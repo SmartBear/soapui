@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Web Service Overview- The Interface view</title>
+    </properties>
+    <body>
+		<section name="Interface View Tab: Main View">
+			<p>
+				The interface view contains useful information and metrics about your project, such as where files are stored, WSDL Style Binding and more.
+				This is intended as a very quick way of getting information and overview of the Interface.
+			</p>
+			<img src="images/interfaceview.gif" border="0" alt="Interfacce overview in soapUI"/>
+			
+			<p>
+			Please note that the Use of the Operations is listed per operation and not with the style. 
+			We usually  refer to them together (Document/Literal), but since it can change per operation, that where it has to be shown.
+			</p>
+			
+		 <p><hr size="1"/>Next: <a href="endpoints.html">Service Endpoints</a></p>
+		</section>
+    </body>
+</document>

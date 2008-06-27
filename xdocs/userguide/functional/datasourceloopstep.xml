@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Data Driven Testing - soapUI Pro Data Source loop step</title>
+    </properties>
+    <body>
+		<section name="soapUI Pro DataSourceLoop Step">
+		<p>
+		Data Driven Web Service Testing is one on soapUIs' strengths. In soapUI this can be done by Groovy scripting, but in soapUI
+		Pro this is simplified. 
+		</p>
+		<p>The DataSourceLoop Step is used together with the DataSource Step to create a sequence of steps that 
+		should be executed for each row of data. It must be placed after its corresponding DataSource step and
+		is configured by either double-clicking or selecting "Configure" from its popup menu, which displays the 
+		following dialog:</p>
+		<p align="center"><img src="images/datasource_loop.gif" alt="DataSOurce Loop Configuration Panel"/></p>
+		<p>The dialog contains 2 options:</p>
+		<ul>
+		<li>DataSource Step - selects the DataSource Step to check for more data</li>
+		<li>Target Step - selects the Step to loop to if more data is available</li>
+		</ul>
+		<p>For example, if a DataSource step is used to read data from an external file and the followed by 
+		a request using that data, a DataSource Loop should be added after the request specifying the DataSource Step
+		and the Request step as its target step... (i.e. loop back to the request if more data is available).</p>
+		 <p><hr size="1"/>Next: <a href="../properties.html#Property_Expansion">Using Property Expansions for parameters in Web Service Testing</a></p>
+		</section>
+    </body>
+</document>
+

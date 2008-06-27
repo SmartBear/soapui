@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Web Service testing scenarios - Tutorials</title>
+    </properties>
+    <body>
+		<section name="Web Service Test Usage Scenarios">
+		<p>This section describes some more complete soapUI usage scenarios, currently the following
+		are described:</p>
+		<table><tr><th>Scenario</th><th>Description</th></tr>
+		<tr><td><a href="datadriven.html">Data Driven Web Service Testing</a></td><td>Shows how to use a combination of TestSteps or 
+		Groovy Scripts to allow test data (query parameters, username/password, etc) to be provided
+		from an external source</td></tr>
+		<tr><td><a href="templatedriven.html">Template Driven Web Service Testing</a></td><td>Extends Data Driven testing to show
+		how to read a series for test values from an external source and run the entire TestCase for each row of values.</td></tr>
+		<tr><td><a href="interactive.html">Interactive Testing</a></td><td>Shows how to use Groovy scripts to create
+		an input dialog for a TestCase and for displaying the result.</td></tr>
+		<tr><td><a href="surveillance.html">Surveillance Testing</a></td><td>Describes how to use a scheduling tool in conjunction
+		with soapUI to set up ongoing test processes that continuously validate functionality and
+		performance.</td></tr>
+		</table>
+		<p>If you have any suggestions or requests for more scenarios please let us know!</p>
+		
+		<p><hr size="1"/>Next: <a href="datadriven.html">Data Driven Web Service Testing</a></p>
+		</section>
+    </body>
+</document>
+

@@ -1,0 +1,65 @@
+<definitions name="incrementService"
+             targetNamespace="http://orchestra.objectweb.org/samples/incrementService"
+             xmlns:tns="http://orchestra.objectweb.org/samples/incrementService"
+             xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://orchestra.objectweb.org/samples/incrementService">
+      <complexType name="ProcessIncrementServiceType">
+        <sequence>
+          <element name="value" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <complexType name="ProcessIncrementServiceResponseType">
+        <sequence>
+          <element name="result" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <element name="processIncrementService" type="tns:ProcessIncrementServiceType"/>
+      <element name="processIncrementServiceResponse" type="tns:ProcessIncrementServiceResponseType"/>
+    </schema>
+  </types>
+
+  <message name="processIncrementServiceSoapRequest">
+    <part name="parameters" element="tns:processIncrementService"/>
+  </message>
+
+  <message name="processIncrementServiceSoapResponse">
+    <part name="parameters" element="tns:processIncrementServiceResponse"/>
+  </message>
+
+  <portType name="IncrementServicePT">
+    <operation name="process">
+      <input message="tns:processIncrementServiceSoapRequest"/>
+      <output message="tns:processIncrementServiceSoapResponse"/>
+    </operation>
+  </portType>
+
+  <plnk:partnerLinkType name="IncrementService">
+    <plnk:role name="service">
+      <plnk:portType name="tns:IncrementServicePT"/>
+    </plnk:role>
+  </plnk:partnerLinkType>
+
+  <binding name="IncrementServicePTSOAPBinding" type="tns:IncrementServicePT">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="process">
+      <input>
+        <soap:body use="encoded" namespace="http://orchestra.objectweb.org/samples/incrementService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="http://orchestra.objectweb.org/samples/incrementService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="IncrementServiceServiceBP">
+    <port name="IncrementServicePT" binding="tns:IncrementServicePTSOAPBinding">
+      <soap:address location="http://localhost:9000/axis/services/IncrementServicePT"/>
+    </port>
+  </service>
+
+</definitions>

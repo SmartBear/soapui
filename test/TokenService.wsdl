@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:tns="http://tempo.intalio.org/security/tokenService/"
+	xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+	xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+	xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:ns="http://tempo.intalio.org/security/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:common="http://www.example.org/"
+	xmlns:import="https://athtestweb.acompany.com/public/services/myApplicationWS/"
+	targetNamespace="http://tempo.intalio.org/security/tokenService/">
+    <wsdl:import namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" location="test.wsdl"></wsdl:import>
+    <wsdl:types>
+		<xsd:schema
+			xmlns:auth_runtime="http://tempo.intalio.org/security/tokenService/"
+			xmlns:common="http://tempo.intalio.org/security/"
+			targetNamespace="http://tempo.intalio.org/security/tokenService/"
+			elementFormDefault="unqualified"
+			attributeFormDefault="unqualified">
+			<xsd:complexType name="PropertyType">
+				<xsd:sequence>
+					<xsd:element type="xsd:string" name="name" />
+					<xsd:element type="xsd:string" name="value" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="Properties">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0"
+							type="tns:PropertyType" name="properties" maxOccurs="unbounded" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element type="xsd:string" name="AuthenticationFault" />
+			<xsd:complexType name="UserNotFoundFaultType" />
+			<xsd:complexType name="AuthenticationFaultType" />
+			<xsd:element name="RemoteFault">
+				<xsd:complexType />
+			</xsd:element>
+			<xsd:element type="xsd:string" name="RBACFault" />
+			<xsd:element name="authenticateUserWCredentialsRequestEl">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element type="xsd:string" name="user" />
+						<xsd:element minOccurs="0"
+							type="tns:PropertyType" name="credentials" maxOccurs="unbounded" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="AuthenticateUserEl">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element type="xsd:string" name="user" />
+						<xsd:element type="xsd:string" name="password" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element type="xsd:string"
+				name="AuthenticateUserResponseEl" />
+			<xsd:element type="xsd:string"
+				name="AuthenticateUserWCredentialsResponseEl" />
+		</xsd:schema>
+		<xsd:schema
+			xmlns:axis2wrapped="http://tempo.intalio.org/security/tokenService/"
+			targetNamespace="http://tempo.intalio.org/security/tokenService/"
+			elementFormDefault="unqualified"
+			attributeFormDefault="unqualified">
+			<xsd:complexType name="getTokenPropertiesRequest">
+				<xsd:sequence>
+					<xsd:element type="xsd:string" name="token" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element type="tns:getTokenPropertiesRequest"
+				name="getTokenProperties" />
+			<xsd:element type="xsd:string"
+				name="authenticateUserWCredentials" />
+			<xsd:element type="xsd:string"
+				name="authenticateUser" />
+			<xsd:element type="xsd:string"
+				name="getTokenPropertiesResponse" />
+			<xsd:element type="xsd:string"
+				name="authenticateUserWCredentialsResponse" />
+			<xsd:element type="xsd:string"
+				name="authenticateUserResponse" />
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="getTokenPropertiesRequest">
+		<wsdl:part element="tns:getTokenProperties" name="part1" />
+	</wsdl:message>
+	<wsdl:message name="getTokenPropertiesResponse">
+		<wsdl:part element="tns:Properties" name="part1" />
+	</wsdl:message>
+	<wsdl:message name="RBACFault">
+		<wsdl:part element="tns:RBACFault" name="part1" />
+	</wsdl:message>
+	<wsdl:message name="RemoteFault">
+		<wsdl:part element="tns:RemoteFault" name="part1" />
+	</wsdl:message>
+	<wsdl:message name="AuthenticationFault">
+		<wsdl:part element="tns:AuthenticationFault" name="part1" />
+	</wsdl:message>
+	<wsdl:message name="authenticateUserWCredentialsRequest">
+		<wsdl:part element="tns:authenticateUserWCredentialsRequestEl"
+			name="part1" />
+	</wsdl:message>
+	<wsdl:message name="authenticateUserWCredentialsResponse">
+		<wsdl:part element="tns:AuthenticateUserWCredentialsResponseEl"
+			name="part1" />
+	</wsdl:message>
+
+	<wsdl:message name="authenticateUserRequest">
+		<wsdl:part element="tns:AuthenticateUserEl" name="part1" />
+	</wsdl:message>
+	<wsdl:message name="authenticateUserResponse">
+		<wsdl:part element="tns:AuthenticateUserResponseEl"
+			name="part1" />
+	</wsdl:message>
+	<wsdl:portType name="TokenServicePortType">
+		<wsdl:operation name="getTokenProperties">
+			<wsdl:input message="tns:getTokenPropertiesRequest" />
+			<wsdl:output message="tns:getTokenPropertiesResponse" />
+			<wsdl:fault name="RBACFault" message="tns:RBACFault" />
+			<wsdl:fault name="RemoteFault" message="tns:RemoteFault" />
+			<wsdl:fault name="AuthenticationFault"
+				message="tns:AuthenticationFault" />
+		</wsdl:operation>
+		<wsdl:operation name="authenticateUserWCredentials">
+			<wsdl:input
+				message="tns:authenticateUserWCredentialsRequest" />
+			<wsdl:output
+				message="tns:authenticateUserWCredentialsResponse" />
+			<wsdl:fault name="RBACFault" message="tns:RBACFault" />
+			<wsdl:fault name="RemoteFault" message="tns:RemoteFault" />
+			<wsdl:fault name="AuthenticationFault"
+				message="tns:AuthenticationFault" />
+		</wsdl:operation>
+		<wsdl:operation name="authenticateUser">
+			<wsdl:input message="tns:authenticateUserRequest" />
+			<wsdl:output message="tns:authenticateUserResponse" />
+			<wsdl:fault name="RBACFault" message="tns:RBACFault" />
+			<wsdl:fault name="RemoteFault" message="tns:RemoteFault" />
+			<wsdl:fault name="AuthenticationFault"
+				message="tns:AuthenticationFault" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding type="tns:TokenServicePortType"
+		name="TokenServiceSOAP11Binding">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="getTokenProperties">
+			<soap:operation style="document"
+				soapAction="getTokenProperties" />
+			<wsdl:input>
+				<soap:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="RBACFault">
+			</wsdl:fault>
+			<wsdl:fault name="RemoteFault">
+			</wsdl:fault>
+			<wsdl:fault name="AuthenticationFault">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="authenticateUserWCredentials">
+			<soap:operation style="document"
+				soapAction="authenticateUserWCredentials" />
+			<wsdl:input>
+				<soap:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="RBACFault">
+			</wsdl:fault>
+			<wsdl:fault name="RemoteFault">
+			</wsdl:fault>
+			<wsdl:fault name="AuthenticationFault">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="authenticateUser">
+			<soap:operation style="document"
+				soapAction="authenticateUser" />
+			<wsdl:input>
+				<soap:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="RBACFault">
+			</wsdl:fault>
+			<wsdl:fault name="RemoteFault">
+			</wsdl:fault>
+			<wsdl:fault name="AuthenticationFault">
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding type="tns:TokenServicePortType"
+		name="TokenServiceSOAP12Binding">
+		<soap12:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="getTokenProperties">
+			<soap12:operation style="document"
+				soapAction="getTokenProperties" />
+			<wsdl:input>
+				<soap12:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="RBACFault">
+				<soap12:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="RemoteFault">
+				<soap12:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="AuthenticationFault">
+				<soap12:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="authenticateUserWCredentials">
+			<soap12:operation style="document"
+				soapAction="authenticateUserWCredentials" />
+			<wsdl:input>
+				<soap12:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="RBACFault">
+				<soap12:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="RemoteFault">
+				<soap12:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="AuthenticationFault">
+				<soap12:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="authenticateUser">
+			<soap12:operation style="document"
+				soapAction="authenticateUser" />
+			<wsdl:input>
+				<soap12:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="RBACFault">
+				<soap12:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="RemoteFault">
+				<soap12:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="AuthenticationFault">
+				<soap12:body
+					namespace="http://tempo.intalio.org/security/tokenService/"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding type="tns:TokenServicePortType"
+		name="TokenServiceHttpBinding">
+		<http:binding verb="POST" />
+		<wsdl:operation name="getTokenProperties">
+			<http:operation location="getTokenProperties" />
+			<wsdl:input>
+				<mime:content type="text/xml" />
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="authenticateUserWCredentials">
+			<http:operation location="authenticateUserWCredentials" />
+			<wsdl:input>
+				<mime:content type="text/xml" />
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="authenticateUser">
+			<http:operation location="authenticateUser" />
+			<wsdl:input>
+				<mime:content type="text/xml" />
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="TokenService">
+		<wsdl:port binding="tns:TokenServiceSOAP11Binding"
+			name="TokenServiceSOAP11port0">
+			<soap:address
+				location="http://localhost:8080/axis2/services/TokenService" />
+		</wsdl:port>
+		<wsdl:port binding="tns:TokenServiceSOAP12Binding"
+			name="TokenServiceSOAP12port0">
+			<soap12:address
+				location="http://localhost:8080/axis2/services/TokenService" />
+		</wsdl:port>
+		<wsdl:port binding="tns:TokenServiceHttpBinding"
+			name="TokenServiceHttpport0">
+			<http:address
+				location="http://localhost:8080/axis2/rest/TokenService" />
+		</wsdl:port>
+		<wsdl:port binding="import:ABCReqtSoap" name="ABCReqtSoap11Port"/>
+	</wsdl:service>
+</wsdl:definitions>

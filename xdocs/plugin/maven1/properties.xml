@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+  <properties>
+    <title>soapUI maven 1.X plugin settings</title>
+  </properties>
+  <body>
+    <section name="maven 1.X plugin settings">
+      <table>
+        <tr>
+          <th>Property</th>
+          <th>Optional?</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>maven.soapui.project</td>
+          <td>Yes</td>
+          <td>Specified the name/URL of the soapUI project file to use, default value is
+              <code>${pom.artifactId}-soapui-project.xml</code></td>
+        </tr>
+        <tr>
+          <td>maven.soapui.test.testsuite</td>
+          <td>Yes</td>
+          <td>Specifies the name of the TestSuite to run</td>
+        </tr>
+        <tr>
+          <td>maven.soapui.test.testcase</td>
+          <td>Yes</td>
+          <td>Specifies the name of the TestCase to run</td>
+        </tr>
+        <tr>
+          <td>maven.soapui.test.loadtest</td>
+          <td>Yes</td>
+          <td>Specifies the name of the LoadTest to run (if running the soapui:loadtest goal)</td>
+        </tr>
+        <tr>
+          <td>maven.soapui.test.limit</td>
+          <td>Yes</td>
+          <td>Overrides the limit of executed LoadTests (if running the soapui:loadtest goal)</td>
+        </tr>
+        <tr>
+          <td>maven.soapui.test.endpoint</td>
+          <td>Yes</td>
+          <td>Overrides the service endpoint to be invoked by any TestRequests</td>
+        </tr>
+        <tr>
+          <td>maven.soapui.test.host</td>
+          <td>Yes</td>
+          <td>Overrides the target host:port to be invoked by any TestRequests</td>
+        </tr>
+        <tr>
+          <td>maven.soapui.test.username</td>
+          <td>Yes</td>
+          <td>Overrides the username used by any TestRequests run</td>
+        </tr>
+        <tr>
+          <td>maven.soapui.test.password</td>
+          <td>Yes</td>
+          <td>Overrides the password used by any TestRequests run</td>
+        </tr>
+        <tr>
+          <td>maven.soapui.test.domain</td>
+          <td>Yes</td>
+          <td>Overrides the domain used by any TestRequests run</td>
+        </tr>
+        <tr>
+          <td>maven.soapui.report</td>
+          <td>Yes</td>
+          <td>Controls if a small test report should be printed to the console (yes/no)</td>
+        </tr>
+        <tr>
+          <td>maven.soapui.report.folder</td>
+          <td>Yes</td>
+          <td>Set which folder results/reports are saved to</td>
+        </tr>
+         <tr>
+          <td>maven.soapui.report.junit</td>
+          <td>Yes</td>
+          <td>Turns on creation of <a href="../../userguide/commandline/functional.html#JUnit_Reports">JUnit reports</a></td>
+        </tr>
+        <tr>
+          <td>maven.soapui.report.all</td>
+          <td>Yes</td>
+          <td>Controls if all test requests should be exported (default only exports errors), (yes/no)</td>
+        </tr>
+         <tr>
+          <td>maven.soapui.mock.service</td>
+          <td>No</td>
+          <td>Sets which MockService to run with the soapui:mock goal</td>
+        </tr>
+         <tr>
+          <td>maven.soapui.mock.port</td>
+          <td>No</td>
+          <td>Sets which port to listen on locally when mocking</td>
+        </tr>
+         <tr>
+          <td>maven.soapui.mock.path</td>
+          <td>No</td>
+          <td>Sets which path to listen on locally when mocking</td>
+        </tr>
+        <tr>
+          <td>maven.soapui.mock.noblock</td>
+          <td>No</td>
+          <td>Turns off blocking when MockRunner has started</td>
+        </tr>
+      </table>
+       <p><hr size="1"/>Next: <a href="../maven2/index.html">maven 2.X soapUI plugin</a></p>
+    </section>
+  </body>
+</document>

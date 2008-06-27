@@ -1,0 +1,81 @@
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="link">
+    <xs:annotation>
+      <xs:documentation>
+        A link between two personas.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="persona1Id" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            The id of the first persona.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="persona2Id" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            The id of the second persona.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="socialGroup">
+    <xs:annotation>
+      <xs:documentation>
+        A social group.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="id" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            The id of the social group.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="memberIds" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>
+            The ids of the members in the social group.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="groupLeaderId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            The id of the group leader.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="exclusive" type="xs:boolean" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Whether the group is exclusive.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="name">
+    <xs:annotation>
+      <xs:documentation>
+        A name of a persona.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="xs:anyType"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="persona">
+    <xs:sequence>
+      <xs:element name="id" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="email" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="alias" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="name" type="name" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="picture" type="xs:base64Binary" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

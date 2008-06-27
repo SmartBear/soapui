@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>the Web Service, SOA and SOAP Testing Tool</title>
+    </properties>
+    <body>
+		
+    <section>
+
+	 <div id="OpenPro">
+      	<div id="OpenLeft">
+      		<div class="os_infobox2">
+      			<div class="os_infobox_top"></div>
+      				<div class="os_infobox_overall">
+      					<div class="os_infobox_header"> <img src="images/small_soapui-logo.png" border="0" alt=""></img></div>
+      					<div class="os_infobox_content">
+							<p>
+								<span class="os_par">80000 Users<br></br>
+								Free - Open Source<br></br></span>
+							</p>
+						</div>
+						<div class="os_infobox_footer">
+							<a onclick="javascript:urchinTracker('/downloadOpenSource')" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=571745" class="os_infoboxlink"><span class="os_ilink"> Download Latest!</span> </a>
+						</div>
+      				</div>
+   					<div class="os_infobox_bottom">
+   						<div></div>
+   					</div>
+			</div>	
+		</div>
+		
+	  	<div id="OpenRight">
+	  	     		<div class="infobox2">
+      			<div class="infobox_top"></div>
+      				<div class="infobox_overall">
+      					<div class="infobox_header"> <img src="images/small_soapuipro-logo.png" border="0" alt=""></img></div>
+      					<div class="infobox_content">
+							<p>
+								<span class="pro_par">Pro Support<br></br>
+								Pro Functionality<br></br></span>
+							</p>
+						</div>
+						<div class="infobox_footer">
+							<a onclick="javascript:urchinTracker('/downloadPro')" href="http://www.eviware.com/trial" class="infoboxlink"><span class="ilink"> Download Trial!</span> </a>
+						</div>
+      				</div>
+   					<div class="infobox_bottom">
+   						<div></div>
+   					</div>
+			</div>	
+
+	  	</div>
+	</div>
+		
+		<h1>soapUI; the Web Services Testing tool.</h1>
+		
+		<p>
+		soapUI is the leading tool for Web Service Testing. With more than 300 000 downloads, it's the most used tool for SOA testing in the world.
+		</p>
+		<p>
+		soapUI is Free and Open Source and is used for 
+		
+		<a href="features.html#Web_Service_Inspection_and_Invocation">Inspecting Web Services</a>, 
+		<a href="features.html#Web_Service_Inspection_and_Invocation">Invoking Web Services</a>, 
+		<a href="features.html#Web_Service_Development_and_Validation">Developing Web Services</a>, 
+		<a href="features.html#Web_Service_Simulation">Web Service Simulation and Web Service Mocking</a> and 
+		<a href="features.html#Web_Service_Functional_Testing">Functional Testing of Web Services</a>
+		<a href="features.html#Web_Service_Functional_Testing">Load Testing of Web Services</a> 
+		over HTTP.
+		</p>
+		<p> <a target="_new" href="http://www.eviware.com"><b>soapUI Pro</b></a> is an extended version of soapUI with professional support
+		and extended functionality.
+		</p>
+<div class="os_infobox2">
+			<div class="os_infobox_top"></div>
+      			<div class="os_infobox_overall">
+         			<div class="os_infobox_header"> Where do I Start?</div>
+					<div class="os_infobox_content">
+						<table class="gstable" cellspacing="0" cellpadding="0"><tr class="a"><td width="300">
+					<ul>
+						<li>Read the <a href="features.html">Feature Overview</a></li>
+						<li>Read the <a href="comparison.html">soapUI Pro comparison</a></li>
+						<li>Download the <a target="_new" onclick="javascript:urchinTracker('/downloadOpenSource');" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=571745">latest soapUI release</a></li>
+						<li>Or try <a target="_new" onclick="javascript:urchinTracker('/downloadPro');" href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/">soapUI Pro</a></li>
+					</ul>
+				</td><td width="300">
+					<ul>
+						<li>Try your hands on <a href="gettingstarted/sample-project.html">the Example soapUI Project</a></li>
+						<li>Read the <a href="gettingstarted/index.html">Getting Started with soapUI Guide</a></li>
+						<li>Watch the <a href="#" onclick="openVideo('movies/sample_project/sample_project.html');">Example Project Movie</a></li>
+						<li>You can also try the WebStart links below</li>
+					</ul>
+				</td></tr></table>
+
+					</div>
+
+      			</div>
+   				<div class="os_infobox_bottom"><div></div></div>
+		</div>
+
+		<table class="webstartlinkstable">
+		<tr>
+		        <td align="center" bgcolor="white"><span class="webstartheader">soapUI 2.0.2</span><div>
+				<a href="http://www.soapui.org/jnlp/2.0.2/soapui.jnlp" onclick="javascript:urchinTracker('/jnlp/soapui/2_0_2');"><img class="webstart" src="images/webstart_green.png" border="0"/></a></div>
+			 [<a href="new_and_noteworthy_2.html">Read More</a>]
+			 [<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=571745">Download</a>]</td>
+			 <td align="center" bgcolor="white"><span class="webstartheader">soapUI 2.0.2 Pro</span><div>
+				<a href="http://www.eviware.com/jnlp/2.0.2/soapui-pro.jnlp" onclick="javascript:urchinTracker:(/jnlp/soapui/2_0_2_pro);"><img class="webstart" src="images/webstart_orange.png" border="0"/></a></div>
+			 [<a href="comparison.html">Compare</a>]
+			 [<a target="_new" href="http://www.eviware.com">Trial/Buy</a>]
+			 [<a target="_new" href="http://www.eviware.com/content/view/42/36/">FAQ</a>]</td>
+	
+			</tr>
+		</table>
+				
+		<p style="font-size: 9pt"><i>"Great software, extremely useful, has replaced several other commercial products and a 
+		home-grown utility in our organization, (and not because of cost but rather because of value 
+		and usability)."</i> - Charlie Collins</p>
+		
+		<p style="font-size: 9pt"><i>"thanks for an excellent project - ... this tool has greatly improved the quality and manageability 
+		of our development."</i> - Matthew Feldt</p>
+		<subsection name="Latest News">
+		
+		<p><b>2008-01-28: soapUI 2.0.2</b> : Mostly bug-fixes and Plug-in updates <a href="new_and_noteworthy_2.html#2.0.2_Release">[Read more]</a></p>
+		
+		<p><b>2008-01-15: soapUI 2.0.1</b> : Mostly bug-fixes <a href="new_and_noteworthy_2.html#2.0.1_Release">[Read more]</a></p>
+
+		<p><b>2007-12-12: soapUI 2.0 Final</b> : Final Fixes... <a href="new_and_noteworthy_2.html">[Read more]</a></p>
+				
+		<p><b>2007-12-02: soapUI 2.0 beta2</b> : Improved WS-Security, Raw message viewer and more... <a href="new_and_noteworthy_2.html">[Read more]</a></p>
+
+		<p><b>2007-11-20: SNAPSHOT Update and 2.0 beta1 releases of the IDE plugins </b> : LoadTest statistics logging, minor updates and bugfixes... 
+		   <a href="snapshot.html">[Read More]</a></p>
+		
+		<p><b>2007-11-14: soapUI 2.0 beta1</b> : Major release filled with functionality such as Message Capture, WS-Security and more... <a href="new_and_noteworthy_2.html">[Read more]</a></p>
+		
+		<p><b>2007-09-26: soapUI 1.7.6 release</b> : Intermediate release with a bunch of fixes and improvements... <a href="new_and_noteworthy_176.html">[Read more]</a></p>
+
+		<p><b>2007-08-29: SNAPSHOT Update</b> : Some important bug-fixes and a large number of improvements... <a href="snapshot.html">[Read more]</a></p>
+		
+		<p><b>2007-08-06: soapUI 1.7.5 Final</b> : The "Community Release" goes final... <a href="new_and_noteworthy_175.html">[Read more]</a></p>
+		
+		<p><b>2007-05-11: soapUI gets "9/10 - Excellent" score in InfoWorld round-up</b> : <a target="_new" href="http://www.infoworld.com/article/07/05/11/19TCwebservicetest_1.html">[Full Article]</a>.</p>
+		
+		</subsection>
+
+		<subsection name="soapUI in the news">
+		<p>Fortunately, we are not the only ones using soapUI, have a look at what some others have written:</p>
+		<ul>
+			<li><a target="_new" href="http://nikitaknysh.blogspot.com/2008/01/how-to-test-web-service.html">How to Test a Web Service</a> from Nikita Knysh's Blog</li>
+			<li><a target="_new" href="http://www.gmjjavadesigns.com/gmjd/entry/soapui_2_0_web_service">soapUI 2.0: Web Service Testing Tool</a> from GMJ Designs</li>
+			<li><a target="_new" href="http://blogsearch.google.com/blogsearch?hl=en&amp;q=soapui&amp;ie=UTF-8">soapUI - Testing JAX-WS Web service in NetBeans</a> from Arun Gupta's Blog</li>
+		    <li><a target="_new" href="http://www.pascalalma.net/?p=43">Another common issue solved with Soap UI</a> from Pascal's Blog</li>
+		    <li><a target="_new" href="http://www.pascalalma.net/?p=42">Managing the test-database with SOAP UI</a> from Pascal's Blog</li>
+		    <li><a target="_new" href="http://www.softwarefrontier.com/2007/06/testing-web-service-clients.html">Testing Web Service Clients</a> from Software Frontier</li>
+		    <li><a target="_new" href="http://temujin.blogsome.com/2007/06/06/mocking-web-services-with-soapui/">Mocking web services with SoapUI</a> from temujin, the fabulous freak</li>
+		    <li><a target="_new" href="http://blogs.sun.com/gopalan/entry/open_esb_partner_ecosystem_videos">Open ESB Partner Ecosystem: Videos on using 
+		    SOAPUI with Open ESB, NetBeans, and GlassFish</a> from Web Cornucopia</li>
+			<li><a target="_new" href="http://www.pascalalma.net/?p=37">Using SoapUI for testing your webservice</a> from Pascal's Blog</li>
+			<li><a target="_new" href="http://myarch.com/soapui-vs-junit">soapUI vs JUnit</a> from myArch</li>
+			<li><a target="_new" href="http://jroller.com/page/cwap?entry=first_post">MTOM (SOAP) Attachment Tutorial</a> from CWAP</li>
+			<li><a target="_new" href="http://jroller.com/page/n9ski?entry=the_right_tool_for_the">The Right Tool for the Job</a> from Ryan Nelsestuen's Weblog</li>
+			<li><a target="_new" href="http://beamsblag.blogspot.com/2007/04/testing-aspnet-soap-web-services.html">Testing ASP.NET SOAP Web Services</a> from Pete's Blog on software development</li>
+			<li><a target="_new" href="http://ivanjocic.blogspot.com/2007/03/freeware-soap-testing.html">Freeware SOAP Testing</a> from IvanJo's thoughts</li>
+			<li><a target="_new" href="http://ws-rx.blogspot.com/2007/03/soap-ui-or-dream-come-true.html">soap UI - or a dream come true</a> from Web Services on Drugs</li>
+			<li><a target="_new" href="http://www2.sitina.net/index.php/2007/03/16/soap-ui/">soap ui</a> from www2.sitina.net</li>
+			<li><a target="_new" href="http://pushtotest.com/thecohenblog/soapui.html">SOAPUI is a new testing tool, and it's fiesty</a> - from PushToTest</li>
+			<li><a target="_new" href="http://www.logemann.org/2006/11/16/soapui-16-rocks/">SoapUI 1.6 rocks!</a> - from Logemann Blog</li>
+			<li><a target="_new" href="http://chrismcmahonsblog.blogspot.com/2006/11/another-look-at-soapui-load-test.html">another look at soapui: load test</a> - from Chris McMahon's Blog</li>
+			<li><a target="_new" href="http://blogs.cognifide.com/cleve/2006/11/03/soapui/">soapUI</a> - from The long way round...</li>
+			<li><a target="_new" href="http://www.vorburger.ch/blog1/2006/10/soapui.html">soapUI</a> - from Michael Vorburger's Blog</li>
+			<li><a target="_new" href="http://stephannoske.de/wp/?p=349">Seifendienste</a> - (in German) from .toString();</li>
+		 	<li><a target="_new" href="http://www.demerath.com/roller/page/matthew">Web Service Testing with SOAPUI</a> - from Matthew Demerath</li>
+		 	<li><a target="_new" href="http://saasmaan.blogspot.com/2006/08/really-useful-things.html">Really Useful Things</a> - from SaaS-Man</li>
+			<li><a target="_new" href="http://mikehadlow.blogspot.com/2006/08/nice-soap-test-tool-soapui.html">A nice soap test tool: soapUI</a> - from Code rant</li>
+			<li><a target="_new" href="http://www.testingreflections.com/node/view/4023">From SOAPscope to soapui</a> - from testingreflections.com</li>
+			<li><a target="_new" href="http://softwaredevscott.spaces.live.com/blog/cns!1A9E939F7373F3B7!173.entry">Tool Recommendation for soapui</a> - from Software Development With Scott</li>
+			<li><a target="_new" href="http://atharvana.blogspot.com/2006/07/debugging-web-services.html">Debugging Web Services</a> - from A developer with good habits</li>
+			<li><a target="_new" href="http://chrismcmahonsblog.blogspot.com/2006/07/another-fine-soap-test-tool.html">Another fine SOAP test tool</a> - from Chris McMahon's Blog</li>
+			<li><a target="_new" href="http://www.nodalpoint.org/2006/06/02/debugging_web_services">Debugging Web Services</a> - from nodalpoint.org</li>
+			<li><a target="_new" href="http://www.ferdychristant.com/blog/articles/DOMM-6J2QFF">PHP &amp; Web Services</a> - from ferdychristant.com</li>
+			<li><a target="_new" href="http://www.jroller.com/page/jdunlop/Weblog?catname=%2FWeb+Services">Tools of the Trade</a> - from the GWN Weblog</li>
+			<li><a target="_new" href="http://netzooid.com/blog/2006/05/16/soapui-now-with-xfire-11">soapui, now with XFire</a> - from the 
+			netzoid blog</li>		
+		 	<li><a target="_new" href="http://en.wikipedia.org/wiki/Soapui">soapUI Wikipedia entry</a></li>
+		</ul>
+		
+		</subsection>
+				 <div class="infobox">
+			<div class="infobox_top"></div>
+      			<div class="infobox_overall">
+         			<div class="infobox_header">Did you know...?</div>
+					<div class="infobox_content">
+						<span class="pro_par">
+						<p>
+						In soapUI Pro you have two more request and response editors; The Form editor and the Outline Editor.
+						</p>
+						<p>
+						Both will improve your productivity and make Web Service Testing more fun
+						
+						</p>
+						</span>
+					</div>
+					<div class="infobox_footer">
+						<a onclick="javascript:urchinTracker('/relevantinfo')" href="http://www.eviware.com/trial" class="infoboxlink"><span class="ilink"> Try It </span> </a>
+					</div>
+      			</div>
+   				<div class="infobox_bottom"><div></div></div>
+		</div>
+		<subsection name="contact us!">
+		<p>We created soapUI for its users... please let us know how its working for you, how it troubles you, how you would
+		like to see it improved, how you would like to integrate it with your own projects/offerings, how you would like us to 
+		write/talk about it, etc... Just send an email to info.at.eviware.com to share your thoughts, ideas and ramblings and we'll 
+		get back to you as soon as possible. Thank you!</p>
+		<p>/the-eviware-soapui-team; Ole, Niclas, Lars and Emil</p>
+		</subsection>
+		
+		 <p><hr size="1"/>Next: <a href="features.html">Features</a></p>
+		
+		</section>
+    </body>
+</document>

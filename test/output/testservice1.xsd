@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<s:schema elementFormDefault="qualified" targetNamespace="http://schemas.eviware.com/TestService/v1/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.eviware.com/TestService/v1/">
+  <s:include schemaLocation="testservice2.xsd"/>
+  <s:element name="GetDefaultPageData">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="1" maxOccurs="1" name="pageLink" type="tns:PageReference"/>
+        <s:element minOccurs="1" maxOccurs="1" name="pageTypeID" type="s:int"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+  <s:element name="GetDefaultPageDataResponse">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="0" maxOccurs="1" name="GetDefaultPageDataResult" type="tns:RawPage"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+  <s:complexType name="RawPage">
+    <s:sequence>
+      <s:element minOccurs="0" maxOccurs="1" name="Property" type="tns:ArrayOfRawProperty"/>
+      <s:element minOccurs="0" maxOccurs="1" name="ACL" type="tns:ArrayOfRawACE"/>
+    </s:sequence>
+  </s:complexType>
+  <s:complexType name="ArrayOfRawProperty">
+    <s:sequence>
+      <s:element minOccurs="0" maxOccurs="unbounded" name="RawProperty" nillable="true" type="tns:RawProperty"/>
+    </s:sequence>
+  </s:complexType>
+  <s:complexType name="RawProperty">
+    <s:sequence>
+      <s:element minOccurs="1" maxOccurs="1" name="PageDefinitionID" type="s:int"/>
+      <s:element minOccurs="1" maxOccurs="1" name="OwnerTab" type="s:int"/>
+      <s:element minOccurs="1" maxOccurs="1" name="IsModified" type="s:boolean"/>
+      <s:element minOccurs="1" maxOccurs="1" name="IsNull" type="s:boolean"/>
+      <s:element minOccurs="1" maxOccurs="1" name="IsRequired" type="s:boolean"/>
+      <s:element minOccurs="1" maxOccurs="1" name="IsPropertyData" type="s:boolean"/>
+      <s:element minOccurs="1" maxOccurs="1" name="IsDynamicProperty" type="s:boolean"/>
+      <s:element minOccurs="1" maxOccurs="1" name="IsPersonalized" type="s:boolean"/>
+      <s:element minOccurs="1" maxOccurs="1" name="Type" type="tns:PropertyDataType"/>
+      <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+      <s:element minOccurs="0" maxOccurs="1" name="DisplayName" type="s:string"/>
+      <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string"/>
+      <s:element minOccurs="0" maxOccurs="1" name="LanguageKey" type="s:string"/>
+      <s:element minOccurs="0" maxOccurs="1" name="TypeName" type="s:string"/>
+      <s:element minOccurs="0" maxOccurs="1" name="AssemblyName" type="s:string"/>
+      <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string"/>
+      <s:element minOccurs="0" maxOccurs="1" name="CustomData" type="tns:ArrayOfRawNameAndXml"/>
+    </s:sequence>
+  </s:complexType>
+  <s:simpleType name="PropertyDataType">
+    <s:restriction base="s:string">
+      <s:enumeration value="Boolean"/>
+      <s:enumeration value="Number"/>
+      <s:enumeration value="FloatNumber"/>
+      <s:enumeration value="PageType"/>
+      <s:enumeration value="PageReference"/>
+      <s:enumeration value="Date"/>
+      <s:enumeration value="String"/>
+      <s:enumeration value="LongString"/>
+      <s:enumeration value="Category"/>
+      <s:enumeration value="Form"/>
+    </s:restriction>
+  </s:simpleType>
+  <s:complexType name="ArrayOfRawNameAndXml">
+    <s:sequence>
+      <s:element minOccurs="0" maxOccurs="unbounded" name="RawNameAndXml" nillable="true" type="tns:RawNameAndXml"/>
+    </s:sequence>
+  </s:complexType>
+  <s:complexType name="RawNameAndXml">
+    <s:sequence>
+      <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+      <s:element minOccurs="0" maxOccurs="1" name="Xml" type="s:string"/>
+    </s:sequence>
+  </s:complexType>
+  <s:complexType name="ArrayOfRawACE">
+    <s:sequence>
+      <s:element minOccurs="0" maxOccurs="unbounded" name="RawACE" nillable="true" type="tns:RawACE"/>
+    </s:sequence>
+  </s:complexType>
+  <s:complexType name="RawACE">
+    <s:sequence>
+      <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+      <s:element minOccurs="1" maxOccurs="1" name="SID" type="s:int"/>
+      <s:element minOccurs="1" maxOccurs="1" name="Access" type="tns:AccessLevel"/>
+    </s:sequence>
+  </s:complexType>
+  <s:simpleType name="AccessLevel">
+    <s:list>
+      <s:simpleType>
+        <s:restriction base="s:string">
+          <s:enumeration value="Read"/>
+          <s:enumeration value="Create"/>
+          <s:enumeration value="Edit"/>
+          <s:enumeration value="Delete"/>
+          <s:enumeration value="Publish"/>
+          <s:enumeration value="Administer"/>
+        </s:restriction>
+      </s:simpleType>
+    </s:list>
+  </s:simpleType>
+  <s:element name="SignatureHeader" type="tns:SignatureHeader"/>
+  <s:complexType name="SignatureHeader">
+    <s:sequence>
+      <s:element minOccurs="0" maxOccurs="1" name="CheckSum" type="s:string"/>
+      <s:element minOccurs="0" maxOccurs="1" name="RemoteSite" type="s:string"/>
+    </s:sequence>
+  </s:complexType>
+  <s:element name="GetPage">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="1" maxOccurs="1" name="pageLink" type="tns:PageReference"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+  <s:element name="GetPageResponse">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="0" maxOccurs="1" name="GetPageResult" type="tns:RawPage"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+  <s:element name="GetChildren">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="1" maxOccurs="1" name="pageLink" type="tns:PageReference"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+  <s:element name="GetChildrenResponse">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="0" maxOccurs="1" name="GetChildrenResult" type="tns:ArrayOfRawPage"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+  <s:complexType name="ArrayOfRawPage">
+    <s:sequence>
+      <s:element minOccurs="0" maxOccurs="unbounded" name="RawPage" nillable="true" type="tns:RawPage"/>
+    </s:sequence>
+  </s:complexType>
+  <s:element name="FindPagesWithCriteria">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="1" maxOccurs="1" name="pageLink" type="tns:PageReference"/>
+        <s:element minOccurs="0" maxOccurs="1" name="criterias" type="tns:ArrayOfPropertyCriteria"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+  <s:complexType name="ArrayOfPropertyCriteria">
+    <s:sequence>
+      <s:element minOccurs="0" maxOccurs="unbounded" name="PropertyCriteria" nillable="true" type="tns:PropertyCriteria"/>
+    </s:sequence>
+  </s:complexType>
+  <s:complexType name="PropertyCriteria">
+    <s:sequence>
+      <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+      <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string"/>
+      <s:element minOccurs="1" maxOccurs="1" name="Type" type="tns:PropertyDataType"/>
+      <s:element minOccurs="1" maxOccurs="1" name="Condition" type="tns:CompareCondition"/>
+      <s:element minOccurs="1" maxOccurs="1" name="StringCondition" type="tns:StringCompareMethod"/>
+      <s:element minOccurs="1" maxOccurs="1" name="IsNull" type="s:boolean"/>
+      <s:element minOccurs="1" maxOccurs="1" name="Required" type="s:boolean"/>
+    </s:sequence>
+  </s:complexType>
+  <s:simpleType name="CompareCondition">
+    <s:restriction base="s:string">
+      <s:enumeration value="Equal"/>
+      <s:enumeration value="GreaterThan"/>
+      <s:enumeration value="LessThan"/>
+      <s:enumeration value="NotEqual"/>
+    </s:restriction>
+  </s:simpleType>
+  <s:simpleType name="StringCompareMethod">
+    <s:restriction base="s:string">
+      <s:enumeration value="Identical"/>
+      <s:enumeration value="StartsWith"/>
+      <s:enumeration value="EndsWith"/>
+      <s:enumeration value="Contained"/>
+    </s:restriction>
+  </s:simpleType>
+  <s:element name="FindPagesWithCriteriaResponse">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="0" maxOccurs="1" name="FindPagesWithCriteriaResult" type="tns:ArrayOfRawPage"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+  <s:element name="Save">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="0" maxOccurs="1" name="page" type="tns:RawPage"/>
+        <s:element minOccurs="1" maxOccurs="1" name="action" type="tns:SaveAction"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+  <s:simpleType name="SaveAction">
+    <s:restriction base="s:string">
+      <s:enumeration value="None"/>
+      <s:enumeration value="Save"/>
+      <s:enumeration value="CheckIn"/>
+      <s:enumeration value="Publish"/>
+      <s:enumeration value="Reject"/>
+      <s:enumeration value="ForceNewVersion"/>
+      <s:enumeration value="ForceCurrentVersion"/>
+    </s:restriction>
+  </s:simpleType>
+  <s:element name="SaveResponse">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="1" maxOccurs="1" name="SaveResult" type="tns:PageReference"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+  <s:element name="Ping">
+    <s:complexType/>
+  </s:element>
+  <s:element name="PingResponse">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="1" maxOccurs="1" name="PingResult" type="s:boolean"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+  <s:element name="DeleteVersion">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="1" maxOccurs="1" name="pageLink" type="tns:PageReference"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+  <s:element name="DeleteVersionResponse">
+    <s:complexType/>
+  </s:element>
+  <s:element name="Delete">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="1" maxOccurs="1" name="pageLink" type="tns:PageReference"/>
+        <s:element minOccurs="1" maxOccurs="1" name="forceDelete" type="s:boolean"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+  <s:element name="DeleteResponse">
+    <s:complexType/>
+  </s:element>
+  <s:element name="DeleteChildren">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="1" maxOccurs="1" name="pageLink" type="tns:PageReference"/>
+        <s:element minOccurs="1" maxOccurs="1" name="forceDelete" type="s:boolean"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+  <s:element name="DeleteChildrenResponse">
+    <s:complexType/>
+  </s:element>
+  <s:element name="Move">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="1" maxOccurs="1" name="pageLink" type="tns:PageReference"/>
+        <s:element minOccurs="1" maxOccurs="1" name="destinationLink" type="tns:PageReference"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+  <s:element name="MoveResponse">
+    <s:complexType/>
+  </s:element>
+  <s:element name="Copy">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="1" maxOccurs="1" name="pageLink" type="tns:PageReference"/>
+        <s:element minOccurs="1" maxOccurs="1" name="destinationLink" type="tns:PageReference"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+  <s:element name="CopyResponse">
+    <s:complexType>
+      <s:sequence>
+        <s:element minOccurs="1" maxOccurs="1" name="CopyResult" type="tns:PageReference"/>
+      </s:sequence>
+    </s:complexType>
+  </s:element>
+</s:schema>

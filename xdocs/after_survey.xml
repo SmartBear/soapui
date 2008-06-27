@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>thank you!</title>
+    </properties>
+    <body>
+		<section name="Thank You!">
+		<p>Thank you for particapting in our survey, your feedback is extremely valuable for us and the soapUI
+		community!</p>
+		<p>/the eviware-soapui-team</p>
+		<p align="center"><a href="index.html">Back to the front page!</a></p>
+		</section>
+    </body>
+</document>

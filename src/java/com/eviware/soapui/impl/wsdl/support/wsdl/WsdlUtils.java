@@ -1,0 +1,951 @@
+/*
+ *  soapUI, copyright (C) 2004-2008 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
+package com.eviware.soapui.impl.wsdl.support.wsdl;
+
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.wsdl.Binding;
+import javax.wsdl.BindingFault;
+import javax.wsdl.BindingInput;
+import javax.wsdl.BindingOperation;
+import javax.wsdl.BindingOutput;
+import javax.wsdl.Definition;
+import javax.wsdl.Fault;
+import javax.wsdl.Input;
+import javax.wsdl.Message;
+import javax.wsdl.Operation;
+import javax.wsdl.Output;
+import javax.wsdl.Part;
+import javax.wsdl.Port;
+import javax.wsdl.Service;
+import javax.wsdl.WSDLException;
+import javax.wsdl.extensions.ExtensibilityElement;
+import javax.wsdl.extensions.ExtensionDeserializer;
+import javax.wsdl.extensions.ExtensionRegistry;
+import javax.wsdl.extensions.mime.MIMEContent;
+import javax.wsdl.extensions.mime.MIMEMultipartRelated;
+import javax.wsdl.extensions.mime.MIMEPart;
+import javax.wsdl.extensions.soap.SOAPAddress;
+import javax.wsdl.extensions.soap.SOAPBinding;
+import javax.wsdl.extensions.soap.SOAPBody;
+import javax.wsdl.extensions.soap.SOAPFault;
+import javax.wsdl.extensions.soap.SOAPHeader;
+import javax.wsdl.extensions.soap.SOAPOperation;
+import javax.wsdl.extensions.soap12.SOAP12Address;
+import javax.wsdl.extensions.soap12.SOAP12Binding;
+import javax.wsdl.extensions.soap12.SOAP12Body;
+import javax.wsdl.extensions.soap12.SOAP12Fault;
+import javax.wsdl.extensions.soap12.SOAP12Header;
+import javax.wsdl.extensions.soap12.SOAP12Operation;
+import javax.wsdl.factory.WSDLFactory;
+import javax.wsdl.xml.WSDLReader;
+import javax.xml.namespace.QName;
+
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.SchemaGlobalElement;
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
+
+import com.eviware.soapui.config.DefinitionCacheConfig;
+import com.eviware.soapui.config.DefinitionCacheTypeConfig;
+import com.eviware.soapui.config.DefintionPartConfig;
+import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.support.Constants;
+import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
+import com.eviware.soapui.support.xml.XmlUtils;
+import com.ibm.wsdl.util.xml.QNameUtils;
+import com.ibm.wsdl.xml.WSDLReaderImpl;
+import com.ibm.wsdl.xml.WSDLWriterImpl;
+
+/**
+ * Wsdl-related tools
+ * 
+ * @author Ole.Matzura
+ */
+
+public class WsdlUtils
+{
+	private final static Logger log = Logger.getLogger( WsdlUtils.class );
+	private static WSDLReader wsdlReader;
+
+	public static <T extends ExtensibilityElement> T getExtensiblityElement( List list, Class<T> clazz )
+	{
+		List<T> elements = getExtensiblityElements( list, clazz );
+		return elements.isEmpty() ? null : elements.get( 0 );
+	}
+
+	public static <T extends ExtensibilityElement> List<T> getExtensiblityElements( List list, Class<T> clazz )
+	{
+		List<T> result = new ArrayList<T>();
+
+		for( Iterator<T> i = list.iterator(); i.hasNext(); )
+		{
+			T elm = i.next();
+			if( clazz.isAssignableFrom( elm.getClass() ) )
+			{
+				result.add( elm );
+			}
+		}
+
+		return result;
+	}
+
+	public static String getSoapAction( BindingOperation operation )
+	{
+		List list = operation.getExtensibilityElements();
+		SOAPOperation soapOperation = WsdlUtils.getExtensiblityElement( list, SOAPOperation.class );
+		if( soapOperation != null )
+			return soapOperation.getSoapActionURI();
+
+		SOAP12Operation soap12Operation = WsdlUtils.getExtensiblityElement( list, SOAP12Operation.class );
+		if( soap12Operation != null )
+			return soap12Operation.getSoapActionURI();
+
+		return null;
+	}
+
+	public static String[] getEndpointsForBinding( Definition definition, Binding binding )
+	{
+		List<String> result = new ArrayList<String>();
+		Map map = definition.getAllServices();
+		for( Iterator i = map.values().iterator(); i.hasNext(); )
+		{
+			Service service = ( Service ) i.next();
+			Map portMap = service.getPorts();
+			for( Iterator i2 = portMap.values().iterator(); i2.hasNext(); )
+			{
+				Port port = ( Port ) i2.next();
+				if( port.getBinding() == binding )
+				{
+					String endpoint = WsdlUtils.getSoapEndpoint( port );
+					if( endpoint != null )
+						result.add( endpoint );
+				}
+			}
+		}
+
+		return result.toArray( new String[result.size()] );
+	}
+
+	public static Binding findBindingForOperation( Definition definition, BindingOperation bindingOperation )
+	{
+		Map services = definition.getAllServices();
+		Iterator<Service> s = services.values().iterator();
+
+		while( s.hasNext() )
+		{
+			Map ports = s.next().getPorts();
+			Iterator<Port> p = ports.values().iterator();
+			while( p.hasNext() )
+			{
+				Binding binding = p.next().getBinding();
+				List bindingOperations = binding.getBindingOperations();
+				for( Iterator iter = bindingOperations.iterator(); iter.hasNext(); )
+				{
+					BindingOperation op = ( BindingOperation ) iter.next();
+					if( op.getName().equals( bindingOperation.getName() ) )
+						return binding;
+				}
+			}
+		}
+
+		Map bindings = definition.getAllBindings();
+		Iterator<QName> names = bindings.keySet().iterator();
+		while( names.hasNext() )
+		{
+			Binding binding = definition.getBinding( names.next() );
+			List bindingOperations = binding.getBindingOperations();
+			for( Iterator iter = bindingOperations.iterator(); iter.hasNext(); )
+			{
+				BindingOperation op = ( BindingOperation ) iter.next();
+				if( op.getName().equals( bindingOperation.getName() ) )
+					return binding;
+			}
+		}
+
+		return null;
+	}
+
+	public static BindingOperation findBindingOperation( Definition definition, String operationName )
+	{
+		Map services = definition.getAllServices();
+		for( Iterator i = services.keySet().iterator(); i.hasNext(); )
+		{
+			QName qName = ( QName ) i.next();
+			Service service = definition.getService( qName );
+			Map ports = service.getPorts();
+
+			for( Iterator iterator = ports.keySet().iterator(); iterator.hasNext(); )
+			{
+				String key = ( String ) iterator.next();
+				Port port = service.getPort( key );
+				BindingOperation bindingOperation = port.getBinding().getBindingOperation( operationName, null, null );
+				if( bindingOperation != null )
+					return bindingOperation;
+			}
+		}
+
+		Map bindings = definition.getAllBindings();
+		for( Iterator i = bindings.keySet().iterator(); i.hasNext(); )
+		{
+			Object key = i.next();
+			Binding binding = ( Binding ) bindings.get( key );
+			BindingOperation bindingOperation = binding.getBindingOperation( operationName, null, null );
+			if( bindingOperation != null )
+				return bindingOperation;
+		}
+
+		return null;
+	}
+
+	public static boolean isInputSoapEncoded( BindingOperation bindingOperation )
+	{
+		if( bindingOperation == null )
+			return false;
+		
+		BindingInput bindingInput = bindingOperation.getBindingInput();
+		if( bindingInput == null )
+			return false;
+		
+		SOAPBody soapBody = WsdlUtils.getExtensiblityElement( bindingInput
+					.getExtensibilityElements(), SOAPBody.class );
+
+		if( soapBody != null )
+		{
+			return soapBody.getUse() != null
+						&& soapBody.getUse().equalsIgnoreCase( "encoded" )
+						&& ( soapBody.getEncodingStyles() == null || soapBody.getEncodingStyles().contains(
+									"http://schemas.xmlsoap.org/soap/encoding/" ) );
+		}
+
+		SOAP12Body soap12Body = WsdlUtils.getExtensiblityElement( bindingInput
+					.getExtensibilityElements(), SOAP12Body.class );
+
+		if( soap12Body != null )
+		{
+			return soap12Body.getUse() != null
+						&& soap12Body.getUse().equalsIgnoreCase( "encoded" )
+						&& ( soap12Body.getEncodingStyle() == null || soap12Body.getEncodingStyle().equals(
+									"http://schemas.xmlsoap.org/soap/encoding/" ) );
+		}
+
+		return false;
+	}
+
+	public static boolean isOutputSoapEncoded( BindingOperation bindingOperation )
+	{
+		if( bindingOperation == null )
+			return false;
+		
+		BindingOutput bindingOutput = bindingOperation.getBindingOutput();
+		if( bindingOutput == null )
+			return false;
+
+		SOAPBody soapBody = WsdlUtils.getExtensiblityElement( bindingOutput.getExtensibilityElements(), SOAPBody.class );
+
+		if( soapBody != null )
+		{
+			return soapBody.getUse() != null
+						&& soapBody.getUse().equalsIgnoreCase( "encoded" )
+						&& ( soapBody.getEncodingStyles() == null || soapBody.getEncodingStyles().contains(
+									"http://schemas.xmlsoap.org/soap/encoding/" ) );
+		}
+
+		SOAP12Body soap12Body = WsdlUtils.getExtensiblityElement( bindingOutput.getExtensibilityElements(),
+					SOAP12Body.class );
+
+		if( soap12Body != null )
+		{
+			return soap12Body.getUse() != null
+						&& soap12Body.getUse().equalsIgnoreCase( "encoded" )
+						&& ( soap12Body.getEncodingStyle() == null || soap12Body.getEncodingStyle().equals(
+									"http://schemas.xmlsoap.org/soap/encoding/" ) );
+		}
+
+		return false;
+	}
+
+	public static boolean isRpc( Definition definition, BindingOperation bindingOperation )
+	{
+		SOAPOperation soapOperation = WsdlUtils.getExtensiblityElement( bindingOperation.getExtensibilityElements(),
+					SOAPOperation.class );
+
+		if( soapOperation != null && soapOperation.getStyle() != null )
+			return soapOperation.getStyle().equalsIgnoreCase( "rpc" );
+
+		SOAP12Operation soap12Operation = WsdlUtils.getExtensiblityElement( bindingOperation.getExtensibilityElements(),
+					SOAP12Operation.class );
+
+		if( soap12Operation != null && soap12Operation.getStyle() != null )
+			return soap12Operation.getStyle().equalsIgnoreCase( "rpc" );
+
+		Binding binding = findBindingForOperation( definition, bindingOperation );
+		if( binding == null )
+		{
+			log.error( "Failed to find binding for operation [" + bindingOperation.getName() + "] in definition ["
+						+ definition.getDocumentBaseURI() + "]" );
+			return false;
+		}
+
+		return isRpc( binding );
+	}
+
+	public static boolean isRpc( Binding binding )
+	{
+		SOAPBinding soapBinding = WsdlUtils
+					.getExtensiblityElement( binding.getExtensibilityElements(), SOAPBinding.class );
+
+		if( soapBinding != null )
+			return "rpc".equalsIgnoreCase( soapBinding.getStyle() );
+
+		SOAP12Binding soap12Binding = WsdlUtils.getExtensiblityElement( binding.getExtensibilityElements(),
+					SOAP12Binding.class );
+
+		if( soap12Binding != null )
+			return "rpc".equalsIgnoreCase( soap12Binding.getStyle() );
+
+		return false;
+	}
+
+	/**
+	 * Returns a list of parts for the specifed operation, either as specified in
+	 * body or all
+	 */
+
+	public static Part[] getInputParts( BindingOperation operation )
+	{
+		List<Part> result = new ArrayList<Part>();
+		Input input = operation.getOperation().getInput();
+		if( input == null )
+			return new Part[0];
+		
+		Message msg = input.getMessage();
+		
+		if( msg != null )
+		{
+			SOAPBody soapBody = WsdlUtils.getExtensiblityElement( operation.getBindingInput().getExtensibilityElements(),
+						SOAPBody.class );
+	
+			if( soapBody == null || soapBody.getParts() == null )
+			{
+				SOAP12Body soap12Body = WsdlUtils.getExtensiblityElement( operation.getBindingInput()
+							.getExtensibilityElements(), SOAP12Body.class );
+	
+				if( soap12Body == null || soap12Body.getParts() == null )
+				{
+					if( msg != null )
+						result.addAll( msg.getOrderedParts( null ) );
+				}
+				else
+				{
+					Iterator i = soap12Body.getParts().iterator();
+					while( i.hasNext() )
+					{
+						String partName = ( String ) i.next();
+						Part part = msg.getPart( partName );
+	
+						result.add( part );
+					}
+				}
+			}
+			else
+			{
+				Iterator i = soapBody.getParts().iterator();
+				while( i.hasNext() )
+				{
+					String partName = ( String ) i.next();
+					Part part = msg.getPart( partName );
+	
+					result.add( part );
+				}
+			}
+		}
+		else
+		{}
+
+		return result.toArray( new Part[result.size()] );
+	}
+
+	public static boolean isAttachmentInputPart( Part part, BindingOperation operation )
+	{
+		return getInputMultipartContent( part, operation ).length > 0;
+	}
+
+	public static boolean isAttachmentOutputPart( Part part, BindingOperation operation )
+	{
+		return getOutputMultipartContent( part, operation ).length > 0;
+	}
+
+	public static MIMEContent[] getOutputMultipartContent( Part part, BindingOperation operation )
+	{
+		MIMEMultipartRelated multipartOutput = WsdlUtils.getExtensiblityElement( operation.getBindingOutput()
+					.getExtensibilityElements(), MIMEMultipartRelated.class );
+
+		return getContentParts( part, multipartOutput );
+	}
+
+	public static MIMEContent[] getInputMultipartContent( Part part, BindingOperation operation )
+	{
+		MIMEMultipartRelated multipartInput = WsdlUtils.getExtensiblityElement( operation.getBindingInput()
+					.getExtensibilityElements(), MIMEMultipartRelated.class );
+
+		return getContentParts( part, multipartInput );
+	}
+
+	public static MIMEContent[] getContentParts( Part part, MIMEMultipartRelated multipart )
+	{
+		List<MIMEContent> result = new ArrayList<MIMEContent>();
+
+		if( multipart != null )
+		{
+			List<MIMEPart> parts = multipart.getMIMEParts();
+
+			for( int c = 0; c < parts.size(); c++ )
+			{
+				List<MIMEContent> contentParts = WsdlUtils.getExtensiblityElements( parts.get( c )
+							.getExtensibilityElements(), MIMEContent.class );
+
+				for( MIMEContent content : contentParts )
+				{
+					if( content.getPart().equals( part.getName() ) )
+						result.add( content );
+				}
+			}
+		}
+
+		return result.toArray( new MIMEContent[result.size()] );
+	}
+
+	public static Part[] getFaultParts( BindingOperation bindingOperation, String faultName ) throws Exception
+	{
+		List<Part> result = new ArrayList<Part>();
+
+		BindingFault bindingFault = bindingOperation.getBindingFault( faultName );
+		SOAPFault soapFault = WsdlUtils.getExtensiblityElement( bindingFault.getExtensibilityElements(), SOAPFault.class );
+
+		Operation operation = bindingOperation.getOperation();
+		if( soapFault != null && soapFault.getName() != null )
+		{
+			Fault fault = operation.getFault( soapFault.getName() );
+			if( fault == null )
+				throw new Exception( "Missing Fault [" + soapFault.getName() + "] in operation [" + operation.getName()
+							+ "]" );
+			result.addAll( fault.getMessage().getOrderedParts( null ) );
+		}
+		else
+		{
+			SOAP12Fault soap12Fault = WsdlUtils.getExtensiblityElement( bindingFault.getExtensibilityElements(),
+						SOAP12Fault.class );
+
+			if( soap12Fault != null && soap12Fault.getName() != null )
+			{
+				result.addAll( operation.getFault( soap12Fault.getName() ).getMessage().getOrderedParts( null ) );
+			}
+			else
+			{
+				result.addAll( operation.getFault( faultName ).getMessage().getOrderedParts( null ) );
+			}
+		}
+
+		return result.toArray( new Part[result.size()] );
+	}
+
+	public static String findSoapFaultPartName( WsdlContext wsdlContext, BindingOperation bindingOperation,
+				String message ) throws Exception
+	{
+		if( WsdlUtils.isOutputSoapEncoded( bindingOperation ) )
+			throw new Exception( "SOAP-Encoded messages not supported" );
+
+		XmlObject xml = XmlObject.Factory.parse( message );
+		XmlObject[] msgPaths = xml.selectPath( "declare namespace env='"
+					+ wsdlContext.getSoapVersion().getEnvelopeNamespace() + "';" + "$this/env:Envelope/env:Body/env:Fault" );
+		if( msgPaths.length == 0 )
+			return null;
+
+		XmlObject msgXml = msgPaths[0];
+
+		Map faults = bindingOperation.getBindingFaults();
+		for( Iterator<BindingFault> i = faults.values().iterator(); i.hasNext(); )
+		{
+			BindingFault bindingFault = i.next();
+			String faultName = bindingFault.getName();
+			Part[] faultParts = WsdlUtils.getFaultParts( bindingOperation, faultName );
+			Part part = faultParts[0];
+
+			QName elementName = part.getElementName();
+			if( elementName != null )
+			{
+				XmlObject[] faultPaths = msgXml.selectPath( "declare namespace env='"
+							+ wsdlContext.getSoapVersion().getEnvelopeNamespace() + "';" + "declare namespace ns='"
+							+ elementName.getNamespaceURI() + "';" + "//env:Fault/detail/ns:" + elementName.getLocalPart() );
+
+				if( faultPaths.length == 1 )
+					return faultName;
+			}
+			// this is not allowed by Basic Profile.. remove?
+			else if( part.getTypeName() != null )
+			{
+				QName typeName = part.getTypeName();
+				XmlObject[] faultPaths = msgXml.selectPath( "declare namespace env='"
+							+ wsdlContext.getSoapVersion().getEnvelopeNamespace() + "';" + "declare namespace ns='"
+							+ typeName.getNamespaceURI() + "';" + "//env:Fault/detail/ns:" + part.getName() );
+
+				if( faultPaths.length == 1 )
+					return faultName;
+			}
+		}
+
+		return null;
+	}
+
+	public static Part[] getOutputParts( BindingOperation operation )
+	{
+		BindingOutput bindingOutput = operation.getBindingOutput();
+		if( bindingOutput == null )
+			return new Part[0];
+
+		List<Part> result = new ArrayList<Part>();
+		Output output = operation.getOperation().getOutput();
+		if( output == null )
+			return new Part[0];
+		
+		Message msg = output.getMessage();
+		if( msg != null )
+		{
+			SOAPBody soapBody = WsdlUtils.getExtensiblityElement( bindingOutput.getExtensibilityElements(), SOAPBody.class );
+	
+			if( soapBody == null || soapBody.getParts() == null )
+			{
+				SOAP12Body soap12Body = WsdlUtils.getExtensiblityElement( bindingOutput.getExtensibilityElements(),
+							SOAP12Body.class );
+	
+				if( soap12Body == null || soap12Body.getParts() == null )
+				{
+					result.addAll( msg.getOrderedParts( null ) );
+				}
+				else
+				{
+					Iterator i = soap12Body.getParts().iterator();
+					while( i.hasNext() )
+					{
+						String partName = ( String ) i.next();
+						Part part = msg.getPart( partName );
+	
+						result.add( part );
+					}
+				}
+			}
+			else
+			{
+				Iterator i = soapBody.getParts().iterator();
+				while( i.hasNext() )
+				{
+					String partName = ( String ) i.next();
+					Part part = msg.getPart( partName );
+	
+					result.add( part );
+				}
+			}
+		}
+		else
+		{
+			log.warn("Missing output message for binding operation [" + operation.getName() + "]");
+		}
+
+		return result.toArray( new Part[result.size()] );
+	}
+
+	public static boolean isMultipartRequest( Definition definition, BindingOperation bindingOperation )
+	{
+		return WsdlUtils.getExtensiblityElement( bindingOperation.getBindingInput().getExtensibilityElements(),
+					MIMEMultipartRelated.class ) != null;
+	}
+
+	public static String getSoapEndpoint( Port port )
+	{
+		SOAPAddress soapAddress = WsdlUtils.getExtensiblityElement( port.getExtensibilityElements(), SOAPAddress.class );
+		if( soapAddress != null )
+			try
+			{
+				return URLDecoder.decode( soapAddress.getLocationURI(), "UTF-8" );
+			}
+			catch( UnsupportedEncodingException e )
+			{
+				e.printStackTrace();
+				return soapAddress.getLocationURI();
+			}
+
+		SOAP12Address soap12Address = WsdlUtils.getExtensiblityElement( port.getExtensibilityElements(),
+					SOAP12Address.class );
+		if( soap12Address != null )
+			try
+			{
+				return URLDecoder.decode( soap12Address.getLocationURI(), "UTF-8" );
+			}
+			catch( UnsupportedEncodingException e )
+			{
+				e.printStackTrace();
+				return soap12Address.getLocationURI();
+			}
+
+		return null;
+	}
+
+	public static boolean replaceSoapEndpoint( Port port, String endpoint )
+	{
+		SOAPAddress soapAddress = WsdlUtils.getExtensiblityElement( port.getExtensibilityElements(), SOAPAddress.class );
+		if( soapAddress != null )
+		{
+			soapAddress.setLocationURI( endpoint );
+			return true;
+		}
+		
+		SOAP12Address soap12Address = WsdlUtils.getExtensiblityElement( port.getExtensibilityElements(),
+					SOAP12Address.class );
+		if( soap12Address != null )
+		{
+			soap12Address.setLocationURI( endpoint );
+			return true;
+		}
+		
+		return false;
+	}
+
+	public static String getSoapBodyNamespace( List list )
+	{
+		SOAPBody soapBody = WsdlUtils.getExtensiblityElement( list, SOAPBody.class );
+		if( soapBody != null )
+			return soapBody.getNamespaceURI();
+
+		SOAP12Body soap12Body = WsdlUtils.getExtensiblityElement( list, SOAP12Body.class );
+		if( soap12Body != null )
+			return soap12Body.getNamespaceURI();
+
+		return null;
+	}
+
+	public static final class NonSchemaImportingWsdlReaderImpl extends WSDLReaderImpl
+	{
+		@SuppressWarnings("unchecked")
+		@Override
+		protected ExtensibilityElement parseSchema( Class parentType, Element el, Definition def, ExtensionRegistry extReg )
+					throws WSDLException
+		{
+			QName elementType = QNameUtils.newQName( el );
+
+			ExtensionDeserializer exDS = extReg.queryDeserializer( parentType, elementType );
+
+			// Now unmarshall the DOM element.
+			ExtensibilityElement ee = exDS.unmarshall( parentType, elementType, el, def, extReg );
+
+			return ee;
+		}
+
+	}
+
+	/**
+	 * A SOAP-Header wrapper
+	 * 
+	 * @author ole.matzura
+	 */
+
+	public interface SoapHeader
+	{
+		public QName getMessage();
+
+		public String getPart();
+	}
+
+	/**
+	 * SOAP 1.1 Header implementation
+	 * 
+	 * @author ole.matzura
+	 */
+
+	public static class Soap11Header implements SoapHeader
+	{
+		private final SOAPHeader soapHeader;
+
+		public Soap11Header( SOAPHeader soapHeader )
+		{
+			this.soapHeader = soapHeader;
+		}
+
+		public QName getMessage()
+		{
+			return soapHeader.getMessage();
+		}
+
+		public String getPart()
+		{
+			return soapHeader.getPart();
+		}
+	}
+
+	/**
+	 * SOAP 1.2 Header implementation
+	 * 
+	 * @author ole.matzura
+	 */
+
+	public static class Soap12Header implements SoapHeader
+	{
+		private final SOAP12Header soapHeader;
+
+		public Soap12Header( SOAP12Header soapHeader )
+		{
+			this.soapHeader = soapHeader;
+		}
+
+		public QName getMessage()
+		{
+			return soapHeader.getMessage();
+		}
+
+		public String getPart()
+		{
+			return soapHeader.getPart();
+		}
+	}
+
+	public static List<SoapHeader> getSoapHeaders( List list )
+	{
+		List<SoapHeader> result = new ArrayList<SoapHeader>();
+
+		List<SOAPHeader> soapHeaders = WsdlUtils.getExtensiblityElements( list, SOAPHeader.class );
+		if( soapHeaders != null && !soapHeaders.isEmpty() )
+		{
+			for( SOAPHeader header : soapHeaders )
+				result.add( new Soap11Header( header ) );
+		}
+		else
+		{
+			List<SOAP12Header> soap12Headers = WsdlUtils.getExtensiblityElements( list, SOAP12Header.class );
+			if( soap12Headers != null && !soap12Headers.isEmpty() )
+			{
+				for( SOAP12Header header : soap12Headers )
+					result.add( new Soap12Header( header ) );
+			}
+		}
+
+		return result;
+	}
+
+	public static synchronized Definition readDefinition( String wsdlUrl ) throws Exception
+	{
+		if( wsdlReader == null )
+		{
+			WSDLFactory factory = WSDLFactory.newInstance();
+			wsdlReader = factory.newWSDLReader();
+			wsdlReader.setFeature( "javax.wsdl.verbose", true );
+			wsdlReader.setFeature( "javax.wsdl.importDocuments", true );
+		}
+
+		return wsdlReader.readWSDL( new UrlWsdlLoader( wsdlUrl ) );
+	}
+
+	public static SchemaType getSchemaTypeForPart( WsdlContext wsdlContext, javax.wsdl.Part part ) throws Exception
+	{
+		SchemaType schemaType = null;
+		QName elementName = part.getElementName();
+
+		if( elementName != null )
+		{
+			SchemaGlobalElement elm = wsdlContext.getSchemaTypeLoader().findElement( elementName );
+			if( elm != null )
+			{
+				schemaType = elm.getType();
+			}
+			else
+				WsdlRequest.log.error( "Could not find element [" + elementName + "] specified in part [" + part.getName()
+							+ "]" );
+		}
+		else
+		{
+			QName typeName = part.getTypeName();
+
+			if( typeName != null )
+			{
+				schemaType = wsdlContext.getSchemaTypeLoader().findType( typeName );
+
+				if( schemaType == null )
+				{
+					WsdlRequest.log.error( "Could not find type [" + typeName + "] specified in part [" + part.getName()
+								+ "]" );
+				}
+			}
+		}
+		return schemaType;
+	}
+
+	public static SchemaGlobalElement getSchemaElementForPart( WsdlContext wsdlContext, javax.wsdl.Part part )
+				throws Exception
+	{
+		QName elementName = part.getElementName();
+
+		if( elementName != null )
+		{
+			return wsdlContext.getSchemaTypeLoader().findElement( elementName );
+		}
+
+		return null;
+	}
+
+	public static String replacePortEndpoint( WsdlInterface iface, InputSource inputSource, String endpoint )
+				throws WSDLException
+	{
+		WSDLReader wsdlReader = new NonSchemaImportingWsdlReaderImpl();
+
+		wsdlReader.setFeature( "javax.wsdl.verbose", true );
+		wsdlReader.setFeature( "javax.wsdl.importDocuments", false );
+
+		Definition definition = wsdlReader.readWSDL( null, inputSource );
+
+		boolean updated = false;
+		Map map = definition.getServices();
+		for( Iterator i = map.values().iterator(); i.hasNext(); )
+		{
+			Service service = ( Service ) i.next();
+			Map portMap = service.getPorts();
+			for( Iterator i2 = portMap.values().iterator(); i2.hasNext(); )
+			{
+				Port port = ( Port ) i2.next();
+				if( port.getBinding().getQName().equals( iface.getBindingName() ) )
+				{
+					if( replaceSoapEndpoint( port, endpoint ))
+						updated = true;
+				}
+			}
+		}
+
+		if( updated )
+		{
+			StringWriter writer = new StringWriter();
+			
+			Map nsMap = definition.getNamespaces();
+			if( !nsMap.values().contains( Constants.SOAP_HTTP_BINDING_NS ))
+				definition.addNamespace( "soaphttp", Constants.SOAP_HTTP_BINDING_NS );
+			
+			new WSDLWriterImpl().writeWSDL( definition, writer );
+			return writer.toString();
+		}
+
+		return null;
+	}
+
+	public static BindingOperation findBindingOperation( Binding binding, String bindingOperationName, String inputName, String outputName )
+	{
+		if( binding == null )
+	      return null;
+	   
+	   if( inputName == null )
+	      inputName = ":none";
+	   
+	   if( outputName == null )
+	      outputName = ":none";
+	   
+	   BindingOperation result = binding.getBindingOperation( bindingOperationName, inputName, outputName );
+	
+	   if( result == null && (inputName.equals( ":none" ) || outputName.equals( ":none" )))
+	   {
+	      // fall back to this behaviour for WSDL4j 1.5.0 compatibility
+	      result = binding.getBindingOperation( bindingOperationName, 
+	               inputName.equals( ":none" ) ? null : inputName, outputName.equals( ":none" ) ? null : outputName ); 
+	   }
+	   return result;
+	}
+
+	public static boolean isHeaderInputPart( Part part, Message message, BindingOperation bindingOperation )
+	{
+		List<SOAPHeader> headers = WsdlUtils.getExtensiblityElements( 
+					bindingOperation.getBindingInput().getExtensibilityElements(), SOAPHeader.class );
+		
+		if( headers == null || headers.isEmpty() )
+			return false;
+		
+		for( SOAPHeader header : headers )
+		{
+			if( message.getQName().equals( header.getMessage() ) &&
+				 part.getName().equals( header.getPart() ))
+				return true;
+		}
+		
+		return false;
+	}
+	
+	public static boolean isHeaderOutputPart( Part part, Message message, BindingOperation bindingOperation )
+	{
+		List<SOAPHeader> headers = WsdlUtils.getExtensiblityElements( 
+					bindingOperation.getBindingOutput().getExtensibilityElements(), SOAPHeader.class );
+		
+		if( headers == null || headers.isEmpty() )
+			return false;
+		
+		for( SOAPHeader header : headers )
+		{
+			if( message.getQName().equals( header.getMessage() ) &&
+				 part.getName().equals( header.getPart() ))
+				return true;
+		}
+		
+		return false;
+	}
+
+	public static DefinitionCacheConfig cacheWsdl( WsdlLoader loader ) throws Exception
+	{
+		DefinitionCacheConfig definitionCache = DefinitionCacheConfig.Factory.newInstance();
+		definitionCache.setRootPart( loader.getBaseURI() );
+		definitionCache.setType( DefinitionCacheTypeConfig.TEXT );
+		
+		Map<String, XmlObject> urls = SchemaUtils.getDefinitionParts( loader );
+		
+		for( Iterator<String> i = urls.keySet().iterator(); i.hasNext(); )
+		{
+			DefintionPartConfig definitionPart = definitionCache.addNewPart();
+			String url = i.next();
+			definitionPart.setUrl( url );
+			XmlObject xmlObject = urls.get( url );
+			Node domNode = xmlObject.getDomNode();
+			
+			if( domNode.getNodeType() == Node.DOCUMENT_FRAGMENT_NODE )
+			{
+				Node node = ((DocumentFragment)domNode).getFirstChild(); 
+				if( node.getNodeType() == Node.TEXT_NODE )
+				{
+					domNode = XmlUtils.parseXml( node.getNodeValue() );
+					xmlObject = XmlObject.Factory.parse( domNode );
+				}
+			}
+
+			Element contentElement = (Element)((Document)domNode).getDocumentElement();
+				
+			Node newDomNode = definitionPart.addNewContent().getDomNode();
+			newDomNode.appendChild( newDomNode.getOwnerDocument().createTextNode( xmlObject.toString() ) );
+			definitionPart.setType( contentElement.getNamespaceURI());
+		}		
+		
+		return definitionCache;
+	}
+}

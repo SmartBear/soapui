@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Template Driven Web Service Testing - Tutorial</title>
+    </properties>
+    <body>
+		<section name="Template Driven Testing">
+		<p>Template Driven testing is an extension to Data Driven testing where the same TestCase is run for a variable 
+		number of input values read from some external source. The example given here extends the Data Driven Testing
+		example to read a list of authors and their expected minimum books from a text file and then run the TestCase for
+		each author and validate the number of books found.</p>
+		<p>To achieve this, we need to extend and modify the Data Driven example as follows:</p>
+		<ul>
+		<li>Create an initial Groovy step that reads the external values and stores them in the current 
+		TestRunContext together with an index telling which author is currently tested</li>
+		<li>Create another Groovy step that assigns a set of values to the Properties Step for each TestCase run</li>
+		<li>Create a Groovy step at the end of the TestCase that checks the number of hits and loops back to the beginning if there 
+		are more test values to test</li>
+		</ul>
+		<p>Here we go!</p>
+		
+		<subsection name="Read external values">
+		<p>The following example script reads all lines of the "testdata.txt" file into a list stored in the TestRunContext. 
+		Each line contains an author name and a number of minimum hits separated by a comma, for example "King,230"</p>
+		<source>def list = []
+new File( "testdata.txt" ).eachLine { line -&gt; list.add( line ) }
+
+log.info( "Read " + list.size() + " test values.." )
+
+context.setProperty( "values", list )
+context.setProperty( "index", 0 )</source>
+		<p>After reading the file into the list, it is stored in the TestRunContext together with an index telling which 
+		"row" is currently tested</p>
+		</subsection>
+		
+		<subsection name="Init properties with test values">
+		<p>This script reads the current row and assigns that rows author to the Properties Steps "Author" property</p>
+		<source>def values = context.getProperty( "values" )
+def index = context.getProperty( "index" );
+
+def str = values[index]
+def ix = str.indexOf( "," )
+def author = str.substring( 0, ix )
+
+def props = testRunner.testCase.getTestStepByName( "Properties" )
+props.setPropertyValue( "Author", author )
+
+log.info( "set author to [" + author + "]" )</source>
+		<p>After this, the previously available Property Transfers and Requests are run as configured:</p>
+		<ul>
+		<li>The first transfer copies the author and subscription id to the search request</li>
+		<li>The request performs the book search</li>
+		<li>The second transfer copies the number of hits to the "ResultCount" property</li>
+		</ul>
+		</subsection>
+		
+		<subsection name="Validate and move to next">
+		<p>This step checks the number of hits against the provided text value and fails if the number of hits is not
+		sufficient. Otherwise, the script advances the test index to the next row and loops back if that row exists</p>
+		<source>def values = context.getProperty( "values" )
+def index = context.getProperty( "index" );
+
+def str = values[index]
+def ix = str.indexOf( "," )
+
+def props = testRunner.testCase.getTestStepByName( "Properties" )
+def resultCount = props.getPropertyValue( "ResultCount" )
+def count = str.substring( ix+1 )
+def author = props.getPropertyValue( "Author" )
+
+if( count > resultCount )
+{
+   throw new Exception( "not enough hits for author [" + author + 
+                        "], expected " + count + ", got " + resultCount )
+}
+else
+{
+   log.info "got " + resultCount + " hits for [" + author + "], required " + count
+   if( ++index &lt; values.size() )
+   {
+      context.setProperty( "index", index )
+      testRunner.gotoStepByName( "Init Run" )
+   }
+   else
+   {
+      log.info "Finished TestCase, tested " + values.size() + " values"
+   }
+}</source>
+		</subsection>
+		
+		<subsection name="Running the TestCase">
+		<columns><column><div>The TestCase should now look as follows:</div><img src="images/template1.gif" alt="Template Driven Web Service Test"/></column>
+		<column><div>and running it with the following testdata.txt</div>
+		<source>coupland,150
+king,150
+shakespeare,150</source><p>shows the following result in the Groovy log:</p> 
+
+		<img src="images/template2.gif" alt="Groovy Log in Template Driven test for SOAP"/></column></columns>
+		<p>The following image shows a simple LoadTest which ran the TestCase 5 times, as you can see each step in the loop was called
+		15 times in total, i.e. once for each test value</p>
+		<p align="center"><img src="images/template3.gif" alt="Load Test based on a Template Driven Test"/></p>
+		</subsection>
+
+		<p><hr size="1"/>Next: <a href="interactive.html">Interactive Web Service Testing</a></p>
+		
+		</section>
+    </body>
+</document>
+

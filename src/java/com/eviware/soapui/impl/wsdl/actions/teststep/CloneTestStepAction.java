@@ -1,0 +1,254 @@
+/*
+ *  soapUI, copyright (C) 2004-2008 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
+package com.eviware.soapui.impl.wsdl.actions.teststep;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
+
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.WorkspaceImpl;
+import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
+import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.support.SoapUIException;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.XFormField;
+import com.eviware.x.form.XFormFieldListener;
+import com.eviware.x.form.support.ADialogBuilder;
+import com.eviware.x.form.support.AField;
+import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
+
+/**
+ * Clones a WsdlTestStep
+ * 
+ * @author Ole.Matzura
+ */
+
+public class CloneTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
+{
+	private static final String CREATE_NEW_OPTION = "<Create New>";
+	private XFormDialog dialog;
+
+	public CloneTestStepAction() 
+   {
+      super( "Clone TestStep", "Clones this TestStep" );
+   }
+	
+   public void perform( WsdlTestStep testStep, Object param )
+	{
+   	if( dialog == null )
+   	{
+		   dialog = ADialogBuilder.buildDialog( Form.class );
+		   dialog.getFormField( Form.PROJECT ).addFormFieldListener( new XFormFieldListener() {
+
+				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+				{
+					if( newValue.equals( CREATE_NEW_OPTION ))
+						dialog.setOptions( Form.TESTSUITE, new String[] {CREATE_NEW_OPTION} );
+					else
+					{
+						Project project = SoapUI.getWorkspace().getProjectByName( newValue );
+						String[] names = ModelSupport.getNames( project.getTestSuiteList(), new String[] {CREATE_NEW_OPTION} );
+						dialog.setOptions( Form.TESTSUITE, names);
+						dialog.setValue( Form.TESTSUITE, names[0] );
+						
+						if( names.length > 1 )
+						{
+							TestSuite testSuite = project.getTestSuiteByName( names[0] );
+							dialog.setOptions( Form.TESTCASE, 
+									ModelSupport.getNames( testSuite.getTestCaseList(), new String[] {CREATE_NEW_OPTION} ));
+						}
+						else
+						{
+							dialog.setOptions( Form.TESTCASE, new String[] {CREATE_NEW_OPTION} );
+						}
+					}
+				}} );
+		   
+		   dialog.getFormField( Form.TESTSUITE ).addFormFieldListener( new XFormFieldListener() {
+
+				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+				{
+					if( newValue.equals( CREATE_NEW_OPTION ))
+					{
+						dialog.setOptions( Form.TESTCASE, new String[] {CREATE_NEW_OPTION} );
+					}
+					else
+					{
+						String projectName = dialog.getValue( Form.PROJECT );
+						Project project = SoapUI.getWorkspace().getProjectByName( projectName );
+						TestSuite testSuite = project.getTestSuiteByName( newValue );
+						dialog.setOptions( Form.TESTCASE, testSuite == null ? new String[] {CREATE_NEW_OPTION} :	
+								ModelSupport.getNames( testSuite.getTestCaseList(), new String[] {CREATE_NEW_OPTION} ));
+					}
+				}} );
+		   
+   	}
+   	
+   	dialog.setBooleanValue(Form.MOVE, false);
+   	dialog.setValue( Form.NAME, "Copy of " + testStep.getName() );
+   	WorkspaceImpl workspace = testStep.getTestCase().getTestSuite().getProject().getWorkspace();
+		dialog.setOptions( Form.PROJECT, 
+					ModelSupport.getNames( workspace.getOpenProjectList(), new String[] {CREATE_NEW_OPTION} ) );
+		
+		dialog.setValue( Form.PROJECT, testStep.getTestCase().getTestSuite().getProject().getName() );
+		
+		dialog.setOptions( Form.TESTSUITE, 
+					ModelSupport.getNames( testStep.getTestCase().getTestSuite().getProject().getTestSuiteList(), new String[] {CREATE_NEW_OPTION} ) );
+		dialog.setValue( Form.TESTSUITE, testStep.getTestCase().getTestSuite().getName() );
+		
+		dialog.setOptions( Form.TESTCASE, 
+					ModelSupport.getNames( testStep.getTestCase().getTestSuite().getTestCaseList(), new String[] {CREATE_NEW_OPTION} ) );
+		dialog.setValue( Form.TESTCASE, testStep.getTestCase().getName() );
+		
+		if( dialog.show() )
+		{
+			String targetProjectName = dialog.getValue( Form.PROJECT );
+			String targetTestSuiteName = dialog.getValue( Form.TESTSUITE );
+			String targetTestCaseName = dialog.getValue( Form.TESTCASE );
+			String name = dialog.getValue( Form.NAME );
+			
+			WsdlProject project = testStep.getTestCase().getTestSuite().getProject();
+			WsdlTestSuite targetTestSuite = null;
+			WsdlTestCase targetTestCase = null;
+			Set<WsdlInterface> requiredInterfaces = new HashSet<WsdlInterface>();
+			
+			// to another project project?
+			if( !targetProjectName.equals( project.getName() ))
+			{
+				// get required interfaces
+				requiredInterfaces.addAll( testStep.getRequiredInterfaces() );
+				
+				project = ( WsdlProject ) workspace.getProjectByName( targetProjectName );
+				if( project == null )
+				{
+					targetProjectName = UISupport.prompt( "Enter name for new Project", "Clone TestStep", "" );
+					if( targetProjectName == null )
+						return;
+					
+					try
+					{
+						project = workspace.createProject( targetProjectName );
+					}
+					catch( SoapUIException e )
+					{
+						UISupport.showErrorMessage( e );
+					}
+					
+					if( project == null )
+						return;
+				}
+				
+				if( requiredInterfaces.size() > 0 && project.getInterfaceCount() > 0 )
+				{
+					Map<QName,WsdlInterface> bindings = new HashMap<QName,WsdlInterface>();
+					for( WsdlInterface iface : requiredInterfaces )
+					{
+						bindings.put( iface.getBindingName(), iface );
+					}
+					
+					for( Interface iface : project.getInterfaceList() )
+					{
+						bindings.remove( iface.getTechnicalId());
+					}
+
+					requiredInterfaces.retainAll( bindings.values() );
+				}
+				
+				if( requiredInterfaces.size() > 0 )
+				{
+					String msg = "Target project [" + targetProjectName  +"] is missing required interfaces;\r\n\r\n";
+					for( WsdlInterface iface : requiredInterfaces )
+					{
+						msg += iface.getName() + " [" + iface.getBindingName() + "]\r\n";
+					}
+					msg += "\r\nThese will be cloned to the targetProject as well";
+					
+					if( !UISupport.confirm( msg, "Clone TestStep" ))
+						return;
+					
+					for( WsdlInterface iface : requiredInterfaces )
+					{
+						project.importInterface( iface, true, true );
+					}
+				}
+			}
+			 
+			targetTestSuite = project.getTestSuiteByName( targetTestSuiteName );
+	      if( targetTestSuite == null )
+	      {
+	      	targetTestSuiteName = UISupport.prompt( "Specify name for new TestSuite", "Clone TestStep", 
+	      				"Copy of " + testStep.getTestCase().getTestSuite().getName() );
+	      	if( targetTestSuiteName == null )
+	      		return;
+	      	
+	      	targetTestSuite = project.addNewTestSuite( targetTestSuiteName );
+	      }
+	      
+	      targetTestCase = targetTestSuite.getTestCaseByName( targetTestCaseName );
+	      if( targetTestCase == null )
+	      {
+	      	targetTestCaseName = UISupport.prompt( "Specify name for new TestCase", "Clone TestStep", 
+	      				"Copy of " + testStep.getTestCase().getName() );
+	      	if( targetTestCaseName == null )
+	      		return;
+	      	
+	      	targetTestCase = targetTestSuite.addNewTestCase( targetTestCaseName );
+	      }
+			
+	      boolean move = dialog.getBooleanValue( Form.MOVE );
+	      
+	      WsdlTestStep newTestStep = targetTestCase.importTestStep( testStep, name, -1, !move );
+			UISupport.select( newTestStep );
+			
+			if( move )
+			{
+			   testStep.getTestCase().removeTestStep( testStep );
+			}
+		}
+   }
+   
+   @AForm(description = "Specify target Project/TestSuite/TestCase and name of cloned TestStep", name = "Clone TestStep",
+   			helpUrl=HelpUrls.CLONETESTSTEP_HELP_URL, icon=UISupport.TOOL_ICON_PATH)
+	protected interface Form
+	{
+   	@AField( name="TestStep Name", description = "The name of the cloned TestStep", type=AFieldType.STRING )
+		public final static String NAME = "TestStep Name";
+   	
+		@AField( name="Target TestCase", description = "The target TestCase for the cloned TestStep", type=AFieldType.ENUMERATION )
+		public final static String TESTCASE = "Target TestCase";
+
+		@AField( name="Target TestSuite", description = "The target TestSuite for the cloned TestStep", type=AFieldType.ENUMERATION )
+		public final static String TESTSUITE = "Target TestSuite";
+
+		@AField( name="Target Project", description = "The target Project for the cloned TestStep", type=AFieldType.ENUMERATION )
+		public final static String PROJECT = "Target Project";
+		
+		@AField( name="Move instead", description = "Moves the selected TestStep instead of copying", type=AFieldType.BOOLEAN )
+		public final static String MOVE = "Move instead";
+	}
+}

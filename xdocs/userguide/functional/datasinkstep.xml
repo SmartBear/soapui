@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Data Driven Web Service Testing - DataSinks</title>
+    </properties>
+    <body>
+		<section name="soapUI Pro DataSink Step">
+		<p>Often you want save the data when doing Web Service testing. This can be in to take a response and 
+		use it in later Requests, save info for logging purposes or even to actually populate a business database.</p>
+		
+		<p>This can be done in soapUI by writing a Groovy script, but is simplified in soapUI Pro.</p>
+	
+		<p>soapUI Pro includes a specialized DataSink TestStep that greatly eases the task of saving of data collected during 
+		a test to an external storage. The following DataSink types are supported:</p>
+		<ul>
+		<li><a href="#JDBC_DataSink">JDBC DataSink</a> - writes data to a JDBC datasource</li>
+		<li><a href="#Excel_DataSink">Excel DataSink</a> - writes data to an Excel (xls) file</li>
+		<li><a href="#File_DataSink">File DataSink</a> - writes data to a columnar data file</li>
+		<li><a href="#Groovy_DataSink">Groovy DataSink</a> - calls a Groovy Script for each set of data</li>
+		</ul>
+		
+		<subsection name="The soapUI Pro DataSink Editor">
+		<p>The DataSink editor is divided into 4 parts;</p>
+		<ul>
+		<li>A list of properties to the left containing the values to be saved.</li>
+		<li>A toolbar to the top right for selecting a DataSink and setting properties and options</li>
+		<li>A DataSink specific configuration panel to the right</li>
+		<li>A Data Log inspector at the bottom for displaying rows processed by the DataSink</li>
+		</ul>
+		<p align="center"><img src="images/datasink_editor.gif" alt="The soapUI Pro DataSink Editor"/></p>
+		<p>The list of Properties should contain those properties that will be passed to the configured Datasink, they 
+		are added/removed using the Add/Remove toolbar buttons. The DataSink dropdown selects the DataSink to use</p>
+		</subsection>
+		
+		<subsection name="soapUI Pro DataSink Options" >
+		<p>The DataSink Options dialog is as follows:</p>
+		<p align="center"><img src="images/datasink_options.gif" alt="The soapUI Pro DataSink Editor Options"/></p>
+		<p>The following settings are available:</p>
+		<ul>
+		<li><b>Shared</b> - controls whether this DataSink should be shared between threads in a LoadTest (see below)</li>
+		</ul>
+		</subsection>
+		
+		<subsection name="soapUI Pro DataSink Execution">
+		<p>Every time the TestCase execution flow passes the DataSink Step it will call the configured DataSink with
+		the current property values. Values should have been previously set by either a Groovy script or a property transfer,
+		or can alternatively contain a PropertyExpansion syntax.</p>
+		<p>It is possible to drag properties from the Navigator tree into the Properties table to either add new a new 
+		property containing a PropertyExpansion for the dragged property, or if dragged onto an existing propertys' value; 
+		to create a PropertyExpansion there instead.</p>
+		<p>The "Shared" option in the toolbar controls if the DataSink should be shared between threads during a LoadTest, 
+		meaning	that all running threads will write (synchronized) to the same DataSink instead of each creating their own.</p>
+		</subsection>
+
+		<subsection name="soapUI Pro JDBC DataSink">
+		<p>The JDBC DataSink has the following configuration panel:</p>
+		<p align="center"><img src="images/jdbc_datasink_config_panel.gif" alt="The soapUI Pro JDBC DataSink configuration panel"/></p>
+		<p>The 4 available options are pretty straight forward:</p>
+		<ul>
+		<li><b>Driver</b> - the JDBC Driver to load and use for this DataSink. Must be available in the soapUI classpath 
+		either by placing it in a soapui/bin/ext directory, the jre/lib/ext directory or by directly modifying the 
+		soapui.bat/.sh files to include the required jar files</li>
+		<li><b>Connection String</b> - the connection string to use</li>
+		<li><b>SQL Update</b> - the update statement to issue for the created connection, using Prepared Statement syntax 
+		(ie ? is used as value placeholder).</li> 
+		<li><b>Stored Procedure</b> - select if the SQL statement calls a stored procedure</li>
+		</ul>
+		</subsection>
+		
+		<subsection name="soapUI Pro Excel DataSink">
+		<p>The Excel DataSink has the following configuration panel:</p>
+		<p align="center"><img src="images/excel_datasink.gif" alt="The soapUI Pro Excel DataSink configuration panel"/></p>
+		<p>The 4 available options are pretty straight-forward:</p>
+		<ul>
+		<li><b>File</b> - the source excel file to use as a template for adding data</li>
+		<li><b>Out File</b> - the target excel file to write. If not specified the data is written to the source file</li>
+		<li><b>Worksheet</b> the worksheet to which the data should be added</li>
+		<li><b>Start at Cell</b> - the top-left cell to start at when writing data.</li> 
+		</ul>
+		</subsection>
+		
+		<subsection name="soapUI Pro File DataSink">
+		<p>The File DataSink has the following configuration panel:</p>
+		<p align="center"><img src="images/file_datasink_config_panel.gif" alt="The soapUI Pro File DataSink configuration panel"/></p>
+		<p>Files will be written in a simple row format, using the specified separator. The available options are:</p>
+		<ul>
+		<li>File - the file to write to</li>
+		<li>Separator - the separator for the columns in each row</li>
+		<li>Trim Values - values will be trimmed before writing</li>
+		<li>Append Values - values will be appended to an existing file instead of creating a new one when the TestCase starts</li>
+		</ul>
+		</subsection>
+
+		<subsection name="soapUI Pro Groovy DataSink">
+		<p>The Groovy DataSink has the following configuration panel:</p>
+		<p align="center"><img src="images/groovy_datasink_config_panel.gif" alt="The soapUI Pro Groovy DataSink configuration panel"/></p>
+		<p>This step allows any kind of DataSink to be created for a DataSink Step. Available context variables are:</p>
+		<ul>
+		<li>"context" - the current TestRunContext for storing context-specific values</li>
+		<li>"properties" - a Map containing the current property values</li>
+		<li>"testRunner" - the current TestRunner object</li>
+		<li>"log" - a log for logging</li>
+		</ul> 
+		</subsection>
+
+		 <p><hr size="1"/>Next: <a href="../loadtest/index.html">Load Testing Web Services with soapUI</a></p>
+		</section>
+    </body>
+</document>

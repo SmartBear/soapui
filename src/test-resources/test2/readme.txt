@@ -1,0 +1,1 @@
+This setup uses relative import to xsds, include from xsds

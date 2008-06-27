@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:tns="http://testcase/one" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://testcase/one" elementFormDefault="qualified" attributeFormDefault="unqualified">
+   <xs:include schemaLocation="common.xsd"/>
+   <xs:complexType name="OneType">
+      <xs:sequence>
+         <xs:element name="shared" type="tns:SharedType"/>
+      </xs:sequence>
+   </xs:complexType>
+</xs:schema>

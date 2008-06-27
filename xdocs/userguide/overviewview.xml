@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Readable Web Service messages - soapUI Pro Overview View</title>
+    </properties>
+    <body>
+		<section name="Overview View">
+		<p>soapUI Pro includes an Overview View for visualizing response or mock-request messages in a form-editor fashion.</p>
+		<p>Each section contains links (far right) to the corresponding nodes in the XML or Outline editor. Text values have
+		a right-button menu for copying the value to the clipboard and opening URLs in an external browser; URL's are 
+		displayed in blue and are directly clickable for opening in an external browser.</p>
+		<p align="center"><img src="images/overviewview.gif" alt="An example of making Message viewing easy for Web Services"/></p>
+		 <p><hr size="1"/>Next: <a href="outlineeditor.html">Structured Outline Editor for Web Services</a></p>
+		</section>
+    </body>
+</document>

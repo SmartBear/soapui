@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inspection xmlns="http://schemas.xmlsoap.org/ws/2001/10/inspection/"
+xmlns:wsilwsdl="http://schemas.xmlsoap.org/ws/2001/10/inspection/wsdl/"
+xmlns:wsiluddi="http://schemas.xmlsoap.org/ws/2001/10/inspection/uddi/"
+xmlns:uddi="urn:uddi-org:api">
+<service>
+<abstract xml:lang="en-US">
+
+</abstract>
+<description referencedNamespace="http://schemas.xmlsoap.org/wsdl/" location="attachment-test.wsdl">
+</description>
+</service>
+<service>
+<abstract xml:lang="en-US">
+
+</abstract>
+<description referencedNamespace="http://schemas.xmlsoap.org/wsdl/" location="attachment-test.wsdl">
+</description>
+</service>
+</inspection>
+

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>WSDL Test Coverage - soapUI</title>
+    </properties>
+    <body>
+		<section name="Project Coverage">
+		<p>Project Coverage is the main <a href="../coverage.html">Coverage</a> analysis point for Test Coverage, 
+		allowing you to run all tests in your project and see the resulting Coverage analysis. 
+		Apart from the standard Coverage panel, the toolbar includes a Run/Cancel/Progress bar that will run all 
+		TestSuites in the current project, continuously updating coverage as they execute.</p>
+		<p>The bottom of the panel has been extended with a "Run Log" inspector which shows ongoing output from 
+		the running TestSuites/TestCases</p>
+		<p align="center"><img src="images/coverage_1.gif" alt="WSDL Test Coverage in soapUI"/></p>
+
+		 <p><hr size="1"/>Next: <a href="requirements.html">Web Service Project Requirements </a></p>
+		</section>
+    </body>
+</document>

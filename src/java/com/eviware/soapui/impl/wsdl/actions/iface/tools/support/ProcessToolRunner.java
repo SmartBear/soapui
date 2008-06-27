@@ -1,0 +1,236 @@
+/*
+ *  soapUI, copyright (C) 2004-2008 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
+package com.eviware.soapui.impl.wsdl.actions.iface.tools.support;
+
+import java.io.InputStream;
+import java.util.List;
+
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.support.UISupport;
+
+/**
+ * ToolRunner for running command-line processes
+ * 
+ * @author ole.matzura
+ */
+
+public class ProcessToolRunner implements ToolRunner
+{
+	private final ProcessBuilder [] builders;
+	private boolean running;
+	private Process process;
+	private RunnerContext context;
+	private final String name;
+	private final ModelItem modelItem;
+	private boolean canCancel = true;
+	private boolean showLog = true;
+
+	public ProcessToolRunner( ProcessBuilder builder, String name, ModelItem modelItem )
+	{
+		this( new ProcessBuilder[] {builder}, name, modelItem);
+	}
+	
+	public ProcessToolRunner(ProcessBuilder [] builders, String name, ModelItem modelItem)
+	{
+		this.builders = builders;
+		this.name = name;
+		this.modelItem = modelItem;
+	}
+
+	public ProcessBuilder [] getBuilders()
+	{
+		return builders;
+	}
+	
+	public Process getProcess()
+	{
+		return process;
+	}
+
+	public boolean isRunning()
+	{
+		return running;
+	}
+	
+	public void cancel()
+	{
+		getProcess().destroy();
+		try
+		{
+			getProcess().waitFor();
+		}
+		catch( InterruptedException e )
+		{
+			e.printStackTrace();
+		}
+		
+		running = false;
+	}
+
+	public void run()
+	{
+		try
+		{
+			int exitCode = -1;
+			
+			beforeRun( context );
+			
+			for( int c = 0; c < builders.length; c++ )
+			{
+				beforeProcess( process, context );
+
+				logRunInfo( builders[c] );
+				process = builders[c].start();
+				if( c == 0 )
+					context.setStatus( RunnerContext.RunnerStatus.RUNNING );
+				
+				running = true;
+				
+				InputStream in = process.getInputStream();
+				InputStream err = process.getErrorStream();
+				
+				exitCode = -1;
+				
+				while( exitCode == -1 && running )
+				{
+					try 
+					{
+						exitCode = process.exitValue();
+						break;
+					} 
+					catch (IllegalThreadStateException e) 
+					{
+					}
+					finally
+					{
+						while( in.available() > 0  )
+						{
+							byte [] data = new byte[in.available()];
+							in.read( data );
+	
+							context.log( new String( data ) );
+						}
+						
+						while( err.available() > 0  )
+						{
+							byte [] data = new byte[err.available()];
+							err.read( data );
+	
+							context.logError( new String( data ) );
+						}
+					}
+					
+					Thread.sleep( 25 );
+				}
+				
+				afterProcess( process, context );
+			}
+			
+         context.setStatus( RunnerContext.RunnerStatus.FINISHED );
+         
+         if( running )
+			{
+				running = false;
+				afterRun( exitCode, context );
+			}
+		}
+		catch (Exception ex)
+		{
+			context.setStatus( RunnerContext.RunnerStatus.ERROR );
+			UISupport.showErrorMessage( ex );
+			running = false;
+			afterRun( -1, context );
+		}
+      finally
+      {
+         context.disposeContext();
+      }
+	}
+
+	protected void beforeRun(RunnerContext context)
+	{
+	}
+
+	protected void beforeProcess(Process process2, RunnerContext context)
+	{
+	}
+
+	protected void afterProcess(Process process2, RunnerContext context)
+	{
+	}
+
+	protected void afterRun(int exitCode, RunnerContext context)
+	{
+		if (exitCode == 0)
+			UISupport.showInfoMessage("Execution finished successfully", context.getTitle() );
+		else
+			UISupport.showInfoMessage("Execution finished with errorCode " + exitCode
+					+ ",\r\nplease check log for error messages", context.getTitle());
+	}
+
+	private void logRunInfo(ProcessBuilder builder)
+	{
+		List<String> args = builder.command();
+		StringBuffer buf = new StringBuffer();
+		for( int c = 0; c < args.size(); c++ )
+		{
+			if( c > 0 )
+				buf.append( ' ' );
+			
+			buf.append( args.get( c ));
+		}
+		
+		context.log( "directory: " + builder.directory().getAbsolutePath() + "\r\n" );
+		context.log( "command: " + buf.toString() + "\r\n" );
+	}
+
+	public void setContext(RunnerContext context)
+	{
+		this.context = context;
+	}
+
+	public ModelItem getModelItem()
+	{
+		return modelItem;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public boolean canCancel()
+	{
+		return canCancel;
+	}
+
+	public boolean showLog()
+	{
+		return showLog;
+	}
+
+	public void setCanCancel(boolean canCancel )
+	{
+		this.canCancel = canCancel;
+	}
+
+	public void setShowLog(boolean showLog)
+	{
+		this.showLog = showLog;
+	}
+
+	public String getDescription()
+	{
+		return null;
+	}
+}

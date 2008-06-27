@@ -1,0 +1,273 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>soapUI Preferences</title>
+    </properties>
+    <body>
+		<section name="soapUI Preferences">
+		<p>The preferences dialog opened when selecting the "Preferences" option from the file menu contains the
+		following tabs:</p>
+		<table><tr><th>Tab</th><th>Description</th></tr>
+		<tr><td><a href="#HTTP_Settings">HTTP Settings</a></td><td>Sets various HTTP-related options</td></tr>
+		<tr><td><a href="#Proxy_Settings">Proxy Settings</a></td><td>Sets HTTP Proxy address and authentication</td></tr>
+		<tr><td><a href="#SSL_Settings">SSL Settings</a></td><td>Sets SSL-related options</td></tr>
+		<tr><td><a href="#WSDL_Settings">WSDL Settings</a></td><td>Sets WSDL-related options</td></tr>
+		<tr><td><a href="#UI_Settings">UI Settings</a></td><td>Sets UI-related options</td></tr>
+		<tr><td><a href="#Editor_Settings">Editor Settings</a></td><td>Sets editor-related options</td></tr>
+		<tr><td><a href="#Integrated_Tools">Tools</a></td><td>Sets paths to integrated tools</td></tr>
+		<tr><td><a href="#WSI_Settings">WSI Settings</a></td><td>Sets WS-I Basic Profile validation options</td></tr>
+		<tr><td><a href="#Global_Properties">Global Properties</a></td><td>Manages Global Properties</td></tr>
+		<tr><td><a href="#soapUI_Pro_Settings">soapUI Pro Settings</a></td><td>Sets soapUI-Pro specific settings</td></tr>
+		<tr><td><a href="#Coverage_Settings">Coverage Settings</a></td><td>Coverate related settings</td></tr>
+		</table>
+		<subsection name="Import Preferences">
+		<p>The global File menu contains a menu action for importing global preferences from an existing installation.
+		In soapUI this will prompt for an existing soapui-settings file, in soapUI Pro the following dialog will be shown:</p>
+		<p align="center"><img src="images/import_prefs.gif" alt="Importing preferneces from an earlier soapUI Installation"/></p>
+		<p>The options are:</p>
+		<ul>
+		<li><b>Folder</b> - en existing soapUI installation folder</li>
+		<li><b>Import Preferences, Libraries, Scripts, and Extensions</b> - if the corresponding artifacts should be imported</li>
+		<li><b>Overwrite</b> - overwrites existing files..</li>
+		</ul>
+		<p>If importing more than the preferences, it is recommended to restart soapUI to avoid 
+		script or extension inconsistencies with the previous installation.</p>
+		</subsection>
+		
+
+		
+		<subsection name="HTTP Settings">
+		
+		<table><tr><th>Setting</th><th>Description</th></tr>
+		<tr><td>User-Agent Header</td><td>Sets the HTTP User-Agent Header. If none is specified the default HttpClient header
+		is used</td></tr>
+		<tr><td>Close connections after request</td><td>Disables HTTP Keep-Alives by requesting to close the HTTP connection
+		after each request. This will have a negative impact on performance but may give more realistic values during 
+		load testing</td></tr>
+		<tr><td>Authenticate Preemptively</td><td>Send Authentication headers with each request without first 
+		receiving an authentication challenge. This is a potential security hazard but will improve performance since only one 
+		request will be required for authenticated endpoints instead of two</td></tr>
+		<tr><td>Include request in time taken</td><td>Includes the time it took to write the request in time-taken</td></tr>
+		<tr><td>Include response in time taken</td><td>Includes the time it took to read the response body in time-taken</td></tr>
+		<tr><td>Preencoded Endpoints</td><td>Do not URL-encode endpoints, set this if your endpoint URLs are already
+		URL-encoded (containing for example %20 or %3A)</td></tr>
+		<tr><td>Socket Timeout</td><td>The socket timeout for HTTP requests in milliseconds</td></tr>
+		<tr><td>Max Response Size</td><td>The maximum number of bytes to read from a response (0 = unlimited)</td></tr>
+		<tr><td>Max Connections Per Host</td><td>The maximum number of simultaneous connections to a specific host. Increase this
+		value if you are running LoadTests with more than 500 threads on a particular host.</td></tr>
+		<tr><td>Max Total Connections</td><td>The total maximum number of connections. Increase this
+		value if you are running LoadTests with more than 2000 threads.</td></tr>
+		<tr><td>Bind Address</td><td>The local address to bind to when sending requests, can be overridden
+		on a request level (with the corresponding request property) and on a system level by setting 
+		the soapui.bind.address system variable.</td></tr>
+		<tr><td>Leave MockEngine</td><td>Will leave the MockEngine running even when all MockServices have stopped resulting in
+		much faster startup-times for new MockServices and 404 errors when trying to call a stopped MockService (instead of
+		connection failure)</td></tr>
+		</table>
+		
+		<p align="center"><img src="images/http_settings.gif" alt="The HTTP Settings Tab in soapUI"/></p>
+		
+		</subsection>
+		
+		<subsection name="Proxy Settings">
+		
+		<table><tr><th>Setting</th><th>Description</th></tr>
+		<tr><td>Proxy Host</td><td>The HTTP Proxy host to use</td></tr>
+		<tr><td>Proxy Port</td><td>The HTTP Proxy port to use</td></tr>
+		<tr><td>Proxy Username</td><td>The username sent for proxy authentications</td></tr>
+		<tr><td>Proxy Password</td><td>The password sent for proxy authentications</td></tr>
+		<tr><td>Excludes</td><td>A comma-separated list of hosts to exclude, for example "127.0.0.1:8080,myserver.com" 
+		will not use a proxy for 127.0.0.1 on port 8080 and myserver.com on any port.</td></tr>
+		</table>
+		
+		<p align="center"><img src="images/proxy_settings.gif" alt="The Proxy Settings Tab in soapUI"/></p>
+		</subsection>
+		
+		<subsection name="SSL Settings">
+		
+		<table><tr><th>Setting</th><th>Description</th></tr>
+		<tr><td>keyStore</td><td>Path to the keyStore to use when locating client certificates</td></tr>
+		<tr><td>keyStore password</td><td>the keyStore password</td></tr>
+		<tr><td>Enable Mock SSL</td><td>Enables SSL support for MockServices</td></tr>
+		<tr><td>Mock Port</td><td>The port for SSL connections</td></tr>
+		<tr><td>Mock KeyStore</td><td>The keystore to use for SSL certificates</td></tr>
+		<tr><td>Mock Password</td><td>The keystore password</td></tr>
+		<tr><td>Mock Key Password</td><td>The default keys password</td></tr>
+		<tr><td>Mock TrustStore</td><td>The truststore to use (optional)</td></tr>
+		<tr><td>Mock TrustStore Password</td><td>The truststore password</td></tr>
+		</table>
+		<p>Changing either of first two settings should not require a restart of soapUI to get activated. The MockService
+		related settings will get applied the next time the MockEngine is started.</p>
+		<p align="center"><img src="images/ssl_settings.gif" alt="The SSL Settings Tab in soapUI"/></p>
+		</subsection>
+		
+		<subsection name="WSDL Settings">
+		
+		<table><tr><th>Setting</th><th>Description</th></tr>
+		<tr><td>Cache WSDLs</td><td>Turns on and off caching of WSDL's as described under 
+		<a href="interfaces/index.html#Caching_Definitions">Caching Definitions</a>.</td></tr>
+		<tr><td>Sample Values</td><td>Generates example values in requests when creating from schema</td></tr>
+		<tr><td>Type Comment</td><td>Generates comments with type information in new requests</td></tr>
+		<tr><td>Include Optional</td><td>Always includes optional elements in generated requests</td></tr>
+		<tr><td>Pretty Print</td><td>Pretty prints response messages in response editor</td></tr>
+		<tr><td>Attachment Parts</td><td>Generates part-elements in request messages for mime-attachments in RPC
+		messages (required by some ws-stacks)</td></tr>
+		<tr><td>No Content-Type Validation</td><td>Does not validate the content-type of a mime-attachment against
+		the type(s) specified in the SOAP-Binding</td></tr>
+		<tr><td>Schema Directory</td><td>Specifies a directory containing schema (.xsd) files that should be automatically
+		added when parsing or validating wsdl or requests. Changing the contents of this directory requires a restart.</td></tr>
+		<tr><td>Name with Binding</td><td>Tells soapUI to name imported interfaces with the name of their corresponding
+		soap/http binding, and not with their portType (as described in <a href="interfaces/index.html">Interfaces</a>). This
+		ensures that WSDL containing bindings for both SOAP 1.1 and SOAP 1.2 will get unique names during import. This
+		setting defaults to true.</td></tr>
+		<tr><td>Excluded Types</td><td>A list of XML-Schema types and global elements in the form of name@namespace which 
+		will be used when generating sample requests and responses and input forms in the soapUI Pro Form editor. By default
+		the XML-Schema root element is added since it is quite common in .NET services and generates a sample xml fragment
+		of about 300 kb!.</td></tr>
+		<tr><td>Strict Schema Types</td><td>Check this to not allow schema type redefinitions in included/imported xsd:s for a
+		specific WSDL (default behavior in versions prior to 1.7.5)</td></tr>
+		<tr><td>Compression Limit</td><td>The minimum message size to compress in the soapUI project file for preserving 
+		space. Compression is performed with gzip and the result is base64 encoded into the project file. For large requests, 
+		this can save up to 90% file-space, but be aware that the requests are no longer readable or diffable.</td></tr>
+		<tr><td>Pretty Print Project Files</td><td>Pretty prints project files when they are saved, which makes it easier
+		to work with a source-control system (diffing, etc...). Be aware that when selecting this option the size of the 
+		project files will increase	substantially and also cached WSDLs and XSDs will be pretty-printed.</td></tr>
+		</table>
+		
+		<p align="center"><img src="images/wsdl_settings.gif" alt="The WSDL Settings Tab in soapUI"/></p>
+		</subsection>
+		
+		<subsection name="UI Settings">
+		
+		<table><tr><th>Setting</th><th>Description</th></tr>
+		<tr><td>Close Projects</td><td>Closes all projects at startup for improved startup-time and less memory 
+		consumption.</td></tr>
+		<tr><td>Order Projects</td><td>Sorts Projects in alphabetical order in the navigator.</td></tr>
+		<tr><td>Order Requests</td><td>Sorts Requests in alphabetical order in the navigator.</td></tr>
+		<tr><td>Order TestSuites</td><td>Sorts TestSuites in alphabetical order in the navigator.</td></tr>
+		<tr><td>Create Backup</td><td>Creates a backup copy of a projects project-file before saving.</td></tr>
+		<tr><td>Backup Folder</td><td>The folder where to save backups, if relative or empty the folder is relative to 
+		the project files folder</td></tr>
+		<tr><td>Auto Save Interval</td><td>Sets a project auto save interval (in minutes). If set over 0, soapUI will 
+		automatically save all projects that have no running tests (both Functional and Load) at the specified interval</td></tr>
+		<tr><td>Desktop Type</td><td>Selects which desktop layout to use. soapUI Pro adds a 
+		<a href="tabbeddesktop.html">Tabbed Desktop</a> as an alternative to the default layout. Changing this setting
+		will be applied when closing the preferences dialog.</td></tr>
+		<tr><td>Native L&amp;F</td><td>Turns off the use of the default Look &amp; Feel and uses the JRE default instead.
+		Requires a restart.</td></tr>
+		<tr><td>Do not disable Groovy Log</td><td>Keeps the groovy log active during LoadTests, which can be useful for
+		debugging, etc.</td></tr>
+		<tr><td>Show Log Tabs</td><td>Expands the log tabs when starting soapUI.</td></tr>
+		</table>
+		
+						<div class="infobox">
+			<div class="infobox_top"></div>
+      			<div class="infobox_overall">
+         			<div class="infobox_header">Did you know...?</div>
+					<div class="infobox_content">
+						<span class="pro_par">
+						<p>
+						In <b><i>soapUI Pro</i></b> you can set a whole fresh view of web Service Requests, the tabbed view.
+						</p>
+						<p>
+						<b><i>soapUI Pro</i></b> contains productivity enhancements as well as offers Professional World Class support. contains productivity enhancements as well as offers Professional World Class support.
+						</p>
+						</span>
+					</div>
+					<div class="infobox_footer">
+						<a onclick="javascript:urchinTracker('/relevantinfo')" href="http://www.eviware.com/trial" class="infoboxlink"><span class="ilink"> Try It </span> </a>
+					</div>
+      			</div>
+   				<div class="infobox_bottom"><div></div></div>
+		</div>
+		
+		<p align="center"><img src="images/ui_settings.gif" alt="The UI Settings Tab in soapUI"/></p>
+		</subsection>
+		
+		<subsection name="Editor Settings">
+		
+		<table><tr><th>Setting</th><th>Description</th></tr>
+		<tr><td>Editor Font</td><td>The font to be used by all XML Editors. The "Select Font" button opens a dialog
+		for selecting the desired font and size.</td></tr>
+		<tr><td>XML Line Numbers</td><td>Shows line-numbers by default in all XML-Editors (use Alt-L in editors to toggle).</td></tr>
+		<tr><td>Groovy Line Numbers</td><td>Shows line-numbers by default in all Groovy-Editors (use Alt-L in editors to toggle).</td></tr>
+		<tr><td>Disable auto-resize</td><td>Disables automatic resizing of request/response editors.</td></tr>
+		<tr><td>Tabbed Request view</td><td>Sets the tab-layout as the default layout for request/response
+		editors (see <a href="requests.html">Requests</a>).</td></tr>
+		
+		<tr><td>Validate Requests</td><td>Turns on automatic validation of requests before they are submitted
+		from a request editor. The validation performed is the same as when pressing Alt-V in the editor.</td></tr>
+		<tr><td>Abort on Invalid</td><td>Enabled in conjunction with "Validate Requests", if selected any requests
+		that fail validation will not be submitted.</td></tr>
+		<tr><td>Validate Responses</td><td>Turns on automatic validation of response messages when they are received
+		in a response editor. The validation performed is the same as when pressing Alt-V in the editor.</td></tr>
+		</table>
+		
+		<p align="center"><img src="images/editor_settings.gif" alt="The Editor Settings Tab in soapUI"/></p>
+		</subsection>
+		
+		<subsection name="Integrated Tools">
+		<p>Paths to integrated Tools as described under <a href="tools/index.html">Tool Integrations</a></p>
+		</subsection>
+		
+		
+		<subsection name="WSI Settings">
+		<p>These settings are related to WS-I Validation functionality as described under 
+		<a href="interfaces/wsi.html">WS-I Integrations</a>.</p>
+		<table><tr><th>Setting</th><th>Description</th></tr>
+		<tr><td>Verbose</td><td>Sets verbose output of WS-I tools</td></tr>
+		<tr><td>Results Type</td><td>Sets which results to show in the generated report</td></tr>
+		<tr><td>Message Entry</td><td>Shows message entries in report</td></tr>
+		<tr><td>Failure Message</td><td>Includes defined failure messages in report</td></tr>
+		<tr><td>Assertion Description</td><td>Includes description of each test assertion in report</td></tr>
+		<tr><td>Location</td><td>Local path to installed WS-I test tools</td></tr>
+		<tr><td>Show Log</td><td>Shows Log window when running WS-I tools</td></tr>
+		<tr><td>Output Folder</td><td>If specified, generated HTML reports will automatically be exported to this folder, 
+		which is required when running ws-i validation from the command-line or one of the Maven plug-ins</td></tr>
+		</table>
+		
+		<p align="center"><img src="interfaces/images/wsi_settings.gif" alt="The WS-I Settings Tab in soapUI"/></p>
+		</subsection>
+		
+		<subsection name="Global Properties">
+		<p>Manages globl properties, if a soapui.properties file has been specified, that files contents will be 
+		available in the table. The "Enable Override" option will make global properties to always override any other
+		property references (see <a href="properties.html#Global_Properties">Properties</a> for more information).</p>
+		<p align="center"><img src="images/globalproperty_settings.gif" alt="The Global Properties Tab in soapUI"/></p>
+		</subsection>
+		
+		<subsection name="soapUI Pro Settings">
+		<p>These settings are related to soapUI Pro specific functionality.</p>
+		<table><tr><th>Setting</th><th>Description</th></tr>
+		<tr><td>Default Request Editor</td><td>Sets the default Message Editor to use when a Request is opened</td></tr>
+		<tr><td>Default Response Editor</td><td>Sets the default Message Editor to use when a Response is received</td></tr>
+		<tr><td>Outline Editor Limit</td><td>Defines the maximum size of messages to handle in the outline editor; since
+		the outline editor consumes a large amount of memory, setting a limit related to one’s own memory settings is 
+		encouraged</td></tr>
+		<tr><td>Table Inspector Columns</td><td>Sets the maximum number of columns displayed by the 
+		<a href="messageinspectors.html#Table_Layout_Inspector">Table Inspector</a> (due to performance reasons).</td></tr>
+		<tr><td>Form Editor Limit</td><td>Defines the maximum size of messages to handle in the form editor; since
+		the outline editor consumes a large amount of memory, setting a limit related to one’s own memory settings is 
+		encouraged</td></tr>
+		<tr><td>Script Library</td><td>Sets the location for the local <a href="scripting.html#Groovy_Script_Library">Script Library</a>.</td></tr>
+		</table>
+		
+		<p align="center"><img src="images/pro_settings.gif" alt="The soapUI Pro Settings Tab in soapUI"/></p>
+		</subsection>
+		
+		<subsection name="Coverage Settings">
+		<p>These settings are related to soapUI Pro specific WSDL Coverage functionality.</p>
+		<table><tr><th>Setting</th><th>Description</th></tr>
+		<tr><td>Count Empty Values</td><td>Sets empty elements and attributes to count as covered</td></tr>
+		<tr><td>Count ? Values</td><td>Sets elements and attributes containing ? to count as covered</td></tr>
+		<tr><td>Auto Prepare</td><td>Automatically prepares for Coverage calculation when opening a window containing
+		Coverage content.</td></tr>
+		</table>
+		
+		<p align="center"><img src="images/coverage_settings.gif" alt="The Coverage Settings Tab in soapUI"/></p>
+		</subsection>
+		
+		<p><hr size="1"/>Next: <a href="xpath_selector.html">XPath Selection</a></p>
+		</section>
+    </body>
+</document>

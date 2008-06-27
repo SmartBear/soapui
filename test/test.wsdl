@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+	xmlns:tns="https://athtestweb.acompany.com/public/services/myApplicationWS/"
+	xmlns:s="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+	xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+	targetNamespace="https://athtestweb.acompany.com/public/services/myApplicationWS/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+	<wsdl:types>
+		<s:schema elementFormDefault="qualified"
+			targetNamespace="https://athtestweb.acompany.com/public/services/myApplicationWS/">
+			<s:import namespace="http://www.w3.org/2001/XMLSchema" schemaLocation="http://www.w3.org/2001/XMLSchema.xsd"/>
+			<s:element name="getSummary">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="strXMLReqt" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="getSummaryResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="getSummaryResult">
+							<s:complexType>
+								<s:sequence>
+									<s:element ref="s:schema" />
+									<s:any />
+								</s:sequence>
+							</s:complexType>
+						</s:element>
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="getReferenceTables">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="strXMLReqt" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="getReferenceTablesResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="getReferenceTablesResult">
+							<s:complexType>
+								<s:sequence>
+							 		<s:element ref="s:schema" />
+									<s:any />
+								</s:sequence>
+							</s:complexType>
+						</s:element>
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+		</s:schema>
+	</wsdl:types>
+	<wsdl:message name="getBusinessListByCriteriaSoapIn">
+		<wsdl:part name="strXMLReqt" type="s:string" />
+	</wsdl:message>
+	<wsdl:message name="getBusinessListByCriteriaSoapOut">
+		<wsdl:part name="getBusinessListByCriteriaResult"
+			type="s:string" />
+	</wsdl:message>
+	<wsdl:message name="getBusinessDetailSoapIn">
+		<wsdl:part name="strXMLReqt" type="s:string" />
+	</wsdl:message>
+	<wsdl:message name="getBusinessDetailSoapOut">
+		<wsdl:part name="getBusinessDetailResult" type="s:string" />
+	</wsdl:message>
+	<wsdl:message name="getSummarySoapIn">
+		<wsdl:part name="parameters" element="tns:getSummary" />
+	</wsdl:message>
+	<wsdl:message name="getSummarySoapOut">
+		<wsdl:part name="parameters" element="tns:getSummaryResponse" />
+	</wsdl:message>
+	<wsdl:message name="getProductListSoapIn">
+		<wsdl:part name="strXMLReqt" type="s:string" />
+	</wsdl:message>
+	<wsdl:message name="getProductListSoapOut">
+		<wsdl:part name="getProductListResult" type="s:string" />
+	</wsdl:message>
+	<wsdl:message name="getDepositCreditLineUtilizationSoapIn">
+		<wsdl:part name="strXMLReqt" type="s:string" />
+	</wsdl:message>
+	<wsdl:message name="getDepositCreditLineUtilizationSoapOut">
+		<wsdl:part name="getDepositCreditLineUtilizationResult"
+			type="s:string" />
+	</wsdl:message>
+	<wsdl:message name="getUserInformationSoapIn">
+		<wsdl:part name="strXMLReqt" type="s:string" />
+	</wsdl:message>
+	<wsdl:message name="getUserInformationSoapOut">
+		<wsdl:part name="getUserInformationResult" type="s:string" />
+	</wsdl:message>
+	<wsdl:message name="getReferenceTablesSoapIn">
+		<wsdl:part name="parameters" element="tns:getReferenceTables" />
+	</wsdl:message>
+	<wsdl:message name="getReferenceTablesSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:getReferenceTablesResponse" />
+	</wsdl:message>
+	<wsdl:message name="getTopZIPSoapIn">
+		<wsdl:part name="strXMLReqt" type="s:string" />
+	</wsdl:message>
+	<wsdl:message name="getTopZIPSoapOut">
+		<wsdl:part name="getTopZIPResult" type="s:string" />
+	</wsdl:message>
+	<wsdl:message name="getAccessibleCustomListSoapIn">
+		<wsdl:part name="strXMLReqt" type="s:string" />
+	</wsdl:message>
+	<wsdl:message name="getAccessibleCustomListSoapOut">
+		<wsdl:part name="getAccessibleCustomListResult" type="s:string" />
+	</wsdl:message>
+	<wsdl:portType name="ABCReqtSoap">
+		<wsdl:operation name="getBusinessListByCriteria">
+			<wsdl:input message="tns:getBusinessListByCriteriaSoapIn" />
+			<wsdl:output message="tns:getBusinessListByCriteriaSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="getBusinessDetail">
+			<wsdl:input message="tns:getBusinessDetailSoapIn" />
+			<wsdl:output message="tns:getBusinessDetailSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="getSummary">
+			<wsdl:input message="tns:getSummarySoapIn" />
+			<wsdl:output message="tns:getSummarySoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="getProductList">
+			<wsdl:input message="tns:getProductListSoapIn" />
+			<wsdl:output message="tns:getProductListSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="getDepositCreditLineUtilization">
+			<wsdl:input
+				message="tns:getDepositCreditLineUtilizationSoapIn" />
+			<wsdl:output
+				message="tns:getDepositCreditLineUtilizationSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="getUserInformation">
+			<wsdl:input message="tns:getUserInformationSoapIn" />
+			<wsdl:output message="tns:getUserInformationSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="getReferenceTables">
+			<wsdl:input message="tns:getReferenceTablesSoapIn" />
+			<wsdl:output message="tns:getReferenceTablesSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="getTopZIP">
+			<wsdl:input message="tns:getTopZIPSoapIn" />
+			<wsdl:output message="tns:getTopZIPSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="getAccessibleCustomList">
+			<wsdl:input message="tns:getAccessibleCustomListSoapIn" />
+			<wsdl:output message="tns:getAccessibleCustomListSoapOut" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="ABCReqtSoap" type="tns:ABCReqtSoap">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http"
+			style="rpc" />
+		<wsdl:operation name="getBusinessListByCriteria">
+			<soap:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getBusinessListByCriteria"
+				style="rpc" />
+			<wsdl:input>
+				<soap:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getBusinessDetail">
+			<soap:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getBusinessDetail"
+				style="rpc" />
+			<wsdl:input>
+				<soap:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getSummary">
+			<soap:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getSummary"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getProductList">
+			<soap:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getProductList"
+				style="rpc" />
+			<wsdl:input>
+				<soap:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getDepositCreditLineUtilization">
+			<soap:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getDepositCreditLineUtilization"
+				style="rpc" />
+			<wsdl:input>
+				<soap:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getUserInformation">
+			<soap:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getUserInformation"
+				style="rpc" />
+			<wsdl:input>
+				<soap:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getReferenceTables">
+			<soap:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getReferenceTables"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getTopZIP">
+			<soap:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getTopZIP"
+				style="rpc" />
+			<wsdl:input>
+				<soap:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getAccessibleCustomList">
+			<soap:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getAccessibleCustomList"
+				style="rpc" />
+			<wsdl:input>
+				<soap:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="ABCReqtSoap12" type="tns:ABCReqtSoap">
+		<soap12:binding transport="http://schemas.xmlsoap.org/soap/http"
+			style="rpc" />
+		<wsdl:operation name="getBusinessListByCriteria">
+			<soap12:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getBusinessListByCriteria"
+				style="rpc" />
+			<wsdl:input>
+				<soap12:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getBusinessDetail">
+			<soap12:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getBusinessDetail"
+				style="rpc" />
+			<wsdl:input>
+				<soap12:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getSummary">
+			<soap12:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getSummary"
+				style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getProductList">
+			<soap12:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getProductList"
+				style="rpc" />
+			<wsdl:input>
+				<soap12:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getDepositCreditLineUtilization">
+			<soap12:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getDepositCreditLineUtilization"
+				style="rpc" />
+			<wsdl:input>
+				<soap12:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getUserInformation">
+			<soap12:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getUserInformation"
+				style="rpc" />
+			<wsdl:input>
+				<soap12:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getReferenceTables">
+			<soap12:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getReferenceTables"
+				style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getTopZIP">
+			<soap12:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getTopZIP"
+				style="rpc" />
+			<wsdl:input>
+				<soap12:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getAccessibleCustomList">
+			<soap12:operation
+				soapAction="https://athtestweb.acompany.com/public/services/myApplicationWS/getAccessibleCustomList"
+				style="rpc" />
+			<wsdl:input>
+				<soap12:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"
+					namespace="https://athtestweb.acompany.com/public/services/myApplicationWS/" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="ABCReqt">
+		<wsdl:port name="ABCReqtSoap" binding="tns:ABCReqtSoap">
+			<soap:address
+				location="https://athtestweb.acompany.com/public/services/myApplicationWS/ABCReqt.asmx" />
+		</wsdl:port>
+		<wsdl:port name="ABCReqtSoap12" binding="tns:ABCReqtSoap12">
+			<soap12:address
+				location="https://athtestweb.acompany.com/public/services/myApplicationWS/ABCReqt.asmx" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

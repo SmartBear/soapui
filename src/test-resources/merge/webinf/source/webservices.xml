@@ -1,0 +1,15 @@
+<webservices version='1.1' xmlns='http://java.sun.com/xml/ns/j2ee' xmlns:impl='urn:ole.test' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://java.sun.com/xml/ns/j2ee http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd'>
+ <webservice-description>
+  <webservice-description-name>TestImpl</webservice-description-name>
+  <wsdl-file>WEB-INF/wsdl/TestImpl.wsdl</wsdl-file>
+  <jaxrpc-mapping-file>WEB-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>
+  <port-component>
+   <port-component-name>TestPort</port-component-name>
+   <wsdl-port>impl:TestPort</wsdl-port>
+   <service-endpoint-interface>ole.test.Test</service-endpoint-interface>
+   <service-impl-bean>
+    <servlet-link>TestImpl</servlet-link>
+   </service-impl-bean>
+  </port-component>
+ </webservice-description>
+</webservices>

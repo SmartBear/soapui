@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+  <properties>
+    <title>maven 1.X plugin goals for SOA Testing</title>
+  </properties>
+  <body>
+    <goals>
+      <goal>
+        <name>soapui:test</name>
+        <description>Runs the soapUI tests as specified by the plugin properties. Internally invokes the
+        <a href="../../userguide/commandline/functional.html">SoapUITestCaseRunner</a> as described there.</description>
+      </goal>
+      <goal>
+        <name>soapui:loadtest</name>
+        <description>Runs the soapUI LoadTests as specified by the plugin properties. Internally invokes the
+        <a href="../../userguide/commandline/loadtest.html">SoapUILoadTestRunner</a> as described there.</description>
+      </goal>
+       <goal>
+        <name>soapui:mock</name>
+        <description>Runs the soapUI MockService specified by the plugin properties. Internally invokes the
+        <a href="../../userguide/commandline/mockrunner.html">SoapUIMockServiceRunner</a> as described there.</description>
+      </goal>
+    </goals>
+    <p><hr size="1"/>Next: <a href="properties.html">Maven Plugin Properties</a></p>
+  </body>
+</document>

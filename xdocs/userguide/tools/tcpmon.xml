@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>TCPMon Integration for Web Services</title>
+    </properties>
+    <body>
+    	<section name="Apache TcpMon Integration for testing Web Services">
+    	<p>The <a href="http://ws.apache.org/commons/tcpmon/" target="_new">Apache TcpMon utility</a> can be 
+    	used to "listen in" on any HTTP traffic, including of course SOAP request or response messages. Download
+    	and install TcpMon as described on their site and specify the installation directory in the 
+    	soapUI <a href="../preferences.html#Integrated_Tools">Integrated Tools</a> Settings.</p>
+    	<p>soapUI provides 2 simple integrations with this useful tool:</p>
+    	<ol>
+    	<li>From the main Tools menu which will just start TcpMon in a separate process</li>
+    	<li>From the <a href="../interfaces/index.html#Interface_Actions">Interface Menu</a> which can be used to create a local proxy
+    	for the designated service. This will bring up the following dialog:</li>
+    	</ol>
+    	<p align="center"><img src="images/tcpmon.gif" alt="TCPMon Launcher"/></p>
+    	<p>The dialog contains the following options:</p>
+    	<ul>
+    	<li><b>Endpoint</b> - the target endpoint that TcpMon should invoke</li>
+    	<li><b>Local Port</b> - the local port to that TcpMon should listen on</li>
+    	<li><b>Add Local Endpoint</b> - adds an endpoint to the current service pointing at the created TcpMon proxy</li>
+    	</ul>
+    	<p>Launching with the above settings will start TcpMon with the following monitor:</p>
+    	<p align="center"><img src="images/tcpmon2.gif" alt="TCPMon Launcher"/></p>
+    	<p>In soapUI, an endpoint has been added to the current service that can be used to invoke TcpMon instead of the service
+    	directly (this endpoint must be removed manually):</p>
+    	<p align="center"><img src="images/tcpmon3.gif" alt="Endpoint handling for TCPMon"/></p>
+    	<p>Using this endpoint results in the SOAP request being "proxied" through TcpMon which will be shown as follows:</p>
+    	<p align="center"><img src="images/tcpmon4.gif" alt="TCPMon Endpoint Replacement"/></p>
+    	  <p><hr size="1"/>Next: <a href="../commandline/index.html">Command Line Tools</a></p>
+		</section>
+    </body>
+</document>
+

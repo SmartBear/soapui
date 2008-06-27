@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Easy XPath creating - soapUI Pro XPath selector</title>
+    </properties>
+    <body>
+		<section name="soapUI Pro XPath Selection Dialog">
+		<p>soapUI Pro includes a XPath Wizard or Selection dialog that is available wherever an XPath expression is 
+		required:</p>
+		<ul>
+		<li>The XPath Assertion editor</li>
+		<li>The Property-Transfer editor</li>
+		<li>The MockOperation editor</li>
+		<li>The ConditionalGoto editor</li>
+		<li>etc..</li>
+		</ul>
+		<p>The selector displays general instructions and a tree-view of the message or XML to be selected from. Navigating 
+		the tree displays the corresponding	XPath expression for the current node below. Selecting the desired node 
+		and pressing OK will close the dialog and return the selected XPath expression to the calling functionality.</p>
+		<p align="center"><img src="images/xpath_selector.gif"/></p>
+		 <p><hr size="1"/>Next: <a href="scripting.html#Groovy_Script_Library">soapUI Script Library</a></p>
+		</section>
+    </body>
+</document>

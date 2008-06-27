@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--  This is an example of a Log4j XML configuration file.                -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">  
+   
+   <!-- =================== -->
+   <!-- Appenders           -->
+   <!-- =================== -->
+   
+   <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+      <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
+      <param name="Target" value="System.out"/>
+      <param name="Threshold" value="DEBUG"/>
+      <layout class="org.apache.log4j.PatternLayout">
+         <!-- The default pattern: Date Priority [Category] Message\n -->
+         <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
+      </layout>
+   </appender>
+
+   <appender name="FILE" class="org.apache.log4j.RollingFileAppender">
+     <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
+     <param name="File" value="${soapui.logroot}soapui.log"/>
+     <param name="Threshold" value="INFO"/>
+     <param name="Append" value="false"/>
+     <param name="MaxFileSize" value="5000KB"/>
+     <param name="MaxBackupIndex" value="50"/>
+     <layout class="org.apache.log4j.PatternLayout">
+       <param name="ConversionPattern" value="%d %-5p [%c{1}] %m%n"/>
+     </layout>	    
+   </appender>
+   
+   <appender name="ERRORFILE" class="org.apache.log4j.RollingFileAppender">
+     <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
+     <param name="File" value="${soapui.logroot}soapui-errors.log"/>
+     <param name="Threshold" value="INFO"/>
+     <param name="Append" value="true"/>
+     <param name="MaxFileSize" value="5000KB"/>
+     <param name="MaxBackupIndex" value="50"/>
+     <layout class="org.apache.log4j.PatternLayout">
+       <param name="ConversionPattern" value="%d %-5p [%c{1}] %m%n"/>
+     </layout>	    
+   </appender>
+      
+   <appender name="SOAPUI" class="com.eviware.soapui.support.log.SoapUIAppender">
+      <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
+   </appender>
+   
+   <!-- =============== -->
+   <!-- Loggers         -->
+   <!-- =============== -->
+   
+   <logger name="com.eviware.soapui">
+     <level value="DEBUG" />
+     <appender-ref ref="SOAPUI"/>
+	 <appender-ref ref="CONSOLE"/>
+   </logger>
+   
+   <logger name="soapui.errorlog">
+     <level value="DEBUG" />
+ 	 <appender-ref ref="ERRORFILE"/> 
+   </logger>
+   
+   <logger name="org.apache.commons.httpclient">
+   	  <level value="ERROR"/>
+   	  <appender-ref ref="CONSOLE"/>
+   </logger>
+   
+   <logger name="com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager">
+   		<level value="ERROR"/>
+   	  <appender-ref ref="CONSOLE"/>
+   </logger>
+   
+   <root>
+  	  <priority value="INFO" />
+  	  <appender-ref ref="FILE"/> 
+   </root>
+   
+</log4j:configuration>

@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<wsdl:definitions xmlns:types="http://example.com/mimetypes"
+                  xmlns:ref="http://ws-i.org/profiles/basic/1.1/xsd"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soapbind="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+                  targetNamespace="http://example.com/mimewsdl"
+                  xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+                  xmlns:tns="http://example.com/mimewsdl">
+
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://example.com/mimetypes"
+                    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+            <xsd:import namespace="http://ws-i.org/profiles/basic/1.1/xsd" />
+            <xsd:complexType name="ClaimDetailType">
+                <xsd:sequence>
+                    <xsd:element name="Name" type="xsd:string"/>
+                    <xsd:element name="ClaimForm" type="ref:swaRef"/>
+                   <xsd:element name="ClaimImage" type="xmime:base64Binary"/>  
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="ClaimIn">
+        <wsdl:part name="ClaimDetail" type="types:ClaimDetailType"/>
+        <wsdl:part name="ClaimPhoto" type="xsd:base64Binary"/>
+    </wsdl:message>
+
+    <wsdl:message name="ClaimOut">
+        <wsdl:part name="ClaimRefNo" type="xsd:string"/>
+    </wsdl:message>
+
+    <wsdl:portType name="ClaimPortType">
+        <wsdl:operation name="SendClaim">
+            <wsdl:input message="tns:ClaimIn"/>
+            <wsdl:output message="tns:ClaimOut"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="ClaimBinding" type="tns:ClaimPortType">
+        <soapbind:binding style="rpc" 
+                          transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="SendClaim">
+            <soapbind:operation soapAction="http://example.com/soapaction"/>
+            <wsdl:input>
+                <mime:multipartRelated>
+                    <mime:part>
+                        <soapbind:body use="literal" 
+                                       parts="ClaimDetail" 
+                                       namespace="http://example.com/mimetypes"/>
+                    </mime:part>
+                    <mime:part>
+                        <mime:content part="ClaimPhoto" 
+                                      type="image/jpeg"/>
+                    </mime:part>
+                </mime:multipartRelated>
+            </wsdl:input>
+            <wsdl:output>
+                <soapbind:body use="literal" 
+                               namespace="http://example.com/mimetypes"/>
+            </wsdl:output>
+        </wsdl:operation>
+ </wsdl:binding>
+</wsdl:definitions>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>WSDL generation integrations for Web Service Testing</title>
+    </properties>
+    <body>
+		<section name="WSDL Generation Tools for Web Service Testing">
+		<p>The following WSDL Generation tools have currently been integrated and are available from the Project right-button menu:</p> 
+		<table>
+		<tr><th>Tool</th><th>URL</th><th>Documentation</th><th>Prerequisite</th></tr>
+		<tr>
+			<td>JBossWS WSTools</td>
+			<td><a href="http://labs.jboss.com/portal/index.html?ctrl:id=page.default.info&amp;project=jbossws">JBossWS</a></td>
+			<td><a href="http://labs.jboss.com/portal/jbossws/user-guide/en/html/index.html" target="_new">JBossWS User Guide</a></td>
+			<td>Install the latest JBossWS stack release and configure as required. Extract the wstools script from the 
+			lib/jdk1.X/jbossws.jar file into some directory and specify that directory in the soapUI Tool Integrations settings</td>
+		</tr>		
+		</table>
+		<p align="center"><img src="images/bottomup.gif" alt=""/></p>
+		<subsection name="JBossWS wstools">
+		<p>The recently released JBossWS stack includes a utility for generating a WSDL from existing/annotated java-code; wstools. 
+		soapUI integrates with wstools allowing you to run the tool and automatically add the generated WSDL to the selected soapUI
+		project. The added interface will have a "Regenerate with JBossWS" menu option allowing you to rerun the tool as needed if
+		the underlying java-code changes or if you want to change some generation option.</p>
+		<p align="center"><img src="images/wstools-java2wsdl.gif"/></p>
+		
+		</subsection>
+		  <p><hr size="1"/>Next: <a href="tcpmon.html">Apache TcpMon</a></p>
+		</section>
+    </body>
+</document>

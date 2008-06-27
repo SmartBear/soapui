@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<faqs title="soapUI FAQ">
+
+  <part id="general">
+    <title>General Questions</title>
+
+    <faq id="general1">
+      <question>
+        <b>When should I use soapUI?</b>
+      </question>
+      <answer>
+      <p>When you are developing/discovering Web Service clients or implementations and need a tool to test them 
+      interactively and/or create functional and load-tests that can be run in a continuous integration environment.</p> 
+      </answer>
+      
+      </faq>
+
+    <faq id="general2">
+      <question>
+        <b>What can I not do with soapUI?</b>
+      </question>
+      <answer>
+      <p>Some of the more obvious missing features are WSDL authoring WS-Security support. Check out
+      the <a href="future.html">Future Plans</a> document to see what's missing (for now).</p>
+      </answer>
+      
+      </faq>
+
+
+    <faq id="general3">
+      <question>
+        <b>Does soapUI work with any Web Service technology?</b>
+      </question>
+      <answer>
+      <p>soapUI is platform agnostic, you can use it for Web Services created with .NET, J2EE, Perl, PHP, etc. The
+			only requirements on your Web Service are that they have a defining WSDL, that they are bound with the SOAP/HTTP binding,  
+			and that they do not use SOAP-Encoding (if you want to do validations).</p>
+      </answer>
+      
+      </faq>
+      
+   </part>   
+      
+   <part id="distribution">
+      <title>Distribution and Execution</title>
+      
+      <faq id="dist1">
+      
+       <question>
+        <b>Why would I use the Java WebStart distribution?</b>
+      </question>
+      <answer>
+         <p>Because it is easier to install and update. You won't have to download new versions and bug-fixes, the
+         Java WebStart runtime does that for you. Also, minor updates/fixes will be added to the WebStart distribution
+         continuously, whereas the "offline" distribution will be updated at "relevant" intervals.</p>
+      </answer>
+    </faq>  
+    
+ <faq id="dist2">
+      
+       <question>
+        <b>Are there any differences between the Java WebStart distribution and the standalone distribution?</b>
+      </question>
+      <answer>
+         <p>There are some differences:
+         <ul>
+         	<li>The standalone distribution allows you to specify the <a href="userguide/projects.html">workspace file</a> as 
+         	a command-line argument to soapUI</li>
+         	<li>The WebStart classloader handling will prevent you from performing sandboxed operations from within your Groovy scripts</li>
+         </ul>
+         
+         </p>
+      </answer>
+    </faq>  
+
+    <faq id="dist3">
+      
+       <question>
+        <b>Does the Java WebStart distribution require me to be online when I want to use soapUI?</b>
+      </question>
+      <answer>
+         <p>No, soapUI can run in offline mode. You may need to setup a start-icon for soapUI though (using the 
+         Java control panel).</p>
+      </answer>
+    </faq>  
+
+
+
+   </part>
+   
+    <part id="usage">
+      <title>Usage</title>
+      
+      <faq id="usage1">
+      
+       <question>
+        <b>How do I save the changes I make to my projects, requests, TestCases, etc?</b>
+      </question>
+      <answer>
+         <p>soapUI automatically saves everything upon exit. If you want to save your projects without 
+         exiting (for example if you want to commit your project file to CVS) use the "Save All" option in 
+         the main File menu</p>
+      </answer>
+    </faq>  
+    
+    <faq id="usage2">
+      
+       <question>
+        <b>I have updated my XML Schema for my service but soapUI still generates/validates according to the 
+        old schema</b>
+      </question>
+      <answer>
+         <p>soapUI caches XML schemas when they are first loaded. If you need to force a reload of an interfaces
+         schema either restart soapUI or use the "Update Definition" action for an interface and just specify the 
+         same URL as the current one.</p>
+      </answer>
+    </faq>  
+
+   </part>
+  
+</faqs>

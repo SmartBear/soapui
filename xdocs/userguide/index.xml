@@ -1,0 +1,262 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>soapUI User Guide - for Web Service Testing</title>
+    </properties>
+    <body>
+		<section name="soapUI User Guide">
+		 
+		<p>The soapUI User Guide aims at giving an overview of all features available together with some 
+		explanations on the underlying implementations. The User Guide covers both soapUI, its IDE Plugins and soapUI Pro, 
+		sections and pages related to soapUI Pro are clearly marked. Read the <a href="../comparison.html">feature comparison 
+		between soapUI and soapUI Pro here</a>.</p>
+		<table><tr><th>Page</th><th>Description</th></tr>
+		<tr><td colspan="2"><b>Core Functionality</b></td></tr>
+		<tr>
+		 	<td><a href="overview.html">soapUI Overview</a></td>
+		 	<td>Gives an overview of the soapUI interface, prerequisites and general functionality</td>
+	 	</tr>
+	 	<tr>
+		 	<td><a href="tabbeddesktop.html">soapUI Tabbed Desktop</a></td>
+		 	<td>Gives an overview of the soapUI tabbed desktop, a soapUI Pro only feature</td>
+	 	</tr>
+	 	<tr>
+		 	<td><a href="licensemanagement.html">soapUI License Management</a></td>
+		 	<td>Gives an overview of the soapUI License Management, a soapUI Pro only feature</td>
+	 	</tr>
+	 	<tr>
+		 	<td><a href="preferences.html">Preferences</a></td>
+		 	<td>Explains soapUI global preferences</td>
+	 	</tr>
+	 	<tr>
+		 	<td><a href="xpath_selector.html">XPath Selection</a></td>
+		 	<td>Gives an overview of the soapUI Pro only XPath Selection feature</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="scripting.html#Groovy_Script_Library">Script Library</a></td>
+		 	<td>Explains how to use the global Groovy Script Library (soapUI Pro only)</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="workspaces.html">Workspaces</a></td>
+		 	<td>Explains how to manage workspaces in soapUI</td>
+	 	</tr>
+	 	<tr>
+		 	<td><a href="projects/index.html">Test Projects</a></td>
+		 	<td>Explains projects and how to work with them</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="interfaces/index.html">WSDL Interfaces</a></td>
+		 	<td>Details on how WSDLs are visualized and how to work with them</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="interfaces/interfaceeditor.html">WSDL Interface Viewer</a></td>
+		 	<td>Explains the integrated WSDL Viewer</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="operations.html">Web Service Operations</a></td>
+		 	<td>Shows how Operations are visualized and handled</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="requests.html">Working with Web Service Requests</a></td>
+		 	<td>Shows how to invoke web service operations and work with the request editor</td>
+	 	</tr>
+	 	<tr>
+		 	<td><a href="formeditor.html">Form Editor</a></td>
+		 	<td>Shows the functionality of the Form Editor an editor that simplifies Inspection</td>
+	 	</tr>
+	 	<tr>
+		 	<td><a href="outlineeditor.html">Outline Editor</a></td>
+		 	<td>Shows the functionality of the Form Editor an editor for Request/Response Overview</td>
+	 	</tr>
+	 	<tr>
+		 	<td><a href="messageinspectors.html">Message Inspectors</a></td>
+		 	<td>Shows the functionality of a soapUI Pro only feature, The Message Inspectors</td>
+	 	</tr>	 	
+		<tr>
+		 	<td><a href="attachments.html">Working with WS Attachments</a></td>
+		 	<td>Shows how to use soapUI’s Attachment functionality</td>
+	 	</tr>
+		<tr><td colspan="2"><b>Functional Testing of Web Services</b></td></tr>
+		<tr>
+		 	<td><a href="functional/index.html">Functional Testing</a></td>
+		 	<td>Gives an overview of functional testing of web services</td>
+	 	</tr>
+	 	<tr>
+		 	<td><a href="../gettingstarted/functional.html">Getting Started with functional testing</a></td>
+		 	<td>A quick introduction to get you started with functional testing</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="functional/testsuites.html">TestSuites</a></td>
+		 	<td>Shows how to work with and run TestSuites</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="functional/testcases.html">TestCases</a></td>
+		 	<td>Describes TestCases, TestSteps and the TestCase editor</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="functional/testrequests.html">Web Service Test Requests</a></td>
+		 	<td>Shows how to set up TestRequest steps and validate response messages</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="functional/response-assertions.html">Web Service Test Assertions</a></td>
+		 	<td>Describes available response assertions and their usage</td>
+	 	</tr>
+	 			<tr>
+		 	<td><a href="functional/response-wizards.html">Editor Wizards</a></td>
+		 	<td>Shows the Editor Wizards. soapUI Pro only</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="functional/propertytransfers.html">Property Transfers</a></td>
+		 	<td>Describes the PropertyTransfer Step and it can be used to transfer values between TestSteps</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="functional/gotostep.html">Conditional Gotos</a></td>
+		 	<td>Describes the Conditional Goto Step and how it can be used to control TestCase execution</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="functional/groovystep.html">Web Service Test Groovy Scripts</a></td>
+		 	<td>Shows how the Groovy Script Step can be used to perform arbitrary functionality in a TestCase</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="functional/propertiesstep.html">Properties Step</a></td>
+		 	<td>The Properties Step can be used to handle global properties in a TestCase</td>
+	 	</tr>
+	 	<tr>
+		 	<td><a href="functional/delaystep.html">Delay Step</a></td>
+		 	<td>The Delay Step can be used to create pauses in a TestCase</td>
+	 	</tr>
+
+	 	<tr>
+		 	<td><a href="functional/mockresponse.html">MockResponse Step</a></td>
+		 	<td>The MockResponse Step can be used to create MockResponses in a TestCase</td>
+	 	</tr>
+	 	<tr>
+		 	<td><a href="functional/datasourcestep.html">DataSource Step</a></td>
+		 	<td>The DataSource Step can be used to collect data from a number of sources in a TestCase</td>
+	 	</tr>
+	 	<tr>
+		 	<td><a href="functional/datasourceloopstep.html">DataSource Loop Step</a></td>
+		 	<td>The DataSource Loop Step can be used to loop a DataSource in a TestCase</td>
+	 	</tr>	 	
+	 	<tr>
+		 	<td><a href="properties.html#Property_Expansion">Property Expansion</a></td>
+		 	<td>Shows how property values easily can be used in requests and XPath expressions</td>
+	 	</tr>
+		<tr><td colspan="2"><b>Load Testing of Web Services</b></td></tr>
+		<tr>
+		 	<td><a href="loadtest/index.html">Web Service Load Testing</a></td>
+		 	<td>Outlines soapUI LoadTesting functionality available for web services</td>
+	 	</tr>
+	 	 <tr>
+		 	<td><a href="../gettingstarted/loadtest.html">Getting Started with Web Service Load Testing</a></td>
+		 	<td>A quick introduction to get you started with load testing</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="loadtest/configuration.html">Limit &amp; Strategies</a></td>
+		 	<td>Describes the available configuration options for running LoadTests</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="loadtest/execution.html">Execution</a></td>
+		 	<td>Describes how LoadTests are executed internally in soapUI</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="loadtest/assertions.html">Assertions</a></td>
+		 	<td>Shows the available LoadTest assertions and their usage</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="loadtest/diagrams.html">Diagrams</a></td>
+		 	<td>Describes the available real time diagrams and their contents</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="loadtest/comparison.html">JMeter Comparison</a></td>
+		 	<td>Compares soapUI functionality and performance to that of JMeter</td>
+	 	</tr>
+	 	<tr><td colspan="2"><b>Mocking of Web Services</b></td></tr>
+		<tr>
+		 	<td><a href="mock/index.html">Mocking of Web Services</a></td>
+		 	<td>Outlines soapUI’s web service mocking/simulation functionality</td>
+	 	</tr>
+	 	 <tr>
+		 	<td><a href="../gettingstarted/mocking.html">Getting Started With Web Service Simulation</a></td>
+		 	<td>A quick introduction to get you started with load testing</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="mock/services.html">Mock Services</a></td>
+		 	<td>Describes MockServices</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="mock/operations.html">Mock Operations</a></td>
+		 	<td>Describes how MockOperations are used with MockServices</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="mock/responses.html">Mock Responses</a></td>
+		 	<td>Describes how MockResponses are used with MockOperations</td>
+	 	</tr>
+		<tr><td colspan="2"><b>Usage Scenarios</b></td></tr>
+		<tr>
+		 	<td><a href="scenarios/index.html">Usage Scenarios</a></td>
+		 	<td>Outlines described scenarios for testing web services</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="scenarios/datadriven.html">Data Driven Testing</a></td>
+		 	<td>Shows how to test a Web Service using external input data</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="scenarios/templatedriven.html">Template Driven Testing</a></td>
+		 	<td>Shows how to run a TestCase for a set of test values</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="scenarios/interactive.html">Interactive Testing</a></td>
+		 	<td>Shows how to create TestCases with input or output dialogs for interactive demos and tests</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="scenarios/surveillance.html">Surveillance Testing</a></td>
+		 	<td>Shows how to use a scheduling tool to run continuous functional and load-tests</td>
+	 	</tr>
+		<tr><td colspan="2"><b>Tool Integrations</b></td></tr>
+		<tr>
+		 	<td><a href="tools/index.html">Tool Integrations</a></td>
+		 	<td>Gives an overview of the available tool integrations in soapUI</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="tools/topdown.html">Code Generation</a></td>
+		 	<td>Describes the available Code Generation integrations</td>
+	 	</tr>
+	 	<tr>
+		 	<td><a href="interfaces/wsi.html">WS-I Integrations</a></td>
+		 	<td>Describes the available integrations for the WS-I Basic Profile validation tools</td>
+	 	</tr>		
+	 	<tr>
+		 	<td><a href="tools/tcpmon.html">TcpMon Integration</a></td>
+		 	<td>Describes the available integration for the Apache TcpMon tool</td>
+	 	</tr>		
+	 	<tr><td colspan="2"><b>Command Line Tools</b></td></tr>
+		<tr>
+		 	<td><a href="commandline/index.html">Command Line Tools</a></td>
+		 	<td>Gives an overview of the available command line tools in soapUI</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="commandline/functional.html">TestCaseRunner</a></td>
+		 	<td>Describes the commandline runner for functional TestCases</td>
+	 	</tr>
+		<tr>
+		 	<td><a href="commandline/mockrunner.html">MockServiceRunner</a></td>
+		 	<td>Describes the commandline runner for MockServices</td>
+	 	</tr>
+	 	<tr>
+		 	<td><a href="commandline/loadtest.html">LoadTestRunner</a></td>
+		 	<td>Describes the commandline runner for LoadTests</td>
+	 	</tr>
+	 	<tr>
+		 	<td><a href="commandline/toolrunner.html">ToolRunner</a></td>
+		 	<td>Describes the commandline runner for Code-Generation integrations</td>
+	 	</tr>
+		<tr><td colspan="2"><b>Appendix</b></td></tr>
+	 	<tr>
+		 	<td><a href="shortcuts.html">Keyboard Shortcuts</a></td>
+		 	<td>Reference over available keyboard shortcuts</td>
+	 	</tr></table>
+		 
+		</section>
+    </body>
+</document>

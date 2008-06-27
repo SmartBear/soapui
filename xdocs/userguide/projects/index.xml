@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Web Service Test Projects in soapUI</title>
+    </properties>
+    <body>
+		<section name="Web Service test projects">
+	  	 <p>Any number of projects can be created in the current soapUI Workspace, either by creating new ones (see below)
+	  	 or importing existing ones... A soapUI Project contains the following items in the Navigator:</p>
+		 <ul>
+		 	<li>A number of Interfaces each corresponding to a SOAP/HTTP Binding for a defined PortType</li>
+		 	<li>A number of TestSuites containing TestCases for these Interfaces' Operations</li>
+		 	<li>A number of MockServices containing Mock implementations of these Interfaces' Operations</li>
+		 </ul>
+		 <p>soapUI projects are saved in a self contained xml file upon creation (as described above).
+		 This file can be safely moved around, checked into CVS, sent by email, etc. It only has file-system 
+		 references if an interface/WSDL has been imported from a local file (not recommended due to this limitation) 
+		 or if referenced attachments or inline files are used <a href="../attachments.html">(see Attachments)</a>. 
+		 When obtaining an existing soapUI project file, this can be added to the current workspace with the 
+		 "Import Project" action on the Workspace popup menu.</p>
+		 
+		 <p>Internally, soapUI abstracts the actual nature of projects and their contained interfaces, tests, etc... 
+		  opening the possiblity of support for other service definitions or protocols than WSDL / SOAP (check out 
+		 the <code>com.eviware.soapui.model</code> package). Currently though, the only implementation for
+		 these interfaces is for WSDL 1.1 and the SOAP/HTTP binding (as required by Basic Profile 1.0). Therefore, 
+		 all actions and functionality described will be in regard to this implementation.</p>
+		
+		 <subsection name="Creating a WSDL Projects">
+		 <p>Selecting the New WSDL Project option from the Workspace Menu opens this dialog which prompts for:
+		 <ul>
+		 	<li>A name for the project is required</li>
+		 	<li>An optional initial WSDL to import into the project (either file or URL)</li>
+		 	<li>An option to optionally create default requests when specifying an initial WSDL</li>
+		 	<li>An option to save the empty project to a file (unsaved projects	will be prompted for a project file on exit).</li>
+		 </ul>
+		</p>
+		<p align="center"><img src="images/new_wsdl_project.gif" alt="Creating a new Web Service test project from WSDL in soapUI"/></p>
+		<p>Once specified, soapUI will prompt for a filename to which the project is to be saved (defaults to 
+	 	<code>&lt;project-name&gt;-soapui-project.xml</code>). Put this file anywhere you want, the file
+	 	is a regular XML file and can be checked into SCM systems and edited with any XML editor.</p>
+		</subsection>
+		
+		 <subsection name="Remote Test Projects">
+		 <columns><column><div>
+		 soapUI 1.7.6 and following can handle remote project files over http(s) in read only mode (basic authentication is supported). 
+		 When importing, the URL to the project file is saved in the workspace and can be closed, opened, or reloaded 
+		 as usual.</div>
+		 <p>Remote projects are always closed at startup and marked with a light blue icon in the navigator.</p>
+		 </column><column>
+			<img src="images/remote_project.gif" border="0" alt="A remote project in soapUI"/>
+			</column></columns>
+	 	 <p>This opens for a number of possibilities:</p>
+		 <ul>
+		 <li>Projects can easily be distributed to clients without the requirement to download updates, 
+		 for example for testing or demonstration purposes.</li>
+		 <li>The command line TestRunners also accept http url project files, allowing for centralized 
+		 storage of project files even if they are run in a distributed testing environment</li>
+		</ul>
+		<p>Remote projects can be modified as normal projects, but soapUI will not prompt to save them on exit or close.
+		If changes to a remote project need to be saved, use the "Save as" Project Menu action which prompts to 
+		save the project locally, transforming it to a regular file based project.</p>
+		 </subsection>
+		 
+		 <subsection name="Test Project Actions">
+		<columns><column><div>
+		 The following actions are available from the project nodes' right-button menu:		 
+		 <ul>
+		 <li><b>Add WSDL from URL</b> - Prompts for a WSDL URL that will be parsed and imported accordingly</li>
+		 <li><b>Add WSDL from file</b> - Prompts for a local WSDL file that will be parsed and imported accordingly</li>
+		 <li><b>Launch TestRunner</b> - Opens the dialog for launching the 
+		 <a href="../commandline/functional.html#Launch_Dialog">Command Line TestRunner</a></li>
+		 <li><b>Launch LoadTestRunner</b> - Opens the dialog for launching the 
+		 <a href="../commandline/loadtest.html#Launch_Dialog">Command Line LoadTestRunner</a></li>
+		 <li><b>New TestSuite</b> - Prompts to create a new <a href="../functional/testsuites.html">TestSuite</a> in the selected project</li>
+		 <li><b>New MockService</b> - Prompts to create a new <a href="../mock/services.html">MockService</a> in the selected project</li>
+		 <li><b>Rename</b> - Prompts to rename the selected project. The new name will be shown in the navigation tree. The
+		 filename of the project will be unaffected</li>
+		 <li><b>Remove</b> - Prompts to remove the selected project from the workspace. The project file will not be deleted
+		 and can be imported back into the workspace subsequently</li>
+		 <li><b>Reload Project</b> - Prompts to reload the project from its external source, discarding any changes</li>
+		 <li><b>Close Project</b> - Prompts to close the current project, disabling it in the workspace</li>
+		 <li><b>Save Project</b> - Saves the state of the project and all its contained items to the underlying project file</li>
+		 <li><b>Save Project As</b> - Saves the state of the project and all its contained items to a new project file</li>
+		 <li><b>Online Help</b> - Displays this page in an external browser</li>
+		 </ul>
+		 </div></column><column>
+			<img src="images/project_actions.gif" border="0" alt="Test Project Actions in soapUI"/>
+			</column></columns>
+		 </subsection>
+		 
+		  <subsection name="Project Details Tab">
+		  <columns><column><div>
+		 The "Details" tab shown in the bottom-left shows the following values when the workspace node is selected in 
+		 the navigation tree
+		 <ul>
+		  <li><b>Name</b> : the name of the project</li>
+		   <li><b>Description</b> : an arbitrary description of the project, displayed as a tooltip over the 
+		   projects' node in the Navigator.</li>
+		 <li><b>File</b> (read-only): the selected projects project-file</li>
+		 <li><b>Cache Definitions</b> : sets if definitions should be cached for this project 
+		 (see <a href="../interfaces/index.html#Caching_Definitions">Caching Definitions</a>). 
+		 This overrides the global "Cache WSDLs" setting under the WSDL Preferences settings tab</li>
+		 </ul>
+		 </div></column><column>
+			<img src="images/project_details_tab.gif" border="0" alt="Project details for a WSDL Test Project"/>
+		  </column></columns>
+		 </subsection>
+		 
+		 <subsection name="Project View">
+		<p>When double clicking a project you will get the Project View. The purpose of the project view is giving 
+		you a work area for project related functionality.
+		</p>
+
+		<p>
+		The Project view consist of a number of tabs available at the top and a number of inspectors available at the 
+		bottom of the project view. The inspectors are context sensitive and will change based on which tab you choose.
+		</p>
+
+		<p>
+		The Tabs are as follows:
+		<ul>
+		<li><b>Overview Tab</b> The overview tab gives you an quick overview of your project as well as general project metrics such as the number of TestSteps the project contains.<a href="projectview.html">Read More</a></li>
+		<li><b>Project Coverage Tab (Pro Only)</b> Project Coverage allows you to see how much of the interfaces contained in the project that is being covered by tests. This functionality will make you development process more efficient and will increase Test Quality considerably.<a href="coverage.html">Read More</a></li>
+		<li><b>Project Requirements Tab  (Pro Only)</b> The Project Requirements tab is an easy way of managing test requirements in soapUI.<a href="requirements.html">Read More</a></li>
+		<li><b>WS-Security Configuration Tab</b> The WS-Security Configuration Tab is the working area for creating WS-Security configurations to be used in Tests, SOAP Monitor or MockServices.<a href="wss.html">Read More</a></li>
+		</ul>
+		</p>
+		<p align="center"><img src="images/project_view.gif" border="0" alt="An example of a Web Service Test Project"/></p>
+		</subsection>
+		 
+		 <p><hr size="1"/>Next: <a href="projectview.html">Project Overview</a></p>
+		</section>
+    </body>
+</document>

@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://services.tvguide.com/v4/watchlist" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://services.tvguide.com/v4/watchlist" xmlns:s1="http://services.tvguide.com/v4/common/types" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://services.tvguide.com/v4/watchlist">
+      <s:import namespace="http://services.tvguide.com/v4/common/types"/>
+      <s:element name="AddWatchListItem">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:AddWatchListItemRQ"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AddWatchListItemRQ">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:CoreRequest">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="ContentId" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="ContentType" type="tns:ContentType"/>
+              <s:element minOccurs="1" maxOccurs="1" name="DeviceProfileId" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Keyword" nillable="true" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="KeywordType" type="tns:KeywordType"/>
+              <s:element minOccurs="1" maxOccurs="1" name="AutoRecord" nillable="true" type="s:boolean"/>
+              <s:element minOccurs="1" maxOccurs="1" name="AutoRemind" nillable="true" type="s:boolean"/>
+              <s:element minOccurs="1" maxOccurs="1" name="AutoAlert" nillable="true" type="s:boolean"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:simpleType name="ContentType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Series"/>
+          <s:enumeration value="Credit"/>
+          <s:enumeration value="RecommendationList"/>
+          <s:enumeration value="Keyword"/>
+          <s:enumeration value="TVObject"/>
+          <s:enumeration value="Genre"/>
+          <s:enumeration value="Movie"/>
+          <s:enumeration value="TVMovie"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="KeywordType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Unknown"/>
+          <s:enumeration value="Title"/>
+          <s:enumeration value="Actor"/>
+          <s:enumeration value="Director"/>
+          <s:enumeration value="Author"/>
+          <s:enumeration value="Producer"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="AddWatchListItemResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddWatchListItemResult" type="tns:AddWatchListItemRS"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AddWatchListItemRS">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:CoreResponse">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="WatchListItemId" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="DeleteWatchListItems">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:DeleteWatchListItemsRQ"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DeleteWatchListItemsRQ">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:CoreRequest">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="WatchListItemIds" type="tns:ArrayOfString"/>
+              <s:element minOccurs="1" maxOccurs="1" name="DeviceProfileId" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="LastUpdateDate" type="s:dateTime"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DeleteWatchListItemsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:DeleteWatchListItemsResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetWatchListItems">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:GetWatchListItemsRQ"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetWatchListItemsRQ">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:CoreRequest">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="DeviceProfileId" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Page" type="tns:DataPage"/>
+              <s:element minOccurs="1" maxOccurs="1" name="ItemType" type="tns:ContentType"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="DataPage">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="PageSize" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="StartIndex" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="TotalRows" type="s:int"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SortByColumn" type="tns:ArrayOfInt"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfInt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetWatchListItemsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetWatchListItemsResult" type="tns:GetWatchListItemsRS"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetWatchListItemsRS">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:CoreResponse">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="WatchListItems" type="tns:ArrayOfWatchListItem"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Page" type="tns:DataPage"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfWatchListItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="WatchListItem" nillable="true" type="tns:WatchListItem"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="WatchListItem">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="WatchListItemId" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="DisplayOrder" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ContentType" type="tns:ContentType"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ContentId" type="s:int"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Keyword" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="KeywordType" type="tns:KeywordType"/>
+          <s:element minOccurs="1" maxOccurs="1" name="LastUpdateDate" nillable="true" type="s:dateTime"/>
+          <s:element minOccurs="1" maxOccurs="1" name="AutoRecord" nillable="true" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="AutoRemind" nillable="true" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="AutoAlert" nillable="true" type="s:boolean"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetWatchListItemResults">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:GetWatchListItemResultsRQ"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetWatchListItemResultsRQ">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:CoreRequest">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="ServiceIds" nillable="true" type="tns:ArrayOfInt"/>
+              <s:element minOccurs="0" maxOccurs="1" name="ItemResultsDetails" type="tns:ArrayOfWatchListItemResultsDetail"/>
+              <s:element minOccurs="1" maxOccurs="1" name="ResultsFromDate" nillable="true" type="s:dateTime"/>
+              <s:element minOccurs="1" maxOccurs="1" name="ResultsToDate" nillable="true" type="s:dateTime"/>
+              <s:element minOccurs="1" maxOccurs="1" name="DeviceProfileId" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="CopyType" nillable="true" type="s:int"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Image" type="tns:Image"/>
+              <s:element minOccurs="1" maxOccurs="1" name="IncludeDataType" nillable="true" type="tns:IncludeDataType"/>
+              <s:element minOccurs="0" maxOccurs="1" name="MSGridId" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfWatchListItemResultsDetail">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="WatchListItemResultsDetail" nillable="true" type="tns:WatchListItemResultsDetail"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="WatchListItemResultsDetail">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="WatchListItem" type="tns:WatchListItem"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Page" type="tns:DataPage"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ProgramsFilters" type="tns:ArrayOfFilter"/>
+          <s:element minOccurs="0" maxOccurs="1" name="AiringsFilters" type="tns:ArrayOfFilter"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfFilter">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Filter" nillable="true" type="tns:Filter"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Filter">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ColumnNumber" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Operation" type="tns:FilteringOperation"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Expression" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="FilteringOperation">
+        <s:restriction base="s:string">
+          <s:enumeration value="Equals"/>
+          <s:enumeration value="Starts"/>
+          <s:enumeration value="Ends"/>
+          <s:enumeration value="Contains"/>
+          <s:enumeration value="Match"/>
+          <s:enumeration value="GT"/>
+          <s:enumeration value="GEQ"/>
+          <s:enumeration value="LT"/>
+          <s:enumeration value="LEQ"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="Image">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ImageUrl" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ImageUseType" nillable="true" type="tns:ImageUseType"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ImageId" nillable="true" type="s:int"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ImageTitle" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ImageCaption" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ObjectId" nillable="true" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ObjectType" nillable="true" type="tns:ImageObjectType"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ObjectName" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Relevancy" nillable="true" type="s:boolean"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ImageCredit" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ImageCreditDisplay" nillable="true" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ImageCastWeight" nillable="true" type="s:float"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ImageZoomLevel" nillable="true" type="tns:ImageZoomLevel"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ImageHeadcount" nillable="true" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ImageType" nillable="true" type="tns:ImageType"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ImageFormat" nillable="true" type="tns:ImageFormat"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ImageHorizontalResolution" nillable="true" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ImageVerticalResolution" nillable="true" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ImageMaintainAspectFlag" nillable="true" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ImageExpiryDateTime" nillable="true" type="s:dateTime"/>
+          <s:element minOccurs="1" maxOccurs="1" name="LastUpdate" nillable="true" type="s:dateTime"/>
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="ImageUseType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Logo"/>
+          <s:enumeration value="HeroImage"/>
+          <s:enumeration value="Thumbnail"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="ImageObjectType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Program"/>
+          <s:enumeration value="Credit"/>
+          <s:enumeration value="Channel"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="ImageZoomLevel">
+        <s:restriction base="s:string">
+          <s:enumeration value="1"/>
+          <s:enumeration value="2"/>
+          <s:enumeration value="3"/>
+          <s:enumeration value="4"/>
+          <s:enumeration value="5"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="ImageType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Head Shot: Key"/>
+          <s:enumeration value="Group"/>
+          <s:enumeration value="Gallery: Key"/>
+          <s:enumeration value="Gallery: Supporting"/>
+          <s:enumeration value="Program: Key"/>
+          <s:enumeration value="Box Art"/>
+          <s:enumeration value="Production: Key"/>
+          <s:enumeration value="Program Logo"/>
+          <s:enumeration value="Team Logo"/>
+          <s:enumeration value="League Logo"/>
+          <s:enumeration value="Key Art"/>
+          <s:enumeration value="Station Logo"/>
+          <s:enumeration value="Head Shot: Supporting"/>
+          <s:enumeration value="Program: Supporting"/>
+          <s:enumeration value="Production: Supporting"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="ImageFormat">
+        <s:restriction base="s:string">
+          <s:enumeration value="jpg"/>
+          <s:enumeration value="GIF"/>
+          <s:enumeration value="BitMap"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="IncludeDataType">
+        <s:restriction base="s:string">
+          <s:enumeration value="AllWithProgramsSort"/>
+          <s:enumeration value="AllWithAiringsSort"/>
+          <s:enumeration value="ProgramsOnly"/>
+          <s:enumeration value="AiringsOnly"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetWatchListItemResultsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetWatchListItemResultsResult" type="tns:GetWatchListItemResultsRS"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetWatchListItemResultsRS">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:CoreResponse">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="ItemResults" type="tns:ArrayOfWatchListItemResults"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfWatchListItemResults">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="WatchListItemResults" nillable="true" type="tns:WatchListItemResults"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="WatchListItemResults">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Page" type="tns:DataPage"/>
+          <s:element minOccurs="0" maxOccurs="1" name="WatchListItem" type="tns:WatchListItem"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Airings" type="tns:ArrayOfAiring"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Programs" type="tns:ArrayOfProgram"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfAiring">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Airing" nillable="true" type="tns:Airing"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Airing">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ProgramId" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="SeriesId" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="InstanceId" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="UnknownInstance" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="TvObjectId" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="StartDateTime" type="s:dateTime"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Duration" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="EndDateTime" type="s:dateTime"/>
+          <s:element minOccurs="1" maxOccurs="1" name="AiringType" type="tns:AiringType"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ShowingType" type="tns:ShowingType"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ColorType" type="tns:ColorType"/>
+          <s:element minOccurs="0" maxOccurs="1" name="AiringRating" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="CC" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="LetterBox" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Stereo" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="SAP" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Dolby" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="DSS" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="HD" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="HighDefinitionLevel" type="tns:HighDefinitionLevel"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Sports" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="DVS" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ServiceId" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="SourceId" type="s:int"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Channel" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ChannelType" type="tns:ChannelType"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CallLetters" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SourceName" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SourceLongName" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="TivoSupported" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ParentNetworkId" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="IconAvailable" type="s:boolean"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ChannelImages" type="tns:ArrayOfImage"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ChannelSchedules" type="tns:ArrayOfChannelSchedule"/>
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="AiringType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Unknown"/>
+          <s:enumeration value="Live"/>
+          <s:enumeration value="Taped"/>
+          <s:enumeration value="Repeat"/>
+          <s:enumeration value="New"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="ShowingType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Premiere"/>
+          <s:enumeration value="Series Premiere"/>
+          <s:enumeration value="Season Premiere"/>
+          <s:enumeration value="Finale"/>
+          <s:enumeration value="Series Finale"/>
+          <s:enumeration value="Season Finale"/>
+          <s:enumeration value="Paid For"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="ColorType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Color"/>
+          <s:enumeration value="Black and White"/>
+          <s:enumeration value="Colorized"/>
+          <s:enumeration value="Color &amp; BW Episodes"/>
+          <s:enumeration value="May be colorized"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="HighDefinitionLevel">
+        <s:restriction base="s:string">
+          <s:enumeration value="HD Level Unknown"/>
+          <s:enumeration value="None"/>
+          <s:enumeration value="720p"/>
+          <s:enumeration value="1080i"/>
+          <s:enumeration value="1080p"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="ChannelType">
+        <s:restriction base="s:string">
+          <s:enumeration value="24-Hours"/>
+          <s:enumeration value="Partial"/>
+          <s:enumeration value="Shared"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfImage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Image" nillable="true" type="tns:Image"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfChannelSchedule">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ChannelSchedule" nillable="true" type="tns:ChannelSchedule"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ChannelSchedule">
+        <s:attribute name="Flag" type="s:string"/>
+        <s:attribute name="EffectiveTime" type="s:int" use="required"/>
+        <s:attribute name="EndTime" type="s:int" use="required"/>
+      </s:complexType>
+      <s:complexType name="ArrayOfProgram">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Program" nillable="true" type="tns:Program"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Program">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ProgramId" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="SeriesId" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="TvObjectId" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="MasterTitle" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="EpisodeTitle" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="CopyText" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Runtime" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ProgramType" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Category" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Subcategory" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ReleaseYear" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Season" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="EpisodeNumber" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="PartNumber" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="PartTotal" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="StarRating" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="TVRating" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="MovieRating" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Subtitled" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Letterbox" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="CC" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Color" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="OriginalAirDate" type="s:dateTime"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Syndicated" type="s:boolean"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Keywords" type="tns:ArrayOfString"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Credits" type="tns:ArrayOfProgramCredit"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ProgramImages" type="tns:ArrayOfImage"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfProgramCredit">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ProgramCredit" nillable="true" type="tns:ProgramCredit"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ProgramCredit">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ProgramId" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="CreditId" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="CreditName" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="PartName" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="CreditType" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Sequence" type="s:int"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OrderWatchListItems">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:OrderWatchListItemsRQ"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OrderWatchListItemsRQ">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:CoreRequest">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="WatchListItems" type="tns:ArrayOfWatchListItem"/>
+              <s:element minOccurs="1" maxOccurs="1" name="DeviceProfileId" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="LastUpdateDate" type="s:dateTime"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="OrderWatchListItemsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:OrderWatchListItemsResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateWatchListItem">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:UpdateWatchListItemRQ"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UpdateWatchListItemRQ">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:CoreRequest">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="DeviceProfileId" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="WatchListItem" type="tns:WatchListItem"/>
+              <s:element minOccurs="1" maxOccurs="1" name="LastUpdateDate" type="s:dateTime"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="UpdateWatchListItemResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:UpdateWatchListItemResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Ping">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:PingRQ"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PingRQ">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:CoreRequest"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="PingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PingResult" type="tns:PingRS"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PingRS">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:CoreResponse">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="BuildVersion" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="IP" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="HostName" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://services.tvguide.com/v4/common/types">
+      <s:complexType name="CoreRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ClientBatchId" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CoreResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="RequestId" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ClientBatchId" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="TimeStamp" type="s:dateTime"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Status" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="s1:ArrayOfError"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfError">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Error" nillable="true" type="s1:Error"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Error">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ErrorCode" type="s:int"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ErrorName" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ErrorText" nillable="true" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ErrorType" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DeleteWatchListItemsResult" type="s1:CoreResponse"/>
+      <s:element name="OrderWatchListItemsResult" type="s1:CoreResponse"/>
+      <s:element name="UpdateWatchListItemResult" type="s1:CoreResponse"/>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="AddWatchListItemSoapIn">
+    <wsdl:part name="parameters" element="tns:AddWatchListItem"/>
+  </wsdl:message>
+  <wsdl:message name="AddWatchListItemSoapOut">
+    <wsdl:part name="parameters" element="tns:AddWatchListItemResponse"/>
+  </wsdl:message>
+  <wsdl:message name="DeleteWatchListItemsSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteWatchListItems"/>
+  </wsdl:message>
+  <wsdl:message name="DeleteWatchListItemsSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteWatchListItemsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetWatchListItemsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetWatchListItems"/>
+  </wsdl:message>
+  <wsdl:message name="GetWatchListItemsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetWatchListItemsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetWatchListItemResultsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetWatchListItemResults"/>
+  </wsdl:message>
+  <wsdl:message name="GetWatchListItemResultsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetWatchListItemResultsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="OrderWatchListItemsSoapIn">
+    <wsdl:part name="parameters" element="tns:OrderWatchListItems"/>
+  </wsdl:message>
+  <wsdl:message name="OrderWatchListItemsSoapOut">
+    <wsdl:part name="parameters" element="tns:OrderWatchListItemsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="UpdateWatchListItemSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateWatchListItem"/>
+  </wsdl:message>
+  <wsdl:message name="UpdateWatchListItemSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateWatchListItemResponse"/>
+  </wsdl:message>
+  <wsdl:message name="PingSoapIn">
+    <wsdl:part name="parameters" element="tns:Ping"/>
+  </wsdl:message>
+  <wsdl:message name="PingSoapOut">
+    <wsdl:part name="parameters" element="tns:PingResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="WatchListServiceSoap">
+    <wsdl:operation name="AddWatchListItem">
+      <wsdl:input message="tns:AddWatchListItemSoapIn"/>
+      <wsdl:output message="tns:AddWatchListItemSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteWatchListItems">
+      <wsdl:input message="tns:DeleteWatchListItemsSoapIn"/>
+      <wsdl:output message="tns:DeleteWatchListItemsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetWatchListItems">
+      <wsdl:input message="tns:GetWatchListItemsSoapIn"/>
+      <wsdl:output message="tns:GetWatchListItemsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetWatchListItemResults">
+      <wsdl:input message="tns:GetWatchListItemResultsSoapIn"/>
+      <wsdl:output message="tns:GetWatchListItemResultsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="OrderWatchListItems">
+      <wsdl:input message="tns:OrderWatchListItemsSoapIn"/>
+      <wsdl:output message="tns:OrderWatchListItemsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateWatchListItem">
+      <wsdl:input message="tns:UpdateWatchListItemSoapIn"/>
+      <wsdl:output message="tns:UpdateWatchListItemSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <wsdl:input message="tns:PingSoapIn"/>
+      <wsdl:output message="tns:PingSoapOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WatchListServiceSoap" type="tns:WatchListServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="AddWatchListItem">
+      <soap:operation soapAction="http://services.tvguide.com/v4/watchlist/AddWatchListItem" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteWatchListItems">
+      <soap:operation soapAction="http://services.tvguide.com/v4/watchlist/DeleteWatchListItems" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetWatchListItems">
+      <soap:operation soapAction="http://services.tvguide.com/v4/watchlist/GetWatchListItems" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetWatchListItemResults">
+      <soap:operation soapAction="http://services.tvguide.com/v4/watchlist/GetWatchListItemResults" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderWatchListItems">
+      <soap:operation soapAction="http://services.tvguide.com/v4/watchlist/OrderWatchListItems" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateWatchListItem">
+      <soap:operation soapAction="http://services.tvguide.com/v4/watchlist/UpdateWatchListItem" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <soap:operation soapAction="http://services.tvguide.com/v4/watchlist/Ping" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="WatchListServiceSoap12" type="tns:WatchListServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="AddWatchListItem">
+      <soap12:operation soapAction="http://services.tvguide.com/v4/watchlist/AddWatchListItem" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteWatchListItems">
+      <soap12:operation soapAction="http://services.tvguide.com/v4/watchlist/DeleteWatchListItems" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetWatchListItems">
+      <soap12:operation soapAction="http://services.tvguide.com/v4/watchlist/GetWatchListItems" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetWatchListItemResults">
+      <soap12:operation soapAction="http://services.tvguide.com/v4/watchlist/GetWatchListItemResults" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderWatchListItems">
+      <soap12:operation soapAction="http://services.tvguide.com/v4/watchlist/OrderWatchListItems" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateWatchListItem">
+      <soap12:operation soapAction="http://services.tvguide.com/v4/watchlist/UpdateWatchListItem" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <soap12:operation soapAction="http://services.tvguide.com/v4/watchlist/Ping" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WatchListService">
+    <wsdl:port name="WatchListServiceSoap" binding="tns:WatchListServiceSoap">
+      <soap:address location="http://cswebdev.tvguide.com/v4/watchlistservice.asmx"/>
+    </wsdl:port>
+    <wsdl:port name="WatchListServiceSoap12" binding="tns:WatchListServiceSoap12">
+      <soap12:address location="http://cswebdev.tvguide.com/v4/watchlistservice.asmx"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

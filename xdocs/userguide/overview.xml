@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>soapUI Userguide Overview</title>
+    </properties>
+    <body>
+		<section name="soapUI Overview">
+		 
+		 <subsection name="Prerequisites">
+		 <p>Although soapUI should be easy to get started with, you will need to have a good grasp of the following 
+		 concepts and technologies to get the most out of soapUI's functionality.</p>
+		 <ul>
+		 	<li><b>WSDL</b> - You should have a grasp of basic concepts like services, ports, bindings, port types, and the relation to XML Schema</li>
+		 	<li><b>SOAP</b> - You should have a grasp of basic concepts and relation to WSDL (bindings, etc), different encoding types (soap encoded/literal) and 
+		 	message styles (document/rpc)</li>
+		 	<li><b>XML and related technologies</b> - Useful knowledge is XPath, XML Schema, namespaces, etc</li>
+		 </ul>
+		 <p>You can find most specifications at <a target="_new" href="http://www.w3.org">W3C</a> and tutorials
+		 at several sites, for example <a target="_new" href="http://www.w3schools.com">W3Schools</a> and
+		 <a target="_new" href="http://www.zvon.org/o_html/group_web_services.html">zvon.org</a>.</p>
+		 </subsection>
+		 				 <div class="infobox">
+			<div class="infobox_top"></div>
+      			<div class="infobox_overall">
+         			<div class="infobox_header">Did you know...?</div>
+					<div class="infobox_content">
+						<span class="pro_par">
+						<p>
+						There is a commercial version of soapUI available; <b><i>soapUI Pro</i></b>.
+						</p>
+						<p>
+						<b><i>soapUI Pro</i></b> contains productivity enhancements as well as offers Professional World Class support.
+						</p>
+						</span>
+					</div>
+					<div class="infobox_footer">
+						<a  onclick="javascript:urchinTracker('/relevantinfo')" href="http://www.eviware.com/trial" class="infoboxlink"><span class="ilink"> Try It </span> </a>
+					</div>
+      			</div>
+   				<div class="infobox_bottom"><div></div></div>
+		</div>
+		
+		 <subsection name="The soapUI Interface">
+		 <p>soapUI is a standard desktop application adhering to established User Interface concepts for Integrated Development Environments, as available in for example
+		 Eclipse, NetBeans and IDEA. Most actions have keyboard shortcuts and tooltips, you should have no problems finding 
+		 your way around. soapUI makes heavy use of "Inspectors"; i.e. tabs that can be shown and hidden by selecting them.</p>
+
+		 <p>The soapUI window is divided into the following views:</p>
+		 <table><tr>
+		 <td><i>left</i><br/>The main navigator showing a hierarchy of all projects, interfaces, etc. (see below)
+		 <ul>
+		 	<li> Selecting an item will show available overview information in the bottom left "Properties" panel</li>
+		 	<li> Double clicking or pressing enter on a selected item will open the items' editor
+		 	to the right if available</li>
+		 </ul>
+		 </td>
+		 <td><i>right</i><br/>The soapUI desktop containing editors and viewers for those double clicked items in the navigator.
+		 <ul>
+		 <li>Cycle between active panes with Ctrl-Tab or use Ctrl-W to switch</li>
+		 <li>Maximize, Minimize, Resize or Move as usual using each panes window menu</li>
+		 <li>Focusing on a pane will automatically put focus on its item in the navigator, scrolling into view if necessary</li>
+		 </ul>
+		 </td></tr>
+		 <tr><td><i>bottom-left</i>
+		 <ul>
+		 <li>The <b>Properties</b> panel will show information on the item currently selected in the navigator</li>
+		 </ul>
+		 </td><td><i>bottom right</i><br/>A color coded log view showing log messages from soapUI</td></tr></table>
+		 <p align="center">
+			<img src="images/soapui_overview.gif" border="0" alt="an overview of the Web Testing tool, soapUI"/>
+		</p>
+		<p>You can set a centered background image for the default desktop by placing a soapui-backgroung.gif/jpg/png file in the
+		soapUI bin folder when using the default desktop</p>
+		 </subsection>
+		 
+		 <subsection name="The Navigator">
+		 <imgtable src="images/navigator_items.gif" alt="The soapUI Navigator Tree"><div>
+		 The following objects are currently shown in the navigator tree:
+		 
+		 <ul>
+		 	<li><b>Projects</b> node : the soapUI workspace
+		 	<ul>
+		 		<li><p><a href="projects/index.html">Project</a> node(s) : for each project in the workspace</p>
+		 		<ul>
+		 			<li><p><a href="interfaces/index.html">Interface</a> node(s) : for each interface in the project</p>
+		 			<ul>
+		 				<li><p><a href="interfaces/index.html#Operations">Operation</a> node(s) : for each operation in the interface</p>
+		 				<ul>
+		 					<li><p><a href="requests.html">Request</a> node(s) : for each request created for the operation</p></li>
+		 				</ul>
+		 				</li>
+		 			</ul>
+		 			
+		 			</li>
+		 			<li><p><a href="functional/testsuites.html">TestSuite</a> node(s) : for each TestSuite in the project</p>
+					<ul>
+						<li><p><a href="functional/testcases.html">TestCase</a> node(s) : for each TestCase in the testsuite</p>
+		    			<ul>
+							<li><p><b>TestSteps</b> node, contains the TestCases'</p>
+			    			<ul>
+			    				<li><p><a href="functional/testcases.html#Test_Steps">TestStep</a> node(s) : for each TestCase-step, together with a colored
+			    				icon indicating the status of that step.</p></li>
+			    			</ul>
+			    			</li>
+							<li><p><b>LoadTests</b> node, contains the TestCases'</p>
+			    			<ul>
+			    				<li><p><a href="loadtest/index.html">LoadTest</a> node(s) : for each loadtest in the containing TestCase</p></li>
+			    			</ul>
+			    			</li>
+		    			</ul>
+						</li>
+		 			</ul>
+		 			</li>
+		 			<li><p><a href="mock/services.html">MockService</a> node(s) : for each MockService in the project</p>
+					<ul>
+						<li><p><a href="mock/operations.html">MockOperation</a> node(s) : for each MockOperation in the MockService</p>
+		    			<ul>
+							<li><p><a href="mock/responses.html">MockResponse</a> node(s) : for each MockResponse in the containing MockOperation</p>
+			    			</li>
+		    			</ul>
+						</li>
+		 			</ul>
+		 			</li>
+		 		</ul>
+		 		</li>
+		 	</ul>
+		 	</li>
+		 </ul>
+		 The tree can be navigated using the standard keyboard actions. An items' associated desktop panel can 
+		 	be opened by double clicking it or selecting it and pressing Enter.
+		</div></imgtable>
+		 </subsection>
+		 
+		 <subsection name="Property Mode">
+		 <columns><column>
+		 <div>The Navigator described above contains a small toggle button on top of the tree. Pressing it will 
+		 put the Navigator into <i>Property Mode</i>, displaying all <a href="properties.html">Properties</a> for their 
+		 corresponding objects in the tree (green = read/write, black = read-only), giving an overview of all
+		 defined or available properties within a project.</div>
+		 <ul>
+		 <li>Items containing custom properties (Projects, TestSuites, TestCases, MockServices and MockResponse) will
+		 in the tree get a <i>Properties child node</i> contain that objects custom properties.</li>
+		 <li> Double clicking a property prompts to set its value.</li>
+		 <li> Right clicking the Properties node open a menu for adding new properties.</li>
+		 </ul>
+		 <p>One of the main Use cases for this mode is the possibility to drag a property from the tree into any
+		 text editor that supports <a href="properties.html#Property_Expansion">Property Expansion</a>, making it
+		 extremely easy to create property expansions as desired. If the property being dragged contains an XML value,
+		 the <a href="xpath_selector.html">XPath Selector</a> will be displayed after a drop, allowing for further
+		 property-expansion refinement</p>
+		 </column><column><img src="images/property_mode.gif" alt="Working in property mode"/></column></columns>
+		 </subsection>
+		 
+		 <subsection name="Drag and Drop">
+		 <p>soapUI provides extensive support for dragging and dropping items in the Navigator, resulting in corresponding Clone or Move 
+		 operations, alternatively add or import actions, for example dragging a Request to a TestCase creates a TestRequest Step corresponding
+		 to the dragged Request. It is also possible to drag and drop within or between the TestSuite and TestCase editors and the Navigator to 
+		 rearrange, move, or copy items.</p>
+		 </subsection>
+		 
+		 <subsection name="Main Menu">
+		 <p>Most actions in soapUI are performed through toolbar buttons or context sensitive right-button menus. 
+		 The following actions are available from the main menu:</p>
+		 <columns>
+			 <column>
+				<div>
+				 <b>File Menu</b>
+				 <p>The first 9 actions are the same as those for the Workspace popup menu, please go to the
+				 <a href="workspaces.html">Workspaces</a> page for details. After these come the following actions:</p>
+				 <ul>
+				 	<li><b>Preferences</b> - Sets global <a href="preferences.html">soapUI Preferences</a></li>
+				 	<li><b>Save Preferences</b> - Saves the current global settings</li>
+				 	<li><b>Import Preferences</b> - Prompts to import global settings from another location (for example
+				 	an old soapUI installation). After loading, soapUI may need to be restarted for all settings to be 
+				 	activated</li>
+				 	<li><b>Recent</b> - Contains submenus for recent editors, projects, or workspaces for easy switching</li>
+				 	<li><b>Exit</b> - Prompts to exit soapUI</li>
+				 	<li><b>Exit without saving</b> - prompts to exit soapUI without saving anything</li>
+				 	<li><b>Online Help</b> - displays this page in an external browser</li>
+				 </ul>
+				 </div>
+			 </column>
+			 <column width="250">
+			  	<img src="images/file_menu.gif" alt="The soapUI File menu"/>
+			 </column>
+		 </columns>
+		 
+		 <columns>
+			 <column><div>
+				 <b>Tools Menu</b>
+				 <ul><li>Contains actions for invoking integrated tools as described in the
+				 <a href="tools/index.html">Tool Integrations</a> section.</li></ul>
+				 </div>
+		  	 </column>
+			 <column width="250">
+			  	<img src="images/tools_menu.gif" alt="The soapUI Tools Menu"/>
+			 </column>
+		 </columns>
+		 
+		   <columns>
+			 <column><div>
+		 <b>Desktop Menu</b> -
+		 Shows actions related to the currently selected Desktop.
+		 <ul>
+		    <li><b>Switch Windows</b> - opens a <i>Switch Window</i> dialog for switching to another open editor</li>
+		    <li><b>Maximize Desktop</b> - hides or shows the Navigator and Log-Inspectors</li>
+			<li><b>Close Current</b> - closes the currently active desktop pane</li>
+			<li><b>Close All</b> - closes all desktop panes</li>
+			<li><b>Closes Others</b> - closes all desktop panes except the currently active one</li>		 
+		 </ul>
+		 </div> </column>
+			 <column width="250">
+			  	<img src="images/window_menu.gif" alt="Desktop Menu in soapUI"/>
+			 </column>
+		 </columns>
+		 
+		 <columns>
+			 <column><div>
+		 <b>Help Menu</b> - general information and soapUI Pro specific actions
+		 <ul>
+			<li><b>User Guide</b> - Opens the soapUI User Guide</li>
+			<li><b>Getting Started</b> - Opens the soapUI Getting Started documents </li>
+			<li><b>System Properties</b> - Opens a list of all currently defined system properties (see below)</li>
+			<li><b>Update License</b> (soapUI Pro only) - see <a href="licensemanagement.html">License Management</a></li>
+			<li><b>Show License Details</b> (soapUI Pro only) - see <a href="licensemanagement.html">License Management</a></li>
+			<li><b>soapUI.org</b> - Opens http://www.soapui.org</li>		 
+			<li><b>About soapUI</b> - Shows a version information dialog</li>
+		 </ul>
+		 </div></column>
+			 <column width="250">
+			  	<img src="images/help_menu.gif" alt="The soapUI Help Menu"/>
+			 </column>
+		 </columns>
+		 </subsection>
+		 
+		 <subsection name="System Properties">
+		 <p>The System Properties option from the help menu opens a simple dialog showing all current defined system properties, 
+		 which can be useful for debugging system or security settings, etc…</p>
+		 <p align="center"><img src="images/systemproperties.gif" alt="System Properties in soapUI"/></p>
+		 </subsection>
+		 
+		 <subsection name="Log Tabs">
+ 
+ 		 <p>The bottom right of the soapUI workspace contains a number of log windows, each displaying 
+ 		 corresponding output;</p>
+ 		 <p align="center"><img src="images/log_tabs.gif" alt="the soapUI Logs Tab"/></p>
+ 		 <p>Right clicking on a log will show a popup menu with options to clear and enable or disable the 
+		 log and to copy selected rows to the clipboard. Also, log-entries can be selected or copied to the clipboard for transfer to 
+ 		 external tools. An option to set the maximum number of rows is available (default is 1000), when exceeding this
+ 		 limit, old rows are removed from the log (i.e. fifo).</p>		 
+		
+		 <p>The following tabs are currently displayed (when needed):</p>
+		 <ul>
+		 <li><b>soapUI log</b> - general notifications and messages</li>
+		 <li><b>http Log</b> - http wire log for sent http requests for viewing the actual
+		 data sent and received on the socket (disabled during LoadTesting)</li>
+		 <li><b>jetty log</b> - mock-service related status notifications from</li>
+		 <li><b>groovy log</b> - log messages from groovy scripts using the available log object (disabled
+		 during loadtest but can be enabled from File/Preferences/UI Settings)</li>
+		 <li><b>error log</b> - log with diagnostic information for errors that arise during execution, this log
+		 should be included in any bug-reports if it contains related error information. Please note that not
+		 all errors logged have to be actual errors in soapUI, for example if a target server or service is not
+		 available, a socket connection error will be shown here, which may well be due to "natural" causes.</li> 
+		 </ul>
+
+		 <p>soapUI uses <a target="_new" href="http://logging.apache.org/log4j/docs/index.html">log4j</a> for logging, 
+		 you can customize the log4j configuration by putting a log4j xml configuration file named "soapui-log4j.xml" 
+		 in the soapUI bin directory (or the current working directory when not running from there).</p>
+		 </subsection>
+		 
+		 <p><hr size="1"/>Next: <a href="preferences.html">soapUI Preferences</a></p>
+		</section>
+    </body>
+</document>

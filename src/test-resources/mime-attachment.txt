@@ -1,0 +1,10 @@
+------=_Part_1_24266834.1160572036885
+Content-Type: text/xml
+
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><SOAP-ENV:Body/></SOAP-ENV:Envelope> 
+------=_Part_1_24266834.1160572036885
+Content-Type: text/html
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?> 
+<SOME-XML>...</SOME-XML>
+------=_Part_1_24266834.1160572036885--

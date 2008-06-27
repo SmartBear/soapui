@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8'?><java-wsdl-mapping version='1.1' xmlns='http://java.sun.com/xml/ns/j2ee' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://java.sun.com/xml/ns/j2ee    http://www.ibm.com/webservices/xsd/j2ee_jaxrpc_mapping_1_1.xsd'>
+ <package-mapping>
+  <package-type>ole.test</package-type>
+  <namespaceURI>urn:ole.test.types</namespaceURI>
+ </package-mapping>
+ <java-xml-type-mapping>
+  <java-type>ole.test.Test_toUpperCase_RequestStruct</java-type>
+  <root-type-qname xmlns:typeNS='urn:ole.test.types'>typeNS:toUpperCase</root-type-qname>
+  <qname-scope>complexType</qname-scope>
+  <variable-mapping>
+   <java-variable-name>string_1</java-variable-name>
+   <xml-element-name>String_1</xml-element-name>
+  </variable-mapping>
+ </java-xml-type-mapping>
+ <java-xml-type-mapping>
+  <java-type>ole.test.Test_toUpperCase_ResponseStruct</java-type>
+  <root-type-qname xmlns:typeNS='urn:ole.test.types'>typeNS:toUpperCaseResponse</root-type-qname>
+  <qname-scope>complexType</qname-scope>
+  <variable-mapping>
+   <java-variable-name>result</java-variable-name>
+   <xml-element-name>result</xml-element-name>
+  </variable-mapping>
+ </java-xml-type-mapping>
+ <service-interface-mapping>
+  <service-interface>ole.test.TestImpl</service-interface>
+  <wsdl-service-name xmlns:serviceNS='urn:ole.test'>serviceNS:TestImpl</wsdl-service-name>
+  <port-mapping>
+   <port-name>TestPort</port-name>
+   <java-port-name>TestPort</java-port-name>
+  </port-mapping>
+ </service-interface-mapping>
+ <service-endpoint-interface-mapping>
+  <service-endpoint-interface>ole.test.Test</service-endpoint-interface>
+  <wsdl-port-type xmlns:portTypeNS='urn:ole.test'>portTypeNS:Test</wsdl-port-type>
+  <wsdl-binding xmlns:bindingNS='urn:ole.test'>bindingNS:TestBinding</wsdl-binding>
+  <service-endpoint-method-mapping>
+   <java-method-name>toUpperCase</java-method-name>
+   <wsdl-operation>toUpperCase</wsdl-operation>
+   <wrapped-element/>
+   <method-param-parts-mapping>
+    <param-position>0</param-position>
+    <param-type>java.lang.String</param-type>
+    <wsdl-message-mapping>
+     <wsdl-message xmlns:wsdlMsgNS='urn:ole.test'>wsdlMsgNS:Test_toUpperCase</wsdl-message>
+     <wsdl-message-part-name>String_1</wsdl-message-part-name>
+     <parameter-mode>IN</parameter-mode>
+    </wsdl-message-mapping>
+   </method-param-parts-mapping>
+   <wsdl-return-value-mapping>
+    <method-return-value>java.lang.String</method-return-value>
+    <wsdl-message xmlns:wsdlMsgNS='urn:ole.test'>wsdlMsgNS:Test_toUpperCaseResponse</wsdl-message>
+    <wsdl-message-part-name>result</wsdl-message-part-name>
+   </wsdl-return-value-mapping>
+  </service-endpoint-method-mapping>
+ </service-endpoint-interface-mapping>
+</java-wsdl-mapping>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Web Service Test Coverage - TCPMon SOAP Monitoring in soapUI</title>
+    </properties>
+    <body>
+		<section name="SOAP Monitor Coverage">
+		<p>When enabling <a href="../coverage.html">WSDL Coverage</a> for a SOAP Monitor, soapUI will 
+		continuously accumulate and analyze monitored requests and add their coverage to the Coverage Panel. This can be
+		used in many situations, for example:</p>
+		<ul>
+		<li>If you are running manual tests and want to see how much these cover, you can run these through a SOAP Monitor and
+		analyze the results.</li>
+		<li>If you want to see the actual utilization of a contract in a testing or live environment.</li>
+		<li>etc...</li>
+		</ul>
+		<p>When collecting coverage for a SOAP Monitor, the Coverage Panel only contains the Interface-related part
+		of the Coverage Tree, since no TestSuites/TestCases are applicable during this analysis;</p>
+ 		<p align="center"><img src="images/coverage_1.gif" alt="Web Service Test Monitor Coverage"/></p>
+		 <p><hr size="1"/>Next: <a href=" "> </a></p>
+		</section>
+    </body>
+</document>

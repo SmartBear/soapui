@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Web Service Surveillance Testing - Tutorial</title>
+    </properties>
+    <body>
+		<section name="Surveillance Testing for Web Services">
+		<p>Surveillance testing is here used to describe a setup where a number of both functional and load tests are 
+		run using some kind of scheduling tool to continuously validate the availability to some web service. I this 
+		example, we will use the Open Source <a href="http://luntbuild.javaforge.com/" target="_new">LuntBuild tool</a> for setting up both functional and load test to be run
+		regularly and validated. A notification will be sent if any of the tests fail.</p> 
+		<subsection name="Creating the tests">
+		<columns><column><div>The tests used in the sample will test one of the apps 
+		included in with JBossWS (the JBoss web-service stack). They consist of:
+		<ul>
+		<li>A "getContactInfo" TestCase which validates that the response returned by a random input
+		value contains that value back. The value is generated and validated using 2 Groovy steps.</li>		
+		<li>A number of LoadTests named LoadTestXX, where XX is the number of threads, each validating that
+		the TPS value never goes under 100. The LoadTests use the Simple Strategy with no delay and both 
+		run for 5000 requests.</li>
+		</ul>
+		<p>The image to the right shows this setup in the navigator</p>
+		</div></column>
+		<column><img src="images/surveillance1.gif" alt="A Surveillance Test Case"/></column></columns>
+		</subsection>
+		
+		<subsection name="Running Surveillance Test from the command line">
+		<p>Before we automate the running of the tests using LuntBuild, let's just check that they run ok from 
+		the command line. We will use the command-line runners in this example, let's start by running the functional 
+		TestCase from within the folder where the soapUI project file is located:</p>
+		<source>testrunner.bat "C:\Documents and Settings\ole.matzura\My Documents\jbossws-soapui-project.xml" 
+		   -s"Organization Tests" -c"getContactInfo Test" -r</source>
+		<p>This produces the following output:</p>
+		<source><font size="-1">SoapUI SNAPSHOT TestCase Runner
+10:47:36,703 INFO  [SoapUITestCaseRunner] setting projectFile to [C:\Documents and Settings\ole.matzura\My Documents\jbossws-soapui-project.xml]
+10:47:36,703 INFO  [SoapUITestCaseRunner] setting testSuite to [Organization Tests]
+10:47:36,703 INFO  [SoapUITestCaseRunner] setting testCase to [getContactInfo Test]
+10:47:37,284 INFO  [WsdlProject] Loaded project from [C:\Documents and Settings\ole.matzura\My Documents\jbossws-soapui-project.xml]
+10:47:38,616 INFO  [SoapUITestCaseRunner] Running soapui tests in project [jbossws]
+10:47:38,616 INFO  [SoapUITestCaseRunner] Running soapui suite [Organization Tests], runType = SEQUENTIAL
+10:47:38,626 INFO  [SoapUITestCaseRunner] Running soapui testcase [getContactInfo Test]
+10:47:38,636 INFO  [SoapUITestCaseRunner] runing step [Groovy Script - init boss]
+10:47:39,176 INFO  [SoapUITestCaseRunner] runing step [Properties]
+10:47:39,176 INFO  [SoapUITestCaseRunner] runing step [Transfer Values - set boss]
+10:47:39,557 INFO  [SoapUITestCaseRunner] runing step [request step]
+Retrieving document at 'http://lpt-olma:8080/ws4ee-samples-server-ejb/Organization?wsdl'.
+10:47:40,398 INFO  [SchemaUtils] Loading schema types from [http://lpt-olma:8080/ws4ee-samples-server-ejb/Organization?wsdl]
+10:47:40,398 INFO  [SchemaUtils] Getting schema http://lpt-olma:8080/ws4ee-samples-server-ejb/Organization?wsdl
+10:47:40,568 INFO  [SoapUITestCaseRunner] Assertion [Schema Compliance] has status VALID
+10:47:40,568 INFO  [SoapUITestCaseRunner] runing step [Groovy Script]
+10:47:40,689 INFO  [log] boss name matched [testsd1143708459106]
+10:47:40,689 INFO  [SoapUITestCaseRunner] Finished running soapui testcase [getContactInfo Test], time taken: 1065ms, status: FINISHED
+10:47:40,689 INFO  [SoapUITestCaseRunner] Skipping testcase [getContactInfo LoadTests], filter is [getContactInfo Test]
+10:47:40,689 INFO  [SoapUITestCaseRunner] soapui suite [Organization Tests] finished in 2073ms
+
+SoapUI SNAPSHOT TestCaseRunner Summary
+-----------------------------
+Time Taken: 2070ms
+Total TestSuites: 1
+Total TestCases: 1
+Total TestSteps: 5
+Total Request Assertions: 1
+Total Failed Assertions: 0
+Total Exported Results: 0</font></source>
+		<p>Likewise, running the LoadTests is done as follows:</p>
+		
+		
+		<source>loadtestrunner.bat "C:\Documents and Settings\ole.matzura\My Documents\jbossws-soapui-project.xml" 
+   -s"Organization Tests" -c"getContactInfo LoadTests" -r</source>
+       <p>Producing the following:</p>
+       <source><font size="-1">SoapUI 1.5beta2 LoadTestRunner
+21:16:07,912 INFO  [SoapUILoadTestRunner] setting projectFile to [C:\Documents and Settings\ole.matzura\My Documents\j..
+21:16:07,932 INFO  [SoapUILoadTestRunner] setting testSuite to [Organization Tests]
+21:16:07,942 INFO  [SoapUILoadTestRunner] setting testCase to [getContactInfo LoadTests]
+21:16:09,134 INFO  [WsdlProject] Loaded project from [C:\Documents and Settings\ole.matzura\My Documents\jbossws-soapu
+21:16:11,458 INFO  [SoapUILoadTestRunner] Skipping testcase [getContactInfo Test], filter is [getContactInfo LoadTests
+21:16:11,458 INFO  [SoapUILoadTestRunner] Running LoadTest [LoadTest10]
+21:16:11,848 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest10] progress: 0.0
+21:16:12,850 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest10] progress: 0.0144
+.. etc .. 
+21:16:54,399 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest10] progress: 0.9452
+21:16:55,391 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest10] progress: 0.9744
+21:16:56,392 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest10] finished with status FINISHED
+21:16:56,392 INFO  [SoapUILoadTestRunner] Exporting log and statistics for LoadTest [LoadTest10]
+21:16:56,512 INFO  [SoapUILoadTestRunner] Exported 1 log items to [LoadTest10-log.txt]
+21:16:56,512 INFO  [SoapUILoadTestRunner] Exported 0 error results
+21:16:56,512 INFO  [SoapUILoadTestRunner] Exported 2 statistics to [LoadTest10-statistics.txt]
+21:16:56,602 INFO  [SoapUILoadTestRunner] Running LoadTest [LoadTest25]
+21:16:57,113 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest25] progress: 0.0046
+21:16:58,135 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest25] progress: 0.0348
+.. etc .. 
+21:17:37,742 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest25] progress: 0.9506
+21:17:38,773 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest25] progress: 0.9748
+21:17:39,845 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest25] finished with status FINISHED
+21:17:39,865 INFO  [SoapUILoadTestRunner] Exporting log and statistics for LoadTest [LoadTest25]
+21:17:40,095 INFO  [SoapUILoadTestRunner] Exported 1 log items to [LoadTest25-log.txt]
+21:17:40,095 INFO  [SoapUILoadTestRunner] Exported 0 error results
+21:17:40,095 INFO  [SoapUILoadTestRunner] Exported 2 statistics to [LoadTest25-statistics.txt]
+21:17:40,105 INFO  [SoapUILoadTestRunner] soapui suite [Organization Tests] finished in 88647ms</font></source>
+		
+		</subsection>
+		
+		<subsection name="Setting up the Luntbuild Project">
+		<p>Download and install luntbuild from the <a href="http://luntbuild.sourceforge.net" target="_new">SourceForge</a> site. 
+		Once you have it "figured out" and running, do the following:</p>
+		<p>Login to luntbuild and create a new project:</p>
+		<p align="center"><img src="images/surveillance2.gif" alt="LuntBuild setup for Integration with soapUI - Basic"/></p>
+		<p>Create an empty VCS File System Adapter (we will host the soapUI project file for our tests locally in this example, 
+		better would of course be to have them in a version-control system):</p>
+		<p align="center"><img src="images/surveillance3.gif" alt="LuntBuild setup for Integration with soapUI - VCS Adaptors"/></p>
+		<p>Create one builder for each testRunner, set the build command to the entire command line invocation of one of the
+		soapUI testRunners prefixed with "cmd.exe /C". Remember to set the directory to the soapui/bin directory.</p>
+		<p align="center"><img src="images/surveillance4.gif" alt="LuntBuild setup for Integration with soapUI - Builders"/></p>		
+		<p>Create one schedule for each builder and schedule accordingly (in the example below the trigger is set to manual but 
+		should be set to some more repetitive timing)</p>
+		<p align="center"><img src="images/surveillance5.gif" alt="LuntBuild setup for Integration with soapUI - Schedulers"/></p>
+		</subsection>
+		
+		<subsection name="Run the Surveillance Tests">
+		<p>Go back to the main page and run the first schedule (press the green arrow to the right of the schedule and select
+		"Save" at the bottom of the run page):</p>
+		<p align="center"><img src="images/surveillance6.gif" alt="Setting up to Run Surveillance Web Service Tests"/></p>
+		<p>Click on the schedules Latest Build and into the TestSteps directory (since we added the -f option in our builder the 
+		output TestStep results are written to that folder):</p>
+		<p align="center"><img src="images/surveillance7.gif" alt="Running the Surveillance Web Service Tests"/></p>
+		<p>To view the entire output written to system.out select the "build log" link on the top right:</p>
+		<p>Go back to the main page and run the second schedule and click on its Latest Build, the created statistics will be in the 
+		output folder:</p>
+		<p align="center"><img src="images/surveillance8.gif" alt="Log from the Surveillance Web Service Tests"/></p>
+		<p>Click on one of the statistics files to see its contents:</p>
+		<source>Request Step,min,max,avg,last,cnt,tps,bytes,bps,err
+request step,3,1189,95.25,76,5000,262.45,2160000,84454,0
+Total:,3,1189,95.25,76,5000,262.45,2160000,84454,0</source>
+		</subsection>
+		<subsection name="Summary">
+		<p>The above shows rather quickly how to set up a complete Continuous Testing environment which can be used
+		for surveillance testing of Web Services... play around with the above and add schedules, more tests, notifications, etc 
+		to get the setup that you want.</p>
+		</subsection>
+		
+		<p><hr size="1"/>Next: <a href="../tools/index.html">Web Service Code Tool Integrations</a></p>
+		</section>
+    </body>
+</document>
+

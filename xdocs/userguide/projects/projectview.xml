@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>userguide - project view</title>
+    </properties>
+    <body>
+     <section>
+		<subsection name="Project View Tab: Main View">
+			<p>
+				The project view contains useful information and metrics about your project, such as where files are stored, Test Metrics and MockService Metrics.
+				This is intended as a very quick way of getting information and overview of the project.
+			</p>
+			<img src="images/project_overview.gif" border="0"/>
+			<p>
+				We also have a number of project related inspectors at the bottom of the screen
+			</p>
+		</subsection>
+		
+		<subsection name="Description Inspector">
+			<p>
+			The Description Inspector is a way to write and maintain general information about the Project.
+			</p>
+			<img src="images/project_description_insp.gif" border="0"/>
+		</subsection>
+		
+		<subsection name="Description Inspector">
+			<p>
+			The Properties Inspector handles Project level Properties. These properties can be used in levels below the Project.
+			</p>
+			<img src="images/project_properties_insp.gif" border="0"/>
+		</subsection>
+		
+		<subsection name="Load Script Inspector">
+			<p>
+			The Load Script Inspector enable you to create Groovy Scripts that runs whenever you open a project. 
+			This might be setting Project Properties, synching Project Requirements with external sources and more.
+			</p>
+			<img src="images/project_loadscript_insp.gif" border="0"/>
+		</subsection>
+		
+		<subsection name="Save Script Inspector">
+			<p>
+			The Save Script Inspector is the opposite of the Load Script Inspector, it enables you to create Groovy Scripts that runs whenever you <b>close</b> a project. 
+			This might be writing data to file, synching Project Requirements with external sources and more.
+			</p>
+			<img src="images/project_savescript_insp.gif" border="0"/>
+		</subsection>
+		
+		
+		 <p><hr size="1"/>Next: <a href="coverage.html"> Project Coverage </a></p>
+		</section>
+    </body>
+</document>

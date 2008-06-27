@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+xmlns:s="http://www.w3.org/2001/XMLSchema" 
+xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
+xmlns:tns="http://schemas.eviware.com/TestService/v1/" 
+xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" 
+xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" 
+targetNamespace="http://schemas.eviware.com/TestService/v1/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+ 
+   <wsdl:import namespace="http://schemas.eviware.com/TestService/v1/" location="wsdls/TestBinding.wsdl"/>
+ 
+  <wsdl:service name="TestService">
+    <documentation xmlns="http://schemas.xmlsoap.org/wsdl/" />
+    <wsdl:port name="TestServiceSoap" binding="tns:TestServiceSoap">
+      <soap:address location="http://www.eviware.com/webservices/TestService" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

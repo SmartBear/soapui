@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   targetNamespace="http://eviware.com/soapui/junit" 
+		   elementFormDefault="qualified" 
+		   xmlns:tns="http://eviware.com/soapui/junit" xmlns:Q1="xsd" xmlns:Q2="x" xmlns:Q3="2" xmlns:Q4="Q" xmlns:Q5="4" xmlns:Q6="5">
+
+  <xs:element name="testsuite" type="tns:testsuite" />
+  <xs:complexType name="testsuite">
+
+  	<xs:sequence>
+  		<xs:element ref="tns:properties" minOccurs="0" maxOccurs="1" />
+  		<xs:element ref="tns:testcase" minOccurs="0"
+  			maxOccurs="unbounded" />
+  		<xs:element name="system-out" type="xs:normalizedString"
+  			minOccurs="1" maxOccurs="1" />
+  		<xs:element name="system-err" type="xs:normalizedString"
+  			minOccurs="1" maxOccurs="1" />
+  	</xs:sequence>
+
+  	<xs:attribute name="errors" type="xs:int" />
+  	<xs:attribute name="failures" type="xs:int" />
+  	<xs:attribute name="name" type="xs:string" />
+  	<xs:attribute name="tests" type="xs:int" />
+  	<xs:attribute name="time" type="xs:decimal" />
+  	<xs:attribute name="package" type="xs:string"></xs:attribute>
+  	<xs:attribute name="id" type="xs:string"></xs:attribute>
+  </xs:complexType>
+
+  <xs:element name="properties" type="tns:properties" />
+  <xs:complexType name="properties">
+  	<xs:sequence>
+  		<xs:element ref="tns:property" minOccurs="0" maxOccurs="unbounded"/>
+  	</xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="property" type="tns:property" />
+  <xs:complexType name="property">
+  	<xs:attribute name="name" type="xs:string"></xs:attribute>
+  	<xs:attribute name="value" type="xs:string"></xs:attribute>
+  </xs:complexType>
+
+  <xs:element name="testcase" type="tns:testcase" />
+  <xs:complexType name="testcase">
+  	<xs:sequence>
+  		<xs:element ref="tns:failure" minOccurs="0" maxOccurs="1"/>
+  		<xs:element ref="tns:error" minOccurs="0" maxOccurs="1"/>
+  	</xs:sequence>
+  	<xs:attribute name="name" type="xs:string"></xs:attribute>
+  	<xs:attribute name="time" type="xs:double"></xs:attribute>
+  	<xs:attribute name="package" type="xs:string"></xs:attribute>
+  </xs:complexType>
+ 
+	<xs:element name="failure">
+	  <xs:complexType>
+	  	<xs:simpleContent>
+	  		<xs:extension base="xs:string">
+	  			<xs:attribute name="type" type="xs:string" />
+	  			<xs:attribute name="message" type="xs:string"></xs:attribute>
+	  		</xs:extension>
+	  	</xs:simpleContent>
+	  </xs:complexType>
+	</xs:element>
+
+	<xs:element name="error">
+	  <xs:complexType>
+	  	<xs:simpleContent>
+	  		<xs:extension base="xs:string">
+	  			<xs:attribute name="type" type="xs:string" />
+	  			<xs:attribute name="message" type="xs:string"></xs:attribute>
+	  		</xs:extension>
+	  	</xs:simpleContent>
+	  </xs:complexType>
+	</xs:element>
+  
+
+
+	<xs:element name="testsuites" type="tns:testsuites"></xs:element>
+
+	<xs:complexType name="testsuites">
+		<xs:sequence>
+			<xs:element name="testsuite" type="tns:testsuite"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
