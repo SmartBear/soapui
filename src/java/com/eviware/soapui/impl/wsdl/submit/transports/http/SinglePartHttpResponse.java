@@ -79,7 +79,7 @@ class SinglePartHttpResponse implements HttpResponse
 			String contentType = httpMethod.getResponseContentType();
 			String charset = httpMethod.getResponseCharSet();
 			
-			if( contentType.toLowerCase().endsWith("xml"))
+			if( contentType != null && contentType.toLowerCase().endsWith("xml"))
 			{
 				if( responseSize > 3 && responseBody[0] == (byte)239 && responseBody[1] == (byte)187 && responseBody[2] == (byte)191 )
 				{
