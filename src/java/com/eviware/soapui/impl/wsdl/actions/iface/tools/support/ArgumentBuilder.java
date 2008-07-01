@@ -27,8 +27,13 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 public class ArgumentBuilder
 {
+	private static final String SHADOW = "XXXXXX";
 	private final StringToStringMap values;
 	private List<String> args = new ArrayList<String>();
+	/** 
+	 * List of arguments that needs to be shadowed.
+	 */ 
+	private List<String> argsToShadow = new ArrayList<String>();
 	private boolean isUnix;
 
 	public ArgumentBuilder( StringToStringMap values )
@@ -95,6 +100,26 @@ public class ArgumentBuilder
 		
 		return true;
 	}
+	
+	public boolean addStringShadow(String name, String arg)
+	{
+		if( !values.containsKey( name ))
+			return false;
+		
+		String value = values.get( name ).toString();
+		if( value == null || value.length() == 0 ) {
+			return false;
+		}
+		
+		if( arg != null ) {
+			args.add( arg );
+		}
+		
+		args.add( value );
+		argsToShadow.add( value );
+		
+		return true;
+	}
 
 	public ArgumentBuilder addArgs( String... args )
 	{
@@ -115,15 +140,30 @@ public class ArgumentBuilder
 		return false;
 	}
 
+	/**
+	 * Arguments that are added 
+	 */
 	public String toString()
 	{
 		StringBuffer buf = new StringBuffer();
-		for( int c = 0; c < args.size(); c++ )
+		for( int cnt = 0; cnt < args.size(); cnt++ )
 		{
-			if( c > 0 )
+			if( cnt > 0 ) {
 				buf.append( ' ' );
+			}
 			
-			buf.append( args.get( c ));
+			String value = args.get(cnt);
+			for(String argToShadow : argsToShadow ) {
+				if( value.equals(argToShadow) ) {
+					value = SHADOW;
+					break;
+				}
+				if (value.startsWith(argToShadow)) {
+					value = argToShadow + SHADOW;
+					break;
+				}
+			}
+			buf.append( value );
 		}
 		
 		return buf.toString();
@@ -144,6 +184,25 @@ public class ArgumentBuilder
 			return false;
 		
 		args.add( arg + separator + value );
+		
+		return true;
+	}
+	
+	/**
+	 *  Just remember how argument starts, assumes that value can change.
+	 */
+	public boolean addStringShadow(String name, String arg, String separator)
+	{
+		
+		if( !values.containsKey( name ))
+			return false;
+		
+		String value = values.get( name ).toString();
+		if( value == null || value.length() == 0 )
+			return false;
+		
+		args.add( arg + separator + value );
+		argsToShadow.add( arg + separator);
 		
 		return true;
 	}
@@ -190,4 +249,5 @@ public class ArgumentBuilder
 	{
 		return args.toArray( new String[args.size()] );
 	}
+
 }

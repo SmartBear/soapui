@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.support;
 
 import java.io.InputStream;
-import java.util.List;
 
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.UISupport;
@@ -26,6 +25,7 @@ import com.eviware.soapui.support.UISupport;
 
 public class ProcessToolRunner implements ToolRunner
 {
+
 	private final ProcessBuilder [] builders;
 	private boolean running;
 	private Process process;
@@ -34,17 +34,28 @@ public class ProcessToolRunner implements ToolRunner
 	private final ModelItem modelItem;
 	private boolean canCancel = true;
 	private boolean showLog = true;
+	private ArgumentBuilder args;
 
-	public ProcessToolRunner( ProcessBuilder builder, String name, ModelItem modelItem )
+	public ProcessToolRunner( ProcessBuilder builder, String name, ModelItem modelItem, ArgumentBuilder args )
 	{
-		this( new ProcessBuilder[] {builder}, name, modelItem);
+		this( new ProcessBuilder[] {builder}, name, modelItem, args);
 	}
 	
-	public ProcessToolRunner(ProcessBuilder [] builders, String name, ModelItem modelItem)
+	public ProcessToolRunner(ProcessBuilder [] builders, String name, ModelItem modelItem, ArgumentBuilder args)
 	{
 		this.builders = builders;
 		this.name = name;
 		this.modelItem = modelItem;
+		this.args = args;
+	}
+	
+	public ProcessToolRunner(ProcessBuilder [] builders, String name, ModelItem modelItem)
+	{
+		this( builders, name, modelItem, null);
+	}
+
+	public ProcessToolRunner(ProcessBuilder builder, String name, ModelItem modelItem) {
+		this( new ProcessBuilder[] {builder}, name, modelItem, null);
 	}
 
 	public ProcessBuilder [] getBuilders()
@@ -180,18 +191,8 @@ public class ProcessToolRunner implements ToolRunner
 
 	private void logRunInfo(ProcessBuilder builder)
 	{
-		List<String> args = builder.command();
-		StringBuffer buf = new StringBuffer();
-		for( int c = 0; c < args.size(); c++ )
-		{
-			if( c > 0 )
-				buf.append( ' ' );
-			
-			buf.append( args.get( c ));
-		}
-		
 		context.log( "directory: " + builder.directory().getAbsolutePath() + "\r\n" );
-		context.log( "command: " + buf.toString() + "\r\n" );
+		context.log( "command: " + args.toString() + "\r\n" );
 	}
 
 	public void setContext(RunnerContext context)

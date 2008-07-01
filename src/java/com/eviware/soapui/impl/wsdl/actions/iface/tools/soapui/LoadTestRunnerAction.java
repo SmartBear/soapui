@@ -213,7 +213,7 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 			log.debug( "Launching loadtestrunner in directory [" + builder.directory() + "] with arguments [" +
 					args.toString() + "]" );
 		
-		toolHost.run( new ProcessToolRunner( builder, "soapUI LoadTestRunner", modelItem ));
+		toolHost.run( new ProcessToolRunner( builder, "soapUI LoadTestRunner", modelItem, args ));
 	}
 
 	private ArgumentBuilder buildArgs(WsdlProject modelItem) throws IOException
@@ -246,7 +246,7 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 		builder.addString( LIMIT, "-m", "" );
 		builder.addString( THREADCOUNT, "-h", "" );
 		builder.addString( USERNAME, "-u", "" );
-		builder.addString( PASSWORD, "-p", "" );
+		builder.addStringShadow( PASSWORD, "-p", "" );
 		builder.addString( DOMAIN, "-d", "" );
 		
 		builder.addBoolean( PRINTREPORT, "-r" );
