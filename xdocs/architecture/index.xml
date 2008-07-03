@@ -14,7 +14,7 @@
 		 <p>To compile and run soapUI from the source do as follows:</p>
 		 <ol>
 		 <li>Download the source distribution from SourceForge</li>
-		 <li>Unzip the file to some folder</li>
+		 <li>Unzip the file to some folder.</li>
 		 <li>Start a command prompt and type <code>maven soapui:compile-and-run</code>. This will compile, test and 
 		 run soapUI if everything goes OK</li>
 		 </ol>
