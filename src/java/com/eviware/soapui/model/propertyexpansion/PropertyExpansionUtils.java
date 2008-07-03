@@ -147,11 +147,14 @@ public class PropertyExpansionUtils
 			String propertyName = content.substring( ix+2, ix2 );
 			String propertyValue = null;
 			
-			boolean globalOverrideEnabled = SoapUI.getSettings().getBoolean( GlobalPropertySettings.ENABLE_OVERRIDE );
-			
-			for( int c = 0; c < propertyResolvers.size() && propertyValue == null; c++  )
+			if( StringUtils.hasContent(propertyName))
 			{
-				propertyValue = propertyResolvers.get( c ).resolveProperty( context, propertyName, globalOverrideEnabled );
+				boolean globalOverrideEnabled = SoapUI.getSettings().getBoolean( GlobalPropertySettings.ENABLE_OVERRIDE );
+				
+				for( int c = 0; c < propertyResolvers.size() && propertyValue == null; c++  )
+				{
+					propertyValue = propertyResolvers.get( c ).resolveProperty( context, propertyName, globalOverrideEnabled );
+				}
 			}
 				
 			// found a value?

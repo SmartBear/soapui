@@ -17,6 +17,8 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 public interface PropertyExpansion
 {
 	// scope specifiiers
+	public static final String SYSTEM_REFERENCE = "#System#";
+	public static final String ENV_REFERENCE = "#Env#";
 	public static final String GLOBAL_REFERENCE = "#Global#";
 	public static final String PROJECT_REFERENCE = "#Project#";
 	public static final String TESTSUITE_REFERENCE = "#TestSuite#";

@@ -295,7 +295,7 @@ public class WsdlContext
    
    public void release()
    {
-   	if( iface != null )
+   	if( iface != null && urlReferences.containsKey(url))
    	{
 	   	Integer i = urlReferences.get(url);
 	   	if( i.intValue() <= 1 )
