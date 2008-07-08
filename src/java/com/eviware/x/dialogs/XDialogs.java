@@ -40,6 +40,8 @@ public interface XDialogs
    
    Object prompt(String question, String title, Object[] objects, String value );
    
+   char[] promptPassword(String question, String title);
+   
 	XProgressDialog createProgressDialog(String label, int length, String initialValue, boolean canCancel );
 
 	boolean confirmExtendedInfo( String title, String description, String content, Dimension size );

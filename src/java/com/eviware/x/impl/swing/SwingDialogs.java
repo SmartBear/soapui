@@ -22,8 +22,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 
 import com.eviware.soapui.support.DefaultHyperlinkListener;
@@ -216,5 +218,15 @@ public class SwingDialogs implements XDialogs
 	public String selectXPath( String title, String info, String xml, String xpath )
 	{
 		return prompt( "Specify XPath expression", "Select XPath", xpath );
+	}
+
+	/* (non-Javadoc)
+	 * @see com.eviware.x.dialogs.XDialogs#promptPassword(java.lang.String, java.lang.String)
+	 */
+	public char[] promptPassword(String question, String title) {
+		JPasswordField passwordField = new JPasswordField();
+		JLabel qLabel = new JLabel(question);
+		JOptionPane.showConfirmDialog(null, new Object[] {qLabel, passwordField}, title, JOptionPane.OK_CANCEL_OPTION);
+		return passwordField.getPassword();
 	}
 }

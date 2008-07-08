@@ -930,4 +930,9 @@ public class UISupport
 		
 		return Font.decode( DEFAULT_EDITOR_FONT + " " + fontSize );
 	}
+	
+	public static char[] promptPassword( String question, String title )
+	{
+		return dialogs.promptPassword( question, title );
+	}
 }

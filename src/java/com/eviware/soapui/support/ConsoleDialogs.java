@@ -88,4 +88,9 @@ public class ConsoleDialogs implements XDialogs
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public char[] promptPassword(String question, String title) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
