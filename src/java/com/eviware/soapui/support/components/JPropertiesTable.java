@@ -32,6 +32,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -280,6 +281,12 @@ public class JPropertiesTable<T> extends JPanel
 				((PropertyChangeNotifier)propertyObject).removePropertyChangeListener( this );
 				attached = false;
 			}
+		}
+
+		public PropertyDescriptor addPropertyShadow(String caption,	String name, boolean editable) {
+			PropertyDescriptor propertyDescriptor = new PropertyDescriptor( caption, name, editable );
+			properties.add( propertyDescriptor);
+			return propertyDescriptor;
 		}}
 	
 	public static class PropertyDescriptor
@@ -321,6 +328,26 @@ public class JPropertiesTable<T> extends JPanel
 			
 			comboBox.setBorder(null); 
 			cellEditor = new DefaultCellEditor( comboBox );
+		}
+
+		
+		/**
+		 * For password field in table.
+		 * 
+		 * @author robert nemet
+		 * @param caption
+		 * @param name
+		 * @param editable
+		 */
+		public PropertyDescriptor(String caption, String name, boolean editable ) {
+			
+			this.caption = caption;
+			this.name = name;
+			this.editable = editable;
+			
+			JPasswordField textField = new JPasswordField();
+			textField.setBorder(BorderFactory.createEmptyBorder()); 
+			cellEditor = new DefaultCellEditor( textField );
 		}
 
 		public void setFormatter( PropertyFormatter formatter )
@@ -378,9 +405,19 @@ public class JPropertiesTable<T> extends JPanel
 	{
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
 		{
-			Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+			Component component;
+			DefaultCellEditor cellEditor = (DefaultCellEditor) table.getCellEditor(row, column);
+			if( cellEditor.getComponent() instanceof JPasswordField && value instanceof String) { 
+				if ( value != null && ((String)value).length() > 0 ) {
+					component = super.getTableCellRendererComponent(table, "**************", isSelected, hasFocus,
+						row, column);
+				} else {
+					component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,	row, column);
+				}
+			} else {
+				component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
 					row, column);
-			
+			}
 			if( component instanceof JComponent )
 			{
 				PropertyDescriptor descriptor = ((PropertiesTableModel<?>)table.getModel()).getPropertyDescriptorAt( row );
@@ -389,7 +426,8 @@ public class JPropertiesTable<T> extends JPanel
 				{
 					((JComponent)component).setToolTipText( descriptor.getDescription() );
 				}
-				else if( value != null && StringUtils.hasContent( value.toString() ))
+				// do not set tooltip as value for password field, it has no sense.
+				else if( value != null && StringUtils.hasContent( value.toString() ) && !(cellEditor.getComponent() instanceof JPasswordField))
 				{
 					((JComponent)component).setToolTipText( value.toString() );
 				}
@@ -402,7 +440,7 @@ public class JPropertiesTable<T> extends JPanel
 			return component;
 		}
 	}
-	/*
+	/*defaultcelleditor
 	private class PropertiesTableCellEditor extends AbstractCellEditor implements TableCellEditor
 	{
 		private JTextField textField;
@@ -517,5 +555,19 @@ public class JPropertiesTable<T> extends JPanel
 			else
 				return tableModel.getPropertyDescriptorAt( row ).getCellEditor();
 		}
+	}
+
+	/**
+	 * Value in this field will not be showen. It will be masked...
+	 * 
+	 * @author robert nemet
+	 * @param caption
+	 * @param name
+	 * @param editable
+	 * @return
+	 */
+	public PropertyDescriptor addPropertyShadow( String caption, String name, boolean editable )
+	{
+		return tableModel.addPropertyShadow( caption, name, editable );
 	}
 }

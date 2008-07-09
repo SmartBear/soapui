@@ -55,7 +55,7 @@ public class WsdlRequestPanelBuilder extends EmptyPanelBuilder<WsdlRequest>
    	
    	// security / authentication
    	table.addProperty( "Username", "username", true );
-   	table.addProperty( "Password", "password", true );
+   	table.addPropertyShadow( "Password", "password", true );
    	table.addProperty( "Domain", "domain", true );
    	table.addProperty( "WSS-Password Type", "wssPasswordType", 
    			new String[] {null, WsdlRequest.PW_TYPE_NONE, WsdlRequest.PW_TYPE_TEXT, WsdlRequest.PW_TYPE_DIGEST});
