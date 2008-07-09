@@ -520,6 +520,7 @@ public class SoapUI
 		core.afterStartup( workspace );
 		Thread.sleep( 500 );
 		splash.setVisible( false );
+		workspace.inspectProjects();
 		
 		return soapUI;
 	}

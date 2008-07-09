@@ -20,7 +20,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -28,8 +27,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
-
-import net.sf.saxon.pull.PullToStax.SourceStreamLocation;
 
 import org.apache.commons.ssl.OpenSSL;
 import org.apache.log4j.Logger;
@@ -43,7 +40,6 @@ import com.eviware.soapui.config.InterfaceConfig;
 import com.eviware.soapui.config.MockServiceConfig;
 import com.eviware.soapui.config.OperationConfig;
 import com.eviware.soapui.config.ProjectConfig;
-import com.eviware.soapui.config.RequirementsTypeConfig;
 import com.eviware.soapui.config.SoapuiProjectDocumentConfig;
 import com.eviware.soapui.config.TestSuiteConfig;
 import com.eviware.soapui.config.WsdlRequestConfig;
@@ -465,22 +461,28 @@ public class WsdlProject extends
 
 		// check for encryption
 		char[] passwordForEncryption = null;
-		if (UISupport.confirm("Encrypt sensitive data?", "Encryption")) {
-			// ask for password
-			passwordForEncryption = UISupport.promptPassword("Enter password:",	"Encryption");
-			if (passwordForEncryption != null && passwordForEncryption.length > 6) {
-				try {
-					encryptData(passwordForEncryption);
-					projectDocument.getSoapuiProject().setEncryptedContent(OpenSSL.encrypt("des3", passwordForEncryption, getName().getBytes()));
-				} catch (GeneralSecurityException e) {
-					UISupport.showErrorMessage("Encryption Error");
+		if (projectDocument.getSoapuiProject().getEncryptedContent() == null) {
+			if (UISupport.confirm("Encrypt sensitive data?", getName())) {
+				// ask for password
+				passwordForEncryption = UISupport.promptPassword("Enter password:", getName());
+				if (passwordForEncryption != null
+						&& passwordForEncryption.length > 6) {
+					try {
+						encryptData(passwordForEncryption);
+						projectDocument.getSoapuiProject().setEncryptedContent(
+								OpenSSL.encrypt("des3", passwordForEncryption,getName().getBytes()));
+					} catch (GeneralSecurityException e) {
+						UISupport.showErrorMessage("Encryption Error");
+					}
+				} else {
+					UISupport
+							.showErrorMessage("Password can not be shorter than 7 characters");
+					projectDocument.getSoapuiProject()
+							.setEncryptedContent(null);
 				}
 			} else {
-				UISupport.showErrorMessage("Password can not be shorter than 7 characters");
 				projectDocument.getSoapuiProject().setEncryptedContent(null);
 			}
-		} else {
-			projectDocument.getSoapuiProject().setEncryptedContent(null);
 		}
 
 		if (path == null || isRemote()) {
@@ -566,22 +568,6 @@ public class WsdlProject extends
 						byte[] encryptedPassword = OpenSSL.encrypt("des3",passwordForEncryption, password.getBytes("UTF8"), true);
 						((WsdlRequest) request).setUsername(new String(encryptedUsername, "UTF8"));
 						((WsdlRequest) request).setPassword(new String(encryptedPassword, "UTF8"));
-//						byte[] header = { (byte)(encryptedUsername.length >>> 24), (byte)(encryptedUsername.length >>> 16), (byte)(encryptedUsername.length >>>8), (byte)encryptedUsername.length };
-//						byte[] encryptedContent = new byte[header.length + encryptedUsername.length + encryptedPassword.length];
-//						int cnt = 0;
-//						while( cnt < header.length ) {
-//							encryptedContent[cnt] = header[cnt];
-//							cnt++;
-//						}
-//						for( int i = 0; i < encryptedUsername.length; i++ ) {
-//							encryptedContent[cnt] = encryptedUsername[i];
-//							cnt++;
-//						}
-//						for( int i = 0; i < encryptedPassword.length; i++ ) {
-//							encryptedContent[cnt] = encryptedPassword[i];
-//							cnt++;
-//						}
-//						projectDocument.getSoapuiProject().setEncryptedContent(encryptedContent);
 					} catch (IOException e) {
 						e.printStackTrace();
 						log.error("Credentials encrypting error");

@@ -53,4 +53,6 @@ public interface Workspace extends ModelItem
 	public void switchWorkspace( File newPath ) throws SoapUIException;
 
 	public Project openProject( Project modelItem ) throws SoapUIException;
+
+	public void inspectProjects();
 }
