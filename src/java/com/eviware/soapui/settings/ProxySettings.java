@@ -36,4 +36,12 @@ public interface ProxySettings
 	
 	@Setting( name="Excludes", description="Comma-seperated list of hosts to exclude" )
 	public final static String EXCLUDES = ProxySettings.class.getSimpleName() + "@" + "excludes";
+
+	@Setting( name="Shadow Proxy Password", description="Enable shadowing proxy password", type=SettingType.BOOLEAN)
+	public final static String ENABLE_SHADOWING = ProxySettings.class.getSimpleName() + "@" + "enableShadowProxyPassword";
+	
+	@Setting( name="Shadowing Password", description="password for shadowing proxy password in settings file", type=SettingType.PASSWORD )
+	public final static String SHADOW_PASSWORD = ProxySettings.class.getSimpleName() + "@" + "shadowProxyPassword";
+	
 }
+

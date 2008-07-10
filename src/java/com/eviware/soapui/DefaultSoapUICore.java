@@ -14,8 +14,12 @@ package com.eviware.soapui;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 
+import org.apache.commons.ssl.OpenSSL;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -25,10 +29,12 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.settings.HttpSettings;
+import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.ClasspathHacker;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
 import com.eviware.soapui.support.types.StringList;
@@ -169,9 +175,49 @@ public class DefaultSoapUICore implements SoapUICore
 			settings.setLong( HttpSettings.MAX_TOTAL_CONNECTIONS, 2000 );
 		}
 
+		// check if there is encypted data
+		decryptData();
+		
 		return settings;
 	}
 	
+	/**
+	 * Decrypt encrypted data.
+	 * 
+	 * @author robert nemet
+	 */
+	private void decryptData() {
+		
+		String password = settings.getString( ProxySettings.PASSWORD, null );
+		boolean isProxyPasswordShadowed = Boolean.parseBoolean(settings.getString( ProxySettings.ENABLE_SHADOWING, null));
+		String shadowProxyPassword = settings.getString( ProxySettings.SHADOW_PASSWORD, null);
+		
+		if( isProxyPasswordShadowed ) {
+			if( shadowProxyPassword == null || shadowProxyPassword.length() == 0 ) {
+				UISupport.showErrorMessage("Proxy password decryption is enabled but password is missing. Proxy password will not be decrypted.");
+			} else {
+				try {
+					// decrypt key first.
+					byte[] decryptedData = OpenSSL.decrypt("des3", settings.getClass().toString().toCharArray(), shadowProxyPassword.getBytes("UTF-8"));
+					shadowProxyPassword = new String(decryptedData, "UTF-8");
+
+					decryptedData = OpenSSL.decrypt("des3", shadowProxyPassword.toCharArray(), password.getBytes("UTF-8"));
+					password = new String(decryptedData, "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					log.error("Decryption error", e);
+				} catch (IOException e) {
+					log.error("Decryption error", e);
+				} catch (GeneralSecurityException e) {
+					log.error("Decryption error", e);
+				} 
+			}
+		}
+		
+		settings.setString( ProxySettings.SHADOW_PASSWORD, shadowProxyPassword);
+		settings.setString( ProxySettings.PASSWORD, password );
+		
+	}
+
 	/* (non-Javadoc)
 	 * @see com.eviware.soapui.SoapUICore#importSettings(java.io.File)
 	 */
@@ -218,11 +264,49 @@ public class DefaultSoapUICore implements SoapUICore
 			settingsFile = DEFAULT_SETTINGS_FILE;
 		
 		File file = root == null ? new File( settingsFile ) : new File( new File( root ), settingsFile );
+		// should we encrypt proxy password
+		encryptData();
 		settingsDocument.save( file );
 		log.info( "Settings saved to [" + file.getAbsolutePath() + "]" );
 		return file.getAbsolutePath();
 	}
 	
+	/**
+	 * Encrypt proxy password before saving it.
+	 * 
+	 * @author robert nemet
+	 */
+	private void encryptData() {
+		
+		String password = settings.getString( ProxySettings.PASSWORD, null );
+		boolean isProxyPasswordShadowed = Boolean.parseBoolean(settings.getString( ProxySettings.ENABLE_SHADOWING, null));
+		String shadowProxyPassword = settings.getString(ProxySettings.SHADOW_PASSWORD, null);
+		
+		if( isProxyPasswordShadowed ) {
+			if( shadowProxyPassword == null || shadowProxyPassword.length() == 0 ) {
+				UISupport.showErrorMessage("Proxy password encryption is enabled but password is missing. Proxy password will not be encrypted.");
+			} else {
+				try {
+					byte[] encryptedData = OpenSSL.encrypt("des3", shadowProxyPassword.toCharArray(), password.getBytes("UTF-8"));
+					password = new String(encryptedData, "UTF-8");
+					
+					encryptedData = OpenSSL.encrypt("des3", settings.getClass().toString().toCharArray(), shadowProxyPassword.getBytes("UTF-8"));
+					shadowProxyPassword = new String(encryptedData, "UTF-8");
+					
+				} catch (UnsupportedEncodingException e) {
+					log.error("Encryption error", e);
+				} catch (IOException e) {
+					log.error("Encryption error", e);
+				} catch (GeneralSecurityException e) {
+					log.error("Encryption error", e);
+				} 
+			}
+		}
+		
+		settings.setString( ProxySettings.SHADOW_PASSWORD, shadowProxyPassword);
+		settings.setString( ProxySettings.PASSWORD, password );
+	}
+
 	public String getSettingsFile()
 	{
 		return settingsFile;
