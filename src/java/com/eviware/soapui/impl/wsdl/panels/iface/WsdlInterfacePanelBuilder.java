@@ -37,7 +37,7 @@ public class WsdlInterfacePanelBuilder extends EmptyPanelBuilder<WsdlInterface>
    	JPropertiesTable<WsdlInterface> table = new JPropertiesTable<WsdlInterface>( "Interface Properties" );
    	table.addProperty( "PortType", "name" );
    	table.addProperty( "Description", "description", true );
-   	table.addProperty( "Definition URL", "definition" );
+   	table.addProperty( "Definition URL", "definition", true );
    	table.addProperty( "Binding", "bindingName" );
    	table.addProperty( "SOAP Version", "soapVersion", new Object[]{ SoapVersion.Soap11, SoapVersion.Soap12 });
    	table.addProperty( "Cached", "cached", false );
