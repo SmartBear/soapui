@@ -596,13 +596,4 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		return null;
 	}
 
-	@Override
-	public void inspectProjects() {
-		for( Project project : projectList ) {
-			byte[] enc = ((WsdlProject)project).getConfig().getEncryptedContent();
-			if( enc != null ) {
-				UISupport.showInfoMessage("Project needs to be reloaded because it contains ecrypted parts", project.getName());
-			}
-		}
-	}
 }

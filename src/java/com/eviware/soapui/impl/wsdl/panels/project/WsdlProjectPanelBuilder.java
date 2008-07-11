@@ -46,11 +46,13 @@ public class WsdlProjectPanelBuilder extends EmptyPanelBuilder<WsdlProject>
 	   		table.addProperty( "Resource Root", "resourceRoot", new String[] {null, "${projectDir}" } );
 	   		table.addProperty( "Cache Definitions", "cacheDefinitions", JPropertiesTable.BOOLEAN_OPTIONS );
 	   	}
+	   	
    	}
    	else
    	{
    		table.addProperty( "File", "path" );
    	}
+   	table.addPropertyShadow("Project password", "shadowPassword", true);
    	
    	return table;
    }

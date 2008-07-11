@@ -93,6 +93,7 @@ public class WsdlProject extends
 	public final static String RESOURCE_ROOT_PROPERTY = WsdlProject.class
 			.getName()
 			+ "@resourceRoot";
+	public final static String SHADOW_PASSWORD = WsdlProject.class.getName() + "@shadowPassword";
 
 	private WorkspaceImpl workspace;
 	private String path;
@@ -218,11 +219,8 @@ public class WsdlProject extends
 
 			// see if there is encoded data
 			try {
-				if( !checkForEncodedData(projectDocument.getSoapuiProject())) {
-					UISupport.showErrorMessage("Error decrypting data. Project should be reloaded.");
-				}
+				checkForEncodedData(projectDocument.getSoapuiProject());
 			} catch (GeneralSecurityException e) {
-				UISupport.showErrorMessage("Error decrypting data. Project will not be loaded.");
 				throw new SoapUIException("Error decrypting data", e);
 			}
 			
@@ -294,25 +292,19 @@ public class WsdlProject extends
 	 * @throws IOException 
 	 * @throws GeneralSecurityException 
 	 */
-	private boolean checkForEncodedData(ProjectConfig soapuiProject) throws IOException, GeneralSecurityException {
+	private void checkForEncodedData(ProjectConfig soapuiProject) throws IOException, GeneralSecurityException {
 
 		byte[] encryptedContent = soapuiProject.getEncryptedContent();
-		// no encrypted data then go back
-		if (encryptedContent == null || encryptedContent.length < 6) {
-			return true;
-		}
+		String password = null;
 		
-		char[] password = UISupport.promptPassword("Password:", "Enter password for project");
-		if( password == null || password.length == 0) {
-			return false;
+		// no encrypted data then go back
+		if (encryptedContent == null || encryptedContent.length < 1) {
+			return;
 		}
 		
 		try {
-			byte[] data = OpenSSL.decrypt("des3", password, encryptedContent);
-			String decryted = new String(data, "UTF8");
-			if( !decryted.equals(soapuiProject.getName()) ) {
-				return false;
-			}
+			byte[] data = OpenSSL.decrypt("des3", soapuiProject.getName().toCharArray(), encryptedContent);
+			password = new String(data, "UTF8");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -335,9 +327,9 @@ public class WsdlProject extends
 							continue;
 						}
 						// encrypt username
-						byte[] decryptedUsername = OpenSSL.decrypt("des3",password, usernameEncrypted.getBytes("UTF8"));
+						byte[] decryptedUsername = OpenSSL.decrypt("des3",password.toCharArray(), usernameEncrypted.getBytes("UTF8"));
 						// encrypt password
-						byte[] decryptedPassword = OpenSSL.decrypt("des3",password, passwordEncrypted.getBytes("UTF8"));
+						byte[] decryptedPassword = OpenSSL.decrypt("des3",password.toCharArray(), passwordEncrypted.getBytes("UTF8"));
 						credentials.setUsername(new String(decryptedUsername, "UTF8"));
 						credentials.setPassword(new String(decryptedPassword, "UTF8"));
 					} catch (IOException e) {
@@ -352,9 +344,6 @@ public class WsdlProject extends
 				}
 			}
 		}
-		
-		soapuiProject.setEncryptedContent(null);
-		return true;
 		
 	}
 
@@ -459,32 +448,27 @@ public class WsdlProject extends
 		if (!isOpen() || isDisabled() || isRemote())
 			return true;
 
-		// check for encryption
-		char[] passwordForEncryption = null;
-		if (projectDocument.getSoapuiProject().getEncryptedContent() == null) {
-			if (UISupport.confirm("Encrypt sensitive data?", getName())) {
-				// ask for password
-				passwordForEncryption = UISupport.promptPassword("Enter password:", getName());
-				if (passwordForEncryption != null
-						&& passwordForEncryption.length > 6) {
-					try {
-						encryptData(passwordForEncryption);
-						projectDocument.getSoapuiProject().setEncryptedContent(
-								OpenSSL.encrypt("des3", passwordForEncryption,getName().getBytes()));
-					} catch (GeneralSecurityException e) {
-						UISupport.showErrorMessage("Encryption Error");
-					}
-				} else {
-					UISupport
-							.showErrorMessage("Password can not be shorter than 7 characters");
-					projectDocument.getSoapuiProject()
-							.setEncryptedContent(null);
+// check for encryption
+		String passwordForEncryption = getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
+		if (passwordForEncryption != null) {
+			if (passwordForEncryption.length() > 1) {
+				// we have password so do encryption
+				try {
+					encryptData(passwordForEncryption);
+					projectDocument.getSoapuiProject().setEncryptedContent(OpenSSL.encrypt("des3", getName().toCharArray(),passwordForEncryption.getBytes()));
+				} catch (GeneralSecurityException e) {
+					UISupport.showErrorMessage("Encryption Error");
 				}
 			} else {
+				// no password no encryption.
 				projectDocument.getSoapuiProject().setEncryptedContent(null);
 			}
+		} else {
+			// no password no encryption.
+			projectDocument.getSoapuiProject().setEncryptedContent(null);
 		}
-
+// end of encryption.
+		
 		if (path == null || isRemote()) {
 			path = getName() + "-soapui-project.xml";
 			File file = null;
@@ -546,7 +530,7 @@ public class WsdlProject extends
 	 * @throws IOException
 	 * @throws GeneralSecurityException
 	 */
-	private void encryptData(char[] passwordForEncryption) throws IOException,
+	private void encryptData(String passwordForEncryption) throws IOException,
 			GeneralSecurityException {
 
 		log.info("Encrypting credentials.");
@@ -563,9 +547,9 @@ public class WsdlProject extends
 							continue;
 						}
 						// encrypt username
-						byte[] encryptedUsername = OpenSSL.encrypt("des3",passwordForEncryption, username.getBytes("UTF8"), true);
+						byte[] encryptedUsername = OpenSSL.encrypt("des3",passwordForEncryption.toCharArray(), username.getBytes("UTF8"), true);
 						// encrypt password
-						byte[] encryptedPassword = OpenSSL.encrypt("des3",passwordForEncryption, password.getBytes("UTF8"), true);
+						byte[] encryptedPassword = OpenSSL.encrypt("des3",passwordForEncryption.toCharArray(), password.getBytes("UTF8"), true);
 						((WsdlRequest) request).setUsername(new String(encryptedUsername, "UTF8"));
 						((WsdlRequest) request).setPassword(new String(encryptedPassword, "UTF8"));
 					} catch (IOException e) {
@@ -1130,4 +1114,16 @@ public class WsdlProject extends
 	public String getPropertiesLabel() {
 		return "Custom Properties";
 	}
+
+	@Override
+	public String getShadowPassword() {
+		return getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
+	}
+
+	@Override
+	public void setShadowPassword(String password) {
+		getSettings().setString(ProjectSettings.SHADOW_PASSWORD, password);
+	}
+	
+	
 }

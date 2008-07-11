@@ -18,7 +18,6 @@ import java.util.List;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockService;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.workspace.Workspace;
 
@@ -85,4 +84,8 @@ public interface Project extends TestModelItem
 	public String getPath();
 	
 	public String getResourceRoot();
+	
+	public String getShadowPassword();
+	
+	public void setShadowPassword(String password);
 }
