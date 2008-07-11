@@ -120,7 +120,6 @@ public class HttpClientSupport
 		private void initSSL( EasySSLProtocolSocketFactory easySSL ) throws IOException,
 		GeneralSecurityException
 		{
-			log.info( "Initializing SSL" );
 			initKeyMaterial( easySSL );
 
 			 /*
@@ -176,6 +175,8 @@ public class HttpClientSupport
 			char[] pwd = pass.toCharArray();
 			if( !"".equals( keyStore ) )
 			{
+				log.info( "Initializing KeyStore" );
+
 				File f = new File( keyStore );
 				if( f.exists() )
 				{
