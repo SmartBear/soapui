@@ -523,6 +523,8 @@ public class WsdlProject extends
 		long size = 0;
 
 		beforeSave();
+		// work with copy beacuse we do not want to change working project while working with it
+		// if user choose save project, save all etc.
 		SoapuiProjectDocumentConfig projectDocument = (SoapuiProjectDocumentConfig) this.projectDocument.copy();
 // check for encryption
 		String passwordForEncryption = getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
@@ -532,9 +534,8 @@ public class WsdlProject extends
 				if (passwordForEncryption.length() > 1) {
 					// we have password so do encryption
 					try {
-						String data = projectDocument.getSoapuiProject().xmlText();
-						byte[] encrypted = OpenSSL.encrypt("des3",
-								passwordForEncryption.toCharArray(), data.getBytes());
+						String data = getConfig().xmlText();
+						byte[] encrypted = OpenSSL.encrypt("des3", passwordForEncryption.toCharArray(), data.getBytes());
 						projectDocument.getSoapuiProject().setEncryptedContent(encrypted);
 						projectDocument.getSoapuiProject().setInterfaceArray(null);
 						projectDocument.getSoapuiProject().unsetSettings();
