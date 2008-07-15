@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl;
 
+import java.util.TreeMap;
+
 import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.model.workspace.WorkspaceFactory;
 import com.eviware.soapui.support.SoapUIException;
@@ -24,11 +26,11 @@ import com.eviware.soapui.support.SoapUIException;
 
 public class WorkspaceFactoryImpl extends WorkspaceFactory
 {
-   public Workspace openWorkspace(String[] args) throws SoapUIException
+   public Workspace openWorkspace(String workspaceName, TreeMap<String, String> projectOptions) throws SoapUIException
    {
       try
 		{
-			return new WorkspaceImpl( args[0] );
+			return new WorkspaceImpl( workspaceName, projectOptions );
 		}
 		catch (Exception e)
 		{

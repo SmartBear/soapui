@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.swing.ImageIcon;
 
@@ -62,13 +63,19 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 	private Set<WorkspaceListener> listeners = new HashSet<WorkspaceListener>();
 	private ImageIcon workspaceIcon;
 	private XmlBeansSettingsImpl settings;
+	private TreeMap<String, String> projectOptions;
 
-	public WorkspaceImpl( String path ) throws XmlException, IOException
+	public WorkspaceImpl( String path, TreeMap<String, String> projectOptions ) throws XmlException, IOException
 	{
+		if ( projectOptions == null ) {
+			projectOptions = new TreeMap<String, String>();
+		} else {
+			this.projectOptions = projectOptions;
+		}
 		File file = new File( path );
 		this.path = file.getAbsolutePath();
 		loadWorkspace( file );
-		workspaceIcon = UISupport.createImageIcon( "/workspace.gif" ); 
+		workspaceIcon = UISupport.createImageIcon( "/workspace.gif" );
 	}
 
 	public void switchWorkspace( File file ) throws SoapUIException
@@ -594,6 +601,21 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 	public ModelItem getParent()
 	{
 		return null;
+	}
+
+	@Override
+	public void inspectProjects() {
+		for( int cnt = 0 ; cnt < projectList.size(); cnt ++) {
+			projectList.get(cnt).inspect();
+		}
+	}
+
+	public String getProjectPassword(String name) {
+		return projectOptions.get(name);
+	}
+
+	public void clearProjectPassword(String name) {
+		projectOptions.remove(name);
 	}
 
 }

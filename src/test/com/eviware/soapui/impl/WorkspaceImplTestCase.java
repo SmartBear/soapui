@@ -35,7 +35,7 @@ public class WorkspaceImplTestCase extends TestCase
 	public void testProjectRoot() throws Exception
 	{
 		File wsFile = new File( "test-workspace.xml");
-		WorkspaceImpl ws = new WorkspaceImpl( wsFile.getAbsolutePath() );
+		WorkspaceImpl ws = new WorkspaceImpl( wsFile.getAbsolutePath(), null );
 		
 		WsdlProject project = ws.createProject( "Test Project", null );
 		project.saveAs(new File("test-project.xml").getAbsolutePath() );

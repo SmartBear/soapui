@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeMap;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -46,6 +47,10 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -166,6 +171,8 @@ public class SoapUI
 	
 	private static Timer autoSaveTimer;
 	private static AutoSaveTimerTask autoSaveTimerTask;
+	private static String workspaceName;
+	private static TreeMap<String, String> projectOptions = new TreeMap<String, String>();
 
 
 	// --------------------------- CONSTRUCTORS ---------------------------
@@ -503,16 +510,24 @@ public class SoapUI
 		SoapUI soapUI = new SoapUI();
 		Workspace workspace = null;
 
-		if( args.length > 0 )
+		org.apache.commons.cli.Options options = initSoapUIOptions();
+		CommandLineParser parser = new PosixParser();
+		CommandLine cmd = parser.parse( options, args);
+		
+		if (validateCommandLineArgs(cmd, options)) {
+			System.exit(1);
+		}
+		
+		if( workspaceName != null )
 		{
-			workspace = WorkspaceFactory.getInstance().openWorkspace( args );
-			soapUICore.getSettings().setString( CURRENT_SOAPUI_WORKSPACE, args[0] );
+			workspace = WorkspaceFactory.getInstance().openWorkspace( workspaceName, projectOptions );
+			soapUICore.getSettings().setString( CURRENT_SOAPUI_WORKSPACE, workspaceName );
 		}
 		else
 		{
 			String wsfile = soapUICore.getSettings().getString( CURRENT_SOAPUI_WORKSPACE, System.getProperty( "user.home" ) + File.separatorChar
 						+ DEFAULT_WORKSPACE_FILE );
-			workspace = WorkspaceFactory.getInstance().openWorkspace( new String[] { wsfile } );
+			workspace = WorkspaceFactory.getInstance().openWorkspace( wsfile, projectOptions );
 		}
 		
 		core.prepareUI();
@@ -520,10 +535,42 @@ public class SoapUI
 		core.afterStartup( workspace );
 		Thread.sleep( 500 );
 		splash.setVisible( false );
+		SoapUI.workspace.inspectProjects();
 		
 		return soapUI;
 	}
 	
+	private static boolean validateCommandLineArgs(CommandLine cmd, org.apache.commons.cli.Options options) {
+		if( cmd.hasOption('w') ) {
+			workspaceName = cmd.getOptionValue('w');
+		}
+		
+		if( cmd.hasOption('p') ) {
+			 for( String projectNamePassword : cmd.getOptionValues('p')) {
+				 String [] nameAndPassword = projectNamePassword.split(":");
+				 projectOptions.put(nameAndPassword[0], nameAndPassword[1]);
+			 }
+		}
+		
+		if( cmd.getArgs().length > 0 ) {
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp( "soapui.sh [options]", options );
+			return true;
+		}
+		
+		return false;
+		
+	}
+
+	private static org.apache.commons.cli.Options initSoapUIOptions() {
+		
+			org.apache.commons.cli.Options options = new org.apache.commons.cli.Options();
+			options.addOption( "w", true, "Specified the name of the workspace xml file" );
+			options.addOption( "p", true, "Sets project name and its password in format <project name>:<password>" );
+			
+			return options;
+	}
+
 	public static SoapUICore getSoapUICore()
 	{
 		return soapUICore;

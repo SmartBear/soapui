@@ -32,19 +32,15 @@ import org.apache.commons.ssl.OpenSSL;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.config.InterfaceConfig;
 import com.eviware.soapui.config.MockServiceConfig;
-import com.eviware.soapui.config.OperationConfig;
 import com.eviware.soapui.config.ProjectConfig;
 import com.eviware.soapui.config.SoapuiProjectDocumentConfig;
 import com.eviware.soapui.config.TestSuiteConfig;
-import com.eviware.soapui.config.WsdlRequestConfig;
-import com.eviware.soapui.config.impl.OperationConfigImpl;
-import com.eviware.soapui.config.impl.WsdlInterfaceConfigImpl;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategy;
@@ -53,8 +49,6 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.wss.DefaultWssContainer;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
-import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.EndpointStrategy;
 import com.eviware.soapui.model.project.Project;
@@ -146,7 +140,7 @@ public class WsdlProject extends
 
 		this.workspace = workspace;
 		this.path = path;
-
+		
 		try {
 			if (path != null && open) {
 				File file = new File(path);
@@ -194,8 +188,12 @@ public class WsdlProject extends
 				setResourceRoot("${projectDir}");
 			}
 
-			endpointStrategy.init(this);
-			setProjectRoot(path);
+			if( getConfig() != null ) {
+				endpointStrategy.init(this);
+			}
+			if( getSettings() != null ) {
+				setProjectRoot(path);
+			}
 
 			for (ProjectListener listener : SoapUI.getListenerRegistry()
 					.getListeners(ProjectListener.class)) {
@@ -214,15 +212,10 @@ public class WsdlProject extends
 
 			UrlWsdlLoader loader = new UrlWsdlLoader(file.toString());
 			loader.setUseWorker(false);
-			projectDocument = SoapuiProjectDocumentConfig.Factory.parse(loader
-					.load());
+			projectDocument = SoapuiProjectDocumentConfig.Factory.parse(loader.load());
 
 			// see if there is encoded data
-			try {
-				checkForEncodedData(projectDocument.getSoapuiProject());
-			} catch (GeneralSecurityException e) {
-				throw new SoapUIException("Error decrypting data", e);
-			}
+			checkForEncodedData(projectDocument.getSoapuiProject());
 			
 			setConfig(projectDocument.getSoapuiProject());
 
@@ -292,59 +285,52 @@ public class WsdlProject extends
 	 * @throws IOException 
 	 * @throws GeneralSecurityException 
 	 */
-	private void checkForEncodedData(ProjectConfig soapuiProject) throws IOException, GeneralSecurityException {
+	private int checkForEncodedData(ProjectConfig soapuiProject) throws IOException, GeneralSecurityException {
 
 		byte[] encryptedContent = soapuiProject.getEncryptedContent();
-		String password = null;
-		
+		char[] password = null;
+		String projectPassword = getWorkspace().getProjectPassword(soapuiProject.getName());
+		if (projectPassword == null) {
+			password = UISupport.promptPassword("Enter Password:",soapuiProject.getName());
+		} else {
+			password = projectPassword.toCharArray();
+		}
+		byte[] data = null;
 		// no encrypted data then go back
-		if (encryptedContent == null || encryptedContent.length < 1) {
-			return;
+		if (encryptedContent == null || encryptedContent.length < 1 || password == null) {
+			return 0;
 		}
 		
 		try {
-			byte[] data = OpenSSL.decrypt("des3", soapuiProject.getName().toCharArray(), encryptedContent);
-			password = new String(data, "UTF8");
+			data = OpenSSL.decrypt("des3", password, encryptedContent);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return -1;
 		} catch (GeneralSecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return -1;
 		}
+		String decryptedData = new String(data, "UTF-8");
 		
-		for (InterfaceConfig pInterface : soapuiProject.getInterfaceList()) {
-			for (OperationConfig operation :  ((WsdlInterfaceConfigImpl)pInterface).getOperationList()) {
-				for (WsdlRequestConfig request : ((OperationConfigImpl) operation).getCallList()) {
-					try {
-						CredentialsConfig credentials = request.getCredentials();
-						if( credentials == null ) {
-							continue;
-						}
-						String usernameEncrypted = credentials.getUsername();
-						String passwordEncrypted = credentials.getPassword();
-						if(usernameEncrypted == null || passwordEncrypted == null ) {
-							continue;
-						}
-						// encrypt username
-						byte[] decryptedUsername = OpenSSL.decrypt("des3",password.toCharArray(), usernameEncrypted.getBytes("UTF8"));
-						// encrypt password
-						byte[] decryptedPassword = OpenSSL.decrypt("des3",password.toCharArray(), passwordEncrypted.getBytes("UTF8"));
-						credentials.setUsername(new String(decryptedUsername, "UTF8"));
-						credentials.setPassword(new String(decryptedPassword, "UTF8"));
-					} catch (IOException e) {
-						e.printStackTrace();
-						log.error("Credentials decrypting error");
-						throw e;
-					} catch (GeneralSecurityException e) {
-						e.printStackTrace();
-						log.error("Credentials decrypting error");
-						throw e;
-					}
+		if (decryptedData != null) {
+			if (decryptedData.length() > 0) {
+				try {
+					projectDocument.getSoapuiProject().set(XmlObject.Factory.parse(decryptedData));
+				} catch (XmlException e) {
+					UISupport.showErrorMessage("Wrong password. Project need to be reloaded.");
+					getWorkspace().clearProjectPassword(soapuiProject.getName());
+					return -1;
 				}
 			}
+		} else {
+			UISupport.showErrorMessage("Wrong project password");
+			getWorkspace().clearProjectPassword(soapuiProject.getName());
+			return -1;
 		}
-		
+		projectDocument.getSoapuiProject().setEncryptedContent(null);
+		return 1;
 	}
 
 	@Override
@@ -448,26 +434,26 @@ public class WsdlProject extends
 		if (!isOpen() || isDisabled() || isRemote())
 			return true;
 
-// check for encryption
-		String passwordForEncryption = getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
-		if (passwordForEncryption != null) {
-			if (passwordForEncryption.length() > 1) {
-				// we have password so do encryption
-				try {
-					encryptData(passwordForEncryption);
-					projectDocument.getSoapuiProject().setEncryptedContent(OpenSSL.encrypt("des3", getName().toCharArray(),passwordForEncryption.getBytes()));
-				} catch (GeneralSecurityException e) {
-					UISupport.showErrorMessage("Encryption Error");
-				}
-			} else {
-				// no password no encryption.
-				projectDocument.getSoapuiProject().setEncryptedContent(null);
-			}
-		} else {
-			// no password no encryption.
-			projectDocument.getSoapuiProject().setEncryptedContent(null);
-		}
-// end of encryption.
+//// check for encryption
+//		String passwordForEncryption = getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
+//		if (passwordForEncryption != null) {
+//			if (passwordForEncryption.length() > 1) {
+//				// we have password so do encryption
+//				try {
+//					encryptData(passwordForEncryption);
+//					projectDocument.getSoapuiProject().setEncryptedContent(OpenSSL.encrypt("des3", getName().toCharArray(),passwordForEncryption.getBytes()));
+//				} catch (GeneralSecurityException e) {
+//					UISupport.showErrorMessage("Encryption Error");
+//				}
+//			} else {
+//				// no password no encryption.
+//				projectDocument.getSoapuiProject().setEncryptedContent(null);
+//			}
+//		} else {
+//			// no password no encryption.
+//			projectDocument.getSoapuiProject().setEncryptedContent(null);
+//		}
+//// end of encryption.
 		
 		if (path == null || isRemote()) {
 			path = getName() + "-soapui-project.xml";
@@ -522,50 +508,6 @@ public class WsdlProject extends
 		return saveIn(projectFile);
 	}
 
-	/**
-	 * Encrypt credentials(user,pass) and storing data in ecryptedContent. Using base64 for encryption.
-	 * 
-	 * @author robert nemet
-	 * @param passwordForEncryption
-	 * @throws IOException
-	 * @throws GeneralSecurityException
-	 */
-	private void encryptData(String passwordForEncryption) throws IOException,
-			GeneralSecurityException {
-
-		log.info("Encrypting credentials.");
-		// encrypt credentials
-		for (Interface pInterface : getInterfaceList()) {
-			for (Operation operation : ((WsdlInterface) pInterface)
-					.getOperationList()) {
-				for (Request request : ((WsdlOperation) operation)
-						.getRequestList()) {
-					try {
-						String username = ((WsdlRequest) request).getUsername();
-						String password = ((WsdlRequest) request).getPassword();
-						if(username == null || password == null ) {
-							continue;
-						}
-						// encrypt username
-						byte[] encryptedUsername = OpenSSL.encrypt("des3",passwordForEncryption.toCharArray(), username.getBytes("UTF8"), true);
-						// encrypt password
-						byte[] encryptedPassword = OpenSSL.encrypt("des3",passwordForEncryption.toCharArray(), password.getBytes("UTF8"), true);
-						((WsdlRequest) request).setUsername(new String(encryptedUsername, "UTF8"));
-						((WsdlRequest) request).setPassword(new String(encryptedPassword, "UTF8"));
-					} catch (IOException e) {
-						e.printStackTrace();
-						log.error("Credentials encrypting error");
-						throw e;
-					} catch (GeneralSecurityException e) {
-						e.printStackTrace();
-						log.error("Credentials encrypting error");
-						throw e;
-					}
-				}
-			}
-		}
-	}
-
 	public boolean saveBackup() throws IOException {
 		File projectFile;
 		if (path == null || isRemote()) {
@@ -581,7 +523,34 @@ public class WsdlProject extends
 		long size = 0;
 
 		beforeSave();
-
+		SoapuiProjectDocumentConfig projectDocument = (SoapuiProjectDocumentConfig) this.projectDocument.copy();
+// check for encryption
+		String passwordForEncryption = getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
+		// if it has encryptedContend that means it is not decrypted corectly( bad password, etc ), so do not encrypt it again.
+		if (projectDocument.getSoapuiProject().getEncryptedContent() == null) {
+			if (passwordForEncryption != null) {
+				if (passwordForEncryption.length() > 1) {
+					// we have password so do encryption
+					try {
+						String data = projectDocument.getSoapuiProject().xmlText();
+						byte[] encrypted = OpenSSL.encrypt("des3",
+								passwordForEncryption.toCharArray(), data.getBytes());
+						projectDocument.getSoapuiProject().setEncryptedContent(encrypted);
+						projectDocument.getSoapuiProject().setInterfaceArray(null);
+						projectDocument.getSoapuiProject().unsetSettings();
+						projectDocument.getSoapuiProject().unsetProperties();
+					} catch (GeneralSecurityException e) {
+						UISupport.showErrorMessage("Encryption Error");
+					}
+				} else {
+					// no password no encryption.
+					projectDocument.getSoapuiProject()
+							.setEncryptedContent(null);
+				}
+			}
+		}
+// end of encryption.
+		
 		XmlOptions options = new XmlOptions();
 		if (SoapUI.getSettings().getBoolean(
 				WsdlSettings.PRETTY_PRINT_PROJECT_FILES))
@@ -1115,15 +1084,25 @@ public class WsdlProject extends
 		return "Custom Properties";
 	}
 
-	@Override
 	public String getShadowPassword() {
-		return getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
+		return getSettings() == null? null: getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
 	}
 
-	@Override
 	public void setShadowPassword(String password) {
 		getSettings().setString(ProjectSettings.SHADOW_PASSWORD, password);
 	}
-	
-	
+
+	@Override
+	public void inspect() {
+
+		byte data[] = projectDocument.getSoapuiProject().getEncryptedContent();
+		if (data != null && data.length > 0) {
+			try {
+				reload();
+			} catch (SoapUIException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 }

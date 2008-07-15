@@ -88,4 +88,6 @@ public interface Project extends TestModelItem
 	public String getShadowPassword();
 	
 	public void setShadowPassword(String password);
+
+	public void inspect();
 }
