@@ -52,6 +52,20 @@ public abstract class AbstractPathPropertySupport
 		
 		return old;
 	}
+	
+	public String get()
+	{
+		try
+		{
+			return getPropertyValue();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 
 	public String getPropertyName()
 	{

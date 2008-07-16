@@ -603,10 +603,11 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		return null;
 	}
 
-	@Override
 	public void inspectProjects() {
 		for( int cnt = 0 ; cnt < projectList.size(); cnt ++) {
-			projectList.get(cnt).inspect();
+			Project project = projectList.get(cnt);
+			if( project.isOpen())
+				project.inspect();
 		}
 	}
 

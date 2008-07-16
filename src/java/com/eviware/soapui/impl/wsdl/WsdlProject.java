@@ -1093,9 +1093,11 @@ public class WsdlProject extends
 		getSettings().setString(ProjectSettings.SHADOW_PASSWORD, password);
 	}
 
-	@Override
 	public void inspect() {
 
+		if( !isOpen() )
+			return;
+		
 		byte data[] = projectDocument.getSoapuiProject().getEncryptedContent();
 		if (data != null && data.length > 0) {
 			try {

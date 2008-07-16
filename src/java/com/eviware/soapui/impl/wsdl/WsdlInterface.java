@@ -171,9 +171,9 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
 		if( !getConfig().isSetDefinition() )
 			return null;
 		
-		String result = definitionProperty.expand();
+		String result = definitionProperty.get();
 		
-		if( PathUtils.isFilePath(result) && !result.startsWith("file:") && !result.startsWith("$"))
+		if( PathUtils.isFilePath(result) && !PathUtils.isRelativePath(result) &&  !result.startsWith("file:") && !result.startsWith("$"))
 		{
 			try
 			{

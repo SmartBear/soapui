@@ -362,6 +362,9 @@ public class SchemaUtils
 					for( ; c < attributes.getLength(); c++ )
 					{
 						Node item = attributes.item( c );
+						if( item.getNodeName().equals( "xmlns" ) )
+							break;
+						
 						if( item.getNodeValue().equals( tns ) && item.getNodeName().startsWith( "xmlns" ))
 							break;
 					}
