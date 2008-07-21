@@ -47,6 +47,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 	private String path;
 	private List<MockRunner> runners = new ArrayList<MockRunner>();
 	private boolean block;
+	private String projectPassword;
 	
 	public static String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " MockService Runner";
 	
@@ -95,7 +96,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 		
 		String projectFile = getProjectFile();
 		
-		WsdlProject project = new WsdlProject( projectFile );
+		WsdlProject project = new WsdlProject( projectFile, getProjectPassword() );
 		if( project.isDisabled() )
 			throw new Exception( "Failed to load soapUI project file [" + projectFile + "]" );
 		
@@ -195,7 +196,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 		options.addOption( "a", true, "Sets the url path to listen on" );
 		options.addOption( "s", true, "Sets the soapui-settings.xml file to use" );
 		options.addOption( "b", false, "Turns off blocking read for termination" );
-		
+		options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
 		return options;
 	}
 
@@ -216,9 +217,21 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 		
 		setBlock( !cmd.hasOption( 'b' ));
 		
+		if( cmd.hasOption( "x" ) ) {
+			setProjectPassword( cmd.getOptionValue("x"));
+		}
+		
 		return true;
 	}
 
+	public void setProjectPassword(String projectPassword) {
+		this.projectPassword = projectPassword;
+	}
+
+	public String getProjectPassword() {
+		return projectPassword;
+	}
+	
 	public void setBlock( boolean block )
 	{
 		this.block = block;

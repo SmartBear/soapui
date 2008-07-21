@@ -94,6 +94,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 	private JUnitReportCollector reportCollector;
 	private String wssPasswordType;
 	private WsdlProject project;
+
+	private String projectPassword;
 	
 	/**
 	 * Runs the tests in the specified soapUI project file, see soapUI xdocs for details.
@@ -140,12 +142,23 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 		if( cmd.hasOption( "t"))
 			setSettingsFile( getCommandLineOptionSubstSpace( cmd, "t" ));
 		
+		if( cmd.hasOption( "x" ) ) {
+			setProjectPassword( cmd.getOptionValue("x"));
+		}
 		setEnableUI( cmd.hasOption( "i") );
 		setPrintReport( cmd.hasOption( "r" ) );
 		setExportAll( cmd.hasOption( "a" ) );
 		setJUnitReport( cmd.hasOption( "j" ) );
 		
 		return true;
+	}
+
+	public void setProjectPassword(String projectPassword) {
+		this.projectPassword = projectPassword;
+	}
+	
+	public String getProjectPassword() {
+		return projectPassword;
 	}
 
 	protected SoapUIOptions initCommandLineOptions()
@@ -165,6 +178,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 		options.addOption( "j", false, "Sets the output to include JUnit XML reports" );
 		options.addOption( "a", false, "Turns on exporting of all results" );
 		options.addOption( "t", true, "Sets the soapui-settings.xml file to use" );
+		options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
 		return options;
 	}
 
@@ -284,7 +298,9 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 		
 		String projectFile = getProjectFile();
 		
-		project = new WsdlProject( projectFile );
+//		project = new WsdlProject( projectFile );
+		project = new WsdlProject( projectFile, getProjectPassword() );
+		
 		if( project.isDisabled() )
 			throw new Exception( "Failed to load soapUI project file [" + projectFile + "]" );
 		

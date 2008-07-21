@@ -17,6 +17,7 @@ import java.io.File;
 import org.apache.commons.cli.CommandLine;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.axis1.Axis1XWSDL2JavaAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.axis2.Axis2WSDL2CodeAction;
@@ -55,6 +56,11 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
 	private String tool;
 
 	private RunnerStatus status;
+	private String projectPassword;
+	public String getProjectPassword() {
+		return projectPassword;
+	}
+
 	public static String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " Tool Runner";
 	
 	/**
@@ -103,7 +109,7 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
 		if( !new File( projectFile ).exists() )
 			throw new Exception( "soapUI project file [" + projectFile + "] not found" );
 		
-		WsdlProject project = new WsdlProject( projectFile, null );
+		WsdlProject project = new WsdlProject( projectFile, getProjectPassword() );
 		log.info( "Running tools [" + tool + "] for interface [" + iface + "] in project [" + project.getName() + "]" );
 
 		long startTime = System.nanoTime();
@@ -253,6 +259,7 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
 		options.addOption( "i", true, "Sets the interface" );
 		options.addOption( "t", true, "Sets the tool to run" );
 		options.addOption( "s", true, "Sets the soapui-settings.xml file to use" );
+		options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
 		return options;
 	}
 
@@ -267,7 +274,15 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
 		if( cmd.hasOption( "s"))
 			setSettingsFile( getCommandLineOptionSubstSpace( cmd, "s" ));
 		
+		if( cmd.hasOption( "x" ) ) {
+			setProjectPassword( cmd.getOptionValue("x"));
+		}
+		
 		return true;
 
+	}
+
+	public void setProjectPassword(String projectPassword) {
+		this.projectPassword = projectPassword;
 	}
 }

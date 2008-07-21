@@ -70,6 +70,7 @@ public class SoapUILoadTestRunner extends AbstractSoapUIRunner implements LoadTe
 	private int limit = -1;
 	private String wssPasswordType;
 	private long threadCount = -1;
+	private String projectPassword;
 	
 	public static String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " LoadTest Runner";
 	
@@ -128,7 +129,15 @@ public class SoapUILoadTestRunner extends AbstractSoapUIRunner implements LoadTe
 		
 		setPrintReport( cmd.hasOption( "r") );
 		
+		if( cmd.hasOption( "x" ) ) {
+			setProjectPassword( cmd.getOptionValue("x"));
+		}
+		
 		return true;
+	}
+
+	private void setProjectPassword(String projectPassword) {
+		this.projectPassword = projectPassword;
 	}
 
 	public void setLimit( int limit )
@@ -158,6 +167,7 @@ public class SoapUILoadTestRunner extends AbstractSoapUIRunner implements LoadTe
 		options.addOption( "r", false, "Exports statistics and testlogs for each LoadTest run" );
 		options.addOption( "f", true, "Sets the output folder to export to" );
 		options.addOption( "t", true, "Sets the soapui-settings.xml file to use" );
+		options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
 		return options;
 	}
 
@@ -258,7 +268,7 @@ public class SoapUILoadTestRunner extends AbstractSoapUIRunner implements LoadTe
 		
 		String projectFile = getProjectFile();
 		
-		WsdlProject project = new WsdlProject( projectFile );
+		WsdlProject project = new WsdlProject( projectFile, getProjectPassword() );
 		if( project.isDisabled() )
 			throw new Exception( "Failed to load soapUI project file [" + projectFile + "]" );
 		int suiteCount = 0;
@@ -297,6 +307,10 @@ public class SoapUILoadTestRunner extends AbstractSoapUIRunner implements LoadTe
 		}
 		
 		return true;
+	}
+
+	public String getProjectPassword() {
+		return projectPassword;
 	}
 
 	/**

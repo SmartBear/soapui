@@ -154,7 +154,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 				try
 				{
 					WsdlProject project = new WsdlProject( str, this, false, !closeOnStartup &&
-								wsc.getStatus() != Status.CLOSED && wsc.getType() != Type.REMOTE, wsc.getName() );
+								wsc.getStatus() != Status.CLOSED && wsc.getType() != Type.REMOTE, wsc.getName(), null );
 					
 					projectList.add( project );
 				}
@@ -466,7 +466,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		
 		String tempName = project.getName();
 		project.release();
-		project = new WsdlProject( project.getPath(), this, false, true, tempName );
+		project = new WsdlProject( project.getPath(), this, false, true, tempName, null );
 		
 		projectList.add( ix, project );
 
@@ -561,7 +561,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		
 		try
 		{
-			project = new WsdlProject( project.getPath(), this, false, false, name );
+			project = new WsdlProject( project.getPath(), this, false, false, name, null );
 			projectList.add( ix, project );
 			fireProjectAdded( project );
 		}

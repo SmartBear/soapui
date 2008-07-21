@@ -110,6 +110,7 @@ public class WsdlProject extends
 	private PropertyExpansionContext context = new DefaultPropertyExpansionContext(
 			this);
 	private DefaultWssContainer wssContainer;
+	private String projectPassword = null;
 
 	private final static Logger log = Logger.getLogger(WsdlProject.class);
 
@@ -119,9 +120,13 @@ public class WsdlProject extends
 
 	public WsdlProject(String path) throws XmlException, IOException,
 			SoapUIException {
-		this(path, null);
+		this(path, (WorkspaceImpl) null);
 	}
 
+	public WsdlProject(String projectFile, String projectPassword) {
+		this(projectFile, (WorkspaceImpl) null, true, true, null, projectPassword);
+	}
+	
 	public WsdlProject(WorkspaceImpl workspace) {
 		this(null, workspace, true);
 	}
@@ -131,15 +136,16 @@ public class WsdlProject extends
 	}
 
 	public WsdlProject(String path, WorkspaceImpl workspace, boolean create) {
-		this(path, workspace, create, true, null);
+		this(path, workspace, create, true, null, null);
 	}
 
 	public WsdlProject(String path, WorkspaceImpl workspace, boolean create,
-			boolean open, String tempName) {
+			boolean open, String tempName, String projectPassword) {
 		super(null, workspace, "/project.gif");
 
 		this.workspace = workspace;
 		this.path = path;
+		this.projectPassword = projectPassword;
 		
 		try {
 			if (path != null && open) {
@@ -201,6 +207,7 @@ public class WsdlProject extends
 			}
 		}
 	}
+
 
 	public boolean isRemote() {
 		return remote;
@@ -292,6 +299,8 @@ public class WsdlProject extends
 		String projectPassword = null;
 		if ( workspace != null ) {
 			projectPassword = workspace.getProjectPassword(soapuiProject.getName());
+		} else {
+			projectPassword = this.projectPassword;
 		}
 		if (projectPassword == null) {
 			password = UISupport.promptPassword("Enter Password:",soapuiProject.getName());
@@ -541,8 +550,11 @@ public class WsdlProject extends
 						byte[] encrypted = OpenSSL.encrypt("des3", passwordForEncryption.toCharArray(), data.getBytes());
 						projectDocument.getSoapuiProject().setEncryptedContent(encrypted);
 						projectDocument.getSoapuiProject().setInterfaceArray(null);
+						projectDocument.getSoapuiProject().setTestSuiteArray(null);
+						projectDocument.getSoapuiProject().setMockServiceArray(null);
 						projectDocument.getSoapuiProject().unsetSettings();
 						projectDocument.getSoapuiProject().unsetProperties();
+						
 					} catch (GeneralSecurityException e) {
 						UISupport.showErrorMessage("Encryption Error");
 					}
@@ -1089,7 +1101,8 @@ public class WsdlProject extends
 	}
 
 	public String getShadowPassword() {
-		return getSettings() == null? null: getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
+		projectPassword = getSettings() == null? projectPassword : getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
+		return projectPassword;
 	}
 
 	public void setShadowPassword(String password) {
