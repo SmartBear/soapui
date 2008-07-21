@@ -68,7 +68,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 	public WorkspaceImpl( String path, TreeMap<String, String> projectOptions ) throws XmlException, IOException
 	{
 		if ( projectOptions == null ) {
-			projectOptions = new TreeMap<String, String>();
+			this.projectOptions = new TreeMap<String, String>();
 		} else {
 			this.projectOptions = projectOptions;
 		}
@@ -612,7 +612,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 	}
 
 	public String getProjectPassword(String name) {
-		return projectOptions.get(name);
+			return projectOptions.get(name);
 	}
 
 	public void clearProjectPassword(String name) {
