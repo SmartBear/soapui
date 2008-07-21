@@ -289,7 +289,10 @@ public class WsdlProject extends
 
 		byte[] encryptedContent = soapuiProject.getEncryptedContent();
 		char[] password = null;
-		String projectPassword = getWorkspace().getProjectPassword(soapuiProject.getName());
+		String projectPassword = null;
+		if ( workspace != null ) {
+			projectPassword = workspace.getProjectPassword(soapuiProject.getName());
+		}
 		if (projectPassword == null) {
 			password = UISupport.promptPassword("Enter Password:",soapuiProject.getName());
 		} else {
