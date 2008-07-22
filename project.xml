@@ -369,8 +369,8 @@
         </dependency>
         <dependency>
             <groupId>xmlbeans</groupId>
-            <artifactId>xbean-fixed</artifactId>
-            <version>2.4.0</version>
+            <artifactId>xbean</artifactId>
+            <version>fixed-2.4.0</version>
             <type>jar</type>
             <url>http://xmlbeans.apache.org/</url>
             <properties>
