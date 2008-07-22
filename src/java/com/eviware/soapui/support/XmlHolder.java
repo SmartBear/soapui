@@ -121,7 +121,7 @@ public class XmlHolder implements Map<String,Object>
 		return xpath;
 	}
 	
-	public void setNodeValue( String xpath, String value ) throws XmlException
+	public void setNodeValue( String xpath, Object value ) throws XmlException
 	{
 		xpath = initXPathNamespaces( xpath );
 
@@ -132,7 +132,7 @@ public class XmlHolder implements Map<String,Object>
 			
 			if( cursor.toNextSelection() )
 			{
-				XmlUtils.setNodeValue( cursor.getDomNode(), value );
+				XmlUtils.setNodeValue( cursor.getDomNode(), value == null ? null : value.toString() );
 			}
 		}
 		finally
