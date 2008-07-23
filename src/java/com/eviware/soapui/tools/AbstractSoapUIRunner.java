@@ -36,6 +36,8 @@ public abstract class AbstractSoapUIRunner
 	private String projectFile;
 	protected final Logger log = Logger.getLogger( getClass() );
 	private String settingsFile;
+	private String soapUISettingsPassword;
+
 	private boolean enableUI;
 
 	public AbstractSoapUIRunner( String title )
@@ -128,7 +130,7 @@ public abstract class AbstractSoapUIRunner
 		}
 		else
 		{
-			return new DefaultSoapUICore( null, settingsFile );
+			return new DefaultSoapUICore( null, settingsFile, soapUISettingsPassword );
 		}
 	}
 
@@ -209,5 +211,13 @@ public abstract class AbstractSoapUIRunner
 		{
 			return true;
 		}
+	}
+	
+	public String getSoapUISettingsPassword() {
+		return soapUISettingsPassword;
+	}
+
+	public void setSoapUISettingsPassword(String soapUISettingsPassword) {
+		this.soapUISettingsPassword = soapUISettingsPassword;
 	}
 }

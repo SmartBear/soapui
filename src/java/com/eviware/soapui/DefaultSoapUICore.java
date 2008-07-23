@@ -62,6 +62,8 @@ public class DefaultSoapUICore implements SoapUICore
 
 	private String settingsFile;
 
+	private String password;
+
 	public static DefaultSoapUICore createDefault()
 	{
 		return new DefaultSoapUICore( null, DEFAULT_SETTINGS_FILE );
@@ -79,6 +81,13 @@ public class DefaultSoapUICore implements SoapUICore
 	public DefaultSoapUICore( String root, String settingsFile )
 	{
 		this( root );
+		init( settingsFile );
+	}
+	
+	public DefaultSoapUICore( String root, String settingsFile, String password )
+	{
+		this( root );
+		this.password = password;
 		init( settingsFile );
 	}
 
@@ -138,16 +147,24 @@ public class DefaultSoapUICore implements SoapUICore
 
 				byte[] encryptedContent = settingsDocument.getSoapuiSettings().getEncryptedContent();
 				if (encryptedContent != null) {
-					// swing element
-					JPasswordField passwordField = new JPasswordField();
-					JLabel qLabel = new JLabel("Password");
-					JOptionPane.showConfirmDialog(null, new Object[] { qLabel, passwordField }, "Global Settings", JOptionPane.OK_CANCEL_OPTION);
+					char[] password = null;
+					if (this.password == null) {
+						// swing element -!! uh!
+						JPasswordField passwordField = new JPasswordField();
+						JLabel qLabel = new JLabel("Password");
+						JOptionPane.showConfirmDialog(null, new Object[] {qLabel, passwordField }, "Global Settings", JOptionPane.OK_CANCEL_OPTION);
+						password = passwordField.getPassword();
+					} else {
+						password = this.password.toCharArray();
+					}
 					
-					char[] password = passwordField.getPassword();
 					byte[] data = OpenSSL.decrypt("des3", password, encryptedContent);
-					
-					settingsDocument = SoapuiSettingsDocumentConfig.Factory.parse(new String(data, "UTF-8"));
-
+					try {
+						settingsDocument = SoapuiSettingsDocumentConfig.Factory.parse(new String(data, "UTF-8"));
+					} catch (Exception e) {
+						log.warn("Wrong password.");
+						throw e;
+					}
 				}
 
 				log.info( "initialized soapui-settings from [" + settingsFile.getAbsolutePath() + "]" );

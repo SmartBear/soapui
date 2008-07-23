@@ -133,6 +133,10 @@ public class SoapUILoadTestRunner extends AbstractSoapUIRunner implements LoadTe
 			setProjectPassword( cmd.getOptionValue("x"));
 		}
 		
+		if( cmd.hasOption( "v" ) ) {
+			setSoapUISettingsPassword( cmd.getOptionValue("v"));
+		}
+		
 		return true;
 	}
 
@@ -168,6 +172,7 @@ public class SoapUILoadTestRunner extends AbstractSoapUIRunner implements LoadTe
 		options.addOption( "f", true, "Sets the output folder to export to" );
 		options.addOption( "t", true, "Sets the soapui-settings.xml file to use" );
 		options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
+		options.addOption( "v", true, "Sets password for soapui-settings.xml file");
 		return options;
 	}
 

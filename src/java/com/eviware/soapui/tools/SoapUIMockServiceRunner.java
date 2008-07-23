@@ -197,6 +197,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 		options.addOption( "s", true, "Sets the soapui-settings.xml file to use" );
 		options.addOption( "b", false, "Turns off blocking read for termination" );
 		options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
+		options.addOption( "v", true, "Sets password for soapui-settings.xml file");
 		return options;
 	}
 
@@ -219,6 +220,10 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 		
 		if( cmd.hasOption( "x" ) ) {
 			setProjectPassword( cmd.getOptionValue("x"));
+		}
+		
+		if( cmd.hasOption( "v" ) ) {
+			setSoapUISettingsPassword( cmd.getOptionValue("v"));
 		}
 		
 		return true;

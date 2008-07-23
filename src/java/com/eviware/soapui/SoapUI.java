@@ -502,7 +502,7 @@ public class SoapUI
 	{
 		frame = new JFrame( title );
 		
-		SoapUISplash splash = null;//new SoapUISplash( splashImage, frame );
+		SoapUISplash splash = new SoapUISplash( splashImage, frame );
 		
 		isStandalone = true;
 		soapUICore = core;

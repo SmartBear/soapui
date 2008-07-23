@@ -260,6 +260,7 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
 		options.addOption( "t", true, "Sets the tool to run" );
 		options.addOption( "s", true, "Sets the soapui-settings.xml file to use" );
 		options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
+		options.addOption( "v", true, "Sets password for soapui-settings.xml file");
 		return options;
 	}
 
@@ -276,6 +277,10 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
 		
 		if( cmd.hasOption( "x" ) ) {
 			setProjectPassword( cmd.getOptionValue("x"));
+		}
+		
+		if( cmd.hasOption( "v" ) ) {
+			setSoapUISettingsPassword( cmd.getOptionValue("v"));
 		}
 		
 		return true;
