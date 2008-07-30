@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="JettyProxy">
+
+  <title>JettyProxy</title>
+
+  <body>
+
+    <!--
+    <breadcrumbs>
+      <item name="Home" href="/index.html"/>
+    </breadcrumbs>
+    -->
+
+    <links>
+      <item name="Home" href="/index.html"/>
+    </links>
+
+    <!-- An optional sitemap -->
+    <!-- <sitemap/> -->
+
+    <!-- A navigation menu -->
+    <menu name="Documentation">
+      <item name="Home" href="/index.html"/>
+      <!--
+      <item name="A submenu"    href="/submenu/index.html"  collapse="true">
+        <item name="FAQ"        href="/faq.html"/>
+      </item>
+      -->
+    </menu>
+
+    <!-- A Google search field -->
+    <!-- <search/> -->
+
+    <!-- Additional powered-by logos -->
+    <!--
+    <powered-by>
+    </powered-by>
+    -->
+
+    <!-- footer will be placed above the (c) -->
+    <!--
+    <footer>
+    </footer>
+    -->
+
+  </body>
+</project>

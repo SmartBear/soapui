@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+
+  <properties>
+    <title>JettyProxy</title>
+    <!--<author email="john@doe.com">John Doe</author>-->
+  </properties>
+
+  <!-- An optional head, the description is used for the sitemap. -->
+  <!--
+  <head>
+    <meta name="keywords" content="List of keywords"/>
+    <meta name="description" content="The description"/>
+  </head>
+  -->
+
+  <body>
+
+    <section name="JettyProxy">
+      <p>
+        JettyProxy is an extremely cool application.
+      </p>
+      <!--
+      <subsection name="A subsection">
+      </subsection>
+      -->
+    </section>
+
+  </body>
+
+</document>
