@@ -213,7 +213,7 @@ public class WsdlProject extends
 		return remote;
 	}
 
-	private void loadProject(URL file) throws SoapUIException {
+	public void loadProject(URL file) throws SoapUIException {
 		try {
 			UISupport.setHourglassCursor();
 
@@ -296,6 +296,10 @@ public class WsdlProject extends
 
 		byte[] encryptedContent = soapuiProject.getEncryptedContent();
 		char[] password = null;
+		
+		if( encryptedContent == null || encryptedContent.length == 0 )
+			return 0;
+		
 		String projectPassword = null;
 		if ( workspace != null ) {
 			projectPassword = workspace.getProjectPassword(soapuiProject.getName());
@@ -531,7 +535,7 @@ public class WsdlProject extends
 		return saveIn(backupFile);
 	}
 
-	private boolean saveIn(File projectFile) throws IOException {
+	public boolean saveIn(File projectFile) throws IOException {
 		long size = 0;
 
 		beforeSave();
