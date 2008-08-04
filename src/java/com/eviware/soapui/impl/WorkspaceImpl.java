@@ -154,7 +154,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 				try
 				{
 					WsdlProject project = new WsdlProject( str, this, false, !closeOnStartup &&
-								wsc.getStatus() != Status.CLOSED && wsc.getType() != Type.REMOTE, wsc.getName(), null );
+								wsc.getStatus() != Status.CLOSED && wsc.getType() != Type.REMOTE, wsc.getName(), null);
 					
 					projectList.add( project );
 				}
@@ -296,8 +296,13 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 					if( project.isRemote() )
 						wpc.setType( Type.REMOTE );
 					
-					if( !project.isOpen() )
-						wpc.setStatus( Status.CLOSED );
+					if( !project.isOpen() ) {
+						if( project.getEncrypted() == 0 ) {
+							wpc.setStatus( Status.CLOSED );
+						} else {
+							wpc.setStatus( Status.CLOSED_AND_ENCRYPTED );
+						}
+					}
 					
 					wpc.setName( project.getName() );
 					projects.add( wpc );
@@ -548,6 +553,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 
 	public void closeProject( Project project )
 	{
+		int oldProjectEncrypt = ((WsdlProject) project).getEncrypted();
 		int ix = projectList.indexOf( project );
 		if( ix == -1 )
 			throw new RuntimeException( "Project [" + project.getName() 
@@ -562,6 +568,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		try
 		{
 			project = new WsdlProject( project.getPath(), this, false, false, name, null );
+			((WsdlProject)project).setEncrypted( oldProjectEncrypt );
 			projectList.add( ix, project );
 			fireProjectAdded( project );
 		}

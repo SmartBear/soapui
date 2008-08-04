@@ -99,6 +99,7 @@ public class WsdlProject extends
 	private ImageIcon disabledIcon;
 	private ImageIcon closedIcon;
 	private ImageIcon remoteIcon;
+	private ImageIcon openEncyptedIcon;
 	private EndpointStrategy endpointStrategy = new DefaultEndpointStrategy();
 	private long lastModified;
 	private boolean remote;
@@ -111,6 +112,9 @@ public class WsdlProject extends
 			this);
 	private DefaultWssContainer wssContainer;
 	private String projectPassword = null;
+	// flag if project is successfully decrypted, if encrypted, or encrypted.
+	private int encrypted;
+	private ImageIcon closedEncyptedIcon;
 
 	private final static Logger log = Logger.getLogger(WsdlProject.class);
 
@@ -175,18 +179,16 @@ public class WsdlProject extends
 			closedIcon = UISupport.createImageIcon("/closedProject.gif");
 			remoteIcon = UISupport.createImageIcon("/remoteProject.gif");
 			disabledIcon = UISupport.createImageIcon("/disabledProject.gif");
-
-			this.open = open && !disabled;
-
+			openEncyptedIcon = UISupport.createImageIcon("/openEncryptedProject.gif");
+			closedEncyptedIcon = UISupport.createImageIcon("/closedEncryptedProject.gif");
+			
+			this.open = open && !disabled && ( this.encrypted != -1);
+			
 			if (projectDocument == null) {
-				projectDocument = SoapuiProjectDocumentConfig.Factory
-						.newInstance();
+				projectDocument = SoapuiProjectDocumentConfig.Factory.newInstance();
 				setConfig(projectDocument.addNewSoapuiProject());
 				if (tempName != null || path != null)
-					getConfig()
-							.setName(
-									StringUtils.isNullOrEmpty(tempName) ? getNameFromPath()
-											: tempName);
+					getConfig().setName(StringUtils.isNullOrEmpty(tempName) ? getNameFromPath()	: tempName);
 
 				setPropertiesConfig(getConfig().addNewProperties());
 				wssContainer = new DefaultWssContainer(this, getConfig()
@@ -222,7 +224,7 @@ public class WsdlProject extends
 			projectDocument = SoapuiProjectDocumentConfig.Factory.parse(loader.load());
 
 			// see if there is encoded data
-			checkForEncodedData(projectDocument.getSoapuiProject());
+			this.encrypted = checkForEncodedData(projectDocument.getSoapuiProject());
 			
 			setConfig(projectDocument.getSoapuiProject());
 
@@ -291,12 +293,14 @@ public class WsdlProject extends
 	 * @param soapuiProject
 	 * @throws IOException 
 	 * @throws GeneralSecurityException 
+	 * @return 0 - not encrypted, 1 - successfull decryption , -1 error while decrypting, bad password, no password.
 	 */
 	private int checkForEncodedData(ProjectConfig soapuiProject) throws IOException, GeneralSecurityException {
 
 		byte[] encryptedContent = soapuiProject.getEncryptedContent();
 		char[] password = null;
 		
+		// no encrypted data then go back
 		if( encryptedContent == null || encryptedContent.length == 0 )
 			return 0;
 		
@@ -312,9 +316,9 @@ public class WsdlProject extends
 			password = projectPassword.toCharArray();
 		}
 		byte[] data = null;
-		// no encrypted data then go back
-		if (encryptedContent == null || encryptedContent.length < 1 || password == null) {
-			return 0;
+		// no pass go back.
+		if ( password == null ) {
+			return -1; 
 		}
 		
 		try {
@@ -387,6 +391,13 @@ public class WsdlProject extends
 	public ImageIcon getIcon() {
 		if (isDisabled())
 			return disabledIcon;
+		else if ( getEncrypted() != 0 ) {
+			if( isOpen() ) {
+				return openEncyptedIcon;
+			} else {
+				return closedEncyptedIcon;
+			}
+		}
 		else if (!isOpen())
 			return closedIcon;
 		else if (isRemote())
@@ -1126,6 +1137,14 @@ public class WsdlProject extends
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public int getEncrypted() {
+		return this.encrypted;
+	}
+	
+	public int setEncrypted(int code) {
+		return this.encrypted = code;
 	}
 
 }

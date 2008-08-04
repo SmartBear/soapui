@@ -535,7 +535,7 @@ public class SoapUI
 		core.afterStartup( workspace );
 		Thread.sleep( 500 );
 		splash.setVisible( false );
-		SoapUI.workspace.inspectProjects();
+//		SoapUI.workspace.inspectProjects();
 		
 		return soapUI;
 	}

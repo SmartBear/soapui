@@ -35,6 +35,7 @@
 	<tns:action id="RemoveProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.RemoveProjectAction"/>
 	<tns:action id="RenameProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.RenameProjectAction"/>
 	<tns:action id="OpenProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.OpenProjectAction"/>
+	<tns:action id="OpenAndDecryptProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.OpenAndDecryptProjectAction"/>
 	<tns:action id="CloseProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.CloseProjectAction"/>
 	<tns:action id="AddInterfaceActionFromURL" actionClass="com.eviware.soapui.impl.wsdl.actions.project.AddInterfaceActionFromURL"/>
 	<tns:action id="AddInterfaceActionFromFile" actionClass="com.eviware.soapui.impl.wsdl.actions.project.AddInterfaceActionFromFile"/>
@@ -183,6 +184,13 @@
 	
 	<tns:actionGroup name="Closed Project Actions" id="ClosedWsdlProjectActions" default="OpenProjectAction">
 		<tns:actionMapping actionId="OpenProjectAction"/>
+		<tns:actionMapping actionId="RemoveProjectAction" keyStroke="DELETE"/>
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="projects.html"/>
+	</tns:actionGroup>
+	
+	<tns:actionGroup name="Encrypted Project Actions" id="EncryptedWsdlProjectActions" default="OpenProjectAction">
+		<tns:actionMapping actionId="OpenAndDecryptProjectAction"/>
 		<tns:actionMapping actionId="RemoveProjectAction" keyStroke="DELETE"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="projects.html"/>

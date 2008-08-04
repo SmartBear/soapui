@@ -708,6 +708,7 @@
 						<xsd:restriction base="xsd:string">
 							<xsd:enumeration value="OPEN"></xsd:enumeration>
 							<xsd:enumeration value="CLOSED"></xsd:enumeration>
+							<xsd:enumeration value="CLOSED_AND_ENCRYPTED"></xsd:enumeration>
 						</xsd:restriction>
 					</xsd:simpleType>
 				</xsd:attribute>
