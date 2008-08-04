@@ -130,7 +130,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		fireWorkspaceSwitched();
 	}
 	
-	private void loadWorkspace( File file ) throws XmlException, IOException
+	public void loadWorkspace( File file ) throws XmlException, IOException
 	{
 		if( file.exists() )
 		{
