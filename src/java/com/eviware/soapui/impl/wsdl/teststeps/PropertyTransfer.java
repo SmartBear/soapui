@@ -567,7 +567,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 					
 					if( value == null || !getTransferTextContent() )
 					{
-						value = sourceCursor.getObject().xmlText( new XmlOptions().setSaveOuter().setSaveAggressiveNamespaces().setSavePrettyPrint());
+						value = sourceCursor.getObject().xmlText( new XmlOptions().setSaveOuter().setSaveAggressiveNamespaces() );
 					}
 				}
 			}
@@ -621,7 +621,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 				value = XmlUtils.getElementText( (Element) sourceNode);
 				if( value == null && sourceNode.getFirstChild() != null )
 				{
-					value = source.getObject().xmlText( new XmlOptions().setSaveOuter().setSaveAggressiveNamespaces().setSavePrettyPrint() );
+					value = source.getObject().xmlText( new XmlOptions().setSaveOuter().setSaveAggressiveNamespaces() );
 					destNode.getParentNode().replaceChild( destNode.getOwnerDocument().importNode( sourceNode, true ), destNode );
 				}
 				else if( !getIgnoreEmpty() || (value != null && value.length() > 0) )
