@@ -92,7 +92,6 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 public class XPathContainsAssertion extends WsdlMessageAssertion implements RequestAssertion, ResponseAssertion, XPathReferenceContainer
 {
-	private static final int ERROR_LENGTH_LIMIT = 200;
 	private final static Logger log = Logger.getLogger( XPathContainsAssertion.class );
 	private String expectedContent;
 	private String path;
