@@ -189,7 +189,7 @@
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="projects.html"/>
 	</tns:actionGroup>
 	
-	<tns:actionGroup name="Encrypted Project Actions" id="EncryptedWsdlProjectActions" default="OpenProjectAction">
+	<tns:actionGroup name="Encrypted Project Actions" id="EncryptedWsdlProjectActions" default="OpenAndDecryptProjectAction">
 		<tns:actionMapping actionId="OpenAndDecryptProjectAction"/>
 		<tns:actionMapping actionId="RemoveProjectAction" keyStroke="DELETE"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
