@@ -48,6 +48,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 	private List<MockRunner> runners = new ArrayList<MockRunner>();
 	private boolean block;
 	private String projectPassword;
+	private WsdlProject project;
 	
 	public static String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " MockService Runner";
 	
@@ -100,6 +101,8 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 		if( project.isDisabled() )
 			throw new Exception( "Failed to load soapUI project file [" + projectFile + "]" );
 		
+		initProject();
+				
 		if( mockService == null )
 			log.info( "Running all MockServices in project [" + project.getName() + "]" );
 		else
@@ -129,14 +132,23 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 		long timeTaken = (System.nanoTime()-startTime)/1000000;
 		log.info( "time taken: " + timeTaken + "ms" );
 		
+		exportReports();
+		
 		return block;
 	}
 	
+	 protected void initProject() throws Exception
+	   {
+	   }
+	 
+	 protected void exportReports() throws Exception
+	 {
+	 }
+	
 	/**
-	 * Runs the configured tool for the specified interface.. needs to be refactored to use
-	 * some kind of registry/factory pattern for tools
+	 * Runs the specified MockService
 	 * 
-	 * @param iface
+	 * @param mockService
 	 */
 	
 	public void runMockService( WsdlMockService mockService )
@@ -241,4 +253,9 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 	{
 		this.block = block;
 	}
+	
+	 public WsdlProject getProject()
+	   {
+	      return project;
+	   }
 }

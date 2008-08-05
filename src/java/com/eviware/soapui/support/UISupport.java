@@ -97,7 +97,7 @@ public class UISupport
 
 	private static Component frame;
 	private static Map<String, ImageIcon> iconCache = new HashMap<String, ImageIcon>();
-	public static Dimension TOOLBAR_BUTTON_DIMENSION = new Dimension( 22, 21 );
+	public static Dimension TOOLBAR_BUTTON_DIMENSION;
 	private static Boolean isWindows;
 
 	private static XDialogs dialogs;
@@ -115,6 +115,9 @@ public class UISupport
 	{
 		setDialogs( new ConsoleDialogs() );
 		uiUtils = new SwingUtils();
+		
+		if( !isHeadless() )
+			TOOLBAR_BUTTON_DIMENSION = new Dimension( 22, 21 );
 	}
 
 	public static ImageIcon TOOL_ICON = UISupport.createImageIcon( TOOL_ICON_PATH );

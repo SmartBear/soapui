@@ -78,7 +78,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	{
 		super(config, parent, icon);
 
-		if( !forLoadTest )
+		if( !forLoadTest && !UISupport.isHeadless() )
 		{
 			iconAnimator = initIconAnimator();
 			addSubmitListener( iconAnimator );
@@ -369,7 +369,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
    @Override
    public ImageIcon getIcon()
    {
-   	return iconAnimator.getIcon();
+   	return iconAnimator == null ? null : iconAnimator.getIcon();
    }
 	
 	public List<? extends ModelItem> getChildren()

@@ -88,7 +88,6 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
      
       initEndpoints();
       
-      
       // ensure encoding
       if( callConfig.getEncoding() == null || callConfig.getEncoding().length() == 0 )
       {
