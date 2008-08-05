@@ -38,14 +38,15 @@ public class WsdlProjectSoapUIActionGroup extends AbstractSoapUIActionGroup<Wsdl
 		{
 			SoapUIActionGroup<WsdlProject> actionGroup = SoapUI.getActionRegistry().getActionGroup( "DisabledWsdlProjectActions" );
 			return actionGroup.getActionMappings( project );
-		} else if( project.getEncrypted() == -1 ) {
-			SoapUIActionGroup<WsdlProject> actionGroup = SoapUI.getActionRegistry().getActionGroup( "EncryptedWsdlProjectActions" );
-			return actionGroup.getActionMappings( project );
-		}
-		else if( !project.isOpen() )
+		} else if( !project.isOpen() )
 		{
-			SoapUIActionGroup<WsdlProject> actionGroup = SoapUI.getActionRegistry().getActionGroup( "ClosedWsdlProjectActions" );
-			return actionGroup.getActionMappings( project );
+			if( project.getEncrypted() != 0 ) {
+				SoapUIActionGroup<WsdlProject> actionGroup = SoapUI.getActionRegistry().getActionGroup( "EncryptedWsdlProjectActions" );
+				return actionGroup.getActionMappings( project );
+			} else {
+				SoapUIActionGroup<WsdlProject> actionGroup = SoapUI.getActionRegistry().getActionGroup( "ClosedWsdlProjectActions" );
+				return actionGroup.getActionMappings( project );
+			}
 		}
 		else 
 		{

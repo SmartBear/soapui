@@ -12,6 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -77,7 +80,7 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 
 public class WsdlProject extends
 		AbstractTestPropertyHolderWsdlModelItem<ProjectConfig> implements
-		Project, PropertyExpansionContainer {
+		Project, PropertyExpansionContainer, PropertyChangeListener {
 	public final static String AFTER_LOAD_SCRIPT_PROPERTY = WsdlProject.class
 			.getName()
 			+ "@setupScript";
@@ -112,8 +115,15 @@ public class WsdlProject extends
 			this);
 	private DefaultWssContainer wssContainer;
 	private String projectPassword = null;
-	// flag if project is successfully decrypted, if encrypted, or encrypted.
+	/*
+	 *  3 state flag:
+	 *  1. 0 - project not encrypted
+	 *  2. 1 - encrypted , good password, means that it could be successfully decrypted
+	 *  3. -1 - encrypted, but with bad password or no password. 
+	 */
 	private int encrypted;
+	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+	
 	private ImageIcon closedEncyptedIcon;
 
 	private final static Logger log = Logger.getLogger(WsdlProject.class);
@@ -207,6 +217,9 @@ public class WsdlProject extends
 					.getListeners(ProjectListener.class)) {
 				addProjectListener(listener);
 			}
+			
+			addPropertyChangeListener(this);
+
 		}
 	}
 
@@ -461,27 +474,6 @@ public class WsdlProject extends
 		if (!isOpen() || isDisabled() || isRemote())
 			return true;
 
-//// check for encryption
-//		String passwordForEncryption = getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
-//		if (passwordForEncryption != null) {
-//			if (passwordForEncryption.length() > 1) {
-//				// we have password so do encryption
-//				try {
-//					encryptData(passwordForEncryption);
-//					projectDocument.getSoapuiProject().setEncryptedContent(OpenSSL.encrypt("des3", getName().toCharArray(),passwordForEncryption.getBytes()));
-//				} catch (GeneralSecurityException e) {
-//					UISupport.showErrorMessage("Encryption Error");
-//				}
-//			} else {
-//				// no password no encryption.
-//				projectDocument.getSoapuiProject().setEncryptedContent(null);
-//			}
-//		} else {
-//			// no password no encryption.
-//			projectDocument.getSoapuiProject().setEncryptedContent(null);
-//		}
-//// end of encryption.
-		
 		if (path == null || isRemote()) {
 			path = getName() + "-soapui-project.xml";
 			File file = null;
@@ -575,8 +567,7 @@ public class WsdlProject extends
 					}
 				} else {
 					// no password no encryption.
-					projectDocument.getSoapuiProject()
-							.setEncryptedContent(null);
+					projectDocument.getSoapuiProject().setEncryptedContent(null);
 				}
 			}
 		}
@@ -1121,7 +1112,9 @@ public class WsdlProject extends
 	}
 
 	public void setShadowPassword(String password) {
+		String oldPAssword = getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
 		getSettings().setString(ProjectSettings.SHADOW_PASSWORD, password);
+		this.pcs.firePropertyChange("projectPassword", oldPAssword, password);
 	}
 
 	public void inspect() {
@@ -1146,5 +1139,25 @@ public class WsdlProject extends
 	public int setEncrypted(int code) {
 		return this.encrypted = code;
 	}
+	
+	public void addPropertyChangeListener( PropertyChangeListener listener )
+    {
+        this.pcs.addPropertyChangeListener( listener );
+    }
+
+	
+	public void propertyChange(PropertyChangeEvent evt) {
+		
+		if ("projectPassword".equals(evt.getPropertyName())) {
+			if ( encrypted == 0 & (evt.getOldValue() == null || ((String)evt.getOldValue()).length() == 0) ) {
+				encrypted = 1;
+			}
+			if ( encrypted == 1 & ( evt.getNewValue() == null || ((String)evt.getNewValue()).length() == 0) ) {
+				encrypted = 0;
+			}
+		} 
+		SoapUI.getNavigator().repaint();
+	}
+
 
 }
