@@ -16,6 +16,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
+import com.eviware.soapui.model.ModelItem;
 
 /**
  * TestStepProperty implementation that maps to a standard javabean property
@@ -56,7 +57,16 @@ public class TestStepBeanProperty extends DefaultTestStepProperty
 			}
 			catch (Exception e)
 			{
-				SoapUI.logError( e );
+				if( target instanceof ModelItem )
+				{
+					SoapUI.logError( new Exception( "Error getting property [" + targetName + "] from modelItem [" + 
+							((ModelItem)target).getName() + "]", e) );
+				}
+				else
+				{
+					SoapUI.logError( new Exception( "Error getting property [" + targetName + "] from bean [" + target + "]", e) );
+				}
+				
 				return null;
 			}			
 		}

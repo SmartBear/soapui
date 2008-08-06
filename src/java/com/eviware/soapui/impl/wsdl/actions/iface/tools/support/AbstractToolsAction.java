@@ -25,6 +25,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.actions.support.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.wsdl.CachedWsdlLoader;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
@@ -189,7 +190,7 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 			values.put(CACHED_WSDL, Boolean.toString(cached));
 
 		if (values.getBoolean(CACHED_WSDL) || !values.hasValue(WSDL))
-			values.put(WSDL, iface.getExpandedDefinition());
+			values.put(WSDL, PathUtils.expandPath(iface.getDefinition(), iface) );
 	}
 
 	protected abstract void generate(StringToStringMap values, ToolHost toolHost, T modelItem ) throws Exception;
@@ -223,9 +224,12 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 		String wsdl = values.get(WSDL);
 		boolean useCached = values.getBoolean(CACHED_WSDL);
 
-		if (wsdl == null && !useCached && modelItem instanceof Interface)
-			return ((WsdlInterface) modelItem).getExpandedDefinition();
-
+		if (wsdl == null && !useCached && modelItem instanceof WsdlInterface)
+		{
+			WsdlInterface iface = (WsdlInterface) modelItem;
+			return PathUtils.expandPath( iface.getDefinition(), iface );
+		}
+		
 		WsdlInterface iface = (WsdlInterface) modelItem;
 		if (useCached && iface.isCached())
 		{
@@ -309,8 +313,8 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 	{
 		if (modelItem == null)
 			return "";
-
-		String definition = ((WsdlInterface) modelItem).getExpandedDefinition();
+		WsdlInterface iface = (WsdlInterface) modelItem;
+		String definition = PathUtils.expandPath(iface.getDefinition(), iface );
 		if (definition.startsWith("file:"))
 			definition = definition.substring(5);
 

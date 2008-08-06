@@ -36,7 +36,6 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
-import com.eviware.soapui.support.editor.xml.XmlLocation;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 public class MockResponseScriptInspector extends AbstractXmlInspector
@@ -60,10 +59,6 @@ public class MockResponseScriptInspector extends AbstractXmlInspector
 		return panel;
 	}
 
-	public void locationChanged( XmlLocation location )
-	{
-	}
-	
 	@Override
 	public void activate()
 	{

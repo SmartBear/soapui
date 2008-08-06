@@ -30,7 +30,6 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
-import com.eviware.soapui.support.editor.xml.XmlLocation;
 
 public class ResponseSSLInspector extends AbstractXmlInspector implements PropertyChangeListener
 {
@@ -66,10 +65,6 @@ public class ResponseSSLInspector extends AbstractXmlInspector implements Proper
 		request.removePropertyChangeListener( WsdlRequest.RESPONSE_PROPERTY, this );
 	}
 
-	public void locationChanged( XmlLocation location )
-	{
-	}
-	
 	private void updateSSLInfo( SSLInfo sslInfo )
 	{
 		String sslInfoTabTitle = "SSL Info";

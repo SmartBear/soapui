@@ -192,7 +192,7 @@ public class ProcessToolRunner implements ToolRunner
 	private void logRunInfo(ProcessBuilder builder)
 	{
 		context.log( "directory: " + builder.directory().getAbsolutePath() + "\r\n" );
-		context.log( "command: " + args.toString() + "\r\n" );
+		context.log( "command: " + args + "\r\n" );
 	}
 
 	public void setContext(RunnerContext context)

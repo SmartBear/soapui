@@ -22,7 +22,6 @@ import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
-import com.eviware.soapui.support.editor.xml.XmlLocation;
 
 public class AttachmentsInspector extends AbstractXmlInspector implements PropertyChangeListener
 {
@@ -52,10 +51,6 @@ public class AttachmentsInspector extends AbstractXmlInspector implements Proper
 		super.release();
 		attachmentsPanel.release();
 		container.removeAttachmentsChangeListener( this );
-	}
-
-	public void locationChanged( XmlLocation location )
-	{
 	}
 
 	public void propertyChange( PropertyChangeEvent evt )

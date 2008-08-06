@@ -88,8 +88,10 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 			if( wsdlOperation == null )
          {   
             log.error( "Could not find operation [" + requestStepConfig.getOperation() + "] in interface [" + 
-            		requestStepConfig.getInterface() + "] for test request" );
+            		requestStepConfig.getInterface() + "] for test request [" + getName() + "] in TestCase [" + 
+            		getTestCase().getTestSuite().getName() + "/" + getTestCase().getName() + "]" );
             requestStepConfig.setRequest(null);
+            setDisabled(true);
          }
          else
          {
@@ -214,9 +216,13 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 	     	wsdlOperation.getInterface().removeInterfaceListener( interfaceListener );
 	     	wsdlOperation.getInterface().removePropertyChangeListener( this );
       }
-      
-      testRequest.removePropertyChangeListener( this );
-      testRequest.release();
+
+      // could be null if initialization failed..
+      if( testRequest != null )
+      {
+      	testRequest.removePropertyChangeListener( this );
+      	testRequest.release();
+      }
 	}
 
 	@Override
@@ -231,7 +237,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 	@Override
    public ImageIcon getIcon()
    {
-      return testRequest.getIcon();
+      return testRequest == null ? null : testRequest.getIcon();
    }
 
    public WsdlTestRequest getTestRequest()
@@ -468,19 +474,21 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 	{
 		super.beforeSave();
 		
-		testRequest.beforeSave();
+		if( testRequest != null )
+			testRequest.beforeSave();
 	}
 
 	@Override
    public String getDescription()
 	{
-		return testRequest.getDescription();
+		return testRequest == null ? "<missing>" : testRequest.getDescription();
 	}
 
 	@Override
    public void setDescription( String description )
 	{
-		testRequest.setDescription( description );
+		if( testRequest != null )
+			testRequest.setDescription( description );
 	}
 
 	public void setOperation( WsdlOperation operation )

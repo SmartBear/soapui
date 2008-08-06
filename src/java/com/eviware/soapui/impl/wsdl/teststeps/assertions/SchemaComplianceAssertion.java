@@ -18,6 +18,7 @@ import com.eviware.soapui.config.RequestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlValidator;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
@@ -102,7 +103,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		WsdlOperation operation = messageExchange.getOperation();
 		WsdlInterface iface = (WsdlInterface)operation.getInterface();
 		if( definition == null || definition.trim().length() == 0 || definition.equals( 
-				operation.getInterface().getExpandedDefinition() ))
+				PathUtils.expandPath( iface.getDefinition(), iface, context )))
 		{
 			wsdlContext = (iface).getWsdlContext();
 			wsdlContext.loadIfNecessary();
@@ -127,7 +128,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
    	String value = definition;
    	
    	WsdlInterface iface = ( WsdlInterface ) getAssertable().getInterface();
-   	String orgDef = iface == null ? null : iface.getExpandedDefinition();
+   	String orgDef = iface == null ? null : PathUtils.expandPath(iface.getDefinition(), iface);
    		
    	if( value == null || value.trim().length() == 0 )
    	{
