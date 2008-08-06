@@ -89,7 +89,7 @@ public class UrlWsdlLoader extends WsdlLoader
 		{
 		   try
 	      {
-	         File file = new File( url );
+	         File file = new File( url.replace('/', File.separatorChar ) );
 	         if( file.exists() ) 
 	            url = file.toURI().toURL().toString();
 	      }

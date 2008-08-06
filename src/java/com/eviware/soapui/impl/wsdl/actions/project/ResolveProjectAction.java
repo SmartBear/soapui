@@ -63,7 +63,7 @@ public class ResolveProjectAction extends AbstractSoapUIAction<WsdlProject>
 	
    public void perform( WsdlProject project, Object param )
 	{
-   	ResolveContext context = new ResolveContext();
+   	ResolveContext context = new ResolveContext( project );
    	project.resolve( context );
    	if( context.isEmpty() )
    	{

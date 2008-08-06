@@ -52,8 +52,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
@@ -137,7 +135,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
 		
 		if( wsdlContext != null )
 		{
-			wsdlContext.setDefinition( getExpandedDefinition() );
+			wsdlContext.setDefinition( definitionProperty.expandUrl() );
 			wsdlContext.setSoapVersion( getSoapVersion() );
 		}
 
@@ -188,23 +186,11 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
 		return result;
 	}
 	
-	public String getExpandedDefinition()
-	{
-		return getExpandedDefinition( null );
-	}
-	
-	public String getExpandedDefinition( PropertyExpansionContext context )
-	{
-		if( context == null )
-			context = new DefaultPropertyExpansionContext( this );
-		return definitionProperty.expand( context );
-	}
-
 	public synchronized WsdlContext getWsdlContext()
 	{
 		if( wsdlContext == null )
 		{
-			wsdlContext = new WsdlContext( getExpandedDefinition(), getSoapVersion(), getConfig().getDefinitionCache(), this );
+			wsdlContext = new WsdlContext( definitionProperty.expandUrl(), getSoapVersion(), getConfig().getDefinitionCache(), this );
 		}
 
 		return wsdlContext;
@@ -627,7 +613,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
 	public WsdlLoader createWsdlLoader()
 	{
 		return isCached() ? new CachedWsdlLoader( getConfig().getDefinitionCache() )
-					: new UrlWsdlLoader( getExpandedDefinition() );
+					: new UrlWsdlLoader( definitionProperty.expandUrl() );
 	}
 
 	public void clearCache()
@@ -766,7 +752,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
 	{
 		super.resolve( context );
 		
-		String definition = getExpandedDefinition();
+		String definition = definitionProperty.expandUrl();
 		if( definition.startsWith("file:"))
 		{
 			try

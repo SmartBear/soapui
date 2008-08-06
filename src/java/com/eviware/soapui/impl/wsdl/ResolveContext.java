@@ -23,8 +23,19 @@ import com.eviware.soapui.support.UISupport;
 public class ResolveContext
 {
 	private List<PathToResolve> pathsToResolve = new ArrayList<PathToResolve>();
+	private final WsdlProject project;
 	
-   public void addPathToResolve( AbstractWsdlModelItem<?> owner, String description, String path, Resolver resolver )
+   public ResolveContext(WsdlProject project)
+	{
+		this.project = project;
+	}
+   
+	public WsdlProject getProject()
+	{
+		return project;
+	}
+
+	public void addPathToResolve( AbstractWsdlModelItem<?> owner, String description, String path, Resolver resolver )
    {
    	pathsToResolve.add( new PathToResolve( owner, description, path, resolver ));
    }

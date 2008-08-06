@@ -20,6 +20,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
@@ -27,7 +29,7 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
 public class FileFormComponent extends JPanel implements JFormComponent
 {
 	private JTextField textField;
-	private String initialFolder;
+	private AbstractWsdlModelItem<?> modelItem;
 
 	public FileFormComponent( String tooltip )
 	{
@@ -59,9 +61,9 @@ public class FileFormComponent extends JPanel implements JFormComponent
 		setValue( file.getAbsolutePath() );
 	}
 	
-	public void setInitialFolder( String folder )
+	public void setModelItem( AbstractWsdlModelItem<?> modelItem )
 	{
-		this.initialFolder = folder;
+		this.modelItem = modelItem;
 	}
 	
 	public class SelectFileAction extends AbstractAction
@@ -75,7 +77,9 @@ public class FileFormComponent extends JPanel implements JFormComponent
 		{
          String value = FileFormComponent.this.getValue();
 			File file = UISupport.getFileDialogs().open(this, "Select file", null, null, 
-         		StringUtils.hasContent( value ) ? value : initialFolder );
+         		StringUtils.hasContent( value ) ? value : 
+         		PathUtils.getExpandedResourceRoot(modelItem)
+			);
          if( file != null )
 		   {
 		     	setFile( file );

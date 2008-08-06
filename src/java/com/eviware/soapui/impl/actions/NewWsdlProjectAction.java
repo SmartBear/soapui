@@ -94,7 +94,7 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	   				if( url.length() > 0 )
 	   				{
 	   					if( new File( url ).exists() )
-	   						url = "file:" + url; 
+	   						url = new File( url ).toURI().toURL().toString(); 
 	   					
 	      				 WsdlInterface[] results = WsdlInterfaceFactory.importWsdl( project, url, dialog.getValue( Form.CREATEREQUEST ).equals( "true" ));  
 	      				

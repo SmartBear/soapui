@@ -125,7 +125,7 @@ public class WSIAnalyzeAction extends AbstractToolsAction<Interface>
 		return builder;
 	}
 
-	private ConfigurationDocument createConfigFile(File reportFile, Settings settings, WsdlInterface modelItem)
+	private ConfigurationDocument createConfigFile(File reportFile, Settings settings, WsdlInterface iface)
 	{
 		ConfigurationDocument configDoc = ConfigurationDocument.Factory.newInstance();
 		Configuration config = configDoc.addNewConfiguration();
@@ -153,14 +153,14 @@ public class WSIAnalyzeAction extends AbstractToolsAction<Interface>
 		WsdlReference wsdlRef = config.addNewWsdlReference();
 		
 		StringToStringMap values = new StringToStringMap();
-		values.put( WSDL, modelItem.getDefinition() );
-		values.put( CACHED_WSDL, Boolean.toString( modelItem.isCached() ));
+		values.put( WSDL, iface.getDefinition() );
+		values.put( CACHED_WSDL, Boolean.toString( iface.isCached() ));
 		
-		wsdlRef.setWsdlURI( getWsdlUrl( values, modelItem ) );
+		wsdlRef.setWsdlURI( getWsdlUrl( values, iface ) );
 		WsdlElementReference wsdlElement = wsdlRef.addNewWsdlElement();
 		wsdlElement.setType( WsdlElementType.BINDING );
-		wsdlElement.setStringValue( modelItem.getBindingName().getLocalPart() );
-		wsdlElement.setNamespace( modelItem.getBindingName().getNamespaceURI() );
+		wsdlElement.setStringValue( iface.getBindingName().getLocalPart() );
+		wsdlElement.setNamespace( iface.getBindingName().getNamespaceURI() );
 		return configDoc;
 	}
 	

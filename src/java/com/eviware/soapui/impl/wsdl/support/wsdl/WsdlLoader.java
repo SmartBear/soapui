@@ -48,7 +48,7 @@ public abstract class WsdlLoader implements WSDLLocator
 	{
 		this.url = url;
 		
-		if( !PathUtils.isRelativePath(url))
+		if( !PathUtils.isFilePath(url) && !PathUtils.isRelativePath(url))
 		{
 			// check for username/password
 			try

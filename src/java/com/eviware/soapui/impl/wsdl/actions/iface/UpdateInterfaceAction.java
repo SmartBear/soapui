@@ -21,6 +21,7 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
@@ -90,7 +91,7 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
 				}} );
    	}
    	
-   	dialog.setValue( Form.DEFINITION_URL, iface.getDefinition() );
+   	dialog.setValue( Form.DEFINITION_URL, PathUtils.expandPath( iface.getDefinition(), iface ));
    	if( !dialog.show() )
    		return;
    	

@@ -13,16 +13,21 @@
 package com.eviware.soapui.impl.wsdl.support;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.UISupport;
 
 public class PathUtils
 {
@@ -40,6 +45,32 @@ public class PathUtils
 		return parentFile == null ? null : parentFile.getAbsolutePath();
 	}
 
+	public static String expandPath( String path, AbstractWsdlModelItem<?> modelItem )
+	{
+		return expandPath( path, modelItem, null );
+	}
+	
+	public static String expandPath( String path, AbstractWsdlModelItem<?> modelItem, PropertyExpansionContext context )
+	{
+		path = context == null ? 
+				PropertyExpansionUtils.expandProperties(modelItem, path) : 
+				PropertyExpansionUtils.expandProperties(context, path);
+				
+		if( !isRelativePath(path))
+			return path;
+		
+		String root = getExpandedResourceRoot(modelItem, context);
+		if( StringUtils.isNullOrEmpty( root ) || StringUtils.isNullOrEmpty( root ))
+			return path;
+		
+		if( isHttpPath(root))
+			root += "/";
+		else
+			root += File.separatorChar;
+		
+		return Tools.joinRelativeUrl(root, path);
+	}
+	
 	public static String adjustRelativePath(String str, String root, ModelItem contextModelItem )
 	{
 		if( StringUtils.isNullOrEmpty( root ) || StringUtils.isNullOrEmpty( str ))
@@ -102,8 +133,28 @@ public class PathUtils
 		Project project = ModelSupport.getModelItemProject( modelItem );
 		if( project == null )
 			return path;
+
+		if( StringUtils.isNullOrEmpty(project.getPath()) && project.getResourceRoot().indexOf("${projectDir}") >= 0 )
+		{
+			if( UISupport.confirm("Save project before setting path?", "Project has not been saved" ))
+			{
+				try
+				{
+					project.save();
+				}
+				catch (IOException e)
+				{
+					SoapUI.logError( e );
+					UISupport.showErrorMessage(e);
+					return path;
+				}
+			}
+		}
 		
 		String projectPath = PropertyExpansionUtils.expandProperties(project,project.getResourceRoot());
+		if( StringUtils.isNullOrEmpty(projectPath))
+			return path;
+		
 		return PathUtils.relativize( path, projectPath );
 	}
 
@@ -111,6 +162,9 @@ public class PathUtils
 	{
 		if( path == null || modelItem == null )
 			return path;
+		
+		path = PathUtils.denormalizePath( path );
+		path = PropertyExpansionUtils.expandProperties( new DefaultPropertyExpansionContext(modelItem), path );
 		
 		String prefix = "";
 		
@@ -121,11 +175,11 @@ public class PathUtils
 		}
 		
 		if( PathUtils.isAbsolutePath( path ))
-			return path;
+			return prefix + path;
 		
 		WsdlProject project = (WsdlProject) ModelSupport.getModelItemProject( modelItem );
 		if( project == null )
-			return path;
+			return prefix + path;
 		
 		String resourceRoot = PropertyExpansionUtils.expandProperties(project,project.getResourceRoot());
 		
@@ -252,4 +306,24 @@ public class PathUtils
 		return File.separatorChar == '/' ? path.replace( '\\', File.separatorChar ) : path.replace('/', File.separatorChar);
 	}
 
+	public static String getExpandedResourceRoot(AbstractWsdlModelItem<?> modelItem )
+	{
+		return getExpandedResourceRoot(modelItem, null );
+	}
+	
+	public static String getExpandedResourceRoot(AbstractWsdlModelItem<?> modelItem, PropertyExpansionContext context)
+	{
+		WsdlProject project = (WsdlProject) ModelSupport.getModelItemProject(modelItem);
+		if( project == null )
+			return null;
+		
+		String docroot = project.getResourceRoot();
+		if( !StringUtils.hasContent(docroot))
+			return null;
+
+		docroot = context == null ? 
+				PropertyExpansionUtils.expandProperties(modelItem, docroot) : 
+				PropertyExpansionUtils.expandProperties(context, docroot);
+		return docroot;
+	}
 }

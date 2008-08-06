@@ -13,18 +13,17 @@
 package com.eviware.soapui.impl.wsdl.teststeps;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.ResolveContext;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
-import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.support.StringUtils;
 
-public abstract class AbstractPathPropertySupport
+public abstract class AbstractPathPropertySupport 
 {
 	private final String propertyName;
 	private final AbstractWsdlModelItem<?> modelItem;
@@ -37,13 +36,13 @@ public abstract class AbstractPathPropertySupport
 
 	public String set(String value, boolean notify)
 	{
-		String old = expand();
+		String old = get();
 		value = PathUtils.relativizeResourcePath( value, modelItem );
 		try
 		{
 			setPropertyValue(PathUtils.normalizePath( value ));
 			if( notify )
-				notifyUpdate(expand(), old);
+				notifyUpdate(value, old);
 		} 
 		catch (Exception e)
 		{
@@ -66,7 +65,6 @@ public abstract class AbstractPathPropertySupport
 		}
 	}
 	
-
 	public String getPropertyName()
 	{
 		return propertyName;
@@ -84,38 +82,46 @@ public abstract class AbstractPathPropertySupport
 		modelItem.notifyPropertyChanged( modelItem.getClass().getName() + "@" + propertyName, old, value );
 	}
 
-	public String expand()
-	{
-		return expand( null );
-	}
-	
-	public String getExpandedResourceRoot()
-	{
-		WsdlProject project = (WsdlProject) ModelSupport.getModelItemProject( modelItem );
-		if( project == null )
-			return null;
-		
-		return PropertyExpansionUtils.expandProperties(project,project.getResourceRoot());
-	}
-	
-	public String expand( PropertyExpansionContext context )
+	public String expand(TestRunContext context)
 	{
 		try
 		{
-			String result = PathUtils.denormalizePath( getPropertyValue());
-			if( StringUtils.isNullOrEmpty(result))
-				return result;
-			
-			if( context != null )
-				result = PropertyExpansionUtils.expandProperties( context, result );
-			
-			return PathUtils.resolveResourcePath( result, modelItem );
+			return PathUtils.expandPath( getPropertyValue(), modelItem, context );
 		} 
 		catch (Exception e)
 		{
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public String expand()
+	{
+		try
+		{
+			return PathUtils.resolveResourcePath( getPropertyValue(), modelItem );
+		} 
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public String expandUrl()
+	{
+		String result = expand();
+		try
+		{
+			if( PathUtils.isFilePath(result) )
+				result = new File( result ).toURI().toURL().toString();
+		}
+		catch (MalformedURLException e)
+		{
+			SoapUI.logError(e);
+		}
+		
+		return result;
 	}
 
 	public abstract String getPropertyValue() throws Exception;

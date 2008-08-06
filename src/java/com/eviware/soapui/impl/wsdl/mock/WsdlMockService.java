@@ -101,7 +101,6 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 			getConfig().addNewProperties();
 		
 		setPropertiesConfig( getConfig().getProperties() );
-		
 		docrootProperty = new BeanPathPropertySupport( this, "docroot" );
 	}
 
@@ -541,19 +540,18 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	
 	public void setDocroot( String docroot )
 	{
-		docrootProperty.set(docroot, true);
+		docrootProperty.set( docroot, true );
 	}
 	
 	public String getDocroot()
 	{
-		return docrootProperty.expand();
+		return docrootProperty.get();
 	}
 
 	@Override
 	public void resolve(ResolveContext context)
 	{
 		super.resolve(context);
-		
 		docrootProperty.resolveFile(context, "Missing MockService docroot");
 	}
 	

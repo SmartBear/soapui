@@ -32,6 +32,7 @@ import com.eviware.soapui.config.DefinitionCacheTypeConfig;
 import com.eviware.soapui.config.DefintionPartConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.support.Constants;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -57,7 +58,7 @@ public class CachedWsdlLoader extends WsdlLoader
 
 	public CachedWsdlLoader( WsdlInterface iface ) throws Exception
 	{
-		this( WsdlUtils.cacheWsdl( new UrlWsdlLoader( iface.getExpandedDefinition() ) ) );
+		this( WsdlUtils.cacheWsdl( new UrlWsdlLoader( PathUtils.expandPath(iface.getDefinition(), iface ) )));
 	}
 
 	public InputStream load( String url ) throws Exception
