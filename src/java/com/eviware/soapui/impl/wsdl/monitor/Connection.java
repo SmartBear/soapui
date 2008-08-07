@@ -144,7 +144,7 @@ class Connection extends Thread
 			String bufferedData = null;
 			StringBuffer buf = null;
 
-			WsdlMonitorMessageExchange exchange = new WsdlMonitorMessageExchange( monitor.getProject() );
+			TcpMonWsdlMonitorMessageExchange exchange = new TcpMonWsdlMonitorMessageExchange( monitor.getProject() );
 			exchange.setRequestHost( fromHost );
 
 			boolean isProxy = monitor.isProxy();
