@@ -44,20 +44,20 @@ class Connection extends Thread
 
 	private String httpProxyHost = null;
 	private int httpProxyPort = 80;
-	private SlowLinkSimulator slowLink;
+   private SlowLinkSimulator slowLink;
 
 	/**
 	 * Constructor Connection
 	 * 
 	 * @param l
 	 */
-	public Connection( String name, SoapMonitor l )
+	public Connection( String name, SoapMonitor l, SlowLinkSimulator slowLink )
 	{
 		super( name );
 		monitor = l;
 		httpProxyHost = l.getHttpProxyHost();
 		httpProxyPort = l.getHttpProxyPort();
-		slowLink = l.getSlowLink();
+		this.slowLink = slowLink;
 	}
 
 	/**
@@ -66,9 +66,9 @@ class Connection extends Thread
 	 * @param l
 	 * @param s
 	 */
-	public Connection( String name, SoapMonitor l, Socket s )
+	public Connection( String name, SoapMonitor l, Socket s, SlowLinkSimulator slowLink )
 	{
-		this( name, l );
+		this( name, l, slowLink );
 		inSocket = s;
 		start();
 	}
@@ -79,9 +79,9 @@ class Connection extends Thread
 	 * @param l
 	 * @param in
 	 */
-	public Connection( String name, SoapMonitor l, InputStream in )
+	public Connection( String name, SoapMonitor l, InputStream in, SlowLinkSimulator slowLink )
 	{
-		this( name, l );
+		this( name, l, slowLink );
 		inputStream = in;
 		start();
 	}

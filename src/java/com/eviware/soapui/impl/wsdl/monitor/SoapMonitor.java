@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -104,14 +103,9 @@ public class SoapMonitor extends JPanel
 	private JXTable logTable = null;
 	private MonitorLogTableModel tableModel = null;
 
-	private SocketWaiter sw = null;
-
 	private String httpProxyHost = null;
 	private int httpProxyPort = 80;
 
-	private SlowLinkSimulator slowLink;
-
-	private final Vector connections = new Vector();
 	private JButton startButton;
 	private final WsdlProject project;
 	private MessageExchangeRequestMessageEditor requestViewer;
@@ -148,6 +142,7 @@ public class SoapMonitor extends JPanel
 	private String incomingRequestWss;
 	private String incomingResponseWss;
 	private XFormDialog optionsDialog;
+	private SoapMonitorEngine monitorEngine;
 
 	public SoapMonitor( WsdlProject project, int listenPort, String endpoint, 
 				boolean addEndpoint, boolean isProxy, String incomingRequestWss, String incomingResponseWss, JXToolBar mainToolbar )
@@ -163,7 +158,7 @@ public class SoapMonitor extends JPanel
 		this.maxRows = 100;
 
 		// set the slow link to the passed down link
-		this.slowLink = new SlowLinkSimulator( 0, 0 );
+		
 		this.setLayout( new BorderLayout() );
 
 		add( buildToolbars( mainToolbar ), BorderLayout.NORTH );
@@ -176,7 +171,7 @@ public class SoapMonitor extends JPanel
 	{
 		JInspectorPanel inspectorPanel = new JInspectorPanel( buildLog() );
 
-		JComponentInspector viewInspector = new JComponentInspector( buildViewer(), "Message Content",
+		JComponentInspector<JComponent> viewInspector = new JComponentInspector<JComponent>( buildViewer(), "Message Content",
 					"Shows message content", true );
 		inspectorPanel.addInspector( viewInspector );
 
@@ -467,7 +462,9 @@ public class SoapMonitor extends JPanel
 			addLocalEndpointForTunnel();
 		}
 
-		sw = new SocketWaiter( getProject() + " monitor on port " + localPort, this, localPort );
+		monitorEngine = new TcpMonMonitorEngine();
+		monitorEngine.start( this, localPort );
+		
 		stopButton.setEnabled( true );
 		startButton.setEnabled( false );
 		optionsButton.setEnabled( false );
@@ -534,25 +531,7 @@ public class SoapMonitor extends JPanel
 	 */
 	public void stop()
 	{
-		if( sw.isAlive())
-		{
-			try
-			{
-				for( int i = 0; i < connections.size(); i++ )
-				{
-					Connection conn = ( Connection ) connections.get( i );
-					conn.halt();
-				}
-				sw.halt();
-			}
-			catch( Throwable e )
-			{
-				SoapUI.log.info( "Error stopping monitor: " + e.toString() );
-			}
-			
-			SoapUI.log.info(  "Stopped SOAP Monitor on local port " + getLocalPort() );
-		}
-
+		monitorEngine.stop();
 		if( addedEndpoints != null )
 		{
 			for( Interface iface : addedEndpoints.keySet() )
@@ -895,7 +874,9 @@ public class SoapMonitor extends JPanel
 				return null;
 			
 			WsdlMonitorMessageExchange exchange = exchanges.get( rowIndex );
-
+			if( exchange == null )
+				return null;
+			
 			switch( columnIndex )
 			{
 			case 0:
@@ -981,10 +962,10 @@ public class SoapMonitor extends JPanel
 		httpProxyPort = proxyPort;
 	}
 
-	protected SlowLinkSimulator getSlowLink()
-	{
-		return slowLink;
-	}
+//	protected SlowLinkSimulator getSlowLink()
+//	{
+//		return slowLink;
+//	}
 
 	public String getTargetHost()
 	{
@@ -1238,6 +1219,6 @@ public class SoapMonitor extends JPanel
 
 	public boolean isRunning()
 	{
-		return sw != null && sw.isAlive();
+		return monitorEngine.isRunning();
 	}
 }

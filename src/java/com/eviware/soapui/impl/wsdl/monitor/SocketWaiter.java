@@ -31,12 +31,14 @@ class SocketWaiter extends Thread
 	SoapMonitor listener;
 	int port;
 	boolean pleaseStop = false;
+	private SlowLinkSimulator slowLink;
 
 	public SocketWaiter( String name, SoapMonitor l, int p )
 	{
 		super( name );
 		listener = l;
 		port = p;
+		this.slowLink = new SlowLinkSimulator( 0, 0 );
 		start();
 	}
 
@@ -55,7 +57,7 @@ class SocketWaiter extends Thread
 				{
 					break;
 				}
-				new Connection( getName() + " connection from " + inSocket.getRemoteSocketAddress(), listener, inSocket );
+				new Connection( getName() + " connection from " + inSocket.getRemoteSocketAddress(), listener, inSocket, slowLink );
 				inSocket = null;
 			}
 		}
