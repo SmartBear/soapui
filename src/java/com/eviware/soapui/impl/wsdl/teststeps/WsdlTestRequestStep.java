@@ -397,7 +397,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 
 	public int getAssertionCount()
 	{
-		return testRequest.getAssertionCount();
+		return testRequest == null ? 0 : testRequest.getAssertionCount();
 	}
 	
 	public class InternalProjectListener extends ProjectListenerAdapter 
