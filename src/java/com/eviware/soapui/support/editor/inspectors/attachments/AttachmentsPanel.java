@@ -47,6 +47,7 @@ import com.eviware.soapui.impl.wsdl.AttachmentContainer;
 import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
 import com.eviware.soapui.impl.wsdl.actions.support.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.MessagePart.AttachmentPart;
 import com.eviware.soapui.support.Tools;
@@ -284,6 +285,8 @@ public class AttachmentsPanel extends javax.swing.JPanel
 		if (fc == null)
 			fc = new JFileChooser();
 
+		fc.setCurrentDirectory( new File(PathUtils.getExpandedResourceRoot( container.getModelItem())));
+		
 		int returnVal = fc.showOpenDialog(this);
 
 		if (returnVal == JFileChooser.APPROVE_OPTION)

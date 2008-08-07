@@ -148,16 +148,17 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 		{
 			setProjectPassword(cmd.getOptionValue("x"));
 		}
-		
-		if( cmd.hasOption( "v" ) ) {
-			setSoapUISettingsPassword( cmd.getOptionValue("v"));
+
+		if (cmd.hasOption("v"))
+		{
+			setSoapUISettingsPassword(cmd.getOptionValue("v"));
 		}
-		
-		setEnableUI( cmd.hasOption( "i") );
-		setPrintReport( cmd.hasOption( "r" ) );
-		setExportAll( cmd.hasOption( "a" ) );
-		setJUnitReport( cmd.hasOption( "j" ) );
-		
+
+		setEnableUI(cmd.hasOption("i"));
+		setPrintReport(cmd.hasOption("r"));
+		setExportAll(cmd.hasOption("a"));
+		setJUnitReport(cmd.hasOption("j"));
+
 		return true;
 	}
 
@@ -189,7 +190,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 		options.addOption("a", false, "Turns on exporting of all results");
 		options.addOption("t", true, "Sets the soapui-settings.xml file to use");
 		options.addOption("x", true, "Sets project password for decryption if project is encrypted");
-		options.addOption( "v", true, "Sets password for soapui-settings.xml file");
+		options.addOption("v", true, "Sets password for soapui-settings.xml file");
 		return options;
 	}
 

@@ -502,4 +502,9 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 	{
 		return AttachmentUtils.getAttachmentEncoding( getOperation(), partName, false );
 	}
+
+	public ModelItem getModelItem()
+	{
+		return this;
+	}
 }

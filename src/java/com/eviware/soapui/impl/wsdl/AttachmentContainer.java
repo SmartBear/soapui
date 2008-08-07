@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl;
 
 import java.beans.PropertyChangeListener;
 
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.MessagePart.AttachmentPart;
 
@@ -44,4 +45,10 @@ public interface AttachmentContainer
 	public void removeAttachmentsChangeListener( PropertyChangeListener listener );
 
 	public boolean isMultipartEnabled();
+	
+	/**
+	 * Returns ModelItem associated with this container
+	 */
+	
+	public ModelItem getModelItem();
 }

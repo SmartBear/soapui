@@ -306,13 +306,16 @@ public class PathUtils
 		return File.separatorChar == '/' ? path.replace( '\\', File.separatorChar ) : path.replace('/', File.separatorChar);
 	}
 
-	public static String getExpandedResourceRoot(AbstractWsdlModelItem<?> modelItem )
+	public static String getExpandedResourceRoot( ModelItem modelItem )
 	{
 		return getExpandedResourceRoot(modelItem, null );
 	}
 	
-	public static String getExpandedResourceRoot(AbstractWsdlModelItem<?> modelItem, PropertyExpansionContext context)
+	public static String getExpandedResourceRoot( ModelItem modelItem, PropertyExpansionContext context)
 	{
+		if( !(modelItem instanceof AbstractWsdlModelItem<?>) )
+			return null;
+		
 		WsdlProject project = (WsdlProject) ModelSupport.getModelItemProject(modelItem);
 		if( project == null )
 			return null;

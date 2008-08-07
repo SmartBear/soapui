@@ -91,6 +91,11 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 		{
 			return null;
 		}
+		
+		public ModelItem getModelItem()
+		{
+			return request.getParent();
+		}
 
 		public Attachment[] getAttachments()
 		{
@@ -157,6 +162,11 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 		{
 			return null;
 		}
+		
+		public ModelItem getModelItem()
+		{
+			return response.getParent();
+		}
 
 		public Attachment[] getAttachments()
 		{
@@ -222,6 +232,11 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 		public HttpAttachmentPart getAttachmentPart( String partName )
 		{
 			return null;
+		}
+
+		public ModelItem getModelItem()
+		{
+			return request;
 		}
 
 		public Attachment[] getAttachments()
@@ -295,6 +310,11 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 		public Attachment[] getAttachmentsForPart( String partName )
 		{
 			return null;
+		}
+		
+		public ModelItem getModelItem()
+		{
+			return mockResponse;
 		}
 
 		public HttpAttachmentPart[] getDefinedAttachmentParts()
