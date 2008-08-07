@@ -10,7 +10,6 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-
 package com.eviware.soapui.impl.wsdl.monitor;
 
 import java.awt.BorderLayout;
