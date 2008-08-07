@@ -18,7 +18,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
@@ -99,9 +98,34 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 		{
 			cacheFileLocally( file );
 		}
+		
+		urlProperty.set( file.getPath(), false );
+	}
+	
+	public void setName(String value)
+	{
+		config.setName(value);
+	}
+	
+	public void setUrl( String url )
+	{
+		urlProperty.set(url, true);
+	}
+	
+	public void reload( File file, boolean cache ) throws IOException
+	{
+		config.setName( file.getName() );
+		config.setContentType( ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
+		
+		// cache locally if specified
+		if( cache )
+		{
+			cacheFileLocally( file );
+		}
 		else
 		{
 			urlProperty.set( file.getPath(), false );
+			config.unsetData();
 		}
 	}
 	
@@ -203,35 +227,35 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 
 	public String getUrl()
 	{
-		if( isCached() )
-		{
-			String name = config.getName();
-			int ix = name.lastIndexOf( "." );
-			
-			try
-			{
-				File tempFile = File.createTempFile( "attachment-" + name.substring( 0, ix), name.substring(ix)  );
-				FileOutputStream out = new FileOutputStream( tempFile );
-				InputStream in = getInputStream();
-				
-				Tools.writeAll( out, in );
-				
-				out.close();
-				in.close();
-				
-				return tempFile.getAbsoluteFile().toURI().toURL().toString();
-			}
-			catch (IOException e)
-			{
-				SoapUI.logError( e );
-			}
-		}
-		else
-		{
-			return urlProperty.expand();
-		}
+//		if( isCached() )
+//		{
+//			String name = config.getName();
+//			int ix = name.lastIndexOf( "." );
+//			
+//			try
+//			{
+//				File tempFile = File.createTempFile( "attachment-" + name.substring( 0, ix), name.substring(ix)  );
+//				FileOutputStream out = new FileOutputStream( tempFile );
+//				InputStream in = getInputStream();
+//				
+//				Tools.writeAll( out, in );
+//				
+//				out.close();
+//				in.close();
+//				
+//				return tempFile.getAbsoluteFile().toURI().toURL().toString();
+//			}
+//			catch (IOException e)
+//			{
+//				SoapUI.logError( e );
+//			}
+//		}
+//		else
+//		{
+//			return urlProperty.expand();
+//		}
 		
-		return null;
+		return urlProperty.get();
 	}
 
 	public boolean isCached()

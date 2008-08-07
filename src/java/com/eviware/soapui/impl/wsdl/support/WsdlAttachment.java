@@ -12,6 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.config.AttachmentConfig;
@@ -30,4 +33,10 @@ public interface WsdlAttachment extends Attachment
 	public XmlObject getConfig();
 	
 	public void setContentID( String contentID );
+	
+	public void reload( File file, boolean cache ) throws IOException;
+
+	public void setName(String value);
+
+	public void setUrl(String string);
 }

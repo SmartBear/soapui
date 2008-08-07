@@ -13,7 +13,6 @@
 package com.eviware.soapui.support.editor.inspectors.attachments;
 
 import java.awt.Component;
-import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
@@ -28,8 +27,10 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
@@ -48,8 +49,10 @@ import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
 import com.eviware.soapui.impl.wsdl.actions.support.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.impl.wsdl.support.WsdlAttachment;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.MessagePart.AttachmentPart;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -68,6 +71,7 @@ public class AttachmentsPanel extends javax.swing.JPanel
 	private JFileChooser fc;
 	private final AttachmentContainer container;
 	private JButton exportBtn;
+	private JButton reloadBtn;
 
 	/** Creates new form FileTableList */
 	public AttachmentsPanel(AttachmentContainer container)
@@ -173,8 +177,9 @@ public class AttachmentsPanel extends javax.swing.JPanel
 		{
 			addFileBtn = UISupport.createToolbarButton(UISupport.createImageIcon( "/add_property.gif" ));
 			removeBtn = UISupport.createToolbarButton(UISupport.createImageIcon( "/remove_property.gif" ));
+			reloadBtn = UISupport.createToolbarButton(UISupport.createImageIcon( "/reload_properties.gif" ));
 
-			addFileBtn.setToolTipText( "Adds an attachment to this request" );
+			addFileBtn.setToolTipText( "Adds an attachment" );
 			addFileBtn.addActionListener(new java.awt.event.ActionListener()
 			{
 				public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -185,7 +190,7 @@ public class AttachmentsPanel extends javax.swing.JPanel
 
 			jPanel1.addFixed(addFileBtn);
 
-			removeBtn.setToolTipText( "Removes the selected attachment from this request" );
+			removeBtn.setToolTipText( "Removes the selected attachment" );
 			removeBtn.setEnabled(false);
 			removeBtn.addActionListener(new java.awt.event.ActionListener()
 			{
@@ -196,6 +201,18 @@ public class AttachmentsPanel extends javax.swing.JPanel
 			});
 
 			jPanel1.addFixed(removeBtn);
+			
+			reloadBtn.setToolTipText( "Reloads the selected attachment" );
+			reloadBtn.setEnabled(false);
+			reloadBtn.addActionListener(new java.awt.event.ActionListener()
+			{
+				public void actionPerformed(java.awt.event.ActionEvent evt)
+				{
+					reloadBtnActionPerformed(evt);
+				}
+			});
+
+			jPanel1.addFixed(reloadBtn);
 		}
 
 		exportBtn = UISupport.createToolbarButton(UISupport.createImageIcon( "/export.gif" ));
@@ -219,7 +236,10 @@ public class AttachmentsPanel extends javax.swing.JPanel
 			public void valueChanged(ListSelectionEvent e)
 			{
 				if( removeBtn != null )
+				{
 					removeBtn.setEnabled(fileTable.getSelectedRowCount() > 0);
+					reloadBtn.setEnabled(fileTable.getSelectedRowCount() > 0);
+				}
 				
 				exportBtn.setEnabled(fileTable.getSelectedRowCount() > 0);
 			}
@@ -237,14 +257,23 @@ public class AttachmentsPanel extends javax.swing.JPanel
 					return;
 
 				Attachment attachment = container.getAttachmentAt(ix);
-				String url = attachment.getUrl();
-				if (url != null)
+				
+				if( attachment.isCached() )
 				{
-					Tools.openURL(url);
+					String name = attachment.getName();
+					try
+					{
+						File tempFile = File.createTempFile( "attachment-" + name.substring( 0, ix), name.substring(ix)  );
+						exportAttachment(tempFile, attachment, false );
+					}
+					catch (Exception e1)
+					{
+						UISupport.showErrorMessage(e1);
+					}
 				}
 				else
 				{
-					Toolkit.getDefaultToolkit().beep();
+					Tools.openURL(attachment.getUrl());
 				}
 			}
 		});
@@ -264,14 +293,7 @@ public class AttachmentsPanel extends javax.swing.JPanel
 			Attachment attachment = tableModel.getAttachmentAt(fileTable.getSelectedRow());
 			try
 			{
-				FileOutputStream out = new FileOutputStream( file );
-				
-				long total = Tools.writeAll( out, attachment.getInputStream() );
-				out.close();
-				if( UISupport.confirm( "Written [" + total + "] bytes to " + file.getName() + ", open in browser?", "Saved File" ))
-				{
-					Tools.openURL( file.toURI().toURL().toString() );
-				}
+				exportAttachment(file, attachment, true );
 			}
 			catch( Exception e )
 			{
@@ -280,19 +302,64 @@ public class AttachmentsPanel extends javax.swing.JPanel
 		}
 	}
 
+	private void exportAttachment(File file, Attachment attachment, boolean showOpenQuery ) throws FileNotFoundException, IOException,
+			Exception, MalformedURLException
+	{
+		FileOutputStream out = new FileOutputStream( file );
+		
+		long total = Tools.writeAll( out, attachment.getInputStream() );
+		out.close();
+		if( !showOpenQuery  || UISupport.confirm( "Written [" + total + "] bytes to " + file.getName() + ", open in browser?", "Saved File" ))
+		{
+			Tools.openURL( file.toURI().toURL().toString() );
+		}
+	}
+	
+	protected void reloadBtnActionPerformed( ActionEvent evt )
+	{
+		int selectedRow = fileTable.getSelectedRow();
+		if( selectedRow == -1 )
+			return;
+		
+		WsdlAttachment attachment = (WsdlAttachment) tableModel.getAttachmentAt(selectedRow);
+		if( attachment == null )
+			return;
+		
+		File file = UISupport.getFileDialogs().open( this, "Reload Attachment..", "*", "Any File", attachment.getUrl() );
+		if( file != null )
+		{
+			Boolean retval = UISupport.confirmOrCancel("Cache attachment in request?", "Reload Attachment");
+			if (retval == null)
+				return;
+			
+			try
+			{
+				attachment.reload(file, retval);
+				tableModel.fireTableRowsUpdated(selectedRow, selectedRow);
+			}
+			catch (IOException e)
+			{
+				UISupport.showErrorMessage(e);
+			}
+		}
+	}
+	
+
 	private void addFileBtnActionPerformed(java.awt.event.ActionEvent evt)
 	{// GEN-FIRST:event_addFileBtnActionPerformed
 		if (fc == null)
 			fc = new JFileChooser();
 
-		fc.setCurrentDirectory( new File(PathUtils.getExpandedResourceRoot( container.getModelItem())));
+		String root = PathUtils.getExpandedResourceRoot( container.getModelItem());
+		if( StringUtils.hasContent(root))
+			fc.setCurrentDirectory( new File(root));
 		
 		int returnVal = fc.showOpenDialog(this);
 
 		if (returnVal == JFileChooser.APPROVE_OPTION)
 		{
 			File file = fc.getSelectedFile();
-			Boolean retval = UISupport.confirmOrCancel("Cache attachment in request?", "Att Attachment");
+			Boolean retval = UISupport.confirmOrCancel("Cache attachment in request?", "Add Attachment");
 			if (retval == null)
 				return;
 			try

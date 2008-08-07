@@ -89,7 +89,7 @@ public class AttachmentsTableModel extends AbstractTableModel implements Propert
 
 	public int getColumnCount()
 	{
-		return container instanceof MutableAttachmentContainer ? 6 : 5;
+		return container instanceof MutableAttachmentContainer ? 7 : 6;
 	}
 
 	public Attachment getAttachmentAt( int rowIndex )
@@ -107,7 +107,7 @@ public class AttachmentsTableModel extends AbstractTableModel implements Propert
 		switch( columnIndex )
 		{
 		case 0:
-			return att.getName();
+			return att.isCached() ? att.getName() : att.getUrl();
 		case 1:
 			return att.getContentType();
 		case 2:
@@ -118,6 +118,8 @@ public class AttachmentsTableModel extends AbstractTableModel implements Propert
 			return att.getAttachmentType();
 		case 5:
 			return att.getContentID();
+		case 6:
+			return att.isCached();
 		default:
 			return null;
 		}
@@ -153,13 +155,22 @@ public class AttachmentsTableModel extends AbstractTableModel implements Propert
 			return "Type";
 		else if( column == 5 )
 			return "ContentID";
+		else if( column == 6 )
+			return "Cached";
 		else
 			return null;
 	}
 
+	@Override
+	public Class<?> getColumnClass(int columnIndex)
+	{
+		return columnIndex == 6 ? Boolean.class : super.getColumnClass(columnIndex);
+	}
+
 	public boolean isCellEditable( int rowIndex, int columnIndex )
 	{
-		return container instanceof MutableAttachmentContainer && ( columnIndex == 1 || columnIndex == 3 || columnIndex == 5 );
+		return container instanceof MutableAttachmentContainer && 
+		    ( columnIndex == 0 || columnIndex == 1 || columnIndex == 3 || columnIndex == 5 );
 	}
 
 	public void setValueAt( Object aValue, int rowIndex, int columnIndex )
@@ -168,7 +179,14 @@ public class AttachmentsTableModel extends AbstractTableModel implements Propert
 			return;
 
 		WsdlAttachment att = ( WsdlAttachment ) container.getAttachmentAt( rowIndex );
-		if( columnIndex == 1 )
+		if( columnIndex == 0 )
+		{
+			if( att.isCached())
+				att.setName( ( String ) aValue );
+			else
+				att.setUrl( aValue.toString() );
+		}
+		else if( columnIndex == 1 )
 			att.setContentType( ( String ) aValue );
 		else if( columnIndex == 3 )
 			att.setPart( ( String ) aValue );
