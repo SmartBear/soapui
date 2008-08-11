@@ -461,8 +461,10 @@ public class SoapMonitor extends JPanel
 			addLocalEndpointForTunnel();
 		}
 
-		monitorEngine = new TcpMonMonitorEngine();
+//		monitorEngine = new TcpMonMonitorEngine();
+		monitorEngine = new SoapMonitorEngineImpl();
 		monitorEngine.start( this, localPort );
+		
 		
 		stopButton.setEnabled( true );
 		startButton.setEnabled( false );
