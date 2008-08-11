@@ -461,18 +461,27 @@ public class SoapMonitor extends JPanel
 			addLocalEndpointForTunnel();
 		}
 
-//		monitorEngine = new TcpMonMonitorEngine();
-		monitorEngine = new SoapMonitorEngineImpl();
+		monitorEngine = new TcpMonMonitorEngine();
+//		monitorEngine = new SoapMonitorEngineImpl();
 		monitorEngine.start( this, localPort );
 		
-		
-		stopButton.setEnabled( true );
-		startButton.setEnabled( false );
-		optionsButton.setEnabled( false );
-		infoLabel.setText( ( isProxy ? "Proxy " : "Tunnel " ) + "on port " + localPort );
-		progressBar.setIndeterminate( true );
-
-		SoapUI.log.info( "Started SOAP Monitor on local port " + localPort );
+		if ( monitorEngine.isRunning() ) {
+			stopButton.setEnabled( true );
+			startButton.setEnabled( false );
+			optionsButton.setEnabled( false );
+			infoLabel.setText( ( isProxy ? "Proxy " : "Tunnel " ) + "on port " + localPort );
+			progressBar.setIndeterminate( true );
+	
+			SoapUI.log.info( "Started SOAP Monitor on local port " + localPort );
+		} else {
+			stopButton.setEnabled( false );
+			startButton.setEnabled( true );
+			optionsButton.setEnabled( true );
+			infoLabel.setText( "Stoped" );
+			progressBar.setIndeterminate( false );
+			
+			SoapUI.log.info( "Could not start SOAP Monitor on local port " + localPort );
+		}
 	}
 
 	private void addLocalEndpointForTunnel()

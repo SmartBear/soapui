@@ -6,6 +6,7 @@ import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
 import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.ProxyServlet;
+import com.eviware.soapui.support.UISupport;
 
 public class SoapMonitorEngineImpl implements SoapMonitorEngine {
 
@@ -23,12 +24,14 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine {
 		Context context = new Context(server, "/", 0);
 		context.addServlet(new ServletHolder(new ProxyServlet(soapMonitor)), "/");
 		
-		try {
-			server.start();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			try
+			{
+				server.start();
+			}
+			catch (Exception e)
+			{
+				UISupport.showErrorMessage("Error starting monitor: " + e.getMessage());
+			}
 
 	}
 
@@ -39,7 +42,6 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine {
 				server.stop();
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			if ( server != null ) { 

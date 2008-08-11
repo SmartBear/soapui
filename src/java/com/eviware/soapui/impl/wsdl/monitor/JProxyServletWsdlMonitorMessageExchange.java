@@ -55,13 +55,13 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 	private Vector<Object> responseWssResult;
 	private long timestampEnd;
 	private boolean capture;
-
-	public JProxyServletWsdlMonitorMessageExchange() {
-//		this.project = project;
+	
+	public JProxyServletWsdlMonitorMessageExchange(WsdlProject project) {
 		responseHeaders = new StringToStringMap();
 		requestHeaders = new StringToStringMap();
 		timestampStart = System.currentTimeMillis();
 		System.err.println("Created " + timestampStart + " " + this.toString() );
+		this.project = project;
 		capture = true;
 	}
 	
@@ -257,7 +257,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		
 	}
 
-	@Override
+	
 	public WsdlOperation getOperation() {
 		return operation;
 	}

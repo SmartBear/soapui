@@ -22,6 +22,7 @@ import org.mortbay.util.IO;
 import org.mortbay.util.ajax.Continuation;
 import org.mortbay.util.ajax.ContinuationSupport;
 
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 
@@ -33,6 +34,7 @@ public class ProxyServlet implements Servlet {
 	private HttpClient client;
 	private JProxyServletWsdlMonitorMessageExchange capturedData;
 	private SoapMonitor monitor;
+	private WsdlProject project;
 
 //	static HashSet<String> dontProxyHeaders = new HashSet<String>();
 //    {
@@ -49,6 +51,7 @@ public class ProxyServlet implements Servlet {
     
 	public ProxyServlet(SoapMonitor soapMonitor) {
 		this.monitor = soapMonitor;
+		this.project = monitor.getProject();
 	}
 
 	public void destroy() {
@@ -88,7 +91,7 @@ public class ProxyServlet implements Servlet {
         HttpServletResponse httpResponse = (HttpServletResponse)response;
 
         if( capturedData == null ) {
-        	capturedData = new JProxyServletWsdlMonitorMessageExchange();
+        	capturedData = new JProxyServletWsdlMonitorMessageExchange(project);
         	capturedData.setRequestHost(httpRequest.getServerName());
         	capturedData.setTargetHost(httpRequest.getRemoteHost());
         	capturedData.setRequestHeader(httpRequest);
