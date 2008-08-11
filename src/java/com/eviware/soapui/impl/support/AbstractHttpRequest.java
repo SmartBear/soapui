@@ -190,7 +190,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
 	protected RequestIconAnimator<?> initIconAnimator()
 	{
-		return new RequestIconAnimator<AbstractHttpRequest<?>>( this );
+		return new RequestIconAnimator<AbstractHttpRequest<?>>( this, "/request.gif", "/exec_request", 4, "gif" );
 	}
 	
 	public void addSubmitListener(SubmitListener listener)
@@ -536,11 +536,11 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		}
 	}
 	
-	protected static class RequestIconAnimator<T extends AbstractHttpRequest<?>> extends ModelItemIconAnimator<T> implements SubmitListener
+	public static class RequestIconAnimator<T extends AbstractHttpRequest<?>> extends ModelItemIconAnimator<T> implements SubmitListener
 	{
-		public RequestIconAnimator( T modelItem )
+		public RequestIconAnimator( T modelItem, String baseIcon, String animIconRoot, int iconCount, String iconExtension )
 		{
-			super( modelItem, "/request.gif", "/exec_request", 4, "gif" );
+			super( modelItem, baseIcon, animIconRoot, iconCount, iconExtension );
 		}
 		
 		public boolean beforeSubmit(Submit submit, SubmitContext context) 

@@ -50,7 +50,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	
    public RestResource( RestService service, RestResourceConfig resourceConfig )
    {
-   	super( resourceConfig, service, null );
+   	super( resourceConfig, service, "/rest_resource.gif" );
    	
    	for( RestRequestConfig config : resourceConfig.getRequestList())
    	{

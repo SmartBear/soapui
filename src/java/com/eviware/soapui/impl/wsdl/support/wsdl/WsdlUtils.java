@@ -35,9 +35,12 @@ import javax.wsdl.Part;
 import javax.wsdl.Port;
 import javax.wsdl.Service;
 import javax.wsdl.WSDLException;
+import javax.wsdl.extensions.AttributeExtensible;
+import javax.wsdl.extensions.ElementExtensible;
 import javax.wsdl.extensions.ExtensibilityElement;
 import javax.wsdl.extensions.ExtensionDeserializer;
 import javax.wsdl.extensions.ExtensionRegistry;
+import javax.wsdl.extensions.UnknownExtensibilityElement;
 import javax.wsdl.extensions.mime.MIMEContent;
 import javax.wsdl.extensions.mime.MIMEMultipartRelated;
 import javax.wsdl.extensions.mime.MIMEPart;
@@ -61,6 +64,7 @@ import org.apache.log4j.Logger;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlObject;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
@@ -90,7 +94,7 @@ public class WsdlUtils
 	private final static Logger log = Logger.getLogger( WsdlUtils.class );
 	private static WSDLReader wsdlReader;
 
-	public static <T extends ExtensibilityElement> T getExtensiblityElement( List list, Class<T> clazz )
+	public static <T extends ExtensibilityElement> T getExtensiblityElement( List<?> list, Class<T> clazz )
 	{
 		List<T> elements = getExtensiblityElements( list, clazz );
 		return elements.isEmpty() ? null : elements.get( 0 );
@@ -111,7 +115,43 @@ public class WsdlUtils
 
 		return result;
 	}
+	
+	public static Element [] getExentsibilityElements( ElementExtensible item, QName qname ) 
+	{
+		List<Element> result = new ArrayList<Element>();
+		
+		List list = item.getExtensibilityElements();
+		for( Iterator<?> i = list.iterator(); i.hasNext(); )
+		{
+			ExtensibilityElement elm = (ExtensibilityElement) i.next();
+			if( elm.getElementType().equals(qname) && elm instanceof UnknownExtensibilityElement )
+			{
+				result.add( ((UnknownExtensibilityElement)elm).getElement() );
+			}
+		}
+		
+		return result.toArray( new Element[result.size()] );
+	}
 
+	public static Attr [] getExentsibilityAttributes(  AttributeExtensible item, QName qname ) 
+	{
+		List<Attr> result = new ArrayList<Attr>();
+		
+		Map map = item.getExtensionAttributes();
+		
+		for( Iterator<?> i = map.keySet().iterator(); i.hasNext(); )
+		{
+			QName name = (QName) i.next();
+			if( name.equals(qname)  )
+			{
+				result.add( (Attr) map.get( name ) );
+			}
+		}
+		
+		return result.toArray( new Attr[result.size()] );
+	}
+
+	
 	public static String getSoapAction( BindingOperation operation )
 	{
 		List list = operation.getExtensibilityElements();

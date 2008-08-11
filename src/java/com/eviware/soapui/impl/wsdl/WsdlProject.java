@@ -78,18 +78,12 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
  * @author Ole.Matzura
  */
 
-public class WsdlProject extends
-		AbstractTestPropertyHolderWsdlModelItem<ProjectConfig> implements
-		Project, PropertyExpansionContainer, PropertyChangeListener {
-	public final static String AFTER_LOAD_SCRIPT_PROPERTY = WsdlProject.class
-			.getName()
-			+ "@setupScript";
-	public final static String BEFORE_SAVE_SCRIPT_PROPERTY = WsdlProject.class
-			.getName()
-			+ "@tearDownScript";
-	public final static String RESOURCE_ROOT_PROPERTY = WsdlProject.class
-			.getName()
-			+ "@resourceRoot";
+public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<ProjectConfig> implements Project,
+		PropertyExpansionContainer, PropertyChangeListener
+{
+	public final static String AFTER_LOAD_SCRIPT_PROPERTY = WsdlProject.class.getName() + "@setupScript";
+	public final static String BEFORE_SAVE_SCRIPT_PROPERTY = WsdlProject.class.getName() + "@tearDownScript";
+	public final static String RESOURCE_ROOT_PROPERTY = WsdlProject.class.getName() + "@resourceRoot";
 	public final static String SHADOW_PASSWORD = WsdlProject.class.getName() + "@shadowPassword";
 
 	private WorkspaceImpl workspace;
@@ -111,125 +105,148 @@ public class WsdlProject extends
 
 	private SoapUIScriptEngine afterLoadScriptEngine;
 	private SoapUIScriptEngine beforeSaveScriptEngine;
-	private PropertyExpansionContext context = new DefaultPropertyExpansionContext(
-			this);
+	private PropertyExpansionContext context = new DefaultPropertyExpansionContext(this);
 	private DefaultWssContainer wssContainer;
 	private String projectPassword = null;
 	/*
-	 *  3 state flag:
-	 *  1. 0 - project not encrypted
-	 *  2. 1 - encrypted , good password, means that it could be successfully decrypted
-	 *  3. -1 - encrypted, but with bad password or no password. 
+	 * 3 state flag: 1. 0 - project not encrypted 2. 1 - encrypted , good
+	 * password, means that it could be successfully decrypted 3. -1 - encrypted,
+	 * but with bad password or no password.
 	 */
 	private int encrypted;
 	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-	
+
 	private ImageIcon closedEncyptedIcon;
 
 	private final static Logger log = Logger.getLogger(WsdlProject.class);
 
-	public WsdlProject() throws XmlException, IOException, SoapUIException {
+	public WsdlProject() throws XmlException, IOException, SoapUIException
+	{
 		this((WorkspaceImpl) null);
 	}
 
-	public WsdlProject(String path) throws XmlException, IOException,
-			SoapUIException {
+	public WsdlProject(String path) throws XmlException, IOException, SoapUIException
+	{
 		this(path, (WorkspaceImpl) null);
 	}
 
-	public WsdlProject(String projectFile, String projectPassword) {
+	public WsdlProject(String projectFile, String projectPassword)
+	{
 		this(projectFile, (WorkspaceImpl) null, true, true, null, projectPassword);
 	}
-	
-	public WsdlProject(WorkspaceImpl workspace) {
+
+	public WsdlProject(WorkspaceImpl workspace)
+	{
 		this(null, workspace, true);
 	}
 
-	public WsdlProject(String path, WorkspaceImpl workspace) {
+	public WsdlProject(String path, WorkspaceImpl workspace)
+	{
 		this(path, workspace, true);
 	}
 
-	public WsdlProject(String path, WorkspaceImpl workspace, boolean create) {
+	public WsdlProject(String path, WorkspaceImpl workspace, boolean create)
+	{
 		this(path, workspace, create, true, null, null);
 	}
 
-	public WsdlProject(String path, WorkspaceImpl workspace, boolean create,
-			boolean open, String tempName, String projectPassword) {
+	public WsdlProject(String path, WorkspaceImpl workspace, boolean create, boolean open, String tempName,
+			String projectPassword)
+	{
 		super(null, workspace, "/project.gif");
 
 		this.workspace = workspace;
 		this.path = path;
 		this.projectPassword = projectPassword;
-		
-		try {
-			if (path != null && open) {
+
+		try
+		{
+			if (path != null && open)
+			{
 				File file = new File(path);
-				if (file.exists()) {
-					try {
+				if (file.exists())
+				{
+					try
+					{
 						loadProject(file.toURI().toURL());
 						lastModified = file.lastModified();
-					} catch (MalformedURLException e) {
+					}
+					catch (MalformedURLException e)
+					{
 						SoapUI.logError(e);
 						disabled = true;
 					}
-				} else {
-					try {
+				}
+				else
+				{
+					try
+					{
 						remote = true;
 						loadProject(new URL(path));
-					} catch (MalformedURLException e) {
+					}
+					catch (MalformedURLException e)
+					{
 						SoapUI.logError(e);
 						disabled = true;
 					}
 				}
 			}
-		} catch (SoapUIException e) {
+		}
+		catch (SoapUIException e)
+		{
 			SoapUI.logError(e);
 			disabled = true;
-		} finally {
+		}
+		finally
+		{
 			closedIcon = UISupport.createImageIcon("/closedProject.gif");
 			remoteIcon = UISupport.createImageIcon("/remoteProject.gif");
 			disabledIcon = UISupport.createImageIcon("/disabledProject.gif");
 			openEncyptedIcon = UISupport.createImageIcon("/openEncryptedProject.gif");
 			closedEncyptedIcon = UISupport.createImageIcon("/closedEncryptedProject.gif");
-			
-			this.open = open && !disabled && ( this.encrypted != -1);
-			
-			if (projectDocument == null) {
+
+			this.open = open && !disabled && (this.encrypted != -1);
+
+			if (projectDocument == null)
+			{
 				projectDocument = SoapuiProjectDocumentConfig.Factory.newInstance();
 				setConfig(projectDocument.addNewSoapuiProject());
 				if (tempName != null || path != null)
-					getConfig().setName(StringUtils.isNullOrEmpty(tempName) ? getNameFromPath()	: tempName);
+					getConfig().setName(StringUtils.isNullOrEmpty(tempName) ? getNameFromPath() : tempName);
 
 				setPropertiesConfig(getConfig().addNewProperties());
-				wssContainer = new DefaultWssContainer(this, getConfig()
-						.addNewWssContainer());
+				wssContainer = new DefaultWssContainer(this, getConfig().addNewWssContainer());
 				setResourceRoot("${projectDir}");
 			}
 
-			if( getConfig() != null ) {
+			if (getConfig() != null)
+			{
 				endpointStrategy.init(this);
 			}
-			if( getSettings() != null ) {
+			if (getSettings() != null)
+			{
 				setProjectRoot(path);
 			}
 
-			for (ProjectListener listener : SoapUI.getListenerRegistry()
-					.getListeners(ProjectListener.class)) {
+			for (ProjectListener listener : SoapUI.getListenerRegistry().getListeners(ProjectListener.class))
+			{
 				addProjectListener(listener);
 			}
-			
+
 			addPropertyChangeListener(this);
 
 		}
 	}
 
-
-	public boolean isRemote() {
+	public boolean isRemote()
+	{
 		return remote;
 	}
 
-	public void loadProject(URL file) throws SoapUIException {
-		try {
+	public void loadProject(URL file) throws SoapUIException
+	{
+		try
+		{
 			UISupport.setHourglassCursor();
 
 			UrlWsdlLoader loader = new UrlWsdlLoader(file.toString());
@@ -238,41 +255,40 @@ public class WsdlProject extends
 
 			// see if there is encoded data
 			this.encrypted = checkForEncodedData(projectDocument.getSoapuiProject());
-			
+
 			setConfig(projectDocument.getSoapuiProject());
 
 			// removed cached definitions if caching is disabled
-			if (!getSettings().getBoolean(WsdlSettings.CACHE_WSDLS)) {
+			if (!getSettings().getBoolean(WsdlSettings.CACHE_WSDLS))
+			{
 				removeDefinitionCaches(projectDocument);
 			}
 
 			log.info("Loaded project from [" + file.toString() + "]");
 
-			List<InterfaceConfig> interfaceConfigs = getConfig()
-					.getInterfaceList();
-			for (InterfaceConfig config : interfaceConfigs) {
-				AbstractInterface<?> iface = InterfaceFactoryRegistry.build(
-						this, config);
+			List<InterfaceConfig> interfaceConfigs = getConfig().getInterfaceList();
+			for (InterfaceConfig config : interfaceConfigs)
+			{
+				AbstractInterface<?> iface = InterfaceFactoryRegistry.build(this, config);
 				interfaces.add(iface);
 			}
 
-			List<TestSuiteConfig> testSuiteConfigs = getConfig()
-					.getTestSuiteList();
-			for (TestSuiteConfig config : testSuiteConfigs) {
+			List<TestSuiteConfig> testSuiteConfigs = getConfig().getTestSuiteList();
+			for (TestSuiteConfig config : testSuiteConfigs)
+			{
 				testSuites.add(new WsdlTestSuite(this, config));
 			}
 
-			List<MockServiceConfig> mockServiceConfigs = getConfig()
-					.getMockServiceList();
-			for (MockServiceConfig config : mockServiceConfigs) {
+			List<MockServiceConfig> mockServiceConfigs = getConfig().getMockServiceList();
+			for (MockServiceConfig config : mockServiceConfigs)
+			{
 				mockServices.add(new WsdlMockService(this, config));
 			}
 
 			if (!getConfig().isSetWssContainer())
 				getConfig().addNewWssContainer();
 
-			wssContainer = new DefaultWssContainer(this, getConfig()
-					.getWssContainer());
+			wssContainer = new DefaultWssContainer(this, getConfig().getWssContainer());
 
 			endpointStrategy.init(this);
 
@@ -282,19 +298,22 @@ public class WsdlProject extends
 			setPropertiesConfig(getConfig().getProperties());
 
 			afterLoad();
-		} catch (Exception e) {
-			if (e instanceof XmlException) {
+		}
+		catch (Exception e)
+		{
+			if (e instanceof XmlException)
+			{
 				XmlException xe = (XmlException) e;
 				XmlError error = xe.getError();
 				if (error != null)
-					System.err.println("Error at line " + error.getLine()
-							+ ", column " + error.getColumn());
+					System.err.println("Error at line " + error.getLine() + ", column " + error.getColumn());
 			}
 
 			e.printStackTrace();
-			throw new SoapUIException("Failed to load project from file ["
-					+ file.toString() + "]", e);
-		} finally {
+			throw new SoapUIException("Failed to load project from file [" + file.toString() + "]", e);
+		}
+		finally
+		{
 			UISupport.resetCursor();
 		}
 	}
@@ -304,60 +323,81 @@ public class WsdlProject extends
 	 * 
 	 * @author robert nemet
 	 * @param soapuiProject
-	 * @throws IOException 
-	 * @throws GeneralSecurityException 
-	 * @return 0 - not encrypted, 1 - successfull decryption , -1 error while decrypting, bad password, no password.
+	 * @throws IOException
+	 * @throws GeneralSecurityException
+	 * @return 0 - not encrypted, 1 - successfull decryption , -1 error while
+	 *         decrypting, bad password, no password.
 	 */
-	private int checkForEncodedData(ProjectConfig soapuiProject) throws IOException, GeneralSecurityException {
+	private int checkForEncodedData(ProjectConfig soapuiProject) throws IOException, GeneralSecurityException
+	{
 
 		byte[] encryptedContent = soapuiProject.getEncryptedContent();
 		char[] password = null;
-		
+
 		// no encrypted data then go back
-		if( encryptedContent == null || encryptedContent.length == 0 )
+		if (encryptedContent == null || encryptedContent.length == 0)
 			return 0;
-		
+
 		String projectPassword = null;
-		if ( workspace != null ) {
+		if (workspace != null)
+		{
 			projectPassword = workspace.getProjectPassword(soapuiProject.getName());
-		} else {
+		}
+		else
+		{
 			projectPassword = this.projectPassword;
 		}
-		if (projectPassword == null) {
-			password = UISupport.promptPassword("Enter Password:",soapuiProject.getName());
-		} else {
+		if (projectPassword == null)
+		{
+			password = UISupport.promptPassword("Enter Password:", soapuiProject.getName());
+		}
+		else
+		{
 			password = projectPassword.toCharArray();
 		}
 		byte[] data = null;
 		// no pass go back.
-		if ( password == null ) {
-			return -1; 
+		if (password == null)
+		{
+			return -1;
 		}
-		
-		try {
+
+		try
+		{
 			data = OpenSSL.decrypt("des3", password, encryptedContent);
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return -1;
-		} catch (GeneralSecurityException e) {
+		}
+		catch (GeneralSecurityException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return -1;
 		}
 		String decryptedData = new String(data, "UTF-8");
-		
-		if (decryptedData != null) {
-			if (decryptedData.length() > 0) {
-				try {
+
+		if (decryptedData != null)
+		{
+			if (decryptedData.length() > 0)
+			{
+				try
+				{
 					projectDocument.getSoapuiProject().set(XmlObject.Factory.parse(decryptedData));
-				} catch (XmlException e) {
+				}
+				catch (XmlException e)
+				{
 					UISupport.showErrorMessage("Wrong password. Project need to be reloaded.");
 					getWorkspace().clearProjectPassword(soapuiProject.getName());
 					return -1;
 				}
 			}
-		} else {
+		}
+		else
+		{
 			UISupport.showErrorMessage("Wrong project password");
 			getWorkspace().clearProjectPassword(soapuiProject.getName());
 			return -1;
@@ -367,33 +407,40 @@ public class WsdlProject extends
 	}
 
 	@Override
-	public void afterLoad() {
+	public void afterLoad()
+	{
 		super.afterLoad();
 
-		try {
+		try
+		{
 			runAfterLoadScript();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			SoapUI.logError(e);
 		}
 	}
 
-	private void setProjectRoot(String path) {
-		if (path != null && projectDocument != null) {
+	private void setProjectRoot(String path)
+	{
+		if (path != null && projectDocument != null)
+		{
 			int ix = path.lastIndexOf(File.separatorChar);
 			if (ix > 0)
-				getSettings().setString(ProjectSettings.PROJECT_ROOT,
-						path.substring(0, ix));
+				getSettings().setString(ProjectSettings.PROJECT_ROOT, path.substring(0, ix));
 		}
 	}
 
-	public void setResourceRoot(String resourceRoot) {
+	public void setResourceRoot(String resourceRoot)
+	{
 		String old = getResourceRoot();
 
 		getConfig().setResourceRoot(resourceRoot);
 		notifyPropertyChanged(RESOURCE_ROOT_PROPERTY, old, resourceRoot);
 	}
 
-	public String getResourceRoot() {
+	public String getResourceRoot()
+	{
 		if (!getConfig().isSetResourceRoot())
 			getConfig().setResourceRoot("");
 
@@ -401,13 +448,18 @@ public class WsdlProject extends
 	}
 
 	@Override
-	public ImageIcon getIcon() {
+	public ImageIcon getIcon()
+	{
 		if (isDisabled())
 			return disabledIcon;
-		else if ( getEncrypted() != 0 ) {
-			if( isOpen() ) {
+		else if (getEncrypted() != 0)
+		{
+			if (isOpen())
+			{
 				return openEncyptedIcon;
-			} else {
+			}
+			else
+			{
 				return closedEncyptedIcon;
 			}
 		}
@@ -419,14 +471,16 @@ public class WsdlProject extends
 			return super.getIcon();
 	}
 
-	private String getNameFromPath() {
+	private String getNameFromPath()
+	{
 		int ix = path.lastIndexOf(isRemote() ? '/' : File.separatorChar);
 		String name = ix == -1 ? path : path.substring(ix + 1);
 		return name;
 	}
 
 	@Override
-	public String getDescription() {
+	public String getDescription()
+	{
 		if (isOpen())
 			return super.getDescription();
 
@@ -440,21 +494,25 @@ public class WsdlProject extends
 		return name;
 	}
 
-	public WorkspaceImpl getWorkspace() {
+	public WorkspaceImpl getWorkspace()
+	{
 		return workspace;
 	}
 
-	public AbstractInterface<?> getInterfaceAt(int index) {
+	public AbstractInterface<?> getInterfaceAt(int index)
+	{
 		return interfaces.get(index);
 	}
 
-	public AbstractInterface<?> getInterfaceByName(String interfaceName) {
-		return (AbstractInterface<?>) getWsdlModelItemByName(interfaces,
-				interfaceName);
+	public AbstractInterface<?> getInterfaceByName(String interfaceName)
+	{
+		return (AbstractInterface<?>) getWsdlModelItemByName(interfaces, interfaceName);
 	}
 
-	public AbstractInterface<?> getInterfaceByTechnicalId(String technicalId) {
-		for (int c = 0; c < getInterfaceCount(); c++) {
+	public AbstractInterface<?> getInterfaceByTechnicalId(String technicalId)
+	{
+		for (int c = 0; c < getInterfaceCount(); c++)
+		{
 			if (getInterfaceAt(c).getTechnicalId().equals(technicalId))
 				return getInterfaceAt(c);
 		}
@@ -462,29 +520,32 @@ public class WsdlProject extends
 		return null;
 	}
 
-	public int getInterfaceCount() {
+	public int getInterfaceCount()
+	{
 		return interfaces.size();
 	}
 
-	public String getPath() {
+	public String getPath()
+	{
 		return path;
 	}
 
-	public boolean save() throws IOException {
+	public boolean save() throws IOException
+	{
 		if (!isOpen() || isDisabled() || isRemote())
 			return true;
 
-		if (path == null || isRemote()) {
+		if (path == null || isRemote())
+		{
 			path = getName() + "-soapui-project.xml";
 			File file = null;
 
 			while (file == null
-					|| (file.exists() && !UISupport.confirm("File ["
-							+ file.getName() + "] exists, overwrite?",
-							"Overwrite File?"))) {
-				file = UISupport.getFileDialogs().saveAs(this,
-						"Save project " + getName(), ".xml",
-						"XML Files (*.xml)", new File(path));
+					|| (file.exists() && !UISupport.confirm("File [" + file.getName() + "] exists, overwrite?",
+							"Overwrite File?")))
+			{
+				file = UISupport.getFileDialogs().saveAs(this, "Save project " + getName(), ".xml", "XML Files (*.xml)",
+						new File(path));
 				if (file == null)
 					return false;
 			}
@@ -494,65 +555,75 @@ public class WsdlProject extends
 
 		File projectFile = new File(path);
 
-		while (projectFile.exists() && !projectFile.canWrite()) {
-			if (UISupport.confirm("Project file [" + path
-					+ "] can not be written to, save to new file?",
-					"Save Project")) {
-				projectFile = UISupport.getFileDialogs().saveAs(this,
-						"Save project " + getName(), ".xml",
+		while (projectFile.exists() && !projectFile.canWrite())
+		{
+			if (UISupport.confirm("Project file [" + path + "] can not be written to, save to new file?", "Save Project"))
+			{
+				projectFile = UISupport.getFileDialogs().saveAs(this, "Save project " + getName(), ".xml",
 						"XML Files (*.xml)", projectFile);
 
 				if (projectFile == null)
 					return false;
 
 				path = projectFile.getAbsolutePath();
-			} else
+			}
+			else
 				return false;
 		}
 
 		// check modified
-		if (projectFile.exists() && lastModified != 0
-				&& lastModified < projectFile.lastModified()) {
-			if (!UISupport.confirm("Project file for [" + getName()
-					+ "] has been modified externally, overwrite?",
+		if (projectFile.exists() && lastModified != 0 && lastModified < projectFile.lastModified())
+		{
+			if (!UISupport.confirm("Project file for [" + getName() + "] has been modified externally, overwrite?",
 					"Save Project"))
 				return false;
 		}
 
-		if (projectFile.exists()
-				&& getSettings().getBoolean(UISettings.CREATE_BACKUP)) {
+		if (projectFile.exists() && getSettings().getBoolean(UISettings.CREATE_BACKUP))
+		{
 			createBackup(projectFile);
 		}
 
 		return saveIn(projectFile);
 	}
 
-	public boolean saveBackup() throws IOException {
+	public boolean saveBackup() throws IOException
+	{
 		File projectFile;
-		if (path == null || isRemote()) {
+		if (path == null || isRemote())
+		{
 			projectFile = new File(getName() + "-soapui-project.xml");
-		} else {
+		}
+		else
+		{
 			projectFile = new File(path);
 		}
 		File backupFile = getBackupFile(projectFile);
 		return saveIn(backupFile);
 	}
 
-	public boolean saveIn(File projectFile) throws IOException {
+	public boolean saveIn(File projectFile) throws IOException
+	{
 		long size = 0;
 
 		beforeSave();
-		// work with copy beacuse we do not want to change working project while working with it
+		// work with copy beacuse we do not want to change working project while
+		// working with it
 		// if user choose save project, save all etc.
 		SoapuiProjectDocumentConfig projectDocument = (SoapuiProjectDocumentConfig) this.projectDocument.copy();
-// check for encryption
+		// check for encryption
 		String passwordForEncryption = getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
-		// if it has encryptedContend that means it is not decrypted corectly( bad password, etc ), so do not encrypt it again.
-		if (projectDocument.getSoapuiProject().getEncryptedContent() == null) {
-			if (passwordForEncryption != null) {
-				if (passwordForEncryption.length() > 1) {
+		// if it has encryptedContend that means it is not decrypted corectly( bad
+		// password, etc ), so do not encrypt it again.
+		if (projectDocument.getSoapuiProject().getEncryptedContent() == null)
+		{
+			if (passwordForEncryption != null)
+			{
+				if (passwordForEncryption.length() > 1)
+				{
 					// we have password so do encryption
-					try {
+					try
+					{
 						String data = getConfig().xmlText();
 						byte[] encrypted = OpenSSL.encrypt("des3", passwordForEncryption.toCharArray(), data.getBytes());
 						projectDocument.getSoapuiProject().setEncryptedContent(encrypted);
@@ -561,63 +632,72 @@ public class WsdlProject extends
 						projectDocument.getSoapuiProject().setMockServiceArray(null);
 						projectDocument.getSoapuiProject().unsetSettings();
 						projectDocument.getSoapuiProject().unsetProperties();
-						
-					} catch (GeneralSecurityException e) {
+
+					}
+					catch (GeneralSecurityException e)
+					{
 						UISupport.showErrorMessage("Encryption Error");
 					}
-				} else {
+				}
+				else
+				{
 					// no password no encryption.
 					projectDocument.getSoapuiProject().setEncryptedContent(null);
 				}
 			}
 		}
-// end of encryption.
-		
+		// end of encryption.
+
 		XmlOptions options = new XmlOptions();
-		if (SoapUI.getSettings().getBoolean(
-				WsdlSettings.PRETTY_PRINT_PROJECT_FILES))
+		if (SoapUI.getSettings().getBoolean(WsdlSettings.PRETTY_PRINT_PROJECT_FILES))
 			options.setSavePrettyPrint();
 
 		// check for caching
-		if (!getSettings().getBoolean(WsdlSettings.CACHE_WSDLS)) {
+		if (!getSettings().getBoolean(WsdlSettings.CACHE_WSDLS))
+		{
 			// no caching -> create copy and remove definition cachings
-			SoapuiProjectDocumentConfig config = (SoapuiProjectDocumentConfig) projectDocument
-					.copy();
+			SoapuiProjectDocumentConfig config = (SoapuiProjectDocumentConfig) projectDocument.copy();
 			removeDefinitionCaches(config);
 
 			config.getSoapuiProject().setSoapuiVersion(SoapUI.SOAPUI_VERSION);
 			config.save(projectFile, options);
-		} else {
-			try {
+		}
+		else
+		{
+			try
+			{
 				// save to temporary buffer to avoid corruption of file
-				projectDocument.getSoapuiProject().setSoapuiVersion(
-						SoapUI.SOAPUI_VERSION);
+				projectDocument.getSoapuiProject().setSoapuiVersion(SoapUI.SOAPUI_VERSION);
 				ByteArrayOutputStream writer = new ByteArrayOutputStream(8192);
 				projectDocument.save(writer, options);
 				FileOutputStream out = new FileOutputStream(projectFile);
 				writer.writeTo(out);
 				out.close();
 				size = writer.size();
-			} catch (Throwable t) {
+			}
+			catch (Throwable t)
+			{
 				SoapUI.logError(t);
-				UISupport.showErrorMessage("Failed to save project ["
-						+ getName() + "]: " + t.toString());
+				UISupport.showErrorMessage("Failed to save project [" + getName() + "]: " + t.toString());
 				return false;
 			}
 		}
 
 		lastModified = projectFile.lastModified();
-		log.info("Saved project [" + getName() + "] to ["
-				+ projectFile.getAbsolutePath() + " - " + size + " bytes");
+		log.info("Saved project [" + getName() + "] to [" + projectFile.getAbsolutePath() + " - " + size + " bytes");
 		setProjectRoot(path);
 		return true;
 	}
 
 	@Override
-	public void beforeSave() {
-		try {
+	public void beforeSave()
+	{
+		try
+		{
 			runBeforeSaveScript();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			SoapUI.logError(e);
 		}
 
@@ -634,45 +714,47 @@ public class WsdlProject extends
 		endpointStrategy.onSave();
 	}
 
-	private void createBackup(File projectFile) throws IOException {
+	private void createBackup(File projectFile) throws IOException
+	{
 		File backupFile = getBackupFile(projectFile);
 		log.info("Backing up [" + projectFile + "] to [" + backupFile + "]");
 		Tools.copyFile(projectFile, backupFile, true);
 	}
 
-	private File getBackupFile(File projectFile) {
-		String backupFolderName = getSettings().getString(
-				UISettings.BACKUP_FOLDER, "");
+	private File getBackupFile(File projectFile)
+	{
+		String backupFolderName = getSettings().getString(UISettings.BACKUP_FOLDER, "");
 
 		File backupFolder = new File(backupFolderName);
-		if (!backupFolder.isAbsolute()) {
-			backupFolder = new File(projectFile.getParentFile(),
-					backupFolderName);
+		if (!backupFolder.isAbsolute())
+		{
+			backupFolder = new File(projectFile.getParentFile(), backupFolderName);
 		}
 
 		if (!backupFolder.exists())
 			backupFolder.mkdirs();
 
-		File backupFile = new File(backupFolder, projectFile.getName()
-				+ ".backup");
+		File backupFile = new File(backupFolder, projectFile.getName() + ".backup");
 		return backupFile;
 	}
 
-	private void removeDefinitionCaches(SoapuiProjectDocumentConfig config) {
-		for (InterfaceConfig ifaceConfig : config.getSoapuiProject()
-				.getInterfaceList()) {
-			if (ifaceConfig.isSetDefinitionCache()) {
-				log.info("Removing definition cache from interface ["
-						+ ifaceConfig.getName() + "]");
+	private void removeDefinitionCaches(SoapuiProjectDocumentConfig config)
+	{
+		for (InterfaceConfig ifaceConfig : config.getSoapuiProject().getInterfaceList())
+		{
+			if (ifaceConfig.isSetDefinitionCache())
+			{
+				log.info("Removing definition cache from interface [" + ifaceConfig.getName() + "]");
 				ifaceConfig.unsetDefinitionCache();
 			}
 		}
 	}
 
-	public AbstractInterface<?> addNewInterface(String name, String type) {
-		AbstractInterface<?> iface = (AbstractInterface<?>) InterfaceFactoryRegistry
-				.createNew(this, type, name);
-		if (iface != null) {
+	public AbstractInterface<?> addNewInterface(String name, String type)
+	{
+		AbstractInterface<?> iface = (AbstractInterface<?>) InterfaceFactoryRegistry.createNew(this, type, name);
+		if (iface != null)
+		{
 			iface.getConfig().setType(type);
 
 			interfaces.add(iface);
@@ -682,119 +764,140 @@ public class WsdlProject extends
 		return iface;
 	}
 
-	public void addProjectListener(ProjectListener listener) {
+	public void addProjectListener(ProjectListener listener)
+	{
 		projectListeners.add(listener);
 	}
 
-	public void removeProjectListener(ProjectListener listener) {
+	public void removeProjectListener(ProjectListener listener)
+	{
 		projectListeners.remove(listener);
 	}
 
-	public void fireInterfaceAdded(AbstractInterface<?> iface) {
-		ProjectListener[] a = projectListeners
-				.toArray(new ProjectListener[projectListeners.size()]);
+	public void fireInterfaceAdded(AbstractInterface<?> iface)
+	{
+		ProjectListener[] a = projectListeners.toArray(new ProjectListener[projectListeners.size()]);
 
-		for (int c = 0; c < a.length; c++) {
+		for (int c = 0; c < a.length; c++)
+		{
 			a[c].interfaceAdded(iface);
 		}
 	}
 
-	public void fireInterfaceRemoved(AbstractInterface<?> iface) {
-		ProjectListener[] a = projectListeners
-				.toArray(new ProjectListener[projectListeners.size()]);
+	public void fireInterfaceRemoved(AbstractInterface<?> iface)
+	{
+		ProjectListener[] a = projectListeners.toArray(new ProjectListener[projectListeners.size()]);
 
-		for (int c = 0; c < a.length; c++) {
+		for (int c = 0; c < a.length; c++)
+		{
 			a[c].interfaceRemoved(iface);
 		}
 	}
 
-	public void fireInterfaceUpdated(AbstractInterface<?> iface) {
-		ProjectListener[] a = projectListeners
-				.toArray(new ProjectListener[projectListeners.size()]);
+	public void fireInterfaceUpdated(AbstractInterface<?> iface)
+	{
+		ProjectListener[] a = projectListeners.toArray(new ProjectListener[projectListeners.size()]);
 
-		for (int c = 0; c < a.length; c++) {
+		for (int c = 0; c < a.length; c++)
+		{
 			a[c].interfaceUpdated(iface);
 		}
 	}
 
-	public void fireTestSuiteAdded(WsdlTestSuite testSuite) {
-		ProjectListener[] a = projectListeners
-				.toArray(new ProjectListener[projectListeners.size()]);
+	public void fireTestSuiteAdded(WsdlTestSuite testSuite)
+	{
+		ProjectListener[] a = projectListeners.toArray(new ProjectListener[projectListeners.size()]);
 
-		for (int c = 0; c < a.length; c++) {
+		for (int c = 0; c < a.length; c++)
+		{
 			a[c].testSuiteAdded(testSuite);
 		}
 	}
 
-	public void fireTestSuiteRemoved(WsdlTestSuite testSuite) {
-		ProjectListener[] a = projectListeners
-				.toArray(new ProjectListener[projectListeners.size()]);
+	public void fireTestSuiteRemoved(WsdlTestSuite testSuite)
+	{
+		ProjectListener[] a = projectListeners.toArray(new ProjectListener[projectListeners.size()]);
 
-		for (int c = 0; c < a.length; c++) {
+		for (int c = 0; c < a.length; c++)
+		{
 			a[c].testSuiteRemoved(testSuite);
 		}
 	}
 
-	public void fireMockServiceAdded(WsdlMockService mockService) {
-		ProjectListener[] a = projectListeners
-				.toArray(new ProjectListener[projectListeners.size()]);
+	public void fireMockServiceAdded(WsdlMockService mockService)
+	{
+		ProjectListener[] a = projectListeners.toArray(new ProjectListener[projectListeners.size()]);
 
-		for (int c = 0; c < a.length; c++) {
+		for (int c = 0; c < a.length; c++)
+		{
 			a[c].mockServiceAdded(mockService);
 		}
 	}
 
-	public void fireMockServiceRemoved(WsdlMockService mockService) {
-		ProjectListener[] a = projectListeners
-				.toArray(new ProjectListener[projectListeners.size()]);
+	public void fireMockServiceRemoved(WsdlMockService mockService)
+	{
+		ProjectListener[] a = projectListeners.toArray(new ProjectListener[projectListeners.size()]);
 
-		for (int c = 0; c < a.length; c++) {
+		for (int c = 0; c < a.length; c++)
+		{
 			a[c].mockServiceRemoved(mockService);
 		}
 	}
 
-	public void removeInterface(AbstractInterface<?> iface) {
+	public void removeInterface(AbstractInterface<?> iface)
+	{
 		int ix = interfaces.indexOf(iface);
 		interfaces.remove(ix);
-		try {
+		try
+		{
 			fireInterfaceRemoved(iface);
-		} finally {
+		}
+		finally
+		{
 			iface.release();
 			getConfig().removeInterface(ix);
 		}
 	}
 
-	public void removeTestSuite(WsdlTestSuite testSuite) {
+	public void removeTestSuite(WsdlTestSuite testSuite)
+	{
 		int ix = testSuites.indexOf(testSuite);
 		testSuites.remove(ix);
 
-		try {
+		try
+		{
 			fireTestSuiteRemoved(testSuite);
-		} finally {
+		}
+		finally
+		{
 			testSuite.release();
 			getConfig().removeTestSuite(ix);
 		}
 	}
 
-	public boolean isDisabled() {
+	public boolean isDisabled()
+	{
 		return disabled;
 	}
 
-	public int getTestSuiteCount() {
+	public int getTestSuiteCount()
+	{
 		return testSuites.size();
 	}
 
-	public WsdlTestSuite getTestSuiteAt(int index) {
+	public WsdlTestSuite getTestSuiteAt(int index)
+	{
 		return testSuites.get(index);
 	}
 
-	public WsdlTestSuite getTestSuiteByName(String testSuiteName) {
+	public WsdlTestSuite getTestSuiteByName(String testSuiteName)
+	{
 		return (WsdlTestSuite) getWsdlModelItemByName(testSuites, testSuiteName);
 	}
 
-	public WsdlTestSuite addNewTestSuite(String name) {
-		WsdlTestSuite testSuite = new WsdlTestSuite(this, getConfig()
-				.addNewTestSuite());
+	public WsdlTestSuite addNewTestSuite(String name)
+	{
+		WsdlTestSuite testSuite = new WsdlTestSuite(this, getConfig().addNewTestSuite());
 		testSuite.setName(name);
 		testSuites.add(testSuite);
 		fireTestSuiteAdded(testSuite);
@@ -802,15 +905,18 @@ public class WsdlProject extends
 		return testSuite;
 	}
 
-	public boolean isCacheDefinitions() {
+	public boolean isCacheDefinitions()
+	{
 		return getSettings().getBoolean(WsdlSettings.CACHE_WSDLS);
 	}
 
-	public void setCacheDefinitions(boolean cacheDefinitions) {
+	public void setCacheDefinitions(boolean cacheDefinitions)
+	{
 		getSettings().setBoolean(WsdlSettings.CACHE_WSDLS, cacheDefinitions);
 	}
 
-	public boolean saveAs(String fileName) throws IOException {
+	public boolean saveAs(String fileName) throws IOException
+	{
 		if (!isOpen() || isDisabled())
 			return false;
 
@@ -828,10 +934,12 @@ public class WsdlProject extends
 	}
 
 	@Override
-	public void release() {
+	public void release()
+	{
 		super.release();
 
-		if (isOpen()) {
+		if (isOpen())
+		{
 			endpointStrategy.release();
 
 			for (WsdlTestSuite testSuite : testSuites)
@@ -853,9 +961,9 @@ public class WsdlProject extends
 			beforeSaveScriptEngine.release();
 	}
 
-	public WsdlMockService addNewMockService(String name) {
-		WsdlMockService mockService = new WsdlMockService(this, getConfig()
-				.addNewMockService());
+	public WsdlMockService addNewMockService(String name)
+	{
+		WsdlMockService mockService = new WsdlMockService(this, getConfig().addNewMockService());
 		mockService.setName(name);
 		mockServices.add(mockService);
 		fireMockServiceAdded(mockService);
@@ -863,44 +971,54 @@ public class WsdlProject extends
 		return mockService;
 	}
 
-	public WsdlMockService getMockServiceAt(int index) {
+	public WsdlMockService getMockServiceAt(int index)
+	{
 		return mockServices.get(index);
 	}
 
-	public WsdlMockService getMockServiceByName(String mockServiceName) {
-		return (WsdlMockService) getWsdlModelItemByName(mockServices,
-				mockServiceName);
+	public WsdlMockService getMockServiceByName(String mockServiceName)
+	{
+		return (WsdlMockService) getWsdlModelItemByName(mockServices, mockServiceName);
 	}
 
-	public int getMockServiceCount() {
+	public int getMockServiceCount()
+	{
 		return mockServices.size();
 	}
 
-	public void removeMockService(WsdlMockService mockService) {
+	public void removeMockService(WsdlMockService mockService)
+	{
 		int ix = mockServices.indexOf(mockService);
 		mockServices.remove(ix);
 
-		try {
+		try
+		{
 			fireMockServiceRemoved(mockService);
-		} finally {
+		}
+		finally
+		{
 			mockService.release();
 			getConfig().removeMockService(ix);
 		}
 	}
 
-	public List<TestSuite> getTestSuiteList() {
+	public List<TestSuite> getTestSuiteList()
+	{
 		return new ArrayList<TestSuite>(testSuites);
 	}
 
-	public List<MockService> getMockServiceList() {
+	public List<MockService> getMockServiceList()
+	{
 		return new ArrayList<MockService>(mockServices);
 	}
 
-	public List<Interface> getInterfaceList() {
+	public List<Interface> getInterfaceList()
+	{
 		return new ArrayList<Interface>(interfaces);
 	}
 
-	public Map<String, Interface> getInterfaces() {
+	public Map<String, Interface> getInterfaces()
+	{
 		Map<String, Interface> result = new HashMap<String, Interface>();
 		for (Interface iface : interfaces)
 			result.put(iface.getName(), iface);
@@ -908,7 +1026,8 @@ public class WsdlProject extends
 		return result;
 	}
 
-	public Map<String, TestSuite> getTestSuites() {
+	public Map<String, TestSuite> getTestSuites()
+	{
 		Map<String, TestSuite> result = new HashMap<String, TestSuite>();
 		for (TestSuite iface : testSuites)
 			result.put(iface.getName(), iface);
@@ -916,7 +1035,8 @@ public class WsdlProject extends
 		return result;
 	}
 
-	public Map<String, MockService> getMockServices() {
+	public Map<String, MockService> getMockServices()
+	{
 		Map<String, MockService> result = new HashMap<String, MockService>();
 		for (MockService mockService : mockServices)
 			result.put(mockService.getName(), mockService);
@@ -924,36 +1044,37 @@ public class WsdlProject extends
 		return result;
 	}
 
-	public void reload() throws SoapUIException {
+	public void reload() throws SoapUIException
+	{
 		reload(path);
 	}
 
-	public void reload(String path) throws SoapUIException {
+	public void reload(String path) throws SoapUIException
+	{
 		this.path = path;
 		getWorkspace().reloadProject(this);
 	}
 
-	public boolean hasNature(String natureId) {
+	public boolean hasNature(String natureId)
+	{
 		Settings projectSettings = getSettings();
-		String projectNature = projectSettings.getString(
-				ProjectSettings.PROJECT_NATURE, null);
+		String projectNature = projectSettings.getString(ProjectSettings.PROJECT_NATURE, null);
 		return natureId.equals(projectNature);
 	}
 
-	public AbstractInterface<?> importInterface(AbstractInterface<?> iface,
-			boolean importEndpoints, boolean createCopy) {
+	public AbstractInterface<?> importInterface(AbstractInterface<?> iface, boolean importEndpoints, boolean createCopy)
+	{
 		iface.beforeSave();
 
-		InterfaceConfig ifaceConfig = (InterfaceConfig) iface.getConfig()
-				.copy();
-		AbstractInterface<?> imported = InterfaceFactoryRegistry.build(this,
-				ifaceConfig);
+		InterfaceConfig ifaceConfig = (InterfaceConfig) iface.getConfig().copy();
+		AbstractInterface<?> imported = InterfaceFactoryRegistry.build(this, ifaceConfig);
 		if (ifaceConfig.isSetId() && createCopy)
 			ifaceConfig.unsetId();
 
 		interfaces.add(imported);
 
-		if (iface.getProject() != this && importEndpoints) {
+		if (iface.getProject() != this && importEndpoints)
+		{
 			endpointStrategy.importEndpoints(iface);
 		}
 
@@ -963,11 +1084,11 @@ public class WsdlProject extends
 		return imported;
 	}
 
-	public WsdlTestSuite importTestSuite(WsdlTestSuite testSuite, String name,
-			boolean createCopy) {
+	public WsdlTestSuite importTestSuite(WsdlTestSuite testSuite, String name, boolean createCopy)
+	{
 		testSuite.beforeSave();
-		TestSuiteConfig testSuiteConfig = (TestSuiteConfig) getConfig()
-				.addNewTestSuite().set(testSuite.getConfig().copy());
+		TestSuiteConfig testSuiteConfig = (TestSuiteConfig) getConfig().addNewTestSuite().set(
+				testSuite.getConfig().copy());
 		testSuiteConfig.setName(name);
 		if (testSuiteConfig.isSetId() && createCopy)
 			testSuiteConfig.unsetId();
@@ -980,11 +1101,11 @@ public class WsdlProject extends
 		return testSuite;
 	}
 
-	public WsdlMockService importMockService(WsdlMockService mockService,
-			String name, boolean createCopy) {
+	public WsdlMockService importMockService(WsdlMockService mockService, String name, boolean createCopy)
+	{
 		mockService.beforeSave();
-		MockServiceConfig mockServiceConfig = (MockServiceConfig) getConfig()
-				.addNewMockService().set(mockService.getConfig().copy());
+		MockServiceConfig mockServiceConfig = (MockServiceConfig) getConfig().addNewMockService().set(
+				mockService.getConfig().copy());
 		mockServiceConfig.setName(name);
 		if (mockServiceConfig.isSetId() && createCopy)
 			mockServiceConfig.unsetId();
@@ -997,15 +1118,18 @@ public class WsdlProject extends
 		return mockService;
 	}
 
-	public EndpointStrategy getEndpointStrategy() {
+	public EndpointStrategy getEndpointStrategy()
+	{
 		return endpointStrategy;
 	}
 
-	public boolean isOpen() {
+	public boolean isOpen()
+	{
 		return open;
 	}
 
-	public List<? extends ModelItem> getChildren() {
+	public List<? extends ModelItem> getChildren()
+	{
 		ArrayList<ModelItem> list = new ArrayList<ModelItem>();
 		list.addAll(getInterfaceList());
 		list.addAll(getTestSuiteList());
@@ -1013,7 +1137,8 @@ public class WsdlProject extends
 		return list;
 	}
 
-	public void setAfterLoadScript(String script) {
+	public void setAfterLoadScript(String script)
+	{
 		String oldScript = getAfterLoadScript();
 
 		if (!getConfig().isSetAfterLoadScript())
@@ -1026,12 +1151,13 @@ public class WsdlProject extends
 		notifyPropertyChanged(AFTER_LOAD_SCRIPT_PROPERTY, oldScript, script);
 	}
 
-	public String getAfterLoadScript() {
-		return getConfig().isSetAfterLoadScript() ? getConfig()
-				.getAfterLoadScript().getStringValue() : null;
+	public String getAfterLoadScript()
+	{
+		return getConfig().isSetAfterLoadScript() ? getConfig().getAfterLoadScript().getStringValue() : null;
 	}
 
-	public void setBeforeSaveScript(String script) {
+	public void setBeforeSaveScript(String script)
+	{
 		String oldScript = getBeforeSaveScript();
 
 		if (!getConfig().isSetBeforeSaveScript())
@@ -1044,19 +1170,20 @@ public class WsdlProject extends
 		notifyPropertyChanged(BEFORE_SAVE_SCRIPT_PROPERTY, oldScript, script);
 	}
 
-	public String getBeforeSaveScript() {
-		return getConfig().isSetBeforeSaveScript() ? getConfig()
-				.getBeforeSaveScript().getStringValue() : null;
+	public String getBeforeSaveScript()
+	{
+		return getConfig().isSetBeforeSaveScript() ? getConfig().getBeforeSaveScript().getStringValue() : null;
 	}
 
-	public Object runAfterLoadScript() throws Exception {
+	public Object runAfterLoadScript() throws Exception
+	{
 		String script = getAfterLoadScript();
 		if (StringUtils.isNullOrEmpty(script))
 			return null;
 
-		if (afterLoadScriptEngine == null) {
-			afterLoadScriptEngine = SoapUIScriptEngineRegistry.create(
-					SoapUIScriptEngineRegistry.GROOVY_ID, this);
+		if (afterLoadScriptEngine == null)
+		{
+			afterLoadScriptEngine = SoapUIScriptEngineRegistry.create(SoapUIScriptEngineRegistry.GROOVY_ID, this);
 			afterLoadScriptEngine.setScript(script);
 		}
 
@@ -1066,14 +1193,15 @@ public class WsdlProject extends
 		return afterLoadScriptEngine.run();
 	}
 
-	public Object runBeforeSaveScript() throws Exception {
+	public Object runBeforeSaveScript() throws Exception
+	{
 		String script = getBeforeSaveScript();
 		if (StringUtils.isNullOrEmpty(script))
 			return null;
 
-		if (beforeSaveScriptEngine == null) {
-			beforeSaveScriptEngine = SoapUIScriptEngineRegistry.create(
-					SoapUIScriptEngineRegistry.GROOVY_ID, this);
+		if (beforeSaveScriptEngine == null)
+		{
+			beforeSaveScriptEngine = SoapUIScriptEngineRegistry.create(SoapUIScriptEngineRegistry.GROOVY_ID, this);
 			beforeSaveScriptEngine.setScript(script);
 		}
 
@@ -1083,81 +1211,98 @@ public class WsdlProject extends
 		return beforeSaveScriptEngine.run();
 	}
 
-	public PropertyExpansionContext getContext() {
+	public PropertyExpansionContext getContext()
+	{
 		return context;
 	}
 
-	public DefaultWssContainer getWssContainer() {
+	public DefaultWssContainer getWssContainer()
+	{
 		return wssContainer;
 	}
 
 	@Override
-	public void resolve(ResolveContext context) {
+	public void resolve(ResolveContext context)
+	{
 		super.resolve(context);
 
 		wssContainer.resolve(context);
 	}
 
-	public PropertyExpansion[] getPropertyExpansions() {
+	public PropertyExpansion[] getPropertyExpansions()
+	{
 		return wssContainer.getPropertyExpansions();
 	}
 
-	public String getPropertiesLabel() {
+	public String getPropertiesLabel()
+	{
 		return "Custom Properties";
 	}
 
-	public String getShadowPassword() {
-		projectPassword = getSettings() == null? projectPassword : getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
+	public String getShadowPassword()
+	{
+		projectPassword = getSettings() == null ? projectPassword : getSettings().getString(
+				ProjectSettings.SHADOW_PASSWORD, null);
 		return projectPassword;
 	}
 
-	public void setShadowPassword(String password) {
+	public void setShadowPassword(String password)
+	{
 		String oldPAssword = getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
 		getSettings().setString(ProjectSettings.SHADOW_PASSWORD, password);
 		this.pcs.firePropertyChange("projectPassword", oldPAssword, password);
 	}
 
-	public void inspect() {
+	public void inspect()
+	{
 
-		if( !isOpen() )
+		if (!isOpen())
 			return;
-		
+
 		byte data[] = projectDocument.getSoapuiProject().getEncryptedContent();
-		if (data != null && data.length > 0) {
-			try {
+		if (data != null && data.length > 0)
+		{
+			try
+			{
 				reload();
-			} catch (SoapUIException e) {
+			}
+			catch (SoapUIException e)
+			{
 				e.printStackTrace();
 			}
 		}
 	}
-	
-	public int getEncrypted() {
+
+	public int getEncrypted()
+	{
 		return this.encrypted;
 	}
-	
-	public int setEncrypted(int code) {
+
+	public int setEncrypted(int code)
+	{
 		return this.encrypted = code;
 	}
-	
-	public void addPropertyChangeListener( PropertyChangeListener listener )
-    {
-        this.pcs.addPropertyChangeListener( listener );
-    }
 
-	
-	public void propertyChange(PropertyChangeEvent evt) {
-		
-		if ("projectPassword".equals(evt.getPropertyName())) {
-			if ( encrypted == 0 & (evt.getOldValue() == null || ((String)evt.getOldValue()).length() == 0) ) {
-				encrypted = 1;
-			}
-			if ( encrypted == 1 & ( evt.getNewValue() == null || ((String)evt.getNewValue()).length() == 0) ) {
-				encrypted = 0;
-			}
-		} 
-		SoapUI.getNavigator().repaint();
+	public void addPropertyChangeListener(PropertyChangeListener listener)
+	{
+		this.pcs.addPropertyChangeListener(listener);
 	}
 
+	public void propertyChange(PropertyChangeEvent evt)
+	{
+
+		if ("projectPassword".equals(evt.getPropertyName()))
+		{
+			if (encrypted == 0 & (evt.getOldValue() == null || ((String) evt.getOldValue()).length() == 0))
+			{
+				encrypted = 1;
+			}
+			if (encrypted == 1 & (evt.getNewValue() == null || ((String) evt.getNewValue()).length() == 0))
+			{
+				encrypted = 0;
+			}
+		}
+		SoapUI.getNavigator().repaint();
+	}
 
 }

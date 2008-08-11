@@ -51,21 +51,17 @@ public class ProxyServlet implements Servlet {
 		this.monitor = soapMonitor;
 	}
 
-	@Override
 	public void destroy() {
 	}
 
-	@Override
 	public ServletConfig getServletConfig() {
 		return config;
 	}
 
-	@Override
 	public String getServletInfo() {
 		return "SoapUI Monitor";
 	}
 
-	@Override
 	public void init(ServletConfig config) throws ServletException {
 		
 		this.config= config;
@@ -85,7 +81,6 @@ public class ProxyServlet implements Servlet {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public void service(ServletRequest request, ServletResponse response)
 			throws ServletException, IOException {
 

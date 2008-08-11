@@ -336,7 +336,7 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable
 	{
 		public TestRequestIconAnimator( WsdlTestRequest modelItem)
 		{
-			super(modelItem);
+			super( modelItem, "/request.gif", "/exec_request", 4, "gif" );
 		}
 
 		@Override

@@ -52,6 +52,37 @@ public class ActionSupport
 	   return ActionSupport.addActions(actions, menu);
 	}
 
+	public static JXToolBar buildToolbar( ActionList actions )
+	{
+		JXToolBar result = new JXToolBar();
+		
+		for (int i = 0; i < actions.getActionCount(); i++)
+	   {
+	   	Action action = actions.getActionAt(i);
+	   	
+	   	if( action instanceof MarkerAction )
+	   		continue;
+	   	
+			if( action == ActionSupport.SEPARATOR_ACTION )
+			{
+	   	   result.addSeparator();
+			}
+			else if( action instanceof ActionSupport.ActionListAction )
+			{
+//				JMenu subMenu = buildMenu( ((ActionListAction)action).getActionList() );
+//				if( subMenu == null )
+//					subMenu = new JMenu( ((ActionListAction)action).getActionList().getLabel() );
+//				menu.add( subMenu);
+			}
+	   	else if( action != null )
+	   	{
+	   		result.add( action );
+	   	}
+	   }
+	   
+	   return result;
+	}
+	
 	public static JPopupMenu addActions(ActionList actions, JPopupMenu popup)
 	{
 		if( actions == null || actions.getActionCount() == 0 )

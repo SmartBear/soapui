@@ -12,12 +12,10 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine {
 	Server server = new Server();
 	SelectChannelConnector connector = new SelectChannelConnector();
 
-	@Override
 	public boolean isRunning() {
 		return server.isRunning();
 	}
 
-	@Override
 	public void start(SoapMonitor soapMonitor, int localPort) {
 		
 		connector.setPort(localPort);
@@ -34,7 +32,6 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine {
 
 	}
 
-	@Override
 	public void stop() {
 		
 		try {

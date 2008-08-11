@@ -33,7 +33,7 @@ public class RestService extends AbstractInterface<RestServiceConfig>
 	
 	public RestService( WsdlProject project, RestServiceConfig serviceConfig )
 	{
-		super( serviceConfig, project, "/interface2.gif" );
+		super( serviceConfig, project, "/rest_service.gif" );
 		
 		List<RestResourceConfig> resourceConfigs = serviceConfig.getResourceList();
 		for( int i = 0; i < resourceConfigs.size(); i++ )

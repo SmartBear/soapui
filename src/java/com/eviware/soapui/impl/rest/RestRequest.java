@@ -27,8 +27,8 @@ import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
+import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
 import com.eviware.soapui.model.ModelItem;
@@ -58,7 +58,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	
    public RestRequest( RestResource resource, RestRequestConfig requestConfig )
    {
-   	super( requestConfig, resource, null, false );
+   	super( requestConfig, resource, "rest_request.gif", false );
    	
    	if( requestConfig.getParameters() == null )
    		requestConfig.addNewParameters();
@@ -75,6 +75,11 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
    	
    	params = new XmlBeansRestParamsTestPropertyHolder( this, requestConfig.getParameters());
    }
+   
+	protected RequestIconAnimator<?> initIconAnimator()
+	{
+		return new RequestIconAnimator<AbstractHttpRequest<?>>( this, "/rest_request.gif", "/exec_rest_request", 4, "gif" );
+	}
 
 	public MessagePart[] getRequestParts()
 	{

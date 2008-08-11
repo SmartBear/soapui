@@ -13,6 +13,7 @@
 package com.eviware.soapui.support.editor.xml;
 
 import com.eviware.soapui.support.editor.Editor;
+import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 
 /**
  * Editor-framework for Xml Documents
@@ -21,7 +22,7 @@ import com.eviware.soapui.support.editor.Editor;
  */
 
 @SuppressWarnings("serial")
-public class XmlEditor extends Editor<XmlDocument> 
+public abstract class XmlEditor extends Editor<XmlDocument> 
 {
 	public XmlEditor( XmlDocument xmlDocument )
 	{
@@ -33,4 +34,6 @@ public class XmlEditor extends Editor<XmlDocument>
 		XmlEditorView currentView = (XmlEditorView) getCurrentView();
 	   return currentView == null ? true : currentView.saveDocument( validate );
 	}
+
+	public abstract XmlSourceEditorView getSourceEditor();
 }

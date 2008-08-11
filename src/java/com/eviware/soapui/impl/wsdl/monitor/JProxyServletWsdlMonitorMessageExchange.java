@@ -262,62 +262,50 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		return operation;
 	}
 
-	@Override
 	public Vector<?> getRequestWssResult() {
 		return requestWssResult;
 	}
 
-	@Override
 	public Vector<?> getResponseWssResult() {
 		return responseWssResult;
 	}
 
-	@Override
 	public ModelItem getModelItem() {
 		return null;
 	}
 
-	@Override
 	public Attachment[] getRequestAttachments() {
 		return requestMmSupport == null ? new Attachment[0] : requestMmSupport.getAttachments();
 	}
 
-	@Override
 	public String getRequestContent() {
 		return requestMmSupport == null ? requestContent : requestMmSupport.getContentAsString();
 	}
 
-	@Override
 	public StringToStringMap getRequestHeaders() {
 		return requestHeaders;
 	}
 
-	@Override
 	public Attachment[] getResponseAttachments() {
 		return requestMmSupport == null ? new Attachment[0] : requestMmSupport.getAttachments();
 	}
 
-	@Override
 	public String getResponseContent() {
 		return responseContent;
 	}
 
-	@Override
 	public StringToStringMap getResponseHeaders() {
 		return responseHeaders;
 	}
 
-	@Override
 	public long getTimeTaken() {
 		return timestampEnd - timestampStart;
 	}
 
-	@Override
 	public long getTimestamp() {
 		return timestampStart;
 	}
 
-	@Override
 	public boolean isDiscarded() {
 		return discarded;
 	}

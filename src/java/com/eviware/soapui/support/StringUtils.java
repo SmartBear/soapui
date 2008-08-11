@@ -235,7 +235,7 @@ public class StringUtils
 		{
 			char ch = str.charAt( c );
 			
-			if( Character.isWhitespace( ch ))
+			if( Character.isWhitespace( ch ) && whitespaceChar != 0 )
 				result.append( whitespaceChar );
 			else if( Character.isLetterOrDigit( ch ))
 				result.append( ch );

@@ -70,7 +70,7 @@ public class BodyPartAttachment implements Attachment
 	
 	public AttachmentEncoding getEncoding()
 	{
-		return operation.getAttachmentEncoding( getPart(), !isRequest );
+		return operation == null ? AttachmentEncoding.NONE : operation.getAttachmentEncoding( getPart(), !isRequest );
 	}
 
 	public InputStream getInputStream() throws Exception

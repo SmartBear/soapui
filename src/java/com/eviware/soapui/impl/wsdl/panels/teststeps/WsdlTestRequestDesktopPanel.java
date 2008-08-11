@@ -48,263 +48,247 @@ import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.log.JLogList;
 
 /**
- * DesktopPanel for WsdlTestRequest. Essentially a copy of WsdlRequestDesktopPanel with assertions.
+ * DesktopPanel for WsdlTestRequest. Essentially a copy of
+ * WsdlRequestDesktopPanel with assertions.
  * 
  * @author Ole.Matzura
  */
 
-public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel<WsdlTestRequestStep, WsdlTestRequest> implements PropertyChangeListener
+public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel<WsdlTestRequestStep, WsdlTestRequest>
+		implements PropertyChangeListener
 {
-   private JLogList logArea;
-   private InternalTestMonitorListener testMonitorListener = new InternalTestMonitorListener();
+	private JLogList logArea;
+	private InternalTestMonitorListener testMonitorListener = new InternalTestMonitorListener();
 	private JButton addAssertionButton;
 	protected boolean updatingRequest;
-	private WsdlTestRequestDesktopPanel.InternalSubmitListener submitListener;
 	private AssertionsPanel assertionsPanel;
 	private JInspectorPanel inspectorPanel;
 	private JComponentInspector<?> assertionInspector;
 	private JComponentInspector<?> logInspector;
 	private InternalAssertionsListener assertionsListener = new InternalAssertionsListener();
-	
-	public WsdlTestRequestDesktopPanel( WsdlTestRequestStep requestStep )
-   {
-      super( requestStep );
-      
-      init( requestStep.getTestRequest() );
-      
-      SoapUI.getTestMonitor().addTestMonitorListener( testMonitorListener );
-      setEnabled( !SoapUI.getTestMonitor().hasRunningTest( requestStep.getTestCase() ) );
-      
-      requestStep.getTestRequest().addPropertyChangeListener( WsdlTestRequest.STATUS_PROPERTY, this );
-		requestStep.getTestRequest().addAssertionsListener( assertionsListener );
-   }
+	private long startTime;
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-   protected JComponent buildLogPanel()
-   {
-      logArea = new JLogList("Request Log");
-      
-      logArea.getLogList().getModel().addListDataListener( new ListDataChangeListener() {
+	public WsdlTestRequestDesktopPanel(WsdlTestRequestStep requestStep)
+	{
+		super(requestStep);
 
-			public void dataChanged( ListModel model )
+		init(requestStep.getTestRequest());
+
+		SoapUI.getTestMonitor().addTestMonitorListener(testMonitorListener);
+		setEnabled(!SoapUI.getTestMonitor().hasRunningTest(requestStep.getTestCase()));
+
+		requestStep.getTestRequest().addPropertyChangeListener(WsdlTestRequest.STATUS_PROPERTY, this);
+		requestStep.getTestRequest().addAssertionsListener(assertionsListener);
+	}
+
+	protected JComponent buildLogPanel()
+	{
+		logArea = new JLogList("Request Log");
+
+		logArea.getLogList().getModel().addListDataListener(new ListDataChangeListener()
+		{
+
+			public void dataChanged(ListModel model)
 			{
-				logInspector.setTitle( "Request Log (" + model.getSize() + ")" );
-			}}
-				);
-      
-      return logArea;
-   }
-   
-   protected AssertionsPanel buildAssertionsPanel()
-   {
-   	return new AssertionsPanel( getRequest() )
-   	{
+				logInspector.setTitle("Request Log (" + model.getSize() + ")");
+			}
+		});
+
+		return logArea;
+	}
+
+	protected AssertionsPanel buildAssertionsPanel()
+	{
+		return new AssertionsPanel(getRequest())
+		{
 			protected void selectError(AssertionError error)
 			{
-				SoapMessageXmlEditor<?> editor = getResponseEditor();
+				SoapMessageXmlEditor<?> editor = (SoapMessageXmlEditor<?>) getResponseEditor();
 				editor.requestFocus();
 			}
-   	};
-   }
-   
+		};
+	}
+
 	public void setContent(JComponent content)
 	{
-		inspectorPanel.setContentComponent( content );
+		inspectorPanel.setContentComponent(content);
 	}
 
 	public void removeContent(JComponent content)
 	{
-		inspectorPanel.setContentComponent( null );
+		inspectorPanel.setContentComponent(null);
 	}
-	
+
 	protected String getHelpUrl()
 	{
 		return HelpUrls.TESTREQUESTEDITOR_HELP_URL;
 	}
 
 	protected JComponent buildContent()
-   {
-   	JComponent component = super.buildContent();
-   	
-   	inspectorPanel = new JInspectorPanel( component );
-   	assertionsPanel = buildAssertionsPanel();
-		
-   	assertionInspector = new JComponentInspector<JComponent>( assertionsPanel, 
-							"Assertions (" + getModelItem().getAssertionCount() + ")", 
-						   				"Assertions for this Test Request", true);
-		
-		inspectorPanel.addInspector( assertionInspector );
-		
-   	logInspector = new JComponentInspector<JComponent>( buildLogPanel(), "Request Log (0)", "Log of requests", true);
-		inspectorPanel.addInspector( logInspector );
-   	inspectorPanel.setDefaultDividerLocation( 0.6F );
-   	inspectorPanel.setCurrentInspector( "Assertions" );
-   	
-   	updateStatusIcon();
-   	
-   	return inspectorPanel;
-   }
+	{
+		JComponent component = super.buildContent();
+
+		inspectorPanel = new JInspectorPanel(component);
+		assertionsPanel = buildAssertionsPanel();
+
+		assertionInspector = new JComponentInspector<JComponent>(assertionsPanel, "Assertions ("
+				+ getModelItem().getAssertionCount() + ")", "Assertions for this Test Request", true);
+
+		inspectorPanel.addInspector(assertionInspector);
+
+		logInspector = new JComponentInspector<JComponent>(buildLogPanel(), "Request Log (0)", "Log of requests", true);
+		inspectorPanel.addInspector(logInspector);
+		inspectorPanel.setDefaultDividerLocation(0.6F);
+		inspectorPanel.setCurrentInspector("Assertions");
+
+		updateStatusIcon();
+
+		return inspectorPanel;
+	}
 
 	private void updateStatusIcon()
 	{
 		AssertionStatus status = getModelItem().getTestRequest().getAssertionStatus();
-   	switch( status )
-   	{
-   		case FAILED : 
-			{
-				assertionInspector.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ));
-				inspectorPanel.activate( assertionInspector ); 
-				break;
-			}
-   		case UNKNOWN : 
-			{
-				assertionInspector.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" )); 
-				break;
-			}
-   		case VALID : 
-			{
-				assertionInspector.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ));
-				inspectorPanel.deactivate(); 
-				break;
-			}
-   	}
+		switch (status)
+		{
+		case FAILED:
+		{
+			assertionInspector.setIcon(UISupport.createImageIcon("/failed_assertion.gif"));
+			inspectorPanel.activate(assertionInspector);
+			break;
+		}
+		case UNKNOWN:
+		{
+			assertionInspector.setIcon(UISupport.createImageIcon("/unknown_assertion.gif"));
+			break;
+		}
+		case VALID:
+		{
+			assertionInspector.setIcon(UISupport.createImageIcon("/valid_assertion.gif"));
+			inspectorPanel.deactivate();
+			break;
+		}
+		}
 	}
-   
-   protected JComponent buildToolbar()
+
+	protected JComponent buildToolbar()
 	{
-   	addAssertionButton = createActionButton(new AddAssertionAction(getRequest()), true );
+		addAssertionButton = createActionButton(new AddAssertionAction(getRequest()), true);
 		return super.buildToolbar();
 	}
 
 	protected void insertButtons(JToolBar toolbar)
 	{
-		toolbar.add( addAssertionButton );
+		toolbar.add(addAssertionButton);
 	}
 
-	public void setEnabled( boolean enabled )
-   {
-		if( enabled == true )
-			enabled = !SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem().getTestCase() );
-		
-		super.setEnabled( enabled );
-      addAssertionButton.setEnabled( enabled );
-      assertionsPanel.setEnabled( enabled );
-      
-      if( SoapUI.getTestMonitor().hasRunningLoadTest( getRequest().getTestCase() ))
-      {
-      	getRequest().removeSubmitListener( submitListener );
-      }
-      else
-      {
-      	getRequest().addSubmitListener( submitListener );
-      }
-   }
-   
-   protected Submit doSubmit() throws SubmitException
+	public void setEnabled(boolean enabled)
 	{
-		return getRequest().submit( new WsdlTestRunContext(getModelItem()), true );
+		if (enabled == true)
+			enabled = !SoapUI.getTestMonitor().hasRunningLoadTest(getModelItem().getTestCase());
+
+		super.setEnabled(enabled);
+		addAssertionButton.setEnabled(enabled);
+		assertionsPanel.setEnabled(enabled);
+
+		if (SoapUI.getTestMonitor().hasRunningLoadTest(getRequest().getTestCase()))
+		{
+			getRequest().removeSubmitListener(this);
+		}
+		else
+		{
+			getRequest().addSubmitListener(this);
+		}
 	}
 
-   protected InternalSubmitListener createSubmitListener()
+	protected Submit doSubmit() throws SubmitException
 	{
-		submitListener = new InternalSubmitListener();
-		return submitListener;
+		return getRequest().submit(new WsdlTestRunContext(getModelItem()), true);
 	}
-   
+
 	private final class InternalAssertionsListener implements AssertionsListener
 	{
-		public void assertionAdded( TestAssertion assertion )
+		public void assertionAdded(TestAssertion assertion)
 		{
-			assertionInspector.setTitle( "Assertions (" + getModelItem().getAssertionCount() + ")" );
+			assertionInspector.setTitle("Assertions (" + getModelItem().getAssertionCount() + ")");
 		}
 
-		public void assertionRemoved( TestAssertion assertion )
+		public void assertionRemoved(TestAssertion assertion)
 		{
-			assertionInspector.setTitle( "Assertions (" + getModelItem().getAssertionCount() + ")" );
+			assertionInspector.setTitle("Assertions (" + getModelItem().getAssertionCount() + ")");
 		}
 	}
 
-	private class InternalSubmitListener extends AbstractWsdlRequestDesktopPanel<WsdlTestRequestStep, WsdlTestRequest>.InternalSubmitListener
-   {
-      private long startTime;
-      private SimpleDateFormat sdf;
-
-      private InternalSubmitListener()
-      {
-      	super();
-         sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-      }
-
-      public boolean beforeSubmit(Submit submit, SubmitContext context)
-      {
-      	boolean result = super.beforeSubmit( submit, context );
-         startTime = System.currentTimeMillis();
-         return result;
-      }
-
-      protected void logMessages(String message, String infoMessage)
-		{
-         super.logMessages( message, infoMessage );
-         logArea.addLine( sdf.format( new Date( startTime )) + " - " + message );
-      }
-
-		@Override
-		public void afterSubmit( Submit submit, SubmitContext context )
-		{
-			super.afterSubmit( submit, context );
-			updateStatusIcon();
-		}
-   }
-   
-	public boolean onClose( boolean canCancel )
+	public boolean beforeSubmit(Submit submit, SubmitContext context)
 	{
-		if( super.onClose( canCancel ))
+		boolean result = super.beforeSubmit(submit, context);
+		startTime = System.currentTimeMillis();
+		return result;
+	}
+
+	protected void logMessages(String message, String infoMessage)
+	{
+		super.logMessages(message, infoMessage);
+		logArea.addLine(sdf.format(new Date(startTime)) + " - " + message);
+	}
+
+	@Override
+	public void afterSubmit(Submit submit, SubmitContext context)
+	{
+		super.afterSubmit(submit, context);
+		updateStatusIcon();
+	}
+
+	public boolean onClose(boolean canCancel)
+	{
+		if (super.onClose(canCancel))
 		{
 			assertionsPanel.release();
-			SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener );
+			SoapUI.getTestMonitor().removeTestMonitorListener(testMonitorListener);
 			logArea.release();
-			getModelItem().getTestRequest().removePropertyChangeListener( WsdlTestRequest.STATUS_PROPERTY, this );
-			getModelItem().getTestRequest().removeAssertionsListener( assertionsListener );
+			getModelItem().getTestRequest().removePropertyChangeListener(WsdlTestRequest.STATUS_PROPERTY, this);
+			getModelItem().getTestRequest().removeAssertionsListener(assertionsListener);
 			return true;
 		}
-		
-		
-      return false;
+
+		return false;
 	}
-	
+
 	public boolean dependsOn(ModelItem modelItem)
 	{
-		return modelItem == getRequest() || modelItem == getModelItem() || modelItem == getRequest().getOperation() ||
-		    modelItem == getRequest().getOperation().getInterface() || 
-		    modelItem == getRequest().getOperation().getInterface().getProject() ||
-		    modelItem == getModelItem().getTestCase() || modelItem == getModelItem().getTestCase().getTestSuite();
+		return modelItem == getRequest() || modelItem == getModelItem() || modelItem == getRequest().getOperation()
+				|| modelItem == getRequest().getOperation().getInterface()
+				|| modelItem == getRequest().getOperation().getInterface().getProject()
+				|| modelItem == getModelItem().getTestCase() || modelItem == getModelItem().getTestCase().getTestSuite();
 	}
-	
+
 	private class InternalTestMonitorListener extends TestMonitorListenerAdapter
 	{
 		public void loadTestFinished(LoadTestRunner runner)
 		{
-			setEnabled( !SoapUI.getTestMonitor().hasRunningTest( getModelItem().getTestCase() ) );
+			setEnabled(!SoapUI.getTestMonitor().hasRunningTest(getModelItem().getTestCase()));
 		}
 
 		public void loadTestStarted(LoadTestRunner runner)
 		{
-			if( runner.getLoadTest().getTestCase() == getModelItem().getTestCase() )
-				setEnabled( false );
+			if (runner.getLoadTest().getTestCase() == getModelItem().getTestCase())
+				setEnabled(false);
 		}
 
 		public void testCaseFinished(TestRunner runner)
 		{
-			setEnabled(	!SoapUI.getTestMonitor().hasRunningTest( getModelItem().getTestCase() ) );
+			setEnabled(!SoapUI.getTestMonitor().hasRunningTest(getModelItem().getTestCase()));
 		}
 
 		public void testCaseStarted(TestRunner runner)
 		{
-			if( runner.getTestCase() == getModelItem().getTestCase())
-				setEnabled( false );
+			if (runner.getTestCase() == getModelItem().getTestCase())
+				setEnabled(false);
 		}
 	}
 
-	public void propertyChange( PropertyChangeEvent evt )
+	public void propertyChange(PropertyChangeEvent evt)
 	{
 		updateStatusIcon();
 	}

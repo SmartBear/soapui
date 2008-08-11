@@ -102,9 +102,11 @@ public class JLogList extends JPanel
 		listPopup.add( new ExportToFileAction() );
 
 		logList.setComponentPopupMenu( listPopup );
-
+		
 		setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
-		add( new JScrollPane( logList ), BorderLayout.CENTER );
+		JScrollPane scrollPane = new JScrollPane( logList );
+		UISupport.addPreviewCorner(scrollPane, true);
+		add( scrollPane, BorderLayout.CENTER );
 
 		requestAttributes = new SimpleAttributeSet();
 		StyleConstants.setForeground( requestAttributes, Color.BLUE );

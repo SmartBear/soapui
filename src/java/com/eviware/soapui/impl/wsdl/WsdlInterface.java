@@ -350,6 +350,19 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
 		return WsdlUtils.findBindingOperation( binding, bindingOperationName, inputName, outputName );
 	}
 
+	public Binding getBinding()
+	{
+		try
+		{
+			return findBinding(getWsdlContext()).binding;
+		}
+		catch (Exception e)
+		{
+			SoapUI.logError(e);
+			return null;
+		}
+	}
+	
 	@SuppressWarnings( "unchecked" )
 	private BindingTuple findBinding( WsdlContext newContext ) throws Exception
 	{

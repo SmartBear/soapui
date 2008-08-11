@@ -43,7 +43,7 @@ public class InspectorLog4JMonitor extends JInspectorPanel implements Log4JMonit
 	{
 		JLogList logArea = new JLogList( title );
 		logArea.addLogger( loggerName, !isDefault );
-		JComponentInspector inspector = new JComponentInspector<JLogList>(logArea,  title, null, true);
+		JComponentInspector<JLogList> inspector = new JComponentInspector<JLogList>(logArea,  title, null, true);
 		addInspector( inspector);
 		
 		if( isDefault )
@@ -135,7 +135,7 @@ public class InspectorLog4JMonitor extends JInspectorPanel implements Log4JMonit
 	{
 		for( Inspector inspector : getInspectors())
 		{
-			JLogList logList = ((JLogList)((JComponentInspector)inspector).getComponent());
+			JLogList logList = ((JLogList)((JComponentInspector<?>)inspector).getComponent());
 			if( logList.getLogger( loggerName ) != null )
 			{
 				logList.removeLogger( loggerName );

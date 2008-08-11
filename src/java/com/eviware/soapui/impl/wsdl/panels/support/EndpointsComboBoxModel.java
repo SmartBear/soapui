@@ -22,8 +22,8 @@ import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.support.UISupport;
 
 /**
@@ -40,9 +40,9 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 	
 	private Set<ListDataListener> listeners = new HashSet<ListDataListener>();
 	private String[] endpoints;
-	private WsdlRequest request;
+	private AbstractHttpRequest<?> request;
 	
-	public EndpointsComboBoxModel( WsdlRequest request )
+	public EndpointsComboBoxModel( AbstractHttpRequest<?> request )
 	{
 		this.request = request;
 		initEndpoints();
@@ -151,7 +151,7 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 	{
 		String propertyName = evt.getPropertyName();
 		
-		if( propertyName.equals( WsdlRequest.ENDPOINT_PROPERTY ) )
+		if( propertyName.equals( AbstractHttpRequest.ENDPOINT_PROPERTY ) )
       {
          notifyContentsChanged();
       }
