@@ -60,115 +60,53 @@ public class WsaRequestFilter extends AbstractRequestFilter
 		{
 			SoapVersion soapVersion = wsdlRequest.getOperation().getInterface().getSoapVersion();
 			
-//			Definition definition = wsdlRequest.getOperation().getInterface().getWsdlContext().getDefinition();
-//			
-//			
-//			definition.getTargetNamespace();
-//			
-//			wsdlRequest.getOperation().getInterface().getBinding().getPortType().getQName();
-//			
-//			BindingOperation bindingOperation = wsdlRequest.getOperation().getBindingOperation();
-			
          //version="2005/08" is default
-			String versionNameSpace = "http://www.w3.org/2005/08/addressing";
+			String wsaVersionNameSpace = "http://www.w3.org/2005/08/addressing";
          if (wsdlRequest.getWsaConfig().getVersion().equals(WsaVersionTypeConfig.X_200408.toString()))
 			{
-				versionNameSpace = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
+         	wsaVersionNameSpace = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
 			}
 
 			XmlObject xmlObject = XmlObject.Factory.parse(content);
 			Element header = (Element)SoapUtils.getHeaderElement(xmlObject,soapVersion, true).getDomNode();
-			header.setAttribute("xmlns:wsa", versionNameSpace);
+			
+			header.setAttribute("xmlns:wsa", wsaVersionNameSpace);
 
 			XmlObject[] envelope = xmlObject.selectChildren( soapVersion.getEnvelopeQName() );
          Element elm = (Element) envelope[0].getDomNode();
          
-//         if (!wsdlRequest.getWsaConfig().getMustUnderstand().equals(MustUnderstandTypeConfig.NONE.toString()))
-//			{
-//            int muValue = 0;
-//            if (wsdlRequest.getWsaConfig().getMustUnderstand().equals(MustUnderstandTypeConfig.TRUE.toString()))
-//				{
-//					muValue = 1;
-//				}
-//            Element mustUnderstandElm = elm.getOwnerDocument().createElementNS("http://www.w3schools.com/transaction/","m:Trans");
-//            mustUnderstandElm.setAttribute("soap:mustUnderstand", "" + muValue);
-//            header.appendChild(mustUnderstandElm);
-//			}
-         boolean mustUnderstand = false;
-         String mustUnderstandValue = "";
+         Boolean mustUnderstand = null;
          if (!wsdlRequest.getWsaConfig().getMustUnderstand().equals(MustUnderstandTypeConfig.NONE.toString()))
 			{
 				mustUnderstand = true;
-				mustUnderstandValue = 
-					wsdlRequest.getWsaConfig().getMustUnderstand().equals(MustUnderstandTypeConfig.TRUE.toString()) ? "1" : "0";
 			}
-         String soapVersionNamespace = wsdlRequest.getOperation().getInterface().getSoapVersion().getEnvelopeNamespace();
          
-         Element wsActionElm = elm.getOwnerDocument().createElementNS(versionNameSpace,"wsa:Action");
-         Text actTxtElm = elm.getOwnerDocument().createTextNode(wsdlRequest.getWsaConfig().getAction());
-         if (mustUnderstand)
-			{
-         	wsActionElm.setAttributeNS(soapVersionNamespace, "mustUnderstand", mustUnderstandValue);
-         	//("soap:mustUnderstand", "" + mustUnderstandValue);
-			}
-         wsActionElm.appendChild(actTxtElm);
-         header.appendChild(wsActionElm);
+         WsaBuilder builder = new WsaBuilder( header, soapVersion, wsaVersionNameSpace, mustUnderstand );
+         
+         header.appendChild(builder.createWsaChildElement("wsa:Action", elm, wsdlRequest.getWsaConfig().getAction()));
 
          String from = wsdlRequest.getWsaConfig().getFrom(); 
          if (from != null && !from.isEmpty())
 			{
-            Element wsFromElm = elm.getOwnerDocument().createElementNS(versionNameSpace,"wsa:From");
-            Text fromTxtElm = elm.getOwnerDocument().createTextNode(from);
-            if (mustUnderstand)
-   			{
-            	wsFromElm.setAttribute("soap:mustUnderstand", "" + mustUnderstandValue);
-   			}
-            wsFromElm.appendChild(fromTxtElm);
-            header.appendChild(wsFromElm);
+         	header.appendChild(builder.createWsaChildElement("wsa:from", elm, from) );
 			}
          
          String replyTo = wsdlRequest.getWsaConfig().getReplyTo();
          if (replyTo != null && !replyTo.isEmpty())
 			{
-            Element wsAddressElm = elm.getOwnerDocument().createElementNS(versionNameSpace,"wsa:Address");
-            Element wsReplyToElm = elm.getOwnerDocument().createElementNS(versionNameSpace,"wsa:ReplyTo");
-            if (mustUnderstand)
-   			{
-            	wsReplyToElm.setAttribute("soap:mustUnderstand", "" + mustUnderstandValue);
-   			}
-            Text replyToTxtElm = elm.getOwnerDocument().createTextNode(replyTo);
-            wsAddressElm.appendChild(replyToTxtElm);
-            wsReplyToElm.appendChild(wsAddressElm);
-            header.appendChild(wsReplyToElm);
+         	header.appendChild(builder.createWsaChildElement("wsa:replyTo", elm, replyTo) );
 			}
          
          String faultTo = wsdlRequest.getWsaConfig().getFaultTo();
          if (faultTo != null && !faultTo.isEmpty())
 			{
-            Element wsAddressElm = elm.getOwnerDocument().createElementNS(versionNameSpace,"wsa:Address");
-            Element wsFaultToElm = elm.getOwnerDocument().createElementNS(versionNameSpace,"wsa:FaultTo");
-            if (mustUnderstand)
-   			{
-            	wsFaultToElm.setAttribute("soap:mustUnderstand", "" + mustUnderstandValue);
-   			}
-            Text faultToTxtElm = elm.getOwnerDocument().createTextNode(faultTo);
-            wsAddressElm.appendChild(faultToTxtElm);
-            wsFaultToElm.appendChild(wsAddressElm);
-            header.appendChild(wsFaultToElm);
+         	header.appendChild(builder.createWsaChildElement("wsa:faultToTo", elm, faultTo) );
 			}
 
-         String msgId = wsdlRequest.getWsaConfig().getFaultTo();
+         String msgId = wsdlRequest.getWsaConfig().getMessageID();
          if (msgId != null && !msgId.isEmpty())
 			{
-				Element wsaMsgIdElm = elm.getOwnerDocument().createElement("wsa:MessageID");
-				//String msgId = UUID.randomUUID().toString();
-				Text wsaMsgIdTxtElm = elm.getOwnerDocument().createTextNode(msgId);
-	         if (mustUnderstand)
-				{
-	         	wsaMsgIdElm.setAttribute("soap:mustUnderstand", "" + mustUnderstandValue);
-				}
-				wsaMsgIdElm.appendChild(wsaMsgIdTxtElm);
-				header.appendChild(wsaMsgIdElm);
+            header.appendChild(builder.createWsaChildElement("wsa:MessageID", elm, msgId));
 			}
          
          content = xmlObject.xmlText();
@@ -178,9 +116,47 @@ public class WsaRequestFilter extends AbstractRequestFilter
 			SoapUI.logError( e );
 		}
 		
-		
 		return content;
 	}
+	
+	public static class WsaBuilder
+	{
+		private final SoapVersion soapVersion;
+		private final String wsaVersionNameSpace;
+		private final Boolean mustUnderstand;
 
+		public WsaBuilder(Element header, SoapVersion soapVersion, String wsaVersionNameSpace, Boolean mustUnderstand)
+		{
+			// TODO Auto-generated constructor stub
+			this.soapVersion = soapVersion;
+			this.wsaVersionNameSpace = wsaVersionNameSpace;
+			this.mustUnderstand = mustUnderstand;
+		}
+		
+		public Element createWsaChildElement(String elementName, Element addToElement,   String wsaProperty ) {
+			Element wsaElm = addToElement.getOwnerDocument().createElementNS(wsaVersionNameSpace,elementName);
+	      Text txtElm = addToElement.getOwnerDocument().createTextNode(wsaProperty);
+	      if (mustUnderstand != null)
+			{
+	      	wsaElm.setAttributeNS(soapVersion.getEnvelopeNamespace(), "mustUnderstand", mustUnderstand.equals(MustUnderstandTypeConfig.TRUE.toString()) ? "1" : "0");
+			}
+	      wsaElm.appendChild(txtElm);
+//	      header.appendChild(wsFromElm);
+	      return wsaElm;
+		}
+		public Element createWsaAddressChildElement(String elementName, Element addToElement,   String wsaProperty ) {
+	      Element wsAddressElm = addToElement.getOwnerDocument().createElementNS(wsaVersionNameSpace,"wsa:Address");
+			Element wsaElm = addToElement.getOwnerDocument().createElementNS(wsaVersionNameSpace,elementName);
+	      Text txtElm = addToElement.getOwnerDocument().createTextNode(wsaProperty);
+	      if (mustUnderstand != null)
+			{
+	      	wsaElm.setAttributeNS(soapVersion.getEnvelopeNamespace(), "mustUnderstand", mustUnderstand.equals(MustUnderstandTypeConfig.TRUE.toString()) ? "1" : "0");
+			}
+	      wsAddressElm.appendChild(txtElm);
+	      wsaElm.appendChild(wsAddressElm);
+	      return wsaElm;
+		}
+	}
+	
 }
 
