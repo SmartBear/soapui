@@ -56,7 +56,7 @@
 		but it will be bundled in the final jbosside 2.0.0 version</p>
 		<p>Once you have installed the plugin, start by setting the path to the
 		JBossWS WSTools script in the "JBossIDE / JBossWS / Integrated Tools" preferences page:</p>
-		<p align="center"><img src="images/integrated_tools.gif"/></p>
+		<p align="center"><img src="images/integrated_tools.gif" alt="installation JBossWs"/></p>
 		<p>(The JAXB/XmlBeans tools are not required for JBossWS support)</p>
 		</subsection>
 		

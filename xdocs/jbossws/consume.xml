@@ -23,13 +23,13 @@
 		<subsection name="Adding the WSDL">
 		<p>Add the WSDL to the JBossWS Web Services node by selecting the 
 		"JBossWS - Add WSDL from URL" option:</p>
-		<p align="center"><img vspace="20" src="images/addwsdlfromurl.gif"/></p>
+		<p align="center"><img vspace="20" src="images/addwsdlfromurl.gif" alt="adding wsdl to the jbossWS"/></p>
 		<p>This will prompt for a WSDL and import it accordingly into the project</p>
 		
 		<p>If the WSDL resides locally in the file system it can be added using the corresponding
 		"JBossWS - Add WSDL from File" option. If it is part of the current project, it can be 
 		added by selecting the "JBossWS - Add to JBossWS Project" option from the WSDL's right-button menu:</p>
-		<p align="center"><img src="images/addwsdlfromfile.gif"/></p>
+		<p align="center"><img src="images/addwsdlfromfile.gif" alt="jBossWs - Add WSDL"/></p>
 		
 		</subsection>
 		

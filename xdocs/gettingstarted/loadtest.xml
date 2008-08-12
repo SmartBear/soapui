@@ -15,12 +15,12 @@
 		<p>Here we will continue from the Functional TestCase created in the previous "Getting Started" document. Start by 
 		creating a LoadTest for the created TestCase using its "New LoadTest" popup menu option. The opened LoadTest Editor
 		should be something like the following (depending on which steps you created in your TestCase):</p>
-		<p align="center"><img src="images/getting_started_loadtest_1.gif" alt="Load Test Runner"/></p>
+		<p align="center"><img src="images/getting_started_loadtest_1.gif" alt="Soa Load Test Runner"/></p>
 		<p>The LoadTest is pre configured to run for 60 seconds (top right) with 5 threads using the Simple LoadStrategy. Modify 
 		these values as desired (read more about <a href="../userguide/loadtest/configuration.html">soapUI LoadTest Configuration</a>) and run
 		the test. You will see the statistics table in the middle beginning collecting data and after 60 seconds should have a 
 		finished LoadTest as follows (read more about <a href="../userguide/loadtest/execution.html">LoadTest Execution</a>):</p>
-		<p align="center"><img src="images/getting_started_loadtest_2.gif" alt="Load Test Runner executing"/></p>
+		<p align="center"><img src="images/getting_started_loadtest_2.gif" alt="Soa Load Test Runner executing"/></p>
 		
 				<div class="infobox">
 			<div class="infobox_top"></div>

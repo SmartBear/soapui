@@ -15,7 +15,7 @@
 		<item name="forums" href="http://sourceforge.net/forum/?group_id=136013"/>
 		<item name="bugs" href="http://sourceforge.net/tracker/?group_id=136013&amp;atid=737763"/>
   <!--      <item name="blog" href="http://www.eviware.com/blog/"/>  -->
-	  	<item name="sourceforge" href="http://sourceforge.net/projects/soapui"/>  
+	  	<item name="sourceforge" href="http://sourceforge.net/projects/soapui/?abmode=1"/>  
 	  	 <item name="eviware.com" href="http://www.eviware.com"/>  
     </links>
 	

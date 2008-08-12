@@ -30,7 +30,7 @@
 		<subsection name="Create the project and WSDL">
 		<p>Create an empty java-project:</p>
 		<p>Create a standard empty java project; </p>
-		<p align="center"><img src="images/implement/create_project.gif"/></p>
+		<p align="center"><img src="images/implement/create_project.gif" alt=""/></p>
 		<p>Add 2 folders:</p>
 		<ul>
 		<li>One source folder for src/java</li>
@@ -87,7 +87,7 @@
 		
 		<subsection name="Import the WSDL contract">
 		<p>Now we need to enable the JBossWS Nature:</p>
-		<p align="center"><img src="images/implement/add_jbossws_nature.gif"/></p>		
+		<p align="center"><img src="images/implement/add_jbossws_nature.gif" /></p>		
 		<p>After enabling, add the HelloWorld.wsdl to the JBossWS node by right-clicking the WSDL and
 		selecting "JBossWS / Add to JBossWS Project":</p>
 		<p align="center"><img src="images/implement/add_wsdl_to_project.gif"/></p>		

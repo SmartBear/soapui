@@ -53,7 +53,7 @@
 		</ul>
 		<p>Read more about TestSuites/TestCases in the <a href="../userguide/functional/testsuites.html">soapUI User Guide</a></p>
 		</column><column>
-		<img src="images/getting_started_4.gif" alt="Add a request to a test case"/></column></columns>
+		<img src="images/getting_started_4.gif" alt="Add a request to a soap test case"/></column></columns>
 		 </subsection>
 	
 		 <subsection name="Add an Assertions to a test">
