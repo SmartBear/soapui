@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.actions.monitor;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.panels.monitor.SoapMonitorDesktopPanel;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.StringUtils;
@@ -83,7 +84,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 				incomingResponseWss));
 	}
 
-	@AForm(description = "Specify SOAP Monitor settings", name = "Launch SOAP Monitor")
+	@AForm(description = "Specify SOAP Monitor settings", name = "Launch SOAP Monitor", helpUrl = HelpUrls.SOAPMONITOR_HELP_URL )
 	private interface LaunchForm
 	{
 		@AField(description = "The local port to listen on", name = "Port", type = AFieldType.INT)

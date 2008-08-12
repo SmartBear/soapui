@@ -1104,7 +1104,7 @@ public class SoapMonitor extends JPanel
 			}
 		}
 
-		@AForm( name = "MockService Options", description = "Set options for this MockService", helpUrl = HelpUrls.MOCKSERVICEOPTIONS_HELP_URL, icon = UISupport.OPTIONS_ICON_PATH )
+		@AForm( name = "SOAP Monitor Options", description = "Set options for SOAP Monitor", helpUrl = HelpUrls.SOAPMONITOR_HELP_URL, icon = UISupport.OPTIONS_ICON_PATH )
 		private class OptionsForm
 		{
 			@AField( description = "The local port to listen on", name = "Port", type = AFieldType.INT )
