@@ -27,6 +27,8 @@ public interface SoapUIAction<T extends ModelItem> extends PropertyChangeNotifie
 	
 	public void perform( T target, Object param );
 	
+	public String getId();
+	
 	public String getName();
 	
 	public String getDescription();

@@ -23,8 +23,8 @@ import javax.swing.JToolBar;
 import javax.swing.ListModel;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.wsdl.panels.request.AbstractWsdlRequestDesktopPanel;
-import com.eviware.soapui.impl.wsdl.panels.request.components.SoapMessageXmlEditor;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
@@ -71,9 +71,7 @@ public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel
 
 	public WsdlTestRequestDesktopPanel(WsdlTestRequestStep requestStep)
 	{
-		super(requestStep);
-
-		init(requestStep.getTestRequest());
+		super(requestStep, requestStep.getTestRequest());
 
 		SoapUI.getTestMonitor().addTestMonitorListener(testMonitorListener);
 		setEnabled(!SoapUI.getTestMonitor().hasRunningTest(requestStep.getTestCase()));
@@ -104,7 +102,7 @@ public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel
 		{
 			protected void selectError(AssertionError error)
 			{
-				SoapMessageXmlEditor<?> editor = (SoapMessageXmlEditor<?>) getResponseEditor();
+				ModelItemXmlEditor<?> editor = (ModelItemXmlEditor<?>) getResponseEditor();
 				editor.requestFocus();
 			}
 		};

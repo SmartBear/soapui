@@ -14,8 +14,8 @@ package com.eviware.soapui.impl.wsdl.support;
 
 import java.beans.PropertyChangeEvent;
 
+import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.panels.request.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.support.editor.xml.support.DefaultXmlDocument;
 

@@ -33,8 +33,8 @@ import javax.swing.JToggleButton;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
-import com.eviware.soapui.impl.wsdl.actions.support.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction;
 import com.eviware.soapui.impl.wsdl.panels.testcase.TestRunLog;
 import com.eviware.soapui.impl.wsdl.panels.testcase.TestRunLog.TestRunLogTestRunListener;

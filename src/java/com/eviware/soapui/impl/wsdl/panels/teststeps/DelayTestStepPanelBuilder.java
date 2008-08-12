@@ -33,7 +33,7 @@ public class DelayTestStepPanelBuilder extends EmptyPanelBuilder<WsdlDelayTestSt
 	@Override
 	public Component buildOverviewPanel( WsdlDelayTestStep modelItem )
 	{
-		JPropertiesTable table = buildDefaultProperties( modelItem, "Delay Properties" );
+		JPropertiesTable<WsdlDelayTestStep> table = buildDefaultProperties( modelItem, "Delay Properties" );
 		table.addProperty( "Delay", "delay", true );
 		return table;
 	}

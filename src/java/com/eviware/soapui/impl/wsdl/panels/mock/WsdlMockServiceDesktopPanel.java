@@ -46,9 +46,9 @@ import javax.swing.SwingConstants;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.actions.mockservice.AddNewMockOperationAction;
 import com.eviware.soapui.impl.wsdl.actions.mockservice.MockServiceOptionsAction;
-import com.eviware.soapui.impl.wsdl.actions.support.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;

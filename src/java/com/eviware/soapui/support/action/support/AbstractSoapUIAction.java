@@ -30,20 +30,34 @@ public abstract class AbstractSoapUIAction<T extends ModelItem> implements SoapU
 	private String name;
 	private String description;
 	private boolean enabled = true;
+	private String id;
 
-	public AbstractSoapUIAction()
+	public AbstractSoapUIAction( String id )
 	{
+		this.id = id;
 		propertySupport = new PropertyChangeSupport( this );
 	}
 	
 	public AbstractSoapUIAction( String name, String description )
 	{
+		this( null, name, description );
+		id = getClass().getSimpleName();
+	}
+	
+	public AbstractSoapUIAction( String id, String name, String description )
+	{
+		this.id = id;
 		this.name = name;
 		this.description = description;
 		
 		propertySupport = new PropertyChangeSupport( this );
 	}
 	
+	public String getId()
+	{
+		return id;
+	}
+
 	public String getDescription()
 	{
 		return description;

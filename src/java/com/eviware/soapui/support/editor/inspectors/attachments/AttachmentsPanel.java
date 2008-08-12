@@ -44,9 +44,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.AttachmentContainer;
 import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
-import com.eviware.soapui.impl.wsdl.actions.support.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.WsdlAttachment;

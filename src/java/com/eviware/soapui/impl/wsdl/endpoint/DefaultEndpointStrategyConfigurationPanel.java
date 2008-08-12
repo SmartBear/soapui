@@ -40,9 +40,9 @@ import javax.swing.table.AbstractTableModel;
 import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.config.EndpointConfig;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.actions.support.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategy.EndpointDefaults;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;

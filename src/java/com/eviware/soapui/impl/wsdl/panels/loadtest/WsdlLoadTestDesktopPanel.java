@@ -39,8 +39,8 @@ import javax.swing.event.ChangeListener;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.LoadTestLimitTypesConfig;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.actions.loadtest.LoadTestOptionsAction;
-import com.eviware.soapui.impl.wsdl.actions.support.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTestRunner;
 import com.eviware.soapui.impl.wsdl.loadtest.data.LoadTestStatistics;

@@ -10,7 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.panels.request.components;
+package com.eviware.soapui.impl.support.components;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

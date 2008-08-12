@@ -32,7 +32,7 @@ import com.eviware.soapui.support.action.support.StandaloneActionMapping;
  * @author ole.matzura
  */
 
-public class SwingActionDelegate<T extends ModelItem> extends AbstractAction implements PropertyChangeListener
+public class SwingActionDelegate<T extends ModelItem> extends AbstractAction implements PropertyChangeListener, SoapUIActionMarker
 {
 	private final T target;
 	private final SoapUIActionMapping<T> mapping;
@@ -170,5 +170,10 @@ public class SwingActionDelegate<T extends ModelItem> extends AbstractAction imp
 	public static <T extends ModelItem> SwingActionDelegate createDelegate( String soapUIActionId, T target, String keyStroke, String iconPath )
 	{
 		return createDelegate( SoapUI.getActionRegistry().getAction( soapUIActionId ), target, keyStroke, iconPath );
+	}
+
+	public SoapUIAction getSoapUIAction()
+	{
+		return getAction();
 	}
 }

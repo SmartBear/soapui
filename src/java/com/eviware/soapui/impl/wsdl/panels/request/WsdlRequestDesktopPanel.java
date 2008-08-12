@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.wsdl.panels.request;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JToolBar;
 
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -32,16 +31,17 @@ public class WsdlRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel<Wsd
 	
 	public WsdlRequestDesktopPanel(WsdlRequest request)
 	{
-		super(request);
-		init( request );
+		super(request, request);
 	}
-
-	protected JComponent buildToolbar()
+	
+	@Override
+	protected void init(WsdlRequest request)
 	{
 		addToTestCaseButton = createActionButton(
-					SwingActionDelegate.createDelegate( AddRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), 
-								null, "/addToTestCase.gif"), true );
-		return super.buildToolbar();
+				SwingActionDelegate.createDelegate( AddRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), 
+							null, "/addToTestCase.gif"), true );
+		
+		super.init(request);
 	}
 
 	public void setEnabled(boolean enabled)
@@ -53,5 +53,6 @@ public class WsdlRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel<Wsd
 	protected void insertButtons(JToolBar toolbar)
 	{
 		toolbar.add(addToTestCaseButton);
+		super.insertButtons(toolbar);
 	}
 }

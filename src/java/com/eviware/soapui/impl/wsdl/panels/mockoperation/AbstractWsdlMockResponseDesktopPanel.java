@@ -36,17 +36,17 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
+import com.eviware.soapui.impl.support.components.RequestMessageXmlEditor;
+import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.wsdl.actions.mockresponse.OpenRequestForMockResponseAction;
-import com.eviware.soapui.impl.wsdl.actions.support.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.CreateEmptyMockResponseAction;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.CreateFaultMockResponseAction;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.RecreateMockResponseAction;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.WSIValidateResponseAction;
-import com.eviware.soapui.impl.wsdl.panels.request.components.RequestMessageXmlEditor;
-import com.eviware.soapui.impl.wsdl.panels.request.components.ResponseMessageXmlEditor;
-import com.eviware.soapui.impl.wsdl.panels.request.components.SoapMessageXmlEditor;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.MockRunner;
@@ -80,8 +80,8 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 	private MoveFocusAction moveFocusAction;
 	private ClosePanelAction closePanelAction = new ClosePanelAction();
 
-	private SoapMessageXmlEditor<?> requestEditor;
-	private SoapMessageXmlEditor<?> responseEditor;
+	private ModelItemXmlEditor<?> requestEditor;
+	private ModelItemXmlEditor<?> responseEditor;
 
 	public AbstractAction wsiValidateAction;
 
@@ -130,12 +130,12 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		return mockResponse;
 	}
 
-	public final SoapMessageXmlEditor<?> getRequestEditor()
+	public final ModelItemXmlEditor<?> getRequestEditor()
 	{
 		return requestEditor;
 	}
 
-	public final SoapMessageXmlEditor<?> getResponseEditor()
+	public final ModelItemXmlEditor<?> getResponseEditor()
 	{
 		return responseEditor;
 	}
@@ -214,12 +214,12 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		return component;
 	}
 
-	protected SoapMessageXmlEditor<?> buildResponseEditor()
+	protected ModelItemXmlEditor<?> buildResponseEditor()
 	{
 		return new WsdlMockResponseMessageEditor( new MockResponseXmlDocument( mockResponse ));
 	}
 
-	protected SoapMessageXmlEditor<?> buildRequestEditor()
+	protected ModelItemXmlEditor<?> buildRequestEditor()
 	{
 		return new WsdlMockRequestMessageEditor( new MockRequestXmlDocument( mockResponse ));
 	}

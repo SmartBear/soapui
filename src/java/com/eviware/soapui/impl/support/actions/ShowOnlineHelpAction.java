@@ -10,7 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.actions.support;
+package com.eviware.soapui.impl.support.actions;
 
 import java.awt.event.ActionEvent;
 

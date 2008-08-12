@@ -10,7 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.panels.request.components;
+package com.eviware.soapui.impl.support.components;
 
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorFactory;
@@ -24,11 +24,11 @@ import com.eviware.soapui.support.editor.xml.XmlEditor;
  * @author ole.matzura
  */
 
-public abstract class SoapMessageXmlEditor<T extends ModelItem> extends XmlEditor
+public abstract class ModelItemXmlEditor<T extends ModelItem> extends XmlEditor
 {
 	private final T modelItem;
 
-	public SoapMessageXmlEditor( XmlDocument xmlDocument, T modelItem  )
+	public ModelItemXmlEditor( XmlDocument xmlDocument, T modelItem  )
 	{
 		super( xmlDocument );
 		this.modelItem = modelItem;

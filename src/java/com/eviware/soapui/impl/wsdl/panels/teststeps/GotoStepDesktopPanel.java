@@ -37,7 +37,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.actions.support.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.support.TestRunComponentEnabler;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GotoTestStepsComboBoxModel;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
@@ -164,7 +164,7 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 		splitPane.setDividerLocation( 120 );
 		
 		inspectorPanel = new JInspectorPanel( splitPane );
-		inspectorPanel.addInspector( new JComponentInspector( buildLog(), "Log", "A log of evaluated conditions", true ) );
+		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildLog(), "Log", "A log of evaluated conditions", true ) );
 		
 		add( inspectorPanel, BorderLayout.CENTER );
 		

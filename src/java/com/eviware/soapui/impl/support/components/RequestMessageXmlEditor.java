@@ -10,7 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.panels.request.components;
+package com.eviware.soapui.impl.support.components;
 
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.registry.EditorViewFactory;
@@ -29,7 +29,7 @@ import com.eviware.soapui.support.editor.xml.XmlInspector;
  * @author ole.matzura
  */
 
-public class RequestMessageXmlEditor<T extends ModelItem> extends SoapMessageXmlEditor<T>
+public class RequestMessageXmlEditor<T extends ModelItem> extends ModelItemXmlEditor<T>
 {
 	public RequestMessageXmlEditor( XmlDocument xmlDocument, T modelItem  )
 	{

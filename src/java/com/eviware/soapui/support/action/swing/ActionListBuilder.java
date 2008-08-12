@@ -29,13 +29,26 @@ import com.eviware.soapui.support.action.SoapUIActionRegistry.SoapUIActionGroupA
 public class ActionListBuilder
 {
 	/**
+	 * Builds default ActionList for specified ModelItem
+	 * 
+	 * @param <T> the type of ModelItem
+	 * @param modelItem the target ModelItem
+	 * @return the ActionList
+	 */
+	
+	public static <T extends ModelItem> ActionList buildActions( T modelItem)
+	{
+		return buildActions( modelItem, "" );
+	}
+	
+	/**
 	 * Creates an ActionList for the specified modelItem
 	 */
 	
-	public static <T extends ModelItem> ActionList buildActions( T modelItem )
+	public static <T extends ModelItem> ActionList buildActions( T modelItem, String suffix )
 	{
 		Class<?> clazz = modelItem.getClass();
-		ActionList actions = buildActions( clazz.getSimpleName() + "Actions", modelItem);
+		ActionList actions = buildActions( clazz.getSimpleName() + suffix + "Actions", modelItem);
 		
 		if( actions.getActionCount() == 0 )
 		{
@@ -43,7 +56,7 @@ public class ActionListBuilder
 			
 			while( actions.getActionCount() == 0 && clazz != null && ModelItem.class.isAssignableFrom(clazz) )
 			{
-				actions = buildActions( clazz.getSimpleName() + "Actions", modelItem);
+				actions = buildActions( clazz.getSimpleName() + suffix +  "Actions", modelItem);
 				clazz = clazz.getSuperclass();
 			}
 		}

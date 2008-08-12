@@ -53,7 +53,7 @@ import javax.swing.text.Document;
 import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.actions.support.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
 import com.eviware.soapui.impl.wsdl.panels.support.TestRunComponentEnabler;
@@ -125,7 +125,7 @@ public class TransferResponseValuesDesktopPanel extends ModelItemDesktopPanel<Tr
 	private DesktopPanel resultDesktopPanel;
 	private TransfersTableModel transferLogTableModel;
 	private InternalTestRunListener testRunListener;
-	private JComponentInspector logInspector;
+	private JComponentInspector<JComponent> logInspector;
 	private JCheckBox useXQueryCheckBox;
 	private JButton runAllButton;
 	private JInspectorPanel inspectorPanel;
@@ -215,7 +215,7 @@ public class TransferResponseValuesDesktopPanel extends ModelItemDesktopPanel<Tr
 		splitPane.setDividerLocation( 120 );
 		
 		inspectorPanel = new JInspectorPanel( splitPane );
-		logInspector = new JComponentInspector( buildLog(), "Transfer Log (0)", "A log of performed transfers while the editor was open", true );
+		logInspector = new JComponentInspector<JComponent>( buildLog(), "Transfer Log (0)", "A log of performed transfers while the editor was open", true );
 		inspectorPanel.addInspector( logInspector );
 		add( inspectorPanel, BorderLayout.CENTER );
 		
