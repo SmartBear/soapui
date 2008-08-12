@@ -147,7 +147,9 @@ class Connection extends Thread
 			TcpMonWsdlMonitorMessageExchange exchange = new TcpMonWsdlMonitorMessageExchange( monitor.getProject() );
 			exchange.setRequestHost( fromHost );
 
-			boolean isProxy = monitor.isProxy();
+			// this is just temp, this class will be removed soon.
+//			boolean isProxy = monitor.isProxy();
+			boolean isProxy = true;
 			URL targetUrl = isProxy ? null : new URL( monitor.getTargetEndpoint() );
 			
 			if( isProxy || ( httpProxyHost != null ) )

@@ -22,9 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -113,7 +111,6 @@ public class SoapMonitor extends JPanel
 	private MessageExchangeModelItem requestModelItem;
 	private JButton optionsButton;
 	private int listenPort;
-	private boolean isProxy;
 	private String targetEndpoint;
 	private JButton clearButton;
 	private int maxRows;
@@ -126,7 +123,6 @@ public class SoapMonitor extends JPanel
 	private PatternFilter interfaceFilter;
 	private PatternFilter targetHostFilter;
 	private JLabel infoLabel;
-	private final boolean addEndpoint;
 	private PatternFilter requestHostFilter;
 	private JComboBox requestHostFilterCombo;
 	private JComboBox targetHostFilterCombo;
@@ -143,15 +139,12 @@ public class SoapMonitor extends JPanel
 	private XFormDialog optionsDialog;
 	private SoapMonitorEngine monitorEngine;
 
-	public SoapMonitor( WsdlProject project, int listenPort, String endpoint, 
-				boolean addEndpoint, boolean isProxy, String incomingRequestWss, String incomingResponseWss, JXToolBar mainToolbar )
+	public SoapMonitor( WsdlProject project, int listenPort,  
+				String incomingRequestWss, String incomingResponseWss, JXToolBar mainToolbar )
 	{
 		super( new BorderLayout() );
 		this.project = project;
 		this.listenPort = listenPort;
-		this.targetEndpoint = endpoint;
-		this.addEndpoint = addEndpoint;
-		this.isProxy = isProxy;
 		this.incomingRequestWss = incomingRequestWss;
 		this.incomingResponseWss = incomingResponseWss;
 		this.maxRows = 100;
@@ -456,11 +449,6 @@ public class SoapMonitor extends JPanel
 	{
 		int localPort = getLocalPort();
 
-		if( addEndpoint && !isProxy )
-		{
-			addLocalEndpointForTunnel();
-		}
-
 //		monitorEngine = new TcpMonMonitorEngine();
 		monitorEngine = new SoapMonitorEngineImpl();
 		monitorEngine.start( this, localPort );
@@ -469,7 +457,7 @@ public class SoapMonitor extends JPanel
 			stopButton.setEnabled( true );
 			startButton.setEnabled( false );
 			optionsButton.setEnabled( false );
-			infoLabel.setText( ( isProxy ? "Proxy " : "Tunnel " ) + "on port " + localPort );
+			infoLabel.setText(  "Proxy " + "on port " + localPort );
 			progressBar.setIndeterminate( true );
 	
 			SoapUI.log.info( "Started SOAP Monitor on local port " + localPort );
@@ -481,50 +469,6 @@ public class SoapMonitor extends JPanel
 			progressBar.setIndeterminate( false );
 			
 			SoapUI.log.info( "Could not start SOAP Monitor on local port " + localPort );
-		}
-	}
-
-	private void addLocalEndpointForTunnel()
-	{
-		String targetHost = getTargetEndpoint();
-		if( addedEndpoints == null ) 
-			addedEndpoints = new HashMap<AbstractInterface<?>, String>();
-		else
-			addedEndpoints.clear();
-			
-		for( Interface iface : getProject().getInterfaceList() )
-		{
-			if( !(iface instanceof AbstractInterface<?>))
-				continue;
-			
-			for( String endpoint : iface.getEndpoints() )
-			{
-				if( targetHost.equals( endpoint ) )
-				{
-					int ix = targetHost.indexOf( "://" );
-					if( ix > 0 )
-					{
-						String ep = targetHost;
-
-						int ix2 = targetHost.indexOf( '/', ix + 3 );
-						if( ix2 > 0 )
-						{
-							ep = targetHost.substring( 0, ix + 3 ) + "127.0.0.1:" + listenPort + targetHost.substring( ix2 );
-						}
-						else
-						{
-							ep = targetHost.substring( 0, ix + 3 ) + "127.0.0.1:" + listenPort;
-						}
-
-						// only add if not already there (so it wont be removed when we stop..)
-						if( !Arrays.asList( iface.getEndpoints()).contains( ep ))
-						{
-							((AbstractInterface<?>)iface).addEndpoint( ep );
-							addedEndpoints.put( (AbstractInterface<?>)iface, ep );
-						}
-					}
-				}
-			}
 		}
 	}
 
@@ -1015,11 +959,6 @@ public class SoapMonitor extends JPanel
 		return listenPort;
 	}
 
-	public boolean isProxy()
-	{
-		return isProxy;
-	}
-
 	public synchronized void addMessageExchange( WsdlMonitorMessageExchange messageExchange )
 	{
 		messageExchangeStack.push( messageExchange );
@@ -1119,8 +1058,6 @@ public class SoapMonitor extends JPanel
 
 	public class SoapMonitorOptionsAction extends AbstractAction
 	{
-		private static final String CREATE_TCP_TUNNEL = "Create TCP Tunnel";
-		private static final String CREATE_HTTP_PROXY = "Create HTTP Proxy";
 
 		public SoapMonitorOptionsAction()
 		{
@@ -1132,15 +1069,6 @@ public class SoapMonitor extends JPanel
 			if( optionsDialog == null )
 			{
 				optionsDialog = ADialogBuilder.buildDialog( OptionsForm.class );
-				optionsDialog.getFormField( OptionsForm.MODE ).addFormFieldListener( new XFormFieldListener()
-				{
-
-					public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-					{
-						optionsDialog.getFormField( OptionsForm.TARGET_HOST ).setEnabled( !newValue.equals( CREATE_HTTP_PROXY ) );
-						optionsDialog.getFormField( OptionsForm.ADD_ENDPOINT ).setEnabled( !newValue.equals( CREATE_HTTP_PROXY ) );
-					}
-				} );
 			}
 
 			StringList endpoints = new StringList();
@@ -1151,13 +1079,8 @@ public class SoapMonitor extends JPanel
 				endpoints.addAll( iface.getEndpoints() );
 			}
 
-			optionsDialog.setOptions( OptionsForm.TARGET_HOST, endpoints.toStringArray() );
-
 			optionsDialog.setIntValue( OptionsForm.PORT, listenPort );
-			optionsDialog.setValue( OptionsForm.TARGET_HOST, targetEndpoint );
-			optionsDialog.setValue( OptionsForm.MODE, isProxy ? "Create HTTP Proxy" : "Create TCP Tunnel" );
 			optionsDialog.setIntValue( OptionsForm.MAXROWS, maxRows );
-			optionsDialog.setBooleanValue( OptionsForm.ADD_ENDPOINT, addEndpoint );
 			
 			optionsDialog.setOptions( OptionsForm.REQUEST_WSS, 
 						StringUtils.merge( project.getWssContainer().getIncomingWssNames(), "<none>" ) );
@@ -1167,19 +1090,12 @@ public class SoapMonitor extends JPanel
 			optionsDialog.setValue( OptionsForm.REQUEST_WSS, incomingRequestWss );
 			optionsDialog.setValue( OptionsForm.RESPONSE_WSS, incomingResponseWss );
 
-			optionsDialog.getFormField( OptionsForm.TARGET_HOST ).setEnabled( !isProxy );
-			optionsDialog.getFormField( OptionsForm.ADD_ENDPOINT ).setEnabled( !isProxy );
-			
 			if( optionsDialog.show() )
 			{
 				Settings settings = getProject().getSettings();
 
 				settings.setLong( OptionsForm.PORT, listenPort = optionsDialog.getIntValue( OptionsForm.PORT, listenPort ) );
 				settings.setLong( OptionsForm.MAXROWS, maxRows = optionsDialog.getIntValue( OptionsForm.MAXROWS, maxRows ) );
-				settings.setString( OptionsForm.TARGET_HOST, targetEndpoint = optionsDialog.getValue( OptionsForm.TARGET_HOST ) );
-				String mode = optionsDialog.getValue( OptionsForm.MODE );
-				isProxy = mode.equals( "Create HTTP Proxy" );
-				settings.setString( OptionsForm.MODE, mode );
 				
 				incomingRequestWss = optionsDialog.getValue( OptionsForm.REQUEST_WSS );
 				incomingResponseWss = optionsDialog.getValue( OptionsForm.RESPONSE_WSS );
@@ -1193,16 +1109,6 @@ public class SoapMonitor extends JPanel
 		{
 			@AField( description = "The local port to listen on", name = "Port", type = AFieldType.INT )
 			public final static String PORT = "Port";
-
-			@AField( description = "Specifies monitor mode", name = "Mode", type = AFieldType.RADIOGROUP, values = {
-						CREATE_TCP_TUNNEL, CREATE_HTTP_PROXY } )
-			public final static String MODE = "Mode";
-
-			@AField( description = "The target host to invoke", name = "Target Host", type = AFieldType.ENUMERATION )
-			public final static String TARGET_HOST = "Target Host";
-
-			@AField( description = "Adds an endpoint for the Tcp Tunnel", name = "Add Endpoint", type = AFieldType.BOOLEAN )
-			public final static String ADD_ENDPOINT = "Add Endpoint";
 
 			@AField( description = "The maximum number of exchanges to log", name = "Max Log", type = AFieldType.INT )
 			public final static String MAXROWS = "Max Log";

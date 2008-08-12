@@ -22,8 +22,6 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.XFormField;
-import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
@@ -31,106 +29,70 @@ import com.eviware.x.form.support.AField.AFieldType;
 
 public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 {
-	private static final String CREATE_TCP_TUNNEL = "Create TCP Tunnel";
-	private static final String CREATE_HTTP_PROXY = "Create HTTP Proxy";
 	private XFormDialog dialog;
 
 	public SoapMonitorAction()
 	{
-		super( "Launch SOAP Monitor", "Launches a SOAP traffic monitor for this project" );
+		super("Launch SOAP Monitor", "Launches a SOAP traffic monitor for this project");
 	}
 
-	public void perform( WsdlProject target, Object param )
+	public void perform(WsdlProject target, Object param)
 	{
-		if( target.getInterfaceCount() == 0 )
+		if (target.getInterfaceCount() == 0)
 		{
-			UISupport.showErrorMessage( "Missing interfaces to monitor" );
+			UISupport.showErrorMessage("Missing interfaces to monitor");
 			return;
 		}
-		
-		if( dialog == null )
-		{
-			dialog = ADialogBuilder.buildDialog( LaunchForm.class );
-			dialog.getFormField( LaunchForm.MODE ).addFormFieldListener( new XFormFieldListener() {
 
-				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-				{
-					dialog.getFormField( LaunchForm.TARGET_HOST ).setEnabled( !newValue.equals( CREATE_HTTP_PROXY ) );
-					dialog.getFormField( LaunchForm.ADD_ENDPOINT ).setEnabled( !newValue.equals( CREATE_HTTP_PROXY ) );
-				}});
-			
-			dialog.setBooleanValue( LaunchForm.ADD_ENDPOINT, true );
+		if (dialog == null)
+		{
+			dialog = ADialogBuilder.buildDialog(LaunchForm.class);
 		}
 
 		Settings settings = target.getSettings();
-		
+
 		StringList endpoints = new StringList();
-		endpoints.add( null );
-		
-		for( Interface iface : target.getInterfaceList())
+		endpoints.add(null);
+
+		for (Interface iface : target.getInterfaceList())
 		{
-			if( iface.getInterfaceType().equals(WsdlInterfaceFactory.WSDL_TYPE))
-				endpoints.addAll( iface.getEndpoints() );
+			if (iface.getInterfaceType().equals(WsdlInterfaceFactory.WSDL_TYPE))
+				endpoints.addAll(iface.getEndpoints());
 		}
-		
-		dialog.setOptions( LaunchForm.TARGET_HOST, endpoints.toStringArray() );
-		
-		dialog.setIntValue( LaunchForm.PORT, ( int ) settings.getLong( LaunchForm.PORT, 8081 ));
-		dialog.setValue( LaunchForm.TARGET_HOST, settings.getString( LaunchForm.TARGET_HOST, "" ));
-		String launchMode = settings.getString( LaunchForm.MODE, CREATE_TCP_TUNNEL );
-		dialog.setValue( LaunchForm.MODE, launchMode);
 
-		dialog.getFormField( LaunchForm.TARGET_HOST ).setEnabled( !launchMode.equals( CREATE_HTTP_PROXY ) );
-		dialog.getFormField( LaunchForm.ADD_ENDPOINT ).setEnabled( !launchMode.equals( CREATE_HTTP_PROXY ) );
+		dialog.setIntValue(LaunchForm.PORT, (int) settings.getLong(LaunchForm.PORT, 8081));
+		dialog.setOptions(LaunchForm.REQUEST_WSS, StringUtils.merge(target.getWssContainer().getIncomingWssNames(),
+				"<none>"));
+		dialog.setOptions(LaunchForm.RESPONSE_WSS, StringUtils.merge(target.getWssContainer().getIncomingWssNames(),
+				"<none>"));
 
-		dialog.setOptions( LaunchForm.REQUEST_WSS, 
-					StringUtils.merge( target.getWssContainer().getIncomingWssNames(), "<none>" ) );
-		dialog.setOptions( LaunchForm.RESPONSE_WSS, 
-					StringUtils.merge( target.getWssContainer().getIncomingWssNames(), "<none>" ) );
-		
-		if( dialog.show())
+		if (dialog.show())
 		{
-			int listenPort = dialog.getIntValue( LaunchForm.PORT, 8080 );
-			settings.setLong( LaunchForm.PORT, listenPort );
-			String targetHost = dialog.getValue( LaunchForm.TARGET_HOST );
-			settings.setString( LaunchForm.TARGET_HOST, targetHost);
-			settings.setString( LaunchForm.MODE, dialog.getValue( LaunchForm.MODE ));
-			
-			openSoapMonitor( target, listenPort, targetHost, dialog.getBooleanValue( LaunchForm.ADD_ENDPOINT ), 
-						dialog.getValue( LaunchForm.MODE ).equals( CREATE_HTTP_PROXY ), 
-						dialog.getValue( LaunchForm.REQUEST_WSS),
-						dialog.getValue( LaunchForm.RESPONSE_WSS ));
+			int listenPort = dialog.getIntValue(LaunchForm.PORT, 8080);
+			settings.setLong(LaunchForm.PORT, listenPort);
+
+			openSoapMonitor(target, listenPort, dialog.getValue(LaunchForm.REQUEST_WSS), dialog
+					.getValue(LaunchForm.RESPONSE_WSS));
 		}
 	}
 
-	protected void openSoapMonitor( WsdlProject target, int listenPort, String targetHost, boolean addEndpoint, 
-				boolean isProxy, String incomingRequestWss, String incomingResponseWss )
+	protected void openSoapMonitor(WsdlProject target, int listenPort, String incomingRequestWss,
+			String incomingResponseWss)
 	{
-		UISupport.showDesktopPanel( new SoapMonitorDesktopPanel( target, 
-					targetHost, 
-					listenPort, addEndpoint, isProxy, incomingRequestWss, incomingResponseWss	) );
+		UISupport.showDesktopPanel(new SoapMonitorDesktopPanel(target, listenPort, incomingRequestWss,
+				incomingResponseWss));
 	}
-	
-	@AForm(description = "Specify SOAP Monitor settings", name = "Launch SOAP Monitor" )
+
+	@AForm(description = "Specify SOAP Monitor settings", name = "Launch SOAP Monitor")
 	private interface LaunchForm
 	{
-		@AField(description = "The local port to listen on", name = "Port", type=AFieldType.INT )
+		@AField(description = "The local port to listen on", name = "Port", type = AFieldType.INT)
 		public final static String PORT = "Port";
-		
-		@AField(description = "Specifies monitor mode", name = "Mode", type=AFieldType.RADIOGROUP,
-					values= {CREATE_TCP_TUNNEL, CREATE_HTTP_PROXY})
-		public final static String MODE = "Mode";
-		
-		@AField(description = "The target host to invoke", name = "Target Host", type=AFieldType.ENUMERATION )
-		public final static String TARGET_HOST = "Target Host";
-		
-		@AField(description = "Adds an endpoint for the Tcp Tunnel", name = "Add Endpoint", type=AFieldType.BOOLEAN )
-		public final static String ADD_ENDPOINT = "Add Endpoint";
-		
-		@AField(description = "The Incoming WSS configuration to use for processing requests", name = "Incoming Request WSS", type=AFieldType.ENUMERATION )
+
+		@AField(description = "The Incoming WSS configuration to use for processing requests", name = "Incoming Request WSS", type = AFieldType.ENUMERATION)
 		public final static String REQUEST_WSS = "Incoming Request WSS";
 
-		@AField(description = "The Outgoing WSS configuration to use for processing responses", name = "Incoming Response WSS", type=AFieldType.ENUMERATION )
+		@AField(description = "The Outgoing WSS configuration to use for processing responses", name = "Incoming Response WSS", type = AFieldType.ENUMERATION)
 		public final static String RESPONSE_WSS = "Incoming Response WSS";
 	}
 }
