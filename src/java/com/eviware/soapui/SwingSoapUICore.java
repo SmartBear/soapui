@@ -25,6 +25,7 @@ import com.eviware.soapui.support.editor.inspectors.aut.AutInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.script.ScriptInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.ssl.SSLInspectorFactory;
+import com.eviware.soapui.support.editor.inspectors.wsa.WsaInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.wss.WssInspectorFactory;
 import com.eviware.soapui.support.editor.registry.InspectorRegistry;
 import com.eviware.x.form.XFormFactory;
@@ -57,6 +58,7 @@ public class SwingSoapUICore extends DefaultSoapUICore
 		inspectorRegistry.addFactory( new AttachmentsInspectorFactory() );
 		inspectorRegistry.addFactory( new SSLInspectorFactory() );
 		inspectorRegistry.addFactory( new WssInspectorFactory() );
+		inspectorRegistry.addFactory( new WsaInspectorFactory() );
 		
 		addExternalActions( getRoot() == null ? "actions" : getRoot() + File.separatorChar + "actions",	
 					getExtensionClassLoader() );

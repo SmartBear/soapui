@@ -42,6 +42,8 @@ public class WsdlInterfacePanelBuilder extends EmptyPanelBuilder<WsdlInterface>
    	table.addProperty( "SOAP Version", "soapVersion", new Object[]{ SoapVersion.Soap11, SoapVersion.Soap12 });
    	table.addProperty( "Cached", "cached", false );
    	table.addProperty( "Style", "style", false );
+   	//TODO extract info from wsdl if by default ws addresing is implemented 
+   	table.addProperty( "Ws Addressing", "wsAddressing", true );
    	
    	table.setPropertyObject( iface );
    	

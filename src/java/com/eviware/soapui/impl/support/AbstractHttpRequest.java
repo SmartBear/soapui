@@ -509,7 +509,6 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
    	getSettings().setBoolean( REMOVE_EMPTY_CONTENT, removeEmptyContent );
    	notifyPropertyChanged( REMOVE_EMPTY_CONTENT, old, removeEmptyContent );
    }
-	
    public boolean isStripWhitespaces()
    {
    	return getSettings().getBoolean( STRIP_WHITESPACES );

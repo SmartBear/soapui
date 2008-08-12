@@ -120,6 +120,29 @@ public class SoapUtils
 		
 		return body[0];
 	}
+
+	public static XmlObject getHeaderElement(XmlObject messageObject, SoapVersion soapVersion, boolean create ) throws XmlException
+	{
+		XmlObject[] envelope = messageObject.selectChildren( soapVersion.getEnvelopeQName() );
+		if( envelope.length != 1 )
+		    throw new XmlException( "Missing/Invalid SOAP Envelope, expecting [" + soapVersion.getEnvelopeQName() + "]" );
+		
+		QName headerQName = soapVersion.getHeaderQName();
+		XmlObject[] header = envelope[0].selectChildren( headerQName );
+		if( header.length == 0 && create )
+		{
+         Element elm = (Element) envelope[0].getDomNode();
+         Element headerElement = elm.getOwnerDocument().createElementNS(
+         		headerQName.getNamespaceURI(), headerQName.getLocalPart() );
+         
+			elm.appendChild( headerElement);
+         
+         header = envelope[0].selectChildren( headerQName );
+		}
+		
+		return header.length == 0 ? null : header[0];
+	}
+	
 	
 	public static XmlObject getContentElement( XmlObject messageObject, SoapVersion soapVersion ) throws XmlException
 	{

@@ -95,6 +95,7 @@ public class WsdlTestRequestPanelBuilder extends EmptyPanelBuilder<WsdlTestReque
    	table.addProperty( "Dump File", "dumpFile", true ).setDescription("Dumps response message to specified file" );
    	table.addProperty( "Max Size", "maxSize", true ).setDescription("The maximum number of bytes to receive" );
 
+   	table.addProperty( "Ws Addressing", "wsAddressing", JPropertiesTable.BOOLEAN_OPTIONS );
    	
    	table.setPropertyObject( request );
    	

@@ -96,6 +96,8 @@ public class WsdlRequestPanelBuilder extends EmptyPanelBuilder<WsdlRequest>
    	table.addProperty( "Dump File", "dumpFile", true ).setDescription("Dumps response message to specified file" );
    	table.addProperty( "Max Size", "maxSize", true).setDescription("The maximum number of bytes to receive" );
    	
+   	table.addProperty( "Ws Addressing", "wsAddressing", JPropertiesTable.BOOLEAN_OPTIONS );
+   	
    	table.setPropertyObject( request );
    	
    	return table;
@@ -106,3 +108,5 @@ public class WsdlRequestPanelBuilder extends EmptyPanelBuilder<WsdlRequest>
       return true;
    }
 }
+
+

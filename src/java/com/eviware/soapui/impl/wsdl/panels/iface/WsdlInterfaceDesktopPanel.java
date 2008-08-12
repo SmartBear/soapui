@@ -196,6 +196,7 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 			section.addMetric( "Binding" ).set( iface.getBindingName().getLocalPart() );
 			section.addMetric( "SOAP Version" ).set( iface.getSoapVersion().toString() );
 			section.addMetric( "Style" ).set( iface.getStyle() );
+			section.addMetric( "WS-A required" ).set( Boolean.toString(iface.isWsAddressing()));
 		}
 		catch( Exception e )
 		{

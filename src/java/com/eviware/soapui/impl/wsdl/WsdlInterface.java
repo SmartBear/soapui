@@ -809,4 +809,17 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
 	{
 		return getBindingName().toString();
 	}
+	public boolean isWsAddressing()
+	{
+		return getConfig().getUseWsAddressing();
+	}
+	
+	public void setWsAddressing( boolean wsAddressing )
+   {
+   	boolean old = getConfig().getUseWsAddressing();
+   	getConfig().setUseWsAddressing(wsAddressing);
+   	notifyPropertyChanged( "wsAddressing", old, wsAddressing );
+   }
+	
+
 }

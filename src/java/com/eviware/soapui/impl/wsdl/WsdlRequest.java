@@ -28,6 +28,7 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
+import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.MessagePart;
@@ -74,6 +75,8 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
    
 	private List<HttpAttachmentPart> definedAttachmentParts;
 	private InternalInterfaceListener interfaceListener = new InternalInterfaceListener();
+
+	private WsaConfig wsaConfig;
 
    public WsdlRequest( WsdlOperation operation, WsdlRequestConfig callConfig )
    {
@@ -452,6 +455,18 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
    	notifyPropertyChanged( OUGOING_WSS, old, outgoingWss );
    }
 	
+	public boolean isWsAddressing()
+	{
+		return getConfig().getUseWsAddressing();
+	}
+	
+	public void setWsAddressing( boolean wsAddressing )
+   {
+   	boolean old = getConfig().getUseWsAddressing();
+   	getConfig().setUseWsAddressing(wsAddressing);
+   	notifyPropertyChanged( "wsAddressing", old, wsAddressing );
+   }
+	
 
    
    @SuppressWarnings("unchecked")
@@ -501,6 +516,17 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 	public AttachmentEncoding getAttachmentEncoding(String partName)
 	{
 		return AttachmentUtils.getAttachmentEncoding( getOperation(), partName, false );
+	}
+	public WsaConfig getWsaConfig() {
+		if (wsaConfig == null)
+		{
+			if (!getConfig().isSetWsaConfig())
+			{
+				getConfig().addNewWsaConfig();
+			}
+			wsaConfig = new WsaConfig(getConfig().getWsaConfig());
+		}
+		return wsaConfig;
 	}
 
 	public ModelItem getModelItem()

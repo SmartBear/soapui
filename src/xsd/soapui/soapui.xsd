@@ -93,7 +93,8 @@
 		<xsd:complexContent>
 
 			<xsd:extension base="tns:Interface">
-				<xsd:sequence>
+				<xsd:sequence>
+
 					<xsd:element name="operation" type="tns:Operation"
 						minOccurs="0" maxOccurs="unbounded">
 					</xsd:element>
@@ -103,11 +104,12 @@
 				<xsd:attribute name="soapVersion"
 					type="tns:SoapVersionTypes">
 				</xsd:attribute>
+				<xsd:attribute name="useWsAddressing" type="xsd:boolean"></xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 
 	</xsd:complexType>
-	
+
 	<xsd:complexType name="RestService">
 		<xsd:complexContent>
 			<xsd:extension base="tns:Interface">
@@ -200,9 +202,17 @@
 	<xsd:complexType name="WsdlRequest">
 		<xsd:complexContent>
 			<xsd:extension base="tns:AbstractRequest">
-				<xsd:attribute name="wssPasswordType" type="xsd:string"></xsd:attribute>
+				<xsd:sequence>
+					<xsd:element name="wsaConfig" type="tns:WsaConfig"
+						maxOccurs="1" minOccurs="0">
+					</xsd:element>
+				</xsd:sequence>
+				<xsd:attribute name="wssPasswordType"
+					type="xsd:string">
+				</xsd:attribute>
 				<xsd:attribute name="outgoingWss" type="xsd:string"></xsd:attribute>
 				<xsd:attribute name="incomingWss" type="xsd:string"></xsd:attribute>
+				<xsd:attribute name="useWsAddressing" type="xsd:boolean"></xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -1347,4 +1357,29 @@
     	<xsd:attribute name="isResponse" type="xsd:boolean"></xsd:attribute>
     	<xsd:attribute name="isFault" type="xsd:boolean"></xsd:attribute>
     </xsd:complexType>
+
+    <xsd:complexType name="WsaConfig">
+    	<xsd:attribute name="replyTo" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="faultTo" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="action" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="from" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="messageID" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="version" type="tns:WsaVersionType"></xsd:attribute>
+    	<xsd:attribute name="mustUnderstand" type="tns:MustUnderstandType"></xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:simpleType name="MustUnderstandType">
+    	<xsd:restriction base="xsd:string">
+    		<xsd:enumeration value="NONE"></xsd:enumeration>
+    		<xsd:enumeration value="TRUE"></xsd:enumeration>
+    		<xsd:enumeration value="FALSE"></xsd:enumeration>
+    	</xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="WsaVersionType">
+    	<xsd:restriction base="xsd:string">
+    		<xsd:enumeration value="200508"></xsd:enumeration>
+    		<xsd:enumeration value="200408"></xsd:enumeration>
+    	</xsd:restriction>
+    </xsd:simpleType>
 </xsd:schema>
