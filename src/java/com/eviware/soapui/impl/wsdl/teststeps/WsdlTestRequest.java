@@ -122,7 +122,6 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable
 		return assertionsSupport.getAssertionAt( c );
 	}
 
-	@Override
 	public void setResponse( WsdlResponse response, SubmitContext context )
 	{
 		WsdlResponse oldResponse = getResponse();

@@ -71,7 +71,7 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
    public final static String PW_TYPE_TEXT="PasswordText";
    
    private WsdlOperation operation;
-   private WsdlResponse response;
+//   private WsdlResponse response;
    
 	private List<HttpAttachmentPart> definedAttachmentParts;
 	private InternalInterfaceListener interfaceListener = new InternalInterfaceListener();
@@ -154,12 +154,12 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
    @Deprecated
    public String getResponseContent()
    {
-      return response == null ? null : response.getContentAsString();
+      return getResponse() == null ? null : getResponse().getContentAsString();
    }
 
    public WsdlResponse getResponse()
    {
-   	return response;
+   	return (WsdlResponse) super.getResponse();
    }
    
    public WsdlOperation getOperation()
@@ -182,13 +182,13 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
       super.setRequestContent(request);
    }
    
-   public void setResponse( WsdlResponse response, SubmitContext context )
-   {
-   	WsdlResponse oldResponse = getResponse();
-		this.response = response;
-		
-      notifyPropertyChanged( RESPONSE_PROPERTY, oldResponse, response );
-   }
+//   public void setResponse( WsdlResponse response, SubmitContext context )
+//   {
+//   	WsdlResponse oldResponse = getResponse();
+//		this.response = response;
+//		
+//      notifyPropertyChanged( RESPONSE_PROPERTY, oldResponse, response );
+//   }
 
 	public WsdlSubmit<WsdlRequest> submit( SubmitContext submitContext, boolean async ) throws SubmitException
 	{
