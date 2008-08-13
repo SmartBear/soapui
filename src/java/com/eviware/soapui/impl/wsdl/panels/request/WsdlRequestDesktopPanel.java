@@ -13,11 +13,11 @@
 package com.eviware.soapui.impl.wsdl.panels.request;
 
 import javax.swing.JButton;
-import javax.swing.JToolBar;
 
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.actions.request.AddRequestToTestCaseAction;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
+import com.eviware.soapui.support.components.JXToolBar;
 
 /**
  * DesktopPanel for standard WsdlRequests
@@ -50,7 +50,7 @@ public class WsdlRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel<Wsd
 		addToTestCaseButton.setEnabled(enabled);
 	}
 
-	protected void insertButtons(JToolBar toolbar)
+	protected void insertButtons(JXToolBar toolbar)
 	{
 		toolbar.add(addToTestCaseButton);
 		super.insertButtons(toolbar);

@@ -80,8 +80,8 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 	private MoveFocusAction moveFocusAction;
 	private ClosePanelAction closePanelAction = new ClosePanelAction();
 
-	private ModelItemXmlEditor<?> requestEditor;
-	private ModelItemXmlEditor<?> responseEditor;
+	private ModelItemXmlEditor<?,?> requestEditor;
+	private ModelItemXmlEditor<?,?> responseEditor;
 
 	public AbstractAction wsiValidateAction;
 
@@ -130,12 +130,12 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		return mockResponse;
 	}
 
-	public final ModelItemXmlEditor<?> getRequestEditor()
+	public final ModelItemXmlEditor<?,?> getRequestEditor()
 	{
 		return requestEditor;
 	}
 
-	public final ModelItemXmlEditor<?> getResponseEditor()
+	public final ModelItemXmlEditor<?,?> getResponseEditor()
 	{
 		return responseEditor;
 	}
@@ -214,12 +214,12 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		return component;
 	}
 
-	protected ModelItemXmlEditor<?> buildResponseEditor()
+	protected ModelItemXmlEditor<?,?> buildResponseEditor()
 	{
 		return new WsdlMockResponseMessageEditor( new MockResponseXmlDocument( mockResponse ));
 	}
 
-	protected ModelItemXmlEditor<?> buildRequestEditor()
+	protected ModelItemXmlEditor<?,?> buildRequestEditor()
 	{
 		return new WsdlMockRequestMessageEditor( new MockRequestXmlDocument( mockResponse ));
 	}
@@ -281,7 +281,7 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		}
 	}
 
-	public class WsdlMockRequestMessageEditor extends RequestMessageXmlEditor<WsdlMockResponse>
+	public class WsdlMockRequestMessageEditor extends RequestMessageXmlEditor<WsdlMockResponse,XmlDocument>
 	{
 		public WsdlMockRequestMessageEditor(XmlDocument document)
 		{
@@ -303,7 +303,7 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		}
 	}
 
-	public class WsdlMockResponseMessageEditor extends ResponseMessageXmlEditor<WsdlMockResponse>
+	public class WsdlMockResponseMessageEditor extends ResponseMessageXmlEditor<WsdlMockResponse, XmlDocument>
 	{
 		public WsdlMockResponseMessageEditor(XmlDocument document)
 		{

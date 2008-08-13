@@ -47,7 +47,7 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunListener;
-import com.eviware.soapui.model.mock.MockRunner;
+import com.eviware.soapui.model.support.AbstractMockRunner;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
@@ -62,7 +62,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
  * @author ole.matzura
  */
 
-public class WsdlMockRunner implements MockRunner
+public class WsdlMockRunner extends AbstractMockRunner
 {
 	private WsdlMockService mockService;
 	private final List<WsdlMockResult> mockResults = Collections.synchronizedList( new LinkedList<WsdlMockResult>() );
@@ -235,9 +235,17 @@ public class WsdlMockRunner implements MockRunner
 			removed++;
 		}
 	}
+	
+	@Override
+	public MockResult dispatchHeadRequest(HttpServletRequest request, HttpServletResponse response)
+			throws DispatchException
+	{
+		response.setStatus( HttpServletResponse.SC_OK );
+		return null;
+	}
 
 	@SuppressWarnings( "unchecked" )
-	public WsdlMockResult dispatchMockRequest( HttpServletRequest request, HttpServletResponse response )
+	public WsdlMockResult dispatchPostRequest( HttpServletRequest request, HttpServletResponse response )
 				throws DispatchException
 	{
 		WsdlMockResult result = null;
@@ -343,7 +351,7 @@ public class WsdlMockRunner implements MockRunner
 		mockContext.clear();
 	}
 
-	public void dispatchGetRequest( HttpServletRequest request, HttpServletResponse response ) throws DispatchException
+	public MockResult dispatchGetRequest( HttpServletRequest request, HttpServletResponse response ) throws DispatchException
 	{
 		try
 		{
@@ -372,6 +380,8 @@ public class WsdlMockRunner implements MockRunner
 					}
 				}
 			}
+			
+			return null;
 		}
 		catch( Exception e )
 		{

@@ -36,4 +36,6 @@ public interface MockResult
 	public long getTimeTaken();
 	
 	public long getTimestamp();
+
+	public void finish();
 }

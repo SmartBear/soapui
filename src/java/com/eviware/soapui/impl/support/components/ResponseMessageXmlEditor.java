@@ -13,6 +13,8 @@
 package com.eviware.soapui.impl.support.components;
 
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.support.editor.EditorInspector;
+import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.registry.EditorViewFactory;
 import com.eviware.soapui.support.editor.registry.EditorViewRegistry;
 import com.eviware.soapui.support.editor.registry.InspectorFactory;
@@ -29,9 +31,10 @@ import com.eviware.soapui.support.editor.xml.XmlInspector;
  * @author ole.matzura
  */
 
-public class ResponseMessageXmlEditor<T extends ModelItem> extends ModelItemXmlEditor<T>
+public class ResponseMessageXmlEditor<T extends ModelItem, T2 extends XmlDocument> extends ModelItemXmlEditor<T, T2>
 {
-	public ResponseMessageXmlEditor( XmlDocument xmlDocument, T modelItem  )
+	@SuppressWarnings("unchecked")
+	public ResponseMessageXmlEditor( T2 xmlDocument, T modelItem  )
 	{
 		super( xmlDocument, modelItem );
 		
@@ -43,7 +46,7 @@ public class ResponseMessageXmlEditor<T extends ModelItem> extends ModelItemXmlE
 			ResponseEditorViewFactory f = ( ResponseEditorViewFactory ) factory;
 			XmlEditorView editorView = (XmlEditorView) f.createResponseEditorView( this, modelItem );
 			if( editorView != null )
-				addEditorView( editorView);
+				addEditorView( (EditorView<T2>) editorView);
 		}
 		
 		InspectorFactory[] inspectorFactories = InspectorRegistry.getInstance().getFactoriesOfType( 
@@ -54,7 +57,7 @@ public class ResponseMessageXmlEditor<T extends ModelItem> extends ModelItemXmlE
 			ResponseInspectorFactory f = ( ResponseInspectorFactory ) factory;
 			XmlInspector inspector = (XmlInspector) f.createResponseInspector( this, modelItem );
 			if( inspector != null )
-				addInspector( inspector);
+				addInspector( (EditorInspector<T2>) inspector);
 		}
 	}
 }

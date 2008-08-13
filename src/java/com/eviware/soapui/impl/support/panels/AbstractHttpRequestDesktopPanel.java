@@ -34,7 +34,6 @@ import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -62,7 +61,6 @@ import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
-import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
@@ -90,8 +88,8 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	private ClosePanelAction closePanelAction = new ClosePanelAction();
 	private T2 request;
 
-	private XmlEditor requestEditor;
-	private XmlEditor responseEditor;
+	private ModelItemXmlEditor<?,?> requestEditor;
+	private ModelItemXmlEditor<?,?> responseEditor;
 
 	private JTabbedPane requestTabs;
 	private JPanel requestTabPanel;
@@ -139,12 +137,12 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		return request;
 	}
 
-	public final XmlEditor getRequestEditor()
+	public final ModelItemXmlEditor<?,?> getRequestEditor()
 	{
 		return requestEditor;
 	}
 
-	public final XmlEditor getResponseEditor()
+	public final ModelItemXmlEditor<?,?> getResponseEditor()
 	{
 		return responseEditor;
 	}
@@ -235,9 +233,9 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		return submitAction;
 	}
 
-	protected abstract ModelItemXmlEditor<?> buildResponseEditor();
+	protected abstract ModelItemXmlEditor<?,?> buildResponseEditor();
 
-	protected abstract ModelItemXmlEditor<?> buildRequestEditor();
+	protected abstract ModelItemXmlEditor<?,?> buildRequestEditor();
 
 	protected JComponent buildToolbar()
 	{
@@ -290,7 +288,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	protected abstract String getHelpUrl();
 
-	protected abstract void insertButtons(JToolBar toolbar);
+	protected abstract void insertButtons(JXToolBar toolbar);
 
 	public void setEnabled(boolean enabled)
 	{
@@ -303,12 +301,12 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		statusBar.setIndeterminate(!enabled);
 	}
 
-	public abstract class AbstractHttpRequestMessageEditor extends RequestMessageXmlEditor<AbstractHttpRequest<?>>
+	public abstract class AbstractHttpRequestMessageEditor<T3 extends XmlDocument> extends RequestMessageXmlEditor<T2, T3>
 	{
 		private InputAreaFocusListener inputAreaFocusListener;
 		private JXEditTextArea inputArea;
 
-		public AbstractHttpRequestMessageEditor(XmlDocument document)
+		public AbstractHttpRequestMessageEditor(T3 document)
 		{
 			super(document, request);
 
@@ -331,12 +329,12 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
-	public abstract class AbstractHttpResponseMessageEditor extends ResponseMessageXmlEditor<AbstractHttpRequest<?>>
+	public abstract class AbstractHttpResponseMessageEditor<T3 extends XmlDocument> extends ResponseMessageXmlEditor<T2, T3>
 	{
 		private JXEditTextArea inputArea;
 		private ResultAreaFocusListener resultAreaFocusListener;
 
-		public AbstractHttpResponseMessageEditor(XmlDocument document)
+		public AbstractHttpResponseMessageEditor(T3 document)
 		{
 			super(document, request);
 

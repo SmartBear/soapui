@@ -20,7 +20,7 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.support.editor.xml.support.DefaultXmlDocument;
 
-public class MessageExchangeRequestMessageEditor extends RequestMessageXmlEditor<MessageExchangeModelItem>
+public class MessageExchangeRequestMessageEditor extends RequestMessageXmlEditor<MessageExchangeModelItem,DefaultXmlDocument>
 {
 	private final MessageExchangeModelItem messageExchangeModelItem;
 

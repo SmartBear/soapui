@@ -16,7 +16,6 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
-import javax.swing.JToolBar;
 
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.RequestXmlDocument;
@@ -36,6 +35,7 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
+import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.support.DefaultXmlDocument;
@@ -81,17 +81,17 @@ public class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 extends Wsd
 		super.init(request);
 	}
 
-	protected ModelItemXmlEditor<?> buildResponseEditor()
+	protected ModelItemXmlEditor<?,?> buildResponseEditor()
 	{
 		return new WsdlResponseMessageEditor(new ResponseXmlDocument(getRequest()));
 	}
 
-	protected ModelItemXmlEditor<?> buildRequestEditor()
+	protected ModelItemXmlEditor<?,?> buildRequestEditor()
 	{
 		return new WsdlRequestMessageEditor(new RequestXmlDocument(getRequest()));
 	}
 
-	public static class OneWayResponseMessageEditor extends ModelItemXmlEditor<ModelItem>
+	public static class OneWayResponseMessageEditor extends ModelItemXmlEditor<ModelItem, DefaultXmlDocument>
 	{
 		public OneWayResponseMessageEditor(ModelItem modelItem)
 		{
@@ -104,7 +104,7 @@ public class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 extends Wsd
 		return HelpUrls.REQUESTEDITOR_HELP_URL;
 	}
 
-	protected void insertButtons(JToolBar toolbar)
+	protected void insertButtons(JXToolBar toolbar)
 	{
 		toolbar.add(addToMockServiceButton);
 		toolbar.add(recreateButton);
@@ -121,7 +121,7 @@ public class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 extends Wsd
 		cloneButton.setEnabled(enabled);
 	}
 
-	public class WsdlRequestMessageEditor extends AbstractHttpRequestDesktopPanel<T,T2>.AbstractHttpRequestMessageEditor
+	public class WsdlRequestMessageEditor extends AbstractHttpRequestDesktopPanel<T,T2>.AbstractHttpRequestMessageEditor<XmlDocument>
 	{
 		public WsdlRequestMessageEditor(XmlDocument document)
 		{
@@ -133,7 +133,7 @@ public class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 extends Wsd
 		}
 	}
 
-	public class WsdlResponseMessageEditor extends AbstractHttpRequestDesktopPanel<T,T2>.AbstractHttpResponseMessageEditor
+	public class WsdlResponseMessageEditor extends AbstractHttpRequestDesktopPanel<T,T2>.AbstractHttpResponseMessageEditor<XmlDocument>
 	{
 		public WsdlResponseMessageEditor(XmlDocument document)
 		{

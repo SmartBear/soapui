@@ -102,7 +102,7 @@ public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel
 		{
 			protected void selectError(AssertionError error)
 			{
-				ModelItemXmlEditor<?> editor = (ModelItemXmlEditor<?>) getResponseEditor();
+				ModelItemXmlEditor<?,?> editor = (ModelItemXmlEditor<?,?>) getResponseEditor();
 				editor.requestFocus();
 			}
 		};

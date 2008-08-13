@@ -13,6 +13,8 @@
 package com.eviware.soapui.impl.rest.actions.project;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.apache.log4j.Logger;
 
@@ -26,6 +28,8 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.XFormField;
+import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
@@ -56,11 +60,81 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
    	{
 			dialog = ADialogBuilder.buildDialog( Form.class );
 			dialog.getFormField( Form.SERVICENAME ).addFormFieldValidator( new RequiredValidator( "Service Name is required") );
+			dialog.getFormField( Form.SERVICEENDPOINT ).addFormFieldListener( new XFormFieldListener() {
+
+				public void valueChanged(XFormField sourceField, String newValue, String oldValue)
+				{
+					boolean enable = false;
+					
+					try
+					{
+						URL url = new URL( newValue );
+						enable = url.getPath().length() > 0 && 
+						   !(url.getPath().length() == 1 && url.getPath().charAt(0)=='/');
+						
+						if( enable )
+						{
+							newValue = dialog.getValue( Form.WADLURL );
+							
+							try
+							{
+								new URL( newValue );
+								enable = false;
+							}
+							catch (MalformedURLException e)
+							{
+								if( new File( newValue ).exists())
+									enable = false;
+							}
+						}
+					}
+					catch (MalformedURLException e)
+					{
+					}
+					
+					dialog.getFormField(Form.EXTRACTPARAMS).setEnabled(enable);
+				}});
+			
+			dialog.getFormField( Form.WADLURL ).addFormFieldListener( new XFormFieldListener() {
+
+				public void valueChanged(XFormField sourceField, String newValue, String oldValue)
+				{
+					boolean enable = true;
+					
+					try
+					{
+						new URL( newValue );
+					}
+					catch (MalformedURLException e)
+					{
+						if( new File( newValue ).exists())
+							enable = false;
+					}
+					
+					if( enable )
+					{
+						try
+						{
+							URL url = new URL( dialog.getValue(Form.SERVICEENDPOINT) );
+							enable = url.getPath().length() > 0 && 
+						   	!(url.getPath().length() == 1 && url.getPath().charAt(0)=='/');
+						}
+						catch (MalformedURLException e)
+						{
+							enable = false;
+						}
+						
+						dialog.getFormField(Form.EXTRACTPARAMS).setEnabled(enable);
+					}
+					else dialog.getFormField(Form.EXTRACTPARAMS).setEnabled(false);
+				}});
+			
+			dialog.getFormField(Form.EXTRACTPARAMS).setEnabled(false);
    	}
    	else 
    	{
    		dialog.setValue( Form.SERVICENAME, "" ); 
-   		dialog.setValue( Form.SERVICEENDPOINT, "" ); 
+   		dialog.setValue( Form.SERVICEENDPOINT, "" );
    		dialog.setValue( Form.WADLURL, "" );
    	}
    	
@@ -96,6 +170,9 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
 		
 		@AField(description = "Form.ServiceUrl.Description", type = AFieldType.STRING ) 
 		public final static String SERVICEENDPOINT = messages.get("Form.ServiceUrl.Label"); 
+
+		@AField(description = "Form.ExtractParams.Description", type = AFieldType.BOOLEAN ) 
+		public final static String EXTRACTPARAMS = messages.get("Form.ExtractParams.Label"); 
 
 		@AField(description = "Form.WadlUrl.Description", type = AFieldType.FILE ) 
 		public final static String WADLURL = messages.get("Form.WadlUrl.Label"); 

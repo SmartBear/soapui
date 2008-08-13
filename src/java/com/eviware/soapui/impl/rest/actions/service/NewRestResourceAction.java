@@ -12,6 +12,10 @@
 
 package com.eviware.soapui.impl.rest.actions.service;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
@@ -56,11 +60,32 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
    	
    	if( dialog.show() )
    	{
-   		service.addNewResource( dialog.getValue(Form.RESOURCENAME), dialog.getValue(Form.RESOURCEPATH) );
+   		String path = dialog.getValue(Form.RESOURCEPATH);
+
+   		try
+			{
+				URL url = new URL( path );
+				path = url.getPath();
+			}
+			catch (MalformedURLException e)
+			{
+			}
+   		
+			RestResource resource = service.addNewResource( dialog.getValue(Form.RESOURCENAME), path );
+			
+			if( dialog.getBooleanValue(Form.EXTRACTPARAMS))
+			{
+				extractParams( resource, path );
+			}
    	}
    }
 	
-   @AForm( name="Form.Title", description = "Form.Description", helpUrl=HelpUrls.NEWRESTSERVICE_HELP_URL, icon=UISupport.TOOL_ICON_PATH)
+   protected void extractParams(RestResource resource, String path)
+	{
+		
+	}
+
+	@AForm( name="Form.Title", description = "Form.Description", helpUrl=HelpUrls.NEWRESTSERVICE_HELP_URL, icon=UISupport.TOOL_ICON_PATH)
 	public interface Form 
 	{
 		@AField( description = "Form.ServiceName.Description", type = AFieldType.STRING ) 
@@ -68,5 +93,8 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 		
 		@AField(description = "Form.ServiceUrl.Description", type = AFieldType.STRING ) 
 		public final static String RESOURCEPATH = messages.get("Form.ResourcePath.Label"); 
+		
+		@AField(description = "Form.ExtractParams.Description", type = AFieldType.BOOLEAN ) 
+		public final static String EXTRACTPARAMS = messages.get("Form.ExtractParams.Label"); 
 	}
 }

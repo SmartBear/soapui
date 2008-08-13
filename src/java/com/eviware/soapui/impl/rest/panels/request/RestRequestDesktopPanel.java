@@ -12,52 +12,77 @@
 
 package com.eviware.soapui.impl.rest.panels.request;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+
+import org.apache.xmlbeans.SchemaTypeSystem;
 
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequest.RequestMethod;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
+import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
+import com.eviware.soapui.model.iface.Submit;
+import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 
-public class RestRequestDesktopPanel extends ModelItemDesktopPanel<RestRequest> implements PropertyChangeListener
+public class RestRequestDesktopPanel extends AbstractHttpRequestDesktopPanel<RestRequest, RestRequest> implements PropertyChangeListener
 {
-	private RestRequestMessageEditor requestEditor;
 	private boolean updatingRequest;
 	private JComboBox methodCombo;
 	private JComboBox mediaTypeCombo;
 
 	public RestRequestDesktopPanel(RestRequest modelItem)
 	{
-		super(modelItem);
-		
-		buildUI();
+		super(modelItem, modelItem);
 	}
 
-	private void buildUI()
+	public void propertyChange(PropertyChangeEvent evt)
 	{
-		add( buildToolbar(), BorderLayout.NORTH );
-		add( buildContent(), BorderLayout.CENTER );
+		if( evt.getPropertyName().equals( "method" ) && !updatingRequest )
+		{
+			methodCombo.setSelectedItem(evt.getNewValue());
+		}
+		else if( evt.getPropertyName().equals( "mediaType" ) && !updatingRequest )
+		{
+			mediaTypeCombo.setSelectedItem( (String)evt.getNewValue() );
+		}
 	}
 
-	private Component buildToolbar()
+	@Override
+	protected ModelItemXmlEditor<?,?> buildRequestEditor()
 	{
-		return new JXToolBar();
+		return new RestRequestMessageEditor( getModelItem() );
 	}
 
-	private Component buildRequestToolbar()
+	@Override
+	protected ModelItemXmlEditor<?,?> buildResponseEditor()
 	{
-		JXToolBar toolbar = UISupport.createToolbar();
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected Submit doSubmit() throws SubmitException
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected String getHelpUrl()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected void insertButtons(JXToolBar toolbar)
+	{
 		methodCombo = new JComboBox( new Object[] { RequestMethod.GET, RequestMethod.POST, 
 				RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.HEAD});
 		
@@ -85,50 +110,88 @@ public class RestRequestDesktopPanel extends ModelItemDesktopPanel<RestRequest> 
 			}} );
 		
 		toolbar.addLabeledFixed( "Media Type", mediaTypeCombo );
-		return toolbar;
-	}
-
-	private Component buildContent()
-	{
-		return UISupport.createHorizontalSplit( buildRequestEditor(), buildResponseEditor() );
-	}
-
-	private Component buildRequestEditor()
-	{
-		requestEditor = new RestRequestMessageEditor( getModelItem() );
 		
-		JPanel panel = new JPanel( new BorderLayout() );
-		panel.add( requestEditor, BorderLayout.CENTER );
-		panel.add( buildRequestToolbar(), BorderLayout.NORTH );
-		
-		return panel;
-	}
-
-	private Component buildResponseEditor()
-	{
-		return new JTabbedPane();
-	}
-
-	@Override
-	public boolean dependsOn(ModelItem modelItem)
-	{
-		return false;
 	}
 	
-	public boolean onClose(boolean canCancel)
+	public class RestRequestMessageEditor extends AbstractHttpRequestDesktopPanel<?,?>.AbstractHttpRequestMessageEditor<RestRequestDocument>
 	{
-		return true;
-	}
-
-	public void propertyChange(PropertyChangeEvent evt)
-	{
-		if( evt.getPropertyName().equals( "method" ) && !updatingRequest )
+		public RestRequestMessageEditor(RestRequest modelItem)
 		{
-			methodCombo.setSelectedItem(evt.getNewValue());
+			super( new RestRequestDocument( modelItem ));
 		}
-		else if( evt.getPropertyName().equals( "mediaType" ) && !updatingRequest )
+	}
+	
+	public class RestResponseMessageEditor extends AbstractHttpRequestDesktopPanel<?,?>.AbstractHttpRequestMessageEditor<RestResponseDocument>
+	{
+		public RestResponseMessageEditor(RestRequest modelItem)
 		{
-			mediaTypeCombo.setSelectedItem( (String)evt.getNewValue() );
+			super( new RestResponseDocument( modelItem ));
+		}
+	}
+	
+	public static class RestRequestDocument extends AbstractXmlDocument 
+	{
+		private final RestRequest modelItem;
+
+		public RestRequestDocument(RestRequest modelItem)
+		{
+			this.modelItem = modelItem;
+		}
+		
+		public RestRequest getRequest()
+		{
+			return modelItem;
+		}
+
+		public SchemaTypeSystem getTypeSystem()
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public String getXml()
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public void setXml(String xml)
+		{
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	
+	public static class RestResponseDocument extends AbstractXmlDocument
+	{
+		private final RestRequest modelItem;
+
+		public RestResponseDocument(RestRequest modelItem)
+		{
+			this.modelItem = modelItem;
+		}
+		
+		public RestRequest getRequest()
+		{
+			return modelItem;
+		}
+
+		public SchemaTypeSystem getTypeSystem()
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public String getXml()
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public void setXml(String xml)
+		{
+			// TODO Auto-generated method stub
+			
 		}
 	}
 }

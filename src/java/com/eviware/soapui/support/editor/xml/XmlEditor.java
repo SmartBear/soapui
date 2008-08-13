@@ -22,9 +22,9 @@ import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
  */
 
 @SuppressWarnings("serial")
-public abstract class XmlEditor extends Editor<XmlDocument> 
+public abstract class XmlEditor <T extends XmlDocument> extends Editor<T> 
 {
-	public XmlEditor( XmlDocument xmlDocument )
+	public XmlEditor( T xmlDocument )
 	{
 		super( xmlDocument );
 	}

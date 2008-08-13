@@ -35,11 +35,11 @@ import org.mortbay.thread.BoundedThreadPool;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapMessageBuilder;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.settings.HttpSettings;
@@ -56,328 +56,324 @@ import com.eviware.soapui.support.log.JettyLogger;
 
 public class MockEngine
 {
-	public final static Logger log = Logger.getLogger( MockEngine.class );
-	
+	public final static Logger log = Logger.getLogger(MockEngine.class);
+
 	private Server server;
-	private Map<Integer, Map<String,List<MockRunner>>> runners = new HashMap<Integer, Map<String,List<MockRunner>>>();
-	private Map<Integer, SoapUIConnector> connectors = new HashMap<Integer,SoapUIConnector>();
+	private Map<Integer, Map<String, List<MockRunner>>> runners = new HashMap<Integer, Map<String, List<MockRunner>>>();
+	private Map<Integer, SoapUIConnector> connectors = new HashMap<Integer, SoapUIConnector>();
 	private List<MockRunner> mockRunners = new ArrayList<MockRunner>();
 
 	private SslSocketConnector sslConnector;
-	
+
 	public MockEngine()
 	{
-		System.setProperty( "org.mortbay.log.class", JettyLogger.class.getName() );
+		System.setProperty("org.mortbay.log.class", JettyLogger.class.getName());
 	}
-	
-	public boolean hasRunningMock( MockService mockService )
+
+	public boolean hasRunningMock(MockService mockService)
 	{
-		for( MockRunner runner : mockRunners )
-			if( runner.getMockService() == mockService )
+		for (MockRunner runner : mockRunners)
+			if (runner.getMockService() == mockService)
 				return true;
-		
+
 		return false;
 	}
 
-	public synchronized void startMockService( MockRunner runner ) throws Exception
+	public synchronized void startMockService(MockRunner runner) throws Exception
 	{
-		if( server == null )
+		if (server == null)
 			initServer();
-		
-		WsdlMockService mockService = ( WsdlMockService ) runner.getMockService();
+
+		WsdlMockService mockService = (WsdlMockService) runner.getMockService();
 		int port = mockService.getPort();
-		
-		if( !runners.containsKey( port ))
+
+		if (!runners.containsKey(port))
 		{
 			SoapUIConnector connector = new SoapUIConnector();
-			
-			connector.setPort( port );
-			if( sslConnector != null )
-				connector.setConfidentialPort( sslConnector.getPort() );
-			
-			if( mockService.getBindToHostOnly() )
+
+			connector.setPort(port);
+			if (sslConnector != null)
+				connector.setConfidentialPort(sslConnector.getPort());
+
+			if (mockService.getBindToHostOnly())
 			{
 				String host = mockService.getHost();
-				if( StringUtils.hasContent( host ))
+				if (StringUtils.hasContent(host))
 				{
-					connector.setHost( host );
+					connector.setHost(host);
 				}
 			}
-			
+
 			boolean wasRunning = server.isRunning();
-			
-			if( wasRunning )
+
+			if (wasRunning)
 			{
 				server.stop();
 			}
-			
-			server.addConnector( connector );
+
+			server.addConnector(connector);
 			try
 			{
 				server.start();
 			}
-			catch( RuntimeException e )
+			catch (RuntimeException e)
 			{
-				UISupport.showErrorMessage( e );
-				
-				server.removeConnector( connector );
-				if( wasRunning ) 
+				UISupport.showErrorMessage(e);
+
+				server.removeConnector(connector);
+				if (wasRunning)
 				{
 					server.start();
 					return;
 				}
 			}
-			
-			connectors.put( new Integer( port), connector );
-			runners.put( new Integer( port), new HashMap<String,List<MockRunner>>() );
+
+			connectors.put(new Integer(port), connector);
+			runners.put(new Integer(port), new HashMap<String, List<MockRunner>>());
 		}
-		
-		Map<String, List<MockRunner>> map = runners.get( port );
+
+		Map<String, List<MockRunner>> map = runners.get(port);
 		String path = mockService.getPath();
-		if( !map.containsKey(path))
+		if (!map.containsKey(path))
 		{
-			map.put( path, new ArrayList<MockRunner>() );
+			map.put(path, new ArrayList<MockRunner>());
 		}
-		map.get(path).add( runner );
-		mockRunners.add( runner );
-		
-		log.info(  "Started mockService [" + mockService.getName() + "] on port [" + port + "] at path [" + path + "]" );
+		map.get(path).add(runner);
+		mockRunners.add(runner);
+
+		log.info("Started mockService [" + mockService.getName() + "] on port [" + port + "] at path [" + path + "]");
 	}
 
 	private void initServer() throws Exception
 	{
 		server = new Server();
 		BoundedThreadPool threadPool = new BoundedThreadPool();
-		threadPool.setMaxThreads( 100 );
-		server.setThreadPool( threadPool );
-		server.setHandler( new ServerHandler() );
-		
-		if( SoapUI.getSettings().getBoolean( SSLSettings.ENABLE_MOCK_SSL ))
+		threadPool.setMaxThreads(100);
+		server.setThreadPool(threadPool);
+		server.setHandler(new ServerHandler());
+
+		if (SoapUI.getSettings().getBoolean(SSLSettings.ENABLE_MOCK_SSL))
 		{
 			sslConnector = new SslSocketConnector();
-			sslConnector.setKeystore( SoapUI.getSettings().getString( SSLSettings.MOCK_KEYSTORE, null ));
-			sslConnector.setPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_PASSWORD, null ));
-			sslConnector.setKeyPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_KEYSTORE_PASSWORD, null ));
-			sslConnector.setTruststore( SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE, null ));
-			sslConnector.setTrustPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE_PASSWORD, null ));
-			sslConnector.setMaxIdleTime( 30000 );
-			sslConnector.setPort( ( int ) SoapUI.getSettings().getLong( SSLSettings.MOCK_PORT, 443 ) );
-			sslConnector.setNeedClientAuth( SoapUI.getSettings().getBoolean(SSLSettings.CLIENT_AUTHENTICATION));
-			
-			server.addConnector( sslConnector );
+			sslConnector.setKeystore(SoapUI.getSettings().getString(SSLSettings.MOCK_KEYSTORE, null));
+			sslConnector.setPassword(SoapUI.getSettings().getString(SSLSettings.MOCK_PASSWORD, null));
+			sslConnector.setKeyPassword(SoapUI.getSettings().getString(SSLSettings.MOCK_KEYSTORE_PASSWORD, null));
+			sslConnector.setTruststore(SoapUI.getSettings().getString(SSLSettings.MOCK_TRUSTSTORE, null));
+			sslConnector.setTrustPassword(SoapUI.getSettings().getString(SSLSettings.MOCK_TRUSTSTORE_PASSWORD, null));
+			sslConnector.setMaxIdleTime(30000);
+			sslConnector.setPort((int) SoapUI.getSettings().getLong(SSLSettings.MOCK_PORT, 443));
+			sslConnector.setNeedClientAuth(SoapUI.getSettings().getBoolean(SSLSettings.CLIENT_AUTHENTICATION));
+
+			server.addConnector(sslConnector);
 		}
 	}
 
-	public synchronized void stopMockService( WsdlMockRunner runner )
+	public synchronized void stopMockService(WsdlMockRunner runner)
 	{
 		MockService mockService = runner.getMockService();
-		final Integer port = new Integer( mockService.getPort());
-		Map<String, List<MockRunner>> map = runners.get( port );
-		
-		map.get(mockService.getPath() ).remove(runner);
-		mockRunners.remove( runner );
-		
-		log.info( "Stopped MockService [" + mockService.getName() + "] on port [" + port + "]" );
-		
-		if( map.isEmpty() && !SoapUI.getSettings().getBoolean( HttpSettings.LEAVE_MOCKENGINE ) )
+		final Integer port = new Integer(mockService.getPort());
+		Map<String, List<MockRunner>> map = runners.get(port);
+
+		map.get(mockService.getPath()).remove(runner);
+		mockRunners.remove(runner);
+
+		log.info("Stopped MockService [" + mockService.getName() + "] on port [" + port + "]");
+
+		if (map.isEmpty() && !SoapUI.getSettings().getBoolean(HttpSettings.LEAVE_MOCKENGINE))
 		{
-			SoapUIConnector connector = ( SoapUIConnector ) connectors.get( port );
-			if( connector == null )
+			SoapUIConnector connector = (SoapUIConnector) connectors.get(port);
+			if (connector == null)
 			{
-				log.warn( "Missing connectors on port [" + port + "]" );
+				log.warn("Missing connectors on port [" + port + "]");
 				return;
 			}
-			
+
 			try
 			{
-				log.info( "Stopping connector on port " + port );
-				if( !connector.waitUntilIdle( 5000 ))
+				log.info("Stopping connector on port " + port);
+				if (!connector.waitUntilIdle(5000))
 				{
-					log.warn(  "Failed to wait for idle.. stopping connector anyway.." );
+					log.warn("Failed to wait for idle.. stopping connector anyway..");
 				}
 				connector.stop();
 			}
-			catch( Exception e )
+			catch (Exception e)
 			{
-				SoapUI.logError( e );
+				SoapUI.logError(e);
 			}
-			server.removeConnector( connector );
-			runners.remove( port );
-			if( runners.isEmpty() )
+			server.removeConnector(connector);
+			runners.remove(port);
+			if (runners.isEmpty())
 			{
 				try
 				{
-					log.info( "No more connectors.. stopping server" );
+					log.info("No more connectors.. stopping server");
 					server.stop();
-					if( sslConnector != null )
+					if (sslConnector != null)
 					{
 						server.removeConnector(sslConnector);
 						sslConnector.stop();
 						sslConnector = null;
 					}
 				}
-				catch( Exception e )
+				catch (Exception e)
 				{
-					SoapUI.logError( e );
+					SoapUI.logError(e);
 				}
 			}
 		}
 	}
-	
+
 	private class SoapUIConnector extends SelectChannelConnector
 	{
 		private Set<HttpConnection> connections = new HashSet<HttpConnection>();
-		
+
 		@Override
-		protected void connectionClosed( HttpConnection arg0 )
+		protected void connectionClosed(HttpConnection arg0)
 		{
-			super.connectionClosed( arg0 );
-			connections.remove( arg0 );
+			super.connectionClosed(arg0);
+			connections.remove(arg0);
 		}
 
 		@Override
-		protected void connectionOpened( HttpConnection arg0 )
+		protected void connectionOpened(HttpConnection arg0)
 		{
-			super.connectionOpened( arg0 );
-			connections.add( arg0 );
+			super.connectionOpened(arg0);
+			connections.add(arg0);
 		}
-		
-		public boolean waitUntilIdle( long maxwait ) throws Exception
+
+		public boolean waitUntilIdle(long maxwait) throws Exception
 		{
-			while( maxwait > 0 && hasActiveConnections() )
+			while (maxwait > 0 && hasActiveConnections())
 			{
-				System.out.println( "Waiting for active connections to finish.." );
-				Thread.sleep( 500 );
+				System.out.println("Waiting for active connections to finish..");
+				Thread.sleep(500);
 				maxwait -= 500;
 			}
-			
+
 			return !hasActiveConnections();
 		}
 
 		private boolean hasActiveConnections()
 		{
-			for( HttpConnection connection : connections )
+			for (HttpConnection connection : connections)
 			{
-				if( !connection.isIdle() )
+				if (!connection.isIdle())
 					return true;
 			}
-			
+
 			return false;
 		}
 	}
-	
+
 	private class ServerHandler extends AbstractHandler
 	{
-		public void handle( String target, HttpServletRequest request,
-					HttpServletResponse response, int dispatch ) throws IOException, ServletException
+		public void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch)
+				throws IOException, ServletException
 		{
 			// find mockService
-			Map<String, List<MockRunner>> map = runners.get( request.getLocalPort() );
-			
+			Map<String, List<MockRunner>> map = runners.get(request.getLocalPort());
+
 			// ssl?
-			if( map == null && sslConnector != null && request.getLocalPort() == sslConnector.getPort())
+			if (map == null && sslConnector != null && request.getLocalPort() == sslConnector.getPort())
 			{
-				for( Map<String, List<MockRunner>> runnerMap : runners.values() )
+				for (Map<String, List<MockRunner>> runnerMap : runners.values())
 				{
-					if( runnerMap.containsKey( request.getPathInfo() ))
+					if (runnerMap.containsKey(request.getPathInfo()))
 					{
 						map = runnerMap;
 						break;
 					}
 				}
 			}
-			
-			if( map != null )
+
+			if (map != null)
 			{
-				List<MockRunner> wsdlMockRunners = map.get( request.getPathInfo() );
-				if( wsdlMockRunners == null && request.getMethod().equals( "GET" ))
+				List<MockRunner> wsdlMockRunners = map.get(request.getPathInfo());
+				if (wsdlMockRunners == null && request.getMethod().equals("GET"))
 				{
-					for( String root : map.keySet())
+					for (String root : map.keySet())
 					{
-						if( request.getPathInfo().startsWith(root))
+						if (request.getPathInfo().startsWith(root))
 						{
-							wsdlMockRunners = map.get( root );
+							wsdlMockRunners = map.get(root);
 						}
 					}
 				}
-				
-				if( wsdlMockRunners != null )
+
+				if (wsdlMockRunners != null)
 				{
-					synchronized( wsdlMockRunners )
+					synchronized (wsdlMockRunners)
 					{
 						try
 						{
-							for( MockRunner wsdlMockRunner : wsdlMockRunners)
+							for (MockRunner wsdlMockRunner : wsdlMockRunners)
 							{
 								try
 								{
-									if( request.getMethod().equals( "GET" ))
-									{
-										wsdlMockRunner.dispatchGetRequest( request, response );
-									}
-									else if( request.getMethod().equals( "POST" ))
-									{
-										WsdlMockResult result = ( WsdlMockResult ) wsdlMockRunner.dispatchMockRequest( request, response );
+									MockResult result = wsdlMockRunner.dispatchRequest(request, response);
+									if( result != null ) 
 										result.finish();
-									}
-									
+
 									// if we get here, we got dispatched..
 									break;
 								}
-								catch( DispatchException e )
+								catch (DispatchException e)
 								{
-									log.debug(wsdlMockRunner.getMockService().getName() + " was unable to dispatch mock request ", e);
+									log.debug(wsdlMockRunner.getMockService().getName()
+											+ " was unable to dispatch mock request ", e);
 								}
 							}
 						}
-						catch( Exception e )
+						catch (Exception e)
 						{
-							SoapUI.logError( e );
-							
-							response.setStatus( HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
-							response.setContentType( "text/html" );
-							response.getWriter().print( SoapMessageBuilder.buildFault( "Server", e.getMessage(), 
-										SoapVersion.Utils.getSoapVersionForContentType( request.getContentType(), SoapVersion.Soap11 )));
+							SoapUI.logError(e);
+
+							response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+							response.setContentType("text/html");
+							response.getWriter().print(
+									SoapMessageBuilder.buildFault("Server", e.getMessage(), SoapVersion.Utils
+											.getSoapVersionForContentType(request.getContentType(), SoapVersion.Soap11)));
 							response.flushBuffer();
-							
-							//throw new ServletException( e );
+
+							// throw new ServletException( e );
 						}
 					}
 				}
 				else
 				{
-					printMockServiceList( response );
+					printMockServiceList(response);
 				}
 			}
 			else
 			{
-				printMockServiceList( response );
+				printMockServiceList(response);
 			}
 		}
 
-		private void printMockServiceList( HttpServletResponse response ) throws IOException
+		private void printMockServiceList(HttpServletResponse response) throws IOException
 		{
-			response.setStatus( HttpServletResponse.SC_OK );
-			response.setContentType( "text/html" );
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.setContentType("text/html");
 
 			MockRunner[] mockRunners = getMockRunners();
 			PrintWriter out = response.getWriter();
-			out.print( "<html><body><p>There are currently " + mockRunners.length + " running soapUI MockServices</p><ul>" );
-			
-			for( MockRunner mockRunner : mockRunners )
+			out.print("<html><body><p>There are currently " + mockRunners.length + " running soapUI MockServices</p><ul>");
+
+			for (MockRunner mockRunner : mockRunners)
 			{
-				out.print( "<li><a href=\"" );
-				out.print( ((WsdlMockService)mockRunner.getMockService()).getPath() + "?WSDL" );
-				out.print( "\">" + mockRunner.getMockService().getName() + "</a></li>" );
+				out.print("<li><a href=\"");
+				out.print(((WsdlMockService) mockRunner.getMockService()).getPath() + "?WSDL");
+				out.print("\">" + mockRunner.getMockService().getName() + "</a></li>");
 			}
 
-			out.print( "</ul></p></body></html>" );
+			out.print("</ul></p></body></html>");
 			response.flushBuffer();
 		}
 	}
 
-	public MockRunner [] getMockRunners()
+	public MockRunner[] getMockRunners()
 	{
-		return mockRunners.toArray( new MockRunner[mockRunners.size()] );
+		return mockRunners.toArray(new MockRunner[mockRunners.size()]);
 	}
 }

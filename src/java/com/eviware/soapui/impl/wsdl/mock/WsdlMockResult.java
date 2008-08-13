@@ -128,13 +128,16 @@ public class WsdlMockResult implements MockResult
 	@SuppressWarnings("unchecked")
 	public void finish()
 	{
-		HttpFields httpFields = ((org.mortbay.jetty.Response)response).getHttpFields();
-		
-		Enumeration<String> e = httpFields.getFieldNames();
-		while( e.hasMoreElements() )
+		if( response instanceof org.mortbay.jetty.Response )
 		{
-			String nextElement = e.nextElement();
-			responseHeaders.put( nextElement, httpFields.getStringField( nextElement ) );
+			HttpFields httpFields = ((org.mortbay.jetty.Response)response).getHttpFields();
+			
+			Enumeration<String> e = httpFields.getFieldNames();
+			while( e.hasMoreElements() )
+			{
+				String nextElement = e.nextElement();
+				responseHeaders.put( nextElement, httpFields.getStringField( nextElement ) );
+			}
 		}
 		
 		response = null;

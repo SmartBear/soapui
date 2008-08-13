@@ -33,7 +33,5 @@ public interface MockRunner
 	
 	public MockService getMockService();
 
-	public MockResult dispatchMockRequest( HttpServletRequest request, HttpServletResponse response ) throws DispatchException;
-
-	public void dispatchGetRequest( HttpServletRequest request, HttpServletResponse response ) throws DispatchException;
+	public MockResult dispatchRequest( HttpServletRequest request, HttpServletResponse response ) throws DispatchException;
 }
