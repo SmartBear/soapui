@@ -12,12 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.monitor;
 
-import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
 import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.ProxyServlet;
+import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.Server;
 import com.eviware.soapui.support.UISupport;
 
 public class SoapMonitorEngineImpl implements SoapMonitorEngine {
