@@ -28,38 +28,38 @@
 
 		<subsection name="New and Noteworthy">
 		
-			<newfeature img="images/176/interfaceendpoints.gif">
+			<newfeature img="images/176/interfaceendpoints.gif" alt="interface pop up menu default username password for soa test">
 				<div>The "Service Endpoints" dialog shown from the Interface popup menu now allows association 
 				of default username/password/domain/WSS-Type/WSS-TimeToLive for an endpoint, removing the requirement 
 				to enter these at the request/test-request level. [<a href="userguide/interfaces/endpoints.html">Read More</a>]</div>
 			</newfeature>
 			
-			<newfeature img="images/176/testrunnerdialog.gif">
+			<newfeature img="images/176/testrunnerdialog.gif" alt="launch command line for soa test">
 			<div>Launch dialog for the soapUI command-line TestCaseRunner makes it easy to explore command-line options, 
 			generate launch commands and see the results for command-line execution. soapUI Pro includes an option to 
 			open generated reports directory in a browser. [<a href="userguide/commandline/functional.html#Launch_Dialog">Read More</a>]</div>
 			</newfeature>
 
-			<newfeature img="images/176/loadtestrunnerdialog.gif">
+			<newfeature img="images/176/loadtestrunnerdialog.gif" alt=" load test runner for soa test">
 			<div>Launch dialog for the soapUI command-line LoadTestRunner makes it easy to explore command-line options, 
 			generate launch commands and see the results for command-line execution. [<a href="userguide/commandline/loadtest.html#Launch_Dialog">Read More</a>]</div>
 			</newfeature>
 			
-			<newfeature img="images/176/apachecxf.gif">
+			<newfeature img="images/176/apachecxf.gif" alt="Apche CXF stubsfor soap test">
 				<div>Tool integration for CXF wsdl2java utility. [<a href="userguide/tools/topdown.html#Apache_CXF_2_X">Read More</a>]</div>
 			</newfeature>
 			
-			<newfeature img="images/176/xqueryassertion.gif">
+			<newfeature img="images/176/xqueryassertion.gif" alt="xquery assertion soa test">
 				<div>XQuery 2.0 assertion and property-transfer support for complex assertions/transfers. 
 				[<a href="userguide/functional/response-assertions.html#XQuery_Match">Read More</a>]</div>
 			</newfeature>
 			
-			<newfeature img="images/176/containsregex.gif">
+			<newfeature img="images/176/containsregex.gif" alt="xquery match match confiquration soa test">
 				<div>Support for regular expressions in Simple Contains/NotContains assertions. 
 				[<a href="userguide/functional/response-assertions.html#Simple_Contains">Read More</a>]</div>
 			</newfeature>
 			
-			<newfeature img="images/176/linenumbers.gif">
+			<newfeature img="images/176/linenumbers.gif" alt="groovy and xml editors with line for soa test">
 				<div>Improved Groovy/xml editors with line-numbers, right-button menus, etc..</div>
 			</newfeature>
 
@@ -71,17 +71,17 @@
 				and reduce memory consumption. [<a href="userguide/workspaces.html">Read More</a>]</div>
 			</newfeature>
 
-			<newfeature img="images/176/recentmenu.gif">
+			<newfeature img="images/176/recentmenu.gif" alt="file and recent menu for soa test">
 			<div>A File/Recent menu for easily switching to/from recent workspaces/projects/editors.</div>
 			</newfeature>
 
-			<newfeature img="images/176/remoteprojects.gif">
+			<newfeature img="images/176/remoteprojects.gif" alt="handle remote project files over http read only mode for you soa test">
 				<div>soapUI can now handle remote project-files over HTTP in read-only mode. When importing, the URL to 
 				project file is saved in the workspace and can be closed/opened/reloaded as usual. 
 				[<a href="userguide/projects/index.html">Read More</a>]</div>
 			</newfeature>
 			
-			<newfeature img="images/176/postprocess.gif">
+			<newfeature img="images/176/postprocess.gif alt="check and post process soa test">
 			<div>A number of actions currently update a number of target items (TestRequests, etc.). It may be required 
 			to manually check/post-process these after such an operation and they have been extended with an option to 
 			open a list of the modified items in a separate window which can be used for post-processing/navigating to 
@@ -102,7 +102,7 @@
 				<div>[<a href="userguide/attachments.html#MTOM_Attachments">Read More</a>]</div>
 			</newfeature>
 			
-			<newfeature img="images/176/changemockoperation.gif">
+			<newfeature img="images/176/changemockoperation.gif" alt="actions for mock operations soa test">
 			<div>A "Change Operation" action for MockOperations to change which operation they are mocking. 
 			[<a href="userguide/mock/operations.html#Change_Operation">Read More</a>]</div>
 			</newfeature>
@@ -134,11 +134,11 @@
 			    </ul>
 			</newfeature>
 			
-			<newfeature img="images/176/switchwindow.gif">
+			<newfeature img="images/176/switchwindow.gif" alt="switch window action between open editors soa test">
 			<div>A global "Switch Window" action (Ctrl W) to switch between open editors</div>
 			</newfeature>
 			
-			<newfeature img="images/176/maximizedesktop.gif">
+			<newfeature img="images/176/maximizedesktop.gif" alt="maximize desktop soa test>
 			<div>A global "Maximize Desktop" action (Ctrl M) to show/hide Navigator/Log Inspectors</div>
 			</newfeature>
 			
@@ -192,7 +192,7 @@
 		<subsection name="New and Noteworthy in soapUI Pro">
 		<p>On top of all the above, the following improvements/additions have been made to soapUI Pro:</p>
 		
-		<newfeature img="images/176/overviewview.gif">
+		<newfeature img="images/176/overviewview.gif" alt="overview of response and mock request messages soa test">
 		<div>Overview View for getting an overview of response/mock-request messages with links to corresponding xml/outline
 		positions. [<a href="userguide/overviewview.html">Read More</a>]</div>
 		</newfeature>
@@ -210,7 +210,7 @@
 		[<a href="userguide/functional/datasourcestep.html#DataSource_Options">Read More</a>]</div>
 		</newfeature>
 
-		<newfeature img="images/176/datainput.gif">
+		<newfeature img="images/176/datainput.gif" alt="data source for data driven testing soa test">
 		<div>Improved Form-Editor with:</div>
 		<ul> 
 		<li>Extensive XML-Schema datatype validation/input</li>
@@ -223,7 +223,7 @@
 		<div>[<a href="userguide/formeditor.html">Read More</a>]</div>
 		</newfeature>
 		
-		<newfeature img="images/176/copyrequests.gif">
+		<newfeature img="images/176/copyrequests.gif" alt="grid datasource for managing data driven test data soa test">
 		<div>A new "Copy Requests to TestRequests" action for copying/merging request content into existing TestRequests. 
 		[<a href="userguide/requests.html#Copy_Requests">Read More</a>]</div>
 		</newfeature>

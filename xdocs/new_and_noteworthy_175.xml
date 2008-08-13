@@ -30,7 +30,7 @@
 
 		<subsection name="New and Noteworthy">
 		
-			<newfeature img="images/175/cloning.gif">
+			<newfeature img="images/175/cloning.gif" alt="clone test steps">
 				<div>Extensive support for cloning/moving TestSteps/TestCases/TestSuites within and between projects. soapUI Pro
 				makes it even easier with full drag-and-drop support and a CloneTestSteps action for cloning/moving a subset of
 				TestSteps in one sweep. 
@@ -42,7 +42,7 @@
 				</div>
 			</newfeature>
 			
-			<newfeature img="images/175/workspace_mgmt.gif">
+			<newfeature img="images/175/workspace_mgmt.gif" alt="soap test work space management">
 				<div>Workspace management; possibility to have several workspaces and switch between them, which makes it easy
 				to partition projects into more manageable groups.
 				(see Feature Requests 
@@ -51,25 +51,25 @@
 				</div>
 			</newfeature>
 			
-			<newfeature img="images/175/generate_testsuite.gif">
+			<newfeature img="images/175/generate_testsuite.gif" alt="soap test generate test cases">
 				<div>Enhanced generation of TestSuites
 				(see Feature Request 
 				<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1694354&amp;group_id=136013&amp;atid=737766">1694354</a>)
 				</div>
 			</newfeature>
 			
-			<newfeature img="images/175/generate_mockservice.gif">
+			<newfeature img="images/175/generate_mockservice.gif" alt="soap test Generate mockservice">
 				<div>Enhanced generation of MockServices</div>
 			</newfeature>
 			
-			<newfeature img="images/175/sla_assertion.gif">
+			<newfeature img="images/175/sla_assertion.gif" alt="soap test new response SLA assertion">
 				<div>A new Response SLA Assertion (Contribution by Cory Lewis!)
 				(see Feature Request 
 				<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1704403&amp;group_id=136013&amp;atid=737766">1704403</a>)
 				</div>
 			</newfeature>
 			
-			<newfeature img="images/175/order_testcases.gif">
+			<newfeature img="images/175/order_testcases.gif" alt="soap test Reorder test cases within test suite">
 				<div>Possibility to reorder TestCases within a TestSuite; when running a TestSuite, TestCases are now
 				executed in the order displayed in the tree/editor (in soapUI Pro this can be performed via drag-and-drop, both
 				in the Navigator Tree and in the TestSuite editor).
@@ -78,7 +78,7 @@
 				</div>
 			</newfeature>
 			
-			<newfeature img="images/175/enable_disable_teststeps.gif">
+			<newfeature img="images/175/enable_disable_teststeps.gif alt="disable and enable test steps">
 				<div>Possibiliy to Disable/Enable TestSteps; disabled steps are skipped during execution but still available
 				for property-transfers, groovy-access, etc.
 				(see Feature Request 
@@ -86,7 +86,7 @@
 				</div>
 			</newfeature>
 			
-			<newfeature img="images/175/update_definition.gif">
+			<newfeature img="images/175/update_definition.gif" alt="soap test improve update definition">
 				<div>Improved "Update Definition" functionality creates updated request and optionally backs up
 				existing ones. (soapUI Pro Feature Request)</div>
 			</newfeature>
@@ -114,51 +114,51 @@ id = "123"
 			
 			</newfeature>
 			
-			<newfeature img="images/175/responsetime.gif">
+			<newfeature img="images/175/responsetime.gif" alt=" soap test tresponse delay property for mockervices">
 				<div>ResponseDelay property for MockResponses, delays the response the specified number of milliseconds
 				(see Feature Request 
 				<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1694623&amp;group_id=136013&amp;atid=737766">1694623</a>)
 				</div>
 			</newfeature>
 			
-			<newfeature img="images/175/wsstimestamp.gif">
+			<newfeature img="images/175/wsstimestamp.gif alt"soap test WSS time property">
 				<div>WSS TimeToLive property for Requests/TestRequest. Setting this value will automatically insert
 				a WSS TimeToLive header with the specified duration to outgoing requests.</div>
 			</newfeature>
 			
-			<newfeature img="images/175/http_settings.gif">
+			<newfeature img="images/175/http_settings.gif" alt="htpp settings controling number of connections>
 				<div>HTTP Settings for controlling maximum number of connections. (Forum Discussion)</div>
 			</newfeature>
 			
-			<newfeature img="images/175/descriptionprop.gif">
+			<newfeature img="images/175/descriptionprop.gif" alt="soap test Description for all items">
 				<div>Description property for all items, the value is used as tooltip text in the Navigator. (soapUI Pro Feature Request)</div>
 			</newfeature>
 			
-			<newfeature img="images/175/compression.gif">
+			<newfeature img="images/175/compression.gif alt="compress large messages mock response in project file">
 				<div>Option to compress large messages/mock-responses in project file (in WSDL Preferences tab), 
 				recommended for "large" 
 				messages (> 128 kb) since the underlying persistance-layer may choke on these otherwise. Messages
 				are compressed with gzip and saved as base64 encoded string. (soapUI Pro Feature Request)</div>
 			</newfeature>
 			
-			<newfeature img="images/175/disable_statistics.gif">
+			<newfeature img="images/175/disable_statistics.gif" alt="soap test">
 				<div>Option to turn off collection of LoadTest history data to preserve memory in long-running tests 
 				where history-diagrams are not important. (soapUI Pro Feature Request)</div>
 			</newfeature>
 			
-			<newfeature img="images/175/change_operation.gif"><div>
+			<newfeature img="images/175/change_operation.gif" alt="soap test change the operation of a test test request"><div>
 		    Action to change the operation of a TestRequest.</div>
 		</newfeature>
 		
-		<newfeature img="images/175/mock_service_log.gif"><div>
+		<newfeature img="images/175/mock_service_log.gif"alt="soap testing mock service log toolbar set size and clear"><div>
 		    Improved MockService log with own toolbar and options to set size and clear.</div>
 		</newfeature>
 		
-		<newfeature img="images/175/local_address.gif"><div>
+		<newfeature img="images/175/local_address.gif" alt="set address globally and on a request lvel"><div>
 		    Possibility to set the local address both globally and on a request level.</div>
-		</newfeature>
+		</nwfeature>
 		
-		<newfeature img="images/175/pretty_print_project.gif"><div>
+		<newfeature img="images/175/pretty_print_project.gif" alt="soap test Print project files for easier SCM intergration"><div>
 		    Option to pretty-print project files for easier SCM integration.</div>
 		</newfeature>
 		
@@ -171,34 +171,34 @@ id = "123"
 		    Added option to enable interactive utilities when running from command-line.</div>
 		</newfeature>
 		
-		<newfeature img="images/175/xpath_contains_wildcards.gif"><div>
+		<newfeature img="images/175/xpath_contains_wildcards.gif" alt="soap test Support for wild card elment and attributes values"><div>
 		    Rudimentary support for wildcard element/attribute values in the matching XML of XPath Contains assertions, 
 		    which eases comparisons of large XML blocks.</div>
 		    </newfeature>
 		    
-		    <newfeature img="images/175/error_log.gif"><div>
+		    <newfeature img="images/175/error_log.gif" alt="soap test Dedicated errors and reporting"><div>
 		    A dedicated Error Log which makes it easier to understand errors and report them back to us :-)</div>
 		    </newfeature>
 		    
-		    <newfeature img="images/175/import_preferences.gif"><div>
+		    <newfeature img="images/175/import_preferences.gif" alt="soap test Import global preferences from existing soapui installation"><div>
 		    Action to import global preferences from an existing soapUI installation.</div>
 		    </newfeature>
 		    
-		    <newfeature img="images/175/add_endpoint.gif"><div>
+		    <newfeature img="images/175/add_endpoint.gif" alt="soap test Adding mockservice endpoints to their mocked services"><div>
 		    An "Add Endpoint to Interface" action for easily adding MockService endpoints to their mocked Interfaces. 
 		    Changing the MockService endpoint will automatically update the associated Interface Endpoint as well.</div>
 		    </newfeature>
 
-		    <newfeature img="images/175/remove_empty_content.gif"><div>
+		    <newfeature img="images/175/remove_empty_content.gif" alt="saop test Remove empty content  from otgoing requests><div>
 		    Request/MockResponse option option to dynamically remove empty content from outgoing requests, which can be useful when performing
 		    data-driven tests where not all data is available in each iteration.</div>
 		    </newfeature>
 		    
-		    <newfeature img="images/175/encode_attachments.gif"><div>
+		    <newfeature img="images/175/encode_attachments.gif" alt="Request and response option for encodinding attachments in soap test"><div>
 			Request/MockResponse option for encoding attachments as specified by their associated WSDL Part (base64 or hexBinary)</div>
 		    </newfeature>
 
-			<newfeature img="images/175/type_redefinition.gif"><div>
+			<newfeature img="images/175/type_redefinition.gif" alt="Fixed WSDL import to allow  redefinition of global types for soap test><div>
 		    Fixed WSDL import to allow redefinition of global types/element (can be turned off in WSDL Settings). Thanks 
 		    to Lars Borup Jensen.</div>
 		    </newfeature>
@@ -234,8 +234,8 @@ id = "123"
 			<p><a target="_new" href="http://www.eviware.com/component/option,com_frontpage/Itemid,1/">soapUI Pro</a> of course includes all the above and a number of 
 			improvements for professional users:</p>
 			
-			<newfeature img="images/175/junit_reports.gif">
-				<div>Possibiliy to generate improved JUnit-Style reports from within the UI, both for TestCases and
+			<newfeature img="images/175/junit_reports.gif" alt="generate improved JUnit-Style reports from within the UI for soap test">
+				<div>Possibility to generate improved JUnit-Style reports from within the UI, both for TestCases and
 				TestSuites.<br/> See example
 				reports; <a href="report-samples/frames/index.html">[Multiple Pages]</a> and 
 				<a href="report-samples/print/index.html">[Single Page]</a></div>
@@ -250,7 +250,7 @@ id = "123"
 				</div>
 			</newfeature>
 			
-		    <newfeature img="images/175/dnd.gif">
+		    <newfeature img="images/175/dnd.gif" alt="Extensive drag and drop support for reordering for soap test">
 				<div>Extensive Drag-and-Drop support for reordering/copying/moving 
 				TestSteps/TestCases/TestSuites/etc.
 				(see Feature Requests
@@ -259,29 +259,29 @@ id = "123"
 				</div>
 			</newfeature>
 			
-			<newfeature img="images/175/xpath_match_wizard.gif">
+			<newfeature img="images/175/xpath_match_wizard.gif" alt="new wizard for matching values aginst properties in XPath when you soap test">
 				<div>New wizard for matching values agains existing properties in XPath Contains dialog. (soapUI Pro Feature Request)</div>
 			</newfeature>
 			
-			<newfeature img="images/175/pro_preferences.gif">
+			<newfeature img="images/175/pro_preferences.gif" alt="AutoSave of projects when you soap test">
 				<div>A number of soapUI Pro specific preferences, including AutoSave of projects. (soapUI Pro Feature Request)</div>
 			</newfeature>
 
-			<newfeature img="images/175/outline_editor_improvements.gif">
+			<newfeature img="images/175/outline_editor_improvements.gif" alt="soapui pro outline editor for soap test">
 				<div>Improvements to the soapUI Pro outline editor; toolbar, type column, performance.</div>
 			</newfeature>
 			
-			<newfeature img="images/175/panorama_view.gif">
+			<newfeature img="images/175/panorama_view.gif" alt=" messages editors for easy scrolling and overview for soap test">
 				<div>Panorama-View button in all message editors for easy scrolling/overview of large messages 
 				(located at bottom right below scrollbar)</div>
 			</newfeature>
 			
-			<newfeature img="images/175/clone_teststeps.gif">
+			<newfeature img="images/175/clone_teststeps.gif" alt="clone multiple steps in one sweep for soap test">
 				<div>Possibility to clone multiple TestSteps in one sweep, maintaining internal references 
 				(Property Transfers, etc.)</div>
 			</newfeature>
 			
-			<newfeature img="images/175/add_as_mockresponse.gif">
+			<newfeature img="images/175/add_as_mockresponse.gif" alt="Adding mock response to a soap test case">
 				<div>Menu/Toolbar actions to add operations, requests or mockresponse to a testcase as a MockResponse Step</div>
 			</newfeature>
 			

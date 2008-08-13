@@ -41,14 +41,14 @@
 		and selecting either one of them in the soapUI group.</p>
 		</column>
 		<column>
-		<img src="images/show_view.gif"/>
+		<img src="images/show_view.gif" alt="soap test tool"/>
 		</column></columns>
 		
 		</subsection>
 		
 		<subsection name="soapUI Preferences">
 		<p>Most soapUI Settings are available from the standard Window/Preferences dialog under the soapUI node;</p>
-		<p align="center"><img src="images/eclipse-preferences.gif"/></p>
+		<p align="center"><img src="images/eclipse-preferences.gif" alt"soap test"/></p>
 		
 		</subsection>
 		</section>

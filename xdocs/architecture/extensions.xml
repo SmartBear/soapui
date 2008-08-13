@@ -75,7 +75,7 @@ public class DemoAction extends AbstractSoapUIAction&lt;WsdlProject&gt;
 10:09:23,421 INFO  [DefaultSoapUICore] Adding actions from [C:\workspace\core\actions\demo-actions.xml]
 ...</source>
 		<p>And your action will magically now appear at the end of the project popup:</p>
-		<p align="center"><img src="images/demo_action_1.gif"/><img src="images/demo_action_2.gif" alt="Custom action demo in soapUI"/></p>
+		<p align="center"><img src="images/demo_action_1.gif" alt="Custom action demo in soapUI"/><img src="images/demo_action_2.gif" alt="Custom action demo popup in soapUI"/></p>
 		</subsection>
 		
 		<subsection name="Event Listeners in soapUI">
