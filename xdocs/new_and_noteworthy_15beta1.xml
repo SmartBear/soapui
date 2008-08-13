@@ -30,7 +30,7 @@
 		from the commandline, allowing scheduled loadtests to be used for performance surveillance (for example).</p>
 		<p>Right click on a TestCase and selected "New LoadTest" (you can create any number of loadtests), this will 
 		open the following LoadTest view after prompting for a title:</p>
-		<p align="center"><img src="images/loadtest_1.gif"/></p>
+		<p align="center"><img src="images/loadtest_1.gif" alt="load test view for soap test"/></p>
 		<p>The view is divided into 3 parts (top-down):</p>
 		<ul>
 		<li>A toolbar with general actions, test-limit, interactive thread-count and strategy settings</li>
@@ -40,12 +40,12 @@
 		</subsection>
 		<subsection name="Assertions">
 		<p>The log at the bottom has an additional tab showing the configured loadtest assertions:</p>
-		<p align="center"><img src="images/loadtest_3.gif"/></p>
+		<p align="center"><img src="images/loadtest_3.gif" alt="confiquered load test assertions"/></p>
 		<p>When running a LoadTest, the configured assertions are applied and will generate an error in the log if not met:</p>
-		<p align="center"><img src="images/loadtest_4.gif"/></p>
+		<p align="center"><img src="images/loadtest_4.gif" alt="generating an error in the log for soap test"/></p>
 		<p>Assertion errors can be double-clicked and will show a view displaying the entire request/response that 
 		failed the assertion;</p>
-		<p align="center"><img src="images/teststep_result_1.gif"/></p>
+		<p align="center"><img src="images/teststep_result_1.gif" alt="failed request response that failed assertion in soap test"/></p>
 		</subsection>
 		<subsection name="Limit, ThreadCount and Strategies">
 		<p>A LoadTest is controlled by its limit (by time or number of requests), threadcount and strategy. There are 
@@ -71,7 +71,7 @@
 		</ul>
 		<p>Both these are meant to be used for <i>behavioural</i> analysis, ie seeing trends over time. Exact values/legends
 		are not shown;</p>
-		<p align="center"><img src="images/loadtest_2.gif"/></p>
+		<p align="center"><img src="images/loadtest_2.gif" alt="load testing trends soap test"/></p>
 		</subsection>
 		<subsection name="CommandLine Runner">
 		<p>A <code>com.eviware.soapui.tools.SoapUILoadTestRunner</code> is available for running loadtests from the commandline,
@@ -98,13 +98,13 @@
 		<p>The properties teststep allows you to define a number of properties which can further be loaded to/saved from
 		a local file or URL (optionally specified by a system property). The defined properties can then be assigned/used 
 		from a groovy script or a ValueTransfer. The PropertiesStep editor is a simple table as follows:</p>
-		<p align="center"><img src="images/teststep_properties_1.gif"/></p>
+		<p align="center"><img src="images/teststep_properties_1.gif" alt="the properties step editor"/></p>
 		</subsection>
 		
 		<subsection name="Groovy Script TestStep">
 		<p>The GroovyScript teststep allows you to execute an arbitrary Groovy script in your testcase. The script has
 		full access to the soapUI object-model, allowing it to modify other teststeps, get external data, etc.</p>
-		<p align="center"><img src="images/teststep_groovy_1.gif"/></p>
+		<p align="center"><img src="images/teststep_groovy_1.gif" alt="/></p>
 		<p>The shown script sets the property "boss" of another teststep to a "random" value</p>
 		</subsection>
 		
