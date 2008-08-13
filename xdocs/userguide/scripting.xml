@@ -30,7 +30,7 @@
 		<subsection name="Script Editors">
 		<p>Script editors are generally available as inspectors at the bottom of the corresponding objects editor, each having
 		a run button, a drop-down edit menu (same as the right-click popup), an information label, and a help button;</p>
-		<p align="center"><img src="images/script_editor.gif"/></p>
+		<p align="center"><img src="images/script_editor.gif" alt="script editor"/></p>
 		<p>The popup-menu (as shown above) contains standard edit-related actions and will in soapUI Pro contain a 
 		"Get Data" menu option that expands to show all properties available within the current scope. Selecting a property
 		(or the option to create a new one) will eventually create a script to get the variable, for example</p>
