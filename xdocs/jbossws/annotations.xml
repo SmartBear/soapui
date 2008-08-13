@@ -18,7 +18,7 @@
 		existing Java code.</p> 
 		<p>Start by enabling the JBossWS nature and by selecting the 
 		"JBossWS - Add Web Service Annotations" option from the desired Java classes right-button menu:</p>
-		<p align="center"><img src="images/annotate_menu.gif"/></p>
+		<p align="center"><img src="images/annotate_menu.gif" alt="web service annotations soap test"/></p>
 		<p>This will open the following dialog:</p>
 		<p align="center"><img src="images/annotate_dialog.gif" alt="Adding web service annotations/></p>
 		<p>The contained options map directly to the service/binding level annotations available in the 
