@@ -26,7 +26,6 @@ public class CaptureInputStream extends FilterInputStream
 		super( in );
 	}
 
-	@Override
 	public int read() throws IOException
 	{
 		int i = super.read();
@@ -34,7 +33,6 @@ public class CaptureInputStream extends FilterInputStream
 		return i;
 	}
 
-	@Override
 	public int read( byte[] b ) throws IOException
 	{
 		int i = super.read( b );
@@ -42,7 +40,6 @@ public class CaptureInputStream extends FilterInputStream
 		return i;
 	}
 	
-	@Override
 	public int read( byte[] b, int off, int len ) throws IOException
 	{
 		int i = super.read( b, off, len );

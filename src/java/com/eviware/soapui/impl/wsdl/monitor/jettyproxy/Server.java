@@ -49,7 +49,8 @@ public class Server extends org.mortbay.jetty.Server
 
 		IO.copyThread(socket.getInputStream(), out);
 
-		IO.copy(in, socket.getOutputStream());
+		IO.copyThread(in, socket.getOutputStream());
+		
 	}
 
 }

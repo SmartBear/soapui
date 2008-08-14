@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.monitor;
 
-import org.mortbay.jetty.nio.SelectChannelConnector;
+import org.mortbay.jetty.bio.SocketConnector;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
@@ -23,7 +23,7 @@ import com.eviware.soapui.support.UISupport;
 public class SoapMonitorEngineImpl implements SoapMonitorEngine {
 
 	Server server = new Server();
-	SelectChannelConnector connector = new SelectChannelConnector();
+	SocketConnector connector = new SocketConnector();
 
 	public boolean isRunning() {
 		return server.isRunning();
