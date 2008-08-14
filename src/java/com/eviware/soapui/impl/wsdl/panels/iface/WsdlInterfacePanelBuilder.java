@@ -43,7 +43,7 @@ public class WsdlInterfacePanelBuilder extends EmptyPanelBuilder<WsdlInterface>
    	table.addProperty( "Cached", "cached", false );
    	table.addProperty( "Style", "style", false );
    	//TODO extract info from wsdl if by default ws addresing is implemented 
-   	table.addProperty( "Ws Addressing", "wsAddressing", true );
+   	table.addProperty( "WS-A version", "wsAddressing", false );
    	
    	table.setPropertyObject( iface );
    	
