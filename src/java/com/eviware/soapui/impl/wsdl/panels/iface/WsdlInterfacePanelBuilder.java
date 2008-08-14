@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.panels.iface;
 
 import java.awt.Component;
 
+import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
@@ -43,7 +44,9 @@ public class WsdlInterfacePanelBuilder extends EmptyPanelBuilder<WsdlInterface>
    	table.addProperty( "Cached", "cached", false );
    	table.addProperty( "Style", "style", false );
    	//TODO extract info from wsdl if by default ws addresing is implemented 
-   	table.addProperty( "WS-A version", "wsAddressing", false );
+   	table.addProperty( "WS-A version", "wsaVersion", 
+   			new Object[]{ WsaVersionTypeConfig.NONE.toString(), 
+   			WsaVersionTypeConfig.X_200408.toString(), WsaVersionTypeConfig.X_200508.toString() } );
    	
    	table.setPropertyObject( iface );
    	

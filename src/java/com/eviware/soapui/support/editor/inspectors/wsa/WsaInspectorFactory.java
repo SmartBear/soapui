@@ -20,7 +20,7 @@ import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 
 public class WsaInspectorFactory implements RequestInspectorFactory
 {
-	public static final String INSPECTOR_ID = "Wsa";
+	public static final String INSPECTOR_ID = "WSA";
 
 	public String getInspectorId()
 	{

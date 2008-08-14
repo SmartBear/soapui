@@ -18,9 +18,9 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel.RestRequestDocument;
 import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel.RestRequestMessageEditor;
 import com.eviware.soapui.impl.rest.panels.resource.JWadlParamsTable;
-import com.eviware.soapui.support.editor.support.AbstractEditorView;
+import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 
-public class RestRequestParamsView extends AbstractEditorView<RestRequestDocument>
+public class RestRequestParamsView extends AbstractXmlEditorView<RestRequestDocument>
 {
 	private final RestRequest restRequest;
 
@@ -31,8 +31,21 @@ public class RestRequestParamsView extends AbstractEditorView<RestRequestDocumen
 	}
 
 	@Override
-	public JComponent buildUI()
+	public void setXml(String xml)
+	{
+	}
+
+	public boolean saveDocument(boolean validate)
+	{
+		return false;
+	}
+
+	public JComponent getComponent()
 	{
 		return new JWadlParamsTable( restRequest.getParams() );
+	}
+
+	public void setEditable(boolean enabled)
+	{
 	}
 }

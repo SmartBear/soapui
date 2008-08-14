@@ -28,7 +28,7 @@ public abstract class RawXmlEditor<T extends XmlDocument> extends AbstractXmlEdi
 
 	public RawXmlEditor( String title, XmlEditor<T> xmlEditor, String tooltip )
 	{
-		super( title, xmlEditor );
+		super( title, xmlEditor, RawXmlEditorFactory.VIEW_ID );
 		
 		textArea = new JTextArea();
 		textArea.setEditable( false );
@@ -49,11 +49,6 @@ public abstract class RawXmlEditor<T extends XmlDocument> extends AbstractXmlEdi
 	public JComponent getComponent()
 	{
 		return scrollPane;
-	}
-
-	public String getViewId()
-	{
-		return RawXmlEditorFactory.VIEW_ID;
 	}
 
 	public boolean isInspectable()

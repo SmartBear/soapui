@@ -18,8 +18,10 @@ import java.net.URL;
 
 import org.apache.log4j.Logger;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
+import com.eviware.soapui.impl.rest.actions.service.NewRestResourceAction;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -111,6 +113,8 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
 							enable = false;
 					}
 					
+					dialog.getFormField(Form.CREATERESOURCE ).setEnabled(enable);
+					
 					if( enable )
 					{
 						try
@@ -159,6 +163,13 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
 					log.error(e.toString());
 				}
    		}
+   		
+   		UISupport.select(restService);
+   		
+   		if( dialog.getFormField(Form.CREATERESOURCE).isEnabled() && dialog.getBooleanValue(Form.CREATERESOURCE))
+   		{
+   			SoapUI.getActionRegistry().getAction(NewRestResourceAction.SOAPUI_ACTION_ID).perform(restService, null);
+   		}
    	}
    }
 	
@@ -176,6 +187,9 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
 
 		@AField(description = "Form.WadlUrl.Description", type = AFieldType.FILE ) 
 		public final static String WADLURL = messages.get("Form.WadlUrl.Label"); 
+		
+		@AField(description = "Form.CreateResource.Description", type = AFieldType.BOOLEAN ) 
+		public final static String CREATERESOURCE = messages.get("Form.CreateResource.Label"); 
 
 	}
 }

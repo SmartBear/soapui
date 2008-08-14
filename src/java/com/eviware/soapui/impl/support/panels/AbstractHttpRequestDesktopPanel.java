@@ -29,8 +29,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
@@ -201,7 +199,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 						int ix = requestTabs.getSelectedIndex();
 						if (ix == 0)
 							requestEditor.requestFocus();
-						else if (ix == 1)
+						else if (ix == 1 && responseEditor != null )
 							responseEditor.requestFocus();
 					}
 				});
@@ -213,7 +211,8 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		if (request.getSettings().getBoolean(UISettings.START_WITH_REQUEST_TABS))
 		{
 			requestTabs.addTab("Request", requestEditor);
-			requestTabs.addTab("Response", responseEditor);
+			if( responseEditor != null )
+				requestTabs.addTab("Response", responseEditor);
 			splitButton.setEnabled(false);
 			tabsButton.setSelected(true);
 
@@ -311,21 +310,25 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 			super(document, request);
 
 			XmlSourceEditorView editor = getSourceEditor();
-			inputArea = editor.getInputArea();
-			inputArea.getInputHandler().addKeyBinding("A+ENTER", submitButton.getAction());
-			inputArea.getInputHandler().addKeyBinding("A+X", cancelButton.getAction());
-			inputArea.getInputHandler().addKeyBinding("AC+TAB", moveFocusAction);
-			inputArea.getInputHandler().addKeyBinding("C+F4", closePanelAction);
-
-			inputAreaFocusListener = new InputAreaFocusListener(editor);
-			inputArea.addFocusListener(inputAreaFocusListener);
+			if( editor != null )
+			{
+				inputArea = editor.getInputArea();
+				inputArea.getInputHandler().addKeyBinding("A+ENTER", submitButton.getAction());
+				inputArea.getInputHandler().addKeyBinding("A+X", cancelButton.getAction());
+				inputArea.getInputHandler().addKeyBinding("AC+TAB", moveFocusAction);
+				inputArea.getInputHandler().addKeyBinding("C+F4", closePanelAction);
+	
+				inputAreaFocusListener = new InputAreaFocusListener(editor);
+				inputArea.addFocusListener(inputAreaFocusListener);
+			}
 		}
 
 		@Override
 		public void release()
 		{
 			super.release();
-			inputArea.removeFocusListener(inputAreaFocusListener);
+			if( inputArea != null )
+				inputArea.removeFocusListener(inputAreaFocusListener);
 		}
 	}
 
@@ -341,16 +344,16 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 			XmlSourceEditorView editor = getSourceEditor();
 
 			inputArea = editor.getInputArea();
-			resultAreaFocusListener = new ResultAreaFocusListener(editor);
-			inputArea.addFocusListener(resultAreaFocusListener);
-
-			inputArea.getInputHandler().addKeyBinding("A+ENTER", submitButton.getAction());
-			inputArea.getInputHandler().addKeyBinding("A+X", cancelButton.getAction());
-			inputArea.getInputHandler().addKeyBinding("AC+TAB", moveFocusAction);
-			inputArea.getInputHandler().addKeyBinding("C+F4", closePanelAction);
-
-			JPopupMenu inputPopup = editor.getEditorPopup();
-			inputPopup.insert(new JSeparator(), 2);
+			if( inputArea != null )
+			{
+				resultAreaFocusListener = new ResultAreaFocusListener(editor);
+				inputArea.addFocusListener(resultAreaFocusListener);
+	
+				inputArea.getInputHandler().addKeyBinding("A+ENTER", submitButton.getAction());
+				inputArea.getInputHandler().addKeyBinding("A+X", cancelButton.getAction());
+				inputArea.getInputHandler().addKeyBinding("AC+TAB", moveFocusAction);
+				inputArea.getInputHandler().addKeyBinding("C+F4", closePanelAction);
+			}
 		}
 
 		@Override
@@ -358,7 +361,8 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		{
 			super.release();
 
-			inputArea.removeFocusListener(resultAreaFocusListener);
+			if( inputArea != null )
+				inputArea.removeFocusListener(resultAreaFocusListener);
 		}
 	}
 
@@ -605,7 +609,9 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		request.removeSubmitListener(this);
 		requestEditor.saveDocument(false);
 
-		responseEditor.getParent().remove(responseEditor);
+		if( responseEditor != null )
+			responseEditor.getParent().remove(responseEditor);
+		
 		requestEditor.getParent().remove(requestEditor);
 		requestSplitPane.removeAll();
 
@@ -617,7 +623,9 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		endpointsModel.release();
 		requestEditor.release();
-		responseEditor.release();
+		
+		if( responseEditor != null )
+			responseEditor.release();
 		
 		return super.release();
 	}
@@ -645,7 +653,9 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 				removeContent(requestSplitPane);
 				setContent(requestTabPanel);
 				requestTabs.addTab("Request", requestEditor);
-				requestTabs.addTab("Response", responseEditor);
+				
+				if( responseEditor != null )
+					requestTabs.addTab("Response", responseEditor);
 
 				if (responseHasFocus)
 				{
@@ -661,10 +671,11 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 				removeContent(requestTabPanel);
 				setContent(requestSplitPane);
 				requestSplitPane.setTopComponent(requestEditor);
-				requestSplitPane.setBottomComponent(responseEditor);
+				if( responseEditor != null )
+					requestSplitPane.setBottomComponent(responseEditor);
 				requestSplitPane.setDividerLocation(0.5);
 
-				if (selectedIndex == 0)
+				if (selectedIndex == 0 || responseEditor == null )
 					requestEditor.requestFocus();
 				else
 					responseEditor.requestFocus();

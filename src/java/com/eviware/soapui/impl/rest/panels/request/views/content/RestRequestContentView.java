@@ -28,11 +28,11 @@ import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel.RestR
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.editor.support.AbstractEditorView;
+import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class RestRequestContentView extends AbstractEditorView<RestRequestDocument> implements PropertyChangeListener
+public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDocument> implements PropertyChangeListener
 {
 	private final RestRequest restRequest;
 	private JPanel contentPanel;
@@ -47,8 +47,7 @@ public class RestRequestContentView extends AbstractEditorView<RestRequestDocume
 		restRequest.addPropertyChangeListener( this );
 	}
 
-	@Override
-	public JComponent buildUI()
+	public JComponent getComponent()
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
 		
@@ -109,5 +108,19 @@ public class RestRequestContentView extends AbstractEditorView<RestRequestDocume
 		{
 			contentEditor.setText( (String)evt.getNewValue() );
 		}
+	}
+
+	@Override
+	public void setXml(String xml)
+	{
+	}
+
+	public boolean saveDocument(boolean validate)
+	{
+		return false;
+	}
+
+	public void setEditable(boolean enabled)
+	{
 	}
 }

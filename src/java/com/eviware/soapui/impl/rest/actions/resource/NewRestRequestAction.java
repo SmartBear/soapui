@@ -16,7 +16,6 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestRequest.RequestMethod;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -59,9 +58,11 @@ public class NewRestRequestAction extends AbstractSoapUIAction<RestResource>
    		RestRequest request = resource.addNewRequest( dialog.getValue(Form.RESOURCENAME));
    		request.setMethod( RequestMethod.valueOf(dialog.getValue( Form.METHOD )));
    		
-   		for( TestProperty p : resource.getDefaultParams())
+   		UISupport.select(request);
+   		
+   		if( dialog.getBooleanValue(Form.OPENSREQUEST))
    		{
-   			request.addProperty(p.getName()).setValue(p.getValue());
+   			UISupport.showDesktopPanel(request);
    		}
    	}
    }
@@ -74,5 +75,8 @@ public class NewRestRequestAction extends AbstractSoapUIAction<RestResource>
 
 		@AField( description = "Form.Method.Description", type = AFieldType.ENUMERATION, values={"GET","POST","PUT","DELETE","HEAD"} ) 
 		public final static String METHOD = messages.get("Form.Method.Label"); 
+		
+		@AField(description = "Form.OpenRequest.Description", type = AFieldType.BOOLEAN ) 
+		public final static String OPENSREQUEST = messages.get("Form.OpenRequest.Label"); 
 	}
 }

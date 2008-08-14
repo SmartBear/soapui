@@ -39,12 +39,14 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
 	private boolean xmlChanged;
 	private Set<EditorLocationListener<T>> listeners = new HashSet<EditorLocationListener<T>>();
 	private XmlEditor<T> editor;
+	private final String viewId;
 	
-	public AbstractXmlEditorView(String title, XmlEditor<T> xmlEditor)
+	public AbstractXmlEditorView(String title, XmlEditor<T> xmlEditor, String viewId)
 	{
 		super();
 		this.title = title;
 		editor = xmlEditor;
+		this.viewId = viewId;
 		xmlChanged = false;
 	}
 
@@ -53,6 +55,11 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
 		return propertyChangeSupport;
 	}
 	
+	public String getViewId()
+	{
+		return viewId;
+	}
+
 	public boolean activate(EditorLocation<T> location)
 	{
 		isActive = true;

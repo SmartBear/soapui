@@ -80,7 +80,7 @@ public class XmlSourceEditorView extends AbstractXmlEditorView<XmlDocument> impl
 
 	public XmlSourceEditorView( XmlEditor<XmlDocument> xmlEditor )
    {
-   	super( "XML", xmlEditor );
+   	super( "XML", xmlEditor, XmlSourceEditorFactory.VIEW_ID );
    }
 	
 	protected void buildUI()
@@ -432,11 +432,6 @@ public class XmlSourceEditorView extends AbstractXmlEditorView<XmlDocument> impl
 	public boolean isInspectable()
 	{
 		return true;
-	}
-
-	public String getViewId()
-	{
-		return XmlSourceEditorFactory.VIEW_ID;
 	}
 
 	public ValidateMessageXmlAction getValidateXmlAction()

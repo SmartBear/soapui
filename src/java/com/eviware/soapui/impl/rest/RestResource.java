@@ -208,6 +208,11 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		RestRequest request = new RestRequest( this, resourceConfig);
 		requests.add( request );
 		
+		for( TestProperty p : getDefaultParams())
+		{
+			request.addProperty(p.getName()).setValue(p.getValue());
+		}
+		
 		getInterface().fireRequestAdded(request);
 		return request;
 	}

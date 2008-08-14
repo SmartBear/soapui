@@ -85,6 +85,9 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
 	{
 		super( interfaceConfig, project, "/interface2.gif" );
 
+		if( !interfaceConfig.isSetWsaVersion() )
+			interfaceConfig.setWsaVersion( WsaVersionTypeConfig.NONE );
+		
 		this.project = project;
 
 		List<OperationConfig> operationConfigs = interfaceConfig.getOperationList();

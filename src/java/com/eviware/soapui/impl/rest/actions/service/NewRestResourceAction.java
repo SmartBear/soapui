@@ -15,8 +15,10 @@ package com.eviware.soapui.impl.rest.actions.service;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.RestRequest.RequestMethod;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
@@ -72,15 +74,28 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 			}
    		
 			RestResource resource = service.addNewResource( dialog.getValue(Form.RESOURCENAME), path );
+			UISupport.select(resource);
 			
 			if( dialog.getBooleanValue(Form.EXTRACTPARAMS))
 			{
 				extractParams( resource, path );
 			}
+			
+			if( dialog.getBooleanValue(Form.CREATEREQUEST))
+			{
+				createRequest( resource );
+			}
    	}
    }
 	
-   protected void extractParams(RestResource resource, String path)
+   protected void createRequest(RestResource resource)
+	{
+   	RestRequest request = resource.addNewRequest( dialog.getValue(Form.RESOURCENAME));
+		request.setMethod( RequestMethod.GET );
+		UISupport.showDesktopPanel( request );
+	}
+
+	protected void extractParams(RestResource resource, String path)
 	{
 		
 	}
@@ -96,5 +111,8 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 		
 		@AField(description = "Form.ExtractParams.Description", type = AFieldType.BOOLEAN ) 
 		public final static String EXTRACTPARAMS = messages.get("Form.ExtractParams.Label"); 
+		
+		@AField(description = "Form.CreateRequest.Description", type = AFieldType.BOOLEAN ) 
+		public final static String CREATEREQUEST = messages.get("Form.CreateRequest.Label"); 
 	}
 }

@@ -25,6 +25,7 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequest.RequestMethod;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
+import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -62,21 +63,18 @@ public class RestRequestDesktopPanel extends AbstractHttpRequestDesktopPanel<Res
 	@Override
 	protected ModelItemXmlEditor<?,?> buildResponseEditor()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected Submit doSubmit() throws SubmitException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return getRequest().submit(new WsdlSubmitContext(getModelItem()), true);
 	}
 
 	@Override
 	protected String getHelpUrl()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
