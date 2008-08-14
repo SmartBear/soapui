@@ -34,6 +34,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.DefinitionCacheConfig;
 import com.eviware.soapui.config.OperationConfig;
 import com.eviware.soapui.config.SoapVersionTypesConfig;
+import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.config.WsdlInterfaceConfig;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.support.AbstractInterface;
@@ -809,16 +810,29 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
 	{
 		return getBindingName().toString();
 	}
-	public boolean isWsAddressing()
+	
+	//TODO - do it right
+	public String getWsaVersion()
 	{
-		return getConfig().getUseWsAddressing();
+		if( getConfig().getWsaVersion().equals(WsaVersionTypeConfig.X_200408) ){
+			return WsaVersionTypeConfig.X_200408.toString();
+		} else if (getConfig().getWsaVersion().equals(WsaVersionTypeConfig.X_200508))
+		{
+			return WsaVersionTypeConfig.X_200508.toString();
+		}
+
+		return WsaVersionTypeConfig.NONE.toString();
 	}
 	
-	public void setWsAddressing( boolean wsAddressing )
+	public void setWsaVersion( String wsAddressing )
    {
-   	boolean old = getConfig().getUseWsAddressing();
-   	getConfig().setUseWsAddressing(wsAddressing);
-   	notifyPropertyChanged( "wsAddressing", old, wsAddressing );
+		if( wsAddressing.equals(WsaVersionTypeConfig.X_200508.toString() ))
+			getConfig().setWsaVersion( WsaVersionTypeConfig.X_200508);
+		else if( wsAddressing.equals(WsaVersionTypeConfig.X_200408.toString() ))
+			getConfig().setWsaVersion( WsaVersionTypeConfig.X_200408);
+		else
+			getConfig().setWsaVersion(WsaVersionTypeConfig.NONE);
+
    }
 	
 
