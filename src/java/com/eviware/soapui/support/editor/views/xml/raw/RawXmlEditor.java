@@ -18,14 +18,15 @@ import javax.swing.JTextArea;
 
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
+import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 
-public abstract class RawXmlEditor extends AbstractXmlEditorView
+public abstract class RawXmlEditor<T extends XmlDocument> extends AbstractXmlEditorView<T>
 {
 	private JTextArea textArea;
 	private JScrollPane scrollPane;
 
-	public RawXmlEditor( String title, XmlEditor xmlEditor, String tooltip )
+	public RawXmlEditor( String title, XmlEditor<T> xmlEditor, String tooltip )
 	{
 		super( title, xmlEditor );
 		

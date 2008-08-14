@@ -36,6 +36,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		return VIEW_ID;
 	}
 
+	@SuppressWarnings("unchecked")
 	public EditorView<?> createResponseEditorView( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof MessageExchangeModelItem && 
@@ -55,6 +56,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public EditorView<XmlDocument> createRequestEditorView( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof MessageExchangeModelItem && 
@@ -74,11 +76,11 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		return null;
 	}
 	
-	private static class WsdlRequestRawXmlEditor extends RawXmlEditor
+	private static class WsdlRequestRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
 		private final WsdlRequest request;
 
-		public WsdlRequestRawXmlEditor( WsdlRequest request, XmlEditor editor )
+		public WsdlRequestRawXmlEditor( WsdlRequest request, XmlEditor<XmlDocument> editor )
 		{
 			super( "Raw", editor, "The actual content of the last submitted request" );
 			this.request = request;
@@ -113,11 +115,11 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		}
 	}
 	
-	private static class WsdlResponseRawXmlEditor extends RawXmlEditor
+	private static class WsdlResponseRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
 		private final WsdlRequest request;
 
-		public WsdlResponseRawXmlEditor( WsdlRequest request, XmlEditor editor )
+		public WsdlResponseRawXmlEditor( WsdlRequest request, XmlEditor<XmlDocument> editor )
 		{
 			super( "Raw", editor, "The actual content of the last received response" );
 			this.request = request;
@@ -151,11 +153,11 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 			super.release();
 		}}
 
-	private static class WsdlMockRequestRawXmlEditor extends RawXmlEditor
+	private static class WsdlMockRequestRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
 		private final WsdlMockResponse request;
 
-		public WsdlMockRequestRawXmlEditor( WsdlMockResponse response, XmlEditor editor )
+		public WsdlMockRequestRawXmlEditor( WsdlMockResponse response, XmlEditor<XmlDocument> editor )
 		{
 			super( "Raw", editor, "The actual content of the last received mock request" );
 			this.request = response;
@@ -190,11 +192,11 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		}
 	}
 	
-	private static class WsdlMockResponseRawXmlEditor extends RawXmlEditor
+	private static class WsdlMockResponseRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
 		private final WsdlMockResponse request;
 
-		public WsdlMockResponseRawXmlEditor( WsdlMockResponse response, XmlEditor editor )
+		public WsdlMockResponseRawXmlEditor( WsdlMockResponse response, XmlEditor<XmlDocument> editor )
 		{
 			super( "Raw", editor, "The actual content of the last returned Mock Response" );
 			this.request = response;
@@ -252,11 +254,11 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		return result.toString().trim();
 	}
 	
-	private static class WsdlMessageExchangeResponseRawXmlEditor extends RawXmlEditor
+	private static class WsdlMessageExchangeResponseRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
 		private final MessageExchangeModelItem response;
 
-		public WsdlMessageExchangeResponseRawXmlEditor( MessageExchangeModelItem response, XmlEditor editor )
+		public WsdlMessageExchangeResponseRawXmlEditor( MessageExchangeModelItem response, XmlEditor<XmlDocument> editor )
 		{
 			super( "Raw", editor, "The raw response data" );
 			this.response = response;
@@ -270,11 +272,11 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		}
 	}
 	
-	private static class WsdlMessageExchangeRequestRawXmlEditor extends RawXmlEditor
+	private static class WsdlMessageExchangeRequestRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
 		private final MessageExchangeModelItem request;
 
-		public WsdlMessageExchangeRequestRawXmlEditor( MessageExchangeModelItem request, XmlEditor editor )
+		public WsdlMessageExchangeRequestRawXmlEditor( MessageExchangeModelItem request, XmlEditor<XmlDocument> editor )
 		{
 			super( "Raw", editor, "The raw request data" );
 			this.request = request;

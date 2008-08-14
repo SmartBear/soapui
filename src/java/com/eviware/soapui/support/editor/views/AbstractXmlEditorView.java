@@ -23,7 +23,6 @@ import com.eviware.soapui.support.editor.EditorLocationListener;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.editor.xml.XmlEditorView;
-import com.eviware.soapui.support.editor.xml.XmlLocation;
 
 /**
  * Abstract base-class to be extended by XmlViews
@@ -31,17 +30,17 @@ import com.eviware.soapui.support.editor.xml.XmlLocation;
  * @author ole.matzura
  */
 
-public abstract class AbstractXmlEditorView implements XmlEditorView, PropertyChangeListener
+public abstract class AbstractXmlEditorView<T extends XmlDocument> implements XmlEditorView<T>, PropertyChangeListener
 {
 	private String title;
 	private boolean isActive;
 	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport( this );
-	private XmlDocument xmlDocument;
+	private T xmlDocument;
 	private boolean xmlChanged;
-	private Set<EditorLocationListener<XmlDocument>> listeners = new HashSet<EditorLocationListener<XmlDocument>>();
-	private XmlEditor editor;
+	private Set<EditorLocationListener<T>> listeners = new HashSet<EditorLocationListener<T>>();
+	private XmlEditor<T> editor;
 	
-	public AbstractXmlEditorView(String title, XmlEditor xmlEditor)
+	public AbstractXmlEditorView(String title, XmlEditor<T> xmlEditor)
 	{
 		super();
 		this.title = title;
@@ -54,7 +53,7 @@ public abstract class AbstractXmlEditorView implements XmlEditorView, PropertyCh
 		return propertyChangeSupport;
 	}
 	
-	public boolean activate(EditorLocation<XmlDocument> location)
+	public boolean activate(EditorLocation<T> location)
 	{
 		isActive = true;
 		update();
@@ -122,12 +121,12 @@ public abstract class AbstractXmlEditorView implements XmlEditorView, PropertyCh
 		propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
 	}
 	
-	public XmlDocument getDocument()
+	public T getDocument()
 	{
 		return xmlDocument;
 	}
 
-	public void setDocument(XmlDocument xmlDocument)
+	public void setDocument(T xmlDocument)
 	{
 		if( this.xmlDocument != null )
 		{
@@ -168,23 +167,23 @@ public abstract class AbstractXmlEditorView implements XmlEditorView, PropertyCh
 		}		
 	}
 
-	public void addLocationListener(EditorLocationListener<XmlDocument> listener)
+	public void addLocationListener(EditorLocationListener<T> listener)
 	{
 		listeners.add( listener );
 	}
 
-	public void removeLocationListener(EditorLocationListener<XmlDocument> listener)
+	public void removeLocationListener(EditorLocationListener<T> listener)
 	{
 		listeners.remove( listener );
 	}
 	
-	public void fireLocationChanged( EditorLocation<XmlDocument> location )
+	public void fireLocationChanged( EditorLocation<T> location )
 	{
-		for( EditorLocationListener<XmlDocument> listener : listeners )
+		for( EditorLocationListener<T> listener : listeners )
 			listener.locationChanged( location );
 	}
 	
-	public XmlLocation getEditorLocation()
+	public EditorLocation<T> getEditorLocation()
 	{
 		return null;
 	}
@@ -194,11 +193,11 @@ public abstract class AbstractXmlEditorView implements XmlEditorView, PropertyCh
 		return xmlDocument == null ? null : xmlDocument.getXml();
 	}
 
-	public void setLocation(EditorLocation<XmlDocument> location)
+	public void setLocation(EditorLocation<T> location)
 	{
 	}
 	
-	public void locationChanged(EditorLocation<XmlDocument> location)
+	public void locationChanged(EditorLocation<T> location)
 	{
 	}
 
@@ -211,7 +210,7 @@ public abstract class AbstractXmlEditorView implements XmlEditorView, PropertyCh
 		}
 	}
 	
-	public XmlEditor getEditor()
+	public XmlEditor<T> getEditor()
 	{
 		return editor;
 	}

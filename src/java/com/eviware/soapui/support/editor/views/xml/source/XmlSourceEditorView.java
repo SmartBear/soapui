@@ -43,6 +43,7 @@ import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.PreviewCorner;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
+import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.editor.xml.XmlLocation;
 import com.eviware.soapui.support.editor.xml.support.ValidationError;
@@ -58,7 +59,7 @@ import com.eviware.soapui.support.xml.actions.SaveXmlTextAreaAction;
  * @author ole.matzura
  */
 
-public class XmlSourceEditorView extends AbstractXmlEditorView implements PropertyChangeListener
+public class XmlSourceEditorView extends AbstractXmlEditorView<XmlDocument> implements PropertyChangeListener
 {
 	private JXEditTextArea editArea;
 	private ValidateMessageXmlAction validateXmlAction;
@@ -77,7 +78,7 @@ public class XmlSourceEditorView extends AbstractXmlEditorView implements Proper
 	private JCheckBoxMenuItem toggleLineNumbersMenuItem;
 	private PreviewCorner previewCorner;
 
-	public XmlSourceEditorView( XmlEditor xmlEditor )
+	public XmlSourceEditorView( XmlEditor<XmlDocument> xmlEditor )
    {
    	super( "XML", xmlEditor );
    }
