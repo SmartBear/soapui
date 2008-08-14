@@ -38,7 +38,7 @@
 		<p>We will continue where we left off in the first "Getting Started" document where we just had created a project
 		and imported the Amazon Web Service. The next step is to create a TestSuite/TestCase and add some TestSteps:</p>
 		
-		 <subsection name="Create a Web Servie Test from SOAP request">
+		 <subsection name="Create a Web Service Test from SOAP request">
 		 <columns><column><div>
 		 Once you have some requests working as you want, you can create a TestCase that verifies their behavior</div>
 		<ul>
