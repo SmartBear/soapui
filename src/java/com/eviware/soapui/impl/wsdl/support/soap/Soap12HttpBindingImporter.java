@@ -12,9 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.support.soap;
 
-import java.text.Collator;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,7 +26,6 @@ import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.support.BindingImporter;
 import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
@@ -40,7 +37,7 @@ import com.eviware.soapui.settings.WsdlSettings;
  * @author Ole.Matzura
  */
 
-public class Soap12HttpBindingImporter implements BindingImporter
+public class Soap12HttpBindingImporter extends AbstractSoapBindingImporter
 {
    private final static Logger log = Logger.getLogger( Soap12HttpBindingImporter.class );
    
@@ -88,14 +85,9 @@ public class Soap12HttpBindingImporter implements BindingImporter
          }
       }
       
+      initWsAddressing(binding, iface);
+      
       return iface;
    }
    
-   private static final class BindingOperationComparator implements Comparator<BindingOperation>
-	{
-		public int compare(BindingOperation o1, BindingOperation o2)
-		{
-		   return Collator.getInstance().compare( o1.getOperation().getName(), o2.getOperation().getName() );
-		}
-	}
 }

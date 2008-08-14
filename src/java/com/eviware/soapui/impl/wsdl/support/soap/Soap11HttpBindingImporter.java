@@ -12,9 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.support.soap;
 
-import java.text.Collator;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,7 +37,7 @@ import com.eviware.soapui.settings.WsdlSettings;
  * @author Ole.Matzura
  */
 
-public class Soap11HttpBindingImporter implements BindingImporter
+public class Soap11HttpBindingImporter extends AbstractSoapBindingImporter 
 {
    private final static Logger log = Logger.getLogger( Soap11HttpBindingImporter.class );
    
@@ -86,14 +84,8 @@ public class Soap11HttpBindingImporter implements BindingImporter
          }
       }
       
+      initWsAddressing(binding, iface);
+      
       return iface;
    }
-   
-   private static final class BindingOperationComparator implements Comparator<BindingOperation>
-	{
-		public int compare(BindingOperation o1, BindingOperation o2)
-		{
-		   return Collator.getInstance().compare( o1.getOperation().getName(), o2.getOperation().getName() );
-		}
-	}
 }
