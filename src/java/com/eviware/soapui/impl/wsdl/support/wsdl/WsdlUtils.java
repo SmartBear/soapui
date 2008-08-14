@@ -78,6 +78,7 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
+import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.ibm.wsdl.util.xml.QNameUtils;
 import com.ibm.wsdl.xml.WSDLReaderImpl;
@@ -133,9 +134,9 @@ public class WsdlUtils
 		return result.toArray( new Element[result.size()] );
 	}
 
-	public static Attr [] getExentsibilityAttributes(  AttributeExtensible item, QName qname ) 
+	public static String [] getExentsibilityAttributes(  AttributeExtensible item, QName qname ) 
 	{
-		List<Attr> result = new ArrayList<Attr>();
+		StringList result = new StringList();
 		
 		Map map = item.getExtensionAttributes();
 		
@@ -144,11 +145,11 @@ public class WsdlUtils
 			QName name = (QName) i.next();
 			if( name.equals(qname)  )
 			{
-				result.add( (Attr) map.get( name ) );
+				result.add(  map.get( name ).toString() );
 			}
 		}
 		
-		return result.toArray( new Attr[result.size()] );
+		return result.toStringArray();
 	}
 
 	
