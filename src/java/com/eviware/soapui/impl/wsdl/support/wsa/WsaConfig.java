@@ -1,3 +1,14 @@
+/*
+ *  soapUI, copyright (C) 2004-2008 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
 package com.eviware.soapui.impl.wsdl.support.wsa;
 
 import java.beans.PropertyChangeListener;
@@ -45,6 +56,10 @@ public class WsaConfig implements PropertyChangeNotifier
 		return wsaConfig.getFrom();
 	}
 
+	public String getTo()
+	{
+		return wsaConfig.getTo();
+	}
 	public String getMessageID()
 	{
 		return wsaConfig.getMessageID();
@@ -74,7 +89,7 @@ public class WsaConfig implements PropertyChangeNotifier
 
 	public void setFaultTo(String arg0)
 	{
-		String oldValue = getAction();
+		String oldValue = getFaultTo();
 		wsaConfig.setFaultTo(arg0);
 		propertyChangeSupport.firePropertyChange("faultTo", oldValue, arg0);
 		
@@ -82,21 +97,28 @@ public class WsaConfig implements PropertyChangeNotifier
 
 	public void setFrom(String arg0)
 	{
-		String oldValue = getAction();
+		String oldValue = getFrom();
 		wsaConfig.setFrom(arg0);
 		propertyChangeSupport.firePropertyChange("from", oldValue, arg0);
 	}
 
+	public void setTo(String arg0)
+	{
+		String oldValue = getTo();
+		wsaConfig.setTo(arg0);
+		propertyChangeSupport.firePropertyChange("to", oldValue, arg0);
+	}
+
 	public void setMessageID(String arg0)
 	{
-		String oldValue = getAction();
+		String oldValue = getMessageID();
 		wsaConfig.setMessageID(arg0);
 		propertyChangeSupport.firePropertyChange("messageID", oldValue, arg0);
 	}
 
 	public void setReplyTo(String arg0)
 	{
-		String oldValue = getAction();
+		String oldValue = getReplyTo();
 		wsaConfig.setReplyTo(arg0);
 		propertyChangeSupport.firePropertyChange("replyTo", oldValue, arg0);
 	}
@@ -110,7 +132,7 @@ public class WsaConfig implements PropertyChangeNotifier
 
 	public void setVersion(String arg0)
 	{
-		String oldValue = getAction();
+		String oldValue = getVersion();
 		wsaConfig.setVersion(WsaVersionTypeConfig.Enum.forString(arg0));
 		propertyChangeSupport.firePropertyChange("version", oldValue, arg0);
 	}
