@@ -20,6 +20,7 @@ import javax.swing.JSeparator;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
+import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.actions.mockresponse.ApplyOutgoingWSSToMockResponseAction;
@@ -95,6 +96,10 @@ public class XmlSourceEditorFactory implements ResponseEditorViewFactory, Reques
 		else if( modelItem instanceof WsdlMockResponse )
 		{
 			return new WsdlMockResponseXmlSourceEditor( (XmlEditor) editor, ( WsdlMockResponse ) modelItem ); 
+		}
+		else if( modelItem instanceof RestRequest )
+		{
+			return new XmlSourceEditorView( (XmlEditor) editor );
 		}
 		else if( modelItem instanceof MessageExchangeModelItem )
 		{

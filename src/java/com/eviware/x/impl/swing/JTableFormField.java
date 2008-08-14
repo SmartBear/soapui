@@ -13,6 +13,7 @@
 package com.eviware.x.impl.swing;
 
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -32,7 +33,9 @@ public class JTableFormField extends AbstractSwingXFormField<JComponent> impleme
 		super( new JXTable() );
 		
 		scrollPane = new JScrollPane( getTable() );
+		scrollPane.setPreferredSize(new Dimension( 350, 200 ));
 		getTable().setToolTipText(description);
+		getTable().setHorizontalScrollEnabled(true);
 	}
 	
 	public void setRequired(boolean required, String message)

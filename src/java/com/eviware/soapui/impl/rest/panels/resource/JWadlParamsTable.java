@@ -13,14 +13,11 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
 import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -28,7 +25,7 @@ import com.eviware.soapui.support.components.JXToolBar;
 public class JWadlParamsTable extends JPanel
 {
 	private final XmlBeansRestParamsTestPropertyHolder params;
-	private ParamsTableModel paramsTableModel;
+	private WadlParamsTableModel paramsTableModel;
 	private JXTable paramsTable;
 	private AddParamAction addParamAction = new AddParamAction();
 	private RemoveParamAction removeParamAction = new RemoveParamAction();
@@ -41,7 +38,7 @@ public class JWadlParamsTable extends JPanel
 		super( new BorderLayout() );
 		this.params = params;
 		
-		paramsTableModel = new ParamsTableModel();
+		paramsTableModel = new WadlParamsTableModel( params );
 		paramsTable = new JXTable( paramsTableModel );
 		paramsTable.setDefaultEditor(ParameterStyle.class, new DefaultCellEditor(new JComboBox( 
 				new Object[] {ParameterStyle.QUERY, ParameterStyle.TEMPLATE, ParameterStyle.HEADER, ParameterStyle.MATRIX, ParameterStyle.PLAIN })));
@@ -73,71 +70,6 @@ public class JWadlParamsTable extends JPanel
 		return toolbar;
 	}
 
-	public class ParamsTableModel extends AbstractTableModel implements TableModel
-	{
-		public int getColumnCount()
-		{
-			return 3;
-		}
-
-		@Override
-		public String getColumnName(int column)
-		{
-			switch (column)
-			{
-				case 0: return "Name";
-				case 1: return "Value";
-				case 2: return "Style";
-			}
-			
-			return null;
-		}
-		
-		@Override
-		public Class<?> getColumnClass(int columnIndex)
-		{
-			return columnIndex < 2 ? String.class : ParameterStyle.class;
-		}
-
-		@Override
-		public boolean isCellEditable(int rowIndex, int columnIndex)
-		{
-			return true;
-		}
-
-		public int getRowCount()
-		{
-			return params.getPropertyCount();
-		}
-
-		public Object getValueAt(int rowIndex, int columnIndex)
-		{
-			RestParamProperty prop = params.getPropertyAt(rowIndex);
-
-			switch( columnIndex)
-			{
-			case 0 : return prop.getName();
-			case 1 : return prop.getDefaultValue();
-			case 2 : return prop.getStyle();
-			}
-			
-			return null;
-		}
-
-		@Override
-		public void setValueAt(Object value, int rowIndex, int columnIndex)
-		{
-			RestParamProperty prop = params.getPropertyAt(rowIndex);
-			
-			switch (columnIndex)
-			{
-			case 0 : prop.setName( value.toString() ); return;
-			case 1 : prop.setValue( value.toString() ); return;
-			case 2 : prop.setStyle( (ParameterStyle) value ); return;
-			}
-		}
-	}
-	
 	private class AddParamAction extends AbstractAction
 	{
 		public AddParamAction()

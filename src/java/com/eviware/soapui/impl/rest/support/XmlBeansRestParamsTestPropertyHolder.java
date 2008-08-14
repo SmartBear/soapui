@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.xmlbeans.XmlObject;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.RestParametersConfig;
@@ -553,5 +555,21 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 	public void setPropertiesLabel(String propertiesLabel)
 	{
 		this.propertiesLabel = propertiesLabel;
+	}
+
+	public XmlObject getConfig()
+	{
+		return config;
+	}
+
+	public void addParameters(XmlBeansRestParamsTestPropertyHolder params)
+	{
+		for( int c = 0; c < params.getPropertyCount(); c++ )
+		{
+			RestParamProperty property = params.getPropertyAt(c);
+			RestParamProperty prop = addProperty(property.getName());
+			prop.setStyle(property.getStyle());
+			prop.setValue(property.getValue());
+		}
 	}
 }

@@ -30,6 +30,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.StringUtils;
@@ -207,11 +208,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		
 		RestRequest request = new RestRequest( this, resourceConfig);
 		requests.add( request );
-		
-		for( TestProperty p : getDefaultParams())
-		{
-			request.addProperty(p.getName()).setValue(p.getValue());
-		}
+		request.getParams().addParameters(getParams());
 		
 		getInterface().fireRequestAdded(request);
 		return request;
@@ -386,5 +383,10 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	public String getPropertiesLabel()
 	{
 		return "Resource Params";
+	}
+
+	public String buildPath(PropertyExpansionContext context)
+	{
+		return getFullPath();
 	}
 }

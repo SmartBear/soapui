@@ -12,15 +12,26 @@
 
 package com.eviware.soapui.impl.rest.actions.service;
 
+import java.awt.event.ActionEvent;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 
+import javax.swing.AbstractAction;
+
+import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestRequest.RequestMethod;
+import com.eviware.soapui.impl.rest.panels.resource.WadlParamsTableModel;
+import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
+import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
+import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
@@ -41,6 +52,7 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 	public static final String SOAPUI_ACTION_ID = "NewRestResourceAction"; 
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRestResourceAction.class );
 	private XFormDialog dialog;
+	private XmlBeansRestParamsTestPropertyHolder params;
 	
 	public NewRestResourceAction()
    {
@@ -53,13 +65,25 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
    	{
 			dialog = ADialogBuilder.buildDialog( Form.class );
 			dialog.getFormField(Form.RESOURCENAME ).addFormFieldValidator(new RequiredValidator());
+			dialog.getFormField(Form.EXTRACTPARAMS).setProperty("action", new ExtractParamsAction() );
+			
    	}
    	else 
    	{
    		dialog.setValue( Form.RESOURCENAME, "" ); 
    		dialog.setValue( Form.RESOURCEPATH, "" ); 
    	}
-   	
+
+		params = new XmlBeansRestParamsTestPropertyHolder( service, 
+				RestParametersConfig.Factory.newInstance() );
+		
+		if( param instanceof URL )
+		{
+			extractParams(param, params);
+		}
+		
+		dialog.getFormField(Form.PARAMSTABLE).setProperty("tableModel", new WadlParamsTableModel( params ));
+		
    	if( dialog.show() )
    	{
    		String path = dialog.getValue(Form.RESOURCEPATH);
@@ -74,12 +98,10 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 			}
    		
 			RestResource resource = service.addNewResource( dialog.getValue(Form.RESOURCENAME), path );
-			UISupport.select(resource);
 			
-			if( dialog.getBooleanValue(Form.EXTRACTPARAMS))
-			{
-				extractParams( resource, path );
-			}
+			resource.getParams().addParameters( params );
+			
+			UISupport.select(resource);
 			
 			if( dialog.getBooleanValue(Form.CREATEREQUEST))
 			{
@@ -87,6 +109,75 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 			}
    	}
    }
+
+	private void extractParams(Object param, XmlBeansRestParamsTestPropertyHolder params)
+	{
+		String path = ((URL) param).getPath();
+		String[] items = path.split("/");
+		for( String item : items )
+		{
+			try
+			{
+				String[] matrixParams = item.split(";");
+				if( matrixParams.length > 0 )
+				{
+					item = matrixParams[0];
+					for( int c = 1; c < matrixParams.length; c++ )
+					{
+						String matrixParam = matrixParams[c];
+						
+						int ix = matrixParam.indexOf('=');
+						if( ix == -1 )
+						{
+							params.addProperty( URLDecoder.decode( matrixParam, "Utf-8" )).setStyle(ParameterStyle.MATRIX);
+						}
+						else
+						{
+							String name = matrixParam.substring(0, ix);
+							RestParamProperty property = params.addProperty(URLDecoder.decode(name, "Utf-8"));
+							property.setStyle(ParameterStyle.MATRIX);
+							property.setValue(URLDecoder.decode(matrixParam.substring(ix+1), "Utf-8"));
+						}
+					}
+				}
+				
+				Integer.parseInt(item);
+				params.addProperty(item).setStyle(ParameterStyle.TEMPLATE);
+			}
+			catch( Exception e )
+			{}
+		}
+		
+		String query = ((URL) param).getQuery();
+		if( StringUtils.hasContent(query))
+		{
+			items = query.split("&");
+			for( String item : items )
+			{
+				try
+				{
+					int ix = item.indexOf('=');
+					if( ix == -1 )
+					{
+						params.addProperty( URLDecoder.decode( item, "Utf-8" )).setStyle(ParameterStyle.QUERY);
+					}
+					else
+					{
+						String name = item.substring(0, ix);
+						RestParamProperty property = params.addProperty(URLDecoder.decode(name, "Utf-8"));
+						property.setStyle(ParameterStyle.QUERY);
+						property.setValue(URLDecoder.decode(item.substring(ix+1), "Utf-8"));
+					}
+				}
+				catch (UnsupportedEncodingException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		dialog.setValue(Form.RESOURCEPATH, ((URL) param).getPath());
+	}
 	
    protected void createRequest(RestResource resource)
 	{
@@ -95,11 +186,32 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 		UISupport.showDesktopPanel( request );
 	}
 
-	protected void extractParams(RestResource resource, String path)
+	private class ExtractParamsAction extends AbstractAction
 	{
+		public ExtractParamsAction()
+		{
+			super( "Extract Params" );
+		}
 		
+		public void actionPerformed(ActionEvent e)
+		{
+			if( !UISupport.confirm("Extract params from current endpoint?", "Extract Params"))
+			{
+				return;
+			}
+			
+			try
+			{
+				extractParams( new URL( dialog.getValue(Form.RESOURCEPATH)), params);
+			}
+			catch (MalformedURLException e1)
+			{
+				UISupport.showErrorMessage("Error extracting parameters; " + e1 );
+			}
+			
+		}
 	}
-
+	
 	@AForm( name="Form.Title", description = "Form.Description", helpUrl=HelpUrls.NEWRESTSERVICE_HELP_URL, icon=UISupport.TOOL_ICON_PATH)
 	public interface Form 
 	{
@@ -109,8 +221,11 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 		@AField(description = "Form.ServiceUrl.Description", type = AFieldType.STRING ) 
 		public final static String RESOURCEPATH = messages.get("Form.ResourcePath.Label"); 
 		
-		@AField(description = "Form.ExtractParams.Description", type = AFieldType.BOOLEAN ) 
+		@AField(description = "Form.ExtractParams.Description", type = AFieldType.ACTION ) 
 		public final static String EXTRACTPARAMS = messages.get("Form.ExtractParams.Label"); 
+
+		@AField(description = "Form.ParamsTable.Description", type = AFieldType.TABLE ) 
+		public final static String PARAMSTABLE = messages.get("Form.ParamsTable.Label"); 
 		
 		@AField(description = "Form.CreateRequest.Description", type = AFieldType.BOOLEAN ) 
 		public final static String CREATEREQUEST = messages.get("Form.CreateRequest.Label"); 

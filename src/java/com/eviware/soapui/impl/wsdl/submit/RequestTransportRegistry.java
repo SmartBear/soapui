@@ -16,12 +16,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.submit.filters.EndpointRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.EndpointStrategyRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpAuthenticationRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpProxyRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpSettingsRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.PropertyExpansionRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.RemoveEmptyContentRequestFilter;
+import com.eviware.soapui.impl.wsdl.submit.filters.RestHeadersRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.SoapHeadersRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.StripWhitespacesRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WsaRequestFilter;
@@ -47,7 +49,9 @@ public class RequestTransportRegistry
 	{
 		HttpClientRequestTransport httpTransport = new HttpClientRequestTransport();
 		
+		httpTransport.addRequestFilter( new EndpointRequestFilter() );
 		httpTransport.addRequestFilter( new HttpSettingsRequestFilter() );
+		httpTransport.addRequestFilter( new RestHeadersRequestFilter() );
 		httpTransport.addRequestFilter( new SoapHeadersRequestFilter() );
 		httpTransport.addRequestFilter( new HttpProxyRequestFilter() );
 		httpTransport.addRequestFilter( new HttpAuthenticationRequestFilter() );

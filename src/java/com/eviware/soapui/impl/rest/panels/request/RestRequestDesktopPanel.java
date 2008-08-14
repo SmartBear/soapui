@@ -26,6 +26,7 @@ import com.eviware.soapui.impl.rest.RestRequest.RequestMethod;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -63,7 +64,7 @@ public class RestRequestDesktopPanel extends AbstractHttpRequestDesktopPanel<Res
 	@Override
 	protected ModelItemXmlEditor<?,?> buildResponseEditor()
 	{
-		return null;
+		return new RestResponseMessageEditor( getModelItem() );
 	}
 
 	@Override
@@ -119,7 +120,7 @@ public class RestRequestDesktopPanel extends AbstractHttpRequestDesktopPanel<Res
 		}
 	}
 	
-	public class RestResponseMessageEditor extends AbstractHttpRequestDesktopPanel<?,?>.AbstractHttpRequestMessageEditor<RestResponseDocument>
+	public class RestResponseMessageEditor extends AbstractHttpRequestDesktopPanel<?,?>.AbstractHttpResponseMessageEditor<RestResponseDocument>
 	{
 		public RestResponseMessageEditor(RestRequest modelItem)
 		{
@@ -127,7 +128,7 @@ public class RestRequestDesktopPanel extends AbstractHttpRequestDesktopPanel<Res
 		}
 	}
 	
-	public static class RestRequestDocument extends AbstractXmlDocument 
+	public class RestRequestDocument extends AbstractXmlDocument 
 	{
 		private final RestRequest modelItem;
 
@@ -143,30 +144,29 @@ public class RestRequestDesktopPanel extends AbstractHttpRequestDesktopPanel<Res
 
 		public SchemaTypeSystem getTypeSystem()
 		{
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		public String getXml()
 		{
-			// TODO Auto-generated method stub
-			return null;
+			return getModelItem().getRequestContent();
 		}
 
 		public void setXml(String xml)
 		{
-			// TODO Auto-generated method stub
-			
+			getModelItem().setRequestContent(xml);
 		}
 	}
 	
-	public static class RestResponseDocument extends AbstractXmlDocument
+	public class RestResponseDocument extends AbstractXmlDocument implements PropertyChangeListener
 	{
 		private final RestRequest modelItem;
 
 		public RestResponseDocument(RestRequest modelItem)
 		{
 			this.modelItem = modelItem;
+			
+			modelItem.addPropertyChangeListener(RestRequest.RESPONSE_PROPERTY, this);
 		}
 		
 		public RestRequest getRequest()
@@ -176,20 +176,27 @@ public class RestRequestDesktopPanel extends AbstractHttpRequestDesktopPanel<Res
 
 		public SchemaTypeSystem getTypeSystem()
 		{
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		public String getXml()
 		{
-			// TODO Auto-generated method stub
-			return null;
+			HttpResponse response = getModelItem().getResponse();
+			return response == null ? "" : response.getContentAsString();
 		}
 
 		public void setXml(String xml)
 		{
-			// TODO Auto-generated method stub
-			
+			HttpResponse response = getModelItem().getResponse();
+			if( response != null )
+				response.setResponseContent(xml);
+		}
+
+		public void propertyChange(PropertyChangeEvent evt)
+		{
+			fireXmlChanged(evt.getOldValue() == null ? null : 
+				((HttpResponse)evt.getOldValue()).getContentAsString(), 
+				((HttpResponse)evt.getNewValue()).getContentAsString());
 		}
 	}
 }

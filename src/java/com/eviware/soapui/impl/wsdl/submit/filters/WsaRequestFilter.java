@@ -42,7 +42,7 @@ public class WsaRequestFilter extends AbstractRequestFilter
 	
 	public void filterAbstractHttpRequest(SubmitContext context, AbstractHttpRequest<?> wsdlRequest)
 	{
-		if( wsdlRequest != null && !((WsdlRequest)wsdlRequest).isWsAddressing())
+		if( !(wsdlRequest instanceof WsdlRequest) || !((WsdlRequest)wsdlRequest).isWsAddressing())
 			return;
 		
 		String content = (String) context.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );

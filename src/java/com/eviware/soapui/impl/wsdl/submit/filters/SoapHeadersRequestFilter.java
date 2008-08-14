@@ -13,16 +13,12 @@
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
 import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.URI;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
-import com.eviware.soapui.settings.HttpSettings;
 
 /**
  * RequestFilter that adds SOAP specific headers
@@ -37,16 +33,6 @@ public class SoapHeadersRequestFilter extends AbstractRequestFilter
 		HttpMethod postMethod = (HttpMethod) context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 		
 		WsdlInterface wsdlInterface = (WsdlInterface) wsdlRequest.getOperation().getInterface();
-		String strURL = wsdlRequest.getEndpoint();
-		strURL = PropertyExpansionUtils.expandProperties( context, strURL );
-		try
-		{
-			postMethod.setURI(new URI(strURL, wsdlRequest.getSettings().getBoolean( HttpSettings.ENCODED_URLS )));
-		}
-		catch ( Exception e)
-		{
-			SoapUI.logError( e );
-		}
 		
 		//	 init content-type and encoding
 		String encoding = wsdlRequest.getEncoding();

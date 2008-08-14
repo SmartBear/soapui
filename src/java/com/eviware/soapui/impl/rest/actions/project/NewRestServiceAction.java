@@ -146,6 +146,21 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
    	{
    		RestService restService = (RestService) project.addNewInterface( dialog.getValue(Form.SERVICENAME), RestServiceFactory.REST_TYPE );
    		restService.setBasePath( dialog.getValue(Form.SERVICEENDPOINT));
+   		UISupport.select(restService);
+   		
+   		if( dialog.getFormField(Form.EXTRACTPARAMS).isEnabled() && dialog.getBooleanValue(Form.EXTRACTPARAMS))
+   		{
+   			try
+				{
+					URL url = new URL( restService.getBasePath() );
+					SoapUI.getActionRegistry().getAction(NewRestResourceAction.SOAPUI_ACTION_ID).perform(restService, url );
+				}
+				catch (MalformedURLException e)
+				{
+					SoapUI.getActionRegistry().getAction(NewRestResourceAction.SOAPUI_ACTION_ID).perform(restService, null );
+				}
+   			
+   		}
    		
    		String wadl = dialog.getValue(Form.WADLURL);
    		if( StringUtils.hasContent(wadl))
@@ -164,7 +179,17 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
 				}
    		}
    		
-   		UISupport.select(restService);
+   		try
+   		{
+   			URL url = new URL( restService.getBasePath() );
+   			String endpoint = url.getProtocol() + "://" + url.getHost();
+   			if( url.getPort() > 0 )
+   				endpoint += ":" + url.getPort();
+   			
+				restService.addEndpoint( endpoint );
+   		}
+   		catch( Exception e )
+   		{}
    		
    		if( dialog.getFormField(Form.CREATERESOURCE).isEnabled() && dialog.getBooleanValue(Form.CREATERESOURCE))
    		{

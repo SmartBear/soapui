@@ -150,11 +150,6 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		}
 	}
 
-	public RestResponse getResponse()
-	{
-		return (RestResponse) super.getResponse();
-	}
-	
 	public PropertyExpansion[] getPropertyExpansions()
 	{
 		PropertyExpansionsResult result = new PropertyExpansionsResult( this, this );
@@ -192,6 +187,12 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	public ModelItem getModelItem()
 	{
 		return this;
+	}
+
+	@Override
+	public RestResource getOperation()
+	{
+		return (RestResource) super.getOperation();
 	}
 
 	public Map<String, TestProperty> getProperties()
@@ -337,5 +338,10 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	{
 		RequestMethod method = getMethod();
 		return method == RequestMethod.POST || method == RequestMethod.PUT;
+	}
+
+	public RestResource getResource()
+	{
+		return getOperation();
 	}
 }

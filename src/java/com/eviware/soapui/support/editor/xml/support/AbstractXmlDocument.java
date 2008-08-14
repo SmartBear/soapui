@@ -51,7 +51,7 @@ public abstract class AbstractXmlDocument implements XmlDocument
    {
    	propertyChangeSupport.firePropertyChange( XML_PROPERTY, oldValue, newValue );
    }
-
+   
 	public void release()
 	{
 	}

@@ -13,7 +13,7 @@
 package com.eviware.soapui.impl.rest.panels.request;
 
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.support.editor.registry.RequestMessageEditor;
 
 /**
@@ -33,7 +33,7 @@ public class RestResponseMessageEditor extends RequestMessageEditor<RestDocument
 			this.modelItem = modelItem;
 		}
 		
-		public RestResponse getResponse()
+		public HttpResponse getResponse()
 		{
 			return modelItem.getResponse();
 		}

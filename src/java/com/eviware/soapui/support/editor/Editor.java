@@ -188,7 +188,7 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
 	public void addInspector( EditorInspector<T> inspector )
 	{
 		inspectorPanel.addInspector( inspector );
-		inspectorPanel.setInspectorVisible( inspector, inspector.isEnabledFor( currentView ) );
+		inspectorPanel.setInspectorVisible( inspector, currentView == null ? true : inspector.isEnabledFor( currentView ) );
 	}
 	
 	private final class InputTabsChangeListener implements ChangeListener
