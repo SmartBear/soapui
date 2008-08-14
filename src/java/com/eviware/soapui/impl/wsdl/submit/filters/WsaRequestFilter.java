@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
+import java.util.UUID;
+
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Element;
@@ -23,6 +25,7 @@ import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -49,12 +52,13 @@ public class WsaRequestFilter extends AbstractRequestFilter
 		}
 		else
 		{
-			content = addWSAddressing(content, (WsdlRequest) wsdlRequest);
+			ExtendedHttpMethod httpMethod = (ExtendedHttpMethod) context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
+			content = addWSAddressing(content, (WsdlRequest) wsdlRequest, httpMethod);
 			if( content != null )
 				context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, content );
 		}
 	}
-	public static String addWSAddressing( String content, WsdlRequest wsdlRequest )
+	public static String addWSAddressing( String content, WsdlRequest wsdlRequest, ExtendedHttpMethod httpMethod )
 	{
 		try
 		{
@@ -76,7 +80,10 @@ public class WsaRequestFilter extends AbstractRequestFilter
          Element elm = (Element) envelope[0].getDomNode();
          
          Boolean mustUnderstand = null;
-         if (!wsdlRequest.getWsaConfig().getMustUnderstand().equals(MustUnderstandTypeConfig.NONE.toString()))
+         if (wsdlRequest.getWsaConfig().getMustUnderstand().equals(MustUnderstandTypeConfig.FALSE.toString()))
+			{
+				mustUnderstand = false;
+			} else if (wsdlRequest.getWsaConfig().getMustUnderstand().equals(MustUnderstandTypeConfig.TRUE.toString()))
 			{
 				mustUnderstand = true;
 			}
@@ -95,19 +102,35 @@ public class WsaRequestFilter extends AbstractRequestFilter
          if (replyTo != null && !replyTo.isEmpty())
 			{
          	header.appendChild(builder.createWsaChildElement("wsa:replyTo", elm, replyTo) );
+			} else if (wsdlRequest.getOperation().isRequestResponse())
+			{
+				//TODO if replyTo not specified but wsa:replyTo mandatory ...specify what???
 			}
          
          String faultTo = wsdlRequest.getWsaConfig().getFaultTo();
          if (faultTo != null && !faultTo.isEmpty())
 			{
-         	header.appendChild(builder.createWsaChildElement("wsa:faultToTo", elm, faultTo) );
-			}
+         	header.appendChild(builder.createWsaChildElement("wsa:faultTo", elm, faultTo) );
+			} 
 
          String msgId = wsdlRequest.getWsaConfig().getMessageID();
          if (msgId != null && !msgId.isEmpty())
 			{
             header.appendChild(builder.createWsaChildElement("wsa:MessageID", elm, msgId));
+			} else if (wsdlRequest.getOperation().isRequestResponse())
+			{
+				//if msgId not specified but wsa:msgId mandatory create one
+            header.appendChild(builder.createWsaChildElement("wsa:MessageID", elm, UUID.randomUUID().toString()));
 			}
+         
+         String to = wsdlRequest.getWsaConfig().getMessageID();
+         if (to != null && to.isEmpty())
+			{
+            header.appendChild(builder.createWsaChildElement("wsa:to", elm, to) );
+			} else if (wsdlRequest.getOperation().isOneWay() || wsdlRequest.getOperation().isRequestResponse()) {
+				//if to not specified but wsa:to mandatory get default value
+            header.appendChild(builder.createWsaChildElement("wsa:to", elm, httpMethod.getURI().toString()) );
+         }
          
          content = xmlObject.xmlText();
 		}
@@ -138,7 +161,7 @@ public class WsaRequestFilter extends AbstractRequestFilter
 	      Text txtElm = addToElement.getOwnerDocument().createTextNode(wsaProperty);
 	      if (mustUnderstand != null)
 			{
-	      	wsaElm.setAttributeNS(soapVersion.getEnvelopeNamespace(), "mustUnderstand", mustUnderstand.equals(MustUnderstandTypeConfig.TRUE.toString()) ? "1" : "0");
+	      	wsaElm.setAttributeNS(soapVersion.getEnvelopeNamespace(), "mustUnderstand", mustUnderstand ? "1" : "0");
 			}
 	      wsaElm.appendChild(txtElm);
 //	      header.appendChild(wsFromElm);
@@ -150,7 +173,7 @@ public class WsaRequestFilter extends AbstractRequestFilter
 	      Text txtElm = addToElement.getOwnerDocument().createTextNode(wsaProperty);
 	      if (mustUnderstand != null)
 			{
-	      	wsaElm.setAttributeNS(soapVersion.getEnvelopeNamespace(), "mustUnderstand", mustUnderstand.equals(MustUnderstandTypeConfig.TRUE.toString()) ? "1" : "0");
+	      	wsaElm.setAttributeNS(soapVersion.getEnvelopeNamespace(), "mustUnderstand", mustUnderstand ? "1" : "0");
 			}
 	      wsAddressElm.appendChild(txtElm);
 	      wsaElm.appendChild(wsAddressElm);
