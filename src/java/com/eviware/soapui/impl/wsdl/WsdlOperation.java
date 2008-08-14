@@ -36,6 +36,7 @@ import org.apache.xmlbeans.SchemaType;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.OperationConfig;
 import com.eviware.soapui.config.OperationTypesConfig;
+import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.config.WsdlRequestConfig;
 import com.eviware.soapui.config.PartsConfig.Part;
 import com.eviware.soapui.impl.support.AbstractHttpOperation;
@@ -144,9 +145,42 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
       WsdlRequest requestImpl = new WsdlRequest( this, getConfig().addNewCall() );
       requestImpl.setName( name );
       requests.add( requestImpl );
+      
+      if(!getInterface().getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString()))
+      {
+  			requestImpl.setWsAddressing(true);
+        
+      	String [] attrs = WsdlUtils.getExentsibilityAttributes(getBindingOperation().getOperation().getInput(), new QName("http://www.w3.org/2006/05/addressing/wsdl", "Action") );
+      	if (attrs.length > 0)
+			{
+         	requestImpl.getWsaConfig().setAction(attrs[0]);
+			} else {
+				createDefaultedAction(requestImpl);
+			}
+      	
+      }
+      
       (getInterface()).fireRequestAdded( requestImpl );
       return requestImpl;
    }
+
+	private void createDefaultedAction(WsdlRequest requestImpl)
+	{
+		try
+		{
+			//construct default action
+			Definition definition = requestImpl.getOperation().getInterface().getWsdlContext().getDefinition();
+			String targetNamespace = definition.getTargetNamespace();
+			String portTypeName = requestImpl.getOperation().getInterface().getBinding().getPortType().getQName().getLocalPart();
+			String operationName = requestImpl.getOperation().getName();
+			requestImpl.getWsaConfig().setAction(targetNamespace + "/" + portTypeName + "/" + operationName);
+			
+		}
+		catch (Exception e)
+		{
+			SoapUI.logError( e );
+		}
+	}
 
    public WsdlInterface getInterface()
    {
