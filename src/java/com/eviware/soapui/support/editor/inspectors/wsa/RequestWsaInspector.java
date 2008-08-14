@@ -60,11 +60,12 @@ public class RequestWsaInspector extends AbstractXmlInspector
 				form.appendComboBox( "version", "WS-A Version", new String[] {WsaVersionTypeConfig.X_200508.toString(), WsaVersionTypeConfig.X_200408.toString()},
 					"The  property for managing WS-A version" );
 				
-				form.appendTextField( "from", "From", "The source endpoint reference" );
-				form.appendTextField( "replyTo", "Reply to", "The reply endpoint reference" );
-				form.appendTextField( "faultTo", "Fault to", "The fault endpoint reference" );
+//				form.appendTextField( "from", "From", "The source endpoint reference" );
+//				form.appendTextField( "replyTo", "Reply to", "The reply endpoint reference" );
+//				form.appendTextField( "faultTo", "Fault to", "The fault endpoint reference" );
 				form.appendTextField( "action", "Action", "The action related to a message" );
 				form.appendTextField( "messageID", "MessageID", " The ID of a message that can be used to uniquely identify a message" );
+				form.appendTextField( "to", "To", "The destination endpoint reference" );
 			}
 			
 			form.addSpace( 5 );
