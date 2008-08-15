@@ -208,7 +208,13 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		
 		RestRequest request = new RestRequest( this, resourceConfig);
 		requests.add( request );
-		request.getParams().addParameters(getParams());
+		
+		for( RestParamProperty prop : getDefaultParams())
+		{
+			RestParamProperty p = request.addProperty(prop.getName());
+			p.setValue(prop.getValue());
+			p.setStyle(prop.getStyle());
+		}
 		
 		getInterface().fireRequestAdded(request);
 		return request;
@@ -388,5 +394,21 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	public String buildPath(PropertyExpansionContext context)
 	{
 		return getFullPath();
+	}
+
+	public void removeRequest(RestRequest request)
+	{
+	}
+	
+	public RestRequest cloneRequest( RestRequest request, String name )
+	{
+		RestRequestConfig resourceConfig = (RestRequestConfig) getConfig().addNewRequest().set(request.getConfig());
+		resourceConfig.setName(name);
+		
+		RestRequest newRequest = new RestRequest( this, resourceConfig);
+		requests.add( newRequest );
+		
+		getInterface().fireRequestAdded(newRequest);
+		return newRequest;
 	}
 }

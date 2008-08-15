@@ -58,7 +58,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	
    public RestRequest( RestResource resource, RestRequestConfig requestConfig )
    {
-   	super( requestConfig, resource, "rest_request.gif", false );
+   	super( requestConfig, resource, "/rest_request.gif", false );
    	
    	if( requestConfig.getParameters() == null )
    		requestConfig.addNewParameters();
@@ -343,5 +343,25 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	public RestResource getResource()
 	{
 		return getOperation();
+	}
+
+	public String getPath()
+	{
+		if( getConfig().isSetFullPath())
+			return getConfig().getFullPath();
+		else
+			return getResource().getFullPath();
+	}
+
+	public void setPath(String fullPath)
+	{
+		String old = getPath();
+		
+		if( getResource().getFullPath().equals(fullPath ))
+			getConfig().unsetFullPath();
+		else
+			getConfig().setFullPath(fullPath);
+		
+		notifyPropertyChanged("path", old, fullPath);
 	}
 }

@@ -47,6 +47,7 @@ public class MimeMessageResponse implements HttpResponse
 	private long timestamp;
 	private PostResponseDataSource postResponseDataSource;
 	private byte[] requestData;
+	private String contentType;
 
 	public MimeMessageResponse(AbstractHttpRequest<?> httpRequest, final ExtendedHttpMethod httpMethod, String requestContent, PropertyExpansionContext context)
 	{
@@ -54,6 +55,7 @@ public class MimeMessageResponse implements HttpResponse
 		this.requestContent = requestContent;
 		this.timeTaken = httpMethod.getTimeTaken();
 		this.timestamp = System.currentTimeMillis();
+		this.contentType = httpMethod.getResponseContentType();
 		
 		try
 		{
@@ -197,5 +199,10 @@ public class MimeMessageResponse implements HttpResponse
 	public byte[] getRawResponseData()
 	{
 		return postResponseDataSource.getData();
+	}
+
+	public String getContentType()
+	{
+		return contentType;
 	}
 }

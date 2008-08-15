@@ -71,6 +71,12 @@
 	<!-- RestResource Actions -->
 	<tns:action id="NewRestRequestAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.NewRestRequestAction"/>
 	<tns:action id="NewSubResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.NewRestSubResourceAction"/>
+
+	<!-- RestRequest Actions -->
+	<tns:action id="AddRestRequestToTestCaseAction" actionClass="com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction"/>
+	<tns:action id="CloneRestRequestAction" actionClass="com.eviware.soapui.impl.rest.actions.request.CloneRestRequestAction"/>
+	<tns:action id="RenameRestRequestAction" actionClass="com.eviware.soapui.impl.rest.actions.request.RenameRestRequestAction"/>
+	<tns:action id="DeleteRestRequestAction" actionClass="com.eviware.soapui.impl.rest.actions.request.DeleteRestRequestAction"/>
 	
 	<!-- Request Actions -->
 	<tns:action id="AddRequestToTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.request.AddRequestToTestCaseAction"/>
@@ -273,8 +279,8 @@
  	</tns:actionGroup>
  	
  	<!-- RestService ActionGroup -->
- 	<tns:actionGroup name="REST Service Actions" id="RestServiceActions">
- 	<tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Service Viewer" 
+ 	<tns:actionGroup name="REST Service Actions" id="RestServiceActions" default="ShowDesktopPanelAction">
+ 		<tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Service Viewer" 
  			description="Shows the Service Viewer for this REST Service" keyStroke="ENTER"/>
  			<tns:actionMapping actionId="SeperatorAction"/>
  		<tns:actionMapping actionId="NewRestResourceAction"/>
@@ -293,8 +299,8 @@
 	</tns:actionGroup>
 	
 	<!-- RestResource ActionGroup -->
- 	<tns:actionGroup name="REST Resource Actions" id="RestResourceActions">
- 	<tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Resource Viewer" 
+ 	<tns:actionGroup name="REST Resource Actions" id="RestResourceActions" default="ShowDesktopPanelAction">
+ 		<tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Resource Viewer" 
  			description="Shows the Resource Viewer for this REST Resource" keyStroke="ENTER"/>
  			<tns:actionMapping actionId="SeperatorAction"/>
  		<tns:actionMapping actionId="NewRestRequestAction"/>
@@ -322,6 +328,12 @@
  	<tns:actionGroup name="REST Request Actions" id="RestRequestActions" default="ShowDesktopPanelAction">
 	 	<tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Request Editor" 
  			description="Shows the Request Editor for this Request" keyStroke="ENTER"/>
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="AddRestRequestToTestCaseAction" keyStroke="menu alt A" iconPath="/addToTestCase.gif"/>
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="CloneRestRequestAction" keyStroke="F9" iconPath="/clone_request.gif"/>
+		<tns:actionMapping actionId="RenameRestRequestAction" keyStroke="F2"/>
+		<tns:actionMapping actionId="DeleteRestRequestAction" keyStroke="DELETE"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="requests.html"/>
 	</tns:actionGroup>

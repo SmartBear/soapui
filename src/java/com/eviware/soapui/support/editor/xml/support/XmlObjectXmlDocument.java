@@ -13,6 +13,7 @@
 package com.eviware.soapui.support.editor.xml.support;
 
 import org.apache.xmlbeans.SchemaTypeSystem;
+import org.apache.xmlbeans.XmlBeans;
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
@@ -33,7 +34,7 @@ public class XmlObjectXmlDocument extends AbstractXmlDocument
 	
 	public SchemaTypeSystem getTypeSystem()
 	{
-		return xmlObject == null ? null : xmlObject.schemaType().getTypeSystem();
+		return xmlObject == null ? XmlBeans.getBuiltinTypeSystem() : xmlObject.schemaType().getTypeSystem();
 	}
 
 	public String getXml()

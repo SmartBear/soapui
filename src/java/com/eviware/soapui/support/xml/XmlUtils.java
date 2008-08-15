@@ -797,20 +797,20 @@ public final class XmlUtils
 		return buf.toString();
 	}
 
-	public static String setXPathContent( String emptyResponse, String string, String actor )
+	public static String setXPathContent( String xmlText, String xpath, String value )
 	{
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( emptyResponse );
+			XmlObject xmlObject = XmlObject.Factory.parse( xmlText );
 			
 			String namespaces = declareXPathNamespaces( xmlObject );
 			if( namespaces != null && namespaces.trim().length() > 0 )
-				string = namespaces + string;
+				xpath = namespaces + xpath;
 			
-			XmlObject[] path = xmlObject.selectPath( string );
+			XmlObject[] path = xmlObject.selectPath( xpath );
 			for( XmlObject xml : path )
 			{
-				setNodeValue( xml.getDomNode(), actor );
+				setNodeValue( xml.getDomNode(), value );
 			}
 			
 			return xmlObject.toString();
@@ -820,7 +820,7 @@ public final class XmlUtils
 			SoapUI.logError( e );
 		}
 		
-		return emptyResponse;
+		return xmlText;
 	}
 	
 	public static QName getQName( Node node )

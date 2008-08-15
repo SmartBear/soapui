@@ -102,4 +102,10 @@ public class RestResponse implements HttpResponse
 		return null;
 	}
 
+	public String getContentType()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

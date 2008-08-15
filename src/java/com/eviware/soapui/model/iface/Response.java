@@ -30,6 +30,8 @@ public interface Response
    
    public String getRequestContent();
    
+   public String getContentType();
+   
    public long getTimeTaken();
    
    public Attachment [] getAttachments();

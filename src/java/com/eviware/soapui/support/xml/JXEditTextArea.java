@@ -41,6 +41,7 @@ import org.syntax.jedit.InputHandler;
 import org.syntax.jedit.JEditTextArea;
 import org.syntax.jedit.SyntaxStyle;
 import org.syntax.jedit.tokenmarker.GroovyTokenMarker;
+import org.syntax.jedit.tokenmarker.JavaScriptTokenMarker;
 import org.syntax.jedit.tokenmarker.Token;
 import org.syntax.jedit.tokenmarker.TokenMarker;
 import org.syntax.jedit.tokenmarker.XMLTokenMarker;
@@ -109,6 +110,12 @@ public class JXEditTextArea extends JEditTextArea implements
 	public static JXEditTextArea createGroovyEditor()
 	{
 		return new JXEditTextArea( new GroovyTokenMarker() );
+	}
+	
+	
+	public static JXEditTextArea createJavaScriptEditor()
+	{
+		return new JXEditTextArea( new JavaScriptTokenMarker() );
 	}
 	
 	public JXEditTextArea( TokenMarker tokenMarker )

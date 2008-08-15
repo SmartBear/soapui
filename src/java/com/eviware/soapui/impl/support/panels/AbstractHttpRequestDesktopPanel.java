@@ -163,7 +163,6 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		return statusBar;
 	}
 
-	@SuppressWarnings("unchecked")
 	protected JComponent buildContent()
 	{
 		requestSplitPane = UISupport.createHorizontalSplit();

@@ -1295,6 +1295,7 @@
     				type="xsd:string">
     			</xsd:attribute>
     			<xsd:attribute name="mediaType" type="xsd:string"></xsd:attribute>
+    			<xsd:attribute name="fullPath" type="xsd:string"></xsd:attribute>
     		</xsd:extension>
     	</xsd:complexContent>
     </xsd:complexType>

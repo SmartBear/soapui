@@ -12,14 +12,24 @@
 
 package com.eviware.soapui.impl.rest.panels.request;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.text.Document;
 
-import org.apache.xmlbeans.SchemaTypeSystem;
+import net.sf.json.JSONObject;
+import net.sf.json.xml.XMLSerializer;
 
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequest.RequestMethod;
@@ -29,14 +39,21 @@ import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.Request.SubmitException;
+import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
+import com.eviware.soapui.support.xml.XmlUtils;
 
-public class RestRequestDesktopPanel extends AbstractHttpRequestDesktopPanel<RestRequest, RestRequest> implements PropertyChangeListener
+public class RestRequestDesktopPanel extends AbstractHttpRequestDesktopPanel<RestRequest, RestRequest> implements
+		PropertyChangeListener
 {
 	private boolean updatingRequest;
 	private JComboBox methodCombo;
 	private JComboBox mediaTypeCombo;
+	private JUndoableTextField pathField;
+	private JButton recreatePathButton;
 
 	public RestRequestDesktopPanel(RestRequest modelItem)
 	{
@@ -45,26 +62,26 @@ public class RestRequestDesktopPanel extends AbstractHttpRequestDesktopPanel<Res
 
 	public void propertyChange(PropertyChangeEvent evt)
 	{
-		if( evt.getPropertyName().equals( "method" ) && !updatingRequest )
+		if (evt.getPropertyName().equals("method") && !updatingRequest)
 		{
 			methodCombo.setSelectedItem(evt.getNewValue());
 		}
-		else if( evt.getPropertyName().equals( "mediaType" ) && !updatingRequest )
+		else if (evt.getPropertyName().equals("mediaType") && !updatingRequest)
 		{
-			mediaTypeCombo.setSelectedItem( (String)evt.getNewValue() );
+			mediaTypeCombo.setSelectedItem((String) evt.getNewValue());
 		}
 	}
 
 	@Override
-	protected ModelItemXmlEditor<?,?> buildRequestEditor()
+	protected ModelItemXmlEditor<?, ?> buildRequestEditor()
 	{
-		return new RestRequestMessageEditor( getModelItem() );
+		return new RestRequestMessageEditor(getModelItem());
 	}
 
 	@Override
-	protected ModelItemXmlEditor<?,?> buildResponseEditor()
+	protected ModelItemXmlEditor<?, ?> buildResponseEditor()
 	{
-		return new RestResponseMessageEditor( getModelItem() );
+		return new RestResponseMessageEditor(getModelItem());
 	}
 
 	@Override
@@ -80,55 +97,95 @@ public class RestRequestDesktopPanel extends AbstractHttpRequestDesktopPanel<Res
 	}
 
 	@Override
-	protected void insertButtons(JXToolBar toolbar)
+	protected JComponent buildToolbar()
 	{
-		methodCombo = new JComboBox( new Object[] { RequestMethod.GET, RequestMethod.POST, 
-				RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.HEAD});
-		
+		recreatePathButton = createActionButton(new RecreatePathAction(), true);
+
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.add(super.buildToolbar(), BorderLayout.NORTH);
+
+		JXToolBar toolbar = UISupport.createToolbar();
+		toolbar.addSpace(3);
+		methodCombo = new JComboBox(new Object[] { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+				RequestMethod.DELETE, RequestMethod.HEAD });
+
 		methodCombo.setSelectedItem(getModelItem().getMethod());
-		methodCombo.addItemListener(new ItemListener() {
+		methodCombo.addItemListener(new ItemListener()
+		{
 
 			public void itemStateChanged(ItemEvent e)
 			{
 				updatingRequest = true;
 				getModelItem().setMethod((RequestMethod) methodCombo.getSelectedItem());
 				updatingRequest = false;
-			}});
-		
-		toolbar.addLabeledFixed( "Method", methodCombo );
-		
-		mediaTypeCombo = new JComboBox( new Object[]{ getModelItem().getMediaType()});
+			}
+		});
+
+		toolbar.addLabeledFixed("Method", methodCombo);
+		toolbar.addSeparator();
+
+		pathField = new JUndoableTextField();
+		pathField.setPreferredSize(new Dimension(250, 20));
+		pathField.setText(getModelItem().getPath());
+		pathField.getDocument().addDocumentListener(new DocumentListenerAdapter()
+		{
+
+			@Override
+			public void update(Document document)
+			{
+				getModelItem().setPath(pathField.getText());
+			}
+		});
+
+		toolbar.addLabeledFixed("Resource Path:", pathField);
+		toolbar.add(recreatePathButton);
+
+		toolbar.addSeparator();
+
+		mediaTypeCombo = new JComboBox(new Object[] { getModelItem().getMediaType() });
 		mediaTypeCombo.setEditable(true);
-		mediaTypeCombo.addItemListener(new ItemListener() {
+		mediaTypeCombo.addItemListener(new ItemListener()
+		{
 
 			public void itemStateChanged(ItemEvent e)
 			{
 				updatingRequest = true;
 				getModelItem().setMediaType((String) mediaTypeCombo.getSelectedItem());
 				updatingRequest = false;
-			}} );
-		
-		toolbar.addLabeledFixed( "Media Type", mediaTypeCombo );
-		
+			}
+		});
+
+		toolbar.addLabeledFixed("Media Type", mediaTypeCombo);
+		toolbar.addSeparator();
+
+		panel.add(toolbar, BorderLayout.SOUTH);
+		return panel;
 	}
-	
-	public class RestRequestMessageEditor extends AbstractHttpRequestDesktopPanel<?,?>.AbstractHttpRequestMessageEditor<RestRequestDocument>
+
+	@Override
+	protected void insertButtons(JXToolBar toolbar)
+	{
+	}
+
+	public class RestRequestMessageEditor extends
+			AbstractHttpRequestDesktopPanel<?, ?>.AbstractHttpRequestMessageEditor<RestRequestDocument>
 	{
 		public RestRequestMessageEditor(RestRequest modelItem)
 		{
-			super( new RestRequestDocument( modelItem ));
+			super(new RestRequestDocument(modelItem));
 		}
 	}
-	
-	public class RestResponseMessageEditor extends AbstractHttpRequestDesktopPanel<?,?>.AbstractHttpResponseMessageEditor<RestResponseDocument>
+
+	public class RestResponseMessageEditor extends
+			AbstractHttpRequestDesktopPanel<?, ?>.AbstractHttpResponseMessageEditor<RestResponseDocument>
 	{
 		public RestResponseMessageEditor(RestRequest modelItem)
 		{
-			super( new RestResponseDocument( modelItem ));
+			super(new RestResponseDocument(modelItem));
 		}
 	}
-	
-	public class RestRequestDocument extends AbstractXmlDocument 
+
+	public class RestRequestDocument extends AbstractXmlDocument
 	{
 		private final RestRequest modelItem;
 
@@ -136,15 +193,10 @@ public class RestRequestDesktopPanel extends AbstractHttpRequestDesktopPanel<Res
 		{
 			this.modelItem = modelItem;
 		}
-		
+
 		public RestRequest getRequest()
 		{
 			return modelItem;
-		}
-
-		public SchemaTypeSystem getTypeSystem()
-		{
-			return null;
 		}
 
 		public String getXml()
@@ -157,7 +209,7 @@ public class RestRequestDesktopPanel extends AbstractHttpRequestDesktopPanel<Res
 			getModelItem().setRequestContent(xml);
 		}
 	}
-	
+
 	public class RestResponseDocument extends AbstractXmlDocument implements PropertyChangeListener
 	{
 		private final RestRequest modelItem;
@@ -165,38 +217,64 @@ public class RestRequestDesktopPanel extends AbstractHttpRequestDesktopPanel<Res
 		public RestResponseDocument(RestRequest modelItem)
 		{
 			this.modelItem = modelItem;
-			
+
 			modelItem.addPropertyChangeListener(RestRequest.RESPONSE_PROPERTY, this);
 		}
-		
+
 		public RestRequest getRequest()
 		{
 			return modelItem;
 		}
 
-		public SchemaTypeSystem getTypeSystem()
-		{
-			return null;
-		}
-
 		public String getXml()
 		{
 			HttpResponse response = getModelItem().getResponse();
-			return response == null ? "" : response.getContentAsString();
+			if (response == null)
+				return "";
+			String content = response.getContentAsString();
+
+			if (response.getContentType().equals("text/javascript"))
+			{
+				try
+				{
+					JSONObject json = JSONObject.fromObject(content);
+					content = new XMLSerializer().write(json);
+					content = XmlUtils.prettyPrintXml(content);
+				}
+				catch (Throwable e)
+				{
+					e.printStackTrace();
+				}
+			}
+			
+			return content;
 		}
 
 		public void setXml(String xml)
 		{
 			HttpResponse response = getModelItem().getResponse();
-			if( response != null )
+			if (response != null)
 				response.setResponseContent(xml);
 		}
 
 		public void propertyChange(PropertyChangeEvent evt)
 		{
-			fireXmlChanged(evt.getOldValue() == null ? null : 
-				((HttpResponse)evt.getOldValue()).getContentAsString(), 
-				((HttpResponse)evt.getNewValue()).getContentAsString());
+			fireXmlChanged(evt.getOldValue() == null ? null : ((HttpResponse) evt.getOldValue()).getContentAsString(),
+					getXml());
+		}
+	}
+
+	private class RecreatePathAction extends AbstractAction
+	{
+		public RecreatePathAction()
+		{
+			super();
+			putValue(Action.SMALL_ICON, UISupport.createImageIcon("/recreate_request.gif"));
+		}
+
+		public void actionPerformed(ActionEvent e)
+		{
+			getModelItem().setPath(getModelItem().getResource().getFullPath());
 		}
 	}
 }

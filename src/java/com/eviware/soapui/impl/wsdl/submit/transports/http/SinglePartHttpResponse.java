@@ -39,7 +39,6 @@ import com.eviware.soapui.support.xml.XmlUtils;
 class SinglePartHttpResponse implements HttpResponse
 {
 	private final WeakReference<AbstractHttpRequest<?>> wsdlRequest;
-	@SuppressWarnings("unused")
 	private final ExtendedHttpMethod httpMethod;
 	private long timeTaken;
 	private String responseContent;
@@ -214,5 +213,10 @@ class SinglePartHttpResponse implements HttpResponse
 	public byte[] getRawResponseData()
 	{
 		return responseBody;
+	}
+
+	public String getContentType()
+	{
+		return httpMethod.getResponseContentType();
 	}
 }

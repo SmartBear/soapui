@@ -121,13 +121,6 @@ public class RestUtils
 			RestRequest request = newResource.addNewRequest( getFirstTitle(method.getDocList(), method.getName() + " - " + method.getId()));
 			request.setMethod( RestRequest.RequestMethod.valueOf( method.getName() ));
 			
-			for( RestParamProperty prop : newResource.getDefaultParams())
-			{
-				RestParamProperty p = request.addProperty(prop.getName());
-				p.setValue(prop.getValue());
-				p.setStyle(prop.getStyle());
-			}
-			
 			for( Param param : method.getRequest().getParamList())
 			{
 				RestParamProperty p = request.addProperty(param.getName());
