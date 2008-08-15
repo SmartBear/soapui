@@ -26,9 +26,12 @@ public class WsaConfig implements PropertyChangeNotifier
 	
 	private PropertyChangeSupport propertyChangeSupport;
 
-	public WsaConfig(WsaConfigConfig wsaConfig)
+	private final WsaContainer container;
+
+	public WsaConfig(WsaConfigConfig wsaConfig, WsaContainer container)
 	{
 		this.wsaConfig = wsaConfig;
+		this.container = container;
 		propertyChangeSupport = new PropertyChangeSupport(this);
 		// TODO Auto-generated constructor stub
 		if (!wsaConfig.isSetMustUnderstand())
@@ -64,7 +67,6 @@ public class WsaConfig implements PropertyChangeNotifier
 	{
 		return wsaConfig.getMessageID();
 	}
-
 	public String getReplyTo()
 	{
 		return wsaConfig.getReplyTo();
@@ -74,6 +76,12 @@ public class WsaConfig implements PropertyChangeNotifier
 	{
 		return wsaConfig.getVersion().toString();
 	}
+	
+	public boolean isWsaEnabled ()
+	{
+		return container.isWsaEnabled();
+	}
+
 
 	public String getMustUnderstand()
 	{
@@ -135,6 +143,13 @@ public class WsaConfig implements PropertyChangeNotifier
 		String oldValue = getVersion();
 		wsaConfig.setVersion(WsaVersionTypeConfig.Enum.forString(arg0));
 		propertyChangeSupport.firePropertyChange("version", oldValue, arg0);
+	}
+
+	public void setWsaEnabled(boolean arg0)
+	{
+		boolean oldValue = isWsaEnabled();
+		container.setWsaEnabled(arg0);
+		propertyChangeSupport.firePropertyChange("enableWsa", oldValue, arg0);
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener)

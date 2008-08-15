@@ -29,6 +29,7 @@ import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
+import com.eviware.soapui.impl.wsdl.support.wsa.WsaContainer;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.MessagePart;
@@ -50,7 +51,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
  * @author Ole.Matzura
  */
 
-public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implements WsdlAttachmentContainer, PropertyExpansionContainer
+public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implements WsdlAttachmentContainer, PropertyExpansionContainer, WsaContainer
 {
 	public final static Logger log = Logger.getLogger( WsdlRequest.class );
 	
@@ -524,7 +525,7 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 			{
 				getConfig().addNewWsaConfig();
 			}
-			wsaConfig = new WsaConfig(getConfig().getWsaConfig());
+			wsaConfig = new WsaConfig(getConfig().getWsaConfig(), this);
 		}
 		return wsaConfig;
 	}
@@ -532,5 +533,16 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 	public ModelItem getModelItem()
 	{
 		return this;
+	}
+
+	public boolean isWsaEnabled()
+	{
+		return isWsAddressing();
+	}
+
+	public void setWsaEnabled(boolean arg0)
+	{
+		setWsAddressing(arg0);
+		
 	}
 }

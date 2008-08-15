@@ -51,6 +51,9 @@ public class RequestWsaInspector extends AbstractXmlInspector
 
 			if( request instanceof WsdlRequest )
 			{
+				
+				form.addSpace( 5 );
+				form.appendCheckBox("wsaEnabled", "Enable WS-A addressing", "Enable/Disable WS-A addressing");
 				form.addSpace( 5 );
 				//add mustUnderstand drop down list
 				form.appendComboBox( "mustUnderstand", "Must understand", new String[] {MustUnderstandTypeConfig.NONE.toString(), 

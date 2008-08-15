@@ -148,7 +148,7 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
       
       if(!getInterface().getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString()))
       {
-  			requestImpl.setWsAddressing(true);
+      	requestImpl.setWsAddressing(true);
         
       	String [] attrs = WsdlUtils.getExentsibilityAttributes(getBindingOperation().getOperation().getInput(), new QName("http://www.w3.org/2006/05/addressing/wsdl", "Action") );
       	if (attrs.length > 0)
