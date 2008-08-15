@@ -149,7 +149,7 @@ public class WsaConfig implements PropertyChangeNotifier
 	{
 		boolean oldValue = isWsaEnabled();
 		container.setWsaEnabled(arg0);
-		propertyChangeSupport.firePropertyChange("enableWsa", oldValue, arg0);
+		propertyChangeSupport.firePropertyChange("wsaEnabled", oldValue, arg0);
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener)
