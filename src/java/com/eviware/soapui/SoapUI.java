@@ -290,7 +290,6 @@ public class SoapUI
 		return helpMenu;
 	}
 
-	@SuppressWarnings("unchecked")
 	private JMenu buildToolsMenu()
 	{
 		toolsMenu = new JMenu( "Tools" );
@@ -810,7 +809,7 @@ public class SoapUI
 
 		public void actionPerformed( ActionEvent e )
 		{
-			DesktopPanel dp = UISupport.showDesktopPanel(new URLDesktopPanel( "soapUI Starter Page", "Info on soapUI", "http://www.soapui.org"));
+			DesktopPanel dp = UISupport.showDesktopPanel(new URLDesktopPanel( "soapUI Starter Page", "Info on soapUI", "http://www.soapui.org/appindex/soapui_start.htm"));
 			desktop.maximize( dp );
 		}
 	}

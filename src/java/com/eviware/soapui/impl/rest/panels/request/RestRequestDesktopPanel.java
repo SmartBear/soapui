@@ -238,7 +238,9 @@ public class RestRequestDesktopPanel extends AbstractHttpRequestDesktopPanel<Res
 				try
 				{
 					JSONObject json = JSONObject.fromObject(content);
-					content = new XMLSerializer().write(json);
+					XMLSerializer serializer = new XMLSerializer();
+					serializer.setTypeHintsEnabled(false);
+					content = serializer.write(json);
 					content = XmlUtils.prettyPrintXml(content);
 				}
 				catch (Throwable e)
