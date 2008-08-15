@@ -17,7 +17,7 @@
 		is to finish the documentation and fix any new/outstanding bugs, hopefully a final version can be made available 
 		within 3-4 weeks.</p>
 		</td><td bgcolor="white">
-			<a href="images/screenshot3.gif" target="_new"><img src="images/screenshot3_tn.gif" border="0" alt="/></a>
+			<a href="images/screenshot3.gif" target="_new"><img src="images/screenshot3_tn.gif" border="0" alt="load function testing with a soap test"/></a>
 		</td></tr></table>
 		</subsection>
 		
@@ -104,14 +104,14 @@
 		<subsection name="Groovy Script TestStep">
 		<p>The GroovyScript teststep allows you to execute an arbitrary Groovy script in your testcase. The script has
 		full access to the soapUI object-model, allowing it to modify other teststeps, get external data, etc.</p>
-		<p align="center"><img src="images/teststep_groovy_1.gif" alt="/></p>
+		<p align="center"><img src="images/teststep_groovy_1.gif" alt="execute arbitary groovy script test case"/></p>
 		<p>The shown script sets the property "boss" of another teststep to a "random" value</p>
 		</subsection>
 		
 		<subsection name="TestSuite Runner">
 		<p>The TestSuite view (opened by double-clicking a TestSuite) allows you to run a selection of contained 
 		TestCases in sequence or parallel from within soapUI:</p>
-		<p align="center"><img src="images/testsuite_view_1.gif"/></p>
+		<p align="center"><img src="images/testsuite_view_1.gif" alt="run selection of contained TestCases soap test"/></p>
 		</subsection>
 		
 		</section>
@@ -120,12 +120,12 @@
 		
 		<subsection name="Preferences">
 		<p>A preferences dialog invoked from the main menu allows you to set a number of general options:</p>
-		<p align="center"><img src="images/preferences_dialog.gif"/></p>
+		<p align="center"><img src="images/preferences_dialog.gif" alt="preference dialog invoked"/></p>
 		
 		</subsection>
 		<subsection name="Improved Logging">
 		<p>Logging has been color-coded and improved to include a HTTP wire log and a seperate log for groovy scripts:</p>
-		<p align="center"><img src="images/log_tabs.gif"/></p>
+		<p align="center"><img src="images/log_tabs.gif" alt="HTTP wire log and seperate log for groovy scripts"/></p>
 		</subsection>
 		
 		</section>
