@@ -13,7 +13,7 @@
 		</column>
 		<column align="center" width="200">
 			       <div>
-				<a href="http://www.soapui.org/jnlp/SNAPSHOT/soapui.jnlp" urchinTracker="/jnlp/soapui/snapshot"><img src="images/webstart_green.png" border="0"/></a>
+				<a href="http://www.soapui.org/jnlp/SNAPSHOT/soapui.jnlp" urchinTracker="/jnlp/soapui/snapshot"><img src="images/webstart_green.png" alt=" border="0"/></a>
 			 <br/>[<a urchinTracker="/download/soapui/snapshot" href="download/soapui-SNAPSHOT-bin.zip">Download</a>]</div>
 		<p>Updated 2007-11-20</p>
 		</column></columns>
@@ -23,7 +23,7 @@
 		<ul>
 		<li>LoadTest Statistics can now be continuously logged to external files during the run of a LoadTest via the 
 		following tab in the LoadTest Options dialog:
-		<p align="center"><img src="images/loadteststatistics.gif"/></p>
+		<p align="center"><img src="images/loadteststatistics.gif" alt="soap test load test statistics"/></p>
 		When specifying a folder, soapUI will there create one file for each TestStep and one for the TestCase total, 
 		and then export	the corresponding statistics as configured and when the LoadTest ends</li>
 		<li>A -b option has been added to the MockServiceRunner commandline utility that will cause it not to read from stdin 
@@ -31,7 +31,7 @@
 		<li>WSDL Caching has been modified to now cache WSDL's as text and not XML, which will improve project load/save 
 		times and stability, especially when working with large/many WSDLs/XSDs</li>
 		<li>The TestRun log visible in the TestCase and TestSuite editors has been "brushed up" visually:
-		<p align="center"><img src="images/testrunlog.gif"/></p></li>
+		<p align="center"><img src="images/testrunlog.gif" alt="test run log and TestSuite editors soap test"/></p></li>
 		<li>a global ${projectDir} property is now available for accessing the projects directory</li>
 		<li>etc..</li>
 		</ul>
