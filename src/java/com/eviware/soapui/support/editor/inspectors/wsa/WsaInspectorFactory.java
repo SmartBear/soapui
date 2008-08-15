@@ -30,7 +30,7 @@ public class WsaInspectorFactory implements RequestInspectorFactory
 	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof WsdlRequest )
-			return new RequestWsaInspector( ((WsdlRequest)modelItem) );
+			return new WsdlRequestWsaInspector( ((WsdlRequest)modelItem) );
 		
 		return null;
 	}

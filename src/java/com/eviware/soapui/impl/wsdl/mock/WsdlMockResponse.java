@@ -64,6 +64,8 @@ import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
 import com.eviware.soapui.impl.wsdl.support.WsdlAttachment;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
+import com.eviware.soapui.impl.wsdl.support.wsa.WsaContainer;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils.SoapHeader;
@@ -96,7 +98,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
  */
 
 public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> implements MockResponse,
-			MutableWsdlAttachmentContainer, PropertyExpansionContainer, TestPropertyHolder
+			MutableWsdlAttachmentContainer, PropertyExpansionContainer, TestPropertyHolder, WsaContainer
 {
 	private final static Logger log = Logger.getLogger( WsdlMockResponse.class );
 
@@ -120,6 +122,8 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 	private String responseContent;
 	private ScriptEnginePool scriptEnginePool;
 	private MapTestPropertyHolder propertyHolder;
+	private WsaConfig wsaConfig;
+
 
 	public WsdlMockResponse( WsdlMockOperation operation, MockResponseConfig config )
 	{
@@ -1002,4 +1006,40 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 	{
 		return AttachmentUtils.getAttachmentEncoding( getMockOperation().getOperation(), partName, true );
 	}
+	
+	public WsaConfig getWsaConfig() {
+		if (wsaConfig == null)
+		{
+			if (!getConfig().isSetWsaConfig())
+			{
+				getConfig().addNewWsaConfig();
+			}
+			wsaConfig = new WsaConfig(getConfig().getWsaConfig(), this);
+		}
+		return wsaConfig;
+	}
+
+	public boolean isWsAddressing()
+	{
+		return getConfig().getUseWsAddressing();
+	}
+	
+	public void setWsAddressing( boolean wsAddressing )
+   {
+   	boolean old = getConfig().getUseWsAddressing();
+   	getConfig().setUseWsAddressing(wsAddressing);
+   	notifyPropertyChanged( "wsAddressing", old, wsAddressing );
+   }
+	
+	public boolean isWsaEnabled()
+	{
+		return isWsAddressing();
+	}
+
+	public void setWsaEnabled(boolean arg0)
+	{
+		setWsAddressing(arg0);
+		
+	}
+
 }
