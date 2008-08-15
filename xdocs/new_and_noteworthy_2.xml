@@ -11,7 +11,7 @@
 		<table class="webstartlinkstable">
 		<tr>
 		        <td align="center" bgcolor="white"><span class="webstartheader">soapUI 2.0.1</span><div>
-				<a href="http://www.soapui.org/jnlp/2.0.1/soapui.jnlp" urchinTracker="/jnlp/soapui/2_0_1"><img class="webstart" src="images/webstart_green.png" border="0" alt="soapUI WebStart"/></a></div>
+				<a href="http://www.soapui.org/jnlp/2.0.1/soapui.jnlp" urchinTracker="/jnlp/soapui/2_0_1"><img class="webstart" src="images/webstart_green.png" alt="soap test webstart" border="0" alt="soap test with soapUI WebStart"/></a></div>
 			 [<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=568878">Download</a>]</td>
 			 <td align="center" bgcolor="white"><span class="webstartheader">soapUI 2.0.1 Pro</span><div>
 				<a href="http://www.eviware.com/jnlp/2.0.1/soapui-pro.jnlp" urchinTracker="/jnlp/soapui/2_0_1-pro"><img class="webstart" src="images/webstart_orange.png" border="0" alt="soapUI Pro WebStart"/></a></div>
@@ -166,7 +166,7 @@
 				</div>
 			</newfeature>
 			
-			<newfeature img="images/2/wsdl_refactoring_updated.gif">
+			<newfeature img="images/2/wsdl_refactoring_updated.gif" alt="wsdl refactory update with soap test">
 				<div>
 					<p><b>WSDL Refactoring Updated!</b></p>
 					<p>
@@ -176,7 +176,7 @@
 				</div>
 			</newfeature>
 
-		<newfeature img="images/2/wss_request.gif">
+		<newfeature img="images/2/wss_request.gif" alt=wss request">
 				<div>
 					<p><b>Aut Inspector</b></p>
 					<p>
@@ -225,7 +225,7 @@
 					
 				</div>
 		</newfeature>
-		<newfeature img="images/2/interface_overview.gif">
+		<newfeature img="images/2/interface_overview.gif" alt=" soap test interface overview">
 				<div>
 					<p><b>Interface viewer expanded</b></p>
 					<p>
@@ -246,7 +246,7 @@
 				</div>
 		</newfeature>
 		
-		<newfeature img="images/2/testcaselog.gif">
+		<newfeature img="images/2/testcaselog.gif" alt=soap test log">
 				<div>
 					<p><b>TestCase Log spiffed up</b></p>
 					<p>
@@ -259,18 +259,18 @@
 				</div>
 		</newfeature>
 		
-		<newfeature img="images/2/rawview.gif">
+		<newfeature img="images/2/rawview.gif" alt=">
 		<div>A new read-only "Raw" editor tab has been added to both request and response editors displaying the actual content
 		of the underlying request/response as it was last transmitted over the wire. This can be great help when trying 
 		to debug property-transfers/expansions, WS-Security configurations, etc.. </div>
 		</newfeature>
 		
-		<newfeature img="images/2/loadteststats.gif">
+		<newfeature img="images/2/loadteststats.gif" alt="soap test raw editor">
 		<div>LoadTests can now continously export statistics to comma-seperated files for manuall processing/reporting in 
 		Excel, etc...</div>
 		</newfeature>
 		
-		<newfeature img="images/2/logmessageinspector.gif">
+		<newfeature img="images/2/logmessageinspector.gif" alt="soap test log message inspector">
 		<div>The message-viewer available for logged messages has been enhanced to show request/response messages with the
 		"standard" message editors, including all inspectors, etc..</div>		
 		</newfeature>
@@ -292,7 +292,7 @@
 		
 		<subsection name="New and Noteworthy in soapUI beta1">
 		
-			<newfeature img="images/2/crypto.gif">
+			<newfeature img="images/2/crypto.gif" alt="soap test soapuI beta1">
 				<div>
 					<p><b>WS-Security</b></p>
 					<p>
@@ -317,7 +317,7 @@
  				</div>
 			</newfeature>
 			
-			<newfeature img="images/2/SOAPMon.gif">
+			<newfeature img="images/2/SOAPMon.gif" alt="soap test capturing and recording">
 				<div>
 					<p><b>Message Capturing and Recording</b></p>
 					
@@ -340,11 +340,11 @@
 					</p>
  				</div>
  				<div>
- 				<p><b>Launch it by right-clicking a project and choose "Launch SOAP Monitor"</b></p>
+ 				<p><b>Launch it by right-clicking a project and choose "soap test Launch SOAP Monitor"</b></p>
  				</div>
 			</newfeature>
 			
-		<newfeature img="images/2/MemoryMonitor.gif">
+		<newfeature img="images/2/MemoryMonitor.gif" alt="soap test launch Soap Monitor">
 		<div>					
 			<p><b>Memory Log</b></p>
 			<p>
@@ -353,7 +353,7 @@
 		</div>
 		</newfeature>
 			
-			<newfeature img="images/2/RunTestCaseTestStep.gif">
+			<newfeature img="images/2/RunTestCaseTestStep.gif" alt="soap test memory log">
 				<div>
 					<p><b>Run TestCase TestStep</b></p>
 					<p>
@@ -373,7 +373,7 @@
  				</div>
 			</newfeature>	
 
-			<newfeature img="images/2/disableTestCase.gif">
+			<newfeature img="images/2/disableTestCase.gif" alt="soap test set up and Teardown scripts">
 				<div>
 					<p><b>Disable TestCase</b></p>
 					<p>
@@ -382,7 +382,7 @@
  				</div>
 			</newfeature>	
 
-			<newfeature img="images/2/disableAssertion.gif">
+			<newfeature img="images/2/disableAssertion.gif" alt="disable TestCases">
 				<div>
 					<p><b>Disable Assertion</b></p>
 					<p>
@@ -391,7 +391,7 @@
  				</div>
 			</newfeature>	
 
-			<newfeature img="images/2/disableTestSuite.gif">
+			<newfeature img="images/2/disableTestSuite.gif" Alt="soap test disable assertion">
 				<div>
 					<p><b>Disable TestSuite</b></p>
 					<p>
@@ -400,7 +400,7 @@
  				</div>
 			</newfeature>	
 			
-			<newfeature img="images/2/mockSSL.gif">
+			<newfeature img="images/2/mockSSL.gif" alt="soap test>
 				<div>
 					<p><b>MockService SSL Support</b></p>
 					<p>
@@ -409,7 +409,7 @@
  				</div>
 			</newfeature>	
 
-			<newfeature img="images/2/exposeWSDL.gif">
+			<newfeature img="images/2/exposeWSDL.gif" alt="soap testexpose WSDL">
 				<div>
 					<p><b>MockService WSDL Exposure</b></p>
 					<p>
@@ -418,7 +418,7 @@
  				</div>
 			</newfeature>	
 
-			<newfeature img="images/2/MockStartScript.gif">
+			<newfeature img="images/2/MockStartScript.gif" alt="soap test mock star script">
 				<div>
 					<p><b>Mocking Start and Stop Scripts</b></p>
 					<p>
@@ -428,7 +428,7 @@
  				</div>
 			</newfeature>	
 
-			<newfeature img="images/2/ProJectOverview.gif">
+			<newfeature img="images/2/ProJectOverview.gif" alt="soap test manipulate properties">
 				<div>
 					<p><b>Project Overview</b></p>
 					<p>
@@ -441,7 +441,7 @@
  				</div>
 			</newfeature>	
 
-			<newfeature img="images/2/TestSuiteLog_Small.gif">
+			<newfeature img="images/2/TestSuiteLog_Small.gif" alt="testSuiteLog">
 				<div>
 					<p><b>TestSuite Editor run log</b></p>
 					<p>
@@ -451,7 +451,7 @@
 			</newfeature>
 			
 			
-			<newfeature img="images/2/TestCaseProperties.gif">
+			<newfeature img="images/2/TestCaseProperties.gif" alt="soap test Test Case Properties">
 				<div>
 					<p><b>Properties Management</b></p>
 					<p>
@@ -501,7 +501,7 @@ ${TestStep-name#Property-name} refers to a property in a named TestStep.
  				</div>
 			</newfeature>	
 
-			<newfeature img="images/2/properties_expand.gif">
+			<newfeature img="images/2/properties_expand.gif" alt="soap test craeting automatic Property Expansion">
 				<div>
 					<p><b>Extended Properties view</b></p>
 					<p>
@@ -515,7 +515,7 @@ ${TestStep-name#Property-name} refers to a property in a named TestStep.
  				</div>
 			</newfeature>
 			
-			<newfeature img="images/2/TestCaseLogOptions.gif">
+			<newfeature img="images/2/TestCaseLogOptions.gif" alt="soap test extended properties view">
 				<div>
 					<p><b>TestCase Log improvements</b></p>
 					<p>
@@ -540,7 +540,7 @@ ${TestStep-name#Property-name} refers to a property in a named TestStep.
 		<subsection name="New and Noteworthy in soapUI Pro">
 		<p>On top of all the above, the following improvements/additions have been made to soapUI Pro:</p>
 		
-				<newfeature img="images/2/ProjectCoverage.gif">
+				<newfeature img="images/2/ProjectCoverage.gif" alt="soap test project coverage">
 		<div>					
 			<p><b>Web Service Coverage</b></p>
 			<p>
@@ -563,7 +563,7 @@ ${TestStep-name#Property-name} refers to a property in a named TestStep.
 			</ul>
 			<p>Coverage information is updated in realtime and can be ongoing monitored during the above mentioned processes</p>
 			<p>Also, a specialized Coverage Inspector is available for displaying an edited messages coverage:</p>
-			<p align="center"><img src="images/2/MessageCoverage.gif"/></p>
+			<p align="center"><img src="images/2/MessageCoverage.gif" alt="soap test specialiaed coverage inspector"/></p>
 			<p>
 			This exclusive functionality will increase development quality, speed and make the Web Service testing faster than ever before.
 			</p>
@@ -572,7 +572,7 @@ ${TestStep-name#Property-name} refers to a property in a named TestStep.
 		
 
 		
-		<newfeature img="images/2/refactorSchema.gif">
+		<newfeature img="images/2/refactorSchema.gif" alt="soap test refactor schema">
 		<div>					
 			<p><b>WSDL Refactoring</b></p>
 			
@@ -595,7 +595,7 @@ ${TestStep-name#Property-name} refers to a property in a named TestStep.
 		</newfeature>
 	
 
-		<newfeature img="images/2/ProjectRequirements.gif">
+		<newfeature img="images/2/ProjectRequirements.gif" alt="soap test project requirements">
 		<div>					
 			<p><b>Requirements</b></p>
 			<p>
@@ -609,7 +609,7 @@ ${TestStep-name#Property-name} refers to a property in a named TestStep.
 		</div>
 		</newfeature>	
 
-		<newfeature img="images/2/DataSink.gif">
+		<newfeature img="images/2/DataSink.gif" alt="intergrating your testing tool in the requirements user tool">
 		<div>					
 			<p><b>DataSink TestStep</b></p>
 			<p>
