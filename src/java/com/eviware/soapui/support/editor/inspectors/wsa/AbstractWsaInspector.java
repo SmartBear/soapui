@@ -1,3 +1,15 @@
+/*
+ *  soapUI, copyright (C) 2004-2008 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
 package com.eviware.soapui.support.editor.inspectors.wsa;
 
 import java.awt.BorderLayout;
@@ -29,30 +41,15 @@ public abstract class AbstractWsaInspector extends AbstractXmlInspector
 		super( "WSA", "WS-Addressing related settings", true, WsaInspectorFactory.INSPECTOR_ID );
 		this.wsaContainer = wsaContainer;
 	}
-//	public AbstractWsaInspector(String title, String description, boolean enabled, String inspectorId)
-//	{
-//		super(title, description, enabled, inspectorId);
-//	}
-//
 	public JComponent getComponent()
 	{
 		if( mainPanel == null )
 		{
 			mainPanel = new JPanel( new BorderLayout() );
-	
 			form = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( wsaContainer.getWsaConfig() ) );
-	
-//			if( request instanceof WsdlRequest )
-//			{
-				
-				buildContent();
-//			}
-			
-			form.addSpace( 5 );
-			
+			buildContent();
 			mainPanel.add( new JScrollPane( form.getPanel() ), BorderLayout.CENTER );
 		}
-	
 		return mainPanel;
 	}
 
@@ -75,6 +72,7 @@ public abstract class AbstractWsaInspector extends AbstractXmlInspector
 		form.appendTextField( "faultTo", "Fault to", "The fault endpoint reference" );
 		form.appendTextField( "messageID", "MessageID", " The ID of a message that can be used to uniquely identify a message, will be generated if left empty" );
 		form.appendTextField( "to", "To", "The destination endpoint reference, will be generated if left empty" );
+		form.addSpace( 5 );
 	}
 
 	@Override

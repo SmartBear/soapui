@@ -15,17 +15,17 @@ package com.eviware.soapui.support.editor.inspectors.wsa;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
 
-public class WsdlRequestWsaInspector extends AbstractWsaInspector implements XmlInspector, PropertyChangeListener
+public class WsdlMockresponseWsaInspector extends AbstractWsaInspector implements XmlInspector, PropertyChangeListener
 {
-	private final WsdlRequest request;
+	private final WsdlMockResponse response;
 
-	public WsdlRequestWsaInspector( WsdlRequest request )
+	public WsdlMockresponseWsaInspector( WsdlMockResponse response )
 	{
-		super( request );
-		this.request = request;
+		super( response );
+		this.response = response;
 	}
 
 	public void propertyChange(PropertyChangeEvent arg0)

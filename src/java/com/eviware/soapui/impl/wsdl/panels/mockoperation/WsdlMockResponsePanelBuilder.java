@@ -71,6 +71,8 @@ public class WsdlMockResponsePanelBuilder extends EmptyPanelBuilder<WsdlMockResp
 	  	table.addProperty( "Response HTTP-Status", "responseHttpStatus", true );
 	  	table.addProperty( "Response Delay", "responseDelay", true );
    	
+   	table.addProperty( "WS-Addressing", "wsAddressing", JPropertiesTable.BOOLEAN_OPTIONS );
+
    	table.setPropertyObject( mockResponse );
    	
    	return table;
