@@ -77,7 +77,7 @@
 		
 		<subsection name="New and Noteworthy in beta1">
 		
-			<newfeature img="images/mockoverview.gif" alt="mock service for soap testing width="550">
+			<newfeature img="images/mockoverview.gif" alt="mock service for soap testing" width="550">
 				<div>Support for Mocking of Web Services directly from within soapUI. 
 				Mock Services can be run either from inside soapUI or with one of the IDE/Maven/CommandLine plugins.
 				This opens for a number of usage scenarios, including:</div>
@@ -133,16 +133,16 @@
 				the xpath will stop working)</div>
 			</newfeature>
 			
-			<newfeature img="images/new_override_contentids.gif alt="soa test">
+			<newfeature img="images/new_override_contentids.gif" alt="soa test new over ride content ids">
 				<div>Possibility to override attachment Content-IDs (see
 		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1605695&amp;group_id=136013&amp;atid=737766">Feature Request</a>)</div>
 		    </newfeature>
 		    
-		    <newfeature img="images/new_logtabs_history.gif">
+		    <newfeature img="images/new_logtabs_history.gif" alt="soa test new log tabs history" >
 				<div>Possibility to set log-tabs history</div>
 		    </newfeature>
 		    
-		    <newfeature img="images/new_notfault_assertion.gif">
+		    <newfeature img="images/new_notfault_assertion.gif" alt="soa testing new notfault assertion">
 				<div>New Not-SOAP-Fault assertion</div>
 		    </newfeature>
 		    
