@@ -1,5 +1,7 @@
 package com.eviware.x.impl.swing;
 
+import java.awt.Dimension;
+
 import javax.swing.Action;
 import javax.swing.JButton;
 
@@ -14,6 +16,7 @@ public class ActionFormFieldComponent extends AbstractSwingXFormField<JButton> i
 
 	public void setWidth(int columns)
 	{
+		getComponent().setPreferredSize(new Dimension( columns, 20 ));
 	}
 
 	public String getValue()
@@ -37,4 +40,6 @@ public class ActionFormFieldComponent extends AbstractSwingXFormField<JButton> i
 			super.setProperty(name, value);
 		}
 	}
+	
+	
 }

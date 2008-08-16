@@ -12,9 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
+import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
+import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
 
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
@@ -70,10 +74,23 @@ public class RestHeadersRequestFilter extends AbstractRequestFilter
 			httpMethod.setQueryString( query.toString() );
 		
 		httpMethod.setPath(path);
+		String encoding = StringUtils.unquote( request.getEncoding());
+		
+		if( request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod )
+		{
+			String requestContent = request.getRequestContent();
+			try
+			{
+				byte[] content = encoding == null ? requestContent.getBytes() : requestContent.getBytes(encoding);
+				((EntityEnclosingMethod)httpMethod).setRequestEntity(new ByteArrayRequestEntity(content));
+			}
+			catch (UnsupportedEncodingException e)
+			{
+				((EntityEnclosingMethod)httpMethod).setRequestEntity(new ByteArrayRequestEntity( requestContent.getBytes()));
+			}
+		}
 
 		// init content-type and encoding
-		String encoding = request.getEncoding();
-
 		httpMethod.setRequestHeader("Content-Type", request.getMediaType()
 				+ (StringUtils.hasContent(encoding) ? "; charset=" + encoding : ""));
 	}

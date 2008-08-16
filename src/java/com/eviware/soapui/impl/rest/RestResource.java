@@ -216,6 +216,10 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 			p.setStyle(prop.getStyle());
 		}
 		
+		 String[] endpoints = getInterface().getEndpoints();
+		 if( endpoints.length > 0 )
+			 request.setEndpoint(endpoints[0]);
+		
 		getInterface().fireRequestAdded(request);
 		return request;
 	}
@@ -298,7 +302,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 
 	public String getFullPath()
 	{
-		String base = parentResource == null ? "" : parentResource.getFullPath();
+		String base = parentResource == null ? getInterface().getBasePath() : parentResource.getFullPath();
 		String path = getPath();
 		if( StringUtils.hasContent(path) && base != null && !base.endsWith("/") && !path.startsWith("/"))
 			base += "/";

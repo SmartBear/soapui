@@ -12,16 +12,20 @@
 
 package com.eviware.x.form;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.JComponent;
+
+import com.eviware.soapui.support.UISupport;
 import com.eviware.x.form.validators.RequiredValidator;
 
 
-public abstract class AbstractXFormField<T> implements XFormField
+public abstract class AbstractXFormField<T extends JComponent> implements XFormField
 {
 	private Set<XFormFieldListener> listeners;
 	private List<XFormFieldValidator> validators;
@@ -123,6 +127,10 @@ public abstract class AbstractXFormField<T> implements XFormField
 
 	public void setProperty(String name, Object value)
 	{
+		if( name.equals("dimension"))
+		{
+			UISupport.setFixedSize(getComponent(), (Dimension)value);
+		}
 	}
 
 	public boolean isMultiRow()

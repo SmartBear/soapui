@@ -79,6 +79,12 @@ public class RestResourceTreeNode extends OperationTreeNode
 			super.propertyChange(evt);
 		}
 	}
+	
+	@Override
+	public String toString()
+	{
+		return restResource.getName() + " [" + restResource.getPath() + "]";
+	}
 
 	@Override
 	public int getChildCount()

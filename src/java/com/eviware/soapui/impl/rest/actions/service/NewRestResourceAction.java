@@ -25,7 +25,7 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestRequest.RequestMethod;
-import com.eviware.soapui.impl.rest.panels.resource.WadlParamsTableModel;
+import com.eviware.soapui.impl.rest.panels.resource.JWadlParamsTable;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
@@ -82,7 +82,7 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 			extractParams(param, params);
 		}
 		
-		dialog.getFormField(Form.PARAMSTABLE).setProperty("tableModel", new WadlParamsTableModel( params ));
+		dialog.getFormField(Form.PARAMSTABLE).setProperty("component", new JWadlParamsTable( params ));
 		
    	if( dialog.show() )
    	{
@@ -114,6 +114,12 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 	{
 		String path = ((URL) param).getPath();
 		String[] items = path.split("/");
+		
+		if( items.length > 0 )
+		{
+			dialog.setValue(Form.RESOURCENAME, items[items.length-1]);
+		}
+		
 		for( String item : items )
 		{
 			try
@@ -224,7 +230,7 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 		@AField(description = "Form.ExtractParams.Description", type = AFieldType.ACTION ) 
 		public final static String EXTRACTPARAMS = messages.get("Form.ExtractParams.Label"); 
 
-		@AField(description = "Form.ParamsTable.Description", type = AFieldType.TABLE ) 
+		@AField(description = "Form.ParamsTable.Description", type = AFieldType.COMPONENT ) 
 		public final static String PARAMSTABLE = messages.get("Form.ParamsTable.Label"); 
 		
 		@AField(description = "Form.CreateRequest.Description", type = AFieldType.BOOLEAN ) 

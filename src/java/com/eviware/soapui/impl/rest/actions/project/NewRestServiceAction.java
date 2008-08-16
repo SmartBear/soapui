@@ -145,21 +145,26 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
    	if( dialog.show() )
    	{
    		RestService restService = (RestService) project.addNewInterface( dialog.getValue(Form.SERVICENAME), RestServiceFactory.REST_TYPE );
-   		restService.setBasePath( dialog.getValue(Form.SERVICEENDPOINT));
    		UISupport.select(restService);
+   		URL url = null;
+   		
+   		try
+   		{
+   			url = new URL( dialog.getValue(Form.SERVICEENDPOINT));
+   			String endpoint = url.getProtocol() + "://" + url.getHost();
+   			if( url.getPort() > 0 )
+   				endpoint += ":" + url.getPort();
+   			
+				restService.addEndpoint( endpoint );
+				restService.setBasePath(url.getPath());
+   		}
+   		catch( Exception e )
+   		{}
    		
    		if( dialog.getFormField(Form.EXTRACTPARAMS).isEnabled() && dialog.getBooleanValue(Form.EXTRACTPARAMS))
    		{
-   			try
-				{
-					URL url = new URL( restService.getBasePath() );
-					SoapUI.getActionRegistry().getAction(NewRestResourceAction.SOAPUI_ACTION_ID).perform(restService, url );
-				}
-				catch (MalformedURLException e)
-				{
-					SoapUI.getActionRegistry().getAction(NewRestResourceAction.SOAPUI_ACTION_ID).perform(restService, null );
-				}
-   			
+				restService.setBasePath( "" );
+				SoapUI.getActionRegistry().getAction(NewRestResourceAction.SOAPUI_ACTION_ID).perform(restService, url );
    		}
    		
    		String wadl = dialog.getValue(Form.WADLURL);
@@ -178,18 +183,6 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
 					log.error(e.toString());
 				}
    		}
-   		
-   		try
-   		{
-   			URL url = new URL( restService.getBasePath() );
-   			String endpoint = url.getProtocol() + "://" + url.getHost();
-   			if( url.getPort() > 0 )
-   				endpoint += ":" + url.getPort();
-   			
-				restService.addEndpoint( endpoint );
-   		}
-   		catch( Exception e )
-   		{}
    		
    		if( dialog.getFormField(Form.CREATERESOURCE).isEnabled() && dialog.getBooleanValue(Form.CREATERESOURCE))
    		{

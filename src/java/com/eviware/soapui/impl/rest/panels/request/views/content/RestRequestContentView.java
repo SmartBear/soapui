@@ -20,6 +20,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.impl.rest.RestRequest;
@@ -84,7 +85,14 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 			public void update(Document document)
 			{
 				updatingRequest = true;
-				restRequest.setRequestContent( contentEditor.getText() );
+				try
+				{
+					restRequest.setRequestContent( document.getText(0, document.getLength()-1) );
+				}
+				catch (BadLocationException e)
+				{
+					e.printStackTrace();
+				}
 				updatingRequest = false;
 			}} );
 		
@@ -108,6 +116,10 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 		{
 			contentEditor.setText( (String)evt.getNewValue() );
 		}
+		else if( evt.getPropertyName().equals( "method"))
+		{
+			contentEditor.setEditable( restRequest.hasRequestBody() );
+		}
 	}
 
 	@Override
@@ -122,5 +134,6 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 
 	public void setEditable(boolean enabled)
 	{
+		contentEditor.setEditable(enabled);
 	}
 }

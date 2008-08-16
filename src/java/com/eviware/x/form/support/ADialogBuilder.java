@@ -27,6 +27,7 @@ import com.eviware.x.form.XFormTextField;
 import com.eviware.x.form.XForm.FieldType;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.ActionFormFieldComponent;
+import com.eviware.x.impl.swing.JComponentFormField;
 import com.eviware.x.impl.swing.JStringListFormField;
 import com.eviware.x.impl.swing.JTableFormField;
 
@@ -231,6 +232,9 @@ public class ADialogBuilder
 				break;
 			case ACTION : 
 				field = form.addComponent( name, new ActionFormFieldComponent( name, description ));
+				break;
+			case COMPONENT : 
+				field = form.addComponent( name, new JComponentFormField( name, description ));
 				break;
 			default :
 				System.out.println( "Unsupported field type: " + type );

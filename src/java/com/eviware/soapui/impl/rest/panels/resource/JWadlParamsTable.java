@@ -10,6 +10,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -40,6 +41,8 @@ public class JWadlParamsTable extends JPanel
 		
 		paramsTableModel = new WadlParamsTableModel( params );
 		paramsTable = new JXTable( paramsTableModel );
+		paramsTable.setHorizontalScrollEnabled(true);
+		paramsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		paramsTable.setDefaultEditor(ParameterStyle.class, new DefaultCellEditor(new JComboBox( 
 				new Object[] {ParameterStyle.QUERY, ParameterStyle.TEMPLATE, ParameterStyle.HEADER, ParameterStyle.MATRIX, ParameterStyle.PLAIN })));
 		
@@ -48,8 +51,8 @@ public class JWadlParamsTable extends JPanel
 			public void valueChanged(ListSelectionEvent e)
 			{
 				removeParamAction.setEnabled( paramsTable.getSelectedRow() != -1 );
-				movePropertyDownAction.setEnabled( paramsTable.getSelectedRow() >= paramsTable.getRowCount() );
-				movePropertyUpAction.setEnabled( paramsTable.getSelectedRow() != -1 && paramsTable.getSelectedRow() < paramsTable.getRowCount() );
+				movePropertyDownAction.setEnabled( paramsTable.getSelectedRow() < paramsTable.getRowCount()-1 );
+				movePropertyUpAction.setEnabled( paramsTable.getSelectedRow() > 0 );
 			}} );
 		
 		add( buildToolbar(), BorderLayout.NORTH );
