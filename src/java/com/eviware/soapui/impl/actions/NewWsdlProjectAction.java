@@ -14,8 +14,10 @@ package com.eviware.soapui.impl.actions;
 
 import java.io.File;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
+import com.eviware.soapui.impl.rest.actions.project.NewRestServiceAction;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateMockServiceAction;
@@ -90,28 +92,38 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 								
 	   			if( project != null )
 	            {
-	   				String url = dialog.getValue( Form.INITIALWSDL ).trim();
+	   			   UISupport.select(project);
+
+	   			   String url = dialog.getValue( Form.INITIALWSDL ).trim();
 	   				if( url.length() > 0 )
 	   				{
 	   					if( new File( url ).exists() )
 	   						url = new File( url ).toURI().toURL().toString(); 
 	   					
-	      				 WsdlInterface[] results = WsdlInterfaceFactory.importWsdl( project, url, dialog.getValue( Form.CREATEREQUEST ).equals( "true" ));  
-	      				
-		                if (dialog.getValue( Form.GENERATETESTSUITE ).equals( "true" )) 
-		                {
-		                    GenerateTestSuiteAction generateTestSuiteAction = new GenerateTestSuiteAction();
-		                    generateTestSuiteAction.generateTestSuite(results[0],true);
-		                }
-
-		                if (dialog.getValue( Form.GENERATEMOCKSERVICE ).equals( "true" )) 
-		                {
-		                    GenerateMockServiceAction generateMockAction = new GenerateMockServiceAction();
-		                    generateMockAction.generateMockService(results[0],false);
-		                }
+	      				 WsdlInterface[] results = WsdlInterfaceFactory.importWsdl( project, url, dialog.getValue( Form.CREATEREQUEST ).equals( "true" ));
+	      				 for( WsdlInterface iface : results )
+	      				 {
+	      					 UISupport.select(iface);
+	      					 
+			                if (dialog.getValue( Form.GENERATETESTSUITE ).equals( "true" )) 
+			                {
+			                    GenerateTestSuiteAction generateTestSuiteAction = new GenerateTestSuiteAction();
+			                    generateTestSuiteAction.generateTestSuite(iface,true);
+			                }
+	
+			                if (dialog.getValue( Form.GENERATEMOCKSERVICE ).equals( "true" )) 
+			                {
+			                    GenerateMockServiceAction generateMockAction = new GenerateMockServiceAction();
+			                    generateMockAction.generateMockService(iface,false);
+			                }
+	      				 }
 	   				}
 	   				
-	   			   UISupport.select(project);
+	   				if( dialog.getBooleanValue(Form.ADDRESTSERVICE))
+	   				{
+	   					SoapUI.getActionRegistry().getAction(NewRestServiceAction.SOAPUI_ACTION_ID).perform( project, null );
+	   				}
+	   				
 	   			   break;
 	            }
    			}
@@ -141,6 +153,9 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		@AField(description = "Form.GenerateMockService.Description", type = AFieldType.BOOLEAN, enabled = false )
 		public final static String GENERATEMOCKSERVICE = messages.get("Form.GenerateMockService.Label"); 
 
+		@AField(description = "Form.AddRestService.Description", type = AFieldType.BOOLEAN, enabled = true )
+		public final static String ADDRESTSERVICE = messages.get("Form.AddRestService.Label"); 
+		
 //		@AField( description = "Form.CreateProjectFile.Description", type = AFieldType.BOOLEAN )
 //		public final static String CREATEPROJECTFILE = messages.get("Form.CreateProjectFile.Label");  
 	}

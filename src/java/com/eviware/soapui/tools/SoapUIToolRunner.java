@@ -17,7 +17,6 @@ import java.io.File;
 import org.apache.commons.cli.CommandLine;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.axis1.Axis1XWSDL2JavaAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.axis2.Axis2WSDL2CodeAction;
@@ -37,7 +36,6 @@ import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIAnalyzeAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsimport.WSImportAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.xfire.XFireAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans.XmlBeans2Action;
-import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 
 /**
@@ -70,7 +68,6 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
 	 * @throws Exception
 	 */
 
-	@SuppressWarnings("static-access")
 	public static void main( String [] args) throws Exception
 	{
 		new SoapUIToolRunner().runFromCommandLine( args );

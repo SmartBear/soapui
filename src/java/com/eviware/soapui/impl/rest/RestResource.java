@@ -41,7 +41,8 @@ import com.eviware.soapui.support.StringUtils;
  * @author Ole.Matzura
  */
 
-public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> implements AbstractHttpOperation, MutableTestPropertyHolder
+public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> implements AbstractHttpOperation, 
+	MutableTestPropertyHolder, RestResourceContainer
 {
 	private List<RestRequest> requests = new ArrayList<RestRequest>();
 	private List<RestResource> resources = new ArrayList<RestResource>();
@@ -83,6 +84,11 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	public RestResource getParentResource()
 	{
 		return parentResource;
+	}
+	
+	public RestResourceContainer getResourceContainer()
+	{
+		return parentResource == null ? getInterface() : parentResource;
 	}
 
 	public List<? extends ModelItem> getChildren()
@@ -176,7 +182,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		RestResource resource = new RestResource( this, resourceConfig);
 		resources.add( resource );
 		
-		notifyPropertyChanged( "resources", null, resource );
+		getInterface().fireOperationAdded( resource );
 		
 		return resource;
 	}
@@ -406,13 +412,57 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	
 	public RestRequest cloneRequest( RestRequest request, String name )
 	{
-		RestRequestConfig resourceConfig = (RestRequestConfig) getConfig().addNewRequest().set(request.getConfig());
-		resourceConfig.setName(name);
+		RestRequestConfig requestConfig = (RestRequestConfig) getConfig().addNewRequest().set(request.getConfig());
+		requestConfig.setName(name);
 		
-		RestRequest newRequest = new RestRequest( this, resourceConfig);
+		RestRequest newRequest = new RestRequest( this, requestConfig);
 		requests.add( newRequest );
 		
 		getInterface().fireRequestAdded(newRequest);
 		return newRequest;
+	}
+
+	public RestResource cloneResource(RestResource resource, String name)
+	{
+		RestResourceConfig resourceConfig = (RestResourceConfig) getConfig().addNewResource().set(resource.getConfig());
+		resourceConfig.setName(name);
+		
+		RestResource newResource = new RestResource( this, resourceConfig);
+		resources.add( newResource );
+		
+		getInterface().fireOperationAdded( newResource );
+		return newResource;
+	}
+
+	@Override
+	public void release()
+	{
+		super.release();
+		params.release();
+		
+		for( RestResource resource : resources )
+		{
+			resource.release();
+		}
+		
+		for( RestRequest request : requests )
+		{
+			request.release();
+		}
+		
+		for( RestRepresentation representation : representations )
+		{
+			representation.release();
+		}
+	}
+
+	public void deleteResource(RestResource resource)
+	{
+		if( !resources.remove(resource))
+			return;
+
+		getInterface().fireOperationRemoved(resource);
+		
+		resource.release();
 	}
 }

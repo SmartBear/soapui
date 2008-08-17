@@ -35,7 +35,7 @@ public class TestSuiteTreeNode extends AbstractModelItemTreeNode<TestSuite>
 	private InternalTestSuiteListener internalTestSuiteListener = new InternalTestSuiteListener();;
    private ReorderPropertyChangeListener propertyChangeListener = new ReorderPropertyChangeListener();
 	private List<TestCaseTreeNode> testCaseNodes = new ArrayList<TestCaseTreeNode>();
-	private PropertiesTreeNode propertiesTreeNode;
+	private PropertiesTreeNode<?> propertiesTreeNode;
 
 	public TestSuiteTreeNode(TestSuite testSuite, SoapUITreeModel treeModel )
    {

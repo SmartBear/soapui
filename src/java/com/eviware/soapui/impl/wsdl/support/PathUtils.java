@@ -158,7 +158,7 @@ public class PathUtils
 		return PathUtils.relativize( path, projectPath );
 	}
 
-	public static String resolveResourcePath( String path, AbstractWsdlModelItem<?> modelItem )
+	public static String resolveResourcePath( String path, ModelItem modelItem )
 	{
 		if( path == null || modelItem == null )
 			return path;
@@ -181,7 +181,7 @@ public class PathUtils
 		if( project == null )
 			return prefix + path;
 		
-		String resourceRoot = PropertyExpansionUtils.expandProperties(project,project.getResourceRoot());
+		String resourceRoot = getExpandedResourceRoot(modelItem);
 		
 		if( StringUtils.hasContent(resourceRoot) && !resourceRoot.endsWith( File.separator ))
 			resourceRoot += File.separator;
@@ -322,7 +322,7 @@ public class PathUtils
 		
 		String docroot = project.getResourceRoot();
 		if( !StringUtils.hasContent(docroot))
-			return null;
+			return new File( "").getAbsolutePath();
 
 		docroot = context == null ? 
 				PropertyExpansionUtils.expandProperties(modelItem, docroot) : 

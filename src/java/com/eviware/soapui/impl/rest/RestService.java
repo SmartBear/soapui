@@ -27,7 +27,7 @@ import com.eviware.soapui.model.iface.Operation;
  * @author Ole.Matzura
  */
 
-public class RestService extends AbstractInterface<RestServiceConfig>
+public class RestService extends AbstractInterface<RestServiceConfig> implements RestResourceContainer
 {
 	private List<RestResource> resources = new ArrayList<RestResource>();
 	
@@ -111,5 +111,25 @@ public class RestService extends AbstractInterface<RestServiceConfig>
 		return resource;
 	}
 
-	
+	public RestResource cloneResource(RestResource resource, String name)
+	{
+		RestResourceConfig resourceConfig = (RestResourceConfig) getConfig().addNewResource().set(resource.getConfig());
+		resourceConfig.setName(name);
+		
+		RestResource newResource = new RestResource( this, resourceConfig);
+		resources.add( newResource );
+		
+		fireOperationAdded(newResource);
+		return newResource;
+	}
+
+	public void deleteResource(RestResource resource)
+	{
+		if( !resources.remove(resource))
+			return;
+
+		fireOperationRemoved(resource);
+		
+		resource.release();
+	}
 }

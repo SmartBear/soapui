@@ -60,7 +60,6 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 	 * @throws Exception
 	 */
 
-	@SuppressWarnings("static-access")
 	public static void main( String [] args) throws Exception
 	{
 		new SoapUIMockServiceRunner().runFromCommandLine( args );

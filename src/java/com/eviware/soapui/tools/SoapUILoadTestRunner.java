@@ -63,7 +63,6 @@ public class SoapUILoadTestRunner extends AbstractSoapUIRunner implements LoadTe
 	private String host;
 	private String loadTest;
 	private boolean printReport;
-	private String outputFolder;
 	private List<LoadTestRunner> failedTests = new ArrayList<LoadTestRunner>();
 	private int testCaseCount;
 	private int loadTestCount;
@@ -189,11 +188,6 @@ public class SoapUILoadTestRunner extends AbstractSoapUIRunner implements LoadTe
 	public void setLoadTest(String loadTest)
 	{
 		this.loadTest = loadTest;
-	}
-
-	public void setOutputFolder(String outputFolder)
-	{
-		this.outputFolder = outputFolder;
 	}
 
 	public void setPrintReport(boolean printReport)
@@ -418,10 +412,10 @@ public class SoapUILoadTestRunner extends AbstractSoapUIRunner implements LoadTe
 	{
 		ExportStatisticsAction exportStatisticsAction = new ExportStatisticsAction( loadTest.getStatisticsModel() );
 		String statisticsFileName = StringUtils.createFileName( loadTest.getName(), '_' ) + "-statistics.txt";
-		if( outputFolder != null )
+		if( getOutputFolder() != null )
 		{
-			ensureOutputFolder();
-			statisticsFileName = outputFolder + File.separator + statisticsFileName;
+			ensureOutputFolder( loadTest );
+			statisticsFileName = getAbsoluteOutputFolder(loadTest) + File.separator + statisticsFileName;
 		}
 		
 		int cnt = exportStatisticsAction.exportToFile( new File( statisticsFileName ));
@@ -434,10 +428,10 @@ public class SoapUILoadTestRunner extends AbstractSoapUIRunner implements LoadTe
 		LoadTestLog loadTestLog = loadTest.getLoadTestLog();
 		ExportLoadTestLogAction exportLoadTestLogAction = new ExportLoadTestLogAction(loadTestLog, null);
 		String logFileName = StringUtils.createFileName( loadTest.getName(), '_' ) + "-log.txt";
-		if( outputFolder != null )
+		if( getOutputFolder() != null )
 		{
-			ensureOutputFolder();
-			logFileName = outputFolder + File.separator + logFileName;
+			ensureOutputFolder( loadTest );
+			logFileName = getAbsoluteOutputFolder(loadTest) + File.separator + logFileName;
 		}
 		
 		int cnt = exportLoadTestLogAction.exportToFile( new File( logFileName ));
@@ -451,10 +445,10 @@ public class SoapUILoadTestRunner extends AbstractSoapUIRunner implements LoadTe
 			if( entry != null && entry.isError() )
 			{
 				String entryFileName = StringUtils.createFileName( loadTest.getName(), '_' ) + "-error-" + errorCnt++ + "-entry.txt";
-				if( outputFolder != null )
+				if( getOutputFolder() != null )
 				{
-					ensureOutputFolder();
-					entryFileName = outputFolder + File.separator + entryFileName;
+					ensureOutputFolder( loadTest );
+					entryFileName = getAbsoluteOutputFolder(loadTest) + File.separator + entryFileName;
 				}
 
 				try
@@ -468,11 +462,6 @@ public class SoapUILoadTestRunner extends AbstractSoapUIRunner implements LoadTe
 			}
 		}
 		log.info( "Exported " + errorCnt + " error results" );
-	}
-
-	private void ensureOutputFolder()
-	{
-		ensureFolder(outputFolder);
 	}
 
 	/**

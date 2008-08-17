@@ -86,6 +86,11 @@ public class RestRepresentation
 	{
 		config.setStatus(arg0);
 	}
+
+	public void release()
+	{
+		
+	}
 	
 	
 }

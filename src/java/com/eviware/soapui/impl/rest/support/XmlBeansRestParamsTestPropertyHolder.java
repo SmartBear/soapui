@@ -572,4 +572,8 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 			prop.setValue(property.getValue());
 		}
 	}
+
+	public void release()
+	{
+	}
 }

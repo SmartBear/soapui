@@ -17,6 +17,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,8 +47,10 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategy.EndpointDefaults;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.support.wss.WssContainer;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -55,16 +59,16 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.MetricsPanel;
 
-public class DefaultEndpointStrategyConfigurationPanel extends JPanel
+public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements PropertyChangeListener
 {
 	private EndpointsTableModel tableModel;
 	private JXTable table;
 	private JButton deleteButton;
 	private JButton assignButton;
-	private WsdlInterface iface;
+	private Interface iface;
 	private final DefaultEndpointStrategy strategy;
 
-	public DefaultEndpointStrategyConfigurationPanel( WsdlInterface iface, DefaultEndpointStrategy strategy )
+	public DefaultEndpointStrategyConfigurationPanel( Interface iface, DefaultEndpointStrategy strategy )
 	{
 		super( new BorderLayout() );
 		
@@ -78,7 +82,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel
 
 	private void buildUI()
 	{
-		tableModel = new EndpointsTableModel();
+		tableModel = iface instanceof WsdlInterface ? new WsdlEndpointsTableModel() : new RestEndpointsTableModel();
 		table = new JXTable( tableModel );
 		table.setHorizontalScrollEnabled( true );
 		table.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
@@ -96,17 +100,20 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel
 		table.getColumn( 0 ).setPreferredWidth( 250 );
 		JComboBox wssTypeCombo = new JComboBox( new String[] {WsdlRequest.PW_TYPE_NONE, WsdlRequest.PW_TYPE_TEXT, WsdlRequest.PW_TYPE_DIGEST});
 		wssTypeCombo.setEditable( true );
-		table.getColumn( 4 ).setCellEditor( new DefaultCellEditor( wssTypeCombo) );
-		
-		table.getColumn( 6 ).setCellEditor( new OutgoingWssCellEditor() );
-		table.getColumn( 7 ).setCellEditor( new IncomingWssCellEditor() );
-		table.getColumn( 8 ).setCellEditor( new DefaultCellEditor(
-					new JComboBox( new String[] {
-								EndpointConfig.Mode.OVERRIDE.toString(),
-								EndpointConfig.Mode.COMPLEMENT.toString(),
-								EndpointConfig.Mode.COPY.toString()
-					})) );
 
+		if( iface instanceof WsdlInterface )
+		{
+			table.getColumn( 4 ).setCellEditor( new DefaultCellEditor( wssTypeCombo) );
+			table.getColumn( 6 ).setCellEditor( new OutgoingWssCellEditor( ((WsdlInterface)iface).getProject().getWssContainer() ) );
+			table.getColumn( 7 ).setCellEditor( new IncomingWssCellEditor( ((WsdlInterface)iface).getProject().getWssContainer() ) );
+			table.getColumn( 8 ).setCellEditor( new DefaultCellEditor(
+						new JComboBox( new String[] {
+									EndpointConfig.Mode.OVERRIDE.toString(),
+									EndpointConfig.Mode.COMPLEMENT.toString(),
+									EndpointConfig.Mode.COPY.toString()
+						})) );
+		}
+		
 		table.getTableHeader().setReorderingAllowed( false );
 		
 		setBackground( Color.WHITE );
@@ -119,6 +126,8 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel
 
 		add( scrollPane, BorderLayout.CENTER );
 		add( createButtons(), BorderLayout.NORTH );
+		
+		iface.addPropertyChangeListener( "endpoints", this );
 	}
 
 	protected void enableButtons()
@@ -291,8 +300,145 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel
 			}
 		}
 	}
+	
+	private abstract class EndpointsTableModel extends AbstractTableModel
+	{
+		public String getEndpointAt( int selectedIndex )
+		{
+			return iface.getEndpoints()[selectedIndex];
+		}
+		
+		public EndpointDefaults getDefaultsAt( int selectedIndex )
+		{
+			String endpoint = getEndpointAt( selectedIndex );
+			return strategy.getEndpointDefaults( endpoint );
+		}
 
-	private class EndpointsTableModel extends AbstractTableModel
+		public void addEndpoint( String endpoint )
+		{
+			int rowCount = getRowCount();
+			iface.addEndpoint( endpoint );
+			
+			fireTableRowsInserted( rowCount, rowCount );
+		}
+		
+		public void removeEndpoint( int index )
+		{
+			String ep = getEndpointAt( index );
+			iface.removeEndpoint( ep );
+			fireTableRowsDeleted( index, index );
+		}
+
+		
+		public int getRowCount()
+		{
+			return iface == null ? 0 : iface.getEndpoints().length;
+		}
+		
+		@Override
+		public boolean isCellEditable( int rowIndex, int columnIndex )
+		{
+			return true;
+		}
+		
+		public void refresh()
+		{
+			fireTableDataChanged();
+		}
+	}
+	
+	private class RestEndpointsTableModel extends EndpointsTableModel
+	{
+		public int getColumnCount()
+		{
+			return 5;
+		}
+
+		@Override
+		public String getColumnName( int column )
+		{
+			switch( column )
+			{
+			case 0:
+				return "Endpoint";
+			case 1:
+				return "Username";
+			case 2:
+				return "Password";
+			case 3:
+				return "Domain";
+			case 4:
+				return "Mode";
+			}
+
+			return null;
+		}
+
+		public Object getValueAt( int rowIndex, int columnIndex )
+		{
+			String endpoint = getEndpointAt( rowIndex );
+			EndpointDefaults defaults = strategy.getEndpointDefaults( endpoint );
+
+			switch( columnIndex )
+			{
+			case 0:
+				return endpoint;
+			case 1:
+				return defaults.getUsername();
+			case 2:
+				return defaults.getPassword();
+			case 3:
+				return defaults.getDomain();
+			case 4:
+				return defaults.getMode();
+			}
+
+			return null;
+		}
+
+
+		@Override
+		public void setValueAt( Object aValue, int rowIndex, int columnIndex )
+		{
+			String endpoint = getEndpointAt( rowIndex );
+			EndpointDefaults defaults = strategy.getEndpointDefaults( endpoint );
+			
+			if( aValue == null )
+				aValue = "";
+			
+			switch( columnIndex )
+			{
+				case 0 :
+				{
+//					strategy.changeEndpoint( endpoint, aValue.toString() );
+					iface.changeEndpoint( endpoint, aValue.toString() );
+					break;
+				}
+				case 1 :
+				{
+					defaults.setUsername( aValue.toString() );
+					break;
+				}
+				case 2 :
+				{
+					defaults.setPassword( aValue.toString() );
+					break;
+				}
+				case 3 :
+				{
+					defaults.setDomain( aValue.toString() );
+					break;
+				}
+				case 4 :
+				{
+					defaults.setMode( EndpointConfig.Mode.Enum.forString( aValue.toString() ) );
+					break;
+				}
+			}
+		}
+	}
+
+	private class WsdlEndpointsTableModel extends EndpointsTableModel
 	{
 		public int getColumnCount()
 		{
@@ -327,37 +473,6 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel
 			return null;
 		}
 
-		public String getEndpointAt( int selectedIndex )
-		{
-			return iface.getEndpoints()[selectedIndex];
-		}
-		
-		public EndpointDefaults getDefaultsAt( int selectedIndex )
-		{
-			String endpoint = getEndpointAt( selectedIndex );
-			return strategy.getEndpointDefaults( endpoint );
-		}
-
-		public void addEndpoint( String endpoint )
-		{
-			int rowCount = getRowCount();
-			iface.addEndpoint( endpoint );
-			
-			fireTableRowsInserted( rowCount, rowCount );
-		}
-		
-		public void removeEndpoint( int index )
-		{
-			String ep = getEndpointAt( index );
-			iface.removeEndpoint( ep );
-			fireTableRowsDeleted( index, index );
-		}
-		
-		public int getRowCount()
-		{
-			return iface == null ? 0 : iface.getEndpoints().length;
-		}
-
 		public Object getValueAt( int rowIndex, int columnIndex )
 		{
 			String endpoint = getEndpointAt( rowIndex );
@@ -386,12 +501,6 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel
 			}
 
 			return null;
-		}
-
-		@Override
-		public boolean isCellEditable( int rowIndex, int columnIndex )
-		{
-			return true;
 		}
 
 		@Override
@@ -455,11 +564,14 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel
 		}
 	}
 	
-	private class IncomingWssCellEditor extends DefaultCellEditor
+	private static class IncomingWssCellEditor extends DefaultCellEditor
 	{
-		public IncomingWssCellEditor()
+		private final WssContainer wssContainer;
+
+		public IncomingWssCellEditor( WssContainer wssContainer )
 		{
 			super( new JComboBox() );
+			this.wssContainer = wssContainer;
 		}
 
 		@Override
@@ -467,7 +579,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel
 		{
 			JComboBox comboBox = ( JComboBox ) super.getTableCellEditorComponent( table, value, isSelected, row, column );
 			
-			DefaultComboBoxModel model = new DefaultComboBoxModel( iface.getProject().getWssContainer().getIncomingWssNames() );
+			DefaultComboBoxModel model = new DefaultComboBoxModel( wssContainer.getIncomingWssNames() );
 			model.addElement( "" );
 			
 			comboBox.setModel( model );
@@ -476,11 +588,14 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel
 		}
 	}
 	
-	private class OutgoingWssCellEditor extends DefaultCellEditor
+	private static class OutgoingWssCellEditor extends DefaultCellEditor
 	{
-		public OutgoingWssCellEditor()
+		private final WssContainer wssContainer;
+
+		public OutgoingWssCellEditor( WssContainer wssContainer )
 		{
 			super( new JComboBox() );
+			this.wssContainer = wssContainer;
 		}
 
 		@Override
@@ -488,12 +603,22 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel
 		{
 			JComboBox comboBox = ( JComboBox ) super.getTableCellEditorComponent( table, value, isSelected, row, column );
 			
-			DefaultComboBoxModel model = new DefaultComboBoxModel( iface.getProject().getWssContainer().getOutgoingWssNames() );
+			DefaultComboBoxModel model = new DefaultComboBoxModel( wssContainer.getOutgoingWssNames() );
 			model.addElement( "" );
 			
 			comboBox.setModel( model );
 			
 			return comboBox;
 		}
+	}
+	
+	public void release()
+	{
+		iface.removePropertyChangeListener("endpoints", this );
+	}
+
+	public void propertyChange(PropertyChangeEvent evt)
+	{
+		tableModel.refresh();
 	}
 }

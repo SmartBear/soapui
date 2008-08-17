@@ -28,6 +28,9 @@ import com.eviware.soapui.DefaultSoapUICore;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SoapUICore;
 import com.eviware.soapui.StandaloneSoapUICore;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 
 public abstract class AbstractSoapUIRunner
@@ -39,6 +42,7 @@ public abstract class AbstractSoapUIRunner
 	private String soapUISettingsPassword;
 
 	private boolean enableUI;
+	private String outputFolder;
 
 	public AbstractSoapUIRunner( String title )
 	{
@@ -155,6 +159,37 @@ public abstract class AbstractSoapUIRunner
 		return settingsFile;
 	}
 
+	public void setOutputFolder(String outputFolder)
+	{
+		this.outputFolder = outputFolder;
+	}
+
+	public String getOutputFolder()
+	{
+		return this.outputFolder;
+	}
+
+	public String getAbsoluteOutputFolder( ModelItem modelItem )
+	{
+		String folder = outputFolder;
+		
+		if( StringUtils.isNullOrEmpty(folder) )
+		{
+			folder = PathUtils.getExpandedResourceRoot(modelItem);
+		}
+		else if( PathUtils.isRelativePath(folder))
+		{
+			folder = PathUtils.resolveResourcePath(folder, modelItem);
+		}
+		
+		return folder;
+	}
+	
+	protected void ensureOutputFolder( ModelItem modelItem )
+	{
+		ensureFolder(getAbsoluteOutputFolder(modelItem));
+	}
+	
 	public void ensureFolder(String path)
 	{
 		if( path == null )

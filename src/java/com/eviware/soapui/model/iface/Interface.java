@@ -47,9 +47,13 @@ public interface Interface extends ModelItem
 
    public String getTechnicalId();
    
-  //  public QName getBindingName();
-
 	public List<Operation> getOperationList();
 	
 	public String getInterfaceType();
+
+	public void addEndpoint(String endpoint);
+
+	public void removeEndpoint(String ep);
+
+	public void changeEndpoint(String endpoint, String string);
 }

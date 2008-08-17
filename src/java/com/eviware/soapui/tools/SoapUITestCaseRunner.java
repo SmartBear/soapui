@@ -88,7 +88,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 	private int testAssertionCount;
 
 	private boolean printReport;
-	private String outputFolder;
 	private boolean exportAll;
 	private boolean junitReport;
 	private int exportCount;
@@ -106,7 +105,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 	 * @throws Exception
 	 */
 
-	@SuppressWarnings("static-access")
 	public static void main(String[] args) throws Exception
 	{
 		new SoapUITestCaseRunner().runFromCommandLine(args);
@@ -210,16 +208,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 			reportCollector = new JUnitReportCollector();
 	}
 
-	public void setOutputFolder(String outputFolder)
-	{
-		this.outputFolder = outputFolder;
-	}
-
-	public String getOutputFolder()
-	{
-		return this.outputFolder;
-	}
-
 	public SoapUITestCaseRunner()
 	{
 		super(SoapUITestCaseRunner.TITLE);
@@ -316,8 +304,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 	{
 		initGroovyLog();
 
-		ensureFolder(outputFolder);
-
 		assertions.clear();
 
 		String projectFile = getProjectFile();
@@ -328,7 +314,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 			throw new Exception("Failed to load soapUI project file [" + projectFile + "]");
 
 		initProject();
-
+		ensureOutputFolder( project );
+		
 		log.info("Running soapUI tests in project [" + project.getName() + "]");
 
 		long startTime = System.nanoTime();
@@ -371,8 +358,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 		{
 			printReport(timeTaken);
 		}
-
-		exportReports();
+		
+		exportReports( project );
 
 		if (assertions.size() > 0 || failedTests.size() > 0)
 		{
@@ -386,11 +373,11 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 	{
 	}
 
-	protected void exportReports() throws Exception
+	protected void exportReports( WsdlProject project ) throws Exception
 	{
 		if (junitReport)
 		{
-			exportJUnitReports(reportCollector, outputFolder);
+			exportJUnitReports(reportCollector, getAbsoluteOutputFolder( project ));
 		}
 	}
 
@@ -653,11 +640,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 						+ StringUtils.createFileName(currentStep.getName(), '_') + "-" + count.longValue() + "-"
 						+ result.getStatus();
 
-				String fileName = nameBase + ".txt";
-				if (outputFolder != null)
-				{
-					fileName = outputFolder + File.separator + fileName;
-				}
+				String absoluteOutputFolder = getAbsoluteOutputFolder( project );
+				String fileName = absoluteOutputFolder + File.separator + nameBase + ".txt";
 
 				if (result.getStatus() == TestStepStatus.FAILED)
 					log.error(currentStep.getName() + " failed, exporting to [" + fileName + "]");
@@ -688,10 +672,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 								fileName += "dat";
 							}
 
-							if (outputFolder != null)
-							{
-								fileName = outputFolder + File.separator + fileName;
-							}
+							fileName = absoluteOutputFolder + File.separator + fileName;
 
 							FileOutputStream outFile = new FileOutputStream(fileName);
 							Tools.writeAll(outFile, attachment.getInputStream());

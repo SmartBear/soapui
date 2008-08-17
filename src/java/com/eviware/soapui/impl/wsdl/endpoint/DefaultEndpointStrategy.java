@@ -30,7 +30,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.DefaultEndpointStrategyConfig;
 import com.eviware.soapui.config.EndpointConfig;
 import com.eviware.soapui.config.ProjectConfig;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpAuthenticationRequestFilter;
@@ -74,7 +74,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 				getEndpointDefaults( endpoint );
 			}
 
-			iface.addPropertyChangeListener( WsdlInterface.ENDPOINT_PROPERTY, propertyChangeListener );
+			iface.addPropertyChangeListener( AbstractInterface.ENDPOINT_PROPERTY, propertyChangeListener );
 		}
 
 		removeUnusedEndpoints();
@@ -302,7 +302,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 	{
 		project.removeProjectListener( projectListener );
 		for( Interface iface : project.getInterfaceList() )
-			iface.removePropertyChangeListener( WsdlInterface.ENDPOINT_PROPERTY, propertyChangeListener );
+			iface.removePropertyChangeListener( AbstractInterface.ENDPOINT_PROPERTY, propertyChangeListener );
 	}
 
 	private class InternalProjectListener extends ProjectListenerAdapter
@@ -316,13 +316,13 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 				getEndpointDefaults( endpoint );
 			}
 
-			iface.addPropertyChangeListener( WsdlInterface.ENDPOINT_PROPERTY, propertyChangeListener );
+			iface.addPropertyChangeListener( AbstractInterface.ENDPOINT_PROPERTY, propertyChangeListener );
 		}
 
 		@Override
 		public void interfaceRemoved( Interface iface )
 		{
-			iface.removePropertyChangeListener( WsdlInterface.ENDPOINT_PROPERTY, propertyChangeListener );
+			iface.removePropertyChangeListener( AbstractInterface.ENDPOINT_PROPERTY, propertyChangeListener );
 			removeUnusedEndpoints();
 		}
 	}
@@ -532,7 +532,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 
 	public JComponent getConfigurationPanel( Interface iface )
 	{
-		return new DefaultEndpointStrategyConfigurationPanel( ( WsdlInterface ) iface, this );
+		return new DefaultEndpointStrategyConfigurationPanel( iface, this );
 	}
 
 	public void afterRequest( SubmitContext context, Response response )

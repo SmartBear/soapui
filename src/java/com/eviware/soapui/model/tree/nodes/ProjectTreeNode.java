@@ -15,8 +15,6 @@ package com.eviware.soapui.model.tree.nodes;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.eviware.soapui.impl.WsdlInterfaceFactory;
-import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.Project;
@@ -38,7 +36,7 @@ public class ProjectTreeNode extends AbstractModelItemTreeNode<Project>
 	private List<InterfaceTreeNode> interfaceNodes = new ArrayList<InterfaceTreeNode>();
 	private List<TestSuiteTreeNode> testSuiteNodes = new ArrayList<TestSuiteTreeNode>();
 	private List<MockServiceTreeNode> mockServiceNodes = new ArrayList<MockServiceTreeNode>();
-	private PropertiesTreeNode propertiesTreeNode;
+	private PropertiesTreeNode<?> propertiesTreeNode;
 	
    public ProjectTreeNode( Project project, WorkspaceTreeNode workspaceNode )
    {

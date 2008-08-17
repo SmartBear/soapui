@@ -69,7 +69,6 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
    	if( !requestConfig.isSetMediaType())
    		setMediaType( DEFAULT_MEDIATYPE );
 
-   	
    	if( requestConfig.getParameters() == null )
    		requestConfig.addNewParameters();
    	
@@ -363,5 +362,12 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 			getConfig().setFullPath(fullPath);
 		
 		notifyPropertyChanged("path", old, fullPath);
+	}
+
+	@Override
+	public void release()
+	{
+		super.release();
+		params.release();
 	}
 }

@@ -71,6 +71,8 @@
 	<!-- RestResource Actions -->
 	<tns:action id="NewRestRequestAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.NewRestRequestAction"/>
 	<tns:action id="NewSubResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.NewRestSubResourceAction"/>
+	<tns:action id="CloneRestResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.CloneRestResourceAction"/>
+	<tns:action id="DeleteRestResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.DeleteRestResourceAction"/>
 
 	<!-- RestRequest Actions -->
 	<tns:action id="AddRestRequestToTestCaseAction" actionClass="com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction"/>
@@ -305,6 +307,9 @@
  			<tns:actionMapping actionId="SeperatorAction"/>
  		<tns:actionMapping actionId="NewRestRequestAction"/>
  		<tns:actionMapping actionId="NewSubResourceAction"/>
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="CloneRestResourceAction" keyStroke="F9" iconPath="/clone_request.gif"/>
+		<tns:actionMapping actionId="DeleteRestResourceAction" keyStroke="DELETE"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="operations.html"/>
 	</tns:actionGroup>

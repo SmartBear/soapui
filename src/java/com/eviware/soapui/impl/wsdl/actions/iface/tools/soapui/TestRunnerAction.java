@@ -51,42 +51,27 @@ import com.eviware.x.form.XFormFieldListener;
  * @author Ole.Matzura
  */
 
-public class TestRunnerAction extends AbstractToolsAction<WsdlProject> {
+public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
+{
 	private static final String ALL_VALUE = "<all>";
-
 	private static final String ENDPOINT = "Endpoint";
-
 	private static final String HOSTPORT = "Host:Port";
-
 	private static final String TESTSUITE = "TestSuite";
-
 	private static final String TESTCASE = "TestCase";
-
 	private static final String USERNAME = "Username";
-
 	private static final String PASSWORD = "Password";
-
 	private static final String WSSTYPE = "WSS Password Type";
-
 	private static final String DOMAIN = "Domain";
-
 	private static final String PRINTREPORT = "Print Report";
-
 	private static final String ROOTFOLDER = "Root Folder";
-
 	private static final String EXPORTJUNITRESULTS = "Export JUnit Results";
-
 	private static final String EXPORTALL = "Export All";
-
 	private static final String ENABLEUI = "Enable UI";
-
 	private static final String TESTRUNNERPATH = "TestRunner Path";
-
 	private static final String SAVEPROJECT = "Save Project";
-
 	private static final String ADDSETTINGS = "Add Settings";
-
 	private static final String OPEN_REPORT = "Open Report";
+	private static final String COVERAGE = "Coverage Report";
 
 	private XForm mainForm;
 
@@ -98,50 +83,51 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject> {
 
 	private List<TestSuite> testSuites;
 
-	public TestRunnerAction() {
-		super("Launch TestRunner",
-				"Launch command-line TestRunner for this project");
+	public TestRunnerAction()
+	{
+		super("Launch TestRunner", "Launch command-line TestRunner for this project");
 	}
 
-	protected XFormDialog buildDialog(WsdlProject modelItem) {
+	protected XFormDialog buildDialog(WsdlProject modelItem)
+	{
 		if (modelItem == null)
 			return null;
 
-		XFormDialogBuilder builder = XFormFactory
-				.createDialogBuilder("Launch TestRunner");
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder("Launch TestRunner");
 
 		mainForm = builder.createForm("Basic");
-		mainForm
-				.addComboBox(TESTSUITE, new String[] {}, "The TestSuite to run")
-				.addFormFieldListener(new XFormFieldListener() {
+		mainForm.addComboBox(TESTSUITE, new String[] {}, "The TestSuite to run").addFormFieldListener(
+				new XFormFieldListener()
+				{
 
-					public void valueChanged(XFormField sourceField,
-							String newValue, String oldValue) {
+					public void valueChanged(XFormField sourceField, String newValue, String oldValue)
+					{
 						List<String> testCases = new ArrayList<String>();
 						String tc = mainForm.getComponentValue(TESTCASE);
 
-						if (newValue.equals(ALL_VALUE)) {
-							for (TestSuite testSuite : testSuites) {
-								for (TestCase testCase : testSuite
-										.getTestCaseList()) {
+						if (newValue.equals(ALL_VALUE))
+						{
+							for (TestSuite testSuite : testSuites)
+							{
+								for (TestCase testCase : testSuite.getTestCaseList())
+								{
 									if (!testCases.contains(testCase.getName()))
 										testCases.add(testCase.getName());
 								}
 							}
-						} else {
-							TestSuite testSuite = getModelItem()
-									.getTestSuiteByName(newValue);
+						}
+						else
+						{
+							TestSuite testSuite = getModelItem().getTestSuiteByName(newValue);
 							if (testSuite != null)
-								testCases
-										.addAll(Arrays.asList(ModelSupport
-												.getNames(testSuite
-														.getTestCaseList())));
+								testCases.addAll(Arrays.asList(ModelSupport.getNames(testSuite.getTestCaseList())));
 						}
 
 						testCases.add(0, ALL_VALUE);
 						mainForm.setOptions(TESTCASE, testCases.toArray());
 
-						if (testCases.contains(tc)) {
+						if (testCases.contains(tc))
+						{
 							mainForm.getFormField(TESTCASE).setValue(tc);
 						}
 					}
@@ -149,61 +135,51 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject> {
 
 		mainForm.addComboBox(TESTCASE, new String[] {}, "The TestCase to run");
 		mainForm.addSeparator();
-		mainForm.addCheckBox(PRINTREPORT,
-				"Prints a summary report to the console");
-		mainForm.addCheckBox(EXPORTJUNITRESULTS,
-				"Exports results to a JUnit-Style report");
-		mainForm
-				.addCheckBox(EXPORTALL, "Exports all results (not only errors)");
-		mainForm.addTextField(ROOTFOLDER, "Folder to export to",
-				XForm.FieldType.FOLDER);
-		mainForm.addCheckBox(OPEN_REPORT,
-				"Open generated HTML report in browser (soapUI Pro only)");
+		mainForm.addCheckBox(PRINTREPORT, "Prints a summary report to the console");
+		mainForm.addCheckBox(EXPORTJUNITRESULTS, "Exports results to a JUnit-Style report");
+		mainForm.addCheckBox(EXPORTALL, "Exports all results (not only errors)");
+		mainForm.addTextField(ROOTFOLDER, "Folder to export to", XForm.FieldType.FOLDER);
+		mainForm.addCheckBox(COVERAGE, "Generate WSDL Coverage report (soapUI Pro only)");
+		mainForm.addCheckBox(OPEN_REPORT, "Open generated HTML report in browser (soapUI Pro only)");
 		mainForm.addSeparator();
 		mainForm.addCheckBox(ENABLEUI, "Enables UI components in scripts");
-		mainForm.addTextField(TESTRUNNERPATH,
-				"Folder containing TestRunner.bat to use",
-				XForm.FieldType.FOLDER);
+		mainForm.addTextField(TESTRUNNERPATH, "Folder containing TestRunner.bat to use", XForm.FieldType.FOLDER);
 		mainForm.addCheckBox(SAVEPROJECT, "Saves project before running");
-		mainForm.addCheckBox(ADDSETTINGS,
-				"Adds global settings to command-line");
+		mainForm.addCheckBox(ADDSETTINGS, "Adds global settings to command-line");
 
 		advForm = builder.createForm("Overrides");
-		advForm.addComboBox(ENDPOINT, new String[] { "" },
-				"endpoint to forward to");
-		advForm.addTextField(HOSTPORT, "Host:Port to use for requests",
-				XForm.FieldType.TEXT);
+		advForm.addComboBox(ENDPOINT, new String[] { "" }, "endpoint to forward to");
+		advForm.addTextField(HOSTPORT, "Host:Port to use for requests", XForm.FieldType.TEXT);
 		advForm.addSeparator();
-		advForm.addTextField(USERNAME, "The username to set for all requests",
-				XForm.FieldType.TEXT);
-		advForm.addTextField(PASSWORD, "The password to set for all requests",
-				XForm.FieldType.PASSWORD);
-		advForm.addTextField(DOMAIN, "The domain to set for all requests",
-				XForm.FieldType.TEXT);
-		advForm.addComboBox(WSSTYPE, new String[] { "", "Text", "Digest" },
-				"The username to set for all requests");
+		advForm.addTextField(USERNAME, "The username to set for all requests", XForm.FieldType.TEXT);
+		advForm.addTextField(PASSWORD, "The password to set for all requests", XForm.FieldType.PASSWORD);
+		advForm.addTextField(DOMAIN, "The domain to set for all requests", XForm.FieldType.TEXT);
+		advForm.addComboBox(WSSTYPE, new String[] { "", "Text", "Digest" }, "The username to set for all requests");
 
 		setToolsSettingsAction(null);
 		buildArgsForm(builder, false, "TestRunner");
 
-		return builder.buildDialog(buildDefaultActions(
-				HelpUrls.TESTRUNNER_HELP_URL, modelItem),
-				"Specify arguments for launching soapUI TestRunner",
-				UISupport.TOOL_ICON);
+		return builder.buildDialog(buildDefaultActions(HelpUrls.TESTRUNNER_HELP_URL, modelItem),
+				"Specify arguments for launching soapUI TestRunner", UISupport.TOOL_ICON);
 	}
 
-	protected Action createRunOption(WsdlProject modelItem) {
+	protected Action createRunOption(WsdlProject modelItem)
+	{
 		Action action = super.createRunOption(modelItem);
 		action.putValue(Action.NAME, "Launch");
 		return action;
 	}
 
-	protected StringToStringMap initValues(WsdlProject modelItem, Object param) {
-		if (modelItem != null && mainForm != null) {
+	protected StringToStringMap initValues(WsdlProject modelItem, Object param)
+	{
+		if (modelItem != null && mainForm != null)
+		{
 			List<String> endpoints = new ArrayList<String>();
 
-			for (Interface iface : modelItem.getInterfaceList()) {
-				for (String endpoint : iface.getEndpoints()) {
+			for (Interface iface : modelItem.getInterfaceList())
+			{
+				for (String endpoint : iface.getEndpoints())
+				{
 					if (!endpoints.contains(endpoint))
 						endpoints.add(endpoint);
 				}
@@ -213,20 +189,23 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject> {
 			advForm.setOptions(ENDPOINT, endpoints.toArray());
 
 			testSuites = modelItem.getTestSuiteList();
-			for (int c = 0; c < testSuites.size(); c++) {
-				if (testSuites.get(c).getTestCaseCount() == 0) {
+			for (int c = 0; c < testSuites.size(); c++)
+			{
+				if (testSuites.get(c).getTestCaseCount() == 0)
+				{
 					testSuites.remove(c);
 					c--;
 				}
 			}
 
-			mainForm.setOptions(TESTSUITE, ModelSupport.getNames(
-					new String[] { ALL_VALUE }, testSuites));
+			mainForm.setOptions(TESTSUITE, ModelSupport.getNames(new String[] { ALL_VALUE }, testSuites));
 
 			List<String> testCases = new ArrayList<String>();
 
-			for (TestSuite testSuite : testSuites) {
-				for (TestCase testCase : testSuite.getTestCaseList()) {
+			for (TestSuite testSuite : testSuites)
+			{
+				for (TestCase testCase : testSuite.getTestCaseList())
+				{
 					if (!testCases.contains(testCase.getName()))
 						testCases.add(testCase.getName());
 				}
@@ -234,25 +213,27 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject> {
 
 			testCases.add(0, ALL_VALUE);
 			mainForm.setOptions(TESTCASE, testCases.toArray());
-		} else if (mainForm != null) {
+		}
+		else if (mainForm != null)
+		{
 			mainForm.setOptions(ENDPOINT, new String[] { null });
 		}
 
 		StringToStringMap values = super.initValues(modelItem, param);
 
-		if (mainForm != null) {
-			if (param instanceof WsdlTestCase) {
-				mainForm.getFormField(TESTSUITE).setValue(
-						((WsdlTestCase) param).getTestSuite().getName());
-				mainForm.getFormField(TESTCASE).setValue(
-						((WsdlTestCase) param).getName());
+		if (mainForm != null)
+		{
+			if (param instanceof WsdlTestCase)
+			{
+				mainForm.getFormField(TESTSUITE).setValue(((WsdlTestCase) param).getTestSuite().getName());
+				mainForm.getFormField(TESTCASE).setValue(((WsdlTestCase) param).getName());
 
-				values.put(TESTSUITE, ((WsdlTestCase) param).getTestSuite()
-						.getName());
+				values.put(TESTSUITE, ((WsdlTestCase) param).getTestSuite().getName());
 				values.put(TESTCASE, ((WsdlTestCase) param).getName());
-			} else if (param instanceof WsdlTestSuite) {
-				mainForm.getFormField(TESTSUITE).setValue(
-						((WsdlTestSuite) param).getName());
+			}
+			else if (param instanceof WsdlTestSuite)
+			{
+				mainForm.getFormField(TESTSUITE).setValue(((WsdlTestSuite) param).getName());
 				values.put(TESTSUITE, ((WsdlTestSuite) param).getName());
 			}
 		}
@@ -260,8 +241,8 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject> {
 		return values;
 	}
 
-	protected void generate(StringToStringMap values, ToolHost toolHost,
-			WsdlProject modelItem) throws Exception {
+	protected void generate(StringToStringMap values, ToolHost toolHost, WsdlProject modelItem) throws Exception
+	{
 		String testRunnerDir = mainForm.getComponentValue(TESTRUNNERPATH);
 
 		ProcessBuilder builder = new ProcessBuilder();
@@ -272,24 +253,23 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject> {
 		else
 			builder.directory(new File(testRunnerDir));
 
-		if (mainForm.getComponentValue(SAVEPROJECT).equals(
-				Boolean.TRUE.toString())) {
+		if (mainForm.getComponentValue(SAVEPROJECT).equals(Boolean.TRUE.toString()))
+		{
 			modelItem.save();
 		}
 
 		if (log.isDebugEnabled())
-			log.debug("Launching testrunner in directory ["
-					+ builder.directory() + "] with arguments ["
-					+ args.toString() + "]");
+			log.debug("Launching testrunner in directory [" + builder.directory() + "] with arguments [" + args.toString()
+					+ "]");
 
-		toolHost.run(new ProcessToolRunner(builder, "soapUI TestRunner",
-				modelItem, args));
+		toolHost.run(new ProcessToolRunner(builder, "soapUI TestRunner", modelItem, args));
 	}
 
-	private ArgumentBuilder buildArgs(WsdlProject modelItem) throws IOException {
-		if (dialog == null) {
-			ArgumentBuilder builder = new ArgumentBuilder(
-					new StringToStringMap());
+	private ArgumentBuilder buildArgs(WsdlProject modelItem) throws IOException
+	{
+		if (dialog == null)
+		{
+			ArgumentBuilder builder = new ArgumentBuilder(new StringToStringMap());
 			builder.startScript("testrunner", ".bat", ".sh");
 			return builder;
 		}
@@ -319,11 +299,16 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject> {
 		builder.addBoolean(EXPORTJUNITRESULTS, "-j");
 		builder.addString(ROOTFOLDER, "-f");
 		builder.addBoolean(OPEN_REPORT, "-o");
+		builder.addBoolean(COVERAGE, "-g");
 
-		if (dialog.getBooleanValue(ADDSETTINGS)) {
-			try {
+		if (dialog.getBooleanValue(ADDSETTINGS))
+		{
+			try
+			{
 				builder.addBoolean(ADDSETTINGS, "-t" + SoapUI.saveSettings());
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				SoapUI.logError(e);
 			}
 		}

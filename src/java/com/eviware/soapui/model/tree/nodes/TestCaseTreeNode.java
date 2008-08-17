@@ -37,7 +37,7 @@ public class TestCaseTreeNode  extends AbstractModelItemTreeNode<TestCase>
 {
 	private TestStepsTreeNode testStepsNode;
 	private LoadTestsTreeNode loadTestsNode;
-	private PropertiesTreeNode propertiesTreeNode;
+	private PropertiesTreeNode<?> propertiesTreeNode;
 	private List<SoapUITreeNode> childNodes = new ArrayList<SoapUITreeNode>();
 	
 	public TestCaseTreeNode( TestCase testCase, SoapUITreeModel treeModel )
