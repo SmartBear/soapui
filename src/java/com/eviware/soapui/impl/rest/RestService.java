@@ -69,7 +69,7 @@ public class RestService extends AbstractInterface<RestServiceConfig>
 
 	public String getBasePath()
 	{
-		return getConfig().getBasePath();
+		return getConfig().isSetBasePath() ? getConfig().getBasePath() : "";
 	}
 	
 	public void setBasePath( String basePath )

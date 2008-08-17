@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
