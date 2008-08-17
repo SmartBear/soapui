@@ -1308,6 +1308,8 @@
     	<xsd:sequence>
     		<xsd:element name="restRequest" type="tns:RestRequest"></xsd:element>
     	</xsd:sequence>
+    	<xsd:attribute name="service" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="resourcePath" type="xsd:string"></xsd:attribute>
     </xsd:complexType>
 
     <xsd:complexType name="RestParameter">

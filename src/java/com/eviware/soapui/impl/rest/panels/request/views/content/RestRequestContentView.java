@@ -24,8 +24,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel.RestRequestDocument;
-import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel.RestRequestMessageEditor;
+import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestDocument;
+import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestMessageEditor;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;

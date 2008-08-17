@@ -28,7 +28,6 @@ import com.eviware.soapui.impl.wsdl.actions.request.CloneRequestAction;
 import com.eviware.soapui.impl.wsdl.actions.request.CreateEmptyRequestAction;
 import com.eviware.soapui.impl.wsdl.actions.request.RecreateRequestAction;
 import com.eviware.soapui.impl.wsdl.panels.request.actions.WSIValidateRequestAction;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -47,15 +46,13 @@ import com.eviware.soapui.support.xml.JXEditTextArea;
  * @author Ole.Matzura
  */
 
-public class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 extends WsdlRequest> extends
+public abstract class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 extends WsdlRequest> extends
 		AbstractHttpRequestDesktopPanel<T, T2> implements SubmitListener
 {
 	private JButton recreateButton;
 	private JButton cloneButton;
 	private JButton createEmptyButton;
-
 	private JButton addToMockServiceButton;
-
 	private AbstractAction wsiValidateAction;
 
 	public AbstractWsdlRequestDesktopPanel(T modelItem, T2 request)
@@ -97,11 +94,6 @@ public class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 extends Wsd
 		{
 			super(new DefaultXmlDocument(), modelItem);
 		}
-	}
-
-	protected String getHelpUrl()
-	{
-		return HelpUrls.REQUESTEDITOR_HELP_URL;
 	}
 
 	protected void insertButtons(JXToolBar toolbar)

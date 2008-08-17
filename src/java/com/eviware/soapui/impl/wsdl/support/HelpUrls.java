@@ -144,4 +144,6 @@ public interface HelpUrls
 	public static final String RESOLVEPROJECT_HELP_URL = "";
 
 	public static final String NEWRESTSERVICE_HELP_URL = "";
+
+	public static final String RESTREQUESTEDITOR_HELP_URL = "";
 }

@@ -15,8 +15,8 @@ package com.eviware.soapui.impl.rest.panels.request.views.param;
 import javax.swing.JComponent;
 
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel.RestRequestDocument;
-import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel.RestRequestMessageEditor;
+import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestDocument;
+import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestMessageEditor;
 import com.eviware.soapui.impl.rest.panels.resource.JWadlParamsTable;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 

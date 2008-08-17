@@ -15,20 +15,18 @@ package com.eviware.soapui.impl.wsdl.teststeps.registry;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig;
-import com.eviware.soapui.config.RequestStepConfig;
+import com.eviware.soapui.config.RestRequestConfig;
+import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.config.WsdlRequestConfig;
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.iface.Interface;
-import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.project.Project;
-import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.x.form.XForm;
@@ -44,60 +42,55 @@ import com.eviware.x.form.XFormFactory;
 
 public class RestRequestStepFactory extends WsdlTestStepFactory
 {
-	public static final String REQUEST_TYPE = "restrequest";
+	public static final String RESTREQUEST_TYPE = "restrequest";
 	public static final String STEP_NAME = "Name";
 	private XFormDialog dialog;
 	private StringToStringMap dialogValues = new StringToStringMap();
 
 	public RestRequestStepFactory()
 	{
-		super( REQUEST_TYPE, "Test Request", "Submits a request and validates its response", "/request.gif" );
+		super( RESTREQUEST_TYPE, "REST Test Request", "Submits a REST-style Request and validates its response", "/request.gif" );
 	}
 
 	public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest)
 	{
-		return new WsdlTestRequestStep( testCase, config, forLoadTest );
+		return new RestTestRequestStep( testCase, config, true, forLoadTest );
 	}
 
-	public static TestStepConfig createConfig(WsdlRequest request, String stepName)
+	public static TestStepConfig createConfig(RestRequest request, String stepName)
 	{
-		RequestStepConfig requestStepConfig = RequestStepConfig.Factory.newInstance();
+		RestRequestStepConfig requestStepConfig = RestRequestStepConfig.Factory.newInstance();
 		
-      requestStepConfig.setInterface( request.getOperation().getInterface().getName() );
-      requestStepConfig.setOperation( request.getOperation().getName() );
+      requestStepConfig.setService( request.getOperation().getInterface().getName() );
+      requestStepConfig.setResourcePath( request.getOperation().getFullPath() );
 
-      WsdlRequestConfig testRequestConfig = requestStepConfig.addNewRequest();
+      RestRequestConfig testRequestConfig = requestStepConfig.addNewRestRequest();
       
       testRequestConfig.setName( stepName );
       testRequestConfig.setEncoding( request.getEncoding() );
       testRequestConfig.setEndpoint( request.getEndpoint() );
       testRequestConfig.addNewRequest().setStringValue( request.getRequestContent() );
-      testRequestConfig.setOutgoingWss( request.getOutgoingWss() );
-      testRequestConfig.setIncomingWss( request.getIncomingWss() );
 
       if( (CredentialsConfig) request.getConfig().getCredentials() != null )
       {
       	testRequestConfig.setCredentials( (CredentialsConfig) request.getConfig().getCredentials().copy() );
       }
 
-      testRequestConfig.setWssPasswordType( request.getConfig().getWssPasswordType() );
-      //testRequestConfig.setSettings( request.getConfig().getSettings() );
-      
       TestStepConfig testStep = TestStepConfig.Factory.newInstance();
-      testStep.setType( REQUEST_TYPE );
+      testStep.setType( RESTREQUEST_TYPE );
       testStep.setConfig( requestStepConfig );
 
 		return testStep;
 	}
 
-	public static TestStepConfig createConfig( WsdlOperation operation, String stepName )
+	public static TestStepConfig createConfig( RestResource operation, String stepName )
 	{
-		RequestStepConfig requestStepConfig = RequestStepConfig.Factory.newInstance();
+		RestRequestStepConfig requestStepConfig = RestRequestStepConfig.Factory.newInstance();
 		
-      requestStepConfig.setInterface( operation.getInterface().getName() );
-      requestStepConfig.setOperation( operation.getName() );
+      requestStepConfig.setService( operation.getInterface().getName() );
+      requestStepConfig.setResourcePath( operation.getFullPath() );
 
-      WsdlRequestConfig testRequestConfig = requestStepConfig.addNewRequest();
+      RestRequestConfig testRequestConfig = requestStepConfig.addNewRestRequest();
       
       testRequestConfig.setName( stepName );
       testRequestConfig.setEncoding( "UTF-8" );
@@ -105,12 +98,10 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
       if( endpoints.length > 0 )
       	testRequestConfig.setEndpoint( endpoints[0] );
       
-      String requestContent = operation.createRequest( 
-      			SoapUI.getSettings().getBoolean( WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS ));
-      testRequestConfig.addNewRequest().setStringValue( requestContent );
+      testRequestConfig.addNewRequest();
       
       TestStepConfig testStep = TestStepConfig.Factory.newInstance();
-      testStep.setType( REQUEST_TYPE );
+      testStep.setType( RESTREQUEST_TYPE );
       testStep.setConfig( requestStepConfig );
 
 		return testStep;
@@ -121,25 +112,30 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
 		// build list of available interfaces / operations
 		Project project = testCase.getTestSuite().getProject();
 		List<String> options = new ArrayList<String>();
-		List<Operation> operations = new ArrayList<Operation>();
+		List<RestResource> operations = new ArrayList<RestResource>();
 
 		for( int c = 0; c < project.getInterfaceCount(); c++ )
 		{
 			Interface iface = project.getInterfaceAt( c );
-			for( int i = 0; i < iface.getOperationCount(); i++ )
+			if( iface instanceof RestService )
 			{
-				options.add( iface.getName() + " -> " + iface.getOperationAt( i ).getName() );
-				operations.add( iface.getOperationAt( i ));
+				RestResource[] resources = ((RestService)iface).getAllResources();
+				
+				for( RestResource resource : resources )
+				{
+					options.add( iface.getName() + " -> " + resource.getFullPath() );
+					operations.add( resource );
+				}
 			}
 		}
 		
-		Object op = UISupport.prompt( "Select operation to invoke for request", "New TestRequest", options.toArray() );
+		Object op = UISupport.prompt( "Select Resource to invoke for request", "New RestRequest", options.toArray() );
 		if( op != null )
 		{
 			int ix = options.indexOf( op );
 			if( ix != -1 )
 			{
-				WsdlOperation operation = (WsdlOperation) operations.get( ix );
+				RestResource operation = operations.get( ix );
 				
 				if( dialog == null )
 					buildDialog();
@@ -156,17 +152,16 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
 		return null;
 	}
 
-	public TestStepConfig createNewTestStep(WsdlOperation operation, StringToStringMap values )
+	public TestStepConfig createNewTestStep(RestResource operation, StringToStringMap values )
 	{
-		String name;
-		name = values.get( STEP_NAME );
+		String name = values.get( STEP_NAME );
 		
-		RequestStepConfig requestStepConfig = RequestStepConfig.Factory.newInstance();
+		RestRequestStepConfig requestStepConfig = RestRequestStepConfig.Factory.newInstance();
 		
-		requestStepConfig.setInterface( operation.getInterface().getName() );
-		requestStepConfig.setOperation( operation.getName() );
+		requestStepConfig.setService( operation.getInterface().getName() );
+		requestStepConfig.setResourcePath( operation.getName() );
 
-		WsdlRequestConfig testRequestConfig = requestStepConfig.addNewRequest();
+		RestRequestConfig testRequestConfig = requestStepConfig.addNewRestRequest();
 		
 		testRequestConfig.setName( name );
 		testRequestConfig.setEncoding( "UTF-8" );
@@ -175,7 +170,7 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
 			testRequestConfig.setEndpoint( endpoints[0] );
 		
 		TestStepConfig testStep = TestStepConfig.Factory.newInstance();
-		testStep.setType( REQUEST_TYPE );
+		testStep.setType( RESTREQUEST_TYPE );
 		testStep.setConfig( requestStepConfig );
 		testStep.setName( name );
 
@@ -189,12 +184,12 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
 	
 	private void buildDialog()
 	{
-		XFormDialogBuilder builder = XFormFactory.createDialogBuilder("Add Request to TestCase");
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder("Add REST Request to TestCase");
 		XForm mainForm = builder.createForm( "Basic" );
 		
 		mainForm.addTextField( STEP_NAME, "Name of TestStep", XForm.FieldType.URL ).setWidth( 30 );
 
 		dialog = builder.buildDialog( builder.buildOkCancelActions(), 
-				"Specify options for adding a new request to a TestCase", UISupport.OPTIONS_ICON);		
+				"Specify options for adding a new REST Request to a TestCase", UISupport.OPTIONS_ICON);		
 	}
 }

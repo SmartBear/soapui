@@ -16,6 +16,7 @@ import javax.swing.JButton;
 
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.actions.request.AddRequestToTestCaseAction;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JXToolBar;
 
@@ -44,6 +45,11 @@ public class WsdlRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel<Wsd
 		super.init(request);
 	}
 
+	protected String getHelpUrl()
+	{
+		return HelpUrls.REQUESTEDITOR_HELP_URL;
+	}
+	
 	public void setEnabled(boolean enabled)
 	{
 		super.setEnabled(enabled);

@@ -24,8 +24,8 @@ import javax.swing.JScrollPane;
 import net.sf.json.JSONObject;
 
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel.RestResponseDocument;
-import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel.RestResponseMessageEditor;
+import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestResponseDocument;
+import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestResponseMessageEditor;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.support.UISupport;

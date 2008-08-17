@@ -100,12 +100,12 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		super(modelItem);
 		
+		this.request = request;
 		init( request );
 	}
 
 	protected void init(T2 request)
 	{
-		this.request = request;
 		this.endpointsModel = new EndpointsComboBoxModel(request);
 
 		request.addSubmitListener(this);

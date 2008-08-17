@@ -152,27 +152,27 @@ public class SwingActionDelegate<T extends ModelItem> extends AbstractAction imp
 		return new SwingActionDelegate<T>( new StandaloneActionMapping<T>( action ), null );
 	}
 
-	public static SwingActionDelegate createDelegate( String soapUIActionId )
+	public static SwingActionDelegate<?> createDelegate( String soapUIActionId )
 	{
 		return createDelegate( SoapUI.getActionRegistry().getAction( soapUIActionId ));
 	}
 	
-	public static <T extends ModelItem> SwingActionDelegate createDelegate( String soapUIActionId, T target )
+	public static <T extends ModelItem> SwingActionDelegate<?> createDelegate( String soapUIActionId, T target )
 	{
 		return createDelegate( SoapUI.getActionRegistry().getAction( soapUIActionId ), target );
 	}
 	
-	public static <T extends ModelItem> SwingActionDelegate createDelegate( String soapUIActionId, T target, String keyStroke )
+	public static <T extends ModelItem> SwingActionDelegate<?> createDelegate( String soapUIActionId, T target, String keyStroke )
 	{
 		return createDelegate( SoapUI.getActionRegistry().getAction( soapUIActionId ), target, keyStroke );
 	}
 	
-	public static <T extends ModelItem> SwingActionDelegate createDelegate( String soapUIActionId, T target, String keyStroke, String iconPath )
+	public static <T extends ModelItem> SwingActionDelegate<?> createDelegate( String soapUIActionId, T target, String keyStroke, String iconPath )
 	{
 		return createDelegate( SoapUI.getActionRegistry().getAction( soapUIActionId ), target, keyStroke, iconPath );
 	}
 
-	public SoapUIAction getSoapUIAction()
+	public SoapUIAction<?> getSoapUIAction()
 	{
 		return getAction();
 	}

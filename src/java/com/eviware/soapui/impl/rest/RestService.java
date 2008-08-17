@@ -132,4 +132,9 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 		
 		resource.release();
 	}
+
+	public RestResource[] getAllResources()
+	{
+		return resources.toArray(new RestResource[resources.size()]);
+	}
 }

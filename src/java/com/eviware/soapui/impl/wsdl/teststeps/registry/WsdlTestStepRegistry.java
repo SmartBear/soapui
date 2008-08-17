@@ -38,6 +38,7 @@ public class WsdlTestStepRegistry
 		addFactory( new DelayStepFactory() );
 		addFactory( new RunTestCaseStepFactory() );
 		addFactory( new AsyncResponseStepFactory() );
+		addFactory( new RestRequestStepFactory() );
 	}
 	
 	public WsdlTestStepFactory getFactory( String type )
