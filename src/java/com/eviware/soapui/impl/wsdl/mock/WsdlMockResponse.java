@@ -86,6 +86,7 @@ import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.editor.inspectors.wsa.WsaUtils;
 import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -242,6 +243,8 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			}
 
 			responseContent = PropertyExpansionUtils.expandProperties( context, responseContent, true );
+			
+			responseContent = new WsaUtils(getSoapVersion(), getMockOperation().getOperation()).addWSAddressing(responseContent, this);
 
 			String outgoingWss = getOutgoingWss();
 			if( StringUtils.isNullOrEmpty( outgoingWss ))
