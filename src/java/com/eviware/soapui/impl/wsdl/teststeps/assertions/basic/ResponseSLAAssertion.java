@@ -10,13 +10,14 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.teststeps.assertions;
+package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.config.RequestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
@@ -39,6 +40,7 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 public class ResponseSLAAssertion extends WsdlMessageAssertion implements ResponseAssertion
 {
 	public static final String ID = "Response SLA Assertion";
+	public static final String LABEL = "Response SLA";
 	private String SLA;
 
 	/**
@@ -133,5 +135,13 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 	{
 		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
 		return builder.add( "SLA", SLA ).finish();
+	}
+	
+	public static class Factory extends AbstractTestAssertionFactory
+	{
+		public Factory()
+		{
+			super(ResponseSLAAssertion.ID, ResponseSLAAssertion.LABEL, ResponseSLAAssertion.class);
+		}
 	}
 }

@@ -12,9 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +22,18 @@ import org.apache.log4j.Logger;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RequestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.GroovyScriptAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.ResponseSLAAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SchemaComplianceAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleContainsAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleNotContainsAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XPathContainsAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XQueryContainsAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.NotSoapFaultAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.SoapFaultAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.SoapResponseAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.WSSStatusAssertion;
 import com.eviware.soapui.model.testsuite.Assertable;
-import com.eviware.soapui.model.testsuite.RequestAssertion;
-import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.support.types.StringToStringMap;
 
@@ -39,31 +46,31 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public class WsdlAssertionRegistry
 {
    private static WsdlAssertionRegistry instance;
-	private Map<String,Class<? extends WsdlMessageAssertion> > availableAssertions = new HashMap<String,Class<? extends WsdlMessageAssertion> >();
+	private Map<String, TestAssertionFactory > availableAssertions = new HashMap<String,TestAssertionFactory >();
 	private StringToStringMap assertionLabels = new StringToStringMap();
 	private final static Logger log = Logger.getLogger( WsdlAssertionRegistry.class );
 	
 	public WsdlAssertionRegistry()
 	{
-		addAssertion( SoapResponseAssertion.ID, "SOAP Response", SoapResponseAssertion.class );
-		addAssertion( SchemaComplianceAssertion.ID, "Schema Compliance", SchemaComplianceAssertion.class );
-		addAssertion( SimpleContainsAssertion.ID, "Contains", SimpleContainsAssertion.class );
-		addAssertion( SimpleNotContainsAssertion.ID, "Not Contains", SimpleNotContainsAssertion.class );
-		addAssertion( XPathContainsAssertion.ID, XPathContainsAssertion.LABEL, XPathContainsAssertion.class );
-		addAssertion( NotSoapFaultAssertion.ID, NotSoapFaultAssertion.LABEL, NotSoapFaultAssertion.class );
-		addAssertion( SoapFaultAssertion.ID, "SOAP Fault", SoapFaultAssertion.class );
-		addAssertion( ResponseSLAAssertion.ID, "Response SLA", ResponseSLAAssertion.class );
-		addAssertion( GroovyScriptAssertion.ID, GroovyScriptAssertion.LABEL,	GroovyScriptAssertion.class );
-		addAssertion( XQueryContainsAssertion.ID, XQueryContainsAssertion.LABEL, XQueryContainsAssertion.class );
-		addAssertion( WSSStatusAssertion.ID, "WS-Security Status", WSSStatusAssertion.class );
+		addAssertion( new SoapResponseAssertion.Factory() );
+		addAssertion( new SchemaComplianceAssertion.Factory() );
+		addAssertion( new SimpleContainsAssertion.Factory() );
+		addAssertion( new SimpleNotContainsAssertion.Factory() );
+		addAssertion( new XPathContainsAssertion.Factory() );
+		addAssertion( new NotSoapFaultAssertion.Factory() );
+		addAssertion( new SoapFaultAssertion.Factory() );
+		addAssertion( new ResponseSLAAssertion.Factory() );
+		addAssertion( new GroovyScriptAssertion.Factory() );
+		addAssertion( new XQueryContainsAssertion.Factory() );
+		addAssertion( new WSSStatusAssertion.Factory() );
 	}
 	
-	public void addAssertion( String id, String label, Class<? extends WsdlMessageAssertion> assertionClass )
+	public void addAssertion( TestAssertionFactory factory)
 	{
-		availableAssertions.put(  id, assertionClass );
-		assertionLabels.put( label, id );
+		availableAssertions.put( factory.getAssertionId(), factory );
+		assertionLabels.put(factory.getAssertionLabel(), factory.getAssertionId() );
 	}
-	
+
 	public static synchronized WsdlAssertionRegistry getInstance()
 	{
 		if( instance == null )
@@ -77,18 +84,14 @@ public class WsdlAssertionRegistry
 	   try
 		{
 			String type = config.getType();
-			Class<? extends WsdlMessageAssertion> clazz = availableAssertions.get(type);
-			if( clazz == null )
+			TestAssertionFactory factory = availableAssertions.get(type);
+			if( factory == null )
 			{
 				log.error( "Missing assertion for type [" + type + "]" );
 			}
 			else
 			{
-				Constructor<? extends WsdlMessageAssertion> ctor = clazz
-					.getConstructor(new Class[] { RequestAssertionConfig.class,
-							Assertable.class });
-				
-				return (WsdlMessageAssertion) ctor.newInstance(config, assertable);
+				return (WsdlMessageAssertion) factory.buildAssertion(config, assertable);
 			}
 		}
 		catch (Exception e)
@@ -101,7 +104,7 @@ public class WsdlAssertionRegistry
 	
 	public boolean canBuildAssertion( RequestAssertionConfig config )
 	{
-		return availableAssertions.get(config.getType()) != null;
+		return availableAssertions.containsKey(config.getType());
 	}
 	
 	public String getAssertionTypeForName( String name )
@@ -111,39 +114,14 @@ public class WsdlAssertionRegistry
 	
 	public enum AssertableType { REQUEST, RESPONSE, BOTH }
 	
-	public String[] getAvailableAssertionNames( AssertableType type )
+	public String[] getAvailableAssertionNames( Assertable assertable )
 	{
 		List<String> result = new ArrayList<String>();
 		
-		for( String assertion : assertionLabels.keySet() )
+		for( TestAssertionFactory assertion : availableAssertions.values() )
 		{
-			switch( type )
-			{
-				case BOTH : 
-				{
-				   result.add( assertion );
-				   break;
-				}
-				case REQUEST :
-				{
-					String assertionId = assertionLabels.get( assertion );
-					if( Arrays.asList( availableAssertions.get( assertionId ).getInterfaces() ).contains( RequestAssertion.class )) 
-					{
-						result.add(  assertion );
-					}
-					break;
-				}
-				
-				case RESPONSE :
-				{
-					String assertionId = assertionLabels.get( assertion );
-					if( Arrays.asList( availableAssertions.get( assertionId ).getInterfaces() ).contains( ResponseAssertion.class )) 
-					{
-						result.add(  assertion );
-					}
-					break;
-				}
-			}
+			if( assertion.canAssert( assertable ))
+				result.add( assertion.getAssertionLabel() );
 		}
 		
       return result.toArray( new String[result.size()] );

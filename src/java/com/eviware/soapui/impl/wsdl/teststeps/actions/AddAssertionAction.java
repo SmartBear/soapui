@@ -43,7 +43,7 @@ public class AddAssertionAction extends AbstractAction
    
    public void actionPerformed(ActionEvent e)
 	{
-      String [] assertions = WsdlAssertionRegistry.getInstance().getAvailableAssertionNames( assertable.getAssertableType() );
+      String [] assertions = WsdlAssertionRegistry.getInstance().getAvailableAssertionNames( assertable );
       
       if( assertions == null || assertions.length == 0 )
       {

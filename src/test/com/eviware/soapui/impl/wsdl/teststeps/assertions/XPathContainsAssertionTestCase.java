@@ -22,6 +22,7 @@ import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.config.RequestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XPathContainsAssertion;
 
 public class XPathContainsAssertionTestCase extends TestCase
 {
@@ -54,7 +55,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 	public void testFullContentMatch() throws Exception
 	{
 		assertion.setPath( "/" );
-		assertion.setContent( testResponse );
+		assertion.setExpectedContent( testResponse );
 		
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ));
 	}
@@ -64,7 +65,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 		assertion.setPath( "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';" +
                "//urn:searchResponse" );
 		
-		assertion.setContent( testBody );
+		assertion.setExpectedContent( testBody );
 		
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ));
 	}
@@ -75,7 +76,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 				"declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';" +
 				"declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';" +
                "/env:Envelope/env:Body/urn:searchResponse/urn1:searchResult/@hitCount" );
-		assertion.setContent( "131" );
+		assertion.setExpectedContent( "131" );
 		
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ));
 	}
@@ -85,7 +86,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 		assertion.setPath( "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';" +
 				"declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';" +
                "//urn:searchResponse/urn1:searchResult/company[2]/companyName" );
-		assertion.setContent( "<companyName>Bonnier Otto Karl Adam</companyName>" );
+		assertion.setExpectedContent( "<companyName>Bonnier Otto Karl Adam</companyName>" );
 		
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ));
 	}
@@ -96,7 +97,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 				"declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';" +
 				"declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';" +
                "/env:Envelope/env:Body/urn:searchResponse/urn1:searchResult/company[2]/companyName/text()" );
-		assertion.setContent( "Bonnier Otto Karl Adam" );
+		assertion.setExpectedContent( "Bonnier Otto Karl Adam" );
 		
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ));
 	}
@@ -106,14 +107,14 @@ public class XPathContainsAssertionTestCase extends TestCase
 		assertion.setPath( "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';" +
 				"declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';" +
                "//urn:searchResponse/urn1:searchResult/company[4]" );
-		assertion.setContent( readResource( "/testFragment.xml") );
+		assertion.setExpectedContent( readResource( "/testFragment.xml") );
 		
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ));
    }
    
    public void testAnyFragmentMatch() throws Exception
    {
-		assertion.setContent( readResource( "/testFragment.xml") );
+		assertion.setExpectedContent( readResource( "/testFragment.xml") );
 		assertion.setPath( "//company" );
 
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ));
@@ -122,7 +123,7 @@ public class XPathContainsAssertionTestCase extends TestCase
    public void testLastElementTextMatch() throws Exception
 	{
 		assertion.setPath( "//company[last()]/companyName/text()" );
-		assertion.setContent( "Bonnier Zoo Förlag AB" );
+		assertion.setExpectedContent( "Bonnier Zoo Förlag AB" );
 		
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ));
 	}
@@ -130,7 +131,7 @@ public class XPathContainsAssertionTestCase extends TestCase
    public void testElementCountMatch() throws Exception
 	{
 		assertion.setPath( "count(//company)" );
-		assertion.setContent( "20" );
+		assertion.setExpectedContent( "20" );
 		
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ));
 	}
@@ -141,7 +142,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 				"declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';" +
 				"declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';" +
                "/env:Envelope/env:Body/urn:searchResponse/urn1:searchResult/company/companyName/text()" );
-		assertion.setContent( "Bonnier Otto Karl Adam" );
+		assertion.setExpectedContent( "Bonnier Otto Karl Adam" );
 		
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ));
 	}
@@ -152,7 +153,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 				"declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';" +
 				"declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';" +
                "/env:Envelope/env:Body/urn:searchResponse/urn1:searchResult/company/companyName/text()" );
-		assertion.setContent( "Bonnier Otto Karl Adams" );
+		assertion.setExpectedContent( "Bonnier Otto Karl Adams" );
 		
 		try
 		{
@@ -175,7 +176,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 		"<name>Stephen King</name>" + 
 		"</humanBeing></response>";
    	
-		assertion.setContent( "Stephen King"  );
+		assertion.setExpectedContent( "Stephen King"  );
 		//assertion.setPath( "//*[@id=substring(//book/bookID[text()='1012']/following-sibling::author/@href,2)]" );
 		
 		assertion.setPath( "//*[@id=substring(//book/bookID[text()='1012']/following-sibling::author/@href,2)]/name/text()" );

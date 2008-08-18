@@ -10,7 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.teststeps.assertions;
+package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
 import org.apache.xmlbeans.XmlObject;
 
@@ -22,6 +22,7 @@ import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlValidator;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.Assertable;
@@ -45,6 +46,8 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 public class SchemaComplianceAssertion extends WsdlMessageAssertion implements RequestAssertion, ResponseAssertion
 {
 	public static final String ID = "Schema Compliance";
+	public static final String LABEL = "Schema Compliance";
+	
 	private String definition;
 	private WsdlContext wsdlContext;
 	private String wsdlContextDef;
@@ -183,5 +186,13 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		}
 		
 		return "Schema compliance OK";
+	}
+	
+	public static class Factory extends AbstractTestAssertionFactory
+	{
+		public Factory()
+		{
+			super( SchemaComplianceAssertion.ID, SchemaComplianceAssertion.LABEL, SchemaComplianceAssertion.class);
+		}
 	}
 }

@@ -10,7 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.teststeps.assertions;
+package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -53,6 +53,7 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -627,5 +628,13 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 		}
 		
 		return result.toArray( new XPathReference[result.size()] );
+	}
+	
+	public static class Factory extends AbstractTestAssertionFactory
+	{
+		public Factory()
+		{
+			super(XQueryContainsAssertion.ID, XQueryContainsAssertion.LABEL, XQueryContainsAssertion.class);
+		}
 	}
 }
