@@ -27,22 +27,7 @@ public abstract class AbstractSoapBindingImporter implements BindingImporter
 
 	protected void initWsAddressing(Binding binding, WsdlInterface iface)
 	{
-		Element[] usingAddressingElements = WsdlUtils.getExentsibilityElements(binding, new QName("http://www.w3.org/2006/05/addressing/wsdl","UsingAddressing"));
-	   if( usingAddressingElements.length == 0) {
-	   	usingAddressingElements = WsdlUtils.getExentsibilityElements(binding, new QName("http://www.w3.org/2006/02/addressing/wsdl","UsingAddressing"));
-	   }
-	   
-	   if (usingAddressingElements.length != 0) {
-	   	//this should resolve wsdl version, not addressing version??? what is the connection?
-	   	String addressingVersion = usingAddressingElements[0].getAttributeNS("http://schemas.xmlsoap.org/wsdl/","required");
-	   	if (addressingVersion != null && addressingVersion.equals("true"))
-			{
-	         iface.setWsaVersion(WsaVersionTypeConfig.X_200508.toString());
-			} 
-	   	
-	   } else {
-	   	iface.setWsaVersion(WsaVersionTypeConfig.NONE.toString());
-	   }
+	   	iface.setWsaVersion(WsdlUtils.getUsingAddressing(binding));
 	}
 
 	public AbstractSoapBindingImporter()

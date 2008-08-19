@@ -74,6 +74,7 @@ import org.xml.sax.InputSource;
 import com.eviware.soapui.config.DefinitionCacheConfig;
 import com.eviware.soapui.config.DefinitionCacheTypeConfig;
 import com.eviware.soapui.config.DefintionPartConfig;
+import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.Constants;
@@ -624,6 +625,26 @@ public class WsdlUtils
 					MIMEMultipartRelated.class ) != null;
 	}
 
+	public static String getUsingAddressing(ElementExtensible item)
+	{
+	   String version = WsaVersionTypeConfig.NONE.toString();
+	   
+ 		Element[] usingAddressingElements = WsdlUtils.getExentsibilityElements(item, new QName("http://www.w3.org/2006/05/addressing/wsdl","UsingAddressing"));
+	   if( usingAddressingElements.length == 0) {
+	   	usingAddressingElements = WsdlUtils.getExentsibilityElements(item, new QName("http://www.w3.org/2006/02/addressing/wsdl","UsingAddressing"));
+	   }
+	   
+	   if (usingAddressingElements.length != 0) {
+	   	//this should resolve wsdl version, not addressing version??? what is the connection?
+	   	String addressingVersion = usingAddressingElements[0].getAttributeNS("http://schemas.xmlsoap.org/wsdl/","required");
+	   	if (addressingVersion != null && addressingVersion.equals("true"))
+			{
+	   		version = WsaVersionTypeConfig.X_200508.toString();
+			} 
+	   	
+	   } 
+	   return version;
+	}
 	public static String getSoapEndpoint( Port port )
 	{
 		SOAPAddress soapAddress = WsdlUtils.getExtensiblityElement( port.getExtensibilityElements(), SOAPAddress.class );

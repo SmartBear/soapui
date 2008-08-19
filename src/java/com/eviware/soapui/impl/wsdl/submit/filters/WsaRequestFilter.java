@@ -56,6 +56,8 @@ public class WsaRequestFilter extends AbstractRequestFilter
 		{
 			ExtendedHttpMethod httpMethod = (ExtendedHttpMethod) context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 			Operation operation = ((WsdlRequest)wsdlRequest).getOperation();
+//	TODO check UsingAddressing for particular endpoint when running a request
+//			((WsdlRequest)wsdlRequest).getEndpoint();
 			SoapVersion soapVersion = ((WsdlRequest)wsdlRequest).getOperation().getInterface().getSoapVersion();
 			content = new WsaUtils(soapVersion, operation).addWSAddressing(content, (WsdlRequest) wsdlRequest, httpMethod);
 			if( content != null )

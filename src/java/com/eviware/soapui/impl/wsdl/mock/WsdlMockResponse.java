@@ -51,7 +51,9 @@ import com.eviware.soapui.impl.wsdl.WsdlHeaderPart;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.submit.filters.RemoveEmptyContentRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.AttachmentUtils;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BodyPartAttachment;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.MimeMessageMockResponseEntity;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.MockResponseDataSource;
 import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
@@ -241,7 +243,6 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			{
 				result.addHeader( name, PropertyExpansionUtils.expandProperties( context, responseHeaders.get( name ) ) );
 			}
-
 			responseContent = PropertyExpansionUtils.expandProperties( context, responseContent, true );
 			
 			responseContent = new WsaUtils(getSoapVersion(), getMockOperation().getOperation()).addWSAddressing(responseContent, this);

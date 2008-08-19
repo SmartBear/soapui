@@ -28,12 +28,14 @@ import javax.xml.namespace.QName;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.BindingImporter;
 import com.eviware.soapui.impl.wsdl.support.soap.Soap11HttpBindingImporter;
 import com.eviware.soapui.impl.wsdl.support.soap.Soap12HttpBindingImporter;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
 
@@ -144,6 +146,9 @@ public class WsdlImporter
 	               if( endpoint != null )
 	                  iface.addEndpoint( endpoint );
 	               
+	               if( iface.getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString()))
+	                  iface.setWsaVersion(WsdlUtils.getUsingAddressing( port ));
+	                  
 	               result.add( iface );
 	               importedBindings.put( binding, iface );
                }
