@@ -73,7 +73,7 @@ public class WsaUtils
 				mustUnderstand = true;
 			}
          
-         WsaBuilder builder = new WsaBuilder( header, wsaVersionNameSpace, mustUnderstand );
+         WsaBuilder builder = new WsaBuilder( wsaVersionNameSpace, mustUnderstand );
          
          header.appendChild(builder.createWsaChildElement("wsa:Action", elm, wsaContainer.getWsaConfig().getAction()));
 
@@ -108,14 +108,18 @@ public class WsaUtils
             header.appendChild(builder.createWsaChildElement("wsa:MessageID", elm, UUID.randomUUID().toString()));
 			}
          
-//         String to = wsaContainer.getWsaConfig().getMessageID();
-//         if (to != null && to.isEmpty())
-//			{
-//            header.appendChild(builder.createWsaChildElement("wsa:to", elm, to) );
-//			} else if (operation.isOneWay() || operation.isRequestResponse()) {
-//				//if to not specified but wsa:to mandatory get default value
-//            header.appendChild(builder.createWsaChildElement("wsa:to", elm, httpMethod.getURI().toString()) );
-//         }
+         //only for wsdlRequest
+         if (httpMethod != null)
+			{
+            String to = wsaContainer.getWsaConfig().getTo();
+            if (to != null && to.isEmpty())
+   			{
+               header.appendChild(builder.createWsaChildElement("wsa:to", elm, to) );
+   			} else if (operation.isOneWay() || operation.isRequestResponse()) {
+   				//if to not specified but wsa:to mandatory get default value
+               header.appendChild(builder.createWsaChildElement("wsa:to", elm, httpMethod.getURI().toString()) );
+            }
+			}
          
          content = xmlObject.xmlText();
 		}
@@ -132,7 +136,7 @@ public class WsaUtils
 		private final String wsaVersionNameSpace;
 		private final Boolean mustUnderstand;
 
-		public WsaBuilder(Element header, String wsaVersionNameSpace, Boolean mustUnderstand)
+		public WsaBuilder(String wsaVersionNameSpace, Boolean mustUnderstand)
 		{
 			// TODO Auto-generated constructor stub
 			this.wsaVersionNameSpace = wsaVersionNameSpace;
@@ -147,7 +151,6 @@ public class WsaUtils
 	      	wsaElm.setAttributeNS(soapVersion.getEnvelopeNamespace(), "mustUnderstand", mustUnderstand ? "1" : "0");
 			}
 	      wsaElm.appendChild(txtElm);
-//	      header.appendChild(wsFromElm);
 	      return wsaElm;
 		}
 		public Element createWsaAddressChildElement(String elementName, Element addToElement,   String wsaProperty ) {
