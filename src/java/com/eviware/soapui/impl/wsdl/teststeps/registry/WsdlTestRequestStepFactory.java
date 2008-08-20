@@ -17,7 +17,7 @@ import java.util.List;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig;
-import com.eviware.soapui.config.RequestAssertionConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.RequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.config.WsdlRequestConfig;
@@ -188,19 +188,19 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory
 		
 		if( values.getBoolean( ADD_SOAP_RESPONSE_ASSERTION ))
 		{
-			RequestAssertionConfig assertionConfig = testRequestConfig.addNewAssertion();
+			TestAssertionConfig assertionConfig = testRequestConfig.addNewAssertion();
 			assertionConfig.setType( SoapResponseAssertion.ID );
 		}
 		
 		if( values.getBoolean( ADD_SCHEMA_ASSERTION ))
 		{
-			RequestAssertionConfig assertionConfig = testRequestConfig.addNewAssertion();
+			TestAssertionConfig assertionConfig = testRequestConfig.addNewAssertion();
 			assertionConfig.setType( SchemaComplianceAssertion.ID );
 		}
 		
 		if( values.getBoolean( ADD_SOAP_FAULT_ASSERTION ))
 		{
-			RequestAssertionConfig assertionConfig = testRequestConfig.addNewAssertion();
+			TestAssertionConfig assertionConfig = testRequestConfig.addNewAssertion();
 			assertionConfig.setType( NotSoapFaultAssertion.ID );
 		}
 

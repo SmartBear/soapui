@@ -16,8 +16,8 @@ import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.List;
 
-import com.eviware.soapui.config.RequestAssertionConfig;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.WsdlAssertionRegistry.AssertableType;
+import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
@@ -29,22 +29,23 @@ public abstract class AbstractTestAssertionFactory implements TestAssertionFacto
 	private final Class<? extends TestAssertion> assertionClass;
 	private final Class<? extends ModelItem> targetClass;
 
-	public AbstractTestAssertionFactory( String id, String label, Class<? extends TestAssertion> assertionClass )
+	public AbstractTestAssertionFactory(String id, String label, Class<? extends TestAssertion> assertionClass)
 	{
 		this.id = id;
 		this.label = label;
 		this.assertionClass = assertionClass;
 		targetClass = null;
 	}
-	
-	public AbstractTestAssertionFactory( String id, String label, Class<? extends TestAssertion> assertionClass, Class<? extends ModelItem> targetClass )
+
+	public AbstractTestAssertionFactory(String id, String label, Class<? extends TestAssertion> assertionClass,
+			Class<? extends ModelItem> targetClass)
 	{
 		this.id = id;
 		this.label = label;
 		this.assertionClass = assertionClass;
 		this.targetClass = targetClass;
 	}
-	
+
 	public String getAssertionId()
 	{
 		return id;
@@ -55,33 +56,34 @@ public abstract class AbstractTestAssertionFactory implements TestAssertionFacto
 		return label;
 	}
 
-	@SuppressWarnings("deprecation")
-	public boolean canAssert( Assertable assertable )
+	public boolean canAssert(Assertable assertable)
 	{
-		List<Class> classes = Arrays.asList(assertable.getClass().getClasses());
-		
-		if( targetClass != null && !classes.contains(targetClass))
+		List<Class<?>> classes = Arrays.asList(assertionClass.getInterfaces());
+
+		if (targetClass != null && !Arrays.asList(targetClass.getClasses()).contains(targetClass) && 
+				!Arrays.asList(targetClass.getInterfaces()).contains(targetClass))
 			return false;
-				
-		if( assertable.getAssertableType() == AssertableType.BOTH )
-			return true;
-		
-		if(assertable.getAssertableType() == AssertableType.REQUEST && classes.contains( RequestAssertion.class )) 
+
+		if (assertable.getAssertableType() == AssertableType.BOTH)
 			return true;
 
-		else if(assertable.getAssertableType() == AssertableType.RESPONSE && classes.contains( ResponseAssertion.class )) 
+		if (assertable.getAssertableType() == AssertableType.REQUEST
+				&& classes.contains(com.eviware.soapui.model.testsuite.RequestAssertion.class))
 			return true;
-		
+
+		else if (assertable.getAssertableType() == AssertableType.RESPONSE
+				&& classes.contains(com.eviware.soapui.model.testsuite.ResponseAssertion.class))
+			return true;
+
 		return false;
 	}
 
-	public TestAssertion buildAssertion(RequestAssertionConfig config, Assertable assertable)
+	public TestAssertion buildAssertion(TestAssertionConfig config, Assertable assertable)
 	{
 		try
 		{
-			Constructor<? extends TestAssertion> ctor = assertionClass
-			.getConstructor(new Class[] { RequestAssertionConfig.class,
-					Assertable.class });
+			Constructor<? extends TestAssertion> ctor = assertionClass.getConstructor(new Class[] {
+					TestAssertionConfig.class, Assertable.class });
 
 			return ctor.newInstance(config, assertable);
 		}

@@ -10,24 +10,25 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.rest.panels.request.views.param;
+package com.eviware.soapui.impl.rest.panels.request.views.html;
 
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestMessageEditor;
+import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestResponseMessageEditor;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorView;
-import com.eviware.soapui.support.editor.registry.RequestEditorViewFactory;
+import com.eviware.soapui.support.editor.registry.ResponseEditorViewFactory;
 
-public class RestRequestParamsViewFactory implements RequestEditorViewFactory
+public class RestHtmlResponseViewFactory implements ResponseEditorViewFactory
 {
-	public final static String VIEW_ID = "REST Params";
+	public final static String VIEW_ID = "HTML Response";
 	
-	public EditorView<?> createRequestEditorView(Editor<?> editor, ModelItem modelItem)
+	@SuppressWarnings("unchecked")
+	public EditorView<?> createResponseEditorView(Editor<?> editor, ModelItem modelItem)
 	{
-		if( editor instanceof RestRequestMessageEditor && modelItem instanceof RestRequest )
+		if( editor instanceof RestResponseMessageEditor && modelItem instanceof RestRequest )
 		{
-			return new RestRequestParamsView( (RestRequestMessageEditor) editor, (RestRequest) modelItem );
+			return new RestHtmlResponseView( (RestResponseMessageEditor) editor, (RestRequest) modelItem );
 		}
 		
 		return null;

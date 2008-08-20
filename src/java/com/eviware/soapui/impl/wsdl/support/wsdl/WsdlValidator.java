@@ -63,7 +63,6 @@ public class WsdlValidator
 		this.wsdlContext = wsdlContext;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public AssertionError [] assertRequest( WsdlMessageExchange messageExchange, boolean envelopeOnly )
 	{
 		List<XmlError> errors = new ArrayList<XmlError>(); 
@@ -395,7 +394,7 @@ public class WsdlValidator
    }
 
 
-	@SuppressWarnings({ "unchecked", "unchecked" })
+	@SuppressWarnings("unchecked")
 	public void validateXml(String request, List<XmlError> errors )
 	{
 		try
@@ -547,7 +546,6 @@ public class WsdlValidator
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	public AssertionError [] assertResponse( WsdlMessageExchange messageExchange, boolean envelopeOnly ) 
 	{
 		List<XmlError> errors = new ArrayList<XmlError>(); 

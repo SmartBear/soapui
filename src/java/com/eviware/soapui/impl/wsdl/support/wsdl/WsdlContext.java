@@ -34,6 +34,7 @@ import org.apache.xmlbeans.XmlObject;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.DefinitionCacheConfig;
 import com.eviware.soapui.config.DefintionPartConfig;
+import com.eviware.soapui.impl.support.DefinitionContext;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaException;
@@ -49,7 +50,7 @@ import com.eviware.x.dialogs.XProgressMonitor;
  * @author Ole.Matzura
  */
 
-public class WsdlContext 
+public class WsdlContext implements DefinitionContext
 {
    private String url;
    private Definition definition;
@@ -336,9 +337,17 @@ public class WsdlContext
 		return schemaCache.get(url).findElement( soapVersion.getEnvelopeQName() ).getTypeSystem();
 	}
    
-   public boolean hasSchemaTypes() throws Exception
+   public boolean hasSchemaTypes() 
    {
-      loadIfNecessary();
+      try
+		{
+			loadIfNecessary();
+		}
+		catch (Exception e)
+		{
+			SoapUI.logError(e);
+			return false;
+		}
       return schemaCache.containsKey( url );
    }
 

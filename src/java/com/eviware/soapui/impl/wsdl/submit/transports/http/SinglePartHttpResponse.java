@@ -14,8 +14,11 @@ package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.ref.WeakReference;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.methods.RequestEntity;
 
 import com.eviware.soapui.SoapUI;
@@ -218,5 +221,18 @@ class SinglePartHttpResponse implements HttpResponse
 	public String getContentType()
 	{
 		return httpMethod.getResponseContentType();
+	}
+
+	public URL getURL()
+	{
+		try
+		{
+			return new URL( httpMethod.getURI().toString() );
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

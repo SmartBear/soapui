@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
+import java.net.URL;
+
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.model.iface.Response;
 
@@ -24,4 +26,6 @@ public interface HttpResponse extends Response
 	public abstract void setResponseContent(String responseContent);
 
 	public abstract SSLInfo getSSLInfo();
+
+	public abstract URL getURL();
 }

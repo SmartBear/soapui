@@ -185,7 +185,7 @@
 						type="tns:CompressedString" minOccurs="1" maxOccurs="1">
 					</xsd:element>
 					<xsd:element name="assertion"
-						type="tns:RequestAssertion" maxOccurs="unbounded" minOccurs="0">
+						type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="credentials"
 						type="tns:Credentials" maxOccurs="1" minOccurs="1">
@@ -233,7 +233,7 @@
 		<xsd:attribute name="timestamp" type="xsd:dateTime"></xsd:attribute>
 	</xsd:complexType>
 
-	<xsd:complexType name="RequestAssertion">
+	<xsd:complexType name="TestAssertion">
 		<xsd:complexContent>
 			<xsd:extension base="tns:ModelItem">
 				<xsd:sequence>
@@ -908,7 +908,7 @@
 			<xsd:element name="port" type="xsd:int"></xsd:element>
             <xsd:element name="timeout" type="xsd:long"></xsd:element>
             <xsd:element name="response" type="tns:MockResponse"></xsd:element>
-			<xsd:element name="assertion" type="tns:RequestAssertion"
+			<xsd:element name="assertion" type="tns:TestAssertion"
 				maxOccurs="unbounded" minOccurs="0">
 			</xsd:element>
 		</xsd:sequence>
@@ -924,7 +924,7 @@
 			<xsd:element name="port" type="xsd:int"></xsd:element>
             <xsd:element name="timeout" type="xsd:long"></xsd:element>
             <xsd:element name="response" type="tns:MockResponse"></xsd:element>
-			<xsd:element name="assertion" type="tns:RequestAssertion"
+			<xsd:element name="assertion" type="tns:TestAssertion"
 				maxOccurs="unbounded" minOccurs="0">
 			</xsd:element>
 		</xsd:sequence>
@@ -1393,4 +1393,5 @@
     		<xsd:enumeration value="NONE"></xsd:enumeration>
     	</xsd:restriction>
     </xsd:simpleType>
+
 </xsd:schema>

@@ -32,7 +32,6 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.MultipartMessageSuppo
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
-import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
@@ -71,6 +70,7 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 
 	public TcpMonWsdlMonitorMessageExchange( WsdlProject project )
 	{
+		super( null );
 		this.project = project;
 		responseHeaders = new StringToStringMap();
 		requestHeaders = new StringToStringMap();
@@ -399,11 +399,6 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 		requestMmSupport = null;
 		
 		discarded = true;
-	}
-
-	public ModelItem getModelItem()
-	{
-		return null;
 	}
 
 	public boolean isDiscarded()

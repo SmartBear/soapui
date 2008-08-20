@@ -15,7 +15,6 @@ package com.eviware.soapui.impl.wsdl.teststeps.registry;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
@@ -54,7 +53,7 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
 
 	public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest)
 	{
-		return new RestTestRequestStep( testCase, config, true, forLoadTest );
+		return new RestTestRequestStep( testCase, config, forLoadTest );
 	}
 
 	public static TestStepConfig createConfig(RestRequest request, String stepName)
@@ -63,19 +62,8 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
 		
       requestStepConfig.setService( request.getOperation().getInterface().getName() );
       requestStepConfig.setResourcePath( request.getOperation().getFullPath() );
-
-      RestRequestConfig testRequestConfig = requestStepConfig.addNewRestRequest();
+      requestStepConfig.addNewRestRequest().set( request.getConfig().copy() );
       
-      testRequestConfig.setName( stepName );
-      testRequestConfig.setEncoding( request.getEncoding() );
-      testRequestConfig.setEndpoint( request.getEndpoint() );
-      testRequestConfig.addNewRequest().setStringValue( request.getRequestContent() );
-
-      if( (CredentialsConfig) request.getConfig().getCredentials() != null )
-      {
-      	testRequestConfig.setCredentials( (CredentialsConfig) request.getConfig().getCredentials().copy() );
-      }
-
       TestStepConfig testStep = TestStepConfig.Factory.newInstance();
       testStep.setType( RESTREQUEST_TYPE );
       testStep.setConfig( requestStepConfig );

@@ -14,10 +14,10 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
 import org.apache.xmlbeans.XmlObject;
 
-import com.eviware.soapui.config.RequestAssertionConfig;
-import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
@@ -49,7 +49,7 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 	 * @param assertionConfig
 	 * @param modelItem
 	 */
-	public ResponseSLAAssertion( RequestAssertionConfig assertionConfig, Assertable modelItem )
+	public ResponseSLAAssertion( TestAssertionConfig assertionConfig, Assertable modelItem )
 	{
 		super( assertionConfig, modelItem, false, true, false, false );
 		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( getConfiguration() );
@@ -60,7 +60,7 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 	 * @see com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion#internalAssertRequest(com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange,
 	 *      com.eviware.soapui.model.iface.SubmitContext)
 	 */
-	protected String internalAssertRequest( WsdlMessageExchange messageExchange, SubmitContext context )
+	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
 				throws AssertionException
 	{
 
@@ -72,7 +72,7 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 	 * @see com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion#internalAssertResponse(com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange,
 	 *      com.eviware.soapui.model.iface.SubmitContext)
 	 */
-	protected String internalAssertResponse( WsdlMessageExchange messageExchange, SubmitContext context )
+	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 				throws AssertionException
 	{
 

@@ -56,7 +56,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	
 	private XmlBeansRestParamsTestPropertyHolder params;
 	
-   public RestRequest( RestResource resource, RestRequestConfig requestConfig )
+   public RestRequest( RestResource resource, RestRequestConfig requestConfig, boolean forLoadTest )
    {
    	super( requestConfig, resource, "/rest_request.gif", false );
    	
@@ -369,5 +369,14 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	{
 		super.release();
 		params.release();
+	}
+
+	public void updateConfig(RestRequestConfig request)
+	{
+	}
+
+	public String buildPath(SubmitContext context)
+	{
+		return getPath();
 	}
 }

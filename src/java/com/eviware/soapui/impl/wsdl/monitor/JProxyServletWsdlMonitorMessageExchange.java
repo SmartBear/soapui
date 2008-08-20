@@ -34,7 +34,6 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.MultipartMessageSuppo
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
-import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
@@ -71,6 +70,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 
 	public JProxyServletWsdlMonitorMessageExchange(WsdlProject project)
 	{
+		super( null );
 		responseHeaders = new StringToStringMap();
 		requestHeaders = new StringToStringMap();
 		timestampStart = System.currentTimeMillis();
@@ -297,11 +297,6 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		return responseWssResult;
 	}
 
-	public ModelItem getModelItem()
-	{
-		return null;
-	}
-
 	public Attachment[] getRequestAttachments()
 	{
 		return requestMmSupport == null ? new Attachment[0] : requestMmSupport.getAttachments();
@@ -400,10 +395,9 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 
 	public void setTargetHost(String remoteHost)
 	{
-		// TODO Auto-generated method stub
-
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setRequestHeader(HttpServletRequest httpRequest)
 	{
 		Enumeration<String> headerNames = httpRequest.getHeaderNames();
@@ -430,7 +424,6 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		}
 		catch (MalformedURLException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -18,25 +18,23 @@ import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange;
-import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.support.types.StringToStringMap;
 
-public class WsdlMockRequestMessageExchange extends AbstractWsdlMessageExchange
+public class WsdlMockRequestMessageExchange extends AbstractWsdlMessageExchange<WsdlMockOperation>
 {
 	private final WsdlMockRequest request;
-	private final WsdlMockOperation mockOperation;
 
 	public WsdlMockRequestMessageExchange( WsdlMockRequest request, WsdlMockOperation mockOperation )
 	{
+		super( mockOperation );
 		this.request = request;
-		this.mockOperation = mockOperation;
 	}
 	
 	@Override
 	public WsdlOperation getOperation()
 	{
-		return mockOperation.getOperation();
+		return getModelItem().getOperation();
 	}
 
 	public Vector<?> getRequestWssResult()
@@ -47,11 +45,6 @@ public class WsdlMockRequestMessageExchange extends AbstractWsdlMessageExchange
 	public Vector<?> getResponseWssResult()
 	{
 		return null;
-	}
-
-	public ModelItem getModelItem()
-	{
-		return mockOperation;
 	}
 
 	public Attachment[] getRequestAttachments()

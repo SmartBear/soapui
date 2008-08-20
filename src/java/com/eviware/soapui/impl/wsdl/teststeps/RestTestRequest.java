@@ -1,114 +1,408 @@
+/*
+ *  soapUI, copyright (C) 2004-2008 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
+
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.RestRequestConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.WsdlAssertionRegistry.AssertableType;
-import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
+import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Submit;
+import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.monitor.TestMonitor;
+import com.eviware.soapui.support.UISupport;
 
 public class RestTestRequest extends RestRequest implements Assertable
 {
+	public static final String RESPONSE_PROPERTY = RestTestRequest.class.getName() + "@response";
+	public static final String STATUS_PROPERTY = RestTestRequest.class.getName() + "@status";
 
-	public RestTestRequest(RestResource resource, RestRequestConfig requestConfig)
+	private static ImageIcon validRequestIcon;
+	private static ImageIcon failedRequestIcon;
+	private static ImageIcon disabledRequestIcon;
+	private static ImageIcon unknownRequestIcon;
+
+	private AssertionStatus currentStatus;
+	private final RestTestRequestStep testStep;
+
+	private AssertionsSupport assertionsSupport;
+	private RestResponseMessageExchange messageExchange;
+	private final boolean forLoadTest;
+	private PropertyChangeNotifier notifier;
+
+	public RestTestRequest( RestResource resource, RestRequestConfig callConfig, RestTestRequestStep testStep,
+				boolean forLoadTest )
 	{
-		super(resource, requestConfig);
-		// TODO Auto-generated constructor stub
+		super( resource, callConfig, forLoadTest );
+		this.forLoadTest = forLoadTest;
+
+		setSettings( new XmlBeansSettingsImpl( this, testStep.getSettings(), callConfig.getSettings() ) );
+
+		this.testStep = testStep;
+
+		initAssertions();
+		initIcons();
 	}
 
-	public TestAssertion addAssertion(String selection)
+	public WsdlTestCase getTestCase()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return testStep.getTestCase();
 	}
 
-	public void addAssertionsListener(AssertionsListener listener)
+	protected void initIcons()
 	{
-		// TODO Auto-generated method stub
+		if( validRequestIcon == null )
+			validRequestIcon = UISupport.createImageIcon( "/valid_request.gif" );
 
+		if( failedRequestIcon == null )
+			failedRequestIcon = UISupport.createImageIcon( "/invalid_request.gif" );
+
+		if( unknownRequestIcon == null )
+			unknownRequestIcon = UISupport.createImageIcon( "/unknown_request.gif" );
+
+		if( disabledRequestIcon == null )
+			disabledRequestIcon = UISupport.createImageIcon( "/disabled_request.gif" );
 	}
 
-	public TestAssertion cloneAssertion(TestAssertion source, String name)
+	@Override
+	protected RequestIconAnimator<?> initIconAnimator()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return new TestRequestIconAnimator( this );
 	}
 
-	public String getAssertableContent()
+	private void initAssertions()
 	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+		assertionsSupport = new AssertionsSupport( testStep, new AssertableConfig(){
 
-	public AssertableType getAssertableType()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+			public TestAssertionConfig addNewAssertion()
+			{
+				return getConfig().addNewAssertion();
+			}
 
-	public TestAssertion getAssertionAt(int c)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+			public List<TestAssertionConfig> getAssertionList()
+			{
+				return getConfig().getAssertionList();
+			}
 
-	public TestAssertion getAssertionByName(String name)
-	{
-		// TODO Auto-generated method stub
-		return null;
+			public void removeAssertion(int ix)
+			{
+				getConfig().removeAssertion(ix);
+			}} );
 	}
 
 	public int getAssertionCount()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return assertionsSupport.getAssertionCount();
 	}
 
-	public List<TestAssertion> getAssertionList()
+	public WsdlMessageAssertion getAssertionAt( int c )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return assertionsSupport.getAssertionAt( c );
+	}
+
+	public void setResponse( HttpResponse response, SubmitContext context )
+	{
+		HttpResponse oldResponse = getResponse();
+		super.setResponse( response, context );
+
+		if( response != oldResponse )
+			assertResponse( context );
+	}
+
+	public void assertResponse( SubmitContext context )
+	{
+		if( notifier == null )
+			notifier = new PropertyChangeNotifier();
+		
+		messageExchange = new RestResponseMessageExchange( this );
+
+		// assert!
+		for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
+		{
+			assertion.assertResponse( messageExchange, context );
+		}
+
+		notifier.notifyChange();
+	}
+
+	private class PropertyChangeNotifier
+	{
+		private AssertionStatus oldStatus;
+		private ImageIcon oldIcon;
+
+		public PropertyChangeNotifier()
+		{
+			oldStatus = getAssertionStatus();
+			oldIcon = getIcon();
+		}
+
+		public void notifyChange()
+		{
+			AssertionStatus newStatus = getAssertionStatus();
+			ImageIcon newIcon = getIcon();
+
+			if( oldStatus != newStatus )
+				notifyPropertyChanged( STATUS_PROPERTY, oldStatus, newStatus );
+
+			if( oldIcon != newIcon )
+				notifyPropertyChanged( ICON_PROPERTY, oldIcon, getIcon() );
+			
+			oldStatus = newStatus;
+			oldIcon = newIcon;
+		}
+	}
+
+	public WsdlMessageAssertion addAssertion( String assertionLabel )
+	{
+		PropertyChangeNotifier notifier = new PropertyChangeNotifier();
+
+		try
+		{
+			WsdlMessageAssertion assertion = assertionsSupport.addWsdlAssertion( assertionLabel );
+			if( assertion == null )
+				return null;
+			
+			if( getResponse() != null )
+			{
+				assertion.assertResponse( new RestResponseMessageExchange( this ), new WsdlTestRunContext( testStep ) );
+				notifier.notifyChange();
+			}
+
+			return assertion;
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+			return null;
+		}
+	}
+
+	public void removeAssertion( TestAssertion assertion )
+	{
+		PropertyChangeNotifier notifier = new PropertyChangeNotifier();
+
+		try
+		{
+			assertionsSupport.removeAssertion( ( WsdlMessageAssertion ) assertion );
+			
+		}
+		finally
+		{
+			((WsdlMessageAssertion)assertion).release();
+			notifier.notifyChange();
+		}
 	}
 
 	public AssertionStatus getAssertionStatus()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		currentStatus = AssertionStatus.UNKNOWN;
+
+		if( messageExchange != null )
+		{
+			if( !messageExchange.hasResponse() && 
+					getOperation().isBidirectional() )
+			{
+				currentStatus = AssertionStatus.FAILED;
+			}
+		}
+		else
+			return currentStatus;
+
+		int cnt = getAssertionCount();
+		if( cnt == 0 )
+			return currentStatus;
+
+		for( int c = 0; c < cnt; c++ )
+		{
+			if( getAssertionAt( c ).getStatus() == AssertionStatus.FAILED )
+			{
+				currentStatus = AssertionStatus.FAILED;
+				break;
+			}
+		}
+
+		if( currentStatus == AssertionStatus.UNKNOWN )
+			currentStatus = AssertionStatus.VALID;
+
+		return currentStatus;
 	}
 
-	public Map<String, TestAssertion> getAssertions()
+	@Override
+	public ImageIcon getIcon()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if( forLoadTest )
+			return null;
+
+		TestMonitor testMonitor = SoapUI.getTestMonitor();
+		if( testMonitor != null && testMonitor.hasRunningLoadTest( testStep.getTestCase() ) )
+			return disabledRequestIcon;
+
+		ImageIcon icon = getIconAnimator().getIcon();
+		if( icon == getIconAnimator().getBaseIcon() )
+		{
+			AssertionStatus status = getAssertionStatus();
+			if( status == AssertionStatus.VALID )
+				return validRequestIcon;
+			else if( status == AssertionStatus.FAILED )
+				return failedRequestIcon;
+			else if( status == AssertionStatus.UNKNOWN )
+				return unknownRequestIcon;
+		}
+
+		return icon;
+	}
+
+	public void addAssertionsListener( AssertionsListener listener )
+	{
+		assertionsSupport.addAssertionsListener( listener );
+	}
+
+	public void removeAssertionsListener( AssertionsListener listener )
+	{
+		assertionsSupport.removeAssertionsListener( listener );
+	}
+
+	/**
+	 * Called when a testrequest is moved in a testcase
+	 */
+
+	public void updateConfig( RestRequestConfig request )
+	{
+		super.updateConfig( request );
+
+		assertionsSupport.refresh();
+
+		List<AttachmentConfig> attachmentConfigs = getConfig().getAttachmentList();
+		for( int i = 0; i < attachmentConfigs.size(); i++ )
+		{
+			AttachmentConfig config = attachmentConfigs.get( i );
+			getAttachmentsList().get( i ).updateConfig( config );
+		}
+	}
+
+	@Override
+	public void release()
+	{
+		super.release();
+		assertionsSupport.release();
+	}
+
+	public String getAssertableContent()
+	{
+		return getResponse() == null ? null : getResponse().getContentAsString();
+	}
+
+	public RestTestRequestStep getTestStep()
+	{
+		return testStep;
+	}
+
+	public RestService getInterface()
+	{
+		return getOperation().getInterface();
+	}
+
+	protected static class TestRequestIconAnimator extends RequestIconAnimator<RestTestRequest>
+	{
+		public TestRequestIconAnimator( RestTestRequest modelItem)
+		{
+			super( modelItem, "/request.gif", "/exec_request", 4, "gif" );
+		}
+
+		@Override
+		public boolean beforeSubmit( Submit submit, SubmitContext context )
+		{
+			if( SoapUI.getTestMonitor() != null && SoapUI.getTestMonitor().hasRunningLoadTest( getTarget().getTestCase() ) )
+				return true;
+
+			return super.beforeSubmit( submit, context );
+		}
+
+		@Override
+		public void afterSubmit( Submit submit, SubmitContext context )
+		{
+			if( submit.getRequest() == getTarget() )
+				stop();
+		}
+	}
+
+	public AssertableType getAssertableType()
+	{
+		return AssertableType.RESPONSE;
+	}
+
+	public TestAssertion cloneAssertion( TestAssertion source, String name )
+	{
+		return assertionsSupport.cloneAssertion( source, name );
+	}
+
+	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy )
+	{
+		return assertionsSupport.importAssertion( source, overwrite, createCopy );
+	}
+
+	public List<TestAssertion> getAssertionList()
+	{
+		return new ArrayList<TestAssertion>( assertionsSupport.getAssertionList() );
+	}
+
+	public WsdlMessageAssertion getAssertionByName( String name )
+	{
+		return assertionsSupport.getAssertionByName( name );
+	}
+
+	public ModelItem getModelItem()
+	{
+		return testStep;
+	}
+	
+	public Map<String,TestAssertion> getAssertions()
+	{
+		return assertionsSupport.getAssertions();
 	}
 
 	public String getDefaultAssertableContent()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return "";
 	}
 
-	public Interface getInterface()
+	public String getResponseContentAsString()
+	{
+		return getResponse() == null ? null : getResponse().getContentAsString();
+	}
+	
+	public void setResource(RestResource wsdlOperation)
 	{
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
-
-	public void removeAssertion(TestAssertion assertion)
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	public void removeAssertionsListener(AssertionsListener listener)
-	{
-		// TODO Auto-generated method stub
-
-	}
-
 }

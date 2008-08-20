@@ -28,13 +28,15 @@ import com.eviware.soapui.support.types.StringToStringMap;
  * @author ole.matzura
  */
 
-public class WsdlMockResultMessageExchange extends AbstractWsdlMessageExchange
+public class WsdlMockResultMessageExchange extends AbstractWsdlMessageExchange<ModelItem>
 {
 	private final WsdlMockResult mockResult;
 	private WsdlMockResponse mockResponse;
 
 	public WsdlMockResultMessageExchange( WsdlMockResult mockResult, WsdlMockResponse mockResponse )
 	{
+		super( mockResponse );
+		
 		this.mockResult = mockResult;
 		this.mockResponse = mockResponse;
 	}

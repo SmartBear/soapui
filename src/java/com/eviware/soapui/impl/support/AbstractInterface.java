@@ -182,4 +182,6 @@ public abstract class AbstractInterface<T extends InterfaceConfig> extends Abstr
 		
 		interfaceListeners.clear();
 	}
+	
+	public abstract DefinitionContext getDefinitionContext();
 }

@@ -15,8 +15,7 @@ package com.eviware.soapui.impl.wsdl.submit;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 
@@ -26,9 +25,9 @@ import com.eviware.soapui.model.iface.Attachment;
  * @author ole.matzura
  */
 
-public abstract class AbstractWsdlMessageExchange<T extends ModelItem> extends AbstractMessageExchange<T> implements WsdlMessageExchange
+public abstract class AbstractRestMessageExchange<T extends ModelItem> extends AbstractMessageExchange<T> 
 {
-	public AbstractWsdlMessageExchange(T modelItem)
+	public AbstractRestMessageExchange(T modelItem)
 	{
 		super(modelItem);
 	}
@@ -39,7 +38,7 @@ public abstract class AbstractWsdlMessageExchange<T extends ModelItem> extends A
 		return responseContent != null && responseContent.trim().length() > 0;
 	}
 	
-	public abstract WsdlOperation getOperation();
+	public abstract RestResource getResource();
 
 	public Attachment[] getResponseAttachmentsForPart( String name )
 	{
@@ -71,14 +70,6 @@ public abstract class AbstractWsdlMessageExchange<T extends ModelItem> extends A
 	{
 		String requestContent = getRequestContent();
 		return !(requestContent == null || (ignoreEmpty && requestContent.trim().length() == 0 ));
-	}
-
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange#getSoapVersion()
-	 */
-	public SoapVersion getSoapVersion()
-	{
-		return getOperation().getInterface().getSoapVersion();
 	}
 
 	public boolean hasRawData()

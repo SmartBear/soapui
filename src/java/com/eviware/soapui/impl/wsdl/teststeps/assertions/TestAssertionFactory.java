@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions;
 
-import com.eviware.soapui.config.RequestAssertionConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 
@@ -20,7 +20,7 @@ public interface TestAssertionFactory
 {
 	public boolean canAssert( Assertable assertable );
 	
-	public TestAssertion buildAssertion(RequestAssertionConfig config, Assertable assertable);
+	public TestAssertion buildAssertion(TestAssertionConfig config, Assertable assertable);
 	
 	public String getAssertionId();
 	

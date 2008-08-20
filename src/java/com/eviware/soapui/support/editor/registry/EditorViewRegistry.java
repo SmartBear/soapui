@@ -41,6 +41,7 @@ public class EditorViewRegistry
 		addFactory( new RestRequestParamsViewFactory() );
 		addFactory( new RestRequestContentViewFactory() );
 		addFactory( new RestJsonResponseViewFactory() );
+//		addFactory( new RestHtmlResponseViewFactory() );
 	}
 	
 	public void addFactory( EditorViewFactory factory )

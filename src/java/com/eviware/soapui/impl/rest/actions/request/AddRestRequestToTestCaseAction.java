@@ -41,8 +41,7 @@ public class AddRestRequestToTestCaseAction extends AbstractAddToTestCaseAction<
    private static final String STEP_NAME = "Name";
 	private static final String CLOSE_REQUEST = "Close Request Window";
 	private static final String SHOW_TESTCASE = "Shows TestCase Editor";
-	private static final String COPY_ATTACHMENTS = "Copy Attachments";
-	private static final String COPY_HTTPHEADERS = "Copy HTTP Headers";
+	private static final String SHOW_REQUEST = "Shows Request Editor";
 	
 	private XFormDialog dialog;
 	private StringToStringMap dialogValues = new StringToStringMap();
@@ -70,11 +69,7 @@ public class AddRestRequestToTestCaseAction extends AbstractAddToTestCaseAction<
 		dialogValues.put( STEP_NAME, request.getOperation().getName() + " - " + request.getName() );
 		dialogValues.put( CLOSE_REQUEST, "true" );
 		dialogValues.put( SHOW_TESTCASE, "true" );
-		dialog.getFormField( COPY_ATTACHMENTS ).setEnabled( request.getAttachmentCount() > 0 );
-		dialog.setBooleanValue( COPY_ATTACHMENTS, true );
-
-		dialog.getFormField( COPY_HTTPHEADERS ).setEnabled( request.getRequestHeaders().size() > 0 );
-		dialog.setBooleanValue( COPY_HTTPHEADERS, false );
+		dialogValues.put( SHOW_REQUEST, "true" );
 		
 		SoapUIDesktop desktop = SoapUI.getDesktop();
 		closeRequestCheckBox.setEnabled( desktop != null && desktop.hasDesktopPanel( request ));
@@ -91,8 +86,6 @@ public class AddRestRequestToTestCaseAction extends AbstractAddToTestCaseAction<
 		if( testStep == null )
 			return null;
 
-		UISupport.selectAndShow( testStep );
-		
 		if( dialogValues.getBoolean( CLOSE_REQUEST ) && desktop != null )
 		{
 			desktop.closeDesktopPanel( request );
@@ -101,6 +94,11 @@ public class AddRestRequestToTestCaseAction extends AbstractAddToTestCaseAction<
 		if( dialogValues.getBoolean( SHOW_TESTCASE ) )
 		{
 			UISupport.selectAndShow( testCase );
+		}
+		
+		if( dialogValues.getBoolean( SHOW_REQUEST) )
+		{
+			UISupport.selectAndShow( testStep );
 		}
 			
 		return testStep;
@@ -115,8 +113,7 @@ public class AddRestRequestToTestCaseAction extends AbstractAddToTestCaseAction<
 
 		closeRequestCheckBox = mainForm.addCheckBox( CLOSE_REQUEST, "(closes the current window for this request)" );
 		mainForm.addCheckBox( SHOW_TESTCASE, "(opens the TestCase editor for the target TestCase)" );
-		mainForm.addCheckBox( COPY_ATTACHMENTS, "(copies the requests attachments to the TestRequest)" );
-		mainForm.addCheckBox( COPY_HTTPHEADERS, "(copies the requests HTTP-Headers to the TestRequest)" );
+		mainForm.addCheckBox( SHOW_REQUEST, "(opens the Request editor for the created TestStep)" );
 		
 		dialog = builder.buildDialog( builder.buildOkCancelActions(), 
       		"Specify options for adding the request to a TestCase", UISupport.OPTIONS_ICON );		

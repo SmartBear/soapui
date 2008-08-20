@@ -16,9 +16,15 @@ import java.net.URL;
 
 import com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
+import com.eviware.soapui.model.iface.Operation;
 
-public abstract class WsdlMonitorMessageExchange extends AbstractWsdlMessageExchange
+public abstract class WsdlMonitorMessageExchange extends AbstractWsdlMessageExchange<Operation>
 {
+	public WsdlMonitorMessageExchange(Operation modelItem)
+	{
+		super(modelItem);
+	}
+
 	public abstract URL getTargetUrl();
 
 	public abstract void discard();

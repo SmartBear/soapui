@@ -19,9 +19,8 @@ import javax.swing.ImageIcon;
 
 import org.apache.xmlbeans.XmlObject;
 
-import com.eviware.soapui.config.RequestAssertionConfig;
-import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.WsdlAssertionRegistry;
+import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -47,7 +46,7 @@ import com.eviware.soapui.support.UISupport;
 
 public abstract class WsdlMessageAssertion extends AbstractModelItem implements PropertyExpansionContainer, TestAssertion
 {
-	private RequestAssertionConfig assertionConfig;
+	private TestAssertionConfig assertionConfig;
    private final Assertable assertable;
    private AssertionStatus assertionStatus = AssertionStatus.UNKNOWN;
    private com.eviware.soapui.model.testsuite.AssertionError [] assertionErrors;
@@ -60,7 +59,7 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 	private final boolean allowMultiple;
 	private final boolean requiresResponseContent;  
    
-   protected WsdlMessageAssertion(RequestAssertionConfig assertionConfig, Assertable modelItem, 
+   protected WsdlMessageAssertion(TestAssertionConfig assertionConfig, Assertable modelItem, 
    			boolean cloneable, boolean configurable, boolean multiple, boolean requiresResponseContent )
    {
       this.assertionConfig = assertionConfig;
@@ -98,7 +97,7 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
    public String getName()
    {
       return assertionConfig.isSetName() ? assertionConfig.getName() : 
-      	WsdlAssertionRegistry.getInstance().getAssertionNameForType( assertionConfig.getType());
+      	TestAssertionRegistry.getInstance().getAssertionNameForType( assertionConfig.getType());
    }
 
    /* (non-Javadoc)
@@ -146,7 +145,7 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
       {
 	      try
 	      {
-	      	internalAssertResponse( ( WsdlMessageExchange ) messageExchange, context );
+	      	internalAssertResponse( messageExchange, context );
 	         assertionStatus = AssertionStatus.VALID;
 	         assertionErrors = null;
 	      }
@@ -170,7 +169,7 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
       return assertionStatus;
    }
 
-   protected abstract String internalAssertResponse(WsdlMessageExchange messageExchange, SubmitContext context ) throws AssertionException;
+   protected abstract String internalAssertResponse( MessageExchange messageExchange, SubmitContext context ) throws AssertionException;
    
    public AssertionStatus assertRequest( MessageExchange messageExchange, SubmitContext context)
    {
@@ -187,7 +186,7 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
       {
 	      try
 	      {
-	      	internalAssertRequest( ( WsdlMessageExchange ) messageExchange, context );
+	      	internalAssertRequest( messageExchange, context );
 	         assertionStatus = AssertionStatus.VALID;
 	         assertionErrors = null;
 	      }
@@ -210,7 +209,7 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
       return assertionStatus;
    }
    
-   protected abstract String internalAssertRequest(WsdlMessageExchange messageExchange, SubmitContext context ) throws AssertionException;
+   protected abstract String internalAssertRequest( MessageExchange messageExchange, SubmitContext context ) throws AssertionException;
 
    /* (non-Javadoc)
 	 * @see com.eviware.soapui.impl.wsdl.teststeps.TestAssertion#isConfigurable()
@@ -259,12 +258,12 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
       return null;
    }
 
-	public void updateConfig(RequestAssertionConfig config)
+	public void updateConfig(TestAssertionConfig config)
 	{
 		this.assertionConfig = config;
 	}
 
-	public RequestAssertionConfig getConfig()
+	public TestAssertionConfig getConfig()
 	{
 		return assertionConfig;
 	}

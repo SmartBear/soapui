@@ -44,6 +44,7 @@ import com.eviware.soapui.support.StringUtils;
 public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> implements AbstractHttpOperation, 
 	MutableTestPropertyHolder, RestResourceContainer
 {
+	public static final String PATH_PROPERTY = "path";
 	private List<RestRequest> requests = new ArrayList<RestRequest>();
 	private List<RestResource> resources = new ArrayList<RestResource>();
 	private List<RestRepresentation> representations = new ArrayList<RestRepresentation>();
@@ -56,7 +57,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
    	
    	for( RestRequestConfig config : resourceConfig.getRequestList())
    	{
-   		requests.add( new RestRequest( this, config ));
+   		requests.add( new RestRequest( this, config, false ));
    	}
    	
    	for( RestResourceConfig config : resourceConfig.getResourceList())
@@ -212,7 +213,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		RestRequestConfig resourceConfig = getConfig().addNewRequest();
 		resourceConfig.setName(name);
 		
-		RestRequest request = new RestRequest( this, resourceConfig);
+		RestRequest request = new RestRequest( this, resourceConfig, false);
 		requests.add( request );
 		
 		for( RestParamProperty prop : getDefaultParams())
@@ -415,7 +416,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		RestRequestConfig requestConfig = (RestRequestConfig) getConfig().addNewRequest().set(request.getConfig());
 		requestConfig.setName(name);
 		
-		RestRequest newRequest = new RestRequest( this, requestConfig);
+		RestRequest newRequest = new RestRequest( this, requestConfig, false);
 		requests.add( newRequest );
 		
 		getInterface().fireRequestAdded(newRequest);
@@ -464,5 +465,17 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		getInterface().fireOperationRemoved(resource);
 		
 		resource.release();
+	}
+
+	public String createRequest(boolean b)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String createResponse(boolean b)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

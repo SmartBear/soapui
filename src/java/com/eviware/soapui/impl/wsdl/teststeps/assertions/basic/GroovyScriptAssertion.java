@@ -35,7 +35,7 @@ import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.RequestAssertionConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
@@ -46,6 +46,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.Assertable;
@@ -78,7 +79,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 	private JDialog dialog;
 	private GroovyScriptAssertionPanel groovyScriptAssertionPanel;
 
-	public GroovyScriptAssertion( RequestAssertionConfig assertionConfig, Assertable modelItem )
+	public GroovyScriptAssertion( TestAssertionConfig assertionConfig, Assertable modelItem )
 	{
 		super( assertionConfig, modelItem, true, true, true, false );
 		
@@ -90,12 +91,12 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 	}
 
 	@Override
-	protected String internalAssertRequest( WsdlMessageExchange messageExchange, SubmitContext context ) throws AssertionException
+	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
 		return assertScript( messageExchange, context, SoapUI.ensureGroovyLog() );
 	}
 
-	private String assertScript( WsdlMessageExchange messageExchange, SubmitContext context, Logger log ) throws AssertionException
+	private String assertScript( MessageExchange messageExchange, SubmitContext context, Logger log ) throws AssertionException
 	{
 		try
 		{
@@ -117,7 +118,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 	}
 
 	@Override
-	protected String internalAssertResponse( WsdlMessageExchange messageExchange, SubmitContext context ) throws AssertionException
+	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
 		return assertScript( messageExchange, context, SoapUI.ensureGroovyLog() );
 	}

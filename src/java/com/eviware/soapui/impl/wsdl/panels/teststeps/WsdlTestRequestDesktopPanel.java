@@ -19,7 +19,6 @@ import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JToolBar;
 import javax.swing.ListModel;
 
 import com.eviware.soapui.SoapUI;
@@ -45,6 +44,7 @@ import com.eviware.soapui.support.ListDataChangeListener;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.log.JLogList;
 
 /**
@@ -176,7 +176,7 @@ public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel
 		return super.buildToolbar();
 	}
 
-	protected void insertButtons(JToolBar toolbar)
+	protected void insertButtons(JXToolBar toolbar)
 	{
 		toolbar.add(addAssertionButton);
 	}

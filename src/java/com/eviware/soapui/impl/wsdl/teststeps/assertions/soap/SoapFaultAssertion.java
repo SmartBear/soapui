@@ -13,12 +13,14 @@
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.soap;
 
 
-import com.eviware.soapui.config.RequestAssertionConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
@@ -36,17 +38,17 @@ public class SoapFaultAssertion extends WsdlMessageAssertion implements Response
 	public static final String ID = "Not SOAP Fault Assertion";
 	public static final String LABEL = "SOAP Fault";
 
-	public SoapFaultAssertion(RequestAssertionConfig assertionConfig, Assertable assertable )
+	public SoapFaultAssertion(TestAssertionConfig assertionConfig, Assertable assertable )
    {
       super(assertionConfig, assertable, false, false, false, true);
    }
 
-   public String internalAssertResponse(WsdlMessageExchange messageExchange, SubmitContext context ) throws AssertionException
+   public String internalAssertResponse(MessageExchange messageExchange, SubmitContext context ) throws AssertionException
    {
       String responseContent = messageExchange.getResponseContent();
       try
       {
-      	SoapVersion soapVersion = messageExchange.getOperation().getInterface().getSoapVersion();
+      	SoapVersion soapVersion = ((WsdlMessageExchange)messageExchange).getOperation().getInterface().getSoapVersion();
       	
       	if( !SoapUtils.isSoapFault( responseContent, soapVersion ))
       		throw new AssertionException( new AssertionError("Response is not a SOAP Fault") );
@@ -60,7 +62,7 @@ public class SoapFaultAssertion extends WsdlMessageAssertion implements Response
    }
 
 	@Override
-	protected String internalAssertRequest( WsdlMessageExchange messageExchange, SubmitContext context ) throws AssertionException
+	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
 		return null;
 	}
@@ -69,7 +71,7 @@ public class SoapFaultAssertion extends WsdlMessageAssertion implements Response
 	{
 		public Factory()
 		{
-			super(SoapFaultAssertion.ID, SoapFaultAssertion.LABEL, SoapFaultAssertion.class);
+			super(SoapFaultAssertion.ID, SoapFaultAssertion.LABEL, SoapFaultAssertion.class, WsdlRequest.class);
 		}
 	}
 }

@@ -14,7 +14,8 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
 import org.apache.xmlbeans.XmlObject;
 
-import com.eviware.soapui.config.RequestAssertionConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
@@ -23,6 +24,8 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlValidator;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
+import com.eviware.soapui.model.iface.MessageExchange;
+import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.Assertable;
@@ -52,7 +55,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 	private WsdlContext wsdlContext;
 	private String wsdlContextDef;
 	
-   public SchemaComplianceAssertion(RequestAssertionConfig assertionConfig, Assertable assertable)
+   public SchemaComplianceAssertion(TestAssertionConfig assertionConfig, Assertable assertable)
    {
       super(assertionConfig, assertable,false, true, false, true);
       
@@ -69,12 +72,12 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		wsdlContextDef = null;
 	}
 
-	protected String internalAssertResponse(WsdlMessageExchange messageExchange, SubmitContext context) throws AssertionException
+	protected String internalAssertResponse(MessageExchange messageExchange, SubmitContext context) throws AssertionException
 	{
 		WsdlContext wsdlContext = null;
 		try
 		{
-			wsdlContext = getWsdlContext( messageExchange, context );
+			wsdlContext = getWsdlContext( (WsdlMessageExchange) messageExchange, context );
 		}
 		catch( Exception e1 )
 		{
@@ -85,7 +88,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		
 		try
 		{
-			AssertionError[] errors = validator.assertResponse( messageExchange, false );
+			AssertionError[] errors = validator.assertResponse( (WsdlMessageExchange) messageExchange, false );
 			if (errors.length > 0)
 				throw new AssertionException(errors);
 		}
@@ -157,12 +160,12 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
    	return builder.add( "definition", definition ).finish();
    }
 
-	protected String internalAssertRequest( WsdlMessageExchange messageExchange, SubmitContext context ) throws AssertionException
+	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
 		WsdlContext wsdlContext = null;
 		try
 		{
-			wsdlContext = getWsdlContext( messageExchange, context );
+			wsdlContext = getWsdlContext( (WsdlMessageExchange) messageExchange, context );
 		}
 		catch( Exception e1 )
 		{
@@ -172,7 +175,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		
 		try
 		{
-			AssertionError[] errors = validator.assertRequest( messageExchange, false );
+			AssertionError[] errors = validator.assertRequest( (WsdlMessageExchange) messageExchange, false );
 			if (errors.length > 0)
 				throw new AssertionException(errors);
 		}
@@ -193,6 +196,19 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		public Factory()
 		{
 			super( SchemaComplianceAssertion.ID, SchemaComplianceAssertion.LABEL, SchemaComplianceAssertion.class);
+		}
+
+		@Override
+		public boolean canAssert(Assertable assertable)
+		{
+			boolean result = super.canAssert(assertable);
+			if( result )
+			{
+				result = assertable instanceof Request && ((Request)assertable).getOperation().getInterface() instanceof AbstractInterface &&
+					((AbstractInterface<?>)	((Request)assertable).getOperation().getInterface()).getDefinitionContext().hasSchemaTypes(); 
+			}
+			
+			return result;
 		}
 	}
 }

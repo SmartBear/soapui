@@ -1,56 +1,23 @@
-/*
- *  soapUI, copyright (C) 2004-2008 eviware.com 
- *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
- *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
-
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.util.Vector;
-
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.wsdl.submit.AbstractRestMessageExchange;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.support.types.StringToStringMap;
 
-/**
- * WsdlMessageExchange for a WsdlRequest and its response
- *  
- * @author ole.matzura
- */
-
-public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<WsdlRequest>
+public class RestResponseMessageExchange extends AbstractRestMessageExchange<RestRequest>
 {
-	private WsdlResponse response;
+	private HttpResponse response;
 	private String requestContent;
 
-	public WsdlResponseMessageExchange( WsdlRequest request )
+	public RestResponseMessageExchange(RestRequest request)
 	{
-		super( request );
+		super(request);
+		
 		response = request.getResponse();
-	}
-	
-   public WsdlRequest getRequest()
-   {
-      return getModelItem();
-   }
-   
-   public WsdlResponse getResponse()
-   {
-      return response;
-   }
-   
-	public void setResponse( WsdlResponse response )
-	{
-		this.response = response;
 	}
 
 	public String getRequestContent()
@@ -98,11 +65,6 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 		return response == null ? null : response.getResponseHeaders();
 	}
 
-   public WsdlOperation getOperation()
-	{
-		return getModelItem().getOperation();
-	}
-
 	public long getTimeTaken()
 	{
 		if( response == null )
@@ -129,13 +91,15 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 		return false;
 	}
 
-	public Vector<?> getRequestWssResult()
+	@Override
+	public RestResource getResource()
 	{
-		return null;
+		return getModelItem().getResource();
 	}
 
-	public Vector<?> getResponseWssResult()
+	public Operation getOperation()
 	{
-		return response.getWssResult();
+		return getResource();
 	}
+
 }

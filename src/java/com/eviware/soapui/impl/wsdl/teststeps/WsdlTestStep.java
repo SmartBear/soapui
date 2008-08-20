@@ -209,8 +209,7 @@ abstract public class WsdlTestStep extends AbstractWsdlModelItem<TestStepConfig>
 		notifyPropertyChanged( DISABLED_PROPERTY, oldDisabled, disabled );
 
 		String label = getLabel();
-		if( !oldLabel.equals( label ) )
-			notifyPropertyChanged( LABEL_PROPERTY, oldLabel, label );
+		notifyPropertyChanged( LABEL_PROPERTY, oldLabel, label );
 	}
 
 	@SuppressWarnings( "unchecked" )

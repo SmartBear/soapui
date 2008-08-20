@@ -40,7 +40,7 @@ public class RestHeadersRequestFilter extends AbstractRequestFilter
 	{
 		HttpMethod httpMethod = (HttpMethod) context.getProperty(BaseHttpRequestTransport.HTTP_METHOD);
 
-		String path = request.getResource().buildPath(context);
+		String path = request.buildPath(context);
 		StringBuffer query = new StringBuffer();
 		
 		XmlBeansRestParamsTestPropertyHolder params = request.getParams();

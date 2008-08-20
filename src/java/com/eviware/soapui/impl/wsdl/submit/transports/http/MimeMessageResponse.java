@@ -14,10 +14,12 @@ package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.ref.WeakReference;
+import java.net.URL;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HeaderElement;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.RequestEntity;
 
 import com.eviware.soapui.SoapUI;
@@ -48,6 +50,7 @@ public class MimeMessageResponse implements HttpResponse
 	private PostResponseDataSource postResponseDataSource;
 	private byte[] requestData;
 	private String contentType;
+	private URI uri;
 
 	public MimeMessageResponse(AbstractHttpRequest<?> httpRequest, final ExtendedHttpMethod httpMethod, String requestContent, PropertyExpansionContext context)
 	{
@@ -61,6 +64,7 @@ public class MimeMessageResponse implements HttpResponse
 		{
 			initHeaders( httpMethod );
 			sslInfo = httpMethod.getSSLInfo();
+			uri = httpMethod.getURI();
 			postResponseDataSource = new PostResponseDataSource( httpMethod );
 			responseContentLength = postResponseDataSource.getDataSize();
 			
@@ -204,5 +208,18 @@ public class MimeMessageResponse implements HttpResponse
 	public String getContentType()
 	{
 		return contentType;
+	}
+
+	public URL getURL()
+	{
+		try
+		{
+			return new URL( uri.toString() );
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

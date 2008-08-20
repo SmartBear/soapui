@@ -20,7 +20,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.RequestAssertionConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.GroovyScriptAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.ResponseSLAAssertion;
@@ -43,14 +43,14 @@ import com.eviware.soapui.support.types.StringToStringMap;
  * @author Ole.Matzura
  */
 
-public class WsdlAssertionRegistry
+public class TestAssertionRegistry
 {
-   private static WsdlAssertionRegistry instance;
+   private static TestAssertionRegistry instance;
 	private Map<String, TestAssertionFactory > availableAssertions = new HashMap<String,TestAssertionFactory >();
 	private StringToStringMap assertionLabels = new StringToStringMap();
-	private final static Logger log = Logger.getLogger( WsdlAssertionRegistry.class );
+	private final static Logger log = Logger.getLogger( TestAssertionRegistry.class );
 	
-	public WsdlAssertionRegistry()
+	public TestAssertionRegistry()
 	{
 		addAssertion( new SoapResponseAssertion.Factory() );
 		addAssertion( new SchemaComplianceAssertion.Factory() );
@@ -71,15 +71,15 @@ public class WsdlAssertionRegistry
 		assertionLabels.put(factory.getAssertionLabel(), factory.getAssertionId() );
 	}
 
-	public static synchronized WsdlAssertionRegistry getInstance()
+	public static synchronized TestAssertionRegistry getInstance()
 	{
 		if( instance == null )
-			instance = new WsdlAssertionRegistry();
+			instance = new TestAssertionRegistry();
 		
 		return instance;
 	}
 
-	public WsdlMessageAssertion buildAssertion(RequestAssertionConfig config, Assertable assertable)
+	public WsdlMessageAssertion buildAssertion(TestAssertionConfig config, Assertable assertable)
 	{
 	   try
 		{
@@ -102,7 +102,7 @@ public class WsdlAssertionRegistry
 		return null;
 	}
 	
-	public boolean canBuildAssertion( RequestAssertionConfig config )
+	public boolean canBuildAssertion( TestAssertionConfig config )
 	{
 		return availableAssertions.containsKey(config.getType());
 	}

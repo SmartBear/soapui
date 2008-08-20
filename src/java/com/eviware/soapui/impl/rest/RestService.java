@@ -18,6 +18,7 @@ import java.util.List;
 import com.eviware.soapui.config.RestResourceConfig;
 import com.eviware.soapui.config.RestServiceConfig;
 import com.eviware.soapui.impl.support.AbstractInterface;
+import com.eviware.soapui.impl.support.DefinitionContext;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.iface.Operation;
 
@@ -30,6 +31,7 @@ import com.eviware.soapui.model.iface.Operation;
 public class RestService extends AbstractInterface<RestServiceConfig> implements RestResourceContainer
 {
 	private List<RestResource> resources = new ArrayList<RestResource>();
+	private WadlContext wadlContext = new WadlContext();
 	
 	public RestService( WsdlProject project, RestServiceConfig serviceConfig )
 	{
@@ -135,6 +137,39 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 
 	public RestResource[] getAllResources()
 	{
-		return resources.toArray(new RestResource[resources.size()]);
+		List<RestResource> result = new ArrayList<RestResource>();
+		for( RestResource resource : resources )
+		{
+			addResourcesToResult( resource, result );
+		}
+			
+		return result.toArray(new RestResource[result.size()]);
+	}
+
+	private void addResourcesToResult(RestResource resource, List<RestResource> result)
+	{
+		result.add( resource );
+		
+		for( RestResource res : resource.getResourceList() )
+		{
+			addResourcesToResult( res, result );
+		}
+	}
+
+	public RestResource getResourceByPath(String resourcePath)
+	{
+		for( RestResource resource : getAllResources() )
+		{
+			if( resource.getFullPath().equals(resourcePath))
+				return resource;
+		}
+		
+		return null;
+	}
+
+	@Override
+	public DefinitionContext getDefinitionContext()
+	{
+		return wadlContext;
 	}
 }

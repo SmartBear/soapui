@@ -1,3 +1,15 @@
+/*
+ *  soapUI, copyright (C) 2004-2008 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
 package com.eviware.soapui.impl.wsdl.teststeps;
 
 import java.beans.PropertyChangeEvent;
@@ -16,7 +28,7 @@ import org.apache.log4j.Logger;
 import com.eviware.soapui.config.AsyncResponseStepConfig;
 import com.eviware.soapui.config.DispatchStyleConfig;
 import com.eviware.soapui.config.MockResponseConfig;
-import com.eviware.soapui.config.RequestAssertionConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
@@ -30,10 +42,11 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResultMessageExchange;
+import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.WsdlAssertionRegistry;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
@@ -61,8 +74,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 // TODO Ericsson: Move WsdlAsyncResponseTestStep to pro?
-public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implements
-		PropertyChangeListener, Assertable
+public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implements PropertyChangeListener, Assertable
 {
 	private static final Logger log = Logger.getLogger(WsdlAsyncResponseTestStep.class);
 
@@ -75,162 +87,14 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 	private WsdlMockOperation mockOperation;
 	private WsdlMockService mockService;
 	private WsdlMockResponse mockResponse;
-	
+
 	private AssertionsSupport assertionsSupport;
 	private InternalMockRunListener listener;
-	
+
 	private final InternalProjectListener projectListener = new InternalProjectListener();
 	private final InternalInterfaceListener interfaceListener = new InternalInterfaceListener();
-   private WsdlInterface iface;
-   private AssertionStatus oldStatus;
-   
-	private class AssertedWsdlMockResultMessageExchange extends WsdlMockResultMessageExchange
-	implements RequestAssertedMessageExchange, AssertedXPathsContainer
-	{
-	   private List<AssertedXPath> list;
-	   
-		public AssertedWsdlMockResultMessageExchange(WsdlMockResult result)
-		{
-			super(result, result.getMockResponse());
-		}
-
-		public AssertedXPath[] getAssertedXPathsForRequest()
-		{
-			return (list == null ? new AssertedXPath[0] : list.toArray(new AssertedXPath[list.size()]) );
-		}
-
-		public void addAssertedXPath(AssertedXPath assertedXPath)
-		{
-			if (list == null)
-			{
-				list = new ArrayList<AssertedXPath>();
-			}
-			
-			list.add(assertedXPath);
-		}
-	}
-
-	private class ResponseHeaderHolder
-	{
-		private final StringToStringMap headers;
-		private final String header;
-
-		public String getValue()
-		{
-			return headers.get(header);
-		}
-
-		public void setValue(String value)
-		{
-			headers.put(header, value);
-			getMockResponse().setResponseHeaders(headers);
-		}
-
-		public ResponseHeaderHolder(StringToStringMap headers, String header)
-		{
-			this.headers = headers;
-			this.header = header;
-		}
-	}
-
-	private class InternalInterfaceListener extends InterfaceListenerAdapter
-	{
-		public void operationRemoved(Operation operation)
-		{
-			if (operation == getOperation())
-			{
-				log.debug("Removing test step due to removed operation");
-				getTestCase().removeTestStep(WsdlAsyncResponseTestStep.this);
-			}
-		}
-
-		public void operationUpdated(Operation operation)
-		{
-			if (operation == getOperation())
-			{
-				setOperation(operation.getName());
-			}
-		}
-	}
-
-	private class InternalProjectListener extends ProjectListenerAdapter
-	{
-		public void interfaceRemoved(Interface iface)
-		{
-			if (getOperation() != null && getOperation().getInterface().equals(iface))
-			{
-				log.debug("Removing test step due to removed interface");
-				getTestCase().removeTestStep(WsdlAsyncResponseTestStep.this);
-			}
-		}
-	}
-
-	private class PropertyChangeNotifier
-	{
-		private AssertionStatus status;
-		private ImageIcon icon;
-
-		public PropertyChangeNotifier()
-		{
-			status = getAssertionStatus();
-			icon = getIcon();
-		}
-
-		public void notifyChange()
-		{
-			AssertionStatus newStatus = getAssertionStatus();
-			ImageIcon newIcon = getIcon();
-			
-			if (this.status != newStatus)
-			{
-				notifyPropertyChanged(WsdlAsyncResponseTestStep.STATUS_PROPERTY, 
-						this.status, newStatus);
-			}
-			
-			if (this.icon != newIcon)
-			{
-				notifyPropertyChanged(ModelItem.ICON_PROPERTY, 
-						this.icon, newIcon);
-			}
-		}
-	}
-
-	private class InternalMockRunListener extends MockRunListenerAdapter
-	{
-		private WsdlMockResult result;
-		private boolean canceled;
-
-		public void onMockResult(MockResult mockResult)
-		{
-			result = (WsdlMockResult) mockResult;
-			
-			// Wake up our thread if our MockResponse was used.
-			if (result == null || (result != null && result.getMockResponse() == mockResponse))
-			{
-				synchronized (this)
-				{
-					notifyAll();
-				}
-			}
-		}
-
-		public void cancel()
-		{
-			canceled = true;
-			listener.onMockResult(null);
-		}
-
-		public WsdlMockResult getResult()
-		{
-			return result;
-		}
-
-		public boolean isCanceled()
-		{
-			return canceled;
-		}
-	}
-
+	private WsdlInterface iface;
+	private AssertionStatus oldStatus;
 
 	/**
 	 * Constructor
@@ -239,29 +103,42 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 	 * @param testStepConfig
 	 * @param forLoadTest
 	 */
-	public WsdlAsyncResponseTestStep(WsdlTestCase testCase,
-			TestStepConfig config,
-			boolean forLoadTest)
+	public WsdlAsyncResponseTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest)
 	{
 		super(testCase, config, true, forLoadTest);
 
 		if (config.getConfig() != null)
 		{
-			testStepConfig = (AsyncResponseStepConfig) config.getConfig().changeType(
-					AsyncResponseStepConfig.type);
+			testStepConfig = (AsyncResponseStepConfig) config.getConfig().changeType(AsyncResponseStepConfig.type);
 			mockResponseConfig = testStepConfig.getResponse();
 		}
 		else
 		{
-			testStepConfig = (AsyncResponseStepConfig) config.addNewConfig().changeType(
-					AsyncResponseStepConfig.type);
+			testStepConfig = (AsyncResponseStepConfig) config.addNewConfig().changeType(AsyncResponseStepConfig.type);
 			mockResponseConfig = testStepConfig.addNewResponse();
 		}
 
-		assertionsSupport = new AssertionsSupport(this, testStepConfig.getAssertionList());
+		assertionsSupport = new AssertionsSupport(this, new AssertableConfig()
+		{
+
+			public TestAssertionConfig addNewAssertion()
+			{
+				return testStepConfig.addNewAssertion();
+			}
+
+			public List<TestAssertionConfig> getAssertionList()
+			{
+				return testStepConfig.getAssertionList();
+			}
+
+			public void removeAssertion(int ix)
+			{
+				testStepConfig.removeAssertion(ix);
+			}
+		});
 
 		createMockService();
-		
+
 		if (!forLoadTest)
 		{
 			setIcon(UISupport.createImageIcon("/asyncResponseStep.gif"));
@@ -271,27 +148,23 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 				iface.addInterfaceListener(interfaceListener);
 			}
 		}
-		
+
 		addProperty(new TestStepBeanProperty("Response", false, mockResponse, "responseContent", this));
-		addProperty(new DefaultTestStepProperty(
-				"Request",
-				true,
-				new DefaultTestStepProperty.PropertyHandlerAdapter()
+		addProperty(new DefaultTestStepProperty("Request", true, new DefaultTestStepProperty.PropertyHandlerAdapter()
+		{
+			public String getValue(DefaultTestStepProperty property)
+			{
+				WsdlMockResult mockResult = getMockResponse().getMockResult();
+				if (mockResult == null)
 				{
-					public String getValue(DefaultTestStepProperty property)
-					{
-						WsdlMockResult mockResult = getMockResponse().getMockResult();
-						if (mockResult == null)
-						{
-							return null;
-						}
-						else
-						{
-							return mockResult.getMockRequest().getRequestContent();
-						}
-					}
-				}, 
-				this));
+					return null;
+				}
+				else
+				{
+					return mockResult.getMockRequest().getRequestContent();
+				}
+			}
+		}, this));
 
 		addProperty(new TestStepBeanProperty("Matching Value", false, this, "matchingValue", this));
 	}
@@ -299,9 +172,9 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 	public void resetConfigOnMove(TestStepConfig config)
 	{
 		super.resetConfigOnMove(config);
-		
-		testStepConfig = (AsyncResponseStepConfig) config.getConfig().changeType(
-				AsyncResponseStepConfig.type);
+
+		assertionsSupport.refresh();
+		testStepConfig = (AsyncResponseStepConfig) config.getConfig().changeType(AsyncResponseStepConfig.type);
 		mockResponseConfig = this.testStepConfig.getResponse();
 		mockResponse.setConfig(mockResponseConfig);
 	}
@@ -312,45 +185,43 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 		{
 			listener.cancel();
 		}
-		
+
 		return true;
 	}
 
 	public void createMockService()
 	{
 		WsdlProject project = getTestCase().getTestSuite().getProject();
-		MockRunnerManager manager = MockRunnerManagerImpl.getInstance(
-				getTestCase());
-		
+		MockRunnerManager manager = MockRunnerManagerImpl.getInstance(getTestCase());
+
 		mockService = manager.getMockService(getPort(), getPath());
-		
-		iface = (WsdlInterface) project.getInterfaceByName(  testStepConfig.getInterface());
+
+		iface = (WsdlInterface) project.getInterfaceByName(testStepConfig.getInterface());
 		iface.addInterfaceListener(interfaceListener);
-		
+
 		WsdlOperation operation = iface.getOperationByName(testStepConfig.getOperation());
-		mockOperation = mockService.getMockOperation( operation );
-      if( mockOperation == null )
-         mockOperation = mockService.addNewMockOperation(operation);
-      mockOperation.setDispatchStyle(DispatchStyleConfig.QUERY_MATCH);
+		mockOperation = mockService.getMockOperation(operation);
+		if (mockOperation == null)
+			mockOperation = mockService.addNewMockOperation(operation);
+		mockOperation.setDispatchStyle(DispatchStyleConfig.QUERY_MATCH);
 		mockResponse = mockOperation.addNewMockResponse(mockResponseConfig);
 		mockResponse.addPropertyChangeListener(this);
 
 		listener = new InternalMockRunListener();
 		mockService.addMockRunListener(listener);
 	}
-	
+
 	public TestStepResult run(TestRunner testRunner, TestRunContext context)
 	{
 		WsdlMockResponse oldResponse = getMockResponse();
 		mockResponse = mockOperation.addNewMockResponse(getRequestQuery(), getMatchingValue());
 		mockResponse.setConfig(oldResponse.getConfig());
-				
-		WsdlSingleMessageExchangeTestStepResult result = 
-			new WsdlSingleMessageExchangeTestStepResult(this);
+
+		WsdlSingleMessageExchangeTestStepResult result = new WsdlSingleMessageExchangeTestStepResult(this);
 
 		result.startTimer();
 		long timeout = getTimeout();
-		
+
 		synchronized (listener)
 		{
 			long start = System.currentTimeMillis();
@@ -364,7 +235,7 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 				{
 					// Do nothing
 				}
-				
+
 				timeout -= (System.currentTimeMillis() - start);
 			}
 			while (timeout > 0);
@@ -372,20 +243,17 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 
 		if (listener.getResult() != null)
 		{
-			AssertedWsdlMockResultMessageExchange messageExchange = 
-				new AssertedWsdlMockResultMessageExchange(
-					listener.getResult());
-			
+			AssertedWsdlMockResultMessageExchange messageExchange = new AssertedWsdlMockResultMessageExchange(listener
+					.getResult());
+
 			result.setMessageExchange(messageExchange);
 
-			context.setProperty(
-					AssertedXPathsContainer.ASSERTEDXPATHSCONTAINER_PROPERTY,
-					messageExchange);
+			context.setProperty(AssertedXPathsContainer.ASSERTEDXPATHSCONTAINER_PROPERTY, messageExchange);
 			updateAssertionStatus(listener.getResult(), ((context)));
 		}
-		
+
 		result.stopTimer();
-		
+
 		if (listener.getResult() == null)
 		{
 			if (listener.isCanceled())
@@ -395,8 +263,8 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 			else
 			{
 				result.setStatus(TestStepStatus.FAILED);
-				result.addMessage((new StringBuilder()).append(
-						"Timeout occured after ").append(timeout).append(" milliseconds").toString());
+				result.addMessage((new StringBuilder()).append("Timeout occured after ").append(timeout).append(
+						" milliseconds").toString());
 			}
 		}
 		else if (getAssertionStatus() == AssertionStatus.FAILED)
@@ -426,7 +294,7 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 		{
 			result.setStatus(TestStepStatus.OK);
 		}
-		
+
 		return result;
 	}
 
@@ -436,13 +304,12 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 		{
 			oldStatus = getAssertionStatus();
 		}
-		
+
 		for (int i = 0; i < getAssertionCount(); i++)
 		{
 			WsdlMessageAssertion assertion = getAssertionAt(i);
 			if (!assertion.isDisabled())
-				assertion.assertRequest(new WsdlMockResultMessageExchange(
-						mockResult, getMockResponse()), submitContext);
+				assertion.assertRequest(new WsdlMockResultMessageExchange(mockResult, getMockResponse()), submitContext);
 		}
 
 		AssertionStatus newAssertionStatus = getAssertionStatus();
@@ -501,9 +368,9 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 		{
 			value = "";
 		}
-		
+
 		String oldValue = testStepConfig.getMatchingValue();
-		
+
 		if (!value.equals(oldValue))
 		{
 			testStepConfig.setMatchingValue(value);
@@ -643,42 +510,36 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 		if (event.getSource() == mockResponse)
 		{
 			mockResponseConfig.set(mockResponse.getConfig());
-		
-			notifyPropertyChanged(event.getPropertyName(), 
-					event.getOldValue(), event.getNewValue());
+
+			notifyPropertyChanged(event.getPropertyName(), event.getOldValue(), event.getNewValue());
 		}
-/*		else if (event.getSource() == this)
-		{
-			if (event.getPropertyName().equals(MATCHING_VALUE_PROPERTY))
-			{
-				testStepConfig.setMatchingValue((String) event.getNewValue());
-				notifyPropertyChanged(event.getPropertyName(), 
-						event.getOldValue(), event.getNewValue());				
-			}
-		}*/
+		/*
+		 * else if (event.getSource() == this) { if
+		 * (event.getPropertyName().equals(MATCHING_VALUE_PROPERTY)) {
+		 * testStepConfig.setMatchingValue((String) event.getNewValue());
+		 * notifyPropertyChanged(event.getPropertyName(), event.getOldValue(),
+		 * event.getNewValue()); } }
+		 */
 	}
 
 	public WsdlMessageAssertion addAssertion(String assertion)
 	{
 		PropertyChangeNotifier notifier = new PropertyChangeNotifier();
 
-		RequestAssertionConfig assertionConfig = testStepConfig.addNewAssertion();
-		assertionConfig.setType(WsdlAssertionRegistry.getInstance()
-				.getAssertionTypeForName(assertion));
+		TestAssertionConfig assertionConfig = testStepConfig.addNewAssertion();
+		assertionConfig.setType(TestAssertionRegistry.getInstance().getAssertionTypeForName(assertion));
 
-		WsdlMessageAssertion messageAssertion = 
-			assertionsSupport.addWsdlAssertion(assertionConfig);
+		WsdlMessageAssertion messageAssertion = assertionsSupport.addWsdlAssertion(assertionConfig);
 
 		assertionsSupport.fireAssertionAdded(messageAssertion);
-		
+
 		if (getMockResponse().getMockResult() != null)
 		{
-			messageAssertion.assertRequest(
-					new WsdlMockResultMessageExchange(getMockResponse().getMockResult(), 
-							getMockResponse()), new WsdlSubmitContext(this));
+			messageAssertion.assertRequest(new WsdlMockResultMessageExchange(getMockResponse().getMockResult(),
+					getMockResponse()), new WsdlSubmitContext(this));
 			notifier.notifyChange();
 		}
-		
+
 		return messageAssertion;
 	}
 
@@ -710,7 +571,7 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 		{
 			return currentStatus;
 		}
-		
+
 		int j = 0;
 		do
 		{
@@ -718,44 +579,39 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 			{
 				break;
 			}
-			
+
 			WsdlMessageAssertion assertion = getAssertionAt(j);
-			if (!assertion.isDisabled() && 
-					assertion.getStatus() == AssertionStatus.FAILED)
+			if (!assertion.isDisabled() && assertion.getStatus() == AssertionStatus.FAILED)
 			{
 				currentStatus = AssertionStatus.FAILED;
 				break;
 			}
-			
+
 			j++;
 		}
 		while (true);
-		
+
 		if (currentStatus == AssertionStatus.UNKNOWN)
 		{
 			currentStatus = AssertionStatus.VALID;
 		}
-		
+
 		return currentStatus;
 	}
 
 	public void removeAssertion(TestAssertion assertion)
 	{
 		PropertyChangeNotifier notifier = new PropertyChangeNotifier();
-		
-		int i = assertionsSupport.removeAssertion((WsdlMessageAssertion) assertion);
-		testStepConfig.removeAssertion(i);
-		
-		WsdlMessageAssertion messageAssertion = (WsdlMessageAssertion) assertion;
-		messageAssertion.release();
-		
+
+		assertionsSupport.removeAssertion((WsdlMessageAssertion) assertion);
+
 		notifier.notifyChange();
 	}
 
 	public String getAssertableContent()
 	{
 		WsdlMockResult result = getMockResponse().getMockResult();
-		
+
 		if (result == null)
 		{
 			return null;
@@ -774,7 +630,7 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 	public void setName(String name)
 	{
 		super.setName(name);
-		
+
 		if (mockService != null)
 		{
 			mockService.setName(getName());
@@ -793,9 +649,9 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 
 	public void setInterface(String interfaceName)
 	{
-		WsdlInterface wsdlInterface = 
-			(WsdlInterface) getTestCase().getTestSuite().getProject().getInterfaceByName(interfaceName);
-		
+		WsdlInterface wsdlInterface = (WsdlInterface) getTestCase().getTestSuite().getProject().getInterfaceByName(
+				interfaceName);
+
 		if (wsdlInterface != null)
 		{
 			testStepConfig.setInterface(wsdlInterface.getName());
@@ -818,19 +674,19 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 	public void release()
 	{
 		super.release();
-		
+
 		assertionsSupport.release();
-		
+
 		if (mockResponse != null)
 		{
 			mockResponse.removePropertyChangeListener(this);
 		}
-		
+
 		if (mockService != null)
 		{
 			mockService.release();
 		}
-	
+
 		if (iface != null)
 		{
 			iface.getProject().removeProjectListener(projectListener);
@@ -838,23 +694,23 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 		}
 	}
 
-	public WsdlAssertionRegistry.AssertableType getAssertableType()
+	public TestAssertionRegistry.AssertableType getAssertableType()
 	{
-		return WsdlAssertionRegistry.AssertableType.REQUEST;
+		return TestAssertionRegistry.AssertableType.REQUEST;
 	}
 
 	public Collection<WsdlInterface> getRequiredInterfaces()
 	{
 		ArrayList<WsdlInterface> interfaces = new ArrayList<WsdlInterface>();
 		interfaces.add(getInterface());
-		
+
 		return interfaces;
 	}
 
 	public void beforeSave()
 	{
 		super.beforeSave();
-		
+
 		if (mockResponse != null)
 		{
 			mockResponse.beforeSave();
@@ -871,8 +727,7 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 	{
 		long oldTimeout = getTimeout();
 		testStepConfig.setTimeout(newTimeout);
-		notifyPropertyChanged(TIMEOUT_PROPERTY, 
-				Long.valueOf(oldTimeout), Long.valueOf(newTimeout));
+		notifyPropertyChanged(TIMEOUT_PROPERTY, Long.valueOf(oldTimeout), Long.valueOf(newTimeout));
 	}
 
 	public boolean dependsOn(AbstractWsdlModelItem<?> modelItem)
@@ -882,11 +737,11 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 
 	public WsdlMessageAssertion cloneAssertion(TestAssertion testAssertion, String s)
 	{
-		RequestAssertionConfig assertionConfig = testStepConfig.addNewAssertion();
+		TestAssertionConfig assertionConfig = testStepConfig.addNewAssertion();
 		assertionConfig.set(((WsdlMessageAssertion) testAssertion).getConfig());
 		assertionConfig.setName(s);
 		WsdlMessageAssertion messageAssertion = assertionsSupport.addWsdlAssertion(assertionConfig);
-		
+
 		assertionsSupport.fireAssertionAdded(messageAssertion);
 		return messageAssertion;
 	}
@@ -904,18 +759,15 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 	public PropertyExpansion[] getPropertyExpansions()
 	{
 		ArrayList<PropertyExpansion> expansions = new ArrayList<PropertyExpansion>();
-		expansions.addAll(PropertyExpansionUtils.extractPropertyExpansions(
-				this, mockResponse, "responseContent"));
-		
+		expansions.addAll(PropertyExpansionUtils.extractPropertyExpansions(this, mockResponse, "responseContent"));
+
 		StringToStringMap headers = mockResponse.getResponseHeaders();
 		String s;
 		for (Iterator<?> iterator = headers.keySet().iterator(); iterator.hasNext(); PropertyExpansionUtils
-				.extractPropertyExpansions(this, new ResponseHeaderHolder(headers, s),
-						"value"))
+				.extractPropertyExpansions(this, new ResponseHeaderHolder(headers, s), "value"))
 			s = (String) iterator.next();
 
-		return (PropertyExpansion[]) expansions.toArray(
-				new PropertyExpansion[expansions.size()]);
+		return (PropertyExpansion[]) expansions.toArray(new PropertyExpansion[expansions.size()]);
 	}
 
 	public WsdlMessageAssertion getAssertionByName(String s)
@@ -927,27 +779,168 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 	{
 		HashMap<String, TestAssertion> hashmap = new HashMap<String, TestAssertion>();
 		TestAssertion testassertion;
-		for (Iterator<?> iterator = getAssertionList().iterator(); iterator.hasNext(); hashmap.put(
-				testassertion.getName(), testassertion))
+		for (Iterator<?> iterator = getAssertionList().iterator(); iterator.hasNext(); hashmap.put(testassertion
+				.getName(), testassertion))
 			testassertion = (TestAssertion) iterator.next();
 
 		return hashmap;
 	}
-	
+
 	public String toString()
 	{
-		return WsdlAsyncResponseTestStep.class.getName() + 
-			" [port= " + this.getPort() + 
-			", path= " + this.getPath() + 
-			", query=" + this.getRequestQuery() + 
-			", value=" + this.getMatchingValue() + 
-			", interface=" + this.getInterface().getName() +
-			", operation=" + this.getOperation().getName() +
-			"]";
+		return WsdlAsyncResponseTestStep.class.getName() + " [port= " + this.getPort() + ", path= " + this.getPath()
+				+ ", query=" + this.getRequestQuery() + ", value=" + this.getMatchingValue() + ", interface="
+				+ this.getInterface().getName() + ", operation=" + this.getOperation().getName() + "]";
 	}
 
-   public String getDefaultAssertableContent()
-   {
-      return getOperation().createResponse( true );
-   }
+	public String getDefaultAssertableContent()
+	{
+		return getOperation().createResponse(true);
+	}
+
+	private class AssertedWsdlMockResultMessageExchange extends WsdlMockResultMessageExchange implements
+			RequestAssertedMessageExchange, AssertedXPathsContainer
+	{
+		private List<AssertedXPath> list;
+
+		public AssertedWsdlMockResultMessageExchange(WsdlMockResult result)
+		{
+			super(result, result.getMockResponse());
+		}
+
+		public AssertedXPath[] getAssertedXPathsForRequest()
+		{
+			return (list == null ? new AssertedXPath[0] : list.toArray(new AssertedXPath[list.size()]));
+		}
+
+		public void addAssertedXPath(AssertedXPath assertedXPath)
+		{
+			if (list == null)
+			{
+				list = new ArrayList<AssertedXPath>();
+			}
+
+			list.add(assertedXPath);
+		}
+	}
+
+	private class ResponseHeaderHolder
+	{
+		private final StringToStringMap headers;
+		private final String header;
+
+		public String getValue()
+		{
+			return headers.get(header);
+		}
+
+		public void setValue(String value)
+		{
+			headers.put(header, value);
+			getMockResponse().setResponseHeaders(headers);
+		}
+
+		public ResponseHeaderHolder(StringToStringMap headers, String header)
+		{
+			this.headers = headers;
+			this.header = header;
+		}
+	}
+
+	private class InternalInterfaceListener extends InterfaceListenerAdapter
+	{
+		public void operationRemoved(Operation operation)
+		{
+			if (operation == getOperation())
+			{
+				log.debug("Removing test step due to removed operation");
+				getTestCase().removeTestStep(WsdlAsyncResponseTestStep.this);
+			}
+		}
+
+		public void operationUpdated(Operation operation)
+		{
+			if (operation == getOperation())
+			{
+				setOperation(operation.getName());
+			}
+		}
+	}
+
+	private class InternalProjectListener extends ProjectListenerAdapter
+	{
+		public void interfaceRemoved(Interface iface)
+		{
+			if (getOperation() != null && getOperation().getInterface().equals(iface))
+			{
+				log.debug("Removing test step due to removed interface");
+				getTestCase().removeTestStep(WsdlAsyncResponseTestStep.this);
+			}
+		}
+	}
+
+	private class PropertyChangeNotifier
+	{
+		private AssertionStatus status;
+		private ImageIcon icon;
+
+		public PropertyChangeNotifier()
+		{
+			status = getAssertionStatus();
+			icon = getIcon();
+		}
+
+		public void notifyChange()
+		{
+			AssertionStatus newStatus = getAssertionStatus();
+			ImageIcon newIcon = getIcon();
+
+			if (this.status != newStatus)
+			{
+				notifyPropertyChanged(WsdlAsyncResponseTestStep.STATUS_PROPERTY, this.status, newStatus);
+			}
+
+			if (this.icon != newIcon)
+			{
+				notifyPropertyChanged(ModelItem.ICON_PROPERTY, this.icon, newIcon);
+			}
+		}
+	}
+
+	private class InternalMockRunListener extends MockRunListenerAdapter
+	{
+		private WsdlMockResult result;
+		private boolean canceled;
+
+		public void onMockResult(MockResult mockResult)
+		{
+			result = (WsdlMockResult) mockResult;
+
+			// Wake up our thread if our MockResponse was used.
+			if (result == null || (result != null && result.getMockResponse() == mockResponse))
+			{
+				synchronized (this)
+				{
+					notifyAll();
+				}
+			}
+		}
+
+		public void cancel()
+		{
+			canceled = true;
+			listener.onMockResult(null);
+		}
+
+		public WsdlMockResult getResult()
+		{
+			return result;
+		}
+
+		public boolean isCanceled()
+		{
+			return canceled;
+		}
+	}
+
 }

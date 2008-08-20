@@ -121,7 +121,7 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	   				
 	   				if( dialog.getBooleanValue(Form.ADDRESTSERVICE))
 	   				{
-	   					SoapUI.getActionRegistry().getAction(NewRestServiceAction.SOAPUI_ACTION_ID).perform( project, null );
+	   					SoapUI.getActionRegistry().getAction(NewRestServiceAction.SOAPUI_ACTION_ID).perform( project, project );
 	   				}
 	   				
 	   			   break;

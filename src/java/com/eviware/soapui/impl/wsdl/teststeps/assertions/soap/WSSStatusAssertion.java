@@ -14,10 +14,12 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.soap;
 
 import java.util.Vector;
 
-import com.eviware.soapui.config.RequestAssertionConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
@@ -42,7 +44,7 @@ public class WSSStatusAssertion extends WsdlMessageAssertion implements Response
 	 * @param assertionConfig
 	 * @param modelItem
 	 */
-	public WSSStatusAssertion( RequestAssertionConfig assertionConfig, Assertable modelItem )
+	public WSSStatusAssertion( TestAssertionConfig assertionConfig, Assertable modelItem )
 	{
 		super( assertionConfig, modelItem, false, false, false, true );
 	}
@@ -51,10 +53,10 @@ public class WSSStatusAssertion extends WsdlMessageAssertion implements Response
 	 * @see com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion#internalAssertRequest(com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange,
 	 *      com.eviware.soapui.model.iface.SubmitContext)
 	 */
-	protected String internalAssertRequest( WsdlMessageExchange messageExchange, SubmitContext context )
+	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
 				throws AssertionException
 	{
-		Vector<?> result = messageExchange.getRequestWssResult();
+		Vector<?> result = ((WsdlMessageExchange) messageExchange).getRequestWssResult();
 		
 		if( result == null || result.isEmpty() )
 			throw new AssertionException( new AssertionError( "Missing WS-Security results" ));
@@ -74,10 +76,10 @@ public class WSSStatusAssertion extends WsdlMessageAssertion implements Response
 	 * @see com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion#internalAssertResponse(com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange,
 	 *      com.eviware.soapui.model.iface.SubmitContext)
 	 */
-	protected String internalAssertResponse( WsdlMessageExchange messageExchange, SubmitContext context )
+	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 				throws AssertionException
 	{
-		Vector<?> result = messageExchange.getResponseWssResult();
+		Vector<?> result = ((WsdlMessageExchange) messageExchange).getResponseWssResult();
 		
 		if( result == null || result.isEmpty() )
 			throw new AssertionException( new AssertionError( "Missing WS-Security results" ));
@@ -97,7 +99,7 @@ public class WSSStatusAssertion extends WsdlMessageAssertion implements Response
 	{
 		public Factory()
 		{
-			super(WSSStatusAssertion.ID, WSSStatusAssertion.LABEL, WSSStatusAssertion.class);
+			super(WSSStatusAssertion.ID, WSSStatusAssertion.LABEL, WSSStatusAssertion.class, WsdlRequest.class);
 		}
 	}
 }

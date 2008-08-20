@@ -48,7 +48,8 @@ import com.eviware.soapui.support.UISupport;
 public class WsdlImporter
 {
    private static List<BindingImporter> bindingImporters = new ArrayList<BindingImporter>();
-   private static WsdlImporter instance;
+   @SuppressWarnings("unused")
+	private static WsdlImporter instance;
    
    private final static Logger log = Logger.getLogger( WsdlImporter.class );
    
@@ -93,17 +94,17 @@ public class WsdlImporter
       
       Map<Binding,WsdlInterface> importedBindings = new HashMap<Binding,WsdlInterface>();
       
-      Map serviceMap = definition.getAllServices();
+      Map<?,?> serviceMap = definition.getAllServices();
       if( serviceMap.isEmpty() )
          log.info(  "Missing services in [" + wsdlUrl + "], check for bindings" );
       else
       {
-         Iterator i = serviceMap.values().iterator();
+         Iterator<?> i = serviceMap.values().iterator();
          while( i.hasNext() )
          {
             Service service = (Service) i.next();
-            Map portMap = service.getPorts();
-            Iterator i2 = portMap.values().iterator();
+            Map<?,?> portMap = service.getPorts();
+            Iterator<?> i2 = portMap.values().iterator();
             while( i2.hasNext() )
             {
                Port port = (Port) i2.next();
@@ -156,10 +157,10 @@ public class WsdlImporter
          }
       }
       
-      Map bindingMap = definition.getAllBindings();
+      Map<?,?> bindingMap = definition.getAllBindings();
       if( !bindingMap.isEmpty())
       {
-         Iterator i = bindingMap.values().iterator();
+         Iterator<?> i = bindingMap.values().iterator();
          while( i.hasNext() )
          {
             Binding binding = (Binding) i.next();

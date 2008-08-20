@@ -19,7 +19,6 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange;
-import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.support.types.StringToStringMap;
 
@@ -29,13 +28,11 @@ import com.eviware.soapui.support.types.StringToStringMap;
  * @author ole.matzura
  */
 
-public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
+public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange<WsdlMockResponse>
 {
-	private final WsdlMockResponse mockResponse;
-
 	public WsdlMockResponseMessageExchange( WsdlMockResponse mockResponse )
 	{
-		this.mockResponse = mockResponse;
+		super( mockResponse );
 	}
 	
 	public Attachment[] getRequestAttachments()
@@ -43,14 +40,9 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 		return null;
 	}
 
-	public ModelItem getModelItem()
-	{
-	   return mockResponse;
-	}
-	
 	public String getRequestContent()
 	{
-		WsdlMockResult mockResult = mockResponse.getMockResult();
+		WsdlMockResult mockResult = getModelItem().getMockResult();
       WsdlMockRequest mockRequest = mockResult.getMockRequest();
       return mockRequest.getRequestContent();
 	}
@@ -62,23 +54,23 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 
 	public Attachment[] getResponseAttachments()
 	{
-		return mockResponse.getAttachments();
+		return getModelItem().getAttachments();
 	}
 
 	public String getResponseContent()
 	{
-		return mockResponse.getResponseContent();
+		return getModelItem().getResponseContent();
 	}
 
 	public StringToStringMap getResponseHeaders()
 	{
-		return mockResponse.getResponseHeaders();
+		return getModelItem().getResponseHeaders();
 	}
 
 	@Override
    public WsdlOperation getOperation()
 	{
-		return mockResponse.getMockOperation().getOperation();
+		return getModelItem().getMockOperation().getOperation();
 	}
 
 	public long getTimeTaken()
@@ -98,7 +90,7 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 
 	public Vector<?> getRequestWssResult()
 	{
-		return mockResponse.getMockResult().getRequestWssResult();
+		return getModelItem().getMockResult().getRequestWssResult();
 	}
 
 	public Vector<?> getResponseWssResult()

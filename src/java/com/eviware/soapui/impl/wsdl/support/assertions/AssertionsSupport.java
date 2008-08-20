@@ -15,15 +15,18 @@ package com.eviware.soapui.impl.wsdl.support.assertions;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.RequestAssertionConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.WsdlAssertionRegistry;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
+import com.eviware.soapui.model.testsuite.TestAssertion;
 
 /**
  * Utility for implementing the Assertable interface
@@ -36,22 +39,24 @@ public class AssertionsSupport implements PropertyChangeListener
 	private List<AssertionsListener> assertionsListeners = new ArrayList<AssertionsListener>();
 	private List<WsdlMessageAssertion> assertions = new ArrayList<WsdlMessageAssertion>();
 	private final Assertable assertable;
+	private AssertableConfig modelItemConfig;
 
-	public AssertionsSupport( Assertable assertable, List<RequestAssertionConfig> assertionList )
+	public AssertionsSupport( Assertable assertable, AssertableConfig modelItemConfig )
 	{
 		this.assertable = assertable;
+		this.modelItemConfig = modelItemConfig;
 
-		for( RequestAssertionConfig rac : assertionList )
+		for( TestAssertionConfig rac : modelItemConfig.getAssertionList() )
 		{
 			addWsdlAssertion( rac );
 		}
 	}
 
-	public WsdlMessageAssertion addWsdlAssertion( RequestAssertionConfig config )
+	public WsdlMessageAssertion addWsdlAssertion( TestAssertionConfig config )
 	{
 		try
 		{
-			WsdlMessageAssertion assertion = WsdlAssertionRegistry.getInstance().buildAssertion(
+			WsdlMessageAssertion assertion = TestAssertionRegistry.getInstance().buildAssertion(
 						config, assertable );
 			if( assertion == null )
 			{
@@ -98,7 +103,7 @@ public class AssertionsSupport implements PropertyChangeListener
 		assertionsListeners.remove( listener );
 	}
 
-	public int removeAssertion( WsdlMessageAssertion assertion )
+	public void removeAssertion( WsdlMessageAssertion assertion )
 	{
 		int ix = assertions.indexOf( assertion );
 		if( ix == -1 )
@@ -109,15 +114,16 @@ public class AssertionsSupport implements PropertyChangeListener
 		assertion.removePropertyChangeListener( this );
 		assertions.remove( ix );
 		fireAssertionRemoved( assertion );
-
-		return ix;
+		
+		assertion.release();
+		
+		modelItemConfig.removeAssertion( ix );
 	}
 
 	public void release()
 	{
 		for( WsdlMessageAssertion assertion : assertions )
 			assertion.release();
-
 	}
 
 	public Iterator<WsdlMessageAssertion> iterator()
@@ -147,14 +153,16 @@ public class AssertionsSupport implements PropertyChangeListener
 		}
 	}
 	
-	public void updateConfig( List<RequestAssertionConfig> assertionList )
+	public void refresh()
 	{
 		int mod = 0;
 		
+		List<TestAssertionConfig> assertionList = modelItemConfig.getAssertionList();
+		
       for (int i = 0; i < assertionList.size(); i++)
       {
-         RequestAssertionConfig config = assertionList.get( i );
-         if( WsdlAssertionRegistry.getInstance().canBuildAssertion( config ))
+         TestAssertionConfig config = assertionList.get( i );
+         if( TestAssertionRegistry.getInstance().canBuildAssertion( config ))
          {
          	assertions.get( i-mod ).updateConfig( config );
          }
@@ -189,5 +197,73 @@ public class AssertionsSupport implements PropertyChangeListener
 		}
 		
 		return null;
+	}
+
+	public Map<String, TestAssertion> getAssertions()
+	{
+		Map<String,TestAssertion> result = new HashMap<String, TestAssertion>();
+		
+		for( TestAssertion assertion : assertions )
+			result.put( assertion.getName(), assertion );
+		
+		return result;
+	}
+
+	public WsdlMessageAssertion importAssertion(WsdlMessageAssertion source, boolean overwrite, boolean createCopy)
+	{
+		TestAssertionConfig conf = modelItemConfig.addNewAssertion();
+		conf.set( source.getConfig() );
+		if( createCopy && conf.isSetId() )
+			conf.unsetId();
+
+		if( !source.isAllowMultiple() )
+		{
+			List<WsdlMessageAssertion> existing = getAssertionsOfType( source.getClass() );
+			if( !existing.isEmpty() && !overwrite )
+				return null;
+
+			while( !existing.isEmpty() )
+			{
+				removeAssertion( existing.remove( 0 ) );
+			}
+		}
+
+		WsdlMessageAssertion result = addWsdlAssertion( conf );
+		fireAssertionAdded( result );
+		return result;
+	}
+
+	public TestAssertion cloneAssertion(TestAssertion source, String name)
+	{
+		TestAssertionConfig conf = modelItemConfig.addNewAssertion();
+		conf.set( ((WsdlMessageAssertion)source).getConfig() );
+		conf.setName( name );
+
+		WsdlMessageAssertion result = addWsdlAssertion( conf );
+		fireAssertionAdded( result );
+		return result;
+
+	}
+
+	public WsdlMessageAssertion addWsdlAssertion(String assertionLabel)
+	{
+		try
+		{
+			TestAssertionConfig assertionConfig = modelItemConfig.addNewAssertion();
+			assertionConfig.setType( TestAssertionRegistry.getInstance().getAssertionTypeForName( assertionLabel ) );
+
+			WsdlMessageAssertion assertion = addWsdlAssertion( assertionConfig );
+			if( assertion == null )
+				return null;
+			
+			fireAssertionAdded( assertion );
+
+			return assertion;
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+			return null;
+		}
 	}
 }

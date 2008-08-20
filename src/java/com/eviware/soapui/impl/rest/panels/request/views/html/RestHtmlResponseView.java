@@ -10,41 +10,44 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.rest.panels.request.views.json;
+package com.eviware.soapui.impl.rest.panels.request.views.html;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.ByteArrayInputStream;
 
 import javax.swing.JComponent;
+import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
-import net.sf.json.JSONObject;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
 
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestResponseDocument;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestResponseMessageEditor;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import com.eviware.soapui.support.DefaultHyperlinkListener;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
-import com.eviware.soapui.support.xml.JXEditTextArea;
 
 @SuppressWarnings("unchecked")
-public class RestJsonResponseView extends AbstractXmlEditorView<RestResponseDocument> implements PropertyChangeListener
+public class RestHtmlResponseView extends AbstractXmlEditorView<RestResponseDocument> implements PropertyChangeListener
 {
 	private final RestRequest restRequest;
 	private JPanel contentPanel;
-	private JXEditTextArea contentEditor;
 	private boolean updatingRequest;
 	private JPanel panel;
+	private JEditorPane editorPane;
+	private HTMLEditorKit editorKit;
 
-	public RestJsonResponseView(RestResponseMessageEditor restRequestMessageEditor, RestRequest restRequest)
+	public RestHtmlResponseView(RestResponseMessageEditor restRequestMessageEditor, RestRequest restRequest)
 	{
-		super( "JSON", restRequestMessageEditor, RestJsonResponseViewFactory.VIEW_ID );
+		super( "HTML", restRequestMessageEditor, RestHtmlResponseViewFactory.VIEW_ID );
 		this.restRequest = restRequest;
 		
 		restRequest.addPropertyChangeListener( this );
@@ -81,38 +84,39 @@ public class RestJsonResponseView extends AbstractXmlEditorView<RestResponseDocu
 	{
 		contentPanel = new JPanel( new BorderLayout() );
 		
-		contentEditor = JXEditTextArea.createJavaScriptEditor();
+		editorPane = new JEditorPane();
+		editorKit = new HTMLEditorKit();
+		editorPane.setEditorKit( editorKit );
+		editorPane.setEditable( false );
+		editorPane.addHyperlinkListener( new DefaultHyperlinkListener( editorPane ));
+		
 		HttpResponse response = restRequest.getResponse();
 		if( response != null)
 			setEditorContent(response);
 		
-		contentPanel.add( new JScrollPane( contentEditor ));
-		contentEditor.setEditable( false );
+		contentPanel.add( new JScrollPane( editorPane ));
 		
 		return contentPanel;
 	}
 
 	protected void setEditorContent(HttpResponse httpResponse)
 	{
-		if( httpResponse.getContentType().contains("javascript"))
+		if( httpResponse.getContentType().contains("html"))
 		{
-			String content = httpResponse.getContentAsString();
-			
 			try
 			{
-				JSONObject json = JSONObject.fromObject(httpResponse.getContentAsString());
-				content = json.toString(3);
+				HTMLDocument document = (HTMLDocument) editorKit.createDefaultDocument();
+				document.setBase(httpResponse.getURL());
+				editorPane.read(new ByteArrayInputStream( httpResponse.getRawResponseData()), document);
 			}
-			catch (Throwable e)
+			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
-			
-			contentEditor.setText( content );
 		}
 		else
 		{
-			contentEditor.setText( "" );
+			editorPane.setText( "" );
 		}
 	}
 

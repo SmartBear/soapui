@@ -17,7 +17,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.WsdlAssertionRegistry;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.support.UISupport;
@@ -43,7 +43,7 @@ public class AddAssertionAction extends AbstractAction
    
    public void actionPerformed(ActionEvent e)
 	{
-      String [] assertions = WsdlAssertionRegistry.getInstance().getAvailableAssertionNames( assertable );
+      String [] assertions = TestAssertionRegistry.getInstance().getAvailableAssertionNames( assertable );
       
       if( assertions == null || assertions.length == 0 )
       {
@@ -54,7 +54,7 @@ public class AddAssertionAction extends AbstractAction
       String selection = (String) UISupport.prompt( "Select assertion to add", "Select Assertion", assertions );
       if( selection == null ) return;
       
-      if( !WsdlAssertionRegistry.getInstance().canAddMultipleAssertions( selection, assertable ) )
+      if( !TestAssertionRegistry.getInstance().canAddMultipleAssertions( selection, assertable ) )
       {
       	UISupport.showErrorMessage( "This assertion can only be added once" );
       	return;

@@ -38,6 +38,7 @@ import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.config.WsdlInterfaceConfig;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.support.AbstractInterface;
+import com.eviware.soapui.impl.support.DefinitionContext;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapMessageBuilder;
@@ -837,6 +838,12 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
 			getConfig().setWsaVersion(WsaVersionTypeConfig.NONE);
 
    }
+
+	@Override
+	public DefinitionContext getDefinitionContext()
+	{
+		return getWsdlContext();
+	}
 	
 
 }

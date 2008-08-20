@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 
-import com.eviware.soapui.config.RequestAssertionConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XPathContainsAssertion;
 
@@ -34,12 +34,12 @@ public class XPathContainsAssertionTestCase extends TestCase
 	{
 		testResponse = readResource( "/testResponse.xml" );
 		testBody = readResource( "/testBody.xml" );
-		assertion = new XPathContainsAssertion( RequestAssertionConfig.Factory.newInstance(), null );
+		assertion = new XPathContainsAssertion( TestAssertionConfig.Factory.newInstance(), null );
 	}
 
 	public void testCreate() throws Exception
 	{
-		RequestAssertionConfig config = createConfig( "testPath", "testContent" );
+		TestAssertionConfig config = createConfig( "testPath", "testContent" );
 		
 		XPathContainsAssertion assertion = new XPathContainsAssertion( config, null );
 		
@@ -199,9 +199,9 @@ public class XPathContainsAssertionTestCase extends TestCase
 		return result.toString();
 	}
 
-	private RequestAssertionConfig createConfig( String path, String content ) throws XmlException
+	private TestAssertionConfig createConfig( String path, String content ) throws XmlException
 	{
-		return RequestAssertionConfig.Factory.parse( 
+		return TestAssertionConfig.Factory.parse( 
 				"<con:configuration xmlns:con=\"http://eviware.com/soapui/config\">" +
 				"<path>" + path + "</path><content>" + content + "</content></con:configuration>" );
 	}

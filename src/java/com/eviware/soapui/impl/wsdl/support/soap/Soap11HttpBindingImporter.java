@@ -25,7 +25,6 @@ import org.apache.log4j.Logger;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.support.BindingImporter;
 import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
@@ -43,13 +42,14 @@ public class Soap11HttpBindingImporter extends AbstractSoapBindingImporter
    
    public boolean canImport(Binding binding)
    {
-      List list = binding.getExtensibilityElements();
+      List<?> list = binding.getExtensibilityElements();
       SOAPBinding soapBinding = (SOAPBinding) WsdlUtils.getExtensiblityElement( list, SOAPBinding.class );
       return soapBinding == null ? false : 
          soapBinding.getTransportURI().startsWith( Constants.SOAP_HTTP_TRANSPORT );
    }
 
-   public WsdlInterface importBinding( WsdlProject project, WsdlContext wsdlContext, Binding binding ) throws Exception
+   @SuppressWarnings("unchecked")
+	public WsdlInterface importBinding( WsdlProject project, WsdlContext wsdlContext, Binding binding ) throws Exception
    {
    	String name = project.getSettings().getBoolean( WsdlSettings.NAME_WITH_BINDING ) ? 
    				binding.getQName().getLocalPart() : binding.getPortType().getQName().getLocalPart();
@@ -68,9 +68,9 @@ public class Soap11HttpBindingImporter extends AbstractSoapBindingImporter
       List<BindingOperation> list = binding.getBindingOperations();
       Collections.sort( list, new BindingOperationComparator());
       
-      for (Iterator iter = list.iterator(); iter.hasNext();)
+      for (Iterator<BindingOperation> iter = list.iterator(); iter.hasNext();)
       {
-         BindingOperation operation = (BindingOperation) iter.next();
+         BindingOperation operation = iter.next();
          
          // sanity check
          if( operation.getOperation() == null || operation.getOperation().isUndefined())

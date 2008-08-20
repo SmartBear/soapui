@@ -53,6 +53,7 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRestResourceAction.class );
 	private XFormDialog dialog;
 	private XmlBeansRestParamsTestPropertyHolder params;
+	private JWadlParamsTable paramsTable;
 	
 	public NewRestResourceAction()
    {
@@ -82,7 +83,8 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 			extractParams(param, params);
 		}
 		
-		dialog.getFormField(Form.PARAMSTABLE).setProperty("component", new JWadlParamsTable( params ));
+		paramsTable = new JWadlParamsTable( params );
+		dialog.getFormField(Form.PARAMSTABLE).setProperty("component", paramsTable);
 		
    	if( dialog.show() )
    	{
@@ -181,6 +183,9 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 				}
 			}
 		}
+
+		if( paramsTable != null )
+			paramsTable.refresh();
 		
 		dialog.setValue(Form.RESOURCEPATH, ((URL) param).getPath());
 	}

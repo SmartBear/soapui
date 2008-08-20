@@ -15,7 +15,6 @@ package com.eviware.soapui.model.util;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WorkspaceImplPanelBuilder;
 import com.eviware.soapui.impl.rest.RestRequest;
@@ -47,18 +46,20 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.DelayTestStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.GotoStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.GroovyScriptStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.PropertiesStepPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.RestTestRequestPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.TransferResponseValuesTestStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.WsdlRunTestCaseTestStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.WsdlTestRequestPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.testsuite.WsdlTestSuitePanelBuilder;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.TransferResponseValuesTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlAsyncResponseTestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlRunTestCaseTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlDelayTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlGotoTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlGroovyScriptTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlPropertiesTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlRunTestCaseTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.PanelBuilder;
@@ -104,6 +105,7 @@ public class PanelBuilderRegistry
 		register( WsdlMockResponse.class, new WsdlMockResponsePanelBuilder() );
 		register( WsdlGotoTestStep.class, new GotoStepPanelBuilder() );
 		register( WsdlDelayTestStep.class, new DelayTestStepPanelBuilder() );
+		register( RestTestRequestStep.class, new RestTestRequestPanelBuilder() );
 		register( WsdlTestRequestStep.class, new WsdlTestRequestPanelBuilder() );
 		register( WsdlPropertiesTestStep.class, new PropertiesStepPanelBuilder() );
 		register( WsdlGroovyScriptTestStep.class, new GroovyScriptStepPanelBuilder() );

@@ -12,12 +12,14 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.soap;
 
-import com.eviware.soapui.config.RequestAssertionConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlValidator;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
@@ -36,21 +38,21 @@ public class SoapResponseAssertion extends WsdlMessageAssertion implements Respo
 	public static final String ID = "SOAP Response";
 	public static final String LABEL = "SOAP Response";
 
-	public SoapResponseAssertion( RequestAssertionConfig assertionConfig, Assertable assertable )
+	public SoapResponseAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
 		super( assertionConfig, assertable, false, false, false, true );
 	}
 	
 	@Override
-	protected String internalAssertResponse( WsdlMessageExchange messageExchange, SubmitContext context )
+	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 				throws AssertionException
 	{
-		WsdlContext wsdlContext = messageExchange.getOperation().getInterface().getWsdlContext();
+		WsdlContext wsdlContext = ((WsdlMessageExchange)messageExchange).getOperation().getInterface().getWsdlContext();
 		WsdlValidator validator = new WsdlValidator( wsdlContext );
 		
 		try
 		{
-			AssertionError[] errors = validator.assertResponse( messageExchange, true );
+			AssertionError[] errors = validator.assertResponse( (WsdlMessageExchange) messageExchange, true );
 			if (errors.length > 0)
 				throw new AssertionException(errors);
 		}
@@ -67,14 +69,14 @@ public class SoapResponseAssertion extends WsdlMessageAssertion implements Respo
 	}
 
 	@Override
-	protected String internalAssertRequest( WsdlMessageExchange messageExchange, SubmitContext context ) throws AssertionException
+	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
-		WsdlContext wsdlContext = messageExchange.getOperation().getInterface().getWsdlContext();
+		WsdlContext wsdlContext = ((WsdlMessageExchange)messageExchange).getOperation().getInterface().getWsdlContext();
 		WsdlValidator validator = new WsdlValidator( wsdlContext );
 		
 		try
 		{
-			AssertionError[] errors = validator.assertRequest( messageExchange, true );
+			AssertionError[] errors = validator.assertRequest( (WsdlMessageExchange) messageExchange, true );
 			if (errors.length > 0)
 				throw new AssertionException(errors);
 		}
@@ -94,7 +96,7 @@ public class SoapResponseAssertion extends WsdlMessageAssertion implements Respo
 	{
 		public Factory()
 		{
-			super(SoapResponseAssertion.ID, SoapResponseAssertion.LABEL, SoapResponseAssertion.class);
+			super(SoapResponseAssertion.ID, SoapResponseAssertion.LABEL, SoapResponseAssertion.class, WsdlRequest.class);
 		}
 	}
 }

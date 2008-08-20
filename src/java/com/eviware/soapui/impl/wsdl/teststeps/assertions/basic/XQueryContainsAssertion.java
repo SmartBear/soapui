@@ -45,16 +45,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.RequestAssertionConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.TestModelItem;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
@@ -99,7 +99,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 	public static final String LABEL = "XQuery Match";
 	private JCheckBox allowWildcardsCheckBox;
 
-	public XQueryContainsAssertion( RequestAssertionConfig assertionConfig, Assertable assertable )
+	public XQueryContainsAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
 		super( assertionConfig, assertable, true, true, true, true );
 
@@ -150,7 +150,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 		this.allowWildcards = allowWildcards;
 	}
 
-	protected String internalAssertResponse( WsdlMessageExchange messageExchange, SubmitContext context )
+	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 				throws AssertionException
 	{
 		return assertContent( messageExchange.getResponseContent(), context, "Response" );
@@ -587,7 +587,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 	}
 
 	@Override
-	protected String internalAssertRequest( WsdlMessageExchange messageExchange, SubmitContext context )
+	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
 				throws AssertionException
 	{
 		if( !messageExchange.hasRequest( true ) )

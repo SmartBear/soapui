@@ -17,11 +17,11 @@ import java.util.List;
 
 import org.apache.xmlbeans.XmlObject;
 
-import com.eviware.soapui.config.RequestAssertionConfig;
-import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
@@ -59,7 +59,7 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 	private static final String USE_REGEX = "Regular Expression";
 	public static final String LABEL = "Contains";
 
-	public SimpleContainsAssertion( RequestAssertionConfig assertionConfig, Assertable assertable )
+	public SimpleContainsAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
 		super( assertionConfig, assertable, true, true, true, true );
 
@@ -69,7 +69,7 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 		useRegEx = reader.readBoolean( "useRegEx", false );
 	}
 
-	public String internalAssertResponse( WsdlMessageExchange messageExchange, SubmitContext context )
+	public String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 				throws AssertionException
 	{
 		return assertContent( context, messageExchange.getResponseContent(), "Response" );
@@ -171,7 +171,7 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 	}
 
 	@Override
-	protected String internalAssertRequest( WsdlMessageExchange messageExchange,
+	protected String internalAssertRequest( MessageExchange messageExchange,
 				SubmitContext context ) throws AssertionException
 	{
 		return assertContent( context, messageExchange.getRequestContent(), "Request" );

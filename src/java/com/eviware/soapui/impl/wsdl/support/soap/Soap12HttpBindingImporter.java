@@ -24,7 +24,6 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
@@ -43,14 +42,15 @@ public class Soap12HttpBindingImporter extends AbstractSoapBindingImporter
    
    public boolean canImport(Binding binding)
    {
-      List list = binding.getExtensibilityElements();
+      List<?> list = binding.getExtensibilityElements();
       SOAP12Binding soapBinding = WsdlUtils.getExtensiblityElement( list, SOAP12Binding.class );
       return soapBinding == null ? false : 
          soapBinding.getTransportURI().startsWith( Constants.SOAP_HTTP_TRANSPORT ) ||
          soapBinding.getTransportURI().startsWith( Constants.SOAP12_HTTP_BINDING_NS );
    }
 
-   public WsdlInterface importBinding( WsdlProject project, WsdlContext wsdlContext, Binding binding ) throws Exception
+   @SuppressWarnings("unchecked")
+	public WsdlInterface importBinding( WsdlProject project, WsdlContext wsdlContext, Binding binding ) throws Exception
    {
    	String name = project.getSettings().getBoolean( WsdlSettings.NAME_WITH_BINDING ) ? 
    				binding.getQName().getLocalPart() : binding.getPortType().getQName().getLocalPart();
@@ -69,7 +69,7 @@ public class Soap12HttpBindingImporter extends AbstractSoapBindingImporter
       List<BindingOperation> list = binding.getBindingOperations();
       Collections.sort( list, new BindingOperationComparator());
       
-      for (Iterator iter = list.iterator(); iter.hasNext();)
+      for (Iterator<BindingOperation> iter = list.iterator(); iter.hasNext();)
       {
          BindingOperation operation = (BindingOperation) iter.next();
          
@@ -81,7 +81,6 @@ public class Soap12HttpBindingImporter extends AbstractSoapBindingImporter
          else
          {
          	log.info("importing operation " + operation.getName() );
-         	WsdlOperation op = iface.addNewOperation( operation );
          }
       }
       

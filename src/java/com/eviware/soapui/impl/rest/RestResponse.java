@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.rest;
 
+import java.net.URL;
+
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
@@ -103,6 +105,12 @@ public class RestResponse implements HttpResponse
 	}
 
 	public String getContentType()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public URL getURL()
 	{
 		// TODO Auto-generated method stub
 		return null;

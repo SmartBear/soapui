@@ -419,11 +419,17 @@
 		<tns:actionMapping actionId="MoveTestStepDownAction" keyStroke="menu DOWN"/>
 	</tns:actionGroup>
 	
-	<tns:actionGroup name="RequestStep Actions" id="WsdlTestRequestStepActions"
+	<tns:actionGroup name="WSDL RequestStep Actions" id="WsdlTestRequestStepActions"
 		class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ChangeOperationAction"/>
 		<tns:actionMapping actionId="SelectOperationAction"/>
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/testrequests.html"/>
+	</tns:actionGroup>
+	
+	<tns:actionGroup name="REST RequestStep Actions" id="RestTestRequestStepActions"
+		class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/testrequests.html"/>
 	</tns:actionGroup>

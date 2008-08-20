@@ -17,11 +17,11 @@ import java.util.List;
 
 import org.apache.xmlbeans.XmlObject;
 
-import com.eviware.soapui.config.RequestAssertionConfig;
-import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
@@ -56,9 +56,9 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 	private static final String CONTENT = "Content";
 	private static final String IGNORE_CASE = "Ignore Case";
 	private static final String USE_REGEX = "Regular Expression";
-	public static final String LABEL = null;
+	public static final String LABEL = "Not Contains";
 
-   public SimpleNotContainsAssertion(RequestAssertionConfig assertionConfig, Assertable assertable)
+   public SimpleNotContainsAssertion(TestAssertionConfig assertionConfig, Assertable assertable)
    {
       super(assertionConfig, assertable, true, true, true, true);
       
@@ -68,7 +68,7 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
       useRegEx = reader.readBoolean( "useRegEx", false );
    }
    
-   public String internalAssertResponse(WsdlMessageExchange messageExchange, SubmitContext context) throws AssertionException
+   public String internalAssertResponse( MessageExchange messageExchange, SubmitContext context) throws AssertionException
    {
    	return assertContent( context, messageExchange.getResponseContent(), "Response" );
    }
@@ -145,7 +145,7 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
       		"Specify options", UISupport.OPTIONS_ICON );		
 	}
 
-	protected String internalAssertRequest( WsdlMessageExchange messageExchange, SubmitContext context ) throws AssertionException
+	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
       return assertContent( context, messageExchange.getRequestContent(), "Request" );
 	}

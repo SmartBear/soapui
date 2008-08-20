@@ -25,6 +25,7 @@ import com.eviware.soapui.impl.rest.actions.service.NewRestResourceAction;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -142,6 +143,9 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
    		dialog.setValue( Form.WADLURL, "" );
    	}
    	
+		if( param instanceof ModelItem )
+   		dialog.setValue( Form.SERVICENAME, ((ModelItem)param).getName() );
+		
    	if( dialog.show() )
    	{
    		RestService restService = (RestService) project.addNewInterface( dialog.getValue(Form.SERVICENAME), RestServiceFactory.REST_TYPE );

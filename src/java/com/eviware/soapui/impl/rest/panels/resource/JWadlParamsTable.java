@@ -203,4 +203,9 @@ public class JWadlParamsTable extends JPanel
 			}
 		}
 	}
+
+	public void refresh()
+	{
+		paramsTableModel.fireTableDataChanged();
+	}
 }

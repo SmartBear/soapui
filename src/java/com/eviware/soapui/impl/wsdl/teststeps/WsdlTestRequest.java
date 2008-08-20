@@ -13,8 +13,6 @@
 package com.eviware.soapui.impl.wsdl.teststeps;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -22,18 +20,18 @@ import javax.swing.ImageIcon;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AttachmentConfig;
-import com.eviware.soapui.config.RequestAssertionConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.WsdlRequestConfig;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
+import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.WsdlAssertionRegistry;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.WsdlAssertionRegistry.AssertableType;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -109,7 +107,22 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable
 
 	private void initAssertions()
 	{
-		assertionsSupport = new AssertionsSupport( testStep, getConfig().getAssertionList() );
+		assertionsSupport = new AssertionsSupport( testStep, new AssertableConfig(){
+
+			public TestAssertionConfig addNewAssertion()
+			{
+				return getConfig().addNewAssertion();
+			}
+
+			public List<TestAssertionConfig> getAssertionList()
+			{
+				return getConfig().getAssertionList();
+			}
+
+			public void removeAssertion(int ix)
+			{
+				getConfig().removeAssertion(ix);
+			}} );
 	}
 
 	public int getAssertionCount()
@@ -139,9 +152,8 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable
 		messageExchange = new WsdlResponseMessageExchange( this );
 
 		// assert!
-		for( Iterator<WsdlMessageAssertion> iter = assertionsSupport.iterator(); iter.hasNext(); )
+		for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
 		{
-			WsdlMessageAssertion assertion = iter.next();
 			assertion.assertResponse( messageExchange, context );
 		}
 
@@ -181,15 +193,10 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable
 
 		try
 		{
-			RequestAssertionConfig assertionConfig = getConfig().addNewAssertion();
-			assertionConfig.setType( WsdlAssertionRegistry.getInstance().getAssertionTypeForName( assertionLabel ) );
-
-			WsdlMessageAssertion assertion = assertionsSupport.addWsdlAssertion( assertionConfig );
+			WsdlMessageAssertion assertion = assertionsSupport.addWsdlAssertion( assertionLabel );
 			if( assertion == null )
 				return null;
 			
-			assertionsSupport.fireAssertionAdded( assertion );
-
 			if( getResponse() != null )
 			{
 				assertion.assertResponse( new WsdlResponseMessageExchange( this ), new WsdlTestRunContext( testStep ) );
@@ -211,8 +218,8 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable
 
 		try
 		{
-			int ix = assertionsSupport.removeAssertion( ( WsdlMessageAssertion ) assertion );
-			getConfig().removeAssertion( ix );
+			assertionsSupport.removeAssertion( ( WsdlMessageAssertion ) assertion );
+			
 		}
 		finally
 		{
@@ -299,7 +306,7 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable
 	{
 		super.updateConfig( request );
 
-		assertionsSupport.updateConfig( getConfig().getAssertionList() );
+		assertionsSupport.refresh();
 
 		List<AttachmentConfig> attachmentConfigs = getConfig().getAttachmentList();
 		for( int i = 0; i < attachmentConfigs.size(); i++ )
@@ -372,37 +379,12 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable
 
 	public TestAssertion cloneAssertion( TestAssertion source, String name )
 	{
-		RequestAssertionConfig conf = getConfig().addNewAssertion();
-		conf.set( ((WsdlMessageAssertion)source).getConfig() );
-		conf.setName( name );
-
-		WsdlMessageAssertion result = assertionsSupport.addWsdlAssertion( conf );
-		assertionsSupport.fireAssertionAdded( result );
-		return result;
+		return assertionsSupport.cloneAssertion( source, name );
 	}
 
 	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy )
 	{
-		RequestAssertionConfig conf = getConfig().addNewAssertion();
-		conf.set( source.getConfig() );
-		if( createCopy && conf.isSetId() )
-			conf.unsetId();
-
-		if( !source.isAllowMultiple() )
-		{
-			List<WsdlMessageAssertion> existing = assertionsSupport.getAssertionsOfType( source.getClass() );
-			if( !existing.isEmpty() && !overwrite )
-				return null;
-
-			while( !existing.isEmpty() )
-			{
-				removeAssertion( existing.remove( 0 ) );
-			}
-		}
-
-		WsdlMessageAssertion result = assertionsSupport.addWsdlAssertion( conf );
-		assertionsSupport.fireAssertionAdded( result );
-		return result;
+		return assertionsSupport.importAssertion( source, overwrite, createCopy );
 	}
 
 	public List<TestAssertion> getAssertionList()
@@ -422,12 +404,7 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable
 	
 	public Map<String,TestAssertion> getAssertions()
 	{
-		Map<String,TestAssertion> result = new HashMap<String, TestAssertion>();
-		
-		for( TestAssertion assertion : getAssertionList() )
-			result.put( assertion.getName(), assertion );
-		
-		return result;
+		return assertionsSupport.getAssertions();
 	}
 
 	public String getDefaultAssertableContent()
