@@ -6,10 +6,10 @@
     <body>
 		<section name="Response Assertions">
 		 
-		 <p>One of the major quality assurance feature features of soapUI is the ability to create assertions on the contents of the SOAP Responses. 
-		 We supply a number of different of Assertions in order to cover the needs of high quality Testing.</p>
+		 <p>One of the major quality assurance features of soapUI is the ability assert the content of SOAP Responses. 
+		 soapUI comes with a number of different Assertions in order to cover the needs of high quality Testing.</p>
 		 
-		 <p>We have created a number of assertion, that together hopefully make up a useful testing toolbox that will allow Ageile testing of Web Services. 
+		 <p>Hopefully these assertions make a useful testing tool box that will allow Agile testing of Web Services. 
 		 Currently the following assertions are available:</p>
 		 <table><tr><th>Type</th><th>Description</th></tr>
 		 <tr><td><a href="#Schema_Compliance">Schema Compliance</a> *</td><td>Validates the response message against its xml schema</td></tr>
@@ -48,8 +48,8 @@
 		</div>
 		
 		 <subsection name="Schema Compliance Assertion">
-		 <p>The Schema Compliance assertions checks that the response is compliant with the response messages 
-		 xml schema definition. If not, a list of validation errors as those displayed in the <a href="../requests.html#Message_Validation">validation-tab</a> of the
+		 <p>The Schema Compliance assertion checks that the response is compliant with the response messages 
+		 XML Schema definition. If not, a list of validation errors as those displayed in the <a href="../requests.html#Message_Validation">validation-tab</a> of the
 		 request editors is displayed and the assertion fails. The list of errors is also displayed in the assertion 
 		 tab of the TestRequest Editor; errors are double clickable and will highlight the row of the validation error
 		 if possible.</p>
