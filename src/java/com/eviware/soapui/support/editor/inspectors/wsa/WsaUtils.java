@@ -78,13 +78,13 @@ public class WsaUtils
          header.appendChild(builder.createWsaChildElement("wsa:Action", elm, wsaContainer.getWsaConfig().getAction()));
 
          String from = wsaContainer.getWsaConfig().getFrom(); 
-         if (from != null && !from.isEmpty())
+         if (from != null && from.length() > 0)
 			{
          	header.appendChild(builder.createWsaChildElement("wsa:from", elm, from) );
 			}
          
          String replyTo = wsaContainer.getWsaConfig().getReplyTo();
-         if (replyTo != null && !replyTo.isEmpty())
+         if (replyTo != null && replyTo.length() > 0)
 			{
          	header.appendChild(builder.createWsaChildElement("wsa:replyTo", elm, replyTo) );
 			} else if (operation.isRequestResponse())
@@ -93,13 +93,13 @@ public class WsaUtils
 			}
          
          String faultTo = wsaContainer.getWsaConfig().getFaultTo();
-         if (faultTo != null && !faultTo.isEmpty())
+         if (faultTo != null && faultTo.length() > 0)
 			{
          	header.appendChild(builder.createWsaChildElement("wsa:faultTo", elm, faultTo) );
 			} 
 
          String msgId = wsaContainer.getWsaConfig().getMessageID();
-         if (msgId != null && !msgId.isEmpty())
+         if (msgId != null && msgId.length() > 0)
 			{
             header.appendChild(builder.createWsaChildElement("wsa:MessageID", elm, msgId));
 			} else if (operation.isRequestResponse())
@@ -112,7 +112,7 @@ public class WsaUtils
          if (httpMethod != null)
 			{
             String to = wsaContainer.getWsaConfig().getTo();
-            if (to != null && to.isEmpty())
+            if (to != null && to.length() == 0)
    			{
                header.appendChild(builder.createWsaChildElement("wsa:to", elm, to) );
    			} else if (operation.isOneWay() || operation.isRequestResponse()) {
