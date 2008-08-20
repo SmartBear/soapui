@@ -12,21 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import java.util.UUID;
-
 import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlObject;
-import org.w3c.dom.Element;
-import org.w3c.dom.Text;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.MustUnderstandTypeConfig;
-import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.iface.SubmitContext;
