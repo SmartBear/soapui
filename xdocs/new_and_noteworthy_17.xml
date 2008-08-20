@@ -102,7 +102,7 @@
 				<div>New Tool Integration for JBossWS "wsimport" (requires JBoss 5.0 beta2 from jboss svn)</div>
 			</newfeature>
 			
-			<newfeature img="images/new_oracle_wsa.gif" alt="soa testing integration for oracle wsa.jar utility>
+			<newfeature img="images/new_oracle_wsa.gif" alt="soa testing integration for oracle wsa.jar utility">
 				<div>New Initial Integration for Oracle wsa.jar utility</div>
 			</newfeature>
 			
@@ -113,7 +113,7 @@
 				double clicking a message part will focus on that parts global element or complex type in the schema.</div>
 			</newfeature>
 			
-			<newfeature img="images/new_ssl_viewer.gif" alt="soa testing SSL inspecrion shows peer certificate iformation"width="550">
+			<newfeature img="images/new_ssl_viewer.gif" alt="soa testing SSL inspecrion shows peer certificate iformation" width="550">
 				<div>SSL-inspection tab shows peer certificate information for responses received using https</div>
 			</newfeature>
 			

@@ -81,7 +81,7 @@
 				[<a href="userguide/projects/index.html">Read More</a>]</div>
 			</newfeature>
 			
-			<newfeature img="images/176/postprocess.gif alt="check and post process soa test">
+			<newfeature img="images/176/postprocess.gif" alt="check and post process soa test">
 			<div>A number of actions currently update a number of target items (TestRequests, etc.). It may be required 
 			to manually check/post-process these after such an operation and they have been extended with an option to 
 			open a list of the modified items in a separate window which can be used for post-processing/navigating to 
@@ -138,7 +138,7 @@
 			<div>A global "Switch Window" action (Ctrl W) to switch between open editors</div>
 			</newfeature>
 			
-			<newfeature img="images/176/maximizedesktop.gif" alt="maximize desktop soa test>
+			<newfeature img="images/176/maximizedesktop.gif" alt="maximize desktop soa test">
 			<div>A global "Maximize Desktop" action (Ctrl M) to show/hide Navigator/Log Inspectors</div>
 			</newfeature>
 			

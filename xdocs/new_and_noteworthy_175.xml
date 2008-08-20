@@ -78,9 +78,9 @@
 				</div>
 			</newfeature>
 			
-			<newfeature img="images/175/enable_disable_teststeps.gif alt="disable and enable test steps">
-				<div>Possibiliy to Disable/Enable TestSteps; disabled steps are skipped during execution but still available
-				for property-transfers, groovy-access, etc.
+			<newfeature img="images/175/enable_disable_teststeps.gif" alt="disable and enable test steps">
+				<div> Possibility to Disable/Enable TestSteps; disabled steps are skipped during execution but still available
+				for property-transfers, Groovy access, etc.
 				(see Feature Request 
 				<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1449420&amp;group_id=136013&amp;atid=737766">1449420</a>)
 				</div>
@@ -121,12 +121,12 @@ id = "123"
 				</div>
 			</newfeature>
 			
-			<newfeature img="images/175/wsstimestamp.gif alt"soap test WSS time property">
+			<newfeature img="images/175/wsstimestamp.gif" alt="soap test WSS time property">
 				<div>WSS TimeToLive property for Requests/TestRequest. Setting this value will automatically insert
 				a WSS TimeToLive header with the specified duration to outgoing requests.</div>
 			</newfeature>
 			
-			<newfeature img="images/175/http_settings.gif" alt="htpp settings controling number of connections>
+			<newfeature img="images/175/http_settings.gif" alt="htpp settings controling number of connections">
 				<div>HTTP Settings for controlling maximum number of connections. (Forum Discussion)</div>
 			</newfeature>
 			
@@ -134,7 +134,7 @@ id = "123"
 				<div>Description property for all items, the value is used as tooltip text in the Navigator. (soapUI Pro Feature Request)</div>
 			</newfeature>
 			
-			<newfeature img="images/175/compression.gif alt="compress large messages mock response in project file">
+			<newfeature img="images/175/compression.gif" alt="compress large messages mock response in project file">
 				<div>Option to compress large messages/mock-responses in project file (in WSDL Preferences tab), 
 				recommended for "large" 
 				messages (> 128 kb) since the underlying persistance-layer may choke on these otherwise. Messages
@@ -150,13 +150,13 @@ id = "123"
 		    Action to change the operation of a TestRequest.</div>
 		</newfeature>
 		
-		<newfeature img="images/175/mock_service_log.gif"alt="soap testing mock service log toolbar set size and clear"><div>
+		<newfeature img="images/175/mock_service_log.gif" alt="soap testing mock service log toolbar set size and clear"><div>
 		    Improved MockService log with own toolbar and options to set size and clear.</div>
 		</newfeature>
 		
-		<newfeature img="images/175/local_address.gif" alt="set address globally and on a request lvel"><div>
+		<newfeature img="images/175/local_address.gif" alt="set address globally and on a request level"><div>
 		    Possibility to set the local address both globally and on a request level.</div>
-		</nwfeature>
+		</newfeature>
 		
 		<newfeature img="images/175/pretty_print_project.gif" alt="soap test Print project files for easier SCM intergration"><div>
 		    Option to pretty-print project files for easier SCM integration.</div>
@@ -189,16 +189,16 @@ id = "123"
 		    Changing the MockService endpoint will automatically update the associated Interface Endpoint as well.</div>
 		    </newfeature>
 
-		    <newfeature img="images/175/remove_empty_content.gif" alt="saop test Remove empty content  from otgoing requests><div>
+		    <newfeature img="images/175/remove_empty_content.gif" alt="soap test Remove empty content  from outgoing requests"><div>
 		    Request/MockResponse option option to dynamically remove empty content from outgoing requests, which can be useful when performing
 		    data-driven tests where not all data is available in each iteration.</div>
 		    </newfeature>
 		    
-		    <newfeature img="images/175/encode_attachments.gif" alt="Request and response option for encodinding attachments in soap test"><div>
+		    <newfeature img="images/175/encode_attachments.gif" alt="Request and response option for encoding attachments in soap test"><div>
 			Request/MockResponse option for encoding attachments as specified by their associated WSDL Part (base64 or hexBinary)</div>
 		    </newfeature>
 
-			<newfeature img="images/175/type_redefinition.gif" alt="Fixed WSDL import to allow  redefinition of global types for soap test><div>
+			<newfeature img="images/175/type_redefinition.gif" alt="Fixed WSDL import to allow  redefinition of global types for soap test"><div>
 		    Fixed WSDL import to allow redefinition of global types/element (can be turned off in WSDL Settings). Thanks 
 		    to Lars Borup Jensen.</div>
 		    </newfeature>

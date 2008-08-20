@@ -113,14 +113,14 @@
 		<subsection name="Groovy Script TestStep">
 		<p>The GroovyScript teststep allows you to execute an arbitrary Groovy script in your testcase. The script has
 		full access to the soapUI object-model, allowing it to modify other teststeps, get external data, etc.</p>
-		<p align="center"><img src="images/teststep_groovy_1.gif" alt="Test step groovy for soap test/></p>
+		<p align="center"><img src="images/teststep_groovy_1.gif" alt="Test step Groovy for soap test"/></p>
 		<p>The shown script sets the property "boss" of another teststep to a "random" value</p>
 		</subsection>
 		
 		<subsection name="TestSuite Runner">
 		<p>The TestSuite view (opened by double-clicking a TestSuite) allows you to run a selection of contained 
 		TestCases in sequence or parallel from within soapUI:</p>
-		<p align="center"><img src="images/testsuite_view_1.gif" alt="conrained test cases"/></p>
+		<p align="center"><img src="images/testsuite_view_1.gif" alt="contained test cases"/></p>
 		</subsection>
 		
 		</section>

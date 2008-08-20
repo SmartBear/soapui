@@ -11,7 +11,7 @@
 		<table class="webstartlinkstable">
 		<tr>
 		        <td align="center" bgcolor="white"><span class="webstartheader">soapUI 2.0.1</span><div>
-				<a href="http://www.soapui.org/jnlp/2.0.1/soapui.jnlp" urchinTracker="/jnlp/soapui/2_0_1"><img class="webstart" src="images/webstart_green.png" alt="soap test webstart" border="0" alt="soap test with soapUI WebStart"/></a></div>
+				<a href="http://www.soapui.org/jnlp/2.0.1/soapui.jnlp" urchinTracker="/jnlp/soapui/2_0_1"><img class="webstart" src="images/webstart_green.png" border="0" alt="soapUI WebStart"/></a></div>
 			 [<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=568878">Download</a>]</td>
 			 <td align="center" bgcolor="white"><span class="webstartheader">soapUI 2.0.1 Pro</span><div>
 				<a href="http://www.eviware.com/jnlp/2.0.1/soapui-pro.jnlp" urchinTracker="/jnlp/soapui/2_0_1-pro"><img class="webstart" src="images/webstart_orange.png" border="0" alt="soapUI Pro WebStart"/></a></div>
@@ -176,7 +176,7 @@
 				</div>
 			</newfeature>
 
-		<newfeature img="images/2/wss_request.gif" alt=wss request">
+		<newfeature img="images/2/wss_request.gif" alt="wss request">
 				<div>
 					<p><b>Aut Inspector</b></p>
 					<p>
@@ -246,7 +246,7 @@
 				</div>
 		</newfeature>
 		
-		<newfeature img="images/2/testcaselog.gif" alt=soap test log">
+		<newfeature img="images/2/testcaselog.gif" alt="soap test log">
 				<div>
 					<p><b>TestCase Log spiffed up</b></p>
 					<p>
@@ -259,7 +259,7 @@
 				</div>
 		</newfeature>
 		
-		<newfeature img="images/2/rawview.gif" alt=">
+		<newfeature img="images/2/rawview.gif" alt="Raw view in soapUI">
 		<div>A new read-only "Raw" editor tab has been added to both request and response editors displaying the actual content
 		of the underlying request/response as it was last transmitted over the wire. This can be great help when trying 
 		to debug property-transfers/expansions, WS-Security configurations, etc.. </div>
@@ -400,7 +400,7 @@
  				</div>
 			</newfeature>	
 			
-			<newfeature img="images/2/mockSSL.gif" alt="soap test>
+			<newfeature img="images/2/mockSSL.gif" alt="soap test">
 				<div>
 					<p><b>MockService SSL Support</b></p>
 					<p>
@@ -609,7 +609,7 @@ ${TestStep-name#Property-name} refers to a property in a named TestStep.
 		</div>
 		</newfeature>	
 
-		<newfeature img="images/2/DataSink.gif" alt="intergrating your testing tool in the requirements user tool">
+		<newfeature img="images/2/DataSink.gif" alt="integrating your testing tool in the requirements user tool">
 		<div>					
 			<p><b>DataSink TestStep</b></p>
 			<p>

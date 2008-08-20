@@ -13,7 +13,7 @@
 		</column>
 		<column align="center" width="200">
 			       <div>
-				<a href="http://www.soapui.org/jnlp/SNAPSHOT/soapui.jnlp" urchinTracker="/jnlp/soapui/snapshot"><img src="images/webstart_green.png" alt=" border="0"/></a>
+				<a href="http://www.soapui.org/jnlp/SNAPSHOT/soapui.jnlp" urchinTracker="/jnlp/soapui/snapshot"><img src="images/webstart_green.png" alt="" border="0"/></a>
 			 <br/>[<a urchinTracker="/download/soapui/snapshot" href="download/soapui-SNAPSHOT-bin.zip">Download</a>]</div>
 		<p>Updated 2007-11-20</p>
 		</column></columns>
