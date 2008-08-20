@@ -86,7 +86,7 @@ public class HelloWorld implements HelloWorldRemoteInterface {
 		<subsection name="Package and Deploy">
 		<p>Packaging must currently be performed manually: right-click the project and select "Properties". 
 		In the properties dialog select "Packaging Configurations":</p>
-		<p align="center"><img src="images/annotate/packaging.gif" alt/></p>
+		<p align="center"><img src="images/annotate/packaging.gif" alt=""/></p>
 		<p>Enable packaging and create a new jar package containing the projects output folder 
 		(as shown above).</p>
 		<p>After closing the dialog, right-click the project and select "Run Packaging", this will 

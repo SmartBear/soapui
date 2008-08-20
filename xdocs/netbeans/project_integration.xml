@@ -5,7 +5,7 @@
     </properties>
     <body>
 		<section name="NetBeans Project Integration">
-		<imgtable src="images/create_project_menu.gif alt="WSDL files direct creation"><div>
+		<imgtable src="images/create_project_menu.gif" alt="WSDL files direct creation"><div>
 		Version 1.7.1 of the NetBeans soapUI Plugin introduces a soapUI sub-menu in the popup menu of NetBeans 
 		Projects and WSDL files allowing direct creation of and access to an associated soapUI project for the 
 		containing NetBeans project. The menu allows direct access to all objects in this associated soapUI project 
@@ -15,7 +15,7 @@
 		also be added to the soapUI Navigator window and named after the corresponding NetBeans project.</p></imgtable>
 				
 		<subsection name="Project Menu">
-		<imgtable src="images/project_menu.gif" alt="project menu soap test><div>
+		<imgtable src="images/project_menu.gif" alt="project menu soap test"><div>
 		Once created, the soapUI Project submenu contains the following actions:</div>
 		<ul>
 		<li><b>Show Project</b> : Opens the soapUI Navigator and selects the associated project</li>

@@ -48,7 +48,7 @@
 		
 		<subsection name="soapUI Preferences">
 		<p>Most soapUI Settings are available from the standard Window/Preferences dialog under the soapUI node;</p>
-		<p align="center"><img src="images/eclipse-preferences.gif" alt"soap test"/></p>
+		<p align="center"><img src="images/eclipse-preferences.gif" alt="soap test"/></p>
 		
 		</subsection>
 		</section>
