@@ -58,7 +58,7 @@ public abstract class AbstractTestAssertionFactory implements TestAssertionFacto
 	@SuppressWarnings("deprecation")
 	public boolean canAssert( Assertable assertable )
 	{
-		List<Class<?>> classes = Arrays.asList(assertable.getClass().getClasses());
+		List<Class> classes = Arrays.asList(assertable.getClass().getClasses());
 		
 		if( targetClass != null && !classes.contains(targetClass))
 			return false;
