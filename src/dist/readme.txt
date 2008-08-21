@@ -426,7 +426,7 @@ we are happy to announce the final release of soapUI 1.5. It includes
 * a windows installer including the required JRE for those that dont have java installed 
   and/or want start-menu icons and an uninstaller.
 
-The release is as always available at sourceforge.net/projects/soapui
+The release is as always available at http://sourceforge.net/projects/soapui/?abmode=1
 
 2006-03-13 : 1.5 beta2 release
 ----------------------------------------------------------------------
