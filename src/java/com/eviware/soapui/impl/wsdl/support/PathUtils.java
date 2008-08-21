@@ -276,7 +276,7 @@ public class PathUtils
 		
 		return 
 			path.startsWith( "HTTP:/" ) || path.startsWith( "HTTPS:/") || path.startsWith( "/" ) ||
-			path.startsWith( "\\") || (path.length() > 2 && path.substring( 1,2 ).equals( ":\\" ));
+			path.startsWith( "\\") || (path.length() > 2 && path.substring( 1,3 ).equals( ":\\" ));
 	}
 
 	public static boolean isFilePath( String path )

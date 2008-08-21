@@ -42,7 +42,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 
 	public RestRequestContentView(RestRequestMessageEditor restRequestMessageEditor, RestRequest restRequest)
 	{
-		super( "REST Content", restRequestMessageEditor, RestRequestContentViewFactory.VIEW_ID );
+		super( "Body", restRequestMessageEditor, RestRequestContentViewFactory.VIEW_ID );
 		this.restRequest = restRequest;
 		
 		restRequest.addPropertyChangeListener( this );

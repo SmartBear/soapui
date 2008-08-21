@@ -26,7 +26,7 @@ public class RestRequestParamsView extends AbstractXmlEditorView<RestRequestDocu
 
 	public RestRequestParamsView(RestRequestMessageEditor restRequestMessageEditor, RestRequest restRequest)
 	{
-		super( "REST Params", restRequestMessageEditor, RestRequestParamsViewFactory.VIEW_ID );
+		super( "Params", restRequestMessageEditor, RestRequestParamsViewFactory.VIEW_ID );
 		this.restRequest = restRequest;
 	}
 
