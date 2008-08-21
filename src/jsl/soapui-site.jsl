@@ -299,23 +299,17 @@ urchinTracker();
     <!-- Google logos: http://www.google.com/stickers.html -->
     <!-- Terms: http://www.google.com./services/terms_free.html -->
     
-      <div id="menuheader">Search ${pom.name} site</div>
+      <div id="menuheader">Search ${pom.name}</div>
       <div id="search">
-      <form method="get" action="http://www.google.com/search">
-        <a class="navlink" href="http://www.google.com">
-          <img src="http://www.google.com/logos/Logo_25wht.gif" width="75" height="32" alt="Google" />
-        </a>
-        <j:set var="siteURL" value="${pom.url}"/>
-        <!-- google fails on urls that end with / -->
-        <j:if test="${siteURL.endsWith('/')}">
-          <j:set var="URLLength" value="${siteURL.length() - 1}"/>
-          <j:set var="siteURL" value="${siteURL.substring(0, URLLength.intValue())}"/>
-        </j:if>
-        <input type="text" id="q" size="15" name="q" maxlength="255" value=""/>
-        <input type="submit" id="btnG" value="Go" name="btnG"/>
-        <input type="hidden" name="domains" value="${siteURL}"/>
-        <input type="hidden" id="search" name="sitesearch" value="${siteURL}"/>
-      </form>
+  <form id="searchbox_007200683325252461236:o_7361jqhqo" action="http://www.google.com/cse">
+    <input type="hidden" name="cx" value="007200683325252461236:o_7361jqhqo" />
+    <input type="hidden" name="sa" value="Search" />
+    <input name="q" type="text" size="15" />
+    <input type="submit" name="a" value="soapUI search" />
+    <input type="hidden" name="cof" value="FORID:0" />
+  </form>
+  <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_007200683325252461236:o_7361jqhqo"></script>
+
 
     </div>
   </jsl:template>
