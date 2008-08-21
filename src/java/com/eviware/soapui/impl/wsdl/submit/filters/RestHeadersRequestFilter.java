@@ -35,6 +35,7 @@ import com.eviware.soapui.support.StringUtils;
 
 public class RestHeadersRequestFilter extends AbstractRequestFilter
 {
+	@SuppressWarnings("deprecation")
 	@Override
 	public void filterRestRequest(SubmitContext context, RestRequest request)
 	{

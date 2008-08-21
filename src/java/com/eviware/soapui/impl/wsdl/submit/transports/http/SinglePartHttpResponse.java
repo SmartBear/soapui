@@ -14,11 +14,9 @@ package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.ref.WeakReference;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.methods.RequestEntity;
 
 import com.eviware.soapui.SoapUI;
@@ -39,7 +37,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
  * @author ole.matzura
  */
 
-class SinglePartHttpResponse implements HttpResponse
+public class SinglePartHttpResponse implements HttpResponse
 {
 	private final WeakReference<AbstractHttpRequest<?>> wsdlRequest;
 	private final ExtendedHttpMethod httpMethod;

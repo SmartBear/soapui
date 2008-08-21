@@ -560,4 +560,8 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 			defaults.put(newEndpoint, endpointDefaults);
 		}
 	}
+
+	public void afterRequest(SubmitContext context, Request request)
+	{
+	}
 }

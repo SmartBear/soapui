@@ -26,5 +26,11 @@ public interface RequestFilter
 {
    public void filterRequest( SubmitContext context, Request request );
 
+   public void afterRequest( SubmitContext context, Request request );
+   
+   /**
+    * @deprecated
+    */
+   
 	public void afterRequest( SubmitContext context, Response response );
 }

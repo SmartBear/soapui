@@ -101,7 +101,10 @@ public class RestJsonResponseView extends AbstractXmlEditorView<RestResponseDocu
 			try
 			{
 				JSONObject json = JSONObject.fromObject(httpResponse.getContentAsString());
-				content = json.toString(3);
+				if( json.isEmpty() )
+					content = "<Empty JSON content>";
+				else
+					content = json.toString(3);
 			}
 			catch (Throwable e)
 			{
@@ -112,7 +115,7 @@ public class RestJsonResponseView extends AbstractXmlEditorView<RestResponseDocu
 		}
 		else
 		{
-			contentEditor.setText( "" );
+			contentEditor.setText( "<Not JSON content>" );
 		}
 	}
 

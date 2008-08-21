@@ -16,6 +16,7 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.RequestFilter;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -44,7 +45,34 @@ public abstract class AbstractRequestFilter implements RequestFilter
 	{
 	}
 
-	public void afterRequest( SubmitContext context, Response response )
+	public void afterRequest( SubmitContext context, Request request )
+	{
+		// do this for backwards compatibility
+		Response response = (Response) context.getProperty(BaseHttpRequestTransport.RESPONSE);
+		if( response != null )
+			afterRequest( context, response );
+		
+		if( request instanceof AbstractHttpRequest )
+			afterAbstractHttpResponse( context, (AbstractHttpRequest<?>)request );
+	}
+
+	public void afterAbstractHttpResponse( SubmitContext context, AbstractHttpRequest<?> request )
+	{
+		if( request instanceof WsdlRequest )
+			afterWsdlRequest(context, (WsdlRequest) request );
+		else if( request instanceof RestRequest )
+			afterRestRequest(context, (RestRequest) request );
+	}
+
+	public void afterWsdlRequest(SubmitContext context, WsdlRequest request)
+	{
+	}
+
+	public void afterRestRequest(SubmitContext context, RestRequest request)
+	{
+	}
+
+	public void afterRequest(SubmitContext context, Response response)
 	{
 	}
 }

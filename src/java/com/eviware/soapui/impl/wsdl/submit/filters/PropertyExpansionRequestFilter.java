@@ -48,7 +48,7 @@ public class PropertyExpansionRequestFilter extends AbstractRequestFilter
 	/**
 	 * @deprecated Use {@link PropertyExpansionUtils#expandProperties(SubmitContext,String)} instead
 	 */
-	@SuppressWarnings("deprecation")
+	
 	public static String expandProperties(SubmitContext context, String content)
 	{
 		return PropertyExpansionUtils.expandProperties( context, content );
@@ -57,6 +57,7 @@ public class PropertyExpansionRequestFilter extends AbstractRequestFilter
 	/**
 	 * @deprecated Use {@link PropertyExpansionUtils#getGlobalProperty(String)} instead
 	 */
+	
 	public static String getGlobalProperty( String propertyName )
 	{
 		return PropertyExpansionUtils.getGlobalProperty( propertyName );

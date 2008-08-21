@@ -20,7 +20,6 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.impl.rest.RestRequest;
@@ -39,6 +38,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 	private JPanel contentPanel;
 	private JXEditTextArea contentEditor;
 	private boolean updatingRequest;
+	private JComponent panel;
 
 	public RestRequestContentView(RestRequestMessageEditor restRequestMessageEditor, RestRequest restRequest)
 	{
@@ -50,11 +50,14 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 
 	public JComponent getComponent()
 	{
-		JPanel panel = new JPanel( new BorderLayout() );
-		
-		panel.add( buildToolbar(), BorderLayout.NORTH );
-		panel.add( buildContent(), BorderLayout.CENTER );
-		panel.add( buildStatus(), BorderLayout.SOUTH );
+		if( panel == null )
+		{
+			panel = new JPanel( new BorderLayout() );
+			
+			panel.add( buildToolbar(), BorderLayout.NORTH );
+			panel.add( buildContent(), BorderLayout.CENTER );
+			panel.add( buildStatus(), BorderLayout.SOUTH );
+		}
 		
 		return panel;
 	}
@@ -85,20 +88,12 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 			public void update(Document document)
 			{
 				updatingRequest = true;
-				try
-				{
-					restRequest.setRequestContent( document.getText(0, document.getLength()-1) );
-				}
-				catch (BadLocationException e)
-				{
-					e.printStackTrace();
-				}
+				restRequest.setRequestContent( contentEditor.getText() );
 				updatingRequest = false;
 			}} );
 		
 		contentPanel.add( new JScrollPane( contentEditor ));
-		
-		contentEditor.setEditable( restRequest.hasRequestBody() );
+		contentEditor.setEnabledAndEditable( restRequest.hasRequestBody() );
 		
 		return contentPanel;
 	}
@@ -118,7 +113,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 		}
 		else if( evt.getPropertyName().equals( "method"))
 		{
-			contentEditor.setEditable( restRequest.hasRequestBody() );
+			contentEditor.setEnabledAndEditable( restRequest.hasRequestBody() );
 		}
 	}
 
@@ -134,6 +129,6 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 
 	public void setEditable(boolean enabled)
 	{
-		contentEditor.setEditable(enabled);
+		contentEditor.setEnabledAndEditable(enabled ? restRequest.hasRequestBody() : false );
 	}
 }
