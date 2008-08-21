@@ -30,21 +30,21 @@
 		</div>
 		
 	  	<div id="OpenRight">
-	  	     		<div class="infobox2">
-      			<div class="infobox_top"></div>
-      				<div class="infobox_overall">
-      					<div class="infobox_header"> <img src="images/small_soapuipro-logo.png" border="0" alt=""></img></div>
-      					<div class="infobox_content">
+	  	     		<div class="pro_infobox2">
+      			<div class="pro_infobox_top"></div>
+      				<div class="pro_infobox_overall">
+      					<div class="pro_infobox_header"> <img src="images/small_soapuipro-logo.png" border="0" alt=""></img></div>
+      					<div class="pro_infobox_content">
 							<p>
 								<span class="pro_par">Pro Support<br></br>
 								Pro Functionality<br></br></span>
 							</p>
 						</div>
-						<div class="infobox_footer">
-							<a onclick="javascript:urchinTracker('/downloadPro')" href="http://www.eviware.com/trial" class="infoboxlink"><span class="ilink"> Download Trial!</span> </a>
+						<div class="pro_infobox_footer">
+							<a onclick="javascript:urchinTracker('/downloadPro')" href="http://www.eviware.com/trial" class="infoboxlink"><span class="pro_ilink"> Download Trial!</span> </a>
 						</div>
       				</div>
-   					<div class="infobox_bottom">
+   					<div class="pro_infobox_bottom">
    						<div></div>
    					</div>
 			</div>	
@@ -197,9 +197,8 @@
 						</p>
 						<p>
 						Both will improve your productivity and make Web Service Testing more fun
-						
 						</p>
-						</span>
+						</span> 
 					</div>
 					<div class="infobox_footer">
 						<a onclick="javascript:urchinTracker('/relevantinfo')" href="http://www.eviware.com/trial" class="infoboxlink"><span class="ilink"> Try It </span> </a>
