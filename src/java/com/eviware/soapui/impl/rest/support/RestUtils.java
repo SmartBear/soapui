@@ -9,6 +9,7 @@ import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringList;
 import com.sun.research.wadl.x2006.x10.ApplicationDocument;
 import com.sun.research.wadl.x2006.x10.ApplicationDocument.Application;
@@ -49,8 +50,20 @@ public class RestUtils
 			Application application = applicationDocument.getApplication();
 
 			Resources resources = application.getResources();
+			String base = resources.getBase();
 			
-			service.setBasePath(resources.getBase());
+			try
+			{
+				URL baseUrl = new URL( base );
+				service.setBasePath(baseUrl.getPath());
+				
+				service.addEndpoint( Tools.getEndpointFromUrl( baseUrl ));
+			}
+			catch (Exception e)
+			{
+				service.setBasePath(base);
+			}
+			
 			service.setWadlUrl(wadlUrl);
 			
 			for( Resource resource : resources.getResourceList())

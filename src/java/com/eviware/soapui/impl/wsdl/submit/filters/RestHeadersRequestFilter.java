@@ -60,7 +60,9 @@ public class RestHeadersRequestFilter extends AbstractRequestFilter
 				if( query.length() > 0 )
 					query.append( '&' );
 				
-				query.append( URLEncoder.encode(param.getName())).append('=').append( URLEncoder.encode(value ));
+				query.append( URLEncoder.encode(param.getName()));
+				if( StringUtils.hasContent(value))
+					query.append('=').append( URLEncoder.encode(value ));
 				break;
 			case TEMPLATE :
 				path.replaceAll(param.getName(), URLEncoder.encode(value));

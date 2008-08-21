@@ -31,7 +31,7 @@ import com.eviware.soapui.model.iface.Operation;
 public class RestService extends AbstractInterface<RestServiceConfig> implements RestResourceContainer
 {
 	private List<RestResource> resources = new ArrayList<RestResource>();
-	private WadlContext wadlContext = new WadlContext();
+	private WadlContext wadlContext;
 	
 	public RestService( WsdlProject project, RestServiceConfig serviceConfig )
 	{
@@ -170,6 +170,14 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 	@Override
 	public DefinitionContext getDefinitionContext()
 	{
+		return getWadlContext();
+	}
+
+	public WadlContext getWadlContext()
+	{
+		if( wadlContext == null )
+			wadlContext = new WadlContext( this );
+		
 		return wadlContext;
 	}
 }

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -472,5 +473,16 @@ public class Tools
 		}
 		
 		return endpoint.substring( 0, ix1 )+ "://" + host + (ix2 == -1 ? "" : endpoint.substring(ix2));
+	}
+
+	public static String getEndpointFromUrl(URL baseUrl)
+	{
+		StringBuffer result = new StringBuffer();
+		result.append( baseUrl.getProtocol() ).append( "://" );
+		result.append( baseUrl.getHost());
+		if( baseUrl.getPort() > 0 )
+			result.append( ':').append( baseUrl.getPort());
+		
+		return result.toString();
 	}
 }

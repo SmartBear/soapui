@@ -43,6 +43,7 @@ public class JWadlParamsTable extends JPanel
 		paramsTable = new JXTable( paramsTableModel );
 		paramsTable.setHorizontalScrollEnabled(true);
 		paramsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		paramsTable.setAutoStartEditOnKeyStroke(true);
 		paramsTable.setDefaultEditor(ParameterStyle.class, new DefaultCellEditor(new JComboBox( 
 				new Object[] {ParameterStyle.QUERY, ParameterStyle.TEMPLATE, ParameterStyle.HEADER, ParameterStyle.MATRIX, ParameterStyle.PLAIN })));
 		
