@@ -80,7 +80,7 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 		
 		if( param instanceof URL )
 		{
-			extractParams(param, params);
+			extractParams((URL) param, params);
 		}
 		
 		paramsTable = new JWadlParamsTable( params );
@@ -112,9 +112,9 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
    	}
    }
 
-	private void extractParams(Object param, XmlBeansRestParamsTestPropertyHolder params)
+	private void extractParams(URL param, XmlBeansRestParamsTestPropertyHolder params)
 	{
-		String path = ((URL) param).getPath();
+		String path = param.getPath();
 		String[] items = path.split("/");
 		
 		if( items.length > 0 )
@@ -122,8 +122,12 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 			dialog.setValue(Form.RESOURCENAME, items[items.length-1]);
 		}
 		
-		for( String item : items )
+		int templateParamCount = 0;
+		StringBuffer resultPath = new StringBuffer();
+		
+		for( int i = 0; i < items.length; i++ )
 		{
+			String item = items[i];
 			try
 			{
 				String[] matrixParams = item.split(";");
@@ -148,12 +152,19 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 						}
 					}
 				}
-				
+
 				Integer.parseInt(item);
-				params.addProperty(item).setStyle(ParameterStyle.TEMPLATE);
+				RestParamProperty prop = params.addProperty("param" + templateParamCount++ );
+				prop.setStyle(ParameterStyle.TEMPLATE);
+				prop.setValue(item);
+
+				item = "{" + prop.getName() + "}";
 			}
 			catch( Exception e )
 			{}
+			
+			if( StringUtils.hasContent(item) )
+				resultPath.append('/').append( item );
 		}
 		
 		String query = ((URL) param).getQuery();
@@ -187,7 +198,7 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 		if( paramsTable != null )
 			paramsTable.refresh();
 		
-		dialog.setValue(Form.RESOURCEPATH, ((URL) param).getPath());
+		dialog.setValue(Form.RESOURCEPATH, resultPath.toString());
 	}
 	
    protected void createRequest(RestResource resource)

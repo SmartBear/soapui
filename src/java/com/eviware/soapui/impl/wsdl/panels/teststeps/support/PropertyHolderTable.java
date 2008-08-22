@@ -380,7 +380,9 @@ public class PropertyHolderTable extends JPanel
 							public void run()
 							{
 								propertiesTable.editCellAt(row, 1);
-								propertiesTable.getEditorComponent().requestFocusInWindow();
+								Component editorComponent = propertiesTable.getEditorComponent();
+								if( editorComponent != null )
+									editorComponent.requestFocusInWindow();
 							}
 						} );
 					}

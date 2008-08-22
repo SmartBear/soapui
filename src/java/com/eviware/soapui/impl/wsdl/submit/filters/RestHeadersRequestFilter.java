@@ -65,10 +65,12 @@ public class RestHeadersRequestFilter extends AbstractRequestFilter
 					query.append('=').append( URLEncoder.encode(value ));
 				break;
 			case TEMPLATE :
-				path.replaceAll(param.getName(), URLEncoder.encode(value));
+				path = path.replaceAll( "\\{" + param.getName() + "\\}", URLEncoder.encode(value));
 				break;
 			case MATRIX :
-				path += ";" + param.getName() + "=" + value;
+				path += ";" + param.getName();
+				if( value != null )
+					path += "=" + URLEncoder.encode(value);
 			}
 		}
 		

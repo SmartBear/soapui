@@ -23,6 +23,7 @@ import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 public class RestRequestParamsView extends AbstractXmlEditorView<RestRequestDocument>
 {
 	private final RestRequest restRequest;
+	private JWadlParamsTable table;
 
 	public RestRequestParamsView(RestRequestMessageEditor restRequestMessageEditor, RestRequest restRequest)
 	{
@@ -39,10 +40,23 @@ public class RestRequestParamsView extends AbstractXmlEditorView<RestRequestDocu
 	{
 		return false;
 	}
+	
+	
 
 	public JComponent getComponent()
 	{
-		return new JWadlParamsTable( restRequest.getParams() );
+		if( table == null )
+		{
+			table = new JWadlParamsTable( restRequest.getParams() );
+		}
+		
+		return table;
+	}
+
+	@Override
+	public void requestFocus()
+	{
+		table.requestFocusInWindow();
 	}
 
 	public void setEditable(boolean enabled)
