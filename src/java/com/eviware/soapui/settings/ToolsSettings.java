@@ -35,5 +35,6 @@ public interface ToolsSettings
 	public final static String JAXB_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "jaxb";
 	public final static String TCPMON_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "tcpmon";
 	public static final String ORACLE_WSA_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "wsa";
+	public static final String WADL2JAVA_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "wadl2java";
 	//public static final String SCRIPT_LIBRARIES = ToolsSettings.class.getSimpleName() + "@" + "libraries";
 }

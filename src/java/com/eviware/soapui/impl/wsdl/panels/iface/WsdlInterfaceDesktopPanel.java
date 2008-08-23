@@ -65,6 +65,7 @@ import com.eviware.soapui.actions.SoapUIPreferencesAction;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.actions.iface.CreateWsdlDocumentationAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.ExportDefinitionAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.UpdateInterfaceAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIAnalyzeAction;
@@ -272,7 +273,7 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
       JPanel panel = new JPanel( new BorderLayout() );
       
       panel.add( split, BorderLayout.CENTER );
-      panel.add( buildToolbar(), BorderLayout.PAGE_START );
+      panel.add( buildWsdlTabToolbar(), BorderLayout.PAGE_START );
 		statusBar = new JEditorStatusBar( );
 		panel.add( statusBar, BorderLayout.PAGE_END );
       setPreferredSize( new Dimension( 600, 500 ));
@@ -307,7 +308,7 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 		}
 	}
 
-	private Component buildToolbar()
+	private Component buildWsdlTabToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 		
@@ -321,6 +322,8 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 		button = UISupport.createToolbarButton( SwingActionDelegate.createDelegate( ExportDefinitionAction.SOAPUI_ACTION_ID, getModelItem(),
 					null, "/exportDefinition.gif"));
 		button.setText( null );
+		toolbar.addFixed(UISupport.createToolbarButton(
+				SwingActionDelegate.createDelegate( CreateWsdlDocumentationAction.SOAPUI_ACTION_ID, iface, null, "/export.gif")));
 		toolbar.addFixed( button);
 		toolbar.addGlue();
 		button = UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.INTERFACE_HELP_URL ));

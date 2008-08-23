@@ -59,9 +59,12 @@
 	<tns:action id="RemoveInterfaceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.RemoveInterfaceAction"/>
 	<tns:action id="WSIAnalyzeAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIAnalyzeAction"/>
 	<tns:action id="CloneInterfaceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.CloneInterfaceAction"/> 	
+	<tns:action id="CreateWsdlDocumentationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.CreateWsdlDocumentationAction"/>
 
 	<!-- RestService Actions -->
 	<tns:action id="NewRestResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.service.NewRestResourceAction"/>
+	<tns:action id="CreateWadlDocumentationAction" actionClass="com.eviware.soapui.impl.rest.actions.service.CreateWadlDocumentationAction"/>
+	<tns:action id="Wadl2JavaAction" actionClass="com.eviware.soapui.impl.rest.actions.service.Wadl2JavaAction"/>
 	
 	<!-- Operation Actions -->
 	<tns:action id="AddOperationToMockServiceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.operation.AddOperationToMockServiceAction"/>
@@ -270,6 +273,7 @@
 	 	<tns:actionMapping actionId="SeperatorAction"/>
 	 	<tns:actionMapping actionId="GenerateTestSuiteAction"/>
 	 	<tns:actionMapping actionId="GenerateMockServiceAction"/>
+	 	<tns:actionMapping actionId="CreateWsdlDocumentationAction"/>
 	 	<tns:actionMapping actionId="SeperatorAction"/>
 	 	<tns:actionMapping actionId="UpdateInterfaceAction" keyStroke="F5" iconPath="/updateDefinition.gif"/>
 	 	<tns:actionMapping actionId="ExportDefinitionAction" keyStroke="menu P" iconPath="/exportDefinition.gif"/>
@@ -286,6 +290,9 @@
  			description="Shows the Service Viewer for this REST Service" keyStroke="ENTER"/>
  			<tns:actionMapping actionId="SeperatorAction"/>
  		<tns:actionMapping actionId="NewRestResourceAction"/>
+	 	<tns:actionMapping actionId="SeperatorAction"/>
+	 	<tns:actionMapping actionId="CreateWadlDocumentationAction"/>
+	 	<tns:actionMapping actionId="Wadl2JavaAction"/>
 	 	<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="interfaces.html"/>
  	</tns:actionGroup>

@@ -62,6 +62,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.WadlContext;
+import com.eviware.soapui.impl.rest.actions.service.CreateWadlDocumentationAction;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.ExportDefinitionAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.UpdateInterfaceAction;
@@ -227,7 +228,7 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 		JPanel panel = new JPanel(new BorderLayout());
 
 		panel.add(split, BorderLayout.CENTER);
-		panel.add(buildToolbar(), BorderLayout.PAGE_START);
+		panel.add(buildWadlTabToolbar(), BorderLayout.PAGE_START);
 		statusBar = new JEditorStatusBar();
 		panel.add(statusBar, BorderLayout.PAGE_END);
 		setPreferredSize(new Dimension(600, 500));
@@ -256,7 +257,7 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 		}
 	}
 
-	private Component buildToolbar()
+	private Component buildWadlTabToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 
@@ -271,6 +272,8 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 				ExportDefinitionAction.SOAPUI_ACTION_ID, getModelItem(), null, "/exportDefinition.gif"));
 		button.setText(null);
 		toolbar.addFixed(button);
+		toolbar.addFixed(UISupport.createToolbarButton(
+				SwingActionDelegate.createDelegate( CreateWadlDocumentationAction.SOAPUI_ACTION_ID, iface, null, "/export.gif")));
 		toolbar.addGlue();
 		button = UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.INTERFACE_HELP_URL));
 		button.setText(null);

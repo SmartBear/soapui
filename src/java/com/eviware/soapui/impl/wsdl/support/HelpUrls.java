@@ -146,4 +146,8 @@ public interface HelpUrls
 	public static final String NEWRESTSERVICE_HELP_URL = "";
 
 	public static final String RESTREQUESTEDITOR_HELP_URL = "";
+
+	public static final String CREATEWADLDOC_HELP_URL = "";
+
+	public static final String WADL2JAVA_HELP_URL = "https://wadl.dev.java.net/wadl2java.html";
 }

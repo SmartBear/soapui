@@ -43,6 +43,7 @@ public class ToolsPrefs implements Prefs
    public static final String JAXB = "JAXB xjc";
    public static final String TCPMON = "Apache TcpMon";
    public static final String WSA = "Oracle wsa.jar";
+   public static final String WADL = "WADL2Java";
    public static final String LIBRARIES = "Script libraries";
 
    private static final String[][] TOOLS = {
@@ -61,6 +62,7 @@ public class ToolsPrefs implements Prefs
       { JAXB, ToolsSettings.JAXB_LOCATION },
       { TCPMON, ToolsSettings.TCPMON_LOCATION },
       { WSA, ToolsSettings.ORACLE_WSA_LOCATION },
+      { WADL, ToolsSettings.WADL2JAVA_LOCATION},
    };
    
 	private SimpleForm toolsForm;
@@ -121,6 +123,7 @@ public class ToolsPrefs implements Prefs
 			toolsForm.append( ToolsPrefs.JAVAC, new DirectoryFormComponent( "location of JDK 1.5 javac" ));
 			toolsForm.append( ToolsPrefs.TCPMON, new DirectoryFormComponent( "location of TcpMon directory" ));
 			toolsForm.append( ToolsPrefs.WSA, new DirectoryFormComponent( "location of Orace wsa.jar" ));
+			toolsForm.append( ToolsPrefs.WADL, new DirectoryFormComponent( "location of wadl2java script"));
 			toolsForm.addSpace( 5 );
 		}
 		

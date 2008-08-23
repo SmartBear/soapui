@@ -135,6 +135,14 @@ public class CachedWsdlLoader extends WsdlLoader
 	{
 		return false;
 	}
+	
+	/**
+	 * Saves the complete definition to the specified folder, returns path to root part
+	 *  
+	 * @param folderName
+	 * @return
+	 * @throws Exception
+	 */
 
 	public String saveDefinition( String folderName ) throws Exception
 	{

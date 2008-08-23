@@ -13,10 +13,8 @@
 package com.eviware.soapui.impl.rest.actions.service;
 
 import java.awt.event.ActionEvent;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLDecoder;
 
 import javax.swing.AbstractAction;
 
@@ -24,14 +22,12 @@ import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.WadlUtils;
 import com.eviware.soapui.impl.rest.RestRequest.RequestMethod;
 import com.eviware.soapui.impl.rest.panels.resource.JWadlParamsTable;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
@@ -80,7 +76,18 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 		
 		if( param instanceof URL )
 		{
-			extractParams((URL) param, params);
+			String path = WadlUtils.extractParams((URL) param, params);
+			dialog.setValue(Form.RESOURCEPATH, path );
+			
+			String[] items = path.split("/");
+			
+			if( items.length > 0 )
+			{
+				dialog.setValue(Form.RESOURCENAME, items[items.length-1]);
+			}
+			
+			if( paramsTable != null )
+				paramsTable.refresh();
 		}
 		
 		paramsTable = new JWadlParamsTable( params );
@@ -112,96 +119,7 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
    	}
    }
 
-	private void extractParams(URL param, XmlBeansRestParamsTestPropertyHolder params)
-	{
-		String path = param.getPath();
-		String[] items = path.split("/");
-		
-		if( items.length > 0 )
-		{
-			dialog.setValue(Form.RESOURCENAME, items[items.length-1]);
-		}
-		
-		int templateParamCount = 0;
-		StringBuffer resultPath = new StringBuffer();
-		
-		for( int i = 0; i < items.length; i++ )
-		{
-			String item = items[i];
-			try
-			{
-				String[] matrixParams = item.split(";");
-				if( matrixParams.length > 0 )
-				{
-					item = matrixParams[0];
-					for( int c = 1; c < matrixParams.length; c++ )
-					{
-						String matrixParam = matrixParams[c];
-						
-						int ix = matrixParam.indexOf('=');
-						if( ix == -1 )
-						{
-							params.addProperty( URLDecoder.decode( matrixParam, "Utf-8" )).setStyle(ParameterStyle.MATRIX);
-						}
-						else
-						{
-							String name = matrixParam.substring(0, ix);
-							RestParamProperty property = params.addProperty(URLDecoder.decode(name, "Utf-8"));
-							property.setStyle(ParameterStyle.MATRIX);
-							property.setValue(URLDecoder.decode(matrixParam.substring(ix+1), "Utf-8"));
-						}
-					}
-				}
-
-				Integer.parseInt(item);
-				RestParamProperty prop = params.addProperty("param" + templateParamCount++ );
-				prop.setStyle(ParameterStyle.TEMPLATE);
-				prop.setValue(item);
-
-				item = "{" + prop.getName() + "}";
-			}
-			catch( Exception e )
-			{}
-			
-			if( StringUtils.hasContent(item) )
-				resultPath.append('/').append( item );
-		}
-		
-		String query = ((URL) param).getQuery();
-		if( StringUtils.hasContent(query))
-		{
-			items = query.split("&");
-			for( String item : items )
-			{
-				try
-				{
-					int ix = item.indexOf('=');
-					if( ix == -1 )
-					{
-						params.addProperty( URLDecoder.decode( item, "Utf-8" )).setStyle(ParameterStyle.QUERY);
-					}
-					else
-					{
-						String name = item.substring(0, ix);
-						RestParamProperty property = params.addProperty(URLDecoder.decode(name, "Utf-8"));
-						property.setStyle(ParameterStyle.QUERY);
-						property.setValue(URLDecoder.decode(item.substring(ix+1), "Utf-8"));
-					}
-				}
-				catch (UnsupportedEncodingException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}
-
-		if( paramsTable != null )
-			paramsTable.refresh();
-		
-		dialog.setValue(Form.RESOURCEPATH, resultPath.toString());
-	}
-	
-   protected void createRequest(RestResource resource)
+	protected void createRequest(RestResource resource)
 	{
    	RestRequest request = resource.addNewRequest( dialog.getValue(Form.RESOURCENAME));
 		request.setMethod( RequestMethod.GET );
@@ -224,7 +142,7 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 			
 			try
 			{
-				extractParams( new URL( dialog.getValue(Form.RESOURCEPATH)), params);
+				WadlUtils.extractParams( new URL( dialog.getValue(Form.RESOURCEPATH)), params);
 			}
 			catch (MalformedURLException e1)
 			{
