@@ -180,4 +180,10 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 		
 		return wadlContext;
 	}
+
+	@Override
+	public String getDefinition()
+	{
+		return getWadlUrl();
+	}
 }

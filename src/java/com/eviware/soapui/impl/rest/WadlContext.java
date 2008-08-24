@@ -1,5 +1,7 @@
 package com.eviware.soapui.impl.rest;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +51,25 @@ public class WadlContext implements DefinitionContext
 	}
 
 	public boolean loadIfNecessary()
+	{
+		return true;
+	}
+
+	public String export(String path) throws Exception
+	{
+		File dir = new File( path );
+		if( !dir.exists())
+			dir.mkdirs();
+		
+		File outFile = new File( dir, "export.wadl");
+	   FileWriter writer = new FileWriter( outFile) ;
+	   writer.write( getDefinitionParts().values().iterator().next().toString() );
+	   writer.close();
+
+	   return outFile.toURI().toURL().toString();
+	}
+
+	public boolean isCached()
 	{
 		return true;
 	}

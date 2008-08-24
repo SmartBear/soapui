@@ -14,8 +14,7 @@ package com.eviware.soapui.impl.wsdl.actions.iface;
 
 import java.io.File;
 
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.support.wsdl.CachedWsdlLoader;
+import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
@@ -25,7 +24,8 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
  * @author Ole.Matzura
  */
 
-public class ExportDefinitionAction extends AbstractSoapUIAction<WsdlInterface>
+@SuppressWarnings("unchecked")
+public class ExportDefinitionAction extends AbstractSoapUIAction<AbstractInterface>
 {
    public static final String SOAPUI_ACTION_ID = "ExportDefinitionAction";
 
@@ -34,7 +34,7 @@ public class ExportDefinitionAction extends AbstractSoapUIAction<WsdlInterface>
       super("Export Definition", "Exports the entire WSDL and included/imported files to a local directory");
    }
    
-   public void perform( WsdlInterface iface, Object param )
+   public void perform( AbstractInterface iface, Object param )
 	{
      	try
 		{
@@ -47,7 +47,7 @@ public class ExportDefinitionAction extends AbstractSoapUIAction<WsdlInterface>
 		}
    }
 
-	public String exportDefinition( String location, WsdlInterface iface ) throws Exception
+	public String exportDefinition( String location, AbstractInterface iface ) throws Exception
 	{
 		File folderName =location == null ? UISupport.getFileDialogs().openDirectory( this, "Select output directory", null ) 
 				: new File( location );
@@ -55,17 +55,6 @@ public class ExportDefinitionAction extends AbstractSoapUIAction<WsdlInterface>
      	if( folderName == null )
      		return null; 
 		
-     	CachedWsdlLoader loader = null;
-     	
-     	if( iface.isCached() )
-     	{
-     		loader = (CachedWsdlLoader) iface.createWsdlLoader();
-     	}
-     	else
-     	{
-			loader = new CachedWsdlLoader( iface );
-     	}
-     	
-		return loader.saveDefinition( folderName.getAbsolutePath() );
+     	return iface.getDefinitionContext().export(folderName.getAbsolutePath());
 	} 
 }

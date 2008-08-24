@@ -23,13 +23,14 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
+import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
-import com.eviware.soapui.impl.wsdl.support.wsdl.CachedWsdlLoader;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.settings.ProjectSettings;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -224,26 +225,32 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 		String wsdl = values.get(WSDL);
 		boolean useCached = values.getBoolean(CACHED_WSDL);
 
-		if (wsdl == null && !useCached && modelItem instanceof WsdlInterface)
+		if( modelItem instanceof AbstractInterface )
 		{
-			WsdlInterface iface = (WsdlInterface) modelItem;
-			return PathUtils.expandPath( iface.getDefinition(), iface );
-		}
+			AbstractInterface<?> iface = (AbstractInterface<?>) modelItem;
 		
-		WsdlInterface iface = (WsdlInterface) modelItem;
-		if (useCached && iface.isCached())
-		{
-			try
+			boolean hasDefinition = StringUtils.hasContent(iface.getDefinition());
+			if (wsdl == null && !useCached && hasDefinition)
 			{
-				File tempFile = File.createTempFile("tempdir", null);
-				String path = tempFile.getAbsolutePath();
-				tempFile.delete();
-				CachedWsdlLoader loader = (CachedWsdlLoader) iface.createWsdlLoader();
-				wsdl = loader.saveDefinition(path);
+				return PathUtils.expandPath( iface.getDefinition(), iface );
 			}
-			catch (Exception e)
+		
+			if (!hasDefinition || (useCached && iface.getDefinitionContext().isCached()))
 			{
-				SoapUI.logError( e );
+				try
+				{
+					File tempFile = File.createTempFile("tempdir", null);
+					String path = tempFile.getAbsolutePath();
+					tempFile.delete();
+					wsdl = iface.getDefinitionContext().export( path );
+					
+	//				CachedWsdlLoader loader = (CachedWsdlLoader) iface.createWsdlLoader();
+	//				wsdl = loader.saveDefinition(path);
+				}
+				catch (Exception e)
+				{
+					SoapUI.logError( e );
+				}
 			}
 		}
 

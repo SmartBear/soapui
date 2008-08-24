@@ -9,4 +9,8 @@ public interface DefinitionContext
 	boolean hasSchemaTypes();
 	
 	public Map<String, XmlObject> getDefinitionParts() throws Exception;
+
+	boolean isCached();
+
+	String export(String path) throws Exception;
 }

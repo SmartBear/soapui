@@ -56,7 +56,6 @@ public class Wadl2JavaAction extends AbstractToolsAction<Interface>
       XFormDialogBuilder builder = XFormFactory.createDialogBuilder("WADL2Java");
 
 		XForm mainForm = builder.createForm( "Basic" );
-		addWSDLFields(mainForm, modelItem);
 		
 		mainForm.addTextField( OUTPUT, "Root directory for all emitted files.", XForm.FieldType.PROJECT_FOLDER );
 		mainForm.addTextField( PACKAGE, "Default Package for generated classes", XForm.FieldType.JAVA_PACKAGE );
@@ -90,7 +89,7 @@ public class Wadl2JavaAction extends AbstractToolsAction<Interface>
 		builder.command(args.getArgs());
 		builder.directory(new File(xfireDir));
 		
-		toolHost.run( new ProcessToolRunner( builder, "WADL2Java", modelItem ));
+		toolHost.run( new ProcessToolRunner( builder, "WADL2Java", modelItem, args ));
 	}
    
 	private ArgumentBuilder buildArgs( Interface modelItem ) throws IOException

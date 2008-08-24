@@ -469,13 +469,16 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 
 	public String createRequest(boolean b)
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String createResponse(boolean b)
 	{
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public RestResource getResourceAt(int c)
+	{
+		return resources.get( c );
 	}
 }

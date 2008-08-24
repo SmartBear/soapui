@@ -184,4 +184,6 @@ public abstract class AbstractInterface<T extends InterfaceConfig> extends Abstr
 	}
 	
 	public abstract DefinitionContext getDefinitionContext();
+
+	public abstract String getDefinition();
 }

@@ -28,6 +28,7 @@ import com.eviware.soapui.impl.rest.panels.resource.JWadlParamsTable;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
@@ -76,7 +77,11 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 		
 		if( param instanceof URL )
 		{
-			String path = WadlUtils.extractParams((URL) param, params);
+			URL url = (URL) param;
+			
+			service.setBasePath(Tools.getEndpointFromUrl(url));
+			
+			String path = WadlUtils.extractParams(url, params);
 			dialog.setValue(Form.RESOURCEPATH, path );
 			
 			String[] items = path.split("/");

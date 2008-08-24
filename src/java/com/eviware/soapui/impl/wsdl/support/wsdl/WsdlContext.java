@@ -435,4 +435,27 @@ public class WsdlContext implements DefinitionContext
 		schemaCache.remove(url);
 		urlReferences.remove(url);
 	}
+
+	public String export(String path) throws Exception
+	{
+		CachedWsdlLoader loader = null;
+     	
+     	if( iface.isCached() )
+     	{
+     		loader = (CachedWsdlLoader) iface.createWsdlLoader();
+     	}
+     	else
+     	{
+			loader = new CachedWsdlLoader( iface );
+     	}
+     	
+		return loader.saveDefinition(path);	
+	}
+
+	public boolean isCached()
+	{
+		return iface.isCached();
+	}
+	
+	
 }
