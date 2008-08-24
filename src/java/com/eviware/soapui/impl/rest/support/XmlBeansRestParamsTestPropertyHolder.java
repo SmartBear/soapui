@@ -25,7 +25,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlString;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestParameterConfig;
@@ -289,11 +292,6 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 			return false;
 		}
 
-		public Type getType()
-		{
-			return Type.STRING;
-		}
-
 		public ModelItem getModelItem()
 		{
 			return modelItem;
@@ -302,6 +300,36 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 		public String getDefaultValue()
 		{
 			return null;
+		}
+
+		public String[] getOptions()
+		{
+			return propertyConfig.getOptionList().toArray( new String[propertyConfig.sizeOfOptionArray()] );
+		}
+
+		public boolean getRequired()
+		{
+			return propertyConfig.getRequired();
+		}
+
+		public QName getType()
+		{
+			return propertyConfig.isSetType() ? propertyConfig.getType() : XmlString.type.getName();
+		}
+
+		public void setOptions(String[] arg0)
+		{
+			propertyConfig.setOptionArray(arg0);
+		}
+
+		public void setRequired(boolean arg0)
+		{
+			propertyConfig.setRequired(arg0);
+		}
+
+		public void setType(QName arg0)
+		{
+			propertyConfig.setType(arg0);
 		}
 	}
 

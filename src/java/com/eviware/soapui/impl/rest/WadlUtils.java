@@ -115,10 +115,7 @@ public class WadlUtils
 		if( StringUtils.hasContent(propertyAt.getValue()))
 			paramConfig.setDefault( propertyAt.getValue() );
 		
-		switch( propertyAt.getType())
-		{
-			case STRING : paramConfig.setType(org.apache.xmlbeans.XmlString.type.getName());
-		}
+		paramConfig.setType(propertyAt.getType());
 		
 		ParamStyle.Enum style = ParamStyle.QUERY;
 		switch (propertyAt.getStyle())

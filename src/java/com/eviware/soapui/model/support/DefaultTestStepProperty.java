@@ -12,6 +12,10 @@
 
 package com.eviware.soapui.model.support;
 
+import javax.xml.namespace.QName;
+
+import org.apache.xmlbeans.XmlString;
+
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.RenameableTestProperty;
@@ -157,9 +161,9 @@ public class DefaultTestStepProperty implements TestStepProperty, RenameableTest
 			this.value = value;
 		}}
 
-	public Type getType()
+	public QName getType()
 	{
-		return Type.STRING;
+		return XmlString.type.getName();
 	}
 
 	public ModelItem getModelItem()

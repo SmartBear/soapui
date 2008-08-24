@@ -17,6 +17,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
+import org.apache.xmlbeans.XmlString;
+
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -130,9 +134,9 @@ public class GlobalPropertyResolver implements PropertyResolver
 				return key.toString();
 			}
 
-			public Type getType()
+			public QName getType()
 			{
-				return Type.STRING;
+				return XmlString.type.getName();
 			}
 
 			public String getValue()
@@ -254,9 +258,9 @@ public class GlobalPropertyResolver implements PropertyResolver
 				return key.toString();
 			}
 
-			public Type getType()
+			public QName getType()
 			{
-				return Type.STRING;
+				return XmlString.type.getName();
 			}
 
 			public String getValue()

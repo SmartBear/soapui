@@ -1327,7 +1327,7 @@
     				</xsd:restriction>
     			</xsd:simpleType>
     		</xsd:element>
-    		<xsd:element name="type" type="xsd:string" maxOccurs="1"
+    		<xsd:element name="type" type="xsd:QName" maxOccurs="1"
     			minOccurs="0">
     		</xsd:element>
     		<xsd:element name="default" type="xsd:string" maxOccurs="1"
@@ -1357,8 +1357,9 @@
     <xsd:complexType name="RestResourceRepresentation">
     	<xsd:sequence>
     		<xsd:element name="mediaType" type="xsd:string"></xsd:element>
-            <xsd:element name="status" type="xsd:string"></xsd:element>
-            <xsd:element name="params" type="tns:RestParameters"></xsd:element>
+    		<xsd:element name="status" type="xsd:string"></xsd:element>
+    		<xsd:element name="params" type="tns:RestParameters"></xsd:element>
+    		<xsd:element name="element" type="xsd:QName"></xsd:element>
     	</xsd:sequence>
     	<xsd:attribute name="id" type="xsd:string"></xsd:attribute>
     	<xsd:attribute name="isResponse" type="xsd:boolean"></xsd:attribute>

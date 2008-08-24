@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.model.testsuite;
 
+import javax.xml.namespace.QName;
+
 import com.eviware.soapui.model.ModelItem;
 
 public interface TestProperty
@@ -28,9 +30,9 @@ public interface TestProperty
 	
 	public boolean isReadOnly();
 	
-	public Type getType();
+	public QName getType();
 	
-	public enum Type { STRING };
+//	public enum Type { STRING };
 	
 	/**
 	 * Gets the modelItem containing this property

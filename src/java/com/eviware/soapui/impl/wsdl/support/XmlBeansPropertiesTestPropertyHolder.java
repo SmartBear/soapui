@@ -25,6 +25,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
+import org.apache.xmlbeans.XmlString;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.PropertiesTypeConfig;
 import com.eviware.soapui.config.PropertyConfig;
@@ -272,9 +276,9 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 			return false;
 		}
 
-		public Type getType()
+		public QName getType()
 		{
-			return Type.STRING;
+			return XmlString.type.getName();
 		}
 
 		public ModelItem getModelItem()

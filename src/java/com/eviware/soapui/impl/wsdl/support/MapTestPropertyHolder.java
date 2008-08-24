@@ -23,6 +23,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
+import org.apache.xmlbeans.XmlString;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
@@ -218,9 +222,9 @@ public class MapTestPropertyHolder implements MutableTestPropertyHolder
 			return false;
 		}
 
-		public Type getType()
+		public QName getType()
 		{
-			return Type.STRING;
+			return XmlString.type.getName();
 		}
 
 		public ModelItem getModelItem()
