@@ -16,21 +16,15 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.ByteArrayInputStream;
 
 import javax.swing.JComponent;
-import javax.swing.JEditorPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
 
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestResponseDocument;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestResponseMessageEditor;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
-import com.eviware.soapui.support.DefaultHyperlinkListener;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
@@ -42,28 +36,27 @@ public class RestHtmlResponseView extends AbstractXmlEditorView<RestResponseDocu
 	private JPanel contentPanel;
 	private boolean updatingRequest;
 	private JPanel panel;
-	private JEditorPane editorPane;
-	private HTMLEditorKit editorKit;
+//	private BrComponent browser;
 
 	public RestHtmlResponseView(RestResponseMessageEditor restRequestMessageEditor, RestRequest restRequest)
 	{
-		super( "HTML", restRequestMessageEditor, RestHtmlResponseViewFactory.VIEW_ID );
+		super("HTML", restRequestMessageEditor, RestHtmlResponseViewFactory.VIEW_ID);
 		this.restRequest = restRequest;
-		
-		restRequest.addPropertyChangeListener( this );
+
+		restRequest.addPropertyChangeListener(this);
 	}
 
 	public JComponent getComponent()
 	{
-		if( panel == null )
+		if (panel == null)
 		{
-			panel = new JPanel( new BorderLayout() );
-			
-			panel.add( buildToolbar(), BorderLayout.NORTH );
-			panel.add( buildContent(), BorderLayout.CENTER );
-			panel.add( buildStatus(), BorderLayout.SOUTH );
+			panel = new JPanel(new BorderLayout());
+
+			panel.add(buildToolbar(), BorderLayout.NORTH);
+			panel.add(buildContent(), BorderLayout.CENTER);
+			panel.add(buildStatus(), BorderLayout.SOUTH);
 		}
-		
+
 		return panel;
 	}
 
@@ -71,8 +64,8 @@ public class RestHtmlResponseView extends AbstractXmlEditorView<RestResponseDocu
 	public void release()
 	{
 		super.release();
-		
-		restRequest.removePropertyChangeListener( this );
+
+		restRequest.removePropertyChangeListener(this);
 	}
 
 	private Component buildStatus()
@@ -82,32 +75,47 @@ public class RestHtmlResponseView extends AbstractXmlEditorView<RestResponseDocu
 
 	private Component buildContent()
 	{
-		contentPanel = new JPanel( new BorderLayout() );
-		
-		editorPane = new JEditorPane();
-		editorKit = new HTMLEditorKit();
-		editorPane.setEditorKit( editorKit );
-		editorPane.setEditable( false );
-		editorPane.addHyperlinkListener( new DefaultHyperlinkListener( editorPane ));
-		
+		contentPanel = new JPanel(new BorderLayout());
+
+//		org.jdic.web.BrComponent.DESIGN_MODE = false;
+//		browser = new BrComponent();
+
+//		javax.swing.GroupLayout brMainLayout = new javax.swing.GroupLayout(browser);
+
+//		browser.setLayout(brMainLayout);
+
+//		brMainLayout.setHorizontalGroup(
+//
+//		brMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//
+//		.addGap(0, 299, Short.MAX_VALUE)
+//
+//		);
+//
+//		brMainLayout.setVerticalGroup(
+//
+//		brMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//
+//		.addGap(0, 503, Short.MAX_VALUE)
+//
+//		);
+
 		HttpResponse response = restRequest.getResponse();
-		if( response != null)
+		if (response != null)
 			setEditorContent(response);
-		
-		contentPanel.add( new JScrollPane( editorPane ));
-		
+
+//		contentPanel.add(new JScrollPane(browser));
+
 		return contentPanel;
 	}
 
 	protected void setEditorContent(HttpResponse httpResponse)
 	{
-		if( httpResponse.getContentType().contains("html"))
+		if (httpResponse.getContentType().contains("html"))
 		{
 			try
 			{
-				HTMLDocument document = (HTMLDocument) editorKit.createDefaultDocument();
-				document.setBase(httpResponse.getURL());
-				editorPane.read(new ByteArrayInputStream( httpResponse.getRawResponseData()), document);
+//				browser.open(httpResponse.getURL().toString());
 			}
 			catch (Exception e)
 			{
@@ -116,22 +124,22 @@ public class RestHtmlResponseView extends AbstractXmlEditorView<RestResponseDocu
 		}
 		else
 		{
-			editorPane.setText( "" );
+//			browser.setHTML("");
 		}
 	}
 
 	private Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
-		
+
 		return toolbar;
 	}
 
 	public void propertyChange(PropertyChangeEvent evt)
 	{
-		if( evt.getPropertyName().equals( AbstractHttpRequest.RESPONSE_PROPERTY ) && !updatingRequest )
+		if (evt.getPropertyName().equals(AbstractHttpRequest.RESPONSE_PROPERTY) && !updatingRequest)
 		{
-			setEditorContent( ((HttpResponse)evt.getNewValue()) );
+			setEditorContent(((HttpResponse) evt.getNewValue()));
 		}
 	}
 

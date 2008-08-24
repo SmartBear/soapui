@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.eviware.soapui.impl.rest.panels.request.views.content.RestRequestContentViewFactory;
+import com.eviware.soapui.impl.rest.panels.request.views.html.RestHtmlResponseViewFactory;
 import com.eviware.soapui.impl.rest.panels.request.views.json.RestJsonResponseViewFactory;
 import com.eviware.soapui.impl.rest.panels.request.views.param.RestRequestParamsViewFactory;
 import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
@@ -41,7 +42,7 @@ public class EditorViewRegistry
 		addFactory( new RestRequestParamsViewFactory() );
 		addFactory( new RestRequestContentViewFactory() );
 		addFactory( new RestJsonResponseViewFactory() );
-//		addFactory( new RestHtmlResponseViewFactory() );
+		addFactory( new RestHtmlResponseViewFactory() );
 	}
 	
 	public void addFactory( EditorViewFactory factory )

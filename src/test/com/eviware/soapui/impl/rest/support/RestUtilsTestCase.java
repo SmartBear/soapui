@@ -32,7 +32,7 @@ public class RestUtilsTestCase extends TestCase
 				new File( "src" + File.separatorChar + "test-resources" + File.separatorChar + "wadl" + File.separatorChar + "YahooSearch.wadl").toURI().toURL().toString() );
 		
 	   assertEquals( 1, service.getOperationCount() );
-	   assertEquals("http://api.search.yahoo.com/NewsSearchService/V1/", service.getBasePath());
+	   assertEquals("/NewsSearchService/V1/", service.getBasePath());
 		
 	   RestResource resource = service.getOperationAt( 0 );
 	   
