@@ -15,24 +15,25 @@ package com.eviware.soapui.impl.rest.panels.request.views.content;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestDocument;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestMessageEditor;
+import com.eviware.soapui.impl.rest.panels.resource.JWadlParamsTable;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.xml.JXEditTextArea;
@@ -46,11 +47,12 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 	private JXEditTextArea contentEditor;
 	private boolean updatingRequest;
 	private JComponent panel;
-	private JComboBox mediaTypeCombo;
+	private JUndoableTextField mediaTypeTextField;
+	private JSplitPane split;
 	
 	public RestRequestContentView(RestRequestMessageEditor restRequestMessageEditor, RestRequest restRequest)
 	{
-		super( "Body", restRequestMessageEditor, RestRequestContentViewFactory.VIEW_ID );
+		super( "Request", restRequestMessageEditor, RestRequestContentViewFactory.VIEW_ID );
 		this.restRequest = restRequest;
 		
 		RestRepresentation[] representations = restRequest.getRepresentations(RestRepresentation.Type.REQUEST);
@@ -73,11 +75,22 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 	{
 		if( panel == null )
 		{
-			panel = new JPanel( new BorderLayout() );
+			JPanel p = new JPanel( new BorderLayout() );
 			
-			panel.add( buildToolbar(), BorderLayout.NORTH );
-			panel.add( buildContent(), BorderLayout.CENTER );
-			panel.add( buildStatus(), BorderLayout.SOUTH );
+			p.add( buildToolbar(), BorderLayout.NORTH );
+			p.add( buildContent(), BorderLayout.CENTER );
+			
+			split = UISupport.createVerticalSplit( new JWadlParamsTable( restRequest.getParams() ), p );
+			
+			panel = new JPanel( new BorderLayout() );
+			panel.add( split);
+			
+			SwingUtilities.invokeLater(new Runnable() {
+
+				public void run()
+				{
+					split.setDividerLocation( restRequest.hasRequestBody() ? 0.5 : 1.0);
+				}} );
 		}
 		
 		return panel;
@@ -88,11 +101,6 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 	{
 		super.release();
 		restRequest.removePropertyChangeListener( this );
-	}
-
-	private Component buildStatus()
-	{
-		return new JPanel();
 	}
 
 	private Component buildContent()
@@ -122,20 +130,22 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 		
-		mediaTypeCombo = new JComboBox(new Object[] { requestRepresentation.getMediaType() });
-		mediaTypeCombo.setPreferredSize(new Dimension( 200, 20 ));
-		mediaTypeCombo.setEditable(true);
-		mediaTypeCombo.addItemListener(new ItemListener()
+		mediaTypeTextField = new JUndoableTextField( requestRepresentation.getMediaType() );
+		mediaTypeTextField.setPreferredSize(new Dimension( 200, 20 ));
+		mediaTypeTextField.setEnabled( restRequest.hasRequestBody());
+		mediaTypeTextField.getDocument().addDocumentListener(new DocumentListenerAdapter()
 		{
-			public void itemStateChanged(ItemEvent e)
+			@Override
+			public void update(Document document)
 			{
 				updatingRequest = true;
-				requestRepresentation.setMediaType((String) mediaTypeCombo.getSelectedItem());
+				requestRepresentation.setMediaType(mediaTypeTextField.getText());
 				updatingRequest = false;
+				
 			}
 		});
 
-		toolbar.addLabeledFixed("Media Type", mediaTypeCombo);
+		toolbar.addLabeledFixed("Media Type", mediaTypeTextField);
 		toolbar.addSeparator();
 		
 		return toolbar;
@@ -150,6 +160,16 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 		else if( evt.getPropertyName().equals( "method"))
 		{
 			contentEditor.setEnabledAndEditable( restRequest.hasRequestBody() );
+			mediaTypeTextField.setEnabled( restRequest.hasRequestBody() );
+			
+			if( !restRequest.hasRequestBody())
+			{
+				split.setDividerLocation(1.0);
+			}
+			else if( split.getDividerLocation() >= split.getHeight()-20 )
+			{
+				split.setDividerLocation( 0.5);
+			}
 		}
 	}
 
