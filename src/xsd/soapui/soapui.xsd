@@ -1268,7 +1268,7 @@
     				<xsd:element name="parameters"
     					type="tns:RestParameters">
     				</xsd:element>
-    				<xsd:element name="request" type="tns:RestRequest"
+    				<xsd:element name="request" type="tns:RestMethod"
     					maxOccurs="unbounded" minOccurs="0">
     				</xsd:element>
 
@@ -1277,7 +1277,6 @@
     					maxOccurs="unbounded" minOccurs="0">
     				</xsd:element>
 
-    				<xsd:element name="representation" type="tns:RestResourceRepresentation" maxOccurs="unbounded" minOccurs="0"></xsd:element>
     			</xsd:sequence>
     			<xsd:attribute name="path" type="xsd:string"></xsd:attribute>
     			<xsd:attribute name="wadlId" type="xsd:string"></xsd:attribute>
@@ -1285,20 +1284,17 @@
     	</xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:complexType name="RestRequest">
+    <xsd:complexType name="RestMethod">
     	<xsd:complexContent>
     		<xsd:extension base="tns:AbstractRequest">
     			<xsd:sequence>
     				<xsd:element name="parameters"
     					type="tns:RestParameters">
     				</xsd:element>
+    				<xsd:element name="representation" type="tns:RestResourceRepresentation" maxOccurs="unbounded" minOccurs="0"></xsd:element>
     			</xsd:sequence>
     			<xsd:attribute name="method" type="xsd:string"></xsd:attribute>
-    			<xsd:attribute name="wadlId" type="xsd:string"></xsd:attribute>
-    			<xsd:attribute name="representation"
-    				type="xsd:string">
-    			</xsd:attribute>
-    			<xsd:attribute name="mediaType" type="xsd:string"></xsd:attribute>
+    			<xsd:attribute name="wadlId" type="xsd:string"></xsd:attribute>
     			<xsd:attribute name="fullPath" type="xsd:string"></xsd:attribute>
     		</xsd:extension>
     	</xsd:complexContent>
@@ -1306,7 +1302,7 @@
 
     <xsd:complexType name="RestRequestStep">
     	<xsd:sequence>
-    		<xsd:element name="restRequest" type="tns:RestRequest"></xsd:element>
+    		<xsd:element name="restRequest" type="tns:RestMethod"></xsd:element>
     	</xsd:sequence>
     	<xsd:attribute name="service" type="xsd:string"></xsd:attribute>
     	<xsd:attribute name="resourcePath" type="xsd:string"></xsd:attribute>
@@ -1358,13 +1354,12 @@
     <xsd:complexType name="RestResourceRepresentation">
     	<xsd:sequence>
     		<xsd:element name="mediaType" type="xsd:string"></xsd:element>
-    		<xsd:element name="status" type="xsd:string"></xsd:element>
+    		<xsd:element name="status" type="tns:statusCodesType"></xsd:element>
     		<xsd:element name="params" type="tns:RestParameters"></xsd:element>
     		<xsd:element name="element" type="xsd:QName"></xsd:element>
     	</xsd:sequence>
     	<xsd:attribute name="id" type="xsd:string"></xsd:attribute>
-    	<xsd:attribute name="isResponse" type="xsd:boolean"></xsd:attribute>
-    	<xsd:attribute name="isFault" type="xsd:boolean"></xsd:attribute>
+    	<xsd:attribute name="type" type="tns:RestResourceRepresentationType"></xsd:attribute>
     </xsd:complexType>
 
     <xsd:complexType name="WsaConfig">
@@ -1396,4 +1391,15 @@
     	</xsd:restriction>
     </xsd:simpleType>
 
+
+    <xsd:simpleType name="RestResourceRepresentationType">
+    	<xsd:restriction base="xsd:string">
+    		<xsd:enumeration value="REQUEST"></xsd:enumeration>
+    		<xsd:enumeration value="RESPONSE"></xsd:enumeration>
+    		<xsd:enumeration value="FAULT"></xsd:enumeration>
+    	</xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="statusCodesType">
+    	<xsd:list itemType="xsd:int"></xsd:list></xsd:simpleType>
 </xsd:schema>

@@ -10,24 +10,12 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.submit.transports.http;
+package com.eviware.soapui.impl.support;
 
-import java.net.URL;
-
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.model.iface.Response;
-
-public interface HttpResponse extends Response
+public class HttpUtils
 {
-	public abstract AbstractHttpRequest<?> getRequest();
-
-	public abstract String getRequestContent();
-
-	public abstract void setResponseContent(String responseContent);
-
-	public abstract SSLInfo getSSLInfo();
-
-	public abstract URL getURL();
-
-	public abstract int getStatusCode();
+	public static boolean isErrorStatus(int statusCode)
+	{
+		return statusCode >= 400;
+	}
 }

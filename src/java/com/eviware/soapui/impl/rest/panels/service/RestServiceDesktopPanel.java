@@ -71,6 +71,7 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.LineNumbersPanel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JEditorStatusBar;
@@ -103,15 +104,15 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 	private JEditorStatusBar statusBar;
 	private DefaultMutableTreeNode rootNode;
 	private DefaultTreeModel treeModel;
-	private final RestService iface;
+	private final RestService restService;
 	private MetricsPanel metrics;
-	private boolean updatingInterface;
+	private boolean updatingService;
 	private ResourcesTableModel operationsTableModel;
 
-	public RestServiceDesktopPanel(RestService iface)
+	public RestServiceDesktopPanel(RestService service)
 	{
-		super(iface);
-		this.iface = iface;
+		super(service);
+		this.restService = service;
 
 		try
 		{
@@ -134,21 +135,21 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 	private void buildUI()
 	{
 		JTabbedPane tabs = new JTabbedPane();
-		tabs.addTab("Overview", buildInterfaceOverviewTab());
+		tabs.addTab("Overview", buildServiceOverviewTab());
 		tabs.addTab("Service Endpoints", buildEndpointsTab());
 		tabs.addTab("WADL Content", buildWadlContentTab());
 
 		add(UISupport.createTabPanel(tabs, true), BorderLayout.CENTER);
 	}
 
-	private Component buildInterfaceOverviewTab()
+	private Component buildServiceOverviewTab()
 	{
 		metrics = new MetricsPanel();
 		MetricsSection section = metrics.addSection("WSDL Definition");
 
 		try
 		{
-			section.addMetric("WADL URL", MetricType.URL).set(iface.getWadlUrl());
+			section.addMetric("WADL URL", MetricType.URL).set(restService.getWadlUrl());
 			// section.addMetric( "Namespace" ).set(
 			// iface.getBindingName().getNamespaceURI() );
 			// section.addMetric( "Binding" ).set(
@@ -177,7 +178,7 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 
 	private Component buildEndpointsTab()
 	{
-		return iface.getProject().getEndpointStrategy().getConfigurationPanel(iface);
+		return restService.getProject().getEndpointStrategy().getConfigurationPanel(restService);
 	}
 
 	private JComponent buildWadlContentTab()
@@ -185,7 +186,7 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 		partTabs = new JTabbedPane();
 		partTabs.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
-		rootNode = new DefaultMutableTreeNode(iface.getName());
+		rootNode = new DefaultMutableTreeNode(restService.getName());
 		treeModel = new DefaultTreeModel(rootNode);
 		tree = new JTree(treeModel);
 		tree.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
@@ -223,7 +224,7 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 		split.setDividerLocation(250);
 		split.setResizeWeight(0.3);
 
-		initTreeModel(iface);
+		initTreeModel(restService);
 
 		JPanel panel = new JPanel(new BorderLayout());
 
@@ -273,12 +274,20 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 		button.setText(null);
 		toolbar.addFixed(button);
 		toolbar.addFixed(UISupport.createToolbarButton(
-				SwingActionDelegate.createDelegate( CreateWadlDocumentationAction.SOAPUI_ACTION_ID, iface, null, "/export.gif")));
+				SwingActionDelegate.createDelegate( CreateWadlDocumentationAction.SOAPUI_ACTION_ID, restService, null, "/export.gif")));
+		
+		toolbar.addFixed(button);
+
+		if( !StringUtils.hasContent(restService.getWadlUrl() ))
+		{
+			toolbar.addUnrelatedGap();
+			toolbar.addFixed(UISupport.createToolbarButton(new RecreateWadlAction()));
+		}
+		
 		toolbar.addGlue();
 		button = UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.INTERFACE_HELP_URL));
 		button.setText(null);
-		toolbar.addFixed(button);
-
+		
 		return toolbar;
 	}
 
@@ -853,10 +862,32 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 				tree.setSelectionPath(navigationHistory.get(historyIndex));
 				navigating = false;
 			}
-
 		}
 	}
 
+	private class RecreateWadlAction extends AbstractAction
+	{
+		public RecreateWadlAction()
+		{
+			putValue(SMALL_ICON, UISupport.createImageIcon("/updateDefinition.gif"));
+			putValue(Action.SHORT_DESCRIPTION, "Recreate WADL");
+		}
+
+		public void actionPerformed(ActionEvent arg0)
+		{
+			partTabs.removeAll();
+			tree.setSelectionRow( -1 );
+			rootNode.removeAllChildren();
+		   editors.clear();
+			groupNodes.clear();
+			pathMap.clear();
+			targetNamespaces.clear();
+			initTreeModel( restService );
+			operationsTableModel.fireTableDataChanged();
+			updatingService = false;
+		}
+	}
+	
 	private class ResourcesTableModel extends AbstractTableModel
 	{
 		public int getColumnCount()
@@ -866,7 +897,7 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 
 		public int getRowCount()
 		{
-			return iface.getOperationCount();
+			return restService.getOperationCount();
 		}
 
 		@Override
@@ -885,10 +916,10 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 
 		public Object getValueAt(int rowIndex, int columnIndex)
 		{
-			if (updatingInterface)
+			if (updatingService)
 				return "<updating>";
 
-			RestResource operation = iface.getOperationAt(rowIndex);
+			RestResource operation = restService.getOperationAt(rowIndex);
 
 			switch (columnIndex)
 			{

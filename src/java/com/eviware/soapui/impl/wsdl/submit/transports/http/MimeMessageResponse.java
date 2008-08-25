@@ -13,13 +13,10 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
 import java.io.ByteArrayOutputStream;
-import java.lang.ref.WeakReference;
-import java.net.URL;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HeaderElement;
 import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.RequestEntity;
 
 import com.eviware.soapui.SoapUI;
@@ -28,7 +25,6 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.settings.HttpSettings;
-import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * WsdlMockResponse for a MimeResponse
@@ -36,35 +32,23 @@ import com.eviware.soapui.support.types.StringToStringMap;
  * @author ole.matzura
  */
 
-public class MimeMessageResponse implements HttpResponse
+public class MimeMessageResponse  extends BaseHttpResponse
 {
-	private final WeakReference<AbstractHttpRequest<?>> httpRequest;
 	private long timeTaken;
 	private long responseContentLength;
-	private StringToStringMap requestHeaders;
-	private StringToStringMap responseHeaders;
 	private final String requestContent;
-	private SSLInfo sslInfo;
 	private MultipartMessageSupport mmSupport;
-	private long timestamp;
 	private PostResponseDataSource postResponseDataSource;
 	private byte[] requestData;
-	private String contentType;
-	private URI uri;
 
-	public MimeMessageResponse(AbstractHttpRequest<?> httpRequest, final ExtendedHttpMethod httpMethod, String requestContent, PropertyExpansionContext context)
+	public MimeMessageResponse(AbstractHttpRequest<?> httpRequest, ExtendedHttpMethod httpMethod, String requestContent, PropertyExpansionContext context)
 	{
-		this.httpRequest = new WeakReference<AbstractHttpRequest<?>>( httpRequest );
+		super( httpMethod, httpRequest );
+		
 		this.requestContent = requestContent;
-		this.timeTaken = httpMethod.getTimeTaken();
-		this.timestamp = System.currentTimeMillis();
-		this.contentType = httpMethod.getResponseContentType();
 		
 		try
 		{
-			initHeaders( httpMethod );
-			sslInfo = httpMethod.getSSLInfo();
-			uri = httpMethod.getURI();
 			postResponseDataSource = new PostResponseDataSource( httpMethod );
 			responseContentLength = postResponseDataSource.getDataSize();
 			
@@ -113,55 +97,11 @@ public class MimeMessageResponse implements HttpResponse
 		return mmSupport;
 	}
 
-	public SSLInfo getSSLInfo()
-	{
-		return sslInfo;
-	}
-
 	public long getContentLength()
 	{
 		return responseContentLength;
 	}
 
-	public AbstractHttpRequest<?> getRequest()
-	{
-		return httpRequest.get();
-	}
-
-	public long getTimeTaken()
-	{
-		return timeTaken;
-	}
-
-	private void initHeaders(ExtendedHttpMethod postMethod)
-	{
-		requestHeaders = new StringToStringMap();
-		Header[] headers = postMethod.getRequestHeaders();
-		for( Header header : headers )
-		{
-			requestHeaders.put( header.getName(), header.getValue() );
-		}
-		
-		responseHeaders = new StringToStringMap();
-		headers = postMethod.getResponseHeaders();
-		for( Header header : headers )
-		{
-			responseHeaders.put( header.getName(), header.getValue() );
-		}
-		
-		responseHeaders.put( "#status#", postMethod.getStatusLine().toString() );
-	}
-	
-	public StringToStringMap getRequestHeaders()
-	{
-		return requestHeaders;
-	}
-
-	public StringToStringMap getResponseHeaders()
-	{
-		return responseHeaders;
-	}
-	
 	public String getRequestContent()
 	{
 		return requestContent;
@@ -190,11 +130,6 @@ public class MimeMessageResponse implements HttpResponse
 		return mmSupport.getContentAsString();
 	}
 
-	public long getTimestamp()
-	{
-		return timestamp;
-	}
-
 	public byte[] getRawRequestData()
 	{
 		return requestData;
@@ -203,23 +138,5 @@ public class MimeMessageResponse implements HttpResponse
 	public byte[] getRawResponseData()
 	{
 		return postResponseDataSource.getData();
-	}
-
-	public String getContentType()
-	{
-		return contentType;
-	}
-
-	public URL getURL()
-	{
-		try
-		{
-			return new URL( uri.toString() );
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
 	}
 }

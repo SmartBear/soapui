@@ -70,7 +70,6 @@ public class JWadlParamsTable extends JPanel
 				movePropertyDownAction.setEnabled( selectedRow < paramsTable.getRowCount()-1 );
 				movePropertyUpAction.setEnabled( selectedRow > 0 );
 
-				inspectorPanel.setInspectorsVisible( selectedRow != -1);
 				detailsInspector.setEnabled(selectedRow != -1 );
 				
 				if( selectedRow != -1 )
@@ -78,6 +77,7 @@ public class JWadlParamsTable extends JPanel
 					RestParamProperty selectedParameter = getSelectedParameter();
 					paramDetailsModel.setBean( selectedParameter);
 				}
+				else inspectorPanel.deactivate();
 			}} );
 		
 		add( buildToolbar(), BorderLayout.NORTH );
@@ -108,7 +108,7 @@ public class JWadlParamsTable extends JPanel
 		
 		form.addSpace( 5 );
 		
-		return form.getPanel();
+		return new JScrollPane( form.getPanel() );
 	}
 
 	protected RestParamProperty getSelectedParameter()

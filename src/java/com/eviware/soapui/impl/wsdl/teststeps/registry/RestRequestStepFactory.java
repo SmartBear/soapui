@@ -15,7 +15,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.registry;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.eviware.soapui.config.RestRequestConfig;
+import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
@@ -78,7 +78,7 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
       requestStepConfig.setService( operation.getInterface().getName() );
       requestStepConfig.setResourcePath( operation.getFullPath() );
 
-      RestRequestConfig testRequestConfig = requestStepConfig.addNewRestRequest();
+      RestMethodConfig testRequestConfig = requestStepConfig.addNewRestRequest();
       
       testRequestConfig.setName( stepName );
       testRequestConfig.setEncoding( "UTF-8" );
@@ -149,7 +149,7 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
 		requestStepConfig.setService( operation.getInterface().getName() );
 		requestStepConfig.setResourcePath( operation.getName() );
 
-		RestRequestConfig testRequestConfig = requestStepConfig.addNewRestRequest();
+		RestMethodConfig testRequestConfig = requestStepConfig.addNewRestRequest();
 		
 		testRequestConfig.setName( name );
 		testRequestConfig.setEncoding( "UTF-8" );

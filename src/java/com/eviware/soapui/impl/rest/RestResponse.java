@@ -116,4 +116,9 @@ public class RestResponse implements HttpResponse
 		return null;
 	}
 
+	public int getStatusCode()
+	{
+		// TODO Auto-generated method stub
+		return 200;
+	}
 }

@@ -17,9 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.eviware.soapui.config.RestRequestConfig;
+import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.RestResourceConfig;
-import com.eviware.soapui.config.RestResourceRepresentationConfig;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
@@ -47,7 +46,6 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	public static final String PATH_PROPERTY = "path";
 	private List<RestRequest> requests = new ArrayList<RestRequest>();
 	private List<RestResource> resources = new ArrayList<RestResource>();
-	private List<RestRepresentation> representations = new ArrayList<RestRepresentation>();
 	private RestResource parentResource;
 	private XmlBeansRestParamsTestPropertyHolder params;
 	
@@ -55,7 +53,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
    {
    	super( resourceConfig, service, "/rest_resource.gif" );
    	
-   	for( RestRequestConfig config : resourceConfig.getRequestList())
+   	for( RestMethodConfig config : resourceConfig.getRequestList())
    	{
    		requests.add( new RestRequest( this, config, false ));
    	}
@@ -63,11 +61,6 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
    	for( RestResourceConfig config : resourceConfig.getResourceList())
    	{
    		resources.add( new RestResource( this, config ));
-   	}
-   	
-   	for( RestResourceRepresentationConfig config : resourceConfig.getRepresentationList() )
-   	{
-   		representations.add( new RestRepresentation( this, config ));
    	}
    	
    	if( resourceConfig.getParameters() == null )
@@ -100,43 +93,6 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		result.addAll( getResourceList());
 		
 		return result;
-	}
-
-	public RestRepresentation [] getRequestRepresentations()
-	{
-		List<RestRepresentation> result = new ArrayList<RestRepresentation>();
-		
-		for( RestRepresentation representation : representations )
-		{
-			if( !representation.isResponse())
-				result.add( representation );
-		}
-		
-		return result.toArray( new RestRepresentation[result.size()] );
-	}
-
-	public RestRepresentation [] getResponseRepresentations()
-	{
-		List<RestRepresentation> result = new ArrayList<RestRepresentation>();
-		
-		for( RestRepresentation representation : representations )
-		{
-			if( representation.isResponse())
-				result.add( representation );
-		}
-		
-		return result.toArray( new RestRepresentation[result.size()] );
-	}
-	
-	public RestRepresentation getRepresentationById( String id )
-	{
-		for( RestRepresentation representation : representations )
-		{
-			if( id.equals(representation.getId()))
-				return representation;
-		}
-		
-		return null;
 	}
 
 	public MessagePart[] getDefaultRequestParts()
@@ -210,7 +166,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	
 	public RestRequest addNewRequest(String name)
 	{
-		RestRequestConfig resourceConfig = getConfig().addNewRequest();
+		RestMethodConfig resourceConfig = getConfig().addNewRequest();
 		resourceConfig.setName(name);
 		
 		RestRequest request = new RestRequest( this, resourceConfig, false);
@@ -411,7 +367,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	
 	public RestRequest cloneRequest( RestRequest request, String name )
 	{
-		RestRequestConfig requestConfig = (RestRequestConfig) getConfig().addNewRequest().set(request.getConfig());
+		RestMethodConfig requestConfig = (RestMethodConfig) getConfig().addNewRequest().set(request.getConfig());
 		requestConfig.setName(name);
 		
 		RestRequest newRequest = new RestRequest( this, requestConfig, false);
@@ -447,11 +403,6 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		for( RestRequest request : requests )
 		{
 			request.release();
-		}
-		
-		for( RestRepresentation representation : representations )
-		{
-			representation.release();
 		}
 	}
 

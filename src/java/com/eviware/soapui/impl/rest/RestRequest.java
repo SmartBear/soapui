@@ -23,7 +23,9 @@ import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlString;
 
-import com.eviware.soapui.config.RestRequestConfig;
+import com.eviware.soapui.config.RestMethodConfig;
+import com.eviware.soapui.config.RestResourceRepresentationConfig;
+import com.eviware.soapui.impl.rest.RestRepresentation.Type;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -48,15 +50,16 @@ import com.eviware.soapui.support.UISupport;
  * @author Ole.Matzura
  */
 
-public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implements MutableTestPropertyHolder
+public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implements MutableTestPropertyHolder
 {
 	public final static Logger log = Logger.getLogger( RestRequest.class );
 	public static final String DEFAULT_MEDIATYPE = "application/xml";
 	public enum RequestMethod { GET, POST, PUT, DELETE, HEAD }
-	
+	private List<RestRepresentation> representations = new ArrayList<RestRepresentation>();
+
 	private XmlBeansRestParamsTestPropertyHolder params;
 	
-   public RestRequest( RestResource resource, RestRequestConfig requestConfig, boolean forLoadTest )
+   public RestRequest( RestResource resource, RestMethodConfig requestConfig, boolean forLoadTest )
    {
    	super( requestConfig, resource, "/rest_request.gif", false );
    	
@@ -66,11 +69,13 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
    	if( !requestConfig.isSetMethod())
    		setMethod( RequestMethod.GET );
 
-   	if( !requestConfig.isSetMediaType())
-   		setMediaType( DEFAULT_MEDIATYPE );
-
    	if( requestConfig.getParameters() == null )
    		requestConfig.addNewParameters();
+   	
+   	for( RestResourceRepresentationConfig config : requestConfig.getRepresentationList() )
+   	{
+   		representations.add( new RestRepresentation( this, config ));
+   	}
    	
    	params = new XmlBeansRestParamsTestPropertyHolder( this, requestConfig.getParameters());
    }
@@ -96,6 +101,30 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		
 		return result.toArray( new MessagePart[result.size()] );
 	}
+	
+	public RestRepresentation [] getRepresentations( RestRepresentation.Type type )
+	{
+		List<RestRepresentation> result = new ArrayList<RestRepresentation>();
+		
+		for( RestRepresentation representation : representations )
+		{
+			if( type == null || type == representation.getType())
+				result.add( representation );
+		}
+		
+		return result.toArray( new RestRepresentation[result.size()] );
+	}
+
+	public RestRepresentation getRepresentationById( String id )
+	{
+		for( RestRepresentation representation : representations )
+		{
+			if( id.equals(representation.getId()))
+				return representation;
+		}
+		
+		return null;
+	}
 
 	public MessagePart[] getResponseParts()
 	{
@@ -115,18 +144,6 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		return method == null ? null : RequestMethod.valueOf( method );
 	}
 	
-	public void setMediaType( String mediaType )
-	{
-		String old = getMediaType();
-		getConfig().setMediaType( mediaType );
-		notifyPropertyChanged( "mediaType", old, mediaType );
-	}
-	
-	public String getMediaType()
-	{
-		return getConfig().getMediaType();
-	}
-
 	public WsdlSubmit<RestRequest> submit(SubmitContext submitContext, boolean async) throws SubmitException
 	{
       String endpoint = PropertyExpansionUtils.expandProperties( submitContext, getEndpoint());
@@ -369,9 +386,15 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	{
 		super.release();
 		params.release();
+		
+
+		for( RestRepresentation representation : representations )
+		{
+			representation.release();
+		}
 	}
 
-	public void updateConfig(RestRequestConfig request)
+	public void updateConfig(RestMethodConfig request)
 	{
 	}
 
@@ -384,5 +407,16 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	{
 		return params.addProperty(prop);
 		
+	}
+
+	public RestRepresentation addNewRepresentation(Type type)
+	{
+		RestRepresentation representation = new RestRepresentation( this, getConfig().addNewRepresentation() );
+		representation.setType(type);
+		representations.add( representation );
+		
+		notifyPropertyChanged("representations", null, representation);
+		
+		return representation;
 	}
 }

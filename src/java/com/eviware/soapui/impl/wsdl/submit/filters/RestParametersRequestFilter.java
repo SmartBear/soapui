@@ -20,6 +20,7 @@ import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
 import org.apache.xmlbeans.XmlBoolean;
 
+import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
@@ -107,10 +108,14 @@ public class RestParametersRequestFilter extends AbstractRequestFilter
 			{
 				((EntityEnclosingMethod)httpMethod).setRequestEntity(new ByteArrayRequestEntity( requestContent.getBytes()));
 			}
+			
+			RestRepresentation [] representations = request.getRepresentations(RestRepresentation.Type.REQUEST);
+			if( representations.length > 0 )
+			{
+				// init content-type and encoding
+				httpMethod.setRequestHeader("Content-Type", representations[0].getMediaType()
+						+ (StringUtils.hasContent(encoding) ? "; charset=" + encoding : ""));
+			}
 		}
-
-		// init content-type and encoding
-		httpMethod.setRequestHeader("Content-Type", request.getMediaType()
-				+ (StringUtils.hasContent(encoding) ? "; charset=" + encoding : ""));
 	}
 }

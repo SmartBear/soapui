@@ -16,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.xmlbeans.XmlObject;
@@ -26,6 +27,7 @@ import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder
 import com.eviware.soapui.support.StringUtils;
 import com.sun.research.wadl.x2006.x10.ApplicationDocument;
 import com.sun.research.wadl.x2006.x10.ParamStyle;
+import com.sun.research.wadl.x2006.x10.RepresentationType;
 import com.sun.research.wadl.x2006.x10.ApplicationDocument.Application;
 import com.sun.research.wadl.x2006.x10.DocDocument.Doc;
 import com.sun.research.wadl.x2006.x10.MethodDocument.Method;
@@ -170,8 +172,38 @@ public class WadlUtils
 				generateParam(requestConfig.addNewParam(), param );
 		}
 		
+		if( request.hasRequestBody() )
+		{
+			for( RestRepresentation representation : request.getRepresentations(RestRepresentation.Type.REQUEST))
+			{
+				generateRepresentation( requestConfig.addNewRepresentation(), representation );
+			}
+		}
+		
 		Response responseConfig = methodConfig.addNewResponse();
-		responseConfig.addNewRepresentation().setMediaType("application/xml");
+		for( RestRepresentation representation : request.getRepresentations(RestRepresentation.Type.RESPONSE))
+		{
+			generateRepresentation( responseConfig.addNewRepresentation(), representation );
+		}
+		
+		for( RestRepresentation representation : request.getRepresentations(RestRepresentation.Type.FAULT))
+		{
+			generateRepresentation( responseConfig.addNewFault(), representation );
+		}
+	}
+
+	private static void generateRepresentation(RepresentationType representationConfig, RestRepresentation representation)
+	{
+		representationConfig.setMediaType(representation.getMediaType());
+		
+		if( StringUtils.hasContent(representation.getId()))
+			representationConfig.setId( representation.getId() );
+		
+		List status = representation.getStatus();
+		if( status != null && status.size() > 0 )
+		{
+			representationConfig.setStatus(status);
+		}
 	}
 
 	public static String extractParams(URL param, XmlBeansRestParamsTestPropertyHolder params)

@@ -14,18 +14,24 @@ package com.eviware.soapui.impl.rest.panels.request.views.content;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.text.Document;
 
+import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestDocument;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestMessageEditor;
 import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
@@ -35,15 +41,30 @@ import com.eviware.soapui.support.xml.XmlUtils;
 public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDocument> implements PropertyChangeListener
 {
 	private final RestRequest restRequest;
+	private RestRepresentation requestRepresentation;
 	private JPanel contentPanel;
 	private JXEditTextArea contentEditor;
 	private boolean updatingRequest;
 	private JComponent panel;
-
+	private JComboBox mediaTypeCombo;
+	
 	public RestRequestContentView(RestRequestMessageEditor restRequestMessageEditor, RestRequest restRequest)
 	{
 		super( "Body", restRequestMessageEditor, RestRequestContentViewFactory.VIEW_ID );
 		this.restRequest = restRequest;
+		
+		RestRepresentation[] representations = restRequest.getRepresentations(RestRepresentation.Type.REQUEST);
+		if( representations.length == 0 )
+		{
+			requestRepresentation = restRequest.addNewRepresentation( RestRepresentation.Type.REQUEST );
+		}
+		else
+		{
+			requestRepresentation = representations[0];
+		}
+
+		if( !StringUtils.hasContent(requestRepresentation.getMediaType()))
+			requestRepresentation.setMediaType("application/xml");
 		
 		restRequest.addPropertyChangeListener( this );
 	}
@@ -66,7 +87,6 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 	public void release()
 	{
 		super.release();
-		
 		restRequest.removePropertyChangeListener( this );
 	}
 
@@ -101,6 +121,22 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 	private Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
+		
+		mediaTypeCombo = new JComboBox(new Object[] { requestRepresentation.getMediaType() });
+		mediaTypeCombo.setPreferredSize(new Dimension( 200, 20 ));
+		mediaTypeCombo.setEditable(true);
+		mediaTypeCombo.addItemListener(new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent e)
+			{
+				updatingRequest = true;
+				requestRepresentation.setMediaType((String) mediaTypeCombo.getSelectedItem());
+				updatingRequest = false;
+			}
+		});
+
+		toolbar.addLabeledFixed("Media Type", mediaTypeCombo);
+		toolbar.addSeparator();
 		
 		return toolbar;
 	}

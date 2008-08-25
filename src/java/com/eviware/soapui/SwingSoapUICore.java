@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 
 import com.eviware.soapui.config.SoapuiSettingsDocumentConfig;
+import com.eviware.soapui.impl.rest.panels.request.inspectors.representations.RestRepresentationsInspectorFactory;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.SwingToolHost;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.workspace.Workspace;
@@ -59,6 +60,7 @@ public class SwingSoapUICore extends DefaultSoapUICore
 		inspectorRegistry.addFactory( new SSLInspectorFactory() );
 		inspectorRegistry.addFactory( new WssInspectorFactory() );
 		inspectorRegistry.addFactory( new WsaInspectorFactory() );
+		inspectorRegistry.addFactory( new RestRepresentationsInspectorFactory() );
 		
 		addExternalActions( getRoot() == null ? "actions" : getRoot() + File.separatorChar + "actions",	
 					getExtensionClassLoader() );

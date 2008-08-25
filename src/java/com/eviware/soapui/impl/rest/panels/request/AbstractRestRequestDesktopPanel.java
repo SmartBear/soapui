@@ -19,6 +19,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -31,14 +34,18 @@ import javax.swing.text.Document;
 import net.sf.json.JSONObject;
 import net.sf.json.xml.XMLSerializer;
 
+import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRepresentation.Type;
 import com.eviware.soapui.impl.rest.RestRequest.RequestMethod;
+import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Submit;
+import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
@@ -52,7 +59,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 {
 	private boolean updatingRequest;
 	private JComboBox methodCombo;
-	private JComboBox mediaTypeCombo;
 	private JUndoableTextField pathField;
 	private JButton recreatePathButton;
 
@@ -66,10 +72,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		if (evt.getPropertyName().equals("method") && !updatingRequest)
 		{
 			methodCombo.setSelectedItem(evt.getNewValue());
-		}
-		else if (evt.getPropertyName().equals("mediaType") && !updatingRequest)
-		{
-			mediaTypeCombo.setSelectedItem((String) evt.getNewValue());
 		}
 	}
 
@@ -89,6 +91,64 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	protected Submit doSubmit() throws SubmitException
 	{
 		return getRequest().submit(new WsdlSubmitContext(getModelItem()), true);
+	}
+
+	@Override
+	public void afterSubmit(Submit submit, SubmitContext context)
+	{
+		super.afterSubmit(submit, context);
+		
+		HttpResponse response = getRequest().getResponse();
+		if( response != null )
+		{
+			if( HttpUtils.isErrorStatus( response.getStatusCode() ) )
+			{
+				extractRepresentation(response, RestRepresentation.Type.FAULT);
+			}
+			else
+			{
+				extractRepresentation(response, RestRepresentation.Type.RESPONSE);
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void extractRepresentation(HttpResponse response, Type type)
+	{
+		RestRepresentation[] representations = getRequest().getRepresentations(type);
+		int c = 0; 
+		for( ;c < representations.length; c++)
+		{
+			if( representations[c].getMediaType().equals(response.getContentType()))
+			{
+				List status = representations[c].getStatus();
+				if( status == null || !status.contains(response.getStatusCode()))
+				{
+					status = status == null ? new ArrayList<Integer>() : new ArrayList<Integer>( status );
+					status.add( response.getStatusCode() );
+					representations[c].setStatus(status);
+				}
+				break;
+			}
+		}
+		
+		if( c == representations.length )
+		{
+			RestRepresentation representation = getRequest().addNewRepresentation(type);
+			representation.setMediaType(response.getContentType());
+			representation.setStatus( Arrays.asList( response.getStatusCode() ));
+		}
+	}
+
+	@Override
+	protected String getHelpUrl()
+	{
+		return null;
+	}
+
+	@Override
+	protected void insertButtons(JXToolBar toolbar)
+	{
 	}
 
 	@Override
@@ -135,22 +195,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		toolbar.addLabeledFixed("Resource Path:", pathField);
 		toolbar.add(recreatePathButton);
 
-		toolbar.addSeparator();
-
-		mediaTypeCombo = new JComboBox(new Object[] { getRequest().getMediaType() });
-		mediaTypeCombo.setEditable(true);
-		mediaTypeCombo.addItemListener(new ItemListener()
-		{
-
-			public void itemStateChanged(ItemEvent e)
-			{
-				updatingRequest = true;
-				getRequest().setMediaType((String) mediaTypeCombo.getSelectedItem());
-				updatingRequest = false;
-			}
-		});
-
-		toolbar.addLabeledFixed("Media Type", mediaTypeCombo);
 		toolbar.addSeparator();
 
 		panel.add(toolbar, BorderLayout.SOUTH);

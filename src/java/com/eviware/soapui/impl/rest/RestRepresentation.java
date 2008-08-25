@@ -1,23 +1,47 @@
+/*
+ *  soapUI, copyright (C) 2004-2008 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
 package com.eviware.soapui.impl.rest;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.List;
+
 import com.eviware.soapui.config.RestResourceRepresentationConfig;
+import com.eviware.soapui.config.RestResourceRepresentationTypeConfig;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 
 public class RestRepresentation
 {
-	private final RestResource restResource;
+	private final RestRequest restResource;
 	private RestResourceRepresentationConfig config;
 	private XmlBeansRestParamsTestPropertyHolder params;
+	private PropertyChangeSupport propertyChangeSupport;
 
-	public RestRepresentation(RestResource restResource, RestResourceRepresentationConfig config)
+	public enum Type { REQUEST, RESPONSE, FAULT };
+	
+	public RestRepresentation(RestRequest restResource, RestResourceRepresentationConfig config)
 	{
 		this.restResource = restResource;
 		this.config = config;
 		
+		if( config.getParams() == null )
+			config.addNewParams();
+		
 		params = new XmlBeansRestParamsTestPropertyHolder( restResource, config.getParams() );
+		propertyChangeSupport = new PropertyChangeSupport( this );
 	}
 
-	public RestResource getRestResource()
+	public RestRequest getRestResource()
 	{
 		return restResource;
 	}
@@ -41,15 +65,10 @@ public class RestRepresentation
 	{
 		return config.getId();
 	}
-
-	public boolean isFault()
+	
+	public Type getType()
 	{
-		return config.getIsFault();
-	}
-
-	public boolean isResponse()
-	{
-		return config.getIsResponse();
+		return Type.valueOf(config.getType().toString());
 	}
 
 	public String getMediaType()
@@ -57,24 +76,14 @@ public class RestRepresentation
 		return config.getMediaType();
 	}
 
-	public String getStatus()
-	{
-		return config.getStatus();
-	}
-
 	public void setId(String arg0)
 	{
 		config.setId(arg0);
 	}
 
-	public void setFault(boolean arg0)
+	public void setType(Type type)
 	{
-		config.setIsFault(arg0);
-	}
-
-	public void setResponse(boolean arg0)
-	{
-		config.setIsResponse(arg0);
+		config.setType( RestResourceRepresentationTypeConfig.Enum.forString(type.toString()));
 	}
 
 	public void setMediaType(String arg0)
@@ -82,7 +91,12 @@ public class RestRepresentation
 		config.setMediaType(arg0);
 	}
 
-	public void setStatus(String arg0)
+	public List getStatus()
+	{
+		return config.getStatus();
+	}
+
+	public void setStatus(List arg0)
 	{
 		config.setStatus(arg0);
 	}
@@ -91,6 +105,24 @@ public class RestRepresentation
 	{
 		
 	}
-	
-	
+
+	public void addPropertyChangeListener(PropertyChangeListener listener)
+	{
+		propertyChangeSupport.addPropertyChangeListener(listener);
+	}
+
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
+	{
+		propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener)
+	{
+		propertyChangeSupport.removePropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
+	{
+		propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
+	}
 }

@@ -20,7 +20,7 @@ import javax.swing.ImageIcon;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AttachmentConfig;
-import com.eviware.soapui.config.RestRequestConfig;
+import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
@@ -59,7 +59,7 @@ public class RestTestRequest extends RestRequest implements Assertable
 	private final boolean forLoadTest;
 	private PropertyChangeNotifier notifier;
 
-	public RestTestRequest( RestResource resource, RestRequestConfig callConfig, RestTestRequestStep testStep,
+	public RestTestRequest( RestResource resource, RestMethodConfig callConfig, RestTestRequestStep testStep,
 				boolean forLoadTest )
 	{
 		super( resource, callConfig, forLoadTest );
@@ -295,7 +295,7 @@ public class RestTestRequest extends RestRequest implements Assertable
 	 * Called when a testrequest is moved in a testcase
 	 */
 
-	public void updateConfig( RestRequestConfig request )
+	public void updateConfig( RestMethodConfig request )
 	{
 		super.updateConfig( request );
 

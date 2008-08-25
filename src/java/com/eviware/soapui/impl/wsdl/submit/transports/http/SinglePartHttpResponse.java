@@ -13,22 +13,15 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
 import java.io.ByteArrayOutputStream;
-import java.lang.ref.WeakReference;
-import java.net.URL;
 
-import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.methods.RequestEntity;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
@@ -37,33 +30,19 @@ import com.eviware.soapui.support.xml.XmlUtils;
  * @author ole.matzura
  */
 
-public class SinglePartHttpResponse implements HttpResponse
+public class SinglePartHttpResponse extends BaseHttpResponse
 {
-	private final WeakReference<AbstractHttpRequest<?>> wsdlRequest;
-	private final ExtendedHttpMethod httpMethod;
-	private long timeTaken;
 	private String responseContent;
-	private StringToStringMap requestHeaders;
-	private StringToStringMap responseHeaders;
 	private final String requestContent;
 	private boolean prettyPrint;
-	private SSLInfo sslInfo;
-	private long timestamp;
 	private long responseSize;
 	private byte[] requestData;
 	private byte[] responseBody;
 	
-	public SinglePartHttpResponse(AbstractHttpRequest<?> wsdlRequest, ExtendedHttpMethod httpMethod, String requestContent, PropertyExpansionContext context )
+	public SinglePartHttpResponse(AbstractHttpRequest<?> httpRequest, ExtendedHttpMethod httpMethod, String requestContent, PropertyExpansionContext context )
 	{
-		this.wsdlRequest = new WeakReference<AbstractHttpRequest<?>>(wsdlRequest);
-		this.httpMethod = httpMethod;
+		super( httpMethod, httpRequest );
 		this.requestContent = requestContent;
-		this.timeTaken = httpMethod.getTimeTaken();
-		this.sslInfo = httpMethod.getSSLInfo();
-		this.timestamp = System.currentTimeMillis();
-		
-		// read response immediately since we need to release connection
-		Settings settings = wsdlRequest.getSettings();
 		
 		try
 		{
@@ -73,8 +52,6 @@ public class SinglePartHttpResponse implements HttpResponse
 				responseBody = new byte[0];
 			
 			responseSize = responseBody.length;
-			if (settings.getBoolean(HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN))
-				timeTaken += httpMethod.getResponseReadTime();
 			
 			String contentType = httpMethod.getResponseContentType();
 			String charset = httpMethod.getResponseCharSet();
@@ -89,16 +66,14 @@ public class SinglePartHttpResponse implements HttpResponse
 			}
 			
 			if( charset == null )
-				charset = wsdlRequest.getEncoding();
+				charset = httpRequest.getEncoding();
 			
 			charset = StringUtils.unquote( charset );
 				
 			responseContent = responseBody.length == 0 ? null : charset == null ? new String(responseBody) : 
 				new String(	responseBody, contentOffset, (int)(responseSize-contentOffset), charset );
 			
-			prettyPrint = wsdlRequest.getSettings().getBoolean( WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES );
-			
-			initHeaders(httpMethod);
+			prettyPrint = httpRequest.getSettings().getBoolean( WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES );
 			
 			RequestEntity requestEntity = httpMethod.getRequestEntity();
 			if( requestEntity != null )
@@ -118,25 +93,6 @@ public class SinglePartHttpResponse implements HttpResponse
 		}
 	}
 
-	private void initHeaders(ExtendedHttpMethod postMethod)
-	{
-		requestHeaders = new StringToStringMap();
-		Header[] headers = postMethod.getRequestHeaders();
-		for( Header header : headers )
-		{
-			requestHeaders.put( header.getName(), header.getValue() );
-		}
-		
-		responseHeaders = new StringToStringMap();
-		headers = postMethod.getResponseHeaders();
-		for( Header header : headers )
-		{
-			responseHeaders.put( header.getName(), header.getValue() );
-		}
-		
-		responseHeaders.put( "#status#", postMethod.getStatusLine().toString() );
-	}
-
 	public String getContentAsString()
 	{
 		if( prettyPrint )
@@ -153,36 +109,6 @@ public class SinglePartHttpResponse implements HttpResponse
 		return responseSize;
 	}
 
-	public AbstractHttpRequest<?> getRequest()
-	{
-		return wsdlRequest.get();
-	}
-
-	public long getTimeTaken()
-	{
-		return timeTaken;
-	}
-
-	public Attachment[] getAttachments()
-	{
-		return new Attachment[0];
-	}
-
-	public StringToStringMap getRequestHeaders()
-	{
-		return requestHeaders;
-	}
-
-	public StringToStringMap getResponseHeaders()
-	{
-		return responseHeaders;
-	}
-
-	public Attachment[] getAttachmentsForPart(String partName)
-	{
-		return new Attachment[0];
-	}
-
 	public String getRequestContent()
 	{
 		return requestContent;
@@ -196,15 +122,6 @@ public class SinglePartHttpResponse implements HttpResponse
 		getRequest().notifyPropertyChanged( WsdlRequest.RESPONSE_CONTENT_PROPERTY, oldContent, responseContent );
 	}
 
-	public SSLInfo getSSLInfo()
-	{
-		return sslInfo;
-	}
-
-	public long getTimestamp()
-	{
-		return timestamp;
-	}
 
 	public byte[] getRawRequestData()
 	{
@@ -216,21 +133,5 @@ public class SinglePartHttpResponse implements HttpResponse
 		return responseBody;
 	}
 
-	public String getContentType()
-	{
-		return httpMethod.getResponseContentType();
-	}
 
-	public URL getURL()
-	{
-		try
-		{
-			return new URL( httpMethod.getURI().toString() );
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
 }
