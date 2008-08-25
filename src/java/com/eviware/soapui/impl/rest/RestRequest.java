@@ -379,4 +379,10 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	{
 		return getPath();
 	}
+
+	public RestParamProperty addProperty(RestParamProperty prop)
+	{
+		return params.addProperty(prop);
+		
+	}
 }

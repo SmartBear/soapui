@@ -18,8 +18,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import com.eviware.soapui.config.MustUnderstandTypeConfig;
-import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaContainer;
 import com.eviware.soapui.support.components.SimpleBindingForm;
@@ -31,7 +29,6 @@ import com.jgoodies.binding.PresentationModel;
 
 public abstract class AbstractWsaInspector extends AbstractXmlInspector
 {
-
 	private JPanel mainPanel;
 	private SimpleBindingForm form;
 	private final WsaContainer wsaContainer;

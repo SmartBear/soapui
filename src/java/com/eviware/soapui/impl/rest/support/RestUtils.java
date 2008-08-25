@@ -123,8 +123,7 @@ public class RestUtils
 			RestParamProperty prop = newResource.hasProperty(nm) ?
 					newResource.getProperty(nm) : newResource.addProperty(nm);
 					
-			prop.setValue(param.getDefault());
-			prop.setStyle( ParameterStyle.valueOf( param.getStyle().toString().toUpperCase() ));
+			initParam(param, prop);
 		}
 		
 		for( Method method : resource.getMethodList())
@@ -137,10 +136,25 @@ public class RestUtils
 			for( Param param : method.getRequest().getParamList())
 			{
 				RestParamProperty p = request.addProperty(param.getName());
-				p.setValue(param.getDefault());
-				p.setStyle( ParameterStyle.valueOf( param.getStyle().toString().toUpperCase() ));
+				initParam( param, p );
 			}
 		}
+	}
+
+	private static void initParam(Param param, RestParamProperty prop)
+	{
+		prop.setDefaultValue(param.getDefault());
+		prop.setValue(param.getDefault());
+		prop.setStyle( ParameterStyle.valueOf( param.getStyle().toString().toUpperCase() ));
+		prop.setRequired(param.getRequired());
+		prop.setType(param.getType());
+		
+		String [] options = new String[param.sizeOfOptionArray()];
+		for( int c = 0; c < options.length; c++ )
+			options[c] = param.getOptionArray(c).getValue();
+		
+		if( options.length > 0 )
+			prop.setOptions(options);
 	}
 
 	private static Method resolveMethod(Method method, Application application)

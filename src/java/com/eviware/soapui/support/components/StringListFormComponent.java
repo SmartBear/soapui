@@ -119,6 +119,7 @@ public class StringListFormComponent extends JPanel implements JFormComponent, A
 	
 	public void setValue(String value)
 	{
+		String[] oldData = getData();
 		listModel.clear();
 
 		try
@@ -129,6 +130,8 @@ public class StringListFormComponent extends JPanel implements JFormComponent, A
 			for( String file : files )
 				if( file.trim().length() > 0)
 					listModel.addElement( file );
+			
+			firePropertyChange("data", oldData, getData());
 		}
 		catch( Exception e )
 		{
@@ -149,12 +152,15 @@ public class StringListFormComponent extends JPanel implements JFormComponent, A
 	
 	public void actionPerformed( ActionEvent e )
 	{
+		String[] oldData = getData();
+		
 		if( e.getSource() == addButton )
 		{
 			String value = UISupport.prompt( "Specify value to add", "Add..", defaultValue );
          if( value != null )
 		   {
 		     	listModel.addElement( value );
+		     	firePropertyChange("options", oldData, getData());
 		   }
 		}
 		else
@@ -167,6 +173,7 @@ public class StringListFormComponent extends JPanel implements JFormComponent, A
 				if( UISupport.confirm( "Remove [" + elm.toString() + "] from list", "Remove" ))
 				{
 					listModel.remove( selectedIndex );
+					firePropertyChange("options", oldData, getData());
 				}
 			}
 			else if( e.getSource() == editButton && selectedIndex != -1 )
@@ -177,6 +184,7 @@ public class StringListFormComponent extends JPanel implements JFormComponent, A
 				if( value != null )
 				{
 					listModel.setElementAt( value, selectedIndex );
+					firePropertyChange("options", oldData, getData());
 				}
 			}
 		}
@@ -200,10 +208,27 @@ public class StringListFormComponent extends JPanel implements JFormComponent, A
 
 	public void setData( String[] strings )
 	{
+		String[] oldData = getData();
+		
 		listModel.clear();
-		for( String str : strings )
+		if( strings != null )
 		{
-			listModel.addElement( str );
+			for( String str : strings )
+			{
+				listModel.addElement( str );
+			}
 		}
+		
+		firePropertyChange("options", oldData, getData());
+	}
+	
+	public String [] getOptions()
+	{
+		return getData();
+	}
+	
+	public void setOptions( String [] options )
+	{
+		setData( options );
 	}
 }

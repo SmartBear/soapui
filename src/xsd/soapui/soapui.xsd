@@ -1315,8 +1315,8 @@
     <xsd:complexType name="RestParameter">
     	<xsd:sequence>
     		<xsd:element name="name" type="xsd:string"></xsd:element>
-            <xsd:element name="value" type="xsd:string"></xsd:element>
-            <xsd:element name="style">
+    		<xsd:element name="value" type="xsd:string"></xsd:element>
+    		<xsd:element name="style">
     			<xsd:simpleType>
     				<xsd:restriction base="xsd:string">
     					<xsd:enumeration value="MATRIX"></xsd:enumeration>
@@ -1343,6 +1343,7 @@
     			maxOccurs="unbounded" minOccurs="0">
     		</xsd:element>
 
+    		<xsd:element name="description" type="xsd:string" maxOccurs="1" minOccurs="0"></xsd:element>
     	</xsd:sequence>
     	<xsd:attribute name="required" type="xsd:boolean"></xsd:attribute>
     	<xsd:attribute name="repeating" type="xsd:boolean"></xsd:attribute>

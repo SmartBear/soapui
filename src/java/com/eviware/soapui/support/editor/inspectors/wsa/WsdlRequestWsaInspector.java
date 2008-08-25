@@ -33,8 +33,6 @@ public class WsdlRequestWsaInspector extends AbstractWsaInspector implements Xml
 
 	public void propertyChange(PropertyChangeEvent arg0)
 	{
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void buildContent(SimpleBindingForm form)

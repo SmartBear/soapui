@@ -18,6 +18,7 @@ import java.net.URLEncoder;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
+import org.apache.xmlbeans.XmlBoolean;
 
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
@@ -33,7 +34,7 @@ import com.eviware.soapui.support.StringUtils;
  * @author Ole.Matzura
  */
 
-public class RestHeadersRequestFilter extends AbstractRequestFilter
+public class RestParametersRequestFilter extends AbstractRequestFilter
 {
 	@SuppressWarnings("deprecation")
 	@Override
@@ -50,6 +51,8 @@ public class RestHeadersRequestFilter extends AbstractRequestFilter
 			RestParamProperty param = params.getPropertyAt(c);
 			
 			String value = PropertyExpansionUtils.expandProperties(context, param.getValue());
+			if( !StringUtils.hasContent(value) && !param.getRequired())
+				continue;
 			
 			switch( param.getStyle() )
 			{
@@ -68,9 +71,21 @@ public class RestHeadersRequestFilter extends AbstractRequestFilter
 				path = path.replaceAll( "\\{" + param.getName() + "\\}", URLEncoder.encode(value));
 				break;
 			case MATRIX :
-				path += ";" + param.getName();
-				if( value != null )
-					path += "=" + URLEncoder.encode(value);
+				if( param.getType().equals(XmlBoolean.type.getName()))
+				{
+					if( value.toUpperCase().equals("TRUE") || value.equals("1"))
+					{
+						path += ";" + param.getName();
+					}
+				}
+				else
+				{
+					path += ";" + param.getName();
+					if( StringUtils.hasContent(value) )
+					{
+						path += "=" + URLEncoder.encode(value);
+					}
+				}
 			}
 		}
 		

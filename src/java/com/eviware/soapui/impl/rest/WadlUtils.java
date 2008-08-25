@@ -16,9 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
 
@@ -90,7 +88,7 @@ public class WadlUtils
 		XmlBeansRestParamsTestPropertyHolder params = resource.getParams();
 		for (int c = 0; c < params.size(); c++)
 		{
-			createParam(resourceConfig.addNewParam(), params.getPropertyAt(c));
+			generateParam(resourceConfig.addNewParam(), params.getPropertyAt(c));
 		}
 
 		for (int c = 0; c < resource.getResourceCount(); c++)
@@ -101,24 +99,32 @@ public class WadlUtils
 		for (int c = 0; c < resource.getRequestCount(); c++)
 		{
 			RestRequest request = resource.getRequestAt(c);
-			addMethod(resourceConfig, request);
+			generateWadlMethod(resourceConfig, request);
 		}
 
 		return resourceConfig;
 	}
 
-	private static void createParam(Param paramConfig, RestParamProperty propertyAt)
+	private static void generateParam(Param paramConfig, RestParamProperty param)
 	{
-		paramConfig.setName(propertyAt.getName());
-		createDoc( paramConfig.addNewDoc(), propertyAt.getName(), propertyAt.getDescription() );
+		paramConfig.setName(param.getName());
 		
-		if( StringUtils.hasContent(propertyAt.getValue()))
-			paramConfig.setDefault( propertyAt.getValue() );
+		if( StringUtils.hasContent(param.getDefaultValue()))
+			paramConfig.setDefault( param.getDefaultValue() );
 		
-		paramConfig.setType(propertyAt.getType());
+		paramConfig.setType(param.getType());
+		paramConfig.setRequired( param.getRequired());
+		paramConfig.setDefault(param.getDefaultValue());
+		
+		if( StringUtils.hasContent(param.getDescription()))
+			createDoc( paramConfig.addNewDoc(), param.getName() + " Parameter", param.getDescription() );
+		
+		String[] options = param.getOptions();
+		for(String option : options )
+			paramConfig.addNewOption().setValue(option);
 		
 		ParamStyle.Enum style = ParamStyle.QUERY;
-		switch (propertyAt.getStyle())
+		switch (param.getStyle())
 		{
 		case HEADER:
 			style = ParamStyle.HEADER;
@@ -140,10 +146,11 @@ public class WadlUtils
 	private static void createDoc(Doc docConfig, String name, String description)
 	{
 		docConfig.setLang("en");
-		docConfig.setTitle( StringUtils.hasContent(description) ? description : "[" + name + "]");
+		docConfig.setTitle( name );
+		docConfig.getDomNode().appendChild(docConfig.getDomNode().getOwnerDocument().createTextNode(description));
 	}
 
-	private static void addMethod(Resource resourceConfig, RestRequest request)
+	private static void generateWadlMethod(Resource resourceConfig, RestRequest request)
 	{
 		Method methodConfig = resourceConfig.addNewMethod();
 		createDoc(methodConfig.addNewDoc(), request.getName(), request.getDescription());
@@ -151,16 +158,16 @@ public class WadlUtils
 		methodConfig.setId(request.getName());
 		Request requestConfig = methodConfig.addNewRequest();
 
-		Set<String> defaultParamNames = new HashSet<String>();
+		Map<String,RestParamProperty> defaultParams = new HashMap<String,RestParamProperty>();
 		for( RestParamProperty defaultParam : request.getResource().getDefaultParams() )
-			defaultParamNames.add(defaultParam.getName());
+			defaultParams.put(defaultParam.getName(), defaultParam);
 		
 		XmlBeansRestParamsTestPropertyHolder params = request.getParams();
 		for (int c = 0; c < params.size(); c++)
 		{
 			RestParamProperty param = params.getPropertyAt( c );
-			if( !defaultParamNames.contains(param.getName()))
-				createParam(requestConfig.addNewParam(), param );
+			if( !defaultParams.containsKey(param.getName()) || !param.equals(defaultParams.get( param.getName() )))
+				generateParam(requestConfig.addNewParam(), param );
 		}
 		
 		Response responseConfig = methodConfig.addNewResponse();

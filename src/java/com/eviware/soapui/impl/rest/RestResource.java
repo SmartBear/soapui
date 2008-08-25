@@ -218,9 +218,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		
 		for( RestParamProperty prop : getDefaultParams())
 		{
-			RestParamProperty p = request.addProperty(prop.getName());
-			p.setValue(prop.getValue());
-			p.setStyle(prop.getStyle());
+			request.addProperty(prop);
 		}
 		
 		 String[] endpoints = getInterface().getEndpoints();

@@ -10,31 +10,30 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.rest.actions.resource;
+package com.eviware.soapui.impl.rest.actions.service;
 
-import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
- * Deletes a RestResource from its containing Service or Resource
+ * Deletes a WsdlRequest from its WsdlOperation
  * 
  * @author Ole.Matzura
  */
 
-public class DeleteRestResourceAction extends AbstractSoapUIAction<RestResource>
+public class DeleteRestServiceAction extends AbstractSoapUIAction<RestService>
 {
-	public DeleteRestResourceAction()
+	public DeleteRestServiceAction()
    {
-      super( "Delete", "Deletes this Resource" );
+      super( "Delete", "Deletes this Service" );
    }
 	
-   public void perform( RestResource resource, Object param )
+   public void perform( RestService service, Object param )
 	{
-      if( UISupport.confirm( "Delete Resource [" + resource.getName() + "] from [" + resource.getResourceContainer().getName() + 
-            "]", "Delete Resource" ))
+      if( UISupport.confirm( "Delete Service [" + service.getName() + "]", "Delete Service" ))
       {
-      	resource.getResourceContainer().deleteResource( resource );
+      	service.getProject().removeInterface(service);
       }
    }
 }

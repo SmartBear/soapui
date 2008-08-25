@@ -65,6 +65,7 @@
 	<tns:action id="NewRestResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.service.NewRestResourceAction"/>
 	<tns:action id="CreateWadlDocumentationAction" actionClass="com.eviware.soapui.impl.rest.actions.service.CreateWadlDocumentationAction"/>
 	<tns:action id="Wadl2JavaAction" actionClass="com.eviware.soapui.impl.rest.actions.service.Wadl2JavaAction"/>
+	<tns:action id="DeleteRestServiceAction" actionClass="com.eviware.soapui.impl.rest.actions.service.DeleteRestServiceAction"/>
 	
 	<!-- Operation Actions -->
 	<tns:action id="AddOperationToMockServiceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.operation.AddOperationToMockServiceAction"/>
@@ -290,6 +291,8 @@
  			description="Shows the Service Viewer for this REST Service" keyStroke="ENTER"/>
  			<tns:actionMapping actionId="SeperatorAction"/>
  		<tns:actionMapping actionId="NewRestResourceAction"/>
+	 	<tns:actionMapping actionId="SeperatorAction"/>
+	 	<tns:actionMapping actionId="DeleteRestServiceAction"/>
 	 	<tns:actionMapping actionId="SeperatorAction"/>
 	 	<tns:actionMapping actionId="CreateWadlDocumentationAction"/>
 	 	<tns:actionMapping actionId="Wadl2JavaAction"/>

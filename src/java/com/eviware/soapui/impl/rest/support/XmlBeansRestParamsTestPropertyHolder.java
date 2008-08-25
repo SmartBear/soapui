@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.rest.support;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -219,10 +221,33 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 	public class RestParamProperty implements RenameableTestProperty
 	{
 		private RestParameterConfig propertyConfig;
+		private PropertyChangeSupport propertySupport;
 		
 		public RestParamProperty(RestParameterConfig propertyConfig)
 		{
 			this.propertyConfig = propertyConfig;
+			
+			propertySupport = new PropertyChangeSupport( this );
+		}
+
+		public void addPropertyChangeListener(PropertyChangeListener listener)
+		{
+			propertySupport.addPropertyChangeListener(listener);
+		}
+
+		public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
+		{
+			propertySupport.addPropertyChangeListener(propertyName, listener);
+		}
+
+		public void removePropertyChangeListener(PropertyChangeListener listener)
+		{
+			propertySupport.removePropertyChangeListener(listener);
+		}
+
+		public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
+		{
+			propertySupport.removePropertyChangeListener(propertyName, listener);
 		}
 
 		public void setConfig(RestParameterConfig restParameterConfig)
@@ -248,7 +273,12 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 
 		public String getDescription()
 		{
-			return null;
+			return propertyConfig.getDescription();
+		}
+		
+		public void setDescription( String description )
+		{
+			propertyConfig.setDescription( description );
 		}
 
 		public ParameterStyle getStyle()
@@ -299,7 +329,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 
 		public String getDefaultValue()
 		{
-			return null;
+			return propertyConfig.getDefault();
 		}
 
 		public String[] getOptions()
@@ -330,6 +360,27 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 		public void setType(QName arg0)
 		{
 			propertyConfig.setType(arg0);
+		}
+
+		public void setDefaultValue(String default1)
+		{
+			propertyConfig.setDefault(default1);
+		}
+
+		public RestParameterConfig getConfig()
+		{
+			return propertyConfig;
+		}
+
+		@Override
+		public boolean equals(Object obj)
+		{
+			if( obj instanceof RestParamProperty )
+			{
+				return propertyConfig.toString().equals( ((RestParamProperty) obj).propertyConfig.toString() );
+			}
+			
+			return super.equals(obj);
 		}
 	}
 
@@ -603,5 +654,11 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 
 	public void release()
 	{
+	}
+
+	public RestParamProperty addProperty(RestParamProperty prop)
+	{
+		RestParameterConfig propertyConfig = (RestParameterConfig) config.addNewParameter().set(prop.getConfig());
+		return addProperty( propertyConfig, true );
 	}
 }

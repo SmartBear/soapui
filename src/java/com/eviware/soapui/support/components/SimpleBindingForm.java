@@ -15,6 +15,7 @@ package com.eviware.soapui.support.components;
 import javax.swing.ComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
@@ -51,7 +52,14 @@ public class SimpleBindingForm extends SimpleForm
 		Bindings.bind( checkBox, pm.getModel( propertyName ) );
 		return checkBox;
 	}
+	
+	public void appendComponent( String propertyName, String label, JComponent component)
+	{
+		super.append( label, component );
+		Bindings.bind( component, propertyName, pm.getModel(propertyName) );
+	}
 
+	
 	public JComboBox appendComboBox( String propertyName, String label, Object[] values, String tooltip )
 	{
 		JComboBox comboBox = super.appendComboBox( label, values, tooltip );

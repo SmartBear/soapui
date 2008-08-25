@@ -90,4 +90,9 @@ public class WadlParamsTableModel extends AbstractTableModel implements TableMod
 		case 2 : prop.setStyle( (ParameterStyle) value ); return;
 		}
 	}
+
+	public RestParamProperty getParameterAt(int selectedRow)
+	{
+		return params.getPropertyAt(selectedRow);
+	}
 }
