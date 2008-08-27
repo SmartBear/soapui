@@ -1085,17 +1085,31 @@ public class WsdlUtils
 				return attrs[0];
 			}
 			
+			if( StringUtils.hasContent( operation.getAction()))
+				return operation.getAction();
+			
 			WsdlInterface iface = operation.getInterface();
 			
 			Definition definition = iface.getWsdlContext().getDefinition();
 			String targetNamespace = definition.getTargetNamespace();
 			String portTypeName = iface.getBinding().getPortType().getQName().getLocalPart();
 			String operationName = output ? operation.getOutputName() : operation.getInputName();
+			if( operationName == null )
+				operationName = operation.getName() + (output ? "Response" : "Request");
 			
-			return targetNamespace + "/" + portTypeName + "/" + operationName;
+			StringBuffer result = new StringBuffer( targetNamespace );
+			if( targetNamespace.charAt( targetNamespace.length()-1 ) != '/' && portTypeName.charAt(0) != '/')
+				result.append( '/' );
+			result.append( portTypeName );
+			if( portTypeName.charAt( portTypeName.length()-1 ) != '/' && operationName.charAt(0) != '/')
+				result.append( '/' );
+			result.append( operationName );
+			
+			return result.toString();
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			log.warn( e.toString() );
 			return null;
 		}
