@@ -151,6 +151,16 @@ public class SimpleLoadStrategy extends AbstractLoadStrategy
 		}
 	}
 	
+	public int getTestDelay()
+	{
+		return testDelay;
+	}
+
+	public float getRandomFactor()
+	{
+		return randomFactor;
+	}
+
 	/**
 	 * Factory for SimpleLoadStrategy class
 	 * 
