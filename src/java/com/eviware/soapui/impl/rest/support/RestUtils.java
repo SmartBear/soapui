@@ -89,8 +89,8 @@ public class RestUtils
 	{
 		for( Resource res : resource.getResourceList() )
 		{
-			String name = getFirstTitle(resource.getDocList(), resource.getPath());
-			String path = resource.getPath();
+			String name = getFirstTitle(res.getDocList(), res.getPath());
+			String path = res.getPath();
 			
 			RestResource newRes = newResource.addNewResource(name, path);
 			initResourceFromWadlResource(newRes, res, application );
@@ -113,12 +113,6 @@ public class RestUtils
 
 	private static void initResourceFromWadlResource(RestResource newResource, Resource resource, Application application)
 	{
-		String[] templateParams = RestUtils.extractTemplateParams(resource.getPath());
-		for( String param : templateParams )
-		{
-			newResource.addProperty(param);
-		}
-		
 		for( Param param : resource.getParamList())
 		{
 			String nm = param.getName();
@@ -131,8 +125,12 @@ public class RestUtils
 		for( Method method : resource.getMethodList())
 		{
 			method = resolveMethod( method, application );
-			
-			RestRequest request = newResource.addNewRequest( getFirstTitle(method.getDocList(), method.getName() + " - " + method.getId()));
+
+            String name = method.getName();
+            if( StringUtils.hasContent(method.getId()))
+                name += " - " + method.getId();
+            
+            RestRequest request = newResource.addNewRequest( getFirstTitle(method.getDocList(), name));
 			request.setMethod( RestRequest.RequestMethod.valueOf( method.getName() ));
 			
 			if( method.getRequest() != null )

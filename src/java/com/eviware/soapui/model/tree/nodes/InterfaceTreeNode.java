@@ -23,6 +23,7 @@ import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
 import com.eviware.soapui.model.tree.TreeNodeFactory;
+import com.eviware.soapui.impl.rest.RestResource;
 
 /**
  * SoapUITreeNode for Interface implementations
@@ -98,8 +99,20 @@ public class InterfaceTreeNode extends AbstractModelItemTreeNode<Interface>
 
       public void operationAdded(Operation operation)
       {
-      	OperationTreeNode operationTreeNode = (OperationTreeNode) TreeNodeFactory.createTreeNode( operation, getTreeModel() );
-      	operationNodes.add( operationTreeNode );
+           if( operation instanceof RestResource )
+           {
+               RestResource restResource = (RestResource) operation;
+               if( restResource.getParentResource() != null )
+               {
+                   RestResourceTreeNode treeNode = (RestResourceTreeNode) getTreeModel().getTreeNode(restResource.getParentResource());
+                   treeNode.addSubResource( restResource );
+                   return;
+               }
+           }
+
+          OperationTreeNode operationTreeNode = (OperationTreeNode) TreeNodeFactory.createTreeNode( operation, getTreeModel() );
+
+          operationNodes.add( operationTreeNode );
          getTreeModel().notifyNodeInserted( operationTreeNode );
       }
          

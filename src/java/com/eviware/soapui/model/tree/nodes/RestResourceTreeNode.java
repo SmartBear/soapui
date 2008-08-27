@@ -20,6 +20,7 @@ import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
+import com.eviware.soapui.model.tree.TreeNodeFactory;
 
 /**
  * SoapUITreeNode for Operation implementations
@@ -83,7 +84,7 @@ public class RestResourceTreeNode extends OperationTreeNode
 	@Override
 	public String toString()
 	{
-		return restResource.getName() + " [" + restResource.getPath() + "]";
+		return restResource.getName() + " [" + restResource.getFullPath() + "]";
 	}
 
 	@Override
@@ -120,4 +121,11 @@ public class RestResourceTreeNode extends OperationTreeNode
 	{
 		super.release();
 	}
+
+    public void addSubResource(RestResource restResource) {
+        RestResourceTreeNode operationTreeNode = (RestResourceTreeNode) TreeNodeFactory.createTreeNode( restResource, getTreeModel() );
+
+          resourceNodes.add( operationTreeNode );
+         getTreeModel().notifyNodeInserted( operationTreeNode );
+    }
 }
