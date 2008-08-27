@@ -56,10 +56,10 @@ import com.eviware.x.form.XFormFactory;
 public class UrlWsdlLoader extends WsdlLoader 
 {
 	private HttpState state;
-	private GetMethod getMethod;
+	protected GetMethod getMethod;
 	private boolean aborted;
-	private Map<String,byte[]> urlCache = new HashMap<String,byte[]>();
-	private boolean finished;
+	protected Map<String,byte[]> urlCache = new HashMap<String,byte[]>();
+	protected boolean finished;
 	private boolean useWorker;
 	
 	public UrlWsdlLoader(String url)
@@ -164,7 +164,7 @@ public class UrlWsdlLoader extends WsdlLoader
 		}		
 	}
 
-	private void createGetMethod(String url)
+	protected void createGetMethod(String url)
 	{
 		getMethod = new GetMethod( url );
 		getMethod.setDoAuthentication(true);
@@ -180,7 +180,7 @@ public class UrlWsdlLoader extends WsdlLoader
 		}
 	}
 	
-	private final class LoaderWorker extends SwingWorker
+	public final class LoaderWorker extends SwingWorker
 	{
 		public Object construct()
 		{

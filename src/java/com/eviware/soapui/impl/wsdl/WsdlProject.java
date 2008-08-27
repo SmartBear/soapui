@@ -84,21 +84,20 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	public final static String AFTER_LOAD_SCRIPT_PROPERTY = WsdlProject.class.getName() + "@setupScript";
 	public final static String BEFORE_SAVE_SCRIPT_PROPERTY = WsdlProject.class.getName() + "@tearDownScript";
 	public final static String RESOURCE_ROOT_PROPERTY = WsdlProject.class.getName() + "@resourceRoot";
-	public final static String SHADOW_PASSWORD = WsdlProject.class.getName() + "@shadowPassword";
 
 	private WorkspaceImpl workspace;
-	private String path;
-	private List<AbstractInterface<?>> interfaces = new ArrayList<AbstractInterface<?>>();
-	private List<WsdlTestSuite> testSuites = new ArrayList<WsdlTestSuite>();
-	private List<WsdlMockService> mockServices = new ArrayList<WsdlMockService>();
+	protected String path;
+	protected List<AbstractInterface<?>> interfaces = new ArrayList<AbstractInterface<?>>();
+	protected List<WsdlTestSuite> testSuites = new ArrayList<WsdlTestSuite>();
+	protected List<WsdlMockService> mockServices = new ArrayList<WsdlMockService>();
 	private Set<ProjectListener> projectListeners = new HashSet<ProjectListener>();
-	private SoapuiProjectDocumentConfig projectDocument;
+	protected SoapuiProjectDocumentConfig projectDocument;
 	private ImageIcon disabledIcon;
 	private ImageIcon closedIcon;
 	private ImageIcon remoteIcon;
 	private ImageIcon openEncyptedIcon;
-	private EndpointStrategy endpointStrategy = new DefaultEndpointStrategy();
-	private long lastModified;
+	protected EndpointStrategy endpointStrategy = new DefaultEndpointStrategy();
+	protected long lastModified;
 	private boolean remote;
 	private boolean open = true;
 	private boolean disabled;
@@ -106,19 +105,18 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	private SoapUIScriptEngine afterLoadScriptEngine;
 	private SoapUIScriptEngine beforeSaveScriptEngine;
 	private PropertyExpansionContext context = new DefaultPropertyExpansionContext(this);
-	private DefaultWssContainer wssContainer;
+	protected DefaultWssContainer wssContainer;
 	private String projectPassword = null;
 	/*
 	 * 3 state flag: 1. 0 - project not encrypted 2. 1 - encrypted , good
 	 * password, means that it could be successfully decrypted 3. -1 - encrypted,
 	 * but with bad password or no password.
 	 */
-	private int encrypted;
-	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
+	protected int encrypted;
 	private ImageIcon closedEncyptedIcon;
+	private final PropertyChangeSupport pcs;
 
-	private final static Logger log = Logger.getLogger(WsdlProject.class);
+	protected final static Logger log = Logger.getLogger(WsdlProject.class);
 
 	public WsdlProject() throws XmlException, IOException, SoapUIException
 	{
@@ -154,6 +152,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			String projectPassword)
 	{
 		super(null, workspace, "/project.gif");
+
+		pcs = new PropertyChangeSupport(this);
 
 		this.workspace = workspace;
 		this.path = path;
@@ -296,7 +296,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 				getConfig().addNewProperties();
 
 			setPropertiesConfig(getConfig().getProperties());
-
 			afterLoad();
 		}
 		catch (Exception e)
@@ -328,7 +327,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	 * @return 0 - not encrypted, 1 - successfull decryption , -1 error while
 	 *         decrypting, bad password, no password.
 	 */
-	private int checkForEncodedData(ProjectConfig soapuiProject) throws IOException, GeneralSecurityException
+	protected int checkForEncodedData(ProjectConfig soapuiProject) throws IOException, GeneralSecurityException
 	{
 
 		byte[] encryptedContent = soapuiProject.getEncryptedContent();
@@ -421,7 +420,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		}
 	}
 
-	private void setProjectRoot(String path)
+	protected void setProjectRoot(String path)
 	{
 		if (path != null && projectDocument != null)
 		{
@@ -660,6 +659,12 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			removeDefinitionCaches(config);
 
 			config.getSoapuiProject().setSoapuiVersion(SoapUI.SOAPUI_VERSION);
+			ByteArrayOutputStream writer = new ByteArrayOutputStream(8192);
+			config.save(writer, options);
+			FileOutputStream out = new FileOutputStream(projectFile);
+			writer.writeTo(out);
+			out.close();
+			size = writer.size();
 			config.save(projectFile, options);
 		}
 		else
@@ -689,7 +694,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		return true;
 	}
 
-	@Override
 	public void beforeSave()
 	{
 		try
@@ -714,7 +718,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		endpointStrategy.onSave();
 	}
 
-	private void createBackup(File projectFile) throws IOException
+	protected void createBackup(File projectFile) throws IOException
 	{
 		File backupFile = getBackupFile(projectFile);
 		log.info("Backing up [" + projectFile + "] to [" + backupFile + "]");
@@ -738,7 +742,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		return backupFile;
 	}
 
-	private void removeDefinitionCaches(SoapuiProjectDocumentConfig config)
+	protected void removeDefinitionCaches(SoapuiProjectDocumentConfig config)
 	{
 		for (InterfaceConfig ifaceConfig : config.getSoapuiProject().getInterfaceList())
 		{
@@ -1248,9 +1252,9 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 	public void setShadowPassword(String password)
 	{
-		String oldPAssword = getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
+		String oldPassword = getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
 		getSettings().setString(ProjectSettings.SHADOW_PASSWORD, password);
-		this.pcs.firePropertyChange("projectPassword", oldPAssword, password);
+		this.pcs.firePropertyChange("projectPassword", oldPassword, password);
 	}
 
 	public void inspect()
@@ -1290,7 +1294,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 	public void propertyChange(PropertyChangeEvent evt)
 	{
-
 		if ("projectPassword".equals(evt.getPropertyName()))
 		{
 			if (encrypted == 0 & (evt.getOldValue() == null || ((String) evt.getOldValue()).length() == 0))
@@ -1301,8 +1304,14 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			{
 				encrypted = 0;
 			}
+			SoapUI.getNavigator().repaint();
 		}
-		SoapUI.getNavigator().repaint();
+
+	}
+
+	public SoapuiProjectDocumentConfig getProjectDocument()
+	{
+		return projectDocument;
 	}
 
 }

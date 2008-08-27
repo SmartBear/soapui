@@ -34,9 +34,11 @@ import com.eviware.soapui.config.WorkspaceProjectConfig.Status;
 import com.eviware.soapui.config.WorkspaceProjectConfig.Type;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.WsdlProjectFactory;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.workspace.Workspace;
@@ -153,8 +155,10 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 				
 				try
 				{
-					WsdlProject project = new WsdlProject( str, this, false, !closeOnStartup &&
-								wsc.getStatus() != Status.CLOSED && wsc.getType() != Type.REMOTE, wsc.getName(), null);
+//					WsdlProject project = new WsdlProject( str, this, false, !closeOnStartup &&
+//								wsc.getStatus() != Status.CLOSED && wsc.getType() != Type.REMOTE, wsc.getName(), null);
+					WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew( str, this, false, !closeOnStartup &&
+							wsc.getStatus() != Status.CLOSED && wsc.getType() != Type.REMOTE, wsc.getName(), null);
 					
 					projectList.add( project );
 				}
@@ -338,7 +342,9 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 	{
 		File projectFile = new File( fileName );
 
-		WsdlProject project = new WsdlProject( projectFile.getAbsolutePath(), this );
+		
+//		WsdlProject project = new WsdlProject( projectFile.getAbsolutePath(), this );
+		WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(projectFile.getAbsolutePath(), this );
 		projectList.add( project );
 		fireProjectAdded( project );
 
@@ -386,8 +392,9 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 			}
 		}
 
-		WsdlProject project = new WsdlProject( projectFile == null ? null : projectFile.getAbsolutePath(), this );
-
+//		WsdlProject project = new WsdlProject( projectFile == null ? null : projectFile.getAbsolutePath(), this );
+		WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory(WsdlProjectFactory.WSDL_TYPE).createNew( projectFile == null ? null : projectFile.getAbsolutePath(), this );
+		
 		project.setName( name );
 		projectList.add( project );
 
@@ -471,8 +478,8 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		
 		String tempName = project.getName();
 		project.release();
-		project = new WsdlProject( project.getPath(), this, false, true, tempName, null );
-		
+//		project = new WsdlProject( project.getPath(), this, false, true, tempName, null );
+		project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(project.getPath(), this, false, true, tempName, null);
 		projectList.add( ix, project );
 
 		fireProjectAdded( project );
@@ -542,7 +549,8 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 
 	public WsdlProject importRemoteProject( String url ) throws SoapUIException
 	{
-		WsdlProject project = new WsdlProject( url, this, false );
+//		WsdlProject project = new WsdlProject( url, this, false );
+		WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(url, this, false);
 		projectList.add( project );
 		fireProjectAdded( project );
 
@@ -567,7 +575,8 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		
 		try
 		{
-			project = new WsdlProject( project.getPath(), this, false, false, name, null );
+//			project = new WsdlProject( project.getPath(), this, false, false, name, null );
+			project = ProjectFactoryRegistry.getProjectFactory(WsdlProjectFactory.WSDL_TYPE).createNew(project.getPath(), this, false, false, name, null);
 			((WsdlProject)project).setEncrypted( oldProjectEncrypt );
 			projectList.add( ix, project );
 			fireProjectAdded( project );
