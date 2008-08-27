@@ -49,13 +49,14 @@ public class WsdlRequestWsaInspector extends AbstractWsaInspector implements Xml
 			"The  property for managing WS-A version" );
 		
 		form.appendTextField( "action", "Action", "The action related to a message, will be generated if left empty" );
-		form.appendTextField( "from", "From", "The source endpoint reference, will be generated if left empty" );
+		form.appendTextField( "to", "To", "The destination endpoint reference, will be generated if left empty" );
 		form.appendTextField( "replyTo", "Reply to", "The reply endpoint reference, will be generated if left empty" );
-		form.appendTextField( "faultTo", "Fault to", "The fault endpoint reference" );
 		form.appendTextField( "messageID", "MessageID", " The ID of a message that can be used to uniquely identify a message, will be generated if left empty" );
+		form.addSpace( 10 );
+		form.appendTextField( "from", "From", "The source endpoint reference, will be generated if left empty" );
+		form.appendTextField( "faultTo", "Fault to", "The fault endpoint reference" );
 		form.appendTextField( "relatesTo", "Relates to", "The endpoint reference Mock Response relates to" );
 		form.appendTextField( "relationshipType", "Relationship type", "Relationship type" );
-		form.appendTextField( "to", "To", "The destination endpoint reference, will be generated if left empty" );
 		form.addSpace( 5 );
 	}
 }
