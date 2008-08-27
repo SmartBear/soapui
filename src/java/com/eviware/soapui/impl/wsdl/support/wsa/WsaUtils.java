@@ -124,7 +124,7 @@ public class WsaUtils
 			
 			if (!StringUtils.isNullOrEmpty(action))
 			{
-				header.appendChild(builder.createWsaChildElement("wsa:Action", elm, wsaContainer.getWsaConfig().getAction()));
+				header.appendChild(builder.createWsaChildElement("wsa:Action", elm, action ));
 			}
 
 			String replyTo = wsaContainer.getWsaConfig().getReplyTo();
@@ -192,7 +192,7 @@ public class WsaUtils
 			}
 			if (!StringUtils.isNullOrEmpty(action) )
 			{
-				header.appendChild(builder.createWsaChildElement("wsa:Action", elm, wsaContainer.getWsaConfig().getAction()));
+				header.appendChild(builder.createWsaChildElement("wsa:Action", elm, action ));
 			}
 
 			String replyTo = wsaContainer.getWsaConfig().getReplyTo();
