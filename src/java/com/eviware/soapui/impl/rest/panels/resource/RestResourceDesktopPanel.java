@@ -36,7 +36,7 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 	private Component buildContent()
 	{
 		JTabbedPane tabs = new JTabbedPane();
-		tabs.addTab("Resource Parameters", new JWadlParamsTable( getModelItem().getParams() ));
+		tabs.addTab("Resource Parameters", new JWadlParamsTable( getModelItem().getParams(), true ));
 		return UISupport.createTabPanel(tabs, false );
 	}
 

@@ -62,8 +62,6 @@ public interface MessagePart
 	
 	public abstract static class HeaderPart extends ContentPart
 	{
-		public abstract SchemaType getSchemaType();
-		
 		public PartType getPartType()
 		{
 			return PartType.HEADER;
@@ -72,8 +70,6 @@ public interface MessagePart
 	
 	public abstract static class ParameterPart extends ContentPart
 	{
-		public abstract SchemaType getSchemaType();
-		
 		public PartType getPartType()
 		{
 			return PartType.PARAMETER;
@@ -82,8 +78,6 @@ public interface MessagePart
 	
 	public abstract static class FaultPart extends ContentPart
 	{
-		public abstract SchemaType getSchemaType();
-		
 		public PartType getPartType()
 		{
 			return PartType.FAULT;

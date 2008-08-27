@@ -23,7 +23,7 @@ import com.eviware.soapui.impl.wsdl.submit.filters.HttpProxyRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpSettingsRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.PropertyExpansionRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.RemoveEmptyContentRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.RestParametersRequestFilter;
+import com.eviware.soapui.impl.wsdl.submit.filters.RestRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.SoapHeadersRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.StripWhitespacesRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WsaRequestFilter;
@@ -53,7 +53,7 @@ public class RequestTransportRegistry
 		
 		httpTransport.addRequestFilter( new EndpointRequestFilter() );
 		httpTransport.addRequestFilter( new HttpSettingsRequestFilter() );
-		httpTransport.addRequestFilter( new RestParametersRequestFilter() );
+		httpTransport.addRequestFilter( new RestRequestFilter() );
 		httpTransport.addRequestFilter( new SoapHeadersRequestFilter() );
 		httpTransport.addRequestFilter( new HttpProxyRequestFilter() );
 		httpTransport.addRequestFilter( new HttpAuthenticationRequestFilter() );

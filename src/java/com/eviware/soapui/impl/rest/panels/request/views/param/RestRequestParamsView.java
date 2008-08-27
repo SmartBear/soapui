@@ -47,7 +47,7 @@ public class RestRequestParamsView extends AbstractXmlEditorView<RestRequestDocu
 	{
 		if( table == null )
 		{
-			table = new JWadlParamsTable( restRequest.getParams() );
+			table = new JWadlParamsTable( restRequest.getParams(), true );
 		}
 		
 		return table;

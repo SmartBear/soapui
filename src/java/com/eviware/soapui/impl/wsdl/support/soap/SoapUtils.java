@@ -22,6 +22,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -62,14 +63,27 @@ public class SoapUtils
 
 	/**
 	 * Init soapversion from content-type header.. should envelope be checked and/or override? 
+	 * @param xmlObject 
 	 */
 	
-	public static SoapVersion initSoapVersion( String contentType )
+	public static SoapVersion deduceSoapVersion( String contentType, XmlObject xmlObject )
 	{
-		if( StringUtils.isNullOrEmpty( contentType ) )
-			return null;
+		if( xmlObject != null )
+		{
+			Element elm = ((Document)(xmlObject.getDomNode())).getDocumentElement();
+			if( elm.getLocalName().equals("Envelope"))
+			{
+				if( elm.getNamespaceURI().equals( SoapVersion.Soap11.getEnvelopeNamespace()))
+					return SoapVersion.Soap11;
+				else if( elm.getNamespaceURI().equals( SoapVersion.Soap12.getEnvelopeNamespace()))
+					return SoapVersion.Soap12;
+			}
+		}
 		
 		SoapVersion soapVersion = null;
+		
+		if( StringUtils.isNullOrEmpty( contentType ) )
+			return null;
 		
 		soapVersion = contentType.startsWith( SoapVersion.Soap11.getContentType() ) ? SoapVersion.Soap11 : null;
 		soapVersion = soapVersion == null && contentType.startsWith( SoapVersion.Soap12.getContentType() ) ? SoapVersion.Soap12 : soapVersion;
@@ -287,5 +301,17 @@ public class SoapUtils
 		}
 		
 		return content;
+	}
+
+	public static SoapVersion deduceSoapVersion(String requestContentType, String requestContent)
+	{
+		try
+		{
+			return deduceSoapVersion(requestContentType, XmlObject.Factory.parse(requestContent));
+		}
+		catch (XmlException e)
+		{
+			return deduceSoapVersion(requestContentType,(XmlObject)null);
+		}
 	}
 }

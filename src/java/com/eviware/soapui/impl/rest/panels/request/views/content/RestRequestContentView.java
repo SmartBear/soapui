@@ -80,7 +80,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 			p.add( buildToolbar(), BorderLayout.NORTH );
 			p.add( buildContent(), BorderLayout.CENTER );
 			
-			split = UISupport.createVerticalSplit( new JWadlParamsTable( restRequest.getParams() ), p );
+			split = UISupport.createVerticalSplit( new JWadlParamsTable( restRequest.getParams(), true ), p );
 			
 			panel = new JPanel( new BorderLayout() );
 			panel.add( split);

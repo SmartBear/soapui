@@ -119,7 +119,10 @@ public class WsdlMockRequest implements MockRequest
 			}
 		}
 
-		soapVersion = SoapUtils.initSoapVersion( contentType );
+		soapVersion = SoapUtils.deduceSoapVersion( contentType, getRequestXmlObject() );
+		if( soapVersion == null )
+			soapVersion = SoapVersion.Soap11;
+		
 		soapAction = SoapUtils.getSoapAction( soapVersion, requestHeaders );
 	}
 

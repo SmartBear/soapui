@@ -398,11 +398,6 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 	{
 	}
 
-	public String buildPath(SubmitContext context)
-	{
-		return getPath();
-	}
-
 	public RestParamProperty addProperty(RestParamProperty prop)
 	{
 		return params.addProperty(prop);

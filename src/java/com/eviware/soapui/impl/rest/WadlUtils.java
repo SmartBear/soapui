@@ -24,6 +24,7 @@ import org.apache.xmlbeans.XmlObject;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.StringUtils;
 import com.sun.research.wadl.x2006.x10.ApplicationDocument;
 import com.sun.research.wadl.x2006.x10.ParamStyle;
@@ -63,8 +64,18 @@ public class WadlUtils
 
 		ApplicationDocument applicationDocument = ApplicationDocument.Factory.newInstance();
 		Application application = applicationDocument.addNewApplication();
+		
+		createDoc( application.addNewDoc(), restService );
+		
 		Resources resources = application.addNewResources();
-		resources.setBase(restService.getBasePath());
+
+		// use first endpoint for now -> this should be configurable
+		String basePath = restService.getBasePath();
+		String[] endpoints = restService.getEndpoints();
+		if( endpoints.length > 0 )
+			basePath = endpoints[0] + basePath;
+		
+		resources.setBase(basePath);
 
 		for (int c = 0; c < restService.getOperationCount(); c++)
 		{
@@ -79,7 +90,7 @@ public class WadlUtils
 	private static XmlObject generateWadlResource(RestResource resource)
 	{
 		Resource resourceConfig = Resource.Factory.newInstance();
-		createDoc(resourceConfig.addNewDoc(), resource.getName(), resource.getDescription());
+		createDoc(resourceConfig.addNewDoc(), resource );
 		String path = resource.getPath();
 		if( path.startsWith("/"))
 			path = path.length() > 1 ? path.substring(1) : "";
@@ -145,6 +156,11 @@ public class WadlUtils
 		paramConfig.setStyle(style);
 	}
 
+	private static void createDoc( Doc docConfig, ModelItem modelItem )
+	{
+		createDoc( docConfig, modelItem.getName(), modelItem.getDescription() );
+	}
+	
 	private static void createDoc(Doc docConfig, String name, String description)
 	{
 		docConfig.setLang("en");
@@ -155,7 +171,7 @@ public class WadlUtils
 	private static void generateWadlMethod(Resource resourceConfig, RestRequest request)
 	{
 		Method methodConfig = resourceConfig.addNewMethod();
-		createDoc(methodConfig.addNewDoc(), request.getName(), request.getDescription());
+		createDoc(methodConfig.addNewDoc(), request );
 		methodConfig.setName(request.getMethod().toString());
 		methodConfig.setId(request.getName());
 		Request requestConfig = methodConfig.addNewRequest();

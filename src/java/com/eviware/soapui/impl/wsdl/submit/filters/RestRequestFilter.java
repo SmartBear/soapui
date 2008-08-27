@@ -13,6 +13,8 @@
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 
 import org.apache.commons.httpclient.HttpMethod;
@@ -28,6 +30,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransp
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
 
 /**
  * RequestFilter that adds SOAP specific headers
@@ -35,7 +38,7 @@ import com.eviware.soapui.support.StringUtils;
  * @author Ole.Matzura
  */
 
-public class RestParametersRequestFilter extends AbstractRequestFilter
+public class RestRequestFilter extends AbstractRequestFilter
 {
 	@SuppressWarnings("deprecation")
 	@Override
@@ -43,7 +46,7 @@ public class RestParametersRequestFilter extends AbstractRequestFilter
 	{
 		HttpMethod httpMethod = (HttpMethod) context.getProperty(BaseHttpRequestTransport.HTTP_METHOD);
 
-		String path = request.buildPath(context);
+		String path = request.getPath();
 		StringBuffer query = new StringBuffer();
 		
 		XmlBeansRestParamsTestPropertyHolder params = request.getParams();

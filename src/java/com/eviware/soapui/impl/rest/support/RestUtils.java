@@ -3,6 +3,7 @@ package com.eviware.soapui.impl.rest.support;
 import java.net.URL;
 import java.util.List;
 
+import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
@@ -12,6 +13,7 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringList;
 import com.sun.research.wadl.x2006.x10.ApplicationDocument;
+import com.sun.research.wadl.x2006.x10.RepresentationType;
 import com.sun.research.wadl.x2006.x10.ApplicationDocument.Application;
 import com.sun.research.wadl.x2006.x10.DocDocument.Doc;
 import com.sun.research.wadl.x2006.x10.MethodDocument.Method;
@@ -133,10 +135,30 @@ public class RestUtils
 			RestRequest request = newResource.addNewRequest( getFirstTitle(method.getDocList(), method.getName() + " - " + method.getId()));
 			request.setMethod( RestRequest.RequestMethod.valueOf( method.getName() ));
 			
-			for( Param param : method.getRequest().getParamList())
+			if( method.getRequest() != null )
 			{
-				RestParamProperty p = request.addProperty(param.getName());
-				initParam( param, p );
+				for( Param param : method.getRequest().getParamList())
+				{
+					RestParamProperty p = request.addProperty(param.getName());
+					initParam( param, p );
+				}
+			}
+
+			if( method.getResponse() != null )
+			{
+				for( RepresentationType representationType : method.getResponse().getRepresentationList())
+				{
+					RestRepresentation restRepresentation = request.addNewRepresentation(RestRepresentation.Type.RESPONSE);
+					restRepresentation.setMediaType(representationType.getMediaType());
+					restRepresentation.setStatus(representationType.getStatus());
+				}
+
+				for( RepresentationType representationType : method.getResponse().getFaultList())
+				{
+					RestRepresentation restRepresentation = request.addNewRepresentation(RestRepresentation.Type.FAULT);
+					restRepresentation.setMediaType(representationType.getMediaType());
+					restRepresentation.setStatus(representationType.getStatus());
+				}
 			}
 		}
 	}

@@ -350,7 +350,7 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 
 	private WsdlOperation findOperation() throws Exception
 	{
-		soapVersion = SoapUtils.initSoapVersion( requestContentType );
+		soapVersion = SoapUtils.deduceSoapVersion( requestContentType, getRequestContent() );
 		if( soapVersion == null )
 			throw new Exception( "Unrecognized SOAP Version" );
 
@@ -375,7 +375,7 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 	public SoapVersion getSoapVersion()
 	{
 		if( soapVersion == null )
-			soapVersion = SoapUtils.initSoapVersion( requestHeaders.get( "Content-Type" ) );
+			soapVersion = SoapUtils.deduceSoapVersion( requestHeaders.get( "Content-Type" ), getRequestContent() );
 		
 		return soapVersion;
 	}

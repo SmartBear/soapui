@@ -49,7 +49,7 @@ public class JWadlParamsTable extends JPanel
 	private JInspectorPanel inspectorPanel;
 	private StringListFormComponent optionsFormComponent;
 
-	public JWadlParamsTable(XmlBeansRestParamsTestPropertyHolder params)
+	public JWadlParamsTable(XmlBeansRestParamsTestPropertyHolder params, boolean showInspector)
 	{
 		super( new BorderLayout() );
 		this.params = params;
@@ -81,13 +81,20 @@ public class JWadlParamsTable extends JPanel
 			}} );
 		
 		add( buildToolbar(), BorderLayout.NORTH );
-		
-		inspectorPanel = new JInspectorPanel( new JScrollPane( paramsTable) );
-		detailsInspector = new JComponentInspector<JComponent>( buildDetails(), "Parameter Details", 
-				"Details for the selected Parameter", false );
-		inspectorPanel.addInspector(detailsInspector);
-		
-		add( inspectorPanel, BorderLayout.CENTER );
+	
+		if( showInspector )
+		{
+			inspectorPanel = new JInspectorPanel( new JScrollPane( paramsTable) );
+			detailsInspector = new JComponentInspector<JComponent>( buildDetails(), "Parameter Details", 
+					"Details for the selected Parameter", false );
+			inspectorPanel.addInspector(detailsInspector);
+			
+			add( inspectorPanel, BorderLayout.CENTER );
+		}
+		else
+		{
+			add( new JScrollPane( paramsTable ), BorderLayout.CENTER);
+		}
 	}
 
 	private JComponent buildDetails()

@@ -239,7 +239,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 
 	private WsdlOperation findOperation() throws Exception
 	{
-		soapVersion = SoapUtils.initSoapVersion(requestContentType);
+		soapVersion = SoapUtils.deduceSoapVersion(requestContentType, XmlObject.Factory.parse(getRequestContent()));
 		if (soapVersion == null)
 			throw new Exception("Unrecognized SOAP Version");
 
