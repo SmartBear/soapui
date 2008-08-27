@@ -70,12 +70,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.DefinitionCacheConfig;
 import com.eviware.soapui.config.DefinitionCacheTypeConfig;
 import com.eviware.soapui.config.DefintionPartConfig;
 import com.eviware.soapui.config.WsaVersionTypeConfig;
+import com.eviware.soapui.config.WsdlRequestConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
 import com.eviware.soapui.support.types.StringList;
@@ -1009,4 +1013,56 @@ public class WsdlUtils
 		
 		return definitionCache;
 	}
+	public static void createDefaultedAction(WsdlRequest requestImpl)
+	{
+		try
+		{
+			//construct default action
+			Definition definition = requestImpl.getOperation().getInterface().getWsdlContext().getDefinition();
+			String targetNamespace = definition.getTargetNamespace();
+			String portTypeName = requestImpl.getOperation().getInterface().getBinding().getPortType().getQName().getLocalPart();
+			String operationName = requestImpl.getOperation().getName();
+			requestImpl.getWsaConfig().setAction(targetNamespace + "/" + portTypeName + "/" + operationName);
+			
+		}
+		catch (Exception e)
+		{
+			SoapUI.logError( e );
+		}
+	}
+	public static void createDefaultedAction(WsdlOperation requestImpl, WsdlRequestConfig wsdlRequestConfig)
+	{
+		try
+		{
+			//construct default action
+			Definition definition = requestImpl.getInterface().getWsdlContext().getDefinition();
+			String targetNamespace = definition.getTargetNamespace();
+			String portTypeName = requestImpl.getInterface().getBinding().getPortType().getQName().getLocalPart();
+			String operationName = requestImpl.getName();
+			wsdlRequestConfig.getWsaConfig().setAction(targetNamespace + "/" + portTypeName + "/" + operationName);
+			
+		}
+		catch (Exception e)
+		{
+			SoapUI.logError( e );
+		}
+	}
+	public static void createDefaultedAction(WsdlMockResponse response)
+	{
+		try
+		{
+			//construct default action
+			Definition definition = response.getMockOperation().getOperation().getInterface().getWsdlContext().getDefinition();
+			String targetNamespace = definition.getTargetNamespace();
+			String portTypeName = response.getMockOperation().getOperation().getInterface().getBinding().getPortType().getQName().getLocalPart();
+			String operationName = response.getMockOperation().getOperation().getOutputName();
+			response.getWsaConfig().setAction(targetNamespace + "/" + portTypeName + "/" + operationName);
+			
+		}
+		catch (Exception e)
+		{
+			SoapUI.logError( e );
+		}
+	}
+
 }

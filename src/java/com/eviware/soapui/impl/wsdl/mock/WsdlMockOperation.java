@@ -22,6 +22,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.ImageIcon;
+import javax.wsdl.Definition;
+import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlCursor;
@@ -37,6 +39,7 @@ import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
+import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
@@ -206,9 +209,34 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
 			setDefaultResponse( mockResponse.getName() );
 		
 		(getMockService()).fireMockResponseAdded( mockResponse );
+		//add ws-a action
+   	String [] attrs = WsdlUtils.getExentsibilityAttributes(getOperation().getBindingOperation().getOperation().getOutput(), new QName("http://www.w3.org/2006/05/addressing/wsdl", "Action") );
+   	if (attrs.length > 0)
+		{
+   		mockResponse.getWsaConfig().setAction(attrs[0]);
+		} else {
+			WsdlUtils.createDefaultedAction(mockResponse);
+		}
 		
 		return mockResponse;
 	}
+//	private void createDefaultedAction(WsdlMockResponse response)
+//	{
+//		try
+//		{
+//			//construct default action
+//			Definition definition = response.getMockOperation().getOperation().getInterface().getWsdlContext().getDefinition();
+//			String targetNamespace = definition.getTargetNamespace();
+//			String portTypeName = response.getMockOperation().getOperation().getInterface().getBinding().getPortType().getQName().getLocalPart();
+//			String operationName = response.getMockOperation().getOperation().getOutputName();
+//			response.getWsaConfig().setAction(targetNamespace + "/" + portTypeName + "/" + operationName);
+//			
+//		}
+//		catch (Exception e)
+//		{
+//			SoapUI.logError( e );
+//		}
+//	}
 	
 	public WsdlMockResponse addNewMockResponse( String name, boolean createResponse )
 	{

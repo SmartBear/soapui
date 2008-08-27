@@ -364,7 +364,7 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable
 
 	public AssertableType getAssertableType()
 	{
-		return AssertableType.RESPONSE;
+		return AssertableType.BOTH;
 	}
 
 	public String getInterfaceName()

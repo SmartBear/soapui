@@ -12,9 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.actions.mockresponse;
 
+import javax.xml.namespace.QName;
+
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.support.AbstractAddToTestCaseAction;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SchemaComplianceAssertion;
@@ -82,6 +85,15 @@ public class CreateTestRequestForMockResponseAction extends AbstractAddToTestCas
 		WsdlTestRequestStep testStep = (WsdlTestRequestStep) testCase.insertTestStep( 
 				WsdlTestRequestStepFactory.createConfig( mockResponse.getMockOperation().getOperation(), name ), position );
 
+		//add ws-a action
+   	String [] attrs = WsdlUtils.getExentsibilityAttributes(testStep.getOperation().getBindingOperation().getOperation().getInput(), new QName("http://www.w3.org/2006/05/addressing/wsdl", "Action") );
+   	if (attrs.length > 0)
+		{
+   		testStep.getTestRequest().getWsaConfig().setAction(attrs[0]);
+		} else {
+			WsdlUtils.createDefaultedAction(testStep.getTestRequest());
+		}
+   	
 		if( enabled )
 		{
 			if( dialogValues.getBoolean( ADD_SOAP_RESPONSE_ASSERTION ))
@@ -118,3 +130,4 @@ public class CreateTestRequestForMockResponseAction extends AbstractAddToTestCas
 		dialogValues.put( ADD_SOAP_RESPONSE_ASSERTION, Boolean.TRUE.toString() );
 	}
 }
+

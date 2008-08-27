@@ -19,9 +19,9 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.support.editor.inspectors.wsa.WsaUtils;
 
 /**
  * RequestFilter that expands properties in request content
@@ -50,7 +50,7 @@ public class WsaRequestFilter extends AbstractRequestFilter
 //	TODO check UsingAddressing for particular endpoint when running a request
 //			((WsdlRequest)wsdlRequest).getEndpoint();
 			SoapVersion soapVersion = ((WsdlRequest)wsdlRequest).getOperation().getInterface().getSoapVersion();
-			content = new WsaUtils(soapVersion, operation).addWSAddressing(content, (WsdlRequest) wsdlRequest, httpMethod);
+			content = new WsaUtils(soapVersion, operation).addWSAddressingRequest(content, (WsdlRequest) wsdlRequest, httpMethod);
 			if( content != null )
 				context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, content );
 		}

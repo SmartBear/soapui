@@ -146,41 +146,24 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
       requestImpl.setName( name );
       requests.add( requestImpl );
       
-      if(!getInterface().getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString()))
-      {
+//      if(!getInterface().getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString()))
+//      {
       	requestImpl.setWsAddressing(true);
         
+   		//add ws-a action
       	String [] attrs = WsdlUtils.getExentsibilityAttributes(getBindingOperation().getOperation().getInput(), new QName("http://www.w3.org/2006/05/addressing/wsdl", "Action") );
       	if (attrs.length > 0)
 			{
          	requestImpl.getWsaConfig().setAction(attrs[0]);
 			} else {
-				createDefaultedAction(requestImpl);
+				WsdlUtils.createDefaultedAction(requestImpl);
 			}
       	
-      }
+//      }
       
       (getInterface()).fireRequestAdded( requestImpl );
       return requestImpl;
    }
-
-	private void createDefaultedAction(WsdlRequest requestImpl)
-	{
-		try
-		{
-			//construct default action
-			Definition definition = requestImpl.getOperation().getInterface().getWsdlContext().getDefinition();
-			String targetNamespace = definition.getTargetNamespace();
-			String portTypeName = requestImpl.getOperation().getInterface().getBinding().getPortType().getQName().getLocalPart();
-			String operationName = requestImpl.getOperation().getName();
-			requestImpl.getWsaConfig().setAction(targetNamespace + "/" + portTypeName + "/" + operationName);
-			
-		}
-		catch (Exception e)
-		{
-			SoapUI.logError( e );
-		}
-	}
 
    public WsdlInterface getInterface()
    {

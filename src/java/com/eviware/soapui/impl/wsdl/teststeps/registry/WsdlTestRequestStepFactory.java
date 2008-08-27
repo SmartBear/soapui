@@ -15,14 +15,22 @@ package com.eviware.soapui.impl.wsdl.teststeps.registry;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.RequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.config.WsdlRequestConfig;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
+import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
@@ -106,6 +114,7 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory
       requestStepConfig.setOperation( operation.getName() );
 
       WsdlRequestConfig testRequestConfig = requestStepConfig.addNewRequest();
+      testRequestConfig.addNewWsaConfig();
       
       testRequestConfig.setName( stepName );
       testRequestConfig.setEncoding( "UTF-8" );
@@ -116,7 +125,15 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory
       String requestContent = operation.createRequest( 
       			SoapUI.getSettings().getBoolean( WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS ));
       testRequestConfig.addNewRequest().setStringValue( requestContent );
-      
+
+		//add ws-a action
+   	String [] attrs = WsdlUtils.getExentsibilityAttributes(operation.getBindingOperation().getOperation().getInput(), new QName("http://www.w3.org/2006/05/addressing/wsdl", "Action") );
+   	if (attrs.length > 0)
+		{
+   		testRequestConfig.getWsaConfig().setAction(attrs[0]);
+		} else {
+			WsdlUtils.createDefaultedAction(operation, testRequestConfig);
+		}
       TestStepConfig testStep = TestStepConfig.Factory.newInstance();
       testStep.setType( REQUEST_TYPE );
       testStep.setConfig( requestStepConfig );

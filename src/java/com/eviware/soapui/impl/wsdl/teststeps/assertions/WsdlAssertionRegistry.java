@@ -43,14 +43,14 @@ import com.eviware.soapui.support.types.StringToStringMap;
  * @author Ole.Matzura
  */
 
-public class TestAssertionRegistry
+public class WsdlAssertionRegistry
 {
-   private static TestAssertionRegistry instance;
+   private static WsdlAssertionRegistry instance;
 	private Map<String, TestAssertionFactory > availableAssertions = new HashMap<String,TestAssertionFactory >();
 	private StringToStringMap assertionLabels = new StringToStringMap();
-	private final static Logger log = Logger.getLogger( TestAssertionRegistry.class );
+	private final static Logger log = Logger.getLogger( WsdlAssertionRegistry.class );
 	
-	public TestAssertionRegistry()
+	public WsdlAssertionRegistry()
 	{
 		addAssertion( new SoapResponseAssertion.Factory() );
 		addAssertion( new SchemaComplianceAssertion.Factory() );
@@ -72,10 +72,10 @@ public class TestAssertionRegistry
 		assertionLabels.put(factory.getAssertionLabel(), factory.getAssertionId() );
 	}
 
-	public static synchronized TestAssertionRegistry getInstance()
+	public static synchronized WsdlAssertionRegistry getInstance()
 	{
 		if( instance == null )
-			instance = new TestAssertionRegistry();
+			instance = new WsdlAssertionRegistry();
 		
 		return instance;
 	}

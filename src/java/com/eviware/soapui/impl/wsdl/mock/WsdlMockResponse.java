@@ -51,9 +51,7 @@ import com.eviware.soapui.impl.wsdl.WsdlHeaderPart;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.submit.filters.RemoveEmptyContentRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.AttachmentUtils;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BodyPartAttachment;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.MimeMessageMockResponseEntity;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.MockResponseDataSource;
 import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
@@ -68,6 +66,7 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaContainer;
+import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils.SoapHeader;
@@ -88,7 +87,6 @@ import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.editor.inspectors.wsa.WsaUtils;
 import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -245,7 +243,10 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			}
 			responseContent = PropertyExpansionUtils.expandProperties( context, responseContent, true );
 			
-			responseContent = new WsaUtils(getSoapVersion(), getMockOperation().getOperation()).addWSAddressing(responseContent, this);
+			if (this.getWsaConfig().isWsaEnabled())
+			{
+				responseContent = new WsaUtils(getSoapVersion(), getMockOperation().getOperation()).addWSAddressingMockResponse(responseContent, this, request);
+			}
 
 			String outgoingWss = getOutgoingWss();
 			if( StringUtils.isNullOrEmpty( outgoingWss ))

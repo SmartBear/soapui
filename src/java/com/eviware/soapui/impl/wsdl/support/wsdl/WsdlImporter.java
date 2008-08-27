@@ -35,7 +35,6 @@ import com.eviware.soapui.impl.wsdl.support.BindingImporter;
 import com.eviware.soapui.impl.wsdl.support.soap.Soap11HttpBindingImporter;
 import com.eviware.soapui.impl.wsdl.support.soap.Soap12HttpBindingImporter;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
-import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
 

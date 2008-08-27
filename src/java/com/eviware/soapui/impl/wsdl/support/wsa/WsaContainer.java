@@ -11,7 +11,6 @@
  */
 package com.eviware.soapui.impl.wsdl.support.wsa;
 
-import com.jgoodies.binding.value.ValueModel;
 
 public interface WsaContainer
 {

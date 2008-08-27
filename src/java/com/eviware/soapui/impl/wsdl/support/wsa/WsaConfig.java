@@ -63,6 +63,16 @@ public class WsaConfig implements PropertyChangeNotifier
 	{
 		return wsaConfig.getTo();
 	}
+	public String getRelationshipType()
+	{
+		return wsaConfig.getRelationshipType();
+	}
+
+	public String getRelatesTo()
+	{
+		return wsaConfig.getRelatesTo();
+	}
+
 	public String getMessageID()
 	{
 		return wsaConfig.getMessageID();
@@ -117,6 +127,18 @@ public class WsaConfig implements PropertyChangeNotifier
 		propertyChangeSupport.firePropertyChange("to", oldValue, arg0);
 	}
 
+	public void setRelationshipType(String arg0)
+	{
+		String oldValue = getRelationshipType();
+		wsaConfig.setRelationshipType(arg0);
+		propertyChangeSupport.firePropertyChange("relationshipType", oldValue, arg0);
+	}
+	public void setRelatesTo(String arg0)
+	{
+		String oldValue = getRelatesTo();
+		wsaConfig.setRelatesTo(arg0);
+		propertyChangeSupport.firePropertyChange("relatesTo", oldValue, arg0);
+	}
 	public void setMessageID(String arg0)
 	{
 		String oldValue = getMessageID();
@@ -171,5 +193,7 @@ public class WsaConfig implements PropertyChangeNotifier
 	{
 		propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
 	}
+
+
 
 }
