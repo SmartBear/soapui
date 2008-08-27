@@ -1047,4 +1047,9 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 		
 	}
 
+	public WsdlOperation getOperation()
+	{
+		return getMockOperation().getOperation();
+	}
+
 }

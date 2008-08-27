@@ -15,21 +15,15 @@ package com.eviware.soapui.impl.wsdl.teststeps.registry;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig;
-import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.RequestStepConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.config.WsaVersionTypeConfig;
+import com.eviware.soapui.config.WsaConfigConfig;
 import com.eviware.soapui.config.WsdlRequestConfig;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
-import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
@@ -41,6 +35,7 @@ import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.settings.WsdlSettings;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.x.form.XForm;
@@ -90,6 +85,7 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory
       testRequestConfig.addNewRequest().setStringValue( request.getRequestContent() );
       testRequestConfig.setOutgoingWss( request.getOutgoingWss() );
       testRequestConfig.setIncomingWss( request.getIncomingWss() );
+      testRequestConfig.setWsaConfig((WsaConfigConfig) request.getConfig().getWsaConfig().copy());
 
       if( (CredentialsConfig) request.getConfig().getCredentials() != null )
       {
@@ -127,13 +123,10 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory
       testRequestConfig.addNewRequest().setStringValue( requestContent );
 
 		//add ws-a action
-   	String [] attrs = WsdlUtils.getExentsibilityAttributes(operation.getBindingOperation().getOperation().getInput(), new QName("http://www.w3.org/2006/05/addressing/wsdl", "Action") );
-   	if (attrs.length > 0)
-		{
-   		testRequestConfig.getWsaConfig().setAction(attrs[0]);
-		} else {
-			WsdlUtils.createDefaultedAction(operation, testRequestConfig);
-		}
+      String defaultAction = WsdlUtils.getDefaultWsaAction(operation, false);
+      if( StringUtils.hasContent(defaultAction))
+      	testRequestConfig.getWsaConfig().setAction(defaultAction);
+
       TestStepConfig testStep = TestStepConfig.Factory.newInstance();
       testStep.setType( REQUEST_TYPE );
       testStep.setConfig( requestStepConfig );

@@ -12,13 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.actions.request;
 
-import javax.xml.namespace.QName;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.actions.support.AbstractAddToTestCaseAction;
-import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SchemaComplianceAssertion;
@@ -134,15 +131,7 @@ public class AddRequestToTestCaseAction extends AbstractAddToTestCaseAction<Wsdl
 		{
 			UISupport.selectAndShow( testCase );
 		}
-			
-		//add ws-a action
-   	String [] attrs = WsdlUtils.getExentsibilityAttributes(testStep.getOperation().getBindingOperation().getOperation().getInput(), new QName("http://www.w3.org/2006/05/addressing/wsdl", "Action") );
-   	if (attrs.length > 0)
-		{
-   		testStep.getTestRequest().getWsaConfig().setAction(attrs[0]);
-		} else {
-			WsdlUtils.createDefaultedAction(testStep.getTestRequest());
-		}
+		
 		return testStep;
 	}
 	

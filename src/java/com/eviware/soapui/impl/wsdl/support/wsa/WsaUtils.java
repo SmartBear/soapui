@@ -17,14 +17,11 @@ import java.util.UUID;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MustUnderstandTypeConfig;
 import com.eviware.soapui.config.WsaVersionTypeConfig;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
@@ -32,7 +29,6 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.settings.SSLSettings;
 import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -121,13 +117,11 @@ public class WsaUtils
 			Element header = addWsAddressingCommon(content, wsaContainer);
 
 			String action = wsaContainer.getWsaConfig().getAction();
-			if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_ACTION))
+			if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_ACTION) && StringUtils.isNullOrEmpty(action))
 			{
-				if (action == null || action.isEmpty())
-				{
-					WsdlUtils.createDefaultedAction((WsdlRequest)wsaContainer);
-				}
+				action = WsdlUtils.getDefaultWsaAction( wsaContainer.getOperation(), false );
 			}
+			
 			if (!StringUtils.isNullOrEmpty(action))
 			{
 				header.appendChild(builder.createWsaChildElement("wsa:Action", elm, wsaContainer.getWsaConfig().getAction()));
@@ -192,12 +186,9 @@ public class WsaUtils
 			Element header = addWsAddressingCommon(content, wsaContainer);
 
 			String action = wsaContainer.getWsaConfig().getAction();
-			if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_ACTION))
+			if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_ACTION) && StringUtils.isNullOrEmpty(action))
 			{
-				if (action == null || action.isEmpty())
-				{
-					WsdlUtils.createDefaultedAction((WsdlMockResponse)wsaContainer);
-				}
+				action = WsdlUtils.getDefaultWsaAction( wsaContainer.getOperation(), true );
 			}
 			if (!StringUtils.isNullOrEmpty(action) )
 			{

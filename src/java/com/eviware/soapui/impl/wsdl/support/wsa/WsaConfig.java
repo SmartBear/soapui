@@ -194,6 +194,11 @@ public class WsaConfig implements PropertyChangeNotifier
 		propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
 	}
 
+	public WsaContainer getWsaContainer()
+	{
+		return container;
+	}
+
 
 
 }
