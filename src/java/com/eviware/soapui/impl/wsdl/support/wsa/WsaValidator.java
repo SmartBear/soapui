@@ -13,6 +13,8 @@ import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * Validating class for WS Addressing
@@ -71,27 +73,31 @@ public class WsaValidator
 			}
 			
 			//Action is Mandatory
-			NodeList actionList = header.getElementsByTagNameNS(wsaVersionNameSpace, "Action");
-			if (actionList.getLength() == 0 || actionList.item(0).getFirstChild() == null)
+			Element actionNode = XmlUtils.getFirstChildElementNS(header, wsaVersionNameSpace, "Action");
+			if (actionNode == null)
 			{
 				throw new AssertionException( new AssertionError("WS-A Action property is not specified") );
 			}
+			String actionValue = XmlUtils.getElementText(actionNode);
+			if (StringUtils.isNullOrEmpty(actionValue))
+			{
+				throw new AssertionException( new AssertionError("WS-A Action property is empty") );
+			}
 			
 			//To is Mandatory
-			NodeList destinationList = header.getElementsByTagNameNS(wsaVersionNameSpace, "To");
-			if (destinationList.getLength() == 0 || destinationList.item(0).getFirstChild() == null) {
+			Element toNode = XmlUtils.getFirstChildElementNS(header,wsaVersionNameSpace,"To");
+			if (toNode == null) {
 				throw new AssertionException( new AssertionError("WS-A To property is not specified") );
 			}
-			Element toNode = (Element)destinationList.item(0).getChildNodes();
-			NodeList toAddresses = toNode.getElementsByTagNameNS(wsaVersionNameSpace, "Address");
-			if (toAddresses.getLength() == 0)
+			Element addressNode = XmlUtils.getFirstChildElementNS(toNode, wsaVersionNameSpace, "Address");
+			if( addressNode == null )
 			{
 				throw new AssertionException( new AssertionError("WS-A To Address property is not specified") );
 			}
-			String toAddressValue = toAddresses.item(0).getFirstChild().getNodeValue();
-			if (toAddressValue == null || toAddressValue.isEmpty())
+			String toAddressValue = XmlUtils.getElementText(addressNode);
+			if (StringUtils.isNullOrEmpty(toAddressValue))
 			{
-				throw new AssertionException( new AssertionError("WS-A To Address property is not specified") );
+				throw new AssertionException( new AssertionError("WS-A To Address property is empty") );
 			}
 				
 		}
@@ -108,27 +114,32 @@ public class WsaValidator
 		if (operation.isRequestResponse())
 		{
 			//MessageId is Mandatory
-			NodeList msgIdsList = header.getElementsByTagNameNS(wsaVersionNameSpace, "MessageID");
-			if (msgIdsList.getLength() == 0 || msgIdsList.item(0).getFirstChild() == null)
+			Element msgNode = XmlUtils.getFirstChildElementNS(header, wsaVersionNameSpace, "MessageID");
+			if (msgNode == null)
 			{
 				throw new AssertionException( new AssertionError("WS-A MessageID property is not specified") );
 			}
+			String msgValue = XmlUtils.getElementText(msgNode);
+			if (StringUtils.isNullOrEmpty(msgValue))
+			{
+				throw new AssertionException( new AssertionError("WS-A MessageID property is empty") );
+			}
 			
 			//ReplyTo is Mandatory
-			NodeList repliesToList = header.getElementsByTagNameNS(wsaVersionNameSpace, "ReplyTo");
-			if (repliesToList.getLength() == 0 || repliesToList.item(0).getFirstChild() == null) {
+			Element replyToNode = XmlUtils.getFirstChildElementNS(header,wsaVersionNameSpace, "ReplyTo");
+			if (replyToNode == null)
+			{
 				throw new AssertionException( new AssertionError("WS-A ReplyTo property is not specified") );
 			}
-			Element replyToNode = (Element)repliesToList.item(0).getChildNodes();
-			NodeList replyToAddresses = replyToNode.getElementsByTagNameNS(wsaVersionNameSpace, "Address");
-			if (replyToAddresses.getLength() == 0 )
+			Element addressNode = XmlUtils.getFirstChildElementNS(replyToNode, wsaVersionNameSpace, "Address");
+			if (addressNode == null)
 			{
 				throw new AssertionException( new AssertionError("WS-A ReplyTo Address property is not specified") );
 			}
-			String replyToAddressValue = replyToAddresses.item(0).getFirstChild().getNodeValue();
-			if (replyToAddressValue == null || replyToAddressValue.isEmpty())
+			String replyToAddressValue = XmlUtils.getElementText(addressNode);
+			if (StringUtils.isNullOrEmpty(replyToAddressValue))
 			{
-				throw new AssertionException( new AssertionError("WS-A ReplyTo Address property is not specified") );
+				throw new AssertionException( new AssertionError("WS-A ReplyTo Address property is empty") );
 			}
 		}
 	}
@@ -137,25 +148,24 @@ public class WsaValidator
 		validateWsAddressingCommon();
 		
 		//To is Mandatory
-		NodeList relatesToList = header.getElementsByTagNameNS(wsaVersionNameSpace, "RelatesTo");
-		if (relatesToList.getLength() == 0 || relatesToList.item(0).getFirstChild() == null) {
+		Element relatesToNode = XmlUtils.getFirstChildElementNS(header,wsaVersionNameSpace, "RelatesTo");
+		if (relatesToNode == null) {
 			throw new AssertionException( new AssertionError("WS-A RelatesTo property is not specified") );
 		}
-		Element relatesToNode = (Element)relatesToList.item(0).getChildNodes();
 		String relationshipType = relatesToNode.getAttribute("RelationshipType");
-		if (relationshipType == null || relationshipType.isEmpty())
+		if (StringUtils.isNullOrEmpty(relationshipType))
 		{
 			throw new AssertionException( new AssertionError("WS-A RelationshipType is not specified") );
 		}
-		NodeList relatesToAddresses = relatesToNode.getElementsByTagNameNS(wsaVersionNameSpace, "Address");
-		if (relatesToAddresses.getLength() == 0)
+		Element relatesToAddressNode = XmlUtils.getFirstChildElementNS(relatesToNode,wsaVersionNameSpace, "Address");
+		if (relatesToAddressNode == null)
 		{
 			throw new AssertionException( new AssertionError("WS-A RelatesTo Address property is not specified") );
 		}
-		String relatesToAddressesValue = relatesToAddresses.item(0).getFirstChild().getNodeValue();
-		if (relatesToAddressesValue == null || relatesToAddressesValue.isEmpty())
+		String relatesToAddressesValue = XmlUtils.getElementText(relatesToAddressNode);
+		if (StringUtils.isNullOrEmpty(relatesToAddressesValue))
 		{
-			throw new AssertionException( new AssertionError("WS-A RelatesTo Address property is not specified") );
+			throw new AssertionException( new AssertionError("WS-A RelatesTo Address property is empty") );
 		}
 	}
 	

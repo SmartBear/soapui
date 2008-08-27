@@ -34,6 +34,8 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.settings.SSLSettings;
 import com.eviware.soapui.settings.WsaSettings;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * WS Addressing-related utility-methods..
@@ -98,12 +100,12 @@ public class WsaUtils
 
 
 		String from = wsaContainer.getWsaConfig().getFrom();
-		if (from != null && from.length() > 0)
+		if (!StringUtils.isNullOrEmpty(from))
 		{
 			header.appendChild(builder.createWsaAddressChildElement("wsa:From", elm, from));
 		}
 		String faultTo = wsaContainer.getWsaConfig().getFaultTo();
-		if (faultTo != null && faultTo.length() > 0)
+		if (!StringUtils.isNullOrEmpty(faultTo))
 		{
 			header.appendChild(builder.createWsaAddressChildElement("wsa:FaultTo", elm, faultTo));
 		}
@@ -126,10 +128,13 @@ public class WsaUtils
 					WsdlUtils.createDefaultedAction((WsdlRequest)wsaContainer);
 				}
 			}
-			header.appendChild(builder.createWsaChildElement("wsa:Action", elm, wsaContainer.getWsaConfig().getAction()));
+			if (!StringUtils.isNullOrEmpty(action))
+			{
+				header.appendChild(builder.createWsaChildElement("wsa:Action", elm, wsaContainer.getWsaConfig().getAction()));
+			}
 
 			String replyTo = wsaContainer.getWsaConfig().getReplyTo();
-			if (replyTo != null && replyTo.length() > 0)
+			if (!StringUtils.isNullOrEmpty(replyTo))
 			{
 				header.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", elm, replyTo));
 			}
@@ -143,13 +148,13 @@ public class WsaUtils
 
 			String relatesTo = wsaContainer.getWsaConfig().getRelationshipType();
 			String relationshipType = wsaContainer.getWsaConfig().getRelationshipType();
-			if (relationshipType != null && relationshipType.length() > 0 && relatesTo != null && relatesTo.length() > 0)
+			if (!StringUtils.isNullOrEmpty(relationshipType) && !StringUtils.isNullOrEmpty(relatesTo))
 			{
 				header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", elm, relationshipType, relatesTo));
 			}
 
 			String msgId = wsaContainer.getWsaConfig().getMessageID();
-			if (msgId != null && msgId.length() > 0)
+			if (!StringUtils.isNullOrEmpty(msgId))
 			{
 				header.appendChild(builder.createWsaChildElement("wsa:MessageID", elm, msgId));
 			}
@@ -160,7 +165,7 @@ public class WsaUtils
 			}
 
 			String to = wsaContainer.getWsaConfig().getTo();
-			if (to != null && to.length() == 0)
+			if (!StringUtils.isNullOrEmpty(to))
 			{
 				header.appendChild(builder.createWsaAddressChildElement("wsa:To", elm, to));
 			}
@@ -194,10 +199,13 @@ public class WsaUtils
 					WsdlUtils.createDefaultedAction((WsdlMockResponse)wsaContainer);
 				}
 			}
-			header.appendChild(builder.createWsaChildElement("wsa:Action", elm, wsaContainer.getWsaConfig().getAction()));
+			if (!StringUtils.isNullOrEmpty(action) )
+			{
+				header.appendChild(builder.createWsaChildElement("wsa:Action", elm, wsaContainer.getWsaConfig().getAction()));
+			}
 
 			String replyTo = wsaContainer.getWsaConfig().getReplyTo();
-			if (replyTo != null && replyTo.length() > 0)
+			if (!StringUtils.isNullOrEmpty(replyTo))
 			{
 				header.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", elm, replyTo));
 			}
@@ -207,39 +215,41 @@ public class WsaUtils
 					.getDomNode();
 
 			// request.messageId = mockResponse.relatesTo so get it
-			NodeList msgIds = requestHeader.getElementsByTagNameNS(wsaVersionNameSpace, "MessageID");
+			Element msgNode = XmlUtils.getFirstChildElementNS(requestHeader, wsaVersionNameSpace, "MessageID");
 			String requestMessageId = null;
-			if (msgIds.getLength() > 0)
+			if (msgNode != null)
 			{
-				requestMessageId = msgIds.item(0).getFirstChild().getNodeValue();
+				requestMessageId = XmlUtils.getElementText(msgNode);
 			}
 
 			// request.replyTo = mockResponse.to so get it
-			NodeList repliesTo = requestHeader.getElementsByTagNameNS(wsaVersionNameSpace, "ReplyTo");
-			Node replyToNode = repliesTo.item(0);
-			String requestReplyTo = null;
+			Element replyToNode = XmlUtils.getFirstChildElementNS(requestHeader, wsaVersionNameSpace, "ReplyTo");
+			String requestReplyToValue = null;
 			if (replyToNode != null)
 			{
-				NodeList replyToAddresses = replyToNode.getChildNodes();
-				if (replyToAddresses.getLength() > 0)
+				Element replyToAddresseNode = XmlUtils.getFirstChildElementNS(replyToNode, wsaVersionNameSpace, "Address");
+				if (replyToAddresseNode != null)
 				{
-					requestReplyTo = replyToAddresses.item(0).getFirstChild().getNodeValue();
+					requestReplyToValue = XmlUtils.getElementText(replyToAddresseNode);
 				}
 			}
 			
 			String to = wsaContainer.getWsaConfig().getTo();
-			if (to != null && to.length() > 0)
+			if (!StringUtils.isNullOrEmpty(to))
 			{
 				header.appendChild(builder.createWsaAddressChildElement("wsa:To", elm, to));
 			}
 			else
 			{
 				// if to not specified but wsa:to mandatory get default value
-				header.appendChild(builder.createWsaAddressChildElement("wsa:To", elm, requestReplyTo));
+				if (!StringUtils.isNullOrEmpty(requestReplyToValue))
+				{
+					header.appendChild(builder.createWsaAddressChildElement("wsa:To", elm, requestReplyToValue));
+				}
 			}
 
 			String relationshipType = wsaContainer.getWsaConfig().getRelationshipType();
-			if (relationshipType != null && relationshipType.length() > 0)
+			if (!StringUtils.isNullOrEmpty(relationshipType) && !StringUtils.isNullOrEmpty(requestMessageId))
 			{
 				header
 						.appendChild(builder.createRelatesToElement("wsa:RelatesTo", elm, relationshipType, requestMessageId));
@@ -248,13 +258,16 @@ public class WsaUtils
 			{
 				if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE))
 				{
-					header
+					if (!StringUtils.isNullOrEmpty(requestMessageId))
+					{
+						header
 						.appendChild(builder.createRelatesToElement("wsa:RelatesTo", elm, relatesToReply, requestMessageId));
+					}
 				}
 			}
 
 			String msgId = wsaContainer.getWsaConfig().getMessageID();
-			if (msgId != null && msgId.length() > 0)
+			if (!StringUtils.isNullOrEmpty(msgId))
 			{
 				header.appendChild(builder.createWsaChildElement("wsa:MessageID", elm, msgId));
 			}
