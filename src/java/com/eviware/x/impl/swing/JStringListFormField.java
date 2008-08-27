@@ -39,7 +39,5 @@ public class JStringListFormField extends AbstractSwingXFormField<StringListForm
 
    public void setWidth(int columns)
    {
-      // TODO Auto-generated method stub
-      
    }
 }
