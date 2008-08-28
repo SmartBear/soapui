@@ -173,10 +173,11 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
 	{
 		super.resetConfigOnMove(config);
 
-		assertionsSupport.refresh();
 		testStepConfig = (AsyncResponseStepConfig) config.getConfig().changeType(AsyncResponseStepConfig.type);
 		mockResponseConfig = this.testStepConfig.getResponse();
 		mockResponse.setConfig(mockResponseConfig);
+
+      assertionsSupport.refresh();
 	}
 
 	public boolean cancel()
