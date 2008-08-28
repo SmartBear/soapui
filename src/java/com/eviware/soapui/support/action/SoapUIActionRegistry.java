@@ -15,6 +15,7 @@ package com.eviware.soapui.support.action;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,24 +157,21 @@ public class SoapUIActionRegistry
 				// modify existing?
 				if( actionGroups.containsKey( group.getId() ))
 				{
-					actionGroup = actionGroups.get( group.getId() );
-					addMappings( actionGroup, group );
+                    actionGroup = actionGroups.get( group.getId() );
+
+                    if( group.isSetClass1())
+                    {
+                        actionGroup = createActionGroupClassFromConfig(group);
+                        actionGroups.put( group.getId(), actionGroup );
+                    }
+
+    				addMappings( actionGroup, group );
 				}
 				else
 				{
 					if( group.isSetClass1())
 					{
-						Class<SoapUIActionGroup> actionGroupClass = ( Class<SoapUIActionGroup> ) Class.forName( group.getClass1() );
-						
-						Constructor<SoapUIActionGroup> constructor = actionGroupClass.getConstructor( new Class[] {String.class, String.class} );
-						if( constructor != null )
-						{
-							actionGroup = constructor.newInstance( new Object[] {group.getId(), group.getName()} );
-						}
-						else
-						{
-							actionGroup = actionGroupClass.newInstance();
-						}
+                        actionGroup = createActionGroupClassFromConfig(group);
 					}
 					else
 					{
@@ -202,7 +200,23 @@ public class SoapUIActionRegistry
 		}
 	}
 
-	private void addMappings( SoapUIActionGroup actionGroup, SoapUIActionGroupConfig groupConfig )
+    private SoapUIActionGroup createActionGroupClassFromConfig(SoapUIActionGroupConfig group) throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        SoapUIActionGroup actionGroup;
+        Class<SoapUIActionGroup> actionGroupClass = ( Class<SoapUIActionGroup> ) Class.forName( group.getClass1() );
+
+        Constructor<SoapUIActionGroup> constructor = actionGroupClass.getConstructor( new Class[] {String.class, String.class} );
+        if( constructor != null )
+        {
+            actionGroup = constructor.newInstance( new Object[] {group.getId(), group.getName()} );
+        }
+        else
+        {
+            actionGroup = actionGroupClass.newInstance();
+        }
+        return actionGroup;
+    }
+
+    private void addMappings( SoapUIActionGroup actionGroup, SoapUIActionGroupConfig groupConfig )
 	{
 		for( SoapUIActionMappingConfig mapping : groupConfig.getActionMappingList() )
 		{
