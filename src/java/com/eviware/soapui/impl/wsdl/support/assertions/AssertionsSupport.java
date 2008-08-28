@@ -12,14 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support.assertions;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
@@ -27,6 +19,10 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.*;
 
 /**
  * Utility for implementing the Assertable interface
@@ -153,7 +149,7 @@ public class AssertionsSupport implements PropertyChangeListener
 		}
 	}
 	
-	public void refresh()
+	public void refresh( )
 	{
 		int mod = 0;
 		
