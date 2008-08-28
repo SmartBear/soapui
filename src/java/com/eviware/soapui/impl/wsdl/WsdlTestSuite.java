@@ -529,4 +529,22 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 		if( !oldLabel.equals( label ))
 			notifyPropertyChanged( LABEL_PROPERTY, oldLabel, label );
 	}
+
+	public void replace(WsdlTestCase testCase, WsdlTestCase newTestCase)
+	{
+		int ix = testCases.indexOf( testCase );
+
+      testCases.remove( ix );
+      try
+      {
+      	fireTestCaseRemoved( testCase );
+      }
+      finally
+      {
+      	testCase.release();
+      	getConfig().removeTestCase( ix );
+      }
+      
+      importTestCase(newTestCase, newTestCase.getName(), ix, true, false);
+	}
 }
