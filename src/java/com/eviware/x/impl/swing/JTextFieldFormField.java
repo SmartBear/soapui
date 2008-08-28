@@ -12,23 +12,22 @@
 
 package com.eviware.x.impl.swing;
 
-import java.awt.Color;
-
-import javax.swing.BorderFactory;
-import javax.swing.JTextField;
-import javax.swing.text.Document;
-
 import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.x.form.XFormTextField;
 
-public class JTextFieldFormField extends AbstractSwingXFormField<JTextField> implements XFormTextField
+import javax.swing.*;
+import javax.swing.text.Document;
+import java.awt.*;
+
+public class JTextFieldFormField extends AbstractSwingXFormField<JUndoableTextField> implements XFormTextField
 {
 	private boolean updating;
 	private String oldValue;
 	
 	public JTextFieldFormField()
 	{
-		super( new JTextField() );
+		super( new JUndoableTextField() );
 		
 		getComponent().getDocument().addDocumentListener( new DocumentListenerAdapter() {
 

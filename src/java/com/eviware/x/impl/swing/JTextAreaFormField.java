@@ -12,14 +12,11 @@
 
 package com.eviware.x.impl.swing;
 
-import java.awt.Color;
-
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-
+import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.x.form.XFormTextField;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class JTextAreaFormField extends AbstractSwingXFormField<JComponent> implements XFormTextField
 {
@@ -27,7 +24,7 @@ public class JTextAreaFormField extends AbstractSwingXFormField<JComponent> impl
 
 	public JTextAreaFormField()
 	{
-		super( new JTextArea() );
+		super( new JUndoableTextArea() );
 		
 		scrollPane = new JScrollPane( super.getComponent() );
 	}
