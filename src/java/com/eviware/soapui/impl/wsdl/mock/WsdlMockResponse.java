@@ -788,7 +788,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 
 	public long getContentLength()
 	{
-		return getResponseContent().length();
+		return getResponseContent() == null ? 0 : getResponseContent().length();
 	}
 
 	public boolean isMultipartEnabled()
