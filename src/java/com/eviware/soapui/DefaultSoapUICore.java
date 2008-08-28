@@ -32,10 +32,7 @@ import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.MockEngine;
-import com.eviware.soapui.settings.HttpSettings;
-import com.eviware.soapui.settings.SecuritySettings;
-import com.eviware.soapui.settings.UISettings;
-import com.eviware.soapui.settings.WsdlSettings;
+import com.eviware.soapui.settings.*;
 import com.eviware.soapui.support.ClasspathHacker;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
@@ -265,6 +262,11 @@ public class DefaultSoapUICore implements SoapUICore
 		settings.setBoolean(HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN, true);
 
 		settings.setString(UISettings.AUTO_SAVE_INTERVAL, "0");
+        settings.setBoolean(UISettings.SHOW_STARTUP_PAGE, true);
+
+        settings.setBoolean( WsaSettings.USE_DEFAULT_ACTION, true );
+        settings.setBoolean( WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE, true );
+        settings.setBoolean( WsaSettings.USE_DEFAULT_REPLYTO, true );
 	}
 
 	/*

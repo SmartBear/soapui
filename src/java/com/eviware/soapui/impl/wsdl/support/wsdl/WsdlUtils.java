@@ -78,6 +78,7 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.Constants;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
@@ -1065,6 +1066,10 @@ public class WsdlUtils
 
 	public static String getDefaultWsaAction(WsdlOperation operation, boolean output) 
 	{
+        // SOAP 1.1 specific handling
+        if( operation.getInterface().getSoapVersion() == SoapVersion.Soap11 && StringUtils.hasContent( operation.getAction()))
+            return operation.getAction();
+
 		try
 		{
 			AttributeExtensible attributeExtensible = output ? 
@@ -1084,9 +1089,6 @@ public class WsdlUtils
 			{
 				return attrs[0];
 			}
-			
-			if( StringUtils.hasContent( operation.getAction()))
-				return operation.getAction();
 			
 			WsdlInterface iface = operation.getInterface();
 			
