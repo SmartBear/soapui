@@ -44,7 +44,8 @@ public class UIPrefs implements Prefs
 	public static final String ENABLE_GROOVY_LOG_DURING_LOADTEST = "Do not disable Groovy Log";
 	public static final String SHOW_LOGS_AT_STARTUP = "Show Log Tabs";
 	public static final String AUTOSAVE_INTERVAL = "AutoSave Interval";
-	
+    public static final String SHOW_STARTUP = "Show Startup Page";
+
 	private SimpleForm editorForm;
 	private final String title;
 	private JCheckBox backupCheckBox;
@@ -96,7 +97,10 @@ public class UIPrefs implements Prefs
 			editorForm.appendCheckBox( ENABLE_GROOVY_LOG_DURING_LOADTEST, "(do not disable the groovy log when running LoadTests)", true );
 			
 			if( SoapUI.isStandalone())
+            {
 				editorForm.appendCheckBox( SHOW_LOGS_AT_STARTUP, "(shows log tabs when starting soapUI)", false );
+                editorForm.appendCheckBox( SHOW_STARTUP, "(opens startup webpage when starting soapUI)", false );
+            }
 		}
 		
 		return editorForm;

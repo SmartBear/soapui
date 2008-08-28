@@ -49,5 +49,6 @@ public interface UISettings
 	
 	public static final String SHOW_PROPERTIES_IN_TREE = UISettings.class.getSimpleName() + "@show_properties_in_tree";
 
-	public static final String AUTO_SAVE_INTERVAL = UISettings.class.getSimpleName() + "@auto_save_interval";;
+	public static final String AUTO_SAVE_INTERVAL = UISettings.class.getSimpleName() + "@auto_save_interval";
+    public static final String SHOW_STARTUP_PAGE = UISettings.class.getSimpleName() + "@show_startup_page";
 }

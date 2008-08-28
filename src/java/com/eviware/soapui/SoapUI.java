@@ -534,6 +534,9 @@ public class SoapUI
 		core.afterStartup( workspace );
 		Thread.sleep( 500 );
 		splash.setVisible( false );
+
+        if( getSettings().getBoolean(UISettings.SHOW_STARTUP_PAGE))
+                showPushPage();
 //		SoapUI.workspace.inspectProjects();
 		
 		return soapUI;
@@ -799,9 +802,9 @@ public class SoapUI
 		}
 	}
 	
-	private static class ShowPushPageAction extends AbstractAction
+	private class ShowPushPageAction extends AbstractAction
 	{
-		public ShowPushPageAction()
+        public ShowPushPageAction()
 		{
 			super( "Starter Page" );
 			putValue( Action.SHORT_DESCRIPTION, "Shows the starter page" );
@@ -809,10 +812,16 @@ public class SoapUI
 
 		public void actionPerformed( ActionEvent e )
 		{
-			DesktopPanel dp = UISupport.showDesktopPanel(new URLDesktopPanel( "soapUI Starter Page", "Info on soapUI", "http://www.soapui.org/appindex/soapui_start.htm"));
-			desktop.maximize( dp );
+            showPushPage();
 		}
-	}
+    }
+
+    public static String PUSH_PAGE_URL = "http://www.soapui.org/appindex/soapui_start.htm";
+
+    public static void showPushPage() {
+        DesktopPanel dp = UISupport.showDesktopPanel(new URLDesktopPanel( "soapUI Starter Page", "Info on soapUI", PUSH_PAGE_URL));
+        desktop.maximize( dp );
+    }
 
 	private static class ShowSystemPropertiesAction extends AbstractAction
 	{
