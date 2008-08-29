@@ -44,11 +44,11 @@ public class AddWsaHeadersToRequestAction extends AbstractAction
 		try
 		{
 			SoapVersion soapVersion = request.getOperation().getInterface().getSoapVersion();
-			WsaUtils wsaUtils = new WsaUtils(soapVersion, request.getOperation());
 			String content = request.getRequestContent();
+			WsaUtils wsaUtils = new WsaUtils(content,soapVersion, request.getOperation());
 			if (!wsaUtils.hasWsAddressing(content))
 			{
-				content = wsaUtils.addWSAddressingRequest(content, request);
+				content = wsaUtils.addWSAddressingRequest(request);
 			}
 			else if (SoapUI.getSettings().getBoolean(WsaSettings.OVERRIDE_EXISTING_HEADERS))
 			{

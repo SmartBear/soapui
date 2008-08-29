@@ -245,7 +245,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			
 			if (this.getWsaConfig().isWsaEnabled())
 			{
-				responseContent = new WsaUtils(getSoapVersion(), getMockOperation().getOperation()).addWSAddressingMockResponse(responseContent, this, request);
+				responseContent = new WsaUtils(responseContent, getSoapVersion(), getMockOperation().getOperation()).addWSAddressingMockResponse(this, request);
 			}
 
 			String outgoingWss = getOutgoingWss();
