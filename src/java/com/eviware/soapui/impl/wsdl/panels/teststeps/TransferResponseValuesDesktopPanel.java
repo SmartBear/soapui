@@ -12,10 +12,38 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
+import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
+import com.eviware.soapui.impl.wsdl.panels.support.TestRunComponentEnabler;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.teststeps.*;
+import com.eviware.soapui.impl.wsdl.teststeps.TransferResponseValuesTestStep.ValueTransferResult;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.TestModelItem;
+import com.eviware.soapui.model.TestPropertyHolder;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.support.TestRunListenerAdapter;
+import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
+import com.eviware.soapui.model.testsuite.*;
+import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.*;
+import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.ui.desktop.DesktopPanel;
+import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+import org.jdesktop.swingx.JXTable;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.text.Document;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -25,67 +53,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.text.Document;
-
-import org.jdesktop.swingx.JXTable;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
-import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
-import com.eviware.soapui.impl.wsdl.panels.support.TestRunComponentEnabler;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfer;
-import com.eviware.soapui.impl.wsdl.teststeps.TransferResponseValuesTestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.TransferResponseValuesTestStep.ValueTransferResult;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.TestModelItem;
-import com.eviware.soapui.model.TestPropertyHolder;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
-import com.eviware.soapui.model.support.TestRunListenerAdapter;
-import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestPropertyListener;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
-import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.support.DocumentListenerAdapter;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JUndoableTextArea;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.xml.XmlUtils;
-import com.eviware.soapui.ui.desktop.DesktopPanel;
-import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
 /**
  * DesktopPanel for TransferResponseValuesTestStep
@@ -214,10 +181,10 @@ public class TransferResponseValuesDesktopPanel extends ModelItemDesktopPanel<Tr
 		splitPane.setResizeWeight( 0.1 );
 		splitPane.setDividerLocation( 120 );
 		
-		inspectorPanel = new JInspectorPanel( splitPane );
+		inspectorPanel = JInspectorPanelFactory.build( splitPane );
 		logInspector = new JComponentInspector<JComponent>( buildLog(), "Transfer Log (0)", "A log of performed transfers while the editor was open", true );
 		inspectorPanel.addInspector( logInspector );
-		add( inspectorPanel, BorderLayout.CENTER );
+		add( inspectorPanel.getComponent(), BorderLayout.CENTER );
 		
 		setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ));
 		setPreferredSize( new Dimension( 550, 400 ));

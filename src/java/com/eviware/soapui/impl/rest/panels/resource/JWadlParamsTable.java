@@ -1,38 +1,22 @@
 package com.eviware.soapui.impl.rest.panels.resource;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import org.apache.xmlbeans.XmlBoolean;
-import org.apache.xmlbeans.XmlInt;
-import org.apache.xmlbeans.XmlString;
-import org.jdesktop.swingx.JXTable;
-
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.components.SimpleBindingForm;
-import com.eviware.soapui.support.components.StringListFormComponent;
+import com.eviware.soapui.support.components.*;
 import com.jgoodies.binding.PresentationModel;
+import org.apache.xmlbeans.XmlBoolean;
+import org.apache.xmlbeans.XmlInt;
+import org.apache.xmlbeans.XmlString;
+import org.jdesktop.swingx.JXTable;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class JWadlParamsTable extends JPanel
 {
@@ -84,12 +68,12 @@ public class JWadlParamsTable extends JPanel
 	
 		if( showInspector )
 		{
-			inspectorPanel = new JInspectorPanel( new JScrollPane( paramsTable) );
+			inspectorPanel = JInspectorPanelFactory.build( new JScrollPane( paramsTable) );
 			detailsInspector = new JComponentInspector<JComponent>( buildDetails(), "Parameter Details", 
 					"Details for the selected Parameter", false );
 			inspectorPanel.addInspector(detailsInspector);
 			
-			add( inspectorPanel, BorderLayout.CENTER );
+			add( inspectorPanel.getComponent(), BorderLayout.CENTER );
 		}
 		else
 		{

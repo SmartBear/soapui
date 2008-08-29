@@ -28,7 +28,7 @@ public class HtmlMediaTypeHandler implements MediaTypeHandler {
    }
 
    public String createXmlRepresentation(HttpResponse response) {
-      String content = response.getContentAsString();
+      String content = response == null ? null : response.getContentAsString();
       if (!StringUtils.hasContent(content))
          return null;
 
@@ -43,7 +43,7 @@ public class HtmlMediaTypeHandler implements MediaTypeHandler {
          XmlUtils.serializePretty(document, writer);
          return writer.toString();
       } catch (Throwable e) {
-         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+         e.printStackTrace();  
       }
       return null;
    }

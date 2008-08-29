@@ -12,31 +12,6 @@
  
 package com.eviware.soapui.support.components;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.AbstractAction;
-import javax.swing.AbstractListModel;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreePath;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
@@ -46,6 +21,14 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.swing.ModelItemListMouseListener;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
+
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ModelItemListDesktopPanel extends DefaultDesktopPanel
 {
@@ -127,7 +110,7 @@ public class ModelItemListDesktopPanel extends DefaultDesktopPanel
 				detailListModel.refresh();
 			}} );
 		
-		JInspectorPanel inspectorPanel = new JInspectorPanel( new JScrollPane( list ) );
+		JInspectorPanelImpl inspectorPanel = new JInspectorPanelImpl( new JScrollPane( list ) );
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildDetails(), "Details", 
 					"Shows detailed information for the selected item", true ) );
 		

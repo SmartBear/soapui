@@ -12,26 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.testsuite;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JToggleButton;
-import javax.swing.text.Document;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
@@ -52,14 +32,14 @@ import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.GroovyEditorComponent;
-import com.eviware.soapui.support.components.GroovyEditorInspector;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JFocusableComponentInspector;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JUndoableTextArea;
-import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+
+import javax.swing.*;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * DesktopPanel for WsdlTestSuite
@@ -105,11 +85,11 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 
 	private JComponent buildContent()
 	{
-		JInspectorPanel inspectorPanel = new JInspectorPanel( buildTabs() );
+		JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildTabs() );
 		inspectorPanel.addInspector( new JComponentInspector( buildRunLog(), "TestSuite Log", 
 					"Log of executed TestCases and TestSteps", true ));
 		
-		return inspectorPanel;
+		return inspectorPanel.getComponent();
 	}
 	
 	private JComponent buildRunLog()
@@ -203,9 +183,9 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	private JComponent buildTabs()
 	{
 		JTabbedPane tabs = new JTabbedPane( JTabbedPane.TOP );
-		JInspectorPanel inspectorPanel = new JInspectorPanel( buildTestCaseList( testSuite ) );
+		JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildTestCaseList( testSuite ) );
 		
-		tabs.addTab( "TestCases", inspectorPanel );
+		tabs.addTab( "TestCases", inspectorPanel.getComponent() );
 		
       addTabs( tabs, inspectorPanel );
       tabs.setTabLayoutPolicy( JTabbedPane.SCROLL_TAB_LAYOUT );

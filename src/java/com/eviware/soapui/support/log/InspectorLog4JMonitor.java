@@ -12,15 +12,15 @@
 
 package com.eviware.soapui.support.log;
 
-import java.awt.Component;
-
-import javax.swing.JComponent;
-
-import org.apache.log4j.spi.LoggingEvent;
-
 import com.eviware.soapui.support.components.Inspector;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
+import org.apache.log4j.spi.LoggingEvent;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.List;
 
 /**
  * JTabbedPane that displays Log4J output in different tabs
@@ -28,13 +28,14 @@ import com.eviware.soapui.support.components.JInspectorPanel;
  * @author Ole.Matzura
  */
 
-public class InspectorLog4JMonitor extends JInspectorPanel implements Log4JMonitor
+public class InspectorLog4JMonitor implements JInspectorPanel, Log4JMonitor
 {
 	private JLogList defaultLogArea;
+   private JInspectorPanel inspectorPanel;
 
-	public InspectorLog4JMonitor( JComponent content )
+   public InspectorLog4JMonitor( JComponent content )
 	{
-		super( content );
+		inspectorPanel = JInspectorPanelFactory.build( content );
 		
 		setResizeWeight( 0.9F );
 	}
@@ -63,7 +64,7 @@ public class InspectorLog4JMonitor extends JInspectorPanel implements Log4JMonit
 			LoggingEvent event = (LoggingEvent) msg;
 			String loggerName = event.getLoggerName();
 			
-			for( Inspector inspector : getInspectors() )
+			for( Inspector inspector : inspectorPanel.getInspectors() )
 			{
 				Component tabComponent = inspector.getComponent();
 				if( tabComponent instanceof JLogList )
@@ -84,7 +85,7 @@ public class InspectorLog4JMonitor extends JInspectorPanel implements Log4JMonit
 	
 	public JLogList getLogArea( String title )
 	{
-		Inspector inspector = getInspectorByTitle( title );
+		Inspector inspector = inspectorPanel.getInspectorByTitle( title );
 		return ( JLogList ) ( title == null ? null : inspector.getComponent() );
 	}
 
@@ -106,12 +107,40 @@ public class InspectorLog4JMonitor extends JInspectorPanel implements Log4JMonit
 		return false;
 	}
 
-	public JComponent getComponent()
+   public JComponent getComponent()
 	{
-		return this;
+		return inspectorPanel.getComponent();
 	}
-	
-	public void setCurrentLog( JLogList lastLog )
+
+   public Inspector getCurrentInspector() {
+      return inspectorPanel.getCurrentInspector();
+   }
+
+   public Inspector getInspectorByTitle(String title) {
+      return inspectorPanel.getInspectorByTitle(title);
+   }
+
+   public List<Inspector> getInspectors() {
+      return inspectorPanel.getInspectors();
+   }
+
+   public void setCurrentInspector(String s) {
+      inspectorPanel.setCurrentInspector(s);
+   }
+
+   public void setDefaultDividerLocation(float v) {
+      inspectorPanel.setDefaultDividerLocation(v);
+   }
+
+   public void setDividerLocation(int i) {
+      inspectorPanel.setDividerLocation(i);
+   }
+
+   public void setResizeWeight(double v) {
+      inspectorPanel.setResizeWeight(v);
+   }
+
+   public void setCurrentLog( JLogList lastLog )
 	{
 		for( Inspector inspector : getInspectors() )
 		{
@@ -123,15 +152,32 @@ public class InspectorLog4JMonitor extends JInspectorPanel implements Log4JMonit
 			}
 		}
 		
-		deactivate();
+		inspectorPanel.deactivate();
 	}
 
-	public JLogList getCurrentLog()
+   public void activate(Inspector inspector) {
+      inspectorPanel.activate(inspector);
+   }
+
+   public <T extends Inspector> T addInspector(T inspector) {
+      return inspectorPanel.addInspector(inspector);
+   }
+
+   public void deactivate() {
+      inspectorPanel.deactivate();
+   }
+
+   public void removeInspector(Inspector inspector) {
+      inspectorPanel.removeInspector(inspector);
+   }
+
+   public JLogList getCurrentLog()
 	{
-		return ( JLogList ) ( getCurrentInspector() == null ? null : getCurrentInspector().getComponent() );
+		return ( JLogList ) ( inspectorPanel.getCurrentInspector() == null ? null : inspectorPanel.getCurrentInspector().getComponent() );
 	}
 
-	public boolean removeLogArea( String loggerName )
+
+   public boolean removeLogArea( String loggerName )
 	{
 		for( Inspector inspector : getInspectors())
 		{
@@ -139,7 +185,7 @@ public class InspectorLog4JMonitor extends JInspectorPanel implements Log4JMonit
 			if( logList.getLogger( loggerName ) != null )
 			{
 				logList.removeLogger( loggerName );
-				removeInspector( inspector );
+				inspectorPanel.removeInspector( inspector );
 				
 				return true;
 			}
@@ -147,4 +193,28 @@ public class InspectorLog4JMonitor extends JInspectorPanel implements Log4JMonit
 		
 		return false;
 	}
+
+   public int getDividerLocation() {
+      return inspectorPanel.getDividerLocation();
+   }
+
+   public void setContentComponent(JComponent component) {
+      inspectorPanel.setContentComponent( component );
+   }
+
+   public void release() {
+      inspectorPanel.release();
+   }
+
+   public void setResetDividerLocation() {
+      inspectorPanel.setResetDividerLocation();
+   }
+
+   public void setInspectorVisible(Inspector inspector, boolean b) {
+      inspectorPanel.setInspectorVisible(inspector, b);
+   }
+
+   public Inspector getInspector(String inspectorId) {
+      return inspectorPanel.getInspector(inspectorId);
+   }
 }

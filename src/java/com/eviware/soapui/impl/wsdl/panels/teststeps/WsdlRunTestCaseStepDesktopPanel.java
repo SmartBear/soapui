@@ -12,21 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
-import javax.swing.border.TitledBorder;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RunTestCaseRunModeTypeConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -50,6 +35,7 @@ import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
@@ -58,9 +44,17 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.XFormMultiSelectList;
-import com.eviware.x.form.support.AField.AFieldType;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.List;
 
 public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlRunTestCaseTestStep> implements PropertyChangeListener
 {
@@ -111,11 +105,11 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 
 	private Component buildContent()
 	{
-		JInspectorPanel inspectorPanel = new JInspectorPanel( createPropertiesTable() );
+		JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( createPropertiesTable() );
 		
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildLog(), "TestCase Log", "log output from testcase run", true ) );
 		
-		return inspectorPanel;
+		return inspectorPanel.getComponent();
 	}
 
 	private JComponent buildLog()

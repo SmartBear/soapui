@@ -1,425 +1,49 @@
-/*
- *  soapUI, copyright (C) 2004-2008 eviware.com 
- *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
- *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
-
 package com.eviware.soapui.support.components;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.HashMap;
+import javax.swing.*;
 import java.util.List;
-import java.util.Map;
 
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
-import javax.swing.SwingConstants;
+/**
+ * Created by IntelliJ IDEA.
+ * User: ole
+ * Date: Aug 29, 2008
+ * Time: 11:20:52 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public interface JInspectorPanel {
+   public <T extends Inspector> T addInspector( final T inspector )  ;
 
-import com.jgoodies.looks.HeaderStyle;
-import com.jgoodies.looks.Options;
+   JComponent getComponent();
 
-public class JInspectorPanel extends JPanel implements PropertyChangeListener
-{	
-	private float defaultDividerLocation = 0.7F;
-	
-	private final JSplitPane mainSplit;
-	private JPanel inspectorPanel;
-	private int lastDividerLocation = 0;
-	private JXToolBar inspectToolbar;
-	private List<Inspector> inspectors = new ArrayList<Inspector>();
-	private Map<Inspector,JToggleButton> inspectorButtons = new HashMap<Inspector,JToggleButton>();
-	public Inspector currentInspector;
+   void setDefaultDividerLocation(float v);
 
-	private final int orientation;
+   public void activate( Inspector inspector );
 
-	public JInspectorPanel( JComponent contentComponent )
-	{
-		this( contentComponent, SwingConstants.BOTTOM );
-	}
-	
-	public JInspectorPanel(JComponent contentComponent, int orientation )
-	{
-		super( new BorderLayout() );
-		this.orientation = orientation;
+   void setCurrentInspector(String s);
 
-		inspectorPanel = new JPanel(new CardLayout());
-		inspectorPanel.setVisible( false );
-		
-		mainSplit = new JSplitPane( orientation == SwingConstants.LEFT || orientation == SwingConstants.RIGHT ?
-					JSplitPane.HORIZONTAL_SPLIT : JSplitPane.VERTICAL_SPLIT);
-		mainSplit.setDividerSize( 5 );
-		mainSplit.setBorder( null );
-		mainSplit.setOneTouchExpandable( false );
-		
-		JXToolBar toolbar = createInspectButtons();
-		if( orientation == SwingConstants.BOTTOM )
-		{
-			mainSplit.setTopComponent( contentComponent );
-			mainSplit.setBottomComponent( inspectorPanel );
-			mainSplit.setResizeWeight( 0.8 );
-			toolbar.setBorder( BorderFactory.createEmptyBorder( 1, 2, 3, 2 ));
-			add( toolbar, BorderLayout.SOUTH  );
-		}
-		else if( orientation == SwingConstants.LEFT )
-		{
-			mainSplit.setRightComponent( contentComponent );
-			
-			JPanel p = new JPanel( new BorderLayout() );
-			p.add( toolbar );
-			toolbar.setBorder( BorderFactory.createEmptyBorder( 2, 3, 0, 4 ));
-			mainSplit.setLeftComponent( inspectorPanel );
-			mainSplit.setResizeWeight( 0.2 );
-			
-			toolbar.setOrientation( JToolBar.VERTICAL );
-			
-			
-			add(p, BorderLayout.WEST  );
-		}
-		else if( orientation == SwingConstants.RIGHT )
-		{
-			mainSplit.setLeftComponent( contentComponent );
-			
-			JPanel p = new JPanel( new BorderLayout() );
-			p.add( toolbar );
-			toolbar.setBorder( BorderFactory.createEmptyBorder( 2, 1, 0, 3 ));
-			mainSplit.setRightComponent( inspectorPanel );
-			mainSplit.setResizeWeight( 0.8 );
-			toolbar.setOrientation( JToolBar.VERTICAL );
-			add( p, BorderLayout.EAST  );
-		}
+   void setDividerLocation(int i);
 
-		add(mainSplit, BorderLayout.CENTER);
-	}
-	
-	private JXToolBar createInspectButtons()
-	{
-		inspectToolbar = new JXToolBar()
-		{
-			@Override
-			public Dimension getMinimumSize()
-			{
-				return new Dimension( 10, 10 );
-			}
-		};
-		
-		inspectToolbar.setRollover( true );
-		inspectToolbar.putClientProperty( Options.HEADER_STYLE_KEY, HeaderStyle.SINGLE );
-		inspectToolbar.setBorder( BorderFactory.createEmptyBorder( 3, 0, 3, 0 ) );
+   void setResizeWeight(double v);
 
-		if( orientation == SwingConstants.TOP || orientation == SwingConstants.BOTTOM )
-			inspectToolbar.addSpace( 10 );
-		inspectToolbar.setBackground( Color.WHITE );
-		inspectToolbar.setOpaque( true );
-		return inspectToolbar;
-	}
-	
-	public float getDefaultDividerLocation()
-	{
-		return defaultDividerLocation;
-	}
+   List<Inspector> getInspectors();
 
-	public void setDefaultDividerLocation( float defaultDividerLocation )
-	{
-		this.defaultDividerLocation = defaultDividerLocation;
-		setResetDividerLocation();
-	}
+   Inspector getCurrentInspector();
 
-	public <T extends Inspector> T addInspector( final T inspector )
-	{
-		if( inspectors.size() > 0 )
-		{
-			inspectToolbar.addSpace(5);
-		}
-		
-		inspectors.add( inspector );
-		inspector.addPropertyChangeListener( JInspectorPanel.this );
-		
-		inspectorPanel.add( inspector.getComponent(), inspector.getInspectorId() );
-		JToggleButton button = new JToggleButton( new SelectInspectorAction( inspector ));
-		
-		inspectorButtons.put( inspector, button );
-		if( orientation == SwingConstants.LEFT  )
-		{
-			String text = button.getText();
-			button.setText( null );
-			button.setPreferredSize( new Dimension( 17, 10 ) );
-			button.setIcon( new VTextIcon( inspectToolbar, text, VTextIcon.ROTATE_LEFT) );
-			inspectToolbar.add( button );
-		}
-		else if( orientation == SwingConstants.RIGHT  )
-		{
-			String text = button.getText();
-			button.setText( null );
-			button.setPreferredSize( new Dimension( 17, 10 ) );
-			button.setIcon( new VTextIcon( inspectToolbar, text, VTextIcon.ROTATE_RIGHT) );
-			inspectToolbar.add( button );
-		}
-		else
-			inspectToolbar.add( button );
-		
-		button.setMinimumSize( new Dimension( 10, 10 ) );
-		
-		inspectToolbar.invalidate();
-		repaint();
+   Inspector getInspectorByTitle(String title);
 
-		return inspector;
-	}
-	
-	public Inspector getInspector( String inspectorId  )
-	{
-		for( Inspector inspector : inspectors )
-		{
-			if( inspector.getInspectorId().equals( inspectorId ))
-				return inspector;
-		}
-		
-		return null;
-	}
-	
-	public Inspector getInspectorByTitle( String title )
-	{
-		for( Inspector inspector : inspectors )
-		{
-			if( inspector.getTitle().equals( title ))
-				return inspector;
-		}
-		
-		return null;
-	}
-	
-	public void propertyChange(PropertyChangeEvent evt)
-	{
-		if( evt.getPropertyName().equals( Inspector.ENABLED_PROPERTY ))
-		{
-			JToggleButton toggleButton = inspectorButtons.get( evt.getSource() );
-			if( toggleButton != null )
-				toggleButton.setEnabled( ( Boolean ) evt.getNewValue() );
-		}
-	}
-	
-	public class SelectInspectorAction extends AbstractAction implements PropertyChangeListener
-	{
-		private final Inspector inspector;
+   void deactivate();
 
-		public SelectInspectorAction( Inspector inspector )
-		{
-			super( inspector.getTitle());
-			this.inspector = inspector;
-			
-			putValue( AbstractAction.SHORT_DESCRIPTION, inspector.getDescription() );
-			putValue( AbstractAction.SMALL_ICON, inspector.getIcon());
-			setEnabled( inspector.isEnabled() );
-			
-			inspector.addPropertyChangeListener( this );
-		}
+   void removeInspector(Inspector inspector);
 
-		public void actionPerformed( ActionEvent arg0 )
-		{
-			JToggleButton button = inspectorButtons.get( inspector );
-			if( !button.isSelected() )
-			{
-				deactivate();
-//				currentInspector = null;
-//				button.setBackground( inspectToolbar.getBackground() );
-//				lastDividerLocation = mainSplit.getDividerLocation();
-//				inspectorPanel.setVisible( false );
-			}
-			else
-			{
-				activate( inspector );
-			}
-		}
+   void setContentComponent(JComponent component);
 
-		public void propertyChange( PropertyChangeEvent evt )
-		{
-			if( evt.getPropertyName().equals( Inspector.TITLE_PROPERTY ))
-				putValue( AbstractAction.NAME, evt.getNewValue() );
-			else if( evt.getPropertyName().equals( Inspector.ICON_PROPERTY ))
-				putValue( AbstractAction.SMALL_ICON, evt.getNewValue() );
-			else if( evt.getPropertyName().equals( Inspector.DESCRIPTION_PROPERTY ))
-				putValue( AbstractAction.SHORT_DESCRIPTION, evt.getNewValue() );
-			else if( evt.getPropertyName().equals( Inspector.ENABLED_PROPERTY ))
-			{
-				boolean enable = ((Boolean)evt.getNewValue()).booleanValue();
-				setEnabled( enable );
-				
-				if( !enable && currentInspector == inspector )
-				{
-					inspectorButtons.get( currentInspector ).setSelected( false );
-				}
-			}
-		}
-	}
-	
-	public void release()
-	{
-		for( Inspector inspector : inspectors )
-		{
-			inspector.removePropertyChangeListener( this );
-			inspector.release();
-		}
-		
-		inspectors.clear();
-		inspectorPanel.removeAll();
-		mainSplit.removeAll();
-	}
+   int getDividerLocation();
 
-	public List<Inspector> getInspectors()
-	{
-		return inspectors;
-	}
+   Inspector getInspector(String inspectorId);
 
-	public Inspector getCurrentInspector()
-	{
-		return currentInspector;
-	}
+   void setInspectorVisible(Inspector inspector, boolean b);
 
-	public void setInspectorsVisible( boolean b )
-	{
-		inspectorPanel.setVisible( b );
-	}
-	
-	public void setInspectorVisible( Inspector inspector, boolean b )
-	{
-		if( inspectorButtons.containsKey( inspector ))
-		{
-			if( !b && inspector == currentInspector )
-			{
-				activate( null );
-			}
+   void setResetDividerLocation();
 
-			inspectorButtons.get( inspector ).setVisible( b );
-		}
-	}
-
-	public void setToolbarVisible( boolean b )
-	{
-		inspectToolbar.setVisible( b );
-	}
-
-	public double getResizeWeight()
-	{
-		return mainSplit.getResizeWeight();
-	}
-
-	public void setResizeWeight( double value )
-	{
-		mainSplit.setResizeWeight( value );
-	}
-
-	public int getDividerLocation()
-	{
-		return mainSplit.getDividerLocation();
-	}
-
-	public void setResetDividerLocation()
-	{
-		mainSplit.setDividerLocation( defaultDividerLocation );
-	}
-
-	public void setDividerLocation( int dividerLocation )
-	{
-		mainSplit.setDividerLocation( dividerLocation );
-	}
-
-	public void setCurrentInspector( String string )
-	{
-		for( Inspector inspector : inspectors )
-		{
-			if( inspector.getTitle().equals( string ))
-			{
-				activate( inspector );
-				break;
-			}
-		}
-	}
-	
-	public void deactivate()
-	{
-		activate( null );
-	}
-	
-	public void activate( Inspector inspector )
-	{
-		if( inspector == currentInspector )
-			return;
-		
-		if( currentInspector != null )
-		{
-			inspectorButtons.get( currentInspector ).setSelected( false );
-			currentInspector.deactivate();
-		}
-		
-		if( inspector == null )
-		{
-			currentInspector = null;
-			inspectorPanel.setVisible( false );
-		}
-		else
-		{
-			JToggleButton button = inspectorButtons.get( inspector );
-			currentInspector = inspector;
-			
-			button.setSelected( true );
-			button.setBackground( Color.WHITE );
-			
-			if( !inspectorPanel.isVisible() )
-			{
-				inspectorPanel.setVisible( true );
-				if( lastDividerLocation == 0 )
-					mainSplit.setDividerLocation( defaultDividerLocation );
-				else
-					mainSplit.setDividerLocation( lastDividerLocation );
-			}
-			
-			CardLayout cards = ( CardLayout ) inspectorPanel.getLayout();
-			cards.show( inspectorPanel, inspector.getInspectorId() );
-			
-			currentInspector.activate();
-		}
-	}
-
-	public void setContentComponent( JComponent content )
-	{
-		mainSplit.setTopComponent( content );
-	}
-	
-	public void removeInspector( Inspector inspector )
-	{
-		if( currentInspector == inspector )
-		{
-			deactivate();
-		}
-		
-		inspector.release();
-		inspectors.remove( inspector );
-		JToggleButton toggleButton = inspectorButtons.get( inspector );
-		
-		int ix = inspectToolbar.getComponentIndex( toggleButton );
-		if( ix > 1 )
-			inspectToolbar.remove( ix-1 );
-		
-		inspectToolbar.remove( toggleButton);
-		inspectorPanel.remove( inspector.getComponent() );
-		inspectToolbar.repaint();
-		inspectorButtons.remove( inspector );
-	}
+   void release();
 }

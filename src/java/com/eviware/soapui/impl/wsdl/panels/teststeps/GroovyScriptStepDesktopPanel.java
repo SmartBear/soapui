@@ -12,28 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.ListModel;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
@@ -49,12 +27,16 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
 import com.eviware.soapui.support.ListDataChangeListener;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.log.JLogList;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * DesktopPanel for WsdlGroovyTestSteps
@@ -134,12 +116,12 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
 		
 		JScrollPane scrollPane = new JScrollPane( editor );
 		UISupport.addPreviewCorner( scrollPane, true );
-		JInspectorPanel inspectorPanel = new JInspectorPanel( scrollPane);
+		JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( scrollPane);
 		logInspector = inspectorPanel.addInspector( new JComponentInspector<JComponent>( logArea, "Log Output (0)", 
 							"Groovy Log output for this script", true ) );
 		inspectorPanel.setDefaultDividerLocation( 0.8F  );
 		inspectorPanel.activate( logInspector );
-		add( inspectorPanel, BorderLayout.CENTER );
+		add( inspectorPanel.getComponent(), BorderLayout.CENTER );
 		add( buildToolbar(), BorderLayout.NORTH );
 		add( buildStatusBar(), BorderLayout.SOUTH );
 		

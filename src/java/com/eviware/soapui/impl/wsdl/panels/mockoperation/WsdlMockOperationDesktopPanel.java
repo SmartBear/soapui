@@ -12,33 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.AbstractListModel;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
-
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.DispatchStyleConfig;
 import com.eviware.soapui.config.DispatchStyleConfig.Enum;
@@ -71,6 +44,7 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.swing.ExtendedComboBoxModel;
 import com.eviware.soapui.support.swing.ModelItemListKeyListener;
@@ -79,6 +53,17 @@ import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
+import org.apache.xmlbeans.XmlObject;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DesktopPanel for WsdlGroovyTestSteps
@@ -125,7 +110,7 @@ public class WsdlMockOperationDesktopPanel extends ModelItemDesktopPanel<WsdlMoc
 	{
 		add( buildToolbar(), BorderLayout.NORTH );
 		
-      JInspectorPanel inspectorPanel = new JInspectorPanel( buildResponseList() );
+      JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildResponseList() );
       inspectorPanel.setDefaultDividerLocation( 0.5F );
       dispatchInspector = new JComponentInspector<JComponent>( 
 				      			buildDispatchEditor(), "Dispatch (" + getModelItem().getDispatchStyle().toString() + ")", 
@@ -133,7 +118,7 @@ public class WsdlMockOperationDesktopPanel extends ModelItemDesktopPanel<WsdlMoc
 		inspectorPanel.addInspector( dispatchInspector);
       inspectorPanel.activate( dispatchInspector );
 		
-      add( inspectorPanel, BorderLayout.CENTER );
+      add( inspectorPanel.getComponent(), BorderLayout.CENTER );
 	}
 
 	private JComponent buildResponseList()

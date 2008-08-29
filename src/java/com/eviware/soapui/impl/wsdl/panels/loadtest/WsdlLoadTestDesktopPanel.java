@@ -12,31 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.loadtest;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JSpinner;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.LoadTestLimitTypesConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -62,15 +37,21 @@ import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.LoadTestRunner.Status;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.GroovyEditorComponent;
-import com.eviware.soapui.support.components.GroovyEditorInspector;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
 import com.eviware.soapui.ui.support.DesktopListenerAdapter;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * Desktop panel for LoadTests
@@ -145,7 +126,7 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 
 	private JComponent buildContent()
 	{
-		JInspectorPanel inspectorPanel = new JInspectorPanel( buildStatistics() );
+		JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildStatistics() );
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildLog(), "LoadTest Log", "The current LoadTest execution log", true ) );
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildAssertions(), "LoadTest Assertions", "The assertions for this LoadTest", true ));
 		inspectorPanel.addInspector( new GroovyEditorInspector( buildSetupScriptPanel(), "Setup Script", "Script to run before tunning a TestCase" ) );
@@ -153,7 +134,7 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 		inspectorPanel.setDefaultDividerLocation( 0.6F );
 		inspectorPanel.setCurrentInspector( "LoadTest Log" );
 		
-		return inspectorPanel;
+		return inspectorPanel.getComponent();
 	}
 
 	protected GroovyEditorComponent buildTearDownScriptPanel()

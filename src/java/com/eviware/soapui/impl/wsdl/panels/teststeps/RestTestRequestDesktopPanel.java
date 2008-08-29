@@ -12,15 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.ListModel;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
@@ -30,22 +21,26 @@ import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.iface.Request.SubmitException;
-import com.eviware.soapui.model.testsuite.AssertionError;
-import com.eviware.soapui.model.testsuite.AssertionsListener;
-import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
+import com.eviware.soapui.model.testsuite.AssertionError;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.support.ListDataChangeListener;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.log.JLogList;
+
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel<RestTestRequestStep, RestTestRequest> 
 	implements PropertyChangeListener
@@ -120,7 +115,7 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 	{
 		JComponent component = super.buildContent();
 
-		inspectorPanel = new JInspectorPanel(component);
+		inspectorPanel = JInspectorPanelFactory.build(component);
 		assertionsPanel = buildAssertionsPanel();
 
 		assertionInspector = new JComponentInspector<JComponent>(assertionsPanel, "Assertions ("
@@ -135,7 +130,7 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 
 		updateStatusIcon();
 
-		return inspectorPanel;
+		return inspectorPanel.getComponent();
 	}
 
 	private void updateStatusIcon()

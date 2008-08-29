@@ -12,39 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.mock;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.AbstractListModel;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
-import javax.swing.SwingConstants;
-import javax.swing.text.Document;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.actions.mockservice.AddNewMockOperationAction;
@@ -57,11 +24,7 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEdito
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.mock.MockOperation;
-import com.eviware.soapui.model.mock.MockResponse;
-import com.eviware.soapui.model.mock.MockResult;
-import com.eviware.soapui.model.mock.MockRunner;
-import com.eviware.soapui.model.mock.MockServiceListener;
+import com.eviware.soapui.model.mock.*;
 import com.eviware.soapui.model.support.MockRunListenerAdapter;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.Tools;
@@ -69,17 +32,22 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.GroovyEditorComponent;
-import com.eviware.soapui.support.components.GroovyEditorInspector;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JFocusableComponentInspector;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JUndoableTextArea;
-import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.swing.AbstractListMouseListener;
 import com.eviware.soapui.support.swing.ModelItemListKeyListener;
 import com.eviware.soapui.support.swing.ModelItemListMouseListener;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+
+import javax.swing.*;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.List;
 
 /**
  * DesktopPanel for WsdlMockServices
@@ -157,14 +125,14 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 	{
       add( buildToolbar(), BorderLayout.NORTH );
       
-      JInspectorPanel inspectorPanel = new JInspectorPanel( buildContent() );
+      JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildContent() );
       inspectorPanel.setDefaultDividerLocation( 0.5F );
       inspectorPanel.addInspector( new JComponentInspector<JComponent>( 
       			buildLog(), "Message Log", "A log of processed requests and their responses", true ));
       
       inspectorPanel.setCurrentInspector( "Message Log" );
       
-      add( inspectorPanel, BorderLayout.CENTER );
+      add( inspectorPanel.getComponent(), BorderLayout.CENTER );
       add( new JLabel( "--"), BorderLayout.PAGE_END );
 	}
 
@@ -176,9 +144,9 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
    private JComponent buildContent()
    {
    	JTabbedPane tabs = new JTabbedPane();
-   	JInspectorPanel inspectorPanel = new JInspectorPanel( buildOperationList() );
+   	JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildOperationList() );
    	
-   	tabs.addTab( "Operations", inspectorPanel );
+   	tabs.addTab( "Operations", inspectorPanel.getComponent() );
    	addTabs( tabs, inspectorPanel );
    	
    	return UISupport.createTabPanel( tabs, true );
