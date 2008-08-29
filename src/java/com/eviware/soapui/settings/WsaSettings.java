@@ -33,4 +33,7 @@ public interface WsaSettings {
 	@Setting( name="Use default RelationshipType", description="Use default 'reply' for RelationshipType", type=SettingType.BOOLEAN )
 	public final static String USE_DEFAULT_RELATIONSHIP_TYPE = WsaSettings.class.getSimpleName() + "@" + "useDefaultRelationshipType";
 	
+	@Setting( name="Override existing headers", description="Overrides existing WS-A headers (or skips them if unchecked) ", type=SettingType.BOOLEAN )
+	public final static String OVERRIDE_EXISTING_HEADERS = WsaSettings.class.getSimpleName() + "@" + "overrideExistingHeaders";
+	
 }

@@ -16,9 +16,11 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
+import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.support.UISupport;
 
 /**
@@ -43,7 +45,16 @@ public class AddWsaHeadersToMockResponseAction extends AbstractAction
 		try
 		{
 			SoapVersion soapVersion = mockResponse.getOperation().getInterface().getSoapVersion();
-			String content = new WsaUtils(soapVersion,mockResponse.getOperation()).addWSAddressingMockResponse(mockResponse.getResponseContent(), mockResponse);
+			WsaUtils wsaUtils = new WsaUtils(soapVersion, mockResponse.getOperation());
+			String content = mockResponse.getResponseContent();
+			if (!wsaUtils.hasWsAddressing(content))
+			{
+				content = wsaUtils.addWSAddressingMockResponse(content, mockResponse);
+			}
+			else if (SoapUI.getSettings().getBoolean(WsaSettings.OVERRIDE_EXISTING_HEADERS))
+			{
+				content = wsaUtils.overrideExistingMockresponseHeaders(content, mockResponse);
+			}
 			mockResponse.setResponseContent(content);
 		}
 		catch( Exception e1 )

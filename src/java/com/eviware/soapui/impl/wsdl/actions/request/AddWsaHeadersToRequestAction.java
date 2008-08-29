@@ -16,14 +16,15 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
+import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.support.UISupport;
 
 /**
- * Adds WS-A headers to the specified WsdlRequests
- * requestContent
+ * Adds WS-A headers to the specified WsdlRequests requestContent
  * 
  * @author dragica.soldo
  */
@@ -32,23 +33,32 @@ public class AddWsaHeadersToRequestAction extends AbstractAction
 {
 	private final WsdlRequest request;
 
-	public AddWsaHeadersToRequestAction( WsdlRequest request)
+	public AddWsaHeadersToRequestAction(WsdlRequest request)
 	{
-		super( "Add WS-A headers" );
+		super("Add WS-A headers");
 		this.request = request;
 	}
 
-	public void actionPerformed( ActionEvent e )
+	public void actionPerformed(ActionEvent e)
 	{
 		try
 		{
 			SoapVersion soapVersion = request.getOperation().getInterface().getSoapVersion();
-			String content = new WsaUtils(soapVersion,request.getOperation()).addWSAddressingRequest(request.getRequestContent(), request);
+			WsaUtils wsaUtils = new WsaUtils(soapVersion, request.getOperation());
+			String content = request.getRequestContent();
+			if (!wsaUtils.hasWsAddressing(content))
+			{
+				content = wsaUtils.addWSAddressingRequest(content, request);
+			}
+			else if (SoapUI.getSettings().getBoolean(WsaSettings.OVERRIDE_EXISTING_HEADERS))
+			{
+				content = wsaUtils.overrideExistingRequestHeaders(content, request);
+			}
 			request.setRequestContent(content);
 		}
-		catch( Exception e1 )
+		catch (Exception e1)
 		{
-			UISupport.showErrorMessage( e1 );
+			UISupport.showErrorMessage(e1);
 		}
 		finally
 		{
