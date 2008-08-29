@@ -15,6 +15,7 @@ package com.eviware.soapui.support.editor.views.xml.source;
 import java.util.List;
 
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.event.PopupMenuEvent;
@@ -23,9 +24,11 @@ import javax.swing.event.PopupMenuListener;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.actions.mockresponse.AddWsaHeadersToMockResponseAction;
 import com.eviware.soapui.impl.wsdl.actions.mockresponse.ApplyOutgoingWSSToMockResponseAction;
 import com.eviware.soapui.impl.wsdl.actions.request.AddWSSUsernameTokenAction;
 import com.eviware.soapui.impl.wsdl.actions.request.AddWSTimestampAction;
+import com.eviware.soapui.impl.wsdl.actions.request.AddWsaHeadersToRequestAction;
 import com.eviware.soapui.impl.wsdl.actions.request.ApplyOutgoingWSSToRequestAction;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResponseMessageExchange;
@@ -119,6 +122,7 @@ public class XmlSourceEditorFactory implements ResponseEditorViewFactory, Reques
 	{
 		private final WsdlRequest request;
 		private JMenu applyMenu;
+		private JMenuItem wsaApplyMenu;
 
 		public WsdlRequestXmlSourceEditor(XmlEditor xmlEditor, WsdlRequest request )
 		{
@@ -151,6 +155,10 @@ public class XmlSourceEditorFactory implements ResponseEditorViewFactory, Reques
 			inputPopup.insert(new AddWSSUsernameTokenAction(request),3);
 			inputPopup.insert(new AddWSTimestampAction(request),4);
 			inputPopup.insert( applyMenu = new JMenu( "Apply Outgoing WSS"),5);
+
+			wsaApplyMenu = new JMenuItem( "Add WS-A headers");
+			inputPopup.insert(wsaApplyMenu,6 );
+			wsaApplyMenu.setAction( new AddWsaHeadersToRequestAction(request));
 			
 			inputPopup.addPopupMenuListener( new PopupMenuListener() {
 
@@ -175,6 +183,8 @@ public class XmlSourceEditorFactory implements ResponseEditorViewFactory, Reques
 					{
 						applyMenu.add( new ApplyOutgoingWSSToRequestAction( request, outgoing ) );
 					}
+					
+					wsaApplyMenu.setEnabled( request.getWsaConfig().isWsaEnabled() );
 				}} );
 		}
 
@@ -261,6 +271,7 @@ public class XmlSourceEditorFactory implements ResponseEditorViewFactory, Reques
 	{
 		private final WsdlMockResponse mockResponse;
 		private JMenu applyMenu;
+		private JMenuItem wsaApplyMenu;
 
 		public WsdlMockResponseXmlSourceEditor(XmlEditor xmlEditor, WsdlMockResponse mockResponse)
 		{
@@ -299,6 +310,10 @@ public class XmlSourceEditorFactory implements ResponseEditorViewFactory, Reques
 
 			inputPopup.insert( applyMenu = new JMenu( "Apply Outgoing WSS"),2);
 			
+			wsaApplyMenu = new JMenuItem( "Add WS-A headers");
+			inputPopup.insert(wsaApplyMenu,3 );
+			wsaApplyMenu.setAction( new AddWsaHeadersToMockResponseAction(mockResponse));
+			
 			inputPopup.addPopupMenuListener( new PopupMenuListener() {
 
 				public void popupMenuCanceled( PopupMenuEvent e )
@@ -322,6 +337,8 @@ public class XmlSourceEditorFactory implements ResponseEditorViewFactory, Reques
 					{
 						applyMenu.add( new ApplyOutgoingWSSToMockResponseAction( mockResponse, outgoing ) );
 					}
+					
+					wsaApplyMenu.setEnabled(mockResponse.getWsaConfig().isWsaEnabled());
 				}} );
 		}
 	}

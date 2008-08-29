@@ -55,8 +55,16 @@ public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssert
 	protected String internalAssertRequest(MessageExchange messageExchange, SubmitContext context)
 			throws AssertionException
 	{
-		// TODO Auto-generated method stub
-		return null;
+	    try
+	    {
+	    	new WsaValidator(messageExchange).validateWsAddressingRequest();
+	    }
+	    catch (Exception e)
+	    {
+	       throw new AssertionException( new AssertionError(e.getMessage()) );
+	    }
+	    
+	    return "Request WS-Addressing is valid";
 	}
 
 	@Override
@@ -72,7 +80,7 @@ public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssert
        throw new AssertionException( new AssertionError(e.getMessage()) );
     }
     
-    return "Request Ws-Addressing is valid";
+    return "Response WS-Addressing is valid";
 	}
 
 }

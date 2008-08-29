@@ -146,11 +146,11 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
 		requestImpl.setName(name);
 		requests.add(requestImpl);
 
-		if (getInterface().getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString()))
+		if (!getInterface().getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString()))
 		{
 			requestImpl.setWsAddressing(true);
-			WsdlUtils.setDefaultWsaAction(requestImpl.getWsaConfig(), false);
 		}
+		WsdlUtils.setDefaultWsaAction(requestImpl.getWsaConfig(), false);
 
 		(getInterface()).fireRequestAdded(requestImpl);
 		return requestImpl;

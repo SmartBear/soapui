@@ -34,15 +34,14 @@ public class WsaValidator
 		this.messageExchange = messageExchange;
 	}
 	
-	private void validateWsAddressingCommon() throws AssertionException
+	private void validateWsAddressingCommon(String content) throws AssertionException
 	{
-		String responseContent = messageExchange.getResponseContent();
 		try
 		{
 			SoapVersion soapVersion = ((WsdlMessageExchange) messageExchange).getOperation().getInterface()
 					.getSoapVersion();
 
-			XmlObject xmlObject = XmlObject.Factory.parse(responseContent);
+			XmlObject xmlObject = XmlObject.Factory.parse(content);
 			XmlObject[] envS = xmlObject.selectChildren(soapVersion.getEnvelopeQName());
 			Element envelope = (Element) envS[0].getDomNode();
 			
@@ -108,7 +107,8 @@ public class WsaValidator
 	}
 	public void validateWsAddressingRequest() throws AssertionException
 	{
-		validateWsAddressingCommon();
+		String content = messageExchange.getRequestContent();
+		validateWsAddressingCommon(content);
 		Operation operation = messageExchange.getOperation();
 		
 		if (operation.isRequestResponse())
@@ -145,7 +145,8 @@ public class WsaValidator
 	}
 	public void validateWsAddressingResponse() throws AssertionException
 	{
-		validateWsAddressingCommon();
+		String content = messageExchange.getResponseContent();
+		validateWsAddressingCommon(content);
 		
 		//To is Mandatory
 		Element relatesToNode = XmlUtils.getFirstChildElementNS(header,wsaVersionNameSpace, "RelatesTo");

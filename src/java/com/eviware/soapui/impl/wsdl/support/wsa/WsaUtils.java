@@ -109,6 +109,10 @@ public class WsaUtils
 		return header;
 
 	}
+	public String addWSAddressingRequest (String content, WsaContainer wsaContainer)
+	{
+		return addWSAddressingRequest(content, wsaContainer, null);
+	}
 
 	public String addWSAddressingRequest(String content, WsaContainer wsaContainer, ExtendedHttpMethod httpMethod)
 	{
@@ -165,8 +169,11 @@ public class WsaUtils
 			}
 			else if (operation.isOneWay() || operation.isRequestResponse())
 			{
-				// if to not specified but wsa:to mandatory get default value
-				header.appendChild(builder.createWsaAddressChildElement("wsa:To", elm, httpMethod.getURI().toString()));
+				if (httpMethod != null)
+				{
+					// if to not specified but wsa:to mandatory get default value
+					header.appendChild(builder.createWsaAddressChildElement("wsa:To", elm, httpMethod.getURI().toString()));
+				}
 			}
 
 			content = xmlObject.xmlText();
@@ -177,6 +184,10 @@ public class WsaUtils
 		}
 
 		return content;
+	}
+	public String addWSAddressingMockResponse(String content, WsaContainer wsaContainer)
+	{
+		return addWSAddressingMockResponse(content, wsaContainer, null);
 	}
 
 	public String addWSAddressingMockResponse(String content, WsaContainer wsaContainer, WsdlMockRequest request)
@@ -201,58 +212,63 @@ public class WsaUtils
 				header.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", elm, replyTo));
 			}
 
-			XmlObject requestXmlObject = request.getRequestXmlObject();
-			Element requestHeader = (Element) SoapUtils.getHeaderElement(requestXmlObject, request.getSoapVersion(), true)
-					.getDomNode();
-
-			// request.messageId = mockResponse.relatesTo so get it
-			Element msgNode = XmlUtils.getFirstChildElementNS(requestHeader, wsaVersionNameSpace, "MessageID");
-			String requestMessageId = null;
-			if (msgNode != null)
+			// TODO check the logic of adding to header in case of not yet executed response
+			boolean isRequestNull = false;
+			if (request != null)
 			{
-				requestMessageId = XmlUtils.getElementText(msgNode);
-			}
+				XmlObject requestXmlObject = request.getRequestXmlObject();
+				Element requestHeader = (Element) SoapUtils.getHeaderElement(requestXmlObject, request.getSoapVersion(), true)
+						.getDomNode();
 
-			// request.replyTo = mockResponse.to so get it
-			Element replyToNode = XmlUtils.getFirstChildElementNS(requestHeader, wsaVersionNameSpace, "ReplyTo");
-			String requestReplyToValue = null;
-			if (replyToNode != null)
-			{
-				Element replyToAddresseNode = XmlUtils.getFirstChildElementNS(replyToNode, wsaVersionNameSpace, "Address");
-				if (replyToAddresseNode != null)
+				// request.messageId = mockResponse.relatesTo so get it
+				Element msgNode = XmlUtils.getFirstChildElementNS(requestHeader, wsaVersionNameSpace, "MessageID");
+				String requestMessageId = null;
+				if (msgNode != null)
 				{
-					requestReplyToValue = XmlUtils.getElementText(replyToAddresseNode);
+					requestMessageId = XmlUtils.getElementText(msgNode);
 				}
-			}
-			
-			String to = wsaContainer.getWsaConfig().getTo();
-			if (!StringUtils.isNullOrEmpty(to))
-			{
-				header.appendChild(builder.createWsaAddressChildElement("wsa:To", elm, to));
-			}
-			else
-			{
-				// if to not specified but wsa:to mandatory get default value
-				if (!StringUtils.isNullOrEmpty(requestReplyToValue))
-				{
-					header.appendChild(builder.createWsaAddressChildElement("wsa:To", elm, requestReplyToValue));
-				}
-			}
 
-			String relationshipType = wsaContainer.getWsaConfig().getRelationshipType();
-			if (!StringUtils.isNullOrEmpty(relationshipType) && !StringUtils.isNullOrEmpty(requestMessageId))
-			{
-				header
-						.appendChild(builder.createRelatesToElement("wsa:RelatesTo", elm, relationshipType, requestMessageId));
-			}
-			else if (wsaContainer instanceof WsdlMockResponse)
-			{
-				if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE))
+				// request.replyTo = mockResponse.to so get it
+				Element replyToNode = XmlUtils.getFirstChildElementNS(requestHeader, wsaVersionNameSpace, "ReplyTo");
+				String requestReplyToValue = null;
+				if (replyToNode != null)
 				{
-					if (!StringUtils.isNullOrEmpty(requestMessageId))
+					Element replyToAddresseNode = XmlUtils.getFirstChildElementNS(replyToNode, wsaVersionNameSpace, "Address");
+					if (replyToAddresseNode != null)
 					{
-						header
-						.appendChild(builder.createRelatesToElement("wsa:RelatesTo", elm, relatesToReply, requestMessageId));
+						requestReplyToValue = XmlUtils.getElementText(replyToAddresseNode);
+					}
+				}
+				
+				String to = wsaContainer.getWsaConfig().getTo();
+				if (!StringUtils.isNullOrEmpty(to))
+				{
+					header.appendChild(builder.createWsaAddressChildElement("wsa:To", elm, to));
+				}
+				else
+				{
+					// if to not specified but wsa:to mandatory get default value
+					if (!StringUtils.isNullOrEmpty(requestReplyToValue))
+					{
+						header.appendChild(builder.createWsaAddressChildElement("wsa:To", elm, requestReplyToValue));
+					}
+				}
+
+				String relationshipType = wsaContainer.getWsaConfig().getRelationshipType();
+				if (!StringUtils.isNullOrEmpty(relationshipType) && !StringUtils.isNullOrEmpty(requestMessageId))
+				{
+					header
+							.appendChild(builder.createRelatesToElement("wsa:RelatesTo", elm, relationshipType, requestMessageId));
+				}
+				else if (wsaContainer instanceof WsdlMockResponse)
+				{
+					if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE))
+					{
+						if (!StringUtils.isNullOrEmpty(requestMessageId))
+						{
+							header
+							.appendChild(builder.createRelatesToElement("wsa:RelatesTo", elm, relatesToReply, requestMessageId));
+						}
 					}
 				}
 			}
@@ -326,6 +342,40 @@ public class WsaUtils
 			wsaElm.appendChild(wsAddressElm);
 			return wsaElm;
 		}
+	}
+	public String addWsaRequestAction(String content, WsaConfig wsaConfig)throws XmlException {
+		// version="2005/08" is default
+		String wsaVersionNameSpace = WS_A_VERSION_200508;
+		if (wsaConfig.getVersion().equals(WsaVersionTypeConfig.X_200408.toString()))
+		{
+			wsaVersionNameSpace = WS_A_VERSION_200408;
+		}
+
+		XmlObject xmlObject = XmlObject.Factory.parse(content);
+		Element header = (Element) SoapUtils.getHeaderElement(xmlObject, soapVersion, true).getDomNode();
+
+		header.setAttribute("xmlns:wsa", wsaVersionNameSpace);
+
+		XmlObject[] envelope = xmlObject.selectChildren(soapVersion.getEnvelopeQName());
+		Element elm = (Element) envelope[0].getDomNode();
+
+		Boolean mustUnderstand = null;
+		if (wsaConfig.getMustUnderstand().equals(MustUnderstandTypeConfig.FALSE.toString()))
+		{
+			mustUnderstand = false;
+		}
+		else if (wsaConfig.getMustUnderstand().equals(MustUnderstandTypeConfig.TRUE.toString()))
+		{
+			mustUnderstand = true;
+		}
+
+		WsaBuilder builder = new WsaBuilder(wsaVersionNameSpace, mustUnderstand);
+		if (!StringUtils.isNullOrEmpty(wsaConfig.getAction() ) )
+		{
+			header.appendChild(builder.createWsaChildElement("wsa:Action", elm, wsaConfig.getAction() ) );
+		}
+		content = xmlObject.xmlText();
+		return content;
 	}
 
 }
