@@ -12,8 +12,28 @@
 
 package com.eviware.soapui.impl.rest.panels.request;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import com.eviware.soapui.impl.rest.RestRepresentation;
+import com.eviware.soapui.impl.rest.RestRepresentation.Type;
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequest.RequestMethod;
+import com.eviware.soapui.impl.support.HttpUtils;
+import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
+import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
+import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Request.SubmitException;
+import com.eviware.soapui.model.iface.Submit;
+import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JUndoableTextField;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
+
+import javax.swing.*;
+import javax.swing.text.Document;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -22,37 +42,6 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.text.Document;
-
-import net.sf.json.JSONObject;
-import net.sf.json.xml.XMLSerializer;
-
-import com.eviware.soapui.impl.rest.RestRepresentation;
-import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestRepresentation.Type;
-import com.eviware.soapui.impl.rest.RestRequest.RequestMethod;
-import com.eviware.soapui.impl.support.HttpUtils;
-import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
-import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
-import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.iface.Submit;
-import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.iface.Request.SubmitException;
-import com.eviware.soapui.support.DocumentListenerAdapter;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JUndoableTextField;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
-import com.eviware.soapui.support.xml.XmlUtils;
 
 public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 extends RestRequest> 
 	extends AbstractHttpRequestDesktopPanel<T, T2> implements PropertyChangeListener
@@ -262,28 +251,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 		public String getXml()
 		{
-			HttpResponse response = getRequest().getResponse();
-			if (response == null)
-				return "";
-			String content = response.getContentAsString();
-
-			if (response.getContentType().equals("text/javascript"))
-			{
-				try
-				{
-					JSONObject json = JSONObject.fromObject(content);
-					XMLSerializer serializer = new XMLSerializer();
-					serializer.setTypeHintsEnabled(false);
-					content = serializer.write(json);
-					content = XmlUtils.prettyPrintXml(content);
-				}
-				catch (Throwable e)
-				{
-					e.printStackTrace();
-				}
-			}
-			
-			return content;
+			return modelItem.getResponseContentAsXml();
 		}
 
 		public void setXml(String xml)

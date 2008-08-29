@@ -12,18 +12,15 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
-import java.io.File;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
-
-import org.apache.xmlbeans.SchemaTypeLoader;
-import org.apache.xmlbeans.XmlObject;
-
-import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
 import com.eviware.soapui.support.TestCaseWithJetty;
+import org.apache.xmlbeans.SchemaTypeLoader;
+import org.apache.xmlbeans.XmlObject;
+
+import javax.xml.namespace.QName;
+import java.io.File;
+import java.util.Map;
 
 public class SchemaUtilsTestCase extends TestCaseWithJetty
 {
@@ -93,21 +90,21 @@ public class SchemaUtilsTestCase extends TestCaseWithJetty
    public void testHttpImport9() throws Exception
    {
    	String url = "http://localhost:8082/test9/testcase.wsdl";
-		SchemaTypeLoader schemaTypes = SchemaUtils.loadSchemaTypes( url, SoapVersion.Soap11, new UrlWsdlLoader( url ));  
+		SchemaTypeLoader schemaTypes = SchemaUtils.loadSchemaTypes( url,  new UrlWsdlLoader( url ));
    	assertNotNull( schemaTypes.findElement( new QName( "http://testcase/wsdl", "One")));
    	assertNotNull( schemaTypes.findElement( new QName( "http://testcase/wsdl", "Two")));
    	assertNotNull( schemaTypes.findType( new QName( "http://testcase/one", "OneType")));
    	assertNotNull( schemaTypes.findType( new QName( "http://testcase/two", "TwoType")));
 
    	url = new File( "src\\test-resources\\test9\\testcase.wsdl" ).toURI().toURL().toString();
-   	schemaTypes = SchemaUtils.loadSchemaTypes( url, SoapVersion.Soap11, new UrlWsdlLoader( url ));
+   	schemaTypes = SchemaUtils.loadSchemaTypes( url, new UrlWsdlLoader( url ));
    	assertNotNull( schemaTypes.findElement(  new QName( "http://testcase/wsdl", "One")));
    	assertNotNull( schemaTypes.findElement(  new QName( "http://testcase/wsdl", "Two")));
    }
    
 	private SchemaTypeLoader validate( String url, int cnt ) throws Exception
 	{
-		SchemaTypeLoader schemaTypes = SchemaUtils.loadSchemaTypes( url, SoapVersion.Soap11, new UrlWsdlLoader( url ) );
+		SchemaTypeLoader schemaTypes = SchemaUtils.loadSchemaTypes( url, new UrlWsdlLoader( url ) );
    	Map<String, XmlObject> definitionUrls = SchemaUtils.getDefinitionParts( new UrlWsdlLoader( url ) );
 		
    	assertNotNull( schemaTypes );
@@ -118,5 +115,14 @@ public class SchemaUtilsTestCase extends TestCaseWithJetty
    	
    	return schemaTypes;
 	}
+
+   public void testWadlImport() throws Exception
+   {
+      String file = new File("src\\test-resources\\wadl\\YahooSearch.wadl").toURI().toURL().toString();
+      SchemaTypeLoader types = SchemaUtils.loadSchemaTypes(file, new UrlSchemaLoader( file ));
+
+      assertNotNull( types.findElement( new QName( "urn:yahoo:yn", "ResultSet")));
+      assertNotNull( types.findElement( new QName( "urn:yahoo:api", "Error")));
+   }
 
 }

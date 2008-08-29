@@ -12,15 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.config.WsdlRequestConfig;
@@ -31,10 +22,10 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaContainer;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
@@ -44,6 +35,14 @@ import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
+import org.apache.log4j.Logger;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Request implementation holding a SOAP request
@@ -275,8 +274,12 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		
 		return definedAttachmentParts.toArray( new HttpAttachmentPart[definedAttachmentParts.size()] );
 	}
-	
-	/* (non-Javadoc)
+
+   public RequestMethod getMethod() {
+      return RequestMethod.POST;
+   }
+
+   /* (non-Javadoc)
 	 * @see com.eviware.soapui.impl.wsdl.AttachmentContainer#getAttachmentPart(java.lang.String)
 	 */
 	public HttpAttachmentPart getAttachmentPart( String partName )

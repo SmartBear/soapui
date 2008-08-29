@@ -1,16 +1,15 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.net.URL;
-
-import org.apache.commons.httpclient.Header;
-
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.types.StringToStringMap;
+import org.apache.commons.httpclient.Header;
+
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.net.URL;
 
 public abstract class BaseHttpResponse implements HttpResponse
 {
@@ -24,14 +23,18 @@ public abstract class BaseHttpResponse implements HttpResponse
 	private SSLInfo sslInfo;
 	private URL url;
 	private WeakReference<AbstractHttpRequest<?>> httpRequest;
+   private AbstractHttpRequest.RequestMethod method;
+   private String version;
 
-	public BaseHttpResponse(ExtendedHttpMethod httpMethod, AbstractHttpRequest<?> httpRequest)
+   public BaseHttpResponse(ExtendedHttpMethod httpMethod, AbstractHttpRequest<?> httpRequest)
 	{
 		this.httpRequest = new WeakReference<AbstractHttpRequest<?>>(httpRequest);
-		
 		this.timeTaken = httpMethod.getTimeTaken();
-		
-		Settings settings = httpRequest.getSettings();
+
+      method = httpMethod.getMethod();
+      version = httpMethod.getParams().getVersion().toString();
+
+      Settings settings = httpRequest.getSettings();
 		if (settings.getBoolean(HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN))
 		{
 			try
@@ -145,4 +148,12 @@ public abstract class BaseHttpResponse implements HttpResponse
 	{
 		return null;
 	}
+
+   public AbstractHttpRequest.RequestMethod getMethod() {
+      return method;
+   }
+
+   public String getHttpVersion() {
+      return version;
+   }
 }

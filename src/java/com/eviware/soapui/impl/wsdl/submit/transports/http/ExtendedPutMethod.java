@@ -12,12 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-import java.io.IOException;
-
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.PutMethod;
+
+import java.io.IOException;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -103,4 +104,8 @@ public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMe
 	{
 		return httpMethodSupport.getResponseContentType();
 	}
+
+   public AbstractHttpRequest.RequestMethod getMethod() {
+      return AbstractHttpRequest.RequestMethod.PUT;
+   }
 }

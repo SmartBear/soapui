@@ -12,13 +12,14 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-import java.io.IOException;
-
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
+
+import java.io.IOException;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -110,4 +111,9 @@ public final class ExtendedDeleteMethod extends DeleteMethod implements Extended
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+   public AbstractHttpRequest.RequestMethod getMethod() {
+      return AbstractHttpRequest.RequestMethod.DELETE;
+   }
+
 }

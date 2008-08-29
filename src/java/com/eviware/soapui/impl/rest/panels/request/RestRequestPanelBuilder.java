@@ -12,13 +12,13 @@
 
 package com.eviware.soapui.impl.rest.panels.request;
 
-import java.awt.Component;
-
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestRequest.RequestMethod;
+import com.eviware.soapui.impl.support.AbstractHttpRequest.RequestMethod;
 import com.eviware.soapui.support.components.JPropertiesTable;
 import com.eviware.soapui.support.types.StringList;
+
+import java.awt.*;
 
 /**
  * PanelBuilder for WsdlInterface

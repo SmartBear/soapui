@@ -12,27 +12,11 @@
 
 package com.eviware.soapui.impl.support;
 
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AbstractRequestConfig;
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.CredentialsConfig;
-import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
-import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
-import com.eviware.soapui.impl.wsdl.ResolveContext;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.*;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
 import com.eviware.soapui.impl.wsdl.support.FileAttachment;
@@ -40,11 +24,7 @@ import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
 import com.eviware.soapui.impl.wsdl.support.RequestFileAttachment;
 import com.eviware.soapui.impl.wsdl.teststeps.SettingPathPropertySupport;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.model.iface.Request;
-import com.eviware.soapui.model.iface.Submit;
-import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.iface.SubmitListener;
+import com.eviware.soapui.model.iface.*;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
@@ -52,6 +32,16 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> extends AbstractWsdlModelItem<T> implements Request,
 		PropertyExpansionContainer, MutableAttachmentContainer
@@ -66,6 +56,8 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	public static final String DISABLE_MULTIPART_ATTACHMENTS = WsdlRequest.class.getName() + "@disable-multipart-attachments";
 	public static final String DUMP_FILE = AbstractHttpRequest.class.getName() + "@dump-file";
 	public static final String MAX_SIZE = AbstractHttpRequest.class.getName() + "@max-size";;
+
+   public enum RequestMethod { GET, POST, PUT, DELETE, HEAD }
 
 	private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
 	private String requestContent;
@@ -121,6 +113,8 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 			return null;
 		}
 	}
+
+   public abstract RequestMethod getMethod();
 
 	/**
 	 * Override just to get a better return type

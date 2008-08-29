@@ -1,15 +1,5 @@
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.config.RequestStepConfig;
 import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
@@ -26,8 +16,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.A
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.Request.SubmitException;
+import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
@@ -37,16 +27,18 @@ import com.eviware.soapui.model.support.InterfaceListenerAdapter;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.support.TestStepBeanProperty;
-import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.AssertionError;
-import com.eviware.soapui.model.testsuite.AssertionsListener;
-import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
-import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.types.StringToStringMap;
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class RestTestRequestStep extends WsdlTestStepWithProperties implements PropertyChangeListener, PropertyExpansionContainer, Assertable
 {
@@ -114,7 +106,16 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements P
 				return wsdlOperation.createRequest(true);
 			}
       });
-      addProperty( new TestStepBeanProperty( "Response", true, testRequest, "responseContentAsString", this )
+      addProperty( new TestStepBeanProperty( "Response", true, testRequest, "responseContentAsXml", this )
+      {
+			@Override
+			public String getDefaultValue()
+			{
+				return wsdlOperation.createResponse(true);
+			}
+      });
+
+       addProperty( new TestStepBeanProperty( "RawResponse", true, testRequest, "responseContentAsString", this )
       {
 			@Override
 			public String getDefaultValue()

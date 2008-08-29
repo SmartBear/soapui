@@ -12,10 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-import java.net.URL;
-
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.model.iface.Response;
+
+import java.net.URL;
 
 public interface HttpResponse extends Response
 {
@@ -28,6 +28,10 @@ public interface HttpResponse extends Response
 	public abstract SSLInfo getSSLInfo();
 
 	public abstract URL getURL();
+
+   public AbstractHttpRequest.RequestMethod getMethod();
+
+   public String getHttpVersion();
 
 	public abstract int getStatusCode();
 }

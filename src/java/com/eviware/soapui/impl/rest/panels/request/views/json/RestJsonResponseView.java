@@ -12,17 +12,6 @@
 
 package com.eviware.soapui.impl.rest.panels.request.views.json;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
-import net.sf.json.JSONObject;
-
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestResponseDocument;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestResponseMessageEditor;
@@ -32,6 +21,12 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.xml.JXEditTextArea;
+import net.sf.json.JSONObject;
+
+import javax.swing.*;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 @SuppressWarnings("unchecked")
 public class RestJsonResponseView extends AbstractXmlEditorView<RestResponseDocument> implements PropertyChangeListener
@@ -94,29 +89,36 @@ public class RestJsonResponseView extends AbstractXmlEditorView<RestResponseDocu
 
 	protected void setEditorContent(HttpResponse httpResponse)
 	{
-		if( httpResponse.getContentType().contains("javascript"))
-		{
-			String content = httpResponse.getContentAsString();
-			
-			try
-			{
-				JSONObject json = JSONObject.fromObject(httpResponse.getContentAsString());
-				if( json.isEmpty() )
-					content = "<Empty JSON content>";
-				else
-					content = json.toString(3);
-			}
-			catch (Throwable e)
-			{
-				e.printStackTrace();
-			}
-			
-			contentEditor.setText( content );
-		}
-		else
-		{
-			contentEditor.setText( "<Not JSON content>" );
-		}
+      if( httpResponse == null )
+      {
+         contentEditor.setText( "" );
+      }
+      else
+      {
+         String content = "<Not JSON content>";
+
+         if( httpResponse.getContentType() != null && httpResponse.getContentType().contains("javascript"))
+         {
+            try
+            {
+               JSONObject json = JSONObject.fromObject(httpResponse.getContentAsString());
+               if( json.isEmpty() )
+                  content = "<Empty JSON content>";
+               else
+                  content = json.toString(3);
+            }
+            catch (Throwable e)
+            {
+               e.printStackTrace();
+            }
+
+            contentEditor.setText( content );
+         }
+         else
+         {
+            contentEditor.setText( "<Not JSON content>" );
+         }
+      }
 	}
 
 	private Component buildToolbar()

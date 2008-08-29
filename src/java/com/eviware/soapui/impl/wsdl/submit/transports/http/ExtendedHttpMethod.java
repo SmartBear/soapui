@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 
@@ -38,4 +39,6 @@ public interface ExtendedHttpMethod extends HttpMethod
 	public RequestEntity getRequestEntity();
 	
 	public void setDumpFile( String dumpFile );
+
+   public AbstractHttpRequest.RequestMethod getMethod();
 }

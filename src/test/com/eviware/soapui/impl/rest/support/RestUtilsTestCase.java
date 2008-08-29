@@ -1,15 +1,14 @@
 package com.eviware.soapui.impl.rest.support;
 
-import java.io.File;
-
-import junit.framework.TestCase;
-
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
-import com.eviware.soapui.impl.rest.RestRequest.RequestMethod;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import junit.framework.TestCase;
+
+import java.io.File;
 
 public class RestUtilsTestCase extends TestCase
 {
@@ -42,7 +41,7 @@ public class RestUtilsTestCase extends TestCase
 	   assertEquals( 1, resource.getRequestCount() );
 	   
 	   RestRequest request = resource.getRequestAt(0);
-	   assertEquals( RequestMethod.GET, request.getMethod() );
+	   assertEquals( AbstractHttpRequest.RequestMethod.GET, request.getMethod() );
 	   assertEquals( 9, request.getPropertyCount() );
 	   
 	}

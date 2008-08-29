@@ -12,8 +12,7 @@
 
 package com.eviware.soapui.support.editor.views.xml.raw;
 
-import java.beans.PropertyChangeEvent;
-
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
@@ -26,6 +25,8 @@ import com.eviware.soapui.support.editor.registry.ResponseEditorViewFactory;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.types.StringToStringMap;
+
+import java.beans.PropertyChangeEvent;
 
 public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEditorViewFactory
 {
@@ -44,9 +45,9 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		{
 			return new WsdlMessageExchangeResponseRawXmlEditor( (MessageExchangeModelItem) modelItem, (XmlEditor) editor );
 		}
-		else if( modelItem instanceof WsdlRequest )
+		else if( modelItem instanceof AbstractHttpRequest)
 		{
-			return new WsdlResponseRawXmlEditor( (WsdlRequest) modelItem, (XmlEditor) editor );
+			return new HttpResponseRawXmlEditor( (AbstractHttpRequest) modelItem, (XmlEditor) editor );
 		}
 		else if( modelItem instanceof WsdlMockResponse )
 		{
@@ -64,9 +65,9 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		{
 			return new WsdlMessageExchangeRequestRawXmlEditor( (MessageExchangeModelItem) modelItem, (XmlEditor) editor );
 		}
-		else if( modelItem instanceof WsdlRequest )
+		else if( modelItem instanceof AbstractHttpRequest )
 		{
-			return new WsdlRequestRawXmlEditor( (WsdlRequest) modelItem, (XmlEditor) editor );
+			return new HttpRequestRawXmlEditor( (AbstractHttpRequest) modelItem, (XmlEditor) editor );
 		}
 		else if( modelItem instanceof WsdlMockResponse )
 		{
@@ -76,19 +77,19 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		return null;
 	}
 	
-	private static class WsdlRequestRawXmlEditor extends RawXmlEditor<XmlDocument>
+	private static class HttpRequestRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
-		private final WsdlRequest request;
+		private final AbstractHttpRequest request;
 
-		public WsdlRequestRawXmlEditor( WsdlRequest request, XmlEditor<XmlDocument> editor )
+		public HttpRequestRawXmlEditor( AbstractHttpRequest request, XmlEditor<XmlDocument> editor )
 		{
 			super( "Raw", editor, "The actual content of the last submitted request" );
 			this.request = request;
 			
 			request.addPropertyChangeListener( WsdlRequest.RESPONSE_PROPERTY, this );
 		}
-		
-		@Override
+
+      @Override
 		public void propertyChange( PropertyChangeEvent evt )
 		{
 			if( evt.getPropertyName().equals( WsdlRequest.RESPONSE_PROPERTY  ))
@@ -102,8 +103,11 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		{
 			if( request.getResponse() == null )
 				return"<missing raw request>";
+
+         String firstLine = request.getResponse().getMethod() + " " +
+                 request.getResponse().getURL().getFile() + " " + request.getResponse().getHttpVersion() + "\r\n";
 			
-			return buildRawContent( request.getResponse().getRequestHeaders(), 
+			return firstLine + buildRawContent( request.getResponse().getRequestHeaders(), 
 						request.getResponse().getRawRequestData());
 		}
 
@@ -115,19 +119,19 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		}
 	}
 	
-	private static class WsdlResponseRawXmlEditor extends RawXmlEditor<XmlDocument>
+	private static class HttpResponseRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
-		private final WsdlRequest request;
+		private final AbstractHttpRequest request;
 
-		public WsdlResponseRawXmlEditor( WsdlRequest request, XmlEditor<XmlDocument> editor )
+		public HttpResponseRawXmlEditor( AbstractHttpRequest request, XmlEditor<XmlDocument> editor )
 		{
 			super( "Raw", editor, "The actual content of the last received response" );
 			this.request = request;
 			
 			request.addPropertyChangeListener( WsdlRequest.RESPONSE_PROPERTY, this );
 		}
-		
-		@Override
+
+      @Override
 		public void propertyChange( PropertyChangeEvent evt )
 		{
 			if( evt.getPropertyName().equals( WsdlRequest.RESPONSE_PROPERTY  ))

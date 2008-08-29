@@ -12,20 +12,11 @@
 
 package com.eviware.soapui.impl.rest;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.SchemaGlobalElement;
-import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.XmlString;
-
 import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.RestResourceRepresentationConfig;
 import com.eviware.soapui.impl.rest.RestRepresentation.Type;
+import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
+import com.eviware.soapui.impl.rest.support.MediaTypeHandlerRegistry;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -33,16 +24,26 @@ import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessagePart;
-import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.MessagePart.ContentPart;
+import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.UISupport;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.SchemaGlobalElement;
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlString;
+
+import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Request implementation holding a SOAP request
@@ -54,7 +55,6 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 {
 	public final static Logger log = Logger.getLogger( RestRequest.class );
 	public static final String DEFAULT_MEDIATYPE = "application/xml";
-	public enum RequestMethod { GET, POST, PUT, DELETE, HEAD }
 	private List<RestRepresentation> representations = new ArrayList<RestRepresentation>();
 
 	private XmlBeansRestParamsTestPropertyHolder params;
@@ -381,7 +381,20 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 		notifyPropertyChanged("path", old, fullPath);
 	}
 
-	@Override
+   public String getResponseContentAsXml()
+   {
+      HttpResponse response = getResponse();
+      if( response == null )
+         return null;
+
+      MediaTypeHandler typeHandler = MediaTypeHandlerRegistry.getTypeHandler(response.getContentType());
+      if( typeHandler != null )
+         return typeHandler.createXmlRepresentation( response );
+      else
+         return null;
+   }
+
+   @Override
 	public void release()
 	{
 		super.release();

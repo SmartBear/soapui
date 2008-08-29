@@ -12,14 +12,6 @@
 
 package com.eviware.soapui.impl.rest.panels.request.views.html;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestResponseDocument;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestResponseMessageEditor;
@@ -28,6 +20,11 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
+
+import javax.swing.*;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 @SuppressWarnings("unchecked")
 public class RestHtmlResponseView extends AbstractXmlEditorView<RestResponseDocument> implements PropertyChangeListener
@@ -111,7 +108,7 @@ public class RestHtmlResponseView extends AbstractXmlEditorView<RestResponseDocu
 
 	protected void setEditorContent(HttpResponse httpResponse)
 	{
-		if (httpResponse.getContentType().contains("html"))
+		if (httpResponse.getContentType() != null && httpResponse.getContentType().contains("html"))
 		{
 			try
 			{

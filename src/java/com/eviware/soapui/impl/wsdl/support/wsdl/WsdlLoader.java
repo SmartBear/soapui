@@ -12,21 +12,20 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
-import java.io.InputStream;
-import java.net.URL;
-
-import javax.wsdl.xml.WSDLLocator;
-
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.impl.wsdl.support.xsd.SchemaLoader;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
+import com.eviware.x.dialogs.XProgressMonitor;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.xml.sax.InputSource;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.support.PathUtils;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.Tools;
-import com.eviware.x.dialogs.XProgressMonitor;
+import javax.wsdl.xml.WSDLLocator;
+import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Abstract WSDLLocator for loading definitions from either URL or cache.. 
@@ -34,7 +33,7 @@ import com.eviware.x.dialogs.XProgressMonitor;
  * @author ole.matzura
  */
 
-public abstract class WsdlLoader implements WSDLLocator
+public abstract class WsdlLoader implements WSDLLocator, SchemaLoader
 {
 	private final String url;
 	private String last;

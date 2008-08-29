@@ -10,13 +10,14 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.rest.support;
+package com.eviware.soapui.impl.wsdl.support.xsd;
 
-import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
 
-public interface MediaTypeHandler
+public interface SchemaLoader 
 {
-   public boolean canHandle( String contentType );
+   XmlObject loadXmlObject(String wsdlUrl, XmlOptions options) throws Exception;
 
-	public String createXmlRepresentation( HttpResponse response );
+   String getBaseURI();
 }

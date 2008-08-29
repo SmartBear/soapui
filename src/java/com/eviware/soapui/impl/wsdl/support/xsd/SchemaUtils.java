@@ -12,50 +12,22 @@
 
 package com.eviware.soapui.impl.wsdl.support.xsd;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.xml.namespace.QName;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.SchemaAnnotation;
-import org.apache.xmlbeans.SchemaLocalElement;
-import org.apache.xmlbeans.SchemaParticle;
-import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.SchemaTypeLoader;
-import org.apache.xmlbeans.SchemaTypeSystem;
-import org.apache.xmlbeans.SimpleValue;
-import org.apache.xmlbeans.XmlAnySimpleType;
-import org.apache.xmlbeans.XmlBase64Binary;
-import org.apache.xmlbeans.XmlBeans;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlHexBinary;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.Constants;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
-import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlLoader;
 import com.eviware.soapui.model.settings.SettingsListener;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.*;
+import org.w3c.dom.*;
+
+import javax.xml.namespace.QName;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 /**
  * XML-Schema related tools
@@ -168,7 +140,7 @@ public class SchemaUtils
 		log.info( "Added default schema from " + url.getPath() + " with targetNamespace " + targetNamespace );
    }
    
-   public static SchemaTypeLoader loadSchemaTypes(String wsdlUrl, SoapVersion soapVersion, WsdlLoader loader ) throws SchemaException
+   public static SchemaTypeLoader loadSchemaTypes(String wsdlUrl, SchemaLoader loader) throws SchemaException
    {
    	ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
    	Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
@@ -179,7 +151,7 @@ public class SchemaUtils
 			ArrayList<XmlObject> schemas = new ArrayList<XmlObject>(getSchemas(
 					wsdlUrl, loader).values());
 
-			return buildSchemaTypes(schemas, soapVersion);
+			return buildSchemaTypes(schemas);
 		}
 		catch (Exception e)
 		{
@@ -192,7 +164,7 @@ public class SchemaUtils
    	}
    }
 
-   public static SchemaTypeLoader buildSchemaTypes(List<XmlObject> schemas, SoapVersion soapVersion) throws SchemaException
+   public static SchemaTypeLoader buildSchemaTypes(List<XmlObject> schemas) throws SchemaException
    {
       XmlOptions options = new XmlOptions();
       options.setCompileNoValidation();
@@ -300,7 +272,7 @@ public class SchemaUtils
 		return ((Document)s.getDomNode()).getDocumentElement().getAttribute( "targetNamespace" );
 	}
    
-   public static Map<String,XmlObject> getSchemas( String wsdlUrl, WsdlLoader loader ) throws SchemaException
+   public static Map<String,XmlObject> getSchemas( String wsdlUrl, SchemaLoader loader) throws SchemaException
    {
    	Map<String,XmlObject> result = new HashMap<String,XmlObject>();
    	getSchemas( wsdlUrl, result, loader, null /*, false */ );
@@ -311,7 +283,7 @@ public class SchemaUtils
     * Returns a map mapping urls to corresponding XmlSchema XmlObjects for the specified wsdlUrl
     */
    
-   public static void getSchemas( String wsdlUrl, Map<String,XmlObject> existing,  WsdlLoader loader, String tns) throws SchemaException
+   public static void getSchemas( String wsdlUrl, Map<String,XmlObject> existing, SchemaLoader loader, String tns) throws SchemaException
    {
    	if( existing.containsKey( wsdlUrl ))
    		return; 
@@ -408,6 +380,20 @@ public class SchemaUtils
 						getSchemas(location, existing, loader, null );
 					}
 				}
+
+            XmlObject[] wadlImports = xmlObject
+                  .selectPath("declare namespace s='" + Constants.WADL10_NS + "' .//s:grammars/s:include/@href");
+            for (int i = 0; i < wadlImports.length; i++)
+            {
+               String location = ((SimpleValue) wadlImports[i]).getStringValue();
+               if (location != null)
+               {
+                  if ( !location.startsWith("file:") && location.indexOf("://") == -1 )
+                     location = Tools.joinRelativeUrl(wsdlUrl, location);
+
+                  getSchemas(location, existing, loader, null );
+               }
+            }
 			}
 
 			existing.putAll( result );
@@ -463,14 +449,14 @@ public class SchemaUtils
     * Returns a map mapping urls to corresponding XmlObjects for the specified wsdlUrl
     */
    
-   public static Map<String,XmlObject> getDefinitionParts( WsdlLoader loader ) throws Exception
+   public static Map<String,XmlObject> getDefinitionParts( SchemaLoader loader) throws Exception
    {
    	HashMap<String, XmlObject> result = new HashMap<String,XmlObject>();
-		getDefinitionParts( loader.getBaseURI(), result, loader );
+		getDefinitionParts( loader.getBaseURI(), result, loader);
 		return result;
    }
    
-   public static void getDefinitionParts( String wsdlUrl, Map<String,XmlObject> existing, WsdlLoader loader ) throws Exception
+   public static void getDefinitionParts( String wsdlUrl, Map<String,XmlObject> existing, SchemaLoader loader) throws Exception
    {
    	if( existing.containsKey( wsdlUrl ))
    		return;
@@ -489,7 +475,7 @@ public class SchemaUtils
 	         	if ( !location.startsWith("file:") && location.indexOf("://") == -1 )
 						location = Tools.joinRelativeUrl(wsdlUrl, location);
 	
-	         	getDefinitionParts( location, existing, loader );
+	         	getDefinitionParts( location, existing, loader);
          	}
          	else
          	{
@@ -510,7 +496,7 @@ public class SchemaUtils
 	         	if ( !location.startsWith("file:") && location.indexOf("://") == -1 )
 						location = Tools.joinRelativeUrl(wsdlUrl, location);
 	
-	         	getDefinitionParts( location, existing, loader );
+	         	getDefinitionParts( location, existing, loader);
          	}
          	else
          	{
@@ -531,7 +517,7 @@ public class SchemaUtils
 	         	if ( !location.startsWith("file:") && location.indexOf("://") == -1 )
 						location = Tools.joinRelativeUrl(wsdlUrl, location);
 	
-	         	getDefinitionParts( location, existing, loader );
+	         	getDefinitionParts( location, existing, loader);
          	}
          	else
          	{

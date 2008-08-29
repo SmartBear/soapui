@@ -12,14 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
-import java.io.File;
-
-import junit.framework.TestCase;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
+import junit.framework.TestCase;
+
+import java.io.File;
 
 public class SchemaUtilsDefaultNSTestCase extends TestCase
 {
@@ -27,7 +25,6 @@ public class SchemaUtilsDefaultNSTestCase extends TestCase
 	{
 		SoapUI.initDefaultCore();
 		File file = new File( "src\\test-resources\\chameleon\\chameleon.wsdl");
-		SchemaUtils.loadSchemaTypes( file.toURL().toString(), SoapVersion.Soap11,
-					new UrlWsdlLoader(file.toURL().toString()) );
+		SchemaUtils.loadSchemaTypes( file.toURL().toString(),	new UrlWsdlLoader(file.toURL().toString()) );
 	}
 }

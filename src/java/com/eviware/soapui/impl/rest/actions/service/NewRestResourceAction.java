@@ -12,20 +12,14 @@
 
 package com.eviware.soapui.impl.rest.actions.service;
 
-import java.awt.event.ActionEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.swing.AbstractAction;
-
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.WadlUtils;
-import com.eviware.soapui.impl.rest.RestRequest.RequestMethod;
 import com.eviware.soapui.impl.rest.panels.resource.JWadlParamsTable;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
+import com.eviware.soapui.impl.support.AbstractHttpRequest.RequestMethod;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
@@ -33,9 +27,14 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Actions for importing an existing soapUI project file into the current workspace

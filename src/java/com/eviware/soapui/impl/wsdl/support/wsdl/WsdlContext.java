@@ -12,25 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.wsdl.Definition;
-import javax.wsdl.factory.WSDLFactory;
-import javax.wsdl.xml.WSDLReader;
-import javax.xml.namespace.QName;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.SchemaTypeLoader;
-import org.apache.xmlbeans.SchemaTypeSystem;
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.DefinitionCacheConfig;
 import com.eviware.soapui.config.DefintionPartConfig;
@@ -43,6 +24,17 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.x.dialogs.Worker;
 import com.eviware.x.dialogs.XProgressDialog;
 import com.eviware.x.dialogs.XProgressMonitor;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.SchemaTypeLoader;
+import org.apache.xmlbeans.SchemaTypeSystem;
+import org.apache.xmlbeans.XmlObject;
+
+import javax.wsdl.Definition;
+import javax.wsdl.factory.WSDLFactory;
+import javax.wsdl.xml.WSDLReader;
+import javax.xml.namespace.QName;
+import java.util.*;
 
 /**
  * Holder for WSDL4J Definitions and related SchemaTypeLoader types
@@ -284,7 +276,7 @@ public class WsdlContext implements DefinitionContext
       
       if( !currentLoader.isAborted() )
       {
-      	schemaTypes = SchemaUtils.loadSchemaTypes(loader.getBaseURI(), soapVersion, loader);
+      	schemaTypes = SchemaUtils.loadSchemaTypes(loader.getBaseURI(),  loader);
       	if( iface != null )
       		schemaCache.put( url, schemaTypes);
       }

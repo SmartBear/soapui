@@ -12,13 +12,21 @@
 
 package com.eviware.soapui.impl.rest.support.handlers;
 
-import com.eviware.soapui.impl.rest.RestResponse;
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class DefaultMediaTypeHandler implements MediaTypeHandler
 {
-	public String createXmlRepresentation(RestResponse response)
-	{
-		return response.getContentAsString();
-	}
+   public boolean canHandle(String contentType) {
+      return true;
+   }
+
+   public String createXmlRepresentation(HttpResponse response) {
+      String content = response.getContentAsString();
+      if( content == null || XmlUtils.seemsToBeXml(content))
+         return content;
+      else
+         return "<data><![CDATA[" + content + "]]></data>";
+   }
 }

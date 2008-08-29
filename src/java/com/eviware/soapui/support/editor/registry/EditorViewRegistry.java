@@ -12,14 +12,14 @@
 
 package com.eviware.soapui.support.editor.registry;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.eviware.soapui.impl.rest.panels.request.views.content.RestRequestContentViewFactory;
 import com.eviware.soapui.impl.rest.panels.request.views.json.RestJsonResponseViewFactory;
 import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Registry of availabel XmlViews
@@ -36,11 +36,11 @@ public class EditorViewRegistry
 	{
 		// this should obviously come from a configuration file.. 
 		addFactory( new XmlSourceEditorFactory() );
-		addFactory( new RawXmlEditorFactory() );
 //		addFactory( new RestRequestParamsViewFactory() );
 		addFactory( new RestRequestContentViewFactory() );
 		addFactory( new RestJsonResponseViewFactory() );
 //		addFactory( new RestHtmlResponseViewFactory() );
+      addFactory( new RawXmlEditorFactory() );
 	}
 	
 	public void addFactory( EditorViewFactory factory )

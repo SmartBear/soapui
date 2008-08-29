@@ -601,6 +601,15 @@
                 <eclipse.jar>true</eclipse.jar>
             </properties>
         </dependency>
+       <dependency>
+            <groupId>jtidy</groupId>
+            <artifactId>jtidy</artifactId>
+            <version>20000804r7-noxml</version>
+            <type>jar</type>
+            <properties>
+                <jnlp.jar>true</jnlp.jar>
+            </properties>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/java</sourceDirectory>
