@@ -12,27 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.mock;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.DispatchStyleConfig;
+import com.eviware.soapui.config.DispatchStyleConfig.Enum;
 import com.eviware.soapui.config.MockOperationConfig;
 import com.eviware.soapui.config.MockResponseConfig;
-import com.eviware.soapui.config.DispatchStyleConfig.Enum;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
@@ -52,6 +36,20 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * A WsdlMockOperation in a WsdlMockService
@@ -349,6 +347,9 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
       
       WsdlMockResponse mockResponse = retVal == null ? getMockResponseByName( getDefaultResponse() ) 
       			: getMockResponseByName( retVal.toString() );
+
+      if( mockResponse == null )
+         mockResponse = getMockResponseByName( getDefaultResponse() );
       
       if( mockResponse != null )
       {
