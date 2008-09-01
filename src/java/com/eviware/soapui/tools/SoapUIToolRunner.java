@@ -37,6 +37,7 @@ import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsimport.WSImportAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.xfire.XFireAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans.XmlBeans2Action;
 import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 
 /**
  * Standalone tool-runner used from maven-plugin, can also be used from command-line (see xdocs) or
@@ -106,7 +107,9 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
 		if( !new File( projectFile ).exists() )
 			throw new Exception( "soapUI project file [" + projectFile + "] not found" );
 		
-		WsdlProject project = new WsdlProject( projectFile, getProjectPassword() );
+//		WsdlProject project = new WsdlProject( projectFile, getProjectPassword() );
+		WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(projectFile, getProjectPassword());
+		
 		log.info( "Running tools [" + tool + "] for interface [" + iface + "] in project [" + project.getName() + "]" );
 
 		long startTime = System.nanoTime();

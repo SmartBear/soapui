@@ -1406,4 +1406,6 @@
 
     <xsd:simpleType name="statusCodesType">
     	<xsd:list itemType="xsd:int"></xsd:list></xsd:simpleType>
+
+    <xsd:element name="testCase" type="tns:TestCase"></xsd:element>
 </xsd:schema>

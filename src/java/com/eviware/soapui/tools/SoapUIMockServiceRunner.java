@@ -29,6 +29,7 @@ import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunListener;
 import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.model.mock.MockService;
+import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 
 /**
  * Standalone tool-runner used from maven-plugin, can also be used from command-line (see xdocs) or
@@ -96,7 +97,8 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 		
 		String projectFile = getProjectFile();
 		
-		WsdlProject project = new WsdlProject( projectFile, getProjectPassword() );
+//		WsdlProject project = new WsdlProject( projectFile, getProjectPassword() );
+		WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(projectFile, getProjectPassword());
 		if( project.isDisabled() )
 			throw new Exception( "Failed to load soapUI project file [" + projectFile + "]" );
 		

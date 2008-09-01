@@ -28,6 +28,7 @@ import com.eviware.soapui.impl.wsdl.loadtest.log.LoadTestLog;
 import com.eviware.soapui.impl.wsdl.loadtest.log.LoadTestLogEntry;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunListener;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
@@ -267,7 +268,9 @@ public class SoapUILoadTestRunner extends AbstractSoapUIRunner implements LoadTe
 		
 		String projectFile = getProjectFile();
 		
-		WsdlProject project = new WsdlProject( projectFile, getProjectPassword() );
+//		WsdlProject project = new WsdlProject( projectFile, getProjectPassword() );
+		WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(projectFile, getProjectPassword());
+		
 		if( project.isDisabled() )
 			throw new Exception( "Failed to load soapUI project file [" + projectFile + "]" );
 		int suiteCount = 0;

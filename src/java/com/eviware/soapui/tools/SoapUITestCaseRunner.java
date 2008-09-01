@@ -35,6 +35,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStepResult;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepResult;
 import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.Assertable;
@@ -308,8 +309,9 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 
 		String projectFile = getProjectFile();
 
-		project = new WsdlProject(projectFile, getProjectPassword());
-
+//		project = new WsdlProject(projectFile, getProjectPassword());
+		project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(projectFile, getProjectPassword());
+		
 		if (project.isDisabled())
 			throw new Exception("Failed to load soapUI project file [" + projectFile + "]");
 
