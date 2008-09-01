@@ -1408,4 +1408,6 @@
     	<xsd:list itemType="xsd:int"></xsd:list></xsd:simpleType>
 
     <xsd:element name="testCase" type="tns:TestCase"></xsd:element>
+
+    <xsd:element name="operation" type="tns:Operation"></xsd:element>
 </xsd:schema>
