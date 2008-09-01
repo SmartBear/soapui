@@ -521,4 +521,14 @@ public class WsdlTestSuite extends
 		testCase.afterLoad();
 		fireTestCaseAdded(testCase);
 	}
+
+	public void addTestCase(TestCaseConfig newTestCaseConfig)
+	{
+		TestCaseConfig newConfig = (TestCaseConfig) getConfig().addNewTestCase().set(newTestCaseConfig).changeType(TestCaseConfig.type);
+		WsdlTestCase newTestCase = new WsdlTestCase(this, newConfig, false );
+		testCases.add(newTestCase);
+		newTestCase.afterLoad();
+		fireTestCaseAdded(newTestCase);
+		
+	}
 }
