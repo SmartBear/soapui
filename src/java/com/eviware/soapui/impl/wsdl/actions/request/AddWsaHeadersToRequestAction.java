@@ -16,11 +16,9 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
-import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.support.UISupport;
 
 /**
@@ -46,14 +44,15 @@ public class AddWsaHeadersToRequestAction extends AbstractAction
 			SoapVersion soapVersion = request.getOperation().getInterface().getSoapVersion();
 			String content = request.getRequestContent();
 			WsaUtils wsaUtils = new WsaUtils(content,soapVersion, request.getOperation());
-			if (!wsaUtils.hasWsAddressing(content))
-			{
-				content = wsaUtils.addWSAddressingRequest(request);
-			}
-			else if (SoapUI.getSettings().getBoolean(WsaSettings.OVERRIDE_EXISTING_HEADERS))
-			{
-				content = wsaUtils.overrideExistingRequestHeaders(content, request);
-			}
+//			if (!wsaUtils.hasWsAddressing(content))
+//			{
+//				content = wsaUtils.addWSAddressingRequest(request);
+//			}
+//			else if (SoapUI.getSettings().getBoolean(WsaSettings.OVERRIDE_EXISTING_HEADERS))
+//			{
+//				content = wsaUtils.overrideExistingRequestHeaders(content, request);
+//			}
+			content = wsaUtils.addWSAddressingRequest(request);
 			request.setRequestContent(content);
 		}
 		catch (Exception e1)
