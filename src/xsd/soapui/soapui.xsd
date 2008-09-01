@@ -1410,4 +1410,6 @@
     <xsd:element name="testCase" type="tns:TestCase"></xsd:element>
 
     <xsd:element name="operation" type="tns:Operation"></xsd:element>
+
+    <xsd:element name="mockOperation" type="tns:MockOperation"></xsd:element>
 </xsd:schema>
