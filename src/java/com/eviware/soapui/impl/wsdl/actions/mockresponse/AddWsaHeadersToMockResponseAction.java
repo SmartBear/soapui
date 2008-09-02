@@ -45,14 +45,6 @@ public class AddWsaHeadersToMockResponseAction extends AbstractAction
 			SoapVersion soapVersion = mockResponse.getOperation().getInterface().getSoapVersion();
 			String content = mockResponse.getResponseContent();
 			WsaUtils wsaUtils = new WsaUtils(content, soapVersion, mockResponse.getOperation());
-//			if (!wsaUtils.hasWsAddressing(content))
-//			{
-//				content = wsaUtils.addWSAddressingMockResponse(mockResponse);
-//			}
-//			else if (SoapUI.getSettings().getBoolean(WsaSettings.OVERRIDE_EXISTING_HEADERS))
-//			{
-//				content = wsaUtils.overrideExistingMockresponseHeaders(content, mockResponse);
-//			}
 			content = wsaUtils.addWSAddressingMockResponse(mockResponse);
 			mockResponse.setResponseContent(content);
 		}
