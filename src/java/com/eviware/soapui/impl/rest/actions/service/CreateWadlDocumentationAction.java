@@ -12,17 +12,6 @@
 
 package com.eviware.soapui.impl.rest.actions.service;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -33,8 +22,18 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreateWadlDocumentationAction extends AbstractSoapUIAction<RestService>
 {
@@ -98,7 +97,7 @@ public class CreateWadlDocumentationAction extends AbstractSoapUIAction<RestServ
 		String reportFile = reportDirAbsolutePath + File.separatorChar + "wadl-report.html";
 		StreamResult result = new StreamResult( new FileWriter( reportFile ) );
 		
-		transformer.transform( 	new StreamSource( new StringReader( target.getWadlContext().getDefinitionParts().values().iterator().next().toString()   ) ), result );
+		transformer.transform( 	new StreamSource( new StringReader( target.getWadlContext().getDefinitionParts().get(0).getContent() )), result );
 
 		String reportUrl = new File( reportFile ).toURI().toURL().toString();
 		return reportUrl;
@@ -106,7 +105,7 @@ public class CreateWadlDocumentationAction extends AbstractSoapUIAction<RestServ
 
 	protected static void initTransformers() throws Exception
 	{
-		transformers = new HashMap<String,Transformer>();
+		transformers = new HashMap<String,Transformer>();                                                 
 		TransformerFactory xformFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
 
 		transformers.put( "WADL", xformFactory.newTemplates( new StreamSource( 

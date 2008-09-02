@@ -12,39 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl.panels.request.actions;
 
-import java.awt.Dimension;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Calendar;
-
-import javax.swing.SwingUtilities;
-
-import org.wsI.testing.x2003.x03.common.AddStyleSheet;
-import org.wsI.testing.x2003.x03.log.Environment;
-import org.wsI.testing.x2003.x03.log.HttpMessageEntry;
-import org.wsI.testing.x2003.x03.log.Implementation;
-import org.wsI.testing.x2003.x03.log.Log;
-import org.wsI.testing.x2003.x03.log.LogDocument;
-import org.wsI.testing.x2003.x03.log.MessageEntry;
-import org.wsI.testing.x2003.x03.log.Monitor;
-import org.wsI.testing.x2003.x03.log.NameVersionPair;
-import org.wsI.testing.x2003.x03.log.TcpMessageType;
-import org.wsI.testing.x2004.x07.analyzerConfig.AssertionResults;
-import org.wsI.testing.x2004.x07.analyzerConfig.Configuration;
-import org.wsI.testing.x2004.x07.analyzerConfig.ConfigurationDocument;
-import org.wsI.testing.x2004.x07.analyzerConfig.LogFile;
-import org.wsI.testing.x2004.x07.analyzerConfig.ReportFile;
-import org.wsI.testing.x2004.x07.analyzerConfig.LogFile.CorrelationType;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ArgumentBuilder;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.RunnerContext;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolHost;
+import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.*;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIAnalyzeAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIReportPanel;
 import com.eviware.soapui.model.iface.Response;
@@ -53,6 +23,18 @@ import com.eviware.soapui.settings.WSISettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
+import org.wsI.testing.x2003.x03.common.AddStyleSheet;
+import org.wsI.testing.x2003.x03.log.*;
+import org.wsI.testing.x2004.x07.analyzerConfig.*;
+import org.wsI.testing.x2004.x07.analyzerConfig.LogFile.CorrelationType;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Calendar;
 
 /**
  * Validates the request XML of a WsdlRequest
@@ -171,7 +153,7 @@ public class WSIValidateRequestAction extends AbstractToolsAction<WsdlRequest>
 		WsdlInterface iface = (WsdlInterface) modelItem.getOperation().getInterface();
 		
 		WsdlReferenceConfig wsdlRef = config.addNewWsdlReference();
-		wsdlRef.setWsdlURI( iface.getDefinition() );
+		wsdlRef.setWsdlURI( iface.getWsdlDefinition() );
 		WsdlElementReferenceConfig wsdlElement = wsdlRef.addNewWsdlElement();
 		wsdlElement.setType( WsdlElementTypeConfig.BINDING );
 		wsdlElement.setStringValue( iface.getBindingName().getLocalPart() );

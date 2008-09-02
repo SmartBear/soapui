@@ -12,25 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support.soap;
 
-import java.io.StringWriter;
-import java.util.List;
-import java.util.Map;
-
-import javax.wsdl.BindingOperation;
-import javax.wsdl.BindingOutput;
-import javax.wsdl.Message;
-import javax.wsdl.Part;
-import javax.xml.namespace.QName;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.SchemaGlobalElement;
-import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.support.Constants;
@@ -43,6 +24,19 @@ import com.eviware.soapui.model.iface.MessageBuilder;
 import com.eviware.soapui.model.iface.MessagePart.FaultPart;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import javax.wsdl.BindingOperation;
+import javax.wsdl.BindingOutput;
+import javax.wsdl.Message;
+import javax.wsdl.Part;
+import javax.xml.namespace.QName;
+import java.io.StringWriter;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Builds SOAP requests according to WSDL/XSD definitions
@@ -278,7 +272,7 @@ public class SoapMessageBuilder implements MessageBuilder
       }
       else 
       {
-//         cursor.beginElement( new QName( wsdlContext.getDefinition().getTargetNamespace(), part.getName() ));
+//         cursor.beginElement( new QName( wsdlContext.getWsdlDefinition().getTargetNamespace(), part.getName() ));
          cursor.beginElement( part.getName() );
          if( typeName != null && wsdlContext.hasSchemaTypes() )
          {
@@ -371,7 +365,7 @@ public class SoapMessageBuilder implements MessageBuilder
 	            QName typeName = part.getTypeName();
 	            if( typeName != null )
 	            {
-						SchemaType type = wsdlContext.findType( typeName );
+						SchemaType type = wsdlContext.getInterfaceDefinition().findType( typeName );
 		            
 		            if( type != null )
 		            {
@@ -446,7 +440,7 @@ public class SoapMessageBuilder implements MessageBuilder
 	            QName typeName = part.getTypeName();
 	            if( typeName != null )
 	            {
-						SchemaType type = wsdlContext.findType( typeName );
+						SchemaType type = wsdlContext.getInterfaceDefinition().findType( typeName );
 		            
 		            if( type != null )
 		            {

@@ -12,29 +12,28 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss.crypto;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyStore;
-import java.util.Properties;
-
-import org.apache.commons.ssl.KeyStoreBuilder;
-import org.apache.commons.ssl.Util;
-import org.apache.ws.security.components.crypto.CredentialException;
-import org.apache.ws.security.components.crypto.Crypto;
-import org.apache.ws.security.components.crypto.Merlin;
-
 import com.eviware.soapui.config.KeyMaterialCryptoConfig;
 import com.eviware.soapui.config.WSSCryptoConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.ResolveContext;
 import com.eviware.soapui.impl.wsdl.support.wss.DefaultWssContainer;
 import com.eviware.soapui.impl.wsdl.support.wss.WssContainer;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
 import com.eviware.soapui.impl.wsdl.teststeps.BeanPathPropertySupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.resolver.ResolveContext;
+import org.apache.commons.ssl.KeyStoreBuilder;
+import org.apache.commons.ssl.Util;
+import org.apache.ws.security.components.crypto.CredentialException;
+import org.apache.ws.security.components.crypto.Crypto;
+import org.apache.ws.security.components.crypto.Merlin;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.util.Properties;
 
 public class KeyMaterialWssCrypto implements WssCrypto
 {
@@ -255,7 +254,7 @@ public class KeyMaterialWssCrypto implements WssCrypto
 		getWssContainer().fireCryptoUpdated( this );
 	}
 
-	public void resolve(ResolveContext context)
+	public void resolve( ResolveContext context)
 	{
 		sourceProperty.resolveFile( context, "Missing keystore/certificate file");
 	}

@@ -12,15 +12,16 @@
 
 package com.eviware.soapui.impl.rest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eviware.soapui.config.RestResourceConfig;
 import com.eviware.soapui.config.RestServiceConfig;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.support.DefinitionContext;
+import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.iface.Operation;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * WSDL implementation of Interface, maps to a WSDL Binding
@@ -31,7 +32,7 @@ import com.eviware.soapui.model.iface.Operation;
 public class RestService extends AbstractInterface<RestServiceConfig> implements RestResourceContainer
 {
 	private List<RestResource> resources = new ArrayList<RestResource>();
-	private WadlContext wadlContext;
+	private WadlDefinitionContext wadlContext;
 	
 	public RestService( WsdlProject project, RestServiceConfig serviceConfig )
 	{
@@ -173,13 +174,13 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 		return getWadlContext();
 	}
 
-	public WadlContext getWadlContext()
+	public WadlDefinitionContext getWadlContext()
 	{
 		if( wadlContext == null )
-			wadlContext = new WadlContext( this );
-		
-		return wadlContext;
-	}
+			wadlContext = new WadlDefinitionContext( getWadlUrl(), this );
+
+      return wadlContext;
+   }
 
 	@Override
 	public String getDefinition()

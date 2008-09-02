@@ -12,10 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.registry;
 
+import com.eviware.soapui.config.TestStepConfig;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.eviware.soapui.config.TestStepConfig;
 
 /**
  * Registry of WsdlTestStep factories
@@ -39,7 +39,8 @@ public class WsdlTestStepRegistry
 		addFactory( new RunTestCaseStepFactory() );
 		//addFactory( new AsyncResponseStepFactory() );
 		addFactory( new RestRequestStepFactory() );
-	}
+      addFactory( new HttpRequestStepFactory() );
+   }
 	
 	public WsdlTestStepFactory getFactory( String type )
 	{

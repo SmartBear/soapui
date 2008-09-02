@@ -13,17 +13,15 @@
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.definition.support.AbstractDefinitionLoader;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
-import com.eviware.soapui.impl.wsdl.support.xsd.SchemaLoader;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
-import com.eviware.x.dialogs.XProgressMonitor;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.xml.sax.InputSource;
 
-import javax.wsdl.xml.WSDLLocator;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -33,17 +31,15 @@ import java.net.URL;
  * @author ole.matzura
  */
 
-public abstract class WsdlLoader implements WSDLLocator, SchemaLoader
+public abstract class WsdlLoader extends AbstractDefinitionLoader implements WsdlDefinitionLoader
 {
 	private final String url;
 	private String last;
 	private String username;
 	private String password;
 	protected static final Logger log = Logger.getLogger( WsdlLoader.class );
-	private XProgressMonitor monitor;
-	private int progressIndex;
 
-	public WsdlLoader( String url )
+   public WsdlLoader( String url )
 	{
 		this.url = url;
 		
@@ -169,13 +165,4 @@ public abstract class WsdlLoader implements WSDLLocator, SchemaLoader
 		return username;
 	}
 
-	public abstract boolean abort();
-
-	public abstract boolean isAborted();
-
-	public void setProgressMonitor(XProgressMonitor monitor, int progressIndex)
-	{
-		this.monitor = monitor;
-		this.progressIndex = progressIndex;
-	}
 }

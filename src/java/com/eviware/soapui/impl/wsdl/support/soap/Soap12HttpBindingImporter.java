@@ -12,16 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support.soap;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.wsdl.Binding;
-import javax.wsdl.BindingOperation;
-import javax.wsdl.extensions.soap12.SOAP12Binding;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -29,6 +19,14 @@ import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.settings.WsdlSettings;
+import org.apache.log4j.Logger;
+
+import javax.wsdl.Binding;
+import javax.wsdl.BindingOperation;
+import javax.wsdl.extensions.soap12.SOAP12Binding;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * BindingImporter that can import a WsdlInterface from an SOAP 1.2/HTTP binding
@@ -81,6 +79,7 @@ public class Soap12HttpBindingImporter extends AbstractSoapBindingImporter
          else
          {
          	log.info("importing operation " + operation.getName() );
+            iface.addNewOperation( operation );
          }
       }
       

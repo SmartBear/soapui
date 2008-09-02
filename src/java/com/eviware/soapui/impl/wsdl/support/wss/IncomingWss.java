@@ -12,13 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss;
 
-import java.io.IOException;
-import java.util.Vector;
-
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.callback.UnsupportedCallbackException;
-
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.IncomingWssConfig;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.resolver.ResolveContext;
 import org.apache.ws.security.WSPasswordCallback;
 import org.apache.ws.security.WSSecurityEngine;
 import org.apache.ws.security.WSSecurityException;
@@ -27,12 +26,11 @@ import org.apache.ws.security.util.WSSecurityUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.IncomingWssConfig;
-import com.eviware.soapui.impl.wsdl.ResolveContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.UISupport;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.UnsupportedCallbackException;
+import java.io.IOException;
+import java.util.Vector;
 
 public class IncomingWss
 {

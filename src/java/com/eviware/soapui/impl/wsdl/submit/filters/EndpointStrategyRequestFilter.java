@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
+import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.project.EndpointStrategy;
@@ -26,8 +27,12 @@ public class EndpointStrategyRequestFilter extends AbstractRequestFilter
 {
 	public void filterRequest(SubmitContext context, Request wsdlRequest)
 	{
-		EndpointStrategy endpointStrategy = wsdlRequest.getOperation().getInterface().getProject().getEndpointStrategy();
-		if( endpointStrategy != null )
-			endpointStrategy.filterRequest( context, wsdlRequest );
-	}
+      Operation operation = wsdlRequest.getOperation();
+      if( operation != null )
+      {
+         EndpointStrategy endpointStrategy = operation.getInterface().getProject().getEndpointStrategy();
+         if( endpointStrategy != null )
+            endpointStrategy.filterRequest( context, wsdlRequest );
+      }
+   }
 }

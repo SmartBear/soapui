@@ -12,10 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
@@ -29,6 +25,10 @@ import com.eviware.soapui.model.testsuite.ResponseAssertedMessageExchange;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TestStepResult for a WsdlTestRequestStep
@@ -50,11 +50,16 @@ public class RestRequestStepResult extends WsdlTestStepResult implements
 	private boolean addedAction;
 	private List<AssertedXPath> assertedXPaths;
 	
-	public RestRequestStepResult(RestTestRequestStep step )
+	public RestRequestStepResult(HttpTestRequestStep step )
 	{
 		super( step );
 	}
 
+   public RestRequestStepResult(RestTestRequestStep step )
+   {
+      super( step );
+   }
+   
    public WsdlOperation getOperation()
    {
       WsdlTestRequestStep testStep = (WsdlTestRequestStep) getTestStep();

@@ -12,11 +12,6 @@
 
 package com.eviware.soapui.impl.support;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.EndpointsConfig;
 import com.eviware.soapui.config.InterfaceConfig;
@@ -28,162 +23,179 @@ import com.eviware.soapui.model.iface.InterfaceListener;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.iface.Request;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public abstract class AbstractInterface<T extends InterfaceConfig> extends AbstractWsdlModelItem<T> implements Interface
 {
-	private Set<InterfaceListener> interfaceListeners = new HashSet<InterfaceListener>();
-	
-	protected AbstractInterface(T config, ModelItem parent, String icon)
-	{
-		super(config, parent, icon);
-		
-		if( config.getEndpoints() == null )
-			config.addNewEndpoints();
-		
-		for( InterfaceListener listener : SoapUI.getListenerRegistry().getListeners( InterfaceListener.class ) )
-		{
-			addInterfaceListener( listener );
-		}
-	}
+   private Set<InterfaceListener> interfaceListeners = new HashSet<InterfaceListener>();
 
-	public WsdlProject getProject()
-	{
-		return (WsdlProject) getParent();
-	}
-	
-	public List<? extends ModelItem> getChildren()
-	{
-		return getOperationList();
-	}
+   protected AbstractInterface(T config, ModelItem parent, String icon)
+   {
+      super(config, parent, icon);
 
-	public String[] getEndpoints()
-	{
-		EndpointsConfig endpoints = getConfig().getEndpoints();
-		List<String> endpointArray = endpoints.getEndpointList();
-		return endpointArray.toArray( new String[endpointArray.size()] );
-	}
-	
-	public void addEndpoint( String endpoint )
-	{
-		if( endpoint == null || endpoint.trim().length() == 0 )
-			return;
+      if (config.getEndpoints() == null)
+         config.addNewEndpoints();
 
-		endpoint = endpoint.trim();
-		String[] endpoints = getEndpoints();
+      for (InterfaceListener listener : SoapUI.getListenerRegistry().getListeners(InterfaceListener.class))
+      {
+         addInterfaceListener(listener);
+      }
 
-		// dont add the same endpoint twice
-		if( Arrays.asList( endpoints ).contains( endpoint ) )
-			return;
+      if (!config.isSetDefinitionCache())
+         config.addNewDefinitionCache();
+   }
 
-		getConfig().getEndpoints().addNewEndpoint().setStringValue( endpoint );
+   public WsdlProject getProject()
+   {
+      return (WsdlProject) getParent();
+   }
 
-		notifyPropertyChanged( ENDPOINT_PROPERTY, null, endpoint );
-	}
+   public T getConfig()
+   {
+      return super.getConfig();
+   }
 
-	public void changeEndpoint( String oldEndpoint, String newEndpoint )
-	{
-		if( oldEndpoint == null || oldEndpoint.trim().length() == 0 )
-			return;
-		if( newEndpoint == null || newEndpoint.trim().length() == 0 )
-			return;
+   public List<? extends ModelItem> getChildren()
+   {
+      return getOperationList();
+   }
 
-		EndpointsConfig endpoints = getConfig().getEndpoints();
+   public String[] getEndpoints()
+   {
+      EndpointsConfig endpoints = getConfig().getEndpoints();
+      List<String> endpointArray = endpoints.getEndpointList();
+      return endpointArray.toArray(new String[endpointArray.size()]);
+   }
 
-		for( int c = 0; c < endpoints.sizeOfEndpointArray(); c++ )
-		{
-			if( endpoints.getEndpointArray( c ).equals( oldEndpoint ) )
-			{
-				endpoints.setEndpointArray( c, newEndpoint );
-				notifyPropertyChanged( ENDPOINT_PROPERTY, oldEndpoint, newEndpoint );
-				break;
-			}
-		}
-	}
+   public void addEndpoint(String endpoint)
+   {
+      if (endpoint == null || endpoint.trim().length() == 0)
+         return;
 
-	public void removeEndpoint( String endpoint )
-	{
-		EndpointsConfig endpoints = getConfig().getEndpoints();
+      endpoint = endpoint.trim();
+      String[] endpoints = getEndpoints();
 
-		for( int c = 0; c < endpoints.sizeOfEndpointArray(); c++ )
-		{
-			if( endpoints.getEndpointArray( c ).equals( endpoint ) )
-			{
-				endpoints.removeEndpoint( c );
-				notifyPropertyChanged( ENDPOINT_PROPERTY, endpoint, null );
-				break;
-			}
-		}
-	}
+      // dont add the same endpoint twice
+      if (Arrays.asList(endpoints).contains(endpoint))
+         return;
 
-	
-	public void fireOperationAdded( Operation operation )
-	{
-		InterfaceListener[] a = interfaceListeners.toArray( new InterfaceListener[interfaceListeners.size()] );
+      getConfig().getEndpoints().addNewEndpoint().setStringValue(endpoint);
 
-		for( int c = 0; c < a.length; c++ )
-		{
-			a[c].operationAdded( operation );
-		}
-	}
+      notifyPropertyChanged(ENDPOINT_PROPERTY, null, endpoint);
+   }
 
-	public void fireOperationUpdated( Operation operation )
-	{
-		InterfaceListener[] a = interfaceListeners.toArray( new InterfaceListener[interfaceListeners.size()] );
+   public void changeEndpoint(String oldEndpoint, String newEndpoint)
+   {
+      if (oldEndpoint == null || oldEndpoint.trim().length() == 0)
+         return;
+      if (newEndpoint == null || newEndpoint.trim().length() == 0)
+         return;
 
-		for( int c = 0; c < a.length; c++ )
-		{
-			a[c].operationUpdated( operation );
-		}
-	}
+      EndpointsConfig endpoints = getConfig().getEndpoints();
 
-	public void fireOperationRemoved( Operation operation )
-	{
-		InterfaceListener[] a = interfaceListeners.toArray( new InterfaceListener[interfaceListeners.size()] );
+      for (int c = 0; c < endpoints.sizeOfEndpointArray(); c++)
+      {
+         if (endpoints.getEndpointArray(c).equals(oldEndpoint))
+         {
+            endpoints.setEndpointArray(c, newEndpoint);
+            notifyPropertyChanged(ENDPOINT_PROPERTY, oldEndpoint, newEndpoint);
+            break;
+         }
+      }
+   }
 
-		for( int c = 0; c < a.length; c++ )
-		{
-			a[c].operationRemoved( operation );
-		}
-	}
+   public void removeEndpoint(String endpoint)
+   {
+      EndpointsConfig endpoints = getConfig().getEndpoints();
 
-	public void fireRequestAdded( Request request )
-	{
-		InterfaceListener[] a = interfaceListeners.toArray( new InterfaceListener[interfaceListeners.size()] );
+      for (int c = 0; c < endpoints.sizeOfEndpointArray(); c++)
+      {
+         if (endpoints.getEndpointArray(c).equals(endpoint))
+         {
+            endpoints.removeEndpoint(c);
+            notifyPropertyChanged(ENDPOINT_PROPERTY, endpoint, null);
+            break;
+         }
+      }
+   }
 
-		for( int c = 0; c < a.length; c++ )
-		{
-			a[c].requestAdded( request );
-		}
-	}
 
-	public void fireRequestRemoved( Request request )
-	{
-		InterfaceListener[] a = interfaceListeners.toArray( new InterfaceListener[interfaceListeners.size()] );
+   public void fireOperationAdded(Operation operation)
+   {
+      InterfaceListener[] a = interfaceListeners.toArray(new InterfaceListener[interfaceListeners.size()]);
 
-		for( int c = 0; c < a.length; c++ )
-		{
-			a[c].requestRemoved( request );
-		}
-	}
+      for (int c = 0; c < a.length; c++)
+      {
+         a[c].operationAdded(operation);
+      }
+   }
 
-	public void addInterfaceListener( InterfaceListener listener )
-	{
-		interfaceListeners.add( listener );
-	}
+   public void fireOperationUpdated(Operation operation)
+   {
+      InterfaceListener[] a = interfaceListeners.toArray(new InterfaceListener[interfaceListeners.size()]);
 
-	public void removeInterfaceListener( InterfaceListener listener )
-	{
-		interfaceListeners.remove( listener );
-	}
+      for (int c = 0; c < a.length; c++)
+      {
+         a[c].operationUpdated(operation);
+      }
+   }
 
-	@Override
-	public void release()
-	{
-		super.release();
-		
-		interfaceListeners.clear();
-	}
-	
-	public abstract DefinitionContext getDefinitionContext();
+   public void fireOperationRemoved(Operation operation)
+   {
+      InterfaceListener[] a = interfaceListeners.toArray(new InterfaceListener[interfaceListeners.size()]);
 
-	public abstract String getDefinition();
+      for (int c = 0; c < a.length; c++)
+      {
+         a[c].operationRemoved(operation);
+      }
+   }
+
+   public void fireRequestAdded(Request request)
+   {
+      InterfaceListener[] a = interfaceListeners.toArray(new InterfaceListener[interfaceListeners.size()]);
+
+      for (int c = 0; c < a.length; c++)
+      {
+         a[c].requestAdded(request);
+      }
+   }
+
+   public void fireRequestRemoved(Request request)
+   {
+      InterfaceListener[] a = interfaceListeners.toArray(new InterfaceListener[interfaceListeners.size()]);
+
+      for (int c = 0; c < a.length; c++)
+      {
+         a[c].requestRemoved(request);
+      }
+   }
+
+   public void addInterfaceListener(InterfaceListener listener)
+   {
+      interfaceListeners.add(listener);
+   }
+
+   public void removeInterfaceListener(InterfaceListener listener)
+   {
+      interfaceListeners.remove(listener);
+   }
+
+   @Override
+   public void release()
+   {
+      super.release();
+
+      interfaceListeners.clear();
+   }
+
+   public abstract DefinitionContext getDefinitionContext();
+
+   /**
+    * Return the URL for the current definition (ie a WSDL or WADL url)
+    */
+
+   public abstract String getDefinition();
 }

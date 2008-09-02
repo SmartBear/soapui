@@ -12,21 +12,6 @@
 
 package com.eviware.soapui.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeMap;
-
-import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlOptions;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SoapuiWorkspaceDocumentConfig;
 import com.eviware.soapui.config.WorkspaceProjectConfig;
@@ -47,6 +32,15 @@ import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.resolver.ResolveDialog;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlOptions;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Default Workspace implementation
@@ -66,8 +60,9 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 	private ImageIcon workspaceIcon;
 	private XmlBeansSettingsImpl settings;
 	private TreeMap<String, String> projectOptions;
+   private ResolveDialog resolver;
 
-	public WorkspaceImpl( String path, TreeMap<String, String> projectOptions ) throws XmlException, IOException
+   public WorkspaceImpl( String path, TreeMap<String, String> projectOptions ) throws XmlException, IOException
 	{
 		if ( projectOptions == null ) {
 			this.projectOptions = new TreeMap<String, String>();
@@ -342,17 +337,23 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 	{
 		File projectFile = new File( fileName );
 
-		
-//		WsdlProject project = new WsdlProject( projectFile.getAbsolutePath(), this );
 		WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(projectFile.getAbsolutePath(), this );
-		projectList.add( project );
+
+      projectList.add( project );
 		fireProjectAdded( project );
 
-		save( true );
+      if( resolver ==null)
+      {
+         resolver = new ResolveDialog( "Resolve Project", "Resolve imported project", null );
+         resolver.setShowOkMessage( false );
+      }
+      
+      resolver.resolve( project );
+
+      save( true );
 
 		return project;
 	}
-
 	
 	public WsdlProject createProject( String name ) throws SoapUIException
 	{

@@ -12,17 +12,17 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.xmlbeans.XmlException;
-
+import com.eviware.soapui.impl.support.definition.export.WsdlDefinitionExporter;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.TestCaseWithJetty;
+import org.apache.xmlbeans.XmlException;
 
-public class CachedWsdlLoaderTestCase extends TestCaseWithJetty
+import java.io.File;
+import java.io.IOException;
+
+public class WsdlDefinitionExporterTestCase extends TestCaseWithJetty
 {
    public void testSaveDefinition() throws Exception 
    {
@@ -41,18 +41,19 @@ public class CachedWsdlLoaderTestCase extends TestCaseWithJetty
 	{
 		WsdlProject project = new WsdlProject();
    	project.getSettings().setBoolean( WsdlSettings.CACHE_WSDLS, true );
-		WsdlInterface wsdl = WsdlImporter.importWsdl( project, wsdlUrl )[0];
+		WsdlInterface wsdlInterface = WsdlImporter.importWsdl( project, wsdlUrl )[0];
    	
-   	assertTrue( wsdl.isCached() );
-   	CachedWsdlLoader loader = (CachedWsdlLoader) wsdl.createWsdlLoader();
-   	
-   	String root = loader.saveDefinition( "test" + File.separatorChar + "output" );
+   	assertTrue( wsdlInterface.isCached() );
+
+      WsdlDefinitionExporter exporter = new WsdlDefinitionExporter( wsdlInterface );
+
+   	String root = exporter.export( "test" + File.separatorChar + "output" );
    	
    	WsdlProject project2 = new WsdlProject();
    	WsdlInterface wsdl2 = WsdlImporter.importWsdl( project2, new File( root ).toURI().toURL().toString() )[0];
    	
-   	assertEquals( wsdl.getBindingName(), wsdl2.getBindingName() );
-   	assertEquals( wsdl.getOperationCount(), wsdl2.getOperationCount() );
-   	assertEquals( wsdl.getWsdlContext().getDefinedNamespaces(), wsdl2.getWsdlContext().getDefinedNamespaces() );
+   	assertEquals( wsdlInterface.getBindingName(), wsdl2.getBindingName() );
+   	assertEquals( wsdlInterface.getOperationCount(), wsdl2.getOperationCount() );
+   	assertEquals( wsdlInterface.getWsdlContext().getInterfaceDefinition().getDefinedNamespaces(), wsdl2.getWsdlContext().getInterfaceDefinition().getDefinedNamespaces() );
 	}
 }

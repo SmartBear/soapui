@@ -12,33 +12,28 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.util.Collections;
-import java.util.List;
+ import com.eviware.soapui.config.TestAssertionConfig;
+ import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
+ import com.eviware.soapui.model.ModelItem;
+ import com.eviware.soapui.model.iface.MessageExchange;
+ import com.eviware.soapui.model.iface.SubmitContext;
+ import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
+ import com.eviware.soapui.model.settings.Settings;
+ import com.eviware.soapui.model.support.AbstractModelItem;
+ import com.eviware.soapui.model.support.ModelSupport;
+ import com.eviware.soapui.model.testsuite.*;
+ import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
+ import com.eviware.soapui.model.testsuite.AssertionError;
+ import com.eviware.soapui.support.UISupport;
+ import com.eviware.soapui.support.resolver.ResolveContext;
+ import org.apache.xmlbeans.XmlObject;
 
-import javax.swing.ImageIcon;
+ import javax.swing.*;
+ import java.util.Collections;
+ import java.util.List;
 
-import org.apache.xmlbeans.XmlObject;
-
-import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.iface.MessageExchange;
-import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
-import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.support.AbstractModelItem;
-import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.model.testsuite.Assertable;
-import com.eviware.soapui.model.testsuite.AssertionError;
-import com.eviware.soapui.model.testsuite.AssertionException;
-import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
-import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
-import com.eviware.soapui.support.UISupport;
-
-/**
+ /**
  * Base class for WsdlAssertions
  * 
  * @author Ole.Matzura
@@ -382,6 +377,9 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 
 	public void prepare( TestRunner testRunner, TestRunContext testRunContext ) throws Exception
 	{
-		
 	}
+
+   public void resolve( ResolveContext context )
+   {
+   }
 }

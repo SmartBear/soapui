@@ -12,24 +12,23 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss;
 
+import com.eviware.soapui.config.IncomingWssConfig;
+import com.eviware.soapui.config.KeyMaterialCryptoConfig;
+import com.eviware.soapui.config.OutgoingWssConfig;
+import com.eviware.soapui.config.WssContainerConfig;
+import com.eviware.soapui.impl.wsdl.support.wss.crypto.KeyMaterialWssCrypto;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
+import com.eviware.soapui.support.resolver.ResolveContext;
+import com.eviware.soapui.support.types.StringList;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-
-import com.eviware.soapui.config.IncomingWssConfig;
-import com.eviware.soapui.config.KeyMaterialCryptoConfig;
-import com.eviware.soapui.config.OutgoingWssConfig;
-import com.eviware.soapui.config.WssContainerConfig;
-import com.eviware.soapui.impl.wsdl.ResolveContext;
-import com.eviware.soapui.impl.wsdl.support.wss.crypto.KeyMaterialWssCrypto;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
-import com.eviware.soapui.support.types.StringList;
 
 public class DefaultWssContainer implements WssContainer
 {
@@ -351,7 +350,7 @@ public class DefaultWssContainer implements WssContainer
 		}
 	}
 
-	public void resolve(ResolveContext context)
+	public void resolve( ResolveContext context)
 	{
 		for( int c = 0; c < cryptos.size(); c++ )
 		{

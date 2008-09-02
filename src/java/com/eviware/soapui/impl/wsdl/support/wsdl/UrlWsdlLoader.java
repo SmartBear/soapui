@@ -12,28 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpState;
-import org.apache.commons.httpclient.NTCredentials;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScheme;
-import org.apache.commons.httpclient.auth.CredentialsNotAvailableException;
-import org.apache.commons.httpclient.auth.CredentialsProvider;
-import org.apache.commons.httpclient.auth.NTLMScheme;
-import org.apache.commons.httpclient.auth.RFC2617Scheme;
-import org.apache.commons.httpclient.methods.GetMethod;
-
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.definition.DefinitionLoader;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
@@ -46,6 +26,17 @@ import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
+import org.apache.commons.httpclient.*;
+import org.apache.commons.httpclient.auth.*;
+import org.apache.commons.httpclient.methods.GetMethod;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * WsdlLoader for URLs
@@ -53,7 +44,7 @@ import com.eviware.x.form.XFormFactory;
  * @author ole.matzura
  */
 
-public class UrlWsdlLoader extends WsdlLoader 
+public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader 
 {
 	private HttpState state;
 	protected GetMethod getMethod;

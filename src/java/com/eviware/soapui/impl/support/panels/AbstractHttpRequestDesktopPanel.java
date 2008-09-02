@@ -12,32 +12,6 @@
 
 package com.eviware.soapui.impl.support.panels;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JToggleButton;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.EndpointsComboBoxModel;
@@ -47,11 +21,11 @@ import com.eviware.soapui.impl.support.components.RequestMessageXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Submit;
+import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
-import com.eviware.soapui.model.iface.Request.SubmitException;
-import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
@@ -62,6 +36,14 @@ import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
 
 /**
  * Abstract DesktopPanel for HttpRequests
@@ -101,7 +83,8 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		super(modelItem);
 		
 		this.request = request;
-		init( request );
+
+      init( request );
 	}
 
 	protected void init(T2 request)
@@ -109,8 +92,9 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		this.endpointsModel = new EndpointsComboBoxModel(request);
 
 		request.addSubmitListener(this);
+      request.addPropertyChangeListener(this);
 
-		add(buildContent(), BorderLayout.CENTER);
+      add(buildContent(), BorderLayout.CENTER);
 		add(buildToolbar(), BorderLayout.NORTH);
 		add(buildStatusLabel(), BorderLayout.SOUTH);
 
@@ -172,7 +156,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		submitAction = new SubmitAction();
 		submitButton = createActionButton(submitAction, true);
 		submitButton.setEnabled(request.getEndpoint() != null && request.getEndpoint().trim().length() > 0);
-		
+
 		cancelButton = createActionButton(new CancelAction(), false);
 		splitButton = createActionButton(new ChangeSplitPaneOrientationAction(requestSplitPane), true);
 
@@ -245,10 +229,14 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		insertButtons( toolbar );
 		
 		toolbar.add(cancelButton);
-		toolbar.addSeparator();
-		toolbar.add(endpointComponent);
 
-		toolbar.add(Box.createHorizontalGlue());
+      if( endpointComponent != null )
+      {
+         toolbar.addSeparator();
+		   toolbar.add(endpointComponent);
+      }
+
+      toolbar.add(Box.createHorizontalGlue());
 		toolbar.add(tabsButton);
 		toolbar.add(splitButton);
 		toolbar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction(getHelpUrl())));
@@ -275,23 +263,33 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 					String selectedItem = item.toString();
 					endpointCombo.setToolTipText(selectedItem);
 				}
-
-				submitButton.setEnabled(submit == null && request.getEndpoint() != null
-						&& request.getEndpoint().trim().length() > 0);
 			}
 		});
 		
 		return endpointCombo;
 	}
 
-	protected abstract String getHelpUrl();
+   public void propertyChange(PropertyChangeEvent evt)
+   {
+      if( evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY ))
+      {
+         submitButton.setEnabled(submit == null && request.getEndpoint() != null
+						&& request.getEndpoint().trim().length() > 0);
+      }
+
+      super.propertyChange(evt);
+   }
+
+   protected abstract String getHelpUrl();
 
 	protected abstract void insertButtons(JXToolBar toolbar);
 
 	public void setEnabled(boolean enabled)
 	{
-		endpointComponent.setEnabled(enabled);
-		requestEditor.setEditable(enabled);
+      if( endpointComponent != null )
+         endpointComponent.setEnabled(enabled);
+
+      requestEditor.setEditable(enabled);
 		if( responseEditor != null )
 			responseEditor.setEditable(enabled);
 
@@ -545,7 +543,8 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
 		String message = null;
 		String infoMessage = null;
-		String requestName = request.getOperation().getInterface().getName() + "." + request.getOperation().getName()
+		String requestName = request.getOperation() == null ? request.getName() :
+              request.getOperation().getInterface().getName() + "." + request.getOperation().getName()
 				+ ":" + request.getName();
 
 		if (status == Status.CANCELED)
@@ -606,7 +605,8 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 			submit.cancel();
 		}
 
-		request.removeSubmitListener(this);
+      request.removePropertyChangeListener(this);
+      request.removeSubmitListener(this);
 		requestEditor.saveDocument(false);
 
 		if( responseEditor != null )

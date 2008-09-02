@@ -43,242 +43,249 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 extends RestRequest> 
-	extends AbstractHttpRequestDesktopPanel<T, T2> implements PropertyChangeListener
+public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 extends RestRequest>
+        extends AbstractHttpRequestDesktopPanel<T, T2>
 {
-	private boolean updatingRequest;
-	private JComboBox methodCombo;
-	private JUndoableTextField pathField;
-	private JButton recreatePathButton;
+   private boolean updatingRequest;
+   private JComboBox methodCombo;
+   private JUndoableTextField pathField;
+   private JButton recreatePathButton;
 
-	public AbstractRestRequestDesktopPanel( T modelItem, T2 requestItem )
-	{
-		super(modelItem, requestItem);
-	}
+   public AbstractRestRequestDesktopPanel(T modelItem, T2 requestItem)
+   {
+      super(modelItem, requestItem);
+   }
 
-	public void propertyChange(PropertyChangeEvent evt)
-	{
-		if (evt.getPropertyName().equals("method") && !updatingRequest)
-		{
-			methodCombo.setSelectedItem(evt.getNewValue());
-		}
-	}
+   public void propertyChange(PropertyChangeEvent evt)
+   {
+      if (evt.getPropertyName().equals("method") && !updatingRequest)
+      {
+         methodCombo.setSelectedItem(evt.getNewValue());
+      }
 
-	@Override
-	protected ModelItemXmlEditor<?, ?> buildRequestEditor()
-	{
-		return new RestRequestMessageEditor(getRequest());
-	}
+      super.propertyChange(evt);
+   }
 
-	@Override
-	protected ModelItemXmlEditor<?, ?> buildResponseEditor()
-	{
-		return new RestResponseMessageEditor(getRequest());
-	}
+   @Override
+   protected ModelItemXmlEditor<?, ?> buildRequestEditor()
+   {
+      return new RestRequestMessageEditor(getRequest());
+   }
 
-	@Override
-	protected Submit doSubmit() throws SubmitException
-	{
-		return getRequest().submit(new WsdlSubmitContext(getModelItem()), true);
-	}
+   @Override
+   protected ModelItemXmlEditor<?, ?> buildResponseEditor()
+   {
+      return new RestResponseMessageEditor(getRequest());
+   }
 
-	@Override
-	public void afterSubmit(Submit submit, SubmitContext context)
-	{
-		super.afterSubmit(submit, context);
-		
-		HttpResponse response = getRequest().getResponse();
-		if( response != null )
-		{
-			if( HttpUtils.isErrorStatus( response.getStatusCode() ) )
-			{
-				extractRepresentation(response, RestRepresentation.Type.FAULT);
-			}
-			else
-			{
-				extractRepresentation(response, RestRepresentation.Type.RESPONSE);
-			}
-		}
-	}
+   @Override
+   protected Submit doSubmit() throws SubmitException
+   {
+      return getRequest().submit(new WsdlSubmitContext(getModelItem()), true);
+   }
 
-	@SuppressWarnings("unchecked")
-	private void extractRepresentation(HttpResponse response, Type type)
-	{
-		RestRepresentation[] representations = getRequest().getRepresentations(type);
-		int c = 0; 
-		for( ;c < representations.length; c++)
-		{
-			if( representations[c].getMediaType().equals(response.getContentType()))
-			{
-				List status = representations[c].getStatus();
-				if( status == null || !status.contains(response.getStatusCode()))
-				{
-					status = status == null ? new ArrayList<Integer>() : new ArrayList<Integer>( status );
-					status.add( response.getStatusCode() );
-					representations[c].setStatus(status);
-				}
-				break;
-			}
-		}
-		
-		if( c == representations.length )
-		{
-			RestRepresentation representation = getRequest().addNewRepresentation(type);
-			representation.setMediaType(response.getContentType());
-			representation.setStatus( Arrays.asList( response.getStatusCode() ));
-		}
-	}
+   @Override
+   public void afterSubmit(Submit submit, SubmitContext context)
+   {
+      super.afterSubmit(submit, context);
 
-	@Override
-	protected String getHelpUrl()
-	{
-		return null;
-	}
+      HttpResponse response = getRequest().getResponse();
+      if (response != null)
+      {
+         if (HttpUtils.isErrorStatus(response.getStatusCode()))
+         {
+            extractRepresentation(response, RestRepresentation.Type.FAULT);
+         }
+         else
+         {
+            extractRepresentation(response, RestRepresentation.Type.RESPONSE);
+         }
+      }
+   }
 
-	@Override
-	protected void insertButtons(JXToolBar toolbar)
-	{
-	}
+   @SuppressWarnings("unchecked")
+   private void extractRepresentation(HttpResponse response, Type type)
+   {
+      RestRepresentation[] representations = getRequest().getRepresentations(type);
+      int c = 0;
+      for (; c < representations.length; c++)
+      {
+         if (representations[c].getMediaType().equals(response.getContentType()))
+         {
+            List status = representations[c].getStatus();
+            if (status == null || !status.contains(response.getStatusCode()))
+            {
+               status = status == null ? new ArrayList<Integer>() : new ArrayList<Integer>(status);
+               status.add(response.getStatusCode());
+               representations[c].setStatus(status);
+            }
+            break;
+         }
+      }
 
-	@Override
-	protected JComponent buildToolbar()
-	{
-		recreatePathButton = createActionButton(new RecreatePathAction(), true);
+      if (c == representations.length)
+      {
+         RestRepresentation representation = getRequest().addNewRepresentation(type);
+         representation.setMediaType(response.getContentType());
+         representation.setStatus(Arrays.asList(response.getStatusCode()));
+      }
+   }
 
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.add(super.buildToolbar(), BorderLayout.NORTH);
+   @Override
+   protected String getHelpUrl()
+   {
+      return null;
+   }
 
-		JXToolBar toolbar = UISupport.createToolbar();
-		toolbar.addSpace(3);
-		methodCombo = new JComboBox(new Object[] { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
-				RequestMethod.DELETE, RequestMethod.HEAD });
+   @Override
+   protected void insertButtons(JXToolBar toolbar)
+   {
+   }
 
-		methodCombo.setSelectedItem(getRequest().getMethod());
-		methodCombo.addItemListener(new ItemListener()
-		{
+   protected JComponent buildEndpointComponent()
+   {
+      return getRequest().getOperation() == null ? null : super.buildEndpointComponent();
+   }
 
-			public void itemStateChanged(ItemEvent e)
-			{
-				updatingRequest = true;
-				getRequest().setMethod((RequestMethod) methodCombo.getSelectedItem());
-				updatingRequest = false;
-			}
-		});
+   @Override
+   protected JComponent buildToolbar()
+   {
+      recreatePathButton = createActionButton(new RecreatePathAction(), true);
 
-		toolbar.addLabeledFixed("Method", methodCombo);
-		toolbar.addSeparator();
+      JPanel panel = new JPanel(new BorderLayout());
+      panel.add(super.buildToolbar(), BorderLayout.NORTH);
 
-		pathField = new JUndoableTextField();
-		pathField.setPreferredSize(new Dimension(250, 20));
-		pathField.setText(getRequest().getPath());
-		pathField.getDocument().addDocumentListener(new DocumentListenerAdapter()
-		{
+      JXToolBar toolbar = UISupport.createToolbar();
+      toolbar.addSpace(3);
+      methodCombo = new JComboBox(new Object[]{RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+              RequestMethod.DELETE, RequestMethod.HEAD});
 
-			@Override
-			public void update(Document document)
-			{
-				getRequest().setPath(pathField.getText());
-			}
-		});
+      methodCombo.setSelectedItem(getRequest().getMethod());
+      methodCombo.addItemListener(new ItemListener()
+      {
 
-		toolbar.addLabeledFixed("Resource Path:", pathField);
-		toolbar.add(recreatePathButton);
+         public void itemStateChanged(ItemEvent e)
+         {
+            updatingRequest = true;
+            getRequest().setMethod((RequestMethod) methodCombo.getSelectedItem());
+            updatingRequest = false;
+         }
+      });
 
-		toolbar.addSeparator();
+      toolbar.addLabeledFixed("Method", methodCombo);
+      toolbar.addSeparator();
 
-		panel.add(toolbar, BorderLayout.SOUTH);
-		return panel;
-	}
+      pathField = new JUndoableTextField();
+      pathField.setPreferredSize(new Dimension(250, 20));
+      pathField.setText(getRequest().getPath());
+      pathField.getDocument().addDocumentListener(new DocumentListenerAdapter()
+      {
 
-	public class RestRequestMessageEditor extends
-			AbstractHttpRequestDesktopPanel<?, ?>.AbstractHttpRequestMessageEditor<RestRequestDocument>
-	{
-		public RestRequestMessageEditor(RestRequest modelItem)
-		{
-			super(new RestRequestDocument(modelItem));
-		}
-	}
+         @Override
+         public void update(Document document)
+         {
+            getRequest().setPath(pathField.getText());
+         }
+      });
 
-	public class RestResponseMessageEditor extends
-			AbstractHttpRequestDesktopPanel<?, ?>.AbstractHttpResponseMessageEditor<RestResponseDocument>
-	{
-		public RestResponseMessageEditor(RestRequest modelItem)
-		{
-			super(new RestResponseDocument(modelItem));
-		}
-	}
+      toolbar.addLabeledFixed("Resource Path:", pathField);
+      toolbar.add(recreatePathButton);
 
-	public class RestRequestDocument extends AbstractXmlDocument
-	{
-		private final RestRequest modelItem;
+      toolbar.addSeparator();
 
-		public RestRequestDocument(RestRequest modelItem)
-		{
-			this.modelItem = modelItem;
-		}
+      panel.add(toolbar, BorderLayout.SOUTH);
+      return panel;
+   }
 
-		public RestRequest getRequest()
-		{
-			return modelItem;
-		}
+   public class RestRequestMessageEditor extends
+           AbstractHttpRequestDesktopPanel<?, ?>.AbstractHttpRequestMessageEditor<RestRequestDocument>
+   {
+      public RestRequestMessageEditor(RestRequest modelItem)
+      {
+         super(new RestRequestDocument(modelItem));
+      }
+   }
 
-		public String getXml()
-		{
-			return getRequest().getRequestContent();
-		}
+   public class RestResponseMessageEditor extends
+           AbstractHttpRequestDesktopPanel<?, ?>.AbstractHttpResponseMessageEditor<RestResponseDocument>
+   {
+      public RestResponseMessageEditor(RestRequest modelItem)
+      {
+         super(new RestResponseDocument(modelItem));
+      }
+   }
 
-		public void setXml(String xml)
-		{
-			getRequest().setRequestContent(xml);
-		}
-	}
+   public class RestRequestDocument extends AbstractXmlDocument
+   {
+      private final RestRequest modelItem;
 
-	public class RestResponseDocument extends AbstractXmlDocument implements PropertyChangeListener
-	{
-		private final RestRequest modelItem;
+      public RestRequestDocument(RestRequest modelItem)
+      {
+         this.modelItem = modelItem;
+      }
 
-		public RestResponseDocument(RestRequest modelItem)
-		{
-			this.modelItem = modelItem;
+      public RestRequest getRequest()
+      {
+         return modelItem;
+      }
 
-			modelItem.addPropertyChangeListener(RestRequest.RESPONSE_PROPERTY, this);
-		}
+      public String getXml()
+      {
+         return getRequest().getRequestContent();
+      }
 
-		public RestRequest getRequest()
-		{
-			return modelItem;
-		}
+      public void setXml(String xml)
+      {
+         getRequest().setRequestContent(xml);
+      }
+   }
 
-		public String getXml()
-		{
-			return modelItem.getResponseContentAsXml();
-		}
+   public class RestResponseDocument extends AbstractXmlDocument implements PropertyChangeListener
+   {
+      private final RestRequest modelItem;
 
-		public void setXml(String xml)
-		{
-			HttpResponse response = getRequest().getResponse();
-			if (response != null)
-				response.setResponseContent(xml);
-		}
+      public RestResponseDocument(RestRequest modelItem)
+      {
+         this.modelItem = modelItem;
 
-		public void propertyChange(PropertyChangeEvent evt)
-		{
-			fireXmlChanged(evt.getOldValue() == null ? null : ((HttpResponse) evt.getOldValue()).getContentAsString(),
-					getXml());
-		}
-	}
+         modelItem.addPropertyChangeListener(RestRequest.RESPONSE_PROPERTY, this);
+      }
 
-	private class RecreatePathAction extends AbstractAction
-	{
-		public RecreatePathAction()
-		{
-			super();
-			putValue(Action.SMALL_ICON, UISupport.createImageIcon("/recreate_request.gif"));
-		}
+      public RestRequest getRequest()
+      {
+         return modelItem;
+      }
 
-		public void actionPerformed(ActionEvent e)
-		{
-			getRequest().setPath(getRequest().getResource().getFullPath());
-		}
-	}
+      public String getXml()
+      {
+         return modelItem.getResponseContentAsXml();
+      }
+
+      public void setXml(String xml)
+      {
+         HttpResponse response = getRequest().getResponse();
+         if (response != null)
+            response.setResponseContent(xml);
+      }
+
+      public void propertyChange(PropertyChangeEvent evt)
+      {
+         fireXmlChanged(evt.getOldValue() == null ? null : ((HttpResponse) evt.getOldValue()).getContentAsString(),
+                 getXml());
+      }
+   }
+
+   private class RecreatePathAction extends AbstractAction
+   {
+      public RecreatePathAction()
+      {
+         super();
+         putValue(Action.SMALL_ICON, UISupport.createImageIcon("/recreate_request.gif"));
+      }
+
+      public void actionPerformed(ActionEvent e)
+      {
+         getRequest().setPath(getRequest().getResource().getFullPath());
+      }
+   }
 }

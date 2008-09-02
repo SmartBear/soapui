@@ -12,22 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.mock;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.swing.ImageIcon;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MockOperationConfig;
 import com.eviware.soapui.config.MockServiceConfig;
 import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.ResolveContext;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -36,16 +24,17 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.BeanPathPropertySupport;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.mock.MockOperation;
-import com.eviware.soapui.model.mock.MockResult;
-import com.eviware.soapui.model.mock.MockRunListener;
-import com.eviware.soapui.model.mock.MockRunner;
-import com.eviware.soapui.model.mock.MockService;
-import com.eviware.soapui.model.mock.MockServiceListener;
+import com.eviware.soapui.model.mock.*;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.*;
+import java.util.*;
 
 /**
  * A MockService for simulation WsdlInterfaces and their operations
@@ -552,7 +541,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	}
 
 	@Override
-	public void resolve(ResolveContext context)
+	public void resolve( ResolveContext context)
 	{
 		super.resolve(context);
 		docrootProperty.resolveFile(context, "Missing MockService docroot");

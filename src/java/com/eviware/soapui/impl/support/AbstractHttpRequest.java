@@ -16,7 +16,10 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AbstractRequestConfig;
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.CredentialsConfig;
-import com.eviware.soapui.impl.wsdl.*;
+import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
+import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
 import com.eviware.soapui.impl.wsdl.support.FileAttachment;
@@ -31,6 +34,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringToStringMap;
 import org.apache.log4j.Logger;
 
@@ -564,11 +568,11 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
    }
    
 	@Override
-	public void resolve(ResolveContext context)
+	public void resolve( ResolveContext context)
 	{
 		super.resolve(context);
 		
 		for( FileAttachment<?> attachment : attachments )
 			attachment.resolve( context );
-	}
+   }
 }

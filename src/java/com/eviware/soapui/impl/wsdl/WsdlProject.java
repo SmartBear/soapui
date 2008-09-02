@@ -12,38 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.ImageIcon;
-
-import org.apache.commons.ssl.OpenSSL;
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlError;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.InterfaceConfig;
-import com.eviware.soapui.config.MockServiceConfig;
-import com.eviware.soapui.config.ProjectConfig;
-import com.eviware.soapui.config.SoapuiProjectDocumentConfig;
-import com.eviware.soapui.config.TestSuiteConfig;
+import com.eviware.soapui.config.*;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategy;
@@ -69,8 +39,28 @@ import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
+import org.apache.commons.ssl.OpenSSL;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlError;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.GeneralSecurityException;
+import java.util.*;
 
 /**
  * WSDL project implementation
@@ -216,7 +206,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 				setPropertiesConfig(getConfig().addNewProperties());
 				wssContainer = new DefaultWssContainer(this, getConfig().addNewWssContainer());
-				setResourceRoot("${projectDir}");
+//				setResourceRoot("${projectDir}");
 			}
 
 			if (getConfig() != null)
@@ -1226,7 +1216,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	}
 
 	@Override
-	public void resolve(ResolveContext context)
+	public void resolve( ResolveContext context)
 	{
 		super.resolve(context);
 

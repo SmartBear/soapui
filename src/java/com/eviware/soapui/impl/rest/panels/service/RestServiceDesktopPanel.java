@@ -12,58 +12,13 @@
 
 package com.eviware.soapui.impl.rest.panels.service;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTree;
-import javax.swing.SwingUtilities;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlLineNumber;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-import org.jdesktop.swingx.JXTable;
-import org.syntax.jedit.JEditTextArea;
-import org.w3c.dom.Element;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
-import com.eviware.soapui.impl.rest.WadlContext;
 import com.eviware.soapui.impl.rest.actions.service.CreateWadlDocumentationAction;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.support.definition.InterfaceDefinitionPart;
+import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
 import com.eviware.soapui.impl.wsdl.actions.iface.ExportDefinitionAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.UpdateInterfaceAction;
 import com.eviware.soapui.impl.wsdl.panels.iface.WsdlInterfaceDesktopPanel;
@@ -77,9 +32,9 @@ import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JEditorStatusBar;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.MetricsPanel;
-import com.eviware.soapui.support.components.ProgressDialog;
 import com.eviware.soapui.support.components.MetricsPanel.MetricType;
 import com.eviware.soapui.support.components.MetricsPanel.MetricsSection;
+import com.eviware.soapui.support.components.ProgressDialog;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -88,6 +43,30 @@ import com.eviware.x.dialogs.Worker;
 import com.eviware.x.dialogs.XProgressDialog;
 import com.eviware.x.dialogs.XProgressMonitor;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlLineNumber;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+import org.jdesktop.swingx.JXTable;
+import org.syntax.jedit.JEditTextArea;
+import org.w3c.dom.Element;
+
+import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.StringWriter;
+import java.util.*;
+import java.util.List;
 
 public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 {
@@ -357,15 +336,14 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 
 			try
 			{
-				WadlContext wadlContext = iface.getWadlContext();
-				Map<String, XmlObject> parts = wadlContext.getDefinitionParts();
+				WadlDefinitionContext wadlContext = iface.getWadlContext();
+				List<InterfaceDefinitionPart> parts = wadlContext.getDefinitionParts();
 				
 				int tabCount = partTabs.getTabCount();
 
-				for (Iterator<String> iter = parts.keySet().iterator(); iter.hasNext();)
+				for (InterfaceDefinitionPart part : parts)
 				{
-					String url = iter.next();
-					addTab(url, parts.get(url));
+					addTab(part.getUrl(), part.getContent());
 				}
 
 				while (tabCount-- > 0)
@@ -388,7 +366,7 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 			}
 		}
 
-		private void addTab(String url, XmlObject xmlObject) throws Exception
+		private void addTab(String url, String content) throws Exception
 		{
 			int ix = url.startsWith("file:") ? url.lastIndexOf(File.separatorChar) : url.lastIndexOf('/');
 			if (ix == -1)
@@ -410,11 +388,11 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 
 			JXEditTextArea inputArea = JXEditTextArea.createXmlEditor(false);
 			StringWriter writer = new StringWriter();
-			XmlUtils.serializePretty(xmlObject, writer);
+			XmlUtils.serializePretty( XmlObject.Factory.parse( content ), writer);
 			String xmlString = writer.toString();
 
 			// reparse so linenumbers are correct
-			xmlObject = XmlObject.Factory.parse(xmlString, new XmlOptions().setLoadLineNumbers());
+			XmlObject xmlObject = XmlObject.Factory.parse(xmlString, new XmlOptions().setLoadLineNumbers());
 
 			inputArea.setText(xmlString);
 			inputArea.setEditable(false);

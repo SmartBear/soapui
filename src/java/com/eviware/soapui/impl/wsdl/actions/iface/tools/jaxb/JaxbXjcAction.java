@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.jaxb;
 
-import java.io.File;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ArgumentBuilder;
@@ -30,6 +28,8 @@ import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
+
+import java.io.File;
 
 /**
  * Generates JAXB classes for given interface
@@ -100,7 +100,7 @@ public class JaxbXjcAction extends AbstractToolsAction<Interface>
 		
 		mainForm.addTextField( HTTPPROXY, "set HTTP/HTTPS proxy. Format is [user[:password]@]proxyHost[:proxyPort]", XForm.FieldType.TEXT );
 		mainForm.addCheckBox( READONLY, "(generated files will be in read-only mode)" );
-		mainForm.addCheckBox( NOVALIDATION, "(do not perform strict validation of the input schema(s))" );
+		mainForm.addCheckBox( NOVALIDATION, "(do not resolve strict validation of the input schema(s))" );
 		mainForm.addCheckBox( NPA, "(suppress generation of package level annotations (**/package-info.java))" );
 
 		mainForm.addCheckBox( VERBOSE, "(be extra verbose)" );

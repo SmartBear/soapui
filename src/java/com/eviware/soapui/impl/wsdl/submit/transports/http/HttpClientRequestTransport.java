@@ -12,17 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethodBase;
-import org.apache.commons.httpclient.HttpState;
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -35,8 +24,15 @@ import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.types.StringToStringMap;
+import org.apache.commons.httpclient.*;
+import org.apache.log4j.Logger;
+
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * HTTP transport that uses HttpClient to send/receive SOAP messages
@@ -128,7 +124,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			}
 			
 			//	do request
-			WsdlProject project = (WsdlProject) httpRequest.getOperation().getInterface().getProject();
+			WsdlProject project = (WsdlProject) ModelSupport.getModelItemProject( httpRequest );
 			WssCrypto crypto = project.getWssContainer().getCryptoByName( httpRequest.getSslKeystore() );
 			if( crypto != null && WssCrypto.STATUS_OK.equals( crypto.getStatus() ) )
 			{

@@ -12,12 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
-import javax.swing.JPanel;
-
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.support.components.JPropertiesTable;
+
+import javax.swing.*;
 
 /**
  * PanelBuilder for RestTestRequest
@@ -51,22 +51,21 @@ public class RestTestRequestPanelBuilder extends EmptyPanelBuilder<RestTestReque
    	table.addProperty( "Description", "description", true );
 //   	table.addProperty( "Message Size", "contentLength", false );
    	table.addProperty( "Encoding", "encoding", new String[] {null, "UTF-8", "iso-8859-1" } );
-   	table.addProperty( "Endpoint", "endpoint", request.getInterface().getEndpoints() );
-   	table.addProperty( "Bind Address", "bindAddress", true );
 
-//   	table.addProperty( "Service", "service" );
-//   	table.addProperty( "Resource", "resourcePath" );
+      if( request.getOperation() == null )
+         table.addProperty( "Endpoint", "endpoint", true );
+      else
+         table.addProperty( "Endpoint", "endpoint", request.getInterface().getEndpoints() );
+      
+      table.addProperty( "Bind Address", "bindAddress", true );
+
+   	table.addProperty( "Service", "service" );
+   	table.addProperty( "Resource", "resourcePath" );
    	
    	// security / authentication
    	table.addProperty( "Username", "username", true );
    	table.addProperty( "Password", "password", true );
    	table.addProperty( "Domain", "domain", true );
-   	
-   	// preprocessing
-//   	table.addProperty( "Enable Inline Files", "inlineFilesEnabled", JPropertiesTable.BOOLEAN_OPTIONS ).
-//			setDescription( "Enables inline file references in elements with binary content; file:<path>" );
-//   	table.addProperty( "Strip whitespaces", "stripWhitespaces", JPropertiesTable.BOOLEAN_OPTIONS );
-//   	table.addProperty( "Remove Empty Content", "removeEmptyContent", JPropertiesTable.BOOLEAN_OPTIONS );
    	
    	// post-processing
    	table.addProperty( "Pretty Print", "prettyPrint", JPropertiesTable.BOOLEAN_OPTIONS );

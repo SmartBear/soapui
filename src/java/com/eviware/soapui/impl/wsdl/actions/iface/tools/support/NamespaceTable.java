@@ -12,25 +12,20 @@
 
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.support;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.table.AbstractTableModel;
-
-import org.jdesktop.swingx.JXTable;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.x.form.XForm.ToolkitType;
 import com.eviware.x.impl.swing.AbstractSwingXFormField;
+import org.jdesktop.swingx.JXTable;
+
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Swing JTable for holding Namespace/Package mappings
@@ -96,7 +91,7 @@ public class NamespaceTable extends AbstractSwingXFormField<JPanel>
 			try
 			{
 				if( iface != null )
-					namespaces.addAll( iface.getWsdlContext().getDefinedNamespaces());
+					namespaces.addAll( iface.getWsdlContext().getInterfaceDefinition().getDefinedNamespaces());
 			}
 			catch (Exception e)
 			{

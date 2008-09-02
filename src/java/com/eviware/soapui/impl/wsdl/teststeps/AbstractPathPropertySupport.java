@@ -12,16 +12,16 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.ResolveContext;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.resolver.ResolveContext;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public abstract class AbstractPathPropertySupport 
 {
@@ -174,7 +174,7 @@ public abstract class AbstractPathPropertySupport
 				File file = new File( source );
 				if( !file.exists() || !file.isDirectory())
 				{
-					context.addPathToResolve( modelItem, errorDescription, source, new ResolveContext.DirectoryResolver( "Select Directory", source ) 
+					context.addPathToResolve( modelItem, errorDescription, source, new ResolveContext.DirectoryResolver( "Select Directory", source )
 					{
 						@Override
 						public boolean apply(File newFile)

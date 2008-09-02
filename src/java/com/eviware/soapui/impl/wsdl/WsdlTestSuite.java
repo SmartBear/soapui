@@ -12,23 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.xmlbeans.XmlException;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.LoadTestConfig;
-import com.eviware.soapui.config.TestCaseConfig;
-import com.eviware.soapui.config.TestCaseDocumentConfig;
-import com.eviware.soapui.config.TestSuiteConfig;
-import com.eviware.soapui.config.TestSuiteRunTypesConfig;
+import com.eviware.soapui.config.*;
 import com.eviware.soapui.config.TestSuiteRunTypesConfig.Enum;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -41,8 +26,12 @@ import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuiteListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.resolver.ResolveDialog;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
+
+import java.io.File;
+import java.util.*;
 
 /**
  * TestSuite implementation for WSDL projects.
@@ -576,13 +565,9 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 		{
 			testCaseNewConfig = TestCaseDocumentConfig.Factory.parse(file).getTestCase();
 		}
-		catch (XmlException e)
+		catch( Exception e)
 		{
-			e.printStackTrace();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
+			SoapUI.logError( e );
 		}
 
 		if (testCaseNewConfig != null)
@@ -592,7 +577,12 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 			WsdlTestCase newTestCase = new WsdlTestCase(this, newConfig, false);
 // needs to be validated..			
 			newTestCase.afterLoad();
-			testCases.add(newTestCase);
+
+         ResolveDialog resolver = new ResolveDialog( "Validate TestCase", "Checks TestCase for inconsistencies", null );
+         resolver.setShowOkMessage( false );
+         resolver.resolve( newTestCase );
+
+         testCases.add(newTestCase);
 			fireTestCaseAdded(newTestCase);
 		}
 		else

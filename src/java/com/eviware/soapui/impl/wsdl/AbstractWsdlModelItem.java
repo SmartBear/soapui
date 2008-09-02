@@ -12,11 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import java.util.Collection;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
@@ -24,6 +19,11 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.resolver.ResolveContext;
+
+import javax.swing.*;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Abstract base class for WSDL-implementation classes
@@ -98,7 +98,7 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends A
 		return settings;
 	}
 	
-	final public T getConfig()
+	public T getConfig()
 	{
 		return config;
 	}

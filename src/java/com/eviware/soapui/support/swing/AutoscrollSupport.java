@@ -12,14 +12,9 @@
 
 package com.eviware.soapui.support.swing;
 
-import java.awt.Component;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.dnd.Autoscroll;
-
-import javax.swing.JViewport;
-import javax.swing.SwingUtilities;
 
 public class AutoscrollSupport implements Autoscroll{ 
    private static final int AUTOSCROLL_MARGIN = 12;
@@ -51,7 +46,7 @@ public class AutoscrollSupport implements Autoscroll{
        int viewHeight = viewport.getExtentSize().height; 
        int viewWidth = viewport.getExtentSize().width; 
 
-       // perform scrolling 
+       // resolve scrolling
        if((cursorLoc.y-viewPos.y)<insets.top){ // scroll up 
            viewport.setViewPosition( 
                    new Point(viewPos.x, 

@@ -16,8 +16,8 @@ import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
-import com.eviware.soapui.impl.rest.WadlUtils;
 import com.eviware.soapui.impl.rest.panels.resource.JWadlParamsTable;
+import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest.RequestMethod;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -77,7 +77,7 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 		{
 			URL url = (URL) param;
 			
-			String path = WadlUtils.extractParams(url, params);
+			String path = RestUtils.extractParams(url, params);
 			dialog.setValue(Form.RESOURCEPATH, path );
 			
 			String[] items = path.split("/");
@@ -143,7 +143,7 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 			
 			try
 			{
-				WadlUtils.extractParams( new URL( dialog.getValue(Form.RESOURCEPATH)), params);
+				RestUtils.extractParams( new URL( dialog.getValue(Form.RESOURCEPATH)), params);
 			}
 			catch (MalformedURLException e1)
 			{

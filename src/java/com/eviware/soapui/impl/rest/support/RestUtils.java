@@ -1,25 +1,32 @@
 package com.eviware.soapui.impl.rest.support;
 
-import java.net.URL;
-import java.util.List;
-
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
+import com.eviware.soapui.impl.wsdl.support.UrlSchemaLoader;
+import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringList;
 import com.sun.research.wadl.x2006.x10.ApplicationDocument;
-import com.sun.research.wadl.x2006.x10.RepresentationType;
 import com.sun.research.wadl.x2006.x10.ApplicationDocument.Application;
 import com.sun.research.wadl.x2006.x10.DocDocument.Doc;
 import com.sun.research.wadl.x2006.x10.MethodDocument.Method;
 import com.sun.research.wadl.x2006.x10.ParamDocument.Param;
+import com.sun.research.wadl.x2006.x10.RepresentationType;
 import com.sun.research.wadl.x2006.x10.ResourceDocument.Resource;
 import com.sun.research.wadl.x2006.x10.ResourcesDocument.Resources;
+import org.apache.xmlbeans.XmlObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RestUtils
 {
@@ -191,4 +198,106 @@ public class RestUtils
 		
 		return method;
 	}
+
+   public static Map<String, XmlObject> getDefinitionParts(String wadlUrl)
+   {
+      Map<String, XmlObject> result = new HashMap<String, XmlObject>();
+
+      try
+      {
+return SchemaUtils.getSchemas( wadlUrl, new UrlSchemaLoader( wadlUrl ));
+
+//         URL url = new URL(wadlUrl);
+//			ApplicationDocument applicationDocument = ApplicationDocument.Factory.parse(url);
+//			result.put(url.getPath(), applicationDocument);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+
+      return result;
+   }
+
+   public static String extractParams(URL param, XmlBeansRestParamsTestPropertyHolder params)
+   {
+      String path = param.getPath();
+      String[] items = path.split("/");
+
+      int templateParamCount = 0;
+      StringBuffer resultPath = new StringBuffer();
+
+      for (int i = 0; i < items.length; i++)
+      {
+         String item = items[i];
+         try
+         {
+            String[] matrixParams = item.split(";");
+            if (matrixParams.length > 0)
+            {
+               item = matrixParams[0];
+               for (int c = 1; c < matrixParams.length; c++)
+               {
+                  String matrixParam = matrixParams[c];
+
+                  int ix = matrixParam.indexOf('=');
+                  if (ix == -1)
+                  {
+                     params.addProperty(URLDecoder.decode(matrixParam, "Utf-8")).setStyle(ParameterStyle.MATRIX);
+                  }
+                  else
+                  {
+                     String name = matrixParam.substring(0, ix);
+                     RestParamProperty property = params.addProperty(URLDecoder.decode(name, "Utf-8"));
+                     property.setStyle(ParameterStyle.MATRIX);
+                     property.setValue(URLDecoder.decode(matrixParam.substring(ix + 1), "Utf-8"));
+                  }
+               }
+            }
+
+            Integer.parseInt(item);
+            RestParamProperty prop = params.addProperty("param" + templateParamCount++);
+            prop.setStyle(ParameterStyle.TEMPLATE);
+            prop.setValue(item);
+
+            item = "{" + prop.getName() + "}";
+         }
+         catch (Exception e)
+         {
+         }
+
+         if (StringUtils.hasContent(item))
+            resultPath.append('/').append(item);
+      }
+
+      String query = ((URL) param).getQuery();
+      if (StringUtils.hasContent(query))
+      {
+         items = query.split("&");
+         for (String item : items)
+         {
+            try
+            {
+               int ix = item.indexOf('=');
+               if (ix == -1)
+               {
+                  params.addProperty(URLDecoder.decode(item, "Utf-8")).setStyle(ParameterStyle.QUERY);
+               }
+               else
+               {
+                  String name = item.substring(0, ix);
+                  RestParamProperty property = params.addProperty(URLDecoder.decode(name, "Utf-8"));
+                  property.setStyle(ParameterStyle.QUERY);
+                  property.setValue(URLDecoder.decode(item.substring(ix + 1), "Utf-8"));
+               }
+            }
+            catch (UnsupportedEncodingException e)
+            {
+               e.printStackTrace();
+            }
+         }
+      }
+
+      return resultPath.toString();
+   }
 }

@@ -38,7 +38,6 @@ import com.eviware.soapui.support.log.JLogList;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -50,7 +49,6 @@ import java.util.Date;
  */
 
 public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel<WsdlTestRequestStep, WsdlTestRequest>
-		implements PropertyChangeListener
 {
 	private JLogList logArea;
 	private InternalTestMonitorListener testMonitorListener = new InternalTestMonitorListener();
@@ -71,7 +69,6 @@ public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel
 		SoapUI.getTestMonitor().addTestMonitorListener(testMonitorListener);
 		setEnabled(!SoapUI.getTestMonitor().hasRunningTest(requestStep.getTestCase()));
 
-		requestStep.getTestRequest().addPropertyChangeListener(WsdlTestRequest.STATUS_PROPERTY, this);
 		requestStep.getTestRequest().addAssertionsListener(assertionsListener);
 	}
 
@@ -240,7 +237,6 @@ public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel
 			assertionsPanel.release();
 			SoapUI.getTestMonitor().removeTestMonitorListener(testMonitorListener);
 			logArea.release();
-			getModelItem().getTestRequest().removePropertyChangeListener(WsdlTestRequest.STATUS_PROPERTY, this);
 			getModelItem().getTestRequest().removeAssertionsListener(assertionsListener);
 			return true;
 		}
@@ -283,6 +279,9 @@ public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel
 
 	public void propertyChange(PropertyChangeEvent evt)
 	{
-		updateStatusIcon();
+      super.propertyChange( evt );
+
+      if( evt.getPropertyName().equals(WsdlTestRequest.STATUS_PROPERTY))
+         updateStatusIcon();
 	}
 }

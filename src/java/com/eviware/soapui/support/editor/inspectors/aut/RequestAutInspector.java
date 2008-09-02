@@ -12,12 +12,6 @@
 
 package com.eviware.soapui.support.editor.inspectors.aut;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.support.components.SimpleBindingForm;
@@ -27,6 +21,9 @@ import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.types.StringList;
 import com.jgoodies.binding.PresentationModel;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class RequestAutInspector extends AbstractXmlInspector
 {
@@ -46,13 +43,6 @@ public class RequestAutInspector extends AbstractXmlInspector
 		{
 			mainPanel = new JPanel( new BorderLayout() );
 
-			StringList outgoingNames = new StringList( request.getOperation().getInterface().getProject()
-						.getWssContainer().getOutgoingWssNames() );
-			outgoingNames.add( "" );
-			StringList incomingNames = new StringList( request.getOperation().getInterface().getProject()
-						.getWssContainer().getIncomingWssNames() );
-			incomingNames.add( "" );
-
 			form = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( request ) );
 			form.addSpace( 5 );
 			form.appendTextField( "username", "Username", "The username to use for HTTP Authentication" );
@@ -61,7 +51,14 @@ public class RequestAutInspector extends AbstractXmlInspector
 
 			if( request instanceof WsdlRequest )
 			{
-				form.addSpace( 5 );
+            StringList outgoingNames = new StringList( request.getOperation().getInterface().getProject()
+						.getWssContainer().getOutgoingWssNames() );
+            outgoingNames.add( "" );
+            StringList incomingNames = new StringList( request.getOperation().getInterface().getProject()
+                     .getWssContainer().getIncomingWssNames() );
+            incomingNames.add( "" );
+
+            form.addSpace( 5 );
 				form.appendComboBox( "outgoingWss", "Outgoing WSS", outgoingNames.toStringArray(),
 							"The outgoing WS-Security configuration to use" );
 				form.appendComboBox( "incomingWss", "Incoming WSS", incomingNames.toStringArray(),

@@ -12,23 +12,22 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.ws.security.message.WSSecHeader;
-import org.apache.ws.security.util.WSSecurityUtil;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.OutgoingWssConfig;
 import com.eviware.soapui.config.WSSEntryConfig;
-import com.eviware.soapui.impl.wsdl.ResolveContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.resolver.ResolveContext;
+import org.apache.ws.security.message.WSSecHeader;
+import org.apache.ws.security.util.WSSecurityUtil;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OutgoingWss implements PropertyExpansionContainer
 {

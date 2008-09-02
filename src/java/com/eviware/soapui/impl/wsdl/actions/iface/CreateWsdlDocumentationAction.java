@@ -12,21 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.actions.iface;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.definition.export.WsdlDefinitionExporter;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.support.wsdl.CachedWsdlLoader;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
@@ -34,8 +23,18 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreateWsdlDocumentationAction extends AbstractSoapUIAction<WsdlInterface>
 {
@@ -98,19 +97,9 @@ public class CreateWsdlDocumentationAction extends AbstractSoapUIAction<WsdlInte
 		
 		String reportFile = reportDirAbsolutePath + File.separatorChar + "wsdl-report.html";
 		StreamResult result = new StreamResult( new FileWriter( reportFile ) );
-		
-     	CachedWsdlLoader loader = null;
-     	
-     	if( target.isCached() )
-     	{
-     		loader = (CachedWsdlLoader) target.createWsdlLoader();
-     	}
-     	else
-     	{
-			loader = new CachedWsdlLoader( target );
-     	}
 
-		String infile = loader.saveDefinition( reportDirAbsolutePath );
+      WsdlDefinitionExporter exporter = new WsdlDefinitionExporter( target );
+		String infile = exporter.export( reportDirAbsolutePath );
 		
 		transformer.transform( new StreamSource( new FileReader( infile )), result );
 
