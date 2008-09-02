@@ -27,6 +27,9 @@ public interface WsaSettings {
 	@Setting( name="Use default Action", description="Use default Action generated from wsdl", type=SettingType.BOOLEAN )
 	public final static String USE_DEFAULT_ACTION = WsaSettings.class.getSimpleName() + "@" + "useDefaultAction";
 	
+	@Setting( name="Generate MessageID", description="Randomly generate MessageID", type=SettingType.BOOLEAN )
+	public final static String GENERATE_MESSAGE_ID = WsaSettings.class.getSimpleName() + "@" + "generateMessageID";
+	
 	@Setting( name="Use default ReplyTo", description="Use default 'anonimoys' for ReplyTo ", type=SettingType.BOOLEAN )
 	public final static String USE_DEFAULT_REPLYTO = WsaSettings.class.getSimpleName() + "@" + "useDefaultReplyTo";
 	
