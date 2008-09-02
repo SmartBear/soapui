@@ -62,7 +62,6 @@ public class WsaUtils
 	XmlObject xmlHeaderObject;
 	ArrayList<Node> headerWsaElementList;
 
-	// String content, WsaContainer wsdlRequest, ExtendedHttpMethod httpMethod
 	public WsaUtils(String content, SoapVersion soapVersion, Operation operation)
 	{
 		this.soapVersion = soapVersion;
@@ -161,6 +160,7 @@ public class WsaUtils
 			if (!StringUtils.isNullOrEmpty(action))
 			{
 				header.appendChild(builder.createWsaChildElement("wsa:Action", envelopeElement, action));
+				wsaContainer.getWsaConfig().setAction(action);
 			}
 
 			String replyTo = wsaContainer.getWsaConfig().getReplyTo();
@@ -174,6 +174,7 @@ public class WsaUtils
 				{
 					header
 							.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, replyToAnonimus));
+					wsaContainer.getWsaConfig().setReplyTo(replyToAnonimus);
 				}
 			}
 
@@ -190,11 +191,12 @@ public class WsaUtils
 			{
 				header.appendChild(builder.createWsaChildElement("wsa:MessageID", envelopeElement, msgId));
 			}
-			else if (operation.isRequestResponse())
+			else if (operation.isRequestResponse() && SoapUI.getSettings().getBoolean(WsaSettings.GENERATE_MESSAGE_ID))
 			{
 				// if msgId not specified but wsa:msgId mandatory create one
-				header.appendChild(builder.createWsaChildElement("wsa:MessageID", envelopeElement, UUID.randomUUID()
-						.toString()));
+				String generatedMessageId = UUID.randomUUID().toString();
+				header.appendChild(builder.createWsaChildElement("wsa:MessageID", envelopeElement, generatedMessageId ));
+				wsaContainer.getWsaConfig().setMessageID(generatedMessageId);
 			}
 
 			String to = wsaContainer.getWsaConfig().getTo();
@@ -207,8 +209,9 @@ public class WsaUtils
 				if (httpMethod != null)
 				{
 					// if to not specified but wsa:to mandatory get default value
-					header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement, httpMethod.getURI()
-							.toString()));
+					String defaultTo = httpMethod.getURI().toString();
+					header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement, defaultTo ));
+					wsaContainer.getWsaConfig().setTo(defaultTo);
 				}
 			}
 
@@ -256,16 +259,6 @@ public class WsaUtils
 	{
 		try
 		{
-			// if ws-a already exists and globally set not to be overriden return existing content
-			if (getExistingWsAddressing(content) && !SoapUI.getSettings().getBoolean(WsaSettings.OVERRIDE_EXISTING_HEADERS))
-			{
-				return content;
-			}
-			else
-			{
-				cleanExistingWsaHeaders(content);
-			}
-
 			Element header = addWsAddressingCommon(wsaContainer);
 
 			String action = wsaContainer.getWsaConfig().getAction();
@@ -276,6 +269,7 @@ public class WsaUtils
 			if (!StringUtils.isNullOrEmpty(action))
 			{
 				header.appendChild(builder.createWsaChildElement("wsa:Action", envelopeElement, action));
+				wsaContainer.getWsaConfig().setAction(action);
 			}
 
 			String replyTo = wsaContainer.getWsaConfig().getReplyTo();
@@ -304,6 +298,7 @@ public class WsaUtils
 				{
 					header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement, relationshipType,
 							requestMessageId));
+					wsaContainer.getWsaConfig().setRelatesTo(requestMessageId);
 				}
 				else if (wsaContainer instanceof WsdlMockResponse)
 				{
@@ -313,6 +308,8 @@ public class WsaUtils
 						{
 							header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement,
 									relatesToReply, requestMessageId));
+							wsaContainer.getWsaConfig().setRelationshipType(relatesToReply);
+							wsaContainer.getWsaConfig().setRelatesTo(requestMessageId);
 						}
 					}
 				}
@@ -342,6 +339,7 @@ public class WsaUtils
 					{
 						header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement,
 								requestReplyToValue));
+						wsaContainer.getWsaConfig().setTo(requestReplyToValue);
 					}
 				}
 			}
@@ -354,17 +352,18 @@ public class WsaUtils
 				}
 
 				String relationshipType = wsaContainer.getWsaConfig().getRelationshipType();
-				if (!StringUtils.isNullOrEmpty(relationshipType))
+				String relatesTo = wsaContainer.getWsaConfig().getRelatesTo();
+				if (!StringUtils.isNullOrEmpty(relationshipType) && !StringUtils.isNullOrEmpty(relatesTo))
 				{
 					header.appendChild(builder
-							.createRelatesToElement("wsa:RelatesTo", envelopeElement, relationshipType, ""));
+							.createRelatesToElement("wsa:RelatesTo", envelopeElement, relationshipType, relatesTo));
 				}
 				else if (wsaContainer instanceof WsdlMockResponse)
 				{
-					if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE))
+					if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE) && !StringUtils.isNullOrEmpty(relatesTo))
 					{
 						header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement, relatesToReply,
-								""));
+								relatesTo));
 					}
 				}
 
@@ -473,39 +472,18 @@ public class WsaUtils
 
 	private String cleanExistingWsaHeaders(String content)
 	{
-//		try
-//		{
-			// XmlObject xmlObject = XmlObject.Factory.parse(content);
-//			xmlHeaderObject = (XmlObject) SoapUtils.getHeaderElement(xmlContentObject, soapVersion, true);
-			Iterator<Node> iter = headerWsaElementList.iterator();
-			while (iter.hasNext())
-			{
-				((Element) xmlHeaderObject.getDomNode()).removeChild((Node) iter.next());
+		Iterator<Node> iter = headerWsaElementList.iterator();
+		while (iter.hasNext())
+		{
+			((Element) xmlHeaderObject.getDomNode()).removeChild((Node) iter.next());
 
-			}
+		}
 
-			((Element) xmlHeaderObject.getDomNode()).removeAttribute("xmlns:wsa");
+		((Element) xmlHeaderObject.getDomNode()).removeAttribute("xmlns:wsa");
 
-			content = xmlContentObject.xmlText();
+		content = xmlContentObject.xmlText();
 
-//		}
-//		catch (XmlException e)
-//		{
-//			SoapUI.logError(e);
-//		}
 		return content;
 	}
 
-//	public String overrideExistingRequestHeaders(String content, WsdlRequest wsdlrequest)
-//	{
-//		cleanExistingWsaHeaders(content);
-//		return addWSAddressingRequest(wsdlrequest);
-//	}
-//
-//	public String overrideExistingMockresponseHeaders(String content, WsdlMockResponse wsdlMockResponse)
-//	{
-//		cleanExistingWsaHeaders(content);
-//		return addWSAddressingMockResponse(wsdlMockResponse);
-//	}
-//
 }
