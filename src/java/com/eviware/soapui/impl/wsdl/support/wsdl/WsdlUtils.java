@@ -1015,55 +1015,6 @@ public class WsdlUtils
 		return definitionCache;
 	}
 	
-//	public static void createDefaultWsaAction(WsdlRequest requestImpl)
-//	{
-//		try
-//		{
-//			//construct default action
-//			Definition definition = requestImpl.getOperation().getInterface().getWsdlContext().getDefinition();
-//			String targetNamespace = definition.getTargetNamespace();
-//			String portTypeName = requestImpl.getOperation().getInterface().getBinding().getPortType().getQName().getLocalPart();
-//			String operationName = requestImpl.getOperation().getName();
-//			requestImpl.getWsaConfig().setAction(targetNamespace + "/" + portTypeName + "/" + operationName);
-//			
-//		}
-//		catch (Exception e)
-//		{
-//			SoapUI.logError( e );
-//		}
-//	}
-//	public static void createDefaultWsaAction(WsdlOperation wsdlOperation, WsdlRequestConfig wsdlRequestConfig)
-//	{
-//		try
-//		{
-//			//construct default action
-//			Definition definition = wsdlOperation.getInterface().getWsdlContext().getDefinition();
-//			String targetNamespace = definition.getTargetNamespace();
-//			String portTypeName = wsdlOperation.getInterface().getBinding().getPortType().getQName().getLocalPart();
-//			String operationName = wsdlOperation.getInputName();
-//			wsdlRequestConfig.getWsaConfig().setAction(targetNamespace + "/" + portTypeName + "/" + operationName);
-//			
-//		}
-//		catch (Exception e)
-//		{
-//			SoapUI.logError( e );
-//		}
-//	}
-//	public static void createDefaultWsaAction(WsdlMockResponse response)
-//	{
-//		try
-//		{
-//			//construct default action
-//			WsdlOperation operation = response.getMockOperation().getOperation();
-//			String defaultAction = getDefaultWsaAction(operation, true);
-//			response.getWsaConfig().setAction(defaultAction);
-//		}
-//		catch (Exception e)
-//		{
-//			SoapUI.logError( e );
-//		}
-//	}
-
 	public static String getDefaultWsaAction(WsdlOperation operation, boolean output) 
 	{
         // SOAP 1.1 specific handling
