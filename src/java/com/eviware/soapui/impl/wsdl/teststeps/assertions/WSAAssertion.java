@@ -24,7 +24,7 @@ import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 
 /**
- * Assertion for verifiying that WS-Addressing processing was ok
+ * Assertion for verifying that WS-Addressing processing was ok
  * 
  * @author dragica.soldo
  */
