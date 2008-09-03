@@ -41,6 +41,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
@@ -194,7 +195,8 @@ public class AssertionsPanel extends JPanel
 				removeAssertionAction.setEnabled( ix >= 0 );
 				
             if( ix == -1 ) return;
-            configureAssertionAction.setEnabled( assertionListModel.getAssertionAt( ix ).isConfigurable() );	
+            TestAssertion assertion = assertionListModel.getAssertionAt( ix );
+				configureAssertionAction.setEnabled( assertion != null && assertion.isConfigurable() );	
 			}} );
 		
 		return toolbar;
@@ -288,12 +290,12 @@ public class AssertionsPanel extends JPanel
       public TestAssertion getAssertionAt( int index )
       {
       	Object object = items.get( index );
-      	while( object instanceof AssertionError && index > 0 )
+      	while( !(object instanceof TestAssertion) && index > 0 )
       	{
       		object = items.get( --index );
       	}
       	
-      	return (TestAssertion) object;
+      	return (TestAssertion) ((object instanceof TestAssertion) ? object : null);
       }
       
       public void refresh()
