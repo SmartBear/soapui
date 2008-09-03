@@ -43,6 +43,16 @@ public class RestTestRequestStep extends HttpTestRequestStep
       }
    }
 
+   public String getService()
+   {
+      return getRequestStepConfig().getService();
+   }
+
+   public String getResourcePath()
+   {
+      return getRequestStepConfig().getResourcePath();
+   }
+   
    protected String createDefaultRawResponseContent()
    {
       return restResource == null ? null : restResource.createResponse(true);

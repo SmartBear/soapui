@@ -280,6 +280,11 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
       super.propertyChange(evt);
    }
 
+   public JButton getSubmitButton()
+   {
+      return submitButton;
+   }
+
    protected abstract String getHelpUrl();
 
 	protected abstract void insertButtons(JXToolBar toolbar);

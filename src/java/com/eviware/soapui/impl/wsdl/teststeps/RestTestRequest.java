@@ -55,7 +55,7 @@ public class RestTestRequest extends RestRequest implements Assertable
    private static ImageIcon unknownRequestIcon;
 
    private AssertionStatus currentStatus;
-   private final HttpTestRequestStep testStep;
+   private HttpTestRequestStep testStep;
 
    private AssertionsSupport assertionsSupport;
    private RestResponseMessageExchange messageExchange;
@@ -344,7 +344,7 @@ public class RestTestRequest extends RestRequest implements Assertable
    @Override
    public RestResource getOperation()
    {
-      return null; // getTestStep().getResource();
+      return ((RestTestRequestStep)testStep).getResource();
    }
 
    protected static class TestRequestIconAnimator extends RequestIconAnimator<RestTestRequest>

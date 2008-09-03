@@ -172,6 +172,11 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
       return result;
    }
 
+   public String getType()
+   {
+      return WsdlInterfaceFactory.WSDL_TYPE;
+   }
+
    public synchronized WsdlContext getWsdlContext()
    {
       if (wsdlContext == null)

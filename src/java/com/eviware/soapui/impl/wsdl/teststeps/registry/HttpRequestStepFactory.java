@@ -15,8 +15,9 @@ package com.eviware.soapui.impl.wsdl.teststeps.registry;
 import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -47,7 +48,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 
    public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest)
    {
-      return new RestTestRequestStep(testCase, config, forLoadTest);
+      return new HttpTestRequestStep(testCase, config, forLoadTest);
    }
 
    public TestStepConfig createNewTestStep(WsdlTestCase testCase, String name)
@@ -62,7 +63,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 
       RestRequestStepConfig testStepConfig = RestRequestStepConfig.Factory.newInstance();
       RestMethodConfig requestConfig = testStepConfig.addNewRestRequest();
-      requestConfig.setEndpoint(dialog.getValue(ENDPOINT));
+      requestConfig.setFullPath(dialog.getValue(ENDPOINT));
       requestConfig.setMethod(dialog.getValue(METHOD));
 
       TestStepConfig testStep = TestStepConfig.Factory.newInstance();
@@ -83,9 +84,15 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
       XFormDialogBuilder builder = XFormFactory.createDialogBuilder("Add HTTP Request to TestCase");
       XForm mainForm = builder.createForm("Basic");
 
-      mainForm.addTextField(STEP_NAME, "Name of TestStep", XForm.FieldType.URL).setWidth(30);
+      mainForm.addTextField(STEP_NAME, "Name of TestStep", XForm.FieldType.TEXT).setWidth(30);
       mainForm.addTextField(ENDPOINT, "Endpoint", XForm.FieldType.URL).setWidth(30);
-      mainForm.addTextField(METHOD, "Endpoint", XForm.FieldType.URL).setWidth(30);
+      mainForm.addComboBox(METHOD, new Object[] {
+         RestRequest.RequestMethod.GET,
+              RestRequest.RequestMethod.POST,
+              RestRequest.RequestMethod.PUT,
+              RestRequest.RequestMethod.DELETE,
+              RestRequest.RequestMethod.HEAD
+      }, "The HTTP method to use" );
 
       dialog = builder.buildDialog(builder.buildOkCancelActions(),
               "Specify options for adding a new HTTP Request to a TestCase", UISupport.OPTIONS_ICON);

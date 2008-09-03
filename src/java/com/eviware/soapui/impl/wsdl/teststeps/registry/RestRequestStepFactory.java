@@ -71,18 +71,18 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
       return testStep;
    }
 
-   public static TestStepConfig createConfig(RestResource operation, String stepName)
+   public static TestStepConfig createConfig(RestResource resource, String stepName)
    {
       RestRequestStepConfig requestStepConfig = RestRequestStepConfig.Factory.newInstance();
 
-      requestStepConfig.setService(operation.getInterface().getName());
-      requestStepConfig.setResourcePath(operation.getFullPath());
+      requestStepConfig.setService(resource.getInterface().getName());
+      requestStepConfig.setResourcePath(resource.getFullPath());
 
       RestMethodConfig testRequestConfig = requestStepConfig.addNewRestRequest();
 
       testRequestConfig.setName(stepName);
       testRequestConfig.setEncoding("UTF-8");
-      String[] endpoints = operation.getInterface().getEndpoints();
+      String[] endpoints = resource.getInterface().getEndpoints();
       if (endpoints.length > 0)
          testRequestConfig.setEndpoint(endpoints[0]);
 
@@ -97,13 +97,10 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
 
    public TestStepConfig createNewTestStep(WsdlTestCase testCase, String name)
    {
-      // build list of available interfaces / operations
+      // build list of available interfaces / restResources
       Project project = testCase.getTestSuite().getProject();
       List<String> options = new ArrayList<String>();
-      List<RestResource> operations = new ArrayList<RestResource>();
-
-      options.add("-> none");
-      operations.add(null);
+      List<RestResource> restResources = new ArrayList<RestResource>();
 
       for (int c = 0; c < project.getInterfaceCount(); c++)
       {
@@ -114,10 +111,16 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
 
             for (RestResource resource : resources)
             {
-               options.add(iface.getName() + " -> " + resource.getFullPath());
-               operations.add(resource);
+               options.add(iface.getName() + " -> " + resource.getPath());
+               restResources.add(resource);
             }
          }
+      }
+
+      if( restResources.size() == 0 )
+      {
+         UISupport.showErrorMessage( "Missing REST Resources in project" );
+         return null;
       }
 
       Object op = UISupport.prompt("Select Resource to invoke for request", "New RestRequest", options.toArray());
@@ -126,7 +129,7 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
          int ix = options.indexOf(op);
          if (ix != -1)
          {
-            RestResource operation = operations.get(ix);
+            RestResource operation = restResources.get(ix);
 
             if (dialog == null)
                buildDialog();
@@ -143,7 +146,7 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
       return null;
    }
 
-   public TestStepConfig createNewTestStep(RestResource operation, StringToStringMap values)
+   public TestStepConfig createNewTestStep(RestResource resource, StringToStringMap values)
    {
       String name = values.get(STEP_NAME);
 
@@ -153,22 +156,22 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
       testRequestConfig.setName(name);
       testRequestConfig.setEncoding("UTF-8");
 
-      TestStepConfig testStep = TestStepConfig.Factory.newInstance();
-      testStep.setType(RESTREQUEST_TYPE);
-      testStep.setConfig(requestStepConfig);
-      testStep.setName(name);
-
-      if (operation != null)
+      if (resource != null)
       {
-         requestStepConfig.setService(operation.getInterface().getName());
-         requestStepConfig.setResourcePath(operation.getName());
+         requestStepConfig.setService(resource.getInterface().getName());
+         requestStepConfig.setResourcePath(resource.getPath());
 
-         String[] endpoints = operation.getInterface().getEndpoints();
+         String[] endpoints = resource.getInterface().getEndpoints();
          if (endpoints.length > 0)
             testRequestConfig.setEndpoint(endpoints[0]);
       }
 
-      return testStep;
+      TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
+      testStepConfig.setType(RESTREQUEST_TYPE);
+      testStepConfig.setConfig(requestStepConfig);
+      testStepConfig.setName(name);
+
+      return testStepConfig;
    }
 
    public boolean canCreate()

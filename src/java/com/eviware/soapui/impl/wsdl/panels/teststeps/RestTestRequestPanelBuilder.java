@@ -53,13 +53,13 @@ public class RestTestRequestPanelBuilder extends EmptyPanelBuilder<RestTestReque
    	table.addProperty( "Encoding", "encoding", new String[] {null, "UTF-8", "iso-8859-1" } );
 
       if( request.getOperation() == null )
-         table.addProperty( "Endpoint", "endpoint", true );
+         table.addProperty( "Path", "path", true );
       else
          table.addProperty( "Endpoint", "endpoint", request.getInterface().getEndpoints() );
       
       table.addProperty( "Bind Address", "bindAddress", true );
 
-   	table.addProperty( "Service", "service" );
+      table.addProperty( "Service", "service" );
    	table.addProperty( "Resource", "resourcePath" );
    	
    	// security / authentication

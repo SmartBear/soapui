@@ -25,166 +25,172 @@ import java.util.List;
 
 /**
  * WSDL implementation of Interface, maps to a WSDL Binding
- * 
+ *
  * @author Ole.Matzura
  */
 
 public class RestService extends AbstractInterface<RestServiceConfig> implements RestResourceContainer
 {
-	private List<RestResource> resources = new ArrayList<RestResource>();
-	private WadlDefinitionContext wadlContext;
-	
-	public RestService( WsdlProject project, RestServiceConfig serviceConfig )
-	{
-		super( serviceConfig, project, "/rest_service.gif" );
-		
-		List<RestResourceConfig> resourceConfigs = serviceConfig.getResourceList();
-		for( int i = 0; i < resourceConfigs.size(); i++ )
-		{
-			resources.add( new RestResource( this, resourceConfigs.get( i ) ) );
-		}
-	}
+   private List<RestResource> resources = new ArrayList<RestResource>();
+   private WadlDefinitionContext wadlContext;
 
-	public String getInterfaceType()
-	{
-		return RestServiceFactory.REST_TYPE;
-	}
+   public RestService( WsdlProject project, RestServiceConfig serviceConfig )
+   {
+      super( serviceConfig, project, "/rest_service.gif" );
 
-	public RestResource getOperationAt(int index)
-	{
-		return resources.get(index);
-	}
+      List<RestResourceConfig> resourceConfigs = serviceConfig.getResourceList();
+      for( int i = 0; i < resourceConfigs.size(); i++ )
+      {
+         resources.add( new RestResource( this, resourceConfigs.get( i ) ) );
+      }
+   }
 
-	public RestResource getOperationByName( String name )
-	{
-		return ( RestResource ) getWsdlModelItemByName( resources, name );
-	}
-	
-	public int getOperationCount()
-	{
-		return resources.size();
-	}
+   public String getInterfaceType()
+   {
+      return RestServiceFactory.REST_TYPE;
+   }
 
-	public List<Operation> getOperationList()
-	{
-		return new ArrayList<Operation>( resources );
-	}
+   public RestResource getOperationAt( int index )
+   {
+      return resources.get( index );
+   }
 
-	public String getBasePath()
-	{
-		return getConfig().isSetBasePath() ? getConfig().getBasePath() : "";
-	}
-	
-	public void setBasePath( String basePath )
-	{
-		String old = getBasePath();
-		getConfig().setBasePath(basePath);
-		
-		notifyPropertyChanged("basePath", old, basePath);
-	}
-	
-	public String getWadlUrl()
-	{
-		return getConfig().getDefinitionUrl();
-	}
-	
-	public void setWadlUrl( String wadlUrl )
-	{
-		String old = getWadlUrl();
-		getConfig().setDefinitionUrl(wadlUrl);
-		
-		notifyPropertyChanged("wadlUrl", old, wadlUrl);
-	}
-	
-	public String getTechnicalId()
-	{
-		return getConfig().getBasePath();
-	}
+   public RestResource getOperationByName( String name )
+   {
+      return (RestResource) getWsdlModelItemByName( resources, name );
+   }
 
-	public RestResource addNewResource(String name, String path)
-	{
-		RestResourceConfig resourceConfig = getConfig().addNewResource();
-		resourceConfig.setName(name);
-		resourceConfig.setPath(path);
-		
-		RestResource resource = new RestResource( this, resourceConfig);
-		resources.add( resource );
-		
-		fireOperationAdded(resource);
-		return resource;
-	}
+   public int getOperationCount()
+   {
+      return resources.size();
+   }
 
-	public RestResource cloneResource(RestResource resource, String name)
-	{
-		RestResourceConfig resourceConfig = (RestResourceConfig) getConfig().addNewResource().set(resource.getConfig());
-		resourceConfig.setName(name);
-		
-		RestResource newResource = new RestResource( this, resourceConfig);
-		resources.add( newResource );
-		
-		fireOperationAdded(newResource);
-		return newResource;
-	}
+   public List<Operation> getOperationList()
+   {
+      return new ArrayList<Operation>( resources );
+   }
 
-	public void deleteResource(RestResource resource)
-	{
-		if( !resources.remove(resource))
-			return;
+   public String getBasePath()
+   {
+      return getConfig().isSetBasePath() ? getConfig().getBasePath() : "";
+   }
 
-		fireOperationRemoved(resource);
-		
-		resource.release();
-	}
+   public void setBasePath( String basePath )
+   {
+      String old = getBasePath();
+      getConfig().setBasePath( basePath );
 
-	public RestResource[] getAllResources()
-	{
-		List<RestResource> result = new ArrayList<RestResource>();
-		for( RestResource resource : resources )
-		{
-			addResourcesToResult( resource, result );
-		}
-			
-		return result.toArray(new RestResource[result.size()]);
-	}
+      notifyPropertyChanged( "basePath", old, basePath );
+   }
 
-	private void addResourcesToResult(RestResource resource, List<RestResource> result)
-	{
-		result.add( resource );
-		
-		for( RestResource res : resource.getResourceList() )
-		{
-			addResourcesToResult( res, result );
-		}
-	}
+   public String getWadlUrl()
+   {
+      return getConfig().getDefinitionUrl();
+   }
 
-	public RestResource getResourceByPath(String resourcePath)
-	{
-		for( RestResource resource : getAllResources() )
-		{
-			if( resource.getFullPath().equals(resourcePath))
-				return resource;
-		}
-		
-		return null;
-	}
+   public void setWadlUrl( String wadlUrl )
+   {
+      String old = getWadlUrl();
+      getConfig().setDefinitionUrl( wadlUrl );
 
-	@Override
-	public DefinitionContext getDefinitionContext()
-	{
-		return getWadlContext();
-	}
+      notifyPropertyChanged( "wadlUrl", old, wadlUrl );
+   }
 
-	public WadlDefinitionContext getWadlContext()
-	{
-		if( wadlContext == null )
-			wadlContext = new WadlDefinitionContext( getWadlUrl(), this );
+   public String getTechnicalId()
+   {
+      return getConfig().getBasePath();
+   }
+
+   public RestResource addNewResource( String name, String path )
+   {
+      RestResourceConfig resourceConfig = getConfig().addNewResource();
+      resourceConfig.setName( name );
+      resourceConfig.setPath( path );
+
+      RestResource resource = new RestResource( this, resourceConfig );
+      resources.add( resource );
+
+      fireOperationAdded( resource );
+      return resource;
+   }
+
+   public RestResource cloneResource( RestResource resource, String name )
+   {
+      RestResourceConfig resourceConfig = (RestResourceConfig) getConfig().addNewResource().set( resource.getConfig() );
+      resourceConfig.setName( name );
+
+      RestResource newResource = new RestResource( this, resourceConfig );
+      resources.add( newResource );
+
+      fireOperationAdded( newResource );
+      return newResource;
+   }
+
+   public void deleteResource( RestResource resource )
+   {
+      if( !resources.remove( resource ) )
+         return;
+
+      fireOperationRemoved( resource );
+
+      resource.release();
+   }
+
+   public RestResource[] getAllResources()
+   {
+      List<RestResource> result = new ArrayList<RestResource>();
+      for( RestResource resource : resources )
+      {
+         addResourcesToResult( resource, result );
+      }
+
+      return result.toArray( new RestResource[result.size()] );
+   }
+
+   private void addResourcesToResult( RestResource resource, List<RestResource> result )
+   {
+      result.add( resource );
+
+      for( RestResource res : resource.getResourceList() )
+      {
+         addResourcesToResult( res, result );
+      }
+   }
+
+   public RestResource getResourceByPath( String resourcePath )
+   {
+      for( RestResource resource : getAllResources() )
+      {
+         if( resource.getPath().equals( resourcePath ) )
+            return resource;
+      }
+
+      return null;
+   }
+
+   @Override
+   public DefinitionContext getDefinitionContext()
+   {
+      return getWadlContext();
+   }
+
+   public WadlDefinitionContext getWadlContext()
+   {
+      if( wadlContext == null )
+         wadlContext = new WadlDefinitionContext( getWadlUrl(), this );
 
       return wadlContext;
    }
 
-	@Override
-	public String getDefinition()
-	{
-		return getWadlUrl();
-	}
+   @Override
+   public String getDefinition()
+   {
+      return getWadlUrl();
+   }
+
+   public String getType()
+   {
+      return RestServiceFactory.REST_TYPE;
+   }
+
 }

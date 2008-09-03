@@ -438,13 +438,20 @@
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/testrequests.html"/>
 	</tns:actionGroup>
 	
-	<tns:actionGroup name="REST RequestStep Actions" id="RestTestRequestStepActions"
+	<tns:actionGroup name="HTTP RequestStep Actions" id="HttpTestRequestStepActions"
 		class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 		<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/testrequests.html"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/httprequests.html"/>
 	</tns:actionGroup>
-	
-	<tns:actionGroup name="PropertyTransfer Actions" id="TransferResponseValuesTestStepActions"
+
+   <tns:actionGroup name="REST RequestStep Actions" id="RestTestRequestStepActions"
+         class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
+         <tns:actionMapping actionId="SeperatorAction"/>
+         <tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/testrequests.html"/>
+      </tns:actionGroup>
+
+
+   <tns:actionGroup name="PropertyTransfer Actions" id="TransferResponseValuesTestStepActions"
 		class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/propertytransfers.html"/>

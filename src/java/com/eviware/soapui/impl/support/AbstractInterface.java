@@ -198,4 +198,6 @@ public abstract class AbstractInterface<T extends InterfaceConfig> extends Abstr
     */
 
    public abstract String getDefinition();
+
+   public abstract String getType();
 }
