@@ -103,7 +103,6 @@ public class DefaultSoapUICore implements SoapUICore
 		SoapVersion.Soap11.equals(SoapVersion.Soap12);
 
 	}
-
 	protected void initExtensions(ClassLoader extensionClassLoader)
 	{
 		String extDir = System.getProperty("soapui.ext.listeners");
@@ -220,7 +219,6 @@ public class DefaultSoapUICore implements SoapUICore
 		{
 			settings.setLong(HttpSettings.MAX_TOTAL_CONNECTIONS, 2000);
 		}
-
 		return settings;
 	}
 
@@ -262,11 +260,13 @@ public class DefaultSoapUICore implements SoapUICore
 		settings.setBoolean(HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN, true);
 
 		settings.setString(UISettings.AUTO_SAVE_INTERVAL, "0");
-        settings.setBoolean(UISettings.SHOW_STARTUP_PAGE, true);
+      settings.setBoolean(UISettings.SHOW_STARTUP_PAGE, true);
 
-        settings.setBoolean( WsaSettings.USE_DEFAULT_ACTION, true );
-        settings.setBoolean( WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE, true );
-        settings.setBoolean( WsaSettings.USE_DEFAULT_REPLYTO, true );
+      settings.setBoolean( WsaSettings.USE_DEFAULT_ACTION, true );
+      settings.setBoolean( WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE, true );
+      settings.setBoolean( WsaSettings.USE_DEFAULT_REPLYTO, true );
+      settings.setBoolean( WsaSettings.GENERATE_MESSAGE_ID, true );
+      settings.setBoolean( WsaSettings.OVERRIDE_EXISTING_HEADERS, true );
 	}
 
 	/*
