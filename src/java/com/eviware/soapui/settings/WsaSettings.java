@@ -21,9 +21,6 @@ import com.eviware.soapui.settings.Setting.SettingType;
  */
 public interface WsaSettings {
 
-//	@Setting( name="Enable WS Addressing", description="Enable WS Addressing on a global level", type=SettingType.BOOLEAN )
-//	public final static String ENABLE_WSA = WsaSettings.class.getSimpleName() + "@" + "enableWSA";
-	
 	@Setting( name="Use default Action", description="Use default Action generated from wsdl", type=SettingType.BOOLEAN )
 	public final static String USE_DEFAULT_ACTION = WsaSettings.class.getSimpleName() + "@" + "useDefaultAction";
 	
