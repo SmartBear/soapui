@@ -71,8 +71,6 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
    public final static String PW_TYPE_TEXT="PasswordText";
    
    private WsdlOperation operation;
-//   private WsdlResponse response;
-   
 	private List<HttpAttachmentPart> definedAttachmentParts;
 	private InternalInterfaceListener interfaceListener = new InternalInterfaceListener();
 
