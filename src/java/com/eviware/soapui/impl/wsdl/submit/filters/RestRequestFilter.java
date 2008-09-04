@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
@@ -118,6 +117,8 @@ public class RestRequestFilter extends AbstractRequestFilter
 
       if( request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod )
       {
+         httpMethod.setRequestHeader("Content-Type", request.getMediaType() );
+
          String requestContent = request.getRequestContent();
          Attachment[] attachments = request.getAttachments();
 
@@ -160,14 +161,6 @@ public class RestRequestFilter extends AbstractRequestFilter
             {
 
             }
-         }
-
-         RestRepresentation[] representations = request.getRepresentations( RestRepresentation.Type.REQUEST );
-         if( representations.length > 0 )
-         {
-            // init content-type and encoding
-            httpMethod.setRequestHeader( "Content-Type", representations[0].getMediaType()
-                    + (StringUtils.hasContent( encoding ) ? "; charset=" + encoding : "") );
          }
       }
    }
