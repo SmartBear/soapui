@@ -18,7 +18,7 @@ import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.rest.actions.project.NewRestServiceAction;
-import com.eviware.soapui.impl.rest.support.RestUtils;
+import com.eviware.soapui.impl.rest.support.WadlImporter;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateMockServiceAction;
@@ -135,7 +135,7 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
       UISupport.select( restService );
       try
       {
-         RestUtils.initFromWadl( restService, url );
+         new WadlImporter( restService ).initFromWadl( url );
       }
       catch( Exception e )
       {

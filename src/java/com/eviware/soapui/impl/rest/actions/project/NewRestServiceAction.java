@@ -12,17 +12,11 @@
 
 package com.eviware.soapui.impl.rest.actions.project;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.rest.actions.service.NewRestResourceAction;
-import com.eviware.soapui.impl.rest.support.RestUtils;
+import com.eviware.soapui.impl.rest.support.WadlImporter;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
@@ -35,9 +29,14 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Actions for importing an existing soapUI project file into the current workspace
@@ -177,10 +176,8 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
    			try
 				{
 					File f = new File( wadl );
-					if( f.exists())
-						RestUtils.initFromWadl( restService, f.toURI().toURL().toString());
-					else
-						RestUtils.initFromWadl( restService, wadl );
+               WadlImporter importer = new WadlImporter( restService );
+               importer.initFromWadl( f.exists() ? f.toURI().toURL().toString() : wadl );
 				}
 				catch (Exception e)
 				{

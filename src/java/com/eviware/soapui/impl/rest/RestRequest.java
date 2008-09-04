@@ -121,17 +121,6 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
       return result.toArray( new RestRepresentation[result.size()] );
    }
 
-   public RestRepresentation getRepresentationById( String id )
-   {
-      for( RestRepresentation representation : representations )
-      {
-         if( id.equals( representation.getId() ) )
-            return representation;
-      }
-
-      return null;
-   }
-
    public MessagePart[] getResponseParts()
    {
       return new MessagePart[0];
@@ -149,6 +138,20 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
       String method = getConfig().getMethod();
       return method == null ? null : RequestMethod.valueOf( method );
    }
+
+     public void setMediaType( String mediaType )
+   {
+      String old = getMediaType();
+      getConfig().setMediaType( mediaType );
+      notifyPropertyChanged( "mediaType", old, mediaType );
+   }
+
+   public String getMediaType()
+   {
+      String mediaType = getConfig().getMediaType();
+      return mediaType;
+   }
+   
 
    public WsdlSubmit<RestRequest> submit( SubmitContext submitContext, boolean async ) throws SubmitException
    {

@@ -292,7 +292,7 @@
  			<tns:actionMapping actionId="SeperatorAction"/>
  		<tns:actionMapping actionId="NewRestResourceAction"/>
 	 	<tns:actionMapping actionId="SeperatorAction"/>
-	 	<tns:actionMapping actionId="DeleteRestServiceAction"/>
+	 	<tns:actionMapping actionId="DeleteRestServiceAction" keyStroke="DELETE"/>
 	 	<tns:actionMapping actionId="SeperatorAction"/>
 	 	<tns:actionMapping actionId="CreateWadlDocumentationAction"/>
 	 	<tns:actionMapping actionId="Wadl2JavaAction"/>

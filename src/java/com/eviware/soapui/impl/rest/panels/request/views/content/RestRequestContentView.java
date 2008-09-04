@@ -18,7 +18,6 @@ import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPan
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestMessageEditor;
 import com.eviware.soapui.impl.rest.panels.resource.JWadlParamsTable;
 import com.eviware.soapui.support.DocumentListenerAdapter;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
@@ -37,31 +36,17 @@ import java.beans.PropertyChangeListener;
 public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDocument> implements PropertyChangeListener
 {
 	private final RestRequest restRequest;
-	private RestRepresentation requestRepresentation;
 	private JPanel contentPanel;
 	private JXEditTextArea contentEditor;
 	private boolean updatingRequest;
 	private JComponent panel;
-	private JComboBox mediaTypeTextField;
+	private JComboBox mediaTypeCombo;
 	private JSplitPane split;
 	
 	public RestRequestContentView(RestRequestMessageEditor restRequestMessageEditor, RestRequest restRequest)
 	{
 		super( "Request", restRequestMessageEditor, RestRequestContentViewFactory.VIEW_ID );
 		this.restRequest = restRequest;
-		
-		RestRepresentation[] representations = restRequest.getRepresentations(RestRepresentation.Type.REQUEST);
-		if( representations.length == 0 )
-		{
-			requestRepresentation = restRequest.addNewRepresentation( RestRepresentation.Type.REQUEST );
-		}
-		else
-		{
-			requestRepresentation = representations[0];
-		}
-
-		if( !StringUtils.hasContent(requestRepresentation.getMediaType()))
-			requestRepresentation.setMediaType("application/xml");
 		
 		restRequest.addPropertyChangeListener( this );
 	}
@@ -125,19 +110,20 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 		
-		mediaTypeTextField = new JComboBox( getRequestMediaTypes() );
-		mediaTypeTextField.setPreferredSize(new Dimension( 200, 20 ));
-		mediaTypeTextField.setEnabled( restRequest.hasRequestBody());
-      mediaTypeTextField.setEditable( true );
-      mediaTypeTextField.addItemListener( new ItemListener() 
+		mediaTypeCombo = new JComboBox( getRequestMediaTypes() );
+		mediaTypeCombo.setPreferredSize(new Dimension( 200, 20 ));
+		mediaTypeCombo.setEnabled( restRequest.hasRequestBody());
+      mediaTypeCombo.setEditable( true );
+      mediaTypeCombo.setSelectedItem( restRequest.getMediaType() );
+      mediaTypeCombo.addItemListener( new ItemListener()
 		{
          public void itemStateChanged( ItemEvent e )
          {
-            //To change body of implemented methods use File | Settings | File Templates.
+            restRequest.setMediaType( mediaTypeCombo.getSelectedItem().toString() );
          }
       });
 
-		toolbar.addLabeledFixed("Media Type", mediaTypeTextField);
+		toolbar.addLabeledFixed("Media Type", mediaTypeCombo );
 		toolbar.addSeparator();
 		
 		return toolbar;
@@ -149,8 +135,15 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 
       for( RestRepresentation representation : restRequest.getRepresentations( RestRepresentation.Type.REQUEST ))
       {
-         result.add( representation.getMediaType());
+         if( !result.contains( representation.getMediaType() ))
+            result.add( representation.getMediaType());
       }
+
+      if( !result.contains( "application/xml"))
+         result.add( "application/xml");
+
+      if( !result.contains( "text/xml"))
+         result.add( "text/xml");
 
       return result.toStringArray();
    }
@@ -164,7 +157,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 		else if( evt.getPropertyName().equals( "method"))
 		{
 			contentEditor.setEnabledAndEditable( restRequest.hasRequestBody() );
-			mediaTypeTextField.setEnabled( restRequest.hasRequestBody() );
+			mediaTypeCombo.setEnabled( restRequest.hasRequestBody() );
 			
 			if( !restRequest.hasRequestBody())
 			{

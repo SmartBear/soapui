@@ -140,7 +140,8 @@
 					<xsd:element name="call" type="tns:WsdlRequest"
 						minOccurs="0" maxOccurs="unbounded">
 					</xsd:element>
-					<xsd:element name="requestParts" maxOccurs="1" minOccurs="0" type="tns:Parts">
+					<xsd:element name="requestParts" maxOccurs="1" minOccurs="0" type="tns:Parts">
+
 					</xsd:element>
 					<xsd:element name="responseParts" type="tns:Parts" maxOccurs="1" minOccurs="0"></xsd:element>
 				</xsd:sequence>
@@ -594,7 +595,8 @@
 				minOccurs="0">
 			</xsd:element>
 			<xsd:element name="properties" maxOccurs="1"
-				minOccurs="0" type="tns:PropertiesType">
+				minOccurs="0" type="tns:PropertiesType">
+
 			</xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="createMissingOnLoad" type="xsd:boolean"></xsd:attribute>
@@ -1230,7 +1232,9 @@
     	<xsd:sequence>
             <xsd:element name="property"
     			type="tns:DataGeneratorProperty" maxOccurs="unbounded"
-    			minOccurs="0">    		</xsd:element>
+    			minOccurs="0">
+
+    		</xsd:element>
     	</xsd:sequence>
     </xsd:complexType>
 
@@ -1294,8 +1298,10 @@
     				<xsd:element name="representation" type="tns:RestResourceRepresentation" maxOccurs="unbounded" minOccurs="0"></xsd:element>
     			</xsd:sequence>
     			<xsd:attribute name="method" type="xsd:string"></xsd:attribute>
-    			<xsd:attribute name="wadlId" type="xsd:string"></xsd:attribute>
-    			<xsd:attribute name="fullPath" type="xsd:string"></xsd:attribute>
+    			<xsd:attribute name="wadlId" type="xsd:string"></xsd:attribute>
+             <xsd:attribute name="fullPath" type="xsd:string"></xsd:attribute>
+             <xsd:attribute name="mediaType" type="xsd:string"></xsd:attribute>
+             <xsd:attribute name="postQueryString" type="xsd:boolean"></xsd:attribute>
     		</xsd:extension>
     	</xsd:complexContent>
     </xsd:complexType>
