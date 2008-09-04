@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 
@@ -89,10 +90,26 @@ public abstract class AbstractTestAssertionFactory implements TestAssertionFacto
    private void addImplementedAndExtendedClasses( Class clazz, ArrayList<Class> result )
    {
       result.add( clazz );
-      result.addAll( Arrays.asList( clazz.getInterfaces() ));
+//      result.addAll( Arrays.asList( clazz.getInterfaces() ));
+      addImplementedInterfaces(clazz, result);
       if( clazz.getSuperclass() != null )
       {
           addImplementedAndExtendedClasses( clazz.getSuperclass(), result );
+      }
+   }
+
+   private void addImplementedInterfaces( Class intrfc, ArrayList<Class> result )
+   {
+//      result.add( intrfc.getClass() );
+      Class<?> [] interfacesArray = intrfc.getInterfaces();
+      if( interfacesArray.length > 0 )
+      {
+         result.addAll( Arrays.asList( interfacesArray ));
+         for (int i = 0; i < interfacesArray.length; i++)
+			{
+				Class<?> class1 = interfacesArray[i];
+				addImplementedInterfaces( class1, result );
+			}
       }
    }
 
