@@ -113,9 +113,15 @@ public abstract class AbstractPathPropertySupport
 		String result = expand();
 		try
 		{
-			if( PathUtils.isFilePath(result) )
-				result = new File( result ).toURI().toURL().toString();
-		}
+			if( PathUtils.isFilePath(result) && !result.startsWith( "file:" ))
+         {
+            result = new File( result ).toURI().toURL().toString();
+         }
+         else
+         {
+            result = new URL( result ).toString();
+         }
+      }
 		catch (MalformedURLException e)
 		{
 			SoapUI.logError(e);

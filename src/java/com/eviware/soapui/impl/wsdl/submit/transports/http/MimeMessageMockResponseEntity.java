@@ -12,19 +12,17 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+import org.apache.commons.httpclient.methods.RequestEntity;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-
-import org.apache.commons.httpclient.methods.RequestEntity;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * MimeMessage response for a WsdlMockResponse

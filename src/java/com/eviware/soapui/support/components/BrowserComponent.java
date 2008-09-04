@@ -1,16 +1,15 @@
 package com.eviware.soapui.support.components;
 
-import com.eviware.soapui.support.xml.XmlUtils;
-//import com.teamdev.jxbrowser.WebBrowser;
-//import com.teamdev.jxbrowser.WebBrowserFactory;
-//import com.teamdev.jxbrowser.event.StatusChangeEvent;
-//import com.teamdev.jxbrowser.event.StatusChangeListener;
-//import com.teamdev.xpcom.Xpcom;
-
+import javax.swing.*;
+import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.URL;
 
 public class BrowserComponent
 {
+   private JEditorPane editorPane;
 //   private WebBrowser browser;
 //   private static WebBrowserFactory webBrowserFactory;
 //
@@ -21,7 +20,9 @@ public class BrowserComponent
 
    public BrowserComponent()
    {
-
+      editorPane = new JEditorPane();
+      editorPane.setEditorKit( new HTMLEditorKit() );
+      editorPane.setEditable( false );
    }
 
    public Component getComponent()
@@ -32,7 +33,7 @@ public class BrowserComponent
 //      }
 //
 //      return browser.getComponent();
-   	return null;
+   	return new JScrollPane( editorPane );
    }
 
    private void initBrowser()
@@ -61,6 +62,16 @@ public class BrowserComponent
 
    public void setContent( String contentAsString, String contentType, String contextUri )
    {
+      editorPane.setContentType( contentType );
+      try
+      {
+         editorPane.read( new ByteArrayInputStream(contentAsString.getBytes()),  editorPane.getEditorKit().createDefaultDocument());
+      }
+      catch( IOException e )
+      {
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+
 //      if( browser == null )
 //      {
 //         initBrowser();
@@ -70,6 +81,8 @@ public class BrowserComponent
 
    public void setContent( String content, String contentType )
    {
+      setContent( content, contentType, null );
+
 //      if( browser == null )
 //      {
 //         initBrowser();
@@ -79,6 +92,15 @@ public class BrowserComponent
 
    public void navigate( String url )
    {
+      try
+      {
+         editorPane.setPage( new URL( url ));
+      }
+      catch( IOException e )
+      {
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+
 //      if( browser == null )
 //      {
 //         initBrowser();
@@ -90,6 +112,6 @@ public class BrowserComponent
    public String getContent()
    {
 //      return browser == null ? null : XmlUtils.serialize( browser.getDocument() );
-   	return "";
+   	return editorPane.getText();
    }
 }

@@ -12,10 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-import java.io.ByteArrayOutputStream;
-
-import org.apache.commons.httpclient.methods.RequestEntity;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -23,6 +19,9 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.commons.httpclient.methods.RequestEntity;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Simple response to a request

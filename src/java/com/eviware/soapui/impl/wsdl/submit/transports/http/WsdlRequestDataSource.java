@@ -12,16 +12,14 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+
+import javax.activation.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import javax.activation.DataSource;
-
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 
 /**
  * DataSource for an existing WsdlRequest
@@ -44,7 +42,7 @@ public class WsdlRequestDataSource implements DataSource
 
 	public String getContentType()
 	{
-		SoapVersion soapVersion = ((WsdlInterface)wsdlRequest.getOperation().getInterface()).getSoapVersion();
+		SoapVersion soapVersion = wsdlRequest.getOperation().getInterface().getSoapVersion();
 		
 		if( isXOP )
 		{

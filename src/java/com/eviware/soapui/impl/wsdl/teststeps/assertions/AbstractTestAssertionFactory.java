@@ -12,15 +12,16 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions;
 
-import java.lang.reflect.Constructor;
-import java.util.Arrays;
-import java.util.List;
-
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
+
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractTestAssertionFactory implements TestAssertionFactory
 {
@@ -60,8 +61,8 @@ public abstract class AbstractTestAssertionFactory implements TestAssertionFacto
 	{
 		List<Class<?>> classes = Arrays.asList(assertionClass.getInterfaces());
 
-		if (targetClass != null && !Arrays.asList(targetClass.getClasses()).contains(targetClass) && 
-				!Arrays.asList(targetClass.getInterfaces()).contains(targetClass))
+      List<Class> classList = getImplementedAndExtendedClasses( assertable );
+      if (targetClass != null && !classList.contains(targetClass))
 			return false;
 
 		if (assertable.getAssertableType() == AssertableType.BOTH)
@@ -78,7 +79,24 @@ public abstract class AbstractTestAssertionFactory implements TestAssertionFacto
 		return false;
 	}
 
-	public TestAssertion buildAssertion(TestAssertionConfig config, Assertable assertable)
+   private List<Class> getImplementedAndExtendedClasses( Object obj )
+   {
+      ArrayList<Class> result = new ArrayList<Class>();
+      addImplementedAndExtendedClasses( obj.getClass(), result );
+      return result;
+   }
+
+   private void addImplementedAndExtendedClasses( Class clazz, ArrayList<Class> result )
+   {
+      result.add( clazz );
+      result.addAll( Arrays.asList( clazz.getInterfaces() ));
+      if( clazz.getSuperclass() != null )
+      {
+          addImplementedAndExtendedClasses( clazz.getSuperclass(), result );
+      }
+   }
+
+   public TestAssertion buildAssertion(TestAssertionConfig config, Assertable assertable)
 	{
 		try
 		{

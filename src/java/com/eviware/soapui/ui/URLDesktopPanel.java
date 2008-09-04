@@ -29,9 +29,8 @@ public class URLDesktopPanel extends DefaultDesktopPanel
       JPanel panel = (JPanel) getComponent();
 
       browser = new BrowserComponent();
-      navigate( url );
-
       panel.add( browser.getComponent(), BorderLayout.CENTER );
+      navigate( url );
    }
 
    public void navigate( String url )

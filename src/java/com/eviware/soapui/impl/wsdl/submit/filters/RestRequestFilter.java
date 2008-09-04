@@ -18,6 +18,7 @@ import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.StringUtils;
@@ -25,6 +26,7 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
+import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
 import org.apache.xmlbeans.XmlBoolean;
 
 import java.io.UnsupportedEncodingException;
@@ -38,44 +40,44 @@ import java.net.URLEncoder;
 
 public class RestRequestFilter extends AbstractRequestFilter
 {
-   @SuppressWarnings("deprecation")
+   @SuppressWarnings( "deprecation" )
    @Override
-   public void filterRestRequest(SubmitContext context, RestRequest request)
+   public void filterRestRequest( SubmitContext context, RestRequest request )
    {
-      HttpMethod httpMethod = (HttpMethod) context.getProperty(BaseHttpRequestTransport.HTTP_METHOD);
+      HttpMethod httpMethod = (HttpMethod) context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 
       String path = request.getPath();
       StringBuffer query = new StringBuffer();
 
       XmlBeansRestParamsTestPropertyHolder params = request.getParams();
-      for (int c = 0; c < params.getPropertyCount(); c++)
+      for( int c = 0; c < params.getPropertyCount(); c++ )
       {
-         RestParamProperty param = params.getPropertyAt(c);
+         RestParamProperty param = params.getPropertyAt( c );
 
-         String value = PropertyExpansionUtils.expandProperties(context, param.getValue());
-         if (!StringUtils.hasContent(value) && !param.getRequired())
+         String value = PropertyExpansionUtils.expandProperties( context, param.getValue() );
+         if( !StringUtils.hasContent( value ) && !param.getRequired() )
             continue;
 
-         switch (param.getStyle())
+         switch( param.getStyle() )
          {
             case HEADER:
-               httpMethod.setRequestHeader(param.getName(), value);
+               httpMethod.setRequestHeader( param.getName(), value );
                break;
             case QUERY:
-               if (query.length() > 0)
-                  query.append('&');
+               if( query.length() > 0 )
+                  query.append( '&' );
 
-               query.append(URLEncoder.encode(param.getName()));
-               if (StringUtils.hasContent(value))
-                  query.append('=').append(URLEncoder.encode(value));
+               query.append( URLEncoder.encode( param.getName() ) );
+               if( StringUtils.hasContent( value ) )
+                  query.append( '=' ).append( URLEncoder.encode( value ) );
                break;
             case TEMPLATE:
-               path = path.replaceAll("\\{" + param.getName() + "\\}", URLEncoder.encode(value));
+               path = path.replaceAll( "\\{" + param.getName() + "\\}", URLEncoder.encode( value ) );
                break;
             case MATRIX:
-               if (param.getType().equals(XmlBoolean.type.getName()))
+               if( param.getType().equals( XmlBoolean.type.getName() ) )
                {
-                  if (value.toUpperCase().equals("TRUE") || value.equals("1"))
+                  if( value.toUpperCase().equals( "TRUE" ) || value.equals( "1" ) )
                   {
                      path += ";" + param.getName();
                   }
@@ -83,54 +85,87 @@ public class RestRequestFilter extends AbstractRequestFilter
                else
                {
                   path += ";" + param.getName();
-                  if (StringUtils.hasContent(value))
+                  if( StringUtils.hasContent( value ) )
                   {
-                     path += "=" + URLEncoder.encode(value);
+                     path += "=" + URLEncoder.encode( value );
                   }
                }
          }
       }
 
-      if (query.length() > 1)
-         httpMethod.setQueryString(query.toString());
+      if( query.length() > 0 )
+         httpMethod.setQueryString( query.toString() );
 
-      if (PathUtils.isHttpPath(path))
+      if( PathUtils.isHttpPath( path ) )
       {
          try
          {
-            httpMethod.setURI(new URI(path));
+            httpMethod.setURI( new URI( path ) );
          }
-         catch (Exception e)
+         catch( Exception e )
          {
             e.printStackTrace();
          }
       }
       else
       {
-         httpMethod.setPath(path);
+         httpMethod.setPath( path );
       }
 
-      String encoding = StringUtils.unquote(request.getEncoding());
+      String encoding = StringUtils.unquote( request.getEncoding() );
 
-      if (request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod)
+      if( request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod )
       {
          String requestContent = request.getRequestContent();
-         try
+         Attachment[] attachments = request.getAttachments();
+
+         if( StringUtils.hasContent( requestContent ) )
          {
-            byte[] content = encoding == null ? requestContent.getBytes() : requestContent.getBytes(encoding);
-            ((EntityEnclosingMethod) httpMethod).setRequestEntity(new ByteArrayRequestEntity(content));
+            if( attachments.length == 0 )
+            {
+               try
+               {
+                  byte[] content = encoding == null ? requestContent.getBytes() : requestContent.getBytes( encoding );
+                  ((EntityEnclosingMethod) httpMethod).setRequestEntity( new ByteArrayRequestEntity( content ) );
+               }
+               catch( UnsupportedEncodingException e )
+               {
+                  ((EntityEnclosingMethod) httpMethod).setRequestEntity( new ByteArrayRequestEntity( requestContent.getBytes() ) );
+               }
+            }
+            else
+            {
+
+            }
          }
-         catch (UnsupportedEncodingException e)
+         else if( attachments.length > 0 )
          {
-            ((EntityEnclosingMethod) httpMethod).setRequestEntity(new ByteArrayRequestEntity(requestContent.getBytes()));
+            if( attachments.length == 1 )
+            {
+               try
+               {
+                  ((EntityEnclosingMethod) httpMethod).setRequestEntity( new InputStreamRequestEntity(
+                     attachments[0].getInputStream()) );
+
+                  httpMethod.setRequestHeader( "Content-Type", attachments[0].getContentType() );
+               }
+               catch( Exception e )
+               {
+                  e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+               }
+            }
+            else
+            {
+               
+            }
          }
 
-         RestRepresentation[] representations = request.getRepresentations(RestRepresentation.Type.REQUEST);
-         if (representations.length > 0)
+         RestRepresentation[] representations = request.getRepresentations( RestRepresentation.Type.REQUEST );
+         if( representations.length > 0 )
          {
             // init content-type and encoding
-            httpMethod.setRequestHeader("Content-Type", representations[0].getMediaType()
-                    + (StringUtils.hasContent(encoding) ? "; charset=" + encoding : ""));
+            httpMethod.setRequestHeader( "Content-Type", representations[0].getMediaType()
+                    + (StringUtils.hasContent( encoding ) ? "; charset=" + encoding : "") );
          }
       }
    }

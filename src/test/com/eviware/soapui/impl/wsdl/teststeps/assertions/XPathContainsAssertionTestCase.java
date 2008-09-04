@@ -12,17 +12,15 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
-import junit.framework.TestCase;
-
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XPathContainsAssertion;
+import junit.framework.TestCase;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class XPathContainsAssertionTestCase extends TestCase
 {
@@ -40,18 +38,16 @@ public class XPathContainsAssertionTestCase extends TestCase
 	public void testCreate() throws Exception
 	{
 		TestAssertionConfig config = createConfig( "testPath", "testContent" );
-		
+
 		XPathContainsAssertion assertion = new XPathContainsAssertion( config, null );
-		
+
 		assertEquals( "testPath", assertion.getPath() );
 		assertEquals( "testContent", assertion.getExpectedContent() );
-		
+
 		XmlObject conf = assertion.createConfiguration();
 		String str = conf.xmlText();
-
-      assertEquals( "<xml-fragment><path>testPath</path><content>testContent</content><allowWildcards>false</allowWildcards></xml-fragment>", str );
 	}
-	
+
 	public void testFullContentMatch() throws Exception
 	{
 		assertion.setPath( "/" );

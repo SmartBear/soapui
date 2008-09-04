@@ -41,7 +41,6 @@ import javax.wsdl.*;
 import javax.xml.namespace.QName;
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -733,7 +732,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
       {
          try
          {
-            File file = new File(new URL(definition).toURI());
+            File file = new File( definition.substring( 5 ));
             if (!file.exists())
             {
                context.addPathToResolve(this, "Missing WSDL file", definition, new ResolveContext.FileResolver("Select WSDL File",

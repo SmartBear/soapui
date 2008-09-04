@@ -12,28 +12,24 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.*;
+import com.eviware.soapui.impl.wsdl.support.MessageXmlObject;
+import com.eviware.soapui.impl.wsdl.support.MessageXmlPart;
+import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.types.StringToStringMap;
+import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
+
 import javax.activation.DataHandler;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.PreencodedMimeBodyPart;
-
-import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.AttachmentUtils;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedPostMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.MimeMessageRequestEntity;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlRequestDataSource;
-import com.eviware.soapui.impl.wsdl.support.MessageXmlObject;
-import com.eviware.soapui.impl.wsdl.support.MessageXmlPart;
-import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.types.StringToStringMap;
 
 public class WsdlPackagingRequestFilter extends AbstractRequestFilter
 {
@@ -85,9 +81,9 @@ public class WsdlPackagingRequestFilter extends AbstractRequestFilter
 				SoapUI.log.warn( "Failed to process inline/MTOM attachments; " + e );
 			}			
 		}
-		
-		// non-multipart request?
-		if( !isXOP && (mp == null || mp.getCount() == 0 ) && wsdlRequest.getAttachmentCount() == 0 )
+
+      // non-multipart request?
+		if( !isXOP && (mp == null || mp.getCount() == 0 ) && hasNonContentAttachments( wsdlRequest ) )
 		{
 			String encoding = StringUtils.unquote( wsdlRequest.getEncoding());
 			byte[] content = encoding == null ? requestContent.getBytes() : requestContent.getBytes(encoding);
@@ -109,7 +105,7 @@ public class WsdlPackagingRequestFilter extends AbstractRequestFilter
 			MimeMessage message = new MimeMessage( AttachmentUtils.JAVAMAIL_SESSION );
 			message.setContent( mp );
 			message.saveChanges();
-			MimeMessageRequestEntity mimeMessageRequestEntity = new MimeMessageRequestEntity( message, isXOP, wsdlRequest );
+			WsdlRequestMimeMessageRequestEntity mimeMessageRequestEntity = new WsdlRequestMimeMessageRequestEntity( message, isXOP, wsdlRequest );
 			postMethod.setRequestEntity( mimeMessageRequestEntity );
 			postMethod.setRequestHeader( "Content-Type", mimeMessageRequestEntity.getContentType() );
 			postMethod.setRequestHeader( "MIME-Version", "1.0" );
@@ -118,7 +114,18 @@ public class WsdlPackagingRequestFilter extends AbstractRequestFilter
 		return requestContent;
 	}
 
-	/**
+   private boolean hasNonContentAttachments( WsdlRequest wsdlRequest )
+   {
+      for( Attachment attachment : wsdlRequest.getAttachments())
+      {
+         if( attachment.getAttachmentType() == Attachment.AttachmentType.CONTENT )
+            return true;
+      }
+
+      return false;
+   }
+
+   /**
 	 * Creates root BodyPart containing message
 	 */
 	

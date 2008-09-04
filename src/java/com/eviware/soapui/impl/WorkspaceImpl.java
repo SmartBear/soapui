@@ -336,26 +336,30 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 	public Project importProject( String fileName ) throws SoapUIException
 	{
 		File projectFile = new File( fileName );
-
 		WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(projectFile.getAbsolutePath(), this );
 
       projectList.add( project );
 		fireProjectAdded( project );
 
-      if( resolver ==null)
-      {
-         resolver = new ResolveDialog( "Resolve Project", "Resolve imported project", null );
-         resolver.setShowOkMessage( false );
-      }
-      
-      resolver.resolve( project );
+      resolveProject( project );
 
       save( true );
 
 		return project;
 	}
-	
-	public WsdlProject createProject( String name ) throws SoapUIException
+
+   public void resolveProject( WsdlProject project )
+   {
+      if( resolver ==null)
+      {
+         resolver = new ResolveDialog( "Resolve Project", "Resolve imported project", null );
+         resolver.setShowOkMessage( false );
+      }
+
+      resolver.resolve( project );
+   }
+
+   public WsdlProject createProject( String name ) throws SoapUIException
 	{
 		File projectFile = new File( createProjectFileName( name ) );
 		File file = UISupport.getFileDialogs().saveAs( this, messages.get("CreateProject.Title"), ".xml", 
@@ -555,7 +559,9 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		projectList.add( project );
 		fireProjectAdded( project );
 
-		save( true );
+      resolveProject( project );
+
+      save( true );
 
 		return project;
 	}

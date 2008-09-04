@@ -62,7 +62,7 @@ public class NewRestResourceAction extends AbstractSoapUIAction<RestService>
 			dialog = ADialogBuilder.buildDialog( Form.class );
 			dialog.getFormField(Form.RESOURCENAME ).addFormFieldValidator(new RequiredValidator());
 			dialog.getFormField(Form.EXTRACTPARAMS).setProperty("action", new ExtractParamsAction() );
-			
+			dialog.setBooleanValue( Form.CREATEREQUEST, true );
    	}
    	else 
    	{

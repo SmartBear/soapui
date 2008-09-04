@@ -13,7 +13,6 @@
 package com.eviware.soapui.support.editor.registry;
 
 import com.eviware.soapui.impl.rest.panels.request.views.content.RestRequestContentViewFactory;
-import com.eviware.soapui.impl.rest.panels.request.views.html.RestHtmlResponseViewFactory;
 import com.eviware.soapui.impl.rest.panels.request.views.json.RestJsonResponseViewFactory;
 import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorFactory;
@@ -40,7 +39,7 @@ public class EditorViewRegistry
 //		addFactory( new RestRequestParamsViewFactory() );
       addFactory( new RestRequestContentViewFactory() );
       addFactory( new RestJsonResponseViewFactory() );
-      addFactory(new RestHtmlResponseViewFactory());
+//      addFactory(new RestHtmlResponseViewFactory());
       addFactory( new RawXmlEditorFactory() );
    }
 

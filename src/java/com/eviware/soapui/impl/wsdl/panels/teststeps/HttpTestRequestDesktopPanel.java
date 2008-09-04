@@ -64,6 +64,8 @@ public class HttpTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
       setEnabled( !SoapUI.getTestMonitor().hasRunningTest( requestStep.getTestCase() ) );
 
       requestStep.getTestRequest().addAssertionsListener( assertionsListener );
+
+      getSubmitButton().setEnabled( getSubmit() == null && StringUtils.hasContent( getRequest().getPath() ) );
    }
 
    protected JComponent buildLogPanel()

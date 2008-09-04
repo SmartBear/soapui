@@ -344,7 +344,7 @@ public class RestTestRequest extends RestRequest implements Assertable
    @Override
    public RestResource getOperation()
    {
-      return ((RestTestRequestStep)testStep).getResource();
+      return testStep instanceof RestTestRequestStep ? ((RestTestRequestStep)testStep).getResource() : null;
    }
 
    protected static class TestRequestIconAnimator extends RequestIconAnimator<RestTestRequest>

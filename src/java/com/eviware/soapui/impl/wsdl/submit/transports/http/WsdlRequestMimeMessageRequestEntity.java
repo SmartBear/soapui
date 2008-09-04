@@ -12,20 +12,18 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-
-import org.apache.commons.httpclient.methods.RequestEntity;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+import org.apache.commons.httpclient.methods.RequestEntity;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * MimeMessage request class 
@@ -33,14 +31,14 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
  * @author ole.matzura
  */
 
-public class MimeMessageRequestEntity implements RequestEntity
+public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
 {
 	private final MimeMessage message;
 	private byte[] buffer;
 	private final boolean isXOP;
 	private final WsdlRequest wsdlRequest;
 
-	public MimeMessageRequestEntity(MimeMessage message, boolean isXOP, WsdlRequest wsdlRequest )
+	public WsdlRequestMimeMessageRequestEntity(MimeMessage message, boolean isXOP, WsdlRequest wsdlRequest )
 	{
 		this.message = message;
 		this.isXOP = isXOP;
