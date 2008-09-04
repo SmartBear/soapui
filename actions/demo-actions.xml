@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:soapui-actions xmlns:tns="http://eviware.com/soapui/config">
 
-    <!-- defined action -->
-  	<tns:action id="DemoAction" actionClass="soapui.demo.DemoAction"/>
-
-    <!-- add action to project popup -->
- 	<tns:actionGroup id="EnabledWsdlProjectActions">
-		<tns:actionMapping actionId="DemoAction"/>
-	</tns:actionGroup>
+ 
 	 
 </tns:soapui-actions>

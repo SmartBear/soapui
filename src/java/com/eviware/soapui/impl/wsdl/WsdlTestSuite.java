@@ -18,6 +18,7 @@ import com.eviware.soapui.config.TestSuiteRunTypesConfig.Enum;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.actions.ChangeOperationAction;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
@@ -26,12 +27,16 @@ import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuiteListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.resolver.ChangeOperationResolver;
+import com.eviware.soapui.support.resolver.ImportInterfaceResolver;
 import com.eviware.soapui.support.resolver.ResolveDialog;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 
 import java.io.File;
 import java.util.*;
+
+import org.apache.xml.security.utils.resolver.implementations.ResolverAnonymous;
 
 /**
  * TestSuite implementation for WSDL projects.
@@ -575,15 +580,14 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 			TestCaseConfig newConfig = (TestCaseConfig) getConfig().addNewTestCase().set(testCaseNewConfig).changeType(
 					TestCaseConfig.type);
 			WsdlTestCase newTestCase = new WsdlTestCase(this, newConfig, false);
-// needs to be validated..			
 			newTestCase.afterLoad();
+			testCases.add(newTestCase);
+			fireTestCaseAdded(newTestCase);
 
-         ResolveDialog resolver = new ResolveDialog( "Validate TestCase", "Checks TestCase for inconsistencies", null );
+         ResolveDialog resolver = new ResolveDialog( "Validate TestCase", "Checks TestCase for inconsistencies", null, new ImportInterfaceResolver(this), new ChangeOperationResolver(this) );
          resolver.setShowOkMessage( false );
          resolver.resolve( newTestCase );
 
-         testCases.add(newTestCase);
-			fireTestCaseAdded(newTestCase);
 		}
 		else
 		{

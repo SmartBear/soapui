@@ -1,0 +1,1632 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml-fragment xsi:type="con:WsdlInterface" name="AmazonEC2Binding" type="wsdl" bindingName="{http://ec2.amazonaws.com/doc/2008-02-01/}AmazonEC2Binding" soapVersion="1_1" definition="http://s3.amazonaws.com/ec2-downloads/ec2.wsdl" wsaVersion="NONE" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:definitionCache rootPart="http://s3.amazonaws.com/ec2-downloads/ec2.wsdl" type="TEXT"><con:part><con:url>http://s3.amazonaws.com/ec2-downloads/ec2.wsdl</con:url><con:content><![CDATA[<definitions targetNamespace="http://ec2.amazonaws.com/doc/2008-02-01/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ec2.amazonaws.com/doc/2008-02-01/">
+  <types>
+    <xs:schema targetNamespace="http://ec2.amazonaws.com/doc/2008-02-01/" elementFormDefault="qualified" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <xs:annotation>
+        <xs:documentation xml:lang="en"></xs:documentation>
+      </xs:annotation>
+      <!--RegisterImage request definitions-->
+      <xs:element name="RegisterImage" type="tns:RegisterImageType"/>
+      <xs:complexType name="RegisterImageType">
+        <xs:sequence>
+          <xs:element name="imageLocation" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--RegisterImage response definitions-->
+      <xs:element name="RegisterImageResponse" type="tns:RegisterImageResponseType"/>
+      <xs:complexType name="RegisterImageResponseType">
+        <xs:sequence>
+          <xs:element name="imageId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DeregisterImage request definitions-->
+      <xs:element name="DeregisterImage" type="tns:DeregisterImageType"/>
+      <xs:complexType name="DeregisterImageType">
+        <xs:sequence>
+          <xs:element name="imageId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DeregisterImage response definitions-->
+      <xs:element name="DeregisterImageResponse" type="tns:DeregisterImageResponseType"/>
+      <xs:complexType name="DeregisterImageResponseType">
+        <xs:sequence>
+          <xs:element name="return" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--CreateKeyPair request definitions-->
+      <xs:element name="CreateKeyPair" type="tns:CreateKeyPairType"/>
+      <xs:complexType name="CreateKeyPairType">
+        <xs:sequence>
+          <xs:element name="keyName" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--CreateKeyPair response definitions-->
+      <xs:element name="CreateKeyPairResponse" type="tns:CreateKeyPairResponseType"/>
+      <xs:complexType name="CreateKeyPairResponseType">
+        <xs:sequence>
+          <xs:element name="keyName" type="xs:string"/>
+          <xs:element name="keyFingerprint" type="xs:string"/>
+          <xs:element name="keyMaterial" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DeleteKeyPair request definitions-->
+      <xs:element name="DeleteKeyPair" type="tns:DeleteKeyPairType"/>
+      <xs:complexType name="DeleteKeyPairType">
+        <xs:sequence>
+          <xs:element name="keyName" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DeleteKeyPair response definitions-->
+      <xs:element name="DeleteKeyPairResponse" type="tns:DeleteKeyPairResponseType"/>
+      <xs:complexType name="DeleteKeyPairResponseType">
+        <xs:sequence>
+          <xs:element name="return" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DescribeKeyPairs Request definitions-->
+      <xs:element name="DescribeKeyPairs" type="tns:DescribeKeyPairsType"/>
+      <xs:complexType name="DescribeKeyPairsType">
+        <xs:sequence>
+          <xs:element name="keySet" type="tns:DescribeKeyPairsInfoType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeKeyPairsInfoType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:DescribeKeyPairsItemType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeKeyPairsItemType">
+        <xs:sequence>
+          <xs:element name="keyName" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DescribeKeyPairs Response definitions-->
+      <xs:element name="DescribeKeyPairsResponse" type="tns:DescribeKeyPairsResponseType"/>
+      <xs:complexType name="DescribeKeyPairsResponseType">
+        <xs:sequence>
+          <xs:element name="keySet" type="tns:DescribeKeyPairsResponseInfoType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeKeyPairsResponseInfoType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:DescribeKeyPairsResponseItemType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeKeyPairsResponseItemType">
+        <xs:sequence>
+          <xs:element name="keyName" type="xs:string"/>
+          <xs:element name="keyFingerprint" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--RunInstances request definitions-->
+      <xs:element name="RunInstances" type="tns:RunInstancesType"/>
+      <xs:complexType name="RunInstancesType">
+        <xs:sequence>
+          <xs:element name="imageId" type="xs:string"/>
+          <xs:element name="minCount" type="xs:int"/>
+          <xs:element name="maxCount" type="xs:int"/>
+          <xs:element name="keyName" type="xs:string" minOccurs="0"/>
+          <xs:element name="groupSet" type="tns:GroupSetType"/>
+          <xs:element name="additionalInfo" type="xs:string" minOccurs="0"/>
+          <xs:element name="userData" type="tns:UserDataType" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="addressingType" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="instanceType" type="xs:string"/>
+          <xs:element name="placement" type="tns:PlacementRequestType" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="kernelId" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="ramdiskId" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="blockDeviceMapping" type="tns:BlockDeviceMappingType" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GroupSetType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:GroupItemType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GroupItemType">
+        <xs:sequence>
+          <xs:element name="groupId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="UserDataType" mixed="true">
+        <xs:sequence>
+          <xs:element name="data" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="version" type="xs:string" use="required" fixed="1.0"/>
+        <xs:attribute name="encoding" type="xs:string" use="required" fixed="base64"/>
+      </xs:complexType>
+      <xs:complexType name="BlockDeviceMappingType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:BlockDeviceMappingItemType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BlockDeviceMappingItemType">
+        <xs:sequence>
+          <xs:element name="virtualName" type="xs:string"/>
+          <xs:element name="deviceName" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="PlacementRequestType">
+        <xs:sequence>
+          <xs:element name="availabilityZone" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--RunInstances response definitions-->
+      <xs:element name="RunInstancesResponse" type="tns:ReservationInfoType"/>
+      <xs:complexType name="ReservationInfoType">
+        <xs:sequence>
+          <xs:element name="reservationId" type="xs:string"/>
+          <xs:element name="ownerId" type="xs:string"/>
+          <xs:element name="groupSet" type="tns:GroupSetType"/>
+          <xs:element name="instancesSet" type="tns:RunningInstancesSetType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="RunningInstancesSetType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:RunningInstancesItemType" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="RunningInstancesItemType">
+        <xs:sequence>
+          <xs:element name="instanceId" type="xs:string"/>
+          <xs:element name="imageId" type="xs:string"/>
+          <xs:element name="instanceState" type="tns:InstanceStateType"/>
+          <xs:element name="privateDnsName" type="xs:string"/>
+          <xs:element name="dnsName" type="xs:string"/>
+          <xs:element name="reason" type="xs:string" minOccurs="0"/>
+          <xs:element name="keyName" type="xs:string" minOccurs="0"/>
+          <xs:element name="amiLaunchIndex" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="productCodes" type="tns:ProductCodesSetType" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="instanceType" type="xs:string"/>
+          <xs:element name="launchTime" type="xs:dateTime"/>
+          <xs:element name="placement" type="tns:PlacementResponseType"/>
+          <xs:element name="kernelId" type="xs:string" minOccurs="0"/>
+          <xs:element name="ramdiskId" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="PlacementResponseType">
+        <xs:sequence>
+          <xs:element name="availabilityZone" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--GetConsoleOutput request definitions-->
+      <xs:element name="GetConsoleOutput" type="tns:GetConsoleOutputType"/>
+      <xs:complexType name="GetConsoleOutputType">
+        <xs:sequence>
+          <xs:element name="instanceId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--GetConsoleOutput response definitions-->
+      <xs:element name="GetConsoleOutputResponse" type="tns:GetConsoleOutputResponseType"/>
+      <xs:complexType name="GetConsoleOutputResponseType">
+        <xs:sequence>
+          <xs:element name="instanceId" type="xs:string"/>
+          <xs:element name="timestamp" type="xs:dateTime"/>
+          <xs:element name="output" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--TerminateInstances request definitions-->
+      <xs:element name="TerminateInstances" type="tns:TerminateInstancesType"/>
+      <xs:complexType name="TerminateInstancesType">
+        <xs:sequence>
+          <xs:element name="instancesSet" type="tns:TerminateInstancesInfoType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TerminateInstancesInfoType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:TerminateInstancesItemType" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TerminateInstancesItemType">
+        <xs:sequence>
+          <xs:element name="instanceId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--TerminateInstances response definitions-->
+      <xs:element name="TerminateInstancesResponse" type="tns:TerminateInstancesResponseType"/>
+      <xs:complexType name="TerminateInstancesResponseType">
+        <xs:sequence>
+          <xs:element name="instancesSet" type="tns:TerminateInstancesResponseInfoType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TerminateInstancesResponseInfoType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:TerminateInstancesResponseItemType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TerminateInstancesResponseItemType">
+        <xs:sequence>
+          <xs:element name="instanceId" type="xs:string"/>
+          <xs:element name="shutdownState" type="tns:InstanceStateType"/>
+          <xs:element name="previousState" type="tns:InstanceStateType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--RebootInstances request definitions-->
+      <xs:element name="RebootInstances" type="tns:RebootInstancesType"/>
+      <xs:complexType name="RebootInstancesType">
+        <xs:sequence>
+          <xs:element name="instancesSet" type="tns:RebootInstancesInfoType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="RebootInstancesInfoType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:RebootInstancesItemType" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="RebootInstancesItemType">
+        <xs:sequence>
+          <xs:element name="instanceId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--RebootInstances response definitions-->
+      <xs:element name="RebootInstancesResponse" type="tns:RebootInstancesResponseType"/>
+      <xs:complexType name="RebootInstancesResponseType">
+        <xs:sequence>
+          <xs:element name="return" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DescribeInstances Request definitions-->
+      <xs:element name="DescribeInstances" type="tns:DescribeInstancesType"/>
+      <xs:complexType name="DescribeInstancesType">
+        <xs:sequence>
+          <xs:element name="instancesSet" type="tns:DescribeInstancesInfoType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeInstancesInfoType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:DescribeInstancesItemType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeInstancesItemType">
+        <xs:sequence>
+          <xs:element name="instanceId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DescribeInstances Response definitions-->
+      <xs:element name="DescribeInstancesResponse" type="tns:DescribeInstancesResponseType"/>
+      <xs:complexType name="DescribeInstancesResponseType">
+        <xs:sequence>
+          <xs:element name="reservationSet" type="tns:ReservationSetType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ReservationSetType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:ReservationInfoType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DescribeImages Request definitions-->
+      <xs:element name="DescribeImages" type="tns:DescribeImagesType"/>
+      <xs:complexType name="DescribeImagesType">
+        <xs:sequence>
+          <xs:element name="executableBySet" type="tns:DescribeImagesExecutableBySetType" minOccurs="0"/>
+          <xs:element name="imagesSet" type="tns:DescribeImagesInfoType"/>
+          <xs:element name="ownersSet" type="tns:DescribeImagesOwnersType" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeImagesInfoType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:DescribeImagesItemType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeImagesItemType">
+        <xs:sequence>
+          <xs:element name="imageId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeImagesOwnersType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:DescribeImagesOwnerType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeImagesOwnerType">
+        <xs:sequence>
+          <xs:element name="owner" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeImagesExecutableBySetType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:DescribeImagesExecutableByType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeImagesExecutableByType">
+        <xs:sequence>
+          <xs:element name="user" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DescribeImages Response definitions-->
+      <xs:element name="DescribeImagesResponse" type="tns:DescribeImagesResponseType"/>
+      <xs:complexType name="DescribeImagesResponseType">
+        <xs:sequence>
+          <xs:element name="imagesSet" type="tns:DescribeImagesResponseInfoType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeImagesResponseInfoType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:DescribeImagesResponseItemType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeImagesResponseItemType">
+        <xs:sequence>
+          <xs:element name="imageId" type="xs:string"/>
+          <xs:element name="imageLocation" type="xs:string"/>
+          <xs:element name="imageState" type="xs:string"/>
+          <xs:element name="imageOwnerId" type="xs:string"/>
+          <xs:element name="isPublic" type="xs:boolean"/>
+          <xs:element name="productCodes" type="tns:ProductCodesSetType" minOccurs="0"/>
+          <xs:element name="architecture" type="xs:string" minOccurs="0"/>
+          <xs:element name="imageType" type="xs:string" minOccurs="0"/>
+          <xs:element name="kernelId" type="xs:string" minOccurs="0"/>
+          <xs:element name="ramdiskId" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--CreateSecurityGroup Request definitions-->
+      <xs:element name="CreateSecurityGroup" type="tns:CreateSecurityGroupType"/>
+      <xs:complexType name="CreateSecurityGroupType">
+        <xs:sequence>
+          <xs:element name="groupName" type="xs:string"/>
+          <xs:element name="groupDescription" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--CreateSecurityGroup Response definitions-->
+      <xs:element name="CreateSecurityGroupResponse" type="tns:CreateSecurityGroupResponseType"/>
+      <xs:complexType name="CreateSecurityGroupResponseType">
+        <xs:sequence>
+          <xs:element name="return" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DeleteSecurityGroup Request definitions-->
+      <xs:element name="DeleteSecurityGroup" type="tns:DeleteSecurityGroupType"/>
+      <xs:complexType name="DeleteSecurityGroupType">
+        <xs:sequence>
+          <xs:element name="groupName" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DeleteSecurityGroup Response definitions-->
+      <xs:element name="DeleteSecurityGroupResponse" type="tns:DeleteSecurityGroupResponseType"/>
+      <xs:complexType name="DeleteSecurityGroupResponseType">
+        <xs:sequence>
+          <xs:element name="return" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DescribeSecurityGroups Request definitions-->
+      <xs:element name="DescribeSecurityGroups" type="tns:DescribeSecurityGroupsType"/>
+      <xs:complexType name="DescribeSecurityGroupsType">
+        <xs:sequence>
+          <xs:element name="securityGroupSet" type="tns:DescribeSecurityGroupsSetType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeSecurityGroupsSetType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:DescribeSecurityGroupsSetItemType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeSecurityGroupsSetItemType">
+        <xs:sequence>
+          <xs:element name="groupName" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DescribeSecurityGroups Response definitions-->
+      <xs:element name="DescribeSecurityGroupsResponse" type="tns:DescribeSecurityGroupsResponseType"/>
+      <xs:complexType name="DescribeSecurityGroupsResponseType">
+        <xs:sequence>
+          <xs:element name="securityGroupInfo" type="tns:SecurityGroupSetType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="IpPermissionSetType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:IpPermissionType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="IpPermissionType">
+        <xs:sequence>
+          <xs:element name="ipProtocol" type="xs:string"/>
+          <xs:element name="fromPort" type="xs:int"/>
+          <xs:element name="toPort" type="xs:int"/>
+          <xs:element name="groups" type="tns:UserIdGroupPairSetType"/>
+          <xs:element name="ipRanges" type="tns:IpRangeSetType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="IpRangeSetType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:IpRangeItemType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="IpRangeItemType">
+        <xs:sequence>
+          <xs:element name="cidrIp" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="UserIdGroupPairSetType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:UserIdGroupPairType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="UserIdGroupPairType">
+        <xs:sequence>
+          <xs:element name="userId" type="xs:string"/>
+          <xs:element name="groupName" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SecurityGroupSetType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:SecurityGroupItemType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SecurityGroupItemType">
+        <xs:sequence>
+          <xs:element name="ownerId" type="xs:string"/>
+          <xs:element name="groupName" type="xs:string"/>
+          <xs:element name="groupDescription" type="xs:string"/>
+          <xs:element name="ipPermissions" type="tns:IpPermissionSetType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--AuthorizeSecurityGroupIngress Request definitions-->
+      <xs:annotation>
+        <xs:documentation xml:lang="en">This API call should be treated as under development. The current API specification supports a richer
+		      set of semantics than we intend to retain in future releases, and the details for this call are still under
+		      review. Semantically, clients can depend on fine grained CIDR based access control (as currently exposed) but
+		      for group based access control clients should only depend on the ability to control access for an entire
+		      (user,group) tuple. Fine grained group based access control at the protocol and port or icmp code:type level
+		      are not guaranteed to be supported in future releases of this API.</xs:documentation>
+      </xs:annotation>
+      <xs:element name="AuthorizeSecurityGroupIngress" type="tns:AuthorizeSecurityGroupIngressType"/>
+      <xs:complexType name="AuthorizeSecurityGroupIngressType">
+        <xs:sequence>
+          <xs:element name="userId" type="xs:string"/>
+          <xs:element name="groupName" type="xs:string"/>
+          <xs:element name="ipPermissions" type="tns:IpPermissionSetType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--AuthorizeSecurityGroupIngress Response definitions-->
+      <xs:element name="AuthorizeSecurityGroupIngressResponse" type="tns:AuthorizeSecurityGroupIngressResponseType"/>
+      <xs:complexType name="AuthorizeSecurityGroupIngressResponseType">
+        <xs:sequence>
+          <xs:element name="return" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--RevokeSecurityGroupIngress Request definitions-->
+      <xs:annotation>
+        <xs:documentation xml:lang="en">This API call should be treated as under development. The current API specification supports a richer
+		      set of semantics than we intend to retain in future releases, and the details for this call are still under
+		      review. Semantically, clients can depend on fine grained CIDR based access control (as currently exposed) but
+		      for group based access control clients should only depend on the ability to control access for an entire
+		      (user,group) tuple. Fine grained group based access control at the protocol and port or icmp code:type level
+		      are not guaranteed to be supported in future releases of this API.</xs:documentation>
+      </xs:annotation>
+      <xs:element name="RevokeSecurityGroupIngress" type="tns:RevokeSecurityGroupIngressType"/>
+      <xs:complexType name="RevokeSecurityGroupIngressType">
+        <xs:sequence>
+          <xs:element name="userId" type="xs:string"/>
+          <xs:element name="groupName" type="xs:string"/>
+          <xs:element name="ipPermissions" type="tns:IpPermissionSetType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--RevokeSecurityGroupIngress Response definitions-->
+      <xs:element name="RevokeSecurityGroupIngressResponse" type="tns:RevokeSecurityGroupIngressResponseType"/>
+      <xs:complexType name="RevokeSecurityGroupIngressResponseType">
+        <xs:sequence>
+          <xs:element name="return" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--Instance state type definition-->
+      <xs:complexType name="InstanceStateType">
+        <xs:sequence>
+          <xs:element name="code" type="xs:int"/>
+          <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--ModifyImageAttribute Definitions-->
+      <xs:element name="ModifyImageAttribute" type="tns:ModifyImageAttributeType"/>
+      <xs:complexType name="ModifyImageAttributeType">
+        <xs:sequence>
+          <xs:element name="imageId" type="xs:string"/>
+          <xs:choice>
+            <xs:element name="launchPermission" type="tns:LaunchPermissionOperationType"/>
+            <xs:element name="productCodes" type="tns:ProductCodeListType"/>
+          </xs:choice>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="LaunchPermissionOperationType">
+        <xs:choice>
+          <xs:element name="add" type="tns:LaunchPermissionListType"/>
+          <xs:element name="remove" type="tns:LaunchPermissionListType"/>
+        </xs:choice>
+      </xs:complexType>
+      <xs:complexType name="LaunchPermissionListType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:LaunchPermissionItemType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="LaunchPermissionItemType">
+        <xs:choice>
+          <xs:element name="userId" type="xs:string"/>
+          <xs:element name="group" type="xs:string"/>
+        </xs:choice>
+      </xs:complexType>
+      <xs:complexType name="ProductCodeListType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:ProductCodeItemType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ProductCodeItemType">
+        <xs:choice>
+          <xs:element name="productCode" type="xs:string"/>
+        </xs:choice>
+      </xs:complexType>
+      <!--ModifyImageAttributeResponse Definitions-->
+      <xs:element name="ModifyImageAttributeResponse" type="tns:ModifyImageAttributeResponseType"/>
+      <xs:complexType name="ModifyImageAttributeResponseType">
+        <xs:sequence>
+          <xs:element name="return" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--ResetImageAttribute Definitions-->
+      <xs:element name="ResetImageAttribute" type="tns:ResetImageAttributeType"/>
+      <xs:complexType name="ResetImageAttributeType">
+        <xs:sequence>
+          <xs:element name="imageId" type="xs:string"/>
+          <xs:group ref="tns:ResetImageAttributesGroup"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:group name="ResetImageAttributesGroup">
+        <xs:choice>
+          <xs:element name="launchPermission" type="tns:EmptyElementType"/>
+        </xs:choice>
+      </xs:group>
+      <xs:complexType name="EmptyElementType"></xs:complexType>
+      <!--ResetImageAttributeResponse Definitions-->
+      <xs:element name="ResetImageAttributeResponse" type="tns:ResetImageAttributeResponseType"/>
+      <xs:complexType name="ResetImageAttributeResponseType">
+        <xs:sequence>
+          <xs:element name="return" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DescribeImageAttribute Definitions-->
+      <xs:element name="DescribeImageAttribute" type="tns:DescribeImageAttributeType"/>
+      <xs:complexType name="DescribeImageAttributeType">
+        <xs:sequence>
+          <xs:element name="imageId" type="xs:string"/>
+          <xs:group ref="tns:DescribeImageAttributesGroup"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:group name="DescribeImageAttributesGroup">
+        <xs:choice>
+          <xs:element name="launchPermission" type="tns:EmptyElementType"/>
+          <xs:element name="productCodes" type="tns:EmptyElementType"/>
+          <xs:element name="kernel" type="tns:EmptyElementType"/>
+          <xs:element name="ramdisk" type="tns:EmptyElementType"/>
+          <xs:element name="blockDeviceMapping" type="tns:EmptyElementType"/>
+        </xs:choice>
+      </xs:group>
+      <!--DescribeImageAttributeResponse Definitions-->
+      <xs:element name="DescribeImageAttributeResponse" type="tns:DescribeImageAttributeResponseType"/>
+      <xs:complexType name="DescribeImageAttributeResponseType">
+        <xs:sequence>
+          <xs:element name="imageId" type="xs:string"/>
+          <xs:choice>
+            <xs:element name="launchPermission" type="tns:LaunchPermissionListType"/>
+            <xs:element name="productCodes" type="tns:ProductCodeListType"/>
+            <xs:element name="kernel" type="tns:NullableAttributeValueType"/>
+            <xs:element name="ramdisk" type="tns:NullableAttributeValueType"/>
+            <xs:element name="blockDeviceMapping" type="tns:BlockDeviceMappingType"/>
+          </xs:choice>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="NullableAttributeValueType">
+        <xs:sequence>
+          <xs:element name="value" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AttributeValueType">
+        <xs:sequence>
+          <xs:element name="value" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--ConfirmProductInstance Definitions-->
+      <xs:element name="ConfirmProductInstance" type="tns:ConfirmProductInstanceType"/>
+      <xs:complexType name="ConfirmProductInstanceType">
+        <xs:sequence>
+          <xs:element name="productCode" type="xs:string"/>
+          <xs:element name="instanceId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ProductCodesSetType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:ProductCodesSetItemType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ProductCodesSetItemType">
+        <xs:sequence>
+          <xs:element name="productCode" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--ConfirmProductInstanceResponse Definitions-->
+      <xs:element name="ConfirmProductInstanceResponse" type="tns:ConfirmProductInstanceResponseType"/>
+      <xs:complexType name="ConfirmProductInstanceResponseType">
+        <xs:sequence>
+          <xs:element name="return" type="xs:boolean"/>
+          <xs:element name="ownerId" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DescribeAvailabilityZones Definitions-->
+      <xs:element name="DescribeAvailabilityZones" type="tns:DescribeAvailabilityZonesType"/>
+      <xs:complexType name="DescribeAvailabilityZonesType">
+        <xs:sequence>
+          <xs:element name="availabilityZoneSet" type="tns:DescribeAvailabilityZonesSetType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeAvailabilityZonesSetType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:DescribeAvailabilityZonesSetItemType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeAvailabilityZonesSetItemType">
+        <xs:sequence>
+          <xs:element name="zoneName" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DescribeAvailabilityZones Response definitions-->
+      <xs:element name="DescribeAvailabilityZonesResponse" type="tns:DescribeAvailabilityZonesResponseType"/>
+      <xs:complexType name="DescribeAvailabilityZonesResponseType">
+        <xs:sequence>
+          <xs:element name="availabilityZoneInfo" type="tns:AvailabilityZoneSetType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AvailabilityZoneSetType">
+        <xs:sequence>
+          <xs:element name="item" type="tns:AvailabilityZoneItemType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AvailabilityZoneItemType">
+        <xs:sequence>
+          <xs:element name="zoneName" type="xs:string"/>
+          <xs:element name="zoneState" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--AllocateAddress definitions-->
+      <xs:element name="AllocateAddress" type="tns:AllocateAddressType"/>
+      <xs:complexType name="AllocateAddressType"/>
+      <!--AllocateAddressResponse definitions-->
+      <xs:element name="AllocateAddressResponse" type="tns:AllocateAddressResponseType"/>
+      <xs:complexType name="AllocateAddressResponseType">
+        <xs:sequence>
+          <xs:element name="publicIp" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--ReleaseAddress definitions-->
+      <xs:element name="ReleaseAddress" type="tns:ReleaseAddressType"/>
+      <xs:complexType name="ReleaseAddressType">
+        <xs:sequence>
+          <xs:element name="publicIp" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--ReleaseAddressResponse definitions-->
+      <xs:element name="ReleaseAddressResponse" type="tns:ReleaseAddressResponseType"/>
+      <xs:complexType name="ReleaseAddressResponseType">
+        <xs:sequence>
+          <xs:element name="return" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DescribeAddresses definitions-->
+      <xs:element name="DescribeAddresses" type="tns:DescribeAddressesType"/>
+      <xs:complexType name="DescribeAddressesType">
+        <xs:sequence>
+          <xs:element name="publicIpsSet" type="tns:DescribeAddressesInfoType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeAddressesInfoType">
+        <xs:sequence>
+          <xs:element name="item" maxOccurs="unbounded" minOccurs="0" type="tns:DescribeAddressesItemType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeAddressesItemType">
+        <xs:sequence>
+          <xs:element name="publicIp" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DescribeAddressesResponse definitions-->
+      <xs:element name="DescribeAddressesResponse" type="tns:DescribeAddressesResponseType"/>
+      <xs:complexType name="DescribeAddressesResponseType">
+        <xs:sequence>
+          <xs:element name="addressesSet" type="tns:DescribeAddressesResponseInfoType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeAddressesResponseInfoType">
+        <xs:sequence>
+          <xs:element name="item" maxOccurs="unbounded" minOccurs="0" type="tns:DescribeAddressesResponseItemType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DescribeAddressesResponseItemType">
+        <xs:sequence>
+          <xs:element name="publicIp" type="xs:string"/>
+          <xs:element name="instanceId" minOccurs="0" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--AssociateAddress definitions-->
+      <xs:element name="AssociateAddress" type="tns:AssociateAddressType"/>
+      <xs:complexType name="AssociateAddressType">
+        <xs:sequence>
+          <xs:element name="publicIp" type="xs:string"/>
+          <xs:element name="instanceId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--AssociateAddressResponse definitions-->
+      <xs:element name="AssociateAddressResponse" type="tns:AssociateAddressResponseType"/>
+      <xs:complexType name="AssociateAddressResponseType">
+        <xs:sequence>
+          <xs:element name="return" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DisassociateAddress definitions-->
+      <xs:element name="DisassociateAddress" type="tns:DisassociateAddressType"/>
+      <xs:complexType name="DisassociateAddressType">
+        <xs:sequence>
+          <xs:element name="publicIp" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <!--DisassociateAddressResponse definitions-->
+      <xs:element name="DisassociateAddressResponse" type="tns:DisassociateAddressResponseType"/>
+      <xs:complexType name="DisassociateAddressResponseType">
+        <xs:sequence>
+          <xs:element name="return" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </types>
+  <!--message definitions-->
+  <message name="RegisterImageRequestMsg">
+    <part name="RegisterImageRequestMsgReq" element="tns:RegisterImage"/>
+  </message>
+  <message name="RegisterImageResponseMsg">
+    <part name="RegisterImageResponseMsgResp" element="tns:RegisterImageResponse"/>
+  </message>
+  <message name="DeregisterImageRequestMsg">
+    <part name="DeregisterImageRequestMsgReq" element="tns:DeregisterImage"/>
+  </message>
+  <message name="DeregisterImageResponseMsg">
+    <part name="DeregisterImageResponseMsgResp" element="tns:DeregisterImageResponse"/>
+  </message>
+  <message name="RunInstancesRequestMsg">
+    <part name="RunInstancesRequestMsgReq" element="tns:RunInstances"/>
+  </message>
+  <message name="RunInstancesResponseMsg">
+    <part name="RunInstancesResponseMsgResp" element="tns:RunInstancesResponse"/>
+  </message>
+  <message name="CreateKeyPairRequestMsg">
+    <part name="CreateKeyPairRequestMsgReq" element="tns:CreateKeyPair"/>
+  </message>
+  <message name="CreateKeyPairResponseMsg">
+    <part name="CreateKeyPairResponseMsgResp" element="tns:CreateKeyPairResponse"/>
+  </message>
+  <message name="DescribeKeyPairsRequestMsg">
+    <part name="DescribeKeyPairsRequestMsgReq" element="tns:DescribeKeyPairs"/>
+  </message>
+  <message name="DescribeKeyPairsResponseMsg">
+    <part name="DescribeKeyPairsResponseMsgResp" element="tns:DescribeKeyPairsResponse"/>
+  </message>
+  <message name="DeleteKeyPairRequestMsg">
+    <part name="DeleteKeyPairRequestMsgReq" element="tns:DeleteKeyPair"/>
+  </message>
+  <message name="DeleteKeyPairResponseMsg">
+    <part name="DeleteKeyPairResponseMsgResp" element="tns:DeleteKeyPairResponse"/>
+  </message>
+  <message name="GetConsoleOutputRequestMsg">
+    <part name="GetConsoleOutputRequestMsgReq" element="tns:GetConsoleOutput"/>
+  </message>
+  <message name="GetConsoleOutputResponseMsg">
+    <part name="GetConsoleOutputResponseMsgResp" element="tns:GetConsoleOutputResponse"/>
+  </message>
+  <message name="TerminateInstancesRequestMsg">
+    <part name="TerminateInstancesRequestMsgReq" element="tns:TerminateInstances"/>
+  </message>
+  <message name="TerminateInstancesResponseMsg">
+    <part name="TerminateInstancesResponseMsgResp" element="tns:TerminateInstancesResponse"/>
+  </message>
+  <message name="RebootInstancesRequestMsg">
+    <part name="RebootInstancesRequestMsgReq" element="tns:RebootInstances"/>
+  </message>
+  <message name="RebootInstancesResponseMsg">
+    <part name="RebootInstancesRequestMsgResp" element="tns:RebootInstancesResponse"/>
+  </message>
+  <message name="DescribeInstancesRequestMsg">
+    <part name="DescribeInstancesRequestMsgReq" element="tns:DescribeInstances"/>
+  </message>
+  <message name="DescribeInstancesResponseMsg">
+    <part name="DescribeInstancesRequestMsgResp" element="tns:DescribeInstancesResponse"/>
+  </message>
+  <message name="DescribeImagesRequestMsg">
+    <part name="DescribeImagesRequestMsgReq" element="tns:DescribeImages"/>
+  </message>
+  <message name="DescribeImagesResponseMsg">
+    <part name="DescribeImagesRequestMsgResp" element="tns:DescribeImagesResponse"/>
+  </message>
+  <message name="CreateSecurityGroupRequestMsg">
+    <part name="CreateSecurityGroupRequestMsgReq" element="tns:CreateSecurityGroup"/>
+  </message>
+  <message name="CreateSecurityGroupResponseMsg">
+    <part name="CreateSecurityGroupRequestMsgResp" element="tns:CreateSecurityGroupResponse"/>
+  </message>
+  <message name="DeleteSecurityGroupRequestMsg">
+    <part name="DeleteSecurityGroupRequestMsgReq" element="tns:DeleteSecurityGroup"/>
+  </message>
+  <message name="DeleteSecurityGroupResponseMsg">
+    <part name="DeleteSecurityGroupRequestMsgResp" element="tns:DeleteSecurityGroupResponse"/>
+  </message>
+  <message name="DescribeSecurityGroupsRequestMsg">
+    <part name="DescribeSecurityGroupsRequestMsgReq" element="tns:DescribeSecurityGroups"/>
+  </message>
+  <message name="DescribeSecurityGroupsResponseMsg">
+    <part name="DescribeSecurityGroupsRequestMsgResp" element="tns:DescribeSecurityGroupsResponse"/>
+  </message>
+  <message name="AuthorizeSecurityGroupIngressRequestMsg">
+    <part name="AuthorizeSecurityGroupIngressRequestMsgReq" element="tns:AuthorizeSecurityGroupIngress"/>
+  </message>
+  <message name="AuthorizeSecurityGroupIngressResponseMsg">
+    <part name="AuthorizeSecurityGroupIngressRequestMsgResp" element="tns:AuthorizeSecurityGroupIngressResponse"/>
+  </message>
+  <message name="RevokeSecurityGroupIngressRequestMsg">
+    <part name="RevokeSecurityGroupIngressRequestMsgReq" element="tns:RevokeSecurityGroupIngress"/>
+  </message>
+  <message name="RevokeSecurityGroupIngressResponseMsg">
+    <part name="RevokeSecurityGroupIngressRequestMsgResp" element="tns:RevokeSecurityGroupIngressResponse"/>
+  </message>
+  <message name="ModifyImageAttributeRequestMsg">
+    <part name="ModifyImageAttributeRequestMsgReq" element="tns:ModifyImageAttribute"/>
+  </message>
+  <message name="ModifyImageAttributeResponseMsg">
+    <part name="ModifyImageAttributeRequestMsgResp" element="tns:ModifyImageAttributeResponse"/>
+  </message>
+  <message name="ResetImageAttributeRequestMsg">
+    <part name="ResetImageAttributeRequestMsgReq" element="tns:ResetImageAttribute"/>
+  </message>
+  <message name="ResetImageAttributeResponseMsg">
+    <part name="ResetImageAttributeRequestMsgResp" element="tns:ResetImageAttributeResponse"/>
+  </message>
+  <message name="DescribeImageAttributeRequestMsg">
+    <part name="DescribeImageAttributeRequestMsgReq" element="tns:DescribeImageAttribute"/>
+  </message>
+  <message name="DescribeImageAttributeResponseMsg">
+    <part name="DescribeImageAttributeRequestMsgResp" element="tns:DescribeImageAttributeResponse"/>
+  </message>
+  <message name="ConfirmProductInstanceRequestMsg">
+    <part name="ConfirmProductInstanceRequestMsgReq" element="tns:ConfirmProductInstance"/>
+  </message>
+  <message name="ConfirmProductInstanceResponseMsg">
+    <part name="ConfirmProductInstanceRequestMsgResp" element="tns:ConfirmProductInstanceResponse"/>
+  </message>
+  <message name="DescribeAvailabilityZonesRequestMsg">
+    <part name="DescribeAvailabilityZonesRequestMsgReq" element="tns:DescribeAvailabilityZones"/>
+  </message>
+  <message name="DescribeAvailabilityZonesResponseMsg">
+    <part name="DescribeAvailabilityZonesRequestMsgResp" element="tns:DescribeAvailabilityZonesResponse"/>
+  </message>
+  <message name="AllocateAddressRequestMsg">
+    <part name="AllocateAddressRequestMsgReq" element="tns:AllocateAddress"/>
+  </message>
+  <message name="AllocateAddressResponseMsg">
+    <part name="AllocateAddressResponseMsgResp" element="tns:AllocateAddressResponse"/>
+  </message>
+  <message name="ReleaseAddressRequestMsg">
+    <part name="ReleaseAddressRequestMsgReq" element="tns:ReleaseAddress"/>
+  </message>
+  <message name="ReleaseAddressResponseMsg">
+    <part name="ReleaseAddressResponseMsgResp" element="tns:ReleaseAddressResponse"/>
+  </message>
+  <message name="DescribeAddressesRequestMsg">
+    <part name="DescribeAddressesRequestMsgReq" element="tns:DescribeAddresses"/>
+  </message>
+  <message name="DescribeAddressesResponseMsg">
+    <part name="DescribeAddressesResponseMsgResp" element="tns:DescribeAddressesResponse"/>
+  </message>
+  <message name="AssociateAddressRequestMsg">
+    <part name="AssociateAddressRequestMsgReq" element="tns:AssociateAddress"/>
+  </message>
+  <message name="AssociateAddressResponseMsg">
+    <part name="AssociateAddressResponseMsgResp" element="tns:AssociateAddressResponse"/>
+  </message>
+  <message name="DisassociateAddressRequestMsg">
+    <part name="DisassociateAddressRequestMsgReq" element="tns:DisassociateAddress"/>
+  </message>
+  <message name="DisassociateAddressResponseMsg">
+    <part name="DisassociateAddressResponseMsgResp" element="tns:DisassociateAddressResponse"/>
+  </message>
+  <portType name="AmazonEC2PortType">
+    <operation name="RegisterImage">
+      <input message="tns:RegisterImageRequestMsg"/>
+      <output message="tns:RegisterImageResponseMsg"/>
+    </operation>
+    <operation name="DeregisterImage">
+      <input message="tns:DeregisterImageRequestMsg"/>
+      <output message="tns:DeregisterImageResponseMsg"/>
+    </operation>
+    <operation name="RunInstances">
+      <input message="tns:RunInstancesRequestMsg"/>
+      <output message="tns:RunInstancesResponseMsg"/>
+    </operation>
+    <operation name="CreateKeyPair">
+      <input message="tns:CreateKeyPairRequestMsg"/>
+      <output message="tns:CreateKeyPairResponseMsg"/>
+    </operation>
+    <operation name="DescribeKeyPairs">
+      <input message="tns:DescribeKeyPairsRequestMsg"/>
+      <output message="tns:DescribeKeyPairsResponseMsg"/>
+    </operation>
+    <operation name="DeleteKeyPair">
+      <input message="tns:DeleteKeyPairRequestMsg"/>
+      <output message="tns:DeleteKeyPairResponseMsg"/>
+    </operation>
+    <operation name="GetConsoleOutput">
+      <input message="tns:GetConsoleOutputRequestMsg"/>
+      <output message="tns:GetConsoleOutputResponseMsg"/>
+    </operation>
+    <operation name="TerminateInstances">
+      <input message="tns:TerminateInstancesRequestMsg"/>
+      <output message="tns:TerminateInstancesResponseMsg"/>
+    </operation>
+    <operation name="RebootInstances">
+      <input message="tns:RebootInstancesRequestMsg"/>
+      <output message="tns:RebootInstancesResponseMsg"/>
+    </operation>
+    <operation name="DescribeInstances">
+      <input message="tns:DescribeInstancesRequestMsg"/>
+      <output message="tns:DescribeInstancesResponseMsg"/>
+    </operation>
+    <operation name="DescribeImages">
+      <input message="tns:DescribeImagesRequestMsg"/>
+      <output message="tns:DescribeImagesResponseMsg"/>
+    </operation>
+    <operation name="CreateSecurityGroup">
+      <input message="tns:CreateSecurityGroupRequestMsg"/>
+      <output message="tns:CreateSecurityGroupResponseMsg"/>
+    </operation>
+    <operation name="DeleteSecurityGroup">
+      <input message="tns:DeleteSecurityGroupRequestMsg"/>
+      <output message="tns:DeleteSecurityGroupResponseMsg"/>
+    </operation>
+    <operation name="DescribeSecurityGroups">
+      <input message="tns:DescribeSecurityGroupsRequestMsg"/>
+      <output message="tns:DescribeSecurityGroupsResponseMsg"/>
+    </operation>
+    <operation name="AuthorizeSecurityGroupIngress">
+      <input message="tns:AuthorizeSecurityGroupIngressRequestMsg"/>
+      <output message="tns:AuthorizeSecurityGroupIngressResponseMsg"/>
+    </operation>
+    <operation name="RevokeSecurityGroupIngress">
+      <input message="tns:RevokeSecurityGroupIngressRequestMsg"/>
+      <output message="tns:RevokeSecurityGroupIngressResponseMsg"/>
+    </operation>
+    <operation name="ModifyImageAttribute">
+      <input message="tns:ModifyImageAttributeRequestMsg"/>
+      <output message="tns:ModifyImageAttributeResponseMsg"/>
+    </operation>
+    <operation name="ResetImageAttribute">
+      <input message="tns:ResetImageAttributeRequestMsg"/>
+      <output message="tns:ResetImageAttributeResponseMsg"/>
+    </operation>
+    <operation name="DescribeImageAttribute">
+      <input message="tns:DescribeImageAttributeRequestMsg"/>
+      <output message="tns:DescribeImageAttributeResponseMsg"/>
+    </operation>
+    <operation name="ConfirmProductInstance">
+      <input message="tns:ConfirmProductInstanceRequestMsg"/>
+      <output message="tns:ConfirmProductInstanceResponseMsg"/>
+    </operation>
+    <operation name="DescribeAvailabilityZones">
+      <input message="tns:DescribeAvailabilityZonesRequestMsg"/>
+      <output message="tns:DescribeAvailabilityZonesResponseMsg"/>
+    </operation>
+    <operation name="AllocateAddress">
+      <input message="tns:AllocateAddressRequestMsg"/>
+      <output message="tns:AllocateAddressResponseMsg"/>
+    </operation>
+    <operation name="ReleaseAddress">
+      <input message="tns:ReleaseAddressRequestMsg"/>
+      <output message="tns:ReleaseAddressResponseMsg"/>
+    </operation>
+    <operation name="DescribeAddresses">
+      <input message="tns:DescribeAddressesRequestMsg"/>
+      <output message="tns:DescribeAddressesResponseMsg"/>
+    </operation>
+    <operation name="AssociateAddress">
+      <input message="tns:AssociateAddressRequestMsg"/>
+      <output message="tns:AssociateAddressResponseMsg"/>
+    </operation>
+    <operation name="DisassociateAddress">
+      <input message="tns:DisassociateAddressRequestMsg"/>
+      <output message="tns:DisassociateAddressResponseMsg"/>
+    </operation>
+  </portType>
+  <binding name="AmazonEC2Binding" type="tns:AmazonEC2PortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="RegisterImage">
+      <soap:operation soapAction="RegisterImage"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="DeregisterImage">
+      <soap:operation soapAction="DeregisterImage"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="CreateKeyPair">
+      <soap:operation soapAction="CreateKeyPair"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="DescribeKeyPairs">
+      <soap:operation soapAction="DescribeKeyPairs"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="DeleteKeyPair">
+      <soap:operation soapAction="DeleteKeyPair"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="RunInstances">
+      <soap:operation soapAction="RunInstances"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetConsoleOutput">
+      <soap:operation soapAction="GetConsoleOutput"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="TerminateInstances">
+      <soap:operation soapAction="TerminateInstances"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="RebootInstances">
+      <soap:operation soapAction="RebootInstances"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="DescribeInstances">
+      <soap:operation soapAction="DescribeInstances"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="DescribeImages">
+      <soap:operation soapAction="DescribeImages"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="CreateSecurityGroup">
+      <soap:operation soapAction="CreateSecurityGroup"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="DeleteSecurityGroup">
+      <soap:operation soapAction="DeleteSecurityGroup"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="DescribeSecurityGroups">
+      <soap:operation soapAction="DescribeSecurityGroups"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="AuthorizeSecurityGroupIngress">
+      <soap:operation soapAction="AuthorizeSecurityGroupIngress"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="RevokeSecurityGroupIngress">
+      <soap:operation soapAction="RevokeSecurityGroupIngress"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="ModifyImageAttribute">
+      <soap:operation soapAction="ModifyImageAttribute"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="ResetImageAttribute">
+      <soap:operation soapAction="ResetImageAttribute"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="DescribeImageAttribute">
+      <soap:operation soapAction="DescribeImageAttribute"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="ConfirmProductInstance">
+      <soap:operation soapAction="ConfirmProductInstance"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="DescribeAvailabilityZones">
+      <soap:operation soapAction="DescribeAvailabilityZones"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="AllocateAddress">
+      <soap:operation soapAction="AllocateAddress"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="ReleaseAddress">
+      <soap:operation soapAction="ReleaseAddress"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="DescribeAddresses">
+      <soap:operation soapAction="DescribeAddresses"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="AssociateAddress">
+      <soap:operation soapAction="AssociateAddress"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="DisassociateAddress">
+      <soap:operation soapAction="DisassociateAddress"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="AmazonEC2">
+    <port name="AmazonEC2Port" binding="tns:AmazonEC2Binding">
+      <soap:address location="https://ec2.amazonaws.com/"/>
+    </port>
+  </service>
+</definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:endpoint>http://127.0.0.1:8088/mockAmazonEC2Binding</con:endpoint></con:endpoints><con:operation isOneWay="false" action="AllocateAddress" name="AllocateAddress" bindingOperationName="AllocateAddress" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:AllocateAddress/>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:call></con:operation><con:operation isOneWay="false" action="AssociateAddress" name="AssociateAddress" bindingOperationName="AssociateAddress" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:AssociateAddress>
+         <ns:publicIp>?</ns:publicIp>
+         <ns:instanceId>?</ns:instanceId>
+      </ns:AssociateAddress>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:call></con:operation><con:operation isOneWay="false" action="AuthorizeSecurityGroupIngress" name="AuthorizeSecurityGroupIngress" bindingOperationName="AuthorizeSecurityGroupIngress" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:AuthorizeSecurityGroupIngress>
+         <ns:userId>?</ns:userId>
+         <ns:groupName>?</ns:groupName>
+         <ns:ipPermissions>
+            <!--Zero or more repetitions:-->
+            <ns:item>
+               <ns:ipProtocol>?</ns:ipProtocol>
+               <ns:fromPort>?</ns:fromPort>
+               <ns:toPort>?</ns:toPort>
+               <ns:groups>
+                  <!--Zero or more repetitions:-->
+                  <ns:item>
+                     <ns:userId>?</ns:userId>
+                     <ns:groupName>?</ns:groupName>
+                  </ns:item>
+               </ns:groups>
+               <ns:ipRanges>
+                  <!--Zero or more repetitions:-->
+                  <ns:item>
+                     <ns:cidrIp>?</ns:cidrIp>
+                  </ns:item>
+               </ns:ipRanges>
+            </ns:item>
+         </ns:ipPermissions>
+      </ns:AuthorizeSecurityGroupIngress>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:call></con:operation><con:operation isOneWay="false" action="ConfirmProductInstance" name="ConfirmProductInstance" bindingOperationName="ConfirmProductInstance" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:ConfirmProductInstance>
+         <ns:productCode>?</ns:productCode>
+         <ns:instanceId>?</ns:instanceId>
+      </ns:ConfirmProductInstance>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="CreateKeyPair" name="CreateKeyPair" bindingOperationName="CreateKeyPair" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:CreateKeyPair>
+         <ns:keyName>?</ns:keyName>
+      </ns:CreateKeyPair>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:call></con:operation><con:operation isOneWay="false" action="CreateSecurityGroup" name="CreateSecurityGroup" bindingOperationName="CreateSecurityGroup" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:CreateSecurityGroup>
+         <ns:groupName>?</ns:groupName>
+         <ns:groupDescription>?</ns:groupDescription>
+      </ns:CreateSecurityGroup>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:call></con:operation><con:operation isOneWay="false" action="DeleteKeyPair" name="DeleteKeyPair" bindingOperationName="DeleteKeyPair" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:DeleteKeyPair>
+         <ns:keyName>?</ns:keyName>
+      </ns:DeleteKeyPair>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="DeleteSecurityGroup" name="DeleteSecurityGroup" bindingOperationName="DeleteSecurityGroup" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:DeleteSecurityGroup>
+         <ns:groupName>?</ns:groupName>
+      </ns:DeleteSecurityGroup>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="DeregisterImage" name="DeregisterImage" bindingOperationName="DeregisterImage" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:DeregisterImage>
+         <ns:imageId>?</ns:imageId>
+      </ns:DeregisterImage>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:call></con:operation><con:operation isOneWay="false" action="DescribeAddresses" name="DescribeAddresses" bindingOperationName="DescribeAddresses" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:DescribeAddresses>
+         <ns:publicIpsSet>
+            <!--Zero or more repetitions:-->
+            <ns:item>
+               <ns:publicIp>?</ns:publicIp>
+            </ns:item>
+         </ns:publicIpsSet>
+      </ns:DescribeAddresses>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="DescribeAvailabilityZones" name="DescribeAvailabilityZones" bindingOperationName="DescribeAvailabilityZones" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:DescribeAvailabilityZones>
+         <ns:availabilityZoneSet>
+            <!--Zero or more repetitions:-->
+            <ns:item>
+               <ns:zoneName>?</ns:zoneName>
+            </ns:item>
+         </ns:availabilityZoneSet>
+      </ns:DescribeAvailabilityZones>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="DescribeImageAttribute" name="DescribeImageAttribute" bindingOperationName="DescribeImageAttribute" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:DescribeImageAttribute>
+         <ns:imageId>?</ns:imageId>
+         <!--You have a CHOICE of the next 5 items at this level-->
+         <ns:launchPermission/>
+         <ns:productCodes/>
+         <ns:kernel/>
+         <ns:ramdisk/>
+         <ns:blockDeviceMapping/>
+      </ns:DescribeImageAttribute>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="DescribeImages" name="DescribeImages" bindingOperationName="DescribeImages" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:DescribeImages>
+         <!--Optional:-->
+         <ns:executableBySet>
+            <!--Zero or more repetitions:-->
+            <ns:item>
+               <ns:user>?</ns:user>
+            </ns:item>
+         </ns:executableBySet>
+         <ns:imagesSet>
+            <!--Zero or more repetitions:-->
+            <ns:item>
+               <ns:imageId>?</ns:imageId>
+            </ns:item>
+         </ns:imagesSet>
+         <!--Optional:-->
+         <ns:ownersSet>
+            <!--Zero or more repetitions:-->
+            <ns:item>
+               <ns:owner>?</ns:owner>
+            </ns:item>
+         </ns:ownersSet>
+      </ns:DescribeImages>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="DescribeInstances" name="DescribeInstances" bindingOperationName="DescribeInstances" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:DescribeInstances>
+         <ns:instancesSet>
+            <!--Zero or more repetitions:-->
+            <ns:item>
+               <ns:instanceId>?</ns:instanceId>
+            </ns:item>
+         </ns:instancesSet>
+      </ns:DescribeInstances>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="DescribeKeyPairs" name="DescribeKeyPairs" bindingOperationName="DescribeKeyPairs" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:DescribeKeyPairs>
+         <ns:keySet>
+            <!--Zero or more repetitions:-->
+            <ns:item>
+               <ns:keyName>?</ns:keyName>
+            </ns:item>
+         </ns:keySet>
+      </ns:DescribeKeyPairs>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="DescribeSecurityGroups" name="DescribeSecurityGroups" bindingOperationName="DescribeSecurityGroups" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:DescribeSecurityGroups>
+         <ns:securityGroupSet>
+            <!--Zero or more repetitions:-->
+            <ns:item>
+               <ns:groupName>?</ns:groupName>
+            </ns:item>
+         </ns:securityGroupSet>
+      </ns:DescribeSecurityGroups>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="DisassociateAddress" name="DisassociateAddress" bindingOperationName="DisassociateAddress" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:DisassociateAddress>
+         <ns:publicIp>?</ns:publicIp>
+      </ns:DisassociateAddress>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="GetConsoleOutput" name="GetConsoleOutput" bindingOperationName="GetConsoleOutput" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:GetConsoleOutput>
+         <ns:instanceId>?</ns:instanceId>
+      </ns:GetConsoleOutput>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:call></con:operation><con:operation isOneWay="false" action="ModifyImageAttribute" name="ModifyImageAttribute" bindingOperationName="ModifyImageAttribute" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:ModifyImageAttribute>
+         <ns:imageId>?</ns:imageId>
+         <!--You have a CHOICE of the next 2 items at this level-->
+         <ns:launchPermission>
+            <!--You have a CHOICE of the next 2 items at this level-->
+            <ns:add>
+               <!--Zero or more repetitions:-->
+               <ns:item>
+                  <!--You have a CHOICE of the next 2 items at this level-->
+                  <ns:userId>?</ns:userId>
+                  <ns:group>?</ns:group>
+               </ns:item>
+            </ns:add>
+            <ns:remove>
+               <!--Zero or more repetitions:-->
+               <ns:item>
+                  <!--You have a CHOICE of the next 2 items at this level-->
+                  <ns:userId>?</ns:userId>
+                  <ns:group>?</ns:group>
+               </ns:item>
+            </ns:remove>
+         </ns:launchPermission>
+         <ns:productCodes>
+            <!--Zero or more repetitions:-->
+            <ns:item>
+               <ns:productCode>?</ns:productCode>
+            </ns:item>
+         </ns:productCodes>
+      </ns:ModifyImageAttribute>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="RebootInstances" name="RebootInstances" bindingOperationName="RebootInstances" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:RebootInstances>
+         <ns:instancesSet>
+            <!--1 or more repetitions:-->
+            <ns:item>
+               <ns:instanceId>?</ns:instanceId>
+            </ns:item>
+         </ns:instancesSet>
+      </ns:RebootInstances>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="RegisterImage" name="RegisterImage" bindingOperationName="RegisterImage" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:RegisterImage>
+         <ns:imageLocation>?</ns:imageLocation>
+      </ns:RegisterImage>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:call></con:operation><con:operation isOneWay="false" action="ReleaseAddress" name="ReleaseAddress" bindingOperationName="ReleaseAddress" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:ReleaseAddress>
+         <ns:publicIp>?</ns:publicIp>
+      </ns:ReleaseAddress>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="ResetImageAttribute" name="ResetImageAttribute" bindingOperationName="ResetImageAttribute" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:ResetImageAttribute>
+         <ns:imageId>?</ns:imageId>
+         <ns:launchPermission/>
+      </ns:ResetImageAttribute>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="RevokeSecurityGroupIngress" name="RevokeSecurityGroupIngress" bindingOperationName="RevokeSecurityGroupIngress" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:RevokeSecurityGroupIngress>
+         <ns:userId>?</ns:userId>
+         <ns:groupName>?</ns:groupName>
+         <ns:ipPermissions>
+            <!--Zero or more repetitions:-->
+            <ns:item>
+               <ns:ipProtocol>?</ns:ipProtocol>
+               <ns:fromPort>?</ns:fromPort>
+               <ns:toPort>?</ns:toPort>
+               <ns:groups>
+                  <!--Zero or more repetitions:-->
+                  <ns:item>
+                     <ns:userId>?</ns:userId>
+                     <ns:groupName>?</ns:groupName>
+                  </ns:item>
+               </ns:groups>
+               <ns:ipRanges>
+                  <!--Zero or more repetitions:-->
+                  <ns:item>
+                     <ns:cidrIp>?</ns:cidrIp>
+                  </ns:item>
+               </ns:ipRanges>
+            </ns:item>
+         </ns:ipPermissions>
+      </ns:RevokeSecurityGroupIngress>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="RunInstances" name="RunInstances" bindingOperationName="RunInstances" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:RunInstances>
+         <ns:imageId>?</ns:imageId>
+         <ns:minCount>?</ns:minCount>
+         <ns:maxCount>?</ns:maxCount>
+         <!--Optional:-->
+         <ns:keyName>?</ns:keyName>
+         <ns:groupSet>
+            <!--Zero or more repetitions:-->
+            <ns:item>
+               <ns:groupId>?</ns:groupId>
+            </ns:item>
+         </ns:groupSet>
+         <!--Optional:-->
+         <ns:additionalInfo>?</ns:additionalInfo>
+         <!--Optional:-->
+         <ns:userData version="1.0" encoding="base64">
+            e
+            <ns:data>?</ns:data>
+            gero
+         </ns:userData>
+         <!--Optional:-->
+         <ns:addressingType>?</ns:addressingType>
+         <ns:instanceType>?</ns:instanceType>
+         <!--Optional:-->
+         <ns:placement>
+            <!--Optional:-->
+            <ns:availabilityZone>?</ns:availabilityZone>
+         </ns:placement>
+         <!--Optional:-->
+         <ns:kernelId>?</ns:kernelId>
+         <!--Optional:-->
+         <ns:ramdiskId>?</ns:ramdiskId>
+         <!--Optional:-->
+         <ns:blockDeviceMapping>
+            <!--Zero or more repetitions:-->
+            <ns:item>
+               <ns:virtualName>?</ns:virtualName>
+               <ns:deviceName>?</ns:deviceName>
+            </ns:item>
+         </ns:blockDeviceMapping>
+      </ns:RunInstances>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation isOneWay="false" action="TerminateInstances" name="TerminateInstances" bindingOperationName="TerminateInstances" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://ec2.amazonaws.com/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://ec2.amazonaws.com/doc/2008-02-01/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:TerminateInstances>
+         <ns:instancesSet>
+            <!--1 or more repetitions:-->
+            <ns:item>
+               <ns:instanceId>?</ns:instanceId>
+            </ns:item>
+         </ns:instancesSet>
+      </ns:TerminateInstances>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request></con:call></con:operation></xml-fragment>

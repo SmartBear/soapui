@@ -15,203 +15,252 @@ package com.eviware.soapui.support.resolver;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.SoapUIAction;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ResolveContext<T extends AbstractWsdlModelItem>
 {
-   private List<PathToResolve> pathsToResolve = new ArrayList<PathToResolve>();
-   private final T project;
+	private List<PathToResolve> pathsToResolve = new ArrayList<PathToResolve>();
+	private final T project;
 
-   public ResolveContext( T project )
-   {
-      this.project = project;
-   }
+	public ResolveContext(T project)
+	{
+		this.project = project;
+	}
 
-   public T getProject()
-   {
-      return project;
-   }
+	public T getProject()
+	{
+		return project;
+	}
 
-   public void addPathToResolve( AbstractWsdlModelItem<?> owner, String description, String path, Resolver resolver )
-   {
-      pathsToResolve.add( new PathToResolve( owner, description, path, resolver ) );
-   }
+	public PathToResolve addPathToResolve(AbstractWsdlModelItem<?> owner, String description, String path,
+			Resolver resolver)
+	{
+		PathToResolve pathToResolve = new PathToResolve(owner, description, path, resolver);
+		pathsToResolve.add(pathToResolve);
+		return pathToResolve;
+	}
 
-   public class PathToResolve
-   {
-      private final AbstractWsdlModelItem<?> owner;
-      private final String description;
-      private final Resolver resolver;
-      private final String path;
+	public class PathToResolve
+	{
+		private final AbstractWsdlModelItem<?> owner;
+		private final String description;
+		private Resolver resolver;
+		private final String path;
+		private SoapUIAction<AbstractWsdlModelItem<?>> defaultAction;
 
-      public PathToResolve( AbstractWsdlModelItem<?> owner, String description, String path, Resolver resolver )
-      {
-         this.owner = owner;
-         this.description = description;
-         this.path = path;
-         this.resolver = resolver;
-      }
+		public PathToResolve(AbstractWsdlModelItem<?> owner, String description, String path, Resolver resolver)
+		{
+			this.owner = owner;
+			this.description = description;
+			this.path = path;
+			this.resolver = resolver;
+		}
 
-      public AbstractWsdlModelItem<?> getOwner()
-      {
-         return owner;
-      }
+		public SoapUIAction<?> getDefaultAction()
+		{
+			return defaultAction;
+		}
 
-      public String getDescription()
-      {
-         return description;
-      }
+		public void setDefaultAction(SoapUIAction<AbstractWsdlModelItem<?>> defaultAction)
+		{
+			this.defaultAction = defaultAction;
+		}
 
-      public Resolver getResolver()
-      {
-         return resolver;
-      }
+		public AbstractWsdlModelItem<?> getOwner()
+		{
+			return owner;
+		}
 
-      public String getPath()
-      {
-         return path;
-      }
+		public String getDescription()
+		{
+			return description;
+		}
 
-      public boolean apply()
-      {
-         return resolver == null ? false : resolver.apply();
-      }
-   }
+		public Resolver getResolver()
+		{
+			return resolver;
+		}
 
-   public interface Resolver
-   {
-      public boolean resolve();
+		public String getPath()
+		{
+			return path;
+		}
 
-      public boolean apply();
+		public boolean apply()
+		{
+			if (resolver != null)
+				return resolver.apply();
 
-      public boolean isResolved();
+			if (defaultAction != null)
+			{
+				defaultAction.perform(owner, this);
+				return true;
+			}
 
-      public String getResolvedPath();
-   }
+			return false;
+		}
 
-   public boolean isEmpty()
-   {
-      return pathsToResolve.isEmpty();
-   }
+		public void setResolver(Object resolveOrDefaultAction)
+		{
+			this.resolver = (Resolver) resolveOrDefaultAction;
+		}
+	}
 
-   public List<PathToResolve> getPathsToResolve()
-   {
-      return pathsToResolve;
-   }
+	public interface Resolver
+	{
+		public boolean resolve();
 
-   public int getUnresolvedCount()
-   {
-      int resultCnt = 0;
+		public boolean apply();
 
-      for( PathToResolve ptr : pathsToResolve )
-      {
-         if( ptr.getResolver() == null || !ptr.getResolver().isResolved() )
-            resultCnt++;
-      }
+		public boolean isResolved();
 
-      return resultCnt;
-   }
+		public String getResolvedPath();
 
-   public int apply()
-   {
-      int resultCnt = 0;
+		public Object getDecription();
+		
+	}
 
-      for( PathToResolve ptr : pathsToResolve )
-      {
-         if( ptr.apply() )
-            resultCnt++;
-      }
+	public boolean isEmpty()
+	{
+		return pathsToResolve.isEmpty();
+	}
 
-      return resultCnt;
-   }
+	public List<PathToResolve> getPathsToResolve()
+	{
+		return pathsToResolve;
+	}
 
-   public abstract static class FileResolver implements Resolver
-   {
-      private String title;
-      private String extension;
-      private String fileType;
-      private String current;
-      private File result;
-      private boolean resolved;
+	public int getUnresolvedCount()
+	{
+		int resultCnt = 0;
 
-      public FileResolver( String title, String extension, String fileType, String current )
-      {
-         super();
+		for (PathToResolve ptr : pathsToResolve)
+		{
+			if (ptr.getResolver() == null || !ptr.getResolver().isResolved())
+				resultCnt++;
+		}
 
-         this.title = title;
-         this.extension = extension;
-         this.fileType = fileType;
-         this.current = current;
-      }
+		return resultCnt;
+	}
 
-      public boolean apply()
-      {
-         return apply( result );
-      }
+	public int apply()
+	{
+		int resultCnt = 0;
 
-      public boolean isResolved()
-      {
-         return resolved;
-      }
+		for (PathToResolve ptr : pathsToResolve)
+		{
+			if (ptr.apply())
+				resultCnt++;
+		}
 
-      public String getResolvedPath()
-      {
-         return result == null ? null : result.getAbsolutePath();
-      }
+		return resultCnt;
+	}
 
-      public abstract boolean apply( File newFile );
+	public abstract static class FileResolver implements Resolver
+	{
+		private String title;
+		private String extension;
+		private String fileType;
+		private String current;
+		private File result;
+		private boolean resolved;
 
-      public boolean resolve()
-      {
-         result = UISupport.getFileDialogs().open( this, title, extension, fileType, current );
-         resolved = result != null;
-         return result != null;
-      }
+		public FileResolver(String title, String extension, String fileType, String current)
+		{
+			super();
 
-   }
+			this.title = title;
+			this.extension = extension;
+			this.fileType = fileType;
+			this.current = current;
+		}
 
-   public abstract static class DirectoryResolver implements Resolver
-   {
-      private String title;
-      private String current;
-      private File result;
-      private boolean resolved;
+		public boolean apply()
+		{
+			return apply(result);
+		}
 
-      public DirectoryResolver( String title, String current )
-      {
-         super();
+		public boolean isResolved()
+		{
+			return resolved;
+		}
 
-         this.title = title;
-         this.current = current;
-      }
+		public String getResolvedPath()
+		{
+			return result == null ? null : result.getAbsolutePath();
+		}
 
-      public boolean apply()
-      {
-         return apply( result );
-      }
+		public abstract boolean apply(File newFile);
 
-      public boolean isResolved()
-      {
-         return resolved;
-      }
+		public boolean resolve()
+		{
+			result = UISupport.getFileDialogs().open(this, title, extension, fileType, current);
+			resolved = result != null;
+			return result != null;
+		}
+		
+		public Object getDecription()
+		{
+			return title;
+		}
+		
+	}
 
-      public String getResolvedPath()
-      {
-         return result == null ? null : result.getAbsolutePath();
-      }
+	public abstract static class DirectoryResolver implements Resolver
+	{
+		private String title;
+		private String current;
+		private File result;
+		private boolean resolved;
 
-      public abstract boolean apply( File newFile );
+		public DirectoryResolver(String title, String current)
+		{
+			super();
 
-      public boolean resolve()
-      {
-         result = UISupport.getFileDialogs().openDirectory( this, title, StringUtils.isNullOrEmpty( current ) ? null : new File( current ) );
-         resolved = result != null;
-         return result != null;
-      }
+			this.title = title;
+			this.current = current;
+		}
 
-   }
+		public boolean apply()
+		{
+			return apply(result);
+		}
+
+		public boolean isResolved()
+		{
+			return resolved;
+		}
+
+		public String getResolvedPath()
+		{
+			return result == null ? null : result.getAbsolutePath();
+		}
+
+		public abstract boolean apply(File newFile);
+
+		public boolean resolve()
+		{
+			result = UISupport.getFileDialogs().openDirectory(this, title,
+					StringUtils.isNullOrEmpty(current) ? null : new File(current));
+			resolved = result != null;
+			return result != null;
+		}
+		
+		public Object getDecription()
+		{
+			return title;
+		}
+	}
+
+	public void cancel()
+	{
+		for (PathToResolve path : pathsToResolve)
+		{
+			path.defaultAction.perform(path.owner, path);
+		}
+	}
 }
