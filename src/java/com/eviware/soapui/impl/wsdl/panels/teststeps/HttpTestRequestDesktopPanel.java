@@ -24,6 +24,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.*;
@@ -245,7 +246,12 @@ public class HttpTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 
    public boolean dependsOn( ModelItem modelItem )
    {
-      return modelItem == getRequest() || modelItem == getModelItem() || modelItem == getRequest().getOperation()
+      if( getRequest().getOperation() == null )
+         return  modelItem == getRequest() || modelItem == getModelItem()
+               || ModelSupport.getModelItemProject( getRequest() ) == modelItem 
+               || modelItem == getModelItem().getTestCase() || modelItem == getModelItem().getTestCase().getTestSuite();
+      else
+         return modelItem == getRequest() || modelItem == getModelItem() || modelItem == getRequest().getOperation()
               || modelItem == getRequest().getOperation().getInterface()
               || modelItem == getRequest().getOperation().getInterface().getProject()
               || modelItem == getModelItem().getTestCase() || modelItem == getModelItem().getTestCase().getTestSuite();

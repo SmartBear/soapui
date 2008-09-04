@@ -20,6 +20,7 @@ import org.w3c.dom.Document;
 import org.w3c.tidy.Tidy;
 
 import java.io.ByteArrayInputStream;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 
 public class HtmlMediaTypeHandler implements MediaTypeHandler {
@@ -35,8 +36,12 @@ public class HtmlMediaTypeHandler implements MediaTypeHandler {
 
       try {
          Tidy tidy = new Tidy();
-         tidy.setXHTML(true);
-         tidy.setQuiet(true);
+         tidy.setXmlOut(true);
+         tidy.setShowWarnings( false );
+         tidy.setErrout( new PrintWriter( new StringWriter()) );
+//         tidy.setQuiet(true);
+         tidy.setNumEntities( true );
+         tidy.setQuoteNbsp( true );
 
          Document document = tidy.parseDOM(new ByteArrayInputStream(content.getBytes()), null);
          StringWriter writer = new StringWriter();

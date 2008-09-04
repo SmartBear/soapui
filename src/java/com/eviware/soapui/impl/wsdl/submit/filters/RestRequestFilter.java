@@ -94,7 +94,9 @@ public class RestRequestFilter extends AbstractRequestFilter
       }
 
       if( query.length() > 0 )
+      {
          httpMethod.setQueryString( query.toString() );
+      }
 
       if( PathUtils.isHttpPath( path ) )
       {
@@ -145,7 +147,7 @@ public class RestRequestFilter extends AbstractRequestFilter
                try
                {
                   ((EntityEnclosingMethod) httpMethod).setRequestEntity( new InputStreamRequestEntity(
-                     attachments[0].getInputStream()) );
+                          attachments[0].getInputStream() ) );
 
                   httpMethod.setRequestHeader( "Content-Type", attachments[0].getContentType() );
                }
@@ -156,7 +158,7 @@ public class RestRequestFilter extends AbstractRequestFilter
             }
             else
             {
-               
+
             }
          }
 

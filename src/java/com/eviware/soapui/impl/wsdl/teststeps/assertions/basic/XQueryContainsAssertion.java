@@ -12,38 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlAnySimpleType;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.Difference;
-import org.custommonkey.xmlunit.DifferenceEngine;
-import org.custommonkey.xmlunit.DifferenceListener;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -61,13 +29,8 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
 import com.eviware.soapui.model.support.XPathReferenceImpl;
-import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.AssertionError;
-import com.eviware.soapui.model.testsuite.AssertionException;
-import com.eviware.soapui.model.testsuite.RequestAssertion;
-import com.eviware.soapui.model.testsuite.ResponseAssertion;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JUndoableTextArea;
@@ -76,6 +39,21 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlAnySimpleType;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+import org.custommonkey.xmlunit.*;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Assertion that matches a specified XQuery expression and its expected result
@@ -153,7 +131,10 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 				throws AssertionException
 	{
-		return assertContent( messageExchange.getResponseContent(), context, "Response" );
+       if( !messageExchange.hasResponse() )
+         return "Missing Response";
+      else
+         return assertContent( messageExchange.getResponseContentAsXml(), context, "Response" );
 	}
 
 	public String assertContent( String response, SubmitContext context, String type ) throws AssertionException

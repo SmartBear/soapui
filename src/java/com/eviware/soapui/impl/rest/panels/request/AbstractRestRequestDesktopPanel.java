@@ -195,7 +195,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
       toolbar.addSeparator();
 
       pathField = new JUndoableTextField();
-      pathField.setPreferredSize( new Dimension( 250, 20 ) );
+      pathField.setPreferredSize( new Dimension( getRequest().getResource() == null ? 350 : 250, 20 ) );
       pathField.setText( getRequest().getPath() );
       pathField.getDocument().addDocumentListener( new DocumentListenerAdapter()
       {

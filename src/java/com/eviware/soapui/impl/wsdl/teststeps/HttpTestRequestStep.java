@@ -77,7 +77,8 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
             return createDefaultRequestContent();
          }
       });
-      addProperty(new TestStepBeanProperty("Response", true, testRequest, "responseContentAsXml", this)
+      
+      addProperty(new TestStepBeanProperty("ResponseAsXml", true, testRequest, "responseContentAsXml", this)
       {
          @Override
          public String getDefaultValue()
@@ -86,7 +87,7 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
          }
       });
 
-      addProperty(new TestStepBeanProperty("RawResponse", true, testRequest, "responseContentAsString", this)
+      addProperty(new TestStepBeanProperty("Response", true, testRequest, "responseContentAsString", this)
       {
          @Override
          public String getDefaultValue()
@@ -253,7 +254,13 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
          }
 
          if (response != null)
+         {
             testStepResult.setRequestContent(response.getRequestContent());
+            testStepResult.getProperties().put( "URL", response.getURL().toString() );
+            testStepResult.getProperties().put( "Method", response.getMethod().toString());
+            testStepResult.getProperties().put( "StatusCode", String.valueOf( response.getStatusCode() ) );
+            testStepResult.getProperties().put( "HTTP Version", response.getHttpVersion() );
+         }
          else
             testStepResult.setRequestContent(testRequest.getRequestContent());
       }
@@ -269,8 +276,8 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 
       testStepResult.setDomain(PropertyExpansionUtils.expandProperties(runContext, testRequest.getDomain()));
       testStepResult.setUsername(PropertyExpansionUtils.expandProperties(runContext, testRequest.getUsername()));
+      testStepResult.setEndpoint( PropertyExpansionUtils.expandProperties( runContext, testRequest.getEndpoint() ));
       testStepResult.setPassword(PropertyExpansionUtils.expandProperties(runContext, testRequest.getPassword()));
-      testStepResult.setEndpoint(PropertyExpansionUtils.expandProperties(runContext, testRequest.getEndpoint()));
       testStepResult.setEncoding(PropertyExpansionUtils.expandProperties(runContext, testRequest.getEncoding()));
 
       if (testStepResult.getStatus() != TestStepStatus.CANCELED)

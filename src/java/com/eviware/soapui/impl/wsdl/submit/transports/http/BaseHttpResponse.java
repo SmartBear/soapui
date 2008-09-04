@@ -25,6 +25,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 	private WeakReference<AbstractHttpRequest<?>> httpRequest;
    private AbstractHttpRequest.RequestMethod method;
    private String version;
+   private StringToStringMap properties;
 
    public BaseHttpResponse(ExtendedHttpMethod httpMethod, AbstractHttpRequest<?> httpRequest)
 	{
@@ -155,5 +156,23 @@ public abstract class BaseHttpResponse implements HttpResponse
 
    public String getHttpVersion() {
       return version;
+   }
+
+   public void setPropertyValue( String name, String value )
+   {
+      if( properties == null )
+         properties = new StringToStringMap();
+
+      properties.put( name, value );
+   }
+
+   public String getProperty( String name )
+   {
+      return properties == null ? null : properties.get( name );
+   }
+
+   public String[] getPropertyNames()
+   {
+      return properties == null ? new String[0] : properties.getKeys();
    }
 }

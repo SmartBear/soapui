@@ -12,19 +12,6 @@
 
 package com.eviware.soapui.impl.rest.panels.request.views.content;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
-import javax.swing.text.Document;
-
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestDocument;
@@ -33,11 +20,19 @@ import com.eviware.soapui.impl.rest.panels.resource.JWadlParamsTable;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
+import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.support.xml.XmlUtils;
+
+import javax.swing.*;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDocument> implements PropertyChangeListener
 {
@@ -47,7 +42,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 	private JXEditTextArea contentEditor;
 	private boolean updatingRequest;
 	private JComponent panel;
-	private JUndoableTextField mediaTypeTextField;
+	private JComboBox mediaTypeTextField;
 	private JSplitPane split;
 	
 	public RestRequestContentView(RestRequestMessageEditor restRequestMessageEditor, RestRequest restRequest)
@@ -130,20 +125,17 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 		
-		mediaTypeTextField = new JUndoableTextField( requestRepresentation.getMediaType() );
+		mediaTypeTextField = new JComboBox( getRequestMediaTypes() );
 		mediaTypeTextField.setPreferredSize(new Dimension( 200, 20 ));
 		mediaTypeTextField.setEnabled( restRequest.hasRequestBody());
-		mediaTypeTextField.getDocument().addDocumentListener(new DocumentListenerAdapter()
+      mediaTypeTextField.setEditable( true );
+      mediaTypeTextField.addItemListener( new ItemListener() 
 		{
-			@Override
-			public void update(Document document)
-			{
-				updatingRequest = true;
-				requestRepresentation.setMediaType(mediaTypeTextField.getText());
-				updatingRequest = false;
-				
-			}
-		});
+         public void itemStateChanged( ItemEvent e )
+         {
+            //To change body of implemented methods use File | Settings | File Templates.
+         }
+      });
 
 		toolbar.addLabeledFixed("Media Type", mediaTypeTextField);
 		toolbar.addSeparator();
@@ -151,7 +143,19 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 		return toolbar;
 	}
 
-	public void propertyChange(PropertyChangeEvent evt)
+   private Object[] getRequestMediaTypes()
+   {
+      StringList result = new StringList();
+
+      for( RestRepresentation representation : restRequest.getRepresentations( RestRepresentation.Type.REQUEST ))
+      {
+         result.add( representation.getMediaType());
+      }
+
+      return result.toStringArray();
+   }
+
+   public void propertyChange(PropertyChangeEvent evt)
 	{
 		if( evt.getPropertyName().equals( "request" ) && !updatingRequest )
 		{

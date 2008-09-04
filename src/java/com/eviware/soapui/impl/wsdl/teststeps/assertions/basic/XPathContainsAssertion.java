@@ -152,7 +152,10 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
    protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
            throws AssertionException
    {
-      return assertContent( messageExchange.getResponseContent(), context, "Response" );
+       if( !messageExchange.hasResponse() )
+         return "Missing Response";
+      else
+         return assertContent( messageExchange.getResponseContentAsXml(), context, "Response" );
    }
 
    public String assertContent( String response, SubmitContext context, String type ) throws AssertionException

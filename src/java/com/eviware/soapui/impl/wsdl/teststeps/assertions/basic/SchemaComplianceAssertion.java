@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
@@ -25,19 +23,14 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlValidator;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.iface.MessageExchange;
-import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
-import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.AssertionError;
-import com.eviware.soapui.model.testsuite.AssertionException;
-import com.eviware.soapui.model.testsuite.RequestAssertion;
-import com.eviware.soapui.model.testsuite.ResponseAssertion;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
+import org.apache.xmlbeans.XmlObject;
 
 /**
  * Asserts that a request or response message complies with its related 
@@ -201,14 +194,8 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		@Override
 		public boolean canAssert(Assertable assertable)
 		{
-			boolean result = super.canAssert(assertable);
-			if( result )
-			{
-				result = assertable instanceof Request && ((Request)assertable).getOperation().getInterface() instanceof AbstractInterface &&
-					((AbstractInterface<?>)	((Request)assertable).getOperation().getInterface()).getDefinitionContext().hasSchemaTypes(); 
-			}
-			
-			return result;
+			return super.canAssert(assertable) && assertable.getInterface() instanceof AbstractInterface &&
+                 ((AbstractInterface)assertable.getInterface()).getDefinitionContext().hasSchemaTypes();
 		}
 	}
 }

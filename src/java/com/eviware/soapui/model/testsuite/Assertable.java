@@ -12,12 +12,12 @@
 
 package com.eviware.soapui.model.testsuite;
 
-import java.util.List;
-import java.util.Map;
-
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Behaviour for an object that can be asserted
@@ -54,7 +54,7 @@ public interface Assertable
 	public TestAssertion getAssertionByName( String name );
 
 	public ModelItem getModelItem();
-	
+
 	public Interface getInterface();
 	
 	public TestAssertion cloneAssertion( TestAssertion source, String name );

@@ -12,13 +12,13 @@
 
 package com.eviware.soapui.impl.rest.panels.request.views.param;
 
-import javax.swing.JComponent;
-
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestDocument;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestMessageEditor;
 import com.eviware.soapui.impl.rest.panels.resource.JWadlParamsTable;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
+
+import javax.swing.*;
 
 public class RestRequestParamsView extends AbstractXmlEditorView<RestRequestDocument>
 {
@@ -40,8 +40,6 @@ public class RestRequestParamsView extends AbstractXmlEditorView<RestRequestDocu
 	{
 		return false;
 	}
-	
-	
 
 	public JComponent getComponent()
 	{

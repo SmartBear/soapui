@@ -35,8 +35,12 @@ public interface MessageExchange extends ResultContainer
 	public StringToStringMap getProperties();
 	
    public String getRequestContent();
-   
+
    public String getResponseContent();
+
+   public String getRequestContentAsXml();
+
+   public String getResponseContentAsXml();
    
    public StringToStringMap getRequestHeaders();
    
@@ -63,4 +67,6 @@ public interface MessageExchange extends ResultContainer
 	public boolean hasRequest( boolean ignoreEmpty );
 
 	public boolean hasResponse();
+
+   public String getProperty( String name );
 }

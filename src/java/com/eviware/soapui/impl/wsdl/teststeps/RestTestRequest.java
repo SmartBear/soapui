@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class RestTestRequest extends RestRequest implements Assertable
+public class RestTestRequest extends RestRequest implements Assertable, TestRequest
 {
    public static final String RESPONSE_PROPERTY = RestTestRequest.class.getName() + "@response";
    public static final String STATUS_PROPERTY = RestTestRequest.class.getName() + "@status";
@@ -328,7 +328,7 @@ public class RestTestRequest extends RestRequest implements Assertable
 
    public String getAssertableContent()
    {
-      return getResponse() == null ? null : getResponse().getContentAsString();
+      return getResponseContentAsXml();
    }
 
    public HttpTestRequestStep getTestStep()
@@ -437,6 +437,8 @@ public class RestTestRequest extends RestRequest implements Assertable
    {
 
    }
+
+
 
    public void resolve( ResolveContext context )
    {

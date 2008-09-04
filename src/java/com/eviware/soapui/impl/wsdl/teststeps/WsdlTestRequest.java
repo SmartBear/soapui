@@ -48,7 +48,7 @@ import java.util.Map;
  * @author Ole.Matzura
  */
 
-public class WsdlTestRequest extends WsdlRequest implements Assertable
+public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequest
 {
    public static final String RESPONSE_PROPERTY = WsdlTestRequest.class.getName() + "@response";
    public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";

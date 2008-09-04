@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.submit;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public abstract class AbstractMessageExchange<T extends ModelItem> implements MessageExchange
 {
@@ -32,16 +33,37 @@ public abstract class AbstractMessageExchange<T extends ModelItem> implements Me
 	{
 		return modelItem;
 	}
-	
-	public void addProperty( String name, String value )
+
+   public String getRequestContentAsXml()
+   {
+      if( hasRequest( true ) && XmlUtils.seemsToBeXml( getRequestContent() ))
+         return getRequestContent();
+      else
+         return null;
+   }
+
+   public String getResponseContentAsXml()
+   {
+    if( hasResponse() && XmlUtils.seemsToBeXml( getResponseContent() ))
+         return getResponseContent();
+      else
+         return null;
+   }
+
+   public void addProperty( String name, String value )
 	{
 		if( properties == null )
 			properties = new StringToStringMap();
 		
 		properties.put( name, value );
 	}
-	
-	public StringToStringMap getProperties()
+
+   public String getProperty( String name )
+   {
+      return properties.get( name );
+   }
+
+   public StringToStringMap getProperties()
 	{
 		return properties;
 	}

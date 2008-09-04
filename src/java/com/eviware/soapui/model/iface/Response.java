@@ -47,4 +47,8 @@ public interface Response
    public byte [] getRawRequestData();
    
    public byte [] getRawResponseData();
+
+   public String getProperty( String name );
+
+   public String [] getPropertyNames();
 }

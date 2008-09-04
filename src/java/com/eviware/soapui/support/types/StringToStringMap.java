@@ -12,12 +12,12 @@
 
 package com.eviware.soapui.support.types;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.StringToStringMapConfig;
 import com.eviware.soapui.config.StringToStringMapConfig.Entry;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * HashMap&lt;String,String&gt;
@@ -183,4 +183,9 @@ public class StringToStringMap extends HashMap<String,String>
 			return def;
 		}		
 	}
+
+   public String[] getKeys()
+   {
+      return keySet().toArray( new String[size()] );
+   }
 }

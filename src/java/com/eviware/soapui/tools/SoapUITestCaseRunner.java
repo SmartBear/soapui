@@ -73,7 +73,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 
 	private boolean printReport;
 	private boolean exportAll;
-	private boolean junitReport;
+   private boolean ignoreErrors;
+   private boolean junitReport;
 	private int exportCount;
 	private JUnitReportCollector reportCollector;
 	private String wssPasswordType;
@@ -214,7 +215,12 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 		this.printReport = printReport;
 	}
 
-	/**
+   public void setIgnoreError( boolean ignoreErrors )
+	{
+		this.ignoreErrors = ignoreErrors;
+	}
+
+   /**
 	 * Sets the host to use by all test-requests, the existing endpoint port and
 	 * path will be used
 	 * 
@@ -345,7 +351,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUIRunner implements TestRu
 		
 		exportReports( project );
 
-		if (assertions.size() > 0 || failedTests.size() > 0)
+		if (assertions.size() > 0 || failedTests.size() > 0 && !ignoreErrors )
 		{
 			throwFailureException();
 		}

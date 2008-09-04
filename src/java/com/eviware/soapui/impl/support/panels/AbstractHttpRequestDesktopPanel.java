@@ -298,7 +298,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		if( responseEditor != null )
 			responseEditor.setEditable(enabled);
 
-		submitButton.setEnabled(enabled && request.getEndpoint() != null && request.getEndpoint().trim().length() > 0);
+		submitButton.setEnabled(enabled && request.hasEndpoint());
 
 		statusBar.setIndeterminate(!enabled);
 	}

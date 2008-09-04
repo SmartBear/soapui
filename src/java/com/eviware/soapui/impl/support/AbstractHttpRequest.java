@@ -33,6 +33,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.settings.WsdlSettings;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -574,5 +575,10 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		
 		for( FileAttachment<?> attachment : attachments )
 			attachment.resolve( context );
+   }
+
+   public boolean hasEndpoint()
+   {
+      return StringUtils.hasContent( getEndpoint() );
    }
 }
