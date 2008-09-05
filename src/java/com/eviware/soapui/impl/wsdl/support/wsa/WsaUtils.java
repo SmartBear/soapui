@@ -24,6 +24,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.AnonymousTypeConfig;
 import com.eviware.soapui.config.MustUnderstandTypeConfig;
 import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
@@ -55,7 +56,8 @@ public class WsaUtils
 	// element to add every property to
 	Element envelopeElement;
 	String wsaVersionNameSpace;
-	String replyToAnonimus;
+	String anonymousType;
+	String anonymousAddress;
 	String relatesToReply;
 	String content;
 	// needed for checking if ws-a already applied before
@@ -86,9 +88,11 @@ public class WsaUtils
 		{
 			wsaVersionNameSpace = WS_A_VERSION_200408;
 		}
-		replyToAnonimus = wsaVersionNameSpace + "/anonymous";
+		anonymousAddress = wsaVersionNameSpace + "/anonymous";
 		relatesToReply = wsaVersionNameSpace + "/reply";
 
+		anonymousType = wsaContainer.getOperation().getAnonymous();
+		
 		Element header = (Element) SoapUtils.getHeaderElement(xmlContentObject, soapVersion, true).getDomNode();
 
 		header.setAttribute("xmlns:wsa", wsaVersionNameSpace);
@@ -113,10 +117,16 @@ public class WsaUtils
 		{
 			header.appendChild(builder.createWsaAddressChildElement("wsa:From", envelopeElement, from));
 		}
-		String faultTo = wsaContainer.getWsaConfig().getFaultTo();
-		if (!StringUtils.isNullOrEmpty(faultTo))
+		if (AnonymousTypeConfig.REQUIRED.toString().equals(anonymousType))
 		{
-			header.appendChild(builder.createWsaAddressChildElement("wsa:FaultTo", envelopeElement, faultTo));
+			header.appendChild(builder.createWsaAddressChildElement("wsa:FaultTo", envelopeElement, anonymousAddress));
+			wsaContainer.getWsaConfig().setFaultTo(anonymousAddress);
+		} else {
+			String faultTo = wsaContainer.getWsaConfig().getFaultTo();
+			if (!StringUtils.isNullOrEmpty(faultTo))
+			{
+				header.appendChild(builder.createWsaAddressChildElement("wsa:FaultTo", envelopeElement, faultTo));
+			}
 		}
 
 		return header;
@@ -164,17 +174,25 @@ public class WsaUtils
 			}
 
 			String replyTo = wsaContainer.getWsaConfig().getReplyTo();
-			if (!StringUtils.isNullOrEmpty(replyTo))
+			if (AnonymousTypeConfig.REQUIRED.toString().equals(anonymousType) )
+				//TODO check if WsaSettings.USE_DEFAULT_REPLYTO is needed considering anonymous added
+//					&& SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_REPLYTO))
+			{
+				header
+					.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, anonymousAddress));
+				wsaContainer.getWsaConfig().setReplyTo(anonymousAddress);
+			} else if (!StringUtils.isNullOrEmpty(replyTo))
 			{
 				header.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, replyTo));
 			}
 			else if (operation.isRequestResponse())
 			{
-				if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_REPLYTO))
+				if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_REPLYTO) && 
+						!AnonymousTypeConfig.PROHIBITED.equals(anonymousType))
 				{
 					header
-							.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, replyToAnonimus));
-					wsaContainer.getWsaConfig().setReplyTo(replyToAnonimus);
+							.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, anonymousAddress));
+					wsaContainer.getWsaConfig().setReplyTo(anonymousAddress);
 				}
 			}
 

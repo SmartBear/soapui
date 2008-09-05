@@ -34,6 +34,7 @@ import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.AnonymousTypeConfig;
 import com.eviware.soapui.config.OperationConfig;
 import com.eviware.soapui.config.OperationTypesConfig;
 import com.eviware.soapui.config.WsaVersionTypeConfig;
@@ -151,6 +152,7 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
 			requestImpl.setWsAddressing(true);
 		}
 		WsdlUtils.setDefaultWsaAction(requestImpl.getWsaConfig(), false);
+		WsdlUtils.getAnonymous(this);
 
 		(getInterface()).fireRequestAdded(requestImpl);
 		return requestImpl;
@@ -387,6 +389,33 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
 	{
 		String outputName = getConfig().getOutputName();
 		return outputName == null || outputName.trim().length() == 0 ? null : outputName;
+	}
+
+	public String getAnonymous()
+	{
+//		return WsdlUtils.getAnonymous(this);
+      if (getConfig().getAnonymous().equals(AnonymousTypeConfig.PROHIBITED))
+      {
+         return AnonymousTypeConfig.PROHIBITED.toString();
+      }
+      else if (getConfig().getAnonymous().equals(AnonymousTypeConfig.REQUIRED))
+      {
+         return AnonymousTypeConfig.REQUIRED.toString();
+      }
+
+      return AnonymousTypeConfig.OPTIONAL.toString();
+}
+	
+	public void setAnonymous(String anonymous)
+	{
+//		getConfig().setAnonymous(AnonymousTypeConfig.Enum.forString(arg0));
+      if (anonymous.equals(AnonymousTypeConfig.REQUIRED.toString()))
+         getConfig().setAnonymous(AnonymousTypeConfig.REQUIRED);
+      else if (anonymous.equals(AnonymousTypeConfig.PROHIBITED.toString()))
+         getConfig().setAnonymous(AnonymousTypeConfig.PROHIBITED);
+      else
+         getConfig().setAnonymous(AnonymousTypeConfig.OPTIONAL);
+
 	}
 
 	public boolean isOneWay()

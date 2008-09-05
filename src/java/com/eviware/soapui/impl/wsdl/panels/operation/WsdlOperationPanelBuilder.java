@@ -14,6 +14,8 @@ package com.eviware.soapui.impl.wsdl.panels.operation;
 
 import javax.swing.JPanel;
 
+import com.eviware.soapui.config.AnonymousTypeConfig;
+import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.support.components.JPropertiesTable;
@@ -43,6 +45,8 @@ public class WsdlOperationPanelBuilder extends EmptyPanelBuilder<WsdlOperation>
 		table.addProperty( "Output", "outputName" );
 		table.addProperty( "Sends Attachments", "sendsAttachments" );
 		table.addProperty( "Receives Attachments", "receivesAttachments" );
+		table.addProperty( "WS-A Anonymous", "anonymous", new Object[]{ AnonymousTypeConfig.OPTIONAL.toString(), 
+				AnonymousTypeConfig.REQUIRED.toString(), AnonymousTypeConfig.PROHIBITED.toString() }  );
    	table.setPropertyObject( operation );
    	
    	return table;

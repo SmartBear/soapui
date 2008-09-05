@@ -140,24 +140,38 @@
 					<xsd:element name="call" type="tns:WsdlRequest"
 						minOccurs="0" maxOccurs="unbounded">
 					</xsd:element>
-					<xsd:element name="requestParts" maxOccurs="1" minOccurs="0" type="tns:Parts">
+					<xsd:element name="requestParts" maxOccurs="1"
+						minOccurs="0" type="tns:Parts">
 
 					</xsd:element>
-					<xsd:element name="responseParts" type="tns:Parts" maxOccurs="1" minOccurs="0"></xsd:element>
+					<xsd:element name="responseParts" type="tns:Parts"
+						maxOccurs="1" minOccurs="0">
+					</xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="action" type="xsd:string"></xsd:attribute>
-				<xsd:attribute name="bindingOperationName" type="xsd:string"></xsd:attribute>
-				<xsd:attribute name="style" type="tns:OperationStyles"></xsd:attribute>
+				<xsd:attribute name="bindingOperationName"
+					type="xsd:string">
+				</xsd:attribute>
+				<xsd:attribute name="style"
+					type="tns:OperationStyles">
+				</xsd:attribute>
 				<xsd:attribute name="type" type="tns:OperationTypes"></xsd:attribute>
 				<xsd:attribute name="inputName" type="xsd:string"></xsd:attribute>
 				<xsd:attribute name="outputName" type="xsd:string"></xsd:attribute>
 				<!-- NOTE isOneWay only kept for backwards compatibility, type is used from now on. -->
-				<xsd:attribute name="isOneWay" type="xsd:boolean" default="false"></xsd:attribute>
-				<xsd:attribute name="sendsAttachments" type="xsd:boolean"></xsd:attribute>
-				<xsd:attribute name="receivesAttachments" type="xsd:boolean"></xsd:attribute>
+				<xsd:attribute name="isOneWay" type="xsd:boolean"
+					default="false">
+				</xsd:attribute>
+				<xsd:attribute name="sendsAttachments"
+					type="xsd:boolean">
+				</xsd:attribute>
+				<xsd:attribute name="receivesAttachments"
+					type="xsd:boolean">
+				</xsd:attribute>
+				<xsd:attribute name="anonymous" type="tns:AnonymousType"></xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
-		
+
 	</xsd:complexType>
 
 	<xsd:simpleType name="OperationStyles">
@@ -1419,4 +1433,12 @@
     <xsd:element name="operation" type="tns:Operation"></xsd:element>
 
     <xsd:element name="mockOperation" type="tns:MockOperation"></xsd:element>
+
+    <xsd:simpleType name="AnonymousType">
+    	<xsd:restriction base="xsd:string">
+    		<xsd:enumeration value="optional"></xsd:enumeration>
+    		<xsd:enumeration value="required"></xsd:enumeration>
+    		<xsd:enumeration value="prohibited"></xsd:enumeration>
+    	</xsd:restriction>
+    </xsd:simpleType>
 </xsd:schema>

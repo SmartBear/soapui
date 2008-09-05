@@ -16,6 +16,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Element;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.AnonymousTypeConfig;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
@@ -107,7 +108,34 @@ public class WsaValidator
 			if (StringUtils.isNullOrEmpty(toAddressValue))
 			{
 				throw new AssertionException( new AssertionError("WS-A To Address property is empty") );
+			} else
+			{
+				//check for anonymous
+				if (AnonymousTypeConfig.PROHIBITED.toString().equals(((WsdlMessageExchange) messageExchange).getOperation().getAnonymous())
+						&& (toAddressValue.equals("http://www.w3.org/2005/08/addressing/anonymous") || toAddressValue.equals("http://schemas.xmlsoap.org/ws/2004/08/addressing/anonymous") ) )
+				{
+//					throw new AssertionException( new AssertionError("WS-A InvalidAddressingHeader , Anonymous addresses are prohibited") );
+				}
 			}
+			//if fault_to is specified check if anonymous allowed
+			Element faultToNode = XmlUtils.getFirstChildElementNS(header,wsaVersionNameSpace,"FaultTo");
+			if (faultToNode != null) {
+				addressNode = XmlUtils.getFirstChildElementNS(faultToNode, wsaVersionNameSpace, "Address");
+				if( addressNode != null )
+				{
+					String faultToAddressValue = XmlUtils.getElementText(addressNode);
+					if (!StringUtils.isNullOrEmpty(faultToAddressValue))
+					{
+						//check for anonymous
+						if (AnonymousTypeConfig.PROHIBITED.toString().equals(((WsdlMessageExchange) messageExchange).getOperation().getAnonymous())
+								&& (faultToAddressValue.equals("http://www.w3.org/2005/08/addressing/anonymous") || faultToAddressValue.equals("http://schemas.xmlsoap.org/ws/2004/08/addressing/anonymous") ) )
+						{
+							throw new AssertionException( new AssertionError("WS-A InvalidAddressingHeader , Anonymous addresses are prohibited") );
+						}
+					}
+				}
+			}
+			//TODO the same for replyTo, also check when required and not anonymous
 				
 		}
 		catch (XmlException e)
