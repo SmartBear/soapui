@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Composite Projects - spit old project files</title>
+    </properties>
+    <body>
+		<section name="Composite Projects in SoapUI Pro ">
+		<p>Composite project is SoapUI project saved in different form. Normally project file is one xml file.
+           That means that collaboration and team work is very hard because synchronization is very hard to do.
+           Composite SoapUI project is saved in form of file system so updating/changing/committing parts of
+           projects is easier to do. 
+        </p>
+        <subsection name="Composite File System">
+        <p>Composite SoapUI project is saved in directory with project name. It contains separate directories for
+           each interface, test suite and mock service and file settings.xml where other project settings and data
+           are stored. Each interface directory contains interface settings.xml file and for each operation one xml
+           file named by operation. Test suite directory contains settings.xml and one xml file for each test case 
+           named by test case. Mock service directory contains settings.xml and one xml file for each mock operation
+           named by mock operation.
+        </p>
+        </subsection>
+        <subsection name="Making Project Composite">
+        <p>Making SopaIU project composite is easy. In project properties there is property ,<b>Composite Project</b>
+        that can be true or false. Setting it on true will make project be saved in composite form when saved. Projects 
+        that have set <b>Project Password</b> can not be composite. 
+        </p>
+        </subsection>
+        <subsection name="Composite behavior and actions">
+        <p>When renaming element( interface, operation, test suite, test case, etc..) corresponding element in composite
+        file system will be renamed if there is no file or directory with new name. Otherwise error message will be 
+        prompted. Deleting element means removing it from file system, too. Trough submenu <b>Composite Actions</b> is 
+        possible to save or reload element. For test cases is possible to export, save at designated location, or import 
+        them in test suite.
+        </p>
+        </subsection>
+		 <p><hr size="1"/>Next: <a href=" "> </a></p>
+		</section>
+    </body>
+</document>
