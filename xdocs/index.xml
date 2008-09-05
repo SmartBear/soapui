@@ -112,13 +112,40 @@
 	
 			</tr>
 		</table>
+		
 				
+		
 		<p style="font-size: 9pt"><i>"Great software, extremely useful, has replaced several other commercial products and a 
 		home-grown utility in our organization, (and not because of cost but rather because of value 
 		and usability)."</i> - Charlie Collins</p>
 		
 		<p style="font-size: 9pt"><i>"thanks for an excellent project - ... this tool has greatly improved the quality and manageability 
 		of our development."</i> - Matthew Feldt</p>
+		
+		<subsection name="Vote For soapUI">
+		<columns>
+		<column>
+		<a target="_new" href="http://soa.sys-con.com/general/readerschoice.htm" onclick="javascript:urchinTracker('/voteLink');">
+		<img src="images/WSJ-SOAReadersChoice-125_125px.jpg" alt="Vote for soapUI"/>
+		</a>
+		</column>
+		<column>
+		<p align="left">
+		<b>
+        Vote for soapUI in SOA World Magazine Reader's Choice Vote. <br/>
+        </b>
+		We are participating in several categories and need your support; <br/>
+		if you use soapUI and enjoy it; why not cast your vote on soapUI? <br/>
+		Thanks for your support, we appreciate it!<br/>
+		<a target="_new" href="http://soa.sys-con.com/general/readerschoice.htm" onclick="javascript:urchinTracker('/voteLink');">
+		Vote Here!
+		</a>
+		
+		</p>
+		</column></columns>
+		
+		</subsection>
+
 		<subsection name="Latest News">
 		
 		<p><b>2008-01-28: soapUI 2.0.2</b> : Mostly bug-fixes and Plug-in updates <a href="new_and_noteworthy_2.html#2.0.2_Release">[Read more]</a></p>

@@ -162,7 +162,7 @@
      
 	</menu>
 	
-	<menu name="IDE/Tool Plugins" collapse="true" href="/ideplugins.html">
+	<menu name="The PlugIns" collapse="true" href="/ideplugins.html">
 	
 	<item name="Maven Plugins" href="/plugin/index.html">
       <item href="/plugin/maven1/index.html" name="Maven 1.X Plugin">

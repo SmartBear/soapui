@@ -144,22 +144,17 @@ urchinTracker();
 	 		width="88" height="31" border="0" alt="SourceForge.net Logo" />
         	 	</a>
 
+
           </div>
        </div>
       <div id="leftBanner">
      <br/>
  
 
-		<!--
 		<br/>
 		<br/>
 		<a target="_new" href="http://soa.sys-con.com/general/readerschoice.htm">
-		<img width="125" height="125" border="0" src="http://www2.sys-con.com/webservices/readerschoice2003a/125x125-XML-WSJ.jpg"/></a>
-		       		<p style="font-size: 10px">Vote for soapUI at the WSJ Readers' Choice awards 
-		       		in the<br/>'<b>Best Web Services Utility</b>' and<br/>'<b>Best Web Services Testing Tool</b>'<br/>categories</p>
-
-		
-		-->
+		<img width="125" height="125" border="0" src="images/WSJ-SOAReadersChoice-125_125px.jpg"/></a>
        </div>
      
              </div>
