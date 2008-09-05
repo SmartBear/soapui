@@ -107,10 +107,10 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
 			return path;
 		}
 
-		public boolean apply()
+		public boolean resolve()
 		{
 			if (resolver != null)
-				return resolver.apply();
+				return resolver.resolve();
 
 			if (defaultAction != null)
 			{
@@ -136,7 +136,7 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
 	{
 		public boolean resolve();
 
-		public boolean apply();
+//		public boolean apply();
 
 		public boolean isResolved();
 
@@ -175,7 +175,7 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
 
 		for (PathToResolve ptr : pathsToResolve)
 		{
-			if (ptr.apply())
+			if (ptr.resolve())
 				resultCnt++;
 		}
 
@@ -201,11 +201,6 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
 			this.current = current;
 		}
 
-		public boolean apply()
-		{
-			return apply(result);
-		}
-
 		public boolean isResolved()
 		{
 			return resolved;
@@ -221,8 +216,8 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
 		public boolean resolve()
 		{
 			result = UISupport.getFileDialogs().open(this, title, extension, fileType, current);
-			resolved = result != null;
-			return result != null;
+			resolved = apply(result);
+			return resolved;
 		}
 		
 		public Object getDescription()
@@ -247,11 +242,6 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
 			this.current = current;
 		}
 
-		public boolean apply()
-		{
-			return apply(result);
-		}
-
 		public boolean isResolved()
 		{
 			return resolved;
@@ -268,8 +258,8 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
 		{
 			result = UISupport.getFileDialogs().openDirectory(this, title,
 					StringUtils.isNullOrEmpty(current) ? null : new File(current));
-			resolved = result != null;
-			return result != null;
+			resolved = apply(result);
+			return resolved;
 		}
 		
 		public Object getDescription()

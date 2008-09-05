@@ -1,21 +1,30 @@
 package com.eviware.soapui.support.resolver;
 
+import java.io.File;
+
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext.Resolver;
 
 public class ImportInterfaceResolver implements Resolver
 {
 	private boolean resolved = false;
-
-	//place holder
-	public ImportInterfaceResolver(AbstractWsdlModelItem<?> wsdlTestRequestStep)
+	private WsdlTestRequestStep item;
+	
+	public ImportInterfaceResolver(WsdlTestRequestStep item)
 	{
+		this.item = item;
 	}
 
 	public boolean apply()
 	{
-//		WsdlTestCase wsdlTestCase = wtRequestStep.getTestCase();
+//		File iFile = UISupport.getFileDialogs().openXML(this, "Choose interface to import");
+//		WsdlTestCase tCase = item.getTestCase();
+//		item.getO
+//		WsdlProject project = tCase.getTestSuite().getProject();
 //		if (wsdlTestCase != null)
 //		{
 //			wsdlTestCase.removeTestStep(wtRequestStep);
@@ -25,8 +34,7 @@ public class ImportInterfaceResolver implements Resolver
 //		{
 //			resolved = false;
 //		}
-//		return resolved;
-		return resolve();
+		return resolved;
 	}
 
 	public String getResolvedPath()
