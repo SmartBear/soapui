@@ -35,9 +35,14 @@ public class ChangeOperationResolver implements Resolver
 		return true;
 	}
 
-	public String getDecription()
+	public String getDescription()
 	{
 		return "Resolve: Import operation";
 	}
 
+	 @Override
+	public String toString()
+	{
+		return getDescription();
+	}
 }

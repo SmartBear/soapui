@@ -18,7 +18,6 @@ import com.eviware.soapui.config.TestSuiteRunTypesConfig.Enum;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.actions.ChangeOperationAction;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
@@ -36,7 +35,6 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import java.io.File;
 import java.util.*;
 
-import org.apache.xml.security.utils.resolver.implementations.ResolverAnonymous;
 
 /**
  * TestSuite implementation for WSDL projects.
@@ -584,7 +582,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 			testCases.add(newTestCase);
 			fireTestCaseAdded(newTestCase);
 
-         ResolveDialog resolver = new ResolveDialog( "Validate TestCase", "Checks TestCase for inconsistencies", null, new ImportInterfaceResolver(this), new ChangeOperationResolver(this) );
+         ResolveDialog resolver = new ResolveDialog( "Validate TestCase", "Checks TestCase for inconsistencies", null);
          resolver.setShowOkMessage( false );
          resolver.resolve( newTestCase );
 

@@ -32,11 +32,11 @@ import com.eviware.soapui.support.components.JButtonBar;
 
 public abstract class SimpleDialog extends JDialog
 {
-	public SimpleDialog(String title, String description, String helpUrl)
+	public SimpleDialog(String title, String description, String helpUrl, boolean okAndCancel)
 	{
 		super(UISupport.getMainFrame(), title, true);
 
-		JButtonBar buttons = UISupport.initDialogActions(buildActions(helpUrl), this);
+		JButtonBar buttons = UISupport.initDialogActions(buildActions(helpUrl, okAndCancel), this);
 		buttons.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		getContentPane().add(
@@ -53,9 +53,14 @@ public abstract class SimpleDialog extends JDialog
 		pack();
 	}
 
+	public SimpleDialog(String title, String description, String helpUrl)
+	{
+		this(title, description, helpUrl, true);
+	}
+	
 	protected abstract Component buildContent();
 
-	public ActionList buildActions(String url)
+	public ActionList buildActions(String url, boolean okAndCancel)
 	{
 		DefaultActionList actions = new DefaultActionList("Actions");
 		if (url != null)
@@ -63,27 +68,30 @@ public abstract class SimpleDialog extends JDialog
 
 		OKAction okAction = new OKAction();
 		actions.addAction(okAction);
-		actions.addAction(new CancelAction());
-		actions.setDefaultAction(okAction);
+		if (okAndCancel)
+		{
+			actions.addAction(new CancelAction());
+			actions.setDefaultAction(okAction);
+		}
 		return actions;
 	}
-	
+
 	protected abstract boolean handleOk();
 
 	@Override
 	public void setVisible(boolean b)
 	{
-		if( b )
+		if (b)
 			beforeShow();
-		else 
+		else
 			beforeHide();
-		
-		UISupport.centerDialog( this );
+
+		UISupport.centerDialog(this);
 		super.setVisible(b);
 
-		if( b )
+		if (b)
 			afterShow();
-		else 
+		else
 			afterHide();
 	}
 
@@ -107,7 +115,7 @@ public abstract class SimpleDialog extends JDialog
 	{
 		return true;
 	}
-	
+
 	protected final class OKAction extends AbstractAction
 	{
 		public OKAction()

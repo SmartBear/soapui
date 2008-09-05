@@ -12,6 +12,7 @@ import com.eviware.soapui.model.support.InterfaceListenerAdapter;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import org.apache.log4j.Logger;
 
@@ -197,14 +198,14 @@ public class RestTestRequestStep extends HttpTestRequestStep
       return this;
    }
 
-   public void resolve( ResolveContext context )
+	public void resolve( ResolveContext context )
    {
       super.resolve( context );
 
       if( restResource == null )
       {
          context.addPathToResolve( this, "Missing REST Resource in Project", getRequestStepConfig().getService() + "/" +
-            getRequestStepConfig().getResourcePath(), null );
+            getRequestStepConfig().getResourcePath(), (SoapUIAction<AbstractWsdlModelItem<?>>)null);
       }
    }
 }

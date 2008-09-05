@@ -17,5 +17,11 @@ public class TestRequestDefaultResolveAction extends AbstractSoapUIAction<Abstra
 		WsdlTestCase tc = ((WsdlTestRequestStep)target).getTestCase();
 		tc.removeTestStep((WsdlTestRequestStep)target);
 	}
+	
+	@Override
+	public String toString()
+	{
+		return getDescription();
+	}
 
 }

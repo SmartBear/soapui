@@ -1,7 +1,6 @@
 package com.eviware.soapui.support.resolver;
 
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext.Resolver;
 
@@ -47,9 +46,14 @@ public class ImportInterfaceResolver implements Resolver
 		return true;
 	}
 
-	public String getDecription()
+	public String getDescription()
 	{
 		return "Resolve: Import inteface";
 	}
 
+	@Override
+	public String toString()
+	{
+		return getDescription();
+	}
 }

@@ -19,6 +19,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
+import com.eviware.soapui.impl.wsdl.teststeps.actions.ChangeOperationAction;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
@@ -36,6 +37,8 @@ import com.eviware.soapui.model.support.TestStepBeanProperty;
 import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.support.resolver.ChangeOperationResolver;
+import com.eviware.soapui.support.resolver.ImportInterfaceResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringToStringMap;
 import org.apache.log4j.Logger;
@@ -110,7 +113,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		}
 
 		// init properties
-		if( testRequest != null )
+		if (testRequest != null)
 		{
 			addProperty(new TestStepBeanProperty("Endpoint", false, testRequest, "endpoint", this));
 			addProperty(new TestStepBeanProperty("Username", false, testRequest, "username", this));
@@ -650,8 +653,10 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 
 		if (wsdlOperation == null)
 		{
-			context.addPathToResolve(this, "Missing SOAP Operation in Project", requestStepConfig.getInterface() + "/"
-					+ requestStepConfig.getOperation(), null).setDefaultAction(new TestRequestDefaultResolveAction());
+			context.addPathToResolve(this, "Missing SOAP Operation in Project",
+					requestStepConfig.getInterface() + "/" + requestStepConfig.getOperation(),
+					new TestRequestDefaultResolveAction()).addResolvers(new ImportInterfaceResolver(this),
+					new ChangeOperationResolver(this));
 		}
 		else
 		{

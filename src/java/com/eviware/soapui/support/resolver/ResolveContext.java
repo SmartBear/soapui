@@ -12,16 +12,16 @@
 
 package com.eviware.soapui.support.resolver;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.SoapUIAction;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-public class ResolveContext<T extends AbstractWsdlModelItem>
+public class ResolveContext<T extends AbstractWsdlModelItem<?>>
 {
 	private List<PathToResolve> pathsToResolve = new ArrayList<PathToResolve>();
 	private final T project;
@@ -37,9 +37,18 @@ public class ResolveContext<T extends AbstractWsdlModelItem>
 	}
 
 	public PathToResolve addPathToResolve(AbstractWsdlModelItem<?> owner, String description, String path,
+			SoapUIAction<AbstractWsdlModelItem<?>> defaultAction)
+	{
+		PathToResolve pathToResolve = new PathToResolve(owner, description, path, defaultAction);
+		pathsToResolve.add(pathToResolve);
+		return pathToResolve;
+	}
+	
+	public PathToResolve addPathToResolve(AbstractWsdlModelItem<?> owner, String description, String path,
 			Resolver resolver)
 	{
-		PathToResolve pathToResolve = new PathToResolve(owner, description, path, resolver);
+		PathToResolve pathToResolve = new PathToResolve(owner, description, path, null);
+		pathToResolve.addResolvers(resolver);
 		pathsToResolve.add(pathToResolve);
 		return pathToResolve;
 	}
@@ -48,16 +57,17 @@ public class ResolveContext<T extends AbstractWsdlModelItem>
 	{
 		private final AbstractWsdlModelItem<?> owner;
 		private final String description;
-		private Resolver resolver;
+		private List<Resolver> resolvers = new ArrayList<Resolver>();
 		private final String path;
 		private SoapUIAction<AbstractWsdlModelItem<?>> defaultAction;
+		private Resolver resolver;
 
-		public PathToResolve(AbstractWsdlModelItem<?> owner, String description, String path, Resolver resolver)
+		public PathToResolve(AbstractWsdlModelItem<?> owner, String description, String path, SoapUIAction<AbstractWsdlModelItem<?>> defaultAction)
 		{
 			this.owner = owner;
 			this.description = description;
 			this.path = path;
-			this.resolver = resolver;
+			this.defaultAction = defaultAction;
 		}
 
 		public SoapUIAction<?> getDefaultAction()
@@ -68,6 +78,13 @@ public class ResolveContext<T extends AbstractWsdlModelItem>
 		public void setDefaultAction(SoapUIAction<AbstractWsdlModelItem<?>> defaultAction)
 		{
 			this.defaultAction = defaultAction;
+		}
+		
+		public void addResolvers( Resolver ... resolvers )
+		{
+			for( Resolver res : resolvers ) {
+				this.resolvers.add(res);
+			}
 		}
 
 		public AbstractWsdlModelItem<?> getOwner()
@@ -108,6 +125,11 @@ public class ResolveContext<T extends AbstractWsdlModelItem>
 		{
 			this.resolver = (Resolver) resolveOrDefaultAction;
 		}
+
+		public ArrayList<Resolver> getResolvers()
+		{
+			return (ArrayList<Resolver>) resolvers;
+		}
 	}
 
 	public interface Resolver
@@ -120,7 +142,7 @@ public class ResolveContext<T extends AbstractWsdlModelItem>
 
 		public String getResolvedPath();
 
-		public Object getDecription();
+		public Object getDescription();
 		
 	}
 
@@ -203,7 +225,7 @@ public class ResolveContext<T extends AbstractWsdlModelItem>
 			return result != null;
 		}
 		
-		public Object getDecription()
+		public Object getDescription()
 		{
 			return title;
 		}
@@ -250,17 +272,10 @@ public class ResolveContext<T extends AbstractWsdlModelItem>
 			return result != null;
 		}
 		
-		public Object getDecription()
+		public Object getDescription()
 		{
 			return title;
 		}
 	}
 
-	public void cancel()
-	{
-		for (PathToResolve path : pathsToResolve)
-		{
-			path.defaultAction.perform(path.owner, path);
-		}
-	}
 }
