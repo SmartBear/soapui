@@ -112,9 +112,23 @@ public class RestResponseMessageExchange extends AbstractRestMessageExchange<Res
 		return getModelItem().getResource();
 	}
 
-	public Operation getOperation()
+   public RestRequest getRestRequest()
+   {
+      return getModelItem();
+   }
+
+   public Operation getOperation()
 	{
 		return getResource();
 	}
 
+   public int getResponseStatusCode()
+   {
+      return response == null ? 0 : response.getStatusCode();
+   }
+
+   public String getResponseContentType()
+   {
+      return response == null ? null : response.getContentType();
+   }
 }

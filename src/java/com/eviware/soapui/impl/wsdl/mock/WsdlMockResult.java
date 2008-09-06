@@ -12,21 +12,19 @@
 
 package com.eviware.soapui.impl.wsdl.mock;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Enumeration;
-import java.util.Vector;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.mortbay.jetty.HttpFields;
-
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResultMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.types.StringToStringMap;
+import org.mortbay.jetty.HttpFields;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * The result of a handled WsdlMockRequest
@@ -46,13 +44,15 @@ public class WsdlMockResult implements MockResult
 	private HttpServletResponse response;
 	private byte[] rawResponseData;
 	private WsdlMockOperation mockOperation;
+   private String responseContentType;
+   private int responseStatus = 200;
 
-	public WsdlMockResult( WsdlMockRequest request, HttpServletResponse response ) throws Exception
+   public WsdlMockResult( WsdlMockRequest request, HttpServletResponse response ) throws Exception
 	{
 		this.response = response;
 		timestamp = System.currentTimeMillis();
 		mockRequest = request;
-	}
+   }
 
 	public WsdlMockRequest getMockRequest()
 	{
@@ -156,10 +156,11 @@ public class WsdlMockResult implements MockResult
 		return response.isCommitted();
 	}
 
-	public void setContentType( String string )
+	public void setContentType( String contentType )
 	{
-		response.setContentType( string );
-	}
+		response.setContentType( contentType );
+      responseContentType = contentType;
+   }
 
 	public OutputStream getOutputStream() throws IOException
 	{
@@ -169,7 +170,8 @@ public class WsdlMockResult implements MockResult
 	public void initResponse()
 	{
 		response.setStatus( HttpServletResponse.SC_OK );
-	}
+      responseStatus = HttpServletResponse.SC_OK;
+   }
 
 	public boolean isDiscarded()
 	{
@@ -209,4 +211,24 @@ public class WsdlMockResult implements MockResult
 		
 		return mockResponse == null ? null : mockResponse.getMockOperation();
 	}
+
+   public String getResponseContentType()
+   {
+      return responseContentType;
+   }
+
+   public int getResponseStatus()
+   {
+      return responseStatus;
+   }
+
+   public void setResponseStatus( int responseStatus )
+   {
+      this.responseStatus = responseStatus;
+   }
+
+   public void setResponseContentType( String responseContentType )
+   {
+      this.responseContentType = responseContentType;
+   }
 }

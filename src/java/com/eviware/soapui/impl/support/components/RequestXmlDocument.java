@@ -12,17 +12,16 @@
 
 package com.eviware.soapui.impl.support.components;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import org.apache.xmlbeans.SchemaTypeSystem;
-import org.apache.xmlbeans.XmlBeans;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
+import org.apache.xmlbeans.SchemaTypeSystem;
+import org.apache.xmlbeans.XmlBeans;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * XmlDocument for a WsdlRequest
@@ -48,14 +47,23 @@ public class RequestXmlDocument extends AbstractXmlDocument implements PropertyC
 
 	public void setXml(String xml)
 	{
-		request.setRequestContent( xml );
-	}
+      if( !updating )
+      {
+         updating = true;
+         request.setRequestContent( xml );
+         updating = false;
+      }
+   }
 
 	public void propertyChange(PropertyChangeEvent evt)
 	{
 		if( !updating )
-			fireXmlChanged( (String)evt.getOldValue(), (String)evt.getNewValue() );
-	}
+      {
+         updating = true;
+         fireXmlChanged( (String)evt.getOldValue(), (String)evt.getNewValue() );
+         updating = false;
+      }
+   }
 
 	public SchemaTypeSystem getTypeSystem()
 	{

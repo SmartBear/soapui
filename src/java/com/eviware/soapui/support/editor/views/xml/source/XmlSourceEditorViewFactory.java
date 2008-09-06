@@ -12,15 +12,6 @@
 
 package com.eviware.soapui.support.editor.views.xml.source;
 
-import java.util.List;
-
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -38,19 +29,27 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlValidator;
 import com.eviware.soapui.impl.wsdl.support.wss.DefaultWssContainer;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
+import com.eviware.soapui.impl.wsdl.teststeps.RestResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.WadlValidator;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.registry.RequestEditorViewFactory;
 import com.eviware.soapui.support.editor.registry.ResponseEditorViewFactory;
+import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.editor.xml.XmlEditorView;
 import com.eviware.soapui.support.editor.xml.support.ValidationError;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.xml.JXEditTextArea;
+
+import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import java.util.List;
 
 /**
  * Factory for default "XML" source editor view in soapUI
@@ -58,7 +57,7 @@ import com.eviware.soapui.support.xml.JXEditTextArea;
  * @author ole.matzura
  */
 
-public class XmlSourceEditorFactory implements ResponseEditorViewFactory, RequestEditorViewFactory
+public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, RequestEditorViewFactory
 {
 	public static final String VIEW_ID = "Source";
 
@@ -102,7 +101,7 @@ public class XmlSourceEditorFactory implements ResponseEditorViewFactory, Reques
 		}
 		else if( modelItem instanceof RestRequest )
 		{
-			return new XmlSourceEditorView( (XmlEditor) editor );
+			return new RestResponseXmlSourceEditor( (XmlEditor) editor, (RestRequest)modelItem );
 		}
 		else if( modelItem instanceof MessageExchangeModelItem )
 		{
@@ -342,4 +341,24 @@ public class XmlSourceEditorFactory implements ResponseEditorViewFactory, Reques
 				}} );
 		}
 	}
+
+   private class RestResponseXmlSourceEditor extends XmlSourceEditorView
+   {
+      private RestRequest restRequest;
+
+      public RestResponseXmlSourceEditor( XmlEditor<XmlDocument> xmlEditor, RestRequest restRequest )
+      {
+         super( xmlEditor );
+         this.restRequest = restRequest;
+      }
+
+      protected ValidationError[] validateXml( String xml )
+      {
+         if( restRequest.getResource() == null )
+            return new ValidationError[0];
+
+         WadlValidator validator = new WadlValidator( restRequest.getResource().getService().getWadlContext() );
+         return validator.assertResponse( new RestResponseMessageExchange( restRequest ) );
+      }
+   }
 }

@@ -12,14 +12,14 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.util.Vector;
-
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.support.types.StringToStringMap;
+
+import java.util.Vector;
 
 /**
  * WsdlMessageExchange for a WsdlRequest and its response
@@ -138,4 +138,14 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 	{
 		return response.getWssResult();
 	}
+
+   public String getResponseContentType()
+   {
+      return response.getContentType();
+   }
+
+   public int getResponseStatusCode()
+   {
+      return response.getStatusCode();
+   }
 }

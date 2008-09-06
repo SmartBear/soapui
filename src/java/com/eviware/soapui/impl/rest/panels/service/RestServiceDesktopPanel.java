@@ -23,6 +23,7 @@ import com.eviware.soapui.impl.wsdl.actions.iface.ExportDefinitionAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.UpdateInterfaceAction;
 import com.eviware.soapui.impl.wsdl.panels.iface.WsdlInterfaceDesktopPanel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.LineNumbersPanel;
+import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
 import com.eviware.soapui.model.ModelItem;
@@ -418,97 +419,103 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 			targetNamespaces.add(SchemaUtils.getTargetNamespace(xmlObject));
 
 			int tabCount = partTabs.getTabCount() - 1;
-			mapTreeItems(xmlObject, treeRoot, false, tabCount, "Complex Types",
-					"declare namespace xs='http://www.w3.org/2001/XMLSchema';//xs:complexType[@name!='']", "@name", true,
+         String xmlNsDeclaration = "declare namespace xs='" + Constants.XSD_NS + "';";
+         String wadlNsDeclaration = "declare namespace wadl='" + Constants.WADL10_NS + "';";
+
+         mapTreeItems(xmlObject, treeRoot, false, tabCount, "Complex Types",
+					xmlNsDeclaration + "//xs:complexType[@name!='']", "@name", true,
 					null);
 
 			mapTreeItems(xmlObject, treeRoot, false, tabCount, "Simple Types",
-					"declare namespace xs='http://www.w3.org/2001/XMLSchema';//xs:simpleType[@name!='']", "@name", true,
+					xmlNsDeclaration + "//xs:simpleType[@name!='']", "@name", true,
 					null);
 
 			mapTreeItems(xmlObject, treeRoot, false, tabCount, "Anonymous Complex Types",
-					"declare namespace xs='http://www.w3.org/2001/XMLSchema';//xs:complexType[not(exists(@name))]",
+					xmlNsDeclaration + "//xs:complexType[not(exists(@name))]",
 					"parent::node()/@name", true, null);
 
 			mapTreeItems(xmlObject, treeRoot, false, tabCount, "Global Elements",
-					"declare namespace xs='http://www.w3.org/2001/XMLSchema';//xs:schema/xs:element[@name!='']", "@name",
+					xmlNsDeclaration + "//xs:schema/xs:element[@name!='']", "@name",
 					true, new GlobalElementSelector());
 
 			mapTreeItems(xmlObject, treeRoot, false, tabCount, "Schemas",
-					"declare namespace xs='http://www.w3.org/2001/XMLSchema';//xs:schema", "@targetNamespace", true, null);
+					xmlNsDeclaration + "//xs:schema", "@targetNamespace", true, null);
 
-			List<DefaultMutableTreeNode> messages = mapTreeItems(xmlObject, treeRoot, false, tabCount, "Messages",
-					"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';//wsdl:message", "@name", true, null);
+			List<DefaultMutableTreeNode> resources = mapTreeItems(xmlObject, treeRoot, false, tabCount, "Resources",
+					wadlNsDeclaration + "//wadl:resource", "concat( @path, ' [', *:doc[1]/@title, ']' )", true, null);
 
-			for (DefaultMutableTreeNode treeNode : messages)
-			{
-				mapTreeItems(
-						((InspectItem) treeNode.getUserObject()).item,
-						treeNode,
-						false,
-						tabCount,
-						null,
-						"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';wsdl:part",
-						"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';concat('part: name=[', @name, '] type=[', @type, '] element=[', @element, ']' )",
-						true, new PartSelector());
-			}
+//			for (DefaultMutableTreeNode treeNode : resources)
+//			{
+//				mapTreeItems(
+//						((InspectItem) treeNode.getUserObject()).item,
+//						treeNode,
+//						false,
+//						tabCount,
+//						null,
+//						"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';wsdl:part",
+//						"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';concat('part: name=[', @name, '] type=[', @type, '] element=[', @element, ']' )",
+//						true, new PartSelector());
+//			}
 
-			List<DefaultMutableTreeNode> portTypes = mapTreeItems(xmlObject, treeRoot, false, tabCount, "PortTypes",
-					"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';//wsdl:portType", "@name", true, null);
+			List<DefaultMutableTreeNode> methods = mapTreeItems(xmlObject, treeRoot, false, tabCount, "Methods",
+					wadlNsDeclaration + "//wadl:method[exists(@name)]", "concat( @name, ' [', *:doc[1]/@title, ']' )", true, null);
 
-			for (DefaultMutableTreeNode treeNode : portTypes)
-			{
-				List<DefaultMutableTreeNode> operationNodes = mapTreeItems(((InspectItem) treeNode.getUserObject()).item,
-						treeNode, false, tabCount, null,
-						"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';wsdl:operation", "@name", true, null);
+//			for (DefaultMutableTreeNode treeNode : methods)
+//			{
+//				List<DefaultMutableTreeNode> operationNodes = mapTreeItems(((InspectItem) treeNode.getUserObject()).item,
+//						treeNode, false, tabCount, null,
+//						"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';wsdl:operation", "@name", true, null);
+//
+//				for (DefaultMutableTreeNode treeNode2 : operationNodes)
+//				{
+//					mapTreeItems(((InspectItem) treeNode2.getUserObject()).item, treeNode2, false, tabCount, null,
+//							"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';wsdl:*",
+//							"concat( @name, ' [', local-name(), '], message=[', @message, ']' )", false, new MessageSelector());
+//				}
+//			}
 
-				for (DefaultMutableTreeNode treeNode2 : operationNodes)
-				{
-					mapTreeItems(((InspectItem) treeNode2.getUserObject()).item, treeNode2, false, tabCount, null,
-							"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';wsdl:*",
-							"concat( @name, ' [', local-name(), '], message=[', @message, ']' )", false, new MessageSelector());
-				}
-			}
+         List<DefaultMutableTreeNode> representations = mapTreeItems(xmlObject, treeRoot, false, tabCount, "Representations",
+					wadlNsDeclaration + "//wadl:representation", "concat( @mediaType, ' [', *:doc[1]/@title, ']' )", true, null);
 
-			List<DefaultMutableTreeNode> bindings = mapTreeItems(
-					xmlObject,
-					treeRoot,
-					false,
-					tabCount,
-					"Bindings",
-					"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';//wsdl:binding",
-					"declare namespace wsdlsoap='http://schemas.xmlsoap.org/wsdl/soap/';concat( @name, ' [style=', wsdlsoap:binding[1]/@style, ']' )",
-					true, null);
-
-			for (DefaultMutableTreeNode treeNode : bindings)
-			{
-				List<DefaultMutableTreeNode> operationNodes = mapTreeItems(
-						((InspectItem) treeNode.getUserObject()).item,
-						treeNode,
-						false,
-						tabCount,
-						null,
-						"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';wsdl:operation",
-						"declare namespace wsdlsoap='http://schemas.xmlsoap.org/wsdl/soap/';concat( @name, ' [soapAction=', wsdlsoap:operation/@soapAction, ']' )",
-						true, null);
-
-				for (DefaultMutableTreeNode treeNode2 : operationNodes)
-				{
-					mapTreeItems(((InspectItem) treeNode2.getUserObject()).item, treeNode2, false, tabCount, null,
-							"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';wsdl:*",
-							"concat( @name, ' [', local-name(), ']' )", false, new BindingOperationSelector());
-				}
-			}
-
-			List<DefaultMutableTreeNode> services = mapTreeItems(xmlObject, treeRoot, false, tabCount, "Services",
-					"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';//wsdl:service", "@name", true, null);
-
-			for (DefaultMutableTreeNode treeNode : services)
-			{
-				mapTreeItems(((InspectItem) treeNode.getUserObject()).item, treeNode, false, tabCount, null,
-						"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';wsdl:port",
-						"concat( 'port: name=[', @name, '] binding=[', @binding, ']' )", true, new PortSelector());
-			}
+//         List<DefaultMutableTreeNode> bindings = mapTreeItems(
+//					xmlObject,
+//					treeRoot,
+//					false,
+//					tabCount,
+//					"Bindings",
+//					"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';//wsdl:binding",
+//					"declare namespace wsdlsoap='http://schemas.xmlsoap.org/wsdl/soap/';concat( @name, ' [style=', wsdlsoap:binding[1]/@style, ']' )",
+//					true, null);
+//
+//			for (DefaultMutableTreeNode treeNode : bindings)
+//			{
+//				List<DefaultMutableTreeNode> operationNodes = mapTreeItems(
+//						((InspectItem) treeNode.getUserObject()).item,
+//						treeNode,
+//						false,
+//						tabCount,
+//						null,
+//						"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';wsdl:operation",
+//						"declare namespace wsdlsoap='http://schemas.xmlsoap.org/wsdl/soap/';concat( @name, ' [soapAction=', wsdlsoap:operation/@soapAction, ']' )",
+//						true, null);
+//
+//				for (DefaultMutableTreeNode treeNode2 : operationNodes)
+//				{
+//					mapTreeItems(((InspectItem) treeNode2.getUserObject()).item, treeNode2, false, tabCount, null,
+//							"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';wsdl:*",
+//							"concat( @name, ' [', local-name(), ']' )", false, new BindingOperationSelector());
+//				}
+//			}
+//
+//			List<DefaultMutableTreeNode> services = mapTreeItems(xmlObject, treeRoot, false, tabCount, "Services",
+//					"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';//wsdl:service", "@name", true, null);
+//
+//			for (DefaultMutableTreeNode treeNode : services)
+//			{
+//				mapTreeItems(((InspectItem) treeNode.getUserObject()).item, treeNode, false, tabCount, null,
+//						"declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/';wsdl:port",
+//						"concat( 'port: name=[', @name, '] binding=[', @binding, ']' )", true, new PortSelector());
+//			}
 
 			tree.expandRow(0);
 			editors.add(inputArea);

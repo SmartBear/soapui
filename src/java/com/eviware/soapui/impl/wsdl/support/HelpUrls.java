@@ -150,4 +150,5 @@ public interface HelpUrls
 	public static final String CREATEWADLDOC_HELP_URL = "";
 
 	public static final String WADL2JAVA_HELP_URL = "https://wadl.dev.java.net/wadl2java.html";
+   public static final String WADL_PARAMS_HELP_URL = "";
 }

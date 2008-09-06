@@ -12,26 +12,33 @@
 
 package com.eviware.soapui.impl.rest;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.List;
-
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestResourceRepresentationConfig;
 import com.eviware.soapui.config.RestResourceRepresentationTypeConfig;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
+import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
+import org.apache.xmlbeans.SchemaGlobalElement;
+import org.apache.xmlbeans.SchemaType;
+
+import javax.xml.namespace.QName;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RestRepresentation
 {
-	private final RestRequest restResource;
+	private final RestRequest restRequest;
 	private RestResourceRepresentationConfig config;
 	private XmlBeansRestParamsTestPropertyHolder params;
 	private PropertyChangeSupport propertyChangeSupport;
+   private SchemaType schemaType;
 
-	public enum Type { REQUEST, RESPONSE, FAULT };
+   public enum Type { REQUEST, RESPONSE, FAULT };
 	
 	public RestRepresentation(RestRequest restResource, RestResourceRepresentationConfig config)
 	{
-		this.restResource = restResource;
+		this.restRequest = restResource;
 		this.config = config;
 		
 		if( config.getParams() == null )
@@ -41,9 +48,9 @@ public class RestRepresentation
 		propertyChangeSupport = new PropertyChangeSupport( this );
 	}
 
-	public RestRequest getRestResource()
+	public RestRequest getRestRequest()
 	{
-		return restResource;
+		return restRequest;
 	}
 
 	public RestResourceRepresentationConfig getConfig()
@@ -91,9 +98,15 @@ public class RestRepresentation
 		config.setMediaType(arg0);
 	}
 
-	public List getStatus()
+   public void setElement( QName name )
+   {
+      config.setElement( name );
+      schemaType = null;
+   }
+
+   public List getStatus()
 	{
-		return config.getStatus();
+		return config.getStatus() == null ? new ArrayList() :  config.getStatus();
 	}
 
 	public void setStatus(List arg0)
@@ -101,12 +114,52 @@ public class RestRepresentation
 		config.setStatus(arg0);
 	}
 
-	public void release()
+   public SchemaType getSchemaType()
+   {
+      if( schemaType == null )
+      {
+         try
+         {
+            if( getElement() != null )
+            {
+               WadlDefinitionContext context = getRestRequest().getResource().getService().getWadlContext();
+               if( context.hasSchemaTypes() )
+               {
+                  SchemaGlobalElement element = context.getSchemaTypeSystem().findElement( getElement() );
+                  if( element != null )
+                     schemaType = element.getType();
+               }
+            }
+         }
+         catch( Exception e )
+         {
+            SoapUI.logError( e );
+         }
+      }
+
+      return schemaType;
+   }
+
+   public void release()
 	{
-		
 	}
 
-	public void addPropertyChangeListener(PropertyChangeListener listener)
+   public void setDescription( String description )
+   {
+      config.setDescription( description );
+   }
+
+   public String getDescription()
+   {
+      return config.getDescription();
+   }
+
+   public QName getElement()
+   {
+      return config.getElement();
+   }
+   
+   public void addPropertyChangeListener(PropertyChangeListener listener)
 	{
 		propertyChangeSupport.addPropertyChangeListener(listener);
 	}

@@ -49,10 +49,10 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
    public static final String RESPONSE_PROPERTY = RestTestRequest.class.getName() + "@response";
    public static final String STATUS_PROPERTY = RestTestRequest.class.getName() + "@status";
 
-   private static ImageIcon validRequestIcon;
-   private static ImageIcon failedRequestIcon;
-   private static ImageIcon disabledRequestIcon;
-   private static ImageIcon unknownRequestIcon;
+   private ImageIcon validRequestIcon;
+   private ImageIcon failedRequestIcon;
+   private ImageIcon disabledRequestIcon;
+   private ImageIcon unknownRequestIcon;
 
    private AssertionStatus currentStatus;
    private HttpTestRequestStep testStep;
@@ -88,17 +88,19 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
 
    protected void initIcons()
    {
-      if( validRequestIcon == null )
-         validRequestIcon = UISupport.createImageIcon( "/valid_request.gif" );
+      boolean isRest = getTestStep() instanceof RestTestRequestStep;
 
-      if( failedRequestIcon == null )
-         failedRequestIcon = UISupport.createImageIcon( "/invalid_request.gif" );
+      validRequestIcon = !isRest ? UISupport.createImageIcon( "/valid_http_request.gif" ) :
+              UISupport.createImageIcon( "/valid_rest_request.gif" );
 
-      if( unknownRequestIcon == null )
-         unknownRequestIcon = UISupport.createImageIcon( "/unknown_request.gif" );
+      failedRequestIcon = !isRest ? UISupport.createImageIcon( "/invalid_http_request.gif" ) :
+              UISupport.createImageIcon( "/invalid_rest_request.gif" );
 
-      if( disabledRequestIcon == null )
-         disabledRequestIcon = UISupport.createImageIcon( "/disabled_request.gif" );
+      unknownRequestIcon = !isRest ? UISupport.createImageIcon( "/unknown_http_request.gif" ) :
+              UISupport.createImageIcon( "/unknown_rest_request.gif" );
+
+      disabledRequestIcon = !isRest ? UISupport.createImageIcon( "/disabled_http_request.gif" ) :
+              UISupport.createImageIcon( "/disabled_rest_request.gif" );
    }
 
    @Override
@@ -344,14 +346,16 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
    @Override
    public RestResource getOperation()
    {
-      return testStep instanceof RestTestRequestStep ? ((RestTestRequestStep)testStep).getResource() : null;
+      return testStep instanceof RestTestRequestStep ? ((RestTestRequestStep) testStep).getResource() : null;
    }
 
    protected static class TestRequestIconAnimator extends RequestIconAnimator<RestTestRequest>
    {
       public TestRequestIconAnimator( RestTestRequest modelItem )
       {
-         super( modelItem, "/request.gif", "/exec_request", 4, "gif" );
+         super( modelItem,
+                 modelItem.getTestStep() instanceof RestTestRequestStep ? "/rest_request.gif" : "/http_request.gif",
+                 modelItem.getTestStep() instanceof RestTestRequestStep ? "/exec_rest_request" : "/exec_http_request", 4, "gif" );
       }
 
       @Override
@@ -439,12 +443,11 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
    }
 
 
-
    public void resolve( ResolveContext context )
    {
       super.resolve( context );
 
       assertionsSupport.resolve( context );
-      
+
    }
 }

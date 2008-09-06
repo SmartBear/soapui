@@ -63,6 +63,7 @@ public class WadlImporter
 
          Element element = ((Document) xmlObject.getDomNode()).getDocumentElement();
 
+         // try to allow older namespaces
          if( element.getLocalName().equals( "application" ) && element.getNamespaceURI().startsWith( "http://research.sun.com/wadl" ) &&
                  !element.getNamespaceURI().equals( Constants.WADL10_NS ) )
          {
@@ -80,6 +81,9 @@ public class WadlImporter
          application = applicationDocument.getApplication();
 
          resources = application.getResources();
+
+         service.setName( getFirstTitle( application.getDocList(), service.getName() ));
+
          String base = resources.getBase();
 
          try
@@ -199,26 +203,37 @@ public class WadlImporter
             RestParamProperty p = request.addProperty( param.getName() );
             initParam( param, p );
          }
+
+         for( RepresentationType representationType : method.getResponse().getRepresentationList() )
+         {
+            addRepresentationFromConfig( request, representationType, RestRepresentation.Type.REQUEST );
+         }
       }
 
       if( method.getResponse() != null )
       {
          for( RepresentationType representationType : method.getResponse().getRepresentationList() )
          {
-            RestRepresentation restRepresentation = request.addNewRepresentation( RestRepresentation.Type.RESPONSE );
-            restRepresentation.setMediaType( representationType.getMediaType() );
-            restRepresentation.setStatus( representationType.getStatus() );
+            addRepresentationFromConfig( request, representationType, RestRepresentation.Type.RESPONSE );
          }
 
          for( RepresentationType representationType : method.getResponse().getFaultList() )
          {
-            RestRepresentation restRepresentation = request.addNewRepresentation( RestRepresentation.Type.FAULT );
-            restRepresentation.setMediaType( representationType.getMediaType() );
-            restRepresentation.setStatus( representationType.getStatus() );
+            addRepresentationFromConfig( request, representationType, RestRepresentation.Type.FAULT );
          }
       }
 
       return request;
+   }
+
+   private void addRepresentationFromConfig( RestRequest request, RepresentationType representationType, RestRepresentation.Type type )
+   {
+      RestRepresentation restRepresentation = request.addNewRepresentation( type );
+      restRepresentation.setMediaType( representationType.getMediaType() );
+      restRepresentation.setElement( representationType.getElement() );
+      restRepresentation.setStatus( representationType.getStatus() );
+      restRepresentation.setId( representationType.getId() );
+      restRepresentation.setDescription( getFirstTitle( representationType.getDocList(), null ));
    }
 
    private void initParam( Param param, RestParamProperty prop )

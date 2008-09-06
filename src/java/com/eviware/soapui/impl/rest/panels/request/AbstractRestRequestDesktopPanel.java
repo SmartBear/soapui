@@ -106,7 +106,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
    @SuppressWarnings( "unchecked" )
    private void extractRepresentation( HttpResponse response, Type type )
    {
-      RestRepresentation[] representations = getRequest().getRepresentations( type );
+      RestRepresentation[] representations = getRequest().getRepresentations( type, null );
       int c = 0;
       for( ; c < representations.length; c++ )
       {
@@ -238,13 +238,16 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
       }
    }
 
-   public class RestRequestDocument extends AbstractXmlDocument
+   public class RestRequestDocument extends AbstractXmlDocument implements PropertyChangeListener
    {
       private final RestRequest modelItem;
+      private boolean updating;
 
       public RestRequestDocument( RestRequest modelItem )
       {
          this.modelItem = modelItem;
+
+         modelItem.addPropertyChangeListener( this );
       }
 
       public RestRequest getRequest()
@@ -259,7 +262,22 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
       public void setXml( String xml )
       {
-         getRequest().setRequestContent( xml );
+         if( !updating )
+         {
+            updating = true;
+            getRequest().setRequestContent( xml );
+            updating = false;
+         }
+      }
+
+      public void propertyChange( PropertyChangeEvent evt )
+      {
+         if( evt.getPropertyName().equals( RestRequest.REQUEST_PROPERTY ) && !updating )
+         {
+            updating = true;
+            fireXmlChanged( (String) evt.getOldValue(), (String) evt.getNewValue() );
+            updating = false;
+         }
       }
    }
 

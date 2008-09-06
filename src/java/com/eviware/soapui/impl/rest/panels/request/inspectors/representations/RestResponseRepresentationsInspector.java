@@ -12,19 +12,6 @@
 
 package com.eviware.soapui.impl.rest.panels.request.inspectors.representations;
 
-import java.awt.BorderLayout;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.table.AbstractTableModel;
-
-import org.jdesktop.swingx.JXTable;
-
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.support.StringUtils;
@@ -32,6 +19,15 @@ import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
+import org.jdesktop.swingx.JXTable;
+
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RestResponseRepresentationsInspector extends AbstractXmlInspector implements PropertyChangeListener
 {
@@ -80,7 +76,7 @@ public class RestResponseRepresentationsInspector extends AbstractXmlInspector i
 		{
 			data.clear();
 			
-			for( RestRepresentation representation : request.getRepresentations( null ))
+			for( RestRepresentation representation : request.getRepresentations( null, null ))
 			{
 				if( representation.getType() != RestRepresentation.Type.REQUEST )
 					data.add( representation );
@@ -89,7 +85,7 @@ public class RestResponseRepresentationsInspector extends AbstractXmlInspector i
 
 		public int getColumnCount()
 		{
-			return 3;
+			return 4;
 		}
 
 		public int getRowCount()
@@ -106,6 +102,7 @@ public class RestResponseRepresentationsInspector extends AbstractXmlInspector i
 			case 0 : return representation.getType().toString();
 			case 1 : return representation.getMediaType();
 			case 2 : return representation.getStatus().toString();
+         case 3 : return representation.getElement() == null ? null : representation.getElement().toString();
 			}
 			
 			return null;
@@ -115,7 +112,7 @@ public class RestResponseRepresentationsInspector extends AbstractXmlInspector i
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex)
 		{
-			return columnIndex > 0;
+			return columnIndex > 0 && columnIndex < 3;
 		}
 
 		@Override
@@ -158,9 +155,10 @@ public class RestResponseRepresentationsInspector extends AbstractXmlInspector i
 			switch( column )
 			{
 			case 0 : return "Type";
-			case 1 : return "Content-Type";
+			case 1 : return "Media-Type";
 			case 2 : return "Status Codes";
-			}
+         case 3 : return "QName";
+         }
 			
 			return null;
 		}

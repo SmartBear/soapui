@@ -75,6 +75,10 @@ permissions and limitations under the License.
       <param name="callback" type="xsd:string" style="query">
         <doc>The name of the callback function to wrap around the JSON data. The following characters are allowed: A-Z a-z 0-9 . [] and _. If output=json has not been requested, this parameter has no effect. More information on the callback can be found in the <html:a href="http://developer.yahoo.com/common/json.html#callbackparam">Yahoo! Developer Network JSON Documentation</html:a>.</doc>
       </param>
+
+       <representation mediaType="application/xml" element="yn:ResultSet">
+        <doc xml:lang="en" title="A list of news items matching the query"/>
+      </representation>
     </request>
     <response>
       <representation mediaType="application/xml" element="yn:ResultSet">

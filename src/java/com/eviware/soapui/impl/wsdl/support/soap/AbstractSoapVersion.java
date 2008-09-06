@@ -12,19 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.support.soap;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.*;
 
 import javax.xml.namespace.QName;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.SchemaTypeLoader;
-import org.apache.xmlbeans.XmlError;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-import org.apache.xmlbeans.XmlValidationError;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Common behaviour for all SOAP Versions
@@ -52,8 +45,10 @@ public abstract class AbstractSoapVersion implements SoapVersion
 		}
 	   catch ( XmlException e )
 	   {
-   		errorList.addAll( e.getErrors() );
-	   	errors.add( XmlError.forMessage( e.getMessage() ));
+         if( e.getErrors() != null )
+            errorList.addAll( e.getErrors() );
+         
+         errors.add( XmlError.forMessage( e.getMessage() ));
 	   }
 	   catch (Exception e)
 	   {

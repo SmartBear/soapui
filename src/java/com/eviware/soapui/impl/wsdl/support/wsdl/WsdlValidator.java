@@ -12,32 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.wsdl.Binding;
-import javax.wsdl.BindingFault;
-import javax.wsdl.BindingOperation;
-import javax.wsdl.Part;
-import javax.wsdl.Port;
-import javax.wsdl.Service;
-import javax.wsdl.extensions.mime.MIMEContent;
-import javax.xml.namespace.QName;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.SchemaGlobalElement;
-import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlError;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlLineNumber;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-import org.apache.xmlbeans.XmlValidationError;
-import org.w3c.dom.Element;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
@@ -45,6 +19,17 @@ import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.*;
+import org.w3c.dom.Element;
+
+import javax.wsdl.*;
+import javax.wsdl.extensions.mime.MIMEContent;
+import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Class for validating SOAP requests/responses against their definition and schema, requires that
@@ -407,7 +392,8 @@ public class WsdlValidator
 		}
       catch( XmlException e )
       {
-      	errors.addAll( e.getErrors() );
+         if( e.getErrors() != null )
+            errors.addAll( e.getErrors() );
       	errors.add( XmlError.forMessage( e.getMessage() ));
       }
 		catch (Exception e)
@@ -500,7 +486,8 @@ public class WsdlValidator
       }
       catch ( XmlException e )
       {
-      	errors.addAll( e.getErrors() );
+         if( e.getErrors() != null )
+            errors.addAll( e.getErrors() );
       	errors.add( XmlError.forMessage( e.getMessage() ));
       }
       catch (Exception e)
@@ -572,7 +559,8 @@ public class WsdlValidator
 		}
       catch (Exception e)
       {
-      	errors.add( XmlError.forMessage( e.getMessage() ));
+         e.printStackTrace(  );
+         errors.add( XmlError.forMessage( e.getMessage() ));
       }
 		
 		return convertErrors( errors );

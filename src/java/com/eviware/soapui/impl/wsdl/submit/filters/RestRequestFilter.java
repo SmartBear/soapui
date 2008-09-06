@@ -117,7 +117,7 @@ public class RestRequestFilter extends AbstractRequestFilter
 
       if( request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod )
       {
-         httpMethod.setRequestHeader("Content-Type", request.getMediaType() );
+         httpMethod.setRequestHeader( "Content-Type", request.getMediaType() );
 
          String requestContent = request.getRequestContent();
          Attachment[] attachments = request.getAttachments();

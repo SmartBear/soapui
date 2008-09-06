@@ -131,7 +131,7 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
    private void importWadl( WsdlProject project, String url )
    {
-      RestService restService = (RestService) project.addNewInterface( dialog.getValue( project.getName() ), RestServiceFactory.REST_TYPE );
+      RestService restService = (RestService) project.addNewInterface( project.getName(), RestServiceFactory.REST_TYPE );
       UISupport.select( restService );
       try
       {

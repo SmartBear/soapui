@@ -15,7 +15,7 @@ package com.eviware.soapui.support.editor.registry;
 import com.eviware.soapui.impl.rest.panels.request.views.content.RestRequestContentViewFactory;
 import com.eviware.soapui.impl.rest.panels.request.views.json.RestJsonResponseViewFactory;
 import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
-import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorFactory;
+import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorViewFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +35,7 @@ public class EditorViewRegistry
    public EditorViewRegistry()
    {
       // this should obviously come from a configuration file..
-      addFactory( new XmlSourceEditorFactory() );
+      addFactory( new XmlSourceEditorViewFactory() );
 //		addFactory( new RestRequestParamsViewFactory() );
       addFactory( new RestRequestContentViewFactory() );
       addFactory( new RestJsonResponseViewFactory() );

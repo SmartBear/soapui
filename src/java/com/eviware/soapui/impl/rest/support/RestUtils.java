@@ -68,12 +68,20 @@ public class RestUtils
                   int ix = matrixParam.indexOf( '=' );
                   if( ix == -1 )
                   {
-                     params.addProperty( URLDecoder.decode( matrixParam, "Utf-8" ) ).setStyle( ParameterStyle.MATRIX );
+                     String name = URLDecoder.decode( matrixParam, "Utf-8" );
+                     if( !params.hasProperty( name ) )
+                        params.addProperty( name ).setStyle( ParameterStyle.MATRIX );
                   }
                   else
                   {
-                     String name = matrixParam.substring( 0, ix );
-                     RestParamProperty property = params.addProperty( URLDecoder.decode( name, "Utf-8" ) );
+
+                     String name = URLDecoder.decode( matrixParam.substring( 0, ix ), "Utf-8" );
+                     RestParamProperty property = params.getProperty( name );
+                     if( property == null )
+                     {
+                        property = params.addProperty( name );
+                     }
+
                      property.setStyle( ParameterStyle.MATRIX );
                      property.setValue( URLDecoder.decode( matrixParam.substring( ix + 1 ), "Utf-8" ) );
                   }
@@ -81,11 +89,18 @@ public class RestUtils
             }
 
             Integer.parseInt( item );
-            RestParamProperty prop = params.addProperty( "param" + templateParamCount++ );
-            prop.setStyle( ParameterStyle.TEMPLATE );
-            prop.setValue( item );
 
-            item = "{" + prop.getName() + "}";
+            String name = "param" + templateParamCount++;
+            RestParamProperty property = params.getProperty( name );
+            if( !params.hasProperty( name ) )
+            {
+               property = params.addProperty( name );
+            }
+
+            property.setStyle( ParameterStyle.TEMPLATE );
+            property.setValue( item );
+
+            item = "{" + property.getName() + "}";
          }
          catch( Exception e )
          {
@@ -106,12 +121,22 @@ public class RestUtils
                int ix = item.indexOf( '=' );
                if( ix == -1 )
                {
-                  params.addProperty( URLDecoder.decode( item, "Utf-8" ) ).setStyle( ParameterStyle.QUERY );
+                  String name = URLDecoder.decode( item, "Utf-8" );
+
+                  if( !params.hasProperty( name ) )
+                  {
+                     params.addProperty( name ).setStyle( ParameterStyle.QUERY );
+                  }
                }
                else
                {
-                  String name = item.substring( 0, ix );
-                  RestParamProperty property = params.addProperty( URLDecoder.decode( name, "Utf-8" ) );
+                  String name = URLDecoder.decode( item.substring( 0, ix ), "Utf-8" );
+                  RestParamProperty property = params.getProperty( name );
+                  if( property == null )
+                  {
+                     property = params.addProperty( name );
+                  }
+
                   property.setStyle( ParameterStyle.QUERY );
                   property.setValue( URLDecoder.decode( item.substring( ix + 1 ), "Utf-8" ) );
                }

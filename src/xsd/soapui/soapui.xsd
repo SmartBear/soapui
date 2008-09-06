@@ -189,7 +189,7 @@
 			<xsd:enumeration value="Solicit-Response"></xsd:enumeration>
 		</xsd:restriction>
 	</xsd:simpleType>
-	
+
 	<xsd:complexType name="AbstractRequest" abstract="true">
 		<xsd:complexContent>
 			<xsd:extension base="tns:ModelItem">
@@ -213,7 +213,7 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	
+
 	<xsd:complexType name="WsdlRequest">
 		<xsd:complexContent>
 			<xsd:extension base="tns:AbstractRequest">
@@ -552,7 +552,7 @@
 			<xsd:element name="targetStep" type="xsd:string"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-	
+
 	<xsd:simpleType name="GotoConditionType">
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="XPATH"></xsd:enumeration>
@@ -582,7 +582,7 @@
 	</xsd:simpleType>
 
 	<xsd:element name="soapui-settings" type="tns:Settings"/>
-	
+
 	<xsd:complexType name="Settings">
 		<xsd:sequence>
 			<xsd:element name="setting" type="tns:Setting"
@@ -648,7 +648,7 @@
 			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-	
+
 	<xsd:complexType name="StringList">
 		<xsd:sequence>
 			<xsd:element name="entry" maxOccurs="unbounded" minOccurs="0" type="xsd:string"/>
@@ -870,7 +870,7 @@
 			</xsd:element>
             <xsd:element name="actionGroup" type="tns:SoapUIActionGroup" maxOccurs="unbounded" minOccurs="0">
             </xsd:element>
-            
+
 
 		</xsd:sequence>
 	</xsd:complexType>
@@ -915,7 +915,7 @@
 			<xsd:enumeration value="REPLACE"></xsd:enumeration>
 		</xsd:restriction>
 	</xsd:simpleType>
-	
+
 	<xsd:complexType name="MockResponseStep">
 		<xsd:sequence>
 			<xsd:element name="interface" type="xsd:string"></xsd:element>
@@ -945,7 +945,7 @@
 			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-	
+
 	<xsd:complexType name="DataSourceStep">
 		<xsd:sequence>
 			<xsd:element name="dataSource" type="tns:DataSource">
@@ -982,7 +982,7 @@
 			<xsd:element name="targetStep" type="xsd:string"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-	
+
 
 	<xsd:complexType name="CompressedString">
 
@@ -1008,9 +1008,9 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	
+
 	<xsd:element name="soapui-listeners" type="tns:SoapUIListeners"/>
- 
+
 <xsd:complexType name="SoapUIListeners">
   <xsd:sequence>
    <xsd:element name="listener" type="tns:SoapUIListener" minOccurs="0" maxOccurs="unbounded"/>
@@ -1067,7 +1067,7 @@
 			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-	
+
 	<xsd:complexType name="RunTestSuiteStep">
 		<xsd:sequence>
 			<xsd:element name="targetTestSuite" type="xsd:string"></xsd:element>
@@ -1075,7 +1075,7 @@
 			<xsd:element name="returnProperties" type="tns:StringList"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-	
+
 
 	<xsd:complexType name="DataSinkStep">
 		<xsd:sequence>
@@ -1085,7 +1085,7 @@
             <xsd:element name="properties" type="tns:PropertiesType"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-	
+
     <xsd:complexType name="DataSink">
     	<xsd:complexContent>
     		<xsd:extension base="tns:RegistryEntry"></xsd:extension>
@@ -1126,7 +1126,7 @@
     		</xsd:extension>
     	</xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="WSSCrypto">
     	<xsd:complexContent>
     		<xsd:extension base="tns:RegistryEntry">
@@ -1327,7 +1327,7 @@
     	<xsd:attribute name="service" type="xsd:string"></xsd:attribute>
     	<xsd:attribute name="resourcePath" type="xsd:string"></xsd:attribute>
     </xsd:complexType>
-    
+
 
     <xsd:complexType name="RestParameter">
     	<xsd:sequence>
@@ -1378,7 +1378,8 @@
     		<xsd:element name="status" type="tns:statusCodesType"></xsd:element>
     		<xsd:element name="params" type="tns:RestParameters"></xsd:element>
     		<xsd:element name="element" type="xsd:QName"></xsd:element>
-    	</xsd:sequence>
+          <xsd:element name="description" type="xsd:string"></xsd:element>
+       </xsd:sequence>
     	<xsd:attribute name="id" type="xsd:string"></xsd:attribute>
     	<xsd:attribute name="type" type="tns:RestResourceRepresentationType"></xsd:attribute>
     </xsd:complexType>

@@ -12,19 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.monitor;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpParser;
-import org.apache.xmlbeans.XmlObject;
-import org.w3c.dom.Document;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -40,6 +27,18 @@ import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HttpParser;
+import org.apache.xmlbeans.XmlObject;
+import org.w3c.dom.Document;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 {
@@ -415,4 +414,14 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 	{
 		return responseWssResult;
 	}
+
+   public int getResponseStatusCode()
+   {
+      return 0;  //To change body of implemented methods use File | Settings | File Templates.
+   }
+
+   public String getResponseContentType()
+   {
+      return null;  //To change body of implemented methods use File | Settings | File Templates.
+   }
 }

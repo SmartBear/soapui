@@ -108,14 +108,16 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
       return result.toArray( new MessagePart[result.size()] );
    }
 
-   public RestRepresentation[] getRepresentations( RestRepresentation.Type type )
+   public RestRepresentation[] getRepresentations( RestRepresentation.Type type, String mediaType )
    {
       List<RestRepresentation> result = new ArrayList<RestRepresentation>();
 
       for( RestRepresentation representation : representations )
       {
-         if( type == null || type == representation.getType() )
+         if( (type == null || type == representation.getType()) && (mediaType == null || mediaType.equals( representation.getMediaType() )) )
+         {
             result.add( representation );
+         }
       }
 
       return result.toArray( new RestRepresentation[result.size()] );

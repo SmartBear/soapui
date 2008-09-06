@@ -12,56 +12,17 @@
 
 package com.eviware.soapui.impl.wsdl.mock;
 
-import java.beans.PropertyChangeListener;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.zip.GZIPOutputStream;
-
-import javax.activation.DataHandler;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.PreencodedMimeBodyPart;
-import javax.swing.ImageIcon;
-import javax.wsdl.BindingOperation;
-import javax.wsdl.Message;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.SchemaGlobalElement;
-import org.apache.xmlbeans.SchemaType;
-import org.w3c.dom.Document;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.HeaderConfig;
 import com.eviware.soapui.config.MockResponseConfig;
-import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
-import com.eviware.soapui.impl.wsdl.MutableWsdlAttachmentContainer;
-import com.eviware.soapui.impl.wsdl.WsdlContentPart;
-import com.eviware.soapui.impl.wsdl.WsdlHeaderPart;
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.*;
 import com.eviware.soapui.impl.wsdl.submit.filters.RemoveEmptyContentRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BodyPartAttachment;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.MimeMessageMockResponseEntity;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.MockResponseDataSource;
-import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
-import com.eviware.soapui.impl.wsdl.support.FileAttachment;
-import com.eviware.soapui.impl.wsdl.support.MapTestPropertyHolder;
-import com.eviware.soapui.impl.wsdl.support.MessageXmlObject;
-import com.eviware.soapui.impl.wsdl.support.MessageXmlPart;
-import com.eviware.soapui.impl.wsdl.support.MockFileAttachment;
-import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
-import com.eviware.soapui.impl.wsdl.support.WsdlAttachment;
+import com.eviware.soapui.impl.wsdl.support.*;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
@@ -74,8 +35,8 @@ import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
+import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockRunContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -91,6 +52,27 @@ import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.SchemaGlobalElement;
+import org.apache.xmlbeans.SchemaType;
+import org.w3c.dom.Document;
+
+import javax.activation.DataHandler;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.PreencodedMimeBodyPart;
+import javax.swing.*;
+import javax.wsdl.BindingOperation;
+import javax.wsdl.Message;
+import java.beans.PropertyChangeListener;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.*;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * A WsdlMockResponse contained by a WsdlMockOperation
@@ -272,7 +254,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 
 			result.setResponseContent( responseContent );
 
-			setMockResult( result );
+         setMockResult( result );
 
 			return mockResult;
 		}
@@ -627,18 +609,22 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			if( SoapUtils.isSoapFault( responseContent, request.getSoapVersion() ) )
 			{
 				request.getHttpResponse().setStatus( 500 );
-			}
+            response.setResponseStatus( 500 );
+         }
 			else
 			{
 				request.getHttpResponse().setStatus( 200 );
-			}
+            response.setResponseStatus( 200 );
+         }
 		}
 		else
 		{
 			try
 			{
-				request.getHttpResponse().setStatus( Integer.parseInt( status ) );
-			}
+            int statusCode = Integer.parseInt( status );
+            request.getHttpResponse().setStatus( statusCode );
+            response.setResponseStatus( statusCode );
+         }
 			catch( RuntimeException e )
 			{
 				SoapUI.logError( e );

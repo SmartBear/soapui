@@ -13,8 +13,8 @@
 package com.eviware.soapui.impl.support.components;
 
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorFactory;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
+import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorViewFactory;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 
@@ -41,6 +41,6 @@ public abstract class ModelItemXmlEditor<T extends ModelItem, T2 extends XmlDocu
 
 	public final XmlSourceEditorView getSourceEditor()
 	{
-		return ( XmlSourceEditorView ) getView( XmlSourceEditorFactory.VIEW_ID );
+		return ( XmlSourceEditorView ) getView( XmlSourceEditorViewFactory.VIEW_ID );
 	}
 }

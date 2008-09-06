@@ -48,7 +48,7 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
 
    public RestRequestStepFactory()
    {
-      super(RESTREQUEST_TYPE, "REST Test Request", "Submits a REST-style Request and validates its response", "/request.gif");
+      super(RESTREQUEST_TYPE, "REST Test Request", "Submits a REST-style Request and validates its response", "/rest_request.gif");
    }
 
    public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest)
@@ -61,7 +61,7 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
       RestRequestStepConfig requestStepConfig = RestRequestStepConfig.Factory.newInstance();
 
       requestStepConfig.setService(request.getOperation().getInterface().getName());
-      requestStepConfig.setResourcePath(request.getOperation().getFullPath());
+      requestStepConfig.setResourcePath(request.getOperation().getPath());
       requestStepConfig.addNewRestRequest().set(request.getConfig().copy());
 
       TestStepConfig testStep = TestStepConfig.Factory.newInstance();
@@ -76,7 +76,7 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
       RestRequestStepConfig requestStepConfig = RestRequestStepConfig.Factory.newInstance();
 
       requestStepConfig.setService(resource.getInterface().getName());
-      requestStepConfig.setResourcePath(resource.getFullPath());
+      requestStepConfig.setResourcePath(resource.getPath());
 
       RestMethodConfig testRequestConfig = requestStepConfig.addNewRestRequest();
 

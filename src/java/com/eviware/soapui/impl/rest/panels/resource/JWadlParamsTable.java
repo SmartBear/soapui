@@ -3,6 +3,8 @@ package com.eviware.soapui.impl.rest.panels.resource;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.*;
@@ -117,11 +119,22 @@ public class JWadlParamsTable extends JPanel
 		toolbar.addSeparator();
 		toolbar.add( UISupport.createToolbarButton( movePropertyDownAction, false ));
 		toolbar.add( UISupport.createToolbarButton( movePropertyUpAction, false ));
-		
-		return toolbar;
+		toolbar.addSeparator();
+
+      insertAdditionalButtons( toolbar );
+
+      toolbar.addGlue();
+
+      toolbar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction( HelpUrls.WADL_PARAMS_HELP_URL )));
+
+      return toolbar;
 	}
-	
-	private class AddParamAction extends AbstractAction
+
+   protected void insertAdditionalButtons( JXToolBar toolbar )
+   {
+   }
+
+   private class AddParamAction extends AbstractAction
 	{
 		public AddParamAction()
 		{

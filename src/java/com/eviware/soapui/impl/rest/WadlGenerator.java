@@ -170,19 +170,19 @@ public class WadlGenerator
 
       if (request.hasRequestBody())
       {
-         for (RestRepresentation representation : request.getRepresentations(RestRepresentation.Type.REQUEST))
+         for (RestRepresentation representation : request.getRepresentations(RestRepresentation.Type.REQUEST, null))
          {
             generateRepresentation(requestConfig.addNewRepresentation(), representation);
          }
       }
 
       Response responseConfig = methodConfig.addNewResponse();
-      for (RestRepresentation representation : request.getRepresentations(RestRepresentation.Type.RESPONSE))
+      for (RestRepresentation representation : request.getRepresentations(RestRepresentation.Type.RESPONSE, null))
       {
          generateRepresentation(responseConfig.addNewRepresentation(), representation);
       }
 
-      for (RestRepresentation representation : request.getRepresentations(RestRepresentation.Type.FAULT))
+      for (RestRepresentation representation : request.getRepresentations(RestRepresentation.Type.FAULT, null))
       {
          generateRepresentation(responseConfig.addNewFault(), representation);
       }

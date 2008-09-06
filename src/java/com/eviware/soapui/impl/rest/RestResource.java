@@ -12,11 +12,6 @@
 
 package com.eviware.soapui.impl.rest;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.RestResourceConfig;
 import com.eviware.soapui.impl.rest.support.RestUtils;
@@ -26,13 +21,18 @@ import com.eviware.soapui.impl.support.AbstractHttpOperation;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
 import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.iface.Request;
-import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * WSDL implementation of Operation, maps to a WSDL BindingOperation
@@ -430,4 +430,10 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	{
 		return resources.get( c );
 	}
+
+
+   public RestService getService()
+   {
+      return (RestService) (getParentResource() == null ? getParent() : getParentResource().getService());
+   }
 }

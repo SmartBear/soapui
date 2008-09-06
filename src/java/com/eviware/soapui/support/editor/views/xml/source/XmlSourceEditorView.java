@@ -12,30 +12,6 @@
 
 package com.eviware.soapui.support.editor.views.xml.source;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComponent;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
-import javax.swing.text.Document;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.LineNumbersPanel;
 import com.eviware.soapui.settings.UISettings;
@@ -52,6 +28,21 @@ import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.support.xml.actions.FormatXmlAction;
 import com.eviware.soapui.support.xml.actions.LoadXmlTextAreaAction;
 import com.eviware.soapui.support.xml.actions.SaveXmlTextAreaAction;
+import org.apache.xmlbeans.XmlError;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+
+import javax.swing.*;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Default "XML" source editor view in soapUI
@@ -80,7 +71,7 @@ public class XmlSourceEditorView extends AbstractXmlEditorView<XmlDocument> impl
 
 	public XmlSourceEditorView( XmlEditor<XmlDocument> xmlEditor )
    {
-   	super( "XML", xmlEditor, XmlSourceEditorFactory.VIEW_ID );
+   	super( "XML", xmlEditor, XmlSourceEditorViewFactory.VIEW_ID );
    }
 	
 	protected void buildUI()
@@ -267,7 +258,32 @@ public class XmlSourceEditorView extends AbstractXmlEditorView<XmlDocument> impl
 
 	protected ValidationError[] validateXml( String xml )
 	{
-		return null;
+      try
+      {
+         XmlObject.Factory.parse( xml, new XmlOptions().setLoadLineNumbers() );
+      }
+      catch( XmlException e )
+      {
+         List<ValidationError> result = new ArrayList<ValidationError>();
+
+         if( e.getErrors() != null )
+         {
+            for( Object error : e.getErrors())
+            {
+               if( error instanceof XmlError )
+                  result.add( new com.eviware.soapui.model.testsuite.AssertionError( (XmlError) error ));
+               else
+                  result.add( new com.eviware.soapui.model.testsuite.AssertionError( error.toString() ));
+            }
+         }
+
+         if( result.isEmpty())
+           result.add( new com.eviware.soapui.model.testsuite.AssertionError( e.toString() ));
+
+         return result.toArray( new ValidationError[result.size()] );
+      }
+
+      return null;
 	}
 	
 	public class ValidateMessageXmlAction extends AbstractAction

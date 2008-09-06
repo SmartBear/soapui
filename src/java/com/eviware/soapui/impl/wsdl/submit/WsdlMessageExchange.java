@@ -12,13 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.submit;
 
-import java.util.Vector;
-
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
-import com.eviware.soapui.model.iface.MessageExchange;
 
-public interface WsdlMessageExchange extends MessageExchange
+import java.util.Vector;
+
+public interface WsdlMessageExchange extends HttpMessageExchange
 {
 	public abstract SoapVersion getSoapVersion();
 

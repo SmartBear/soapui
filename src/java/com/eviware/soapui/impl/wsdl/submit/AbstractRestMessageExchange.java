@@ -12,12 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.submit;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * MessageExchange for WSDL-based exchanges
@@ -25,7 +24,7 @@ import com.eviware.soapui.model.iface.Attachment;
  * @author ole.matzura
  */
 
-public abstract class AbstractRestMessageExchange<T extends ModelItem> extends AbstractMessageExchange<T> 
+public abstract class AbstractRestMessageExchange<T extends ModelItem> extends AbstractMessageExchange<T> implements RestMessageExchange 
 {
 	public AbstractRestMessageExchange(T modelItem)
 	{
@@ -38,8 +37,6 @@ public abstract class AbstractRestMessageExchange<T extends ModelItem> extends A
 		return responseContent != null && responseContent.trim().length() > 0;
 	}
 	
-	public abstract RestResource getResource();
-
 	public Attachment[] getResponseAttachmentsForPart( String name )
 	{
 		List<Attachment> result = new ArrayList<Attachment>();

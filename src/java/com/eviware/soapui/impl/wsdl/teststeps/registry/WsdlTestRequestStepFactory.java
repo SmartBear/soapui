@@ -12,16 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.registry;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.CredentialsConfig;
-import com.eviware.soapui.config.RequestStepConfig;
-import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.config.WsaConfigConfig;
-import com.eviware.soapui.config.WsdlRequestConfig;
+import com.eviware.soapui.config.*;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
@@ -42,6 +34,9 @@ import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Factory for WsdlTestRequestSteps
@@ -85,7 +80,8 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory
       testRequestConfig.addNewRequest().setStringValue( request.getRequestContent() );
       testRequestConfig.setOutgoingWss( request.getOutgoingWss() );
       testRequestConfig.setIncomingWss( request.getIncomingWss() );
-      testRequestConfig.setWsaConfig((WsaConfigConfig) request.getConfig().getWsaConfig().copy());
+      if( request.getConfig().isSetWsaConfig())
+         testRequestConfig.setWsaConfig((WsaConfigConfig) request.getConfig().getWsaConfig().copy());
 
       if( (CredentialsConfig) request.getConfig().getCredentials() != null )
       {
@@ -93,7 +89,6 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory
       }
 
       testRequestConfig.setWssPasswordType( request.getConfig().getWssPasswordType() );
-      //testRequestConfig.setSettings( request.getConfig().getSettings() );
       
       TestStepConfig testStep = TestStepConfig.Factory.newInstance();
       testStep.setType( REQUEST_TYPE );

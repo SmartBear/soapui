@@ -355,4 +355,14 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
    {
       return response == null ? null : response.getWssResult();
    }
+
+   public int getResponseStatusCode()
+   {
+      return response == null ? 0 : response.getStatusCode();
+   }
+
+   public String getResponseContentType()
+   {
+      return response == null ? null : response.getContentType();
+   }
 }
