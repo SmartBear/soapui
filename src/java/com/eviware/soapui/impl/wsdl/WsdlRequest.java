@@ -102,11 +102,10 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
       }
    }
    
-   
 	public void updateConfig(WsdlRequestConfig request)
 	{
 		setConfig( request );
-	}
+   }
    
    protected void initEndpoints()
    {

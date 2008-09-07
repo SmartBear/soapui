@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.wsdl.teststeps;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
@@ -309,13 +308,6 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
       super.updateConfig( request );
 
       assertionsSupport.refresh();
-
-      List<AttachmentConfig> attachmentConfigs = getConfig().getAttachmentList();
-      for( int i = 0; i < attachmentConfigs.size(); i++ )
-      {
-         AttachmentConfig config = attachmentConfigs.get( i );
-         getAttachmentsList().get( i ).updateConfig( config );
-      }
    }
 
    @Override

@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.rest;
 
+import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.RestResourceRepresentationConfig;
 import com.eviware.soapui.impl.rest.RestRepresentation.Type;
@@ -24,7 +25,6 @@ import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.ModelItem;
@@ -429,7 +429,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
    public void setResponse( HttpResponse response, SubmitContext context )
    {
-      ((BaseHttpResponse) response).setProperty( REST_XML_RESPONSE, createXmlResponse( response ) );
+      response.setProperty( REST_XML_RESPONSE, createXmlResponse( response ) );
       super.setResponse( response, context );
    }
 
@@ -459,12 +459,26 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
    public void updateConfig( RestMethodConfig request )
    {
+      setConfig( request );
+
+      params.resetPropertiesConfig( request.getParameters() );
+
+      for( int c = 0; c < request.sizeOfRepresentationArray(); c++ )
+      {
+         representations.get( c ).setConfig( request.getRepresentationArray( c ));
+      }
+
+      List<AttachmentConfig> attachmentConfigs = getConfig().getAttachmentList();
+      for( int i = 0; i < attachmentConfigs.size(); i++ )
+      {
+         AttachmentConfig config = attachmentConfigs.get( i );
+         getAttachmentsList().get( i ).updateConfig( config );
+      }
    }
 
    public RestParamProperty addProperty( RestParamProperty prop )
    {
       return params.addProperty( prop );
-
    }
 
    public RestRepresentation addNewRepresentation( Type type )

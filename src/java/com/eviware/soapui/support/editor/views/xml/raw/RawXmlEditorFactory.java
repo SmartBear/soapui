@@ -244,18 +244,19 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		String status = headers.get( "#status#");
 		if( status != null )
 			result.append(  status ).append( '\n' );
-		
+
 		for( String header : headers.keySet() )
 		{
 			if( header.equals( "#status#" ))
 				continue;
-			
+
 			result.append( header ).append( ": ").append( headers.get( header )).append( '\n' );
 		}
 		result.append(  '\n' );
-		
-		
-		result.append( new String( data ).trim());
+
+
+      if( data != null )
+         result.append( new String( data ).trim());
 		
 		return result.toString().trim();
 	}

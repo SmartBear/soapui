@@ -59,9 +59,9 @@ public class RestTestRequestPanelBuilder extends EmptyPanelBuilder<RestTestReque
       
       table.addProperty( "Bind Address", "bindAddress", true );
 
-      table.addProperty( "Service", "service" );
-   	table.addProperty( "Resource", "resourcePath" );
-   	
+//      table.addProperty( "Service", "service" );
+//   	table.addProperty( "Resource", "resourcePath" );
+
    	// security / authentication
    	table.addProperty( "Username", "username", true );
    	table.addProperty( "Password", "password", true );
