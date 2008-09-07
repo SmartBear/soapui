@@ -75,10 +75,10 @@ public abstract class AbstractDefinitionCache<T extends AbstractInterface> imple
    {
       definitionCache = reinit( container );
 
-      definitionCache.setRootPart( loader.getBaseURI() );
       definitionCache.setType( DefinitionCacheTypeConfig.TEXT );
 
       Map<String, XmlObject> urls = SchemaUtils.getDefinitionParts( loader );
+      definitionCache.setRootPart( loader.getFirstNewURI() );
 
       for( Iterator<String> i = urls.keySet().iterator(); i.hasNext(); )
       {

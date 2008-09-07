@@ -24,4 +24,8 @@ public interface DefinitionLoader extends SchemaLoader
    boolean isAborted();
 
    boolean abort();
+   
+   void setNewBaseURI(String uri);
+   
+   String getFirstNewURI();
 }

@@ -91,11 +91,13 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 		
 		if( urlCache.containsKey( url ))
 		{
+			setNewBaseURI(url);
 			return new ByteArrayInputStream( urlCache.get( url ) );
 		}
 		
 		if( url.startsWith( "file:" ))
 		{
+			setNewBaseURI(url);
 			return new URL( url ).openStream();
 		}
 		
@@ -140,6 +142,11 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 					}
 					
 					urlCache.put(url, content);
+					String newUrl = getMethod.getURI().getURI();
+					if (!url.equals( newUrl ))
+						log.info( "BaseURI was redirected to [" + newUrl + "]");
+					setNewBaseURI(newUrl);
+					urlCache.put(newUrl, content);
 					return new ByteArrayInputStream(content);
 				}
 				else

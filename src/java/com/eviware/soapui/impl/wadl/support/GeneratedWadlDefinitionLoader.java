@@ -36,4 +36,14 @@ public class GeneratedWadlDefinitionLoader extends AbstractDefinitionLoader
    {
       return restService.getName() + ".wadl";
    }
+	
+	public void setNewBaseURI(String uri)
+	{
+		// not implemented
+	}
+	
+	public String getFirstNewURI()
+	{
+		return null; // not implemented
+	}
 }

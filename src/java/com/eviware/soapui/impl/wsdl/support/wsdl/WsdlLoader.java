@@ -33,7 +33,8 @@ import java.net.URL;
 
 public abstract class WsdlLoader extends AbstractDefinitionLoader implements WsdlDefinitionLoader
 {
-	private final String url;
+	private String url;
+	private String firstNewURI;
 	private String last;
 	private String username;
 	private String password;
@@ -118,7 +119,21 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 //		log.debug( "Returning baseURI [" + url + "]" );
 		return url;
 	}
-
+	
+	public void setNewBaseURI( String newUrl )
+	{
+		if (firstNewURI == null)
+		{
+			firstNewURI = newUrl;
+		}
+		url = newUrl;
+	}
+	
+	public String getFirstNewURI()
+	{
+		return firstNewURI == null ? url : firstNewURI;
+	}
+	 
 	public InputSource getImportInputSource(String parent, String imp)
 	{
 		if( isAbsoluteUrl( imp ))

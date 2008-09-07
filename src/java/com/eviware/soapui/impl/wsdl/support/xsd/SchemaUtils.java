@@ -460,14 +460,16 @@ public class SchemaUtils
       return result;
    }
 
-   public static void getDefinitionParts( String wsdlUrl, Map<String, XmlObject> existing, SchemaLoader loader ) throws Exception
+   public static void getDefinitionParts( String origWsdlUrl, Map<String, XmlObject> existing, SchemaLoader loader ) throws Exception
    {
+	   String wsdlUrl = origWsdlUrl;
       if( existing.containsKey( wsdlUrl ) )
          return;
 
       XmlObject xmlObject = loader.loadXmlObject( wsdlUrl, null );
-      existing.put( wsdlUrl, xmlObject );
-
+      existing.put( loader.getBaseURI(), xmlObject );
+      wsdlUrl = loader.getBaseURI();
+      
       selectDefinitionParts( wsdlUrl, existing, loader, xmlObject, "declare namespace s='" + Constants.WSDL11_NS + "' .//s:import/@location" );
       selectDefinitionParts( wsdlUrl, existing, loader, xmlObject, "declare namespace s='" + Constants.WADL10_NS + "' .//s:grammars/s:include/@href" );
       selectDefinitionParts( wsdlUrl, existing, loader, xmlObject, "declare namespace s='" + Constants.XSD_NS + "' .//s:import/@schemaLocation" );
