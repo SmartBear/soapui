@@ -10,10 +10,9 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.rest.actions.service;
+package com.eviware.soapui.impl.rest.actions.resource;
 
 import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
@@ -25,22 +24,23 @@ import com.eviware.x.form.XFormDialog;
  * @author Ole.Matzura
  */
 
-public class NewRestResourceAction extends NewRestResourceActionBase<RestService>
+public class NewRestChildResourceAction extends NewRestResourceActionBase<RestResource>
 {
-   public static final String SOAPUI_ACTION_ID = "NewRestResourceAction";
-   public static final MessageSupport messages = MessageSupport.getMessages( NewRestResourceAction.class );
+   public static final String SOAPUI_ACTION_ID = "NewRestChildResourceAction";
+   public static final MessageSupport messages = MessageSupport.getMessages( NewRestChildResourceAction.class );
+   private XFormDialog dialog;
 
-   public NewRestResourceAction()
+   public NewRestChildResourceAction()
    {
       super( messages.get( "title" ), messages.get( "description" ) );
    }
 
-   protected RestResource createRestResource( RestService service, String path, XFormDialog dialog )
+   protected RestResource createRestResource( RestResource parentResource, String path, XFormDialog dialog )
    {
       RestResource possibleParent = null;
-      String p = service.getBasePath() + path;
+      String p = parentResource.getFullPath() + path;
 
-      for( RestResource resource : service.getAllResources() )
+      for( RestResource resource : parentResource.getAllChildResources() )
       {
          if( p.startsWith( resource.getFullPath() ) )
          {
@@ -70,10 +70,9 @@ public class NewRestResourceAction extends NewRestResourceActionBase<RestService
       }
       else
       {
-         resource = service.addNewResource( dialog.getValue( Form.RESOURCENAME ), path );
+         resource = parentResource.addNewChildResource( dialog.getValue( Form.RESOURCENAME ), path );
       }
 
       return resource;
    }
-
 }

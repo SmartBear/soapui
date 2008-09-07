@@ -12,9 +12,9 @@
 
 package com.eviware.soapui.model.iface;
 
-import java.util.List;
-
 import com.eviware.soapui.model.ModelItem;
+
+import java.util.List;
 
 /**
  * Operation interface
@@ -26,17 +26,9 @@ public interface Operation extends ModelItem
 {
    public final static String ACTION_PROPERTY = Operation.class.getName() + "@action";
    
-   public boolean isOneWay();
-   
-   public boolean isNotification();
-
-   public boolean isSolicitResponse();
-
-   public boolean isRequestResponse();
-
    public boolean isUnidirectional();
-   
-   public boolean isBidirectional();   
+
+   public boolean isBidirectional();
    
    public Request getRequestAt( int index );
    

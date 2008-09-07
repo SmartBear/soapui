@@ -12,10 +12,20 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsa;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.UUID;
-
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.AnonymousTypeConfig;
+import com.eviware.soapui.config.MustUnderstandTypeConfig;
+import com.eviware.soapui.config.WsaVersionTypeConfig;
+import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
+import com.eviware.soapui.settings.WsaSettings;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Element;
@@ -23,20 +33,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.AnonymousTypeConfig;
-import com.eviware.soapui.config.MustUnderstandTypeConfig;
-import com.eviware.soapui.config.WsaVersionTypeConfig;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
-import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
-import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.settings.WsaSettings;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.xml.XmlUtils;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.UUID;
 
 /**
  * WS Addressing-related utility-methods..
@@ -50,7 +49,7 @@ public class WsaUtils
 	public static final String WS_A_VERSION_200408 = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
 
 	SoapVersion soapVersion;
-	Operation operation;
+	WsdlOperation operation;
 	WsaBuilder builder;
 	XmlObject xmlContentObject;
 	// element to add every property to
@@ -64,7 +63,7 @@ public class WsaUtils
 	XmlObject xmlHeaderObject;
 	ArrayList<Node> headerWsaElementList;
 
-	public WsaUtils(String content, SoapVersion soapVersion, Operation operation)
+	public WsaUtils(String content, SoapVersion soapVersion, WsdlOperation operation)
 	{
 		this.soapVersion = soapVersion;
 		this.operation = operation;
@@ -247,7 +246,6 @@ public class WsaUtils
 	 * Adds ws-a headers to mock response from editor-menu in this case there is
 	 * no request included and only values from ws-a inspector, if any, are used
 	 * 
-	 * @param content
 	 * @param wsaContainer
 	 * @return
 	 */

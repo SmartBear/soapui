@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.model.iface;
 
+import com.eviware.soapui.impl.support.DefinitionContext;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
 
@@ -56,4 +57,6 @@ public interface Interface extends ModelItem
    public void removeEndpoint(String ep);
 
    public void changeEndpoint(String endpoint, String string);
+
+   public DefinitionContext getDefinitionContext();
 }

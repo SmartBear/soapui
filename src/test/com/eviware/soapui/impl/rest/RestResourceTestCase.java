@@ -12,9 +12,8 @@
 
 package com.eviware.soapui.impl.rest;
 
-import junit.framework.TestCase;
-
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import junit.framework.TestCase;
 
 public class RestResourceTestCase extends TestCase
 {
@@ -31,7 +30,7 @@ public class RestResourceTestCase extends TestCase
 		assertEquals( "id", resource.getDefaultParams()[0].getName() );
 		assertEquals( "/{id}/test", resource.getFullPath() );
 		
-		RestResource subResource = resource.addNewResource("Child", "{test}/test" );
+		RestResource subResource = resource.addNewChildResource("Child", "{test}/test" );
 		assertEquals( "/{id}/test/{test}/test", subResource.getFullPath() );
 	}
 }

@@ -50,5 +50,7 @@ public interface Response
 
    public String getProperty( String name );
 
+   public void setProperty( String name, String value );
+
    public String [] getPropertyNames();
 }

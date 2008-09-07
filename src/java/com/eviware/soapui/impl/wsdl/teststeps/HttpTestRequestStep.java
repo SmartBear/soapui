@@ -256,10 +256,10 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
          if (response != null)
          {
             testStepResult.setRequestContent(response.getRequestContent());
-            testStepResult.getProperties().put( "URL", response.getURL().toString() );
-            testStepResult.getProperties().put( "Method", response.getMethod().toString());
-            testStepResult.getProperties().put( "StatusCode", String.valueOf( response.getStatusCode() ) );
-            testStepResult.getProperties().put( "HTTP Version", response.getHttpVersion() );
+            testStepResult.addProperty( "URL", response.getURL() == null ? "<missing>" : response.getURL().toString() );
+            testStepResult.addProperty( "Method", String.valueOf( response.getMethod()) );
+            testStepResult.addProperty( "StatusCode", String.valueOf( response.getStatusCode() ) );
+            testStepResult.addProperty( "HTTP Version", response.getHttpVersion() );
          }
          else
             testStepResult.setRequestContent(testRequest.getRequestContent());

@@ -44,6 +44,8 @@ import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlString;
 
 import javax.xml.namespace.QName;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -56,7 +58,7 @@ import java.util.Map;
  * @author Ole.Matzura
  */
 
-public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implements MutableTestPropertyHolder
+public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implements MutableTestPropertyHolder, PropertyChangeListener
 {
    public final static Logger log = Logger.getLogger( RestRequest.class );
    public static final String DEFAULT_MEDIATYPE = "application/xml";
@@ -64,6 +66,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
    private XmlBeansRestParamsTestPropertyHolder params;
    public static final String REST_XML_RESPONSE = "restXmlResponse";
+   public static final String REST_XML_REQUEST = "restXmlRequest";
 
    public RestRequest( RestResource resource, RestMethodConfig requestConfig, boolean forLoadTest )
    {
@@ -84,6 +87,9 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
       }
 
       params = new XmlBeansRestParamsTestPropertyHolder( this, requestConfig.getParameters() );
+
+      if( resource != null )
+         resource.addPropertyChangeListener( this );
    }
 
    protected RequestIconAnimator<?> initIconAnimator()
@@ -279,6 +285,14 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
       params.setPropertyValue( name, value );
    }
 
+   public void propertyChange( PropertyChangeEvent evt )
+   {
+      if( evt.getPropertyName().equals( "path" ))
+      {
+         notifyPropertyChanged( "path", null, getPath() );
+      }
+   }
+
    public final static class ParameterMessagePart extends MessagePart.ParameterPart
    {
       private String name;
@@ -415,7 +429,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
    public void setResponse( HttpResponse response, SubmitContext context )
    {
-      ((BaseHttpResponse) response).setPropertyValue( REST_XML_RESPONSE, createXmlResponse( response ) );
+      ((BaseHttpResponse) response).setProperty( REST_XML_RESPONSE, createXmlResponse( response ) );
       super.setResponse( response, context );
    }
 
@@ -433,7 +447,9 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
    {
       super.release();
       params.release();
-
+      
+      if( getResource() != null )
+         getResource().removePropertyChangeListener( this );
 
       for( RestRepresentation representation : representations )
       {

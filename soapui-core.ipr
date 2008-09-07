@@ -254,6 +254,30 @@
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
   </component>
   <component name="SvnBranchConfigurationManager">
+    <option name="myConfigurationMap">
+      <map>
+        <entry key="$PROJECT_DIR$">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="trunkUrl" value="svn://193.12.6.210/soapui/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="C:/workspace/soapui-pro-new">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="svn://192.168.250.4/soapui/branches" />
+                  <option value="svn://192.168.250.4/soapui/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="svn://192.168.250.4/soapui/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+      </map>
+    </option>
     <option name="myVersion" value="123" />
   </component>
   <component name="VcsDirectoryMappings">

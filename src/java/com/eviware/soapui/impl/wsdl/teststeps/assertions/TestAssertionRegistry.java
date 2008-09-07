@@ -12,30 +12,20 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.*;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.*;
+import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.support.types.StringToStringMap;
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.log4j.Logger;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.GroovyScriptAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.ResponseSLAAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SchemaComplianceAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleContainsAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleNotContainsAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XPathContainsAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XQueryContainsAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.NotSoapFaultAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.SoapFaultAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.SoapResponseAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.WSSStatusAssertion;
-import com.eviware.soapui.model.testsuite.Assertable;
-import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * Registry for WsdlAssertions

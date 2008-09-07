@@ -40,8 +40,9 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 	@SuppressWarnings("unchecked")
 	public EditorView<?> createResponseEditorView( Editor<?> editor, ModelItem modelItem )
 	{
-		if( modelItem instanceof MessageExchangeModelItem && 
-			((MessageExchangeModelItem)modelItem).hasRawData() )
+		if( modelItem instanceof MessageExchangeModelItem &&
+         ((MessageExchangeModelItem)modelItem).hasRawData() &&
+         ((MessageExchangeModelItem)modelItem).getMessageExchange().getRawResponseData() != null )
 		{
 			return new WsdlMessageExchangeResponseRawXmlEditor( (MessageExchangeModelItem) modelItem, (XmlEditor) editor );
 		}
@@ -61,7 +62,8 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 	public EditorView<XmlDocument> createRequestEditorView( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof MessageExchangeModelItem && 
-			((MessageExchangeModelItem)modelItem).hasRawData() )
+			((MessageExchangeModelItem)modelItem).hasRawData() &&
+         ((MessageExchangeModelItem)modelItem).getMessageExchange().getRawRequestData() != null)
 		{
 			return new WsdlMessageExchangeRequestRawXmlEditor( (MessageExchangeModelItem) modelItem, (XmlEditor) editor );
 		}

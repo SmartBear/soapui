@@ -73,7 +73,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
    public T3 getInterfaceDefinition() throws Exception
    {
       loadIfNecessary();
-      return (T3) (iface == null ? definition : definitionCache.get(url));
+      return (T3) (definition == null ? definitionCache.get( url ) : definition);
    }
 
    public boolean isLoaded()
@@ -253,7 +253,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
 
       log.debug("Loaded Definition: " + (definition != null ? "ok" : "null"));
 
-      if (!currentLoader.isAborted() && iface != null)
+      if (!currentLoader.isAborted() && iface != null && iface.isDefinitionShareble() )
       {
          definitionCache.put(url, definition);
          if (urlReferences.containsKey(url))
@@ -342,6 +342,13 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
    {
       definitionCache.remove(url);
       urlReferences.remove(url);
+   }
+
+   public void reload() throws Exception
+   {
+      getDefinitionCache().clear();
+      loaded = false;
+      load();
    }
 
    public boolean isCached()

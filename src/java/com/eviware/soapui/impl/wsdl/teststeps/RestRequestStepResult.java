@@ -13,6 +13,8 @@
 package com.eviware.soapui.impl.wsdl.teststeps;
 
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
+import com.eviware.soapui.impl.rest.support.MediaTypeHandlerRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
@@ -120,7 +122,7 @@ public class RestRequestStepResult extends WsdlTestStepResult implements
       addProperty( "domain", domain );
    }
 
-   private void addProperty( String key, String value )
+   public void addProperty( String key, String value )
    {
       if( properties == null )
          properties = new StringToStringMap();
@@ -224,7 +226,7 @@ public class RestRequestStepResult extends WsdlTestStepResult implements
 
    public String getProperty( String name )
    {
-      return properties.get( name );
+      return properties == null ? null : properties.get( name );
    }
 
    public Attachment[] getRequestAttachments()
@@ -269,6 +271,13 @@ public class RestRequestStepResult extends WsdlTestStepResult implements
 
    public String getResponseContentAsXml()
    {
+      if( response.getProperty( RestRequest.REST_XML_RESPONSE ) == null )
+      {
+         MediaTypeHandler typeHandler = MediaTypeHandlerRegistry.getTypeHandler( response.getContentType() );
+         if( typeHandler != null )
+            response.setProperty( RestRequest.REST_XML_RESPONSE, typeHandler.createXmlRepresentation( response ));
+      }
+
       return response.getProperty( RestRequest.REST_XML_RESPONSE );
    }
 
@@ -309,12 +318,12 @@ public class RestRequestStepResult extends WsdlTestStepResult implements
 
    public byte[] getRawRequestData()
    {
-      return null;
+      return response.getRawRequestData();
    }
 
    public byte[] getRawResponseData()
    {
-      return null;
+      return response.getRawResponseData();
    }
 
    public Attachment[] getRequestAttachmentsForPart( String partName )
@@ -329,7 +338,7 @@ public class RestRequestStepResult extends WsdlTestStepResult implements
 
    public boolean hasRawData()
    {
-      return false;
+      return getRawResponseData() != null || getRawRequestData() != null;
    }
 
    public boolean hasRequest( boolean b )

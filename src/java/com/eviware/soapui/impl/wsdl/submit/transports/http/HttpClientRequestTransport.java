@@ -97,8 +97,9 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				SoapUI.logError( e );
 			}
 		}
-		
-		submitContext.setProperty( HTTP_METHOD, httpMethod );
+
+      submitContext.removeProperty( RESPONSE );
+      submitContext.setProperty( HTTP_METHOD, httpMethod );
 		submitContext.setProperty( POST_METHOD, httpMethod );
 		submitContext.setProperty( HTTP_CLIENT, httpClient );
 		submitContext.setProperty( REQUEST_CONTENT, httpRequest.getRequestContent() );

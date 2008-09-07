@@ -10,18 +10,17 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.teststeps.assertions;
+package com.eviware.soapui.impl.wsdl.teststeps.assertions.soap;
 
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaValidator;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.AssertionError;
-import com.eviware.soapui.model.testsuite.AssertionException;
-import com.eviware.soapui.model.testsuite.RequestAssertion;
-import com.eviware.soapui.model.testsuite.ResponseAssertion;
 
 /**
  * Assertion for verifying that WS-Addressing processing was ok
@@ -57,7 +56,7 @@ public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssert
 	{
 	    try
 	    {
-	    	new WsaValidator(messageExchange).validateWsAddressingRequest();
+	    	new WsaValidator( (WsdlMessageExchange) messageExchange ).validateWsAddressingRequest();
 	    }
 	    catch (Exception e)
 	    {
@@ -73,7 +72,7 @@ public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssert
 	{
     try
     {
-    	new WsaValidator(messageExchange).validateWsAddressingResponse();
+    	new WsaValidator( (WsdlMessageExchange) messageExchange ).validateWsAddressingResponse();
     }
     catch (Exception e)
     {

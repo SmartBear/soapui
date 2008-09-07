@@ -45,7 +45,8 @@ public class WadlDefinitionContext extends AbstractDefinitionContext<RestService
 
    protected DefinitionLoader createDefinitionLoader(String url)
    {
-      return url == null ? new GeneratedWadlDefinitionLoader( getInterface() ) : new UrlWsdlLoader(url);
+      return url == null || (getInterface().isGenerated() && getInterface().getWadlUrl().equals( url ))
+              ? new GeneratedWadlDefinitionLoader( getInterface() ) : new UrlWsdlLoader(url);
    }
 
    protected WadlInterfaceDefinition loadDefinition(DefinitionLoader loader) throws Exception
@@ -56,5 +57,22 @@ public class WadlDefinitionContext extends AbstractDefinitionContext<RestService
    public String export(String path) throws Exception
    {
       return new WadlDefinitionExporter(getInterface()).export(path);
+   }
+
+   public WadlInterfaceDefinition regenerateWadl()
+   {
+      try
+      {
+         if( getInterface().isGenerated())
+            reload();
+
+          return getInterfaceDefinition();
+      }
+      catch( Exception e )
+      {
+         e.printStackTrace();
+      }
+
+       return null;
    }
 }

@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.support.definition.export;
 import com.eviware.soapui.impl.support.definition.InterfaceDefinition;
 import com.eviware.soapui.impl.support.definition.InterfaceDefinitionPart;
 import com.eviware.soapui.impl.wsdl.support.Constants;
+import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToStringMap;
 import org.apache.xmlbeans.SimpleValue;
@@ -27,11 +28,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractDefinitionExporter implements DefinitionExporter
+public abstract class AbstractDefinitionExporter<T extends Interface> implements DefinitionExporter
 {
    private InterfaceDefinition definition;
 
-   public AbstractDefinitionExporter(InterfaceDefinition definition)
+   public AbstractDefinitionExporter(InterfaceDefinition<T> definition)
+   {
+      this.definition = definition;
+   }
+
+   public InterfaceDefinition<T> getDefinition()
+   {
+      return definition;
+   }
+
+   public void setDefinition( InterfaceDefinition definition )
    {
       this.definition = definition;
    }

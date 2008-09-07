@@ -16,18 +16,16 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.actions.service.CreateWadlDocumentationAction;
+import com.eviware.soapui.impl.rest.actions.service.ExportWadlAction;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.definition.InterfaceDefinitionPart;
 import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
-import com.eviware.soapui.impl.wsdl.actions.iface.ExportDefinitionAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.UpdateInterfaceAction;
 import com.eviware.soapui.impl.wsdl.panels.iface.WsdlInterfaceDesktopPanel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.LineNumbersPanel;
 import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JEditorStatusBar;
@@ -71,378 +69,383 @@ import java.util.List;
 
 public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 {
-	private final static Logger logger = Logger.getLogger(WsdlInterfaceDesktopPanel.class);
-	private JTabbedPane partTabs;
-	private List<JEditTextArea> editors = new ArrayList<JEditTextArea>();
-	private JTree tree;
-	private Map<String, DefaultMutableTreeNode> groupNodes = new HashMap<String, DefaultMutableTreeNode>();
-	private Map<String, TreePath> pathMap = new HashMap<String, TreePath>();
-	private List<TreePath> navigationHistory = new ArrayList<TreePath>();
-	private StringList targetNamespaces = new StringList();
-	private int historyIndex;
-	private boolean navigating;
-	private JEditorStatusBar statusBar;
-	private DefaultMutableTreeNode rootNode;
-	private DefaultTreeModel treeModel;
-	private final RestService restService;
-	private MetricsPanel metrics;
-	private boolean updatingService;
-	private ResourcesTableModel operationsTableModel;
+   private final static Logger logger = Logger.getLogger( WsdlInterfaceDesktopPanel.class );
+   private JTabbedPane partTabs;
+   private List<JEditTextArea> editors = new ArrayList<JEditTextArea>();
+   private JTree tree;
+   private Map<String, DefaultMutableTreeNode> groupNodes = new HashMap<String, DefaultMutableTreeNode>();
+   private Map<String, TreePath> pathMap = new HashMap<String, TreePath>();
+   private List<TreePath> navigationHistory = new ArrayList<TreePath>();
+   private StringList targetNamespaces = new StringList();
+   private int historyIndex;
+   private boolean navigating;
+   private JEditorStatusBar statusBar;
+   private DefaultMutableTreeNode rootNode;
+   private DefaultTreeModel treeModel;
+   private final RestService restService;
+   private MetricsPanel metrics;
+   private boolean updatingService;
+   private ResourcesTableModel operationsTableModel;
 
-	public RestServiceDesktopPanel(RestService service)
-	{
-		super(service);
-		this.restService = service;
+   public RestServiceDesktopPanel( RestService service )
+   {
+      super( service );
+      this.restService = service;
 
-		try
-		{
-			buildUI();
-		}
-		catch (Exception e)
-		{
-			UISupport.showErrorMessage(e);
-			SwingUtilities.invokeLater(new Runnable()
-			{
+      try
+      {
+         buildUI();
+      }
+      catch( Exception e )
+      {
+         UISupport.showErrorMessage( e );
+         SwingUtilities.invokeLater( new Runnable()
+         {
+            public void run()
+            {
+               SoapUI.getDesktop().closeDesktopPanel( RestServiceDesktopPanel.this );
+            }
+         } );
+      }
+   }
 
-				public void run()
-				{
-					SoapUI.getDesktop().closeDesktopPanel(RestServiceDesktopPanel.this);
-				}
-			});
-		}
-	}
+   private void buildUI()
+   {
+      JTabbedPane tabs = new JTabbedPane();
+      tabs.addTab( "Overview", buildServiceOverviewTab() );
+      tabs.addTab( "Service Endpoints", buildEndpointsTab() );
+      tabs.addTab( "WADL Content", buildWadlContentTab() );
 
-	private void buildUI()
-	{
-		JTabbedPane tabs = new JTabbedPane();
-		tabs.addTab("Overview", buildServiceOverviewTab());
-		tabs.addTab("Service Endpoints", buildEndpointsTab());
-		tabs.addTab("WADL Content", buildWadlContentTab());
+      add( UISupport.createTabPanel( tabs, true ), BorderLayout.CENTER );
+   }
 
-		add(UISupport.createTabPanel(tabs, true), BorderLayout.CENTER);
-	}
+   private Component buildServiceOverviewTab()
+   {
+      metrics = new MetricsPanel();
+      MetricsSection section = metrics.addSection( "WSDL Definition" );
 
-	private Component buildServiceOverviewTab()
-	{
-		metrics = new MetricsPanel();
-		MetricsSection section = metrics.addSection("WSDL Definition");
+      try
+      {
+         section.addMetric( "WADL URL", MetricType.URL ).set( restService.getWadlUrl() +
+            (restService.isGenerated() ? " - generated" : "") );
+         
+         // section.addMetric( "Namespace" ).set(
+         // iface.getBindingName().getNamespaceURI() );
+         // section.addMetric( "Binding" ).set(
+         // iface.getBindingName().getLocalPart() );
+         // section.addMetric( "SOAP Version" ).set(
+         // iface.getSoapVersion().toString() );
+         // section.addMetric( "Style" ).set( iface.getStyle() );
+         // section.addMetric( "WS-A version" ).set( iface.getWsaVersion());
+      }
+      catch( Exception e )
+      {
+         UISupport.showErrorMessage( e );
+      }
 
-		try
-		{
-			section.addMetric("WADL URL", MetricType.URL).set(restService.getWadlUrl());
-			// section.addMetric( "Namespace" ).set(
-			// iface.getBindingName().getNamespaceURI() );
-			// section.addMetric( "Binding" ).set(
-			// iface.getBindingName().getLocalPart() );
-			// section.addMetric( "SOAP Version" ).set(
-			// iface.getSoapVersion().toString() );
-			// section.addMetric( "Style" ).set( iface.getStyle() );
-			// section.addMetric( "WS-A version" ).set( iface.getWsaVersion());
-		}
-		catch (Exception e)
-		{
-			UISupport.showErrorMessage(e);
-		}
+      section.finish();
 
-		section.finish();
+      metrics.addSection( "Definition Parts" );
+      section = metrics.addSection( "Resources" );
+      operationsTableModel = new ResourcesTableModel();
+      JXTable table = section.addTable( operationsTableModel );
+      table.getColumn( 1 ).setPreferredWidth( 60 );
+      section.finish();
 
-		metrics.addSection("Definition Parts");
-		section = metrics.addSection("Resources");
-		operationsTableModel = new ResourcesTableModel();
-		JXTable table = section.addTable(operationsTableModel);
-		table.getColumn(1).setPreferredWidth(60);
-		section.finish();
+      return new JScrollPane( metrics );
+   }
 
-		return new JScrollPane(metrics);
-	}
+   private Component buildEndpointsTab()
+   {
+      return restService.getProject().getEndpointStrategy().getConfigurationPanel( restService );
+   }
 
-	private Component buildEndpointsTab()
-	{
-		return restService.getProject().getEndpointStrategy().getConfigurationPanel(restService);
-	}
+   private JComponent buildWadlContentTab()
+   {
+      partTabs = new JTabbedPane();
+      partTabs.setTabLayoutPolicy( JTabbedPane.SCROLL_TAB_LAYOUT );
 
-	private JComponent buildWadlContentTab()
-	{
-		partTabs = new JTabbedPane();
-		partTabs.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+      rootNode = new DefaultMutableTreeNode( restService.getName() );
+      treeModel = new DefaultTreeModel( rootNode );
+      tree = new JTree( treeModel );
+      tree.setBorder( BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) );
+      tree.setExpandsSelectedPaths( true );
+      tree.addTreeSelectionListener( new InternalTreeSelectionListener() );
+      tree.addMouseListener( new MouseAdapter()
+      {
+         @Override
+         public void mouseClicked( MouseEvent arg0 )
+         {
+            if( arg0.getClickCount() > 1 )
+            {
+               TreePath selectionPath = tree.getSelectionPath();
+               if( selectionPath != null )
+               {
+                  DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
+                  Object userObject = treeNode.getUserObject();
+                  if( userObject instanceof InspectItem )
+                  {
+                     InspectItem item = (InspectItem) userObject;
+                     if( item != null && item.selector != null )
+                     {
+                        item.selector.selectNode( item );
+                     }
+                  }
+               }
+            }
+         }
+      } );
 
-		rootNode = new DefaultMutableTreeNode(restService.getName());
-		treeModel = new DefaultTreeModel(rootNode);
-		tree = new JTree(treeModel);
-		tree.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-		tree.setExpandsSelectedPaths(true);
-		tree.addTreeSelectionListener(new InternalTreeSelectionListener());
-		tree.addMouseListener(new MouseAdapter()
-		{
+      JScrollPane scrollPane = new JScrollPane( tree );
+      UISupport.addPreviewCorner( scrollPane, true );
+      JSplitPane split = UISupport.createHorizontalSplit( scrollPane, UISupport.createTabPanel( partTabs, true ) );
 
-			@Override
-			public void mouseClicked(MouseEvent arg0)
-			{
-				if (arg0.getClickCount() > 1)
-				{
-					TreePath selectionPath = tree.getSelectionPath();
-					if (selectionPath != null)
-					{
-						DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-						Object userObject = treeNode.getUserObject();
-						if (userObject instanceof InspectItem)
-						{
-							InspectItem item = (InspectItem) userObject;
-							if (item != null && item.selector != null)
-							{
-								item.selector.selectNode(item);
-							}
-						}
-					}
-				}
-			}
-		});
+      split.setDividerLocation( 250 );
+      split.setResizeWeight( 0.3 );
 
-		JScrollPane scrollPane = new JScrollPane(tree);
-		JSplitPane split = UISupport.createHorizontalSplit(scrollPane, UISupport.createTabPanel(partTabs, true));
+      initTreeModel( restService );
 
-		split.setDividerLocation(250);
-		split.setResizeWeight(0.3);
+      JPanel panel = new JPanel( new BorderLayout() );
 
-		initTreeModel(restService);
+      panel.add( split, BorderLayout.CENTER );
+      panel.add( buildWadlTabToolbar(), BorderLayout.PAGE_START );
+      statusBar = new JEditorStatusBar();
+      panel.add( statusBar, BorderLayout.PAGE_END );
+      setPreferredSize( new Dimension( 600, 500 ) );
 
-		JPanel panel = new JPanel(new BorderLayout());
+      return panel;
+   }
 
-		panel.add(split, BorderLayout.CENTER);
-		panel.add(buildWadlTabToolbar(), BorderLayout.PAGE_START);
-		statusBar = new JEditorStatusBar();
-		panel.add(statusBar, BorderLayout.PAGE_END);
-		setPreferredSize(new Dimension(600, 500));
+   private void initTreeModel( RestService iface )
+   {
+      try
+      {
+         if( iface.getWadlContext().loadIfNecessary() )
+         {
+            XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog( "Loading Defintion", 3,
+                    "Initializing definition..", true );
+            Loader loader = new Loader( iface );
 
-		return panel;
-	}
+            progressDialog.run( loader );
+            loader = null;
+            treeModel.nodeStructureChanged( rootNode );
+         }
+      }
+      catch( Exception e )
+      {
+         SoapUI.logError( e );
+      }
+   }
 
-	private void initTreeModel(RestService iface)
-	{
-		try
-		{
-			 if (iface.getWadlContext().loadIfNecessary())
-			{
-				XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog("Loading Defintion", 3,
-						"Initializing definition..", true);
-				Loader loader = new Loader(iface);
+   private Component buildWadlTabToolbar()
+   {
+      JXToolBar toolbar = UISupport.createToolbar();
 
-				progressDialog.run(loader);
-				loader = null;
-				treeModel.nodeStructureChanged(rootNode);
-			}
-		}
-		catch (Exception e)
-		{
-			SoapUI.logError(e);
-		}
-	}
+      toolbar.addFixed( UISupport.createToolbarButton( new BackwardAction() ) );
+      toolbar.addFixed( UISupport.createToolbarButton( new ForwardAction() ) );
+      toolbar.addUnrelatedGap();
+//      JButton button = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
+//              UpdateInterfaceAction.SOAPUI_ACTION_ID, getModelItem(), null, "/updateDefinition.gif" ) );
+//      button.setText( null );
+//      toolbar.addFixed( button );
+      JButton button = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
+              ExportWadlAction.SOAPUI_ACTION_ID, getModelItem(), null, "/exportDefinition.gif" ) );
+      button.setText( null );
+      toolbar.addFixed( button );
+      toolbar.addFixed( UISupport.createToolbarButton(
+              SwingActionDelegate.createDelegate( CreateWadlDocumentationAction.SOAPUI_ACTION_ID, restService, null, "/export.gif" ) ) );
 
-	private Component buildWadlTabToolbar()
-	{
-		JXToolBar toolbar = UISupport.createToolbar();
+      toolbar.addFixed( button );
 
-		toolbar.addFixed(UISupport.createToolbarButton(new BackwardAction()));
-		toolbar.addFixed(UISupport.createToolbarButton(new ForwardAction()));
-		toolbar.addUnrelatedGap();
-		JButton button = UISupport.createToolbarButton(SwingActionDelegate.createDelegate(
-				UpdateInterfaceAction.SOAPUI_ACTION_ID, getModelItem(), null, "/updateDefinition.gif"));
-		button.setText(null);
-		toolbar.addFixed(button);
-		button = UISupport.createToolbarButton(SwingActionDelegate.createDelegate(
-				ExportDefinitionAction.SOAPUI_ACTION_ID, getModelItem(), null, "/exportDefinition.gif"));
-		button.setText(null);
-		toolbar.addFixed(button);
-		toolbar.addFixed(UISupport.createToolbarButton(
-				SwingActionDelegate.createDelegate( CreateWadlDocumentationAction.SOAPUI_ACTION_ID, restService, null, "/export.gif")));
-		
-		toolbar.addFixed(button);
+      if( restService.isGenerated() )
+      {
+         toolbar.addUnrelatedGap();
+         toolbar.addFixed( UISupport.createToolbarButton( new RecreateWadlAction() ) );
+      }
 
-		if( !StringUtils.hasContent(restService.getWadlUrl() ))
-		{
-			toolbar.addUnrelatedGap();
-			toolbar.addFixed(UISupport.createToolbarButton(new RecreateWadlAction()));
-		}
-		
-		toolbar.addGlue();
-		button = UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.INTERFACE_HELP_URL));
-		button.setText(null);
-		
-		return toolbar;
-	}
+      toolbar.addGlue();
+      button = UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.INTERFACE_HELP_URL ) );
+      button.setText( null );
 
-	private final class InternalTreeSelectionListener implements TreeSelectionListener
-	{
-		public void valueChanged(TreeSelectionEvent e)
-		{
-			TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
-			if (newLeadSelectionPath != null)
-			{
-				if (!navigating)
-				{
-					// if we have moved back in history.. reverse before adding
-					while (historyIndex < navigationHistory.size() - 1)
-					{
-						TreePath path = navigationHistory.remove(navigationHistory.size() - 1);
-						navigationHistory.add(historyIndex++, path);
-					}
+      return toolbar;
+   }
 
-					navigationHistory.add(newLeadSelectionPath);
-					historyIndex = navigationHistory.size() - 1;
-				}
+   private final class InternalTreeSelectionListener implements TreeSelectionListener
+   {
+      public void valueChanged( TreeSelectionEvent e )
+      {
+         TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
+         if( newLeadSelectionPath != null )
+         {
+            if( !navigating )
+            {
+               // if we have moved back in history.. reverse before adding
+               while( historyIndex < navigationHistory.size() - 1 )
+               {
+                  TreePath path = navigationHistory.remove( navigationHistory.size() - 1 );
+                  navigationHistory.add( historyIndex++, path );
+               }
 
-				DefaultMutableTreeNode tn = (DefaultMutableTreeNode) newLeadSelectionPath.getLastPathComponent();
-				if (tn.getUserObject() instanceof InspectItem)
-				{
-					InspectItem item = (InspectItem) tn.getUserObject();
+               navigationHistory.add( newLeadSelectionPath );
+               historyIndex = navigationHistory.size() - 1;
+            }
 
-					partTabs.setSelectedIndex(item.getTabIndex());
-					statusBar.setInfo(item.getDescription());
+            DefaultMutableTreeNode tn = (DefaultMutableTreeNode) newLeadSelectionPath.getLastPathComponent();
+            if( tn.getUserObject() instanceof InspectItem )
+            {
+               InspectItem item = (InspectItem) tn.getUserObject();
 
-					JEditTextArea editor = editors.get(item.getTabIndex());
-					int lineNumber = item.getLineNumber();
-					if (lineNumber > 0 && editor.getLineStartOffset(lineNumber) >= 0)
-					{
-						editor.setCaretPosition(editor.getLineStartOffset(lineNumber));
-					}
-					else
-					{
-						editor.setCaretPosition(0);
-					}
-				}
+               partTabs.setSelectedIndex( item.getTabIndex() );
+               statusBar.setInfo( item.getDescription() );
 
-				tree.scrollPathToVisible(newLeadSelectionPath);
-				tree.expandPath(newLeadSelectionPath);
-			}
-		}
-	}
+               JEditTextArea editor = editors.get( item.getTabIndex() );
+               int lineNumber = item.getLineNumber();
+               if( lineNumber > 0 && editor.getLineStartOffset( lineNumber ) >= 0 )
+               {
+                  editor.setCaretPosition( editor.getLineStartOffset( lineNumber ) );
+               }
+               else
+               {
+                  editor.setCaretPosition( 0 );
+               }
+            }
 
-	private static final String DEFINITION_PARTS_SECTION = "Definition Parts";
+            tree.scrollPathToVisible( newLeadSelectionPath );
+            tree.expandPath( newLeadSelectionPath );
+         }
+      }
+   }
 
-	private class Loader implements Worker
-	{
-		private ProgressDialog progressDialog;
-		private final RestService iface;
-		private JProgressBar progressBar;
+   private static final String DEFINITION_PARTS_SECTION = "Definition Parts";
 
-		public Loader(RestService iface)
-		{
-			this.iface = iface;
-		}
+   private class Loader implements Worker
+   {
+      private ProgressDialog progressDialog;
+      private final RestService iface;
+      private JProgressBar progressBar;
 
-		public Object construct(XProgressMonitor monitor)
-		{
-			MetricsSection section = metrics.getSection(DEFINITION_PARTS_SECTION);
-			section.clear();
+      public Loader( RestService iface )
+      {
+         this.iface = iface;
+      }
 
-			try
-			{
-				WadlDefinitionContext wadlContext = iface.getWadlContext();
-				List<InterfaceDefinitionPart> parts = wadlContext.getDefinitionParts();
-				
-				int tabCount = partTabs.getTabCount();
+      public Object construct( XProgressMonitor monitor )
+      {
+         MetricsSection section = metrics.getSection( DEFINITION_PARTS_SECTION );
+         section.clear();
 
-				for (InterfaceDefinitionPart part : parts)
-				{
-					addTab(part.getUrl(), part.getContent());
-				}
+         try
+         {
+            WadlDefinitionContext wadlContext = iface.getWadlContext();
+            if( iface.isGenerated() )
+               wadlContext.regenerateWadl();
+            List<InterfaceDefinitionPart> parts = wadlContext.getDefinitionParts();
 
-				while (tabCount-- > 0)
-					partTabs.remove(0);
+            int tabCount = partTabs.getTabCount();
 
-				return null;
-			}
-			catch (Exception e)
-			{
-				logger.error("Failed to load WSDL; " + e.getClass().getSimpleName() + "; " + e.getMessage());
-				add(new JLabel("Failed to load WSDL; " + e.toString()), BorderLayout.NORTH);
+            for( InterfaceDefinitionPart part : parts )
+            {
+               addTab( part.getUrl(), part.getContent() );
+            }
 
-				SoapUI.logError(e);
+            while( tabCount-- > 0 )
+               partTabs.remove( 0 );
 
-				return e;
-			}
-			finally
-			{
-				section.finish();
-			}
-		}
+            return null;
+         }
+         catch( Exception e )
+         {
+            logger.error( "Failed to load WSDL; " + e.getClass().getSimpleName() + "; " + e.getMessage() );
+            add( new JLabel( "Failed to load WSDL; " + e.toString() ), BorderLayout.NORTH );
 
-		private void addTab(String url, String content) throws Exception
-		{
-			int ix = url.startsWith("file:") ? url.lastIndexOf(File.separatorChar) : url.lastIndexOf('/');
-			if (ix == -1)
-				ix = url.lastIndexOf('/');
+            SoapUI.logError( e );
 
-			String title = url.substring(ix + 1);
+            return e;
+         }
+         finally
+         {
+            section.finish();
+         }
+      }
 
-			metrics.getSection(DEFINITION_PARTS_SECTION).addMetric(title, MetricType.URL).set(url);
+      private void addTab( String url, String content ) throws Exception
+      {
+         int ix = url.startsWith( "file:" ) ? url.lastIndexOf( File.separatorChar ) : url.lastIndexOf( '/' );
+         if( ix == -1 )
+            ix = url.lastIndexOf( '/' );
 
-			if (progressBar != null)
-				progressBar.setString(title);
-			else if (progressDialog != null)
-				progressDialog.setProgress(1, title);
+         String title = url.substring( ix + 1 );
 
-			JPanel panel = new JPanel(new BorderLayout());
-			JLabel label = new JLabel(url);
-			label.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-			panel.add(label, BorderLayout.NORTH);
+         metrics.getSection( DEFINITION_PARTS_SECTION ).addMetric( title, MetricType.URL ).set( url );
 
-			JXEditTextArea inputArea = JXEditTextArea.createXmlEditor(false);
-			StringWriter writer = new StringWriter();
-			XmlUtils.serializePretty( XmlObject.Factory.parse( content ), writer);
-			String xmlString = writer.toString();
+         if( progressBar != null )
+            progressBar.setString( title );
+         else if( progressDialog != null )
+            progressDialog.setProgress( 1, title );
 
-			// reparse so linenumbers are correct
-			XmlObject xmlObject = XmlObject.Factory.parse(xmlString, new XmlOptions().setLoadLineNumbers());
+         JPanel panel = new JPanel( new BorderLayout() );
+         JLabel label = new JLabel( url );
+         label.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
+         panel.add( label, BorderLayout.NORTH );
 
-			inputArea.setText(xmlString);
-			inputArea.setEditable(false);
-			inputArea.getPainter().setLineHighlightEnabled(true);
+         JXEditTextArea inputArea = JXEditTextArea.createXmlEditor( false );
+         StringWriter writer = new StringWriter();
+         XmlUtils.serializePretty( XmlObject.Factory.parse( content ), writer );
+         String xmlString = writer.toString();
 
-			JPanel p = new JPanel(new BorderLayout());
-			p.add(inputArea, BorderLayout.CENTER);
-			p.add(new LineNumbersPanel(inputArea), BorderLayout.WEST);
+         // reparse so linenumbers are correct
+         XmlObject xmlObject = XmlObject.Factory.parse( xmlString, new XmlOptions().setLoadLineNumbers() );
 
-			panel.add(new JScrollPane(p), BorderLayout.CENTER);
-			partTabs.addTab(title, panel);
+         inputArea.setText( xmlString );
+         inputArea.setEditable( false );
+         inputArea.getPainter().setLineHighlightEnabled( true );
 
-			if (tree != null)
-			{
-				initInspectionTree(xmlObject, inputArea);
-			}
-		}
+         JPanel p = new JPanel( new BorderLayout() );
+         p.add( inputArea, BorderLayout.CENTER );
+         p.add( new LineNumbersPanel( inputArea ), BorderLayout.WEST );
 
-		private void initInspectionTree(XmlObject xmlObject, JXEditTextArea inputArea)
-		{
-			DefaultMutableTreeNode treeRoot = rootNode;
+         JScrollPane scrollPane = new JScrollPane( p );
+         UISupport.addPreviewCorner( scrollPane, true );
+         panel.add( scrollPane, BorderLayout.CENTER );
+         partTabs.addTab( title, panel );
 
-			targetNamespaces.add(SchemaUtils.getTargetNamespace(xmlObject));
+         if( tree != null )
+         {
+            initInspectionTree( xmlObject, inputArea );
+         }
+      }
 
-			int tabCount = partTabs.getTabCount() - 1;
+      private void initInspectionTree( XmlObject xmlObject, JXEditTextArea inputArea )
+      {
+         DefaultMutableTreeNode treeRoot = rootNode;
+
+         targetNamespaces.add( SchemaUtils.getTargetNamespace( xmlObject ) );
+
+         int tabCount = partTabs.getTabCount() - 1;
          String xmlNsDeclaration = "declare namespace xs='" + Constants.XSD_NS + "';";
          String wadlNsDeclaration = "declare namespace wadl='" + Constants.WADL10_NS + "';";
 
-         mapTreeItems(xmlObject, treeRoot, false, tabCount, "Complex Types",
-					xmlNsDeclaration + "//xs:complexType[@name!='']", "@name", true,
-					null);
+         mapTreeItems( xmlObject, treeRoot, false, tabCount, "Complex Types",
+                 xmlNsDeclaration + "//xs:complexType[@name!='']", "@name", true,
+                 null );
 
-			mapTreeItems(xmlObject, treeRoot, false, tabCount, "Simple Types",
-					xmlNsDeclaration + "//xs:simpleType[@name!='']", "@name", true,
-					null);
+         mapTreeItems( xmlObject, treeRoot, false, tabCount, "Simple Types",
+                 xmlNsDeclaration + "//xs:simpleType[@name!='']", "@name", true,
+                 null );
 
-			mapTreeItems(xmlObject, treeRoot, false, tabCount, "Anonymous Complex Types",
-					xmlNsDeclaration + "//xs:complexType[not(exists(@name))]",
-					"parent::node()/@name", true, null);
+         mapTreeItems( xmlObject, treeRoot, false, tabCount, "Anonymous Complex Types",
+                 xmlNsDeclaration + "//xs:complexType[not(exists(@name))]",
+                 "parent::node()/@name", true, null );
 
-			mapTreeItems(xmlObject, treeRoot, false, tabCount, "Global Elements",
-					xmlNsDeclaration + "//xs:schema/xs:element[@name!='']", "@name",
-					true, new GlobalElementSelector());
+         mapTreeItems( xmlObject, treeRoot, false, tabCount, "Global Elements",
+                 xmlNsDeclaration + "//xs:schema/xs:element[@name!='']", "@name",
+                 true, new GlobalElementSelector() );
 
-			mapTreeItems(xmlObject, treeRoot, false, tabCount, "Schemas",
-					xmlNsDeclaration + "//xs:schema", "@targetNamespace", true, null);
+         mapTreeItems( xmlObject, treeRoot, false, tabCount, "Schemas",
+                 xmlNsDeclaration + "//xs:schema", "@targetNamespace", true, null );
 
-			List<DefaultMutableTreeNode> resources = mapTreeItems(xmlObject, treeRoot, false, tabCount, "Resources",
-					wadlNsDeclaration + "//wadl:resource", "concat( @path, ' [', *:doc[1]/@title, ']' )", true, null);
+         List<DefaultMutableTreeNode> resources = mapTreeItems( xmlObject, treeRoot, false, tabCount, "Resources",
+                 wadlNsDeclaration + "//wadl:resource", "concat( @path, ' [', *:doc[1]/@title, ']' )", true, null );
 
 //			for (DefaultMutableTreeNode treeNode : resources)
 //			{
@@ -457,8 +460,8 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 //						true, new PartSelector());
 //			}
 
-			List<DefaultMutableTreeNode> methods = mapTreeItems(xmlObject, treeRoot, false, tabCount, "Methods",
-					wadlNsDeclaration + "//wadl:method[exists(@name)]", "concat( @name, ' [', *:doc[1]/@title, ']' )", true, null);
+         List<DefaultMutableTreeNode> methods = mapTreeItems( xmlObject, treeRoot, false, tabCount, "Methods",
+                 wadlNsDeclaration + "//wadl:method[exists(@name)]", "concat( @name, ' [', *:doc[1]/@title, ']' )", true, null );
 
 //			for (DefaultMutableTreeNode treeNode : methods)
 //			{
@@ -474,8 +477,8 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 //				}
 //			}
 
-         List<DefaultMutableTreeNode> representations = mapTreeItems(xmlObject, treeRoot, false, tabCount, "Representations",
-					wadlNsDeclaration + "//wadl:representation", "concat( @mediaType, ' [', *:doc[1]/@title, ']' )", true, null);
+         List<DefaultMutableTreeNode> representations = mapTreeItems( xmlObject, treeRoot, false, tabCount, "Representations",
+                 wadlNsDeclaration + "//wadl:representation", "concat( @mediaType, ' [', *:doc[1]/@title, ']' )", true, null );
 
 //         List<DefaultMutableTreeNode> bindings = mapTreeItems(
 //					xmlObject,
@@ -517,405 +520,406 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 //						"concat( 'port: name=[', @name, '] binding=[', @binding, ']' )", true, new PortSelector());
 //			}
 
-			tree.expandRow(0);
-			editors.add(inputArea);
-		}
+         tree.expandRow( 0 );
+         editors.add( inputArea );
+      }
 
-		public void finished()
-		{
-			if (progressDialog != null)
-				progressDialog.setVisible(false);
+      public void finished()
+      {
+         if( progressDialog != null )
+            progressDialog.setVisible( false );
 
-			progressDialog = null;
-		}
+         progressDialog = null;
+      }
 
-		public boolean onCancel()
-		{
-			progressBar = new JProgressBar(0, 1);
-			progressBar.setSize(new Dimension(120, 20));
-			progressBar.setStringPainted(true);
-			progressBar.setString("Loading Definition..");
-			progressBar.setIndeterminate(true);
+      public boolean onCancel()
+      {
+         progressBar = new JProgressBar( 0, 1 );
+         progressBar.setSize( new Dimension( 120, 20 ) );
+         progressBar.setStringPainted( true );
+         progressBar.setString( "Loading Definition.." );
+         progressBar.setIndeterminate( true );
 
-			ButtonBarBuilder builder = ButtonBarBuilder.createLeftToRightBuilder();
-			builder.addGlue();
-			builder.addFixed(progressBar);
-			builder.addGlue();
-			builder.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+         ButtonBarBuilder builder = ButtonBarBuilder.createLeftToRightBuilder();
+         builder.addGlue();
+         builder.addFixed( progressBar );
+         builder.addGlue();
+         builder.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
 
-			partTabs.addTab("Loading.. ", builder.getPanel());
-			return true;
-		}
-	}
+         partTabs.addTab( "Loading.. ", builder.getPanel() );
+         return true;
+      }
+   }
 
-	public boolean dependsOn(ModelItem modelItem)
-	{
-		return modelItem == getModelItem() || modelItem == getModelItem().getProject();
-	}
+   public boolean dependsOn( ModelItem modelItem )
+   {
+      return getModelItem().dependsOn( modelItem );
+   }
 
-	public List<DefaultMutableTreeNode> mapTreeItems(XmlObject xmlObject, DefaultMutableTreeNode treeRoot,
-			boolean createEmpty, int tabIndex, String groupName, String query, String nameQuery, boolean sort,
-			NodeSelector selector)
-	{
-		List<DefaultMutableTreeNode> resultNodes = new ArrayList<DefaultMutableTreeNode>();
+   public List<DefaultMutableTreeNode> mapTreeItems( XmlObject xmlObject, DefaultMutableTreeNode treeRoot,
+                                                     boolean createEmpty, int tabIndex, String groupName, String query, String nameQuery, boolean sort,
+                                                     NodeSelector selector )
+   {
+      List<DefaultMutableTreeNode> resultNodes = new ArrayList<DefaultMutableTreeNode>();
 
-		try
-		{
-			XmlObject[] items = xmlObject.selectPath(query);
-			List<DefaultMutableTreeNode> treeNodes = new ArrayList<DefaultMutableTreeNode>();
+      try
+      {
+         XmlObject[] items = xmlObject.selectPath( query );
+         List<DefaultMutableTreeNode> treeNodes = new ArrayList<DefaultMutableTreeNode>();
 
-			DefaultMutableTreeNode root = treeRoot;
-			if (groupName != null)
-			{
-				String groupKey = new TreePath(root.getPath()).toString() + "/" + groupName;
-				root = groupNodes.get(groupKey);
-				if (root == null && (items.length > 0 || createEmpty))
-				{
-					root = new DefaultMutableTreeNode(groupName);
-					treeRoot.add(root);
-					groupNodes.put(groupKey, root);
-				}
-				else if (root != null)
-				{
-					Enumeration<?> children = root.children();
-					while (children.hasMoreElements())
-						treeNodes.add((DefaultMutableTreeNode) children.nextElement());
-				}
-			}
+         DefaultMutableTreeNode root = treeRoot;
+         if( groupName != null )
+         {
+            String groupKey = new TreePath( root.getPath() ).toString() + "/" + groupName;
+            root = groupNodes.get( groupKey );
+            if( root == null && (items.length > 0 || createEmpty) )
+            {
+               root = new DefaultMutableTreeNode( groupName );
+               treeRoot.add( root );
+               groupNodes.put( groupKey, root );
+            }
+            else if( root != null )
+            {
+               Enumeration<?> children = root.children();
+               while( children.hasMoreElements() )
+                  treeNodes.add( (DefaultMutableTreeNode) children.nextElement() );
+            }
+         }
 
-			if (items.length == 0)
-				return resultNodes;
+         if( items.length == 0 )
+            return resultNodes;
 
-			for (XmlObject item : items)
-			{
-				XmlObject[] selectPath = item.selectPath(nameQuery);
-				if (selectPath.length > 0)
-				{
-					DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(new InspectItem(item, selectPath[0],
-							tabIndex, selector));
-					treeNodes.add(treeNode);
-					resultNodes.add(treeNode);
-				}
-			}
+         for( XmlObject item : items )
+         {
+            XmlObject[] selectPath = item.selectPath( nameQuery );
+            if( selectPath.length > 0 )
+            {
+               DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode( new InspectItem( item, selectPath[0],
+                       tabIndex, selector ) );
+               treeNodes.add( treeNode );
+               resultNodes.add( treeNode );
+            }
+         }
 
-			if (sort)
-			{
-				Collections.sort(treeNodes, new Comparator<DefaultMutableTreeNode>()
-				{
+         if( sort )
+         {
+            Collections.sort( treeNodes, new Comparator<DefaultMutableTreeNode>()
+            {
 
-					public int compare(DefaultMutableTreeNode o1, DefaultMutableTreeNode o2)
-					{
-						return o1.toString().compareTo(o2.toString());
-					}
-				});
-			}
+               public int compare( DefaultMutableTreeNode o1, DefaultMutableTreeNode o2 )
+               {
+                  return o1.toString().compareTo( o2.toString() );
+               }
+            } );
+         }
 
-			root.removeAllChildren();
+         root.removeAllChildren();
 
-			for (DefaultMutableTreeNode treeNode : treeNodes)
-			{
-				root.add(treeNode);
+         for( DefaultMutableTreeNode treeNode : treeNodes )
+         {
+            root.add( treeNode );
 
-				String path = "/" + getTreeNodeName(treeNode);
-				TreePath treePath = new TreePath(treeNode.getPath());
-				while (treeNode.getParent() != null)
-				{
-					treeNode = (DefaultMutableTreeNode) treeNode.getParent();
-					path = "/" + getTreeNodeName(treeNode) + path;
-				}
+            String path = "/" + getTreeNodeName( treeNode );
+            TreePath treePath = new TreePath( treeNode.getPath() );
+            while( treeNode.getParent() != null )
+            {
+               treeNode = (DefaultMutableTreeNode) treeNode.getParent();
+               path = "/" + getTreeNodeName( treeNode ) + path;
+            }
 
-				pathMap.put(path, treePath);
-			}
-		}
-		catch (Throwable e)
-		{
-			SoapUI.log("Failed to map items for query [" + query + "]:[" + nameQuery + "]");
-			SoapUI.logError(e);
-		}
+            pathMap.put( path, treePath );
+         }
+      }
+      catch( Throwable e )
+      {
+         SoapUI.log( "Failed to map items for query [" + query + "]:[" + nameQuery + "]" );
+         SoapUI.logError( e );
+      }
 
-		return resultNodes;
-	}
+      return resultNodes;
+   }
 
-	private String getTreeNodeName(DefaultMutableTreeNode treeNode)
-	{
-		Object userObject = treeNode.getUserObject();
-		if (userObject instanceof InspectItem)
-			return ((InspectItem) userObject).getName();
-		else
-			return treeNode.toString();
-	}
+   private String getTreeNodeName( DefaultMutableTreeNode treeNode )
+   {
+      Object userObject = treeNode.getUserObject();
+      if( userObject instanceof InspectItem )
+         return ((InspectItem) userObject).getName();
+      else
+         return treeNode.toString();
+   }
 
-	private final class InspectItem
-	{
-		private final XmlObject item;
-		private String name;
-		private final int tabIndex;
-		private XmlLineNumber lineNumber;
-		private final NodeSelector selector;
+   private final class InspectItem
+   {
+      private final XmlObject item;
+      private String name;
+      private final int tabIndex;
+      private XmlLineNumber lineNumber;
+      private final NodeSelector selector;
 
-		public InspectItem(XmlObject item, XmlObject nameObj, int tabIndex, NodeSelector selector)
-		{
-			this.item = item;
-			this.selector = selector;
-			this.name = XmlUtils.getNodeValue(nameObj.getDomNode());
-			if (name == null)
-				name = nameObj.toString();
-			this.tabIndex = tabIndex;
+      public InspectItem( XmlObject item, XmlObject nameObj, int tabIndex, NodeSelector selector )
+      {
+         this.item = item;
+         this.selector = selector;
+         this.name = XmlUtils.getNodeValue( nameObj.getDomNode() );
+         if( name == null )
+            name = nameObj.toString();
+         this.tabIndex = tabIndex;
 
-			ArrayList<?> list = new ArrayList<Object>();
-			XmlCursor cursor = item.newCursor();
-			cursor.getAllBookmarkRefs(list);
+         ArrayList<?> list = new ArrayList<Object>();
+         XmlCursor cursor = item.newCursor();
+         cursor.getAllBookmarkRefs( list );
 
-			for (Object o : list)
-				if (o instanceof XmlLineNumber)
-					lineNumber = (XmlLineNumber) o;
+         for( Object o : list )
+            if( o instanceof XmlLineNumber )
+               lineNumber = (XmlLineNumber) o;
 
-			cursor.dispose();
-		}
+         cursor.dispose();
+      }
 
-		public String getDescription()
-		{
-			return getName() + "@" + targetNamespaces.get(tabIndex);
-		}
+      public String getDescription()
+      {
+         return getName() + "@" + targetNamespaces.get( tabIndex );
+      }
 
-		public String getName()
-		{
-			int ix = name.indexOf(' ');
-			return ix == -1 ? name : name.substring(0, ix);
-		}
+      public String getName()
+      {
+         int ix = name.indexOf( ' ' );
+         return ix == -1 ? name : name.substring( 0, ix );
+      }
 
-		public int getTabIndex()
-		{
-			return tabIndex;
-		}
+      public int getTabIndex()
+      {
+         return tabIndex;
+      }
 
-		public int getLineNumber()
-		{
-			return lineNumber == null ? -1 : lineNumber.getLine() - 1;
-		}
+      public int getLineNumber()
+      {
+         return lineNumber == null ? -1 : lineNumber.getLine() - 1;
+      }
 
-		@Override
-		public String toString()
-		{
-			return name;
-		}
+      @Override
+      public String toString()
+      {
+         return name;
+      }
 
-		public NodeSelector getSelector()
-		{
-			return selector;
-		}
+      public NodeSelector getSelector()
+      {
+         return selector;
+      }
 
-		public Element getElement()
-		{
-			return (Element) item.getDomNode();
-		}
-	}
+      public Element getElement()
+      {
+         return (Element) item.getDomNode();
+      }
+   }
 
-	public boolean onClose(boolean canCancel)
-	{
+   public boolean onClose( boolean canCancel )
+   {
 
-		return release();
-	}
+      return release();
+   }
 
-	private void simpleSelect(InspectItem item, String attribute, String targetGroup)
-	{
-		Element elm = item.getElement();
-		String type = elm.getAttribute(attribute);
-		if (type.length() > 0)
-		{
-			int ix = type.indexOf(':');
-			if (ix != -1)
-				type = type.substring(ix + 1);
+   private void simpleSelect( InspectItem item, String attribute, String targetGroup )
+   {
+      Element elm = item.getElement();
+      String type = elm.getAttribute( attribute );
+      if( type.length() > 0 )
+      {
+         int ix = type.indexOf( ':' );
+         if( ix != -1 )
+            type = type.substring( ix + 1 );
 
-			TreePath treePath = pathMap.get("/" + getModelItem().getName() + "/" + targetGroup + "/" + type);
-			if (treePath != null)
-			{
-				tree.setSelectionPath(treePath);
-			}
-		}
-	}
+         TreePath treePath = pathMap.get( "/" + getModelItem().getName() + "/" + targetGroup + "/" + type );
+         if( treePath != null )
+         {
+            tree.setSelectionPath( treePath );
+         }
+      }
+   }
 
-	protected interface NodeSelector
-	{
-		public void selectNode(InspectItem item);
-	}
+   protected interface NodeSelector
+   {
+      public void selectNode( InspectItem item );
+   }
 
-	public class PartSelector implements NodeSelector
-	{
-		public void selectNode(InspectItem item)
-		{
-			Element elm = item.getElement();
-			String type = elm.getAttribute("type");
-			String element = elm.getAttribute("element");
-			if (type.length() > 0)
-			{
-				simpleSelect(item, "type", "Complex Types");
-			}
-			else if (element.length() > 0)
-			{
-				simpleSelect(item, "element", "Global Elements");
-			}
-		}
-	}
+   public class PartSelector implements NodeSelector
+   {
+      public void selectNode( InspectItem item )
+      {
+         Element elm = item.getElement();
+         String type = elm.getAttribute( "type" );
+         String element = elm.getAttribute( "element" );
+         if( type.length() > 0 )
+         {
+            simpleSelect( item, "type", "Complex Types" );
+         }
+         else if( element.length() > 0 )
+         {
+            simpleSelect( item, "element", "Global Elements" );
+         }
+      }
+   }
 
-	public class MessageSelector implements NodeSelector
-	{
-		public void selectNode(InspectItem item)
-		{
-			simpleSelect(item, "message", "Messages");
-		}
-	}
+   public class MessageSelector implements NodeSelector
+   {
+      public void selectNode( InspectItem item )
+      {
+         simpleSelect( item, "message", "Messages" );
+      }
+   }
 
-	public class GlobalElementSelector implements NodeSelector
-	{
-		public void selectNode(InspectItem item)
-		{
-			simpleSelect(item, "type", "Complex Types");
-		}
-	}
+   public class GlobalElementSelector implements NodeSelector
+   {
+      public void selectNode( InspectItem item )
+      {
+         simpleSelect( item, "type", "Complex Types" );
+      }
+   }
 
-	public class PortSelector implements NodeSelector
-	{
-		public void selectNode(InspectItem item)
-		{
-			simpleSelect(item, "binding", "Bindings");
-		}
-	}
+   public class PortSelector implements NodeSelector
+   {
+      public void selectNode( InspectItem item )
+      {
+         simpleSelect( item, "binding", "Bindings" );
+      }
+   }
 
-	public class BindingOperationSelector implements NodeSelector
-	{
-		public void selectNode(InspectItem item)
-		{
-			Element elm = item.getElement();
-			String name = elm.getAttribute("name");
+   public class BindingOperationSelector implements NodeSelector
+   {
+      public void selectNode( InspectItem item )
+      {
+         Element elm = item.getElement();
+         String name = elm.getAttribute( "name" );
 
-			Element operationElm = (Element) elm.getParentNode();
-			Element bindingElm = (Element) operationElm.getParentNode();
+         Element operationElm = (Element) elm.getParentNode();
+         Element bindingElm = (Element) operationElm.getParentNode();
 
-			String type = bindingElm.getAttribute("type");
+         String type = bindingElm.getAttribute( "type" );
 
-			if (type.length() > 0)
-			{
-				int ix = type.indexOf(':');
-				if (ix != -1)
-					type = type.substring(ix + 1);
+         if( type.length() > 0 )
+         {
+            int ix = type.indexOf( ':' );
+            if( ix != -1 )
+               type = type.substring( ix + 1 );
 
-				TreePath treePath = pathMap.get("/" + getModelItem().getName() + "/PortTypes/" + type + "/"
-						+ operationElm.getAttribute("name") + "/" + name);
-				if (treePath != null)
-				{
-					tree.setSelectionPath(treePath);
-				}
-			}
-		}
-	}
+            TreePath treePath = pathMap.get( "/" + getModelItem().getName() + "/PortTypes/" + type + "/"
+                    + operationElm.getAttribute( "name" ) + "/" + name );
+            if( treePath != null )
+            {
+               tree.setSelectionPath( treePath );
+            }
+         }
+      }
+   }
 
-	private class BackwardAction extends AbstractAction
-	{
-		public BackwardAction()
-		{
-			putValue(SMALL_ICON, UISupport.createImageIcon("/arrow_left.png"));
-			putValue(Action.SHORT_DESCRIPTION, "Navigate to previous selection");
-		}
+   private class BackwardAction extends AbstractAction
+   {
+      public BackwardAction()
+      {
+         putValue( SMALL_ICON, UISupport.createImageIcon( "/arrow_left.png" ) );
+         putValue( Action.SHORT_DESCRIPTION, "Navigate to previous selection" );
+      }
 
-		public void actionPerformed(ActionEvent arg0)
-		{
-			if (historyIndex > 0)
-			{
-				historyIndex--;
-				navigating = true;
-				tree.setSelectionPath(navigationHistory.get(historyIndex));
-				navigating = false;
-			}
-		}
-	}
+      public void actionPerformed( ActionEvent arg0 )
+      {
+         if( historyIndex > 0 )
+         {
+            historyIndex--;
+            navigating = true;
+            tree.setSelectionPath( navigationHistory.get( historyIndex ) );
+            navigating = false;
+         }
+      }
+   }
 
-	private class ForwardAction extends AbstractAction
-	{
-		public ForwardAction()
-		{
-			putValue(SMALL_ICON, UISupport.createImageIcon("/arrow_right.png"));
-			putValue(Action.SHORT_DESCRIPTION, "Navigate to next selection");
-		}
+   private class ForwardAction extends AbstractAction
+   {
+      public ForwardAction()
+      {
+         putValue( SMALL_ICON, UISupport.createImageIcon( "/arrow_right.png" ) );
+         putValue( Action.SHORT_DESCRIPTION, "Navigate to next selection" );
+      }
 
-		public void actionPerformed(ActionEvent arg0)
-		{
-			if (historyIndex < navigationHistory.size() - 1)
-			{
-				historyIndex++;
-				navigating = true;
-				tree.setSelectionPath(navigationHistory.get(historyIndex));
-				navigating = false;
-			}
-		}
-	}
+      public void actionPerformed( ActionEvent arg0 )
+      {
+         if( historyIndex < navigationHistory.size() - 1 )
+         {
+            historyIndex++;
+            navigating = true;
+            tree.setSelectionPath( navigationHistory.get( historyIndex ) );
+            navigating = false;
+         }
+      }
+   }
 
-	private class RecreateWadlAction extends AbstractAction
-	{
-		public RecreateWadlAction()
-		{
-			putValue(SMALL_ICON, UISupport.createImageIcon("/updateDefinition.gif"));
-			putValue(Action.SHORT_DESCRIPTION, "Recreate WADL");
-		}
+   private class RecreateWadlAction extends AbstractAction
+   {
+      public RecreateWadlAction()
+      {
+         putValue( SMALL_ICON, UISupport.createImageIcon( "/updateDefinition.gif" ) );
+         putValue( Action.SHORT_DESCRIPTION, "Recreate WADL" );
+      }
 
-		public void actionPerformed(ActionEvent arg0)
-		{
-			partTabs.removeAll();
-			tree.setSelectionRow( -1 );
-			rootNode.removeAllChildren();
-		   editors.clear();
-			groupNodes.clear();
-			pathMap.clear();
-			targetNamespaces.clear();
-			initTreeModel( restService );
-			operationsTableModel.fireTableDataChanged();
-			updatingService = false;
-		}
-	}
-	
-	private class ResourcesTableModel extends AbstractTableModel
-	{
-		public int getColumnCount()
-		{
-			return 2;
-		}
+      public void actionPerformed( ActionEvent arg0 )
+      {
+         partTabs.removeAll();
+         tree.setSelectionRow( -1 );
+         rootNode.removeAllChildren();
+         editors.clear();
+         groupNodes.clear();
+         pathMap.clear();
+         targetNamespaces.clear();
+         initTreeModel( restService );
+         operationsTableModel.fireTableDataChanged();
+         updatingService = false;
+      }
+   }
 
-		public int getRowCount()
-		{
-			return restService.getOperationCount();
-		}
 
-		@Override
-		public String getColumnName(int column)
-		{
-			switch (column)
-			{
-			case 0:
-				return "Name";
-			case 1:
-				return "Path";
-			}
+   private class ResourcesTableModel extends AbstractTableModel
+   {
+      public int getColumnCount()
+      {
+         return 2;
+      }
 
-			return null;
-		}
+      public int getRowCount()
+      {
+         return restService.getOperationCount();
+      }
 
-		public Object getValueAt(int rowIndex, int columnIndex)
-		{
-			if (updatingService)
-				return "<updating>";
+      @Override
+      public String getColumnName( int column )
+      {
+         switch( column )
+         {
+            case 0:
+               return "Name";
+            case 1:
+               return "Path";
+         }
 
-			RestResource operation = restService.getOperationAt(rowIndex);
+         return null;
+      }
 
-			switch (columnIndex)
-			{
-			case 0:
-				return operation.getName();
-			case 1:
-				return operation.getPath();
-			}
+      public Object getValueAt( int rowIndex, int columnIndex )
+      {
+         if( updatingService )
+            return "<updating>";
 
-			return null;
-		}
-	}
+         RestResource operation = restService.getOperationAt( rowIndex );
+
+         switch( columnIndex )
+         {
+            case 0:
+               return operation.getName();
+            case 1:
+               return operation.getPath();
+         }
+
+         return null;
+      }
+   }
 
 }

@@ -637,9 +637,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	public boolean dependsOn(ModelItem modelItem)
 	{
-		return modelItem == request || modelItem == request.getOperation()
-				|| modelItem == request.getOperation().getInterface()
-				|| modelItem == request.getOperation().getInterface().getProject();
+		return request.dependsOn( modelItem );
 	}
 
 	private final class ChangeToTabsAction extends AbstractAction

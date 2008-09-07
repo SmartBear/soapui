@@ -84,10 +84,20 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 
          SwingUtilities.invokeLater( new Runnable()
          {
-
             public void run()
             {
-               split.setDividerLocation( restRequest.hasRequestBody() ? 0.5 : 1.0 );
+               // wait for panel to get shown..
+               if( panel.getHeight() == 0 )
+               {
+                  SwingUtilities.invokeLater( this );
+               }
+               else
+               {
+                  if( !restRequest.hasRequestBody() )
+                     split.setDividerLocation( 1.0F );
+                  else
+                     split.setDividerLocation( 0.5F );
+               }
             }
          } );
       }
@@ -253,7 +263,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
             SchemaType schemaType = representation.getSchemaType();
             if( schemaType != null )
             {
-                list.add( representation, schemaType );
+               list.add( representation, schemaType );
             }
          }
 

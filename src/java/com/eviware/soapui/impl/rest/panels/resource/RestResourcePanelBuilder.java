@@ -12,11 +12,11 @@
 
 package com.eviware.soapui.impl.rest.panels.resource;
 
-import java.awt.Component;
-
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.support.components.JPropertiesTable;
+
+import java.awt.*;
 
 /**
  * PanelBuilder for WsdlInterface
@@ -43,7 +43,7 @@ public class RestResourcePanelBuilder extends EmptyPanelBuilder<RestResource>
    public Component buildOverviewPanel(RestResource service)
    {
    	JPropertiesTable<RestResource> table = new JPropertiesTable<RestResource>( "Resource Properties" );
-   	table.addProperty( "Name", "name" );
+   	table.addProperty( "Name", "name", true );
    	table.addProperty( "Description", "description", true );
    	table.addProperty( "Path", "path", true );
    	

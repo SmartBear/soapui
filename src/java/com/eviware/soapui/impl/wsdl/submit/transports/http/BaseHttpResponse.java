@@ -158,7 +158,7 @@ public abstract class BaseHttpResponse implements HttpResponse
       return version;
    }
 
-   public void setPropertyValue( String name, String value )
+   public void setProperty( String name, String value )
    {
       if( properties == null )
          properties = new StringToStringMap();

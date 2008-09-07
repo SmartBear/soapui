@@ -81,9 +81,9 @@ public class SinglePartHttpResponse extends BaseHttpResponse
 				requestEntity.writeRequest( out );
 				requestData = out.toByteArray();
 			}
-			else
+			else if( StringUtils.hasContent( requestContent ))
 			{
-				requestData = new byte[0];
+				requestData = requestContent.getBytes();
 			}
 		}
 		catch( Exception e )
@@ -120,7 +120,6 @@ public class SinglePartHttpResponse extends BaseHttpResponse
 		
 		getRequest().notifyPropertyChanged( WsdlRequest.RESPONSE_CONTENT_PROPERTY, oldContent, responseContent );
 	}
-
 
 	public byte[] getRawRequestData()
 	{

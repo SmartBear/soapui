@@ -15,12 +15,7 @@ package com.eviware.soapui.impl.support.components;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.EditorInspector;
 import com.eviware.soapui.support.editor.EditorView;
-import com.eviware.soapui.support.editor.registry.EditorViewFactory;
-import com.eviware.soapui.support.editor.registry.EditorViewRegistry;
-import com.eviware.soapui.support.editor.registry.InspectorFactory;
-import com.eviware.soapui.support.editor.registry.InspectorRegistry;
-import com.eviware.soapui.support.editor.registry.RequestEditorViewFactory;
-import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
+import com.eviware.soapui.support.editor.registry.*;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
@@ -38,7 +33,7 @@ public class RequestMessageXmlEditor<T extends ModelItem, T2 extends XmlDocument
 	{
 		super( xmlDocument, modelItem );
 		
-		EditorViewFactory[] editorFactories = EditorViewRegistry.getInstance().getFactoriesOfType( 
+		EditorViewFactory[] editorFactories = EditorViewFactoryRegistry.getInstance().getFactoriesOfType(
 					RequestEditorViewFactory.class );
 		
 		for( EditorViewFactory factory : editorFactories )

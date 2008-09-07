@@ -12,16 +12,14 @@
 
 package com.eviware.soapui.impl.rest.panels.resource;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-
-import javax.swing.JTabbedPane;
-
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource>
 {
@@ -62,7 +60,7 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 	@Override
 	public boolean dependsOn(ModelItem modelItem)
 	{
-		return false;
+		return getModelItem().dependsOn( modelItem );
 	}
 
 	public boolean onClose(boolean canCancel)

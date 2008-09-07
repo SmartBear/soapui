@@ -84,9 +84,9 @@ public class WadlGenerator
          generateParam(resourceConfig.addNewParam(), params.getPropertyAt(c));
       }
 
-      for (int c = 0; c < resource.getResourceCount(); c++)
+      for (int c = 0; c < resource.getChildResourceCount(); c++)
       {
-         resourceConfig.addNewResource().set(generateWadlResource(resource.getResourceAt(c)));
+         resourceConfig.addNewResource().set(generateWadlResource(resource.getChildResourceAt(c)));
       }
 
       for (int c = 0; c < resource.getRequestCount(); c++)

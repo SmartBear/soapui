@@ -47,6 +47,23 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends A
 		if( icon != null )
 			this.icon = UISupport.createImageIcon(icon);
 	}
+
+   public boolean dependsOn( ModelItem modelItem )
+   {
+      if( modelItem == this )
+         return true;
+
+      ModelItem p = parent;
+      while( p != null )
+      {
+         if( p == modelItem )
+            return true;
+
+         p = p.getParent();
+      }
+
+      return false;
+   }
 	
    public ModelItem getParent()
 	{

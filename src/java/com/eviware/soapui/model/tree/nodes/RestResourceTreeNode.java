@@ -12,15 +12,15 @@
 
 package com.eviware.soapui.model.tree.nodes;
 
-import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
 import com.eviware.soapui.model.tree.TreeNodeFactory;
+
+import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SoapUITreeNode for Operation implementations
@@ -38,9 +38,9 @@ public class RestResourceTreeNode extends OperationTreeNode
       super( restResource, treeModel );
 		this.restResource = restResource;
 		
-		for( int c = 0; c < restResource.getResourceCount(); c++ )
+		for( int c = 0; c < restResource.getChildResourceCount(); c++ )
 		{
-			resourceNodes.add( new RestResourceTreeNode( restResource.getResourcetAt(c), getTreeModel() )); 
+			resourceNodes.add( new RestResourceTreeNode( restResource.getChildResourcetAt(c), getTreeModel() ));
 		}
 		
 		treeModel.mapModelItems( resourceNodes );
@@ -90,7 +90,7 @@ public class RestResourceTreeNode extends OperationTreeNode
 	@Override
 	public int getChildCount()
 	{
-		return super.getChildCount() + restResource.getResourceCount();
+		return super.getChildCount() + restResource.getChildResourceCount();
 	}
 
 	@Override

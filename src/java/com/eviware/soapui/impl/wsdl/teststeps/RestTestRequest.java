@@ -61,6 +61,7 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
    private RestResponseMessageExchange messageExchange;
    private final boolean forLoadTest;
    private PropertyChangeNotifier notifier;
+   private RestResource restResource;
 
    public RestTestRequest( RestResource resource, RestMethodConfig callConfig, HttpTestRequestStep testStep,
                            boolean forLoadTest )
@@ -101,12 +102,8 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
 
       disabledRequestIcon = !isRest ? UISupport.createImageIcon( "/disabled_http_request.gif" ) :
               UISupport.createImageIcon( "/disabled_rest_request.gif" );
-   }
 
-   @Override
-   protected RequestIconAnimator<?> initIconAnimator()
-   {
-      return new TestRequestIconAnimator( this );
+      setIconAnimator( new TestRequestIconAnimator( this ) );
    }
 
    private void initAssertions()
@@ -437,11 +434,20 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
       }
    }
 
-   public void setResource( RestResource wsdlOperation )
+   public void setResource( RestResource restResource )
    {
+      if( this.restResource != null )
+         this.restResource.removePropertyChangeListener( this );
 
+      this.restResource = restResource;
+
+      restResource.addPropertyChangeListener( this );
    }
 
+   public RestResource getResource()
+   {
+      return restResource;
+   }
 
    public void resolve( ResolveContext context )
    {

@@ -48,12 +48,17 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 {
    private boolean updatingRequest;
    private JComboBox methodCombo;
-   private JUndoableTextField pathField;
-   private JButton recreatePathButton;
+   private JUndoableTextField pathComponent;
+   private JLabel pathLabel;
+   private boolean updating;
+   // private JButton recreatePathButton;
 
    public AbstractRestRequestDesktopPanel( T modelItem, T2 requestItem )
    {
       super( modelItem, requestItem );
+
+      if( requestItem.getResource() != null )
+         requestItem.getResource().addPropertyChangeListener( this );
    }
 
    public void propertyChange( PropertyChangeEvent evt )
@@ -61,6 +66,21 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
       if( evt.getPropertyName().equals( "method" ) && !updatingRequest )
       {
          methodCombo.setSelectedItem( evt.getNewValue() );
+      }
+      else if( evt.getPropertyName().equals( "path" ) &&
+              (getRequest().getResource() == null || getRequest().getResource() == evt.getSource()))
+      {
+         if( pathLabel != null )
+         {
+            pathLabel.setText( getRequest().getResource().getFullPath());
+         }
+
+         if( !updating )
+         {
+            updating = true;
+            pathComponent.setText( (String) evt.getNewValue() );
+            updating = false;
+         }
       }
 
       super.propertyChange( evt );
@@ -154,7 +174,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
    @Override
    protected JComponent buildToolbar()
    {
-      recreatePathButton = createActionButton( new RecreatePathAction(), true );
+     // recreatePathButton = createActionButton( new RecreatePathAction(), true );
 
       if( getRequest().getResource() != null )
       {
@@ -194,30 +214,62 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
       toolbar.addLabeledFixed( "Method", methodCombo );
       toolbar.addSeparator();
 
-      pathField = new JUndoableTextField();
-      pathField.setPreferredSize( new Dimension( getRequest().getResource() == null ? 350 : 250, 20 ) );
-      pathField.setText( getRequest().getPath() );
-      pathField.getDocument().addDocumentListener( new DocumentListenerAdapter()
-      {
-
-         @Override
-         public void update( Document document )
-         {
-            getRequest().setPath( pathField.getText() );
-         }
-      } );
 
       if( getRequest().getResource() != null )
       {
-         toolbar.addLabeledFixed( "Resource Path:", pathField );
-         toolbar.add( recreatePathButton );
+         pathComponent = new JUndoableTextField();
+         pathComponent.setPreferredSize( new Dimension( 250, 20 ) );
+         pathComponent.setText( getRequest().getResource().getPath() );
+         pathComponent.getDocument().addDocumentListener( new DocumentListenerAdapter()
+         {
+            @Override
+            public void update( Document document )
+            {
+               if( updating )
+                 return;
+
+               updating = true;
+               getRequest().getResource().setPath( pathComponent.getText() );
+               updating = false;
+            }
+         } );
+
+         toolbar.addLabeledFixed( "Resource Path:", pathComponent );
+
+         pathLabel = new JLabel( getRequest().getResource().getFullPath() );
+         pathLabel.setPreferredSize( new Dimension( 200, 20 ) );
+
+         toolbar.addSeparator();
+         toolbar.addLabeledFixed( "Full Path:", pathLabel );
       }
       else
       {
-         toolbar.addLabeledFixed( "Request URL:", pathField );
+         pathComponent = new JUndoableTextField();
+         pathComponent.setPreferredSize( new Dimension( 350, 20 ) );
+         pathComponent.setText( getRequest().getPath() );
+         pathComponent.getDocument().addDocumentListener( new DocumentListenerAdapter()
+         {
+            @Override
+            public void update( Document document )
+            {
+               getRequest().setPath( pathComponent.getText() );
+            }
+         } );
+
+         toolbar.addLabeledFixed( "Request URL:", pathComponent );
       }
 
       toolbar.addSeparator();
+   }
+
+   protected boolean release()
+   {
+      if( getRequest().getResource() != null )
+      {
+         getRequest().getResource().removePropertyChangeListener( this );
+      }
+
+      return super.release();
    }
 
    public class RestRequestMessageEditor extends

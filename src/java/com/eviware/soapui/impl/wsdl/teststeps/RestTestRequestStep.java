@@ -32,6 +32,8 @@ public class RestTestRequestStep extends HttpTestRequestStep
       restResource = findRestResource();
       if( restResource == null )
          setDisabled( true );
+      else
+         getTestRequest().setResource( restResource );
 
       if (!forLoadTest && restResource != null )
       {

@@ -29,10 +29,9 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.*;
 
 /**
  * WSDL implementation of Operation, maps to a WSDL BindingOperation
@@ -40,8 +39,8 @@ import java.util.Map;
  * @author Ole.Matzura
  */
 
-public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> implements AbstractHttpOperation, 
-	MutableTestPropertyHolder, RestResourceContainer
+public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> implements AbstractHttpOperation,
+	MutableTestPropertyHolder, RestResourceContainer, PropertyChangeListener
 {
 	public static final String PATH_PROPERTY = "path";
 	private List<RestRequest> requests = new ArrayList<RestRequest>();
@@ -67,13 +66,17 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
    		resourceConfig.addNewParameters();
    	
    	params = new XmlBeansRestParamsTestPropertyHolder( this, resourceConfig.getParameters());
+
+      service.addPropertyChangeListener( this );
    }
 
 	public RestResource(RestResource restResource, RestResourceConfig config)
 	{
 		this( restResource.getInterface(), config );
 		this.parentResource = restResource;
-	}
+
+      parentResource.addPropertyChangeListener( this );
+   }
 
 	public RestResource getParentResource()
 	{
@@ -90,7 +93,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		List<ModelItem> result = new ArrayList<ModelItem>();
 		
 		result.addAll( getRequestList());
-		result.addAll( getResourceList());
+		result.addAll( getChildResourceList());
 		
 		return result;
 	}
@@ -120,17 +123,17 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		return new String[0];
 	}
 
-	public RestResource getResourcetAt(int index)
+	public RestResource getChildResourcetAt(int index)
 	{
 		return resources.get(index);
 	}
 
-	public RestResource getResourceByName(String name)
+	public RestResource getChildResourceByName(String name)
 	{
 		return ( RestResource ) getWsdlModelItemByName( resources, name );
 	}
 	
-	public RestResource addNewResource(String name, String path)
+	public RestResource addNewChildResource(String name, String path)
 	{
 		RestResourceConfig resourceConfig = getConfig().addNewResource();
 		resourceConfig.setName(name);
@@ -144,12 +147,12 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		return resource;
 	}
 
-	public int getResourceCount()
+	public int getChildResourceCount()
 	{
 		return resources.size();
 	}
 
-	public List<RestResource> getResourceList()
+	public List<RestResource> getChildResourceList()
 	{
 		return new ArrayList<RestResource>( resources );
 	}
@@ -174,7 +177,8 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		
 		for( RestParamProperty prop : getDefaultParams())
 		{
-			request.addProperty(prop);
+         if( !request.hasProperty( prop.getName() ))
+            request.addProperty(prop);
 		}
 		
 		 String[] endpoints = getInterface().getEndpoints();
@@ -251,14 +255,21 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	public RestParamProperty[] getDefaultParams()
 	{
 		List<RestParamProperty> result = new ArrayList<RestParamProperty>();
-		
-		if( parentResource != null )
+      Set<String> names = new HashSet<String>();
+
+      if( parentResource != null )
 			result.addAll( Arrays.asList( parentResource.getDefaultParams() ));
 		
 		for( int c = 0; c < getPropertyCount(); c++ )
-			result.add( getPropertyAt(c));
+      {
+         if( names.contains( getPropertyAt( c ).getName()))
+            continue;
+
+         result.add( getPropertyAt(c));
+         names.add( getPropertyAt( c ).getName());
+      }
 		
-		return result.toArray( new RestParamProperty[result.size()]);
+      return result.toArray( new RestParamProperty[result.size()]);
 	}
 
 	public String getFullPath()
@@ -377,7 +388,12 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		return newRequest;
 	}
 
-	public RestResource cloneResource(RestResource resource, String name)
+   public RestResource cloneChildResource( RestResource resource, String name )
+   {
+      return cloneResource( resource, name );
+   }
+
+   public RestResource cloneResource(RestResource resource, String name)
 	{
 		RestResourceConfig resourceConfig = (RestResourceConfig) getConfig().addNewResource().set(resource.getConfig());
 		resourceConfig.setName(name);
@@ -394,8 +410,11 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	{
 		super.release();
 		params.release();
-		
-		for( RestResource resource : resources )
+      getService().removePropertyChangeListener( this );
+      if( parentResource != null )
+         parentResource.removePropertyChangeListener( this );
+
+      for( RestResource resource : resources )
 		{
 			resource.release();
 		}
@@ -406,7 +425,12 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		}
 	}
 
-	public void deleteResource(RestResource resource)
+   public void deleteChildResource( RestResource resource )
+   {
+      deleteResource( resource );
+   }
+
+   public void deleteResource(RestResource resource)
 	{
 		if( !resources.remove(resource))
 			return;
@@ -426,14 +450,42 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		return null;
 	}
 
-	public RestResource getResourceAt(int c)
+	public RestResource getChildResourceAt(int c)
 	{
 		return resources.get( c );
 	}
 
-
    public RestService getService()
    {
       return (RestService) (getParentResource() == null ? getParent() : getParentResource().getService());
+   }
+
+   public void propertyChange( PropertyChangeEvent evt )
+   {
+      if( evt.getPropertyName().equals( "path" ) || evt.getPropertyName().equals( "basePath" ))
+      {
+         notifyPropertyChanged( "path", null, getPath() );
+      }
+   }
+
+   public RestResource[] getAllChildResources()
+   {
+     List<RestResource> result = new ArrayList<RestResource>();
+      for( RestResource resource : resources )
+      {
+         addResourcesToResult( resource, result );
+      }
+
+      return result.toArray( new RestResource[result.size()] );
+   }
+
+   private void addResourcesToResult( RestResource resource, List<RestResource> result )
+   {
+      result.add( resource );
+
+      for( RestResource res : resource.getChildResourceList() )
+      {
+         addResourcesToResult( res, result );
+      }
    }
 }

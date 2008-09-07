@@ -34,7 +34,7 @@ public class RequestMessageEditor<T1 extends EditorDocument, T2 extends ModelIte
 		super( xmlDocument );
 		this.modelItem = modelItem;
 		
-		EditorViewFactory[] editorFactories = EditorViewRegistry.getInstance().getFactoriesOfType( 
+		EditorViewFactory[] editorFactories = EditorViewFactoryRegistry.getInstance().getFactoriesOfType(
 					RequestEditorViewFactory.class );
 		
 		for( EditorViewFactory factory : editorFactories )

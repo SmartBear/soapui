@@ -31,6 +31,4 @@ public class InterfaceConfigDefinitionCache<T extends AbstractInterface> extends
 
       return config.addNewDefinitionCache();
    }
-
-
 }

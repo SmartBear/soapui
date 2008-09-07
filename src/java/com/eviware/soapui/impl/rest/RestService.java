@@ -19,6 +19,7 @@ import com.eviware.soapui.impl.support.DefinitionContext;
 import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.iface.Operation;
+import com.eviware.soapui.support.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,9 +84,19 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
       notifyPropertyChanged( "basePath", old, basePath );
    }
 
+   public boolean isGenerated()
+   {
+      return StringUtils.isNullOrEmpty( getConfig().getDefinitionUrl() );
+   }
+
    public String getWadlUrl()
    {
-      return getConfig().getDefinitionUrl();
+      return isGenerated() ? generateWadlUrl() : getConfig().getDefinitionUrl();
+   }
+
+   public String generateWadlUrl()
+   {
+      return getName() + ".wadl";
    }
 
    public void setWadlUrl( String wadlUrl )
@@ -151,7 +162,7 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
    {
       result.add( resource );
 
-      for( RestResource res : resource.getResourceList() )
+      for( RestResource res : resource.getChildResourceList() )
       {
          addResourcesToResult( res, result );
       }
@@ -193,4 +204,24 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
       return RestServiceFactory.REST_TYPE;
    }
 
+   public boolean isDefinitionShareble()
+   {
+      return !isGenerated();
+   }
+
+   public void beforeSave()
+   {
+      if( isGenerated() && wadlContext != null )
+      {
+         try
+         {
+            wadlContext.getDefinitionCache().clear();
+         }
+         catch( Exception e )
+         {
+            e.printStackTrace();  
+         }
+      }
+
+   }
 }

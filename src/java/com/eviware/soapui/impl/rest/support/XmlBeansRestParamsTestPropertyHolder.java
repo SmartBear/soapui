@@ -649,10 +649,18 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 		for( int c = 0; c < params.getPropertyCount(); c++ )
 		{
 			RestParamProperty property = params.getPropertyAt(c);
-			RestParamProperty prop = addProperty(property.getName());
-			prop.setStyle(property.getStyle());
-			prop.setValue(property.getValue());
-		}
+         if( !hasProperty( property.getName() ))
+         {
+            RestParamProperty prop = addProperty(property.getName());
+			   prop.setStyle(property.getStyle());
+			   prop.setValue(property.getValue());
+            prop.setType( property.getType() );
+            prop.setDefaultValue( property.getDefaultValue() );
+            prop.setDescription( property.getDescription() );
+            prop.setOptions( property.getOptions() );
+            prop.setRequired( property.getRequired() );
+         }
+      }
 	}
 
 	public void release()

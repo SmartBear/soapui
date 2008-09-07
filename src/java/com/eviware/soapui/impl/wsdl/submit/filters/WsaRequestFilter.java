@@ -12,16 +12,15 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
-import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.iface.SubmitContext;
+import org.apache.log4j.Logger;
 
 /**
  * RequestFilter that expands properties in request content
@@ -46,10 +45,10 @@ public class WsaRequestFilter extends AbstractRequestFilter
 		else
 		{
 			ExtendedHttpMethod httpMethod = (ExtendedHttpMethod) context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
-			Operation operation = ((WsdlRequest)wsdlRequest).getOperation();
+			WsdlOperation operation = ((WsdlRequest)wsdlRequest).getOperation();
 //	TODO check UsingAddressing for particular endpoint when running a request
 //			((WsdlRequest)wsdlRequest).getEndpoint();
-			SoapVersion soapVersion = ((WsdlRequest)wsdlRequest).getOperation().getInterface().getSoapVersion();
+			SoapVersion soapVersion = operation.getInterface().getSoapVersion();
 			content = new WsaUtils(content, soapVersion, operation).addWSAddressingRequest((WsdlRequest) wsdlRequest, httpMethod);
 			if( content != null )
 				context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, content );

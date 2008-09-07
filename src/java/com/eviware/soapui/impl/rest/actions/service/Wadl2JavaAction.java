@@ -12,10 +12,8 @@
 
 package com.eviware.soapui.impl.rest.actions.service;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ArgumentBuilder;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner;
@@ -30,6 +28,9 @@ import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Invokes Apache CXF wsdl2java utility
@@ -88,8 +89,10 @@ public class Wadl2JavaAction extends AbstractToolsAction<Interface>
 		ArgumentBuilder args = buildArgs( modelItem );
 		builder.command(args.getArgs());
 		builder.directory(new File(xfireDir));
-		
-		toolHost.run( new ProcessToolRunner( builder, "WADL2Java", modelItem, args ));
+
+      ((RestService)modelItem).getWadlContext().regenerateWadl();
+
+      toolHost.run( new ProcessToolRunner( builder, "WADL2Java", modelItem, args ));
 	}
    
 	private ArgumentBuilder buildArgs( Interface modelItem ) throws IOException

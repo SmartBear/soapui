@@ -13,6 +13,7 @@
 package com.eviware.soapui.support.editor.registry;
 
 import com.eviware.soapui.impl.rest.panels.request.views.content.RestRequestContentViewFactory;
+import com.eviware.soapui.impl.rest.panels.request.views.html.RestHtmlResponseViewFactory;
 import com.eviware.soapui.impl.rest.panels.request.views.json.RestJsonResponseViewFactory;
 import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorViewFactory;
@@ -27,19 +28,19 @@ import java.util.List;
  * @author ole.matzura
  */
 
-public class EditorViewRegistry
+public class EditorViewFactoryRegistry
 {
-   private static EditorViewRegistry instance;
+   private static EditorViewFactoryRegistry instance;
    private List<EditorViewFactory> factories = new ArrayList<EditorViewFactory>();
 
-   public EditorViewRegistry()
+   public EditorViewFactoryRegistry()
    {
       // this should obviously come from a configuration file..
       addFactory( new XmlSourceEditorViewFactory() );
 //		addFactory( new RestRequestParamsViewFactory() );
       addFactory( new RestRequestContentViewFactory() );
       addFactory( new RestJsonResponseViewFactory() );
-//      addFactory(new RestHtmlResponseViewFactory());
+      addFactory( new RestHtmlResponseViewFactory());
       addFactory( new RawXmlEditorFactory() );
    }
 
@@ -59,10 +60,10 @@ public class EditorViewRegistry
       }
    }
 
-   public static final EditorViewRegistry getInstance()
+   public static final EditorViewFactoryRegistry getInstance()
    {
       if( instance == null )
-         instance = new EditorViewRegistry();
+         instance = new EditorViewFactoryRegistry();
 
       return instance;
    }

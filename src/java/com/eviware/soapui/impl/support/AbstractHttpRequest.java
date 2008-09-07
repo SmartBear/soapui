@@ -94,7 +94,9 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 			attachments.add( attachment);
 		}
 	}
-   
+
+
+
    protected List<FileAttachment<?>> getAttachmentsList()
    {
    	return attachments;
@@ -555,7 +557,16 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		}
 	}
 
-	public HttpResponse getResponse()
+   public void setIconAnimator( RequestIconAnimator<?> iconAnimator )
+   {
+      if( this.iconAnimator != null )
+         removeSubmitListener( this.iconAnimator );
+
+      this.iconAnimator = iconAnimator;
+      addSubmitListener( this.iconAnimator );
+   }
+
+   public HttpResponse getResponse()
 	{
 		return response;
 	}

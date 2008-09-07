@@ -16,7 +16,7 @@ import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.support.definition.InterfaceDefinition;
 import com.eviware.soapui.impl.wsdl.support.Constants;
 
-public class WadlDefinitionExporter extends AbstractDefinitionExporter
+public class WadlDefinitionExporter extends AbstractDefinitionExporter<RestService>
 {
    public WadlDefinitionExporter(InterfaceDefinition<RestService> definition)
    {
@@ -26,6 +26,14 @@ public class WadlDefinitionExporter extends AbstractDefinitionExporter
    public WadlDefinitionExporter(RestService restService) throws Exception
    {
       this( restService.getDefinitionContext().getInterfaceDefinition());
+   }
+
+   public String export( String folderName ) throws Exception
+   {
+      if( getDefinition().getInterface().isGenerated() )
+         setDefinition( getDefinition().getInterface().getWadlContext().regenerateWadl());
+
+      return super.export( folderName );    
    }
 
    protected String[] getLocationXPathsToReplace()

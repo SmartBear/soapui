@@ -124,7 +124,7 @@ public class WadlImporter
          String name = getFirstTitle( res.getDocList(), res.getPath() );
          String path = res.getPath();
 
-         RestResource newRes = newResource.addNewResource( name, path );
+         RestResource newRes = newResource.addNewChildResource( name, path );
          initResourceFromWadlResource( newRes, res );
 
          addSubResources( newRes, res );
