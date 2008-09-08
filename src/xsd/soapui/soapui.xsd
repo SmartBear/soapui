@@ -1316,6 +1316,7 @@
              <xsd:attribute name="fullPath" type="xsd:string"></xsd:attribute>
              <xsd:attribute name="mediaType" type="xsd:string"></xsd:attribute>
              <xsd:attribute name="postQueryString" type="xsd:boolean"></xsd:attribute>
+             <xsd:attribute name="accept" type="xsd:string"></xsd:attribute>
     		</xsd:extension>
     	</xsd:complexContent>
     </xsd:complexType>

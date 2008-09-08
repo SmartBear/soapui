@@ -48,7 +48,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 {
    private boolean updatingRequest;
    private JComboBox methodCombo;
-   private JUndoableTextField pathComponent;
+   private JUndoableTextField pathTextField;
+   private JComboBox acceptEncodingCombo;
    private JLabel pathLabel;
    private boolean updating;
    // private JButton recreatePathButton;
@@ -67,18 +68,22 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
       {
          methodCombo.setSelectedItem( evt.getNewValue() );
       }
+      else if( evt.getPropertyName().equals( "accept" ) && !updatingRequest )
+      {
+         acceptEncodingCombo.setSelectedItem( evt.getNewValue() );
+      }
       else if( evt.getPropertyName().equals( "path" ) &&
-              (getRequest().getResource() == null || getRequest().getResource() == evt.getSource()))
+              ( getRequest().getResource() == null || getRequest().getResource() == evt.getSource() ) )
       {
          if( pathLabel != null )
          {
-            pathLabel.setText( getRequest().getResource().getFullPath());
+            pathLabel.setText( getRequest().getResource().getFullPath() );
          }
 
          if( !updating )
          {
             updating = true;
-            pathComponent.setText( (String) evt.getNewValue() );
+            pathTextField.setText( ( String ) evt.getNewValue() );
             updating = false;
          }
       }
@@ -174,7 +179,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
    @Override
    protected JComponent buildToolbar()
    {
-     // recreatePathButton = createActionButton( new RecreatePathAction(), true );
+      // recreatePathButton = createActionButton( new RecreatePathAction(), true );
 
       if( getRequest().getResource() != null )
       {
@@ -196,17 +201,18 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
    protected void addToolbarComponents( JXToolBar toolbar )
    {
       toolbar.addSeparator();
-      methodCombo = new JComboBox( new Object[] { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
-              RequestMethod.DELETE, RequestMethod.HEAD } );
+      methodCombo = new JComboBox( new Object[]{RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+              RequestMethod.DELETE, RequestMethod.HEAD} );
 
       methodCombo.setSelectedItem( getRequest().getMethod() );
+      methodCombo.setToolTipText( "Set desired HTTP method" );
       methodCombo.addItemListener( new ItemListener()
       {
 
          public void itemStateChanged( ItemEvent e )
          {
             updatingRequest = true;
-            getRequest().setMethod( (RequestMethod) methodCombo.getSelectedItem() );
+            getRequest().setMethod( ( RequestMethod ) methodCombo.getSelectedItem() );
             updatingRequest = false;
          }
       } );
@@ -214,27 +220,43 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
       toolbar.addLabeledFixed( "Method", methodCombo );
       toolbar.addSeparator();
 
-
       if( getRequest().getResource() != null )
       {
-         pathComponent = new JUndoableTextField();
-         pathComponent.setPreferredSize( new Dimension( 250, 20 ) );
-         pathComponent.setText( getRequest().getResource().getPath() );
-         pathComponent.getDocument().addDocumentListener( new DocumentListenerAdapter()
+         acceptEncodingCombo = new JComboBox( getRequest().getAcceptEncodings() );
+         acceptEncodingCombo.setEditable( true );
+         acceptEncodingCombo.setToolTipText( "Sets accepted encoding(s) for response" );
+         acceptEncodingCombo.setSelectedItem( getRequest().getAccept() );
+         acceptEncodingCombo.addItemListener( new ItemListener()
+         {
+            public void itemStateChanged( ItemEvent e )
+            {
+               updatingRequest = true;
+               getRequest().setAccept( String.valueOf( acceptEncodingCombo.getSelectedItem() ) );
+               updatingRequest = false;
+            }
+         } );
+
+         toolbar.addLabeledFixed( "Accept", acceptEncodingCombo );
+         toolbar.addSeparator();
+
+         pathTextField = new JUndoableTextField();
+         pathTextField.setPreferredSize( new Dimension( 200, 20 ) );
+         pathTextField.setText( getRequest().getResource().getPath() );
+         pathTextField.getDocument().addDocumentListener( new DocumentListenerAdapter()
          {
             @Override
             public void update( Document document )
             {
                if( updating )
-                 return;
+                  return;
 
                updating = true;
-               getRequest().getResource().setPath( pathComponent.getText() );
+               getRequest().getResource().setPath( pathTextField.getText() );
                updating = false;
             }
          } );
 
-         toolbar.addLabeledFixed( "Resource Path:", pathComponent );
+         toolbar.addLabeledFixed( "Resource Path:", pathTextField );
 
          pathLabel = new JLabel( getRequest().getResource().getFullPath() );
          pathLabel.setPreferredSize( new Dimension( 200, 20 ) );
@@ -244,19 +266,19 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
       }
       else
       {
-         pathComponent = new JUndoableTextField();
-         pathComponent.setPreferredSize( new Dimension( 350, 20 ) );
-         pathComponent.setText( getRequest().getPath() );
-         pathComponent.getDocument().addDocumentListener( new DocumentListenerAdapter()
+         pathTextField = new JUndoableTextField();
+         pathTextField.setPreferredSize( new Dimension( 300, 20 ) );
+         pathTextField.setText( getRequest().getPath() );
+         pathTextField.getDocument().addDocumentListener( new DocumentListenerAdapter()
          {
             @Override
             public void update( Document document )
             {
-               getRequest().setPath( pathComponent.getText() );
+               getRequest().setPath( pathTextField.getText() );
             }
          } );
 
-         toolbar.addLabeledFixed( "Request URL:", pathComponent );
+         toolbar.addLabeledFixed( "Request URL:", pathTextField );
       }
 
       toolbar.addSeparator();
@@ -327,7 +349,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
          if( evt.getPropertyName().equals( RestRequest.REQUEST_PROPERTY ) && !updating )
          {
             updating = true;
-            fireXmlChanged( (String) evt.getOldValue(), (String) evt.getNewValue() );
+            fireXmlChanged( ( String ) evt.getOldValue(), ( String ) evt.getNewValue() );
             updating = false;
          }
       }
@@ -363,7 +385,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
       public void propertyChange( PropertyChangeEvent evt )
       {
-         fireXmlChanged( evt.getOldValue() == null ? null : ((HttpResponse) evt.getOldValue()).getContentAsString(),
+         fireXmlChanged( evt.getOldValue() == null ? null : ( ( HttpResponse ) evt.getOldValue() ).getContentAsString(),
                  getXml() );
       }
    }

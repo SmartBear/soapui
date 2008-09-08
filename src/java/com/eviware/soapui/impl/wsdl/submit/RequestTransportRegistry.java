@@ -12,27 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.submit;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.submit.filters.EndpointRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.EndpointStrategyRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.HttpAuthenticationRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.HttpProxyRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.HttpSettingsRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.PropertyExpansionRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.RemoveEmptyContentRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.RestRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.SoapHeadersRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.StripWhitespacesRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.WsaRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.WsdlPackagingRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.WsdlPackagingResponseFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.WssAuthenticationRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.WssRequestFilter;
+import com.eviware.soapui.impl.wsdl.submit.filters.*;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpClientRequestTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Registry of available transports, currently hard-coded but should be configurable in the future.
@@ -63,6 +49,7 @@ public class RequestTransportRegistry
 		httpTransport.addRequestFilter( new StripWhitespacesRequestFilter() );
 		httpTransport.addRequestFilter( new EndpointStrategyRequestFilter() );
 		httpTransport.addRequestFilter( new WsaRequestFilter() );
+      httpTransport.addRequestFilter( new HttpCompressionRequestFilter() );
 		httpTransport.addRequestFilter( new WsdlPackagingRequestFilter() );
 		httpTransport.addRequestFilter( new WsdlPackagingResponseFilter() );
 		

@@ -37,7 +37,6 @@ public class MimeMessageResponse  extends BaseHttpResponse
 	private final String requestContent;
 	private MultipartMessageSupport mmSupport;
 	private PostResponseDataSource postResponseDataSource;
-//	private byte[] requestData;
 
 	public MimeMessageResponse(AbstractHttpRequest<?> httpRequest, ExtendedHttpMethod httpMethod, String requestContent, PropertyExpansionContext context)
 	{
@@ -71,18 +70,6 @@ public class MimeMessageResponse  extends BaseHttpResponse
 			
 			if (httpRequest.getSettings().getBoolean(HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN))
 				this.timeTaken += httpMethod.getResponseReadTime();
-			
-//			RequestEntity requestEntity = httpMethod.getRequestEntity();
-//			if( requestEntity != null )
-//			{
-//				ByteArrayOutputStream out = new ByteArrayOutputStream();
-//				requestEntity.writeRequest( out );
-//				requestData = out.toByteArray();
-//			}
-//			else
-//			{
-//				requestData = new byte[0];
-//			}
 		}
 		catch ( Exception e)
 		{

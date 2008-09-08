@@ -22,7 +22,6 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.Exten
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPutMethod;
-import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
@@ -108,14 +107,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
       submitContext.setProperty( HTTP_METHOD, httpMethod );
 		submitContext.setProperty( POST_METHOD, httpMethod );
 		submitContext.setProperty( HTTP_CLIENT, httpClient );
-
-		Settings settings = httpRequest.getSettings();
-		String compressionAlg = settings.getString(HttpSettings.REQUEST_COMPRESSION, "None");
-		String requestContent = httpRequest.getRequestContent();
-		if (!"None".equals(compressionAlg))
-			requestContent = new String(CompressionSupport.compress(compressionAlg,requestContent.getBytes()));
-
-		submitContext.setProperty( REQUEST_CONTENT, requestContent );
+		submitContext.setProperty( REQUEST_CONTENT, httpRequest.getRequestContent() );
 		submitContext.setProperty( HOST_CONFIGURATION, hostConfiguration );
 		submitContext.setProperty( WSDL_REQUEST, httpRequest );
 		
@@ -126,6 +118,8 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		
 		try
 		{			
+         Settings settings = httpRequest.getSettings();
+
 			//	custom http headers last so they can be overridden
 			StringToStringMap headers = httpRequest.getRequestHeaders();
 			for( String header : headers.keySet() )

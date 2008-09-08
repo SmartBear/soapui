@@ -38,6 +38,7 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.types.StringList;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
@@ -120,7 +121,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
       for( RestRepresentation representation : representations )
       {
-         if( (type == null || type == representation.getType()) && (mediaType == null || mediaType.equals( representation.getMediaType() )) )
+         if( ( type == null || type == representation.getType() ) && ( mediaType == null || mediaType.equals( representation.getMediaType() ) ) )
          {
             result.add( representation );
          }
@@ -147,7 +148,19 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
       return method == null ? null : RequestMethod.valueOf( method );
    }
 
-     public void setMediaType( String mediaType )
+   public String getAccept()
+   {
+      return getConfig().getAccept();
+   }
+
+   public void setAccept( String acceptEncoding )
+   {
+      String old = getAccept();
+      getConfig().setAccept( acceptEncoding );
+      notifyPropertyChanged( "accept", old, acceptEncoding );
+   }
+
+   public void setMediaType( String mediaType )
    {
       String old = getMediaType();
       getConfig().setMediaType( mediaType );
@@ -159,7 +172,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
       String mediaType = getConfig().getMediaType();
       return mediaType;
    }
-   
+
 
    public WsdlSubmit<RestRequest> submit( SubmitContext submitContext, boolean async ) throws SubmitException
    {
@@ -237,7 +250,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
    @Override
    public RestResource getOperation()
    {
-      return (RestResource) super.getOperation();
+      return ( RestResource ) super.getOperation();
    }
 
    public Map<String, TestProperty> getProperties()
@@ -287,10 +300,23 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
    public void propertyChange( PropertyChangeEvent evt )
    {
-      if( evt.getPropertyName().equals( "path" ))
+      if( evt.getPropertyName().equals( "path" ) )
       {
          notifyPropertyChanged( "path", null, getPath() );
       }
+   }
+
+   public String[] getAcceptEncodings()
+   {
+      StringList result = new StringList();
+
+      for( RestRepresentation representation : getRepresentations( Type.RESPONSE, null ) )
+      {
+         if( !result.contains( representation.getMediaType() ) )
+            result.add( representation.getMediaType() );
+      }
+
+      return result.toStringArray();
    }
 
    public final static class ParameterMessagePart extends MessagePart.ParameterPart
@@ -447,7 +473,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
    {
       super.release();
       params.release();
-      
+
       if( getResource() != null )
          getResource().removePropertyChangeListener( this );
 
@@ -465,7 +491,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
       for( int c = 0; c < request.sizeOfRepresentationArray(); c++ )
       {
-         representations.get( c ).setConfig( request.getRepresentationArray( c ));
+         representations.get( c ).setConfig( request.getRepresentationArray( c ) );
       }
 
       List<AttachmentConfig> attachmentConfigs = getConfig().getAttachmentList();

@@ -164,6 +164,7 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
    protected void insertButtons(JXToolBar toolbar)
    {
       toolbar.add(addAssertionButton);
+      super.insertButtons( toolbar );
    }
 
    public void setEnabled(boolean enabled)

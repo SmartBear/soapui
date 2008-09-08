@@ -113,6 +113,12 @@ public class RestRequestFilter extends AbstractRequestFilter
          httpMethod.setPath( path );
       }
 
+      String acceptEncoding = request.getAccept();
+      if( StringUtils.hasContent( acceptEncoding ) )
+      {
+         httpMethod.setRequestHeader( "Accept", acceptEncoding );
+      }
+
       String encoding = StringUtils.unquote( request.getEncoding() );
 
       if( request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod )
