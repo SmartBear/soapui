@@ -26,68 +26,68 @@ import java.net.URL;
 
 public abstract class BaseHttpResponse implements HttpResponse
 {
-	private StringToStringMap requestHeaders;
-	private StringToStringMap responseHeaders;
-	
-	private long timeTaken;
-	private long timestamp;
-	private String contentType;
-	private int statusCode;
-	private SSLInfo sslInfo;
-	private URL url;
-	private WeakReference<AbstractHttpRequest<?>> httpRequest;
+   private StringToStringMap requestHeaders;
+   private StringToStringMap responseHeaders;
+
+   private long timeTaken;
+   private long timestamp;
+   private String contentType;
+   private int statusCode;
+   private SSLInfo sslInfo;
+   private URL url;
+   private WeakReference<AbstractHttpRequest<?>> httpRequest;
    private AbstractHttpRequest.RequestMethod method;
    private String version;
    private StringToStringMap properties;
-   private ByteArrayOutputStream rawRequestData = new ByteArrayOutputStream( );
-   private ByteArrayOutputStream rawResponseData = new ByteArrayOutputStream( );
+   private ByteArrayOutputStream rawRequestData = new ByteArrayOutputStream();
+   private ByteArrayOutputStream rawResponseData = new ByteArrayOutputStream();
 
-   public BaseHttpResponse(ExtendedHttpMethod httpMethod, AbstractHttpRequest<?> httpRequest)
-	{
-		this.httpRequest = new WeakReference<AbstractHttpRequest<?>>(httpRequest);
-		this.timeTaken = httpMethod.getTimeTaken();
+   public BaseHttpResponse( ExtendedHttpMethod httpMethod, AbstractHttpRequest<?> httpRequest )
+   {
+      this.httpRequest = new WeakReference<AbstractHttpRequest<?>>( httpRequest );
+      this.timeTaken = httpMethod.getTimeTaken();
 
       method = httpMethod.getMethod();
       version = httpMethod.getParams().getVersion().toString();
 
       Settings settings = httpRequest.getSettings();
-		if (settings.getBoolean(HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN))
-		{
-			try
-			{
-				httpMethod.getResponseBody();
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-			timeTaken += httpMethod.getResponseReadTime();
-		}
-		
-		this.timestamp = System.currentTimeMillis();
-		this.contentType = httpMethod.getResponseContentType();
-		this.statusCode = httpMethod.getStatusCode();
-		this.sslInfo = httpMethod.getSSLInfo();
-		
-		try
-		{
-			this.url = new URL( httpMethod.getURI().toString() );
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		initHeaders(httpMethod);
+      if( settings.getBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN ) )
+      {
+         try
+         {
+            httpMethod.getResponseBody();
+         }
+         catch( IOException e )
+         {
+            e.printStackTrace();
+         }
+         timeTaken += httpMethod.getResponseReadTime();
+      }
+
+      this.timestamp = System.currentTimeMillis();
+      this.contentType = httpMethod.getResponseContentType();
+      this.statusCode = httpMethod.getStatusCode();
+      this.sslInfo = httpMethod.getSSLInfo();
+
+      try
+      {
+         this.url = new URL( httpMethod.getURI().toString() );
+      }
+      catch( Exception e )
+      {
+         e.printStackTrace();
+      }
+
+      initHeaders( httpMethod );
    }
-	
-	protected void initHeaders(ExtendedHttpMethod httpMethod)
-	{
+
+   protected void initHeaders( ExtendedHttpMethod httpMethod )
+   {
       try
       {
          rawResponseData.write( httpMethod.getStatusLine().toString().getBytes() );
          rawResponseData.write( "\r\n".getBytes() );
-         rawRequestData.write( (method + " " + url.toString() + " " + version + "\r\n").getBytes() );
+         rawRequestData.write( ( method + " " + url.toString() + " " + version + "\r\n" ).getBytes() );
 
          requestHeaders = new StringToStringMap();
          Header[] headers = httpMethod.getRequestHeaders();
@@ -109,6 +109,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 
          if( httpMethod.getRequestEntity() != null )
          {
+            rawRequestData.write( "\r\n".getBytes() );
             if( httpMethod.getRequestEntity().isRepeatable() )
                httpMethod.getRequestEntity().writeRequest( rawRequestData );
             else
@@ -122,78 +123,80 @@ public abstract class BaseHttpResponse implements HttpResponse
       {
          e.printStackTrace();
       }
-	}
-	
-	public StringToStringMap getRequestHeaders()
-	{
-		return requestHeaders;
-	}
+   }
 
-	public StringToStringMap getResponseHeaders()
-	{
-		return responseHeaders;
-	}
-	
-	public long getTimeTaken()
-	{
-		return timeTaken;
-	}
+   public StringToStringMap getRequestHeaders()
+   {
+      return requestHeaders;
+   }
 
-	public SSLInfo getSSLInfo()
-	{
-		return sslInfo;
-	}
+   public StringToStringMap getResponseHeaders()
+   {
+      return responseHeaders;
+   }
 
-	public long getTimestamp()
-	{
-		return timestamp;
-	}
-	
-	public String getContentType()
-	{
-		return contentType;
-	}
+   public long getTimeTaken()
+   {
+      return timeTaken;
+   }
 
-	public URL getURL()
-	{
-		return url;
-	}
+   public SSLInfo getSSLInfo()
+   {
+      return sslInfo;
+   }
 
-	public AbstractHttpRequest<?> getRequest()
-	{
-		return httpRequest.get();
-	}
+   public long getTimestamp()
+   {
+      return timestamp;
+   }
 
-	public int getStatusCode()
-	{
-		return statusCode;
-	}
+   public String getContentType()
+   {
+      return contentType;
+   }
 
-	public Attachment[] getAttachments()
-	{
-		return new Attachment[0];
-	}
+   public URL getURL()
+   {
+      return url;
+   }
 
-	public Attachment[] getAttachmentsForPart(String partName)
-	{
-		return new Attachment[0];
-	}
+   public AbstractHttpRequest<?> getRequest()
+   {
+      return httpRequest.get();
+   }
 
-	public byte[] getRawRequestData()
-	{
-		return rawRequestData.toByteArray();
-	}
+   public int getStatusCode()
+   {
+      return statusCode;
+   }
 
-	public byte[] getRawResponseData()
-	{
-		return rawResponseData.toByteArray();
-	}
+   public Attachment[] getAttachments()
+   {
+      return new Attachment[0];
+   }
 
-   public AbstractHttpRequest.RequestMethod getMethod() {
+   public Attachment[] getAttachmentsForPart( String partName )
+   {
+      return new Attachment[0];
+   }
+
+   public byte[] getRawRequestData()
+   {
+      return rawRequestData.toByteArray();
+   }
+
+   public byte[] getRawResponseData()
+   {
+      return rawResponseData.toByteArray();
+   }
+
+   public AbstractHttpRequest.RequestMethod getMethod()
+   {
       return method;
    }
 
-   public String getHttpVersion() {
+   public String getHttpVersion()
+   {
       return version;
    }
 
