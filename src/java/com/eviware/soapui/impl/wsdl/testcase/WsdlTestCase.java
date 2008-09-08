@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.testcase;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -883,5 +885,18 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		long old = getTimeout();
 		getConfig().setTimeout( timeout );
 		notifyPropertyChanged( TIMEOUT_PROPERTY, old, timeout );
+	}
+
+	public void exportTestCase(File file)
+	{
+		try
+		{
+			this.getConfig().newCursor().save(file);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		
 	}
 }

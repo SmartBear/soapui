@@ -100,6 +100,7 @@
 	<tns:action id="DeleteTestSuiteAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.DeleteTestSuiteAction"/>
 	<tns:action id="TestSuiteTestRunnerAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestSuiteTestRunnerAction"/>
 	<tns:action id="ToggleDisableTestSuiteAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.ToggleDisableTestSuiteAction"/>
+	<tns:action id="ImportTestCase" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.ImportTestCaseAction"/>
 
 	<!-- TestCase Actions -->
 	<tns:action id="AddNewLoadTestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.AddNewLoadTestAction"/>
@@ -113,6 +114,7 @@
 	<tns:action id="MoveTestCaseUpAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.MoveTestCaseUpAction"/>
 	<tns:action id="TestCaseTestRunnerAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestCaseTestRunnerAction"/>
 	<tns:action id="ToggleDisableTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.ToggleDisableTestCaseAction"/>
+	<tns:action id="ExportTestCase" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.ExportTestCaseAction"/>
 
 	<!-- TestStep Actions -->
 	<tns:action id="RenameTestStepAction" actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.RenameTestStepAction"/>
@@ -372,6 +374,8 @@
 		<tns:actionMapping actionId="RenameTestSuiteAction" keyStroke="F2"/>
 		<tns:actionMapping actionId="DeleteTestSuiteAction" keyStroke="DELETE"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="ImportTestCase"/>
+		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/testsuites.html"/>
 	</tns:actionGroup>
 
@@ -399,6 +403,8 @@
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="MoveTestCaseUpAction" keyStroke="menu UP"/>
 		<tns:actionMapping actionId="MoveTestCaseDownAction" keyStroke="menu DOWN"/>
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="ExportTestCase"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/testcases.html"/>
 	</tns:actionGroup>

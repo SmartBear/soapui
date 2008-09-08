@@ -91,7 +91,10 @@ public class ResolveDialog
 				{
 					int index = resolveContextTableModel.getContext().getPathsToResolve().indexOf(path);
 					Object key = resolveContextTableModel.jbcList.get(index).getSelectedItem();
-					path.setResolver(key);
+					if (key instanceof Resolver)
+					{
+						path.setResolver(key);
+					}
 				}
 				int cnt = resolveContextTableModel.getContext().apply();
 				if (isShowOkMessage())
