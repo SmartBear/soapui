@@ -33,11 +33,15 @@ import com.sun.research.wadl.x2006.x10.RepresentationType;
 import com.sun.research.wadl.x2006.x10.ResourceDocument.Resource;
 import com.sun.research.wadl.x2006.x10.ResourceTypeDocument;
 import com.sun.research.wadl.x2006.x10.ResourcesDocument.Resources;
+import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.HashMap;
@@ -49,6 +53,7 @@ public class WadlImporter
    private RestService service;
    private Application application;
    private Resources resources;
+   private Map<String, ApplicationDocument> refCache = new HashMap<String, ApplicationDocument>();
 
    public WadlImporter( RestService service )
    {
@@ -61,7 +66,7 @@ public class WadlImporter
       {
          XmlObject xmlObject = XmlObject.Factory.parse( new URL( wadlUrl ) );
 
-         Element element = ((Document) xmlObject.getDomNode()).getDocumentElement();
+         Element element = ( ( Document ) xmlObject.getDomNode() ).getDocumentElement();
 
          // try to allow older namespaces
          if( element.getLocalName().equals( "application" ) && element.getNamespaceURI().startsWith( "http://research.sun.com/wadl" ) &&
@@ -71,18 +76,17 @@ public class WadlImporter
             content = content.replaceAll( "\"" + element.getNamespaceURI() + "\"", "\"" + Constants.WADL10_NS + "\"" );
             xmlObject = ApplicationDocument.Factory.parse( content );
          }
-         else
-         if( !element.getLocalName().equals( "application" ) || !element.getNamespaceURI().equals( Constants.WADL10_NS ) )
+         else if( !element.getLocalName().equals( "application" ) || !element.getNamespaceURI().equals( Constants.WADL10_NS ) )
          {
             throw new Exception( "Document is not a WADL application with " + Constants.WADL10_NS + " namespace" );
          }
 
-         ApplicationDocument applicationDocument = (ApplicationDocument) xmlObject.changeType( ApplicationDocument.type );
+         ApplicationDocument applicationDocument = ( ApplicationDocument ) xmlObject.changeType( ApplicationDocument.type );
          application = applicationDocument.getApplication();
 
          resources = application.getResources();
 
-         service.setName( getFirstTitle( application.getDocList(), service.getName() ));
+         service.setName( getFirstTitle( application.getDocList(), service.getName() ) );
 
          String base = resources.getBase();
 
@@ -157,7 +161,6 @@ public class WadlImporter
       for( Method method : resource.getMethodList() )
       {
          method = resolveMethod( method );
-
          initMethod( newResource, method );
       }
 
@@ -171,6 +174,7 @@ public class WadlImporter
             {
                for( Method method : type.getMethodList() )
                {
+                  method = resolveMethod( method );
                   RestRequest restRequest = initMethod( newResource, method );
 
                   for( Param param : type.getParamList() )
@@ -206,6 +210,7 @@ public class WadlImporter
 
          for( RepresentationType representationType : method.getResponse().getRepresentationList() )
          {
+            representationType = resolveRepresentation( representationType );
             addRepresentationFromConfig( request, representationType, RestRepresentation.Type.REQUEST );
          }
       }
@@ -214,11 +219,13 @@ public class WadlImporter
       {
          for( RepresentationType representationType : method.getResponse().getRepresentationList() )
          {
+            representationType = resolveRepresentation( representationType );
             addRepresentationFromConfig( request, representationType, RestRepresentation.Type.RESPONSE );
          }
 
          for( RepresentationType representationType : method.getResponse().getFaultList() )
          {
+            representationType = resolveFault( representationType );
             addRepresentationFromConfig( request, representationType, RestRepresentation.Type.FAULT );
          }
       }
@@ -233,7 +240,7 @@ public class WadlImporter
       restRepresentation.setElement( representationType.getElement() );
       restRepresentation.setStatus( representationType.getStatus() );
       restRepresentation.setId( representationType.getId() );
-      restRepresentation.setDescription( getFirstTitle( representationType.getDocList(), null ));
+      restRepresentation.setDescription( getFirstTitle( representationType.getDocList(), null ) );
    }
 
    private void initParam( Param param, RestParamProperty prop )
@@ -264,6 +271,27 @@ public class WadlImporter
             return m;
       }
 
+      try
+      {
+         ApplicationDocument applicationDocument = loadReferencedWadl( href );
+         if( applicationDocument != null )
+         {
+            int ix = href.lastIndexOf( '#' );
+            if( ix > 0 )
+               href = href.substring( ix + 1 );
+
+            for( Method m : application.getMethodList() )
+            {
+               if( m.getId().equals( href ) )
+                  return m;
+            }
+         }
+      }
+      catch( Exception e )
+      {
+         e.printStackTrace();
+      }
+
       return method;
    }
 
@@ -273,10 +301,55 @@ public class WadlImporter
       if( !StringUtils.hasContent( href ) )
          return representation;
 
-      for( RepresentationType m : application.getRepresentationList() )
+      try
       {
-         if( m.getId().equals( href.substring( 1 ) ) )
-            return m;
+         ApplicationDocument applicationDocument = loadReferencedWadl( href );
+         if( applicationDocument != null )
+         {
+            int ix = href.lastIndexOf( '#' );
+            if( ix > 0 )
+               href = href.substring( ix + 1 );
+
+            for( RepresentationType m : application.getRepresentationList() )
+            {
+               if( m.getId().equals( href ) )
+                  return m;
+            }
+         }
+      }
+      catch( Exception e )
+      {
+         e.printStackTrace();
+      }
+
+      return representation;
+   }
+
+    private RepresentationType resolveFault( RepresentationType representation )
+   {
+      String href = representation.getHref();
+      if( !StringUtils.hasContent( href ) )
+         return representation;
+
+      try
+      {
+         ApplicationDocument applicationDocument = loadReferencedWadl( href );
+         if( applicationDocument != null )
+         {
+            int ix = href.lastIndexOf( '#' );
+            if( ix > 0 )
+               href = href.substring( ix + 1 );
+
+            for( RepresentationType m : application.getFaultList() )
+            {
+               if( m.getId().equals( href ) )
+                  return m;
+            }
+         }
+      }
+      catch( Exception e )
+      {
+         e.printStackTrace();
       }
 
       return representation;
@@ -290,7 +363,46 @@ public class WadlImporter
             return resourceType;
       }
 
+      try
+      {
+         ApplicationDocument applicationDocument = loadReferencedWadl( id );
+         if( applicationDocument != null )
+         {
+            int ix = id.lastIndexOf( '#' );
+            if( ix > 0 )
+               id = id.substring( ix + 1 );
+
+            for( ResourceTypeDocument.ResourceType resourceType : applicationDocument.getApplication().getResourceTypeList() )
+            {
+               if( resourceType.getId().equals( id ) )
+                  return resourceType;
+            }
+         }
+      }
+      catch( Exception e )
+      {
+         e.printStackTrace();
+      }
+
       return null;
+   }
+
+   private ApplicationDocument loadReferencedWadl( String id )
+           throws URISyntaxException, XmlException, IOException
+   {
+      int ix = id.indexOf( '#' );
+      if( ix != -1 )
+         id = id.substring( 0, ix );
+      ApplicationDocument applicationDocument = refCache.get( id );
+
+      if( applicationDocument == null )
+      {
+         URI uri = new URI( id );
+         applicationDocument = ApplicationDocument.Factory.parse( uri.toURL() );
+         refCache.put( id, applicationDocument );
+      }
+
+      return applicationDocument;
    }
 
    public static Map<String, XmlObject> getDefinitionParts( String wadlUrl )
@@ -364,7 +476,7 @@ public class WadlImporter
             resultPath.append( '/' ).append( item );
       }
 
-      String query = ((URL) param).getQuery();
+      String query = ( ( URL ) param ).getQuery();
       if( StringUtils.hasContent( query ) )
       {
          items = query.split( "&" );
