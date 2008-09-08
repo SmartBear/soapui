@@ -106,7 +106,6 @@ public class RestResponseMessageExchange extends AbstractRestMessageExchange<Res
 		return false;
 	}
 
-	@Override
 	public RestResource getResource()
 	{
 		return getModelItem().getResource();

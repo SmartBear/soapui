@@ -11,6 +11,10 @@
  */
 package com.eviware.soapui.impl.wsdl.support.wsa;
 
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.w3c.dom.Element;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AnonymousTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
@@ -21,9 +25,6 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-import org.w3c.dom.Element;
 
 /**
  * Validating class for WS Addressing
@@ -48,7 +49,7 @@ public class WsaValidator
    {
       try
       {
-         SoapVersion soapVersion = ((WsdlMessageExchange) messageExchange).getOperation().getInterface()
+         SoapVersion soapVersion = messageExchange.getOperation().getInterface()
                  .getSoapVersion();
 
          XmlObject xmlObject = XmlObject.Factory.parse( content );
@@ -63,10 +64,10 @@ public class WsaValidator
          }
 
          String wsaNameSpace = header.getAttribute( "xmlns:wsa" );
-         if( wsaNameSpace == null || wsaNameSpace.isEmpty() )
+         if( wsaNameSpace == null || wsaNameSpace.length() == 0)
          {
             wsaNameSpace = envelope.getAttribute( "xmlns:wsa" );
-            if( wsaNameSpace == null || wsaNameSpace.isEmpty() )
+            if( wsaNameSpace == null || wsaNameSpace.length() == 0 )
             {
                throw new AssertionException( new AssertionError( "WS-A version is missing." ) );
             }
@@ -115,7 +116,7 @@ public class WsaValidator
          else
          {
             //check for anonymous
-            if( AnonymousTypeConfig.PROHIBITED.toString().equals( ((WsdlMessageExchange) messageExchange).getOperation().getAnonymous() )
+            if( AnonymousTypeConfig.PROHIBITED.toString().equals( messageExchange.getOperation().getAnonymous() )
                     && (toAddressValue.equals( "http://www.w3.org/2005/08/addressing/anonymous" ) || toAddressValue.equals( "http://schemas.xmlsoap.org/ws/2004/08/addressing/anonymous" )) )
             {
 //					throw new AssertionException( new AssertionError("WS-A InvalidAddressingHeader , Anonymous addresses are prohibited") );
@@ -132,7 +133,7 @@ public class WsaValidator
                if( !StringUtils.isNullOrEmpty( faultToAddressValue ) )
                {
                   //check for anonymous
-                  if( AnonymousTypeConfig.PROHIBITED.toString().equals( ((WsdlMessageExchange) messageExchange).getOperation().getAnonymous() )
+                  if( AnonymousTypeConfig.PROHIBITED.toString().equals( messageExchange.getOperation().getAnonymous() )
                           && (faultToAddressValue.equals( "http://www.w3.org/2005/08/addressing/anonymous" ) || faultToAddressValue.equals( "http://schemas.xmlsoap.org/ws/2004/08/addressing/anonymous" )) )
                   {
                      throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader , Anonymous addresses are prohibited" ) );
