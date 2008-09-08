@@ -20,6 +20,7 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.HttpSettings;
@@ -44,6 +45,15 @@ public class HttpSettingsRequestFilter extends AbstractRequestFilter
 		{
 			httpMethod.setRequestHeader("Connection", "close");
 		}
+		
+		// compress request?
+		String compressionAlg = settings.getString(HttpSettings.REQUEST_COMPRESSION, "None");
+		if ( !"None".equals(compressionAlg))
+			httpMethod.setRequestHeader("Content-Encoding", compressionAlg);
+
+		// accept compressed responses?
+		if (settings.getBoolean(HttpSettings.RESPONSE_COMPRESSION))
+			httpMethod.setRequestHeader("Accept-Encoding", CompressionSupport.getAvailableAlgorithms(","));
 		
 		// no chunking?
 		if (settings.getBoolean(HttpSettings.DISABLE_CHUNKING) && httpMethod instanceof EntityEnclosingMethod )

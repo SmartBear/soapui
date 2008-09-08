@@ -29,6 +29,7 @@ import org.apache.commons.httpclient.HttpState;
 
 import com.eviware.soapui.impl.wsdl.support.http.ConnectionWithSocket;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 
@@ -140,10 +141,18 @@ public final class HttpMethodSupport
 				e.printStackTrace();
 			}
 			
-			if (HttpClientSupport.isZippedResponse( httpMethod ))
-			{
-				responseBody = HttpClientSupport.decompress( responseBody );
-			}
+			String compressionAlg = HttpClientSupport.getResponseCompressionType(httpMethod);
+			if ( compressionAlg != null )
+				try
+				{
+					responseBody = CompressionSupport.decompress( compressionAlg, responseBody );
+				}
+				catch( Exception e )
+				{
+					IOException ioe = new IOException("Decompression of response failed");
+					ioe.initCause(e);
+					throw ioe;
+				}
 		}
 		else
 		{

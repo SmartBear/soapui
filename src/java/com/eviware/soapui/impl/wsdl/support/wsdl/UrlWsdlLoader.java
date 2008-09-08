@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.support.definition.DefinitionLoader;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
@@ -136,10 +137,9 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 				byte[] content = getMethod.getResponseBody();
 				if( content != null )
 				{
-					if (HttpClientSupport.isZippedResponse( getMethod ))
-					{
-						content = HttpClientSupport.decompress( content );
-					}
+					String compressionAlg = HttpClientSupport.getResponseCompressionType( getMethod );
+					if ( compressionAlg != null )
+						content = CompressionSupport.decompress( compressionAlg, content );
 					
 					urlCache.put(url, content);
 					String newUrl = getMethod.getURI().getURI();

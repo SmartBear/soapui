@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -102,7 +103,14 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
       submitContext.setProperty( HTTP_METHOD, httpMethod );
 		submitContext.setProperty( POST_METHOD, httpMethod );
 		submitContext.setProperty( HTTP_CLIENT, httpClient );
-		submitContext.setProperty( REQUEST_CONTENT, httpRequest.getRequestContent() );
+
+		Settings settings = httpRequest.getSettings();
+		String compressionAlg = settings.getString(HttpSettings.REQUEST_COMPRESSION, "None");
+		String requestContent = httpRequest.getRequestContent();
+		if (!"None".equals(compressionAlg))
+			requestContent = new String(CompressionSupport.compress(compressionAlg,requestContent.getBytes()));
+
+		submitContext.setProperty( REQUEST_CONTENT, requestContent );
 		submitContext.setProperty( HOST_CONFIGURATION, hostConfiguration );
 		submitContext.setProperty( WSDL_REQUEST, httpRequest );
 		
@@ -113,8 +121,6 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		
 		try
 		{			
-			Settings settings = httpRequest.getSettings();
-
 			//	custom http headers last so they can be overridden
 			StringToStringMap headers = httpRequest.getRequestHeaders();
 			for( String header : headers.keySet() )

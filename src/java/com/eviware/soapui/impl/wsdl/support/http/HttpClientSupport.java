@@ -12,17 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.support.http;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
-import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
@@ -34,11 +30,11 @@ import org.apache.commons.ssl.KeyMaterial;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.SSLSettings;
-import com.eviware.soapui.support.Tools;
 
 /**
  * HttpClient related tools
@@ -226,53 +222,21 @@ public class HttpClientSupport
 		httpMethod.getParams().setSoTimeout( ( int ) timeout );
 	}
 
-	public static boolean isZippedResponse( HttpMethod httpMethod )
-	{
-		Header contentType = httpMethod.getResponseHeader( "Content-Type" );
-		Header contentEncoding = httpMethod.getResponseHeader( "Content-Encoding" );
+	public static String getResponseCompressionType( HttpMethod method )
+ 	{
+ 		Header contentType = method.getResponseHeader( "Content-Type" );
+ 		Header contentEncoding = method.getResponseHeader( "Content-Encoding" );
 
-		if( contentType != null && contentType.getValue().toUpperCase().endsWith( "GZIP" ) )
-			return true;
-
-		if( contentEncoding != null && contentEncoding.getValue().toUpperCase().endsWith( "GZIP" ) )
-			return true;
-
-		return false;
-	}
-
-	public static byte[] decompress( byte[] s )
-	{
-		GZIPInputStream zipin;
-		try
-		{
-			InputStream in = new ByteArrayInputStream( s );
-			zipin = new GZIPInputStream( in );
-		}
-		catch( IOException e )
-		{
-			SoapUI.logError( e );
-			return s;
-		}
-
-		try
-		{
-			ByteArrayOutputStream out = Tools.readAll( zipin, -1 );
-			s = out.toByteArray();
-			out.close();
-		}
-		catch( IOException e )
-		{
-			SoapUI.logError( e );
-			return s;
-		}
-		try
-		{
-			zipin.close();
-		}
-		catch( IOException e )
-		{
-		}
-
-		return s;
+ 		if( contentType == null )
+ 			return null;
+ 		
+ 		String compressionAlg = CompressionSupport.getAvailableAlgorithm(contentType.getValue());
+ 		if ( compressionAlg != null )
+ 			return compressionAlg;
+ 		
+ 		if ( contentEncoding == null )
+ 			return null;
+ 		else
+ 			return CompressionSupport.getAvailableAlgorithm(contentEncoding.getValue());
 	}
 }

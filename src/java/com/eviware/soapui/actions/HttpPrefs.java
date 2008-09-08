@@ -12,6 +12,9 @@
 
 package com.eviware.soapui.actions;
 
+import java.util.TreeMap;
+
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.components.SimpleForm;
@@ -28,6 +31,8 @@ public class HttpPrefs implements Prefs
    public static final String AUTHENTICATE_PREEMPTIVELY = "Authenticate Preemptively";  
    public static final String INCLUDE_REQUEST_IN_TIME_TAKEN = "Include request in time taken";
    public static final String INCLUDE_RESPONSE_IN_TIME_TAKEN = "Include response in time taken";
+   public static final String REQUEST_COMPRESSION = "Request compression";
+   public static final String RESPONSE_COMPRESSION = "Response compression";
    public static final String CLOSE_CONNECTIONS_AFTER_REQUEST = "Close connections after request";
    public static final String USER_AGENT_HEADER = "User-Agent Header";
    public static final String SOCKET_TIMEOUT = "Socket Timeout";  
@@ -40,7 +45,13 @@ public class HttpPrefs implements Prefs
 	public static final String DISABLE_CHUNKING = "Disable Chunking";
 	public static final String HTTP_VERSION = "HTTP Version";
 	
-   
+	
+	private static TreeMap<String, String> compressionAlgs = new TreeMap<String, String>();
+	static {
+		compressionAlgs.put("None", "None");
+		compressionAlgs.put(CompressionSupport.ALG_GZIP, "GZIP");
+		compressionAlgs.put(CompressionSupport.ALG_DEFLATE, "DEFLATE");
+	}   
    private SimpleForm httpForm;
 	private final String title;
    
@@ -59,6 +70,8 @@ public class HttpPrefs implements Prefs
               {HttpSettings.HTTP_VERSION_1_1, HttpSettings.HTTP_VERSION_1_0,HttpSettings.HTTP_VERSION_0_9}, 
               "Select HTTP Version to use");
 			httpForm.appendTextField( HttpPrefs.USER_AGENT_HEADER, "User-Agent HTTP header to send, blank will send default" );
+			httpForm.appendComboBox( HttpPrefs.REQUEST_COMPRESSION, compressionAlgs );
+			httpForm.appendCheckBox( HttpPrefs.RESPONSE_COMPRESSION, "Accept compressed responses from hosts", true );
 			httpForm.appendCheckBox( HttpPrefs.CLOSE_CONNECTIONS_AFTER_REQUEST, "Closes the HTTP connection after each SOAP request", true );
 			httpForm.appendCheckBox( HttpPrefs.DISABLE_CHUNKING, "Disables content-chunking", true );
 			httpForm.appendCheckBox( HttpPrefs.AUTHENTICATE_PREEMPTIVELY, "Adds authentication information to outgoing request", true );
@@ -91,6 +104,8 @@ public class HttpPrefs implements Prefs
 		settings.setString( HttpSettings.HTTP_VERSION, httpValues.get( HTTP_VERSION ));
 		settings.setString( HttpSettings.DISABLE_CHUNKING, httpValues.get( DISABLE_CHUNKING ));
 		settings.setString( HttpSettings.USER_AGENT, httpValues.get( USER_AGENT_HEADER ));
+		settings.setString( HttpSettings.REQUEST_COMPRESSION, httpValues.get( REQUEST_COMPRESSION ));
+		settings.setString( HttpSettings.RESPONSE_COMPRESSION, httpValues.get( RESPONSE_COMPRESSION ));
       settings.setString( HttpSettings.CLOSE_CONNECTIONS, httpValues.get( CLOSE_CONNECTIONS_AFTER_REQUEST ));
       settings.setString( HttpSettings.AUTHENTICATE_PREEMPTIVELY, httpValues.get( AUTHENTICATE_PREEMPTIVELY ));
       settings.setString( HttpSettings.SOCKET_TIMEOUT, httpValues.get( SOCKET_TIMEOUT ));
@@ -115,6 +130,8 @@ public class HttpPrefs implements Prefs
       httpValues.put( HTTP_VERSION, settings.getString( HttpSettings.HTTP_VERSION, HttpSettings.HTTP_VERSION_1_1 ));
       httpValues.put( DISABLE_CHUNKING, settings.getString( HttpSettings.DISABLE_CHUNKING, null ));
       httpValues.put( USER_AGENT_HEADER, settings.getString( HttpSettings.USER_AGENT, null ));
+      httpValues.put( REQUEST_COMPRESSION, compressionAlgs.get(settings.getString( HttpSettings.REQUEST_COMPRESSION, "None" )));
+      httpValues.put( RESPONSE_COMPRESSION, settings.getString( HttpSettings.RESPONSE_COMPRESSION, null  ));
       httpValues.put( CLOSE_CONNECTIONS_AFTER_REQUEST, settings.getString( HttpSettings.CLOSE_CONNECTIONS, null  ));
       httpValues.put( AUTHENTICATE_PREEMPTIVELY, settings.getString( HttpSettings.AUTHENTICATE_PREEMPTIVELY, null ));
       httpValues.put( INCLUDE_REQUEST_IN_TIME_TAKEN, settings.getString( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN, null ));

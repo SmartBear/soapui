@@ -22,6 +22,8 @@ public interface HttpSettings
 {
 	public final static long DEFAULT_SOCKET_TIMEOUT = 60000L;
 	
+	public final static String REQUEST_COMPRESSION = HttpSettings.class.getSimpleName() + "@" + "request-compression";
+	public final static String RESPONSE_COMPRESSION = HttpSettings.class.getSimpleName() + "@" + "response-compression";
 	public final static String CLOSE_CONNECTIONS = HttpSettings.class.getSimpleName() + "@" + "close-connections";
 	public final static String USER_AGENT = HttpSettings.class.getSimpleName() + "@" + "user-agent";
 	public final static String AUTHENTICATE_PREEMPTIVELY = HttpSettings.class.getSimpleName() + "@" + "authenticate-preemptively";

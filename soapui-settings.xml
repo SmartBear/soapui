@@ -5,4 +5,4 @@
   <con:entry key="/home/robert/test4-soapui-project.xml" value="test4"/>
   <con:entry key="/home/robert/test3-soapui-project" value="test3"/>
   <con:entry key="/home/robert/test3-soapui-project.xml" value="test3"/>
-</xml-fragment>]]></con:setting></con:soapui-settings>
+</xml-fragment>]]></con:setting><con:setting id="HttpSettings@request-compression">None</con:setting><con:setting id="HttpSettings@response-compression">false</con:setting><con:setting id="ToolsSettings@wadl2java"/><con:setting id="WsaSettings@useDefaultAction">false</con:setting><con:setting id="WsaSettings@generateMessageID">false</con:setting><con:setting id="WsaSettings@useDefaultReplyTo">false</con:setting><con:setting id="WsaSettings@useDefaultRelationshipType">false</con:setting><con:setting id="WsaSettings@overrideExistingHeaders">false</con:setting></con:soapui-settings>

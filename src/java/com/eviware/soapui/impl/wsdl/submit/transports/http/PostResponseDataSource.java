@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import javax.activation.DataSource;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 
 /**
@@ -41,10 +42,9 @@ public class PostResponseDataSource implements DataSource
 		{
 			data = postMethod.getResponseBody(); //Tools.readAll( postMethod.getResponseBodyAsStream(), 0 ).toByteArray();
 			
-			if( HttpClientSupport.isZippedResponse( postMethod ))
-			{
-				data = HttpClientSupport.decompress( data );
-			}
+			String compressionAlg = HttpClientSupport.getResponseCompressionType( postMethod );
+			if ( compressionAlg != null )
+				data = CompressionSupport.decompress( compressionAlg, data );
 		}
 		catch (Exception e)
 		{
