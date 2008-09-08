@@ -86,6 +86,7 @@ public abstract class BaseHttpResponse implements HttpResponse
       try
       {
          rawResponseData.write( httpMethod.getStatusLine().toString().getBytes() );
+         rawResponseData.write( "\r\n".getBytes() );
          rawRequestData.write( (method + " " + url.toString() + " " + version + "\r\n").getBytes() );
 
          requestHeaders = new StringToStringMap();
