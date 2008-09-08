@@ -17,12 +17,14 @@
            file named by operation. Test suite directory contains settings.xml and one xml file for each test case 
            named by test case. Mock service directory contains settings.xml and one xml file for each mock operation
            named by mock operation.
+           <p align="center"><img src="images/composite-tree.gif" alt="Composite project look"/></p>
         </p>
         </subsection>
         <subsection name="Making Project Composite">
         <p>Making SopaIU project composite is easy. In project properties there is property ,<b>Composite Project</b>
         that can be true or false. Setting it on true will make project be saved in composite form when saved. Projects 
-        that have set <b>Project Password</b> can not be composite. 
+        that have set <b>Project Password</b> can not be composite.
+        <p align="center"><img src="images/composite-properties.gif" alt="Composite project properties"/></p>
         </p>
         </subsection>
         <subsection name="Composite behavior and actions">
@@ -31,6 +33,9 @@
         prompted. Deleting element means removing it from file system, too. Trough submenu <b>Composite Actions</b> is 
         possible to save or reload element. For test cases is possible to export, save at designated location, or import 
         them in test suite.
+        <p align="center"><img src="images/composite-import.gif" alt="Import test case"/></p>
+        <p align="center"><img src="images/composite-export.gif" alt="Export test case"/></p>
+        <p align="center"><img src="images/composite-actions.gif" alt="Composite actions"/></p>
         </p>
         </subsection>
 		 <p><hr size="1"/>Next: <a href=" "> </a></p>
