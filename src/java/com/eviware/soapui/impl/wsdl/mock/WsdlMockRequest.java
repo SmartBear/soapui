@@ -12,22 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl.mock;
 
-import java.io.ByteArrayOutputStream;
-import java.io.StringWriter;
-import java.util.Enumeration;
-import java.util.Vector;
-
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-import org.w3c.dom.Document;
-
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.MockRequestDataSource;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.MultipartMessageSupport;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MockRequestDataSource;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MultipartMessageSupport;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
@@ -38,6 +25,17 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.w3c.dom.Document;
+
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.StringWriter;
+import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * Request-class created when receiving an external request to a WsdlMockService

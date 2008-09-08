@@ -17,8 +17,8 @@ import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.config.WsdlRequestConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaContainer;
 import com.eviware.soapui.model.ModelItem;
@@ -381,7 +381,7 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 			result.addAll( Arrays.asList( getOperation().getDefaultResponseParts() ));
 			
 			if( getResponse() != null )
-				result.addAll( AttachmentUtils.extractAttachmentParts( 
+				result.addAll( AttachmentUtils.extractAttachmentParts(
 						getOperation(), getResponse().getContentAsString(), true, true, isMtomEnabled() ));
 			
 			return result.toArray( new MessagePart[result.size()] );

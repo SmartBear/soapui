@@ -10,18 +10,20 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.submit.transports.http;
-
-import java.io.StringWriter;
-import java.util.Vector;
-
-import org.w3c.dom.Document;
+package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.filters.WssRequestFilter;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.SinglePartHttpResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.w3c.dom.Document;
+
+import java.io.StringWriter;
+import java.util.Vector;
 
 public class WsdlSinglePartHttpResponse extends SinglePartHttpResponse implements WsdlResponse
 {

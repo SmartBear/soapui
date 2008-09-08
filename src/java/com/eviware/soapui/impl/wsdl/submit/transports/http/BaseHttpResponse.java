@@ -1,3 +1,15 @@
+/*
+ *  soapUI, copyright (C) 2004-2008 eviware.com
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -7,6 +19,7 @@ import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.types.StringToStringMap;
 import org.apache.commons.httpclient.Header;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
@@ -26,6 +39,8 @@ public abstract class BaseHttpResponse implements HttpResponse
    private AbstractHttpRequest.RequestMethod method;
    private String version;
    private StringToStringMap properties;
+   private ByteArrayOutputStream rawRequestData = new ByteArrayOutputStream( );
+   private ByteArrayOutputStream rawResponseData = new ByteArrayOutputStream( );
 
    public BaseHttpResponse(ExtendedHttpMethod httpMethod, AbstractHttpRequest<?> httpRequest)
 	{
@@ -64,25 +79,48 @@ public abstract class BaseHttpResponse implements HttpResponse
 		}
 		
 		initHeaders(httpMethod);
-	}
+   }
 	
-	protected void initHeaders(ExtendedHttpMethod postMethod)
+	protected void initHeaders(ExtendedHttpMethod httpMethod)
 	{
-		requestHeaders = new StringToStringMap();
-		Header[] headers = postMethod.getRequestHeaders();
-		for( Header header : headers )
-		{
-			requestHeaders.put( header.getName(), header.getValue() );
-		}
-		
-		responseHeaders = new StringToStringMap();
-		headers = postMethod.getResponseHeaders();
-		for( Header header : headers )
-		{
-			responseHeaders.put( header.getName(), header.getValue() );
-		}
-		
-		responseHeaders.put( "#status#", postMethod.getStatusLine().toString() );
+      try
+      {
+         rawResponseData.write( httpMethod.getStatusLine().toString().getBytes() );
+         rawRequestData.write( (method + " " + url.toString() + " " + version + "\r\n").getBytes() );
+
+         requestHeaders = new StringToStringMap();
+         Header[] headers = httpMethod.getRequestHeaders();
+         for( Header header : headers )
+         {
+            requestHeaders.put( header.getName(), header.getValue() );
+            rawRequestData.write( header.toExternalForm().getBytes() );
+         }
+
+         responseHeaders = new StringToStringMap();
+         headers = httpMethod.getResponseHeaders();
+         for( Header header : headers )
+         {
+            responseHeaders.put( header.getName(), header.getValue() );
+            rawResponseData.write( header.toExternalForm().getBytes() );
+         }
+
+         responseHeaders.put( "#status#", httpMethod.getStatusLine().toString() );
+
+         if( httpMethod.getRequestEntity() != null )
+         {
+            if( httpMethod.getRequestEntity().isRepeatable() )
+               httpMethod.getRequestEntity().writeRequest( rawRequestData );
+            else
+               rawRequestData.write( "<request data not available>".getBytes() );
+         }
+
+         rawResponseData.write( "\r\n".getBytes() );
+         rawResponseData.write( httpMethod.getResponseBody() );
+      }
+      catch( Exception e )
+      {
+         e.printStackTrace();
+      }
 	}
 	
 	public StringToStringMap getRequestHeaders()
@@ -142,12 +180,12 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 	public byte[] getRawRequestData()
 	{
-		return null;
+		return rawRequestData.toByteArray();
 	}
 
 	public byte[] getRawResponseData()
 	{
-		return null;
+		return rawResponseData.toByteArray();
 	}
 
    public AbstractHttpRequest.RequestMethod getMethod() {

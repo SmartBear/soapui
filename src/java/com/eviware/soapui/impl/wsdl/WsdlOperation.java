@@ -12,46 +12,35 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.ImageIcon;
-import javax.wsdl.BindingInput;
-import javax.wsdl.BindingOperation;
-import javax.wsdl.BindingOutput;
-import javax.wsdl.Definition;
-import javax.wsdl.Message;
-import javax.wsdl.OperationType;
-import javax.wsdl.extensions.mime.MIMEContent;
-import javax.wsdl.extensions.mime.MIMEMultipartRelated;
-import javax.wsdl.extensions.mime.MIMEPart;
-import javax.xml.namespace.QName;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.SchemaGlobalElement;
-import org.apache.xmlbeans.SchemaType;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.AnonymousTypeConfig;
-import com.eviware.soapui.config.OperationConfig;
-import com.eviware.soapui.config.OperationTypesConfig;
-import com.eviware.soapui.config.WsaVersionTypeConfig;
-import com.eviware.soapui.config.WsdlRequestConfig;
+import com.eviware.soapui.config.*;
 import com.eviware.soapui.config.PartsConfig.Part;
 import com.eviware.soapui.impl.support.AbstractHttpOperation;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.AttachmentUtils;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapMessageBuilder;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils.SoapHeader;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.iface.MessagePart;
-import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
+import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.iface.MessagePart.FaultPart;
+import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.UISupport;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.SchemaGlobalElement;
+import org.apache.xmlbeans.SchemaType;
+
+import javax.swing.*;
+import javax.wsdl.*;
+import javax.wsdl.extensions.mime.MIMEContent;
+import javax.wsdl.extensions.mime.MIMEMultipartRelated;
+import javax.wsdl.extensions.mime.MIMEPart;
+import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * WSDL implementation of Operation, maps to a WSDL BindingOperation

@@ -18,10 +18,10 @@ import com.eviware.soapui.config.HeaderConfig;
 import com.eviware.soapui.config.MockResponseConfig;
 import com.eviware.soapui.impl.wsdl.*;
 import com.eviware.soapui.impl.wsdl.submit.filters.RemoveEmptyContentRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.AttachmentUtils;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.BodyPartAttachment;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.MimeMessageMockResponseEntity;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.MockResponseDataSource;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.BodyPartAttachment;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MimeMessageMockResponseEntity;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MockResponseDataSource;
 import com.eviware.soapui.impl.wsdl.support.*;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
@@ -364,7 +364,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			result.addAll( Arrays.asList( getMockOperation().getOperation().getDefaultRequestParts() ));
 			
 			if( getMockResult() != null )
-				result.addAll( AttachmentUtils.extractAttachmentParts( 
+				result.addAll( AttachmentUtils.extractAttachmentParts(
 						getMockOperation().getOperation(), getMockResult().getMockRequest().getRequestContent(), true, false, isMtomEnabled() ));
 			
 			return result.toArray( new MessagePart[result.size()] );

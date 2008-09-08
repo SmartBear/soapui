@@ -10,11 +10,10 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.submit.transports.http;
+package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import org.apache.commons.httpclient.methods.RequestEntity;
 
@@ -26,23 +25,23 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * MimeMessage request class 
+ * MimeMessage response for a WsdlMockResponse
  * 
  * @author ole.matzura
  */
 
-public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
+public class MimeMessageMockResponseEntity implements RequestEntity
 {
 	private final MimeMessage message;
 	private byte[] buffer;
 	private final boolean isXOP;
-	private final WsdlRequest wsdlRequest;
+	private final WsdlMockResponse mockResponse;
 
-	public WsdlRequestMimeMessageRequestEntity(MimeMessage message, boolean isXOP, WsdlRequest wsdlRequest )
+	public MimeMessageMockResponseEntity(MimeMessage message, boolean isXOP, WsdlMockResponse response )
 	{
 		this.message = message;
 		this.isXOP = isXOP;
-		this.wsdlRequest = wsdlRequest;
+		this.mockResponse = response;
 	}
 
 	public long getContentLength()
@@ -65,21 +64,20 @@ public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
 	{
 		try
 		{
-			SoapVersion soapVersion = ((WsdlInterface)wsdlRequest.getOperation().getInterface()).getSoapVersion();
+			SoapVersion soapVersion = mockResponse.getSoapVersion();
 			
 			if( isXOP )
 			{
 				String header = message.getHeader( "Content-Type" )[0];
 				
-				return AttachmentUtils.buildMTOMContentType(header, wsdlRequest.getOperation().getAction(), soapVersion);
+				return AttachmentUtils.buildMTOMContentType(header, null, soapVersion);
 			}
 			else
 			{
 				String header = message.getHeader( "Content-Type" )[0];
 				int ix = header.indexOf( "boundary" );
-				
-				return "multipart/related; type=\"" + soapVersion.getContentType() + "\"; " +
-						"start=\"" + AttachmentUtils.ROOTPART_SOAPUI_ORG + "\"; "  + header.substring( ix );
+				return "multipart/related; type=\"" + soapVersion.getContentType() + 
+					"\"; start=\"" + AttachmentUtils.ROOTPART_SOAPUI_ORG + "\"; "  + header.substring( ix );
 			}
 		}
 		catch (MessagingException e)

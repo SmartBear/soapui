@@ -39,7 +39,7 @@ public abstract class AbstractMessageExchange<T extends ModelItem> implements Me
       if( hasRequest( true ) && XmlUtils.seemsToBeXml( getRequestContent() ))
          return getRequestContent();
       else
-         return null;
+         return "<not-xml/>";
    }
 
    public String getResponseContentAsXml()

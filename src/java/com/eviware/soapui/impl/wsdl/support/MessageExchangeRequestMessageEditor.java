@@ -46,7 +46,7 @@ public class MessageExchangeRequestMessageEditor extends RequestMessageXmlEditor
       try
       {
          MessageExchange messageExchange = messageExchangeModelItem.getMessageExchange();
-         DefaultXmlDocument defaultXmlDocument = ((DefaultXmlDocument) getDocument());
+         DefaultXmlDocument defaultXmlDocument = getDocument();
 
          if( messageExchange != null && messageExchange.getOperation() != null )
             defaultXmlDocument.setTypeSystem(

@@ -13,8 +13,8 @@
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.support.definition.DefinitionLoader;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
@@ -98,8 +98,7 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 		
 		if( url.startsWith( "file:" ))
 		{
-			setNewBaseURI(url);
-			return new URL( url ).openStream();
+         return handleFile( url );
 		}
 		
 		log.debug( "Getting wsdl component from [" + url + "]" );
@@ -162,7 +161,14 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 		}		
 	}
 
-	protected void createGetMethod(String url)
+   protected InputStream handleFile( String url )
+           throws IOException
+   {
+      setNewBaseURI(url);
+      return new URL( url ).openStream();
+   }
+
+   protected void createGetMethod(String url)
 	{
 		getMethod = new GetMethod( url );
 		getMethod.setDoAuthentication(true);

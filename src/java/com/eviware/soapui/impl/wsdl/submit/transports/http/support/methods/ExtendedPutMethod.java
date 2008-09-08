@@ -10,14 +10,16 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.submit.transports.http;
+package com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.commons.httpclient.methods.PutMethod;
 
 import java.io.IOException;
 
@@ -28,11 +30,11 @@ import java.io.IOException;
  * @author Ole.Matzura
  */
 
-public final class ExtendedGetMethod extends GetMethod implements ExtendedHttpMethod
+public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMethod
 {
 	private HttpMethodSupport httpMethodSupport;
 
-	public ExtendedGetMethod()
+	public ExtendedPutMethod()
 	{
 		httpMethodSupport = new HttpMethodSupport( this );
 	}
@@ -106,13 +108,7 @@ public final class ExtendedGetMethod extends GetMethod implements ExtendedHttpMe
 		return httpMethodSupport.getResponseContentType();
 	}
 
-	public RequestEntity getRequestEntity()
-	{
-		return null;
-	}
-
    public AbstractHttpRequest.RequestMethod getMethod() {
-      return AbstractHttpRequest.RequestMethod.GET;
+      return AbstractHttpRequest.RequestMethod.PUT;
    }
-
 }

@@ -13,11 +13,16 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.RequestFilter;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MimeMessageResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedDeleteMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPutMethod;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
@@ -210,7 +215,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			{
 				case GET : return new ExtendedGetMethod();
 				case DELETE : return new ExtendedDeleteMethod();
-				case PUT : return new ExtendedPutMethod(); 
+				case PUT : return new ExtendedPutMethod();
 			}
 		}
 		

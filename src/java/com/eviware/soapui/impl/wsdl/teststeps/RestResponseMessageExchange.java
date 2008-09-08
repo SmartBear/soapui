@@ -61,7 +61,7 @@ public class RestResponseMessageExchange extends AbstractRestMessageExchange<Res
    public String getRequestContentAsXml()
    {
       String result = getRequestContent();
-      return XmlUtils.seemsToBeXml( result ) ? result : null;
+      return XmlUtils.seemsToBeXml( result ) ? result : "<not-xml/>";
    }
 
    public String getResponseContentAsXml()

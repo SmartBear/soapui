@@ -10,60 +10,74 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.submit.transports.http;
+package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import com.eviware.soapui.SoapUI;
+
+import javax.activation.DataSource;
+import javax.mail.BodyPart;
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.activation.DataSource;
-import javax.mail.internet.MimeMultipart;
-
-import com.eviware.soapui.SoapUI;
-
 /**
- * DataSource for multipart attachments
+ * DataSource for a BodyPart
  * 
  * @author ole.matzura
  */
 
-class MultipartAttachmentDataSource implements DataSource
+public class BodyPartDataSource implements DataSource
 {
-	private final MimeMultipart multipart;
+	private final BodyPart bodyPart;
 
-	public MultipartAttachmentDataSource(MimeMultipart multipart)
+	public BodyPartDataSource(BodyPart bodyPart)
 	{
-		this.multipart = multipart;
+		this.bodyPart = bodyPart;
 	}
 
 	public String getContentType()
 	{
-		return multipart.getContentType();
+		try
+		{
+			return bodyPart.getContentType();
+		}
+		catch (MessagingException e)
+		{
+			SoapUI.logError( e );
+			return null;
+		}
 	}
 
 	public InputStream getInputStream() throws IOException
 	{
 		try
 		{
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			multipart.writeTo(out);
-			return new ByteArrayInputStream( out.toByteArray() );
+			return bodyPart.getInputStream();
 		}
-		catch (Exception e)
+		catch (MessagingException e)
 		{
 			SoapUI.logError( e );
 			return null;
-		}		
+		}
 	}
 
 	public String getName()
 	{
-		return multipart.toString();
+		try
+		{
+			return bodyPart.getHeader( "Content-ID" )[0];
+		}
+		catch (MessagingException e)
+		{
+			SoapUI.logError( e );
+			return null;
+		}
 	}
 
 	public OutputStream getOutputStream() throws IOException
 	{
 		return null;
-	}}
+	}
+
+}

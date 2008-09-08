@@ -9,76 +9,55 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
-package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
+package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
+
+import com.eviware.soapui.model.iface.Attachment;
+
+import javax.activation.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.activation.DataSource;
-import javax.mail.BodyPart;
-import javax.mail.MessagingException;
-
-import com.eviware.soapui.SoapUI;
-
 /**
- * DataSource for a BodyPart
+ * Standard DataSource for existing attachments in soapUI
  * 
  * @author ole.matzura
  */
 
-public class BodyPartDataSource implements DataSource
+class AttachmentDataSource implements DataSource
 {
-	private final BodyPart bodyPart;
+	private final Attachment attachment;
 
-	public BodyPartDataSource(BodyPart bodyPart)
+	public AttachmentDataSource(Attachment attachment)
 	{
-		this.bodyPart = bodyPart;
+		this.attachment = attachment;
 	}
 
 	public String getContentType()
 	{
-		try
-		{
-			return bodyPart.getContentType();
-		}
-		catch (MessagingException e)
-		{
-			SoapUI.logError( e );
-			return null;
-		}
+		return attachment.getContentType();
 	}
 
 	public InputStream getInputStream() throws IOException
 	{
 		try
 		{
-			return bodyPart.getInputStream();
+			return attachment.getInputStream();
 		}
-		catch (MessagingException e)
+		catch( Exception e )
 		{
-			SoapUI.logError( e );
-			return null;
+			throw new IOException( e.toString() );
 		}
 	}
 
 	public String getName()
 	{
-		try
-		{
-			return bodyPart.getHeader( "Content-ID" )[0];
-		}
-		catch (MessagingException e)
-		{
-			SoapUI.logError( e );
-			return null;
-		}
+		return attachment.getName();
 	}
 
 	public OutputStream getOutputStream() throws IOException
 	{
 		return null;
 	}
-
 }

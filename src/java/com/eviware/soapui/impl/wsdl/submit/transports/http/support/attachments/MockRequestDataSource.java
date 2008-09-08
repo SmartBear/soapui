@@ -10,55 +10,66 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.submit.transports.http;
+package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.support.Tools;
+
+import javax.activation.DataSource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.activation.DataSource;
-
-import com.eviware.soapui.model.iface.Attachment;
-
 /**
- * Standard DataSource for existing attachments in soapUI
+ * DataSource for a MockRequest
  * 
  * @author ole.matzura
  */
 
-class AttachmentDataSource implements DataSource
+public class MockRequestDataSource implements DataSource
 {
-	private final Attachment attachment;
+	private byte[] data;
+	private String contentType;
+	private String name;
 
-	public AttachmentDataSource(Attachment attachment)
+	public MockRequestDataSource(HttpServletRequest request)
 	{
-		this.attachment = attachment;
+		try
+		{
+			data = Tools.readAll( request.getInputStream(), 0 ).toByteArray();
+			contentType = request.getContentType();
+			name = "Request for " + request.getPathInfo();
+		}
+		catch (Exception e)
+		{
+			SoapUI.logError( e );
+		}		
 	}
 
 	public String getContentType()
 	{
-		return attachment.getContentType();
+		return contentType;
 	}
 
 	public InputStream getInputStream() throws IOException
 	{
-		try
-		{
-			return attachment.getInputStream();
-		}
-		catch( Exception e )
-		{
-			throw new IOException( e.toString() );
-		}
+		return new ByteArrayInputStream( data );
 	}
 
 	public String getName()
 	{
-		return attachment.getName();
+		return name;
 	}
 
 	public OutputStream getOutputStream() throws IOException
 	{
 		return null;
+	}
+
+	public byte[] getData()
+	{
+		return data;
 	}
 }

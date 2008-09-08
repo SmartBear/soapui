@@ -12,16 +12,15 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import org.apache.commons.httpclient.Header;
-
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedPostMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlMimeMessageResponse;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlSinglePartHttpResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.WsdlMimeMessageResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.WsdlSinglePartHttpResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
+import org.apache.commons.httpclient.Header;
 
 public class WsdlPackagingResponseFilter extends AbstractRequestFilter
 {

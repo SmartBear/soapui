@@ -9,19 +9,19 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
-package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
+package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
+
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
+import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
+
+import javax.activation.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import javax.activation.DataSource;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
-import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 
 /**
  * DataSource for a standard POST response

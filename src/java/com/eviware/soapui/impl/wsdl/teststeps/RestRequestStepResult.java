@@ -266,7 +266,7 @@ public class RestRequestStepResult extends WsdlTestStepResult implements
 
    public String getRequestContentAsXml()
    {
-      return XmlUtils.seemsToBeXml( requestContent ) ? requestContent : null;
+      return XmlUtils.seemsToBeXml( requestContent ) ? requestContent : "<not-xml/>";
    }
 
    public String getResponseContentAsXml()

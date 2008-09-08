@@ -103,14 +103,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		@Override
 		public String getContent()
 		{
-			if( request.getResponse() == null )
-				return"<missing raw request>";
-
-         String firstLine = request.getResponse().getMethod() + " " +
-                 request.getResponse().getURL().getFile() + " " + request.getResponse().getHttpVersion() + "\r\n";
-			
-			return firstLine + buildRawContent( request.getResponse().getRequestHeaders(), 
-						request.getResponse().getRawRequestData());
+			return new String( request.getResponse().getRawRequestData());
 		}
 
 		@Override
@@ -148,8 +141,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 			if( request.getResponse() == null )
 				return"<missing response>";
 			
-			return buildRawContent( request.getResponse().getResponseHeaders(), 
-						request.getResponse().getRawResponseData());
+			return new String( request.getResponse().getRawResponseData());
 		}
 
 		@Override

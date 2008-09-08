@@ -10,9 +10,9 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.submit.transports.http;
+package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 
 import javax.activation.DataSource;
@@ -22,31 +22,32 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * DataSource for an existing WsdlRequest
+ * DataSource for an existing WsdlMockResponse  
  * 
  * @author ole.matzura
  */
 
-public class WsdlRequestDataSource implements DataSource
+public class MockResponseDataSource implements DataSource
 {
-	private final WsdlRequest wsdlRequest;
-	private final String requestContent;
+	private final String responseContent;
 	private final boolean isXOP;
+	private final WsdlMockResponse mockResponse;
 
-	public WsdlRequestDataSource(WsdlRequest wsdlRequest, String requestContent, boolean isXOP)
+	public MockResponseDataSource(WsdlMockResponse mockResponse, String responseContent, boolean isXOP)
 	{
-		this.wsdlRequest = wsdlRequest;
-		this.requestContent = requestContent;
+		this.mockResponse = mockResponse;
+		this.responseContent = responseContent;
 		this.isXOP = isXOP;
 	}
 
 	public String getContentType()
 	{
-		SoapVersion soapVersion = wsdlRequest.getOperation().getInterface().getSoapVersion();
+		SoapVersion soapVersion = mockResponse.getSoapVersion();
 		
 		if( isXOP )
 		{
-			return AttachmentUtils.buildRootPartContentType( wsdlRequest.getOperation().getName(),	soapVersion);	
+			return AttachmentUtils.buildRootPartContentType( mockResponse.getMockOperation().getOperation().getName(),
+		   			soapVersion);	
 		}
 		else
 			return soapVersion.getContentType() + "; charset=UTF-8";
@@ -54,13 +55,13 @@ public class WsdlRequestDataSource implements DataSource
 
 	public InputStream getInputStream() throws IOException
 	{
-		byte[] bytes = requestContent.getBytes( "UTF-8");
+		byte[] bytes = responseContent.getBytes( "UTF-8");
 		return new ByteArrayInputStream( bytes);
 	}
 
 	public String getName()
 	{
-		return wsdlRequest.getName();
+		return mockResponse.getName();
 	}
 
 	public OutputStream getOutputStream() throws IOException

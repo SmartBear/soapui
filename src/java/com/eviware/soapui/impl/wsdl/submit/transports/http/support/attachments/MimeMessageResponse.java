@@ -10,21 +10,19 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.submit.transports.http;
-
-import java.io.ByteArrayOutputStream;
-
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HeaderElement;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.RequestEntity;
+package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.settings.HttpSettings;
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HeaderElement;
+import org.apache.commons.httpclient.NameValuePair;
 
 /**
  * WsdlMockResponse for a MimeResponse
@@ -39,7 +37,7 @@ public class MimeMessageResponse  extends BaseHttpResponse
 	private final String requestContent;
 	private MultipartMessageSupport mmSupport;
 	private PostResponseDataSource postResponseDataSource;
-	private byte[] requestData;
+//	private byte[] requestData;
 
 	public MimeMessageResponse(AbstractHttpRequest<?> httpRequest, ExtendedHttpMethod httpMethod, String requestContent, PropertyExpansionContext context)
 	{
@@ -74,17 +72,17 @@ public class MimeMessageResponse  extends BaseHttpResponse
 			if (httpRequest.getSettings().getBoolean(HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN))
 				this.timeTaken += httpMethod.getResponseReadTime();
 			
-			RequestEntity requestEntity = httpMethod.getRequestEntity();
-			if( requestEntity != null )
-			{
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				requestEntity.writeRequest( out );
-				requestData = out.toByteArray();
-			}
-			else
-			{
-				requestData = new byte[0];
-			}
+//			RequestEntity requestEntity = httpMethod.getRequestEntity();
+//			if( requestEntity != null )
+//			{
+//				ByteArrayOutputStream out = new ByteArrayOutputStream();
+//				requestEntity.writeRequest( out );
+//				requestData = out.toByteArray();
+//			}
+//			else
+//			{
+//				requestData = new byte[0];
+//			}
 		}
 		catch ( Exception e)
 		{
@@ -130,13 +128,13 @@ public class MimeMessageResponse  extends BaseHttpResponse
 		return mmSupport.getContentAsString();
 	}
 
-	public byte[] getRawRequestData()
-	{
-		return requestData;
-	}
-
-	public byte[] getRawResponseData()
-	{
-		return postResponseDataSource.getData();
-	}
+//	public byte[] getRawRequestData()
+//	{
+//		return requestData;
+//	}
+//
+//	public byte[] getRawResponseData()
+//	{
+//		return postResponseDataSource.getData();
+//	}
 }

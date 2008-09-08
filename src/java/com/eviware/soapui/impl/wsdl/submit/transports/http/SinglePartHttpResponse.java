@@ -19,9 +19,6 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.commons.httpclient.methods.RequestEntity;
-
-import java.io.ByteArrayOutputStream;
 
 /**
  * Simple response to a request
@@ -35,8 +32,8 @@ public class SinglePartHttpResponse extends BaseHttpResponse
 	private final String requestContent;
 	private boolean prettyPrint;
 	private long responseSize;
-	private byte[] requestData;
-	private byte[] responseBody;
+//	private byte[] requestData;
+//	private byte[] responseBody;
 	
 	public SinglePartHttpResponse(AbstractHttpRequest<?> httpRequest, ExtendedHttpMethod httpMethod, String requestContent, PropertyExpansionContext context )
 	{
@@ -45,7 +42,7 @@ public class SinglePartHttpResponse extends BaseHttpResponse
 		
 		try
 		{
-			responseBody = httpMethod.getResponseBody();
+         byte[] responseBody = httpMethod.getResponseBody();
 			int contentOffset = 0;
 			if( responseBody == null )
 				responseBody = new byte[0];
@@ -74,17 +71,17 @@ public class SinglePartHttpResponse extends BaseHttpResponse
 			
 			prettyPrint = httpRequest.getSettings().getBoolean( WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES );
 			
-			RequestEntity requestEntity = httpMethod.getRequestEntity();
-			if( requestEntity != null )
-			{
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				requestEntity.writeRequest( out );
-				requestData = out.toByteArray();
-			}
-			else if( StringUtils.hasContent( requestContent ))
-			{
-				requestData = requestContent.getBytes();
-			}
+//			RequestEntity requestEntity = httpMethod.getRequestEntity();
+//			if( requestEntity != null )
+//			{
+//				ByteArrayOutputStream out = new ByteArrayOutputStream();
+//				requestEntity.writeRequest( out );
+//				requestData = out.toByteArray();
+//			}
+//			else if( StringUtils.hasContent( requestContent ))
+//			{
+//				requestData = requestContent.getBytes();
+//			}
 		}
 		catch( Exception e )
 		{
@@ -121,15 +118,15 @@ public class SinglePartHttpResponse extends BaseHttpResponse
 		getRequest().notifyPropertyChanged( WsdlRequest.RESPONSE_CONTENT_PROPERTY, oldContent, responseContent );
 	}
 
-	public byte[] getRawRequestData()
-	{
-		return requestData;
-	}
-
-	public byte[] getRawResponseData()
-	{
-		return responseBody;
-	}
+//	public byte[] getRawRequestData()
+//	{
+//		return requestData;
+//	}
+//
+//	public byte[] getRawResponseData()
+//	{
+//		return responseBody;
+//	}
 
 
 }

@@ -10,13 +10,16 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.submit.transports.http;
+package com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
-import org.apache.commons.httpclient.methods.PutMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
 
 import java.io.IOException;
 
@@ -27,11 +30,11 @@ import java.io.IOException;
  * @author Ole.Matzura
  */
 
-public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMethod
+public final class ExtendedPostMethod extends PostMethod implements ExtendedHttpMethod
 {
 	private HttpMethodSupport httpMethodSupport;
 
-	public ExtendedPutMethod()
+	public ExtendedPostMethod()
 	{
 		httpMethodSupport = new HttpMethodSupport( this );
 	}
@@ -106,6 +109,7 @@ public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMe
 	}
 
    public AbstractHttpRequest.RequestMethod getMethod() {
-      return AbstractHttpRequest.RequestMethod.PUT;
+      return AbstractHttpRequest.RequestMethod.POST;
    }
+
 }

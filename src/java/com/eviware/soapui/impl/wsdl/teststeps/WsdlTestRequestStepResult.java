@@ -267,7 +267,7 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
 
    public String getRequestContentAsXml()
    {
-      return XmlUtils.seemsToBeXml( requestContent ) ? requestContent : null;
+      return XmlUtils.seemsToBeXml( requestContent ) ? requestContent : "<not-xml/>";
    }
 
    public String getResponseContentAsXml()
@@ -313,12 +313,12 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
 
    public byte[] getRawRequestData()
    {
-      return null;
+      return response == null ? null : response.getRawRequestData();
    }
 
    public byte[] getRawResponseData()
    {
-      return null;
+      return response == null ? null : response.getRawResponseData();
    }
 
    public Attachment[] getRequestAttachmentsForPart( String partName )
