@@ -43,6 +43,7 @@
     <x:doctype name="html" publicId="-//W3C//DTD XHTML 1.0 Transitional//EN" systemId="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
     <html>
       <head>
+      
         <j:set var="docTitle"><x:expr select="./properties/title"/></j:set>
         <x:if select="$nav/title">
           <title>${docTitle} - <x:expr select="$nav/title"/></title>
@@ -70,6 +71,8 @@
         </style>
         
         <link rel="stylesheet" type="text/css" href="${relativePath}/style/print.css" media="print"/>
+        <meta name="description" content="soapUI, the leading SOA Testing Tool" />
+		<meta name="keywords" content="eviware, soapui, soap ui, soapui, testing, soap, soa , web services, soap testing, soa testing, web services testing, webservices, web service development, webservices, service oriented architecture," />
         <meta http-equiv="Content-Type" content="text/html; charset=${outputencoding}"/>
         <x:forEach var="author" select="./properties/author">
           <meta name="author" content="${author.text}"/>
