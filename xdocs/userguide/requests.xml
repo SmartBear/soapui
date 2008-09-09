@@ -72,6 +72,7 @@ Both will improve your productivity and make Web Service Testing more fun.
 		 <li><b>Encoding</b> : The encoding used by the request</li>
 		 <li><b>Endpoint</b> : The endpoint for the request</li>
 		 <li><b>Bind Address</b>  : The local IP Address to bind to when sending the request.</li>
+		 <li><b>WS-Addressing</b>  : enables/disables ws-addressing.</li>
 		 </ul>
 		 <h4>Security/Authentication Properties</h4>
 		 (override any defaults set for the endpoint)
@@ -228,6 +229,7 @@ Both will improve your productivity and make Web Service Testing more fun.
 		  <li><b>Add WSS-Username Token</b> - prompts to add a WSS-Username SOAP-Header to the request message using the 
 		  username/password specified in the Request Details Tab</li>
 		  <li><b>Add WS-Timestamp</b> - prompts to add a WS-Timestamp SOAP-Header to the request message</li>
+		  <li><b>Add WS-A Headers</b> - adds WS-A header properties to the request message</li>
 		  <li><b>Undo/Redo/Copy/Cut/Paste/Find/Replace</b> - standard editing functions</li>
 		  <li><b>Go To Line</b> - prompts for a line to move to</li>
 		  <li><b>Show Line Numbers</b> - toggles line-number visibility</li>

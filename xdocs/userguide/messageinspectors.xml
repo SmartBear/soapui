@@ -66,6 +66,23 @@
 		<p align="center"><img src="images/doc_inspector_1.gif" alt="Viewing Schema Annotations in the XML Schema Documentation Inspector"/></p>
 		</subsection>
 
+		<subsection name="WS-A Inspector">
+		<p>The WS-A Inspector displays properties used for adding WS-A headers to a Request/MockResponse</p>
+		<li>Enable WS-A Addressing</li>
+		<li>Must understand indicates whether a header entry is mandatory or optional for the recipient to process.</li>
+		<li>Action - REQUIRED element specifies the value of the Action property. If not specified, and WS-A Settings (see <a href="preferences.html#Wsa_Settings">Preferences</a>)
+		'Use default Action' is checked , default action from wsdl will be generated.</li>
+		<li>To - OPTIONAL element specifies the value of the To property</li>
+		<li>ReplyTo - OPTIONAL element specifies the value of the ReplyTo property</li>
+		<li>MessageID - OPTIONAL element specifies the value of the MessageID property. If not specified, and WS-A Settings (see <a href="preferences.html#Wsa_Settings">Preferences</a>)
+		'Generate MessageID' is checked , random MessageID will be generated for RequestResponse operation.</li>
+		<li>From - OPTIONAL element specifies the value of the From property</li>
+		<li>FaultTo - OPTIONAL element specifies the value of the FaultTo property</li>
+		<li>RelatesTo- OPTIONAL element specifies the value of the RelatesTo property</li>
+		<li>RelationshipType- OPTIONAL element specifies the value of the RelationshipType property</li>
+		<p align="center"><img src="images/wsa_inspector.gif" alt="Viewing header properties in WS-A Inspector"/></p>
+		</subsection>
+
 		 <p><hr size="1"/>Next: <a href="attachments.html">Working with Web Service Attachments and Inline Files</a></p>
 		</section>
     </body>

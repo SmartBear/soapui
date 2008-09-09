@@ -47,6 +47,7 @@
 		<li><b>Strip Whitespaces</b> : Strips outgoing responses of any unnecessary whitespaces and xml comments, required by some servers.</li>
 		<li><b>Remove Empty Content</b> : Removes empty elements/attributes from outgoing responses.</li>
 		<li><b>Response Delay</b> : Waits the specified number of milliseconds before returning the response.</li>
+		<li><b>WS-Addressing</b>  : enables/disables ws-addressing.</li>
 		  
 		</ul>
 		</column>

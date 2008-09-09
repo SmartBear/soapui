@@ -17,6 +17,7 @@
 		<tr><td><a href="#Integrated_Tools">Tools</a></td><td>Sets paths to integrated tools</td></tr>
 		<tr><td><a href="#WSI_Settings">WSI Settings</a></td><td>Sets WS-I Basic Profile validation options</td></tr>
 		<tr><td><a href="#Global_Properties">Global Properties</a></td><td>Manages Global Properties</td></tr>
+		<tr><td><a href="#Wsa_Settings">WS-A Settings</a></td><td>Manages WS-A Settings</td></tr>
 		<tr><td><a href="#soapUI_Pro_Settings">soapUI Pro Settings</a></td><td>Sets soapUI-Pro specific settings</td></tr>
 		<tr><td><a href="#Coverage_Settings">Coverage Settings</a></td><td>Coverate related settings</td></tr>
 		</table>
@@ -234,6 +235,18 @@
 		available in the table. The "Enable Override" option will make global properties to always override any other
 		property references (see <a href="properties.html#Global_Properties">Properties</a> for more information).</p>
 		<p align="center"><img src="images/globalproperty_settings.gif" alt="The Global Properties Tab in soapUI"/></p>
+		</subsection>
+		
+		<subsection name="WS-A Settings">
+		<p>Manages WS Addressing settings</p>
+		<table><tr><th>Setting</th><th>Description</th></tr>
+		<tr><td>Use default Action</td><td>Indicates using default Action generated from Wsdl</td></tr>
+		<tr><td>Generate MessageID</td><td>Randomly generates unique messageID</td></tr>
+		<tr><td>Use default RelationshipType</td><td>Indicates using default 'reply' for RelationshipType</td></tr>
+		<tr><td>Override existing headers</td><td>Indicates replacing/skipping(if unchecked) already existing headers</td></tr>
+		</table>
+		
+		<p align="center"><img src="images/wsa_settings.gif" alt="The soapUI Pro Settings Tab in soapUI"/></p>
 		</subsection>
 		
 		<subsection name="soapUI Pro Settings">

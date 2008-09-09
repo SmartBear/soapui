@@ -104,6 +104,7 @@
 		 generated requests (namespaces and content) and according HTTP Headers</li>
 		 <li><b>Cached</b> (read-only): Shows if this definition is currently cached in memory</li>
 		 <li><b>Style</b> (read-only): Shows if this is a Document or RPC definition</li>
+		 <li><b>WS-A version</b> : Shows wsa namespace version</li>
 		 
 		 </ul>
 		 </div></column><column>
