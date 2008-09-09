@@ -63,8 +63,8 @@ public class RestResponseRepresentationsInspector extends AbstractXmlInspector i
 		return !view.getViewId().equals( RawXmlEditorFactory.VIEW_ID );
 	}
 	
-	public class ResponseRepresentationsTableModel extends AbstractTableModel
-	{
+	public class ResponseRepresentationsTableModel extends AbstractTableModel implements PropertyChangeListener
+   {
 		List<RestRepresentation> data = new ArrayList<RestRepresentation>();
 		
 		public ResponseRepresentationsTableModel()
@@ -74,12 +74,19 @@ public class RestResponseRepresentationsInspector extends AbstractXmlInspector i
 		
 		private void initData()
 		{
-			data.clear();
+         if( !data.isEmpty())
+         {
+            release();
+			   data.clear();
+         }
 			
 			for( RestRepresentation representation : request.getRepresentations( null, null ))
 			{
 				if( representation.getType() != RestRepresentation.Type.REQUEST )
+            {
+               representation.addPropertyChangeListener( this );
 					data.add( representation );
+            }
 			}
 		}
 
@@ -107,7 +114,6 @@ public class RestResponseRepresentationsInspector extends AbstractXmlInspector i
 			
 			return null;
 		}
-		
 
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex)
@@ -168,9 +174,28 @@ public class RestResponseRepresentationsInspector extends AbstractXmlInspector i
 			initData();
 			fireTableDataChanged();
 		}
-	}
 
-	public void propertyChange(PropertyChangeEvent evt)
+      public void propertyChange( PropertyChangeEvent evt )
+      {
+         fireTableDataChanged();
+      }
+
+      public void release()
+      {
+         for( RestRepresentation representation : data )
+         {
+            representation.removePropertyChangeListener( this );
+         }
+      }
+   }
+
+   @Override
+   public void release()
+   {
+      tableModel.release();
+   }
+
+   public void propertyChange(PropertyChangeEvent evt)
 	{
 		tableModel.refresh();
 	}

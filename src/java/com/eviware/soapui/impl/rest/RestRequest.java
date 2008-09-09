@@ -68,6 +68,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
    private XmlBeansRestParamsTestPropertyHolder params;
    public static final String REST_XML_RESPONSE = "restXmlResponse";
    public static final String REST_XML_REQUEST = "restXmlRequest";
+   private PropertyChangeListener representationPropertyChangeListener = new RepresentationPropertyChangeListener();
 
    public RestRequest( RestResource resource, RestMethodConfig requestConfig, boolean forLoadTest )
    {
@@ -84,7 +85,9 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
       for( RestResourceRepresentationConfig config : requestConfig.getRepresentationList() )
       {
-         representations.add( new RestRepresentation( this, config ) );
+         RestRepresentation representation = new RestRepresentation( this, config );
+         representation.addPropertyChangeListener( representationPropertyChangeListener );
+         representations.add( representation );
       }
 
       params = new XmlBeansRestParamsTestPropertyHolder( this, requestConfig.getParameters() );
@@ -306,7 +309,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
       }
    }
 
-   public String[] getAcceptEncodings()
+   public String[] getResponseMediaTypes()
    {
       StringList result = new StringList();
 
@@ -511,6 +514,9 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
    {
       RestRepresentation representation = new RestRepresentation( this, getConfig().addNewRepresentation() );
       representation.setType( type );
+
+      representation.addPropertyChangeListener( representationPropertyChangeListener );
+
       representations.add( representation );
 
       notifyPropertyChanged( "representations", null, representation );
@@ -518,8 +524,31 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
       return representation;
    }
 
+   public void removeRepresentation( RestRepresentation representation )
+   {
+      int ix = representations.indexOf( representation );
+
+      representations.remove( ix );
+      representation.removePropertyChangeListener( representationPropertyChangeListener );
+
+      notifyPropertyChanged( "representations", representation, null );
+      getConfig().removeRepresentation( ix );
+      representation.release();
+   }
+
    public boolean hasEndpoint()
    {
       return super.hasEndpoint() || PathUtils.isHttpPath( getPath() );
+   }
+
+   private class RepresentationPropertyChangeListener implements PropertyChangeListener
+   {
+      public void propertyChange( PropertyChangeEvent evt )
+      {
+         if( evt.getPropertyName().equals( "mediaType" ) && ((RestRepresentation)evt.getSource()).getType() == Type.RESPONSE )
+         {
+            RestRequest.this.notifyPropertyChanged( "responseMediaTypes", null, getResponseMediaTypes() );
+         }
+      }
    }
 }

@@ -17,6 +17,7 @@ import com.eviware.soapui.config.RestResourceRepresentationConfig;
 import com.eviware.soapui.config.RestResourceRepresentationTypeConfig;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
+import com.eviware.soapui.support.PropertyChangeNotifier;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
 
@@ -26,7 +27,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestRepresentation
+public class RestRepresentation implements PropertyChangeNotifier
 {
 	private final RestRequest restRequest;
 	private RestResourceRepresentationConfig config;
@@ -75,6 +76,9 @@ public class RestRepresentation
 	
 	public Type getType()
 	{
+      if( !config.isSetType())
+         return null;
+
 		return Type.valueOf(config.getType().toString());
 	}
 
@@ -85,23 +89,31 @@ public class RestRepresentation
 
 	public void setId(String arg0)
 	{
+      String old = getId();
 		config.setId(arg0);
+      propertyChangeSupport.firePropertyChange( "id", old, arg0 );
 	}
 
 	public void setType(Type type)
 	{
+      Type old = getType();
 		config.setType( RestResourceRepresentationTypeConfig.Enum.forString(type.toString()));
+      propertyChangeSupport.firePropertyChange( "type", old, type );
 	}
 
 	public void setMediaType(String arg0)
 	{
+      String old = getMediaType();
 		config.setMediaType(arg0);
+      propertyChangeSupport.firePropertyChange( "mediaType", old, arg0 );
 	}
 
    public void setElement( QName name )
    {
+      QName old = getElement();
       config.setElement( name );
       schemaType = null;
+      propertyChangeSupport.firePropertyChange( "element", old, name );
    }
 
    public List getStatus()
@@ -111,7 +123,9 @@ public class RestRepresentation
 
 	public void setStatus(List arg0)
 	{
+      List old = getStatus();
 		config.setStatus(arg0);
+      propertyChangeSupport.firePropertyChange( "status", old, arg0 );
 	}
 
    public SchemaType getSchemaType()
@@ -146,7 +160,9 @@ public class RestRepresentation
 
    public void setDescription( String description )
    {
+      String old = getDescription();
       config.setDescription( description );
+      propertyChangeSupport.firePropertyChange( "description", old, description );
    }
 
    public String getDescription()

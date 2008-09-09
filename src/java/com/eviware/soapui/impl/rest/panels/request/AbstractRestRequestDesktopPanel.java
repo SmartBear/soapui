@@ -34,7 +34,6 @@ import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 import javax.swing.*;
 import javax.swing.text.Document;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
@@ -49,7 +48,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
    private boolean updatingRequest;
    private JComboBox methodCombo;
    private JUndoableTextField pathTextField;
-   private JComboBox acceptEncodingCombo;
+   private JComboBox acceptCombo;
    private JLabel pathLabel;
    private boolean updating;
    // private JButton recreatePathButton;
@@ -70,7 +69,13 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
       }
       else if( evt.getPropertyName().equals( "accept" ) && !updatingRequest )
       {
-         acceptEncodingCombo.setSelectedItem( evt.getNewValue() );
+         acceptCombo.setSelectedItem( evt.getNewValue() );
+      }
+      else if( evt.getPropertyName().equals( "responseMediaTypes" ) && !updatingRequest )
+      {
+         Object item = acceptCombo.getSelectedItem();
+         acceptCombo.setModel( new DefaultComboBoxModel( ( Object[] ) evt.getNewValue() ) );
+         acceptCombo.setSelectedItem( item );
       }
       else if( evt.getPropertyName().equals( "path" ) &&
               ( getRequest().getResource() == null || getRequest().getResource() == evt.getSource() ) )
@@ -179,8 +184,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
    @Override
    protected JComponent buildToolbar()
    {
-      // recreatePathButton = createActionButton( new RecreatePathAction(), true );
-
       if( getRequest().getResource() != null )
       {
          JPanel panel = new JPanel( new BorderLayout() );
@@ -222,21 +225,21 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
       if( getRequest().getResource() != null )
       {
-         acceptEncodingCombo = new JComboBox( getRequest().getAcceptEncodings() );
-         acceptEncodingCombo.setEditable( true );
-         acceptEncodingCombo.setToolTipText( "Sets accepted encoding(s) for response" );
-         acceptEncodingCombo.setSelectedItem( getRequest().getAccept() );
-         acceptEncodingCombo.addItemListener( new ItemListener()
+         acceptCombo = new JComboBox( getRequest().getResponseMediaTypes() );
+         acceptCombo.setEditable( true );
+         acceptCombo.setToolTipText( "Sets accepted encoding(s) for response" );
+         acceptCombo.setSelectedItem( getRequest().getAccept() );
+         acceptCombo.addItemListener( new ItemListener()
          {
             public void itemStateChanged( ItemEvent e )
             {
                updatingRequest = true;
-               getRequest().setAccept( String.valueOf( acceptEncodingCombo.getSelectedItem() ) );
+               getRequest().setAccept( String.valueOf( acceptCombo.getSelectedItem() ) );
                updatingRequest = false;
             }
          } );
 
-         toolbar.addLabeledFixed( "Accept", acceptEncodingCombo );
+         toolbar.addLabeledFixed( "Accept", acceptCombo );
          toolbar.addSeparator();
 
          pathTextField = new JUndoableTextField();
@@ -387,20 +390,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
       {
          fireXmlChanged( evt.getOldValue() == null ? null : ( ( HttpResponse ) evt.getOldValue() ).getContentAsString(),
                  getXml() );
-      }
-   }
-
-   private class RecreatePathAction extends AbstractAction
-   {
-      public RecreatePathAction()
-      {
-         super();
-         putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/recreate_request.gif" ) );
-      }
-
-      public void actionPerformed( ActionEvent e )
-      {
-         getRequest().setPath( getRequest().getResource().getFullPath() );
       }
    }
 }
