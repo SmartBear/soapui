@@ -1,105 +1,76 @@
 <?xml version="1.0"?>
 <document>
     <properties>
-        <title>Web Service testing Tutorial with soapUI - create tests from a WSDL</title>
+        <title>Web Service Testing in eclipse - soapUI plugin</title>
     </properties>
     <body>
-		<section name="Getting Started with soapUI">
-		<p>Below you'll find a step-by-step guide to creating your first soapUI project with some requests and a TestCase. The
-		sample will use the amazon.com web service</p>
+		<section name="soapUI eclipse-plugin">
 		
-		 <p>Although soapUI should be easy to get started with, you will need to have a good grasp of the following 
-		 concepts and technologies to get the most out of soapUI's functionality.</p>
-		 <ul>
-		 	<li>WSDL - basic concepts (services, ports, bindings, port types), relation to xml-schema</li>
-		 	<li>SOAP - basic concepts, relation to WSDL (bindings, etc), different encoding types (soap-encoded/literal) and 
-		 	message styles (document/rpc)</li>
-		 	<li>XML and related technologies - XPath, XML Schema, namespaces, etc</li>
-		 </ul>
+		<p>The soapUI eclipse plugin provides full soapUI functionality from within eclipse. Apart from "standard" 
+		soapUI 2.0 functionality, the eclipse plugin contains a soapUI project nature and also adds a new soapUI 
+		perspective which mimics the layout of the standalone soapUI version.The plugin makes use of the 
+		SWT_AWT bridge which greatly eases our development effort but may result in graphical glitches with dialogs 
+		and some window updates... but all core functionality should be working	OK (let us know otherwise)...</p>
+		<p>Currently the eclipse plugin can be downloaded from 
+		<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013">soapUI SourceForge Download Page</a> or 
+		through the update site located at http://www.soapui.org/eclipse/update/site.xml (see below)</p>
+		<p>Please <a target="_new" href="http://www.eclipseplugincentral.com/Web_Links-index-req-ratelink-lid-583.html">vote for this plugin</a> 
+		at the <a target="_new" href="http://www.eclipseplugincentral.com">eclipse plugin central</a>.</p>
 		
-		 <p>You can find most specifications at <a target="_new" href="http://www.w3.org">W3C Web Site</a> and tutorials
-		 at several sites, for example <a target="_new" href="http://www.w3schools.com">W3Schools Web Site</a> and
-		 <a target="_new" href="http://www.zvon.org/o_html/group_web_services.html">zvon.org Web Site</a>.</p>
+		<columns><column>
+		<thumbnail src="images/eclipse1.gif" size="250" caption="(Mock Service with Request/Response Editors)" alt="a soapUI Mock Service with Request/Response Editors in eclipse"/>
+		</column><column>
+		<thumbnail src="images/eclipse2.gif" size="250" caption="(Tools / soapUI Menu with LoadTest Runner in background)" alt="Tools / soapUI Menu with LoadTest Runner in background in eclipse"/>
+		</column><column>
+		<thumbnail src="images/eclipse3.gif" size="250" caption="(Axis2 Wizard with WS-I Basic Profile Report in background)" alt="the soapUI Axis2 Wizard with WS-I Basic Profile Report in background in eclipse"/>
+		</column></columns>
 		
-		<subsection name="Install and Run soapUI">
-		
-		<p>Install and Run soapUI in one of the following ways:</p>
-		<ul>
-		<li>By launching the latest version with Java WebStart from this sites' <a href="../index.html">top page</a></li>
-		<li>By downloading and installing soapUI using the windows installer from 
-		<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013">SourceForge soapUI Web Site</a>, which 
-		includes the required 1.6 JRE (Java Runtime Environment). Use the installer if you are unsure about your systems Java 
-		installation or if you want startup menu icons and an uninstaller.</li>
-		<li>By downloading the binary distribution from 
-		<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013">SourceForge</a> 
-		(for example "soapui-1.5-bin.zip") and unzipping it manually and running the included bin\soapui.bat (or .sh) 
-		script (you	will need Java in your path).</li>
-		</ul>
-		<p>In any case, soapUI should start and display an empty Workspace to get started with.</p>
-		</subsection>
-		
-		 <subsection name="Create or Import a Web Service testing project">
-		 
-		<columns><column><div>
-		Now that you're up and running, get going by creating your first project.</div>
-		<ul>
-		<li>Right click on the workspace node in the left navigation pane and select "New WSDL Project"</li>
-		<li>You will be prompted for a project name and then for a local file where the project should be saved</li>
-		<li>If all is OK an empty project will be created in the workspace</li>
-		</ul>
-		<p>If you have downloaded the offline version, a sample project is included in the root folder; select 
-		"Import Project" instead and browse to the sample-soapui-project.xml file.</p>
-		<p>Read more about projects in the <a href="../userguide/projects/index.html">soapUI User Guide</a></p>
+		<subsection name="soapUI eclispe Update Site">
+		<p>An eclipse update site is now available at http://www.soapui.org/eclipse/update/site.xml, Install the 
+		soapui-eclipse-plugin with the following steps:</p>
+		<columns>
+		<column><div><ol>
+		<li>Select "Help"/"Software Updates"/"Find and Install..."</li>
+		<li>Select the "Search for new features to install" option</li>
+		<li>Press the "New Remote Site" button and add the information shown in the image to the right</li>
+		<li>Select Finish and the follow the dialogs to install the soapUI feature</li>
+		</ol></div>
+		<p>Read the <a href="../gettingstarted/index.html">Getting Started with soapUI</a> document and the 
+		<a href="../userguide/index.html">soapUI User Guide</a> to get going!</p>
 		</column>
 		<column>
-		<img src="images/getting_started_1.gif" alt="Create a project from a WSDL"/></column></columns>
-		 </subsection>
-		 
-		 <subsection name="Add a WSDL to create tests from">
-		<columns><column><div>
-		Now that you have a project you can start adding Interfaces (i.e. Web Service PortTypes) to it.</div>
-		<ul>
-		<li>Right click on the project node and select "Add WSDL from URL"</li>
-		<li>You will be prompted for the URL to the Interfaces WSDL; enter 
-		<pre>http://webservices.amazon.com/AWSECommerceService/<br/>AWSECommerceService.wsdl</pre> 
-		to add the amazon web service and select "Ok".</li>
-		<li>soapUI will prompt you if you want to create default requests for each operation, simply select "Yes"</li>
-		<li>soapUI will now add the SOAP/Http Binding for the amazon "AWSECommerceServicePortType" PortType to your project
-		and create nodes for each operation.</li>
-		</ul>
-		<p>Read more about interfaces in the <a href="userguide/interfaces/index.html">soapUI User Guide</a></p>
-		</column>
-		<column><img src="images/getting_started_2.gif" alt="Add WSDL to create tests from"/></column></columns>
-		 </subsection>
-		 
-		 <subsection name="Try some Web Service requests">
-		<columns><column><div>
-		Now that you have added the amazon Web Service you can start playing around with some requests. 
-		When you added the interface in the previous step soapUI created default requests for each operation in 
-		accordance with their WSDL and Schema definition.</div>
-		<ul>
-		<li>Expand the Interface node and any Operation node under it, you should see the created "Request 1".</li>
-		<li>Double-click the request node to open the request editor in the right part of soapUI (see image below)</li>
-		<li>The request editor is divided into 3 parts:
-			<ul>
-				<li>A toolbar at the top with a number of request related actions/options</li>
-		   		<li>A request area to the left</li>
-		   		<li>A response area to the right</li>
-		   </ul>
-		   </li>
-		   <li>The default request created by soapUI will have "?" for each value that needs to be supplied in the request, 
-		   replace or remove any values as required and post request by pressing the left-most toolbar button (a green arrow)</li>
-		   <li>The request will run in the background and its response will be displayed in the right editor</li>
-		</ul>
-		<p>Read more about working with requests in the <a href="../userguide/requests.html">soapUI User Guide</a></p>
-		</column>
-		<column><img src="images/getting_started_3.gif" alt="Web Service Requset in soapUI"/></column></columns>
+		<img src="images/new_update_site.gif" alt="entering the soapUI update site in eclipse"/>
+		</column></columns>
+		</subsection>
 		
-		<p align="center"><img src="images/getting_started_7.gif"  alt="Soap Test Request and Response View"/></p>
-		 </subsection>
-		 
+		<subsection name="The soapUI Perspective">
+		<columns>
+		<column>
+		<div>Once installed, open the soapUI Perspective by using the standard Window/Open Perspective/Other... Command and 
+		selecting "soapUI" from the list. The perspective will open 2 views;</div>
+		<ul>
+		<li>A "soapUI Navigator" view to the left containing the same Navigator and Details tab as the standalone soapUI 
+		version.</li>
+		<li>A "soapUI Logs" view to the bottom containing the same log tabs as the standalone soapUI version. </li>
+		</ul>
+		<p>Navigation/actions work the same as in the standalone version, windows are opened as tabs on the eclipse desktop
+		and can be moved/docked around as usual</p>
+		<p>Of course, the above mentioned views can be added to any perspective using the Window/Show View/Other... Command
+		and selecting either one of them in the soapUI group.</p>
+		</column>
+		<column>
+		<img src="images/show_view.gif" alt="the soapUI navigator in eclipse"/>
+		</column></columns>
 		
-		 <p><hr size="1"/>Next: <a href="functional.html">Getting Started with Functional Testing for Web Services</a></p>
+		</subsection>
+		
+		<subsection name="soapUI Preferences">
+		<p>Most soapUI Settings are available from the standard Window/Preferences dialog under the soapUI node;</p>
+		<p align="center"><img src="images/eclipse-preferences.gif"  alt="soapUI preferences in eclipse"/></p>
+		
+		</subsection>
+		 <p><hr size="1"/>Next: <a href="soapui_nature.html">soapUI Nature in the Eclipse Plug in</a></p>
+		 
 		</section>
     </body>
 </document>

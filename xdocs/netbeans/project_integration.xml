@@ -36,7 +36,7 @@
 		</subsection>
 		
 		<subsection name="WSDL Menu">
-		<imgtable src="images/wsdl_menu.gif" alt="soa test WSDL Menu"><div>
+		<imgtable src="images/wsdl_menu.gif" alt="SOA test WSDL Menu"><div>
 		Once created, the soapUI WSDL File submenu contains the same actions as the project menu described above and 
 		adds the following:</div>
 		<ul>
