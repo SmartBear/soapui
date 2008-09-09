@@ -274,7 +274,7 @@ table.imgTable, table.columnsTable
 
 table.imgTable img, table.columnsTable img, table.bodyTable.img, p img
 {
-  border:1px solid #ddd;
+  border:0px solid #ddd;
   margin-top: 5px;
   margin-bottom: 5px;
 }
@@ -432,7 +432,7 @@ margin-left: 9px;
 #poweredBy img {
   display:block;
   margin: 10px 0 10px 9px;
-  border: 1px solid #aaa;
+  border: 0px solid #aaa;
 }
 
 #sfLogo img {

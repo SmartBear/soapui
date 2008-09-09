@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>news</title>
+    </properties>
+    <body>
+    <section name="soapUI Releases">
+    
+ 	    <subsection name="GWN - Jayme Dunlop's .blog: Tools of the Trade">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/gwn.gif" alt="GWN. soapUI, your testing solution"/>
+	    		</column>
+	    		<column align="left">
+	    			<p>The post starts: "Web Services development can be fun...seriously, it can. ..." <br/>
+	    			Quote "In my humbled opinion, soapui gets the cookie."<br/>
+	    			<a href="http://www.jroller.com/jdunlop/entry/tools_of_the_trade">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+		</subsection>	
+		   
+    	<subsection name="soapui, now with XFire - from the netzoid blog">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/netzooid.gif" alt="NetZoid. soapUI, your testing solution"/>
+	    		</column>
+	    		<column align="left">
+	    			<p>The post starts: "So more and more people have been reporting to me the coolness of soapui..." <br/>
+	    			<a href="http://netzooid.com/blog/2006/05/16/soapui-now-with-xfire-11/">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+		</subsection>	
+		
+	
+
+		</section>
+		 
+    </body>
+</document>
