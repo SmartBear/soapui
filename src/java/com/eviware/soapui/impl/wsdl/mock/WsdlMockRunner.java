@@ -122,7 +122,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 
             wsdlCache.put(iface.getName(), parts);
 
-            MockEngine.log.info("Mounted WSDL for interface [" + iface.getName() + "] at [" + wsdlPrefix + "]");
+            MockEngine.log.info("Mounted WSDL for interface [" + iface.getName() + "] at [" + getOverviewUrl() + "]");
          }
          catch (Exception e)
          {
@@ -396,10 +396,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 
       StringToStringMap parts = wsdlCache.get(iface.getName());
       String part = request.getParameter("part");
-      if (part == null)
-         part = "#root#";
-
-      String content = parts.get(part);
+      String content = StringUtils.isNullOrEmpty( part ) ? null : parts.get(part);
 
       if (content == null)
       {
@@ -427,7 +424,7 @@ public class WsdlMockRunner extends AbstractMockRunner
       if (mockedInterfaces.length == 1)
       {
          StringToStringMap parts = wsdlCache.get(mockedInterfaces[0].getName());
-         printOkXmlResult(response, parts.get("#root#"));
+         printOkXmlResult(response, parts.get( parts.get("#root#")));
       }
       else
       {
@@ -437,8 +434,9 @@ public class WsdlMockRunner extends AbstractMockRunner
             Definition def = wsdlFactory.newDefinition();
             for (WsdlInterface iface : mockedInterfaces)
             {
+               StringToStringMap parts = wsdlCache.get( iface.getName() );
                Import wsdlImport = def.createImport();
-               wsdlImport.setLocationURI(getInterfacePrefix(iface));
+               wsdlImport.setLocationURI(getInterfacePrefix(iface) + "&part=" + parts.get( "#root#"));
                wsdlImport.setNamespaceURI(iface.getWsdlContext().getDefinition().getTargetNamespace());
 
                def.addImport(wsdlImport);
@@ -470,6 +468,9 @@ public class WsdlMockRunner extends AbstractMockRunner
 
       for (String key : parts.keySet())
       {
+         if( key.equals( "#root#" ))
+            continue;
+         
          out.print("<li><a href=\"");
          out.print(getInterfacePrefix(iface) + "&part=" + key);
          out.print("\">" + key + "</a></li>");
