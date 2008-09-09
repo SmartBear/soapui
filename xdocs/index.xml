@@ -63,7 +63,7 @@
 
 	  	</div>
 	</div>
-		
+		<h1>&nbsp</h1>
 		<h1>soapUI; the Web Services Testing tool.</h1>
 		
 		<p>
@@ -159,12 +159,12 @@
 		</subsection>
 		<subsection name="Latest News">
 		
-		<p><b>2008-01-28: soapUI 2.0.2</b> : Mostly bug-fixes and Plug-in updates <a href="new_and_noteworthy_2.html#2.0.2_Release">[Read more]</a></p>
+		<p><i>2008-01-28: soapUI 2.0.2</i> : Mostly bug-fixes and Plug-in updates <a href="new_and_noteworthy_2.html#2.0.2_Release">[Read more]</a></p>
 		
-		<p><b>2008-01-15: soapUI 2.0.1</b> : Mostly bug-fixes <a href="new_and_noteworthy_2.html#2.0.1_Release">[Read more]</a></p>
+		<p><i>2008-01-15: soapUI 2.0.1</i> : Mostly bug-fixes <a href="new_and_noteworthy_2.html#2.0.1_Release">[Read more]</a></p>
 
-		<p><b>2007-12-12: soapUI 2.0 Final</b> : Final Fixes... <a href="new_and_noteworthy_2.html">[Read more]</a></p>
-		<p><b><a href="new_and_noteworthy_2.html">[More News]</a></b></p>		
+		<p><i>2007-12-12: soapUI 2.0 Final</i> : Final Fixes... <a href="new_and_noteworthy_2.html">[Read more]</a></p>
+		<p><b><a href="news.html">[More News]</a></b></p>		
 		
 		</subsection>
 
