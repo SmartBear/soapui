@@ -4,8 +4,8 @@
         <title>news</title>
     </properties>
     <body>
+
 		<news>
-		
 		<entry name="2007-05-07 : 1.7.1">
 		<p>A Bug-Fix release including a much-improved NetBeans plugin and some goodies for soapUI Pro users, 
 		<a href="new_and_noteworthy_17.html">Read More</a></p>
