@@ -134,6 +134,7 @@ Both will improve your productivity and make Web Service Testing more fun.
 		 <li>Attachments : show the associated request/response <a href="attachments.html">Attachments</a> editor</li>
 		 <li>SSL Info (Response only) : shows detailed response <a href="#SSL_Details">SSL Details</a> for the 
 		 current response</li>
+		 <li>WS-A : shows <a href="#WS-A_Inspector">WS-Addressing header properties</a></li>
 		 </ul>
 		 <p>In soapUI Pro, the bottom right corner (under the scrollbar) contains a button to show a panorama view of
 		 the current editor view, allowing easier navigation around large/complex messages/views (available in all editor views, 
@@ -216,6 +217,24 @@ Both will improve your productivity and make Web Service Testing more fun.
 		<p align="center"><img src="images/ssl_details.gif" alt="SSL Details in soapUI"/></p>
 		</subsection>
 		
+		<subsection name="WS-A Inspector">
+		<p>The WS-A Inspector displays properties used for adding WS-A headers to a Request/MockResponse 
+		according to <a href="http://www.w3.org/Submission/ws-addressing/#_Toc77464322">WS Addressing specification</a></p>
+		<li>Enable WS-A Addressing</li>
+		<li>Must understand indicates whether a header entry is mandatory or optional for the recipient to process.</li>
+		<li>Action - REQUIRED element specifies the value of the Action property. If not specified, and WS-A Settings (see <a href="preferences.html#WS-A_Settings">Preferences</a>)
+		'Use default Action' is checked , default action from wsdl will be generated.</li>
+		<li>To - OPTIONAL element specifies the value of the To property</li>
+		<li>ReplyTo - OPTIONAL element specifies the value of the ReplyTo property</li>
+		<li>MessageID - OPTIONAL element specifies the value of the MessageID property. If not specified, and WS-A Settings (see <a href="preferences.html#WS-A_Settings">Preferences</a>)
+		'Generate MessageID' is checked , random MessageID will be generated for RequestResponse operation.</li>
+		<li>From - OPTIONAL element specifies the value of the From property</li>
+		<li>FaultTo - OPTIONAL element specifies the value of the FaultTo property</li>
+		<li>RelatesTo- OPTIONAL element specifies the value of the RelatesTo property</li>
+		<li>RelationshipType- OPTIONAL element specifies the value of the RelationshipType property</li>
+		<p align="center"><img src="images/wsa_inspector.gif" alt="Viewing header properties in WS-A Inspector"/></p>
+		</subsection>
+
 		<subsection name="XML Source Editor">	
 		  <columns><column><div>
 		  The request and response XML editors support syntax highlighting, undo or redo, copy and paste, etc. soapUI Pro also adds a

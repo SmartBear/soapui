@@ -40,7 +40,8 @@
 		 <li><b>Sends Attachments</b> (read-only): Signals that the operation is defined to send Mime Attachments</li>
 		 <li><b>Receives Attachments</b> (read-only): Signals that the operation is defined to receive Mime Attachments</li>
 		 <li><b>One-Way</b> (read-only): Shows that this is a one-way operation (i.e. request only)</li>
-		 <li><b>WS-A Anonymous </b> : indicates the value of WS Addressing wsaw:Anonymous element </li>
+		 <li><b>WS-A Anonymous </b> : indicates the value of WS Addressing Anonymous element
+		 as specified in <a href="http://www.w3.org/TR/2006/WD-ws-addr-wsdl-20060216/#anonelement">WSDL Binding specification</a> </li>
 		 </ul>
 		 </div></column><column>
 			<img src="images/operation_details_tab.gif" border="0" alt="Details of an operation in soapUI"/>

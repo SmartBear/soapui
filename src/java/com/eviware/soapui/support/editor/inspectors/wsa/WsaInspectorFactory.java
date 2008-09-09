@@ -22,7 +22,7 @@ import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
 
 public class WsaInspectorFactory implements RequestInspectorFactory, ResponseInspectorFactory
 {
-	public static final String INSPECTOR_ID = "WSA";
+	public static final String INSPECTOR_ID = "WS-A";
 
 	public String getInspectorId()
 	{

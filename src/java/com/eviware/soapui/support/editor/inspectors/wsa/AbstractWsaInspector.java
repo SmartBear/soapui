@@ -35,7 +35,7 @@ public abstract class AbstractWsaInspector extends AbstractXmlInspector
 
 	protected AbstractWsaInspector( WsaContainer wsaContainer)
 	{
-		super( "WSA", "WS-Addressing related settings", true, WsaInspectorFactory.INSPECTOR_ID );
+		super( "WS-A", "WS-Addressing related settings", true, WsaInspectorFactory.INSPECTOR_ID );
 		this.wsaContainer = wsaContainer;
 	}
 	public JComponent getComponent()
