@@ -23,6 +23,7 @@
 		 <tr><td><a href="#XQuery_Match">XQuery Match</a></td><td>Matches the result of a specified XQuery expression against a predefined value</td></tr>
 		 <tr><td><a href="#Script_Assertion">Script Assertion</a></td><td>Allows a custom Groovy script for asserting the message exchange</td></tr>
 		 <tr><td><a href="#WS-Security_Status">WS-Security Status</a> *</td><td>Checks that incoming WS-Security processing was successful</td></tr>
+		 <tr><td><a href="#WS-A_Assertion">WS-A Assertion</a></td><td>Checks that the response has valid WS-A header properties</td></tr>
 		 </table>
 		 <p>Assertions marked with a (*) are "singular assertions", meaning that they can be added only once to a TestRequest</p>
 		 
@@ -248,6 +249,12 @@ def holder = groovyUtils.getXmlHolder( messageExchange.responseContent )
 
 assert holder["//ns1:RequestId"] != null</source>
 		 </subsection>
+		 
+		 <subsection name="WS-A Assertion">
+		 <p>Validates that the response has valid WS-A header properties.</p>
+		 <p>This assertion has no configuration parameters.</p>
+		 </subsection>
+		 
 		  <p><hr size="1"/>Next: <a href="propertytransfers.html">Use data in a response in another request - PropertyTransfers</a></p>
 		</section>
     </body>
