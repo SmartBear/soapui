@@ -330,9 +330,29 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
       if (this.iface == null && iface != null)
       {
          if (definition != null)
+         {
+            if( definition.getDefinitionCache().validate())
+            {
+               InterfaceConfigDefinitionCache cache = new InterfaceConfigDefinitionCache( iface );
+               try
+               {
+                  cache.importCache( definition.getDefinitionCache() );
+               }
+               catch( Exception e )
+               {
+                  SoapUI.logError( e );
+               }
+
+               definition.setDefinitionCache( cache );
+            }
+
+            definition.setIface( iface );
             definitionCache.put(url, definition);
+         }
          else
+         {
             loaded = false;
+         }
       }
 
       this.iface = iface;

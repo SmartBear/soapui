@@ -41,4 +41,9 @@ public abstract class AbstractInterfaceDefinition<T extends AbstractInterface> i
    {
       return iface;
    }
+
+   public void setIface( T iface )
+   {
+      this.iface = iface;
+   }
 }
