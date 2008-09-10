@@ -185,7 +185,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
    {
       if (wsdlContext == null)
       {
-         wsdlContext = new WsdlContext( getDefinition(), this );
+         wsdlContext = new WsdlContext( PathUtils.expandPath(getDefinition(), this), this );
       }
 
       return wsdlContext;
