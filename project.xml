@@ -34,6 +34,7 @@
         <report>maven-faq-plugin</report>
         <report>maven-javadoc-plugin</report>
         <report>maven-jxr-plugin</report>
+         <report>maven-news-plugin</report>
         <report>maven-junit-report-plugin</report>
         <report>maven-license-plugin</report>
      <!--    <report>maven-findbugs-plugin</report>
