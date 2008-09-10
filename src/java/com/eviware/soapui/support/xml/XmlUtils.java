@@ -910,6 +910,11 @@ public final class XmlUtils
       return writer.toString();
    }
 
+   public static Element getFirstChildElementNS( Element domNode, QName name )
+   {
+      return getFirstChildElementNS( domNode, name.getNamespaceURI(), name.getLocalPart() );
+   }
+
    private final static class ElementNodeList implements NodeList
 	{
 		private final List<Element> list;

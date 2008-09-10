@@ -12,10 +12,6 @@
 
 package com.eviware.soapui.tools;
 
-import java.io.File;
-
-import org.apache.commons.cli.CommandLine;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.axis1.Axis1XWSDL2JavaAction;
@@ -38,256 +34,267 @@ import com.eviware.soapui.impl.wsdl.actions.iface.tools.xfire.XFireAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans.XmlBeans2Action;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
+import com.eviware.soapui.support.UISupport;
+import org.apache.commons.cli.CommandLine;
+
+import java.io.File;
 
 /**
  * Standalone tool-runner used from maven-plugin, can also be used from command-line (see xdocs) or
  * directly from other classes.
  * <p>
  * For standalone usage, set the project file (with setProjectFile) and other desired properties before
- * calling run</p> 
- * 
+ * calling run</p>
+ *
  * @author Ole.Matzura
  */
 
-public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, RunnerContext 
+public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, RunnerContext
 {
-	private String iface;
-	private String tool;
+   private String iface;
+   private String tool;
 
-	private RunnerStatus status;
-	private String projectPassword;
-	public String getProjectPassword() {
-		return projectPassword;
-	}
+   private RunnerStatus status;
+   private String projectPassword;
 
-	public static String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " Tool Runner";
-	
-	/**
-	 * Runs the specified tool in the specified soapUI project file, see soapUI xdocs for details.
-	 * 
-	 * @param args
-	 * @throws Exception
-	 */
 
-	public static void main( String [] args) throws Exception
-	{
-		new SoapUIToolRunner().runFromCommandLine( args );
-	}
+   public static String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " Tool Runner";
 
-	/**
-	 * Sets the tool(s) to run, can be a comma-seperated list
-	 * 
-	 * @param tool the tools to run
-	 */
+   /**
+    * Runs the specified tool in the specified soapUI project file, see soapUI xdocs for details.
+    *
+    * @param args
+    * @throws Exception
+    */
 
-	public void setTool(String tool)
-	{
-		this.tool = tool;
-	}
+   public static void main( String[] args ) throws Exception
+   {
+      new SoapUIToolRunner().runFromCommandLine( args );
+   }
 
-	public void setInterface(String iface)
-	{
-		this.iface = iface;
-	}
+   /**
+    * Sets the tool(s) to run, can be a comma-seperated list
+    *
+    * @param tool the tools to run
+    */
 
-	public SoapUIToolRunner()
-	{
-		super( TITLE );
-	}
-	
-	public SoapUIToolRunner( String title )
-	{
-		super( title );
-	}
-	
-	public boolean runRunner() throws Exception
-	{
-		String projectFile = getProjectFile();
-		
-		if( !new File( projectFile ).exists() )
-			throw new Exception( "soapUI project file [" + projectFile + "] not found" );
-		
+   public void setTool( String tool )
+   {
+      this.tool = tool;
+   }
+
+   public void setInterface( String iface )
+   {
+      this.iface = iface;
+   }
+
+   public SoapUIToolRunner()
+   {
+      super( TITLE );
+   }
+
+   public SoapUIToolRunner( String title )
+   {
+      super( title );
+   }
+
+   public boolean runRunner() throws Exception
+   {
+      UISupport.setToolHost( this );
+      String projectFile = getProjectFile();
+
+      if( !new File( projectFile ).exists() )
+         throw new Exception( "soapUI project file [" + projectFile + "] not found" );
+
 //		WsdlProject project = new WsdlProject( projectFile, getProjectPassword() );
-		WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(projectFile, getProjectPassword());
-		
-		log.info( "Running tools [" + tool + "] for interface [" + iface + "] in project [" + project.getName() + "]" );
+      WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew( projectFile, getProjectPassword() );
 
-		long startTime = System.nanoTime();
-		
-		for( int c = 0; c < project.getInterfaceCount(); c++ )
-		{
-			Interface i = project.getInterfaceAt( c );
-			if( iface == null || i.getName().equals( iface ))
-			{
-				runTool( i );
-			}
-		}
-		
-		long timeTaken = (System.nanoTime()-startTime)/1000000;
-		log.info( "time taken: " + timeTaken + "ms" );
-		
-		return true;
-	}
-	
-	/**
-	 * Runs the configured tool(s) for the specified interface.. needs to be refactored to use
-	 * some kind of registry/factory pattern for tools
-	 * 
-	 * @param iface
-	 */
-	
-	public void runTool( Interface iface )
-	{
-		AbstractToolsAction<Interface> action = null;
-		
-		String [] tools = tool.split( "," );
-		for( String tool : tools )
-		{
-			if( tool == null || tool.trim().length() == 0 )
-				continue;
-			
-			if( tool.equals( "axis1" ))
-			{
-				action = new Axis1XWSDL2JavaAction();
-			}
-			else if( tool.equals( "axis2" ))
-			{
-				action = new Axis2WSDL2CodeAction();
-			}
-			else if( tool.equals( "dotnet" ))
-			{
-				action = new DotNetWsdlAction();
-			}
-			else if( tool.equals( "gsoap" ))
-			{
-				action = new GSoapAction();
-			}
-			else if( tool.equals( "jaxb" ))
-			{
-				action = new JaxbXjcAction();
-			}
-			else if( tool.equals( "wstools" ))
-			{
-				action = new WSToolsWsdl2JavaAction();
-			}
-			else if( tool.equals( "wscompile" ))
-			{
-				action = new WSCompileAction();
-			}
-			else if( tool.equals( "wsimport" ))
-			{
-				action = new WSImportAction();
-			}
-			else if( tool.equals( "wsconsume" ))
-			{
-				action = new JBossWSConsumeAction();
-			}
-			else if( tool.equals( "xfire" ))
-			{
-				action = new XFireAction();
-			}
-			else if( tool.equals( "cxf" ))
-			{
-				action = new CXFAction();
-			}
-			else if( tool.equals( "xmlbeans" ))
-			{
-				action = new XmlBeans2Action();
-			}
-			else if( tool.equals( "ora" ))
-			{
-				action = new OracleWsaGenProxyAction();
-			}
-			else if( tool.equals( "wsi" ))
-			{
-				action = new WSIAnalyzeAction();
-			}
-			
-			try
-			{
-				log.info( "Running tool [" + tool + 
-							"] for Interface [" + iface.getName() + "]" );
-				action.perform( iface, null );
-			}
-			catch (Exception e)
-			{
-				SoapUI.logError( e );
-			}
-		}
-	}
+      log.info( "Running tools [" + tool + "] for interface [" + iface + "] in project [" + project.getName() + "]" );
 
-	public void run(ToolRunner runner) throws Exception
-	{
-		status = RunnerStatus.RUNNING;
-		runner.setContext( this );
-		runner.run();
-	}
+      long startTime = System.nanoTime();
 
-	public RunnerStatus getStatus()
-	{
-		return status;
-	}
+      for( int c = 0; c < project.getInterfaceCount(); c++ )
+      {
+         Interface i = project.getInterfaceAt( c );
+         if( iface == null || i.getName().equals( iface ) )
+         {
+            runTool( i );
+         }
+      }
 
-	public String getTitle()
-	{
-		return getClass().getSimpleName();
-	}
+      long timeTaken = ( System.nanoTime() - startTime ) / 1000000;
+      log.info( "time taken: " + timeTaken + "ms" );
 
-	public void log(String msg)
-	{
-		System.out.print( msg );
-	}
+      return true;
+   }
+
+   /**
+    * Runs the configured tool(s) for the specified interface.. needs to be refactored to use
+    * some kind of registry/factory pattern for tools
+    *
+    * @param iface
+    */
+
+   public void runTool( Interface iface )
+   {
+      AbstractToolsAction<Interface> action = null;
+
+      String[] tools = tool.split( "," );
+      for( String tool : tools )
+      {
+         if( tool == null || tool.trim().length() == 0 )
+            continue;
+
+         if( tool.equals( "axis1" ) )
+         {
+            action = new Axis1XWSDL2JavaAction();
+         }
+         else if( tool.equals( "axis2" ) )
+         {
+            action = new Axis2WSDL2CodeAction();
+         }
+         else if( tool.equals( "dotnet" ) )
+         {
+            action = new DotNetWsdlAction();
+         }
+         else if( tool.equals( "gsoap" ) )
+         {
+            action = new GSoapAction();
+         }
+         else if( tool.equals( "jaxb" ) )
+         {
+            action = new JaxbXjcAction();
+         }
+         else if( tool.equals( "wstools" ) )
+         {
+            action = new WSToolsWsdl2JavaAction();
+         }
+         else if( tool.equals( "wscompile" ) )
+         {
+            action = new WSCompileAction();
+         }
+         else if( tool.equals( "wsimport" ) )
+         {
+            action = new WSImportAction();
+         }
+         else if( tool.equals( "wsconsume" ) )
+         {
+            action = new JBossWSConsumeAction();
+         }
+         else if( tool.equals( "xfire" ) )
+         {
+            action = new XFireAction();
+         }
+         else if( tool.equals( "cxf" ) )
+         {
+            action = new CXFAction();
+         }
+         else if( tool.equals( "xmlbeans" ) )
+         {
+            action = new XmlBeans2Action();
+         }
+         else if( tool.equals( "ora" ) )
+         {
+            action = new OracleWsaGenProxyAction();
+         }
+         else if( tool.equals( "wsi" ) )
+         {
+            action = new WSIAnalyzeAction();
+         }
+
+         try
+         {
+            log.info( "Running tool [" + tool +
+                    "] for Interface [" + iface.getName() + "]" );
+            action.perform( iface, null );
+         }
+         catch( Exception e )
+         {
+            SoapUI.logError( e );
+         }
+      }
+   }
+
+   public void run( ToolRunner runner ) throws Exception
+   {
+      status = RunnerStatus.RUNNING;
+      runner.setContext( this );
+      runner.run();
+   }
+
+   public RunnerStatus getStatus()
+   {
+      return status;
+   }
+
+   public String getTitle()
+   {
+      return getClass().getSimpleName();
+   }
+
+   public String getProjectPassword()
+   {
+      return projectPassword;
+   }
+
+   public void log( String msg )
+   {
+      System.out.print( msg );
+   }
 
    public void logError( String msg )
    {
       System.err.println( msg );
    }
 
-	public void setStatus(RunnerStatus status)
-	{
-		this.status = status;
-	}
+   public void setStatus( RunnerStatus status )
+   {
+      this.status = status;
+   }
 
    public void disposeContext()
    {
    }
 
-	@Override
-	protected SoapUIOptions initCommandLineOptions()
-	{
-		SoapUIOptions options = new SoapUIOptions( "toolrunner" );
-		options.addOption( "i", true, "Sets the interface" );
-		options.addOption( "t", true, "Sets the tool to run" );
-		options.addOption( "s", true, "Sets the soapui-settings.xml file to use" );
-		options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
-		options.addOption( "v", true, "Sets password for soapui-settings.xml file");
-		return options;
-	}
+   @Override
+   protected SoapUIOptions initCommandLineOptions()
+   {
+      SoapUIOptions options = new SoapUIOptions( "toolrunner" );
+      options.addOption( "i", true, "Sets the interface" );
+      options.addOption( "t", true, "Sets the tool to run" );
+      options.addOption( "s", true, "Sets the soapui-settings.xml file to use" );
+      options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
+      options.addOption( "v", true, "Sets password for soapui-settings.xml file" );
+      return options;
+   }
 
-	@Override
-	protected boolean processCommandLine( CommandLine cmd )
-	{
-		setTool( cmd.getOptionValue( "t") );
-		
-		if( cmd.hasOption( "i"))
-			setInterface( cmd.getOptionValue( "i" ) );
-		
-		if( cmd.hasOption( "s"))
-			setSettingsFile( getCommandLineOptionSubstSpace( cmd, "s" ));
-		
-		if( cmd.hasOption( "x" ) ) {
-			setProjectPassword( cmd.getOptionValue("x"));
-		}
-		
-		if( cmd.hasOption( "v" ) ) {
-			setSoapUISettingsPassword( cmd.getOptionValue("v"));
-		}
-		
-		return true;
+   @Override
+   protected boolean processCommandLine( CommandLine cmd )
+   {
+      setTool( cmd.getOptionValue( "t" ) );
 
-	}
+      if( cmd.hasOption( "i" ) )
+         setInterface( cmd.getOptionValue( "i" ) );
 
-	public void setProjectPassword(String projectPassword) {
-		this.projectPassword = projectPassword;
+      if( cmd.hasOption( "s" ) )
+         setSettingsFile( getCommandLineOptionSubstSpace( cmd, "s" ) );
+
+      if( cmd.hasOption( "x" ) )
+      {
+         setProjectPassword( cmd.getOptionValue( "x" ) );
+      }
+
+      if( cmd.hasOption( "v" ) )
+      {
+         setSoapUISettingsPassword( cmd.getOptionValue( "v" ) );
+      }
+
+      return true;
+
+   }
+
+   public void setProjectPassword( String projectPassword )
+   {
+      this.projectPassword = projectPassword;
 	}
 }
