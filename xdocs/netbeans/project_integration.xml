@@ -17,6 +17,7 @@
 		<subsection name="Project Menu">
 		<imgtable src="images/project_menu.gif" alt="project menu soap test"><div>
 		Once created, the soapUI Project submenu contains the following actions:</div>
+		
 		<ul>
 		<li><b>Show Project</b> : Opens the soapUI Navigator and selects the associated project</li>
 		<li><b>Interfaces</b> : A submenu containing all Interfaces/Operations/Requests in the associated
