@@ -915,6 +915,33 @@ public final class XmlUtils
       return getFirstChildElementNS( domNode, name.getNamespaceURI(), name.getLocalPart() );
    }
 
+   public static QName findTypeNameForXsiType( String typeName, Element elm )
+   {
+      int ix = typeName.indexOf( ':' );
+      if( ix == -1 )
+         return null;
+
+      String prefix = typeName.substring(0,ix );
+      String localName = typeName.substring( ix+1 );
+      String namespaceUri = elm.getAttribute( "xmlns:" + prefix );
+
+      while( StringUtils.isNullOrEmpty( namespaceUri ) && elm != null )
+      {
+         if( elm.getParentNode().getNodeType() != Node.ELEMENT_NODE )
+            break;
+
+         elm = (Element) elm.getParentNode();
+         namespaceUri = elm.getAttribute( "xmlns:" + prefix );
+      }
+
+      if( StringUtils.hasContent( namespaceUri ))
+      {
+         return new QName( namespaceUri, localName );
+      }
+
+      return null;
+   }
+
    private final static class ElementNodeList implements NodeList
 	{
 		private final List<Element> list;

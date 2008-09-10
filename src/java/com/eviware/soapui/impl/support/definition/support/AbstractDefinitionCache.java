@@ -68,7 +68,21 @@ public abstract class AbstractDefinitionCache<T extends AbstractInterface> imple
 
    public void importCache( DefinitionCache cache ) throws Exception
    {
-      update( new InterfaceCacheDefinitionLoader( cache ) );
+      if( cache instanceof AbstractDefinitionCache )
+      {
+         definitionCache = reinit( container );
+         definitionCache.set( ((AbstractDefinitionCache)cache).getConfig() );
+         initParts();
+      }
+      else
+      {
+         update( new InterfaceCacheDefinitionLoader( cache ) );
+      }
+   }
+
+   protected DefinitionCacheConfig getConfig()
+   {
+      return definitionCache;
    }
 
    public void update( DefinitionLoader loader ) throws Exception

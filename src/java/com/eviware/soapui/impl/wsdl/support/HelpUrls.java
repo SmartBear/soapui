@@ -59,7 +59,7 @@ public interface HelpUrls
 	public static final String LOADTESTOPTIONS_HELP_URL = HELP_URL_ROOT + "loadtest/index.html#LoadTest_Options";
 	public static final String XPATHASSERTIONEDITOR_HELP_URL = HELP_URL_ROOT + "functional/response-assertions.html#XPath_Match";
 
-	public static final String ENDPOINTSEDITOR_HELP_URL = HELP_URL_ROOT + "interfaces.html#Service_Endpoints";
+	public static final String ENDPOINTSEDITOR_HELP_URL = HELP_URL_ROOT + "interfaces/endpoints.html";
 
 	public static final String AXIS1X_HELP_URL = "http://ws.apache.org/axis/java/reference.html#WSDL2JavaReference";
 	public static final String AXIS2X_HELP_URL = "http://ws.apache.org/axis2/tools/1_0/CodegenToolReference.html";

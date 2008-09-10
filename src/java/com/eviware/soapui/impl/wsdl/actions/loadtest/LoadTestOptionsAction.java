@@ -23,9 +23,9 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.APage;
-import com.eviware.x.form.support.AField.AFieldType;
 
 /**
  * Displays the LoadTest Options dialog
@@ -113,7 +113,7 @@ public class LoadTestOptionsAction extends AbstractSoapUIAction<WsdlLoadTest>
 		} );
 	}
 
-	@AForm( description = "Set options for this LoadTest", name = "LoadTest Options", helpUrl = HelpUrls.UPDATE_INTERFACE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	@AForm( description = "Set options for this LoadTest", name = "LoadTest Options", helpUrl = HelpUrls.LOADTESTOPTIONS_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
 	private interface WizardForm
 	{
 		@APage( name = "Settings" )
