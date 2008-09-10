@@ -183,11 +183,14 @@ public class WsaUtils
 			}
 			else if (!StringUtils.isNullOrEmpty(replyTo))
 			{
-				header.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, replyTo));
+				if (! (AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType) && isAnonymousAddress(replyTo)))
+				{
+					header.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, replyTo));
+				}
 			}
 			else if (operation.isRequestResponse())
 			{
-				if (!AnonymousTypeConfig.PROHIBITED.equals(anonymousType))
+				if (!AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType))
 				{
 					header.appendChild(builder
 							.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, anonymousAddress));
@@ -361,7 +364,11 @@ public class WsaUtils
 				String to = wsaContainer.getWsaConfig().getTo();
 				if (!StringUtils.isNullOrEmpty(to))
 				{
-					header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement, to));
+					if (! (AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType)
+							&& isAnonymousAddress(to)) )
+					{
+						header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement, to));
+					}
 				}
 				else
 				{
@@ -370,8 +377,7 @@ public class WsaUtils
 					{
 						//if anonymous prohibited than default anonymous should not be added 
 						if (! (AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType)
-								&& (requestReplyToValue.equals("http://www.w3.org/2005/08/addressing/anonymous")  
-									|| requestReplyToValue.equals("http://schemas.xmlsoap.org/ws/2004/08/addressing/anonymous"))) )
+								&& isAnonymousAddress(requestReplyToValue)) )
 						{
 							header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement,
 									requestReplyToValue));
@@ -522,6 +528,11 @@ public class WsaUtils
 		content = xmlContentObject.xmlText();
 
 		return content;
+	}
+	public static boolean isAnonymousAddress(String address)
+	{
+		return (address.equals("http://www.w3.org/2005/08/addressing/anonymous") || 
+		address.equals("http://schemas.xmlsoap.org/ws/2004/08/addressing/anonymous")) ? true : false;
 	}
 
 }

@@ -116,7 +116,7 @@ public class WsaValidator
          {
             // check for anonymous - in case of mock response to=request.replyTo
             if( AnonymousTypeConfig.PROHIBITED.toString().equals( messageExchange.getOperation().getAnonymous() )
-                    && (toAddressValue.equals( "http://www.w3.org/2005/08/addressing/anonymous" ) || toAddressValue.equals( "http://schemas.xmlsoap.org/ws/2004/08/addressing/anonymous" )) )
+                    && WsaUtils.isAnonymousAddress(toAddressValue) )
             {
 					throw new AssertionException( new AssertionError("WS-A InvalidAddressingHeader To , Anonymous addresses are prohibited") );
             }
@@ -133,11 +133,11 @@ public class WsaValidator
                {
                   // check for anonymous
                   if( AnonymousTypeConfig.PROHIBITED.toString().equals( messageExchange.getOperation().getAnonymous() )
-                          && (faultToAddressValue.equals( "http://www.w3.org/2005/08/addressing/anonymous" ) || faultToAddressValue.equals( "http://schemas.xmlsoap.org/ws/2004/08/addressing/anonymous" )) )
+                          && WsaUtils.isAnonymousAddress(faultToAddressValue) )
                   {
                      throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader FaultTo , Anonymous addresses are prohibited" ) );
                   } else if (AnonymousTypeConfig.REQUIRED.toString().equals( ((WsdlMessageExchange) messageExchange).getOperation().getAnonymous() )
-                        && !(faultToAddressValue.equals( "http://www.w3.org/2005/08/addressing/anonymous" ) || faultToAddressValue.equals( "http://schemas.xmlsoap.org/ws/2004/08/addressing/anonymous" )))
+                        && !WsaUtils.isAnonymousAddress(faultToAddressValue))
                   {
                   	throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader FaultTo , Anonymous addresses are required" ) );
                   }
@@ -190,11 +190,11 @@ public class WsaValidator
 			} else {
             // check for anonymous
             if( AnonymousTypeConfig.PROHIBITED.toString().equals( ((WsdlMessageExchange) messageExchange).getOperation().getAnonymous() )
-                    && (replyToAddressValue.equals( "http://www.w3.org/2005/08/addressing/anonymous" ) || replyToAddressValue.equals( "http://schemas.xmlsoap.org/ws/2004/08/addressing/anonymous" )) )
+                    && WsaUtils.isAnonymousAddress(replyToAddressValue) )
             {
                throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader ReplyTo , Anonymous addresses are prohibited" ) );
             } else if (AnonymousTypeConfig.REQUIRED.toString().equals( ((WsdlMessageExchange) messageExchange).getOperation().getAnonymous() )
-                  && !(replyToAddressValue.equals( "http://www.w3.org/2005/08/addressing/anonymous" ) || replyToAddressValue.equals( "http://schemas.xmlsoap.org/ws/2004/08/addressing/anonymous" )))
+                  && !WsaUtils.isAnonymousAddress(replyToAddressValue))
             {
             	throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader ReplyTo , Anonymous addresses are required" ) );
             }
@@ -240,11 +240,11 @@ public class WsaValidator
             {
                // check for anonymous
                if( AnonymousTypeConfig.PROHIBITED.toString().equals( ((WsdlMessageExchange) messageExchange).getOperation().getAnonymous() )
-                       && (replyToAddressValue.equals( "http://www.w3.org/2005/08/addressing/anonymous" ) || replyToAddressValue.equals( "http://schemas.xmlsoap.org/ws/2004/08/addressing/anonymous" )) )
+                       && WsaUtils.isAnonymousAddress(replyToAddressValue) )
                {
                   throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader ReplyTo , Anonymous addresses are prohibited" ) );
                } else if (AnonymousTypeConfig.REQUIRED.toString().equals( ((WsdlMessageExchange) messageExchange).getOperation().getAnonymous() )
-                     && !(replyToAddressValue.equals( "http://www.w3.org/2005/08/addressing/anonymous" ) || replyToAddressValue.equals( "http://schemas.xmlsoap.org/ws/2004/08/addressing/anonymous" )))
+                     && !WsaUtils.isAnonymousAddress(replyToAddressValue))
                {
                	throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader ReplyTo , Anonymous addresses are required" ) );
                }
