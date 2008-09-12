@@ -215,13 +215,13 @@
 	    		</column>
 	    		<column>
 		<p align="left">We are happy to announce the final release of soapUI 1.5, Read a summary of the new features <a href="new_and_noteworthy_15.html">here</a>.
-		Compared to the last beta, the final release includes</p>
+		Compared to the last beta, the final release includes
 		<ul>
 		<li>a small number of bug fixes</li>
 		<li>improvements to the website (see <a href="site-updates.html">site udaptes</a>)</li>
 		<li>a windows installer including the required JRE for those that dont have java installed 
-		and/or want start-menu icons and an uninstaller.</li>
-		</ul>
+		and/or want start-menu icons and an uninstaller.</li></p>
+	    </ul>
 		<p align="left">The release is as always available from 
 		<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013">sourceforge.net</a>.</p>
 		<p align="left">Again a huge thanks to all those that have provided feedback and encouragement!</p>
@@ -417,7 +417,7 @@
 		<p align="left">Although soapUI has been downloaded/webstarted over 1000 times since its beta release, I have heard almost nothing 
 		from its users. Please <a href="mailto:ole@eviware.com">let me know</a> how/if soapUI is working for you; if there are any problems or if you have 
 		some suggestions to make your everyday soaping easier. <i>Thanks!</i></p>
-		<p>Final release is planned to be in 2 weeks.</p>
+		<p align="left">Final release is planned to be in 2 weeks.</p>
 	    		</column>
 	    	</columns>
 		</subsection>
