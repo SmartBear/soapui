@@ -82,29 +82,12 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 				log.error("Could not find operation [" + requestStepConfig.getOperation() + "] in interface ["
 						+ requestStepConfig.getInterface() + "] for test request [" + getName() + "] in TestCase ["
 						+ getTestCase().getTestSuite().getName() + "/" + getTestCase().getName() + "]");
-				requestStepConfig.setRequest(null);
+//				requestStepConfig.setRequest(null);
 				setDisabled(true);
 			}
 			else
 			{
-				if (!forLoadTest)
-				{
-					wsdlOperation.getInterface().getProject().addProjectListener(projectListener);
-					wsdlOperation.getInterface().addInterfaceListener(interfaceListener);
-
-					// we need to listen for name changes which happen when
-					// interfaces are updated..
-					wsdlOperation.getInterface().addPropertyChangeListener(this);
-					wsdlOperation.addPropertyChangeListener(this);
-				}
-
-				testRequest = new WsdlTestRequest(wsdlOperation, requestStepConfig.getRequest(), this, forLoadTest);
-				testRequest.addPropertyChangeListener(this);
-
-				if (config.isSetName())
-					testRequest.setName(config.getName());
-				else
-					config.setName(testRequest.getName());
+				initTestRequest(config, forLoadTest);
 			}
 		}
 		else
@@ -115,27 +98,54 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		// init properties
 		if (testRequest != null)
 		{
-			addProperty(new TestStepBeanProperty("Endpoint", false, testRequest, "endpoint", this));
-			addProperty(new TestStepBeanProperty("Username", false, testRequest, "username", this));
-			addProperty(new TestStepBeanProperty("Password", false, testRequest, "password", this));
-			addProperty(new TestStepBeanProperty("Domain", false, testRequest, "domain", this));
-			addProperty(new TestStepBeanProperty("Request", false, testRequest, "requestContent", this)
-			{
-				@Override
-				public String getDefaultValue()
-				{
-					return getOperation().createRequest(true);
-				}
-			});
-			addProperty(new TestStepBeanProperty("Response", true, testRequest, "responseContent", this)
-			{
-				@Override
-				public String getDefaultValue()
-				{
-					return getOperation().createResponse(true);
-				}
-			});
+			initRequestProperties();
 		}
+	}
+
+	private void initRequestProperties()
+	{
+		addProperty(new TestStepBeanProperty("Endpoint", false, testRequest, "endpoint", this));
+		addProperty(new TestStepBeanProperty("Username", false, testRequest, "username", this));
+		addProperty(new TestStepBeanProperty("Password", false, testRequest, "password", this));
+		addProperty(new TestStepBeanProperty("Domain", false, testRequest, "domain", this));
+		addProperty(new TestStepBeanProperty("Request", false, testRequest, "requestContent", this)
+		{
+			@Override
+			public String getDefaultValue()
+			{
+				return getOperation().createRequest(true);
+			}
+		});
+		addProperty(new TestStepBeanProperty("Response", true, testRequest, "responseContent", this)
+		{
+			@Override
+			public String getDefaultValue()
+			{
+				return getOperation().createResponse(true);
+			}
+		});
+	}
+
+	private void initTestRequest(TestStepConfig config, boolean forLoadTest)
+	{
+		if (!forLoadTest)
+		{
+			wsdlOperation.getInterface().getProject().addProjectListener(projectListener);
+			wsdlOperation.getInterface().addInterfaceListener(interfaceListener);
+
+			// we need to listen for name changes which happen when
+			// interfaces are updated..
+			wsdlOperation.getInterface().addPropertyChangeListener(this);
+			wsdlOperation.addPropertyChangeListener(this);
+		}
+
+		testRequest = new WsdlTestRequest(wsdlOperation, requestStepConfig.getRequest(), this, forLoadTest);
+		testRequest.addPropertyChangeListener(this);
+
+		if (config.isSetName())
+			testRequest.setName(config.getName());
+		else
+			config.setName(testRequest.getName());
 	}
 
 	@Override
@@ -504,7 +514,9 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		requestStepConfig.setInterface(operation.getInterface().getName());
 		requestStepConfig.setOperation(operation.getName());
 
-		oldOperation.removePropertyChangeListener(this);
+		if( oldOperation != null )
+			oldOperation.removePropertyChangeListener(this);
+		
 		wsdlOperation.addPropertyChangeListener(this);
 
 		testRequest.setOperation(wsdlOperation);
@@ -655,7 +667,21 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		{
 			context.addPathToResolve(this, "Missing SOAP Operation in Project",
 					requestStepConfig.getInterface() + "/" + requestStepConfig.getOperation(),
-					new TestRequestDefaultResolveAction()).addResolvers(new ImportInterfaceResolver(this),
+					new TestRequestDefaultResolveAction()).addResolvers(new ImportInterfaceResolver(this)
+					{
+
+						@Override
+						protected boolean update()
+						{
+							wsdlOperation = findWsdlOperation();
+							if( wsdlOperation == null)
+								return false;
+							
+							initTestRequest(getConfig(), false);
+							initRequestProperties();
+							setDisabled(false);
+							return true;
+						}},
 					new ChangeOperationResolver(this));
 		}
 		else

@@ -26,13 +26,12 @@ import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuiteListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.resolver.ChangeOperationResolver;
-import com.eviware.soapui.support.resolver.ImportInterfaceResolver;
 import com.eviware.soapui.support.resolver.ResolveDialog;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 
@@ -590,6 +589,18 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 		else
 		{
 			UISupport.showErrorMessage("Not valild test case xml");
+		}
+	}
+
+	public void export(File file)
+	{
+		try
+		{
+			this.getConfig().newCursor().save(file);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
 		}
 	}
 }
