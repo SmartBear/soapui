@@ -74,8 +74,10 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 	private JLabel runInfoLabel;
 	private GroovyEditorComponent startGroovyEditor;
 	private GroovyEditorComponent stopGroovyEditor;
+   private GroovyEditorComponent onRequestGroovyEditor;
+   private GroovyEditorComponent afterRequestGroovyEditor;
 
-	public WsdlMockServiceDesktopPanel( WsdlMockService mockService )
+   public WsdlMockServiceDesktopPanel( WsdlMockService mockService )
 	{
 		super( mockService );
 		buildUI();
@@ -159,6 +161,8 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildPropertiesPanel(), "Properties", "Properties for this MockService", true ) );
 		inspectorPanel.addInspector( new GroovyEditorInspector( buildStartScriptPanel(), "Start Script", "A Groovy script to run when starting the MockService" ) );
 		inspectorPanel.addInspector( new GroovyEditorInspector( buildStopScriptPanel(), "Stop Script", "A Groovy script to run when stopping the MockService" ) );
+      inspectorPanel.addInspector( new GroovyEditorInspector( buildOnRequestScriptPanel(), "OnRequest Script", "A Groovy script to run when receiving a request before it is dispatched" ) );
+      inspectorPanel.addInspector( new GroovyEditorInspector( buildAfterRequestScriptPanel(), "AfterRequest Script", "A Groovy script to run after a request has been dispatched" ) );
 	}
    
 	protected JComponent buildOperationList()
@@ -222,6 +226,18 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 	{
 		stopGroovyEditor = new GroovyEditorComponent( new StopScriptGroovyEditorModel(), null );
 		return stopGroovyEditor;
+	}
+
+   protected GroovyEditorComponent buildOnRequestScriptPanel()
+	{
+		onRequestGroovyEditor = new GroovyEditorComponent( new OnRequestScriptGroovyEditorModel(), null );
+		return onRequestGroovyEditor;
+	}
+
+	protected GroovyEditorComponent buildAfterRequestScriptPanel()
+	{
+		afterRequestGroovyEditor = new GroovyEditorComponent( new AfterRequestScriptGroovyEditorModel(), null );
+		return afterRequestGroovyEditor;
 	}
 	
 	protected JPanel buildDescriptionPanel()
@@ -819,6 +835,80 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 					{
 						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext( getModelItem(), null ) : mockRunner.getMockContext();
 						getModelItem().runStopScript( context, mockRunner );
+					}
+					catch( Exception e1 )
+					{
+						UISupport.showErrorMessage( e1 );
+					}
+				}};
+		}
+	}
+
+   private class OnRequestScriptGroovyEditorModel extends AbstractGroovyEditorModel
+	{
+		public OnRequestScriptGroovyEditorModel()
+		{
+			super( new String[] {"log", "context", "mockRequest", "mockRunner" }, getModelItem().getSettings(), "OnRequest" );
+		}
+
+		public String getScript()
+		{
+			return getModelItem().getOnRequestScript();
+		}
+
+		public void setScript( String text )
+		{
+			getModelItem().setOnRequestScript( text );
+		}
+
+		@Override
+		public Action createRunAction()
+		{
+			return new AbstractAction(){
+
+				public void actionPerformed( ActionEvent e )
+				{
+					try
+					{
+						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext( getModelItem(), null ) : mockRunner.getMockContext();
+						getModelItem().runOnRequestScript( context, mockRunner, null );
+					}
+					catch( Exception e1 )
+					{
+						UISupport.showErrorMessage( e1 );
+					}
+				}};
+		}
+	}
+
+	private class AfterRequestScriptGroovyEditorModel extends AbstractGroovyEditorModel
+	{
+		public AfterRequestScriptGroovyEditorModel()
+		{
+			super( new String[] {"log", "context", "mockResult", "mockRunner" }, getModelItem().getSettings(), "AfterRequest" );
+		}
+
+		public String getScript()
+		{
+			return getModelItem().getAfterRequestScript();
+		}
+
+		public void setScript( String text )
+		{
+			getModelItem().setAfterRequestScript( text );
+		}
+
+		@Override
+		public Action createRunAction()
+		{
+			return new AbstractAction(){
+
+				public void actionPerformed( ActionEvent e )
+				{
+					try
+					{
+						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext( getModelItem(), null ) : mockRunner.getMockContext();
+						getModelItem().runAfterRequestScript( context, mockRunner, null );
 					}
 					catch( Exception e1 )
 					{

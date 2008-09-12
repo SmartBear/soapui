@@ -28,189 +28,185 @@ import java.util.Vector;
 
 /**
  * The result of a handled WsdlMockRequest
- * 
+ *
  * @author ole.matzura
  */
 
 public class WsdlMockResult implements MockResult
 {
-	private WsdlMockResponse mockResponse;
-	private String responseContent;
-	private long timeTaken;
-	private long timestamp;
-	private DefaultActionList actions;
-	private StringToStringMap responseHeaders = new StringToStringMap();
-	private WsdlMockRequest mockRequest;
-	private HttpServletResponse response;
-	private byte[] rawResponseData;
-	private WsdlMockOperation mockOperation;
+   private WsdlMockResponse mockResponse;
+   private String responseContent;
+   private long timeTaken;
+   private long timestamp;
+   private DefaultActionList actions;
+   private StringToStringMap responseHeaders = new StringToStringMap();
+   private WsdlMockRequest mockRequest;
+   private byte[] rawResponseData;
+   private WsdlMockOperation mockOperation;
    private String responseContentType;
    private int responseStatus = 200;
 
-   public WsdlMockResult( WsdlMockRequest request, HttpServletResponse response ) throws Exception
-	{
-		this.response = response;
-		timestamp = System.currentTimeMillis();
-		mockRequest = request;
+   public WsdlMockResult( WsdlMockRequest request ) throws Exception
+   {
+      timestamp = System.currentTimeMillis();
+      mockRequest = request;
    }
 
-	public WsdlMockRequest getMockRequest()
-	{
-		return mockRequest;
-	}
+   public WsdlMockRequest getMockRequest()
+   {
+      return mockRequest;
+   }
 
-	public ActionList getActions()
-	{
-		if( actions == null )
-		{
-			actions = new DefaultActionList( "MockResult" );
-			actions.setDefaultAction( new ShowMessageExchangeAction( new WsdlMockResultMessageExchange( this, mockResponse ), "MockResult") );
-		}
-		
-		return actions;
-	}
+   public ActionList getActions()
+   {
+      if( actions == null )
+      {
+         actions = new DefaultActionList( "MockResult" );
+         actions.setDefaultAction( new ShowMessageExchangeAction( new WsdlMockResultMessageExchange( this, mockResponse ), "MockResult" ) );
+      }
 
-	public WsdlMockResponse getMockResponse()
-	{
-		return mockResponse;
-	}
-	
-	public String getResponseContent()
-	{
-		return responseContent;
-	}
-	
-	public long getTimeTaken()
-	{
-		return timeTaken;
-	}
+      return actions;
+   }
 
-	public long getTimestamp()
-	{
-		return timestamp;
-	}
+   public WsdlMockResponse getMockResponse()
+   {
+      return mockResponse;
+   }
 
-	public void setTimestamp( long timestamp )
-	{
-		this.timestamp = timestamp;
-	}
+   public String getResponseContent()
+   {
+      return responseContent;
+   }
 
-	public void setTimeTaken( long timeTaken )
-	{
-		this.timeTaken = timeTaken;
-	}
-	
-	public StringToStringMap getResponseHeaders()
-	{
-		return responseHeaders;
-	}
+   public long getTimeTaken()
+   {
+      return timeTaken;
+   }
 
-	public void setMockResponse( WsdlMockResponse mockResponse )
-	{
-		this.mockResponse = mockResponse;
-		mockRequest.getRequestContext().setMockResponse( mockResponse );
-	}
+   public long getTimestamp()
+   {
+      return timestamp;
+   }
 
-	/**
-	 * @deprecated
-	 */
-	
-	public void setReponseContent( String responseContent )
-	{
-		this.responseContent = responseContent;
-	}
-	
-	public void setResponseContent( String responseContent )
-	{
-		this.responseContent = responseContent;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void finish()
-	{
-		if( response instanceof org.mortbay.jetty.Response )
-		{
-			HttpFields httpFields = ((org.mortbay.jetty.Response)response).getHttpFields();
-			
-			Enumeration<String> e = httpFields.getFieldNames();
-			while( e.hasMoreElements() )
-			{
-				String nextElement = e.nextElement();
-				responseHeaders.put( nextElement, httpFields.getStringField( nextElement ) );
-			}
-		}
-		
-		response = null;
-	}
+   public void setTimestamp( long timestamp )
+   {
+      this.timestamp = timestamp;
+   }
 
-	public void addHeader( String name, String value )
-	{
-		if( response != null )
-			response.addHeader( name, value );
-		else
-			responseHeaders.put( name, value );
-	}
+   public void setTimeTaken( long timeTaken )
+   {
+      this.timeTaken = timeTaken;
+   }
 
-	public boolean isCommitted()
-	{
-		return response.isCommitted();
-	}
+   public StringToStringMap getResponseHeaders()
+   {
+      return responseHeaders;
+   }
 
-	public void setContentType( String contentType )
-	{
-		response.setContentType( contentType );
+   public void setMockResponse( WsdlMockResponse mockResponse )
+   {
+      this.mockResponse = mockResponse;
+      mockRequest.getRequestContext().setMockResponse( mockResponse );
+   }
+
+   /**
+    * @deprecated
+    */
+
+   public void setReponseContent( String responseContent )
+   {
+      this.responseContent = responseContent;
+   }
+
+   public void setResponseContent( String responseContent )
+   {
+      this.responseContent = responseContent;
+   }
+
+   @SuppressWarnings( "unchecked" )
+   public void finish()
+   {
+      if( mockRequest.getHttpResponse() instanceof org.mortbay.jetty.Response )
+      {
+         HttpFields httpFields = ( (org.mortbay.jetty.Response) mockRequest.getHttpResponse() ).getHttpFields();
+
+         Enumeration<String> e = httpFields.getFieldNames();
+         while( e.hasMoreElements() )
+         {
+            String nextElement = e.nextElement();
+            responseHeaders.put( nextElement, httpFields.getStringField( nextElement ) );
+         }
+      }
+   }
+
+   public void addHeader( String name, String value )
+   {
+      if( mockRequest.getHttpResponse() != null )
+         mockRequest.getHttpResponse().addHeader( name, value );
+      else
+         responseHeaders.put( name, value );
+   }
+
+   public boolean isCommitted()
+   {
+      return mockRequest.getHttpResponse().isCommitted();
+   }
+
+   public void setContentType( String contentType )
+   {
+      mockRequest.getHttpResponse().setContentType( contentType );
       responseContentType = contentType;
    }
 
-	public OutputStream getOutputStream() throws IOException
-	{
-		return response.getOutputStream();
-	}
+   public OutputStream getOutputStream() throws IOException
+   {
+      return mockRequest.getHttpResponse().getOutputStream();
+   }
 
-	public void initResponse()
-	{
-		response.setStatus( HttpServletResponse.SC_OK );
+   public void initResponse()
+   {
+      mockRequest.getHttpResponse().setStatus( HttpServletResponse.SC_OK );
       responseStatus = HttpServletResponse.SC_OK;
    }
 
-	public boolean isDiscarded()
-	{
-		return false;
-	}
+   public boolean isDiscarded()
+   {
+      return false;
+   }
 
-	public Vector<?> getRequestWssResult()
-	{
-		return mockRequest.getWssResult();
-	}
+   public Vector<?> getRequestWssResult()
+   {
+      return mockRequest.getWssResult();
+   }
 
-	public byte [] getRawResponseData()
-	{
-		return rawResponseData;
-	}
+   public byte[] getRawResponseData()
+   {
+      return rawResponseData;
+   }
 
-	public void setRawResponseData( byte[] rawResponseData )
-	{
-		this.rawResponseData = rawResponseData;
-	}
+   public void setRawResponseData( byte[] rawResponseData )
+   {
+      this.rawResponseData = rawResponseData;
+   }
 
-	public void writeRawResponseData( byte[] bs ) throws IOException
-	{
-		getOutputStream().write( bs );
-		setRawResponseData( bs );
-	}
+   public void writeRawResponseData( byte[] bs ) throws IOException
+   {
+      getOutputStream().write( bs );
+      setRawResponseData( bs );
+   }
 
-	public void setMockOperation( WsdlMockOperation mockOperation )
-	{
-		this.mockOperation = mockOperation;
-	}
-	
-	public WsdlMockOperation getMockOperation()
-	{
-		if( mockOperation != null )
-			return mockOperation;
-		
-		return mockResponse == null ? null : mockResponse.getMockOperation();
-	}
+   public void setMockOperation( WsdlMockOperation mockOperation )
+   {
+      this.mockOperation = mockOperation;
+   }
+
+   public WsdlMockOperation getMockOperation()
+   {
+      if( mockOperation != null )
+         return mockOperation;
+
+      return mockResponse == null ? null : mockResponse.getMockOperation();
+   }
 
    public String getResponseContentType()
    {

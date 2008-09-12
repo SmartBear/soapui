@@ -78,53 +78,62 @@ public class WsdlMockRequest implements MockRequest
 		
 		protocol = request.getProtocol();
 		path = request.getPathInfo();
-		
-		String contentType = request.getContentType();
-		
-		if( contentType != null &&	contentType.toUpperCase().startsWith( "MULTIPART" ))
-		{
-			readMultipartRequest( request );
-			contentType = mmSupport.getRootPart().getContentType();
-		}
-		else
-		{
-			this.requestContent = readRequestContent( request );
-			
-			if( StringUtils.hasContent( context.getMockService().getIncomingWss() ))
-			{
-				IncomingWss incoming = context.getMockService().getProject().getWssContainer().getIncomingWssByName( context.getMockService().getIncomingWss() );
-				if( incoming != null )
-				{
-					Document dom = XmlUtils.parseXml( requestContent );
-					try
-					{
-						wssResult = incoming.processIncoming( dom, context );
-						if( wssResult != null && wssResult.size() > 0 )
-						{
-							StringWriter writer = new StringWriter();
-							XmlUtils.serialize( dom, writer );
-							actualRequestContent = requestContent;
-							requestContent = writer.toString();
-						}
-					}
-					catch( Exception e )
-					{
-						if( wssResult == null )
-							wssResult = new Vector<Object>();
-						wssResult.add( e );
-					}
-				}
-			}
-		}
 
-		soapVersion = SoapUtils.deduceSoapVersion( contentType, getRequestXmlObject() );
-		if( soapVersion == null )
-			soapVersion = SoapVersion.Soap11;
-		
-		soapAction = SoapUtils.getSoapAction( soapVersion, requestHeaders );
+      if( request.getMethod().equals( "POST" ))
+      {
+         initPostRequest( request, context );
+      }
 	}
 
-	public SoapVersion getSoapVersion()
+   protected void initPostRequest( HttpServletRequest request, WsdlMockRunContext context )
+           throws Exception
+   {
+      String contentType = request.getContentType();
+
+      if( contentType != null &&	contentType.toUpperCase().startsWith( "MULTIPART" ))
+      {
+         readMultipartRequest( request );
+         contentType = mmSupport.getRootPart().getContentType();
+      }
+      else
+      {
+         this.requestContent = readRequestContent( request );
+
+         if( StringUtils.hasContent( context.getMockService().getIncomingWss() ))
+         {
+            IncomingWss incoming = context.getMockService().getProject().getWssContainer().getIncomingWssByName( context.getMockService().getIncomingWss() );
+            if( incoming != null )
+            {
+               Document dom = XmlUtils.parseXml( requestContent );
+               try
+               {
+                  wssResult = incoming.processIncoming( dom, context );
+                  if( wssResult != null && wssResult.size() > 0 )
+                  {
+                     StringWriter writer = new StringWriter();
+                     XmlUtils.serialize( dom, writer );
+                     actualRequestContent = requestContent;
+                     requestContent = writer.toString();
+                  }
+               }
+               catch( Exception e )
+               {
+                  if( wssResult == null )
+                     wssResult = new Vector<Object>();
+                  wssResult.add( e );
+               }
+            }
+         }
+      }
+
+      soapVersion = SoapUtils.deduceSoapVersion( contentType, getRequestXmlObject() );
+      if( soapVersion == null )
+         soapVersion = SoapVersion.Soap11;
+
+      soapAction = SoapUtils.getSoapAction( soapVersion, requestHeaders );
+   }
+
+   public SoapVersion getSoapVersion()
 	{
 		return soapVersion;
 	}

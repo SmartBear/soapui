@@ -41,7 +41,6 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -264,12 +263,12 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
       }
    }
 
-	public WsdlMockResult dispatchRequest( WsdlMockRequest request, HttpServletResponse response ) throws DispatchException
+	public WsdlMockResult dispatchRequest( WsdlMockRequest request ) throws DispatchException
 	{
 		try
 		{
 			request.setOperation( getOperation() );
-			WsdlMockResult result = new WsdlMockResult( request, response );
+			WsdlMockResult result = new WsdlMockResult( request );
 			
 			if( getMockResponseCount() == 0 )
 				throw new DispatchException( "Missing MockResponse(s) in MockOperation [" + getName() + "]" );

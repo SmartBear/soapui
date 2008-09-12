@@ -103,7 +103,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 
          try
          {
-            WsdlDefinitionExporter exporter = new WsdlDefinitionExporter( ( WsdlInterface ) iface );
+            WsdlDefinitionExporter exporter = new WsdlDefinitionExporter( (WsdlInterface) iface );
 
             String wsdlPrefix = getInterfacePrefix( iface ).substring( 1 );
             StringToStringMap parts = exporter.createFilesForExport( wsdlPrefix + "&part=" );
@@ -113,7 +113,7 @@ public class WsdlMockRunner extends AbstractMockRunner
                if( key.toLowerCase().endsWith( ".wsdl" ) )
                {
                   InputSource inputSource = new InputSource( new StringReader( parts.get( key ) ) );
-                  String content = WsdlUtils.replacePortEndpoint( ( WsdlInterface ) iface, inputSource, getLocalMockServiceEndpoint() );
+                  String content = WsdlUtils.replacePortEndpoint( (WsdlInterface) iface, inputSource, getLocalMockServiceEndpoint() );
 
                   if( content != null )
                      parts.put( key, content );
@@ -223,7 +223,7 @@ public class WsdlMockRunner extends AbstractMockRunner
    }
 
    @SuppressWarnings( "unchecked" )
-   public WsdlMockResult dispatchPostRequest( HttpServletRequest request, HttpServletResponse response )
+   public WsdlMockResult dispatchPostRequest( WsdlMockRequest mockRequest )
            throws DispatchException
    {
       WsdlMockResult result = null;
@@ -233,11 +233,10 @@ public class WsdlMockRunner extends AbstractMockRunner
       {
          for( MockRunListener listener : mockRunListeners )
          {
-            listener.onMockRequest( this, request, response );
+            listener.onMockRequest( this, mockRequest.getHttpRequest(), mockRequest.getHttpResponse() );
          }
 
          long timestamp = System.currentTimeMillis();
-         WsdlMockRequest mockRequest = new WsdlMockRequest( request, response, mockContext );
 
          SoapVersion soapVersion = mockRequest.getSoapVersion();
          if( soapVersion == null )
@@ -257,21 +256,21 @@ public class WsdlMockRunner extends AbstractMockRunner
                long startTime = System.nanoTime();
                try
                {
-                  result = mockOperation.dispatchRequest( mockRequest, response );
+                  result = mockOperation.dispatchRequest( mockRequest );
                }
                catch( DispatchException e )
                {
-                  result = new WsdlMockResult( mockRequest, response );
+                  result = new WsdlMockResult( mockRequest );
 
                   String fault = SoapMessageBuilder.buildFault( "Server", e.getMessage(), mockRequest.getSoapVersion() );
                   result.setResponseContent( fault );
                   result.setMockOperation( mockOperation );
 
-                  response.getWriter().write( fault );
+                  mockRequest.getHttpResponse().getWriter().write( fault );
                }
 
-               if( request instanceof org.mortbay.jetty.Request )
-                  ( ( org.mortbay.jetty.Request ) request ).setHandled( true );
+               if( mockRequest.getHttpRequest() instanceof org.mortbay.jetty.Request )
+                  ( (org.mortbay.jetty.Request) mockRequest.getHttpRequest() ).setHandled( true );
 
                result.setTimeTaken( ( System.nanoTime() - startTime ) / 1000000 );
                result.setTimestamp( timestamp );
@@ -291,7 +290,7 @@ public class WsdlMockRunner extends AbstractMockRunner
       catch( Exception e )
       {
          if( e instanceof DispatchException )
-            throw ( DispatchException ) e;
+            throw (DispatchException) e;
 
          throw new DispatchException( e );
       }
@@ -329,6 +328,32 @@ public class WsdlMockRunner extends AbstractMockRunner
       mockContext.clear();
    }
 
+   @Override
+   public MockResult dispatchRequest( HttpServletRequest request, HttpServletResponse response ) throws DispatchException
+   {
+      try
+      {
+         WsdlMockRequest mockRequest = new WsdlMockRequest( request, response, mockContext );
+         Object result = mockService.runOnRequestScript( mockContext, this, mockRequest );
+         if( !(result instanceof MockResult) )
+         {
+            String method = request.getMethod();
+
+            if( method.equals( "POST" ) )
+               result = dispatchPostRequest( mockRequest );
+            else
+               result = super.dispatchRequest( request, response );
+         }
+
+         mockService.runAfterRequestScript( mockContext, this, (MockResult) result );
+         return (MockResult) result;
+      }
+      catch( Exception e )
+      {
+         throw new DispatchException( e );
+      }
+   }
+
    public MockResult dispatchGetRequest( HttpServletRequest request, HttpServletResponse response ) throws DispatchException
    {
       try
@@ -348,7 +373,7 @@ public class WsdlMockRunner extends AbstractMockRunner
                   FileInputStream in = new FileInputStream( file );
                   response.setStatus( HttpServletResponse.SC_OK );
                   long length = file.length();
-                  response.setContentLength( ( int ) length );
+                  response.setContentLength( (int) length );
                   response.setContentType( ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
                   Tools.readAndWrite( in, length, response.getOutputStream() );
                }
@@ -387,7 +412,7 @@ public class WsdlMockRunner extends AbstractMockRunner
       }
 
       String ifaceName = request.getParameter( "interface" );
-      WsdlInterface iface = ( WsdlInterface ) mockService.getProject().getInterfaceByName( ifaceName );
+      WsdlInterface iface = (WsdlInterface) mockService.getProject().getInterfaceByName( ifaceName );
       if( iface == null )
       {
          printInterfaceList( response );

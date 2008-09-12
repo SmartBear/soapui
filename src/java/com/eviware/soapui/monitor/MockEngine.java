@@ -12,27 +12,6 @@
 
 package com.eviware.soapui.monitor;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.mortbay.jetty.HttpConnection;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.AbstractHandler;
-import org.mortbay.jetty.nio.SelectChannelConnector;
-import org.mortbay.jetty.security.SslSocketConnector;
-import org.mortbay.thread.BoundedThreadPool;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
@@ -47,6 +26,20 @@ import com.eviware.soapui.settings.SSLSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.log.JettyLogger;
+import org.apache.log4j.Logger;
+import org.mortbay.jetty.HttpConnection;
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.handler.AbstractHandler;
+import org.mortbay.jetty.nio.SelectChannelConnector;
+import org.mortbay.jetty.security.SslSocketConnector;
+import org.mortbay.thread.BoundedThreadPool;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.*;
 
 /**
  * Core Mock-Engine hosting a Jetty web server
@@ -307,6 +300,8 @@ public class MockEngine
 					{
 						try
 						{
+                     DispatchException ex = null;
+
 							for (MockRunner wsdlMockRunner : wsdlMockRunners)
 							{
 								try
@@ -322,8 +317,13 @@ public class MockEngine
 								{
 									log.debug(wsdlMockRunner.getMockService().getName()
 											+ " was unable to dispatch mock request ", e);
+
+                           ex = e;
 								}
 							}
+
+                     if( ex != null )
+                        throw ex;
 						}
 						catch (Exception e)
 						{
