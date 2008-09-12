@@ -215,12 +215,14 @@
 	    		</column>
 	    		<column>
 		<p align="left">We are happy to announce the final release of soapUI 1.5, Read a summary of the new features <a href="new_and_noteworthy_15.html">here</a>.
-		Compared to the last beta, the final release includes
+		Compared to the last beta, the final release includes</p>
 		<ul>
+		<p>
 		<li>a small number of bug fixes</li>
+		</p>
 		<li>improvements to the website (see <a href="site-updates.html">site udaptes</a>)</li>
 		<li>a windows installer including the required JRE for those that dont have java installed 
-		and/or want start-menu icons and an uninstaller.</li></p>
+		and/or want start-menu icons and an uninstaller.</li>
 	    </ul>
 		<p align="left">The release is as always available from 
 		<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013">sourceforge.net</a>.</p>
