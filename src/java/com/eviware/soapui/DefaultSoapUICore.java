@@ -12,21 +12,6 @@
 
 package com.eviware.soapui;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.security.GeneralSecurityException;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-
-import org.apache.commons.ssl.OpenSSL;
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
-
 import com.eviware.soapui.config.SoapuiSettingsDocumentConfig;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
@@ -38,6 +23,17 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
 import com.eviware.soapui.support.types.StringList;
+import org.apache.commons.ssl.OpenSSL;
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.security.GeneralSecurityException;
 
 /**
  * Initializes core objects. Transform to a Spring "ApplicationContext"?
@@ -219,6 +215,12 @@ public class DefaultSoapUICore implements SoapUICore
 		{
 			settings.setLong(HttpSettings.MAX_TOTAL_CONNECTIONS, 2000);
 		}
+
+      if( !settings.isSet( UISettings.AUTO_SAVE_PROJECTS_ON_EXIT ))
+      {
+         settings.setBoolean( UISettings.AUTO_SAVE_PROJECTS_ON_EXIT, true );
+      }
+      
 		return settings;
 	}
 

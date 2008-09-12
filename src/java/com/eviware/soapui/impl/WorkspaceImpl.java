@@ -231,7 +231,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 
 	public void onClose()
 	{
-		save( false );
+		save( !getSettings().getBoolean(UISettings.AUTO_SAVE_PROJECTS_ON_EXIT ));
 	}
 
 	public void save( boolean workspaceOnly )

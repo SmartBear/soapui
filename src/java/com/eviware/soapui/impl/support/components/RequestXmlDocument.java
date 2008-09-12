@@ -50,7 +50,9 @@ public class RequestXmlDocument extends AbstractXmlDocument implements PropertyC
       if( !updating )
       {
          updating = true;
+         String old = request.getRequestContent();
          request.setRequestContent( xml );
+         fireXmlChanged( old, xml );
          updating = false;
       }
    }

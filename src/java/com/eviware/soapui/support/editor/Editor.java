@@ -225,7 +225,9 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
 			EditorInspector<T> currentInspector = (EditorInspector<T>) inspectorPanel.getCurrentInspector();
 			
 			if( currentInspector != null )
-				lastDividerLocation = inspectorPanel.getDividerLocation();
+         {
+            lastDividerLocation = inspectorPanel.getDividerLocation();
+         }
 			
 			for( Inspector inspector : inspectorPanel.getInspectors())
 			{
