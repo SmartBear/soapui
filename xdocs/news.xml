@@ -214,19 +214,19 @@
 	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
 	    		</column>
 	    		<column>
-		<p align="left">We are happy to announce the final release of soapUI 1.5, Read a summary of the new features <a href="new_and_noteworthy_15.html">here</a>.
-		Compared to the last beta, the final release includes</p>
+		<div align="left">
+		<p>We are happy to announce the final release of soapUI 1.5, Read a summary of the new features <a href="new_and_noteworthy_15.html">here</a>.
+		Compared to the last beta, the final release includes
 		<ul>
-		<p>
 		<li>a small number of bug fixes</li>
-		</p>
 		<li>improvements to the website (see <a href="site-updates.html">site udaptes</a>)</li>
 		<li>a windows installer including the required JRE for those that dont have java installed 
 		and/or want start-menu icons and an uninstaller.</li>
-	    </ul>
-		<p align="left">The release is as always available from 
+	    </ul></p>
+		<p>The release is as always available from 
 		<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013">sourceforge.net</a>.</p>
-		<p align="left">Again a huge thanks to all those that have provided feedback and encouragement!</p>
+		<p>Again a huge thanks to all those that have provided feedback and encouragement!</p>
+		</div>
 	    		</column>
 	    	</columns>
 		</subsection>
@@ -237,6 +237,7 @@
 	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
 	    		</column>
 	    		<column>
+		<div align="left">
 		<p align="left">This is the second beta for soapUI 1.5, it introduces no new major functionality but:</p>
 		<ul>
 		<li>fixes a large number of internal issues and adds some improvements in the area of LoadTest timings, etc.</li>
@@ -244,6 +245,7 @@
 		<li>includes the first 1.5 beta of the maven-plugin</li>
 		</ul>
 		<p align="left">As always huge thanks for all feedback and encouragement! Keep it coming :-)</p>
+	    </div>
 	    		</column>
 	    	</columns>
 		</subsection>
@@ -265,6 +267,7 @@
 	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
 	    		</column>
 	    		<column>
+	    <div align="left">
 		<p align="left">This release fixes the following issues:</p>
 		<ul>
 		<li>Fixed inclusion of relative xsds in sub wsdls, see bug
@@ -285,6 +288,7 @@
 		<li>Related site/doc updates</li>
 		</ul>
 		<p align="left">Thanks to all that have helped in reporting/suggesting/confirming the above issues!</p>
+		</div>
 	    		</column>
 	    	</columns>
 	    	</subsection>
@@ -295,6 +299,7 @@
 	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
 	    		</column>
 	    		<column>
+	    <div align="left">		
 		<p align="left">This release fixes the following issues:</p>
 		<ul>
 		<li>Fixed inclusion of schemas when adding WSDL from the file system; see bug 
@@ -334,6 +339,7 @@
 		<li>Related site/doc updates</li>
 		</ul>
 		<p align="left">Thanks to all that have helped in reporting/suggesting/confirming the above issues!</p>
+		</div>
 	    		</column>
 	    	</columns>
 		</subsection>
@@ -346,7 +352,8 @@
 	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
 	    		</column>
 	    		<column>
-		<p align="left">This release fixes a small number of issues:</p>
+	    <div align="left">		
+		<p>This release fixes a small number of issues:</p>
 		<ul>
 		<li>Fixed naming of value transfers; see bug 
 		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1342557&amp;group_id=136013&amp;atid=737763">1342557</a></li>
@@ -356,8 +363,9 @@
 		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1342555&amp;group_id=136013&amp;atid=737763">1342555</a></li>
 		<li>Minor improvements to documentation (added PDF)</li>
 		</ul>
-		<p align="left">Thanks to all reports / comments! Focus is now on the first 1.1 beta containing load-test functionality, 
+		<p>Thanks to all reports / comments! Focus is now on the first 1.1 beta containing load-test functionality, 
 		scheduled for mid-november.</p>
+		</div>
 	    		</column>
 	    	</columns>
 		</subsection>
@@ -369,6 +377,7 @@
 	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
 	    		</column>
 	    		<column>
+	    <div align="left">		
 		<p align="left">After 4 weeks of testing and &gt;2000 downloads, the final release is ready. The following bugs have been fixed;</p>
 		<ul>
 			<li>Fixed setting of empty SOAP Action header; see bug 
@@ -382,6 +391,7 @@
 		</ul>
 		<p align="left">Thanks to all reports / comments so far! Focus is now on fixing any new bugs and on the next version 
 		[<a href="future.html">read more...</a>].</p>
+		</div>
 	    		</column>
 	    	</columns>
 		</subsection>
@@ -393,6 +403,7 @@
 	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
 	    		</column>
 	    		<column>
+	    <div align="left">
 		<p align="left">This is beta2, which contains the following fixes/improvements;</p>
 		<ul>
 			<li>Improved "Update Definition" functionality; fixed bug 
@@ -420,6 +431,7 @@
 		from its users. Please <a href="mailto:ole@eviware.com">let me know</a> how/if soapUI is working for you; if there are any problems or if you have 
 		some suggestions to make your everyday soaping easier. <i>Thanks!</i></p>
 		<p align="left">Final release is planned to be in 2 weeks.</p>
+		</div>
 	    		</column>
 	    	</columns>
 		</subsection>
@@ -430,7 +442,7 @@
 	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
 	    		</column>
 	    		<column>
-		<p align="left">This is the first "public" version of soapUI so please have patience
+	    <p align="left">This is the first "public" version of soapUI so please have patience
 		and understanding with any problems related to WSDL importing, XML Validation, 
 		etc. (soapUI has been tested rather extensively only with doc/literal services 
 		in a J2EE environment and running under WinXP).
