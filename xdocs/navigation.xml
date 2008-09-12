@@ -72,7 +72,7 @@
          	<item href="/userguide/interfaces/interfaceview.html" name="Interface View"/>
          	<item href="/userguide/interfaces/endpoints.html" name="Service Endpoints"/>
             <item href="/userguide/interfaces/interfaceeditor.html" name="WSDL Content"/>
-           	<item href="/userguide/interfaces/wsi.html" name="WS-I Complicance"/>
+           	<item href="/userguide/interfaces/wsi.html" name="WS-I Compliance"/>
             <item href="/userguide/interfaces/refactoring.html" name="WSDL Refactoring" pro="true"/>
          </item>
          
