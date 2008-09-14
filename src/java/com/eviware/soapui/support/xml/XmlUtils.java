@@ -880,6 +880,11 @@ public final class XmlUtils
       return new ElementNodeList( list );
    }
 
+   public static NodeList getChildElementsNS( Element elm, QName name )
+   {
+      return getChildElementsByTagNameNS( elm, name.getNamespaceURI(), name.getLocalPart() );
+   }
+
    public static NodeList getChildElementsByTagNameNS( Element elm, String namespaceUri, String localName )
    {
       List<Element> list = new ArrayList<Element>();
