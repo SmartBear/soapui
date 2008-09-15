@@ -12,27 +12,19 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.actions;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.Arrays;
-
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.table.AbstractTableModel;
-
-import org.jdesktop.swingx.JXTable;
-
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfersTestStep.PropertyTransferResult;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepResult;
-import com.eviware.soapui.impl.wsdl.teststeps.TransferResponseValuesTestStep.ValueTransferResult;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
+import org.jdesktop.swingx.JXTable;
+
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.Arrays;
 
 /**
  * Shows a desktop-panel with the TestStepResult for a ValueTransferResult
@@ -42,12 +34,12 @@ import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 
 public class ShowTransferValuesResultsAction extends AbstractAction
 {
-	private final ValueTransferResult result;
+	private final PropertyTransferResult result;
 	private DefaultDesktopPanel desktopPanel;
 
 	public ShowTransferValuesResultsAction(WsdlTestStepResult result)
 	{
-		this.result = (ValueTransferResult) result;
+		this.result = (PropertyTransferResult) result;
 	}
 
 	public void actionPerformed(ActionEvent e)

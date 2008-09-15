@@ -12,11 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import junit.framework.TestCase;
-
-import com.eviware.soapui.config.ValueTransferConfig;
+import com.eviware.soapui.config.PropertyTransferConfig;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.model.support.DefaultTestStepProperty;
+import junit.framework.TestCase;
 
 public class PropertyTransferTestCase extends TestCase
 {
@@ -28,14 +27,14 @@ public class PropertyTransferTestCase extends TestCase
 	{
 		super.setUp();
 		
-		transfer = new PropertyTransfer( null, ValueTransferConfig.Factory.newInstance() );
+		transfer = new PropertyTransfer( null, PropertyTransferConfig.Factory.newInstance() );
 		sourceProperty = new DefaultTestStepProperty( "source", null );
 		targetProperty = new DefaultTestStepProperty( "target", null );
 	}
 
 	public void testStringToStringTransfer() throws Exception
    {
-   	PropertyTransfer transfer = new PropertyTransfer( null, ValueTransferConfig.Factory.newInstance() );
+   	PropertyTransfer transfer = new PropertyTransfer( null, PropertyTransferConfig.Factory.newInstance() );
    	DefaultTestStepProperty sourceProperty = new DefaultTestStepProperty( "source", null );
    	sourceProperty.setValue( "Test" );
    	

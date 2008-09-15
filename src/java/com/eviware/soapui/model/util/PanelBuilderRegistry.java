@@ -90,7 +90,7 @@ public class PanelBuilderRegistry
 		register( WsdlTestRequestStep.class, new WsdlTestRequestPanelBuilder() );
 		register( WsdlPropertiesTestStep.class, new PropertiesStepPanelBuilder() );
 		register( WsdlGroovyScriptTestStep.class, new GroovyScriptStepPanelBuilder() );
-		register( TransferResponseValuesTestStep.class, new TransferResponseValuesTestStepPanelBuilder() );
+		register( PropertyTransfersTestStep.class, new PropertyTransfersTestStepPanelBuilder() );
 		register( WsdlRunTestCaseTestStep.class, new WsdlRunTestCaseTestStepPanelBuilder() );
 		register( WsdlAsyncResponseTestStep.class, new AsyncResponseStepPanelBuilder() );
 	}

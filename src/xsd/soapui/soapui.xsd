@@ -438,13 +438,13 @@
 		</xsd:sequence>
 	</xsd:complexType>
 
-	<xsd:complexType name="TransferValuesStep">
+	<xsd:complexType name="PropertyTransfersStep">
 		<xsd:sequence>
-			<xsd:element name="transfers" type="tns:ValueTransfer" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+			<xsd:element name="transfers" type="tns:PropertyTransfer" maxOccurs="unbounded" minOccurs="0"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 
-	<xsd:complexType name="ValueTransfer">
+	<xsd:complexType name="PropertyTransfer">
 		<xsd:sequence>
 			<xsd:element name="name" type="xsd:string"></xsd:element>
 			<xsd:element name="sourceType" type="xsd:string"
@@ -463,7 +463,7 @@
 			</xsd:element>
 			<xsd:element name="targetPath" type="xsd:string"></xsd:element>
 			<xsd:element name="type" maxOccurs="1" minOccurs="0"
-				type="tns:ValueTransferTypes" default="XPATH">
+				type="tns:PropertyTransferTypes" default="XPATH">
 			</xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="failOnError" type="xsd:boolean"></xsd:attribute>
@@ -474,6 +474,8 @@
 		<xsd:attribute name="ignoreEmpty" type="xsd:boolean"></xsd:attribute>
 		<xsd:attribute name="transferToAll" type="xsd:boolean"></xsd:attribute>
 		<xsd:attribute name="useXQuery" type="xsd:boolean"></xsd:attribute>
+      <xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
+      <xsd:attribute name="transferChildNodes" type="xsd:boolean"></xsd:attribute>
 	</xsd:complexType>
 
 	<xsd:complexType name="Credentials">
@@ -516,7 +518,7 @@
 		</xsd:simpleContent>
 	</xsd:complexType>
 
-	<xsd:simpleType name="ValueTransferSourceType">
+	<xsd:simpleType name="PropertyTransferSourceType">
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="REQUEST"></xsd:enumeration>
 			<xsd:enumeration value="RESPONSE"></xsd:enumeration>
@@ -527,7 +529,7 @@
 		</xsd:restriction>
 	</xsd:simpleType>
 
-	<xsd:simpleType name="ValueTransferTargetType">
+	<xsd:simpleType name="PropertyTransferTargetType">
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="REQUEST"></xsd:enumeration>
 			<xsd:enumeration value="ENDPOINT"></xsd:enumeration>
@@ -558,7 +560,7 @@
 		</xsd:restriction>
 	</xsd:simpleType>
 
-	<xsd:simpleType name="ValueTransferTypes">
+	<xsd:simpleType name="PropertyTransferTypes">
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="XPATH"></xsd:enumeration>
 			<xsd:enumeration value="XQUERY"></xsd:enumeration>

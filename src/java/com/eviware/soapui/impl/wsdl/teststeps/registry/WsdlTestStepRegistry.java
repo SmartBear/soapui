@@ -33,7 +33,7 @@ public class WsdlTestStepRegistry
 		addFactory( new WsdlTestRequestStepFactory() );
 		addFactory( new GroovyScriptStepFactory() );
 		addFactory( new PropertiesStepFactory() );
-		addFactory( new TransferValuesStepFactory() );
+		addFactory( new PropertyTransfersStepFactory() );
 		addFactory( new GotoStepFactory() );
 		addFactory( new DelayStepFactory() );
 		addFactory( new RunTestCaseStepFactory() );

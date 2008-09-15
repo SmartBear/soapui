@@ -12,10 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.registry;
 
+import com.eviware.soapui.config.PropertyTransfersStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.config.TransferValuesStepConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.teststeps.TransferResponseValuesTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfersTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 
 /**
@@ -24,19 +24,19 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
  * @author Ole.Matzura
  */
 
-public class TransferValuesStepFactory extends WsdlTestStepFactory
+public class PropertyTransfersStepFactory extends WsdlTestStepFactory
 {
 	public static final String TRANSFER_TYPE = "transfer";
 
-	public TransferValuesStepFactory()
+	public PropertyTransfersStepFactory()
 	{
 		super( TRANSFER_TYPE, "Property Transfer", 
 					"Transfers values from the previous response to the next request", "/value_transfer.gif" );
 	}
 
-	public WsdlTestStep buildTestStep(WsdlTestCase testCase,	TestStepConfig config, boolean forLoadTest)
+   public WsdlTestStep buildTestStep(WsdlTestCase testCase,	TestStepConfig config, boolean forLoadTest)
 	{
-		return new TransferResponseValuesTestStep( testCase, config, forLoadTest );
+		return new PropertyTransfersTestStep( testCase, config, forLoadTest );
 	}
 
 	public TestStepConfig createNewTestStep(WsdlTestCase testCase, String name)
@@ -44,7 +44,7 @@ public class TransferValuesStepFactory extends WsdlTestStepFactory
 		TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
       testStepConfig.setType( TRANSFER_TYPE );
       testStepConfig.setName( name );
-      testStepConfig.setConfig( TransferValuesStepConfig.Factory.newInstance() );
+      testStepConfig.setConfig( PropertyTransfersStepConfig.Factory.newInstance() );
       return testStepConfig;
 	}
 

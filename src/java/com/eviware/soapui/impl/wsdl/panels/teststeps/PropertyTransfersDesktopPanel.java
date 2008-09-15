@@ -19,7 +19,7 @@ import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
 import com.eviware.soapui.impl.wsdl.panels.support.TestRunComponentEnabler;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.*;
-import com.eviware.soapui.impl.wsdl.teststeps.TransferResponseValuesTestStep.ValueTransferResult;
+import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfersTestStep.PropertyTransferResult;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
@@ -60,9 +60,9 @@ import java.util.List;
  * @author Ole.Matzura
  */
 
-public class TransferResponseValuesDesktopPanel extends ModelItemDesktopPanel<TransferResponseValuesTestStep>
+public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<PropertyTransfersTestStep>
 {
-	private final TransferResponseValuesTestStep transferStep;
+	private final PropertyTransfersTestStep transferStep;
 	private DefaultListModel listModel;
 	private JList transferList;
 	private JTextArea sourceArea;
@@ -97,8 +97,9 @@ public class TransferResponseValuesDesktopPanel extends ModelItemDesktopPanel<Tr
 	private JButton runAllButton;
 	private JInspectorPanel inspectorPanel;
 	private JXTable logTable;
+   private JToggleButton disableButton;
 
-	public TransferResponseValuesDesktopPanel(TransferResponseValuesTestStep testStep)
+   public PropertyTransfersDesktopPanel( PropertyTransfersTestStep testStep)
 	{
 		super( testStep );
 		this.transferStep = testStep;
@@ -113,7 +114,7 @@ public class TransferResponseValuesDesktopPanel extends ModelItemDesktopPanel<Tr
 		transferStep.getTestCase().addTestRunListener( testRunListener );
 	}
 
-	protected void buildUI()
+   protected void buildUI()
 	{
 		JSplitPane splitPane = UISupport.createHorizontalSplit();
 		
@@ -121,7 +122,11 @@ public class TransferResponseValuesDesktopPanel extends ModelItemDesktopPanel<Tr
 		
 		for( int c = 0; c < transferStep.getTransferCount(); c++ )
 		{
-			listModel.addElement( transferStep.getTransferAt( c  ).getName() );
+         String name = transferStep.getTransferAt( c ).getName();
+         if( transferStep.getTransferAt( c ).isDisabled())
+            name += " (disabled)";
+
+         listModel.addElement( name );
 		}
 		
 		transferList = new JList( listModel );
@@ -257,6 +262,13 @@ public class TransferResponseValuesDesktopPanel extends ModelItemDesktopPanel<Tr
 		renameButton = UISupport.createToolbarButton( new RenameAction() );
 		renameButton.setEnabled( false );
 		toolbar.addFixed( renameButton);
+
+      disableButton = new JToggleButton( new DisableAction() );
+      disableButton.setPreferredSize( UISupport.TOOLBAR_BUTTON_DIMENSION );
+      disableButton.setSelectedIcon( UISupport.createImageIcon( "/bullet_red.png" ));
+      toolbar.addSeparator( );
+      toolbar.addFixed( disableButton );
+
 		return toolbar;
 	}
 	
@@ -821,11 +833,14 @@ public class TransferResponseValuesDesktopPanel extends ModelItemDesktopPanel<Tr
 				ignoreEmptyCheckBox.setSelected( transfer.getIgnoreEmpty() );
 				transferAllCheckBox.setSelected( transfer.getTransferToAll() );
 				useXQueryCheckBox.setSelected( transfer.getUseXQuery() );
+
+            disableButton.setSelected( transfer.isDisabled() );
 			}
 			
 			copyButton.setEnabled( transfer != null );
 			renameButton.setEnabled( transfer != null );
 			deleteButton.setEnabled( transfer != null );
+         disableButton.setEnabled( transfer != null );
 			declareButton.setEnabled( transfer != null );
 			sourceStepCombo.setEnabled( transfer != null );
 			targetStepCombo.setEnabled( transfer != null );
@@ -1014,6 +1029,27 @@ public class TransferResponseValuesDesktopPanel extends ModelItemDesktopPanel<Tr
 			}
 		}
 	}
+
+   private final class DisableAction extends AbstractAction
+	{
+		public DisableAction()
+		{
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/bullet_green.png" ));
+			putValue( Action.SHORT_DESCRIPTION, "Disables the selected Property Transfer" );
+		}
+
+		public void actionPerformed(ActionEvent e)
+		{
+			PropertyTransfer transfer = getCurrentTransfer();
+         transfer.setDisabled( disableButton.isSelected() );
+
+         String name = transfer.getName();
+         if( transfer.isDisabled())
+            name += " (disabled)";
+
+         listModel.setElementAt( name, transferList.getSelectedIndex() );
+		}
+	}
 	
 	private final class DeclareNamespacesAction extends AbstractAction
 	{
@@ -1074,7 +1110,7 @@ public class TransferResponseValuesDesktopPanel extends ModelItemDesktopPanel<Tr
 			for( int c = 0; c < transferStep.getTransferCount(); c++ )
 			{
 				PropertyTransfer transfer = transferStep.getTransferAt(c);
-				ValueTransferResult result = (ValueTransferResult) transferStep.run( mockRunner, context, transfer );
+				PropertyTransfersTestStep.PropertyTransferResult result = (PropertyTransfersTestStep.PropertyTransferResult) transferStep.run( mockRunner, context, transfer );
 				transferLogTableModel.addResult( result );
 			}
 		}
@@ -1098,7 +1134,7 @@ public class TransferResponseValuesDesktopPanel extends ModelItemDesktopPanel<Tr
 			
 			MockTestRunner mockRunner = new MockTestRunner( transferStep.getTestCase() );
 			MockTestRunContext context = new MockTestRunContext( mockRunner, transferStep );
-			ValueTransferResult result = (ValueTransferResult) transferStep.run( mockRunner, context, getCurrentTransfer() );
+			PropertyTransferResult result = (PropertyTransferResult) transferStep.run( mockRunner, context, getCurrentTransfer() );
 			transferLogTableModel.addResult( result );
 		}
 	}
@@ -1173,12 +1209,12 @@ public class TransferResponseValuesDesktopPanel extends ModelItemDesktopPanel<Tr
 	
 	private class TransfersTableModel extends AbstractTableModel
 	{
-		private List<ValueTransferResult> results = new ArrayList<ValueTransferResult>();
+		private List<PropertyTransfersTestStep.PropertyTransferResult> results = new ArrayList<PropertyTransfersTestStep.PropertyTransferResult>();
 		
 		public synchronized int getRowCount()
 		{
 			int sum = 0; 
-			for( ValueTransferResult result : results )
+			for( PropertyTransfersTestStep.PropertyTransferResult result : results )
 			{
 				sum += result.getTransferCount();
 			}
@@ -1193,7 +1229,7 @@ public class TransferResponseValuesDesktopPanel extends ModelItemDesktopPanel<Tr
 			logInspector.setTitle(  "Transfer Log (0)" );
 		}
 
-		public void addResult( ValueTransferResult result )
+		public void addResult( PropertyTransfersTestStep.PropertyTransferResult result )
 		{
 		   int rowCount;
 		   synchronized(this)
@@ -1228,7 +1264,7 @@ public class TransferResponseValuesDesktopPanel extends ModelItemDesktopPanel<Tr
 		public synchronized Object getValueAt(int rowIndex, int columnIndex)
 		{
 			// find correct transfer
-			ValueTransferResult result = null;
+			PropertyTransfersTestStep.PropertyTransferResult result = null;
 			int sum = 0;
 			
 			for( int c = 0; c < results.size(); c++ )
@@ -1266,7 +1302,7 @@ public class TransferResponseValuesDesktopPanel extends ModelItemDesktopPanel<Tr
 		{
 			if( result.getTestStep() == transferStep )
 			{
-				transferLogTableModel.addResult( ( ValueTransferResult ) result );
+				transferLogTableModel.addResult( (PropertyTransferResult) result );
 			}
 		}
 	}

@@ -12,16 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-
+import com.eviware.soapui.config.PropertyTransferConfig;
+import com.eviware.soapui.config.PropertyTransfersStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.config.TransferValuesStepConfig;
-import com.eviware.soapui.config.ValueTransferConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowTransferValuesResultsAction;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -36,6 +29,12 @@ import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 
+import javax.swing.*;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * WsdlTestStep for transferring values from a WsdlTestRequest response to a 
  * WsdlTestRequest request using XPath expressions
@@ -43,15 +42,15 @@ import com.eviware.soapui.support.UISupport;
  * @author Ole.Matzura
  */
 
-public class TransferResponseValuesTestStep extends WsdlTestStepWithProperties implements XPathReferenceContainer
+public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implements XPathReferenceContainer
 {
-	private TransferValuesStepConfig transferStepConfig;
+	private PropertyTransfersStepConfig transferStepConfig;
 	private boolean canceled;
 	private List<PropertyTransfer> transfers = new ArrayList<PropertyTransfer>();
 	private ImageIcon failedIcon;
 	private ImageIcon okIcon;
 
-	public TransferResponseValuesTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest)
+	public PropertyTransfersTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest)
 	{
 		super(testCase, config, true, forLoadTest);
       
@@ -63,14 +62,14 @@ public class TransferResponseValuesTestStep extends WsdlTestStepWithProperties i
 		}
 	}
 
-	@Override
+   @Override
 	public void afterLoad()
 	{
 		TestStepConfig config = getConfig();
 		
 		if( config.getConfig() != null )
       {
-			transferStepConfig = (TransferValuesStepConfig) config.getConfig().changeType(TransferValuesStepConfig.type);
+			transferStepConfig = (PropertyTransfersStepConfig) config.getConfig().changeType(PropertyTransfersStepConfig.type);
 			for( int c = 0; c < transferStepConfig.sizeOfTransfersArray(); c++ )
 			{
 				transfers.add( new PropertyTransfer( this, transferStepConfig.getTransfersArray( c )));
@@ -78,13 +77,13 @@ public class TransferResponseValuesTestStep extends WsdlTestStepWithProperties i
       }
       else
       {
-         transferStepConfig = (TransferValuesStepConfig) config.addNewConfig().changeType( TransferValuesStepConfig.type );
+         transferStepConfig = (PropertyTransfersStepConfig) config.addNewConfig().changeType( PropertyTransfersStepConfig.type );
       }
 		
 		super.afterLoad();
 	}
 
-	public TransferValuesStepConfig getTransferConfig()
+	public PropertyTransfersStepConfig getTransferConfig()
 	{
 		return transferStepConfig;
 	}
@@ -94,7 +93,7 @@ public class TransferResponseValuesTestStep extends WsdlTestStepWithProperties i
 	{
 		super.resetConfigOnMove(config);
 		
-		transferStepConfig = (TransferValuesStepConfig) config.getConfig().changeType(TransferValuesStepConfig.type);
+		transferStepConfig = (PropertyTransfersStepConfig) config.getConfig().changeType(PropertyTransfersStepConfig.type);
 		for( int c = 0; c < transferStepConfig.sizeOfTransfersArray(); c++ )
 		{
 			transfers.get( c ).setConfigOnMove( transferStepConfig.getTransfersArray( c ));
@@ -108,7 +107,7 @@ public class TransferResponseValuesTestStep extends WsdlTestStepWithProperties i
 	
 	public TestStepResult run( TestRunner runner, TestRunContext context, PropertyTransfer transfer )
 	{
-		ValueTransferResult result = new ValueTransferResult();
+		PropertyTransferResult result = new PropertyTransferResult();
 		result.addAction( new ShowTransferValuesResultsAction( result ), true );
 
 		canceled = false;
@@ -118,7 +117,7 @@ public class TransferResponseValuesTestStep extends WsdlTestStepWithProperties i
 		for( int c = 0; c < transfers.size(); c++ )
 		{
 			PropertyTransfer valueTransfer = transfers.get( c );
-			if( transfer != null && transfer != valueTransfer )
+			if( (transfer != null && transfer != valueTransfer) || valueTransfer.isDisabled() )
 				continue;
 			
 			try
@@ -200,7 +199,7 @@ public class TransferResponseValuesTestStep extends WsdlTestStepWithProperties i
 	
 	public TestStepResult createFailedResult(String message)
 	{
-		ValueTransferResult result = new ValueTransferResult();
+		PropertyTransferResult result = new PropertyTransferResult();
 		result.setStatus( TestStepStatus.FAILED );
 		result.addMessage( message );
 		
@@ -218,20 +217,20 @@ public class TransferResponseValuesTestStep extends WsdlTestStepWithProperties i
 		}
 	}
 
-	public class ValueTransferResult extends WsdlTestStepResult
+	public class PropertyTransferResult extends WsdlTestStepResult
 	{
-		private List<ValueTransferConfig> transfers = new ArrayList<ValueTransferConfig>();
+		private List<PropertyTransferConfig> transfers = new ArrayList<PropertyTransferConfig>();
 		private List<String[]> values = new ArrayList<String[]>();
 		
-		public ValueTransferResult()
+		public PropertyTransferResult()
 		{
-			super( TransferResponseValuesTestStep.this );
+			super( PropertyTransfersTestStep.this );
 		}
 
-		public void addTransferResult( PropertyTransfer transfer, String [] values )
+      public void addTransferResult( PropertyTransfer transfer, String [] values )
 		{
 			// save a copy, so we dont mirror changes
-			transfers.add( ( ValueTransferConfig ) transfer.getConfig().copy()  );
+			transfers.add( ( PropertyTransferConfig ) transfer.getConfig().copy()  );
 			this.values.add( values );
 		}
 		
@@ -240,7 +239,7 @@ public class TransferResponseValuesTestStep extends WsdlTestStepWithProperties i
 			return transfers == null ? 0 : transfers.size();
 		}
 		
-		public ValueTransferConfig getTransferAt( int index )
+		public PropertyTransferConfig getTransferAt( int index )
 		{
 			return transfers == null ? null : transfers.get( index );
 		}
@@ -269,7 +268,7 @@ public class TransferResponseValuesTestStep extends WsdlTestStepWithProperties i
 				writer.println( "----------------------------------------------------" );
 				for( int c = 0; c < transfers.size(); c++ )
 				{
-					ValueTransferConfig transfer = transfers.get( c );
+					PropertyTransferConfig transfer = transfers.get( c );
 					writer.println( transfer.getName() + " transferred [" + Arrays.toString(values.get( c )) + "] from [" + 
 							transfer.getSourceStep() + "." + transfer.getSourceType() + "] to [" + 
 							transfer.getTargetStep() + "." + transfer.getTargetType() + "]" );

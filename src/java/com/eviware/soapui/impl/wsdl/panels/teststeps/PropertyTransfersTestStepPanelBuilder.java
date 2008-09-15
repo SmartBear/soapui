@@ -12,28 +12,28 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
-import java.awt.Component;
-
 import com.eviware.soapui.impl.EmptyPanelBuilder;
-import com.eviware.soapui.impl.wsdl.teststeps.TransferResponseValuesTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfersTestStep;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
+
+import java.awt.*;
 
 /**
  * PanelBuilder for TransferResponseValuesTestStep
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class TransferResponseValuesTestStepPanelBuilder 
-	extends EmptyPanelBuilder<TransferResponseValuesTestStep>
+public class PropertyTransfersTestStepPanelBuilder
+        extends EmptyPanelBuilder<PropertyTransfersTestStep>
 {
-	public TransferResponseValuesTestStepPanelBuilder()
+   public PropertyTransfersTestStepPanelBuilder()
    {
    }
 
-   public DesktopPanel buildDesktopPanel(TransferResponseValuesTestStep testStep)
+   public DesktopPanel buildDesktopPanel( PropertyTransfersTestStep testStep )
    {
-      return new TransferResponseValuesDesktopPanel( testStep );
+      return new PropertyTransfersDesktopPanel( testStep );
    }
 
    public boolean hasDesktopPanel()
@@ -41,9 +41,9 @@ public class TransferResponseValuesTestStepPanelBuilder
       return true;
    }
 
-	@Override
-	public Component buildOverviewPanel( TransferResponseValuesTestStep modelItem )
-	{
-		return buildDefaultProperties( modelItem, "PropertyTransfer Properties" );
-	}
+   @Override
+   public Component buildOverviewPanel( PropertyTransfersTestStep modelItem )
+   {
+      return buildDefaultProperties( modelItem, "PropertyTransfer Properties" );
+   }
 }
