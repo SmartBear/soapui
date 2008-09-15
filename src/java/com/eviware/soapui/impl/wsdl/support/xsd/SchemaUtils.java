@@ -565,14 +565,16 @@ public class SchemaUtils
               isInstanceOf( schemaType, XmlBase64Binary.type );
    }
 
-   public static String getDocumentation( SchemaParticle particle, SchemaType schemaType )
+   public static String getDocumentation( SchemaType schemaType )
    {
       String result = null;
       String xsPrefix = null;
 
-      if( particle instanceof SchemaLocalElement )
+      SchemaField containerField = schemaType.getContainerField();
+
+      if( containerField instanceof SchemaLocalElement )
       {
-         SchemaAnnotation annotation = ((SchemaLocalElement) particle).getAnnotation();
+         SchemaAnnotation annotation = ((SchemaLocalElement) containerField).getAnnotation();
          if( annotation != null )
          {
             XmlObject[] userInformation = annotation.getUserInformation();
