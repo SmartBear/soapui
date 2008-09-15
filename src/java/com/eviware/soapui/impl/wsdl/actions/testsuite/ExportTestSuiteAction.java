@@ -25,7 +25,6 @@ public class ExportTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 		super("Export", "Export this test suite");
 	}
 
-	@Override
 	public void perform(WsdlTestSuite tSuite, Object param)
 	{
 		tSuite.beforeSave();
