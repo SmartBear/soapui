@@ -24,7 +24,6 @@ public class ImportTestSuiteAction extends AbstractSoapUIAction<WsdlProject>
 		super("Import Test Suite", "Import test suite for this interface");
 	}
 
-	@Override
 	public void perform(WsdlProject project, Object param)
 	{
 		File file = UISupport.getFileDialogs().openXML(this, "Choose test suite to import");
