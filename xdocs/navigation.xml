@@ -21,7 +21,6 @@
 	
     <menu name="Home" collapse="true" href="/index.html">
       <item href="/features.html" name="Feature Overview">
-      
       <item href="/comparison.html" name="soapUI Pro comparison"/>
       </item>
       <item href="/news.html" name="News and History">
@@ -33,22 +32,19 @@
 	      <item href="/new_and_noteworthy_16.html" name="New and Noteworthy in 1.6"/>
 	      <item href="/new_and_noteworthy_15.html" name="New and Noteworthy in 1.5"/>
       </item>
-      
       <item href="/architecture/index.html" name="Building"/>
       <item href="/architecture/integration.html" name="Integrating"/>
       <item href="/architecture/extensions.html" name="Extending"/>
-      
       <item href="/future.html" name="Future Plans"/>
       <item href="/faq.html" name="FAQ"/>
-     
       </menu>
       
       <menu name="Getting Started" collapse="true" href="/gettingstarted/index.html">
+	      <item href="/gettingstarted/your_first_soapUI_project.html" name="Your first soapUI Project"/>
 	      <item href="/gettingstarted/functional.html" name="Functional Web Service Tests"/>
     	  <item href="/gettingstarted/loadtest.html" name="Web Service Load Tests"/>
     	  <item href="/gettingstarted/mocking.html" name="Web Service Mocking"/>
     	  <item href="/gettingstarted/sample-project.html" name="soapUI Sample Project"/>
-      
       </menu>
 
    <menu name="User Guide" collapse="true" href="/userguide/index.html">
