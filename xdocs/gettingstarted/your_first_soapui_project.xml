@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Web Service testing Tutorial with soapUI - Your First Web Service Test Project</title>
+    </properties>
+    <body>
+		<section name="Your first soapUI Project">
+		<p>If you have a copy of soapUI up and running, let's get going by creating your first project!</p>
+		<p>We are going to do the following:
+		<ol>
+			<li>Set up a test project</li>
+			<li>Add a WSDl that defines the Web Service</li>
+			<li>Make some Requests</li>
+		</ol>
+		</p>
+		
+
+		 <subsection name="Create or Import a Web Service testing project">
+		 
+		<columns><column>
+		<ul>
+		<li>Right click on the workspace node in the left navigation pane and select "New WSDL Project"</li>
+		<li>You will be prompted for a project name and then for a local file where the project should be saved</li>
+		<li>If all is OK an empty project will be created in the workspace</li>
+		</ul>
+		<p>If you have downloaded the offline version, a sample project is included in the root folder; select 
+		"Import Project" instead and browse to the sample-soapui-project.xml file.</p>
+		<p>Read more about projects in the <a href="../userguide/projects/index.html">soapUI User Guide</a></p>
+		</column>
+		<column>
+		<img src="images/getting_started_1.gif" alt="Create a project from a WSDL"/></column></columns>
+		 </subsection>
+		 
+		 <subsection name="Add a WSDL to create tests from">
+		<columns><column><div>
+		Now that you have a project you can start adding Interfaces (i.e. Web Service PortTypes) to it.</div>
+		<ul>
+		<li>Right click on the project node and select "Add WSDL from URL"</li>
+		<li>You will be prompted for the URL to the Interfaces WSDL; enter 
+		<pre>http://webservices.amazon.com/AWSECommerceService/<br/>AWSECommerceService.wsdl</pre> 
+		to add the amazon web service and select "Ok".</li>
+		<li>soapUI will prompt you if you want to create default requests for each operation, simply select "Yes"</li>
+		<li>soapUI will now add the SOAP/Http Binding for the amazon "AWSECommerceServicePortType" PortType to your project
+		and create nodes for each operation.</li>
+		</ul>
+		<p>Read more about interfaces in the <a href="userguide/interfaces/index.html">soapUI User Guide</a></p>
+		</column>
+		<column><img src="images/getting_started_2.gif" alt="Add WSDL to create tests from"/></column></columns>
+		 </subsection>
+		 
+		 <subsection name="Try some Web Service requests">
+		<columns><column><div>
+		Now that you have added the amazon Web Service you can start playing around with some requests. 
+		When you added the interface in the previous step soapUI created default requests for each operation in 
+		accordance with their WSDL and Schema definition.</div>
+		<ul>
+		<li>Expand the Interface node and any Operation node under it, you should see the created "Request 1".</li>
+		<li>Double-click the request node to open the request editor in the right part of soapUI (see image below)</li>
+		<li>The request editor is divided into 3 parts:
+			<ul>
+				<li>A toolbar at the top with a number of request related actions/options</li>
+		   		<li>A request area to the left</li>
+		   		<li>A response area to the right</li>
+		   </ul>
+		   </li>
+		   <li>The default request created by soapUI will have "?" for each value that needs to be supplied in the request, 
+		   replace or remove any values as required and post request by pressing the left-most toolbar button (a green arrow)</li>
+		   <li>The request will run in the background and its response will be displayed in the right editor</li>
+		</ul>
+		<p>Read more about working with requests in the <a href="../userguide/requests.html">soapUI User Guide</a></p>
+		</column>
+		<column><img src="images/getting_started_3.gif" alt="Web Service Requset in soapUI"/></column></columns>
+		
+		<p align="center"><img src="images/getting_started_7.gif"  alt="Soap Test Request and Response View"/></p>
+		 </subsection>
+		 
+		
+		 <p><hr size="1"/>Next: <a href="functional.html">Getting Started with Functional Testing for Web Services</a></p>
+		 </section>
+	</body>
+</document>
