@@ -131,7 +131,9 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			
 			//	do request
 			WsdlProject project = (WsdlProject) ModelSupport.getModelItemProject( httpRequest );
-			WssCrypto crypto = project.getWssContainer().getCryptoByName( httpRequest.getSslKeystore() );
+			WssCrypto crypto = project.getWssContainer().getCryptoByName(
+                  PropertyExpansionUtils.expandProperties( submitContext, httpRequest.getSslKeystore()) );
+         
 			if( crypto != null && WssCrypto.STATUS_OK.equals( crypto.getStatus() ) )
 			{
 				hostConfiguration.getParams().setParameter( SoapUIHostConfiguration.SOAPUI_SSL_CONFIG, 

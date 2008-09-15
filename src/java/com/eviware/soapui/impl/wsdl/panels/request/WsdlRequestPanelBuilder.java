@@ -12,12 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.panels.request;
 
-import javax.swing.JPanel;
-
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.support.components.JPropertiesTable;
 import com.eviware.soapui.support.types.StringList;
+
+import javax.swing.*;
 
 /**
  * PanelBuilder for WsdlRequest
@@ -62,7 +62,7 @@ public class WsdlRequestPanelBuilder extends EmptyPanelBuilder<WsdlRequest>
    	table.addProperty( "WSS TimeToLive", "wssTimeToLive", true );
    	
 		StringList keystores = new StringList( request.getOperation().getInterface().getProject().getWssContainer().getCryptoNames() );
-		keystores.add( "" );
+		keystores.add( 0, null );
 		table.addProperty( "SSL Keystore", "sslKeystore", keystores.toStringArray() );
 
 //   	

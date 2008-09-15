@@ -12,13 +12,14 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
-import javax.swing.JPanel;
-
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.support.components.JPropertiesTable;
+import com.eviware.soapui.support.types.StringList;
+
+import javax.swing.*;
 
 /**
  * PanelBuilder for WsdlTestRequest
@@ -65,6 +66,10 @@ public class WsdlTestRequestPanelBuilder extends EmptyPanelBuilder<WsdlTestReque
    	table.addProperty( "WSS-Password Type", "wssPasswordType", 
    			new String[] {WsdlRequest.PW_TYPE_NONE, WsdlRequest.PW_TYPE_TEXT, WsdlRequest.PW_TYPE_DIGEST});
    	table.addProperty( "WSS TimeToLive", "wssTimeToLive", true );
+
+      StringList keystores = new StringList( request.getOperation().getInterface().getProject().getWssContainer().getCryptoNames() );
+		keystores.add( 0, null );
+		table.addProperty( "SSL Keystore", "sslKeystore", keystores.toStringArray() );
 //   	
 //   	StringList outgoingNames = new StringList( request.getOperation().getInterface().getProject().getWssContainer().getOutgoingNames());
 //   	outgoingNames.add( "" );
