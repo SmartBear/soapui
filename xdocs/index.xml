@@ -27,8 +27,9 @@
       					<div class="os_infobox_header"> <img src="images/small_soapui-logo.png" border="0" alt=""></img></div>
       					<div class="os_infobox_content">
 							<p>
-								<span class="os_par">80000 Users<br></br>
-								Free - Open Source<br></br></span>
+								<span class="os_par">140 000 Users<br/>
+								Free - For Real<br/>
+								Open Source<br/></span>
 							</p>
 						</div>
 						<div class="os_infobox_footer">
@@ -48,8 +49,9 @@
       					<div class="pro_infobox_header"> <img src="images/small_soapuipro-logo.png" border="0" alt=""></img></div>
       					<div class="pro_infobox_content">
 							<p>
-								<span class="pro_par">Pro Support<br></br>
-								Pro Functionality<br></br></span>
+								<span class="pro_par">Pro Features<br/>
+								Pro Services<br/>
+								Pro Support<br/></span>
 							</p>
 						</div>
 						<div class="pro_infobox_footer">
@@ -63,10 +65,11 @@
 
 	  	</div>
 	</div>
-		<h1> </h1> 
+			<h1></h1>
+
 		<h1>soapUI; the Web Services Testing tool.</h1>
 		<p>
-		soapUI is the leading tool for Web Service Testing. With more than 300 000 downloads, it's the most used tool for SOA testing in the world.
+		soapUI is the leading tool for Web Service Testing. With more than 760 000 downloads, it's the most used tool for SOA testing in the world.
 		</p>
 		<p>
 		soapUI is Free and Open Source and is used for 

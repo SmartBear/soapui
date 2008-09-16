@@ -25,7 +25,7 @@
          			<div class="infobox_header">New in soapUI Pro!</div>
 					<div class="infobox_content">
 					<span class="pro_par">
-						<p>In soapUI Pro there you have two more request and response editors; The Form editor and the Outline Editor.<br></br>
+						<p>In soapUI Pro there you have two more request and response editors; The Form editor and the Outline Editor.<br/>
 						Both will improve your productivity and make Web Service Testing more fun.
 						</p>
 						<p>
@@ -127,7 +127,7 @@
 	
 		</subsection>
 		
-		<p><hr size="1"/>Next: <a href="../userguide/sample-project.html">soapUI Sample Project</a></p>
+		<p><hr size="1"/>Next: <a href="sample-project.html">soapUI Sample Project</a></p>
 		</section>
     </body>
 </document>

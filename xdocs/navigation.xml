@@ -40,7 +40,7 @@
       </menu>
       
       <menu name="Getting Started" collapse="true" href="/gettingstarted/index.html">
-	      <item href="/gettingstarted/your_first_soapUI_project.html" name="Your first soapUI Project"/>
+	      <item href="/gettingstarted/your_first_soapui_project.html" name="Your first soapUI Project"/>
 	      <item href="/gettingstarted/functional.html" name="Functional Web Service Tests"/>
     	  <item href="/gettingstarted/loadtest.html" name="Web Service Load Tests"/>
     	  <item href="/gettingstarted/mocking.html" name="Web Service Mocking"/>
