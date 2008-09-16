@@ -56,7 +56,7 @@ public class RestResourceTreeNode extends OperationTreeNode
 	@Override
 	public void propertyChange(PropertyChangeEvent evt)
 	{
-		if( evt.getPropertyName().equals("resources") && evt.getSource() == restResource )
+		if( evt.getPropertyName().equals("childResources") && evt.getSource() == restResource )
 		{
 			if( evt.getNewValue() != null && evt.getOldValue() == null )
 			{

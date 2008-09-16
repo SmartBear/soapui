@@ -153,7 +153,8 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
    public String getAccept()
    {
-      return getConfig().getAccept();
+      String accept = getConfig().getAccept();
+      return accept == null ? "" : accept;
    }
 
    public void setAccept( String acceptEncoding )
@@ -175,7 +176,6 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
       String mediaType = getConfig().getMediaType();
       return mediaType;
    }
-
 
    public WsdlSubmit<RestRequest> submit( SubmitContext submitContext, boolean async ) throws SubmitException
    {
@@ -320,6 +320,20 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
       }
 
       return result.toStringArray();
+   }
+
+   public boolean isPostQueryString()
+   {
+      return getConfig().getPostQueryString();
+   }
+
+   public void setPostQueryString( boolean b )
+   {
+      boolean old = isPostQueryString();
+      getConfig().setPostQueryString( b );
+      notifyPropertyChanged( "postQueryString", old, b );
+
+      setMediaType( b ? "application/x-www-form-urlencoded" : "");
    }
 
    public final static class ParameterMessagePart extends MessagePart.ParameterPart

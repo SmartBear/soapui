@@ -139,11 +139,13 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 
    public void deleteResource( RestResource resource )
    {
+      int ix = resources.indexOf( resource );
       if( !resources.remove( resource ) )
          return;
 
       fireOperationRemoved( resource );
 
+      getConfig().removeResource( ix );
       resource.release();
    }
 

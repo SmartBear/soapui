@@ -26,6 +26,7 @@ import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.xmlbeans.XmlBoolean;
 
 import java.io.UnsupportedEncodingException;
@@ -92,7 +93,7 @@ public class RestRequestFilter extends AbstractRequestFilter
          }
       }
 
-      if( query.length() > 0 )
+      if( query.length() > 0 && !request.isPostQueryString() )
       {
          httpMethod.setQueryString( query.toString() );
       }
@@ -125,47 +126,54 @@ public class RestRequestFilter extends AbstractRequestFilter
       {
          httpMethod.setRequestHeader( "Content-Type", request.getMediaType() );
 
-         String requestContent = request.getRequestContent();
-         Attachment[] attachments = request.getAttachments();
-
-         if( StringUtils.hasContent( requestContent ) )
+         if( request.isPostQueryString())
          {
-            if( attachments.length == 0 )
-            {
-               try
-               {
-                  byte[] content = encoding == null ? requestContent.getBytes() : requestContent.getBytes( encoding );
-                  ((EntityEnclosingMethod) httpMethod).setRequestEntity( new ByteArrayRequestEntity( content ) );
-               }
-               catch( UnsupportedEncodingException e )
-               {
-                  ((EntityEnclosingMethod) httpMethod).setRequestEntity( new ByteArrayRequestEntity( requestContent.getBytes() ) );
-               }
-            }
-            else
-            {
-
-            }
+            ((EntityEnclosingMethod) httpMethod).setRequestEntity( new StringRequestEntity( query.toString() ) );
          }
-         else if( attachments.length > 0 )
+         else
          {
-            if( attachments.length == 1 )
-            {
-               try
-               {
-                  ((EntityEnclosingMethod) httpMethod).setRequestEntity( new InputStreamRequestEntity(
-                          attachments[0].getInputStream() ) );
+            String requestContent = request.getRequestContent();
+            Attachment[] attachments = request.getAttachments();
 
-                  httpMethod.setRequestHeader( "Content-Type", attachments[0].getContentType() );
-               }
-               catch( Exception e )
+            if( StringUtils.hasContent( requestContent ) )
+            {
+               if( attachments.length == 0 )
                {
-                  e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                  try
+                  {
+                     byte[] content = encoding == null ? requestContent.getBytes() : requestContent.getBytes( encoding );
+                     ((EntityEnclosingMethod) httpMethod).setRequestEntity( new ByteArrayRequestEntity( content ) );
+                  }
+                  catch( UnsupportedEncodingException e )
+                  {
+                     ((EntityEnclosingMethod) httpMethod).setRequestEntity( new ByteArrayRequestEntity( requestContent.getBytes() ) );
+                  }
+               }
+               else
+               {
+
                }
             }
-            else
+            else if( attachments.length > 0 )
             {
+               if( attachments.length == 1 )
+               {
+                  try
+                  {
+                     ((EntityEnclosingMethod) httpMethod).setRequestEntity( new InputStreamRequestEntity(
+                             attachments[0].getInputStream() ) );
 
+                     httpMethod.setRequestHeader( "Content-Type", attachments[0].getContentType() );
+                  }
+                  catch( Exception e )
+                  {
+                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                  }
+               }
+               else
+               {
+
+               }
             }
          }
       }

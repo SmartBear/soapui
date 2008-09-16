@@ -51,6 +51,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
    private JSplitPane split;
    private JButton recreateButton;
    private JWadlParamsTable paramsTable;
+   private JCheckBox postQueryCheckBox;
 
    public RestRequestContentView( RestRequestMessageEditor restRequestMessageEditor, RestRequest restRequest )
    {
@@ -135,9 +136,16 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
       } );
 
       contentPanel.add( new JScrollPane( contentEditor ) );
-      contentEditor.setEnabledAndEditable( restRequest.hasRequestBody() );
+
+      enableBodyComponents();
 
       return contentPanel;
+   }
+
+   private void enableBodyComponents()
+   {
+      mediaTypeCombo.setEnabled( restRequest.hasRequestBody() && !restRequest.isPostQueryString() );
+      contentEditor.setEnabledAndEditable( restRequest.hasRequestBody() && !restRequest.isPostQueryString() );
    }
 
    private Component buildToolbar()
@@ -163,6 +171,21 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
       recreateButton = UISupport.createActionButton( new CreateDefaultRepresentationAction(), true );
       recreateButton.setEnabled( canRecreate() );
       toolbar.addFixed( recreateButton );
+
+      toolbar.addSeparator();
+
+      postQueryCheckBox = new JCheckBox( "Post QueryString", restRequest.isPostQueryString() );
+      postQueryCheckBox.addItemListener( new ItemListener()
+      {
+         public void itemStateChanged( ItemEvent e )
+         {
+            restRequest.setPostQueryString( postQueryCheckBox.isSelected() );
+            enableBodyComponents();
+         }
+      } );
+
+      postQueryCheckBox.setPreferredSize( new Dimension( 200, 20 ) );
+      toolbar.addFixed( postQueryCheckBox );
 
       return toolbar;
    }
@@ -207,8 +230,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
       }
       else if( evt.getPropertyName().equals( "method" ) )
       {
-         contentEditor.setEnabledAndEditable( restRequest.hasRequestBody() );
-         mediaTypeCombo.setEnabled( restRequest.hasRequestBody() );
+         enableBodyComponents();
 
          if( !restRequest.hasRequestBody() )
          {
@@ -221,6 +243,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
       }
       else if( evt.getPropertyName().equals( "mediaType" ) )
       {
+         mediaTypeCombo.setSelectedItem( evt.getNewValue() );
          recreateButton.setEnabled( canRecreate() );
       }
    }
@@ -238,6 +261,8 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
    public void setEditable( boolean enabled )
    {
       contentEditor.setEnabledAndEditable( enabled ? restRequest.hasRequestBody() : false );
+      mediaTypeCombo.setEnabled( enabled );
+      postQueryCheckBox.setEnabled( enabled );
    }
 
    private class CreateDefaultRepresentationAction extends AbstractAction

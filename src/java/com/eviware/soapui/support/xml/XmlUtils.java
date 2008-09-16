@@ -1001,6 +1001,22 @@ public final class XmlUtils
       return "ns" + (int)(Math.random()*1000);
    }
 
+   public static QName createQName( Node node )
+   {
+      return new QName( node.getNamespaceURI(), node.getLocalName());
+   }
+
+   public static Node getNextElementSibling( Node node )
+   {
+      node = node.getNextSibling();
+      while( node != null && node.getNodeType() != Node.ELEMENT_NODE )
+      {
+         node = node.getNextSibling();
+      }
+
+      return node;
+   }
+
    private final static class ElementNodeList implements NodeList
    {
       private final List<Element> list;

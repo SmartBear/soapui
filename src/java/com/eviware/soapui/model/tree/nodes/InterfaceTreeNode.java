@@ -12,9 +12,7 @@
 
 package com.eviware.soapui.model.tree.nodes;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.InterfaceListener;
 import com.eviware.soapui.model.iface.Operation;
@@ -23,7 +21,9 @@ import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
 import com.eviware.soapui.model.tree.TreeNodeFactory;
-import com.eviware.soapui.impl.rest.RestResource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SoapUITreeNode for Interface implementations
@@ -124,7 +124,11 @@ public class InterfaceTreeNode extends AbstractModelItemTreeNode<Interface>
       		getTreeModel().notifyNodeRemoved( treeNode );
       		operationNodes.remove( treeNode );
       	}
-			else throw new RuntimeException( "Removing unkown operation" ); 
+			else if( treeNode instanceof RestResourceTreeNode )
+         {
+
+         }
+         else throw new RuntimeException( "Removing unkown operation" ); 
       }
 
 		public void operationUpdated( Operation operation )

@@ -35,8 +35,8 @@ public class DeleteRestRequestAction extends AbstractSoapUIAction<RestRequest>
       if( UISupport.confirm( "Delete Request [" + request.getName() + "] from Resource [" + request.getOperation().getName() + 
             "]", "Delete Request" ))
       {
-      	RestResource operation = request.getResource();
-         operation.removeRequest( request );
+      	RestResource resource = request.getResource();
+         resource.removeRequest( request );
       }
    }
 }

@@ -143,6 +143,8 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		resources.add( resource );
 		
 		getInterface().fireOperationAdded( resource );
+
+      notifyPropertyChanged( "childResources", null, resource );
 		
 		return resource;
 	}
@@ -374,6 +376,18 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 
 	public void removeRequest(RestRequest request)
 	{
+      int ix = requests.indexOf(request);
+		requests.remove(ix);
+
+		try
+		{
+			(getInterface()).fireRequestRemoved(request);
+		}
+		finally
+		{
+			request.release();
+			getConfig().removeRequest(ix);
+		}
 	}
 	
 	public RestRequest cloneRequest( RestRequest request, String name )
@@ -432,11 +446,15 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 
    public void deleteResource(RestResource resource)
 	{
+      int ix = resources.indexOf( resource );
 		if( !resources.remove(resource))
 			return;
 
 		getInterface().fireOperationRemoved(resource);
-		
+
+      notifyPropertyChanged( "childResources", resource, null );
+
+      getConfig().removeResource( ix );
 		resource.release();
 	}
 

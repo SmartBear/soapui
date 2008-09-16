@@ -87,7 +87,7 @@ public class WsdlPackagingRequestFilter extends AbstractRequestFilter
 		}
 
       // non-multipart request?
-		if( !isXOP && (mp == null || mp.getCount() == 0 ) && hasNonContentAttachments( wsdlRequest ) )
+		if( !isXOP && (mp == null || mp.getCount() == 0 ) && hasContentAttachmentsOnly( wsdlRequest ) )
 		{
 			String encoding = StringUtils.unquote( wsdlRequest.getEncoding());
 			byte[] content = encoding == null ? requestContent.getBytes() : requestContent.getBytes(encoding);
@@ -118,15 +118,15 @@ public class WsdlPackagingRequestFilter extends AbstractRequestFilter
 		return requestContent;
 	}
 
-   private boolean hasNonContentAttachments( WsdlRequest wsdlRequest )
+   private boolean hasContentAttachmentsOnly( WsdlRequest wsdlRequest )
    {
       for( Attachment attachment : wsdlRequest.getAttachments())
       {
-         if( attachment.getAttachmentType() == Attachment.AttachmentType.CONTENT )
-            return true;
+         if( attachment.getAttachmentType() != Attachment.AttachmentType.CONTENT )
+            return false;
       }
 
-      return false;
+      return true;
    }
 
    /**
