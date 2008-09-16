@@ -46,7 +46,7 @@ public class WadlDefinitionContext extends AbstractDefinitionContext<RestService
    protected DefinitionLoader createDefinitionLoader(String url)
    {
       return url == null || (getInterface().isGenerated() && getInterface().getWadlUrl().equals( url ))
-              ? new GeneratedWadlDefinitionLoader( getInterface() ) : new UrlWsdlLoader(url);
+              ? new GeneratedWadlDefinitionLoader( getInterface() ) : new UrlWsdlLoader(url, getInterface());
    }
 
    protected WadlInterfaceDefinition loadDefinition(DefinitionLoader loader) throws Exception

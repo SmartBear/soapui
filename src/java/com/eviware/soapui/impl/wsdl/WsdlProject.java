@@ -240,7 +240,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		{
 			UISupport.setHourglassCursor();
 
-			UrlWsdlLoader loader = new UrlWsdlLoader(file.toString());
+			UrlWsdlLoader loader = new UrlWsdlLoader(file.toString(), this);
 			loader.setUseWorker(false);
 			projectDocument = SoapuiProjectDocumentConfig.Factory.parse(loader.load());
 

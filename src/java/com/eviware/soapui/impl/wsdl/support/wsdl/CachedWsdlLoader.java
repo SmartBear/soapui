@@ -54,7 +54,7 @@ public class CachedWsdlLoader extends WsdlLoader
 
    public CachedWsdlLoader(AbstractInterface iface) throws Exception
    {
-      this(WsdlUtils.cacheWsdl(new UrlWsdlLoader(PathUtils.expandPath(iface.getDefinition(), iface))));
+      this(WsdlUtils.cacheWsdl(new UrlWsdlLoader(PathUtils.expandPath(iface.getDefinition(), iface), iface)));
    }
 
    public InputStream load(String url) throws Exception

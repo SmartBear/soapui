@@ -444,7 +444,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 			}
 			else if( propFile.toLowerCase().startsWith( "http://" ) || propFile.toLowerCase().startsWith( "https://" ))
 			{
-			   UrlWsdlLoader loader = new UrlWsdlLoader( propFile );
+			   UrlWsdlLoader loader = new UrlWsdlLoader( propFile, getModelItem() );
 			   loader.setUseWorker( false );
 			   input = loader.load();
 			}

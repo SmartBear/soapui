@@ -12,23 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.xml.namespace.QName;
-
-import org.apache.xmlbeans.XmlString;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.PropertiesTypeConfig;
 import com.eviware.soapui.config.PropertyConfig;
@@ -40,6 +23,13 @@ import com.eviware.soapui.model.testsuite.RenameableTestProperty;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.StringUtils;
+import org.apache.xmlbeans.XmlString;
+
+import javax.xml.namespace.QName;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.*;
 
 public class XmlBeansPropertiesTestPropertyHolder implements MutableTestPropertyHolder, Map<String,TestProperty>
 {
@@ -349,7 +339,7 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 			}
 			else if( propFile.toLowerCase().startsWith( "http://" ) || propFile.toLowerCase().startsWith( "https://" ))
 			{
-			   UrlWsdlLoader loader = new UrlWsdlLoader( propFile );
+			   UrlWsdlLoader loader = new UrlWsdlLoader( propFile, getModelItem() );
 			   loader.setUseWorker( false );
 			   input = loader.load();
 			}

@@ -57,7 +57,7 @@ public class WsdlContext extends AbstractDefinitionContext<WsdlInterface, WsdlDe
 
    protected WsdlDefinitionLoader createDefinitionLoader( String url )
    {
-      return new UrlWsdlLoader( url );
+      return new UrlWsdlLoader( url, getInterface() );
    }
 
    protected WsdlInterfaceDefinition loadDefinition( WsdlDefinitionLoader loader ) throws Exception
