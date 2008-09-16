@@ -23,12 +23,14 @@ import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.submit.RestMessageExchange;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlValidator;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.AssertionError;
@@ -36,6 +38,9 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import org.apache.xmlbeans.XmlObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Asserts that a request or response message complies with its related
@@ -52,6 +57,9 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
    private String definition;
    private DefinitionContext definitionContext;
    private String wsdlContextDef;
+   private static Map<String, WsdlContext> wsdlContextMap = new HashMap();
+   private static final String SCHEMA_COMPLIANCE_HAS_CLEARED_CACHE_FLAG = SchemaComplianceAssertion.class.getName() +
+           "@SchemaComplianceHasClearedCacheFlag";
 
    public SchemaComplianceAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
    {
@@ -68,6 +76,19 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 
       definitionContext = null;
       wsdlContextDef = null;
+
+      // get correct context for checking if cache has been cleared for this run
+      PropertyExpansionContext context = testRunContext.hasProperty( TestRunContext.LOAD_TEST_CONTEXT ) ?
+              (PropertyExpansionContext) testRunContext.getProperty( TestRunContext.LOAD_TEST_CONTEXT ) : testRunContext;
+
+      synchronized( context )
+      {
+         if( !context.hasProperty( SCHEMA_COMPLIANCE_HAS_CLEARED_CACHE_FLAG ))
+         {
+            wsdlContextMap.clear();
+            context.setProperty( SCHEMA_COMPLIANCE_HAS_CLEARED_CACHE_FLAG, "yep!" );
+         }
+      }
    }
 
    protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context ) throws AssertionException
@@ -156,22 +177,38 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
       if( definition == null || definition.trim().length() == 0 || definition.equals(
               PathUtils.expandPath( iface.getDefinition(), iface, context ) ) )
       {
-         definitionContext = (iface).getWsdlContext();
-         ((WsdlContext) definitionContext).loadIfNecessary();
+         definitionContext = ( iface ).getWsdlContext();
+         ( (WsdlContext) definitionContext ).loadIfNecessary();
       }
       else
       {
          String def = PropertyExpansionUtils.expandProperties( context, definition );
          if( definitionContext == null || !def.equals( wsdlContextDef ) )
          {
-            definitionContext = new WsdlContext( def, iface.getSoapVersion() );
-            ((WsdlContext) definitionContext).load();
-            ((WsdlContext) definitionContext).setInterface( iface );
+            definitionContext = getContext( def, iface.getSoapVersion() );
+//            ( (WsdlContext) definitionContext ).load();
+            ( (WsdlContext) definitionContext ).setInterface( iface );
             wsdlContextDef = def;
          }
       }
 
       return definitionContext;
+   }
+
+   private synchronized WsdlContext getContext( String wsdlLocation, SoapVersion soapVersion ) throws Exception
+   {
+      if( wsdlContextMap.containsKey( wsdlLocation ) )
+      {
+         return wsdlContextMap.get( wsdlLocation );
+      }
+      else
+      {
+
+         WsdlContext newWsdlContext = new WsdlContext( wsdlLocation, soapVersion );
+         newWsdlContext.load();
+         wsdlContextMap.put( wsdlLocation, newWsdlContext );
+         return newWsdlContext;
+      }
    }
 
    private DefinitionContext getWadlContext( RestMessageExchange messageExchange, SubmitContext context ) throws Exception
@@ -182,7 +219,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
               PathUtils.expandPath( service.getDefinition(), service, context ) ) )
       {
          definitionContext = service.getWadlContext();
-         ((WadlDefinitionContext) definitionContext).loadIfNecessary();
+         ( (WadlDefinitionContext) definitionContext ).loadIfNecessary();
       }
       else
       {
@@ -190,15 +227,14 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
          if( definitionContext == null || !def.equals( wsdlContextDef ) )
          {
             definitionContext = new WadlDefinitionContext( def );
-            ((WadlDefinitionContext) definitionContext).load();
-            ((WadlDefinitionContext) definitionContext).setInterface( service );
+            ( (WadlDefinitionContext) definitionContext ).load();
+            ( (WadlDefinitionContext) definitionContext ).setInterface( service );
             wsdlContextDef = def;
          }
       }
 
       return definitionContext;
    }
-
 
    public boolean configure()
    {
@@ -273,7 +309,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
       public boolean canAssert( Assertable assertable )
       {
          return super.canAssert( assertable ) && assertable.getInterface() instanceof AbstractInterface &&
-                 ((AbstractInterface) assertable.getInterface()).getDefinitionContext().hasSchemaTypes();
+                 ( (AbstractInterface) assertable.getInterface() ).getDefinitionContext().hasSchemaTypes();
       }
    }
 }
