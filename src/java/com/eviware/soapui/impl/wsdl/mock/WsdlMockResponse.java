@@ -637,6 +637,9 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 		if( !isXOP && ( mp == null || mp.getCount() == 0 ) && getAttachmentCount() == 0 )
 		{
 			String encoding = getEncoding();
+         if( responseContent == null )
+            responseContent = "";
+         
 			byte[] content = encoding == null ? responseContent.getBytes() : responseContent.getBytes( encoding );
 
 			response.setContentType( soapVersion.getContentTypeHttpHeader( encoding, null ) );
