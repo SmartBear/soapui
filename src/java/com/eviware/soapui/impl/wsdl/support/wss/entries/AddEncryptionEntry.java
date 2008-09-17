@@ -12,21 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss.entries;
 
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.io.StringWriter;
-import java.util.List;
-
-import javax.swing.JComponent;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-
-import org.apache.ws.security.WSConstants;
-import org.apache.ws.security.components.crypto.Crypto;
-import org.apache.ws.security.message.WSSecEncrypt;
-import org.apache.ws.security.message.WSSecHeader;
-import org.w3c.dom.Document;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.WSSEntryConfig;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
@@ -42,6 +27,17 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.jgoodies.binding.PresentationModel;
+import org.apache.ws.security.WSConstants;
+import org.apache.ws.security.components.crypto.Crypto;
+import org.apache.ws.security.message.WSSecEncrypt;
+import org.apache.ws.security.message.WSSecHeader;
+import org.w3c.dom.Document;
+
+import javax.swing.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.StringWriter;
+import java.util.List;
 
 public class AddEncryptionEntry extends WssEntryBase
 {
@@ -87,7 +83,6 @@ public class AddEncryptionEntry extends WssEntryBase
 		keyAliasComboBoxModel = new KeyAliasComboBoxModel( getWssContainer().getCryptoByName( crypto ) );
 		form.appendComboBox( "username", "Alias", keyAliasComboBoxModel, "The alias for the key to use for encryption" );
 
-		
 		form.appendPasswordField( "password", "Password", "The password for the key to use for encryption (if it is private)" );
 
 		form.appendComboBox( "keyIdentifierType", "Key Identifier Type", new Integer[] { 0, 1, 2, 3, 4, 5, 6, 8 },
@@ -114,7 +109,7 @@ public class AddEncryptionEntry extends WssEntryBase
 		form.appendCheckBox( "encryptSymmetricKey", "Create Encrypted Key",
 					"Indicates whether to encrypt the symmetric key into an EncryptedKey or not" );
 
-		form.append( "Parts", new WSPartsTable( parts ) );
+		form.append( "Parts", new WSPartsTable( parts, this ) );
 
 		return new JScrollPane( form.getPanel() );
 	}

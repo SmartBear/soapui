@@ -44,6 +44,6 @@ public class GeneratedWadlDefinitionLoader extends AbstractDefinitionLoader
 	
 	public String getFirstNewURI()
 	{
-		return null; // not implemented
+		return getBaseURI();
 	}
 }

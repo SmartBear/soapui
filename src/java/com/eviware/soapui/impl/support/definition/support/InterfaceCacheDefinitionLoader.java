@@ -109,6 +109,6 @@ public class InterfaceCacheDefinitionLoader extends AbstractWsdlDefinitionLoader
 	
 	public String getFirstNewURI()
 	{
-		return null; // not implemented
+		return getBaseURI();
 	}
 }

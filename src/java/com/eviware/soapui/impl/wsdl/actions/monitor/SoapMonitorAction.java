@@ -25,8 +25,8 @@ import com.eviware.soapui.support.types.StringList;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 {
@@ -73,15 +73,15 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 			settings.setLong(LaunchForm.PORT, listenPort);
 
 			openSoapMonitor(target, listenPort, dialog.getValue(LaunchForm.REQUEST_WSS), dialog
-					.getValue(LaunchForm.RESPONSE_WSS));
+					.getValue(LaunchForm.RESPONSE_WSS), dialog.getBooleanValue( LaunchForm.SETASPROXY ));
 		}
 	}
 
 	protected void openSoapMonitor(WsdlProject target, int listenPort, String incomingRequestWss,
-			String incomingResponseWss)
+			String incomingResponseWss, boolean setAsProxy)
 	{
 		UISupport.showDesktopPanel(new SoapMonitorDesktopPanel(target, listenPort, incomingRequestWss,
-				incomingResponseWss));
+				incomingResponseWss, setAsProxy));
 	}
 
 	@AForm(description = "Specify SOAP Monitor settings", name = "Launch SOAP Monitor", helpUrl = HelpUrls.SOAPMONITOR_HELP_URL )
@@ -95,5 +95,9 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 
 		@AField(description = "The Outgoing WSS configuration to use for processing responses", name = "Incoming Response WSS", type = AFieldType.ENUMERATION)
 		public final static String RESPONSE_WSS = "Incoming Response WSS";
+
+      @AField(description = "Set as Global Proxy", name = "Set as Proxy", type = AFieldType.BOOLEAN)
+      public final static String SETASPROXY = "Set as Proxy";
+
 	}
 }

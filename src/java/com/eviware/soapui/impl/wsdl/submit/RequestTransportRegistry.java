@@ -50,18 +50,14 @@ public class RequestTransportRegistry
 		httpTransport.addRequestFilter( new EndpointStrategyRequestFilter() );
 		httpTransport.addRequestFilter( new WsaRequestFilter() );
       httpTransport.addRequestFilter( new HttpCompressionRequestFilter() );
+      httpTransport.addRequestFilter( new WssRequestFilter() );
 		httpTransport.addRequestFilter( new WsdlPackagingRequestFilter() );
 		httpTransport.addRequestFilter( new WsdlPackagingResponseFilter() );
-		
-	//	httpTransport.addRequestFilter( new ScriptExpansionRequestFilter() );
 		
 		for( RequestFilter filter : SoapUI.getListenerRegistry().getListeners( RequestFilter.class ))
 		{
 			httpTransport.addRequestFilter( filter );
 		}
-		
-		// ws-security processing must come last.. 
-		httpTransport.addRequestFilter( new WssRequestFilter() );
 		
 		transports.put( HTTP, httpTransport );
 		transports.put( HTTPS, httpTransport );

@@ -101,7 +101,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
    @Override
    public long getRequestContentLength()
    {
-      return this.request.length;
+      return request == null ? -1 : request.length;
    }
 
    @Override
@@ -113,7 +113,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
    @Override
    public long getResponseContentLength()
    {
-      return response.length;
+      return response == null ? -1 : response.length;
    }
 
    @Override
@@ -197,7 +197,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
    private void parseRequestData( IncomingWss incomingRequestWss )
    {
 
-      ByteArrayInputStream in = request == null ? new ByteArrayInputStream( null ) : new ByteArrayInputStream( request );
+      ByteArrayInputStream in = request == null ? new ByteArrayInputStream( new byte[0] ) : new ByteArrayInputStream( request );
       try
       {
 

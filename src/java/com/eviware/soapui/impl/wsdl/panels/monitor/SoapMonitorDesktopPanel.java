@@ -12,12 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.monitor;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
@@ -27,21 +21,24 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 {
 	private SoapMonitor soapMonitor;
 	private final WsdlProject project;
 
-	public SoapMonitorDesktopPanel( WsdlProject project, int sourcePort, String incomingRequestWss, String incomingResponseWss )
+	public SoapMonitorDesktopPanel( WsdlProject project, int sourcePort, String incomingRequestWss, String incomingResponseWss, boolean setAsProxy )
 	{
 		super( "SOAP Monitor [" + project.getName() + "]", null, new JPanel( new BorderLayout() ) );
 		this.project = project;
-		
+
 		JPanel p = ( JPanel ) getComponent();
 		JTabbedPane tabs = new JTabbedPane();
 
 		JXToolBar toolbar = UISupport.createToolbar();
-		soapMonitor = new SoapMonitor( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar );
+		soapMonitor = new SoapMonitor( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy );
 		
 		tabs.add( soapMonitor, "Traffic Log" );
 		

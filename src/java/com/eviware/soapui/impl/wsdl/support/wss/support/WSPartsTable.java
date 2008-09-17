@@ -12,41 +12,34 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss.support;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
-
+import com.eviware.soapui.impl.wsdl.support.wss.entries.WssEntryBase;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringToStringMap;
 
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.List;
+
 public class WSPartsTable extends JPanel
 {
 	private final List<StringToStringMap> parts;
-	private PartsTableModel partsTableModel;
+   private WssEntryBase entry;
+   private PartsTableModel partsTableModel;
 	private JTable partsTable;
 	private JButton removePartButton;
 
-	public WSPartsTable(List<StringToStringMap> parts)
+	public WSPartsTable(List<StringToStringMap> parts, WssEntryBase entry)
 	{
 		super( new BorderLayout() );
 		this.parts = parts;
-		
-		partsTableModel = new PartsTableModel();
+      this.entry = entry;
+
+      partsTableModel = new PartsTableModel();
 		partsTable = new JTable( partsTableModel );
 		partsTable.getSelectionModel().addListSelectionListener( new ListSelectionListener() {
 
@@ -122,18 +115,20 @@ public class WSPartsTable extends JPanel
 				case 0 :
 					part.put( "name", "" );
 					fireTableCellUpdated( rowIndex, 1 );
-					part.put( "id", aValue.toString() ); return;
+					part.put( "id", aValue.toString() ); break;
 				case 1 : 
 					part.put( "id", "" );
 					fireTableCellUpdated( rowIndex, 0 );
-					part.put( "name", aValue.toString() ); return;
+					part.put( "name", aValue.toString() ); break;
 				case 2 : 
 					part.put( "id", "" );
 					fireTableCellUpdated( rowIndex, 0 );
-					part.put( "namespace", aValue.toString() ); return;
+					part.put( "namespace", aValue.toString() ); break;
 				case 3 : 
-					part.put( "enc", aValue.toString() ); return;
+					part.put( "enc", aValue.toString() ); break;
 			}
+
+         entry.saveConfig();
 		}
 
 		public Object getValueAt( int rowIndex, int columnIndex )
@@ -174,6 +169,7 @@ public class WSPartsTable extends JPanel
 		public void actionPerformed( ActionEvent e )
 		{
 			partsTableModel.addParts( new StringToStringMap() );
+         entry.saveConfig();
 		}
 	}
 	
@@ -195,6 +191,7 @@ public class WSPartsTable extends JPanel
 			if( UISupport.confirm( "Remove selected Part?", "Remove Part" ))
 			{
 				partsTableModel.remove( row );
+            entry.saveConfig();
 			}
 		}
 	}
