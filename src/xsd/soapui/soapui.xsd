@@ -1455,4 +1455,13 @@
     <xsd:element name="mockService" type="tns:MockService"></xsd:element>
 
     <xsd:element name="testSuite" type="tns:TestSuite"></xsd:element>
+
+    <xsd:element name="lockedFileInfo" type="tns:LockedFileInfo"></xsd:element>
+    
+    <xsd:complexType name="LockedFileInfo">
+    	<xsd:sequence>
+    		<xsd:element name="owner" type="xsd:string"></xsd:element>
+    		<xsd:element name="date" type="xsd:date"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
 </xsd:schema>

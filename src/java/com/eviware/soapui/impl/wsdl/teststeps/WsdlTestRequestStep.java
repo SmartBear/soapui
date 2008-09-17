@@ -40,6 +40,7 @@ import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.resolver.ChangeOperationResolver;
 import com.eviware.soapui.support.resolver.ImportInterfaceResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
+import com.eviware.soapui.support.resolver.defaultaction.TestRequestDefaultResolveAction;
 import com.eviware.soapui.support.types.StringToStringMap;
 import org.apache.log4j.Logger;
 

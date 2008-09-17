@@ -14,7 +14,6 @@ package com.eviware.soapui.support.resolver;
 import java.io.File;
 
 import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
 
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.wsdl.WsdlProject;

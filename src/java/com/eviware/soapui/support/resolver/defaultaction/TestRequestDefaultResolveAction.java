@@ -1,7 +1,8 @@
-package com.eviware.soapui.impl.wsdl.teststeps;
+package com.eviware.soapui.support.resolver.defaultaction;
 
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 public class TestRequestDefaultResolveAction extends AbstractSoapUIAction<AbstractWsdlModelItem<?>>
