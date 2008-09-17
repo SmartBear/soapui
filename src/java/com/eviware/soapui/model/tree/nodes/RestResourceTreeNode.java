@@ -13,119 +13,99 @@
 package com.eviware.soapui.model.tree.nodes;
 
 import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
 import com.eviware.soapui.model.tree.TreeNodeFactory;
 
-import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * SoapUITreeNode for Operation implementations
- * 
+ *
  * @author Ole.Matzura
  */
 
 public class RestResourceTreeNode extends OperationTreeNode
 {
-	private List<RestResourceTreeNode> resourceNodes = new ArrayList<RestResourceTreeNode>();
-	private final RestResource restResource;
+   private List<RestResourceTreeNode> resourceNodes = new ArrayList<RestResourceTreeNode>();
+   private final RestResource restResource;
 
-	public RestResourceTreeNode(RestResource restResource, SoapUITreeModel treeModel )
+   public RestResourceTreeNode( RestResource restResource, SoapUITreeModel treeModel )
    {
       super( restResource, treeModel );
-		this.restResource = restResource;
-		
-		for( int c = 0; c < restResource.getChildResourceCount(); c++ )
-		{
-			resourceNodes.add( new RestResourceTreeNode( restResource.getChildResourcetAt(c), getTreeModel() ));
-		}
-		
-		treeModel.mapModelItems( resourceNodes );
+      this.restResource = restResource;
+
+      for( int c = 0; c < restResource.getChildResourceCount(); c++ )
+      {
+         resourceNodes.add( new RestResourceTreeNode( restResource.getChildResourcetAt( c ), getTreeModel() ) );
+      }
+
+      treeModel.mapModelItems( resourceNodes );
    }
-	
+
    @Override
-	public SoapUITreeNode getParentTreeNode()
-	{
-   	return restResource.getParentResource() == null ? super.getParentTreeNode() : 
-   		getTreeModel().getTreeNode( restResource.getParentResource() );
-	}
+   public SoapUITreeNode getParentTreeNode()
+   {
+      return restResource.getParentResource() == null ? super.getParentTreeNode() :
+              getTreeModel().getTreeNode( restResource.getParentResource() );
+   }
 
-	@Override
-	public void propertyChange(PropertyChangeEvent evt)
-	{
-		if( evt.getPropertyName().equals("childResources") && evt.getSource() == restResource )
-		{
-			if( evt.getNewValue() != null && evt.getOldValue() == null )
-			{
-				RestResourceTreeNode resourceNode = new RestResourceTreeNode( (RestResource) evt.getNewValue(), getTreeModel() );
-				resourceNodes.add( resourceNode );
-				getTreeModel().notifyNodeInserted( resourceNode );
-			}
-			else if( evt.getOldValue() != null && evt.getNewValue() == null )
-			{
-				SoapUITreeNode resourceNode = getTreeModel().getTreeNode( (ModelItem) evt.getOldValue() );
-				if( resourceNodes.contains( resourceNode ))
-				{
-				   getTreeModel().notifyNodeRemoved( resourceNode );
-				   resourceNodes.remove( resourceNode );
-				}
-				else throw new RuntimeException( "Removing unkown Resource" );
-			}
-		}
-		else
-		{
-			super.propertyChange(evt);
-		}
-	}
-	
-	@Override
-	public String toString()
-	{
-		return restResource.getName() + " [" + restResource.getFullPath() + "]";
-	}
+   @Override
+   public String toString()
+   {
+      return restResource.getName() + " [" + restResource.getFullPath() + "]";
+   }
 
-	@Override
-	public int getChildCount()
-	{
-		return super.getChildCount() + restResource.getChildResourceCount();
-	}
+   @Override
+   public int getChildCount()
+   {
+      return super.getChildCount() + restResource.getChildResourceCount();
+   }
 
-	@Override
-	public SoapUITreeNode getChildNode(int index)
-	{
-		int childCount = super.getChildCount();
-		if( index < childCount)
-			return super.getChildNode(index);
-		else
-			return resourceNodes.get( index-childCount );
-	}
+   @Override
+   public SoapUITreeNode getChildNode( int index )
+   {
+      int childCount = super.getChildCount();
+      if( index < childCount )
+         return super.getChildNode( index );
+      else
+         return resourceNodes.get( index - childCount );
+   }
 
-	@Override
-	public int getIndexOfChild(Object child)
-	{
-		int result = super.getIndexOfChild(child);
-		if( result == -1 )
-		{
-			result = resourceNodes.indexOf(child);
-			if( result >= 0 )
-				result += super.getChildCount();
-		}
-		
-		return result;
-	}
+   @Override
+   public int getIndexOfChild( Object child )
+   {
+      int result = super.getIndexOfChild( child );
+      if( result == -1 )
+      {
+         result = resourceNodes.indexOf( child );
+         if( result >= 0 )
+            result += super.getChildCount();
+      }
 
-	public void release()
-	{
-		super.release();
-	}
+      return result;
+   }
 
-    public void addSubResource(RestResource restResource) {
-        RestResourceTreeNode operationTreeNode = (RestResourceTreeNode) TreeNodeFactory.createTreeNode( restResource, getTreeModel() );
+   public void release()
+   {
+      super.release();
+   }
 
-          resourceNodes.add( operationTreeNode );
-         getTreeModel().notifyNodeInserted( operationTreeNode );
-    }
+   public void addChildResource( RestResource restResource )
+   {
+      RestResourceTreeNode operationTreeNode = (RestResourceTreeNode) TreeNodeFactory.createTreeNode( restResource, getTreeModel() );
+
+      resourceNodes.add( operationTreeNode );
+      getTreeModel().notifyNodeInserted( operationTreeNode );
+   }
+
+   public void removeChildResource( RestResourceTreeNode childResource )
+   {
+      if( resourceNodes.contains( childResource ) )
+      {
+         getTreeModel().notifyNodeRemoved( childResource );
+         resourceNodes.remove( childResource );
+      }
+   }
 }

@@ -56,14 +56,17 @@ public class RestParamsTable extends JPanel
 				movePropertyDownAction.setEnabled( selectedRow < paramsTable.getRowCount()-1 );
 				movePropertyUpAction.setEnabled( selectedRow > 0 );
 
-				detailsInspector.setEnabled(selectedRow != -1 );
-				
-				if( selectedRow != -1 )
-				{
-					RestParamProperty selectedParameter = getSelectedParameter();
-					paramDetailsModel.setBean( selectedParameter);
-				}
-				else inspectorPanel.deactivate();
+            if( detailsInspector != null )
+            {
+               detailsInspector.setEnabled(selectedRow != -1 );
+
+               if( selectedRow != -1 )
+               {
+                  RestParamProperty selectedParameter = getSelectedParameter();
+                  paramDetailsModel.setBean( selectedParameter);
+               }
+               else inspectorPanel.deactivate();
+            }
 			}} );
 		
 		add( buildToolbar(), BorderLayout.NORTH );
