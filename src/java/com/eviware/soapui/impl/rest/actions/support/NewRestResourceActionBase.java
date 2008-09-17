@@ -15,7 +15,7 @@ package com.eviware.soapui.impl.rest.actions.support;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.panels.resource.JWadlParamsTable;
+import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest.RequestMethod;
@@ -47,7 +47,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 {
 	private XFormDialog dialog;
 	private XmlBeansRestParamsTestPropertyHolder params;
-	private JWadlParamsTable paramsTable;
+	private RestParamsTable paramsTable;
    public static final MessageSupport messages = MessageSupport.getMessages( NewRestResourceActionBase.class );
 
    public NewRestResourceActionBase( String title, String description  )
@@ -86,7 +86,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 				paramsTable.refresh();
 		}
 
-		paramsTable = new JWadlParamsTable( params, false );
+		paramsTable = new RestParamsTable( params, false );
 		dialog.getFormField(Form.PARAMSTABLE).setProperty("component", paramsTable);
 
    	if( dialog.show() )

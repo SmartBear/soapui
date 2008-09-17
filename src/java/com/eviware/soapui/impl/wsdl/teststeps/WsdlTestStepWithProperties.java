@@ -12,17 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
+
+import java.util.*;
 
 /**
  * Base class for WSDL TestCase test steps.
@@ -80,13 +75,23 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 		}
 	}
 
-	protected void addProperty( TestProperty property )
+   protected void addProperty( TestProperty property )
+   {
+      addProperty( property, false );
+   }
+
+	protected void addProperty( TestProperty property, boolean notify )
 	{
 		if( properties == null )
 			properties = new HashMap<String, TestProperty>();
 
 		properties.put( property.getName().toUpperCase(), property );
 		propertyList.add(property);
+
+      if( notify )
+      {
+         firePropertyAdded( property.getName() );
+      }
 	}
 
 	protected TestProperty deleteProperty( String name, boolean notify )

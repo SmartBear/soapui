@@ -12,24 +12,27 @@
 
 package com.eviware.soapui.impl.rest.panels.resource;
 
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
-
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.StringUtils;
 
-public class WadlParamsTableModel extends AbstractTableModel implements TableModel
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+
+public class RestParamsTableModel extends AbstractTableModel implements TableModel, TestPropertyListener
 {
 	private final XmlBeansRestParamsTestPropertyHolder params;
 
-	public WadlParamsTableModel(XmlBeansRestParamsTestPropertyHolder params)
+	public RestParamsTableModel(XmlBeansRestParamsTestPropertyHolder params)
 	{
 		this.params = params;
+
+      params.addTestPropertyListener( this );
 	}
 
-	public int getColumnCount()
+   public int getColumnCount()
 	{
 		return 3;
 	}
@@ -78,6 +81,7 @@ public class WadlParamsTableModel extends AbstractTableModel implements TableMod
 		return null;
 	}
 
+
 	@Override
 	public void setValueAt(Object value, int rowIndex, int columnIndex)
 	{
@@ -95,4 +99,25 @@ public class WadlParamsTableModel extends AbstractTableModel implements TableMod
 	{
 		return params.getPropertyAt(selectedRow);
 	}
+
+   public void propertyAdded( String name )
+   {
+   }
+
+   public void propertyRemoved( String name )
+   {
+   }
+
+   public void propertyRenamed( String oldName, String newName )
+   {
+   }
+
+   public void propertyValueChanged( String name, String oldValue, String newValue )
+   {
+      fireTableCellUpdated( params.getPropertyIndex( name ), 1 );
+   }
+
+   public void propertyMoved( String name, int oldIndex, int newIndex )
+   {
+   }
 }

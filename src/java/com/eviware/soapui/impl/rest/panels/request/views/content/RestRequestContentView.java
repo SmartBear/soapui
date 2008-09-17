@@ -16,7 +16,7 @@ import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestDocument;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestMessageEditor;
-import com.eviware.soapui.impl.rest.panels.resource.JWadlParamsTable;
+import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.wsdl.support.xsd.SampleXmlUtil;
 import com.eviware.soapui.support.DocumentListenerAdapter;
@@ -50,7 +50,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
    private JComboBox mediaTypeCombo;
    private JSplitPane split;
    private JButton recreateButton;
-   private JWadlParamsTable paramsTable;
+   private RestParamsTable paramsTable;
    private JCheckBox postQueryCheckBox;
 
    public RestRequestContentView( RestRequestMessageEditor restRequestMessageEditor, RestRequest restRequest )
@@ -70,7 +70,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
          p.add( buildToolbar(), BorderLayout.NORTH );
          p.add( buildContent(), BorderLayout.CENTER );
 
-         paramsTable = new JWadlParamsTable( restRequest.getParams(), true )
+         paramsTable = new RestParamsTable( restRequest.getParams(), true )
          {
             protected void insertAdditionalButtons( JXToolBar toolbar )
             {
@@ -175,6 +175,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
       toolbar.addSeparator();
 
       postQueryCheckBox = new JCheckBox( "Post QueryString", restRequest.isPostQueryString() );
+      postQueryCheckBox.setOpaque( false );
       postQueryCheckBox.addItemListener( new ItemListener()
       {
          public void itemStateChanged( ItemEvent e )

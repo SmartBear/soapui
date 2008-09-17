@@ -15,7 +15,7 @@ package com.eviware.soapui.impl.rest.panels.request.views.param;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestDocument;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestMessageEditor;
-import com.eviware.soapui.impl.rest.panels.resource.JWadlParamsTable;
+import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 
 import javax.swing.*;
@@ -23,7 +23,7 @@ import javax.swing.*;
 public class RestRequestParamsView extends AbstractXmlEditorView<RestRequestDocument>
 {
 	private final RestRequest restRequest;
-	private JWadlParamsTable table;
+	private RestParamsTable table;
 
 	public RestRequestParamsView(RestRequestMessageEditor restRequestMessageEditor, RestRequest restRequest)
 	{
@@ -45,7 +45,7 @@ public class RestRequestParamsView extends AbstractXmlEditorView<RestRequestDocu
 	{
 		if( table == null )
 		{
-			table = new JWadlParamsTable( restRequest.getParams(), true );
+			table = new RestParamsTable( restRequest.getParams(), true );
 		}
 		
 		return table;

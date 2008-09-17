@@ -20,10 +20,10 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-public class JWadlParamsTable extends JPanel
+public class RestParamsTable extends JPanel
 {
 	private final XmlBeansRestParamsTestPropertyHolder params;
-	private WadlParamsTableModel paramsTableModel;
+	private RestParamsTableModel paramsTableModel;
 	private JXTable paramsTable;
 	private AddParamAction addParamAction = new AddParamAction();
 	private RemoveParamAction removeParamAction = new RemoveParamAction();
@@ -35,12 +35,12 @@ public class JWadlParamsTable extends JPanel
 	private JInspectorPanel inspectorPanel;
 	private StringListFormComponent optionsFormComponent;
 
-	public JWadlParamsTable(XmlBeansRestParamsTestPropertyHolder params, boolean showInspector)
+	public RestParamsTable(XmlBeansRestParamsTestPropertyHolder params, boolean showInspector)
 	{
 		super( new BorderLayout() );
 		this.params = params;
 		
-		paramsTableModel = new WadlParamsTableModel( params );
+		paramsTableModel = new RestParamsTableModel( params );
 		paramsTable = new JXTable( paramsTableModel );
 		paramsTable.setHorizontalScrollEnabled(true);
 		paramsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -83,7 +83,7 @@ public class JWadlParamsTable extends JPanel
 		}
 	}
 
-	private JComponent buildDetails()
+   private JComponent buildDetails()
 	{
 		paramDetailsModel = new PresentationModel<RestParamProperty>( null );
 		SimpleBindingForm form = new SimpleBindingForm( paramDetailsModel );
