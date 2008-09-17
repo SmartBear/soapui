@@ -6,6 +6,18 @@
     <body>
     <section name="soapUI Releases">
     
+       <subsection name="soapui, How to Test a Web Service">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/nikita.gif" alt="How to test web services."/>
+	    		</column>
+	    		<column align="left">
+	    			<p>The post starts: "As a web service is something that has no user interface....." <br/>
+	    			<a href="http://nikitaknysh.blogspot.com/2008/01/how-to-test-web-service.html[Read more]</a></p>
+	    		</column>
+	    	</columns>
+		</subsection>   
+        
         <subsection name="soapui, now with XFire - from the netzoid blog">
 	    	<columns>
 	    		<column width="200">
