@@ -41,7 +41,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -468,14 +467,6 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
    	notifyPropertyChanged( "wsAddressing", old, wsAddressing );
    }
 	
-
-   
-   @SuppressWarnings("unchecked")
-   public List<? extends ModelItem> getChildren()
-   {
-      return Collections.EMPTY_LIST;
-   }
-   
    public PropertyExpansion[] getPropertyExpansions()
 	{
 		PropertyExpansionsResult result = new PropertyExpansionsResult( this, this );

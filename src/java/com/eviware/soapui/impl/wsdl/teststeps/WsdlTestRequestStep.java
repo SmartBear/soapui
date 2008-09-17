@@ -19,7 +19,6 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
-import com.eviware.soapui.impl.wsdl.teststeps.actions.ChangeOperationAction;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
@@ -47,10 +46,7 @@ import org.apache.log4j.Logger;
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * WsdlTestStep that executes a WsdlTestRequest
@@ -526,7 +522,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 	@Override
 	public List<? extends ModelItem> getChildren()
 	{
-		return testRequest == null ? new ArrayList<TestAssertion>() : testRequest.getAssertionList();
+		return testRequest == null ? Collections.EMPTY_LIST  : testRequest.getAssertionList();
 	}
 
 	public PropertyExpansion[] getPropertyExpansions()

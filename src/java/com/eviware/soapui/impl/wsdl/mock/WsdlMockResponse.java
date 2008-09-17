@@ -71,7 +71,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -877,12 +880,6 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 	{
 		return getMockOperation().getOperation() == null ? SoapVersion.Soap11 : getMockOperation().getOperation()
 					.getInterface().getSoapVersion();
-	}
-
-	@SuppressWarnings( "unchecked" )
-	public List<? extends ModelItem> getChildren()
-	{
-		return Collections.EMPTY_LIST;
 	}
 
 	public PropertyExpansion[] getPropertyExpansions()

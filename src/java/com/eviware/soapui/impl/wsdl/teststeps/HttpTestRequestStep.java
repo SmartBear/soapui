@@ -34,7 +34,7 @@ import javax.swing.*;
 import javax.xml.namespace.QName;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -374,7 +374,7 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
    @Override
    public List<? extends ModelItem> getChildren()
    {
-      return testRequest == null ? new ArrayList<TestAssertion>() : testRequest.getAssertionList();
+      return testRequest == null ? Collections.EMPTY_LIST : testRequest.getAssertionList();
    }
 
    public PropertyExpansion[] getPropertyExpansions()

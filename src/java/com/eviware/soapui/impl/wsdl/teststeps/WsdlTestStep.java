@@ -28,7 +28,6 @@ import com.eviware.soapui.support.UISupport;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -210,12 +209,6 @@ abstract public class WsdlTestStep extends AbstractWsdlModelItem<TestStepConfig>
 
 		String label = getLabel();
 		notifyPropertyChanged( LABEL_PROPERTY, oldLabel, label );
-	}
-
-	@SuppressWarnings( "unchecked" )
-	public List<? extends ModelItem> getChildren()
-	{
-		return Collections.EMPTY_LIST;
 	}
 
 	public ModelItem getModelItem()

@@ -12,9 +12,6 @@
 
 package com.eviware.soapui.model.support;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.ModelItem;
@@ -23,6 +20,9 @@ import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringList;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Utility methods for soapui model-related interfaces
@@ -95,6 +95,9 @@ public class ModelSupport
 	@SuppressWarnings("unchecked")
 	public static <T extends ModelItem> T findModelItemById( String id, ModelItem root )
 	{
+      if( root == null || id == null )
+         return null;
+
 		for( ModelItem child : root.getChildren() )
 		{
 			if( child.getId().equals( id ))

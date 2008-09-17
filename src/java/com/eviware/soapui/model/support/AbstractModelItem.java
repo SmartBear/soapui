@@ -12,11 +12,12 @@
 
 package com.eviware.soapui.model.support;
 
+import com.eviware.soapui.model.ModelItem;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-
-
-import com.eviware.soapui.model.ModelItem;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Base-class for ModelItem implementations
@@ -77,4 +78,11 @@ public abstract class AbstractModelItem implements ModelItem
 	{
 		propertyChangeSupport.fireIndexedPropertyChange( propertyName, index, oldValue, newValue );
 	}
+
+   @SuppressWarnings("unchecked")
+   public List<? extends ModelItem> getChildren()
+   {
+      return Collections.EMPTY_LIST;
+   }
+
 }

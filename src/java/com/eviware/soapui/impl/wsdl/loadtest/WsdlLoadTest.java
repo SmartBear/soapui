@@ -12,21 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.loadtest;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.LoadStrategyConfig;
 import com.eviware.soapui.config.LoadTestAssertionConfig;
@@ -39,30 +24,27 @@ import com.eviware.soapui.impl.wsdl.loadtest.assertions.LoadTestAssertionRegistr
 import com.eviware.soapui.impl.wsdl.loadtest.data.LoadTestStatistics;
 import com.eviware.soapui.impl.wsdl.loadtest.log.LoadTestLog;
 import com.eviware.soapui.impl.wsdl.loadtest.log.LoadTestLogErrorEntry;
-import com.eviware.soapui.impl.wsdl.loadtest.strategy.BurstLoadStrategy;
-import com.eviware.soapui.impl.wsdl.loadtest.strategy.LoadStrategy;
-import com.eviware.soapui.impl.wsdl.loadtest.strategy.LoadStrategyFactory;
-import com.eviware.soapui.impl.wsdl.loadtest.strategy.LoadStrategyRegistry;
-import com.eviware.soapui.impl.wsdl.loadtest.strategy.SimpleLoadStrategy;
+import com.eviware.soapui.impl.wsdl.loadtest.strategy.*;
 import com.eviware.soapui.impl.wsdl.support.Configurable;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.SimplePathPropertySupport;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
-import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.LoadTestRunListenerAdapter;
-import com.eviware.soapui.model.testsuite.LoadTest;
-import com.eviware.soapui.model.testsuite.LoadTestRunContext;
-import com.eviware.soapui.model.testsuite.LoadTestRunListener;
-import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
-import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.LoadTestRunner.Status;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringList;
+import org.apache.log4j.Logger;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.*;
 
 /**
  * TestCase implementation for LoadTests
@@ -700,12 +682,6 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 		}
 	}
 
-   @SuppressWarnings("unchecked")
-   public List<? extends ModelItem> getChildren()
-   {
-      return Collections.EMPTY_LIST;
-   }
-   
    public class StatisticsLogger implements Runnable
    {
 		private boolean stopped;

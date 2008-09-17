@@ -26,7 +26,6 @@ import com.eviware.soapui.impl.wsdl.support.FileAttachment;
 import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
 import com.eviware.soapui.impl.wsdl.support.RequestFileAttachment;
 import com.eviware.soapui.impl.wsdl.teststeps.SettingPathPropertySupport;
-import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.*;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
@@ -373,11 +372,6 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
    	return iconAnimator == null ? null : iconAnimator.getIcon();
    }
 	
-	public List<? extends ModelItem> getChildren()
-	{
-		return null;
-	}
-
 	public PropertyExpansion[] getPropertyExpansions()
 	{
 		PropertyExpansionsResult result = new PropertyExpansionsResult( this, this );

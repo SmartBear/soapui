@@ -30,8 +30,6 @@ package com.eviware.soapui.impl.wsdl.teststeps;
  import org.apache.xmlbeans.XmlObject;
 
  import javax.swing.*;
- import java.util.Collections;
- import java.util.List;
 
  /**
  * Base class for WsdlAssertions
@@ -288,12 +286,6 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 		return assertionConfig.getId();
 	}
 	
-	@SuppressWarnings("unchecked")
-   public List<? extends ModelItem> getChildren()
-	{
-	   return Collections.EMPTY_LIST;
-	}
-
 	public PropertyExpansion[] getPropertyExpansions()
 	{
 		return null;
