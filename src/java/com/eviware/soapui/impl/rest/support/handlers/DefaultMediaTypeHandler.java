@@ -18,13 +18,15 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 public class DefaultMediaTypeHandler implements MediaTypeHandler
 {
-   public boolean canHandle(String contentType) {
+   public boolean canHandle( String contentType )
+   {
       return true;
    }
 
-   public String createXmlRepresentation(HttpResponse response) {
+   public String createXmlRepresentation( HttpResponse response )
+   {
       String content = response.getContentAsString();
-      if( content == null || XmlUtils.seemsToBeXml(content))
+      if( content == null || XmlUtils.seemsToBeXml( content ) )
          return content;
       else
          return "<data><![CDATA[" + content + "]]></data>";

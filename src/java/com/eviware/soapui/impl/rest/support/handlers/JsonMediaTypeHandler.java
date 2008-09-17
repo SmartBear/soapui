@@ -19,28 +19,32 @@ import com.eviware.soapui.support.xml.XmlUtils;
 import net.sf.json.JSONObject;
 import net.sf.json.xml.XMLSerializer;
 
-public class JsonMediaTypeHandler implements MediaTypeHandler {
-   public boolean canHandle(String contentType) {
-      return contentType.contains("javascript");
+public class JsonMediaTypeHandler implements MediaTypeHandler
+{
+   public boolean canHandle( String contentType )
+   {
+      return contentType != null && contentType.contains( "javascript" );
    }
 
-   public String createXmlRepresentation(HttpResponse response) {
+   public String createXmlRepresentation( HttpResponse response )
+   {
 
       try
       {
          String content = response.getContentAsString();
-         if( !StringUtils.hasContent(content))
+         if( !StringUtils.hasContent( content ) )
             return null;
-         
-         JSONObject json = JSONObject.fromObject(content);
+
+         JSONObject json = JSONObject.fromObject( content );
          XMLSerializer serializer = new XMLSerializer();
-         serializer.setTypeHintsEnabled(false);
-         content = serializer.write(json);
-         content = XmlUtils.prettyPrintXml(content);
+         serializer.setTypeHintsEnabled( false );
+         content = serializer.write( json );
+         content = XmlUtils.prettyPrintXml( content );
 
          return content;
       }
-      catch (Throwable e) {
+      catch( Throwable e )
+      {
          e.printStackTrace();
       }
       return null;

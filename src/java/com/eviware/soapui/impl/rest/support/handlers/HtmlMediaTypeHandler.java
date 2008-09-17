@@ -23,32 +23,37 @@ import java.io.ByteArrayInputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-public class HtmlMediaTypeHandler implements MediaTypeHandler {
-   public boolean canHandle(String contentType) {
-      return contentType.equals("text/html");
+public class HtmlMediaTypeHandler implements MediaTypeHandler
+{
+   public boolean canHandle( String contentType )
+   {
+      return contentType != null && contentType.equals( "text/html" );
    }
 
-   public String createXmlRepresentation(HttpResponse response) {
+   public String createXmlRepresentation( HttpResponse response )
+   {
       String content = response == null ? null : response.getContentAsString();
-      if (!StringUtils.hasContent(content))
+      if( !StringUtils.hasContent( content ) )
          return null;
 
-
-      try {
+      try
+      {
          Tidy tidy = new Tidy();
-         tidy.setXmlOut(true);
+         tidy.setXmlOut( true );
          tidy.setShowWarnings( false );
-         tidy.setErrout( new PrintWriter( new StringWriter()) );
+         tidy.setErrout( new PrintWriter( new StringWriter() ) );
 //         tidy.setQuiet(true);
          tidy.setNumEntities( true );
          tidy.setQuoteNbsp( true );
 
-         Document document = tidy.parseDOM(new ByteArrayInputStream(content.getBytes()), null);
+         Document document = tidy.parseDOM( new ByteArrayInputStream( content.getBytes() ), null );
          StringWriter writer = new StringWriter();
-         XmlUtils.serializePretty(document, writer);
+         XmlUtils.serializePretty( document, writer );
          return writer.toString();
-      } catch (Throwable e) {
-         e.printStackTrace();  
+      }
+      catch( Throwable e )
+      {
+         e.printStackTrace();
       }
       return null;
    }
