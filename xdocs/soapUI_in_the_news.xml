@@ -28,20 +28,8 @@
 	    			<a href="http://netzooid.com/blog/2006/05/16/soapui-now-with-xfire-11/">[Read more]</a></p>
 	    		</column>
 	    	</columns>
-		</subsection>	
-	   
-        <subsection name="soapui, How to Test a Web Service">
-	    	<columns>
-	    		<column width="200">
-	    		<img src="images/inthenews/nikita.gif" alt="How to test web services."/>
-	    		</column>
-	    		<column align="left">
-	    			<p>The post starts: "As a web service is something that has no user interface....." <br/>
-	    			<a href="http://nikitaknysh.blogspot.com/2008/01/how-to-test-web-service.html">[Read more]</a></p>
-	    		</column>
-	    	</columns>
 		</subsection>
-
+	   
         <subsection name="Manging the test - database with soapUI">
 	    	<columns>
 	    		<column width="200">
