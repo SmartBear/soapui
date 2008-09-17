@@ -24,7 +24,8 @@
       <item href="/comparison.html" name="soapUI Pro comparison"/>
       </item>
       <item href="/news.html" name="News and History">
-	      <item href="/snapshot.html" name="Snapshot release"/>
+      pagingInit
+	      <item href="/soapUI_in_the_news.html" name="soapUI in the news"/>
 	      <item href="/new_and_noteworthy_2.html" name="New and Noteworthy in 2.0"/>
 	      <item href="/new_and_noteworthy_176.html" name="New and Noteworthy in 1.7.6"/>
 	      <item href="/new_and_noteworthy_175.html" name="New and Noteworthy in 1.7.5"/>
