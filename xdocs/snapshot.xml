@@ -26,10 +26,10 @@
 		<p align="center"><img src="images/loadteststatistics.gif" alt="soap test load test statistics"/></p>
 		When specifying a folder, soapUI will there create one file for each TestStep and one for the TestCase total, 
 		and then export	the corresponding statistics as configured and when the LoadTest ends</li>
-		<li>A -b option has been added to the MockServiceRunner commandline utility that will cause it not to read from stdin 
+		<li>A -b option has been added to the MockServiceRunner command line utility that will cause it not to read from stdin 
 		when starting. This is required if you want to run your MockServices in the background with for example nohup</li>
 		<li>WSDL Caching has been modified to now cache WSDL's as text and not XML, which will improve project load/save 
-		times and stability, especially when working with large/many WSDLs/XSDs</li>
+		times and stability, especially when working with large/many WSDL's/XSD's</li>
 		<li>The TestRun log visible in the TestCase and TestSuite editors has been "brushed up" visually:
 		<p align="center"><img src="images/testrunlog.gif" alt="test run log and TestSuite editors soap test"/></p></li>
 		<li>a global ${projectDir} property is now available for accessing the projects directory</li>
@@ -45,7 +45,7 @@
 		<li>etc...</li>
 		</ul>
 		
-		<p>Together with the SNAPSHOT release, we are also releasing the 2.0 beta1 version of the eclipse, maven, IDEA and
+		<p>Together with the SNAPSHOT release, we are also releasing the 2.0 beta1 version of the eclipse, Maven, IDEA and
 		NetBeans plugins;</p>
 		<ul>
 		<li>The NetBeans plugin has been overhauled to now use the standard NetBeans project model instead of a soapUI 
@@ -54,9 +54,9 @@
 		Projects can then either be created or imported from an existing soapUI Project and are displayed in the 
 		standard NetBeans project explorer:
 		<p align="center"><img src="images/netbeans_explorer.gif"/></p></li>
-		<li>The eclipse plugin is available from sourceforge and the update site</li>
-		<li>The IDEA plugin is available throught the IDEA plugin manager or from sourceforge</li>
-		<li>The maven plugins are available at sourceforge and our maven repositories</li>
+		<li>The eclipse plugin is available from SourceForge and the update site</li>
+		<li>The IDEA plugin is available through the IDEA plugin manager or from SourceForge</li>
+		<li>The Maven plugins are available at SourceForge and our Maven repositories</li>
 		</ul>
 		
 		<p>An associated <a target="_new" href="http://www.eviware.com/content/view/81/58/">soapUI Pro SNAPSHOT</a> is also available 
@@ -94,7 +94,7 @@
 		<ul>
 		<li>Added option to clear Properties when saving a Project, see 
 		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1767300&amp;group_id=136013&amp;atid=737766">Feature Request</a></li>
-		<li>Added line-numbers in all Groovy/xml editors (Alt-L) and also a "Go To Line" action (Ctrl-Alt-L), see 
+		<li>Added line-numbers in all Groovy/XML editors (Alt-L) and also a "Go To Line" action (Ctrl-Alt-L), see 
 		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1728250&amp;group_id=136013&amp;atid=737766">Feature Request</a></li>
 		<li>Added Excel-file support to DataSource TestStep (soapUI Pro only)</li>
 		<li>Added range-support to DataSource TestStep (soapUI Pro only)</li>
@@ -122,7 +122,7 @@
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1702798&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
 		<li>Fixed correct count and termination of LoadTestRunners, see
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1702805&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
-		<li>Fixed TPS/BPS calculation with branched testcases, see
+		<li>Fixed TPS/BPS calculation with branched TestCases, see
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1702802&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
 		<li>Updated to commons-logging 1.1</li>
 		<li>And more internal fixes.. </li>
@@ -138,7 +138,7 @@
 		<ul>
 		<li>Improved error reporting and dispatching for mock operations</li>
 		<li>Added MockService option to require correct SOAP Version in requests</li>
-		<li>Added XML Schema XSD to default xsd:s when importing</li>
+		<li>Added XML Schema XSD to default XSD's when importing</li>
 		<li>Added scroll bars to MockOperation dispatch script/XPath editors</li>
 		<li>Fixed unsetting of OutputName when updating to a one-way operation</li>
 		<li>Fixed check of MockService path before starting</li>
@@ -153,7 +153,7 @@
 		<subsection name="SNAPSHOT 2007-03-25">
 		<p>This snapshot fixes a number of minor issues:</p>
 		<ul>
-		<li>Added experimental support for 3rd-party libraries in "ext" folder relative to startup folder, normally soapui/bin. 
+		<li>Added experimental support for 3rd-party libraries in "ext" folder relative to startup folder, normally soapUI/bin. 
 		Place JDBC drivers and other libs required from Groovy scripts in this folder.</li>
 		<li>Fixed correct validation and failures for one-way operation requests</li>
 		<li>Added new "SOAP Response" assertion which validates that the response is a soap message as mandated by the WSDL. 
@@ -207,20 +207,20 @@
 		<li>Added update frequency to both LoadTest graphs (for regular intervals..) and LoadTests themselves (in the 
 		Options dialog), see 
 		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1667522&amp;group_id=136013&amp;atid=737766">Feature Request</a></li>
-		<li>Fixed threading issues with groovy scripts</li>
+		<li>Fixed threading issues with Groovy scripts</li>
 		<li>Fixed loading of SOAP 1.2 XSD</li>
-		<li>Added option stripipt whitespaces from outgoing requests, see 
+		<li>Added option strip whitespaces from outgoing requests, see 
 		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1667555&amp;group_id=136013&amp;atid=737766">Feature Request</a></li>
 		<li>Fixed case of wsdl2java axis2 script, see
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1666462&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
 		<li>Hopefully fixed calculation of TPS/BPS when using "based on actual time passed" in load tests, see
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1665700&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
-		<li>Added possbility to save project before removing, see
+		<li>Added possibility to save project before removing, see
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1664733&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
-		<li>Improved contentID handling for multipart attachments; the first attachment of a multipart attachment
+		<li>Improved contentID handling for multi part attachments; the first attachment of a multipart attachment
 		can have 2 space-separated contentIds, where the second will be used for the multipart attachment itself</li>
 		<li>Added system-properties viewer to help menu</li>
-		<li>More minor fixes and refactorings..</li>
+		<li>More minor fixes and refactorings...</li>
 		</ul>
 		
 		<p>Thanks again for all feedback, keep it coming!</p>
@@ -229,14 +229,14 @@
 		<subsection name="SNAPSHOT 2007-02-19">
 		<p>This snapshot fixes a number of minor issues:</p>
 		<ul>
-		<li>Fixed teststep focus when moving teststeps with the keyboard in the testcase editor</li>
-		<li>Fixed check for 0 tabSize in groovy/xml-editors</li>
+		<li>Fixed TestStep focus when moving teststeps with the keyboard in the testcase editor</li>
+		<li>Fixed check for 0 tabSize in Groovy/XML editors</li>
 		<li>Update JRE requirement to 1.5+ for webstart</li>
 		<li>Improved SOAP Fault error message when dispatch fails in MockService</li>
 		<li>Added saveFirst and createMissing properties to PropertiesStep (default to true/false), see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1661060&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
 		<li>Added PropertyTransfer setting "Transfer to all", which will transfer a single source property to all target selections 
-		(when using xpath for target). Selecting this option and for example transferring a source property/value to
+		(when using XPath for target). Selecting this option and for example transferring a source property/value to
 		<source>declare namespace ns1='http://www.webserviceX.NET/';
 //ns1:ConversionRate/ns1:*/text()</source>
 		would set the text of all child elements of ns1:ConversionRate</li>
@@ -256,7 +256,7 @@
 		<li>Fixed all file dialogs to use same chooser and thus reuse last directory</li>
 		<li>Hopefully fixed selection of content nodes when dispatching mock request to RPC operation</li>
 		<li>Updated JBossWS JAX-WS tool to use "wsconsume" instead of "wsimport" (in alignment with their docs..)</li>
-		<li>Let all context objects in groovy scripts implement Map interface allowing for much simpler syntax when accessing
+		<li>Let all context objects in Groovy scripts implement Map interface allowing for much simpler syntax when accessing
 		these;
 		<source>context["name"] = ... 
 or
@@ -299,11 +299,11 @@ context.name = .. </source></li>
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1604544&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
 		<li>More SSL fixes; removed trustStore settings since soapUI trusts everything anyway.. Huge
 		thanks to Julius Davies for explaining and Thomas Arn for testing!</li>
-		<li>Fixed scrollbar increment in xml/groovy editors, see
+		<li>Fixed scrollbar increment in XML/Groovy editors, see
 		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1604562&amp;group_id=136013&amp;atid=737766">Feature Request</a></li>
-		<li>More internal improvements and bugfixes..</li>
+		<li>More internal improvements and bug fixes...</li>
 		</ul>
-		<p>Since we have updated a core library (wsdl4j) and are aiming for a 1.6.1 release before christmas we kindly urge 
+		<p>Since we have updated a core library (wsdl4j) and are aiming for a 1.6.1 release before Christmas we kindly urge 
 		you to report any new/more relevant issues! Thank you!</p>
 		</subsection>
 		
@@ -311,8 +311,8 @@ context.name = .. </source></li>
 		<p>This snapshot fixes a number of bugs:</p>
 		<ul>
 		<li>Copying a Property Transfer now copies source step/property/path correctly</li>
-		<li>Requests are sent using multipart only when neccessary</li>
-		<li>Dependency error in commandline runners</li>
+		<li>Requests are sent using multi part only when necessary</li>
+		<li>Dependency error in command line runners</li>
 		<li>Updated to commons-ssl-0.3.4, please report any SSL-related problems!</li>
 		<li>Fixed file-choosers in dialog to allow selection of files..</li>
 		<li>etc..</li>
@@ -323,7 +323,7 @@ context.name = .. </source></li>
 		<subsection name="SNAPSHOT 2006-11-23">
 		<p>This snapshot fixes the following:</p>
 		<ul>
-		<li>Fixed problem when creating new testcases in empty testsuite, see 
+		<li>Fixed problem when creating new TestCases in empty testsuite, see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1596907&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
 		<li>Fixed lockup when loading unavailable WSDL's, see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1599211&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
@@ -336,7 +336,7 @@ context.name = .. </source></li>
 		<p align="center"><img src="images/ssl_settings_for_snapshot.gif"/></p></li>
 		<li>Added support for "anonymous" attachments; attachments can be added to any request (regardless of 
 		WSDL definition) and assigned the "anonymous" part in the Attachments table. The request will in this case 
-		be sent as a multipart message and the attachment(s) will be added without reference from the root part. (see
+		be sent as a multi part message and the attachment(s) will be added without reference from the root part. (see
 		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1599266&amp;group_id=136013&amp;atid=737766">Feature Request</a>)
 		<p align="center"><img src="images/anonymous_attachments_for_snapshot.gif"/></p></li>
 		<li>Added support for specifying request HTTP Headers and viewing response HTTP Headers in the request/response
@@ -349,8 +349,8 @@ context.name = .. </source></li>
 		<subsection name="SNAPSHOT 2006-11-08">
 		<p>This snapshot fixes the following:</p>
 		<ul>
-		<li>Added exclusion list to proxy settings (comma-seperated)</li>
-		<li>Added support for shift ins/del (copy/cut) to xml editors</li>
+		<li>Added exclusion list to proxy settings (comma separated)</li>
+		<li>Added support for shift ins/del (copy/cut) to XML editors</li>
 		<li>Added 2 context properties available when load-testing:
 		<ol>
 		<li><b>ThreadIndex</b> - the index of the created thread.. this value will never change for a given TestCase during its run time.. 
@@ -362,10 +362,10 @@ context.name = .. </source></li>
 		<li>Fixed correct popup in LoadTest log and similar errors in other tables, see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1592156&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
 		<li>Improved error handling in LoadTest runner</li>
-		<li>Added initial support for unzipping gzipped response messages, ie messages with a Content-Type or Content-Encoding ending with "gzip". 
+		<li>Added initial support for unzipping gzipped response messages, i.e. messages with a Content-Type or Content-Encoding ending with "gzip". 
 		Thanks to Diego Banda.</li>
 		</ul>
-		<p>As always.. all feedback is greatly appreciated..!</p>
+		<p>As always... all feedback is greatly appreciated...!</p>
 		</subsection>
 		
 		<subsection name="SNAPSHOT 2006-10-26">
@@ -375,7 +375,7 @@ context.name = .. </source></li>
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1585239&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
 		<li>Fixes headless support for command-line runners, see
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1585241&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
-		<li>Fixes unix script arguments, see
+		<li>Fixes Unix script arguments, see
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1585240&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
 		<li>More internal fixes..</li>
 		</ul>
@@ -391,7 +391,7 @@ context.name = .. </source></li>
 		which is written to file if no errors occur..)</li>
 		<li>Fixed export of definitions containing multiple files with same name, see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1579756&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
-		<li>Fixed validation of derived types in xml-editors</li>
+		<li>Fixed validation of derived types in XML editors</li>
 		<li>Fixed load-test statistics to show correct values if a step is executed multiple times within one run</li>
 		<li>Fixed automatic adding of TestStep Status assertion to newly created loadtests, see
 		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1595693&amp;forum_id=494205">forum discussion</a></li>
@@ -412,7 +412,7 @@ context.name = .. </source></li>
 		"Out of Memory" error (see <a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1543510&amp;group_id=136013&amp;atid=737763">Bug Report</a>)</li>
 		<li>Hopefully fixed bug of Property-Table values not being saved when moving focus away (see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1563155&amp;group_id=136013&amp;atid=737763">Bug Report</a>)</li> 
-		<li>Fixed a serious memory-leak in request-processor for mtom/inline attachments and also modified memory-management 
+		<li>Fixed a serious memory-leak in request-processor for MTOM/inline attachments and also modified memory-management 
 		under testing to never discard timing results for individual teststeps.</li>
 		<li>More internal fixes..</li>
 		</ul>
@@ -425,7 +425,7 @@ context.name = .. </source></li>
 		<li>Added support for automatic validation of request/response messages in editors (see
 		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1570712&amp;group_id=136013&amp;atid=737766">Feature Request</a>), 
 		thanks to Michael Vorburger! ("Preferences / UI Settings / Validate Request / Response")</li>
-		<li>Added support for generating rpc-parts for attachments ("Preferences / WSDL Settings / Attachment Parts")</li>
+		<li>Added support for generating RPC-parts for attachments ("Preferences / WSDL Settings / Attachment Parts")</li>
 		<li>Improved Code-generation dialogs:
 		<ul>
 		<li>Added [Tools] button which open "Preferences / Integrated Tools" for setting tool paths</li>
@@ -453,36 +453,36 @@ context.name = .. </source></li>
 		<subsection name="SNAPSHOT 2006-09-22">
 		<p>This snapshot fixes the following:</p>
 		<ul>
-		<li>Fixed caching of attachments to now be saved in the soapui-project file (compressed).. this makes
-		portability of soapui-projects with attachments much simpler.. The attachment-folder setting has been
+		<li>Fixed caching of attachments to now be saved in the soapUI project file (compressed).. this makes
+		portability of soapUI projects with attachments much simpler.. The attachment-folder setting has been
 		removed.</li>
 		<li>Fixed importing/viewing of schemas starting with a comment</li>
-		<li>Fixed property-expansion when running xpath-assertions and property-transfers from within their
+		<li>Fixed property-expansion when running XPath assertions and property-transfers from within their
 		editors.</li>
-		<li>Fixed .sh script invocation on unix-platforms</li>
-		<li>Fixed loading/caching of wsdls/schemas on paths with spaces</li>
+		<li>Fixed .sh script invocation on Unix platforms</li>
+		<li>Fixed loading/caching of WSDL's/schemas on paths with spaces</li>
 		<li>more minor fixes..</li>
 		</ul>
-		<p>As always, we are greatly thankfull for your help!</p>
+		<p>As always, we are greatly thankful for your help!</p>
 		</subsection>
 		
 		<subsection name="SNAPSHOT 2006-09-13">
 		<p>This snapshot fixes the following:</p>
 		<ul>
 		<li>Fix for the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1557534&amp;group_id=136013&amp;atid=737763">bug</a> 
-		when loading secured wsdls.</li> 
+		when loading secured WSDL's.</li> 
 		<li>Fix for the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1557534&amp;group_id=136013&amp;atid=737763">bug</a> 
-		with xpath-assertions containing empty content.</li> 
+		with XPath assertions containing empty content.</li> 
 		<li>Fixes password-input fields to be masked</li>
 		<li>Added debug-output when launching TcpMon</li>
 		</ul>
-		<p>As always, we are greatly thankfull for your help!</p>
+		<p>As always, we are greatly thankful for your help!</p>
 		</subsection>
 
 		<subsection name="SNAPSHOT 2006-09-03">
 		<p>This release adds/fixes the following:</p>
 		<ul>
-		<li>Optimized the groovy-teststep for lower memory consumption and faster execution times</li> 
+		<li>Optimized the Groovy-TestStep for lower memory consumption and faster execution times</li> 
 		<li>Initial fix for the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1546292&amp;group_id=136013&amp;atid=737763">bug</a> 
 		when validating doc-literal messages with mime-attachments.</li> 
 		<li>Initial fix for the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1546280&amp;group_id=136013&amp;atid=737763">bug</a> 
@@ -492,8 +492,8 @@ context.name = .. </source></li>
 		<li>Initial fix for the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1549544&amp;group_id=136013&amp;atid=737763">bug</a> 
 		when running WS-I analysis reports.</li> 
 		<li>Initial fix for the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1546845&amp;group_id=136013&amp;atid=737763">bug</a> 
-		for keyboard accelarators on the mac.</li> 
-		<li>Added a new "Transfer text content" option to Property Transfers for backwards compatibility reasons. When an xpath expression points at an element
+		for keyboard accelerators on the mac.</li> 
+		<li>Added a new "Transfer text content" option to Property Transfers for backwards compatibility reasons. When an XPath expression points at an element
 		and this option is checked, the elements text-content will be transferred instead of the entire element. This option will be checked by default.</li>
 		<li>Added a new "Set NULL on missing source" option to Property Transfers that sets the target property to null if the source property is not available (instead of failing) </li>
 		<li>Added a new "Search Properties" option to TestCases that controls if property-references should look for all steps after the requested property or only
@@ -504,7 +504,7 @@ context.name = .. </source></li>
 		<li>A large number of minor UI-improvements (icons, shadows, etc..)</li> 
 		<li>Internal refactorings</li>
 		</ul>
-		<p>Thanks again for everyones feedback, as always very appreciated!</p>
+		<p>Thanks again for everyone´s feedback, as always very appreciated!</p>
 		</subsection>
 		
 		<subsection name="SNAPSHOT 2006-08-24">
@@ -514,7 +514,7 @@ context.name = .. </source></li>
 		<li>Added step numbers to the testcase log</li> 
 		<li>Minor refactorings..</li>
 		</ul>
-		<p>Thanks again for everyones feedback, as always very appreciated!</p>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
 		</subsection>
 		
 		<subsection name="SNAPSHOT 2006-08-23">
@@ -529,7 +529,7 @@ context.name = .. </source></li>
 		(see <a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1556818&amp;forum_id=494205">forum discussion</a>)</li> 
 		<li>A small number of internal refactorings and improvements..</li> 
 		</ul>
-		<p>Thanks again for everyones feedback, as always very appreciated!</p>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
 		</subsection>
 		
 		
@@ -550,27 +550,26 @@ context.name = .. </source></li>
 		
 		<li>A number of internal refactorings and improvements..</li> 
 		</ul>
-		<p>Thanks again for everyones feedback, as always very appreciated!</p>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
 		</subsection>
 		
 		<subsection name="SNAPSHOT 2006-08-09">
 		<p>This release adds/fixes the following:</p>
-		<ul>
-		<li>Improved the groovy editor in line with the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1534414&amp;group_id=136013&amp;atid=737766">Feature Request</a> adding
+		<li>Improved the Groovy editor in line with the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1534414&amp;group_id=136013&amp;atid=737766">Feature Request</a> adding
 		syntax highlighting, undo/redo, line-number information and caret-to-error positioning on parse/execution errors if possible</li> 
-		<li>Improved the undo/redo funtionality in line with the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1514430 &amp;group_id=136013&amp;atid=737766">feature request</a>
+		<li>Improved the undo/redo functionalityin line with the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1514430 &amp;group_id=136013&amp;atid=737766">feature request</a>
 		and this <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1529127&amp;group_id=136013&amp;atid=737763">bug report</a></li> 
 		<li>Fixed the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1536980&amp;group_id=136013&amp;atid=737763">bug</a> 
-		when importing a WSDL using the swaRef datatype.</li> 
+		when importing a WSDL using the swaRef data type.</li> 
 		<li>Hopefully fixed the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1529892&amp;group_id=136013&amp;atid=737763">bug</a> 
-		when trying to load an inaccesible WSDL.</li> 
+		when trying to load an inaccessible WSDL.</li> 
 		<li>Totally refactored the request/response editor internals and added line-number information and a possible tab-based layout (as in the eclipse-plugin) which can be
-		toggled from the reqest editors toolbar.. Please let us know if you experience any new problems with the request/respose editors</li>
+		toggled from the request editors toolbar.. Please let us know if you experience any new problems with the request/response editors</li>
 		<li>"Downgraded" to jgoodies looks 2.0 due to user errors under win2000</li>
 		<li>Updated to use commons-ssl for unverified certificate support</li>
 		<li>A large number of internal refactorings and improvements..</li> 
 		</ul>
-		<p>Thanks again for everyones feedback, as always very appreciated!</p>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
 		</subsection>
 		
 		<subsection name="SNAPSHOT 2006-07-24">
@@ -585,7 +584,7 @@ context.name = .. </source></li>
 		<li>Improved all integrated Code-Generation tools to optionally use the cached WSDL if available</li>
 		<li>Improved the Dialog UI</li>
 		</ul>
-		<p>Thanks again for everyones feedback, as always very appreciated!</p>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
 		</subsection>
 		
 		<subsection name="SNAPSHOT 2006-07-20">
@@ -595,7 +594,7 @@ context.name = .. </source></li>
 		when updating an interface and also added an option to create default requests for new methods.</li> 
 		<li>Added a binary distribution (see above)</li>
 		</ul>
-		<p>Thanks again for everyones feedback, as always very appreciated!</p>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
 		
 		</subsection>
 	
@@ -605,7 +604,7 @@ context.name = .. </source></li>
 		<li>An option to turn off automatic resizing of the request/response editors in the 
 		<a href="userguide/preferences.html#UI_Settings">UI Settings</a></li>
 		<li>An option to discard successfull testresults which will save memory when executing
-		long-running testcases (see <a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1537364&amp;forum_id=494205">forum discussion</a>), 
+		long-running TestCases (see <a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1537364&amp;forum_id=494205">forum discussion</a>), 
 		available in the <a href="userguide/functional/testcases.html#TestCase_Options">TestCase Options</a> dialog.</li> 
 		<li>Fixed the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1524153&amp;group_id=136013&amp;atid=737763">bug</a> when moving a testrequest step containing attachments</li> 
 		<li>Options for including request/response times in global time-taken calculations in the <a href="userguide/preferences.html#HTTP_Settings">HTTP Settings</a></li>
@@ -613,7 +612,7 @@ context.name = .. </source></li>
 		<li>Improved the <a href="userguide/functional/testrequests.html#Request_Result_Viewer">Request Result Viewer</a> to show
 		the actual request content sent, including expanded properties, inline files and MTOM/XOP Includes..</li>
 		</ul>
-		<p>Thanks again for everyones feedback, as always very appreciated!</p>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
 		
 		</subsection>
 	
@@ -623,7 +622,7 @@ context.name = .. </source></li>
 		<li>Adds initial SOAP 1.2 support, selecting the corresponding SOAP Version from an Interfaces Details 
 		panel will affect request generation and HTTP Headers accordingly. SOAP 1.2 documents are currently 
 		validated as if they were SOAP 1.1 (in accordance with Basic Profile).</li>
-		<li>Adds inital WS-Security support for UsernamePassword and Timestamp tokens. Both can be added directly
+		<li>Adds initial WS-Security support for UsernamePassword and Timestamp tokens. Both can be added directly
 		in the request editor from its right-button menu, UsernamePassword tokens can also be added dynamically 
 		at request time by selecting the appropriate WSS-Password Type in a requests Details panel</li>
 		<li>Added a number of WSDL-related settings to the global Preferences dialog</li>
@@ -631,7 +630,7 @@ context.name = .. </source></li>
 		within soapUI.. <a href="userguide/tools/index.html">[Read More]</a></li>
 		<li>A fair number of bug-fixes related to test-running, logging, etc..</li>
 		</ul>
-		<p>Thanks again for everyones feedback, as always very appreciated!</p>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
 		
 		</subsection>
 	
@@ -647,7 +646,7 @@ context.name = .. </source></li>
         to guard yourself against too long results (which will consume large amounts of memory), leaving it at 0 will result
         in the entire response being read.</li>
 		</ul>
-		<p>Thanks again for everyones feedback, as always very appreciated!</p>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
 		
 		</subsection>
 	
@@ -679,7 +678,7 @@ context.name = .. </source></li>
 		<p>This release fixes a number of internal issues, including:</p>
 		<ul>
 		<li>Correct rescaling and update of loadtest graphs</li>
-		<li>Correct test monitoring in cloned testcases/testsuites</li>
+		<li>Correct test monitoring in cloned TestCases/testsuites</li>
 		</ul>
 		</subsection>
 		<subsection name="SNAPSHOT 2006-03-05">
@@ -696,7 +695,7 @@ context.name = .. </source></li>
 		<p>This release fixes numerous minor issues with the 1.5 beta1 release, including:</p>
 		<ul>
 		<li>Errors when moving teststeps</li>
-		<li>Errors in Properties teststep editor</li>
+		<li>Errors in Properties TestStep editor</li>
 		<li>Timings of non-request teststeps</li>
 		</ul>
 		<p>And adds the following functionality:</p>
