@@ -90,19 +90,7 @@
 	    	</columns>
 		</subsection>
 	
-        <subsection name="Another look at soapUI: load test">
-	    	<columns>
-	    		<column width="200">
-	    		<img src="images/inthenews/netzooid.gif" alt="NetZoid. soapUI, your testing solution"/>
-	    		</column>
-	    		<column align="left">
-	    			<p>The post starts: "So more and more people have been reporting to me the coolness of soapui..." <br/>
-	    			<a href="http://chrismcmahonsblog.blogspot.com/2006/11/another-look-at-soapui-load-test.html">[Read more]</a></p>
-	    		</column>
-	    	</columns>
-		</subsection>
-		
-        <subsection name="Using soapUI for testing your webservice">
+	    <subsection name="Using soapUI for testing your webservice">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/pascal.gif" alt="soapUI for testing your web services"/>
