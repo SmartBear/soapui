@@ -237,8 +237,6 @@ body {
 #inner_box {
 	width: auto;
 	background-color: white;
-	color: black;
-	border: 1px solid navy;
 }
 
 /**
@@ -246,18 +244,18 @@ body {
 	Fixed box with links
 =========================================
 */
-#outer_links { 
+#outer_links {
 	position: fixed;
 	left: 0px;
 	top: 0px;
 	margin: 3px;
 	padding: 1px;
-	z-index: 200; 
+	z-index: 200;
 	width: 180px;
 	height: auto;
 	background-color: gainsboro;
 	padding-top: 2px;
-	border: 1px solid navy;
+	border: 1px solid black;
 }
 
 * html #outer_links /* Override above rule for IE */ 
@@ -301,7 +299,7 @@ body {
 #links a {
 	display: block;
 	padding: 0 2px;
-	color: blue;
+	color: 000;
 	width: auto;
 	border: 1px solid white;
 	text-decoration: none;
@@ -411,10 +409,9 @@ body {
 */
 #header {
 	margin: 0;
-	padding: .5em 4em;
-	color: white;
-	background-color: red;
-	border: 1px solid darkred;
+	padding: 20px;
+	background-color: #fff;
+	color: #00cc33;
 }
 
 #content {
@@ -456,7 +453,7 @@ body {
 	/* width: 30%; */
 	width: 205px;
 }
-html&gt;body #rightColumn {
+html>body #rightColumn {
 	width: 205px; /* ie5win fudge ends */
 } /* Opera5.02 shows a 2px gap between. N6.01Win sometimes does.
 	Depends on amount of fill and window size and wind direction. */
@@ -468,9 +465,11 @@ html&gt;body #rightColumn {
 */
 
 .page {
-	border-bottom: 3px dotted navy;
+	border-bottom: 1px;
 	margin: 0;
 	padding: 10px 0 20px 0;
+	border-bottom-color: #33CC00;
+	border-bottom-style: dotted;
 }
 
 .value, .label {
@@ -481,17 +480,21 @@ html&gt;body #rightColumn {
 .label {
 	float: left;
 	width: 140px;
-	text-align: right;
+	text-align: left;
 	font-weight: bold;
-	padding-bottom: .5em;
+	padding-bottom: 0.5em;
 	margin-right: 0;
-	color: darkblue;
+	color: #000000;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 .value {
 	margin-left: 147px;
-	color: darkblue;
-	padding-bottom: .5em;
+	color: #000000;
+	padding-bottom: 0.5em;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
 }
 
 strong, strong a {
@@ -510,18 +513,17 @@ strong, strong a {
 
 a.local:link,
 a.local:visited {
-	color: blue; 
+	color: #000000;
 	margin-left: 10px;
-	border-bottom: 1px dotted blue;
 	text-decoration: none;
 	font-style: italic;
+	font-size: 12px;
 }
 
 a.local:hover {
-	background-color: gainsboro; 
-	color: darkblue;
+	background-color: gainsboro;
+	color: #333333;
 	padding-bottom: 1px;
-	border-bottom: 1px solid darkblue;
 }
 
 a.target:link,
@@ -542,9 +544,10 @@ a.target:hover
 .box {
 	padding: 6px;
 	color: black;
-	background-color: gainsboro;
-	border: 1px solid gray;
-}
+	background-color: #fff;
+	border-color:#999999;
+	border:dashed 1px;
+	}
 
 .shadow {
 	background: silver;
@@ -610,11 +613,13 @@ html .floatcontainer {
 .xml-element, .xml-proc, .xml-comment {
 	margin: 2px 0;
 	padding: 2px 0 2px 0;
+	font-family: monospace;
+	font-size: 12px;
 }
 
 .xml-element {
 	word-spacing: 3px;
-	color: red;
+	color: #0033FF;
 	font-weight: bold;
 	font-style:normal;
 	border-left: 1px dotted silver;
@@ -625,12 +630,12 @@ html .floatcontainer {
 }
 
 .xml-att {
-	color: blue;
+	color: #9966FF;
 	font-weight: bold;
 }
 
 .xml-att-val {
-	color: blue;
+	color: #333333;
 	font-weight: normal;
 }
 
@@ -659,28 +664,29 @@ html .floatcontainer {
 =========================================
 */
 h1, h2, h3 {
-	margin: 10px 10px 2px;
-	font-family: Georgia, Times New Roman, Times, Serif;
-	font-weight: normal;
+	margin: 0px 5px 5px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #00cc33;
 	}
 
 h1 {
-	font-weight: bold;
-	letter-spacing: 3px;
-	font-size: 220%;
-	line-height: 100%;
+	 font-size: 18.0pt;
+	 font-weight: bold;
 }
 
 h2 {
+	font-size: 16pt;
 	font-weight: bold;
-	font-size: 175%;
-	line-height: 200%;
 }
 
 h3 {
-	font-size: 150%;
-	line-height: 150%;
-	font-style: italic;
+	font-size: 14px;
+	line-height: normal;
+	font-style: bold;
+	border-bottom: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #33CC00;
 }
 
 /**
@@ -698,6 +704,9 @@ h3 {
 	margin-bottom: 20px;
 	padding-bottom: 10px;
 	border-bottom: 1px dashed gray;
+	color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
 }
 
 
@@ -714,7 +723,7 @@ h3 {
 */
 
 	#outer_box {
-		padding: 3px;
+	padding: 0px;
 	}
 /* END print media definition
 }

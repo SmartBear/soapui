@@ -4,29 +4,62 @@ body {
     color:#000000;
 }
 table tr td, table tr th {
-    font-size: 68%;
+    	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: normal;
 }
 table.details tr th{
-    font-weight: bold;
-    text-align:left;
-    background:#a6caf0;
+font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-align:left;
+	padding: 5px;
+	background:#00cc33;
 }
 table.details tr td{
-    background:#eeeee0;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+	text-align: left;
+	background: #eeeeee;
+	padding: 3px 5px 3px 3px;
+	-moz-border-radius: ;
 }
+
+a:link{
+color: #333333;
+}
+
+a:visited{
+color: #333333;
+}
+
 
 p {
     line-height:1.5em;
     margin-top:0.5em; margin-bottom:1.0em;
 }
 h1 {
-    margin: 0px 0px 5px; font: 165% verdana,arial,helvetica
-}
+    margin: 0px 0px 5px; 
+	font: verdana,arial,helvetica;
+	 color: #00cc33;
+	 font-weight: normal;
+	 font-size: 18.0pt;
+	 font-weight: bold;
+	}
 h2 {
-    margin-top: 1em; margin-bottom: 0.5em; font: bold 125% verdana,arial,helvetica
+    margin: 0px 0px 5px;  
+	font: verdana,arial,helvetica;
+		 color: #00cc33;
+	 font-size: 14.0pt;
+	 font-weight: bold;
 }
 h3 {
-    margin-bottom: 0.5em; font: bold 115% verdana,arial,helvetica
+	margin: 10px 0px 5px; 
+	font-weight: bold;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size:14px;
+	color: #00cc33;
 }
 h4 {
     margin-bottom: 0.5em; font: bold 100% verdana,arial,helvetica

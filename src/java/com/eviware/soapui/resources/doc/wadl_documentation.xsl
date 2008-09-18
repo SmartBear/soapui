@@ -228,35 +228,63 @@
                         <xsl:otherwise>My Web Application</xsl:otherwise>
                     </xsl:choose>                 
                 </title>
-                <style type="text/css">
+<style type="text/css">
                     body {
                         font-family: sans-serif;
                         font-size: 0.85em;
                         margin: 2em 8em;
                     }
                     .methods {
-                        background-color: #eef;
+                        background-color: #ffffff;
                         padding: 1em;
-                    }
+						 }
+					pre {
+						border: dashed 1px;
+						border-color:#999999;
+						margin-left: 7px;
+						padding: 0.5em;
+						line-height: 150%;
+						font-family: monospace;
+						font-size: 12px;
+						color:#000;
+						}
+					a:link{
+						color: #333333;
+						font-family: Verdana, Arial, Helvetica, sans-serif;
+						font-size: 12px;
+						}
+					a:visited{
+						color: #333333;
+						color: #333333;
+						font-family: Verdana, Arial, Helvetica, sans-serif;
+						}
+
                     h1 {
-                        font-size: 2.5em;
+                        	margin: 0px 5px 5px; 
+							font: verdana,arial,helvetica;
+							color: #00cc33;
+							font-weight: normal;
+							font-size: 18.0pt;
+							font-weight: bold;
                     }
                     h2 {
-                        border-bottom: 1px solid black;
-                        margin-top: 1em;
-                        margin-bottom: 0.5em;
-                        font-size: 2em;
+					    margin: 0px 0px 5px;  
+						font: verdana,arial,helvetica;
+						color: #00cc33;
+						font-weight: normal;
+						font-size: 14.0pt;
+						font-weight: bold;
                        }
                     h3 {
-                        color: orange;
-                        font-size: 1.75em;
-                        margin-top: 1.25em;
-                        margin-bottom: 0em;
+						margin: 10px 0px 5px; 
+						font-weight: bold;
+						font-family: Verdana, Arial, Helvetica, sans-serif;
+						font-size:14px;
+						color: #00cc33;
                     }
                     h4 {
                         margin: 0em;
                         padding: 0em;
-                        border-bottom: 2px solid white;
                     }
                     h6 {
                         font-size: 1.1em;
@@ -273,33 +301,47 @@
                         margin-bottom: 0.5em;
                     }
                     th {
-                        text-align: left;
-                        font-weight: normal;
-                        color: black;
-                        border-bottom: 1px solid black;
-                        padding: 3px 6px;
+						font-family: Arial, Helvetica, sans-serif;
+						font-size: 12px;
+						font-weight: bold;
+						text-align:left;
+						padding: 5px;
+						background:#00cc33;
+						-moz-border-radius: ;
+						width=150px;
                     }
                     td {
                         padding: 3px 6px;
+						font-weight: normal;
                         vertical-align: top;
-                        background-color: f6f6ff;
-                        font-size: 0.85em;
+                        background: #eeeeee;
+						font-family: Arial, Helvetica, sans-serif;
+						font-size: 12px;
                     }
                     td p {
                         margin: 0px;
+						font-family: Arial, Helvetica, sans-serif;
+						font-size: 12px;
                     }
                     ul {
                         padding-left: 1.75em;
                     }
+					li {
+                        font-family: Arial, Helvetica, sans-serif;
+						font-size: 12px;
+                    }
+					
+
                     p + ul, p + ol, p + dl {
                         margin-top: 0em;
+						                        font-family: Arial, Helvetica, sans-serif;
+						font-size: 12px;
                     }
                     .optional {
                         font-weight: normal;
                         opacity: 0.75;
                     }
                 </style>
-
             </head>
             <body>
                 <h1>

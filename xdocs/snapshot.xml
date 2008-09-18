@@ -555,6 +555,7 @@ context.name = .. </source></li>
 		
 		<subsection name="SNAPSHOT 2006-08-09">
 		<p>This release adds/fixes the following:</p>
+		<ul>
 		<li>Improved the Groovy editor in line with the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1534414&amp;group_id=136013&amp;atid=737766">Feature Request</a> adding
 		syntax highlighting, undo/redo, line-number information and caret-to-error positioning on parse/execution errors if possible</li> 
 		<li>Improved the undo/redo functionalityin line with the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1514430 &amp;group_id=136013&amp;atid=737766">feature request</a>
