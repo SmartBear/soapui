@@ -134,8 +134,11 @@ public class UIPrefs implements Prefs
       }
 
       settings.setBoolean( UISettings.DONT_DISABLE_GROOVY_LOG, values.getBoolean( ENABLE_GROOVY_LOG_DURING_LOADTEST ) );
-      if( SoapUI.isStandalone() )
+      if( SoapUI.isStandalone() ) 
+      {
          settings.setBoolean( UISettings.SHOW_LOGS_AT_STARTUP, values.getBoolean( SHOW_LOGS_AT_STARTUP ) );
+         settings.setBoolean( UISettings.SHOW_STARTUP_PAGE, values.getBoolean( SHOW_STARTUP ) );
+      }
 
       SoapUI.initAutoSaveTimer();
    }

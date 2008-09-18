@@ -68,7 +68,7 @@ public abstract class XmlSchemaBasedInterfaceDefinition<T extends AbstractInterf
 
    public SchemaType findType(QName typeName)
    {
-      return getSchemaTypeSystem().findType(typeName);
+      return getSchemaTypeLoader().findType(typeName);
    }
 
    public void loadSchemaTypes(DefinitionLoader loader) throws SchemaException

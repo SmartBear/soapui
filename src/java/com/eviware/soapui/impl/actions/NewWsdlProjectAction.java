@@ -78,11 +78,13 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
       {
          dialog.setValue( Form.PROJECTNAME, "" );
          dialog.setValue( Form.INITIALWSDL, "" );
+         
+         dialog.setBooleanValue( Form.ADDRESTSERVICE, false );
 
          dialog.getFormField( Form.CREATEREQUEST ).setEnabled( false );
          dialog.getFormField( Form.GENERATEMOCKSERVICE ).setEnabled( false );
          dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( false );
-         dialog.getFormField( Form.ADDRESTSERVICE ).setEnabled( false );
+         dialog.getFormField( Form.ADDRESTSERVICE ).setEnabled( true );
       }
 
       while( dialog.show() )

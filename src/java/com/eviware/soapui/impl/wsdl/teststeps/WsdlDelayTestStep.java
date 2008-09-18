@@ -134,6 +134,7 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties
 		try
 		{
 			canceled = false;
+         running = true;
 			
 			try
 			{
@@ -149,8 +150,9 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties
 			{
 				if( timeWaited % 1000 == 0 && context.getProperty( TestRunContext.LOAD_TEST_RUNNER ) == null )
 				{
-					notifyPropertyChanged( WsdlTestStep.LABEL_PROPERTY, oldLabel, getLabel() );
-					oldLabel = getLabel(); 
+               String newLabel = getLabel();
+               notifyPropertyChanged( WsdlTestStep.LABEL_PROPERTY, oldLabel, newLabel );
+					oldLabel = newLabel;
 				}
 				
 				if( timeWaited <= delay-DELAY_CHUNK )

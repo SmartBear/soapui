@@ -240,7 +240,7 @@ public class SchemaUtils
 //      	schemas.add( soapVersion.getSoapEnvelopeSchema());
          schemas.addAll( defaultSchemas.values() );
 
-         SchemaTypeSystem sts = XmlBeans.compileXsd(
+         SchemaTypeSystem sts = XmlBeans.compileXsd( 
                  schemas.toArray( new XmlObject[schemas.size()] ), XmlBeans.getBuiltinTypeSystem(), options );
 
          return sts;
