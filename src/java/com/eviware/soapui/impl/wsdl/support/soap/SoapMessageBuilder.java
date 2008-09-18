@@ -563,7 +563,7 @@ public class SoapMessageBuilder implements MessageBuilder
 		{
 			XmlObject xmlObject = XmlObject.Factory.parse( faultResponse );
 			XmlObject[] detail = xmlObject.selectPath( "//detail" );
-			cursor  = detail[0].newCursor();
+			cursor = detail[0].newCursor();
 			
 			cursor.toFirstContentToken();
 

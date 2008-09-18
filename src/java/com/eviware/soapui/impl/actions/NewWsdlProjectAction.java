@@ -64,12 +64,13 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
          dialog.setValue( Form.CREATEREQUEST, Boolean.toString( true ) );
          dialog.getFormField( Form.INITIALWSDL ).addFormFieldListener( new XFormFieldListener()
          {
-
             public void valueChanged( XFormField sourceField, String newValue, String oldValue )
             {
-               dialog.getFormField( Form.CREATEREQUEST ).setEnabled( newValue.trim().length() > 0 );
-               dialog.getFormField( Form.GENERATEMOCKSERVICE ).setEnabled( newValue.trim().length() > 0 );
-               dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( newValue.trim().length() > 0 );
+               String value = newValue.toLowerCase().trim();
+
+               dialog.getFormField( Form.CREATEREQUEST ).setEnabled( value.length() > 0 );
+               dialog.getFormField( Form.GENERATEMOCKSERVICE ).setEnabled( newValue.trim().length() > 0 && !newValue.endsWith( ".wadl" ));
+               dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( newValue.trim().length() > 0 && !newValue.endsWith( ".wadl" ));
                dialog.getFormField( Form.ADDRESTSERVICE ).setEnabled( newValue.trim().length() == 0 );
             }
          } );

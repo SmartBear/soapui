@@ -129,17 +129,30 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
 						}
 						
 						dialog.getFormField(Form.EXTRACTPARAMS).setEnabled(enable);
+                  dialog.getFormField(Form.CREATERESOURCE).setEnabled(!enable);
 					}
-					else dialog.getFormField(Form.EXTRACTPARAMS).setEnabled(false);
+					else
+               {
+                  dialog.getFormField(Form.EXTRACTPARAMS).setEnabled(false);
+                  dialog.getFormField(Form.CREATERESOURCE).setEnabled(true);
+               }
 				}});
 			
 			dialog.getFormField(Form.EXTRACTPARAMS).setEnabled(false);
+         dialog.getFormField(Form.EXTRACTPARAMS).addFormFieldListener( new XFormFieldListener() {
+            public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+            {
+               dialog.getFormField( Form.CREATERESOURCE ).setEnabled( !dialog.getBooleanValue(Form.EXTRACTPARAMS ));
+            }
+         } );
+
    	}
    	else 
    	{
    		dialog.setValue( Form.SERVICENAME, "" ); 
    		dialog.setValue( Form.SERVICEENDPOINT, "" );
    		dialog.setValue( Form.WADLURL, "" );
+         dialog.setBooleanValue( Form.EXTRACTPARAMS, false );
    	}
    	
 		if( param instanceof ModelItem )

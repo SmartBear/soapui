@@ -193,9 +193,8 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
          }
 			catch (MalformedURLException e1)
 			{
-				UISupport.showErrorMessage("Error extracting parameters; " + e1 );
+				UISupport.showInfoMessage("No parameters to extract!");
 			}
-
 		}
 	}
 
