@@ -189,7 +189,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
    {
       if( getMockOperation( operation ) != null )
          return null;
-
+      
       MockOperationConfig config = getConfig().addNewMockOperation();
       config.setName( operation.getName() );
       WsdlMockOperation mockOperation = new WsdlMockOperation( this, config, operation );

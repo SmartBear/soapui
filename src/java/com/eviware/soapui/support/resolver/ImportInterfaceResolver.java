@@ -16,8 +16,12 @@ import java.io.File;
 import javax.swing.JOptionPane;
 
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
+import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.RestServiceFactory;
+import com.eviware.soapui.impl.rest.support.WadlImporter;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.propertyexpansion.resolvers.providers.ProjectDirProvider;
 import com.eviware.soapui.support.UISupport;
@@ -26,9 +30,9 @@ import com.eviware.soapui.support.resolver.ResolveContext.Resolver;
 public abstract class ImportInterfaceResolver implements Resolver
 {
 	private boolean resolved = false;
-	private WsdlTestRequestStep item;
+	private WsdlTestStep item;
 
-	public ImportInterfaceResolver(WsdlTestRequestStep item)
+	public ImportInterfaceResolver(WsdlTestStep item)
 	{
 		this.item = item;
 	}
@@ -45,7 +49,7 @@ public abstract class ImportInterfaceResolver implements Resolver
 
 	public boolean resolve()
 	{
-		String[] options = { "File", "Url", "Cancel" };
+		String[] options = { "File(Wsdl)", "Url(Wsdl)", "File(Wadl)", "Url(Wadl)", "Cancel" };
 		int choosed = JOptionPane
 				.showOptionDialog(UISupport.getMainFrame(), "Choose source for new interface from ...",
 						"New interface source", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
@@ -53,33 +57,63 @@ public abstract class ImportInterfaceResolver implements Resolver
 		switch (choosed)
 		{
 		case 0:
-		{
 			loadWsdlFromFile();
-		}
 			break;
 		case 1:
-		{
 			loadWsdlFromUrl();
-		}
 			break;
 		case 2:
+			loadWadlFromFile();
+			break;
+		case 3:
+			loadWadlFromUrl();
+			break;
+		default:
 			break;
 		}
 		resolved = update();
-//		ResolveContext context = new ResolveContext(item.getTestCase().getTestSuite());
-//		item.getTestCase().getTestSuite().resolve(context);
-//		
-//		if (context.isEmpty())
-//		{
-//			resolved = true;
-//		}
-//		else
-//		{
-//			resolved = false;
-//		}
 		return resolved;
 	}
-	
+
+	private void loadWadlFromUrl()
+	{
+		WsdlProject project = item.getTestCase().getTestSuite().getProject();
+		String url = UISupport.prompt("Enter WADL URL", "Add WADL from URL", "");
+		if (url == null)
+			return;
+		
+		importWadl(project, url);
+      
+	}
+
+	private void loadWadlFromFile()
+	{
+		WsdlProject project = item.getTestCase().getTestSuite().getProject();
+		File file = UISupport.getFileDialogs().open(this, "Select WADL file", ".wadl", "WADL Files (*.wadl)",
+				ProjectDirProvider.getProjectFolder(project));
+		if (file == null)
+			return;
+
+		String path = file.getAbsolutePath();
+		if (path == null)
+			return;
+		
+		importWadl(project, "file:/" + path);
+	}
+
+	private void importWadl(WsdlProject project, String path)
+	{
+		RestService restService = (RestService) project.addNewInterface( ((RestTestRequestStep) item).getRequestStepConfig().getService(), RestServiceFactory.REST_TYPE );
+      try
+      {
+         new WadlImporter( restService ).initFromWadl( path );
+      }
+      catch( Exception e )
+      {
+         UISupport.showErrorMessage( e );
+      }
+	}
+
 	protected abstract boolean update();
 
 	private void loadWsdlFromUrl()
@@ -89,21 +123,7 @@ public abstract class ImportInterfaceResolver implements Resolver
 		if (url == null)
 			return;
 
-		try
-		{
-			Boolean createRequests = UISupport
-					.confirmOrCancel("Create default requests for all operations", "Import WSDL");
-			if (createRequests == null)
-				return;
-
-			Interface[] ifaces = WsdlInterfaceFactory.importWsdl(project, url, createRequests);
-			if (ifaces != null && ifaces.length > 0)
-				UISupport.select(ifaces[0]);
-		}
-		catch (Exception ex)
-		{
-			UISupport.showErrorMessage(ex.getMessage() + ":" + ex.getCause());
-		}
+		importWsdl(project, url);
 	}
 
 	private void loadWsdlFromFile()
@@ -119,6 +139,11 @@ public abstract class ImportInterfaceResolver implements Resolver
 		if (path == null)
 			return;
 
+		importWsdl(project, file.getAbsolutePath());
+	}
+
+	private void importWsdl(WsdlProject project, String file)
+	{
 		try
 		{
 			Boolean createRequests = UISupport
@@ -126,7 +151,7 @@ public abstract class ImportInterfaceResolver implements Resolver
 			if (createRequests == null)
 				return;
 
-			Interface[] ifaces = WsdlInterfaceFactory.importWsdl(project, file.toURI().toURL().toString(), createRequests);
+			Interface[] ifaces = WsdlInterfaceFactory.importWsdl(project, file, createRequests);
 			if (ifaces.length > 0)
 				UISupport.select(ifaces[0]);
 		}

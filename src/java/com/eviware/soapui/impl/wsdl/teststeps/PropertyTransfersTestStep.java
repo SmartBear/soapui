@@ -340,6 +340,7 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
 		return result.toArray(new XPathReference[result.size()]);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void resolve(ResolveContext context)
 	{

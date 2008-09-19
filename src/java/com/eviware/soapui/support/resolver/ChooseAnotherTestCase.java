@@ -1,15 +1,3 @@
-/*
- *  soapUI, copyright (C) 2004-2008 eviware.com
- *
- *  soapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by
- *  the Free Software Foundation.
- *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
-
 package com.eviware.soapui.support.resolver;
 
 import java.awt.Component;
@@ -25,54 +13,36 @@ import javax.swing.JDialog;
 import javax.swing.JList;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlRunTestCaseTestStep;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
+import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext.Resolver;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-public abstract class ChangeOperationResolver implements Resolver
+public class ChooseAnotherTestCase implements Resolver
 {
 
-	private boolean resolved = false;
-	private WsdlTestStep testStep;
+	private boolean resolved;
+	private WsdlRunTestCaseTestStep runTestStep;
 	private WsdlProject project;
-	private Operation pickedOperation;
+	private WsdlTestCase pickedTestCase;
 
-	public ChangeOperationResolver(WsdlTestStep testStep)
+	public ChooseAnotherTestCase(WsdlRunTestCaseTestStep wsdlRunTestCaseTestStep)
 	{
-		this.testStep = testStep;
-		this.project = testStep.getTestCase().getTestSuite().getProject();
-
+		runTestStep = wsdlRunTestCaseTestStep;
+		project = runTestStep.getTestCase().getTestSuite().getProject();
 	}
 
-	public String getResolvedPath()
-	{
-		return "";
-	}
-
-	public boolean isResolved()
-	{
-		return resolved;
-	}
-
-	public boolean resolve()
-	{
-
-		PropertyChangeDialog pDialog = new PropertyChangeDialog("Choose operation");
-		pDialog.showAndChoose();
-		resolved = update();
-		return true;
-	}
-
-	public abstract boolean update();
-
+	@Override
 	public String getDescription()
 	{
-		return "Resolve: Choose another operation";
+		return "Choose another test step";
 	}
 
 	@Override
@@ -81,16 +51,38 @@ public abstract class ChangeOperationResolver implements Resolver
 		return getDescription();
 	}
 
+	@Override
+	public String getResolvedPath()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isResolved()
+	{
+		return resolved;
+	}
+
+	@Override
+	public boolean resolve()
+	{
+		TestCaseChangeDialog dialog = new TestCaseChangeDialog("Choose another test case");
+		dialog.showAndChoose();
+		
+		return resolved;
+	}
+
 	@SuppressWarnings("serial")
-	private class PropertyChangeDialog extends JDialog
+	private class TestCaseChangeDialog extends JDialog
 	{
 
-		private JComboBox sourceStepCombo;
-		private JComboBox propertiesCombo;
+		private JComboBox tSuiteStepCombo;
+		private JComboBox tCaseCombo;
 		private JButton okBtn = new JButton(" Ok ");
 		private JButton cancelBtn = new JButton(" Cancel ");
 
-		public PropertyChangeDialog(String title)
+		public TestCaseChangeDialog(String title)
 		{
 			super(UISupport.getMainFrame(), title, true);
 			init();
@@ -104,43 +96,42 @@ public abstract class ChangeOperationResolver implements Resolver
 			PanelBuilder panel = new PanelBuilder(layout);
 			panel.addLabel("Interface:", cc.xy(1, 2));
 
-			List<Interface> ifaces = project.getInterfaceList();
+			List<TestSuite> tSuites = project.getTestSuiteList();
 			DefaultComboBoxModel sourceStepComboModel = new DefaultComboBoxModel();
-			sourceStepCombo = new JComboBox(sourceStepComboModel);
-			sourceStepCombo.setRenderer(new InterfaceComboRenderer());
-			for (Interface element : ifaces)
+			tSuiteStepCombo = new JComboBox(sourceStepComboModel);
+			tSuiteStepCombo.setRenderer(new TestSuiteComboRenderer());
+			for (TestSuite element : tSuites)
 				sourceStepComboModel.addElement(element);
 
-			sourceStepCombo.setSelectedIndex(0);
-			panel.add(sourceStepCombo, cc.xyw(3, 2, 3));
+			tSuiteStepCombo.setSelectedIndex(0);
+			panel.add(tSuiteStepCombo, cc.xyw(3, 2, 3));
 
-
-			propertiesCombo = new JComboBox(((Interface) sourceStepCombo.getSelectedItem()).getOperationList().toArray());
-			propertiesCombo.setRenderer(new OperationComboRender());
+			tCaseCombo = new JComboBox(((TestSuite) tSuiteStepCombo.getSelectedItem()).getTestCaseList().toArray());
+			tCaseCombo.setRenderer(new TestCaseComboRender());
 
 			panel.addLabel("Operation:", cc.xy(1, 4));
-			panel.add(propertiesCombo, cc.xyw(3, 4, 3));
+			panel.add(tCaseCombo, cc.xyw(3, 4, 3));
 
 			panel.add(okBtn, cc.xy(3, 6));
 			panel.add(cancelBtn, cc.xy(5, 6));
 
-			sourceStepCombo.addActionListener(new ActionListener()
+			tSuiteStepCombo.addActionListener(new ActionListener()
 			{
 
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					Interface iface = project.getInterfaceByName(((Interface) sourceStepCombo.getSelectedItem()).getName());
-					propertiesCombo.removeAllItems();
+					Interface iface = project.getInterfaceByName(((TestSuite) tSuiteStepCombo.getSelectedItem()).getName());
+					tCaseCombo.removeAllItems();
 					if (iface != null)
 					{
-						propertiesCombo.setEnabled(true);
+						tCaseCombo.setEnabled(true);
 						for (Operation op : iface.getOperationList())
-							propertiesCombo.addItem(op);
+							tCaseCombo.addItem(op);
 					}
 					else
 					{
-						propertiesCombo.setEnabled(false);
+						tCaseCombo.setEnabled(false);
 					}
 
 				}
@@ -154,8 +145,9 @@ public abstract class ChangeOperationResolver implements Resolver
 				public void actionPerformed(ActionEvent e)
 				{
 
-					pickedOperation = (Operation) propertiesCombo.getSelectedItem();
-
+					pickedTestCase = (WsdlTestCase) tCaseCombo.getSelectedItem();
+					runTestStep.setTargetTestCase(pickedTestCase);
+					
 					setVisible(false);
 				}
 
@@ -184,7 +176,7 @@ public abstract class ChangeOperationResolver implements Resolver
 	}
 
 	@SuppressWarnings("serial")
-	private class InterfaceComboRenderer extends DefaultListCellRenderer
+	private class TestSuiteComboRenderer extends DefaultListCellRenderer
 	{
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
@@ -192,9 +184,9 @@ public abstract class ChangeOperationResolver implements Resolver
 		{
 			Component result = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-			if (value instanceof Interface)
+			if (value instanceof TestSuite)
 			{
-				Interface item = (Interface) value;
+				TestSuite item = (TestSuite) value;
 				setIcon(item.getIcon());
 				setText(item.getName());
 			}
@@ -204,7 +196,7 @@ public abstract class ChangeOperationResolver implements Resolver
 	}
 
 	@SuppressWarnings("serial")
-	private class OperationComboRender extends DefaultListCellRenderer
+	private class TestCaseComboRender extends DefaultListCellRenderer
 	{
 
 		@Override
@@ -213,9 +205,10 @@ public abstract class ChangeOperationResolver implements Resolver
 		{
 			Component result = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-			if (value instanceof Operation)
+			if (value instanceof TestCase)
 			{
-				Operation item = (Operation) value;
+				TestCase item = (TestCase) value;
+				setIcon(item.getIcon());
 				setText(item.getName());
 			}
 
@@ -223,10 +216,10 @@ public abstract class ChangeOperationResolver implements Resolver
 		}
 
 	}
-	
-	public Operation getPickedOperation()
+
+	public WsdlTestCase getPickedTestCase()
 	{
-		return pickedOperation;
+		return pickedTestCase;
 	}
 
 }

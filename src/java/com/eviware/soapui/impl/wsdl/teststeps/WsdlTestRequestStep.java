@@ -39,7 +39,7 @@ import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.resolver.ChangeOperationResolver;
 import com.eviware.soapui.support.resolver.ImportInterfaceResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
-import com.eviware.soapui.support.resolver.defaultaction.TestRequestDefaultResolveAction;
+import com.eviware.soapui.support.resolver.defaultaction.RemoveTestStepDefaultResolveAction;
 import com.eviware.soapui.support.types.StringToStringMap;
 import org.apache.log4j.Logger;
 
@@ -656,6 +656,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		return testRequest.getDefaultAssertableContent();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void resolve(ResolveContext context)
 	{
 		super.resolve(context);
@@ -664,7 +665,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		{
 			context.addPathToResolve(this, "Missing SOAP Operation in Project",
 					requestStepConfig.getInterface() + "/" + requestStepConfig.getOperation(),
-					new TestRequestDefaultResolveAction()).addResolvers(new ImportInterfaceResolver(this)
+					new RemoveTestStepDefaultResolveAction()).addResolvers(new ImportInterfaceResolver(this)
 					{
 
 						@Override
@@ -679,7 +680,22 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 							setDisabled(false);
 							return true;
 						}},
-					new ChangeOperationResolver(this));
+					new ChangeOperationResolver(this) {
+
+						@Override
+						public boolean update()
+						{
+							wsdlOperation = (WsdlOperation) getPickedOperation();
+							if( wsdlOperation == null)
+								return false;
+							
+							initTestRequest(getConfig(), false);
+							initRequestProperties();
+							setDisabled(false);
+							return true;
+						}
+							
+						});
 		}
 		else
 		{

@@ -1126,6 +1126,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void resolver(ResolveContext context, PropertyTransfersTestStep parent)
 	{
 		if (getSourceProperty() == null)

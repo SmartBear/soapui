@@ -12,202 +12,247 @@ import com.eviware.soapui.model.support.InterfaceListenerAdapter;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.support.action.SoapUIAction;
+import com.eviware.soapui.support.resolver.ChangeOperationResolver;
+import com.eviware.soapui.support.resolver.ImportInterfaceResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
+import com.eviware.soapui.support.resolver.defaultaction.RemoveTestStepDefaultResolveAction;
+
 import org.apache.log4j.Logger;
 
 import java.beans.PropertyChangeEvent;
 
 public class RestTestRequestStep extends HttpTestRequestStep
 {
-   private final static Logger log = Logger.getLogger(RestTestRequestStep.class);
-   private RestResource restResource;
-   private final InternalProjectListener projectListener = new InternalProjectListener();
-   private final InternalInterfaceListener interfaceListener = new InternalInterfaceListener();
+	private final static Logger log = Logger.getLogger(RestTestRequestStep.class);
+	private RestResource restResource;
+	private final InternalProjectListener projectListener = new InternalProjectListener();
+	private final InternalInterfaceListener interfaceListener = new InternalInterfaceListener();
 
-   public RestTestRequestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest)
-   {
-      super(testCase, config, forLoadTest);
+	public RestTestRequestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest)
+	{
+		super(testCase, config, forLoadTest);
 
-      restResource = findRestResource();
-      if( restResource == null )
-         setDisabled( true );
-      else
-         getTestRequest().setResource( restResource );
+		restResource = findRestResource();
+		initRestTestRequest(forLoadTest);
+	}
 
-      if (!forLoadTest && restResource != null )
-      {
-         restResource.getInterface().getProject().addProjectListener(projectListener);
-         restResource.getInterface().addInterfaceListener(interfaceListener);
+	private void initRestTestRequest(boolean forLoadTest)
+	{
+		if (restResource == null)
+			setDisabled(true);
+		else
+			getTestRequest().setResource(restResource);
 
-         // we need to listen for name changes which happen when interfaces are updated..
-         restResource.getInterface().addPropertyChangeListener(this);
-         restResource.addPropertyChangeListener(this);
-      }
-   }
+		if (!forLoadTest && restResource != null)
+		{
+			restResource.getInterface().getProject().addProjectListener(projectListener);
+			restResource.getInterface().addInterfaceListener(interfaceListener);
 
-   public String getService()
-   {
-      return getRequestStepConfig().getService();
-   }
+			// we need to listen for name changes which happen when interfaces are
+			// updated..
+			restResource.getInterface().addPropertyChangeListener(this);
+			restResource.addPropertyChangeListener(this);
+		}
+	}
 
-   public String getResourcePath()
-   {
-      return getRequestStepConfig().getResourcePath();
-   }
-   
-   protected String createDefaultRawResponseContent()
-   {
-      return restResource == null ? null : restResource.createResponse(true);
-   }
+	public String getService()
+	{
+		return getRequestStepConfig().getService();
+	}
 
-   protected String createDefaultResponseXmlContent()
-   {
-      return restResource == null ? null : restResource.createResponse(true);
-   }
+	public String getResourcePath()
+	{
+		return getRequestStepConfig().getResourcePath();
+	}
 
-   protected String createDefaultRequestContent()
-   {
-      return restResource == null ? null : restResource.createRequest(true);
-   }
+	protected String createDefaultRawResponseContent()
+	{
+		return restResource == null ? null : restResource.createResponse(true);
+	}
 
-   private RestResource findRestResource()
-   {
-      Project project = ModelSupport.getModelItemProject(this);
-      RestService restService = (RestService) project.getInterfaceByName(getRequestStepConfig().getService());
-      if (restService != null)
-      {
-         return restService.getResourceByPath(getRequestStepConfig().getResourcePath());
-      }
+	protected String createDefaultResponseXmlContent()
+	{
+		return restResource == null ? null : restResource.createResponse(true);
+	}
 
-      return null;
-   }
+	protected String createDefaultRequestContent()
+	{
+		return restResource == null ? null : restResource.createRequest(true);
+	}
 
-   public RestResource getResource()
-   {
-      return restResource;
-   }
+	private RestResource findRestResource()
+	{
+		Project project = ModelSupport.getModelItemProject(this);
+		RestService restService = (RestService) project.getInterfaceByName(getRequestStepConfig().getService());
+		if (restService != null)
+		{
+			return restService.getResourceByPath(getRequestStepConfig().getResourcePath());
+		}
 
-   @Override
-   public void release()
-   {
-      super.release();
+		return null;
+	}
 
-      if( restResource != null )
-      {
-         restResource.removePropertyChangeListener(this);
-         restResource.getInterface().getProject().removeProjectListener(projectListener);
-         restResource.getInterface().removeInterfaceListener(interfaceListener);
-         restResource.getInterface().removePropertyChangeListener(this);
-      }
-   }
+	public RestResource getResource()
+	{
+		return restResource;
+	}
 
-   public void propertyChange(PropertyChangeEvent evt)
-   {
-      if (evt.getSource() == restResource )
-      {
-         if (evt.getPropertyName().equals(RestResource.PATH_PROPERTY))
-         {
-            getRequestStepConfig().setResourcePath((String) evt.getNewValue());
-         }
-      }
-      else if ( restResource != null && evt.getSource() == restResource.getInterface())
-      {
-         if (evt.getPropertyName().equals(Interface.NAME_PROPERTY))
-         {
-            getRequestStepConfig().setService((String) evt.getNewValue());
-         }
-      }
+	@Override
+	public void release()
+	{
+		super.release();
 
-      super.propertyChange(evt);
-   }
+		if (restResource != null)
+		{
+			restResource.removePropertyChangeListener(this);
+			restResource.getInterface().getProject().removeProjectListener(projectListener);
+			restResource.getInterface().removeInterfaceListener(interfaceListener);
+			restResource.getInterface().removePropertyChangeListener(this);
+		}
+	}
 
-   public class InternalProjectListener extends ProjectListenerAdapter
-   {
-      @Override
-      public void interfaceRemoved(Interface iface)
-      {
-         if ( restResource != null && restResource.getInterface().equals(iface))
-         {
-            log.debug("Removing test step due to removed interface");
-            (getTestCase()).removeTestStep(RestTestRequestStep.this);
-         }
-      }
-   }
+	public void propertyChange(PropertyChangeEvent evt)
+	{
+		if (evt.getSource() == restResource)
+		{
+			if (evt.getPropertyName().equals(RestResource.PATH_PROPERTY))
+			{
+				getRequestStepConfig().setResourcePath((String) evt.getNewValue());
+			}
+		}
+		else if (restResource != null && evt.getSource() == restResource.getInterface())
+		{
+			if (evt.getPropertyName().equals(Interface.NAME_PROPERTY))
+			{
+				getRequestStepConfig().setService((String) evt.getNewValue());
+			}
+		}
 
-   public class InternalInterfaceListener extends InterfaceListenerAdapter
-   {
-      @Override
-      public void operationRemoved(Operation operation)
-      {
-         if (operation == restResource )
-         {
-            log.debug("Removing test step due to removed operation");
-            (getTestCase()).removeTestStep(RestTestRequestStep.this);
-         }
-      }
+		super.propertyChange(evt);
+	}
 
-      @Override
-      public void operationUpdated(Operation operation)
-      {
-         if (operation == restResource )
-         {
-//				requestStepConfig.setResourcePath( operation.get );
-         }
-      }
-   }
+	public class InternalProjectListener extends ProjectListenerAdapter
+	{
+		@Override
+		public void interfaceRemoved(Interface iface)
+		{
+			if (restResource != null && restResource.getInterface().equals(iface))
+			{
+				log.debug("Removing test step due to removed interface");
+				(getTestCase()).removeTestStep(RestTestRequestStep.this);
+			}
+		}
+	}
 
-   @Override
-   public boolean dependsOn(AbstractWsdlModelItem<?> modelItem)
-   {
-      if (modelItem instanceof Interface && getTestRequest().getOperation() != null &&
-              getTestRequest().getOperation().getInterface() == modelItem)
-      {
-         return true;
-      }
-      else if (modelItem instanceof Operation && getTestRequest().getOperation() == modelItem)
-      {
-         return true;
-      }
+	public class InternalInterfaceListener extends InterfaceListenerAdapter
+	{
+		@Override
+		public void operationRemoved(Operation operation)
+		{
+			if (operation == restResource)
+			{
+				log.debug("Removing test step due to removed operation");
+				(getTestCase()).removeTestStep(RestTestRequestStep.this);
+			}
+		}
 
-      return false;
-   }
+		@Override
+		public void operationUpdated(Operation operation)
+		{
+			if (operation == restResource)
+			{
+				// requestStepConfig.setResourcePath( operation.get );
+			}
+		}
+	}
 
-   public void setResource(RestResource operation)
-   {
-      if ( restResource == operation)
-         return;
+	@Override
+	public boolean dependsOn(AbstractWsdlModelItem<?> modelItem)
+	{
+		if (modelItem instanceof Interface && getTestRequest().getOperation() != null
+				&& getTestRequest().getOperation().getInterface() == modelItem)
+		{
+			return true;
+		}
+		else if (modelItem instanceof Operation && getTestRequest().getOperation() == modelItem)
+		{
+			return true;
+		}
 
-      RestResource oldOperation = restResource;
-      restResource = operation;
-      getRequestStepConfig().setService(operation.getInterface().getName());
-      getRequestStepConfig().setResourcePath(operation.getFullPath());
+		return false;
+	}
 
-      if (oldOperation != null)
-         oldOperation.removePropertyChangeListener(this);
+	public void setResource(RestResource operation)
+	{
+		if (restResource == operation)
+			return;
 
-      restResource.addPropertyChangeListener(this);
-      getTestRequest().setResource( restResource );
-   }
+		RestResource oldOperation = restResource;
+		restResource = operation;
+		getRequestStepConfig().setService(operation.getInterface().getName());
+		getRequestStepConfig().setResourcePath(operation.getFullPath());
 
-   public Interface getInterface()
-   {
-      return restResource == null ? null : restResource.getInterface();
-   }
+		if (oldOperation != null)
+			oldOperation.removePropertyChangeListener(this);
 
-   public TestStep getTestStep()
-   {
-      return this;
-   }
+		restResource.addPropertyChangeListener(this);
+		getTestRequest().setResource(restResource);
+	}
 
-	public void resolve( ResolveContext context )
-   {
-      super.resolve( context );
+	public Interface getInterface()
+	{
+		return restResource == null ? null : restResource.getInterface();
+	}
 
-      if( restResource == null )
-      {
-         context.addPathToResolve( this, "Missing REST Resource in Project", getRequestStepConfig().getService() + "/" +
-            getRequestStepConfig().getResourcePath(), (SoapUIAction<AbstractWsdlModelItem<?>>)null);
-      }
-   }
+	public TestStep getTestStep()
+	{
+		return this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public void resolve(ResolveContext context)
+	{
+		super.resolve(context);
+
+		if (restResource == null)
+		{
+			context.addPathToResolve(this, "Missing REST Resource in Project",
+					getRequestStepConfig().getService() + "/" + getRequestStepConfig().getResourcePath(),
+					new RemoveTestStepDefaultResolveAction()).addResolvers(new ImportInterfaceResolver(this)
+			{
+
+				@Override
+				protected boolean update()
+				{
+					restResource = findRestResource();
+					if (restResource == null)
+						return false;
+
+					initRestTestRequest(false);
+					setDisabled(false);
+					return true;
+				}
+
+			}, new ChangeOperationResolver(this)
+			{
+
+				@Override
+				public boolean update()
+				{
+					restResource = (RestResource) getPickedOperation();
+					if (restResource == null)
+						return false;
+
+					initRestTestRequest(false);
+					setDisabled(false);
+					return true;
+				}
+
+			});
+		}
+		else
+		{
+			restResource.resolve(context);
+		}
+	}
 }

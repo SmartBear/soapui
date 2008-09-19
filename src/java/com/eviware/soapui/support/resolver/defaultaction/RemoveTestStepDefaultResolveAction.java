@@ -12,23 +12,20 @@
 
 package com.eviware.soapui.support.resolver.defaultaction;
 
-import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
-public class TestRequestDefaultResolveAction extends AbstractSoapUIAction<AbstractWsdlModelItem<?>>
+public class RemoveTestStepDefaultResolveAction extends AbstractSoapUIAction<WsdlTestStep>
 {
 
-	public TestRequestDefaultResolveAction()
+	public RemoveTestStepDefaultResolveAction()
 	{
 		super("Default resolver", "Remove unresolved request");
 	}
 
-	public void perform(AbstractWsdlModelItem<?> target, Object param)
+	public void perform(WsdlTestStep target, Object param)
 	{
-		WsdlTestCase tc = ((WsdlTestRequestStep)target).getTestCase();
-		tc.removeTestStep((WsdlTestRequestStep)target);
+		target.getTestCase().removeTestStep(target);
 	}
 	
 	@Override
