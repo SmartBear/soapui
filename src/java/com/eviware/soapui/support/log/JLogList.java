@@ -210,8 +210,12 @@ public class JLogList extends JPanel
 					component.setForeground( levelColors.get( eventWrapper.getLevel() ) );
 			}
 
-			component.setToolTipText( component.getText() );
-
+			// Limit the length of the tool tip, to prevent long delays.
+			String toolTip = component.getText();
+			if(toolTip != null && toolTip.length() > 1000)
+			   toolTip = toolTip.substring(0, 1000);
+			component.setToolTipText( toolTip );
+			
 			return component;
 		}
 	}
