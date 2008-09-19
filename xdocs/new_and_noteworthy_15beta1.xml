@@ -125,7 +125,7 @@
 		</subsection>
 		<subsection name="Improved Logging">
 		<p>Logging has been color-coded and improved to include a HTTP wire log and a seperate log for groovy scripts:</p>
-		<p align="center"><img src="images/log_tabs.gif" alt="HTTP wire log and seperate log for groovy scripts"/></p>
+		<p align="center"><img src="images/log_tabs.gif" alt="HTTP wire log and separate log for groovy scripts"/></p>
 		</subsection>
 		
 		</section>

@@ -103,7 +103,7 @@
 		<li> Fixed invalid Regular Expression in XSDs to get discarded and show a warning</li>
 		<li> Fixed parallell execution of TestCases in TestSuites</li>
 		<li> Fixed encoding-problems when compiling Groovy Scripts</li>
-		<li> Added support for %20 as space-delimiter in command-line arguments (for unix/linux)</li>
+		<li> Added support for %20 as space-delimiter in command-line arguments (for Unix/linux)</li>
 		<li> Fixed check to recreate messages when updating interface</li>
 		<li> Fixed global properties as PropertyTransfer targets</li>
 		<li> Fixed NPE:s in related to TestCase and MockService logs</li>
@@ -214,7 +214,7 @@
 						incoming requests to the target service and for the corresponding response, making it easy to see 
 						encrypted data, etc..</li>
 						<li>We have also updated significantly the scope of the WS-Security Standard we support; bith Signature
-						and Encryption entries have been extended with a large number of settings related to algorihtms, content, tokens, etc...</li>
+						and Encryption entries have been extended with a large number of settings related to algorithms, content, tokens, etc...</li>
 						<li>A WSS Assertion has been added to the list of possible response assertions for checking that a
 						response has valid WS-Security content</li>
 						<li>Support for extended UsernameToken password hashing</li>
@@ -266,7 +266,7 @@
 		</newfeature>
 		
 		<newfeature img="images/2/loadteststats.gif" alt="soap test raw editor">
-		<div>LoadTests can now continously export statistics to comma-seperated files for manuall processing/reporting in 
+		<div>LoadTests can now continuously export statistics to comma-seperated files for manuall processing/reporting in 
 		Excel, etc...</div>
 		</newfeature>
 		

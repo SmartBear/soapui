@@ -46,7 +46,7 @@
 		</subsection>
 		
 		<subsection name="New and Noteworthy in beta2">
-		<p>A large number of minor issues and bugfixes have been accumulated with the last snapshot releases, see
+		<p>A large number of minor issues and bug fixes have been accumulated with the last snapshot releases, see
 		the <a href="snapshot.html">snapshot release</a> page for details. Since the last snapshot, the following have
 		been fixed/added;</p>
 		<ul>
@@ -162,21 +162,21 @@
 		</subsection>
 		
 		<subsection name="Bugfixes">
-		<p>Of course a large number of bugfixes are in this release;</p>
+		<p>Of course a large number of bug fixes are in this release;</p>
 		<ul>
-		<li>Fixed setting of ThreadIndex when running testCases, see 
+		<li>Fixed setting of ThreadIndex when running TestCases, see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1648725&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
 		<li>Fixed cloning of Http Headers when cloning requests, see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1644222&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
 		<li>Fixed replacing of property-expansions in combination with property transfers, see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1642291&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
-		<li>Fixed mouse-over tooltip for continous-run button, see 
+		<li>Fixed mouse-over tooltip for continuous-run button, see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1642287&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
 		<li>Fixed response sizes with attachments, see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1636175&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
 		<li>Fixed correct log4j initialization, see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1623511&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
-		<li>Fixed correct invocation of WSI analyzer tool on unix, see 
+		<li>Fixed correct invocation of WSI analyzer tool on Unix, see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1619021&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
 		<li>Fixed removal of non-existant projects (they are now disabled instead), see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1592845&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>

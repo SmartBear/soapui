@@ -323,7 +323,7 @@ context.name = .. </source></li>
 		<subsection name="SNAPSHOT 2006-11-23">
 		<p>This snapshot fixes the following:</p>
 		<ul>
-		<li>Fixed problem when creating new TestCases in empty testsuite, see 
+		<li>Fixed problem when creating new TestCases in empty TestSuite, see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1596907&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
 		<li>Fixed lockup when loading unavailable WSDL's, see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1599211&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
@@ -447,7 +447,7 @@ context.name = .. </source></li>
 		<li>Updated to commons-ssl-0.3.0.jar</li>
 		<li>Many more minor fixes..</li>
 		</ul>
-		<p>As always, we are greatly thankfull for your help!</p>
+		<p>As always, we are greatly thankful for your help!</p>
 		</subsection>
 		
 		<subsection name="SNAPSHOT 2006-09-22">
@@ -558,7 +558,7 @@ context.name = .. </source></li>
 		<ul>
 		<li>Improved the Groovy editor in line with the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1534414&amp;group_id=136013&amp;atid=737766">Feature Request</a> adding
 		syntax highlighting, undo/redo, line-number information and caret-to-error positioning on parse/execution errors if possible</li> 
-		<li>Improved the undo/redo functionalityin line with the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1514430 &amp;group_id=136013&amp;atid=737766">feature request</a>
+		<li>Improved the undo/redo functionality in line with the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1514430 &amp;group_id=136013&amp;atid=737766">feature request</a>
 		and this <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1529127&amp;group_id=136013&amp;atid=737763">bug report</a></li> 
 		<li>Fixed the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1536980&amp;group_id=136013&amp;atid=737763">bug</a> 
 		when importing a WSDL using the swaRef data type.</li> 
@@ -604,7 +604,7 @@ context.name = .. </source></li>
 		<ul>
 		<li>An option to turn off automatic resizing of the request/response editors in the 
 		<a href="userguide/preferences.html#UI_Settings">UI Settings</a></li>
-		<li>An option to discard successfull testresults which will save memory when executing
+		<li>An option to discard successful test results which will save memory when executing
 		long-running TestCases (see <a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1537364&amp;forum_id=494205">forum discussion</a>), 
 		available in the <a href="userguide/functional/testcases.html#TestCase_Options">TestCase Options</a> dialog.</li> 
 		<li>Fixed the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1524153&amp;group_id=136013&amp;atid=737763">bug</a> when moving a testrequest step containing attachments</li> 
@@ -679,7 +679,7 @@ context.name = .. </source></li>
 		<p>This release fixes a number of internal issues, including:</p>
 		<ul>
 		<li>Correct rescaling and update of loadtest graphs</li>
-		<li>Correct test monitoring in cloned TestCases/testsuites</li>
+		<li>Correct test monitoring in cloned TestCases/TestSuites</li>
 		</ul>
 		</subsection>
 		<subsection name="SNAPSHOT 2006-03-05">

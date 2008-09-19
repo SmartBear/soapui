@@ -59,7 +59,7 @@
 		Compared to the last beta, the final release includes</p>
 		<ul>
 		<li>a small number of bug fixes</li>
-		<li>improvements to the website (see <a href="site-updates.html">site udaptes</a>)</li>
+		<li>improvements to the website (see <a href="site-updates.html">site updates</a>)</li>
 		<li>a windows installer including the required JRE for those that dont have java installed 
 		and/or want start-menu icons and an uninstaller.</li>
 		</ul>
@@ -83,7 +83,7 @@
 		<entry name="2005-11-24 : 1.0.3 maintenance release">
 		<p>This release fixes the following issues:</p>
 		<ul>
-		<li>Fixed inclusion of relative xsds in sub wsdls, see bug
+		<li>Fixed inclusion of relative XSDs in sub wsdls, see bug
 		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1362652&amp;group_id=136013&amp;atid=737763">1362652</a></li>		
 		<li>Fixed lockup on failed authentication, see bug
 		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1362888&amp;group_id=136013&amp;atid=737763">1362888</a></li>		
@@ -157,7 +157,7 @@
 		<li>Minor improvements to documentation (added PDF)</li>
 		</ul>
 		<p>Thanks to all reports / comments! Focus is now on the first 1.1 beta containing load-test functionality, 
-		scheduled for mid-november.</p>
+		scheduled for mid-November.</p>
 		</entry>
 		<entry name="2005-10-17 : 1.0 final release">
 		<p>After 4 weeks of testing and &gt;2000 downloads, the final release is ready. The following bugs have been fixed;</p>
@@ -190,7 +190,7 @@
 			which reused authentication credentials</li>
 			<li>Fixed bug <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1304913&amp;group_id=136013&amp;atid=737763">1304913</a>
 			which did not terminate soapUI correctly under webstart runtime</li>
-			<li>Modified splitpane behaviour so that dragged splitpanes do not automatically resize themselves 
+			<li>Modified splitpane behaviour so that dragged split panes do not automatically resize themselves 
 			(see "bug" <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1304920&amp;group_id=136013&amp;atid=737763"> 1304920</a>)</li>
 			<li>Added a sample-project to the offline distribution containing some tests, assertions, etc.</li>
 			<li>Improved <a href="userguide/interfaces.html#Service_Endpoints">Service Endpoints</a> management</li>

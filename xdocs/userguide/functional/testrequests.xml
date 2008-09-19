@@ -126,7 +126,7 @@
 		 <li><b>Target TestSuite</b> - the target TestSuite</li>
 		 <li><b>Target Project</b> - the target Project</li>
 		 <li><b>Overwrite</b> - overwrites existing singular assertions (ie those assertions that can only 
-		 exist once, for example SoapFault, SchemaCompliance, etc). If not selected and the corrsponding
+		 exist once, for example SoapFault, SchemaCompliance, etc). If not selected and the corresponding
 		 assertions exist in the target TestStep(s), they will be ignored.</li>
 		 <li><b>Open List</b> - opens a separate window after the update containing a list of all Requests/TestRequests
 		 that have been modified during the clone procedure (useful for manual post processing).</li>

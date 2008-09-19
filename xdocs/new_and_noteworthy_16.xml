@@ -52,7 +52,7 @@
 		<p>soapUI 1.6 final introduces a large number of fixes and many minor improvements which have been
 		accumulated during the snapshot releases during the last months. Some highlights are :</p>
 		<ul>
-		<li>Added exclusion list to proxy settings (comma-seperated)</li>
+		<li>Added exclusion list to proxy settings (comma-sepaerated)</li>
 		<li>Added 2 context properties available when load-testing:
 		<ol>
 		<li><b>ThreadIndex</b> - the index of the created thread... this value will never change for a given TestCase during its run time.. 

@@ -24,7 +24,7 @@
 		via the NetBeans Plugin manager. If you downloaded it from SourceForge, install 
 		as described in the <a href="installation.html">soapUI Installation</a> document. See the 
 		<a href="#Demonstration_Movies">soapUI demonstration movies</a> below for some hands-on tutorials,
-		otherwise the existing <a href="../gettingstarted/index.html">Getting Started woth soapUI</a> applies also to the NetBeans Plugin, as does
+		otherwise the existing <a href="../gettingstarted/index.html">Getting Started with soapUI</a> applies also to the NetBeans Plugin, as does
 		the <a href="../userguide/index.html">User Guide</a>. The only real difference is that the standalone soapUI Desktop has
 		been replaced by the NetBeans tabbed interface for editors.</p>
 		</subsection>

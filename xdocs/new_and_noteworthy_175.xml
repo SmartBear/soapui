@@ -260,7 +260,7 @@ id = "123"
 			</newfeature>
 			
 			<newfeature img="images/175/xpath_match_wizard.gif" alt="new wizard for matching values aginst properties in XPath when you soap test">
-				<div>New wizard for matching values agains existing properties in XPath Contains dialog. (soapUI Pro Feature Request)</div>
+				<div>New wizard for matching values against existing properties in XPath Contains dialog. (soapUI Pro Feature Request)</div>
 			</newfeature>
 			
 			<newfeature img="images/175/pro_preferences.gif" alt="AutoSave of projects when you soap test">
@@ -288,7 +288,7 @@ id = "123"
 		</subsection>
 		
 		<subsection name="Bugfixes">
-		<p>Of course a large number of bugfixes are in this release, including;</p>
+		<p>Of course a large number of bug fixes are in this release, including;</p>
 		<ul>
 		<li>MimeBinding not read correctly, see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1721392&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
@@ -327,13 +327,13 @@ id = "123"
 				<h4>In Final Release</h4>
 					<ul>
 			<li>Fixed UpdateInterface to not set all TestRequests to same operation</li>
-			<li>Fixed cloning of Assertions to be persistant</li>
+			<li>Fixed cloning of Assertions to be persistent</li>
 			<li>Fixed Memory-Leaks in MockService Log</li>
 			<li>Fixed Display of correct Response Message Size</li>
 			<li>Fixed Dependencies for Eclipse Plugin</li>
 			<li>Fixed PropertyExpansion to support xpath expansion also for Context Properties</li>
 			<li>Fixed Form Editor to not pretty-print message and correctly hande nillable values (soapUI Pro)</li>
-			<li>Fixed initializing of external libraries to be before intializing of Groovy Script Library when 
+			<li>Fixed initializing of external libraries to be before initializing of Groovy Script Library when 
 			running any of the command-line runners (soapUI Pro)</li>
 			<li>Fixed calculation of TestCase average during LoadTests</li>
 			<li>Fixed LoadTest Options dialog</li>

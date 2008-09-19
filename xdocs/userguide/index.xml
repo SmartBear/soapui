@@ -237,19 +237,19 @@
 	 	</tr>
 		<tr>
 		 	<td><a href="commandline/functional.html">TestCaseRunner</a></td>
-		 	<td>Describes the commandline runner for functional TestCases</td>
+		 	<td>Describes the command line runner for functional TestCases</td>
 	 	</tr>
 		<tr>
 		 	<td><a href="commandline/mockrunner.html">MockServiceRunner</a></td>
-		 	<td>Describes the commandline runner for MockServices</td>
+		 	<td>Describes the command line runner for MockServices</td>
 	 	</tr>
 	 	<tr>
 		 	<td><a href="commandline/loadtest.html">LoadTestRunner</a></td>
-		 	<td>Describes the commandline runner for LoadTests</td>
+		 	<td>Describes the command line runner for LoadTests</td>
 	 	</tr>
 	 	<tr>
 		 	<td><a href="commandline/toolrunner.html">ToolRunner</a></td>
-		 	<td>Describes the commandline runner for Code-Generation integrations</td>
+		 	<td>Describes the command line runner for Code-Generation integrations</td>
 	 	</tr>
 		<tr><td colspan="2"><b>Appendix</b></td></tr>
 	 	<tr>
