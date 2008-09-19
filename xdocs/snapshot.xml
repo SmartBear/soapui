@@ -229,7 +229,7 @@
 		<subsection name="SNAPSHOT 2007-02-19">
 		<p>This snapshot fixes a number of minor issues:</p>
 		<ul>
-		<li>Fixed TestStep focus when moving teststeps with the keyboard in the testcase editor</li>
+		<li>Fixed TestStep focus when moving TestSteps with the keyboard in the testcase editor</li>
 		<li>Fixed check for 0 tabSize in Groovy/XML editors</li>
 		<li>Update JRE requirement to 1.5+ for webstart</li>
 		<li>Improved SOAP Fault error message when dispatch fails in MockService</li>
@@ -413,7 +413,7 @@ context.name = .. </source></li>
 		<li>Hopefully fixed bug of Property-Table values not being saved when moving focus away (see 
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1563155&amp;group_id=136013&amp;atid=737763">Bug Report</a>)</li> 
 		<li>Fixed a serious memory-leak in request-processor for MTOM/inline attachments and also modified memory-management 
-		under testing to never discard timing results for individual teststeps.</li>
+		under testing to never discard timing results for individual TestSteps.</li>
 		<li>More internal fixes..</li>
 		</ul>
 		<p>As always.. all feedback is greatly appreciated.. hopefully there are only 1-2 more snapshots before the final 1.6 release</p>
@@ -500,7 +500,7 @@ context.name = .. </source></li>
 		the TestRunContext. Unchecked by default (for backwards compatibility), see 
 		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1562227&amp;forum_id=494205">forum discussion</a></li>
 		<li>Added the possibility to specify property expansions as <code>${&lt;TestStep Name&gt;#&lt;Property&gt;}</code> allowing specification 
-		of which teststeps property to use (instead of searching context and preceding teststeps..).</li>
+		of which TestSteps property to use (instead of searching context and preceding TestSteps..).</li>
 		<li>A large number of minor UI-improvements (icons, shadows, etc..)</li> 
 		<li>Internal refactorings</li>
 		</ul>
@@ -685,9 +685,9 @@ context.name = .. </source></li>
 		<subsection name="SNAPSHOT 2006-03-05">
 		<p>This release fixes a number of internal issues, including:</p>
 		<ul>
-		<li>Synchronization of LoadTest Assertions with target teststeps</li>
+		<li>Synchronization of LoadTest Assertions with target TestSteps</li>
 		<li>Correct test monitoring in newly created projects</li>
-		<li>Extensive internal refactorings in accordance with findbugs report</li>
+		<li>Extensive internal refactorings in accordance with Findbugs report</li>
 		<li>Moved to JGoodies Looks 2.0</li>
 		</ul>
 		</subsection>
@@ -695,14 +695,14 @@ context.name = .. </source></li>
 		<subsection name="SNAPSHOT 2006-03-02">
 		<p>This release fixes numerous minor issues with the 1.5 beta1 release, including:</p>
 		<ul>
-		<li>Errors when moving teststeps</li>
+		<li>Errors when moving TestSteps</li>
 		<li>Errors in Properties TestStep editor</li>
 		<li>Timings of non-request teststeps</li>
 		</ul>
 		<p>And adds the following functionality:</p>
 		<ul>
 		<li>Possibility to control if request timing should contain send/read times in loadtest options dialog</li>
-		<li>Undo/Redo in all textareas</li>
+		<li>Undo/Redo in all text areas</li>
 		<li>Groovy Scripts expose result property</li>
 		<li>Internal timings are now using <code>System.nanoTime()</code></li>
 		</ul>
