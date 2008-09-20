@@ -12,8 +12,11 @@
 
 package com.eviware.x.impl.swing;
 
+import java.awt.Dimension;
+
 import javax.swing.JComponent;
 
+import com.eviware.soapui.support.UISupport;
 import com.eviware.x.form.AbstractXFormField;
 
 public abstract class AbstractSwingXFormField<T extends JComponent> extends AbstractXFormField<T>
@@ -45,4 +48,12 @@ public abstract class AbstractSwingXFormField<T extends JComponent> extends Abst
 	{
       component.setEnabled( enabled );	
 	}
+
+   public void setProperty(String name, Object value)
+   {
+      if( name.equals("dimension"))
+      {
+         UISupport.setFixedSize(getComponent(), (Dimension)value);
+      }
+   }
 }
