@@ -15,7 +15,6 @@ public class CreateNewEmptyTestCase implements Resolver
 		testStep = wsdlRunTestCaseTestStep;
 	}
 
-	@Override
 	public String getDescription()
 	{
 		return "Create new empty test case";
@@ -27,19 +26,16 @@ public class CreateNewEmptyTestCase implements Resolver
 		return getDescription();
 	}
 
-	@Override
 	public String getResolvedPath()
 	{
 		return null;
 	}
 
-	@Override
 	public boolean isResolved()
 	{
 		return resolved;
 	}
 
-	@Override
 	public boolean resolve()
 	{
 		WsdlTestCase tCase = testStep.getTestCase().getTestSuite().addNewTestCase("New Test Case");

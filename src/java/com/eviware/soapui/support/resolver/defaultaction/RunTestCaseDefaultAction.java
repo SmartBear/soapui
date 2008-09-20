@@ -11,7 +11,6 @@ public class RunTestCaseDefaultAction extends AbstractSoapUIAction<WsdlTestStep>
 		super("Default RunTestStep Action", "Remove test case");
 	}
 
-	@Override
 	public void perform(WsdlTestStep target, Object param)
 	{
 		target.setDisabled(true);

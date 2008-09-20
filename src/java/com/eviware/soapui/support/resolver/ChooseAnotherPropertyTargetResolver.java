@@ -93,7 +93,6 @@ public class ChooseAnotherPropertyTargetResolver implements Resolver
 		return resolved;
 	}
 
-	@Override
 	public boolean resolve()
 	{
 		PropertyChangeDialog propertyChangeDialog = new PropertyChangeDialog("Choose another property");
@@ -145,7 +144,6 @@ public class ChooseAnotherPropertyTargetResolver implements Resolver
 			sourceStepCombo.addActionListener(new ActionListener()
 			{
 
-				@Override
 				public void actionPerformed(ActionEvent e)
 				{
 					int index = sourceStepCombo.getSelectedIndex();
@@ -166,7 +164,6 @@ public class ChooseAnotherPropertyTargetResolver implements Resolver
 			okBtn.addActionListener(new ActionListener()
 			{
 
-				@Override
 				public void actionPerformed(ActionEvent e)
 				{
 
@@ -195,7 +192,6 @@ public class ChooseAnotherPropertyTargetResolver implements Resolver
 			cancelBtn.addActionListener(new ActionListener()
 			{
 
-				@Override
 				public void actionPerformed(ActionEvent e)
 				{
 					setVisible(false);

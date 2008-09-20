@@ -20,7 +20,6 @@ public class CreateMissingPropertyResolver implements Resolver
 		badTransfer = transfer;
 	}
 
-	@Override
 	public String getDescription()
 	{
 		return "Create new property";
@@ -32,19 +31,16 @@ public class CreateMissingPropertyResolver implements Resolver
 		return getDescription();
 	}
 
-	@Override
 	public String getResolvedPath()
 	{
 		return null;
 	}
 
-	@Override
 	public boolean isResolved()
 	{
 		return resolved;
 	}
 
-	@Override
 	public boolean resolve()
 	{
 		WsdlProject project = parentPropertyTestStep.getTestCase().getTestSuite().getProject();

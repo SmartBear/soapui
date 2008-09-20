@@ -39,7 +39,6 @@ public class ChooseAnotherTestCase implements Resolver
 		project = runTestStep.getTestCase().getTestSuite().getProject();
 	}
 
-	@Override
 	public String getDescription()
 	{
 		return "Choose another test step";
@@ -51,20 +50,17 @@ public class ChooseAnotherTestCase implements Resolver
 		return getDescription();
 	}
 
-	@Override
 	public String getResolvedPath()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public boolean isResolved()
 	{
 		return resolved;
 	}
 
-	@Override
 	public boolean resolve()
 	{
 		TestCaseChangeDialog dialog = new TestCaseChangeDialog("Choose another test case");
@@ -118,7 +114,6 @@ public class ChooseAnotherTestCase implements Resolver
 			tSuiteStepCombo.addActionListener(new ActionListener()
 			{
 
-				@Override
 				public void actionPerformed(ActionEvent e)
 				{
 					Interface iface = project.getInterfaceByName(((TestSuite) tSuiteStepCombo.getSelectedItem()).getName());
@@ -141,7 +136,6 @@ public class ChooseAnotherTestCase implements Resolver
 			okBtn.addActionListener(new ActionListener()
 			{
 
-				@Override
 				public void actionPerformed(ActionEvent e)
 				{
 
@@ -156,7 +150,6 @@ public class ChooseAnotherTestCase implements Resolver
 			cancelBtn.addActionListener(new ActionListener()
 			{
 
-				@Override
 				public void actionPerformed(ActionEvent e)
 				{
 					setVisible(false);

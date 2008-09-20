@@ -145,7 +145,6 @@ public class ChooseAnotherPropertySourceResolver implements Resolver
 			sourceStepCombo.addActionListener(new ActionListener()
 			{
 
-				@Override
 				public void actionPerformed(ActionEvent e)
 				{
 					int index = sourceStepCombo.getSelectedIndex();
@@ -166,7 +165,6 @@ public class ChooseAnotherPropertySourceResolver implements Resolver
 			okBtn.addActionListener(new ActionListener()
 			{
 
-				@Override
 				public void actionPerformed(ActionEvent e)
 				{
 
@@ -195,7 +193,6 @@ public class ChooseAnotherPropertySourceResolver implements Resolver
 			cancelBtn.addActionListener(new ActionListener()
 			{
 
-				@Override
 				public void actionPerformed(ActionEvent e)
 				{
 					setVisible(false);

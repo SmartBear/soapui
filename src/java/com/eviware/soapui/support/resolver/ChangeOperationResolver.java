@@ -127,7 +127,6 @@ public abstract class ChangeOperationResolver implements Resolver
 			sourceStepCombo.addActionListener(new ActionListener()
 			{
 
-				@Override
 				public void actionPerformed(ActionEvent e)
 				{
 					Interface iface = project.getInterfaceByName(((Interface) sourceStepCombo.getSelectedItem()).getName());
@@ -150,7 +149,6 @@ public abstract class ChangeOperationResolver implements Resolver
 			okBtn.addActionListener(new ActionListener()
 			{
 
-				@Override
 				public void actionPerformed(ActionEvent e)
 				{
 
@@ -164,7 +162,6 @@ public abstract class ChangeOperationResolver implements Resolver
 			cancelBtn.addActionListener(new ActionListener()
 			{
 
-				@Override
 				public void actionPerformed(ActionEvent e)
 				{
 					setVisible(false);
