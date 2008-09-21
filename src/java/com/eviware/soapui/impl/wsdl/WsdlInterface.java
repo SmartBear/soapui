@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.*;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.support.DefinitionContext;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
@@ -698,9 +699,9 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
 
    private void getAllMessages(ModelItem modelItem, List<AbstractWsdlModelItem<?>> list)
    {
-      if (modelItem instanceof WsdlRequest)
+      if (modelItem instanceof AbstractHttpRequest )
       {
-         WsdlRequest wsdlRequest = (WsdlRequest) modelItem;
+         AbstractHttpRequest wsdlRequest = (AbstractHttpRequest) modelItem;
          if (wsdlRequest.getOperation().getInterface() == this)
             list.add(wsdlRequest);
       }

@@ -13,6 +13,7 @@
  
 package com.eviware.soapui.support.propertyexpansion;
 
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.model.ModelItem;
 
@@ -31,6 +32,10 @@ public abstract class AbstractPropertyExpansionTarget  implements PropertyExpans
 		{
 			modelItem = ((WsdlTestRequest)modelItem).getTestStep();
 		}
+      else if( modelItem instanceof RestTestRequest )
+      {
+         modelItem = ((RestTestRequest)modelItem).getTestStep();
+      }
 //		else if( modelItem instanceof WsdlMockResponse && 
 //					((WsdlMockResponse)modelItem).getMockOperation().getMockService() instanceof WsdlTestMockService )
 //		{

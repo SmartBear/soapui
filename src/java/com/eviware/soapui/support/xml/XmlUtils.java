@@ -1017,6 +1017,15 @@ public final class XmlUtils
       return node;
    }
 
+   public static Document createDocument( QName element )
+   {
+      ensureDocumentBuilder();
+      
+      Document document = documentBuilder.newDocument();
+      document.appendChild( document.createElementNS( element.getNamespaceURI(), element.getLocalPart() ));
+      return document;
+   }
+
    private final static class ElementNodeList implements NodeList
    {
       private final List<Element> list;

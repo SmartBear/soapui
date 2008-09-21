@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.model.propertyexpansion.resolvers;
 
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
@@ -20,7 +21,7 @@ public class SubmitPropertyResolver implements PropertyResolver
 {
 	public String resolveProperty( PropertyExpansionContext context, String propertyName, boolean globalOverride )
 	{
-		if(  propertyName.charAt( 0 ) == PropertyExpansion.SCOPE_PREFIX  && context.getModelItem() instanceof WsdlRequest )
+		if(  propertyName.charAt( 0 ) == PropertyExpansion.SCOPE_PREFIX  && context.getModelItem() instanceof AbstractHttpRequest )
 		{
 			return ResolverUtils.checkForExplicitReference( propertyName, PropertyExpansion.PROJECT_REFERENCE, 
 						((WsdlRequest)context.getModelItem()).getOperation().getInterface().getProject(), context, globalOverride );

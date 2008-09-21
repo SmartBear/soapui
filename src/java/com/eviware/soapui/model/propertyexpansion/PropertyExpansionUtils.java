@@ -12,21 +12,11 @@
 
 package com.eviware.soapui.model.propertyexpansion;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
@@ -39,25 +29,17 @@ import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.Project;
-import com.eviware.soapui.model.propertyexpansion.resolvers.ContextPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.DynamicPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.EvalPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.GlobalPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.MockRunPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.ModelItemPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.PropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.SubmitPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.TestRunPropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.*;
 import com.eviware.soapui.model.support.SettingsTestPropertyHolder;
-import com.eviware.soapui.model.testsuite.RenameableTestProperty;
-import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.settings.GlobalPropertySettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
+
+import java.util.*;
 
 public class PropertyExpansionUtils
 {
@@ -428,9 +410,9 @@ public class PropertyExpansionUtils
 			mockService = ( WsdlMockService ) modelItem;
 			project = mockService.getProject();
 		}	
-		else if( modelItem instanceof WsdlRequest )
+		else if( modelItem instanceof AbstractHttpRequest )
 		{
-			project = ((WsdlRequest)modelItem).getOperation().getInterface().getProject();
+			project = ((AbstractHttpRequest)modelItem).getOperation().getInterface().getProject();
 		}
 		else if( modelItem instanceof WsdlMockOperation )
 		{

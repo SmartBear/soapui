@@ -12,30 +12,9 @@
 
 package com.eviware.soapui.support.propertyexpansion;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JMenu;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.text.JTextComponent;
-
-import org.apache.xmlbeans.XmlObject;
-
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
@@ -54,6 +33,16 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.ShowPopupAction;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.xmlbeans.XmlObject;
+
+import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.event.ActionEvent;
 
 public class PropertyExpansionPopupListener implements PopupMenuListener
 {
@@ -120,9 +109,9 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 		{
 			project = ( WsdlProject ) modelItem;
 		}
-		else if( modelItem instanceof WsdlRequest )
+		else if( modelItem instanceof AbstractHttpRequest )
 		{
-			project = ( WsdlProject ) ((WsdlRequest)modelItem).getOperation().getInterface().getProject();
+			project = ((AbstractHttpRequest)modelItem).getOperation().getInterface().getProject();
 		}
 		
 		TestPropertyHolder globalProperties = PropertyExpansionUtils.getGlobalProperties();

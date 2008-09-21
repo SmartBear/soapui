@@ -12,9 +12,9 @@
 
 package com.eviware.soapui.model.propertyexpansion.resolvers;
 
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
@@ -131,9 +131,9 @@ public class ModelItemPropertyResolver implements PropertyResolver
 			mockService = ( WsdlMockService ) modelItem;
 			project = mockService.getProject();
 		}	
-		else if( modelItem instanceof WsdlRequest )
+		else if( modelItem instanceof AbstractHttpRequest )
 		{
-			project = ((WsdlRequest)modelItem).getOperation().getInterface().getProject();
+			project = ((AbstractHttpRequest)modelItem).getOperation().getInterface().getProject();
 		}
 		else if( modelItem instanceof WsdlMockOperation )
 		{

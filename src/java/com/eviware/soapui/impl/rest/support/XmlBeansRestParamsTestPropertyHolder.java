@@ -232,9 +232,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
       MATRIX, HEADER, QUERY, TEMPLATE, PLAIN
    }
 
-   ;
-
-   public class RestParamProperty implements RenameableTestProperty
+   public class RestParamProperty implements RenameableTestProperty, RestParameter
    {
       private RestParameterConfig propertyConfig;
       private PropertyChangeSupport propertySupport;
@@ -600,7 +598,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
       }
    }
 
-   public TestProperty get( Object key )
+   public RestParamProperty get( Object key )
    {
       return getProperty( (String) key );
    }
