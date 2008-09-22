@@ -83,7 +83,7 @@ public class Soap12HttpBindingImporter extends AbstractSoapBindingImporter
          }
       }
       
-      initWsAddressing(binding, iface);
+      initWsAddressing(binding, iface, wsdlContext.getDefinition());
       
       return iface;
    }

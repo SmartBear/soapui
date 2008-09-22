@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.panels.iface;
 
 import java.awt.Component;
 
+import com.eviware.soapui.config.AnonymousTypeConfig;
 import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
@@ -47,6 +48,9 @@ public class WsdlInterfacePanelBuilder extends EmptyPanelBuilder<WsdlInterface>
    	table.addProperty( "WS-A version", "wsaVersion", 
    			new Object[]{ WsaVersionTypeConfig.NONE.toString(), 
    			WsaVersionTypeConfig.X_200408.toString(), WsaVersionTypeConfig.X_200508.toString() } );
+   	table.addProperty( "WS-A Anonymous", "anonymous", 
+   			new Object[]{ AnonymousTypeConfig.OPTIONAL.toString(), 
+   			AnonymousTypeConfig.REQUIRED.toString(), AnonymousTypeConfig.PROHIBITED.toString() } );
    	
    	table.setPropertyObject( iface );
    	

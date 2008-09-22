@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xs:schema PUBLIC "-//W3C//DTD XMLSCHEMA 200102//EN" "http://www.w3.org/2001/XMLSchema.dtd">
+<!--
+    W3C XML Schema defined in the Web Services Addressing 1.0 
+    - Metadata specification
+    http://www.w3.org/TR/ws-addr-metadata
+
+   Copyright © 2007 World Wide Web Consortium,
+
+   (Massachusetts Institute of Technology, European Research Consortium for
+   Informatics and Mathematics, Keio University). All Rights Reserved. This
+   work is distributed under the W3C® Software License [1] in the hope that
+   it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+   [1] http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231
+
+   $Id: ws-addr-metadata.xsd,v 1.1 2007/05/15 15:03:00 plehegar Exp $
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.w3.org/2007/05/addressing/metadata" targetNamespace="http://www.w3.org/2007/05/addressing/metadata" blockDefault="#all" elementFormDefault="qualified" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+    <xs:import schemaLocation="policy.xsd" namespace="http://schemas.xmlsoap.org/ws/2004/09/policy"></xs:import>
+    <xs:import namespace="http://schemas.xmlsoap.org/ws/2004/09/policy" schemaLocation="policy.xsd" /> 
+    
+    <xs:element name="ServiceName" type="tns:ServiceNameType"/>
+    <xs:complexType name="ServiceNameType">
+        <xs:simpleContent>
+            <xs:extension base="xs:QName">
+                <xs:attribute name="EndpointName" type="xs:NCName" use="optional"/>
+                <xs:anyAttribute namespace="##other" processContents="lax"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+ 
+    <xs:element name="InterfaceName" type="tns:AttributedQNameType"/>
+    <xs:complexType name="AttributedQNameType">
+        <xs:simpleContent>
+            <xs:extension base="xs:QName">
+                <xs:anyAttribute namespace="##other" processContents="lax"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:attribute name="Action" type="xs:anyURI"/>
+
+    <!-- WS-Policy assertions -->
+    
+    <xs:element name="Addressing">
+        <xs:complexType>
+        	<xs:sequence>
+        		<xs:element ref="wsp:Policy" />
+        	</xs:sequence>
+        	<xs:attribute name="Optional" type="wsp:OptionalType"></xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="AnonymousResponses">
+        <xs:complexType>
+            <xs:anyAttribute namespace="##other" processContents="lax" wsp:Optional=""/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="NonAnonymousResponses">
+        <xs:complexType>
+            <xs:anyAttribute namespace="##other" processContents="lax" wsp:Optional=""/>
+        </xs:complexType>
+    </xs:element>
+    
+</xs:schema>

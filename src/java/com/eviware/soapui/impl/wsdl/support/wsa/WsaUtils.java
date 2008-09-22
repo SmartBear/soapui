@@ -47,6 +47,7 @@ public class WsaUtils
 {
 	public static final String WS_A_VERSION_200508 = "http://www.w3.org/2005/08/addressing";
 	public static final String WS_A_VERSION_200408 = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
+	public static final String WSAM_NAMESPACE = "http://www.w3.org/2007/05/addressing/metadata";
 
 	SoapVersion soapVersion;
 	WsdlOperation operation;
@@ -91,6 +92,11 @@ public class WsaUtils
 		relatesToReply = wsaVersionNameSpace + "/reply";
 
 		anonymousType = wsaContainer.getOperation().getAnonymous();
+		//if optional at operation level, check policy specification on interface level
+		if (anonymousType.equals(AnonymousTypeConfig.OPTIONAL.toString()))
+		{
+			anonymousType = wsaContainer.getOperation().getInterface().getAnonymous();
+		}
 
 		Element header = (Element) SoapUtils.getHeaderElement(xmlContentObject, soapVersion, true).getDomNode();
 

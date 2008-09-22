@@ -36,4 +36,7 @@ public interface WsaSettings {
 	@Setting( name="Override existing headers", description="Replaces existing WS-A headers (or skips them if unchecked) ", type=SettingType.BOOLEAN )
 	public final static String OVERRIDE_EXISTING_HEADERS = WsaSettings.class.getSimpleName() + "@" + "overrideExistingHeaders";
 	
+	@Setting( name="Enable for optional Addressing policy", description="Enables WS-Addressing for Addressing Optional='true'", type=SettingType.BOOLEAN )
+	public final static String ENABLE_FOR_OPTIONAL = WsaSettings.class.getSimpleName() + "@" + "enableForOptional";
+	
 }

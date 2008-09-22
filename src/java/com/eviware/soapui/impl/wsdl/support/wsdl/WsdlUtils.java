@@ -64,12 +64,19 @@ import org.apache.log4j.Logger;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlObject;
+import org.w3.x2007.x05.addressing.metadata.AddressingDocument.Addressing;
+import org.w3.x2007.x05.addressing.metadata.AnonymousResponsesDocument.AnonymousResponses;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
+import org.xmlsoap.schemas.ws.x2004.x09.policy.OptionalType;
+import org.xmlsoap.schemas.ws.x2004.x09.policy.Policy;
+import org.xmlsoap.schemas.ws.x2004.x09.policy.PolicyDocument;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.AnonymousTypeConfig;
 import com.eviware.soapui.config.DefinitionCacheConfig;
 import com.eviware.soapui.config.DefinitionCacheTypeConfig;
 import com.eviware.soapui.config.DefintionPartConfig;
@@ -79,10 +86,12 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.Constants;
+import com.eviware.soapui.impl.wsdl.support.policy.PolicyUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
+import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -100,6 +109,8 @@ public class WsdlUtils
 {
 	private final static Logger log = Logger.getLogger(WsdlUtils.class);
 	private static WSDLReader wsdlReader;
+	private final static String WSDL_NAMESPACE = "http://schemas.xmlsoap.org/wsdl/";
+	private final static String WSU_NAMESPACE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
 
 	public static <T extends ExtensibilityElement> T getExtensiblityElement(List<?> list, Class<T> clazz)
 	{
@@ -628,7 +639,7 @@ public class WsdlUtils
 				MIMEMultipartRelated.class) != null;
 	}
 
-	public static String getUsingAddressing(ElementExtensible item)
+	public static String getUsingAddressing(ElementExtensible item, Definition def)
 	{
 		String version = WsaVersionTypeConfig.NONE.toString();
 
@@ -644,8 +655,7 @@ public class WsdlUtils
 		{
 			// this should resolve wsdl version, not addressing version??? what is
 			// the connection?
-			String addressingVersion = usingAddressingElements[0].getAttributeNS("http://schemas.xmlsoap.org/wsdl/",
-					"required");
+			String addressingVersion = usingAddressingElements[0].getAttributeNS(WSDL_NAMESPACE, "required");
 			if (addressingVersion != null && addressingVersion.equals("true"))
 			{
 				version = WsaVersionTypeConfig.X_200508.toString();
@@ -654,7 +664,165 @@ public class WsdlUtils
 		}
 		return version;
 	}
+	public static Policy getAttachedPolicy(ElementExtensible item, Definition def) {
 
+		Policy rtnPolicy = null;
+		Element[] policyReferences = WsdlUtils
+					.getExentsibilityElements(item, new QName(PolicyUtils.WS_POLICY_NAMESPACE, "PolicyReference"));
+		if (policyReferences.length > 0)
+		{
+			String policyId = policyReferences[0].getAttribute("URI");
+			if (!StringUtils.isNullOrEmpty(policyId))
+			{
+				Element[] policies = WsdlUtils.getExentsibilityElements(def, new QName(PolicyUtils.WS_POLICY_NAMESPACE, "Policy"));
+				Element policy = null;
+				for (int i = 0; i < policies.length; i++)
+				{
+					policy = policies[i];
+					String policyIdx = policy.getAttributeNS(WSU_NAMESPACE, "Id");
+					if (policyId.equals("#" + policyIdx))
+					{
+						rtnPolicy = getPolicy(policy);
+						continue;
+					}
+	
+				}
+			}
+		}
+		else
+		{
+			// get policies of item itself
+			Element[] itemPolicies = WsdlUtils.getExentsibilityElements(item, new QName(PolicyUtils.WS_POLICY_NAMESPACE, "Policy"));
+			if (itemPolicies.length > 0)
+			{
+				for (int i = 0; i < itemPolicies.length; i++)
+				{
+					Element policy = itemPolicies[i];
+					rtnPolicy = getPolicy(policy);
+	
+				}
+			}
+		}
+		return rtnPolicy;
+	}
+
+	public static Policy getPolicy(Element policy)
+	{
+//		policy = PolicyUtils.normalize(policy);
+		
+		
+		// check if found reference is addressing policy
+		Element wsAddressing = XmlUtils.getFirstChildElementNS(policy, WsaUtils.WSAM_NAMESPACE, "Addressing");
+		Element addressingPolicy = null;
+		Policy newPolicy = PolicyDocument.Factory.newInstance().addNewPolicy();
+		Addressing newAddressing = null;
+		if (wsAddressing != null)
+		{
+//			newAddressing = AddressingDocument.Factory.newInstance().addNewAddressing();
+			newAddressing = newPolicy.addNewAddressing();
+			String optional = wsAddressing.getAttributeNS(PolicyUtils.WS_POLICY_NAMESPACE, "Optional");
+			if (!StringUtils.isNullOrEmpty(optional) && optional.equals(OptionalType.TRUE.toString()))
+			{
+				newAddressing.setOptional(OptionalType.TRUE);
+			} else {
+				newAddressing.setOptional(OptionalType.FALSE);
+			}
+			addressingPolicy = XmlUtils.getFirstChildElementNS(wsAddressing, PolicyUtils.WS_POLICY_NAMESPACE, "Policy");
+			if (addressingPolicy != null)
+			{
+				Policy innerPolicy = newAddressing.addNewPolicy();
+//				if (StringUtils.isNullOrEmpty(optional) || optional.equals("false") || 
+//				(optional.equals("true") && SoapUI.getSettings().getBoolean(WsaSettings.ENABLE_FOR_OPTIONAL)) )
+//				{
+//					version = WsaVersionTypeConfig.X_200508.toString();
+//				}
+				//check if policy has Anonymous
+				Element anonymousElm = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(PolicyUtils.WSAM_NAMESPACE,"AnonymousResponses"));
+				if (anonymousElm != null)
+				{
+					AnonymousResponses anr = innerPolicy.addNewAnonymousResponses();
+				} else {
+					Element nonAnonymousElement = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(PolicyUtils.WSAM_NAMESPACE,"NonAnonymousResponses"));
+					if (nonAnonymousElement != null)
+					{
+						innerPolicy.addNewNonAnonymousResponses();
+					}
+				}
+			}
+		}
+		return newPolicy;
+	}
+	private static String checkIfWsaPolicy(String version, Element policy)
+	{
+//		Policy builtPolicy = new WsaPolicy().buildPolicy(policy.getTextContent());
+//		policy = WsaPolicy.normalize(policy);
+		
+		
+		// check if found reference is addressing policy
+//		Element wsAddressing = XmlUtils.getFirstChildElementNS(policy, WsaUtils.WSAM_NAMESPACE, "Addressing");
+//		Element addressingPolicy = null;
+//		if (wsAddressing != null)
+//		{
+//			String optional = wsAddressing.getAttributeNS(WsaPolicy.WS_POLICY_NAMESPACE, "Optional");
+//			addressingPolicy = XmlUtils.getFirstChildElementNS(wsAddressing, WsaPolicy.WS_POLICY_NAMESPACE, "Policy");
+//			if (addressingPolicy != null)
+//			{
+//				if (StringUtils.isNullOrEmpty(optional) || optional.equals("false") || 
+//				(optional.equals("true") && SoapUI.getSettings().getBoolean(WsaSettings.ENABLE_FOR_OPTIONAL)) )
+//				{
+//					version = WsaVersionTypeConfig.X_200508.toString();
+//				}
+//				//check if policy has Anonymous
+//				Element anonymousElm = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(WsaPolicy.WSAM_NAMESPACE,"AnonymousResponses"));
+//				if (anonymousElm != null)
+//				{
+//					//TODO anonymous = required
+//				} else {
+//					Element nonAnonymousElement = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(WsaPolicy.WSAM_NAMESPACE,"NonAnonymousResponses"));
+//					if (nonAnonymousElement != null)
+//					{
+//						//TODO anonymous = prohibited
+//					}
+//				}
+//			}
+//		}
+		return version;
+	}
+
+	public static String getWsaPolicyAnonymous(Element policy)
+	{
+		String version = WsaVersionTypeConfig.NONE.toString();
+		String anonymous = AnonymousTypeConfig.OPTIONAL.toString();
+		// check if found reference is addressing policy
+		Element wsAddressing = XmlUtils.getFirstChildElementNS(policy, WsaUtils.WSAM_NAMESPACE, "Addressing");
+		Element addressingPolicy = null;
+		if (wsAddressing != null)
+		{
+			String optional = wsAddressing.getAttributeNS(PolicyUtils.WS_POLICY_NAMESPACE, "Optional");
+			addressingPolicy = XmlUtils.getFirstChildElementNS(wsAddressing, PolicyUtils.WS_POLICY_NAMESPACE, "Policy");
+			if (addressingPolicy != null)
+			{
+				if (StringUtils.isNullOrEmpty(optional) || optional.equals("false") || 
+				(optional.equals("true") && SoapUI.getSettings().getBoolean(WsaSettings.ENABLE_FOR_OPTIONAL)) )
+				{
+					version = WsaVersionTypeConfig.X_200508.toString();
+				}
+				//check if policy has Anonymous
+				Element anonymousElm = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(PolicyUtils.WSAM_NAMESPACE,"AnonymousResponses"));
+				if (anonymousElm != null)
+				{
+					anonymous = AnonymousTypeConfig.REQUIRED.toString();
+				} else {
+					Element nonAnonymousElement = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(PolicyUtils.WSAM_NAMESPACE,"NonAnonymousResponses"));
+					if (nonAnonymousElement != null)
+					{
+						anonymous = AnonymousTypeConfig.PROHIBITED.toString();
+					}
+				}
+			}
+		}
+		return anonymous;
+	}
 	public static String getSoapEndpoint(Port port)
 	{
 		SOAPAddress soapAddress = WsdlUtils.getExtensiblityElement(port.getExtensibilityElements(), SOAPAddress.class);

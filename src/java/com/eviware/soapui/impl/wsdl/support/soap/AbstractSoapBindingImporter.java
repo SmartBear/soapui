@@ -17,7 +17,11 @@ import java.util.Comparator;
 
 import javax.wsdl.Binding;
 import javax.wsdl.BindingOperation;
+import javax.wsdl.Definition;
 
+import org.xmlsoap.schemas.ws.x2004.x09.policy.Policy;
+
+import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.support.BindingImporter;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
@@ -33,9 +37,13 @@ public abstract class AbstractSoapBindingImporter implements BindingImporter
 			}
 		}
 
-	protected void initWsAddressing(Binding binding, WsdlInterface iface)
+	protected void initWsAddressing(Binding binding, WsdlInterface iface, Definition def) throws Exception
 	{
-	   	iface.setWsaVersion(WsdlUtils.getUsingAddressing(binding));
+	   	iface.setWsaVersion(WsdlUtils.getUsingAddressing(binding, def));
+	   	if (iface.getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString()))
+			{
+				iface.processPolicy(WsdlUtils.getAttachedPolicy(binding, def));
+			}
 	}
 
 	public AbstractSoapBindingImporter()

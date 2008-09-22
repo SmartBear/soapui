@@ -26,6 +26,7 @@ import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.Constants;
+import com.eviware.soapui.impl.wsdl.support.policy.PolicyUtils;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.settings.WsdlSettings;
@@ -83,8 +84,8 @@ public class Soap11HttpBindingImporter extends AbstractSoapBindingImporter
          	iface.addNewOperation( operation );
          }
       }
-      
-      initWsAddressing(binding, iface);
+//      PolicyUtils.getPolicies(wsdlContext);
+      initWsAddressing(binding, iface, wsdlContext.getDefinition());
       
       return iface;
    }

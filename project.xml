@@ -480,6 +480,15 @@
         </dependency>
         <dependency>
             <groupId>eviware</groupId>
+            <artifactId>policy-xmlbeans</artifactId>
+            <version>1.5</version>
+            <type>jar</type>
+            <properties>
+                <jnlp.jar>true</jnlp.jar>
+            </properties>
+        </dependency>
+        <dependency>
+            <groupId>eviware</groupId>
             <artifactId>soap-xmlbeans</artifactId>
             <version>1.2</version>
             <type>jar</type>

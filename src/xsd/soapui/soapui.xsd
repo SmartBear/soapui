@@ -80,9 +80,12 @@
 					<xsd:element name="definitionCache"
 						type="tns:DefinitionCache" maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="endpoints" type="tns:Endpoints"></xsd:element>
+					<xsd:element name="endpoints"
+						type="tns:Endpoints">
+					</xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="type" type="xsd:string"></xsd:attribute>
+				<xsd:attribute name="anonymous" type="tns:AnonymousType"></xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 
@@ -1455,7 +1458,6 @@
     <xsd:element name="mockService" type="tns:MockService"></xsd:element>
 
     <xsd:element name="testSuite" type="tns:TestSuite"></xsd:element>
-
     <xsd:element name="lockedFileInfo" type="tns:LockedFileInfo"></xsd:element>
     
     <xsd:complexType name="LockedFileInfo">

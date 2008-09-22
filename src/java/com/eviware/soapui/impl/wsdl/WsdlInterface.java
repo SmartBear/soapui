@@ -32,11 +32,17 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.settings.WsdlSettings;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringList;
 import org.apache.log4j.Logger;
+import org.w3.x2007.x05.addressing.metadata.AddressingDocument.Addressing;
+import org.w3.x2007.x05.addressing.metadata.AnonymousResponsesDocument.AnonymousResponses;
+import org.w3.x2007.x05.addressing.metadata.NonAnonymousResponsesDocument.NonAnonymousResponses;
+import org.xmlsoap.schemas.ws.x2004.x09.policy.Policy;
 
 import javax.wsdl.*;
 import javax.xml.namespace.QName;
@@ -779,7 +785,6 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
       return getBindingName().toString();
    }
 
-   //TODO - do it right
    public String getWsaVersion()
    {
       if (getConfig().getWsaVersion().equals(WsaVersionTypeConfig.X_200408))
@@ -804,6 +809,31 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
          getConfig().setWsaVersion(WsaVersionTypeConfig.NONE);
 
    }
+
+   public void setAnonymous(String anonymous)
+   {
+      if (anonymous.equals(AnonymousTypeConfig.REQUIRED.toString()))
+         getConfig().setAnonymous(AnonymousTypeConfig.REQUIRED);
+      else if (anonymous.equals(AnonymousTypeConfig.PROHIBITED.toString()))
+         getConfig().setAnonymous(AnonymousTypeConfig.PROHIBITED);
+      else
+         getConfig().setAnonymous(AnonymousTypeConfig.OPTIONAL);
+
+   }
+	public String getAnonymous()
+	{
+//		return WsdlUtils.getAnonymous(this);
+      if (getConfig().getAnonymous().equals(AnonymousTypeConfig.PROHIBITED))
+      {
+         return AnonymousTypeConfig.PROHIBITED.toString();
+      }
+      else if (getConfig().getAnonymous().equals(AnonymousTypeConfig.REQUIRED))
+      {
+         return AnonymousTypeConfig.REQUIRED.toString();
+      }
+
+      return AnonymousTypeConfig.OPTIONAL.toString();
+}
 
    @Override
    public DefinitionContext getDefinitionContext()
@@ -844,6 +874,58 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
 	   newOperation.afterLoad();
 	   fireOperationAdded(newOperation);
 	   
+	}
+	/**
+	 * Method for processing policy on interface level
+	 * it should include processing of all types of policies, but for now there's only Addressing policy implemented
+	 * @param policy
+	 * @return this interface changed in a proper way indicated by the policy
+	 */
+	public WsdlInterface processPolicy(Policy policy) throws Exception {
+		
+		//default is optional
+//		String anonymous = AnonymousTypeConfig.OPTIONAL.toString();
+		String wsaVersion = WsaVersionTypeConfig.NONE.toString();
+		setAnonymous(AnonymousTypeConfig.OPTIONAL.toString());
+		
+		if (policy != null)
+		{
+			List<Addressing> addressingList = policy.getAddressingList();
+			for (Addressing addressing : addressingList)
+			{
+				String optional = addressing.getOptional().toString();
+				if (StringUtils.isNullOrEmpty(optional) || optional.equals("false")
+						|| (optional.equals("true") && SoapUI.getSettings().getBoolean(WsaSettings.ENABLE_FOR_OPTIONAL)))
+				{
+					wsaVersion = WsaVersionTypeConfig.X_200508.toString();
+				}
+				Policy innerPolicy = addressing.getPolicy();
+				if (innerPolicy != null)
+				{
+					List<AnonymousResponses> anonymousList = innerPolicy.getAnonymousResponsesList();
+					List<NonAnonymousResponses> nonAnonymousList = innerPolicy.getNonAnonymousResponsesList();
+					if (anonymousList.size() > 0 && nonAnonymousList.size() > 0)
+					{
+						throw new Exception("Wrong addressing policy, anonymousResponses and nonAnonymousResponses can not be specified together");
+					}
+					if (anonymousList.size() > 0)
+					{
+						AnonymousResponses anonResp = anonymousList.get(0);
+						setAnonymous(AnonymousTypeConfig.REQUIRED.toString());
+					}
+					else
+					{
+						if (nonAnonymousList.size() > 0)
+						{
+							NonAnonymousResponses nonAnonResp = nonAnonymousList.get(0);
+							setAnonymous(AnonymousTypeConfig.PROHIBITED.toString());
+						}
+					}
+				}
+			}
+		}
+		setWsaVersion( wsaVersion);
+		return this;
 	}
 	
 
