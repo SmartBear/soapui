@@ -28,6 +28,7 @@ import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.iface.MessagePart.ContentPart;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -49,9 +50,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Request implementation holding a SOAP request
@@ -118,15 +117,41 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
       return result.toArray( new MessagePart[result.size()] );
    }
 
+   public RestRepresentation[] getRepresentations()
+   {
+      return getRepresentations( null, null );
+   }
+
+   public RestRepresentation[] getRepresentations( RestRepresentation.Type type )
+   {
+      return getRepresentations( type, null );
+   }
+   
    public RestRepresentation[] getRepresentations( RestRepresentation.Type type, String mediaType )
    {
       List<RestRepresentation> result = new ArrayList<RestRepresentation>();
+      Set<String> addedTypes = new HashSet<String>();
 
       for( RestRepresentation representation : representations )
       {
          if( ( type == null || type == representation.getType() ) && ( mediaType == null || mediaType.equals( representation.getMediaType() ) ) )
          {
             result.add( representation );
+            addedTypes.add( representation.getMediaType() );
+         }
+      }
+
+      if( type == RestRepresentation.Type.REQUEST )
+      {
+         for( Attachment attachment : getAttachments())
+         {
+            if( (mediaType == null || mediaType.equals( attachment.getContentType())) && !addedTypes.contains( attachment.getContentType() ))
+            {
+               RestRepresentation representation = new RestRepresentation( this, RestResourceRepresentationConfig.Factory.newInstance() );
+               representation.setType( RestRepresentation.Type.REQUEST );
+               representation.setMediaType( attachment.getContentType() );
+               result.add( representation );
+            }
          }
       }
 

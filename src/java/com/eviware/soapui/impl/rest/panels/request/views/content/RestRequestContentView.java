@@ -18,6 +18,7 @@ import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPan
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel.RestRequestMessageEditor;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.support.RestUtils;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.support.xsd.SampleXmlUtil;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
@@ -246,6 +247,11 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
       {
          mediaTypeCombo.setSelectedItem( evt.getNewValue() );
          recreateButton.setEnabled( canRecreate() );
+      }
+      else if( evt.getPropertyName().equals( AbstractHttpRequest.ATTACHMENTS_PROPERTY ) )
+      {
+         mediaTypeCombo.setModel( new DefaultComboBoxModel( getRequestMediaTypes()) );
+         mediaTypeCombo.setSelectedItem( restRequest.getMediaType() );
       }
    }
 

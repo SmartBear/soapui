@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import org.apache.commons.httpclient.methods.RequestEntity;
@@ -65,7 +64,7 @@ public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
 	{
 		try
 		{
-			SoapVersion soapVersion = ((WsdlInterface)wsdlRequest.getOperation().getInterface()).getSoapVersion();
+			SoapVersion soapVersion = wsdlRequest.getOperation().getInterface().getSoapVersion();
 			
 			if( isXOP )
 			{

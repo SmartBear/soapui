@@ -451,14 +451,14 @@ public class AttachmentUtils
     * Adds defined attachments as mimeparts
     */
 
-   public static void addMimeParts( AttachmentContainer container, MimeMultipart mp, StringToStringMap contentIds ) throws MessagingException
+   public static void addMimeParts( AttachmentContainer container, List<Attachment> attachments, MimeMultipart mp, StringToStringMap contentIds ) throws MessagingException
    {
       // no multipart handling?
       if( !container.isMultipartEnabled() )
       {
-         for( int c = 0; c < container.getAttachmentCount(); c++ )
+         for( int c = 0; c < attachments.size(); c++ )
          {
-            Attachment att = container.getAttachmentAt( c );
+            Attachment att = attachments.get( c );
             if( att.getAttachmentType() != Attachment.AttachmentType.CONTENT )
             {
                addSingleAttachment( mp, contentIds, att );
@@ -469,9 +469,9 @@ public class AttachmentUtils
       {
          // first identify if any part has more than one attachments
          Map<String, List<Attachment>> attachmentsMap = new HashMap<String, List<Attachment>>();
-         for( int c = 0; c < container.getAttachmentCount(); c++ )
+         for( int c = 0; c < attachments.size(); c++ )
          {
-            Attachment att = container.getAttachmentAt( c );
+            Attachment att = attachments.get( c );
             if( att.getAttachmentType() == Attachment.AttachmentType.CONTENT )
                continue;
 
@@ -488,7 +488,7 @@ public class AttachmentUtils
          // add attachments
          for( Iterator<String> i = attachmentsMap.keySet().iterator(); i.hasNext(); )
          {
-            List<Attachment> attachments = attachmentsMap.get( i.next() );
+            attachments = attachmentsMap.get( i.next() );
             if( attachments.size() == 1 )
             {
                Attachment att = attachments.get( 0 );

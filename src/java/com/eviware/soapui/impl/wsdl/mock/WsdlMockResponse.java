@@ -670,7 +670,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			initRootPart( responseContent, mp, isXOP );
 
 			// init mimeparts
-			AttachmentUtils.addMimeParts( this, mp, contentIds );
+			AttachmentUtils.addMimeParts( this, Arrays.asList(getAttachments()), mp, contentIds );
 
 			// create request message
 			MimeMessage message = new MimeMessage( AttachmentUtils.JAVAMAIL_SESSION );

@@ -16,11 +16,15 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.RestRequestDataSource;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.RestRequestMimeMessageRequestEntity;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.types.StringToStringMap;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
@@ -29,8 +33,16 @@ import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.xmlbeans.XmlBoolean;
 
+import javax.activation.DataHandler;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.PreencodedMimeBodyPart;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * RequestFilter that adds SOAP specific headers
@@ -126,56 +138,88 @@ public class RestRequestFilter extends AbstractRequestFilter
       {
          httpMethod.setRequestHeader( "Content-Type", request.getMediaType() );
 
-         if( request.isPostQueryString())
+         if( request.isPostQueryString() )
          {
-            ((EntityEnclosingMethod) httpMethod).setRequestEntity( new StringRequestEntity( query.toString() ) );
+            ( (EntityEnclosingMethod) httpMethod ).setRequestEntity( new StringRequestEntity( query.toString() ) );
          }
          else
          {
             String requestContent = request.getRequestContent();
-            Attachment[] attachments = request.getAttachments();
+            List<Attachment> attachments = new ArrayList<Attachment>();
 
-            if( StringUtils.hasContent( requestContent ) )
+            for( Attachment attachment : request.getAttachments() )
             {
-               if( attachments.length == 0 )
+               if( attachment.getContentType().equals( request.getMediaType() ) )
                {
-                  try
-                  {
-                     byte[] content = encoding == null ? requestContent.getBytes() : requestContent.getBytes( encoding );
-                     ((EntityEnclosingMethod) httpMethod).setRequestEntity( new ByteArrayRequestEntity( content ) );
-                  }
-                  catch( UnsupportedEncodingException e )
-                  {
-                     ((EntityEnclosingMethod) httpMethod).setRequestEntity( new ByteArrayRequestEntity( requestContent.getBytes() ) );
-                  }
-               }
-               else
-               {
-
+                  attachments.add( attachment );
                }
             }
-            else if( attachments.length > 0 )
-            {
-               if( attachments.length == 1 )
-               {
-                  try
-                  {
-                     ((EntityEnclosingMethod) httpMethod).setRequestEntity( new InputStreamRequestEntity(
-                             attachments[0].getInputStream() ) );
 
-                     httpMethod.setRequestHeader( "Content-Type", attachments[0].getContentType() );
-                  }
-                  catch( Exception e )
+            if( StringUtils.hasContent( requestContent ) && attachments.isEmpty() )
+            {
+               try
+               {
+                  byte[] content = encoding == null ? requestContent.getBytes() : requestContent.getBytes( encoding );
+                  ( (EntityEnclosingMethod) httpMethod ).setRequestEntity( new ByteArrayRequestEntity( content ) );
+               }
+               catch( UnsupportedEncodingException e )
+               {
+                  ( (EntityEnclosingMethod) httpMethod ).setRequestEntity( new ByteArrayRequestEntity( requestContent.getBytes() ) );
+               }
+            }
+            else if( attachments.size() > 0 )
+            {
+               try
+               {
+                  MimeMultipart mp = null;
+
+                  if( StringUtils.hasContent( requestContent ) )
                   {
-                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                     mp = new MimeMultipart();
+                     initRootPart( request, requestContent, mp );
+                  }
+                  else if( attachments.size() == 1 )
+                  {
+                     ( (EntityEnclosingMethod) httpMethod ).setRequestEntity( new InputStreamRequestEntity(
+                             attachments.get( 0 ).getInputStream() ) );
+
+                     httpMethod.setRequestHeader( "Content-Type", request.getMediaType() );
+                  }
+
+                  if( ( (EntityEnclosingMethod) httpMethod ).getRequestEntity() == null )
+                  {
+                     if( mp == null )
+                        mp = new MimeMultipart();
+
+                     // init mimeparts
+                     AttachmentUtils.addMimeParts( request, attachments, mp, new StringToStringMap() );
+
+                     // create request message
+                     MimeMessage message = new MimeMessage( AttachmentUtils.JAVAMAIL_SESSION );
+                     message.setContent( mp );
+                     message.saveChanges();
+                     RestRequestMimeMessageRequestEntity mimeMessageRequestEntity = new RestRequestMimeMessageRequestEntity( message, request );
+                     ( (EntityEnclosingMethod) httpMethod ).setRequestEntity( mimeMessageRequestEntity );
+                     httpMethod.setRequestHeader( "Content-Type", mimeMessageRequestEntity.getContentType() );
+                     httpMethod.setRequestHeader( "MIME-Version", "1.0" );
                   }
                }
-               else
+               catch( Exception e )
                {
-
+                  e.printStackTrace();
                }
             }
          }
       }
+   }
+
+   protected void initRootPart( RestRequest wsdlRequest, String requestContent, MimeMultipart mp ) throws MessagingException
+   {
+      MimeBodyPart rootPart = new PreencodedMimeBodyPart( "8bit" );
+      rootPart.setContentID( AttachmentUtils.ROOTPART_SOAPUI_ORG );
+      mp.addBodyPart( rootPart, 0 );
+
+      DataHandler dataHandler = new DataHandler( new RestRequestDataSource( wsdlRequest, requestContent ) );
+      rootPart.setDataHandler( dataHandler );
    }
 }

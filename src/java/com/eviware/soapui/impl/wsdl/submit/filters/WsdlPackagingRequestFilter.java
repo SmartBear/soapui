@@ -34,6 +34,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.PreencodedMimeBodyPart;
+import java.util.Arrays;
 
 public class WsdlPackagingRequestFilter extends AbstractRequestFilter
 {
@@ -103,7 +104,7 @@ public class WsdlPackagingRequestFilter extends AbstractRequestFilter
 			initRootPart(wsdlRequest, requestContent, mp, isXOP);
 			
 			// init mimeparts
-			AttachmentUtils.addMimeParts(wsdlRequest, mp, contentIds);
+			AttachmentUtils.addMimeParts(wsdlRequest, Arrays.asList(wsdlRequest.getAttachments()), mp, contentIds);
 			
 			// create request message
 			MimeMessage message = new MimeMessage( AttachmentUtils.JAVAMAIL_SESSION );
