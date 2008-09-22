@@ -128,7 +128,19 @@ public class CapturedExchange {
 	}
 
 	public void setRequest(byte[] request) {
-		this.request = request;
+//		this.request = request;
+		if (this.request == null ) {
+			this.request = request;
+		} else {
+			byte[] newRequest = new byte[this.request.length + request.length];
+			for(int i = 0; i < this.request.length; i++) {
+				newRequest[i] = this.request[i];
+			}
+			for( int i = this.request.length; i < newRequest.length; i++) {
+				newRequest[i] = request[i - this.response.length];
+			}
+			this.request = newRequest;
+		}
 		this.setRequestSize(this.request.length);
 	}
 
@@ -178,9 +190,10 @@ public class CapturedExchange {
 		while (headerNames.hasMoreElements()) {
 			String name = headerNames.nextElement();
 			
-//			if (ProxyServlet.dontProxyHeaders.contains(name.toLowerCase())) {
-//				continue;
-//			}
+			if (ProxyServlet.dontProxyHeaders.contains(name.toLowerCase()))
+			{
+				continue;
+			}
 			
 			headerValue = name + "::";
 			Enumeration<String> header = httpRequest.getHeaders(name);

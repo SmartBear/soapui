@@ -28,9 +28,9 @@ import org.mortbay.util.ajax.ContinuationSupport;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 
+public class SoapUIHttpExchange extends HttpExchange
+{
 
-public class SoapUIHttpExchange extends HttpExchange {
-	
 	private Continuation continuation;
 	private InputStream in;
 	private OutputStream out;
@@ -38,101 +38,109 @@ public class SoapUIHttpExchange extends HttpExchange {
 	private Logger log = Logger.getLogger(SoapUIHttpExchange.class);
 	private JProxyServletWsdlMonitorMessageExchange capturedMessage;
 	private SoapMonitor monitor;
-	
-	
-	public SoapUIHttpExchange(SoapMonitor monitor, HttpServletRequest httpRequest, HttpServletResponse httpResponse, CaptureInputStream capture, JProxyServletWsdlMonitorMessageExchange capturedData) throws IOException {
+
+	public SoapUIHttpExchange(SoapMonitor monitor, HttpServletRequest httpRequest, HttpServletResponse httpResponse,
+			CaptureInputStream capture, JProxyServletWsdlMonitorMessageExchange capturedData) throws IOException
+	{
 		this.httpResponse = httpResponse;
-		continuation = ContinuationSupport.getContinuation(httpRequest,httpRequest);
+		continuation = ContinuationSupport.getContinuation(httpRequest, httpRequest);
 		in = capture;
-        out = httpResponse.getOutputStream();
-        this.capturedMessage = capturedData;
-        this.monitor = monitor;
+		out = httpResponse.getOutputStream();
+		this.capturedMessage = capturedData;
+		this.monitor = monitor;
 	}
-	
+
 	@Override
-	protected void onConnectionFailed(Throwable ex) {
+	protected void onConnectionFailed(Throwable ex)
+	{
 //		log.warn("onConnectionFailed");
-		try {
+		try
+		{
 			httpResponse.sendError(HttpServletResponse.SC_EXPECTATION_FAILED, ex.getMessage());
 			httpResponse.flushBuffer();
 			this.capturedMessage.stopCapture();
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
-	protected void onException(Throwable ex) {
+	protected void onException(Throwable ex)
+	{
 //		log.error("onException" + ex.getMessage());
-		try {
+		try
+		{
 			httpResponse.sendError(HttpServletResponse.SC_NOT_FOUND, ex.getMessage());
 			httpResponse.flushBuffer();
 			this.capturedMessage.stopCapture();
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected void onRequestCommitted() throws IOException
-    {
-//        log.info("onRequestCommitted()");
-    }
+	{
+//		log.info("onRequestCommitted()");
+		this.capturedMessage.setRequest(((CaptureInputStream) in).getCapturedData());
+	}
 
 	@Override
-    protected void onRequestComplete() throws IOException
-    {
-//        log.info("onRequestComplete()");
-        this.capturedMessage.setRequest(((CaptureInputStream) in).getCapturedData());
-    }
+	protected void onRequestComplete() throws IOException
+	{
+//		log.info("onRequestComplete()");
+		this.capturedMessage.setRequest(((CaptureInputStream) in).getCapturedData());
+	}
 
 	@Override
-    protected void onResponseComplete() throws IOException
-    {
-//        log.info("onResponseComplete()");
-        continuation.resume();
-        this.capturedMessage.stopCapture();
-//        this.monitor.addMessageExchange(capturedMessage);
-//        capturedMessage= null;
-    }
+	protected void onResponseComplete() throws IOException
+	{
+//		log.info("onResponseComplete()");
+		continuation.resume();
+		this.capturedMessage.stopCapture();
+	}
 
 	@Override
-    protected void onResponseContent(Buffer content) throws IOException
-    {
-//        log.info("onResponseContent()");
-        byte[] buffer = new byte[content.length()];
-        while (content.hasContent())
-        {
-			int len=content.get(buffer ,0,buffer.length);
+	protected void onResponseContent(Buffer content) throws IOException
+	{
+//		log.info("onResponseContent()");
+		byte[] buffer = new byte[content.length()];
+		while (content.hasContent())
+		{
+			int len = content.get(buffer, 0, buffer.length);
 			this.capturedMessage.setResponse(buffer);
-            out.write(buffer,0,len);  // May block here for a little bit!
-        }
-    }
+			out.write(buffer, 0, len); // May block here for a little bit!
+		}
+	}
 
 	@Override
-    protected void onResponseHeaderComplete() throws IOException
-    {
-//        log.info("onResponseCompleteHeader()");
-    }
+	protected void onResponseHeaderComplete() throws IOException
+	{
+//		log.info("onResponseCompleteHeader()");
+	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-    protected void onResponseStatus(Buffer version, int status, Buffer reason) throws IOException
-    {
-        if (reason!=null && reason.length()>0)
-            httpResponse.setStatus(status,reason.toString());
-        else
-            httpResponse.setStatus(status);
-            
-    }
+	protected void onResponseStatus(Buffer version, int status, Buffer reason) throws IOException
+	{
+		if (reason != null && reason.length() > 0)
+			httpResponse.setStatus(status, reason.toString());
+		else
+			httpResponse.setStatus(status);
+
+	}
 
 	@Override
-    protected void onResponseHeader(Buffer name, Buffer value) throws IOException
-    {
-        httpResponse.addHeader(name.toString(),value.toString());
-        capturedMessage.setResponseHeader(name.toString(),value.toString());
-    }
-    
+	protected void onResponseHeader(Buffer name, Buffer value) throws IOException
+	{
+		httpResponse.addHeader(name.toString(), value.toString());
+		capturedMessage.setResponseHeader(name.toString(), value.toString());
+	}
+
 }
