@@ -90,6 +90,7 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
       while( dialog.show() )
       {
+         WsdlProject project = null;
          try
          {
             String projectName = dialog.getValue( Form.PROJECTNAME ).trim();
@@ -99,7 +100,7 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
             }
             else
             {
-               WsdlProject project = workspace.createProject( projectName, null );
+               project = workspace.createProject( projectName, null );
 
                if( project != null )
                {
@@ -128,6 +129,10 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
          catch( Exception ex )
          {
             UISupport.showErrorMessage( ex );
+            if( project != null )
+            {
+               workspace.removeProject( project );
+            }
          }
       }
    }

@@ -12,10 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -28,6 +24,10 @@ import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 public class PathUtils
 {
@@ -125,7 +125,7 @@ public class PathUtils
 		return relativize(path, root);
 	}
 
-	public static String relativizeResourcePath( String path, AbstractWsdlModelItem<?> modelItem )
+	public static String relativizeResourcePath( String path, ModelItem modelItem )
 	{
 		if( modelItem == null || StringUtils.isNullOrEmpty(path) || isRelativePath(path) || isHttpPath(path))
 			return path;

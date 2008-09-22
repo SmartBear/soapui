@@ -322,6 +322,11 @@ SOAPUI_CLASSPATH=$$SOAPUI_CLASSPATH:$$SOAPUI_HOME/lib/${lib.file.name}</j:set>
    		    <fileset dir="src/xsd/wsdl"/>
    		</ant:xmlbean>
 
+      <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/policy-xmlbeans-1.5.jar"
+   			classpathref="xmlbeans-classpath" javasource="1.5">
+   		    <fileset dir="src/xsd/policy"/>
+   		</ant:xmlbean>
+
    		<ant:xmlbean destfile="${maven.repo.local}/eviware/jars/wadl-xmlbeans-1.0.jar" 
    			classpathref="xmlbeans-classpath" javasource="1.5">
    		    <fileset dir="src/xsd/wadl"/>

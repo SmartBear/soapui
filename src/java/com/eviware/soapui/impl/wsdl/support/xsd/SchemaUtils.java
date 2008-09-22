@@ -672,4 +672,9 @@ public class SchemaUtils
       String excluded = SoapUI.getSettings().getString( WsdlSettings.EXCLUDED_TYPES, null );
       return SettingUtils.string2QNames( excluded );
    }
+
+   public static boolean isAnyType( SchemaType schemaType )
+   {
+       return schemaType.getBuiltinTypeCode() == SchemaType.BTC_ANY_TYPE;
+   }
 }

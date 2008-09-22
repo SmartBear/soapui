@@ -523,8 +523,10 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 				return false;
 			}
 		}
-		else
-			requestEditor.saveDocument(false);
+		else 
+      {
+         requestEditor.saveDocument( false );
+      }
 
 		setEnabled(false);
 		cancelButton.setEnabled(AbstractHttpRequestDesktopPanel.this.submit != null);

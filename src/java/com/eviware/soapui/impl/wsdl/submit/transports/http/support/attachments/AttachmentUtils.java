@@ -14,7 +14,10 @@ package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
 import com.eviware.soapui.config.PartsConfig;
 import com.eviware.soapui.config.PartsConfig.Part;
-import com.eviware.soapui.impl.wsdl.*;
+import com.eviware.soapui.impl.wsdl.AttachmentContainer;
+import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
+import com.eviware.soapui.impl.wsdl.WsdlAttachmentContainer;
+import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.support.MessageXmlPart;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
@@ -135,7 +138,7 @@ public class AttachmentUtils
                      }
                   }
                }
-               else if( SchemaUtils.isBinaryType( schemaType ) )
+               else if( SchemaUtils.isBinaryType( schemaType ) || SchemaUtils.isAnyType( schemaType ) )
                {
                   String xmimeContentType = getXmlMimeContentType( cursor );
 
@@ -378,7 +381,7 @@ public class AttachmentUtils
 
       if( messageContent.length() > 0 )
       {
-         WsdlContext wsdlContext = ((WsdlInterface) operation.getInterface()).getWsdlContext();
+         WsdlContext wsdlContext = operation.getInterface().getWsdlContext();
          WsdlValidator validator = new WsdlValidator( wsdlContext );
          try
          {
@@ -397,7 +400,7 @@ public class AttachmentUtils
                         String attributeText = AttachmentUtils.getXmlMimeContentType( cursor );
 
                         // xop?
-                        if( SchemaUtils.isBinaryType( schemaType ) )
+                        if( SchemaUtils.isBinaryType( schemaType ) || SchemaUtils.isAnyType( schemaType ))
                         {
                            String contentId = cursor.getTextValue();
                            if( contentId.startsWith( "cid:" ) )

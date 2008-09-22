@@ -85,7 +85,6 @@
 					</xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="type" type="xsd:string"></xsd:attribute>
-				<xsd:attribute name="anonymous" type="tns:AnonymousType"></xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 
@@ -107,6 +106,7 @@
 					type="tns:SoapVersionTypes">
 				</xsd:attribute>
 				<xsd:attribute name="wsaVersion" type="tns:WsaVersionType"></xsd:attribute>
+            <xsd:attribute name="anonymous" type="tns:AnonymousType"></xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 

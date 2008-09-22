@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
@@ -71,8 +70,7 @@ public class WsdlPackagingRequestFilter extends AbstractRequestFilter
 			{
 				mp = new MimeMultipart();
 				
-				MessageXmlObject requestXmlObject = new MessageXmlObject(( WsdlOperation ) wsdlRequest.getOperation(), 
-							requestContent, true);
+				MessageXmlObject requestXmlObject = new MessageXmlObject( wsdlRequest.getOperation(), requestContent, true);
 				MessageXmlPart[] requestParts = requestXmlObject.getMessageParts();
 				for (MessageXmlPart requestPart : requestParts)
 				{
