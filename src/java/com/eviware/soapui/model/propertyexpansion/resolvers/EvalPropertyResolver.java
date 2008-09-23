@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.model.propertyexpansion.resolvers;
 
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
@@ -25,15 +23,11 @@ import com.eviware.soapui.model.mock.MockRunContext;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.model.testsuite.LoadTest;
-import com.eviware.soapui.model.testsuite.LoadTestRunContext;
-import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.types.StringToObjectMap;
+import org.apache.log4j.Logger;
 
 public class EvalPropertyResolver implements PropertyResolver
 {
@@ -111,6 +105,11 @@ public class EvalPropertyResolver implements PropertyResolver
 		{
 			objects.put( "interface", modelItem );
 		}
+
+      if( modelItem != null )
+      {
+         objects.put( "modelItem", modelItem );
+      }
 
 		return doEval(name, modelItem, objects );
 	}

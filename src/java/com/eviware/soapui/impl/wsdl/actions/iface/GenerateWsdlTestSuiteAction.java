@@ -12,9 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.actions.iface;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -29,8 +26,11 @@ import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormOptionsField;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Generates a TestSuite for the specified Interface
@@ -38,14 +38,14 @@ import com.eviware.x.form.support.AField.AFieldType;
  * @author ole.matzura
  */
 
-public class GenerateTestSuiteAction extends AbstractSoapUIAction<WsdlInterface>
+public class GenerateWsdlTestSuiteAction extends AbstractSoapUIAction<WsdlInterface>
 {
-	public GenerateTestSuiteAction()
+	public GenerateWsdlTestSuiteAction()
 	{
 		super( "Generate TestSuite", "Generates TestSuite with TestCase(s) for all Operations in this Interface" );
 	}
 
-	public void perform( WsdlInterface target, Object param )
+   public void perform( WsdlInterface target, Object param )
 	{
 		generateTestSuite( target, false );
 	}
@@ -60,7 +60,7 @@ public class GenerateTestSuiteAction extends AbstractSoapUIAction<WsdlInterface>
 		XFormOptionsField operationsFormField = ( XFormOptionsField ) dialog.getFormField( GenerateForm.OPERATIONS );
 		operationsFormField.setSelectedOptions( names );
 
-		WsdlProject project = ( WsdlProject ) iface.getProject();
+		WsdlProject project = iface.getProject();
 		String[] testSuites = ModelSupport.getNames( new String[] { "<create>" }, project.getTestSuiteList() );
 		dialog.setOptions( GenerateForm.TESTSUITE, testSuites );
 
@@ -82,11 +82,11 @@ public class GenerateTestSuiteAction extends AbstractSoapUIAction<WsdlInterface>
 
 			if( testSuiteName != null && testSuiteName.trim().length() > 0 )
 			{
-				WsdlTestSuite testSuite = ( WsdlTestSuite ) project.getTestSuiteByName( testSuiteName );
+				WsdlTestSuite testSuite = project.getTestSuiteByName( testSuiteName );
 
 				if( testSuite == null )
 				{
-					testSuite = ( WsdlTestSuite ) project.addNewTestSuite( testSuiteName );
+					testSuite = project.addNewTestSuite( testSuiteName );
 				}
 
 				int style = dialog.getValueIndex( GenerateForm.STYLE );
@@ -120,7 +120,7 @@ public class GenerateTestSuiteAction extends AbstractSoapUIAction<WsdlInterface>
 
 		for( int i = 0; i < iface.getOperationCount(); i++ )
 		{
-			WsdlOperation operation = ( WsdlOperation ) iface.getOperationAt( i );
+			WsdlOperation operation = iface.getOperationAt( i );
 			if( !operations.contains( operation.getName() ))
 				continue;
 
@@ -149,7 +149,7 @@ public class GenerateTestSuiteAction extends AbstractSoapUIAction<WsdlInterface>
 	{
 		for( int i = 0; i < iface.getOperationCount(); i++ )
 		{
-			WsdlOperation operation = ( WsdlOperation ) iface.getOperationAt( i );
+			WsdlOperation operation = iface.getOperationAt( i );
 			if( !operations.contains( operation.getName() ))
 				continue;
 			

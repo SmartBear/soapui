@@ -22,7 +22,9 @@ import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.support.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * WSDL implementation of Interface, maps to a WSDL Binding
@@ -149,7 +151,7 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
       resource.release();
    }
 
-   public RestResource[] getAllResources()
+   public List<RestResource> getAllResources()
    {
       List<RestResource> result = new ArrayList<RestResource>();
       for( RestResource resource : resources )
@@ -157,7 +159,19 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
          addResourcesToResult( resource, result );
       }
 
-      return result.toArray( new RestResource[result.size()] );
+      return result;
+   }
+
+    public Map<String, RestResource> getResources()
+   {
+      Map<String,RestResource> result = new HashMap<String,RestResource>();
+
+      for( RestResource resource : getAllResources() )
+      {
+         result.put( resource.getFullPath( false ), resource );
+      }
+
+      return result;
    }
 
    private void addResourcesToResult( RestResource resource, List<RestResource> result )

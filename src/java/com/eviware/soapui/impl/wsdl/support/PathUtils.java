@@ -112,7 +112,7 @@ public class PathUtils
 		str = str.toLowerCase();
 		
 		return !str.startsWith("/") && !str.startsWith("\\") && !str.startsWith("http:/") && !str.startsWith("https:/" ) &&
-			 str.indexOf(":\\" ) != 1 && !str.startsWith("file:" );
+			 str.indexOf(":\\" ) != 1 && !str.startsWith("file:" ) &&  str.indexOf(":/" ) != 1;
 	}
 
 	public static String createRelativePath(String path, String root,	ModelItem contextModelItem)
@@ -272,11 +272,7 @@ public class PathUtils
 
 	public static boolean isAbsolutePath( String path )
 	{
-		path = path.toUpperCase();
-		
-		return 
-			path.startsWith( "HTTP:/" ) || path.startsWith( "HTTPS:/") || path.startsWith( "/" ) ||
-			path.startsWith( "\\") || (path.length() > 2 && path.substring( 1,3 ).equals( ":\\" ));
+		return !isRelativePath( path );
 	}
 
 	public static boolean isFilePath( String path )
@@ -327,6 +323,7 @@ public class PathUtils
 		docroot = context == null ? 
 				PropertyExpansionUtils.expandProperties(modelItem, docroot) : 
 				PropertyExpansionUtils.expandProperties(context, docroot);
+      
 		return docroot;
 	}
 }

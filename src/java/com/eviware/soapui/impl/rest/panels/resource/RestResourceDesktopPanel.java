@@ -13,58 +13,109 @@
 package com.eviware.soapui.impl.rest.panels.resource;
 
 import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.actions.resource.NewRestRequestAction;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.swing.SwingActionDelegate;
+import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
 import javax.swing.*;
+import javax.swing.text.Document;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
 
 public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource>
 {
-	public RestResourceDesktopPanel(RestResource modelItem)
-	{
-		super(modelItem);
-		
-		add( buildToolbar(), BorderLayout.NORTH );
-		add( buildContent(), BorderLayout.CENTER );
-	}
+   private JUndoableTextField pathTextField;
+   private boolean updating;
 
-	private Component buildContent()
-	{
-		JTabbedPane tabs = new JTabbedPane();
-		tabs.addTab("Resource Parameters", new RestParamsTable( getModelItem().getParams(), true ));
-		return UISupport.createTabPanel(tabs, false );
-	}
+   public RestResourceDesktopPanel( RestResource modelItem )
+   {
+      super( modelItem );
 
-	@Override
-	public String getTitle()
-	{
-		return getName( getModelItem() );
-	}
+      add( buildToolbar(), BorderLayout.NORTH );
+      add( buildContent(), BorderLayout.CENTER );
+   }
 
-	private String getName(RestResource modelItem)
-	{
-		if( modelItem.getParentResource() != null )
-			return getName( modelItem.getParentResource() ) + "/" + modelItem.getName();
-		else 
-			return modelItem.getName();
-	}
+   private Component buildContent()
+   {
+      JTabbedPane tabs = new JTabbedPane();
+      tabs.addTab( "Resource Parameters", new RestParamsTable( getModelItem().getParams(), true ) );
+      return UISupport.createTabPanel( tabs, false );
+   }
 
-	private Component buildToolbar()
-	{
-		return new JXToolBar();
-	}
+   @Override
+   public String getTitle()
+   {
+      return getName( getModelItem() );
+   }
 
-	@Override
-	public boolean dependsOn(ModelItem modelItem)
-	{
-		return getModelItem().dependsOn( modelItem );
-	}
+   private String getName( RestResource modelItem )
+   {
+      if( modelItem.getParentResource() != null )
+         return getName( modelItem.getParentResource() ) + "/" + modelItem.getName();
+      else
+         return modelItem.getName();
+   }
 
-	public boolean onClose(boolean canCancel)
-	{
-		return true;
-	}
+   private Component buildToolbar()
+   {
+      JXToolBar toolbar = UISupport.createToolbar();
+
+      toolbar.addFixed( createActionButton( SwingActionDelegate.createDelegate(
+              NewRestRequestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/create_empty_request.gif" ), true ) );
+
+      toolbar.addSeparator();
+
+      pathTextField = new JUndoableTextField( getModelItem().getPath(), 20 );
+      pathTextField.getDocument().addDocumentListener( new DocumentListenerAdapter(){
+         public void update( Document document )
+         {
+            if( !updating)
+            {
+               updating = true;
+               getModelItem().setPath( getText( document ));
+               updating = false;
+            }
+         }
+      } );
+      toolbar.addLabeledFixed( "Resource Path", pathTextField );
+
+      toolbar.addGlue();
+      toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.RESTRESOURCEEDITOR_HELPURL ) ) );
+
+      return toolbar;
+   }
+
+   @Override
+   public boolean dependsOn( ModelItem modelItem )
+   {
+      return getModelItem().dependsOn( modelItem );
+   }
+
+   public boolean onClose( boolean canCancel )
+   {
+      return true;
+   }
+
+   @Override
+   public void propertyChange( PropertyChangeEvent evt )
+   {
+      if( evt.getPropertyName().equals( "path" ))
+      {
+         if( !updating )
+         {
+            updating = true;
+            pathTextField.setText( String.valueOf( evt.getNewValue() ) );
+            updating = false;
+         }
+      }
+
+      super.propertyChange( evt );
+   }
 }

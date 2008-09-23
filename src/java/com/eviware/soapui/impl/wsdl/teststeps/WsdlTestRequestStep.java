@@ -464,6 +464,16 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
       return result;
    }
 
+   public String getDefaultSourcePropertyName()
+   {
+      return "Response";
+   }
+
+   public String getDefaultTargetPropertyName()
+   {
+      return "Request";
+   }
+
    @Override
    public boolean dependsOn( AbstractWsdlModelItem<?> modelItem )
    {

@@ -34,6 +34,7 @@ import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.*;
@@ -81,8 +82,9 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 	private PropertyHolderTable propertiesTable;
 	private GroovyEditorComponent tearDownGroovyEditor;
 	private GroovyEditorComponent setupGroovyEditor;
+   private JInspectorPanel testStepListInspectorPanel;
 
-	public WsdlTestCaseDesktopPanel( WsdlTestCase testCase )
+   public WsdlTestCaseDesktopPanel( WsdlTestCase testCase )
 	{
 		super( testCase );
 
@@ -128,6 +130,9 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildTestLog(), "TestCase Log", "TestCase Execution Log", true ) );
 		inspectorPanel.setDefaultDividerLocation( 0.7F );
 		inspectorPanel.setCurrentInspector( "TestCase Log" );
+
+       if( StringUtils.hasContent( getModelItem().getDescription() ))
+         testStepListInspectorPanel.setCurrentInspector( "Description" );
 		
 		add( inspectorPanel.getComponent(), BorderLayout.CENTER );
 	}
@@ -147,12 +152,12 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 	private JComponent buildContent()
 	{
 		JTabbedPane tabs = new JTabbedPane( JTabbedPane.TOP );
-		JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildTestStepList(),
-					SwingConstants.BOTTOM);
+      testStepListInspectorPanel = JInspectorPanelFactory.build( buildTestStepList(),
+               SwingConstants.BOTTOM);
 		
-		tabs.addTab( "TestSteps", inspectorPanel.getComponent() );
+		tabs.addTab( "TestSteps", testStepListInspectorPanel.getComponent() );
 		
-		addTabs( tabs, inspectorPanel );
+		addTabs( tabs, testStepListInspectorPanel );
 		tabs.setTabLayoutPolicy( JTabbedPane.SCROLL_TAB_LAYOUT );
 
 		return UISupport.createTabPanel( tabs, true );

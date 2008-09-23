@@ -274,9 +274,16 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
       return result.toArray( new RestParamProperty[result.size()]);
 	}
 
-	public String getFullPath()
+   public String getFullPath()
+   {
+      return getFullPath( true );
+   }
+
+	public String getFullPath( boolean includeBasePath )
 	{
-		String base = parentResource == null ? getInterface().getBasePath() : parentResource.getFullPath();
+		String base = parentResource == null ?
+              ( includeBasePath ? getInterface().getBasePath() : "" ) : parentResource.getFullPath( includeBasePath );
+      
 		String path = getPath();
 		if( StringUtils.hasContent(path) && base != null && !base.endsWith("/") && !path.startsWith("/"))
 			base += "/";
@@ -371,7 +378,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 
 	public String buildPath(PropertyExpansionContext context)
 	{
-		return getFullPath();
+		return getFullPath( true );
 	}
 
 	public void removeRequest(RestRequest request)
@@ -505,5 +512,17 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
       {
          addResourcesToResult( res, result );
       }
+   }
+
+   public Map<String, RestRequest> getRequests()
+   {
+      Map<String,RestRequest> result = new HashMap<String,RestRequest>();
+
+      for( RestRequest request : requests )
+      {
+         result.put( request.getName(), request );
+      }
+
+      return result;
    }
 }

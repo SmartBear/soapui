@@ -12,16 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.LoadTestConfig;
-import com.eviware.soapui.config.RunTestCaseRunModeTypeConfig;
-import com.eviware.soapui.config.RunTestCaseStepConfig;
-import com.eviware.soapui.config.TestCaseConfig;
-import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.config.*;
 import com.eviware.soapui.config.RunTestCaseRunModeTypeConfig.Enum;
 import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder.PropertiesStepProperty;
@@ -32,14 +24,7 @@ import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
-import com.eviware.soapui.model.testsuite.MessageExchangeTestStepResult;
-import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestPropertyListener;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunListener;
-import com.eviware.soapui.model.testsuite.TestRunner;
-import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ChooseAnotherTestCase;
@@ -48,6 +33,10 @@ import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.resolver.defaultaction.RunTestCaseDefaultAction;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.types.StringToObjectMap;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class WsdlRunTestCaseTestStep extends WsdlTestStep
 {
@@ -254,7 +243,7 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 			return name;
 	}
 
-	@Override
+   @Override
 	public boolean cancel()
 	{
 		if (testCaseRunner != null)

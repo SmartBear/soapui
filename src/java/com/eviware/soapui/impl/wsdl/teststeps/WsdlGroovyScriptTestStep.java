@@ -12,10 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -26,14 +22,17 @@ import com.eviware.soapui.model.support.DefaultTestStepProperty;
 import com.eviware.soapui.model.support.TestStepBeanProperty;
 import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.model.testsuite.TestRunner;
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
 
 /**
  * TestStep that executes an arbitraty Groovy script
@@ -120,7 +119,14 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 		readConfig( config );
 	}
 
-	public TestStepResult run(TestRunner testRunner, TestRunContext context)
+   public String getDefaultSourcePropertyName()
+   {
+      return "result";
+   }
+
+   
+
+   public TestStepResult run(TestRunner testRunner, TestRunContext context)
 	{
 		SoapUI.ensureGroovyLog();
 		

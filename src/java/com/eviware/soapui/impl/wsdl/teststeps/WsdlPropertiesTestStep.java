@@ -280,8 +280,8 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 		
 		return str;
 	}
-	
-	public void setTarget( String target )
+
+   public void setTarget( String target )
 	{
 		targetProperty.set(target, true);
 	}

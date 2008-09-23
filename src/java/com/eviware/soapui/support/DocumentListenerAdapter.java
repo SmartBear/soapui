@@ -14,6 +14,7 @@ package com.eviware.soapui.support;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 /**
@@ -43,4 +44,17 @@ public abstract class DocumentListenerAdapter implements DocumentListener
 	public void changedUpdate(DocumentEvent e)
 	{
 	}
+
+   public String getText( Document document )
+   {
+      try
+      {
+         return document.getText( 0, document.getLength() );
+      }
+      catch( BadLocationException e )
+      {
+         e.printStackTrace();
+         return "";
+      }
+   }
 }

@@ -30,6 +30,7 @@ import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.*;
@@ -50,7 +51,6 @@ import java.awt.event.ActionListener;
 @SuppressWarnings("serial")
 public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSuite>
 {
-	private final WsdlTestSuite testSuite;
 	private JProgressBar progressBar;
 	private JTestSuiteTestCaseList testCaseList;
 	private RunAction runAction = new RunAction();
@@ -65,12 +65,12 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	private TestRunLog testRunLog;
 	private GroovyEditorComponent tearDownGroovyEditor;
 	private GroovyEditorComponent setupGroovyEditor;
+   private JInspectorPanel testCaseListInspectorPanel;
 
-	public WsdlTestSuiteDesktopPanel(WsdlTestSuite testSuite)
+   public WsdlTestSuiteDesktopPanel(WsdlTestSuite testSuite)
 	{
 		super( testSuite );
-		this.testSuite = testSuite;
-		
+
 		buildUI();
 		testSuite.addTestSuiteListener( testSuiteListener );
 	}
@@ -88,7 +88,10 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 		JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildTabs() );
 		inspectorPanel.addInspector( new JComponentInspector( buildRunLog(), "TestSuite Log", 
 					"Log of executed TestCases and TestSteps", true ));
-		
+
+      if( StringUtils.hasContent( getModelItem().getDescription() ))
+         testCaseListInspectorPanel.setCurrentInspector( "Description" );
+
 		return inspectorPanel.getComponent();
 	}
 	
@@ -107,20 +110,20 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	public void addNotify()
 	{
 		super.addNotify();
-		testSuite.addTestSuiteListener( testSuiteListener );
+		getModelItem().addTestSuiteListener( testSuiteListener );
 	}
 
 	@Override
 	public void removeNotify()
 	{
 		super.removeNotify();
-		testSuite.removeTestSuiteListener( testSuiteListener );
+		getModelItem().removeTestSuiteListener( testSuiteListener );
 	}
 
 	private JComponent buildToolbar()
 	{
 		cancelAction.setEnabled( false );
-		runAction.setEnabled( testSuite.getTestCaseCount() > 0 );
+		runAction.setEnabled( getModelItem().getTestCaseCount() > 0 );
 		
 		JXToolBar toolbar = UISupport.createToolbar();
 		
@@ -128,7 +131,7 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 		toolbar.addGlue();
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.TESTSUITEEDITOR_HELP_URL )));
 		
-		progressBar = new JProgressBar( 0, testSuite.getTestCaseCount() );
+		progressBar = new JProgressBar( 0, getModelItem().getTestCaseCount() );
 		JPanel progressPanel = UISupport.createProgressBarPanel(progressBar, 10, false );
 		
 		JPanel panel = new JPanel( new BorderLayout() );
@@ -151,12 +154,12 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 		sequentialButton = new JToggleButton( UISupport.createImageIcon( "/sequential.gif" ), true );
 		sequentialButton.setToolTipText( "The selected TestCases are run in sequence" );
 		sequentialButton.setPreferredSize( UISupport.getPreferredButtonSize());
-		sequentialButton.setSelected( testSuite.getRunType() == TestSuiteRunType.SEQUENTIAL );
+		sequentialButton.setSelected( getModelItem().getRunType() == TestSuiteRunType.SEQUENTIAL );
 		sequentialButton.addActionListener( new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
 			{
-				testSuite.setRunType( TestSuiteRunType.SEQUENTIAL );
+				getModelItem().setRunType( TestSuiteRunType.SEQUENTIAL );
 			}} );
 		
 		buttonGroup.add( sequentialButton );
@@ -164,12 +167,12 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 		parallellButton = new JToggleButton( UISupport.createImageIcon( "/parallell.gif" ));
 		parallellButton.setToolTipText( "The selected TestCases are run in parallel" );
 		parallellButton.setPreferredSize( UISupport.getPreferredButtonSize());
-		parallellButton.setSelected( testSuite.getRunType() == TestSuiteRunType.PARALLEL );
+		parallellButton.setSelected( getModelItem().getRunType() == TestSuiteRunType.PARALLEL );
 		parallellButton.addActionListener( new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
 			{
-				testSuite.setRunType( TestSuiteRunType.PARALLEL );
+				getModelItem().setRunType( TestSuiteRunType.PARALLEL );
 			}} );
 		
 		buttonGroup.add( parallellButton );
@@ -183,11 +186,11 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	private JComponent buildTabs()
 	{
 		JTabbedPane tabs = new JTabbedPane( JTabbedPane.TOP );
-		JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildTestCaseList( testSuite ) );
+      testCaseListInspectorPanel = JInspectorPanelFactory.build( buildTestCaseList( getModelItem() ) );
 		
-		tabs.addTab( "TestCases", inspectorPanel.getComponent() );
+		tabs.addTab( "TestCases", testCaseListInspectorPanel.getComponent() );
 		
-      addTabs( tabs, inspectorPanel );
+      addTabs( tabs, testCaseListInspectorPanel );
       tabs.setTabLayoutPolicy( JTabbedPane.SCROLL_TAB_LAYOUT );
       
       return UISupport.createTabPanel( tabs, true );
@@ -231,12 +234,12 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	private JPanel buildDescriptionPanel()
 	{
    	JPanel panel = new JPanel( new BorderLayout() );
-   	descriptionArea = new JUndoableTextArea( testSuite.getDescription() );
+   	descriptionArea = new JUndoableTextArea( getModelItem().getDescription() );
    	descriptionArea.getDocument().addDocumentListener( new DocumentListenerAdapter() 
    	{
 			public void update(Document document)
 			{
-				testSuite.setDescription( descriptionArea.getText() );
+				getModelItem().setDescription( descriptionArea.getText() );
 			}} );
    	
    	panel.setBorder( BorderFactory.createEmptyBorder( 2, 2, 2, 2));
@@ -262,7 +265,7 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 		toolbar.add( UISupport.createToolbarButton( 
-					SwingActionDelegate.createDelegate( AddNewTestCaseAction.SOAPUI_ACTION_ID, testSuite, null, "/testCase.gif" )));
+					SwingActionDelegate.createDelegate( AddNewTestCaseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/testCase.gif" )));
 
 		return toolbar;
 	}
@@ -286,12 +289,12 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 
 	public boolean dependsOn(ModelItem modelItem)
 	{
-		return modelItem == testSuite || modelItem == testSuite.getProject();
+		return modelItem == getModelItem() || modelItem == getModelItem().getProject();
 	}
 
 	protected void runTestSuite()
 	{
-		new Thread( testSuiteRunner, testSuite.getName() + " TestSuiteRunner" ).start();
+		new Thread( testSuiteRunner, getModelItem().getName() + " TestSuiteRunner" ).start();
 	}
 
 	protected void beforeRun()
@@ -318,12 +321,12 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	{
 		public void testCaseAdded(TestCase testCase)
 		{
-			runAction.setEnabled( testSuite.getTestCaseCount() > 0 );
+			runAction.setEnabled( getModelItem().getTestCaseCount() > 0 );
 		}
 
 		public void testCaseRemoved(TestCase testCase)
 		{
-			runAction.setEnabled( testSuite.getTestCaseCount() > 0 );
+			runAction.setEnabled( getModelItem().getTestCaseCount() > 0 );
 		}
 	}
 
@@ -373,13 +376,13 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 		
 		public void run()
 		{
-			setRunType( testSuite.getRunType() );
+			setRunType( getModelItem().getRunType() );
 			
 			removeAllTestCases();
 
 			testCaseList.reset();
 			
-			for( TestCase testCase : testSuite.getTestCaseList() )
+			for( TestCase testCase : getModelItem().getTestCaseList() )
 			{
 				if( !testCase.isDisabled() )
 					addTestCase( testCase );
@@ -390,7 +393,7 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 
 		protected PropertyExpansionContext createContext()
 		{
-			return new DefaultPropertyExpansionContext( testSuite );
+			return new DefaultPropertyExpansionContext( getModelItem() );
 		}
 		
 		public void beforeRun( PropertyExpansionContext context )
@@ -412,10 +415,10 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 			if( getRunType() == TestSuiteRunType.PARALLEL )
 				testRunLog.addText( "<log disabled during parallell execution>" );
 			
-			context = new DefaultPropertyExpansionContext( testSuite );
+			context = new DefaultPropertyExpansionContext( getModelItem() );
 			try
 			{
-				testSuite.runSetupScript( context );
+				getModelItem().runSetupScript( context );
 			}
 			catch( Exception e )
 			{
@@ -451,7 +454,7 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 			
 			try
 			{
-				testSuite.runTearDownScript( context );
+				getModelItem().runTearDownScript( context );
 			}
 			catch( Exception e )
 			{

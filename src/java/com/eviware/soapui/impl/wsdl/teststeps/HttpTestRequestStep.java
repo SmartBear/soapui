@@ -498,6 +498,16 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
       }
    }
 
+   public String getDefaultSourcePropertyName()
+   {
+      return "ResponseAsXml";
+   }
+
+   public String getDefaultTargetPropertyName()
+   {
+      return "Request";
+   }
+
    public String getDefaultAssertableContent()
    {
       return testRequest.getDefaultAssertableContent();

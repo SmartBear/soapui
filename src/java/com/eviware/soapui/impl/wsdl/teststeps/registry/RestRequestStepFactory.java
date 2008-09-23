@@ -26,11 +26,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.types.StringToStringMap;
-import com.eviware.x.form.XForm;
-import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.XFormDialogBuilder;
-import com.eviware.x.form.XFormFactory;
+import com.eviware.soapui.support.types.TupleList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +41,8 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
 {
    public static final String RESTREQUEST_TYPE = "restrequest";
    public static final String STEP_NAME = "Name";
-   private XFormDialog dialog;
-   private StringToStringMap dialogValues = new StringToStringMap();
+//   private XFormDialog dialog;
+//   private StringToStringMap dialogValues = new StringToStringMap();
 
    public RestRequestStepFactory()
    {
@@ -69,58 +65,35 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
       TestStepConfig testStep = TestStepConfig.Factory.newInstance();
       testStep.setType( RESTREQUEST_TYPE );
       testStep.setConfig( requestStepConfig );
+      testStep.setName( stepName );
 
       return testStep;
    }
-
-//   public static TestStepConfig createConfig( RestResource resource, String stepName )
-//   {
-//      RestRequestStepConfig requestStepConfig = RestRequestStepConfig.Factory.newInstance();
-//
-//      requestStepConfig.setService( resource.getInterface().getName() );
-//      requestStepConfig.setResourcePath( resource.getPath() );
-//
-//      RestMethodConfig testRequestConfig = requestStepConfig.addNewRestRequest();
-//
-//      testRequestConfig.setName( stepName );
-//      testRequestConfig.setEncoding( "UTF-8" );
-//      String[] endpoints = resource.getInterface().getEndpoints();
-//      if( endpoints.length > 0 )
-//         testRequestConfig.setEndpoint( endpoints[0] );
-//
-//      testRequestConfig.addNewRequest();
-//      RestParametersConfig parametersConfig = testRequestConfig.addNewParameters();
-//
-//      for( XmlBeansRestParamsTestPropertyHolder.RestParamProperty property : resource.getDefaultParams() )
-//      {
-//         parametersConfig.addNewParameter().set( property.getConfig() );
-//      }
-//
-//      TestStepConfig testStep = TestStepConfig.Factory.newInstance();
-//      testStep.setType( RESTREQUEST_TYPE );
-//      testStep.setConfig( requestStepConfig );
-//
-//      return testStep;
-//   }
 
    public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
    {
       // build list of available interfaces / restResources
       Project project = testCase.getTestSuite().getProject();
       List<String> options = new ArrayList<String>();
-      List<RestResource> restResources = new ArrayList<RestResource>();
+      TupleList<RestResource, RestRequest> restResources = new TupleList<RestResource, RestRequest>();
 
       for( int c = 0; c < project.getInterfaceCount(); c++ )
       {
          Interface iface = project.getInterfaceAt( c );
          if( iface instanceof RestService )
          {
-            RestResource[] resources = ( (RestService) iface ).getAllResources();
+            List<RestResource> resources = ( (RestService) iface ).getAllResources();
 
             for( RestResource resource : resources )
             {
                options.add( iface.getName() + " -> " + resource.getPath() );
-               restResources.add( resource );
+               restResources.add( resource, null );
+
+               for( RestRequest request : resource.getRequests().values() )
+               {
+                  restResources.add( resource, request );
+                  options.add( iface.getName() + " -> " + resource.getPath() + " -> " + request.getName() );
+               }
             }
          }
       }
@@ -137,27 +110,26 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
          int ix = options.indexOf( op );
          if( ix != -1 )
          {
-            RestResource resource = restResources.get( ix );
+            TupleList<RestResource, RestRequest>.Tuple tuple = restResources.get( ix );
 
-            if( dialog == null )
-               buildDialog();
+//            if( dialog == null )
+//               buildDialog();
+//
+//            dialogValues.put( STEP_NAME, name );
+//            dialogValues = dialog.show( dialogValues );
+//            if( dialog.getReturnValue() != XFormDialog.OK_OPTION )
+//               return null;
 
-            dialogValues.put( STEP_NAME, name );
-            dialogValues = dialog.show( dialogValues );
-            if( dialog.getReturnValue() != XFormDialog.OK_OPTION )
-               return null;
-
-            return createNewTestStep( resource, dialogValues );
+            return tuple.getValue2() == null ? createNewTestStep( tuple.getValue1(), name )
+                    : createConfig( tuple.getValue2(), name );
          }
       }
 
       return null;
    }
 
-   public TestStepConfig createNewTestStep( RestResource resource, StringToStringMap values )
+   public TestStepConfig createNewTestStep( RestResource resource, String name )
    {
-      String name = values.get( STEP_NAME );
-
       RestRequestStepConfig requestStepConfig = RestRequestStepConfig.Factory.newInstance();
       RestMethodConfig testRequestConfig = requestStepConfig.addNewRestRequest();
 
@@ -195,14 +167,14 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
       return true;
    }
 
-   private void buildDialog()
-   {
-      XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Add REST Request to TestCase" );
-      XForm mainForm = builder.createForm( "Basic" );
-
-      mainForm.addTextField( STEP_NAME, "Name of TestStep", XForm.FieldType.URL ).setWidth( 30 );
-
-      dialog = builder.buildDialog( builder.buildOkCancelActions(),
-              "Specify options for adding a new REST Request to a TestCase", UISupport.OPTIONS_ICON );
-   }
+//   private void buildDialog()
+//   {
+//      XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Add REST Request to TestCase" );
+//      XForm mainForm = builder.createForm( "Basic" );
+//
+//      mainForm.addTextField( STEP_NAME, "Name of TestStep", XForm.FieldType.URL ).setWidth( 30 );
+//
+//      dialog = builder.buildDialog( builder.buildOkCancelActions(),
+//              "Specify options for adding a new REST Request to a TestCase", UISupport.OPTIONS_ICON );
+//   }
 }

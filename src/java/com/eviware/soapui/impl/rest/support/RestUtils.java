@@ -25,6 +25,9 @@ public class RestUtils
 {
    public static String[] extractTemplateParams( String path )
    {
+      if( StringUtils.isNullOrEmpty( path ))
+         return new String[0];
+
       StringList result = new StringList();
 
       int ix = path.indexOf( '{' );
@@ -46,6 +49,9 @@ public class RestUtils
 
    public static String extractParams( URL param, XmlBeansRestParamsTestPropertyHolder params )
    {
+      if( param == null || StringUtils.isNullOrEmpty( param.getPath() ))
+         return "";
+
       String path = param.getPath();
       String[] items = path.split( "/" );
 

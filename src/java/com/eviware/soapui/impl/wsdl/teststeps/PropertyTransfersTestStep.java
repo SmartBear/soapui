@@ -176,7 +176,7 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
 		return canceled;
 	}
 
-	public int getTransferCount()
+   public int getTransferCount()
 	{
 		return transferStepConfig.sizeOfTransfersArray();
 	}
