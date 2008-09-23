@@ -70,7 +70,7 @@ public class CurrencyConverterSoapImpl implements CurrencyConvertorSoap {
 		<subsection name="Publishing the implementation">
 		<p>Once implemented, publish the Web Service as described in the <a href="bottomup.html">Publish</a> 
 		document. Since you have already generated a mapping file during the "consume" process and the 
-		WSDL is publicaly available, you should specify to reuse the created mapping file and uncheck the 
+		WSDL is publically available, you should specify to reuse the created mapping file and uncheck the 
 		option to import the WSDL into the JBossWS Project:</p>
 		<p align="center"><img src="images/implement_override.gif" alt="publishing the web service"/></p>
 		<p>If you have the WSDL locally, you can select to use it instead and must also specify the 

@@ -100,7 +100,7 @@
 		<li>Much enhanced ValueTransfer teststep allowing transfer of properties between any other teststeps</li>
 		<li>TestCase options for setting session keeping, failure on error, etc.</li>
 		<li>A TestSuite viewer/runner (see below)</li>
-		<li>Possibility to loop a testcase continueously</li>
+		<li>Possibility to loop a testcase continuously</li>
 		</ul>
 		</subsection>
 		<subsection name="Properties TestStep">

@@ -91,7 +91,7 @@
 		<li>Much enhanced ValueTransfer teststep allowing transfer of properties between any other teststeps</li>
 		<li>TestCase options for setting session keeping, failure on error, etc.</li>
 		<li>A TestSuite viewer/runner (see below)</li>
-		<li>Possibility to loop a testcase continueously</li>
+		<li>Possibility to loop a testcase continuously</li>
 		</ul>
 		</subsection>
 		<subsection name="Properties TestStep">
@@ -124,7 +124,7 @@
 		
 		</subsection>
 		<subsection name="Improved Logging">
-		<p>Logging has been color-coded and improved to include a HTTP wire log and a seperate log for groovy scripts:</p>
+		<p>Logging has been color-coded and improved to include a HTTP wire log and a separate log for groovy scripts:</p>
 		<p align="center"><img src="images/log_tabs.gif" alt="HTTP wire log and separate log for groovy scripts"/></p>
 		</subsection>
 		

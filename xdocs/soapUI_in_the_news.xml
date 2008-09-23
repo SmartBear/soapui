@@ -96,7 +96,7 @@
 	    		<img src="images/inthenews/jroller.gif" alt="soap test tutorial"/>
 	    		</column>
 	    		<column align="left">
-	    			<p>The post starts: "In the first post here, I wantd to jot down what I...." <br/>
+	    			<p>The post starts: "In the first post here, I wanted to jot down what I...." <br/>
 	    			<a href="http://jroller.com/cwap/entry/first_post">[Read more]</a></p>
 	    		</column>
 	    	</columns>
@@ -210,7 +210,7 @@
 	    	</columns>
 		</subsection>	
 		
-		<subsection name="From SOAPscoe to soapUI">
+		<subsection name="From SOAPscope to soapUI">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/testingr.gif" alt="soapUI for wsdl testing"/>

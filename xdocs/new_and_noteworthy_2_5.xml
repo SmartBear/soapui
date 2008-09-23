@@ -101,7 +101,7 @@
 		<li> Fixed NPE when initializing properties</li>
 		<li> Fixed corruption of PropertyTransfer, ConditionalGoto and RunTestCase teststeps</li>
 		<li> Fixed invalid Regular Expression in XSDs to get discarded and show a warning</li>
-		<li> Fixed parallell execution of TestCases in TestSuites</li>
+		<li> Fixed parallel execution of TestCases in TestSuites</li>
 		<li> Fixed encoding-problems when compiling Groovy Scripts</li>
 		<li> Added support for %20 as space-delimiter in command-line arguments (for Unix/linux)</li>
 		<li> Fixed check to recreate messages when updating interface</li>
@@ -208,7 +208,7 @@
 						<li>You then refer to these configurations in the requests and responses either from the new "Aut" inspector
 						which handles all authentication-related settings for a request, or from dedicated Property-editors/fields</li>
 						<li>MockServices can have an associated Incoming WSS configuration that will be used to decrypt any incoming
-						messages before they are dispatched which may be necessay for correct dispatch if the entire message content
+						messages before they are dispatched which may be necessary for correct dispatch if the entire message content
 						is encrypted.</li>
 						<li>SOAP Monitors can have associated Incoming WSS configurations for decrypting/verifying both 
 						incoming requests to the target service and for the corresponding response, making it easy to see 
@@ -237,7 +237,7 @@
 						interface is Document/Literal.</li>
 						<li>Service Endpoints. The Service Endpoint Editor was available by right-clicking the 
 						interface before but is now in a non-modal tab which we think increases usability. Also, it is now
-						possible to associate default incoming/ougoing WSS configurations (see above) with an endpoint.</li>
+						possible to associate default incoming/outgoing WSS configurations (see above) with an endpoint.</li>
 						<li>WSDL Content. The Old inspector, view the WSDL.</li>
 						<li> WS-I Compliance. This was, as Service Endpoints, available in the Interface context menu, 
 						but is added for usability reasons.</li>
@@ -266,7 +266,7 @@
 		</newfeature>
 		
 		<newfeature img="images/2/loadteststats.gif" alt="soap test raw editor">
-		<div>LoadTests can now continuously export statistics to comma-seperated files for manuall processing/reporting in 
+		<div>LoadTests can now continuously export statistics to comma-separated files for manuall processing/reporting in 
 		Excel, etc...</div>
 		</newfeature>
 		
@@ -559,7 +559,7 @@ ${TestStep-name#Property-name} refers to a property in a named TestStep.
 			<ul>
 			<li>Functional Tests - calculate the WSDL coverage for your running tests, how much of the WSDL contract are you actually testing and asserting?</li>
 			<li>MockServices - calculate the WSDL coverage for your MockServices, how much of the WSDL contract are you client sending in and mocks returning?</li>
-			<li>Monitors - calculate the WSDL coverage on monitored traffice, how much of your WSDL contract are you actually using?</li>
+			<li>Monitors - calculate the WSDL coverage on monitored traffic, how much of your WSDL contract are you actually using?</li>
 			</ul>
 			<p>Coverage information is updated in realtime and can be ongoing monitored during the above mentioned processes</p>
 			<p>Also, a specialized Coverage Inspector is available for displaying an edited messages coverage:</p>
