@@ -220,6 +220,11 @@ public class DefaultSoapUICore implements SoapUICore
       {
          settings.setBoolean( UISettings.AUTO_SAVE_PROJECTS_ON_EXIT, true );
       }
+
+      if( !settings.isSet( UISettings.SHOW_DESCRIPTIONS))
+      {
+         settings.setBoolean( UISettings.SHOW_DESCRIPTIONS, true );
+      }
       
 		return settings;
 	}

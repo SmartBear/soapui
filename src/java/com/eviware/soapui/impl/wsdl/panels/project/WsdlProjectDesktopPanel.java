@@ -26,7 +26,9 @@ import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.util.ModelItemIconFactory;
+import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.components.MetricsPanel.MetricType;
@@ -104,7 +106,12 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 
 		inspectorPanel.setCurrentInspector( "Properties" );
 
-		treeModelListener = new InternalTreeModelListener();
+      if( StringUtils.hasContent( getModelItem().getDescription() ) && getModelItem().getSettings().getBoolean( UISettings.SHOW_DESCRIPTIONS ) )
+      {
+         inspectorPanel.setCurrentInspector( "Description" );
+      }
+
+      treeModelListener = new InternalTreeModelListener();
 		SoapUI.getNavigator().getMainTree().getModel().addTreeModelListener( treeModelListener );
 
 		updateStatistics();

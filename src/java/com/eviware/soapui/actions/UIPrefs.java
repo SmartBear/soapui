@@ -35,6 +35,7 @@ public class UIPrefs implements Prefs
    public static final String ORDER_PROJECTS = "Order Projects";
    public static final String ORDER_TESTSUITES = "Order TestSuites";
    public static final String ORDER_REQUESTS = "Order Requests";
+   public static final String SHOW_DESCRIPTIONS = "";
    public static final String CREATE_BACKUP = "Create Backup";
    public static final String BACKUP_FOLDER = "Backup Folder";
    public static final String DESKTOP_TYPE = "Desktop Type";
@@ -43,13 +44,12 @@ public class UIPrefs implements Prefs
    public static final String SHOW_LOGS_AT_STARTUP = "Show Log Tabs";
    public static final String AUTOSAVE_INTERVAL = "AutoSave Interval";
    public static final String AUTOSAVE_ONEXIT = "Save projects on exit";
-   public static final String SHOW_STARTUP = "Show Startup Page";
+   public static final String SHOW_STARTUP_PAGE = "Show Startup Page";
 
    private SimpleForm editorForm;
    private final String title;
    private JCheckBox backupCheckBox;
    private JTextField backupFolder;
-   private JCheckBox autoSaveCheckBox;
 
    public UIPrefs( String title )
    {
@@ -72,9 +72,10 @@ public class UIPrefs implements Prefs
          editorForm.appendCheckBox( ORDER_PROJECTS, "(orders Projects alphabetically in tree)", false );
          editorForm.appendCheckBox( ORDER_REQUESTS, "(orders Requests alphabetically in tree)", false );
          editorForm.appendCheckBox( ORDER_TESTSUITES, "(orders TestSuites alphabetically in tree)", false );
+         editorForm.appendCheckBox( SHOW_DESCRIPTIONS, "(show Description Content when available)", false );
          editorForm.appendSeparator();
 
-         autoSaveCheckBox = editorForm.appendCheckBox( AUTOSAVE_ONEXIT, "(automatically save all projects on exit)", true );
+         editorForm.appendCheckBox( AUTOSAVE_ONEXIT, "(automatically save all projects on exit)", true );
          backupCheckBox = editorForm.appendCheckBox( CREATE_BACKUP, "(backup project files before they are saved)", true );
          backupFolder = editorForm.appendTextField( BACKUP_FOLDER, "(folder to backup to, can be both relative or absolut)" );
          backupCheckBox.addActionListener( new ActionListener()
@@ -102,7 +103,7 @@ public class UIPrefs implements Prefs
          if( SoapUI.isStandalone() )
          {
             editorForm.appendCheckBox( SHOW_LOGS_AT_STARTUP, "(shows log tabs when starting soapUI)", false );
-            editorForm.appendCheckBox( SHOW_STARTUP, "(opens startup webpage when starting soapUI)", false );
+            editorForm.appendCheckBox( SHOW_STARTUP_PAGE, "(opens startup webpage when starting soapUI)", false );
          }
       }
 
@@ -122,6 +123,7 @@ public class UIPrefs implements Prefs
       settings.setBoolean( UISettings.ORDER_PROJECTS, values.getBoolean( ORDER_PROJECTS ) );
       settings.setBoolean( UISettings.ORDER_REQUESTS, values.getBoolean( ORDER_REQUESTS ) );
       settings.setBoolean( UISettings.ORDER_TESTSUITES, values.getBoolean( ORDER_TESTSUITES ) );
+      settings.setBoolean( UISettings.SHOW_DESCRIPTIONS, values.getBoolean( SHOW_DESCRIPTIONS ));
       settings.setBoolean( UISettings.CREATE_BACKUP, values.getBoolean( CREATE_BACKUP ) );
       settings.setString( UISettings.BACKUP_FOLDER, values.get( BACKUP_FOLDER ) );
       settings.setString( UISettings.AUTO_SAVE_INTERVAL, values.get( AUTOSAVE_INTERVAL ) );
@@ -137,7 +139,7 @@ public class UIPrefs implements Prefs
       if( SoapUI.isStandalone() ) 
       {
          settings.setBoolean( UISettings.SHOW_LOGS_AT_STARTUP, values.getBoolean( SHOW_LOGS_AT_STARTUP ) );
-         settings.setBoolean( UISettings.SHOW_STARTUP_PAGE, values.getBoolean( SHOW_STARTUP ) );
+         settings.setBoolean( UISettings.SHOW_STARTUP_PAGE, values.getBoolean( SHOW_STARTUP_PAGE ) );
       }
 
       SoapUI.initAutoSaveTimer();
@@ -156,6 +158,7 @@ public class UIPrefs implements Prefs
       values.put( ORDER_PROJECTS, settings.getBoolean( UISettings.ORDER_PROJECTS ) );
       values.put( ORDER_REQUESTS, settings.getBoolean( UISettings.ORDER_REQUESTS ) );
       values.put( ORDER_TESTSUITES, settings.getBoolean( UISettings.ORDER_TESTSUITES ) );
+      values.put( SHOW_DESCRIPTIONS, settings.getBoolean( UISettings.SHOW_DESCRIPTIONS ) );
       values.put( CREATE_BACKUP, settings.getBoolean( UISettings.CREATE_BACKUP ) );
       values.put( BACKUP_FOLDER, settings.getString( UISettings.BACKUP_FOLDER, "" ) );
       values.put( AUTOSAVE_INTERVAL, settings.getString( UISettings.AUTO_SAVE_INTERVAL, "0" ) );
@@ -169,7 +172,10 @@ public class UIPrefs implements Prefs
 
       values.put( ENABLE_GROOVY_LOG_DURING_LOADTEST, settings.getBoolean( UISettings.DONT_DISABLE_GROOVY_LOG ) );
       if( SoapUI.isStandalone() )
+      {
          values.put( SHOW_LOGS_AT_STARTUP, settings.getBoolean( UISettings.SHOW_LOGS_AT_STARTUP ) );
+         values.put( SHOW_STARTUP_PAGE, settings.getBoolean( UISettings.SHOW_STARTUP_PAGE ) );
+      }
 
       return values;
    }

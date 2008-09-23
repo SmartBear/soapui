@@ -100,6 +100,7 @@ public class AddWsdlAction extends AbstractSoapUIAction<WsdlProject>
                   url = new File( url ).toURI().toURL().toString();
 
                importWsdl( project, url );
+               break;
             }
          }
          catch( Exception ex )

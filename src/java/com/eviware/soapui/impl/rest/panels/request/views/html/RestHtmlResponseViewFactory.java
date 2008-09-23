@@ -28,7 +28,7 @@ public class RestHtmlResponseViewFactory implements ResponseEditorViewFactory
 	{
 		if( editor instanceof RestResponseMessageEditor && modelItem instanceof RestRequest )
 		{
-			return new RestHtmlResponseView( (RestResponseMessageEditor) editor, (RestRequest) modelItem );
+//			return new RestHtmlResponseView( (RestResponseMessageEditor) editor, (RestRequest) modelItem );
 		}
 		
 		return null;

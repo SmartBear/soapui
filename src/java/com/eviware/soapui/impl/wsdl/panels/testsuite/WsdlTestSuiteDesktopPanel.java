@@ -29,6 +29,7 @@ import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
+import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -89,8 +90,10 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 		inspectorPanel.addInspector( new JComponentInspector( buildRunLog(), "TestSuite Log", 
 					"Log of executed TestCases and TestSteps", true ));
 
-      if( StringUtils.hasContent( getModelItem().getDescription() ))
+      if( StringUtils.hasContent( getModelItem().getDescription() ) && getModelItem().getSettings().getBoolean( UISettings.SHOW_DESCRIPTIONS ))
+      {
          testCaseListInspectorPanel.setCurrentInspector( "Description" );
+      }
 
 		return inspectorPanel.getComponent();
 	}
