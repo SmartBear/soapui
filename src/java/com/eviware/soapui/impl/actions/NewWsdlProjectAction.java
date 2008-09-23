@@ -18,6 +18,7 @@ import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.rest.actions.project.NewRestServiceAction;
+import com.eviware.soapui.impl.rest.actions.service.GenerateRestTestSuiteAction;
 import com.eviware.soapui.impl.rest.support.WadlImporter;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -70,7 +71,7 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
                dialog.getFormField( Form.CREATEREQUEST ).setEnabled( value.length() > 0 );
                dialog.getFormField( Form.GENERATEMOCKSERVICE ).setEnabled( newValue.trim().length() > 0 && !newValue.endsWith( ".wadl" ));
-               dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( newValue.trim().length() > 0 && !newValue.endsWith( ".wadl" ));
+               dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( newValue.trim().length() > 0 );
                dialog.getFormField( Form.ADDRESTSERVICE ).setEnabled( newValue.trim().length() == 0 );
             }
          } );
@@ -144,6 +145,12 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
       try
       {
          new WadlImporter( restService ).initFromWadl( url );
+
+         if( dialog.getBooleanValue( Form.GENERATETESTSUITE ) )
+         {
+            GenerateRestTestSuiteAction generateTestSuiteAction = new GenerateRestTestSuiteAction();
+            generateTestSuiteAction.generateTestSuite( restService, true );
+         }
       }
       catch( Exception e )
       {
@@ -159,13 +166,13 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
       {
          UISupport.select( iface );
 
-         if( dialog.getValue( Form.GENERATETESTSUITE ).equals( "true" ) )
+         if( dialog.getBooleanValue( Form.GENERATETESTSUITE ) )
          {
             GenerateWsdlTestSuiteAction generateTestSuiteAction = new GenerateWsdlTestSuiteAction();
             generateTestSuiteAction.generateTestSuite( iface, true );
          }
 
-         if( dialog.getValue( Form.GENERATEMOCKSERVICE ).equals( "true" ) )
+         if( dialog.getBooleanValue( Form.GENERATEMOCKSERVICE ) )
          {
             GenerateMockServiceAction generateMockAction = new GenerateMockServiceAction();
             generateMockAction.generateMockService( iface, false );
