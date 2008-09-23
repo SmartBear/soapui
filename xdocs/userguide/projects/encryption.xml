@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Project encryption</title>
+    </properties>
+    <body>
+		<section name="Project Encryption">
+		<p>To protect sensitive data in projects files <b>Project Password</b> property is added. Setting this 
+		property, typing a password, will cause that project file will be encrypted when saved. Aslo, this will 
+		be marked in <b>Navigator</b>.</p>
+		<p align="center"><img src="images/non-encrypted-project.gif" alt="non encrypted opened project"/>
+		<img src="images/encrypted-project.gif" alt="encrypted open project"/></p>
+		<p>Project <b>can not</b> be composite and encrypted at same time. If you set password for composite project composite
+		property will set to false and error message will be prompted. Same goes if yoo try to set composite propety true
+		on encrypted project.
+		<p align="center"><img src="images/password-composite.gif" alt="project settings"/></p>
+        </p>
+        <subsection name="Working with encrypted project">
+        <p>When start SoapUI you will not be promted for password for encrypted projects. You need to open them and than you
+        will be prompted for password:
+        <p align="center"><img src="images/password-dialog.gif" alt="project password dialog"/></p>
+        If password is correct project will be opened, if password is wrong it stays closed. 
+        </p>
+        </subsection>
+        <subsection name="Encryption in global settings">
+        <p>If you need to protect data that are stored in global settings there is global password setting:
+        <p align="center"><img src="images/global-password.gif" alt="Global password setting"/></p>
+        Setting global password will encrypt soapui-settings.xml where SoapUI global settigns are stored. When starting
+        SoapUI with encrypted soapui-settings.xml you will be asked for password first:
+        <p align="center"><img src="images/global-password2.gif" alt="Global password setting dialog"/></p>
+        If correct SoapUI will restore all your settings with workspace and projects. If not you'll see:
+        <p align="center"><img src="images/bad-global-password.gif" alt="Global password - bad password"/></p>
+        Old soapui-settings will be saved in backup file and default settings will replace your old settings.
+        </p>
+        </subsection>
+		 <p><hr size="1"/>Next: <a href=" "> </a></p>
+		</section>
+    </body>
+</document>
