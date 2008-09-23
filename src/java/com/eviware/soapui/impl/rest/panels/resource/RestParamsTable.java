@@ -9,16 +9,18 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.*;
 import com.jgoodies.binding.PresentationModel;
-import org.apache.xmlbeans.XmlBoolean;
-import org.apache.xmlbeans.XmlInt;
-import org.apache.xmlbeans.XmlString;
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlBeans;
 import org.jdesktop.swingx.JXTable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.xml.namespace.QName;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RestParamsTable extends JPanel
 {
@@ -94,16 +96,21 @@ public class RestParamsTable extends JPanel
 		form.addSpace( 5 );
 		form.appendCheckBox("required", "Required", "Sets if parameter is required");
 		form.appendTextField( "defaultValue", "Default", "The default value for this parameter" );
-		form.appendComboBox( "type", "Type", new Object[] {
-				XmlString.type.getName(), XmlBoolean.type.getName(), XmlInt.type.getName()
-		}, "The type of the parameter");
+
+      List<QName> types = new ArrayList<QName>();
+      for( SchemaType type : XmlBeans.getBuiltinTypeSystem().globalTypes())
+      {
+         types.add( type.getName() );
+      }
+
+		form.appendComboBox( "type", "Type", types.toArray(), "The type of the parameter");
 		optionsFormComponent = new StringListFormComponent( "Available values for this Parameter" );
 		optionsFormComponent.setPreferredSize(new Dimension( 350, 80 ));
 		form.appendComponent("options", "Options", optionsFormComponent );
 		form.appendTextField("description", "Description", "A short description of the parameter" );
 		
 		form.addSpace( 5 );
-		
+
 		return new JScrollPane( form.getPanel() );
 	}
 

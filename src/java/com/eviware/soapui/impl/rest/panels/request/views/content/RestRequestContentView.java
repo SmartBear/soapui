@@ -154,7 +154,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
       JXToolBar toolbar = UISupport.createToolbar();
 
       mediaTypeCombo = new JComboBox( getRequestMediaTypes() );
-      mediaTypeCombo.setPreferredSize( new Dimension( 200, 20 ) );
+      mediaTypeCombo.setPreferredSize( new Dimension( 120, 20 ) );
       mediaTypeCombo.setEnabled( restRequest.hasRequestBody() );
       mediaTypeCombo.setEditable( true );
       mediaTypeCombo.setSelectedItem( restRequest.getMediaType() );
@@ -186,9 +186,11 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
          }
       } );
 
-      postQueryCheckBox.setPreferredSize( new Dimension( 200, 20 ) );
+      postQueryCheckBox.setPreferredSize( new Dimension( 130, 20 ) );
       toolbar.addFixed( postQueryCheckBox );
 
+      toolbar.setMinimumSize( new Dimension( 50, 20) );
+      
       return toolbar;
    }
 
