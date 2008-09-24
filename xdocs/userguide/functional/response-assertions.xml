@@ -251,8 +251,8 @@ assert holder["//ns1:RequestId"] != null</source>
 		 </subsection>
 		 
 		 <subsection name="WS-A Assertion">
-		 <p>Validates that the response has valid WS-A header properties as specified  by the 
-		 <a href="http://www.w3.org/TR/2006/REC-ws-addr-soap-20060509/">WS-A SOAP Binding </a>.</p>
+		 <p>Validates that the response has valid WS-A header properties as specified  in 
+		 <a href="http://www.w3.org/TR/2006/WD-ws-addr-wsdl-20060216/#WSDLMEPS">WS-Addressing and WSDL Message Exchange Patterns </a>.</p>
 		 <p>This assertion has no configuration parameters.</p>
 		 </subsection>
 		 

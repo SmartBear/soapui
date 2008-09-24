@@ -222,11 +222,16 @@ Both will improve your productivity and make Web Service Testing more fun.
 		according to <a href="http://www.w3.org/Submission/ws-addressing/#_Toc77464322">WS Addressing specification</a></p>
 		<li>Enable WS-A Addressing</li>
 		<li>Must understand indicates whether a header entry is mandatory or optional for the recipient to process.</li>
-		<li>Action - REQUIRED element specifies the value of the Action property. If not specified, and WS-A Settings (see <a href="preferences.html#WS-A_Settings">Preferences</a>)
+		<li>Action - REQUIRED element specifies the value of the Action property. If not specified, and WS-A Settings 
+		(see <a href="preferences.html#WS-A_Settings">Preferences</a>)
 		'Use default Action' is checked , default action from wsdl will be generated.</li>
 		<li>To - OPTIONAL element specifies the value of the To property</li>
-		<li>ReplyTo - OPTIONAL element specifies the value of the ReplyTo property</li>
-		<li>MessageID - OPTIONAL element specifies the value of the MessageID property. If not specified, and WS-A Settings (see <a href="preferences.html#WS-A_Settings">Preferences</a>)
+		<li>ReplyTo - OPTIONAL element specifies the value of the ReplyTo property. If not specified, and Anonymous property 
+		is set to 'required', either on <a href="interfaces/index.html#Interface_Details_Tab">Interface</a> or 
+		<a href="operations.html#Operation_Details_Tab">Operation</a> level , default value of 
+		'http://www.w3.org/2005/08/addressing/anonymous' will be used (Operation level definition has priority if not 'optional').</li>
+		<li>MessageID - OPTIONAL element specifies the value of the MessageID property. If not specified, and WS-A Settings 
+		(see <a href="preferences.html#WS-A_Settings">Preferences</a>)
 		'Generate MessageID' is checked , random MessageID will be generated for RequestResponse operation.</li>
 		<li>From - OPTIONAL element specifies the value of the From property</li>
 		<li>FaultTo - OPTIONAL element specifies the value of the FaultTo property</li>

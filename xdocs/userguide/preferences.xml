@@ -242,8 +242,14 @@
 		<table><tr><th>Setting</th><th>Description</th></tr>
 		<tr><td>Use default Action</td><td>Indicates using<a href="http://www.w3.org/TR/ws-addr-wsdl/#defactionwsdl11"> default Action </a>generated from Wsdl</td></tr>
 		<tr><td>Generate MessageID</td><td>Randomly generates unique messageID</td></tr>
-		<tr><td>Use default RelationshipType</td><td>Indicates using default 'reply' for RelationshipType</td></tr>
+		<tr><td>Use default RelationshipType</td><td>Indicates using default 'reply' for RelationshipType 
+		as specified in <a href="http://www.w3.org/TR/ws-addr-core/#msgaddrprops">Message Addressing Properties</a></td></tr>
+		<tr><td>Use default RelatesTo</td><td>Indicates using default 'unspecified' for RelatesTo
+		as specified in <a href="http://www.w3.org/TR/ws-addr-core/#msgaddrprops">Message Addressing Properties</a></td></tr>
 		<tr><td>Override existing headers</td><td>Indicates replacing/skipping(if unchecked) already existing headers</td></tr>
+		<tr><td>Enable for optional Addressing policy</td><td>Enables WS Addressing for Policy Addressing Assertion attribute Optional="true"
+		(see the <a href="http://www.w3.org/TR/2007/REC-ws-addr-metadata-20070904/#wspolicyassertions">WS-Policy Assertions
+		specification</a>)</td></tr>
 		</table>
 		
 		<p align="center"><img src="images/wsa_settings.gif" alt="The soapUI Pro Settings Tab in soapUI"/></p>
