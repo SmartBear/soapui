@@ -1,5 +1,7 @@
 package com.eviware.soapui.support.components;
 
+import com.eviware.soapui.support.DefaultHyperlinkListener;
+
 import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
@@ -23,6 +25,7 @@ public class BrowserComponent
       editorPane = new JEditorPane();
       editorPane.setEditorKit( new HTMLEditorKit() );
       editorPane.setEditable( false );
+      editorPane.addHyperlinkListener( new DefaultHyperlinkListener( editorPane ));
    }
 
    public Component getComponent()
