@@ -271,6 +271,7 @@ public class DefaultSoapUICore implements SoapUICore
 
       settings.setBoolean( WsaSettings.USE_DEFAULT_ACTION, true );
       settings.setBoolean( WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE, true );
+      settings.setBoolean( WsaSettings.USE_DEFAULT_RELATES_TO, true );
       settings.setBoolean( WsaSettings.GENERATE_MESSAGE_ID, true );
       settings.setBoolean( WsaSettings.OVERRIDE_EXISTING_HEADERS, true );
       settings.setBoolean( WsaSettings.ENABLE_FOR_OPTIONAL, true );

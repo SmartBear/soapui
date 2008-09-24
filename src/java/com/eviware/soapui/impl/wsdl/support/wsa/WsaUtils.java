@@ -58,7 +58,9 @@ public class WsaUtils
 	String wsaVersionNameSpace;
 	String anonymousType;
 	String anonymousAddress;
-	String relatesToReply;
+	String relationshipTypeReply;
+	// used for mock response relates to if request.messageId not specified
+	String unspecifiedMessage;
 	String content;
 	// needed for checking if ws-a already applied before
 	XmlObject xmlHeaderObject;
@@ -89,10 +91,12 @@ public class WsaUtils
 			wsaVersionNameSpace = WS_A_VERSION_200408;
 		}
 		anonymousAddress = wsaVersionNameSpace + "/anonymous";
-		relatesToReply = wsaVersionNameSpace + "/reply";
+		relationshipTypeReply = wsaVersionNameSpace + "/reply";
+		unspecifiedMessage = wsaVersionNameSpace + "/unspecified";
 
 		anonymousType = wsaContainer.getOperation().getAnonymous();
-		//if optional at operation level, check policy specification on interface level
+		// if optional at operation level, check policy specification on interface
+		// level
 		if (anonymousType.equals(AnonymousTypeConfig.OPTIONAL.toString()))
 		{
 			anonymousType = wsaContainer.getOperation().getInterface().getAnonymous();
@@ -189,7 +193,7 @@ public class WsaUtils
 			}
 			else if (!StringUtils.isNullOrEmpty(replyTo))
 			{
-				if (! (AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType) && isAnonymousAddress(replyTo)))
+				if (!(AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType) && isAnonymousAddress(replyTo,wsaVersionNameSpace)))
 				{
 					header.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, replyTo));
 				}
@@ -334,11 +338,21 @@ public class WsaUtils
 				}
 
 				String relationshipType = wsaContainer.getWsaConfig().getRelationshipType();
-				if (!StringUtils.isNullOrEmpty(relationshipType) && !StringUtils.isNullOrEmpty(requestMessageId))
+				if (!StringUtils.isNullOrEmpty(relationshipType))
 				{
-					header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement, relationshipType,
-							requestMessageId));
-					wsaContainer.getWsaConfig().setRelatesTo(requestMessageId);
+					if (!StringUtils.isNullOrEmpty(requestMessageId))
+					{
+						header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement, relationshipType,
+								requestMessageId));
+						wsaContainer.getWsaConfig().setRelatesTo(requestMessageId);
+					}
+					else if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_RELATES_TO))
+					{
+						// if request.messageId not specified use unspecifiedMessage
+						header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement, relationshipType,
+								unspecifiedMessage));
+						wsaContainer.getWsaConfig().setRelatesTo(unspecifiedMessage);
+					}
 				}
 				else if (wsaContainer instanceof WsdlMockResponse)
 				{
@@ -347,9 +361,18 @@ public class WsaUtils
 						if (!StringUtils.isNullOrEmpty(requestMessageId))
 						{
 							header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement,
-									relatesToReply, requestMessageId));
-							wsaContainer.getWsaConfig().setRelationshipType(relatesToReply);
+									relationshipTypeReply, requestMessageId));
+							wsaContainer.getWsaConfig().setRelationshipType(relationshipTypeReply);
 							wsaContainer.getWsaConfig().setRelatesTo(requestMessageId);
+						}
+						else if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_RELATES_TO))
+						{
+							// if request.messageId not specified use
+							// unspecifiedMessage
+							header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement,
+									relationshipTypeReply, unspecifiedMessage));
+							wsaContainer.getWsaConfig().setRelationshipType(relationshipTypeReply);
+							wsaContainer.getWsaConfig().setRelatesTo(unspecifiedMessage);
 						}
 					}
 				}
@@ -370,8 +393,7 @@ public class WsaUtils
 				String to = wsaContainer.getWsaConfig().getTo();
 				if (!StringUtils.isNullOrEmpty(to))
 				{
-					if (! (AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType)
-							&& isAnonymousAddress(to)) )
+					if (!(AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType) && isAnonymousAddress(to,wsaVersionNameSpace)))
 					{
 						header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement, to));
 					}
@@ -381,9 +403,9 @@ public class WsaUtils
 					// if to not specified but wsa:to mandatory get default value
 					if (!StringUtils.isNullOrEmpty(requestReplyToValue))
 					{
-						//if anonymous prohibited than default anonymous should not be added 
-						if (! (AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType)
-								&& isAnonymousAddress(requestReplyToValue)) )
+						// if anonymous prohibited than default anonymous should not
+						// be added
+						if (!(AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType) && isAnonymousAddress(requestReplyToValue,wsaVersionNameSpace)))
 						{
 							header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement,
 									requestReplyToValue));
@@ -409,11 +431,17 @@ public class WsaUtils
 				}
 				else if (wsaContainer instanceof WsdlMockResponse)
 				{
-					if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE)
-							&& !StringUtils.isNullOrEmpty(relatesTo))
+					if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE))
 					{
-						header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement, relatesToReply,
-								relatesTo));
+						if (!StringUtils.isNullOrEmpty(relatesTo))
+						{
+							header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement,
+									relationshipTypeReply, relatesTo));
+						} else if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_RELATES_TO))
+						{
+							header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement,
+									relationshipTypeReply, unspecifiedMessage));
+						}
 					}
 				}
 
@@ -535,10 +563,15 @@ public class WsaUtils
 
 		return content;
 	}
-	public static boolean isAnonymousAddress(String address)
+
+	public static boolean isAnonymousAddress(String address, String wsaVersionNamespace)
 	{
-		return (address.equals("http://www.w3.org/2005/08/addressing/anonymous") || 
-		address.equals("http://schemas.xmlsoap.org/ws/2004/08/addressing/anonymous")) ? true : false;
+		return (address.equals(wsaVersionNamespace + "/anonymous")) ? true : false;
+	}
+
+	public static boolean isNoneAddress(String address, String wsaVersionNamespace)
+	{
+		return (address.equals(wsaVersionNamespace + "/none")) ? true : false;
 	}
 
 }

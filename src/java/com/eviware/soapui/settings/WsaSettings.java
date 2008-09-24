@@ -27,11 +27,11 @@ public interface WsaSettings {
 	@Setting( name="Generate MessageID", description="Randomly generate MessageID", type=SettingType.BOOLEAN )
 	public final static String GENERATE_MESSAGE_ID = WsaSettings.class.getSimpleName() + "@" + "generateMessageID";
 	
-//	@Setting( name="Use default ReplyTo", description="Use default 'anonymous' for ReplyTo ", type=SettingType.BOOLEAN )
-//	public final static String USE_DEFAULT_REPLYTO = WsaSettings.class.getSimpleName() + "@" + "useDefaultReplyTo";
-//	
 	@Setting( name="Use default RelationshipType", description="Use default 'reply' for RelationshipType", type=SettingType.BOOLEAN )
 	public final static String USE_DEFAULT_RELATIONSHIP_TYPE = WsaSettings.class.getSimpleName() + "@" + "useDefaultRelationshipType";
+	
+	@Setting( name="Use default RelatesTo", description="Use default 'unspecified' for RelatesTo", type=SettingType.BOOLEAN )
+	public final static String USE_DEFAULT_RELATES_TO = WsaSettings.class.getSimpleName() + "@" + "useDefaultRelatesTo";
 	
 	@Setting( name="Override existing headers", description="Replaces existing WS-A headers (or skips them if unchecked) ", type=SettingType.BOOLEAN )
 	public final static String OVERRIDE_EXISTING_HEADERS = WsaSettings.class.getSimpleName() + "@" + "overrideExistingHeaders";

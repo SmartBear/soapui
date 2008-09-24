@@ -116,7 +116,7 @@ public class WsaValidator
          {
             // check for anonymous - in case of mock response to=request.replyTo
             if( AnonymousTypeConfig.PROHIBITED.toString().equals( messageExchange.getOperation().getAnonymous() )
-                    && WsaUtils.isAnonymousAddress(toAddressValue) )
+                    && WsaUtils.isAnonymousAddress(toAddressValue,wsaVersionNameSpace) )
             {
 					throw new AssertionException( new AssertionError("WS-A InvalidAddressingHeader To , Anonymous addresses are prohibited") );
             }
@@ -133,11 +133,11 @@ public class WsaValidator
                {
                   // check for anonymous
                   if( AnonymousTypeConfig.PROHIBITED.toString().equals( messageExchange.getOperation().getAnonymous() )
-                          && WsaUtils.isAnonymousAddress(faultToAddressValue) )
+                          && WsaUtils.isAnonymousAddress(faultToAddressValue,wsaVersionNameSpace) )
                   {
                      throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader FaultTo , Anonymous addresses are prohibited" ) );
                   } else if (AnonymousTypeConfig.REQUIRED.toString().equals( ((WsdlMessageExchange) messageExchange).getOperation().getAnonymous() )
-                        && !WsaUtils.isAnonymousAddress(faultToAddressValue))
+                        && !(WsaUtils.isAnonymousAddress(faultToAddressValue,wsaVersionNameSpace) || WsaUtils.isNoneAddress(faultToAddressValue,wsaVersionNameSpace)))
                   {
                   	throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader FaultTo , Anonymous addresses are required" ) );
                   }
@@ -190,11 +190,11 @@ public class WsaValidator
 			} else {
             // check for anonymous
             if( AnonymousTypeConfig.PROHIBITED.toString().equals( ((WsdlMessageExchange) messageExchange).getOperation().getAnonymous() )
-                    && WsaUtils.isAnonymousAddress(replyToAddressValue) )
+                    && WsaUtils.isAnonymousAddress(replyToAddressValue,wsaVersionNameSpace) )
             {
                throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader ReplyTo , Anonymous addresses are prohibited" ) );
             } else if (AnonymousTypeConfig.REQUIRED.toString().equals( ((WsdlMessageExchange) messageExchange).getOperation().getAnonymous() )
-                  && !WsaUtils.isAnonymousAddress(replyToAddressValue))
+                  && !(WsaUtils.isAnonymousAddress(replyToAddressValue,wsaVersionNameSpace)|| WsaUtils.isNoneAddress(replyToAddressValue,wsaVersionNameSpace)))
             {
             	throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader ReplyTo , Anonymous addresses are required" ) );
             }
@@ -207,7 +207,7 @@ public class WsaValidator
 		String content = messageExchange.getResponseContent();
 		validateWsAddressingCommon(content);
 
-		// To is Mandatory
+		// RelatesTo is Mandatory
 		Element relatesToNode = XmlUtils.getFirstChildElementNS(header, wsaVersionNameSpace, "RelatesTo");
 		if (relatesToNode == null)
 		{
@@ -240,11 +240,11 @@ public class WsaValidator
             {
                // check for anonymous
                if( AnonymousTypeConfig.PROHIBITED.toString().equals( ((WsdlMessageExchange) messageExchange).getOperation().getAnonymous() )
-                       && WsaUtils.isAnonymousAddress(replyToAddressValue) )
+                       && WsaUtils.isAnonymousAddress(replyToAddressValue,wsaVersionNameSpace) )
                {
                   throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader ReplyTo , Anonymous addresses are prohibited" ) );
                } else if (AnonymousTypeConfig.REQUIRED.toString().equals( ((WsdlMessageExchange) messageExchange).getOperation().getAnonymous() )
-                     && !WsaUtils.isAnonymousAddress(replyToAddressValue))
+                     && !(WsaUtils.isAnonymousAddress(replyToAddressValue,wsaVersionNameSpace) || WsaUtils.isNoneAddress(replyToAddressValue,wsaVersionNameSpace)))
                {
                	throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader ReplyTo , Anonymous addresses are required" ) );
                }

@@ -48,7 +48,7 @@ public class WsdlInterfacePanelBuilder extends EmptyPanelBuilder<WsdlInterface>
    	table.addProperty( "WS-A version", "wsaVersion", 
    			new Object[]{ WsaVersionTypeConfig.NONE.toString(), 
    			WsaVersionTypeConfig.X_200408.toString(), WsaVersionTypeConfig.X_200508.toString() } );
-   	table.addProperty( "WS-A Anonymous", "anonymous", 
+   	table.addProperty( "WS-A anonymous", "anonymous", 
    			new Object[]{ AnonymousTypeConfig.OPTIONAL.toString(), 
    			AnonymousTypeConfig.REQUIRED.toString(), AnonymousTypeConfig.PROHIBITED.toString() } );
    	

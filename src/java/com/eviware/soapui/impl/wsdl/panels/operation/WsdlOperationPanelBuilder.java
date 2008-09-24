@@ -45,7 +45,7 @@ public class WsdlOperationPanelBuilder extends EmptyPanelBuilder<WsdlOperation>
 		table.addProperty( "Output", "outputName" );
 		table.addProperty( "Sends Attachments", "sendsAttachments" );
 		table.addProperty( "Receives Attachments", "receivesAttachments" );
-		table.addProperty( "WS-A Anonymous", "anonymous", new Object[]{ AnonymousTypeConfig.OPTIONAL.toString(), 
+		table.addProperty( "WS-A anonymous", "anonymous", new Object[]{ AnonymousTypeConfig.OPTIONAL.toString(), 
 				AnonymousTypeConfig.REQUIRED.toString(), AnonymousTypeConfig.PROHIBITED.toString() }  );
    	table.setPropertyObject( operation );
    	
