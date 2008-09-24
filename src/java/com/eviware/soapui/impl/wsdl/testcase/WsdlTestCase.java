@@ -12,17 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.testcase;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.LoadTestConfig;
 import com.eviware.soapui.config.TestCaseConfig;
@@ -36,19 +25,20 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.testsuite.LoadTest;
-import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunListener;
-import com.eviware.soapui.model.testsuite.TestRunner;
-import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
+import com.eviware.soapui.support.resolver.ResolveDialog;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * TestCase implementation for WSDL projects
@@ -424,8 +414,17 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		if( createCopy && newStepConfig.isSetId() )
 			newStepConfig.unsetId();
 
-		return insertTestStep( newStepConfig, index );
+      WsdlTestStep result = insertTestStep( newStepConfig, index );
+      resolveTestCase();
+      return result;
 	}
+
+   private void resolveTestCase()
+   {
+      ResolveDialog resolver = new ResolveDialog( "Validate TestCase", "Checks TestCase for inconsistencies", null );
+      resolver.setShowOkMessage( false );
+      resolver.resolve( this );
+   }
 
 	public WsdlTestStep[] importTestSteps( WsdlTestStep[] testSteps, int index, boolean createCopies )
 	{
@@ -439,7 +438,9 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 				newStepConfigs[c].unsetId();
 		}
 
-		return insertTestSteps( newStepConfigs, index );
+      WsdlTestStep[] result = insertTestSteps( newStepConfigs, index );
+      resolveTestCase();
+      return result;
 	}
 
 	public WsdlTestStep insertTestStep( TestStepConfig stepConfig, int ix )

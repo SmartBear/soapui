@@ -1093,6 +1093,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		testSuite.afterLoad();
 		fireTestSuiteAdded(testSuite);
 
+      resolveImportedTestSuite( testSuite );
+
 		return testSuite;
 	}
 
@@ -1362,10 +1364,15 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			testSuites.add(testSuite);
 			testSuite.afterLoad();
 			fireTestSuiteAdded(testSuite);
-			
-			ResolveDialog resolver = new ResolveDialog( "Validate TestSuite", "Checks TestSuite for inconsistencies", null);
-         resolver.setShowOkMessage( false );
-         resolver.resolve( testSuite );
+
+         resolveImportedTestSuite( testSuite );
 		}
 	}
+
+   private void resolveImportedTestSuite( WsdlTestSuite testSuite )
+   {
+      ResolveDialog resolver = new ResolveDialog( "Validate TestSuite", "Checks TestSuite for inconsistencies", null);
+      resolver.setShowOkMessage( false );
+      resolver.resolve( testSuite );
+   }
 }
