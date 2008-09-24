@@ -12,23 +12,16 @@
 
 package com.eviware.soapui.support;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
+import com.eviware.soapui.support.types.StringToStringMap;
+
+import java.io.*;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import com.eviware.soapui.support.types.StringToStringMap;
 
 public class Tools
 {
@@ -485,4 +478,14 @@ public class Tools
 		
 		return result.toString();
 	}
+
+   public static String getContentTypeFromFilename(String fileName)
+	{
+		return ContentTypeHandler.getContentTypeFromFilename( fileName );
+	}
+
+	public static String getExtensionForContentType( String contentType )
+   {
+      return ContentTypeHandler.getExtensionForContentType( contentType );
+   }
 }

@@ -51,6 +51,21 @@ public class ContentTypeHandler
 
 	}
 
+   public static String getExtensionForContentType( String contentType )
+   {
+      int ix = contentType.indexOf( ';' );
+      if( ix > 0 )
+         contentType = contentType.substring( 0, ix );
+      
+      for( String key : suffixToContentType.keySet())
+      {
+         if( suffixToContentType.get( key ).equals( contentType ))
+            return key;
+      }
+
+      return "dat";
+   }
+
 	static
 	{
 		suffixToContentType = new HashMap<String, String>();
@@ -302,6 +317,7 @@ public class ContentTypeHandler
 		suffixToContentType.put("ztardist", "application/x-ztardist");
 		suffixToContentType.put("wkz", "application/x-wingz");
 		suffixToContentType.put("iv", "graphics/x-inventor");
+      suffixToContentType.put( "dat", DEFAULT_CONTENTTYPE );
 	}
 
 }
