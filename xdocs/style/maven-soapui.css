@@ -23,12 +23,13 @@ a:active, a:hover {
   color:#69c;
 }
 
+/*
+Change Margin from 8px
+*/
 #banner
 {
-	background: url(../images/back.png);
 	padding: 0px;
-	margin: 8px;
-	border: 0px solid #ddd;
+	margin: 0px;
 	width: 1024px;
 	height: 68px;
 }
@@ -60,32 +61,33 @@ a.newWindow, a.newWindow:link, a.newWindow:visited, a.newWindow:active, a.newWin
 }
 
 h1 {
-	margin-top: 15px;	
+	margin-top: 15px;
+	font-family: Helvetica, Arial, sans-serif;  
 	margin-bottom: 12px;
-  padding-bottom: 3px;
-  color: #00cc33;
-  font-weight: normal;
-  font-size: 18.0pt;
-  text-align: center;
-  font-weight: bold;
+	padding-bottom: 3px;
+	color: #999999;
+	font-weight: normal;
+	font-size: 18pt;
+	text-align: left;
+	font-weight: bold;
 }
 
 h2 {
-	margin: 12px 0px 0px 0px;	
-  padding-bottom: 3px;
-  padding-top: 0px;
-  border-bottom: 1px solid #00cc33;
-  color: #00cc33;
-  font-weight: bold;
-  font-size: 16pt;
+	margin: 12px 0px 0px 0px;
+	padding-bottom: 3px;
+	padding-top: 0px;
+	border-bottom: 1px solid #33cc00;
+	color: #00cc33;;
+	font-weight: bold;
+	font-size: 16pt;
 }
 h3 {
-  padding-bottom: 3px;
-  border-bottom: 1px solid #00cc33;
-  color: #00cc33;
-  font-weight: bold;
-  font-size: medium;
-  margin-bottom: 0px;
+	padding-bottom: 3px;
+	border-bottom: 1px solid #00cc33;
+	color: #00cc33;
+	font-weight: bold;
+	font-size: medium;
+	margin-bottom: 0px;
 }
 
 
@@ -189,8 +191,8 @@ padding-bottom: 3px;
   margin-left: 18px;
   margin-right: 5px;
   background: white;
-  width: 819px;
   margin-top: 0px;
+  width:800px;
   
 }
 
@@ -268,8 +270,7 @@ table.imgTable, table.columnsTable
 	margin-left: 0px;
 	 margin-top: 8px;
 	 padding-left: 0px;
-	 border:none;
-	 
+	 border:none;	 
 }
 
 table.imgTable img, table.columnsTable img, table.bodyTable.img, p img
@@ -387,8 +388,25 @@ table.bodyTable tr.b {
 }
 
 table.gstable{
-  background: none;
-  margin-left: 5px;
+	background: none;
+	margin-left: 0px;
+	border: 1px;
+
+
+
+
+
+
+
+
+
+
+
+dotted; 
+	border-style: solid;
+	border-color: #CCCCCC;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 td.gstd{
@@ -420,12 +438,13 @@ margin-left: 9px;
 }
 
 #footer {
-  font-size: x-small;
-  width: 1024px;
+ font-size: x-small;
+  width: 200px;
 }
 
 .xright
 {
+	position: absolute;
 	text-align: right;
 }
 
@@ -511,86 +530,68 @@ table.functable img
 	padding: 7px;
 }
 
-#OpenPro{
-padding: 8px;
-padding-left: 13px;
-height: 130px;
+.evilist {
+	list-style-image: url(../images/evibullet.jpg);
+}
+.relatedInfoHeader {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 24px;
+	color: #999999;
+	padding-left: 1px;
+}
+.relatedLinks {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #999999;
+	padding-right: 10px;
+}
+.gsHeader {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 24px;
+	color: #999999;
+	padding-left: 5px;
+}
+.table.relatedInner {
+	background-color: #FFFFFF;
 }
 
-#OpenLeft{
-position: relative;
-left: 60px;
-width: 300px;
-height: 130px;
-float: left;
-background: url(../images/green_150.png) no-repeat;
-text-align: center;
+table.relatedInfo {
+	margin-left: 0px;
+	border: 1px; 
+	border-style: solid;
+	border-color: #CCCCCC;
+	margin-top: 10px;
+	background-color: #FFFFFF;
 }
 
-#OpenRight{
-position: relative;
-left: 120px;
-width: 300px;
-float: left;
-clear: right;
-height: 130px;
-background: url(../images/orange_150.png) no-repeat;
-text-align: center;
+table.relatedInner {
+	background-color: #FFFFFF;
+	width="600";
+	border="0";
+	cellpadding="0";
+}
+table.GSInner {
+	background-color: #FFFFFF;
+	width="600";
+	border="0";
+	cellpadding="0";
+}
+.WebStartHeader {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	color: #666666;
+	font-weight: normal;
 }
 
-#OpenCenter{
-position: relative;
-left: 60px;
-width: 300px;
-float: left;
-clear: right;
-height: 170px;
-background: url(bild.png) no-repeat;
-text-align: center;
+table.OSProTable {
+	margin-left: 0px;
+	margin-top: 10px;
+	background-color: #FFFFFF;
 }
-
-H1.Open{
-font:normal 1em georgia,helvetica,arial;
-letter-spacing:-0.5px; /* it isn't web 2.0 otherwise, right? ;) */
-font-smooth: always;
-MARGIN-TOP: 4px; 
-FONT-WEIGHT: bold; 
-FONT-SIZE: 20pt; 
-MARGIN-BOTTOM: 0px; 
-PADDING-BOTTOM: 0px; 
-PADDING-TOP: 3px;
-color:#ffffff;
-}
-
-P.Open{
-font:normal 1em georgia,helvetica,arial;
-letter-spacing:1.5px; /* it isn't web 2.0 otherwise, right? ;) */
-MARGIN-TOP: 0px;
-Text-Align: Center; 
-FONT-WEIGHT: Bold; 
-FONT-SIZE: 12pt; 
-MARGIN-BOTTOM: 0px; 
-PADDING-BOTTOM: px; 
-PADDING-TOP: 3px;
-color:#ffffff;
-}
-
-#OpenPro A{
-font:normal 1em georgia,helvetica,arial;
-letter-spacing:1.5px; /* it isn't web 2.0 otherwise, right? ;) */
-MARGIN-TOP: 0px;
-Text-Align: Center; 
-FONT-WEIGHT: Bold; 
-FONT-SIZE: 16pt; 
-MARGIN-BOTTOM: 0px; 
-PADDING-BOTTOM: px; 
-PADDING-TOP: 3px;
-color:#ffffff;
-}
-
-#OpenPro A:Visited {
-	COLOR: #ffffff
-}
-#OpenPro A:hover {
-	COLOR: #ffffff
+.OrangeHeader {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	color: #ffa500;
+	font-weight: normal;
 }

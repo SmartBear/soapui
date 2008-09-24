@@ -132,7 +132,8 @@ urchinTracker();
             <!-- allows user to put menu items after standard reports -->
             <x:if select="$nav">
               <jsl:applyTemplates select="$nav/body/menu[@type='footer']"/>
-            </x:if>
+             </x:if>
+
             <!-- Standard Maven Navigation -->
             <j:set var="fileName">${file}</j:set>
             <j:set var="poweredbyimage">${maven.xdoc.poweredby.image}</j:set>
@@ -150,17 +151,18 @@ urchinTracker();
 
           </div>
        </div>
+       
       <div id="leftBanner">
-     <br/>
- 
-
+     	<br/>
+     	    <a href="http://www.eviware.com" target="_blank"> 
+	 		<img src="http://www.soapui.org/images/eviware-logo.png" 
+	 		width="148" height="56"  alt="Eviware Logo" />
+        	 	</a>
 		<br/>
-		<br/>
-		<a target="_new" href="http://soa.sys-con.com/general/readerschoice.htm">
-		<img width="125" height="125" border="0" src="images/WSJ-SOAReadersChoice-125_125px.jpg"/></a>
+		<a target="_new" href="http://soa.sys-con.com/general/readerschoice.htm"><img width="125" height="125" border="0" src="http://www.soapui.org/images/WSJ-SOAReadersChoice-125_125px.jpg"/></a>
        </div>
      
-             </div>
+      </div>
        <!-- left column end -->
               
        <!-- body start -->
@@ -170,14 +172,9 @@ urchinTracker();
            <jsl:applyTemplates select="$doc/document/body/section"/>
            <jsl:applyTemplates select="$doc/document/body/release" />
            <jsl:applyTemplates select="$doc/document/body/goals" />
-         </div>
-       </div>
-       <div class="clear"><hr /></div>
-       <!-- body end -->
-        
-              
-       <!-- footer start -->    
-       <div id="footer">  
+		   
+		   
+		<div id="footer">  
 
           <jsl:applyTemplates select="$nav/body/footer"/>
           <div class="xright">
@@ -202,6 +199,13 @@ urchinTracker();
 
         </div>
         <!-- footer end --> 
+         </div>
+        </div>
+       <!-- body end -->
+        
+              
+       <!-- footer start -->    
+
               
         
       </x:element>

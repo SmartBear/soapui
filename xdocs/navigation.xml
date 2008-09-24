@@ -63,7 +63,7 @@
 	         <item href="/userguide/projects/coverage.html" name="Coverage" pro="true"/>
 	         <item href="/userguide/projects/requirements.html" name="Requirements" pro="true"/>
 	         <item href="/userguide/projects/wss.html" name="WS-Security"/>
-            <item href="/userguide/projects/composite-projects.html" name="Composite Projects"/>            
+            <item href="/userguide/projects/composite-projects.html" name="Composite Projects" pro="true"/>            
          </item>
          <item href="/userguide/interfaces/index.html" name="Interfaces">
          	<item href="/userguide/interfaces/interfaceview.html" name="Interface View"/>
