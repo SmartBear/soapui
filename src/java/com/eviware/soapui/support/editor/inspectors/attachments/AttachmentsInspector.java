@@ -12,16 +12,15 @@
 
 package com.eviware.soapui.support.editor.inspectors.attachments;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.JComponent;
-
 import com.eviware.soapui.impl.wsdl.AttachmentContainer;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
+
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class AttachmentsInspector extends AbstractXmlInspector implements PropertyChangeListener
 {
@@ -30,7 +29,7 @@ public class AttachmentsInspector extends AbstractXmlInspector implements Proper
 
 	public AttachmentsInspector( AttachmentContainer container)
 	{
-		super( "Attachments (" + container.getAttachmentCount() + ")", "Files attached to this request",
+		super( "Attachments (" + container.getAttachmentCount() + ")", "Files attached to this message",
 					true, AttachmentsInspectorFactory.INSPECTOR_ID );
 		this.container = container;
 		
@@ -40,7 +39,9 @@ public class AttachmentsInspector extends AbstractXmlInspector implements Proper
 	public JComponent getComponent()
 	{
 		if( attachmentsPanel == null )
+      {
 			attachmentsPanel = new AttachmentsPanel( container );
+      }
 		
 		return attachmentsPanel;
 	}

@@ -242,11 +242,10 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		}
 	}
 
-	
-	
 	/* (non-Javadoc)
 	 * @see com.eviware.soapui.impl.wsdl.AttachmentContainer#getDefinedAttachmentParts()
 	 */
+   
 	public HttpAttachmentPart [] getDefinedAttachmentParts()
 	{
 		if( definedAttachmentParts == null )
@@ -271,7 +270,8 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		return definedAttachmentParts.toArray( new HttpAttachmentPart[definedAttachmentParts.size()] );
 	}
 
-   public RequestMethod getMethod() {
+   public RequestMethod getMethod()
+   {
       return RequestMethod.POST;
    }
 

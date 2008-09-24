@@ -12,13 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.panels.request;
 
-import javax.swing.JButton;
-
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.actions.request.AddRequestToTestCaseAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JXToolBar;
+
+import javax.swing.*;
 
 /**
  * DesktopPanel for standard WsdlRequests
@@ -33,7 +33,16 @@ public class WsdlRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel<Wsd
 	public WsdlRequestDesktopPanel(WsdlRequest request)
 	{
 		super(request, request);
-	}
+
+      try
+      {
+         request.getOperation().getInterface().getWsdlContext().loadIfNecessary();
+      }
+      catch( Exception e )
+      {
+         e.printStackTrace();
+      }
+   }
 	
 	@Override
 	protected void init(WsdlRequest request)
