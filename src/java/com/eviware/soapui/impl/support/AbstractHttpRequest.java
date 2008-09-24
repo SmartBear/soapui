@@ -106,20 +106,13 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
    /* (non-Javadoc)
 	 * @see com.eviware.soapui.impl.wsdl.AttachmentContainer#attachFile(java.io.File, boolean)
 	 */
-   public Attachment attachFile( File file, boolean cache )
+   
+   public Attachment attachFile( File file, boolean cache ) throws IOException
    {
-      try
-      {
-         RequestFileAttachment fileAttachment = new RequestFileAttachment( file, cache, this );
-         attachments.add( fileAttachment );
-         notifyPropertyChanged( ATTACHMENTS_PROPERTY, null, fileAttachment );
-         return fileAttachment;
-      }
-      catch( IOException e )
-      {
-         UISupport.showErrorMessage( e );
-         return null;
-      }
+      RequestFileAttachment fileAttachment = new RequestFileAttachment( file, cache, this );
+      attachments.add( fileAttachment );
+      notifyPropertyChanged( ATTACHMENTS_PROPERTY, null, fileAttachment );
+      return fileAttachment;
    }
 
    public abstract RequestMethod getMethod();
@@ -157,7 +150,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
       for( Attachment attachment : attachments )
       {
-         if( attachment.getPart().equals( partName ) )
+         if( partName.equals( attachment.getPart()) )
             result.add( attachment );
       }
 

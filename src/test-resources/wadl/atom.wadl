@@ -1,0 +1,63 @@
+<application xmlns="http://research.sun.com/wadl/2006/07"
+             xmlns:app="http://purl.org/atom/app#"
+             xmlns:atom="http://www.w3.org/2005/Atom">
+
+   <grammars>
+      <include href="http://purl.org/atom/app.xsd"/>
+   </grammars>
+
+   <resource_type id="entry_feed">
+      <method href="#getFeed"/>
+      <method href="#addEntryCollectionMember"/>
+   </resource_type>
+
+   <resource_type id="media_feed">
+      <method href="#getFeed"/>
+      <method href="#addEntryCollectionMember"/>
+      <method href="#addMediaCollectionMember"/>
+   </resource_type>
+
+   <representation id="entry" mediaType="application/atom+xml"
+                   element="atom:entry"/>
+
+   <representation id="feed" mediaType="application/atom+xml"
+                   element="atom:feed">
+      <param name="first_link" style="plain"
+             path="/atom:feed/atom:link[@rel=’first’]">
+         <link href="#feed_resource" rel="first"/>
+      </param>
+      <param name="next_link" style="plain"
+             path="/atom:feed/atom:link[@rel=’next’]">
+         <link href="#feed_resource" rel="next" rev="previous"/>
+      </param>
+      <param name="prev_link" style="plain"
+             path="/atom:feed/atom:link[@rel=’previous’]">
+         <link href="#feed_resource" rel="previous" rev="next"/>
+      </param>
+      <param name="last_link" style="plain"
+             path="/atom:feed/atom:link[@rel=’last’]">
+         <link href="#feed_resource" rel="last"/>
+      </param>
+   </representation>
+
+   <method name="GET" id="getFeed">
+      <response>
+         <representation href="#feed"/>
+      </response>
+   </method>
+
+   <method name="POST" id="addEntryCollectionMember">
+      <request>
+         <representation href="#entry"/>
+      </request>
+   </method>
+
+
+   <method name="POST" id="addMediaCollectionMember">
+      <request>
+         <representation href="#entry"/>
+         <representation/>
+      </request>
+   </method>
+
+</application>

@@ -79,963 +79,955 @@ import java.util.zip.GZIPOutputStream;
 
 /**
  * A WsdlMockResponse contained by a WsdlMockOperation
- * 
+ *
  * @author ole.matzura
  */
 
 public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> implements MockResponse,
-			MutableWsdlAttachmentContainer, PropertyExpansionContainer, TestPropertyHolder, WsaContainer
+        MutableWsdlAttachmentContainer, PropertyExpansionContainer, TestPropertyHolder, WsaContainer
 {
-	private final static Logger log = Logger.getLogger( WsdlMockResponse.class );
+   private final static Logger log = Logger.getLogger( WsdlMockResponse.class );
 
-	public final static String MOCKRESULT_PROPERTY = WsdlMockResponse.class.getName() + "@mockresult";
-	public final static String SCRIPT_PROPERTY = WsdlMockResponse.class.getName() + "@script";
-	public final static String HEADERS_PROPERTY = WsdlMockResponse.class.getName() + "@headers";
-	public final static String DISABLE_MULTIPART_ATTACHMENTS = WsdlMockResponse.class.getName() + "@disable-multipart-attachments";
-	public static final String FORCE_MTOM = WsdlMockResponse.class.getName() + "@force_mtom";
-	public static final String ENABLE_INLINE_FILES = WsdlMockResponse.class.getName() + "@enable_inline_files";
-	public final static String RESPONSE_DELAY_PROPERTY = WsdlMockResponse.class.getName() + "@response-delay";
-	public static final String STRIP_WHITESPACES = WsdlMockResponse.class.getName() + "@strip-whitespaces";
-	public static final String REMOVE_EMPTY_CONTENT = WsdlMockResponse.class.getName() + "@remove_empty_content";
-	public static final String ENCODE_ATTACHMENTS = WsdlMockResponse.class.getName() + "@encode_attachments";
-	public static final String RESPONSE_HTTP_STATUS = WsdlMockResponse.class.getName() + "@response-http-status";
-	public static final String OUGOING_WSS = WsdlMockResponse.class.getName() + "@outgoing-wss";
+   public final static String MOCKRESULT_PROPERTY = WsdlMockResponse.class.getName() + "@mockresult";
+   public final static String SCRIPT_PROPERTY = WsdlMockResponse.class.getName() + "@script";
+   public final static String HEADERS_PROPERTY = WsdlMockResponse.class.getName() + "@headers";
+   public final static String DISABLE_MULTIPART_ATTACHMENTS = WsdlMockResponse.class.getName() + "@disable-multipart-attachments";
+   public static final String FORCE_MTOM = WsdlMockResponse.class.getName() + "@force_mtom";
+   public static final String ENABLE_INLINE_FILES = WsdlMockResponse.class.getName() + "@enable_inline_files";
+   public final static String RESPONSE_DELAY_PROPERTY = WsdlMockResponse.class.getName() + "@response-delay";
+   public static final String STRIP_WHITESPACES = WsdlMockResponse.class.getName() + "@strip-whitespaces";
+   public static final String REMOVE_EMPTY_CONTENT = WsdlMockResponse.class.getName() + "@remove_empty_content";
+   public static final String ENCODE_ATTACHMENTS = WsdlMockResponse.class.getName() + "@encode_attachments";
+   public static final String RESPONSE_HTTP_STATUS = WsdlMockResponse.class.getName() + "@response-http-status";
+   public static final String OUGOING_WSS = WsdlMockResponse.class.getName() + "@outgoing-wss";
 
-	protected List<FileAttachment<WsdlMockResponse>> attachments = new ArrayList<FileAttachment<WsdlMockResponse>>();
-	private List<HttpAttachmentPart> definedAttachmentParts;
-	private ModelItemIconAnimator<WsdlMockResponse> iconAnimator;
-	private WsdlMockResult mockResult;
-	private String responseContent;
-	private ScriptEnginePool scriptEnginePool;
-	private MapTestPropertyHolder propertyHolder;
-	private WsaConfig wsaConfig;
+   protected List<FileAttachment<WsdlMockResponse>> attachments = new ArrayList<FileAttachment<WsdlMockResponse>>();
+   private List<HttpAttachmentPart> definedAttachmentParts;
+   private ModelItemIconAnimator<WsdlMockResponse> iconAnimator;
+   private WsdlMockResult mockResult;
+   private String responseContent;
+   private ScriptEnginePool scriptEnginePool;
+   private MapTestPropertyHolder propertyHolder;
+   private WsaConfig wsaConfig;
 
+   public WsdlMockResponse( WsdlMockOperation operation, MockResponseConfig config )
+   {
+      super( config, operation, "/mockResponse.gif" );
 
-	public WsdlMockResponse( WsdlMockOperation operation, MockResponseConfig config )
-	{
-		super( config, operation, "/mockResponse.gif" );
+      for( AttachmentConfig ac : getConfig().getAttachmentList() )
+      {
+         attachments.add( new MockFileAttachment( ac, this ) );
+      }
 
-		for( AttachmentConfig ac : getConfig().getAttachmentList() )
-		{
-			attachments.add( new MockFileAttachment( ac, this ) );
-		}
+      if( !config.isSetEncoding() )
+         config.setEncoding( "UTF-8" );
 
-		if( !config.isSetEncoding() )
-			config.setEncoding( "UTF-8" );
+      iconAnimator = new ModelItemIconAnimator<WsdlMockResponse>( this, "/mockResponse.gif", "/exec_request", 4, "gif" );
 
-		iconAnimator = new ModelItemIconAnimator<WsdlMockResponse>( this, "/mockResponse.gif", "/exec_request", 4, "gif" );
+      scriptEnginePool = new ScriptEnginePool( this );
+      scriptEnginePool.setScript( getScript() );
 
-		scriptEnginePool = new ScriptEnginePool( this );
-		scriptEnginePool.setScript( getScript() );
+      propertyHolder = new MapTestPropertyHolder( this );
+      propertyHolder.addProperty( "Request" );
+   }
 
-		propertyHolder = new MapTestPropertyHolder( this );
-		propertyHolder.addProperty( "Request" );
-	}
+   @Override
+   public void setConfig( MockResponseConfig config )
+   {
+      super.setConfig( config );
 
-	@Override
-	public void setConfig( MockResponseConfig config )
-	{
-		super.setConfig( config );
-		
-		if( scriptEnginePool != null )
-			scriptEnginePool.setScript( getScript() );
-	}
+      if( scriptEnginePool != null )
+         scriptEnginePool.setScript( getScript() );
+   }
 
-	public Attachment[] getAttachments()
-	{
-		return attachments.toArray( new Attachment[attachments.size()] );
-	}
+   public Attachment[] getAttachments()
+   {
+      return attachments.toArray( new Attachment[attachments.size()] );
+   }
 
-	public String getScript()
-	{
-		return getConfig().isSetScript() ? getConfig().getScript().getStringValue() : null;
-	}
+   public String getScript()
+   {
+      return getConfig().isSetScript() ? getConfig().getScript().getStringValue() : null;
+   }
 
-	public String getEncoding()
-	{
-		return getConfig().getEncoding();
-	}
+   public String getEncoding()
+   {
+      return getConfig().getEncoding();
+   }
 
-	public void setEncoding( String encoding )
-	{
-		String old = getEncoding();
-		getConfig().setEncoding( encoding );
-		notifyPropertyChanged( ENCODING_PROPERTY, old, encoding );
-	}
+   public void setEncoding( String encoding )
+   {
+      String old = getEncoding();
+      getConfig().setEncoding( encoding );
+      notifyPropertyChanged( ENCODING_PROPERTY, old, encoding );
+   }
 
-	public String getResponseContent()
-	{
-		if( getConfig().getResponseContent() == null )
-			getConfig().addNewResponseContent();
+   public String getResponseContent()
+   {
+      if( getConfig().getResponseContent() == null )
+         getConfig().addNewResponseContent();
 
-		if( responseContent == null )
-			responseContent = CompressedStringSupport.getString( getConfig().getResponseContent() );
+      if( responseContent == null )
+         responseContent = CompressedStringSupport.getString( getConfig().getResponseContent() );
 
-		return responseContent;
-	}
+      return responseContent;
+   }
 
-	public void setResponseContent( String responseContent )
-	{
-	   String oldContent = getResponseContent();
-	   if( responseContent.equals( oldContent ) )
-	      return;
-		
+   public void setResponseContent( String responseContent )
+   {
+      String oldContent = getResponseContent();
+      if( responseContent.equals( oldContent ) )
+         return;
+
       this.responseContent = responseContent;
       notifyPropertyChanged( RESPONSE_CONTENT_PROPERTY, oldContent, responseContent );
-	}
+   }
 
-	@Override
-	public ImageIcon getIcon()
-	{
-		return iconAnimator.getIcon();
-	}
+   @Override
+   public ImageIcon getIcon()
+   {
+      return iconAnimator.getIcon();
+   }
 
-	public WsdlMockOperation getMockOperation()
-	{
-		return ( WsdlMockOperation ) getParent();
-	}
+   public WsdlMockOperation getMockOperation()
+   {
+      return (WsdlMockOperation) getParent();
+   }
 
-	public WsdlMockResult execute( WsdlMockRequest request, WsdlMockResult result ) throws DispatchException
-	{
-		try
-		{
-			iconAnimator.start();
+   public WsdlMockResult execute( WsdlMockRequest request, WsdlMockResult result ) throws DispatchException
+   {
+      try
+      {
+         iconAnimator.start();
 
-			getProperty( "Request" ).setValue( request.getRequestContent() );
+         getProperty( "Request" ).setValue( request.getRequestContent() );
 
-			long delay = getResponseDelay();
-			if( delay > 0 )
-				Thread.sleep( delay );
+         long delay = getResponseDelay();
+         if( delay > 0 )
+            Thread.sleep( delay );
 
-			String script = getScript();
-			if( script != null && script.trim().length() > 0 )
-			{
-				evaluateScript( request );
-			}
-			
-			String responseContent = getResponseContent();
+         String script = getScript();
+         if( script != null && script.trim().length() > 0 )
+         {
+            evaluateScript( request );
+         }
 
-			// create merged context
-			WsdlMockRunContext context = new WsdlMockRunContext( request.getContext().getMockService(), null );
-			context.setMockResponse( this );
-			context.putAll( request.getContext() );
-			context.putAll( request.getRequestContext() );
+         String responseContent = getResponseContent();
 
-			StringToStringMap responseHeaders = getResponseHeaders();
-			for( String name : responseHeaders.keySet() )
-			{
-				result.addHeader( name, PropertyExpansionUtils.expandProperties( context, responseHeaders.get( name ) ) );
-			}
-			responseContent = PropertyExpansionUtils.expandProperties( context, responseContent, true );
-			
-			if (this.getWsaConfig().isWsaEnabled())
-			{
-				responseContent = new WsaUtils(responseContent, getSoapVersion(), getMockOperation().getOperation()).addWSAddressingMockResponse(this, request);
-			}
+         // create merged context
+         WsdlMockRunContext context = new WsdlMockRunContext( request.getContext().getMockService(), null );
+         context.setMockResponse( this );
+         context.putAll( request.getContext() );
+         context.putAll( request.getRequestContext() );
 
-			String outgoingWss = getOutgoingWss();
-			if( StringUtils.isNullOrEmpty( outgoingWss ))
-				outgoingWss = getMockOperation().getMockService().getOutgoingWss();
-			
-			 if( StringUtils.hasContent( outgoingWss ) )
-			 {
-				 OutgoingWss outgoing = getMockOperation().getMockService().getProject().getWssContainer().getOutgoingWssByName( outgoingWss );
-				 if( outgoing != null )
-				 {
-					 Document dom = XmlUtils.parseXml( responseContent );
-					 outgoing.processOutgoing( dom, context );
-					 StringWriter writer = new StringWriter();
-					 XmlUtils.serialize( dom, writer );
-					 responseContent = writer.toString();
-				 }
-			 }
+         StringToStringMap responseHeaders = getResponseHeaders();
+         for( String name : responseHeaders.keySet() )
+         {
+            result.addHeader( name, PropertyExpansionUtils.expandProperties( context, responseHeaders.get( name ) ) );
+         }
+         responseContent = PropertyExpansionUtils.expandProperties( context, responseContent, true );
 
-			if( !result.isCommitted() )
-			{
-				responseContent = writeResponse( result, responseContent );
-			}
+         if( this.getWsaConfig().isWsaEnabled() )
+         {
+            responseContent = new WsaUtils( responseContent, getSoapVersion(), getMockOperation().getOperation() ).addWSAddressingMockResponse( this, request );
+         }
 
-			result.setResponseContent( responseContent );
+         String outgoingWss = getOutgoingWss();
+         if( StringUtils.isNullOrEmpty( outgoingWss ) )
+            outgoingWss = getMockOperation().getMockService().getOutgoingWss();
+
+         if( StringUtils.hasContent( outgoingWss ) )
+         {
+            OutgoingWss outgoing = getMockOperation().getMockService().getProject().getWssContainer().getOutgoingWssByName( outgoingWss );
+            if( outgoing != null )
+            {
+               Document dom = XmlUtils.parseXml( responseContent );
+               outgoing.processOutgoing( dom, context );
+               StringWriter writer = new StringWriter();
+               XmlUtils.serialize( dom, writer );
+               responseContent = writer.toString();
+            }
+         }
+
+         if( !result.isCommitted() )
+         {
+            responseContent = writeResponse( result, responseContent );
+         }
+
+         result.setResponseContent( responseContent );
 
          setMockResult( result );
 
-			return mockResult;
-		}
-		catch( Throwable e )
-		{
-			SoapUI.logError(e);
-			throw new DispatchException( e );
-		}
-		finally
-		{
-			iconAnimator.stop();
-		}
-	}
+         return mockResult;
+      }
+      catch( Throwable e )
+      {
+         SoapUI.logError( e );
+         throw new DispatchException( e );
+      }
+      finally
+      {
+         iconAnimator.stop();
+      }
+   }
 
-	public void evaluateScript( WsdlMockRequest request ) throws Exception
-	{
-		String script = getScript();
-		if( script == null || script.trim().length() == 0 )
-			return;
+   public void evaluateScript( WsdlMockRequest request ) throws Exception
+   {
+      String script = getScript();
+      if( script == null || script.trim().length() == 0 )
+         return;
 
-		WsdlMockService mockService = getMockOperation().getMockService();
-		WsdlMockRunner mockRunner = mockService.getMockRunner();
-		MockRunContext context = mockRunner == null ? new WsdlMockRunContext( mockService, null ) : mockRunner
-					.getMockContext();
+      WsdlMockService mockService = getMockOperation().getMockService();
+      WsdlMockRunner mockRunner = mockService.getMockRunner();
+      MockRunContext context = mockRunner == null ? new WsdlMockRunContext( mockService, null ) : mockRunner
+              .getMockContext();
 
-		SoapUIScriptEngine scriptEngine = scriptEnginePool.getScriptEngine();
+      SoapUIScriptEngine scriptEngine = scriptEnginePool.getScriptEngine();
 
-		try
-		{
-			scriptEngine.setVariable( "context", context );
-			scriptEngine.setVariable( "requestContext", request == null ? null : request.getRequestContext() );
-			scriptEngine.setVariable( "mockContext", context );
-			scriptEngine.setVariable( "mockRequest", request );
-			scriptEngine.setVariable( "mockResponse", this );
-			scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
+      try
+      {
+         scriptEngine.setVariable( "context", context );
+         scriptEngine.setVariable( "requestContext", request == null ? null : request.getRequestContext() );
+         scriptEngine.setVariable( "mockContext", context );
+         scriptEngine.setVariable( "mockRequest", request );
+         scriptEngine.setVariable( "mockResponse", this );
+         scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 
-			scriptEngine.run();
-		}
-		catch( RuntimeException e )
-		{
-			throw new Exception( e.getMessage(), e );
-		}
-		finally
-		{
-			scriptEnginePool.returnScriptEngine( scriptEngine );
-		}
-	}
+         scriptEngine.run();
+      }
+      catch( RuntimeException e )
+      {
+         throw new Exception( e.getMessage(), e );
+      }
+      finally
+      {
+         scriptEnginePool.returnScriptEngine( scriptEngine );
+      }
+   }
 
-	@Override
-	public void release()
-	{
-		super.release();
-		scriptEnginePool.release();
-	}
+   @Override
+   public void release()
+   {
+      super.release();
+      scriptEnginePool.release();
+   }
 
-	public void setScript( String script )
-	{
-		String oldScript = getScript();
-		if( !script.equals( oldScript ) )
-		{
-			if( !getConfig().isSetScript() )
-				getConfig().addNewScript();
-			getConfig().getScript().setStringValue( script );
+   public void setScript( String script )
+   {
+      String oldScript = getScript();
+      if( !script.equals( oldScript ) )
+      {
+         if( !getConfig().isSetScript() )
+            getConfig().addNewScript();
+         getConfig().getScript().setStringValue( script );
 
-			scriptEnginePool.setScript( script );
+         scriptEnginePool.setScript( script );
 
-			notifyPropertyChanged( SCRIPT_PROPERTY, oldScript, script );
-		}
-	}
+         notifyPropertyChanged( SCRIPT_PROPERTY, oldScript, script );
+      }
+   }
 
-	public void setResponseHeaders( StringToStringMap headers )
-	{
-		StringToStringMap oldHeaders = getResponseHeaders();
+   public void setResponseHeaders( StringToStringMap headers )
+   {
+      StringToStringMap oldHeaders = getResponseHeaders();
 
-		HeaderConfig[] headerConfigs = new HeaderConfig[headers.size()];
-		int ix = 0;
-		for( String header : headers.keySet() )
-		{
-			headerConfigs[ix] = HeaderConfig.Factory.newInstance();
-			headerConfigs[ix].setName( header );
-			headerConfigs[ix].setValue( headers.get( header ) );
-			ix++;
-		}
+      HeaderConfig[] headerConfigs = new HeaderConfig[headers.size()];
+      int ix = 0;
+      for( String header : headers.keySet() )
+      {
+         headerConfigs[ix] = HeaderConfig.Factory.newInstance();
+         headerConfigs[ix].setName( header );
+         headerConfigs[ix].setValue( headers.get( header ) );
+         ix++;
+      }
 
-		getConfig().setHeaderArray( headerConfigs );
+      getConfig().setHeaderArray( headerConfigs );
 
-		notifyPropertyChanged( HEADERS_PROPERTY, oldHeaders, headers );
-	}
+      notifyPropertyChanged( HEADERS_PROPERTY, oldHeaders, headers );
+   }
 
-	public StringToStringMap getResponseHeaders()
-	{
-		StringToStringMap result = new StringToStringMap();
-		List<HeaderConfig> headerList = getConfig().getHeaderList();
-		for( HeaderConfig header : headerList )
-		{
-			result.put( header.getName(), header.getValue() );
-		}
+   public StringToStringMap getResponseHeaders()
+   {
+      StringToStringMap result = new StringToStringMap();
+      List<HeaderConfig> headerList = getConfig().getHeaderList();
+      for( HeaderConfig header : headerList )
+      {
+         result.put( header.getName(), header.getValue() );
+      }
 
-		return result;
-	}
+      return result;
+   }
 
-	public MessagePart[] getRequestParts()
-	{
-		try
-		{
-			List<MessagePart> result = new ArrayList<MessagePart>();
-			result.addAll( Arrays.asList( getMockOperation().getOperation().getDefaultRequestParts() ));
-			
-			if( getMockResult() != null )
-				result.addAll( AttachmentUtils.extractAttachmentParts(
-						getMockOperation().getOperation(), getMockResult().getMockRequest().getRequestContent(), true, false, isMtomEnabled() ));
-			
-			return result.toArray( new MessagePart[result.size()] );
-		}
-		catch (Exception e)
-		{
-			SoapUI.logError( e );
-			return new MessagePart [0];
-		}		
-	}
-	
-	public MessagePart[] getResponseParts()
-	{
-		try
-		{
-			// init
-			WsdlOperation op = getMockOperation().getOperation();
-			if( op == null || op.isUnidirectional() )
-				return new MessagePart[0];
+   public MessagePart[] getRequestParts()
+   {
+      try
+      {
+         List<MessagePart> result = new ArrayList<MessagePart>();
+         result.addAll( Arrays.asList( getMockOperation().getOperation().getDefaultRequestParts() ) );
 
-			List<MessagePart> result = new ArrayList<MessagePart>();
-			WsdlContext wsdlContext = op.getInterface().getWsdlContext();
-			BindingOperation bindingOperation = op.findBindingOperation( wsdlContext.getDefinition() );
+         if( getMockResult() != null )
+            result.addAll( AttachmentUtils.extractAttachmentParts(
+                    getMockOperation().getOperation(), getMockResult().getMockRequest().getRequestContent(), true, false, isMtomEnabled() ) );
 
-			if( bindingOperation == null )
-				return new MessagePart[0];
+         return result.toArray( new MessagePart[result.size()] );
+      }
+      catch( Exception e )
+      {
+         SoapUI.logError( e );
+         return new MessagePart[0];
+      }
+   }
 
-			// header parts
-			List<SoapHeader> headers = WsdlUtils.getSoapHeaders( bindingOperation.getBindingOutput()
-						.getExtensibilityElements() );
+   public MessagePart[] getResponseParts()
+   {
+      try
+      {
+         // init
+         WsdlOperation op = getMockOperation().getOperation();
+         if( op == null || op.isUnidirectional() )
+            return new MessagePart[0];
 
-			for( int i = 0; i < headers.size(); i++ )
-			{
-				SoapHeader header = headers.get( i );
+         List<MessagePart> result = new ArrayList<MessagePart>();
+         WsdlContext wsdlContext = op.getInterface().getWsdlContext();
+         BindingOperation bindingOperation = op.findBindingOperation( wsdlContext.getDefinition() );
 
-				Message message = wsdlContext.getDefinition().getMessage( header.getMessage() );
-				if( message == null )
-				{
-					log.error( "Missing message for header: " + header.getMessage() );
-					continue;
-				}
+         if( bindingOperation == null )
+            return new MessagePart[0];
 
-				javax.wsdl.Part part = message.getPart( header.getPart() );
+         // header parts
+         List<SoapHeader> headers = WsdlUtils.getSoapHeaders( bindingOperation.getBindingOutput()
+                 .getExtensibilityElements() );
 
-				if( part != null )
-				{
-					SchemaType schemaType = WsdlUtils.getSchemaTypeForPart( wsdlContext, part );
-					SchemaGlobalElement schemaElement = WsdlUtils.getSchemaElementForPart( wsdlContext, part );
-					if( schemaType != null )
-						result.add( new WsdlHeaderPart( part.getName(), schemaType, part.getElementName(), schemaElement ) );
-				}
-				else
-					log.error( "Missing part for header; " + header.getPart() );
-			}
+         for( int i = 0; i < headers.size(); i++ )
+         {
+            SoapHeader header = headers.get( i );
 
-			// content parts
-			javax.wsdl.Part[] parts = WsdlUtils.getOutputParts( bindingOperation );
+            Message message = wsdlContext.getDefinition().getMessage( header.getMessage() );
+            if( message == null )
+            {
+               log.error( "Missing message for header: " + header.getMessage() );
+               continue;
+            }
 
-			for( int i = 0; i < parts.length; i++ )
-			{
-				javax.wsdl.Part part = parts[i];
+            javax.wsdl.Part part = message.getPart( header.getPart() );
 
-				if( !WsdlUtils.isAttachmentOutputPart( part, bindingOperation ) )
-				{
-					SchemaType schemaType = WsdlUtils.getSchemaTypeForPart( wsdlContext, part );
-					SchemaGlobalElement schemaElement = WsdlUtils.getSchemaElementForPart( wsdlContext, part );
-					if( schemaType != null )
-						result.add( new WsdlContentPart( part.getName(), schemaType, part.getElementName(), schemaElement ) );
-				}
-			}
+            if( part != null )
+            {
+               SchemaType schemaType = WsdlUtils.getSchemaTypeForPart( wsdlContext, part );
+               SchemaGlobalElement schemaElement = WsdlUtils.getSchemaElementForPart( wsdlContext, part );
+               if( schemaType != null )
+                  result.add( new WsdlHeaderPart( part.getName(), schemaType, part.getElementName(), schemaElement ) );
+            }
+            else
+               log.error( "Missing part for header; " + header.getPart() );
+         }
 
-			result.addAll( Arrays.asList( getDefinedAttachmentParts() ) );
+         // content parts
+         javax.wsdl.Part[] parts = WsdlUtils.getOutputParts( bindingOperation );
 
-			return result.toArray( new MessagePart[result.size()] );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-			return new MessagePart[0];
-		}
-	}
+         for( int i = 0; i < parts.length; i++ )
+         {
+            javax.wsdl.Part part = parts[i];
 
-	public Attachment attachFile( File file, boolean cache )
-	{
-		try
-		{
-			FileAttachment<WsdlMockResponse> fileAttachment = new MockFileAttachment( file, cache, this );
-			attachments.add( fileAttachment );
-			notifyPropertyChanged( ATTACHMENTS_PROPERTY, null, fileAttachment );
-			return fileAttachment;
-		}
-		catch( IOException e )
-		{
-			UISupport.showErrorMessage( e );
-			return null;
-		}
-	}
+            if( !WsdlUtils.isAttachmentOutputPart( part, bindingOperation ) )
+            {
+               SchemaType schemaType = WsdlUtils.getSchemaTypeForPart( wsdlContext, part );
+               SchemaGlobalElement schemaElement = WsdlUtils.getSchemaElementForPart( wsdlContext, part );
+               if( schemaType != null )
+                  result.add( new WsdlContentPart( part.getName(), schemaType, part.getElementName(), schemaElement ) );
+            }
+         }
 
-	public int getAttachmentCount()
-	{
-		return attachments.size();
-	}
+         result.addAll( Arrays.asList( getDefinedAttachmentParts() ) );
 
-	public WsdlAttachment getAttachmentAt( int index )
-	{
-		return attachments.get( index );
-	}
+         return result.toArray( new MessagePart[result.size()] );
+      }
+      catch( Exception e )
+      {
+         SoapUI.logError( e );
+         return new MessagePart[0];
+      }
+   }
 
-	public void removeAttachment( Attachment attachment )
-	{
-		int ix = attachments.indexOf( attachment );
-		attachments.remove( ix );
+   public Attachment attachFile( File file, boolean cache ) throws IOException
+   {
+      FileAttachment<WsdlMockResponse> fileAttachment = new MockFileAttachment( file, cache, this );
+      attachments.add( fileAttachment );
+      notifyPropertyChanged( ATTACHMENTS_PROPERTY, null, fileAttachment );
+      return fileAttachment;
+   }
 
-		try
-		{
-			notifyPropertyChanged( ATTACHMENTS_PROPERTY, attachment, null );
-		}
-		finally
-		{
-			getConfig().removeAttachment( ix );
-		}
-	}
+   public int getAttachmentCount()
+   {
+      return attachments.size();
+   }
 
-	public HttpAttachmentPart[] getDefinedAttachmentParts()
-	{
-		if( definedAttachmentParts == null )
-		{
-			try
-			{
-				WsdlOperation operation = getMockOperation().getOperation();
-				if( operation == null )
-				{
-					definedAttachmentParts = new ArrayList<HttpAttachmentPart>();
-				}
-				else
-				{
-					UISupport.setHourglassCursor();
-					definedAttachmentParts = AttachmentUtils.extractAttachmentParts( operation, getResponseContent(), true,
-								true, isMtomEnabled() );
-				}
-			}
-			catch( Exception e )
-			{
-				log.warn( e.toString() );
-			}
-			finally
-			{
-				UISupport.resetCursor();
-			}
-		}
+   public WsdlAttachment getAttachmentAt( int index )
+   {
+      return attachments.get( index );
+   }
 
-		return definedAttachmentParts.toArray( new HttpAttachmentPart[definedAttachmentParts.size()] );
-	}
+   public void removeAttachment( Attachment attachment )
+   {
+      int ix = attachments.indexOf( attachment );
+      attachments.remove( ix );
 
-	public HttpAttachmentPart getAttachmentPart( String partName )
-	{
-		HttpAttachmentPart[] parts = getDefinedAttachmentParts();
-		for( HttpAttachmentPart part : parts )
-		{
-			if( part.getName().equals( partName ) )
-				return part;
-		}
+      try
+      {
+         notifyPropertyChanged( ATTACHMENTS_PROPERTY, attachment, null );
+      }
+      finally
+      {
+         getConfig().removeAttachment( ix );
+      }
+   }
 
-		return null;
-	}
+   public HttpAttachmentPart[] getDefinedAttachmentParts()
+   {
+      if( definedAttachmentParts == null )
+      {
+         try
+         {
+            WsdlOperation operation = getMockOperation().getOperation();
+            if( operation == null )
+            {
+               definedAttachmentParts = new ArrayList<HttpAttachmentPart>();
+            }
+            else
+            {
+               UISupport.setHourglassCursor();
+               definedAttachmentParts = AttachmentUtils.extractAttachmentParts( operation, getResponseContent(), true,
+                       true, isMtomEnabled() );
+            }
+         }
+         catch( Exception e )
+         {
+            log.warn( e.toString() );
+         }
+         finally
+         {
+            UISupport.resetCursor();
+         }
+      }
 
-	public Attachment[] getAttachmentsForPart( String partName )
-	{
-		List<Attachment> result = new ArrayList<Attachment>();
+      return definedAttachmentParts.toArray( new HttpAttachmentPart[definedAttachmentParts.size()] );
+   }
 
-		for( Attachment attachment : attachments )
-		{
-			if( attachment.getPart().equals( partName ) )
-				result.add( attachment );
-		}
+   public HttpAttachmentPart getAttachmentPart( String partName )
+   {
+      HttpAttachmentPart[] parts = getDefinedAttachmentParts();
+      for( HttpAttachmentPart part : parts )
+      {
+         if( part.getName().equals( partName ) )
+            return part;
+      }
 
-		return result.toArray( new Attachment[result.size()] );
-	}
+      return null;
+   }
 
-	public boolean isMtomEnabled()
-	{
-		return getSettings().getBoolean( WsdlSettings.ENABLE_MTOM );
-	}
+   public Attachment[] getAttachmentsForPart( String partName )
+   {
+      List<Attachment> result = new ArrayList<Attachment>();
 
-	public void setMtomEnabled( boolean mtomEnabled )
-	{
-		boolean old = isMtomEnabled();
-		getSettings().setBoolean( WsdlSettings.ENABLE_MTOM, mtomEnabled );
-		definedAttachmentParts = null;
-		notifyPropertyChanged( MTOM_NABLED_PROPERTY, old, mtomEnabled );
-	}
+      for( Attachment attachment : attachments )
+      {
+         if( attachment.getPart().equals( partName ) )
+            result.add( attachment );
+      }
 
-	private String writeResponse( WsdlMockResult response, String responseContent ) throws Exception
-	{
-		MimeMultipart mp = null;
-		WsdlOperation operation = getMockOperation().getOperation();
-		if( operation == null )
-			throw new Exception( "Missing WsdlOperation for mock response" );
+      return result.toArray( new Attachment[result.size()] );
+   }
 
-		SoapVersion soapVersion = operation.getInterface().getSoapVersion();
+   public boolean isMtomEnabled()
+   {
+      return getSettings().getBoolean( WsdlSettings.ENABLE_MTOM );
+   }
 
-		StringToStringMap contentIds = new StringToStringMap();
-		boolean isXOP = isMtomEnabled() && isForceMtom();
+   public void setMtomEnabled( boolean mtomEnabled )
+   {
+      boolean old = isMtomEnabled();
+      getSettings().setBoolean( WsdlSettings.ENABLE_MTOM, mtomEnabled );
+      definedAttachmentParts = null;
+      notifyPropertyChanged( MTOM_NABLED_PROPERTY, old, mtomEnabled );
+   }
 
-		// preprocess only if neccessary
-		if( isMtomEnabled() || isInlineFilesEnabled() || getAttachmentCount() > 0 )
-		{
-			try
-			{
-				mp = new MimeMultipart();
+   private String writeResponse( WsdlMockResult response, String responseContent ) throws Exception
+   {
+      MimeMultipart mp = null;
+      WsdlOperation operation = getMockOperation().getOperation();
+      if( operation == null )
+         throw new Exception( "Missing WsdlOperation for mock response" );
 
-				MessageXmlObject requestXmlObject = new MessageXmlObject( operation, getResponseContent(), false );
-				MessageXmlPart[] requestParts = requestXmlObject.getMessageParts();
-				for( MessageXmlPart requestPart : requestParts )
-				{
-					if( AttachmentUtils.prepareMessagePart( this, mp, requestPart, contentIds ) )
-						isXOP = true;
-				}
-				responseContent = requestXmlObject.getMessageContent();
-			}
-			catch( Exception e )
-			{
-				e.printStackTrace();
-			}
-		}
+      SoapVersion soapVersion = operation.getInterface().getSoapVersion();
 
-		if( isRemoveEmptyContent() )
-		{
-			responseContent = RemoveEmptyContentRequestFilter.removeEmptyContent( responseContent );
-		}
+      StringToStringMap contentIds = new StringToStringMap();
+      boolean isXOP = isMtomEnabled() && isForceMtom();
 
-		if( isStripWhitespaces() )
-		{
-			responseContent = XmlUtils.stripWhitespaces( responseContent );
-		}
+      // preprocess only if neccessary
+      if( isMtomEnabled() || isInlineFilesEnabled() || getAttachmentCount() > 0 )
+      {
+         try
+         {
+            mp = new MimeMultipart();
 
-		String status = getResponseHttpStatus();
-		WsdlMockRequest request = response.getMockRequest();
+            MessageXmlObject requestXmlObject = new MessageXmlObject( operation, getResponseContent(), false );
+            MessageXmlPart[] requestParts = requestXmlObject.getMessageParts();
+            for( MessageXmlPart requestPart : requestParts )
+            {
+               if( AttachmentUtils.prepareMessagePart( this, mp, requestPart, contentIds ) )
+                  isXOP = true;
+            }
+            responseContent = requestXmlObject.getMessageContent();
+         }
+         catch( Exception e )
+         {
+            e.printStackTrace();
+         }
+      }
 
-		if( status == null || status.trim().length() == 0 )
-		{
-			if( SoapUtils.isSoapFault( responseContent, request.getSoapVersion() ) )
-			{
-				request.getHttpResponse().setStatus( 500 );
+      if( isRemoveEmptyContent() )
+      {
+         responseContent = RemoveEmptyContentRequestFilter.removeEmptyContent( responseContent );
+      }
+
+      if( isStripWhitespaces() )
+      {
+         responseContent = XmlUtils.stripWhitespaces( responseContent );
+      }
+
+      String status = getResponseHttpStatus();
+      WsdlMockRequest request = response.getMockRequest();
+
+      if( status == null || status.trim().length() == 0 )
+      {
+         if( SoapUtils.isSoapFault( responseContent, request.getSoapVersion() ) )
+         {
+            request.getHttpResponse().setStatus( 500 );
             response.setResponseStatus( 500 );
          }
-			else
-			{
-				request.getHttpResponse().setStatus( 200 );
+         else
+         {
+            request.getHttpResponse().setStatus( 200 );
             response.setResponseStatus( 200 );
          }
-		}
-		else
-		{
-			try
-			{
+      }
+      else
+      {
+         try
+         {
             int statusCode = Integer.parseInt( status );
             request.getHttpResponse().setStatus( statusCode );
             response.setResponseStatus( statusCode );
          }
-			catch( RuntimeException e )
-			{
-				SoapUI.logError( e );
-			}
-		}
+         catch( RuntimeException e )
+         {
+            SoapUI.logError( e );
+         }
+      }
 
-		ByteArrayOutputStream outData = new ByteArrayOutputStream();
-		
-		// non-multipart request?
-		if( !isXOP && ( mp == null || mp.getCount() == 0 ) && getAttachmentCount() == 0 )
-		{
-			String encoding = getEncoding();
+      ByteArrayOutputStream outData = new ByteArrayOutputStream();
+
+      // non-multipart request?
+      if( !isXOP && ( mp == null || mp.getCount() == 0 ) && getAttachmentCount() == 0 )
+      {
+         String encoding = getEncoding();
          if( responseContent == null )
             responseContent = "";
-         
-			byte[] content = encoding == null ? responseContent.getBytes() : responseContent.getBytes( encoding );
 
-			response.setContentType( soapVersion.getContentTypeHttpHeader( encoding, null ) );
-
-			String acceptEncoding = response.getMockRequest().getRequestHeaders().get( "Accept-Encoding" );
-			if( acceptEncoding != null && acceptEncoding.toUpperCase().contains( "GZIP" ) )
-			{
-				response.addHeader( "Content-Encoding", "gzip" );
-				GZIPOutputStream zipOut = new GZIPOutputStream( outData );
-				zipOut.write( content );
-				zipOut.close();
-			}
-			else
-			{
-				outData.write( content );
-			}
-		}
-		else
-		{
-			// make sure..
-			if( mp == null )
-				mp = new MimeMultipart();
-
-			// init root part
-			initRootPart( responseContent, mp, isXOP );
-
-			// init mimeparts
-			AttachmentUtils.addMimeParts( this, Arrays.asList(getAttachments()), mp, contentIds );
-
-			// create request message
-			MimeMessage message = new MimeMessage( AttachmentUtils.JAVAMAIL_SESSION );
-			message.setContent( mp );
-			message.saveChanges();
-			MimeMessageMockResponseEntity mimeMessageRequestEntity = new MimeMessageMockResponseEntity( message, isXOP,
-						this );
-
-			response.addHeader( "Content-Type", mimeMessageRequestEntity.getContentType() );
-			response.addHeader( "MIME-Version", "1.0" );
-			mimeMessageRequestEntity.writeRequest( outData );
-		}
-		
-		response.writeRawResponseData( outData.toByteArray() );
-
-		return responseContent;
-	}
-
-	private void initRootPart( String requestContent, MimeMultipart mp, boolean isXOP ) throws MessagingException
-	{
-		MimeBodyPart rootPart = new PreencodedMimeBodyPart( "8bit" );
-		rootPart.setContentID( AttachmentUtils.ROOTPART_SOAPUI_ORG );
-		mp.addBodyPart( rootPart, 0 );
-
-		DataHandler dataHandler = new DataHandler( new MockResponseDataSource( this, requestContent, isXOP ) );
-		rootPart.setDataHandler( dataHandler );
-	}
-
-	@SuppressWarnings("unchecked")
-	public Attachment addAttachment( Attachment attachment )
-	{
-		if( attachment instanceof BodyPartAttachment )
-		{
-			try
-			{
-				BodyPartAttachment att = ( BodyPartAttachment ) attachment;
-
-				AttachmentConfig newConfig = getConfig().addNewAttachment();
-				newConfig.setData( Tools.readAll( att.getInputStream(), 0 ).toByteArray() );
-				newConfig.setContentId( att.getContentID() );
-				newConfig.setContentType( att.getContentType() );
-				newConfig.setName( att.getName() );
-
-				FileAttachment<WsdlMockResponse> newAttachment = new MockFileAttachment( newConfig, this );
-				attachments.add( newAttachment );
-				return newAttachment;
-			}
-			catch( Exception e )
-			{
-				SoapUI.logError( e );
-			}
-		}
-		else if( attachment instanceof FileAttachment )
-		{
-			AttachmentConfig oldConfig = ( ( FileAttachment<WsdlMockResponse> ) attachment ).getConfig();
-			AttachmentConfig newConfig = ( AttachmentConfig ) getConfig().addNewAttachment().set( oldConfig );
-			FileAttachment<WsdlMockResponse> newAttachment = new MockFileAttachment( newConfig, this );
-			attachments.add( newAttachment );
-			return newAttachment;
-		}
-
-		return null;
-	}
-
-	public void setResponseDelay( long delay )
-	{
-		long oldDelay = getResponseDelay();
-
-		if( delay == 0 )
-			getSettings().clearSetting( RESPONSE_DELAY_PROPERTY );
-		else
-			getSettings().setLong( RESPONSE_DELAY_PROPERTY, delay );
-
-		notifyPropertyChanged( RESPONSE_DELAY_PROPERTY, oldDelay, delay );
-	}
-
-	public long getResponseDelay()
-	{
-		return getSettings().getLong( RESPONSE_DELAY_PROPERTY, 0 );
-	}
-
-	public void setResponseHttpStatus( String httpStatus )
-	{
-		String oldStatus = getResponseHttpStatus();
-
-		getConfig().setHttpResponseStatus( httpStatus );
-
-		notifyPropertyChanged( RESPONSE_HTTP_STATUS, oldStatus, httpStatus );
-	}
-
-	public String getResponseHttpStatus()
-	{
-		return getConfig().getHttpResponseStatus();
-	}
-
-	public void setMockResult( WsdlMockResult mockResult )
-	{
-		WsdlMockResult oldResult = this.mockResult;
-		this.mockResult = mockResult;
-		notifyPropertyChanged( MOCKRESULT_PROPERTY, oldResult, mockResult );
-	}
-
-	public WsdlMockResult getMockResult()
-	{
-		return mockResult;
-	}
-
-	public long getContentLength()
-	{
-		return getResponseContent() == null ? 0 : getResponseContent().length();
-	}
-
-	public boolean isMultipartEnabled()
-	{
-		return !getSettings().getBoolean( DISABLE_MULTIPART_ATTACHMENTS );
-	}
-
-	public void setMultipartEnabled( boolean multipartEnabled )
-	{
-		getSettings().setBoolean( DISABLE_MULTIPART_ATTACHMENTS, multipartEnabled );
-	}
-
-	public boolean isForceMtom()
-	{
-		return getSettings().getBoolean( FORCE_MTOM );
-	}
-
-	public void setForceMtom( boolean forceMtom )
-	{
-		boolean old = getSettings().getBoolean( FORCE_MTOM );
-		getSettings().setBoolean( FORCE_MTOM, forceMtom );
-		notifyPropertyChanged( FORCE_MTOM, old, forceMtom );
-	}
-
-	public boolean isRemoveEmptyContent()
-	{
-		return getSettings().getBoolean( REMOVE_EMPTY_CONTENT );
-	}
-
-	public void setRemoveEmptyContent( boolean removeEmptyContent )
-	{
-		boolean old = getSettings().getBoolean( REMOVE_EMPTY_CONTENT );
-		getSettings().setBoolean( REMOVE_EMPTY_CONTENT, removeEmptyContent );
-		notifyPropertyChanged( REMOVE_EMPTY_CONTENT, old, removeEmptyContent );
-	}
-
-	public boolean isEncodeAttachments()
-	{
-		return getSettings().getBoolean( ENCODE_ATTACHMENTS );
-	}
-
-	public void setEncodeAttachments( boolean encodeAttachments )
-	{
-		boolean old = getSettings().getBoolean( ENCODE_ATTACHMENTS );
-		getSettings().setBoolean( ENCODE_ATTACHMENTS, encodeAttachments );
-		notifyPropertyChanged( ENCODE_ATTACHMENTS, old, encodeAttachments );
-	}
-
-	public boolean isStripWhitespaces()
-	{
-		return getSettings().getBoolean( STRIP_WHITESPACES );
-	}
-
-	public void setStripWhitespaces( boolean stripWhitespaces )
-	{
-		boolean old = getSettings().getBoolean( STRIP_WHITESPACES );
-		getSettings().setBoolean( STRIP_WHITESPACES, stripWhitespaces );
-		notifyPropertyChanged( STRIP_WHITESPACES, old, stripWhitespaces );
-	}
-
-	public boolean isInlineFilesEnabled()
-	{
-		return getSettings().getBoolean( WsdlMockResponse.ENABLE_INLINE_FILES );
-	}
-
-	public void setInlineFilesEnabled( boolean inlineFilesEnabled )
-	{
-		getSettings().setBoolean( WsdlMockResponse.ENABLE_INLINE_FILES, inlineFilesEnabled );
-	}
-
-	@Override
-	public void beforeSave()
-	{
-		if( responseContent != null )
-		{
-			CompressedStringSupport.setString( getConfig().getResponseContent(), responseContent );
-			responseContent = null;
-		}
-	}
-
-	public void addAttachmentsChangeListener( PropertyChangeListener listener )
-	{
-		addPropertyChangeListener( ATTACHMENTS_PROPERTY, listener );
-	}
-
-	public boolean isReadOnly()
-	{
-		return false;
-	}
-
-	public void removeAttachmentsChangeListener( PropertyChangeListener listener )
-	{
-		removePropertyChangeListener( ATTACHMENTS_PROPERTY, listener );
-	}
-
-	public SoapVersion getSoapVersion()
-	{
-		return getMockOperation().getOperation() == null ? SoapVersion.Soap11 : getMockOperation().getOperation()
-					.getInterface().getSoapVersion();
-	}
-
-	public PropertyExpansion[] getPropertyExpansions()
-	{
-		List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
-
-		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "responseContent" ) );
-
-		StringToStringMap responseHeaders = getResponseHeaders();
-		for( String key : responseHeaders.keySet() )
-		{
-			result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, new ResponseHeaderHolder(
-						responseHeaders, key ), "value" ) );
-		}
-
-		return result.toArray( new PropertyExpansion[result.size()] );
-	}
-
-	public class ResponseHeaderHolder
-	{
-		private final StringToStringMap valueMap;
-		private final String key;
-
-		public ResponseHeaderHolder( StringToStringMap valueMap, String key )
-		{
-			this.valueMap = valueMap;
-			this.key = key;
-		}
-
-		public String getValue()
-		{
-			return valueMap.get( key );
-		}
-
-		public void setValue( String value )
-		{
-			valueMap.put( key, value );
-			setResponseHeaders( valueMap );
-		}
-	}
-
-	public void addTestPropertyListener( TestPropertyListener listener )
-	{
-		propertyHolder.addTestPropertyListener( listener );
-	}
-
-	public ModelItem getModelItem()
-	{
-		return propertyHolder.getModelItem();
-	}
-
-	public Map<String, TestProperty> getProperties()
-	{
-		return propertyHolder.getProperties();
-	}
-
-	public TestProperty getProperty( String name )
-	{
-		return propertyHolder.getProperty( name );
-	}
-
-	public String[] getPropertyNames()
-	{
-		return propertyHolder.getPropertyNames();
-	}
-
-	public String getPropertyValue( String name )
-	{
-		return propertyHolder.getPropertyValue( name );
-	}
-
-	public boolean hasProperty( String name )
-	{
-		return propertyHolder.hasProperty( name );
-	}
-
-	public void removeTestPropertyListener( TestPropertyListener listener )
-	{
-		propertyHolder.removeTestPropertyListener( listener );
-	}
-
-	public void setPropertyValue( String name, String value )
-	{
-		propertyHolder.setPropertyValue( name, value );
-	}
-
-	public String getOutgoingWss()
-	{
-		return getConfig().getOutgoingWss();
-	}
-
-	public void setOutgoingWss( String outgoingWss )
-	{
-		String old = getOutgoingWss();
-		getConfig().setOutgoingWss( outgoingWss );
-		notifyPropertyChanged( OUGOING_WSS, old, outgoingWss );
-	}
-
-	public TestProperty getPropertyAt(int index)
-	{
-		return propertyHolder.getPropertyAt(index);
-	}
-
-	public int getPropertyCount()
-	{
-		return propertyHolder.getPropertyCount();
-	}
-
-	public String getPropertiesLabel()
-	{
-		return "Custom Properties";
-	}
-
-	public AttachmentEncoding getAttachmentEncoding(String partName)
-	{
-		return AttachmentUtils.getAttachmentEncoding( getMockOperation().getOperation(), partName, true );
-	}
-	
-	public WsaConfig getWsaConfig() {
-		if (wsaConfig == null)
-		{
-			if (!getConfig().isSetWsaConfig())
-			{
-				getConfig().addNewWsaConfig();
-			}
-			wsaConfig = new WsaConfig(getConfig().getWsaConfig(), this);
-		}
-		return wsaConfig;
-	}
-
-	public boolean isWsAddressing()
-	{
-		return getConfig().getUseWsAddressing();
-	}
-	
-	public void setWsAddressing( boolean wsAddressing )
-   {
-   	boolean old = getConfig().getUseWsAddressing();
-   	getConfig().setUseWsAddressing(wsAddressing);
-   	notifyPropertyChanged( "wsAddressing", old, wsAddressing );
+         byte[] content = encoding == null ? responseContent.getBytes() : responseContent.getBytes( encoding );
+
+         response.setContentType( soapVersion.getContentTypeHttpHeader( encoding, null ) );
+
+         String acceptEncoding = response.getMockRequest().getRequestHeaders().get( "Accept-Encoding" );
+         if( acceptEncoding != null && acceptEncoding.toUpperCase().contains( "GZIP" ) )
+         {
+            response.addHeader( "Content-Encoding", "gzip" );
+            GZIPOutputStream zipOut = new GZIPOutputStream( outData );
+            zipOut.write( content );
+            zipOut.close();
+         }
+         else
+         {
+            outData.write( content );
+         }
+      }
+      else
+      {
+         // make sure..
+         if( mp == null )
+            mp = new MimeMultipart();
+
+         // init root part
+         initRootPart( responseContent, mp, isXOP );
+
+         // init mimeparts
+         AttachmentUtils.addMimeParts( this, Arrays.asList( getAttachments() ), mp, contentIds );
+
+         // create request message
+         MimeMessage message = new MimeMessage( AttachmentUtils.JAVAMAIL_SESSION );
+         message.setContent( mp );
+         message.saveChanges();
+         MimeMessageMockResponseEntity mimeMessageRequestEntity = new MimeMessageMockResponseEntity( message, isXOP,
+                 this );
+
+         response.addHeader( "Content-Type", mimeMessageRequestEntity.getContentType() );
+         response.addHeader( "MIME-Version", "1.0" );
+         mimeMessageRequestEntity.writeRequest( outData );
+      }
+
+      response.writeRawResponseData( outData.toByteArray() );
+
+      return responseContent;
    }
-	
-	public boolean isWsaEnabled()
-	{
-		return isWsAddressing();
-	}
 
-	public void setWsaEnabled(boolean arg0)
-	{
-		setWsAddressing(arg0);
-		
-	}
+   private void initRootPart( String requestContent, MimeMultipart mp, boolean isXOP ) throws MessagingException
+   {
+      MimeBodyPart rootPart = new PreencodedMimeBodyPart( "8bit" );
+      rootPart.setContentID( AttachmentUtils.ROOTPART_SOAPUI_ORG );
+      mp.addBodyPart( rootPart, 0 );
 
-	public WsdlOperation getOperation()
-	{
-		return getMockOperation().getOperation();
-	}
+      DataHandler dataHandler = new DataHandler( new MockResponseDataSource( this, requestContent, isXOP ) );
+      rootPart.setDataHandler( dataHandler );
+   }
+
+   @SuppressWarnings( "unchecked" )
+   public Attachment addAttachment( Attachment attachment )
+   {
+      if( attachment instanceof BodyPartAttachment )
+      {
+         try
+         {
+            BodyPartAttachment att = (BodyPartAttachment) attachment;
+
+            AttachmentConfig newConfig = getConfig().addNewAttachment();
+            newConfig.setData( Tools.readAll( att.getInputStream(), 0 ).toByteArray() );
+            newConfig.setContentId( att.getContentID() );
+            newConfig.setContentType( att.getContentType() );
+            newConfig.setName( att.getName() );
+
+            FileAttachment<WsdlMockResponse> newAttachment = new MockFileAttachment( newConfig, this );
+            attachments.add( newAttachment );
+            return newAttachment;
+         }
+         catch( Exception e )
+         {
+            SoapUI.logError( e );
+         }
+      }
+      else if( attachment instanceof FileAttachment )
+      {
+         AttachmentConfig oldConfig = ( (FileAttachment<WsdlMockResponse>) attachment ).getConfig();
+         AttachmentConfig newConfig = (AttachmentConfig) getConfig().addNewAttachment().set( oldConfig );
+         FileAttachment<WsdlMockResponse> newAttachment = new MockFileAttachment( newConfig, this );
+         attachments.add( newAttachment );
+         return newAttachment;
+      }
+
+      return null;
+   }
+
+   public void setResponseDelay( long delay )
+   {
+      long oldDelay = getResponseDelay();
+
+      if( delay == 0 )
+         getSettings().clearSetting( RESPONSE_DELAY_PROPERTY );
+      else
+         getSettings().setLong( RESPONSE_DELAY_PROPERTY, delay );
+
+      notifyPropertyChanged( RESPONSE_DELAY_PROPERTY, oldDelay, delay );
+   }
+
+   public long getResponseDelay()
+   {
+      return getSettings().getLong( RESPONSE_DELAY_PROPERTY, 0 );
+   }
+
+   public void setResponseHttpStatus( String httpStatus )
+   {
+      String oldStatus = getResponseHttpStatus();
+
+      getConfig().setHttpResponseStatus( httpStatus );
+
+      notifyPropertyChanged( RESPONSE_HTTP_STATUS, oldStatus, httpStatus );
+   }
+
+   public String getResponseHttpStatus()
+   {
+      return getConfig().getHttpResponseStatus();
+   }
+
+   public void setMockResult( WsdlMockResult mockResult )
+   {
+      WsdlMockResult oldResult = this.mockResult;
+      this.mockResult = mockResult;
+      notifyPropertyChanged( MOCKRESULT_PROPERTY, oldResult, mockResult );
+   }
+
+   public WsdlMockResult getMockResult()
+   {
+      return mockResult;
+   }
+
+   public long getContentLength()
+   {
+      return getResponseContent() == null ? 0 : getResponseContent().length();
+   }
+
+   public boolean isMultipartEnabled()
+   {
+      return !getSettings().getBoolean( DISABLE_MULTIPART_ATTACHMENTS );
+   }
+
+   public void setMultipartEnabled( boolean multipartEnabled )
+   {
+      getSettings().setBoolean( DISABLE_MULTIPART_ATTACHMENTS, multipartEnabled );
+   }
+
+   public boolean isForceMtom()
+   {
+      return getSettings().getBoolean( FORCE_MTOM );
+   }
+
+   public void setForceMtom( boolean forceMtom )
+   {
+      boolean old = getSettings().getBoolean( FORCE_MTOM );
+      getSettings().setBoolean( FORCE_MTOM, forceMtom );
+      notifyPropertyChanged( FORCE_MTOM, old, forceMtom );
+   }
+
+   public boolean isRemoveEmptyContent()
+   {
+      return getSettings().getBoolean( REMOVE_EMPTY_CONTENT );
+   }
+
+   public void setRemoveEmptyContent( boolean removeEmptyContent )
+   {
+      boolean old = getSettings().getBoolean( REMOVE_EMPTY_CONTENT );
+      getSettings().setBoolean( REMOVE_EMPTY_CONTENT, removeEmptyContent );
+      notifyPropertyChanged( REMOVE_EMPTY_CONTENT, old, removeEmptyContent );
+   }
+
+   public boolean isEncodeAttachments()
+   {
+      return getSettings().getBoolean( ENCODE_ATTACHMENTS );
+   }
+
+   public void setEncodeAttachments( boolean encodeAttachments )
+   {
+      boolean old = getSettings().getBoolean( ENCODE_ATTACHMENTS );
+      getSettings().setBoolean( ENCODE_ATTACHMENTS, encodeAttachments );
+      notifyPropertyChanged( ENCODE_ATTACHMENTS, old, encodeAttachments );
+   }
+
+   public boolean isStripWhitespaces()
+   {
+      return getSettings().getBoolean( STRIP_WHITESPACES );
+   }
+
+   public void setStripWhitespaces( boolean stripWhitespaces )
+   {
+      boolean old = getSettings().getBoolean( STRIP_WHITESPACES );
+      getSettings().setBoolean( STRIP_WHITESPACES, stripWhitespaces );
+      notifyPropertyChanged( STRIP_WHITESPACES, old, stripWhitespaces );
+   }
+
+   public boolean isInlineFilesEnabled()
+   {
+      return getSettings().getBoolean( WsdlMockResponse.ENABLE_INLINE_FILES );
+   }
+
+   public void setInlineFilesEnabled( boolean inlineFilesEnabled )
+   {
+      getSettings().setBoolean( WsdlMockResponse.ENABLE_INLINE_FILES, inlineFilesEnabled );
+   }
+
+   @Override
+   public void beforeSave()
+   {
+      if( responseContent != null )
+      {
+         CompressedStringSupport.setString( getConfig().getResponseContent(), responseContent );
+         responseContent = null;
+      }
+   }
+
+   public void addAttachmentsChangeListener( PropertyChangeListener listener )
+   {
+      addPropertyChangeListener( ATTACHMENTS_PROPERTY, listener );
+   }
+
+   public boolean isReadOnly()
+   {
+      return false;
+   }
+
+   public void removeAttachmentsChangeListener( PropertyChangeListener listener )
+   {
+      removePropertyChangeListener( ATTACHMENTS_PROPERTY, listener );
+   }
+
+   public SoapVersion getSoapVersion()
+   {
+      return getMockOperation().getOperation() == null ? SoapVersion.Soap11 : getMockOperation().getOperation()
+              .getInterface().getSoapVersion();
+   }
+
+   public PropertyExpansion[] getPropertyExpansions()
+   {
+      List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+
+      result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "responseContent" ) );
+
+      StringToStringMap responseHeaders = getResponseHeaders();
+      for( String key : responseHeaders.keySet() )
+      {
+         result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, new ResponseHeaderHolder(
+                 responseHeaders, key ), "value" ) );
+      }
+
+      return result.toArray( new PropertyExpansion[result.size()] );
+   }
+
+   public class ResponseHeaderHolder
+   {
+      private final StringToStringMap valueMap;
+      private final String key;
+
+      public ResponseHeaderHolder( StringToStringMap valueMap, String key )
+      {
+         this.valueMap = valueMap;
+         this.key = key;
+      }
+
+      public String getValue()
+      {
+         return valueMap.get( key );
+      }
+
+      public void setValue( String value )
+      {
+         valueMap.put( key, value );
+         setResponseHeaders( valueMap );
+      }
+   }
+
+   public void addTestPropertyListener( TestPropertyListener listener )
+   {
+      propertyHolder.addTestPropertyListener( listener );
+   }
+
+   public ModelItem getModelItem()
+   {
+      return propertyHolder.getModelItem();
+   }
+
+   public Map<String, TestProperty> getProperties()
+   {
+      return propertyHolder.getProperties();
+   }
+
+   public TestProperty getProperty( String name )
+   {
+      return propertyHolder.getProperty( name );
+   }
+
+   public String[] getPropertyNames()
+   {
+      return propertyHolder.getPropertyNames();
+   }
+
+   public String getPropertyValue( String name )
+   {
+      return propertyHolder.getPropertyValue( name );
+   }
+
+   public boolean hasProperty( String name )
+   {
+      return propertyHolder.hasProperty( name );
+   }
+
+   public void removeTestPropertyListener( TestPropertyListener listener )
+   {
+      propertyHolder.removeTestPropertyListener( listener );
+   }
+
+   public void setPropertyValue( String name, String value )
+   {
+      propertyHolder.setPropertyValue( name, value );
+   }
+
+   public String getOutgoingWss()
+   {
+      return getConfig().getOutgoingWss();
+   }
+
+   public void setOutgoingWss( String outgoingWss )
+   {
+      String old = getOutgoingWss();
+      getConfig().setOutgoingWss( outgoingWss );
+      notifyPropertyChanged( OUGOING_WSS, old, outgoingWss );
+   }
+
+   public TestProperty getPropertyAt( int index )
+   {
+      return propertyHolder.getPropertyAt( index );
+   }
+
+   public int getPropertyCount()
+   {
+      return propertyHolder.getPropertyCount();
+   }
+
+   public String getPropertiesLabel()
+   {
+      return "Custom Properties";
+   }
+
+   public AttachmentEncoding getAttachmentEncoding( String partName )
+   {
+      return AttachmentUtils.getAttachmentEncoding( getMockOperation().getOperation(), partName, true );
+   }
+
+   public WsaConfig getWsaConfig()
+   {
+      if( wsaConfig == null )
+      {
+         if( !getConfig().isSetWsaConfig() )
+         {
+            getConfig().addNewWsaConfig();
+         }
+         wsaConfig = new WsaConfig( getConfig().getWsaConfig(), this );
+      }
+      return wsaConfig;
+   }
+
+   public boolean isWsAddressing()
+   {
+      return getConfig().getUseWsAddressing();
+   }
+
+   public void setWsAddressing( boolean wsAddressing )
+   {
+      boolean old = getConfig().getUseWsAddressing();
+      getConfig().setUseWsAddressing( wsAddressing );
+      notifyPropertyChanged( "wsAddressing", old, wsAddressing );
+   }
+
+   public boolean isWsaEnabled()
+   {
+      return isWsAddressing();
+   }
+
+   public void setWsaEnabled( boolean arg0 )
+   {
+      setWsAddressing( arg0 );
+
+   }
+
+   public WsdlOperation getOperation()
+   {
+      return getMockOperation().getOperation();
+   }
 
 }
