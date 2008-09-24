@@ -12,13 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss.entries;
 
-import javax.swing.JComponent;
-
-import org.apache.ws.security.WSSConfig;
-import org.apache.ws.security.message.WSSecHeader;
-import org.apache.ws.security.message.WSSecTimestamp;
-import org.w3c.dom.Document;
-
 import com.eviware.soapui.config.WSSEntryConfig;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
@@ -26,6 +19,12 @@ import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.jgoodies.binding.PresentationModel;
+import org.apache.ws.security.WSSConfig;
+import org.apache.ws.security.message.WSSecHeader;
+import org.apache.ws.security.message.WSSecTimestamp;
+import org.w3c.dom.Document;
+
+import javax.swing.*;
 
 public class AddTimestampEntry extends WssEntryBase
 {
@@ -71,8 +70,7 @@ public class AddTimestampEntry extends WssEntryBase
 		
 		WSSecTimestamp timestamp = new WSSecTimestamp();
 		timestamp.setTimeToLive( timeToLive );
-		timestamp.build( doc, secHeader );
-		
+
 		if( !strictTimestamp )
 		{
 			WSSConfig wsc = WSSConfig.getNewInstance();
