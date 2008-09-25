@@ -26,12 +26,15 @@
       		<td>
       			<div align="center">
       				<a onclick="javascript:urchinTracker('/downloadOpenSource')" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=571745" title="Download soapUI">
-      				<img src="images/download_opensource.png" alt="download Open Source" width="311" height="166" longdesc="http://www.sourceforge.net"></img></a>
+      				<img src="images/download_opensource.png" alt="download Open Source" width="310" height="165" longdesc="http://www.sourceforge.net"/>
+      				</a> 
       			</div>
       		</td>
       		<td>
       			<div align="center">
-      				<img src="images/download_pro.png" alt="Download soapUI Pro" width="310" height="165" longdesc="http://www.eviware.com"></img>
+					<a onclick="javascript:urchinTracker('/downloadPro')" href="http://www.eviware.com/trial" title="Download soapUI Pro">
+						<img src="images/download_pro.png" alt="Download soapUI Pro" width="310" height="165" longdesc="http://www.eviware.com"/>
+      				</a> 
       			</div>
       		</td>
       	</tr>
@@ -73,47 +76,60 @@
 	</tr>
 </table>
 
+		
+<subsection name="Vote For soapUI">
 		<columns>
 		<column>
-		<subsection name="Latest News">
+		<a target="_new" href="http://soa.sys-con.com/general/readerschoice.htm" onclick="javascript:urchinTracker('/voteLink');">
+		<img src="images/WSJ-SOAReadersChoice-125_125px.jpg" alt="Vote for soapUI"/>
+		</a>
+		</column>
+		<column>
+		<p align="left">
+		<b>
+        Vote for soapUI in SOA World Magazine Reader's Choice Vote. <br/>
+        </b>
+		We are participating in several categories and need your support; <br/>
+		if you use soapUI and enjoy it; why not cast your vote on soapUI? <br/>
+		Thanks for your support, we appreciate it!<br/>
+		<a target="_new" href="http://soa.sys-con.com/general/readerschoice.htm" onclick="javascript:urchinTracker('/voteLink');">
+		Vote Here!
+		</a>
 		
-		<p><i>2008-01-28: soapUI 2.0.2</i> : Mostly bug-fixes and Plug-in updates <a href="new_and_noteworthy_2.html#2.0.2_Release">[Read more]</a></p>
-		
-		<p><i>2008-01-15: soapUI 2.0.1</i> : Mostly bug-fixes <a href="new_and_noteworthy_2.html#2.0.1_Release">[Read more]</a></p>
-
-		<p><i>2007-12-12: soapUI 2.0 Final</i> : Final Fixes... <a href="new_and_noteworthy_2.html">[Read more]</a></p>
-		<p><b><a href="news.html">[More News]</a></b></p>		
+		</p>
+		</column></columns>
 		
 		</subsection>
-		</column>
+		
+		
+		<subsection name="What is soapUI for?">
+				<p>soapUI is a powerful testing tool used for:</p>
 
-		<column align="left">
-		<subsection name="soapUI in the news">
-		<p>Fortunately, we are not the only ones using soapUI, have a look at what some others have written:</p>
-		<ul>
-			<li><a target="_new" href="http://nikitaknysh.blogspot.com/2008/01/how-to-test-web-service.html">How to Test a Web Service</a> from Nikita Knysh's Blog</li>
-			<li><a target="_new" href="http://www.gmjjavadesigns.com/gmjd/entry/soapui_2_0_web_service">soapUI 2.0: Web Service Testing Tool</a> from GMJ Designs</li>
-			<li><a target="_new" href="http://blogsearch.google.com/blogsearch?hl=en&amp;q=soapui&amp;ie=UTF-8">soapUI - Testing JAX-WS Web service in NetBeans</a> from Arun Gupta's Blog</li>
-		</ul>
-		<p><b><a href="soapui_in_the_news.html">[More of soapUI in the News]</a></b></p>	
-		</subsection>
-		</column>
+		<columns>
+			<column>
+				<ul class="evilist">
+					<li><a href="features.html">Inspecting Web Services</a></li>
+					<li><a href="gettingstarted/sample-project.html">Invoking Web Services</a></li>
+					<li><a href="#" onclick="openVideo('movies/sample_project/sample_project.html');">Developing Web Services</a></li>
+					
+				</ul>
+			</column>
+			<column>
+				<ul class="evilist">
+					<li><a href="gettingstarted/index.html">Web Service Simulation and Web Service Mocking</a></li>	
+					<li><a href="comparison.html">Functional Testing of Web Services</a></li>
+					<li><a href="comparison.html">Load Testing of Web Services</a></li>
+				</ul>
+			</column>
 		</columns>
+		</subsection>
 
 
 
-<subsection name="What is it for?">
 
-<p>soapUI is a powerful testing tool used for:</p>
-<ul class="evilist">
-<li><a href="features.html">Inspecting Web Services</a></li>
-<li><a href="gettingstarted/sample-project.html">Invoking Web Services</a></li>
-<li><a href="#" onclick="openVideo('movies/sample_project/sample_project.html');">Developing Web Services</a></li>
-<li><a href="gettingstarted/index.html">Web Service Simulation and Web Service Mocking</a></li>
-<li><a href="comparison.html">Functional Testing of Web Services</a></li>
-<li><a href="comparison.html">Load Testing of Web Services</a></li>
-</ul>
-</subsection> 
+
+
+
 
 		
        <table class="webstartlinkstable" cellspacing="0" cellpadding="0">
@@ -137,30 +153,29 @@
 			 </td>
 			</tr>
 		</table>
-		
-		<subsection name="Vote For soapUI">
+
 		<columns>
-		<column>
-		<a target="_new" href="http://soa.sys-con.com/general/readerschoice.htm" onclick="javascript:urchinTracker('/voteLink');">
-		<img src="images/WSJ-SOAReadersChoice-125_125px.jpg" alt="Vote for soapUI"/>
-		</a>
-		</column>
-		<column>
-		<p align="left">
-		<b>
-        Vote for soapUI in SOA World Magazine Reader's Choice Vote. <br/>
-        </b>
-		We are participating in several categories and need your support; <br/>
-		if you use soapUI and enjoy it; why not cast your vote on soapUI? <br/>
-		Thanks for your support, we appreciate it!<br/>
-		<a target="_new" href="http://soa.sys-con.com/general/readerschoice.htm" onclick="javascript:urchinTracker('/voteLink');">
-		Vote Here!
-		</a>
-		
-		</p>
-		</column></columns>
-		
-		</subsection>
+			<column>
+				<subsection name="Latest News">
+					<p><i>2008-01-28: soapUI 2.0.2</i> : Mostly bug-fixes and Plug-in updates <a href="new_and_noteworthy_2.html#2.0.2_Release">[Read more]</a></p>
+					<p><i>2008-01-15: soapUI 2.0.1</i> : Mostly bug-fixes <a href="new_and_noteworthy_2.html#2.0.1_Release">[Read more]</a></p>
+					<p><i>2007-12-12: soapUI 2.0 Final</i> : Final Fixes... <a href="new_and_noteworthy_2.html">[Read more]</a></p>
+					<p><b><a href="news.html">[More News]</a></b></p>		
+				</subsection>
+			</column>
+			<column align="left">
+				<subsection name="soapUI in the news">
+					<p>Fortunately, we are not the only ones using soapUI, have a look at what some others have written:</p>
+					<ul>
+						<li><a target="_new" href="http://nikitaknysh.blogspot.com/2008/01/how-to-test-web-service.html">How to Test a Web Service</a> from Nikita Knysh's Blog</li>
+						<li><a target="_new" href="http://www.gmjjavadesigns.com/gmjd/entry/soapui_2_0_web_service">soapUI 2.0: Web Service Testing Tool</a> from GMJ Designs</li>
+						<li><a target="_new" href="http://blogsearch.google.com/blogsearch?hl=en&amp;q=soapui&amp;ie=UTF-8">soapUI - Testing JAX-WS Web service in NetBeans</a> from Arun Gupta's Blog</li>
+					</ul>
+					<p><b><a href="soapui_in_the_news.html">[More of soapUI in the News]</a></b></p>	
+				</subsection>
+			</column>
+		</columns>
+
 		
 
 
