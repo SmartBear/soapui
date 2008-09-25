@@ -28,7 +28,7 @@
 
 		<subsection name="New and Noteworthy in soapUI 2.5 beta1">
 		
-			<newfeature img="images/2_5/rest.gif" alt="soap test soapuI beta1">
+			<newfeature img="images/2_5/rest.gif" alt="REST Testing">
 				<div>
 					<p><b>REST Service Testing</b></p>
 					<p>
@@ -36,63 +36,76 @@
 
 						<ul>
 							<li>Import REST Services from WADL files</li>
-                     <li>Generate/Modify REST services via endpoints, parameters, etc </li>
+                     <p align="center"><img src="images/2_5/import-wadl.gif"></img> </p>
+                     
+                     <li>Define/Modify REST Services or Resource from endpoints, parameters, etc </li>
+                      <p align="center"><img src="images/2_5/define-resource.gif"></img> </p>
                      <li>REST Request TestStep for validating response representations</li>
+                     <p align="center"><img src="images/2_5/rest-test-request.gif"></img> </p>
                      <li>Support for testing JSON and HTML representations as XML</li>
+                     <p align="center"><img src="images/2_5/rest-request.gif"></img> </p>
                      <li>Generate WADL files for manually defined REST services</li>
+                     <p align="center"><img src="images/2_5/generate-wadl.gif"></img> </p>
                      <li>Generate code and documentation from imported or generated WADL</li>
+                     <p align="center"><img src="images/2_5/wadl2java.gif"></img> </p>
 						</ul>
 					</p>
-					<p>Please evaluate and come back with feedback on how we can improve the interface</p>
+
  				</div>
 			</newfeature>
 			
-			<newfeature img="images/2_5/adressing.gif.gif" alt="WS-Addressing Support">
+			<newfeature img="images/2_5/wsa-inspector.gif" alt="WS-Addressing Support">
 				<div>
 					<p><b>WS-Addressing Support</b></p>
-					
-
+               <ul>
+                  <li>Automatically add WS-Addressing headers to requests and mockresponses</li>
+                  <li>Deduce WS-Addressing requirements from WSDL metadata (including WS-Policy)</li>
+                  <li>WS-A Assertion for validation correct WS-Addressing headers in request/response messages</li>
+               </ul>
  				</div>
 			</newfeature>
 
-         	<newfeature img="images/2_5/httprequest.gif.gif" alt="HTTP Request TestStep">
+         	<newfeature img="images/2_5/http-test-request.gif" alt="HTTP Request TestStep">
 				<div>
 					<p><b>HTTP Request TestStep</b></p>
-
-
+               <ul>
+                  <li>Send arbitrary HTTP Requests</li>
+                  <li>HTML and JSON responses are converted to XML for assertions, property transfers, etc</li>
+               </ul>
  				</div>
 			</newfeature>
 
-         	<newfeature img="images/2_5/mockservice-scripting.gif.gif" alt="WS-Addressing Support">
+         	<newfeature>
 				<div>
-					<p><b>Extended MockService Scripting</b></p>
+					<p><b>Improved MockServices</b></p>
+               <ul>
+                  <li>onRequest / afterRequest scripts for custom processing/logging/etc</li>
+                  <li>improved WSDL exposure with "?WSDL" query argument</li>
+                  <li>support for content-root setting for serving static files on GET requests</li>
+                  <li>etc..</li>
+               </ul>
 
 
  				</div>
 			</newfeature>
 
-         	<newfeature img="images/2_5/loadtest-scripting.gif.gif" alt="WS-Addressing Support">
-				<div>
-					<p><b>Improved LoadTest Scripting</b></p>
-
-
- 				</div>
-			</newfeature>
+         
 
          <newfeature>
          <div>
             <p><b>And much much more..</b></p>
             <ul>
-               <li>Encrypted Project Files</li>
-               <li>Import/Export TestCases/TestSuites</li>
+               <li>Encrypted Project Files and hidden password fields</li>
+               <li>LoadTest before/afterRun scripts</li>
+               <li>Import/Export TestCases/TestSuites for sharing</li>
                <li>Relative paths to project resources</li>
-               <li>Improved SOAP Monitor</li>
-
-               <li>Dump-File for response message</li>
+               <li>Improved SOAP Monitor now supports keep-alive and chunked encoding</li>
+               <li>Dump-File for response message automatically saves responses to a local file</li>
                <li>Unique keystores on request-level</li>
                <li>Improved XPath Contains Assertion with option to ignore namespace prefixes</li>
                <li>Improved compression algorithm support</li>
-               <li></li>
+               <li>Extended HTTP-related settings</li>
+               <li>etc</li>
             </ul>
 
           </div>
@@ -107,7 +120,7 @@
 				<newfeature img="images/2_5/composite-projects.gif" alt="WS-Addressing Support">
 				<div>
 					<p><b>Composite Projects</b></p>
-
+               <p>Finally, for collaborative work on soapUI Pro projects, <a href="userguide/projects/composite-projects.html">Read more</a></p>
 
  				</div>
 			</newfeature>
@@ -115,7 +128,15 @@
          	<newfeature img="images/2_5/datagen.gif" alt="DataGen TestStep">
 				<div>
 					<p><b>DataGen TestStep</b></p>
-
+              <p>Generate data for property values:</p>
+               <ul>
+                  <li>Number : generate sequences or random numbers that can be formatted as int, float, etc</li>
+                  <li>List : sequential or random selection from fixed list of values</li>
+                  <li>Script : dynamically generated property values</li>
+                  <li>Template : content that can be used to create blocks of XML in requests/assertions/etc</li>
+               </ul>
+               <p>Generated property values can be recreated on every usage or only on execution of TestStep, and can
+               be shared between threads during LoadTest.</p>
 
  				</div>
 			</newfeature>
@@ -128,7 +149,7 @@
  				</div>
 			</newfeature>
 
-         <newfeature img="images/2_5/form-editor.gif" alt="WS-Addressing Support">
+         <newfeature img="images/2_5/rest-form-editor.gif" alt="WS-Addressing Support">
          <div>
             <p><b>Improved Form Editor</b></p>
 
@@ -148,7 +169,7 @@
              </newfeature>
 
 
-</subsection>	
+         </subsection>
 
 		 <p><hr size="1"/></p>
 		</section>
