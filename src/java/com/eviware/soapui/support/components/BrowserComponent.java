@@ -1,6 +1,7 @@
 package com.eviware.soapui.support.components;
 
 import com.eviware.soapui.support.DefaultHyperlinkListener;
+import com.eviware.soapui.support.UISupport;
 
 import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
@@ -12,6 +13,7 @@ import java.net.URL;
 public class BrowserComponent
 {
    private JEditorPane editorPane;
+   private JScrollPane scrollPane;
 //   private WebBrowser browser;
 //   private static WebBrowserFactory webBrowserFactory;
 //
@@ -25,7 +27,7 @@ public class BrowserComponent
       editorPane = new JEditorPane();
       editorPane.setEditorKit( new HTMLEditorKit() );
       editorPane.setEditable( false );
-      editorPane.addHyperlinkListener( new DefaultHyperlinkListener( editorPane ));
+      editorPane.addHyperlinkListener( new DefaultHyperlinkListener( editorPane ) );
    }
 
    public Component getComponent()
@@ -36,7 +38,12 @@ public class BrowserComponent
 //      }
 //
 //      return browser.getComponent();
-   	return new JScrollPane( editorPane );
+      if( scrollPane == null )
+      {
+         scrollPane = new JScrollPane( editorPane );
+         UISupport.addPreviewCorner( scrollPane, false );
+      }
+      return scrollPane;
    }
 
    private void initBrowser()
@@ -68,7 +75,7 @@ public class BrowserComponent
       editorPane.setContentType( contentType );
       try
       {
-         editorPane.read( new ByteArrayInputStream(contentAsString.getBytes()),  editorPane.getEditorKit().createDefaultDocument());
+         editorPane.read( new ByteArrayInputStream( contentAsString.getBytes() ), editorPane.getEditorKit().createDefaultDocument() );
       }
       catch( IOException e )
       {
@@ -97,7 +104,7 @@ public class BrowserComponent
    {
       try
       {
-         editorPane.setPage( new URL( url ));
+         editorPane.setPage( new URL( url ) );
       }
       catch( IOException e )
       {
@@ -115,6 +122,6 @@ public class BrowserComponent
    public String getContent()
    {
 //      return browser == null ? null : XmlUtils.serialize( browser.getDocument() );
-   	return editorPane.getText();
+      return editorPane.getText();
    }
 }

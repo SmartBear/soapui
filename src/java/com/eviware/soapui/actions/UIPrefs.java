@@ -35,7 +35,7 @@ public class UIPrefs implements Prefs
    public static final String ORDER_PROJECTS = "Order Projects";
    public static final String ORDER_TESTSUITES = "Order TestSuites";
    public static final String ORDER_REQUESTS = "Order Requests";
-   public static final String SHOW_DESCRIPTIONS = "";
+   public static final String SHOW_DESCRIPTIONS = "Show Descriptions";
    public static final String CREATE_BACKUP = "Create Backup";
    public static final String BACKUP_FOLDER = "Backup Folder";
    public static final String DESKTOP_TYPE = "Desktop Type";
@@ -72,7 +72,7 @@ public class UIPrefs implements Prefs
          editorForm.appendCheckBox( ORDER_PROJECTS, "(orders Projects alphabetically in tree)", false );
          editorForm.appendCheckBox( ORDER_REQUESTS, "(orders Requests alphabetically in tree)", false );
          editorForm.appendCheckBox( ORDER_TESTSUITES, "(orders TestSuites alphabetically in tree)", false );
-         editorForm.appendCheckBox( SHOW_DESCRIPTIONS, "(show Description Content when available)", false );
+         editorForm.appendCheckBox( SHOW_DESCRIPTIONS, "(show description content when available)", false );
          editorForm.appendSeparator();
 
          editorForm.appendCheckBox( AUTOSAVE_ONEXIT, "(automatically save all projects on exit)", true );

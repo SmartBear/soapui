@@ -413,9 +413,10 @@ public class SchemaUtils
                     .selectPath( "declare namespace s='" + Constants.XSD_NS + "' .//s:import/@schemaLocation" );
             for( int i = 0; i < schemaImports.length; i++ )
             {
-               String location = ((SimpleValue) schemaImports[i])
-                       .getStringValue();
-               if( location != null )
+               String location = ((SimpleValue) schemaImports[i]).getStringValue();
+               Element elm = ((Attr)schemaImports[i].getDomNode()).getOwnerElement();
+
+               if( location != null && !defaultSchemas.containsKey( elm.getAttribute("namespace" )))
                {
                   if( !location.startsWith( "file:" ) && location.indexOf( "://" ) == -1 )
                      location = Tools.joinRelativeUrl( wsdlUrl, location );
