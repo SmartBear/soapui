@@ -100,9 +100,8 @@
                <li>Improved SOAP Monitor now supports keep-alive and chunked encoding</li>
                <li>Dump-File for response message automatically saves responses to a local file</li>
                <li>Unique keystores on request-level</li>
-               <li>Improved XPath Contains Assertion with option to ignore namespace prefixes</li>
-               <li>Improved compression algorithm support</li>
-               <li>Extended HTTP-related settings</li>
+               <li>Improved XPath Contains Assertion with option to ignore namespace prefixes (Thanks to the-zerberus)</li>
+               <li>Improved compression algorithm support and Extended HTTP-related settings (Thanks to Mark Moore!)</li>
                <li>WSDL Documentation generation</li>
                <li>Improved WS-Security Timestamp generation to allow non-strict conformance</li>
                <li>Bug fixes...</li>

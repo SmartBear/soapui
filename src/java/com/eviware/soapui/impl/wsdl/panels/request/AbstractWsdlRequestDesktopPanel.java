@@ -12,11 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.request;
 
-import javax.swing.AbstractAction;
-import javax.swing.JButton;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.RequestXmlDocument;
 import com.eviware.soapui.impl.support.components.ResponseXmlDocument;
@@ -29,16 +24,18 @@ import com.eviware.soapui.impl.wsdl.actions.request.CreateEmptyRequestAction;
 import com.eviware.soapui.impl.wsdl.actions.request.RecreateRequestAction;
 import com.eviware.soapui.impl.wsdl.panels.request.actions.WSIValidateRequestAction;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
-import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.support.DefaultXmlDocument;
 import com.eviware.soapui.support.xml.JXEditTextArea;
+
+import javax.swing.*;
 
 /**
  * Abstract DesktopPanel for WsdlRequests
@@ -154,6 +151,7 @@ public abstract class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 ex
 	public void afterSubmit(Submit submit, SubmitContext context)
 	{
 		super.afterSubmit(submit, context);
-		wsiValidateAction.setEnabled(submit.getResponse() != null);
+      if( !isHasClosed() )
+		   wsiValidateAction.setEnabled(submit.getResponse() != null);
 	}
 }

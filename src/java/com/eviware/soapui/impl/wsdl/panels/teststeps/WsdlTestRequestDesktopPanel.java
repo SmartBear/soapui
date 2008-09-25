@@ -228,7 +228,8 @@ public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel
    public void afterSubmit(Submit submit, SubmitContext context)
    {
       super.afterSubmit(submit, context);
-      updateStatusIcon();
+      if( !isHasClosed() )
+         updateStatusIcon();
    }
 
    public boolean onClose(boolean canCancel)

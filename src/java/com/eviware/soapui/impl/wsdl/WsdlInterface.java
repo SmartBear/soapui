@@ -823,13 +823,16 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implem
 	public String getAnonymous()
 	{
 //		return WsdlUtils.getAnonymous(this);
-      if (getConfig().getAnonymous().equals(AnonymousTypeConfig.PROHIBITED))
+      if( getConfig().isSetAnonymous())
       {
-         return AnonymousTypeConfig.PROHIBITED.toString();
-      }
-      else if (getConfig().getAnonymous().equals(AnonymousTypeConfig.REQUIRED))
-      {
-         return AnonymousTypeConfig.REQUIRED.toString();
+         if (getConfig().getAnonymous().equals(AnonymousTypeConfig.PROHIBITED))
+         {
+            return AnonymousTypeConfig.PROHIBITED.toString();
+         }
+         else if (getConfig().getAnonymous().equals(AnonymousTypeConfig.REQUIRED))
+         {
+            return AnonymousTypeConfig.REQUIRED.toString();
+         }
       }
 
       return AnonymousTypeConfig.OPTIONAL.toString();

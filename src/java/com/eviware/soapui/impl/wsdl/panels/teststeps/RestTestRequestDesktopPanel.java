@@ -221,7 +221,8 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
    public void afterSubmit(Submit submit, SubmitContext context)
    {
       super.afterSubmit(submit, context);
-      updateStatusIcon();
+      if( !isHasClosed() )
+        updateStatusIcon();
    }
 
    public boolean onClose(boolean canCancel)

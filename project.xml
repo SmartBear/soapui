@@ -642,6 +642,7 @@
                     <include>**/*.css</include>
                     <include>**/*.txt</include>
                     <include>**/*.html</include>
+                    <include>**/*.jpg</include>
                     <include>**/*.gif</include>
                     <include>**/*.png</include>
                     <include>**/*.properties</include>
