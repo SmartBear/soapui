@@ -27,7 +27,8 @@
 		</ul>
 		<p>soapUI Pro further introduces a <a href="../functional/mockresponse.html">MockResponse TestStep</a> which can be added to any functional TestCase to simulate 
 		the handling of a SOAP request as part of the test, which opens of testing of asynchronous Web Services, etc.</p>
-		 <p><hr size="1"/>Next: <a href="services.html">Mock Web Services</a></p>
+		
+		 <p><hr size="1"/>Next: <a href="getting_started.html">Getting Started with Mock Web Services</a></p>
 		</section>
     </body>
 </document>
