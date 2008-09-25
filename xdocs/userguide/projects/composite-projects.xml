@@ -1,15 +1,22 @@
 <?xml version="1.0"?>
 <document>
     <properties>
-        <title>Composite Projects - spit old project files</title>
+        <title>Composite Projects - Collaboration based Web Service Testing</title>
     </properties>
     <body>
 		<section name="Composite Projects in SoapUI Pro ">
-		<p>Composite project is SoapUI project saved in different form. Normally project file is one xml file.
-           That means that collaboration and team work is very hard because synchronization is very hard to do.
-           Composite SoapUI project is saved in form of file system so updating/changing/committing parts of
-           projects is easier to do. 
+		<p>What is a Composite Project?</p>
+		<p>Behind the somewhat bewildering terminology lies a very simple concept; Composite Projects are soapUI projects saved to enable 
+		Team Collaboration. Normally a soapUI Project is saved as one xml file. 
+		This has its advantages you have only one file to consider and that file contains all information about that project. 
+		It also has some disadvantages; collaboration and joint team test development is very hard because synchronization is very hard to do. 		
+		When working in a Team in a project you often come to the situation where you have one person updating one test and another person a second test. 
+		If you only have one project file this is impossible to do simultaneously and hard to do by synching the test manually.</p>
+		<p> 
+           In comes Composite Projects; composite SoapUI projects are saved as a file system so updating, changing or committing parts of
+           projects, like a TestCase, are much easier to do.
         </p>
+        
         <subsection name="Composite File System">
         <p>Composite SoapUI project is saved in directory with project name. It contains separate directories for
            each interface, test suite and mock service and file settings.xml where other project settings and data
