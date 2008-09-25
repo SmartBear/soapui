@@ -111,7 +111,7 @@ public class SoapUI
 	public final static Logger log = Logger.getLogger( SoapUI.class );
 	public final static String SOAPUI_VERSION = "2.5 beta1";
 	public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
-	public static final String SOAPUI_SPLASH_GIF = "soapui-splash.gif";
+	public static final String SOAPUI_SPLASH_GIF = "soapui-splash.jpg";
 	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
 	public static final String BUILDINFO_RESOURCE = "/com/eviware/soapui/resources/conf/buildinfo.txt";
 

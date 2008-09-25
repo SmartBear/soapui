@@ -1,5 +1,36 @@
 Welcome to soapUI!
 
+2008-09-25 : 2.5-beta1 release!
+----------------------------------------------------------------------------------
+Finally a new version!
+- REST/HTTP Support
+  - WADL import / export / generation
+  - JSON/HTML to XML conversion for assertions, transfers, etc..
+  - REST / HTTP Request TestStep
+  - Generate both code and documentation for WADLs
+- WS-Addressing support
+  - Request, MockResponse, Assertion
+- MockService improvements
+  - onRequest / afterRequest scripts
+  - improved WSDL exposure with ?WSDL endpoint
+  - docroot for serving static content
+  - HEAD request support
+- Encrypted Project Files and hidden password fields
+- LoadTest before/afterRun scripts
+- Import/Export TestCases/TestSuites for sharing
+- Relative paths to project resources
+- Improved SOAP Monitor now supports keep-alive and chunked encoding
+- Dump-File for response message automatically saves responses to a local file
+- Unique keystores on request-level
+- Improved XPath Contains Assertion with option to ignore namespace prefixes
+- Improved compression algorithm support
+- Extended HTTP-related settings
+- ..
+
+Backup your existing projects before testing and please don't hesitate to contact
+us if you have any issues, suggestions, complaints, etc!
+
+
 2008-01-28 : 2.0.2 bug-fix release
 ----------------------------------------------------------------------------------
 Some more bugfixes and improvements:

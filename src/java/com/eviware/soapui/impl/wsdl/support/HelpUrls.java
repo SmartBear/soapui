@@ -141,15 +141,17 @@ public interface HelpUrls
 
 	public static final String WSIREPORT_HELP_URL = HELP_URL_ROOT + "projects/index.html#WSI_Reports";
 
-	public static final String RESOLVEPROJECT_HELP_URL = "";
+	public static final String RESOLVEPROJECT_HELP_URL =  HELP_URL_ROOT + "projects/index.html#Resolving_Projects";
 
-	public static final String NEWRESTSERVICE_HELP_URL = "";
+	public static final String NEWRESTSERVICE_HELP_URL =  HELP_URL_ROOT + "rest/index.html";
 
-	public static final String RESTREQUESTEDITOR_HELP_URL = "";
+	public static final String RESTREQUESTEDITOR_HELP_URL =  HELP_URL_ROOT + "rest/requests.html";
 
-	public static final String CREATEWADLDOC_HELP_URL = "";
+	public static final String CREATEWADLDOC_HELP_URL =  HELP_URL_ROOT + "rest/service.html";
 
 	public static final String WADL2JAVA_HELP_URL = "https://wadl.dev.java.net/wadl2java.html";
-   public static final String WADL_PARAMS_HELP_URL = "";
-   public static final String RESTRESOURCEEDITOR_HELPURL = "";
+   
+   public static final String WADL_PARAMS_HELP_URL =  HELP_URL_ROOT + "rest/paras.html";
+
+   public static final String RESTRESOURCEEDITOR_HELPURL =  HELP_URL_ROOT + "rest/resources.html";
 }
