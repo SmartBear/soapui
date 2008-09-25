@@ -75,8 +75,8 @@ public class AddWsdlAction extends AbstractSoapUIAction<WsdlProject>
                String value = newValue.toLowerCase().trim();
 
                dialog.getFormField( Form.CREATEREQUEST ).setEnabled( value.length() > 0 );
-               dialog.getFormField( Form.GENERATEMOCKSERVICE ).setEnabled( newValue.trim().length() > 0 && !newValue.endsWith( ".wadl" ) );
-               dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( newValue.trim().length() > 0 && !newValue.endsWith( ".wadl" ) );
+               dialog.getFormField( Form.GENERATEMOCKSERVICE ).setEnabled( newValue.trim().length() > 0  );
+               dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( newValue.trim().length() > 0  );
             }
          } );
       }

@@ -71,7 +71,7 @@ public class AddWadlAction extends AbstractSoapUIAction<WsdlProject>
             {
                String value = newValue.toLowerCase().trim();
 
-               dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( newValue.trim().length() > 0 && !newValue.endsWith( ".wadl" ) );
+               dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( newValue.trim().length() > 0 );
             }
          } );
       }
