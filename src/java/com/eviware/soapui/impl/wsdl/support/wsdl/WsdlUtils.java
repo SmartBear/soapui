@@ -718,24 +718,18 @@ public class WsdlUtils
 		Addressing newAddressing = null;
 		if (wsAddressing != null)
 		{
-//			newAddressing = AddressingDocument.Factory.newInstance().addNewAddressing();
-			newAddressing = newPolicy.addNewAddressing();
-			String optional = wsAddressing.getAttributeNS(PolicyUtils.WS_POLICY_NAMESPACE, "Optional");
-			if (!StringUtils.isNullOrEmpty(optional) && optional.equals(OptionalType.TRUE.toString()))
-			{
-				newAddressing.setOptional(OptionalType.TRUE);
-			} else {
-				newAddressing.setOptional(OptionalType.FALSE);
-			}
 			addressingPolicy = XmlUtils.getFirstChildElementNS(wsAddressing, PolicyUtils.WS_POLICY_NAMESPACE, "Policy");
 			if (addressingPolicy != null)
 			{
+				newAddressing = newPolicy.addNewAddressing();
+				String optional = wsAddressing.getAttributeNS(PolicyUtils.WS_POLICY_NAMESPACE, "Optional");
+				if (!StringUtils.isNullOrEmpty(optional) && optional.equals(OptionalType.TRUE.toString()))
+				{
+					newAddressing.setOptional(OptionalType.TRUE);
+				} else {
+					newAddressing.setOptional(OptionalType.FALSE);
+				}
 				Policy innerPolicy = newAddressing.addNewPolicy();
-//				if (StringUtils.isNullOrEmpty(optional) || optional.equals("false") || 
-//				(optional.equals("true") && SoapUI.getSettings().getBoolean(WsaSettings.ENABLE_FOR_OPTIONAL)) )
-//				{
-//					version = WsaVersionTypeConfig.X_200508.toString();
-//				}
 				//check if policy has Anonymous
 				Element anonymousElm = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(PolicyUtils.WSAM_NAMESPACE,"AnonymousResponses"));
 				if (anonymousElm != null)
