@@ -26,7 +26,7 @@
       <item href="/news.html" name="News and History">
       pagingInit
 	      <item href="/soapUI_in_the_news.html" name="soapUI in the news"/>
-          <item href="/new_and_noteworthy_2_5.html" name="New and Noteworthy in 2.5"/>
+	       <item href="/new_and_noteworthy_2_5.html" name="New and Noteworthy in 2.5"/>
 	      <item href="/new_and_noteworthy_2.html" name="New and Noteworthy in 2.0"/>
 	      <item href="/new_and_noteworthy_176.html" name="New and Noteworthy in 1.7.6"/>
 	      <item href="/new_and_noteworthy_175.html" name="New and Noteworthy in 1.7.5"/>
@@ -39,6 +39,7 @@
       <item href="/architecture/extensions.html" name="Extending"/>
       <item href="/future.html" name="Future Plans"/>
       <item href="/faq.html" name="FAQ"/>
+      <item href="/contact.html" name="Contact Us"/>
       </menu>
       
       <menu name="Getting Started" collapse="true" href="/gettingstarted/index.html">
@@ -92,7 +93,7 @@
              </item>
              
          <item href="/userguide/functional/index.html" name="Functional Testing">
-             <item href="/gettingstarted/functional.html" name="Getting Started"/>
+             <item href="/userguide/functional/getting_started.html" name="Getting Started"/>
             
              <item href="/userguide/functional/testsuites.html" name="TestSuites"/>
              <item href="/userguide/functional/testcases.html" name="TestCases">
@@ -116,8 +117,8 @@
 	         </item>
          </item>
          
-         <item href="/userguide/loadtest/index.html" name="Load Testing">
-             <item href="/gettingstarted/loadtest.html" name="Getting Started"/>
+         	 <item href="/userguide/loadtest/index.html" name="Load Testing">
+             <item href="/userguide/loadtest/getting_started.html" name="Getting Started"/>
          	 <item href="/userguide/loadtest/configuration.html" name="Limit &amp; Strategies"/>
              <item href="/userguide/loadtest/execution.html" name="Execution"/>
              <item href="/userguide/loadtest/assertions.html" name="Assertions"/>
@@ -125,10 +126,10 @@
              <item href="/userguide/loadtest/comparison.html" name="JMeter comparison"/>   
          </item>
          
-         <item href="/userguide/mock/index.html" name="Mocking">
-             <item href="/gettingstarted/mocking.html" name="Getting Started"/>
+         	<item href="/userguide/mock/index.html" name="Mocking">
+             <item href="/gettingstarted/mock/getting_started.html" name="Getting Started"/>
          	 <item href="/userguide/mock/services.html" name="Mock Services">
-		         <item href="/userguide/mock/coverage.html" name="Coverage" pro="true"/>
+		      <item href="/userguide/mock/coverage.html" name="Coverage" pro="true"/>
 		     </item>
              <item href="/userguide/mock/operations.html" name="Mock Operations"/>
              <item href="/userguide/mock/responses.html" name="Mock Responses"/>
