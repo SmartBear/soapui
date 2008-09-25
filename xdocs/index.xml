@@ -21,6 +21,7 @@
     
     
     
+    
       <table class="OSProTable">
       	<tr class="b">
       		<td>
@@ -102,8 +103,8 @@
 		</subsection>
 		
 		
-		<subsection name="What is soapUI for?">
-				<p>soapUI is a powerful testing tool used for:</p>
+		<subsection name="What is soapUI?">
+				<p>soapUI is a the most world's most used testing tool used for:</p>
 
 		<columns>
 			<column>
@@ -137,7 +138,7 @@
         	<td align="center" bgcolor="white">
         		<p class="WebStartHeader">soapUI 2.0.2</p>
 		        <div>
-					<a href="http://www.soapui.org/jnlp/2.0.2/soapui.jnlp" class="externalLink" title="External Link" onclick="javascript:urchinTracker('/jnlp/soapui/2_0_2');"><img class="webstart" src="images/webstart_green.png" border="0" alt=""></img></a>
+					<a href="http://www.soapui.org/jnlp/2.5-beta1/soapui.jnlp" class="externalLink" title="External Link" onclick="javascript:urchinTracker('/jnlp/soapui/2_5_beta1');"><img class="webstart" src="images/webstart_green.png" border="0" alt=""></img></a>
 				</div>
 				[<a href="new_and_noteworthy_2.html">Read More</a>]
 				[<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=571745" class="externalLink" title="External Link">Download</a>]
@@ -145,7 +146,7 @@
 			<td align="center" bgcolor="white">
             	<p class="WebStartHeader">soapUI Pro 2.0.2 <span class="OrangeHeader">Pro</span></p>
             	<div>
-					<a href="http://www.eviware.com/jnlp/2.0.2/soapui-pro.jnlp" class="externalLink" title="External Link" onclick="javascript:urchinTracker:(/jnlp/soapui/2_0_2_pro);"><img class="webstart" src="images/webstart_orange.png" border="0" alt=""></img></a>
+					<a href="http://www.eviware.com/jnlp/2.5-beta1/soapui-pro.jnlp" class="externalLink" title="External Link" onclick="javascript:urchinTracker:('/jnlp/soapui/2_5_beta1-pro');"><img class="webstart" src="images/webstart_orange.png" border="0" alt=""></img></a>
 				</div>
 			 	[<a href="comparison.html">Compare</a>]
 			 	[<a target="_new" href="http://www.eviware.com" class="externalLink" title="External Link">Trial/Buy</a>]
@@ -157,9 +158,9 @@
 		<columns>
 			<column>
 				<subsection name="Latest News">
+					<p><i>2008-09-25: soapUI 2.5 beta1- The REST Release</i> : The beta of soapUI 2.5 with full REST Test Suppor is out <a href="new_and_noteworthy_2_5.html">[Read more]</a></p>
 					<p><i>2008-01-28: soapUI 2.0.2</i> : Mostly bug-fixes and Plug-in updates <a href="new_and_noteworthy_2.html#2.0.2_Release">[Read more]</a></p>
 					<p><i>2008-01-15: soapUI 2.0.1</i> : Mostly bug-fixes <a href="new_and_noteworthy_2.html#2.0.1_Release">[Read more]</a></p>
-					<p><i>2007-12-12: soapUI 2.0 Final</i> : Final Fixes... <a href="new_and_noteworthy_2.html">[Read more]</a></p>
 					<p><b><a href="news.html">[More News]</a></b></p>		
 				</subsection>
 			</column>
