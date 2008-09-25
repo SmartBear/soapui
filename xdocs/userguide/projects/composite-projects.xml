@@ -7,9 +7,11 @@
 		<section name="Composite Projects in SoapUI Pro ">
 		<p>What is a Composite Project?</p>
 		<p>Behind the somewhat bewildering terminology lies a very simple concept; Composite Projects are soapUI projects saved to enable 
-		Team Collaboration. Normally a soapUI Project is saved as one xml file. 
-		This has its advantages you have only one file to consider and that file contains all information about that project. 
+		Team Collaboration.</p>
+		<p> Let's explain more in detail. Normally a soapUI Project is saved as one xml file. This has its advantages; you have only one file to consider and that file contains all information about that project. 
 		It also has some disadvantages; collaboration and joint team test development is very hard because synchronization is very hard to do. 		
+		</p>
+		<p> 
 		When working in a Team in a project you often come to the situation where you have one person updating one test and another person a second test. 
 		If you only have one project file this is impossible to do simultaneously and hard to do by synching the test manually.</p>
 		<p> 
