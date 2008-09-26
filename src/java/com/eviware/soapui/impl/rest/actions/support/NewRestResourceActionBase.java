@@ -77,7 +77,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 		{
 			URL url = (URL) param;
 
-			String path = RestUtils.extractParams(url, params);
+			String path = RestUtils.extractParams(url, params, false);
 			dialog.setValue(Form.RESOURCEPATH, path );
 
          setNameFromPath( path );
@@ -146,11 +146,11 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 //      {
 //         // adjust path
 //         path = path.substring( p.length()-possibleParent.getFullPath().length()-1 );
-//         resource = possibleParent.addNewChildResource( dialog.getValue( Form.RESOURCENAME ), path );
+//         resource = possibleParent.addNewChildResource( dialog.getValue( Form.STEPNAME ), path );
 //      }
 //      else
 //      {
-//         resource = service.addNewResource( dialog.getValue( Form.RESOURCENAME), path );
+//         resource = service.addNewResource( dialog.getValue( Form.STEPNAME), path );
 //      }
 //      return resource;
 //   }
@@ -183,7 +183,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 		{
 			try
 			{
-				String path = RestUtils.extractParams( new URL( dialog.getValue(Form.RESOURCEPATH)), params);
+				String path = RestUtils.extractParams( new URL( dialog.getValue(Form.RESOURCEPATH)), params, false);
             dialog.setValue( Form.RESOURCEPATH, path );
 
             if( StringUtils.isNullOrEmpty( dialog.getValue( Form.RESOURCENAME )))

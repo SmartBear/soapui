@@ -335,7 +335,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
          try
          {
             restRequest.getParams().resetValues();
-            RestUtils.extractParams( new URL( str ), restRequest.getParams() );
+            RestUtils.extractParams( new URL( str ), restRequest.getParams(), false );
             paramsTable.refresh();
          }
          catch( Exception e1 )

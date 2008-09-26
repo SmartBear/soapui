@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.rest.support;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringList;
 
 import java.io.UnsupportedEncodingException;
@@ -47,7 +48,7 @@ public class RestUtils
 
    }
 
-   public static String extractParams( URL param, XmlBeansRestParamsTestPropertyHolder params )
+   public static String extractParams( URL param, XmlBeansRestParamsTestPropertyHolder params, boolean keepHost )
    {
       if( param == null || StringUtils.isNullOrEmpty( param.getPath() ))
          return "";
@@ -116,7 +117,7 @@ public class RestUtils
             resultPath.append( '/' ).append( item );
       }
 
-      String query = ((URL) param).getQuery();
+      String query = param.getQuery();
       if( StringUtils.hasContent( query ) )
       {
          items = query.split( "&" );
@@ -152,6 +153,11 @@ public class RestUtils
                e.printStackTrace();
             }
          }
+      }
+
+      if( keepHost )
+      {
+         return Tools.getEndpointFromUrl( param ) + resultPath.toString();
       }
 
       return resultPath.toString();

@@ -64,7 +64,12 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
    public enum RequestMethod
    {
-      GET, POST, PUT, DELETE, HEAD
+      GET, POST, PUT, DELETE, HEAD;
+
+      public static String[] getMethodsAsString()
+      {
+         return new String[] {};
+      }
    }
 
    private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();

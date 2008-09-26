@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.panels.testcase;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.actions.testcase.AddNewLoadTestAction;
 import com.eviware.soapui.impl.wsdl.actions.testcase.TestCaseOptionsAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
@@ -84,6 +85,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
    private GroovyEditorComponent tearDownGroovyEditor;
    private GroovyEditorComponent setupGroovyEditor;
    private JInspectorPanel testStepListInspectorPanel;
+   private JButton createLoadTestButton;
 
    public WsdlTestCaseDesktopPanel( WsdlTestCase testCase )
    {
@@ -262,6 +264,9 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
       stateDependantComponents.add( setCredentialsButton );
       stateDependantComponents.add( setEndpointButton );
 
+      createLoadTestButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
+              AddNewLoadTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/loadtest.gif" ) );
+
       addToolbarActions( toolbar );
 
       toolbar.add( Box.createHorizontalGlue() );
@@ -275,8 +280,12 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
       toolbar.add( runButton );
       toolbar.add( cancelButton );
       toolbar.add( loopButton );
+      toolbar.addSeparator( );
       toolbar.add( setCredentialsButton );
       toolbar.add( setEndpointButton );
+      toolbar.addSeparator( );
+      toolbar.add( createLoadTestButton );
+      toolbar.addSeparator( );
       toolbar.add( optionsButton );
    }
 
