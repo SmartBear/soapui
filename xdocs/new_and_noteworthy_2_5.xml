@@ -29,7 +29,7 @@
 
 		<subsection name="New and Noteworthy in soapUI 2.5 beta1">
 
-			<newfeature img="images/2_5/rest.gif" alt="REST Testing">
+			<newfeature>
 				<div>
 					<p><b>REST Service Testing</b></p>
 					<p>
@@ -115,7 +115,7 @@
 		<subsection name="New and Noteworthy in soapUI Pro">
 		<p>On top of all the above, the following improvements/additions have been made to soapUI Pro:</p>
 
-				<newfeature img="images/2_5/project-properties.gif" alt="WS-Addressing Support">
+				<newfeature img="images/2_5/project-properties.gif" alt="Composite Projects">
 				<div>
 					<p><b>Composite Projects</b></p>
                <p>Finally, for collaborative work on soapUI Pro projects you can split up projects into multiple files that
@@ -139,7 +139,7 @@
  				</div>
 			</newfeature>
 
-         	<newfeature img="images/2_5/loadtest-strategies.gif" alt="WS-Addressing Support">
+         	<newfeature img="images/2_5/loadtest-strategies.gif" alt="LoadTest Strategies">
 				<div>
 					<p><b>New LoadTest Strategies</b></p>
                 <ul>
@@ -150,7 +150,7 @@
  				</div>
 			</newfeature>
 
-         <newfeature img="images/2_5/rest-form-editor.gif" alt="WS-Addressing Support">
+         <newfeature img="images/2_5/rest-form-editor.gif" alt="Improved Form Editor">
          <div>
             <p><b>Improved Form Editor</b></p>
               <ul>
@@ -163,12 +163,13 @@
           </div>
       </newfeature>
 
-         <newfeature img="images/2_5/coverage.gif" alt="WS-Addressing Support">
+         <newfeature>
                 <div>
-                   <p><b>Coverage Improvements</b></p>
+                   <p><b>And much more!</b></p>
                    <ul>
-                      <li>Coverage Reports from command-line</li>
-                      <li>Enumeration Coverage</li>
+                      <li>Coverage Improvements : Coverage Reports from command-line and Multi-Value Coverage</li>
+                      <li>Requirements import/export improvements</li>
+                      <li>etc..</li>
                    </ul>
                  </div>
              </newfeature>
