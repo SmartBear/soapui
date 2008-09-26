@@ -149,7 +149,7 @@ public class SoapUtils
          Element headerElement = elm.getOwnerDocument().createElementNS(
          		headerQName.getNamespaceURI(), headerQName.getLocalPart() );
          
-			elm.appendChild( headerElement);
+			elm.insertBefore(headerElement, elm.getFirstChild());
          
          header = envelope[0].selectChildren( headerQName );
 		}
