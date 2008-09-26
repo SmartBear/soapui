@@ -656,7 +656,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			writer.writeTo(out);
 			out.close();
 			size = writer.size();
-			config.save(projectFile, options);
 		}
 		else
 		{
