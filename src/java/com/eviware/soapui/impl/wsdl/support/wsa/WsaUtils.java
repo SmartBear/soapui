@@ -126,20 +126,28 @@ public class WsaUtils
 		String from = wsaContainer.getWsaConfig().getFrom();
 		if (!StringUtils.isNullOrEmpty(from))
 		{
-			header = removeExistingWsaChild(overrideExisting, header, "wsa:From");
-			header.appendChild(builder.createWsaAddressChildElement("wsa:From", envelopeElement, from));
+			header = processWsaProperty(header, overrideExisting, "wsa:From", from);
 		}
 		String faultTo = wsaContainer.getWsaConfig().getFaultTo();
 		if (!StringUtils.isNullOrEmpty(faultTo))
 		{
-			header = removeExistingWsaChild(overrideExisting, header, "wsa:FaultTo");
-			header.appendChild(builder.createWsaAddressChildElement("wsa:FaultTo", envelopeElement, faultTo));
+			header = processWsaProperty(header, overrideExisting, "wsa:FaultTo", faultTo);
 		}
 		return header;
 
 	}
 
-	private Element removeExistingWsaChild(boolean overrideExisting, Element header, String elementLocalName)
+	private Node getWsaProperty(Element header, String elementLocalName) {
+		NodeList elmList = header.getElementsByTagName(elementLocalName);
+		Node elm = null;
+		if (elmList.getLength() > 0)
+		{
+			elm = elmList.item(0);
+		}
+		return elm;
+		
+	}
+	private Element removeWsaProperty(boolean overrideExisting, Element header, String elementLocalName)
 	{
 		if (overrideExisting)
 		{
@@ -156,6 +164,40 @@ public class WsaUtils
 		}
 		return header;
 	}
+	private Element processWsaProperty(Element header, boolean override, String elementLocalName, String wsaPropValue) {
+		boolean existsWsa = getWsaProperty(header, elementLocalName)!= null ? true: false;
+		if (override)
+		{
+			if (existsWsa)
+			{
+				header = removeWsaProperty(override, header, elementLocalName);
+			}
+			header.appendChild(builder.createWsaAddressChildElement(elementLocalName, envelopeElement, wsaPropValue));
+		} else if (!existsWsa)
+		{
+			header.appendChild(builder.createWsaAddressChildElement(elementLocalName, envelopeElement, wsaPropValue));
+		}
+		return header;
+	}
+
+	private Element processWsaRelatesToProperty(Element header, boolean override, String elementLocalName, String relationshipType,
+			String relatesTo) {
+		boolean existsWsa = getWsaProperty(header, elementLocalName)!= null ? true: false;
+		if (override)
+		{
+			if (existsWsa)
+			{
+				header = removeWsaProperty(override, header, elementLocalName);
+			}
+			header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement, relationshipType,
+					relatesTo));
+		} else if (!existsWsa)
+		{
+			header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement, relationshipType,
+					relatesTo));
+		}
+		return header;
+	}
 
 	public String addWSAddressingRequest(WsaContainer wsaContainer)
 	{
@@ -164,33 +206,14 @@ public class WsaUtils
 
 	public String addWSAddressingRequest(WsaContainer wsaContainer, ExtendedHttpMethod httpMethod)
 	{
-		// if ws-a already exists and globally set not to be overriden return
-		// existing content
-		boolean hasWsaAlready = getExistingWsAddressing(content);
-		if (hasWsaAlready)
-		{
-			if (SoapUI.getSettings().getBoolean(WsaSettings.OVERRIDE_EXISTING_HEADERS))
-			{
-//				cleanExistingWsaHeaders(content);
-				return createNewWSAddressingRequest(wsaContainer, httpMethod, true);
-			}
-			else
-			{
-				return content;
-			}
-		}
-		else
-		{
-			return createNewWSAddressingRequest(wsaContainer, httpMethod, false);
-		}
-
+			return createNewWSAddressingRequest(wsaContainer, httpMethod, SoapUI.getSettings().getBoolean(WsaSettings.OVERRIDE_EXISTING_HEADERS));
 	}
 
-	private String createNewWSAddressingRequest(WsaContainer wsaContainer, ExtendedHttpMethod httpMethod, boolean overrideExisting)
+	private String createNewWSAddressingRequest(WsaContainer wsaContainer, ExtendedHttpMethod httpMethod, boolean override)
 	{
 		try
 		{
-			Element header = addWsAddressingCommon(wsaContainer, overrideExisting);
+			Element header = addWsAddressingCommon(wsaContainer, override);
 
 			String action = wsaContainer.getWsaConfig().getAction();
 			if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_ACTION) && StringUtils.isNullOrEmpty(action))
@@ -200,8 +223,7 @@ public class WsaUtils
 
 			if (!StringUtils.isNullOrEmpty(action))
 			{
-				header = removeExistingWsaChild(overrideExisting, header, "wsa:Action");
-				header.appendChild(builder.createWsaChildElement("wsa:Action", envelopeElement, action));
+				header = processWsaProperty(header, override, "wsa:Action", action);
 			}
 
 			String replyTo = wsaContainer.getWsaConfig().getReplyTo();
@@ -210,15 +232,13 @@ public class WsaUtils
 			// anonymous added
 			// && SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_REPLYTO))
 			{
-				header = removeExistingWsaChild(overrideExisting, header, "wsa:ReplyTo");
-				header.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, anonymousAddress));
+				header = processWsaProperty(header, override, "wsa:ReplyTo", anonymousAddress);
 			}
 			else if (!StringUtils.isNullOrEmpty(replyTo))
 			{
 				if (!(AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType) && isAnonymousAddress(replyTo,wsaVersionNameSpace)))
 				{
-					header = removeExistingWsaChild(overrideExisting, header, "wsa:ReplyTo");
-					header.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, replyTo));
+					header = processWsaProperty(header, override, "wsa:ReplyTo", replyTo);
 				}
 			}
 			else if (operation.isRequestResponse())
@@ -226,13 +246,9 @@ public class WsaUtils
 				//for request-response replyTo is mandatory, set it to none if anonymous prohibited
 				if (!AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType))
 				{
-					header = removeExistingWsaChild(overrideExisting, header, "wsa:ReplyTo");
-					header.appendChild(builder
-							.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, anonymousAddress));
+					header = processWsaProperty(header, override, "wsa:ReplyTo", anonymousAddress);
 				} else {
-					header = removeExistingWsaChild(overrideExisting, header, "wsa:ReplyTo");
-					header.appendChild(builder
-							.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, noneAddress));
+					header = processWsaProperty(header, override, "wsa:ReplyTo", noneAddress);
 				}
 			}
 
@@ -240,30 +256,25 @@ public class WsaUtils
 			String relationshipType = wsaContainer.getWsaConfig().getRelationshipType();
 			if (!StringUtils.isNullOrEmpty(relationshipType) && !StringUtils.isNullOrEmpty(relatesTo))
 			{
-				header = removeExistingWsaChild(overrideExisting, header, "wsa:RelatesTo");
-				header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement, relationshipType,
-						relatesTo));
+				header = processWsaRelatesToProperty(header, override, "wsa:RelatesTo", relationshipType, relatesTo);
 			}
 
 			String msgId = wsaContainer.getWsaConfig().getMessageID();
 			if (!StringUtils.isNullOrEmpty(msgId))
 			{
-				header = removeExistingWsaChild(overrideExisting, header, "wsa:MessageID");
-				header.appendChild(builder.createWsaChildElement("wsa:MessageID", envelopeElement, msgId));
+				header = processWsaProperty(header, override, "wsa:MessageID", msgId);
 			}
 			else if (operation.isRequestResponse() && SoapUI.getSettings().getBoolean(WsaSettings.GENERATE_MESSAGE_ID))
 			{
 				// if msgId not specified but wsa:msgId mandatory create one
 				String generatedMessageId = UUID.randomUUID().toString();
-				header = removeExistingWsaChild(overrideExisting, header, "wsa:MessageID");
-				header.appendChild(builder.createWsaChildElement("wsa:MessageID", envelopeElement, generatedMessageId));
+				header = processWsaProperty(header, override, "wsa:MessageID", generatedMessageId);
 			}
 
 			String to = wsaContainer.getWsaConfig().getTo();
 			if (!StringUtils.isNullOrEmpty(to))
 			{
-				header = removeExistingWsaChild(overrideExisting, header, "wsa:To");
-				header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement, to));
+				header = processWsaProperty(header, override, "wsa:To", to);
 			}
 			else if (operation.isOneWay() || operation.isRequestResponse())
 			{
@@ -271,8 +282,7 @@ public class WsaUtils
 				{
 					// if to not specified but wsa:to mandatory get default value
 					String defaultTo = httpMethod.getURI().toString();
-					header = removeExistingWsaChild(overrideExisting, header, "wsa:To");
-					header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement, defaultTo));
+					header = processWsaProperty(header, override, "wsa:To", defaultTo);
 				}
 			}
 
@@ -300,33 +310,14 @@ public class WsaUtils
 
 	public String addWSAddressingMockResponse(WsaContainer wsaContainer, WsdlMockRequest request)
 	{
-		// if ws-a already exists and globally set not to be overriden return
-		// existing content
-		boolean hasWsaAlready = getExistingWsAddressing(content);
-		if (hasWsaAlready)
-		{
-			if (SoapUI.getSettings().getBoolean(WsaSettings.OVERRIDE_EXISTING_HEADERS))
-			{
-//				cleanExistingWsaHeaders(content);
-				return createWSAddressingMockResponse(wsaContainer, request, true);
-			}
-			else
-			{
-				return content;
-			}
-		}
-		else
-		{
-			return createWSAddressingMockResponse(wsaContainer, request, false);
-		}
-
+		return createWSAddressingMockResponse(wsaContainer, request, SoapUI.getSettings().getBoolean(WsaSettings.OVERRIDE_EXISTING_HEADERS));
 	}
 
-	private String createWSAddressingMockResponse(WsaContainer wsaContainer, WsdlMockRequest request, boolean overrideExisting)
+	private String createWSAddressingMockResponse(WsaContainer wsaContainer, WsdlMockRequest request, boolean override)
 	{
 		try
 		{
-			Element header = addWsAddressingCommon(wsaContainer, overrideExisting);
+			Element header = addWsAddressingCommon(wsaContainer, override);
 
 			String action = wsaContainer.getWsaConfig().getAction();
 			if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_ACTION) && StringUtils.isNullOrEmpty(action))
@@ -335,22 +326,19 @@ public class WsaUtils
 			}
 			if (!StringUtils.isNullOrEmpty(action))
 			{
-				header = removeExistingWsaChild(overrideExisting, header, "wsa:Action");
-				header.appendChild(builder.createWsaChildElement("wsa:Action", envelopeElement, action));
+				header = processWsaProperty(header, override, "wsa:Action", action);
 			}
 
 			if (AnonymousTypeConfig.REQUIRED.toString().equals(anonymousType))
 			{
-				header = removeExistingWsaChild(overrideExisting, header, "wsa:ReplyTo");
-				header.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, anonymousAddress));
+				header = processWsaProperty(header, override, "wsa:ReplyTo", anonymousAddress);
 			}
 			else
 			{
 				String replyTo = wsaContainer.getWsaConfig().getReplyTo();
 				if (!StringUtils.isNullOrEmpty(replyTo))
 				{
-					header = removeExistingWsaChild(overrideExisting, header, "wsa:ReplyTo");
-					header.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, replyTo));
+					header = processWsaProperty(header, override, "wsa:ReplyTo", replyTo);
 				}
 			}
 
@@ -374,16 +362,12 @@ public class WsaUtils
 				{
 					if (!StringUtils.isNullOrEmpty(requestMessageId))
 					{
-						header = removeExistingWsaChild(overrideExisting, header, "wsa:RelatesTo");
-						header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement, relationshipType,
-								requestMessageId));
+						header = processWsaRelatesToProperty(header, override, "wsa:RelatesTo", relationshipType, requestMessageId);
 					}
 					else if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_RELATES_TO))
 					{
 						// if request.messageId not specified use unspecifiedMessage
-						header = removeExistingWsaChild(overrideExisting, header, "wsa:RelatesTo");
-						header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement, relationshipType,
-								unspecifiedMessage));
+						header = processWsaRelatesToProperty(header, override, "wsa:RelatesTo", relationshipType, unspecifiedMessage);
 					}
 				}
 				else if (wsaContainer instanceof WsdlMockResponse)
@@ -392,7 +376,7 @@ public class WsaUtils
 					{
 						if (!StringUtils.isNullOrEmpty(requestMessageId))
 						{
-							header = removeExistingWsaChild(overrideExisting, header, "wsa:RelatesTo");
+							header = removeWsaProperty(override, header, "wsa:RelatesTo");
 							header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement,
 									relationshipTypeReply, requestMessageId));
 						}
@@ -400,9 +384,7 @@ public class WsaUtils
 						{
 							// if request.messageId not specified use
 							// unspecifiedMessage
-							header = removeExistingWsaChild(overrideExisting, header, "wsa:RelatesTo");
-							header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement,
-									relationshipTypeReply, unspecifiedMessage));
+							header = processWsaRelatesToProperty(header, override, "wsa:RelatesTo", relationshipTypeReply, unspecifiedMessage);
 						}
 					}
 				}
@@ -425,8 +407,7 @@ public class WsaUtils
 				{
 					if (!(AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType) && isAnonymousAddress(to,wsaVersionNameSpace)))
 					{
-						header = removeExistingWsaChild(overrideExisting, header, "wsa:To");
-						header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement, to));
+						header = processWsaProperty(header, override, "wsa:To", to);
 					}
 				}
 				else
@@ -438,9 +419,7 @@ public class WsaUtils
 						// be added
 						if (!(AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType) && isAnonymousAddress(requestReplyToValue,wsaVersionNameSpace)))
 						{
-							header = removeExistingWsaChild(overrideExisting, header, "wsa:To");
-							header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement,
-									requestReplyToValue));
+							header = processWsaProperty(header, override, "wsa:To", requestReplyToValue);
 						}
 					}
 				}
@@ -450,7 +429,7 @@ public class WsaUtils
 				String to = wsaContainer.getWsaConfig().getTo();
 				if (!StringUtils.isNullOrEmpty(to))
 				{
-					header = removeExistingWsaChild(overrideExisting, header, "wsa:To");
+					header = removeWsaProperty(override, header, "wsa:To");
 					header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement, to));
 				}
 
@@ -458,9 +437,7 @@ public class WsaUtils
 				String relatesTo = wsaContainer.getWsaConfig().getRelatesTo();
 				if (!StringUtils.isNullOrEmpty(relationshipType) && !StringUtils.isNullOrEmpty(relatesTo))
 				{
-					header = removeExistingWsaChild(overrideExisting, header, "wsa:RelatesTo");
-					header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement, relationshipType,
-							relatesTo));
+					header = processWsaRelatesToProperty(header, override, "wsa:RelatesTo", relationshipType, relatesTo);
 				}
 				else if (wsaContainer instanceof WsdlMockResponse)
 				{
@@ -468,14 +445,10 @@ public class WsaUtils
 					{
 						if (!StringUtils.isNullOrEmpty(relatesTo))
 						{
-							header = removeExistingWsaChild(overrideExisting, header, "wsa:RelatesTo");
-							header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement,
-									relationshipTypeReply, relatesTo));
+							header = processWsaRelatesToProperty(header, override, "wsa:RelatesTo", relationshipTypeReply, relatesTo);
 						} else if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_RELATES_TO))
 						{
-							header = removeExistingWsaChild(overrideExisting, header, "wsa:RelatesTo");
-							header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement,
-									relationshipTypeReply, unspecifiedMessage));
+							header = processWsaRelatesToProperty(header, override, "wsa:RelatesTo", relationshipTypeReply, unspecifiedMessage);
 						}
 					}
 				}
@@ -485,8 +458,7 @@ public class WsaUtils
 			String msgId = wsaContainer.getWsaConfig().getMessageID();
 			if (!StringUtils.isNullOrEmpty(msgId))
 			{
-				header = removeExistingWsaChild(overrideExisting, header, "wsa:MessageID");
-				header.appendChild(builder.createWsaChildElement("wsa:MessageID", envelopeElement, msgId));
+				header = processWsaProperty(header, override, "wsa:MessageID", msgId);
 			}
 
 			content = xmlContentObject.xmlText();
@@ -594,7 +566,6 @@ public class WsaUtils
 		}
 
 		((Element) xmlHeaderObject.getDomNode()).removeAttribute("xmlns:wsa");
-//		((Element) xmlHeaderObject.getDomNode()).removeAttributeNS(namespaceURI, localName);
 
 		content = xmlContentObject.xmlText();
 
