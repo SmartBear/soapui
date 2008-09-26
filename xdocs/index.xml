@@ -26,7 +26,7 @@
       	<tr class="b">
       		<td>
       			<div align="center">
-      				<a onclick="javascript:urchinTracker('/downloadOpenSource')" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=571745" title="Download soapUI">
+      				<a onclick="javascript:urchinTracker('/downloadOpenSource')" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=628758" title="Download soapUI">
       				<img src="images/download_opensource.png" alt="download Open Source" width="310" height="165" longdesc="http://www.sourceforge.net"/>
       				</a> 
       			</div>
@@ -141,7 +141,7 @@
 					<a href="http://www.soapui.org/jnlp/2.5-beta1/soapui.jnlp" class="externalLink" title="External Link" onclick="javascript:urchinTracker('/jnlp/soapui/2_5_beta1');"><img class="webstart" src="images/webstart_green.png" border="0" alt=""></img></a>
 				</div>
 				[<a href="new_and_noteworthy_2.html">Read More</a>]
-				[<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=571745" class="externalLink" title="External Link">Download</a>]
+				[<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=628758" class="externalLink" title="External Link">Download</a>]
 			</td>
 			<td align="center" bgcolor="white">
             	<p class="WebStartHeader">soapUI Pro 2.0.2 <span class="OrangeHeader">Pro</span></p>

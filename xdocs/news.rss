@@ -9,6 +9,14 @@
 	<atom:link href="http://www.soapui.org/news.rss" rel="self" type="application/rss+xml" />
 
 		<item>	
+			<title>soapUI 2.5 beta 1</title>
+			<link>http://www.soapui.org/new_and_noteworthy_2_5.html</link>
+			<guid isPermaLink="false">2.5 beta1</guid>
+			<pubDate>Fri, 26 Sep 2008 13:00:00 +0100</pubDate>
+			<description>soapUI 2.5, The REST Release, betat 1 is out. This release contains not only complete support for REST Testing but is full of additional features.</description> 	  
+</item>
+
+		<item>	
 			<title>soapUI 2.0.2</title>
 			<link>http://www.soapui.org/new_and_noteworthy_2.html</link>
 			<guid isPermaLink="false">2.0.2 release</guid>
@@ -31,6 +39,8 @@
 			<pubDate>Wed, 12 Dec 2007 08:00:00 +0100</pubDate>
 			<description>soapUI 2.0 Final of the Coverage Release</description>
 		</item>
+
+
 
 		<item>
 			<title>soapUI 2.0 beta2</title>

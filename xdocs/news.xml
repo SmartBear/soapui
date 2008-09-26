@@ -6,6 +6,19 @@
     <body>
     <section name="soapUI Releases">
     
+    
+        <subsection name="2008-09-26: soapUI 2.5 beta 1">
+	    	<columns>
+	    		<column width="75">
+	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		</column>
+	    		<column>
+	    			<p align="left">soapUI 2.5, the REST Release, beta 1 is out!<br/>
+	    			<a href="new_and_noteworthy_2_5.html#New and Noteworthy in soapUI 2.5 beta1">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+		</subsection>
+		
     	<subsection name="2008-01-28: soapUI 2.0.2">
 	    	<columns>
 	    		<column width="75">
