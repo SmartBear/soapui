@@ -126,12 +126,12 @@ public class WsaUtils
 		String from = wsaContainer.getWsaConfig().getFrom();
 		if (!StringUtils.isNullOrEmpty(from))
 		{
-			header = processWsaProperty(header, overrideExisting, "wsa:From", from);
+			header = processWsaProperty(header, overrideExisting, "wsa:From", from, true);
 		}
 		String faultTo = wsaContainer.getWsaConfig().getFaultTo();
 		if (!StringUtils.isNullOrEmpty(faultTo))
 		{
-			header = processWsaProperty(header, overrideExisting, "wsa:FaultTo", faultTo);
+			header = processWsaProperty(header, overrideExisting, "wsa:FaultTo", faultTo, true);
 		}
 		return header;
 
@@ -164,7 +164,7 @@ public class WsaUtils
 		}
 		return header;
 	}
-	private Element processWsaProperty(Element header, boolean override, String elementLocalName, String wsaPropValue) {
+	private Element processWsaProperty(Element header, boolean override, String elementLocalName, String wsaPropValue, boolean address) {
 		boolean existsWsa = getWsaProperty(header, elementLocalName)!= null ? true: false;
 		if (override)
 		{
@@ -172,10 +172,21 @@ public class WsaUtils
 			{
 				header = removeWsaProperty(override, header, elementLocalName);
 			}
-			header.appendChild(builder.createWsaAddressChildElement(elementLocalName, envelopeElement, wsaPropValue));
+			if (address)
+			{
+				header.appendChild(builder.createWsaAddressChildElement(elementLocalName, envelopeElement, wsaPropValue));
+			} else {
+				header.appendChild(builder.createWsaChildElement(elementLocalName, envelopeElement, wsaPropValue));
+			}
+			
 		} else if (!existsWsa)
 		{
-			header.appendChild(builder.createWsaAddressChildElement(elementLocalName, envelopeElement, wsaPropValue));
+			if (address)
+			{
+				header.appendChild(builder.createWsaAddressChildElement(elementLocalName, envelopeElement, wsaPropValue));
+			} else {
+				header.appendChild(builder.createWsaChildElement(elementLocalName, envelopeElement, wsaPropValue));
+			}
 		}
 		return header;
 	}
@@ -223,7 +234,7 @@ public class WsaUtils
 
 			if (!StringUtils.isNullOrEmpty(action))
 			{
-				header = processWsaProperty(header, override, "wsa:Action", action);
+				header = processWsaProperty(header, override, "wsa:Action", action, false);
 			}
 
 			String replyTo = wsaContainer.getWsaConfig().getReplyTo();
@@ -232,13 +243,13 @@ public class WsaUtils
 			// anonymous added
 			// && SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_REPLYTO))
 			{
-				header = processWsaProperty(header, override, "wsa:ReplyTo", anonymousAddress);
+				header = processWsaProperty(header, override, "wsa:ReplyTo", anonymousAddress, true);
 			}
 			else if (!StringUtils.isNullOrEmpty(replyTo))
 			{
 				if (!(AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType) && isAnonymousAddress(replyTo,wsaVersionNameSpace)))
 				{
-					header = processWsaProperty(header, override, "wsa:ReplyTo", replyTo);
+					header = processWsaProperty(header, override, "wsa:ReplyTo", replyTo, true);
 				}
 			}
 			else if (operation.isRequestResponse())
@@ -246,9 +257,9 @@ public class WsaUtils
 				//for request-response replyTo is mandatory, set it to none if anonymous prohibited
 				if (!AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType))
 				{
-					header = processWsaProperty(header, override, "wsa:ReplyTo", anonymousAddress);
+					header = processWsaProperty(header, override, "wsa:ReplyTo", anonymousAddress, true);
 				} else {
-					header = processWsaProperty(header, override, "wsa:ReplyTo", noneAddress);
+					header = processWsaProperty(header, override, "wsa:ReplyTo", noneAddress, true);
 				}
 			}
 
@@ -262,19 +273,19 @@ public class WsaUtils
 			String msgId = wsaContainer.getWsaConfig().getMessageID();
 			if (!StringUtils.isNullOrEmpty(msgId))
 			{
-				header = processWsaProperty(header, override, "wsa:MessageID", msgId);
+				header = processWsaProperty(header, override, "wsa:MessageID", msgId, false);
 			}
 			else if (operation.isRequestResponse() && SoapUI.getSettings().getBoolean(WsaSettings.GENERATE_MESSAGE_ID))
 			{
 				// if msgId not specified but wsa:msgId mandatory create one
 				String generatedMessageId = UUID.randomUUID().toString();
-				header = processWsaProperty(header, override, "wsa:MessageID", generatedMessageId);
+				header = processWsaProperty(header, override, "wsa:MessageID", generatedMessageId, false);
 			}
 
 			String to = wsaContainer.getWsaConfig().getTo();
 			if (!StringUtils.isNullOrEmpty(to))
 			{
-				header = processWsaProperty(header, override, "wsa:To", to);
+				header = processWsaProperty(header, override, "wsa:To", to, true);
 			}
 			else if (operation.isOneWay() || operation.isRequestResponse())
 			{
@@ -282,7 +293,7 @@ public class WsaUtils
 				{
 					// if to not specified but wsa:to mandatory get default value
 					String defaultTo = httpMethod.getURI().toString();
-					header = processWsaProperty(header, override, "wsa:To", defaultTo);
+					header = processWsaProperty(header, override, "wsa:To", defaultTo, true);
 				}
 			}
 
@@ -326,19 +337,19 @@ public class WsaUtils
 			}
 			if (!StringUtils.isNullOrEmpty(action))
 			{
-				header = processWsaProperty(header, override, "wsa:Action", action);
+				header = processWsaProperty(header, override, "wsa:Action", action, false);
 			}
 
 			if (AnonymousTypeConfig.REQUIRED.toString().equals(anonymousType))
 			{
-				header = processWsaProperty(header, override, "wsa:ReplyTo", anonymousAddress);
+				header = processWsaProperty(header, override, "wsa:ReplyTo", anonymousAddress, true);
 			}
 			else
 			{
 				String replyTo = wsaContainer.getWsaConfig().getReplyTo();
 				if (!StringUtils.isNullOrEmpty(replyTo))
 				{
-					header = processWsaProperty(header, override, "wsa:ReplyTo", replyTo);
+					header = processWsaProperty(header, override, "wsa:ReplyTo", replyTo, true);
 				}
 			}
 
@@ -407,7 +418,7 @@ public class WsaUtils
 				{
 					if (!(AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType) && isAnonymousAddress(to,wsaVersionNameSpace)))
 					{
-						header = processWsaProperty(header, override, "wsa:To", to);
+						header = processWsaProperty(header, override, "wsa:To", to, true);
 					}
 				}
 				else
@@ -419,7 +430,7 @@ public class WsaUtils
 						// be added
 						if (!(AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType) && isAnonymousAddress(requestReplyToValue,wsaVersionNameSpace)))
 						{
-							header = processWsaProperty(header, override, "wsa:To", requestReplyToValue);
+							header = processWsaProperty(header, override, "wsa:To", requestReplyToValue, true);
 						}
 					}
 				}
@@ -458,7 +469,7 @@ public class WsaUtils
 			String msgId = wsaContainer.getWsaConfig().getMessageID();
 			if (!StringUtils.isNullOrEmpty(msgId))
 			{
-				header = processWsaProperty(header, override, "wsa:MessageID", msgId);
+				header = processWsaProperty(header, override, "wsa:MessageID", msgId, false);
 			}
 
 			content = xmlContentObject.xmlText();
