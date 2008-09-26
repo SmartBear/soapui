@@ -58,6 +58,7 @@ public class WsaUtils
 	String wsaVersionNameSpace;
 	String anonymousType;
 	String anonymousAddress;
+	String noneAddress;
 	String relationshipTypeReply;
 	// used for mock response relates to if request.messageId not specified
 	String unspecifiedMessage;
@@ -91,6 +92,7 @@ public class WsaUtils
 			wsaVersionNameSpace = WS_A_VERSION_200408;
 		}
 		anonymousAddress = wsaVersionNameSpace + "/anonymous";
+		noneAddress = wsaVersionNameSpace + "/none";
 		relationshipTypeReply = wsaVersionNameSpace + "/reply";
 		unspecifiedMessage = wsaVersionNameSpace + "/unspecified";
 
@@ -179,7 +181,7 @@ public class WsaUtils
 			if (!StringUtils.isNullOrEmpty(action))
 			{
 				header.appendChild(builder.createWsaChildElement("wsa:Action", envelopeElement, action));
-				wsaContainer.getWsaConfig().setAction(action);
+//				wsaContainer.getWsaConfig().setAction(action);
 			}
 
 			String replyTo = wsaContainer.getWsaConfig().getReplyTo();
@@ -189,7 +191,7 @@ public class WsaUtils
 			// && SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_REPLYTO))
 			{
 				header.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, anonymousAddress));
-				wsaContainer.getWsaConfig().setReplyTo(anonymousAddress);
+//				wsaContainer.getWsaConfig().setReplyTo(anonymousAddress);
 			}
 			else if (!StringUtils.isNullOrEmpty(replyTo))
 			{
@@ -200,11 +202,15 @@ public class WsaUtils
 			}
 			else if (operation.isRequestResponse())
 			{
+				//for request-response replyTo is mandatory, set it to none if anonymous prohibited
 				if (!AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType))
 				{
 					header.appendChild(builder
 							.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, anonymousAddress));
-					wsaContainer.getWsaConfig().setReplyTo(anonymousAddress);
+//					wsaContainer.getWsaConfig().setReplyTo(anonymousAddress);
+				} else {
+					header.appendChild(builder
+							.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, noneAddress));
 				}
 			}
 
@@ -226,7 +232,7 @@ public class WsaUtils
 				// if msgId not specified but wsa:msgId mandatory create one
 				String generatedMessageId = UUID.randomUUID().toString();
 				header.appendChild(builder.createWsaChildElement("wsa:MessageID", envelopeElement, generatedMessageId));
-				wsaContainer.getWsaConfig().setMessageID(generatedMessageId);
+//				wsaContainer.getWsaConfig().setMessageID(generatedMessageId);
 			}
 
 			String to = wsaContainer.getWsaConfig().getTo();
@@ -241,7 +247,7 @@ public class WsaUtils
 					// if to not specified but wsa:to mandatory get default value
 					String defaultTo = httpMethod.getURI().toString();
 					header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement, defaultTo));
-					wsaContainer.getWsaConfig().setTo(defaultTo);
+//					wsaContainer.getWsaConfig().setTo(defaultTo);
 				}
 			}
 
@@ -305,13 +311,13 @@ public class WsaUtils
 			if (!StringUtils.isNullOrEmpty(action))
 			{
 				header.appendChild(builder.createWsaChildElement("wsa:Action", envelopeElement, action));
-				wsaContainer.getWsaConfig().setAction(action);
+//				wsaContainer.getWsaConfig().setAction(action);
 			}
 
 			if (AnonymousTypeConfig.REQUIRED.toString().equals(anonymousType))
 			{
 				header.appendChild(builder.createWsaAddressChildElement("wsa:ReplyTo", envelopeElement, anonymousAddress));
-				wsaContainer.getWsaConfig().setReplyTo(anonymousAddress);
+//				wsaContainer.getWsaConfig().setReplyTo(anonymousAddress);
 			}
 			else
 			{
@@ -344,14 +350,14 @@ public class WsaUtils
 					{
 						header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement, relationshipType,
 								requestMessageId));
-						wsaContainer.getWsaConfig().setRelatesTo(requestMessageId);
+//						wsaContainer.getWsaConfig().setRelatesTo(requestMessageId);
 					}
 					else if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_RELATES_TO))
 					{
 						// if request.messageId not specified use unspecifiedMessage
 						header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement, relationshipType,
 								unspecifiedMessage));
-						wsaContainer.getWsaConfig().setRelatesTo(unspecifiedMessage);
+//						wsaContainer.getWsaConfig().setRelatesTo(unspecifiedMessage);
 					}
 				}
 				else if (wsaContainer instanceof WsdlMockResponse)
@@ -362,8 +368,8 @@ public class WsaUtils
 						{
 							header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement,
 									relationshipTypeReply, requestMessageId));
-							wsaContainer.getWsaConfig().setRelationshipType(relationshipTypeReply);
-							wsaContainer.getWsaConfig().setRelatesTo(requestMessageId);
+//							wsaContainer.getWsaConfig().setRelationshipType(relationshipTypeReply);
+//							wsaContainer.getWsaConfig().setRelatesTo(requestMessageId);
 						}
 						else if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_RELATES_TO))
 						{
@@ -371,8 +377,8 @@ public class WsaUtils
 							// unspecifiedMessage
 							header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement,
 									relationshipTypeReply, unspecifiedMessage));
-							wsaContainer.getWsaConfig().setRelationshipType(relationshipTypeReply);
-							wsaContainer.getWsaConfig().setRelatesTo(unspecifiedMessage);
+//							wsaContainer.getWsaConfig().setRelationshipType(relationshipTypeReply);
+//							wsaContainer.getWsaConfig().setRelatesTo(unspecifiedMessage);
 						}
 					}
 				}
@@ -409,7 +415,7 @@ public class WsaUtils
 						{
 							header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement,
 									requestReplyToValue));
-							wsaContainer.getWsaConfig().setTo(requestReplyToValue);
+//							wsaContainer.getWsaConfig().setTo(requestReplyToValue);
 						}
 					}
 				}
@@ -558,6 +564,7 @@ public class WsaUtils
 		}
 
 		((Element) xmlHeaderObject.getDomNode()).removeAttribute("xmlns:wsa");
+//		((Element) xmlHeaderObject.getDomNode()).removeAttributeNS(namespaceURI, localName);
 
 		content = xmlContentObject.xmlText();
 
