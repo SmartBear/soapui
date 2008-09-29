@@ -30,7 +30,7 @@ public class ResolveProjectAction extends AbstractSoapUIAction<WsdlProject>
 
    public ResolveProjectAction()
    {
-      super( "Resolve", "Resolve local paths in this project" );
+      super( "Resolve", "Resolve item dependencies in this project" );
    }
 
    public void perform( WsdlProject project, Object param )
