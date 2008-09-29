@@ -2,6 +2,7 @@ package com.eviware.soapui.support.monitor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -16,6 +17,11 @@ public class MonitorPanel extends JPanel {
         setLayout(new BorderLayout());
         add(surf = createSurface());
         setMonitorSource(monitorSource);
+
+       JPopupMenu popup = new JPopupMenu();
+       popup.add( new GCAction() );
+
+       setComponentPopupMenu( popup );
     }
 
     public void start() {
@@ -123,6 +129,8 @@ public class MonitorPanel extends JPanel {
             int graphX = 30;
             int graphY = (int) ssH;
             int graphW = w - graphX - 5;
+            if( graphW < 0 )
+               graphW = 0;
             int graphH = (int) (ssH + (9 * blockHeight) + blockHeight - 1);
 
             i = 0;
@@ -259,4 +267,19 @@ public class MonitorPanel extends JPanel {
             return new Dimension(135, 80);
         }
     }
+
+   private class GCAction extends AbstractAction
+   {
+      private GCAction()
+      {
+         super( "Run GC" );
+         putValue( SHORT_DESCRIPTION, "Runs finalization and garbage collector" );
+      }
+
+      public void actionPerformed( ActionEvent e )
+      {
+         System.runFinalization();
+         Runtime.getRuntime().gc();
+      }
+   }
 }
