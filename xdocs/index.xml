@@ -109,17 +109,17 @@
 		<columns>
 			<column>
 				<ul class="evilist">
-					<li><a href="features.html">Inspecting Web Services</a></li>
-					<li><a href="gettingstarted/sample-project.html">Invoking Web Services</a></li>
+					<li><a href="userguide/interfaces/interfaceeditor.html">Inspecting Web Services</a></li>
+					<li><a href="gettingstarted/your_first_soapui_project.html">Invoking Web Services</a></li>
 					<li><a href="#" onclick="openVideo('movies/sample_project/sample_project.html');">Developing Web Services</a></li>
 					
 				</ul>
 			</column>
-			<column>
+			<column align="left">
 				<ul class="evilist">
-					<li><a href="gettingstarted/index.html">Web Service Simulation and Web Service Mocking</a></li>	
-					<li><a href="comparison.html">Functional Testing of Web Services</a></li>
-					<li><a href="comparison.html">Load Testing of Web Services</a></li>
+					<li><a href="userguide/mock/index.html">Web Service Simulation and Web Service Mocking</a></li>	
+					<li><a href="userguide/functional/index.html">Functional Testing of Web Services</a></li>
+					<li><a href="userguide/loadtest/index.html">Load Testing of Web Services</a></li>
 				</ul>
 			</column>
 		</columns>
