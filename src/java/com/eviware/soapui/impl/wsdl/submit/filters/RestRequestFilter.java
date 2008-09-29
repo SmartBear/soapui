@@ -105,11 +105,6 @@ public class RestRequestFilter extends AbstractRequestFilter
          }
       }
 
-      if( query.length() > 0 && !request.isPostQueryString() )
-      {
-         httpMethod.setQueryString( query.toString() );
-      }
-
       if( PathUtils.isHttpPath( path ) )
       {
          try
@@ -124,6 +119,11 @@ public class RestRequestFilter extends AbstractRequestFilter
       else
       {
          httpMethod.setPath( path );
+      }
+
+      if( query.length() > 0 && !request.isPostQueryString() )
+      {
+         httpMethod.setQueryString( query.toString() );
       }
 
       String acceptEncoding = request.getAccept();
