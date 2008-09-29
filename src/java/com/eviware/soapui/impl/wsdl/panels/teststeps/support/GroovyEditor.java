@@ -130,7 +130,10 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget
 
 	public void release()
 	{
-		model.getSettings().removeSettingsListener( settingsListener );
+		if (model != null)
+		{
+			model.getSettings().removeSettingsListener( settingsListener );
+		}
 		model = null;
 		editArea.getDocument().removeDocumentListener( groovyDocumentListener );
 		editArea.getInputHandler().removeAllKeyBindings();
