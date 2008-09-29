@@ -12,18 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss.support;
 
+import com.eviware.soapui.impl.wsdl.support.wss.*;
+
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.AbstractListModel;
-import javax.swing.ComboBoxModel;
-
-import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
-import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
-import com.eviware.soapui.impl.wsdl.support.wss.WssContainer;
-import com.eviware.soapui.impl.wsdl.support.wss.WssContainerListener;
-import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
-import com.eviware.soapui.impl.wsdl.support.wss.WssEntry;
 
 public class KeystoresComboBoxModel extends AbstractListModel implements ComboBoxModel, WssContainerListener
 {
@@ -62,7 +55,7 @@ public class KeystoresComboBoxModel extends AbstractListModel implements ComboBo
 
 	public int getSize()
 	{
-		return cryptos.size();
+		return cryptos == null ? 0 : cryptos.size();
 	}
 	
 	public void cryptoAdded( WssCrypto crypto )
