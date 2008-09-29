@@ -12,15 +12,15 @@
 
 package com.eviware.soapui.model.tree.nodes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
 import com.eviware.soapui.settings.UISettings;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SoapUITreeNode for Operation implementations
@@ -54,7 +54,7 @@ public class OperationTreeNode extends AbstractModelItemTreeNode<Operation>
 		
 		for( RequestTreeNode treeNode : requestNodes )
 		{
-			treeNode.getModelItem().removePropertyChangeListener( propertyChangeListener );
+			treeNode.getModelItem().removePropertyChangeListener( Request.NAME_PROPERTY, propertyChangeListener );
 			treeNode.release();
 		}
 	}

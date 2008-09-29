@@ -12,19 +12,10 @@
 
 package com.eviware.soapui.model.tree.nodes;
 
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.TestModelItem;
+import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
@@ -34,6 +25,13 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PropertiesTreeNode<T extends ModelItem> extends AbstractModelItemTreeNode<T>
 {
@@ -82,6 +80,8 @@ public class PropertiesTreeNode<T extends ModelItem> extends AbstractModelItemTr
 
 	public void release()
 	{
+      super.release();
+      
 		holder.removeTestPropertyListener( testPropertyListener );
 		
 		for( PropertyTreeNode node : propertyNodes )

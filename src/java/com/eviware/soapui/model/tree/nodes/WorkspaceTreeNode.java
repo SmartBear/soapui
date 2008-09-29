@@ -12,11 +12,6 @@
 
 package com.eviware.soapui.model.tree.nodes;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.event.TreeModelEvent;
-
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.support.WorkspaceListenerAdapter;
 import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
@@ -24,6 +19,10 @@ import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
 import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.settings.UISettings;
+
+import javax.swing.event.TreeModelEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SoapUITreeNode for Workspace implementations
@@ -61,7 +60,7 @@ public class WorkspaceTreeNode extends AbstractModelItemTreeNode<Workspace>
    	
    	for( ProjectTreeNode treeNode : projectNodes )
    	{
-   		treeNode.getModelItem().removePropertyChangeListener( propertyChangeListener );
+   		treeNode.getModelItem().removePropertyChangeListener( Project.NAME_PROPERTY, propertyChangeListener );
    		treeNode.release();
    	}
    }

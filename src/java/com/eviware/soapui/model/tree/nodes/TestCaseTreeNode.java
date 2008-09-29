@@ -12,9 +12,6 @@
 
 package com.eviware.soapui.model.tree.nodes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eviware.soapui.model.testsuite.LoadTest;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -26,6 +23,9 @@ import com.eviware.soapui.model.tree.nodes.support.WsdlLoadTestsModelItem;
 import com.eviware.soapui.model.tree.nodes.support.WsdlTestStepsModelItem;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SoapUITreeNode for TestCase implementations
@@ -60,13 +60,15 @@ public class TestCaseTreeNode  extends AbstractModelItemTreeNode<TestCase>
 
 	public void release()
 	{
+      super.release();
+
 		for( SoapUITreeNode treeNode : childNodes )
 		{
-			getTreeModel().unmapModelItem( treeNode.getModelItem() );
+         if( !(treeNode instanceof PropertiesTreeNode ))
+			   getTreeModel().unmapModelItem( treeNode.getModelItem() );
+         
 			treeNode.release();
 		}
-		
-		super.release();
 	}
 
 	public int getChildCount()

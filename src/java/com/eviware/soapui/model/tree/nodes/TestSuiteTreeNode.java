@@ -12,17 +12,13 @@
 
 package com.eviware.soapui.model.tree.nodes;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.eviware.soapui.model.testsuite.LoadTest;
-import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestSuite;
-import com.eviware.soapui.model.testsuite.TestSuiteListener;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SoapUITreeNode for TestSuite implementations
@@ -64,7 +60,7 @@ public class TestSuiteTreeNode extends AbstractModelItemTreeNode<TestSuite>
 		
 		for( TestCaseTreeNode treeNode : testCaseNodes )
 		{
-			treeNode.getModelItem().removePropertyChangeListener( propertyChangeListener );
+			treeNode.getModelItem().removePropertyChangeListener( TestCase.NAME_PROPERTY, propertyChangeListener );
 			treeNode.release();
 		}
 		
