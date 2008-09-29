@@ -12,11 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
-import java.awt.Component;
-
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlDelayTestStep;
 import com.eviware.soapui.support.components.JPropertiesTable;
+
+import java.awt.*;
 
 /**
  * PanelBuilder for WsdlGotoTestStep
@@ -34,7 +34,7 @@ public class DelayTestStepPanelBuilder extends EmptyPanelBuilder<WsdlDelayTestSt
 	public Component buildOverviewPanel( WsdlDelayTestStep modelItem )
 	{
 		JPropertiesTable<WsdlDelayTestStep> table = buildDefaultProperties( modelItem, "Delay Properties" );
-		table.addProperty( "Delay", "delay", true );
+		table.addProperty( "Delay", "delayString", true );
 		return table;
 	}
 }

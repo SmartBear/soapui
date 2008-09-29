@@ -197,6 +197,7 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties
       result.setStatus( canceled ? TestStepStatus.CANCELED : TestStepStatus.OK );
 
       timeWaited = 0;
+      running = false;
 
       if( context.getProperty( TestRunContext.LOAD_TEST_RUNNER ) == null )
          notifyPropertyChanged( WsdlTestStep.LABEL_PROPERTY, oldLabel, getLabel() );
