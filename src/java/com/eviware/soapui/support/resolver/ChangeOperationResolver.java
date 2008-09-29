@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -98,11 +99,11 @@ public abstract class ChangeOperationResolver implements Resolver
 
 		private void init()
 		{
-			FormLayout layout = new FormLayout("right:pref, 4dlu, 30dlu, 5dlu, 30dlu, min ",
-					"min, pref, 4dlu, pref, 4dlu, pref, min");
+			FormLayout layout = new FormLayout("min,right:pref, 4dlu, 40dlu, 5dlu, 40dlu, min ",
+			"min, pref, 4dlu, pref, 4dlu, pref, min");
 			CellConstraints cc = new CellConstraints();
 			PanelBuilder panel = new PanelBuilder(layout);
-			panel.addLabel("Interface:", cc.xy(1, 2));
+			panel.addLabel("Interface:", cc.xy(2, 2));
 
 			List<Interface> ifaces = project.getInterfaceList();
 			DefaultComboBoxModel sourceStepComboModel = new DefaultComboBoxModel();
@@ -112,17 +113,17 @@ public abstract class ChangeOperationResolver implements Resolver
 				sourceStepComboModel.addElement(element);
 
 			sourceStepCombo.setSelectedIndex(0);
-			panel.add(sourceStepCombo, cc.xyw(3, 2, 3));
+			panel.add(sourceStepCombo, cc.xyw(4, 2, 3));
 
 
 			propertiesCombo = new JComboBox(((Interface) sourceStepCombo.getSelectedItem()).getOperationList().toArray());
 			propertiesCombo.setRenderer(new OperationComboRender());
 
-			panel.addLabel("Operation:", cc.xy(1, 4));
-			panel.add(propertiesCombo, cc.xyw(3, 4, 3));
+			panel.addLabel("Operation:", cc.xy(2, 4));
+			panel.add(propertiesCombo, cc.xyw(4, 4, 3));
 
-			panel.add(okBtn, cc.xy(3, 6));
-			panel.add(cancelBtn, cc.xy(5, 6));
+			panel.add(okBtn, cc.xy(4, 6));
+			panel.add(cancelBtn, cc.xy(6, 6));
 
 			sourceStepCombo.addActionListener(new ActionListener()
 			{
@@ -170,6 +171,7 @@ public abstract class ChangeOperationResolver implements Resolver
 			});
 
 			setLocationRelativeTo(UISupport.getParentFrame(this));
+			panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 			this.add(panel.getPanel());
 		}
 

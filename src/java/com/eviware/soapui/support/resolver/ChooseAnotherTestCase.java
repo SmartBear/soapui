@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -158,6 +159,7 @@ public class ChooseAnotherTestCase implements Resolver
 			});
 
 			setLocationRelativeTo(UISupport.getParentFrame(this));
+			panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 			this.add(panel.getPanel());
 		}
 

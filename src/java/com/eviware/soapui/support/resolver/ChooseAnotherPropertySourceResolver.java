@@ -17,15 +17,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.WindowConstants;
 
 import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfer;
 import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfersTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -59,15 +65,15 @@ public class ChooseAnotherPropertySourceResolver implements Resolver
 		sources.add(parent.getTestCase());
 		properties.add(parent.getTestCase().getPropertyNames());
 
-//		for( int c = 0; c < parent.getTestCase().getTestStepCount(); c++ )
-//		{
-//			WsdlTestStep testStep = parent.getTestCase().getTestStepAt( c );
-//			if( testStep == parent )
-//				continue;
-//			
-//			sources.add(testStep);
-//			properties.add(testStep.getPropertyNames());
-//		}
+		for( int c = 0; c < parent.getTestCase().getTestStepCount(); c++ )
+		{
+			WsdlTestStep testStep = parent.getTestCase().getTestStepAt( c );
+			if( testStep == parent )
+				continue;
+			
+			sources.add(testStep);
+			properties.add(testStep.getPropertyNames());
+		}
 		
 	}
 
@@ -119,11 +125,11 @@ public class ChooseAnotherPropertySourceResolver implements Resolver
 
 		private void init()
 		{
-			FormLayout layout = new FormLayout("right:pref, 4dlu, 30dlu, 5dlu, 30dlu, min ",
+			FormLayout layout = new FormLayout("min,right:pref, 4dlu, 40dlu, 5dlu, 40dlu, min ",
 			"min, pref, 4dlu, pref, 4dlu, pref, min");
 			CellConstraints cc = new CellConstraints();
 			PanelBuilder panel = new PanelBuilder(layout);
-			panel.addLabel("Source:", cc.xy(1, 2));
+			panel.addLabel("Source:", cc.xy(2, 2));
 			DefaultComboBoxModel sourceStepComboModel = new DefaultComboBoxModel();
 			sourceStepCombo = new JComboBox(sourceStepComboModel);
 			sourceStepCombo.setRenderer(new StepComboRenderer());
@@ -131,16 +137,16 @@ public class ChooseAnotherPropertySourceResolver implements Resolver
 				sourceStepComboModel.addElement(element);
 
 			sourceStepCombo.setSelectedIndex(0);
-			panel.add(sourceStepCombo, cc.xyw(3, 2, 3));
+			panel.add(sourceStepCombo, cc.xyw(4, 2, 3));
 
 			int index = sourceStepCombo.getSelectedIndex();
 
 			propertiesCombo = new JComboBox(properties.get(index));
-			panel.addLabel("Property:", cc.xy(1, 4));
-			panel.add(propertiesCombo, cc.xyw(3, 4, 3));
+			panel.addLabel("Property:", cc.xy(2, 4));
+			panel.add(propertiesCombo, cc.xyw(4, 4, 3));
 
-			panel.add(okBtn, cc.xy(3, 6));
-			panel.add(cancelBtn, cc.xy(5, 6));
+			panel.add(okBtn, cc.xy(4, 6));
+			panel.add(cancelBtn, cc.xy(6, 6));
 
 			sourceStepCombo.addActionListener(new ActionListener()
 			{
@@ -201,7 +207,9 @@ public class ChooseAnotherPropertySourceResolver implements Resolver
 			});
 			
 			setLocationRelativeTo(UISupport.getParentFrame(this));
+			panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 			this.add(panel.getPanel());
+			setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		}
 
 		public void showAndChoose()
