@@ -86,6 +86,19 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
       this.request = request;
 
       init( request );
+
+      try
+      {
+         // required to avoid deadlock in UI when opening attachments inspector
+         if( request.getAttachmentCount() > 0 )
+         {
+            request.getOperation().getInterface().getDefinitionContext().loadIfNecessary();
+         }
+      }
+      catch( Exception e )
+      {
+         e.printStackTrace();
+      }
    }
 
    protected void init( T2 request )

@@ -33,15 +33,6 @@ public class WsdlRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel<Wsd
 	public WsdlRequestDesktopPanel(WsdlRequest request)
 	{
 		super(request, request);
-
-      try
-      {
-         request.getOperation().getInterface().getWsdlContext().loadIfNecessary();
-      }
-      catch( Exception e )
-      {
-         e.printStackTrace();
-      }
    }
 	
 	@Override

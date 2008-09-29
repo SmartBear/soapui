@@ -12,18 +12,17 @@
 
 package com.eviware.soapui.support.editor.inspectors.attachments;
 
+import com.eviware.soapui.impl.wsdl.AttachmentContainer;
+import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
+import com.eviware.soapui.impl.wsdl.support.WsdlAttachment;
+import com.eviware.soapui.model.iface.Attachment;
+
+import javax.swing.table.AbstractTableModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-
-import javax.swing.table.AbstractTableModel;
-
-import com.eviware.soapui.impl.wsdl.AttachmentContainer;
-import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
-import com.eviware.soapui.impl.wsdl.support.WsdlAttachment;
-import com.eviware.soapui.model.iface.Attachment;
 
 /**
  * TableModel for Request Attachments
@@ -35,7 +34,7 @@ public class AttachmentsTableModel extends AbstractTableModel implements Propert
 			AttachmentTableModel
 {
 
-	AttachmentContainer container;
+	private AttachmentContainer container;
 
 	/** Creates a new instance of AttachmentTableModel */
 	public AttachmentsTableModel( AttachmentContainer request )

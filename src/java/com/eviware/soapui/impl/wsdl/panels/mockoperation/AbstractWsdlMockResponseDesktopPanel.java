@@ -12,29 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
@@ -61,6 +38,15 @@ import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * Abstract base DesktopPanel for WsdlMockResponses
@@ -123,6 +109,19 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 				else
 					requestEditor.requestFocus();
 			}} );
+
+       try
+      {
+         // required to avoid deadlock in UI when opening attachments inspector
+         if( mockResponse.getAttachmentCount() > 0 )
+         {
+            mockResponse.getOperation().getInterface().getDefinitionContext().loadIfNecessary();
+         }
+      }
+      catch( Exception e )
+      {
+         e.printStackTrace();
+      }
 	}
 
 	protected WsdlMockResponse getMockResponse()

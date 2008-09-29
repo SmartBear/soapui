@@ -15,7 +15,6 @@ package com.eviware.soapui.impl.rest;
 import com.eviware.soapui.config.RestResourceConfig;
 import com.eviware.soapui.config.RestServiceConfig;
 import com.eviware.soapui.impl.support.AbstractInterface;
-import com.eviware.soapui.impl.support.DefinitionContext;
 import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.iface.Operation;
@@ -196,7 +195,7 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
    }
 
    @Override
-   public DefinitionContext getDefinitionContext()
+   public WadlDefinitionContext getDefinitionContext()
    {
       return getWadlContext();
    }

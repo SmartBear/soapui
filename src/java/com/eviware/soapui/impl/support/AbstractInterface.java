@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.support;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.EndpointsConfig;
 import com.eviware.soapui.config.InterfaceConfig;
+import com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.ModelItem;
@@ -191,7 +192,7 @@ public abstract class AbstractInterface<T extends InterfaceConfig> extends Abstr
       interfaceListeners.clear();
    }
 
-   public abstract DefinitionContext getDefinitionContext();
+   public abstract AbstractDefinitionContext getDefinitionContext();
 
    /**
     * Return the URL for the current definition (ie a WSDL or WADL url)

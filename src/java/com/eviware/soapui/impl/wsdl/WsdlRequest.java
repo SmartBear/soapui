@@ -246,7 +246,7 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 	 * @see com.eviware.soapui.impl.wsdl.AttachmentContainer#getDefinedAttachmentParts()
 	 */
    
-	public HttpAttachmentPart [] getDefinedAttachmentParts()
+	public synchronized HttpAttachmentPart [] getDefinedAttachmentParts()
 	{
 		if( definedAttachmentParts == null )
 		{
