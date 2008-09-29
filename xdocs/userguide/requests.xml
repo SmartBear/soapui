@@ -10,12 +10,23 @@
 		 own message content, endpoint, encoding, etc. Requests are mainly managed through the request-editor displayed
 		 when double clicking a request node in the navigator (described below)</p>
 		 
-		<div class="infobox">
-			<div class="infobox_top"></div>
-      			<div class="infobox_overall">
-         			<div class="infobox_header">Did you know...?</div>
-					<div class="infobox_content">
-						<span class="pro_par">
+		 
+		 				
+				<table class="relatedInfo" cellspacing="0" cellpadding="0">
+	<tr class="a">
+    	<td width="75" style="padding-top:5px">
+        	<img src="../images/where_do_i_start.jpg" alt="Start soapUI Testing" longdesc="http://www.soapui.org"></img>
+        </td>
+        <td>
+            <table class="relatedInner">
+              <tr>
+                <td>
+                	<span class="relatedInfoHeader">Did you know?</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                    <div>
 						<p>
 						In <b><i>soapUI Pro</i></b> you have two more request and response editors; The Form editor and the Outline Editor. 
 Both will improve your productivity and make Web Service Testing more fun.
@@ -24,14 +35,22 @@ Both will improve your productivity and make Web Service Testing more fun.
 						<p>
 						<b><i>soapUI Pro</i></b> contains productivity enhancements as well as offers Professional World Class support.
 						</p>
-						</span>
-					</div>
-					<div class="infobox_footer">
-						<a  onclick="javascript:urchinTracker('/relevantinfo')" href="http://www.eviware.com/trial" class="infoboxlink"><span class="ilink"> Try It </span> </a>
-					</div>
-      			</div>
-   				<div class="infobox_bottom"><div></div></div>
-		</div>
+                    </div>
+                </td>
+              </tr>
+              <tr align="right">
+              	<td>
+                	<span class="relatedLinks"><a href="www.eviware.com" title="try soapUI Pro">Try It!</a> | <a href="www.eviware.com" title="try soapUI Pro">Try It!</a></span>
+                </td>
+              </tr>
+            </table>
+		</td>
+	</tr>
+</table>
+		 
+		 
+		 
+
 		 
 		 <subsection name="Request Actions">
 		  <columns><column><div>

@@ -43,26 +43,43 @@
 		</subsection> 
 		
 		
-				 <div class="infobox">
-			<div class="infobox_top"></div>
-      			<div class="infobox_overall">
-         			<div class="infobox_header">Did you know...?</div>
-					<div class="infobox_content">
-						<span class="pro_par">
+						
+				<table class="relatedInfo" cellspacing="0" cellpadding="0">
+	<tr class="a">
+    	<td width="75" style="padding-top:5px">
+        	<img src="images/where_do_i_start.jpg" alt="Start soapUI Testing" longdesc="http://www.soapui.org"></img>
+        </td>
+        <td>
+            <table class="relatedInner">
+              <tr>
+                <td>
+                	<span class="relatedInfoHeader">Did you know?</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                    <div>
 						<p>
 						soapUI Pro 2 includes <b><i>Web Service Coverage</i></b>. See how well tested your Web Services are!
 						</p>
 						<p>
 						<b><i>soapUI Pro</i></b> contains productivity enhancements as well as offers Professional World Class support.
 						</p>
-						</span>
-					</div>
-					<div class="infobox_footer">
-						<a  onclick="javascript:urchinTracker('/relevantinfo')" href="http://www.eviware.com/trial" class="infoboxlink"><span class="ilink"> Try It </span> </a> | <a href="http://www.eviware.com/trial" class="infoboxlink"><span class="ilink"> Read more </span></a>
-					</div>
-      			</div>
-   				<div class="infobox_bottom"><div></div></div>
-		</div>
+                    </div>
+                </td>
+              </tr>
+              <tr align="right">
+              	<td>
+                	<span class="relatedLinks"><a href="www.eviware.com" title="try soapUI Pro">Try It!</a> | <a href="www.eviware.com" title="try soapUI Pro">Try It!</a></span>
+                </td>
+              </tr>
+            </table>
+		</td>
+	</tr>
+</table>
+		
+		
+
 		
 		<subsection name="soapUI 2.0.2 Release">
 		<p>The 2.0.2 release is mainly another bug-fix release with a small number of improvements and
