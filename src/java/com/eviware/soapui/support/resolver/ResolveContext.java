@@ -231,6 +231,12 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
       {
          return title;
       }
+      
+      @Override
+      public String toString()
+      {
+      	return (String)getDescription();
+      }
    }
 
    public abstract static class DirectoryResolver implements Resolver
@@ -273,6 +279,10 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
       public Object getDescription()
       {
          return title;
+      }
+      
+      public String toString() {
+      	return (String) getDescription();
       }
    }
 }
