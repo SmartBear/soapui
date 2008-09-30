@@ -136,7 +136,7 @@ public class WsdlImporter
 	                  iface.addEndpoint( endpoint );
 	               
 	               if( iface.getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString()))
-	                  iface.setWsaVersion(WsdlUtils.getUsingAddressing( port , wsdlContext.getDefinition()));
+	                  iface.setWsaVersion(WsdlUtils.getUsingAddressing( port));
 		      	   	if (iface.getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString()))
 		      			{
 		      				iface.processPolicy(WsdlUtils.getAttachedPolicy(port, wsdlContext.getDefinition()));

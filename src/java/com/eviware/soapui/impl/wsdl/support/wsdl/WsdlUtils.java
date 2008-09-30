@@ -639,7 +639,7 @@ public class WsdlUtils
 				MIMEMultipartRelated.class) != null;
 	}
 
-	public static String getUsingAddressing(ElementExtensible item, Definition def)
+	public static String getUsingAddressing(ElementExtensible item)
 	{
 		String version = WsaVersionTypeConfig.NONE.toString();
 

@@ -82,7 +82,7 @@ public class WsaUtils
 		}
 	}
 
-	public Element addWsAddressingCommon(WsaContainer wsaContainer, boolean overrideExisting) throws XmlException
+	private Element addWsAddressingCommon(WsaContainer wsaContainer, boolean overrideExisting) throws XmlException
 	{
 
 		// version="2005/08" is default
@@ -285,7 +285,7 @@ public class WsaUtils
 			String to = wsaContainer.getWsaConfig().getTo();
 			if (!StringUtils.isNullOrEmpty(to))
 			{
-				header = processWsaProperty(header, override, "wsa:To", to, true);
+				header = processWsaProperty(header, override, "wsa:To", to, false);
 			}
 			else if (operation.isOneWay() || operation.isRequestResponse())
 			{
@@ -293,7 +293,7 @@ public class WsaUtils
 				{
 					// if to not specified but wsa:to mandatory get default value
 					String defaultTo = httpMethod.getURI().toString();
-					header = processWsaProperty(header, override, "wsa:To", defaultTo, true);
+					header = processWsaProperty(header, override, "wsa:To", defaultTo, false);
 				}
 			}
 
@@ -387,9 +387,7 @@ public class WsaUtils
 					{
 						if (!StringUtils.isNullOrEmpty(requestMessageId))
 						{
-							header = removeWsaProperty(override, header, "wsa:RelatesTo");
-							header.appendChild(builder.createRelatesToElement("wsa:RelatesTo", envelopeElement,
-									relationshipTypeReply, requestMessageId));
+							header = processWsaRelatesToProperty(header, override, "wsa:RelatesTo", relationshipTypeReply, requestMessageId);
 						}
 						else if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_RELATES_TO))
 						{
@@ -418,7 +416,7 @@ public class WsaUtils
 				{
 					if (!(AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType) && isAnonymousAddress(to,wsaVersionNameSpace)))
 					{
-						header = processWsaProperty(header, override, "wsa:To", to, true);
+						header = processWsaProperty(header, override, "wsa:To", to, false);
 					}
 				}
 				else
@@ -430,7 +428,7 @@ public class WsaUtils
 						// be added
 						if (!(AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType) && isAnonymousAddress(requestReplyToValue,wsaVersionNameSpace)))
 						{
-							header = processWsaProperty(header, override, "wsa:To", requestReplyToValue, true);
+							header = processWsaProperty(header, override, "wsa:To", requestReplyToValue, false);
 						}
 					}
 				}
@@ -440,8 +438,9 @@ public class WsaUtils
 				String to = wsaContainer.getWsaConfig().getTo();
 				if (!StringUtils.isNullOrEmpty(to))
 				{
-					header = removeWsaProperty(override, header, "wsa:To");
-					header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement, to));
+//					header = removeWsaProperty(override, header, "wsa:To");
+//					header.appendChild(builder.createWsaAddressChildElement("wsa:To", envelopeElement, to));
+					header = processWsaProperty(header, override, "wsa:To", to, false);
 				}
 
 				String relationshipType = wsaContainer.getWsaConfig().getRelationshipType();
