@@ -603,7 +603,6 @@ public class SoapUI
 
       soapUICore.getSettings().addSettingsListener( new SettingsListener()
       {
-
          public void settingChanged( String name, String newValue, String oldValue )
          {
             if( name.equals( UISettings.DESKTOP_TYPE ) )
@@ -620,9 +619,6 @@ public class SoapUI
       frame.setVisible( true );
 
       initAutoSaveTimer();
-
-//		DesktopPanel dp = UISupport.showDesktopPanel(new URLDesktopPanel( "soapUI Rocks!", "Info on soapUI", "http://www.soapui.org"));
-//		desktop.maximize( dp );
    }
 
    private void changeDesktop( SoapUIDesktop newDesktop )

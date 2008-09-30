@@ -14,6 +14,8 @@ package com.eviware.soapui.impl.wsdl.teststeps;
 
 import com.eviware.soapui.config.RequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
 import com.eviware.soapui.impl.wsdl.*;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
@@ -55,7 +57,7 @@ import java.util.*;
  */
 
 public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements OperationTestStep,
-        PropertyChangeListener, PropertyExpansionContainer, Assertable
+        PropertyChangeListener, PropertyExpansionContainer, Assertable, HttpRequestTestStep
 {
    private final static Logger log = Logger.getLogger( WsdlTestRequestStep.class );
    private RequestStepConfig requestStepConfig;
@@ -408,6 +410,11 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
    public int getAssertionCount()
    {
       return testRequest == null ? 0 : testRequest.getAssertionCount();
+   }
+
+   public AbstractHttpRequest getHttpRequest()
+   {
+      return testRequest;
    }
 
    public class InternalProjectListener extends ProjectListenerAdapter

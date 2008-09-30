@@ -1,5 +1,6 @@
 package com.eviware.soapui.support.components;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.DefaultHyperlinkListener;
 import com.eviware.soapui.support.UISupport;
 
@@ -8,6 +9,7 @@ import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.NoRouteToHostException;
 import java.net.URL;
 
 public class BrowserComponent
@@ -100,16 +102,23 @@ public class BrowserComponent
 //      browser.setContent( content, contentType );
    }
 
-   public void navigate( String url )
+   public boolean navigate( String url )
    {
       try
       {
          editorPane.setPage( new URL( url ) );
+         return true;
       }
-      catch( IOException e )
+      catch( NoRouteToHostException e )
       {
-         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+         SoapUI.log.warn( "Failed to access [" + url + "]" );
       }
+      catch( Exception e )
+      {
+         SoapUI.logError( e );
+      }
+
+      return false;
 
 //      if( browser == null )
 //      {

@@ -5,6 +5,8 @@ import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
@@ -38,7 +40,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class HttpTestRequestStep extends WsdlTestStepWithProperties implements PropertyChangeListener, PropertyExpansionContainer, Assertable
+public class HttpTestRequestStep extends WsdlTestStepWithProperties implements PropertyChangeListener,
+        PropertyExpansionContainer, Assertable, HttpRequestTestStep
 {
    private final static Logger log = Logger.getLogger( HttpTestRequestStep.class );
    private RestRequestStepConfig requestStepConfig;
@@ -396,6 +399,11 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 //		result.addAll( testRequest.getWssContainer().getPropertyExpansions() );
 
       return result.toArray( new PropertyExpansion[result.size()] );
+   }
+
+   public AbstractHttpRequest getHttpRequest()
+   {
+      return testRequest;
    }
 
    public class RequestHeaderHolder

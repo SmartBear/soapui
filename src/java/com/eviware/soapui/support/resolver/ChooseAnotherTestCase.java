@@ -1,17 +1,16 @@
+/*
+ * soapUI, copyright (C) 2004-2008 eviware.com
+ *
+ * soapUI is free software; you can redistribute it and/or modify it under the
+ * terms of version 2.1 of the GNU Lesser General Public License as published by
+ * the Free Software Foundation.
+ *
+ * soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
 package com.eviware.soapui.support.resolver;
-
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JList;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -25,6 +24,12 @@ import com.eviware.soapui.support.resolver.ResolveContext.Resolver;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 public class ChooseAnotherTestCase implements Resolver
 {
