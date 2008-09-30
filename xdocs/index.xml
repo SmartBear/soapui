@@ -168,8 +168,8 @@
 				<subsection name="soapUI in the news">
 					<p>Fortunately, we are not the only ones using soapUI, have a look at what some others have written:</p>
 					<ul>
-						<li><a target="_new" href="http://nikitaknysh.blogspot.com/2008/01/how-to-test-web-service.html">How to Test a Web Service</a> from Nikita Knysh's Blog</li>
-						<li><a target="_new" href="http://www.gmjjavadesigns.com/gmjd/entry/soapui_2_0_web_service">soapUI 2.0: Web Service Testing Tool</a> from GMJ Designs</li>
+						<li><a target="_new" href="http://groovyinsoapui.wordpress.com/">Groovy in soapUI</a> from Devakara´s Blog</li>
+						<li><a target="_new" href="http://blogs.techrepublic.com.com/programming-and-development/?p=699</a> from Tony Patton</li>
 						<li><a target="_new" href="http://blogsearch.google.com/blogsearch?hl=en&amp;q=soapui&amp;ie=UTF-8">soapUI - Testing JAX-WS Web service in NetBeans</a> from Arun Gupta's Blog</li>
 					</ul>
 					<p><b><a href="soapui_in_the_news.html">[More of soapUI in the News]</a></b></p>	
