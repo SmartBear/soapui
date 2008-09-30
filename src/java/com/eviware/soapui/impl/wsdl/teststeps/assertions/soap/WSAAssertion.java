@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.soap;
 
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaValidator;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
@@ -47,7 +48,7 @@ public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssert
 	{
 		public Factory()
 		{
-			super(WSAAssertion.ID, WSAAssertion.LABEL, WSAAssertion.class);
+			super(WSAAssertion.ID, WSAAssertion.LABEL, WSAAssertion.class, WsdlRequest.class);
 		}
 	}
 	@Override
