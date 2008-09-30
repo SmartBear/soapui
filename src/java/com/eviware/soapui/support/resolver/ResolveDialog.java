@@ -12,6 +12,29 @@
 
 package com.eviware.soapui.support.resolver;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.ArrayList;
+
+import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+
+import org.jdesktop.swingx.JXTable;
+
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
 import com.eviware.soapui.model.ModelItem;
@@ -19,15 +42,6 @@ import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
 import com.eviware.soapui.support.resolver.ResolveContext.Resolver;
-import org.jdesktop.swingx.JXTable;
-
-import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Utility for resolving items
@@ -95,21 +109,32 @@ public class ResolveDialog
 				}
 				return true;
 			}
-			
+
 			@Override
 			protected boolean handleCancel()
 			{
-				if ( UISupport.confirm("There are unresolved item, continue?", "Unresolved items") )
-					return true;
-				else 
-					return false;
+				return UISupport.confirm("There are unresolved item, continue?", "Unresolved items");
+
 			}
 
 		};
 
 		dialog.setSize(550, 300);
 		dialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		
+		dialog.addWindowListener(new WindowAdapter()
+		{
+
+			@Override
+			public void windowClosing(WindowEvent arg0)
+			{
+				if (UISupport.confirm("There are unresolved item, continue?", "Unresolved items"))
+				{
+					dialog.setVisible(false);
+				}
+
+			}
+		});
+
 	}
 
 	public boolean isShowOkMessage()
@@ -234,7 +259,7 @@ public class ResolveDialog
 			switch (arg1)
 			{
 			case 0:
-				return createItemName( ptr );
+				return createItemName(ptr);
 			case 1:
 				return ptr.getDescription();
 			case 2:
@@ -245,21 +270,21 @@ public class ResolveDialog
 			return null;
 		}
 
-      private String createItemName( PathToResolve ptr )
-      {
-         ModelItem modelItem = ptr.getOwner();
-         String name = modelItem.getName();
+		private String createItemName(PathToResolve ptr)
+		{
+			ModelItem modelItem = ptr.getOwner();
+			String name = modelItem.getName();
 
-         while( modelItem.getParent() != null && !(modelItem.getParent() instanceof Project ) )
-         {
-            modelItem = modelItem.getParent();
-            name = modelItem.getName() + " - " + name;
-         }
+			while (modelItem.getParent() != null && !(modelItem.getParent() instanceof Project))
+			{
+				modelItem = modelItem.getParent();
+				name = modelItem.getName() + " - " + name;
+			}
 
-         return name;
-      }
+			return name;
+		}
 
-      public ResolveContext<?> getContext()
+		public ResolveContext<?> getContext()
 		{
 			return context;
 		}

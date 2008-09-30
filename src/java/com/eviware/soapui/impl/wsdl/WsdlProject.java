@@ -715,7 +715,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		Tools.copyFile(projectFile, backupFile, true);
 	}
 
-	private File getBackupFile(File projectFile)
+	protected File getBackupFile(File projectFile)
 	{
 		String backupFolderName = getSettings().getString(UISettings.BACKUP_FOLDER, "");
 

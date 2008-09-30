@@ -548,12 +548,14 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
          getConfig().removeTestCase( ix );
       }
 
-      TestCaseConfig newConfig = (TestCaseConfig) getConfig().addNewTestCase().set( newTestCase ).changeType(
+      TestCaseConfig newConfig = (TestCaseConfig) getConfig().insertNewTestCase(ix).set( newTestCase ).changeType(
               TestCaseConfig.type );
       testCase = new WsdlTestCase( this, newConfig, false );
       testCases.add( ix, testCase );
       testCase.afterLoad();
       fireTestCaseAdded( testCase );
+      
+      resolveImportedTestCase(testCase);
    }
 
    public void importTestCase( File file )

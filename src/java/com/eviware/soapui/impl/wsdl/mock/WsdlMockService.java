@@ -637,7 +637,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
       mockOperation.release();
       getConfig().removeMockOperation( ix );
 
-      MockOperationConfig newConfig = (MockOperationConfig) getConfig().addNewMockOperation()
+      MockOperationConfig newConfig = (MockOperationConfig) getConfig().insertNewMockOperation(ix)
               .set( reloadedMockOperation ).changeType( MockOperationConfig.type );
       WsdlMockOperation newOperation = new WsdlMockOperation( this, newConfig );
       mockOperations.add( ix, newOperation );

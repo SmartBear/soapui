@@ -484,7 +484,7 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 
 		if (targetTestCase == null)
 		{
-			context.addPathToResolve(this, "Missing Test Case", stepConfig.getTargetTestCase(),
+			context.addPathToResolve(this, "Missing Test Case", getTestStepTitle() + "/" + stepConfig.getTargetTestCase(),
 					new RunTestCaseDefaultAction()).addResolvers(new ChooseAnotherTestCase(this),
 					new CreateNewEmptyTestCase(this));
 		}
