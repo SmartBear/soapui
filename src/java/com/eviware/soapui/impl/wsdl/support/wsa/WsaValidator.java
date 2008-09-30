@@ -257,12 +257,12 @@ public class WsaValidator
 	//         throw new AssertionException( new AssertionError( "WS-A Action property is empty" ) );
 	         cumulativeErrorMsg.append("WS-A Action property is empty. ");
 	      } else {
-		      String defaultWsdlAction = WsdlUtils.getDefaultWsaAction(messageExchange.getOperation(), true);
-		      if (!actionValue.equals(defaultWsdlAction))
-				{
-		//      	throw new AssertionException( new AssertionError( "WS-A Action property has the wrong value" ) );
-		      	cumulativeErrorMsg.append("WS-A Action property has the wrong value. ");
-				}
+//		      String defaultWsdlAction = WsdlUtils.getDefaultWsaAction(messageExchange.getOperation(), true);
+//		      if (!actionValue.equals(defaultWsdlAction))
+//				{
+//		//      	throw new AssertionException( new AssertionError( "WS-A Action property has the wrong value" ) );
+//		      	cumulativeErrorMsg.append("WS-A Action property has the wrong value. ");
+//				}
 	      }
       }
 		validateWsAddressingCommon(content);
