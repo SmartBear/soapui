@@ -16,20 +16,20 @@
 	    			<a href="http://groovyinsoapui.wordpress.com/">[Read more]</a></p>
 	    		</column>
 	    	</columns>
-		</subsection>   
-  
-        <subsection name="soapui, now with XFire - from the netzoid blog">
+		</subsection>  
+		
+	    <subsection name="Easily test Web services With soapUI">
 	    	<columns>
 	    		<column width="200">
-	    		<img src="images/inthenews/netzooid.gif" alt="NetZoid. soapUI, your testing solution"/>
+	    		<img src="images/inthenews/techrep.gif" alt="test web services with soapUI"/>
 	    		</column>
 	    		<column align="left">
-	    			<p>The post starts: "So more and more people have been reporting to me the coolness of soapui..." <br/>
-	    			<a href="http://netzooid.com/blog/2006/05/16/soapui-now-with-xfire-11/">[Read more]</a></p>
+	    			<p>The post starts: "The soapUI tool makes it much easier to test Web services during..." <br/>
+	    			<a href="http://blogs.techrepublic.com.com/programming-and-development/?p=699">[Read more]</a></p>
 	    		</column>
 	    	</columns>
-		</subsection>
-	   
+		</subsection>  
+  
         <subsection name="Manging the test - database with soapUI">
 	    	<columns>
 	    		<column width="200">
@@ -270,6 +270,18 @@
 	    	</columns>
 		</subsection>
 
+        <subsection name="soapui, now with XFire - from the netzoid blog">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/netzooid.gif" alt="NetZoid. soapUI, your testing solution"/>
+	    		</column>
+	    		<column align="left">
+	    			<p>The post starts: "So more and more people have been reporting to me the coolness of soapui..." <br/>
+	    			<a href="http://netzooid.com/blog/2006/05/16/soapui-now-with-xfire-11/">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+		</subsection>
+        
         <subsection name="soapUI 2.0: Web Service Testing Tool">
 	    	<columns>
 	    		<column width="200">
