@@ -5,7 +5,7 @@
     </properties>
     <body>
 		<section name="SOAP Monitor">
-		<p>soapUI 2.0 adds powerful SOAP Monitoring possibilities (ie TCPmon), allowing you to capture and perform SOAP traffic analysis 
+		<p>soapUI 2.0 adds powerful SOAP Monitoring possibilities (ie TCPMon), allowing you to capture and perform SOAP traffic analysis 
 		between an existing client and server. The captured traffic can be used to generate both TestCases and MockServices,
 		and soapUI Pro adds (extremely cool) Coverage possibilities allowing you to monitor the actual utilization of the 
 		monitored WSDL contract(s).</p>
