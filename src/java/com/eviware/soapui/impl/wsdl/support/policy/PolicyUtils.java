@@ -19,7 +19,7 @@ import com.eviware.soapui.support.StringUtils;
 
 public class PolicyUtils
 {
-	public final static String WS_POLICY_NAMESPACE = "http://schemas.xmlsoap.org/ws/2004/09/policy";
+	public final static String WS_POLICY_NAMESPACE = "http://www.w3.org/ns/ws-policy";
 	public final static String WS_SECURITY_NAMESPACE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
 
 	public static List<Policy> getPolicies(WsdlContext wsdlContext) {
