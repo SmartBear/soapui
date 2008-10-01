@@ -393,7 +393,7 @@ context.name = .. </source></li>
 		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1579756&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
 		<li>Fixed validation of derived types in XML editors</li>
 		<li>Fixed load-test statistics to show correct values if a step is executed multiple times within one run</li>
-		<li>Fixed automatic adding of TestStep Status assertion to newly created loadtests, see
+		<li>Fixed automatic adding of TestStep Status assertion to newly created Load Tests, see
 		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1595693&amp;forum_id=494205">forum discussion</a></li>
 		<li>More internal fixes..</li>
 		</ul>
@@ -670,7 +670,7 @@ context.name = .. </source></li>
 		<subsection name="SNAPSHOT 2006-03-08">
 		<p>This release fixes numerous internal issues, including:</p>
 		<ul>
-		<li>Update of loadtest history graph on reset/restart</li>
+		<li>Update of Load Test history graph on reset/restart</li>
 		<li>Glitches in TestSuite runner</li>
 		<li>etc...</li>
 		</ul>
@@ -678,7 +678,7 @@ context.name = .. </source></li>
 		<subsection name="SNAPSHOT 2006-03-06">
 		<p>This release fixes a number of internal issues, including:</p>
 		<ul>
-		<li>Correct rescaling and update of loadtest graphs</li>
+		<li>Correct rescaling and update of load Test graphs</li>
 		<li>Correct test monitoring in cloned TestCases/TestSuites</li>
 		</ul>
 		</subsection>

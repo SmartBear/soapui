@@ -13,7 +13,7 @@
 		any desired	functionality</li>
 		<li>Before and after running a <a href="functional/testcases.html">TestCase</a> or 
 		<a href="functional/testsuites.html">TestSuite</a> for initializing and cleaning up before or after running your tests.</li>
-		<li>When starting/stopping a <a href="mock/services.html">MockService</a> to intializing or cleaning-up MockService state</li>
+		<li>When starting/stopping a <a href="mock/services.html">MockService</a> to initializing or cleaning-up MockService state</li>
 		<li>When opening/closing a <a href="projects/index.html">Project</a>, for initializing or cleaning-up Project related settings</li>
 		<li>As a dynamic <a href="functional/datasourcestep.html#Groovy_DataSource">DataSource</a> or 
 		<a href="functional/datasinkstep.html#Groovy_DataSink">DataSink</a> with the corresponding DataSource/DataSink test steps</li>

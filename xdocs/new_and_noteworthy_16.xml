@@ -43,7 +43,7 @@
 			<li>Response-size <a href="userguide/preferences.html#HTTP_Settings">threshold</a></li>
 			<li>Support for <a href="userguide/preferences.html#HTTP_Settings">preencoded urls</a> 
 			(see <a href="http://sourceforge.net/forum/forum.php?thread_id=1530358&amp;forum_id=494205" target="_new">Forum discussion</a>)</li>
-			<li>Updated xmlbeans/saxon for <a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1531755&amp;forum_id=494205">improved XPath 2.0</a> support</li>
+			<li>Updated XMLBeans/saxon for <a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1531755&amp;forum_id=494205">improved XPath 2.0</a> support</li>
 			<li>More <a href="userguide/shortcuts.html">keyboard shortcuts</a></li>
 		</ul>
 		</subsection>
@@ -52,7 +52,7 @@
 		<p>soapUI 1.6 final introduces a large number of fixes and many minor improvements which have been
 		accumulated during the snapshot releases during the last months. Some highlights are :</p>
 		<ul>
-		<li>Added exclusion list to proxy settings (comma-sepaerated)</li>
+		<li>Added exclusion list to proxy settings (comma-separated)</li>
 		<li>Added 2 context properties available when load-testing:
 		<ol>
 		<li><b>ThreadIndex</b> - the index of the created thread... this value will never change for a given TestCase during its run time.. 
@@ -68,7 +68,7 @@
 		<li>Improved saving of projects to not corrupt files on out-of-memory (saving now first saves to an in-memory buffer
 		which is written to file if no errors occur..)</li>
 		<li>Fixed validation of derived types in xml-editors</li>
-		<li>Fixed automatic adding of TestStep Status assertion to newly created loadtests, see
+		<li>Fixed automatic adding of TestStep Status assertion to newly created Load Tests, see
 		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1595693&amp;forum_id=494205">forum discussion</a></li>
 		<li>Added option to ignore case in Contains/NotContains assertions</li>
 		<li>Improved support for automatic validation by adding an option to not send invalid requests (see
@@ -90,7 +90,7 @@
 		<li>Fixed caching of attachments to now be saved in the soapui-project file (compressed).. this makes
 		portability of soapui-projects with attachments much simpler... The attachment-folder setting has been
 		removed.</li>
-		<li>Fixed property-expansion when running xpath-assertions and property-transfers from within their
+		<li>Fixed property-expansion when running XPath-assertions and property-transfers from within their
 		editors.</li>
 		<li>Fixes password-input fields to be masked</li>
 		</ul>
@@ -114,7 +114,7 @@
 		<subsection name="More Bugfixes from soapUI 1.5">
 		<ul>
 			<li><a href="http://sourceforge.net/forum/forum.php?thread_id=1528232&amp;forum_id=494205" target="_new">Readonly Project files</a></li>
-			<li>Threads in loadtests shared underlying data</li>
+			<li>Threads in Load Tests shared underlying data</li>
 			<li><a href="http://sourceforge.net/forum/forum.php?thread_id=1519001&amp;forum_id=494205" target="_new">Circular imports/includes</a></li>
 			<li>Tools run in <a href="http://sourceforge.net/forum/forum.php?thread_id=1525246&amp;forum_id=494205" target="_new">headless environment</a></li>
 		</ul>

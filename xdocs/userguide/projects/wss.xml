@@ -51,7 +51,7 @@
 		
 		<ul>
 		<li>Source : the source file of the keystore/certificate (Read Only)</li>
-		<li>Status : the load-status of the keystore/certifcate (Read Only</li>
+		<li>Status : the load-status of the keystore/certificate (Read Only</li>
 		<li>Password : the keystore password if required</li>
 		<li>Default Alias : the default alias in a keystore to use for validation or decryption</li>
 		<li>Default Password : the password for default alias</li>

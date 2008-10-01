@@ -86,7 +86,7 @@
 		also includes updated version of all IDE / maven plugins;</p>
 		<ul>
 			<li>Fixed -n option for commandline LoadTestRunner (was incorrectly -h)</li>
-			<li>Fixed internal initialization of copied/cloned testcases/teststeps and during loadtesting</li>
+			<li>Fixed internal initialization of copied/cloned testcases/teststeps and during Load Testing</li>
 			<li>Improved Aut/Header inspectors to be visible for form/overview views</li>
 			<li>Fixed quoting of SOAP 1.2 Action in content-type header</li>
 			<li>Improved opening of local files in external browser (reports, etc)</li>

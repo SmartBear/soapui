@@ -128,9 +128,9 @@
 				Improved property-expansion allows XPath expression directly in property-expansion syntax; for example
 				<source>&lt;someTag&gt;${Request1#Response#//ns2:Title/text()}&lt;/someTag&gt;</source>
 				would select the ns2:Title/text() from the specified Response property. This functionality can in many cases
-				replace simple property-transfers. Also, as you can see, the xpath expression uses the namespace prefixes 
+				replace simple property-transfers. Also, as you can see, the XPath expression uses the namespace prefixes 
 				in the specified property, so namespaces need not be declared (but if the prefixes in the source property 
-				the xpath will stop working)</div>
+				the XPath will stop working)</div>
 			</newfeature>
 			
 			<newfeature img="images/new_override_contentids.gif" alt="soa test new over ride content ids">

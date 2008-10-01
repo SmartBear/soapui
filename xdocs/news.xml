@@ -283,13 +283,13 @@
 	    <div align="left">
 		<p align="left">This release fixes the following issues:</p>
 		<ul>
-		<li>Fixed inclusion of relative xsds in sub wsdls, see bug
+		<li>Fixed inclusion of relative xsds in sub WSDls, see bug
 		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1362652&amp;group_id=136013&amp;atid=737763">1362652</a></li>		
 		<li>Fixed lockup on failed authentication, see bug
 		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1362888&amp;group_id=136013&amp;atid=737763">1362888</a></li>		
 		<li>Fixed handling of overloaded operations, see bug
 		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1362929&amp;group_id=136013&amp;atid=737763">1362929</a></li>		
-		<li> Fixed handling of wsdls containing multiple inline schemas in the types element</li>
+		<li> Fixed handling containing multiple inline schemas in the types element</li>
 		</ul>
 		<p align="left">And adds a small number of improvements:</p>
 		<ul>
@@ -343,7 +343,7 @@
 		<li>Improved logging in TestCase desktop panel to show info on performed value transfers and goto conditions</li>
 		<li>Improved WSDL importing to handle WSDLs with invalid XSDs. A warning will be shown and request-generation/
   		schema-validation will not work.</li>
-  		<li>Upgraded to xmlbeans 2.1.0</li>
+  		<li>Upgraded to XMLBeans 2.1.0</li>
 		<li>Improved keyboard navigation in navigator so selected items can be opened by pressing enter</li>
 		<li>Improved endpoint combobox in request editors to include an option for adding a new endpoint</li>
 		<li>Added a number of unit tests for wsdl importing and valuetransfer test steps</li>
@@ -377,7 +377,7 @@
 		<li>Minor improvements to documentation (added PDF)</li>
 		</ul>
 		<p>Thanks to all reports / comments! Focus is now on the first 1.1 beta containing load-test functionality, 
-		scheduled for mid-november.</p>
+		scheduled for mid-November.</p>
 		</div>
 	    		</column>
 	    	</columns>
@@ -460,7 +460,7 @@
 		etc. (soapUI has been tested rather extensively only with doc/literal services 
 		in a J2EE environment and running under WinXP).
 		<a target="_new" href="http://sourceforge.net/tracker/?group_id=136013&amp;atid=737763">post bug-reports</a> on 
-		sourceforge including wsdls, soap requests, 
+		sourceforge including WSDLs, soap requests, 
 		etc anything that could be needed to recreate your problems. <i>Thanks!</i></p>
 	    		</column>
 	    	</columns>

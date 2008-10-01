@@ -35,20 +35,20 @@
 		 <p>Any number of LoadTests can be created for a TestCase (using the TestCases "New LoadTest" popup-menu action), 
 		 each with different strategies, assertions, etc. to validate/assess a TestCases and its TestSteps performance 
 		 under different circumstances. LoadTests can be run both interactively in soapUI or
-		from the commandline, allowing scheduled loadtests to be used for performance surveillance (for example).</p>
+		from the commandline, allowing scheduled Load Tests to be used for performance surveillance (for example).</p>
 		
-		<p>Right click on a TestCase and selected "New LoadTest" (you can create any number of loadtests), this will 
+		<p>Right click on a TestCase and selected "New LoadTest" (you can create any number of Load Tests), this will 
 		open the following LoadTest view after prompting for a title:</p>
 		<p align="center"><img src="images/loadtest_1.gif" alt="soap load test"/></p>
 		<p>The view is divided into 3 parts (top-down):</p>
 		<ul>
 		<li>A toolbar with general actions, test-limit, interactive thread-count and strategy settings</li>
-		<li>A statistics table showing the statistics for each step in the loadtest</li>
+		<li>A statistics table showing the statistics for each step in the Load Test</li>
 		<li>A log showing general messages and any assertions errors</li>
 		</ul>
 		</subsection>
 		<subsection name="Assertions">
-		<p>The log at the bottom has an additional tab showing the configured loadtest assertions:</p>
+		<p>The log at the bottom has an additional tab showing the configured Load Test assertions:</p>
 		<p align="center"><img src="images/loadtest_3.gif" alt="load test assertions in soap testing"/></p>
 		<p>When running a LoadTest, the configured assertions are applied and will generate an error in the log if not met:</p>
 		<p align="center"><img src="images/loadtest_4.gif" alt="load test assertions generate an error in the log"/></p>
@@ -83,7 +83,7 @@
 		<p align="center"><img width="800" src="images/loadtest_2.gif" alt="selected test steps for soap testing"/></p>
 		</subsection>
 		<subsection name="CommandLine Runner">
-		<p>A <code>com.eviware.soapui.tools.SoapUILoadTestRunner</code> is available for running loadtests from the commandline,
+		<p>A <code>com.eviware.soapui.tools.SoapUILoadTestRunner</code> is available for running Load Tests from the commandline,
 		the same arguments as described for the <code>com.eviware.soapui.tools.SoapUILoadTestRunner</code> are valid, with the
 		introduction of <code>-l&lt;loadtest name&gt;</code>, <code>-r</code> for reporting and <code>-f&lt;folder name&gt;</code>.
 		Failed results and error logs will be exported to text-files for viewing.</p>
