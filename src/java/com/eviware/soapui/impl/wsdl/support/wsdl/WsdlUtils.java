@@ -664,17 +664,20 @@ public class WsdlUtils
 		}
 		return version;
 	}
-	public static Policy getAttachedPolicy(ElementExtensible item, Definition def) {
+
+	public static Policy getAttachedPolicy(ElementExtensible item, Definition def)
+	{
 
 		Policy rtnPolicy = null;
-		Element[] policyReferences = WsdlUtils
-					.getExentsibilityElements(item, new QName(PolicyUtils.WS_POLICY_NAMESPACE, "PolicyReference"));
+		Element[] policyReferences = WsdlUtils.getExentsibilityElements(item, new QName(PolicyUtils.WS_POLICY_NAMESPACE,
+				"PolicyReference"));
 		if (policyReferences.length > 0)
 		{
 			String policyId = policyReferences[0].getAttribute("URI");
 			if (!StringUtils.isNullOrEmpty(policyId))
 			{
-				Element[] policies = WsdlUtils.getExentsibilityElements(def, new QName(PolicyUtils.WS_POLICY_NAMESPACE, "Policy"));
+				Element[] policies = WsdlUtils.getExentsibilityElements(def, new QName(PolicyUtils.WS_POLICY_NAMESPACE,
+						"Policy"));
 				Element policy = null;
 				for (int i = 0; i < policies.length; i++)
 				{
@@ -685,21 +688,22 @@ public class WsdlUtils
 						rtnPolicy = getPolicy(policy);
 						continue;
 					}
-	
+
 				}
 			}
 		}
 		else
 		{
 			// get policies of item itself
-			Element[] itemPolicies = WsdlUtils.getExentsibilityElements(item, new QName(PolicyUtils.WS_POLICY_NAMESPACE, "Policy"));
+			Element[] itemPolicies = WsdlUtils.getExentsibilityElements(item, new QName(PolicyUtils.WS_POLICY_NAMESPACE,
+					"Policy"));
 			if (itemPolicies.length > 0)
 			{
 				for (int i = 0; i < itemPolicies.length; i++)
 				{
 					Element policy = itemPolicies[i];
 					rtnPolicy = getPolicy(policy);
-	
+
 				}
 			}
 		}
@@ -708,9 +712,8 @@ public class WsdlUtils
 
 	public static Policy getPolicy(Element policy)
 	{
-//		policy = PolicyUtils.normalize(policy);
-		
-		
+		// policy = PolicyUtils.normalize(policy);
+
 		// check if found reference is addressing policy
 		Element wsAddressing = XmlUtils.getFirstChildElementNS(policy, WsaUtils.WSAM_NAMESPACE, "Addressing");
 		Element addressingPolicy = null;
@@ -726,17 +729,23 @@ public class WsdlUtils
 				if (!StringUtils.isNullOrEmpty(optional) && optional.equals(OptionalType.TRUE.toString()))
 				{
 					newAddressing.setOptional(OptionalType.TRUE);
-				} else {
+				}
+				else
+				{
 					newAddressing.setOptional(OptionalType.FALSE);
 				}
 				Policy innerPolicy = newAddressing.addNewPolicy();
-				//check if policy has Anonymous
-				Element anonymousElm = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(PolicyUtils.WSAM_NAMESPACE,"AnonymousResponses"));
+				// check if policy has Anonymous
+				Element anonymousElm = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(WsaUtils.WSAM_NAMESPACE,
+						"AnonymousResponses"));
 				if (anonymousElm != null)
 				{
 					AnonymousResponses anr = innerPolicy.addNewAnonymousResponses();
-				} else {
-					Element nonAnonymousElement = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(PolicyUtils.WSAM_NAMESPACE,"NonAnonymousResponses"));
+				}
+				else
+				{
+					Element nonAnonymousElement = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(
+							WsaUtils.WSAM_NAMESPACE, "NonAnonymousResponses"));
 					if (nonAnonymousElement != null)
 					{
 						innerPolicy.addNewNonAnonymousResponses();
@@ -746,40 +755,49 @@ public class WsdlUtils
 		}
 		return newPolicy;
 	}
+
 	private static String checkIfWsaPolicy(String version, Element policy)
 	{
-//		Policy builtPolicy = new WsaPolicy().buildPolicy(policy.getTextContent());
-//		policy = WsaPolicy.normalize(policy);
-		
-		
+		// Policy builtPolicy = new
+		// WsaPolicy().buildPolicy(policy.getTextContent());
+		// policy = WsaPolicy.normalize(policy);
+
 		// check if found reference is addressing policy
-//		Element wsAddressing = XmlUtils.getFirstChildElementNS(policy, WsaUtils.WSAM_NAMESPACE, "Addressing");
-//		Element addressingPolicy = null;
-//		if (wsAddressing != null)
-//		{
-//			String optional = wsAddressing.getAttributeNS(WsaPolicy.WS_POLICY_NAMESPACE, "Optional");
-//			addressingPolicy = XmlUtils.getFirstChildElementNS(wsAddressing, WsaPolicy.WS_POLICY_NAMESPACE, "Policy");
-//			if (addressingPolicy != null)
-//			{
-//				if (StringUtils.isNullOrEmpty(optional) || optional.equals("false") || 
-//				(optional.equals("true") && SoapUI.getSettings().getBoolean(WsaSettings.ENABLE_FOR_OPTIONAL)) )
-//				{
-//					version = WsaVersionTypeConfig.X_200508.toString();
-//				}
-//				//check if policy has Anonymous
-//				Element anonymousElm = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(WsaPolicy.WSAM_NAMESPACE,"AnonymousResponses"));
-//				if (anonymousElm != null)
-//				{
-//					//TODO anonymous = required
-//				} else {
-//					Element nonAnonymousElement = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(WsaPolicy.WSAM_NAMESPACE,"NonAnonymousResponses"));
-//					if (nonAnonymousElement != null)
-//					{
-//						//TODO anonymous = prohibited
-//					}
-//				}
-//			}
-//		}
+		// Element wsAddressing = XmlUtils.getFirstChildElementNS(policy,
+		// WsaUtils.WSAM_NAMESPACE, "Addressing");
+		// Element addressingPolicy = null;
+		// if (wsAddressing != null)
+		// {
+		// String optional =
+		// wsAddressing.getAttributeNS(WsaPolicy.WS_POLICY_NAMESPACE, "Optional");
+		// addressingPolicy = XmlUtils.getFirstChildElementNS(wsAddressing,
+		// WsaPolicy.WS_POLICY_NAMESPACE, "Policy");
+		// if (addressingPolicy != null)
+		// {
+		// if (StringUtils.isNullOrEmpty(optional) || optional.equals("false") ||
+		// (optional.equals("true") &&
+		// SoapUI.getSettings().getBoolean(WsaSettings.ENABLE_FOR_OPTIONAL)) )
+		// {
+		// version = WsaVersionTypeConfig.X_200508.toString();
+		// }
+		// //check if policy has Anonymous
+		// Element anonymousElm =
+		// XmlUtils.getFirstChildElementNS(addressingPolicy, new
+		// QName(WsaPolicy.WSAM_NAMESPACE,"AnonymousResponses"));
+		// if (anonymousElm != null)
+		// {
+		// //TODO anonymous = required
+		// } else {
+		// Element nonAnonymousElement =
+		// XmlUtils.getFirstChildElementNS(addressingPolicy, new
+		// QName(WsaPolicy.WSAM_NAMESPACE,"NonAnonymousResponses"));
+		// if (nonAnonymousElement != null)
+		// {
+		// //TODO anonymous = prohibited
+		// }
+		// }
+		// }
+		// }
 		return version;
 	}
 
@@ -796,18 +814,22 @@ public class WsdlUtils
 			addressingPolicy = XmlUtils.getFirstChildElementNS(wsAddressing, PolicyUtils.WS_POLICY_NAMESPACE, "Policy");
 			if (addressingPolicy != null)
 			{
-				if (StringUtils.isNullOrEmpty(optional) || optional.equals("false") || 
-				(optional.equals("true") && SoapUI.getSettings().getBoolean(WsaSettings.ENABLE_FOR_OPTIONAL)) )
+				if (StringUtils.isNullOrEmpty(optional) || optional.equals("false")
+						|| (optional.equals("true") && SoapUI.getSettings().getBoolean(WsaSettings.ENABLE_FOR_OPTIONAL)))
 				{
 					version = WsaVersionTypeConfig.X_200508.toString();
 				}
-				//check if policy has Anonymous
-				Element anonymousElm = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(PolicyUtils.WSAM_NAMESPACE,"AnonymousResponses"));
+				// check if policy has Anonymous
+				Element anonymousElm = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(WsaUtils.WSAM_NAMESPACE,
+						"AnonymousResponses"));
 				if (anonymousElm != null)
 				{
 					anonymous = AnonymousTypeConfig.REQUIRED.toString();
-				} else {
-					Element nonAnonymousElement = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(PolicyUtils.WSAM_NAMESPACE,"NonAnonymousResponses"));
+				}
+				else
+				{
+					Element nonAnonymousElement = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(
+							WsaUtils.WSAM_NAMESPACE, "NonAnonymousResponses"));
 					if (nonAnonymousElement != null)
 					{
 						anonymous = AnonymousTypeConfig.PROHIBITED.toString();
@@ -817,6 +839,7 @@ public class WsdlUtils
 		}
 		return anonymous;
 	}
+
 	public static String getSoapEndpoint(Port port)
 	{
 		SOAPAddress soapAddress = WsdlUtils.getExtensiblityElement(port.getExtensibilityElements(), SOAPAddress.class);
@@ -1205,7 +1228,7 @@ public class WsdlUtils
 	{
 		// SOAP 1.1 specific handling
 		if (operation.getInterface().getSoapVersion() == SoapVersion.Soap11
-				&& StringUtils.hasContent(operation.getAction()))
+				&& StringUtils.hasContent(operation.getAction()) && SoapUI.getSettings().getBoolean(WsaSettings.SOAP_ACTION_OVERRIDES_WSA_ACTION))
 			return operation.getAction();
 
 		try
@@ -1221,7 +1244,6 @@ public class WsdlUtils
 			if (attrs == null || attrs.length == 0)
 				attrs = WsdlUtils.getExentsibilityAttributes(attributeExtensible, new QName(WsaUtils.WS_A_VERSION_200508,
 						"Action"));
-
 			if (attrs != null && attrs.length > 0)
 			{
 				return attrs[0];
@@ -1232,17 +1254,32 @@ public class WsdlUtils
 			Definition definition = iface.getWsdlContext().getDefinition();
 			String targetNamespace = definition.getTargetNamespace();
 			String portTypeName = iface.getBinding().getPortType().getQName().getLocalPart();
-			String operationName = output ? operation.getOutputName() : operation.getInputName();
-			if (operationName == null)
-				operationName = operation.getName() + (output ? "Response" : "Request");
+			String operationName = operation.getName();
+			if (!StringUtils.isNullOrEmpty(operationName))
+			{
+				Operation op = iface.getBinding().getPortType().getOperation(operationName, null, null);
+				if (op != null)
+				{
+					attributeExtensible = output ? op.getOutput() : op.getInput();
+					attrs = WsdlUtils.getExentsibilityAttributes(attributeExtensible, new QName(WsaUtils.WSAM_NAMESPACE,
+							"Action"));
+					if (attrs != null && attrs.length > 0)
+					{
+						return attrs[0];
+					}
+				}
+			}
+			String operationInOutName = output ? operation.getOutputName() : operation.getInputName();
+			if (operationInOutName == null)
+				operationInOutName = operation.getName() + (output ? "Response" : "Request");
 
 			StringBuffer result = new StringBuffer(targetNamespace);
 			if (targetNamespace.charAt(targetNamespace.length() - 1) != '/' && portTypeName.charAt(0) != '/')
 				result.append('/');
 			result.append(portTypeName);
-			if (portTypeName.charAt(portTypeName.length() - 1) != '/' && operationName.charAt(0) != '/')
+			if (portTypeName.charAt(portTypeName.length() - 1) != '/' && operationInOutName.charAt(0) != '/')
 				result.append('/');
-			result.append(operationName);
+			result.append(operationInOutName);
 
 			return result.toString();
 		}

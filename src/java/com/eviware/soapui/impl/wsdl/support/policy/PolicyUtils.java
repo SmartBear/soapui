@@ -19,7 +19,6 @@ import com.eviware.soapui.support.StringUtils;
 
 public class PolicyUtils
 {
-	public static final String WSAM_NAMESPACE = "http://www.w3.org/2007/05/addressing/metadata";
 	public final static String WS_POLICY_NAMESPACE = "http://schemas.xmlsoap.org/ws/2004/09/policy";
 	public final static String WS_SECURITY_NAMESPACE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
 
