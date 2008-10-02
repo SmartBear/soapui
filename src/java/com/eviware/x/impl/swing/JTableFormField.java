@@ -12,17 +12,12 @@
 
 package com.eviware.x.impl.swing;
 
-import java.awt.Color;
-import java.awt.Dimension;
-
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JScrollPane;
-import javax.swing.table.TableModel;
-
+import com.eviware.x.form.XFormTextField;
 import org.jdesktop.swingx.JXTable;
 
-import com.eviware.x.form.XFormTextField;
+import javax.swing.*;
+import javax.swing.table.TableModel;
+import java.awt.*;
 
 public class JTableFormField extends AbstractSwingXFormField<JComponent> implements XFormTextField
 {
@@ -30,7 +25,7 @@ public class JTableFormField extends AbstractSwingXFormField<JComponent> impleme
 
 	public JTableFormField(String description)
 	{
-		super( new JXTable() );
+		super( new JTable() );
 		
 		scrollPane = new JScrollPane( getTable() );
 		scrollPane.setPreferredSize(new Dimension( 350, 200 ));

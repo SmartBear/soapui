@@ -26,7 +26,6 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.jdesktop.swingx.JXTable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -110,13 +109,15 @@ public class PropertyHolderTable extends JPanel
 		return propertiesTable;
 	}
 	
-	public class PropertiesHolderJTable extends JXTable
+	public class PropertiesHolderJTable extends JTable
 	{
 		public PropertiesHolderJTable()
 		{
 			super( propertiesModel );
 			setSelectionMode( ListSelectionModel.SINGLE_SELECTION  );
-			setHorizontalScrollEnabled(true);
+//         setAutoStartEditOnKeyStroke( true );
+         setSurrendersFocusOnKeystroke( true );
+//			setHorizontalScrollEnabled(true);
 		}
 		
 		public PropertyModelItem getTestProperty()
