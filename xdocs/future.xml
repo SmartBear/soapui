@@ -6,7 +6,7 @@
     <body>
 		<section name="soapUI Future Plans">
 		<subsection name="soapUI Release plan"> 
-		<p>The following features have been considered for the upcoming version 1.8:</p>
+		<p>The following features have been considered for the upcoming version:</p>
 	    <ul>
 			<li>Improved WS-Security support</li>
 		    <li>Improved Endpoint management</li>
@@ -17,8 +17,7 @@
 		 <li>add possibility to label endpoints for readability</li>
 		 <li>reload-project / file-system monitoring</li>
 		 <li>option to reload schemas on run TestCase</li>
-		 <li>association of request credentials with an endpoint (so all requests to that endpoint use 
-		 these same credentials) </li>
+
 		 </ul>
 		 <p>Above improvements will be rolled out in minor releases during the coming months. Let us know if you have 
 		 any wishes/suggestions that should be included!</p>
@@ -32,13 +31,13 @@
 		 <p>Some of the features currently being considered (in no special order, let us know what you prefer!):</p>
 		 <ul>
 		 <li>Validations for WS-Security compliance, etc</li>
-		 <li>Request generation/submittal support for WS-Addressing, WS-Security, WS-RM, etc..</li>
+		 <li>Request generation/submittal support for WS-Security, WS-RM, etc..</li>
 		 <li>UDDI/JAXR support for discovering web-services</li>
 		 <li>Schema-aware XML-editor</li>
+       <li>Code-aware Groovy editor</li>
 		 <li>WSDL authoring support (currently WSDLs/Schemas can not be modified)</li>
-		 <li>Improved support for SOAP-Encoding</li>
+		 <li>Improved reporting</li>
 		 <li>WSDL2 support</li>
-		 <li>Support for HTTP bindings</li>
 		 <li>JMS/JBI support</li>
 		 </ul>
 		</subsection>
