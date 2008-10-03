@@ -522,7 +522,6 @@ public class WsaUtils
 		public Element createRelatesToElement(String elementName, Element addToElement, String relationshipType,
 				String relatesTo)
 		{
-			Element wsAddressElm = addToElement.getOwnerDocument().createElementNS(wsaVersionNameSpace, "wsa:Address");
 			Element wsaElm = addToElement.getOwnerDocument().createElementNS(wsaVersionNameSpace, elementName);
 			wsaElm.setAttribute("RelationshipType", relationshipType);
 			Text txtElm = addToElement.getOwnerDocument().createTextNode(relatesTo);
@@ -530,56 +529,9 @@ public class WsaUtils
 			{
 				wsaElm.setAttributeNS(soapVersion.getEnvelopeNamespace(), "mustUnderstand", mustUnderstand ? "1" : "0");
 			}
-			wsAddressElm.appendChild(txtElm);
-			wsaElm.appendChild(wsAddressElm);
+			wsaElm.appendChild(txtElm);
 			return wsaElm;
 		}
-	}
-
-	private boolean getExistingWsAddressing(String content)
-	{
-		boolean appliedWsAddressing = false;
-		try
-		{
-			xmlHeaderObject = (XmlObject) SoapUtils.getHeaderElement(xmlContentObject, soapVersion, true);
-			String currentWsaVersionNameSpace = ((Element) xmlHeaderObject.getDomNode()).getAttribute("xmlns:wsa");
-			NodeList headerElements = ((Element) xmlHeaderObject.getDomNode()).getChildNodes();
-			headerWsaElementList = new ArrayList<Node>();
-			for (int i = 0; i < headerElements.getLength(); i++)
-			{
-				Node childNode = headerElements.item(i);
-				String namespaceURI = childNode.getNamespaceURI();
-				if (!StringUtils.isNullOrEmpty(namespaceURI) && namespaceURI.equals(currentWsaVersionNameSpace))
-				{
-					headerWsaElementList.add(childNode);
-				}
-			}
-			if (headerWsaElementList.size() > 0)
-			{
-				appliedWsAddressing = true;
-			}
-		}
-		catch (XmlException e)
-		{
-			SoapUI.logError(e);
-		}
-		return appliedWsAddressing;
-	}
-
-	private String cleanExistingWsaHeaders(String content)
-	{
-		Iterator<Node> iter = headerWsaElementList.iterator();
-		while (iter.hasNext())
-		{
-			((Element) xmlHeaderObject.getDomNode()).removeChild((Node) iter.next());
-
-		}
-
-		((Element) xmlHeaderObject.getDomNode()).removeAttribute("xmlns:wsa");
-
-		content = xmlContentObject.xmlText();
-
-		return content;
 	}
 
 	public static boolean isAnonymousAddress(String address, String wsaVersionNamespace)
