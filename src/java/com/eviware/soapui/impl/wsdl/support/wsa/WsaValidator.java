@@ -194,41 +194,53 @@ public class WsaValidator
 			Element msgNode = XmlUtils.getFirstChildElementNS(header, wsaVersionNameSpace, "MessageID");
 			if (msgNode == null)
 			{
-				throw new AssertionException(new AssertionError("WS-A MessageID property is not specified"));
+//				throw new AssertionException(new AssertionError("WS-A MessageID property is not specified"));
+				cumulativeErrorMsg.append("WS-A MessageID property is not specified. ");
 			}
 			String msgValue = XmlUtils.getElementText(msgNode);
 			if (StringUtils.isNullOrEmpty(msgValue))
 			{
-				throw new AssertionException(new AssertionError("WS-A MessageID property is empty"));
+//				throw new AssertionException(new AssertionError("WS-A MessageID property is empty"));
+				cumulativeErrorMsg.append("WS-A MessageID property is empty");
 			}
 
 			// ReplyTo is Mandatory
 			Element replyToNode = XmlUtils.getFirstChildElementNS(header, wsaVersionNameSpace, "ReplyTo");
 			if (replyToNode == null)
 			{
-				throw new AssertionException(new AssertionError("WS-A ReplyTo property is not specified"));
+//				throw new AssertionException(new AssertionError("WS-A ReplyTo property is not specified"));
+				cumulativeErrorMsg.append("WS-A ReplyTo property is not specified. ");
 			}
 			Element addressNode = XmlUtils.getFirstChildElementNS(replyToNode, wsaVersionNameSpace, "Address");
 			if (addressNode == null)
 			{
-				throw new AssertionException(new AssertionError("WS-A ReplyTo Address property is not specified"));
+//				throw new AssertionException(new AssertionError("WS-A ReplyTo Address property is not specified"));
+				cumulativeErrorMsg.append("WS-A ReplyTo Address property is not specified. ");
 			}
 			String replyToAddressValue = XmlUtils.getElementText(addressNode);
 			if (StringUtils.isNullOrEmpty(replyToAddressValue))
 			{
-				throw new AssertionException(new AssertionError("WS-A ReplyTo Address property is empty"));
+//				throw new AssertionException(new AssertionError("WS-A ReplyTo Address property is empty"));
+				cumulativeErrorMsg.append("WS-A ReplyTo Address property is empty. ");
 			} else {
             // check for anonymous
             if( AnonymousTypeConfig.PROHIBITED.toString().equals( ((WsdlMessageExchange) messageExchange).getOperation().getAnonymous() )
                     && WsaUtils.isAnonymousAddress(replyToAddressValue,wsaVersionNameSpace) )
             {
-               throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader ReplyTo , Anonymous addresses are prohibited" ) );
+//               throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader ReplyTo , Anonymous addresses are prohibited" ) );
+            	cumulativeErrorMsg.append("WS-A InvalidAddressingHeader ReplyTo , Anonymous addresses are prohibited. ");
             } else if (AnonymousTypeConfig.REQUIRED.toString().equals( ((WsdlMessageExchange) messageExchange).getOperation().getAnonymous() )
                   && !(WsaUtils.isAnonymousAddress(replyToAddressValue,wsaVersionNameSpace)|| WsaUtils.isNoneAddress(replyToAddressValue,wsaVersionNameSpace)))
             {
-            	throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader ReplyTo , Anonymous addresses are required" ) );
+//            	throw new AssertionException( new AssertionError( "WS-A InvalidAddressingHeader ReplyTo , Anonymous addresses are required" ) );
+            	cumulativeErrorMsg.append("WS-A InvalidAddressingHeader ReplyTo , Anonymous addresses are required. ");
             }
 			}
+		}
+      String cumulativeError = cumulativeErrorMsg.toString();
+      if (!StringUtils.isNullOrEmpty(cumulativeError))
+		{
+         throw new AssertionException(new AssertionError(cumulativeError));
 		}
 	}
 
@@ -261,7 +273,7 @@ public class WsaValidator
 		      if (!actionValue.equals(defaultWsdlAction))
 				{
 		//      	throw new AssertionException( new AssertionError( "WS-A Action property has the wrong value" ) );
-		      	cumulativeErrorMsg.append("WS-A Action property has the wrong value. ");
+		      	cumulativeErrorMsg.append("WS-A Action property should be " + defaultWsdlAction + ". ");
 				}
 	      }
       }
@@ -271,29 +283,27 @@ public class WsaValidator
 		Element relatesToNode = XmlUtils.getFirstChildElementNS(header, wsaVersionNameSpace, "RelatesTo");
 		if (relatesToNode == null)
 		{
-//			throw new AssertionException(new AssertionError("WS-A RelatesTo property is not specified"));
 			cumulativeErrorMsg.append("WS-A RelatesTo property is not specified. ");
 		} else {
-			String relationshipType = relatesToNode.getAttribute("RelationshipType");
-			if (StringUtils.isNullOrEmpty(relationshipType))
+			String relatesToAddressesValue = XmlUtils.getElementText(relatesToNode);
+			if (StringUtils.isNullOrEmpty(relatesToAddressesValue))
 			{
-	//			throw new AssertionException(new AssertionError("WS-A RelationshipType is not specified"));
-				cumulativeErrorMsg.append("WS-A RelationshipType is not specified. ");
-			} else {
-				Element relatesToAddressNode = XmlUtils.getFirstChildElementNS(relatesToNode, wsaVersionNameSpace, "Address");
-				if (relatesToAddressNode == null)
-				{
-		//			throw new AssertionException(new AssertionError("WS-A RelatesTo Address property is not specified"));
-					cumulativeErrorMsg.append("WS-A RelatesTo Address property is not specified. ");
-				} else {
-					String relatesToAddressesValue = XmlUtils.getElementText(relatesToAddressNode);
-					if (StringUtils.isNullOrEmpty(relatesToAddressesValue))
-					{
-			//			throw new AssertionException(new AssertionError("WS-A RelatesTo Address property is empty"));
-						cumulativeErrorMsg.append("WS-A RelatesTo Address property is empty. ");
-					}
-				}
+				cumulativeErrorMsg.append("WS-A RelatesTo property is empty. ");
 			}
+			//When absent, the implied value of this attribute is "http://www.w3.org/2005/08/addressing/reply".
+//			String relationshipType = relatesToNode.getAttribute("RelationshipType");
+//			if (StringUtils.isNullOrEmpty(relationshipType))
+//			{
+//				relationshipType = relatesToNode.getAttributeNS(WsaUtils.WS_A_VERSION_200508, "RelationshipType");
+//				if (StringUtils.isNullOrEmpty(relationshipType))
+//				{
+//					relationshipType = relatesToNode.getAttributeNS(WsaUtils.WS_A_VERSION_200408, "RelationshipType");
+//					if (StringUtils.isNullOrEmpty(relationshipType))
+//					{
+//						cumulativeErrorMsg.append("WS-A RelationshipType is not specified. ");
+//					}
+//				} 
+//			} 
 		}
       // if fault_to is specified check if anonymous allowed
       Element replyToNode = XmlUtils.getFirstChildElementNS( header, wsaVersionNameSpace, "ReplyTo" );
@@ -320,7 +330,10 @@ public class WsaValidator
             }
          }
       }
-      throw new AssertionException(new AssertionError(cumulativeErrorMsg.toString()));
+      String cumulativeError = cumulativeErrorMsg.toString();
+      if (!StringUtils.isNullOrEmpty(cumulativeError))
+		{
+         throw new AssertionException(new AssertionError(cumulativeError));
+		}
 	}
-
 }
