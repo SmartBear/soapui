@@ -17,7 +17,7 @@
 	    		</column>
 	    	</columns>
 		</subsection>  
-		--------------------------------------
+
 		<subsection name="soapUI - How to synchronize using threads during load test">
 	    	<columns>
 	    		<column width="200">
@@ -30,8 +30,6 @@
 	    	</columns>
 		</subsection> 
 		
-		
-		---------------------------------------
 	    <subsection name="Easily test Web services With soapUI">
 	    	<columns>
 	    		<column width="200">
