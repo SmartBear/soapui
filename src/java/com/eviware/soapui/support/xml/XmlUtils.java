@@ -396,7 +396,7 @@ public final class XmlUtils
                   for( int c = 0; c < attributes.getLength(); c++ )
                   {
                      Attr attr = (Attr) attributes.item( c );
-                     elm2.setAttribute( attr.getNodeName(), attr.getNodeValue() );
+                     elm2.setAttributeNodeNS( (Attr) elm2.getOwnerDocument().importNode( attr, true ) );
                   }
 
                   // transfer text

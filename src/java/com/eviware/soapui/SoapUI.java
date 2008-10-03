@@ -114,6 +114,10 @@ public class SoapUI
    private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
    public static final String BUILDINFO_RESOURCE = "/com/eviware/soapui/resources/conf/buildinfo.txt";
 
+   public static String PUSH_PAGE_URL = "http://www.soapui.org/appindex/soapui_start.htm";
+   public static String FRAME_ICON = "/16-perc.gif";
+   
+
    // ------------------------------ FIELDS ------------------------------
 
    //	private static SoapUI instance;
@@ -477,6 +481,8 @@ public class SoapUI
 
       SoapUISplash splash = new SoapUISplash( splashImage, frame );
 
+      frame.setIconImage( UISupport.createImageIcon( FRAME_ICON ).getImage() );
+
       isStandalone = true;
       soapUICore = core;
 
@@ -802,8 +808,6 @@ public class SoapUI
          showPushPage();
       }
    }
-
-   public static String PUSH_PAGE_URL = "http://www.soapui.org/appindex/soapui_start.htm";
 
    public static void showPushPage()
    {

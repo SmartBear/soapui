@@ -77,18 +77,18 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 		} );
 		
 		for( int c = 0; c < table.getColumnCount(); c++ )
-			table.getColumn( c ).setHeaderRenderer( new MetricsPanel.InternalHeaderRenderer( getBackground() ) );
+			table.getColumnModel().getColumn( c ).setHeaderRenderer( new MetricsPanel.InternalHeaderRenderer( getBackground() ) );
 		
-		table.getColumn( 0 ).setPreferredWidth( 250 );
+		table.getColumnModel().getColumn( 0 ).setPreferredWidth( 250 );
 		JComboBox wssTypeCombo = new JComboBox( new String[] {WsdlRequest.PW_TYPE_NONE, WsdlRequest.PW_TYPE_TEXT, WsdlRequest.PW_TYPE_DIGEST});
 		wssTypeCombo.setEditable( true );
 
 		if( iface instanceof WsdlInterface )
 		{
-			table.getColumn( 4 ).setCellEditor( new DefaultCellEditor( wssTypeCombo) );
-			table.getColumn( 6 ).setCellEditor( new OutgoingWssCellEditor( ((WsdlInterface)iface).getProject().getWssContainer() ) );
-			table.getColumn( 7 ).setCellEditor( new IncomingWssCellEditor( ((WsdlInterface)iface).getProject().getWssContainer() ) );
-			table.getColumn( 8 ).setCellEditor( new DefaultCellEditor(
+			table.getColumnModel().getColumn( 4 ).setCellEditor( new DefaultCellEditor( wssTypeCombo) );
+			table.getColumnModel().getColumn( 6 ).setCellEditor( new OutgoingWssCellEditor( ((WsdlInterface)iface).getProject().getWssContainer() ) );
+			table.getColumnModel().getColumn( 7 ).setCellEditor( new IncomingWssCellEditor( ((WsdlInterface)iface).getProject().getWssContainer() ) );
+			table.getColumnModel().getColumn( 8 ).setCellEditor( new DefaultCellEditor(
 						new JComboBox( new String[] {
 									EndpointConfig.Mode.OVERRIDE.toString(),
 									EndpointConfig.Mode.COMPLEMENT.toString(),

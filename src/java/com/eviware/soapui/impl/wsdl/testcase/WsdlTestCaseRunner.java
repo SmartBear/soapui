@@ -256,7 +256,7 @@ public class WsdlTestCaseRunner implements Runnable, TestRunner
       TestStepResult stepResult = testStep.run(this, runContext);
       testStepResults.add(stepResult);
       resultCount++;
-      enforceMaxSize();
+      enforceMaxResults( testCase.getMaxResults());
 
       for (int i = 0; i < listeners.length; i++)
       {
@@ -368,9 +368,8 @@ public class WsdlTestCaseRunner implements Runnable, TestRunner
       gotoStepIndex = index;
    }
 
-   private void enforceMaxSize()
+   public void enforceMaxResults( long maxResults )
    {
-      int maxResults = testCase.getMaxResults();
       if (maxResults < 1)
          return;
 

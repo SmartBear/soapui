@@ -24,21 +24,20 @@ import java.util.List;
 public class ResolveContext<T extends AbstractWsdlModelItem<?>>
 {
    private List<PathToResolve> pathsToResolve = new ArrayList<PathToResolve>();
-   private final T project;
+   private final T modelItem;
 
-   public ResolveContext( T project )
+   public ResolveContext( T modelItem )
    {
-      this.project = project;
+      this.modelItem = modelItem;
    }
 
-   public T getProject()
+   public T getModelItem()
    {
-      return project;
+      return modelItem;
    }
 
    public PathToResolve addPathToResolve(
-           AbstractWsdlModelItem<?> owner, String description, String path,
-           SoapUIAction<AbstractWsdlModelItem<?>> defaultAction
+           AbstractWsdlModelItem owner, String description, String path, SoapUIAction defaultAction
    )
    {
       PathToResolve pathToResolve = new PathToResolve( owner, description, path, defaultAction );
@@ -47,7 +46,7 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
    }
 
    public PathToResolve addPathToResolve(
-           AbstractWsdlModelItem<?> owner, String description, String path,
+           AbstractWsdlModelItem owner, String description, String path,
            Resolver resolver
    )
    {
@@ -59,14 +58,14 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
 
    public class PathToResolve
    {
-      private final AbstractWsdlModelItem<?> owner;
+      private final AbstractWsdlModelItem owner;
       private final String description;
       private List<Resolver> resolvers = new ArrayList<Resolver>();
       private final String path;
-      private SoapUIAction<AbstractWsdlModelItem<?>> defaultAction;
+      private SoapUIAction defaultAction;
       private Resolver resolver;
 
-      public PathToResolve( AbstractWsdlModelItem<?> owner, String description, String path, SoapUIAction<AbstractWsdlModelItem<?>> defaultAction )
+      public PathToResolve( AbstractWsdlModelItem owner, String description, String path, SoapUIAction defaultAction )
       {
          this.owner = owner;
          this.description = description;
@@ -79,7 +78,7 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
          return defaultAction;
       }
 
-      public void setDefaultAction( SoapUIAction<AbstractWsdlModelItem<?>> defaultAction )
+      public void setDefaultAction( SoapUIAction<?> defaultAction )
       {
          this.defaultAction = defaultAction;
       }
@@ -231,11 +230,11 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
       {
          return title;
       }
-      
+
       @Override
       public String toString()
       {
-      	return (String)getDescription();
+         return (String) getDescription();
       }
    }
 
@@ -280,9 +279,10 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
       {
          return title;
       }
-      
-      public String toString() {
-      	return (String) getDescription();
+
+      public String toString()
+      {
+         return (String) getDescription();
       }
    }
 }

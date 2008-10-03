@@ -12,15 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.loadtest;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.LoadTestConfig;
 import com.eviware.soapui.config.LoadTestLimitTypesConfig;
@@ -29,13 +20,7 @@ import com.eviware.soapui.impl.wsdl.loadtest.log.LoadTestLogMessageEntry;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.testsuite.LoadTest;
-import com.eviware.soapui.model.testsuite.LoadTestRunListener;
-import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunListener;
-import com.eviware.soapui.model.testsuite.TestRunner;
-import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
@@ -43,6 +28,10 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.x.dialogs.Worker;
 import com.eviware.x.dialogs.XProgressDialog;
 import com.eviware.x.dialogs.XProgressMonitor;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.*;
 
 /**
  * TestRunner for load-tests. 
@@ -609,6 +598,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		
 		// dont discard.. the WsdlLoadTests internal listener will discard after asserting..
 		tc.setDiscardOkResults( false );
+      tc.setMaxResults( 0 );
 		return tc;
 	}
 

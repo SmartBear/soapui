@@ -105,13 +105,13 @@ public class WSSTabPanel extends JPanel
       } );
 
       incomingWssDecryptionCryptoComboBox = new JComboBox( new KeystoresComboBoxModel( wssContainer, null ) );
-      incomingWssTable.getColumn( 1 ).setCellEditor( new DefaultCellEditor( incomingWssDecryptionCryptoComboBox ) );
+      incomingWssTable.getColumnModel().getColumn( 1 ).setCellEditor( new DefaultCellEditor( incomingWssDecryptionCryptoComboBox ) );
 
       incomingWssSignatureCryptoComboBox = new JComboBox( new KeystoresComboBoxModel( wssContainer, null ) );
-      incomingWssTable.getColumn( 2 ).setCellEditor( new DefaultCellEditor( incomingWssSignatureCryptoComboBox ) );
+      incomingWssTable.getColumnModel().getColumn( 2 ).setCellEditor( new DefaultCellEditor( incomingWssSignatureCryptoComboBox ) );
 
-      incomingWssTable.getColumn( 3 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
-      incomingWssTable.getColumn( 3 ).setCellRenderer( new PasswordTableCellRenderer() );
+      incomingWssTable.getColumnModel().getColumn( 3 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
+      incomingWssTable.getColumnModel().getColumn( 3 ).setCellRenderer( new PasswordTableCellRenderer() );
 
       p.add( new JScrollPane( incomingWssTable ), BorderLayout.CENTER );
       panel.add( p, BorderLayout.CENTER );
@@ -150,8 +150,8 @@ public class WSSTabPanel extends JPanel
          }
       } );
 
-      outgoingWssTable.getColumn( 2 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
-      outgoingWssTable.getColumn( 2 ).setCellRenderer( new PasswordTableCellRenderer() );
+      outgoingWssTable.getColumnModel().getColumn( 2 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
+      outgoingWssTable.getColumnModel().getColumn( 2 ).setCellRenderer( new PasswordTableCellRenderer() );
 
       JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( outgoingWssTable ), buildOutgoingWssDetails() );
       split.setDividerLocation( 140 );
@@ -281,10 +281,10 @@ public class WSSTabPanel extends JPanel
 //		JComboBox comboBox = new JComboBox( providers.toArray() );
 //		cryptosTable.getColumn( 5 ).setCellEditor( new DefaultCellEditor( comboBox ) );
 
-      cryptosTable.getColumn( 2 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
-      cryptosTable.getColumn( 2 ).setCellRenderer( new PasswordTableCellRenderer() );
-      cryptosTable.getColumn( 4 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
-      cryptosTable.getColumn( 4 ).setCellRenderer( new PasswordTableCellRenderer() );
+      cryptosTable.getColumnModel().getColumn( 2 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
+      cryptosTable.getColumnModel().getColumn( 2 ).setCellRenderer( new PasswordTableCellRenderer() );
+      cryptosTable.getColumnModel().getColumn( 4 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
+      cryptosTable.getColumnModel().getColumn( 4 ).setCellRenderer( new PasswordTableCellRenderer() );
 
       p.add( new JScrollPane( cryptosTable ), BorderLayout.CENTER );
 

@@ -121,7 +121,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 	public WsdlProject(String projectFile, String projectPassword)
 	{
-		this(projectFile, (WorkspaceImpl) null, true, true, null, projectPassword);
+		this(projectFile, null, true, true, null, projectPassword);
 	}
 
 	public WsdlProject(WorkspaceImpl workspace)

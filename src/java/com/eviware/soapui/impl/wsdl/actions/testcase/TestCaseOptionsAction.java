@@ -18,12 +18,7 @@ import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.types.StringToStringMap;
-import com.eviware.x.form.XForm;
-import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.XFormDialogBuilder;
-import com.eviware.x.form.XFormFactory;
-import com.eviware.x.form.XFormField;
-import com.eviware.x.form.XFormFieldListener;
+import com.eviware.x.form.*;
 import com.eviware.x.form.XForm.FieldType;
 
 /**
@@ -71,7 +66,7 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase>
 			form.addCheckBox( DISCARD_OK_RESULTS, "Discards successfull testresults to preserve memory" );
 			form.addTextField( SOCKET_TIMEOUT, "Socket timeout in milliseconds", FieldType.TEXT );
 			form.addTextField( TESTCASE_TIMEOUT, "Timeout in milliseconds for entire TestCase", FieldType.TEXT );
-			form.addTextField(MAXRESULTS, "Maximum number of results to keep durin a run", FieldType.TEXT);
+			form.addTextField(MAXRESULTS, "Maximum number of TestStep Results to keep in memory during a run", FieldType.TEXT);
 
 			dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.TESTCASEOPTIONS_HELP_URL ), 
 					"Specify general options for this TestCase", UISupport.OPTIONS_ICON );

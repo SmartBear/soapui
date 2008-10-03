@@ -113,8 +113,10 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
    public synchronized boolean load(T2 wsdlLoader) throws Exception
    {
       if (!loaded && iface != null)
+      {
          loaded = definitionCache.containsKey(url);
-
+      }
+      
       if (loaded)
          return true;
 
@@ -154,7 +156,8 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
    public SchemaTypeLoader getSchemaTypeLoader() throws Exception
    {
       loadIfNecessary();
-      return iface != null ? definitionCache.get(url).getSchemaTypeLoader() : null;
+      return iface != null ? definitionCache.get(url).getSchemaTypeLoader() :
+              definition != null ? definition.getSchemaTypeLoader() : null;
    }
 
    public SchemaException getSchemaException()
