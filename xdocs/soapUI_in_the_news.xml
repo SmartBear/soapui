@@ -17,7 +17,21 @@
 	    		</column>
 	    	</columns>
 		</subsection>  
+		--------------------------------------
+		<subsection name="soapUI - How to synchronize using threads during load test">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/darshan.gif" alt="How to synchronize using threads during load test"/>
+	    		</column>
+	    		<column align="left">
+	    			<p>The post starts: "I use soapUI to test webservices. I was facing this..." <br/>
+	    			<a href="http://groovyinsoapui.wordpress.com/">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+		</subsection> 
 		
+		
+		---------------------------------------
 	    <subsection name="Easily test Web services With soapUI">
 	    	<columns>
 	    		<column width="200">
