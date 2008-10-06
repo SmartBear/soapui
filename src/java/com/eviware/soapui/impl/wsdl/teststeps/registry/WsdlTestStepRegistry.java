@@ -40,6 +40,7 @@ public class WsdlTestStepRegistry
 		//addFactory( new AsyncResponseStepFactory() );
 		addFactory( new RestRequestStepFactory() );
       addFactory( new HttpRequestStepFactory() );
+      addFactory( new WsdlMockResponseStepFactory() );
    }
 	
 	public WsdlTestStepFactory getFactory( String type )

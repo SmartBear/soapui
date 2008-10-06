@@ -11,29 +11,15 @@
  */
 package com.eviware.soapui.support.dnd;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.GradientPaint;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.SystemColor;
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.support.dnd.handlers.*;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DragGestureEvent;
-import java.awt.dnd.DragGestureListener;
-import java.awt.dnd.DragSource;
-import java.awt.dnd.DragSourceDragEvent;
-import java.awt.dnd.DragSourceDropEvent;
-import java.awt.dnd.DragSourceEvent;
-import java.awt.dnd.DragSourceListener;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
+import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -42,26 +28,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.Timer;
-import javax.swing.ToolTipManager;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.support.dnd.handlers.InterfaceToProjectDropHandler;
-import com.eviware.soapui.support.dnd.handlers.MockServiceToProjectDropHandler;
-import com.eviware.soapui.support.dnd.handlers.OperationToMockServiceDropHandler;
-import com.eviware.soapui.support.dnd.handlers.RequestToMockOperationDropHandler;
-import com.eviware.soapui.support.dnd.handlers.RequestToTestCaseDropHandler;
-import com.eviware.soapui.support.dnd.handlers.RequestToTestStepDropHandler;
-import com.eviware.soapui.support.dnd.handlers.RequestToTestStepsDropHandler;
-import com.eviware.soapui.support.dnd.handlers.TestCaseToProjectDropHandler;
-import com.eviware.soapui.support.dnd.handlers.TestCaseToTestCaseDropHandler;
-import com.eviware.soapui.support.dnd.handlers.TestCaseToTestSuiteDropHandler;
-import com.eviware.soapui.support.dnd.handlers.TestStepToTestCaseDropHandler;
-import com.eviware.soapui.support.dnd.handlers.TestStepToTestStepDropHandler;
-import com.eviware.soapui.support.dnd.handlers.TestStepToTestStepsDropHandler;
-import com.eviware.soapui.support.dnd.handlers.TestSuiteToProjectDropHandler;
 
 public class SoapUIDragAndDropHandler implements DragGestureListener, DragSourceListener
 {
@@ -91,6 +57,9 @@ public class SoapUIDragAndDropHandler implements DragGestureListener, DragSource
 		SoapUIDragAndDropHandler.addDropHandler( new RequestToMockOperationDropHandler() );
 		SoapUIDragAndDropHandler.addDropHandler( new MockServiceToProjectDropHandler() );
 		SoapUIDragAndDropHandler.addDropHandler( new OperationToMockServiceDropHandler() );
+      SoapUIDragAndDropHandler.addDropHandler( new MockResponseToTestCaseDropHandler() );
+      SoapUIDragAndDropHandler.addDropHandler( new MockResponseToTestStepDropHandler() );
+      SoapUIDragAndDropHandler.addDropHandler( new MockResponseToTestStepsDropHandler() );
 	}
 
 	@SuppressWarnings("unchecked")

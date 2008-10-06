@@ -93,5 +93,6 @@ public class PanelBuilderRegistry
 		register( PropertyTransfersTestStep.class, new PropertyTransfersTestStepPanelBuilder() );
 		register( WsdlRunTestCaseTestStep.class, new WsdlRunTestCaseTestStepPanelBuilder() );
 		register( WsdlAsyncResponseTestStep.class, new AsyncResponseStepPanelBuilder() );
+      register( WsdlMockResponseTestStep.class, new MockResponseStepPanelBuilder() );
 	}
 }

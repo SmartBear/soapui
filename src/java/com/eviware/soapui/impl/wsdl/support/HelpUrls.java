@@ -40,7 +40,14 @@ public interface HelpUrls
 	public static final String GROOVYSTEP_HELP_URL = HELP_URL_ROOT + "functional/groovystep.html";
 	public static final String TESTREQUEST_HELP_URL = HELP_URL_ROOT + "functional/testrequests.html";
 	public static final String LOADTEST_HELP_URL = HELP_URL_ROOT + "loadtest/index.html";
+   public static final String MOCKRESPONSESTEP_HELP_URL = HELP_URL_ROOT + "functional/mockresponsestep.html";
+   public static final String CREATEMOCKRESPONSESTEP_HELP_URL = "functional/mockresponse.html";
 
+   public static final String ADDREQUESTASMOCKRESPONSESTEP_HELP_URL = HELP_URL_ROOT +"functional/mockresponse.html";
+   public static final String ADDMOCKRESPONSETOTESTCASE_HELP_URL = HELP_URL_ROOT +"functional/mockresponse.html";
+   public static final String ADDMOCKOPERATIONASMOCKRESPONSESTEP_HELP_URL = HELP_URL_ROOT +"functional/mockresponse.html";
+   public static final String SETMOCKOPERATION_HELP_URL = HELP_URL_ROOT +"functional/mockresponsestep.html#Set_Mock_Operation";
+   
 	public static final String USERGUIDE_HELP_URL = HELP_URL_ROOT + "index.html";
 	public static final String GETTINGSTARTED_HELP_URL = "http://www.soapui.org/gettingstarted/index.html";
 	public static final String GOTOSTEPEDITOR_HELP_URL = HELP_URL_ROOT + "functional/gotostep.html#The_Conditional_Goto_Editor";

@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.panels.request;
 
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.actions.request.AddRequestAsMockResponseStepAction;
 import com.eviware.soapui.impl.wsdl.actions.request.AddRequestToTestCaseAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
@@ -29,6 +30,7 @@ import javax.swing.*;
 public class WsdlRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel<WsdlRequest,WsdlRequest>
 {
 	private JButton addToTestCaseButton;
+   private JButton addAsMockResponseStepToTestCaseButton;
 	
 	public WsdlRequestDesktopPanel(WsdlRequest request)
 	{
@@ -54,11 +56,19 @@ public class WsdlRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel<Wsd
 	{
 		super.setEnabled(enabled);
 		addToTestCaseButton.setEnabled(enabled);
+      addAsMockResponseStepToTestCaseButton.setEnabled(enabled);
 	}
 
 	protected void insertButtons(JXToolBar toolbar)
 	{
 		toolbar.add(addToTestCaseButton);
+
 		super.insertButtons(toolbar);
+
+      AbstractAction delegate = SwingActionDelegate.createDelegate(
+            AddRequestAsMockResponseStepAction.SOAPUI_ACTION_ID, getRequest(), null, "/addAsMockResponseStep.gif");
+      addAsMockResponseStepToTestCaseButton = createActionButton( delegate, true );
+
+		toolbar.add(addAsMockResponseStepToTestCaseButton);
 	}
 }

@@ -94,6 +94,7 @@
 	<tns:action id="CloneRequestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.request.CloneRequestAction"/>
 	<tns:action id="RenameRequestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.request.RenameRequestAction"/>
 	<tns:action id="DeleteRequestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.request.DeleteRequestAction"/>
+   <tns:action id="AddRequestAsMockResponseStepAction" actionClass="com.eviware.soapui.impl.wsdl.actions.request.AddRequestAsMockResponseStepAction"/>
 
 	<!-- TestSuite Actions -->
 	<tns:action id="AddNewTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction"/>
@@ -162,6 +163,7 @@
 	<tns:action id="RenameMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.RenameMockOperationAction"/>
 	<tns:action id="ChangeMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.ChangeMockOperationAction"/>
 	<tns:action id="DeleteMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.DeleteMockOperationAction"/>
+   <tns:action id="AddOperationAsMockResponseStepAction"	actionClass="com.eviware.soapui.impl.wsdl.actions.operation.AddOperationAsMockResponseStepAction"/>
 
 	<!-- MockResponse Actions -->
 	<tns:action id="OpenRequestForMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.OpenRequestForMockResponseAction"/>
@@ -169,6 +171,9 @@
 	<tns:action id="CloneMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.CloneMockResponseAction"/>
 	<tns:action id="RenameMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.RenameMockResponseAction"/>
 	<tns:action id="DeleteMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.DeleteMockResponseAction"/>
+   <tns:action id="AddMockResponseToTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.AddMockResponseToTestCaseAction"/>
+
+   <tns:action id="SetMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.SetMockOperationAction"/>
 
 	<!-- AsyncResponse Actions -->
 	<tns:action id="SetAsyncResponseMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.SetAsyncResponseMockOperationAction"/>
@@ -316,6 +321,7 @@
  	<!-- WsdlOperation ActionGroup -->
  	<tns:actionGroup name="Operation Actions" id="WsdlOperationActions">
 		<tns:actionMapping actionId="AddOperationToMockServiceAction" iconPath="/addToMockService.gif"/>
+      <tns:actionMapping actionId="AddOperationAsMockResponseStepAction"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="NewRequestAction" keyStroke="menu N"/>
 		<tns:actionMapping actionId="RelabelOperationAction" keyStroke="F2"/>
@@ -345,6 +351,7 @@
 		<tns:actionMapping actionId="SeperatorAction"/>
  		<tns:actionMapping actionId="AddRequestToTestCaseAction" keyStroke="menu alt A" iconPath="/addToTestCase.gif"/>
 		<tns:actionMapping actionId="AddRequestToMockServiceAction" iconPath="/addToMockService.gif"/>
+      <tns:actionMapping actionId="AddRequestAsMockResponseStepAction"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="CloneRequestAction" keyStroke="F9" iconPath="/clone_request.gif"/>
 		<tns:actionMapping actionId="RenameRequestAction" keyStroke="F2"/>
@@ -516,6 +523,15 @@
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/asyncresponse.html"/>
 	</tns:actionGroup>
 
+   <tns:actionGroup name="WsdlMockResponseTestStep Actions" id="WsdlMockResponseTestStepActions"
+		class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup"
+		default="ConfigureDataSourceLoopStepAction">
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="SetMockOperationAction"/>
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/mockresponsestep.html"/>
+	</tns:actionGroup>
+
 	<!-- WsdlMessageAssertions -->
 	<tns:actionGroup name="Assertion Action" id="WsdlMessageAssertionActions"
 		class="com.eviware.soapui.impl.wsdl.teststeps.actions.WsdlMessageAssertionSoapUIActionGroup">
@@ -584,6 +600,7 @@
  			description="Shows the MockResponse Editor for this MockResponse" keyStroke="ENTER"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="OpenRequestForMockResponseAction" iconPath="/open_request.gif"/>
+      <tns:actionMapping actionId="AddMockResponseToTestCaseAction"/>
 		<tns:actionMapping actionId="CreateTestRequestForMockResponseAction" iconPath="/open_request.gif"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
  		<tns:actionMapping actionId="CloneMockResponseAction" keyStroke="F9"/>
