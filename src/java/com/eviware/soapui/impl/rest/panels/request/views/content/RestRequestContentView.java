@@ -39,7 +39,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.URL;
 
 public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDocument> implements PropertyChangeListener
 {
@@ -335,7 +334,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
          try
          {
             restRequest.getParams().resetValues();
-            RestUtils.extractParams( new URL( str ), restRequest.getParams(), false );
+            RestUtils.extractParams( str, restRequest.getParams(), false );
             paramsTable.refresh();
          }
          catch( Exception e1 )

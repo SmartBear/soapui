@@ -19,6 +19,7 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringList;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 
@@ -26,7 +27,7 @@ public class RestUtils
 {
    public static String[] extractTemplateParams( String path )
    {
-      if( StringUtils.isNullOrEmpty( path ))
+      if( StringUtils.isNullOrEmpty( path ) )
          return new String[0];
 
       StringList result = new StringList();
@@ -48,12 +49,31 @@ public class RestUtils
 
    }
 
-   public static String extractParams( URL param, XmlBeansRestParamsTestPropertyHolder params, boolean keepHost )
+   public static String extractParams( String pathOrEndpoint, XmlBeansRestParamsTestPropertyHolder params, boolean keepHost )
    {
-      if( param == null || StringUtils.isNullOrEmpty( param.getPath() ))
+      if( StringUtils.isNullOrEmpty( pathOrEndpoint ) )
          return "";
 
-      String path = param.getPath();
+      String path = pathOrEndpoint;
+      String queryString = "";
+      URL url = null;
+
+      try
+      {
+         url = new URL( pathOrEndpoint );
+         path = url.getPath();
+         queryString = url.getQuery();
+      }
+      catch( MalformedURLException e )
+      {
+         int ix = path.indexOf( '?' );
+         if( ix >= 0 )
+         {
+            queryString = path.substring( ix + 1 );
+            path = path.substring( 0, ix );
+         }
+      }
+
       String[] items = path.split( "/" );
 
       int templateParamCount = 0;
@@ -64,50 +84,65 @@ public class RestUtils
          String item = items[i];
          try
          {
-            String[] matrixParams = item.split( ";" );
-            if( matrixParams.length > 0 )
+            if( item.startsWith( "{" ) && item.endsWith( "}" ) )
             {
-               item = matrixParams[0];
-               for( int c = 1; c < matrixParams.length; c++ )
+               String name = item.substring( 1, item.length() - 1 );
+               RestParamProperty property = params.getProperty( name );
+               if( !params.hasProperty( name ) )
                {
-                  String matrixParam = matrixParams[c];
+                  property = params.addProperty( name );
+               }
 
-                  int ix = matrixParam.indexOf( '=' );
-                  if( ix == -1 )
+               property.setStyle( ParameterStyle.TEMPLATE );
+               property.setValue( name );
+            }
+            else
+            {
+               String[] matrixParams = item.split( ";" );
+               if( matrixParams.length > 0 )
+               {
+                  item = matrixParams[0];
+                  for( int c = 1; c < matrixParams.length; c++ )
                   {
-                     String name = URLDecoder.decode( matrixParam, "Utf-8" );
-                     if( !params.hasProperty( name ) )
-                        params.addProperty( name ).setStyle( ParameterStyle.MATRIX );
-                  }
-                  else
-                  {
+                     String matrixParam = matrixParams[c];
 
-                     String name = URLDecoder.decode( matrixParam.substring( 0, ix ), "Utf-8" );
-                     RestParamProperty property = params.getProperty( name );
-                     if( property == null )
+                     int ix = matrixParam.indexOf( '=' );
+                     if( ix == -1 )
                      {
-                        property = params.addProperty( name );
+                        String name = URLDecoder.decode( matrixParam, "Utf-8" );
+                        if( !params.hasProperty( name ) )
+                           params.addProperty( name ).setStyle( ParameterStyle.MATRIX );
                      }
+                     else
+                     {
 
-                     property.setStyle( ParameterStyle.MATRIX );
-                     property.setValue( URLDecoder.decode( matrixParam.substring( ix + 1 ), "Utf-8" ) );
+                        String name = URLDecoder.decode( matrixParam.substring( 0, ix ), "Utf-8" );
+                        RestParamProperty property = params.getProperty( name );
+                        if( property == null )
+                        {
+                           property = params.addProperty( name );
+                        }
+
+                        property.setStyle( ParameterStyle.MATRIX );
+                        property.setValue( URLDecoder.decode( matrixParam.substring( ix + 1 ), "Utf-8" ) );
+                     }
                   }
                }
+
+               Integer.parseInt( item );
+
+               String name = "param" + templateParamCount++;
+               RestParamProperty property = params.getProperty( name );
+               if( !params.hasProperty( name ) )
+               {
+                  property = params.addProperty( name );
+               }
+
+               property.setStyle( ParameterStyle.TEMPLATE );
+               property.setValue( item );
+
+               item = "{" + property.getName() + "}";
             }
-
-            Integer.parseInt( item );
-
-            String name = "param" + templateParamCount++;
-            RestParamProperty property = params.getProperty( name );
-            if( !params.hasProperty( name ) )
-            {
-               property = params.addProperty( name );
-            }
-
-            property.setStyle( ParameterStyle.TEMPLATE );
-            property.setValue( item );
-
-            item = "{" + property.getName() + "}";
          }
          catch( Exception e )
          {
@@ -117,10 +152,9 @@ public class RestUtils
             resultPath.append( '/' ).append( item );
       }
 
-      String query = param.getQuery();
-      if( StringUtils.hasContent( query ) )
+      if( StringUtils.hasContent( queryString ) )
       {
-         items = query.split( "&" );
+         items = queryString.split( "&" );
          for( String item : items )
          {
             try
@@ -155,9 +189,9 @@ public class RestUtils
          }
       }
 
-      if( keepHost )
+      if( keepHost && url != null )
       {
-         return Tools.getEndpointFromUrl( param ) + resultPath.toString();
+         return Tools.getEndpointFromUrl( url ) + resultPath.toString();
       }
 
       return resultPath.toString();
