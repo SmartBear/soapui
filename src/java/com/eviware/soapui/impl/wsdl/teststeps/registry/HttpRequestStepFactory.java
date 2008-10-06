@@ -36,8 +36,6 @@ import com.eviware.x.form.validators.RequiredValidator;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Factory for WsdlTestRequestSteps
@@ -153,7 +151,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
       {
          try
          {
-            String path = RestUtils.extractParams( new URL( dialog.getValue( Form.ENDPOINT ) ), params, true);
+            String path = RestUtils.extractParams( dialog.getValue( Form.ENDPOINT ), params, true );
             dialog.setValue( Form.ENDPOINT, path );
 
             if( StringUtils.isNullOrEmpty( dialog.getValue( Form.STEPNAME ) ) )
@@ -163,7 +161,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 
             paramsTable.refresh();
          }
-         catch( MalformedURLException e1 )
+         catch( Exception e1 )
          {
             UISupport.showInfoMessage( "No parameters to extract!" );
          }

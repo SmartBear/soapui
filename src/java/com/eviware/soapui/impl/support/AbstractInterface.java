@@ -203,4 +203,9 @@ public abstract class AbstractInterface<T extends InterfaceConfig> extends Abstr
    public abstract String getType();
 
    public abstract boolean isDefinitionShareble();
+
+   public Operation [] getAllOperations()
+   {
+      return getOperationList().toArray( new Operation[getOperationCount()] );
+   }
 }

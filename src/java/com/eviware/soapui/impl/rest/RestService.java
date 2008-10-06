@@ -40,10 +40,9 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
    {
       super( serviceConfig, project, "/rest_service.gif" );
 
-      List<RestResourceConfig> resourceConfigs = serviceConfig.getResourceList();
-      for( int i = 0; i < resourceConfigs.size(); i++ )
+      for( RestResourceConfig resourceConfig : serviceConfig.getResourceList() )
       {
-         resources.add( new RestResource( this, resourceConfigs.get( i ) ) );
+         resources.add( new RestResource( this, resourceConfig ) );
       }
    }
 
@@ -161,9 +160,9 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
       return result;
    }
 
-    public Map<String, RestResource> getResources()
+   public Map<String, RestResource> getResources()
    {
-      Map<String,RestResource> result = new HashMap<String,RestResource>();
+      Map<String, RestResource> result = new HashMap<String, RestResource>();
 
       for( RestResource resource : getAllResources() )
       {
@@ -224,6 +223,13 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
       return !isGenerated();
    }
 
+   @Override
+   public Operation[] getAllOperations()
+   {
+      List<RestResource> restResources = getAllResources();
+      return restResources.toArray( new Operation[restResources.size()] );
+   }
+
    public void beforeSave()
    {
       if( isGenerated() && wadlContext != null )
@@ -234,7 +240,7 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
          }
          catch( Exception e )
          {
-            e.printStackTrace();  
+            e.printStackTrace();
          }
       }
 

@@ -13,14 +13,15 @@
 package com.eviware.soapui.impl.wsdl.endpoint;
 
 import com.eviware.soapui.config.EndpointConfig;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategy.EndpointDefaults;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.wss.WssContainer;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.testsuite.TestCase;
@@ -80,11 +81,12 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 			table.getColumnModel().getColumn( c ).setHeaderRenderer( new MetricsPanel.InternalHeaderRenderer( getBackground() ) );
 		
 		table.getColumnModel().getColumn( 0 ).setPreferredWidth( 250 );
-		JComboBox wssTypeCombo = new JComboBox( new String[] {WsdlRequest.PW_TYPE_NONE, WsdlRequest.PW_TYPE_TEXT, WsdlRequest.PW_TYPE_DIGEST});
-		wssTypeCombo.setEditable( true );
 
 		if( iface instanceof WsdlInterface )
 		{
+         JComboBox wssTypeCombo = new JComboBox( new String[] {WsdlRequest.PW_TYPE_NONE, WsdlRequest.PW_TYPE_TEXT, WsdlRequest.PW_TYPE_DIGEST});
+         wssTypeCombo.setEditable( true );
+
 			table.getColumnModel().getColumn( 4 ).setCellEditor( new DefaultCellEditor( wssTypeCombo) );
 			table.getColumnModel().getColumn( 6 ).setCellEditor( new OutgoingWssCellEditor( ((WsdlInterface)iface).getProject().getWssContainer() ) );
 			table.getColumnModel().getColumn( 7 ).setCellEditor( new IncomingWssCellEditor( ((WsdlInterface)iface).getProject().getWssContainer() ) );
@@ -193,17 +195,14 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 			if( endpoint == null )
 				return;
 
-			int changeCount = 0;
-
 			if( endpoint.equals( ALL_REQUESTS ) || endpoint.equals( ALL_REQUESTS_WITH_NO_ENDPOINT )
 						|| endpoint.equals( ALL_REQUESTS_AND_TEST_REQUESTS ) )
 			{
-				for( int c = 0; c < iface.getOperationCount(); c++ )
+				for( Operation operation : iface.getAllOperations() )
 				{
-					Operation operation = iface.getOperationAt( c );
 					for( int i = 0; i < operation.getRequestCount(); i++ )
 					{
-						WsdlRequest request = ( WsdlRequest ) operation.getRequestAt( i );
+						AbstractHttpRequest request = (AbstractHttpRequest) operation.getRequestAt( i );
 						String ep = request.getEndpoint();
 
 						if( endpoint.equals( ALL_REQUESTS ) || endpoint.equals( ALL_REQUESTS_AND_TEST_REQUESTS )
@@ -215,12 +214,14 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 							request.setUsername( defaults.getUsername() );
 							request.setPassword( defaults.getPassword() );
 							request.setDomain( defaults.getDomain() );
-							request.setWssPasswordType( defaults.getWssType() );
-							request.setWssTimeToLive( defaults.getWssTimeToLive() );
-							request.setOutgoingWss( defaults.getOutgoingWss() );
-							request.setIncomingWss( defaults.getIncomingWss() );
-							
-							changeCount++;
+
+                     if( request instanceof WsdlRequest )
+                     {
+                        ((WsdlRequest)request).setWssPasswordType( defaults.getWssType() );
+                        ((WsdlRequest)request).setWssTimeToLive( defaults.getWssTimeToLive() );
+                        ((WsdlRequest)request).setOutgoingWss( defaults.getOutgoingWss() );
+                        ((WsdlRequest)request).setIncomingWss( defaults.getIncomingWss() );
+                     }
 						}
 					}
 				}
@@ -234,22 +235,24 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 					{
 						for( TestStep testStep : testCase.getTestStepList() )
 						{
-							if( testStep instanceof WsdlTestRequestStep )
+							if( testStep instanceof HttpRequestTestStep )
 							{
-								WsdlTestRequest testRequest = ( ( WsdlTestRequestStep ) testStep ).getTestRequest();
-								if( testRequest.getOperation().getInterface() == iface )
+                        AbstractHttpRequest httpRequest = ((HttpRequestTestStep)testStep).getHttpRequest();
+								if( httpRequest.getOperation() != null && httpRequest.getOperation().getInterface() == iface )
 								{
-									testRequest.setEndpoint( selectedEndpoint );
+									httpRequest.setEndpoint( selectedEndpoint );
 									
-									testRequest.setUsername( defaults.getUsername() );
-									testRequest.setPassword( defaults.getPassword() );
-									testRequest.setDomain( defaults.getDomain() );
-									testRequest.setWssPasswordType( defaults.getWssType() );
-									testRequest.setWssTimeToLive( defaults.getWssTimeToLive() );
-									testRequest.setOutgoingWss( defaults.getOutgoingWss() );
-									testRequest.setIncomingWss( defaults.getIncomingWss() );
-									
-									changeCount++;
+									httpRequest.setUsername( defaults.getUsername() );
+									httpRequest.setPassword( defaults.getPassword() );
+									httpRequest.setDomain( defaults.getDomain() );
+                           if( httpRequest instanceof WsdlRequest )
+                           {
+                              WsdlTestRequest testRequest = (WsdlTestRequest) httpRequest;
+                              testRequest.setWssPasswordType( defaults.getWssType() );
+                              testRequest.setWssTimeToLive( defaults.getWssTimeToLive() );
+                              testRequest.setOutgoingWss( defaults.getOutgoingWss() );
+                              testRequest.setIncomingWss( defaults.getIncomingWss() );
+                           }
 								}
 							}
 						}
