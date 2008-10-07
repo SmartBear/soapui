@@ -63,6 +63,7 @@ import javax.xml.namespace.QName;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.w3.x2007.x05.addressing.metadata.AddressingDocument.Addressing;
 import org.w3.x2007.x05.addressing.metadata.AnonymousResponsesDocument.AnonymousResponses;
@@ -85,8 +86,10 @@ import com.eviware.soapui.impl.support.definition.DefinitionLoader;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.impl.wsdl.support.policy.PolicyUtils;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
@@ -1296,6 +1299,29 @@ public class WsdlUtils
 		String defaultAction = getDefaultWsaAction(wsaConfig.getWsaContainer().getOperation(), b);
 		if (StringUtils.hasContent(defaultAction))
 			wsaConfig.setAction(defaultAction);
+	}
+	public static String getRequestWsaMessageId(WsdlMessageExchange messageExchange, String wsaVersionNameSpace) {
+		String requestMessageId = null;
+		try
+		{
+			XmlObject xmlObject = XmlObject.Factory.parse( messageExchange.getRequestContent() );
+			SoapVersion soapVersion = messageExchange.getOperation().getInterface()
+				.getSoapVersion();
+
+			Element header = (Element) SoapUtils.getHeaderElement( xmlObject, soapVersion, true ).getDomNode();
+			Element msgNode = XmlUtils.getFirstChildElementNS(header, wsaVersionNameSpace, "MessageID");
+			if (msgNode != null)
+			{
+				requestMessageId = XmlUtils.getElementText(msgNode);
+			}
+		}
+		catch (XmlException e)
+		{
+			e.printStackTrace();
+			log.warn(e.toString());
+			return null;
+		}
+		return requestMessageId;
 	}
 
 }

@@ -23,6 +23,8 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -66,12 +68,14 @@ public class WsaUtils
 	// needed for checking if ws-a already applied before
 	XmlObject xmlHeaderObject;
 	ArrayList<Node> headerWsaElementList;
+	private final PropertyExpansionContext context;
 
-	public WsaUtils(String content, SoapVersion soapVersion, WsdlOperation operation)
+	public WsaUtils(String content, SoapVersion soapVersion, WsdlOperation operation, PropertyExpansionContext context)
 	{
 		this.soapVersion = soapVersion;
 		this.operation = operation;
 		this.content = content;
+		this.context = context;
 		try
 		{
 			xmlContentObject = XmlObject.Factory.parse(content);
@@ -123,12 +127,12 @@ public class WsaUtils
 
 		builder = new WsaBuilder(wsaVersionNameSpace, mustUnderstand);
 
-		String from = wsaContainer.getWsaConfig().getFrom();
+		String from = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getFrom());
 		if (!StringUtils.isNullOrEmpty(from))
 		{
 			header = processWsaProperty(header, overrideExisting, "wsa:From", from, true);
 		}
-		String faultTo = wsaContainer.getWsaConfig().getFaultTo();
+		String faultTo = PropertyExpansionUtils.expandProperties(context,wsaContainer.getWsaConfig().getFaultTo());
 		if (!StringUtils.isNullOrEmpty(faultTo))
 		{
 			header = processWsaProperty(header, overrideExisting, "wsa:FaultTo", faultTo, true);
@@ -226,7 +230,7 @@ public class WsaUtils
 		{
 			Element header = addWsAddressingCommon(wsaContainer, override);
 
-			String action = wsaContainer.getWsaConfig().getAction();
+			String action = PropertyExpansionUtils.expandProperties(context,wsaContainer.getWsaConfig().getAction());
 			if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_ACTION) && StringUtils.isNullOrEmpty(action))
 			{
 				action = WsdlUtils.getDefaultWsaAction(wsaContainer.getOperation(), false);
@@ -237,7 +241,7 @@ public class WsaUtils
 				header = processWsaProperty(header, override, "wsa:Action", action, false);
 			}
 
-			String replyTo = wsaContainer.getWsaConfig().getReplyTo();
+			String replyTo = PropertyExpansionUtils.expandProperties(context,wsaContainer.getWsaConfig().getReplyTo());
 			if (AnonymousTypeConfig.REQUIRED.toString().equals(anonymousType))
 			// TODO check if WsaSettings.USE_DEFAULT_REPLYTO is needed considering
 			// anonymous added
@@ -263,14 +267,14 @@ public class WsaUtils
 				}
 			}
 
-			String relatesTo = wsaContainer.getWsaConfig().getRelatesTo();
-			String relationshipType = wsaContainer.getWsaConfig().getRelationshipType();
+			String relatesTo = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getRelatesTo());
+			String relationshipType = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getRelationshipType());
 			if (!StringUtils.isNullOrEmpty(relationshipType) && !StringUtils.isNullOrEmpty(relatesTo))
 			{
 				header = processWsaRelatesToProperty(header, override, "wsa:RelatesTo", relationshipType, relatesTo);
 			}
 
-			String msgId = wsaContainer.getWsaConfig().getMessageID();
+			String msgId = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getMessageID());
 			if (!StringUtils.isNullOrEmpty(msgId))
 			{
 				header = processWsaProperty(header, override, "wsa:MessageID", msgId, false);
@@ -282,7 +286,7 @@ public class WsaUtils
 				header = processWsaProperty(header, override, "wsa:MessageID", generatedMessageId, false);
 			}
 
-			String to = wsaContainer.getWsaConfig().getTo();
+			String to = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getTo());
 			if (!StringUtils.isNullOrEmpty(to))
 			{
 				header = processWsaProperty(header, override, "wsa:To", to, false);
@@ -330,7 +334,7 @@ public class WsaUtils
 		{
 			Element header = addWsAddressingCommon(wsaContainer, override);
 
-			String action = wsaContainer.getWsaConfig().getAction();
+			String action = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getAction());
 			if (SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_ACTION) && StringUtils.isNullOrEmpty(action))
 			{
 				action = WsdlUtils.getDefaultWsaAction(wsaContainer.getOperation(), true);
@@ -346,7 +350,7 @@ public class WsaUtils
 			}
 			else
 			{
-				String replyTo = wsaContainer.getWsaConfig().getReplyTo();
+				String replyTo = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getReplyTo());
 				if (!StringUtils.isNullOrEmpty(replyTo))
 				{
 					header = processWsaProperty(header, override, "wsa:ReplyTo", replyTo, true);
@@ -357,18 +361,21 @@ public class WsaUtils
 			if (request != null)
 			{
 				XmlObject requestXmlObject = request.getRequestXmlObject();
+				
+				String requestWsaVersionNameSpace = WsaValidator.getWsaVersion(requestXmlObject, request.getSoapVersion());
+				
 				requestHeader = (Element) SoapUtils.getHeaderElement(requestXmlObject, request.getSoapVersion(), true)
 						.getDomNode();
 
 				// request.messageId = mockResponse.relatesTo so get it
-				Element msgNode = XmlUtils.getFirstChildElementNS(requestHeader, wsaVersionNameSpace, "MessageID");
+				Element msgNode = XmlUtils.getFirstChildElementNS(requestHeader, requestWsaVersionNameSpace, "MessageID");
 				String requestMessageId = null;
 				if (msgNode != null)
 				{
 					requestMessageId = XmlUtils.getElementText(msgNode);
 				}
 
-				String relationshipType = wsaContainer.getWsaConfig().getRelationshipType();
+				String relationshipType = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getRelationshipType());
 				if (!StringUtils.isNullOrEmpty(relationshipType))
 				{
 					if (!StringUtils.isNullOrEmpty(requestMessageId))
@@ -399,11 +406,11 @@ public class WsaUtils
 				}
 
 				// request.replyTo = mockResponse.to so get it
-				Element replyToNode = XmlUtils.getFirstChildElementNS(requestHeader, wsaVersionNameSpace, "ReplyTo");
+				Element replyToNode = XmlUtils.getFirstChildElementNS(requestHeader, requestWsaVersionNameSpace, "ReplyTo");
 				String requestReplyToValue = null;
 				if (replyToNode != null)
 				{
-					Element replyToAddresseNode = XmlUtils.getFirstChildElementNS(replyToNode, wsaVersionNameSpace,
+					Element replyToAddresseNode = XmlUtils.getFirstChildElementNS(replyToNode, requestWsaVersionNameSpace,
 							"Address");
 					if (replyToAddresseNode != null)
 					{
@@ -411,7 +418,7 @@ public class WsaUtils
 					}
 				}
 
-				String to = wsaContainer.getWsaConfig().getTo();
+				String to = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getTo());
 				if (!StringUtils.isNullOrEmpty(to))
 				{
 					if (!(AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType) && isAnonymousAddress(to,wsaVersionNameSpace)))
@@ -435,7 +442,7 @@ public class WsaUtils
 			}
 			else
 			{
-				String to = wsaContainer.getWsaConfig().getTo();
+				String to = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getTo());
 				if (!StringUtils.isNullOrEmpty(to))
 				{
 //					header = removeWsaProperty(override, header, "wsa:To");
@@ -443,8 +450,8 @@ public class WsaUtils
 					header = processWsaProperty(header, override, "wsa:To", to, false);
 				}
 
-				String relationshipType = wsaContainer.getWsaConfig().getRelationshipType();
-				String relatesTo = wsaContainer.getWsaConfig().getRelatesTo();
+				String relationshipType = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getRelationshipType());
+				String relatesTo = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getRelatesTo());
 				if (!StringUtils.isNullOrEmpty(relationshipType) && !StringUtils.isNullOrEmpty(relatesTo))
 				{
 					header = processWsaRelatesToProperty(header, override, "wsa:RelatesTo", relationshipType, relatesTo);
@@ -465,7 +472,7 @@ public class WsaUtils
 
 			}
 
-			String msgId = wsaContainer.getWsaConfig().getMessageID();
+			String msgId = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getMessageID());
 			if (!StringUtils.isNullOrEmpty(msgId))
 			{
 				header = processWsaProperty(header, override, "wsa:MessageID", msgId, false);

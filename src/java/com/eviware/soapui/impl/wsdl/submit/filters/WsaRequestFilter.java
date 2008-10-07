@@ -49,7 +49,7 @@ public class WsaRequestFilter extends AbstractRequestFilter
 //	TODO check UsingAddressing for particular endpoint when running a request
 //			((WsdlRequest)wsdlRequest).getEndpoint();
 			SoapVersion soapVersion = operation.getInterface().getSoapVersion();
-			content = new WsaUtils(content, soapVersion, operation).addWSAddressingRequest((WsdlRequest) wsdlRequest, httpMethod);
+			content = new WsaUtils(content, soapVersion, operation, context).addWSAddressingRequest((WsdlRequest) wsdlRequest, httpMethod);
 			if( content != null )
 				context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, content );
 		}

@@ -19,6 +19,7 @@ import javax.swing.AbstractAction;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
+import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.support.UISupport;
 
 /**
@@ -44,7 +45,7 @@ public class AddWsaHeadersToMockResponseAction extends AbstractAction
 		{
 			SoapVersion soapVersion = mockResponse.getOperation().getInterface().getSoapVersion();
 			String content = mockResponse.getResponseContent();
-			WsaUtils wsaUtils = new WsaUtils(content, soapVersion, mockResponse.getOperation());
+			WsaUtils wsaUtils = new WsaUtils(content, soapVersion, mockResponse.getOperation(),new DefaultPropertyExpansionContext(mockResponse));
 			content = wsaUtils.addWSAddressingMockResponse(mockResponse);
 			mockResponse.setResponseContent(content);
 		}

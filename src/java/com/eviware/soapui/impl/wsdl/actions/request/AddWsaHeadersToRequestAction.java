@@ -19,6 +19,7 @@ import javax.swing.AbstractAction;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
+import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.support.UISupport;
 
 /**
@@ -43,7 +44,7 @@ public class AddWsaHeadersToRequestAction extends AbstractAction
 		{
 			SoapVersion soapVersion = request.getOperation().getInterface().getSoapVersion();
 			String content = request.getRequestContent();
-			WsaUtils wsaUtils = new WsaUtils(content,soapVersion, request.getOperation());
+			WsaUtils wsaUtils = new WsaUtils(content,soapVersion, request.getOperation(),new DefaultPropertyExpansionContext(request));
 			content = wsaUtils.addWSAddressingRequest(request);
 			request.setRequestContent(content);
 		}
