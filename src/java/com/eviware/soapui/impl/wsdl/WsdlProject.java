@@ -1358,10 +1358,10 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		else
 		{
 			WsdlTestSuite testSuite = new WsdlTestSuite(this, newTestSuiteConfig.getTestSuite());
+			projectDocument.getSoapuiProject().addNewTestSuite().set(testSuite.getConfig());
 			testSuite.afterLoad();
 			
 			testSuites.add(testSuite);
-			testSuite.afterLoad();
 			fireTestSuiteAdded(testSuite);
 
          resolveImportedTestSuite( testSuite );
