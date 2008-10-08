@@ -31,6 +31,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 
@@ -100,12 +101,18 @@ public class RestRequestRepresentationsInspector extends AbstractRestRepresentat
    @SuppressWarnings( "unchecked" )
    protected void extractRepresentation( HttpResponse response )
    {
+      String responseContentType = response.getRequestHeaders().get( "Content-Type" );
+      if( StringUtils.isNullOrEmpty( responseContentType ))
+         return;
+
       RestRepresentation[] representations = getRequest().getRepresentations( RestRepresentation.Type.REQUEST, null );
       int c = 0;
+
       for( ; c < representations.length; c++ )
       {
-         if( representations[c].getMediaType() != null &&
-             representations[c].getMediaType().equals( response.getRequestHeaders().get( "Content-Type" ) ) )
+         String repMediaType = representations[c].getMediaType();
+
+         if( responseContentType.equals( repMediaType ))
          {
             break;
          }
@@ -114,7 +121,7 @@ public class RestRequestRepresentationsInspector extends AbstractRestRepresentat
       if( c == representations.length )
       {
          RestRepresentation representation = getRequest().addNewRepresentation( RestRepresentation.Type.REQUEST );
-         representation.setMediaType( response.getRequestHeaders().get( "Content-Type" ) );
+         representation.setMediaType( responseContentType );
       }
    }
 

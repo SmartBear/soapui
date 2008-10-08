@@ -69,6 +69,7 @@ public abstract class AbstractRestRepresentationsInspector extends AbstractXmlIn
       this.types = Arrays.asList( types );
 
       request.addPropertyChangeListener( "representations", this );
+      updateLabel();
    }
 
    public JComponent getComponent()
@@ -186,7 +187,8 @@ public abstract class AbstractRestRepresentationsInspector extends AbstractXmlIn
       @Override
       public boolean isCellEditable( int rowIndex, int columnIndex )
       {
-         return columnIndex > 0 && columnIndex < 3 && !data.get( rowIndex ).getType().equals( RestRepresentation.Type.REQUEST  );
+         return columnIndex > 0 && columnIndex < 3 &&
+                 !(data.get( rowIndex ).getType().equals( RestRepresentation.Type.REQUEST  ) && columnIndex == 2 );
       }
 
       @Override
@@ -278,6 +280,19 @@ public abstract class AbstractRestRepresentationsInspector extends AbstractXmlIn
    public void propertyChange( PropertyChangeEvent evt )
    {
       tableModel.refresh();
+      updateLabel();
+   }
+
+   private void updateLabel()
+   {
+      int cnt = 0;
+      for( RestRepresentation representation : request.getRepresentations( ))
+      {
+         if( types.contains( representation.getType() ))
+            cnt++;
+      }
+
+      setTitle( "Representations (" + cnt + ")" );
    }
 
    private class AddRepresentationAction extends AbstractAction
