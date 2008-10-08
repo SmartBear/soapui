@@ -12,6 +12,16 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsa;
 
+import java.util.ArrayList;
+import java.util.UUID;
+
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AnonymousTypeConfig;
 import com.eviware.soapui.config.MustUnderstandTypeConfig;
@@ -28,16 +38,6 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.UUID;
 
 /**
  * WS Addressing-related utility-methods..
