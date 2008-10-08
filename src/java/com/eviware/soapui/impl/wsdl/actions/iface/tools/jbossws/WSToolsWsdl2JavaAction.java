@@ -12,26 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.jboss.jbosswsTools.ConfigurationDocument;
-import org.jboss.jbosswsTools.ConfigurationType;
-import org.jboss.jbosswsTools.GlobalType;
-import org.jboss.jbosswsTools.PkgNSType;
-import org.jboss.jbosswsTools.WsdlToJavaType;
-import org.jboss.jbosswsTools.WsxmlType;
-import org.jboss.jbosswsTools.WsdlToJavaType.ParameterStyle;
-import org.w3c.dom.Element;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ArgumentBuilder;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ShowConfigFileAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolHost;
+import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.*;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.project.Project;
@@ -40,13 +22,15 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.types.StringToStringMap;
-import com.eviware.x.form.XForm;
-import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.XFormDialogBuilder;
-import com.eviware.x.form.XFormFactory;
-import com.eviware.x.form.XFormField;
-import com.eviware.x.form.XFormFieldListener;
-import com.eviware.x.form.XFormTextField;
+import com.eviware.x.form.*;
+import org.jboss.jbosswsTools.*;
+import org.jboss.jbosswsTools.WsdlToJavaType.ParameterStyle;
+import org.w3c.dom.Element;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Invokes jbossws wsdl2java tools
@@ -173,7 +157,7 @@ public class WSToolsWsdl2JavaAction extends AbstractToolsAction<Interface>
 		builder.command(args.getArgs());
 		builder.directory(new File(wstoolsDir));
 		
-		toolHost.run( new ProcessToolRunner( builder, "JBossWS wstools", modelItem ));
+		toolHost.run( new ProcessToolRunner( builder, "JBossWS wstools", modelItem, args ));
 	}
 
 	private ArgumentBuilder buildArgs( boolean isWindows, Interface modelItem  ) throws IOException

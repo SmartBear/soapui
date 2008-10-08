@@ -18,6 +18,7 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlRunTestCaseTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.model.testsuite.*;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 
 public abstract class AbstractSoapUITestRunner extends AbstractSoapUIRunner implements TestRunListener
@@ -143,16 +144,14 @@ public abstract class AbstractSoapUITestRunner extends AbstractSoapUIRunner impl
       return wssPasswordType;
    }
 
-   protected void prepareRequestStep( HttpRequestTestStep currentStep )
+   protected void prepareRequestStep( HttpRequestTestStep requestStep )
    {
-      HttpRequestTestStep requestStep = (HttpRequestTestStep) currentStep;
       AbstractHttpRequest httpRequest = requestStep.getHttpRequest();
-      if( endpoint != null && endpoint.length() > 0 )
+      if( StringUtils.hasContent( endpoint ) )
       {
          httpRequest.setEndpoint( endpoint );
       }
-
-      if( host != null && host.length() > 0 )
+      else if( StringUtils.hasContent( host ) )
       {
          try
          {
@@ -165,17 +164,17 @@ public abstract class AbstractSoapUITestRunner extends AbstractSoapUIRunner impl
          }
       }
 
-      if( username != null && username.length() > 0 )
+      if( StringUtils.hasContent( username ) )
       {
          httpRequest.setUsername( username );
       }
 
-      if( password != null && password.length() > 0 )
+      if(StringUtils.hasContent( password ) )
       {
          httpRequest.setPassword( password );
       }
 
-      if( domain != null && domain.length() > 0 )
+      if( StringUtils.hasContent( domain ) )
       {
          httpRequest.setDomain( domain );
       }

@@ -151,16 +151,6 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			// submit!
 			httpClient.executeMethod(hostConfiguration, httpMethod, httpState);
 			httpMethod.getTimeTaken();
-			
-			for( RequestFilter filter : filters )
-			{
-				filter.afterRequest( submitContext, httpRequest );
-			}
-			
-			if( !submitContext.hasProperty(RESPONSE))
-			{
-				createDefaultResponse(submitContext, httpRequest, httpMethod);
-			}
 		}
 		catch( Throwable t )
 		{
@@ -168,6 +158,16 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		}
 		finally
 		{
+			for( int c = filters.size()-1; c >= 0; c-- )
+			{
+				filters.get( c ).afterRequest( submitContext, httpRequest );
+			}
+
+			if( !submitContext.hasProperty(RESPONSE))
+			{
+				createDefaultResponse(submitContext, httpRequest, httpMethod);
+			}
+
 			if (httpMethod != null)
 			{
 				httpMethod.releaseConnection();
@@ -175,7 +175,9 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			else log.error( "PostMethod is null");
 			
 			if( createdState )
-				submitContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, null );
+         {
+            submitContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, null );
+         }
 		}		
 		
 		return (Response) submitContext.getProperty(BaseHttpRequestTransport.RESPONSE);

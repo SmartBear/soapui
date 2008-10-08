@@ -12,27 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.jboss.jbosswsTools.ConfigurationDocument;
-import org.jboss.jbosswsTools.ConfigurationType;
-import org.jboss.jbosswsTools.JavaToWsdlType;
-import org.jboss.jbosswsTools.MappingType;
-import org.jboss.jbosswsTools.NamespacesType;
-import org.jboss.jbosswsTools.ServiceType;
-import org.jboss.jbosswsTools.WsxmlType;
-import org.jboss.jbosswsTools.ServiceType.ParameterStyle;
-import org.jboss.jbosswsTools.ServiceType.Style;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ArgumentBuilder;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.RunnerContext;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ShowConfigFileAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolHost;
+import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.*;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.settings.ToolsSettings;
 import com.eviware.soapui.support.Tools;
@@ -43,6 +25,12 @@ import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
+import org.jboss.jbosswsTools.*;
+import org.jboss.jbosswsTools.ServiceType.ParameterStyle;
+import org.jboss.jbosswsTools.ServiceType.Style;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Invokes jbossws java2wsdl tools
@@ -126,7 +114,7 @@ public class WSToolsRegenerateJava2WsdlAction extends AbstractToolsAction<WsdlIn
 		builder.command(args.getArgs());
 		builder.directory(new File(wstoolsDir));
 		
-		toolHost.run( new ToolRunner( builder, new File( values.get( OUTPUT )), values.get( SERVICE_NAME ), modelItem ));
+		toolHost.run( new ToolRunner( builder, new File( values.get( OUTPUT )), values.get( SERVICE_NAME ), modelItem, args ));
 	}
 
 	private ArgumentBuilder buildArgs( boolean isWindows ) throws IOException
@@ -185,9 +173,9 @@ public class WSToolsRegenerateJava2WsdlAction extends AbstractToolsAction<WsdlIn
 		private final String serviceName;
 		private final WsdlInterface modelItem;
 
-		public ToolRunner(ProcessBuilder builder, File outDir, String serviceName, WsdlInterface modelItem  )
+		public ToolRunner( ProcessBuilder builder, File outDir, String serviceName, WsdlInterface modelItem, ArgumentBuilder args )
 		{
-			super(builder, "JBossWS wstools", modelItem );
+			super(builder, "JBossWS wstools", modelItem, args );
 			this.outDir = outDir;
 			this.serviceName = serviceName;
 			this.modelItem = modelItem;

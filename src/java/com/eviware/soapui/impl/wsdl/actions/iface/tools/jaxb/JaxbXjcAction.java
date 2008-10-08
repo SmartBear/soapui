@@ -121,10 +121,11 @@ public class JaxbXjcAction extends AbstractToolsAction<Interface>
 		}
 		
 		ProcessBuilder builder = new ProcessBuilder();
-		builder.command( buildArgs( modelItem ).getArgs() );
+      ArgumentBuilder argumentBuilder = buildArgs( modelItem );
+      builder.command( argumentBuilder.getArgs() );
 		builder.directory( new File( jaxbDir + File.separatorChar + "bin" ));
 		
-		toolHost.run( new ProcessToolRunner( builder, "JAXB xjc", modelItem ));
+		toolHost.run( new ProcessToolRunner( builder, "JAXB xjc", modelItem, argumentBuilder ));
 	}
 
 	private ArgumentBuilder buildArgs(Interface modelItem )

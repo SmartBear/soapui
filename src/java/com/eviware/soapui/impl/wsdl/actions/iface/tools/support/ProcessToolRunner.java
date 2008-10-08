@@ -12,10 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.support;
 
-import java.io.InputStream;
-
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.UISupport;
+
+import java.io.InputStream;
 
 /**
  * ToolRunner for running command-line processes
@@ -48,17 +48,18 @@ public class ProcessToolRunner implements ToolRunner
 		this.modelItem = modelItem;
 		this.args = args;
 	}
-	
-	public ProcessToolRunner(ProcessBuilder [] builders, String name, ModelItem modelItem)
-	{
-		this( builders, name, modelItem, null);
-	}
 
-	public ProcessToolRunner(ProcessBuilder builder, String name, ModelItem modelItem) {
-		this( new ProcessBuilder[] {builder}, name, modelItem, null);
-	}
+   public ProcessToolRunner( ProcessBuilder[] processBuilders, String s, ModelItem modelItem )
+   {
+     this( processBuilders, s, modelItem, null );
+   }
 
-	public ProcessBuilder [] getBuilders()
+   public ProcessToolRunner( ProcessBuilder builder, String s, ModelItem modelItem )
+   {
+      this( builder, s, modelItem, null );
+   }
+
+   public ProcessBuilder [] getBuilders()
 	{
 		return builders;
 	}
@@ -192,7 +193,7 @@ public class ProcessToolRunner implements ToolRunner
 	private void logRunInfo(ProcessBuilder builder)
 	{
 		context.log( "directory: " + builder.directory().getAbsolutePath() + "\r\n" );
-		context.log( "command: " + args + "\r\n" );
+		context.log( "command: " + (args == null ? builder.command() : args) + "\r\n" );
 	}
 
 	public void setContext(RunnerContext context)

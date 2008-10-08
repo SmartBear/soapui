@@ -28,7 +28,6 @@ public class JsonMediaTypeHandler implements MediaTypeHandler
 
    public String createXmlRepresentation( HttpResponse response )
    {
-
       try
       {
          String content = response.getContentAsString();

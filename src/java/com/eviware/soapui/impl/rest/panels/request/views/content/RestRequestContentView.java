@@ -146,6 +146,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
    {
       mediaTypeCombo.setEnabled( restRequest.hasRequestBody() && !restRequest.isPostQueryString() );
       contentEditor.setEnabledAndEditable( restRequest.hasRequestBody() && !restRequest.isPostQueryString() );
+      postQueryCheckBox.setEnabled( restRequest.hasRequestBody() );
    }
 
    private Component buildToolbar()
@@ -175,6 +176,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
       toolbar.addSeparator();
 
       postQueryCheckBox = new JCheckBox( "Post QueryString", restRequest.isPostQueryString() );
+      postQueryCheckBox.setToolTipText( "Controls if Query-parameters should be put in message body" );
       postQueryCheckBox.setOpaque( false );
       postQueryCheckBox.addItemListener( new ItemListener()
       {
@@ -188,8 +190,8 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
       postQueryCheckBox.setPreferredSize( new Dimension( 130, 20 ) );
       toolbar.addFixed( postQueryCheckBox );
 
-      toolbar.setMinimumSize( new Dimension( 50, 20) );
-      
+      toolbar.setMinimumSize( new Dimension( 50, 20 ) );
+
       return toolbar;
    }
 
@@ -251,7 +253,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
       }
       else if( evt.getPropertyName().equals( AbstractHttpRequest.ATTACHMENTS_PROPERTY ) )
       {
-         mediaTypeCombo.setModel( new DefaultComboBoxModel( getRequestMediaTypes()) );
+         mediaTypeCombo.setModel( new DefaultComboBoxModel( getRequestMediaTypes() ) );
          mediaTypeCombo.setSelectedItem( restRequest.getMediaType() );
       }
    }

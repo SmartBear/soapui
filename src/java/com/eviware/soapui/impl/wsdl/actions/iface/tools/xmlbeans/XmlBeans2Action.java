@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans;
 
-import java.io.File;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ArgumentBuilder;
@@ -24,6 +22,7 @@ import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.settings.ToolsSettings;
 import com.eviware.soapui.settings.ToolsSupport;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -31,6 +30,8 @@ import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
+
+import java.io.File;
 
 /**
  * Generates XMLBeans for given interface
@@ -122,7 +123,8 @@ public class XmlBeans2Action extends AbstractToolsAction<Interface>
 		}
 		
 		ProcessBuilder builder = new ProcessBuilder();
-		builder.command( buildArgs( modelItem ).getArgs() );
+      ArgumentBuilder argumentBuilder = buildArgs( modelItem );
+      builder.command( argumentBuilder.getArgs() );
 		builder.directory( new File( xbDir + File.separatorChar + "bin" ));
 		
 		toolHost.run( new ProcessToolRunner( builder, "XmlBeans", modelItem ));
@@ -157,7 +159,7 @@ public class XmlBeans2Action extends AbstractToolsAction<Interface>
 		
       String javac = ToolsSupport.getToolLocator().getJavacLocation(false);
 
-		if( javac != null )
+		if( StringUtils.hasContent( javac ))
 		{
 			builder.addArgs( "-compiler", javac + File.separatorChar + "javac" );
 		}

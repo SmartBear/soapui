@@ -59,45 +59,49 @@ public class WadlValidator
 
       for( RestRepresentation representation : restRequest.getRepresentations( type, messageExchange.getResponseContentType() ) )
       {
-         SchemaType schemaType = representation.getSchemaType();
-
-         boolean statusOk = representation.getStatus().isEmpty() || representation.getStatus().contains( messageExchange.getResponseStatusCode());
-
-         if( schemaType != null && responseBodyElementName != null && statusOk )
+         if( representation.getStatus().isEmpty() || representation.getStatus().contains( messageExchange.getResponseStatusCode() ) )
          {
-            try
+            SchemaType schemaType = representation.getSchemaType();
+            if( schemaType != null && representation.getElement().equals( responseBodyElementName ) )
             {
-               XmlObject xmlObject = schemaType.getTypeSystem().parse( messageExchange.getResponseContentAsXml(), schemaType, new XmlOptions() );
-
-               // create internal error list
-               List<?> list = new ArrayList<Object>();
-
-               XmlOptions xmlOptions = new XmlOptions();
-               xmlOptions.setErrorListener( list );
-               xmlOptions.setValidateTreatLaxAsSkip();
-               xmlObject.validate( xmlOptions );
-
-               for( Object o : list )
+               try
                {
-                  if( o instanceof XmlError )
-                     result.add( new AssertionError( (XmlError) o ) );
-                  else
-                     result.add( new AssertionError( o.toString() ) );
-               }
+                  XmlObject xmlObject = schemaType.getTypeSystem().parse( messageExchange.getResponseContentAsXml(), schemaType, new XmlOptions() );
 
-               asserted = true;
+                  // create internal error list
+                  List<?> list = new ArrayList<Object>();
+
+                  XmlOptions xmlOptions = new XmlOptions();
+                  xmlOptions.setErrorListener( list );
+                  xmlOptions.setValidateTreatLaxAsSkip();
+                  xmlObject.validate( xmlOptions );
+
+                  for( Object o : list )
+                  {
+                     if( o instanceof XmlError )
+                        result.add( new AssertionError( (XmlError) o ) );
+                     else
+                        result.add( new AssertionError( o.toString() ) );
+                  }
+
+                  asserted = true;
+               }
+               catch( XmlException e )
+               {
+                  SoapUI.logError( e );
+               }
             }
-            catch( XmlException e )
+            else
             {
-               SoapUI.logError( e );
+               asserted = true;
             }
          }
       }
 
-      if( !asserted && result.isEmpty())
+      if( !asserted && result.isEmpty() )
       {
          result.add( new AssertionError( "Missing matching representation for request with contentType [" +
-            messageExchange.getResponseContentType() + "]" ));
+                 messageExchange.getResponseContentType() + "]" ) );
       }
 
       return result.toArray( new AssertionError[result.size()] );
@@ -108,7 +112,7 @@ public class WadlValidator
       try
       {
          XmlObject xmlObject = XmlObject.Factory.parse( messageExchange.getResponseContentAsXml() );
-         Element docElement = ((Document) xmlObject.getDomNode()).getDocumentElement();
+         Element docElement = ( (Document) xmlObject.getDomNode() ).getDocumentElement();
 
          return new QName( docElement.getNamespaceURI(), docElement.getLocalName() );
       }

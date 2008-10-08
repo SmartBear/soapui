@@ -12,65 +12,67 @@
 
 package com.eviware.soapui.support.types;
 
+import com.eviware.soapui.config.StringListConfig;
+import com.eviware.soapui.support.StringUtils;
+import org.apache.xmlbeans.XmlException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.apache.xmlbeans.XmlException;
-
-import com.eviware.soapui.config.StringListConfig;
-import com.eviware.soapui.support.StringUtils;
-
 public class StringList extends ArrayList<String>
 {
-	public StringList()
-	{
-		super();
-	}
+   public StringList()
+   {
+      super();
+   }
 
-	public StringList(Collection<? extends String> c)
-	{
-		super(c);
-	}
+   public StringList( int initialCapacity )
+   {
+      super( initialCapacity );
+   }
 
-	public StringList(int initialCapacity)
-	{
-		super(initialCapacity);
-	}
+   public StringList( String[] strings )
+   {
+      super( Arrays.asList( strings ) );
+   }
 
-	public StringList( String[] strings )
-	{
-		super( Arrays.asList( strings ));
-	}
+   public StringList( Object[] objects )
+   {
+      super();
 
-	public StringList( Object[] objects )
-	{
-		super();
-		
-		for( Object object : objects )
-			add( object == null ? null : object.toString() );
-	}
+      for( Object object : objects )
+         add( object == null ? null : object.toString() );
+   }
 
-	public void addAll(String[] strings)
-	{
-		addAll( Arrays.asList( strings ));
-	}
+   public StringList( Collection<?> objects )
+   {
+      super();
 
-	public String[] toStringArray()
-	{
-		return toArray( new String[size()]);
-	}
+      for( Object object : objects )
+         add( object == null ? null : object.toString() );
+   }
 
-	public static StringList fromXml( String value ) throws XmlException
-	{
-		return StringUtils.isNullOrEmpty( value ) ? new StringList() : 
-			new StringList( StringListConfig.Factory.parse( value ).getEntryList() );
-	}
+   public void addAll( String[] strings )
+   {
+      addAll( Arrays.asList( strings ) );
+   }
 
-	public String toXml()
-	{
-		StringListConfig config = StringListConfig.Factory.newInstance();
-		config.setEntryArray( toStringArray() );
-		return config.xmlText();
-	}
+   public String[] toStringArray()
+   {
+      return toArray( new String[size()] );
+   }
+
+   public static StringList fromXml( String value ) throws XmlException
+   {
+      return StringUtils.isNullOrEmpty( value ) ? new StringList() :
+              new StringList( StringListConfig.Factory.parse( value ).getEntryList() );
+   }
+
+   public String toXml()
+   {
+      StringListConfig config = StringListConfig.Factory.newInstance();
+      config.setEntryArray( toStringArray() );
+      return config.xmlText();
+   }
 }

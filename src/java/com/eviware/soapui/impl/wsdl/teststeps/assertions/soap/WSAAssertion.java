@@ -12,12 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.soap;
 
-import java.awt.Component;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
@@ -29,14 +23,14 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlMockResponseTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.AssertionError;
-import com.eviware.soapui.model.testsuite.AssertionException;
-import com.eviware.soapui.model.testsuite.RequestAssertion;
-import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Assertion for verifying that WS-Addressing processing was ok
@@ -52,14 +46,14 @@ public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssert
 	private boolean configureResult;
 	private SimpleForm editorForm;
 	private WsaPropertiesTable wsaPropertiesTable;
-	private boolean asertWsaAction;
-	private boolean asertWsaTo;
-	private boolean asertWsaRelatesTo;
-	private JCheckBox asertWsaActionCheckBox;
-	private JCheckBox asertWsaToCheckBox;
-	private JCheckBox asertWsaRelatesToCheckBox;
+	private boolean assertWsaAction;
+	private boolean assertWsaTo;
+	private boolean assertWsaRelatesTo;
+	private JCheckBox assertWsaActionCheckBox;
+	private JCheckBox assertWsaToCheckBox;
+	private JCheckBox assertWsaRelatesToCheckBox;
 
-	/**
+   /**
 	 * Constructor for our assertion.
 	 * 
 	 * @param assertionConfig
@@ -70,12 +64,12 @@ public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssert
 		super(assertionConfig, modelItem, false, true, false, true);
 
 		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader(getConfiguration());
-		asertWsaAction = reader.readBoolean("action", true);
-		asertWsaTo = reader.readBoolean("to", true);
-		asertWsaRelatesTo = reader.readBoolean("relatesTo", false);
+		assertWsaAction = reader.readBoolean("action", true);
+		assertWsaTo = reader.readBoolean("to", true);
+		assertWsaRelatesTo = reader.readBoolean("relatesTo", false);
 	}
 
-	public static class Factory extends AbstractTestAssertionFactory
+   public static class Factory extends AbstractTestAssertionFactory
 	{
 		@SuppressWarnings("unchecked")
 		public Factory()
@@ -122,9 +116,9 @@ public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssert
 		if (configurationDialog == null)
 			buildConfigurationDialog();
 
-		asertWsaActionCheckBox.setSelected(asertWsaAction);
-		asertWsaToCheckBox.setSelected(asertWsaTo);
-		asertWsaRelatesToCheckBox.setSelected(asertWsaRelatesTo);
+		assertWsaActionCheckBox.setSelected( assertWsaAction );
+		assertWsaToCheckBox.setSelected( assertWsaTo );
+		assertWsaRelatesToCheckBox.setSelected( assertWsaRelatesTo );
 
 		UISupport.showDialog(configurationDialog);
 		return configureResult;
@@ -134,20 +128,17 @@ public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssert
 	protected void buildConfigurationDialog()
 	{
 		String onlineHelpUrl = "";
-		configurationDialog = new SimpleDialog("Ws-a properties to assert","", onlineHelpUrl, true)
+		configurationDialog = new SimpleDialog("WS-A Assertion", "Set options for WS-Addressing assertion", onlineHelpUrl, true)
 		{
 
 			@Override
 			protected Component buildContent()
 			{
 				editorForm = new SimpleForm();
-				asertWsaActionCheckBox = new JCheckBox("Assert wsa:Action", asertWsaAction);
-				editorForm.append(asertWsaActionCheckBox);
-				asertWsaToCheckBox = new JCheckBox("Assert wsa:To", asertWsaTo);
-				editorForm.append(asertWsaToCheckBox);
-
-				asertWsaRelatesToCheckBox = new JCheckBox("Assert wsa:RelatesTo", asertWsaRelatesTo);
-				editorForm.append(asertWsaRelatesToCheckBox);
+            
+				assertWsaActionCheckBox = editorForm.appendCheckBox( "wsa:Action", "Asserts value of wsa:Action against WSDL metadata", assertWsaAction );
+				assertWsaToCheckBox = editorForm.appendCheckBox("wsa:To", "Asserts value of wsa:To against WSDL metadata", assertWsaTo );
+				assertWsaRelatesToCheckBox = editorForm.appendCheckBox("wsa:RelatesTo", "Asserts value of wsa:RelatesTo in regard to sent MessageID", assertWsaRelatesTo );
 
 				return editorForm.getPanel();
 			}
@@ -155,17 +146,17 @@ public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssert
 			@Override
 			protected boolean handleOk()
 			{
-				setAsertWsaAction(asertWsaActionCheckBox.isSelected());
-				setAsertWsaTo(asertWsaToCheckBox.isSelected());
-				setAsertWsaRelatesTo(asertWsaRelatesToCheckBox.isSelected());
-				wsaPropertiesTable = new WsaPropertiesTable(asertWsaAction, asertWsaTo, asertWsaRelatesTo);
+				setAssertWsaAction( assertWsaActionCheckBox.isSelected());
+				setAssertWsaTo( assertWsaToCheckBox.isSelected());
+				setAssertWsaRelatesTo( assertWsaRelatesToCheckBox.isSelected());
+				wsaPropertiesTable = new WsaPropertiesTable( assertWsaAction, assertWsaTo, assertWsaRelatesTo );
 				configureResult = true;
 				configurationDialog.setVisible(false);
 				return true;
 			}
 
 		};
-		configurationDialog.setSize(300, 200);
+		configurationDialog.setSize(400, 200);
 		configurationDialog.setModal(true);
 	}
 
@@ -185,34 +176,34 @@ public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssert
 		return okButton;
 	}
 
-	public boolean isAsertWsaAction()
+	public boolean isAssertWsaAction()
 	{
-		return asertWsaAction;
+		return assertWsaAction;
 	}
 
-	public void setAsertWsaAction(boolean asertWsaAction)
+	public void setAssertWsaAction(boolean assertWsaAction )
 	{
-		this.asertWsaAction = asertWsaAction;
+		this.assertWsaAction = assertWsaAction;
 	}
 
-	public boolean isAsertWsaTo()
+	public boolean isAssertWsaTo()
 	{
-		return asertWsaTo;
+		return assertWsaTo;
 	}
 
-	public void setAsertWsaTo(boolean asertWsaTo)
+	public void setAssertWsaTo(boolean assertWsaTo )
 	{
-		this.asertWsaTo = asertWsaTo;
+		this.assertWsaTo = assertWsaTo;
 	}
 
-	public boolean isAsertWsaRelatesTo()
+	public boolean isAssertWsaRelatesTo()
 	{
-		return asertWsaRelatesTo;
+		return assertWsaRelatesTo;
 	}
 
-	public void setAsertWsaRelatesTo(boolean asertWsaRelatesTo)
+	public void setAssertWsaRelatesTo(boolean assertWsaRelatesTo )
 	{
-		this.asertWsaRelatesTo = asertWsaRelatesTo;
+		this.assertWsaRelatesTo = assertWsaRelatesTo;
 	}
 
 	public WsaPropertiesTable getWsaPropertiesTable()
