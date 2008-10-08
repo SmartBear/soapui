@@ -29,4 +29,6 @@ public interface XFileDialogs
    File openXML(Object action, String title);
 
    File openDirectory(Object action, String string, File defaultDirectory);
+   
+   File openFileOrDirectory(Object action, String title, File defaultDirectory);
 }

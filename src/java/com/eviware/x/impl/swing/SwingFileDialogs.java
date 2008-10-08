@@ -128,4 +128,18 @@ public class SwingFileDialogs implements XFileDialogs
          
       return chooser.getSelectedFile();
    }
+   
+   public File openFileOrDirectory(Object action, String title, File defaultDirectory) {
+   	JFileChooser chooser = getChooser(action);
+      chooser.setDialogTitle(title);
+      chooser.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
+
+      if(defaultDirectory != null)
+         chooser.setCurrentDirectory( defaultDirectory );
+      
+      if (chooser.showOpenDialog(getParent()) != JFileChooser.APPROVE_OPTION)
+         return null;
+         
+      return chooser.getSelectedFile();
+   }
 }
