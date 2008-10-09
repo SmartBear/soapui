@@ -12,10 +12,7 @@
 package com.eviware.soapui.impl.wsdl.monitor.jettyproxy;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.util.Enumeration;
 import java.util.HashSet;
 
@@ -30,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.mortbay.jetty.HttpSchemes;
 import org.mortbay.jetty.client.HttpClient;
-import org.mortbay.util.IO;
 import org.mortbay.util.ajax.Continuation;
 import org.mortbay.util.ajax.ContinuationSupport;
 
@@ -41,12 +37,12 @@ import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 public class ProxyServlet implements Servlet
 {
 
-	private ServletConfig config;
-	private ServletContext context;
-	private HttpClient client;
-	private JProxyServletWsdlMonitorMessageExchange capturedData;
-	private SoapMonitor monitor;
-	private WsdlProject project;
+	protected ServletConfig config;
+	protected ServletContext context;
+	protected HttpClient client;
+	protected JProxyServletWsdlMonitorMessageExchange capturedData;
+	protected SoapMonitor monitor;
+	protected WsdlProject project;
 
 	static HashSet<String> dontProxyHeaders = new HashSet<String>();
 	{
@@ -114,12 +110,6 @@ public class ProxyServlet implements Servlet
 			capturedData.setRequestHeader(httpRequest);
 		}
 
-		// if ("CONNECT".equalsIgnoreCase(httpRequest.getMethod()))
-		// {
-		// handleConnect(httpRequest,httpResponse);
-		// }
-		// else
-		// {
 		CaptureInputStream capture = new CaptureInputStream(httpRequest.getInputStream());
 		Continuation continuation = ContinuationSupport.getContinuation(httpRequest, httpRequest);
 
@@ -141,8 +131,6 @@ public class ProxyServlet implements Servlet
 			InetSocketAddress address = new InetSocketAddress(httpRequest.getServerName(), httpRequest.getServerPort());
 			exchange.setAddress(address);
 
-			System.err.println("PROXY TO http://" + address.getHostName() + ":" + address.getPort() + uri);
-
 			// check connection header
 			String connectionHeader = httpRequest.getHeader("Connection");
 			if (connectionHeader != null)
@@ -157,7 +145,7 @@ public class ProxyServlet implements Servlet
 			boolean hasContent = false;
 			@SuppressWarnings("unused")
 			long contentLength = -1;
-			Enumeration headerNames = httpRequest.getHeaderNames();
+			Enumeration<?> headerNames = httpRequest.getHeaderNames();
 			while (headerNames.hasMoreElements())
 			{
 				String hdr = (String) headerNames.nextElement();
@@ -173,7 +161,7 @@ public class ProxyServlet implements Servlet
 				if ("content-length".equals(lhdr))
 					contentLength = request.getContentLength();
 
-				Enumeration vals = httpRequest.getHeaders(hdr);
+				Enumeration<?> vals = httpRequest.getHeaders(hdr);
 				while (vals.hasMoreElements())
 				{
 					String val = (String) vals.nextElement();
@@ -197,31 +185,13 @@ public class ProxyServlet implements Servlet
 			client.send(exchange);
 			continuation.suspend(3000);
 		}
-		// }
-		// if operation is stoped clear it.
+		//wait for transaction to end and store it.
+		while(capturedData.isStopCapture());
 		if (!capturedData.isStopCapture())
 		{
-			// capturedData.discard();
 			monitor.addMessageExchange(capturedData);
-			System.err.println("Killed " + capturedData.toString());
 			capturedData = null;
 		}
 	}
-
-
-
-	// public static void main(String[] args) throws Exception {
-	//		
-	// Server server = new Server();
-	// SelectChannelConnector connector = new SelectChannelConnector();
-	// connector.setPort(8888);
-	// server.addConnector(connector);
-	// Context context = new Context(server, "/", 0);
-	// context.addServlet(new ServletHolder(new ProxyServlet()), "/");
-	//		
-	// server.start();
-	// server.join();
-	//		
-	// }
 
 }

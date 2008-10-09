@@ -7,6 +7,8 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import javax.servlet.ServletException;
 
 import org.mortbay.jetty.Request;
@@ -40,7 +42,7 @@ public class Server extends org.mortbay.jetty.Server
 		final InputStream in = clientSocket.getInputStream();
 		final OutputStream out = clientSocket.getOutputStream();
 
-		final Socket socket = new Socket(inetAddress.getAddress(), inetAddress.getPort());
+		final SSLSocket socket = (SSLSocket) SSLSocketFactory.getDefault().createSocket(inetAddress.getAddress(), inetAddress.getPort());
 
 		final Response response = connection.getResponse();
 		response.setStatus(200);
@@ -50,7 +52,7 @@ public class Server extends org.mortbay.jetty.Server
 		IO.copyThread(socket.getInputStream(), out);
 
 		IO.copyThread(in, socket.getOutputStream());
-		
+
 	}
 
 }

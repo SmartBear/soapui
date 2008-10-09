@@ -13,54 +13,99 @@
 package com.eviware.soapui.impl.wsdl.monitor;
 
 import org.mortbay.jetty.bio.SocketConnector;
+import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
+import org.mortbay.thread.BoundedThreadPool;
 
+import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction;
+import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.HttpsProxyServlet;
 import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.ProxyServlet;
 import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.Server;
+import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.UISupport;
 
-public class SoapMonitorEngineImpl implements SoapMonitorEngine {
+public class SoapMonitorEngineImpl implements SoapMonitorEngine
+{
 
 	Server server = new Server();
 	SocketConnector connector = new SocketConnector();
+	private SslSocketConnector sslConnector;
+	private String sslEndpoint = null;
 
-	public boolean isRunning() {
+	public boolean isRunning()
+	{
 		return server.isRunning();
 	}
 
-	public void start(SoapMonitor soapMonitor, int localPort) {
-		
-		connector.setPort(localPort);
-		server.addConnector(connector);
+	public void start(SoapMonitor soapMonitor, int localPort)
+	{
+
+		Settings settings = soapMonitor.getProject().getSettings();
+		BoundedThreadPool threadPool = new BoundedThreadPool();
+		threadPool.setMaxThreads(100);
+		server.setThreadPool(threadPool);
 		Context context = new Context(server, "/", 0);
-		context.addServlet(new ServletHolder(new ProxyServlet(soapMonitor)), "/");
-		
-			try
-			{
-				server.start();
-			}
-			catch (Exception e)
-			{
-				UISupport.showErrorMessage("Error starting monitor: " + e.getMessage());
-			}
+
+		if (sslEndpoint != null)
+		{
+			sslConnector = new SslSocketConnector();
+			sslConnector.setKeystore(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_KEYSTORE, ""));
+			sslConnector.setPassword(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_PASSWORD, ""));
+			sslConnector.setKeyPassword(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_KEYPASSWORD, ""));
+			sslConnector.setTruststore(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_TRUSTSTORE, ""));
+			sslConnector.setTrustPassword(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, ""));
+			sslConnector.setMaxIdleTime(30000);
+			sslConnector.setNeedClientAuth(false);
+			sslConnector.setPort(localPort);
+
+			server.addConnector(sslConnector);
+			context.addServlet(new ServletHolder(new HttpsProxyServlet(soapMonitor, sslEndpoint)), "/");
+		}
+		else
+		{
+			connector.setPort(localPort);
+			server.addConnector(connector);
+			context.addServlet(new ServletHolder(new ProxyServlet(soapMonitor)), "/");
+		}
+		try
+		{
+			server.start();
+		}
+		catch (Exception e)
+		{
+			UISupport.showErrorMessage("Error starting monitor: " + e.getMessage());
+		}
 
 	}
 
-	public void stop() {
-		
-		try {
-			if( server != null ) {
+	public void stop()
+	{
+
+		try
+		{
+			if (server != null)
+			{
 				server.stop();
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
-		} finally {
-			if ( server != null ) { 
+		}
+		finally
+		{
+			if (server != null)
+			{
 				server.destroy();
 			}
 		}
 
+	}
+
+	protected void setSslEndpoint(String sslEndpoint)
+	{
+		this.sslEndpoint = sslEndpoint;
 	}
 
 }

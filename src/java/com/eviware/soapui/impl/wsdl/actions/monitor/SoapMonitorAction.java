@@ -23,10 +23,12 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.XFormField;
+import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
 
 public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 {
@@ -37,9 +39,9 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		super("Launch SOAP Monitor", "Launches a SOAP traffic monitor for this project");
 	}
 
-	public void perform(WsdlProject target, Object param)
+	public void perform(WsdlProject project, Object param)
 	{
-		if (target.getInterfaceCount() == 0)
+		if (project.getInterfaceCount() == 0)
 		{
 			UISupport.showErrorMessage("Missing interfaces to monitor");
 			return;
@@ -50,43 +52,131 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 			dialog = ADialogBuilder.buildDialog(LaunchForm.class);
 		}
 
-		Settings settings = target.getSettings();
+		Settings settings = project.getSettings();
 
 		StringList endpoints = new StringList();
 		endpoints.add(null);
 
-		for (Interface iface : target.getInterfaceList())
+		for (Interface iface : project.getInterfaceList())
 		{
 			if (iface.getInterfaceType().equals(WsdlInterfaceFactory.WSDL_TYPE))
 				endpoints.addAll(iface.getEndpoints());
 		}
 
 		dialog.setIntValue(LaunchForm.PORT, (int) settings.getLong(LaunchForm.PORT, 8081));
-		dialog.setOptions(LaunchForm.REQUEST_WSS, StringUtils.merge(target.getWssContainer().getIncomingWssNames(),
+		dialog.setOptions(LaunchForm.REQUEST_WSS, StringUtils.merge(project.getWssContainer().getIncomingWssNames(),
 				"<none>"));
-		dialog.setOptions(LaunchForm.RESPONSE_WSS, StringUtils.merge(target.getWssContainer().getIncomingWssNames(),
+		dialog.setOptions(LaunchForm.RESPONSE_WSS, StringUtils.merge(project.getWssContainer().getIncomingWssNames(),
 				"<none>"));
+		dialog.setValue(LaunchForm.SETSSLMON, settings.getString(LaunchForm.SETSSLMON, "").length() > 0 ? settings
+				.getString(LaunchForm.SETSSLMON, "") : "https://");
+		dialog.setOptions(LaunchForm.SSLORHTTP, new String[] { "SSL Tunnel", "HTTP Proxy" });
+
+		dialog.setValue(LaunchForm.SSLTUNNEL_KEYSTORE, settings.getString(LaunchForm.SSLTUNNEL_KEYSTORE, ""));
+		dialog.setValue(LaunchForm.SSLTUNNEL_PASSWORD, settings.getString(LaunchForm.SSLTUNNEL_PASSWORD, ""));
+		dialog.setValue(LaunchForm.SSLTUNNEL_KEYPASSWORD, settings.getString(LaunchForm.SSLTUNNEL_KEYPASSWORD, ""));
+		dialog.setValue(LaunchForm.SSLTUNNEL_TRUSTSTORE, settings.getString(LaunchForm.SSLTUNNEL_TRUSTSTORE, ""));
+		dialog.setValue(LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, settings.getString(
+				LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, ""));
+
+		XFormField sslOrHttp = dialog.getFormField(LaunchForm.SSLORHTTP);
+		sslOrHttp.setValue("SSL Tunnel");
+		sslOrHttp.addFormFieldListener(new XFormFieldListener()
+		{
+
+			public void valueChanged(XFormField sourceField, String newValue, String oldValue)
+			{
+				if ("HTTP Proxy".equals(newValue))
+				{
+					dialog.getFormField(LaunchForm.SETSSLMON).setEnabled(false);
+					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTORE).setEnabled(false);
+					dialog.getFormField(LaunchForm.SSLTUNNEL_PASSWORD).setEnabled(false);
+					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYPASSWORD).setEnabled(false);
+					dialog.getFormField(LaunchForm.SSLTUNNEL_TRUSTSTORE).setEnabled(false);
+					dialog.getFormField(LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD).setEnabled(false);
+				}
+				else
+				{
+					dialog.getFormField(LaunchForm.SETSSLMON).setEnabled(true);
+					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTORE).setEnabled(true);
+					dialog.getFormField(LaunchForm.SSLTUNNEL_PASSWORD).setEnabled(true);
+					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYPASSWORD).setEnabled(true);
+					dialog.getFormField(LaunchForm.SSLTUNNEL_TRUSTSTORE).setEnabled(true);
+					dialog.getFormField(LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD).setEnabled(true);
+				}
+			}
+
+		});
 
 		if (dialog.show())
 		{
 			int listenPort = dialog.getIntValue(LaunchForm.PORT, 8080);
 			settings.setLong(LaunchForm.PORT, listenPort);
 
-			openSoapMonitor(target, listenPort, dialog.getValue(LaunchForm.REQUEST_WSS), dialog
-					.getValue(LaunchForm.RESPONSE_WSS), dialog.getBooleanValue( LaunchForm.SETASPROXY ));
+			settings.setString(LaunchForm.SETSSLMON, dialog.getValue(LaunchForm.SETSSLMON));
+			
+			settings.setString(LaunchForm.SSLTUNNEL_KEYSTORE, dialog.getValue(LaunchForm.SSLTUNNEL_KEYSTORE));
+			settings.setString(LaunchForm.SSLTUNNEL_PASSWORD, dialog.getValue(LaunchForm.SSLTUNNEL_PASSWORD));
+			settings.setString(LaunchForm.SSLTUNNEL_KEYPASSWORD, dialog.getValue(LaunchForm.SSLTUNNEL_KEYPASSWORD));
+			settings.setString(LaunchForm.SSLTUNNEL_TRUSTSTORE, dialog.getValue(LaunchForm.SSLTUNNEL_TRUSTSTORE));
+			settings.setString(LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, dialog.getValue(LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD));
+
+			if ("HTTP Proxy".equals(dialog.getValue(LaunchForm.SSLORHTTP)))
+			{
+				openSoapMonitor(project, listenPort, dialog.getValue(LaunchForm.REQUEST_WSS), dialog
+						.getValue(LaunchForm.RESPONSE_WSS), dialog.getBooleanValue(LaunchForm.SETASPROXY), null);
+			}
+			else
+			{
+				openSoapMonitor(project, listenPort, dialog.getValue(LaunchForm.REQUEST_WSS), dialog
+						.getValue(LaunchForm.RESPONSE_WSS), dialog.getBooleanValue(LaunchForm.SETASPROXY), dialog
+						.getValue(LaunchForm.SETSSLMON));
+			}
 		}
 	}
 
 	protected void openSoapMonitor(WsdlProject target, int listenPort, String incomingRequestWss,
-			String incomingResponseWss, boolean setAsProxy)
+			String incomingResponseWss, boolean setAsProxy, String sslEndpoint)
 	{
-		UISupport.showDesktopPanel(new SoapMonitorDesktopPanel(target, listenPort, incomingRequestWss,
-				incomingResponseWss, setAsProxy));
+		if (sslEndpoint == null)
+		{
+			UISupport.showDesktopPanel(new SoapMonitorDesktopPanel(target, listenPort, incomingRequestWss,
+					incomingResponseWss, setAsProxy, null));
+		}
+		else
+		{
+			String ssl = validate(sslEndpoint);
+			if (ssl == null)
+			{
+				UISupport.showErrorMessage("SSL Monitor needs endpoint.");
+			}
+			else
+			{
+				UISupport.showDesktopPanel(new SoapMonitorDesktopPanel(target, listenPort, incomingRequestWss,
+						incomingResponseWss, setAsProxy, ssl));
+			}
+		}
 	}
 
-	@AForm(description = "Specify SOAP Monitor settings", name = "Launch SOAP Monitor", helpUrl = HelpUrls.SOAPMONITOR_HELP_URL )
-	private interface LaunchForm
+	private String validate(String sslEndpoint)
 	{
+		String res = sslEndpoint;
+		int prot = sslEndpoint.indexOf("://");
+		if (prot > 0)
+			res = sslEndpoint.substring(prot + 3);
+		if (res.trim().length() > 0)
+		{
+			return res.trim();
+		}
+		return null;
+	}
+
+	@AForm(description = "Specify SOAP Monitor settings", name = "Launch SOAP Monitor", helpUrl = HelpUrls.SOAPMONITOR_HELP_URL)
+	public interface LaunchForm
+	{
+		@AField(description = "SSL tunnel or HTTP proxy", name = "Choose one:", type = AFieldType.RADIOGROUP)
+		public final static String SSLORHTTP = "Choose one:";
+
 		@AField(description = "The local port to listen on", name = "Port", type = AFieldType.INT)
 		public final static String PORT = "Port";
 
@@ -96,8 +186,25 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		@AField(description = "The Outgoing WSS configuration to use for processing responses", name = "Incoming Response WSS", type = AFieldType.ENUMERATION)
 		public final static String RESPONSE_WSS = "Incoming Response WSS";
 
-      @AField(description = "Set as Global Proxy", name = "Set as Proxy", type = AFieldType.BOOLEAN)
-      public final static String SETASPROXY = "Set as Proxy";
+		@AField(description = "Set as Global Proxy", name = "Set as Proxy", type = AFieldType.BOOLEAN)
+		public final static String SETASPROXY = "Set as Proxy";
 
+		@AField(description = "Set endpoint", name = "Set endpoint for SSL Tunnel:", type = AFieldType.STRING)
+		public final static String SETSSLMON = "Set endpoint for SSL Tunnel:";
+
+		@AField(description = "Set SSL Tunnel KeyStore", name = "SSL tunnel - KeyStore", type = AFieldType.STRING)
+		public final static String SSLTUNNEL_KEYSTORE = "SSL tunnel - KeyStore";
+
+		@AField(description = "Set SSL Tunnel Password", name = "SSL tunnel - Password", type = AFieldType.PASSWORD)
+		public final static String SSLTUNNEL_PASSWORD = "SSL tunnel - Password";
+
+		@AField(description = "Set SSL Tunnel KeyPassword", name = "SSL tunnel - KeyPassword", type = AFieldType.PASSWORD)
+		public final static String SSLTUNNEL_KEYPASSWORD = "SSL tunnel - KeyPassword";
+
+		@AField(description = "Set SSL Tunnel TrustStore", name = "SSL tunnel - TrustStore", type = AFieldType.STRING)
+		public final static String SSLTUNNEL_TRUSTSTORE = "SSL tunnel - TrustStore";
+
+		@AField(description = "Set SSL Tunnel TrustStore Password", name = "SSL tunnel - TrustStore Password", type = AFieldType.PASSWORD)
+		public final static String SSLTUNNEL_TRUSTSTORE_PASSWORD = "SSL tunnel - TrustStore Password";
 	}
 }

@@ -72,7 +72,6 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
       responseHeaders = new StringToStringMap();
       requestHeaders = new StringToStringMap();
       timestampStart = System.currentTimeMillis();
-      System.err.println( "Created " + timestampStart + " " + this.toString() );
       this.project = project;
       capture = true;
    }
@@ -134,7 +133,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
    private void parseReponseData( IncomingWss incomingResponseWss )
    {
 
-      ByteArrayInputStream in = new ByteArrayInputStream( response );
+      ByteArrayInputStream in = new ByteArrayInputStream( response == null ? new byte[0] : response );
       try
       {
 
@@ -364,24 +363,10 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
    public void setRequest( byte[] request )
    {
       this.request = request;
-//      if (this.request == null ) {
-//			this.request = request;
-//		} else {
-//			byte[] newRequest = new byte[this.request.length + request.length];
-//			for(int i = 0; i < this.request.length; i++) {
-//				newRequest[i] = this.request[i];
-//			}
-//			for( int i = this.request.length; i < newRequest.length; i++) {
-//				newRequest[i] = request[i - this.response.length];
-//			}
-//			this.request = newRequest;
-//		}
-      // this.requestContent = XmlUtils.prettyPrintXml( new String(request) );
    }
 
    public void setResponse( byte[] response )
    {
-      // this.response = response;
       if( this.response == null )
       {
          this.response = response;
@@ -455,4 +440,5 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
    {
       return null;  //To change body of implemented methods use File | Settings | File Templates.
    }
+
 }

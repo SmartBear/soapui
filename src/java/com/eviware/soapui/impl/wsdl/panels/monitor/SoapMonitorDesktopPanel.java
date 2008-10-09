@@ -29,7 +29,7 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 	private SoapMonitor soapMonitor;
 	private final WsdlProject project;
 
-	public SoapMonitorDesktopPanel( WsdlProject project, int sourcePort, String incomingRequestWss, String incomingResponseWss, boolean setAsProxy )
+	public SoapMonitorDesktopPanel( WsdlProject project, int sourcePort, String incomingRequestWss, String incomingResponseWss, boolean setAsProxy, String sslEndpoint )
 	{
 		super( "SOAP Monitor [" + project.getName() + "]", null, new JPanel( new BorderLayout() ) );
 		this.project = project;
@@ -38,7 +38,8 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 		JTabbedPane tabs = new JTabbedPane();
 
 		JXToolBar toolbar = UISupport.createToolbar();
-		soapMonitor = new SoapMonitor( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy );
+		soapMonitor = new SoapMonitor( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy, sslEndpoint );
+		
 		
 		tabs.add( soapMonitor, "Traffic Log" );
 		

@@ -125,10 +125,11 @@ public class SoapMonitor extends JPanel
    private SoapMonitorEngine monitorEngine;
    private String oldProxyHost;
    private String oldProxyPort;
+	private String sslEndpoint;
 
    public SoapMonitor(
            WsdlProject project, int listenPort,
-           String incomingRequestWss, String incomingResponseWss, JXToolBar mainToolbar, boolean setAsProxy
+           String incomingRequestWss, String incomingResponseWss, JXToolBar mainToolbar, boolean setAsProxy, String sslEndpoint
    )
    {
       super( new BorderLayout() );
@@ -138,6 +139,7 @@ public class SoapMonitor extends JPanel
       this.incomingResponseWss = incomingResponseWss;
       this.setAsProxy = setAsProxy;
       this.maxRows = 100;
+      this.sslEndpoint = sslEndpoint;
 
       // set the slow link to the passed down link
 
@@ -149,7 +151,13 @@ public class SoapMonitor extends JPanel
       start();
    }
 
-   private JComponent buildContent()
+   public SoapMonitor(WsdlProject project, int sourcePort, String incomingRequestWss, String incomingResponseWss,
+			JXToolBar toolbar, boolean setAsProxy)
+	{
+   	this(project,sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy, null);
+	}
+
+	private JComponent buildContent()
    {
       JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildLog() );
 
@@ -442,6 +450,7 @@ public class SoapMonitor extends JPanel
 //		monitorEngine = new TcpMonMonitorEngine();
 
       monitorEngine = new SoapMonitorEngineImpl();
+      ((SoapMonitorEngineImpl) monitorEngine).setSslEndpoint(sslEndpoint);
       monitorEngine.start( this, localPort );
 
       if( monitorEngine.isRunning() )
