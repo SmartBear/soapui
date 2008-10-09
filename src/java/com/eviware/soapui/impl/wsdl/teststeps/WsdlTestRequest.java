@@ -322,6 +322,8 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
          AttachmentConfig config = attachmentConfigs.get(i);
          getAttachmentsList().get(i).updateConfig(config);
       }
+
+
    }
 
    @Override

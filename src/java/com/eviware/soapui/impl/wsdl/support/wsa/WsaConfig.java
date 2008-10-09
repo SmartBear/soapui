@@ -11,18 +11,18 @@
  */
 package com.eviware.soapui.impl.wsdl.support.wsa;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-
 import com.eviware.soapui.config.MustUnderstandTypeConfig;
 import com.eviware.soapui.config.WsaConfigConfig;
 import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.support.PropertyChangeNotifier;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 public class WsaConfig implements PropertyChangeNotifier 
 {
 
-	private final WsaConfigConfig wsaConfig;
+	private WsaConfigConfig wsaConfig;
 	
 	private PropertyChangeSupport propertyChangeSupport;
 
@@ -199,6 +199,8 @@ public class WsaConfig implements PropertyChangeNotifier
 		return container;
 	}
 
-
-
+   public void setConfig( WsaConfigConfig wsaConfig )
+   {
+      this.wsaConfig = wsaConfig;
+   }
 }
