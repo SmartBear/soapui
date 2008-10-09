@@ -12,6 +12,17 @@
 
 package com.eviware.soapui.impl.rest;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.namespace.QName;
+
+import org.apache.xmlbeans.SchemaGlobalElement;
+import org.apache.xmlbeans.SchemaType;
+import org.w3c.dom.Document;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestResourceRepresentationConfig;
 import com.eviware.soapui.config.RestResourceRepresentationTypeConfig;
@@ -19,15 +30,6 @@ import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder
 import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
 import com.eviware.soapui.support.PropertyChangeNotifier;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.xmlbeans.SchemaGlobalElement;
-import org.apache.xmlbeans.SchemaType;
-import org.w3c.dom.Document;
-
-import javax.xml.namespace.QName;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.List;
 
 public class RestRepresentation implements PropertyChangeNotifier
 {
@@ -41,8 +43,6 @@ public class RestRepresentation implements PropertyChangeNotifier
    {
       REQUEST, RESPONSE, FAULT
    }
-
-   ;
 
    public RestRepresentation( RestRequest restResource, RestResourceRepresentationConfig config )
    {
