@@ -19,6 +19,7 @@ import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewWsdlProjectAction;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.axis1.Axis1XWSDL2JavaAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.axis2.Axis2WSDL2CodeAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.cxf.CXFAction;
@@ -727,7 +728,11 @@ public class SoapUI
 
             if( modelItem instanceof TestPropertyHolder )
             {
-               propertyHolderTable = new PropertyHolderTable( (TestPropertyHolder) modelItem );
+               // check for closed project -> this should be solved with a separate ClosedWsdlProject modelItem
+               if(  !(modelItem instanceof WsdlProject ) || ((WsdlProject)modelItem).isOpen() )
+               {
+                  propertyHolderTable = new PropertyHolderTable( (TestPropertyHolder) modelItem );
+               }
             }
 
             PanelBuilder<ModelItem> panelBuilder = PanelBuilderRegistry.getPanelBuilder( modelItem );
