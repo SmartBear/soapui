@@ -12,18 +12,16 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-
-import org.apache.commons.httpclient.HttpVersion;
-import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
-
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
-import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
+import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.HttpSettings;
+import org.apache.commons.httpclient.HttpVersion;
+import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
 
 /**
  * RequestFilter that applies SoapUI HTTP-settings to the current request
@@ -33,12 +31,12 @@ import com.eviware.soapui.settings.HttpSettings;
 
 public class HttpSettingsRequestFilter extends AbstractRequestFilter
 {
-	public void filterAbstractHttpRequest(SubmitContext context, AbstractHttpRequest<?> wsdlRequest)
+	public void filterAbstractHttpRequest(SubmitContext context, AbstractHttpRequest<?> httpRequest)
 	{
 		ExtendedHttpMethod httpMethod = (ExtendedHttpMethod) context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 		
 		//	 set maxsize
-		Settings settings = wsdlRequest.getSettings();
+		Settings settings = httpRequest.getSettings();
 
 		// close connections?
 		if (settings.getBoolean(HttpSettings.CLOSE_CONNECTIONS))
@@ -76,12 +74,15 @@ public class HttpSettingsRequestFilter extends AbstractRequestFilter
 		}
 		
 		// max size..
-		long maxSize = wsdlRequest.getMaxSize();
+		long maxSize = httpRequest.getMaxSize();
 		if( maxSize == 0 )
 			maxSize = settings.getLong( HttpSettings.MAX_RESPONSE_SIZE, 0 );
 		if( maxSize > 0 )
 			httpMethod.setMaxSize( maxSize ); 
-		
+
+      // follow redirects
+      httpMethod.setFollowRedirects( httpRequest.isFollowRedirects() );
+
 		// apply global settings
 		HttpClientSupport.applyHttpSettings(httpMethod, settings);
 	}

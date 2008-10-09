@@ -128,7 +128,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				headerValue = PropertyExpansionUtils.expandProperties( submitContext, headerValue );
 				httpMethod.setRequestHeader( header, headerValue );
 			}
-			
+
 			//	do request
 			WsdlProject project = (WsdlProject) ModelSupport.getModelItemProject( httpRequest );
 			WssCrypto crypto = project.getWssContainer().getCryptoByName(

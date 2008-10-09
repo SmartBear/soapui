@@ -60,7 +60,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
    public static final String DISABLE_MULTIPART_ATTACHMENTS = WsdlRequest.class.getName() + "@disable-multipart-attachments";
    public static final String DUMP_FILE = AbstractHttpRequest.class.getName() + "@dump-file";
    public static final String MAX_SIZE = AbstractHttpRequest.class.getName() + "@max-size";
-   ;
+   public static final String FOLLOW_REDIRECTS = AbstractHttpRequest.class.getName() + "@follow-redirects";
 
    public enum RequestMethod
    {
@@ -516,6 +516,18 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
       boolean old = getSettings().getBoolean( STRIP_WHITESPACES );
       getSettings().setBoolean( STRIP_WHITESPACES, stripWhitespaces );
       notifyPropertyChanged( STRIP_WHITESPACES, old, stripWhitespaces );
+   }
+
+   public boolean isFollowRedirects()
+   {
+      return getSettings().getBoolean( FOLLOW_REDIRECTS );
+   }
+
+   public void setFollowRedirects( boolean followRedirects )
+   {
+      boolean old = getSettings().getBoolean( FOLLOW_REDIRECTS );
+      getSettings().setBoolean( FOLLOW_REDIRECTS, followRedirects );
+      notifyPropertyChanged( FOLLOW_REDIRECTS, old, followRedirects );
    }
 
    @Override

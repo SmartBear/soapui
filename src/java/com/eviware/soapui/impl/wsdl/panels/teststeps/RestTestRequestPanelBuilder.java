@@ -21,7 +21,7 @@ import javax.swing.*;
 
 /**
  * PanelBuilder for RestTestRequest
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -31,51 +31,51 @@ public class RestTestRequestPanelBuilder extends EmptyPanelBuilder<RestTestReque
    {
    }
 
-   public RestTestRequestDesktopPanel buildDesktopPanel(RestTestRequestStep testStep)
+   public RestTestRequestDesktopPanel buildDesktopPanel( RestTestRequestStep testStep )
    {
-      return new RestTestRequestDesktopPanel(testStep);
+      return new RestTestRequestDesktopPanel( testStep );
    }
 
    public boolean hasDesktopPanel()
    {
       return true;
    }
-   
-   public JPanel buildOverviewPanel(RestTestRequestStep testStep)
+
+   public JPanel buildOverviewPanel( RestTestRequestStep testStep )
    {
-   	RestTestRequest request = testStep.getTestRequest();
-   	JPropertiesTable<RestTestRequest> table = new JPropertiesTable<RestTestRequest>( "REST TestRequest Properties" );
-   	
-   	// basic properties
-   	table.addProperty( "Name", "name", true );
-   	table.addProperty( "Description", "description", true );
-//   	table.addProperty( "Message Size", "contentLength", false );
-   	table.addProperty( "Encoding", "encoding", new String[] {null, "UTF-8", "iso-8859-1" } );
+      RestTestRequest request = testStep.getTestRequest();
+      JPropertiesTable<RestTestRequest> table = new JPropertiesTable<RestTestRequest>( "REST TestRequest Properties" );
+
+      // basic properties
+      table.addProperty( "Name", "name", true );
+      table.addProperty( "Description", "description", true );
+      table.addProperty( "Message Size", "contentLength", false );
+      table.addProperty( "Encoding", "encoding", new String[]{null, "UTF-8", "iso-8859-1"} );
 
       if( request.getOperation() == null )
          table.addProperty( "Path", "path", true );
       else
          table.addProperty( "Endpoint", "endpoint", request.getInterface().getEndpoints() );
-      
+
       table.addProperty( "Bind Address", "bindAddress", true );
+      table.addProperty( "Follow Redirects", "followRedirects", JPropertiesTable.BOOLEAN_OPTIONS );
 
-//      table.addProperty( "Service", "service" );
-//   	table.addProperty( "Resource", "resourcePath" );
+      table.addProperty( "Service", "service" );
+      table.addProperty( "Resource", "resourcePath" );
 
-   	// security / authentication
-   	table.addProperty( "Username", "username", true );
-   	table.addProperty( "Password", "password", true );
-   	table.addProperty( "Domain", "domain", true );
-   	
-   	// post-processing
-   	table.addProperty( "Pretty Print", "prettyPrint", JPropertiesTable.BOOLEAN_OPTIONS );
-   	table.addProperty( "Dump File", "dumpFile", true ).setDescription("Dumps response message to specified file" );
-   	table.addProperty( "Max Size", "maxSize", true ).setDescription("The maximum number of bytes to receive" );
+      // security / authentication
+      table.addProperty( "Username", "username", true );
+      table.addProperty( "Password", "password", true );
+      table.addProperty( "Domain", "domain", true );
 
-   	
-   	table.setPropertyObject( request );
-   	
-   	return table;
+      // post-processing
+      table.addProperty( "Pretty Print", "prettyPrint", JPropertiesTable.BOOLEAN_OPTIONS );
+      table.addProperty( "Dump File", "dumpFile", true ).setDescription( "Dumps response message to specified file" );
+      table.addProperty( "Max Size", "maxSize", true ).setDescription( "The maximum number of bytes to receive" );
+
+      table.setPropertyObject( request );
+
+      return table;
    }
 
    public boolean hasOverviewPanel()
