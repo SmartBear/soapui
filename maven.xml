@@ -61,13 +61,31 @@
        <attainGoal name="xdoc"/>
 
        <attainGoal name="soapui:create-binary-dist"/>
+
        <!-- <attainGoal name="soapui:create-standalone-binary-dist"/> -->
-       
+
        <ant:copy todir="target/docs/repository/eviware/jars">
           <ant:fileset file="${maven.repo.local}/eviware/jars/*-xmlbeans-${pom.currentVersion}.jar"/>
           <ant:fileset file="target/soapui-${pom.currentVersion}.jar"/>
        </ant:copy>
-       
+
+    </goal>
+
+   	<!-- Create soapui SNAPSHOT distribution -->
+
+    <goal name="soapui:nightly-build">
+
+       <attainGoal name="clean"/>
+       <attainGoal name="soapui:generate-xml-beans"/>
+       <attainGoal name="jar:install"/>
+
+       <attainGoal name="soapui:create-binary-dist"/>
+       <attainGoal name="soapui:create-standalone-binary-dist"/>
+       <attainGoal name="soapui:make-installer"/>
+
+       <attainGoal name="soapui:publish"/>
+
+
     </goal>
     
     <!-- fix apos entities for IE in urchinTracker onClicks -->
