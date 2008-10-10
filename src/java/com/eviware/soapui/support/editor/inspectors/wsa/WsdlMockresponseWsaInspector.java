@@ -12,8 +12,13 @@
 
 package com.eviware.soapui.support.editor.inspectors.wsa;
 
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import javax.swing.JCheckBox;
+import javax.swing.JTextField;
 
 import com.eviware.soapui.config.MustUnderstandTypeConfig;
 import com.eviware.soapui.config.WsaVersionTypeConfig;
@@ -24,6 +29,9 @@ import com.eviware.soapui.support.editor.xml.XmlInspector;
 public class WsdlMockresponseWsaInspector extends AbstractWsaInspector implements XmlInspector, PropertyChangeListener
 {
 	private final WsdlMockResponse response;
+	private JCheckBox generateMessageIdCheckBox;
+	private JTextField messageIdTextField;
+
 
 	public WsdlMockresponseWsaInspector( WsdlMockResponse response )
 	{
@@ -58,7 +66,16 @@ public class WsdlMockresponseWsaInspector extends AbstractWsaInspector implement
 		form.appendTextField( "from", "From", "The source endpoint reference" );
 		form.appendTextField( "faultTo", "Fault to", "The fault endpoint reference" );
 		form.appendTextField( "replyTo", "Reply to", "The reply endpoint reference" );
-		form.appendTextField( "messageID", "MessageID", " The ID of a message that can be used to uniquely identify a message, will be generated if left empty and ws-a settings 'generate message id' checked " );
+		messageIdTextField = form.appendTextField( "messageID", "MessageID", " The ID of a message that can be used to uniquely identify a message, will be generated if left empty and ws-a settings 'generate message id' checked " );
+		generateMessageIdCheckBox = form.appendCheckBox("generateMessageId", "Generate MessageID", "Randomly generate MessageId");
+		messageIdTextField.setEnabled(!generateMessageIdCheckBox.isSelected());
+		generateMessageIdCheckBox.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent arg0)
+			{
+				messageIdTextField.setEnabled(!generateMessageIdCheckBox.isSelected());
+			}});
 		form.addSpace( 5 );
 	}
 }

@@ -12,25 +12,32 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.soap;
 
+import org.apache.xmlbeans.XmlObject;
+
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.WsaPropertiesTable;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaValidator;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMockResponseTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.testsuite.*;
+import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
+import com.eviware.soapui.model.testsuite.AssertionException;
+import com.eviware.soapui.model.testsuite.RequestAssertion;
+import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.SimpleForm;
+import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
-
-import javax.swing.*;
-import java.awt.*;
+import com.eviware.x.form.XForm;
+import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.XFormDialogBuilder;
+import com.eviware.x.form.XFormFactory;
 
 /**
  * Assertion for verifying that WS-Addressing processing was ok
@@ -42,17 +49,14 @@ public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssert
 {
 	public static final String ID = "WS Addressing Assertion";
 	public static final String LABEL = "WS-Addressing";
-	private JDialog configurationDialog;
-	private boolean configureResult;
-	private SimpleForm editorForm;
 	private WsaPropertiesTable wsaPropertiesTable;
 	private boolean assertWsaAction;
 	private boolean assertWsaTo;
 	private boolean assertWsaRelatesTo;
-	private JCheckBox assertWsaActionCheckBox;
-	private JCheckBox assertWsaToCheckBox;
-	private JCheckBox assertWsaRelatesToCheckBox;
-
+	private XFormDialog dialog;
+	private static final String ASSERT_ACTION = "Assert wsa:Action";
+	private static final String ASSERT_TO = "Assert wsa:To";
+	private static final String ASSERT_RELATES_TO = "Assert wsa:RelatesTo";
    /**
 	 * Constructor for our assertion.
 	 * 
@@ -64,9 +68,9 @@ public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssert
 		super(assertionConfig, modelItem, false, true, false, true);
 
 		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader(getConfiguration());
-		assertWsaAction = reader.readBoolean("action", true);
-		assertWsaTo = reader.readBoolean("to", true);
-		assertWsaRelatesTo = reader.readBoolean("relatesTo", false);
+		assertWsaAction = reader.readBoolean("asertWsaAction", true);
+		assertWsaTo = reader.readBoolean("asertWsaTo", true);
+		assertWsaRelatesTo = reader.readBoolean("asertWsaRelatesTo", false);
 	}
 
    public static class Factory extends AbstractTestAssertionFactory
@@ -113,67 +117,47 @@ public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssert
 
 	public boolean configure()
 	{
-		if (configurationDialog == null)
-			buildConfigurationDialog();
+		if( dialog == null )
+			buildDialog();
 
-		assertWsaActionCheckBox.setSelected( assertWsaAction );
-		assertWsaToCheckBox.setSelected( assertWsaTo );
-		assertWsaRelatesToCheckBox.setSelected( assertWsaRelatesTo );
+		StringToStringMap values = new StringToStringMap();
+		values.put( ASSERT_ACTION, assertWsaAction );
+		values.put( ASSERT_TO, assertWsaTo );
+		values.put( ASSERT_RELATES_TO, assertWsaRelatesTo );
 
-		UISupport.showDialog(configurationDialog);
-		return configureResult;
-
-	}
-
-	protected void buildConfigurationDialog()
-	{
-		String onlineHelpUrl = "";
-		configurationDialog = new SimpleDialog("WS-A Assertion", "Set options for WS-Addressing assertion", onlineHelpUrl, true)
+		values = dialog.show( values );
+		if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
 		{
-
-			@Override
-			protected Component buildContent()
-			{
-				editorForm = new SimpleForm();
-            
-				assertWsaActionCheckBox = editorForm.appendCheckBox( "wsa:Action", "Asserts value of wsa:Action against WSDL metadata", assertWsaAction );
-				assertWsaToCheckBox = editorForm.appendCheckBox("wsa:To", "Asserts value of wsa:To against WSDL metadata", assertWsaTo );
-				assertWsaRelatesToCheckBox = editorForm.appendCheckBox("wsa:RelatesTo", "Asserts value of wsa:RelatesTo in regard to sent MessageID", assertWsaRelatesTo );
-
-				return editorForm.getPanel();
-			}
-
-			@Override
-			protected boolean handleOk()
-			{
-				setAssertWsaAction( assertWsaActionCheckBox.isSelected());
-				setAssertWsaTo( assertWsaToCheckBox.isSelected());
-				setAssertWsaRelatesTo( assertWsaRelatesToCheckBox.isSelected());
-				wsaPropertiesTable = new WsaPropertiesTable( assertWsaAction, assertWsaTo, assertWsaRelatesTo );
-				configureResult = true;
-				configurationDialog.setVisible(false);
-				return true;
-			}
-
-		};
-		configurationDialog.setSize(400, 200);
-		configurationDialog.setModal(true);
-	}
-
-	private JButton okButton;
-
-	public SimpleForm getForm()
-	{
-		if (editorForm == null)
-		{
+			assertWsaAction = values.getBoolean( ASSERT_ACTION );
+			assertWsaTo = values.getBoolean(ASSERT_TO);
+			assertWsaRelatesTo = values.getBoolean(ASSERT_RELATES_TO);
 		}
 
-		return editorForm;
+		wsaPropertiesTable = new WsaPropertiesTable(assertWsaAction, assertWsaTo, assertWsaRelatesTo);
+		setConfiguration( createConfiguration() );
+		return true;
 	}
 
-	public JButton getDefaultButton()
+	private void buildDialog()
 	{
-		return okButton;
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Ws-a properties to assert" );
+		XForm mainForm = builder.createForm( "Basic" );
+		mainForm.addCheckBox(ASSERT_ACTION, "Check if 'wsa:Action' exists and has the right value");
+		mainForm.addCheckBox( ASSERT_TO, "Check if 'wsa:To' exists" );
+		mainForm.addCheckBox( ASSERT_RELATES_TO, "Check if 'wsa:RelatesTo' exists" );
+
+		dialog = builder.buildDialog( builder
+					.buildOkCancelHelpActions( HelpUrls.SIMPLE_CONTAINS_HELP_URL ), "Specify options",
+					UISupport.OPTIONS_ICON );
+	}
+
+	protected XmlObject createConfiguration()
+	{
+		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
+		builder.add( "asertWsaAction", assertWsaAction );
+		builder.add( "asertWsaTo", assertWsaTo );
+		builder.add( "asertWsaRelatesTo", assertWsaRelatesTo );
+		return builder.finish();
 	}
 
 	public boolean isAssertWsaAction()

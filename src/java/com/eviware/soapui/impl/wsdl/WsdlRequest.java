@@ -471,6 +471,7 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
       notifyPropertyChanged( "wsAddressing", old, wsAddressing );
    }
 
+	
    public PropertyExpansion[] getPropertyExpansions()
    {
       PropertyExpansionsResult result = new PropertyExpansionsResult( this, this );
@@ -509,23 +510,22 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
       }
    }
 
-   public AttachmentEncoding getAttachmentEncoding( String partName )
-   {
-      return AttachmentUtils.getAttachmentEncoding( getOperation(), partName, false );
-   }
-
-   public WsaConfig getWsaConfig()
-   {
-      if( wsaConfig == null )
-      {
-         if( !getConfig().isSetWsaConfig() )
-         {
-            getConfig().addNewWsaConfig();
-         }
-         wsaConfig = new WsaConfig( getConfig().getWsaConfig(), this );
-      }
-      return wsaConfig;
-   }
+	public AttachmentEncoding getAttachmentEncoding(String partName)
+	{
+		return AttachmentUtils.getAttachmentEncoding( getOperation(), partName, false );
+	}
+	public WsaConfig getWsaConfig() {
+		if (wsaConfig == null)
+		{
+			if (!getConfig().isSetWsaConfig())
+			{
+				getConfig().addNewWsaConfig();
+			}
+			wsaConfig = new WsaConfig(getConfig().getWsaConfig(), this);
+			wsaConfig.setGenerateMessageId(true);
+		}
+		return wsaConfig;
+	}
 
    public ModelItem getModelItem()
    {

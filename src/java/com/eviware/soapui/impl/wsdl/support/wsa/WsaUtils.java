@@ -274,16 +274,16 @@ public class WsaUtils
 				header = processWsaRelatesToProperty(header, override, "wsa:RelatesTo", relationshipType, relatesTo);
 			}
 
-			String msgId = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getMessageID());
-			if (!StringUtils.isNullOrEmpty(msgId))
+			if (wsaContainer.getWsaConfig().isGenerateMessageId() )
 			{
-				header = processWsaProperty(header, override, "wsa:MessageID", msgId, false);
-			}
-			else if (operation.isRequestResponse() && SoapUI.getSettings().getBoolean(WsaSettings.GENERATE_MESSAGE_ID))
-			{
-				// if msgId not specified but wsa:msgId mandatory create one
 				String generatedMessageId = UUID.randomUUID().toString();
 				header = processWsaProperty(header, override, "wsa:MessageID", generatedMessageId, false);
+			} else {
+				String msgId = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getMessageID());
+				if (!StringUtils.isNullOrEmpty(msgId))
+				{
+					header = processWsaProperty(header, override, "wsa:MessageID", msgId, false);
+				}
 			}
 
 			String to = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getTo());
@@ -472,10 +472,16 @@ public class WsaUtils
 
 			}
 
-			String msgId = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getMessageID());
-			if (!StringUtils.isNullOrEmpty(msgId))
+			if (wsaContainer.getWsaConfig().isGenerateMessageId())
 			{
-				header = processWsaProperty(header, override, "wsa:MessageID", msgId, false);
+				String generatedMessageId = UUID.randomUUID().toString();
+				header = processWsaProperty(header, override, "wsa:MessageID", generatedMessageId, false);
+			} else {
+				String msgId = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getMessageID());
+				if (!StringUtils.isNullOrEmpty(msgId))
+				{
+					header = processWsaProperty(header, override, "wsa:MessageID", msgId, false);
+				}
 			}
 
 			content = xmlContentObject.xmlText();

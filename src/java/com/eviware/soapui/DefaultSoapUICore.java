@@ -227,10 +227,10 @@ public class DefaultSoapUICore implements SoapUICore
          settings.setBoolean( UISettings.SHOW_DESCRIPTIONS, true );
       }
 
-      if( !settings.isSet( WsaSettings.GENERATE_MESSAGE_ID ) )
-      {
-         settings.setBoolean( WsaSettings.GENERATE_MESSAGE_ID, true );
-      }
+//      if( !settings.isSet( WsaSettings.GENERATE_MESSAGE_ID ) )
+//      {
+//         settings.setBoolean( WsaSettings.GENERATE_MESSAGE_ID, true );
+//      }
 
       if( !settings.isSet( WsaSettings.USE_DEFAULT_ACTION ) )
       {
@@ -294,7 +294,7 @@ public class DefaultSoapUICore implements SoapUICore
       settings.setBoolean( WsaSettings.SOAP_ACTION_OVERRIDES_WSA_ACTION, false );
       settings.setBoolean( WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE, true );
       settings.setBoolean( WsaSettings.USE_DEFAULT_RELATES_TO, true );
-      settings.setBoolean( WsaSettings.GENERATE_MESSAGE_ID, true );
+//      settings.setBoolean( WsaSettings.GENERATE_MESSAGE_ID, true );
       settings.setBoolean( WsaSettings.OVERRIDE_EXISTING_HEADERS, false );
       settings.setBoolean( WsaSettings.ENABLE_FOR_OPTIONAL, false );
    }

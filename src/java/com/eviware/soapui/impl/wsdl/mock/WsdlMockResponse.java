@@ -998,6 +998,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
             getConfig().addNewWsaConfig();
          }
          wsaConfig = new WsaConfig( getConfig().getWsaConfig(), this );
+//         wsaConfig.setGenerateMessageId(true);
       }
       return wsaConfig;
    }

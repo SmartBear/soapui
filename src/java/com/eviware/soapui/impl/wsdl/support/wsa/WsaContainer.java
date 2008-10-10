@@ -22,4 +22,5 @@ public interface WsaContainer
 	WsaConfig getWsaConfig();
 
 	WsdlOperation getOperation();
+	
 }

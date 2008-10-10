@@ -77,6 +77,18 @@ public class WsaConfig implements PropertyChangeNotifier
 	{
 		return wsaConfig.getMessageID();
 	}
+	
+	public boolean isGenerateMessageId() {
+		return wsaConfig.getGenerateMessageId();
+	}
+	
+	public void setGenerateMessageId( boolean generateMessageId )
+	{
+		
+		boolean oldValue = isGenerateMessageId();
+		wsaConfig.setGenerateMessageId(generateMessageId);
+		propertyChangeSupport.firePropertyChange("generateMessageId", oldValue, generateMessageId);
+	}
 	public String getReplyTo()
 	{
 		return wsaConfig.getReplyTo();
@@ -145,7 +157,6 @@ public class WsaConfig implements PropertyChangeNotifier
 		wsaConfig.setMessageID(arg0);
 		propertyChangeSupport.firePropertyChange("messageID", oldValue, arg0);
 	}
-
 	public void setReplyTo(String arg0)
 	{
 		String oldValue = getReplyTo();

@@ -12,8 +12,13 @@
 
 package com.eviware.soapui.support.editor.inspectors.wsa;
 
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import javax.swing.JCheckBox;
+import javax.swing.JTextField;
 
 import com.eviware.soapui.config.MustUnderstandTypeConfig;
 import com.eviware.soapui.config.WsaVersionTypeConfig;
@@ -24,6 +29,8 @@ import com.eviware.soapui.support.editor.xml.XmlInspector;
 public class WsdlRequestWsaInspector extends AbstractWsaInspector implements XmlInspector, PropertyChangeListener
 {
 	private final WsdlRequest request;
+	private JCheckBox generateMessageIdCheckBox;
+	private JTextField messageIdTextField;
 
 	public WsdlRequestWsaInspector( WsdlRequest request )
 	{
@@ -51,7 +58,15 @@ public class WsdlRequestWsaInspector extends AbstractWsaInspector implements Xml
 		form.appendTextField( "action", "Action", "The action related to a message, will be generated if left empty and ws-a settings 'use default action...' checked " );
 		form.appendTextField( "to", "To", "The destination endpoint reference, will be generated if left empty" );
 		form.appendTextField( "replyTo", "Reply to", "The reply endpoint reference, will be generated if left empty" );
-		form.appendTextField( "messageID", "MessageID", " The ID of a message that can be used to uniquely identify a message, will be generated if left empty and ws-a settings 'generate message id' checked " );
+		messageIdTextField = form.appendTextField( "messageID", "MessageID", " The ID of a message that can be used to uniquely identify a message, will be generated if left empty and ws-a settings 'generate message id' checked " );
+		generateMessageIdCheckBox = form.appendCheckBox("generateMessageId", "Generate MessageID", "Randomly generate MessageId");
+		messageIdTextField.setEnabled(!generateMessageIdCheckBox.isSelected());
+		generateMessageIdCheckBox.addItemListener(new ItemListener() {
+
+		public void itemStateChanged(ItemEvent arg0)
+		{
+			messageIdTextField.setEnabled(!generateMessageIdCheckBox.isSelected());
+		}});
 		form.addSpace( 10 );
 		form.appendTextField( "from", "From", "The source endpoint reference" );
 		form.appendTextField( "faultTo", "Fault to", "The fault endpoint reference" );

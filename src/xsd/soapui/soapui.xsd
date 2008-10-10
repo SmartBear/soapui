@@ -1402,13 +1402,14 @@
     	<xsd:attribute name="messageID" type="xsd:string"></xsd:attribute>
     	<xsd:attribute name="to" type="xsd:string"></xsd:attribute>
     	<xsd:attribute name="relationshipType" type="xsd:string"></xsd:attribute>
-        <xsd:attribute name="relatesTo" type="xsd:string"></xsd:attribute>
-        <xsd:attribute name="version" type="tns:WsaVersionType"></xsd:attribute>
+    	<xsd:attribute name="relatesTo" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="version" type="tns:WsaVersionType"></xsd:attribute>
     	<xsd:attribute name="mustUnderstand"
     		type="tns:MustUnderstandType">
     	</xsd:attribute>
 
 
+    	<xsd:attribute name="generateMessageId" type="xsd:boolean"></xsd:attribute>
     </xsd:complexType>
 
     <xsd:simpleType name="MustUnderstandType">
