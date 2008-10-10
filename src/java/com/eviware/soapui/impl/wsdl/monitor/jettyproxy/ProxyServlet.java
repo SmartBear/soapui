@@ -84,7 +84,7 @@ public class ProxyServlet implements Servlet
 		this.context = config.getServletContext();
 
 		client = new HttpClient();
-		client.setConnectorType(HttpClient.CONNECTOR_SOCKET);// CONNECTOR_SELECT_CHANNEL);
+		client.setConnectorType(HttpClient.CONNECTOR_SOCKET);
 		try
 		{
 			client.start();

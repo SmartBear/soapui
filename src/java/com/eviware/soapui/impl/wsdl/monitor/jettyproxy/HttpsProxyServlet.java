@@ -111,12 +111,13 @@ public class HttpsProxyServlet extends ProxyServlet
 		client.executeMethod(postMethod);
 		capturedData.stopCapture();
 		
-		byte[] requestBytes = getRequestToBytes(postMethod, capture);
-		byte[] responseBytes = getResponseToBytes(postMethod);
-		
+		byte[] res = postMethod.getResponseBody();
 		IO.copy(new ByteArrayInputStream(postMethod.getResponseBody()), response.getOutputStream());
 		capturedData.setRequest(capture.getCapturedData());
-		capturedData.setResponse(postMethod.getResponseBody());
+		capturedData.setResponse(res);
+		capturedData.setResponseHeader(postMethod);
+		capturedData.setRawRequestData(getRequestToBytes(postMethod, capture));
+		capturedData.setRawResponseData(getResponseToBytes(postMethod, res));
 		monitor.addMessageExchange(capturedData);
 		capturedData = null;
 		
@@ -124,7 +125,7 @@ public class HttpsProxyServlet extends ProxyServlet
 
 	}
 
-	private byte[] getResponseToBytes(ExtendedPostMethod postMethod)
+	private byte[] getResponseToBytes(ExtendedPostMethod postMethod, byte[] res)
 	{
 		String response = "";
 		
@@ -132,14 +133,8 @@ public class HttpsProxyServlet extends ProxyServlet
 		for( Header header : headers ) {
 			response += header.toString();
 		}
-		try
-		{
-			response += postMethod.getResponseBodyAsString();
-		}
-		catch (IOException e)
-		{
-			SoapUI.log(e.getStackTrace());
-		}
+			response += "\n";
+			response += new String(res);
 		
 		return response.getBytes();
 	}
@@ -152,6 +147,7 @@ public class HttpsProxyServlet extends ProxyServlet
 		for( Header header : headers ) {
 			request += header.toString();
 		}
+		request += "\n";
 		request += new String(capture.getCapturedData());
 		
 		return request.getBytes();

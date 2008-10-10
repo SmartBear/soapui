@@ -23,7 +23,7 @@ public class JPasswordFieldFormField extends AbstractSwingXFormField<JPasswordFi
 {
 	public JPasswordFieldFormField()
 	{
-		super( new JPasswordField() );
+		super( new JPasswordField(15) );
 	}
 	
 	public void setRequired(boolean required, String message)
