@@ -23,7 +23,7 @@ public class JsonMediaTypeHandler implements MediaTypeHandler
 {
    public boolean canHandle( String contentType )
    {
-      return contentType != null && contentType.contains( "javascript" );
+      return contentType != null && (contentType.contains( "javascript" ) || contentType.contains( "json"));
    }
 
    public String createXmlRepresentation( HttpResponse response )
