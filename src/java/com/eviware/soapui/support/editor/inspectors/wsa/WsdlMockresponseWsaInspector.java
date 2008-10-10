@@ -71,7 +71,6 @@ public class WsdlMockresponseWsaInspector extends AbstractWsaInspector implement
 		messageIdTextField.setEnabled(!generateMessageIdCheckBox.isSelected());
 		generateMessageIdCheckBox.addItemListener(new ItemListener() {
 
-			@Override
 			public void itemStateChanged(ItemEvent arg0)
 			{
 				messageIdTextField.setEnabled(!generateMessageIdCheckBox.isSelected());
