@@ -12,8 +12,7 @@
     <issueTrackingUrl>https://sourceforge.net/tracker/?group_id=136013</issueTrackingUrl>
     <siteAddress>http://www.soapui.org</siteAddress>
     <repository>
-        <developerConnection>https://svn.sourceforge.net/svnroot/soapui/trunk/core</developerConnection>
-        <url>http://svn.sourceforge.net/viewcvs.cgi/soapui/</url>
+        <developerConnection>svn://svn.eviware.com/soapui/trunk/core</developerConnection>
     </repository>
     <mailingLists>
         <mailingList>
@@ -34,7 +33,6 @@
         <report>maven-faq-plugin</report>
         <report>maven-javadoc-plugin</report>
         <report>maven-jxr-plugin</report>
-         <report>maven-news-plugin</report>
         <report>maven-junit-report-plugin</report>
         <report>maven-license-plugin</report>
      <!--    <report>maven-findbugs-plugin</report>
@@ -339,7 +337,7 @@
         <dependency>
             <groupId>groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>1.5.6</version>
+            <version>1.5.7</version>
             <type>jar</type>
             <url>http://groovy.codehaus.org/</url>
             <properties>
