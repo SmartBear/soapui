@@ -242,8 +242,7 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 
       if (messageExchange != null)
       {
-         if (!messageExchange.hasResponse() &&
-                 getOperation().isBidirectional())
+         if (!messageExchange.hasResponse() && getOperation().isBidirectional() && !isWsaEnabled())
          {
             currentStatus = AssertionStatus.FAILED;
          }
