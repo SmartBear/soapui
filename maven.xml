@@ -78,6 +78,7 @@
        <attainGoal name="clean"/>
        <attainGoal name="soapui:generate-xml-beans"/>
        <attainGoal name="jar:install"/>
+       <attainGoal name="jnlp"/>
 
        <attainGoal name="soapui:create-binary-dist"/>
        <attainGoal name="soapui:create-standalone-binary-dist"/>
