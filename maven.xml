@@ -554,6 +554,21 @@ set CLASSPATH=%CLASSPATH%;..\lib\${lib.file.name}</j:set>
 	    
 	</goal>
 
+   <goal name="soapui:ftp-publish">
+      <j:set var="source" value="${maven.soapui.ftp.source}"/>
+
+      <j:if test="${!empty(source)}">
+         <echo>ftp:ing!</echo>
+         <taskdef name="ftp" classname="org.apache.tools.ant.taskdefs.optional.net.FTP"/>
+         
+         <ant:ftp server="${maven.soapui.ftp.host}" port="${maven.soapui.ftp.port}" verbose="yes"
+                  userid="${maven.soapui.ftp.username}" password="${maven.soapui.ftp.password}">
+             <ant:fileset dir="${source}"/>
+         </ant:ftp>
+       </j:if>
+
+   </goal>
+
 	<!-- Get all necessary JAR files from the repository and update the libs plugin -->
 	<goal name="soapui:build-libs" prereqs="jar:install">
 		

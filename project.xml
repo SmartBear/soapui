@@ -421,6 +421,15 @@
             <type>jar</type>
             <url>http://jakarta.apache.org/commons/jexl</url>
         </dependency>
+       <dependency>
+            <groupId>net-components</groupId>
+            <artifactId>netcomponents</artifactId>
+            <version>1.3.8a</version>
+            <properties>
+              <classloader>root</classloader>
+            </properties>
+          </dependency>
+
         <dependency>
             <groupId>lint4j</groupId>
             <artifactId>jutils-lint4j-plugin</artifactId>
