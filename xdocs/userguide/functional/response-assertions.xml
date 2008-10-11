@@ -237,7 +237,7 @@ count(//ns1:DetailPageURL) = count(//ns1:DetailPageURL[starts-with(text(), 'http
 		 fail if the items come in another order and/or get more/other data "around" the id element.</p>
 		 </subsection>
 		 
-		 <subsection name="Script Assertion Assertion">
+		 <subsection name="Script Assertion">
 		 <p>The Script Assertion allows for arbitrary validations (see examples below). 
 		 When creating or double clicking a script assertion, a Groovy script editor is shown as follows;</p>
 		 <p align="center"><img src="images/script_assertion_editor.gif"/></p> 
