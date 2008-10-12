@@ -209,6 +209,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
       options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
       options.addOption( "v", true, "Sets password for soapui-settings.xml file" );
       options.addOption( "D", true, "Sets system property with name=value");
+      options.addOption( "G", true, "Sets global property with name=value" );
       
       return options;
    }
@@ -243,6 +244,11 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
       if( cmd.hasOption( "D" ) )
       {
          setSystemProperties( cmd.getOptionValues( "D" ) );
+      }
+
+      if( cmd.hasOption( "G" ) )
+      {
+         setGlobalProperties( cmd.getOptionValues( "G" ) );
       }
 
       return true;
