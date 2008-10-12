@@ -120,6 +120,11 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
          setSoapUISettingsPassword( cmd.getOptionValue( "v" ) );
       }
 
+      if( cmd.hasOption( "D" ) )
+      {
+         setSystemProperties( cmd.getOptionValues( "D" ) );
+      }
+
       return true;
    }
 
@@ -152,6 +157,8 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
       options.addOption( "t", true, "Sets the soapui-settings.xml file to use" );
       options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
       options.addOption( "v", true, "Sets password for soapui-settings.xml file" );
+      options.addOption( "D", true, "Sets system property with name=value");
+      
       return options;
    }
 
@@ -434,7 +441,7 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 
    public void beforeTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner, TestRunContext runContext, TestStep testStep )
    {
-     super.beforeStep( testRunner, runContext );
+      super.beforeStep( testRunner, runContext );
    }
 
    public void loadTestStarted( LoadTestRunner loadTestRunner, LoadTestRunContext context )

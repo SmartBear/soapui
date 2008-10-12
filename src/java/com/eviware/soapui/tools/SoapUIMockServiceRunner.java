@@ -12,16 +12,6 @@
 
 package com.eviware.soapui.tools;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.cli.CommandLine;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
@@ -30,233 +20,251 @@ import com.eviware.soapui.model.mock.MockRunListener;
 import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
+import org.apache.commons.cli.CommandLine;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Standalone tool-runner used from maven-plugin, can also be used from command-line (see xdocs) or
  * directly from other classes.
  * <p>
  * For standalone usage, set the project file (with setProjectFile) and other desired properties before
- * calling run</p> 
- * 
+ * calling run</p>
+ *
  * @author Ole.Matzura
  */
 
 public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 {
-	private String mockService;
-	private String port;
-	private String path;
-	private List<MockRunner> runners = new ArrayList<MockRunner>();
-	private boolean block;
-	private String projectPassword;
-	private WsdlProject project;
-	
-	public static String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " MockService Runner";
-	
+   private String mockService;
+   private String port;
+   private String path;
+   private List<MockRunner> runners = new ArrayList<MockRunner>();
+   private boolean block;
+   private String projectPassword;
+   private WsdlProject project;
 
-	/**
-	 * Runs the specified MockService in the specified soapUI project file, see soapUI xdocs for details.
-	 * 
-	 * @param args
-	 * @throws Exception
-	 */
+   public static String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " MockService Runner";
 
-	public static void main( String [] args) throws Exception
-	{
-		new SoapUIMockServiceRunner().runFromCommandLine( args );
-	}
+   /**
+    * Runs the specified MockService in the specified soapUI project file, see soapUI xdocs for details.
+    *
+    * @param args
+    * @throws Exception
+    */
 
-	public void setMockService(String mockService)
-	{
-		this.mockService = mockService;
-	}
+   public static void main( String[] args ) throws Exception
+   {
+      new SoapUIMockServiceRunner().runFromCommandLine( args );
+   }
 
-	public void setPath( String path )
-	{
-		this.path = path;
-	}
+   public void setMockService( String mockService )
+   {
+      this.mockService = mockService;
+   }
 
-	public void setPort( String port )
-	{
-		this.port = port;
-	}
+   public void setPath( String path )
+   {
+      this.path = path;
+   }
 
-	public SoapUIMockServiceRunner()
-	{
-		super( TITLE );
-	}
-	
-	public SoapUIMockServiceRunner( String title )
-	{
-		super( title );
-	}
-	
-	public boolean runRunner() throws Exception
-	{
-		initGroovyLog();
-		
-		String projectFile = getProjectFile();
-		
+   public void setPort( String port )
+   {
+      this.port = port;
+   }
+
+   public SoapUIMockServiceRunner()
+   {
+      super( TITLE );
+   }
+
+   public SoapUIMockServiceRunner( String title )
+   {
+      super( title );
+   }
+
+   public boolean runRunner() throws Exception
+   {
+      initGroovyLog();
+
+      String projectFile = getProjectFile();
+
 //		WsdlProject project = new WsdlProject( projectFile, getProjectPassword() );
-		WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(projectFile, getProjectPassword());
-		if( project.isDisabled() )
-			throw new Exception( "Failed to load soapUI project file [" + projectFile + "]" );
-		
-		initProject();
-				
-		if( mockService == null )
-			log.info( "Running all MockServices in project [" + project.getName() + "]" );
-		else
-			log.info( "Running MockService [" + mockService + "] in project [" + project.getName() + "]" );
-		
-		log.info( "Press any key to terminate" );
-		
-		long startTime = System.nanoTime();
-		
-		for( int c = 0; c < project.getMockServiceCount(); c++ )
-		{
-			MockService ms = project.getMockServiceAt( c );
-			if( mockService == null || ms.getName().equals( mockService ))
-				runMockService( ( WsdlMockService ) ms );
-		}
-		
-		log.info( "Started " + runners.size() + " runner" + ((runners.size() == 1) ? "" : "s" ) );
-		
-		if( block )
-		{
-			System.out.println( "Press any key to terminate..." );
-			System.in.read();
-			for( MockRunner runner : runners )
-				runner.stop();
-		}
-		
-		long timeTaken = (System.nanoTime()-startTime)/1000000;
-		log.info( "time taken: " + timeTaken + "ms" );
-		
-		exportReports();
-		
-		return block;
-	}
-	
-	 protected void initProject() throws Exception
-	   {
-	   }
-	 
-	 protected void exportReports() throws Exception
-	 {
-	 }
-	
-	/**
-	 * Runs the specified MockService
-	 * 
-	 * @param mockService
-	 */
-	
-	public void runMockService( WsdlMockService mockService )
-	{
-		try
-		{
-			if( path != null )
-				mockService.setPath( path );
-			
-			if( port != null )
-				mockService.setPort( Integer.parseInt( port ));
-			
-			mockService.addMockRunListener( new LogListener() );
-			runners.add( mockService.start() );
-		}
-		catch (Exception e)
-		{
-			SoapUI.logError( e );
-		}
-	}
+      WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew( projectFile, getProjectPassword() );
+      if( project.isDisabled() )
+         throw new Exception( "Failed to load soapUI project file [" + projectFile + "]" );
+
+      initProject();
+
+      if( mockService == null )
+         log.info( "Running all MockServices in project [" + project.getName() + "]" );
+      else
+         log.info( "Running MockService [" + mockService + "] in project [" + project.getName() + "]" );
+
+      log.info( "Press any key to terminate" );
+
+      long startTime = System.nanoTime();
+
+      for( int c = 0; c < project.getMockServiceCount(); c++ )
+      {
+         MockService ms = project.getMockServiceAt( c );
+         if( mockService == null || ms.getName().equals( mockService ) )
+            runMockService( (WsdlMockService) ms );
+      }
+
+      log.info( "Started " + runners.size() + " runner" + ( ( runners.size() == 1 ) ? "" : "s" ) );
+
+      if( block )
+      {
+         System.out.println( "Press any key to terminate..." );
+         System.in.read();
+         for( MockRunner runner : runners )
+            runner.stop();
+      }
+
+      long timeTaken = ( System.nanoTime() - startTime ) / 1000000;
+      log.info( "time taken: " + timeTaken + "ms" );
+
+      exportReports();
+
+      return block;
+   }
+
+   protected void initProject() throws Exception
+   {
+   }
+
+   protected void exportReports() throws Exception
+   {
+   }
+
+   /**
+    * Runs the specified MockService
+    *
+    * @param mockService
+    */
+
+   public void runMockService( WsdlMockService mockService )
+   {
+      try
+      {
+         if( path != null )
+            mockService.setPath( path );
+
+         if( port != null )
+            mockService.setPort( Integer.parseInt( port ) );
+
+         mockService.addMockRunListener( new LogListener() );
+         runners.add( mockService.start() );
+      }
+      catch( Exception e )
+      {
+         SoapUI.logError( e );
+      }
+   }
 
    public class LogListener implements MockRunListener
-	{
-   	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-		private int responseCount;
-   	
-		public void onMockRunnerStart( MockRunner mockRunner )
-		{
-			log.info( "MockService started on port " + mockRunner.getMockService().getPort() + " at path [" + 
-						mockRunner.getMockService().getPath() + "]" );
-		}
+   {
+      private SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
+      private int responseCount;
 
-		public void onMockRunnerStop( MockRunner mockRunner )
-		{
-			log.info( "MockService stopped, handled " + responseCount + " requests" );
-		}
+      public void onMockRunnerStart( MockRunner mockRunner )
+      {
+         log.info( "MockService started on port " + mockRunner.getMockService().getPort() + " at path [" +
+                 mockRunner.getMockService().getPath() + "]" );
+      }
 
-		public void onMockResult( MockResult result )
-		{
-			responseCount++;
-			log.info( "Handled request " + responseCount + "; [" + result.getMockResponse().getMockOperation().getName() + 
-						"] with [" + result.getMockResponse().getName() + "] in [" + result.getTimeTaken() + 
-						"ms] at [" + dateFormat.format( new Date( result.getTimestamp())) + "]" );
-		}
+      public void onMockRunnerStop( MockRunner mockRunner )
+      {
+         log.info( "MockService stopped, handled " + responseCount + " requests" );
+      }
 
-		public void onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
-		{
-		}
-	}
+      public void onMockResult( MockResult result )
+      {
+         responseCount++;
+         log.info( "Handled request " + responseCount + "; [" + result.getMockResponse().getMockOperation().getName() +
+                 "] with [" + result.getMockResponse().getName() + "] in [" + result.getTimeTaken() +
+                 "ms] at [" + dateFormat.format( new Date( result.getTimestamp() ) ) + "]" );
+      }
 
-	@Override
-	protected SoapUIOptions initCommandLineOptions()
-	{
-		SoapUIOptions options = new SoapUIOptions( "mockservicerunner" );
-		options.addOption( "m", true, "Specified the name of the MockService to run" );
-		options.addOption( "p", true, "Sets the local port to listen on" );
-		options.addOption( "a", true, "Sets the url path to listen on" );
-		options.addOption( "s", true, "Sets the soapui-settings.xml file to use" );
-		options.addOption( "b", false, "Turns off blocking read for termination" );
-		options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
-		options.addOption( "v", true, "Sets password for soapui-settings.xml file");
-		return options;
-	}
+      public void onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
+      {
+      }
+   }
 
-	@Override
-	protected boolean processCommandLine( CommandLine cmd )
-	{
-		if( cmd.hasOption( "m" ))
-			setMockService( getCommandLineOptionSubstSpace( cmd, "m") );
-		
-		if( cmd.hasOption( "a"))
-			setPath( getCommandLineOptionSubstSpace( cmd, "a" ) );
+   @Override
+   protected SoapUIOptions initCommandLineOptions()
+   {
+      SoapUIOptions options = new SoapUIOptions( "mockservicerunner" );
+      options.addOption( "m", true, "Specified the name of the MockService to run" );
+      options.addOption( "p", true, "Sets the local port to listen on" );
+      options.addOption( "a", true, "Sets the url path to listen on" );
+      options.addOption( "s", true, "Sets the soapui-settings.xml file to use" );
+      options.addOption( "b", false, "Turns off blocking read for termination" );
+      options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
+      options.addOption( "v", true, "Sets password for soapui-settings.xml file" );
+      options.addOption( "D", true, "Sets system property with name=value");
+      
+      return options;
+   }
 
-		if( cmd.hasOption( "p"))
-			setPort( cmd.getOptionValue( "p" ) );
-		
-		if( cmd.hasOption( "s"))
-			setSettingsFile( getCommandLineOptionSubstSpace( cmd, "s" ));
-		
-		setBlock( !cmd.hasOption( 'b' ));
-		
-		if( cmd.hasOption( "x" ) ) {
-			setProjectPassword( cmd.getOptionValue("x"));
-		}
-		
-		if( cmd.hasOption( "v" ) ) {
-			setSoapUISettingsPassword( cmd.getOptionValue("v"));
-		}
-		
-		return true;
-	}
+   @Override
+   protected boolean processCommandLine( CommandLine cmd )
+   {
+      if( cmd.hasOption( "m" ) )
+         setMockService( getCommandLineOptionSubstSpace( cmd, "m" ) );
 
-	public void setProjectPassword(String projectPassword) {
-		this.projectPassword = projectPassword;
-	}
+      if( cmd.hasOption( "a" ) )
+         setPath( getCommandLineOptionSubstSpace( cmd, "a" ) );
 
-	public String getProjectPassword() {
-		return projectPassword;
-	}
-	
-	public void setBlock( boolean block )
-	{
-		this.block = block;
-	}
-	
-	 public WsdlProject getProject()
-	   {
-	      return project;
+      if( cmd.hasOption( "p" ) )
+         setPort( cmd.getOptionValue( "p" ) );
+
+      if( cmd.hasOption( "s" ) )
+         setSettingsFile( getCommandLineOptionSubstSpace( cmd, "s" ) );
+
+      setBlock( !cmd.hasOption( 'b' ) );
+
+      if( cmd.hasOption( "x" ) )
+      {
+         setProjectPassword( cmd.getOptionValue( "x" ) );
+      }
+
+      if( cmd.hasOption( "v" ) )
+      {
+         setSoapUISettingsPassword( cmd.getOptionValue( "v" ) );
+      }
+
+      if( cmd.hasOption( "D" ) )
+      {
+         setSystemProperties( cmd.getOptionValues( "D" ) );
+      }
+
+      return true;
+   }
+
+   public void setProjectPassword( String projectPassword )
+   {
+      this.projectPassword = projectPassword;
+   }
+
+   public String getProjectPassword()
+   {
+      return projectPassword;
+   }
+
+   public void setBlock( boolean block )
+   {
+      this.block = block;
+   }
+
+   public WsdlProject getProject()
+   {
+      return project;
 	   }
 }

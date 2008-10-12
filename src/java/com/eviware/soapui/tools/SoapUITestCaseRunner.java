@@ -134,6 +134,11 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
          setSoapUISettingsPassword( cmd.getOptionValue( "v" ) );
       }
 
+      if( cmd.hasOption( "D" ) )
+      {
+         setSystemProperties( cmd.getOptionValues( "D" ) );
+      }
+
       setEnableUI( cmd.hasOption( "i" ) );
       setPrintReport( cmd.hasOption( "r" ) );
       setExportAll( cmd.hasOption( "a" ) );
@@ -171,6 +176,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
       options.addOption( "t", true, "Sets the soapui-settings.xml file to use" );
       options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
       options.addOption( "v", true, "Sets password for soapui-settings.xml file" );
+      options.addOption( "D", true, "Sets system property with name=value");
+      
       return options;
    }
 

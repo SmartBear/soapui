@@ -57,7 +57,6 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
    private RunnerStatus status;
    private String projectPassword;
 
-
    public static String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " Tool Runner";
 
    /**
@@ -265,6 +264,7 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
       options.addOption( "s", true, "Sets the soapui-settings.xml file to use" );
       options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
       options.addOption( "v", true, "Sets password for soapui-settings.xml file" );
+      options.addOption( "D", true, "Sets system property with name=value");
       return options;
    }
 
@@ -289,12 +289,16 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
          setSoapUISettingsPassword( cmd.getOptionValue( "v" ) );
       }
 
-      return true;
+      if( cmd.hasOption( "D" ) )
+      {
+         setSystemProperties( cmd.getOptionValues( "D" ) );
+      }
 
+      return true;
    }
 
    public void setProjectPassword( String projectPassword )
    {
       this.projectPassword = projectPassword;
-	}
+   }
 }

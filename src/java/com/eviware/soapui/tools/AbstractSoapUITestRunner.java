@@ -219,4 +219,6 @@ public abstract class AbstractSoapUITestRunner extends AbstractSoapUIRunner impl
    public void afterRun( TestRunner testRunner, TestRunContext runContext )
    {
    }
+
+  
 }
