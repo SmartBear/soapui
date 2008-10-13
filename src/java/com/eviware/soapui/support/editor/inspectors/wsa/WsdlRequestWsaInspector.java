@@ -30,7 +30,9 @@ public class WsdlRequestWsaInspector extends AbstractWsaInspector implements Xml
 {
 	private final WsdlRequest request;
 	private JCheckBox generateMessageIdCheckBox;
+	private JCheckBox addDefaultToCheckBox;
 	private JTextField messageIdTextField;
+	private JTextField toTextField;
 
 	public WsdlRequestWsaInspector( WsdlRequest request )
 	{
@@ -56,7 +58,16 @@ public class WsdlRequestWsaInspector extends AbstractWsaInspector implements Xml
 			"The  property for managing WS-A version" );
 		
 		form.appendTextField( "action", "Action", "The action related to a message, will be generated if left empty and ws-a settings 'use default action...' checked " );
-		form.appendTextField( "to", "To", "The destination endpoint reference, will be generated if left empty" );
+		toTextField = form.appendTextField( "to", "To", "The destination endpoint reference, will be generated if left empty" );
+		addDefaultToCheckBox = form.appendCheckBox("addDefaultTo", "Add default wsa:To", "Add default wsa:To");
+		toTextField.setEnabled(!addDefaultToCheckBox.isSelected());
+		addDefaultToCheckBox.addItemListener(new ItemListener() {
+
+		public void itemStateChanged(ItemEvent arg0)
+		{
+			toTextField.setEnabled(!addDefaultToCheckBox.isSelected());
+		}});
+		
 		form.appendTextField( "replyTo", "Reply to", "The reply endpoint reference, will be generated if left empty" );
 		messageIdTextField = form.appendTextField( "messageID", "MessageID", " The ID of a message that can be used to uniquely identify a message, will be generated if left empty and ws-a settings 'generate message id' checked " );
 		generateMessageIdCheckBox = form.appendCheckBox("generateMessageId", "Generate MessageID", "Randomly generate MessageId");

@@ -89,7 +89,19 @@ public class WsaConfig implements PropertyChangeNotifier
 		wsaConfig.setGenerateMessageId(generateMessageId);
 		propertyChangeSupport.firePropertyChange("generateMessageId", oldValue, generateMessageId);
 	}
-	public String getReplyTo()
+	public boolean isAddDefaultTo() {
+		return wsaConfig.getAddDefaultTo();
+	}
+	
+	public void setAddDefaultTo( boolean addDefaultTo )
+	{
+		
+		boolean oldValue = isAddDefaultTo();
+		wsaConfig.setAddDefaultTo(addDefaultTo);
+		propertyChangeSupport.firePropertyChange("addDefaultTo", oldValue, addDefaultTo);
+	}
+
+public String getReplyTo()
 	{
 		return wsaConfig.getReplyTo();
 	}

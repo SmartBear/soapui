@@ -286,21 +286,17 @@ public class WsaUtils
 				}
 			}
 
-			String to = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getTo());
-			if (!StringUtils.isNullOrEmpty(to))
+			if (wsaContainer.getWsaConfig().isAddDefaultTo() )
 			{
-				header = processWsaProperty(header, override, "wsa:To", to, false);
-			}
-			else if (operation.isOneWay() || operation.isRequestResponse())
-			{
-				if (httpMethod != null)
+				String defaultTo = httpMethod.getURI().toString();
+				header = processWsaProperty(header, override, "wsa:To", defaultTo, false);
+			} else {
+				String to = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getTo());
+				if (!StringUtils.isNullOrEmpty(to))
 				{
-					// if to not specified but wsa:to mandatory get default value
-					String defaultTo = httpMethod.getURI().toString();
-					header = processWsaProperty(header, override, "wsa:To", defaultTo, false);
+					header = processWsaProperty(header, override, "wsa:To", to, false);
 				}
 			}
-
 			content = xmlContentObject.xmlText();
 		}
 		catch (Exception e)

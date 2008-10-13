@@ -31,6 +31,8 @@ public class WsdlMockresponseWsaInspector extends AbstractWsaInspector implement
 	private final WsdlMockResponse response;
 	private JCheckBox generateMessageIdCheckBox;
 	private JTextField messageIdTextField;
+	private JCheckBox addDefaultToCheckBox;
+	private JTextField toTextField;
 
 
 	public WsdlMockresponseWsaInspector( WsdlMockResponse response )
@@ -59,7 +61,16 @@ public class WsdlMockresponseWsaInspector extends AbstractWsaInspector implement
 			"The  property for managing WS-A version" );
 		
 		form.appendTextField( "action", "Action", "The action related to a message, will be generated if left empty and ws-a settings 'use default action...' checked " );
-		form.appendTextField( "to", "To", "The destination endpoint reference, will be set to request replyTo if left empty" );
+		toTextField = form.appendTextField( "to", "To", "The destination endpoint reference, will be generated if left empty" );
+		addDefaultToCheckBox = form.appendCheckBox("addDefaultTo", "Add default wsa:To", "Add default wsa:To");
+		toTextField.setEnabled(!addDefaultToCheckBox.isSelected());
+		addDefaultToCheckBox.addItemListener(new ItemListener() {
+
+		public void itemStateChanged(ItemEvent arg0)
+		{
+			toTextField.setEnabled(!addDefaultToCheckBox.isSelected());
+		}});
+		
 		form.appendTextField( "relatesTo", "Relates to", "The endpoint reference Mock Response relates to, will be set to 'unspecified' if left empty and ws-a settings 'use default...' checked  " );
 		form.appendTextField( "relationshipType", "Relationship type", "Relationship type, will be set to 'reply' if left empty and ws-a settings 'use default...' checked  " );
 		form.addSpace( 10 );
