@@ -3,11 +3,13 @@
    xmlns:j="jelly:core"
    xmlns:velocity="jelly:velocity"
    xmlns:ant="jelly:ant"
+   xmlns:jsl="jelly:jsl"
    xmlns:artifact="artifact"
    xmlns:maven="jelly:maven"
    xmlns:util="jelly:util"
    xmlns:jetty="jelly:jetty" 
-   xmlns:define="jelly:define" 
+   xmlns:define="jelly:define"
+   xmlns:x="jelly:xml"
    xmlns:interact="jelly:interaction"
    >
 
@@ -84,10 +86,16 @@
        <attainGoal name="soapui:create-standalone-binary-dist"/>
        <attainGoal name="soapui:make-installer"/>
 
+       <attaingGoal name="soapui:changelog"/>
        <attainGoal name="soapui:publish"/>
-
-
     </goal>
+
+   <goal name="soapui:changelog">
+      <attainGoal name="maven-changelog-plugin:report"/>
+      <util:file name="target/changelog.xml" var="changelogFile" />
+      <x:parse var="doc" xml="${changelogFile}"/>
+       <j:file name="${pom.artifactId}-changelog.txt" omitXmlDeclaration="true" trim="true"><j:include file="src/jsl/changelog2txt.jsl"/></j:file>
+   </goal>
     
     <!-- fix apos entities for IE in urchinTracker onClicks -->
     
