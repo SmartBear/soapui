@@ -94,7 +94,7 @@
       <attainGoal name="maven-changelog-plugin:report"/>
       <util:file name="target/changelog.xml" var="changelogFile" />
       <x:parse var="doc" xml="${changelogFile}"/>
-       <j:file name="${pom.artifactId}-changelog.txt" omitXmlDeclaration="true" trim="true"><j:include file="src/jsl/changelog2txt.jsl"/></j:file>
+       <j:file name="target/distributions/${pom.artifactId}-changelog.txt" omitXmlDeclaration="true" trim="true"><j:include file="src/jsl/changelog2txt.jsl"/></j:file>
    </goal>
     
     <!-- fix apos entities for IE in urchinTracker onClicks -->
