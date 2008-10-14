@@ -60,8 +60,9 @@ public class WsdlMockRequest implements MockRequest
 	private Vector<Object> wssResult;
 	private MockRequestDataSource mockRequestDataSource;
 	private String actualRequestContent;
-	
-	public WsdlMockRequest( HttpServletRequest request, HttpServletResponse response, WsdlMockRunContext context ) throws Exception
+   private boolean responseMessage;
+
+   public WsdlMockRequest( HttpServletRequest request, HttpServletResponse response, WsdlMockRunContext context ) throws Exception
 	{
 		this.request = request;
 		this.response = response;
@@ -272,4 +273,14 @@ public class WsdlMockRequest implements MockRequest
 					actualRequestContent == null ? requestContent.getBytes() : actualRequestContent.getBytes()  
 						: mockRequestDataSource.getData();
 	}
+
+   public void setResponseMessage( boolean responseMessage )
+   {
+      this.responseMessage = responseMessage;
+   }
+
+   public boolean isResponseMessage()
+   {
+      return responseMessage;
+   }
 }

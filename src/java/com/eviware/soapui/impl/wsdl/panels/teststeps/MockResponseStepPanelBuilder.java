@@ -53,7 +53,10 @@ public class MockResponseStepPanelBuilder extends EmptyPanelBuilder<WsdlMockResp
    	StringList outgoingNames = new StringList( mockResponseStep.getTestCase().getTestSuite().getProject().getWssContainer().getOutgoingWssNames() );
 		outgoingNames.add( "" );
 		table.addProperty( "Outgoing WSS", "outgoingWss", outgoingNames.toStringArray() );
-   	
+
+     	table.addProperty( "Handle Fault", "handleFault", JPropertiesTable.BOOLEAN_OPTIONS  );
+      table.addProperty( "Handle Response", "handleResponse", JPropertiesTable.BOOLEAN_OPTIONS  );
+
    	// attachments
 	  	table.addProperty( "Enable MTOM", "mtomEnabled", JPropertiesTable.BOOLEAN_OPTIONS  );
 	  	table.addProperty( "Force MTOM", "forceMtom", JPropertiesTable.BOOLEAN_OPTIONS  );

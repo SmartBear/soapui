@@ -120,7 +120,9 @@ public final class HttpMethodSupport
       if( maxSize == 0 || ( contentLength >= 0 && contentLength <= maxSize ) )
       {
          ByteArrayOutputStream out = new ByteArrayOutputStream();
-         Tools.writeAll( out, instream );
+         if( instream != null )
+            Tools.writeAll( out, instream );
+         
          responseReadTime = System.nanoTime() - now;
          responseBody = out.toByteArray();
 
@@ -155,7 +157,7 @@ public final class HttpMethodSupport
       {
          try
          {
-            if( StringUtils.hasContent( dumpFile ) )
+            if( StringUtils.hasContent( dumpFile ) && instream != null )
             {
                FileOutputStream fileOutputStream = new FileOutputStream( dumpFile );
                Tools.writeAll( fileOutputStream, instream );
@@ -169,7 +171,9 @@ public final class HttpMethodSupport
             e.printStackTrace();
          }
 
-         ByteArrayOutputStream outstream = Tools.readAll( instream, maxSize );
+         ByteArrayOutputStream outstream = instream == null ? new ByteArrayOutputStream() :
+                 Tools.readAll( instream, maxSize );
+
          if( responseReadTime == 0 )
             responseReadTime = System.nanoTime() - now;
 

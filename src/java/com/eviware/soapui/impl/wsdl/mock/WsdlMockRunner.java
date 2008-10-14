@@ -243,10 +243,49 @@ public class WsdlMockRunner extends AbstractMockRunner
             throw new DispatchException( "Unrecognized SOAP Version" );
 
          String soapAction = mockRequest.getSoapAction();
+         WsdlOperation operation = null;
 
-         WsdlOperation operation = SoapUtils.findOperationForRequest( soapVersion, soapAction, mockRequest
-                 .getRequestXmlObject(), mockService.getMockedOperations(),
-                 mockService.isRequireSoapVersion(), mockService.isRequireSoapAction() );
+         if( SoapUtils.isSoapFault( mockRequest.getRequestContent(), soapVersion ) )
+         {
+            // we should inspect fault detail and try to find matching operation but not for now..
+            WsdlMockOperation faultMockOperation = mockService.getFaultMockOperation();
+            if( faultMockOperation != null )
+               operation = faultMockOperation.getOperation();
+         }
+         else
+         {
+            try
+            {
+               operation = SoapUtils.findOperationForRequest( soapVersion, soapAction, mockRequest
+                       .getRequestXmlObject(), mockService.getMockedOperations(),
+                       mockService.isRequireSoapVersion(), mockService.isRequireSoapAction() );
+            }
+            catch( Exception e )
+            {
+               if( mockService.isDispatchResponseMessages() )
+               {
+                  try
+                  {
+                     operation = SoapUtils.findOperationForResponse( soapVersion, soapAction, mockRequest
+                             .getRequestXmlObject(), mockService.getMockedOperations(),
+                             mockService.isRequireSoapVersion(), mockService.isRequireSoapAction() );
+
+                     if( operation != null )
+                     {
+                        mockRequest.setResponseMessage( true );
+                     }
+                  }
+                  catch( Exception e2 )
+                  {
+                     throw e;
+                  }
+               }
+               else
+               {
+                  throw e;
+               }
+            }
+         }
 
          if( operation != null )
          {
@@ -335,7 +374,7 @@ public class WsdlMockRunner extends AbstractMockRunner
       {
          WsdlMockRequest mockRequest = new WsdlMockRequest( request, response, mockContext );
          Object result = mockService.runOnRequestScript( mockContext, this, mockRequest );
-         if( !(result instanceof MockResult) )
+         if( !( result instanceof MockResult ) )
          {
             String method = request.getMethod();
 

@@ -12,13 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.panels.mock;
 
-import java.awt.Component;
-
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.support.components.JPropertiesTable;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
+
+import java.awt.*;
 
 /**
  * PanelBuilder for WsdlMockServices
@@ -53,6 +53,7 @@ public class WsdlMockServicePanelBuilder extends EmptyPanelBuilder<WsdlMockServi
    	table.addProperty( "Match SOAP Version", "requireSoapVersion", JPropertiesTable.BOOLEAN_OPTIONS ).setDescription(
    			"Matches incoming SOAP Version against corresponding Interface");
    	table.addProperty( "Require SOAP Action", "requireSoapAction", JPropertiesTable.BOOLEAN_OPTIONS );
+      table.addProperty( "Dispatch Responses", "dispatchResponseMessages", JPropertiesTable.BOOLEAN_OPTIONS );
    	StringList incomingNames = new StringList( mockService.getProject().getWssContainer().getIncomingWssNames() );
    	incomingNames.add( "" );
 		table.addProperty( "Incoming WSS", "incomingWss", incomingNames.toStringArray() );

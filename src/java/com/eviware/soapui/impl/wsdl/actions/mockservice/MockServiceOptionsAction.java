@@ -14,13 +14,14 @@ package com.eviware.soapui.impl.wsdl.actions.mockservice;
 
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * Displays the options for the specified WsdlMockService
@@ -53,6 +54,8 @@ public class MockServiceOptionsAction extends AbstractSoapUIAction<WsdlMockServi
 		dialog.setIntValue( OptionsForm.PORT, mockService.getPort() );
 		dialog.setBooleanValue( OptionsForm.HOSTONLY, mockService.getBindToHostOnly() );
 		dialog.setValue(OptionsForm.DOCROOT, mockService.getDocroot());
+      dialog.setOptions( OptionsForm.FAULT_OPERATION, ModelSupport.getNames( new String[] { "- none -"}, mockService.getMockOperationList() ));
+      dialog.setValue( OptionsForm.FAULT_OPERATION, String.valueOf(mockService.getFaultMockOperation()) );
 		
 		if( dialog.show() )
 		{
@@ -61,6 +64,7 @@ public class MockServiceOptionsAction extends AbstractSoapUIAction<WsdlMockServi
 			mockService.setHost(  dialog.getValue( OptionsForm.HOST ) );
 			mockService.setBindToHostOnly( dialog.getBooleanValue( OptionsForm.HOSTONLY ) );
 			mockService.setDocroot(dialog.getValue( OptionsForm.DOCROOT ));
+         mockService.setFaultMockOperation( mockService.getMockOperationByName( dialog.getValue(OptionsForm.FAULT_OPERATION )));
 		}
 	}
 
@@ -82,5 +86,8 @@ public class MockServiceOptionsAction extends AbstractSoapUIAction<WsdlMockServi
 
 		@AField( name="Docroot", description="The document root to serve (empty = none)", type=AFieldType.FOLDER )
 		public final static String DOCROOT = "Docroot";
+
+      @AField( name="Fault Operation", description="The MockOperation that should handle incoming SOAP Faults", type=AFieldType.ENUMERATION )
+      public final static String FAULT_OPERATION = "Fault Operation";
 	}
 }

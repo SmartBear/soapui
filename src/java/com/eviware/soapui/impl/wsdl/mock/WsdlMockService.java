@@ -62,6 +62,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
    private BeanPathPropertySupport docrootProperty;
    private SoapUIScriptEngine onRequestScriptEngine;
    private SoapUIScriptEngine afterRequestScriptEngine;
+   private WsdlMockOperation faultMockOperation;
 
    public WsdlMockService( Project project, MockServiceConfig config )
    {
@@ -93,6 +94,11 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 
       setPropertiesConfig( getConfig().getProperties() );
       docrootProperty = new BeanPathPropertySupport( this, "docroot" );
+
+      if( getConfig().isSetFaultMockOperation() )
+      {
+         faultMockOperation = getMockOperationByName( getConfig().getFaultMockOperation() );
+      }
    }
 
    public void addMockRunListener( MockRunListener listener )
@@ -338,6 +344,20 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
    public ImageIcon getIcon()
    {
       return iconAnimator.getIcon();
+   }
+
+   public WsdlMockOperation getFaultMockOperation()
+   {
+      return faultMockOperation;
+   }
+
+   public void setFaultMockOperation( WsdlMockOperation mockOperation )
+   {
+      faultMockOperation = mockOperation;
+      if( faultMockOperation == null )
+         getConfig().unsetFaultMockOperation();
+      else
+         getConfig().setFaultMockOperation( faultMockOperation.getName() );
    }
 
    private class MockServiceIconAnimator extends ModelItemIconAnimator<WsdlMockService> implements MockRunListener
@@ -597,6 +617,18 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
       String old = getOutgoingWss();
       getConfig().setOutgoingWss( outgoingWss );
       notifyPropertyChanged( OUGOING_WSS, old, outgoingWss );
+   }
+
+    public boolean isDispatchResponseMessages()
+   {
+      return getConfig().getDispatchResponseMessages();
+   }
+
+   public void setDispatchResponseMessages( boolean dispatchResponseMessages )
+   {
+      boolean old = isDispatchResponseMessages();
+      getConfig().setDispatchResponseMessages( dispatchResponseMessages );
+      notifyPropertyChanged( "dispatchResponseMessages", old, dispatchResponseMessages );
    }
 
    public List<WsdlOperation> getMockedOperations()

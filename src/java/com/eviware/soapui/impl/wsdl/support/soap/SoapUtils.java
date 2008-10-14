@@ -12,13 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.support.soap;
 
-import java.util.List;
-
-import javax.wsdl.BindingOperation;
-import javax.wsdl.Message;
-import javax.wsdl.Part;
-import javax.xml.namespace.QName;
-
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.mock.DispatchException;
+import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -27,13 +27,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.mock.DispatchException;
-import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.types.StringToStringMap;
-import com.eviware.soapui.support.xml.XmlUtils;
+import javax.wsdl.BindingOperation;
+import javax.wsdl.Message;
+import javax.wsdl.Part;
+import javax.xml.namespace.QName;
+import java.util.List;
 
 /**
  * SOAP-related utility-methods..
@@ -193,7 +191,7 @@ public class SoapUtils
 
 	@SuppressWarnings("unchecked")
 	public static WsdlOperation findOperationForRequest( SoapVersion soapVersion, String soapAction, XmlObject requestContent, 
-				List<WsdlOperation> operations, boolean requireSoapVersionMatch, boolean requireSoapActionMatch ) throws XmlException, DispatchException, Exception
+				List<WsdlOperation> operations, boolean requireSoapVersionMatch, boolean requireSoapActionMatch ) throws Exception
 	{
 		XmlObject contentElm = getContentElement( requestContent, soapVersion );
 		if( contentElm == null )
@@ -281,11 +279,107 @@ public class SoapUtils
 				}
 			}
 		}
-	
+
 		throw new DispatchException( "Missing operation for soapAction [" + soapAction + "] and body element ["
 					+ contentQName + "] with SOAP Version [" + soapVersion + "]" );
 	}
-	
+
+   @SuppressWarnings("unchecked")
+	public static WsdlOperation findOperationForResponse( SoapVersion soapVersion, String soapAction, XmlObject responseContent,
+				List<WsdlOperation> operations, boolean requireSoapVersionMatch, boolean requireSoapActionMatch ) throws Exception
+	{
+		XmlObject contentElm = getContentElement( responseContent, soapVersion );
+		if( contentElm == null )
+			throw new DispatchException( "Missing content element in body" );
+
+		QName contentQName = XmlUtils.getQName( contentElm.getDomNode() );
+		NodeList contentChildNodes = null;
+
+		for( int c = 0; c < operations.size(); c++ )
+		{
+			WsdlOperation wsdlOperation = operations.get( c );
+			String action = wsdlOperation.getAction();
+
+			// matches soapAction?
+			if( !requireSoapActionMatch || (
+						( soapAction == null && wsdlOperation.getAction() == null )	||
+						( action != null && action.equals( soapAction ))
+						))
+			{
+				QName qname = wsdlOperation.getResponseBodyElementQName();
+
+				if( !contentQName.equals( qname ) )
+					continue;
+
+				SoapVersion ifaceSoapVersion = wsdlOperation.getInterface().getSoapVersion();
+
+				if( requireSoapVersionMatch && ifaceSoapVersion != soapVersion )
+				{
+					continue;
+				}
+
+				// check content
+				if( wsdlOperation.getStyle().equals( WsdlOperation.STYLE_DOCUMENT ) )
+				{
+					// matches!
+					return wsdlOperation;
+				}
+				else if( wsdlOperation.getStyle().equals( WsdlOperation.STYLE_RPC ) )
+				{
+					BindingOperation bindingOperation = wsdlOperation.getBindingOperation();
+					Message message = bindingOperation.getOperation().getOutput().getMessage();
+					List<Part> parts = message.getOrderedParts( null );
+
+					if( contentChildNodes == null )
+						contentChildNodes = XmlUtils.getChildElements( ( Element ) contentElm.getDomNode() );
+
+					int i = 0;
+
+					if( parts.size() > 0 )
+					{
+						for( int x = 0; x < parts.size(); x++ )
+						{
+							if( WsdlUtils.isAttachmentOutputPart( parts.get( x ), bindingOperation ) ||
+								 WsdlUtils.isHeaderOutputPart( parts.get( x ), message, bindingOperation ))
+							{
+								parts.remove( x );
+								x--;
+							}
+						}
+
+						for( ; i < contentChildNodes.getLength() && !parts.isEmpty(); i++ )
+						{
+							Node item = contentChildNodes.item( i );
+							if( item.getNodeType() != Node.ELEMENT_NODE )
+								continue;
+
+							int j = 0;
+							while( ( j < parts.size() ) && ( !item.getNodeName().equals( parts.get( j ).getName() ) ) )
+							{
+								j++;
+							}
+
+							if( j == parts.size() )
+								break;
+
+							parts.remove( j );
+						}
+					}
+
+					// match?
+					if( i == contentChildNodes.getLength() && parts.isEmpty() )
+					{
+						return wsdlOperation;
+					}
+				}
+			}
+		}
+
+		throw new DispatchException( "Missing response operation for soapAction [" + soapAction + "] and body element ["
+					+ contentQName + "] with SOAP Version [" + soapVersion + "]" );
+	}
+
+
 	public static String removeEmptySoapHeaders( String content, SoapVersion soapVersion ) throws XmlException
 	{
 		XmlObject xmlObject = XmlObject.Factory.parse( content );

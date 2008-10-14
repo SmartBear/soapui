@@ -781,6 +781,8 @@
 				<xsd:attribute name="incomingWss" type="xsd:string"></xsd:attribute>
 				<xsd:attribute name="outgoingWss" type="xsd:string"></xsd:attribute>
 				<xsd:attribute name="docroot" type="xsd:string"></xsd:attribute>
+                <xsd:attribute name="faultMockOperation" type="xsd:string"></xsd:attribute>
+                <xsd:attribute name="dispatchResponseMessages" type="xsd:boolean"></xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -805,6 +807,7 @@
 				</xsd:sequence>
 				<xsd:attribute name="interface" type="xsd:string"></xsd:attribute>
 				<xsd:attribute name="operation" type="xsd:string"></xsd:attribute>
+                <xsd:attribute name="faultMockOperation" type="xsd:string"></xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -937,6 +940,8 @@
 				maxOccurs="unbounded" minOccurs="0">
 			</xsd:element>
 		</xsd:sequence>
+        <xsd:attribute name="handleFault" type="xsd:boolean"></xsd:attribute>
+        <xsd:attribute name="handleResponse" type="xsd:boolean"></xsd:attribute>
 	</xsd:complexType>
 
 	<xsd:complexType name="AsyncResponseStep">

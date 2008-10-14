@@ -37,7 +37,7 @@ public class WsdlTestStepRegistry
 		addFactory( new GotoStepFactory() );
 		addFactory( new DelayStepFactory() );
 		addFactory( new RunTestCaseStepFactory() );
-		//addFactory( new AsyncResponseStepFactory() );
+		addFactory( new AsyncResponseStepFactory() );
 		addFactory( new RestRequestStepFactory() );
       addFactory( new HttpRequestStepFactory() );
       addFactory( new WsdlMockResponseStepFactory() );
