@@ -1411,6 +1411,7 @@
 
     	<xsd:attribute name="generateMessageId" type="xsd:boolean"></xsd:attribute>
     	<xsd:attribute name="addDefaultTo" type="xsd:boolean"></xsd:attribute>
+    	<xsd:attribute name="addDefaultAction" type="xsd:boolean"></xsd:attribute>
     </xsd:complexType>
 
     <xsd:simpleType name="MustUnderstandType">

@@ -20,15 +20,8 @@ import com.eviware.soapui.settings.Setting.SettingType;
  * @author dragica.soldo
  */
 public interface WsaSettings {
-
-	@Setting( name="Use default Action", description="Use default Action generated from wsdl", type=SettingType.BOOLEAN )
-	public final static String USE_DEFAULT_ACTION = WsaSettings.class.getSimpleName() + "@" + "useDefaultAction";
-	
 	@Setting( name="Soap action overrides wsa action", description="Soap action if present overrides wsa action", type=SettingType.BOOLEAN )
 	public final static String SOAP_ACTION_OVERRIDES_WSA_ACTION = WsaSettings.class.getSimpleName() + "@" + "soapActionOverridesWsaAction";
-	
-//	@Setting( name="Generate MessageID", description="Randomly generate MessageID", type=SettingType.BOOLEAN )
-//	public final static String GENERATE_MESSAGE_ID = WsaSettings.class.getSimpleName() + "@" + "generateMessageID";
 	
 	@Setting( name="Use default RelationshipType", description="Use default 'reply' for RelationshipType", type=SettingType.BOOLEAN )
 	public final static String USE_DEFAULT_RELATIONSHIP_TYPE = WsaSettings.class.getSimpleName() + "@" + "useDefaultRelationshipType";

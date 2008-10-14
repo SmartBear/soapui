@@ -33,6 +33,8 @@ public class WsdlMockresponseWsaInspector extends AbstractWsaInspector implement
 	private JTextField messageIdTextField;
 	private JCheckBox addDefaultToCheckBox;
 	private JTextField toTextField;
+	private JCheckBox addDefaultActionCheckBox;
+	private JTextField actionTextField;
 
 
 	public WsdlMockresponseWsaInspector( WsdlMockResponse response )
@@ -60,7 +62,16 @@ public class WsdlMockresponseWsaInspector extends AbstractWsaInspector implement
 		form.appendComboBox( "version", "WS-A Version", new String[] {WsaVersionTypeConfig.X_200508.toString(), WsaVersionTypeConfig.X_200408.toString()},
 			"The  property for managing WS-A version" );
 		
-		form.appendTextField( "action", "Action", "The action related to a message, will be generated if left empty and ws-a settings 'use default action...' checked " );
+		actionTextField = form.appendTextField(  "action", "Action", "The action related to a message, will be generated if left empty and ws-a settings 'use default action...' checked " );
+		addDefaultActionCheckBox = form.appendCheckBox("addDefaultAction", "Add default wsa:Action", "Add default wsa:Action");
+		actionTextField.setEnabled(!addDefaultActionCheckBox.isSelected());
+		addDefaultActionCheckBox.addItemListener(new ItemListener() {
+
+		public void itemStateChanged(ItemEvent arg0)
+		{
+			actionTextField.setEnabled(!addDefaultActionCheckBox.isSelected());
+		}});
+		
 		toTextField = form.appendTextField( "to", "To", "The destination endpoint reference, will be generated if left empty" );
 		addDefaultToCheckBox = form.appendCheckBox("addDefaultTo", "Add default wsa:To", "Add default wsa:To");
 		toTextField.setEnabled(!addDefaultToCheckBox.isSelected());
