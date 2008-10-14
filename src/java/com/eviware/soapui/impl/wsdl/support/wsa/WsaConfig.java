@@ -101,7 +101,19 @@ public class WsaConfig implements PropertyChangeNotifier
 		propertyChangeSupport.firePropertyChange("addDefaultTo", oldValue, addDefaultTo);
 	}
 
-public String getReplyTo()
+	public boolean isAddDefaultAction() {
+		return wsaConfig.getAddDefaultAction();
+	}
+	
+	public void setAddDefaultAction( boolean addDefaultAction )
+	{
+		
+		boolean oldValue = isAddDefaultAction();
+		wsaConfig.setAddDefaultAction(addDefaultAction);
+		propertyChangeSupport.firePropertyChange("addDefaultAction", oldValue, addDefaultAction);
+	}
+
+	public String getReplyTo()
 	{
 		return wsaConfig.getReplyTo();
 	}
