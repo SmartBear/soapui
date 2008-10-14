@@ -86,7 +86,7 @@
        <attainGoal name="soapui:create-standalone-binary-dist"/>
        <attainGoal name="soapui:make-installer"/>
 
-       <attaingGoal name="soapui:changelog"/>
+       <attainGoal name="soapui:changelog"/>
        <attainGoal name="soapui:publish"/>
     </goal>
 
