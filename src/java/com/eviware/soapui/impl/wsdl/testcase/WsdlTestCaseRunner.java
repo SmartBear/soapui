@@ -244,6 +244,16 @@ public class WsdlTestCaseRunner implements Runnable, TestRunner
       }
    }
 
+   public TestStepResult runTestStepByName( String name )
+   {
+      return runTestStep( getTestCase().getTestStepByName( name ), true, true );
+   }
+
+   public TestStepResult runTestStep(TestStep testStep )
+   {
+      return runTestStep( testStep, true, true );
+   }
+
    public TestStepResult runTestStep(TestStep testStep, boolean discard, boolean process)
    {
       for (int i = 0; i < listeners.length; i++)

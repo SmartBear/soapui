@@ -102,4 +102,10 @@ public interface TestRunner
 	 */
 	
 	public void gotoStepByName( String stepName );
+
+   /**
+    * Runs the specified TestStep and returns the result
+    */
+
+   public TestStepResult runTestStepByName( String name );
 }
