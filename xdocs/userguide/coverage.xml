@@ -9,9 +9,14 @@
 		much of a given Interface or WSDL is being covered by your Functional Tests, MockServices, Mock Clients and SOAP Monitor clients
 		and targets. This document aims at giving a brief overview of the concepts of WSDL Coverage, with links to the corresponding 
 		documentation for each Coverage point in soapUI. The best way to learn is to play around with it!</p>
-		<p align="left"><img src="images/try_pro.jpg" alt="Try soap test tool soapUI pro"/></p>
+	    
+      			<div align="left">
+					<a onclick="javascript:urchinTracker('/downloadTrial')" href="http://www.eviware.com/trial" title="Download soapUI Pro">
+						<img src="images/try_pro.jpg" alt="Try soapUI pro to soap test" width="100" height="25" longdesc="http://www.eviware.com"/>
+      				</a> 
+      			</div>
 		
-        <subsection name="Web Services Coverage">
+		<subsection name="Web Services Coverage">
 		<p>Traditionally in environments such as Java or .Net , coverage is used to measure how much of the actual code base 
 		that is being used during a given execution scenario (usually during Unit Tests). The returned value tries to give an
 		estimate of how much of the code base that is actuality being used or tested.</p>
