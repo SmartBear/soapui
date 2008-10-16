@@ -795,7 +795,7 @@
 						minOccurs="0">
 					</xsd:element>
 					<xsd:element name="dispatchStyle"
-						type="tns:DispatchStyle" minOccurs="0">
+						type="tns:MockOperationDispatchStyle" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="defaultResponse"
 						type="xsd:string" maxOccurs="1" minOccurs="0">
@@ -857,7 +857,7 @@
 		</xsd:sequence>
 	</xsd:complexType>
 
-	<xsd:simpleType name="DispatchStyle">
+	<xsd:simpleType name="MockOperationDispatchStyle">
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="RANDOM"></xsd:enumeration>
 			<xsd:enumeration value="SEQUENCE"></xsd:enumeration>
@@ -1419,6 +1419,21 @@
     	<xsd:attribute name="addDefaultAction" type="xsd:boolean"></xsd:attribute>
     	<xsd:attribute name="replyToRefParams" type="xsd:string"></xsd:attribute>
     	<xsd:attribute name="faultToRefParams" type="xsd:string"></xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="MockOperationQueryDispatchConfig">
+        <xsd:sequence>
+            <xsd:element name="query" minOccurs="0" maxOccurs="unbounded">
+                <xsd:complexType>
+                     <xsd:sequence>
+                         <xsd:element name="name" type="xsd:string"/>
+                         <xsd:element name="path" type="xsd:string"/>
+                         <xsd:element name="value" type="xsd:string"/>
+                         <xsd:element name="response" type="xsd:string"/>
+                     </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
     </xsd:complexType>
 
     <xsd:simpleType name="MustUnderstandType">

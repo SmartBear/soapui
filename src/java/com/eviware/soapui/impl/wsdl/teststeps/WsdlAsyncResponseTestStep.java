@@ -12,7 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import com.eviware.soapui.config.*;
+import com.eviware.soapui.config.AsyncResponseStepConfig;
+import com.eviware.soapui.config.MockResponseConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.*;
 import com.eviware.soapui.impl.wsdl.mock.*;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResultMessageExchange;
@@ -172,7 +175,7 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
       mockOperation = mockService.getMockOperation( operation );
       if( mockOperation == null )
          mockOperation = mockService.addNewMockOperation( operation );
-      mockOperation.setDispatchStyle( DispatchStyleConfig.QUERY_MATCH );
+   //   mockOperation.setDispatchStyle( DispatchStyleConfig.QUERY_MATCH );
       mockResponse = mockOperation.addNewMockResponse( mockResponseConfig );
       mockResponse.addPropertyChangeListener( this );
 

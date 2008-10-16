@@ -167,9 +167,6 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
       if( path == null || path.trim().length() == 0 || path.trim().charAt( 0 ) != '/' )
          throw new Exception( "Invalid path; must start with '/'" );
 
-      for( WsdlMockOperation operation : mockOperations )
-         operation.onStart();
-
       mockRunner = new WsdlMockRunner( this, context );
       return mockRunner;
    }

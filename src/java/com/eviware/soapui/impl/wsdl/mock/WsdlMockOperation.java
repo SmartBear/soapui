@@ -13,13 +13,14 @@
 package com.eviware.soapui.impl.wsdl.mock;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.DispatchStyleConfig;
-import com.eviware.soapui.config.DispatchStyleConfig.Enum;
 import com.eviware.soapui.config.MockOperationConfig;
+import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
 import com.eviware.soapui.config.MockResponseConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatchRegistry;
+import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatcher;
 import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.model.ModelItem;
@@ -27,28 +28,17 @@ import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
-import com.eviware.soapui.model.mock.MockRunContext;
 import com.eviware.soapui.model.support.InterfaceListenerAdapter;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.settings.WsdlSettings;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.scripting.ScriptEnginePool;
-import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
-import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * A WsdlMockOperation in a WsdlMockService
@@ -66,17 +56,13 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
    public final static String OPERATION_PROPERTY = WsdlMockOperation.class.getName() + "@operation";
 
    private WsdlOperation operation;
+   private MockOperationDispatcher dispatcher;
    private List<WsdlMockResponse> responses = new ArrayList<WsdlMockResponse>();
-   private int currentDispatchIndex;
-   private ScriptEnginePool scriptEnginePool;
    private InternalInterfaceListener interfaceListener = new InternalInterfaceListener();
    private InternalProjectListener projectListener = new InternalProjectListener();
    private ImageIcon oneWayIcon;
    private ImageIcon notificationIcon;
    private ImageIcon solicitResponseIcon;
-
-   private AtomicLong counter;
-   private Map<QueryValuePair, WsdlMockResponse> responseMap;
 
    public WsdlMockOperation( WsdlMockService mockService, MockOperationConfig config )
    {
@@ -103,8 +89,7 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
 
       initData( config );
 
-      counter = new AtomicLong();
-      responseMap = new ConcurrentHashMap<QueryValuePair, WsdlMockResponse>();
+//      counter = new AtomicLong();
    }
 
    private void initData( MockOperationConfig config )
@@ -112,14 +97,17 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
       if( !config.isSetName() )
          config.setName( operation == null ? "<missing operation>" : operation.getName() );
 
-      if( !config.isSetDispatchStyle() )
-         config.setDispatchStyle( DispatchStyleConfig.SEQUENCE );
-
       if( !config.isSetDefaultResponse() && responses.size() > 0 )
          setDefaultResponse( responses.get( 0 ).getName() );
 
-      scriptEnginePool = new ScriptEnginePool( this );
-      scriptEnginePool.setScript( getDispatchPath() );
+      if( !config.isSetDispatchStyle() )
+         config.setDispatchStyle( MockOperationDispatchStyleConfig.SEQUENCE );
+
+      if( !getConfig().isSetDispatchConfig() )
+         getConfig().addNewDispatchConfig();
+
+      dispatcher = MockOperationDispatchRegistry.buildDispatcher( config.getDispatchStyle().toString(), this,
+              getConfig().getDispatchConfig() );
 
       if( operation != null )
       {
@@ -143,9 +131,6 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
 
       initData( config );
       interfaceListener = new InternalInterfaceListener();
-
-      counter = new AtomicLong();
-      responseMap = new ConcurrentHashMap<QueryValuePair, WsdlMockResponse>();
    }
 
    @Override
@@ -238,12 +223,12 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
    public WsdlMockResponse addNewMockResponse( String requestQuery, String matchingValue )
    {
       // Create a unique name.
-      String name = String.valueOf( counter.addAndGet( 1 ) );
+//      String name = String.valueOf( counter.addAndGet( 1 ) );
 
       // Create the mock response and store it for later retrieval.
-      WsdlMockResponse mockResponse = addNewMockResponse( name, false );
-      responseMap.put( new QueryValuePair( requestQuery, matchingValue ), mockResponse );
-      return mockResponse;
+      //WsdlMockResponse mockResponse = addNewMockResponse( name, false );
+//      responseMap.put( new QueryValuePair( requestQuery, matchingValue ), mockResponse );
+      return null; //mockResponse;
    }
 
    public void removeMockResponse( WsdlMockResponse mockResponse )
@@ -273,116 +258,30 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
          if( getMockResponseCount() == 0 )
             throw new DispatchException( "Missing MockResponse(s) in MockOperation [" + getName() + "]" );
 
-         Enum dispatchStyle = getDispatchStyle();
-         if( dispatchStyle == DispatchStyleConfig.XPATH )
+         result.setMockOperation( this );
+         WsdlMockResponse response = dispatcher.selectMockResponse( request, result );
+         if( response == null )
          {
-            dispatchRequestXPath( request, result );
+            response = getMockResponseByName( getDefaultResponse() );
          }
-         else if( dispatchStyle == DispatchStyleConfig.SCRIPT )
+
+         if( response == null )
          {
-            dispatchRequestScript( request, result );
+            throw new DispatchException( "Failed to find MockResponse" );
          }
-         // I added DispatchStyleConfig.QUERY_MATCH to handle async response test step. /Lars
-         else if( dispatchStyle == DispatchStyleConfig.QUERY_MATCH )
-         {
-            dispatchRequestQueryMatch( request, result );
-         }
-         else
-         {
-            dispatchRequestSequence( request, result );
-         }
+
+         result.setMockResponse( response );
+         response.execute( request, result );
 
          return result;
       }
       catch( Throwable e )
       {
-         throw new DispatchException( e );
+         if( e instanceof DispatchException )
+            throw (DispatchException) e;
+         else
+            throw new DispatchException( e );
       }
-   }
-
-   private void dispatchRequestQueryMatch( WsdlMockRequest request, WsdlMockResult result ) throws DispatchException
-   {
-      WsdlMockResponse mockResponse = getMatchingMockResponse( request );
-      if( mockResponse != null )
-      {
-         result.setMockResponse( mockResponse );
-         mockResponse.execute( request, result );
-      }
-      else
-      {
-         log.error( "Unable to find a response for the request. Dropping it!" );
-
-// TODO Ericsson: Throw exception if no response was found?
-//         throw new DispatchException("Unable to find a response for the request.");
-      }
-   }
-
-   private void dispatchRequestXPath( WsdlMockRequest request, WsdlMockResult result )
-           throws XmlException, DispatchException
-   {
-      XmlObject[] items = evaluateDispatchXPath( request );
-      for( XmlObject item : items )
-      {
-         WsdlMockResponse mockResponse = getMockResponseByName( XmlUtils.getNodeValue( item.getDomNode() ) );
-
-         if( mockResponse == null )
-            mockResponse = getMockResponseByName( getDefaultResponse() );
-
-         if( mockResponse != null )
-         {
-            result.setMockResponse( mockResponse );
-            mockResponse.execute( request, result );
-            return;
-         }
-      }
-
-      throw new DispatchException( "Missing matching response message" );
-   }
-
-   private void dispatchRequestScript( WsdlMockRequest request, WsdlMockResult result )
-           throws DispatchException
-   {
-      Object retVal = evaluateDispatchScript( request );
-
-      WsdlMockResponse mockResponse = retVal == null ? getMockResponseByName( getDefaultResponse() )
-              : getMockResponseByName( retVal.toString() );
-
-      if( mockResponse == null )
-         mockResponse = getMockResponseByName( getDefaultResponse() );
-
-      if( mockResponse != null )
-      {
-         result.setMockResponse( mockResponse );
-         mockResponse.execute( request, result );
-         return;
-      }
-      else
-      {
-         throw new DispatchException( "Missing matching response message [" + retVal + "]" );
-      }
-   }
-
-   private void dispatchRequestSequence( WsdlMockRequest request, WsdlMockResult result )
-           throws DispatchException
-   {
-      WsdlMockResponse mockResponse = null;
-      synchronized( this )
-      {
-         if( getDispatchStyle() == DispatchStyleConfig.RANDOM )
-         {
-            currentDispatchIndex = (int) ( ( Math.random() * getMockResponseCount() ) + 0.5F );
-         }
-
-         if( currentDispatchIndex >= getMockResponseCount() )
-            currentDispatchIndex = 0;
-
-         mockResponse = getMockResponseAt( currentDispatchIndex );
-         result.setMockResponse( mockResponse );
-
-         currentDispatchIndex++;
-      }
-
-      mockResponse.execute( request, result );
    }
 
    @Override
@@ -390,13 +289,14 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
    {
       super.release();
 
+      if( dispatcher != null )
+         dispatcher.release();
+
       for( WsdlMockResponse response : responses )
       {
          response.removePropertyChangeListener( this );
          response.release();
       }
-
-      scriptEnginePool.release();
 
       if( operation != null )
       {
@@ -406,64 +306,29 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
       }
    }
 
-   public XmlObject[] evaluateDispatchXPath( WsdlMockRequest request ) throws XmlException
+   public String getDispatchStyle()
    {
-      XmlObject xmlObject = request.getRequestXmlObject();
-      String path = getDispatchPath();
-      if( StringUtils.isNullOrEmpty( path ) )
-         throw new XmlException( "Missing dispatch XPath expression" );
-
-      XmlObject[] items = xmlObject.selectPath( path );
-      return items;
+      return String.valueOf( getConfig().isSetDispatchStyle() ? getConfig().getDispatchStyle() : MockOperationDispatchStyleConfig.SEQUENCE) ;
    }
 
-   public Object evaluateDispatchScript( WsdlMockRequest request ) throws DispatchException
+   public MockOperationDispatcher setDispatchStyle( String dispatchStyle )
    {
-      String dispatchPath = getDispatchPath();
-      if( dispatchPath == null || dispatchPath.trim().length() == 0 )
+      String old = getDispatchStyle();
+      getConfig().setDispatchStyle( MockOperationDispatchStyleConfig.Enum.forString( dispatchStyle ));
+
+      if( dispatcher != null )
       {
-         throw new DispatchException( "Dispatch Script is empty" );
+         dispatcher.release();
       }
 
-      SoapUIScriptEngine scriptEngine = scriptEnginePool.getScriptEngine();
+      if( !getConfig().isSetDispatchConfig() )
+         getConfig().addNewDispatchConfig();
 
-      try
-      {
-         WsdlMockService mockService = getMockService();
-         WsdlMockRunner mockRunner = mockService.getMockRunner();
-         MockRunContext context = mockRunner == null ? new WsdlMockRunContext( mockService, null ) : mockRunner.getMockContext();
+      dispatcher = MockOperationDispatchRegistry.buildDispatcher( dispatchStyle, this, getConfig().getDispatchConfig() );
 
-         scriptEngine.setVariable( "context", context );
-         scriptEngine.setVariable( "requestContext", request == null ? null : request.getRequestContext() );
-         scriptEngine.setVariable( "mockRequest", request );
-         scriptEngine.setVariable( "mockOperation", this );
-         scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-
-         scriptEngine.setScript( dispatchPath );
-         Object retVal = scriptEngine.run();
-         return retVal;
-      }
-      catch( Throwable e )
-      {
-         SoapUI.logError( e );
-         throw new DispatchException( "Failed to dispatch using script; " + e );
-      }
-      finally
-      {
-         scriptEnginePool.returnScriptEngine( scriptEngine );
-      }
-   }
-
-   public DispatchStyleConfig.Enum getDispatchStyle()
-   {
-      return getConfig().isSetDispatchStyle() ? getConfig().getDispatchStyle() : DispatchStyleConfig.SEQUENCE;
-   }
-
-   public void setDispatchStyle( DispatchStyleConfig.Enum dispatchStyle )
-   {
-      Enum old = getDispatchStyle();
-      getConfig().setDispatchStyle( dispatchStyle );
       notifyPropertyChanged( DISPATCH_STYLE_PROPERTY, old, dispatchStyle );
+
+      return dispatcher;
    }
 
    public String getDispatchPath()
@@ -476,8 +341,6 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
       String old = getDispatchPath();
       getConfig().setDispatchPath( dispatchPath );
       notifyPropertyChanged( DISPATCH_PATH_PROPERTY, old, dispatchPath );
-
-      scriptEnginePool.setScript( dispatchPath );
    }
 
    public String getWsdlOperationName()
@@ -559,6 +422,11 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
          mockResponse.beforeSave();
    }
 
+   public MockOperationDispatcher getMockOperationDispatcher()
+   {
+      return dispatcher;
+   }
+
    private class InternalInterfaceListener extends InterfaceListenerAdapter
    {
       @Override
@@ -621,54 +489,5 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
    public List<? extends ModelItem> getChildren()
    {
       return responses;
-   }
-
-   public void onStart()
-   {
-      currentDispatchIndex = 0;
-   }
-
-   private WsdlMockResponse getMatchingMockResponse( WsdlMockRequest request )
-           throws DispatchException
-   {
-      try
-      {
-         XmlObject xmlObject = request.getRequestXmlObject();
-
-         for( QueryValuePair pair : responseMap.keySet() )
-         {
-            log.debug( "Testing request for match: " + pair );
-
-            XmlObject[] nodes = xmlObject.selectPath( pair.getQuery() );
-            if( nodes != null && nodes.length > 0 )
-            {
-               // Only look at the first node.
-               log.debug( "Comparing selected node " + nodes[0] +
-                       " with the value " + pair.getValue() );
-               XmlCursor cursor = nodes[0].newCursor();
-               try
-               {
-                  if( pair.getValue().equals( cursor.getTextValue() ) )
-                  {
-                     log.debug( "Found a request with a matching query: +" +
-                             request.getRequestContent() );
-
-                     return responseMap.get( pair );
-                  }
-               }
-               finally
-               {
-                  cursor.dispose();
-               }
-            }
-         }
-
-         return null;
-//       throw new DispatchException("No request query matched");
-      }
-      catch( XmlException e )
-      {
-         throw new DispatchException( e );
-      }
    }
 }

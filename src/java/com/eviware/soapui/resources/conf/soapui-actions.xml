@@ -163,7 +163,7 @@
 	<tns:action id="RenameMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.RenameMockOperationAction"/>
 	<tns:action id="ChangeMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.ChangeMockOperationAction"/>
 	<tns:action id="DeleteMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.DeleteMockOperationAction"/>
-   <tns:action id="AddOperationAsMockResponseStepAction"	actionClass="com.eviware.soapui.impl.wsdl.actions.operation.AddOperationAsMockResponseStepAction"/>
+    <tns:action id="AddOperationAsMockResponseStepAction"	actionClass="com.eviware.soapui.impl.wsdl.actions.operation.AddOperationAsMockResponseStepAction"/>
 
 	<!-- MockResponse Actions -->
 	<tns:action id="OpenRequestForMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.OpenRequestForMockResponseAction"/>
