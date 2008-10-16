@@ -182,6 +182,7 @@ public class CapturedExchange {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setRequestHeader(HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) {
 		

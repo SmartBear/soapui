@@ -19,4 +19,6 @@ public interface SoapMonitorEngine
 	void stop();
 
 	boolean isRunning();
+	
+	boolean isProxy();
 }

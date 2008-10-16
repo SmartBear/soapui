@@ -68,8 +68,8 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 	private Vector<Object> responseWssResult;
 	private long timestampEnd;
 	private boolean capture;
-	private byte[] requestRaw;
-	private byte[] responseRaw;
+	private byte[] requestRaw = null;
+	private byte[] responseRaw = null;
 
 	public JProxyServletWsdlMonitorMessageExchange(WsdlProject project)
 	{
@@ -310,19 +310,27 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 
 	public byte[] getRawRequestData()
 	{
-		return requestRaw;
+		if (requestRaw != null)
+			return requestRaw;
+		else
+			return request;
 	}
-	
-	public void setRawRequestData(byte[] data) {
+
+	public void setRawRequestData(byte[] data)
+	{
 		requestRaw = data;
 	}
 
 	public byte[] getRawResponseData()
 	{
-		return responseRaw;
+		if (responseRaw == null)
+			return responseRaw;
+		else
+			return response;
 	}
-	
-	public void setRawResponseData(byte[] data) {
+
+	public void setRawResponseData(byte[] data)
+	{
 		responseRaw = data;
 	}
 

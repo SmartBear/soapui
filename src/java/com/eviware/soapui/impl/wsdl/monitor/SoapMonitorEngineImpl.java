@@ -32,6 +32,7 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 	SocketConnector connector = new SocketConnector();
 	private SslSocketConnector sslConnector;
 	private String sslEndpoint = null;
+	private boolean proxyOrTunnel = true;
 
 	public boolean isRunning()
 	{
@@ -61,9 +62,11 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 
 			server.addConnector(sslConnector);
 			context.addServlet(new ServletHolder(new HttpsProxyServlet(soapMonitor, sslEndpoint)), "/");
+			proxyOrTunnel = false;
 		}
 		else
 		{
+			proxyOrTunnel = true;
 			connector.setPort(localPort);
 			server.addConnector(connector);
 			context.addServlet(new ServletHolder(new ProxyServlet(soapMonitor)), "/");
@@ -106,6 +109,16 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 	protected void setSslEndpoint(String sslEndpoint)
 	{
 		this.sslEndpoint = sslEndpoint;
+	}
+
+	/*
+	 * @return true if proxy, false if ssl tunnel
+	 * (non-Javadoc)
+	 * @see com.eviware.soapui.impl.wsdl.monitor.SoapMonitorEngine#isProxy()
+	 */
+	public boolean isProxy()
+	{
+		return proxyOrTunnel;
 	}
 
 }

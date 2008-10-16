@@ -75,6 +75,7 @@ import java.util.List;
  * A SOAP Monitor..
  */
 
+@SuppressWarnings("serial")
 public class SoapMonitor extends JPanel
 {
    private static final String ALL_FILTER_OPTION = "- all -";
@@ -458,7 +459,7 @@ public class SoapMonitor extends JPanel
          stopButton.setEnabled( true );
          startButton.setEnabled( false );
          optionsButton.setEnabled( false );
-         infoLabel.setText( "Proxy " + "on port " + localPort );
+         infoLabel.setText( monitorEngine.isProxy()?"HTTP Proxy ":"SSL Tunnel " + "on port " + localPort );
          progressBar.setIndeterminate( true );
 
          if( setAsProxy )

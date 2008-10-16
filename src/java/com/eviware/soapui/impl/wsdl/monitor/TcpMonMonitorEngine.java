@@ -63,4 +63,9 @@ public class TcpMonMonitorEngine implements SoapMonitorEngine
 	{
 		return sw != null && sw.isAlive();
 	}
+
+	public boolean isProxy()
+	{
+		return true;
+	}
 }

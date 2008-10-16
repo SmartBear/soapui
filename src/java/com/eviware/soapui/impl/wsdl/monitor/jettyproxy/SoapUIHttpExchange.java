@@ -35,8 +35,10 @@ public class SoapUIHttpExchange extends HttpExchange
 	private InputStream in;
 	private OutputStream out;
 	private HttpServletResponse httpResponse;
+	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(SoapUIHttpExchange.class);
 	private JProxyServletWsdlMonitorMessageExchange capturedMessage;
+	@SuppressWarnings("unused")
 	private SoapMonitor monitor;
 
 	public SoapUIHttpExchange(SoapMonitor monitor, HttpServletRequest httpRequest, HttpServletResponse httpResponse,
