@@ -59,8 +59,8 @@ public class WsdlRequestWsaInspector extends AbstractWsaInspector implements Xml
 		form.appendComboBox( "version", "WS-A Version", new String[] {WsaVersionTypeConfig.X_200508.toString(), WsaVersionTypeConfig.X_200408.toString()},
 			"The  property for managing WS-A version" );
 		
-		actionTextField = form.appendTextField(  "action", "Action", "The action related to a message, will be generated if left empty and ws-a settings 'use default action...' checked " );
 		addDefaultActionCheckBox = form.appendCheckBox("addDefaultAction", "Add default wsa:Action", "Add default wsa:Action");
+		actionTextField = form.appendTextField(  "action", "Action", "The action related to a message, will be generated if left empty and ws-a settings 'use default action...' checked " );
 		actionTextField.setEnabled(!addDefaultActionCheckBox.isSelected());
 		addDefaultActionCheckBox.addItemListener(new ItemListener() {
 
@@ -70,8 +70,8 @@ public class WsdlRequestWsaInspector extends AbstractWsaInspector implements Xml
 		}});
 		
 		
-		toTextField = form.appendTextField( "to", "To", "The destination endpoint reference, will be generated if left empty" );
 		addDefaultToCheckBox = form.appendCheckBox("addDefaultTo", "Add default wsa:To", "Add default wsa:To");
+		toTextField = form.appendTextField( "to", "To", "The destination endpoint reference, will be generated if left empty" );
 		toTextField.setEnabled(!addDefaultToCheckBox.isSelected());
 		addDefaultToCheckBox.addItemListener(new ItemListener() {
 
@@ -82,8 +82,8 @@ public class WsdlRequestWsaInspector extends AbstractWsaInspector implements Xml
 		
 		form.appendTextField( "replyTo", "Reply to", "The reply endpoint reference, will be generated if left empty" );
 		form.appendTextArea("replyToRefParams", "ReplyTo Reference Parameters","ReplyTo Reference Parameters, content will be inserted as an xml (not text)");
-		messageIdTextField = form.appendTextField( "messageID", "MessageID", " The ID of a message that can be used to uniquely identify a message, will be generated if left empty and ws-a settings 'generate message id' checked " );
 		generateMessageIdCheckBox = form.appendCheckBox("generateMessageId", "Generate MessageID", "Randomly generate MessageId");
+		messageIdTextField = form.appendTextField( "messageID", "MessageID", " The ID of a message that can be used to uniquely identify a message, will be generated if left empty and ws-a settings 'generate message id' checked " );
 		messageIdTextField.setEnabled(!generateMessageIdCheckBox.isSelected());
 		generateMessageIdCheckBox.addItemListener(new ItemListener() {
 

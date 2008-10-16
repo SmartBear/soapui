@@ -14,11 +14,13 @@ package com.eviware.soapui.impl.wsdl.support.wsa;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AnonymousTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.support.WsaPropertiesTable;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.WsaAssertionConfiguration;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
@@ -41,12 +43,12 @@ public class WsaValidator
 	Element header;
 	String wsaVersionNameSpace;
 	StringBuilder cumulativeErrorMsg;
-	WsaPropertiesTable wsaPropertiesTable;
+	WsaAssertionConfiguration wsaAssertionConfiguration;
 
-	public WsaValidator(WsdlMessageExchange messageExchange, WsaPropertiesTable wsaPropertiesTable)
+	public WsaValidator(WsdlMessageExchange messageExchange, WsaAssertionConfiguration wsaPropertiesTable)
 	{
 		this.messageExchange = messageExchange;
-		this.wsaPropertiesTable = wsaPropertiesTable;
+		this.wsaAssertionConfiguration = wsaPropertiesTable;
 		cumulativeErrorMsg = new StringBuilder();
 	}
 
@@ -100,7 +102,7 @@ public class WsaValidator
 	}
 	private void validateWsAddressingCommon( String content ) 
    {
-         if (wsaPropertiesTable.isAssertTo())
+         if (wsaAssertionConfiguration.isAssertTo())
 			{
 				// To is Mandatory
 				Element toNode = XmlUtils.getFirstChildElementNS(header, wsaVersionNameSpace, "To");
@@ -171,7 +173,7 @@ public class WsaValidator
 
 		WsdlOperation operation = messageExchange.getOperation();
 
-      if (wsaPropertiesTable.isAssertAction())
+      if (wsaAssertionConfiguration.isAssertAction())
 		{
 			// Action is Mandatory
 			Element actionNode = XmlUtils.getFirstChildElementNS(header, wsaVersionNameSpace, "Action");
@@ -255,7 +257,7 @@ public class WsaValidator
 			throw new AssertionException( new AssertionError( "Response has the wrong ws-a version namespace value." ) );
 		}
 
-      if (wsaPropertiesTable.isAssertAction())
+      if (wsaAssertionConfiguration.isAssertAction())
 		{
 			// Action is Mandatory
 			Element actionNode = XmlUtils.getFirstChildElementNS(header, wsaVersionNameSpace, "Action");
@@ -282,7 +284,7 @@ public class WsaValidator
 		}
 		validateWsAddressingCommon(content);
 
-		if (wsaPropertiesTable.isAssertRelatesTo())
+		if (wsaAssertionConfiguration.isAssertRelatesTo())
 		{
 			// RelatesTo is Mandatory
 			Element relatesToNode = XmlUtils.getFirstChildElementNS(header, wsaVersionNameSpace, "RelatesTo");
@@ -349,7 +351,41 @@ public class WsaValidator
             }
          }
       }
-      String cumulativeError = cumulativeErrorMsg.toString();
+      if (wsaAssertionConfiguration.isAssertReplyToRefParams()) {
+		//check if request ReplyTo ReferenceParameters are included in response 
+		NodeList requestReplyToRefProps = WsdlUtils.getRequestReplyToRefProps(
+				messageExchange, getWsaVersion(requestXmlObject, soapVersion));
+		for (int i = 0; i < requestReplyToRefProps.getLength(); i++) {
+			Node refProp = requestReplyToRefProps.item(i);
+			String refPropName = refProp.getNodeName();
+			NodeList existingResponseRefs = XmlUtils.getChildElementsByTagName(header, refPropName);
+			if (existingResponseRefs != null
+					&& existingResponseRefs.getLength() > 0) {
+				continue;
+			} else {
+				cumulativeErrorMsg.append("Response does not have request ReferenceProperty "+ refPropName + ". ");
+			}
+
+		}
+      }
+      if (wsaAssertionConfiguration.isAssertFaultToRefParams()) {
+  		//check if request FaultTo ReferenceParameters are included in response 
+  		NodeList requestFaultToRefProps = WsdlUtils.getRequestFaultToRefProps(
+  				messageExchange, getWsaVersion(requestXmlObject, soapVersion));
+  		for (int i = 0; i < requestFaultToRefProps.getLength(); i++) {
+  			Node refProp = requestFaultToRefProps.item(i);
+  			String refPropName = refProp.getNodeName();
+  			NodeList existingResponseRefs = XmlUtils.getChildElementsByTagName(header, refPropName);
+  			if (existingResponseRefs != null
+  					&& existingResponseRefs.getLength() > 0) {
+  				continue;
+  			} else {
+  				cumulativeErrorMsg.append("Response does not have request ReferenceProperty "+ refPropName + ". ");
+  			}
+
+  		}
+  	}
+	String cumulativeError = cumulativeErrorMsg.toString();
       if (!StringUtils.isNullOrEmpty(cumulativeError))
 		{
          throw new AssertionException(new AssertionError(cumulativeError));

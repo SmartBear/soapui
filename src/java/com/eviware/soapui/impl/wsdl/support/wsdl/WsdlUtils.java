@@ -71,6 +71,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xmlsoap.schemas.ws.x2004.x09.policy.OptionalType;
 import org.xmlsoap.schemas.ws.x2004.x09.policy.Policy;
@@ -1324,4 +1325,70 @@ public class WsdlUtils
 		return requestMessageId;
 	}
 
+	public static NodeList getRequestReplyToRefProps(WsdlMessageExchange messageExchange, String wsaVersionNameSpace) {
+		try
+		{
+			XmlObject xmlObject = XmlObject.Factory.parse( messageExchange.getRequestContent() );
+			SoapVersion soapVersion = messageExchange.getOperation().getInterface()
+				.getSoapVersion();
+
+			Element header = (Element) SoapUtils.getHeaderElement( xmlObject, soapVersion, true ).getDomNode();
+			Element replyToNode = XmlUtils.getFirstChildElementNS(header, wsaVersionNameSpace, "ReplyTo");
+			Element replyRefParamsNode = XmlUtils.getFirstChildElementNS(replyToNode, wsaVersionNameSpace, "ReferenceParameters");
+			if (replyRefParamsNode != null)
+			{
+				return XmlUtils.getChildElements(replyRefParamsNode);
+			}
+		}
+		catch (XmlException e)
+		{
+			e.printStackTrace();
+			log.warn(e.toString());
+		}
+		return null;
+	}
+	public static NodeList getRequestFaultToRefProps(WsdlMessageExchange messageExchange, String wsaVersionNameSpace) {
+		try
+		{
+			XmlObject xmlObject = XmlObject.Factory.parse( messageExchange.getRequestContent() );
+			SoapVersion soapVersion = messageExchange.getOperation().getInterface()
+				.getSoapVersion();
+
+			Element header = (Element) SoapUtils.getHeaderElement( xmlObject, soapVersion, true ).getDomNode();
+			Element faultToNode = XmlUtils.getFirstChildElementNS(header, wsaVersionNameSpace, "FaultTo");
+			Element faultRefParamsNode = XmlUtils.getFirstChildElementNS(faultToNode, wsaVersionNameSpace, "ReferenceParameters");
+			if (faultRefParamsNode != null)
+			{
+				return XmlUtils.getChildElements(faultRefParamsNode);
+			}
+		}
+		catch (XmlException e)
+		{
+			e.printStackTrace();
+			log.warn(e.toString());
+		}
+		return null;
+	}
+	public static String getFaultCode(WsdlMessageExchange messageExchange) {
+		try
+		{
+			XmlObject xmlObject = XmlObject.Factory.parse( messageExchange.getResponseContent() );
+			SoapVersion soapVersion = messageExchange.getOperation().getInterface()
+				.getSoapVersion();
+
+			Element body = (Element) SoapUtils.getBodyElement(xmlObject, soapVersion).getDomNode();
+			Element soapenvFault = XmlUtils.getFirstChildElementNS(body, "http://schemas.xmlsoap.org/soap/envelope/", "Fault");
+			Element faultCode = XmlUtils.getFirstChildElement(soapenvFault, "faultcode");
+			if (faultCode != null)
+			{
+				return XmlUtils.getElementText(faultCode);
+			}
+		}
+		catch (XmlException e)
+		{
+			e.printStackTrace();
+			log.warn(e.toString());
+		}
+		return null;
+	}
 }

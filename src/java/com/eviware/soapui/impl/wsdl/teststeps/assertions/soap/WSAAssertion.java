@@ -12,12 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.soap;
 
+import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.support.WsaPropertiesTable;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.WsaAssertionConfiguration;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaValidator;
@@ -46,167 +47,186 @@ import com.eviware.x.form.XFormFactory;
  * @author dragica.soldo
  */
 
-public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssertion, RequestAssertion
-{
+public class WSAAssertion extends WsdlMessageAssertion implements
+		ResponseAssertion, RequestAssertion {
 	public static final String ID = "WS Addressing Assertion";
 	public static final String LABEL = "WS-Addressing";
-	private WsaPropertiesTable wsaPropertiesTable;
+	private WsaAssertionConfiguration wsaAssertionConfiguration;
 	private boolean assertWsaAction;
 	private boolean assertWsaTo;
 	private boolean assertWsaRelatesTo;
+	private boolean assertReplyToRefParams;
+	private boolean assertFaultToRefParams;
 	private XFormDialog dialog;
-	private static final String ASSERT_ACTION = "Assert wsa:Action";
-	private static final String ASSERT_TO = "Assert wsa:To";
-	private static final String ASSERT_RELATES_TO = "Assert wsa:RelatesTo";
-   /**
+	private static final String ASSERT_ACTION = "wsa:Action";
+	private static final String ASSERT_TO = "wsa:To";
+	private static final String ASSERT_RELATES_TO = "wsa:RelatesTo";
+	private static final String ASSERT_REPLY_TO_REF_PARAMS = "wsa:ReplyTo ReferenceParameters";
+	private static final String ASSERT_FAULT_TO_REF_PARAMS = "wsa:FaultTo ReferenceParameters";
+
+	/**
 	 * Constructor for our assertion.
 	 * 
 	 * @param assertionConfig
 	 * @param modelItem
 	 */
-	public WSAAssertion(TestAssertionConfig assertionConfig, Assertable modelItem)
-	{
+	public WSAAssertion(TestAssertionConfig assertionConfig,
+			Assertable modelItem) {
 		super(assertionConfig, modelItem, false, true, false, true);
 
-		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader(getConfiguration());
+		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader(
+				getConfiguration());
 		assertWsaAction = reader.readBoolean("asertWsaAction", true);
 		assertWsaTo = reader.readBoolean("asertWsaTo", true);
 		assertWsaRelatesTo = reader.readBoolean("asertWsaRelatesTo", false);
+		assertReplyToRefParams = reader.readBoolean("assertReplyToRefParams",
+				false);
+		assertFaultToRefParams = reader.readBoolean("assertFaultToRefParams",
+				false);
 	}
 
-   public static class Factory extends AbstractTestAssertionFactory
-	{
+	public static class Factory extends AbstractTestAssertionFactory {
 		@SuppressWarnings("unchecked")
-		public Factory()
-		{
-			super(WSAAssertion.ID, WSAAssertion.LABEL, WSAAssertion.class, new Class[] { WsdlRequest.class,
-					WsdlMockResponseTestStep.class });
+		public Factory() {
+			super(WSAAssertion.ID, WSAAssertion.LABEL, WSAAssertion.class,
+					new Class[] { WsdlRequest.class,
+							WsdlMockResponseTestStep.class });
 		}
 	}
 
 	@Override
-	protected String internalAssertRequest(MessageExchange messageExchange, SubmitContext context)
-			throws AssertionException
-	{
-		try
-		{
-			new WsaValidator((WsdlMessageExchange) messageExchange, wsaPropertiesTable).validateWsAddressingRequest();
-		}
-		catch (AssertionException e)
-		{
+	protected String internalAssertRequest(MessageExchange messageExchange,
+			SubmitContext context) throws AssertionException {
+		try {
+			new WsaValidator((WsdlMessageExchange) messageExchange,
+					wsaAssertionConfiguration).validateWsAddressingRequest();
+		} catch (AssertionException e) {
 			throw new AssertionException(new AssertionError(e.getMessage()));
-		}
-		catch (Exception e)
-		{
-			SoapUI.logError( e );
+		} catch (XmlException e) {
+			SoapUI.logError(e);
+			throw new AssertionException(
+					new AssertionError(
+							"There has been some XmlException, ws-a couldn't be validated properly."));
 		}
 
 		return "Request WS-Addressing is valid";
 	}
 
 	@Override
-	protected String internalAssertResponse(MessageExchange messageExchange, SubmitContext context)
-			throws AssertionException
-	{
-		try
-		{
-			new WsaValidator((WsdlMessageExchange) messageExchange, wsaPropertiesTable).validateWsAddressingResponse();
-		}
-		catch (AssertionException e)
-		{
+	protected String internalAssertResponse(MessageExchange messageExchange,
+			SubmitContext context) throws AssertionException {
+		try {
+			new WsaValidator((WsdlMessageExchange) messageExchange,
+					wsaAssertionConfiguration).validateWsAddressingResponse();
+		} catch (AssertionException e) {
 			throw new AssertionException(new AssertionError(e.getMessage()));
-		}
-		catch (Exception e)
-		{
-			SoapUI.logError( e );
+		} catch (XmlException e) {
+			SoapUI.logError(e);
+			throw new AssertionException(
+					new AssertionError(
+							"There has been some XmlException, ws-a couldn't be validated properly."));
 		}
 
 		return "Response WS-Addressing is valid";
 	}
 
-	public boolean configure()
-	{
-		if( dialog == null )
+	public boolean configure() {
+		if (dialog == null)
 			buildDialog();
 
 		StringToStringMap values = new StringToStringMap();
-		values.put( ASSERT_ACTION, assertWsaAction );
-		values.put( ASSERT_TO, assertWsaTo );
-		values.put( ASSERT_RELATES_TO, assertWsaRelatesTo );
+		values.put(ASSERT_ACTION, assertWsaAction);
+		values.put(ASSERT_TO, assertWsaTo);
+		values.put(ASSERT_RELATES_TO, assertWsaRelatesTo);
+		values.put(ASSERT_REPLY_TO_REF_PARAMS, assertReplyToRefParams);
+		values.put(ASSERT_FAULT_TO_REF_PARAMS, assertFaultToRefParams);
 
-		values = dialog.show( values );
-		if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
-		{
-			assertWsaAction = values.getBoolean( ASSERT_ACTION );
+		values = dialog.show(values);
+		if (dialog.getReturnValue() == XFormDialog.OK_OPTION) {
+			assertWsaAction = values.getBoolean(ASSERT_ACTION);
 			assertWsaTo = values.getBoolean(ASSERT_TO);
 			assertWsaRelatesTo = values.getBoolean(ASSERT_RELATES_TO);
+			assertReplyToRefParams = values
+					.getBoolean(ASSERT_REPLY_TO_REF_PARAMS);
+			assertFaultToRefParams = values
+					.getBoolean(ASSERT_FAULT_TO_REF_PARAMS);
 		}
 
-		wsaPropertiesTable = new WsaPropertiesTable(assertWsaAction, assertWsaTo, assertWsaRelatesTo);
-		setConfiguration( createConfiguration() );
+		wsaAssertionConfiguration = new WsaAssertionConfiguration(
+				assertWsaAction, assertWsaTo, assertWsaRelatesTo,
+				assertReplyToRefParams, assertFaultToRefParams);
+		setConfiguration(createConfiguration());
 		return true;
 	}
 
-	private void buildDialog()
-	{
-		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Ws-a properties to assert" );
-		XForm mainForm = builder.createForm( "Basic" );
-		mainForm.addCheckBox(ASSERT_ACTION, "Check if 'wsa:Action' exists and has the right value");
-		mainForm.addCheckBox( ASSERT_TO, "Check if 'wsa:To' exists" );
-		mainForm.addCheckBox( ASSERT_RELATES_TO, "Check if 'wsa:RelatesTo' exists" );
+	private void buildDialog() {
+		XFormDialogBuilder builder = XFormFactory
+				.createDialogBuilder("Ws-a properties to assert");
+		XForm mainForm = builder.createForm("Basic");
+		mainForm.addCheckBox(ASSERT_ACTION,
+				"Check if 'wsa:Action' exists and has the right value");
+		mainForm.addCheckBox(ASSERT_TO, "Check if 'wsa:To' exists");
+		mainForm.addCheckBox(ASSERT_RELATES_TO,
+				"Check if 'wsa:RelatesTo' exists");
+		mainForm.addCheckBox(ASSERT_REPLY_TO_REF_PARAMS,
+				"Check if 'wsa:ReplyTo' ReferenceParameters exist");
+		mainForm.addCheckBox(ASSERT_FAULT_TO_REF_PARAMS,
+				"Check if 'wsa:FaultTo' ReferenceParameters exist");
 
-		dialog = builder.buildDialog( builder
-					.buildOkCancelHelpActions( HelpUrls.SIMPLE_CONTAINS_HELP_URL ), "Specify options",
-					UISupport.OPTIONS_ICON );
+		dialog = builder.buildDialog(builder
+				.buildOkCancelHelpActions(HelpUrls.SIMPLE_CONTAINS_HELP_URL),
+				"Specify options", UISupport.OPTIONS_ICON);
 	}
 
-	protected XmlObject createConfiguration()
-	{
+	protected XmlObject createConfiguration() {
 		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
-		builder.add( "asertWsaAction", assertWsaAction );
-		builder.add( "asertWsaTo", assertWsaTo );
-		builder.add( "asertWsaRelatesTo", assertWsaRelatesTo );
+		builder.add("asertWsaAction", assertWsaAction);
+		builder.add("asertWsaTo", assertWsaTo);
+		builder.add("asertWsaRelatesTo", assertWsaRelatesTo);
+		builder.add("assertReplyToRefParams", assertReplyToRefParams);
+		builder.add("assertFaultToRefParams", assertFaultToRefParams);
 		return builder.finish();
 	}
 
-	public boolean isAssertWsaAction()
-	{
+	public boolean isAssertWsaAction() {
 		return assertWsaAction;
 	}
 
-	public void setAssertWsaAction(boolean assertWsaAction )
-	{
+	public void setAssertWsaAction(boolean assertWsaAction) {
 		this.assertWsaAction = assertWsaAction;
 	}
 
-	public boolean isAssertWsaTo()
-	{
+	public boolean isAssertWsaTo() {
 		return assertWsaTo;
 	}
 
-	public void setAssertWsaTo(boolean assertWsaTo )
-	{
+	public void setAssertWsaTo(boolean assertWsaTo) {
 		this.assertWsaTo = assertWsaTo;
 	}
 
-	public boolean isAssertWsaRelatesTo()
-	{
+	public boolean isAssertWsaRelatesTo() {
 		return assertWsaRelatesTo;
 	}
 
-	public void setAssertWsaRelatesTo(boolean assertWsaRelatesTo )
-	{
+	public void setAssertWsaRelatesTo(boolean assertWsaRelatesTo) {
 		this.assertWsaRelatesTo = assertWsaRelatesTo;
 	}
 
-	public WsaPropertiesTable getWsaPropertiesTable()
-	{
-		return wsaPropertiesTable;
+	public WsaAssertionConfiguration getWsaPropertiesTable() {
+		return wsaAssertionConfiguration;
 	}
 
-	public void setWsaPropertiesTable(WsaPropertiesTable wsaPropertiesTable)
-	{
-		this.wsaPropertiesTable = wsaPropertiesTable;
+	public void setWsaPropertiesTable(
+			WsaAssertionConfiguration wsaPropertiesTable) {
+		this.wsaAssertionConfiguration = wsaPropertiesTable;
+	}
+
+	public boolean isAssertFaultToRefParams() {
+		return assertFaultToRefParams;
+	}
+
+	public void setAssertFaultToRefParams(boolean assertFaultToRefParams) {
+		this.assertFaultToRefParams = assertFaultToRefParams;
 	}
 
 }
