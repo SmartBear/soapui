@@ -15,9 +15,10 @@ package com.eviware.soapui.support.resolver;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
 import javax.swing.AbstractCellEditor;
@@ -68,9 +69,10 @@ public class ResolveDialog
 
 	}
 
+	@SuppressWarnings("serial")
 	private void buildDialog()
 	{
-		dialog = new SimpleDialog(title, description, helpUrl, true)
+		dialog = new SimpleDialog(title, description, helpUrl, false)
 		{
 			@Override
 			protected Component buildContent()
@@ -89,32 +91,22 @@ public class ResolveDialog
 				return panel;
 			}
 
+			@SuppressWarnings("unchecked")
 			@Override
 			protected boolean handleOk()
 			{
-				// needs refactor
 				for (PathToResolve path : resolveContextTableModel.getContext().getPathsToResolve())
 				{
-					int index = resolveContextTableModel.getContext().getPathsToResolve().indexOf(path);
-					Object key = resolveContextTableModel.jbcList.get(index).getSelectedItem();
-					if (key instanceof Resolver)
+					if (!path.isResolved())
 					{
-						path.setResolver(key);
+						if (UISupport.confirm("There are unresolved paths, continue?", "Unresolved paths - Warning"))
+						{
+							return true;
+						}
+						return false;
 					}
 				}
-				int cnt = resolveContextTableModel.getContext().apply();
-				if (isShowOkMessage())
-				{
-					UISupport.showInfoMessage("Resolved " + cnt + " items");
-				}
 				return true;
-			}
-
-			@Override
-			protected boolean handleCancel()
-			{
-				return UISupport.confirm("There are unresolved item, continue?", "Unresolved items");
-
 			}
 
 		};
@@ -124,14 +116,21 @@ public class ResolveDialog
 		dialog.addWindowListener(new WindowAdapter()
 		{
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public void windowClosing(WindowEvent arg0)
 			{
-				if (UISupport.confirm("There are unresolved item, continue?", "Unresolved items"))
+				for (PathToResolve path : resolveContextTableModel.getContext().getPathsToResolve())
 				{
-					dialog.setVisible(false);
+					if (!path.isResolved())
+					{
+						if (UISupport.confirm("There are unresolved paths, continue?", "Unresolved paths - Warning"))
+						{
+							dialog.setVisible(false);
+						}
+						break;
+					}
 				}
-
 			}
 		});
 
@@ -147,9 +146,9 @@ public class ResolveDialog
 		this.showOkMessage = showOkMessage;
 	}
 
-	public ResolveContext resolve(AbstractWsdlModelItem modelItem)
+	public ResolveContext<?> resolve(AbstractWsdlModelItem<?> modelItem)
 	{
-		ResolveContext context = new ResolveContext(modelItem);
+		ResolveContext<?> context = new ResolveContext<AbstractWsdlModelItem<?>>(modelItem);
 		modelItem.resolve(context);
 		if (context.isEmpty())
 		{
@@ -184,10 +183,7 @@ public class ResolveDialog
 			for (PathToResolve path : context.getPathsToResolve())
 			{
 				ArrayList<Object> resolversAndDefaultAction = new ArrayList<Object>();
-				if (path.getDefaultAction() != null)
-				{
-					resolversAndDefaultAction.add(path.getDefaultAction());
-				}
+				resolversAndDefaultAction.add("Choose one...");
 				for (Object resolver : path.getResolvers())
 				{
 					resolversAndDefaultAction.add(resolver);
@@ -208,7 +204,7 @@ public class ResolveDialog
 			return 4;
 		}
 
-		public void setContext(ResolveContext context)
+		public void setContext(ResolveContext<?> context)
 		{
 			this.context = context;
 			fireTableDataChanged();
@@ -270,10 +266,19 @@ public class ResolveDialog
 			return null;
 		}
 
+		@SuppressWarnings("unchecked")
 		private String createItemName(PathToResolve ptr)
 		{
+			String name = "";
 			ModelItem modelItem = ptr.getOwner();
-			String name = modelItem.getName();
+			try
+			{
+				name = modelItem.getName();
+			}
+			catch (Exception e)
+			{
+				e.getStackTrace();
+			}
 
 			while (modelItem.getParent() != null && !(modelItem.getParent() instanceof Project))
 			{
@@ -289,6 +294,7 @@ public class ResolveDialog
 			return context;
 		}
 
+		@SuppressWarnings("unchecked")
 		public void setResolver(int pathIndex, Object resolveOrDefaultAction)
 		{
 			PathToResolve path = context.getPathsToResolve().get(pathIndex);
@@ -310,13 +316,50 @@ public class ResolveDialog
 		}
 	}
 
+	@SuppressWarnings("serial")
 	private class ResolverEditor extends AbstractCellEditor implements TableCellEditor
 	{
 		private JComboBox jbc = new JComboBox();
 
-		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column)
+		@SuppressWarnings("unchecked")
+		public Component getTableCellEditorComponent(final JTable table, Object value, boolean isSelected, int row, int column)
 		{
 			jbc = ((ResolveContextTableModel) table.getModel()).getResolversAndActions(row);
+			final PathToResolve path = resolveContextTableModel.getContext().getPathsToResolve().get(row);
+
+			jbc.addActionListener(new ActionListener()
+			{
+
+				public void actionPerformed(ActionEvent e)
+				{
+					Object key = jbc.getSelectedItem();
+					if (key instanceof Resolver)
+					{
+						path.setResolver(key);
+					}
+					if (path.resolve())
+					{
+						jbc.addItem("Resolved");
+						jbc.setSelectedIndex(jbc.getItemCount() - 1);
+
+						for (int cnt = 0; cnt < resolveContextTableModel.getContext().getPathsToResolve().size(); cnt++)
+						{
+							PathToResolve otherPath = resolveContextTableModel.getContext().getPathsToResolve().get(cnt);
+							if (path != otherPath & !otherPath.isResolved())
+							{
+								otherPath.getOwner().afterLoad();
+								otherPath.getOwner().resolve(resolveContextTableModel.getContext());
+								if ( otherPath.isResolved() ) {
+									JComboBox jbcOther = ((ResolveContextTableModel) table.getModel()).getResolversAndActions(cnt);
+									jbcOther.addItem("Resolved");
+									jbcOther.setSelectedIndex(jbcOther.getItemCount() - 1);
+								}
+							}
+						}
+					}
+				}
+
+			});
 			return jbc;
 		}
 
@@ -327,11 +370,13 @@ public class ResolveDialog
 
 	}
 
+	@SuppressWarnings("serial")
 	private class PathCellRenderer extends DefaultTableCellRenderer
 	{
 		private Color greenColor = Color.GREEN.darker().darker();
 		private Color redColor = Color.RED.darker().darker();
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public Component getTableCellRendererComponent(JTable arg0, Object arg1, boolean arg2, boolean arg3, int arg4,
 				int arg5)
@@ -339,16 +384,16 @@ public class ResolveDialog
 			Component comp = super.getTableCellRendererComponent(arg0, arg1, arg2, arg3, arg4, arg5);
 
 			PathToResolve ptr = resolveContextTableModel.getContext().getPathsToResolve().get(arg4);
-			boolean resolved = ptr.getResolver() != null && ptr.getResolver().isResolved();
+//			boolean resolved = ptr.getResolver() != null && ptr.getResolver().isResolved();
 
-			if (resolved)
+			if (ptr.isResolved())
 			{
-				setForeground(greenColor);
-				setText(ptr.getResolver().getResolvedPath());
+				comp.setForeground(greenColor);
+				setText(ptr.getPath());
 			}
 			else
 			{
-				setForeground(redColor);
+				comp.setForeground(redColor);
 			}
 
 			return comp;

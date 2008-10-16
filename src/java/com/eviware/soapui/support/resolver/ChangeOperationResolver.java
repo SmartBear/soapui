@@ -39,13 +39,11 @@ public abstract class ChangeOperationResolver implements Resolver
 {
 
 	private boolean resolved = false;
-	private WsdlTestStep testStep;
 	private WsdlProject project;
 	private Operation pickedOperation;
 
 	public ChangeOperationResolver(WsdlTestStep testStep)
 	{
-		this.testStep = testStep;
 		this.project = testStep.getTestCase().getTestSuite().getProject();
 
 	}
@@ -66,7 +64,7 @@ public abstract class ChangeOperationResolver implements Resolver
 		PropertyChangeDialog pDialog = new PropertyChangeDialog("Choose operation");
 		pDialog.showAndChoose();
 		resolved = update();
-		return true;
+		return resolved;
 	}
 
 	public abstract boolean update();

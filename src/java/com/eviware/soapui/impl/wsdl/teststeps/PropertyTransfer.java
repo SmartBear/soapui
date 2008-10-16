@@ -27,8 +27,9 @@ import com.eviware.soapui.support.PropertyChangeNotifier;
 import com.eviware.soapui.support.resolver.ChooseAnotherPropertySourceResolver;
 import com.eviware.soapui.support.resolver.ChooseAnotherPropertyTargetResolver;
 import com.eviware.soapui.support.resolver.CreateMissingPropertyResolver;
+import com.eviware.soapui.support.resolver.DisablePropertyTransferResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
-import com.eviware.soapui.support.resolver.defaultaction.DisablePropertyTransferAction;
+import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
 import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlCursor;
@@ -1131,14 +1132,30 @@ public class PropertyTransfer implements PropertyChangeNotifier
 	{
 		if (getSourceProperty() == null)
 		{
-			context.addPathToResolve(parent, "Resolve source property", getConfig().getSourceStep(),
-					new DisablePropertyTransferAction(this)).addResolvers(new CreateMissingPropertyResolver(this,parent), new ChooseAnotherPropertySourceResolver(this, parent));
+			if ( context.hasThisModelItem(parent, "Resolve source property", getConfig().getSourceStep())) 
+				return;
+			context.addPathToResolve(parent, "Resolve source property", getConfig().getSourceStep()).addResolvers(
+					new DisablePropertyTransferResolver(this), new CreateMissingPropertyResolver(this, parent),
+					new ChooseAnotherPropertySourceResolver(this, parent));
+		} else {
+			if ( context.hasThisModelItem(parent, "Resolve source property", getConfig().getSourceStep())) {
+				PathToResolve path = context.getPath(parent, "Resolve source property", getConfig().getSourceStep());
+				path.setSolved(true);
+			}
 		}
 
 		if (getTargetProperty() == null)
 		{
-			context.addPathToResolve(parent, "Resolve target property", getConfig().getTargetStep(),
-					new DisablePropertyTransferAction(this)).addResolvers(new CreateMissingPropertyResolver(this,parent), new ChooseAnotherPropertyTargetResolver(this, parent));
+			if ( context.hasThisModelItem(parent, "Resolve target property", getConfig().getTargetStep())) 
+				return;
+			context.addPathToResolve(parent, "Resolve target property", getConfig().getTargetStep()).addResolvers(
+					new DisablePropertyTransferResolver(this), new CreateMissingPropertyResolver(this, parent),
+					new ChooseAnotherPropertyTargetResolver(this, parent));
+		} else {
+			if ( context.hasThisModelItem(parent, "Resolve target property", getConfig().getTargetStep())) {
+				PathToResolve path = context.getPath(parent, "Resolve target property", getConfig().getTargetStep());
+				path.setSolved(true);
+			}
 		}
 
 	}

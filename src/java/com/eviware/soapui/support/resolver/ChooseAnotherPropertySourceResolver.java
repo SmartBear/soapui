@@ -25,9 +25,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JRootPane;
-import javax.swing.WindowConstants;
 
 import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfer;
 import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfersTestStep;
@@ -61,20 +58,20 @@ public class ChooseAnotherPropertySourceResolver implements Resolver
 		properties.add(parent.getTestCase().getTestSuite().getProject().getPropertyNames());
 		sources.add(parent.getTestCase().getTestSuite());
 		properties.add(parent.getTestCase().getTestSuite().getPropertyNames());
-		
+
 		sources.add(parent.getTestCase());
 		properties.add(parent.getTestCase().getPropertyNames());
 
-		for( int c = 0; c < parent.getTestCase().getTestStepCount(); c++ )
+		for (int c = 0; c < parent.getTestCase().getTestStepCount(); c++)
 		{
-			WsdlTestStep testStep = parent.getTestCase().getTestStepAt( c );
-			if( testStep == parent )
+			WsdlTestStep testStep = parent.getTestCase().getTestStepAt(c);
+			if (testStep == parent)
 				continue;
-			
+
 			sources.add(testStep);
 			properties.add(testStep.getPropertyNames());
 		}
-		
+
 	}
 
 	public String getDescription()
@@ -126,7 +123,7 @@ public class ChooseAnotherPropertySourceResolver implements Resolver
 		private void init()
 		{
 			FormLayout layout = new FormLayout("min,right:pref, 4dlu, 40dlu, 5dlu, 40dlu, min ",
-			"min, pref, 4dlu, pref, 4dlu, pref, min");
+					"min, pref, 4dlu, pref, 4dlu, pref, min");
 			CellConstraints cc = new CellConstraints();
 			PanelBuilder panel = new PanelBuilder(layout);
 			panel.addLabel("Source:", cc.xy(2, 2));
@@ -160,7 +157,9 @@ public class ChooseAnotherPropertySourceResolver implements Resolver
 						propertiesCombo.setEnabled(true);
 						for (String str : properties.get(index))
 							propertiesCombo.addItem(str);
-					} else {
+					}
+					else
+					{
 						propertiesCombo.setEnabled(false);
 					}
 
@@ -191,6 +190,8 @@ public class ChooseAnotherPropertySourceResolver implements Resolver
 
 					badTransfer.setSourcePropertyName((String) propertiesCombo.getSelectedItem());
 
+					resolved = true;
+
 					setVisible(false);
 				}
 
@@ -201,11 +202,12 @@ public class ChooseAnotherPropertySourceResolver implements Resolver
 
 				public void actionPerformed(ActionEvent e)
 				{
+					resolved = false;
 					setVisible(false);
 				}
 
 			});
-			
+
 			setLocationRelativeTo(UISupport.getParentFrame(this));
 			panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 			this.add(panel.getPanel());
@@ -222,24 +224,33 @@ public class ChooseAnotherPropertySourceResolver implements Resolver
 	@SuppressWarnings("serial")
 	private class StepComboRenderer extends DefaultListCellRenderer
 	{
+		@SuppressWarnings("finally")
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
 				boolean cellHasFocus)
 		{
 			Component result = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
-			if (value instanceof TestModelItem)
+			try
 			{
-				TestModelItem item = (TestModelItem) value;
-				setIcon(item.getIcon());
-				setText(item.getName()); 
+				if (value instanceof TestModelItem)
+				{
+					TestModelItem item = (TestModelItem) value;
+					setIcon(item.getIcon());
+					setText(item.getName());
+				}
+				else if (value == PropertyExpansionUtils.getGlobalProperties())
+				{
+					setText("Global");
+				}
 			}
-			else if (value == PropertyExpansionUtils.getGlobalProperties())
+			catch (Exception e)
 			{
-				setText("Global");
+				setText("Removed element");
 			}
-
-			return result;
+			finally
+			{
+				return result;
+			}
 		}
 	}
 

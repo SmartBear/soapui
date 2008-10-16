@@ -15,7 +15,6 @@ package com.eviware.soapui.support.resolver;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.SoapUIAction;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,20 +36,20 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
    }
 
    public PathToResolve addPathToResolve(
-           AbstractWsdlModelItem owner, String description, String path, SoapUIAction defaultAction
+           AbstractWsdlModelItem<?> owner, String description, String path
    )
    {
-      PathToResolve pathToResolve = new PathToResolve( owner, description, path, defaultAction );
+      PathToResolve pathToResolve = new PathToResolve( owner, description, path);
       pathsToResolve.add( pathToResolve );
       return pathToResolve;
    }
 
    public PathToResolve addPathToResolve(
-           AbstractWsdlModelItem owner, String description, String path,
+           AbstractWsdlModelItem<?> owner, String description, String path,
            Resolver resolver
    )
    {
-      PathToResolve pathToResolve = new PathToResolve( owner, description, path, null );
+      PathToResolve pathToResolve = new PathToResolve( owner, description, path );
       pathToResolve.addResolvers( resolver );
       pathsToResolve.add( pathToResolve );
       return pathToResolve;
@@ -58,29 +57,18 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
 
    public class PathToResolve
    {
-      private final AbstractWsdlModelItem owner;
+      private final AbstractWsdlModelItem<?> owner;
       private final String description;
       private List<Resolver> resolvers = new ArrayList<Resolver>();
       private final String path;
-      private SoapUIAction defaultAction;
       private Resolver resolver;
+      private boolean resolved;
 
-      public PathToResolve( AbstractWsdlModelItem owner, String description, String path, SoapUIAction defaultAction )
+      public PathToResolve( AbstractWsdlModelItem<?> owner, String description, String path )
       {
          this.owner = owner;
          this.description = description;
          this.path = path;
-         this.defaultAction = defaultAction;
-      }
-
-      public SoapUIAction<?> getDefaultAction()
-      {
-         return defaultAction;
-      }
-
-      public void setDefaultAction( SoapUIAction<?> defaultAction )
-      {
-         this.defaultAction = defaultAction;
       }
 
       public void addResolvers( Resolver... resolvers )
@@ -113,13 +101,9 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
 
       public boolean resolve()
       {
-         if( resolver != null )
-            return resolver.resolve();
-
-         if( defaultAction != null )
-         {
-            defaultAction.perform( owner, this );
-            return true;
+         if( resolver != null ) {
+         	resolved = resolver.resolve();
+            return resolved;
          }
 
          return false;
@@ -134,13 +118,75 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
       {
          return (ArrayList<Resolver>) resolvers;
       }
+      
+      public boolean isResolved() {
+      	return resolved;
+      }
+
+		@Override
+		public int hashCode()
+		{
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result + ((description == null) ? 0 : description.hashCode());
+			result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+			result = prime * result + ((path == null) ? 0 : path.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj)
+		{
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			PathToResolve other = (PathToResolve) obj;
+			if (!getOuterType().equals(other.getOuterType()))
+				return false;
+			if (description == null)
+			{
+				if (other.description != null)
+					return false;
+			}
+			else if (!description.equals(other.description))
+				return false;
+			if (owner == null)
+			{
+				if (other.owner != null)
+					return false;
+			}
+			else if (!owner.equals(other.owner))
+				return false;
+			if (path == null)
+			{
+				if (other.path != null)
+					return false;
+			}
+			else if (!path.equals(other.path))
+				return false;
+			return true;
+		}
+
+		@SuppressWarnings("unchecked")
+		private ResolveContext getOuterType()
+		{
+			return ResolveContext.this;
+		}
+
+		public void setSolved(boolean solved)
+		{
+			this.resolved = solved;
+		}
+      
    }
 
    public interface Resolver
    {
       public boolean resolve();
-
-//		public boolean apply();
 
       public boolean isResolved();
 
@@ -285,4 +331,27 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
          return (String) getDescription();
       }
    }
+
+	public boolean hasThisModelItem(AbstractWsdlModelItem<?> modelItem, String description, String pathName)
+	{
+		// if removed path is changed and turned to null. that is ok.
+		if( pathName == null ) 
+			return true;
+		PathToResolve pathToCheck = new PathToResolve( modelItem, description, pathName); 
+		for( PathToResolve path : pathsToResolve ) {
+			if ( path.equals(pathToCheck) )
+				return true;
+		}
+		return false;
+	}
+
+	public PathToResolve getPath(AbstractWsdlModelItem<?> modelItem, String description, String pathName)
+	{
+		PathToResolve pathToCheck = new PathToResolve( modelItem, description, pathName); 
+		for( PathToResolve path : pathsToResolve ) {
+			if ( path.equals(pathToCheck) )
+				return path;
+		}
+		return null;
+	}
 }

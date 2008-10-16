@@ -147,7 +147,7 @@ public class ChooseAnotherTestCase implements Resolver
 
 					pickedTestCase = (WsdlTestCase) tCaseCombo.getSelectedItem();
 					runTestStep.setTargetTestCase(pickedTestCase);
-					
+					resolved = true;
 					setVisible(false);
 				}
 
@@ -158,6 +158,7 @@ public class ChooseAnotherTestCase implements Resolver
 
 				public void actionPerformed(ActionEvent e)
 				{
+					resolved = false;
 					setVisible(false);
 				}
 

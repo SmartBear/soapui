@@ -30,7 +30,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ChooseAnotherTestCase;
 import com.eviware.soapui.support.resolver.CreateNewEmptyTestCase;
 import com.eviware.soapui.support.resolver.ResolveContext;
-import com.eviware.soapui.support.resolver.defaultaction.RunTestCaseDefaultAction;
+import com.eviware.soapui.support.resolver.RunTestCaseRemoveResolver;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
@@ -243,7 +243,7 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 			return name;
 	}
 
-   @Override
+	@Override
 	public boolean cancel()
 	{
 		if (testCaseRunner != null)
@@ -484,13 +484,21 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 
 		if (targetTestCase == null)
 		{
-			context.addPathToResolve(this, "Missing Test Case", getTestStepTitle() + "/" + stepConfig.getTargetTestCase(),
-					new RunTestCaseDefaultAction()).addResolvers(new ChooseAnotherTestCase(this),
-					new CreateNewEmptyTestCase(this));
+			if (context.hasThisModelItem(this, "Missing Test Case", getTestStepTitle() + "/"
+					+ stepConfig.getTargetTestCase()))
+				return;
+			context.addPathToResolve(this, "Missing Test Case", getTestStepTitle() + "/" + stepConfig.getTargetTestCase())
+					.addResolvers(new RunTestCaseRemoveResolver(this), new ChooseAnotherTestCase(this),
+							new CreateNewEmptyTestCase(this));
 		}
 		else
 		{
 			targetTestCase.resolve(context);
+			if (context.hasThisModelItem(this, "Missing Test Case", getTestStepTitle() + "/"
+					+ stepConfig.getTargetTestCase())) {
+				context.getPath(this, "Missing Test Case", getTestStepTitle() + "/"
+					+ stepConfig.getTargetTestCase()).setSolved(true);
+			}
 		}
 	}
 }

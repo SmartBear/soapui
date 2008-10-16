@@ -46,7 +46,7 @@ public class ChooseAnotherPropertyTargetResolver implements Resolver
 	private PropertyTransfersTestStep parent = null;
 	private ArrayList<Object> sources = new ArrayList<Object>();
 	private ArrayList<String[]> properties = new ArrayList<String[]>();
-	
+
 	public ChooseAnotherPropertyTargetResolver(PropertyTransfer propertyTransfer, PropertyTransfersTestStep parent)
 	{
 		this.badTransfer = propertyTransfer;
@@ -58,27 +58,27 @@ public class ChooseAnotherPropertyTargetResolver implements Resolver
 		properties.add(parent.getTestCase().getTestSuite().getProject().getPropertyNames());
 		sources.add(parent.getTestCase().getTestSuite());
 		properties.add(parent.getTestCase().getTestSuite().getPropertyNames());
-		
+
 		sources.add(parent.getTestCase());
 		properties.add(parent.getTestCase().getPropertyNames());
 
-		for( int c = 0; c < parent.getTestCase().getTestStepCount(); c++ )
+		for (int c = 0; c < parent.getTestCase().getTestStepCount(); c++)
 		{
-			WsdlTestStep testStep = parent.getTestCase().getTestStepAt( c );
-			if( testStep == parent )
+			WsdlTestStep testStep = parent.getTestCase().getTestStepAt(c);
+			if (testStep == parent)
 				continue;
-			
+
 			sources.add(testStep);
 			properties.add(testStep.getPropertyNames());
 		}
-		
+
 	}
 
 	public String getDescription()
 	{
 		return "Choose new target property";
 	}
-	
+
 	@Override
 	public String toString()
 	{
@@ -121,7 +121,7 @@ public class ChooseAnotherPropertyTargetResolver implements Resolver
 		private void init()
 		{
 			FormLayout layout = new FormLayout("min,right:pref, 4dlu, 40dlu, 5dlu, 40dlu, min ",
-			"min, pref, 4dlu, pref, 4dlu, pref, min");
+					"min, pref, 4dlu, pref, 4dlu, pref, min");
 			CellConstraints cc = new CellConstraints();
 			PanelBuilder panel = new PanelBuilder(layout);
 			panel.addLabel("Source:", cc.xy(2, 2));
@@ -155,7 +155,9 @@ public class ChooseAnotherPropertyTargetResolver implements Resolver
 						propertiesCombo.setEnabled(true);
 						for (String str : properties.get(index))
 							propertiesCombo.addItem(str);
-					} else {
+					}
+					else
+					{
 						propertiesCombo.setEnabled(false);
 					}
 
@@ -186,6 +188,8 @@ public class ChooseAnotherPropertyTargetResolver implements Resolver
 
 					badTransfer.setTargetPropertyName((String) propertiesCombo.getSelectedItem());
 
+					resolved = true;
+
 					setVisible(false);
 				}
 
@@ -196,11 +200,13 @@ public class ChooseAnotherPropertyTargetResolver implements Resolver
 
 				public void actionPerformed(ActionEvent e)
 				{
+					resolved = false;
+
 					setVisible(false);
 				}
 
 			});
-			
+
 			setLocationRelativeTo(UISupport.getParentFrame(this));
 			panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 			this.add(panel.getPanel());
@@ -216,24 +222,33 @@ public class ChooseAnotherPropertyTargetResolver implements Resolver
 	@SuppressWarnings("serial")
 	private class StepComboRenderer extends DefaultListCellRenderer
 	{
+		@SuppressWarnings("finally")
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
 				boolean cellHasFocus)
 		{
 			Component result = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-			if (value instanceof TestModelItem)
+			try
 			{
-				TestModelItem item = (TestModelItem) value;
-				setIcon(item.getIcon());
-				setText(item.getName());
-			}
-			else if (value == PropertyExpansionUtils.getGlobalProperties())
-			{
-				setText("Global");
-			}
+				if (value instanceof TestModelItem)
+				{
+					TestModelItem item = (TestModelItem) value;
+					setIcon(item.getIcon());
+					setText(item.getName());
+				}
+				else if (value == PropertyExpansionUtils.getGlobalProperties())
+				{
+					setText("Global");
+				}
 
-			return result;
+			}
+			catch (Exception e)
+			{
+				setText("Removed element");
+			} finally {
+				return result;
+			}
 		}
 	}
 }

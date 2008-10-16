@@ -58,20 +58,25 @@ public abstract class ImportInterfaceResolver implements Resolver
 		{
 		case 0:
 			loadWsdlFromFile();
+			resolved = update();
 			break;
 		case 1:
 			loadWsdlFromUrl();
+			resolved = update();
 			break;
 		case 2:
 			loadWadlFromFile();
+			resolved = update();
 			break;
 		case 3:
 			loadWadlFromUrl();
+			resolved = update();
 			break;
 		default:
+			resolved = false;
 			break;
 		}
-		resolved = update();
+		
 		return resolved;
 	}
 

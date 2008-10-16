@@ -14,8 +14,9 @@ import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.resolver.ChangeOperationResolver;
 import com.eviware.soapui.support.resolver.ImportInterfaceResolver;
+import com.eviware.soapui.support.resolver.RemoveTestStepResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
-import com.eviware.soapui.support.resolver.defaultaction.RemoveTestStepDefaultResolveAction;
+import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
 
 import org.apache.log4j.Logger;
 
@@ -216,43 +217,52 @@ public class RestTestRequestStep extends HttpTestRequestStep
 
 		if (restResource == null)
 		{
+			if (context.hasThisModelItem(this, "Missing REST Resource in Project", getRequestStepConfig().getService()
+					+ "/" + getRequestStepConfig().getResourcePath()))
+				return;
 			context.addPathToResolve(this, "Missing REST Resource in Project",
-					getRequestStepConfig().getService() + "/" + getRequestStepConfig().getResourcePath(),
-					new RemoveTestStepDefaultResolveAction()).addResolvers(new ImportInterfaceResolver(this)
-			{
+					getRequestStepConfig().getService() + "/" + getRequestStepConfig().getResourcePath()).addResolvers(
+					new RemoveTestStepResolver(this), new ImportInterfaceResolver(this)
+					{
 
-				@Override
-				protected boolean update()
-				{
-					restResource = findRestResource();
-					if (restResource == null)
-						return false;
+						@Override
+						protected boolean update()
+						{
+							restResource = findRestResource();
+							if (restResource == null)
+								return false;
 
-					initRestTestRequest(false);
-					setDisabled(false);
-					return true;
-				}
+							initRestTestRequest(false);
+							setDisabled(false);
+							return true;
+						}
 
-			}, new ChangeOperationResolver(this)
-			{
+					}, new ChangeOperationResolver(this)
+					{
 
-				@Override
-				public boolean update()
-				{
-					restResource = (RestResource) getPickedOperation();
-					if (restResource == null)
-						return false;
+						@Override
+						public boolean update()
+						{
+							restResource = (RestResource) getPickedOperation();
+							if (restResource == null)
+								return false;
 
-					initRestTestRequest(false);
-					setDisabled(false);
-					return true;
-				}
+							initRestTestRequest(false);
+							setDisabled(false);
+							return true;
+						}
 
-			});
+					});
 		}
 		else
 		{
 			restResource.resolve(context);
+			if (context.hasThisModelItem(this, "Missing REST Resource in Project", getRequestStepConfig().getService()
+					+ "/" + getRequestStepConfig().getResourcePath())) {
+				PathToResolve path = context.getPath(this, "Missing REST Resource in Project", getRequestStepConfig().getService()
+					+ "/" + getRequestStepConfig().getResourcePath());
+				path.setSolved(true);
+			}
 		}
 	}
 }
