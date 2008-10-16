@@ -12,11 +12,14 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsa;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -190,7 +193,16 @@ public class WsaUtils
 		}
 		return header;
 	}
-	private Element processWsaProperty(Element header, boolean override, String elementLocalName, String wsaPropValue, boolean address) {
+	/**
+	 * Processing ws-a property
+	 * @param header - header element to add wsa to
+	 * @param override - indicates if existing parameters should be overriden with new values
+	 * @param elementLocalName - property string to add, for instance: any:Action, or any:ReplyTo
+	 * @param wsaPropValue - wsa property value, inserted in input box, or default generated
+	 * @param address - indicates if property is an endpoint reference, i.e. if it has <address> tag inside itself
+	 * @param refParamsContent - the content of ReferenceParameters for specific endpoint reference, null if property is an absolute IRI 
+	 */
+	private Element processWsaProperty(Element header, boolean override, String elementLocalName, String wsaPropValue, boolean address, String refParamsContent) {
 		boolean existsWsa = getWsaProperty(header, elementLocalName)!= null ? true: false;
 		if (override)
 		{
@@ -200,7 +212,7 @@ public class WsaUtils
 			}
 			if (address)
 			{
-				header.appendChild(builder.createWsaAddressChildElement(elementLocalName, envelopeElement, wsaPropValue));
+				header.appendChild(builder.createWsaAddressChildElement(elementLocalName, envelopeElement, wsaPropValue, refParamsContent));
 			} else {
 				header.appendChild(builder.createWsaChildElement(elementLocalName, envelopeElement, wsaPropValue));
 			}
@@ -209,12 +221,15 @@ public class WsaUtils
 		{
 			if (address)
 			{
-				header.appendChild(builder.createWsaAddressChildElement(elementLocalName, envelopeElement, wsaPropValue));
+				header.appendChild(builder.createWsaAddressChildElement(elementLocalName, envelopeElement, wsaPropValue, refParamsContent));
 			} else {
 				header.appendChild(builder.createWsaChildElement(elementLocalName, envelopeElement, wsaPropValue));
 			}
 		}
 		return header;
+	}
+	private Element processWsaProperty(Element header, boolean override, String elementLocalName, String wsaPropValue, boolean address) {
+		return processWsaProperty(header, override, elementLocalName, wsaPropValue, address, null);
 	}
 
 	private Element processWsaRelatesToProperty(Element header, boolean override, String elementLocalName, String relationshipType,
@@ -270,18 +285,19 @@ public class WsaUtils
 			}
 
 			String replyTo = PropertyExpansionUtils.expandProperties(context,wsaContainer.getWsaConfig().getReplyTo());
+			String replyToRefParams = wsaContainer.getWsaConfig().getReplyToRefParams();
 			if (AnonymousTypeConfig.REQUIRED.toString().equals(anonymousType))
 			// TODO check if WsaSettings.USE_DEFAULT_REPLYTO is needed considering
 			// anonymous added
 			// && SoapUI.getSettings().getBoolean(WsaSettings.USE_DEFAULT_REPLYTO))
 			{
-				header = processWsaProperty(header, override, wsaPrefix + ":ReplyTo", anonymousAddress, true);
+				header = processWsaProperty(header, override, wsaPrefix + ":ReplyTo", anonymousAddress, true, replyToRefParams);
 			}
 			else if (!StringUtils.isNullOrEmpty(replyTo))
 			{
 				if (!(AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType) && isAnonymousAddress(replyTo,wsaVersionNameSpace)))
 				{
-					header = processWsaProperty(header, override, wsaPrefix + ":ReplyTo", replyTo, true);
+					header = processWsaProperty(header, override, wsaPrefix + ":ReplyTo", replyTo, true, replyToRefParams);
 				}
 			}
 			else if (operation.isRequestResponse())
@@ -289,9 +305,9 @@ public class WsaUtils
 				//for request-response replyTo is mandatory, set it to none if anonymous prohibited
 				if (!AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType))
 				{
-					header = processWsaProperty(header, override, wsaPrefix + ":ReplyTo", anonymousAddress, true);
+					header = processWsaProperty(header, override, wsaPrefix + ":ReplyTo", anonymousAddress, true, replyToRefParams);
 				} else {
-					header = processWsaProperty(header, override, wsaPrefix + ":ReplyTo", noneAddress, true);
+					header = processWsaProperty(header, override, wsaPrefix + ":ReplyTo", noneAddress, true, replyToRefParams);
 				}
 			}
 
@@ -301,9 +317,10 @@ public class WsaUtils
 				header = processWsaProperty(header, override, wsaPrefix + ":From", from, true);
 			}
 			String faultTo = PropertyExpansionUtils.expandProperties(context,wsaContainer.getWsaConfig().getFaultTo());
+			String faultToRefParams = wsaContainer.getWsaConfig().getFaultToRefParams();
 			if (!StringUtils.isNullOrEmpty(faultTo))
 			{
-				header = processWsaProperty(header, override, wsaPrefix + ":FaultTo", faultTo, true);
+				header = processWsaProperty(header, override, wsaPrefix + ":FaultTo", faultTo, true, faultToRefParams);
 			}
 			
 			String relatesTo = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getRelatesTo());
@@ -389,9 +406,10 @@ public class WsaUtils
 			else
 			{
 				String replyTo = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getReplyTo());
+				String replyToRefParams = wsaContainer.getWsaConfig().getReplyToRefParams();
 				if (!StringUtils.isNullOrEmpty(replyTo))
 				{
-					header = processWsaProperty(header, override, wsaPrefix + ":ReplyTo", replyTo, true);
+					header = processWsaProperty(header, override, wsaPrefix + ":ReplyTo", replyTo, true, replyToRefParams);
 				}
 			}
 
@@ -419,9 +437,10 @@ public class WsaUtils
 					header = processWsaProperty(header, override, wsaPrefix + ":From", from, true);
 				}
 				String faultTo = PropertyExpansionUtils.expandProperties(context,wsaContainer.getWsaConfig().getFaultTo());
+				String faultToRefParams = wsaContainer.getWsaConfig().getFaultToRefParams();
 				if (!StringUtils.isNullOrEmpty(faultTo))
 				{
-					header = processWsaProperty(header, override, wsaPrefix + ":FaultTo", faultTo, true);
+					header = processWsaProperty(header, override, wsaPrefix + ":FaultTo", faultTo, true, faultToRefParams);
 				}
 				
 				String relationshipType = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getRelationshipType());
@@ -567,17 +586,47 @@ public class WsaUtils
 			return wsaElm;
 		}
 
-		public Element createWsaAddressChildElement(String elementName, Element addToElement, String wsaProperty)
+		public Element createWsaAddressChildElement(String elementName, Element addToElement, String wsaProperty, String refParamsContent)
 		{
-			Element wsAddressElm = addToElement.getOwnerDocument().createElementNS(wsaVersionNameSpace, wsaPrefix + ":Address");
-			Element wsaElm = addToElement.getOwnerDocument().createElementNS(wsaVersionNameSpace, elementName);
-			Text txtElm = addToElement.getOwnerDocument().createTextNode(wsaProperty);
+			Document document = addToElement.getOwnerDocument();
+			Element wsAddressElm = document.createElementNS(wsaVersionNameSpace, wsaPrefix + ":Address");
+			Element wsaElm = document.createElementNS(wsaVersionNameSpace, elementName);
+			Text propertyContent = document.createTextNode(wsaProperty);
 			if (mustUnderstand != null)
 			{
 				wsaElm.setAttributeNS(soapVersion.getEnvelopeNamespace(), "mustUnderstand", mustUnderstand ? "1" : "0");
 			}
-			wsAddressElm.appendChild(txtElm);
+			wsAddressElm.appendChild(propertyContent);
 			wsaElm.appendChild(wsAddressElm);
+			
+			try
+			{
+				if (refParamsContent != null)
+				{
+					//Text propertyRefParamsContent = document.createTextNode(refParamsContent);
+					Element refParamsElm = document.createElementNS(wsaVersionNameSpace,
+							wsaPrefix + ":ReferenceParameters");
+					refParamsContent = "<dummy>" + refParamsContent + "</dummy>";
+					Node xx = document.importNode(XmlUtils.parseXml( refParamsContent ).getDocumentElement(), true);
+					NodeList xxList = xx.getChildNodes();
+					
+//					refParamsElm.appendChild(propertyRefParamsContent);
+					for (int i = 0; i < xxList.getLength(); i++) {
+						refParamsElm.appendChild(xxList.item(i));
+					}
+					wsaElm.appendChild(refParamsElm);
+				}
+			}
+			catch (DOMException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return wsaElm;
 		}
 

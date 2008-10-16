@@ -1417,6 +1417,8 @@
     	<xsd:attribute name="generateMessageId" type="xsd:boolean"></xsd:attribute>
     	<xsd:attribute name="addDefaultTo" type="xsd:boolean"></xsd:attribute>
     	<xsd:attribute name="addDefaultAction" type="xsd:boolean"></xsd:attribute>
+    	<xsd:attribute name="replyToRefParams" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="faultToRefParams" type="xsd:string"></xsd:attribute>
     </xsd:complexType>
 
     <xsd:simpleType name="MustUnderstandType">

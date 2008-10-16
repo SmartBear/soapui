@@ -238,4 +238,24 @@ public class WsaConfig implements PropertyChangeNotifier
    {
       this.wsaConfig = wsaConfig;
    }
+
+   public String getFaultToRefParams() {
+		return wsaConfig.getFaultToRefParams();
+	}
+   public void setFaultToRefParams(String arg0)
+	{
+		String oldValue = getFaultToRefParams();
+		wsaConfig.setFaultToRefParams(arg0);
+		propertyChangeSupport.firePropertyChange("faultToRefParams", oldValue, arg0);
+	}
+	public String getReplyToRefParams() {
+		return wsaConfig.getReplyToRefParams();
+	}
+   public void setReplyToRefParams(String arg0)
+	{
+		String oldValue = getReplyToRefParams();
+		wsaConfig.setReplyToRefParams(arg0);
+		propertyChangeSupport.firePropertyChange("replyToRefParams", oldValue, arg0);
+	}
+
 }

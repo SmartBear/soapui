@@ -17,6 +17,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPasswordField;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.jgoodies.binding.PresentationModel;
@@ -37,6 +38,13 @@ public class SimpleBindingForm extends SimpleForm
 		JTextField textField = super.appendTextField( label, tooltip );
 		Bindings.bind( textField, pm.getModel( propertyName ));
 		return textField;
+	}
+	
+	public JTextArea appendTextArea( String propertyName, String label, String tooltip )
+	{
+		JTextArea textArea = super.appendTextArea(label, tooltip );
+		Bindings.bind( textArea, pm.getModel( propertyName ));
+		return textArea;
 	}
 	
 	public JPasswordField appendPasswordField( String propertyName, String label, String tooltip )

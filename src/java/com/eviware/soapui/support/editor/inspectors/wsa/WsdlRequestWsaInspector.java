@@ -81,6 +81,7 @@ public class WsdlRequestWsaInspector extends AbstractWsaInspector implements Xml
 		}});
 		
 		form.appendTextField( "replyTo", "Reply to", "The reply endpoint reference, will be generated if left empty" );
+		form.appendTextArea("replyToRefParams", "ReplyTo Reference Parameters","ReplyTo Reference Parameters, content will be inserted as an xml (not text)");
 		messageIdTextField = form.appendTextField( "messageID", "MessageID", " The ID of a message that can be used to uniquely identify a message, will be generated if left empty and ws-a settings 'generate message id' checked " );
 		generateMessageIdCheckBox = form.appendCheckBox("generateMessageId", "Generate MessageID", "Randomly generate MessageId");
 		messageIdTextField.setEnabled(!generateMessageIdCheckBox.isSelected());
@@ -93,6 +94,7 @@ public class WsdlRequestWsaInspector extends AbstractWsaInspector implements Xml
 		form.addSpace( 10 );
 		form.appendTextField( "from", "From", "The source endpoint reference" );
 		form.appendTextField( "faultTo", "Fault to", "The fault endpoint reference" );
+		form.appendTextArea("faultToRefParams", "FaultTo Reference Parameters","FaultTo Reference Parameters, content will be inserted as an xml (not text)");
 		form.appendTextField( "relatesTo", "Relates to", "The endpoint reference request relates to" );
 		form.appendTextField( "relationshipType", "Relationship type", "Relationship type" );
 		form.addSpace( 5 );

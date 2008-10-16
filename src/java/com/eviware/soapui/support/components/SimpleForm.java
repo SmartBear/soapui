@@ -250,7 +250,8 @@ public class SimpleForm
 					jl.setDisplayedMnemonic( text.charAt( ix+1 ) );
 				}
 				
-				component.getAccessibleContext().setAccessibleName( text );
+				if( component.getAccessibleContext() != null )
+					component.getAccessibleContext().setAccessibleName( text );
 			}
       }
       else
@@ -293,6 +294,20 @@ public class SimpleForm
       JTextComponentPopupMenu.add( textField );
 		append( label, textField );
 		return textField;
+   }
+   
+   public JTextArea appendTextArea( String label, String tooltip )
+   {
+      JTextArea textArea = new JUndoableTextArea();
+      textArea.setColumns( 30 );
+      textArea.setRows(3);
+      textArea.setAutoscrolls(true);
+      textArea.add(new JScrollPane());
+      textArea.setToolTipText( tooltip );
+      textArea.getAccessibleContext().setAccessibleDescription( tooltip );
+      JTextComponentPopupMenu.add( textArea );
+		append( label, new JScrollPane( textArea ));
+		return textArea;
    }
    
    public JPasswordField appendPasswordField( String label, String tooltip )
