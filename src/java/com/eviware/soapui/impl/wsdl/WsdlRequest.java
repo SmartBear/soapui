@@ -522,9 +522,6 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 				getConfig().addNewWsaConfig();
 			}
 			wsaConfig = new WsaConfig(getConfig().getWsaConfig(), this);
-			wsaConfig.setGenerateMessageId(true);
-			wsaConfig.setAddDefaultTo(true);
-			wsaConfig.setAddDefaultAction(true);
 		}
 		return wsaConfig;
 	}
