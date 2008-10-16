@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.soap;
 
 import org.apache.xmlbeans.XmlObject;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.WsaPropertiesTable;
@@ -91,9 +92,13 @@ public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssert
 		{
 			new WsaValidator((WsdlMessageExchange) messageExchange, wsaPropertiesTable).validateWsAddressingRequest();
 		}
-		catch (Exception e)
+		catch (AssertionException e)
 		{
 			throw new AssertionException(new AssertionError(e.getMessage()));
+		}
+		catch (Exception e)
+		{
+			SoapUI.logError( e );
 		}
 
 		return "Request WS-Addressing is valid";
@@ -107,9 +112,13 @@ public class WSAAssertion extends WsdlMessageAssertion implements ResponseAssert
 		{
 			new WsaValidator((WsdlMessageExchange) messageExchange, wsaPropertiesTable).validateWsAddressingResponse();
 		}
-		catch (Exception e)
+		catch (AssertionException e)
 		{
 			throw new AssertionException(new AssertionError(e.getMessage()));
+		}
+		catch (Exception e)
+		{
+			SoapUI.logError( e );
 		}
 
 		return "Response WS-Addressing is valid";
