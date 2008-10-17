@@ -47,7 +47,8 @@
               </tr>
               <tr align="right">
               	<td>
-                	<span class="relatedLinks"><a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" title="try soapUI Pro" onclick="javascript:urchinTracker:('/downlaodTrial');"><img src="images/try_pro.jpg" alt="Try soapUI pro to soap test" width="100" height="25" longdesc="http://www.eviware.com"/></a></span>
+                	<span class="relatedLinks"><a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" title="try soapUI Pro" onclick="javascript:urchinTracker:('/downloadTrial');">
+                                               <img src="images/try_pro_100.png" alt="Try soapUI pro to soap test" width="100" height="20" longdesc="http://www.eviware.com"/></a></span>
                 </td>
               </tr>
             </table>
