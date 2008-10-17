@@ -181,6 +181,16 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
 		{
 			this.resolved = solved;
 		}
+
+		public boolean update()
+		{
+			for( Resolver resolver : resolvers )
+			{
+				if( resolver.isResolved())
+					return true;
+			}
+			return false;
+		}
       
    }
 

@@ -32,11 +32,13 @@ import com.eviware.soapui.support.components.JButtonBar;
 
 public abstract class SimpleDialog extends JDialog
 {
+	protected JButtonBar buttons = null;
+
 	public SimpleDialog(String title, String description, String helpUrl, boolean okAndCancel)
 	{
 		super(UISupport.getMainFrame(), title, true);
 
-		JButtonBar buttons = UISupport.initDialogActions(buildActions(helpUrl, okAndCancel), this);
+		buttons = UISupport.initDialogActions(buildActions(helpUrl, okAndCancel), this);
 		buttons.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		getContentPane().add(
@@ -50,14 +52,24 @@ public abstract class SimpleDialog extends JDialog
 				BorderFactory.createEmptyBorder(3, 5, 3, 5)));
 
 		getContentPane().add(buttons, BorderLayout.SOUTH);
+		modifyButtons();
+		
 		pack();
 	}
+
+	/*
+	 * overide this to change buttons at bottom of dialog.
+	 * I did not make it abstrac because it would require 
+	 * refactoring when SimpleDialog is used. 
+	 * Robert.
+	 */
+	protected void modifyButtons() {};
 
 	public SimpleDialog(String title, String description, String helpUrl)
 	{
 		this(title, description, helpUrl, true);
 	}
-	
+
 	protected abstract Component buildContent();
 
 	public ActionList buildActions(String url, boolean okAndCancel)

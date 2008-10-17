@@ -1130,6 +1130,9 @@ public class PropertyTransfer implements PropertyChangeNotifier
 	@SuppressWarnings("unchecked")
 	public void resolver(ResolveContext context, PropertyTransfersTestStep parent)
 	{
+		if ( isDisabled() ) 
+			return;
+		
 		if (getSourceProperty() == null)
 		{
 			if ( context.hasThisModelItem(parent, "Resolve source property", getConfig().getSourceStep())) 

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -72,7 +73,7 @@ public class ResolveDialog
 	@SuppressWarnings("serial")
 	private void buildDialog()
 	{
-		dialog = new SimpleDialog(title, description, helpUrl, false)
+		dialog = new SimpleDialog(title, description, helpUrl, true)
 		{
 			@Override
 			protected Component buildContent()
@@ -89,6 +90,51 @@ public class ResolveDialog
 				panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 				return panel;
+			}
+
+			/*
+			 * Change Cancel into Update
+			 */
+			@Override
+			protected void modifyButtons()
+			{
+				super.modifyButtons();
+				Component[] components = buttons.getComponents();
+				for (Component component : components)
+				{
+					if (component instanceof JButton)
+					{
+						JButton button = (JButton) component;
+						if (button.getText().equals("Cancel"))
+						{
+							button.setText("Update");
+						}
+					}
+				}
+			}
+			
+			@Override
+			protected boolean handleCancel()
+			{
+				return handleUpdate();
+			}
+
+			@SuppressWarnings("unchecked")
+			private boolean handleUpdate()
+			{
+				for( PathToResolve otherPath : resolveContextTableModel.getContext().getPathsToResolve() )
+				{
+					if (!otherPath.isResolved())
+					{
+						otherPath.getOwner().afterLoad();
+						otherPath.getOwner().resolve(resolveContextTableModel.getContext());
+					}
+				}
+				
+				dialog = null;
+				setVisible(false);
+				resolve(resolveContextTableModel.getContext().getModelItem());
+				return true;
 			}
 
 			@SuppressWarnings("unchecked")
@@ -322,7 +368,8 @@ public class ResolveDialog
 		private JComboBox jbc = new JComboBox();
 
 		@SuppressWarnings("unchecked")
-		public Component getTableCellEditorComponent(final JTable table, Object value, boolean isSelected, int row, int column)
+		public Component getTableCellEditorComponent(final JTable table, Object value, boolean isSelected, int row,
+				int column)
 		{
 			jbc = ((ResolveContextTableModel) table.getModel()).getResolversAndActions(row);
 			final PathToResolve path = resolveContextTableModel.getContext().getPathsToResolve().get(row);
@@ -339,23 +386,26 @@ public class ResolveDialog
 					}
 					if (path.resolve())
 					{
+						path.setSolved(true);
 						jbc.addItem("Resolved");
 						jbc.setSelectedIndex(jbc.getItemCount() - 1);
 
-						for (int cnt = 0; cnt < resolveContextTableModel.getContext().getPathsToResolve().size(); cnt++)
-						{
-							PathToResolve otherPath = resolveContextTableModel.getContext().getPathsToResolve().get(cnt);
-							if (path != otherPath & !otherPath.isResolved())
-							{
-								otherPath.getOwner().afterLoad();
-								otherPath.getOwner().resolve(resolveContextTableModel.getContext());
-								if ( otherPath.isResolved() ) {
-									JComboBox jbcOther = ((ResolveContextTableModel) table.getModel()).getResolversAndActions(cnt);
-									jbcOther.addItem("Resolved");
-									jbcOther.setSelectedIndex(jbcOther.getItemCount() - 1);
-								}
-							}
-						}
+//						for (int cnt = 0; cnt < resolveContextTableModel.getContext().getPathsToResolve().size(); cnt++)
+//						{
+//							PathToResolve otherPath = resolveContextTableModel.getContext().getPathsToResolve().get(cnt);
+//							if (path != otherPath & !otherPath.isResolved())
+//							{
+//								otherPath.getOwner().afterLoad();
+//								otherPath.getOwner().resolve(resolveContextTableModel.getContext());
+//								if (otherPath.isResolved())
+//								{
+//									JComboBox jbcOther = ((ResolveContextTableModel) table.getModel())
+//											.getResolversAndActions(cnt);
+//									jbcOther.addItem("Resolved");
+//									jbcOther.setSelectedIndex(jbcOther.getItemCount() - 1);
+//								}
+//							}
+//						}
 					}
 				}
 
@@ -384,7 +434,8 @@ public class ResolveDialog
 			Component comp = super.getTableCellRendererComponent(arg0, arg1, arg2, arg3, arg4, arg5);
 
 			PathToResolve ptr = resolveContextTableModel.getContext().getPathsToResolve().get(arg4);
-//			boolean resolved = ptr.getResolver() != null && ptr.getResolver().isResolved();
+			// boolean resolved = ptr.getResolver() != null &&
+			// ptr.getResolver().isResolved();
 
 			if (ptr.isResolved())
 			{
