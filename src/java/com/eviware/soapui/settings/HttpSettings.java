@@ -44,4 +44,6 @@ public interface HttpSettings
 	public static final String HTTP_VERSION_0_9 = "0.9";
 	public static final String HTTP_VERSION_1_0 = "1.0";
 	public static final String HTTP_VERSION_1_1 = "1.1";
+   
+   public static final String ENABLE_MOCK_WIRE_LOG = HttpSettings.class.getSimpleName() + "@" + "enable_mock_wire_log";
 }
