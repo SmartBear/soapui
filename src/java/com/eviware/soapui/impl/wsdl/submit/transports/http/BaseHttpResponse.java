@@ -64,16 +64,16 @@ public abstract class BaseHttpResponse implements HttpResponse
          timeTaken += httpMethod.getResponseReadTime();
       }
 
-      this.timestamp = System.currentTimeMillis();
-      this.contentType = httpMethod.getResponseContentType();
-      this.statusCode = httpMethod.getStatusCode();
-      this.sslInfo = httpMethod.getSSLInfo();
-
       try
       {
+         this.timestamp = System.currentTimeMillis();
+         this.contentType = httpMethod.getResponseContentType();
+         this.statusCode = httpMethod.getStatusCode();
+         this.sslInfo = httpMethod.getSSLInfo();
+
          this.url = new URL( httpMethod.getURI().toString() );
       }
-      catch( Exception e )
+      catch( Throwable e )
       {
          e.printStackTrace();
       }
