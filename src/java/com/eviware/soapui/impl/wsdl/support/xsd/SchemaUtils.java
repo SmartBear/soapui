@@ -468,7 +468,7 @@ public class SchemaUtils
          return;
 
       XmlObject xmlObject = loader.loadXmlObject( wsdlUrl, null );
-      existing.put( loader.getBaseURI(), xmlObject );
+      existing.put( wsdlUrl, xmlObject );
       wsdlUrl = loader.getBaseURI();
       
       selectDefinitionParts( wsdlUrl, existing, loader, xmlObject, "declare namespace s='" + Constants.WSDL11_NS + "' .//s:import/@location" );
