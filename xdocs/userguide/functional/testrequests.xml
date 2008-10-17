@@ -132,11 +132,9 @@
 		 that have been modified during the clone procedure (useful for manual post processing).</li>
 		 </ul>
 		 <p>Setting the desired options and selecting OK will clone as configured.</p>
-	     <a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" title="try soapUI Pro" onclick="javascript:urchinTracker:('/downloadTrial');">
-         <img src="images/try_pro_100.png" alt="Try soapUI pro to soap test" width="100" height="20" longdesc="http://www.eviware.com"/>
-		 </subsection>
-		 
-		  <subsection name="The Request Log Tab">
+         </subsection>
+
+		 <subsection name="The Request Log Tab">
 		  <columns><column><div>
 		  The Request Log tab simply shows a history of submit/response times and response-sizes for the TestRequest.
 		  This can come in handy if you want to manually compare response times or sizes over time.	</div>
