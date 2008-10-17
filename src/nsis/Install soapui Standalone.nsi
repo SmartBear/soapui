@@ -211,7 +211,7 @@ SectionEnd
 
 ;jre
 
-Section "JRE 1.6.0_5" SEC04
+Section "JRE 1.6.0_7" SEC04
 SectionIn 1
    SetOutPath "$INSTDIR\jre"
         File /r "${INSTALLER_SOURCE}\jre\*.*"
