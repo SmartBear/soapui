@@ -12,17 +12,17 @@
 		 <p>Hopefully these assertions make a useful testing tool box that will allow Agile testing of Web Services. 
 		 Currently the following assertions are available:</p>
 		 <table><tr><th>Type</th><th>Description</th></tr>
-		 <tr><td><a href="#Schema_Compliance">Schema Compliance</a> *</td><td>Validates the response message against its xml schema</td></tr>
-		 <tr><td><a href="#Simple_Contains">Simple Contains</a></td><td>Checks for the existence of a token</td></tr>
-		 <tr><td><a href="#Simple_NotContains">Simple Not Contains</a></td><td>Checks for the non existence of a token</td></tr>
-		 <tr><td><a href="#Soap_Fault">SOAP Fault</a> *</td><td>Checks that the response is a soap fault</td></tr>
-		 <tr><td><a href="#Not_Soap_Fault">Not SOAP Fault</a> *</td><td>Checks that the response is not a soap fault</td></tr>
-		 <tr><td><a href="#SOAP_Response">SOAP Response</a> *</td><td>Checks that the response is valid SOAP Response</td></tr>
-		 <tr><td><a href="#Response_SLA">Response SLA</a> *</td><td>Checks the response time to be under a specified value</td></tr>
-		 <tr><td><a href="#XPath_Match">XPath Match</a></td><td>Matches the result of a specified XPath expression against a predefined value</td></tr>
-		 <tr><td><a href="#XQuery_Match">XQuery Match</a></td><td>Matches the result of a specified XQuery expression against a predefined value</td></tr>
+		 <tr><td><a href="#Schema_Compliance_Assertion">Schema Compliance</a> *</td><td>Validates the response message against its xml schema</td></tr>
+		 <tr><td><a href="#Simple_Contains_Assertion">Simple Contains</a></td><td>Checks for the existence of a token</td></tr>
+		 <tr><td><a href="#Simple_NotContains_Assertion">Simple Not Contains</a></td><td>Checks for the non existence of a token</td></tr>
+		 <tr><td><a href="#Soap_Fault_Assertion">SOAP Fault</a> *</td><td>Checks that the response is a soap fault</td></tr>
+		 <tr><td><a href="#Not_Soap_Fault_Assertion">Not SOAP Fault</a> *</td><td>Checks that the response is not a soap fault</td></tr>
+		 <tr><td><a href="#SOAP_Response_Assertion">SOAP Response</a> *</td><td>Checks that the response is valid SOAP Response</td></tr>
+		 <tr><td><a href="#Response_SLA_Assertion">Response SLA</a> *</td><td>Checks the response time to be under a specified value</td></tr>
+		 <tr><td><a href="#XPath_Match_Assertion">XPath Match</a></td><td>Matches the result of a specified XPath expression against a predefined value</td></tr>
+		 <tr><td><a href="#XQuery_Match_Assertion">XQuery Match</a></td><td>Matches the result of a specified XQuery expression against a predefined value</td></tr>
 		 <tr><td><a href="#Script_Assertion">Script Assertion</a></td><td>Allows a custom Groovy script for asserting the message exchange</td></tr>
-		 <tr><td><a href="#WS-Security_Status">WS-Security Status</a> *</td><td>Checks that incoming WS-Security processing was successful</td></tr>
+		 <tr><td><a href="#WS-Security_Status_Assertion">WS-Security Status</a> *</td><td>Checks that incoming WS-Security processing was successful</td></tr>
 		 <tr><td><a href="#WS-A_Assertion">WS-A Assertion</a></td><td>Checks that the response has valid WS-A header properties</td></tr>
 		 </table>
 		 <p>Assertions marked with a (*) are "singular assertions", meaning that they can be added only once to a TestRequest</p>
@@ -269,9 +269,9 @@ assert holder["//ns1:RequestId"] != null</source>
 		 </subsection>
 		 
 		 <subsection name="WS-A Assertion">
-		 <p>Validates that the response has valid WS-A header properties as specified  in 
-		 <a href="http://www.w3.org/TR/2006/WD-ws-addr-wsdl-20060216/#WSDLMEPS">WS-Addressing and WSDL Message Exchange Patterns </a>.</p>
-		 <p>This assertion has no configuration parameters.</p>
+		 <p>Validates that the response has valid WS-A header properties. When creating or double clicking a ws-a assertion, 
+		 configuration panel is opened where you can choose which properties are to be validated.</p>
+		 <p align="center"><img src="images/wsa_assertion_panel.gif" alt=""></img></p>
 		 </subsection>
 		 
 		  <p><hr size="1"/>Next: <a href="propertytransfers.html">Use data in a response in another request - PropertyTransfers</a></p>
