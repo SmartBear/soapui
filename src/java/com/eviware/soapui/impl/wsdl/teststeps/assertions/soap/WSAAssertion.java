@@ -83,6 +83,9 @@ public class WSAAssertion extends WsdlMessageAssertion implements
 				false);
 		assertFaultToRefParams = reader.readBoolean("assertFaultToRefParams",
 				false);
+		wsaAssertionConfiguration = new WsaAssertionConfiguration(
+				assertWsaAction, assertWsaTo, assertWsaRelatesTo,
+				assertReplyToRefParams, assertFaultToRefParams);
 	}
 
 	public static class Factory extends AbstractTestAssertionFactory {
@@ -152,9 +155,9 @@ public class WSAAssertion extends WsdlMessageAssertion implements
 					.getBoolean(ASSERT_FAULT_TO_REF_PARAMS);
 		}
 
-		wsaAssertionConfiguration = new WsaAssertionConfiguration(
-				assertWsaAction, assertWsaTo, assertWsaRelatesTo,
-				assertReplyToRefParams, assertFaultToRefParams);
+//		wsaAssertionConfiguration = new WsaAssertionConfiguration(
+//				assertWsaAction, assertWsaTo, assertWsaRelatesTo,
+//				assertReplyToRefParams, assertFaultToRefParams);
 		setConfiguration(createConfiguration());
 		return true;
 	}

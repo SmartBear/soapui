@@ -45,10 +45,10 @@ public class WsaValidator
 	StringBuilder cumulativeErrorMsg;
 	WsaAssertionConfiguration wsaAssertionConfiguration;
 
-	public WsaValidator(WsdlMessageExchange messageExchange, WsaAssertionConfiguration wsaPropertiesTable)
+	public WsaValidator(WsdlMessageExchange messageExchange, WsaAssertionConfiguration wsaAssertionConfiguration)
 	{
 		this.messageExchange = messageExchange;
-		this.wsaAssertionConfiguration = wsaPropertiesTable;
+		this.wsaAssertionConfiguration = wsaAssertionConfiguration;
 		cumulativeErrorMsg = new StringBuilder();
 	}
 

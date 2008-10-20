@@ -285,7 +285,7 @@ public class WsaUtils
 			}
 
 			String replyTo = PropertyExpansionUtils.expandProperties(context,wsaContainer.getWsaConfig().getReplyTo());
-			String replyToRefParams = wsaContainer.getWsaConfig().getReplyToRefParams();
+			String replyToRefParams = PropertyExpansionUtils.expandProperties(context,wsaContainer.getWsaConfig().getReplyToRefParams());
 			if (AnonymousTypeConfig.REQUIRED.toString().equals(anonymousType))
 			// TODO check if WsaSettings.USE_DEFAULT_REPLYTO is needed considering
 			// anonymous added
@@ -317,7 +317,7 @@ public class WsaUtils
 				header = processWsaProperty(header, override, wsaPrefix + ":From", from, true);
 			}
 			String faultTo = PropertyExpansionUtils.expandProperties(context,wsaContainer.getWsaConfig().getFaultTo());
-			String faultToRefParams = wsaContainer.getWsaConfig().getFaultToRefParams();
+			String faultToRefParams = PropertyExpansionUtils.expandProperties(context,wsaContainer.getWsaConfig().getFaultToRefParams());
 			if (!StringUtils.isNullOrEmpty(faultTo))
 			{
 				header = processWsaProperty(header, override, wsaPrefix + ":FaultTo", faultTo, true, faultToRefParams);
@@ -406,7 +406,7 @@ public class WsaUtils
 			else
 			{
 				String replyTo = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getReplyTo());
-				String replyToRefParams = wsaContainer.getWsaConfig().getReplyToRefParams();
+				String replyToRefParams = PropertyExpansionUtils.expandProperties(context,wsaContainer.getWsaConfig().getReplyToRefParams());
 				if (!StringUtils.isNullOrEmpty(replyTo))
 				{
 					header = processWsaProperty(header, override, wsaPrefix + ":ReplyTo", replyTo, true, replyToRefParams);
@@ -437,7 +437,7 @@ public class WsaUtils
 					header = processWsaProperty(header, override, wsaPrefix + ":From", from, true);
 				}
 				String faultTo = PropertyExpansionUtils.expandProperties(context,wsaContainer.getWsaConfig().getFaultTo());
-				String faultToRefParams = wsaContainer.getWsaConfig().getFaultToRefParams();
+				String faultToRefParams = PropertyExpansionUtils.expandProperties(context,wsaContainer.getWsaConfig().getFaultToRefParams());
 				if (!StringUtils.isNullOrEmpty(faultTo))
 				{
 					header = processWsaProperty(header, override, wsaPrefix + ":FaultTo", faultTo, true, faultToRefParams);
