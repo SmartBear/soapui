@@ -23,15 +23,20 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
 import org.mortbay.util.IO;
 
+import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.LaunchForm;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
+import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
+import com.eviware.soapui.model.settings.Settings;
 
 public class HttpsProxyServlet extends ProxyServlet
 {
@@ -39,10 +44,13 @@ public class HttpsProxyServlet extends ProxyServlet
 	private String sslEndPoint;
 	private int sslPort = 443;
 	private HttpClient client;
+	private Settings settings;
+	private HttpState httpState = null;
 
 	public HttpsProxyServlet(SoapMonitor soapMonitor, String sslEndpoint)
 	{
 		super(soapMonitor);
+		settings = soapMonitor.getProject().getSettings();
 		int c = sslEndpoint.indexOf(':');
 		if (c > 0)
 		{
@@ -70,9 +78,11 @@ public class HttpsProxyServlet extends ProxyServlet
 		// for this create ui server and port, properties.
 		InetSocketAddress inetAddress = new InetSocketAddress(sslEndPoint, sslPort);
 		ExtendedPostMethod postMethod = new ExtendedPostMethod();
-		
-		postMethod.setURI(new URI("https://" + sslEndPoint, true));
-		
+
+		// HttpState httpState = new HttpState();
+
+		// postMethod.setURI(new URI("https://" + sslEndPoint, true));
+
 		if (capturedData == null)
 		{
 			capturedData = new JProxyServletWsdlMonitorMessageExchange(project);
@@ -118,9 +128,25 @@ public class HttpsProxyServlet extends ProxyServlet
 
 		postMethod.setRequestEntity(new InputStreamRequestEntity(capture, "text/xml; charset=utf-8"));
 
-		client.executeMethod(postMethod);
+		HostConfiguration hostConfiguration = new HostConfiguration();
+		hostConfiguration.getParams().setParameter(
+				SoapUIHostConfiguration.SOAPUI_SSL_CONFIG,
+				settings.getString(LaunchForm.SSLTUNNEL_KEYSTOREPATH, "") + " "
+						+ settings.getString(LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD, ""));
+		hostConfiguration.setHost(new URI("https://" + sslEndPoint, true));
+
+		if (settings.getBoolean(LaunchForm.SSLTUNNEL_REUSESTATE))
+		{
+			if ( httpState == null ) 
+				httpState = new HttpState();
+			client.executeMethod(hostConfiguration, postMethod, httpState);
+		}
+		else
+		{
+			client.executeMethod(hostConfiguration, postMethod);
+		}
 		capturedData.stopCapture();
-		
+
 		byte[] res = postMethod.getResponseBody();
 		IO.copy(new ByteArrayInputStream(postMethod.getResponseBody()), response.getOutputStream());
 		capturedData.setRequest(capture.getCapturedData());
@@ -130,7 +156,7 @@ public class HttpsProxyServlet extends ProxyServlet
 		capturedData.setRawResponseData(getResponseToBytes(postMethod, res));
 		monitor.addMessageExchange(capturedData);
 		capturedData = null;
-		
+
 		postMethod.releaseConnection();
 
 	}
@@ -138,28 +164,30 @@ public class HttpsProxyServlet extends ProxyServlet
 	private byte[] getResponseToBytes(ExtendedPostMethod postMethod, byte[] res)
 	{
 		String response = "";
-		
+
 		Header[] headers = postMethod.getResponseHeaders();
-		for( Header header : headers ) {
+		for (Header header : headers)
+		{
 			response += header.toString();
 		}
-			response += "\n";
-			response += new String(res);
-		
+		response += "\n";
+		response += new String(res);
+
 		return response.getBytes();
 	}
 
 	private byte[] getRequestToBytes(ExtendedPostMethod postMethod, CaptureInputStream capture)
 	{
 		String request = "";
-		
+
 		Header[] headers = postMethod.getRequestHeaders();
-		for( Header header : headers ) {
+		for (Header header : headers)
+		{
 			request += header.toString();
 		}
 		request += "\n";
 		request += new String(capture.getCapturedData());
-		
+
 		return request.getBytes();
 	}
 
