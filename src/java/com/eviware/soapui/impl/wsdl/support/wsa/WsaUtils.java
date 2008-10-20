@@ -300,16 +300,18 @@ public class WsaUtils
 					header = processWsaProperty(header, override, wsaPrefix + ":ReplyTo", replyTo, true, replyToRefParams);
 				}
 			}
-			else if (operation.isRequestResponse())
-			{
-				//for request-response replyTo is mandatory, set it to none if anonymous prohibited
-				if (!AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType))
-				{
-					header = processWsaProperty(header, override, wsaPrefix + ":ReplyTo", anonymousAddress, true, replyToRefParams);
-				} else {
-					header = processWsaProperty(header, override, wsaPrefix + ":ReplyTo", noneAddress, true, replyToRefParams);
-				}
-			}
+			//TODO removed option for the purpose of wstf testing(echo 1.6 for instance needs to have faultTo and no replyTo)
+			//see how to handle this if needed (commented by Dragica 20.10.08.)
+//			else if (operation.isRequestResponse())
+//			{
+//				//for request-response replyTo is mandatory, set it to none if anonymous prohibited
+//				if (!AnonymousTypeConfig.PROHIBITED.toString().equals(anonymousType))
+//				{
+//					header = processWsaProperty(header, override, wsaPrefix + ":ReplyTo", anonymousAddress, true, replyToRefParams);
+//				} else {
+//					header = processWsaProperty(header, override, wsaPrefix + ":ReplyTo", noneAddress, true, replyToRefParams);
+//				}
+//			}
 
 			String from = PropertyExpansionUtils.expandProperties(context, wsaContainer.getWsaConfig().getFrom());
 			if (!StringUtils.isNullOrEmpty(from))
