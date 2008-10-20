@@ -28,13 +28,12 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
-import org.apache.xmlbeans.XmlObject;
 
 public class RandomMockOperationDispatcher extends AbstractMockOperationDispatcher
 {
    public RandomMockOperationDispatcher( WsdlMockOperation mockOperation )
    {
-     super( mockOperation, null );
+     super( mockOperation );
    }
 
    public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result )
@@ -55,7 +54,7 @@ public class RandomMockOperationDispatcher extends AbstractMockOperationDispatch
 
    public static class Factory implements MockOperationDispatchFactory
    {
-      public MockOperationDispatcher build( XmlObject config, WsdlMockOperation mockOperation )
+      public MockOperationDispatcher build( WsdlMockOperation mockOperation )
       {
          return new RandomMockOperationDispatcher( mockOperation );
       }

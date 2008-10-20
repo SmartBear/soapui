@@ -66,14 +66,6 @@ public class WsdlRequestPanelBuilder extends EmptyPanelBuilder<WsdlRequest>
       keystores.add( 0, null );
       table.addProperty( "SSL Keystore", "sslKeystore", keystores.toStringArray() );
 
-//   	
-//   	StringList outgoingNames = new StringList( request.getOperation().getInterface().getProject().getWssContainer().getOutgoingNames());
-//   	outgoingNames.add( "" );
-//		table.addProperty( "WSS Outgoing", "outgoingWss", outgoingNames.toStringArray() );
-//		StringList incomingNames = new StringList( request.getOperation().getInterface().getProject().getWssContainer().getIncomingNames() );
-//		incomingNames.add( "" );
-//		table.addProperty( "WSS Incoming", "incomingWss", incomingNames.toStringArray() );
-
       table.addProperty( "Skip SOAP Action", "skipSoapAction", JPropertiesTable.BOOLEAN_OPTIONS );
 
       // mtom / attachments
@@ -91,6 +83,7 @@ public class WsdlRequestPanelBuilder extends EmptyPanelBuilder<WsdlRequest>
               setDescription( "Enables inline file references in elements with binary content; file:<path>" );
       table.addProperty( "Strip whitespaces", "stripWhitespaces", JPropertiesTable.BOOLEAN_OPTIONS );
       table.addProperty( "Remove Empty Content", "removeEmptyContent", JPropertiesTable.BOOLEAN_OPTIONS );
+      table.addProperty( "Entitize Properties", "entitizeProperties", JPropertiesTable.BOOLEAN_OPTIONS );
 
       // post-processing
       table.addProperty( "Pretty Print", "prettyPrint", JPropertiesTable.BOOLEAN_OPTIONS );

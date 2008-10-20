@@ -12,13 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.resolvers.ResolverUtils;
+import com.eviware.soapui.settings.CommonSettings;
+import org.apache.log4j.Logger;
 
 /**
  * RequestFilter that expands properties in request content
@@ -30,7 +30,7 @@ public class PropertyExpansionRequestFilter extends AbstractRequestFilter
 {
 	public final static Logger log = Logger.getLogger(PropertyExpansionRequestFilter.class);
 	
-	public void filterAbstractHttpRequest(SubmitContext context, AbstractHttpRequest<?> wsdlRequest)
+	public void filterAbstractHttpRequest(SubmitContext context, AbstractHttpRequest<?> httpRequest)
 	{
 		String content = (String) context.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
 		if( content == null )
@@ -39,14 +39,18 @@ public class PropertyExpansionRequestFilter extends AbstractRequestFilter
 		}
 		else
 		{
-			content = PropertyExpansionUtils.expandProperties(context, content, true);
+			content = PropertyExpansionUtils.expandProperties(context, content,
+                 httpRequest.getSettings().getBoolean( CommonSettings.ENTITIZE_PROPERTIES ));
+         
 			if( content != null )
-				context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, content );
+         {
+            context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, content );
+         }
 		}
 	}
 
 	/**
-	 * @deprecated Use {@link PropertyExpansionUtils#expandProperties(SubmitContext,String)} instead
+	 * @deprecated
 	 */
 	
 	public static String expandProperties(SubmitContext context, String content)
@@ -55,7 +59,7 @@ public class PropertyExpansionRequestFilter extends AbstractRequestFilter
 	}
 
 	/**
-	 * @deprecated Use {@link PropertyExpansionUtils#getGlobalProperty(String)} instead
+	 * @deprecated 
 	 */
 	
 	public static String getGlobalProperty( String propertyName )

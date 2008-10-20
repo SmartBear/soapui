@@ -50,7 +50,6 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
-import org.apache.xmlbeans.XmlObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,7 +64,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 
    public ScriptMockOperationDispatcher( WsdlMockOperation mockOperation )
    {
-      super( mockOperation, null );
+      super( mockOperation );
 
       scriptEnginePool = new ScriptEnginePool( mockOperation );
       scriptEnginePool.setScript( mockOperation.getDispatchPath() );
@@ -161,7 +160,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 
    public static class Factory implements MockOperationDispatchFactory
    {
-      public MockOperationDispatcher build( XmlObject config, WsdlMockOperation mockOperation )
+      public MockOperationDispatcher build( WsdlMockOperation mockOperation )
       {
          return new ScriptMockOperationDispatcher( mockOperation );
       }

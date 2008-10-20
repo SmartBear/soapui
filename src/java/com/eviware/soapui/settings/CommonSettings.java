@@ -10,11 +10,9 @@
  * See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.mock.dispatch;
+package com.eviware.soapui.settings;
 
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-
-public interface MockOperationDispatchFactory
+public interface CommonSettings
 {
-   MockOperationDispatcher build( WsdlMockOperation mockOperation );
+   public final static String ENTITIZE_PROPERTIES = CommonSettings.class.getName() + "@entitizeProperties";
 }

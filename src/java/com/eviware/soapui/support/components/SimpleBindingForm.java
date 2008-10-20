@@ -12,17 +12,11 @@
 
 package com.eviware.soapui.support.components;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPasswordField;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.list.SelectionInList;
+
+import javax.swing.*;
 
 public class SimpleBindingForm extends SimpleForm
 {
@@ -81,4 +75,6 @@ public class SimpleBindingForm extends SimpleForm
 		Bindings.bind( comboBox, new SelectionInList<Object>( model, pm.getModel( propertyName )) );
 		return comboBox;
 	}
+
+
 }

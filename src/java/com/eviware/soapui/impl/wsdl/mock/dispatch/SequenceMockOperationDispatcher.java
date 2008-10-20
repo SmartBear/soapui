@@ -19,7 +19,6 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunListener;
 import com.eviware.soapui.model.mock.MockRunner;
-import org.apache.xmlbeans.XmlObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +29,7 @@ public class SequenceMockOperationDispatcher extends AbstractMockOperationDispat
 
    public SequenceMockOperationDispatcher( WsdlMockOperation mockOperation )
    {
-      super( mockOperation, null );
+      super( mockOperation );
 
       mockOperation.getMockService().addMockRunListener( this );
    }
@@ -75,7 +74,7 @@ public class SequenceMockOperationDispatcher extends AbstractMockOperationDispat
 
    public static class Factory implements MockOperationDispatchFactory
    {
-      public MockOperationDispatcher build( XmlObject config, WsdlMockOperation mockOperation )
+      public MockOperationDispatcher build( WsdlMockOperation mockOperation )
       {
          return new SequenceMockOperationDispatcher( mockOperation );
       }

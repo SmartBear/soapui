@@ -44,6 +44,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
+import com.eviware.soapui.settings.CommonSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
@@ -225,7 +226,8 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
          {
             result.addHeader( name, PropertyExpansionUtils.expandProperties( context, responseHeaders.get( name ) ) );
          }
-         responseContent = PropertyExpansionUtils.expandProperties( context, responseContent, true );
+         
+         responseContent = PropertyExpansionUtils.expandProperties( context, responseContent, isEntitizeProperties() );
 
          if( this.getWsaConfig().isWsaEnabled() )
          {
@@ -782,6 +784,16 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
    public void setMultipartEnabled( boolean multipartEnabled )
    {
       getSettings().setBoolean( DISABLE_MULTIPART_ATTACHMENTS, multipartEnabled );
+   }
+
+   public boolean isEntitizeProperties()
+   {
+      return getSettings().getBoolean( CommonSettings.ENTITIZE_PROPERTIES );
+   }
+
+   public void setEntitizeProperties( boolean entitizeProperties )
+   {
+      getSettings().setBoolean( CommonSettings.ENTITIZE_PROPERTIES, entitizeProperties );
    }
 
    public boolean isForceMtom()

@@ -14,7 +14,6 @@ package com.eviware.soapui.impl.wsdl.mock.dispatch;
 
 import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import org.apache.xmlbeans.XmlObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,8 +41,8 @@ public class MockOperationDispatchRegistry
       return factories.keySet().toArray( new String[factories.size()] );
    }
 
-   public static MockOperationDispatcher buildDispatcher( String type, WsdlMockOperation mockOperation, XmlObject config )
+   public static MockOperationDispatcher buildDispatcher( String type, WsdlMockOperation mockOperation )
    {
-      return factories.get( type ).build( config, mockOperation );
+      return factories.get( type ).build( mockOperation );
    }
 }

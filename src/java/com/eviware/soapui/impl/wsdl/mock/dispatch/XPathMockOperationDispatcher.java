@@ -37,7 +37,7 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 
    public XPathMockOperationDispatcher( WsdlMockOperation mockOperation )
    {
-      super( mockOperation, null );
+      super( mockOperation );
    }
 
    public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result ) throws DispatchException
@@ -105,7 +105,7 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 
    public static class Factory implements MockOperationDispatchFactory
    {
-      public MockOperationDispatcher build( XmlObject config, WsdlMockOperation mockOperation )
+      public MockOperationDispatcher build( WsdlMockOperation mockOperation )
       {
          return new XPathMockOperationDispatcher( mockOperation );
       }

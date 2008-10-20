@@ -12,13 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 
-import java.awt.Component;
-
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.support.components.JPropertiesTable;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
+
+import java.awt.*;
 
 /**
  * PanelBuilder for WsdlMockResponses
@@ -64,7 +64,8 @@ public class WsdlMockResponsePanelBuilder extends EmptyPanelBuilder<WsdlMockResp
    	// preprocessing
    	table.addProperty( "Strip whitespaces", "stripWhitespaces", JPropertiesTable.BOOLEAN_OPTIONS );
    	table.addProperty( "Remove Empty Content", "removeEmptyContent", JPropertiesTable.BOOLEAN_OPTIONS );
-   	
+      table.addProperty( "Entitize Properties", "entitizeProperties", JPropertiesTable.BOOLEAN_OPTIONS );
+
    	// others
    	table.addProperty( "Enable Inline Files", "inlineFilesEnabled", JPropertiesTable.BOOLEAN_OPTIONS ).
 			setDescription( "Enables inline file references [file:<path>] in elements with binary content" );

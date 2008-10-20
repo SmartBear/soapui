@@ -13,19 +13,22 @@
 package com.eviware.soapui.impl.wsdl.mock.dispatch;
 
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
+import com.eviware.soapui.support.PropertyChangeNotifier;
 import org.apache.xmlbeans.XmlObject;
 
 import javax.swing.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
-public abstract class AbstractMockOperationDispatcher implements MockOperationDispatcher
+public abstract class AbstractMockOperationDispatcher implements PropertyChangeNotifier, MockOperationDispatcher
 {
    private WsdlMockOperation mockOperation;
-   private XmlObject config;
+   private PropertyChangeSupport propertyChangeSupport;
 
-   protected AbstractMockOperationDispatcher( WsdlMockOperation mockOperation, XmlObject config )
+   protected AbstractMockOperationDispatcher( WsdlMockOperation mockOperation )
    {
       this.mockOperation = mockOperation;
-      this.config = config;
+      propertyChangeSupport = new PropertyChangeSupport( this );
    }
 
    public JComponent buildEditorComponent()
@@ -40,11 +43,41 @@ public abstract class AbstractMockOperationDispatcher implements MockOperationDi
 
    public XmlObject getConfig()
    {
-      return config;
+      return mockOperation.getConfig().getDispatchConfig();
+   }
+
+   protected void saveConfig( XmlObject xmlObject )
+   {
+      mockOperation.getConfig().getDispatchConfig().set( xmlObject );
    }
 
    public WsdlMockOperation getMockOperation()
    {
       return mockOperation;
+   }
+
+   public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
+   {
+      propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
+   }
+
+   public void addPropertyChangeListener( PropertyChangeListener listener )
+   {
+      propertyChangeSupport.addPropertyChangeListener( listener );
+   }
+
+   public void removePropertyChangeListener( PropertyChangeListener listener )
+   {
+      propertyChangeSupport.removePropertyChangeListener( listener );
+   }
+
+   public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
+   {
+      propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
+   }
+
+   protected PropertyChangeSupport getPropertyChangeSupport()
+   {
+      return propertyChangeSupport;
    }
 }

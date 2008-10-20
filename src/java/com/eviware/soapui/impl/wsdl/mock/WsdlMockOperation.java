@@ -88,8 +88,6 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
       }
 
       initData( config );
-
-//      counter = new AtomicLong();
    }
 
    private void initData( MockOperationConfig config )
@@ -106,8 +104,7 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
       if( !getConfig().isSetDispatchConfig() )
          getConfig().addNewDispatchConfig();
 
-      dispatcher = MockOperationDispatchRegistry.buildDispatcher( config.getDispatchStyle().toString(), this,
-              getConfig().getDispatchConfig() );
+      dispatcher = MockOperationDispatchRegistry.buildDispatcher( config.getDispatchStyle().toString(), this );
 
       if( operation != null )
       {
@@ -188,19 +185,11 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
       if( responses.size() == 1 )
          setDefaultResponse( mockResponse.getName() );
 
-      ( getMockService() ).fireMockResponseAdded( mockResponse );
-
       //add ws-a action
       WsdlUtils.setDefaultWsaAction( mockResponse.getWsaConfig(), true );
 
-//   	String [] attrs = WsdlUtils.getExentsibilityAttributes(getOperation().getBindingOperation().getOperation().getOutput(), 
-//   			new QName("http://www.w3.org/2006/05/addressing/wsdl", "Action") );
-//   	if (attrs.length > 0)
-//		{
-//   		mockResponse.getWsaConfig().setAction(attrs[0]);
-//		} else {
-//			WsdlUtils.createDefaultWsaAction(mockResponse);
-//		}
+      ( getMockService() ).fireMockResponseAdded( mockResponse );
+      notifyPropertyChanged( "mockResponses", null, mockResponse );
 
       return mockResponse;
    }
@@ -218,17 +207,6 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
       }
 
       return addNewMockResponse( responseConfig );
-   }
-
-   public WsdlMockResponse addNewMockResponse( String requestQuery, String matchingValue )
-   {
-      // Create a unique name.
-//      String name = String.valueOf( counter.addAndGet( 1 ) );
-
-      // Create the mock response and store it for later retrieval.
-      //WsdlMockResponse mockResponse = addNewMockResponse( name, false );
-//      responseMap.put( new QueryValuePair( requestQuery, matchingValue ), mockResponse );
-      return null; //mockResponse;
    }
 
    public void removeMockResponse( WsdlMockResponse mockResponse )
@@ -308,13 +286,13 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
 
    public String getDispatchStyle()
    {
-      return String.valueOf( getConfig().isSetDispatchStyle() ? getConfig().getDispatchStyle() : MockOperationDispatchStyleConfig.SEQUENCE) ;
+      return String.valueOf( getConfig().isSetDispatchStyle() ? getConfig().getDispatchStyle() : MockOperationDispatchStyleConfig.SEQUENCE );
    }
 
    public MockOperationDispatcher setDispatchStyle( String dispatchStyle )
    {
       String old = getDispatchStyle();
-      getConfig().setDispatchStyle( MockOperationDispatchStyleConfig.Enum.forString( dispatchStyle ));
+      getConfig().setDispatchStyle( MockOperationDispatchStyleConfig.Enum.forString( dispatchStyle ) );
 
       if( dispatcher != null )
       {
@@ -324,7 +302,7 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
       if( !getConfig().isSetDispatchConfig() )
          getConfig().addNewDispatchConfig();
 
-      dispatcher = MockOperationDispatchRegistry.buildDispatcher( dispatchStyle, this, getConfig().getDispatchConfig() );
+      dispatcher = MockOperationDispatchRegistry.buildDispatcher( dispatchStyle, this );
 
       notifyPropertyChanged( DISPATCH_STYLE_PROPERTY, old, dispatchStyle );
 

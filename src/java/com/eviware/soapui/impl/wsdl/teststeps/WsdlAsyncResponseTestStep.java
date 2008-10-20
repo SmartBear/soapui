@@ -71,7 +71,7 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
     * Constructor
     *
     * @param testCase
-    * @param testStepConfig
+    * @param config
     * @param forLoadTest
     */
    public WsdlAsyncResponseTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
@@ -186,7 +186,7 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
    public TestStepResult run( TestRunner testRunner, TestRunContext context )
    {
       WsdlMockResponse oldResponse = getMockResponse();
-      mockResponse = mockOperation.addNewMockResponse( getRequestQuery(), getMatchingValue() );
+      mockResponse = null; //mockOperation.addNewMockResponse( getRequestQuery(), getMatchingValue() );
       mockResponse.setConfig( oldResponse.getConfig() );
 
       WsdlSingleMessageExchangeTestStepResult result = new WsdlSingleMessageExchangeTestStepResult( this );

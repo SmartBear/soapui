@@ -86,7 +86,6 @@ public class PropertyExpansionUtils
 			globalTestPropertyHolder.saveTo( SoapUI.getSettings() );
 		}
 	}
-
 	
 	public static String expandProperties(PropertyExpansionContext context, String content)
 	{

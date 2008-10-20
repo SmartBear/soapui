@@ -477,8 +477,9 @@
 		<xsd:attribute name="ignoreEmpty" type="xsd:boolean"></xsd:attribute>
 		<xsd:attribute name="transferToAll" type="xsd:boolean"></xsd:attribute>
 		<xsd:attribute name="useXQuery" type="xsd:boolean"></xsd:attribute>
-      <xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
-      <xsd:attribute name="transferChildNodes" type="xsd:boolean"></xsd:attribute>
+        <xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
+        <xsd:attribute name="transferChildNodes" type="xsd:boolean"></xsd:attribute>
+        <xsd:attribute name="entitize" type="xsd:boolean"></xsd:attribute>
 	</xsd:complexType>
 
 	<xsd:complexType name="Credentials">
@@ -1421,7 +1422,7 @@
     	<xsd:attribute name="faultToRefParams" type="xsd:string"></xsd:attribute>
     </xsd:complexType>
 
-    <xsd:complexType name="MockOperationQueryDispatchConfig">
+    <xsd:complexType name="MockOperationQueryDispatch">
         <xsd:sequence>
             <xsd:element name="query" minOccurs="0" maxOccurs="unbounded">
                 <xsd:complexType>
@@ -1430,6 +1431,7 @@
                          <xsd:element name="path" type="xsd:string"/>
                          <xsd:element name="value" type="xsd:string"/>
                          <xsd:element name="response" type="xsd:string"/>
+                         <xsd:element name="disabled" type="xsd:boolean"/>
                      </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>

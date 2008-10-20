@@ -44,6 +44,8 @@ public class SimpleForm
    private Map<String,String> hiddenValues;
 	private boolean appended;
 	private Font labelFont;
+   private int defaultTextAreaColumns = 30;
+   private int defaultTextAreaRows = 3;
 
    public SimpleForm()
    {
@@ -299,8 +301,8 @@ public class SimpleForm
    public JTextArea appendTextArea( String label, String tooltip )
    {
       JTextArea textArea = new JUndoableTextArea();
-      textArea.setColumns( 30 );
-      textArea.setRows(3);
+      textArea.setColumns( defaultTextAreaColumns );
+      textArea.setRows( defaultTextAreaRows );
       textArea.setAutoscrolls(true);
       textArea.add(new JScrollPane());
       textArea.setToolTipText( tooltip );
@@ -309,7 +311,27 @@ public class SimpleForm
 		append( label, new JScrollPane( textArea ));
 		return textArea;
    }
-   
+
+   public int getDefaultTextAreaColumns()
+   {
+      return defaultTextAreaColumns;
+   }
+
+   public void setDefaultTextAreaColumns( int defaultTextAreaColumns )
+   {
+      this.defaultTextAreaColumns = defaultTextAreaColumns;
+   }
+
+   public int getDefaultTextAreaRows()
+   {
+      return defaultTextAreaRows;
+   }
+
+   public void setDefaultTextAreaRows( int defaultTextAreaRows )
+   {
+      this.defaultTextAreaRows = defaultTextAreaRows;
+   }
+
    public JPasswordField appendPasswordField( String label, String tooltip )
    {
       JPasswordField textField = new JPasswordField();
@@ -493,5 +515,13 @@ public class SimpleForm
 	{
 		return append( name, label, field, null );
 	}
+
+   public void setEnabled( boolean b )
+   {
+      for( JComponent component : components.values())
+      {
+         component.setEnabled( b );
+      }
+   }
 }
 

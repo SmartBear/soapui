@@ -31,6 +31,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
+import com.eviware.soapui.settings.CommonSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -68,7 +69,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
       public static String[] getMethodsAsString()
       {
-         return new String[] {};
+         return new String[]{};
       }
    }
 
@@ -111,7 +112,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
    /* (non-Javadoc)
 	 * @see com.eviware.soapui.impl.wsdl.AttachmentContainer#attachFile(java.io.File, boolean)
 	 */
-   
+
    public Attachment attachFile( File file, boolean cache ) throws IOException
    {
       RequestFileAttachment fileAttachment = new RequestFileAttachment( file, cache, this );
@@ -155,7 +156,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
       for( Attachment attachment : attachments )
       {
-         if( partName.equals( attachment.getPart()) )
+         if( partName.equals( attachment.getPart() ) )
             result.add( attachment );
       }
 
@@ -211,6 +212,16 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
    public void setMultipartEnabled( boolean multipartEnabled )
    {
       getSettings().setBoolean( DISABLE_MULTIPART_ATTACHMENTS, !multipartEnabled );
+   }
+
+   public boolean isEntitizeProperties()
+   {
+      return getSettings().getBoolean( CommonSettings.ENTITIZE_PROPERTIES );
+   }
+
+   public void setEntitizeProperties( boolean entitizeProperties )
+   {
+      getSettings().setBoolean( CommonSettings.ENTITIZE_PROPERTIES, entitizeProperties );
    }
 
    @Override
