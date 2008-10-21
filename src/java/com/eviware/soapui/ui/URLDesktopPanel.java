@@ -22,7 +22,7 @@ public class URLDesktopPanel extends DefaultDesktopPanel
 {
    private BrowserComponent browser;
 
-   public URLDesktopPanel( String title, String description, String url )
+   public URLDesktopPanel( String title, String description, final String url )
    {
       super( title, description, new JPanel( new BorderLayout() ) );
 
@@ -30,7 +30,14 @@ public class URLDesktopPanel extends DefaultDesktopPanel
 
       browser = new BrowserComponent();
       panel.add( browser.getComponent(), BorderLayout.CENTER );
-      navigate( url );
+
+      SwingUtilities.invokeLater( new Runnable() {
+         public void run()
+         {
+            navigate( url );
+         }
+      } );
+
    }
 
    public void navigate( String url )
