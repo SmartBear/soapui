@@ -12,15 +12,6 @@
 
 package com.eviware.soapui.model.propertyexpansion.resolvers;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.xml.namespace.QName;
-
-import org.apache.xmlbeans.XmlString;
-
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -29,6 +20,13 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.types.StringList;
+import org.apache.xmlbeans.XmlString;
+
+import javax.xml.namespace.QName;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 public class GlobalPropertyResolver implements PropertyResolver
 {
@@ -291,7 +289,11 @@ public class GlobalPropertyResolver implements PropertyResolver
 	
 	public String resolveProperty( PropertyExpansionContext context, String name, boolean globalOverride )
 	{
-		String result = ResolverUtils.checkForExplicitReference( name, PropertyExpansion.SYSTEM_REFERENCE, systemPropertyHolder, context, globalOverride );
+      String result = ResolverUtils.checkForExplicitReference( name, PropertyExpansion.GLOBAL_REFERENCE, PropertyExpansionUtils.getGlobalProperties(), context, false );
+      if( result != null )
+         return result;
+
+		result = ResolverUtils.checkForExplicitReference( name, PropertyExpansion.SYSTEM_REFERENCE, systemPropertyHolder, context, globalOverride );
 		if( result != null )
 			return result;
 		
