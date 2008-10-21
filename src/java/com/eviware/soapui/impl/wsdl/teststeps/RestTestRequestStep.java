@@ -17,7 +17,6 @@ import com.eviware.soapui.support.resolver.ImportInterfaceResolver;
 import com.eviware.soapui.support.resolver.RemoveTestStepResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
-
 import org.apache.log4j.Logger;
 
 import java.beans.PropertyChangeEvent;
@@ -87,7 +86,7 @@ public class RestTestRequestStep extends HttpTestRequestStep
 		RestService restService = (RestService) project.getInterfaceByName(getRequestStepConfig().getService());
 		if (restService != null)
 		{
-			return restService.getResourceByPath(getRequestStepConfig().getResourcePath());
+			return restService.getResourceByFullPath(getRequestStepConfig().getResourcePath());
 		}
 
 		return null;

@@ -444,8 +444,11 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
    public void resolve( ResolveContext context )
    {
       super.resolve( context );
-
       assertionsSupport.resolve( context );
+   }
 
+   public String getServiceName()
+   {
+      return testStep instanceof RestTestRequestStep ? ((RestTestRequestStep)testStep).getService() : null;
    }
 }

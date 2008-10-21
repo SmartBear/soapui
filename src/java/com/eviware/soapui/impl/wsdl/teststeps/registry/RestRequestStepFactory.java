@@ -59,7 +59,7 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
       RestRequestStepConfig requestStepConfig = RestRequestStepConfig.Factory.newInstance();
 
       requestStepConfig.setService( request.getOperation().getInterface().getName() );
-      requestStepConfig.setResourcePath( request.getOperation().getPath() );
+      requestStepConfig.setResourcePath( request.getOperation().getFullPath() );
       requestStepConfig.addNewRestRequest().set( request.getConfig().copy() );
 
       TestStepConfig testStep = TestStepConfig.Factory.newInstance();
