@@ -182,11 +182,11 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
       }
    }
 
-   public RestResource getResourceByPath( String resourcePath )
+   public RestResource getResourceByFullPath( String resourcePath )
    {
       for( RestResource resource : getAllResources() )
       {
-         if( resource.getPath().equals( resourcePath ) )
+         if( resource.getFullPath().equals( resourcePath ) )
             return resource;
       }
 

@@ -49,19 +49,23 @@ public class RestTestRequestPanelBuilder extends EmptyPanelBuilder<RestTestReque
       // basic properties
       table.addProperty( "Name", "name", true );
       table.addProperty( "Description", "description", true );
-      table.addProperty( "Message Size", "contentLength", false );
+//      table.addProperty( "Message Size", "contentLength", false );
       table.addProperty( "Encoding", "encoding", new String[]{null, "UTF-8", "iso-8859-1"} );
 
       if( request.getOperation() == null )
+      {
          table.addProperty( "Path", "path", true );
+      }
       else
+      {
          table.addProperty( "Endpoint", "endpoint", request.getInterface().getEndpoints() );
+         table.addProperty( "Service", "serviceName" );
+         table.addProperty( "Resource", "resourcePath" );
+
+      }
 
       table.addProperty( "Bind Address", "bindAddress", true );
       table.addProperty( "Follow Redirects", "followRedirects", JPropertiesTable.BOOLEAN_OPTIONS );
-
-      table.addProperty( "Service", "service" );
-      table.addProperty( "Resource", "resourcePath" );
 
       // security / authentication
       table.addProperty( "Username", "username", true );
