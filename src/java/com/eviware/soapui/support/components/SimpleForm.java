@@ -46,6 +46,7 @@ public class SimpleForm
 	private Font labelFont;
    private int defaultTextAreaColumns = 30;
    private int defaultTextAreaRows = 3;
+   private int defaultTextFieldColumns = 30;
 
    public SimpleForm()
    {
@@ -290,7 +291,7 @@ public class SimpleForm
    public JTextField appendTextField( String label, String tooltip )
    {
       JTextField textField = new JUndoableTextField();
-      textField.setColumns( 30 );
+      textField.setColumns( defaultTextFieldColumns );
       textField.setToolTipText( tooltip );
       textField.getAccessibleContext().setAccessibleDescription( tooltip );
       JTextComponentPopupMenu.add( textField );
@@ -480,8 +481,13 @@ public class SimpleForm
       
       appended = true;
 	}
-	
-	private final class LabelHider extends ComponentAdapter
+
+   public void setDefaultTextFieldColumns( int defaultTextFieldColumns )
+   {
+      this.defaultTextFieldColumns = defaultTextFieldColumns;
+   }
+
+   private final class LabelHider extends ComponentAdapter
 	{
 		private final JComponent jlabel;
 		private final int rowIndex;
