@@ -19,6 +19,13 @@ public class RestResponseMessageExchange extends AbstractRestMessageExchange<Res
 		super(request);
 		
 		response = request.getResponse();
+      if( response != null )
+      {
+         for( String key : response.getPropertyNames() )
+         {
+            addProperty( key, response.getProperty( key ));
+         }
+      }
 	}
 
 	public String getRequestContent()

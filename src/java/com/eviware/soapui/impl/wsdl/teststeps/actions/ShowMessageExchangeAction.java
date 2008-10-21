@@ -12,39 +12,28 @@
  
 package com.eviware.soapui.impl.wsdl.teststeps.actions;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+ import com.eviware.soapui.SoapUI;
+ import com.eviware.soapui.impl.wsdl.panels.request.StringToStringMapTableModel;
+ import com.eviware.soapui.impl.wsdl.support.MessageExchangeRequestMessageEditor;
+ import com.eviware.soapui.impl.wsdl.support.MessageExchangeResponseMessageEditor;
+ import com.eviware.soapui.model.iface.MessageExchange;
+ import com.eviware.soapui.model.testsuite.AssertedXPath;
+ import com.eviware.soapui.model.testsuite.RequestAssertedMessageExchange;
+ import com.eviware.soapui.model.testsuite.ResponseAssertedMessageExchange;
+ import com.eviware.soapui.support.UISupport;
+ import com.eviware.soapui.support.types.StringToStringMap;
+ import com.eviware.soapui.ui.desktop.DesktopPanel;
+ import com.eviware.soapui.ui.support.DefaultDesktopPanel;
+ import org.jdesktop.swingx.JXTable;
 
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
-import org.jdesktop.swingx.JXTable;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.panels.request.StringToStringMapTableModel;
-import com.eviware.soapui.impl.wsdl.support.MessageExchangeRequestMessageEditor;
-import com.eviware.soapui.impl.wsdl.support.MessageExchangeResponseMessageEditor;
-import com.eviware.soapui.model.iface.MessageExchange;
-import com.eviware.soapui.model.testsuite.AssertedXPath;
-import com.eviware.soapui.model.testsuite.RequestAssertedMessageExchange;
-import com.eviware.soapui.model.testsuite.ResponseAssertedMessageExchange;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.types.StringToStringMap;
-import com.eviware.soapui.ui.desktop.DesktopPanel;
-import com.eviware.soapui.ui.support.DefaultDesktopPanel;
+ import javax.swing.*;
+ import javax.swing.table.DefaultTableModel;
+ import java.awt.*;
+ import java.awt.event.ActionEvent;
+ import java.util.ArrayList;
+ import java.util.Arrays;
+ import java.util.Date;
+ import java.util.List;
 
 /**
  * Shows a desktop-panel with the TestStepResult for a WsdlTestRequestStepResult
@@ -174,7 +163,12 @@ public class ShowMessageExchangeAction extends AbstractAction
 		if( messageExchange != null && messageExchange.getProperties() != null )
 		{
 			properties.putAll( messageExchange.getProperties() );
-		
+
+//         for( String name : messageExchange.getResponse().getPropertyNames())
+//         {
+//            properties.put( name, messageExchange.getResponse().getProperty( name ) );
+//         }
+
 			properties.put( "Timestamp", new Date( messageExchange.getTimestamp() ).toString() );
 			properties.put( "Time Taken", String.valueOf( messageExchange.getTimeTaken() ) );
 		}

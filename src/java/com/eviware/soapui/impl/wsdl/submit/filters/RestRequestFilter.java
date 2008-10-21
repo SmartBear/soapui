@@ -61,12 +61,16 @@ public class RestRequestFilter extends AbstractRequestFilter
       String path = request.getPath();
       StringBuffer query = new StringBuffer();
 
+      StringToStringMap responseProperties = (StringToStringMap) context.getProperty( BaseHttpRequestTransport.RESPONSE_PROPERTIES );
+
       XmlBeansRestParamsTestPropertyHolder params = request.getParams();
       for( int c = 0; c < params.getPropertyCount(); c++ )
       {
          RestParamProperty param = params.getPropertyAt( c );
 
          String value = PropertyExpansionUtils.expandProperties( context, param.getValue() );
+         responseProperties.put( param.getName(), value );
+
          if( !StringUtils.hasContent( value ) && !param.getRequired() )
             continue;
 
@@ -102,6 +106,8 @@ public class RestRequestFilter extends AbstractRequestFilter
                      path += "=" + URLEncoder.encode( value );
                   }
                }
+            case PLAIN:
+               break;
          }
       }
 

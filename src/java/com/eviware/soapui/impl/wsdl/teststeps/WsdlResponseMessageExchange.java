@@ -36,6 +36,14 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 	{
 		super( request );
 		response = request.getResponse();
+
+      if( response != null )
+      {
+         for( String key : response.getPropertyNames() )
+         {
+            addProperty( key, response.getProperty( key ));
+         }
+      }
 	}
 	
    public WsdlRequest getRequest()

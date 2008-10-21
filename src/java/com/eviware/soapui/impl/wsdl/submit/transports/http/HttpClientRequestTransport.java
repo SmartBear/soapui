@@ -49,8 +49,8 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 {
 	private List<RequestFilter> filters = new ArrayList<RequestFilter>();
 	private final static Logger log = Logger.getLogger(HttpClientRequestTransport.class);
-	
-	public HttpClientRequestTransport()
+
+   public HttpClientRequestTransport()
 	{
 	}
 	
@@ -110,6 +110,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		submitContext.setProperty( REQUEST_CONTENT, httpRequest.getRequestContent() );
 		submitContext.setProperty( HOST_CONFIGURATION, hostConfiguration );
 		submitContext.setProperty( WSDL_REQUEST, httpRequest );
+      submitContext.setProperty( RESPONSE_PROPERTIES, new StringToStringMap());
 		
 		for( RequestFilter filter : filters )
 		{
@@ -167,6 +168,14 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			{
 				createDefaultResponse(submitContext, httpRequest, httpMethod);
 			}
+
+         Response response = (Response) submitContext.getProperty(BaseHttpRequestTransport.RESPONSE);
+         StringToStringMap responseProperties = (StringToStringMap) submitContext.getProperty( BaseHttpRequestTransport.RESPONSE_PROPERTIES );
+
+         for( String key : responseProperties.keySet() )
+         {
+            response.setProperty( key, responseProperties.get( key ));
+         }
 
 			if (httpMethod != null)
 			{
