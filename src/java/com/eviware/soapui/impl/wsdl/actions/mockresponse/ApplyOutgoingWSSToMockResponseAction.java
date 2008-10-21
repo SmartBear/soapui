@@ -39,7 +39,7 @@ public class ApplyOutgoingWSSToMockResponseAction extends AbstractAction
 
 	public ApplyOutgoingWSSToMockResponseAction( WsdlMockResponse mockResponse, OutgoingWss outgoing )
 	{
-		super( outgoing.getName() );
+		super( "Apply \" " + outgoing.getName() + " \"" );
 		this.mockResponse = mockResponse;
 		this.outgoing = outgoing;
 	}

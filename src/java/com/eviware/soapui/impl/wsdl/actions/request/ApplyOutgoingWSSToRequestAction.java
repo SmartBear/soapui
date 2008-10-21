@@ -39,7 +39,7 @@ public class ApplyOutgoingWSSToRequestAction extends AbstractAction
 
 	public ApplyOutgoingWSSToRequestAction( WsdlRequest request, OutgoingWss outgoing )
 	{
-		super( outgoing.getName() );
+		super( "Apply \" " + outgoing.getName() + " \"" );
 		this.request = request;
 		this.outgoing = outgoing;
 	}

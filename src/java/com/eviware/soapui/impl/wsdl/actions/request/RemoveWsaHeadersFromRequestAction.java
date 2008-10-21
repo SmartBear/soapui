@@ -24,18 +24,18 @@ import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContex
 import com.eviware.soapui.support.UISupport;
 
 /**
- * Adds WS-A headers to the specified WsdlRequests requestContent
+ * Removes WS-A headers from the specified WsdlRequests requestContent
  * 
  * @author dragica.soldo
  */
 
-public class AddWsaHeadersToRequestAction extends AbstractAction
+public class RemoveWsaHeadersFromRequestAction extends AbstractAction
 {
 	private final WsdlRequest request;
 
-	public AddWsaHeadersToRequestAction(WsdlRequest request)
+	public RemoveWsaHeadersFromRequestAction(WsdlRequest request)
 	{
-		super("Add WS-A headers");
+		super("Remove WS-A headers");
 		this.request = request;
 	}
 
@@ -43,11 +43,14 @@ public class AddWsaHeadersToRequestAction extends AbstractAction
 	{
 		try
 		{
-			SoapVersion soapVersion = request.getOperation().getInterface().getSoapVersion();
-			String content = request.getRequestContent();
-			WsaUtils wsaUtils = new WsaUtils(content,soapVersion, request.getOperation(),new DefaultPropertyExpansionContext(request));
-			content = wsaUtils.addWSAddressingRequest(request);
-			request.setRequestContent(content);
+	      if( UISupport.confirm( "Remove WS-A headers", "Remove WS-A headers" ))
+	      {
+				SoapVersion soapVersion = request.getOperation().getInterface().getSoapVersion();
+				String content = request.getRequestContent();
+				WsaUtils wsaUtils = new WsaUtils(content,soapVersion, request.getOperation(),new DefaultPropertyExpansionContext(request));
+				content = wsaUtils.removeWSAddressing(request);
+				request.setRequestContent(content);
+	      }
 		}
 		catch (Exception e1)
 		{

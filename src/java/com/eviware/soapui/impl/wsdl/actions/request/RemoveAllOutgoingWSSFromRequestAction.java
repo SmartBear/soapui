@@ -18,40 +18,35 @@ import javax.swing.AbstractAction;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
-import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
-import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
+import com.eviware.soapui.impl.wsdl.support.wss.WssUtils;
 import com.eviware.soapui.support.UISupport;
 
 /**
- * Adds WS-A headers to the specified WsdlRequests requestContent
+ * Removes all WSS outgoing Tokens from the specified WsdlRequests
+ * requestContent
  * 
  * @author dragica.soldo
  */
 
-public class AddWsaHeadersToRequestAction extends AbstractAction
-{
+public class RemoveAllOutgoingWSSFromRequestAction extends AbstractAction {
 	private final WsdlRequest request;
 
-	public AddWsaHeadersToRequestAction(WsdlRequest request)
-	{
-		super("Add WS-A headers");
+	public RemoveAllOutgoingWSSFromRequestAction(WsdlRequest request) {
+		super("Remove all outgoing wss");
 		this.request = request;
 	}
 
-	public void actionPerformed(ActionEvent e)
-	{
-		try
-		{
-			SoapVersion soapVersion = request.getOperation().getInterface().getSoapVersion();
-			String content = request.getRequestContent();
-			WsaUtils wsaUtils = new WsaUtils(content,soapVersion, request.getOperation(),new DefaultPropertyExpansionContext(request));
-			content = wsaUtils.addWSAddressingRequest(request);
-			request.setRequestContent(content);
-		}
+	public void actionPerformed(ActionEvent e) {
+		try {
+			if (UISupport.confirm( "Remove all outgoing wss", "Remove all outgoing wss" )) {
+				String content = request.getRequestContent();
+				request.setRequestContent(WssUtils.removeWSSOutgoing(content, request));
+			}
+		} 
 		catch (Exception e1)
 		{
 			SoapUI.logError(e1);
 		}
+
 	}
 }
