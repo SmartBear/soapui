@@ -140,12 +140,7 @@ public class WsdlTestCaseRunner implements Runnable, TestRunner
             timeoutTimer.schedule(timeoutTimerTask, testCase.getTimeout());
          }
 
-         for (int i = 0; i < listeners.length; i++)
-         {
-            listeners[i].beforeRun(this, runContext);
-            if (status != Status.RUNNING)
-               return;
-         }
+         notifyBeforeRun();
 
          for (; initCount < testCase.getTestStepCount() && status == Status.RUNNING; initCount++)
          {
@@ -304,6 +299,17 @@ public class WsdlTestCaseRunner implements Runnable, TestRunner
       for (int i = 0; i < listeners.length; i++)
       {
          listeners[i].afterRun(this, runContext);
+      }
+   }
+
+   private void notifyBeforeRun()
+   {
+      if (listeners == null || listeners.length == 0)
+         return;
+
+      for (int i = 0; i < listeners.length; i++)
+      {
+         listeners[i].beforeRun(this, runContext);
       }
    }
 
