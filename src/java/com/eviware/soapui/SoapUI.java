@@ -67,6 +67,7 @@ import com.eviware.soapui.support.log.Log4JMonitor;
 import com.eviware.soapui.support.log.LogDisablingTestMonitorListener;
 import com.eviware.soapui.support.monitor.MonitorPanel;
 import com.eviware.soapui.support.monitor.RuntimeMemoryMonitorSource;
+import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.ui.JDesktopPanelsList;
 import com.eviware.soapui.ui.Navigator;
 import com.eviware.soapui.ui.NavigatorListener;
@@ -117,7 +118,6 @@ public class SoapUI
 
    public static String PUSH_PAGE_URL = "http://www.soapui.org/appindex/soapui_start.htm";
    public static String FRAME_ICON = "/16-perc.gif";
-   
 
    // ------------------------------ FIELDS ------------------------------
 
@@ -152,7 +152,7 @@ public class SoapUI
    private static Timer autoSaveTimer;
    private static AutoSaveTimerTask autoSaveTimerTask;
    private static String workspaceName;
-   private static TreeMap<String, String> projectOptions = new TreeMap<String, String>();
+   private static StringToStringMap projectOptions = new StringToStringMap();
 
    // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -729,7 +729,7 @@ public class SoapUI
             if( modelItem instanceof TestPropertyHolder )
             {
                // check for closed project -> this should be solved with a separate ClosedWsdlProject modelItem
-               if(  !(modelItem instanceof WsdlProject ) || ((WsdlProject)modelItem).isOpen() )
+               if( !( modelItem instanceof WsdlProject ) || ( (WsdlProject) modelItem ).isOpen() )
                {
                   propertyHolderTable = new PropertyHolderTable( (TestPropertyHolder) modelItem );
                }
