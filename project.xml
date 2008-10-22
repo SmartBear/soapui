@@ -379,17 +379,6 @@
                 <eclipse>true</eclipse>
             </properties>
         </dependency>
-        <dependency>
-  		<groupId>jetty</groupId>
-            <artifactId>jetty-client</artifactId>
-            <version>6.1.11</version>
-            <type>jar</type>
-            <url>http://jetty.mortbay.org/maven/jetty</url>
-            <properties>
-                <jnlp.jar>true</jnlp.jar>
-                <eclipse>true</eclipse>
-            </properties>
-  		</dependency>
         <!-- Needed to call Groovy from Maven: -->
         <dependency>
             <groupId>asm</groupId>

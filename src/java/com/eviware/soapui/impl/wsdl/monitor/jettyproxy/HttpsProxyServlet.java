@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
@@ -36,21 +35,17 @@ import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
-import com.eviware.soapui.model.settings.Settings;
 
 public class HttpsProxyServlet extends ProxyServlet
 {
 
 	private String sslEndPoint;
 	private int sslPort = 443;
-	private HttpClient client;
-	private Settings settings;
-	private HttpState httpState = null;
 
 	public HttpsProxyServlet(SoapMonitor soapMonitor, String sslEndpoint)
 	{
 		super(soapMonitor);
-		settings = soapMonitor.getProject().getSettings();
+
 		int c = sslEndpoint.indexOf(':');
 		if (c > 0)
 		{
@@ -78,10 +73,6 @@ public class HttpsProxyServlet extends ProxyServlet
 		// for this create ui server and port, properties.
 		InetSocketAddress inetAddress = new InetSocketAddress(sslEndPoint, sslPort);
 		ExtendedPostMethod postMethod = new ExtendedPostMethod();
-
-		// HttpState httpState = new HttpState();
-
-		// postMethod.setURI(new URI("https://" + sslEndPoint, true));
 
 		if (capturedData == null)
 		{

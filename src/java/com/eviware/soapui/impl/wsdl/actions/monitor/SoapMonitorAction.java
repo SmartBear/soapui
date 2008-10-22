@@ -97,7 +97,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYPASSWORD).setEnabled(false);
 					dialog.getFormField(LaunchForm.SSLTUNNEL_TRUSTSTORE).setEnabled(false);
 					dialog.getFormField(LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD).setEnabled(false);
-					dialog.getFormField(LaunchForm.SSLTUNNEL_REUSESTATE).setEnabled(false);
+//					dialog.getFormField(LaunchForm.SSLTUNNEL_REUSESTATE).setEnabled(false);
 					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTOREPATH).setEnabled(false);
 					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD).setEnabled(false);
 				}
@@ -109,7 +109,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYPASSWORD).setEnabled(true);
 					dialog.getFormField(LaunchForm.SSLTUNNEL_TRUSTSTORE).setEnabled(true);
 					dialog.getFormField(LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD).setEnabled(true);
-					dialog.getFormField(LaunchForm.SSLTUNNEL_REUSESTATE).setEnabled(true);
+//					dialog.getFormField(LaunchForm.SSLTUNNEL_REUSESTATE).setEnabled(true);
 					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTOREPATH).setEnabled(true);
 					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD).setEnabled(true);
 				}
@@ -219,8 +219,8 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		@AField(description = "Set SSL Tunnel TrustStore Password", name = "SSL tunnel - TrustStore Password", type = AFieldType.PASSWORD)
 		public final static String SSLTUNNEL_TRUSTSTORE_PASSWORD = "SSL tunnel - TrustStore Password";
 		
-		@AField(description = "Keep request state", name = "SSL tunnel - reuse request state", type = AFieldType.BOOLEAN)
-		public final static String SSLTUNNEL_REUSESTATE = "SSL tunnel - reuse request state";
+		@AField(description = "Keep request state", name = "Reuse request state", type = AFieldType.BOOLEAN)
+		public final static String SSLTUNNEL_REUSESTATE = "Reuse request state";
 		
 		@AField(description = "Set SSL Client Key Store", name = "SSL Tunnel - Set SSL Client Key Store path", type = AFieldType.STRING)
 		public final static String SSLTUNNEL_KEYSTOREPATH = "SSL Tunnel - Set SSL Client Key Store path";
