@@ -12,10 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.mock;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.MockRunContext;
@@ -24,13 +20,13 @@ import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContex
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
-import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.types.StringToStringMap;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * MockRunContext available during dispatching of a WsdlMockRequest
@@ -50,7 +46,7 @@ public class WsdlMockRunContext implements MockRunContext, Map<String,Object>, T
 		this.mockService = mockService;
 		this.context = context;
 		
-		properties = context == null ? new DefaultPropertyExpansionContext( mockService ) : context.getProperties(); 
+		properties = context == null ? new DefaultPropertyExpansionContext( mockService ) : context.getProperties();
 	}
 
 	public WsdlMockService getMockService()

@@ -842,11 +842,10 @@
 					</xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="encoding" type="xsd:string"></xsd:attribute>
-				<xsd:attribute name="httpResponseStatus"
-					type="xsd:string">
-				</xsd:attribute>
+				<xsd:attribute name="httpResponseStatus" type="xsd:string"/>
 				<xsd:attribute name="outgoingWss" type="xsd:string"></xsd:attribute>
 				<xsd:attribute name="useWsAddressing" type="xsd:boolean"></xsd:attribute>
+                <xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -940,9 +939,12 @@
 			<xsd:element name="assertion" type="tns:TestAssertion"
 				maxOccurs="unbounded" minOccurs="0">
 			</xsd:element>
+            <xsd:element name="query" type="xsd:string"></xsd:element>
+			<xsd:element name="match" type="xsd:string"></xsd:element>
 		</xsd:sequence>
         <xsd:attribute name="handleFault" type="xsd:boolean"></xsd:attribute>
         <xsd:attribute name="handleResponse" type="xsd:boolean"></xsd:attribute>
+        <xsd:attribute name="preStart" type="xsd:boolean"></xsd:attribute>
 	</xsd:complexType>
 
 	<xsd:complexType name="AsyncResponseStep">

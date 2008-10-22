@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.mock.dispatch;
 
 import com.eviware.soapui.config.MockOperationQueryDispatchConfig;
 import com.eviware.soapui.impl.wsdl.mock.*;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.AbstractPropertyChangeNotifier;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -184,18 +185,22 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
             if( query.isDisabled() )
                continue;
 
-            XmlObject[] nodes = nodesCache.containsKey( query.getPath() ) ?
-                    nodesCache.get( query.getPath() ) : xmlObject.selectPath( query.getPath() );
+            String path = PropertyExpansionUtils.expandProperties( request.getContext(), query.getPath() );
+
+            XmlObject[] nodes = nodesCache.containsKey( path ) ?
+                    nodesCache.get( path ) : xmlObject.selectPath( path );
 
             if( nodes != null && nodes.length > 0 )
             {
-               if( query.getValue().equals( XmlUtils.getNodeValue( nodes[0].getDomNode() ) ) )
+               String value = PropertyExpansionUtils.expandProperties( request.getContext(), query.getValue() );
+
+               if( value.equals( XmlUtils.getNodeValue( nodes[0].getDomNode() ) ) )
                {
                   return getMockOperation().getMockResponseByName( query.getResponse() );
                }
             }
 
-            nodesCache.put( query.getPath(), nodes );
+            nodesCache.put( path, nodes );
          }
 
          return null;

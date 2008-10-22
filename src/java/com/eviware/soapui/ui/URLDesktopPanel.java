@@ -31,18 +31,25 @@ public class URLDesktopPanel extends DefaultDesktopPanel
       browser = new BrowserComponent();
       panel.add( browser.getComponent(), BorderLayout.CENTER );
 
-      SwingUtilities.invokeLater( new Runnable() {
-         public void run()
-         {
-            navigate( url );
-         }
-      } );
-
+      navigate( url, true );
    }
 
-   public void navigate( String url )
+   public void navigate( final String url, boolean async )
    {
-      browser.navigate( url );
+      if( async )
+      {
+         new Thread( new Runnable()
+         {
+            public void run()
+            {
+               browser.navigate( url );
+            }
+         } ).start();
+      }
+      else
+      {
+         browser.navigate( url );
+      }
    }
 
    public boolean onClose( boolean canCancel )

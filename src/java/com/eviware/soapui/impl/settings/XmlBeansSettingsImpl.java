@@ -12,18 +12,14 @@
 
 package com.eviware.soapui.impl.settings;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.eviware.soapui.config.SettingConfig;
 import com.eviware.soapui.config.SettingsConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
 import com.eviware.soapui.support.types.StringToStringMap;
+
+import java.util.*;
 
 /**
  * Settings implementation for XmlBeans generated SettingsConfig
@@ -133,7 +129,10 @@ public class XmlBeansSettingsImpl implements Settings
 	
 	public void setBoolean(String id, boolean value)
 	{
-		setString( id, Boolean.toString( value ));
+      if( !value )
+         clearSetting( id );
+      else
+		   setString( id, "true" );
 	}
 
 	public void addSettingsListener(SettingsListener listener)
