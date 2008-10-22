@@ -5,8 +5,20 @@
     </properties>
     <body>
     <section name="soapUI Releases">
+    
+       <subsection name="Evolution Through">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/dimos.gif" alt="Testing Web Services"/>
+	    		</column>
+	    		<column align="left">
+	    			<p>Over the past year I have been working on several projects that have..." <br/>
+	    			<a href="http://dimosthenes.blogspot.com/2008/10/testing-web-services.html">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+		</subsection>   
  
-         <subsection name="Groovy in soapUI">
+        <subsection name="Groovy in soapUI">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/groovyin.gif" alt="load testing with soapUI"/>
