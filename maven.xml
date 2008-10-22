@@ -205,9 +205,9 @@
           <j:set var="dep" value="${lib.dependency}"/>
           <j:if test="${dep.getProperty('jnlp.jar')=='true' || dep.getProperty('eclipse.jar')=='true'}">
               <j:set var="soapuiclasspath">${soapuiclasspath}
-set CLASSPATH=%CLASSPATH%;..\lib\${lib.file.name}</j:set>
+set CLASSPATH=%CLASSPATH%;%SOAPUI_HOME%..\lib\${lib.file.name}</j:set>
               <j:set var="soapuishclasspath">${soapuishclasspath}
-SOAPUI_CLASSPATH=$$SOAPUI_CLASSPATH:$$SOAPUI_HOME/lib/${lib.file.name}</j:set>
+export SOAPUI_CLASSPATH=$$SOAPUI_CLASSPATH:$$SOAPUI_HOME/lib/${lib.file.name}</j:set>
           </j:if>
        </j:forEach>	 
 
