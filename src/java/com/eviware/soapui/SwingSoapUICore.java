@@ -9,8 +9,8 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
- package com.eviware.soapui;
+
+package com.eviware.soapui;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,79 +38,82 @@ public class SwingSoapUICore extends DefaultSoapUICore
 	{
 		super();
 	}
-	
-	public SwingSoapUICore( String root, String settingsFile )
+
+	public SwingSoapUICore(String root, String settingsFile)
 	{
-		super( root, settingsFile );
+		super(root, settingsFile);
 	}
 
 	public void prepareUI()
 	{
-		UISupport.setToolHost( new SwingToolHost() );
-      XFormFactory.Factory.instance = new SwingFormFactory();
+		UISupport.setToolHost(new SwingToolHost());
+		XFormFactory.Factory.instance = new SwingFormFactory();
 	}
-	
+
 	public void afterStartup(Workspace workspace)
 	{
 		InspectorRegistry inspectorRegistry = InspectorRegistry.getInstance();
-		inspectorRegistry.addFactory( new ScriptInspectorFactory() );
-		inspectorRegistry.addFactory( new AutInspectorFactory() );
-		inspectorRegistry.addFactory( new HttpHeadersInspectorFactory() );
-		inspectorRegistry.addFactory( new AttachmentsInspectorFactory() );
-		inspectorRegistry.addFactory( new SSLInspectorFactory() );
-		inspectorRegistry.addFactory( new WssInspectorFactory() );
-		inspectorRegistry.addFactory( new WsaInspectorFactory() );
-		inspectorRegistry.addFactory( new RestRepresentationsInspectorFactory() );
-		
-		addExternalActions( getRoot() == null ? "actions" : getRoot() + File.separatorChar + "actions",	
-					getExtensionClassLoader() );
+		inspectorRegistry.addFactory(new ScriptInspectorFactory());
+		inspectorRegistry.addFactory(new AutInspectorFactory());
+		inspectorRegistry.addFactory(new HttpHeadersInspectorFactory());
+		inspectorRegistry.addFactory(new AttachmentsInspectorFactory());
+		inspectorRegistry.addFactory(new SSLInspectorFactory());
+		inspectorRegistry.addFactory(new WssInspectorFactory());
+		inspectorRegistry.addFactory(new WsaInspectorFactory());
+		inspectorRegistry.addFactory(new RestRepresentationsInspectorFactory());
+
+		String actionsDir = System.getProperty("soapui.ext.actions");
+		addExternalActions(actionsDir == null ? getRoot() == null ? "actions" : getRoot() + File.separatorChar
+				+ "actions" : actionsDir, getExtensionClassLoader());
 	}
 
 	@Override
-	protected Settings initSettings( String fileName )
+	protected Settings initSettings(String fileName)
 	{
 		String fn = fileName;
-		
-		if( !new File( fileName ).exists() )
+
+		if (!new File(fileName).exists())
 		{
 			try
 			{
-				fileName = importSettingsOnStartup( fileName );
+				fileName = importSettingsOnStartup(fileName);
 			}
-			catch( Exception e )
+			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
 		}
-		
-		Settings result = super.initSettings( fileName );
-		
-		if( !fileName.equals( fn ))
-			setSettingsFile( fn );
-		
+
+		Settings result = super.initSettings(fileName);
+
+		if (!fileName.equals(fn))
+			setSettingsFile(fn);
+
 		return result;
 	}
-	
-	protected String importSettingsOnStartup( String fileName ) throws Exception
+
+	protected String importSettingsOnStartup(String fileName) throws Exception
 	{
-	   if( UISupport.getDialogs().confirm("Missing soapUI Settings, import from existing installation?", "Import Preferences") )
+		if (UISupport.getDialogs().confirm("Missing soapUI Settings, import from existing installation?",
+				"Import Preferences"))
 		{
-			while( true )
+			while (true)
 			{
-			   File settingsFile = UISupport.getFileDialogs().open( null, "Import Preferences", ".xml", "soapUI settings XML", fileName );
-				if( settingsFile != null )
+				File settingsFile = UISupport.getFileDialogs().open(null, "Import Preferences", ".xml",
+						"soapUI settings XML", fileName);
+				if (settingsFile != null)
 				{
 					try
 					{
-						SoapuiSettingsDocumentConfig.Factory.parse( settingsFile );
-						log.info( "imported soapui-settings from [" + settingsFile.getAbsolutePath() + "]" );
+						SoapuiSettingsDocumentConfig.Factory.parse(settingsFile);
+						log.info("imported soapui-settings from [" + settingsFile.getAbsolutePath() + "]");
 						return settingsFile.getAbsolutePath();
 					}
-					catch( Exception e )
+					catch (Exception e)
 					{
-                  if( !UISupport.getDialogs().confirm(
-                        "Error loading settings from [" + settingsFile.getAbsolutePath() + "]\r\nspecify another?",
-                        "Error Importing" ) )
+						if (!UISupport.getDialogs().confirm(
+								"Error loading settings from [" + settingsFile.getAbsolutePath() + "]\r\nspecify another?",
+								"Error Importing"))
 						{
 							break;
 						}
@@ -118,38 +121,37 @@ public class SwingSoapUICore extends DefaultSoapUICore
 				}
 			}
 		}
-		
+
 		return fileName;
 	}
 
-	private void addExternalActions( String folder, ClassLoader classLoader )
+	private void addExternalActions(String folder, ClassLoader classLoader)
 	{
-		File[] actionFiles = new File( folder ).listFiles();
-      if( actionFiles != null )
-      {
-	      for( File actionFile : actionFiles )
-	      {
-	      	if( actionFile.isDirectory() )
-	      	{
-	      		addExternalActions( actionFile.getAbsolutePath(), classLoader );
-	      		continue;
-	      	}
-	      	
-	      	if( !actionFile.getName().toLowerCase().endsWith( "-actions.xml" ))
-	      		continue;
-	      	
-	      	try
+		File[] actionFiles = new File(folder).listFiles();
+		if (actionFiles != null)
+		{
+			for (File actionFile : actionFiles)
+			{
+				if (actionFile.isDirectory())
 				{
-	      		log.info( "Adding actions from [" + actionFile.getAbsolutePath() + "]" );
-					
-					SoapUI.getActionRegistry().addConfig( new FileInputStream( actionFile ), 
-								classLoader);
+					addExternalActions(actionFile.getAbsolutePath(), classLoader);
+					continue;
 				}
-				catch( Exception e )
+
+				if (!actionFile.getName().toLowerCase().endsWith("-actions.xml"))
+					continue;
+
+				try
 				{
-					SoapUI.logError( e );
+					log.info("Adding actions from [" + actionFile.getAbsolutePath() + "]");
+
+					SoapUI.getActionRegistry().addConfig(new FileInputStream(actionFile), classLoader);
 				}
-	      }
-      }
+				catch (Exception e)
+				{
+					SoapUI.logError(e);
+				}
+			}
+		}
 	}
 }

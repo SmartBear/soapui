@@ -118,6 +118,8 @@ public class DefaultSoapUICore implements SoapUICore
 
    public String getRoot()
    {
+   	if ( root == null || root.length() == 0 )
+   		root = System.getProperty("soapui.home");
       return root;
    }
 
