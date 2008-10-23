@@ -303,6 +303,9 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       {
          if( !mockRunListener.hasResult() )
          {
+            if( testMockResponse == null )
+               initTestMockResponse( context );
+
             result.startTimer();
 
             long timeout = getTimeout();

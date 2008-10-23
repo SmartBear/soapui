@@ -677,7 +677,7 @@ public class MockEngine
          }
          catch( IOException e )
          {
-            e.printStackTrace();
+            log.error( "Failed to log request: " + e );
          }
 
          try
@@ -700,7 +700,7 @@ public class MockEngine
          }
          catch( IOException e )
          {
-            e.printStackTrace();
+            log.error( "Failed to log response: " + e );
          }
 
 //         log.info( ">> " + request.getMethod() + " " + request.getUri().toString() + " " + request.getProtocol());

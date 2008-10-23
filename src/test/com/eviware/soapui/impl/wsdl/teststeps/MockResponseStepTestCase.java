@@ -43,7 +43,7 @@ public class MockResponseStepTestCase extends TestCaseWithJetty
       TestStepConfig config = WsdlMockResponseStepFactory.createConfig( request, false );
       WsdlMockResponseTestStep step = (WsdlMockResponseTestStep) testCase.addTestStep( config );
 
-      WsdlMockResponse mockResponse = step.getMockResponse();
+      WsdlMockResponse mockResponse = step.getMockResponse();                             
       mockResponse.setResponseContent( "<xml>Tjoho!!</xml>" );
       step.setPort( 8989 );
       step.setPath( "/tjohoo" );
