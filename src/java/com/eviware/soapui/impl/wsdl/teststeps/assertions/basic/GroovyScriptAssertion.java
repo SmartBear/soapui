@@ -12,28 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -49,12 +27,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFa
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.AssertionError;
-import com.eviware.soapui.model.testsuite.AssertionException;
-import com.eviware.soapui.model.testsuite.RequestAssertion;
-import com.eviware.soapui.model.testsuite.ResponseAssertion;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.log.JLogList;
@@ -63,6 +37,14 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlObject;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Assertion performed by a custom Grooy Script
@@ -199,11 +181,10 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 					editor.selectError( value );
 				}} );
 			
-			JScrollPane scrollPane = new JScrollPane( editor );
-			scrollPane.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 0, 3, 0, 3 ), 
-						scrollPane.getBorder() ));
+			editor.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 0, 3, 0, 3 ), 
+						editor.getBorder() ));
 			
-			mainSplit = UISupport.createVerticalSplit( scrollPane, logArea);
+			mainSplit = UISupport.createVerticalSplit( editor, logArea);
 			mainSplit.setDividerLocation( 280 );
 			mainSplit.setResizeWeight( 0.8 );
 			add( mainSplit, BorderLayout.CENTER );

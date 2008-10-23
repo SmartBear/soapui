@@ -36,10 +36,10 @@
         <report>maven-junit-report-plugin</report>
         <report>maven-license-plugin</report>
         <report>maven-changelog-plugin</report>
-     <!--    <report>maven-findbugs-plugin</report>
-     <report>maven-jdepend-plugin</report>
-        <report>maven-news-plugin</report>
-        <report>jutils-lint4j-plugin</report>  -->
+        <!--    <report>maven-findbugs-plugin</report>
+   <report>maven-jdepend-plugin</report>
+      <report>maven-news-plugin</report>
+      <report>jutils-lint4j-plugin</report>  -->
     </reports>
     <currentVersion>2.5-beta1</currentVersion>
     <package>com.eviware.soapui</package>
@@ -158,6 +158,16 @@
             </properties>
         </dependency>
         <dependency>
+            <groupId>fife</groupId>
+            <artifactId>rsyntaxarea</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+            <url>http://www.fifesoft.com/</url>
+            <properties>
+                <jnlp.jar>true</jnlp.jar>
+            </properties>
+        </dependency>
+        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.14</version>
@@ -177,7 +187,7 @@
                 <jnlp.jar>true</jnlp.jar>
             </properties>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>jgoodies</groupId>
             <artifactId>binding</artifactId>
             <version>2.0.1</version>
@@ -207,7 +217,7 @@
                 <jnlp.jar>true</jnlp.jar>
             </properties>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
             <version>3.2.1</version>
@@ -217,7 +227,7 @@
                 <jnlp.jar>true</jnlp.jar>
             </properties>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.4</version>
@@ -277,7 +287,7 @@
                 <jnlp.jar>true</jnlp.jar>
             </properties>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>json</groupId>
             <artifactId>json-lib</artifactId>
             <version>2.2.2-jdk15</version>
@@ -287,7 +297,7 @@
                 <jnlp.jar>true</jnlp.jar>
             </properties>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>ezmorph</groupId>
             <artifactId>ezmorph</artifactId>
             <version>1.0.5</version>
@@ -297,7 +307,7 @@
                 <jnlp.jar>true</jnlp.jar>
             </properties>
         </dependency>
-          <dependency>
+        <dependency>
             <groupId>xom</groupId>
             <artifactId>xom</artifactId>
             <version>1.1</version>
@@ -346,7 +356,7 @@
                 <eclipse>true</eclipse>
             </properties>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>jetty</groupId>
             <artifactId>jetty</artifactId>
             <version>6.1.11</version>
@@ -368,7 +378,7 @@
                 <eclipse>true</eclipse>
             </properties>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>jetty</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5-6.1.11</version>
@@ -411,14 +421,14 @@
             <type>jar</type>
             <url>http://jakarta.apache.org/commons/jexl</url>
         </dependency>
-       <dependency>
+        <dependency>
             <groupId>net-components</groupId>
             <artifactId>netcomponents</artifactId>
             <version>1.3.8a</version>
             <properties>
-              <classloader>root</classloader>
+                <classloader>root</classloader>
             </properties>
-          </dependency>
+        </dependency>
 
         <dependency>
             <groupId>lint4j</groupId>
@@ -426,7 +436,7 @@
             <version>1.3.1</version>
             <type>plugin</type>
         </dependency>
-       
+
         <dependency>
             <groupId>xmlbeans</groupId>
             <artifactId>xbean</artifactId>
@@ -580,7 +590,7 @@
                 <jnlp.jar>true</jnlp.jar>
             </properties>
         </dependency>
-          <dependency>
+        <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
             <version>2.9.1</version>
@@ -609,7 +619,7 @@
                 <eclipse.jar>true</eclipse.jar>
             </properties>
         </dependency>
-       <dependency>
+        <dependency>
             <groupId>jtidy</groupId>
             <artifactId>jtidy</artifactId>
             <version>20000804r7-noxml</version>
@@ -619,10 +629,10 @@
             </properties>
         </dependency>
         <dependency>
-      <groupId>commons-jelly</groupId>
-      <artifactId>commons-jelly-tags-jsl</artifactId>
-      <version>20030211.143151</version>
-    </dependency>
+            <groupId>commons-jelly</groupId>
+            <artifactId>commons-jelly-tags-jsl</artifactId>
+            <version>20030211.143151</version>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/java</sourceDirectory>
@@ -656,6 +666,7 @@
     </build>
     <name>soapUI</name>
     <id>soapui</id>
-    <shortDescription>A desktop application for inspecting, developing, invoking and testing of web services</shortDescription>
+    <shortDescription>A desktop application for inspecting, developing, invoking and testing of web services
+    </shortDescription>
 </project>
 

@@ -12,17 +12,18 @@
 
 package com.eviware.soapui.support.propertyexpansion;
 
-import java.awt.Point;
-
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.xml.JXEditTextArea;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import javax.swing.text.BadLocationException;
+import java.awt.*;
 
 public class GroovyEditorPropertyExpansionTarget extends AbstractPropertyExpansionTarget
 {
-	private final JXEditTextArea textField;
+	private final RSyntaxTextArea textField;
 
 	public GroovyEditorPropertyExpansionTarget( GroovyEditor textField, ModelItem modelItem )
 	{
@@ -32,7 +33,7 @@ public class GroovyEditorPropertyExpansionTarget extends AbstractPropertyExpansi
 
 	public void insertPropertyExpansion( PropertyExpansion expansion, Point pt )
 	{
-		int pos = pt == null ? -1 : textField.pointToOffset( pt );
+		int pos = pt == null ? -1 : textField.viewToModel( pt );
 		if( pos == -1 )
 			pos = textField.getCaretPosition();
 		
@@ -44,14 +45,23 @@ public class GroovyEditorPropertyExpansionTarget extends AbstractPropertyExpansi
 			return;
 		
 		String txt = "def " + javaName + " = context.expand( '" + expansion +"' )\n";
-		
-		int line = textField.getLineOfOffset( pos );
-		pos = textField.getLineStartOffset( line );
-		
-		textField.setCaretPosition( pos );
-		textField.setSelectedText( txt );
-		textField.requestFocusInWindow();
-	}
+
+      try
+      {
+         int line = textField.getLineOfOffset( pos );
+         pos = textField.getLineStartOffset( line );
+
+         textField.setCaretPosition( pos );
+         textField.insert( txt,pos );
+         textField.setSelectionStart( pos );
+         textField.setSelectionEnd( pos + txt.length() );
+         textField.requestFocusInWindow();
+      }
+      catch( BadLocationException e )
+      {
+         e.printStackTrace();
+      }
+   }
 
 	private String createJavaName( String name )
 	{

@@ -73,7 +73,7 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
       JPanel xpathEditorPanel = new JPanel( new BorderLayout() );
       DispatchXPathGroovyEditorModel editorModel = new DispatchXPathGroovyEditorModel();
       xpathEditor = new GroovyEditor( editorModel );
-      xpathEditorPanel.add( new JScrollPane( xpathEditor ), BorderLayout.CENTER );
+      xpathEditorPanel.add( xpathEditor, BorderLayout.CENTER );
       xpathEditorPanel.add( buildXPathEditorToolbar( editorModel ), BorderLayout.PAGE_START );
 
       return xpathEditorPanel;

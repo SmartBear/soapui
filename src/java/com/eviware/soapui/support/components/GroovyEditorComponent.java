@@ -12,24 +12,14 @@
  
 package com.eviware.soapui.support.components;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
-
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.support.UISupport;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class GroovyEditorComponent extends JPanel
 {
@@ -41,11 +31,9 @@ public class GroovyEditorComponent extends JPanel
 		super( new BorderLayout() );
 		
 		editor = new GroovyEditor( editorModel );
-		JScrollPane scrollPane = new JScrollPane( editor );
-		scrollPane.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 0, 3, 0, 3 ), 
-					scrollPane.getBorder() ));
-		UISupport.addPreviewCorner( scrollPane, true );
-		add( scrollPane, BorderLayout.CENTER );
+		editor.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 0, 3, 0, 3 ), 
+					editor.getBorder() ));
+		add( editor, BorderLayout.CENTER );
 		addToolbar( editorModel, helpUrl );
 	}
 
@@ -124,7 +112,7 @@ public class GroovyEditorComponent extends JPanel
 		
 		public void actionPerformed( ActionEvent e )
 		{
-			JPopupMenu popup = editor.getEditArea().getRightClickPopup();
+			JPopupMenu popup = editor.getEditArea().getComponentPopupMenu();
 			popup.show( insertCodeButton, insertCodeButton.getWidth()/2, insertCodeButton.getHeight()/2 );
 		}
    }

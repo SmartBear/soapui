@@ -127,10 +127,8 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
    {
       JPanel groovyEditorPanel = new JPanel( new BorderLayout() );
       DispatchScriptGroovyEditorModel editorModel = new DispatchScriptGroovyEditorModel();
-      groovyEditor = new GroovyEditor( editorModel );
-      JScrollPane scrollPane = new JScrollPane( groovyEditor );
-      groovyEditorPanel.add( scrollPane, BorderLayout.CENTER );
-      UISupport.addPreviewCorner( scrollPane, true );
+      groovyEditor = (GroovyEditor) UISupport.getEditorFactory().buildGroovyEditor( editorModel );
+      groovyEditorPanel.add( groovyEditor, BorderLayout.CENTER );
       groovyEditorPanel.add( buildGroovyEditorToolbar( editorModel ), BorderLayout.PAGE_START );
 
       return groovyEditorPanel;

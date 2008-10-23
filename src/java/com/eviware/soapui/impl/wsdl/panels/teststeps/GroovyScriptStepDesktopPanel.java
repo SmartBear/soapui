@@ -114,9 +114,7 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
 				
 			}} );
 		
-		JScrollPane scrollPane = new JScrollPane( editor );
-		UISupport.addPreviewCorner( scrollPane, true );
-		JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( scrollPane);
+		JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( editor );
 		logInspector = inspectorPanel.addInspector( new JComponentInspector<JComponent>( logArea, "Log Output (0)", 
 							"Groovy Log output for this script", true ) );
 		inspectorPanel.setDefaultDividerLocation( 0.8F  );

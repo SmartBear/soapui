@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.support;
 
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.support.components.JUndoableTextArea;
 
 import javax.swing.*;
@@ -33,6 +35,11 @@ public class DefaultEditorFactory implements EditorFactory
       textArea.setText( editorModel.getEditorText() );
       textArea.getDocument().addDocumentListener( new EditorModelDocumentListener( editorModel ) );
       return new JScrollPane( textArea );
+   }
+
+   public JComponent buildGroovyEditor( GroovyEditorModel editorModel )
+   {
+      return new GroovyEditor( editorModel );
    }
 
    private static class EditorModelDocumentListener extends DocumentListenerAdapter

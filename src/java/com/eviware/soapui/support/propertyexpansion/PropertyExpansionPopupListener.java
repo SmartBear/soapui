@@ -329,8 +329,8 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 		DropTarget dropTarget = new DropTarget( groovyEditor.getEditArea(), new PropertyExpansionDropTarget( target ) );
 		dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
 		
-		JPopupMenu popup = groovyEditor.getEditArea().getRightClickPopup();
-		
+		JPopupMenu popup = groovyEditor.getEditArea().getComponentPopupMenu();
+
 		if( popup != null )
 		{
 			JMenu menu = new JMenu( "Get Data.." );
