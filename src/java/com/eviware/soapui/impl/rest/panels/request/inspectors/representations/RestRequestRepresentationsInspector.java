@@ -91,7 +91,7 @@ public class RestRequestRepresentationsInspector extends AbstractRestRepresentat
 
    public void afterSubmit( Submit submit, SubmitContext context )
    {
-      HttpResponse response = getRequest().getResponse();
+      HttpResponse response = (HttpResponse) submit.getResponse();
       if( response != null && enableRecordingCheckBox.isSelected() )
       {
          extractRepresentation( response );
