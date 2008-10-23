@@ -944,7 +944,7 @@
 		</xsd:sequence>
         <xsd:attribute name="handleFault" type="xsd:boolean"></xsd:attribute>
         <xsd:attribute name="handleResponse" type="xsd:boolean"></xsd:attribute>
-        <xsd:attribute name="preStart" type="xsd:boolean"></xsd:attribute>
+        <xsd:attribute name="startStep" type="xsd:string"></xsd:attribute>
 	</xsd:complexType>
 
 	<xsd:complexType name="AsyncResponseStep">

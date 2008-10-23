@@ -272,7 +272,7 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
    @Override
    public ImageIcon getIcon()
    {
-      if (forLoadTest)
+      if (forLoadTest || UISupport.isHeadless() )
          return null;
 
       TestMonitor testMonitor = SoapUI.getTestMonitor();

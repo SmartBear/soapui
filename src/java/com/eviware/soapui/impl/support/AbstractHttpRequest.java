@@ -381,7 +381,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
    @Override
    public ImageIcon getIcon()
    {
-      return iconAnimator == null ? null : iconAnimator.getIcon();
+      return iconAnimator == null || UISupport.isHeadless() ? null : iconAnimator.getIcon();
    }
 
    public PropertyExpansion[] getPropertyExpansions()

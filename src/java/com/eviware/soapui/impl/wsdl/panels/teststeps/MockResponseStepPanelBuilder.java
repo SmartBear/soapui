@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMockResponseTestStep;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.components.JPropertiesTable;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
@@ -73,7 +74,10 @@ public class MockResponseStepPanelBuilder extends EmptyPanelBuilder<WsdlMockResp
    	table.addProperty( "Response HTTP-Status", "responseHttpStatus", true );
 	  	table.addProperty( "Response Delay", "responseDelay", true );
 	  	table.addProperty( "Timeout", "timeout", true );
-      table.addProperty( "Pre-Start", "preStart", JPropertiesTable.BOOLEAN_OPTIONS );
+
+      String[] names = ModelSupport.getNames( new String[]{""}, mockResponseStep.getTestCase().getTestStepList() );
+
+      table.addProperty( "Start Step", "startStep", names );
 
    	table.addProperty( "Port", "port", true );
    	table.addProperty( "Path", "path", true );

@@ -74,15 +74,17 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
    private WsdlMockResponse mockResponse;
 
    private AssertionsSupport assertionsSupport;
-   private InternalMockRunListener listener;
+   private InternalMockRunListener mockRunListener;
 
    private final InternalProjectListener projectListener = new InternalProjectListener();
    private final InternalInterfaceListener interfaceListener = new InternalInterfaceListener();
+   private final InternalTestRunListener testRunListener = new InternalTestRunListener();
    private WsdlInterface iface;
    private AssertionStatus oldStatus;
 
    private ModelItemIconAnimator<WsdlMockResponseTestStep> iconAnimator;
    private WsdlMockResponse testMockResponse;
+   private WsdlTestStep startTestStep;
 
    public WsdlMockResponseTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
    {
@@ -118,6 +120,15 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       // init properties
       initProperties();
 
+      testCase.addTestRunListener( testRunListener );
+
+      startTestStep = testCase.getTestStepByName( getStartStep() );
+      if( startTestStep != null )
+      {
+         startTestStep.addPropertyChangeListener( this );
+      }
+
+      testCase.addPropertyChangeListener( this );
    }
 
    private void initProperties()
@@ -221,8 +232,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
          mockRunner = null;
       }
 
-      if( listener != null )
-         listener.cancel();
+      if( mockRunListener != null )
+         mockRunListener.cancel();
 
       return true;
    }
@@ -232,13 +243,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
    {
       super.prepare( testRunner, testRunContext );
 
-      listener = new InternalMockRunListener();
-      mockService.addMockRunListener( listener );
-
-      if( isPreStart() )
-      {
-         initTestMockResponse( testRunContext );
-      }
+      mockRunListener = new InternalMockRunListener();
+      mockService.addMockRunListener( mockRunListener );
 
       mockRunner = mockService.start( (WsdlTestRunContext) testRunContext );
    }
@@ -295,37 +301,32 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
       try
       {
-         if( !isPreStart() || testMockResponse == null )
-         {
-            initTestMockResponse( context );
-         }
-
-         if( !listener.hasResult() )
+         if( !mockRunListener.hasResult() )
          {
             result.startTimer();
 
             long timeout = getTimeout();
-            synchronized( listener )
+            synchronized( mockRunListener )
             {
-               listener.waitForRequest( timeout );
+               mockRunListener.waitForRequest( timeout );
             }
          }
 
          result.stopTimer();
 
-         AssertedWsdlMockResultMessageExchange messageExchange = new AssertedWsdlMockResultMessageExchange( listener
+         AssertedWsdlMockResultMessageExchange messageExchange = new AssertedWsdlMockResultMessageExchange( mockRunListener
                  .getResult() );
          result.setMessageExchange( messageExchange );
 
-         if( listener.getResult() != null )
+         if( mockRunListener.getResult() != null )
          {
             context.setProperty( AssertedXPathsContainer.ASSERTEDXPATHSCONTAINER_PROPERTY, messageExchange );
-            assertResult( listener.getResult(), context );
+            assertResult( mockRunListener.getResult(), context );
          }
 
-         if( listener.getResult() == null )
+         if( mockRunListener.getResult() == null )
          {
-            if( listener.isCanceled() )
+            if( mockRunListener.isCanceled() )
             {
                result.setStatus( TestStepStatus.CANCELED );
             }
@@ -364,7 +365,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
                result.setStatus( TestStepStatus.OK );
             }
 
-            listener.setResult( null );
+            mockRunListener.setResult( null );
          }
       }
       catch( Exception e )
@@ -407,10 +408,10 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
    @Override
    public void finish( TestRunner testRunner, TestRunContext testRunContext )
    {
-      if( listener != null )
+      if( mockRunListener != null )
       {
-         mockService.removeMockRunListener( listener );
-         listener = null;
+         mockService.removeMockRunListener( mockRunListener );
+         mockRunListener = null;
       }
 
       if( testMockResponse != null )
@@ -443,7 +444,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       public void onMockResult( MockResult result )
       {
          // is this for us?
-         if( this.result == null && ( waiting || isPreStart() ) && result.getMockResponse() == testMockResponse )
+         if( this.result == null && waiting && result.getMockResponse() == testMockResponse )
          {
             // save
             this.setResult( (WsdlMockResult) result );
@@ -464,7 +465,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       public void cancel()
       {
          canceled = true;
-        // listener.onMockResult( null );
+        // mockRunListener.onMockResult( null );
       }
 
       private void setResult( WsdlMockResult result )
@@ -485,6 +486,16 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       public boolean hasResult()
       {
          return result != null;
+      }
+
+      public boolean isWaiting()
+      {
+         return waiting;
+      }
+
+      public void setWaiting( boolean waiting )
+      {
+         this.waiting = waiting;
       }
 
       public void waitForRequest( long timeout ) throws InterruptedException
@@ -598,14 +609,29 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       mockResponse.setInlineFilesEnabled( inlineFilesEnabled );
    }
 
-   public boolean isPreStart()
+   public String getStartStep()
    {
-      return mockResponseStepConfig.getPreStart();
+      return startTestStep == null ? "" : startTestStep.getName();
    }
 
-   public void setPreStart( boolean preStart )
+   public void setStartStep( String startStep )
    {
-      mockResponseStepConfig.setPreStart( preStart );
+      if( startTestStep != null )
+      {
+         startTestStep.removePropertyChangeListener( this );
+         startTestStep = null;
+      }
+
+      if( startStep != null )
+      {
+         startTestStep = getTestCase().getTestStepByName( startStep );
+         if( startTestStep != null )
+         {
+            startTestStep.addPropertyChangeListener( this );
+         }
+      }
+
+      mockResponseStepConfig.setStartStep( startStep );
    }
 
    public boolean isMultipartEnabled()
@@ -704,6 +730,15 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       {
          mockResponseConfig.set( mockResponse.getConfig() );
          notifyPropertyChanged( evt.getPropertyName(), evt.getOldValue(), evt.getNewValue() );
+      }
+      else if( evt.getSource() == getTestCase() && evt.getPropertyName().equals( "testSteps" ) &&
+              evt.getNewValue() == null && evt.getOldValue() == startTestStep && startTestStep != null )
+      {
+         setStartStep( null );
+      }
+      else if( evt.getSource() == startTestStep && evt.getPropertyName().equals( WsdlTestStep.NAME_PROPERTY ))
+      {
+         mockResponseStepConfig.setStartStep( String.valueOf( evt.getNewValue() ) );
       }
    }
 
@@ -888,6 +923,9 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
          iface.getProject().removeProjectListener( projectListener );
          iface.removeInterfaceListener( interfaceListener );
       }
+
+      getTestCase().removeTestRunListener( testRunListener );
+      getTestCase().removePropertyChangeListener( this );
    }
 
    public AssertableType getAssertableType()
@@ -1132,6 +1170,19 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
             PathToResolve path = context.getPath( this, "Missing Operation in Project", mockResponseStepConfig.getInterface() + "/"
                     + mockResponseStepConfig.getOperation() );
             path.setSolved( true );
+         }
+      }
+   }
+
+   private class InternalTestRunListener extends TestRunListenerAdapter
+   {
+      @Override
+      public void beforeStep( TestRunner testRunner, TestRunContext runContext )
+      {
+         if( runContext.getCurrentStep() == startTestStep && testMockResponse == null )
+         {
+            initTestMockResponse( runContext );
+            mockRunListener.setWaiting( true );
          }
       }
    }
