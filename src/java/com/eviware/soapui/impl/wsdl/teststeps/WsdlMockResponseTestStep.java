@@ -37,6 +37,7 @@ import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.mock.MockResult;
+import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.*;
@@ -294,7 +295,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
       try
       {
-         if( !isPreStart() && testMockResponse == null )
+         if( !isPreStart() || testMockResponse == null )
          {
             initTestMockResponse( context );
          }
@@ -362,6 +363,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
             {
                result.setStatus( TestStepStatus.OK );
             }
+
+            listener.setResult( null );
          }
       }
       catch( Exception e )
@@ -410,16 +413,22 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
          listener = null;
       }
 
-      if( mockResponse != null )
+      if( testMockResponse != null )
       {
-         mockOperation.removeMockResponse( mockResponse );
-         mockResponse = null;
+         if( testMockResponse != mockResponse )
+         {
+            mockOperation.removeMockResponse( testMockResponse );
+         }
+         
+         testMockResponse = null;
       }
 
       if( mockRunner != null )
       {
          if( mockRunner.isRunning() )
+         {
             mockRunner.stop();
+         }
 
          mockRunner = null;
       }
@@ -433,9 +442,14 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
       public void onMockResult( MockResult result )
       {
-         if( ( waiting || isPreStart() ) && result.getMockResponse() == testMockResponse )
+         // is this for us?
+         if( this.result == null && ( waiting || isPreStart() ) && result.getMockResponse() == testMockResponse )
          {
+            // save
             this.setResult( (WsdlMockResult) result );
+
+            // stop runner
+            mockRunner.stop();
 
             if( waiting )
             {
@@ -450,7 +464,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       public void cancel()
       {
          canceled = true;
-         listener.onMockResult( null );
+        // listener.onMockResult( null );
       }
 
       private void setResult( WsdlMockResult result )
@@ -477,6 +491,14 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       {
          waiting = true;
          wait( timeout );
+      }
+
+      @Override
+      public void onMockRunnerStart( MockRunner mockRunner )
+      {
+         waiting = false;
+         result = null;
+         canceled = false;
       }
    }
 

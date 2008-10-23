@@ -190,6 +190,7 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 	      }
 	      catch (Throwable e)
 	      {
+            e.printStackTrace();
 	         assertionStatus = AssertionStatus.FAILED;
 	         assertionErrors = new com.eviware.soapui.model.testsuite.AssertionError[] 
                            { new com.eviware.soapui.model.testsuite.AssertionError( e.getMessage() )};

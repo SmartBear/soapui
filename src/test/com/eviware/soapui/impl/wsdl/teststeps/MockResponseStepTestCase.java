@@ -69,6 +69,8 @@ public class MockResponseStepTestCase extends TestCaseWithJetty
       // add copy
       testCase.cloneStep( step, "TestStep2" );
 
+      assertEquals( testCase.getTestStepCount(), 2 );
+
       //	 run testcase again
       runner = testCase.run( new StringToObjectMap(), true );
 

@@ -71,7 +71,6 @@ public class WsdlMockResponsePanelBuilder extends EmptyPanelBuilder<WsdlMockResp
 			setDescription( "Enables inline file references [file:<path>] in elements with binary content" );
 	  	table.addProperty( "Response HTTP-Status", "responseHttpStatus", true );
 	  	table.addProperty( "Response Delay", "responseDelay", true );
-      table.addProperty( "Pre-Start", "preStart", JPropertiesTable.BOOLEAN_OPTIONS );
    	
    	table.addProperty( "WS-Addressing", "wsAddressing", JPropertiesTable.BOOLEAN_OPTIONS );
 

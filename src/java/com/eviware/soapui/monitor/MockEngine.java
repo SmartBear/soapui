@@ -651,6 +651,10 @@ public class MockEngine
    {
       public void log( Request request, Response response )
       {
+         if( SoapUI.getLogMonitor() == null || SoapUI.getLogMonitor().getLogArea( "jetty log" ) == null ||
+                 SoapUI.getLogMonitor().getLogArea( "jetty log" ).getLoggers() == null )
+            return;
+
          Logger logger = SoapUI.getLogMonitor().getLogArea( "jetty log" ).getLoggers()[0];
 
          try

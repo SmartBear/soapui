@@ -73,7 +73,8 @@ public class MockResponseStepPanelBuilder extends EmptyPanelBuilder<WsdlMockResp
    	table.addProperty( "Response HTTP-Status", "responseHttpStatus", true );
 	  	table.addProperty( "Response Delay", "responseDelay", true );
 	  	table.addProperty( "Timeout", "timeout", true );
-   	
+      table.addProperty( "Pre-Start", "preStart", JPropertiesTable.BOOLEAN_OPTIONS );
+
    	table.addProperty( "Port", "port", true );
    	table.addProperty( "Path", "path", true );
    	table.setPropertyObject( mockResponseStep );

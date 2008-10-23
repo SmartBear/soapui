@@ -51,6 +51,7 @@ public class WsdlTestCaseRunner implements Runnable, TestRunner
    private int id;
    private int resultCount;
    private final static ExecutorService threadPool = Executors.newCachedThreadPool();
+   
    private final static Logger log = Logger.getLogger(WsdlTestCaseRunner.class);
 
    private static int idCounter = 0;
@@ -115,12 +116,15 @@ public class WsdlTestCaseRunner implements Runnable, TestRunner
    {
       int initCount = 0;
 
+      if( future != null )
+      {
+         Thread.currentThread().setName( "TestCaseRunner Thread for " + testCase.getName() );
+      }
+
       try
       {
          gotoStepIndex = -1;
          testStepResults.clear();
-
-         listeners = testCase.getTestRunListeners();
 
          // create state for testcase if specified
          if (testCase.getKeepSession())
@@ -140,6 +144,7 @@ public class WsdlTestCaseRunner implements Runnable, TestRunner
             timeoutTimer.schedule(timeoutTimerTask, testCase.getTimeout());
          }
 
+         listeners = testCase.getTestRunListeners();
          notifyBeforeRun();
 
          for (; initCount < testCase.getTestStepCount() && status == Status.RUNNING; initCount++)
@@ -160,9 +165,9 @@ public class WsdlTestCaseRunner implements Runnable, TestRunner
             }
          }
 
-         int currentStepIndex = runContext.getCurrentStepIndex();
+         int currentStepIndex = 0;
 
-         for (currentStepIndex = 0; status == Status.RUNNING && currentStepIndex < testCase.getTestStepCount(); currentStepIndex++)
+         for (; status == Status.RUNNING && currentStepIndex < testCase.getTestStepCount(); currentStepIndex++)
          {
             TestStep currentStep = runContext.getCurrentStep();
             if (!currentStep.isDisabled())
