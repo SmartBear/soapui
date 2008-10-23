@@ -12,8 +12,34 @@
 
 package com.eviware.soapui.impl.wsdl;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.wsdl.Binding;
+import javax.wsdl.BindingOperation;
+import javax.wsdl.Definition;
+import javax.wsdl.Port;
+import javax.wsdl.Service;
+import javax.xml.namespace.QName;
+
+import org.apache.log4j.Logger;
+import org.w3.x2007.x05.addressing.metadata.AddressingDocument.Addressing;
+import org.w3.x2007.x05.addressing.metadata.AnonymousResponsesDocument.AnonymousResponses;
+import org.w3.x2007.x05.addressing.metadata.NonAnonymousResponsesDocument.NonAnonymousResponses;
+import org.xmlsoap.schemas.ws.x2004.x09.policy.Policy;
+
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.*;
+import com.eviware.soapui.config.AnonymousTypeConfig;
+import com.eviware.soapui.config.DefinitionCacheConfig;
+import com.eviware.soapui.config.OperationConfig;
+import com.eviware.soapui.config.SoapVersionTypesConfig;
+import com.eviware.soapui.config.WsaVersionTypeConfig;
+import com.eviware.soapui.config.WsdlInterfaceConfig;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractInterface;
@@ -28,7 +54,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.BeanPathPropertySupport;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.settings.WsaSettings;
@@ -37,17 +62,6 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringList;
-import org.apache.log4j.Logger;
-import org.w3.x2007.x05.addressing.metadata.AddressingDocument.Addressing;
-import org.w3.x2007.x05.addressing.metadata.AnonymousResponsesDocument.AnonymousResponses;
-import org.w3.x2007.x05.addressing.metadata.NonAnonymousResponsesDocument.NonAnonymousResponses;
-import org.xmlsoap.schemas.ws.x2004.x09.policy.Policy;
-
-import javax.wsdl.*;
-import javax.xml.namespace.QName;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.util.*;
 
 /**
  * WSDL implementation of Interface, maps to a WSDL Binding
@@ -55,7 +69,7 @@ import java.util.*;
  * @author Ole.Matzura
  */
 
-public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> implements Interface
+public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 {
 	public static final String STYLE_DOCUMENT = "Document";
 	public static final String STYLE_RPC = "RPC";
