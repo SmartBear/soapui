@@ -168,9 +168,9 @@
 				<subsection name="soapUI in the news">
 					<p>Fortunately, we are not the only ones using soapUI, have a look at what some others have written:</p>
 					<ul>
+					    <li><a target="_new" href="http://dimosthenes.blogspot.com/2008/10/testing-web-services.html">Testing Web Services</a> from Dimosthenes</li>
 						<li><a target="_new" href="http://groovyinsoapui.wordpress.com/">Groovy in soapUI</a> from Devakara´s Blog</li>
 						<li><a target="_new" href="http://blog.kmdarshan.com/2008/08/soapui-how-to-synchronize-using-threads.html">soapui- How to synchronize using...</a> from Darshan´s Blog</li>
-						<li><a target="_new" href="http://blogs.techrepublic.com.com/programming-and-development/?p=699">Easily test Web services</a> from Tony Patton</li>
 					</ul>
 					<p><b><a href="soapui_in_the_news.html">[More of soapUI in the News]</a></b></p>
 				</subsection>
