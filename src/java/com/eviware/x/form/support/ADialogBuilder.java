@@ -12,27 +12,16 @@
 
 package com.eviware.x.form.support;
 
-import java.lang.reflect.Field;
-
-import javax.swing.JPasswordField;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.x.form.XForm;
-import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.XFormDialogBuilder;
-import com.eviware.x.form.XFormFactory;
-import com.eviware.x.form.XFormField;
-import com.eviware.x.form.XFormTextField;
+import com.eviware.x.form.*;
 import com.eviware.x.form.XForm.FieldType;
 import com.eviware.x.form.support.AField.AFieldType;
-import com.eviware.x.impl.swing.ActionFormFieldComponent;
-import com.eviware.x.impl.swing.JComponentFormField;
-import com.eviware.x.impl.swing.JPasswordFieldFormField;
-import com.eviware.x.impl.swing.JStringListFormField;
-import com.eviware.x.impl.swing.JTableFormField;
+import com.eviware.x.impl.swing.*;
+
+import java.lang.reflect.Field;
 
 /**
  * Builds XFormDialogs from AForm/AField annotated classes/interfaces
@@ -241,6 +230,8 @@ public class ADialogBuilder
 		case PASSWORD:
 			field = form.addComponent(name, new JPasswordFieldFormField());
 			break;
+      case SEPARATOR:
+         form.addSeparator( description );
 		default:
 			System.out.println("Unsupported field type: " + type);
 		}

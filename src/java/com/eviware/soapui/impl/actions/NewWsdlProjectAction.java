@@ -107,6 +107,18 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
                {
                   UISupport.select( project );
 
+                  if( dialog.getBooleanValue( Form.RELATIVEPATHS ))
+                  {
+                     if( !project.save())
+                     {
+                        UISupport.showErrorMessage( "Project was not saved, paths will not be stored relatively until configured." );
+                     }
+                     else
+                     {
+                        project.setResourceRoot( "${projectDir}" );
+                     }
+                  }
+                  
                   String url = dialog.getValue( Form.INITIALWSDL ).trim();
                   if( url.length() > 0 )
                   {
@@ -200,6 +212,10 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
       @AField( description = "Form.AddRestService.Description", type = AFieldType.BOOLEAN, enabled = true )
       public final static String ADDRESTSERVICE = messages.get( "Form.AddRestService.Label" );
+
+      @AField( description = "Form.RelativePaths.Description", type = AFieldType.BOOLEAN, enabled = true )
+      public final static String RELATIVEPATHS = messages.get( "Form.RelativePaths.Label" );
+
 
 //		@AField( description = "Form.CreateProjectFile.Description", type = AFieldType.BOOLEAN )
 //		public final static String CREATEPROJECTFILE = messages.get("Form.CreateProjectFile.Label");  

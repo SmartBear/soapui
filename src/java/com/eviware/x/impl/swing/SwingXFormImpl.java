@@ -12,19 +12,10 @@
 
 package com.eviware.x.impl.swing;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.border.Border;
-
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.NamespaceTable;
 import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormField;
@@ -33,6 +24,12 @@ import com.eviware.x.form.XFormTextField;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class SwingXFormImpl implements XForm
 {
@@ -137,14 +134,17 @@ public class SwingXFormImpl implements XForm
    public void addSeparator( String label )
    {
       addSpace( rowSpacing );
+      addSpace( rowSpacing );
 
       layout.appendRow( rowSpec );
       int row = layout.getRowCount();
 
-      if( label == null )
+      if( StringUtils.isNullOrEmpty( label ))
       	panel.add( new JSeparator(), cc.xywh( 2, row, 3, 1 ) );
       else
       	panel.add( new JLabel( label ), cc.xywh( 2, row, 3, 1 ) );
+
+      addSpace( rowSpacing );
    }
 
    public XFormTextField addTextField( String name, String description, FieldType type )
