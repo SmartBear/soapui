@@ -31,9 +31,9 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFa
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.AssertionError;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
@@ -83,7 +83,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 
       synchronized( context )
       {
-         if( !context.hasProperty( SCHEMA_COMPLIANCE_HAS_CLEARED_CACHE_FLAG ))
+         if( !context.hasProperty( SCHEMA_COMPLIANCE_HAS_CLEARED_CACHE_FLAG ) )
          {
             wsdlContextMap.clear();
             context.setProperty( SCHEMA_COMPLIANCE_HAS_CLEARED_CACHE_FLAG, "yep!" );
@@ -174,15 +174,14 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
    {
       WsdlOperation operation = messageExchange.getOperation();
       WsdlInterface iface = operation.getInterface();
-      if( definition == null || definition.trim().length() == 0 || definition.equals(
-              PathUtils.expandPath( iface.getDefinition(), iface, context ) ) )
+      if( StringUtils.isNullOrEmpty( definition ) || definition.equals( iface.getDefinition() ) )
       {
          definitionContext = ( iface ).getWsdlContext();
          ( (WsdlContext) definitionContext ).loadIfNecessary();
       }
       else
       {
-         String def = PropertyExpansionUtils.expandProperties( context, definition );
+         String def = PathUtils.expandPath( definition, iface, context );
          if( definitionContext == null || !def.equals( wsdlContextDef ) )
          {
             definitionContext = getContext( def, iface.getSoapVersion() );
@@ -203,7 +202,6 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
       }
       else
       {
-
          WsdlContext newWsdlContext = new WsdlContext( wsdlLocation, soapVersion );
          newWsdlContext.load();
          wsdlContextMap.put( wsdlLocation, newWsdlContext );
@@ -215,7 +213,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
    {
       RestResource operation = messageExchange.getResource();
       RestService service = operation.getService();
-      if( definition == null || definition.trim().length() == 0 || definition.equals(
+      if( StringUtils.isNullOrEmpty( definition ) || definition.equals(
               PathUtils.expandPath( service.getDefinition(), service, context ) ) )
       {
          definitionContext = service.getWadlContext();
@@ -223,7 +221,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
       }
       else
       {
-         String def = PropertyExpansionUtils.expandProperties( context, definition );
+         String def = PathUtils.expandPath( definition, service, context );
          if( definitionContext == null || !def.equals( wsdlContextDef ) )
          {
             definitionContext = new WadlDefinitionContext( def );
@@ -241,9 +239,9 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
       String value = definition;
 
       WsdlInterface iface = (WsdlInterface) getAssertable().getInterface();
-      String orgDef = iface == null ? null : PathUtils.expandPath( iface.getDefinition(), iface );
+      String orgDef = iface == null ? null : iface.getDefinition();
 
-      if( value == null || value.trim().length() == 0 )
+      if( StringUtils.isNullOrEmpty( value ) )
       {
          value = orgDef;
       }
@@ -252,7 +250,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 
       if( value == null ) return false;
 
-      if( value.trim().length() == 0 || value.equals( orgDef ) )
+      if( StringUtils.isNullOrEmpty( value ) || value.equals( orgDef ) )
          definition = "";
       else
          definition = value;
