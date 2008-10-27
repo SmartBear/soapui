@@ -3,15 +3,20 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
 public class WsaAssertionConfiguration 
 {
-	public WsaAssertionConfiguration(boolean assertAction, boolean assertTo, boolean assertRelatesTo, boolean assertReplyToRefParams, boolean assertFaultToRefParams) {
+	public WsaAssertionConfiguration(boolean assertAction, boolean assertTo, boolean assertReplyTo, boolean assertMessageId, 
+			boolean assertRelatesTo, boolean assertReplyToRefParams, boolean assertFaultToRefParams) {
 		this.assertAction = assertAction;
 		this.assertTo = assertTo;
+		this.assertReplyTo = assertReplyTo;
+		this.assertMessageId = assertMessageId;
 		this.assertRelatesTo = assertRelatesTo;
 		this.assertReplyToRefParams = assertReplyToRefParams;
 		this.assertFaultToRefParams = assertFaultToRefParams;
 	}
 	private boolean assertAction;
 	private boolean assertTo;
+	private boolean assertReplyTo;
+	private boolean assertMessageId;
 	private boolean assertRelatesTo;
 	private boolean assertReplyToRefParams;
 	private boolean assertFaultToRefParams;
@@ -56,6 +61,18 @@ public class WsaAssertionConfiguration
 	}
 	public void setAssertFaultToRefParams(boolean assertFaultToRefParams) {
 		this.assertFaultToRefParams = assertFaultToRefParams;
+	}
+	public boolean isAssertReplyTo() {
+		return assertReplyTo;
+	}
+	public void setAssertReplyTo(boolean assertReplyTo) {
+		this.assertReplyTo = assertReplyTo;
+	}
+	public boolean isAssertMessageId() {
+		return assertMessageId;
+	}
+	public void setAssertMessageId(boolean assertMessageId) {
+		this.assertMessageId = assertMessageId;
 	}
 	
 }

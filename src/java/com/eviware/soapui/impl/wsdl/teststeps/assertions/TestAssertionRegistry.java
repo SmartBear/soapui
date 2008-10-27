@@ -54,6 +54,7 @@ public class TestAssertionRegistry
 		addAssertion( new XQueryContainsAssertion.Factory() );
 		addAssertion( new WSSStatusAssertion.Factory() );
 		addAssertion( new WSAAssertion.Factory() );
+		addAssertion( new WSARequestAssertion.Factory() );
 	}
 	
 	public void addAssertion( TestAssertionFactory factory)

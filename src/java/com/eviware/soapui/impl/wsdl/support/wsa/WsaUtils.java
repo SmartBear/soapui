@@ -436,6 +436,10 @@ public class WsaUtils {
 		try {
 			Element header = getHeader(wsaContainer);
 
+//			if (override || wsaVersionNamespaceOld == null) {
+//				header.setAttribute("xmlns:" + wsaPrefix, wsaVersionNameSpace);
+//			}
+
 			String action = null;
 			if (wsaContainer.getWsaConfig().isAddDefaultAction()) {
 				action = WsdlUtils.getDefaultWsaAction(wsaContainer

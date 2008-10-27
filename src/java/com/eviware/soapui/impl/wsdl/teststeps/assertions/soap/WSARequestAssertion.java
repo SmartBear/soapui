@@ -17,7 +17,6 @@ import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.WsaAssertionConfiguration;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -47,26 +46,26 @@ import com.eviware.x.form.XFormFactory;
  * @author dragica.soldo
  */
 
-public class WSAAssertion extends WsdlMessageAssertion implements
+public class WSARequestAssertion extends WsdlMessageAssertion implements
 		RequestAssertion, ResponseAssertion {
-	public static final String ID = "WS-A Response Assertion";
-	public static final String LABEL = "WS-Addressing Response";
+	public static final String ID = "WS-A Request Assertion";
+	public static final String LABEL = "WS-Addressing Request";
 	private WsaAssertionConfiguration wsaAssertionConfiguration;
 	private boolean assertWsaAction;
 	private boolean assertWsaTo;
-//	private boolean assertWsaReplyTo;
-//	private boolean assertWsaMessageId;
-	private boolean assertWsaRelatesTo;
-	private boolean assertReplyToRefParams;
-	private boolean assertFaultToRefParams;
+	private boolean assertWsaReplyTo;
+	private boolean assertWsaMessageId;
+//	private boolean assertWsaRelatesTo;
+//	private boolean assertReplyToRefParams;
+//	private boolean assertFaultToRefParams;
 	private XFormDialog dialog;
 	private static final String ASSERT_ACTION = "wsa:Action";
 	private static final String ASSERT_TO = "wsa:To";
-//	private static final String ASSERT_REPLY_TO = "wsa:ReplyTo";
-//	private static final String ASSERT_MESSAGE_ID = "wsa:MessageId";
-	private static final String ASSERT_RELATES_TO = "wsa:RelatesTo";
-	private static final String ASSERT_REPLY_TO_REF_PARAMS = "wsa:ReplyTo ReferenceParameters";
-	private static final String ASSERT_FAULT_TO_REF_PARAMS = "wsa:FaultTo ReferenceParameters";
+	private static final String ASSERT_REPLY_TO = "wsa:ReplyTo";
+	private static final String ASSERT_MESSAGE_ID = "wsa:MessageId";
+//	private static final String ASSERT_RELATES_TO = "wsa:RelatesTo";
+//	private static final String ASSERT_REPLY_TO_REF_PARAMS = "wsa:ReplyTo ReferenceParameters";
+//	private static final String ASSERT_FAULT_TO_REF_PARAMS = "wsa:FaultTo ReferenceParameters";
 
 	/**
 	 * Constructor for our assertion.
@@ -74,7 +73,7 @@ public class WSAAssertion extends WsdlMessageAssertion implements
 	 * @param assertionConfig
 	 * @param modelItem
 	 */
-	public WSAAssertion(TestAssertionConfig assertionConfig,
+	public WSARequestAssertion(TestAssertionConfig assertionConfig,
 			Assertable modelItem) {
 		super(assertionConfig, modelItem, false, true, false, true);
 
@@ -82,22 +81,22 @@ public class WSAAssertion extends WsdlMessageAssertion implements
 				getConfiguration());
 		assertWsaAction = reader.readBoolean("asertWsaAction", true);
 		assertWsaTo = reader.readBoolean("asertWsaTo", false);
-//		assertWsaReplyTo = reader.readBoolean("assertWsaReplyTo", false);
-//		assertWsaMessageId = reader.readBoolean("assertWsaMessageId", false);
-		assertWsaRelatesTo = reader.readBoolean("asertWsaRelatesTo", false);
-		assertReplyToRefParams = reader.readBoolean("assertReplyToRefParams",
-				false);
-		assertFaultToRefParams = reader.readBoolean("assertFaultToRefParams",
-				false);
+		assertWsaReplyTo = reader.readBoolean("assertWsaReplyTo", false);
+		assertWsaMessageId = reader.readBoolean("assertWsaMessageId", false);
+//		assertWsaRelatesTo = reader.readBoolean("asertWsaRelatesTo", false);
+//		assertReplyToRefParams = reader.readBoolean("assertReplyToRefParams",
+//				false);
+//		assertFaultToRefParams = reader.readBoolean("assertFaultToRefParams",
+//				false);
 		wsaAssertionConfiguration = new WsaAssertionConfiguration(
-				assertWsaAction, assertWsaTo, false, false, assertWsaRelatesTo,
-				assertReplyToRefParams, assertFaultToRefParams);
+				assertWsaAction, assertWsaTo, assertWsaReplyTo, assertWsaMessageId, false,
+				false, false);
 	}
 
 	public static class Factory extends AbstractTestAssertionFactory {
 		@SuppressWarnings("unchecked")
 		public Factory() {
-			super(WSAAssertion.ID, WSAAssertion.LABEL, WSAAssertion.class, WsdlRequest.class );
+			super(WSARequestAssertion.ID, WSARequestAssertion.LABEL, WSARequestAssertion.class,WsdlMockResponseTestStep.class );
 		}
 	}
 
@@ -144,28 +143,28 @@ public class WSAAssertion extends WsdlMessageAssertion implements
 		StringToStringMap values = new StringToStringMap();
 		values.put(ASSERT_ACTION, assertWsaAction);
 		values.put(ASSERT_TO, assertWsaTo);
-//		values.put(ASSERT_REPLY_TO, assertWsaReplyTo);
-//		values.put(ASSERT_MESSAGE_ID, assertWsaMessageId);
-		values.put(ASSERT_RELATES_TO, assertWsaRelatesTo);
-		values.put(ASSERT_REPLY_TO_REF_PARAMS, assertReplyToRefParams);
-		values.put(ASSERT_FAULT_TO_REF_PARAMS, assertFaultToRefParams);
+		values.put(ASSERT_REPLY_TO, assertWsaReplyTo);
+		values.put(ASSERT_MESSAGE_ID, assertWsaMessageId);
+//		values.put(ASSERT_RELATES_TO, assertWsaRelatesTo);
+//		values.put(ASSERT_REPLY_TO_REF_PARAMS, assertReplyToRefParams);
+//		values.put(ASSERT_FAULT_TO_REF_PARAMS, assertFaultToRefParams);
 
 		values = dialog.show(values);
 		if (dialog.getReturnValue() == XFormDialog.OK_OPTION) {
 			assertWsaAction = values.getBoolean(ASSERT_ACTION);
 			assertWsaTo = values.getBoolean(ASSERT_TO);
-//			assertWsaReplyTo = values.getBoolean(ASSERT_REPLY_TO);
-//			assertWsaMessageId = values.getBoolean(ASSERT_MESSAGE_ID);
-			assertWsaRelatesTo = values.getBoolean(ASSERT_RELATES_TO);
-			assertReplyToRefParams = values
-					.getBoolean(ASSERT_REPLY_TO_REF_PARAMS);
-			assertFaultToRefParams = values
-					.getBoolean(ASSERT_FAULT_TO_REF_PARAMS);
+			assertWsaReplyTo = values.getBoolean(ASSERT_REPLY_TO);
+			assertWsaMessageId = values.getBoolean(ASSERT_MESSAGE_ID);
+//			assertWsaRelatesTo = values.getBoolean(ASSERT_RELATES_TO);
+//			assertReplyToRefParams = values
+//					.getBoolean(ASSERT_REPLY_TO_REF_PARAMS);
+//			assertFaultToRefParams = values
+//					.getBoolean(ASSERT_FAULT_TO_REF_PARAMS);
 		}
 
 		wsaAssertionConfiguration = new WsaAssertionConfiguration(
-				assertWsaAction, assertWsaTo, false, false, assertWsaRelatesTo,
-				assertReplyToRefParams, assertFaultToRefParams);
+				assertWsaAction, assertWsaTo, assertWsaReplyTo, assertWsaMessageId, false,
+				false, false);
 		setConfiguration(createConfiguration());
 		return true;
 	}
@@ -177,14 +176,14 @@ public class WSAAssertion extends WsdlMessageAssertion implements
 		mainForm.addCheckBox(ASSERT_ACTION,
 				"Check if 'wsa:Action' exists and has the right value");
 		mainForm.addCheckBox(ASSERT_TO, "Check if 'wsa:To' exists");
-//		mainForm.addCheckBox(ASSERT_REPLY_TO, "Check if 'wsa:ReplyTo' exists");
-//		mainForm.addCheckBox(ASSERT_MESSAGE_ID, "Check if 'wsa:MessageId' exists");
-		mainForm.addCheckBox(ASSERT_RELATES_TO,
-				"Check if 'wsa:RelatesTo' exists");
-		mainForm.addCheckBox(ASSERT_REPLY_TO_REF_PARAMS,
-				"Check if 'wsa:ReplyTo' ReferenceParameters exist");
-		mainForm.addCheckBox(ASSERT_FAULT_TO_REF_PARAMS,
-				"Check if 'wsa:FaultTo' ReferenceParameters exist");
+		mainForm.addCheckBox(ASSERT_REPLY_TO, "Check if 'wsa:ReplyTo' exists");
+		mainForm.addCheckBox(ASSERT_MESSAGE_ID, "Check if 'wsa:MessageId' exists");
+//		mainForm.addCheckBox(ASSERT_RELATES_TO,
+//				"Check if 'wsa:RelatesTo' exists");
+//		mainForm.addCheckBox(ASSERT_REPLY_TO_REF_PARAMS,
+//				"Check if 'wsa:ReplyTo' ReferenceParameters exist");
+//		mainForm.addCheckBox(ASSERT_FAULT_TO_REF_PARAMS,
+//				"Check if 'wsa:FaultTo' ReferenceParameters exist");
 
 		dialog = builder.buildDialog(builder
 				.buildOkCancelHelpActions(HelpUrls.SIMPLE_CONTAINS_HELP_URL),
@@ -195,12 +194,13 @@ public class WSAAssertion extends WsdlMessageAssertion implements
 		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
 		builder.add("asertWsaAction", assertWsaAction);
 		builder.add("asertWsaTo", assertWsaTo);
-//		builder.add("assertWsaReplyTo", assertWsaReplyTo);
-//		builder.add("assertWsaMessageId", assertWsaMessageId);
-		builder.add("asertWsaRelatesTo", assertWsaRelatesTo);
-		builder.add("assertReplyToRefParams", assertReplyToRefParams);
-		builder.add("assertFaultToRefParams", assertFaultToRefParams);
+		builder.add("assertWsaReplyTo", assertWsaReplyTo);
+		builder.add("assertWsaMessageId", assertWsaMessageId);
+//		builder.add("asertWsaRelatesTo", assertWsaRelatesTo);
+//		builder.add("assertReplyToRefParams", assertReplyToRefParams);
+//		builder.add("assertFaultToRefParams", assertFaultToRefParams);
 		return builder.finish();
 	}
+
 
 }
