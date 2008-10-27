@@ -24,6 +24,8 @@ public interface XFileDialogs
 
    File saveAs(Object action, String title);
    
+   File saveAsDirectory(Object action, String title, File defaultDirectory);
+   
    File open(Object action, String title, String extension, String fileType, String current );
 
    File openXML(Object action, String title);
