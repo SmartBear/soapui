@@ -32,6 +32,9 @@ import com.eviware.x.form.support.AField.AFieldType;
 
 public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 {
+	private static final String HTTPS_PROTOCOL = "https://";
+	private static final String HTTP_TUNNEL = "HTTP Tunnel";
+	private static final String HTTP_PROXY = "HTTP Proxy";
 	private XFormDialog dialog;
 
 	public SoapMonitorAction()
@@ -69,8 +72,8 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		dialog.setOptions(LaunchForm.RESPONSE_WSS, StringUtils.merge(project.getWssContainer().getIncomingWssNames(),
 				"<none>"));
 		dialog.setValue(LaunchForm.SETSSLMON, settings.getString(LaunchForm.SETSSLMON, "").length() > 0 ? settings
-				.getString(LaunchForm.SETSSLMON, "") : "https://");
-		dialog.setOptions(LaunchForm.SSLORHTTP, new String[] { "SSL Tunnel", "HTTP Proxy" });
+				.getString(LaunchForm.SETSSLMON, "") : HTTPS_PROTOCOL);
+		dialog.setOptions(LaunchForm.SSLORHTTP, new String[] { HTTP_TUNNEL, HTTP_PROXY });
 
 		dialog.setValue(LaunchForm.SSLTUNNEL_KEYSTORE, settings.getString(LaunchForm.SSLTUNNEL_KEYSTORE, ""));
 		dialog.setValue(LaunchForm.SSLTUNNEL_PASSWORD, settings.getString(LaunchForm.SSLTUNNEL_PASSWORD, ""));
@@ -83,40 +86,19 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		dialog.setValue(LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD, settings.getString(LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD, ""));
 		
 		XFormField sslOrHttp = dialog.getFormField(LaunchForm.SSLORHTTP);
-		sslOrHttp.setValue("SSL Tunnel");
+		sslOrHttp.setValue(HTTP_PROXY);
+		setDialogState(HTTP_PROXY);
 		sslOrHttp.addFormFieldListener(new XFormFieldListener()
 		{
 
 			public void valueChanged(XFormField sourceField, String newValue, String oldValue)
 			{
-				if ("HTTP Proxy".equals(newValue))
-				{
-					dialog.getFormField(LaunchForm.SETSSLMON).setEnabled(false);
-					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTORE).setEnabled(false);
-					dialog.getFormField(LaunchForm.SSLTUNNEL_PASSWORD).setEnabled(false);
-					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYPASSWORD).setEnabled(false);
-					dialog.getFormField(LaunchForm.SSLTUNNEL_TRUSTSTORE).setEnabled(false);
-					dialog.getFormField(LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD).setEnabled(false);
-//					dialog.getFormField(LaunchForm.SSLTUNNEL_REUSESTATE).setEnabled(false);
-					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTOREPATH).setEnabled(false);
-					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD).setEnabled(false);
-				}
-				else
-				{
-					dialog.getFormField(LaunchForm.SETSSLMON).setEnabled(true);
-					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTORE).setEnabled(true);
-					dialog.getFormField(LaunchForm.SSLTUNNEL_PASSWORD).setEnabled(true);
-					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYPASSWORD).setEnabled(true);
-					dialog.getFormField(LaunchForm.SSLTUNNEL_TRUSTSTORE).setEnabled(true);
-					dialog.getFormField(LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD).setEnabled(true);
-//					dialog.getFormField(LaunchForm.SSLTUNNEL_REUSESTATE).setEnabled(true);
-					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTOREPATH).setEnabled(true);
-					dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD).setEnabled(true);
-				}
+				setDialogState(newValue);
 			}
 
 		});
 
+		
 		if (dialog.show())
 		{
 			int listenPort = dialog.getIntValue(LaunchForm.PORT, 8080);
@@ -133,7 +115,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 			settings.setString(LaunchForm.SSLTUNNEL_KEYSTOREPATH, dialog.getValue(LaunchForm.SSLTUNNEL_KEYSTOREPATH));
 			settings.setString(LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD, dialog.getValue(LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD));
 
-			if ("HTTP Proxy".equals(dialog.getValue(LaunchForm.SSLORHTTP)))
+			if (HTTP_PROXY.equals(dialog.getValue(LaunchForm.SSLORHTTP)))
 			{
 				openSoapMonitor(project, listenPort, dialog.getValue(LaunchForm.REQUEST_WSS), dialog
 						.getValue(LaunchForm.RESPONSE_WSS), dialog.getBooleanValue(LaunchForm.SETASPROXY), null);
@@ -183,6 +165,42 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		return null;
 	}
 
+	private void setDialogState(String newValue)
+	{
+		if (HTTP_PROXY.equals(newValue))
+		{
+			dialog.getFormField(LaunchForm.SETSSLMON).setEnabled(false);
+			dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTORE).setEnabled(false);
+			dialog.getFormField(LaunchForm.SSLTUNNEL_PASSWORD).setEnabled(false);
+			dialog.getFormField(LaunchForm.SSLTUNNEL_KEYPASSWORD).setEnabled(false);
+			dialog.getFormField(LaunchForm.SSLTUNNEL_TRUSTSTORE).setEnabled(false);
+			dialog.getFormField(LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD).setEnabled(false);
+			dialog.getFormField(LaunchForm.SSLTUNNEL_REUSESTATE).setEnabled(false);
+			dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTOREPATH).setEnabled(false);
+			dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD).setEnabled(false);
+			
+			dialog.getFormField(LaunchForm.SETASPROXY).setEnabled(true);
+			dialog.getFormField(LaunchForm.REQUEST_WSS).setEnabled(true);
+			dialog.getFormField(LaunchForm.RESPONSE_WSS).setEnabled(true);
+		}
+		else
+		{
+			dialog.getFormField(LaunchForm.SETSSLMON).setEnabled(true);
+			dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTORE).setEnabled(true);
+			dialog.getFormField(LaunchForm.SSLTUNNEL_PASSWORD).setEnabled(true);
+			dialog.getFormField(LaunchForm.SSLTUNNEL_KEYPASSWORD).setEnabled(true);
+			dialog.getFormField(LaunchForm.SSLTUNNEL_TRUSTSTORE).setEnabled(true);
+			dialog.getFormField(LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD).setEnabled(true);
+			dialog.getFormField(LaunchForm.SSLTUNNEL_REUSESTATE).setEnabled(true);
+			dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTOREPATH).setEnabled(true);
+			dialog.getFormField(LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD).setEnabled(true);
+			
+			dialog.getFormField(LaunchForm.SETASPROXY).setEnabled(false);
+			dialog.getFormField(LaunchForm.REQUEST_WSS).setEnabled(false);
+			dialog.getFormField(LaunchForm.RESPONSE_WSS).setEnabled(false);
+		}
+	}
+
 	@AForm(description = "Specify SOAP Monitor settings", name = "Launch SOAP Monitor", helpUrl = HelpUrls.SOAPMONITOR_HELP_URL)
 	public interface LaunchForm
 	{
@@ -201,31 +219,31 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		@AField(description = "Set as Global Proxy", name = "Set as Proxy", type = AFieldType.BOOLEAN)
 		public final static String SETASPROXY = "Set as Proxy";
 
-		@AField(description = "Set endpoint", name = "Set endpoint for SSL Tunnel:", type = AFieldType.STRING)
-		public final static String SETSSLMON = "Set endpoint for SSL Tunnel:";
+		@AField(description = "Set endpoint", name = "Set endpoint for HTTP Tunnel:", type = AFieldType.STRING)
+		public final static String SETSSLMON = "Set endpoint for HTTP Tunnel:";
 
-		@AField(description = "Set SSL Tunnel KeyStore", name = "SSL tunnel - KeyStore", type = AFieldType.STRING)
-		public final static String SSLTUNNEL_KEYSTORE = "SSL tunnel - KeyStore";
+		@AField(description = "Set SSL Tunnel KeyStore", name = "HTTP tunnel - KeyStore", type = AFieldType.STRING)
+		public final static String SSLTUNNEL_KEYSTORE = "HTTP tunnel - KeyStore";
 
-		@AField(description = "Set SSL Tunnel Password", name = "SSL tunnel - Password", type = AFieldType.PASSWORD)
-		public final static String SSLTUNNEL_PASSWORD = "SSL tunnel - Password";
+		@AField(description = "Set SSL Tunnel Password", name = "HTTP tunnel - Password", type = AFieldType.PASSWORD)
+		public final static String SSLTUNNEL_PASSWORD = "HTTP tunnel - Password";
 
-		@AField(description = "Set SSL Tunnel KeyPassword", name = "SSL tunnel - KeyPassword", type = AFieldType.PASSWORD)
-		public final static String SSLTUNNEL_KEYPASSWORD = "SSL tunnel - KeyPassword";
+		@AField(description = "Set SSL Tunnel KeyPassword", name = "HTTP tunnel - KeyPassword", type = AFieldType.PASSWORD)
+		public final static String SSLTUNNEL_KEYPASSWORD = "HTTP tunnel - KeyPassword";
 
-		@AField(description = "Set SSL Tunnel TrustStore", name = "SSL tunnel - TrustStore", type = AFieldType.STRING)
-		public final static String SSLTUNNEL_TRUSTSTORE = "SSL tunnel - TrustStore";
+		@AField(description = "Set SSL Tunnel TrustStore", name = "HTTP tunnel - TrustStore", type = AFieldType.STRING)
+		public final static String SSLTUNNEL_TRUSTSTORE = "HTTP tunnel - TrustStore";
 
-		@AField(description = "Set SSL Tunnel TrustStore Password", name = "SSL tunnel - TrustStore Password", type = AFieldType.PASSWORD)
-		public final static String SSLTUNNEL_TRUSTSTORE_PASSWORD = "SSL tunnel - TrustStore Password";
+		@AField(description = "Set SSL Tunnel TrustStore Password", name = "HTTP tunnel - TrustStore Password", type = AFieldType.PASSWORD)
+		public final static String SSLTUNNEL_TRUSTSTORE_PASSWORD = "HTTP tunnel - TrustStore Password";
 		
 		@AField(description = "Keep request state", name = "Reuse request state", type = AFieldType.BOOLEAN)
 		public final static String SSLTUNNEL_REUSESTATE = "Reuse request state";
 		
-		@AField(description = "Set SSL Client Key Store", name = "SSL Tunnel - Set SSL Client Key Store path", type = AFieldType.STRING)
-		public final static String SSLTUNNEL_KEYSTOREPATH = "SSL Tunnel - Set SSL Client Key Store path";
+		@AField(description = "Set SSL Client Key Store", name = "HTTP tunnel - Set SSL Client Key Store path", type = AFieldType.STRING)
+		public final static String SSLTUNNEL_KEYSTOREPATH = "HTTP tunnel - Set SSL Client Key Store path";
 		
-		@AField(description = "Set SSL Client Key Store Password", name = "SSL Tunnel - Set SSL Client Key Store Password", type = AFieldType.PASSWORD)
-		public final static String SSLTUNNEL_KEYSTOREPASSWORD = "SSL Tunnel - Set SSL Client Key Store Password";
+		@AField(description = "Set SSL Client Key Store Password", name = "HTTP tunnel - Set SSL Client Key Store Password", type = AFieldType.PASSWORD)
+		public final static String SSLTUNNEL_KEYSTOREPASSWORD = "HTTP tunnel - Set SSL Client Key Store Password";
 	}
 }
