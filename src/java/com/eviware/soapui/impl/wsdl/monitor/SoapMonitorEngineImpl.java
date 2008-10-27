@@ -19,7 +19,7 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.thread.BoundedThreadPool;
 
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction;
-import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.HttpsProxyServlet;
+import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.TunnelServlet;
 import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.ProxyServlet;
 import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.Server;
 import com.eviware.soapui.model.settings.Settings;
@@ -61,7 +61,7 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 			sslConnector.setPort(localPort);
 
 			server.addConnector(sslConnector);
-			context.addServlet(new ServletHolder(new HttpsProxyServlet(soapMonitor, sslEndpoint)), "/");
+			context.addServlet(new ServletHolder(new TunnelServlet(soapMonitor, sslEndpoint)), "/");
 			proxyOrTunnel = false;
 		}
 		else

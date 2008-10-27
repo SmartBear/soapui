@@ -36,13 +36,13 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.Exten
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
 
-public class HttpsProxyServlet extends ProxyServlet
+public class TunnelServlet extends ProxyServlet
 {
 
 	private String sslEndPoint;
 	private int sslPort = 443;
 
-	public HttpsProxyServlet(SoapMonitor soapMonitor, String sslEndpoint)
+	public TunnelServlet(SoapMonitor soapMonitor, String sslEndpoint)
 	{
 		super(soapMonitor);
 
