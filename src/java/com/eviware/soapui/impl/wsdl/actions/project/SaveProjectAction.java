@@ -12,11 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
-import java.io.IOException;
-
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+
+import java.io.IOException;
 
 /**
  * Saves a WsdlProject
@@ -37,7 +38,10 @@ public class SaveProjectAction extends AbstractSoapUIAction<WsdlProject>
 	{
       try
 		{
-			project.save();
+         if( StringUtils.hasContent(project.getPath()) || project.getWorkspace() == null )
+			   project.save();
+         else
+            project.save( project.getWorkspace().getProjectRoot() );
 		}
 		catch (IOException e1)
 		{

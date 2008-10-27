@@ -25,6 +25,7 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateMockServiceAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateWsdlTestSuiteAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
@@ -106,10 +107,18 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
                if( project != null )
                {
                   UISupport.select( project );
+                  String url = dialog.getValue( Form.INITIALWSDL ).trim();
 
                   if( dialog.getBooleanValue( Form.RELATIVEPATHS ))
                   {
-                     if( !project.save())
+                     String folder = workspace.getProjectRoot();
+
+                     if( PathUtils.isFilePath( url ) && PathUtils.isAbsolutePath( url ))
+                     {
+                        folder = new File( url ).getParent().toString();   
+                     }
+
+                     if( !project.save( folder ))
                      {
                         UISupport.showErrorMessage( "Project was not saved, paths will not be stored relatively until configured." );
                      }
@@ -118,8 +127,7 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
                         project.setResourceRoot( "${projectDir}" );
                      }
                   }
-                  
-                  String url = dialog.getValue( Form.INITIALWSDL ).trim();
+
                   if( url.length() > 0 )
                   {
                      if( new File( url ).exists() )

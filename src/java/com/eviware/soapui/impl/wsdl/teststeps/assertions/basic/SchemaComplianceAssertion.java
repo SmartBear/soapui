@@ -173,7 +173,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
    private DefinitionContext getWsdlContext( WsdlMessageExchange messageExchange, SubmitContext context ) throws Exception
    {
       WsdlOperation operation = messageExchange.getOperation();
-      WsdlInterface iface = (WsdlInterface) operation.getInterface();
+      WsdlInterface iface = operation.getInterface();
       if( definition == null || definition.trim().length() == 0 || definition.equals(
               PathUtils.expandPath( iface.getDefinition(), iface, context ) ) )
       {

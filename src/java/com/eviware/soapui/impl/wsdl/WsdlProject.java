@@ -520,7 +520,12 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		return path;
 	}
 
-	public boolean save() throws IOException
+   public boolean save() throws IOException
+   {
+      return save( null );
+   }
+
+	public boolean save( String folder ) throws IOException
 	{
 		if (!isOpen() || isDisabled() || isRemote())
 			return true;
@@ -528,6 +533,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		if (path == null || isRemote())
 		{
 			path = getName() + "-soapui-project.xml";
+         if( folder != null )
+         {
+            path = folder + File.separatorChar + path;
+         }
+
 			File file = null;
 
 			while (file == null

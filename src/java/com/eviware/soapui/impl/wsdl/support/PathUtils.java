@@ -27,6 +27,7 @@ import com.eviware.soapui.support.UISupport;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class PathUtils
@@ -326,4 +327,21 @@ public class PathUtils
       
 		return docroot;
 	}
+
+   public static String ensureFilePathIsUrl( String url )
+   {
+      if( isFilePath( url ) && !url.startsWith( "file:" ))
+      {
+         try
+         {
+            return new File( url ).toURI().toURL().toString();
+         }
+         catch( MalformedURLException e )
+         {
+            e.printStackTrace();
+         }
+      }
+      
+      return url;
+   }
 }

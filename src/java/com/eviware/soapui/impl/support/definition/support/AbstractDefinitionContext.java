@@ -19,6 +19,7 @@ import com.eviware.soapui.impl.support.definition.DefinitionCache;
 import com.eviware.soapui.impl.support.definition.DefinitionLoader;
 import com.eviware.soapui.impl.support.definition.InterfaceDefinition;
 import com.eviware.soapui.impl.support.definition.InterfaceDefinitionPart;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaException;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.x.dialogs.Worker;
@@ -46,7 +47,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
    private boolean loaded;
    private SchemaException schemaException;
 
-   private final static Logger log = Logger.getLogger(AbstractDefinitionContext.class);
+   private final static Logger log = Logger.getLogger( AbstractDefinitionContext.class );
 
    private T2 currentLoader;
    private T iface;
@@ -54,15 +55,15 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
    private static Map<String, InterfaceDefinition> definitionCache = new HashMap<String, InterfaceDefinition>();
    private static Map<String, Integer> urlReferences = new HashMap<String, Integer>();
 
-   public AbstractDefinitionContext(String url, T iface)
+   public AbstractDefinitionContext( String url, T iface )
    {
-      this.url = url;
+      this.url = PathUtils.ensureFilePathIsUrl( url );
       this.iface = iface;
    }
 
-   public AbstractDefinitionContext(String url)
+   public AbstractDefinitionContext( String url )
    {
-      this(url, null);
+      this( url, null );
    }
 
    public T getInterface()
@@ -73,7 +74,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
    public T3 getInterfaceDefinition() throws Exception
    {
       loadIfNecessary();
-      return (T3) (definition == null ? definitionCache.get( url ) : definition);
+      return (T3) ( definition == null ? definitionCache.get( url ) : definition );
    }
 
    public boolean isLoaded()
@@ -83,14 +84,14 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
 
    public synchronized boolean loadIfNecessary() throws Exception
    {
-      if (!loaded)
+      if( !loaded )
          load();
       return loaded;
    }
 
-   public synchronized void setDefinition(String url, boolean updateCache) throws Exception
+   public synchronized void setDefinition( String url, boolean updateCache ) throws Exception
    {
-      if (!url.equals(this.url))
+      if( !url.equals( this.url ) )
       {
          this.url = url;
 
@@ -101,52 +102,52 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
             load();
          }
 
-         loaded = iface != null && definitionCache.containsKey(url);
+         loaded = iface != null && definitionCache.containsKey( url );
       }
    }
 
    public synchronized boolean load() throws Exception
    {
-      return load(null);
+      return load( null );
    }
 
-   public synchronized boolean load(T2 wsdlLoader) throws Exception
+   public synchronized boolean load( T2 wsdlLoader ) throws Exception
    {
-      if (!loaded && iface != null)
+      if( !loaded && iface != null )
       {
-         loaded = definitionCache.containsKey(url);
+         loaded = definitionCache.containsKey( url );
       }
-      
-      if (loaded)
+
+      if( loaded )
          return true;
 
       // always use progressDialog since files can import http urls
       XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog(
-              "Loading Definition", 3, "Loading definition..", true);
+              "Loading Definition", 3, "Loading definition..", true );
 
-      Loader loader = new Loader(wsdlLoader);
-      progressDialog.run(loader);
+      Loader loader = new Loader( wsdlLoader );
+      progressDialog.run( loader );
 
       // Get the value. It is the responsibility of the progressDialog to
       // wait for the other thread to finish.
-      if (loader.hasError())
+      if( loader.hasError() )
       {
-         if (loader.getError() instanceof SchemaException)
+         if( loader.getError() instanceof SchemaException )
          {
             schemaException = (SchemaException) loader.getError();
             ArrayList<?> errorList = schemaException.getErrorList();
 
-            log.error("Error loading schema types from " + url + ", see log for details");
+            log.error( "Error loading schema types from " + url + ", see log for details" );
 
-            if (errorList != null)
+            if( errorList != null )
             {
-               for (int c = 0; c < errorList.size(); c++)
+               for( int c = 0; c < errorList.size(); c++ )
                {
-                  log.error(errorList.get(c).toString());
+                  log.error( errorList.get( c ).toString() );
                }
             }
          }
-         else throw new Exception(loader.getError());
+         else throw new Exception( loader.getError() );
       }
       else loaded = true;
 
@@ -156,7 +157,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
    public SchemaTypeLoader getSchemaTypeLoader() throws Exception
    {
       loadIfNecessary();
-      return iface != null ? definitionCache.get(url).getSchemaTypeLoader() :
+      return iface != null ? definitionCache.get( url ).getSchemaTypeLoader() :
               definition != null ? definition.getSchemaTypeLoader() : null;
    }
 
@@ -170,7 +171,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
       private Throwable error;
       private T2 wsdlLoader;
 
-      public Loader(T2 wsdlLoader)
+      public Loader( T2 wsdlLoader )
       {
          super();
          this.wsdlLoader = wsdlLoader;
@@ -178,13 +179,13 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
 
       private T2 getDefinitionLoader()
       {
-         if (wsdlLoader != null)
+         if( wsdlLoader != null )
          {
             return wsdlLoader;
          }
          else
          {
-            return createDefinitionLoader(url);
+            return createDefinitionLoader( url );
          }
       }
 
@@ -193,37 +194,37 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
          return error != null;
       }
 
-      public Object construct(XProgressMonitor monitor)
+      public Object construct( XProgressMonitor monitor )
       {
          try
          {
             DefinitionCache cache = iface == null ?
                     new StandaloneDefinitionCache<T>() :
-                    new InterfaceConfigDefinitionCache<T>(iface);
+                    new InterfaceConfigDefinitionCache<T>( iface );
 
-            if (!cache.validate())
+            if( !cache.validate() )
             {
-               monitor.setProgress(1, "Caching Definition from url [" + url + "]");
+               monitor.setProgress( 1, "Caching Definition from url [" + url + "]" );
 
                currentLoader = getDefinitionLoader();
-               currentLoader.setProgressMonitor(monitor, 2);
+               currentLoader.setProgressMonitor( monitor, 2 );
 
-               cache.update(currentLoader);
+               cache.update( currentLoader );
 
-               if (currentLoader.isAborted())
-                  throw new Exception("Loading of Definition from [" + url + "] was aborted");
+               if( currentLoader.isAborted() )
+                  throw new Exception( "Loading of Definition from [" + url + "] was aborted" );
             }
 
-            monitor.setProgress(1, "Loading Definition from " + (iface == null ? "url" : "cache"));
+            monitor.setProgress( 1, "Loading Definition from " + ( iface == null ? "url" : "cache" ) );
 
-            log.debug("Loading Definition...");
-            cacheDefinition(cache);
+            log.debug( "Loading Definition..." );
+            cacheDefinition( cache );
             return null;
          }
-         catch (Throwable e)
+         catch( Throwable e )
          {
-            log.error("Loading of definition failed for [" + url + "]; " + e);
-            SoapUI.logError(e);
+            log.error( "Loading of definition failed for [" + url + "]; " + e );
+            SoapUI.logError( e );
             this.error = e;
             return e;
          }
@@ -240,73 +241,73 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
 
       public boolean onCancel()
       {
-         if (currentLoader == null)
+         if( currentLoader == null )
             return false;
 
          return currentLoader.abort();
       }
    }
 
-   private void cacheDefinition(DefinitionCache cache) throws Exception
+   private void cacheDefinition( DefinitionCache cache ) throws Exception
    {
-      currentLoader = createDefinitionLoader(cache);
-      currentLoader.setProgressInfo("Loading Definition");
-      definition = loadDefinition(currentLoader);
-      definition.setDefinitionCache(cache);
+      currentLoader = createDefinitionLoader( cache );
+      currentLoader.setProgressInfo( "Loading Definition" );
+      definition = loadDefinition( currentLoader );
+      definition.setDefinitionCache( cache );
 
-      log.debug("Loaded Definition: " + (definition != null ? "ok" : "null"));
+      log.debug( "Loaded Definition: " + ( definition != null ? "ok" : "null" ) );
 
-      if (!currentLoader.isAborted() && iface != null && iface.isDefinitionShareble() )
+      if( !currentLoader.isAborted() && iface != null && iface.isDefinitionShareble() )
       {
-         definitionCache.put(url, definition);
-         if (urlReferences.containsKey(url))
+         definitionCache.put( url, definition );
+         if( urlReferences.containsKey( url ) )
          {
-            urlReferences.put(url, urlReferences.get(url) + 1);
+            urlReferences.put( url, urlReferences.get( url ) + 1 );
          }
          else
          {
-            urlReferences.put(url, 1);
+            urlReferences.put( url, 1 );
          }
       }
 
-      if (currentLoader.isAborted())
-         throw new Exception("Loading of Definition from [" + url + "] was aborted");
+      if( currentLoader.isAborted() )
+         throw new Exception( "Loading of Definition from [" + url + "] was aborted" );
 
       loaded = true;
    }
 
-   protected abstract T2 createDefinitionLoader(DefinitionCache definitionCache);
+   protected abstract T2 createDefinitionLoader( DefinitionCache definitionCache );
 
-   protected abstract T2 createDefinitionLoader(String url);
+   protected abstract T2 createDefinitionLoader( String url );
 
-   protected abstract T3 loadDefinition(T2 loader) throws Exception;
+   protected abstract T3 loadDefinition( T2 loader ) throws Exception;
 
    public void release()
    {
-      if (iface != null && urlReferences.containsKey(url))
+      if( iface != null && urlReferences.containsKey( url ) )
       {
-         Integer i = urlReferences.get(url);
-         if (i.intValue() <= 1)
+         Integer i = urlReferences.get( url );
+         if( i.intValue() <= 1 )
          {
-            urlReferences.remove(url);
-            definitionCache.remove(url);
+            urlReferences.remove( url );
+            definitionCache.remove( url );
          }
          else
          {
-            urlReferences.put(url, i - 1);
+            urlReferences.put( url, i - 1 );
          }
       }
    }
 
    public SchemaTypeSystem getSchemaTypeSystem() throws Exception
    {
-      if (!loaded)
+      if( !loaded )
          load();
 
-      if (!definitionCache.containsKey(url))
+      if( !definitionCache.containsKey( url ) )
          return null;
 
-      return definitionCache.get(url).getSchemaTypeSystem();
+      return definitionCache.get( url ).getSchemaTypeSystem();
    }
 
    public boolean hasSchemaTypes()
@@ -315,12 +316,12 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
       {
          loadIfNecessary();
       }
-      catch (Exception e)
+      catch( Exception e )
       {
-         SoapUI.logError(e);
+         SoapUI.logError( e );
          return false;
       }
-      return definitionCache.containsKey(url) && definitionCache.get(url).hasSchemaTypes();
+      return definitionCache.containsKey( url ) && definitionCache.get( url ).hasSchemaTypes();
    }
 
    public String getUrl()
@@ -328,13 +329,13 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
       return url;
    }
 
-   public void setInterface(T iface)
+   public void setInterface( T iface )
    {
-      if (this.iface == null && iface != null)
+      if( this.iface == null && iface != null )
       {
-         if (definition != null)
+         if( definition != null )
          {
-            if( definition.getDefinitionCache().validate())
+            if( definition.getDefinitionCache().validate() )
             {
                InterfaceConfigDefinitionCache cache = new InterfaceConfigDefinitionCache( iface );
                try
@@ -350,7 +351,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
             }
 
             definition.setIface( iface );
-            definitionCache.put(url, definition);
+            definitionCache.put( url, definition );
          }
          else
          {
@@ -361,10 +362,10 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
       this.iface = iface;
    }
 
-   public static void uncache(String url)
+   public static void uncache( String url )
    {
-      definitionCache.remove(url);
-      urlReferences.remove(url);
+      definitionCache.remove( url );
+      urlReferences.remove( url );
    }
 
    public void reload() throws Exception
