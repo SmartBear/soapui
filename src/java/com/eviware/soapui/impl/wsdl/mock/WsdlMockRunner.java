@@ -429,17 +429,6 @@ public class WsdlMockRunner extends AbstractMockRunner
       {
          throw new DispatchException( e );
       }
-      finally
-      {
-         try
-         {
-            response.flushBuffer();
-         }
-         catch( IOException e )
-         {
-            throw new DispatchException( e );
-         }
-      }
    }
 
    protected void dispatchWsdlRequest( HttpServletRequest request, HttpServletResponse response ) throws IOException

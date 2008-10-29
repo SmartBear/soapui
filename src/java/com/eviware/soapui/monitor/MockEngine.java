@@ -604,8 +604,6 @@ public class MockEngine
                      response.getWriter().print(
                              SoapMessageBuilder.buildFault( "Server", e.getMessage(), SoapVersion.Utils
                                      .getSoapVersionForContentType( request.getContentType(), SoapVersion.Soap11 ) ) );
-                     response.flushBuffer();
-
                      // throw new ServletException( e );
                   }
                }
@@ -619,6 +617,8 @@ public class MockEngine
          {
             printMockServiceList( response );
          }
+
+         response.flushBuffer();
       }
 
       private void printMockServiceList( HttpServletResponse response ) throws IOException
@@ -638,7 +638,6 @@ public class MockEngine
          }
 
          out.print( "</ul></p></body></html>" );
-         response.flushBuffer();
       }
    }
 
