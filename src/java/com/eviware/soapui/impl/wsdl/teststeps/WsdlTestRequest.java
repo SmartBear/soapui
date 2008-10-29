@@ -66,13 +66,15 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
    private final boolean forLoadTest;
    private PropertyChangeNotifier notifier;
 
-   public WsdlTestRequest(WsdlOperation operation, WsdlRequestConfig callConfig, WsdlTestRequestStep testStep,
-                          boolean forLoadTest)
+   public WsdlTestRequest(
+           WsdlOperation operation, WsdlRequestConfig callConfig, WsdlTestRequestStep testStep,
+           boolean forLoadTest
+   )
    {
-      super(operation, callConfig, forLoadTest);
+      super( operation, callConfig, forLoadTest );
       this.forLoadTest = forLoadTest;
 
-      setSettings(new XmlBeansSettingsImpl(this, testStep.getSettings(), callConfig.getSettings()));
+      setSettings( new XmlBeansSettingsImpl( this, testStep.getSettings(), callConfig.getSettings() ) );
 
       this.testStep = testStep;
 
@@ -92,28 +94,28 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 
    protected void initIcons()
    {
-      if (validRequestIcon == null)
-         validRequestIcon = UISupport.createImageIcon("/valid_request.gif");
+      if( validRequestIcon == null )
+         validRequestIcon = UISupport.createImageIcon( "/valid_request.gif" );
 
-      if (failedRequestIcon == null)
-         failedRequestIcon = UISupport.createImageIcon("/invalid_request.gif");
+      if( failedRequestIcon == null )
+         failedRequestIcon = UISupport.createImageIcon( "/invalid_request.gif" );
 
-      if (unknownRequestIcon == null)
-         unknownRequestIcon = UISupport.createImageIcon("/unknown_request.gif");
+      if( unknownRequestIcon == null )
+         unknownRequestIcon = UISupport.createImageIcon( "/unknown_request.gif" );
 
-      if (disabledRequestIcon == null)
-         disabledRequestIcon = UISupport.createImageIcon("/disabled_request.gif");
+      if( disabledRequestIcon == null )
+         disabledRequestIcon = UISupport.createImageIcon( "/disabled_request.gif" );
    }
 
    @Override
    protected RequestIconAnimator<?> initIconAnimator()
    {
-      return new TestRequestIconAnimator(this);
+      return new TestRequestIconAnimator( this );
    }
 
    private void initAssertions()
    {
-      assertionsSupport = new AssertionsSupport(testStep, new AssertableConfig()
+      assertionsSupport = new AssertionsSupport( testStep, new AssertableConfig()
       {
 
          public TestAssertionConfig addNewAssertion()
@@ -126,11 +128,11 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
             return getConfig().getAssertionList();
          }
 
-         public void removeAssertion(int ix)
+         public void removeAssertion( int ix )
          {
-            getConfig().removeAssertion(ix);
+            getConfig().removeAssertion( ix );
          }
-      });
+      } );
    }
 
    public int getAssertionCount()
@@ -138,31 +140,31 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
       return assertionsSupport.getAssertionCount();
    }
 
-   public WsdlMessageAssertion getAssertionAt(int c)
+   public WsdlMessageAssertion getAssertionAt( int c )
    {
-      return assertionsSupport.getAssertionAt(c);
+      return assertionsSupport.getAssertionAt( c );
    }
 
-   public void setResponse( HttpResponse response, SubmitContext context)
+   public void setResponse( HttpResponse response, SubmitContext context )
    {
       WsdlResponse oldResponse = getResponse();
-      super.setResponse(response, context);
+      super.setResponse( response, context );
 
-      if (response != oldResponse)
-         assertResponse(context);
+      if( response != oldResponse )
+         assertResponse( context );
    }
 
-   public void assertResponse(SubmitContext context)
+   public void assertResponse( SubmitContext context )
    {
-      if (notifier == null)
+      if( notifier == null )
          notifier = new PropertyChangeNotifier();
 
-      messageExchange = new WsdlResponseMessageExchange(this);
+      messageExchange = new WsdlResponseMessageExchange( this );
 
       // assert!
-      for (WsdlMessageAssertion assertion : assertionsSupport.getAssertionList())
+      for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
       {
-         assertion.assertResponse(messageExchange, context);
+         assertion.assertResponse( messageExchange, context );
       }
 
       notifier.notifyChange();
@@ -184,54 +186,54 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
          AssertionStatus newStatus = getAssertionStatus();
          ImageIcon newIcon = getIcon();
 
-         if (oldStatus != newStatus)
-            notifyPropertyChanged(STATUS_PROPERTY, oldStatus, newStatus);
+         if( oldStatus != newStatus )
+            notifyPropertyChanged( STATUS_PROPERTY, oldStatus, newStatus );
 
-         if (oldIcon != newIcon)
-            notifyPropertyChanged(ICON_PROPERTY, oldIcon, getIcon());
+         if( oldIcon != newIcon )
+            notifyPropertyChanged( ICON_PROPERTY, oldIcon, getIcon() );
 
          oldStatus = newStatus;
          oldIcon = newIcon;
       }
    }
 
-   public WsdlMessageAssertion addAssertion(String assertionLabel)
+   public WsdlMessageAssertion addAssertion( String assertionLabel )
    {
       PropertyChangeNotifier notifier = new PropertyChangeNotifier();
 
       try
       {
-         WsdlMessageAssertion assertion = assertionsSupport.addWsdlAssertion(assertionLabel);
-         if (assertion == null)
+         WsdlMessageAssertion assertion = assertionsSupport.addWsdlAssertion( assertionLabel );
+         if( assertion == null )
             return null;
 
-         if (getResponse() != null)
+         if( getResponse() != null )
          {
-            assertion.assertResponse(new WsdlResponseMessageExchange(this), new WsdlTestRunContext(testStep));
+            assertion.assertResponse( new WsdlResponseMessageExchange( this ), new WsdlTestRunContext( testStep ) );
             notifier.notifyChange();
          }
 
          return assertion;
       }
-      catch (Exception e)
+      catch( Exception e )
       {
-         SoapUI.logError(e);
+         SoapUI.logError( e );
          return null;
       }
    }
 
-   public void removeAssertion(TestAssertion assertion)
+   public void removeAssertion( TestAssertion assertion )
    {
       PropertyChangeNotifier notifier = new PropertyChangeNotifier();
 
       try
       {
-         assertionsSupport.removeAssertion((WsdlMessageAssertion) assertion);
+         assertionsSupport.removeAssertion( (WsdlMessageAssertion) assertion );
 
       }
       finally
       {
-         ((WsdlMessageAssertion) assertion).release();
+         ( (WsdlMessageAssertion) assertion ).release();
          notifier.notifyChange();
       }
    }
@@ -240,9 +242,9 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
    {
       currentStatus = AssertionStatus.UNKNOWN;
 
-      if (messageExchange != null)
+      if( messageExchange != null )
       {
-         if (!messageExchange.hasResponse() && getOperation().isBidirectional() && !isWsaEnabled())
+         if( !messageExchange.hasResponse() && getOperation().isBidirectional() && !isWsaEnabled() )
          {
             currentStatus = AssertionStatus.FAILED;
          }
@@ -251,19 +253,19 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
          return currentStatus;
 
       int cnt = getAssertionCount();
-      if (cnt == 0)
+      if( cnt == 0 )
          return currentStatus;
 
-      for (int c = 0; c < cnt; c++)
+      for( int c = 0; c < cnt; c++ )
       {
-         if (getAssertionAt(c).getStatus() == AssertionStatus.FAILED)
+         if( getAssertionAt( c ).getStatus() == AssertionStatus.FAILED )
          {
             currentStatus = AssertionStatus.FAILED;
             break;
          }
       }
 
-      if (currentStatus == AssertionStatus.UNKNOWN)
+      if( currentStatus == AssertionStatus.UNKNOWN )
          currentStatus = AssertionStatus.VALID;
 
       return currentStatus;
@@ -272,36 +274,36 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
    @Override
    public ImageIcon getIcon()
    {
-      if (forLoadTest || UISupport.isHeadless() )
+      if( forLoadTest || UISupport.isHeadless() )
          return null;
 
       TestMonitor testMonitor = SoapUI.getTestMonitor();
-      if (testMonitor != null && testMonitor.hasRunningLoadTest(testStep.getTestCase()))
+      if( testMonitor != null && testMonitor.hasRunningLoadTest( testStep.getTestCase() ) )
          return disabledRequestIcon;
 
       ImageIcon icon = getIconAnimator().getIcon();
-      if (icon == getIconAnimator().getBaseIcon())
+      if( icon == getIconAnimator().getBaseIcon() )
       {
          AssertionStatus status = getAssertionStatus();
-         if (status == AssertionStatus.VALID)
+         if( status == AssertionStatus.VALID )
             return validRequestIcon;
-         else if (status == AssertionStatus.FAILED)
+         else if( status == AssertionStatus.FAILED )
             return failedRequestIcon;
-         else if (status == AssertionStatus.UNKNOWN)
+         else if( status == AssertionStatus.UNKNOWN )
             return unknownRequestIcon;
       }
 
       return icon;
    }
 
-   public void addAssertionsListener(AssertionsListener listener)
+   public void addAssertionsListener( AssertionsListener listener )
    {
-      assertionsSupport.addAssertionsListener(listener);
+      assertionsSupport.addAssertionsListener( listener );
    }
 
-   public void removeAssertionsListener(AssertionsListener listener)
+   public void removeAssertionsListener( AssertionsListener listener )
    {
-      assertionsSupport.removeAssertionsListener(listener);
+      assertionsSupport.removeAssertionsListener( listener );
    }
 
    /**
@@ -309,19 +311,18 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
     */
 
    @Override
-   public void updateConfig(WsdlRequestConfig request)
+   public void updateConfig( WsdlRequestConfig request )
    {
-      super.updateConfig(request);
+      super.updateConfig( request );
 
       assertionsSupport.refresh();
 
       List<AttachmentConfig> attachmentConfigs = getConfig().getAttachmentList();
-      for (int i = 0; i < attachmentConfigs.size(); i++)
+      for( int i = 0; i < attachmentConfigs.size(); i++ )
       {
-         AttachmentConfig config = attachmentConfigs.get(i);
-         getAttachmentsList().get(i).updateConfig(config);
+         AttachmentConfig config = attachmentConfigs.get( i );
+         getAttachmentsList().get( i ).updateConfig( config );
       }
-
 
    }
 
@@ -349,24 +350,24 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 
    protected static class TestRequestIconAnimator extends RequestIconAnimator<WsdlTestRequest>
    {
-      public TestRequestIconAnimator(WsdlTestRequest modelItem)
+      public TestRequestIconAnimator( WsdlTestRequest modelItem )
       {
-         super(modelItem, "/request.gif", "/exec_request", 4, "gif");
+         super( modelItem, "/request.gif", "/exec_request", 4, "gif" );
       }
 
       @Override
-      public boolean beforeSubmit(Submit submit, SubmitContext context)
+      public boolean beforeSubmit( Submit submit, SubmitContext context )
       {
-         if (SoapUI.getTestMonitor() != null && SoapUI.getTestMonitor().hasRunningLoadTest(getTarget().getTestCase()))
+         if( SoapUI.getTestMonitor() != null && SoapUI.getTestMonitor().hasRunningLoadTest( getTarget().getTestCase() ) )
             return true;
 
-         return super.beforeSubmit(submit, context);
+         return super.beforeSubmit( submit, context );
       }
 
       @Override
-      public void afterSubmit(Submit submit, SubmitContext context)
+      public void afterSubmit( Submit submit, SubmitContext context )
       {
-         if (submit.getRequest() == getTarget())
+         if( submit.getRequest() == getTarget() )
             stop();
       }
    }
@@ -386,24 +387,24 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
       return testStep.getOperationName();
    }
 
-   public TestAssertion cloneAssertion(TestAssertion source, String name)
+   public TestAssertion cloneAssertion( TestAssertion source, String name )
    {
-      return assertionsSupport.cloneAssertion(source, name);
+      return assertionsSupport.cloneAssertion( source, name );
    }
 
-   public WsdlMessageAssertion importAssertion(WsdlMessageAssertion source, boolean overwrite, boolean createCopy)
+   public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy )
    {
-      return assertionsSupport.importAssertion(source, overwrite, createCopy);
+      return assertionsSupport.importAssertion( source, overwrite, createCopy );
    }
 
    public List<TestAssertion> getAssertionList()
    {
-      return new ArrayList<TestAssertion>(assertionsSupport.getAssertionList());
+      return new ArrayList<TestAssertion>( assertionsSupport.getAssertionList() );
    }
 
-   public WsdlMessageAssertion getAssertionByName(String name)
+   public WsdlMessageAssertion getAssertionByName( String name )
    {
-      return assertionsSupport.getAssertionByName(name);
+      return assertionsSupport.getAssertionByName( name );
    }
 
    public ModelItem getModelItem()
@@ -418,7 +419,7 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 
    public String getDefaultAssertableContent()
    {
-      return getOperation().createResponse(true);
+      return getOperation().createResponse( true );
    }
 
    public void resolve( ResolveContext context )

@@ -130,7 +130,7 @@ public class XmlBeansSettingsImpl implements Settings
 	public void setBoolean(String id, boolean value)
 	{
       if( !value )
-         clearSetting( id );
+         setString( id, "false" );
       else
 		   setString( id, "true" );
 	}

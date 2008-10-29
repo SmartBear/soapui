@@ -286,6 +286,7 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
             logScrollPane.repaint();
          }
       } );
+      enableLogCheckBox.setOpaque( false );
 
       builder.addFixed( enableLogCheckBox );
       builder.addRelatedGap();

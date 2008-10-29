@@ -140,7 +140,6 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
       addProperty( new DefaultTestStepProperty( "Request", true, new DefaultTestStepProperty.PropertyHandlerAdapter()
       {
-
          public String getValue( DefaultTestStepProperty property )
          {
             WsdlMockResult mockResult = mockResponse == null ? null : mockResponse.getMockResult();
@@ -243,10 +242,30 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
    {
       super.prepare( testRunner, testRunContext );
 
+      LoadTestRunner loadTestRunner = (LoadTestRunner) testRunContext.getProperty( TestRunContext.LOAD_TEST_RUNNER );
       mockRunListener = new InternalMockRunListener();
-      mockService.addMockRunListener( mockRunListener );
 
-      mockRunner = mockService.start( (WsdlTestRunContext) testRunContext );
+      if( loadTestRunner == null )
+      {
+         mockService.addMockRunListener( mockRunListener );
+         mockRunner = mockService.start( (WsdlTestRunContext) testRunContext );
+      }
+      else
+      {
+         synchronized( STATUS_PROPERTY )
+         {
+            mockRunner = (WsdlMockRunner) testRunContext.getProperty( "sharedMockServiceRunner" );
+            if( mockRunner == null )
+            {
+               mockService.addMockRunListener( mockRunListener );
+               mockRunner = mockService.start( (WsdlTestRunContext) testRunContext );
+            }
+            else
+            {
+               mockRunner.getMockService().addMockRunListener( mockRunListener );
+            }
+         }
+      }
    }
 
    protected void initTestMockResponse( TestRunContext testRunContext )
@@ -258,8 +277,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
          QueryMatchMockOperationDispatcher dispatcher = (QueryMatchMockOperationDispatcher) mockOperation.setDispatchStyle( MockOperationDispatchStyleConfig.QUERY_MATCH.toString() );
          QueryMatchMockOperationDispatcher.Query query = dispatcher.addQuery( "Match" );
-         query.setPath( PropertyExpansionUtils.expandProperties( testRunContext, getQuery() ) );
-         query.setValue( PropertyExpansionUtils.expandProperties( testRunContext, getMatch() ) );
+         query.setQuery( PropertyExpansionUtils.expandProperties( testRunContext, getQuery() ) );
+         query.setMatch( PropertyExpansionUtils.expandProperties( testRunContext, getMatch() ) );
          query.setResponse( testMockResponse.getName() );
       }
       else
@@ -523,8 +542,10 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
    public void setPort( int port )
    {
+      int old = getPort();
       mockService.setPort( port );
       mockResponseStepConfig.setPort( port );
+      notifyPropertyChanged( "port", old, port );
    }
 
    public String getPath()
@@ -549,7 +570,9 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
    public void setEncoding( String encoding )
    {
+      String old = getEncoding();
       mockResponse.setEncoding( encoding );
+      notifyPropertyChanged( "encoding", old, encoding );
    }
 
    public boolean isMtomEnabled()
@@ -559,7 +582,11 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
    public void setMtomEnabled( boolean enabled )
    {
+      if( isMtomEnabled() == enabled )
+         return;
       mockResponse.setMtomEnabled( enabled );
+
+      notifyPropertyChanged( "mtomEnabled", !enabled, enabled );
    }
 
    public String getOutgoingWss()
@@ -569,12 +596,16 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
    public void setOutgoingWss( String outgoingWss )
    {
+      String old = getOutgoingWss();
       mockResponse.setOutgoingWss( outgoingWss );
+      notifyPropertyChanged( "outgoingWss", old, outgoingWss );
    }
 
    public void setQuery( String s )
    {
+      String old = getQuery();
       mockResponseStepConfig.setQuery( s );
+      notifyPropertyChanged( "query", old, s );
    }
 
    public String getQuery()
@@ -589,7 +620,9 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
    public void setMatch( String s )
    {
+      String old = getMatch();
       mockResponseStepConfig.setMatch( s );
+      notifyPropertyChanged( "match", old, s );
    }
 
    public boolean isForceMtom()
@@ -619,6 +652,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
    public void setStartStep( String startStep )
    {
+      String old = getStartStep();
       if( startTestStep != null )
       {
          startTestStep.removePropertyChangeListener( this );
@@ -635,6 +669,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       }
 
       mockResponseStepConfig.setStartStep( startStep );
+      notifyPropertyChanged( "startStep", old, startStep );
    }
 
    public boolean isMultipartEnabled()

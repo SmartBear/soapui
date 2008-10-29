@@ -292,6 +292,9 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
    public MockOperationDispatcher setDispatchStyle( String dispatchStyle )
    {
       String old = getDispatchStyle();
+      if( dispatcher != null && dispatchStyle.equals( old ))
+         return dispatcher;
+
       getConfig().setDispatchStyle( MockOperationDispatchStyleConfig.Enum.forString( dispatchStyle ) );
 
       if( dispatcher != null )

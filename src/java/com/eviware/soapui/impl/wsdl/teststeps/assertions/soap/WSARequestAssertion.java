@@ -1,4 +1,16 @@
 /*
+ * soapUI, copyright (C) 2004-2008 eviware.com
+ *
+ * soapUI is free software; you can redistribute it and/or modify it under the
+ * terms of version 2.1 of the GNU Lesser General Public License as published by
+ * the Free Software Foundation.
+ *
+ * soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
+/*
  *  soapUI, copyright (C) 2004-2008 eviware.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
@@ -12,9 +24,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.soap;
 
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.WsaAssertionConfiguration;
@@ -26,11 +35,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlMockResponseTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.AssertionError;
-import com.eviware.soapui.model.testsuite.AssertionException;
-import com.eviware.soapui.model.testsuite.RequestAssertion;
-import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
@@ -39,6 +45,8 @@ import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
 
 /**
  * Assertion for verifying that WS-Addressing processing was ok

@@ -1424,14 +1424,14 @@
     	<xsd:attribute name="faultToRefParams" type="xsd:string"></xsd:attribute>
     </xsd:complexType>
 
-    <xsd:complexType name="MockOperationQueryDispatch">
+    <xsd:complexType name="MockOperationQueryMatchDispatch">
         <xsd:sequence>
             <xsd:element name="query" minOccurs="0" maxOccurs="unbounded">
                 <xsd:complexType>
                      <xsd:sequence>
                          <xsd:element name="name" type="xsd:string"/>
-                         <xsd:element name="path" type="xsd:string"/>
-                         <xsd:element name="value" type="xsd:string"/>
+                         <xsd:element name="query" type="xsd:string"/>
+                         <xsd:element name="match" type="xsd:string"/>
                          <xsd:element name="response" type="xsd:string"/>
                          <xsd:element name="disabled" type="xsd:boolean"/>
                      </xsd:sequence>

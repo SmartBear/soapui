@@ -526,6 +526,9 @@ public class SimpleForm
    {
       for( JComponent component : components.values())
       {
+         if( component instanceof JScrollPane )
+            ((JScrollPane)component).getViewport().getView().setEnabled( b );
+
          component.setEnabled( b );
       }
    }

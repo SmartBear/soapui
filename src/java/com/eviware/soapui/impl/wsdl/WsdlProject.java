@@ -229,6 +229,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		}
 	}
 
+   protected PropertyChangeSupport getPropertyChangeSupport()
+   {
+      return pcs;
+   }
+
 	public boolean isRemote()
 	{
 		return remote;

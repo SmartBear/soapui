@@ -22,12 +22,12 @@ public interface EditorModel
 
    public void setEditorText( String text );
 
-//   public void addEditorModelListener( EditorModelListener editorModelListener );
-//
-//   public void removeEditorModelListener( EditorModelListener editorModelListener );
-//
-//   public interface EditorModelListener
-//   {
-//      public void editorTextChanged( String oldText, String newText );
-//   }
+   public void addEditorModelListener( EditorModelListener editorModelListener );
+
+   public void removeEditorModelListener( EditorModelListener editorModelListener );
+
+   public interface EditorModelListener
+   {
+      public void editorTextChanged( String oldText, String newText );
+   }
 }

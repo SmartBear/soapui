@@ -97,10 +97,15 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
    {
       JXToolBar toolbar = UISupport.createToolbar();
       toolbar.addSpace( 3 );
-      toolbar.addFixed( UISupport.createToolbarButton( editorModel.getRunAction() ) );
+      addToolbarActions( editorModel, toolbar );
       toolbar.addGlue();
       toolbar.addFixed( ModelItemDesktopPanel.createActionButton( new ShowOnlineHelpAction( HelpUrls.MOCKOPERATION_XPATHDISPATCH_HELP_URL ), true ) );
       return toolbar;
+   }
+
+   protected void addToolbarActions( DispatchXPathGroovyEditorModel editorModel, JXToolBar toolbar )
+   {
+      toolbar.addFixed( UISupport.createToolbarButton( editorModel.getRunAction() ) );
    }
 
    public static class Factory implements MockOperationDispatchFactory

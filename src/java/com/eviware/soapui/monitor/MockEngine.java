@@ -184,7 +184,7 @@ public class MockEngine
 
       if( map.isEmpty() && !SoapUI.getSettings().getBoolean( HttpSettings.LEAVE_MOCKENGINE ) )
       {
-         SoapUIConnector connector = (SoapUIConnector) connectors.get( port );
+         SoapUIConnector connector = connectors.get( port );
          if( connector == null )
          {
             log.warn( "Missing connectors on port [" + port + "]" );
@@ -675,7 +675,7 @@ public class MockEngine
                }
             }
          }
-         catch( IOException e )
+         catch( Throwable e )
          {
             log.error( "Failed to log request: " + e );
          }
@@ -698,7 +698,7 @@ public class MockEngine
                }
             }
          }
-         catch( IOException e )
+         catch( Throwable e )
          {
             log.error( "Failed to log response: " + e );
          }

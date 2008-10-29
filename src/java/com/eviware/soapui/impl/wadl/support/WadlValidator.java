@@ -10,7 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
+package com.eviware.soapui.impl.wadl.support;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRepresentation;

@@ -40,216 +40,222 @@ import java.beans.PropertyChangeListener;
 
 /**
  * DesktopPanel for WsdlGroovyTestSteps
- * 
+ *
  * @author Ole.Matzura
  */
 
 public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroovyScriptTestStep> implements PropertyChangeListener
 {
-	private final WsdlGroovyScriptTestStep groovyStep;
-	private GroovyEditor editor;
-	private JLogList logArea;
-	private Logger logger;
-	private TestRunComponentEnabler componentEnabler;
-	private RunAction runAction = new RunAction();
-	private JEditorStatusBarWithProgress statusBar;
-	private SettingsListener settingsListener;
-	private JComponentInspector<JComponent> logInspector;
-	public boolean updating;
+   private final WsdlGroovyScriptTestStep groovyStep;
+   private GroovyEditor editor;
+   private JLogList logArea;
+   private Logger logger;
+   private TestRunComponentEnabler componentEnabler;
+   private RunAction runAction = new RunAction();
+   private JEditorStatusBarWithProgress statusBar;
+   private SettingsListener settingsListener;
+   private JComponentInspector<JComponent> logInspector;
+   public boolean updating;
 
-	public GroovyScriptStepDesktopPanel(WsdlGroovyScriptTestStep groovyStep)
-	{
-		super( groovyStep );
-		this.groovyStep = groovyStep;
-		componentEnabler = new TestRunComponentEnabler( groovyStep.getTestCase() );
-		
-		buildUI();
-		setPreferredSize( new Dimension( 600, 440 ));
-		
-		logger = Logger.getLogger( groovyStep.getName() + "#" + hashCode() );
-		
-		addFocusListener( new FocusAdapter() {
+   public GroovyScriptStepDesktopPanel( WsdlGroovyScriptTestStep groovyStep )
+   {
+      super( groovyStep );
+      this.groovyStep = groovyStep;
+      componentEnabler = new TestRunComponentEnabler( groovyStep.getTestCase() );
 
-			public void focusGained( FocusEvent e )
-			{
-				editor.requestFocusInWindow();
-			}
+      buildUI();
+      setPreferredSize( new Dimension( 600, 440 ) );
 
-			} );
-		
-		groovyStep.addPropertyChangeListener( this );
-	}
+      logger = Logger.getLogger( groovyStep.getName() + "#" + hashCode() );
 
-	protected GroovyEditor getEditor()
-	{
-		return editor;
-	}
+      addFocusListener( new FocusAdapter()
+      {
 
-	private void buildUI()
-	{
-		editor = new GroovyEditor( new ScriptStepGroovyEditorModel( ));
-		
-		logArea = new JLogList( "Groovy Test Log" );
-		logArea.addLogger( groovyStep.getName() + "#" + hashCode(), true );
-		logArea.getLogList().addMouseListener( new MouseAdapter() {
+         public void focusGained( FocusEvent e )
+         {
+            editor.requestFocusInWindow();
+         }
 
-			public void mouseClicked(MouseEvent e)
-			{
-				if( e.getClickCount() < 2 )
-					return;
-				
-				String value = logArea.getLogList().getSelectedValue().toString();
-				if( value == null )
-					return;
-				
-				editor.selectError( value );
-			}} );
-		
-		logArea.getLogList().getModel().addListDataListener( new ListDataChangeListener() {
+      } );
 
-			@Override
-			public void dataChanged( ListModel model )
-			{
-				logInspector.setTitle( "Log Output (" + model.getSize() + ")" );
-				
-			}} );
-		
-		JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( editor );
-		logInspector = inspectorPanel.addInspector( new JComponentInspector<JComponent>( logArea, "Log Output (0)", 
-							"Groovy Log output for this script", true ) );
-		inspectorPanel.setDefaultDividerLocation( 0.8F  );
-		inspectorPanel.activate( logInspector );
-		add( inspectorPanel.getComponent(), BorderLayout.CENTER );
-		add( buildToolbar(), BorderLayout.NORTH );
-		add( buildStatusBar(), BorderLayout.SOUTH );
-		
-		componentEnabler.add( editor );
-	}
-	
-	private Component buildStatusBar()
-	{
-		statusBar = new JEditorStatusBarWithProgress( editor );
-		return statusBar;
-	}
+      groovyStep.addPropertyChangeListener( this );
+   }
 
-	private JComponent buildToolbar()
-	{
-		JXToolBar toolBar = UISupport.createToolbar();
-		JButton runButton = UISupport.createToolbarButton( runAction );
-		toolBar.add( runButton );
-		toolBar.add( Box.createHorizontalGlue() );
-		JLabel label = new JLabel("<html>Script is invoked with <code>log</code>, <code>context</code> " +
-						"and <code>testRunner</code> variables</html>");
-		label.setToolTipText( label.getText() );
-		label.setMaximumSize( label.getPreferredSize() );
-		
-		toolBar.add( label);
-		toolBar.addRelatedGap();
-		toolBar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.GROOVYSTEPEDITOR_HELP_URL )));
-		
-		componentEnabler.add( runButton );
-		
-		return toolBar;
-	}
+   protected GroovyEditor getEditor()
+   {
+      return editor;
+   }
 
-	public boolean onClose( boolean canCancel )
-	{
-		componentEnabler.release();
-		editor.release();
-		SoapUI.getSettings().removeSettingsListener( settingsListener );
-		logger.removeAllAppenders();
-		logger = null;
-		logArea.release();
-		super.release();
-		return true;
-	}
+   private void buildUI()
+   {
+      editor = new GroovyEditor( new ScriptStepGroovyEditorModel() );
 
-	public JComponent getComponent()
-	{
-		return this;
-	}
+      logArea = new JLogList( "Groovy Test Log" );
+      logArea.addLogger( groovyStep.getName() + "#" + hashCode(), true );
+      logArea.getLogList().addMouseListener( new MouseAdapter()
+      {
 
-	public boolean dependsOn(ModelItem modelItem)
-	{
-		return modelItem == groovyStep || modelItem == groovyStep.getTestCase() ||
-				modelItem == groovyStep.getTestCase().getTestSuite() ||
-				modelItem == groovyStep.getTestCase().getTestSuite().getProject();
-	}
+         public void mouseClicked( MouseEvent e )
+         {
+            if( e.getClickCount() < 2 )
+               return;
 
-	private class ScriptStepGroovyEditorModel implements GroovyEditorModel
-	{
-		public String[] getKeywords()
-		{
-			return new String[] {"log", "context", "testRunner"};
-		}
+            String value = logArea.getLogList().getSelectedValue().toString();
+            if( value == null )
+               return;
 
-		public Action getRunAction()
-		{
-			return runAction;
-		}
+            editor.selectError( value );
+         }
+      } );
 
-		public String getScript()
-		{
-			return groovyStep.getScript();
-		}
+      logArea.getLogList().getModel().addListDataListener( new ListDataChangeListener()
+      {
 
-		public void setScript( String text )
-		{
-			if( updating )
-				return;
-			
-			updating = true;
-			groovyStep.setScript( text );
-			updating = false;
-		}
+         @Override
+         public void dataChanged( ListModel model )
+         {
+            logInspector.setTitle( "Log Output (" + model.getSize() + ")" );
 
-		public Settings getSettings()
-		{
-			return SoapUI.getSettings();
-		}
+         }
+      } );
 
-		public String getScriptName()
-		{
-			return null;
-		}}
-	
-	private class RunAction extends AbstractAction
-	{
-		public RunAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/run_groovy_script.gif" ));
-			putValue( Action.SHORT_DESCRIPTION, "Runs this script using a mock testRunner and testContext" );
-		}
+      JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( editor );
+      logInspector = inspectorPanel.addInspector( new JComponentInspector<JComponent>( logArea, "Log Output (0)",
+              "Groovy Log output for this script", true ) );
+      inspectorPanel.setDefaultDividerLocation( 0.8F );
+      inspectorPanel.activate( logInspector );
+      add( inspectorPanel.getComponent(), BorderLayout.CENTER );
+      add( buildToolbar(), BorderLayout.NORTH );
+      add( buildStatusBar(), BorderLayout.SOUTH );
 
-		public void actionPerformed(ActionEvent e)
-		{
-			MockTestRunner mockTestRunner = new MockTestRunner( groovyStep.getTestCase(), logger );
-			statusBar.setIndeterminate( true );
-			WsdlTestStepResult result = (WsdlTestStepResult) groovyStep.run( mockTestRunner, 
-					new MockTestRunContext( mockTestRunner, groovyStep ) );
-			statusBar.setIndeterminate( false );
-			
-			Throwable er = result.getError();
-			if( er != null )
-			{
-				String message = er.getMessage();
-				
-				// ugly...
-				editor.selectError( message);
-				
-				UISupport.showErrorMessage( er.toString() );
-				editor.requestFocus();
-			}
-		}
-	}
+      componentEnabler.add( editor );
+   }
 
-	public void propertyChange(PropertyChangeEvent evt)
-	{
-		if( evt.getPropertyName().equals( "script" ) && !updating )
-		{
-			updating = true;
-			editor.getEditArea().setText( (String) evt.getNewValue() );
-			updating = false;
-		}
-	}
+   private Component buildStatusBar()
+   {
+      statusBar = new JEditorStatusBarWithProgress( editor );
+      return statusBar;
+   }
+
+   private JComponent buildToolbar()
+   {
+      JXToolBar toolBar = UISupport.createToolbar();
+      JButton runButton = UISupport.createToolbarButton( runAction );
+      toolBar.add( runButton );
+      toolBar.add( Box.createHorizontalGlue() );
+      JLabel label = new JLabel( "<html>Script is invoked with <code>log</code>, <code>context</code> " +
+              "and <code>testRunner</code> variables</html>" );
+      label.setToolTipText( label.getText() );
+      label.setMaximumSize( label.getPreferredSize() );
+
+      toolBar.add( label );
+      toolBar.addRelatedGap();
+      toolBar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.GROOVYSTEPEDITOR_HELP_URL ) ) );
+
+      componentEnabler.add( runButton );
+
+      return toolBar;
+   }
+
+   public boolean onClose( boolean canCancel )
+   {
+      componentEnabler.release();
+      editor.release();
+      SoapUI.getSettings().removeSettingsListener( settingsListener );
+      logger.removeAllAppenders();
+      logger = null;
+      logArea.release();
+      super.release();
+      return true;
+   }
+
+   public JComponent getComponent()
+   {
+      return this;
+   }
+
+   public boolean dependsOn( ModelItem modelItem )
+   {
+      return modelItem == groovyStep || modelItem == groovyStep.getTestCase() ||
+              modelItem == groovyStep.getTestCase().getTestSuite() ||
+              modelItem == groovyStep.getTestCase().getTestSuite().getProject();
+   }
+
+   private class ScriptStepGroovyEditorModel implements GroovyEditorModel
+   {
+      public String[] getKeywords()
+      {
+         return new String[]{"log", "context", "testRunner"};
+      }
+
+      public Action getRunAction()
+      {
+         return runAction;
+      }
+
+      public String getScript()
+      {
+         return groovyStep.getScript();
+      }
+
+      public void setScript( String text )
+      {
+         if( updating )
+            return;
+
+         updating = true;
+         groovyStep.setScript( text );
+         updating = false;
+      }
+
+      public Settings getSettings()
+      {
+         return SoapUI.getSettings();
+      }
+
+      public String getScriptName()
+      {
+         return null;
+      }
+   }
+
+   private class RunAction extends AbstractAction
+   {
+      public RunAction()
+      {
+         putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/run_groovy_script.gif" ) );
+         putValue( Action.SHORT_DESCRIPTION, "Runs this script using a mock testRunner and testContext" );
+      }
+
+      public void actionPerformed( ActionEvent e )
+      {
+         MockTestRunner mockTestRunner = new MockTestRunner( groovyStep.getTestCase(), logger );
+         statusBar.setIndeterminate( true );
+         WsdlTestStepResult result = (WsdlTestStepResult) groovyStep.run( mockTestRunner,
+                 new MockTestRunContext( mockTestRunner, groovyStep ) );
+         statusBar.setIndeterminate( false );
+
+         Throwable er = result.getError();
+         if( er != null )
+         {
+            String message = er.getMessage();
+
+            // ugly...
+            editor.selectError( message );
+
+            UISupport.showErrorMessage( er.toString() );
+            editor.requestFocus();
+         }
+      }
+   }
+
+   public void propertyChange( PropertyChangeEvent evt )
+   {
+      if( evt.getPropertyName().equals( "script" ) && !updating )
+      {
+         updating = true;
+         editor.getEditArea().setText( (String) evt.getNewValue() );
+         updating = false;
+      }
+   }
 }

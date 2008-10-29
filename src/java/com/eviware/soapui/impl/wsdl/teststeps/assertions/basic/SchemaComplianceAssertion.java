@@ -18,6 +18,7 @@ import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.support.DefinitionContext;
 import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
+import com.eviware.soapui.impl.wadl.support.WadlValidator;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.submit.RestMessageExchange;

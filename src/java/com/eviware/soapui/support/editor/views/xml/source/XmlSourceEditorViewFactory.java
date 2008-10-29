@@ -13,18 +13,14 @@
 package com.eviware.soapui.support.editor.views.xml.source;
 
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.wadl.support.WadlValidator;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.actions.mockresponse.AddWsaHeadersToMockResponseAction;
 import com.eviware.soapui.impl.wsdl.actions.mockresponse.ApplyOutgoingWSSToMockResponseAction;
 import com.eviware.soapui.impl.wsdl.actions.mockresponse.RemoveAllOutgoingWSSFromMockResponseAction;
 import com.eviware.soapui.impl.wsdl.actions.mockresponse.RemoveWsaHeadersFromMockResponseAction;
-import com.eviware.soapui.impl.wsdl.actions.request.AddWSSUsernameTokenAction;
-import com.eviware.soapui.impl.wsdl.actions.request.AddWSTimestampAction;
-import com.eviware.soapui.impl.wsdl.actions.request.AddWsaHeadersToRequestAction;
-import com.eviware.soapui.impl.wsdl.actions.request.ApplyOutgoingWSSToRequestAction;
-import com.eviware.soapui.impl.wsdl.actions.request.RemoveAllOutgoingWSSFromRequestAction;
-import com.eviware.soapui.impl.wsdl.actions.request.RemoveWsaHeadersFromRequestAction;
+import com.eviware.soapui.impl.wsdl.actions.request.*;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResultMessageExchange;
@@ -36,7 +32,6 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.RestResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.WadlValidator;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.support.editor.Editor;

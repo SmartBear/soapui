@@ -161,4 +161,5 @@ public interface HelpUrls
    public static final String WADL_PARAMS_HELP_URL =  HELP_URL_ROOT + "rest/paras.html";
 
    public static final String RESTRESOURCEEDITOR_HELPURL =  HELP_URL_ROOT + "rest/resources.html";
+   public static final String MOCKOPERATION_QUERYMATCHDISPATCH_HELP_URL = HELP_URL_ROOT + "mock/operations.html#QueryMatch_Dispatching";
 }

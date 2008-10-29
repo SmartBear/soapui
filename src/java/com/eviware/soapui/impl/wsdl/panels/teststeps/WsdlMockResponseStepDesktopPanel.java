@@ -7,12 +7,13 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.AbstractWsdlMockResponseDesktopPanel;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMockResponseTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
-import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.*;
+import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.ModelItemPropertyEditorModel;
@@ -21,10 +22,13 @@ import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 import javax.swing.*;
 import javax.swing.text.Document;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
 import java.util.Date;
 
 public class WsdlMockResponseStepDesktopPanel extends AbstractWsdlMockResponseDesktopPanel<WsdlMockResponseTestStep, WsdlMockResponse>
@@ -38,6 +42,8 @@ public class WsdlMockResponseStepDesktopPanel extends AbstractWsdlMockResponseDe
    private JInspectorPanel inspectorPanel;
    private JComponentInspector<JComponent> assertionInspector;
    private JComponentInspector<JComponent> logInspector;
+   private ModelItemPropertyEditorModel<WsdlMockResponseTestStep> queryEditorModel;
+   private ModelItemPropertyEditorModel<WsdlMockResponseTestStep> matchEditorModel;
 
    public WsdlMockResponseStepDesktopPanel( WsdlMockResponseTestStep mockResponseStep )
    {
@@ -72,7 +78,34 @@ public class WsdlMockResponseStepDesktopPanel extends AbstractWsdlMockResponseDe
       inspectorPanel.setDefaultDividerLocation( 0.6F );
       inspectorPanel.setCurrentInspector( "Assertions" );
 
+      updateStatusIcon();
+
       return inspectorPanel.getComponent();
+   }
+
+    private void updateStatusIcon()
+   {
+      Assertable.AssertionStatus status = getModelItem().getAssertionStatus();
+      switch( status )
+      {
+         case FAILED:
+         {
+            assertionInspector.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
+            inspectorPanel.activate( assertionInspector );
+            break;
+         }
+         case UNKNOWN:
+         {
+            assertionInspector.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
+            break;
+         }
+         case VALID:
+         {
+            assertionInspector.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
+            inspectorPanel.deactivate();
+            break;
+         }
+      }
    }
 
    private JComponent buildLogPanel()
@@ -143,7 +176,9 @@ public class WsdlMockResponseStepDesktopPanel extends AbstractWsdlMockResponseDe
    {
       JPanel panel = new JPanel( new BorderLayout() );
       panel.add( buildQueryMatchToolbar(), BorderLayout.NORTH );
-      panel.add( UISupport.createHorizontalSplit( buildQueryEditor(), buildMatchEditor() ), BorderLayout.CENTER );
+      JSplitPane splitPane = UISupport.createHorizontalSplit( buildQueryEditor(), buildMatchEditor() );
+      panel.add( splitPane, BorderLayout.CENTER );
+      splitPane.setDividerLocation( 0.5f );
       return panel;
    }
 
@@ -151,9 +186,8 @@ public class WsdlMockResponseStepDesktopPanel extends AbstractWsdlMockResponseDe
    {
       JPanel panel = new JPanel( new BorderLayout() );
 
-      panel.add( UISupport.getEditorFactory().buildXmlEditor(
-              new ModelItemPropertyEditorModel<WsdlMockResponseTestStep>( getModelItem(), "match" ) ),
-              BorderLayout.CENTER );
+      matchEditorModel = new ModelItemPropertyEditorModel<WsdlMockResponseTestStep>( getModelItem(), "match" );
+      panel.add( UISupport.getEditorFactory().buildXmlEditor( matchEditorModel ), BorderLayout.CENTER );
 
       return panel;
    }
@@ -162,16 +196,16 @@ public class WsdlMockResponseStepDesktopPanel extends AbstractWsdlMockResponseDe
    {
       JPanel panel = new JPanel( new BorderLayout() );
 
-      panel.add( UISupport.getEditorFactory().buildXPathEditor(
-              new ModelItemPropertyEditorModel<WsdlMockResponseTestStep>( getModelItem(), "query" ) ),
-              BorderLayout.CENTER );
+      queryEditorModel = new ModelItemPropertyEditorModel<WsdlMockResponseTestStep>( getModelItem(), "query" );
+      panel.add( UISupport.getEditorFactory().buildXPathEditor( queryEditorModel ), BorderLayout.CENTER );
 
       return panel;
    }
 
    private Component buildQueryMatchToolbar()
    {
-      return UISupport.createSmallToolbar();
+      JXToolBar toolBar = UISupport.createSmallToolbar();
+      return toolBar;
    }
 
    private AssertionsPanel buildAssertionsPanel()
@@ -194,6 +228,9 @@ public class WsdlMockResponseStepDesktopPanel extends AbstractWsdlMockResponseDe
       getModelItem().getTestCase().removeTestRunListener( testRunListener );
       SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener );
       assertionsPanel.release();
+
+      queryEditorModel.release();
+      matchEditorModel.release();
 
       return super.onClose( canCancel );
    }
@@ -273,4 +310,55 @@ public class WsdlMockResponseStepDesktopPanel extends AbstractWsdlMockResponseDe
             setEnabled( false );
       }
    }
+
+   public void propertyChange( PropertyChangeEvent evt )
+   {
+      super.propertyChange( evt );
+
+      if( evt.getPropertyName().equals( WsdlMockResponseTestStep.STATUS_PROPERTY ) )
+         updateStatusIcon();
+   }
+
+   private final class DeclareNamespacesAction extends AbstractAction
+   {
+      public DeclareNamespacesAction()
+      {
+         putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/declareNs.gif" ) );
+         putValue( Action.SHORT_DESCRIPTION, "Declare available response/request namespaces in source/target expressions" );
+      }
+
+      public void actionPerformed( ActionEvent e )
+      {
+         try
+         {
+            WsdlMockResult lastResult = getMockResponse().getMockResult();
+            String content = null;
+            if( lastResult == null )
+            {
+               if( !UISupport.confirm( "Missing last result, declare from default request instead?", "Declare Namespaces" ) )
+               {
+                  return;
+               }
+
+               content = getMockResponse().getMockOperation().getOperation().createRequest( true );
+            }
+            else
+            {
+               content = lastResult.getMockRequest().getRequestContent();
+            }
+
+
+            String path = getModelItem().getQuery();
+            if( path == null )
+               path = "";
+
+            getModelItem().setQuery( XmlUtils.declareXPathNamespaces( content ) + path );
+         }
+         catch( Exception e1 )
+         {
+            UISupport.showErrorMessage( e1 );
+         }
+      }
+   }
+
 }

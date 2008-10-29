@@ -23,98 +23,98 @@ import com.eviware.soapui.model.testsuite.TestStep;
 
 /**
  * Dummy TestRunContext used when executing TestSteps one by one
- * 
+ *
  * @author ole.matzura
  */
 
 public class MockTestRunContext extends AbstractSubmitContext implements TestRunContext
 {
-	private final MockTestRunner mockTestRunner;
-	private final WsdlTestStep testStep;
+   private final MockTestRunner mockTestRunner;
+   private final WsdlTestStep testStep;
 
-	public MockTestRunContext(MockTestRunner mockTestRunner, WsdlTestStep testStep )
-	{
-		super( testStep == null ? mockTestRunner.getTestCase() : testStep );
-		this.mockTestRunner = mockTestRunner;
-		this.testStep = testStep;
-		setProperty( "log", mockTestRunner.getLog() );
-	}
+   public MockTestRunContext( MockTestRunner mockTestRunner, WsdlTestStep testStep )
+   {
+      super( testStep == null ? mockTestRunner.getTestCase() : testStep );
+      this.mockTestRunner = mockTestRunner;
+      this.testStep = testStep;
+      setProperty( "log", mockTestRunner.getLog() );
+   }
 
-	public TestStep getCurrentStep()
-	{
-		return testStep;
-	}
-	
-	@Override
-	public void setProperty( String name, Object value )
-	{
-		super.setProperty( name, value, getTestCase() );
-	}
+   public TestStep getCurrentStep()
+   {
+      return testStep;
+   }
 
-	public int getCurrentStepIndex()
-	{
-		return testStep == null ? -1 : testStep.getTestCase().getIndexOfTestStep( testStep );
-	}
+   @Override
+   public void setProperty( String name, Object value )
+   {
+      super.setProperty( name, value, getTestCase() );
+   }
 
-	public TestRunner getTestRunner()
-	{
-		return mockTestRunner;
-	}
+   public int getCurrentStepIndex()
+   {
+      return testStep == null ? -1 : testStep.getTestCase().getIndexOfTestStep( testStep );
+   }
 
-	@Override
-	public Object get( Object key )
-	{
-		if( "currentStep".equals(key))
-			return getCurrentStep();
+   public TestRunner getTestRunner()
+   {
+      return mockTestRunner;
+   }
 
-		if( "currentStepIndex".equals(key))
-			return getCurrentStepIndex();
+   @Override
+   public Object get( Object key )
+   {
+      if( "currentStep".equals( key ) )
+         return getCurrentStep();
 
-		if( "settings".equals(key))
-			return getSettings();
+      if( "currentStepIndex".equals( key ) )
+         return getCurrentStepIndex();
 
-		if( "testCase".equals(key))
-			return getTestCase();
+      if( "settings".equals( key ) )
+         return getSettings();
 
-		if( "testRunner".equals(key))
-			return getTestRunner();
-		
-		Object result = getProperty( key.toString() );
-		
-		if( result == null )
-		{
-			result = super.get( key );
-		}
-		
-		return result;
-	}
-	
-	@Override
-	public Object put( String key, Object value )
-	{
-		Object oldValue = get( key );
-		setProperty( key, value );
-		return oldValue;
-	}
-	
-	public Object getProperty(String name)
-	{
-		return getProperty( name, testStep, testStep == null ? null : (WsdlTestCase) testStep.getTestCase() );
-	}
+      if( "testCase".equals( key ) )
+         return getTestCase();
 
-	public Object getProperty(String testStepName, String propertyName)
-	{
-		TestStep ts = testStep == null ? null : testStep.getTestCase().getTestStepByName( testStepName );
-		return ts == null ? null : ts.getPropertyValue( propertyName );
-	}
+      if( "testRunner".equals( key ) )
+         return getTestRunner();
 
-	public TestCase getTestCase()
-	{
-		return testStep == null ? null : testStep.getTestCase();
-	}
+      Object result = getProperty( key.toString() );
 
-	public Settings getSettings()
-	{
-		return testStep == null ? null : testStep.getSettings();
-	}
+      if( result == null )
+      {
+         result = super.get( key );
+      }
+
+      return result;
+   }
+
+   @Override
+   public Object put( String key, Object value )
+   {
+      Object oldValue = get( key );
+      setProperty( key, value );
+      return oldValue;
+   }
+
+   public Object getProperty( String name )
+   {
+      return getProperty( name, testStep, testStep == null ? null : (WsdlTestCase) testStep.getTestCase() );
+   }
+
+   public Object getProperty( String testStepName, String propertyName )
+   {
+      TestStep ts = testStep == null ? null : testStep.getTestCase().getTestStepByName( testStepName );
+      return ts == null ? null : ts.getPropertyValue( propertyName );
+   }
+
+   public TestCase getTestCase()
+   {
+      return testStep == null ? null : testStep.getTestCase();
+   }
+
+   public Settings getSettings()
+   {
+      return testStep == null ? null : testStep.getSettings();
+   }
 }

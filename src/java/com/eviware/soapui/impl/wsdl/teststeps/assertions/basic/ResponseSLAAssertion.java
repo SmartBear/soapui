@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
@@ -26,6 +24,7 @@ import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
+import org.apache.xmlbeans.XmlObject;
 
 /**
  * Assertion for verifiying that responses occurred in the desired amount of
@@ -56,22 +55,12 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 		SLA = reader.readString( "SLA", "200" );
 	}
 
-	/**
-	 * @see com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion#internalAssertRequest(com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange,
-	 *      com.eviware.soapui.model.iface.SubmitContext)
-	 */
 	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
 				throws AssertionException
 	{
-
 		return null;
-
 	}
 
-	/**
-	 * @see com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion#internalAssertResponse(com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange,
-	 *      com.eviware.soapui.model.iface.SubmitContext)
-	 */
 	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 				throws AssertionException
 	{
