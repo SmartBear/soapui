@@ -12,11 +12,11 @@
 
 package com.eviware.soapui.impl.rest.panels.service;
 
-import java.awt.Component;
-
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.support.components.JPropertiesTable;
+
+import java.awt.*;
 
 /**
  * PanelBuilder for WsdlInterface
@@ -46,7 +46,8 @@ public class RestServicePanelBuilder extends EmptyPanelBuilder<RestService>
    	table.addProperty( "Name", "name" );
    	table.addProperty( "Description", "description", true );
    	table.addProperty( "Base Path", "basePath", true );
-   	table.addProperty( "WADL", "wadlUrl", true );
+   	table.addProperty( "WADL", "wadlUrl", !service.isGenerated() );
+      table.addProperty( "Generated", "generated", false );
    	
    	table.setPropertyObject( service );
    	

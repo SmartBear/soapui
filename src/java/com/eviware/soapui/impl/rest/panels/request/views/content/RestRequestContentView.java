@@ -275,6 +275,11 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
       postQueryCheckBox.setEnabled( enabled );
    }
 
+   public RestParamsTable getParamsTable()
+   {
+      return paramsTable;
+   }
+
    private class CreateDefaultRepresentationAction extends AbstractAction
    {
       private CreateDefaultRepresentationAction()

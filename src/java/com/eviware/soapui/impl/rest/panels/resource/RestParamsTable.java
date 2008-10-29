@@ -119,6 +119,11 @@ public class RestParamsTable extends JPanel
       return paramsTable.getSelectedRow() == -1 ? null : paramsTableModel.getParameterAt( paramsTable.getSelectedRow() );
    }
 
+   public JTable getParamsTable()
+   {
+      return paramsTable;
+   }
+
    private Component buildToolbar()
    {
       JXToolBar toolbar = UISupport.createToolbar();

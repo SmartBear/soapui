@@ -25,54 +25,56 @@ import com.eviware.soapui.support.StringUtils;
 
 public class WadlDefinitionContext extends AbstractDefinitionContext<RestService, DefinitionLoader, WadlInterfaceDefinition>
 {
-   public WadlDefinitionContext(String url, RestService iface)
+   public WadlDefinitionContext( String url, RestService iface )
    {
-      super(url, iface);
+      super( url, iface );
    }
 
-   public WadlDefinitionContext(String wadlUrl)
+   public WadlDefinitionContext( String wadlUrl )
    {
-      super(wadlUrl);
+      super( wadlUrl );
    }
 
-   protected DefinitionLoader createDefinitionLoader(DefinitionCache restServiceDefinitionCache)
+   protected DefinitionLoader createDefinitionLoader( DefinitionCache restServiceDefinitionCache )
    {
-      if( StringUtils.hasContent(getInterface().getWadlUrl()))
-         return new InterfaceCacheDefinitionLoader(restServiceDefinitionCache);
-      else
+      if( getInterface().isGenerated() || StringUtils.isNullOrEmpty( getInterface().getWadlUrl() ))
          return new GeneratedWadlDefinitionLoader( getInterface() );
+      else
+         return new InterfaceCacheDefinitionLoader( restServiceDefinitionCache );
    }
 
-   protected DefinitionLoader createDefinitionLoader(String url)
+   protected DefinitionLoader createDefinitionLoader( String url )
    {
-      return url == null || (getInterface().isGenerated() && getInterface().getWadlUrl().equals( url ))
-              ? new GeneratedWadlDefinitionLoader( getInterface() ) : new UrlWsdlLoader(url, getInterface());
+       if( getInterface().isGenerated() || StringUtils.isNullOrEmpty( url ))
+         return new GeneratedWadlDefinitionLoader( getInterface() );
+      else
+         return new UrlWsdlLoader( url, getInterface() );
    }
 
-   protected WadlInterfaceDefinition loadDefinition(DefinitionLoader loader) throws Exception
+   protected WadlInterfaceDefinition loadDefinition( DefinitionLoader loader ) throws Exception
    {
-      return new WadlInterfaceDefinition(getInterface()).load(loader);
+      return new WadlInterfaceDefinition( getInterface() ).load( loader );
    }
 
-   public String export(String path) throws Exception
+   public String export( String path ) throws Exception
    {
-      return new WadlDefinitionExporter(getInterface()).export(path);
+      return new WadlDefinitionExporter( getInterface() ).export( path );
    }
 
    public WadlInterfaceDefinition regenerateWadl()
    {
       try
       {
-         if( getInterface().isGenerated())
+         if( getInterface().isGenerated() )
             reload();
 
-          return getInterfaceDefinition();
+         return getInterfaceDefinition();
       }
       catch( Exception e )
       {
          e.printStackTrace();
       }
 
-       return null;
+      return null;
    }
 }

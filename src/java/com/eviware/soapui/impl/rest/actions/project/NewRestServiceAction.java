@@ -61,7 +61,6 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
          dialog.getFormField( Form.SERVICENAME ).addFormFieldValidator( new RequiredValidator( "Service Name is required" ) );
          dialog.getFormField( Form.SERVICEENDPOINT ).addFormFieldListener( new XFormFieldListener()
          {
-
             public void valueChanged( XFormField sourceField, String newValue, String oldValue )
             {
                boolean enable = false;
@@ -88,7 +87,6 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
                dialog.getFormField( Form.CREATERESOURCE ).setEnabled( !dialog.getBooleanValue( Form.EXTRACTPARAMS ) );
             }
          } );
-
       }
       else
       {
