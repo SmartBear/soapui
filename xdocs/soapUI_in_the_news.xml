@@ -5,6 +5,20 @@
     </properties>
     <body>
     <section name="soapUI Releases">
+           <subsection name="soapUI Rest Support">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/sleepless.gif" alt="soapUI Rest Support"/>
+	    		</column>
+	    		<column align="left">
+	    			<p>Some time ago, I had blogged lamenting the absense of a nice..." <br/>
+	    			<a href="http://sleeplessinslc.blogspot.com/2008/10/soapui-rest-support.html">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+		</subsection>  
+    
+    
+    
     
        <subsection name="Evolution Through">
 	    	<columns>
