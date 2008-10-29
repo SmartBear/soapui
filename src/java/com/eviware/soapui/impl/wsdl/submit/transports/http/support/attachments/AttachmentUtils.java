@@ -29,6 +29,7 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
@@ -138,22 +139,21 @@ public class AttachmentUtils
                      }
                   }
                }
-               else if( SchemaUtils.isBinaryType( schemaType ) || SchemaUtils.isAnyType( schemaType ) )
+               else
                {
-                  String xmimeContentType = getXmlMimeContentType( cursor );
-
                   // extract contentId
-                  String textContent = cursor.getTextValue();
+                  String textContent = XmlUtils.getNodeValue( cursor.getDomNode() );
                   Attachment attachment = null;
                   boolean isXopAttachment = false;
 
                   // is content a reference to a file?
-                  if( textContent.startsWith( "file:" ) && container.isInlineFilesEnabled() )
+                  if( container.isInlineFilesEnabled() && textContent.startsWith( "file:" ) )
                   {
                      String filename = textContent.substring( 5 );
                      if( container.isMtomEnabled() )
                      {
                         MimeBodyPart part = new PreencodedMimeBodyPart( "binary" );
+                        String xmimeContentType = getXmlMimeContentType( cursor );
 
                         if( StringUtils.isNullOrEmpty( xmimeContentType ) )
                            xmimeContentType = ContentTypeHandler.getContentTypeFromFilename( filename );
@@ -188,9 +188,10 @@ public class AttachmentUtils
                      contentIds.put( textContent, textContent );
                   }
                   // content should be binary data; is this an XOP element which should be serialized with MTOM?
-                  else if( container.isMtomEnabled() )
+                  else if( container.isMtomEnabled() &&  SchemaUtils.isBinaryType( schemaType ) || SchemaUtils.isAnyType( schemaType ) )
                   {
                      MimeBodyPart part = new PreencodedMimeBodyPart( "binary" );
+                     String xmimeContentType = getXmlMimeContentType( cursor );
 
                      part.setDataHandler( new DataHandler( new XOPPartDataSource( textContent, xmimeContentType, schemaType ) ) );
 
