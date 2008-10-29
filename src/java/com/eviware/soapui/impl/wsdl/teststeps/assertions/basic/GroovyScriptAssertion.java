@@ -15,14 +15,12 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
-import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.*;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -302,13 +300,24 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
          public void actionPerformed( ActionEvent e )
          {
             TestStep testStep = (TestStep) getAssertable().getModelItem();
-            WsdlMessageExchange exchange = null;
+            MessageExchange exchange = null;
 
             if( testStep instanceof WsdlTestRequestStep )
             {
                WsdlTestRequestStep testRequestStep = (WsdlTestRequestStep) testStep;
                exchange = new WsdlResponseMessageExchange( testRequestStep.getTestRequest() );
                ( (WsdlResponseMessageExchange) exchange ).setResponse( testRequestStep.getTestRequest().getResponse() );
+            }
+            else if( testStep instanceof RestTestRequestStep )
+            {
+               RestTestRequestStep testRequestStep = (RestTestRequestStep) testStep;
+               exchange = new RestResponseMessageExchange( testRequestStep.getTestRequest() );
+               ( (RestResponseMessageExchange) exchange ).setResponse( testRequestStep.getTestRequest().getResponse() );
+            }
+            else if( testStep instanceof WsdlMockResponseTestStep )
+            {
+               WsdlMockResponseTestStep mockResponseStep = (WsdlMockResponseTestStep) testStep;
+               exchange = new WsdlMockResponseMessageExchange( mockResponseStep.getMockResponse() );
             }
 
             try
