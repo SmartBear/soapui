@@ -256,9 +256,9 @@ public class DefaultSoapUICore implements SoapUICore
 		if (file != null)
 		{
 			log.info("Importing preferences from [" + file.getAbsolutePath() + "]");
-			toFile = new File(System.getProperty("soapui.home"), file.getName());
+			toFile = new File(root == null ? System.getProperty("soapui.home") : root, file.getName());
 			Tools.copyFile(file, toFile, true);
-			initSettings(toFile.getAbsolutePath());
+			initSettings(toFile.getName());
 		}
 	}
 
