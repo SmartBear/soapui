@@ -12,16 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss.entries;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
-import org.apache.ws.security.message.WSSecHeader;
-import org.apache.ws.security.message.WSSecSAMLToken;
-import org.opensaml.SAMLAssertion;
-import org.w3c.dom.Document;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.WSSEntryConfig;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
@@ -34,88 +24,97 @@ import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.ws.security.message.WSSecHeader;
+import org.apache.ws.security.message.WSSecSAMLToken;
+import org.opensaml.SAMLAssertion;
+import org.w3c.dom.Document;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class AddSAMLEntry extends WssEntryBase
 {
-	public static final String TYPE = "SAML";
-	
-	private String samlAssertion;
+   public static final String TYPE = "SAML";
 
-	private JXEditTextArea editor;
+   private String samlAssertion;
 
-	public void init( WSSEntryConfig config, OutgoingWss container )
-	{
-		super.init( config, container, TYPE );
-	}
-	
-	@Override
-	protected JComponent buildUI()
-	{
-		JPanel panel = new JPanel( new BorderLayout() );
-		
-		editor = JXEditTextArea.createXmlEditor( true );
-		editor.getDocument().addDocumentListener( new DocumentListenerAdapter() {
+   private JXEditTextArea editor;
 
-			@Override
-			public void update( javax.swing.text.Document document )
-			{
-				samlAssertion = editor.getText();
-				saveConfig();
-				
-			}} );
-		panel.add( editor, BorderLayout.CENTER );
-		
-		return UISupport.addTitledBorder( panel, "Enter SAML Assertion" );
-	}
+   public void init( WSSEntryConfig config, OutgoingWss container )
+   {
+      super.init( config, container, TYPE );
+   }
 
-	@Override
-	protected void load( XmlObjectConfigurationReader reader )
-	{
-		samlAssertion = reader.readString( "samlAssertion", null );
-	}
+   @Override
+   protected JComponent buildUI()
+   {
+      JPanel panel = new JPanel( new BorderLayout() );
 
-	@Override
-	protected void save( XmlObjectConfigurationBuilder builder )
-	{
-		builder.add( "samlAssertion", samlAssertion );
-	}
+      editor = JXEditTextArea.createXmlEditor( true );
+      editor.getDocument().addDocumentListener( new DocumentListenerAdapter()
+      {
 
-	public void process( WSSecHeader secHeader, Document doc, PropertyExpansionContext context )
-	{
-		if( StringUtils.isNullOrEmpty( samlAssertion ) )
-			return;
-		
-		try
-		{
-			WSSecSAMLToken samlToken = new WSSecSAMLToken();
-			Document dom = XmlUtils.parseXml( XmlUtils.stripWhitespaces( context.expand( samlAssertion )));
-			SAMLAssertion assertion = new SAMLAssertion( dom.getDocumentElement() );
-			samlToken.build( doc, assertion, secHeader );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-	}
+         @Override
+         public void update( javax.swing.text.Document document )
+         {
+            samlAssertion = editor.getText();
+            saveConfig();
 
-	public String getSamlAssertion()
-	{
-		return samlAssertion;
-	}
+         }
+      } );
+      panel.add( new JScrollPane( editor ), BorderLayout.CENTER );
 
-	public void setSamlAssertion( String samlAssertion )
-	{
-		this.samlAssertion = samlAssertion;
-		saveConfig();
-		
-		if( editor != null )
-			editor.setText( samlAssertion );
-	}
+      return UISupport.addTitledBorder( panel, "Enter SAML Assertion" );
+   }
 
-	@Override
-	protected void addPropertyExpansions( PropertyExpansionsResult result )
-	{
-		super.addPropertyExpansions( result );
-		result.extractAndAddAll( "samlAssertion" );
-	}
+   @Override
+   protected void load( XmlObjectConfigurationReader reader )
+   {
+      samlAssertion = reader.readString( "samlAssertion", null );
+   }
+
+   @Override
+   protected void save( XmlObjectConfigurationBuilder builder )
+   {
+      builder.add( "samlAssertion", samlAssertion );
+   }
+
+   public void process( WSSecHeader secHeader, Document doc, PropertyExpansionContext context )
+   {
+      if( StringUtils.isNullOrEmpty( samlAssertion ) )
+         return;
+
+      try
+      {
+         WSSecSAMLToken samlToken = new WSSecSAMLToken();
+         Document dom = XmlUtils.parseXml( XmlUtils.stripWhitespaces( context.expand( samlAssertion ) ) );
+         SAMLAssertion assertion = new SAMLAssertion( dom.getDocumentElement() );
+         samlToken.build( doc, assertion, secHeader );
+      }
+      catch( Exception e )
+      {
+         SoapUI.logError( e );
+      }
+   }
+
+   public String getSamlAssertion()
+   {
+      return samlAssertion;
+   }
+
+   public void setSamlAssertion( String samlAssertion )
+   {
+      this.samlAssertion = samlAssertion;
+      saveConfig();
+
+      if( editor != null )
+         editor.setText( samlAssertion );
+   }
+
+   @Override
+   protected void addPropertyExpansions( PropertyExpansionsResult result )
+   {
+      super.addPropertyExpansions( result );
+      result.extractAndAddAll( "samlAssertion" );
+   }
 }

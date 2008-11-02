@@ -65,6 +65,11 @@ public class RestResponseMessageExchange extends AbstractRestMessageExchange<Res
       return response == null ? null : response.getContentAsString();
    }
 
+   public HttpResponse getResponse()
+   {
+      return response;
+   }
+
    public String getRequestContentAsXml()
    {
       String result = getRequestContent();
