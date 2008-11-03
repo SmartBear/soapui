@@ -930,7 +930,7 @@ public final class XmlUtils
       String localName = typeName.substring( ix + 1 );
       String namespaceUri = elm.getAttribute( "xmlns:" + prefix );
 
-      if( !StringUtils.hasContent( namespaceUri ))
+      if( !StringUtils.hasContent( namespaceUri ) )
          namespaceUri = findNamespaceForPrefix( elm, prefix );
 
       if( StringUtils.hasContent( namespaceUri ) )
@@ -953,7 +953,7 @@ public final class XmlUtils
          namespaceUri = elm.getAttribute( "xmlns:" + prefix );
       }
 
-      return namespaceUri;
+      return StringUtils.isNullOrEmpty( namespaceUri ) ? null : namespaceUri;
    }
 
    public static String findPrefixForNamespace( Element elm, String namespace )
@@ -984,10 +984,11 @@ public final class XmlUtils
       String prefix = findPrefixForNamespace( elm, name.getNamespaceURI() );
       if( prefix == null )
       {
-         prefix = generatePrefixForNamespace( name.getNamespaceURI());
+         prefix = generatePrefixForNamespace( name.getNamespaceURI() );
+         int cnt = 1;
          while( findNamespaceForPrefix( elm, prefix ) != null )
          {
-            prefix = generatePrefixForNamespace( name.getNamespaceURI());
+            prefix = generatePrefixForNamespace( name.getNamespaceURI() );
          }
 
          elm.setAttribute( "xmlns:" + prefix, name.getNamespaceURI() );
@@ -998,12 +999,12 @@ public final class XmlUtils
 
    private static String generatePrefixForNamespace( String namespaceURI )
    {
-      return "ns" + (int)(Math.random()*1000);
+      return "ns" + (int) ( Math.random() * 1000 );
    }
 
    public static QName createQName( Node node )
    {
-      return new QName( node.getNamespaceURI(), node.getLocalName());
+      return new QName( node.getNamespaceURI(), node.getLocalName() );
    }
 
    public static Node getNextElementSibling( Node node )
@@ -1020,9 +1021,9 @@ public final class XmlUtils
    public static Document createDocument( QName element )
    {
       ensureDocumentBuilder();
-      
+
       Document document = documentBuilder.newDocument();
-      document.appendChild( document.createElementNS( element.getNamespaceURI(), element.getLocalPart() ));
+      document.appendChild( document.createElementNS( element.getNamespaceURI(), element.getLocalPart() ) );
       return document;
    }
 
@@ -1175,6 +1176,6 @@ public final class XmlUtils
       //
       System.out.println( "returning " + result.toString() );
       return result.toString();
-	   }
+   }
 }
 
