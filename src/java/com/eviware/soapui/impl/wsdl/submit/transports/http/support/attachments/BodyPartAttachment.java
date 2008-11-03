@@ -27,202 +27,203 @@ import java.net.MalformedURLException;
 
 /**
  * Attachment for a BodyPart
- * 
+ *
  * @author ole.matzura
  */
 
 public class BodyPartAttachment implements Attachment
 {
-	private final BodyPart bodyPart;
-	private File tempFile;
-	private AbstractHttpOperation operation;
-	private final boolean isRequest;
-	private byte[] data;
-	private AttachmentType attachmentType;
+   private final BodyPart bodyPart;
+   private File tempFile;
+   private AbstractHttpOperation operation;
+   private final boolean isRequest;
+   private byte[] data;
+   private AttachmentType attachmentType;
 
-	public BodyPartAttachment(BodyPart bodyPart, AbstractHttpOperation operation, boolean isRequest, AttachmentType attachmentType )
-	{
-		this.bodyPart = bodyPart;
-		this.operation = operation;
-		this.isRequest = isRequest;
-		this.attachmentType = attachmentType;
-	}
+   public BodyPartAttachment( BodyPart bodyPart, AbstractHttpOperation operation, boolean isRequest, AttachmentType attachmentType )
+   {
+      this.bodyPart = bodyPart;
+      this.operation = operation;
+      this.isRequest = isRequest;
+      this.attachmentType = attachmentType;
+   }
 
-	public String getContentType()
-	{
-		try
-		{
-			return bodyPart.getContentType();
-		}
-		catch (MessagingException e)
-		{
-			SoapUI.logError( e );
-			return null;
-		}
-	}
-	
-	public AttachmentEncoding getEncoding()
-	{
-		return operation == null ? AttachmentEncoding.NONE : operation.getAttachmentEncoding( getPart(), !isRequest );
-	}
+   public String getContentType()
+   {
+      try
+      {
+         return bodyPart.getContentType();
+      }
+      catch( MessagingException e )
+      {
+         SoapUI.logError( e );
+         return null;
+      }
+   }
 
-	public InputStream getInputStream() throws Exception
-	{
-		if( data != null )
-			return new ByteArrayInputStream( data );
-		
-		AttachmentEncoding encoding = getEncoding();
-		if( encoding == AttachmentEncoding.NONE )
-			return bodyPart.getInputStream();
+   public AttachmentEncoding getEncoding()
+   {
+      return operation == null ? AttachmentEncoding.NONE : operation.getAttachmentEncoding( getPart(), !isRequest );
+   }
 
-		data = Tools.readAll( bodyPart.getInputStream(), Tools.READ_ALL ).toByteArray();
+   public synchronized InputStream getInputStream() throws Exception
+   {
+      if( data != null )
+         return new ByteArrayInputStream( data );
 
-		if( encoding == AttachmentEncoding.BASE64 )
-		{
-			if( Base64.isArrayByteBase64( data ))
-				data = Tools.readAll( new ByteArrayInputStream( Base64.decodeBase64( data )), Tools.READ_ALL ).toByteArray();
-			else
-				throw new Exception( "Attachment content for part [" + getPart() + "] is not base64 encoded");
-		}
-		else if(encoding == AttachmentEncoding.HEX )
-		{
-			data = Hex.decodeHex( new String( data ).toCharArray() );
-		}
-		
-		return new ByteArrayInputStream( data );
-	}
+      AttachmentEncoding encoding = getEncoding();
+      if( encoding == AttachmentEncoding.NONE )
+         return bodyPart.getInputStream();
 
-	public String getName()
-	{
-		try
-		{
-			String[] header = bodyPart.getHeader( "Content-Id" );
-			if( header == null || header.length == 0 )
-				return "<missing name>";
-			
-			if( header[0].startsWith( "<" ) && header[0].endsWith( ">" ))
-				header[0] = header[0].substring( 1, header[0].length()-1 );
-			
-			return header[0];
-		}
-		catch (MessagingException e)
-		{
-			SoapUI.logError( e );
-			return null;
-		}
-	}
+      data = Tools.readAll( bodyPart.getInputStream(), Tools.READ_ALL ).toByteArray();
 
-	public String getPart()
-	{
-		String name = getName();
-		int ix = name.indexOf( '=' );
-		if( ix > 0)
-		{
-			name = name.substring( 0,ix );
-		}
-		
-		return name;
-	}
+      if( encoding == AttachmentEncoding.BASE64 )
+      {
+         if( Base64.isArrayByteBase64( data ) )
+            data = Tools.readAll( new ByteArrayInputStream( Base64.decodeBase64( data ) ), Tools.READ_ALL ).toByteArray();
+         else
+            throw new Exception( "Attachment content for part [" + getPart() + "] is not base64 encoded" );
+      }
+      else if( encoding == AttachmentEncoding.HEX )
+      {
+         data = Hex.decodeHex( new String( data ).toCharArray() );
+      }
 
-	public long getSize()
-	{
-		try
-		{
-			getInputStream();
-			return data == null ? bodyPart.getSize() : data.length;
-		}
-		catch (Exception e)
-		{
-			SoapUI.logError( e );
-			return -1;
-		}
-	}
+      return new ByteArrayInputStream( data );
+   }
 
-	public String getUrl()
-	{
-		if( tempFile == null )
-		{
-			String contentType = getContentType();
-			int ix = contentType.lastIndexOf( '/' );
-			int iy = -1;
-			if (ix != -1)
-			iy = contentType.indexOf(';', ix);
-	
-			try
-			{
-				tempFile = File.createTempFile( "response-attachment", (ix == -1 ? ".dat" : "." + (iy == -1 ?
-					contentType.substring(ix+1) : contentType.substring(ix+1, iy))));
+   public String getName()
+   {
+      try
+      {
+         String[] header = bodyPart.getHeader( "Content-Id" );
+         if( header == null || header.length == 0 )
+            return "<missing name>";
 
-				OutputStream out = new BufferedOutputStream( new FileOutputStream( tempFile ));
-				InputStream inputStream = getInputStream();
-				out.write( Tools.readAll( inputStream, 0 ).toByteArray() );
-				out.flush();
-				out.close();
-	
-				inputStream.reset();
-			}
-			catch (Exception e)
-			{
-				SoapUI.logError( e );
-			}
-		}
-			
-		try
-		{
-			return tempFile.toURI().toURL().toString();
-		}
-		catch (MalformedURLException e)
-		{
-			SoapUI.logError( e );
-			return null;
-		}
-	}
+         if( header[0].startsWith( "<" ) && header[0].endsWith( ">" ) )
+            header[0] = header[0].substring( 1, header[0].length() - 1 );
 
-	public void setContentType(String contentType)
-	{
-	}
+         return header[0];
+      }
+      catch( MessagingException e )
+      {
+         SoapUI.logError( e );
+         return null;
+      }
+   }
 
-	public void setPart(String part)
-	{
-	}
+   public String getPart()
+   {
+      String name = getName();
+      int ix = name.indexOf( '=' );
+      if( ix > 0 )
+      {
+         name = name.substring( 0, ix );
+      }
 
-	public boolean isCached()
-	{
-		return true;
-	}
+      return name;
+   }
 
-	public AttachmentType getAttachmentType()
-	{
-		return attachmentType == null ? AttachmentType.UNKNOWN : attachmentType;
-	}
+   public long getSize()
+   {
+      try
+      {
+         getInputStream();
+         return data == null ? bodyPart.getSize() : data.length;
+      }
+      catch( Exception e )
+      {
+         SoapUI.logError( e );
+         return -1;
+      }
+   }
 
-	public void release()
-	{
-		operation = null;
-	}
+   public String getUrl()
+   {
+      if( tempFile == null )
+      {
+         String contentType = getContentType();
+         int ix = contentType.lastIndexOf( '/' );
+         int iy = -1;
+         if( ix != -1 )
+            iy = contentType.indexOf( ';', ix );
 
-	public String getContentID()
-	{
-		try
-		{
-			String[] header = bodyPart.getHeader( "Content-ID" );
-			if( header != null && header.length > 0 )
-				return header[0];
-		}
-		catch( MessagingException e )
-		{
-			SoapUI.logError( e );
-		}
-		
-		return null;
-	}
+         try
+         {
+            tempFile = File.createTempFile( "response-attachment", ( ix == -1 ? ".dat" : "." + ( iy == -1 ?
+                    contentType.substring( ix + 1 ) : contentType.substring( ix + 1, iy ) ) ) );
 
-	public void setOperation( WsdlOperation operation )
-	{
-		this.operation = operation;
-	}
-	
-	public void setAttachmentType(AttachmentType attachmentType)
-	{
-		this.attachmentType = attachmentType;}
+            OutputStream out = new BufferedOutputStream( new FileOutputStream( tempFile ) );
+            InputStream inputStream = getInputStream();
+            out.write( Tools.readAll( inputStream, 0 ).toByteArray() );
+            out.flush();
+            out.close();
+
+            inputStream.reset();
+         }
+         catch( Exception e )
+         {
+            SoapUI.logError( e );
+         }
+      }
+
+      try
+      {
+         return tempFile.toURI().toURL().toString();
+      }
+      catch( MalformedURLException e )
+      {
+         SoapUI.logError( e );
+         return null;
+      }
+   }
+
+   public void setContentType( String contentType )
+   {
+   }
+
+   public void setPart( String part )
+   {
+   }
+
+   public boolean isCached()
+   {
+      return true;
+   }
+
+   public AttachmentType getAttachmentType()
+   {
+      return attachmentType == null ? AttachmentType.UNKNOWN : attachmentType;
+   }
+
+   public void release()
+   {
+      operation = null;
+   }
+
+   public String getContentID()
+   {
+      try
+      {
+         String[] header = bodyPart.getHeader( "Content-ID" );
+         if( header != null && header.length > 0 )
+            return header[0];
+      }
+      catch( MessagingException e )
+      {
+         SoapUI.logError( e );
+      }
+
+      return null;
+   }
+
+   public void setOperation( WsdlOperation operation )
+   {
+      this.operation = operation;
+   }
+
+   public void setAttachmentType( AttachmentType attachmentType )
+   {
+      this.attachmentType = attachmentType;
+   }
 }

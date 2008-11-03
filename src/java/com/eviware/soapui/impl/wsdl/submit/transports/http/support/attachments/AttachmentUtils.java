@@ -96,8 +96,8 @@ public class AttachmentUtils
 
                if( AttachmentUtils.isSwaRefType( schemaType ) )
                {
-                  String textContent = cursor.getTextValue();
-                  if( textContent.startsWith( "cid:" ) )
+                  String textContent = XmlUtils.getNodeValue( cursor.getDomNode() );
+                  if( StringUtils.hasContent( textContent ) && textContent.startsWith( "cid:" ) )
                   {
                      textContent = textContent.substring( 4 );
 
@@ -143,76 +143,79 @@ public class AttachmentUtils
                {
                   // extract contentId
                   String textContent = XmlUtils.getNodeValue( cursor.getDomNode() );
-                  Attachment attachment = null;
-                  boolean isXopAttachment = false;
-
-                  // is content a reference to a file?
-                  if( container.isInlineFilesEnabled() && textContent.startsWith( "file:" ) )
+                  if( StringUtils.hasContent( textContent ) )
                   {
-                     String filename = textContent.substring( 5 );
-                     if( container.isMtomEnabled() )
+                     Attachment attachment = null;
+                     boolean isXopAttachment = false;
+
+                     // is content a reference to a file?
+                     if( container.isInlineFilesEnabled() && textContent.startsWith( "file:" ) )
+                     {
+                        String filename = textContent.substring( 5 );
+                        if( container.isMtomEnabled() )
+                        {
+                           MimeBodyPart part = new PreencodedMimeBodyPart( "binary" );
+                           String xmimeContentType = getXmlMimeContentType( cursor );
+
+                           if( StringUtils.isNullOrEmpty( xmimeContentType ) )
+                              xmimeContentType = ContentTypeHandler.getContentTypeFromFilename( filename );
+
+                           part.setDataHandler( new DataHandler( new XOPPartDataSource( new File( filename ), xmimeContentType, schemaType ) ) );
+                           part.setContentID( "<" + filename + ">" );
+                           mp.addBodyPart( part );
+
+                           isXopAttachment = true;
+                        }
+                        else
+                        {
+                           inlineData( cursor, schemaType, new FileInputStream( filename ) );
+                        }
+                     }
+                     // is content a reference to an attachment?
+                     else if( textContent.startsWith( "cid:" ) )
+                     {
+                        textContent = textContent.substring( 4 );
+
+                        Attachment[] attachments = container.getAttachmentsForPart( textContent );
+                        if( attachments.length == 1 )
+                        {
+                           attachment = attachments[0];
+                        }
+                        else if( attachments.length > 1 )
+                        {
+                           attachment = buildMulitpartAttachment( attachments );
+                        }
+
+                        isXopAttachment = container.isMtomEnabled();
+                        contentIds.put( textContent, textContent );
+                     }
+                     // content should be binary data; is this an XOP element which should be serialized with MTOM?
+                     else if( container.isMtomEnabled() && SchemaUtils.isBinaryType( schemaType ) || SchemaUtils.isAnyType( schemaType ) )
                      {
                         MimeBodyPart part = new PreencodedMimeBodyPart( "binary" );
                         String xmimeContentType = getXmlMimeContentType( cursor );
 
-                        if( StringUtils.isNullOrEmpty( xmimeContentType ) )
-                           xmimeContentType = ContentTypeHandler.getContentTypeFromFilename( filename );
+                        part.setDataHandler( new DataHandler( new XOPPartDataSource( textContent, xmimeContentType, schemaType ) ) );
 
-                        part.setDataHandler( new DataHandler( new XOPPartDataSource( new File( filename ), xmimeContentType, schemaType ) ) );
-                        part.setContentID( "<" + filename + ">" );
+                        textContent = "http://www.soapui.org/" + System.nanoTime();
+
+                        part.setContentID( "<" + textContent + ">" );
                         mp.addBodyPart( part );
 
                         isXopAttachment = true;
                      }
-                     else
+
+                     // add XOP include?
+                     if( isXopAttachment && container.isMtomEnabled() )
                      {
-                        inlineData( cursor, schemaType, new FileInputStream( filename ) );
+                        buildXopInclude( cursor, textContent );
+                        isXop = true;
                      }
-                  }
-                  // is content a reference to an attachment?
-                  else if( textContent.startsWith( "cid:" ) )
-                  {
-                     textContent = textContent.substring( 4 );
-
-                     Attachment[] attachments = container.getAttachmentsForPart( textContent );
-                     if( attachments.length == 1 )
+                     // inline?
+                     else if( attachment != null )
                      {
-                        attachment = attachments[0];
+                        inlineAttachment( cursor, schemaType, attachment );
                      }
-                     else if( attachments.length > 1 )
-                     {
-                        attachment = buildMulitpartAttachment( attachments );
-                     }
-
-                     isXopAttachment = container.isMtomEnabled();
-                     contentIds.put( textContent, textContent );
-                  }
-                  // content should be binary data; is this an XOP element which should be serialized with MTOM?
-                  else if( container.isMtomEnabled() &&  SchemaUtils.isBinaryType( schemaType ) || SchemaUtils.isAnyType( schemaType ) )
-                  {
-                     MimeBodyPart part = new PreencodedMimeBodyPart( "binary" );
-                     String xmimeContentType = getXmlMimeContentType( cursor );
-
-                     part.setDataHandler( new DataHandler( new XOPPartDataSource( textContent, xmimeContentType, schemaType ) ) );
-
-                     textContent = "http://www.soapui.org/" + System.nanoTime();
-
-                     part.setContentID( "<" + textContent + ">" );
-                     mp.addBodyPart( part );
-
-                     isXopAttachment = true;
-                  }
-
-                  // add XOP include?
-                  if( isXopAttachment && container.isMtomEnabled() )
-                  {
-                     buildXopInclude( cursor, textContent );
-                     isXop = true;
-                  }
-                  // inline?
-                  else if( attachment != null )
-                  {
-                     inlineAttachment( cursor, schemaType, attachment );
                   }
                }
             }
@@ -401,7 +404,7 @@ public class AttachmentUtils
                         String attributeText = AttachmentUtils.getXmlMimeContentType( cursor );
 
                         // xop?
-                        if( SchemaUtils.isBinaryType( schemaType ) || SchemaUtils.isAnyType( schemaType ))
+                        if( SchemaUtils.isBinaryType( schemaType ) || SchemaUtils.isAnyType( schemaType ) )
                         {
                            String contentId = cursor.getTextValue();
                            if( contentId.startsWith( "cid:" ) )
@@ -545,7 +548,7 @@ public class AttachmentUtils
          contentID = contentID.trim();
          int ix = contentID.indexOf( ' ' );
          if( ix != -1 )
-            part.setContentID( "<" + (isMultipart ? contentID.substring( ix + 1 ) : contentID.substring( 0, ix )) + ">" );
+            part.setContentID( "<" + ( isMultipart ? contentID.substring( ix + 1 ) : contentID.substring( 0, ix ) ) + ">" );
          else
          {
             if( !contentID.startsWith( "<" ) )
