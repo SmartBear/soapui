@@ -443,7 +443,7 @@ public class WsaUtils {
 			String action = null;
 			if (wsaContainer.getWsaConfig().isAddDefaultAction()) {
 				action = WsdlUtils.getDefaultWsaAction(wsaContainer
-						.getOperation(), false);
+						.getOperation(), true);
 			} else {
 				action = PropertyExpansionUtils.expandProperties(context,
 						wsaContainer.getWsaConfig().getAction());
