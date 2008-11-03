@@ -45,6 +45,7 @@ public class HttpPrefs implements Prefs
    public static final String DISABLE_CHUNKING = "Disable Chunking";
    public static final String HTTP_VERSION = "HTTP Version";
    public static final String ENABLE_MOCK_WIRE_LOG = "Enable Mock HTTP Log";
+   public static final String DISABLE_RESPONSE_DECOMPRESSION = "Disable Response Decompression";
 
    private static TreeMap<String, String> compressionAlgs = new TreeMap<String, String>();
 
@@ -75,6 +76,7 @@ public class HttpPrefs implements Prefs
          httpForm.appendTextField( HttpPrefs.USER_AGENT_HEADER, "User-Agent HTTP header to send, blank will send default" );
          httpForm.appendComboBox( HttpPrefs.REQUEST_COMPRESSION, compressionAlgs );
          httpForm.appendCheckBox( HttpPrefs.RESPONSE_COMPRESSION, "Accept compressed responses from hosts", true );
+         httpForm.appendCheckBox( HttpPrefs.DISABLE_RESPONSE_DECOMPRESSION, "Disable decompression of compressed responses", true );
          httpForm.appendCheckBox( HttpPrefs.CLOSE_CONNECTIONS_AFTER_REQUEST, "Closes the HTTP connection after each SOAP request", true );
          httpForm.appendCheckBox( HttpPrefs.DISABLE_CHUNKING, "Disables content-chunking", true );
          httpForm.appendCheckBox( HttpPrefs.AUTHENTICATE_PREEMPTIVELY, "Adds authentication information to outgoing request", true );
@@ -110,6 +112,7 @@ public class HttpPrefs implements Prefs
       settings.setString( HttpSettings.USER_AGENT, httpValues.get( USER_AGENT_HEADER ) );
       settings.setString( HttpSettings.REQUEST_COMPRESSION, httpValues.get( REQUEST_COMPRESSION ) );
       settings.setString( HttpSettings.RESPONSE_COMPRESSION, httpValues.get( RESPONSE_COMPRESSION ) );
+      settings.setString( HttpSettings.DISABLE_RESPONSE_DECOMPRESSION, httpValues.get( DISABLE_RESPONSE_DECOMPRESSION ) );
       settings.setString( HttpSettings.CLOSE_CONNECTIONS, httpValues.get( CLOSE_CONNECTIONS_AFTER_REQUEST ) );
       settings.setString( HttpSettings.AUTHENTICATE_PREEMPTIVELY, httpValues.get( AUTHENTICATE_PREEMPTIVELY ) );
       settings.setString( HttpSettings.SOCKET_TIMEOUT, httpValues.get( SOCKET_TIMEOUT ) );
@@ -137,6 +140,7 @@ public class HttpPrefs implements Prefs
       httpValues.put( USER_AGENT_HEADER, settings.getString( HttpSettings.USER_AGENT, null ) );
       httpValues.put( REQUEST_COMPRESSION, compressionAlgs.get( settings.getString( HttpSettings.REQUEST_COMPRESSION, "None" ) ) );
       httpValues.put( RESPONSE_COMPRESSION, settings.getString( HttpSettings.RESPONSE_COMPRESSION, null ) );
+      httpValues.put( DISABLE_RESPONSE_DECOMPRESSION, settings.getString( HttpSettings.DISABLE_RESPONSE_DECOMPRESSION, null ) );
       httpValues.put( CLOSE_CONNECTIONS_AFTER_REQUEST, settings.getString( HttpSettings.CLOSE_CONNECTIONS, null ) );
       httpValues.put( AUTHENTICATE_PREEMPTIVELY, settings.getString( HttpSettings.AUTHENTICATE_PREEMPTIVELY, null ) );
       httpValues.put( INCLUDE_REQUEST_IN_TIME_TAKEN, settings.getString( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN, null ) );

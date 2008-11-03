@@ -12,9 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.http.ConnectionWithSocket;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
+import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import org.apache.commons.httpclient.Header;
@@ -65,10 +67,10 @@ public final class HttpMethodSupport
    {
       if( arg1 instanceof ConnectionWithSocket )
       {
-         Socket socket = ( ( ConnectionWithSocket ) arg1 ).getConnectionSocket();
+         Socket socket = ( (ConnectionWithSocket) arg1 ).getConnectionSocket();
          if( socket instanceof SSLSocket )
          {
-            sslInfo = new SSLInfo( ( SSLSocket ) socket );
+            sslInfo = new SSLInfo( (SSLSocket) socket );
          }
       }
    }
@@ -122,7 +124,7 @@ public final class HttpMethodSupport
          ByteArrayOutputStream out = new ByteArrayOutputStream();
          if( instream != null )
             Tools.writeAll( out, instream );
-         
+
          responseReadTime = System.nanoTime() - now;
          responseBody = out.toByteArray();
 
@@ -138,18 +140,21 @@ public final class HttpMethodSupport
             e.printStackTrace();
          }
 
-         String compressionAlg = HttpClientSupport.getResponseCompressionType( httpMethod );
-         if( compressionAlg != null )
+         if( !SoapUI.getSettings().getBoolean( HttpSettings.DISABLE_RESPONSE_DECOMPRESSION ) )
          {
-            try
+            String compressionAlg = HttpClientSupport.getResponseCompressionType( httpMethod );
+            if( compressionAlg != null )
             {
-               responseBody = CompressionSupport.decompress( compressionAlg, responseBody );
-            }
-            catch( Exception e )
-            {
-               IOException ioe = new IOException( "Decompression of response failed" );
-               ioe.initCause( e );
-               throw ioe;
+               try
+               {
+                  responseBody = CompressionSupport.decompress( compressionAlg, responseBody );
+               }
+               catch( Exception e )
+               {
+                  IOException ioe = new IOException( "Decompression of response failed" );
+                  ioe.initCause( e );
+                  throw ioe;
+               }
             }
          }
       }
