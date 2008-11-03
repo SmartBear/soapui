@@ -392,13 +392,6 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
       return testCases.indexOf( testCase );
    }
 
-   @Override
-   public void beforeSave()
-   {
-      for( WsdlTestCase testCase : testCases )
-         testCase.beforeSave();
-   }
-
    public List<? extends ModelItem> getChildren()
    {
       return getTestCaseList();
@@ -548,14 +541,14 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
          getConfig().removeTestCase( ix );
       }
 
-      TestCaseConfig newConfig = (TestCaseConfig) getConfig().insertNewTestCase(ix).set( newTestCase ).changeType(
+      TestCaseConfig newConfig = (TestCaseConfig) getConfig().insertNewTestCase( ix ).set( newTestCase ).changeType(
               TestCaseConfig.type );
       testCase = new WsdlTestCase( this, newConfig, false );
       testCases.add( ix, testCase );
       testCase.afterLoad();
       fireTestCaseAdded( testCase );
-      
-      resolveImportedTestCase(testCase);
+
+      resolveImportedTestCase( testCase );
    }
 
    public void importTestCase( File file )
@@ -610,6 +603,6 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
       catch( IOException e )
       {
          e.printStackTrace();
-		}
-	}
+      }
+   }
 }

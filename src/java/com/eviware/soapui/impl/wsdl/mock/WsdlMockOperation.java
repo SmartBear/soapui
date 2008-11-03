@@ -292,7 +292,7 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
    public MockOperationDispatcher setDispatchStyle( String dispatchStyle )
    {
       String old = getDispatchStyle();
-      if( dispatcher != null && dispatchStyle.equals( old ))
+      if( dispatcher != null && dispatchStyle.equals( old ) )
          return dispatcher;
 
       getConfig().setDispatchStyle( MockOperationDispatchStyleConfig.Enum.forString( dispatchStyle ) );
@@ -394,13 +394,6 @@ public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig
       this.operation = operation;
 
       notifyPropertyChanged( OPERATION_PROPERTY, oldOperation, operation );
-   }
-
-   @Override
-   public void beforeSave()
-   {
-      for( WsdlMockResponse mockResponse : responses )
-         mockResponse.beforeSave();
    }
 
    public MockOperationDispatcher getMockOperationDispatcher()

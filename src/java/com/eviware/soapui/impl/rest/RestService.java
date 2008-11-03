@@ -232,6 +232,8 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 
    public void beforeSave()
    {
+      super.beforeSave();
+
       if( isGenerated() && wadlContext != null )
       {
          try

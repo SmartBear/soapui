@@ -192,7 +192,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
    {
       if( getMockOperation( operation ) != null )
          return null;
-      
+
       MockOperationConfig config = getConfig().addNewMockOperation();
       config.setName( operation.getName() );
       WsdlMockOperation mockOperation = new WsdlMockOperation( this, config, operation );
@@ -423,13 +423,6 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
       return getMockOperation( operation ) != null;
    }
 
-   @Override
-   public void beforeSave()
-   {
-      for( WsdlMockOperation mockOperation : mockOperations )
-         mockOperation.beforeSave();
-   }
-
    public void setStartScript( String script )
    {
       String oldScript = getStartScript();
@@ -616,7 +609,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
       notifyPropertyChanged( OUGOING_WSS, old, outgoingWss );
    }
 
-    public boolean isDispatchResponseMessages()
+   public boolean isDispatchResponseMessages()
    {
       return getConfig().getDispatchResponseMessages();
    }
@@ -666,7 +659,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
       mockOperation.release();
       getConfig().removeMockOperation( ix );
 
-      MockOperationConfig newConfig = (MockOperationConfig) getConfig().insertNewMockOperation(ix)
+      MockOperationConfig newConfig = (MockOperationConfig) getConfig().insertNewMockOperation( ix )
               .set( reloadedMockOperation ).changeType( MockOperationConfig.type );
       WsdlMockOperation newOperation = new WsdlMockOperation( this, newConfig );
       mockOperations.add( ix, newOperation );

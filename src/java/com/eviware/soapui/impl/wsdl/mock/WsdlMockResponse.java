@@ -226,7 +226,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
          {
             result.addHeader( name, PropertyExpansionUtils.expandProperties( context, responseHeaders.get( name ) ) );
          }
-         
+
          responseContent = PropertyExpansionUtils.expandProperties( context, responseContent, isEntitizeProperties() );
 
          if( this.getWsaConfig().isWsaEnabled() )
@@ -857,6 +857,8 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
    @Override
    public void beforeSave()
    {
+      super.beforeSave();
+
       if( responseContent != null )
       {
          CompressedStringSupport.setString( getConfig().getResponseContent(), responseContent );

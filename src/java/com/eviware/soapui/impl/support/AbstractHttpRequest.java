@@ -544,6 +544,8 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
    @Override
    public void beforeSave()
    {
+      super.beforeSave();
+
       if( requestContent != null )
       {
          if( getConfig().getRequest() == null )

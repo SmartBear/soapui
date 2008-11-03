@@ -393,7 +393,7 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
             return AnonymousTypeConfig.REQUIRED.toString();
          }
       }
-      
+
       return AnonymousTypeConfig.OPTIONAL.toString();
    }
 
@@ -937,13 +937,6 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
       {
          return null;
       }
-   }
-
-   @Override
-   public void beforeSave()
-   {
-      for( WsdlRequest request : requests )
-         request.beforeSave();
    }
 
    public List<? extends ModelItem> getChildren()
