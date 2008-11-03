@@ -108,7 +108,7 @@ public class RestParamsTable extends JPanel
       optionsFormComponent.setPreferredSize( new Dimension( 350, 80 ) );
       form.appendComponent( "options", "Options", optionsFormComponent );
       form.appendTextField( "description", "Description", "A short description of the parameter" );
-      form.appendCheckBox( "encode", "URL Encode", "URL-Encodes the parameter value" );
+      form.appendCheckBox( "disableUrlEncoding", "Disable Encoding", "Disables URL-Encoding of the parameter value" );
 
       form.addSpace( 5 );
 

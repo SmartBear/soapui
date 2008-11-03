@@ -241,9 +241,6 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
       {
          this.propertyConfig = propertyConfig;
 
-         if( !propertyConfig.isSetEncode() )
-            propertyConfig.setEncode( true );
-
          propertySupport = new PropertyChangeSupport( this );
       }
 
@@ -359,14 +356,14 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
          return propertyConfig.getRequired();
       }
 
-      public boolean isEncode()
+      public boolean isDisableUrlEncoding()
       {
-         return propertyConfig.getEncode();
+         return propertyConfig.getDisableUrlEncoding();
       }
 
-      public void setEncode( boolean encode )
+      public void setDisableUrlEncoding( boolean encode )
       {
-         propertyConfig.setEncode( encode );
+         propertyConfig.setDisableUrlEncoding( encode );
       }
 
       public QName getType()

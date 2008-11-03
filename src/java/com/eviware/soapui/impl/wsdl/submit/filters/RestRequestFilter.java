@@ -69,7 +69,7 @@ public class RestRequestFilter extends AbstractRequestFilter
          RestParamProperty param = params.getPropertyAt( c );
 
          String value = PropertyExpansionUtils.expandProperties( context, param.getValue() );
-         if( param.isEncode() )
+         if( !param.isDisableUrlEncoding() )
             value = URLEncoder.encode( value );
 
          responseProperties.put( param.getName(), value );
