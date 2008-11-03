@@ -69,6 +69,9 @@ public class RestRequestFilter extends AbstractRequestFilter
          RestParamProperty param = params.getPropertyAt( c );
 
          String value = PropertyExpansionUtils.expandProperties( context, param.getValue() );
+         if( param.isEncode() )
+            value = URLEncoder.encode( value );
+
          responseProperties.put( param.getName(), value );
 
          if( !StringUtils.hasContent( value ) && !param.getRequired() )
@@ -85,10 +88,10 @@ public class RestRequestFilter extends AbstractRequestFilter
 
                query.append( URLEncoder.encode( param.getName() ) );
                if( StringUtils.hasContent( value ) )
-                  query.append( '=' ).append( URLEncoder.encode( value ) );
+                  query.append( '=' ).append( value );
                break;
             case TEMPLATE:
-               path = path.replaceAll( "\\{" + param.getName() + "\\}", URLEncoder.encode( value ) );
+               path = path.replaceAll( "\\{" + param.getName() + "\\}", value );
                break;
             case MATRIX:
                if( param.getType().equals( XmlBoolean.type.getName() ) )
@@ -103,7 +106,7 @@ public class RestRequestFilter extends AbstractRequestFilter
                   path += ";" + param.getName();
                   if( StringUtils.hasContent( value ) )
                   {
-                     path += "=" + URLEncoder.encode( value );
+                     path += "=" + value;
                   }
                }
             case PLAIN:

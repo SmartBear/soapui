@@ -129,7 +129,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
             if( !updatingRequest )
             {
                updatingRequest = true;
-               restRequest.setRequestContent( contentEditor.getText() );
+               restRequest.setRequestContent( getText( document ) );
                updatingRequest = false;
             }
          }

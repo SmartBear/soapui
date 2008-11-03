@@ -1381,6 +1381,7 @@
         </xsd:sequence>
         <xsd:attribute name="required" type="xsd:boolean"></xsd:attribute>
         <xsd:attribute name="repeating" type="xsd:boolean"></xsd:attribute>
+        <xsd:attribute name="encode" type="xsd:boolean"></xsd:attribute>
     </xsd:complexType>
 
     <xsd:complexType name="RestParameters">
