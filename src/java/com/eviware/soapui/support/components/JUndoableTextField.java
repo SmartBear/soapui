@@ -12,180 +12,187 @@
 
 package com.eviware.soapui.support.components;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.swing.JTextComponentPopupMenu;
 
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
-
-import com.eviware.soapui.support.UISupport;
+import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 /**
- * JTextArea with Undo/Redo keyboard/popup support 
+ * JTextArea with Undo/Redo keyboard/popup support
  *
  * @author Ole.Matzura
  */
 
-public class JUndoableTextField extends JTextField implements	Undoable, UndoableEditListener, FocusListener
+public class JUndoableTextField extends JTextField implements Undoable, UndoableEditListener, FocusListener
 {
-	public static final int UNDO_LIMIT = 100;
+   public static final int UNDO_LIMIT = 100;
 
-	private UndoManager undoManager;
-	private boolean discardEditsOnSet = false;
+   private UndoManager undoManager;
+   private boolean discardEditsOnSet = false;
 
-	public JUndoableTextField()
-	{
-		super();
-		init();
-	}
-	
-	private void init()
-	{
-		getDocument().addUndoableEditListener(this);
-		addFocusListener(this);
-		
-		setMinimumSize( new Dimension( 50, 50 ));
-		addKeyListener( new KeyAdapter() {
+   public JUndoableTextField()
+   {
+      super();
+      init();
+   }
 
-			public void keyPressed(KeyEvent e)
-			{
-				if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu Z" )))
-				   undo();
-				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu Y" )))
-					redo();
-				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu X" )))
-					cut();
-				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu C" )))
-					copy();
-			}} );
-	}
+   public JUndoableTextField( boolean addPopup )
+   {
+      this();
+      if( addPopup )
+         JTextComponentPopupMenu.add( this );
+   }
 
-	public JUndoableTextField( String text )
-	{
-		super( text );
-		init();
-	}
-	
-	public JUndoableTextField( int columns )
-	{
-		super( columns );
-		init();
-	}
+   private void init()
+   {
+      getDocument().addUndoableEditListener( this );
+      addFocusListener( this );
 
-	public JUndoableTextField( String text, int columns )
-	{
-		super( text, columns );
-		init();
-	}
+      setMinimumSize( new Dimension( 50, 50 ) );
+      addKeyListener( new KeyAdapter()
+      {
 
-	public void setText(String text)
-	{
-		ensureUndoManager();
-		super.setText(text == null ? "" : text);
-		
-		if( discardEditsOnSet && undoManager != null )
-			undoManager.discardAllEdits();
-	}
-	
-	public boolean isDiscardEditsOnSet()
-	{
-		return discardEditsOnSet;
-	}
+         public void keyPressed( KeyEvent e )
+         {
+            if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu Z" ) ) )
+               undo();
+            else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu Y" ) ) )
+               redo();
+            else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu X" ) ) )
+               cut();
+            else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu C" ) ) )
+               copy();
+         }
+      } );
+   }
 
-	public void setDiscardEditsOnSet(boolean discardEditsOnSet)
-	{
-		this.discardEditsOnSet = discardEditsOnSet;
-	}
+   public JUndoableTextField( String text )
+   {
+      super( text );
+      init();
+   }
 
-	public UndoManager getUndoManager()
-	{
-		return undoManager;
-	}
-	
-	private void ensureUndoManager()
-	{
-		if (isEditable() && undoManager == null )
-		{
-			undoManager = new UndoManager();
-			undoManager.setLimit(UNDO_LIMIT);
-		}
-	}
-	
-	public void focusGained(FocusEvent fe)
-	{
-		ensureUndoManager();
-	}
+   public JUndoableTextField( int columns )
+   {
+      super( columns );
+      init();
+   }
 
-	public void focusLost(FocusEvent fe)
-	{
-		//removeUndoMananger();
-	}
+   public JUndoableTextField( String text, int columns )
+   {
+      super( text, columns );
+      init();
+   }
 
-	public void undoableEditHappened(UndoableEditEvent e)
-	{
-		if (undoManager != null)
-			undoManager.addEdit(e.getEdit());
-	}
+   public void setText( String text )
+   {
+      ensureUndoManager();
+      super.setText( text == null ? "" : text );
 
-	public void undo()
-	{
-		if( !isEditable()  )
-		{
-			getToolkit().beep();
-			return;
-		}
-		
-		try
-		{
-			if( undoManager != null )
-				undoManager.undo();
-		}
-		catch (CannotUndoException cue)
-		{
-			Toolkit.getDefaultToolkit().beep();
-		}
-	}
+      if( discardEditsOnSet && undoManager != null )
+         undoManager.discardAllEdits();
+   }
 
-	public void redo()
-	{
-		if( !isEditable()  )
-		{
-			getToolkit().beep();
-			return;
-		}
-		
-		try
-		{
-			if( undoManager != null )
-				undoManager.redo();
-		}
-		catch (CannotRedoException cue)
-		{
-			Toolkit.getDefaultToolkit().beep();
-		}
-	}
+   public boolean isDiscardEditsOnSet()
+   {
+      return discardEditsOnSet;
+   }
 
-	public void setSelectedText(String txt)
-	{
-		replaceSelection( txt );
-	}
+   public void setDiscardEditsOnSet( boolean discardEditsOnSet )
+   {
+      this.discardEditsOnSet = discardEditsOnSet;
+   }
 
-	public boolean canRedo()
-	{
-		return undoManager != null && undoManager.canRedo();
-	}
+   public UndoManager getUndoManager()
+   {
+      return undoManager;
+   }
 
-	public boolean canUndo()
-	{
-		return undoManager != null && undoManager.canUndo();
-	}
+   private void ensureUndoManager()
+   {
+      if( isEditable() && undoManager == null )
+      {
+         undoManager = new UndoManager();
+         undoManager.setLimit( UNDO_LIMIT );
+      }
+   }
+
+   public void focusGained( FocusEvent fe )
+   {
+      ensureUndoManager();
+   }
+
+   public void focusLost( FocusEvent fe )
+   {
+      //removeUndoMananger();
+   }
+
+   public void undoableEditHappened( UndoableEditEvent e )
+   {
+      if( undoManager != null )
+         undoManager.addEdit( e.getEdit() );
+   }
+
+   public void undo()
+   {
+      if( !isEditable() )
+      {
+         getToolkit().beep();
+         return;
+      }
+
+      try
+      {
+         if( undoManager != null )
+            undoManager.undo();
+      }
+      catch( CannotUndoException cue )
+      {
+         Toolkit.getDefaultToolkit().beep();
+      }
+   }
+
+   public void redo()
+   {
+      if( !isEditable() )
+      {
+         getToolkit().beep();
+         return;
+      }
+
+      try
+      {
+         if( undoManager != null )
+            undoManager.redo();
+      }
+      catch( CannotRedoException cue )
+      {
+         Toolkit.getDefaultToolkit().beep();
+      }
+   }
+
+   public void setSelectedText( String txt )
+   {
+      replaceSelection( txt );
+   }
+
+   public boolean canRedo()
+   {
+      return undoManager != null && undoManager.canRedo();
+   }
+
+   public boolean canUndo()
+   {
+      return undoManager != null && undoManager.canUndo();
+   }
 }
