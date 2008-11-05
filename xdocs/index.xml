@@ -16,207 +16,297 @@
         <title>the Web Service, SOA and SOAP Testing Tool</title>
     </properties>
     <body>
-		
-    <section>
-    
-    
-    
-    
-      <table class="OSProTable">
-      	<tr class="b">
-      		<td>
-      			<div align="center">
-      				<a onclick="javascript:urchinTracker('/downloadOpenSource')" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=628758" title="Download soapUI">
-      				<img src="images/download_opensource.png" alt="download Open Source" width="310" height="165" longdesc="http://www.sourceforge.net"/>
-      				</a> 
-      			</div>
-      		</td>
-      		<td>
-      			<div align="center">
-					<a onclick="javascript:urchinTracker('/downloadPro')" href="http://www.eviware.com/trial" title="Download soapUI Pro">
-						<img src="images/download_pro.png" alt="Download soapUI Pro" width="310" height="165" longdesc="http://www.eviware.com"/>
-      				</a> 
-      			</div>
-      		</td>
-      	</tr>
-      </table>
 
-		
-		<h1>soapUI; the Web Services Testing tool.</h1>
-		<p>
-		soapUI is the leading tool for Web Service Testing. With more than <b>760 000 downloads</b>, it's the most used tool for SOA testing in the world.
-		</p>
+        <section>
 
-		
 
-<table class="gstable" cellspacing="0" cellpadding="0">
-	<tr class="a">
-    	<td width="75" style="padding-top:5px">
-        	<img src="images/where_do_i_start.jpg" alt="Start soapUI Testing" longdesc="http://www.soapui.org"></img>
-        </td>
-        <td>
-            <table class="GSInner" width="600" border="0" cellpadding="0">
-              <tr>
-                <td colspan="2"><span class="gsHeader">Where do I start?</span></td>
+            <table class="OSProTable">
+                <tr class="b">
+                    <td>
+                        <div align="center">
+                            <a onclick="javascript:urchinTracker('/downloadOpenSource')"
+                               href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=628758"
+                               title="Download soapUI">
+                                <img src="images/download_opensource.png" alt="download Open Source" width="310"
+                                     height="165" longdesc="http://www.sourceforge.net"/>
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        <div align="center">
+                            <a onclick="javascript:urchinTracker('/downloadPro')" href="http://www.eviware.com/trial"
+                               title="Download soapUI Pro">
+                                <img src="images/download_pro.png" alt="Download soapUI Pro" width="310" height="165"
+                                     longdesc="http://www.eviware.com"/>
+                            </a>
+                        </div>
+                    </td>
                 </tr>
-              <tr>
-                <td><ul class="evilist">
-                  <li>Read the <a href="features.html">Feature Overview</a></li>
-                  <li>Try your hands on <a href="gettingstarted/sample-project.html">the Example soapUI Project</a></li>
-                  <li>Watch the <a href="#" onclick="openVideo('movies/sample_project/sample_project.html');">Example Project Movie</a></li>
-                </ul>
-                </td>
-                <td valign="top"><ul class="evilist">
-                  <li>Read the <a href="gettingstarted/index.html">Getting Started with soapUI Guide</a></li>
-                  <li>Read the <a href="comparison.html">soapUI Pro comparison</a></li>
-                </ul>
-                </td>
-              </tr>
             </table>
-         </td>
-	</tr>
-</table>
-
-		
-<subsection name="Vote For soapUI">
-		<columns>
-		<column>
-		<a target="_new" href="http://soa.sys-con.com/general/readerschoice.htm" onclick="javascript:urchinTracker('/voteLink');">
-		<img src="images/WSJ-SOAReadersChoice-125_125px.jpg" alt="Vote for soapUI"/>
-		</a>
-		</column>
-		<column>
-		<p align="left">
-		<b>
-        Vote for soapUI in SOA World Magazine Reader's Choice Vote. <br/>
-        </b>
-		We are participating in several categories and need your support; <br/>
-		if you use soapUI and enjoy it; why not cast your vote on soapUI? <br/>
-		Thanks for your support, we appreciate it!<br/>
-		<a target="_new" href="http://soa.sys-con.com/general/readerschoice.htm" onclick="javascript:urchinTracker('/voteLink');">
-		Vote Here!
-		</a>
-		
-		</p>
-		</column></columns>
-		
-		</subsection>
-		
-		
-		<subsection name="What is soapUI?">
-				<p>soapUI is the most used testing tool in the world for:</p>
-
-		<columns>
-			<column>
-				<ul class="evilist">
-					<li><a href="userguide/interfaces/interfaceeditor.html">Inspecting Web Services</a></li>
-					<li><a href="gettingstarted/your_first_soapui_project.html">Invoking Web Services</a></li>
-					<li><a href="#" onclick="openVideo('movies/sample_project/sample_project.html');">Developing Web Services</a></li>
-					
-				</ul>
-			</column>
-			<column align="left">
-				<ul class="evilist">
-					<li><a href="userguide/mock/index.html">Web Service Simulation and Web Service Mocking</a></li>	
-					<li><a href="userguide/functional/index.html">Functional Testing of Web Services</a></li>
-					<li><a href="userguide/loadtest/index.html">Load Testing of Web Services</a></li>
-				</ul>
-			</column>
-		</columns>
-		</subsection>
 
 
+            <h1>soapUI; the Web Services Testing tool.</h1>
+            <p>
+                soapUI is the leading tool for Web Service Testing. With more than<b>760 000 downloads</b>, it's the
+                most used tool for SOA testing in the world.
+            </p>
 
 
-
-
-
-
-		
-       <table class="webstartlinkstable" cellspacing="0" cellpadding="0">
-       	<tr class="b">
-        	<td align="center" bgcolor="white">
-        		<p class="WebStartHeader">soapUI 2.0.2</p>
-		        <div>
-					<a href="http://www.soapui.org/jnlp/2.5-beta1/soapui.jnlp" class="externalLink" title="External Link" onclick="javascript:urchinTracker('/jnlp/soapui/2_5_beta1');"><img class="webstart" src="images/webstart_green.png" border="0" alt=""></img></a>
-				</div>
-				[<a href="new_and_noteworthy_2.html">Read More</a>]
-				[<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=628758" class="externalLink" title="External Link">Download</a>]
-			</td>
-			<td align="center" bgcolor="white">
-            	<p class="WebStartHeader">soapUI Pro 2.0.2 <span class="OrangeHeader">Pro</span></p>
-            	<div>
-					<a href="http://www.eviware.com/jnlp/2.5-beta1/soapui-pro.jnlp" class="externalLink" title="External Link" onclick="javascript:urchinTracker:('/jnlp/soapui/2_5_beta1-pro');"><img class="webstart" src="images/webstart_orange.png" border="0" alt=""></img></a>
-				</div>
-			 	[<a href="comparison.html">Compare</a>]
-			 	[<a target="_new" href="http://www.eviware.com" class="externalLink" title="External Link">Trial/Buy</a>]
-			 	[<a target="_new" href="http://www.eviware.com/content/view/42/36/" class="externalLink" title="External Link">FAQ</a>]
-			 </td>
-			</tr>
-		</table>
-
-		<columns>
-			<column>
-				<subsection name="Latest News">
-					<p><i>2008-09-25: soapUI 2.5 beta1- The REST Release</i> : The beta of soapUI 2.5 with full REST Test Support is out <a href="new_and_noteworthy_2_5.html">[Read more]</a></p>
-					<p><i>2008-01-28: soapUI 2.0.2</i> : Mostly bug-fixes and Plug-in updates <a href="new_and_noteworthy_2.html#2.0.2_Release">[Read more]</a></p>
-					<p><i>2008-01-15: soapUI 2.0.1</i> : Mostly bug-fixes <a href="new_and_noteworthy_2.html#2.0.1_Release">[Read more]</a></p>
-					<p><b><a href="news.html">[More News]</a></b></p>		
-				</subsection>
-			</column>
-			<column align="left">
-				<subsection name="soapUI in the news">
-					<p>Fortunately, we are not the only ones using soapUI, have a look at what some others have written:</p>
-					<ul>
-					    <li><a target="_new" http://sleeplessinslc.blogspot.com/2008/10/soapui-rest-support.html">soapUI Rest Support...</a> from Sanjay´s Blog</li>
-					    <li><a target="_new" href="http://dimosthenes.blogspot.com/2008/10/testing-web-services.html">Testing Web Services</a> from Dimosthenes</li>
-						<li><a target="_new" href="http://groovyinsoapui.wordpress.com/">Groovy in soapUI</a> from Devakara´s Blog</li>
-					</ul>
-					<p><b><a href="soapui_in_the_news.html">[More of soapUI in the News]</a></b></p>
-				</subsection>
-			</column>
-		</columns>
-
-		
-
-
-
-<table class="relatedInfo" cellspacing="0" cellpadding="0">
-	<tr class="a">
-    	<td width="75" style="padding-top:5px">
-        	<img src="images/where_do_i_start.jpg" alt="Start soapUI Testing" longdesc="http://www.soapui.org"></img>
-        </td>
-        <td>
-            <table class="relatedInner">
-              <tr>
-                <td>
-                	<span class="relatedInfoHeader">Did you know?</span>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                    <div>
-                      <p> In soapUI Pro you have two more request and response editors; The Form editor and the Outline Editor. </p>
-                      <p> Both will improve your productivity and make Web Service Testing more fun</p>
-                    </div>
-                </td>
-              </tr>
-              <tr align="right">
-              	<td>
-                	<span class="relatedLinks"><a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" title="try soapUI Pro" onclick="javascript:urchinTracker:('/downloadTrial');">
-                                               <img src="images/try_pro_100.png" alt="Try soapUI pro to soap test" width="100" height="20" longdesc="http://www.eviware.com"/></a></span>
-                </td>
-              </tr>
+            <table class="gstable" cellspacing="0" cellpadding="0">
+                <tr class="a">
+                    <td width="75" style="padding-top:5px">
+                        <img src="images/where_do_i_start.jpg" alt="Start soapUI Testing"
+                             longdesc="http://www.soapui.org"></img>
+                    </td>
+                    <td>
+                        <table class="GSInner" width="600" border="0" cellpadding="0">
+                            <tr>
+                                <td colspan="2">
+                                    <span class="gsHeader">Where do I start?</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <ul class="evilist">
+                                        <li>Read the
+                                            <a href="features.html">Feature Overview</a>
+                                        </li>
+                                        <li>Try your hands on
+                                            <a href="gettingstarted/sample-project.html">the Example soapUI Project</a>
+                                        </li>
+                                        <li>Watch the
+                                            <a href="#"
+                                               onclick="openVideo('movies/sample_project/sample_project.html');">Example
+                                                Project Movie
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td valign="top">
+                                    <ul class="evilist">
+                                        <li>Read the
+                                            <a href="gettingstarted/index.html">Getting Started with soapUI Guide</a>
+                                        </li>
+                                        <li>Read the
+                                            <a href="comparison.html">soapUI Pro comparison</a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
             </table>
-		</td>
-	</tr>
-</table>
 
 
-	
-		
-		 <p><hr size="1"/>Next: <a href="features.html">Features</a></p>
-		
-		</section>
+            <subsection name="Vote For soapUI">
+                <columns>
+                    <column>
+                        <a target="_new" href="http://soa.sys-con.com/general/readerschoice.htm"
+                           onclick="javascript:urchinTracker('/voteLink');">
+                            <img src="images/WSJ-SOAReadersChoice-125_125px.jpg" alt="Vote for soapUI"/>
+                        </a>
+                    </column>
+                    <column>
+                        <p align="left">
+                            <b>
+                                Vote for soapUI in SOA World Magazine Reader's Choice Vote.
+                                <br/>
+                            </b>
+                            We are participating in several categories and need your support;
+                            <br/>
+                            if you use soapUI and enjoy it; why not cast your vote on soapUI?
+                            <br/>
+                            Thanks for your support, we appreciate it!
+                            <br/>
+                            <a target="_new" href="http://soa.sys-con.com/general/readerschoice.htm"
+                               onclick="javascript:urchinTracker('/voteLink');">
+                                Vote Here!
+                            </a>
+
+                        </p>
+                    </column>
+                </columns>
+
+            </subsection>
+
+
+            <subsection name="What is soapUI?">
+                <p>soapUI is the most used testing tool in the world for:</p>
+
+                <columns>
+                    <column>
+                        <ul class="evilist">
+                            <li>
+                                <a href="userguide/interfaces/interfaceeditor.html">Inspecting Web Services</a>
+                            </li>
+                            <li>
+                                <a href="gettingstarted/your_first_soapui_project.html">Invoking Web Services</a>
+                            </li>
+                            <li>
+                                <a href="#" onclick="openVideo('movies/sample_project/sample_project.html');">Developing
+                                    Web Services
+                                </a>
+                            </li>
+
+                        </ul>
+                    </column>
+                    <column align="left">
+                        <ul class="evilist">
+                            <li>
+                                <a href="userguide/mock/index.html">Web Service Simulation and Web Service Mocking</a>
+                            </li>
+                            <li>
+                                <a href="userguide/functional/index.html">Functional Testing of Web Services</a>
+                            </li>
+                            <li>
+                                <a href="userguide/loadtest/index.html">Load Testing of Web Services</a>
+                            </li>
+                        </ul>
+                    </column>
+                </columns>
+            </subsection>
+
+
+            <table class="webstartlinkstable" cellspacing="0" cellpadding="0">
+                <tr class="b">
+                    <td align="center" bgcolor="white">
+                        <p class="WebStartHeader">soapUI 2.0.2</p>
+                        <div>
+                            <a href="http://www.soapui.org/jnlp/2.5-beta1/soapui.jnlp" class="externalLink"
+                               title="External Link" onclick="javascript:urchinTracker('/jnlp/soapui/2_5_beta1');">
+                                <img class="webstart" src="images/webstart_green.png" border="0" alt=""></img>
+                            </a>
+                        </div>
+                        [<a href="new_and_noteworthy_2.html">Read More</a>]
+                        [<a target="_new"
+                            href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=628758"
+                            class="externalLink" title="External Link">Download</a>]
+                    </td>
+                    <td align="center" bgcolor="white">
+                        <p class="WebStartHeader">soapUI Pro 2.0.2
+                            <span class="OrangeHeader">Pro</span>
+                        </p>
+                        <div>
+                            <a href="http://www.eviware.com/jnlp/2.5-beta1/soapui-pro.jnlp" class="externalLink"
+                               title="External Link" onclick="javascript:urchinTracker:('/jnlp/soapui/2_5_beta1-pro');">
+                                <img class="webstart" src="images/webstart_orange.png" border="0" alt=""></img>
+                            </a>
+                        </div>
+                        [<a href="comparison.html">Compare</a>]
+                        [<a target="_new" href="http://www.eviware.com" class="externalLink" title="External Link">
+                        Trial/Buy</a>]
+                        [<a target="_new" href="http://www.eviware.com/content/view/42/36/" class="externalLink"
+                            title="External Link">FAQ</a>]
+                    </td>
+                </tr>
+            </table>
+
+            <columns>
+                <column>
+                    <subsection name="Latest News">
+                        <p>
+                            <i>2008-09-25: soapUI 2.5 beta1- The REST Release</i>
+                            : The beta of soapUI 2.5 with full REST Test Support is out
+                            <a href="new_and_noteworthy_2_5.html">[Read more]</a>
+                        </p>
+                        <p>
+                            <i>2008-01-28: soapUI 2.0.2</i>
+                            : Mostly bug-fixes and Plug-in updates
+                            <a href="new_and_noteworthy_2.html#2.0.2_Release">[Read more]</a>
+                        </p>
+                        <p>
+                            <i>2008-01-15: soapUI 2.0.1</i>
+                            : Mostly bug-fixes
+                            <a href="new_and_noteworthy_2.html#2.0.1_Release">[Read more]</a>
+                        </p>
+                        <p>
+                            <b>
+                                <a href="news.html">[More News]</a>
+                            </b>
+                        </p>
+                    </subsection>
+                </column>
+                <column align="left">
+                    <subsection name="soapUI in the news">
+                        <p>Fortunately, we are not the only ones using soapUI, have a look at what some others have
+                            written:
+                        </p>
+                        <ul>
+                            <li>
+                                <a target="_new"
+                                   href="http://sleeplessinslc.blogspot.com/2008/10/soapui-rest-support.html">soapUI
+                                    Rest Support...
+                                </a>
+                                from Sanjay´s Blog
+                            </li>
+                            <li>
+                                <a target="_new"
+                                   href="http://dimosthenes.blogspot.com/2008/10/testing-web-services.html">Testing Web
+                                    Services
+                                </a>
+                                from Dimosthenes
+                            </li>
+                            <li>
+                                <a target="_new" href="http://groovyinsoapui.wordpress.com/">Groovy in soapUI</a>
+                                from Devakara´s Blog
+                            </li>
+                        </ul>
+                        <p>
+                            <b>
+                                <a href="soapui_in_the_news.html">[More of soapUI in the News]</a>
+                            </b>
+                        </p>
+                    </subsection>
+                </column>
+            </columns>
+
+
+            <table class="relatedInfo" cellspacing="0" cellpadding="0">
+                <tr class="a">
+                    <td width="75" style="padding-top:5px">
+                        <img src="images/where_do_i_start.jpg" alt="Start soapUI Testing"
+                             longdesc="http://www.soapui.org"></img>
+                    </td>
+                    <td>
+                        <table class="relatedInner">
+                            <tr>
+                                <td>
+                                    <span class="relatedInfoHeader">Did you know?</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <p>In soapUI Pro you have two more request and response editors; The Form editor
+                                            and the Outline Editor.
+                                        </p>
+                                        <p>Both will improve your productivity and make Web Service Testing more fun</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr align="right">
+                                <td>
+                                    <span class="relatedLinks">
+                                        <a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/"
+                                           title="try soapUI Pro"
+                                           onclick="javascript:urchinTracker:('/downloadTrial');">
+                                            <img src="images/try_pro_100.png" alt="Try soapUI pro to soap test"
+                                                 width="100" height="20" longdesc="http://www.eviware.com"/>
+                                        </a>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+
+            <p><hr size="1"/>Next:
+                <a href="features.html">Features</a>
+            </p>
+
+        </section>
     </body>
 </document>

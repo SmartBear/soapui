@@ -110,7 +110,7 @@ public class SoapUI
    public static final String DEFAULT_DESKTOP = "Default";
    public static final String CURRENT_SOAPUI_WORKSPACE = SoapUI.class.getName() + "@workspace";
    public final static Logger log = Logger.getLogger( SoapUI.class );
-   public final static String SOAPUI_VERSION = "2.5 beta1";
+   public final static String SOAPUI_VERSION = "2.5 beta2";
    public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
    public static final String SOAPUI_SPLASH_GIF = "soapui-splash.jpg";
    private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
