@@ -19,7 +19,7 @@ import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.support.TestCaseWithJetty;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
-public class MockResponseStepTestCase extends TestCaseWithJetty
+public class MockResponseStepTestCaseOld extends TestCaseWithJetty
 {
    @Override
    protected void setUp() throws Exception
@@ -43,7 +43,7 @@ public class MockResponseStepTestCase extends TestCaseWithJetty
       TestStepConfig config = WsdlMockResponseStepFactory.createConfig( request, false );
       WsdlMockResponseTestStep step = (WsdlMockResponseTestStep) testCase.addTestStep( config );
 
-      WsdlMockResponse mockResponse = step.getMockResponse();                             
+      WsdlMockResponse mockResponse = step.getMockResponse();
       mockResponse.setResponseContent( "<xml>Tjoho!!</xml>" );
       step.setPort( 8989 );
       step.setPath( "/tjohoo" );
