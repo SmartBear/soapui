@@ -710,18 +710,37 @@ public final class XmlUtils
    public static boolean setNodeValue( Node domNode, String string )
    {
       short nodeType = domNode.getNodeType();
-      if( nodeType == Node.ELEMENT_NODE )
+
+      switch( nodeType )
       {
-         setElementText( (Element) domNode, string );
-         return true;
-      }
-      else if( nodeType == Node.ATTRIBUTE_NODE || nodeType == Node.TEXT_NODE )
-      {
-         domNode.setNodeValue( string );
-         return true;
+         case Node.ELEMENT_NODE:
+         {
+            setElementText( (Element) domNode, string );
+            break;
+         }
+         case Node.ATTRIBUTE_NODE:
+         case Node.TEXT_NODE:
+         {
+            domNode.setNodeValue( string );
+            break;
+         }
+         case Node.PROCESSING_INSTRUCTION_NODE:
+         {
+            ( (ProcessingInstruction) domNode ).setData( string );
+            break;
+         }
+         case Node.CDATA_SECTION_NODE:
+         {
+            ( (CDATASection) domNode ).setData( string );
+            break;
+         }
+         default:
+         {
+            return false;
+         }
       }
 
-      return false;
+      return true;
    }
 
    public static String declareXPathNamespaces( XmlObject xmlObject )

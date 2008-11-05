@@ -499,15 +499,16 @@ public class PropertyTransfer implements PropertyChangeNotifier
             throw new Exception( "Missing source value for " + getSourcePropertyName() );
       }
 
-      if( targetNodeType == Node.TEXT_NODE || targetNodeType == Node.ATTRIBUTE_NODE )
-      {
-         node.setNodeValue( value );
-      }
-      else if( targetNodeType == Node.ELEMENT_NODE )
-      {
-         XmlUtils.setElementText( (Element) node, value );
-      }
-      else
+      if( !XmlUtils.setNodeValue( node, value ) )
+//      if( targetNodeType == Node.TEXT_NODE || targetNodeType == Node.ATTRIBUTE_NODE )
+//      {
+//         node.setNodeValue( value );
+//      }
+//      else if( targetNodeType == Node.ELEMENT_NODE )
+//      {
+//         XmlUtils.setElementText( (Element) node, value );
+//      }
+//      else
       {
          throw new Exception( "Failed to set value to node [" + node.toString() + "] of type [" + targetNodeType + "]" );
       }
