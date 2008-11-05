@@ -16,6 +16,7 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
@@ -26,89 +27,100 @@ import java.io.IOException;
 /**
  * Extended PostMethod that supports limiting of response size and detailed
  * timestamps
- * 
+ *
  * @author Ole.Matzura
  */
 
 public final class ExtendedPostMethod extends PostMethod implements ExtendedHttpMethod
 {
-	private HttpMethodSupport httpMethodSupport;
+   private HttpMethodSupport httpMethodSupport;
 
-	public ExtendedPostMethod()
-	{
-		httpMethodSupport = new HttpMethodSupport( this );
-	}
-	
-	public String getDumpFile()
-	{
-		return httpMethodSupport.getDumpFile();
-	}
+   public ExtendedPostMethod()
+   {
+      httpMethodSupport = new HttpMethodSupport( this );
+   }
 
-	public void setDumpFile(String dumpFile)
-	{
-		httpMethodSupport.setDumpFile(dumpFile);
-	}
+   public String getDumpFile()
+   {
+      return httpMethodSupport.getDumpFile();
+   }
 
-	protected void readResponse(HttpState arg0, HttpConnection arg1)
-			throws IOException, HttpException
-	{
-		super.readResponse(arg0, arg1);
-		httpMethodSupport.afterReadResponse(arg0, arg1);
-	}
+   public void setDumpFile( String dumpFile )
+   {
+      httpMethodSupport.setDumpFile( dumpFile );
+   }
 
-	public long getMaxSize()
-	{
-		return httpMethodSupport.getMaxSize();
-	}
+   protected void readResponse( HttpState arg0, HttpConnection arg1 )
+           throws IOException, HttpException
+   {
+      super.readResponse( arg0, arg1 );
+      httpMethodSupport.afterReadResponse( arg0, arg1 );
+   }
 
-	public void setMaxSize(long maxSize)
-	{
-		httpMethodSupport.setMaxSize( maxSize );
-	}
+   @Override
+   public String getResponseCharSet()
+   {
+      Header contentEncodingHeader = getResponseHeader( "Content-Encoding" );
+      if( contentEncodingHeader != null )
+         return contentEncodingHeader.getValue();
 
-	public long getResponseReadTime()
-	{
-		return httpMethodSupport.getResponseReadTime();
-	}
+      return super.getResponseCharSet();
+   }
 
-	protected void writeRequest(HttpState arg0, HttpConnection arg1)
-			throws IOException, HttpException
-	{
-		super.writeRequest(arg0, arg1);
-		httpMethodSupport.afterWriteRequest(arg0, arg1);
-	}
+   public long getMaxSize()
+   {
+      return httpMethodSupport.getMaxSize();
+   }
 
-	public void initStartTime()
-	{
-		httpMethodSupport.initStartTime();
-	}
+   public void setMaxSize( long maxSize )
+   {
+      httpMethodSupport.setMaxSize( maxSize );
+   }
 
-	public long getTimeTaken()
-	{
-		return httpMethodSupport.getTimeTaken();
-	}
+   public long getResponseReadTime()
+   {
+      return httpMethodSupport.getResponseReadTime();
+   }
 
-	public long getStartTime()
-	{
-		return httpMethodSupport.getStartTime();
-	}
+   protected void writeRequest( HttpState arg0, HttpConnection arg1 )
+           throws IOException, HttpException
+   {
+      super.writeRequest( arg0, arg1 );
+      httpMethodSupport.afterWriteRequest( arg0, arg1 );
+   }
 
-	public byte[] getResponseBody() throws IOException
-	{
-		return httpMethodSupport.getResponseBody();
-	}
+   public void initStartTime()
+   {
+      httpMethodSupport.initStartTime();
+   }
 
-	public SSLInfo getSSLInfo()
-	{
-		return httpMethodSupport.getSSLInfo();
-	}
+   public long getTimeTaken()
+   {
+      return httpMethodSupport.getTimeTaken();
+   }
 
-	public String getResponseContentType()
-	{
-		return httpMethodSupport.getResponseContentType();
-	}
+   public long getStartTime()
+   {
+      return httpMethodSupport.getStartTime();
+   }
 
-   public AbstractHttpRequest.RequestMethod getMethod() {
+   public byte[] getResponseBody() throws IOException
+   {
+      return httpMethodSupport.getResponseBody();
+   }
+
+   public SSLInfo getSSLInfo()
+   {
+      return httpMethodSupport.getSSLInfo();
+   }
+
+   public String getResponseContentType()
+   {
+      return httpMethodSupport.getResponseContentType();
+   }
+
+   public AbstractHttpRequest.RequestMethod getMethod()
+   {
       return AbstractHttpRequest.RequestMethod.POST;
    }
 

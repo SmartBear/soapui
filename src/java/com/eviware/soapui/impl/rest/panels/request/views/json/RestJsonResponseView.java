@@ -22,74 +22,75 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.xml.JXEditTextArea;
-import net.sf.json.JSONObject;
+import net.sf.json.JSON;
+import net.sf.json.JSONSerializer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings( "unchecked" )
 public class RestJsonResponseView extends AbstractXmlEditorView<RestResponseDocument> implements PropertyChangeListener
 {
-	private final RestRequest restRequest;
-	private JPanel contentPanel;
-	private JXEditTextArea contentEditor;
-	private boolean updatingRequest;
-	private JPanel panel;
+   private final RestRequest restRequest;
+   private JPanel contentPanel;
+   private JXEditTextArea contentEditor;
+   private boolean updatingRequest;
+   private JPanel panel;
 
-	public RestJsonResponseView(RestResponseMessageEditor restRequestMessageEditor, RestRequest restRequest)
-	{
-		super( "JSON", restRequestMessageEditor, RestJsonResponseViewFactory.VIEW_ID );
-		this.restRequest = restRequest;
-		
-		restRequest.addPropertyChangeListener( this );
-	}
+   public RestJsonResponseView( RestResponseMessageEditor restRequestMessageEditor, RestRequest restRequest )
+   {
+      super( "JSON", restRequestMessageEditor, RestJsonResponseViewFactory.VIEW_ID );
+      this.restRequest = restRequest;
 
-	public JComponent getComponent()
-	{
-		if( panel == null )
-		{
-			panel = new JPanel( new BorderLayout() );
-			
-			panel.add( buildToolbar(), BorderLayout.NORTH );
-			panel.add( buildContent(), BorderLayout.CENTER );
-			panel.add( buildStatus(), BorderLayout.SOUTH );
-		}
-		
-		return panel;
-	}
+      restRequest.addPropertyChangeListener( this );
+   }
 
-	@Override
-	public void release()
-	{
-		super.release();
-		
-		restRequest.removePropertyChangeListener( this );
-	}
+   public JComponent getComponent()
+   {
+      if( panel == null )
+      {
+         panel = new JPanel( new BorderLayout() );
 
-	private Component buildStatus()
-	{
-		return new JPanel();
-	}
+         panel.add( buildToolbar(), BorderLayout.NORTH );
+         panel.add( buildContent(), BorderLayout.CENTER );
+         panel.add( buildStatus(), BorderLayout.SOUTH );
+      }
 
-	private Component buildContent()
-	{
-		contentPanel = new JPanel( new BorderLayout() );
-		
-		contentEditor = JXEditTextArea.createJavaScriptEditor();
-		HttpResponse response = restRequest.getResponse();
-		if( response != null)
-			setEditorContent(response);
-		
-		contentPanel.add( new JScrollPane( contentEditor ));
-		contentEditor.setEditable( false );
-		
-		return contentPanel;
-	}
+      return panel;
+   }
 
-	protected void setEditorContent(HttpResponse httpResponse)
-	{
+   @Override
+   public void release()
+   {
+      super.release();
+
+      restRequest.removePropertyChangeListener( this );
+   }
+
+   private Component buildStatus()
+   {
+      return new JPanel();
+   }
+
+   private Component buildContent()
+   {
+      contentPanel = new JPanel( new BorderLayout() );
+
+      contentEditor = JXEditTextArea.createJavaScriptEditor();
+      HttpResponse response = restRequest.getResponse();
+      if( response != null )
+         setEditorContent( response );
+
+      contentPanel.add( new JScrollPane( contentEditor ) );
+      contentEditor.setEditable( false );
+
+      return contentPanel;
+   }
+
+   protected void setEditorContent( HttpResponse httpResponse )
+   {
       if( httpResponse == null )
       {
          contentEditor.setText( "" );
@@ -98,17 +99,17 @@ public class RestJsonResponseView extends AbstractXmlEditorView<RestResponseDocu
       {
          String content = "<Not JSON content>";
 
-         if( JsonMediaTypeHandler.couldBeJsonContent( httpResponse.getContentType() ))
+         if( JsonMediaTypeHandler.couldBeJsonContent( httpResponse.getContentType() ) )
          {
             try
             {
-               JSONObject json = JSONObject.fromObject(httpResponse.getContentAsString());
+               JSON json = JSONSerializer.toJSON( httpResponse.getContentAsString() );
                if( json.isEmpty() )
                   content = "<Empty JSON content>";
                else
-                  content = json.toString(3);
+                  content = json.toString( 3 );
             }
-            catch (Throwable e)
+            catch( Throwable e )
             {
                e.printStackTrace();
             }
@@ -120,34 +121,34 @@ public class RestJsonResponseView extends AbstractXmlEditorView<RestResponseDocu
             contentEditor.setText( "<Not JSON content>" );
          }
       }
-	}
+   }
 
-	private Component buildToolbar()
-	{
-		JXToolBar toolbar = UISupport.createToolbar();
-		
-		return toolbar;
-	}
+   private Component buildToolbar()
+   {
+      JXToolBar toolbar = UISupport.createToolbar();
 
-	public void propertyChange(PropertyChangeEvent evt)
-	{
-		if( evt.getPropertyName().equals( AbstractHttpRequest.RESPONSE_PROPERTY ) && !updatingRequest )
-		{
-			setEditorContent( ((HttpResponse)evt.getNewValue()) );
-		}
-	}
+      return toolbar;
+   }
 
-	@Override
-	public void setXml(String xml)
-	{
-	}
+   public void propertyChange( PropertyChangeEvent evt )
+   {
+      if( evt.getPropertyName().equals( AbstractHttpRequest.RESPONSE_PROPERTY ) && !updatingRequest )
+      {
+         setEditorContent( ( (HttpResponse) evt.getNewValue() ) );
+      }
+   }
 
-	public boolean saveDocument(boolean validate)
-	{
-		return false;
-	}
+   @Override
+   public void setXml( String xml )
+   {
+   }
 
-	public void setEditable(boolean enabled)
-	{
-	}
+   public boolean saveDocument( boolean validate )
+   {
+      return false;
+   }
+
+   public void setEditable( boolean enabled )
+   {
+   }
 }

@@ -16,7 +16,8 @@ import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
-import net.sf.json.JSONObject;
+import net.sf.json.JSON;
+import net.sf.json.JSONSerializer;
 import net.sf.json.xml.XMLSerializer;
 
 public class JsonMediaTypeHandler implements MediaTypeHandler
@@ -28,18 +29,18 @@ public class JsonMediaTypeHandler implements MediaTypeHandler
 
    public static boolean couldBeJsonContent( String contentType )
    {
-      return contentType != null && (contentType.contains( "javascript" ) || contentType.contains( "json"));
+      return contentType != null && ( contentType.contains( "javascript" ) || contentType.contains( "json" ) );
    }
 
    public String createXmlRepresentation( HttpResponse response )
    {
       try
       {
-         String content = response.getContentAsString();
+         String content = response.getContentAsString().trim();
          if( !StringUtils.hasContent( content ) )
             return null;
 
-         JSONObject json = JSONObject.fromObject( content );
+         JSON json = JSONSerializer.toJSON( content );
          XMLSerializer serializer = new XMLSerializer();
          serializer.setTypeHintsEnabled( false );
          content = serializer.write( json );
