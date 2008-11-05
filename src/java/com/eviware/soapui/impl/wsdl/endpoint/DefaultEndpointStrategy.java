@@ -513,7 +513,8 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
          EndpointConfig ec = config.getEndpointArray( c );
          if( StringUtils.isNullOrEmpty( ec.getDomain() ) && StringUtils.isNullOrEmpty( ec.getUsername() )
                  && StringUtils.isNullOrEmpty( ec.getPassword() ) && StringUtils.isNullOrEmpty( ec.getWssType() )
-                 && StringUtils.isNullOrEmpty( ec.getWssTimeToLive() ) )
+                 && StringUtils.isNullOrEmpty( ec.getWssTimeToLive() ) && StringUtils.isNullOrEmpty( ec.getIncomingWss() )
+                 && StringUtils.isNullOrEmpty( ec.getOutgoingWss() ) )
          {
             defaults.remove( ec.getStringValue() );
             config.removeEndpoint( c );
