@@ -1046,6 +1046,41 @@ public final class XmlUtils
       return document;
    }
 
+   public static String getValueForMatch( XmlCursor cursor )
+   {
+      Node domNode = cursor.getDomNode();
+      String stringValue;
+
+      if( domNode.getNodeType() == Node.ATTRIBUTE_NODE || domNode.getNodeType() == Node.TEXT_NODE )
+      {
+         stringValue = domNode.getNodeValue();
+      }
+      else if( cursor.getObject() instanceof XmlAnySimpleType )
+      {
+         stringValue = ( (XmlAnySimpleType) cursor.getObject() ).getStringValue();
+      }
+      else
+      {
+         if( domNode.getNodeType() == Node.ELEMENT_NODE )
+         {
+            Element elm = (Element) domNode;
+            if( elm.getChildNodes().getLength() == 1 && elm.getAttributes().getLength() == 0 )
+            {
+               stringValue = getElementText( elm );
+            }
+            else
+            {
+               stringValue = cursor.getObject().xmlText( new XmlOptions().setSavePrettyPrint().setSaveOuter().setSaveAggressiveNamespaces() );
+            }
+         }
+         else
+         {
+            stringValue = domNode.getNodeValue();
+         }
+      }
+      return stringValue;
+   }
+
    private final static class ElementNodeList implements NodeList
    {
       private final List<Element> list;

@@ -26,6 +26,7 @@ import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 import com.jgoodies.binding.PresentationModel;
+import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 
@@ -163,8 +164,8 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
       detailForm.setDefaultTextAreaColumns( 50 );
 
       detailForm.append( buildQueryToolbar() );
-      detailForm.appendTextArea( "path", "XPath", "The XPath to query in the request" );
-      detailForm.appendTextArea( "value", "Expected Value", "The value to match" );
+      detailForm.appendTextArea( "query", "XPath", "The XPath to query in the request" );
+      detailForm.appendTextArea( "match", "Expected Value", "The value to match" );
       JComboBox comboBox = detailForm.appendComboBox( "response", "Dispatch to", new MockResponsesComboBoxModel(), "The MockResponse to dispatch to" );
       UISupport.setFixedSize( comboBox, 150, 20 );
       detailForm.appendCheckBox( "disabled", "Disabled", "Disables this Query" );
@@ -193,10 +194,11 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
    public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result ) throws DispatchException
    {
+      Map<String, XmlCursor> cursorCache = new HashMap<String, XmlCursor>();
+
       try
       {
          XmlObject xmlObject = request.getRequestXmlObject();
-         Map<String, XmlObject[]> nodesCache = new HashMap<String, XmlObject[]>();
 
          for( Query query : getQueries() )
          {
@@ -204,28 +206,49 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
                continue;
 
             String path = PropertyExpansionUtils.expandProperties( request.getContext(), query.getQuery() );
-
-            XmlObject[] nodes = nodesCache.containsKey( path ) ?
-                    nodesCache.get( path ) : xmlObject.selectPath( path );
-
-            if( nodes != null && nodes.length > 0 )
+            if( StringUtils.hasContent( path ) )
             {
-               String value = PropertyExpansionUtils.expandProperties( request.getContext(), query.getMatch() );
-
-               if( value.equals( XmlUtils.getNodeValue( nodes[0].getDomNode() ) ) )
+               XmlCursor cursor = cursorCache.get( path );
+               if( cursor == null && !cursorCache.containsKey( path ) )
                {
-                  return getMockOperation().getMockResponseByName( query.getResponse() );
+                  cursor = xmlObject.newCursor();
+                  cursor.selectPath( path );
+                  if( !cursor.toNextSelection() )
+                  {
+                     cursor.dispose();
+                     cursor = null;
+                  }
                }
-            }
 
-            nodesCache.put( path, nodes );
+               if( cursor != null )
+               {
+                  String value = PropertyExpansionUtils.expandProperties( request.getContext(), query.getMatch() );
+
+                  if( value.equals( XmlUtils.getValueForMatch( cursor ) ) )
+                  {
+                     return getMockOperation().getMockResponseByName( query.getResponse() );
+                  }
+               }
+
+               cursorCache.put( path, cursor );
+            }
          }
 
          return null;
       }
-      catch( XmlException e )
+      catch( Throwable e )
       {
          throw new DispatchException( e );
+      }
+      finally
+      {
+         for( XmlCursor cursor : cursorCache.values() )
+         {
+            if( cursor != null )
+            {
+               cursor.dispose();
+            }
+         }
       }
    }
 
@@ -578,7 +601,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
          {
             try
             {
-               UISupport.showInfoMessage( "Selected " + selectMockResponse( result.getMockRequest(), result ) );
+               UISupport.showInfoMessage( "Selected [" + selectMockResponse( result.getMockRequest(), result ).getName() + "]" );
             }
             catch( DispatchException e1 )
             {
@@ -623,22 +646,32 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
             content = getMockOperation().getOperation().createRequest( true );
          }
 
+         XmlCursor cursor = null;
+
          try
          {
             XmlObject xmlObject = XmlObject.Factory.parse( content );
-            XmlObject[] objects = xmlObject.selectPath( selectedQuery.getQuery() );
-            if( objects.length == 0 )
+            cursor = xmlObject.newCursor();
+            cursor.selectPath( selectedQuery.getQuery() );
+            if( !cursor.toNextSelection() )
             {
                UISupport.showErrorMessage( "Missing match in request" );
             }
             else
             {
-               selectedQuery.setMatch( objects[0].xmlText() );
+               selectedQuery.setMatch( XmlUtils.getValueForMatch( cursor ) );
             }
          }
-         catch( XmlException e1 )
+         catch( Throwable e1 )
          {
             SoapUI.logError( e1 );
+         }
+         finally
+         {
+            if( cursor != null )
+            {
+               cursor.dispose();
+            }
          }
       }
    }

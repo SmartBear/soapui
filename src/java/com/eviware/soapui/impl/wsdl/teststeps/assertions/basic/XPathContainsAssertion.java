@@ -152,7 +152,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
    protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
            throws AssertionException
    {
-       if( !messageExchange.hasResponse() )
+      if( !messageExchange.hasResponse() )
          return "Missing Response";
       else
          return assertContent( messageExchange.getResponseContentAsXml(), context, "Response" );
@@ -220,7 +220,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
                {
                   if( items[c] instanceof XmlAnySimpleType )
                   {
-                     String value = ((XmlAnySimpleType) items[c]).getStringValue();
+                     String value = ( (XmlAnySimpleType) items[c] ).getStringValue();
                      String expandedValue = PropertyExpansionUtils.expandProperties( context, value );
                      XMLAssert.assertEquals( expandedContent, expandedValue );
                   }
@@ -314,7 +314,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
             {
                Node domNode = paths[0].getDomNode();
                if( domNode.getNodeType() == Node.ATTRIBUTE_NODE )
-                  ((Attr) domNode).getOwnerElement().removeAttributeNode( (Attr) domNode );
+                  ( (Attr) domNode ).getOwnerElement().removeAttributeNode( (Attr) domNode );
                else
                   domNode.getParentNode().removeChild( domNode );
 
@@ -459,11 +459,6 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 
       try
       {
-         XmlOptions options = new XmlOptions();
-         options.setSavePrettyPrint();
-         options.setSaveOuter();
-         options.setSaveAggressiveNamespaces();
-
          String assertableContent = getAssertable().getAssertableContent();
          if( assertableContent == null || assertableContent.trim().length() == 0 )
          {
@@ -496,32 +491,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
          }
          else
          {
-            Node domNode = cursor.getDomNode();
-            String stringValue = null;
-
-            if( domNode.getNodeType() == Node.ATTRIBUTE_NODE || domNode.getNodeType() == Node.TEXT_NODE )
-            {
-               stringValue = domNode.getNodeValue();
-            }
-            else if( cursor.getObject() instanceof XmlAnySimpleType )
-            {
-               stringValue = ((XmlAnySimpleType) cursor.getObject()).getStringValue();
-            }
-            else
-            {
-               if( domNode.getNodeType() == Node.ELEMENT_NODE )
-               {
-                  Element elm = (Element) domNode;
-                  if( elm.getChildNodes().getLength() == 1 && elm.getAttributes().getLength() == 0 )
-                     stringValue = XmlUtils.getElementText( elm );
-                  else
-                     stringValue = cursor.getObject().xmlText( options );
-               }
-               else
-               {
-                  stringValue = domNode.getNodeValue();
-               }
-            }
+            String stringValue = XmlUtils.getValueForMatch( cursor );
 
             if( contentArea != null && contentArea.isVisible() )
                contentArea.setText( stringValue );
@@ -548,7 +518,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
       public int differenceFound( Difference diff )
       {
          if( allowWildcards
-                 && (diff.getId() == DifferenceEngine.TEXT_VALUE.getId() || diff.getId() == DifferenceEngine.ATTR_VALUE.getId()) )
+                 && ( diff.getId() == DifferenceEngine.TEXT_VALUE.getId() || diff.getId() == DifferenceEngine.ATTR_VALUE.getId() ) )
          {
             if( diff.getControlNodeDetail().getValue().equals( "*" ) )
             {
