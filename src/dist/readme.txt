@@ -3,24 +3,29 @@ Welcome to soapUI!
 2008-11-05 : 2.5 beta2 release
 ---------------------------------------------------------------------------------
 A bunch of improvements and fixes:
-- Improved REST Representation handling
-- MockResponseStep -> open source, load-test/sync improvements
-- MockOperation Query Dispatch
-- HTTP Tunnel with SSL support
-- Entitize option for Requests
-- Much Improved WS-A support
+- Much Improved WS-Addressing support
+- SOAP-Monitor now support HTTP Tunnel now with SSL support (replaces TCP-Tunnel in 2.0.2)
+- REST improvements
+  - Improved REST Representation handling
+  - Option to not URL-Encode parameter values
+- Mock-related improvements
+  - MockResponseStep -> open sourced from soapUI Pro, load-test/sync improvements
+  - MockOperation Query Dispatch
+  - MockService wire log
+  - Improved MockService dispatching; support for handling responses and faults
+- New Request options:
+  - Entitize option for Requests
+  - Option to follow redirects
+  - MTOM improvements (not require binary datatype)
 - Property-Transfer Improvements (entitize, transfer child-nodes)
-- MockService wire log
-- Improved MockService dispatching; responses and faults
 - Improved Resolve Dialog / Logic
-- Fixed command-line runners to run from other directories
-- Added –G and –P command-line switches to command-line runners
-- Added option to follow redirects for request
-- Property-Expansion in DataSource values
-- Updated to groovy 1.5.7
-- Much Improved Groovy Editor
-- MTOM improvements (not require binary datatype)
-- And a slew of bug-fixes thanks to all our great customers and users!
+- Command-line improvements
+  - Fixed command-line runners to run from other directories
+  - Added –G and –P command-line switches to command-line runners
+- Scripting-related:
+  - Updated to groovy 1.5.7
+  - Much Improved Groovy Editor
+- And a slew of bug-fixes minor improvements thanks to all our great customers and community!
 
 Thanks to all of you!
 
