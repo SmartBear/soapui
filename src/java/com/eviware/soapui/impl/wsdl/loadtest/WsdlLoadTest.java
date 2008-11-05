@@ -88,6 +88,7 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
    private SoapUIScriptEngine setupScriptEngine;
    private SoapUIScriptEngine tearDownScriptEngine;
    private SimplePathPropertySupport logFolder;
+   private LoadTestRunListener[] loadTestRunListenersArray;
 
    public WsdlLoadTest( WsdlTestCase testCase, LoadTestConfig config )
    {
@@ -636,16 +637,23 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
    public void addLoadTestRunListener( LoadTestRunListener listener )
    {
       loadTestRunListeners.add( listener );
+      loadTestRunListenersArray = null;
    }
 
    public void removeLoadTestRunListener( LoadTestRunListener listener )
    {
       loadTestRunListeners.remove( listener );
+      loadTestRunListenersArray = null;
    }
 
    public LoadTestRunListener[] getLoadTestRunListeners()
    {
-      return loadTestRunListeners.toArray( new LoadTestRunListener[loadTestRunListeners.size()] );
+      if( loadTestRunListenersArray == null )
+      {
+         loadTestRunListenersArray = loadTestRunListeners.toArray( new LoadTestRunListener[loadTestRunListeners.size()] );
+      }
+
+      return loadTestRunListenersArray;
    }
 
    /**

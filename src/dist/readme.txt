@@ -1,6 +1,6 @@
 Welcome to soapUI!
 
-2008-11-04 : 2.5 beta2 release
+2008-11-05 : 2.5 beta2 release
 ---------------------------------------------------------------------------------
 A bunch of improvements and fixes:
 - Improved REST Representation handling
