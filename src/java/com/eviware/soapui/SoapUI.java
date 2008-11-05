@@ -116,7 +116,7 @@ public class SoapUI
    private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
    public static final String BUILDINFO_RESOURCE = "/com/eviware/soapui/resources/conf/buildinfo.txt";
 
-   public static String PUSH_PAGE_URL = "http://www.soapui.org/appindex/soapui_start.htm";
+   public static String PUSH_PAGE_URL = "http://www.soapui.org/appindex/soapui_start.php";
    public static String FRAME_ICON = "/16-perc.gif";
 
    // ------------------------------ FIELDS ------------------------------
@@ -816,7 +816,8 @@ public class SoapUI
 
    public static void showPushPage()
    {
-      DesktopPanel dp = UISupport.showDesktopPanel( new URLDesktopPanel( "soapUI Starter Page", "Info on soapUI", PUSH_PAGE_URL ) );
+      DesktopPanel dp = UISupport.showDesktopPanel( new URLDesktopPanel( "soapUI Starter Page", "Info on soapUI",
+              PUSH_PAGE_URL ) );
       desktop.maximize( dp );
    }
 
