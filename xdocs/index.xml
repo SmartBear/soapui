@@ -25,7 +25,7 @@
                     <td>
                         <div align="center">
                             <a onclick="javascript:urchinTracker('/downloadOpenSource')"
-                               href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=628758"
+                               href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=638372"
                                title="Download soapUI">
                                 <img src="images/download_opensource.png" alt="download Open Source" width="310"
                                      height="165" longdesc="http://www.sourceforge.net"/>
@@ -171,25 +171,25 @@
             <table class="webstartlinkstable" cellspacing="0" cellpadding="0">
                 <tr class="b">
                     <td align="center" bgcolor="white">
-                        <p class="WebStartHeader">soapUI 2.0.2</p>
+                        <p class="WebStartHeader">soapUI 2.5-beta2</p>
                         <div>
-                            <a href="http://www.soapui.org/jnlp/2.5-beta1/soapui.jnlp" class="externalLink"
-                               title="External Link" onclick="javascript:urchinTracker('/jnlp/soapui/2_5_beta1');">
+                            <a href="http://www.soapui.org/jnlp/2.5-beta2/soapui.jnlp" class="externalLink"
+                               title="External Link" onclick="javascript:urchinTracker('/jnlp/soapui/2_5_beta2');">
                                 <img class="webstart" src="images/webstart_green.png" border="0" alt=""></img>
                             </a>
                         </div>
-                        [<a href="new_and_noteworthy_2.html">Read More</a>]
+                        [<a href="new_and_noteworthy_2_5.html">Read More</a>]
                         [<a target="_new"
-                            href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=628758"
+                            href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=638372"
                             class="externalLink" title="External Link">Download</a>]
                     </td>
                     <td align="center" bgcolor="white">
-                        <p class="WebStartHeader">soapUI Pro 2.0.2
+                        <p class="WebStartHeader">soapUI Pro 2.5-beta2
                             <span class="OrangeHeader">Pro</span>
                         </p>
                         <div>
-                            <a href="http://www.eviware.com/jnlp/2.5-beta1/soapui-pro.jnlp" class="externalLink"
-                               title="External Link" onclick="javascript:urchinTracker:('/jnlp/soapui/2_5_beta1-pro');">
+                            <a href="http://www.eviware.com/jnlp/2.5-beta2/soapui-pro.jnlp" class="externalLink"
+                               title="External Link" onclick="javascript:urchinTracker:('/jnlp/soapui/2_5_beta2-pro');">
                                 <img class="webstart" src="images/webstart_orange.png" border="0" alt=""></img>
                             </a>
                         </div>
@@ -206,6 +206,11 @@
                 <column>
                     <subsection name="Latest News">
                         <p>
+                            <i>2008-11-05: soapUI 2.5 beta2 - Improvements and fixes</i>
+                            : The second beta of soapUI 2.5 with full REST Test Support is out
+                            <a href="new_and_noteworthy_2_5.html">[Read more]</a>
+                        </p>
+                        <p>
                             <i>2008-09-25: soapUI 2.5 beta1- The REST Release</i>
                             : The beta of soapUI 2.5 with full REST Test Support is out
                             <a href="new_and_noteworthy_2_5.html">[Read more]</a>
@@ -214,11 +219,6 @@
                             <i>2008-01-28: soapUI 2.0.2</i>
                             : Mostly bug-fixes and Plug-in updates
                             <a href="new_and_noteworthy_2.html#2.0.2_Release">[Read more]</a>
-                        </p>
-                        <p>
-                            <i>2008-01-15: soapUI 2.0.1</i>
-                            : Mostly bug-fixes
-                            <a href="new_and_noteworthy_2.html#2.0.1_Release">[Read more]</a>
                         </p>
                         <p>
                             <b>
