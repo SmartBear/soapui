@@ -1,6 +1,6 @@
 @echo off
 
-set SOAPUI_HOME=~%dp0
+set SOAPUI_HOME=%~dp0
 set JAVA=%SOAPUI_HOME%..\jre\bin\java
 
 rem init classpath
