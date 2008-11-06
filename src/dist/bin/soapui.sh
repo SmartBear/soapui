@@ -27,7 +27,7 @@ export SOAPUI_HOME
 
 @SOAPUISHCLASSPATH@
 
-export JAVA_OPTS="$JAVA_OPTS -Xms128m -Xmx384m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME"
+export JAVA_OPTS="-Xms128m -Xmx384m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME"
 
 if [ $SOAPUI_HOME != "" ] 
 then
@@ -37,7 +37,7 @@ then
 fi
 
 # For Cygwin, switch paths to Windows format before running java
-if $cygwin; 
+if [ $cygwin = "true" ] 
 then
     SOAPUI_HOME=`cygpath --path --dos "$SOAPUI_HOME"`
     SOAPUI_CLASSPATH=`cygpath --path --dos "$SOAPUI_CLASSPATH"`
