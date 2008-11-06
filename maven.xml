@@ -193,18 +193,10 @@
         <ant:mkdir dir="target/dist/lib"/>
         <ant:mkdir dir="target/dist/bin"/>
 
-        <!--
-             <ant:copy todir="target/dist/docs">
-                <ant:fileset dir="target/docs">
-                   <ant:exclude name="**/*.jnlp"/>
-                </ant:fileset>
-            </ant:copy>
-
-            <ant:delete dir="target/dist/docs/repository"/>
-             -->
+        
 
         <!-- build classpath for batch files -->
-        <j:set var="soapuiclasspath" trim="false" value="set CLASSPATH=soapui-${pom.currentVersion}.jar"/>
+        <j:set var="soapuiclasspath" trim="false" value="set CLASSPATH=%SOAPUI_HOME%soapui-${pom.currentVersion}.jar"/>
         <j:set var="soapuishclasspath" trim="false"
                value="export SOAPUI_CLASSPATH=$$SOAPUI_HOME/bin/soapui-${pom.currentVersion}.jar"/>
         <j:forEach var="lib" items="${pom.artifacts}">
@@ -398,7 +390,7 @@
             </ant:move>
         </util:available>
 
-        <j:set var="soapuiclasspath" trim="false" value="set CLASSPATH=soapui-${pom.currentVersion}.jar"/>
+        <j:set var="soapuiclasspath" trim="false" value="set CLASSPATH=%SOAPUI_HOME%soapui-${pom.currentVersion}.jar"/>
         <j:forEach var="lib" items="${pom.artifacts}">
             <j:set var="dep" value="${lib.dependency}"/>
             <j:if test="${dep.getProperty('jnlp.jar')=='true' || dep.getProperty('eclipse.jar')=='true'}">
