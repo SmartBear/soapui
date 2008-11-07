@@ -5,28 +5,26 @@
     </properties>
     <body>
     <section name="soapUI Releases">
-           <subsection name="soapUI Rest Support">
+           
+        <subsection name="soapUI Rest Support">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/sleepless.gif" alt="soapUI Rest Support"/>
 	    		</column>
 	    		<column align="left">
-	    			<p>Some time ago, I had blogged lamenting the absense of a nice..." <br/>
+	    			<p>The post starts: "Some time ago, I had blogged lamenting the absense of a nice..." <br/>
 	    			<a href="http://sleeplessinslc.blogspot.com/2008/10/soapui-rest-support.html">[Read more]</a></p>
 	    		</column>
 	    	</columns>
 		</subsection>  
     
-    
-    
-    
-       <subsection name="Evolution Through">
+        <subsection name="Evolution Through">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/dimos.gif" alt="Testing Web Services"/>
 	    		</column>
 	    		<column align="left">
-	    			<p>Over the past year I have been working on several projects that have..." <br/>
+	    			<p>The post starts: "Over the past year I have been working on several projects that have..." <br/>
 	    			<a href="http://dimosthenes.blogspot.com/2008/10/testing-web-services.html">[Read more]</a></p>
 	    		</column>
 	    	</columns>
@@ -38,7 +36,7 @@
 	    		<img src="images/inthenews/groovyin.gif" alt="load testing with soapUI"/>
 	    		</column>
 	    		<column align="left">
-	    			<p>The post starts: "load testing with SOAP  request having variable parameter(s)..." <br/>
+	    			<p>The post starts: "Load testing with SOAP  request having variable parameter(s)..." <br/>
 	    			<a href="http://groovyinsoapui.wordpress.com/">[Read more]</a></p>
 	    		</column>
 	    	</columns>
