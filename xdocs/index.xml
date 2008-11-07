@@ -292,7 +292,7 @@
                                            title="try soapUI Pro"
                                            onclick="javascript:urchinTracker:('/downloadTrial');">
                                             <img src="images/try_pro_100.png" alt="Try soapUI pro to soap test"
-                                                 width="100" height="20" longdesc="http://www.eviware.com"/>
+                                                 width="101" height="20" longdesc="http://www.eviware.com"/>
                                         </a>
                                     </span>
                                 </td>
