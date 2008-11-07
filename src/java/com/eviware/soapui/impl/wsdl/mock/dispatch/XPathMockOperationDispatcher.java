@@ -56,10 +56,10 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
       if( StringUtils.isNullOrEmpty( path ) )
          throw new DispatchException( "Missing dispatch XPath expression" );
 
-      XmlObject[] items = xmlObject.selectPath( path );
-      for( XmlObject item : items )
+      String[] values = XmlUtils.selectNodeValues( xmlObject, path );
+      for( String value : values )
       {
-         WsdlMockResponse mockResponse = getMockOperation().getMockResponseByName( XmlUtils.getNodeValue( item.getDomNode() ) );
+         WsdlMockResponse mockResponse = getMockOperation().getMockResponseByName( value );
          if( mockResponse != null )
             return mockResponse;
       }

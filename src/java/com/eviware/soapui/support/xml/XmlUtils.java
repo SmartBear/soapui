@@ -1081,6 +1081,98 @@ public final class XmlUtils
       return stringValue;
    }
 
+   public static String getValueForMatch( Node domNode, boolean prettyPrintXml )
+   {
+      String stringValue;
+
+      if( domNode.getNodeType() == Node.ATTRIBUTE_NODE || domNode.getNodeType() == Node.TEXT_NODE )
+      {
+         stringValue = domNode.getNodeValue();
+      }
+      else
+      {
+         if( domNode.getNodeType() == Node.ELEMENT_NODE )
+         {
+            Element elm = (Element) domNode;
+            if( elm.getChildNodes().getLength() == 1 && elm.getAttributes().getLength() == 0 )
+            {
+               stringValue = getElementText( elm );
+            }
+            else
+            {
+               stringValue = XmlUtils.serialize( domNode, prettyPrintXml );
+            }
+         }
+         else
+         {
+            stringValue = domNode.getNodeValue();
+         }
+      }
+
+      return stringValue;
+   }
+
+   public static String selectFirstNodeValue( XmlObject xmlObject, String xpath )
+           throws XmlException
+   {
+      Node domNode = selectFirstDomNode( xmlObject, xpath );
+      return domNode == null ? null : getNodeValue( domNode );
+   }
+
+   public static String[] selectNodeValues( XmlObject xmlObject, String xpath )
+   {
+      Node[] nodes = selectDomNodes( xmlObject, xpath );
+
+      String[] result = new String[nodes.length];
+      for( int c = 0; c < nodes.length; c++ )
+      {
+         result[c] = getNodeValue( nodes[c] );
+      }
+
+      return result;
+   }
+
+   public static Node selectFirstDomNode( XmlObject xmlObject, String xpath )
+   {
+      XmlCursor cursor = xmlObject.newCursor();
+      try
+      {
+         cursor.selectPath( xpath );
+
+         if( cursor.toNextSelection() )
+         {
+            return cursor.getDomNode();
+         }
+         else return null;
+      }
+      finally
+      {
+         cursor.dispose();
+      }
+   }
+
+   public static Node[] selectDomNodes( XmlObject xmlObject, String xpath )
+   {
+      List<Node> result = new ArrayList<Node>();
+
+      XmlCursor cursor = xmlObject.newCursor();
+      try
+      {
+         cursor.selectPath( xpath );
+
+         while( cursor.toNextSelection() )
+         {
+            result.add( cursor.getDomNode() );
+         }
+      }
+      finally
+      {
+         cursor.dispose();
+      }
+
+      return result.toArray( new Node[result.size()] );
+   }
+
    private final static class ElementNodeList implements NodeList
    {
       private final List<Element> list;
