@@ -26,6 +26,7 @@ import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunListener;
 import com.eviware.soapui.model.support.AbstractMockRunner;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
@@ -540,7 +541,7 @@ public class WsdlMockRunner extends AbstractMockRunner
       PrintWriter out = response.getWriter();
       out.print( "<html><body><p>Mocked Interfaces in project [" + mockService.getProject().getName() + "]</p><ul>" );
 
-      for( Interface iface : mockService.getProject().getInterfaceList() )
+      for( Interface iface : ModelSupport.getChildren( mockService.getProject(), WsdlInterface.class ) )
       {
          out.print( "<li><a href=\"" );
          out.print( getInterfacePrefix( iface ) );

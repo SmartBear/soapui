@@ -65,45 +65,50 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
    {
       if( panel == null )
       {
-         JPanel p = new JPanel( new BorderLayout() );
-
-         p.add( buildToolbar(), BorderLayout.NORTH );
-         p.add( buildContent(), BorderLayout.CENTER );
-
-         paramsTable = new RestParamsTable( restRequest.getParams(), true )
-         {
-            protected void insertAdditionalButtons( JXToolBar toolbar )
-            {
-               toolbar.add( UISupport.createToolbarButton( new UpdateRestParamsAction() ) );
-            }
-         };
-
-         split = UISupport.createVerticalSplit( paramsTable, p );
-
-         panel = new JPanel( new BorderLayout() );
-         panel.add( split );
-
-         SwingUtilities.invokeLater( new Runnable()
-         {
-            public void run()
-            {
-               // wait for panel to get shown..
-               if( panel.getHeight() == 0 )
-               {
-                  SwingUtilities.invokeLater( this );
-               }
-               else
-               {
-                  if( !restRequest.hasRequestBody() )
-                     split.setDividerLocation( 1.0F );
-                  else
-                     split.setDividerLocation( 0.5F );
-               }
-            }
-         } );
+         buildComponent();
       }
 
       return panel;
+   }
+
+   protected void buildComponent()
+   {
+      JPanel p = new JPanel( new BorderLayout() );
+
+      p.add( buildToolbar(), BorderLayout.NORTH );
+      p.add( buildContent(), BorderLayout.CENTER );
+
+      paramsTable = new RestParamsTable( restRequest.getParams(), true )
+      {
+         protected void insertAdditionalButtons( JXToolBar toolbar )
+         {
+            toolbar.add( UISupport.createToolbarButton( new UpdateRestParamsAction() ) );
+         }
+      };
+
+      split = UISupport.createVerticalSplit( paramsTable, p );
+
+      panel = new JPanel( new BorderLayout() );
+      panel.add( split );
+
+      SwingUtilities.invokeLater( new Runnable()
+      {
+         public void run()
+         {
+            // wait for panel to get shown..
+            if( panel.getHeight() == 0 )
+            {
+               SwingUtilities.invokeLater( this );
+            }
+            else
+            {
+               if( !restRequest.hasRequestBody() )
+                  split.setDividerLocation( 1.0F );
+               else
+                  split.setDividerLocation( 0.5F );
+            }
+         }
+      } );
    }
 
    @Override
@@ -111,6 +116,11 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
    {
       super.release();
       restRequest.removePropertyChangeListener( this );
+   }
+
+   public RestRequest getRestRequest()
+   {
+      return restRequest;
    }
 
    private Component buildContent()

@@ -75,7 +75,7 @@ import java.util.List;
  * A SOAP Monitor..
  */
 
-@SuppressWarnings("serial")
+@SuppressWarnings( "serial" )
 public class SoapMonitor extends JPanel
 {
    private static final String ALL_FILTER_OPTION = "- all -";
@@ -126,7 +126,7 @@ public class SoapMonitor extends JPanel
    private SoapMonitorEngine monitorEngine;
    private String oldProxyHost;
    private String oldProxyPort;
-	private String sslEndpoint;
+   private String sslEndpoint;
 
    public SoapMonitor(
            WsdlProject project, int listenPort,
@@ -152,13 +152,15 @@ public class SoapMonitor extends JPanel
       start();
    }
 
-   public SoapMonitor(WsdlProject project, int sourcePort, String incomingRequestWss, String incomingResponseWss,
-			JXToolBar toolbar, boolean setAsProxy)
-	{
-   	this(project,sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy, null);
-	}
+   public SoapMonitor(
+           WsdlProject project, int sourcePort, String incomingRequestWss, String incomingResponseWss,
+           JXToolBar toolbar, boolean setAsProxy
+   )
+   {
+      this( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy, null );
+   }
 
-	private JComponent buildContent()
+   private JComponent buildContent()
    {
       JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildLog() );
 
@@ -292,7 +294,8 @@ public class SoapMonitor extends JPanel
       } );
 
       String[] interfaceNames = ModelSupport
-              .getNames( new String[]{ALL_FILTER_OPTION}, getProject().getInterfaceList() );
+              .getNames( new String[]{ALL_FILTER_OPTION},
+                      ModelSupport.getChildren( getProject(), WsdlInterface.class ) );
 
       toolbar.addFixed( new JLabel( "Interface" ) );
       toolbar.addRelatedGap();
@@ -451,7 +454,7 @@ public class SoapMonitor extends JPanel
 //		monitorEngine = new TcpMonMonitorEngine();
 
       monitorEngine = new SoapMonitorEngineImpl();
-      ((SoapMonitorEngineImpl) monitorEngine).setSslEndpoint(sslEndpoint);
+      ( (SoapMonitorEngineImpl) monitorEngine ).setSslEndpoint( sslEndpoint );
       monitorEngine.start( this, localPort );
 
       if( monitorEngine.isRunning() )
@@ -459,7 +462,7 @@ public class SoapMonitor extends JPanel
          stopButton.setEnabled( true );
          startButton.setEnabled( false );
          optionsButton.setEnabled( false );
-         infoLabel.setText( (monitorEngine.isProxy()?"Http Proxy ":"SSL Tunnel ") + "on port " + localPort );
+         infoLabel.setText( ( monitorEngine.isProxy() ? "Http Proxy " : "SSL Tunnel " ) + "on port " + localPort );
          progressBar.setIndeterminate( true );
 
          if( setAsProxy )
@@ -467,8 +470,8 @@ public class SoapMonitor extends JPanel
             oldProxyHost = SoapUI.getSettings().getString( ProxySettings.HOST, "" );
             oldProxyPort = SoapUI.getSettings().getString( ProxySettings.PORT, "" );
 
-            SoapUI.getSettings().setString( ProxySettings.HOST, "127.0.0.1");
-            SoapUI.getSettings().setString( ProxySettings.PORT, String.valueOf(localPort) );
+            SoapUI.getSettings().setString( ProxySettings.HOST, "127.0.0.1" );
+            SoapUI.getSettings().setString( ProxySettings.PORT, String.valueOf( localPort ) );
          }
 
          SoapUI.log.info( "Started SOAP Monitor on local port " + localPort );
@@ -515,7 +518,7 @@ public class SoapMonitor extends JPanel
 
       if( setAsProxy )
       {
-         SoapUI.getSettings().setString( ProxySettings.HOST, oldProxyHost);
+         SoapUI.getSettings().setString( ProxySettings.HOST, oldProxyHost );
          SoapUI.getSettings().setString( ProxySettings.PORT, oldProxyPort );
       }
    }
@@ -1093,7 +1096,7 @@ public class SoapMonitor extends JPanel
          StringList endpoints = new StringList();
          endpoints.add( null );
 
-         for( Interface iface : getProject().getInterfaceList() )
+         for( WsdlInterface iface : ModelSupport.getChildren( getProject(), WsdlInterface.class ) )
          {
             endpoints.addAll( iface.getEndpoints() );
          }

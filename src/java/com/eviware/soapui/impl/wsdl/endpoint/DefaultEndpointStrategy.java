@@ -316,7 +316,9 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
    {
       project.removeProjectListener( projectListener );
       for( Interface iface : project.getInterfaceList() )
+      {
          iface.removePropertyChangeListener( AbstractInterface.ENDPOINT_PROPERTY, propertyChangeListener );
+      }
    }
 
    private class InternalProjectListener extends ProjectListenerAdapter

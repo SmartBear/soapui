@@ -44,10 +44,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import junit.framework.ComparisonFailure;
 import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlAnySimpleType;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
+import org.apache.xmlbeans.*;
 import org.custommonkey.xmlunit.*;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -218,7 +215,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 
                if( contentObj == null )
                {
-                  if( items[c] instanceof XmlAnySimpleType )
+                  if( items[c] instanceof XmlAnySimpleType && !( items[c] instanceof XmlQName ) )
                   {
                      String value = ( (XmlAnySimpleType) items[c] ).getStringValue();
                      String expandedValue = PropertyExpansionUtils.expandProperties( context, value );

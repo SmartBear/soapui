@@ -33,6 +33,7 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 {
    private JUndoableTextField pathTextField;
    private boolean updating;
+   private RestParamsTable paramsTable;
 
    public RestResourceDesktopPanel( RestResource modelItem )
    {
@@ -45,7 +46,8 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
    private Component buildContent()
    {
       JTabbedPane tabs = new JTabbedPane();
-      tabs.addTab( "Resource Parameters", new RestParamsTable( getModelItem().getParams(), true ) );
+      paramsTable = new RestParamsTable( getModelItem().getParams(), true );
+      tabs.addTab( "Resource Parameters", paramsTable );
       return UISupport.createTabPanel( tabs, false );
    }
 
@@ -53,6 +55,11 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
    public String getTitle()
    {
       return getName( getModelItem() );
+   }
+
+   public RestParamsTable getParamsTable()
+   {
+      return paramsTable;
    }
 
    private String getName( RestResource modelItem )
@@ -73,13 +80,14 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
       toolbar.addSeparator();
 
       pathTextField = new JUndoableTextField( getModelItem().getPath(), 20 );
-      pathTextField.getDocument().addDocumentListener( new DocumentListenerAdapter(){
+      pathTextField.getDocument().addDocumentListener( new DocumentListenerAdapter()
+      {
          public void update( Document document )
          {
-            if( !updating)
+            if( !updating )
             {
                updating = true;
-               getModelItem().setPath( getText( document ));
+               getModelItem().setPath( getText( document ) );
                updating = false;
             }
          }
@@ -106,7 +114,7 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
    @Override
    public void propertyChange( PropertyChangeEvent evt )
    {
-      if( evt.getPropertyName().equals( "path" ))
+      if( evt.getPropertyName().equals( "path" ) )
       {
          if( !updating )
          {

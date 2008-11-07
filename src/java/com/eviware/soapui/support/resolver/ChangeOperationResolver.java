@@ -12,218 +12,216 @@
 
 package com.eviware.soapui.support.resolver;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JList;
-
+import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext.Resolver;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
 public abstract class ChangeOperationResolver implements Resolver
 {
 
-	private boolean resolved = false;
-	private WsdlProject project;
-	private Operation pickedOperation;
+   private boolean resolved = false;
+   private WsdlProject project;
+   private Operation pickedOperation;
 
-	public ChangeOperationResolver(WsdlTestStep testStep)
-	{
-		this.project = testStep.getTestCase().getTestSuite().getProject();
+   public ChangeOperationResolver( WsdlTestStep testStep )
+   {
+      this.project = testStep.getTestCase().getTestSuite().getProject();
 
-	}
+   }
 
-	public String getResolvedPath()
-	{
-		return "";
-	}
+   public String getResolvedPath()
+   {
+      return "";
+   }
 
-	public boolean isResolved()
-	{
-		return resolved;
-	}
+   public boolean isResolved()
+   {
+      return resolved;
+   }
 
-	public boolean resolve()
-	{
+   public boolean resolve()
+   {
 
-		PropertyChangeDialog pDialog = new PropertyChangeDialog("Choose operation");
-		pDialog.showAndChoose();
-		resolved = update();
-		return resolved;
-	}
+      PropertyChangeDialog pDialog = new PropertyChangeDialog( "Choose operation" );
+      pDialog.showAndChoose();
+      resolved = update();
+      return resolved;
+   }
 
-	public abstract boolean update();
+   public abstract boolean update();
 
-	public String getDescription()
-	{
-		return "Resolve: Choose another operation";
-	}
+   public String getDescription()
+   {
+      return "Resolve: Choose another operation";
+   }
 
-	@Override
-	public String toString()
-	{
-		return getDescription();
-	}
+   @Override
+   public String toString()
+   {
+      return getDescription();
+   }
 
-	@SuppressWarnings("serial")
-	private class PropertyChangeDialog extends JDialog
-	{
+   @SuppressWarnings( "serial" )
+   private class PropertyChangeDialog extends JDialog
+   {
 
-		private JComboBox sourceStepCombo;
-		private JComboBox propertiesCombo;
-		private JButton okBtn = new JButton(" Ok ");
-		private JButton cancelBtn = new JButton(" Cancel ");
+      private JComboBox sourceStepCombo;
+      private JComboBox propertiesCombo;
+      private JButton okBtn = new JButton( " Ok " );
+      private JButton cancelBtn = new JButton( " Cancel " );
 
-		public PropertyChangeDialog(String title)
-		{
-			super(UISupport.getMainFrame(), title, true);
-			init();
-		}
+      public PropertyChangeDialog( String title )
+      {
+         super( UISupport.getMainFrame(), title, true );
+         init();
+      }
 
-		private void init()
-		{
-			FormLayout layout = new FormLayout("min,right:pref, 4dlu, 40dlu, 5dlu, 40dlu, min ",
-			"min, pref, 4dlu, pref, 4dlu, pref, min");
-			CellConstraints cc = new CellConstraints();
-			PanelBuilder panel = new PanelBuilder(layout);
-			panel.addLabel("Interface:", cc.xy(2, 2));
+      private void init()
+      {
+         FormLayout layout = new FormLayout( "min,right:pref, 4dlu, 40dlu, 5dlu, 40dlu, min ",
+                 "min, pref, 4dlu, pref, 4dlu, pref, min" );
+         CellConstraints cc = new CellConstraints();
+         PanelBuilder panel = new PanelBuilder( layout );
+         panel.addLabel( "Interface:", cc.xy( 2, 2 ) );
 
-			List<Interface> ifaces = project.getInterfaceList();
-			DefaultComboBoxModel sourceStepComboModel = new DefaultComboBoxModel();
-			sourceStepCombo = new JComboBox(sourceStepComboModel);
-			sourceStepCombo.setRenderer(new InterfaceComboRenderer());
-			for (Interface element : ifaces)
-				sourceStepComboModel.addElement(element);
+         List<WsdlInterface> ifaces = ModelSupport.getChildren( project, WsdlInterface.class );
+         DefaultComboBoxModel sourceStepComboModel = new DefaultComboBoxModel();
+         sourceStepCombo = new JComboBox( sourceStepComboModel );
+         sourceStepCombo.setRenderer( new InterfaceComboRenderer() );
+         for( Interface element : ifaces )
+            sourceStepComboModel.addElement( element );
 
-			sourceStepCombo.setSelectedIndex(0);
-			panel.add(sourceStepCombo, cc.xyw(4, 2, 3));
+         sourceStepCombo.setSelectedIndex( 0 );
+         panel.add( sourceStepCombo, cc.xyw( 4, 2, 3 ) );
 
+         propertiesCombo = new JComboBox( ( (Interface) sourceStepCombo.getSelectedItem() ).getOperationList().toArray() );
+         propertiesCombo.setRenderer( new OperationComboRender() );
 
-			propertiesCombo = new JComboBox(((Interface) sourceStepCombo.getSelectedItem()).getOperationList().toArray());
-			propertiesCombo.setRenderer(new OperationComboRender());
+         panel.addLabel( "Operation:", cc.xy( 2, 4 ) );
+         panel.add( propertiesCombo, cc.xyw( 4, 4, 3 ) );
 
-			panel.addLabel("Operation:", cc.xy(2, 4));
-			panel.add(propertiesCombo, cc.xyw(4, 4, 3));
+         panel.add( okBtn, cc.xy( 4, 6 ) );
+         panel.add( cancelBtn, cc.xy( 6, 6 ) );
 
-			panel.add(okBtn, cc.xy(4, 6));
-			panel.add(cancelBtn, cc.xy(6, 6));
+         sourceStepCombo.addActionListener( new ActionListener()
+         {
 
-			sourceStepCombo.addActionListener(new ActionListener()
-			{
+            public void actionPerformed( ActionEvent e )
+            {
+               Interface iface = project.getInterfaceByName( ( (Interface) sourceStepCombo.getSelectedItem() ).getName() );
+               propertiesCombo.removeAllItems();
+               if( iface != null )
+               {
+                  propertiesCombo.setEnabled( true );
+                  for( Operation op : iface.getOperationList() )
+                     propertiesCombo.addItem( op );
+               }
+               else
+               {
+                  propertiesCombo.setEnabled( false );
+               }
 
-				public void actionPerformed(ActionEvent e)
-				{
-					Interface iface = project.getInterfaceByName(((Interface) sourceStepCombo.getSelectedItem()).getName());
-					propertiesCombo.removeAllItems();
-					if (iface != null)
-					{
-						propertiesCombo.setEnabled(true);
-						for (Operation op : iface.getOperationList())
-							propertiesCombo.addItem(op);
-					}
-					else
-					{
-						propertiesCombo.setEnabled(false);
-					}
+            }
 
-				}
+         } );
 
-			});
+         okBtn.addActionListener( new ActionListener()
+         {
 
-			okBtn.addActionListener(new ActionListener()
-			{
+            public void actionPerformed( ActionEvent e )
+            {
 
-				public void actionPerformed(ActionEvent e)
-				{
+               pickedOperation = (Operation) propertiesCombo.getSelectedItem();
 
-					pickedOperation = (Operation) propertiesCombo.getSelectedItem();
+               setVisible( false );
+            }
 
-					setVisible(false);
-				}
+         } );
 
-			});
+         cancelBtn.addActionListener( new ActionListener()
+         {
 
-			cancelBtn.addActionListener(new ActionListener()
-			{
+            public void actionPerformed( ActionEvent e )
+            {
+               setVisible( false );
+            }
 
-				public void actionPerformed(ActionEvent e)
-				{
-					setVisible(false);
-				}
+         } );
 
-			});
+         setLocationRelativeTo( UISupport.getParentFrame( this ) );
+         panel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
+         this.add( panel.getPanel() );
+      }
 
-			setLocationRelativeTo(UISupport.getParentFrame(this));
-			panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-			this.add(panel.getPanel());
-		}
+      public void showAndChoose()
+      {
+         this.pack();
+         this.setVisible( true );
+      }
+   }
 
-		public void showAndChoose()
-		{
-			this.pack();
-			this.setVisible(true);
-		}
-	}
+   @SuppressWarnings( "serial" )
+   private class InterfaceComboRenderer extends DefaultListCellRenderer
+   {
+      @Override
+      public Component getListCellRendererComponent(
+              JList list, Object value, int index, boolean isSelected,
+              boolean cellHasFocus
+      )
+      {
+         Component result = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
 
-	@SuppressWarnings("serial")
-	private class InterfaceComboRenderer extends DefaultListCellRenderer
-	{
-		@Override
-		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-				boolean cellHasFocus)
-		{
-			Component result = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+         if( value instanceof Interface )
+         {
+            Interface item = (Interface) value;
+            setIcon( item.getIcon() );
+            setText( item.getName() );
+         }
 
-			if (value instanceof Interface)
-			{
-				Interface item = (Interface) value;
-				setIcon(item.getIcon());
-				setText(item.getName());
-			}
+         return result;
+      }
+   }
 
-			return result;
-		}
-	}
+   @SuppressWarnings( "serial" )
+   private class OperationComboRender extends DefaultListCellRenderer
+   {
 
-	@SuppressWarnings("serial")
-	private class OperationComboRender extends DefaultListCellRenderer
-	{
+      @Override
+      public Component getListCellRendererComponent(
+              JList list, Object value, int index, boolean isSelected,
+              boolean cellHasFocus
+      )
+      {
+         Component result = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
 
-		@Override
-		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-				boolean cellHasFocus)
-		{
-			Component result = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+         if( value instanceof Operation )
+         {
+            Operation item = (Operation) value;
+            setText( item.getName() );
+         }
 
-			if (value instanceof Operation)
-			{
-				Operation item = (Operation) value;
-				setText(item.getName());
-			}
+         return result;
+      }
 
-			return result;
-		}
+   }
 
-	}
-	
-	public Operation getPickedOperation()
-	{
-		return pickedOperation;
-	}
+   public Operation getPickedOperation()
+   {
+      return pickedOperation;
+   }
 
 }

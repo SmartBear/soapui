@@ -29,6 +29,7 @@ import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockServiceListener;
 import com.eviware.soapui.model.support.InterfaceListenerAdapter;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.util.ModelItemNames;
 import com.eviware.soapui.support.UISupport;
@@ -248,7 +249,9 @@ public class WsdlMockOperationDesktopPanel extends ModelItemDesktopPanel<WsdlMoc
                       "/open_request.gif" ) ) );
       toolbar.addUnrelatedGap();
 
-      ModelItemNames<Interface> names = new ModelItemNames<Interface>( getModelItem().getMockService().getProject().getInterfaceList() );
+      ModelItemNames<WsdlInterface> names = new ModelItemNames<WsdlInterface>(
+              ModelSupport.getChildren( getModelItem().getMockService().getProject(), WsdlInterface.class ) );
+
       interfaceCombo = new JComboBox( names.getNames() );
       interfaceCombo.setSelectedIndex( -1 );
       interfaceCombo.addItemListener( new InterfaceComboListener() );

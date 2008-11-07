@@ -12,151 +12,154 @@
 
 package com.eviware.x.impl.swing;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.util.Arrays;
-
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
+import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JButtonBar;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.x.form.ValidationMessage;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
 
+import javax.swing.*;
+import java.awt.*;
+import java.util.Arrays;
+
 public class JFormDialog extends SwingXFormDialog
 {
-	private JDialog dialog;
-	private SwingXFormImpl form;
+   private JDialog dialog;
+   private SwingXFormImpl form;
+   private JButtonBar buttons;
 
-	public JFormDialog(String name, SwingXFormImpl form, ActionList actions, String description, ImageIcon icon )
-	{
-		dialog = new JDialog( UISupport.getMainFrame(), name, true );
-		
-		JButtonBar buttons = UISupport.initDialogActions( actions, dialog );
-		buttons.setBorder( BorderFactory.createEmptyBorder( 5, 0, 0, 0 ));
-		
-		JPanel panel = new JPanel( new BorderLayout() );
-		this.form = (SwingXFormImpl)form;
-		panel.add( (this.form.getPanel()), BorderLayout.CENTER );
-		panel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ));
-		
-		if( description != null || icon != null )
-			dialog.getContentPane().add( UISupport.buildDescription( name, description, icon ), BorderLayout.NORTH );
-		
-		dialog.getContentPane().add( panel, BorderLayout.CENTER );
-		
-		buttons.setBorder(
-				BorderFactory.createCompoundBorder( 
-						BorderFactory.createCompoundBorder( 
-								BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.GRAY ),
-								BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.WHITE )),
-						BorderFactory.createEmptyBorder( 3, 5, 3, 5 )));
-		
-		dialog.getContentPane().add( buttons, BorderLayout.SOUTH );
-	}
+   public JFormDialog( String name, SwingXFormImpl form, ActionList actions, String description, ImageIcon icon )
+   {
+      dialog = new JDialog( UISupport.getMainFrame(), name, true );
 
-	public void setValues(StringToStringMap values)
-	{
-		form.setValues( values );
-	}
+      buttons = UISupport.initDialogActions( actions, dialog );
+      buttons.setBorder( BorderFactory.createEmptyBorder( 5, 0, 0, 0 ) );
 
-	public StringToStringMap getValues()
-	{
-		StringToStringMap result = new StringToStringMap();
-		result.putAll( form.getValues());
-		
-		return result;
-	}
+      JPanel panel = new JPanel( new BorderLayout() );
+      this.form = (SwingXFormImpl) form;
+      panel.add( ( this.form.getPanel() ), BorderLayout.CENTER );
+      panel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
 
-	public void setOptions(String field, Object[] options)
-	{
-		form.setOptions( field, options );
-	}
+      if( description != null || icon != null )
+         dialog.getContentPane().add( UISupport.buildDescription( name, description, icon ), BorderLayout.NORTH );
 
-	public void setVisible(boolean visible)
-	{
-		dialog.pack();
-		if( dialog.getHeight() < 270 )
-		{
-			dialog.setSize( new Dimension( dialog.getWidth(), 270 ) );
-		}
-		
-		if( dialog.getWidth() < 450)
-		{
-			dialog.setSize( new Dimension( 450, dialog.getHeight() ) );
-		}
-		
-		UISupport.centerDialog( dialog );
-		dialog.setVisible( visible );
-	}
+      dialog.getContentPane().add( panel, BorderLayout.CENTER );
 
-	public boolean validate()
-	{
-		XFormField[] formFields = form.getFormFields();
-		for( int c = 0; c < formFields.length; c++ )
-		{
-			ValidationMessage [] messages = formFields[c].validate();
-			if( messages != null && messages.length > 0 )
-			{
-				((AbstractSwingXFormField<?>)messages[0].getFormField()).getComponent().requestFocus();
-				UISupport.showErrorMessage( messages[0].getMessage() );
-				return false;
-			}
-		}
-		
-		return true;
-	}
+      buttons.setBorder(
+              BorderFactory.createCompoundBorder(
+                      BorderFactory.createCompoundBorder(
+                              BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.GRAY ),
+                              BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.WHITE ) ),
+                      BorderFactory.createEmptyBorder( 3, 5, 3, 5 ) ) );
 
-	public void setFormFieldProperty(String name, Object value)
-	{
-		form.setFormFieldProperty( name, value );
-	}
+      dialog.getContentPane().add( buttons, BorderLayout.SOUTH );
+   }
 
-	public String getValue( String field )
-	{
-		return form.getComponentValue( field );
-	}
+   public void setValues( StringToStringMap values )
+   {
+      form.setValues( values );
+   }
 
-	public void setValue( String field, String value )
-	{
-		form.setComponentValue( field, value );
-	}
+   public StringToStringMap getValues()
+   {
+      StringToStringMap result = new StringToStringMap();
+      result.putAll( form.getValues() );
 
-	public int getValueIndex( String name )
-	{
-		String [] options = form.getOptions( name );
-		if( options == null )
-			return -1;
-		
-		return Arrays.asList( options ).indexOf( form.getComponentValue( name ) );
-	}
+      return result;
+   }
 
-	public boolean show()
-	{
-		setReturnValue(  XFormDialog.CANCEL_OPTION );
-		show( new StringToStringMap() );
-		return getReturnValue() == XFormDialog.OK_OPTION;
-	}
+   public void setOptions( String field, Object[] options )
+   {
+      form.setOptions( field, options );
+   }
 
-	public XFormField getFormField( String name )
-	{
-		return form.getFormField( name );
-	}
+   public void setVisible( boolean visible )
+   {
+      dialog.pack();
+      if( dialog.getHeight() < 270 )
+      {
+         dialog.setSize( new Dimension( dialog.getWidth(), 270 ) );
+      }
 
-	public void setWidth( int i )
-	{
-		dialog.setPreferredSize( new Dimension( i, ( int ) dialog.getPreferredSize().getHeight()) );
-	}
+      if( dialog.getWidth() < 450 )
+      {
+         dialog.setSize( new Dimension( 450, dialog.getHeight() ) );
+      }
 
-	public void release()
-	{
-		dialog.dispose();
-	}
+      UISupport.centerDialog( dialog );
+      dialog.setVisible( visible );
+   }
+
+   public void addAction( Action action )
+   {
+      DefaultActionList actions = new DefaultActionList();
+      actions.addAction( action );
+      buttons.addActions( actions );
+   }
+
+   public boolean validate()
+   {
+      XFormField[] formFields = form.getFormFields();
+      for( int c = 0; c < formFields.length; c++ )
+      {
+         ValidationMessage[] messages = formFields[c].validate();
+         if( messages != null && messages.length > 0 )
+         {
+            ( (AbstractSwingXFormField<?>) messages[0].getFormField() ).getComponent().requestFocus();
+            UISupport.showErrorMessage( messages[0].getMessage() );
+            return false;
+         }
+      }
+
+      return true;
+   }
+
+   public void setFormFieldProperty( String name, Object value )
+   {
+      form.setFormFieldProperty( name, value );
+   }
+
+   public String getValue( String field )
+   {
+      return form.getComponentValue( field );
+   }
+
+   public void setValue( String field, String value )
+   {
+      form.setComponentValue( field, value );
+   }
+
+   public int getValueIndex( String name )
+   {
+      String[] options = form.getOptions( name );
+      if( options == null )
+         return -1;
+
+      return Arrays.asList( options ).indexOf( form.getComponentValue( name ) );
+   }
+
+   public boolean show()
+   {
+      setReturnValue( XFormDialog.CANCEL_OPTION );
+      show( new StringToStringMap() );
+      return getReturnValue() == XFormDialog.OK_OPTION;
+   }
+
+   public XFormField getFormField( String name )
+   {
+      return form.getFormField( name );
+   }
+
+   public void setWidth( int i )
+   {
+      dialog.setPreferredSize( new Dimension( i, (int) dialog.getPreferredSize().getHeight() ) );
+   }
+
+   public void release()
+   {
+      dialog.dispose();
+   }
 }
