@@ -429,7 +429,7 @@ public class SoapMonitor extends JPanel
       mainToolbar.addGlue();
 
       infoLabel = new JLabel();
-      infoLabel.setPreferredSize( new Dimension( 100, 20 ) );
+      infoLabel.setPreferredSize( new Dimension( 150, 20 ) );
       infoLabel.setOpaque( false );
       mainToolbar.addFixed( infoLabel );
 
@@ -459,7 +459,7 @@ public class SoapMonitor extends JPanel
          stopButton.setEnabled( true );
          startButton.setEnabled( false );
          optionsButton.setEnabled( false );
-         infoLabel.setText( monitorEngine.isProxy()?"HTTP Proxy ":"SSL Tunnel " + "on port " + localPort );
+         infoLabel.setText( (monitorEngine.isProxy()?"Http Proxy ":"SSL Tunnel ") + "on port " + localPort );
          progressBar.setIndeterminate( true );
 
          if( setAsProxy )
