@@ -70,7 +70,8 @@ public class RestRequestRepresentationsInspector extends AbstractRestRepresentat
       }
       else
       {
-         enableRecordingCheckBox.setSelected( getRequest().getResource().getService().isGenerated() );
+         enableRecordingCheckBox.setSelected( getRequest().getResource() == null ||
+                 getRequest().getResource().getService().isGenerated() );
       }
 
       enableRecordingCheckBox.addItemListener( new ItemListener()
@@ -102,7 +103,7 @@ public class RestRequestRepresentationsInspector extends AbstractRestRepresentat
    protected void extractRepresentation( HttpResponse response )
    {
       String responseContentType = response.getRequestHeaders().get( "Content-Type" );
-      if( StringUtils.isNullOrEmpty( responseContentType ))
+      if( StringUtils.isNullOrEmpty( responseContentType ) )
          return;
 
       RestRepresentation[] representations = getRequest().getRepresentations( RestRepresentation.Type.REQUEST, null );
@@ -112,7 +113,7 @@ public class RestRequestRepresentationsInspector extends AbstractRestRepresentat
       {
          String repMediaType = representations[c].getMediaType();
 
-         if( responseContentType.equals( repMediaType ))
+         if( responseContentType.equals( repMediaType ) )
          {
             break;
          }

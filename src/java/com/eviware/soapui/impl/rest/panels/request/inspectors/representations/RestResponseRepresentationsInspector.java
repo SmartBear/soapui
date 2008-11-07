@@ -61,7 +61,8 @@ public class RestResponseRepresentationsInspector extends AbstractRestRepresenta
       }
       else
       {
-         enableRecordingCheckBox.setSelected( getRequest().getResource().getService().isGenerated() );
+         enableRecordingCheckBox.setSelected( getRequest().getResource() == null ||
+                 getRequest().getResource().getService().isGenerated() );
       }
 
       enableRecordingCheckBox.addItemListener( new ItemListener()
