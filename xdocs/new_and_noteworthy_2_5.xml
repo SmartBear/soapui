@@ -5,7 +5,7 @@
     </properties>
     <body>
         <section name="soapUI 2.5 new features!">
-            <p>Welcome to soapUI 2.5, the "restUI" release!</p>
+            <p>Welcome to soapUI 2.5, the REST release!</p>
             <p>
                 <i>As always, make backups of your project files before switching and let us know if you have any
                     issues!

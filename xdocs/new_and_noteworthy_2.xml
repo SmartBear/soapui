@@ -10,11 +10,11 @@
  		<p><i>As always, make backups of your project files before switching and let us know if you have any issues!</i></p>
 		<table class="webstartlinkstable">
 		<tr>
-		        <td align="center" bgcolor="white"><span class="webstartheader">soapUI 2.0.1</span><div>
-				<a href="http://www.soapui.org/jnlp/2.0.1/soapui.jnlp" urchinTracker="/jnlp/soapui/2_0_1"><img class="webstart" src="images/webstart_green.png" border="0" alt="soapUI WebStart"/></a></div>
-			 [<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=568878">Download</a>]</td>
-			 <td align="center" bgcolor="white"><span class="webstartheader">soapUI 2.0.1 Pro</span><div>
-				<a href="http://www.eviware.com/jnlp/2.0.1/soapui-pro.jnlp" urchinTracker="/jnlp/soapui/2_0_1-pro"><img class="webstart" src="images/webstart_orange.png" border="0" alt="soapUI Pro WebStart"/></a></div>
+		        <td align="center" bgcolor="white"><span class="webstartheader">soapUI 2.0.2</span><div>
+				<a href="http://www.soapui.org/jnlp/2.0.1/soapui.jnlp" urchinTracker="/jnlp/soapui/2_0_2"><img class="webstart" src="images/webstart_green.png" border="0" alt="soapUI WebStart"/></a></div>
+			 [<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=571745">Download</a>]</td>
+			 <td align="center" bgcolor="white"><span class="webstartheader">soapUI 2.0.2 Pro</span><div>
+				<a href="http://www.eviware.com/jnlp/2.0.1/soapui-pro.jnlp" urchinTracker="/jnlp/soapui/2_0_2-pro"><img class="webstart" src="images/webstart_orange.png" border="0" alt="soapUI Pro WebStart"/></a></div>
 			 [<a target="_new" href="http://www.eviware.com">Try or buy soapUI Pro</a>]
 			 [<a target="_new" href="http://www.eviware.com/content/view/42/36/">soapUI FAQ</a>]</td>
 	
