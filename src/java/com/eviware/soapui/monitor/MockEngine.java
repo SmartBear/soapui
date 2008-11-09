@@ -182,7 +182,7 @@ public class MockEngine
 
       log.info( "Stopped MockService [" + mockService.getName() + "] on port [" + port + "]" );
 
-      if( map.isEmpty() && !SoapUI.getSettings().getBoolean( HttpSettings.LEAVE_MOCKENGINE ) )
+      if( map.get( mockService.getPath() ).isEmpty() && !SoapUI.getSettings().getBoolean( HttpSettings.LEAVE_MOCKENGINE ) )
       {
          SoapUIConnector connector = connectors.get( port );
          if( connector == null )
@@ -664,7 +664,7 @@ public class MockEngine
                ByteArrayOutputStream byteArrayOutputStream = ( (CapturingServletInputStream) inputStream ).captureOutputStream;
                String str = request.toString() + byteArrayOutputStream.toString();
                BufferedReader reader = new BufferedReader( new StringReader( str ) );
-               ( (CapturingServletInputStream) inputStream ).captureOutputStream = new ByteArrayOutputStream( );
+               ( (CapturingServletInputStream) inputStream ).captureOutputStream = new ByteArrayOutputStream();
 
                String line = reader.readLine();
                while( line != null )
@@ -687,7 +687,7 @@ public class MockEngine
                ByteArrayOutputStream byteArrayOutputStream = ( (CapturingServletOutputStream) outputStream ).captureOutputStream;
                String str = request.toString() + byteArrayOutputStream.toString();
                BufferedReader reader = new BufferedReader( new StringReader( str ) );
-                ( (CapturingServletOutputStream) outputStream ).captureOutputStream = new ByteArrayOutputStream( );
+               ( (CapturingServletOutputStream) outputStream ).captureOutputStream = new ByteArrayOutputStream();
 
                String line = reader.readLine();
                while( line != null )
