@@ -11,7 +11,8 @@
             <item name="maven" href="/plugin/index.html"/>
             <item name="PDF" href="soapui.pdf"/>
             <item name="files" href="http://sourceforge.net/project/showfiles.php?group_id=136013"/>
-            <item name="forums" href="http://sourceforge.net/forum/?group_id=136013"/>
+            <item name="forums" href="http://www.eviware.com/component/option,com_smf/Itemid,53/"/>
+<!--            <item name="forums" href="http://sourceforge.net/forum/?group_id=136013"/> -->
             <item name="bugs" href="http://sourceforge.net/tracker/?group_id=136013&amp;atid=737763"/>
             <item name="sourceforge" href="http://sourceforge.net/projects/soapui/?abmode=1"/>
             <item name="eviware.com" href="http://www.eviware.com"/>
@@ -63,24 +64,41 @@
                 <item href="/userguide/projects/coverage.html" name="Coverage" pro="true"/>
                 <item href="/userguide/projects/requirements.html" name="Requirements" pro="true"/>
                 <item href="/userguide/projects/wss.html" name="WS-Security"/>
+                <item href="/userguide/projects/encryption.html" name="Encryption"/>
                 <item href="/userguide/projects/composite-projects.html" name="Composite Projects" pro="true"/>
             </item>
-            <item href="/userguide/interfaces/index.html" name="Interfaces">
+
+            <item href="/userguide/interfaces/index.html" name="WSDL Services">
                 <item href="/userguide/interfaces/interfaceview.html" name="Interface View"/>
                 <item href="/userguide/interfaces/endpoints.html" name="Service Endpoints"/>
                 <item href="/userguide/interfaces/interfaceeditor.html" name="WSDL Content"/>
                 <item href="/userguide/interfaces/wsi.html" name="WS-I Compliance"/>
                 <item href="/userguide/interfaces/refactoring.html" name="WSDL Refactoring" pro="true"/>
+
+                <item href="/userguide/operations.html" name="WSDL Operations"/>
+
+                <item href="/userguide/requests.html" name="Working with SOAP Requests">
+                    <item href="/userguide/formeditor.html" name="Form Editor" pro="true"/>
+                    <item href="/userguide/overviewview.html" name="Overview View" pro="true"/>
+                    <item href="/userguide/outlineeditor.html" name="Outline Editor" pro="true"/>
+                    <item href="/userguide/messageinspectors.html" name="Message Inspectors" pro="true"/>
+                    <item href="/userguide/attachments.html" name="Attachments/Inline Files"/>
+                </item>
             </item>
 
-            <item href="/userguide/operations.html" name="Operations"/>
+            <item href="/userguide/rest/index.html" name="REST Services">
+                <item href="/userguide/rest/services/index.html" name="Service View"/>
+                <item href="/userguide/rest/services/endpoints.html" name="Service Endpoints"/>
+                <item href="/userguide/rest/services/wadlcontent.html" name="WADL Content"/>
 
-            <item href="/userguide/requests.html" name="Working with Requests">
-                <item href="/userguide/formeditor.html" name="Form Editor" pro="true"/>
-                <item href="/userguide/overviewview.html" name="Overview View" pro="true"/>
-                <item href="/userguide/outlineeditor.html" name="Outline Editor" pro="true"/>
-                <item href="/userguide/messageinspectors.html" name="Message Inspectors" pro="true"/>
-                <item href="/userguide/attachments.html" name="Attachments/Inline Files"/>
+                <item href="/userguide/rest/parameters.html" name="REST Parameters"/>
+                <item href="/userguide/rest/resources.html" name="REST Resources"/>
+
+                <item href="/userguide/rest/requests/index.html" name="REST Requests">
+                    <item href="/userguide/rest/requests/contentview.html" name="Content View"/>
+                    <item href="/userguide/rest/requests/formeditor.html" name="Form Editor" pro="true"/>
+                    <item href="/userguide/rest/requests/outlineeditor.html" name="Outline Editor" pro="true"/>
+                </item>
             </item>
 
             <item href="/userguide/scripting.html" name="Scripting">
@@ -94,8 +112,12 @@
                 <item href="/userguide/functional/getting_started.html" name="Getting Started"/>
 
                 <item href="/userguide/functional/testsuites.html" name="TestSuites"/>
-                <item href="/userguide/functional/testcases.html" name="TestCases">
-                    <item href="/userguide/functional/testrequests.html" name="Test Requests">
+                <item href="/userguide/functional/testcases.html" name="TestCases"/>
+                <item href="/userguide/functional/teststeps.html" name="TestSteps">
+                    <item href="/userguide/functional/testrequests.html" name="Requests">
+                        <item href="/userguide/functional/soap-requests.html" name="SOAP Requests"/>
+                        <item href="/userguide/functional/rest-requests.html" name="REST Requests"/>
+                        <item href="/userguide/functional/http-requests.html" name="HTTP Requests"/>
                         <item href="/userguide/functional/response-assertions.html" name="Assertions"/>
                         <item href="/userguide/functional/response-wizards.html" name="Editor Wizards" pro="true"/>
                     </item>
@@ -112,6 +134,7 @@
                     <item href="/userguide/functional/datasourcestep.html" name="DataSource" pro="true"/>
                     <item href="/userguide/functional/datasourceloopstep.html" name="DataSource Loop" pro="true"/>
                     <item href="/userguide/functional/datasinkstep.html" name="DataSink" pro="true"/>
+                    <item href="/userguide/functional/datagenstep.html" name="DataGen" pro="true"/>
                 </item>
             </item>
 
