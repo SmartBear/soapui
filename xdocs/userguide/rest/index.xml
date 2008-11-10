@@ -13,11 +13,12 @@
 
 <document>
     <properties>
-        <title>userguide - </title>
+        <title>userguide - soapUI REST Support</title>
     </properties>
     <body>
-		<section name=" ">
-		<p></p>
+		<section name="REST Services in sopUI">
+		<p>soapUI 2.5 introduces extensive possibilities to invoke and test REST services, either starting from a WADL
+        definition or just plain URLs.</p>
 
 		 <p><hr size="1"/>Next: <a href=" "> </a></p>
 		</section>

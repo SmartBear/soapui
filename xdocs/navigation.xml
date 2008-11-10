@@ -114,7 +114,7 @@
                 <item href="/userguide/functional/testsuites.html" name="TestSuites"/>
                 <item href="/userguide/functional/testcases.html" name="TestCases"/>
                 <item href="/userguide/functional/teststeps.html" name="TestSteps">
-                    <item href="/userguide/functional/testrequests.html" name="Requests">
+                    <item href="/userguide/functional/testrequests.html" name="Test Requests">
                         <item href="/userguide/functional/soap-requests.html" name="SOAP Requests"/>
                         <item href="/userguide/functional/rest-requests.html" name="REST Requests"/>
                         <item href="/userguide/functional/http-requests.html" name="HTTP Requests"/>

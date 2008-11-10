@@ -7,8 +7,8 @@
 		<section name="soapUI IntelliJ Plugin">
 		<p>The soapUI IntelliJ Plugin provides all soapUI functionality directly from within 
 		<a target="_new" href="http://www.jetbrains.com/idea/">IntelliJ IDEA</a> allowing one integrated development and 
-		testing environment for Web Services in Java. Existing soapUI desktop components are made available through two 
-		ToolWindows:</p>
+		testing environment for Web Services in Java.</p>
+        <p>Existing soapUI desktop components are made available through two ToolWindows:</p>
 		<ul>
 		<li>A "soapUI Navigator" ToolWindow at the left contains the 
 		<a href="../userguide/overview.html#Navigator_Tree_Model">soapUI Workspace Navigator</a> and Details Tab</li>
@@ -31,8 +31,8 @@
 		
 		<subsection name="soapUI Intellij Plugin Installation">
 		
-		<p>The plugin is downloadable from 
-		SourceForge and through IntelliJ&apos;s plugin-manager. After installing, you should increase IntelliJ&apos;s PermGen space
+		<p>Since IntelliJ 8, a direct link for installing the soapUI IntelliJ plugin is available in the Tools/Web Services menu.
+        Is is also downloadable from SourceForge and through IntelliJ&apos;s plugin-manager. After installing, you should increase IntelliJ&apos;s PermGen space
 		as the plugin requires a fair amount of memory; do this by altering the idea.exe.vmoptions file in the idea 
 		bin directory to for example:</p>
 		<source>-Xms128m

@@ -21,7 +21,7 @@
 		 
 		 <subsection name="Building soapUI from SVN">
 		 <p>If you want to build the latest version of soapUI, you need to get the soapUI sources from its SourceForge
-		 subversion repository located at <code>https://svn.sourceforge.net/svnroot/soapui/trunk/core</code>. Once you
+		 subversion repository located at <code>https://svn.eviware.com/soapui/trunk/core</code>. Once you
 		 have checked out the sources you should rebuild the XMLBeans classes used by soapUI to make sure you have up-to-date
 		 versions on your local system; open a command-prompt in the soapUI directory and type 
 		 <code>maven soapui:generate-xml-beans</code>, which will create all required classes for you. Now you can 
@@ -59,12 +59,12 @@
 		 
 		 <subsection name="Libraries Used in soapUI">
 		 
-		 <p>The following libraries are used in soapUI:</p>
+		 <p>The following major libraries are used in soapUI:</p>
 		 <ul>
-		 	<li><a target="_new" href="http://xmlbeans.apache.org">XMLBeans 2.3.0</a> (ASL V2) is used for all 
+		 	<li><a target="_new" href="http://xmlbeans.apache.org">XMLBeans 2.4.0</a> (ASL V2) is used for all
 		 	XML/Schema processing/validation and SOAP message parsing/generation.</li>
 		 	<li><a target="_new" href="http://sourceforge.net/projects/wsdl4j">WSDL4J 1.6.2</a> (CPL) is used for WSDL parsing</li>
-		 	<li><a target="_new" href="http://jakarta.apache.org/commons/httpclient/">HttpClient 3.0.1</a> (ASL V2) is used for the posting of SOAP messages</li>
+		 	<li><a target="_new" href="http://jakarta.apache.org/commons/httpclient/">HttpClient 3.1</a> (ASL V2) is used for the posting of SOAP messages</li>
 		 	<li><a target="_new" href="http://www.jgoodies.com">JGoodies Looks/Forms</a> (BSD) are used for 
 		 	UI-enhancement (together with custom extensions)</li>
 		 	<li><a target="_new" href="http://logging.apache.org/log4j/docs/index.html">log4j</a> (ASL V2) is used for logging</li>
