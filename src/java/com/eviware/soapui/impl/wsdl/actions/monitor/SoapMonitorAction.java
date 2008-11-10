@@ -23,6 +23,7 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.types.StringList;
+import com.eviware.soapui.SoapUI;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
@@ -100,30 +101,49 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 
       if( dialog.show() )
       {
-         int listenPort = dialog.getIntValue( LaunchForm.PORT, 8080 );
-         settings.setLong( LaunchForm.PORT, listenPort );
-
-         settings.setString( LaunchForm.SETSSLMON, dialog.getValue( LaunchForm.SETSSLMON ) );
-
-         settings.setString( LaunchForm.SSLTUNNEL_KEYSTORE, dialog.getValue( LaunchForm.SSLTUNNEL_KEYSTORE ) );
-         settings.setString( LaunchForm.SSLTUNNEL_PASSWORD, dialog.getValue( LaunchForm.SSLTUNNEL_PASSWORD ) );
-         settings.setString( LaunchForm.SSLTUNNEL_KEYPASSWORD, dialog.getValue( LaunchForm.SSLTUNNEL_KEYPASSWORD ) );
-         settings.setString( LaunchForm.SSLTUNNEL_TRUSTSTORE, dialog.getValue( LaunchForm.SSLTUNNEL_TRUSTSTORE ) );
-         settings.setString( LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, dialog.getValue( LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD ) );
-         settings.setString( LaunchForm.SSLTUNNEL_REUSESTATE, dialog.getValue( LaunchForm.SSLTUNNEL_REUSESTATE ) );
-         settings.setString( LaunchForm.SSLTUNNEL_KEYSTOREPATH, dialog.getValue( LaunchForm.SSLTUNNEL_KEYSTOREPATH ) );
-         settings.setString( LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD, dialog.getValue( LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD ) );
-
-         if( HTTP_PROXY.equals( dialog.getValue( LaunchForm.SSLORHTTP ) ) )
+         try
          {
-            openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ), dialog
-                    .getValue( LaunchForm.RESPONSE_WSS ), dialog.getBooleanValue( LaunchForm.SETASPROXY ), null );
+            UISupport.setHourglassCursor();
+
+            int listenPort = dialog.getIntValue( LaunchForm.PORT, 8080 );
+            settings.setLong( LaunchForm.PORT, listenPort );
+
+            settings.setString( LaunchForm.SETSSLMON, dialog.getValue( LaunchForm.SETSSLMON ) );
+
+            settings.setString( LaunchForm.SSLTUNNEL_KEYSTORE, dialog.getValue( LaunchForm.SSLTUNNEL_KEYSTORE ) );
+            settings.setString( LaunchForm.SSLTUNNEL_PASSWORD, dialog.getValue( LaunchForm.SSLTUNNEL_PASSWORD ) );
+            settings.setString( LaunchForm.SSLTUNNEL_KEYPASSWORD, dialog.getValue( LaunchForm.SSLTUNNEL_KEYPASSWORD ) );
+            settings.setString( LaunchForm.SSLTUNNEL_TRUSTSTORE, dialog.getValue( LaunchForm.SSLTUNNEL_TRUSTSTORE ) );
+            settings.setString( LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, dialog.getValue( LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD ) );
+            settings.setString( LaunchForm.SSLTUNNEL_REUSESTATE, dialog.getValue( LaunchForm.SSLTUNNEL_REUSESTATE ) );
+            settings.setString( LaunchForm.SSLTUNNEL_KEYSTOREPATH, dialog.getValue( LaunchForm.SSLTUNNEL_KEYSTOREPATH ) );
+            settings.setString( LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD, dialog.getValue( LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD ) );
+
+            // load all interfaces in project
+            for( Interface iface : project.getInterfaceList() )
+            {
+               iface.getDefinitionContext().loadIfNecessary();
+            }
+
+            if( HTTP_PROXY.equals( dialog.getValue( LaunchForm.SSLORHTTP ) ) )
+            {
+               openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ), dialog
+                       .getValue( LaunchForm.RESPONSE_WSS ), dialog.getBooleanValue( LaunchForm.SETASPROXY ), null );
+            }
+            else
+            {
+               openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ), dialog
+                       .getValue( LaunchForm.RESPONSE_WSS ), dialog.getBooleanValue( LaunchForm.SETASPROXY ), dialog
+                       .getValue( LaunchForm.SETSSLMON ) );
+            }
          }
-         else
+         catch( Exception e )
          {
-            openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ), dialog
-                    .getValue( LaunchForm.RESPONSE_WSS ), dialog.getBooleanValue( LaunchForm.SETASPROXY ), dialog
-                    .getValue( LaunchForm.SETSSLMON ) );
+            SoapUI.logError( e );
+         }
+         finally
+         {
+            UISupport.resetCursor();
          }
       }
    }
