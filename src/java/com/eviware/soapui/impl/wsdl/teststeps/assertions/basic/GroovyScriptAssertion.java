@@ -108,20 +108,30 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
    {
       if( dialog == null )
       {
-         dialog = new JDialog( UISupport.getMainFrame(), "Script Assertion", true );
-         groovyScriptAssertionPanel = new GroovyScriptAssertionPanel();
-         dialog.setContentPane( groovyScriptAssertionPanel );
-         UISupport.initDialogActions( dialog, groovyScriptAssertionPanel.getShowOnlineHelpAction(),
-                 groovyScriptAssertionPanel.getDefaultButton() );
-         dialog.setSize( 600, 500 );
-         dialog.setModal( true );
-         dialog.pack();
+         buildDialog();
       }
 
       UISupport.showDialog( dialog );
 
       setConfiguration( createConfiguration() );
       return true;
+   }
+
+   protected void buildDialog()
+   {
+      dialog = new JDialog( UISupport.getMainFrame(), "Script Assertion", true );
+      groovyScriptAssertionPanel = new GroovyScriptAssertionPanel();
+      dialog.setContentPane( groovyScriptAssertionPanel );
+      UISupport.initDialogActions( dialog, groovyScriptAssertionPanel.getShowOnlineHelpAction(),
+              groovyScriptAssertionPanel.getDefaultButton() );
+      dialog.setSize( 600, 500 );
+      dialog.setModal( true );
+      dialog.pack();
+   }
+
+   protected GroovyScriptAssertionPanel getScriptAssertionPanel()
+   {
+      return groovyScriptAssertionPanel;
    }
 
    protected XmlObject createConfiguration()
@@ -142,7 +152,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
       scriptEngine.setScript( scriptText );
    }
 
-   private class GroovyScriptAssertionPanel extends JPanel
+   protected class GroovyScriptAssertionPanel extends JPanel
    {
       private GroovyEditor editor;
       private JSplitPane mainSplit;
@@ -161,6 +171,11 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 
          logger = Logger.getLogger( "ScriptAssertion." + getName() );
          editor.requestFocusInWindow();
+      }
+
+      public GroovyEditor getGroovyEditor()
+      {
+         return editor;
       }
 
       public void release()

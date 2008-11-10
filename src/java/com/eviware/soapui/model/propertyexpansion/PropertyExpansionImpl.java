@@ -21,6 +21,7 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 
 public class PropertyExpansionImpl implements PropertyExpansion
 {
@@ -62,7 +63,9 @@ public class PropertyExpansionImpl implements PropertyExpansion
 			result.append( PropertyExpansionImpl.MOCKRESPONSE_REFERENCE );
 		else if( modelItem instanceof TestStep )
 			result.append( modelItem.getName() ).append( PROPERTY_SEPARATOR );
-		
+      else if( modelItem instanceof TestRequest )
+         result.append( ((TestRequest)modelItem).getTestStep().getName() ).append( PROPERTY_SEPARATOR );
+
 		result.append( property.getName() );
 		if( StringUtils.hasContent( xpath ))
 			result.append( PROPERTY_SEPARATOR  ).append( xpath );
