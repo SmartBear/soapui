@@ -26,4 +26,6 @@ public interface DefinitionContext<T extends Interface>
    public InterfaceDefinition<T> getInterfaceDefinition() throws Exception;
 
    public String export(String path) throws Exception;
+
+   public boolean loadIfNecessary() throws Exception;
 }
