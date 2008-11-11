@@ -228,15 +228,9 @@ public class WsdlMockRunner extends AbstractMockRunner
            throws DispatchException
    {
       WsdlMockResult result = null;
-      MockRunListener[] mockRunListeners = mockService.getMockRunListeners();
 
       try
       {
-         for( MockRunListener listener : mockRunListeners )
-         {
-            listener.onMockRequest( this, mockRequest.getHttpRequest(), mockRequest.getHttpResponse() );
-         }
-
          long timestamp = System.currentTimeMillis();
 
          SoapVersion soapVersion = mockRequest.getSoapVersion();
@@ -334,16 +328,6 @@ public class WsdlMockRunner extends AbstractMockRunner
 
          throw new DispatchException( e );
       }
-      finally
-      {
-         if( result != null )
-         {
-            for( MockRunListener listener : mockRunListeners )
-            {
-               listener.onMockResult( result );
-            }
-         }
-      }
    }
 
    public MockResult getMockResultAt( int index )
@@ -371,10 +355,19 @@ public class WsdlMockRunner extends AbstractMockRunner
    @Override
    public MockResult dispatchRequest( HttpServletRequest request, HttpServletResponse response ) throws DispatchException
    {
+      Object result = null;
+
       try
       {
+         for( MockRunListener listener : mockService.getMockRunListeners() )
+         {
+            result = listener.onMockRequest( this, request, response );
+            if( result instanceof MockResult )
+               return (MockResult) result;
+         }
+
          WsdlMockRequest mockRequest = new WsdlMockRequest( request, response, mockContext );
-         Object result = mockService.runOnRequestScript( mockContext, this, mockRequest );
+         result = mockService.runOnRequestScript( mockContext, this, mockRequest );
          if( !( result instanceof MockResult ) )
          {
             String method = request.getMethod();
@@ -391,6 +384,16 @@ public class WsdlMockRunner extends AbstractMockRunner
       catch( Exception e )
       {
          throw new DispatchException( e );
+      }
+      finally
+      {
+         if( result instanceof MockResult )
+         {
+            for( MockRunListener listener : mockService.getMockRunListeners() )
+            {
+               listener.onMockResult( (MockResult) result );
+            }
+         }
       }
    }
 

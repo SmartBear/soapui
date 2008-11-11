@@ -68,8 +68,9 @@ public class SequenceMockOperationDispatcher extends AbstractMockOperationDispat
    {
    }
 
-   public void onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
+   public MockResult onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
    {
+      return null;
    }
 
    public static class Factory implements MockOperationDispatchFactory

@@ -39,7 +39,8 @@ public class MockRunListenerAdapter implements MockRunListener
 	{
 	}
 
-	public void onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
+	public MockResult onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
 	{
+      return null;
 	}
 }

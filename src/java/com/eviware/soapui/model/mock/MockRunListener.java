@@ -29,5 +29,15 @@ public interface MockRunListener
 	
 	public void onMockRunnerStop( MockRunner mockRunner );
 
-	public void onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response );
+   /**
+    * Called before dispatching a request. If a MockResult is returned, further dispatching is aborted and the
+    * returned result is used.
+    *
+    * @param runner
+    * @param request
+    * @param response
+    * @return an optional MockResult, null if dispatching should move on as usual
+    */
+
+	public MockResult onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response );
 }

@@ -364,8 +364,9 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
          super( WsdlMockService.this, "/mockService.gif", "/mockService", 4, "gif" );
       }
 
-      public void onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
+      public MockResult onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
       {
+         return null;
       }
 
       public void onMockResult( MockResult result )
