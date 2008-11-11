@@ -102,14 +102,17 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
    public void propertyAdded( String name )
    {
+      fireTableDataChanged();
    }
 
    public void propertyRemoved( String name )
    {
+      fireTableDataChanged();
    }
 
    public void propertyRenamed( String oldName, String newName )
    {
+      fireTableDataChanged();
    }
 
    public void propertyValueChanged( String name, String oldValue, String newValue )
@@ -119,5 +122,6 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
    public void propertyMoved( String name, int oldIndex, int newIndex )
    {
+      fireTableDataChanged();
    }
 }

@@ -43,6 +43,7 @@ public class RestParamsTable extends JPanel
 
       paramsTableModel = new RestParamsTableModel( params );
       paramsTable = new JTable( paramsTableModel );
+      paramsTable.setRowHeight( 19 );
       paramsTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
       paramsTable.setDefaultEditor( ParameterStyle.class, new DefaultCellEditor( new JComboBox(
               new Object[]{ParameterStyle.QUERY, ParameterStyle.TEMPLATE, ParameterStyle.HEADER, ParameterStyle.MATRIX, ParameterStyle.PLAIN} ) ) );
@@ -66,7 +67,11 @@ public class RestParamsTable extends JPanel
                   RestParamProperty selectedParameter = getSelectedParameter();
                   paramDetailsModel.setBean( selectedParameter );
                }
-               else inspectorPanel.deactivate();
+               else
+               {
+                  inspectorPanel.deactivate();
+                  paramDetailsModel.setBean( null );
+               }
             }
          }
       } );
@@ -171,7 +176,6 @@ public class RestParamsTable extends JPanel
 
             params.addProperty( name );
             final int row = params.getPropertyNames().length - 1;
-            paramsTableModel.fireTableRowsInserted( row, row );
             SwingUtilities.invokeLater( new Runnable()
             {
                public void run()
@@ -214,8 +218,8 @@ public class RestParamsTable extends JPanel
          String propertyName = paramsTableModel.getValueAt( row, 0 ).toString();
          if( UISupport.confirm( "Remove parameter [" + propertyName + "]?", "Remove Parameter" ) )
          {
+            paramsTable.clearSelection();
             params.removeProperty( propertyName );
-            paramsTableModel.fireTableRowsDeleted( row, row );
             clearParamsAction.setEnabled( params.getPropertyCount() > 0 );
          }
       }
