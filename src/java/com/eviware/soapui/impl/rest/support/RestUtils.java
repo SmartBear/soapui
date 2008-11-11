@@ -14,14 +14,18 @@ package com.eviware.soapui.impl.rest.support;
 
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringList;
+import org.apache.xmlbeans.XmlBoolean;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 public class RestUtils
 {
@@ -195,5 +199,62 @@ public class RestUtils
       }
 
       return resultPath.toString();
+   }
+
+   public static String expandPath( String path, XmlBeansRestParamsTestPropertyHolder params, ModelItem context )
+   {
+      StringBuffer query = new StringBuffer();
+
+      for( int c = 0; c < params.getPropertyCount(); c++ )
+      {
+         RestParamProperty param = params.getPropertyAt( c );
+
+         String value = PropertyExpansionUtils.expandProperties( context, param.getValue() );
+         if( value != null && !param.isDisableUrlEncoding() )
+            value = URLEncoder.encode( value );
+
+         if( !StringUtils.hasContent( value ) && !param.getRequired() )
+            continue;
+
+         switch( param.getStyle() )
+         {
+            case QUERY:
+               if( query.length() > 0 )
+                  query.append( '&' );
+
+               query.append( URLEncoder.encode( param.getName() ) );
+               query.append( '=' );
+               
+               if( StringUtils.hasContent( value ) )
+                  query.append( value );
+               break;
+            case TEMPLATE:
+               path = path.replaceAll( "\\{" + param.getName() + "\\}", value );
+               break;
+            case MATRIX:
+               if( param.getType().equals( XmlBoolean.type.getName() ) )
+               {
+                  if( value.toUpperCase().equals( "TRUE" ) || value.equals( "1" ) )
+                  {
+                     path += ";" + param.getName();
+                  }
+               }
+               else
+               {
+                  path += ";" + param.getName();
+                  if( StringUtils.hasContent( value ) )
+                  {
+                     path += "=" + value;
+                  }
+               }
+            case PLAIN:
+               break;
+         }
+      }
+
+      if( query.length() > 0 )
+         path += "?" + query.toString();
+
+      return path;
    }
 }

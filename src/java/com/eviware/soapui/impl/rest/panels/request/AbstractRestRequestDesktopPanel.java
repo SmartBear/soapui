@@ -13,14 +13,18 @@
 package com.eviware.soapui.impl.rest.panels.request;
 
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.support.RestUtils;
+import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest.RequestMethod;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Submit;
+import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JUndoableTextField;
@@ -44,14 +48,24 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
    private JComboBox acceptCombo;
    private JLabel pathLabel;
    private boolean updating;
-   // private JButton recreatePathButton;
+   private AbstractRestRequestDesktopPanel<T, T2>.InternalTestPropertyListener testPropertyListener = new AbstractRestRequestDesktopPanel.InternalTestPropertyListener();
+   private AbstractRestRequestDesktopPanel<T, T2>.RestParamPropertyChangeListener restParamPropertyChangeListener = new AbstractRestRequestDesktopPanel.RestParamPropertyChangeListener();
 
    public AbstractRestRequestDesktopPanel( T modelItem, T2 requestItem )
    {
       super( modelItem, requestItem );
 
       if( requestItem.getResource() != null )
+      {
          requestItem.getResource().addPropertyChangeListener( this );
+      }
+
+      requestItem.addTestPropertyListener( testPropertyListener );
+
+      for( TestProperty param : requestItem.getParams().getProperties().values())
+      {
+         (( XmlBeansRestParamsTestPropertyHolder.RestParamProperty)param).addPropertyChangeListener( restParamPropertyChangeListener );
+      }
    }
 
    public void propertyChange( PropertyChangeEvent evt )
@@ -67,7 +81,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
       else if( evt.getPropertyName().equals( "responseMediaTypes" ) && !updatingRequest )
       {
          Object item = acceptCombo.getSelectedItem();
-         acceptCombo.setModel( new DefaultComboBoxModel( ( Object[] ) evt.getNewValue() ) );
+         acceptCombo.setModel( new DefaultComboBoxModel( (Object[]) evt.getNewValue() ) );
          acceptCombo.setSelectedItem( item );
       }
       else if( evt.getPropertyName().equals( "path" ) &&
@@ -75,13 +89,14 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
       {
          if( pathLabel != null )
          {
-            pathLabel.setText( getRequest().getResource().getFullPath() );
+            updateFullPathLabel();
          }
 
          if( !updating )
          {
             updating = true;
-            pathTextField.setText( ( String ) evt.getNewValue() );
+            pathTextField.setText( (String) evt.getNewValue() );
+            pathTextField.setToolTipText( pathTextField.getText() );
             updating = false;
          }
       }
@@ -106,8 +121,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
    {
       return getRequest().submit( new WsdlSubmitContext( getModelItem() ), true );
    }
-
-   
 
    @Override
    protected String getHelpUrl()
@@ -159,11 +172,10 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
       methodCombo.setToolTipText( "Set desired HTTP method" );
       methodCombo.addItemListener( new ItemListener()
       {
-
          public void itemStateChanged( ItemEvent e )
          {
             updatingRequest = true;
-            getRequest().setMethod( ( RequestMethod ) methodCombo.getSelectedItem() );
+            getRequest().setMethod( (RequestMethod) methodCombo.getSelectedItem() );
             updatingRequest = false;
          }
       } );
@@ -193,6 +205,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
          pathTextField = new JUndoableTextField();
          pathTextField.setPreferredSize( new Dimension( 200, 20 ) );
          pathTextField.setText( getRequest().getResource().getPath() );
+         pathTextField.setToolTipText( pathTextField.getText() );
          pathTextField.getDocument().addDocumentListener( new DocumentListenerAdapter()
          {
             @Override
@@ -203,23 +216,26 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
                updating = true;
                getRequest().getResource().setPath( pathTextField.getText() );
+               pathTextField.setToolTipText( pathTextField.getText() );
                updating = false;
             }
          } );
 
          toolbar.addLabeledFixed( "Resource Path:", pathTextField );
 
-         pathLabel = new JLabel( getRequest().getResource().getFullPath() );
-         pathLabel.setPreferredSize( new Dimension( 200, 20 ) );
+         pathLabel = new JLabel();
+         updateFullPathLabel();
+//         pathLabel.setPreferredSize( new Dimension( 300, 20 ) );
 
          toolbar.addSeparator();
-         toolbar.addLabeledFixed( "Full Path:", pathLabel );
+         toolbar.add( pathLabel );
       }
       else
       {
          pathTextField = new JUndoableTextField();
          pathTextField.setPreferredSize( new Dimension( 300, 20 ) );
          pathTextField.setText( getRequest().getPath() );
+         pathTextField.setToolTipText( pathTextField.getText() );
          pathTextField.getDocument().addDocumentListener( new DocumentListenerAdapter()
          {
             @Override
@@ -240,6 +256,13 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
       if( getRequest().getResource() != null )
       {
          getRequest().getResource().removePropertyChangeListener( this );
+      }
+
+      getRequest().removeTestPropertyListener( testPropertyListener );
+
+      for( TestProperty param : getRequest().getParams().getProperties().values())
+      {
+         (( XmlBeansRestParamsTestPropertyHolder.RestParamProperty)param).removePropertyChangeListener( restParamPropertyChangeListener );
       }
 
       return super.release();
@@ -300,7 +323,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
          if( evt.getPropertyName().equals( RestRequest.REQUEST_PROPERTY ) && !updating )
          {
             updating = true;
-            fireXmlChanged( ( String ) evt.getOldValue(), ( String ) evt.getNewValue() );
+            fireXmlChanged( (String) evt.getOldValue(), (String) evt.getNewValue() );
             updating = false;
          }
       }
@@ -336,8 +359,55 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
       public void propertyChange( PropertyChangeEvent evt )
       {
-         fireXmlChanged( evt.getOldValue() == null ? null : ( ( HttpResponse ) evt.getOldValue() ).getContentAsString(),
+         fireXmlChanged( evt.getOldValue() == null ? null : ( (HttpResponse) evt.getOldValue() ).getContentAsString(),
                  getXml() );
+      }
+   }
+
+   private class InternalTestPropertyListener extends TestPropertyListenerAdapter
+   {
+      @Override
+      public void propertyValueChanged( String name, String oldValue, String newValue )
+      {
+         updateFullPathLabel();
+      }
+
+      @Override
+      public void propertyAdded( String name )
+      {
+         updateFullPathLabel();
+
+         getRequest().getParams().getProperty( name ).addPropertyChangeListener( restParamPropertyChangeListener );
+      }
+
+      @Override
+      public void propertyRemoved( String name )
+      {
+         updateFullPathLabel();
+      }
+
+      @Override
+      public void propertyRenamed( String oldName, String newName )
+      {
+         updateFullPathLabel();
+      }
+   }
+
+   private void updateFullPathLabel()
+   {
+      if( pathLabel != null && getRequest().getResource() != null )
+      {
+         String text = RestUtils.expandPath(getRequest().getResource().getFullPath(), getRequest().getParams(), getRequest() );
+         pathLabel.setText( "[" + text + "]" );
+         pathLabel.setToolTipText( text );
+      }
+   }
+
+   private class RestParamPropertyChangeListener implements PropertyChangeListener
+   {
+      public void propertyChange( PropertyChangeEvent evt )
+      {
+         updateFullPathLabel();
       }
    }
 }

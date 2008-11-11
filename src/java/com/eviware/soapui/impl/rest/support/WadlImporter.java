@@ -32,6 +32,7 @@ import com.sun.research.wadl.x2006.x10.ParamDocument.Param;
 import com.sun.research.wadl.x2006.x10.RepresentationType;
 import com.sun.research.wadl.x2006.x10.ResourceDocument.Resource;
 import com.sun.research.wadl.x2006.x10.ResourceTypeDocument;
+import com.sun.research.wadl.x2006.x10.ParamStyle;
 import com.sun.research.wadl.x2006.x10.ResourcesDocument.Resources;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -247,7 +248,11 @@ public class WadlImporter
    {
       prop.setDefaultValue( param.getDefault() );
       prop.setValue( param.getDefault() );
-      prop.setStyle( ParameterStyle.valueOf( param.getStyle().toString().toUpperCase() ) );
+      ParamStyle.Enum paramStyle = param.getStyle();
+      if( paramStyle == null )
+         paramStyle = ParamStyle.QUERY;
+      
+      prop.setStyle( ParameterStyle.valueOf( paramStyle.toString().toUpperCase() ) );
       prop.setRequired( param.getRequired() );
       prop.setType( param.getType() );
 

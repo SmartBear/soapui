@@ -87,6 +87,7 @@ public abstract class AbstractRestRepresentationsInspector extends AbstractXmlIn
       mainPanel = new JPanel( new BorderLayout() );
       tableModel = new RepresentationsTableModel();
       representationsTable = new JTable( tableModel );
+      representationsTable.setRowHeight( 18 );
       mainPanel.add( buildToolbar(), BorderLayout.NORTH );
       mainPanel.add( new JScrollPane( representationsTable ), BorderLayout.CENTER );
 

@@ -292,7 +292,9 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 
       public void setDescription( String description )
       {
+         String old = getDescription();
          propertyConfig.setDescription( description );
+         propertySupport.firePropertyChange( "description", old, description );
       }
 
       public ParameterStyle getStyle()
@@ -305,7 +307,10 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 
       public void setStyle( ParameterStyle style )
       {
+         ParameterStyle old = getStyle();
+
          propertyConfig.setStyle( RestParameterConfig.Style.Enum.forString( style.name() ) );
+         propertySupport.firePropertyChange( "style", old, style );
       }
 
       public String getValue()
@@ -363,7 +368,12 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 
       public void setDisableUrlEncoding( boolean encode )
       {
+         boolean old = isDisableUrlEncoding();
+         if( old == encode)
+            return;
+         
          propertyConfig.setDisableUrlEncoding( encode );
+         propertySupport.firePropertyChange( "disableUrlEncoding", old, encode );
       }
 
       public QName getType()
@@ -373,12 +383,18 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 
       public void setOptions( String[] arg0 )
       {
+         String [] old = getOptions();
          propertyConfig.setOptionArray( arg0 );
+         propertySupport.firePropertyChange( "options", old, arg0 );
       }
 
       public void setRequired( boolean arg0 )
       {
+         boolean old = getRequired();
+         if( old == arg0 )
+            return;
          propertyConfig.setRequired( arg0 );
+         propertySupport.firePropertyChange( "required", old, arg0 );
       }
 
       public void setType( QName arg0 )
@@ -388,7 +404,9 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 
       public void setDefaultValue( String default1 )
       {
+         String old = default1;
          propertyConfig.setDefault( default1 );
+         propertySupport.firePropertyChange( "defaultValue", old, default1 );
       }
 
       public RestParameterConfig getConfig()
