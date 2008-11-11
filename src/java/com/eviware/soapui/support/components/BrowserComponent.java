@@ -1,6 +1,7 @@
 package com.eviware.soapui.support.components;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.support.DefaultHyperlinkListener;
 import com.eviware.soapui.support.UISupport;
 
@@ -106,6 +107,11 @@ public class BrowserComponent
    {
       try
       {
+         System.setProperty( "http.proxyHost", SoapUI.getSettings().getString( ProxySettings.HOST,
+                 System.getProperty( "http.proxyHost", null ) ) );
+         System.setProperty( "http.proxyPort", SoapUI.getSettings().getString( ProxySettings.PORT,
+                 System.getProperty( "http.proxyPort", null ) ) );
+
          editorPane.setPage( new URL( url ) );
          return true;
       }
