@@ -602,14 +602,17 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 
    public boolean isCached()
    {
-      return getConfig().isSetDefinitionCache() || ( wsdlContext != null && wsdlContext.isCached() );
-   }
+      if( wsdlContext != null && wsdlContext.isCached() )
+      {
+         return true;
+      }
 
-   // public WsdlLoader createWsdlLoader()
-   // {
-   // return isCached() ? new CachedWsdlLoader(getConfig().getDefinitionCache())
-   // : new UrlWsdlLoader(definitionProperty.expandUrl());
-   // }
+      DefinitionCacheConfig cacheConfig = getConfig().getDefinitionCache();
+      if( cacheConfig == null || cacheConfig.getRootPart() == null ||  cacheConfig.sizeOfPartArray() == 0 )
+            return false;
+
+      return true;
+   }
 
    public String getStyle()
    {
