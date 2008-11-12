@@ -28,6 +28,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
+
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
@@ -43,6 +44,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.PreencodedMimeBodyPart;
+
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -68,7 +70,7 @@ public class RestRequestFilter extends AbstractRequestFilter
 
       StringToStringMap responseProperties = (StringToStringMap) context.getProperty( BaseHttpRequestTransport.RESPONSE_PROPERTIES );
 
-      MimeMultipart formMp = request.getMediaType().equals( "multipart/form-data" ) ? new MimeMultipart() : null;
+      MimeMultipart formMp = "multipart/form-data".equals( request.getMediaType() ) ? new MimeMultipart() : null;
 
       XmlBeansRestParamsTestPropertyHolder params = request.getParams();
       for( int c = 0; c < params.getPropertyCount(); c++ )
