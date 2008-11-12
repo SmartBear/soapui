@@ -65,7 +65,7 @@ public class HttpTestRequestPanelBuilder extends EmptyPanelBuilder<HttpTestReque
       if( request.getOperation() != null )
       {
          table.addProperty( "Service", "service" );
-         table.addProperty( "Resource", "resourcePath" );
+         table.addProperty( "Resource", "path" );
       }
 
       // security / authentication
