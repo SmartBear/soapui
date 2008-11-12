@@ -12,10 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentDataSource;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.RestRequestDataSource;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.RestRequestMimeMessageRequestEntity;
@@ -24,6 +26,7 @@ import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.URI;
@@ -34,11 +37,13 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.xmlbeans.XmlBoolean;
 
 import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.PreencodedMimeBodyPart;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -63,16 +68,18 @@ public class RestRequestFilter extends AbstractRequestFilter
 
       StringToStringMap responseProperties = (StringToStringMap) context.getProperty( BaseHttpRequestTransport.RESPONSE_PROPERTIES );
 
+      MimeMultipart formMp = request.getMediaType().equals( "multipart/form-data" ) ? new MimeMultipart() : null;
+
       XmlBeansRestParamsTestPropertyHolder params = request.getParams();
       for( int c = 0; c < params.getPropertyCount(); c++ )
       {
          RestParamProperty param = params.getPropertyAt( c );
 
          String value = PropertyExpansionUtils.expandProperties( context, param.getValue() );
-         if(  value != null && !param.isDisableUrlEncoding() )
-            value = URLEncoder.encode( value );
-
          responseProperties.put( param.getName(), value );
+
+         if( value != null && formMp == null && !param.isDisableUrlEncoding() )
+            value = URLEncoder.encode( value );
 
          if( !StringUtils.hasContent( value ) && !param.getRequired() )
             continue;
@@ -83,12 +90,28 @@ public class RestRequestFilter extends AbstractRequestFilter
                httpMethod.setRequestHeader( param.getName(), value );
                break;
             case QUERY:
-               if( query.length() > 0 )
-                  query.append( '&' );
+               if( formMp == null )
+               {
+                  if( query.length() > 0 )
+                     query.append( '&' );
 
-               query.append( URLEncoder.encode( param.getName() ) );
-               if( StringUtils.hasContent( value ) )
-                  query.append( '=' ).append( value );
+                  query.append( URLEncoder.encode( param.getName() ) );
+                  query.append( '=' );
+                  if( StringUtils.hasContent( value ) )
+                     query.append( value );
+               }
+               else
+               {
+                  try
+                  {
+                     addFormMultipart( request, formMp, param.getName(), value );
+                  }
+                  catch( MessagingException e )
+                  {
+                     e.printStackTrace();
+                  }
+               }
+
                break;
             case TEMPLATE:
                path = path.replaceAll( "\\{" + param.getName() + "\\}", value );
@@ -143,7 +166,43 @@ public class RestRequestFilter extends AbstractRequestFilter
 
       String encoding = StringUtils.unquote( request.getEncoding() );
 
-      if( request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod )
+      if( formMp != null )
+      {
+         // create request message
+         try
+         {
+            if( request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod )
+            {
+               String requestContent = PropertyExpansionUtils.expandProperties( context, request.getRequestContent() );
+               if( StringUtils.hasContent( requestContent ) )
+               {
+                  initRootPart( request, requestContent, formMp );
+               }
+            }
+
+            for( Attachment attachment : request.getAttachments() )
+            {
+               MimeBodyPart part = new MimeBodyPart();
+               part.setDisposition( "form-data; name=\"" + attachment.getName() + "\"" );
+               part.setDataHandler( new DataHandler( new AttachmentDataSource( attachment ) ) );
+
+               formMp.addBodyPart( part );
+            }
+
+            MimeMessage message = new MimeMessage( AttachmentUtils.JAVAMAIL_SESSION );
+            message.setContent( formMp );
+            message.saveChanges();
+            RestRequestMimeMessageRequestEntity mimeMessageRequestEntity = new RestRequestMimeMessageRequestEntity( message, request );
+            ( (EntityEnclosingMethod) httpMethod ).setRequestEntity( mimeMessageRequestEntity );
+            httpMethod.setRequestHeader( "Content-Type", mimeMessageRequestEntity.getContentType() );
+            httpMethod.setRequestHeader( "MIME-Version", "1.0" );
+         }
+         catch( Throwable e )
+         {
+            SoapUI.logError( e );
+         }
+      }
+      else if( request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod )
       {
          httpMethod.setRequestHeader( "Content-Type", request.getMediaType() );
 
@@ -153,7 +212,7 @@ public class RestRequestFilter extends AbstractRequestFilter
          }
          else
          {
-            String requestContent = request.getRequestContent();
+            String requestContent = PropertyExpansionUtils.expandProperties( context, request.getRequestContent() );
             List<Attachment> attachments = new ArrayList<Attachment>();
 
             for( Attachment attachment : request.getAttachments() )
@@ -219,6 +278,33 @@ public class RestRequestFilter extends AbstractRequestFilter
                }
             }
          }
+      }
+   }
+
+   private void addFormMultipart( RestRequest request, MimeMultipart formMp, String name, String value ) throws MessagingException
+   {
+      MimeBodyPart part = new MimeBodyPart();
+
+      if( value.startsWith( "file:" ) )
+      {
+         File file = new File( value.substring( 5 ) );
+         part.setDisposition( "form-data; name=\"" + name + "\"; filename=\"" + file.getName() + "\"" );
+         if( file.exists() )
+         {
+            part.setDataHandler( new DataHandler( new FileDataSource( file ) ) );
+         }
+
+         part.setHeader( "Content-Type", ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
+      }
+      else
+      {
+         part.setDisposition( "form-data; name=\"" + name + "\"" );
+         part.setText( URLEncoder.encode( value ), request.getEncoding() );
+      }
+
+      if( part != null )
+      {
+         formMp.addBodyPart( part );
       }
    }
 

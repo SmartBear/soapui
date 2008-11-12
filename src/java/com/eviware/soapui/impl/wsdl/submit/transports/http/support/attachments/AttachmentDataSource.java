@@ -25,7 +25,7 @@ import java.io.OutputStream;
  * @author ole.matzura
  */
 
-class AttachmentDataSource implements DataSource
+public class AttachmentDataSource implements DataSource
 {
 	private final Attachment attachment;
 

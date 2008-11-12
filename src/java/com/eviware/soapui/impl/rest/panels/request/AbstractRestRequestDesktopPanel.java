@@ -70,6 +70,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
    public void propertyChange( PropertyChangeEvent evt )
    {
+      updateFullPathLabel();
+
       if( evt.getPropertyName().equals( "method" ) && !updatingRequest )
       {
          methodCombo.setSelectedItem( evt.getNewValue() );

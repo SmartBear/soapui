@@ -232,6 +232,10 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
       if( !result.contains( "text/xml" ) )
          result.add( "text/xml" );
 
+      if( !result.contains( "multipart/form-data" ) )
+         result.add( "multipart/form-data" );
+
+
       return result.toStringArray();
    }
 
@@ -281,7 +285,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
    public void setEditable( boolean enabled )
    {
       contentEditor.setEnabledAndEditable( enabled ? restRequest.hasRequestBody() : false );
-      mediaTypeCombo.setEnabled( enabled );
+      mediaTypeCombo.setEnabled( enabled && !restRequest.isPostQueryString() );
       postQueryCheckBox.setEnabled( enabled );
    }
 

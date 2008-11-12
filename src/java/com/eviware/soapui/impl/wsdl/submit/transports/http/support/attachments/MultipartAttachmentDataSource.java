@@ -24,7 +24,7 @@ import java.io.*;
  * @author ole.matzura
  */
 
-class MultipartAttachmentDataSource implements DataSource
+public class MultipartAttachmentDataSource implements DataSource
 {
 	private final MimeMultipart multipart;
 
