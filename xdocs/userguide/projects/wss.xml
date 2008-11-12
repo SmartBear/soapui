@@ -50,6 +50,7 @@
 		<p>The following columns are available in the Keystores table:</p>
 		
 		<ul>
+		@TODO@Check these options, no Security Provider in the application 
 		<li>Source : the source file of the keystore/certificate (Read Only)</li>
 		<li>Status : the load-status of the keystore/certificate (Read Only</li>
 		<li>Password : the keystore password if required</li>
@@ -60,7 +61,7 @@
 		
 		</subsection>
 
-		<subsection name="Outgoing WS-Security">
+		<subsection name="Outgoing WSS">
 		<p>Outgoing WSS configurations are used for processing outgoing messages; encrypting, signing, etc. Each 
 		configurations contains a configurable number of "WSS Entries", each corresponding to some WSS-related
 		action to be taken on the outgoing message.</p>
@@ -91,6 +92,7 @@
 		desires an extra MD5 Hash of the password.</li>
 		<p align="center"><img src="images/wss_username_entry.gif" alt="Setting Username for Web Services"/></p>
 		<li><b>Timestamp</b> - adds a Timestamp token to the outgoing message with the specified Time To Live value.</li>
+		@TODO@all the screen shots labels are right justified, in application left justified...? Timestamp screen shot has no millisecond precision checkbox
 		<p align="center"><img src="images/wss_timestamp_entry.gif" alt="Setting a timestamp for Web Services"/></p>
 		<li><b>SAML</b> - adds a SAML assertion to the outgoing message with the specified assertion content.</li>
 		<p align="center"><img src="images/wss_saml_entry.gif" alt="Setting SAML for Web Services"/></p>
@@ -116,7 +118,7 @@
 		that can be added to a TestRequest step for validating that the WS-Security headers were valid in the received response.</p>
 		</subsection>
 
-		 <p><hr size="1"/><a href=" "> </a></p>
+		 <p><hr size="1"/>Next: <a href="encryption.html">Project Encryption</a></p>
 		</section>
     </body>
 </document>

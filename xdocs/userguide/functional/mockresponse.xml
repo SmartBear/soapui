@@ -4,7 +4,7 @@
         <title>Web Service simulation - soapUI Pro mock response</title>
     </properties>
     <body>
-		<section name="soapUI Pro MockResponse Step">
+		<section name="MockResponse Step">
 		<p>soapUI Pro includes a MockResponse step that listens or waits for a SOAP Request and returns a 
 		pre configured response before moving on. The incoming request can be validated just as the response
 		of a TestRequest Step with the same configurable assertions.</p>

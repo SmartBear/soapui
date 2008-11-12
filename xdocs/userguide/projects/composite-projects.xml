@@ -4,7 +4,7 @@
         <title>Composite Projects - Collaboration based Web Service Testing</title>
     </properties>
     <body>
-		<section name="Composite Projects in SoapUI Pro ">
+		<section name="soapUI Pro Composite Projects ">
 		<p>What is a Composite Project?</p>
 		<p>Behind the somewhat bewildering terminology lies a very simple concept; Composite Projects are soapUI projects saved to enable 
 		Team Collaboration.</p>
@@ -42,12 +42,9 @@
         Deleting element means removing it from the file system. Trough the sub menu <b>Composite Actions</b>, it is 
         possible to save or reload elements. For TestCases it is possible to export, save at designated location, or import 
         them into a TestSuite.
-        <p align="center"><img src="images/composite-import.gif" alt="Import test case"/></p>
-        <p align="center"><img src="images/composite-export.gif" alt="Export test case"/></p>
-        <p align="center"><img src="images/composite-actions.gif" alt="Composite actions"/></p>
         </p>
         </subsection>
-		 <p><hr size="1"/>Next: <a href=" "> </a></p>
+		 <p><hr size="1"/>Next: <a href="interfaces/index.html">Interfaces</a></p>
 		</section>
     </body>
 </document>

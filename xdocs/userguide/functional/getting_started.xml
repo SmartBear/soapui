@@ -64,9 +64,9 @@
 		<li>A test-request-editor almost identical to the previous request-editor will be opened with your new test
 		request; it differs by adding assertions functionality</li>
 		</ul>
-		<p>Read more about TestSuites/TestCases in the <a href="../userguide/functional/testsuites.html">soapUI User Guide</a></p>
+		<p>Read more about <a href="testsuites.html">TestSuites</a> / <a href="testcases.html">TestCases</a> </p>
 		</column><column>
-		<img src="images/getting_started_4.gif" alt="Add a request to a soap test case"/></column></columns>
+		<img src="../../gettingstarted/images/getting_started_4.gif" alt="Add a request to a soap test case"/></column></columns>
 		 </subsection>
 	
 		 <subsection name="Add an Assertions to a test">
@@ -80,10 +80,10 @@
 		<li>Post the request with the green submit-button, soapUI will run the request and validate the response. If all goes
 		well the test-request should be shown with a green background in the navigation tree</li>
 		</ul>
-		<p>Read more about assertions in the <a href="../userguide/functional/response-assertions.html">soapUI User Guide</a></p>
-		</column><column><img src="images/getting_started_5.gif" alt="Add a assertion to a test"/></column></columns>
+		<p>Read more about <a href="response-assertions.html">Assertions</a></p>
+		</column><column><img src="../../gettingstarted/images/getting_started_5.gif" alt="Add a assertion to a test"/></column></columns>
 		
-		<p align="center"><img src="images/getting_started_8.gif" alt="view of the assertion inspector"/></p>
+		<p align="center"><img src="../../gettingstarted/images/getting_started_8.gif" alt="view of the assertion inspector"/></p>
 		 </subsection>
 
 		 <subsection name="Now run your web service test!">
@@ -95,8 +95,8 @@
 		submit each test request and validate accordingly, the results will be displayed during the execution.</li>
 		</ul>
 		<p>Run your tests from the command line using one of the 
-		 <a href="../userguide/commandline/index.html">soapUI command line tools</a> available.</p>
-		</column><column><img src="images/getting_started_6.gif" alt="soapUI Test Runner"/></column></columns>
+		 <a href="../commandline/index.html">soapUI command line tools</a> available.</p>
+		</column><column><img src="../../gettingstarted/images/getting_started_6.gif" alt="soapUI Test Runner"/></column></columns>
 		 
 		 </subsection> 
 		

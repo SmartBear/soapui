@@ -25,16 +25,19 @@
 		 these interfaces is for WSDL 1.1 and the SOAP/HTTP binding (as required by Basic Profile 1.0). Therefore, 
 		 all actions and functionality described will be in regard to this implementation.</p>
 		
-		 <subsection name="Creating a WSDL Projects">
-		 <p>Selecting the New WSDL Project option from the Workspace Menu opens this dialog which prompts for:
+		 <subsection name="Creating a SoapUI Projects">
+		 <p>Selecting the New SoapUI Project option from the Workspace Menu opens this dialog which prompts for:
 		 <ul>
 		 	<li>A name for the project is required</li>
-		 	<li>An optional initial WSDL to import into the project (either file or URL)</li>
-		 	<li>An option to optionally create default requests when specifying an initial WSDL</li>
-		 	<li>An option to save the empty project to a file (unsaved projects	will be prompted for a project file on exit).</li>
+		 	<li>An optional initial WSDL/WADL to import into the project (either file or URL)</li>
+		 	<li>An option to create default requests when specifying an initial WSDL</li>
+		 	<li>An option to create TestSuite for specified WSDL or WADL</li>
+		 	<li>An option to create Web Service Simulation of the imported WSDL</li>
+		 	<li>An option to open dialog to create REST service</li>
+		 	<li>An option to store all file paths in project relatively to project file(requires save)</li>
 		 </ul>
 		</p>
-		<p align="center"><img src="images/new_wsdl_project.gif" alt="Creating a new Web Service test project from WSDL in soapUI"/></p>
+		<p align="center">@TODO@change the screen shot<img src="images/new_wsdl_project.gif" alt="Creating a new Web Service test project from WSDL in soapUI"/></p>
 		<p>Once specified, soapUI will prompt for a filename to which the project is to be saved (defaults to 
 	 	<code>&lt;project-name&gt;-soapui-project.xml</code>). Put this file anywhere you want, the file
 	 	is a regular XML file and can be checked into SCM systems and edited with any XML editor.</p>
@@ -78,14 +81,14 @@
 		 <li><b>Remove</b> - Prompts to remove the selected project from the workspace. The project file will not be deleted
 		 and can be imported back into the workspace subsequently</li>
 		 <li><b>Reload Project</b> - Prompts to reload the project from its external source, discarding any changes</li>
+		 <li><b>Resolve Project</b> - @TODO@check this: Resolves missing links between project elements</li>
 		 <li><b>Close Project</b> - Prompts to close the current project, disabling it in the workspace</li>
 		 <li><b>Save Project</b> - Saves the state of the project and all its contained items to the underlying project file</li>
 		 <li><b>Save Project As</b> - Saves the state of the project and all its contained items to a new project file</li>
+		 <li><b>Import Test Suite</b> - Imports previously exported TestSuite</li>
 		 <li><b>Online Help</b> - Displays this page in an external browser</li>
 		 </ul>
-		 </div></column><column>
-			<img src="images/project_actions.gif" border="0" alt="Test Project Actions in soapUI"/>
-			</column></columns>
+		 </div></column></columns>
 		 </subsection>
 		 
 		  <subsection name="Project Details Tab">

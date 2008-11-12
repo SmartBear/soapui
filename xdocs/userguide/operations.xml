@@ -4,7 +4,7 @@
         <title>Web Service operations in soapUI</title>
     </properties>
     <body>
-		<section name="Operations">
+		<section name="WSDL Operations">
 		 <p>When adding an interface as described above, each of that interfaces operations is added as a node in
 		 the navigation tree. We take the name for these from operation in the underlying PortType, that is if they 
 		 are called <i>GetCustomer</i> in the WSDL, that's what we call them.</p>
@@ -21,9 +21,7 @@
 		  versions of the same operation in the Interface.</li>
 		  <li><b>Online Help</b> - Displays this page in an external browser</li>
 		  </ul>
-		  </div></column><column>
-			<img src="images/operation_actions.gif" border="0" alt="Possible actions on a operation"/>
-		</column></columns>
+		  </div></column></columns>
 		 
 		 <subsection name="Operation Details Tab">
 		  <columns><column><div>

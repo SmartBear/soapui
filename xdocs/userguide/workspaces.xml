@@ -19,15 +19,13 @@
 		  it will be grayed out and displayed as disabled, with right-click options to either remove it from the 
 		 workspace or reload it (optionally from a new location).</div>
 		 <p>Projects can be imported and created and removed from the workspace using the Menu Choices on the Workspace or in the Project popup menus.</p></column>
-		 <column>
-		 <img src="images/disabled_project.gif" alt="Reloading a disabled Workspace"/>
-		 </column></columns>		 
+		 </columns>		 
 		 <p>When exiting, soapUI will automatically save all project files in the workspace, except for those that 
 		 still have running tests. A prompt will ask to ignore these or abort the exit. If soapUI detects that
 		 a project file has been modified externally since it was last loaded, based on modification date, it will
 		 first prompt if to overwrite the file or leave it as it is.</p>
 		 
-		 <subsection name="Open or Closed Projects">
+		 <subsection name="Open or Close Projects">
 		 <p>Projects can be closed/opened as desired using corresponding popup-menu actions; closed projects are displayed with 
 		 a grey icon and can easily be opened by either double-clicking them or using the corresponding right-button menu option.
 		 Closed projects are not read into memory which will greatly improve startup time and memory consumption and  
@@ -42,12 +40,12 @@
 		 The following actions are available from the workspace nodes right-button 
 		 menu (and from the main "File" menu):
 		 <ul>
-		 <li><b>New WSDL Project</b> : Prompts to create a new <a href="projects/index.html">WSDL Project</a>.</li>
+		 <li><b>New SoapUI Project</b> : Prompts to create a new <a href="projects/index.html">SoapUI Project</a>.</li>
 		 <li><b>Import Project</b> : Prompts for a filename for an existing soapUI project. The project will be added to
 		 the current workspace. If the project-file is read only it can still be added but no changes will be saved and 
 		 a warning will be shown in the soapUI log.</li>
 		 <li><b>Import Remote Project</b> : Prompts for a URL to an existing remote soapUI project. The project will be added to
-		 the current workspace in read only mode (read more on <a href="projects/index.html#Remote_Projects">Remote Projects</a>).</li>
+		 the current workspace in read only mode (read more on <a href="projects/index.html#Remote_Test_Projects">Remote Projects</a>).</li>
 		 <li><b>Save All Projects</b> - Saves all projects</li>
 		 <li><b>Open All Closed Projects</b> - Opens all closed projects.</li>
 		 <li><b>Close All Open Projects</b> - Prompts to close all opened projects.</li>
@@ -58,9 +56,7 @@
 		 <li><b>Online Help</b> - Displays this page in an external browser</li>
 		 </ul></div>
 		 </column>
-		 <column>
-			<img src="images/workspace_actions.gif" alt="Available choices when right-clicking a WorkSpace"/>
-		</column></columns>		 
+		 </columns>		 
 		</subsection>
 		  <subsection name="soapUI Workspace Details Tab">
 		  <columns><column><div>
@@ -77,7 +73,7 @@
 		  </column></columns>
 		 </subsection>
 		 
-		 <p><hr size="1"/>Next: <a href="projects.html">soapUI Web Service Test Projects</a></p>
+		 <p><hr size="1"/>Next: <a href="projects/index.html">Web Service Test Projects</a></p>
 		</section>
     </body>
 </document>

@@ -19,9 +19,10 @@
 		 <li><b>Check WS-I Compliance</b> : Invokes the WS-I Basic Profile <a href="wsi.html">validation tools</a> for this interface</li>
 		 <li><b>Launch TcpMon</b> : launches TcpMon for this interface as described in
 		 <a href="../tools/tcpmon.html">TcpMon Integration</a>.</li>
-		 <li><b>Generate TestSuite</b> : Generates a complete TestSuite for this interface (see below)</li>
-		 <li><b>Generate MockService</b> : Generates a complete MockService for this interface (see below)</li>
-		 <li><b>Update Definition</b> : see below</li>
+		 <li><b>Generate TestSuite</b> : Generates a complete TestSuite for this interface <a href="functional/testsuites.html">(see more here)</a></li>
+		 <li><b>Generate MockService</b> : Generates a complete MockService for this interface <a href="mock/services.html">(see more here)</a></li>
+		 <li><b>Generate Documentation</b> : Generate simple HTML documentation for this WSDL</li>
+		 <li><b>Update Definition</b> : <a href="#Updating_the_Interface_Definition">see below</a></li>
 		 <li><b>Refactor Definition (Pro Only)</b> : Starts the WSDL refactor definition Wizard. <a href="refactoring.html">Read More Here</a></li>
 		 <li><b>Export Definition</b> : prompts for a local folder and saves the entire definition (including imported/included documents) to
 		 that folder. Import/Include statements in the exported files will be modified accordingly to maintain the definitions integrity</li>
@@ -29,9 +30,7 @@
 		 test-requests associated with operations in that Interface will also be removed from their respective TestCases.</li>
 		 <li><b>Online Help</b> - Displays this page in an external browser</li>
 		 </ul>
-		 </div></column><column>
-		 <img src="images/interface_actions.gif" border="0"/>
-	     </column></columns>
+		 </div></column></columns>
 		 </subsection>
 		 
 		 <subsection name="Updating the Interface Definition">

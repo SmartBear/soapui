@@ -41,7 +41,7 @@ Both will improve your productivity and make Web Service Testing more fun.
               <tr align="right">
               	<td>
                 	<span class="relatedLinks"><a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" title="try soapUI Pro" onclick="javascript:urchinTracker:('/downloadTrial');">
-                                               <img src="images/try_pro_100.png" alt="Try soapUI pro to soap test" width="101" height="20" longdesc="http://www.eviware.com"/></a></span>
+                                               <img src="../images/try_pro_100.png" alt="Try soapUI pro to soap test" width="101" height="20" longdesc="http://www.eviware.com"/></a></span>
                 </td>
               </tr>
             </table>
@@ -63,7 +63,7 @@ Both will improve your productivity and make Web Service Testing more fun.
 		  required</li>
 		   <li><b>Add to MockService</b> - prompts to add the requests' operation to a MockService. If a response is 
 		   available for the request, it will be used as the default MockResponse.</li>
-		    <li><b>Add as MockResponse Step (soapUI Pro only)</b> - prompts to create a <a href="functional/mockresponse.html">MockResponse Step</a>  
+		    <li><b>Add as MockResponse Step </b> - prompts to create a <a href="functional/mockresponse.html">MockResponse Step</a>  
 		  this request in an existing or new TestCase. If a response is available for the request, it will be used as the response content.</li>
 		  <li><b>Copy to TestRequests (soapUI Pro only)</b> - opens dialog for copying/merging this request to existing
 		  TestRequests (see below)</li>
@@ -74,8 +74,6 @@ Both will improve your productivity and make Web Service Testing more fun.
 		  <li><b>Online Help</b> - Displays this page in an external browser</li>
 		  </ul>
 		  </div>
-		  </column><column>
-		  <img src="images/request_actions.gif" alt="Request Actions in soapUI"/>
 		  </column></columns>
 		 </subsection>
 		 
@@ -242,22 +240,27 @@ Both will improve your productivity and make Web Service Testing more fun.
 		according to <a href="http://www.w3.org/Submission/ws-addressing/#_Toc77464322">WS Addressing specification</a></p>
 		<li>Enable WS-A Addressing</li>
 		<li>Must understand indicates whether a header entry is mandatory or optional for the recipient to process.</li>
-		<li>Action - REQUIRED element specifies the value of the Action property. If not specified, and WS-A Settings 
-		(see <a href="preferences.html#WS-A_Settings">Preferences</a>)
-		'Use default Action' is checked , default action from wsdl will be generated.</li>
+		<li>WS-A Version indicates ws addressing version to be used.</li>
+		<li>Add default WS-A:Action indicates if by default generated action is to be added to request/mock response.</li>
+		<li>Action - specifies the value of the Action property. If not specified, and 'Add default WS-A:Action is checked' , 
+		default action from WSDL will be generated and added. Although Action property is mandatory by <a href="http://www.w3.org/TR/ws-addr-core/#msgaddrpropsinfoset">WS-A core specification</a> 
+		by checking previous check box and leaving this empty it is possible for action property to be left unspecified for testing purposes. </li>
+		<li>Add default WS-A:To indicates if default To is to be added to request/mock response.</li>
 		<li>To - OPTIONAL element specifies the value of the To property</li>
 		<li>ReplyTo - OPTIONAL element specifies the value of the ReplyTo property. If not specified, and Anonymous property 
 		is set to 'required', either on <a href="interfaces/index.html#Interface_Details_Tab">Interface</a> or 
 		<a href="operations.html#Operation_Details_Tab">Operation</a> level , default value of 
 		'http://www.w3.org/2005/08/addressing/anonymous' will be used (Operation level definition has priority if not 'optional').</li>
-		<li>MessageID - OPTIONAL element specifies the value of the MessageID property. If not specified, and WS-A Settings 
-		(see <a href="preferences.html#WS-A_Settings">Preferences</a>)
-		'Generate MessageID' is checked , random MessageID will be generated for RequestResponse operation.</li>
+		<li>ReplyTo Reference Parameters - expected to be added in XML not text form and will be included in request exactly as specified</li>
+		<li>Generate MessageID - indicates if messageId should be randomly generated</li>
+		<li>MessageID - OPTIONAL element specifies the value of the MessageID property. If not specified, and previous check box is 
+		checked , random MessageID will be generated for RequestResponse operation.</li>
 		<li>From - OPTIONAL element specifies the value of the From property</li>
 		<li>FaultTo - OPTIONAL element specifies the value of the FaultTo property</li>
+		<li>FaultTo Reference Parameters - expected to be added in XML not text form and will be included in request exactly as specified</li>
 		<li>RelatesTo- OPTIONAL element specifies the value of the RelatesTo property</li>
 		<li>RelationshipType- OPTIONAL element specifies the value of the RelationshipType property</li>
-		<p align="center"><img src="images/wsa_inspector.gif" alt="Viewing header properties in WS-A Inspector"/></p>
+		<p align="center">@TODO@ images/wsa_inspector.gif screen shot have to be changed<img src="images/wsa_inspector.gif" alt="Viewing header properties in WS-A Inspector"/></p>
 		</subsection>
 
 		<subsection name="XML Source Editor">	
@@ -273,12 +276,16 @@ Both will improve your productivity and make Web Service Testing more fun.
 		  <li><b>Add WSS-Username Token</b> - prompts to add a WSS-Username SOAP-Header to the request message using the 
 		  username/password specified in the Request Details Tab</li>
 		  <li><b>Add WS-Timestamp</b> - prompts to add a WS-Timestamp SOAP-Header to the request message</li>
-		  <li><b>Add WS-A Headers</b> - adds WS-A header properties to the request message</li>
+		  <li><b>Outgoing WSS</b> - enabled only when there are <a href="projects\wss.html#Outgoing_WSS">Outgoing WSS Configurations</a> added
+		  and applies or removes outgoing wss from request.</li>
+		  <li><b>WS-A Headers</b> - enabled only when <a href="#WS-A_Inspector">WS Addressing is enabled</a> for the request and 
+		  adds or removes WS-A Headers from the request</li>
 		  <li><b>Undo/Redo/Copy/Cut/Paste/Find/Replace</b> - standard editing functions</li>
 		  <li><b>Go To Line</b> - prompts for a line to move to</li>
 		  <li><b>Show Line Numbers</b> - toggles line-number visibility</li>
 		  <li><b>Save as</b> - prompts to save the editors content to a local file</li>
 		  <li><b>Load from</b> - prompts to load the editors content to a local file</li>
+		  <li><b>Get data..</b> - @TODO@</li>
 		  </ul>
 		  Also, a number of custom keyboard actions are available to make your "everyday-soapui-editing" easier:
 		 <ul>
@@ -288,9 +295,7 @@ Both will improve your productivity and make Web Service Testing more fun.
 		 <li>Shift-Tab : moves focus between request/response areas</li>
 		 </ul>
 		 </div>
-		 </column><column>
-		  <img src="images/request_editor_actions.gif" alt="Available actions for the request editor"/>
-		  </column></columns>
+		 </column></columns>
 		 </subsection>
 
 		 
@@ -318,7 +323,7 @@ Both will improve your productivity and make Web Service Testing more fun.
 		 <subsection name="Authentication">
 		  <p>If the service requires authentication, soapUI will attempt to authenticate using the
 		 specified username, password, or domain values specified either at the endpoint level via the 
-		 <a href="interfaces/index.html#Service_Endpoints">Service Endpoints</a> or those specified in the Request Details 
+		 <a href="interfaces/endpoints.html#Service_Endpoints">Service Endpoints</a> or those specified in the Request Details 
 		 Tab (or a combination of both). Currently supported authentication 
 		 types are those supported by HttpClient, i.e. Basic, Digest and NTLM authentication. SSL should work (=not tested!) 
 		 if you use <code>https</code> urls and <a target="_new" href="http://java.sun.com/products/jsse/doc/guide/API_users_guide.html#Installation">install JSSE</a> 
@@ -352,10 +357,8 @@ Both will improve your productivity and make Web Service Testing more fun.
 		 The response message editor has a similar popup menu to the request-editor containing a "Check WS-I Compliance" 
 		 option. Selecting this option (if the WS-I validation tools have been configured correctly) will validate 
 		 the current request or response message as configured and display a WS-I Compliance report in a separate window as described under 
-		 <a href="projects/wsi.html">WS-I Integrations</a>.
-		 </div></column><column>
-		 <img src="images/response_editor_actions.gif" alt="Available actions in the response message editor in soapUI"/>
-		 </column></columns>
+		 <a href="interfaces/wsi.html">WS-I Integrations</a>.
+		 </div></column></columns>
 		  
 		 </subsection>
 		 

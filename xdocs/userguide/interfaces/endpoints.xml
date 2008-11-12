@@ -36,7 +36,7 @@
 		 </ul>
 		 <p>
 		 Assigning endpoints with this option will <b>not</b> assign to TestRequests, use the "Set TestCase Endpoint"
-		 action in the <a href="../functional/testsuites.html#The_TestCase_Editor">TestCase Editor</a> for this instead.
+		 action in the <a href="../functional/testcases.html#The_TestCase_Editor">TestCase Editor</a> for this instead.
 		 </p>
 		
 		<p align="center"><img src="images/assign_endpoint.gif" border="0" alt="Assigning a Service Endpoint for Web Service Tests"/></p>
@@ -46,7 +46,7 @@
 		 operations request or test requests editor panes.
 		 </p>
 		  
-		  <p><hr size="1"/>Next: <a href="interfaceeditor.html">WSDL Content inspection</a></p>
+		  <p><hr size="1"/>Next: <a href="interfaceeditor.html">WSDL Content Viewer</a></p>
 		</section>
     </body>
 </document>
