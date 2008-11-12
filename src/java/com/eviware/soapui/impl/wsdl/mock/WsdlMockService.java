@@ -352,9 +352,16 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
    {
       faultMockOperation = mockOperation;
       if( faultMockOperation == null )
-         getConfig().unsetFaultMockOperation();
+      {
+         if( getConfig().isSetFaultMockOperation() )
+         {
+            getConfig().unsetFaultMockOperation();
+         }
+      }
       else
+      {
          getConfig().setFaultMockOperation( faultMockOperation.getName() );
+      }
    }
 
    private class MockServiceIconAnimator extends ModelItemIconAnimator<WsdlMockService> implements MockRunListener

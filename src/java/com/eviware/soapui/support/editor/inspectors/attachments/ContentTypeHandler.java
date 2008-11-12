@@ -216,6 +216,7 @@ public class ContentTypeHandler
 		suffixToContentType.put("wsrc", "application/x-wais-source");
 		suffixToContentType.put("hdf", "application/hdf");
 		suffixToContentType.put("js", "text/javascript");
+      suffixToContentType.put("json", "text/javascript");
 		suffixToContentType.put("ls", "text/javascript");
 		suffixToContentType.put("mocha", "text/javascript");
 		// suffixToContentType.put("", "application/x-javascript");

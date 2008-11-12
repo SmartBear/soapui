@@ -27,6 +27,7 @@ import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunListener;
 import com.eviware.soapui.model.support.AbstractMockRunner;
 import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
@@ -407,12 +408,16 @@ public class WsdlMockRunner extends AbstractMockRunner
          }
          else
          {
-            String docroot = getMockService().getDocroot();
+            String docroot = PropertyExpansionUtils.expandProperties( mockContext, getMockService().getDocroot());
             if( StringUtils.hasContent( docroot ) )
             {
                try
                {
-                  File file = new File( docroot + request.getPathInfo().replace( '/', File.separatorChar ) );
+                  String pathInfo = request.getPathInfo();
+                  if( mockService.getPath().length() > 1 && pathInfo.startsWith( mockService.getPath() ))
+                     pathInfo = pathInfo.substring( mockService.getPath().length());
+
+                  File file = new File( docroot + pathInfo.replace( '/', File.separatorChar ) );
                   FileInputStream in = new FileInputStream( file );
                   response.setStatus( HttpServletResponse.SC_OK );
                   long length = file.length();
@@ -420,7 +425,7 @@ public class WsdlMockRunner extends AbstractMockRunner
                   response.setContentType( ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
                   Tools.readAndWrite( in, length, response.getOutputStream() );
                }
-               catch( Exception e )
+               catch( Throwable e )
                {
                   throw new DispatchException( e );
                }
