@@ -232,7 +232,7 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 		if( fileProperty != null )
 			source = fileProperty;
 		
-		URL url = null;
+		URL url;
 		
 		try
 		{
@@ -258,7 +258,7 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 	
 	public String getSource()
 	{
-		return sourceProperty.expand();
+		return sourceProperty.get();
 	}
 	
 	public void setSource( String source )
@@ -268,7 +268,7 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 	
 	public String getTarget()
 	{
-		return targetProperty.expand();
+		return targetProperty.get();
 	}
 	
 	public String getLabel()
@@ -303,7 +303,7 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 
 	public int saveProperties() throws IOException
 	{
-		String target = PropertyExpansionUtils.expandProperties( this, getTarget());
+		String target = PropertyExpansionUtils.expandProperties( this, targetProperty.expand(  ));
 		return saveProperties( target );
 	}
 	
