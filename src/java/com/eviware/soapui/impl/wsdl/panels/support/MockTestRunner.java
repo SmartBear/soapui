@@ -35,6 +35,7 @@ public class MockTestRunner implements TestRunner
    private final WsdlTestCase testCase;
    private final Logger logger;
    private Status status = Status.RUNNING;
+   private MockTestRunContext mockRunContext;
 
    public MockTestRunner( WsdlTestCase testCase )
    {
@@ -75,8 +76,7 @@ public class MockTestRunner implements TestRunner
 
    public TestStepResult runTestStepByName( String name )
    {
-      logger.info( "runTestStepByName [" + name + "]" );
-      return null;
+      return testCase.getTestStepByName( name ).run(  this, mockRunContext );
    }
 
    public long getTimeTaken()
@@ -123,5 +123,10 @@ public class MockTestRunner implements TestRunner
    public String getReason()
    {
       return reason;
+   }
+
+   public void setMockRunContext( MockTestRunContext mockRunContext )
+   {
+      this.mockRunContext = mockRunContext;
    }
 }

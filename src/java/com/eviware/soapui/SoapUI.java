@@ -156,6 +156,7 @@ public class SoapUI
    private static AutoSaveTimerTask autoSaveTimerTask;
    private static String workspaceName;
    private static StringToStringMap projectOptions = new StringToStringMap();
+   private static URLDesktopPanel urlDesktopPanel;
 
    // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -819,7 +820,11 @@ public class SoapUI
 
    public static void showPushPage()
    {
-      URLDesktopPanel urlDesktopPanel = new URLDesktopPanel( "soapUI Starter Page", "Info on soapUI", null );
+      if( urlDesktopPanel == null )
+      {
+         urlDesktopPanel = new URLDesktopPanel( "soapUI Starter Page", "Info on soapUI", null );
+      }
+      
       DesktopPanel dp = UISupport.showDesktopPanel( urlDesktopPanel );
       desktop.maximize( dp );
 

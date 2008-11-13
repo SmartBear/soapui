@@ -38,6 +38,7 @@ public class MockTestRunContext extends AbstractSubmitContext implements TestRun
       this.mockTestRunner = mockTestRunner;
       this.testStep = testStep;
       setProperty( "log", mockTestRunner.getLog() );
+      mockTestRunner.setMockRunContext( this );
    }
 
    public TestStep getCurrentStep()

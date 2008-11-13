@@ -84,6 +84,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
          RestRequestStepConfig testStepConfig = RestRequestStepConfig.Factory.newInstance();
          RestMethodConfig requestConfig = testStepConfig.addNewRestRequest();
          requestConfig.setFullPath( dialog.getValue( Form.ENDPOINT ) );
+         requestConfig.setEndpoint( dialog.getValue( Form.ENDPOINT ) );
          requestConfig.setMethod( dialog.getValue( Form.HTTPMETHOD ) );
 
          new XmlBeansRestParamsTestPropertyHolder( testCase,

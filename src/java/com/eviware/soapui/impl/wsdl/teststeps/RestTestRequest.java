@@ -32,13 +32,10 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.monitor.TestMonitor;
-import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 
 import javax.swing.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -62,8 +59,10 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
    private PropertyChangeNotifier notifier;
    private RestResource restResource;
 
-   public RestTestRequest( RestResource resource, RestMethodConfig callConfig, HttpTestRequestStep testStep,
-                           boolean forLoadTest )
+   public RestTestRequest(
+           RestResource resource, RestMethodConfig callConfig, HttpTestRequestStep testStep,
+           boolean forLoadTest
+   )
    {
       super( resource, callConfig, forLoadTest );
       this.forLoadTest = forLoadTest;
@@ -225,7 +224,7 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
       }
       finally
       {
-         ((WsdlMessageAssertion) assertion).release();
+         ( (WsdlMessageAssertion) assertion ).release();
          notifier.notifyChange();
       }
    }
@@ -335,7 +334,7 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
    @Override
    public RestResource getOperation()
    {
-      return testStep instanceof RestTestRequestStep ? ((RestTestRequestStep) testStep).getResource() : null;
+      return testStep instanceof RestTestRequestStep ? ( (RestTestRequestStep) testStep ).getResource() : null;
    }
 
    protected static class TestRequestIconAnimator extends RequestIconAnimator<RestTestRequest>
@@ -415,14 +414,7 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
 
       if( getOperation() == null )
       {
-         try
-         {
-            setEndpoint( Tools.getEndpointFromUrl( new URL( fullPath ) ) );
-         }
-         catch( MalformedURLException e )
-         {
-
-         }
+         setEndpoint( fullPath );
       }
    }
 
@@ -449,6 +441,6 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
 
    public String getServiceName()
    {
-      return testStep instanceof RestTestRequestStep ? ((RestTestRequestStep)testStep).getService() : null;
+      return testStep instanceof RestTestRequestStep ? ( (RestTestRequestStep) testStep ).getService() : null;
    }
 }

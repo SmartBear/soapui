@@ -21,10 +21,10 @@ import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JUndoableTextField;
@@ -62,9 +62,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
       requestItem.addTestPropertyListener( testPropertyListener );
 
-      for( TestProperty param : requestItem.getParams().getProperties().values())
+      for( TestProperty param : requestItem.getParams().getProperties().values() )
       {
-         (( XmlBeansRestParamsTestPropertyHolder.RestParamProperty)param).addPropertyChangeListener( restParamPropertyChangeListener );
+         ( (XmlBeansRestParamsTestPropertyHolder.RestParamProperty) param ).addPropertyChangeListener( restParamPropertyChangeListener );
       }
    }
 
@@ -262,9 +262,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
       getRequest().removeTestPropertyListener( testPropertyListener );
 
-      for( TestProperty param : getRequest().getParams().getProperties().values())
+      for( TestProperty param : getRequest().getParams().getProperties().values() )
       {
-         (( XmlBeansRestParamsTestPropertyHolder.RestParamProperty)param).removePropertyChangeListener( restParamPropertyChangeListener );
+         ( (XmlBeansRestParamsTestPropertyHolder.RestParamProperty) param ).removePropertyChangeListener( restParamPropertyChangeListener );
       }
 
       return super.release();
@@ -399,7 +399,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
    {
       if( pathLabel != null && getRequest().getResource() != null )
       {
-         String text = RestUtils.expandPath(getRequest().getResource().getFullPath(), getRequest().getParams(), getRequest() );
+         String text = RestUtils.expandPath( getRequest().getResource().getFullPath(), getRequest().getParams(), getRequest() );
          pathLabel.setText( "[" + text + "]" );
          pathLabel.setToolTipText( text );
       }

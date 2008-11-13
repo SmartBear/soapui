@@ -163,7 +163,7 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
       }
       catch( Throwable e )
       {
-         log.error( e );
+         SoapUI.logError( e );
          result.stopTimer();
          result.addMessage( e.getMessage() );
          result.setError( e );

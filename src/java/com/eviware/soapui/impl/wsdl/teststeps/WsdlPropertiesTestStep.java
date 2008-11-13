@@ -444,4 +444,14 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 	{
 		propertyHolderSupport.moveProperty(propertyName, targetIndex);
 	}
+
+   public String getSource( boolean expand )
+   {
+      return expand ? sourceProperty.expand() : getSource();
+   }
+
+   public String getTarget( boolean expand )
+   {
+      return expand ? targetProperty.expand() : getTarget();
+   }
 }

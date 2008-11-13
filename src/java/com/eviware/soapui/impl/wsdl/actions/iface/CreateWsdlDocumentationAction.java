@@ -90,7 +90,7 @@ public class CreateWsdlDocumentationAction extends AbstractSoapUIAction<WsdlInte
 		Transformer transformer = transformers.get( "WSDL" );
 		if( transformer == null )
 		{
-			throw new Exception( "Missing transformer for format [" + target + "]" );
+			throw new Exception( "Missing transformer for format [WSDL]" );
 		}
 		
 		transformer.setParameter( "output.dir", reportDirAbsolutePath );

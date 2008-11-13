@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -81,7 +82,14 @@ public class PropertiesStepDesktopPanel extends ModelItemDesktopPanel<WsdlProper
 		
 		toolbar.addSeparator();
 		toolbar.add(new JLabel("Load from:"));
-		sourceField = new JTextField(testStep.getSource(), 20);
+		sourceField = new JTextField(testStep.getSource(), 20)
+      {
+         @Override
+         public String getToolTipText( MouseEvent event )
+         {
+            return testStep.getSource( true );
+         }
+      };
 		sourceField.setToolTipText("The filename/url or referring system-property to load properties from");
 		sourceField.getDocument().addDocumentListener(new DocumentListenerAdapter()
 		{
@@ -104,7 +112,15 @@ public class PropertiesStepDesktopPanel extends ModelItemDesktopPanel<WsdlProper
 
 		toolbar.addSeparator();
 		toolbar.add(new JLabel("Save to:"));
-		targetField = new JTextField(testStep.getTarget(), 20);
+		targetField = new JTextField(testStep.getTarget(), 20)
+      {
+         @Override
+         public String getToolTipText( MouseEvent event )
+         {
+            return testStep.getTarget( true );
+         }
+      };
+
 		targetField.setToolTipText("The filename/url or referring system-property to save properties to");
 		targetField.getDocument().addDocumentListener(new DocumentListenerAdapter()
 		{
