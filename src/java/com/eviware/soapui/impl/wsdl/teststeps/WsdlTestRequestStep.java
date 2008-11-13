@@ -33,6 +33,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.model.support.InterfaceListenerAdapter;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.support.TestStepBeanProperty;
 import com.eviware.soapui.model.testsuite.*;
@@ -704,7 +705,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
                        setDisabled( false );
                        return true;
                     }
-                 }, new ChangeOperationResolver( this )
+                 }, new ChangeOperationResolver( this, "Operation" )
                  {
 
                     @Override
@@ -718,6 +719,13 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
                        initRequestProperties();
                        setDisabled( false );
                        return true;
+                    }
+
+                    protected Interface[] getInterfaces( WsdlProject project )
+                    {
+                       List<WsdlInterface> interfaces = ModelSupport.getChildren( project, WsdlInterface.class );
+                       return interfaces.toArray( new Interface[interfaces.size()] );
+
                     }
 
                  } );

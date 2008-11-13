@@ -97,6 +97,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.*;
 import java.util.List;
 import java.util.Timer;
@@ -118,6 +119,8 @@ public class SoapUI
 
    public static String PUSH_PAGE_URL = "http://www.soapui.org/appindex/soapui_start.php";
    public static String FRAME_ICON = "/16-perc.gif";
+   public static String PUSH_PAGE_ERROR_URL =
+              SoapUI.class.getResource( "/com/eviware/soapui/resources/html/starter-page.html" ).toString();
 
    // ------------------------------ FIELDS ------------------------------
 
@@ -816,9 +819,12 @@ public class SoapUI
 
    public static void showPushPage()
    {
-      DesktopPanel dp = UISupport.showDesktopPanel( new URLDesktopPanel( "soapUI Starter Page", "Info on soapUI",
-              PUSH_PAGE_URL ) );
+      URLDesktopPanel urlDesktopPanel = new URLDesktopPanel( "soapUI Starter Page", "Info on soapUI", null );
+      DesktopPanel dp = UISupport.showDesktopPanel( urlDesktopPanel );
       desktop.maximize( dp );
+
+      urlDesktopPanel.navigate( PUSH_PAGE_URL + "?version=" + URLEncoder.encode( SOAPUI_VERSION ),
+              PUSH_PAGE_ERROR_URL, true);
    }
 
    private static class ShowSystemPropertiesAction extends AbstractAction

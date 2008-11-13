@@ -31,10 +31,10 @@ public class URLDesktopPanel extends DefaultDesktopPanel
       browser = new BrowserComponent();
       panel.add( browser.getComponent(), BorderLayout.CENTER );
 
-      navigate( url, true );
+      navigate( url, null, true );
    }
 
-   public void navigate( final String url, boolean async )
+   public void navigate( final String url, final String errorUrl, boolean async )
    {
       if( async )
       {
@@ -42,13 +42,13 @@ public class URLDesktopPanel extends DefaultDesktopPanel
          {
             public void run()
             {
-               browser.navigate( url );
+               browser.navigate( url, errorUrl );
             }
          } ).start();
       }
       else
       {
-         browser.navigate( url );
+         browser.navigate( url, errorUrl );
       }
    }
 

@@ -139,7 +139,7 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
       if( resource != null )
       {
          requestStepConfig.setService( resource.getInterface().getName() );
-         requestStepConfig.setResourcePath( resource.getPath() );
+         requestStepConfig.setResourcePath( resource.getFullPath() );
 
          String[] endpoints = resource.getInterface().getEndpoints();
          if( endpoints.length > 0 )

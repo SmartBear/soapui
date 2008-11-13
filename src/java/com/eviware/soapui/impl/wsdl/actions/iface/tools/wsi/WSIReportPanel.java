@@ -88,7 +88,7 @@ public class WSIReportPanel extends JPanel
 		configContent.setText( configFile );
 
       browser = new BrowserComponent();
-      browser.navigate( reportFile.toURI().toURL().toString() );
+      browser.navigate( reportFile.toURI().toURL().toString(), null );
 
       tabs.addTab( "Report", browser.getComponent() );
 		tabs.addTab( "Config", new JScrollPane( configContent ));

@@ -104,7 +104,7 @@ public class BrowserComponent
 //      browser.setContent( content, contentType );
    }
 
-   public boolean navigate( String url )
+   public boolean navigate( String url, String errorPage )
    {
       try
       {
@@ -130,6 +130,11 @@ public class BrowserComponent
       catch( Exception e )
       {
          SoapUI.logError( e );
+      }
+
+      if( errorPage != null )
+      {
+         navigate( errorPage, null );
       }
 
       return false;

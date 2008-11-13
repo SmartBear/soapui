@@ -36,11 +36,13 @@ public abstract class ChangeOperationResolver implements Resolver
    private boolean resolved = false;
    private WsdlProject project;
    private Operation pickedOperation;
+   private String operationType;
 
-   public ChangeOperationResolver( WsdlTestStep testStep )
+   public ChangeOperationResolver( WsdlTestStep testStep, String operationType )
    {
       this.project = testStep.getTestCase().getTestSuite().getProject();
 
+      this.operationType = operationType;
    }
 
    public String getResolvedPath()
@@ -55,8 +57,7 @@ public abstract class ChangeOperationResolver implements Resolver
 
    public boolean resolve()
    {
-
-      PropertyChangeDialog pDialog = new PropertyChangeDialog( "Choose operation" );
+      PropertyChangeDialog pDialog = new PropertyChangeDialog( "Choose " + operationType );
       pDialog.showAndChoose();
       resolved = update();
       return resolved;
@@ -64,9 +65,12 @@ public abstract class ChangeOperationResolver implements Resolver
 
    public abstract boolean update();
 
+   protected abstract Interface[] getInterfaces( WsdlProject project );
+   
+
    public String getDescription()
    {
-      return "Resolve: Choose another operation";
+      return "Resolve: Choose another " + operationType;
    }
 
    @Override
@@ -98,7 +102,7 @@ public abstract class ChangeOperationResolver implements Resolver
          PanelBuilder panel = new PanelBuilder( layout );
          panel.addLabel( "Interface:", cc.xy( 2, 2 ) );
 
-         List<WsdlInterface> ifaces = ModelSupport.getChildren( project, WsdlInterface.class );
+         Interface[] ifaces = getInterfaces( project );
          DefaultComboBoxModel sourceStepComboModel = new DefaultComboBoxModel();
          sourceStepCombo = new JComboBox( sourceStepComboModel );
          sourceStepCombo.setRenderer( new InterfaceComboRenderer() );
@@ -111,7 +115,7 @@ public abstract class ChangeOperationResolver implements Resolver
          propertiesCombo = new JComboBox( ( (Interface) sourceStepCombo.getSelectedItem() ).getOperationList().toArray() );
          propertiesCombo.setRenderer( new OperationComboRender() );
 
-         panel.addLabel( "Operation:", cc.xy( 2, 4 ) );
+         panel.addLabel( operationType + ":", cc.xy( 2, 4 ) );
          panel.add( propertiesCombo, cc.xyw( 4, 4, 3 ) );
 
          panel.add( okBtn, cc.xy( 4, 6 ) );

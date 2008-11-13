@@ -22,7 +22,6 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
-import com.eviware.soapui.model.support.DefaultTestStepProperty;
 import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
 import com.eviware.soapui.model.support.TestStepBeanProperty;
 import com.eviware.soapui.model.testsuite.*;
@@ -528,30 +527,12 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
       testRequest.resolve( context );
    }
 
-   private final class RestPropertyHandler extends DefaultTestStepProperty.PropertyHandlerAdapter
-   {
-      public RestPropertyHandler()
-      {
-      }
-
-      public String getValue( DefaultTestStepProperty property )
-      {
-         return getTestRequest().getPropertyValue( property.getName() );
-      }
-
-      @Override
-      public void setValue( DefaultTestStepProperty property, String value )
-      {
-         getTestRequest().setPropertyValue( property.getName(), value );
-      }
-   }
-
    private class InternalTestPropertyListener extends TestPropertyListenerAdapter
    {
       @Override
       public void propertyAdded( String name )
       {
-         addProperty( new RestTestStepProperty( getTestRequest().getProperty( name )), true );
+         addProperty( new RestTestStepProperty( getTestRequest().getProperty( name ) ), true );
       }
 
       @Override

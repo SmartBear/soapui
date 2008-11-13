@@ -14,10 +14,7 @@ package com.eviware.soapui.impl.wsdl.teststeps;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.*;
-import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
+import com.eviware.soapui.impl.wsdl.*;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
@@ -32,6 +29,7 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
+import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
@@ -1182,7 +1180,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
                        setDisabled( false );
                        return true;
                     }
-                 }, new ChangeOperationResolver( this )
+                 }, new ChangeOperationResolver( this, "Operation" )
                  {
 
                     @Override
@@ -1195,6 +1193,13 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
                        initProperties();
                        setDisabled( false );
                        return true;
+                    }
+
+                    protected Interface[] getInterfaces( WsdlProject project )
+                    {
+                       List<WsdlInterface> interfaces = ModelSupport.getChildren( project, WsdlInterface.class );
+                       return interfaces.toArray( new Interface[interfaces.size()] );
+
                     }
 
                  } );
