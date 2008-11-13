@@ -13,6 +13,7 @@
 package com.eviware.soapui.ui;
 
 import com.eviware.soapui.support.components.BrowserComponent;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 
 import javax.swing.*;
@@ -22,7 +23,7 @@ public class URLDesktopPanel extends DefaultDesktopPanel
 {
    private BrowserComponent browser;
 
-   public URLDesktopPanel( String title, String description, final String url )
+   public URLDesktopPanel( String title, String description, String url )
    {
       super( title, description, new JPanel( new BorderLayout() ) );
 
@@ -31,20 +32,15 @@ public class URLDesktopPanel extends DefaultDesktopPanel
       browser = new BrowserComponent();
       panel.add( browser.getComponent(), BorderLayout.CENTER );
 
-      navigate( url, null, true );
+      if( StringUtils.hasContent( url ))
+         navigate( url, null, true );
    }
 
-   public void navigate( final String url, final String errorUrl, boolean async )
+   public void navigate( String url, String errorUrl, boolean async )
    {
       if( async )
       {
-         new Thread( new Runnable()
-         {
-            public void run()
-            {
-               browser.navigate( url, errorUrl );
-            }
-         } ).start();
+         new Thread( new Navigator( url, errorUrl ) ).start();
       }
       else
       {
@@ -56,5 +52,22 @@ public class URLDesktopPanel extends DefaultDesktopPanel
    {
       browser.release();
       return super.onClose( canCancel );
+   }
+
+   private class Navigator implements Runnable
+   {
+      private final String url;
+      private final String errorUrl;
+
+      public Navigator( String url, String errorUrl )
+      {
+         this.url = url;
+         this.errorUrl = errorUrl;
+      }
+
+      public void run()
+      {
+         browser.navigate( url, errorUrl );
+      }
    }
 }

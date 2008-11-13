@@ -123,13 +123,9 @@ public class BrowserComponent
          editorPane.setPage( new URL( url ) );
          return true;
       }
-      catch( NoRouteToHostException e )
-      {
-         SoapUI.log.warn( "Failed to access [" + url + "]" );
-      }
       catch( Exception e )
       {
-         SoapUI.logError( e );
+         SoapUI.logError( new Exception(  "Failed to access [" + url + "]", e ));
       }
 
       if( errorPage != null )
