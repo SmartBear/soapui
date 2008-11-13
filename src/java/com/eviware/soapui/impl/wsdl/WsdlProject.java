@@ -1081,6 +1081,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
       iface.beforeSave();
 
       InterfaceConfig ifaceConfig = (InterfaceConfig) iface.getConfig().copy();
+      ifaceConfig = (InterfaceConfig) getConfig().addNewInterface().set( ifaceConfig );
+
       AbstractInterface<?> imported = InterfaceFactoryRegistry.build( this, ifaceConfig );
       if( ifaceConfig.isSetId() && createCopy )
          ifaceConfig.unsetId();
