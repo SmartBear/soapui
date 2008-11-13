@@ -665,6 +665,7 @@
                 <includes>
                     <include>**/*.xml</include>
                     <include>**/*.xsd</include>
+                    <include>**/*.xsl</include>
                     <include>**/*.xslt</include>
                     <include>**/*.css</include>
                     <include>**/*.txt</include>
