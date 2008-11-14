@@ -491,13 +491,10 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 
       String tempName = project.getName();
       project.release();
-//		project = new WsdlProject( project.getPath(), this, false, true, tempName, null );
       project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew( project.getPath(), this, false, true, tempName, null );
       projectList.add( ix, project );
 
       fireProjectAdded( project );
-
-//		workspaceConfig.getSoapuiWorkspace().getProjectArray( ix ).setStringValue( project.getPath() );
 
       return project;
    }

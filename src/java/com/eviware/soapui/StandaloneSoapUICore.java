@@ -26,6 +26,7 @@ import com.jgoodies.looks.plastic.theme.SkyBluer;
 
 public class StandaloneSoapUICore extends SwingSoapUICore
 {
+
 	public StandaloneSoapUICore( boolean init )
 	{
 		super();

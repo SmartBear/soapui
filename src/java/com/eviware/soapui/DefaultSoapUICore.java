@@ -19,7 +19,6 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.settings.*;
 import com.eviware.soapui.support.ClasspathHacker;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
@@ -57,6 +56,18 @@ public class DefaultSoapUICore implements SoapUICore
 	private String settingsFile;
 
 	private String password;
+
+	protected boolean initialImport;
+
+	public boolean getInitialImport()
+	{
+		return initialImport;
+	}
+
+	public void setInitialImport(boolean initialImport)
+	{
+		this.initialImport = initialImport;
+	}
 
 	public static DefaultSoapUICore createDefault()
 	{
@@ -129,14 +140,14 @@ public class DefaultSoapUICore implements SoapUICore
 
 		try
 		{
-			File settingsFile = root == null ? new File(System.getProperty("soapui.home"), fileName) : new File(new File(
-					root), fileName);
+			File settingsFile = new File(new File(getRoot()), fileName);
 			if (!settingsFile.exists())
 			{
 				if (settingsDocument == null)
 				{
 					log.info("Creating new settings at [" + settingsFile.getAbsolutePath() + "]");
 					settingsDocument = SoapuiSettingsDocumentConfig.Factory.newInstance();
+					setInitialImport(true);
 				}
 			}
 			else
@@ -256,9 +267,10 @@ public class DefaultSoapUICore implements SoapUICore
 		if (file != null)
 		{
 			log.info("Importing preferences from [" + file.getAbsolutePath() + "]");
-			toFile = new File(root == null ? System.getProperty("soapui.home") : root, file.getName());
+			toFile = new File(getRoot(), file.getName());
+			log.info("Copy preferences from [" + file.getAbsolutePath() + "] to [" + toFile.getAbsolutePath() + "]");
 			Tools.copyFile(file, toFile, true);
-			initSettings(toFile.getName());
+			initSettings(file.getName());
 		}
 	}
 
@@ -305,8 +317,7 @@ public class DefaultSoapUICore implements SoapUICore
 		if (settingsFile == null)
 			settingsFile = DEFAULT_SETTINGS_FILE;
 
-		File file = root == null ? new File(settingsFile) : new File(new File(root),
-				settingsFile);
+		File file = new File(new File(getRoot()),	settingsFile);
 
 		SoapuiSettingsDocumentConfig settingsDocument = (SoapuiSettingsDocumentConfig) this.settingsDocument.copy();
 		String password = settings.getString(SecuritySettings.SHADOW_PASSWORD, null);
@@ -353,7 +364,7 @@ public class DefaultSoapUICore implements SoapUICore
 	{
 		if (!logIsInitialized)
 		{
-			File log4jconfig = root == null ? new File("soapui-log4j.xml") : new File(new File(root), "soapui-log4j.xml");
+			File log4jconfig = new File(new File(getRoot()), "soapui-log4j.xml");
 			if (log4jconfig.exists())
 			{
 				System.out.println("Configuring log4j from [" + log4jconfig.getAbsolutePath() + "]");
@@ -382,8 +393,7 @@ public class DefaultSoapUICore implements SoapUICore
 		{
 			String extDir = System.getProperty("soapui.ext.libraries");
 
-			File dir = extDir != null ? new File(extDir) : StringUtils.isNullOrEmpty(root) ? new File("ext") : new File(
-					new File(root), "ext");
+			File dir = extDir != null ? new File(extDir) : new File(new File(getRoot()), "ext");
 
 			if (dir.exists() && dir.isDirectory())
 			{
