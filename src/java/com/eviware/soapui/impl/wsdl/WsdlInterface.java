@@ -297,7 +297,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 
    public BindingTuple prepareUpdateDefinition( String url ) throws Exception
    {
-      WsdlContext newContext = new WsdlContext( url, (WsdlInterface) null );
+      WsdlContext newContext = new WsdlContext( url );
       if( !newContext.load() )
       {
          return null;

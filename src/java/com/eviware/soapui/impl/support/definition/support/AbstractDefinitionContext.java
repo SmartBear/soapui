@@ -25,6 +25,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.x.dialogs.Worker;
 import com.eviware.x.dialogs.XProgressDialog;
 import com.eviware.x.dialogs.XProgressMonitor;
+
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.SchemaTypeLoader;
 import org.apache.xmlbeans.SchemaTypeSystem;
@@ -77,7 +78,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
       return (T3) ( definition == null ? definitionCache.get( url ) : definition );
    }
 
-   public boolean isLoaded()
+   public synchronized boolean isLoaded()
    {
       return loaded;
    }
@@ -102,6 +103,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
             load();
          }
 
+         // FIXME Refactoring: loaded = (definition != null) ?
          loaded = iface != null && definitionCache.containsKey( url );
       }
    }
@@ -115,6 +117,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
    {
       if( !loaded && iface != null )
       {
+         // FIXME Refactoring: loaded = (definition != null) ?
          loaded = definitionCache.containsKey( url );
       }
 
@@ -149,7 +152,10 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
          }
          else throw new Exception( loader.getError() );
       }
-      else loaded = true;
+      else
+      {
+         loaded = true;
+      }
 
       return loaded;
    }
@@ -301,7 +307,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
 
    public SchemaTypeSystem getSchemaTypeSystem() throws Exception
    {
-      if( !loaded )
+      if( !isLoaded() )
          load();
 
       if( !definitionCache.containsKey( url ) )
@@ -321,7 +327,9 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
          SoapUI.logError( e );
          return false;
       }
-      return definitionCache.containsKey( url ) && definitionCache.get( url ).hasSchemaTypes();
+
+      InterfaceDefinition def = (definition != null ? definition : definitionCache.get( url ));
+      return def != null && def.hasSchemaTypes();
    }
 
    public String getUrl()
