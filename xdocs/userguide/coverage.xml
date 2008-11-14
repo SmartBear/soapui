@@ -90,7 +90,7 @@
 		<li><b> ? Values</b> - select if elements and attributes containing '?' should be regarded as covered</li>
 		</ul>
 		
-		@TODO@update the screen shot and options list
+		@TODO@update the screen shot and options list for coverage optrions
 		<p align="center"><img src="images/coverage_options.gif" alt="Coverage Options in soapUI Pro"/></p>
 		</subsection>
 

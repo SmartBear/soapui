@@ -68,12 +68,17 @@
 		<columns><column><div>
 		 The following actions are available from the project nodes' right-button menu:		 
 		 <ul>
-		 <li><b>Add WSDL from URL</b> - Prompts for a WSDL URL that will be parsed and imported accordingly</li>
-		 <li><b>Add WSDL from file</b> - Prompts for a local WSDL file that will be parsed and imported accordingly</li>
+		 @TODO@everything is listed, just check options explanations
+		 <li><b>Show Project View</b> - Prompts for a WSDL URL that will be parsed and imported accordingly</li>
+		 <li><b>Add WSDL </b> - Prompts for a WSDL (either URL or file path) that will be parsed and imported accordingly</li>
+		 <li><b>Add WADL</b> - Prompts for a WADL (either URL or file path) that will be parsed and imported accordingly</li>
+		 <li><b>New REST Service</b> - Adds a new <a href="../rest/index.html">REST Service</a> to this project</li>
 		 <li><b>Launch TestRunner</b> - Opens the dialog for launching the 
 		 <a href="../commandline/functional.html#Launch_Dialog">Command Line TestRunner</a></li>
 		 <li><b>Launch LoadTestRunner</b> - Opens the dialog for launching the 
 		 <a href="../commandline/loadtest.html#Launch_Dialog">Command Line LoadTestRunner</a></li>
+		 <li><b>Launch SOAP Monitor</b> - Opens the dialog for launching the 
+		 <a href="../monitor/index.html">SOAP Monitor</a></li>
 		 <li><b>New TestSuite</b> - Prompts to create a new <a href="../functional/testsuites.html">TestSuite</a> in the selected project</li>
 		 <li><b>New MockService</b> - Prompts to create a new <a href="../mock/services.html">MockService</a> in the selected project</li>
 		 <li><b>Rename</b> - Prompts to rename the selected project. The new name will be shown in the navigation tree. The
@@ -81,7 +86,7 @@
 		 <li><b>Remove</b> - Prompts to remove the selected project from the workspace. The project file will not be deleted
 		 and can be imported back into the workspace subsequently</li>
 		 <li><b>Reload Project</b> - Prompts to reload the project from its external source, discarding any changes</li>
-		 <li><b>Resolve Project</b> - @TODO@check this: Resolves missing links between project elements</li>
+		 <li><b>Resolve Project</b> - Resolves missing links between project elements</li>
 		 <li><b>Close Project</b> - Prompts to close the current project, disabling it in the workspace</li>
 		 <li><b>Save Project</b> - Saves the state of the project and all its contained items to the underlying project file</li>
 		 <li><b>Save Project As</b> - Saves the state of the project and all its contained items to a new project file</li>

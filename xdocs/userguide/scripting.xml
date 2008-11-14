@@ -95,7 +95,7 @@ greet.salute()</source>
         <source>Wed Jun 27 01:40:16 CEST 2007:INFO:Hello Ole!</source>
 		</subsection>
 
-		 <p><hr size="1"/>Next: <a href="workspaces.html">soapUI Workspaces</a></p>
+		 <p><hr size="1"/>Next: <a href="properties.html">Using Properties in soapUI</a></p>
 		</section>
     </body>
 </document>

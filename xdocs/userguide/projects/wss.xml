@@ -91,8 +91,8 @@
 		"PasswordDigest Ext" option is non standard and should only be used for interop issues where the message receiver
 		desires an extra MD5 Hash of the password.</li>
 		<p align="center"><img src="images/wss_username_entry.gif" alt="Setting Username for Web Services"/></p>
-		<li><b>Timestamp</b> - adds a Timestamp token to the outgoing message with the specified Time To Live value.</li>
 		@TODO@all the screen shots labels are right justified, in application left justified...? Timestamp screen shot has no millisecond precision checkbox
+		<li><b>Timestamp</b> - adds a Timestamp token to the outgoing message with the specified Time To Live value.</li>
 		<p align="center"><img src="images/wss_timestamp_entry.gif" alt="Setting a timestamp for Web Services"/></p>
 		<li><b>SAML</b> - adds a SAML assertion to the outgoing message with the specified assertion content.</li>
 		<p align="center"><img src="images/wss_saml_entry.gif" alt="Setting SAML for Web Services"/></p>
@@ -114,7 +114,7 @@
 		the results of the processing will be shown	in the "WSS" Inspector for the corresponding message. The inspector
 		shows a list of processing results and any errors that may have occurred:</p>
 		<p align="center"><img src="images/wss_inspector.gif" alt="Inspecting Web Services Security Results"/></p>
-		<p>For testing, there is also a <a href="../functional/response-assertions.html#WS-Security_Status">WS-Security Status Assertion</a> 
+		<p>For testing, there is also a <a href="../functional/response-assertions.html#WS-Security_Status_Assertion">WS-Security Status Assertion</a> 
 		that can be added to a TestRequest step for validating that the WS-Security headers were valid in the received response.</p>
 		</subsection>
 

@@ -21,7 +21,7 @@
 		<a href="functional/runtestcasestep.html">Run TestCase</a></li>
 		<li><a href="mock/services.html"><b>MockServices</b></a> : for handling MockService scoped values/arguments</li>
 		<li><a href="mock/responses.html"><b>MockResponses</b></a> : for handling MockResponse scoped values</li>
-		<li><a href="#Global_Properties"><b>Global Properties</b></a> : for handling Global properties, optionally from an external source</li>
+		<li><a href="#Global_Properties_in soapUI"><b>Global Properties</b></a> : for handling Global properties, optionally from an external source</li>
 		</ul>       
 		<p>Apart from these custom properties, many soapUI objects expose their own built in properties, see
 		<a href="#Built-In_Properties"></a> for a list of which are available.</p>
@@ -32,12 +32,12 @@
         <p align="center"><img src="images/properties_editor.gif" alt="Properties Inspecotr in soapUI"/></p>
         <li>From the selected objects Details tab (bottom left) in a <i>Test Properties</i> tab</li>
         <p align="center"><img src="images/test_properties_tab.gif" alt="Test Properties in soapUI"/></p>
-        <li>From the navigator itself when in <a href="overview.html#Property-Mode">Property-Mode</a>.</li>
+        <li>From the navigator itself when in <a href="overview.html#Property-Mode">Property_Mode</a>.</li>
         </ol>
         <p>The table available in the first two options has buttons to Add, Remove, and Clear and Import properties from 
         an external source. In the table both names and values of properties can be edited as desired.</p>
         <p>When renaming a property, soapUI will attempt to refactor all references to that property in both 
-        <a href="#Property_Expansion">Property Expansions</a> and Property Transfers.</p>
+        <a href="#Property_Expansion_in_soapUI">Property Expansions</a> and Property Transfers.</p>
         </subsection>
         
         <subsection name="Global Properties in soapUI">
@@ -230,7 +230,8 @@ id = "123"
 		 
 		 </subsection>
 		 
-		   <p><hr size="1"/>Next: <a href="loadtest/index.html">Load Testing Web Services</a></p>
+		   <p><hr size="1"/>Next: <a href="functional/index.html">Functional Testing Web Services
+</a></p>
 		</section>
     </body>
 </document>

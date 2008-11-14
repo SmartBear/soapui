@@ -20,7 +20,7 @@
 		<p>soapUI 2.5 introduces extensive possibilities to invoke and test REST services, either starting from a WADL
         definition or just plain URLs.</p>
 
-		 <p><hr size="1"/>Next: <a href=" "> </a></p>
+		 <p><hr size="1"/>Next: <a href="services/index.html">REST Service overview</a></p>
 		</section>
     </body>
 </document>

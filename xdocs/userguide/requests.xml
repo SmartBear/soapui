@@ -235,15 +235,15 @@ Both will improve your productivity and make Web Service Testing more fun.
 		<p align="center"><img src="images/ssl_details.gif" alt="SSL Details in soapUI"/></p>
 		</subsection>
 		
-		<subsection name="WS-A Inspector">
+		<subsection name="WS-A Properties">
 		<p>The WS-A Inspector displays properties used for adding WS-A headers to a Request/MockResponse 
-		according to <a href="http://www.w3.org/Submission/ws-addressing/#_Toc77464322">WS Addressing specification</a></p>
+		according to <a href="http://www.w3.org/Submission/ws-addressing/#_Toc77464322" target="_new">WS Addressing specification</a></p>
 		<li>Enable WS-A Addressing</li>
 		<li>Must understand indicates whether a header entry is mandatory or optional for the recipient to process.</li>
 		<li>WS-A Version indicates ws addressing version to be used.</li>
 		<li>Add default WS-A:Action indicates if by default generated action is to be added to request/mock response.</li>
 		<li>Action - specifies the value of the Action property. If not specified, and 'Add default WS-A:Action is checked' , 
-		default action from WSDL will be generated and added. Although Action property is mandatory by <a href="http://www.w3.org/TR/ws-addr-core/#msgaddrpropsinfoset">WS-A core specification</a> 
+		default action from WSDL will be generated and added. Although Action property is mandatory by <a href="http://www.w3.org/TR/ws-addr-core/#msgaddrpropsinfoset" target="_new">WS-A core specification</a> 
 		by checking previous check box and leaving this empty it is possible for action property to be left unspecified for testing purposes. </li>
 		<li>Add default WS-A:To indicates if default To is to be added to request/mock response.</li>
 		<li>To - OPTIONAL element specifies the value of the To property</li>
@@ -384,7 +384,7 @@ Both will improve your productivity and make Web Service Testing more fun.
 		 element level, only at the value level</p>
 		 </subsection>
 		 
-		 <p><hr size="1"/>Next: <a href="attachments.html">WS Attachments and Inline Files</a></p>
+		 <p><hr size="1"/>Next: <a href="formeditor.html">Form Editor</a></p>
 		</section>
     </body>
 </document>

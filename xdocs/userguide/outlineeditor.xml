@@ -40,7 +40,7 @@
 		<p>A number of right-button actions are available
 		for creation of XPath assertions and Property-Transfers/Expansion when editing 
 		<a href="functional/mockresponse.html">Mock Response</a> and 
-		<a href="functional/response-wizards.html">Test Request</a> steps.</p>
+		<a href="functional/testrequests.html">Test Request</a> steps.</p>
 		
 		
 		 <p><hr size="1"/>Next: <a href="messageinspectors.html">Message Inspectors</a></p>
