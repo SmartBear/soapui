@@ -29,7 +29,6 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
-import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
@@ -1186,7 +1185,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
                     @Override
                     public boolean update()
                     {
-                       WsdlOperation operation = (WsdlOperation) getPickedOperation();
+                       WsdlOperation operation = (WsdlOperation) getSelectedOperation();
                        setInterface( operation.getInterface().getName() );
                        setOperation( operation.getName() );
                        initMockObjects( getTestCase() );

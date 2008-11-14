@@ -35,15 +35,7 @@ public class RestTestRequestStep extends HttpTestRequestStep
       super( testCase, config, forLoadTest );
 
       restResource = findRestResource();
-      initRestTestRequest( forLoadTest );
-   }
-
-   private void initRestTestRequest( boolean forLoadTest )
-   {
-      if( restResource == null )
-         setDisabled( true );
-      else
-         getTestRequest().setResource( restResource );
+      initRestTestRequest();
 
       if( !forLoadTest && restResource != null )
       {
@@ -55,6 +47,14 @@ public class RestTestRequestStep extends HttpTestRequestStep
          restResource.getInterface().addPropertyChangeListener( this );
          restResource.addPropertyChangeListener( this );
       }
+   }
+
+   private void initRestTestRequest()
+   {
+      if( restResource == null )
+         setDisabled( true );
+      else
+         getTestRequest().setResource( restResource );
    }
 
    public String getService()
@@ -119,7 +119,7 @@ public class RestTestRequestStep extends HttpTestRequestStep
       {
          if( evt.getPropertyName().equals( RestResource.PATH_PROPERTY ) )
          {
-            getRequestStepConfig().setResourcePath( (String) evt.getNewValue() );
+            getRequestStepConfig().setResourcePath( restResource.getFullPath( ));
          }
       }
       else if( restResource != null && evt.getSource() == restResource.getInterface() )
@@ -225,30 +225,30 @@ public class RestTestRequestStep extends HttpTestRequestStep
                  getRequestStepConfig().getService() + "/" + getRequestStepConfig().getResourcePath() ).addResolvers(
                  new RemoveTestStepResolver( this ), new ImportInterfaceResolver( this )
                  {
-
                     @Override
                     protected boolean update()
                     {
-                       restResource = findRestResource();
+                       RestResource restResource = findRestResource();
                        if( restResource == null )
                           return false;
 
-                       initRestTestRequest( false );
+                       setResource( restResource );
+                       initRestTestRequest();
                        setDisabled( false );
                        return true;
                     }
 
                  }, new ChangeOperationResolver( this, "Resource" )
                  {
-
                     @Override
                     public boolean update()
                     {
-                       restResource = (RestResource) getPickedOperation();
+                       RestResource restResource = (RestResource) getSelectedOperation();
                        if( restResource == null )
                           return false;
 
-                       initRestTestRequest( false );
+                       setResource( restResource );
+                       initRestTestRequest();
                        setDisabled( false );
                        return true;
                     }

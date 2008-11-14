@@ -12,30 +12,25 @@
 
 package com.eviware.soapui.support.resolver;
 
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.resolver.ResolveContext.Resolver;
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
+import com.eviware.soapui.support.swing.ModelItemListCellRenderer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 public abstract class ChangeOperationResolver implements Resolver
 {
-
    private boolean resolved = false;
    private WsdlProject project;
-   private Operation pickedOperation;
+   private Operation selectedOperation;
    private String operationType;
 
    public ChangeOperationResolver( WsdlTestStep testStep, String operationType )
@@ -57,8 +52,8 @@ public abstract class ChangeOperationResolver implements Resolver
 
    public boolean resolve()
    {
-      PropertyChangeDialog pDialog = new PropertyChangeDialog( "Choose " + operationType );
-      pDialog.showAndChoose();
+      PropertyChangeDialog pDialog = new PropertyChangeDialog( "Resolve " + operationType );
+      pDialog.setVisible( true );
       resolved = update();
       return resolved;
    }
@@ -66,11 +61,10 @@ public abstract class ChangeOperationResolver implements Resolver
    public abstract boolean update();
 
    protected abstract Interface[] getInterfaces( WsdlProject project );
-   
 
    public String getDescription()
    {
-      return "Resolve: Choose another " + operationType;
+      return "Resolve: Select another " + operationType;
    }
 
    @Override
@@ -80,50 +74,34 @@ public abstract class ChangeOperationResolver implements Resolver
    }
 
    @SuppressWarnings( "serial" )
-   private class PropertyChangeDialog extends JDialog
+   private class PropertyChangeDialog extends SimpleDialog
    {
-
       private JComboBox sourceStepCombo;
       private JComboBox propertiesCombo;
-      private JButton okBtn = new JButton( " Ok " );
-      private JButton cancelBtn = new JButton( " Cancel " );
 
       public PropertyChangeDialog( String title )
       {
-         super( UISupport.getMainFrame(), title, true );
-         init();
+         super( title, getDescription(), null );
       }
 
-      private void init()
+      protected Component buildContent()
       {
-         FormLayout layout = new FormLayout( "min,right:pref, 4dlu, 40dlu, 5dlu, 40dlu, min ",
-                 "min, pref, 4dlu, pref, 4dlu, pref, min" );
-         CellConstraints cc = new CellConstraints();
-         PanelBuilder panel = new PanelBuilder( layout );
-         panel.addLabel( "Interface:", cc.xy( 2, 2 ) );
+         SimpleForm form = new SimpleForm();
 
+         form.addSpace( 5 );
          Interface[] ifaces = getInterfaces( project );
          DefaultComboBoxModel sourceStepComboModel = new DefaultComboBoxModel();
-         sourceStepCombo = new JComboBox( sourceStepComboModel );
-         sourceStepCombo.setRenderer( new InterfaceComboRenderer() );
+         sourceStepCombo = form.appendComboBox( "Interfaces", sourceStepComboModel, "Target Interface" );
+         sourceStepCombo.setRenderer( new ModelItemListCellRenderer() );
          for( Interface element : ifaces )
             sourceStepComboModel.addElement( element );
 
-         sourceStepCombo.setSelectedIndex( 0 );
-         panel.add( sourceStepCombo, cc.xyw( 4, 2, 3 ) );
-
-         propertiesCombo = new JComboBox( ( (Interface) sourceStepCombo.getSelectedItem() ).getOperationList().toArray() );
-         propertiesCombo.setRenderer( new OperationComboRender() );
-
-         panel.addLabel( operationType + ":", cc.xy( 2, 4 ) );
-         panel.add( propertiesCombo, cc.xyw( 4, 4, 3 ) );
-
-         panel.add( okBtn, cc.xy( 4, 6 ) );
-         panel.add( cancelBtn, cc.xy( 6, 6 ) );
+         propertiesCombo = form.appendComboBox( operationType,
+                 ( (Interface) sourceStepCombo.getSelectedItem() ).getOperationList().toArray(), "Target " + operationType );
+         propertiesCombo.setRenderer( new ModelItemListCellRenderer() );
 
          sourceStepCombo.addActionListener( new ActionListener()
          {
-
             public void actionPerformed( ActionEvent e )
             {
                Interface iface = project.getInterfaceByName( ( (Interface) sourceStepCombo.getSelectedItem() ).getName() );
@@ -138,94 +116,23 @@ public abstract class ChangeOperationResolver implements Resolver
                {
                   propertiesCombo.setEnabled( false );
                }
-
             }
-
          } );
 
-         okBtn.addActionListener( new ActionListener()
-         {
-
-            public void actionPerformed( ActionEvent e )
-            {
-
-               pickedOperation = (Operation) propertiesCombo.getSelectedItem();
-
-               setVisible( false );
-            }
-
-         } );
-
-         cancelBtn.addActionListener( new ActionListener()
-         {
-
-            public void actionPerformed( ActionEvent e )
-            {
-               setVisible( false );
-            }
-
-         } );
-
-         setLocationRelativeTo( UISupport.getParentFrame( this ) );
-         panel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
-         this.add( panel.getPanel() );
+         form.addSpace( 5 );
+         return form.getPanel();
       }
 
-      public void showAndChoose()
+      protected boolean handleOk()
       {
-         this.pack();
-         this.setVisible( true );
+         selectedOperation = (Operation) propertiesCombo.getSelectedItem();
+         return true;
       }
    }
 
-   @SuppressWarnings( "serial" )
-   private class InterfaceComboRenderer extends DefaultListCellRenderer
+   public Operation getSelectedOperation()
    {
-      @Override
-      public Component getListCellRendererComponent(
-              JList list, Object value, int index, boolean isSelected,
-              boolean cellHasFocus
-      )
-      {
-         Component result = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
-
-         if( value instanceof Interface )
-         {
-            Interface item = (Interface) value;
-            setIcon( item.getIcon() );
-            setText( item.getName() );
-         }
-
-         return result;
-      }
-   }
-
-   @SuppressWarnings( "serial" )
-   private class OperationComboRender extends DefaultListCellRenderer
-   {
-
-      @Override
-      public Component getListCellRendererComponent(
-              JList list, Object value, int index, boolean isSelected,
-              boolean cellHasFocus
-      )
-      {
-         Component result = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
-
-         if( value instanceof Operation )
-         {
-            Operation item = (Operation) value;
-            setText( item.getName() );
-         }
-
-         return result;
-      }
-
-   }
-
-   public Operation getPickedOperation()
-   {
-      return pickedOperation;
+      return selectedOperation;
    }
 
 }

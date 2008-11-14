@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.rest.panels.request;
 
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest.RequestMethod;
@@ -20,6 +21,7 @@ import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Submit;
@@ -30,6 +32,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
+import com.eviware.soapui.support.swing.ModelItemListCellRenderer;
 
 import javax.swing.*;
 import javax.swing.text.Document;
@@ -50,6 +53,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
    private boolean updating;
    private AbstractRestRequestDesktopPanel<T, T2>.InternalTestPropertyListener testPropertyListener = new AbstractRestRequestDesktopPanel.InternalTestPropertyListener();
    private AbstractRestRequestDesktopPanel<T, T2>.RestParamPropertyChangeListener restParamPropertyChangeListener = new AbstractRestRequestDesktopPanel.RestParamPropertyChangeListener();
+   private JComboBox pathCombo;
 
    public AbstractRestRequestDesktopPanel( T modelItem, T2 requestItem )
    {
@@ -94,7 +98,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
             updateFullPathLabel();
          }
 
-         if( !updating )
+         if( !updating && pathTextField != null )
          {
             updating = true;
             pathTextField.setText( (String) evt.getNewValue() );
@@ -204,32 +208,36 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
          toolbar.addLabeledFixed( "Accept", acceptCombo );
          toolbar.addSeparator();
 
-         pathTextField = new JUndoableTextField();
-         pathTextField.setPreferredSize( new Dimension( 200, 20 ) );
-         pathTextField.setText( getRequest().getResource().getPath() );
-         pathTextField.setToolTipText( pathTextField.getText() );
-         pathTextField.getDocument().addDocumentListener( new DocumentListenerAdapter()
+         if( getRequest() instanceof RestTestRequest )
          {
-            @Override
-            public void update( Document document )
+            pathCombo = new JComboBox( new PathComboBoxModel() );
+            pathCombo.setRenderer( new ModelItemListCellRenderer() );
+            pathCombo.setPreferredSize( new Dimension( 200, 20 ) );
+            pathCombo.setSelectedItem( getRequest().getResource().getPath() );
+            pathCombo.addItemListener( new ItemListener()
             {
-               if( updating )
-                  return;
+               public void itemStateChanged( ItemEvent e )
+               {
+                  if( updating )
+                     return;
 
-               updating = true;
-               getRequest().getResource().setPath( pathTextField.getText() );
-               pathTextField.setToolTipText( pathTextField.getText() );
-               updating = false;
-            }
-         } );
+                  updating = true;
+                  getRequest().getResource().setPath( String.valueOf( pathCombo.getSelectedItem() ) );
+                  updating = false;
+               }
+            } );
 
-         toolbar.addLabeledFixed( "Resource Path:", pathTextField );
+            toolbar.addLabeledFixed( "Resource:", pathCombo );
+            toolbar.addSeparator();
+         }
+         else
+         {
+            toolbar.add( new JLabel( "Full Path: " ));
+         }
 
          pathLabel = new JLabel();
          updateFullPathLabel();
-//         pathLabel.setPreferredSize( new Dimension( 300, 20 ) );
 
-         toolbar.addSeparator();
          toolbar.add( pathLabel );
       }
       else
@@ -410,6 +418,29 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
       public void propertyChange( PropertyChangeEvent evt )
       {
          updateFullPathLabel();
+      }
+   }
+
+   private class PathComboBoxModel extends AbstractListModel implements ComboBoxModel
+   {
+      public int getSize()
+      {
+         return getRequest().getResource().getService().getAllResources().size();
+      }
+
+      public Object getElementAt( int index )
+      {
+         return getRequest().getResource().getService().getAllResources().get( index );
+      }
+
+      public void setSelectedItem( Object anItem )
+      {
+         ( (RestTestRequest) getRequest() ).setResource( (RestResource) anItem );
+      }
+
+      public Object getSelectedItem()
+      {
+         return getRequest().getResource();
       }
    }
 }

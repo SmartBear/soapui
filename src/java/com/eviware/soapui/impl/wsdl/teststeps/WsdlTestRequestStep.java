@@ -711,7 +711,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
                     @Override
                     public boolean update()
                     {
-                       wsdlOperation = (WsdlOperation) getPickedOperation();
+                       wsdlOperation = (WsdlOperation) getSelectedOperation();
                        if( wsdlOperation == null )
                           return false;
 
