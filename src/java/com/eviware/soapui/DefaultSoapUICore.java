@@ -317,7 +317,7 @@ public class DefaultSoapUICore implements SoapUICore
 		if (settingsFile == null)
 			settingsFile = DEFAULT_SETTINGS_FILE;
 
-		File file = new File(new File(getRoot()),	settingsFile);
+		File file = new File(new File(getRoot()), settingsFile);
 
 		SoapuiSettingsDocumentConfig settingsDocument = (SoapuiSettingsDocumentConfig) this.settingsDocument.copy();
 		String password = settings.getString(SecuritySettings.SHADOW_PASSWORD, null);
@@ -364,7 +364,7 @@ public class DefaultSoapUICore implements SoapUICore
 	{
 		if (!logIsInitialized)
 		{
-			File log4jconfig = new File(new File(getRoot()), "soapui-log4j.xml");
+			File log4jconfig = root == null ? new File("soapui-log4j.xml") : new File(new File(getRoot()), "soapui-log4j.xml");
 			if (log4jconfig.exists())
 			{
 				System.out.println("Configuring log4j from [" + log4jconfig.getAbsolutePath() + "]");
