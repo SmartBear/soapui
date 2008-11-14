@@ -16,7 +16,8 @@
         <title>Web Service Functional Testing - TestRequests</title>
     </properties>
     <body>
-		<section name="TestRequests">
+    @TODO@change the whole page appropriately
+		<section name="HTTP Requests">
 		 
 		 <columns><column><div>
 		TestRequests are one of the main features you work with in soapUI. It extends standard requests with the possibility to 

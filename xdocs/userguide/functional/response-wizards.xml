@@ -67,7 +67,7 @@
 		<li>Select the "Property" option</li>
 		</ol>
 		<p>All of these option will eventually open the "Transfer to Property" dialog:</p>
-		<p align="center"><img src="images/transfer_from_dialog.gif" alt="Transfer from dialog"/></p>
+		<p align="center"><img src="images/transfer_to_dialog.gif" alt="Transfer to dialog"/></p>
 		<p>The dialog will be filled out depending on which option that was chosen; any of the first three options
 		will result in a complete dialog that can be finished with the OK button without further input. The dialogs'
 		first tab has the following options:</p>
@@ -98,7 +98,7 @@
 		expression further and/or save/cancel the creation with the corresponding Save/Cancel buttons</p>
 		</subsection>
 		
-		 <p><hr size="1"/></p>
+		 <p><hr size="1"/>Next: <a href="propertytransfers.html">Property Transfers</a></p>
 		</section>
     </body>
 </document>

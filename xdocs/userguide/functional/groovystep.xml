@@ -49,7 +49,7 @@
               <tr align="right">
               	<td>
                 	<span class="relatedLinks"><a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" title="try soapUI Pro" onclick="javascript:urchinTracker:('/downloadTrial');">
-                                               <img src="images/try_pro_100.png" alt="Try soapUI pro to soap test" width="101" height="20" longdesc="http://www.eviware.com"/></a></span>
+                                               <img src="../../images/try_pro_100.png" alt="Try soapUI pro to soap test" width="101" height="20" longdesc="http://www.eviware.com"/></a></span>
                 </td>
               </tr>
             </table>
@@ -72,15 +72,16 @@
 		<p>The editor popup shown in the screenshot above has standard editing/navigation actions</p>
 		</subsection>
 		
+		@TODO@Check all the links
 		<subsection name="Script Execution">
 		<p>When a Groovy script is executed, the following context variables are set for the script to use:</p>
 		<ul>
-		<li><code>testRunner</code> : the <a href="../../apidocs/com/eviware/soapui/model/testsuite/TestRunner.html">soapUI TestRunner</a>
+		<li><code>testRunner</code> : the <a target="_new" href="http://www.soapui.org/apidocs/com/eviware/soapui/model/testsuite/TestRunner.html">soapUI TestRunner</a>
 		running the current TestCase, this will for now always be an instance of
-		<a href="../../apidocs/com/eviware/soapui/impl/wsdl/testcase/WsdlTestCaseRunner.html">soapUI WsdlTestCaseRunner</a></li>
-		<li><code>context</code> : the <a href="../../apidocs/com/eviware/soapui/model/testsuite/TestRunContext.html">soapUI TestRunContext</a>
+		<a target="_new" href="http://www.soapui.org/apidocs/com/eviware/soapui/impl/wsdl/testcase/WsdlTestCaseRunner.html">soapUI WsdlTestCaseRunner</a></li>
+		<li><code>context</code> : the <a target="_new" href="http://soatoolbox.com/apidocs/com/eviware/soapui/model/testsuite/TestRunContext.html">soapUI TestRunContext</a>
 		running the current TestCase, this will for now always be an instance of
-		<a href="../../apidocs/com/eviware/soapui/impl/wsdl/testcase/WsdlTestRunContext.html">soapUI WsdlTestRunContext</a></li>
+		<a target="_new" href="http://www.soapui.org/apidocs/com/eviware/soapui/impl/wsdl/testcase/WsdlTestRunContext.html">soapUI WsdlTestRunContext</a></li>
 		<li><code>log</code> : a standard log4j <code>Logger</code> object available for logging arbitrary information</li>
 		</ul>
 		<p>When the script is run from inside the editor using the toolbars "Run" button, the first 2 objects will be set to
@@ -102,7 +103,7 @@
 		<li><b>RunCount</b> - tells how many times the TestCase has been run by its thread (not in total) when running under a LoadTest.
 		When not running under a LoadTest the value of this	property will be "0".</li>
 		<li><b>LoadTestRunner</b> - the current 
-		<a target="_new" href="../../apidocs/com/eviware/soapui/model/testsuite/LoadTestRunner.html">soapUI LoadTestRunner</a> 
+		<a target="_new" href="http://www.soapui.org/apidocs/com/eviware/soapui/model/testsuite/LoadTestRunner.html">soapUI LoadTestRunner</a> 
 		when running under a LoadTest, null otherwise.</li>
 		<li><b>#HTTP_STATE</b> - the <a target="_new" href="http://jakarta.apache.org/commons/httpclient/apidocs/org/apache/commons/httpclient/HttpState.html">HttpState</a> maintained by the TestCase if it has been set to do so in the TestCase Options
 		dialog.</li>
@@ -224,7 +225,7 @@ state.addCookie( new org.apache.commons.httpclient.Cookie( "http://www.mydomain.
 		data files in same folder</li>
 		<li><code>setPropertyValue( String testStepName, String propertyName, String value )</code> : sets the specified
 		property value</li>
-		<li><code>expand( string )</code> - expands the specified <a href="../properties.html#Property_Expansion">Property Expansion</a> string</li>
+		<li><code>expand( string )</code> - expands the specified <a href="../properties.html#Property_Expansion_in_soapUI">Property Expansion</a> string</li>
 		<li><code>getXmlHolder( String xmlPropertyOrString )</code> : Creates an <code>XmlHolder</code> object (see below) for 
 		easily accessing/modifying contents of an XML document using XPath expressions. The argument must either be
 		a TestStep property in the <code>TestStepName#PropertyName</code> format or a valid XML string</li>
@@ -257,7 +258,7 @@ state.addCookie( new org.apache.commons.httpclient.Cookie( "http://www.mydomain.
 		</ul>
 		<p>If any of the specified XPath expressions contains no namespace declarations or none have been declared
 		using the <code>declareNamespace</code> method, those present in the XML Message 
-		will be used in the same way as in <a href="../properties.html#Property_Expansion">Property Expansion</a>.</p>
+		will be used in the same way as in <a href="../properties.html#Property_Expansion_in_soapUI">Property Expansion</a>.</p>
 		<p>Some examples of both the GroovyUtils and XmlHolder:</p>
 		<source>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
 log.info( groovyUtils.projectPath )

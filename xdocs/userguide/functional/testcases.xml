@@ -102,7 +102,7 @@
               <tr align="right">
               	<td>
                 	<span class="relatedLinks"><a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" title="try soapUI Pro" onclick="javascript:urchinTracker:('/downloadTrial');">
-                                               <img src="images/try_pro_100.png" alt="Try soapUI pro to soap test" width="101" height="20" longdesc="http://www.eviware.com"/></a></span>
+                                               <img src="../../images/try_pro_100.png" alt="Try soapUI pro to soap test" width="101" height="20" longdesc="http://www.eviware.com"/></a></span>
                 </td>
               </tr>
             </table>
@@ -132,12 +132,12 @@
 		  <li><b>Move TestCase Up</b> - moves the current TestCase up in the list of TestCases</li>
 		  <li><b>Move TestCase Down</b> - moves the current TestCase down in the list of TestCases</li>
 		  
+		  <li><b>Export</b> - prompts for file where to export Test Case</li>
+		  
 		  <li><b>Online Help</b> - Displays this page in an external browser</li>
 		  </ul>
 		</div>
-		</column><column>
-			<img src="images/testcase_actions.gif" border="0" alt="TestCase actions as seen in soapUI"/>
-			</column></columns>
+		</column></columns>
 		 
 		 </subsection>
 		 
@@ -167,7 +167,7 @@
 		 being cloned (in which case the cloned steps will be prompted to be renamed).</p>
 		 <p>If selecting to clone to another project, soapUI will prompt to clone required interfaces to that
 		 project as well.</p>
-		 <p align="center"><img src="images/clone_teststeps.gif"  alt="Clone TestStep dialog in soapUI Pro for Functional Testing"/></p>
+		 <p align="center">@TODO@change the screen shot - multiple target test cases allowed<img src="images/clone_teststeps.gif"  alt="Clone TestStep dialog in soapUI Pro for Functional Testing"/></p>
 		 </subsection>
 		 
 		 <subsection name="The TestCase Editor">
@@ -221,6 +221,7 @@
 		  		useful if you want to run your tests against different servers, etc. The available URL's are collected
 		  		from the test requests' operations' interfaces. The selected endpoint is assigned to each request in the 
 		  		TestCase</li>
+		  		<li><b>New LoadTest</b> - creates a new LoadTest for this TestCase</li>
 		  		<li><b>TestCase Options</b> - opens the TestCase Options dialog described below</li>
 		  		<li><b>Create Report (soapUI Pro only)</b> : Exports a HTML Report for the last TestSuite run (see below)</li>
 		  		 <li><b>Online Help</b> - Displays this page in an external browser</li>
@@ -248,6 +249,7 @@
 		  		
 		  		<li><b>Step specific actions</b> - depends on which type of TestStep that is selected</li>
 		  		<li><b>Online Help</b> - displays this page in a browser</li>
+		  		@TODO@couldn't find example for append, does this still stand?
 		  		<li><b>Append Step -&gt;</b> - shows a list of appendable TestStep types for the TestCase</li>
 		  		
 		  	</ul>
@@ -278,6 +280,7 @@
 		soapUI only save non successful TestStep results which will save substantial amounts of memory.</li>
 		<li><b>Socket timeout</b> : The timeout (in milliseconds) to be used for all requests in the TestCase</li>
 		<li><b>TestCase timeout</b> : The timeout (in milliseconds) to wait before canceling or failing a running TestCase</li>
+		<li><b>Max results</b> : @TODO@ add explanation, change the screen shot</li>
 		
 		</ul>
 		<p align="center"><img src="images/testcase_options.gif" alt="Setting options for a Functional Testing of Web Services in TestCase Options"/></p>
@@ -323,7 +326,7 @@
 		<p align="center"><img src="images/link_testcase_to_requirements.gif" alt="Linking a Case Requirements to a test in soapUI Pro"/></p>
 		</subsection>
 		 
-		   <p><hr size="1"/>Next: <a href="testrequests.html">Web Service functional Testing- Working with TestRequests</a></p>
+		   <p><hr size="1"/>Next: <a href="teststeps.html">Test Steps</a></p>
 		</section>
     </body>
 </document>

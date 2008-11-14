@@ -91,13 +91,13 @@
 		  <li><b>Rename</b> - prompts to rename the TestSuite</li>
 		  <li><b>Remove</b> - prompts to remove the TestSuite from its project. All contained TestCases 
 		  will be removed also.</li>
+		  <li><b>Export</b> - export this TestSuite</li>
+		  <li><b>Import Test Case</b> - prompts for Test Case to import to this TestSuite</li>
 		  <li><b>Online Help</b> - Displays this page in an external browser</li>
 		  
 		  </ul>
 		  </div>
-		  </column><column>
-			<img src="images/testsuite_actions.gif" border="0" alt="TestSUite Actions when choosing Test Suite"/>
-			</column></columns>
+		  </column></columns>
 		 </subsection>
 		 
 		  <subsection name="TestSuite Details Tab">

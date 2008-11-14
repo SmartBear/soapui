@@ -57,7 +57,7 @@
 		<li>The properties are written or read to a target if specified as described above (depending on "Save before
 		Load" option)</li>
 		<li>The properties are all copied to the current TestRunContexts properties so they are available for 
-		<a href="../properties.html#Property_Expansion">Property Expansion</a></li>
+		<a href="../properties.html#Property_Expansion_in_soapUI">Property Expansion</a></li>
 		</ul>
 		</subsection>
 

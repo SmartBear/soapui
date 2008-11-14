@@ -173,10 +173,10 @@
             </item>
 
             <item href="/userguide/commandline/index.html" name="CommandLine Tools">
-                <item href="/userguide/commandline/functional.html" name="TestCaseRunner"/>
-                <item href="/userguide/commandline/loadtest.html" name="LoadTestRunner"/>
-                <item href="/userguide/commandline/mockrunner.html" name="MockServiceRunner"/>
-                <item href="/userguide/commandline/toolrunner.html" name="ToolRunner"/>
+                <item href="/userguide/commandline/testcaserunner.html" name="TestCase Runner"/>
+                <item href="/userguide/commandline/loadtestrunner.html" name="LoadTest Runner"/>
+                <item href="/userguide/commandline/mockrunner.html" name="MockService Runner"/>
+                <item href="/userguide/commandline/toolrunner.html" name="Tool Runner"/>
             </item>
 
             <item href="/userguide/shortcuts.html" name="Keyboard shortcuts"/>
