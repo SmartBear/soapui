@@ -18,7 +18,7 @@
 		   </ul>
 		
 		 <p>Conditions use the same Saxon XPath engine as described for the XPath Assertion, remember that a condition
-		 <i>must</i> evaluate to a Boolean value to be valid (see <a href="#Condition_Examples">Goto examples below</a>) </p>
+		 <i>must</i> evaluate to a Boolean value to be valid (see <a href="#Goto_Condition_Examples">Goto examples below</a>) </p>
 		 
 		 <subsection name="The soapUI Conditional Goto Editor">
 		 <p>The ConditionalGoto Editor is opened by double clicking a ConditionalGoto test step either in the 

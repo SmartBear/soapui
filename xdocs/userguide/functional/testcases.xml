@@ -249,15 +249,15 @@
 		  		
 		  		<li><b>Step specific actions</b> - depends on which type of TestStep that is selected</li>
 		  		<li><b>Online Help</b> - displays this page in a browser</li>
-		  		@TODO@couldn't find example for append, does this still stand?
 		  		<li><b>Append Step -&gt;</b> - shows a list of appendable TestStep types for the TestCase</li>
+		  		@TODO@couldn't find example for append, does this still stand?
 		  		
 		  	</ul>
 		  	
 		  	<p>Double clicking a TestSteps' entry in the log opens a TestStep result viewer for that step 
 		  	if available and as described on each TestStep documentation page 
 		  	(for example the <a href="testrequests.html#Request_Result_Viewer">Request Result Viewer</a>).</p>
-		  </column><column><img src="images/teststep_actions.gif" border="0" alt="Possible Actions in soapUI Pro TestSteps"/></column></columns>
+		  </column></columns>
 		  	
 		 </subsection>
 		 
@@ -267,7 +267,7 @@
 		 
 		 <ul>
 		 <li><b>Search Properties</b> : When looking for property values without step specifications 
-		 (see <a href="../properties.html#Property_Expansion">Property Expansion</a>), check all steps
+		 (see <a href="../properties.html#Property_Expansion_in_soapUI">Property Expansion</a>), check all steps
 		 before the current one for the named property.</li>
 		 <li><b>Session</b> : Controls if a HTTP Session is to maintained for all requests
 		in the TestCase. Selecting this will reuse cookies, authentication headers, etc</li>
