@@ -341,7 +341,7 @@ Domain: asdasd
 			<p>
 				<hr size="1" />
 				Next:
-				<a href="loadtest.html">SoapUILoadTestRunner for Web Service Load Testing</a>
+				<a href="loadtestrunner.html">SoapUILoadTestRunner for Web Service Load Testing</a>
 			</p>
 		</section>
 	</body>

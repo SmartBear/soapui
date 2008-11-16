@@ -17,7 +17,7 @@
 		<p>When collecting coverage for a SOAP Monitor, the Coverage Panel only contains the Interface-related part
 		of the Coverage Tree, since no TestSuites/TestCases are applicable during this analysis;</p>
  		<p align="center"><img src="images/coverage_1.gif" alt="Web Service Test Monitor Coverage"/></p>
-		 <p><hr size="1"/>Next: <a href=" "> </a></p>
+		 <p><hr size="1"/>Next: <a href="../scenarios/index.html">Web Service Test Usage Scenarios</a></p>
 		</section>
     </body>
 </document>

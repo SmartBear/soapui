@@ -11,8 +11,8 @@
 		 <li>Behavioral LoadTesting : analyze performance behaviour under varying load with different 
 		     <a href="configuration.html#LoadTest_Strategies">load strategies</a></li>
 		 <li>Performance LoadTesting : find maximal performance available using thread strategies and 
-		 <a href="../commandline/loadtest.html">Command Line LoadTest execution</a></li>
-		 <li><a href="#Requirements-Driven_Load_Testing">Requirements Driven LoadTesting</a> : define performance 
+		 <a href="../commandline/loadtestrunner.html">Command Line LoadTest execution</a></li>
+		 <li><a href="#Requirements_Driven_Load_Testing">Requirements Driven LoadTesting</a> : define performance 
 		 requirements and continuously validate using <a href="assertions.html">Load Test assertions</a></li>
 		 </ul>
 		 
@@ -70,10 +70,10 @@
 		<subsection name="The LoadTest Toolbar">
 		<p>The main toolbar contains the following actions (left to right):</p>
 		<ul>
-		<li><b>Run</b> : Starts the LoadTest as described under <a href="#LoadTest_Execution">LoadTest Execution</a></li>
+		<li><b>Run</b> : Starts the LoadTest as described under <a href="execution.html#LoadTest_Execution">LoadTest Execution</a></li>
 		<li><b>Cancel</b> : Cancels an ongoing LoadTest</li>
-		<li><b>Statistics Graph</b> : Show the <a href="diagrams.html#Statistics_Graph">Statistics Graph</a> for the LoadTest</li>
-		<li><b>Statistics History Graph</b> : Show the <a href="diagrams.html#Statistics_History_Graph">Statistics History Graph</a> for the LoadTest</li>
+		<li><b>Statistics Graph</b> : Show the <a href="diagrams.html#The_LoadTest_Statistics_Grapgh">Statistics Graph</a> for the LoadTest</li>
+		<li><b>Statistics History Graph</b> : Show the <a href="diagrams.html#The_Statistics_History_Graph">Statistics History Graph</a> for the LoadTest</li>
 		<li><b>Reset Statistics</b> : Resets the statistics for an ongoing LoadTest</li>
 		<li><b>Export Statistics</b> : Prompts to export the current LoadTest Statistics to a comma separated file</li>
 		<li><b>Options</b> : Shows the <a href="#LoadTest_Options">LoadTest Options</a> dialog</li>

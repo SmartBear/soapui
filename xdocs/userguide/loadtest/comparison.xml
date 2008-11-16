@@ -28,7 +28,7 @@
 		<p>The setup for the comparison is a simple request to a web service running locally under an improved version 
 		of JBoss 4.0.3SP1 and running a slightly modified sample Web Service from the jbossws 4.0.3 samples. A simple 
 		request will be run 5000 times under 4 different loads; 1 thread, 5 threads, 10 threads and 25 threads all using 
-		the <a href="configuration.html#Simple">simple Load Test strategy</a> with no delay, the TestCase Options are configured 
+		the <a href="configuration.html#LoadTest_Simple_Strategy">simple Load Test strategy</a> with no delay, the TestCase Options are configured 
 		to include only request write times, and will be run with and without closing connections after each request.</p>
 		<p align="center"><img src="images/comparison1.gif" alt="Load Test Tool Comparison Setup"/></p>
 		
@@ -98,7 +98,7 @@
 		</subsection>
 		
 		<subsection name="Files">
-		<p>If you want to run the tests yourself, the following files are available in <a href="files/comparison-files.zip">Load Test Comparison Zip</a>:</p>
+		<p>If you want to run the tests yourself, the following files are available in <a target="_new" href="files/comparison-files.zip">Load Test Comparison Zip</a>:</p>
 		<table><tr><th>File</th><th>Description</th></tr>
 		<tr><td>comparison-soapui-project.xml</td>
 		    <td>soapUI project file containing all tests run in the comparison</td>

@@ -22,7 +22,7 @@
 		<p>For example, if a DataSource step is used to read data from an external file and the followed by 
 		a request using that data, a DataSource Loop should be added after the request specifying the DataSource Step
 		and the Request step as its target step... (i.e. loop back to the request if more data is available).</p>
-		 <p><hr size="1"/>Next: <a href="../properties.html#Property_Expansion">Using Property Expansions for parameters in Web Service Testing</a></p>
+		 <p><hr size="1"/>Next: <a href="datasinkstep.html">soapUI Pro DataSink Step</a></p>
 		</section>
     </body>
 </document>

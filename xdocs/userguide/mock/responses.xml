@@ -17,16 +17,16 @@
 		shows a popup menu with the following actions:</div>
 		<ul>
 		<li><b>Open MockResponse Editor</b> - opens the MockResponse Editor, see below</li>
-		<li><b>Add to TestCase</b> - prompts to add a corresponding MockResponse Step to a TestCase</li>
 		<li><b>Open Request</b> - prompts to open the editor for an existing request for this MockResponses MockOperation with 
 		the correct local endpoint.</li>
+		<li><b>Add to TestCase</b> - prompts to add a corresponding MockResponse Step to a TestCase</li>
+		<li><b>Create TestRequest</b> - prompts for TestCase where to create MockResponse TestStep</li>
 		<li><b>Clone</b> - prompts to clone the MockResponse</li>
 		<li><b>Rename</b> - prompts to rename the MockResponse</li>
 		<li><b>Remove</b> - prompts to remove the MockResponse</li>
 		<li><b>Online Help</b> - displays this page in an external browser</li>
 		</ul>
-		</column>
-		<column><img src="images/mockresponse_popup.gif" alt="Simulated Web Service Response Menu"/></column></columns>
+		</column></columns>
 		</subsection>
 		
 		<subsection name="MockResponse Details Tab">
@@ -122,13 +122,16 @@
 		<source>&lt;detail&gt;${randomValue}&lt;/detail&gt;</source>
 		</subsection>
 				
-		<subsection name="WS-A Inspector">
+		<subsection name="WS-A Properties">
 		<p>The WS-A Inspector displays properties used for adding WS-A headers to a MockResponse 
 		according to <a href="http://www.w3.org/Submission/ws-addressing/#_Toc77464322">WS Addressing specification</a></p>
 		<li>Enable WS-A Addressing</li>
 		<li>Must understand indicates whether a header entry is mandatory or optional for the recipient to process.</li>
-		<li>Action - REQUIRED element specifies the value of the Action property. If not specified, and WS-A Settings (see <a href="../preferences.html#WS-A_Settings">Preferences</a>)
-		'Use default Action' is checked , default action from wsdl will be generated.</li>
+		<li>Add default WS-A:Action indicates if by default generated action is to be added to request/mock response.</li>
+		<li>Action - specifies the value of the Action property. If not specified, and 'Add default WS-A:Action is checked' , 
+		default action from WSDL will be generated and added. Although Action property is mandatory by <a href="http://www.w3.org/TR/ws-addr-core/#msgaddrpropsinfoset" target="_new">WS-A core specification</a> 
+		by checking previous check box and leaving this empty it is possible for action property to be left unspecified for testing purposes. </li>
+		<li>Add default WS-A:To indicates if default To is to be added to request/mock response.</li>
 		<li>To - OPTIONAL element specifies the value of the To property</li>
 		<li>RelatesTo- OPTIONAL element specifies the value of the RelatesTo property. If not specified, and WS-A Settings (see <a href="../preferences.html#WS-A_Settings">Preferences</a>)
 		'Use default RelatesTo' is checked , default value of 'http://www.w3.org/2005/08/addressing/unspecified' will be used.</li>
@@ -138,14 +141,15 @@
 		<li>From - OPTIONAL element specifies the value of the From property</li>
 		<li>FaultTo - OPTIONAL element specifies the value of the FaultTo property</li>
 		<li>ReplyTo - OPTIONAL element specifies the value of the ReplyTo property</li>
-		<li>MessageID - OPTIONAL element specifies the value of the MessageID property. If not specified, and WS-A Settings (see <a href="../preferences.html#WS-A_Settings">Preferences</a>)
-		'Generate MessageID' is checked , random MessageID will be generated for RequestResponse operation.</li>
-		<p align="center"><img src="images/wsa_inspector.gif" alt="Viewing header properties in WS-A Inspector"/></p>
+		<li>Generate MessageID - indicates if messageId should be randomly generated</li>
+		<li>MessageID - OPTIONAL element specifies the value of the MessageID property. If not specified, and previous check box is 
+		checked , random MessageID will be generated for RequestResponse operation.</li>
+		@TODO@change the screen shot<p align="center"><img src="images/wsa_inspector.gif" alt="Viewing header properties in WS-A Inspector"/></p>
 		</subsection>
 
 		
 
-		 <p><hr size="1"/>Next: <a href="../scenarios/index.html">Web Service Test Usage Scenarios</a></p>
+		 <p><hr size="1"/>Next: <a href="../monitor/index.html">SOAP Monitor</a></p>
 		</section>
     </body>
 </document>

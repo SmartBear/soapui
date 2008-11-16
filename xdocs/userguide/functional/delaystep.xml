@@ -14,7 +14,7 @@
 			<img src="images/set_delay_time.gif" border="0" alt="Set Delay Time"/>
 			</column></columns>
 		 
-		   <p><hr size="1"/>Next: <a href="mockresponse.html">Web Service Simulation - MockResponse Step</a></p>
+		   <p><hr size="1"/>Next: <a href="runtestcasestep.html">Run TestCase Step</a></p>
 		</section>
     </body>
 </document>

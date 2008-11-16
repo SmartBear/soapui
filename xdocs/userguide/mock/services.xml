@@ -39,8 +39,7 @@
 		<li><b>Remove</b> - prompts to remove the MockService</li>
 		<li><b>Online Help</b> - displays this page in an external browser</li>
 		</ul>
-		</column>
-		<column><img src="images/mockservice_popup.gif" alt="MockService Actions"/></column></columns>
+		</column></columns>
 		</subsection>
 		<subsection name="MockService Details Tab">
 		<columns>
@@ -121,6 +120,7 @@
 		<li>Host - the external IP of the local machine (used for WSDL Publishing)</li>
 		<li>Host Only - only bind to host IP instead of all IP's</li>
 		</ul>
+		@TODO@change the screen shot and add options
 		<p align="center"><img src="images/mockservice_options.gif" alt="Setting options for a MoackService"/></p>
 		</subsection>
 		
@@ -156,7 +156,7 @@
 		<p>The root WSDL part (displayed first in the list of parts) can be used to generate clients, etc..</p>
 		</subsection>
 
-		 <p><hr size="1"/>Next: <a href="operations.html">Mock Operations</a></p>
+		 <p><hr size="1"/>Next: <a href="coverage.html">MockService Coverage</a></p>
 		</section>
     </body>
 </document>

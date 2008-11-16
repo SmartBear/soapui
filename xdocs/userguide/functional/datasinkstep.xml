@@ -13,10 +13,10 @@
 		<p>soapUI Pro includes a specialized DataSink TestStep that greatly eases the task of saving of data collected during 
 		a test to an external storage. The following DataSink types are supported:</p>
 		<ul>
-		<li><a href="#JDBC_DataSink">JDBC DataSink</a> - writes data to a JDBC datasource</li>
-		<li><a href="#Excel_DataSink">Excel DataSink</a> - writes data to an Excel (xls) file</li>
-		<li><a href="#File_DataSink">File DataSink</a> - writes data to a columnar data file</li>
-		<li><a href="#Groovy_DataSink">Groovy DataSink</a> - calls a Groovy Script for each set of data</li>
+		<li><a href="#soapUI_Pro_JDBC_DataSink">JDBC DataSink</a> - writes data to a JDBC datasource</li>
+		<li><a href="#soapUI_Pro_Excel_DataSink">Excel DataSink</a> - writes data to an Excel (xls) file</li>
+		<li><a href="#soapUI_Pro_File_DataSink">File DataSink</a> - writes data to a columnar data file</li>
+		<li><a href="#soapUI_Pro_Groovy_DataSink">Groovy DataSink</a> - calls a Groovy Script for each set of data</li>
 		</ul>
 		
 		<subsection name="The soapUI Pro DataSink Editor">
@@ -103,7 +103,7 @@
 		</ul> 
 		</subsection>
 
-		 <p><hr size="1"/>Next: <a href="../loadtest/index.html">Load Testing Web Services with soapUI</a></p>
+		 <p><hr size="1"/>Next: <a href="datagenstep.html">DataGen TestStep</a></p>
 		</section>
     </body>
 </document>

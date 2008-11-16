@@ -148,7 +148,7 @@
             </item>
 
             <item href="/userguide/mock/index.html" name="Mocking">
-                <item href="/gettingstarted/mock/getting_started.html" name="Getting Started"/>
+                <item href="/userguide/mock/getting_started.html" name="Getting Started"/>
                 <item href="/userguide/mock/services.html" name="Mock Services">
                     <item href="/userguide/mock/coverage.html" name="Coverage" pro="true"/>
                 </item>

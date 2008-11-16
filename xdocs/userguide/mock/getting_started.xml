@@ -48,7 +48,8 @@
               </tr>
               <tr align="right">
               	<td>
-                	<span class="relatedLinks"><a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" title="try soapUI Pro" onclick="javascript:urchinTracker:('/downlaodTrial');">Try It!</a></span>
+                	<span class="relatedLinks"><a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" title="try soapUI Pro" onclick="javascript:urchinTracker:('/downloadTrial');">
+                                               <img src="../../images/try_pro_100.png" alt="Try soapUI pro to soap test" width="101" height="20" longdesc="http://www.eviware.com"/></a></span>
                 </td>
               </tr>
             </table>
@@ -62,19 +63,19 @@
 		Groovy and call the mock service from within soapUI. Start by creating a new project for the publicly available CurrencyConverter
 		at http://www.webservicex.net/CurrencyConvertor.asmx?WSDL</p>
 		
-		<p align="center"><img src="images/mockservice_1.gif" alt="New Web Service Project"/></p>
+		<p align="center"><img src="../../gettingstarted/images/mockservice_1.gif" alt="New Web Service Project"/></p>
 		
 		<subsection name="Create a MockService">
 		
 		<p>After importing, you should get an interface with one operation and request. Right-click the interface and select the 
 		"Generate MockService" menu option:</p>
 		
-		<p align="center"><img src="images/mockservice_2.gif"  alt="Generate a Web Service simulation from WSDL"/></p>
+		<p align="center"><img src="../../gettingstarted/images/mockservice_2.gif"  alt="Generate a Web Service simulation from WSDL"/></p>
 		
 		<p>This opens the following dialog which lets you specify the local port/path for the create service (can of course be 
 		changed later..);</p>
 		
-		<p align="center"><img src="images/mockservice_3.gif"  alt="Genererate a Mock Web Service"/></p>
+		<p align="center"><img src="../../gettingstarted/images/mockservice_3.gif"  alt="Genererate a Mock Web Service"/></p>
 		
 		<p>Just leave the suggested values, for this and coming dialogs.. When the MockService has been created, you will get
 		a new tree hierarchy similar to the the initial Interface, but with grayed icons... The MockService contains a MockOperation 
@@ -82,7 +83,7 @@
 		its schema... Double click both the MockService and "Response 1" tree nodes to open their corresponding editors, after some
 		moving or resizing around you should be able to arrive at the following: </p>
 		
-		<p align="center"><img src="images/mockservice_4.gif"  alt="Editing a Web Service Mock Response"/></p>
+		<p align="center"><img src="../../gettingstarted/images/mockservice_4.gif"  alt="Editing a Web Service Mock Response"/></p>
 		
 		<p>The MockService editor (top left) contains a toolbar, a list of all operations for the service and a request/response log
 		which logs all incoming requests that have been handled by the MockService.</p>
@@ -106,12 +107,12 @@
 		<li>Submit the opened request! If all goes well you should get the previously create MockResponse in the request editors response window:</li>
 		</ol>
 		
-		<p align="center"><img src="images/mockservice_5.gif"  alt="Web Service Invocation"/></p>
+		<p align="center"><img src="../../gettingstarted/images/mockservice_5.gif"  alt="Web Service Invocation"/></p>
 		
 		<p>Switching back to the MockResponse editor and selecting its "Incoming Request" tab/view, you should be able to see the request
 		that was posted to the MockService and handled by the corresponding MockOperation:</p>
 		
-		<p align="center"><img src="images/mockservice_6.gif"  alt="Response for soapUI Web Service Mock Response"/></p>
+		<p align="center"><img src="../../gettingstarted/images/mockservice_6.gif"  alt="Response for soapUI Web Service Mock Response"/></p>
 		
 		<p>Congratulations! Hopefully all went well and you now have your first MockService up and running... Feel free to modify the 
 		created MockResponse content and resubmitting the request to see that your changes are instantly available (no need to restart
@@ -123,16 +124,16 @@
 		<p>Let's continue by making the created mock response a bit more dynamic with a Groovy script. Switch to the "Response Script" tab
 		in the MockResponse editor and enter the following:</p>
 		
-		<p align="center"><img src="images/mockservice_7.gif"  alt="Web Service Mock Response Scripting"/></p>
+		<p align="center"><img src="../../gettingstarted/images/mockservice_7.gif"  alt="Web Service Mock Response Scripting"/></p>
 		
 		<p>Go back to the Mock Response tab and change the response body to</p>
 		
-		<p align="center"><img src="images/mockservice_8.gif"  alt="Web Service Mock Response Parameter"/></p>
+		<p align="center"><img src="../../gettingstarted/images/mockservice_8.gif"  alt="Web Service Mock Response Parameter"/></p>
 		
 		<p>Now, when submitting a request to this MockResponse, the script will be evaluated and the generated rate value will be inserted
 		into the outgoing response message;</p>
 		
-		<p align="center"><img src="images/mockservice_9.gif" alt="Web Service Mock Response Expansion"/></p>
+		<p align="center"><img src="../../gettingstarted/images/mockservice_9.gif" alt="Web Service Mock Response Expansion"/></p>
 		
 		<p>OK... this should get you started with your first mock service... now you can continue with:</p>
 		<ul>

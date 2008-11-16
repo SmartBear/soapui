@@ -8,9 +8,9 @@
 		<p>soapUI currently comes with the following command line tools for running TestCases and 
 		LoadTests</p>
 		<table><tr><th>Tool</th><th>Description</th></tr>
-		<tr><td><a href="functional.html">SoapUITestCaseRunner</a></td>
+		<tr><td><a href="testcaserunner.html">SoapUITestCaseRunner</a></td>
 		<td>Runs specified TestCases and reports/exports results as configured</td></tr>
-		<tr><td><a href="loadtest.html">SoapUILoadTestRunner</a></td>
+		<tr><td><a href="loadtestrunner.html">SoapUILoadTestRunner</a></td>
 		<td>Runs specified LoadTests and reports/exports results as configured</td></tr>
 		<tr><td><a href="mockrunner.html">SoapUIMockServiceRunner</a></td>
 		<td>Runs specified MockServices</td></tr>
@@ -20,7 +20,7 @@
 		<tr><td><a href="../../plugin/index.html">soapUI Maven 1.X/2.X plug-ins</a></td>
 		<td>Allows execution of the above two from within a Maven 1.X/2.X build environment</td></tr>
 		</table>		 
-		<p><hr size="1"/>Next: <a href="functional.html">SoapUITestCaseRunner for functional testing</a></p>
+		<p><hr size="1"/>Next: <a href="testcaserunner.html">SoapUITestCaseRunner for functional testing</a></p>
 		</section>
     </body>
 </document>

@@ -16,7 +16,7 @@
 		of the Coverage Tree and the containing MockService and its MockOperations; under each MockOperation the 
 		actual exchanged messages are shown.</p>
  		<p align="center"><img src="images/coverage_1.gif" alt="Web Service Quality Assurance With Mock Coverage"/></p>
-		 <p><hr size="1"/>Next: <a href=" "> </a></p>
+		 <p><hr size="1"/>Next: <a href="operations.html">Mock Operations</a></p>
 		</section>
     </body>
 </document>

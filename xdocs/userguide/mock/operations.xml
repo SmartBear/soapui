@@ -26,8 +26,7 @@
 		<li><b>Remove</b> - prompts to remove the MockOperation</li>
 		<li><b>Online Help</b> - displays this page in an external browser</li>
 		</ul>
-		</column>
-		<column><img src="images/mockoperation_popup.gif" alt="Web Service Mocks - MockOperation Actions"/></column></columns>
+		</column></columns>
 		</subsection>
 		<subsection name="MockOperation Details Tab">
 		<columns>
@@ -127,7 +126,7 @@
 		</subsection>
 		
 
-		 <p><hr size="1"/>Next: <a href="responses.html">Simulated Web Service Responses - Mock Responses</a></p>
+		 <p><hr size="1"/>Next: <a href="responses.html">Mock Responsese</a></p>
 		</section>
     </body>
 </document>

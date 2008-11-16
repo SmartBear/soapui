@@ -36,10 +36,10 @@
 		
 		<p>The following LoadTest Strategies are currently available:</p> 
 		<ul>
-		<li><a href="#Simple"><b>Simple</b></a> : TestCase execution with a configurable delay</li>
-		<li><a href="#Variance"><b>Variance</b></a> : TestCase execution varying the number of threads over time</li>
-		<li><a href="#Burst"><b>Burst</b></a> : TestCase execution in "bursts"</li>
-		<li><a href="#Thread"><b>Thread</b></a> : TestCase execution with a fixed thread count modification</li>
+		<li><a href="#LoadTest_Simple_Strategy"><b>Simple</b></a> : TestCase execution with a configurable delay</li>
+		<li><a href="#LoadTest_Variance_Strategy"><b>Variance</b></a> : TestCase execution varying the number of threads over time</li>
+		<li><a href="#LoadTest_Burst_Strategy"><b>Burst</b></a> : TestCase execution in "bursts"</li>
+		<li><a href="#LoadTest_Thread_Strategy"><b>Thread</b></a> : TestCase execution with a fixed thread count modification</li>
 		</ul>
 
 		<p>Since multiple LoadTests with different strategies can be created one could for example create one LoadTest with

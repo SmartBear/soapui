@@ -45,7 +45,7 @@
   		the <a href="index.html#LoadTest_Options">LoadTest Options</a> dialog (as described there).</td></tr>
   		<tr><td><a href="../functional/groovystep.html">Groovy Script</a></td><td>The actual script evaluation</td></tr>
   		<tr><td><a href="../functional/propertiesstep.html">Properties Step</a></td><td>The time to load/save the properties (if configured)</td></tr>
-  		<tr><td><a href="../functional/index.html#Delay_Test_Step">Delay Step</a></td><td>The steps delay</td></tr>
+  		<tr><td><a href="../functional/delaystep.html">Delay Step</a></td><td>The steps delay</td></tr>
   		<tr><td><a href="../functional/propertytransfers.html">Property Transfer</a></td><td>The time it took to transfer all properties</td></tr>
   		<tr><td><a href="../functional/gotostep.html">Goto Step</a></td><td>The time it took to evaluate the goto-conditions</td></tr>
   		</table>
