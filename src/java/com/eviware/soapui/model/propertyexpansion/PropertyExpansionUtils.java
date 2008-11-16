@@ -35,6 +35,7 @@ import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.settings.GlobalPropertySettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
@@ -86,7 +87,12 @@ public class PropertyExpansionUtils
 			globalTestPropertyHolder.saveTo( SoapUI.getSettings() );
 		}
 	}
-	
+
+   public static String expandProperties( String content )
+   {
+      return expandProperties( new GlobalPropertyExpansionContext(), content );
+   }
+
 	public static String expandProperties(PropertyExpansionContext context, String content)
 	{
 		return expandProperties(context, content, false );
@@ -484,4 +490,54 @@ public class PropertyExpansionUtils
 	{
 		return expandProperties( new DefaultPropertyExpansionContext( contextModelItem ), content );
 	}
+
+   public static class GlobalPropertyExpansionContext implements PropertyExpansionContext
+   {
+      public Object getProperty( String name )
+      {
+         return getGlobalProperties().getProperty( name );
+      }
+
+      public void setProperty( String name, Object value )
+      {
+         getGlobalProperties().setPropertyValue( name, String.valueOf( value ) );
+      }
+
+      public boolean hasProperty( String name )
+      {
+         return getGlobalProperties().hasProperty( name );
+      }
+
+      public Object removeProperty( String name )
+      {
+         return getGlobalProperties().removeProperty( name );
+      }
+
+      public String[] getPropertyNames()
+      {
+         return getGlobalProperties().getPropertyNames();
+      }
+
+      public ModelItem getModelItem()
+      {
+         return null;
+      }
+
+      public String expand( String content )
+      {
+         return expandProperties( this, content );
+      }
+
+      public StringToObjectMap getProperties()
+      {
+         StringToObjectMap result = new StringToObjectMap( );
+         Map<String, TestProperty> props = getGlobalProperties().getProperties();
+         for( String key : props.keySet() )
+         {
+            result.put( key, props.get( key ));
+         }
+
+         return result;
+      }
+   }
 }
