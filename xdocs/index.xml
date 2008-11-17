@@ -209,7 +209,7 @@ Eviware's CTO Ole Matzura and CSO Niclas Reimertz will both make a guest appeara
             <table class="webstartlinkstable" cellspacing="0" cellpadding="0">
                 <tr class="b">
                     <td align="center" bgcolor="white">
-                        <p class="WebStartHeader">soapUI 2.5-beta2</p>
+                        <p class="WebStartHeader">soapUI 2.5</p>
                         <div>
                             <a href="http://www.soapui.org/jnlp/2.5-beta2/soapui.jnlp" class="externalLink"
                                title="External Link" onclick="javascript:urchinTracker('/jnlp/soapui/2_5_beta2');">
@@ -222,12 +222,12 @@ Eviware's CTO Ole Matzura and CSO Niclas Reimertz will both make a guest appeara
                             class="externalLink" title="External Link">Download</a>]
                     </td>
                     <td align="center" bgcolor="white">
-                        <p class="WebStartHeader">soapUI Pro 2.5-beta2
+                        <p class="WebStartHeader">soapUI Pro 2.5
                             <span class="OrangeHeader">Pro</span>
                         </p>
                         <div>
-                            <a href="http://www.eviware.com/jnlp/2.5-beta2/soapui-pro.jnlp" class="externalLink"
-                               title="External Link" onclick="javascript:urchinTracker:('/jnlp/soapui/2_5_beta2-pro');">
+                            <a href="http://www.eviware.com/jnlp/2.5/soapui-pro.jnlp" class="externalLink"
+                               title="External Link" onclick="javascript:urchinTracker:('/jnlp/soapui/2_5_pro');">
                                 <img class="webstart" src="images/webstart_orange.png" border="0" alt=""></img>
                             </a>
                         </div>
@@ -243,6 +243,11 @@ Eviware's CTO Ole Matzura and CSO Niclas Reimertz will both make a guest appeara
             <columns>
                 <column>
                     <subsection name="Latest News">
+                        <p>
+                            <i>2008-11-18: soapUI 2.5 - Final</i>
+                            : The final release of soapUI 2.5 - The REST Release is out!
+                            <a href="new_and_noteworthy_2_5.html">[Read more]</a>
+                        </p>
                         <p>
                             <i>2008-11-05: soapUI 2.5 beta2 - Improvements and fixes</i>
                             : The second beta of soapUI 2.5 with full REST Test Support is out

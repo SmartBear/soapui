@@ -5,6 +5,23 @@
     </properties>
     <body>
     <section name="soapUI Releases">
+
+        <subsection name="2008-11-17: soapUI 2.5">
+	    	<columns>
+	    		<column width="75">
+	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		</column>
+	    		<column>
+	    			<p align="left">soapUI 2.5, the REST Release, is out!</p>
+	    			<p align="left">soapUI 2.5, The REST Release, betat 1 is out. 
+	    			This release contains not only complete support for REST Testing 
+	    			but is full of additional features.
+	    			<a href="new_and_noteworthy_2_5.html#New and Noteworthy in soapUI 2.5 beta1">[Read more]</a>
+	    			</p>
+	    		</column>
+	    	</columns>
+		</subsection>
+		
     
     
         <subsection name="2008-09-26: soapUI 2.5 beta 1">
