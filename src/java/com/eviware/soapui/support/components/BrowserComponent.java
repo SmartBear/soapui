@@ -11,7 +11,6 @@ import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.NoRouteToHostException;
 import java.net.URL;
 
 public class BrowserComponent

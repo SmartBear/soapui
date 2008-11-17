@@ -35,7 +35,6 @@ import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.RunnerContext;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ShowConfigFileAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolHost;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlImporter;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.settings.ToolsSettings;
 import com.eviware.soapui.support.SoapUIException;

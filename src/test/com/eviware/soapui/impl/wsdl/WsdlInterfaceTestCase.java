@@ -15,7 +15,6 @@ package com.eviware.soapui.impl.wsdl;
 
 import junit.framework.TestCase;
 
-import com.eviware.soapui.config.InterfaceConfig;
 import com.eviware.soapui.config.WsdlInterfaceConfig;
 
 public class WsdlInterfaceTestCase extends TestCase

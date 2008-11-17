@@ -19,8 +19,6 @@ import javax.wsdl.Binding;
 import javax.wsdl.BindingOperation;
 import javax.wsdl.Definition;
 
-import org.xmlsoap.schemas.ws.x2004.x09.policy.Policy;
-
 import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.support.BindingImporter;
