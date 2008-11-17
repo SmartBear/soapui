@@ -24,27 +24,24 @@
 		  </div></column></columns>
 		 
 		 <subsection name="Operation Details Tab">
-		  <columns><column><div>
-		 The "Details" tab shown in the bottom-left shows the following values when a Operation node is selected in 
-		 the navigation tree
-		 <ul>
-		 <li><b>Description</b> : an arbitrary description of the operation, displayed as a tooltip over the 
-		   operations node in the Navigator.</li>
-		 <li><b>SOAPAction</b> (read-only): the SOAP Action specified for the operation in its SOAP/HTTP binding</li>
-		 <li><b>Operation</b> (read-only): The name of the operation in the underlying PortType</li>
-		 <li><b>Style</b> (read-only): Shows if this is a Document or RPC operation</li>
-		 <li><b>Input</b> (read-only): The explicit name of the operations' input message (may be empty)</li>
-		 <li><b>Output</b> (read-only): The explicit name of the operations' output message (may be empty)</li>
-		 <li><b>Sends Attachments</b> (read-only): Signals that the operation is defined to send Mime Attachments</li>
-		 <li><b>Receives Attachments</b> (read-only): Signals that the operation is defined to receive Mime Attachments</li>
-		 <li><b>One-Way</b> (read-only): Shows that this is a one-way operation (i.e. request only)</li>
-		 <li><b>WS-A Anonymous </b> : indicates the value of WS Addressing Anonymous element
-		 as specified in <a href="http://www.w3.org/TR/2006/WD-ws-addr-wsdl-20060216/#anonelement">WSDL Binding specification</a> </li>
-		 </ul>
-		 </div></column><column>
-			<img src="images/operation_details_tab.gif" border="0" alt="Details of an operation in soapUI"/>
-		</column></columns>
-		 </subsection>
+			 The "Details" tab shown in the bottom-left shows the following values when a Operation node is selected in 
+			 the navigation tree
+			 <ul>
+			 <li><b>Description</b> : an arbitrary description of the operation, displayed as a tooltip over the 
+			   operations node in the Navigator.</li>
+			 <li><b>SOAPAction</b> (read-only): the SOAP Action specified for the operation in its SOAP/HTTP binding</li>
+			 <li><b>Operation</b> (read-only): The name of the operation in the underlying PortType</li>
+			 <li><b>Style</b> (read-only): Shows if this is a Document or RPC operation</li>
+			 <li><b>Type</b> (read-only): Shows WSDL operation type</li>
+			 <li><b>Input</b> (read-only): The explicit name of the operations' input message (may be empty)</li>
+			 <li><b>Output</b> (read-only): The explicit name of the operations' output message (may be empty)</li>
+			 <li><b>Sends Attachments</b> (read-only): Signals that the operation is defined to send Mime Attachments</li>
+			 <li><b>Receives Attachments</b> (read-only): Signals that the operation is defined to receive Mime Attachments</li>
+			 <li><b>WS-A Anonymous </b> : indicates the value of WS Addressing Anonymous element
+			 as specified in <a href="http://www.w3.org/TR/2006/WD-ws-addr-wsdl-20060216/#anonelement">WSDL Binding specification</a> </li>
+			 </ul>
+		</subsection>
+		
 		  <p><hr size="1"/>Next: <a href="requests.html">Working with Requests</a></p>
 		</section>
     </body>

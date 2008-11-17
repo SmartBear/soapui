@@ -99,24 +99,23 @@
 		 </ul>
 		 </div></column></columns>
 		 </subsection>
-		 
 		  <subsection name="Project Details Tab">
 		 <p>
              The "Details" tab shown in the bottom-left shows the following values when the workspace node is selected in
 		 the navigation tree
 		 <ul>
 		  <li><b>Name</b> : the name of the project</li>
-		   <li><b>Description</b> : an arbitrary description of the project, displayed as a tooltip over the 
+		  <li><b>Description</b> : an arbitrary description of the project, displayed as a tooltip over the 
 		   projects' node in the Navigator.</li>
-		 <li><b>File</b> (read-only): the selected projects project-file</li>
-             <li><b>Resource Root</b> : sets if folder to use as base for all referenced files</li>
-		 <li><b>Cache Definitions</b> : sets if definitions should be cached for this project
+		  <li><b>File</b> (read-only): the selected projects project-file</li>
+          <li><b>Resource Root</b> : sets if folder to use as base for all referenced files</li>
+		  <li><b>Cache Definitions</b> : sets if definitions should be cached for this project
 		 (see <a href="../interfaces/index.html#Caching_Definitions">Caching Definitions</a>). 
 		 This overrides the global "Cache WSDLs" setting under the WSDL Preferences settings tab</li>
-             <li><b>Project Password</b> - Sets the password to use for encrypting the project file when saving, see
+          <li><b>Project Password</b> - Sets the password to use for encrypting the project file when saving, see
                  <a href="encryption.html">Encryption</a> for details.
              </li>
-             <li><b>Composite Project</b> - Sets this project to be saved as a composite project
+          <li><b>Composite Project</b> - Sets this project to be saved as a composite project
                  (<a href="composite-projects.html">Read More</a>).
              </li>
 		 </ul>

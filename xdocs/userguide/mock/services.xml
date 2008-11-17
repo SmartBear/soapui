@@ -42,27 +42,24 @@
 		</column></columns>
 		</subsection>
 		<subsection name="MockService Details Tab">
-		<columns>
-		<column><div>The bottom left details tab for a MockService displays the following properties:</div>
-		<ul>
-		<li><b>Name</b> : the name of the MockService</li>
-		<li><b>Description</b> : an arbitrary description of the MockService, displayed as a tooltip over the 
-		   MockServices' node in the Navigator.</li>
-		<li><b>Path</b> - the path this MockService listens on (read only)</li>
-		<li><b>Port</b> - the port this MockService listens on (read only)</li>
-		<li><b>Require SOAP Version</b> - controls if incoming requests must match the SOAP Version of 
-		a corresponding MockOperation in a MockService.</li>
-		<li><b>Require SOAP Action</b> - controls if incoming requests SOAPAction must match the SOAPAction of 
-		a corresponding MockOperation in a MockService.</li>
-		<li><b>Incoming WSS</b> - the Incoming WSS configuration to use for decrypting incoming requests. This is 
-		necessary if the entire body of a message is encrypted since it can not be dispatched otherwise.</li>
-		<li><b>Default Outgoing WSS</b> - the default Outgoing WSS configuration to apply to all MockResponses.
-		Can be over ridden on the MockResponse level.</li>
-		</ul>
-		<p>The Test Properties tab contains the custom properties defined for this MockService</p>
-		</column>
-		<column><img src="images/mockservice_details.gif" alt="detailed properties of a simulated Web Service"/></column></columns>
-		
+			The bottom left details tab for a MockService displays the following properties:
+			<ul>
+				<li><b>Name</b> : the name of the MockService</li>
+				<li><b>Description</b> : an arbitrary description of the MockService, displayed as a tooltip over the 
+				   MockServices' node in the Navigator.</li>
+				<li><b>Path</b> - the path this MockService listens on (read only)</li>
+				<li><b>Port</b> - the port this MockService listens on (read only)</li>
+				<li><b>Match SOAP Version</b> - controls if incoming requests must match the SOAP Version of 
+				a corresponding MockOperation in a MockService.</li>
+				<li><b>Require SOAP Action</b> - controls if incoming requests SOAPAction must match the SOAPAction of 
+				a corresponding MockOperation in a MockService.</li>
+				<li><b>Dispache Response</b> : @TODO@ </li>
+				<li><b>Incoming WSS</b> - the Incoming WSS configuration to use for decrypting incoming requests. This is 
+				necessary if the entire body of a message is encrypted since it can not be dispatched otherwise.</li>
+				<li><b>Default Outgoing WSS</b> - the default Outgoing WSS configuration to apply to all MockResponses.
+				Can be over ridden on the MockResponse level.</li>
+			</ul>
+			<p>The Test Properties tab contains the custom properties defined for this MockService</p>
 		</subsection>
 		
 		<subsection name="The MockService Editor">

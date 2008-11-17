@@ -142,15 +142,11 @@
 		 </subsection>
 		 
 		 <subsection name="TestCase Details Tab">
-		  <columns><column><div>
-		 The "Details" tab shown in the bottom-left shows the following values when the TestCase node is selected in 
-		 the navigation tree
-		 <ul>
-		 <li><b>Name</b> : the name of the current TestCase</li>
-		 </ul>
-		 </div></column><column>
-	     <img src="images/testcase_details_tab.png" border="0" alt="TestCase Details"/>
-		  </column></columns>
+			 The "Details" tab shown in the bottom-left shows the following values when the TestCase node is selected in 
+			 the navigation tree
+			 <ul>
+			 <li><b>Name</b> : the name of the current TestCase</li>
+			 </ul>
 		 </subsection>
 		 
 		 <subsection name="Clone TestCase">

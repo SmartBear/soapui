@@ -101,15 +101,11 @@
 		 </subsection>
 		 
 		  <subsection name="TestSuite Details Tab">
-		  <columns><column><div>
-		 The "Details" tab shown in the bottom-left shows the following values when the TestSuite node is selected in 
-		 the navigation tree
-		 <ul>
-		 <li><b>Name</b> : the name of the current TestSuite</li>
-		 </ul>
-		 </div></column><column>
-	     <img src="images/testsuite_details_tab.gif" border="0" alt="TestSuite Details in Details Tab"/>
-		  </column></columns>
+				 The "Details" tab shown in the bottom-left shows the following values when the TestSuite node is selected in 
+				 the navigation tree
+				 <ul>
+				 <li><b>Name</b> : the name of the current TestSuite</li>
+				 </ul>
 		 </subsection>
 		 
 		  <subsection name="TestSuite Runner">

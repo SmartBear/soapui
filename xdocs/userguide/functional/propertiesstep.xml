@@ -36,17 +36,15 @@
 		</subsection>
 	
 		<subsection name="Property Details Tab">
-		<columns><column><div>
-		The Properties Step Details Tab (bottom left) contains the following:</div>
-		<ul>
-		<li><b>Name</b>: The name of the Properties step</li>
-		<li><b>Description</b> : an arbitrary description for the Properties step</li>
-		<li><b>Create Missing on Load</b> - creates properties from source property files that are not currently defined</li>
-		<li><b>Save before Load</b> - specifies to save existing properties before loading new ones to/from the specified source
-		and target property files</li>
-		</ul>
-		</column><column>
-		<img src="images/properties_details_tab.gif" alt="Parameters in Web Service Testing in the Property Step details"/></column></columns>
+			The Properties Step Details Tab (bottom left) contains the following:
+			<ul>
+			<li><b>Name</b>: The name of the Properties step</li>
+			<li><b>Description</b> : an arbitrary description for the Properties step</li>
+			<li><b>Create Missing on Load</b> - creates properties from source property files that are not currently defined</li>
+			<li><b>Save before Load</b> - specifies to save existing properties before loading new ones to/from the specified source
+			and target property files</li>
+			<li><b>Discard Values on Save</b> : discards values when it is saved @TODO@</li>
+			</ul>
 		</subsection>
 
 		<subsection name="Step Execution">

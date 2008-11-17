@@ -56,7 +56,7 @@
 		 <li><b>Online Help</b> - Displays this page in an external browser</li>
 		 </ul></p>
 		</subsection>
-		  <subsection name="soapUI Workspace Details Tab">
+		<subsection name="soapUI Workspace Details Tab">
 		  <p>
               The "Details" tab shown in the bottom left shows the following values when the workspace node is selected in
 		 the navigation tree
@@ -70,7 +70,6 @@
 		 </p>
 	    
 		 </subsection>
-		 
 		 <p><hr size="1"/>Next: <a href="projects/index.html">Web Service Test Projects</a></p>
 		</section>
     </body>

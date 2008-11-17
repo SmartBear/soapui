@@ -91,29 +91,29 @@
 		 </subsection>
 		 
 		 <subsection name="Interface Details Tab">
-		  <p>
-              The "Details" tab shown in the bottom-left shows the following values when an Interface node is selected in
-		 the navigation tree
-		 <ul>
-		 <li><b>PortType</b> (read-only): The name of the WSDL PortType that the Binding exposes</li>
-		 <li><b>Description</b> : an arbitrary description for the interface</li>
-		 <li><b>Definition URL</b> (read-only): the URL where the Interface is defined (i.e. from where it was imported)</li>
-		 <li><b>Binding</b> (read-only): The name of the WSDL Binding for the interface in <code>{namespace}name</code> format</li>
-		 <li><b>SOAP Version</b> : The SOAP Version to use for this interface; SOAP 1.1 or SOAP 1.2. This will affect both 
-		 generated requests (namespaces and content) and according HTTP Headers</li>
-		 <li><b>Cached</b> (read-only): Shows if this definition is cached in the project file (not neccessarily in memory yet)</li>
-		 <li><b>Style</b> (read-only): Shows if this is a Document or RPC definition</li>
-		 <li><b>WS-A version</b> : Shows WS-Addressing namespace version</li>
-		 <li><b>WS-A anonymous</b> : indicates the value of WS Addressing anonymous as specified in 
-		 <a href="http://www.w3.org/TR/2007/REC-ws-addr-metadata-20070904/#wspolicyanonresponses">
-		 Web Services Addressing 1.0 Metadata specification</a>. Allowed values are:
-		 <ol><li>optional - default</li>
-		 	<li>required - if AnonymousResponses element defined</li>
-		 	<li>prohibited - if NonAnonymousResponses element defined</li></ol>
-		 </li>
-		 
-		 </ul>
-		</p>
+			 The "Details" tab shown in the bottom-left shows the following values when an Interface node is selected in 
+			 the navigation tree
+			 <ul>
+			 <li><b>PortType</b> (read-only): The name of the WSDL PortType that the Binding exposes</li>
+			 <li><b>Description</b> : an arbitrary description for the interface</li>
+			 <li><b>Definition URL</b> (read-only): the URL where the Interface is defined (i.e. from where it was imported)</li>
+			 <li><b>Binding</b> (read-only): The name of the WSDL Binding for the interface in <code>{namespace}name</code> format</li>
+			 <li><b>SOAP Version</b> : The SOAP Version to use for this interface; SOAP 1.1 or SOAP 1.2. This will affect both 
+			 generated requests (namespaces and content) and according HTTP Headers</li>
+			 <li><b>Cached</b> (read-only): Shows if this definition is currently cached in memory</li>
+			 <li><b>Style</b> (read-only): Shows if this is a Document or RPC definition</li>
+			 <li><b>WS-A version</b> : Shows wsa namespace version</li>
+			 <li><b>WS-A anonymous</b> : indicates the value of WS Addressing anonymous as specified in 
+			 <a href="http://www.w3.org/TR/2007/REC-ws-addr-metadata-20070904/#wspolicyanonresponses">
+			 Web Services Addressing 1.0 Metadata specification</a>. Allowed values are:
+				 <ol>
+				 	<li>optional - default</li>
+				 	<li>required - if AnonymousResponses element defined</li>
+				 	<li>prohibited - if NonAnonymousResponses element defined</li>
+				 </ol>
+			 </li>
+			 
+			 </ul>
 		 </subsection>
 		 
 		 

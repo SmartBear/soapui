@@ -77,70 +77,60 @@ Both will improve your productivity and make Web Service Testing more fun.
 		 </subsection>
 		 
 		  <subsection name="Request Details Tab">
-		 <p>
-             The "Details" tab shown in the bottom-left shows the following values when a Request node is selected in
-		 the navigation tree
-		 <h4>General Properties</h4>
-		 <ul>
-		 <li><b>Name</b> : the name of the request</li>
-		 <li><b>Description</b> : an arbitrary description of the request, displayed as a tooltip over the 
-		   requests node in the Navigator.</li>
-		 <li><b>Message Size</b> : The number of characters in the current request message (including whitespace).</li>
-		 <li><b>Encoding</b> : The encoding used by the request</li>
-		 <li><b>Endpoint</b> : The endpoint for the request</li>
-		 <li><b>Bind Address</b>  : The local IP Address to bind to when sending the request.</li>
-         <li><b>Follow Redirects</b>  : Automatically follow HTTP Redirect responses from the target server/endpoint.</li>
-
-
-		 </ul>
-		 <h4>Security/Authentication Properties</h4>
-		 (override any defaults set for the endpoint)
-		 <ul>
-		 <li><b>Username</b> : The username to use if the request requires authentication</li>
-		 <li><b>Password</b> : The password to use if the request requires authentication</li>
-		 <li><b>Domain</b> : The domain to use if the request requires NTLM authentication)</li>
-		 <li><b>WSS-Password Type</b> : Selects the type of WS-Security username/password token to dynamically add to each outgoing request. 
-		 The above specified Username and Password values will be used for the corresponding header values</li>
-		 <li><b>WSS-TimeToLive</b> : If set, automatically inserts a WSS TimeToLive token in any outgoing requests using 
-		 the specified TimeToLive (in milliseconds)</li>
-         <li><b>SSL Keystore</b> : The name of a keystore/certificate specified in the Project WS-Security Certifcates tab. If
-         specified this will be used as client-keystore, allowing you to have different keystores for different requests.</li>
-		 </ul>
-		 
-		 	 </p>
-		 <h4>Attachment-Related Properties</h4>
-		 <ul>
-
-         <li><b>Skip SOAP Action</b> : does not set the SOAP Action HTTP Header for this request</li>    
-		 <li><b>Enable MTOM/Inline</b> : Enable MTOM-based transfer and inlining of binary data in the 
-		 request (see <a href="attachments.html">Attachments</a>).</li>
-		  <li><b>Force MTOM</b> : Always use MTOM packaging for requests, even if there are no MTOM attachments.</li>
-		  <li><b>Inline Response Attachments</b> : the entire HTTP response for a request (including
-		  MIME/XOP attachments, etc..) will be shown in the response editor instead of attachments being parsed and
-		  visible in the Response Attachments tab.</li>
-		  <li><b>Expand MTOM Attachments</b> : received MTOM attachments will be inlined into the response
-		  message editor, allowing correct viewing and validation of the actual message.</li>
-		  <li><b>Disable Multipart</b> : Tells soapUI not to pack attachments with the same type into a multipart attachment, 
-		  see <a href="attachments.html#Multipart_Attachments">Multipart Attachments</a> for more details.</li>
-		  <li><b>Encode Attachments</b> : Tells soapUI to automatically encode attachments that have a corresponding WSDL part with 
-		  the xsd-type set to either base6Binary or hexBinary.</li>
-          <li><b>Enable Inline Files</b> : enables the use of "file:.." references in requests which will replaced by
-          the corresponding file content</li>
-		  </ul>
-		  <h4>Post-Processing Properties</h4>
-		  <ul>
-		  <li><b>Strip Whitespaces</b> : Strips outgoing requests of any unnecessary whitespaces and XML comments, required by some servers.</li>
-		  <li><b>Remove Empty Content</b> : Removes empty elements/attributes from outgoing requests. This can be useful in 
-		  Data Drive TestRequests which contain elements/attributes that not always contain data and should be removed in those cases.</li>
-          <li><b>Entitize Properties</b> : Entitizes property-values when they are expanded into the request, for example
-          if you are pulling data from a database en need to be sure that ampersands are handled correctly</li>
-          <li><b>Pretty Print</b> : pretty prints the response message (overrides corresponding global preference)</li>
-          <li><b>Dump File</b> : dumps the entire response message regardless of size and Max Size setting (see next) to
-              the file/path specified here</li>
-          <li><b>Max Size</b>  : the maximum number of bytes to read into the editor. </li>
-          <li><b>WS-Addressing</b>  : enables/disables ws-addressing.</li>
-		 </ul>
-	
+			The "Details" tab shown in the bottom-left shows the following values when a Request node is selected in 
+			the navigation tree
+			<h4>General Properties</h4>
+			<ul>
+				 <li><b>Name</b> : the name of the request</li>
+				 <li><b>Description</b> : an arbitrary description of the request, displayed as a tooltip over the 
+				   requests node in the Navigator.</li>
+				 <li><b>Message Size</b> : The number of characters in the current request message (including whitespace).</li>
+				 <li><b>Encoding</b> : The encoding used by the request</li>
+				 <li><b>Endpoint</b> : The endpoint for the request</li>
+				 <li><b>Bind Address</b>  : The local IP Address to bind to when sending the request.</li>
+				 <li><b>WS-Addressing</b>  : enables/disables ws-addressing.</li>
+				 <li><b>Follow Redirections</b> : @TODO@ </li>
+				 <li><b>Skip SOAP Action : </b> : enables/disables this SOAP action @TODO@ </li>
+			</ul>
+			<h4>Security/Authentication Properties</h4>
+			(override any defaults set for the endpoint)
+			<ul>
+				 <li><b>Username</b> : The username to use if the request requires authentication</li>
+				 <li><b>Password</b> : The password to use if the request requires authentication</li>
+				 <li><b>Domain</b> : The domain to use if the request requires NTLM authentication)</li>
+				 <li><b>WSS-Password Type</b> : Selects the type of WS-Security username/password token to dynamically add to each outgoing request. 
+				 The above specified Username and Password values will be used for the corresponding header values</li>
+				 <li><b>WSS-TimeToLive</b> : If set, automatically inserts a WSS TimeToLive token in any outgoing requests using 
+				 the specified TimeToLive (in milliseconds)</li>
+				 <li><b>SSL Keystore</b> : sets path to SSL keystore for request</li>
+				 
+			</ul>
+			<h4>Attachment-Related Properties</h4>
+			<ul>
+				 <li><b>Enable MTOM/Inline</b> : Enable MTOM-based transfer and inlining of binary data in the 
+				 request (see <a href="attachments.html">Attachments</a>).</li>
+				 <li><b>Force MTOM</b> : Always use MTOM packaging for requests, even if there are no MTOM attachments.</li>
+				 <li><b>Inline Response Attachments</b> : the entire HTTP response for a request (including
+				  MIME/XOP attachments, etc..) will be shown in the response editor instead of attachments being parsed and
+				  visible in the Response Attachments tab.</li>
+				 <li><b>Expand MTOM Attachments</b> : received MTOM attachments will be inlined into the response
+				  message editor, allowing correct viewing and validation of the actual message.</li>
+				 <li><b>Disable Multipart</b> : Tells soapUI not to pack attachments with the same type into a multipart attachment, 
+				  see <a href="attachments.html#Multipart_Attachments">Multipart Attachments</a> for more details.</li>
+				 <li><b>Encode Attachments</b> : Tells soapUI to automatically encode attachments that have a corresponding WSDL part with 
+				  the xsd-type set to either base6Binary or hexBinary.</li>
+				 <li><b>Enable Inline Files</b> : enables/disables inline files , see <a href="attachments.html">Working with WS Attachments and Inline Files</a> @TODO@ </li>
+				 <li><b>Entitize Properties</b> : @TODO@ </li>
+			</ul>
+			<h4>Post-Processing Properties</h4>
+			<ul>
+				<li><b>Strip Whitespaces</b> : Strips outgoing requests of any unnecessary whitespaces and XML comments, required by some servers.</li>
+				<li><b>Remove Empty Content</b> : Removes empty elements/attributes from outgoing requests. This can be useful in 
+				Data Drive TestRequests which contain elements/attributes that not always contain data and should be removed in those cases.</li>
+				<li><b>Prity Print</b> : enables more readable text format</li>
+				<li><b>Dump File</b> : file where response will be stored</li>
+				<li><b>Max Size</b> : maximum numbers of bytes to receive @TODO@ </li>
+			</ul>
 		 </subsection>
 		 
 		 <subsection name="The Request Editor">
@@ -282,7 +272,7 @@ Both will improve your productivity and make Web Service Testing more fun.
 		  number of additional editor views to the default "XML"; <a href="outlineeditor.html">"Outline"</a> and 
 		  <a href="formeditor.html">"Form"</a>, together with a number of <a href="messageinspectors.html">Message Inspectors</a>
 		  shown below the request and response message
-		  The following actions are available from the request and response editor right-button menus:
+		  The following actions are available from the request and response editor right-button menus:	
 		  <ul>
 		  <li><b>Validate</b> - validates the editors' content against its message definition as described below</li>
 		  <li><b>Format XML</b> - pretty-prints the xml in the editor</li>

@@ -29,18 +29,14 @@
 		</column></columns>
 		</subsection>
 		<subsection name="MockOperation Details Tab">
-		<columns>
-		<column><div>The bottom left details tab for a MockOperation displays the following properties:</div>
-		<ul>
-		  <li><b>Name</b> : the name of the MockOperation</li>
-		   <li><b>Description</b> : an arbitrary description of the MockOperation, displayed as a tool tip over the 
-		   MockOperations' node in the Navigator.</li>
-		<li><b>WSDL Operation</b> - shows which Interface Operation that is being mocked</li>
-		<li><b>Dispatch Style</b> - shows how incoming requests to this MockOperation are dispatched.</li>
-		</ul>
-		</column>
-		<column><img src="images/mockoperation_details.gif"/></column></columns>
-		
+			The bottom left details tab for a MockOperation displays the following properties:
+			<ul>
+				<li><b>Name</b> : the name of the MockOperation</li>
+				<li><b>Description</b> : an arbitrary description of the MockOperation, displayed as a tool tip over the 
+				MockOperations' node in the Navigator.</li>
+				<li><b>WSDL Operation</b> - shows which Interface Operation that is being mocked</li>
+				<li><b>Dispatch Style</b> - shows how incoming requests to this MockOperation are dispatched.</li>
+			</ul>
 		</subsection>
 		
 		<subsection name="Change Operation">

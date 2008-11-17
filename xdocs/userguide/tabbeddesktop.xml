@@ -21,7 +21,7 @@
 		<p>For example the following screenshot shows a layout where the TestCase window has been dragged to
 		the left and an associated LoadTest to the right. The 2 load-test diagrams have been dragged to the bottom.</p>
 		<p align="center"><img src="images/tabbed_desktop.gif" alt="test case window for soap test"/></p>
-		<p><hr size="1"/>Next: <a href="licensemanagement.html">soapUI Pro License management</a></p>
+		 <p><hr size="1"/>Next: <a href="licensemanagement.html">soapUI Pro License Management</a></p>
 		</section>
     </body>
 </document>
