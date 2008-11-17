@@ -19,7 +19,6 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToStringMap;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 public class GlobalPropertiesPrefs implements Prefs
 {
