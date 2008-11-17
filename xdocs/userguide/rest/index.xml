@@ -47,32 +47,54 @@
                 </ul>
             </subsection>
 
-            <subsection name="REST Parameters">
-             <p>Parameters can be defined on both resource/child-resource and request level. Depending on its type, a
-                 parameters' value will be added to an outgoing request in different ways:</p>
-                <ul>
-                <li>QUERY : added to the query string of the target URL upon submitting</li>
-                <li>HEADER : added as an HTTP Header to the outgoing request</li>
-                <li>TEMPLATE : replaces the corresponding {&lt;parameter name&gt;} placeholder in the URL path upon submitting</li>
-                <li>MATRIX : appends corresponding ";&lt;parameter-name&gt;:&lt;parameter-value&gt;" pairs to the URL path
-                    (before the query string) on submitting. If the parameter is defined as a Boolean, only the
-                    parameter name is added when its value is set to "true".</li>
-                </ul>
-                <p>Furthermore, each parameter has a number of detailed settings that can be accessed via the "Details"
-                tab below the parameter table.</p>
-
-
-
+            <subsection name="WADL Support">
+                <p>soapUI supports WADL in two ways:</p>
+                <ol>
+                    <li>When defining a new REST Service one can do so from a WADL file/URL, which will import
+                    all defined resources and methods (as requests). Associated XML Schemas are also imported and
+                    used for validations and form-generation in soapUI Pro</li>
+                    <li>When defining a new REST Service without a WADL by just specifying ednpoint, parameters, etc manually
+                    soapUI internally automatically generates a WADL from the configured items.</li>
+                </ol>
+                <p>In either case, the WADL can be used for code and documentation generation from the WADL Content tab
+                in the WADL Service window (see below). Also, defined representations will be used to validate response messages when
+                adding SchemaAssertions to REST TestRequest steps.</p>
             </subsection>
 
-            <subsection name="REST Representations">
-                <p>a resource can
-                    define multiple representations for both requests (when updating/creating the resource) or responses
-                    (when getting the resource). Also, faults are defined as a special type of representation which
-                    are returned on errors.</p>
+            <subsection name="Creating REST Services">
+               <p>REST Services can be created in several ways.</p>
+                <ul>
+                    <li>From a WADL:</li>
+                    <ul>
+                    <li>By specifying a WADL file or URL in the New Project wizard</li>
+                    <li>By selecting the "Add WADL" popup menu option from the Project popup</li>
+                        </ul>
+
+                    <li>Manually:</li>
+                    <ul>
+                        <li>By selecting the "Add REST Service" option in the New Project Wizard</li>
+                        <li>Via the "Add REST Service" option from Project Popup</li>
+                        </ul>
 
 
+                </ul>
+
+                <p>When specifying a WADL, soapUI will read the WADL and create the corresponding
+                model items in the project. When creating the service manually, the following dialog will be
+                shown:</p>
                 
+                   <p align="center"><img src="images/new-rest-service.gif"></img></p>
+                <p>The following options are available:</p>
+                <ul>
+
+                    <li>Service Name (required) : an arbitrary name for the service</li>
+                    <li>Service Endpoint : an initial endpoint for the service.</li>
+                    <li>Extract Resource/Params : will open a dialog for defining an initial Resource and its
+                    parameters from the specified endpoint.</li>
+                    <li>Create Resource : if no endpoint has been specified or "Extract..." has not been selected, this
+                    option will open a dialog to create an initial Resource.</li>
+                </ul>
+
             </subsection>
 
 		 <p><hr size="1"/>Next: <a href="services/index.html">REST Service overview</a></p>

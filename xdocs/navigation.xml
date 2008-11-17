@@ -88,14 +88,11 @@
             </item>
 
             <item href="/userguide/rest/index.html" name="REST Services">
-                <item href="/userguide/rest/services/index.html" name="Service View"/>
-                <item href="/userguide/rest/parameters.html" name="REST Parameters"/>
-                <item href="/userguide/rest/resources.html" name="REST Resources"/>
-
-                <item href="/userguide/rest/requests/index.html" name="REST Requests">
-                    <item href="/userguide/rest/requests/contentview.html" name="Content View"/>
-                    <item href="/userguide/rest/requests/formeditor.html" name="Form Editor" pro="true"/>
-                    <item href="/userguide/rest/requests/outlineeditor.html" name="Outline Editor" pro="true"/>
+                <item href="/userguide/rest/resources.html" name="Resources"/>
+                <item href="/userguide/rest/requests.html" name="Requests">
+                    <item href="/userguide/rest/contentview.html" name="Content View"/>
+                    <item href="/userguide/rest/formeditor.html" name="Form Editor" pro="true"/>
+                    <item href="/userguide/rest/outlineeditor.html" name="Outline Editor" pro="true"/>
                 </item>
             </item>
 
