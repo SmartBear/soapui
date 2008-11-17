@@ -89,9 +89,6 @@
 
             <item href="/userguide/rest/index.html" name="REST Services">
                 <item href="/userguide/rest/services/index.html" name="Service View"/>
-                <item href="/userguide/rest/services/endpoints.html" name="Service Endpoints"/>
-                <item href="/userguide/rest/services/wadlcontent.html" name="WADL Content"/>
-
                 <item href="/userguide/rest/parameters.html" name="REST Parameters"/>
                 <item href="/userguide/rest/resources.html" name="REST Resources"/>
 

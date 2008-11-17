@@ -20,14 +20,59 @@
 		<p>soapUI 2.5 introduces extensive possibilities to invoke and test REST services, either starting from a WADL
         definition or just plain URLs. The REST support is divided into two parts:</p>
             <ul>
-                <li>A new REST Service / Resource / Request model in the Navigator</li>
+                <li>A new REST Service / Resource / Request model in the Navigator with corresponding editor windows</li>
                 <li>REST-specific TestSteps for integrating REST testing with existing test-functionality</li>
             </ul>
+            <p>Mocking of REST services is currently only supported via the possibility to specify a document root
+            for serving static content, an upcoming release will have full REST Service mocking functionality.</p>
 
-            <subsection name="REST Model">
-                <p>The model for</p>
+            <subsection name="The REST Model">
+                <p>The model for REST Services in soapUI is closely modelled after the WADL model but does not explicitely
+                require a WADL definition. If a REST Services is defined "manually" (without a WADL), the corresponding
+                WADL will be automatically generated and can be used for validation, code-generation, etc.</p>
+                <p>REST Services consist of the following key items:</p>
+                <ul>
+                   <li>Services - corresponds to Interfaces for WSDL, in a WADL this corresponds to the root application
+                   element. A Service contains an arbitrary number of heirarchically organized resources.</li>
+                   <li>Resources - defines an addressable (URI) item that can be parameterized using a number of parameter
+                   mechanisms. Resources are created/modified/deleted using standard HTTP methods (PUT,POST,GET,etc) and
+                   can be made available in any number of representations (ie states), for example XML, JSON, PDF, etc. Also,
+                   resource can contain child resources which will inherit parameter and path information from their
+                   parent(s).</li>
+                    <li>Requests -  A resource in WADL/REST is accessed through a number of Methods, which in soapUI are
+                        modelled as requests. A request is defined by it's HTTP method, Headers and parameters. The
+                    response is usually a representation of the invoked resource.</li>
+                    <li>Parameters - can be defined on both the Resource and Request level, see more below.</li>
+                    <li>Representations - are used to define the content of a request or response, see more below.</li>
+                </ul>
+            </subsection>
+
+            <subsection name="REST Parameters">
+             <p>Parameters can be defined on both resource/child-resource and request level. Depending on its type, a
+                 parameters' value will be added to an outgoing request in different ways:</p>
+                <ul>
+                <li>QUERY : added to the query string of the target URL upon submitting</li>
+                <li>HEADER : added as an HTTP Header to the outgoing request</li>
+                <li>TEMPLATE : replaces the corresponding {&lt;parameter name&gt;} placeholder in the URL path upon submitting</li>
+                <li>MATRIX : appends corresponding ";&lt;parameter-name&gt;:&lt;parameter-value&gt;" pairs to the URL path
+                    (before the query string) on submitting. If the parameter is defined as a Boolean, only the
+                    parameter name is added when its value is set to "true".</li>
+                </ul>
+                <p>Furthermore, each parameter has a number of detailed settings that can be accessed via the "Details"
+                tab below the parameter table.</p>
 
 
+
+            </subsection>
+
+            <subsection name="REST Representations">
+                <p>a resource can
+                    define multiple representations for both requests (when updating/creating the resource) or responses
+                    (when getting the resource). Also, faults are defined as a special type of representation which
+                    are returned on errors.</p>
+
+
+                
             </subsection>
 
 		 <p><hr size="1"/>Next: <a href="services/index.html">REST Service overview</a></p>
