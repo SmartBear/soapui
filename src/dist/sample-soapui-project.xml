@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project name="Sample Project" soapui-version="1.7.6" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="ProjectSettings@projectRoot">D:\projects\eviware\soapui\soapui_projects</con:setting></con:settings><con:interface name="SampleServiceSoapBinding" bindingName="{http://www.example.org/sample/}SampleServiceSoapBinding" soapVersion="1_1" definition="file:C:\Mogul\Projects\KvI Web Services\WSDL\sample.wsdl"><con:settings/><con:endpoints><con:endpoint>http://www.soapui.org/sample</con:endpoint><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint></con:endpoints><con:operation action="http://www.example.org/sample/login" name="login" bindingOperationName="login" inputName="" isOneWay="false" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
+<con:soapui-project name="Sample Project" soapui-version="2.5 beta2" resourceRoot="" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="ProjectSettings@projectRoot">D:\Projects\eviware\workspace\soapui OS\core\src\dist</con:setting></con:settings><con:interface name="SampleServiceSoapBinding" bindingName="{http://www.example.org/sample/}SampleServiceSoapBinding" soapVersion="1_1" definition="file:C:\eviware\Projects\WSDL\sample.wsdl" xsi:type="con:WsdlInterface" wsaVersion="NONE" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:endpoints><con:endpoint>http://www.soapui.org/sample</con:endpoint><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint></con:endpoints><con:operation action="http://www.example.org/sample/login" name="login" bindingOperationName="login" inputName="" isOneWay="false" receivesAttachments="false" sendsAttachments="false" type="Request-Response"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
    <soapenv:Header/>
    <soapenv:Body>
       <sam:login>
@@ -7,14 +7,14 @@
          <password>Login123</password>
       </sam:login>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation action="http://www.example.org/sample/logout" name="logout" bindingOperationName="logout" inputName="" isOneWay="false" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation action="http://www.example.org/sample/logout" name="logout" bindingOperationName="logout" inputName="" isOneWay="false" receivesAttachments="false" sendsAttachments="false" type="Request-Response"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
    <soapenv:Header/>
    <soapenv:Body>
       <sam:logout>
          <sessionid>21974891784000294</sessionid>
       </sam:logout>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation action="http://www.example.org/sample/search" name="search" bindingOperationName="search" inputName="" isOneWay="false" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation action="http://www.example.org/sample/search" name="search" bindingOperationName="search" inputName="" isOneWay="false" receivesAttachments="false" sendsAttachments="false" type="Request-Response"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
    <soapenv:Header/>
    <soapenv:Body>
       <sam:search>
@@ -22,7 +22,7 @@
          <searchstring>?</searchstring>
       </sam:search>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation action="http://www.example.org/sample/buy" name="buy" bindingOperationName="buy" inputName="" isOneWay="false" receivesAttachments="false" sendsAttachments="false"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://www.soapui.org/sample</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:operation action="http://www.example.org/sample/buy" name="buy" bindingOperationName="buy" inputName="" isOneWay="false" receivesAttachments="false" sendsAttachments="false" type="Request-Response"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://www.soapui.org/sample</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
    <soapenv:Header/>
    <soapenv:Body>
       <sam:buy>
@@ -30,173 +30,169 @@
          <buystring>?</buystring>
       </sam:buy>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request></con:call></con:operation><con:definitionCache rootPart="file:C:\Mogul\Projects\KvI Web Services\WSDL\sample.wsdl"><con:part><con:url>file:C:\Mogul\Projects\KvI Web Services\WSDL\sample.wsdl</con:url><con:content><wsdl:definitions name="sample" targetNamespace="http://www.example.org/sample/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.example.org/sample/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
-    <wsdl:types>
-		<xsd:schema targetNamespace="http://www.example.org/sample/">
-			<xsd:element name="searchResponse">
-				<xsd:complexType>
-					<xsd:sequence>
-
-						<xsd:element name="item" type="tns:ItemType">
-						</xsd:element>
-						
-					</xsd:sequence>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:complexType name="ItemType">
-				<xsd:sequence>
-					<xsd:element name="id" type="xsd:string"/>
-					<xsd:element name="description" type="xsd:string"/>
-					<xsd:element name="price" type="xsd:string"/>
-				</xsd:sequence>
-			</xsd:complexType>
-			<xsd:element name="buyResponse">
-				<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element name="purchasestatus" type="tns:PurchaseStatusType">
-						</xsd:element>		
-					</xsd:sequence>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:complexType name="PurchaseStatusType">
-				<xsd:sequence>
-					<xsd:element name="id" type="xsd:string"/>
-					<xsd:element name="stockStatus" type="xsd:string"/>
-					<xsd:element name="expectedDelivery" type="xsd:string"/>
-				</xsd:sequence>
-			</xsd:complexType>
-		</xsd:schema>
-	</wsdl:types>
-    <wsdl:message name="loginRequest">
-		<wsdl:part name="username" type="xsd:string"/>
-		<wsdl:part name="password" type="xsd:string"/>
-    </wsdl:message>
-    <wsdl:message name="loginResponse">
-    	<wsdl:part name="sessionid" type="xsd:string"/>
-    </wsdl:message>
-    <wsdl:message name="logoutRequest">
-    	<wsdl:part name="sessionid" type="xsd:string"/>
-    </wsdl:message>
-    <wsdl:message name="searchRequest">
-    	<wsdl:part name="sessionid" type="xsd:string"/>
-    	<wsdl:part name="searchstring" type="xsd:string"/>
-    </wsdl:message>
-    <wsdl:message name="searchResponse">
-    	<wsdl:part name="searchresult" element="tns:searchResponse"/>
-    </wsdl:message>
-    <wsdl:message name="buyRequest">
-    	<wsdl:part name="sessionid" type="xsd:string"/>
-    	<wsdl:part name="buystring" type="xsd:string"/>
-    </wsdl:message>
-    <wsdl:message name="buyResponse">
-    	<wsdl:part name="buyresult" element="tns:buyResponse"/>
-    </wsdl:message>
-    <wsdl:message name="login_faultMsg">
-    	<wsdl:part name="loginFault" type="xsd:string"/>
-    </wsdl:message>
-    <wsdl:message name="logout_faultMsg">
-    	<wsdl:part name="logoutFault" type="xsd:string"/>
-    </wsdl:message>
-	<wsdl:message name="search_faultMsg">
-    	<wsdl:part name="searchFault" type="xsd:string"/>
-    </wsdl:message>
-    <wsdl:message name="buy_faultMsg">
-    	<wsdl:part name="buyFault" type="xsd:string"/>
-    </wsdl:message>
-    <wsdl:portType name="ISampleService">
-    	<wsdl:operation name="login">
-    		<wsdl:input message="tns:loginRequest"/>
-    		<wsdl:output message="tns:loginResponse"/>
-            <wsdl:fault name="fault" message="tns:login_faultMsg"/>
-        </wsdl:operation>
-    	<wsdl:operation name="logout">
-    		<wsdl:input message="tns:logoutRequest"/>
-    		<wsdl:output message="tns:NewMessage"/>
-            <wsdl:fault name="fault" message="tns:logout_faultMsg"/>
-        </wsdl:operation>
-    	<wsdl:operation name="search">
-    		<wsdl:input message="tns:searchRequest"/>
-    		<wsdl:output message="tns:searchResponse"/>
-			<wsdl:fault name="fault" message="tns:search_faultMsg"/>
-        </wsdl:operation>
-		<wsdl:operation name="buy">
-    		<wsdl:input message="tns:buyRequest"/>
-    		<wsdl:output message="tns:buyResponse"/>
-			<wsdl:fault name="fault" message="tns:buy_faultMsg"/>
-        </wsdl:operation>
-    </wsdl:portType>
-    <wsdl:binding name="SampleServiceSoapBinding" type="tns:ISampleService">
-    	<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http">
-    	</soap:binding>
-    	<wsdl:operation name="login">
-    		<soap:operation soapAction="http://www.example.org/sample/login">
-    		</soap:operation>
-    		<wsdl:input>
-    			<soap:body use="literal" namespace="http://www.example.org/sample/">
-    			</soap:body>
-    		</wsdl:input>
-    		<wsdl:output>
-    			<soap:body use="literal" namespace="http://www.example.org/sample/">
-    			</soap:body>
-    		</wsdl:output>
-    		<wsdl:fault name="fault">
-    			<soap:fault use="literal" name="fault"/>
-    		</wsdl:fault>
-    	</wsdl:operation>
-    	<wsdl:operation name="logout">
-    		<soap:operation soapAction="http://www.example.org/sample/logout">
-    		</soap:operation>
-    		<wsdl:input>
-    			<soap:body use="literal" namespace="http://www.example.org/sample/">
-    			</soap:body>
-    		</wsdl:input>
-    		<wsdl:output>
-    			<soap:body use="literal" namespace="http://www.example.org/sample/">
-    			</soap:body>
-    		</wsdl:output>
-    	</wsdl:operation>
-    	<wsdl:operation name="search">
-    		<soap:operation soapAction="http://www.example.org/sample/search">
-    		</soap:operation>
-    		<wsdl:input>
-    			<soap:body use="literal" namespace="http://www.example.org/sample/">
-    			</soap:body>
-    		</wsdl:input>
-    		<wsdl:output>
-    			<soap:body use="literal" namespace="http://www.example.org/sample/">
-    			</soap:body>
-    		</wsdl:output>
-    	</wsdl:operation>
-		<wsdl:operation name="buy">
-    		<soap:operation soapAction="http://www.example.org/sample/buy">
-    		</soap:operation>
-    		<wsdl:input>
-    			<soap:body use="literal" namespace="http://www.example.org/sample/">
-    			</soap:body>
-    		</wsdl:input>
-    		<wsdl:output>
-    			<soap:body use="literal" namespace="http://www.example.org/sample/">
-    			</soap:body>
-    		</wsdl:output>
-    	</wsdl:operation>
-    </wsdl:binding>
-    <wsdl:service name="SampleService">
-    	<wsdl:port name="SamplePort" binding="tns:SampleServiceSoapBinding">
-    		<soap:address location="http://www.soapui.org/sample"/>
-    	</wsdl:port>
-    </wsdl:service>
-	</wsdl:definitions></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache></con:interface><con:testSuite name="Sample Simple TestSuite"><con:description>This is a sample TestSuite.
+</soapenv:Envelope>]]></con:request></con:call></con:operation><con:definitionCache rootPart="file:C:\eviware\Projects\WSDL\sample.wsdl"><con:part><con:url>file:C:\eviware\Projects\WSDL\sample.wsdl</con:url><con:content>
+<wsdl:definitions name="sample" targetNamespace="http://www.example.org/sample/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.example.org/sample/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.example.org/sample/">
+      <xsd:element name="searchResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="item" type="tns:ItemType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="ItemType">
+        <xsd:sequence>
+          <xsd:element name="id" type="xsd:string"/>
+          <xsd:element name="description" type="xsd:string"/>
+          <xsd:element name="price" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="buyResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="purchasestatus" type="tns:PurchaseStatusType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="PurchaseStatusType">
+        <xsd:sequence>
+          <xsd:element name="id" type="xsd:string"/>
+          <xsd:element name="stockStatus" type="xsd:string"/>
+          <xsd:element name="expectedDelivery" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="loginRequest">
+    <wsdl:part name="username" type="xsd:string"/>
+    <wsdl:part name="password" type="xsd:string"/>
+  </wsdl:message>
+  <wsdl:message name="loginResponse">
+    <wsdl:part name="sessionid" type="xsd:string"/>
+  </wsdl:message>
+    <wsdl:message name="logoutResponse">
+    <wsdl:part name="sessioninfo" type="xsd:string"/>
+  </wsdl:message>
+  <wsdl:message name="logoutRequest">
+    <wsdl:part name="sessionid" type="xsd:string"/>
+  </wsdl:message>
+  <wsdl:message name="searchRequest">
+    <wsdl:part name="sessionid" type="xsd:string"/>
+    <wsdl:part name="searchstring" type="xsd:string"/>
+  </wsdl:message>
+  <wsdl:message name="searchResponse">
+    <wsdl:part name="searchresult" element="tns:searchResponse"/>
+  </wsdl:message>
+  <wsdl:message name="buyRequest">
+    <wsdl:part name="sessionid" type="xsd:string"/>
+    <wsdl:part name="buystring" type="xsd:string"/>
+  </wsdl:message>
+  <wsdl:message name="buyResponse">
+    <wsdl:part name="buyresult" element="tns:buyResponse"/>
+  </wsdl:message>
+  <wsdl:message name="login_faultMsg">
+    <wsdl:part name="loginFault" type="xsd:string"/>
+  </wsdl:message>
+  <wsdl:message name="logout_faultMsg">
+    <wsdl:part name="logoutFault" type="xsd:string"/>
+  </wsdl:message>
+  <wsdl:message name="search_faultMsg">
+    <wsdl:part name="searchFault" type="xsd:string"/>
+  </wsdl:message>
+  <wsdl:message name="buy_faultMsg">
+    <wsdl:part name="buyFault" type="xsd:string"/>
+  </wsdl:message>
+  <wsdl:portType name="ISampleService">
+    <wsdl:operation name="login">
+      <wsdl:input message="tns:loginRequest"/>
+      <wsdl:output message="tns:loginResponse"/>
+      <wsdl:fault name="fault" message="tns:login_faultMsg"/>
+    </wsdl:operation>
+    <wsdl:operation name="logout">
+      <wsdl:input message="tns:logoutRequest"/>
+      <wsdl:output message="tns:logoutResponse"/>
+      <wsdl:fault name="fault" message="tns:logout_faultMsg"/>
+    </wsdl:operation>
+    <wsdl:operation name="search">
+      <wsdl:input message="tns:searchRequest"/>
+      <wsdl:output message="tns:searchResponse"/>
+      <wsdl:fault name="fault" message="tns:search_faultMsg"/>
+    </wsdl:operation>
+    <wsdl:operation name="buy">
+      <wsdl:input message="tns:buyRequest"/>
+      <wsdl:output message="tns:buyResponse"/>
+      <wsdl:fault name="fault" message="tns:buy_faultMsg"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SampleServiceSoapBinding" type="tns:ISampleService">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="login">
+      <soap:operation soapAction="http://www.example.org/sample/login"/>
+      <wsdl:input>
+        <soap:body use="literal" namespace="http://www.example.org/sample/"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="http://www.example.org/sample/"/>
+      </wsdl:output>
+      <wsdl:fault name="fault">
+        <soap:fault use="literal" name="fault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="logout">
+      <soap:operation soapAction="http://www.example.org/sample/logout"/>
+      <wsdl:input>
+        <soap:body use="literal" namespace="http://www.example.org/sample/"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="http://www.example.org/sample/"/>
+      </wsdl:output>
+      <wsdl:fault name="fault">
+        <soap:fault use="literal" name="fault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="search">
+      <soap:operation soapAction="http://www.example.org/sample/search"/>
+      <wsdl:input>
+        <soap:body use="literal" namespace="http://www.example.org/sample/"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="http://www.example.org/sample/"/>
+      </wsdl:output>
+      <wsdl:fault name="fault">
+        <soap:fault use="literal" name="fault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="buy">
+      <soap:operation soapAction="http://www.example.org/sample/buy"/>
+      <wsdl:input>
+        <soap:body use="literal" namespace="http://www.example.org/sample/"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="http://www.example.org/sample/"/>
+      </wsdl:output>
+      <wsdl:fault name="fault">
+        <soap:fault use="literal" name="fault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SampleService">
+    <wsdl:port name="SamplePort" binding="tns:SampleServiceSoapBinding">
+      <soap:address location="http://www.soapui.org/sample"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache></con:interface><con:testSuite name="Sample Simple TestSuite"><con:description>This is a sample TestSuite.
 
 It contains a number of TestCases Illustrating a number of principles with soapUI.
 
-Try each test and read the descriptions.</con:description><con:settings><con:setting id="ExportJUnitReportAction@report-directory">C:\dev\testreport</con:setting><con:setting id="ExportJUnitReportAction@clear-existing">true</con:setting><con:setting id="ExportJUnitReportAction@format">Frames</con:setting><con:setting id="CreateReportAction@report-directory">C:\dev\testreport</con:setting><con:setting id="CreateReportAction@format">Multiple Pages</con:setting></con:settings><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Simple Login and Logout w. Properties Steps" searchProperties="true"><con:description>TestCase: Simple Login and Logout
+Try each test and read the descriptions.</con:description><con:settings><con:setting id="ExportJUnitReportAction@report-directory">C:\dev\testreport</con:setting><con:setting id="ExportJUnitReportAction@clear-existing">true</con:setting><con:setting id="ExportJUnitReportAction@format">Frames</con:setting><con:setting id="CreateReportAction@report-directory">C:\dev\testreport</con:setting><con:setting id="CreateReportAction@format">Multiple Pages</con:setting></con:settings><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Simple Login and Logout w. Properties Steps" searchProperties="true" id="1366529d-ee43-4ea2-b3d5-fe87615c8528" maxResults="0"><con:description>TestCase: Simple Login and Logout
 
 This one is easy...
 
 The test will first login and then it will logout. :-)
 
 We are using a Property Transfer Step to  move password and user name from a Properties Step to the 
-Request and a second Property Transfer Step to move the sessionID we got in the login response to the logout request..</con:description><con:settings/><con:testStep type="properties" name="Properties: Username and Password"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>Username</con:name><con:value>Loginn</con:value></con:property><con:property><con:name>Password</con:name><con:value>Loginn123</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer: Move Username and Password"><con:settings/><con:config xsi:type="con:TransferValuesStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true"><con:name>TransferUser</con:name><con:sourceType>Username</con:sourceType><con:sourceStep>Properties: Username and Password</con:sourceStep><con:targetType>Request</con:targetType><con:targetStep>Test Request: login</con:targetStep><con:targetPath>declare namespace sam='http://www.example.org/sample/';
+Request and a second Property Transfer Step to move the sessionID we got in the login response to the logout request..</con:description><con:settings/><con:testStep type="properties" name="Properties: Username and Password"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>Username</con:name><con:value>Loginn</con:value></con:property><con:property><con:name>Password</con:name><con:value>Loginn123</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer: Move Username and Password"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true"><con:name>TransferUser</con:name><con:sourceType>Username</con:sourceType><con:sourceStep>Properties: Username and Password</con:sourceStep><con:targetType>Request</con:targetType><con:targetStep>Test Request: login</con:targetStep><con:targetPath>declare namespace sam='http://www.example.org/sample/';
 //sam:login/username</con:targetPath></con:transfers><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" transferToAll="false"><con:name>TransferPass</con:name><con:sourceType>Password</con:sourceType><con:sourceStep>Properties: Username and Password</con:sourceStep><con:targetType>Request</con:targetType><con:targetStep>Test Request: login</con:targetStep><con:targetPath>declare namespace sam='http://www.example.org/sample/';
 //sam:login/password</con:targetPath></con:transfers></con:config></con:testStep><con:testStep type="request" name="Test Request: login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>SampleServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request: login" wssPasswordType=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
    <soapenv:Header/>
@@ -206,16 +202,16 @@ Request and a second Property Transfer Step to move the sessionID we got in the 
          <password>Loginn123</password>
       </sam:login>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer: Move sessionID"><con:settings/><con:config xsi:type="con:TransferValuesStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" transferToAll="false" ignoreEmpty="false"><con:name>MoveSessionId</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>Test Request: login</con:sourceStep><con:sourcePath>declare namespace sam='http://www.example.org/sample/';
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer: Move sessionID"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" transferToAll="false" ignoreEmpty="false"><con:name>MoveSessionId</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>Test Request: login</con:sourceStep><con:sourcePath>declare namespace sam='http://www.example.org/sample/';
 //sam:loginResponse/sessionid</con:sourcePath><con:targetType>Request</con:targetType><con:targetStep>Test Request: logout</con:targetStep><con:targetPath>declare namespace sam='http://www.example.org/sample/';
 //sam:logout/sessionid</con:targetPath></con:transfers></con:config></con:testStep><con:testStep type="request" name="Test Request: logout"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>SampleServiceSoapBinding</con:interface><con:operation>logout</con:operation><con:request name="Test Request: logout" wssPasswordType=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
    <soapenv:Header/>
    <soapenv:Body>
       <sam:logout>
-         <sessionid>5497558240695668</sessionid>
+         <sessionid>3169505463059118</sessionid>
       </sam:logout>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion></con:request></con:config></con:testStep></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Simple Login and Logout Property Expansion" searchProperties="true"><con:description>TestCase: Simple Login and Logout
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Simple Login and Logout Property Expansion" searchProperties="true" id="42f75612-b163-4f61-9a8c-5c8ded5c6097" maxResults="0"><con:description>TestCase: Simple Login and Logout
 
 This one is easy and a little tighter than "Simple Login and Logout w. Properties Steps"
 
@@ -237,7 +233,7 @@ Step to the Request and a second Property Transfer Step to move the sessionID we
          <sessionid>${Test Request: login#Response#//sam:loginResponse/sessionid}</sessionid>
       </sam:logout>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion></con:request></con:config></con:testStep></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Simple Login and Logout and Login Again" searchProperties="true"><con:description>TestCase: Simple Login and Logout
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Simple Login and Logout and Login Again" searchProperties="true" id="42e48e79-c749-4bd8-a020-892561125539" maxResults="0"><con:description>TestCase: Simple Login and Logout
 
 This one is a bit wonky, but has its reasons. What we are testing is that we are able to login again after a logout.
 
@@ -277,13 +273,13 @@ The last step is there in order for us to be able to run the test continuously.<
          <sessionid>${Test Request: login again#Response#//sam:loginResponse/sessionid}</sessionid>
       </sam:logout>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion></con:request></con:config></con:testStep></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Simple Search TestCase" searchProperties="true"><con:description>TestCase: Simple Search TestCase
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Simple Search TestCase" searchProperties="true" id="2d0bfd03-8722-4a0f-8a21-5ecf684275b1" maxResults="0"><con:description>TestCase: Simple Search TestCase
 
 
 The test extends the previous TastCases by doing a simple search between login and logout.
 
 We are using a Property Transfer Step to  move password and user name from a Properties Step to the 
-Request and a second Property Transfer Step to move the sessionID we got in the login response to the logout request..</con:description><con:settings/><con:testStep type="properties" name="Properties: Username and Password"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>Username</con:name><con:value>Logini</con:value></con:property><con:property><con:name>Password</con:name><con:value>Logini123</con:value></con:property><con:property><con:name>SearchPhrase</con:name><con:value>Item 1</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer: Move Username and Password"><con:settings/><con:config xsi:type="con:TransferValuesStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true"><con:name>TransferUser</con:name><con:sourceType>Username</con:sourceType><con:sourceStep>Properties: Username and Password</con:sourceStep><con:targetType>Request</con:targetType><con:targetStep>Test Request: login</con:targetStep><con:targetPath>declare namespace sam='http://www.example.org/sample/';
+Request and a second Property Transfer Step to move the sessionID we got in the login response to the logout request..</con:description><con:settings/><con:testStep type="properties" name="Properties: Username and Password"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>Username</con:name><con:value>Logini</con:value></con:property><con:property><con:name>Password</con:name><con:value>Logini123</con:value></con:property><con:property><con:name>SearchPhrase</con:name><con:value>Item 1</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer: Move Username and Password"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true"><con:name>TransferUser</con:name><con:sourceType>Username</con:sourceType><con:sourceStep>Properties: Username and Password</con:sourceStep><con:targetType>Request</con:targetType><con:targetStep>Test Request: login</con:targetStep><con:targetPath>declare namespace sam='http://www.example.org/sample/';
 //sam:login/username</con:targetPath></con:transfers><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" transferToAll="false"><con:name>TransferPass</con:name><con:sourceType>Password</con:sourceType><con:sourceStep>Properties: Username and Password</con:sourceStep><con:targetType>Request</con:targetType><con:targetStep>Test Request: login</con:targetStep><con:targetPath>declare namespace sam='http://www.example.org/sample/';
 //sam:login/password</con:targetPath></con:transfers></con:config></con:testStep><con:testStep type="request" name="Test Request: login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>SampleServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request: login" wssPasswordType=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
    <soapenv:Header/>
@@ -293,7 +289,7 @@ Request and a second Property Transfer Step to move the sessionID we got in the 
          <password>Logini123</password>
       </sam:login>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer: Move sessionID"><con:settings/><con:config xsi:type="con:TransferValuesStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" transferToAll="false" ignoreEmpty="false"><con:name>MoveSessionId</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>Test Request: login</con:sourceStep><con:sourcePath>declare namespace sam='http://www.example.org/sample/';
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer: Move sessionID"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" transferToAll="false" ignoreEmpty="false"><con:name>MoveSessionId</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>Test Request: login</con:sourceStep><con:sourcePath>declare namespace sam='http://www.example.org/sample/';
 //sam:loginResponse/sessionid</con:sourcePath><con:targetType>Request</con:targetType><con:targetStep>Test Request: logout</con:targetStep><con:targetPath>declare namespace sam='http://www.example.org/sample/';
 //sam:logout/sessionid</con:targetPath></con:transfers><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false"><con:name>moveSessionID Search</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>Test Request: login</con:sourceStep><con:sourcePath>declare namespace sam='http://www.example.org/sample/';
 //sam:loginResponse/sessionid</con:sourcePath><con:targetType>Request</con:targetType><con:targetStep>Test Request: search</con:targetStep><con:targetPath>declare namespace sam='http://www.example.org/sample/';
@@ -302,7 +298,7 @@ Request and a second Property Transfer Step to move the sessionID we got in the 
    <soapenv:Header/>
    <soapenv:Body>
       <sam:search>
-         <sessionid>11471215314023997</sessionid>
+         <sessionid>12988858379997437</sessionid>
          <searchstring>Item 1</searchstring>
       </sam:search>
    </soapenv:Body>
@@ -310,14 +306,14 @@ Request and a second Property Transfer Step to move the sessionID we got in the 
    <soapenv:Header/>
    <soapenv:Body>
       <sam:logout>
-         <sessionid>11471215314023997</sessionid>
+         <sessionid>12988858379997437</sessionid>
       </sam:logout>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion></con:request></con:config></con:testStep></con:testCase></con:testSuite><con:testSuite name="Sample TestSuite fails if we don't get faults"><con:description>This is a complementary TestSuite that illustrates something important.
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:testSuite name="Sample TestSuite fails if we don't get faults"><con:description>This is a complementary TestSuite that illustrates something important.
 
 Do not only test that your Web Service works under the right conditions, also test that it work under the wrong ones.
 
-One of the strengths of soapUI is the ability do quickly create a number of destructive tests, that confirms that the your Web Service handles input errors, abuse, input faults etc. correctly.</con:description><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="TestCase: Invalid Login" searchProperties="true"><con:description>Now, what's this? TestCases that we want to fail?
+One of the strengths of soapUI is the ability do quickly create a number of destructive tests, that confirms that the your Web Service handles input errors, abuse, input faults etc. correctly.</con:description><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="TestCase: Invalid Login" searchProperties="true" id="99e09471-734c-45a0-9f64-98ea05e24b43" maxResults="0"><con:description>Now, what's this? TestCases that we want to fail?
 
 Yes, sometimes it's a great idea to test that the Web Service fail when it should and fail correctly.
 Therefore the TestCase will pass if we get fails for every test in the Case.
@@ -382,7 +378,7 @@ These tests are for login alone.</con:description><con:settings/><con:testStep t
       </sam:logout>
    </soapenv:Body>
 </soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="XPath Match"><con:configuration><path>declare namespace sam='http://www.example.org/sample/';
-//sam:logoutResponse/sessioninfo</path><content>OK</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion></con:request></con:config></con:testStep></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="TestCase: Invalid Search" searchProperties="true"><con:description>Another batch of TestCases that we want to fail?
+//sam:logoutResponse/sessioninfo</path><content>OK</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="TestCase: Invalid Search" searchProperties="true" id="6bd446a9-6c40-45c8-bb0e-39f77a24c50a" maxResults="0"><con:description>Another batch of TestCases that we want to fail?
 
 These tests expands on what we did with "TestCase: Invalid Login" and shows some important test that you always should have.
 
@@ -447,7 +443,7 @@ These tests expands on what we did with "TestCase: Invalid Login" and shows some
          <searchstring>Item 2</searchstring>
       </sam:search>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Failed to find matching operation for request</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request: Login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>SampleServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request: Login" wssPasswordType=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Missing operation for soapAction [http://www.example.org/sample/search] and body element [{http://www.example.org/sample/}search] with SOAP Version [SOAP 1.1]</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request: Login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>SampleServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request: Login" wssPasswordType=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
    <soapenv:Header/>
    <soapenv:Body>
       <sam:login>
@@ -504,7 +500,7 @@ These tests expands on what we did with "TestCase: Invalid Login" and shows some
          <searchstring>Item 2</searchstring>
       </sam:search>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Failed to find matching operation for request</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request: logout"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>SampleServiceSoapBinding</con:interface><con:operation>logout</con:operation><con:request name="Test Request: logout" wssPasswordType=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Missing operation for soapAction [http://www.example.org/sample/search] and body element [{http://www.example.org/sample/}search] with SOAP Version [SOAP 1.1]</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request: logout"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>SampleServiceSoapBinding</con:interface><con:operation>logout</con:operation><con:request name="Test Request: logout" wssPasswordType=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
    <soapenv:Header/>
    <soapenv:Body>
       <sam:logout>
@@ -520,7 +516,7 @@ These tests expands on what we did with "TestCase: Invalid Login" and shows some
          <searchstring>Item 4</searchstring>
       </sam:search>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Invalid Session Id</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion></con:request></con:config></con:testStep></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="TestCase: Searching after Logging out LoadTests" searchProperties="true"><con:description>Here is an interesting TestCase.
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Invalid Session Id</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="TestCase: Searching after Logging out LoadTests" searchProperties="true" id="19a9abba-7dd8-42e4-8e6f-cbb87e327ffd" maxResults="0"><con:description>Here is an interesting TestCase.
 
 The actual TestCase itself is not that interesting, but we've used it in order to test how the Web Service handles load.
 
@@ -556,7 +552,7 @@ Bug Found!
          <searchstring>Item 4</searchstring>
       </sam:search>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Invalid Session Id</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion></con:request></con:config></con:testStep><con:loadTest name="LoadTest"><con:settings/><con:threadCount>1</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>60</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Simple</con:type></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors></con:loadTest><con:loadTest name="LoadTest with Multiple Tests (will fail)"><con:settings/><con:threadCount>10</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>60</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Simple</con:type></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:assertion type="Max Errors" name="After 30 errors, stop"><con:configuration><name>After 30 errors, stop</name><max-absolute-errors>30</max-absolute-errors><max-relative-errors>0.0</max-relative-errors><test-step>- Any -</test-step></con:configuration></con:assertion><con:maxAssertionErrors>100</con:maxAssertionErrors></con:loadTest></con:testCase></con:testSuite><con:testSuite name="Sample expanded TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Search  and Buy TestCase" searchProperties="true"><con:description>TestCase: Search and Buy TestCase
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Invalid Session Id</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion></con:request></con:config></con:testStep><con:loadTest name="LoadTest"><con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings><con:threadCount>1</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>60</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Simple</con:type></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval></con:loadTest><con:loadTest name="LoadTest with Multiple Tests (will fail)"><con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings><con:threadCount>10</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>60</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Simple</con:type></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:assertion type="Max Errors" name="After 30 errors, stop"><con:configuration><name>After 30 errors, stop</name><max-absolute-errors>30</max-absolute-errors><max-relative-errors>0.0</max-relative-errors><test-step>- Any -</test-step></con:configuration></con:assertion><con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval></con:loadTest><con:properties/></con:testCase><con:properties/></con:testSuite><con:testSuite name="Sample expanded TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Search  and Buy TestCase" searchProperties="true" id="93fa6f6a-96bd-4e4a-bf3c-f91d86bca020" maxResults="0"><con:description>TestCase: Search and Buy TestCase
 
 This test is the first expanded TestCase.
 It basically tests our entire MockService by doing the following.
@@ -609,7 +605,7 @@ We will go into that further in the TestCase "TestCase: Searching after Logging 
          <sessionid>${Test Request: login#Response#//sam:loginResponse/sessionid}</sessionid>
       </sam:logout>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion></con:request></con:config></con:testStep><con:loadTest name="LoadTest: Simple Strategy"><con:settings/><con:threadCount>1</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>30</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Simple</con:type></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors></con:loadTest><con:loadTest name="LoadTest: Variance Strategy"><con:settings/><con:threadCount>1</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>30</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Variance</con:type><con:config><interval>5000</interval><variance>0.5</variance></con:config></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors></con:loadTest><con:loadTest name="LoadTest: Burst Strategy"><con:settings/><con:threadCount>1</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>30</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Burst</con:type><con:config><burstDelay>5000</burstDelay><burstDuration>5000</burstDuration></con:config></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors></con:loadTest><con:loadTest name="LoadTest: Thread Strategy"><con:settings/><con:threadCount>2</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>30</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Thread</con:type><con:config><startThreadCount>1</startThreadCount><endThreadCount>2</endThreadCount></con:config></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors></con:loadTest></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="More Than Less Than TestCase" searchProperties="true"><con:description>This TestCase shows some interesting assertions. Check out the search TestStep, there are two assertions "XPath retrieve sibling value" 
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion></con:request></con:config></con:testStep><con:loadTest name="LoadTest: Simple Strategy"><con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings><con:threadCount>1</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>30</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Simple</con:type></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval></con:loadTest><con:loadTest name="LoadTest: Variance Strategy"><con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings><con:threadCount>1</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>30</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Variance</con:type><con:config><interval>5000</interval><variance>0.5</variance></con:config></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval></con:loadTest><con:loadTest name="LoadTest: Burst Strategy"><con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings><con:threadCount>1</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>30</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Burst</con:type><con:config><burstDelay>5000</burstDelay><burstDuration>5000</burstDuration></con:config></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval></con:loadTest><con:loadTest name="LoadTest: Thread Strategy"><con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings><con:threadCount>2</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>30</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Thread</con:type><con:config><startThreadCount>1</startThreadCount><endThreadCount>2</endThreadCount></con:config></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval></con:loadTest><con:properties/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="More Than Less Than TestCase" searchProperties="true" id="d6d13363-6539-4e78-836d-8dde2f5784bc" maxResults="0"><con:description>This TestCase shows some interesting assertions. Check out the search TestStep, there are two assertions "XPath retrieve sibling value" 
 and "XPath Match More Than Less Than" that shows some interesting ways of using XPath.</con:description><con:settings/><con:testStep type="properties" name="Properties: Username and Password"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>Username</con:name><con:value>Logini</con:value></con:property><con:property><con:name>Password</con:name><con:value>Logini123</con:value></con:property><con:property><con:name>SearchPhrase</con:name><con:value>Item 1</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="properties" name="Properties: Wanted Response"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>Item</con:name><con:value>Item 3</con:value></con:property><con:property><con:name>Wanted At Least</con:name><con:value>2.50</con:value></con:property><con:property><con:name>Wanted at most</con:name><con:value>3.50</con:value></con:property><con:property><con:name>Sibling</con:name><con:value>2.99</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="request" name="Test Request: login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>SampleServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request: login" wssPasswordType=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
    <soapenv:Header/>
    <soapenv:Body>
@@ -640,7 +636,7 @@ and
          <sessionid>${Test Request: login#Response#//sam:loginResponse/sessionid}</sessionid>
       </sam:logout>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion></con:request></con:config></con:testStep></con:testCase></con:testSuite><con:mockService port="8088" path="/mockSampleServiceSoapBinding" name="SampleServiceSoapBinding MockService"><con:settings/><con:mockOperation name="login" interface="SampleServiceSoapBinding" operation="login"><con:settings/><con:dispatchPath>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:mockService port="8088" path="/mockSampleServiceSoapBinding" name="SampleServiceSoapBinding MockService"><con:settings/><con:mockOperation name="login" interface="SampleServiceSoapBinding" operation="login"><con:settings/><con:dispatchPath>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
 def holder = groovyUtils.getXmlHolder( mockRequest.requestContent )
 
 def username = holder.getNodeValue( "//username" )
@@ -689,7 +685,7 @@ return "Ok Response"
       </detail>
     </soapenv:Fault>
   </soapenv:Body>
-</soapenv:Envelope>]]></con:responseContent></con:response></con:mockOperation><con:mockOperation name="logout" interface="SampleServiceSoapBinding" operation="logout"><con:settings/><con:dispatchPath>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
+</soapenv:Envelope>]]></con:responseContent></con:response><con:dispatchConfig/></con:mockOperation><con:mockOperation name="logout" interface="SampleServiceSoapBinding" operation="logout"><con:settings/><con:dispatchPath>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
 def holder = groovyUtils.getXmlHolder( mockRequest.requestContent )
 
 def sessionid = holder.getNodeValue( "//sessionid" )
@@ -718,7 +714,7 @@ return "Ok Response"
       <faultstring>Invalid Session Id</faultstring>
     </soapenv:Fault>
   </soapenv:Body>
-</soapenv:Envelope>]]></con:responseContent></con:response></con:mockOperation><con:mockOperation name="search" interface="SampleServiceSoapBinding" operation="search"><con:settings/><con:dispatchPath>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
+</soapenv:Envelope>]]></con:responseContent></con:response><con:dispatchConfig/></con:mockOperation><con:mockOperation name="search" interface="SampleServiceSoapBinding" operation="search"><con:settings/><con:dispatchPath>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
 def holder = groovyUtils.getXmlHolder( mockRequest.requestContent )
 
 def sessionid = holder.getNodeValue( "//sessionid" )
@@ -913,7 +909,7 @@ return "Search Response"</con:dispatchPath><con:dispatchStyle>SCRIPT</con:dispat
          </sam:searchResponse>
       </sam:searchResponse>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:responseContent></con:response></con:mockOperation><con:mockOperation name="buy" interface="SampleServiceSoapBinding" operation="buy"><con:settings/><con:dispatchPath>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
+</soapenv:Envelope>]]></con:responseContent></con:response><con:dispatchConfig/></con:mockOperation><con:mockOperation name="buy" interface="SampleServiceSoapBinding" operation="buy"><con:settings/><con:dispatchPath>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
 def holder = groovyUtils.getXmlHolder( mockRequest.requestContent )
 
 def sessionid = holder.getNodeValue( "//sessionid" )
@@ -1056,4 +1052,4 @@ return "Search Response"</con:dispatchPath><con:dispatchStyle>SCRIPT</con:dispat
             </purchasestatus>¨
          </sam:buyResponse>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:responseContent></con:response></con:mockOperation></con:mockService></con:soapui-project>
+</soapenv:Envelope>]]></con:responseContent></con:response><con:dispatchConfig/></con:mockOperation><con:properties/></con:mockService><con:requirements/><con:properties/><con:wssContainer/></con:soapui-project>

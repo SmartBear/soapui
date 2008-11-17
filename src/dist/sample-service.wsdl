@@ -39,6 +39,9 @@
   <wsdl:message name="loginResponse">
     <wsdl:part name="sessionid" type="xsd:string"/>
   </wsdl:message>
+    <wsdl:message name="logoutResponse">
+    <wsdl:part name="sessioninfo" type="xsd:string"/>
+  </wsdl:message>
   <wsdl:message name="logoutRequest">
     <wsdl:part name="sessionid" type="xsd:string"/>
   </wsdl:message>
@@ -76,7 +79,7 @@
     </wsdl:operation>
     <wsdl:operation name="logout">
       <wsdl:input message="tns:logoutRequest"/>
-      <wsdl:output message="tns:NewMessage"/>
+      <wsdl:output message="tns:logoutResponse"/>
       <wsdl:fault name="fault" message="tns:logout_faultMsg"/>
     </wsdl:operation>
     <wsdl:operation name="search">
@@ -112,6 +115,9 @@
       <wsdl:output>
         <soap:body use="literal" namespace="http://www.example.org/sample/"/>
       </wsdl:output>
+      <wsdl:fault name="fault">
+        <soap:fault use="literal" name="fault"/>
+      </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="search">
       <soap:operation soapAction="http://www.example.org/sample/search"/>
@@ -121,6 +127,9 @@
       <wsdl:output>
         <soap:body use="literal" namespace="http://www.example.org/sample/"/>
       </wsdl:output>
+      <wsdl:fault name="fault">
+        <soap:fault use="literal" name="fault"/>
+      </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="buy">
       <soap:operation soapAction="http://www.example.org/sample/buy"/>
@@ -130,6 +139,9 @@
       <wsdl:output>
         <soap:body use="literal" namespace="http://www.example.org/sample/"/>
       </wsdl:output>
+      <wsdl:fault name="fault">
+        <soap:fault use="literal" name="fault"/>
+      </wsdl:fault>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="SampleService">
