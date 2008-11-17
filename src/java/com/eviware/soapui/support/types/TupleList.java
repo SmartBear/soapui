@@ -57,7 +57,7 @@ public class TupleList<T1 extends Object, T2 extends Object> extends ArrayList<T
 
       public String toString()
       {
-         return TupleList.this.toStringHandler( this );
+         return TupleList.this == null ? value1 + " : " + value2 : TupleList.this.toStringHandler( this );
       }
    }
 

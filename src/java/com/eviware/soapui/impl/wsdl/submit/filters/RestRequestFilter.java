@@ -313,7 +313,7 @@ public class RestRequestFilter extends AbstractRequestFilter
    protected void initRootPart( RestRequest wsdlRequest, String requestContent, MimeMultipart mp ) throws MessagingException
    {
       MimeBodyPart rootPart = new PreencodedMimeBodyPart( "8bit" );
-      rootPart.setContentID( AttachmentUtils.ROOTPART_SOAPUI_ORG );
+//      rootPart.setContentID( AttachmentUtils.ROOTPART_SOAPUI_ORG );
       mp.addBodyPart( rootPart, 0 );
 
       DataHandler dataHandler = new DataHandler( new RestRequestDataSource( wsdlRequest, requestContent ) );

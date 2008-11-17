@@ -64,15 +64,14 @@ public class RestRequestMimeMessageRequestEntity implements RequestEntity
          String header = message.getHeader( "Content-Type" )[0];
          int ix = header.indexOf( "boundary" );
 
-         return "multipart/related; type=\"" + restRequest.getMediaType() + "\"; " +
-                 "start=\"" + AttachmentUtils.ROOTPART_SOAPUI_ORG + "\"; " + header.substring( ix );
+         return restRequest.getMediaType() + "; " + header.substring( ix );
       }
       catch( MessagingException e )
       {
          SoapUI.logError( e );
       }
 
-      return null;
+      return restRequest.getMediaType();
    }
 
    public boolean isRepeatable()

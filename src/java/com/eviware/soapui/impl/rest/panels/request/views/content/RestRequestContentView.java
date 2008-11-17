@@ -308,7 +308,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
          {
             protected String toStringHandler( Tuple tuple )
             {
-               return tuple.getValue2().getContainerField().getName().toString();
+               return tuple.getValue2().getDocumentElementName().toString();
             }
          };
 
@@ -334,7 +334,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
             return;
          }
 
-         restRequest.setRequestContent( SampleXmlUtil.createSampleForElement( (SchemaGlobalElement) result.getValue2().getContainerField() ) );
+         restRequest.setRequestContent( SampleXmlUtil.createSampleForType( result.getValue2() ) );
       }
    }
 
