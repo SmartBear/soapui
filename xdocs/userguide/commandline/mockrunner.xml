@@ -34,8 +34,36 @@
 		 <tr>
 		 	<td>s</td>
 		 	<td>The soapui-settings.xml file to use</td>
+	 	</tr>
+	 	<tr>
+	 		<td>x</td>
+	 		<td>Sets project password for decryption if project is encrypted</td>
+	 	</tr>
+	 	<tr>
+	 		<td>v</td>
+	 		<td>Sets password for soapui-settings.xml file</td>
+	 	</tr>
+	 	<tr>
+	 		<td>D</td>
+	 		<td>Sets system property with name=value</td>
+	 	</tr>
+	 	<tr>
+	 		<td>G</td>
+	 		<td>Sets global property with name=value</td>
+	 	</tr>
+	 	<tr>
+	 		<td>f</td>
+	 		<td>Sets the output folder to export results to ( soapUI Pro only )</td>
 	 	</tr>	
-		 	</table>
+	 	<tr>
+	 		<td>o</td>
+	 		<td>Opens the Coverage Report in a browser (with the -g option) ( soapUI Pro only )</td>
+	 	</tr>
+	 	<tr>
+	 		<td>g</td>
+	 		<td>Sets the output to include Coverage HTML reports ( soapUI Pro only )</td>
+	 	</tr>
+		</table>
 		 <p>The distribution contains a mockservicerunner.bat script for running MockServices in the bin directory, 
 		 for example;</p>	
 		 <source>mockservicerunner.bat -m"IOrderService MockService" "C:\Documents and Settings\Ole Matzura\My Documents\demo2-soapui-project.xml"</source>
