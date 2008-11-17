@@ -4,7 +4,7 @@
         <title>web service testing - soapUI 2.5</title>
     </properties>
     <body>
-        <section name="soapUI 2.5 new features!">
+        <section name="soapUI 2.5 new features">
             <p>Welcome to soapUI 2.5, the REST release!</p>
             <p>
                 <i>As always, make backups of your project files before switching and let us know if you have any
@@ -14,10 +14,10 @@
             <table class="webstartlinkstable">
                 <tr>
                     <td align="center" bgcolor="white">
-                        <span class="webstartheader">soapUI 2.5 beta2</span>
+                        <span class="webstartheader">soapUI 2.5</span>
                         <div>
-                            <a href="http://www.soapui.org/jnlp/2.5-beta2/soapui.jnlp"
-                               urchinTracker="/jnlp/soapui/2_5_beta2">
+                            <a href="http://www.soapui.org/jnlp/2.5/soapui.jnlp"
+                               urchinTracker="/jnlp/soapui/2_5">
                                 <img class="webstart" src="images/webstart_green.png" border="0" alt="soapUI WebStart"/>
                             </a>
                         </div>
@@ -26,10 +26,10 @@
                         Download</a>]
                     </td>
                     <td align="center" bgcolor="white">
-                        <span class="webstartheader">soapUI 2.5 beta2 Pro</span>
+                        <span class="webstartheader">soapUI 2.5</span>
                         <div>
-                            <a href="http://www.eviware.com/jnlp/2.5-beta2/soapui-pro.jnlp"
-                               urchinTracker="/jnlp/soapui/2_5_beta2-pro">
+                            <a href="http://www.eviware.com/jnlp/2.5/soapui-pro.jnlp"
+                               urchinTracker="/jnlp/soapui/2_5-pro">
                                 <img class="webstart" src="images/webstart_orange.png" border="0"
                                      alt="soapUI Pro WebStart"/>
                             </a>
@@ -41,6 +41,18 @@
                 </tr>
             </table>
 
+            <p>
+            soapUI 2.5, The REST Release, introduces support for testing of RESTful services, including Inspection, Invocation, Functional Tests, 
+            Assertions and LoadTests. soapUI 2.5 allows tests of both WADL supported and WADLess RESTful Services. 
+            The REST testing support makes soapUI the first testing tool to properly support REST Testing.
+            </p>
+            
+            <p>
+            soapUI 2.5 also includes WADL generation and from WADLess services and Documentation generation from both WADLed and WADLess Services.
+            soapUI 2.5 will allow you to test both XML and JSON output from RESTful Web Services.         
+            </p>
+            
+            
             <p>
                 The most notable improvements to both soapUI and soapUI Pro are described below, on top of these are a
                 large number of bug fixes, minor UI improvements.
