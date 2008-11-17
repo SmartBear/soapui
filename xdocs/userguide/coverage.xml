@@ -88,6 +88,11 @@
 		<ul>
 		<li><b>Count Empty Values</b> - select if empty elements and attributes should be regarded as covered</li>
 		<li><b> ? Values</b> - select if elements and attributes containing '?' should be regarded as covered</li>
+        <li><b>Excluded Elements</b> - a list of element names in the format <code>"{" + Namespace URI + "}" + local part</code> which
+        should be excluded from coverage calculations.</li>
+        <li><b>Multi Values</b> - a list of element names in the format <code>"{" + Namespace URI + "}" + local part=comma-seperated list of values</code>
+            which will count coverage for the specified values. For example if you have a weekday element you could enter
+            <code>{http://my.namespace}weekday=mon,tue,wed,thu,fri,sat,sun</code> and coverage will be calculated for the complete set of values.</li>
 		</ul>
 		
 		@TODO@update the screen shot and options list for coverage optrions

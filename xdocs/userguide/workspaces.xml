@@ -36,8 +36,8 @@
 		 
 		 <subsection name="soapUI Workspace Actions">
 		 
-		 <columns><column><div>
-		 The following actions are available from the workspace nodes right-button 
+		<p>
+            The following actions are available from the workspace nodes right-button
 		 menu (and from the main "File" menu):
 		 <ul>
 		 <li><b>New SoapUI Project</b> : Prompts to create a new <a href="projects/index.html">SoapUI Project</a>.</li>
@@ -54,23 +54,21 @@
 		 <li><b>Switch Workspace</b> - Prompts for an existing workspace file to switch to (all current projects will 
 		 be saved before making the actual switch).</li>
 		 <li><b>Online Help</b> - Displays this page in an external browser</li>
-		 </ul></div>
-		 </column>
-		 </columns>		 
+		 </ul></p>
 		</subsection>
 		  <subsection name="soapUI Workspace Details Tab">
-		  <columns><column><div>
-		 The "Details" tab shown in the bottom left shows the following values when the workspace node is selected in 
+		  <p>
+              The "Details" tab shown in the bottom left shows the following values when the workspace node is selected in
 		 the navigation tree
 		 <ul>
 		 <li><b>Name</b> : the name of the current workspace</li>
 	     <li><b>Description</b> : an arbitrary description of the current workspace, displayed as a tooltip over the 
 		   workspace node in the Navigator.</li>
 		 <li><b>File</b> (read-only): the current workspace file used</li>
+          <li><b>Project Root</b> : the root folder to user for projects</li>
 		 </ul>
-		 </div></column><column>
-	     <img src="images/workspace_details_tab.gif" border="0" alt="Workspace Details in soapUI"/>
-		  </column></columns>
+		 </p>
+	    
 		 </subsection>
 		 
 		 <p><hr size="1"/>Next: <a href="projects/index.html">Web Service Test Projects</a></p>

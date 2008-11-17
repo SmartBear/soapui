@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <document>
     <properties>
-        <title>userguide - interfaces</title>
+        <title>userguide - soapUI WSDL Interfaces</title>
     </properties>
     <body>
-		<section name="Interfaces">
+		<section name="WSDL Interfaces">
 		 
-		 <p>In the current implementation of the internal soapUI object model, Interfaces in soapUI 
-		 correspond to SOAP/HTTP Bindings for a PortType. Once imported using one of the "Import WSDL from.." actions,
+		 <p>In the current implementation of the internal soapUI object model, WSDL Interfaces
+		 correspond to SOAP/HTTP Bindings for a PortType. Once imported using the "Add WSDL.." action,
 		 the interfaces' operations and default requests will be visible in the navigator tree. The actual import process 
 		 is below described in <a href="#WSDL_Importing_Details">more detail</a>.</p>
 		 <subsection name="Interface Actions">
@@ -21,7 +21,7 @@
 		 <a href="../tools/tcpmon.html">TcpMon Integration</a>.</li>
 		 <li><b>Generate TestSuite</b> : Generates a complete TestSuite for this interface <a href="functional/testsuites.html">(see more here)</a></li>
 		 <li><b>Generate MockService</b> : Generates a complete MockService for this interface <a href="mock/services.html">(see more here)</a></li>
-		 <li><b>Generate Documentation</b> : Generate simple HTML documentation for this WSDL</li>
+		 <li><b>Generate Documentation</b> : Generates a simple HTML documentation for the entire WSDL defining the Interface</li>
 		 <li><b>Update Definition</b> : <a href="#Updating_the_Interface_Definition">see below</a></li>
 		 <li><b>Refactor Definition (Pro Only)</b> : Starts the WSDL refactor definition Wizard. <a href="refactoring.html">Read More Here</a></li>
 		 <li><b>Export Definition</b> : prompts for a local folder and saves the entire definition (including imported/included documents) to
@@ -91,8 +91,8 @@
 		 </subsection>
 		 
 		 <subsection name="Interface Details Tab">
-		  <columns><column><div>
-		 The "Details" tab shown in the bottom-left shows the following values when an Interface node is selected in 
+		  <p>
+              The "Details" tab shown in the bottom-left shows the following values when an Interface node is selected in
 		 the navigation tree
 		 <ul>
 		 <li><b>PortType</b> (read-only): The name of the WSDL PortType that the Binding exposes</li>
@@ -101,9 +101,9 @@
 		 <li><b>Binding</b> (read-only): The name of the WSDL Binding for the interface in <code>{namespace}name</code> format</li>
 		 <li><b>SOAP Version</b> : The SOAP Version to use for this interface; SOAP 1.1 or SOAP 1.2. This will affect both 
 		 generated requests (namespaces and content) and according HTTP Headers</li>
-		 <li><b>Cached</b> (read-only): Shows if this definition is currently cached in memory</li>
+		 <li><b>Cached</b> (read-only): Shows if this definition is cached in the project file (not neccessarily in memory yet)</li>
 		 <li><b>Style</b> (read-only): Shows if this is a Document or RPC definition</li>
-		 <li><b>WS-A version</b> : Shows wsa namespace version</li>
+		 <li><b>WS-A version</b> : Shows WS-Addressing namespace version</li>
 		 <li><b>WS-A anonymous</b> : indicates the value of WS Addressing anonymous as specified in 
 		 <a href="http://www.w3.org/TR/2007/REC-ws-addr-metadata-20070904/#wspolicyanonresponses">
 		 Web Services Addressing 1.0 Metadata specification</a>. Allowed values are:
@@ -113,9 +113,7 @@
 		 </li>
 		 
 		 </ul>
-		 </div></column><column>
-			<img src="images/interface_details_tab.gif" border="0"/>
-		  </column></columns>
+		</p>
 		 </subsection>
 		 
 		 

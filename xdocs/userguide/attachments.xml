@@ -28,13 +28,14 @@
 		<p align="center"><img src="images/attachments_tab.gif" alt="Attachment handling for SOAP Testing"/></p>
 		<p>The attachment-table contains the following columns:</p>
 		<ul>
-		<li><b>Name</b> (read-only) - The filename of the attachment</li>
+		<li><b>Name</b> - The filename of the attachment, support property-expansion and is relative to ResourceRoot</li>
 		<li><b>Content-Type</b> - The MIME content-type of the attachment</li>
 		<li><b>Size</b> (read-only) - The size of the attached file</li>
 		<li><b>Part</b> - The part this attachment should be associated with (see below)</li>
 		<li><b>Type</b> (read-only) - The type of attachment (depends on the attachments Part, see below)</li>
 		<li><b>ContentID</b> - Allows overriding of the content ID taken from the MIME part definition in the 
 		corresponding WSDL</li>
+        <li><b>Cached</b> - Shows if the attachment is cached in the project file</li>
 		</ul>
 		<p>Double-clicking an attachment in either message will attempt to save the attachment to a temporary file 
 		(unless it is relative as described below) and open that file in the systems Web Browser.</p>
@@ -115,8 +116,9 @@
 
 		<subsection name="MTOM Attachments for Web Service Testing">
 		<p>The MTOM specification describes optimized transport of binary data in SOAP-messages. The corresponding
-		data-type used for the binary data message element should be one of the XMIME data types (soapUI 1.7.6 removes
-		this requirement; all binary content will be MTOM encoded if MTOM is enabled). For example if the 
+		data-type used for the binary data message element should be one of the XMIME data types (soapUI 2.5 removes
+		this requirement all together; all element content will checked for and MTOM encoded if MTOM is enabled and there is
+        an attachment reference as described below). For example if the 
 		request operations'	schema defines the following:</p>
 		<source><![CDATA[<wsdl:definitions xmlns:xmime="http://www.w3.org/2005/05/xmlmime
 ...		

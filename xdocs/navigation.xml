@@ -66,13 +66,14 @@
                 <item href="/userguide/projects/wss.html" name="WS-Security"/>
                 <item href="/userguide/projects/encryption.html" name="Encryption"/>
                 <item href="/userguide/projects/composite-projects.html" name="Composite Projects" pro="true"/>
+                <item href="/userguide/projects/resolving.html" name="Project Resolving"/>
             </item>
 
             <item href="/userguide/interfaces/index.html" name="WSDL Interfaces">
                 <item href="/userguide/interfaces/interfaceview.html" name="Interface View"/>
-                <item href="/userguide/interfaces/endpoints.html" name="Service Endpoints"/>
+<!--                <item href="/userguide/interfaces/endpoints.html" name="Service Endpoints"/>
                 <item href="/userguide/interfaces/interfaceeditor.html" name="WSDL Content"/>
-                <item href="/userguide/interfaces/wsi.html" name="WS-I Compliance"/>
+   -->             <item href="/userguide/interfaces/wsi.html" name="WS-I Compliance"/>
                 <item href="/userguide/interfaces/refactoring.html" name="WSDL Refactoring" pro="true"/>
 
                 <item href="/userguide/operations.html" name="WSDL Operations"/>
@@ -81,7 +82,7 @@
                     <item href="/userguide/formeditor.html" name="Form Editor" pro="true"/>
                     <item href="/userguide/overviewview.html" name="Overview View" pro="true"/>
                     <item href="/userguide/outlineeditor.html" name="Outline Editor" pro="true"/>
-                    <item href="/userguide/messageinspectors.html" name="Message Inspectors" pro="true"/>
+                    <item href="/userguide/messageinspectors.html" name="Pro Inspectors" pro="true"/>
                     <item href="/userguide/attachments.html" name="Attachments/Inline Files"/>
                 </item>
             </item>
@@ -103,6 +104,8 @@
 
             <item href="/userguide/scripting.html" name="Scripting">
                 <item href="/userguide/scripting.html#Groovy_Script_Library" name="Script Library" pro="true"/>
+               <item href="/userguide/scripting.html#Dynamic_Properties" name="Dynamic Properties"/>
+                <item href="/userguide/scripting.html#Code_Templates" name="Code Templates" pro="true"/>
             </item>
             <item href="/userguide/properties.html" name="Properties">
                 <item href="/userguide/properties.html#Property_Expansion_in_soapUI" name="Property Expansion"/>

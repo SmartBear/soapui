@@ -57,7 +57,7 @@
                             <b>Much Improved WS-Addressing Support</b>
                         </p>
                         <ul>
-                            <li>Better control over generated headers</li>
+                            <li>Better contrrol over generated headers</li>
                             <li>Configuration for WSA Response assertion</li>
                             <li>New WSA-Request asssertion for assertion WS-A headers posted to a MockResponseStep</li>
                             <li>bugfixes..</li>

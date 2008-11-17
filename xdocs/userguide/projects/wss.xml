@@ -50,13 +50,13 @@
 		<p>The following columns are available in the Keystores table:</p>
 		
 		<ul>
-		@TODO@Check these options, no Security Provider in the application 
 		<li>Source : the source file of the keystore/certificate (Read Only)</li>
 		<li>Status : the load-status of the keystore/certificate (Read Only</li>
 		<li>Password : the keystore password if required</li>
 		<li>Default Alias : the default alias in a keystore to use for validation or decryption</li>
 		<li>Default Password : the password for default alias</li>
-		<li>Security Provider : the JSSE Security Provider to use for handling certificates</li>
+		<li>Security Provider : the JSSE Security Provider to use for handling certificates -> Removed in 2.5, if you need it
+        back let us know!</li>
 		</ul>
 		
 		</subsection>
@@ -91,8 +91,8 @@
 		"PasswordDigest Ext" option is non standard and should only be used for interop issues where the message receiver
 		desires an extra MD5 Hash of the password.</li>
 		<p align="center"><img src="images/wss_username_entry.gif" alt="Setting Username for Web Services"/></p>
-		@TODO@all the screen shots labels are right justified, in application left justified...? Timestamp screen shot has no millisecond precision checkbox
-		<li><b>Timestamp</b> - adds a Timestamp token to the outgoing message with the specified Time To Live value.</li>
+		<li><b>Timestamp</b> - adds a Timestamp token to the outgoing message with the specified Time To Live value. The millisecond-precision
+        setting can be turned off for improved WCF compatibility.</li>
 		<p align="center"><img src="images/wss_timestamp_entry.gif" alt="Setting a timestamp for Web Services"/></p>
 		<li><b>SAML</b> - adds a SAML assertion to the outgoing message with the specified assertion content.</li>
 		<p align="center"><img src="images/wss_saml_entry.gif" alt="Setting SAML for Web Services"/></p>

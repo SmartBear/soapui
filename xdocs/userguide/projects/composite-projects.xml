@@ -31,20 +31,29 @@
         </subsection>
         <subsection name="Creating a Project Composite">
         <p>Creating a soapUI composite project is easy. In project properties you can find a property to set ;<b>Composite Project</b>
-        that can be true or false. Setting it to true will make your soapUI Project save in composite form. Projects 
-        that have set <b>Project Password</b> can not be composite.
+        that can be true or false. Setting it to true will make your soapUI Project save in composite form (projects
+        that have set <b>Project Password</b> can not be composite).
         <p align="center"><img src="images/composite-properties.gif" alt="Composite project properties"/></p>
         </p>
         </subsection>
         <subsection name="Composite behavior and actions">
-        <p>When renaming element, like Interface, Operation, TestSuite, TestCase, and more, corresponding elements in the composite
-        file system will be renamed if there is no file or directory with the same name. Otherwise soapUI will warn you. 
-        Deleting element means removing it from the file system. Trough the sub menu <b>Composite Actions</b>, it is 
-        possible to save or reload elements. For TestCases it is possible to export, save at designated location, or import 
-        them into a TestSuite.
+        <p>When renaming elements in a project, ie Interfaces, Operations/Resources, TestSuite, TestCase, and more,
+            corresponding elements in the composite file system will be renamed if there is no file or directory with
+            the same name, otherwise soapUI will show a warning message.
+        Deleting element means removing them from the file system. Through the Projet-popup sub-menu <b>Composite Actions</b>, it is
+        possible to save or reload elements.</p>
+
+        </subsection>
+
+            <subsection name="Import/Export of TestSuites and TestCases"><p>
+
+                For both TestSuites and TestCases it is possible to export and import them from their containing items popup
+                menus; specify a target/source folder as desired. Please note that these are not "compatible" or the same
+                as TestSuites and TestCases in a composite project; this is merely an alternative way for non-Pro users to
+                share Test items between projects/people.
         </p>
         </subsection>
-		 <p><hr size="1"/>Next: <a href="../interfaces/index.html">Interfaces</a></p>
+		 <p><hr size="1"/>Next: <a href="resolving.html">Resolving Project Items</a></p>
 		</section>
     </body>
 </document>

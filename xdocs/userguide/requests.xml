@@ -54,8 +54,8 @@ Both will improve your productivity and make Web Service Testing more fun.
 
 		 
 		 <subsection name="Request Actions">
-		  <columns><column><div>
-		  The following actions are available from the request nodes' right-button menu:	
+		 <p>
+             The following actions are available from the request nodes' right-button menu:
 		  <ul>
 		  <li><b>Show Request Editor</b> - opens the Request Editor described below</li>
 		  <li><b>Add to TestCase</b> - prompts to add the request to a TestCase. If no
@@ -73,13 +73,12 @@ Both will improve your productivity and make Web Service Testing more fun.
 		  <li><b>Delete</b> - prompts to remove the request from its operation</li>
 		  <li><b>Online Help</b> - Displays this page in an external browser</li>
 		  </ul>
-		  </div>
-		  </column></columns>
+		  </p>
 		 </subsection>
 		 
 		  <subsection name="Request Details Tab">
-		  <columns><column><div>
-		 The "Details" tab shown in the bottom-left shows the following values when a Request node is selected in 
+		 <p>
+             The "Details" tab shown in the bottom-left shows the following values when a Request node is selected in
 		 the navigation tree
 		 <h4>General Properties</h4>
 		 <ul>
@@ -90,7 +89,9 @@ Both will improve your productivity and make Web Service Testing more fun.
 		 <li><b>Encoding</b> : The encoding used by the request</li>
 		 <li><b>Endpoint</b> : The endpoint for the request</li>
 		 <li><b>Bind Address</b>  : The local IP Address to bind to when sending the request.</li>
-		 <li><b>WS-Addressing</b>  : enables/disables ws-addressing.</li>
+         <li><b>Follow Redirects</b>  : Automatically follow HTTP Redirect responses from the target server/endpoint.</li>
+
+
 		 </ul>
 		 <h4>Security/Authentication Properties</h4>
 		 (override any defaults set for the endpoint)
@@ -102,15 +103,15 @@ Both will improve your productivity and make Web Service Testing more fun.
 		 The above specified Username and Password values will be used for the corresponding header values</li>
 		 <li><b>WSS-TimeToLive</b> : If set, automatically inserts a WSS TimeToLive token in any outgoing requests using 
 		 the specified TimeToLive (in milliseconds)</li>
+         <li><b>SSL Keystore</b> : The name of a keystore/certificate specified in the Project WS-Security Certifcates tab. If
+         specified this will be used as client-keystore, allowing you to have different keystores for different requests.</li>
 		 </ul>
 		 
-		 	 </div>
-		 </column><column>
-		  <img src="images/request_details_tab.gif" alt="Requests Details in soapUI"/>
-		  </column></columns>
+		 	 </p>
 		 <h4>Attachment-Related Properties</h4>
 		 <ul>
-		 
+
+         <li><b>Skip SOAP Action</b> : does not set the SOAP Action HTTP Header for this request</li>    
 		 <li><b>Enable MTOM/Inline</b> : Enable MTOM-based transfer and inlining of binary data in the 
 		 request (see <a href="attachments.html">Attachments</a>).</li>
 		  <li><b>Force MTOM</b> : Always use MTOM packaging for requests, even if there are no MTOM attachments.</li>
@@ -123,12 +124,21 @@ Both will improve your productivity and make Web Service Testing more fun.
 		  see <a href="attachments.html#Multipart_Attachments">Multipart Attachments</a> for more details.</li>
 		  <li><b>Encode Attachments</b> : Tells soapUI to automatically encode attachments that have a corresponding WSDL part with 
 		  the xsd-type set to either base6Binary or hexBinary.</li>
+          <li><b>Enable Inline Files</b> : enables the use of "file:.." references in requests which will replaced by
+          the corresponding file content</li>
 		  </ul>
 		  <h4>Post-Processing Properties</h4>
 		  <ul>
 		  <li><b>Strip Whitespaces</b> : Strips outgoing requests of any unnecessary whitespaces and XML comments, required by some servers.</li>
 		  <li><b>Remove Empty Content</b> : Removes empty elements/attributes from outgoing requests. This can be useful in 
 		  Data Drive TestRequests which contain elements/attributes that not always contain data and should be removed in those cases.</li>
+          <li><b>Entitize Properties</b> : Entitizes property-values when they are expanded into the request, for example
+          if you are pulling data from a database en need to be sure that ampersands are handled correctly</li>
+          <li><b>Pretty Print</b> : pretty prints the response message (overrides corresponding global preference)</li>
+          <li><b>Dump File</b> : dumps the entire response message regardless of size and Max Size setting (see next) to
+              the file/path specified here</li>
+          <li><b>Max Size</b>  : the maximum number of bytes to read into the editor. </li>
+          <li><b>WS-Addressing</b>  : enables/disables ws-addressing.</li>
 		 </ul>
 	
 		 </subsection>
@@ -238,6 +248,7 @@ Both will improve your productivity and make Web Service Testing more fun.
 		<subsection name="WS-A Properties">
 		<p>The WS-A Inspector displays properties used for adding WS-A headers to a Request/MockResponse 
 		according to <a href="http://www.w3.org/Submission/ws-addressing/#_Toc77464322" target="_new">WS Addressing specification</a></p>
+            <ul>
 		<li>Enable WS-A Addressing</li>
 		<li>Must understand indicates whether a header entry is mandatory or optional for the recipient to process.</li>
 		<li>WS-A Version indicates ws addressing version to be used.</li>
@@ -260,7 +271,9 @@ Both will improve your productivity and make Web Service Testing more fun.
 		<li>FaultTo Reference Parameters - expected to be added in XML not text form and will be included in request exactly as specified</li>
 		<li>RelatesTo- OPTIONAL element specifies the value of the RelatesTo property</li>
 		<li>RelationshipType- OPTIONAL element specifies the value of the RelationshipType property</li>
-		<p align="center">@TODO@ images/wsa_inspector.gif screen shot have to be changed<img src="images/wsa_inspector.gif" alt="Viewing header properties in WS-A Inspector"/></p>
+         </ul>
+		<p align="center"><img src="images/wsa_inspector.gif" alt="Viewing header properties in WS-A Inspector"/></p>
+            <p>(note that all settings support property-expansion)</p>
 		</subsection>
 
 		<subsection name="XML Source Editor">	
@@ -269,7 +282,7 @@ Both will improve your productivity and make Web Service Testing more fun.
 		  number of additional editor views to the default "XML"; <a href="outlineeditor.html">"Outline"</a> and 
 		  <a href="formeditor.html">"Form"</a>, together with a number of <a href="messageinspectors.html">Message Inspectors</a>
 		  shown below the request and response message
-		  The following actions are available from the request and response editors’ right-button menu:	
+		  The following actions are available from the request and response editor right-button menus:
 		  <ul>
 		  <li><b>Validate</b> - validates the editors' content against its message definition as described below</li>
 		  <li><b>Format XML</b> - pretty-prints the xml in the editor</li>
@@ -279,13 +292,14 @@ Both will improve your productivity and make Web Service Testing more fun.
 		  <li><b>Outgoing WSS</b> - enabled only when there are <a href="projects\wss.html#Outgoing_WSS">Outgoing WSS Configurations</a> added
 		  and applies or removes outgoing wss from request.</li>
 		  <li><b>WS-A Headers</b> - enabled only when <a href="#WS-A_Inspector">WS Addressing is enabled</a> for the request and 
-		  adds or removes WS-A Headers from the request</li>
+		  removes or adds WS-A Headers from the request as configured in the inspector</li>
 		  <li><b>Undo/Redo/Copy/Cut/Paste/Find/Replace</b> - standard editing functions</li>
 		  <li><b>Go To Line</b> - prompts for a line to move to</li>
 		  <li><b>Show Line Numbers</b> - toggles line-number visibility</li>
 		  <li><b>Save as</b> - prompts to save the editors content to a local file</li>
 		  <li><b>Load from</b> - prompts to load the editors content to a local file</li>
-		  <li><b>Get data..</b> - @TODO@</li>
+		  <li><b>Get data..</b> - a soapUI Pro specific popup that allows you to select a property accessible from the
+          request for generating the corresponding property-expansion at the current caret-position.</li>
 		  </ul>
 		  Also, a number of custom keyboard actions are available to make your "everyday-soapui-editing" easier:
 		 <ul>

@@ -55,6 +55,10 @@
 		 <p>This feature can be especially useful when wanting to specify global endpoints or authentication 
 		 settings, just specify the corresponding expansions in the endpoint or authentications properties and
 		 they will get expanded when used</p>
+
+         <p>Both global and system properties can be set directly from the command-line when running any of
+         the soapUI bat/sh files; -Dproperty.name=value sets a system property and -Gproperty.name=value sets a Global
+             Property.</p>   
 		 </subsection>
 		
 		<subsection name="Property Expansion in soapUI">
@@ -68,6 +72,8 @@
 		 <li><code>#TestCase#</code> - references a TestCase property in the containing TestCase</li>
 		 <li><code>#MockService#</code> - references a MockService property in the containing MockService</li>
 		 <li><code>#Global#</code> - references a global property (optional)</li>
+         <li><code>#System#</code> - references a system property</li>
+         <li><code>#Env#</code> - references a environment variable</li>
 		 <li><code>[TestStep name]#</code> - references a TestStep property within the current TestCase</li>
 		 </ul>
 		 <p>Many of the scopes will of course only work if they are available, i.e. you can not use the #MockService#
@@ -98,7 +104,50 @@
 		  to transfer complex content between request, response messages. Also, the result of a Property Transfer is
 		  visible directly in the corresponding request, response editors.</p>
 		</subsection>
-		
+
+        <subsection name="Dynamic Properties">
+        <p>soapUI 2.5 introduces the possibility to write groovy scripts directly inside a PropertyExpansion;
+            prefix the content with a '=' and the remaining content up to the closing brace will be evaluated as
+            a script and its result will be inserted. For example</p>
+            <source>${=(int)(Math.random()*1000)}</source>
+
+            <p>will be replaced with a random number between 0 and 999 every time it is evaluated.</p>
+            <p>Of course this applies to all places where property-expansions can be used; requests, property values,
+                file names, endpoints, etc.. etc..</p>
+            <p>Depending on the context of the expansion, relevant variables will be available for accessing the
+                soapUI object model. For example in a request message or parameter, the containing Request object
+                will be available through the "request" variable, allowing you to (for example) insert its name
+                in your request</p>
+            <source>...
+<name>${=request.name}</name>
+...</source>
+
+<p>or if you want the name of the project just navigate up the soapUI ModelItem tree:</p>
+
+             <source>...
+<name>${=request.operation.interface.project.name}</name>
+...</source>
+
+            <p>The following variables are (almost) always available in these scripts:</p>
+
+            <ul><li>log : a log4j Logger logging to the groovy log window</li>
+                <li>modelItem : the current modelItem (for example a Request, MockResponse, etc..).</li>
+                <li>context : the current run-context (for example when running a TestCase och MockService)</li>
+                </ul>
+                <p>For soapUI Pro users, the global script library is available just as in any other script,
+                    allowing you to call into objects/methods defined there for reuse.
+
+                One current limitation is that although scripts can be multiple lines, they can not contain
+                    nested braces (yet).. as always there is room for improvement!
+                 </p>
+
+
+
+
+
+            
+        </subsection>
+
 		<subsection name="Nested Properties">
 		 <p>soapUI supports both nested and recursive property-expansion (be careful!), for example:</p>
 		 <source><![CDATA[test = "value"

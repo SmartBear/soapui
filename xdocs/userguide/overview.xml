@@ -7,12 +7,13 @@
 		<section name="soapUI Overview">
 		 
 		 <subsection name="Prerequisites">
-		 <p>Although soapUI should be easy to get started with, you will need to have a good grasp of the following 
+		 <p>Although soapUI should be easy to get started with, you should have a good grasp of the following
 		 concepts and technologies to get the most out of soapUI's functionality.</p>
 		 <ul>
 		 	<li><b>WSDL</b> - You should have a grasp of basic concepts like services, ports, bindings, port types, and the relation to XML Schema</li>
 		 	<li><b>SOAP</b> - You should have a grasp of basic concepts and relation to WSDL (bindings, etc), different encoding types (soap encoded/literal) and 
 		 	message styles (document/rpc)</li>
+            <li><b>REST/HTTP</b> - Understand the concepts behind REST and HTTP-based services/resources.</li>
 		 	<li><b>XML and related technologies</b> - Useful knowledge is XPath, XML Schema, namespaces, etc</li>
 		 </ul>
 		 <p>You can find most specifications at <a target="_new" href="http://www.w3.org">W3C</a> and tutorials
@@ -96,19 +97,23 @@
 		 </subsection>
 		 
 		 <subsection name="The Navigator">
-		 <imgtable src="images/navigator_items.gif" alt="The soapUI Navigator Tree"><div>
-		 The following objects are currently shown in the navigator tree:
+		 <p>
+             The following objects are currently shown in the navigator tree:
 		 
 		 <ul>
 		 	<li><b>Projects</b> node : the soapUI workspace
 		 	<ul>
 		 		<li><p><a href="projects/index.html">Project</a> node(s) : for each project in the workspace</p>
 		 		<ul>
-		 			<li><p><a href="interfaces/index.html">Interface</a> node(s) : for each interface in the project</p>
+		 			<li><p><a href="interfaces/index.html">Interface</a>/<a href="rest/services/index.html">Service</a> node(s) : for each WSDL Interface or REST Service
+                         in the project</p>
 		 			<ul>
-		 				<li><p><a href="interfaces/index.html#Operations">Operation</a> node(s) : for each operation in the interface</p>
+		 				<li><p><a href="interfaces/index.html#Operations">Operation</a>/<a href="rest/resources.html">Resource</a> node(s) : for each WSDL Operation
+                             or REST Resource in the containting Interface/Service</p>
 		 				<ul>
-		 					<li><p><a href="requests.html">Request</a> node(s) : for each request created for the operation</p></li>
+		 					<li><p><a href="requests.html">Request</a> node(s) : for each WSDL or REST Request created for the
+                                 containing Operation or Resource</p></li>
+                             <li><p><a href="rest/resources.html">REST Resource</a> node(s) : for each child REST Resource</p></li>
 		 				</ul>
 		 				</li>
 		 			</ul>
@@ -150,7 +155,7 @@
 		 </ul>
 		 The tree can be navigated using the standard keyboard actions. An items' associated desktop panel can 
 		 	be opened by double clicking it or selecting it and pressing Enter.
-		</div></imgtable>
+		</p>
 		 </subsection>
 		 
 		 <subsection name="Property Mode">
@@ -183,9 +188,7 @@
 		 <subsection name="Main Menu">
 		 <p>Most actions in soapUI are performed through toolbar buttons or context sensitive right-button menus. 
 		 The following actions are available from the main menu:</p>
-		 <columns>
-			 <column>
-				<div>
+		 <p>
 				 <b>File Menu</b>
 				 <p>The first 9 actions are the same as those for the Workspace popup menu, please go to the
 				 <a href="workspaces.html">Workspaces</a> page for details. After these come the following actions:</p>
@@ -200,27 +203,17 @@
 				 	<li><b>Exit without saving</b> - prompts to exit soapUI without saving anything</li>
 				 	<li><b>Online Help</b> - displays this page in an external browser</li>
 				 </ul>
-				 </div>
-			 </column>
-			 <column width="250">
-			  	<img src="images/file_menu.gif" alt="The soapUI File menu"/>
-			 </column>
-		 </columns>
+				</p>
 		 
-		 <columns>
-			 <column><div>
+		 <p>
+
 				 <b>Tools Menu</b>
 				 <ul><li>Contains actions for invoking integrated tools as described in the
 				 <a href="tools/index.html">Tool Integrations</a> section.</li></ul>
-				 </div>
-		  	 </column>
-			 <column width="250">
-			  	<img src="images/tools_menu.gif" alt="The soapUI Tools Menu"/>
-			 </column>
-		 </columns>
+
+		  	 </p>
 		 
-		   <columns>
-			 <column><div>
+		  <p>
 		 <b>Desktop Menu</b> -
 		 Shows actions related to the currently selected Desktop.
 		 <ul>
@@ -229,30 +222,25 @@
 			<li><b>Close Current</b> - closes the currently active desktop pane</li>
 			<li><b>Close All</b> - closes all desktop panes</li>
 			<li><b>Closes Others</b> - closes all desktop panes except the currently active one</li>		 
+             <li><b>Open TestCase Layout (soapUI Pro Tabbed Desktop only)</b> - enabled if a TestCase is selected in the
+             Navigator; will create a desktop with the TestCase to the left and all TestStep windows in a Tab Group to
+             the right.</li>
 		 </ul>
-		 </div> </column>
-			 <column width="250">
-			  	<img src="images/window_menu.gif" alt="Desktop Menu in soapUI"/>
-			 </column>
-		 </columns>
+		 </p>
 		 
-		 <columns>
-			 <column><div>
+		 <p>
 		 <b>Help Menu</b> - general information and soapUI Pro specific actions
 		 <ul>
+             <li><b>Starter Page</b> - Opens the Starter Page which is by default shown when soapUI starts</li>
 			<li><b>User Guide</b> - Opens the soapUI User Guide</li>
 			<li><b>Getting Started</b> - Opens the soapUI Getting Started documents </li>
 			<li><b>System Properties</b> - Opens a list of all currently defined system properties (see below)</li>
 			<li><b>Update License</b> (soapUI Pro only) - see <a href="licensemanagement.html">License Management</a></li>
 			<li><b>Show License Details</b> (soapUI Pro only) - see <a href="licensemanagement.html">License Management</a></li>
-			<li><b>soapUI.org</b> - Opens http://www.soapui.org</li>		 
+			<li><b>soapUI.org/eviware.com</b> - Opens http://www.soapui.org or http://www.eviware.com</li>		 
 			<li><b>About soapUI</b> - Shows a version information dialog</li>
 		 </ul>
-		 </div></column>
-			 <column width="250">
-			  	<img src="images/help_menu.gif" alt="The soapUI Help Menu"/>
-			 </column>
-		 </columns>
+		 </p>
 		 </subsection>
 		 
 		 <subsection name="System Properties">
@@ -282,7 +270,9 @@
 		 <li><b>error log</b> - log with diagnostic information for errors that arise during execution, this log
 		 should be included in any bug-reports if it contains related error information. Please note that not
 		 all errors logged have to be actual errors in soapUI, for example if a target server or service is not
-		 available, a socket connection error will be shown here, which may well be due to "natural" causes.</li> 
+		 available, a socket connection error will be shown here, which may well be due to "natural" causes.</li>
+             <li><b>memory log</b> - shows an scrolling monitor over how much of the memory allocated to soapUI that
+             is being used. Right-clicking open a menu with a "GC" option to trigger the Garbage Collector.</li>
 		 </ul>
 
 		 <p>soapUI uses <a target="_new" href="http://logging.apache.org/log4j/docs/index.html">log4j</a> for logging, 
