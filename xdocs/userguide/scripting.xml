@@ -96,7 +96,33 @@ greet.salute()</source>
 		</subsection>
 
         <subsection name="Dynamic Properties">
-        @TODO@add content
+            <p>soapUI 2.5 introduces the possibility to write groovy scripts directly inside a PropertyExpansion;
+            prefix the content with a '=' and the remaining content up to the closing brace will be evaluated as a
+            script and its result will be inserted. For example</p>
+            <source>${=(int)(Math.random()*1000)}</source>
+            <p>will be replaced with a random number between 0 and 999 every time it is evaluated.</p>
+            <p>Of course this applies to all places where property-expansions can be used; requests, property values,
+            file names, endpoints, etc.. etc..</p>
+            <p>Depending on the context of the expansion, relevant variables will be available for accessing the
+            soapUI object model. For example in a request message or parameter, the containing Request object will
+            be available through the "request" variable, allowing you to (for example) insert its name in your request</p>
+            <source>...
+&lt;name&gt;${=request.name}&lt;/name&gt;
+...</source>
+
+            <p>or if you want the name of the project just navigate up the soapUI ModelItem tree:</p>
+            <source>...
+&lt;name&gt;${=request.operation.interface.project.name}&lt;/name&gt;
+...</source>
+
+        <p>The following variables are (almost) always available in these scripts:</p>
+            <ul>
+                <li>log : a log4j Logger logging to the groovy log window</li>
+                <li>modelItem : the current modelItem (for example a Request, MockResponse, etc..).</li>
+                <li>context : the current run-context (for example when running a TestCase och MockService)</li>
+            </ul>
+            <p>For soapUI Pro users, the global script library is available just as in any other script,
+            allowing you to call into objects/methods defined there for reuse.</p>
         </subsection>
         <subsection name="Code Templates">
          <p>soapUI Pro 2.5 adds rudimentary support for configurable code templates which will be activated when
