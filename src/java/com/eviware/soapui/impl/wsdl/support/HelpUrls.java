@@ -137,7 +137,7 @@ public interface HelpUrls
 
 	public static final String CLONETESTSTEP_HELP_URL = HELP_URL_ROOT +"functional/testcases.html#Clone_TestSteps";
 
-	public static final String CLONETESTSUITE_HELP_URL = HELP_URL_ROOT +"functional/testsuites.html#Clone_TestSuite";
+	public static final String CLONETESTSUITE_HELP_URL = HELP_URL_ROOT +"functional/testsuites.html";
 
 	public static final String CHANGEOPERATION_HELP_URL = HELP_URL_ROOT +"functional/testrequests.html#Change_Operation";
 
