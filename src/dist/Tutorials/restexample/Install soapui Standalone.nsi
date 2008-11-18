@@ -209,7 +209,7 @@ SectionIn 1 2
   SetOutPath "$INSTDIR\Tutorials\WSDL-WADL"	
   		File "${INSTALLER_SOURCE}\Tutorials\WSDL-WADL\*.*"
   SetOutPath "$INSTDIR\Tutorials\restexample\NewSearchService\V1"	
-  		File "${INSTALLER_SOURCE}\Tutorials\restexample\NewSearchService\V1\*.*"
+  		File "${INSTALLER_SOURCE}\Tutorials\restexample\NewsSearchService\V1\*.*"
   SetOutPath "$INSTDIR\Tutorials\restexample\NewSearchService\V1\madonna_html_files"	
   		File "${INSTALLER_SOURCE}\Tutorials\restexample\NewSearchService\V1\madonna_html_files\*.*" 		
   SetOutPath "$INSTDIR\Tutorials\restexample\NewSearchService\V1"	
