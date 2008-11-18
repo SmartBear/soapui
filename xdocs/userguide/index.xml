@@ -32,32 +32,78 @@
 		 	<td><a href="xpath_selector.html">XPath Selection</a></td>
 		 	<td>Gives an overview of the soapUI Pro only XPath Selection feature</td>
 	 	</tr>
-		<tr>
-		 	<td><a href="scripting.html#Groovy_Script_Library">Script Library</a></td>
-		 	<td>Explains how to use the global Groovy Script Library (soapUI Pro only)</td>
-	 	</tr>
+        <tr>
+             <td><a href="coverage.html">WSDL Coverage</a></td>
+             <td>Gives an overview of WSDL Coverage functionality (soapUI Pro only)</td>
+         </tr>
+            <tr><td colspan="2"><b>Project handling in soapUI</b></td></tr>
+            
 		<tr>
 		 	<td><a href="workspaces.html">Workspaces</a></td>
 		 	<td>Explains how to manage workspaces in soapUI</td>
 	 	</tr>
+
 	 	<tr>
-		 	<td><a href="projects/index.html">Test Projects</a></td>
-		 	<td>Explains projects and how to work with them</td>
+		 	<td><a href="projects/index.html">Projects</a></td>
+		 	<td>Explains soapUI projects and how to work with them</td>
 	 	</tr>
+            <tr>
+                <td><a href="projects/projectview.html">Project View</a></td>
+                <td>Explains the Project View and its content tabs</td>
+            </tr>
+            <tr>
+                <td><a href="projects/coverage.html">Coverage</a></td>
+                <td>Explains how to work with Project-level Coverage functionality (soapUI Pro only)</td>
+            </tr>
+            <tr>
+                <td><a href="projects/requirements.html">Requirements</a></td>
+                <td>Explains how to work with Project-level Requirements functionality (soapUI Pro only)</td>
+            </tr>
+
+            <tr>
+                <td><a href="projects/wss.html">WS-Security</a></td>
+                <td>Explains how to setup and configure WS-Security for your projects</td>
+            </tr>
+
+            <tr>
+                <td><a href="projects/encryption.html">Encryption</a></td>
+                <td>Explains how to encrypt projects and global settings in soapUI</td>
+            </tr>
+
+            <tr>
+                <td><a href="projects/composite-projects.html">Composite Projects</a></td>
+                <td>Explains how to use Composite Projects when working in Teams (soapUI Pro only)</td>
+            </tr>
+            <tr>
+                <td><a href="projects/resolving.html">Project Resolving</a></td>
+                <td>Shows how project items are resolved during imports</td>
+            </tr>
+
+            <tr><td colspan="2"><b>WSDL Interfaces</b></td></tr>
+
 		<tr>
 		 	<td><a href="interfaces/index.html">WSDL Interfaces</a></td>
 		 	<td>Details on how WSDLs are visualized and how to work with them</td>
 	 	</tr>
 		<tr>
-		 	<td><a href="interfaces/interfaceeditor.html">WSDL Interface Viewer</a></td>
+		 	<td><a href="interfaces/interfaceeditor.html">Interface View</a></td>
 		 	<td>Explains the integrated WSDL Viewer</td>
 	 	</tr>
+            <tr>
+                <td><a href="interfaces/wsi.html">WS-I Compliance</a></td>
+                <td>Shows how to check WS-I Basic Profile compliance for your WSDLs</td>
+            </tr>
+            <tr>
+                <td><a href="interfaces/refactoring.html">WSDL Refactoring</a></td>
+                <td>Shows how to refactor WSDLs and Test Items in your projects (soapUI Pro only)</td>
+            </tr>
+
 		<tr>
-		 	<td><a href="operations.html">Web Service Operations</a></td>
+		 	<td><a href="operations.html">WSDL Operations</a></td>
 		 	<td>Shows how Operations are visualized and handled</td>
 	 	</tr>
 		<tr>
-		 	<td><a href="requests.html">Working with Web Service Requests</a></td>
+		 	<td><a href="requests.html">Working with SOAP Requests</a></td>
 		 	<td>Shows how to invoke web service operations and work with the request editor</td>
 	 	</tr>
 	 	<tr>
@@ -73,16 +119,65 @@
 		 	<td>Shows the functionality of a soapUI Pro only feature, The Message Inspectors</td>
 	 	</tr>	 	
 		<tr>
-		 	<td><a href="attachments.html">Working with WS Attachments</a></td>
-		 	<td>Shows how to use soapUI’s Attachment functionality</td>
+		 	<td><a href="attachments.html">Attachments and Inline files</a></td>
+		 	<td>Shows how to use soapUI’s Attachment and inline file functionality</td>
 	 	</tr>
+            <tr><td colspan="2"><b>REST Services</b></td></tr>
+       <tr>
+		 	<td><a href="rest/index.html">REST Services</a></td>
+		 	<td>Gives an overview of REST Service support in soapUI</td>
+	 	</tr>
+
+        <tr>
+		 	<td><a href="rest/params.html">Parameters and Representations</a></td>
+		 	<td>Explains REST Parameters and Representations in soapUI</td>
+	 	</tr>
+
+        <tr>
+             <td><a href="rest/resources.html">Resources</a></td>
+             <td>Explains how to setup and use REST Resource</td>
+         </tr>
+
+        <tr>
+             <td><a href="rest/requests.html">Requests</a></td>
+             <td>Shows how to work with REST Requests</td>
+         </tr>
+            
+        <tr><td colspan="2"><b>Scripting</b></td></tr>
+
+            <tr>
+                 <td><a href="scripting.html">Scripting</a></td>
+                 <td>Gives an overview of Groovy scripting support</td>
+             </tr>
+
+            <tr>
+                 <td><a href="scripting.html#Groovy_Script_Library">Script Library</a></td>
+                 <td>Shows how to work with the Script Library (soapUI Pro only)</td>
+             </tr>
+
+            <tr>
+                 <td><a href="scripting.html#Dynamic_Properties">Dynamic Properies</a></td>
+                 <td>Shows how to create and use dynamic properties</td>
+             </tr>
+
+        <tr><td colspan="2"><b>Properties</b></td></tr>
+         <tr>
+             <td><a href="properties.html">Scripting</a></td>
+             <td>Gives an overview of Properties support in soapUI</td>
+         </tr>
+
+        <tr>
+             <td><a href="properties.html#Property_Expansion_in_soapUI">Property Expansion</a></td>
+             <td>Shows how to use Property Expansions</td>
+         </tr>
+
 		<tr><td colspan="2"><b>Functional Testing of Web Services</b></td></tr>
 		<tr>
 		 	<td><a href="functional/index.html">Functional Testing</a></td>
 		 	<td>Gives an overview of functional testing of web services</td>
 	 	</tr>
 	 	<tr>
-		 	<td><a href="../gettingstarted/functional.html">Getting Started with functional testing</a></td>
+		 	<td><a href="functional/getting_started.html">Getting Started with functional testing</a></td>
 		 	<td>A quick introduction to get you started with functional testing</td>
 	 	</tr>
 		<tr>
@@ -91,14 +186,35 @@
 	 	</tr>
 		<tr>
 		 	<td><a href="functional/testcases.html">TestCases</a></td>
-		 	<td>Describes TestCases, TestSteps and the TestCase editor</td>
+		 	<td>Describes TestCases and the TestCase editor</td>
 	 	</tr>
-		<tr>
-		 	<td><a href="functional/testrequests.html">Web Service Test Requests</a></td>
-		 	<td>Shows how to set up TestRequest steps and validate response messages</td>
+        <tr>
+		 	<td><a href="functional/teststeps.html">TestSteps</a></td>
+		 	<td>Gives an overview of TestSteps in functional tests</td>
 	 	</tr>
+
+        <tr>
+		 	<td><a href="functional/testrequests.html">Test Requests</a></td>
+		 	<td>General Test Request functionality</td>
+	 	</tr>
+
+        <tr>
+		 	<td><a href="functional/soap-requests.html">SOAP Requests</a></td>
+		 	<td>Explains SOAP Test Requests and how to use them</td>
+	 	</tr>
+
+            <tr>
+                 <td><a href="functional/rest-requests.html">REST Requests</a></td>
+                 <td>Explains REST Test Requests and how to use them</td>
+             </tr>
+
+            <tr>
+                 <td><a href="functional/http-requests.html">HTTP Requests</a></td>
+                 <td>Explains HTTP Test Requests and how to use them</td>
+             </tr>
+
 		<tr>
-		 	<td><a href="functional/response-assertions.html">Web Service Test Assertions</a></td>
+		 	<td><a href="functional/response-assertions.html">Assertions</a></td>
 		 	<td>Describes available response assertions and their usage</td>
 	 	</tr>
 	 			<tr>
@@ -107,15 +223,15 @@
 	 	</tr>
 		<tr>
 		 	<td><a href="functional/propertytransfers.html">Property Transfers</a></td>
-		 	<td>Describes the PropertyTransfer Step and it can be used to transfer values between TestSteps</td>
+		 	<td>Describes how to transfer property values between Test Steps</td>
 	 	</tr>
 		<tr>
 		 	<td><a href="functional/gotostep.html">Conditional Gotos</a></td>
-		 	<td>Describes the Conditional Goto Step and how it can be used to control TestCase execution</td>
+		 	<td>Shows how to control TestCase execution flow using the Goto Step</td>
 	 	</tr>
 		<tr>
 		 	<td><a href="functional/groovystep.html">Web Service Test Groovy Scripts</a></td>
-		 	<td>Shows how the Groovy Script Step can be used to perform arbitrary functionality in a TestCase</td>
+		 	<td>Shows how to use Groovy Script Steps to perform arbitrary functionality</td>
 	 	</tr>
 		<tr>
 		 	<td><a href="functional/propertiesstep.html">Properties Step</a></td>
@@ -126,6 +242,10 @@
 		 	<td>The Delay Step can be used to create pauses in a TestCase</td>
 	 	</tr>
 
+        <tr>
+            <td><a href="functional/runtestcasestep.html">Run TestCase Step</a></td>
+            <td>The Run TestCase Step can be used to modularize your Tests</td>
+        </tr>
 	 	<tr>
 		 	<td><a href="functional/mockresponse.html">MockResponse Step</a></td>
 		 	<td>The MockResponse Step can be used to create MockResponses in a TestCase</td>
@@ -138,17 +258,22 @@
 		 	<td><a href="functional/datasourceloopstep.html">DataSource Loop Step</a></td>
 		 	<td>The DataSource Loop Step can be used to loop a DataSource in a TestCase</td>
 	 	</tr>	 	
-	 	<tr>
-		 	<td><a href="properties.html#Property_Expansion">Property Expansion</a></td>
-		 	<td>Shows how property values easily can be used in requests and XPath expressions</td>
-	 	</tr>
+            <tr>
+                <td><a href="functional/datasinkstep.html">DataSink Step</a></td>
+                <td>The DataSink Step is used for writing property values to external storage</td>
+            </tr>
+            <tr>
+                <td><a href="functional/datagenstep.html">DataGen Step</a></td>
+                <td>The DataGen Step is used to dynamically generate Test Data</td>
+            </tr>
+
 		<tr><td colspan="2"><b>Load Testing of Web Services</b></td></tr>
 		<tr>
 		 	<td><a href="loadtest/index.html">Web Service Load Testing</a></td>
 		 	<td>Outlines soapUI LoadTesting functionality available for web services</td>
 	 	</tr>
 	 	 <tr>
-		 	<td><a href="../gettingstarted/loadtest.html">Getting Started with Web Service Load Testing</a></td>
+		 	<td><a href="loadtest/getting_started.html">Getting Started with Web Service Load Testing</a></td>
 		 	<td>A quick introduction to get you started with load testing</td>
 	 	</tr>
 		<tr>
@@ -177,13 +302,17 @@
 		 	<td>Outlines soapUI’s web service mocking/simulation functionality</td>
 	 	</tr>
 	 	 <tr>
-		 	<td><a href="../gettingstarted/mocking.html">Getting Started With Web Service Simulation</a></td>
+		 	<td><a href="mock/getting_started.html">Getting Started With Web Service Simulation</a></td>
 		 	<td>A quick introduction to get you started with load testing</td>
 	 	</tr>
 		<tr>
 		 	<td><a href="mock/services.html">Mock Services</a></td>
-		 	<td>Describes MockServices</td>
+		 	<td>Describes how to set up MockServices</td>
 	 	</tr>
+            <tr>
+                 <td><a href="mock/services.html">Mock Service Coverage</a></td>
+                 <td>Shows how to calculate WSDL Coverage data for Mock Services</td>
+             </tr>
 		<tr>
 		 	<td><a href="mock/operations.html">Mock Operations</a></td>
 		 	<td>Describes how MockOperations are used with MockServices</td>
@@ -192,6 +321,16 @@
 		 	<td><a href="mock/responses.html">Mock Responses</a></td>
 		 	<td>Describes how MockResponses are used with MockOperations</td>
 	 	</tr>
+
+        <tr><td colspan="2"><b>SOAP Monitoring</b></td></tr>
+		<tr>
+		 	<td><a href="monitor/index.html">SOAP Monitor</a></td>
+		 	<td>Shows the SOAP Monitoring functionality for capturing SOAP HTTP traffic</td>
+	 	</tr>
+            <tr>
+                 <td><a href="monitor/coverage.html">SOAP Monitor Coverage</a></td>
+                 <td>Shows how to calculate WSDL Coverage data for SOAP Monitors</td>
+             </tr>
 		<tr><td colspan="2"><b>Usage Scenarios</b></td></tr>
 		<tr>
 		 	<td><a href="scenarios/index.html">Usage Scenarios</a></td>
@@ -207,7 +346,7 @@
 	 	</tr>
 		<tr>
 		 	<td><a href="scenarios/interactive.html">Interactive Testing</a></td>
-		 	<td>Shows how to create TestCases with input or output dialogs for interactive demos and tests</td>
+		 	<td>Shows how to create TestCases with input or output dialogs for interactive tests</td>
 	 	</tr>
 		<tr>
 		 	<td><a href="scenarios/surveillance.html">Surveillance Testing</a></td>

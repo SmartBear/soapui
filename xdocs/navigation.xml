@@ -96,7 +96,6 @@
             <item href="/userguide/scripting.html" name="Scripting">
                 <item href="/userguide/scripting.html#Groovy_Script_Library" name="Script Library" pro="true"/>
                <item href="/userguide/scripting.html#Dynamic_Properties" name="Dynamic Properties"/>
-                <item href="/userguide/scripting.html#Code_Templates" name="Code Templates" pro="true"/>
             </item>
             <item href="/userguide/properties.html" name="Properties">
                 <item href="/userguide/properties.html#Property_Expansion_in_soapUI" name="Property Expansion"/>

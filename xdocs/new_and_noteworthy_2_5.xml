@@ -61,6 +61,20 @@
                 for more info, tips and tricks, updates, etc.
             </p>
 
+             <subsection name="New and Noteworthy in soapUI 2.5 Final">
+
+              <p>The final 2.5 release contains many many bug fixes and small improvements. The most notable addition
+                  is the availability of Groovy Code-Templates for soapUI Pro users
+                  (<a href="userguide/preferences.html#Code_Templates">Read More</a>) and (finally) an updated
+                  user-guide!.
+              </p>
+
+               <p>As always we are in great debt to our customers and community for your awesome feedback, Thanks to all of
+                   you and keep it coming!! - eviware.team</p>  
+
+            </subsection>
+
+
             <subsection name="New and Noteworthy in soapUI 2.5 beta2">
 
                 <newfeature img="images/2_5/wsa-inspector2.gif" alt="WS-Addressing Support">
