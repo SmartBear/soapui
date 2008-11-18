@@ -22,12 +22,25 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.servlet.ServletException;
 
+import org.apache.log4j.Logger;
 import org.mortbay.jetty.Request;
 import org.mortbay.jetty.Response;
 import org.mortbay.util.IO;
 
+import com.eviware.soapui.SoapUI;
+
 public class Server extends org.mortbay.jetty.Server
 {
+
+	private Logger log = Logger.getLogger(Server.class);
+
+	public Server()
+	{
+		super();
+		if (SoapUI.getLogMonitor() == null || SoapUI.getLogMonitor().getLogArea("jetty log") == null)
+			return;
+		SoapUI.getLogMonitor().getLogArea("jetty log").addLogger(log.getName(), true);
+	}
 
 	@Override
 	public void handle(final org.mortbay.jetty.HttpConnection connection) throws IOException, ServletException
@@ -53,11 +66,12 @@ public class Server extends org.mortbay.jetty.Server
 		final InputStream in = clientSocket.getInputStream();
 		final OutputStream out = clientSocket.getOutputStream();
 
-		final SSLSocket socket = (SSLSocket) SSLSocketFactory.getDefault().createSocket(inetAddress.getAddress(), inetAddress.getPort());
+		final SSLSocket socket = (SSLSocket) SSLSocketFactory.getDefault().createSocket(inetAddress.getAddress(),
+				inetAddress.getPort());
 
 		final Response response = connection.getResponse();
 		response.setStatus(200);
-//		response.setHeader("Connection", "close");
+		// response.setHeader("Connection", "close");
 		response.flushBuffer();
 
 		IO.copyThread(socket.getInputStream(), out);
