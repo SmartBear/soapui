@@ -265,7 +265,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
       stateDependantComponents.add( setEndpointButton );
 
       createLoadTestButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-              AddNewLoadTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/loadtest.gif" ) );
+              AddNewLoadTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/loadTest.gif" ) );
 
       addToolbarActions( toolbar );
 
