@@ -25,7 +25,7 @@
                     <td>
                         <div align="center">
                             <a onclick="javascript:urchinTracker('/downloadOpenSource')"
-                               href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=638372"
+                               href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=641323"
                                title="Download soapUI">
                                 <img src="images/download_opensource.png" alt="download Open Source" width="310"
                                      height="165" longdesc="http://www.sourceforge.net"/>
