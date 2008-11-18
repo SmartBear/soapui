@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<!--
+  ~ soapUI, copyright (C) 2004-2008 eviware.com
+  ~
+  ~ soapUI is free software; you can redistribute it and/or modify it under the
+  ~ terms of version 2.1 of the GNU Lesser General Public License as published by
+  ~ the Free Software Foundation.
+  ~
+  ~ soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+  ~ even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Lesser General Public License for more details at gnu.org.
+  -->
+
+
+
+<document>
+    <properties>
+        <title>userguide - soapUI REST Parameters and Representations</title>
+    </properties>
+    <body>
+		<section name="REST Parameters and Representations">
+		 <p>Parameters and Representations a key concepts in a REST-style service; Parameters for parameterizing
+         a resource and its access methods, Representations for defining how a Resource can be retreived and updated.</p>
+
+        <subsection name="REST Parameters">
+
+            <p>Parameters can be defined on both resource/child-resource and request level and are managed via
+                a parameters table in the corresponding Resource/Request editors:</p>
+               <p align="center"><img src="images/parameters-table.gif"></img></p>
+               <p>The toolbar at the top of the table has the following actions: (left to right)</p>
+            <ul>
+
+                <li><b>Add</b> - adds a new parameter</li>
+                <li><b>Delete</b> - prompts to delete the selected parameter</li>
+                <li><b>Clear</b> - clears all current parameter values</li>
+                <li><b>Move Down</b> - moves the selected parameter down one row in the table</li>
+                <li><b>Move Up</b> - moves the selected parameter up one row in the table</li>
+                <li><b>Update from URL</b> - prompts for an endpoint and adds/extracts corresponding parameters</li>
+            </ul>
+
+
+
+                <p>Depending on a parameters Style in the above table, its value will be added to an outgoing request in different ways:</p>
+                   <ul>
+                   <li><b>QUERY</b> : added to the query string of the target URL upon submitting</li>
+                   <li><b>HEADER</b> : added as an HTTP Header to the outgoing request</li>
+                   <li><b>TEMPLATE</b> : replaces the corresponding {&lt;parameter name&gt;} placeholder in the URL path upon submitting</li>
+                   <li><b>MATRIX</b> : appends corresponding ";&lt;parameter-name&gt;:&lt;parameter-value&gt;" pairs to the URL path
+                       (before the query string) on submitting. If the parameter is defined as a Boolean, only the
+                       parameter name is added when its value is set to "true".</li>
+                   </ul>
+                   <p>Furthermore, each parameter has a number of detailed settings that can be accessed via the "Details"
+                   tab below the parameter table;</p>
+                   <p align="center"><img src="images/parameter-details.gif"></img></p>
+                   <p>The settings are as follows:</p>
+                   <ul>
+                       <li><b>Required</b> : if the parameter is required to have a value</li>
+                       <li><b>Default</b> : the default value to use</li>
+                       <li><b>Type</b> : the XML Schema Type of the parameter value</li>
+                       <li><b>Options</b> : a list of possible parameter values</li>
+                       <li><b>Description</b> : a descriptive text for the parameter</li>
+                       <li><b>Disable Encoding</b> : disables URL-Encoding of the parameter value when it is sent</li>
+                   </ul>
+                   <p>These settings mainly affect two behaviours in soapUI:</p>
+                   <ol>
+                       <li>The generated WADL which contains all but the last setting</li>
+                       <li>The input field generated in the soapUI Pro Form Editor for the parameter:</li>
+                   </ol>
+                   <p align="center"><img src="images/parameter-form.gif"></img></p>
+                   <p>As you can see above the generated form contains drop-downs, type-information, etc as configured
+                   for each parameter.</p>
+
+     </subsection>
+
+    <subsection name="REST Representations">
+        <p>A REST request can both send or receive an arbitrary number of representations. In requests these
+            correspond to the content of the message body (PUT or POST messages), in responses these correspond
+            to the actual content of the response. Which actual representation returned of course depends on the
+            actual resource implementation; from a strict HTTP-point-of-view, the HTTP Accept-Encoding header
+            should be set in the request to let the resource "know" how it should return itself. A more common
+            alternative is to have parameter in the request that specified the desired representation (as the
+            "output" parameter in the parameters table above).
+            </p>
+        <p>soapUI visualizes request and response representations with corresponding inspectors at the bottom
+            of the request/response editors:</p>
+          <p align="center"><img src="images/response-representations.gif"></img></p>
+           <p>If the underlying resource has been imported from a WADL, this table will contain the
+               representations defined therein, otherwise it will be empty. The columns are:</p>
+           <ul>
+               <li><b>Type</b> : the type of representation; for requests this will always be REQUEST, for responses
+               this can be either RESPONSE or FAULT.</li>
+               <li><b>Media-Type</b> : the mediaType of the representation</li>
+               <li><b>Status Codes</b> : for response representation types only, this is a space-separated list
+               of HTTP Status codes that together with the media type identify the representation.</li>
+               <li><b>QName</b> : an optional QName corresponding to a global element in one of the XML Schemas in an
+                   imported WADL</li>
+           </ul>
+
+        <p>Using the add/delete buttons in the toolbar allows one can add/remove representations as desired
+            (to be used for validation and WADL generation). Selecting the Auto-Create option will make soapUI
+        automatically create representations for each incoming response and outgoing request.</p>
+
+    </subsection>
+
+		 <p><hr size="1"/>Next: <a href="resources.html">REST Resources</a></p>
+		</section>
+    </body>
+</document>

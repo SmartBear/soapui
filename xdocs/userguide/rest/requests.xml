@@ -11,108 +11,141 @@
   ~ See the GNU Lesser General Public License for more details at gnu.org.
   -->
 
-<!--
-  ~ soapUI, copyright (C) 2004-2008 eviware.com
-  ~
-  ~ soapUI is free software; you can redistribute it and/or modify it under the
-  ~ terms of version 2.1 of the GNU Lesser General Public License as published by
-  ~ the Free Software Foundation.
-  ~
-  ~ soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
-  ~ even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-  ~ See the GNU Lesser General Public License for more details at gnu.org.
-  -->
-
 <document>
     <properties>
         <title>userguide - soapUI REST Requests</title>
     </properties>
     <body>
-		<section name="REST Requests in sopUI">
-		
+		<section name="REST Requests in soapUI">
+		<p>A REST Request in soapUI correspond roughly to a Method in WADL; it defines an HTTP call to
+        the containing Resource with settings for HTTP Method, Parameters, Message Content, Attachments, Representations, etc.
+        Requests are created either directly when creating Resources via the "Create Request" option in the "New Resource"
+        dialog, or alternatively from the "New Request" Resource popup which prompts for an initial name, HTTP Method and
+        if to open the request editor:</p>
+            <p align="center"><img src="images/new-rest-request.gif"></img></p>
 
-        <subsection name="REST Parameters">
+        <p>soapUI has built in support for visualizing both JSON and XML responses, and also internally converts HTML and JSON
+        responses to XML so they can be used in functional tests together with other related features (property-transfers,
+        xpath assertions, etc).</p>    
 
-                    <p>Parameters can be defined on both resource/child-resource and request level and are managed via
-                        a parameters table in the corresponding Resource/Request editors (see below). When creating a new
-                    request for a resource, it will automatically inherit all parameters of the resource and its parent
-                        resources.</p>
-                    <p>Parameters are managed via a Parameters table in either the Resource or Request editors:</p>
-                       <p align="center"><img src="images/parameters-table.gif"></img></p>
-                       <p>The toolbar at the top of the table has the following actions: (left to right)</p>
-                    <ul>
+         <subsection name="Properties and Actions">
 
-                        <li>Add - adds a new parameter</li>
-                        <li>Delete - prompts to delete the selected parameter</li>
-                        <li>Clear - clears all current parameter values</li>
-                        <li>Move Down - moves the selected parameter down one row in the table</li>
-                        <li>Move Up - moves the selected parameter up one row in the table</li>
-                        <li>Update from URL - prompts for an endpoint and adds/extracts corresponding parameters</li>
-                    </ul>
+          <p>A REST Request has the following properties at the bottom left when selected in the Navigator:</p>
+          <ul>
+              <li><b>Name</b> - the name of the Request</li>
+              <li><b>Description</b> - a description for the Request</li>
+              <li><b>Method</b> - the HTTP Method to use</li>
+              <li><b>Encoding</b> - the encoding for the message body (if PUT or POST)</li>
+              <li><b>Endpoint</b> - the target endpoint for the request</li>
+              <li><b>Bind Address</b> - the local ip-address to bind to when sending the request</li>
+              <li><b>Follow Redirects</b> - option to follow HTTP Redirect response returned by the target server</li>
+              <li><b>Username</b> - Username to use in HTTP Authentication challenges</li>
+              <li><b>Password</b> - Password to use in HTTP Authentication challenges</li>
+              <li><b>Domain</b> - Domain to use in HTTP Authentication challenges</li>
+              <li><b>SSL Keystore</b> - Alternative client keystore to use, must be defined in project WSS certificates tab</li>
+              <li><b>Strip Whitespaces</b> - Option to strip outgoing XML message content of whitespace</li>
+              <li><b>Remove Empty Content</b>- Option to remove empty elements from outgoing message content</li>
+              <li><b>Entitize Properties</b> - Entitize property values expanded in outgoing message content</li>
+              <li><b>Pretty Print</b> - Pretty print response XML</li>
+              <li><b>Dump File</b> - Local file to which the response should be written</li>
+          </ul>
+           <p>The following actions are available from the REST Request popup:</p>
 
+             <ul>
+                 <li><b>Show Request Editor</b> - opens request editor described below</li>
+                 <li><b>Add to TestCase</b> - prompts to add this REST Request to a TestCase as a REST RequestStep</li>
+                 <li><b>Clone Request</b> - prompts to clone the Request</li>
+                 <li><b>Rename</b> - prompts to rename the Request</li>
+                 <li><b>Delete</b> - prompts to delete the Request</li>
+                 <li><b>Online Help</b> - shows this page in a browser</li>
+             </ul>
 
-
-                        <p>Depending on a parameters Style in the above table, its value will be added to an outgoing request in different ways:</p>
-                                   <ul>
-                                   <li>QUERY : added to the query string of the target URL upon submitting</li>
-                                   <li>HEADER : added as an HTTP Header to the outgoing request</li>
-                                   <li>TEMPLATE : replaces the corresponding {&lt;parameter name&gt;} placeholder in the URL path upon submitting</li>
-                                   <li>MATRIX : appends corresponding ";&lt;parameter-name&gt;:&lt;parameter-value&gt;" pairs to the URL path
-                                       (before the query string) on submitting. If the parameter is defined as a Boolean, only the
-                                       parameter name is added when its value is set to "true".</li>
-                                   </ul>
-                                   <p>Furthermore, each parameter has a number of detailed settings that can be accessed via the "Details"
-                                   tab below the parameter table;</p>
-                                   <p align="center"><img src="images/parameter-details.gif"></img></p>
-                                   <p>The settings are as follows:</p>
-                                   <ul>
-                                       <li>Required : if the parameter is required to have a value</li>
-                                       <li>Default : the default value to use</li>
-                                       <li>Type : the XML Schema Type of the parameter value</li>
-                                       <li>Options : a list of possible parameter values</li>
-                                       <li>Description : a descriptive text for the parameter</li>
-                                       <li>Disable Encoding : disables URL-Encoding of the parameter value when it is sent</li>
-                                   </ul>
-                                   <p>These settings mainly affect two behaviours in soapUI:</p>
-                                   <ol>
-                                       <li>The generated WADL which contains all but the last setting</li>
-                                       <li>The input field generated in the soapUI Pro Form Editor for the parameter:</li>
-                                   </ol>
-                                   <p align="center"><img src="images/parameter-form.gif"></img></p>
-                                   <p>As you can see above the generated form contains drop-downs, type-information, etc as configured
-                                   for each parameter.</p>
-
-             </subsection>        
-
-            <subsection name="REST Representations">
-                <p>A REST request can both send or receive an arbitrary number of representations. In requests these
-                    correspond to the content of the message body (PUT or POST messages), in responses these correspond
-                    to the actual content of the response. Which actual representation returned of course depends on the
-                    actual resource implementation; from a strict HTTP-point-of-view, the HTTP Accept-Encoding header
-                    should be set in the request to let the resource "know" how it should return itself. A more common
-                    alternative is to have parameter in the request that specified the desired representation (as the
-                    "output" parameter in the parameters table above).
-                    </p>
-                <p>soapUI visualizes request and response representations with corresponding inspectors at the bottom
-                    of the request/response editors:</p>
-                  <p align="center"><img src="images/response-representations.gif"></img></p>
-                   <p>If the underlying resource has been imported from a WADL, this table will contain the
-                       representations defined therein, otherwise it will be empty. The columns are:</p>
-                   <ul>
-                       <li>Type : the type of representation; for requests this will always be REQUEST, for responses
-                       this can be either RESPONSE or FAULT.</li>
-                       <li>Media-Type : the mediaType of the representation</li>
-                       <li>Status Codes : for response representation types only, this is a space-separated list
-                       of HTTP Status codes that together with the media type identify the representation.</li>
-                       <li>QName : an optional QName corresponding to a global element in one of the XML Schemas in an
-                           imported WADL</li>
-                   </ul>
-
-                <p>Using the add/delete buttons in the toolbar allows one can add/remove representations as desired
-                    (to be used for validation and WADL generation). Selecting the Auto-Create option will make soapUI
-                automatically create representations for each incoming response and outgoing request.</p>
-                
             </subsection>
+
+            <subsection name="REST Request Editor">
+                <p>The REST Request editor is opened by double-clicking a REST Request or selecting the corresponding
+                popup menu item:</p>
+                 <p align="center"><img src="images/rest-request-editor.gif"></img></p>
+                <p>The editor shares much of its concepts with the WSDL Request editor:</p>
+                <ul>
+                    <li>Request/Response areas to the left and right with corresponding editors (vertical tabs) and
+                    inspectors (tabs at the bottom of the editors).</li>
+                    <li>A top toolbar for submitting and configuring the request endpoint</li>
+                </ul>
+                <p>Many of the inspectors are the same as for WSDL Requests and will not be covered here in any detail.</p>
+
+                <p>The top toolbar has two levels of which the second contains the following left-to-right options:</p>
+                <ul>
+                    <li><b>Method</b> - a drop-down selecting the HTTP Method to use. If POST or PUT are selected,
+                    a corresponding Message Content editor area is shown below the Parameters table in the root Request
+                    tab (see below).</li>
+                    <li><b>Accept</b> - a drop-down for selecting the desired accept-encoding. This will be pre-populated
+                    with the mediaTypes defined by all response representations for the request</li>
+                    <li><b>Full path</b> - a label with tooltip showing the actual endpoint URL that would be used
+                    for the request.</li>
+                </ul>
+
+                <p>The default Request editor has a Parameters table as <a href="params.html">described previously</a> for defining
+                parameters and their values. If POST or PUT has been chosen as method, a message-body area is made
+                available below the parameters table:</p>
+                  <p align="center"><img src="images/rest-body-editor.gif"></img></p>
+                <p>The toolbar for this are contains the following options (left to right)</p>
+                <ul>
+                    <li><b>MediaType</b> - drop-down containing MediaTypes of defined Request Representations and
+                    also the multipart/form-data type which can be used to simulate a file-submit of an HTML form;
+                    selecting this option will add all parameters and File Attachments of the request as Mime Parts
+                    in a Multipart request.</li>
+                    <li><b>Recreate Body</b> - action to recreate the content of the body from the corresponding
+                    schemaElement referred to by a Representation with the selected MediaType; if selecting a mediaType
+                    whose representation(s) specify an element in a referenced XML Schema, this action will be enabled
+                    and prompt to generate a default message based on the schema definition.</li>
+                    <li><b>POST QueryString</b> - option to put Query Arguments in the message body instead of after the
+                    path part of the URL; this is for simulating the behaviour of a standard HTML Form submitted with POST.</li>
+                </ul>                                      res
+
+            </subsection>
+
+            <subsection name="Representations and Attachments">
+                <p>Request/Response Representations are defined and available via their corresponding inspectors at the bottom
+                of the requet/response editors and are used as <a href="params.html#REST_Representations">already described</a>.</p>
+                <p>Attachments are used in several ways;</p>
+                <ul>
+                    <li>If the method is PUT or POST and the mediaType of the body is the same as that of a request attachment,
+                    that attachment is inserted into the message body instead</li>
+                    <li>If the method is PUT or POST and the mediaType of the body is the same as that of several request attachments,
+                    these attachments are sent as a Multipart body</li>
+                    <li>If the method is PUT or POST and the mediaType is multipart/form-data, all query parameters and request
+                    attachments are sent as Mime Parts in a Multipart body.</li>
+                </ul>
+
+            </subsection>
+
+            <subsection name="Response Handling">
+                <p>Response received for a Request are displayed to the right. JSON responses have a dedicated
+                viewer which pretty-prints the result:</p>
+                <p align="center"><img src="images/json-viewer.gif"></img></p>
+               <p>Internally both JSON and HTML results get converted to XML which allows them to be inspected using the
+               soapUI Pro inspectors, for example the Table Inspector:</p>
+                <p align="center"><img src="images/rest-xml-table-response-view.gif"></img></p>
+               <p>Or the soapUI Pro Overview view:</p>
+                <p align="center"><img src="images/rest-overview-response-view.gif"></img></p>
+            </subsection>
+
+            <subsection name="soapUI Pro Form Editor">
+            <p>soapUI Pro enhances REST requests in the same way as WSDL requests:</p>
+                <ul>
+                    <li>By providing Form / Outline / Overview views of requests and responses</li>
+                    <li>By providing a number of inspectors for response message content</li>
+                </ul>
+                <p>The Pro Form editor renders an input-friendly form for the defined parameters and
+                also provides a Form-based editor for request XML representations that are defined
+                in an included XML Schema. For example the following Form:</p>
+                <p align="center"><img src="images/pro-form-editor.gif"></img></p>
+                <p>The parameters are rendered as configured in their Details tab, the lower part contains
+                a drop-down for selecting from the representations that have a corresponding element. Once
+                selected, the corresponding form will be rendered (as shown in the screenshot).</p>
+            </subsection>
+
 
 		 <p><hr size="1"/>Next: <a href="services/index.html">REST Service overview</a></p>
 		</section>
