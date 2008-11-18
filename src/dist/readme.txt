@@ -1,5 +1,12 @@
 Welcome to soapUI!
 
+2008-11-18 : 2.5 Final
+---------------------------------------------------------------------------------
+A bunch of bug-fixes and minor improvements, thanks to our awesome customers and
+community for testing and reporting... we owe you another great release!
+
+/eviware-soapui-team
+
 2008-11-05 : 2.5 beta2 release
 ---------------------------------------------------------------------------------
 A bunch of improvements and fixes:
