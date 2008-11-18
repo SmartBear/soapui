@@ -132,7 +132,7 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 		
 		addToolbarActions( toolbar );
 		toolbar.addGlue();
-		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.TESTSUITEEDITOR_HELP_URL )));
+		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.TESTSUITE_HELP_URL )));
 		
 		progressBar = new JProgressBar( 0, getModelItem().getTestCaseCount() );
 		JPanel progressPanel = UISupport.createProgressBarPanel(progressBar, 10, false );
@@ -269,7 +269,8 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 		JXToolBar toolbar = UISupport.createToolbar();
 		toolbar.add( UISupport.createToolbarButton( 
 					SwingActionDelegate.createDelegate( AddNewTestCaseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/testCase.gif" )));
-
+		toolbar.addGlue();
+		toolbar.add(UISupport.createToolbarButton( new ShowOnlineHelpAction(HelpUrls.TESTSUITEEDITOR_HELP_URL)));
 		return toolbar;
 	}
 

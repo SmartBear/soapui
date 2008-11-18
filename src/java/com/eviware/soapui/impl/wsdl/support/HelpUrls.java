@@ -23,32 +23,32 @@ public interface HelpUrls
 	public static final String HELP_URL_ROOT = "http://www.soapui.org/userguide/";
 	
 	public static final String OVERVIEW_HELP_URL = HELP_URL_ROOT + "overview.html";
-	public static final String PROJECT_OVERVIEW_HELP_URL = HELP_URL_ROOT + "projects.html";
+	public static final String PROJECT_OVERVIEW_HELP_URL = HELP_URL_ROOT + "projects/index.html";
 	public static final String INTERFACE_OVERVIEW_HELP_URL = HELP_URL_ROOT + "interfaces/interfaceview.html";
 	public static final String WSDL_CONTENT_HELP_URL = HELP_URL_ROOT + "interfaces/interfaceeditor.html";
 	public static final String WSI_COMPLIANCE_HELP_URL = HELP_URL_ROOT + "interfaces/wsi.html";
 	
 	//TODO option for adding help URl to page section, see buildInterfaceOverviewTab() section operations
 	public static final String OPERATION_HELP_URL = HELP_URL_ROOT + "operations.html";
-	public static final String INTERFACE_HELP_URL = HELP_URL_ROOT + "interfaces.html";
+	public static final String INTERFACE_HELP_URL = HELP_URL_ROOT + "interfaces/index.html";
 	
 	public static final String HEADERS_HELP_URL = HELP_URL_ROOT + "requests.html#HTTP_Headers";
 	//commented ones are not currently used
-//	public static final String PROJECT_HELP_URL = HELP_URL_ROOT + "projects.html#soapui_WSDL_Projects";
-//	public static final String REQUEST_HELP_URL = HELP_URL_ROOT + "requests.html";
+	public static final String PROJECT_HELP_URL = HELP_URL_ROOT + "projects/index.html#soapui_WSDL_Projects";
+	public static final String REQUEST_HELP_URL = HELP_URL_ROOT + "requests.html";
 	public static final String ATTACHMENTS_HELP_URL = HELP_URL_ROOT + "attachments.html";
 
-//	public static final String TESTSUITE_HELP_URL = HELP_URL_ROOT + "functional/testsuites.html";
+	public static final String TESTSUITE_HELP_URL = HELP_URL_ROOT + "functional/testsuites.html";
 //	public static final String TESTCASE_HELP_URL = HELP_URL_ROOT + "functional/testcases.html";
 //	public static final String PROPERTYTRANSFER_HELP_URL = HELP_URL_ROOT + "functional/propertytransfers.html";
 //	public static final String DELAYSTEP_HELP_URL = HELP_URL_ROOT + "functional/testcases.html#Delay_Test_Step";
 //	public static final String GOTOSTEP_HELP_URL = HELP_URL_ROOT + "functional/gotostep.html";
 //	public static final String PROPERTIESSTEP_HELP_URL = HELP_URL_ROOT + "functional/propertiesstep.html";
-//	public static final String GROOVYSTEP_HELP_URL = HELP_URL_ROOT + "functional/groovystep.html";
+//	public static final String GROOVYSTEP_HELP_URL = HELP_URL_ROOT + "fFunctional/groovystep.html";
 //	public static final String TESTREQUEST_HELP_URL = HELP_URL_ROOT + "functional/testrequests.html";
 //	public static final String LOADTEST_HELP_URL = HELP_URL_ROOT + "loadtest/index.html";
-   public static final String MOCKRESPONSESTEP_HELP_URL = HELP_URL_ROOT + "functional/mockresponsestep.html";
-   public static final String CREATEMOCKRESPONSESTEP_HELP_URL = "functional/mockresponse.html";
+//   public static final String MOCKRESPONSESTEP_HELP_URL = HELP_URL_ROOT + "functional/mockresponsestep.html";
+   public static final String CREATEMOCKRESPONSESTEP_HELP_URL = HELP_URL_ROOT + "functional/mockresponse.html";
 
    public static final String ADDREQUESTASMOCKRESPONSESTEP_HELP_URL = HELP_URL_ROOT +"functional/mockresponse.html";
    public static final String ADDMOCKRESPONSETOTESTCASE_HELP_URL = HELP_URL_ROOT +"functional/mockresponse.html";
@@ -98,7 +98,7 @@ public interface HelpUrls
 	public static final String STEP_AVERAGE_LOAD_TEST_ASSERTION_HELP_URL = HELP_URL_ROOT + "loadtest/assertions.html#Step_Average_Assertion";
 
 	public static final String SIMPLE_CONTAINS_HELP_URL = HELP_URL_ROOT + "functional/response-assertions.html#Simple_Contains";
-	public static final String SIMPLE_NOT_CONTAINS_HELP_URL = HELP_URL_ROOT + "functional/response-assertions.html#Simple_NotContains";
+	public static final String SIMPLE_NOT_CONTAINS_HELP_URL = HELP_URL_ROOT + "functional/response-assertions.html#Simple_NotContains_Assertion";
 	public static final String GROOVYASSERTION_HELP_URL = HELP_URL_ROOT + "functional/response-assertions.html#Script_Assertion";
 
 	public static final String MOCKRESPONSE_HELP_URL = HELP_URL_ROOT + "mock/responses.html";
@@ -106,7 +106,7 @@ public interface HelpUrls
 	public static final String MOCKRESPONSE_SCRIPT_HELP_URL = HELP_URL_ROOT + "mock/responses.html#Response_Scripts";
 	
 	public static final String MOCKOPERATION_HELP_URL = HELP_URL_ROOT + "mock/operations.html";
-	public static final String MOCKOPERATION_SCRIPTDISPATCH_HELP_URL = HELP_URL_ROOT + "mock/operations.html#Script_Dispatching";
+	public static final String MOCKOPERATION_SCRIPTDISPATCH_HELP_URL = HELP_URL_ROOT + "mock/operations.html#Groovy_Script_Dispatching";
 	public static final String MOCKOPERATION_XPATHDISPATCH_HELP_URL = HELP_URL_ROOT + "mock/operations.html#XPath_Dispatching";
 
 	public static final String RESPONSE_ASSERTIONS_HELP_URL = HELP_URL_ROOT + "functional/response-assertions.html";
