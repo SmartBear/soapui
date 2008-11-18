@@ -182,7 +182,7 @@
 		soapUI only save non successful TestStep results which will save substantial amounts of memory.</li>
 		<li><b>Socket timeout</b> : The timeout (in milliseconds) to be used for all requests in the TestCase</li>
 		<li><b>TestCase timeout</b> : The timeout (in milliseconds) to wait before canceling or failing a running TestCase</li>
-		<li><b>Max results</b> : @TODO@ add explanation, change the screen shot</li>
+		<li><b>Max results</b> : @TODO@ add explanation</li>
 		
 		</ul>
 		<p align="center"><img src="images/testcase_options.gif" alt="Setting options for a Functional Testing of Web Services in TestCase Options"/></p>
@@ -228,7 +228,7 @@
 		<p align="center"><img src="images/link_testcase_to_requirements.gif" alt="Linking a Case Requirements to a test in soapUI Pro"/></p>
 		</subsection>
 		 
-		   <p><hr size="1"/>Next: <a href="teststeps.html">Test Steps</a></p>
+		   <p><hr size="1"/>Next: <a href="teststeps.html">Web Service functional Testing- Working with Test Steps</a></p>
 		</section>
     </body>
 </document>

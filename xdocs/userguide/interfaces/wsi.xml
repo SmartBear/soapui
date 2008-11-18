@@ -5,7 +5,7 @@
     </properties>
     <body>
 		<section name="WS-I Compliance">
-		<p>soapUI includes integrated support for the <a href="http://www.ws-i.org">WS-I organizations</a> Basic Profile validation 
+		<p>soapUI includes integrated support for the <a target="_new" href="http://www.ws-i.org">WS-I organizations</a> Basic Profile validation 
 		tools for 2 situations:</p>
 		<ol>
 		<li><b>Validating WSDL definitions</b> - from the <a href="../index.html#Interface_Actions">Interface Menu</a> with the 
@@ -18,7 +18,6 @@
 		<a href="http://www.ws-i.org/deliverables/workinggroup.aspx?wg=testingtools" target="_new">deliverables</a> page. 
 		Once downloaded, unzip the file into a local directory and specify the contained "wsi test tools" directory
 		in the soapUI together with the desired settings;</p>
-		@TODO@maybe to change this screen shot - there are more preferences tabs now, but this specific tab is the same
 		<p align="center"><img src="images/wsi_settings.gif" alt="WS-I Tool Setting"/></p>
 		<subsection name="Creating WS-I Reports">
 		<p>When running one of the integrated validations described above, the corresponding WS-I Analyzer configuration file 

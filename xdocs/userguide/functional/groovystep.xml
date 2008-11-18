@@ -72,7 +72,6 @@
 		<p>The editor popup shown in the screenshot above has standard editing/navigation actions</p>
 		</subsection>
 		
-		@TODO@Check all the links
 		<subsection name="Script Execution">
 		<p>When a Groovy script is executed, the following context variables are set for the script to use:</p>
 		<ul>

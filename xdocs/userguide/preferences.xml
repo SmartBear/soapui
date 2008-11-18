@@ -17,9 +17,11 @@
 		<tr><td><a href="#Integrated_Tools">Tools</a></td><td>Sets paths to integrated tools</td></tr>
 		<tr><td><a href="#WSI_Settings">WSI Settings</a></td><td>Sets WS-I Basic Profile validation options</td></tr>
 		<tr><td><a href="#Global_Properties">Global Properties</a></td><td>Manages Global Properties</td></tr>
+		<tr><td><a href="#Global_Security Settings">Global Security Settings</a></td><td>Manages Global Security Settings</td></tr>
 		<tr><td><a href="#WS-A_Settings">WS-A Settings</a></td><td>Manages WS-A Settings</td></tr>
 		<tr><td><a href="#soapUI_Pro_Settings">soapUI Pro Settings</a></td><td>Sets soapUI-Pro specific settings</td></tr>
 		<tr><td><a href="#Coverage_Settings">Coverage Settings</a></td><td>Coverate related settings</td></tr>
+		<tr><td><a href="#Code_Templates">Code Templates</a></td><td>Code Templates settings</td></tr>
 		</table>
 		<subsection name="Import Preferences">
 		<p>The global File menu contains a menu action for importing global preferences from an existing installation.
@@ -40,30 +42,38 @@
 		<subsection name="HTTP Settings">
 		
 		<table><tr><th>Setting</th><th>Description</th></tr>
+		<tr><td>HTTP Version</td><td>Selects the HTTP version</td></tr>
 		<tr><td>User-Agent Header</td><td>Sets the HTTP User-Agent Header. If none is specified the default HttpClient header
 		is used</td></tr>
+		<tr><td>Request Compression</td><td>Selects the request compression type</td></tr>
+		<tr><td>Response Compression</td><td>Indicates if compressed responses from hosts are accepted</td></tr>
+		<tr><td>Disable Response Decompression</td><td>Disables decompression of compressed responses</td></tr>
 		<tr><td>Close connections after request</td><td>Disables HTTP Keep-Alives by requesting to close the HTTP connection
 		after each request. This will have a negative impact on performance but may give more realistic values during 
 		load testing</td></tr>
+		<tr><td>Disable Chunking</td><td>Disables content-chunking</td></tr>
 		<tr><td>Authenticate Preemptively</td><td>Send Authentication headers with each request without first 
 		receiving an authentication challenge. This is a potential security hazard but will improve performance since only one 
 		request will be required for authenticated endpoints instead of two</td></tr>
-		<tr><td>Include request in time taken</td><td>Includes the time it took to write the request in time-taken</td></tr>
-		<tr><td>Include response in time taken</td><td>Includes the time it took to read the response body in time-taken</td></tr>
 		<tr><td>Preencoded Endpoints</td><td>Do not URL-encode endpoints, set this if your endpoint URLs are already
 		URL-encoded (containing for example %20 or %3A)</td></tr>
+		<tr><td>Bind Address</td><td>The local address to bind to when sending requests, can be overridden
+		on a request level (with the corresponding request property) and on a system level by setting 
+		the soapui.bind.address system variable.</td></tr>
+		<tr><td>Include request in time taken</td><td>Includes the time it took to write the request in time-taken</td></tr>
+		<tr><td>Include response in time taken</td><td>Includes the time it took to read the response body in time-taken</td></tr>
 		<tr><td>Socket Timeout</td><td>The socket timeout for HTTP requests in milliseconds</td></tr>
+		
 		<tr><td>Max Response Size</td><td>The maximum number of bytes to read from a response (0 = unlimited)</td></tr>
 		<tr><td>Max Connections Per Host</td><td>The maximum number of simultaneous connections to a specific host. Increase this
 		value if you are running LoadTests with more than 500 threads on a particular host.</td></tr>
 		<tr><td>Max Total Connections</td><td>The total maximum number of connections. Increase this
 		value if you are running LoadTests with more than 2000 threads.</td></tr>
-		<tr><td>Bind Address</td><td>The local address to bind to when sending requests, can be overridden
-		on a request level (with the corresponding request property) and on a system level by setting 
-		the soapui.bind.address system variable.</td></tr>
+		
 		<tr><td>Leave MockEngine</td><td>Will leave the MockEngine running even when all MockServices have stopped resulting in
 		much faster startup-times for new MockServices and 404 errors when trying to call a stopped MockService (instead of
 		connection failure)</td></tr>
+		<tr><td>Enable Mock HTTP Log</td><td>Logs wire content of all mock requests.</td></tr>
 		</table>
 		
 		<p align="center"><img src="images/http_settings.gif" alt="The HTTP Settings Tab in soapUI"/></p>
@@ -96,6 +106,7 @@
 		<tr><td>Mock Key Password</td><td>The default keys password</td></tr>
 		<tr><td>Mock TrustStore</td><td>The truststore to use (optional)</td></tr>
 		<tr><td>Mock TrustStore Password</td><td>The truststore password</td></tr>
+		<tr><td>Client Authentication</td><td>Indicates if client authentication is required</td></tr>
 		</table>
 		<p>Changing either of first two settings should not require a restart of soapUI to get activated. The MockService
 		related settings will get applied the next time the MockEngine is started.</p>
@@ -146,6 +157,8 @@
 		<tr><td>Order Projects</td><td>Sorts Projects in alphabetical order in the navigator.</td></tr>
 		<tr><td>Order Requests</td><td>Sorts Requests in alphabetical order in the navigator.</td></tr>
 		<tr><td>Order TestSuites</td><td>Sorts TestSuites in alphabetical order in the navigator.</td></tr>
+		<tr><td>Show Descriptions</td><td>Show description content when available</td></tr>
+		<tr><td>Save Projects On Exit</td><td>Automatically save all projects on exit.</td></tr>
 		<tr><td>Create Backup</td><td>Creates a backup copy of a projects project-file before saving.</td></tr>
 		<tr><td>Backup Folder</td><td>The folder where to save backups, if relative or empty the folder is relative to 
 		the project files folder</td></tr>
@@ -159,7 +172,8 @@
 		<tr><td>Do not disable Groovy Log</td><td>Keeps the groovy log active during LoadTests, which can be useful for
 		debugging, etc.</td></tr>
 		<tr><td>Show Log Tabs</td><td>Expands the log tabs when starting soapUI.</td></tr>
-		</table>
+		<tr><td>Show Startup Page</td><td>Opens startup web page when starting soapUI.</td></tr>
+		</table> 
 		
 		
 						
@@ -251,24 +265,29 @@
 		</subsection>
 		
 		<subsection name="Global Properties">
-		<p>Manages globl properties, if a soapui.properties file has been specified, that files contents will be 
+		<p>Manages global properties, if a soapui.properties file has been specified, that files contents will be 
 		available in the table. The "Enable Override" option will make global properties to always override any other
 		property references (see <a href="properties.html#Global_Properties">Properties</a> for more information).</p>
 		<p align="center"><img src="images/globalproperty_settings.gif" alt="The Global Properties Tab in soapUI"/></p>
 		</subsection>
 		
+		<subsection name="Global Security Settings">
+		<p>Manages global SoapUI password. If password set it is used for encrypting soapui-settings file. When opening soapUI with 
+		wrong password specified encrypted file backup will be created and new soapui-settings file will be used, with default values.</p>
+		<p align="center"><img src="images/globalsecurity_settings.gif" alt="The Global Security Settings Tab in soapUI"/></p>
+		</subsection>
+		
 		<subsection name="WS-A Settings">
 		<p>Manages WS Addressing settings</p>
 		<table><tr><th>Setting</th><th>Description</th></tr>
-		<tr><td>Use default Action</td><td>Indicates using<a href="http://www.w3.org/TR/ws-addr-wsdl/#defactionwsdl11"> default Action </a>generated from Wsdl</td></tr>
-		<tr><td>Generate MessageID</td><td>Randomly generates unique messageID</td></tr>
+		<tr><td>Soap Action Overrides WS-S Action</td><td>If present in the WSDL soap action overrides wsa:Action</td></tr>
 		<tr><td>Use default RelationshipType</td><td>Indicates using default 'reply' for RelationshipType 
-		as specified in <a href="http://www.w3.org/TR/ws-addr-core/#msgaddrprops">Message Addressing Properties</a></td></tr>
+		as specified in <a target="_new" href="http://www.w3.org/TR/ws-addr-core/#msgaddrprops">Message Addressing Properties</a></td></tr>
 		<tr><td>Use default RelatesTo</td><td>Indicates using default 'unspecified' for RelatesTo
-		as specified in <a href="http://www.w3.org/TR/ws-addr-core/#msgaddrprops">Message Addressing Properties</a></td></tr>
+		as specified in <a target="_new" href="http://www.w3.org/TR/ws-addr-core/#msgaddrprops">Message Addressing Properties</a></td></tr>
 		<tr><td>Override existing headers</td><td>Indicates replacing/skipping(if unchecked) already existing headers</td></tr>
 		<tr><td>Enable for optional Addressing policy</td><td>Enables WS Addressing for Policy Addressing Assertion attribute Optional="true"
-		(see the <a href="http://www.w3.org/TR/2007/REC-ws-addr-metadata-20070904/#wspolicyassertions">WS-Policy Assertions
+		(see the <a target="_new" href="http://www.w3.org/TR/2007/REC-ws-addr-metadata-20070904/#wspolicyassertions">WS-Policy Assertions
 		specification</a>)</td></tr>
 		</table>
 		
@@ -283,9 +302,9 @@
 		<tr><td>Outline Editor Limit</td><td>Defines the maximum size of messages to handle in the outline editor; since
 		the outline editor consumes a large amount of memory, setting a limit related to one’s own memory settings is 
 		encouraged</td></tr>
+		<tr><td>Form Editor Limit</td><td>Defines the maximum size of messages to handle in the form editor; since
 		<tr><td>Table Inspector Columns</td><td>Sets the maximum number of columns displayed by the 
 		<a href="messageinspectors.html#Table_Layout_Inspector">Table Inspector</a> (due to performance reasons).</td></tr>
-		<tr><td>Form Editor Limit</td><td>Defines the maximum size of messages to handle in the form editor; since
 		the outline editor consumes a large amount of memory, setting a limit related to one’s own memory settings is 
 		encouraged</td></tr>
 		<tr><td>Script Library</td><td>Sets the location for the local <a href="scripting.html#Groovy_Script_Library">Script Library</a>.</td></tr>
@@ -297,8 +316,6 @@
 		<subsection name="Coverage Settings">
 		<p>These settings are related to soapUI Pro specific WSDL Coverage functionality.</p>
 		<table><tr><th>Setting</th><th>Description</th></tr>
-		<tr><td>Count Empty Values</td><td>Sets empty elements and attributes to count as covered</td></tr>
-		<tr><td>Count ? Values</td><td>Sets elements and attributes containing ? to count as covered</td></tr>
 		<tr><td>Auto Prepare</td><td>Automatically prepares for Coverage calculation when opening a window containing
 		Coverage content.</td></tr>
 		</table>
@@ -306,6 +323,11 @@
 		<p align="center"><img src="images/coverage_settings.gif" alt="The Coverage Settings Tab in soapUI"/></p>
 		</subsection>
 		
+		<subsection name="Code Templates">
+		<p>@TODO@ add explanation</p>
+		
+		<p align="center"><img src="images/codetemplates_settings.gif" alt="Code Templates Tab in soapUI"/></p>
+		</subsection>		
 		<p><hr size="1"/>Next: <a href="xpath_selector.html">soapUI Pro XPath Selection</a></p>
 		</section>
     </body>

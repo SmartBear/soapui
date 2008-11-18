@@ -19,7 +19,7 @@
 		
 		<columns><column><div>This dialog can always be opened from the "Help/Show License Details" main menu 
 		option. A license can also be updated manually with the "Help/Update License" option which will restart 
-		the above process.</div> @TODO@Option for bye license and change screen shot for help menu
+		the above process.</div> @TODO@explain Option for bye license? 
 		</column>
 		<column><img src="images/help_license_menu.gif" alt="soapUI Pro Help Menu"/></column></columns>
 		<subsection name="Command Line, Plugins and Licenses">

@@ -92,7 +92,7 @@
 		<p>The following screenshot shows the viewer for the PayPal API;</p>
 		<p align="center"><img src="images/interface_viewer.gif" alt="the WSDL Content Inspector"/></p>
 	           </subsection>
-		 <p><hr size="1"/>Next: <a href="endpoints.html">Service Endpoints</a></p>
+		 <p><hr size="1"/>Next: <a href="wsi.html">WS-I Compliance</a></p>
 		</section>
     </body>
 </document>

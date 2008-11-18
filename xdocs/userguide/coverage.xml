@@ -95,7 +95,6 @@
             <code>{http://my.namespace}weekday=mon,tue,wed,thu,fri,sat,sun</code> and coverage will be calculated for the complete set of values.</li>
 		</ul>
 		
-		@TODO@update the screen shot and options list for coverage optrions
 		<p align="center"><img src="images/coverage_options.gif" alt="Coverage Options in soapUI Pro"/></p>
 		</subsection>
 

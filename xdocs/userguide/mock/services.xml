@@ -116,6 +116,8 @@
 		<li>Port - the port to listen on</li>
 		<li>Host - the external IP of the local machine (used for WSDL Publishing)</li>
 		<li>Host Only - only bind to host IP instead of all IP's</li>
+		<li>Docroot - @TODO@explanation</li>
+		<li>Fault Operation - @TODO@explanation</li>
 		</ul>
 		@TODO@change the screen shot and add options
 		<p align="center"><img src="images/mockservice_options.gif" alt="Setting options for a MoackService"/></p>

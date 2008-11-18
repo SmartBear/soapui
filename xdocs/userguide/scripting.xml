@@ -95,6 +95,9 @@ greet.salute()</source>
         <source>Wed Jun 27 01:40:16 CEST 2007:INFO:Hello Ole!</source>
 		</subsection>
 
+        <subsection name="Dynamic Properties">
+        @TODO@add content
+        </subsection>
         <subsection name="Code Templates">
          <p>soapUI Pro 2.5 adds rudimentary support for configurable code templates which will be activated when
          typing the correspondig template ID and pressing Ctrl-Space in an editor. Templates can be added/changed
