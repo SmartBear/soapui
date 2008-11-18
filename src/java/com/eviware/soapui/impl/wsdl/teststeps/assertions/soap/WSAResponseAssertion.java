@@ -113,7 +113,7 @@ public class WSAResponseAssertion extends WsdlMessageAssertion implements
       try
       {
          new WsaValidator( (WsdlMessageExchange) messageExchange,
-                 wsaAssertionConfiguration ).validateWsAddressingRequest();
+                 wsaAssertionConfiguration ).validateWsAddressingResponse();
       }
       catch( AssertionException e )
       {

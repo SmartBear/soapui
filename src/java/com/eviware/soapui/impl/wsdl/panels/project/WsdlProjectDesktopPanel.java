@@ -14,10 +14,12 @@ package com.eviware.soapui.impl.wsdl.panels.project;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockOperation;
@@ -201,7 +203,13 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 
 	private JComponent buildProjectOverview()
 	{
-		metrics = new MetricsPanel();
+	    metrics = new MetricsPanel();
+		
+	      JXToolBar toolbar = UISupport.createSmallToolbar();
+	      toolbar.addGlue();
+	      toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.PROJECT_OVERVIEW_HELP_URL ) ) );
+	      metrics.add(toolbar,BorderLayout.NORTH );
+		
 		
 		MetricsSection section = metrics.addSection( "Project Summary" );
 		section.addMetric( ModelItemIconFactory.getIcon( Project.class ), "File Path", MetricType.URL );
@@ -223,7 +231,6 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 		section.addMetric( ModelItemIconFactory.getIcon( MockOperation.class ), MOCKOPERATIONS_STATISTICS );
 		section.addMetric( ModelItemIconFactory.getIcon( MockResponse.class ), MOCKRESPONSES_STATISTICS );
 		section.finish();
-		
 		return new JScrollPane( metrics );
 	}
 

@@ -158,7 +158,7 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 		toolbar.addFixed( UISupport.createToolbarButton(saveWsiReportAction ));
 
 		toolbar.addGlue();
-		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.WSIREPORT_HELP_URL ) ) );
+		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.WSI_COMPLIANCE_HELP_URL ) ) );
 		
 		return toolbar;
 	}
@@ -166,6 +166,10 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 	private Component buildInterfaceOverviewTab()
 	{
 		metrics = new MetricsPanel();
+		JXToolBar toolbar = UISupport.createSmallToolbar();
+		toolbar.addGlue();
+		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.INTERFACE_OVERVIEW_HELP_URL ) ) );
+		metrics.add(toolbar,BorderLayout.NORTH );
 		MetricsSection section = metrics.addSection( "WSDL Definition" );
 		
 		try
@@ -304,7 +308,7 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 				SwingActionDelegate.createDelegate( CreateWsdlDocumentationAction.SOAPUI_ACTION_ID, iface, null, "/export.gif")));
 		toolbar.addFixed( button);
 		toolbar.addGlue();
-		button = UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.INTERFACE_HELP_URL ));
+		button = UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.WSDL_CONTENT_HELP_URL ));
 		button.setText( null );
 		toolbar.addFixed( button);
 		
