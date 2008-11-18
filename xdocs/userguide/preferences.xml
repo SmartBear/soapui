@@ -303,11 +303,12 @@
 		<tr><td>Outline Editor Limit</td><td>Defines the maximum size of messages to handle in the outline editor; since
 		the outline editor consumes a large amount of memory, setting a limit related to one’s own memory settings is 
 		encouraged</td></tr>
-		<tr><td>Form Editor Limit</td><td>Defines the maximum size of messages to handle in the form editor; since
+		<tr><td>Form Editor Limit</td><td>Defines the maximum size of messages to handle in the form editor; since the form
+            editor consumes a large amount of memory, setting a limit related to one’s own memory settings is 
+		encouraged</td></tr>
 		<tr><td>Table Inspector Columns</td><td>Sets the maximum number of columns displayed by the 
 		<a href="messageinspectors.html#Table_Layout_Inspector">Table Inspector</a> (due to performance reasons).</td></tr>
-		the outline editor consumes a large amount of memory, setting a limit related to one’s own memory settings is 
-		encouraged</td></tr>
+
 		<tr><td>Script Library</td><td>Sets the location for the local <a href="scripting.html#Groovy_Script_Library">Script Library</a>.</td></tr>
 		</table>
 		

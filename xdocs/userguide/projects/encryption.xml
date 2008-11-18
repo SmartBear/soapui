@@ -8,31 +8,36 @@
 		<p>To protect sensitive data in project files (passwords, request data, etc) a <b>Project Password</b> property has been added
             in the bottom left properties table.
         Setting this property by specifying a password will result in that project file being encrypted when saved. The project will
-		be marked in <b>Navigator</b> as shown below.</p>
-		<p align="center"><img src="images/non-encrypted-project.gif" alt="non encrypted opened project"/>
-		<img src="images/encrypted-project.gif" alt="encrypted open project"/></p>
+		be marked in <b>Navigator</b> as shown below:</p>
+            
+		<p align="center"><img src="images/encrypted-project.gif" alt="encrypted open project"/></p>
+
 		<p>A project <b>can not</b> be composite and encrypted at same time. If you set password for composite projects, the composite
 		property will be set to false and and error message will be displayed. Same goes if you try to set composite property to true
-		on encrypted project.
+		on encrypted project. </p>
 		<p align="center"><img src="images/password-composite.gif" alt="project settings"/></p>
-        </p>
+
         <subsection name="Working with encrypted project">
         <p>When starting soapUI encrypted projects will not be opened automatically; you need to open them manually by double-clicking
-            which will first prompt you for the password required to decrypt the project file:
+            which will first prompt you for the password required to decrypt the project file:</p>
         <p align="center"><img src="images/password-dialog.gif" alt="project password dialog"/></p>
-        If password is correct the project will be opened, if password is wrong it stays closed. Please remember your passwords, there
+            <p>
+                If password is correct the project will be opened, if password is wrong it stays closed. Please remember your passwords, there
             is no way to decrypt a project without a password!
         </p>
         </subsection>
         <subsection name="Encryption in global settings">
-        <p>If you need to protect data that is stored in the global settings (Proxy, SSL, etc) there is also a global password setting:
+        <p>If you need to protect data that is stored in the global settings (Proxy, SSL, etc) there is also a global password setting:</p>
         <p align="center"><img src="images/global-password.gif" alt="Global password setting"/></p>
-        Setting this password will encrypt soapui-settings.xml where soapUI stores all global settigns. When starting
-        soapUI with encrypted soapui-settings.xml you will be asked for password first:
+            <p>
+                Setting this password will encrypt soapui-settings.xml where soapUI stores all global settigns. When starting
+        soapUI with encrypted soapui-settings.xml you will be asked for password first:</p>
         <p align="center"><img src="images/global-password2.gif" alt="Global password setting dialog"/></p>
-        If correct soapUI will restore all your settings with workspace and projects. If not you will get:
+            <p>
+                If correct soapUI will restore all your settings with workspace and projects. If not you will get:
         <p align="center"><img src="images/bad-global-password.gif" alt="Global password - bad password"/></p>
-        The encrypted soapui-settings will be saved in a backup file and a new default settings will replace your old settings.
+                <p>
+                    The encrypted soapui-settings will be saved in a backup file and a new default settings will replace your old settings.
         </p>
         </subsection>
 		 <p><hr size="1"/>Next: <a href="composite-projects.html">Composite Projects </a></p>

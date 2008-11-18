@@ -123,8 +123,7 @@
         <item href="/userguide/commandline/toolrunner.html" name="Tool Runner"/>
     </item>
 
-    <item href="/userguide/shortcuts.html" name="Keyboard shortcuts"/>
-
+   
          <item name="IDE/Tool Plugins" href="/ideplugins.html">
 			<item name="Maven Plugins" href="/plugin/index.html">
 		      <item href="/plugin/maven1/index.html" name="Maven 1.X Plugin">
