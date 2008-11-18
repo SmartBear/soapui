@@ -53,7 +53,8 @@
 				a corresponding MockOperation in a MockService.</li>
 				<li><b>Require SOAP Action</b> - controls if incoming requests SOAPAction must match the SOAPAction of 
 				a corresponding MockOperation in a MockService.</li>
-				<li><b>Dispache Response</b> : @TODO@ </li>
+				<li><b>Dispache Response</b> : enables dispatching of request containing a Response Message instead
+                    of a request.</li>
 				<li><b>Incoming WSS</b> - the Incoming WSS configuration to use for decrypting incoming requests. This is 
 				necessary if the entire body of a message is encrypted since it can not be dispatched otherwise.</li>
 				<li><b>Default Outgoing WSS</b> - the default Outgoing WSS configuration to apply to all MockResponses.
@@ -116,10 +117,10 @@
 		<li>Port - the port to listen on</li>
 		<li>Host - the external IP of the local machine (used for WSDL Publishing)</li>
 		<li>Host Only - only bind to host IP instead of all IP's</li>
-		<li>Docroot - @TODO@explanation</li>
-		<li>Fault Operation - @TODO@explanation</li>
+		<li>Docroot - path to a local folder that should be used to serve files for GET requests to the MockService
+        path</li>
+		<li>Fault Operation - MockOperation to dispatch to if a SOAP Fault message is received by the MockService</li>
 		</ul>
-		@TODO@change the screen shot and add options
 		<p align="center"><img src="images/mockservice_options.gif" alt="Setting options for a MoackService"/></p>
 		</subsection>
 		
@@ -153,6 +154,9 @@
 		<p>... and selecting a part displays it in your browser:</p>
 		<p align="center"><img src="images/wsdlpublish_4.gif"/></p>
 		<p>The root WSDL part (displayed first in the list of parts) can be used to generate clients, etc..</p>
+            <p>As of soapUI 2.5, it is possible to call the MockService path with "?WSDL" which will return the
+            mocked WSDL directly. If multiple WSDLs are being mocked, soapUI automatically creates a WSDL that
+            imports these WSDLs instead.</p>
 		</subsection>
 
 		 <p><hr size="1"/>Next: <a href="coverage.html">MockService Coverage</a></p>

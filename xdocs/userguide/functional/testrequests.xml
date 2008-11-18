@@ -89,7 +89,8 @@
                     <li><b>Open List</b> - opens a separate window after the update containing a list of all Requests/TestRequests
                     that have been modified during the clone procedure (useful for manual post processing).</li>
                     </ul>
-                    <p>Setting the desired options and selecting OK will clone as configured.</p>
+                    <p>Setting the desired options and selecting OK will clone as configured, alternatively use the
+                        "Apply" option to execute the current Dialog settings without closing it.</p>
                     </subsection>
             
 

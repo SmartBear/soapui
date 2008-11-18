@@ -22,7 +22,7 @@
             <p>HTTP Request Steps are standalone HTTP requests that can be used to call any HTTP service. They are added
                 via the  TestCase Editors popup menu with the "Insert Step -&gt; HTTP Request" option.</p>
 
-                     <subsection name="REST Test Request Details Tab">
+                     <subsection name="HTTP Test Request Details Tab">
                       <p>
                     The "Details" tab shown in the bottom-left shows the same properties when a TestRequest node is selected in
                     the navigation tree as for a standard request (
@@ -35,7 +35,7 @@
                     </p>
                     </subsection>
 
-                             <subsection name="The REST Test Request Editor">
+                             <subsection name="The HTTP Test Request Editor">
                      <p>Double-clicking a HTTP Test Request in either the navigator or the TestCase Editor Pane opens the requests
                      editor which is a copy of the standard REST Request Editor with the following exception:</p>
                      <ul>
@@ -55,7 +55,7 @@
                     <p>All other editing, submittal, validation functionality is the same as in the REST Request editor</p>
                     </subsection>
 
-		 <p><hr size="1"/>Next: <a href="http-requests.html">HTTP Requests</a></p>
+		 <p><hr size="1"/>Next: <a href="response-assertions.html">Assertions</a></p>
 		</section>
     </body>
 </document>

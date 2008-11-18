@@ -78,12 +78,13 @@
 		<p>Incoming requests to a MockOperation can be dispatched in one of 4 ways using the 
 		dispatch combo box:</p>
 		<ul>
-		<li><b>Sequence</b> - dispatches to the configured responses in sequence, starting from the beginning 
+		<li><b>SEQUENCE</b> - dispatches to the configured responses in sequence, starting from the beginning
 		when the last has been reached.</li>
-		<li><b>Random</b> - dispatches randomly between existing MockResponses</li>
-		<li><b>XPath</b> - dispatches based on a specified XPath expression that will be used to select the name
+		<li><b>RANDOM</b> - dispatches randomly between existing MockResponses</li>
+		<li><b>XPATH</b> - dispatches based on a specified XPath expression that will be used to select the name
 		of the MockResponse step to dispatch to.</li>
-		<li><b>Script</b> - allows a Groovy script for dispatching based on any arbitrary criteria</li>
+		<li><b>SCRIPT</b> - allows a Groovy script for dispatching based on any arbitrary criteria</li>
+        <li><b>QUERY_MATCH</b> - specifies a number of matching queries for the request and their target MockResponse (see below)</li>
 		</ul>
 		<p>Both the XPath and Script dispatch methods allow specification of a default response to be returned
 		if there is no matching response for the XPath or script expression. When selecting XPath or Script, 
@@ -91,6 +92,30 @@
 		can be entered and tested. When running soapUI Pro, the XPath editor also includes a button for the
 		<a href="../xpath_selector.html">XPath Selector</a>.</p>
 		</subsection>
+            
+        <subsection name="Query/Match Dispatching">
+        <p>The QUERY_MATCH dispatch option has the following configuration panel:</p>    
+        <p align="center"><img src="images/querymatch-dispatch-config.gif"></img></p>
+            <p>The list to the left contains a list of queries with a toolbar for adding/removing/etc these.
+                Selecting a query item in the list enables the detail view to the right for the query which
+            contains the following fields:</p>
+            <ul>
+                <li>XPath : the XPath expression to apply to a request to this MockOperation</li>
+                <li>Expected value : the value to check for</li>
+                <li>Dispatch To : the MockResponse to dispatch to if the expected value matches that selected from the request</li>
+                <li>Disabled : option to disable the item</li>
+            </ul>
+
+            <p>The toolbar on top of the Detail area has the following buttons:</p>'
+            <ul>
+                <li>Define Namespaces : create namespace declarations from the last received request</li>
+                <li>Extract : applies the defined XPath expression to the last request and saves the extracted value
+                to the Expected Value field</li>
+                <li>Select... : Opens the soapUI Pro XPath Selector for the last request and writes the selected
+                nodes' XPath to the XPath field</li>
+            </ul>
+        </subsection>
+
 		<subsection name="Groovy Script Dispatching">
 		<p>Using Groovy scripts as a controller to dispatch incoming is a very flexible way of creating
 		MockOperations. The script has access to the following variables:</p>

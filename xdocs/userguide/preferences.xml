@@ -324,8 +324,15 @@
 		</subsection>
 		
 		<subsection name="Code Templates">
-		<p>@TODO@ add explanation</p>
-		
+		<p>soapUI Pro provides initial functionality to define Code Templates which will be replaced with their
+        corresponding content when typing them and pressing Ctrl-Space in any of the groovy editors. This preferences
+        page allows you to add/remove/modify Code Templates as desired. Use the '|' character to specify the caret
+        position after the template has been inserted (otherwise the caret will be positioned after the inserted template text).</p>
+        <p>soapUI Pro comes with two initial templates:</p>
+        <ul>
+            <li>grut - def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )</li>
+            <li>xhre - def holder = groovyUtils.getXmlHolder( "|#Response" )</li>
+        </ul>
 		<p align="center"><img src="images/codetemplates_settings.gif" alt="Code Templates Tab in soapUI"/></p>
 		</subsection>		
 		<p><hr size="1"/>Next: <a href="xpath_selector.html">soapUI Pro XPath Selection</a></p>

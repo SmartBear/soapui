@@ -36,7 +36,7 @@
 				<li><b>Description</b> - an arbitrary description of this MockResponse</li>
 				<li><b>Message Size</b> - shows the size of the current response message content (in characters)</li>
 				<li><b>Encoding</b> - the encoding to use for the content of the MockResponse message.</li>
-				<li><b>Outgoing WSS</b> : @TODO@ </li>
+				<li><b>Outgoing WSS</b> : the project-level Outgoing WSS configuration that should be applied to the response</li>
 				<li><b>Enable MTOM/Inline</b> - enables MTOM/Inline processing for MockResponse messages in the same way as 
 				described for <a href="../attachments.html">Request Attachments</a></li>
 				<li><b>Force MTOM</b> - always returns MTOM packaged responses, even if there are no MTOM attachments in response.</li>
@@ -46,7 +46,7 @@
 				  the xsd-type set to either base6Binary or hexBinary.</li>
 				<li><b>Strip Whitespaces</b> : Strips outgoing responses of any unnecessary whitespaces and xml comments, required by some servers.</li>
 				<li><b>Remove Empty Content</b> : Removes empty elements/attributes from outgoing responses.</li>
-				<li><b>Entitize Properties</b> : @TODO@ </li>
+				<li><b>Entitize Properties</b> : Entitize expanded property values</li>
 				<li><b>Response HTTP-Status</b> : (read only) show http response status</li>
 				<li><b>Response Delay</b> : Waits the specified number of milliseconds before returning the response.</li>
 				<li><b>WS-Addressing</b>  : enables/disables ws-addressing.</li>

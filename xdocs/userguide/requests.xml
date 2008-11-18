@@ -89,8 +89,8 @@ Both will improve your productivity and make Web Service Testing more fun.
 				 <li><b>Endpoint</b> : The endpoint for the request</li>
 				 <li><b>Bind Address</b>  : The local IP Address to bind to when sending the request.</li>
 				 <li><b>WS-Addressing</b>  : enables/disables ws-addressing.</li>
-				 <li><b>Follow Redirections</b> : @TODO@ </li>
-				 <li><b>Skip SOAP Action : </b> : enables/disables this SOAP action @TODO@ </li>
+				 <li><b>Follow Redirects</b> : follows HTTP Redirect response messages </li>
+				 <li><b>Skip SOAP Action : </b> : does not add SOAPAction header to request </li>
 			</ul>
 			<h4>Security/Authentication Properties</h4>
 			(override any defaults set for the endpoint)
@@ -119,8 +119,8 @@ Both will improve your productivity and make Web Service Testing more fun.
 				  see <a href="attachments.html#Multipart_Attachments">Multipart Attachments</a> for more details.</li>
 				 <li><b>Encode Attachments</b> : Tells soapUI to automatically encode attachments that have a corresponding WSDL part with 
 				  the xsd-type set to either base6Binary or hexBinary.</li>
-				 <li><b>Enable Inline Files</b> : enables/disables inline files , see <a href="attachments.html">Working with WS Attachments and Inline Files</a> @TODO@ </li>
-				 <li><b>Entitize Properties</b> : @TODO@ </li>
+				 <li><b>Enable Inline Files</b> : enables/disables inline files , see <a href="attachments.html">Working with WS Attachments and Inline Files</a> </li>
+				 <li><b>Entitize Properties</b> : entitize property-expansion values </li>
 			</ul>
 			<h4>Post-Processing Properties</h4>
 			<ul>
@@ -129,7 +129,7 @@ Both will improve your productivity and make Web Service Testing more fun.
 				Data Drive TestRequests which contain elements/attributes that not always contain data and should be removed in those cases.</li>
 				<li><b>Prity Print</b> : enables more readable text format</li>
 				<li><b>Dump File</b> : file where response will be stored</li>
-				<li><b>Max Size</b> : maximum numbers of bytes to receive @TODO@ </li>
+				<li><b>Max Size</b> : maximum numbers of bytes to receive</li>
 			</ul>
 		 </subsection>
 		 

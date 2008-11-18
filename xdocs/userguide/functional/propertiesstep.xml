@@ -43,7 +43,7 @@
 			<li><b>Create Missing on Load</b> - creates properties from source property files that are not currently defined</li>
 			<li><b>Save before Load</b> - specifies to save existing properties before loading new ones to/from the specified source
 			and target property files</li>
-			<li><b>Discard Values on Save</b> : discards values when it is saved @TODO@</li>
+			<li><b>Discard Values on Save</b> : clears all property values when project is saved</li>
 			</ul>
 		</subsection>
 

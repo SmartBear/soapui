@@ -136,11 +136,9 @@
 		 evaluated against the received response message and compare its result to a predefined value. Expressions
 		 can select everything from attribute values, make Boolean evaluations or select the entire response body.
 		 (XmlUnit is used internally for comparing xml elements, nodes or hierarchies)</p>
-		 <p>soapUI internally uses the Saxon 8.8 XPath processor which has support for both 
+		 <p>soapUI internally uses the Saxon 9 XPath processor which has support for both
 		 <a target="_new" href="http://www.w3.org/TR/xpath">XPath 1.0</a> and 
-		 <a target="_new" href="http://www.w3.org/TR/xpath20/">XPath 2.0</a>. Download the  
-		 <a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=29872&amp;package_id=21888&amp;release_id=444837">Saxon 8.8 release</a>
-		 which contains extensive documentation on which features that are supported.</p>?
+		 <a target="_new" href="http://www.w3.org/TR/xpath20/">XPath 2.0</a>.</p>
 		  <p>The configuration dialog for the XPath-match assertion is divided into 2 areas (see below); the top XPath area which 
 		  contains the desired XPath expression and the bottom result area which contains the expected result.</p>
 		 <p align="center"><img src="images/xpath_match_dialog.gif" border="0" alt="Creating an XPath expression in the soapUI Pro Xpath Match editor"/></p>
@@ -161,6 +159,7 @@
 		  	area. This is essentially the same comparison that is performed during a "real" assertion.</li>
 		  	<li><b>Allow Wildcard</b> - Allows '*' wildcard in attribute and element values, these will be skipped during comparison 
 		  	(see tutorial below).</li>
+            <li><b>IgnoreNamespace Prefixes</b> (not shown in screenshot) - will ignore differing namespace prefixes in comparison.</li>
 		  	<li><b>Select Content (soapUI Pro only)</b> - Allows one to select an existing property whose value must match that of the
 		  	selected XPath value (as in screenshot above).</li>
 		  </ul>
