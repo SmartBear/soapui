@@ -112,14 +112,14 @@ public interface HelpUrls
 	public static final String RESPONSE_ASSERTIONS_HELP_URL = HELP_URL_ROOT + "functional/response-assertions.html";
 
 	public static final String TESTRUNNER_HELP_URL = HELP_URL_ROOT +"commandline/functional.html#Launch_Dialog";
-	public static final String XQUERYASSERTIONEDITOR_HELP_URL = HELP_URL_ROOT +"functional/response-assertions.html#XQuery_Match";
+	public static final String XQUERYASSERTIONEDITOR_HELP_URL = HELP_URL_ROOT +"functional/response-assertions.html#XQuery_Match_Assertion";
 
 	public static final String REQUEST_ASSERTIONS_HELP_URL = HELP_URL_ROOT + "functional/response-assertions.html";
 	public static final String LOADTEST_ASSERTIONS_URL = HELP_URL_ROOT + "loadtest/assertions.html";
 
-	public static final String UPDATE_INTERFACE_HELP_URL = HELP_URL_ROOT + "interfaces.html#Updating_the_Interface_Definition";
+	public static final String UPDATE_INTERFACE_HELP_URL = HELP_URL_ROOT + "interfaces/index.html#Updating_the_Interface_Definition";
 
-	public static final String NEWPROJECT_HELP_URL = HELP_URL_ROOT + "projects.html#Creating_Projects";
+	public static final String NEWPROJECT_HELP_URL = HELP_URL_ROOT + "projects/index.html#Creating_a_WSDL_Projects";
 
 	public static final String GENERATE_MOCKSERVICE_HELP_URL = HELP_URL_ROOT +"mock/services.html";
 
@@ -127,9 +127,9 @@ public interface HelpUrls
 
 	public static final String CHANGEMOCKOPERATION_HELP_URL = HELP_URL_ROOT +"mock/operations.html#Change_Operation";
 
-	public static final String CLONEMOCKSERVICE_HELP_URL = HELP_URL_ROOT +"mock/services.html#Clone_MockService";
+	public static final String CLONEMOCKSERVICE_HELP_URL = HELP_URL_ROOT +"mock/services.html";
 
-	public static final String MOCKOPERATIONOPTIONS_HELP_URL = HELP_URL_ROOT +"mock/operations.html#MockOperation_Options";
+	public static final String MOCKOPERATIONOPTIONS_HELP_URL = HELP_URL_ROOT +"mock/operations.html";
 
 	public static final String MOCKSERVICEOPTIONS_HELP_URL = HELP_URL_ROOT +"mock/services.html#MockService_Options";
 
@@ -153,21 +153,21 @@ public interface HelpUrls
 
 	public static final String CRYPTOSWSS_HELP_URL = HELP_URL_ROOT + "projects/wss.html#Keystores";
 
-	public static final String WSIREPORT_HELP_URL = HELP_URL_ROOT + "projects/index.html#WSI_Reports";
+	public static final String WSIREPORT_HELP_URL = HELP_URL_ROOT + "interfaces/wsi.html#Creating_WS-I_Reports";
 
-	public static final String RESOLVEPROJECT_HELP_URL =  HELP_URL_ROOT + "projects/index.html#Resolving_Projects";
+	public static final String RESOLVEPROJECT_HELP_URL =  HELP_URL_ROOT + "projects/resolving.html";
 
 	public static final String NEWRESTSERVICE_HELP_URL =  HELP_URL_ROOT + "rest/index.html";
 
 	public static final String RESTREQUESTEDITOR_HELP_URL =  HELP_URL_ROOT + "rest/requests.html";
 
-	public static final String CREATEWADLDOC_HELP_URL =  HELP_URL_ROOT + "rest/service.html";
+	public static final String CREATEWADLDOC_HELP_URL =  HELP_URL_ROOT + "rest/index.html";
 
 	public static final String WADL2JAVA_HELP_URL = "https://wadl.dev.java.net/wadl2java.html";
    
    public static final String WADL_PARAMS_HELP_URL =  HELP_URL_ROOT + "rest/params.html";
 
    public static final String RESTRESOURCEEDITOR_HELPURL =  HELP_URL_ROOT + "rest/resources.html";
-   public static final String MOCKOPERATION_QUERYMATCHDISPATCH_HELP_URL = HELP_URL_ROOT + "mock/operations.html#QueryMatch_Dispatching";
+   public static final String MOCKOPERATION_QUERYMATCHDISPATCH_HELP_URL = HELP_URL_ROOT + "mock/operations.html#Query/Match_Dispatching";
    
 }
