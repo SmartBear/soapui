@@ -17,22 +17,18 @@
     </properties>
     <body>
 		<section name="DataGen TestStep">
-		<p>soapUI Pro 2.5 introduces several new TestSteps of which one is soapUI Pro specific; the "DataGen" TestStep. 
-		As the name cleverly suggests, this step can be used to generate data to be used as input in your TestCases, for 
+		<p>The "DataGen" TestStep can be used to generate data to be used as input in your TestCases, for
 		example number or date sequences, random selections, etc. The generated data is available as properties and can 
-		thus be referred to with Property Transfers and Expansions just like any other property. Lets have a quick look 
-		at the available possibilities!</p>
-		
-		<p>
-		Start by creating an empty TestCase and adding a DataGen Step to it, you will see the following editor:</p>
+		thus be referred to with Property Transfers and Expansions just like any other property. Create a DataGen
+        step as usual from the TestCase popup menu. Double-clicking the TestStep will open the following editor:</p>
 		
 		<p align="center"><img src="images/datagen_editor.gif" alt="The soapUI Pro DataGen Editor Options"/></p>
 		
-		<p>The table at the top will contain the defined DataGen properties with their common settings (more on those later), 
-		and selecting a property in the table shows the corresponding configuration panel at the bottom.</p>
+		<p>The table at the top contains the defined DataGen properties with their common settings (see below),
+		selecting a property in the table shows the corresponding configuration panel at the bottom.</p>
 		
-		<p>Let's start by creating a property; select the Add button in the toolbar which opens the following "Add..." dialog:</p>
-		
+		<p>Add and delete properties using the toolbar buttons at the top, the Add button opens the following dialog:</p>
+
 		<p align="center"><img src="images/datagen_add.gif" alt="The soapUI Pro DataGen Add Panel"/></p>
 		
 		<p>The types of property available are currently:</p>
@@ -43,17 +39,14 @@
 		<li>List : specifies a list of possible values to return when the property is read</li>
 		</ul>
 		
-		<p>Lets have a quick look at these in more detail:</p>
 		<subsection name="Script">
 		<p>The configuration panel when selecting a Script property is as follows:</p>
 		<p align="center"><img src="images/datagen_script.gif" alt="The soapUI Pro DataGen Script property configuration"/></p>
-		<p>This is pretty straight-forward; specify a groovy script that returns the desired value for the property. 
+		<p>Specify a groovy script that returns the desired value for the property.
 		For example you could create a property that contains today date in a nice format:</p>
 		
-		<source>
-def sdf = new java.text.SimpleDateFormat("yyyy-MM-dd")
-return sdf.format( new Date())
-		</source>
+		<source>def sdf = new java.text.SimpleDateFormat("yyyy-MM-dd")
+return sdf.format( new Date())</source>
 		
 		<p>Anywhere in your TestCase where PropertyExpansions are available, you could use this with ${DataGen#today}, 
 		which would be replaced with todays date when used.</p>
@@ -66,15 +59,11 @@ return sdf.format( new Date())
 		<p>This type is useful for building complex multiple-line properties, for example to be inserted into requests. 
 		Here one can specify any content that can also contain property-expansions, for example</p>
 		
-		<source>
-<date><today>${DataGen#today}</today></date>
-		</source>
+		<source>&lt;date&gt;&lt;today&gt;${DataGen#today}&lt;/today&gt;&lt;/date&gt;</source>
 		<p>Which would evaluate to an XML element containing todays date when used in conjunction with the above defined script-property.</p>
 		</subsection>
 		
-		
 		<subsection name="Number">
-		<p>Which would evaluate to an XML element containing todays date when used in conjunction with the above defined script-property.</p>
 		
 		<p align="center"><img src="images/datagen_number.gif" alt="The soapUI Pro DataGen Number property configuration"/></p>
 		
