@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <document>
     <properties>
-        <title>SOAP Response Validation - soapUI Response Assertion</title>
+        <title>SOAP Response Validation - soapUI Test Request Assertions</title>
     </properties>
     <body>
-		<section name="Web Service Assertions">
+		<section name="Test Request Assertions">
 		 
-		 <p>One of the major quality assurance features of soapUI is the ability assert the content of SOAP Responses. 
+		 <p>One of the major quality assurance features of soapUI is the ability assert the content of response messages.
 		 soapUI comes with a number of different Assertions in order to cover the needs of high quality Testing.</p>
 		 
-		 <p>Hopefully these assertions make a useful testing tool box that will allow Agile testing of Web Services. 
+		 <p>Hopefully these assertions make a useful testing toolbox that will allow Agile testing of Web Services.
 		 Currently the following assertions are available:</p>
 		 <table><tr><th>Type</th><th>Description</th></tr>
 		 <tr><td><a href="#Schema_Compliance_Assertion">Schema Compliance</a> *</td><td>Validates the response message against its xml schema</td></tr>

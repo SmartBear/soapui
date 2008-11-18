@@ -16,162 +16,62 @@
         <title>Web Service Functional Testing - TestRequests</title>
     </properties>
     <body>
-    @TODO@change the whole page appropriately
-		<section name="REST Requests">
+		<section name="REST/HTTP Request Steps">
 		 
-		 <columns><column><div>
-		TestRequests are one of the main features you work with in soapUI. It extends standard requests with the possibility to 
-		add any number of Assertions that will be applied to the response received for the request. That is, you check that the reponse contains 
-		what you expect it to contain.		 
-		 <p> TestRequests are either created from standard requests using their "Add to Testcase" action or from the TestCase Editors popup 
-		 menu with the "Insert Step -&gt; Test Request" option (shown to the right), which will prompt for which Interface or Operation
-		  the request should be create for.</p>
-		  
-		  <p>When you creat A TestCase A dialog will prompt to add certain standard assertions in order to make you Web Service Testing more Rapid</p></div>
-		  </column><column>
-			<img src="images/add_request_to_testcase.gif" alt="Add Request to TestCase dialog containing Standard Assertions"/>
-			</column></columns>
-		 <p>TestRequests are submitted either manually through their editors submit actions or when running 
-		 the TestCase containing the request. The requests response is validated against a requests assertions and the
-		 requests icon changes to reflect the result of the validations; green means that all validations were ok, red means that some validations 
-		 failed. A grey background icon indicates that the request has not yet been submitted for validation, a white 
-		 background indicates that the TestRequest lacks assertions</p>
+            <p>There are two types of HTTP Request steps available:</p>
+            <ol>
+                <li>REST Requests are linked to a REST Resource defined in the project and use that resources service for
+                validations, etc.</li>
+                <li>HTTP Requests are standalone requests not linked to any other item.</li>
+            </ol>
 
-		  <subsection name="TestRequest Actions">
-		   <columns><column><div>
-		  The following actions are available from the test-request nodes' right-button menu:	
-		  <ul>
-		  <li><b>Open Editor</b> - opens the associated TestStep editor (if available)</li>
-		  		<li><b>Disable/Enable TestStep</b> - disables/enables the TestStep for execution</li>
-		  		<li><b>Insert Step -&gt;</b> - shows a list of insertable test-steps at the current position</li>
-		  		
-		  		<li><b>Rename</b> - prompts to rename the selected step</li>
-		  		<li><b>Delete</b> - prompts to delete the selected step</li>
-		  		<li><b>Clone TestStep</b> - prompts to clone the selected step (see below)</li>
-		  		
-		  		<li><b>Move Step Up</b> - moves the selected step up one position in the list
-		  		(this can also be performed with Ctrl-Up)</li>
-		  		<li><b>Move Step Down</b> - moves the selected step down one position in the list 
-		  		(this can also be performed with Ctrl-Down)</li>
-		  		
-		  		<li><b>Change Operation</b> - prompts to change the operation for this TestRequest (see below)</li>
-		  		<li><b>Select Operation</b> - selects this TestRequests operation in the Navigator</li>
-		  		<li><b>Clone Assertions (soapUI Pro only)</b> - prompts to clone assertions from this TestRequest to 
-		  		other TestRequests (see below)</li>
-		  		<li><b>Online Help</b> - displays this page in a browser</li>
- 		  </ul></div>
-		  </column><column>
-			<img src="images/testrequest_actions.gif" border="0" alt="Menu alternatives for TestRequests"/>
-			</column></columns>
-		 </subsection>
-		 
-		 	 
-		  <subsection name="TestRequest Details Tab">
-		   <columns><column><div>
-		 The "Details" tab shown in the bottom-left shows the same properties when a TestRequest node is selected in 
-		 the navigation tree as for a standard request ( 
-		 see the <a href="../requests.html#Request_Details_Tab">Request Details Tab</a> for more detailed information) 
-		 and adds two read-only properties:
-		 <ul>
-		 <li><b>Interface</b> : the name of the Interface for this TestRequest</li>
-		 <li><b>Operation</b> : the name of the Operation for this TestRequest</li>
-		 </ul>
-		 
-		 </div>
-		 </column><column>
-			<img src="images/test_request_details_tab.gif" border="0" alt="TestRequest Details showing Interface and Operation"/>
-			</column></columns>
-		 </subsection>
-		 
-		  <subsection name="Change Operation">
-		 <p>Selecting to change the operation for a TestRequest opens the following dialog:</p>
-		 <p align="center"><img src="images/change_operation.gif"/></p>
-		 <p>The list of Interfaces displays those available in the current project, the list of Operations
-		 is updated accordingly.</p>
-		 </subsection>
-		 
-		  <subsection name="The TestRequest Editor">
-		  <p>Double-clicking a TestRequest in either the navigator or the TestCase Editor Pane opens the requests
-		  editor which is more or less a copy of the standard Request Editor with the following exception:</p>
-		  <ul>
-		  	<li>The second toolbar button "Add to Testcase" has been replaced with "Add Assertion" which prompts
-		  	to add an assertion to the TestRequest</li>
-		  	<li>The clone action now clones the TestRequest and appends the cloned request to the containing TestCase</li>
-		  	<li>Under the request/response panes there is a now a tabbed pane containing 2 tabs; the "Assertions" tab and
-		  	the "Request Log" tab (both described below).</li>
-		  </ul>
-		 <p>All other editing, submittal, validation functionality is the same as in the request editor</p>
-		 </subsection>
-		 
-		 <subsection name="The Assertions Tab">
-		 <p>The Assertions tab lists the assertions that have been configured for the TestRequest. Double clicking an
-		  assertion in the list opens that assertions' configuration dialog (if available). Any number of assertions
-		  can be added, often it may be relevant to add the same type of assertion multiple times with different 
-		  configurations.</p>
-		  <p>A colored circle next to the  assertion indicates the status of the assertion in regard to the last
-		  received response; red = assertion failed together with error messages, green = assertion ok, 
-		  grey = assertion has not been performed.</p>
-		 <columns><column><div>
-		  The following actions are available from the assertion lists right-button menu:	
-		  <ul>
-			  <li><b>Add Assertion</b> - prompts to add a new assertion to the list.</li>
-			  <li><b>Configure</b> (if possible) - opens the selected assertions' configuration dialog.</li>
-			  <li><b>Clone</b> (if possible) - prompts to clone the select assertion.</li>
-			  <li><b>Rename</b> - prompts to rename the selected assertion.</li>
-			  <li><b>Remove</b> - prompts to remove the selected assertion.</li>
-		  </ul></div>
-		  </column><column>
-			<img src="images/testrequest_assertions_tab.gif" border="0" alt="Assertion Tab easy adding of assertion"/>
-			</column></columns>
-			<p>The toolbar contains corresponding actions and a "Clone Assertions" action for cloning a number
-			of assertions to other TestRequests (see below)</p>
-		 </subsection>
-		 
-		 <subsection name="Clone Assertions">
-		 <p>soapUI Pro contains a right-button or assertion toolbar action for cloning an arbitrary number of
-		 assertions to other TestRequests. The dialog shown is as follows:</p>
-		 <p align="center"><img src="images/clone_assertions.gif" alt="Clone Assertions for Agile Web Service Testing"/></p>
-		 <p>The options top-to-bottom are:</p>
-		 <ul>
-		 <li><b>Assertions</b> - select the assertions to be cloned</li>
-		 <li><b>Target TestSteps</b> - select the TestRequests to clone to</li>
-		 <li><b>Target TestCase</b> - the target TestCase</li>
-		 <li><b>Target TestSuite</b> - the target TestSuite</li>
-		 <li><b>Target Project</b> - the target Project</li>
-		 <li><b>Overwrite</b> - overwrites existing singular assertions (ie those assertions that can only 
-		 exist once, for example SoapFault, SchemaCompliance, etc). If not selected and the corresponding
-		 assertions exist in the target TestStep(s), they will be ignored.</li>
-		 <li><b>Open List</b> - opens a separate window after the update containing a list of all Requests/TestRequests
-		 that have been modified during the clone procedure (useful for manual post processing).</li>
-		 </ul>
-		 <p>Setting the desired options and selecting OK will clone as configured.</p>
-         </subsection>
+            <subsection name="REST Request Steps">
 
-		 <subsection name="The Request Log Tab">
-		  <columns><column><div>
-		  The Request Log tab simply shows a history of submit/response times and response-sizes for the TestRequest.
-		  This can come in handy if you want to manually compare response times or sizes over time.	</div>
-		  </column><column>
-			<img src="images/testrequest_log_tab.gif" border="0" alt="The Request Log Tab for Logging Web Service Tests"/>
-			</column></columns>
-		 </subsection>
-		   <subsection name="Request Result Viewer">
-		  <p>When executing a Request Step from within a TestCase (or associated LoadTest) the actual request/result 
-		  and associated properties for that request can be viewed by opening a "Request Result Viewer" either 
-		  from the TestCase editors log list or from a LoadTest editors log by double-clicking the associated log entry. 
-		  Sent or Received attachments are currently not saved to preserve memory.
-		  </p>
-		  <p> 
-		  The viewer shows 3 tabs:
-		  </p>
-		  <ul>
-		  <li><b>Request Properties</b> - shows request and reponse properties for the request</li>
-		  <li><b>Request Message</b> - shows the actual request message sent, including expanded properties, 
-		  inline files and MTOM/XOP Includes..</li>
-		  <li><b>Response Message</b> - shows the response message received</li>
-		  </ul>
-		  <p align="center"><img src="images/testrequest_result_viewer.gif" border="0" alt="Viewing a A Web Service response"/></p>
-		 </subsection>
+            <p>REST Request Steps are either created from REST requests using their "Add to Testcase" action or from the
+                TestCase Editors popup menu with the "Insert Step -&gt; REST Request" option which will prompt for which
+                REST Resource in the project that the request should be created for.</p>
+
+                    <p>REST/HTTP TestRequests are submitted either manually through their editors submit actions or when running
+                    the TestCase containing the request. The requests response is validated against a requests assertions and the
+                    requests icon changes to reflect the result of the validations; green means that all validations were ok, red means that some validations
+                    failed. A grey background icon indicates that the request has not yet been submitted for validation, a white
+                    background indicates that the TestRequest lacks assertions</p>
+                     </subsection>
+
+                     <subsection name="REST Test Request Details Tab">
+                      <p>
+                    The "Details" tab shown in the bottom-left shows the same properties when a TestRequest node is selected in
+                    the navigation tree as for a standard request (
+                    see the <a href="../rest/requests.html#Request_Details_Tab">Request Details Tab</a> for more detailed information)
+                    and adds two read-only properties:
+                    <ul>
+                    <li><b>Service</b> : the name of the Service for this TestRequest</li>
+                    <li><b>Resource</b> : the path of the Resource for this TestRequest</li>
+                    </ul>
+
+                    </p>
+                    </subsection>
+
+                             <subsection name="The REST Test Request Editor">
+                     <p>Double-clicking a REST Test Request in either the navigator or the TestCase Editor Pane opens the requests
+                     editor which is more or less a copy of the standard REST Request Editor with the following exceptions:</p>
+                     <ul>
+                         <li>The second toolbar button "Add to Testcase" has been replaced with "Add Assertion" which prompts
+                         to add an assertion to the REST TestRequest</li>
+                         <li>The second toolbar contains a drop-down for selecting which REST Resource this REST Test Request should
+                         be linked to.</li>
+                         </ul>
+
+                                     <p align="center"><img src="images/rest-request-step-toolbar.gif"></img></p>
+
+                                 <ul>
+                         <li>The clone action now clones the TestRequest and appends the cloned request to the containing TestCase</li>
+                         <li>Under the request/response panes there is a now a tabbed pane containing 2 tabs; the "Assertions" tab and
+                         the "Request Log" tab as described in the <a href="testrequests.html">Test Requests Overview</a>.</li>
+                     </ul>
+                    <p>All other editing, submittal, validation functionality is the same as in the REST Request editor</p>
+                    </subsection>
+
 		 <p><hr size="1"/>Next: <a href="http-requests.html">HTTP Requests</a></p>
 		</section>
     </body>

@@ -6,7 +6,7 @@
     <body>
 		<section name="soapUI Pro Request and Response Wizards">
 		<p>soapUI Pro introduces a number of wizards to greatly easy the creation of property transfers and XPath
-		assertions. They are all available from a right-click menu in the Outline Editor and are described in detail
+		assertions. They are all available from a right-click menu in the Outline Editors and are described in detail
 		below</p>
 		<ul>
 		<li>Request Transfer From Wizard: Creates a Property Transfer to the selected node</li>
