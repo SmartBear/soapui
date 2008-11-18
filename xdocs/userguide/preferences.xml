@@ -73,7 +73,8 @@
 		<tr><td>Leave MockEngine</td><td>Will leave the MockEngine running even when all MockServices have stopped resulting in
 		much faster startup-times for new MockServices and 404 errors when trying to call a stopped MockService (instead of
 		connection failure)</td></tr>
-		<tr><td>Enable Mock HTTP Log</td><td>Logs wire content of all mock requests.</td></tr>
+		<tr><td>Enable Mock HTTP Log</td><td>Logs wire content of all mock requests. Selecting this option will degrade
+        Mock Engine performance marginally and may require restart to enable or disable.</td></tr>
 		</table>
 		
 		<p align="center"><img src="images/http_settings.gif" alt="The HTTP Settings Tab in soapUI"/></p>

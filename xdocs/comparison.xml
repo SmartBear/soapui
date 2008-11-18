@@ -14,7 +14,7 @@
 		</ul>
 		
 		<p>Don't hesitate to <a target="_new" href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/">Download a soapUI Pro Trial version</a> which offers full soapUI Pro functionality 
-		for seven days.</p>
+		for two weeks.</p>
 		<p>There is also an <a target="_new" href="http://www.eviware.com/content/view/42/36/">soapUI FAQ</a> answering common questions regarding the relationship between 
 		soapUI and soapUI Pro</p>
 		
@@ -32,6 +32,13 @@
 		<td><b>WSDL Refactoring</b></td>
 		<td>Automatically update requests/response/assertions when the underlying WSDL</td>
 		<td>[<a href="images/refactoring_overview.gif">Screenshot</a>] [<a href="userguide/interfaces/refactoring.html">Read More</a>]
+		</td>
+		</tr>
+
+        <tr>
+		<td><b>Composite Projects</b></td>
+		<td>Work together in a team on your Web Service testing projects</td>
+		<td>[<a href="userguide/projects/composite-projects.html">Read More</a>]
 		</td>
 		</tr>
 		<tr>
@@ -93,22 +100,22 @@
 		<tr>
 		<td><b>DataSource TestStep</b> <br/>Reads and loops data from external data sources</td>
 		<td>To greatly ease the creation of Data-Driven Tests</td>
-		<td>Select Insert/Append TestStep from any of the TestCase pop up menus<br/><br/>
+		<td>Select Insert TestStep from any of the TestCase pop up menus<br/><br/>
 		[<a href="images/datasourcestep_overview.gif">Screenshot</a>] [<a href="userguide/functional/datasourcestep.html">Read More</a>]
 		</td>
 		</tr>
 		<tr>
 		<td><b>DataSink TestStep</b> <br/>Writes Test Data to external storage (JDBC, Files, Excel, etc..)</td>
 		<td>Eases collection of data to be used in subsequent tests or for external reporting</td>
-		<td>Select Insert/Append TestStep from any of the TestCase pop up menus<br/><br/>
+		<td>Select Insert TestStep from any of the TestCase pop up menus<br/><br/>
 		[<a href="images/datasinkstep_overview.gif">Screenshot</a>] [<a href="userguide/functional/datasinkstep.html">Read More</a>]
 		</td>
 		</tr>
 		<tr>
-		<td><b>MockResponse TestStep</b> <br/>Waits for external web service invocations</td>
-		<td>To greatly ease the testing of asynchronous services/processes</td>
-		<td>Select Insert/Append TestStep from any of the TestCase popup menus<br/><br/>
-		[<a href="images/mockresponsestep_overview.gif">Screenshot</a>] [<a href="userguide/functional/mockresponse.html">Read More</a>]
+		<td><b>DataGen TestStep</b> <br/>Dynamically Generates Test Data for your Tests</td>
+		<td>To simplify comprehensive testing of complex interfaces</td>
+		<td>Select Insert TestStep from any of the TestCase popup menus<br/><br/>
+		[<a href="images/mockresponsestep_overview.gif">Screenshot</a>] [<a href="userguide/functional/datagenstep.html">Read More</a>]
 		</td>
 		</tr>
 		<tr>
