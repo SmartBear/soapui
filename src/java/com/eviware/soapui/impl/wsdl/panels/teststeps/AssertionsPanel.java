@@ -422,7 +422,7 @@ public class AssertionsPanel extends JPanel
       public RemoveAssertionAction()
       {
       	super( "Remove Assertion" );
-      	putValue( Action.SHORT_DESCRIPTION, "Removes the selected assertion from this LoadTest" );
+      	putValue( Action.SHORT_DESCRIPTION, "Removes the selected assertion" );
       	putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_assertion.gif" ));
       	setEnabled( false );
       }

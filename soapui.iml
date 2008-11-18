@@ -20,20 +20,11 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="jdk" jdkName="1.6" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar://$MAVEN_REPO$/activation/jars/activation-1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MAVEN_REPO$/javamail/jars/javamail-1.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -204,7 +195,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MAVEN_REPO$/groovy/jars/groovy-all-1.5.6.jar!/" />
+          <root url="jar://$MAVEN_REPO$/groovy/jars/groovy-all-1.5.7.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -330,7 +321,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MAVEN_REPO$/eviware/jars/soapui-xmlbeans-2.0.3.jar!/" />
+          <root url="jar://$MAVEN_REPO$/eviware/jars/soapui-xmlbeans-2.5-beta2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -474,7 +465,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../java/jxbrowser-1.1/lib/jxbrowser.jar!/" />
+          <root url="jar://$MAVEN_REPO$/eviware/jars/policy-xmlbeans-1.5.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -483,7 +474,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../java/jxbrowser-1.1/lib/jniwrap-3.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../java/javamail-1.4.1/mail.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -492,25 +483,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../java/jxbrowser-1.1/lib/winpack-3.6.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../java/jxbrowser-1.1/lib/MozillaInterfaces.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../java/jxbrowser-1.1/lib/MozillaGlue.jar!/" />
+          <root url="jar://$MODULE_DIR$/../RSyntaxTextArea/dist/rsyntaxtextarea.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

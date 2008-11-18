@@ -832,6 +832,16 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       if( cnt == 0 )
          return currentStatus;
 
+       if( mockResponse.getMockResult() != null )
+      {
+         if( mockResponse.getMockResult().getMockRequest() == null )
+         {
+            currentStatus = AssertionStatus.FAILED;
+         }
+      }
+      else
+         return currentStatus;
+
       for( int c = 0; c < cnt; c++ )
       {
          WsdlMessageAssertion assertion = getAssertionAt( c );

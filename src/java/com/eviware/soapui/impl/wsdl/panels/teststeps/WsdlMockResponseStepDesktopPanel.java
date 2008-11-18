@@ -189,6 +189,8 @@ public class WsdlMockResponseStepDesktopPanel extends AbstractWsdlMockResponseDe
       matchEditorModel = new ModelItemPropertyEditorModel<WsdlMockResponseTestStep>( getModelItem(), "match" );
       panel.add( UISupport.getEditorFactory().buildXmlEditor( matchEditorModel ), BorderLayout.CENTER );
 
+      UISupport.addTitledBorder( panel, "Matching Value" );
+
       return panel;
    }
 
@@ -198,6 +200,8 @@ public class WsdlMockResponseStepDesktopPanel extends AbstractWsdlMockResponseDe
 
       queryEditorModel = new ModelItemPropertyEditorModel<WsdlMockResponseTestStep>( getModelItem(), "query" );
       panel.add( UISupport.getEditorFactory().buildXPathEditor( queryEditorModel ), BorderLayout.CENTER );
+
+      UISupport.addTitledBorder( panel, "XPath Query" );
 
       return panel;
    }

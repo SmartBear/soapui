@@ -160,7 +160,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
       queryDetailFormPresentationModel = new PresentationModel<Query>( null );
       detailForm = new SimpleBindingForm( queryDetailFormPresentationModel );
 
-      detailForm.setDefaultTextAreaRows( 8 );
+      detailForm.setDefaultTextAreaRows( 5 );
       detailForm.setDefaultTextAreaColumns( 50 );
 
       detailForm.append( buildQueryToolbar() );
