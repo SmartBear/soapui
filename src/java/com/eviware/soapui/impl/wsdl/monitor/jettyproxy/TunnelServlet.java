@@ -46,14 +46,17 @@ public class TunnelServlet extends ProxyServlet
 	{
 		super(soapMonitor);
 
-		int c = sslEndpoint.indexOf(':');
+		int prefix = sslEndpoint.indexOf("://");
+		int c = sslEndpoint.indexOf(prefix, ':');
 		if (c > 0)
 		{
 			this.sslPort = Integer.parseInt(sslEndpoint.substring(c + 1));
-			this.sslEndPoint = sslEndpoint.substring(0, c);
+			this.sslEndPoint = sslEndpoint.substring(prefix, c);
 		}
-		else
-			this.sslEndPoint = sslEndpoint;
+		else {
+			if ( prefix > 0 )
+			this.sslEndPoint = sslEndpoint.substring(prefix+3);
+		}
 	}
 
 	@Override

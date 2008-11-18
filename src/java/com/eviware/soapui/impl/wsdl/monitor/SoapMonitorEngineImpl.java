@@ -28,6 +28,9 @@ import com.eviware.soapui.support.UISupport;
 public class SoapMonitorEngineImpl implements SoapMonitorEngine
 {
 
+	private static final String ROOT = "/";
+	private static final String HTTP = "http://";
+	private static final String HTTPS = "https://";
 	Server server = new Server();
 	SocketConnector connector = new SocketConnector();
 	private SslSocketConnector sslConnector;
@@ -46,22 +49,38 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 		BoundedThreadPool threadPool = new BoundedThreadPool();
 		threadPool.setMaxThreads(100);
 		server.setThreadPool(threadPool);
-		Context context = new Context(server, "/", 0);
+		Context context = new Context(server, ROOT, 0);
 
 		if (sslEndpoint != null)
 		{
-			sslConnector = new SslSocketConnector();
-			sslConnector.setKeystore(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_KEYSTORE, ""));
-			sslConnector.setPassword(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_PASSWORD, ""));
-			sslConnector.setKeyPassword(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_KEYPASSWORD, ""));
-			sslConnector.setTruststore(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_TRUSTSTORE, ""));
-			sslConnector.setTrustPassword(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, ""));
-			sslConnector.setMaxIdleTime(30000);
-			sslConnector.setNeedClientAuth(false);
-			sslConnector.setPort(localPort);
+			if (sslEndpoint.startsWith(HTTPS))
+			{
+				sslConnector = new SslSocketConnector();
+				sslConnector.setKeystore(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_KEYSTORE, "JKS"));
+				sslConnector.setPassword(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_PASSWORD, ""));
+				sslConnector.setKeyPassword(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_KEYPASSWORD, ""));
+				sslConnector.setTruststore(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_TRUSTSTORE, "JKS"));
+				sslConnector.setTrustPassword(settings.getString(
+						SoapMonitorAction.LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, ""));
+				sslConnector.setNeedClientAuth(false);
+				sslConnector.setMaxIdleTime(30000);
+				sslConnector.setPort(localPort);
 
-			server.addConnector(sslConnector);
-			context.addServlet(new ServletHolder(new TunnelServlet(soapMonitor, sslEndpoint)), "/");
+				server.addConnector(sslConnector);
+				context.addServlet(new ServletHolder(new TunnelServlet(soapMonitor, sslEndpoint)), ROOT);
+			}
+			else
+			{
+				if (sslEndpoint.startsWith(HTTP))
+				{
+					connector.setPort(localPort);
+					server.addConnector(connector);
+					context.addServlet(new ServletHolder(new TunnelServlet(soapMonitor, sslEndpoint)), ROOT);
+				} else {
+					UISupport.showErrorMessage("Unsupported/unknown protocol tunnel will not start");
+					return;
+				}
+			}
 			proxyOrTunnel = false;
 		}
 		else
@@ -69,7 +88,7 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 			proxyOrTunnel = true;
 			connector.setPort(localPort);
 			server.addConnector(connector);
-			context.addServlet(new ServletHolder(new ProxyServlet(soapMonitor)), "/");
+			context.addServlet(new ServletHolder(new ProxyServlet(soapMonitor)), ROOT);
 		}
 		try
 		{
@@ -112,8 +131,8 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 	}
 
 	/*
-	 * @return true if proxy, false if ssl tunnel
-	 * (non-Javadoc)
+	 * @return true if proxy, false if ssl tunnel (non-Javadoc)
+	 * 
 	 * @see com.eviware.soapui.impl.wsdl.monitor.SoapMonitorEngine#isProxy()
 	 */
 	public boolean isProxy()
