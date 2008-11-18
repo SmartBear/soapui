@@ -41,7 +41,7 @@
       <report>maven-news-plugin</report>
       <report>jutils-lint4j-plugin</report>  -->
     </reports>
-    <currentVersion>2.5-beta2</currentVersion>
+    <currentVersion>2.5</currentVersion>
     <package>com.eviware.soapui</package>
     <url>http://www.soapui.org</url>
     <versions>
@@ -494,7 +494,7 @@
         <dependency>
             <groupId>eviware</groupId>
             <artifactId>soapui-xmlbeans</artifactId>
-            <version>2.5-beta2</version>
+            <version>2.5</version>
             <type>jar</type>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
