@@ -62,7 +62,7 @@
 		 project as well.</p>
 		 </subsection>
 		 
-		 <subsection name="Clone TestSteps (soapUI Pro only)">
+		 <subsection name="Clone TestSteps">
 		 <p>Selecting to clone TestSteps from the TestCase menu displays the following dialog:</p>
 		 <p>The selected steps will maintain references to each-other (for example via property-transfers) after
 		 the clone, but be sure that the target TestCase(s) contains no TestSteps that have names same as those

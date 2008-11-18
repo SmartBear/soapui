@@ -34,7 +34,7 @@
         soapUI with encrypted soapui-settings.xml you will be asked for password first:</p>
         <p align="center"><img src="images/global-password2.gif" alt="Global password setting dialog"/></p>
             <p>
-                If correct soapUI will restore all your settings with workspace and projects. If not you will get:
+                If correct soapUI will restore all your settings with workspace and projects. If not you will get:</p>
         <p align="center"><img src="images/bad-global-password.gif" alt="Global password - bad password"/></p>
                 <p>
                     The encrypted soapui-settings will be saved in a backup file and a new default settings will replace your old settings.
