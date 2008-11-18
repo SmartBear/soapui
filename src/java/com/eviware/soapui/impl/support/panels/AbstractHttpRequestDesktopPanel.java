@@ -28,6 +28,7 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
 import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -265,6 +266,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
       endpointCombo.addItemListener( new ItemListener()
       {
+         // set tooltip, property is set by model directly
          public void itemStateChanged( ItemEvent e )
          {
             Object item = endpointCombo.getSelectedItem();
@@ -287,8 +289,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
    {
       if( evt.getPropertyName().equals( AbstractHttpRequest.ENDPOINT_PROPERTY ) )
       {
-         submitButton.setEnabled( submit == null && request.getEndpoint() != null
-                 && request.getEndpoint().trim().length() > 0 );
+         submitButton.setEnabled( submit == null && StringUtils.hasContent( request.getEndpoint() ));
       }
 
       super.propertyChange( evt );

@@ -43,7 +43,6 @@ public class RestTestRequestStep extends HttpTestRequestStep
          restResource.getInterface().addInterfaceListener( interfaceListener );
 
          // we need to listen for name changes which happen when interfaces are
-         // updated..
          restResource.getInterface().addPropertyChangeListener( this );
          restResource.addPropertyChangeListener( this );
       }

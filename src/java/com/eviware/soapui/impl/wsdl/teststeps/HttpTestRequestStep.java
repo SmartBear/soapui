@@ -64,7 +64,8 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
          else
             config.setName( testRequest.getName() );
 
-         testRequest.setEndpoint( testRequest.getPath() );
+         if( testRequest.getPath() != null )
+            testRequest.setEndpoint( testRequest.getPath() );
       }
       else
       {

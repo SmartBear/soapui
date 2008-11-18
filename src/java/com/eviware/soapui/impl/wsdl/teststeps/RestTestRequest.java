@@ -108,7 +108,6 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
    {
       assertionsSupport = new AssertionsSupport( testStep, new AssertableConfig()
       {
-
          public TestAssertionConfig addNewAssertion()
          {
             return getConfig().addNewAssertion();
