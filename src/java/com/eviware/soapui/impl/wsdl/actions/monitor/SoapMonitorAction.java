@@ -176,9 +176,6 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
    protected String validate( String sslEndpoint )
    {
       String res = sslEndpoint;
-      int prot = sslEndpoint.indexOf( "://" );
-//      if( prot > 0 )
-//         res = sslEndpoint.substring( prot + 3 );
       if( res.trim().length() > 0 )
       {
          return res.trim();
