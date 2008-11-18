@@ -1496,4 +1496,25 @@
             <xsd:element name="date" type="xsd:date"></xsd:element>
         </xsd:sequence>
     </xsd:complexType>
+
+    <!--
+    <xsd:element name="codeTemplates" type="tns:CodeTemplates"/>
+
+    <xsd:complexType name="CodeTemplates">
+        <xsd:sequence>
+            <xsd:element name="codeTemplate" type="tns:CodeTemplate" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="CodeTemplate">
+        <xsd:sequence>
+            <xsd:element name="content" type="xsd:string" xml:space="preserve"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string"></xsd:attribute>
+        <xsd:attribute name="type" type="xsd:string"></xsd:attribute>
+        <xsd:attribute name="scope" type="xsd:string"></xsd:attribute>
+        <xsd:attribute name="expand" type="xsd:boolean"></xsd:attribute>
+
+    </xsd:complexType>
+    -->
 </xsd:schema>
