@@ -204,21 +204,21 @@
 		<tns:actionMapping actionId="ReloadProjectAction" keyStroke="F5"/>
 		<tns:actionMapping actionId="RemoveProjectAction" keyStroke="DELETE"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="projects.html"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="projects/index.html"/>
 	</tns:actionGroup>
 
 	<tns:actionGroup name="Closed Project Actions" id="ClosedWsdlProjectActions" default="OpenProjectAction">
 		<tns:actionMapping actionId="OpenProjectAction"/>
 		<tns:actionMapping actionId="RemoveProjectAction" keyStroke="DELETE"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="projects.html"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="projects/index.html"/>
 	</tns:actionGroup>
 
 	<tns:actionGroup name="Encrypted Project Actions" id="EncryptedWsdlProjectActions" default="OpenAndDecryptProjectAction">
 		<tns:actionMapping actionId="OpenAndDecryptProjectAction"/>
 		<tns:actionMapping actionId="RemoveProjectAction" keyStroke="DELETE"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="projects.html"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="projects/index.html"/>
 	</tns:actionGroup>
 
 	<tns:actionGroup name="Enabled Project Actions" id="EnabledWsdlProjectActions" default="ShowDesktopPanelAction">
@@ -250,7 +250,7 @@
 		<tns:actionMapping actionId="SeperatorAction"/>
 	 	<tns:actionMapping actionId="ImportTestSuite"/>
 	 	<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="projects.html"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="projects/index.html"/>
 	</tns:actionGroup>
 
  	<!-- Interface Action Groups -->
@@ -297,7 +297,7 @@
 	 	<tns:actionMapping actionId="CloneInterfaceAction" keyStroke="F9"/>
 	 	<tns:actionMapping actionId="RemoveInterfaceAction" keyStroke="DELETE"/>
 	 	<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="interfaces.html"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="interfaces/index.html"/>
  	</tns:actionGroup>
 
  	<!-- RestService ActionGroup -->
@@ -315,7 +315,7 @@
 	 	<tns:actionMapping actionId="DeleteRestServiceAction" keyStroke="DELETE"/>
 	 	<tns:actionMapping actionId="SeperatorAction"/>
 
-		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="rest/services.html"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="rest/index.html"/>
  	</tns:actionGroup>
 
  	<!-- WsdlOperation ActionGroup -->
@@ -430,13 +430,13 @@
  			description="Shows the TestCase Editor for this TestCase" keyStroke="ENTER"/>
 		<tns:actionMapping groupId="WsdlTestCaseAddStepActions" name="Add Step"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/testcases.html"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/teststeps.html"/>
 	</tns:actionGroup>
 
 	<tns:actionGroup name="LoadSteps Node Actions" id="LoadTestsTreeNodeActions">
 		<tns:actionMapping actionId="AddNewLoadTestAction" keyStroke="menu N"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/testcases.html"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="loadtest/index.html"/>
 	</tns:actionGroup>
 
 	<!-- WsdlTestStep ActionGroup -->
@@ -467,13 +467,13 @@
 	<tns:actionGroup name="HTTP RequestStep Actions" id="HttpTestRequestStepActions"
 		class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 		<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/httprequests.html"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/http-requests.html"/>
 	</tns:actionGroup>
 
    <tns:actionGroup name="REST RequestStep Actions" id="RestTestRequestStepActions"
          class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
          <tns:actionMapping actionId="SeperatorAction"/>
-         <tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/testrequests.html"/>
+         <tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/rest-requests.html"/>
       </tns:actionGroup>
 
 
@@ -488,7 +488,7 @@
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="SetWaitTimeAction"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/testcases.html#Delay_Test_Step"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/delaystep.html"/>
 	</tns:actionGroup>
 
 	<tns:actionGroup name="GroovyScript Actions" id="WsdlGroovyScriptTestStepActions"
@@ -515,21 +515,13 @@
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/runtestcasestep.html"/>
 	</tns:actionGroup>
 
-	<tns:actionGroup name="AsyncResponse Actions" id="WsdlAsyncResponseTestStepActions"
-		class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
-		<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="SetAsyncResponseMockOperationAction"/>
-		<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/asyncresponse.html"/>
-	</tns:actionGroup>
-
    <tns:actionGroup name="WsdlMockResponseTestStep Actions" id="WsdlMockResponseTestStepActions"
 		class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup"
 		default="ConfigureDataSourceLoopStepAction">
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="SetMockOperationAction"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/mockresponsestep.html"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/mockresponse.html"/>
 	</tns:actionGroup>
 
 	<!-- WsdlMessageAssertions -->
