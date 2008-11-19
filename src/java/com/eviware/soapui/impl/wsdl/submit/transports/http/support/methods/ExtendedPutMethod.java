@@ -60,11 +60,7 @@ public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMe
    @Override
    public String getResponseCharSet()
    {
-      Header contentEncodingHeader = getResponseHeader( "Content-Encoding" );
-      if( contentEncodingHeader != null )
-         return contentEncodingHeader.getValue();
-
-      return super.getResponseCharSet();
+      return httpMethodSupport.getResponseCharset();
    }
 
    public long getMaxSize()

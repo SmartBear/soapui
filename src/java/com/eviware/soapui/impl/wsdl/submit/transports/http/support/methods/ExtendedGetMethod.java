@@ -16,14 +16,13 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpConnection;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpState;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
+import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -61,11 +60,7 @@ public final class ExtendedGetMethod extends GetMethod implements ExtendedHttpMe
    @Override
    public String getResponseCharSet()
    {
-      Header contentEncodingHeader = getResponseHeader( "Content-Encoding" );
-      if( contentEncodingHeader != null )
-         return contentEncodingHeader.getValue();
-
-      return super.getResponseCharSet();
+      return httpMethodSupport.getResponseCharset();
    }
 
    public long getMaxSize()

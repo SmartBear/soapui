@@ -19,10 +19,7 @@ import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpConnection;
-import org.apache.commons.httpclient.HttpMethodBase;
-import org.apache.commons.httpclient.HttpState;
+import org.apache.commons.httpclient.*;
 
 import javax.net.ssl.SSLSocket;
 import java.io.*;
@@ -210,5 +207,40 @@ public final class HttpMethodSupport
    public long getResponseReadTime()
    {
       return responseReadTime;
+   }
+
+   /**
+    * Handles charset specified in Content-Encoding headers
+    * @return
+    */
+
+   public String getResponseCharset()
+   {
+      Header header = httpMethod.getResponseHeader( "Content-Type" );
+      for( HeaderElement headerElement : header.getElements() )
+      {
+         NameValuePair parameter = headerElement.getParameterByName( "charset" );
+         if( parameter != null )
+            return parameter.getValue();
+      }
+
+      Header contentEncodingHeader = httpMethod.getResponseHeader( "Content-Encoding" );
+      if( contentEncodingHeader != null )
+      {
+         try
+         {
+            String value = contentEncodingHeader.getValue();
+            if( CompressionSupport.getAvailableAlgorithm( value ) == null )
+            {
+               new String( "" ).getBytes( value );
+               return value;
+            }
+         }
+         catch( Exception e )
+         {
+         }
+      }
+
+      return httpMethod.getResponseCharSet();
    }
 }

@@ -61,11 +61,7 @@ public final class ExtendedDeleteMethod extends DeleteMethod implements Extended
    @Override
    public String getResponseCharSet()
    {
-      Header contentEncodingHeader = getResponseHeader( "Content-Encoding" );
-      if( contentEncodingHeader != null )
-         return contentEncodingHeader.getValue();
-
-      return super.getResponseCharSet();
+      return httpMethodSupport.getResponseCharset();
    }
 
    public long getMaxSize()

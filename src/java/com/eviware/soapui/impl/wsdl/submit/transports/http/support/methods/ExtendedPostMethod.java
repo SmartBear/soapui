@@ -16,10 +16,7 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpConnection;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpState;
+import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.PostMethod;
 
 import java.io.IOException;
@@ -60,11 +57,7 @@ public final class ExtendedPostMethod extends PostMethod implements ExtendedHttp
    @Override
    public String getResponseCharSet()
    {
-      Header contentEncodingHeader = getResponseHeader( "Content-Encoding" );
-      if( contentEncodingHeader != null )
-         return contentEncodingHeader.getValue();
-
-      return super.getResponseCharSet();
+      return httpMethodSupport.getResponseCharset();
    }
 
    public long getMaxSize()
