@@ -47,6 +47,7 @@
             <item href="/gettingstarted/loadtest.html" name="Web Service Load Tests"/>
             <item href="/gettingstarted/mocking.html" name="Web Service Mocking"/>
             <item href="/gettingstarted/sample-project.html" name="soapUI Sample Project"/>
+            <item href="/gettingstarted/sample-REST.html" name="soapUI Sample REST Project"/>
         </menu>
 
         <menu name="User Guide" collapse="true" href="/userguide/index.html">
