@@ -217,11 +217,14 @@ public final class HttpMethodSupport
    public String getResponseCharset()
    {
       Header header = httpMethod.getResponseHeader( "Content-Type" );
-      for( HeaderElement headerElement : header.getElements() )
+      if( header != null )
       {
-         NameValuePair parameter = headerElement.getParameterByName( "charset" );
-         if( parameter != null )
-            return parameter.getValue();
+         for( HeaderElement headerElement : header.getElements() )
+         {
+            NameValuePair parameter = headerElement.getParameterByName( "charset" );
+            if( parameter != null )
+               return parameter.getValue();
+         }
       }
 
       Header contentEncodingHeader = httpMethod.getResponseHeader( "Content-Encoding" );
@@ -241,6 +244,6 @@ public final class HttpMethodSupport
          }
       }
 
-      return httpMethod.getResponseCharSet();
+      return null;
    }
 }
