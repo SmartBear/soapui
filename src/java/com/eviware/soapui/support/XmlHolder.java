@@ -69,6 +69,8 @@ public class XmlHolder implements Map<String, Object>
 
    public String getNodeValue( String xpath ) throws XmlException
    {
+      xpath = initXPathNamespaces( xpath );
+
       return XmlUtils.selectFirstNodeValue( xmlObject, xpath );
    }
 
@@ -150,6 +152,7 @@ public class XmlHolder implements Map<String, Object>
 
    public void removeDomNodes( String xpath ) throws XmlException
    {
+       xpath = initXPathNamespaces( xpath );
       Node[] nodes = getDomNodes( xpath );
       for( Node node : nodes )
       {
