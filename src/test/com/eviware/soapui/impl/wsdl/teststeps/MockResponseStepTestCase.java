@@ -32,7 +32,7 @@ public class MockResponseStepTestCase extends TestCaseWithJetty
       assert true;
    }
 
-   public void oldTestMockResponseStep() throws Exception
+   public void testMockResponseStep() throws Exception
    {
       // create empty project
       WsdlProject project = new WsdlProject();
@@ -55,6 +55,7 @@ public class MockResponseStepTestCase extends TestCaseWithJetty
 
       // run testcase
       TestRunner runner = testCase.run( new StringToObjectMap(), true );
+      Thread.sleep( 1000 );
 
       // submit request
       request.setEndpoint( "http://127.0.0.1:8989/tjohoo" );
