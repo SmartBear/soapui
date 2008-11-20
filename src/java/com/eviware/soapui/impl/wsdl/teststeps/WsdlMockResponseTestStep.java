@@ -332,6 +332,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
          }
 
          result.stopTimer();
+         if( mockRunner != null && mockRunner.isRunning())
+            mockRunner.stop();
 
          AssertedWsdlMockResultMessageExchange messageExchange = new AssertedWsdlMockResultMessageExchange( mockRunListener
                  .getResult() );
@@ -439,7 +441,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
          {
             mockOperation.removeMockResponse( testMockResponse );
          }
-         
+
          testMockResponse = null;
       }
 
@@ -468,8 +470,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
             // save
             this.setResult( (WsdlMockResult) result );
 
-            // stop runner
-            mockRunner.stop();
+            // stop runner -> NO, we can't stop, mockengine is still writing response.. 
+            //  mockRunner.stop();
 
             if( waiting )
             {
@@ -484,7 +486,14 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       public void cancel()
       {
          canceled = true;
-        // mockRunListener.onMockResult( null );
+         if( waiting )
+         {
+            synchronized( this )
+            {
+               notifyAll();
+            }
+         }
+         // mockRunListener.onMockResult( null );
       }
 
       private void setResult( WsdlMockResult result )
@@ -771,7 +780,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       {
          setStartStep( null );
       }
-      else if( evt.getSource() == startTestStep && evt.getPropertyName().equals( WsdlTestStep.NAME_PROPERTY ))
+      else if( evt.getSource() == startTestStep && evt.getPropertyName().equals( WsdlTestStep.NAME_PROPERTY ) )
       {
          mockResponseStepConfig.setStartStep( String.valueOf( evt.getNewValue() ) );
       }
@@ -832,7 +841,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       if( cnt == 0 )
          return currentStatus;
 
-       if( mockResponse.getMockResult() != null )
+      if( mockResponse.getMockResult() != null )
       {
          if( mockResponse.getMockResult().getMockRequest() == null )
          {

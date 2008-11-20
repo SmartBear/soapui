@@ -540,7 +540,8 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
       }
       else
       {
-         requestEditor.saveDocument( false );
+         if( requestEditor != null )
+            requestEditor.saveDocument( false );
       }
 
       setEnabled( false );

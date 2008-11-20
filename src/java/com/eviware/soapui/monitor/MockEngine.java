@@ -177,12 +177,20 @@ public class MockEngine
       final Integer port = new Integer( mockService.getPort() );
       Map<String, List<MockRunner>> map = runners.get( port );
 
+      if( map == null )
+         return;
+
       map.get( mockService.getPath() ).remove( runner );
+      if( map.get( mockService.getPath() ).isEmpty() )
+      {
+         map.remove( mockService.getPath() );
+      }
+
       mockRunners.remove( runner );
 
       log.info( "Stopped MockService [" + mockService.getName() + "] on port [" + port + "]" );
 
-      if( map.get( mockService.getPath() ).isEmpty() && !SoapUI.getSettings().getBoolean( HttpSettings.LEAVE_MOCKENGINE ) )
+      if( map.isEmpty() && !SoapUI.getSettings().getBoolean( HttpSettings.LEAVE_MOCKENGINE ) )
       {
          SoapUIConnector connector = connectors.get( port );
          if( connector == null )
@@ -618,7 +626,7 @@ public class MockEngine
             printMockServiceList( response );
          }
 
-         response.flushBuffer();
+         response.flushBuffer();     
       }
 
       private void printMockServiceList( HttpServletResponse response ) throws IOException

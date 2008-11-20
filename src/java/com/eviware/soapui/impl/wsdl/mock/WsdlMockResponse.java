@@ -67,6 +67,7 @@ import javax.mail.internet.PreencodedMimeBodyPart;
 import javax.swing.*;
 import javax.wsdl.BindingOperation;
 import javax.wsdl.Message;
+import javax.servlet.http.HttpServletResponse;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -604,13 +605,13 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
       {
          if( SoapUtils.isSoapFault( responseContent, request.getSoapVersion() ) )
          {
-            request.getHttpResponse().setStatus( 500 );
-            response.setResponseStatus( 500 );
+            request.getHttpResponse().setStatus( HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
+            response.setResponseStatus(  HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
          }
          else
          {
-            request.getHttpResponse().setStatus( 200 );
-            response.setResponseStatus( 200 );
+            request.getHttpResponse().setStatus(  HttpServletResponse.SC_OK );
+            response.setResponseStatus(  HttpServletResponse.SC_OK );
          }
       }
       else
@@ -677,7 +678,8 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
          mimeMessageRequestEntity.writeRequest( outData );
       }
 
-      response.writeRawResponseData( outData.toByteArray() );
+      if( outData.size() > 0 )
+         response.writeRawResponseData( outData.toByteArray() );
 
       return responseContent;
    }

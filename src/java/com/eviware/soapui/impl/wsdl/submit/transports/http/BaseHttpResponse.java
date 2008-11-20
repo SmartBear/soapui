@@ -119,7 +119,7 @@ public abstract class BaseHttpResponse implements HttpResponse
          rawResponseData.write( "\r\n".getBytes() );
          rawResponseData.write( httpMethod.getResponseBody() );
       }
-      catch( Exception e )
+      catch( Throwable e )
       {
          e.printStackTrace();
       }
