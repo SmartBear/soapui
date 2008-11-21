@@ -30,4 +30,10 @@ public class SwingUtils implements UIUtils
 	{
 		SwingUtilities.invokeAndWait( runnable );
 	}
+
+	// TODO Change this to run in the UI thread on Swing too, and then rename the function to "runInUIThread".
+   public void runInUIThreadIfSWT(Runnable runnable)
+   {
+      runnable.run();
+   }
 }

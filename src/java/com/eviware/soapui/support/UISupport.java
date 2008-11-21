@@ -615,6 +615,11 @@ public class UISupport
 	{
 		UISupport.uiUtils = utils;
 	}
+	
+	public static UIUtils getUIUtils()
+	{
+	   return uiUtils;
+	}
 
 	public static void invokeLater( Runnable runnable )
 	{

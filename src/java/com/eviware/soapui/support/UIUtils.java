@@ -17,4 +17,6 @@ public interface UIUtils
 	public void invokeLater(Runnable runnable);
 	
 	public void invokeAndWait(Runnable runnable) throws Exception;
+	
+	public void runInUIThreadIfSWT( Runnable runnable );
 }

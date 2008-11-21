@@ -306,7 +306,14 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
                StringToStringMap values = new StringToStringMap();
                values.put( "Info", "Authentication required for [" + host + ":" + port + "]" );
                basicDialog.setValues( values );
-               if( basicDialog.show() )
+               
+               // Show the dialog in the UI thread. This was a problem in the Eclipse plug-in.
+               ShowDialog showBasicDialog = new ShowDialog(basicDialog);
+               log.info( "show basicDialog in UI thread" );
+               UISupport.getUIUtils().runInUIThreadIfSWT( showBasicDialog );
+               log.info( "basicDialog.show finished" );
+               
+               if( showBasicDialog.result )
                {
                   values = basicDialog.getValues();
                   return new UsernamePasswordCredentials( values.get( "Username" ), values.get( "Password" ) );
@@ -356,4 +363,21 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
    public void close()
 	{
 	}
+   
+   private class ShowDialog implements Runnable
+   {
+      XFormDialog dialog;
+      boolean result;
+      
+      public ShowDialog(XFormDialog dialog)
+      {
+         this.dialog = dialog;
+      }
+      
+      public void run()
+      {
+         log.info( "ShowDialog.run" );
+         result = dialog.show();  
+      }
+   }
 }
