@@ -504,7 +504,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
       }
    }
 
-   public LoadTest getLoadTest()
+   public WsdlLoadTest getLoadTest()
    {
       return loadTest;
    }

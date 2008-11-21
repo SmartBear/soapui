@@ -51,13 +51,14 @@ public class RequestTransportRegistry
 		httpTransport.addRequestFilter( new WsaRequestFilter() );
       httpTransport.addRequestFilter( new HttpCompressionRequestFilter() );
       httpTransport.addRequestFilter( new WssRequestFilter() );
-		httpTransport.addRequestFilter( new WsdlPackagingRequestFilter() );
-		httpTransport.addRequestFilter( new WsdlPackagingResponseFilter() );
 		
 		for( RequestFilter filter : SoapUI.getListenerRegistry().getListeners( RequestFilter.class ))
 		{
 			httpTransport.addRequestFilter( filter );
 		}
+
+      httpTransport.addRequestFilter( new WsdlPackagingRequestFilter() );
+		httpTransport.addRequestFilter( new WsdlPackagingResponseFilter() );
 		
 		transports.put( HTTP, httpTransport );
 		transports.put( HTTPS, httpTransport );
