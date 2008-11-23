@@ -86,6 +86,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
    private GroovyEditorComponent setupGroovyEditor;
    private JInspectorPanel testStepListInspectorPanel;
    private JButton createLoadTestButton;
+   private JInspectorPanel inspectorPanel;
 
    public WsdlTestCaseDesktopPanel( WsdlTestCase testCase )
    {
@@ -129,7 +130,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
       add( panel, BorderLayout.NORTH );
 
-      JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildContent() );
+      inspectorPanel = JInspectorPanelFactory.build( buildContent() );
       inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildTestLog(), "TestCase Log", "TestCase Execution Log", true ) );
       inspectorPanel.setDefaultDividerLocation( 0.7F );
       inspectorPanel.setCurrentInspector( "TestCase Log" );
@@ -477,6 +478,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
       testStepList.release();
       progressBarAdapter.release();
       propertiesTable.release();
+      inspectorPanel.release();
 
       setupGroovyEditor.getEditor().release();
       tearDownGroovyEditor.getEditor().release();

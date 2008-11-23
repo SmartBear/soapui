@@ -323,6 +323,13 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
          return getRequest().getRequestContent();
       }
 
+      @Override
+      public void release()
+      {
+         super.release();
+         modelItem.removePropertyChangeListener( this );
+      }
+
       public void setXml( String xml )
       {
          if( !updating )
@@ -376,6 +383,12 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
       {
          fireXmlChanged( evt.getOldValue() == null ? null : ( (HttpResponse) evt.getOldValue() ).getContentAsString(),
                  getXml() );
+      }
+
+      public void release()
+      {
+         super.release();
+         modelItem.removePropertyChangeListener( RestRequest.RESPONSE_PROPERTY, this );
       }
    }
 

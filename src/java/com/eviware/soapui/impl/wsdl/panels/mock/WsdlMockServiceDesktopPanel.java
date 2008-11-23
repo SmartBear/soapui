@@ -78,6 +78,8 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
    private GroovyEditorComponent stopGroovyEditor;
    private GroovyEditorComponent onRequestGroovyEditor;
    private GroovyEditorComponent afterRequestGroovyEditor;
+   private JInspectorPanel inspectorPanel;
+   private JInspectorPanel contentInspector;
 
    public WsdlMockServiceDesktopPanel( WsdlMockService mockService )
    {
@@ -117,6 +119,8 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
       startGroovyEditor.getEditor().release();
       stopGroovyEditor.getEditor().release();
 
+      inspectorPanel.release();               
+      contentInspector.release();
       return release();
    }
 
@@ -129,14 +133,14 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
    {
       add( buildToolbar(), BorderLayout.NORTH );
 
-      JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildContent() );
-      inspectorPanel.setDefaultDividerLocation( 0.5F );
-      inspectorPanel.addInspector( new JComponentInspector<JComponent>(
+      contentInspector = JInspectorPanelFactory.build( buildContent() );
+      contentInspector.setDefaultDividerLocation( 0.5F );
+      contentInspector.addInspector( new JComponentInspector<JComponent>(
               buildLog(), "Message Log", "A log of processed requests and their responses", true ) );
 
-      inspectorPanel.setCurrentInspector( "Message Log" );
+      contentInspector.setCurrentInspector( "Message Log" );
 
-      add( inspectorPanel.getComponent(), BorderLayout.CENTER );
+      add( contentInspector.getComponent(), BorderLayout.CENTER );
       add( new JLabel( "--" ), BorderLayout.PAGE_END );
    }
 
@@ -148,7 +152,7 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
    private JComponent buildContent()
    {
       JTabbedPane tabs = new JTabbedPane();
-      JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildOperationList() );
+      inspectorPanel = JInspectorPanelFactory.build( buildOperationList() );
 
       tabs.addTab( "Operations", inspectorPanel.getComponent() );
       addTabs( tabs, inspectorPanel );

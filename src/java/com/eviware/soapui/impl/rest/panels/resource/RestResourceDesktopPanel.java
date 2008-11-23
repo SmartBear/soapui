@@ -62,6 +62,13 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
       return paramsTable;
    }
 
+   @Override
+   protected boolean release()
+   {
+      paramsTable.release();
+      return super.release();
+   }
+
    private String getName( RestResource modelItem )
    {
       if( modelItem.getParentResource() != null )

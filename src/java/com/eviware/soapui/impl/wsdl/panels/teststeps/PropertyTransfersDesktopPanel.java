@@ -1236,6 +1236,8 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
       if( resultDesktopPanel != null )
          SoapUI.getDesktop().closeDesktopPanel( resultDesktopPanel );
 
+      inspectorPanel.release();
+
       return true;
    }
 

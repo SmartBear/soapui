@@ -32,6 +32,11 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
       params.addTestPropertyListener( this );
 	}
 
+   public void release()
+   {
+      params.removeTestPropertyListener( this );
+   }
+
    public int getColumnCount()
 	{
 		return 3;

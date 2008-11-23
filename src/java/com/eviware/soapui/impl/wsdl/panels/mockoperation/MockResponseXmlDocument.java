@@ -81,5 +81,6 @@ public class MockResponseXmlDocument extends AbstractXmlDocument implements Prop
 	public void release()
 	{
 		mockResponse.removePropertyChangeListener( WsdlMockResponse.RESPONSE_CONTENT_PROPERTY, this );
+      super.release();
 	}
 }

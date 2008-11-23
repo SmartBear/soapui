@@ -64,8 +64,9 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 	private MetricsPanel metrics;
 	private GroovyEditorComponent loadScriptGroovyEditor;
 	private GroovyEditorComponent saveScriptGroovyEditor;
+   private JInspectorPanel inspectorPanel;
 
-	public WsdlProjectDesktopPanel( WsdlProject modelItem )
+   public WsdlProjectDesktopPanel( WsdlProject modelItem )
 	{
 		super( modelItem );
 
@@ -95,7 +96,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 
 	private Component buildOverviewTab()
 	{
-		JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildProjectOverview() );
+      inspectorPanel = JInspectorPanelFactory.build( buildProjectOverview() );
 
 		inspectorPanel.addInspector(  new JFocusableComponentInspector<JPanel>( buildDescriptionPanel(), 
 					descriptionArea, "Description", "Project description", true ) );
@@ -311,6 +312,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 		SoapUI.getNavigator().getMainTree().getModel().removeTreeModelListener( treeModelListener );
 		wssTabPanel.release();
 
+      inspectorPanel.release();
 		return release();
 	}
 

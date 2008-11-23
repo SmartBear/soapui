@@ -130,6 +130,16 @@ public class RestParamsTable extends JPanel
       return paramsTable;
    }
 
+   public void release()
+   {
+      paramsTableModel.release();
+      if( paramDetailsModel != null )
+         paramDetailsModel.setBean( null );
+
+      if( inspectorPanel != null )
+         inspectorPanel.release();
+   }
+
    private Component buildToolbar()
    {
       JXToolBar toolbar = UISupport.createToolbar();

@@ -38,7 +38,7 @@ public abstract class ModelItemDesktopPanel<T extends ModelItem> extends JPanel 
       super(new BorderLayout());
       this.modelItem = modelItem;
 
-      ((ModelItem) modelItem).addPropertyChangeListener(this);
+      modelItem.addPropertyChangeListener(this);
    }
 
    protected boolean release()

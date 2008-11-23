@@ -236,6 +236,8 @@ public class WsdlMockResponseStepDesktopPanel extends AbstractWsdlMockResponseDe
       queryEditorModel.release();
       matchEditorModel.release();
 
+      inspectorPanel.release();
+
       return super.onClose( canCancel );
    }
 

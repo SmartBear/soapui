@@ -127,6 +127,7 @@ public class SoapMonitor extends JPanel
    private String oldProxyHost;
    private String oldProxyPort;
    private String sslEndpoint;
+   private JInspectorPanel inspectorPanel;
 
    public SoapMonitor(
            WsdlProject project, int listenPort,
@@ -162,7 +163,7 @@ public class SoapMonitor extends JPanel
 
    private JComponent buildContent()
    {
-      JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildLog() );
+      inspectorPanel = JInspectorPanelFactory.build( buildLog() );
 
       JComponentInspector<JComponent> viewInspector = new JComponentInspector<JComponent>( buildViewer(), "Message Content",
               "Shows message content", true );
@@ -1153,6 +1154,8 @@ public class SoapMonitor extends JPanel
          optionsDialog.release();
          optionsDialog = null;
       }
+
+      inspectorPanel.release();
    }
 
    public boolean isRunning()

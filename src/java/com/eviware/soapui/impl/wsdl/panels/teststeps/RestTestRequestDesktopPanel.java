@@ -230,6 +230,7 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
       if( super.onClose( canCancel ) )
       {
          assertionsPanel.release();
+         inspectorPanel.release();
          SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener );
          logArea.release();
          getModelItem().getTestRequest().removeAssertionsListener( assertionsListener );

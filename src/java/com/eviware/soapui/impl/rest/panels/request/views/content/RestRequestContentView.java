@@ -116,6 +116,7 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
    {
       super.release();
       restRequest.removePropertyChangeListener( this );
+      paramsTable.release();
    }
 
    public RestRequest getRestRequest()

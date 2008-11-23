@@ -79,27 +79,37 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
       dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
       dialog.setValue( Form.STEPNAME, name );
 
-      if( dialog.show() )
+      try
       {
-         RestRequestStepConfig testStepConfig = RestRequestStepConfig.Factory.newInstance();
-         RestMethodConfig requestConfig = testStepConfig.addNewRestRequest();
-         requestConfig.setFullPath( dialog.getValue( Form.ENDPOINT ) );
-         requestConfig.setEndpoint( dialog.getValue( Form.ENDPOINT ) );
-         requestConfig.setMethod( dialog.getValue( Form.HTTPMETHOD ) );
+         if( dialog.show() )
+         {
+            RestRequestStepConfig testStepConfig = RestRequestStepConfig.Factory.newInstance();
+            RestMethodConfig requestConfig = testStepConfig.addNewRestRequest();
+            requestConfig.setFullPath( dialog.getValue( Form.ENDPOINT ) );
+            requestConfig.setEndpoint( dialog.getValue( Form.ENDPOINT ) );
+            requestConfig.setMethod( dialog.getValue( Form.HTTPMETHOD ) );
 
-         new XmlBeansRestParamsTestPropertyHolder( testCase,
-                 requestConfig.addNewParameters() ).addParameters( params );
+            new XmlBeansRestParamsTestPropertyHolder( testCase,
+                    requestConfig.addNewParameters() ).addParameters( params );
 
-         TestStepConfig testStep = TestStepConfig.Factory.newInstance();
-         testStep.setType( HTTPREQUEST_TYPE );
-         testStep.setConfig( testStepConfig );
-         testStep.setName( dialog.getValue( Form.STEPNAME ) );
+            TestStepConfig testStep = TestStepConfig.Factory.newInstance();
+            testStep.setType( HTTPREQUEST_TYPE );
+            testStep.setConfig( testStepConfig );
+            testStep.setName( dialog.getValue( Form.STEPNAME ) );
 
-         return testStep;
+            return testStep;
+         }
+         else
+         {
+            return null;
+         }
       }
-      else
+      finally
       {
-         return null;
+         paramsTable.release();
+         paramsTable = null;
+         params = null;
+         dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
       }
    }
 

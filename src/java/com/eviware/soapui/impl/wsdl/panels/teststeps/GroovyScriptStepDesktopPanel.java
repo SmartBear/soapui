@@ -56,6 +56,7 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
    private SettingsListener settingsListener;
    private JComponentInspector<JComponent> logInspector;
    public boolean updating;
+   private JInspectorPanel inspectorPanel;
 
    public GroovyScriptStepDesktopPanel( WsdlGroovyScriptTestStep groovyStep )
    {
@@ -119,7 +120,7 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
          }
       } );
 
-      JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( editor );
+      inspectorPanel = JInspectorPanelFactory.build( editor );
       logInspector = inspectorPanel.addInspector( new JComponentInspector<JComponent>( logArea, "Log Output (0)",
               "Groovy Log output for this script", true ) );
       inspectorPanel.setDefaultDividerLocation( 0.8F );
@@ -165,8 +166,8 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
       logger.removeAllAppenders();
       logger = null;
       logArea.release();
-      super.release();
-      return true;
+      inspectorPanel.release();
+      return super.release();
    }
 
    public JComponent getComponent()

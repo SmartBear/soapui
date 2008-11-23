@@ -30,7 +30,8 @@ public class XmlObjectXmlDocument extends AbstractXmlDocument
 
 	public XmlObjectXmlDocument( XmlObject xmlObject )
 	{
-		this.xmlObject = xmlObject;}
+		this.xmlObject = xmlObject;
+   }
 	
 	public SchemaTypeSystem getTypeSystem()
 	{

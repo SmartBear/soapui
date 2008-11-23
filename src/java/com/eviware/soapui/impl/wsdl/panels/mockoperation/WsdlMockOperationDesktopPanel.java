@@ -75,6 +75,7 @@ public class WsdlMockOperationDesktopPanel extends ModelItemDesktopPanel<WsdlMoc
    private JComboBox defaultResponseCombo;
    private ResponseListModel responseListModel;
    private JComponentInspector<JComponent> dispatchInspector;
+   private JInspectorPanel inspectorPanel;
 
    public WsdlMockOperationDesktopPanel( WsdlMockOperation mockOperation )
    {
@@ -97,7 +98,7 @@ public class WsdlMockOperationDesktopPanel extends ModelItemDesktopPanel<WsdlMoc
    {
       add( buildToolbar(), BorderLayout.NORTH );
 
-      JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildResponseList() );
+      inspectorPanel = JInspectorPanelFactory.build( buildResponseList() );
       inspectorPanel.setDefaultDividerLocation( 0.5F );
       dispatchInspector = new JComponentInspector<JComponent>(
               buildDispatchEditor(), "Dispatch (" + getModelItem().getDispatchStyle().toString() + ")",
@@ -282,6 +283,7 @@ public class WsdlMockOperationDesktopPanel extends ModelItemDesktopPanel<WsdlMoc
       getModelItem().getMockService().getProject().removeProjectListener( projectListener );
       responseListModel.release();
 
+      inspectorPanel.release();
       return release();
    }
 

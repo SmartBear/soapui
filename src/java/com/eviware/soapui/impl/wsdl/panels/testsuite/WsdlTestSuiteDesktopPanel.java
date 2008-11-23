@@ -67,6 +67,7 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	private GroovyEditorComponent tearDownGroovyEditor;
 	private GroovyEditorComponent setupGroovyEditor;
    private JInspectorPanel testCaseListInspectorPanel;
+   private JInspectorPanel inspectorPanel;
 
    public WsdlTestSuiteDesktopPanel(WsdlTestSuite testSuite)
 	{
@@ -86,7 +87,7 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 
 	private JComponent buildContent()
 	{
-		JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildTabs() );
+      inspectorPanel = JInspectorPanelFactory.build( buildTabs() );
 		inspectorPanel.addInspector( new JComponentInspector( buildRunLog(), "TestSuite Log", 
 					"Log of executed TestCases and TestSteps", true ));
 
@@ -277,7 +278,9 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	public boolean onClose( boolean canCancel )
 	{
 		propertiesTable.release();
-		
+		inspectorPanel.release();
+      testCaseListInspectorPanel.release();
+
 		setupGroovyEditor.getEditor().release();
 		tearDownGroovyEditor.getEditor().release();
 		

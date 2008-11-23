@@ -99,8 +99,9 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 	private JStatisticsTable statisticsTable;
 	private GroovyEditorComponent tearDownGroovyEditor;
 	private GroovyEditorComponent setupGroovyEditor;
-	
-	public WsdlLoadTestDesktopPanel(WsdlLoadTest loadTest)
+   private JInspectorPanel inspectorPanel;
+
+   public WsdlLoadTestDesktopPanel(WsdlLoadTest loadTest)
 	{
 		super( loadTest );
 		
@@ -126,7 +127,7 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 
 	private JComponent buildContent()
 	{
-		JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( buildStatistics() );
+      inspectorPanel = JInspectorPanelFactory.build( buildStatistics() );
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildLog(), "LoadTest Log", "The current LoadTest execution log", true ) );
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildAssertions(), "LoadTest Assertions", "The assertions for this LoadTest", true ));
 		inspectorPanel.addInspector( new GroovyEditorInspector( buildSetupScriptPanel(), "Setup Script", "Script to run before tunning a TestCase" ) );
@@ -327,6 +328,7 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 		SoapUI.getDesktop().removeDesktopListener( desktopListener );
 		
 		statisticsTable.release();
+      inspectorPanel.release();
 		
 		return release();
 	}

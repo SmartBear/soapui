@@ -537,7 +537,8 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 		componentEnabler.release();
 		gotoStep.getTestCase().removeTestRunListener( testRunListener );
 		testStepsModel.release();
-
+      inspectorPanel.release();
+      
 		return true;
 	}
 

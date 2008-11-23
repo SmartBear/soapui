@@ -66,8 +66,9 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 	private TestRunLog testRunLog;
 	private CancelRunTestCaseAction cancelAction;
 	private XFormDialog optionsDialog;
+   private JInspectorPanel inspectorPanel;
 
-	public WsdlRunTestCaseStepDesktopPanel( WsdlRunTestCaseTestStep modelItem )
+   public WsdlRunTestCaseStepDesktopPanel( WsdlRunTestCaseTestStep modelItem )
 	{
 		super( modelItem );
 		
@@ -105,7 +106,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 
 	private Component buildContent()
 	{
-		JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( createPropertiesTable() );
+      inspectorPanel = JInspectorPanelFactory.build( createPropertiesTable() );
 		
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildLog(), "TestCase Log", "log output from testcase run", true ) );
 		
@@ -168,6 +169,8 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 			optionsDialog.release();
 			optionsDialog = null;
 		}
+
+      inspectorPanel.release();
 		
 		return release();
 	}

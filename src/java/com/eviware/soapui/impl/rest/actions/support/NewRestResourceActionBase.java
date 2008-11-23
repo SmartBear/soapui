@@ -111,6 +111,11 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
             createRequest( resource );
          }
       }
+
+      paramsTable.release();
+      paramsTable = null;
+      params = null;
+      dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
    }
 
    protected abstract RestResource createRestResource( T service, String path, XFormDialog dialog );
