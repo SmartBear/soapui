@@ -34,7 +34,7 @@ public class HtmlMediaTypeHandler implements MediaTypeHandler
    {
       String content = response == null ? null : response.getContentAsString();
       if( !StringUtils.hasContent( content ) )
-         return null;
+         return "<xml/>";
 
       try
       {

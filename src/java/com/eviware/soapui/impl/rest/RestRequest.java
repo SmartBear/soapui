@@ -507,7 +507,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
       if( typeHandler != null )
          return typeHandler.createXmlRepresentation( response );
       else
-         return null;
+         return "<xml/>";
    }
 
    @Override

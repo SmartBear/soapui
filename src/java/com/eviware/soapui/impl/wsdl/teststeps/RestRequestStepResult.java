@@ -65,7 +65,7 @@ public class RestRequestStepResult extends WsdlTestStepResult implements
 
    public Operation getOperation()
    {
-      return response.getRequest().getOperation();
+      return response == null ? null : response.getRequest().getOperation();
    }
 
    public ModelItem getModelItem()

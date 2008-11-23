@@ -40,10 +40,9 @@
 
                      <subsection name="REST Test Request Details Tab">
                       <p>
-                    The "Details" tab shown in the bottom-left shows the same properties when a TestRequest node is selected in
-                    the navigation tree as for a standard request (
-                    see the <a href="../rest/requests.html#Request_Details_Tab">Request Details Tab</a> for more detailed information)
-                    and adds two read-only properties:
+                    The "Details" tab shown in the bottom-left shows the same properties when a HTTP TestRequest node is selected in
+                    the navigation tree as for a standard REST Request (see the <a href="../rest/requests.html#Request_Details_Tab">Request Details Tab</a>
+                    for more detailed information) and adds two read-only properties:
                     <ul>
                     <li><b>Service</b> : the name of the Service for this TestRequest</li>
                     <li><b>Resource</b> : the path of the Resource for this TestRequest</li>

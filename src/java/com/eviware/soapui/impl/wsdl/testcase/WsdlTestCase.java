@@ -117,19 +117,6 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
          getConfig().addNewProperties();
 
       setPropertiesConfig( getConfig().getProperties() );
-
-//		for( TestStep step : testSteps )
-//		{
-//			WsdlTestStep testStep = ( WsdlTestStep ) step;
-//			try
-//			{
-//				testStep.afterLoad();
-//			}
-//			catch( Exception e )
-//			{
-//				e.printStackTrace();
-//			}
-//		}
    }
 
    public boolean getKeepSession()

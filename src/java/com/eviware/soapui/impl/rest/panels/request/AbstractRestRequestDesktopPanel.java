@@ -251,7 +251,12 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
             @Override
             public void update( Document document )
             {
+               if( updating )
+                  return;
+               
+               updating = true;
                getRequest().setPath( pathTextField.getText() );
+               updating = false;
             }
          } );
 

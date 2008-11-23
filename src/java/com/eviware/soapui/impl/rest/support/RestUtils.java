@@ -194,6 +194,9 @@ public class RestUtils
          }
       }
 
+      if( path.endsWith( "/" ))
+         resultPath.append( '/');
+
       if( keepHost && url != null )
       {
          return Tools.getEndpointFromUrl( url ) + resultPath.toString();

@@ -70,6 +70,7 @@ public class RestRequestPanelBuilder extends EmptyPanelBuilder<RestRequest>
       // post-processing
       table.addProperty( "Pretty Print", "prettyPrint", JPropertiesTable.BOOLEAN_OPTIONS );
       table.addProperty( "Dump File", "dumpFile" ).setDescription( "Dumps response message to specified file" );
+      table.addProperty( "Max Size", "maxSize", true ).setDescription( "The maximum number of bytes to receive" );
 
       table.setPropertyObject( request );
 

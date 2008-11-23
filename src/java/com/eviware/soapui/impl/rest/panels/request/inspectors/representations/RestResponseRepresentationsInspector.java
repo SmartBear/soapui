@@ -104,7 +104,7 @@ public class RestResponseRepresentationsInspector extends AbstractRestRepresenta
       int c = 0;
       for( ; c < representations.length; c++ )
       {
-         if( representations[c].getMediaType().equals( response.getContentType() ) )
+         if( representations[c].getMediaType() != null && representations[c].getMediaType().equals( response.getContentType() ) )
          {
             List status = representations[c].getStatus();
             if( status == null || !status.contains( response.getStatusCode() ) )

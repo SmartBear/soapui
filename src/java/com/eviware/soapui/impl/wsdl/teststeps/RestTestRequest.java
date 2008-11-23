@@ -234,7 +234,7 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
 
       if( messageExchange != null )
       {
-         if( !messageExchange.hasResponse() &&
+         if( !messageExchange.hasResponse() && getOperation() != null &&
                  getOperation().isBidirectional() )
          {
             currentStatus = AssertionStatus.FAILED;
