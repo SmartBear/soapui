@@ -187,8 +187,12 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 	public Map<String, TestProperty> getProperties()
 	{
 		Map<String, TestProperty> result = new HashMap<String, TestProperty>();
-		for( String name : properties.keySet() )
-			result.put( properties.get( name ).getName(), properties.get( name ) );
+
+      if( properties != null )
+      {
+         for( String name : properties.keySet() )
+            result.put( properties.get( name ).getName(), properties.get( name ) );
+      }
 
 		return result;
 	}
