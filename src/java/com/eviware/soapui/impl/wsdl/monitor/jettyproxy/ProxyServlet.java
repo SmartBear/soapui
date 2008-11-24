@@ -32,6 +32,7 @@ import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
 import org.mortbay.util.IO;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.LaunchForm;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
@@ -160,8 +161,12 @@ public class ProxyServlet implements Servlet
 		postMethod.setRequestEntity(new InputStreamRequestEntity(capture, "text/xml; charset=utf-8"));
 		
 		HostConfiguration hostConfiguration = new HostConfiguration();
-		hostConfiguration.setHost(new URI("http://"+httpRequest.getServerName()+httpRequest.getServletPath(), true));
-		postMethod.setPath("http://"+httpRequest.getServerName()+httpRequest.getServletPath());
+		
+		String url = "http://"+httpRequest.getServerName()+ ":" + httpRequest.getServerPort() + httpRequest.getServletPath();
+		hostConfiguration.setHost(new URI(url, true));
+		postMethod.setPath(url);
+		
+		SoapUI.log("PROXY to:"+url);
 		
 		if (settings.getBoolean(LaunchForm.SSLTUNNEL_REUSESTATE))
 		{

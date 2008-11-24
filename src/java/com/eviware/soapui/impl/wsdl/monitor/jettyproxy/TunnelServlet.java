@@ -41,11 +41,16 @@ public class TunnelServlet extends ProxyServlet
 
 	private String sslEndPoint;
 	private int sslPort = 443;
+	private String prot = "https://";
 
 	public TunnelServlet(SoapMonitor soapMonitor, String sslEndpoint)
 	{
 		super(soapMonitor);
 
+		if (!sslEndpoint.startsWith("https"))
+		{
+			this.prot = "http://";
+		}
 		int prefix = sslEndpoint.indexOf("://");
 		int c = sslEndpoint.indexOf(prefix, ':');
 		if (c > 0)
@@ -53,9 +58,10 @@ public class TunnelServlet extends ProxyServlet
 			this.sslPort = Integer.parseInt(sslEndpoint.substring(c + 1));
 			this.sslEndPoint = sslEndpoint.substring(prefix, c);
 		}
-		else {
-			if ( prefix > 0 )
-			this.sslEndPoint = sslEndpoint.substring(prefix+3);
+		else
+		{
+			if (prefix > 0)
+				this.sslEndPoint = sslEndpoint.substring(prefix + 3);
 		}
 	}
 
@@ -82,7 +88,7 @@ public class TunnelServlet extends ProxyServlet
 			capturedData = new JProxyServletWsdlMonitorMessageExchange(project);
 			capturedData.setRequestHost(httpRequest.getRemoteHost());
 			capturedData.setRequestHeader(httpRequest);
-			capturedData.setTargetURL("https://" + inetAddress.getHostName());
+			capturedData.setTargetURL(this.prot + inetAddress.getHostName());
 		}
 
 		CaptureInputStream capture = new CaptureInputStream(httpRequest.getInputStream());
@@ -123,15 +129,17 @@ public class TunnelServlet extends ProxyServlet
 		postMethod.setRequestEntity(new InputStreamRequestEntity(capture, "text/xml; charset=utf-8"));
 
 		HostConfiguration hostConfiguration = new HostConfiguration();
+
+		httpRequest.getProtocol();
 		hostConfiguration.getParams().setParameter(
 				SoapUIHostConfiguration.SOAPUI_SSL_CONFIG,
 				settings.getString(LaunchForm.SSLTUNNEL_KEYSTOREPATH, "") + " "
 						+ settings.getString(LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD, ""));
-		hostConfiguration.setHost(new URI("https://" + sslEndPoint, true));
+		hostConfiguration.setHost(new URI(this.prot + sslEndPoint, true));
 
 		if (settings.getBoolean(LaunchForm.SSLTUNNEL_REUSESTATE))
 		{
-			if ( httpState == null ) 
+			if (httpState == null)
 				httpState = new HttpState();
 			client.executeMethod(hostConfiguration, postMethod, httpState);
 		}
