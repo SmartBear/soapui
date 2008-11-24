@@ -175,7 +175,8 @@ public class RestRequestFilter extends AbstractRequestFilter
          {
             if( request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod )
             {
-               String requestContent = PropertyExpansionUtils.expandProperties( context, request.getRequestContent() );
+               String requestContent = PropertyExpansionUtils.expandProperties( context, request.getRequestContent(),
+                       request.isEntitizeProperties());
                if( StringUtils.hasContent( requestContent ) )
                {
                   initRootPart( request, requestContent, formMp );
@@ -214,7 +215,8 @@ public class RestRequestFilter extends AbstractRequestFilter
          }
          else
          {
-            String requestContent = PropertyExpansionUtils.expandProperties( context, request.getRequestContent() );
+            String requestContent = PropertyExpansionUtils.expandProperties( context, request.getRequestContent(),
+                       request.isEntitizeProperties() );
             List<Attachment> attachments = new ArrayList<Attachment>();
 
             for( Attachment attachment : request.getAttachments() )
