@@ -334,7 +334,7 @@
         <dependency>
             <groupId>swingx</groupId>
             <artifactId>swingx</artifactId>
-            <version>SNAPSHOT</version>
+            <version>soapui</version>
             <type>jar</type>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
