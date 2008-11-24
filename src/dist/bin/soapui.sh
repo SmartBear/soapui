@@ -27,14 +27,18 @@ export SOAPUI_HOME
 
 @SOAPUISHCLASSPATH@
 
-export JAVA_OPTS="-Xms128m -Xmx384m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME"
+export SOAPUI_CLASSPATH
+
+JAVA_OPTS="-Xms128m -Xmx384m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME"
 
 if [ $SOAPUI_HOME != "" ] 
 then
-    export JAVA_OPTS="$JAVA_OPTS -Dsoapui.ext.libraries=$SOAPUI_HOME/bin/ext"
-    export JAVA_OPTS="$JAVA_OPTS -Dsoapui.ext.listeners=$SOAPUI_HOME/bin/listeners"
-    export JAVA_OPTS="$JAVA_OPTS -Dsoapui.ext.actions=$SOAPUI_HOME/bin/actions"
+    JAVA_OPTS="$JAVA_OPTS -Dsoapui.ext.libraries=$SOAPUI_HOME/bin/ext"
+    JAVA_OPTS="$JAVA_OPTS -Dsoapui.ext.listeners=$SOAPUI_HOME/bin/listeners"
+    JAVA_OPTS="$JAVA_OPTS -Dsoapui.ext.actions=$SOAPUI_HOME/bin/actions"
 fi
+
+export JAVA_OPTS
 
 # For Cygwin, switch paths to Windows format before running java
 if [ $cygwin = "true" ] 

@@ -198,7 +198,7 @@
         <!-- build classpath for batch files -->
         <j:set var="soapuiclasspath" trim="false" value="set CLASSPATH=%SOAPUI_HOME%soapui-${pom.currentVersion}.jar"/>
         <j:set var="soapuishclasspath" trim="false"
-               value="export SOAPUI_CLASSPATH=$$SOAPUI_HOME/bin/soapui-${pom.currentVersion}.jar"/>
+               value="SOAPUI_CLASSPATH=$$SOAPUI_HOME/bin/soapui-${pom.currentVersion}.jar"/>
         <j:forEach var="lib" items="${pom.artifacts}">
             <j:set var="dep" value="${lib.dependency}"/>
             <j:if test="${dep.getProperty('jnlp.jar')=='true' || dep.getProperty('eclipse.jar')=='true'}">
@@ -206,7 +206,7 @@
                     set CLASSPATH=%CLASSPATH%;%SOAPUI_HOME%..\lib\${lib.file.name}
                 </j:set>
                 <j:set var="soapuishclasspath">${soapuishclasspath}
-                    export SOAPUI_CLASSPATH=$$SOAPUI_CLASSPATH:$$SOAPUI_HOME/lib/${lib.file.name}
+                    SOAPUI_CLASSPATH=$$SOAPUI_CLASSPATH:$$SOAPUI_HOME/lib/${lib.file.name}
                 </j:set>
             </j:if>
         </j:forEach>
