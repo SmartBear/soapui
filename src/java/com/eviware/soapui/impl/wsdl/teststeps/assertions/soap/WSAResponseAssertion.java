@@ -99,8 +99,7 @@ public class WSAResponseAssertion extends WsdlMessageAssertion implements
       @SuppressWarnings( "unchecked" )
       public Factory()
       {
-         super( WSAResponseAssertion.ID, WSAResponseAssertion.LABEL, WSAResponseAssertion.class,
-                 new Class[]{WsdlMockResponseTestStep.class, WsdlRequest.class} );
+         super( WSAResponseAssertion.ID, WSAResponseAssertion.LABEL, WSAResponseAssertion.class, WsdlRequest.class );
       }
    }
 
@@ -110,24 +109,25 @@ public class WSAResponseAssertion extends WsdlMessageAssertion implements
            SubmitContext context
    ) throws AssertionException
    {
-      try
-      {
-         new WsaValidator( (WsdlMessageExchange) messageExchange,
-                 wsaAssertionConfiguration ).validateWsAddressingResponse();
-      }
-      catch( AssertionException e )
-      {
-         throw new AssertionException( new AssertionError( e.getMessage() ) );
-      }
-      catch( XmlException e )
-      {
-         SoapUI.logError( e );
-         throw new AssertionException(
-                 new AssertionError(
-                         "There has been some XmlException, ws-a couldn't be validated properly." ) );
-      }
-
-      return "Request WS-Addressing is valid";
+//      try
+//      {
+//         new WsaValidator( (WsdlMessageExchange) messageExchange,
+//                 wsaAssertionConfiguration ).validateWsAddressingResponse();
+//      }
+//      catch( AssertionException e )
+//      {
+//         throw new AssertionException( new AssertionError( e.getMessage() ) );
+//      }
+//      catch( XmlException e )
+//      {
+//         SoapUI.logError( e );
+//         throw new AssertionException(
+//                 new AssertionError(
+//                         "There has been some XmlException, ws-a couldn't be validated properly." ) );
+//      }
+//
+//      return "Request WS-Addressing is valid";
+	   return null;
    }
 
    @Override
@@ -202,7 +202,7 @@ public class WSAResponseAssertion extends WsdlMessageAssertion implements
 //		mainForm.addCheckBox(ASSERT_REPLY_TO, "Check if 'wsa:ReplyTo' exists");
 //		mainForm.addCheckBox(ASSERT_MESSAGE_ID, "Check if 'wsa:MessageId' exists");
       mainForm.addCheckBox( ASSERT_RELATES_TO,
-              "Check if 'wsa:RelatesTo' exists" );
+              "Check if 'wsa:RelatesTo' exists and is equal to request MessageID" );
       mainForm.addCheckBox( ASSERT_REPLY_TO_REF_PARAMS,
               "Check if 'wsa:ReplyTo' ReferenceParameters exist" );
       mainForm.addCheckBox( ASSERT_FAULT_TO_REF_PARAMS,

@@ -134,24 +134,25 @@ public class WSARequestAssertion extends WsdlMessageAssertion implements
            SubmitContext context
    ) throws AssertionException
    {
-      try
-      {
-         new WsaValidator( (WsdlMessageExchange) messageExchange,
-                 wsaAssertionConfiguration ).validateWsAddressingResponse();
-      }
-      catch( AssertionException e )
-      {
-         throw new AssertionException( new AssertionError( e.getMessage() ) );
-      }
-      catch( XmlException e )
-      {
-         SoapUI.logError( e );
-         throw new AssertionException(
-                 new AssertionError(
-                         "There has been some XmlException, ws-a couldn't be validated properly." ) );
-      }
+//      try
+//      {
+//         new WsaValidator( (WsdlMessageExchange) messageExchange,
+//                 wsaAssertionConfiguration ).validateWsAddressingResponse();
+//      }
+//      catch( AssertionException e )
+//      {
+//         throw new AssertionException( new AssertionError( e.getMessage() ) );
+//      }
+//      catch( XmlException e )
+//      {
+//         SoapUI.logError( e );
+//         throw new AssertionException(
+//                 new AssertionError(
+//                         "There has been some XmlException, ws-a couldn't be validated properly." ) );
+//      }
 
-      return "Response WS-Addressing is valid";
+//      return "Response WS-Addressing is valid";
+	   return null;
    }
 
    public boolean configure()
@@ -195,7 +196,7 @@ public class WSARequestAssertion extends WsdlMessageAssertion implements
               .createDialogBuilder( "Ws-a properties to assert" );
       XForm mainForm = builder.createForm( "Basic" );
       mainForm.addCheckBox( ASSERT_ACTION,
-              "Check if 'wsa:Action' exists and has the right value" );
+              "Check if 'wsa:Action' exists" );
       mainForm.addCheckBox( ASSERT_TO, "Check if 'wsa:To' exists" );
       mainForm.addCheckBox( ASSERT_REPLY_TO, "Check if 'wsa:ReplyTo' exists" );
       mainForm.addCheckBox( ASSERT_MESSAGE_ID, "Check if 'wsa:MessageId' exists" );

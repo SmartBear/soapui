@@ -199,6 +199,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
          if( mockResponseStepConfig.getHandleResponse() )
             mockService.setDispatchResponseMessages( true );
+         
+         setStartStep(mockResponseStepConfig.getStartStep());
 
          mockResponse = mockOperation.addNewMockResponse( "MockResponse", false );
          mockResponse.setConfig( mockResponseConfig );

@@ -262,19 +262,6 @@ public class WsaValidator
 		}
 	}
 
-	private void parseMessageIdNode(Element msgNode) {
-		if (msgNode == null) {
-			cumulativeErrorMsg
-					.append("WS-A MessageID property is not specified. ");
-		} else {
-			String msgValue = XmlUtils.getElementText(msgNode);
-			if (StringUtils.isNullOrEmpty(msgValue)) {
-				cumulativeErrorMsg
-						.append("WS-A MessageID property is empty");
-			}
-		}
-	}
-
 	public void validateWsAddressingResponse() throws AssertionException, XmlException
 	{
 		String content = messageExchange.getResponseContent();
@@ -285,14 +272,7 @@ public class WsaValidator
 		XmlObject xmlObject = XmlObject.Factory.parse( content );
 		header = (Element) SoapUtils.getHeaderElement( xmlObject, soapVersion, true ).getDomNode();
 		
-      wsaVersionNameSpace = getWsaVersion(xmlObject, soapVersion);
-//		if (wsaVersionNameSpace == null)
-//		{
-//			throw new AssertionException( new AssertionError( "WS-A not enabled." ) );
-//		} else if (!wsaVersionNameSpace.equals(requestWsaVersionNameSpace))
-//		{
-//			throw new AssertionException( new AssertionError( "Response has the wrong ws-a version namespace value." ) );
-//		}
+        wsaVersionNameSpace = getWsaVersion(xmlObject, soapVersion);
 
       	if (wsaAssertionConfiguration.isAssertAction())
 		{
@@ -454,9 +434,6 @@ public class WsaValidator
 				cumulativeErrorMsg
 						.append( propertyName + " property is empty. ");
 			} else if (!StringUtils.isNullOrEmpty(expectedValue)) {
-//				String defaultWsdlAction = WsdlUtils
-//						.getDefaultWsaAction(messageExchange
-//								.getOperation(), true);
 				if (!actionValue.equals(expectedValue)) {
 					cumulativeErrorMsg
 							.append(propertyName + " property should be "
