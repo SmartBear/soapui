@@ -26,10 +26,7 @@ import org.w3c.dom.Element;
 import javax.wsdl.*;
 import javax.wsdl.extensions.mime.MIMEContent;
 import javax.xml.namespace.QName;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class for validating SOAP requests/responses against their definition and schema, requires that
@@ -642,7 +639,19 @@ public class WsdlValidator
       xmlOptions.setLoadLineNumbers();
       xmlOptions.setLoadLineNumbers( XmlOptions.LOAD_LINE_NUMBERS_END_ELEMENT );
 
+      XmlCursor cur = msg.newCursor();
+      Map<String, String> map = new HashMap<String, String>();
+
+      while( cur.hasNextToken() )
+      {
+         if( cur.toNextToken().isNamespace() )
+            map.put( cur.getName().getLocalPart(), cur.getTextValue() );
+      }
+
       String xmlText = msg.copy().changeType( type ).xmlText( xmlOptions.setSaveOuter() );
+
+      xmlOptions.setLoadAdditionalNamespaces( map );
+
       XmlObject obj = type.getTypeSystem().parse( xmlText, type, xmlOptions );
       obj = obj.changeType( type );
 
