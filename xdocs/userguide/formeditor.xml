@@ -5,6 +5,45 @@
     </properties>
     <body>
 		<section name="Auto Generated Form Editor in soapUI Pro">
+		
+		      <table class="relatedInfo" cellspacing="0" cellpadding="0">
+                <tr class="a">
+                    <td width="75" style="padding-top:5px">
+                        <img src="images/where_do_i_start.jpg" alt="Start soapUI Testing"
+                             longdesc="http://www.soapui.org"></img>
+                    </td>
+                    <td>
+                        <table class="relatedInner">
+                            <tr>
+                                <td>
+                                    <span class="relatedInfoHeader">Did you know?</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <p>soapUI pro lets you make make form inputting easier and faster with it´s user friendly lay out.</p>
+                                        <p>The different editors in soapUI pro will improve your productivity and make Web Service Testing fun.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr align="right">
+                                <td>
+                                    <span class="relatedLinks">
+                                        <a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/"
+                                           title="try soapUI Pro"
+                                           onclick="javascript:urchinTracker:('/downloadTrial');">
+                                            <img src="images/try_pro_100.png" alt="Try soapUI pro to soap test"
+                                                 width="101" height="20" longdesc="http://www.eviware.com"/>
+                                        </a>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+		
 		<p>The form editor attempts to dynamically build a user friendly input form from the underlying XML Schema 
 		definition for the current request message. The following screenshot shows the form created for one of
 		the PayPal API calls;</p>

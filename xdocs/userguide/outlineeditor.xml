@@ -12,6 +12,45 @@
 		Node values in the center column are editable by selecting or editing as usual. The right column shows 
 		the schema type for the corresponding node if available. This column can be hidden with the toggle button 
 		in the toolbar.</p>
+		
+		   <table class="relatedInfo" cellspacing="0" cellpadding="0">
+                <tr class="a">
+                    <td width="75" style="padding-top:5px">
+                        <img src="images/where_do_i_start.jpg" alt="Start soapUI Testing"
+                             longdesc="http://www.soapui.org"></img>
+                    </td>
+                    <td>
+                        <table class="relatedInner">
+                            <tr>
+                                <td>
+                                    <span class="relatedInfoHeader">Did you know?</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <p>soapUI pro lets you make make form inputting easier and faster with it´s user friendly lay out.</p>
+                                        <p>The different editors in soapUI pro will improve your productivity and make Web Service Testing fun.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr align="right">
+                                <td>
+                                    <span class="relatedLinks">
+                                        <a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/"
+                                           title="try soapUI Pro"
+                                           onclick="javascript:urchinTracker:('/downloadTrial');">
+                                            <img src="images/try_pro_100.png" alt="Try soapUI pro to soap test"
+                                                 width="101" height="20" longdesc="http://www.eviware.com"/>
+                                        </a>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+		
 		<p>If the underlying schema definition for a specific node
 		has documentation annotations, these will be displayed in the tooltip as shown in the screen-shot below.</p>
 		<p align="center"><img src="images/outline_editor.gif" alt="Structured View of Web Service messages in soapUI Pro"/></p>
