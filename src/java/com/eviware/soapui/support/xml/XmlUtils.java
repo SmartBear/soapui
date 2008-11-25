@@ -754,6 +754,8 @@ public final class XmlUtils
             map.put( cursor.getName(), cursor.getTextValue() );
       }
 
+      cursor.dispose();
+
       Iterator<QName> i = map.keySet().iterator();
       int nsCnt = 0;
 
