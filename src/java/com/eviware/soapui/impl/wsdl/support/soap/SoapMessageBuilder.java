@@ -563,15 +563,18 @@ public class SoapMessageBuilder implements MessageBuilder
 		{
 			XmlObject xmlObject = XmlObject.Factory.parse( faultResponse );
 			XmlObject[] detail = xmlObject.selectPath( "//detail" );
-			cursor = detail[0].newCursor();
-			
-			cursor.toFirstContentToken();
+         if( detail.length > 0 )
+         {
+            cursor = detail[0].newCursor();
 
-			generator.setTypeComment( true );
-			generator.setIgnoreOptional( iface.getSettings().getBoolean( WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS ) );
+            cursor.toFirstContentToken();
+   
+            generator.setTypeComment( true );
+            generator.setIgnoreOptional( iface.getSettings().getBoolean( WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS ) );
 
-			for( Part part : faultPart.getWsdlParts() )
-				createElementForPart( part, cursor, generator );
+            for( Part part : faultPart.getWsdlParts() )
+               createElementForPart( part, cursor, generator );
+         }
 			
 			faultResponse = xmlObject.xmlText( new XmlOptions().setSaveAggressiveNamespaces().setSavePrettyPrint());
 		}
