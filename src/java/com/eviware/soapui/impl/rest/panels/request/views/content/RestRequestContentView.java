@@ -168,12 +168,14 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
       mediaTypeCombo.setPreferredSize( new Dimension( 120, 20 ) );
       mediaTypeCombo.setEnabled( restRequest.hasRequestBody() );
       mediaTypeCombo.setEditable( true );
-      mediaTypeCombo.setSelectedItem( restRequest.getMediaType() );
+      if( restRequest.getMediaType() != null )
+         mediaTypeCombo.setSelectedItem( restRequest.getMediaType() );
+      
       mediaTypeCombo.addItemListener( new ItemListener()
       {
          public void itemStateChanged( ItemEvent e )
          {
-            restRequest.setMediaType( mediaTypeCombo.getSelectedItem().toString() );
+            restRequest.setMediaType( String.valueOf( mediaTypeCombo.getSelectedItem() ) );
          }
       } );
 
