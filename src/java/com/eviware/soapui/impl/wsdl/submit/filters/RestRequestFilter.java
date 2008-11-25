@@ -185,7 +185,7 @@ public class RestRequestFilter extends AbstractRequestFilter
 
             for( Attachment attachment : request.getAttachments() )
             {
-               MimeBodyPart part = new MimeBodyPart();
+               MimeBodyPart part = new PreencodedMimeBodyPart("binary");
                part.setDisposition( "form-data; name=\"" + attachment.getName() + "\"" );
                part.setDataHandler( new DataHandler( new AttachmentDataSource( attachment ) ) );
 
@@ -299,6 +299,7 @@ public class RestRequestFilter extends AbstractRequestFilter
          }
 
          part.setHeader( "Content-Type", ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
+         part.setHeader( "Content-Transfer-Encoding", "binary" );
       }
       else
       {
