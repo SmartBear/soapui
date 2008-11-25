@@ -17,22 +17,29 @@
 		<p> 
            In comes Composite Projects; composite SoapUI projects are saved as a file system, which means updating, changing, or committing parts of
            projects, like a TestCase, are much easier to do.
-           
-            <table class="relatedInner" cellspacing="0" cellpadding="0"><tr class="b"><td>
+        </p>
+        
+        <tr class="a"><td style="padding-top: 5px;" width="75">
+        	<img src="../images/where_do_i_start.jpg" alt="Start soapUI Testing" longdesc="http://www.soapui.org">
+        </td><td>
+            <table class="relatedInner" cellpadding="0" cellspacing="0"><tbody><tr class="a"><td>
                 	<span class="relatedInfoHeader">Did you know?</span>
-                </td></tr><tr class="a"><td>
+                </td></tr><tr class="b"><td>
                     <div>
 						<p>
-						<b><i>soapUI Pro</i> will allow you to update, make changes and committ parts of of you projects easily.
+
+						There is a commercial version of soapUI available; <b><i>soapUI Pro</i></b>.
 						</p>
+						<p>
+						<b><i>soapUI Pro</i></b> contains productivity enhancements as well as offers Professional World Class support.
+						</p>
+                    </div>
+                </td></tr><tr class="a" align="right"><td>
+                	<span class="relatedLinks"><a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" class="externalLink" title="try soapUI Pro" onclick="javascript:urchinTracker:('/downloadTrial');">
 
-					</div>
-                </td></tr><tr class="b" align="right"><td>
-                	<span class="relatedLinks"><a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" class="externalLink" title="try soapUI Pro" onclick="javascript:urchinTracker:(&apos;/downloadTrial&apos;);">
-                                               <img src="../images/try_pro_100.png" alt="Try soapUI pro to soap test" width="101" height="20" longdesc="http://www.eviware.com"></img></a></span>
-                </td></tr></table>
-
-           </p>
+                                               <img src="../images/try_pro_100.png" alt="Try soapUI pro to soap test" longdesc="http://www.eviware.com" width="101" height="20"></a></span>
+                </td></tr></tbody></table>
+		</td></tr>
         
         <subsection name="Composite File System">
         <p>A Composite SoapUI project is saved in directory with the project name. It contains separate directories for
