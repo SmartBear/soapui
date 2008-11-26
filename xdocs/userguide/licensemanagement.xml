@@ -24,8 +24,8 @@
 		<column><img src="images/help_license_menu.gif" alt="soapUI Pro Help Menu"/></column></columns>
 		<subsection name="Command Line, Plugins and Licenses">
 		<p>None of the command line runners will require a license to run. The associated Tool or IDE plug-ins will 
-		be released in pro enabled versions shortly after the stand alone soapUI Pro release. <a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" title="try soapUI Pro" onclick="javascript:urchinTracker:('/downloadTrial');">
-    <img src="../images/try_pro_100.png" alt="Try soapUI pro to soap test" width="101" height="20" longdesc="http://www.eviware.com"/></a></p>
+		be released in pro enabled versions shortly after the stand alone soapUI Pro release. 
+   </p>
 		</subsection>
 		 <p><hr size="1"/>Next: <a href="preferences.html">soapUI Preferences</a></p>
 		</section>

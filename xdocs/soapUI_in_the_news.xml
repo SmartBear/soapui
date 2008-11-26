@@ -5,7 +5,19 @@
     </properties>
     <body>
     <section name="soapUI Releases">
-           
+                
+       <subsection name="Solutions Blog">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/solutions.gif" alt="soapUI Rest Support"/>
+	    		</column>
+	    		<column align="left">
+	    			<p>The post starts: "soapUI is a free and open source desktop application" <br/>
+	    			<a href="http://solutionslog.blogspot.com/2008/11/gui-tool-for-working-with-web-services.html">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+		</subsection>    
+        
         <subsection name="soapUI Rest Support">
 	    	<columns>
 	    		<column width="200">

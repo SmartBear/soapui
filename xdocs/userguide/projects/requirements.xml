@@ -118,6 +118,6 @@ urchinTracker();</script><script type="text/javascript">function openVideo(_url)
 		 	<li><b>Description</b>Long description of the TestCase.</li>
 
 		 	</ul>
-		 	</p><p align="center"><img src="images/TestCases_list.gif" border="0" alt="Test Case integration with Web Service Requirements"></img><a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" class="externalLink" title="try soapUI Pro" onclick="javascript:urchinTracker:(&apos;/downloadTrial&apos;);">
-            <img src="../../images/try_pro_100.png" alt="Try soapUI pro to soap test" width="101" height="20" longdesc="http://www.eviware.com"></img>
+		 	</p><p align="center"><img src="images/TestCases_list.gif" border="0" alt="Test Case integration with Web Service Requirements"></img>
+            
       				</a> </p></div><p><hr size="1"></hr><a href="wss.html"> Next: WS-Security</a></p></div><div id="footer"><div class="xright">© 2005-2008, eviware.com</div><div class="clear"><hr></hr></div></div></div></div></body></html>
