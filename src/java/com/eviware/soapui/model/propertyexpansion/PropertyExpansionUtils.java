@@ -350,15 +350,15 @@ public class PropertyExpansionUtils
 							break;
 						
 						String expansion = str.substring( ix+2, ix2  );
-//						if( !expansions.contains( expansion ))
-//						{
+						if( !expansions.contains( expansion ))
+						{
 							MutablePropertyExpansion tp = createMutablePropertyExpansion( expansion, modelItem, target, propertyName );
 							if( tp != null )
 							{
 								result.add( tp );
-//								expansions.add( expansion );
+								expansions.add( expansion );
 							}
-//						}
+						}
 						
 						str = str.substring( ix2 );
 						ix = str.indexOf( "${" );

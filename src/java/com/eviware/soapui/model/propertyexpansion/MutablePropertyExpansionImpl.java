@@ -61,7 +61,7 @@ public class MutablePropertyExpansionImpl extends PropertyExpansionImpl implemen
 		while( ix != -1 )
 		{
 			str = str.substring( 0, ix ) + rep + str.substring( ix+stringRep.length() );
-			ix = str.indexOf( str, ix + rep.length() );
+			ix = str.indexOf( stringRep, ix + rep.length() );
 		}
 		
 		PropertyUtils.setProperty( container, propertyName, str );
