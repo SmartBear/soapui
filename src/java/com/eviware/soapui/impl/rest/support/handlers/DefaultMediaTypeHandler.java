@@ -15,6 +15,8 @@ package com.eviware.soapui.impl.rest.support.handlers;
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.xmlbeans.XmlBase64Binary;
+import sun.misc.BASE64Encoder;
 
 public class DefaultMediaTypeHandler implements MediaTypeHandler
 {
@@ -28,7 +30,18 @@ public class DefaultMediaTypeHandler implements MediaTypeHandler
       String content = response.getContentAsString();
       if( XmlUtils.seemsToBeXml( content ) )
          return content;
-      else
-         return null; // "<data><![CDATA[" + content + "]]></data>";
+
+      String result = "<data contentType=\"" + response.getContentType() + "\" contentLength=\"" +
+               response.getContentLength() + "\">";
+
+      for( int c = 0; c < content.length(); c++ )
+      {
+         if( content.charAt( c ) < 8 )
+         {
+            return result +  new BASE64Encoder().encode( content.getBytes())+ "</data>";
+         }
+      }
+
+      return result + "<![CDATA[" + content + "]]></data>";
    }
 }
