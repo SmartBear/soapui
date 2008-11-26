@@ -26,9 +26,9 @@ public class DefaultMediaTypeHandler implements MediaTypeHandler
    public String createXmlRepresentation( HttpResponse response )
    {
       String content = response.getContentAsString();
-      if( content == null || XmlUtils.seemsToBeXml( content ) )
+      if( XmlUtils.seemsToBeXml( content ) )
          return content;
       else
-         return "<data><![CDATA[" + content + "]]></data>";
+         return null; // "<data><![CDATA[" + content + "]]></data>";
    }
 }

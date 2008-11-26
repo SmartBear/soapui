@@ -474,7 +474,7 @@ public final class XmlUtils
    {
       try
       {
-         if( StringUtils.isNullOrEmpty( xml ) )
+         if( !XmlUtils.seemsToBeXml( xml ) )
             return xml;
 
          StringWriter writer = new StringWriter();
@@ -1204,7 +1204,7 @@ public final class XmlUtils
 
          return XmlObject.Factory.parse( str ) != null;
       }
-      catch( Exception e )
+      catch( Throwable e )
       {
          return false;
       }
