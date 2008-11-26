@@ -5,8 +5,10 @@
     </properties>
     <body>
 		<section name="soapUI Pro XPath Selection Dialog">
-		<p>soapUI Pro includes a XPath Wizard or Selection dialog that is available wherever an XPath expression is 
-		required:</p>
+		<p>
+			soapUI Pro includes a XPath Wizard or Selection dialog that is available wherever an XPath 
+			expression is required:
+		</p>
 		<ul>
 		<li>The XPath Assertion editor</li>
 		<li>The Property-Transfer editor</li>
@@ -53,11 +55,13 @@
                 </tr>
            </table>
 		
-		<p>The selector displays general instructions and a tree-view of the message or XML to be selected from. Navigating 
-		the tree displays the corresponding	XPath expression for the current node below. Selecting the desired node 
-		and pressing OK will close the dialog and return the selected XPath expression to the calling functionality. 
+		<p>
+			The selector displays general instructions and a tree-view of the message or XML to be selected from. Navigating 
+			the tree displays the corresponding	XPath expression for the current node below. Selecting the desired node 
+			and pressing OK will close the dialog and return the selected XPath expression to the calling functionality.
+		</p> 
        <p align="center"><img src="images/xpath_selector.gif"/></p>
-		 <p><hr size="1"/>Next: <a href="coverage.html">soapUI Pro WSDL Coverage</a></p>
+       <p><hr size="1"/>Next: <a href="coverage.html">soapUI Pro WSDL Coverage</a></p>
 		</section>
     </body>
 </document>

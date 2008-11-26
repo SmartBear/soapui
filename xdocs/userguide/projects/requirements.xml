@@ -1,123 +1,79 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head><title>Web Service Project Requirements - soapUI</title><style type="text/css" media="all">
-          @import url("../../style/maven-base.css");
-          @import url("../../style/boxes.css");
-          
-			    @import url("../../style/maven-soapui.css");</style><link rel="stylesheet" href="../../style/print.css" type="text/css" media="print"></link><meta name="description" content="soapUI, the leading SOA Testing Tool"></meta><meta name="keywords" content="eviware, soapui, soap ui, soapui, testing, soap, soa , web services, soap testing, soa testing, web services testing, webservices, web service development, webservices, service oriented architecture,"></meta><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta><script type="text/javascript" src="http://www.google-analytics.com/urchin.js"></script><script type="text/javascript">_uacct = "UA-92447-1";
-urchinTracker();</script><script type="text/javascript">function openVideo(_url)
-	{
-		var _win = window.open(_url, null, "width=884,height=703,scrollable=yes,resizable=yes");
-		return;
-	}</script></head><body class="composite"><div id="banner"><table cellpadding="0" cellspacing="0"><tr><td><a href="http://www.soapui.org" id="organizationLogo"><img alt="soapui.org" src="../../images/soapui-logo.png"></img></a></td><td></td><td></td></tr></table></div><div id="toolbar"><table cellspacing="0" cellpadding="0" id="toolbartable"><tr><td id="datecell">19 November 2008 - 2.5</td><td id="linkscell">
-     
-        <span id="breadcrumb">
-        <a href="../../userguide/index.html">user guide</a>
-        </span>
-      
-     
-        <span id="breadcrumb">
-        <a href="http://www.eviware.com/blogs/oleblog" class="externalLink" title="External Link">blog</a>
-
-        </span>
-      
-     
-        <span id="breadcrumb">
-        <a href="../../eclipse/index.html">eclipse</a>
-        </span>
-      
-     
-        <span id="breadcrumb">
-        <a href="../../intellij/index.html">intellij</a>
-        </span>
-      
-     
-        <span id="breadcrumb">
-
-        <a href="../../netbeans/index.html">netbeans</a>
-        </span>
-      
-     
-        <span id="breadcrumb">
-        <a href="../../plugin/index.html">maven</a>
-        </span>
-      
-     
-        <span id="breadcrumb">
-        <a href="../../soapui.pdf">PDF</a>
-
-        </span>
-      
-     
-        <span id="breadcrumb">
-        <a href="http://sourceforge.net/project/showfiles.php?group_id=136013" class="externalLink" title="External Link">files</a>
-        </span>
-      
-     
-        <span id="breadcrumb">
-        <a href="http://www.eviware.com/component/option,com_smf/Itemid,53/" class="externalLink" title="External Link">forums</a>
-        </span>
-      
-     
-        <span id="breadcrumb">
-
-        <a href="http://sourceforge.net/tracker/?group_id=136013&amp;amp;atid=737763" class="externalLink" title="External Link">bugs</a>
-        </span>
-      
-     
-        <span id="breadcrumb">
-        <a href="http://sourceforge.net/projects/soapui/?abmode=1" class="externalLink" title="External Link">sourceforge</a>
-        </span>
-      
-     
-        <span id="breadcrumb">
-        <a href="http://www.eviware.com" class="externalLink" title="External Link">eviware.com</a>
-
-        </span>
-      </td></tr></table></div><div id="outerLeftColumn"><div id="leftColumn"><div id="navcolumn"><div id="menuheader"><a href="../../index.html">Home</a></div><div id="menuheader"><a href="../../gettingstarted/index.html">Getting Started</a></div><div id="menuheader"><a href="../../userguide/index.html">User Guide</a></div><ul><li><a href="../../userguide/overview.html">Overview</a><ul><li><a href="../../userguide/tabbeddesktop.html">Tabbed Desktop</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li><li><a href="../../userguide/licensemanagement.html">License Management</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li><li><a href="../../userguide/preferences.html">Preferences</a></li><li><a href="../../userguide/xpath_selector.html">XPath Selection</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li><li><a href="../../userguide/coverage.html">WSDL Coverage</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li></ul></li><li><a href="../../userguide/workspaces.html">Workspaces</a></li><li><a href="../../userguide/projects/index.html">Projects</a><ul><li><a href="../../userguide/projects/projectview.html">Project View</a></li><li><a href="../../userguide/projects/coverage.html">Coverage</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li><li><strong><a href="../../userguide/projects/requirements.html">Requirements</a></strong><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li><li><a href="../../userguide/projects/wss.html">WS-Security</a></li><li><a href="../../userguide/projects/encryption.html">Encryption</a></li><li><a href="../../userguide/projects/composite-projects.html">Composite Projects</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li><li><a href="../../userguide/projects/resolving.html">Project Resolving</a></li></ul></li><li><a href="../../userguide/interfaces/index.html">WSDL Interfaces</a><ul><li><a href="../../userguide/interfaces/interfaceview.html">Interface View</a></li><li><a href="../../userguide/interfaces/wsi.html">WS-I Compliance</a></li><li><a href="../../userguide/interfaces/refactoring.html">WSDL Refactoring</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li><li><a href="../../userguide/operations.html">WSDL Operations</a></li><li><a href="../../userguide/requests.html">Working with SOAP Requests</a><ul><li><a href="../../userguide/formeditor.html">Form Editor</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li><li><a href="../../userguide/overviewview.html">Overview View</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li><li><a href="../../userguide/outlineeditor.html">Outline Editor</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li><li><a href="../../userguide/messageinspectors.html">Pro Inspectors</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li><li><a href="../../userguide/attachments.html">Attachments/Inline Files</a></li></ul></li></ul></li><li><a href="../../userguide/rest/index.html">REST Services</a><ul><li><a href="../../userguide/rest/params.html">Parameters/Representations</a></li><li><a href="../../userguide/rest/resources.html">Resources</a></li><li><a href="../../userguide/rest/requests.html">Requests</a></li></ul></li><li><a href="../../userguide/scripting.html">Scripting</a><ul><li><a href="../../userguide/scripting.html#Groovy_Script_Library">Script Library</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li><li><a href="../../userguide/scripting.html#Dynamic_Properties">Dynamic Properties</a></li></ul></li><li><a href="../../userguide/properties.html">Properties</a><ul><li><a href="../../userguide/properties.html#Property_Expansion_in_soapUI">Property Expansion</a></li></ul></li><li><a href="../../userguide/functional/index.html">Functional Testing</a><ul><li><a href="../../userguide/functional/getting_started.html">Getting Started</a></li><li><a href="../../userguide/functional/testsuites.html">TestSuites</a></li><li><a href="../../userguide/functional/testcases.html">TestCases</a></li><li><a href="../../userguide/functional/teststeps.html">TestSteps</a><ul><li><a href="../../userguide/functional/testrequests.html">Test Requests</a><ul><li><a href="../../userguide/functional/soap-requests.html">SOAP Requests</a></li><li><a href="../../userguide/functional/rest-requests.html">REST Requests</a></li><li><a href="../../userguide/functional/http-requests.html">HTTP Requests</a></li><li><a href="../../userguide/functional/response-assertions.html">Assertions</a></li><li><a href="../../userguide/functional/response-wizards.html">Editor Wizards</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li></ul></li><li><a href="../../userguide/functional/propertytransfers.html">Property Transfers</a></li><li><a href="../../userguide/functional/gotostep.html">Conditional Gotos</a></li><li><a href="../../userguide/functional/groovystep.html">Groovy Scripts</a><ul><li><a href="../../userguide/functional/groovystep.html#Groovy_Script_Examples">Examples</a></li><li><a href="../../userguide/functional/groovystep.html#GroovyUtils">GroovyUtils</a></li></ul></li><li><a href="../../userguide/functional/propertiesstep.html">Properties Step</a></li><li><a href="../../userguide/functional/delaystep.html">Delay Step</a></li><li><a href="../../userguide/functional/runtestcasestep.html">Run TestCase</a></li><li><a href="../../userguide/functional/mockresponse.html">Mock Response</a></li><li><a href="../../userguide/functional/datasourcestep.html">DataSource</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li><li><a href="../../userguide/functional/datasourceloopstep.html">DataSource Loop</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li><li><a href="../../userguide/functional/datasinkstep.html">DataSink</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li><li><a href="../../userguide/functional/datagenstep.html">DataGen</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li></ul></li></ul></li><li><a href="../../userguide/loadtest/index.html">Load Testing</a><ul><li><a href="../../userguide/loadtest/getting_started.html">Getting Started</a></li><li><a href="../../userguide/loadtest/configuration.html">Limit &amp; Strategies</a></li><li><a href="../../userguide/loadtest/execution.html">Execution</a></li><li><a href="../../userguide/loadtest/assertions.html">Assertions</a></li><li><a href="../../userguide/loadtest/diagrams.html">Graphs</a></li><li><a href="../../userguide/loadtest/comparison.html">JMeter comparison</a></li></ul></li><li><a href="../../userguide/mock/index.html">Mocking</a><ul><li><a href="../../userguide/mock/getting_started.html">Getting Started</a></li><li><a href="../../userguide/mock/services.html">Mock Services</a><ul><li><a href="../../userguide/mock/coverage.html">Coverage</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li></ul></li><li><a href="../../userguide/mock/operations.html">Mock Operations</a></li><li><a href="../../userguide/mock/responses.html">Mock Responses</a></li></ul></li><li><a href="../../userguide/monitor/index.html">SOAP Monitoring</a><ul><li><a href="../../userguide/monitor/coverage.html">Coverage</a><img height="8" width="8" style="padding-top: 0px; margin-top: 0px" src="http://www.soapui.org/images/small_pro.png"></img></li></ul></li><li><a href="../../userguide/scenarios/index.html">Usage Scenarios</a><ul><li><a href="../../userguide/scenarios/datadriven.html">Data Driven Testing</a></li><li><a href="../../userguide/scenarios/templatedriven.html">Template Driven Testing</a></li><li><a href="../../userguide/scenarios/interactive.html">Interactive Testing</a></li><li><a href="../../userguide/scenarios/surveillance.html">Surveillance Testing</a></li></ul></li><li><a href="../../userguide/tools/index.html">Tool Integrations</a><ul><li><a href="../../userguide/tools/topdown.html">Code Generation</a></li><li><a href="../../userguide/tools/tcpmon.html">Apache TCPMon</a></li></ul></li><li><a href="../../userguide/commandline/index.html">CommandLine Tools</a><ul><li><a href="../../userguide/commandline/testcaserunner.html">TestCase Runner</a></li><li><a href="../../userguide/commandline/loadtestrunner.html">LoadTest Runner</a></li><li><a href="../../userguide/commandline/mockrunner.html">MockService Runner</a></li><li><a href="../../userguide/commandline/toolrunner.html">Tool Runner</a></li></ul></li><li><a href="../../userguide/shortcuts.html">Keyboard shortcuts</a></li></ul><div id="menuheader"><a href="../../ideplugins.html">The PlugIns</a></div><div id="menuheader">Search soapUI</div><div id="search"><form action="http://www.google.com/cse" id="searchbox_007200683325252461236:o_7361jqhqo"><input name="cx" type="hidden" value="007200683325252461236:o_7361jqhqo"></input><input name="sa" type="hidden" value="Search"></input><input name="q" size="15" type="text"></input><input name="a" type="submit" value="soapUI search"></input><input name="cof" type="hidden" value="FORID:0"></input></form><script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_007200683325252461236:o_7361jqhqo"></script></div><div id="menuheader"><a href="../../">Project Documentation</a></div><ul><li><a href="../../index.html">About soapUI</a></li><li><a href="../../project-info.html">Project Info</a></li><li><a href="../../maven-reports.html">Project Reports</a></li></ul><a href="http://sourceforge.net/projects/soapui" target="_blank" id="sfLogo"><img height="31" border="0" width="88" alt="SourceForge.net Logo" src="http://sourceforge.net/sflogo.php?group_id=136013&amp;type=1"></img></a></div></div><div id="leftBanner"><br></br><a href="http://www.eviware.com" target="_blank"><img height="56" width="148" alt="Eviware Logo" src="http://www.soapui.org/images/eviware-logo.png"></img></a><br></br><a href="http://soa.sys-con.com/general/readerschoice.htm" target="_new"><img height="125" border="0" width="125" src="http://www.soapui.org/images/WSJ-SOAReadersChoice-125_125px.jpg"></img></a></div></div><div id="bodyColumn"><div class="contentBox"><div class="section"><a name="Web_Service_Project_Requirements"></a><h2>Web Service Project Requirements</h2><p>
-
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Web Service Project Requirements</title>
+    </properties>
+    <body>
+		<section name="Web Service Project Requirements">
+		<p>
 		Project Requirements (soapUI Pro only) is an editor handling the requirements of the project.
 		A short explanation of the functionality is that in general you can add, remove, edit, import and export requirements. 
-		</p><p>
+		</p>
+
+		<p>
 		The requirement can then be connected to the TestCases fulfilling the requirements, linked to important information or documented. 
-		</p><p align="center"><img src="images/project_requirements.gif" border="0" alt="Project Requirements Editor Main View"></img></p><div class="subsection"><a name="Project_Requirements_Menu_Bar"></a><h3>Project Requirements Menu Bar</h3><p>The Project Requirements contains the following menu bar items:</p><p>
+		</p>
+		
+		<p align="center"><img src="images/project_requirements.gif" border="0" alt="Project Requirements Editor Main View"/></p>
+		
+		 <subsection name="Project Requirements Menu Bar">
+		 	<p>The Project Requirements contains the following menu bar items:</p>
+		 	
+		 	<p>
 		 	<ul>
 		 	<li><b>Add Requirement</b>. Add a Requirement</li>
 		 	<li><b>Remove Requirement</b> Remove a Requirement</li>
-
 		 	<li><b>Import Requirements</b> Import Requirements from a text file. See format below.</li>
 		 	<li><b>Export Requirements</b> Export Requirements to a text file. See format below.</li>
 		 	</ul>
-		 	</p></div><div class="subsection"><a name="Import_File_Format"></a><h3>Import File Format</h3><p>
+		 	</p>
+		 	
+		 	</subsection>
+		 	
+		 	<subsection name="Import File Format">
+		 	<p>
 		 	The file format for importing and exporting is quite simple, the fields are comma separated and in quotes. Only the main fields; 
 		 	ID, Name, Short Description and Status are supported.
 		 	
 		 	Example:
 		 	</p>
-
-    <div class="source"><pre>
+		 	
+		 	<source>
 "TST-049","User Name Length","User Name must exceed 6 chars and be case sensitive","In Scope"
 "EVI-020","Cu No SQL Injection Test","Test SQL Injection","Out of Scope"
 "EVI-021","Loadtest Purchase","We must make sure that Purchase withstand a buying storm","Out of Scope"
-		 	</pre></div>
-  </div><div class="subsection"><a name="Web_Service_Requirements_List"></a><h3>Web Service Requirements List</h3><p>
+		 	</source>
+		 </subsection>
+		 <subsection name="Web Service Requirements List">
+		 	<p>
 		 	The data in the requirements list is the following:
 		 	<ul>
 		 	<li><b>ID</b> This is the ID for the Requirement. Generally the idea is that ID should be imported from 
 		 	a Test Management system or Project Management system, but it works perfectly well as a stand alone ID. ID does not need to be unique.</li>
 		 	<li><b>Name</b> Name if the Requirement.</li>
-
 		 	<li><b>Short Description</b>Short Description for the Requirement. Long description should be entered in the description the description Inspector.</li>
 		 	<li><b>Status</b> Status of the Requirement. There are two in built values signifying whether the Requirement should be tested or not, but you can manually enter any Status.</li>
 		 	<li><b>TestCases</b> This shows the number of TestCases added in the TestCases Inspector.</li>
 		 	</ul>
-		 	</p><p align="center"><img src="images/Requirement_list.gif" border="0" alt="A list of Web Service Requirements"></img></p></div><div class="subsection"><a name="Requirements_Inspectors"></a><h3>Requirements Inspectors</h3><p>
-
+		 	</p>
+		 	<p align="center"><img src="images/Requirement_list.gif" border="0" alt="A list of Web Service Requirements"/></p>
+		 	
+		 </subsection>
+		 	 
+		 <subsection name="Requirements Inspectors">
+		 	<p>
 		 	There are three Requirements Inspectors:
 		 	<ul>
 		 	<li><b>TestCases</b> This is the functionality for connecting a Requirement to a TestCase in soapUI. You can double click any TestCase and run it.</li>
 		 	<li><b>Links</b> Link to useful references or actual Requirements in a Project management system.</li>
 		 	<li><b>Description</b>Long description of the TestCase.</li>
-
 		 	</ul>
-		 	</p><p align="center"><img src="images/TestCases_list.gif" border="0" alt="Test Case integration with Web Service Requirements"></img>
-            
-      				</a> </p></div><p><hr size="1"></hr><a href="wss.html"> Next: WS-Security</a></p></div><div id="footer"><div class="xright">© 2005-2008, eviware.com</div><div class="clear"><hr></hr></div></div></div></div></body></html>
+		 	</p>
+
+		 </subsection>
+		
+
+		 <p><hr size="1"/><a href="wss.html"> Next: WS-Security</a></p>
+		</section>
+    </body>
+</document>

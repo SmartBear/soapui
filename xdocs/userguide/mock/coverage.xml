@@ -5,13 +5,14 @@
     </properties>
     <body>
 		<section name="MockService Coverage">
+
 		<p>When enabling <a href="../coverage.html">Coverage for a MockService</a> , soapUI will 
 		continuously accumulate and analyze mock requests or responses and add their coverage to the Coverage Panel. This
 		collects the following 2 measurements:</p>
 		
-		   <table class="relatedInner">
+		   				<table class="relatedInner">
                             <tr>
-                                <td>
+                            	<td>
                                     <span class="relatedInfoHeader">Did you know?</span>
                                 </td>
                             </tr>
@@ -36,9 +37,7 @@
                                 </td>
                             </tr>
                         </table>
-                    </td>
-                </tr>
-           </table>
+
 		
 		<ul>
 		<li>Client Coverage : how much of the WSDL contract that your client is actually submitting.</li>
@@ -49,6 +48,7 @@
 		actual exchanged messages are shown.</p>
  		<p align="center"><img src="images/coverage_1.gif" alt="Web Service Quality Assurance With Mock Coverage"/></p>
 		 <p><hr size="1"/>Next: <a href="operations.html">Mock Operations</a></p>
+
 		</section>
     </body>
 </document>
