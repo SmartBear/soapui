@@ -19,7 +19,6 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.settings.*;
 import com.eviware.soapui.support.ClasspathHacker;
-import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
 import com.eviware.soapui.support.types.StringList;
@@ -137,10 +136,18 @@ public class DefaultSoapUICore implements SoapUICore
 
 	protected Settings initSettings(String fileName)
 	{
-
+		File settingsFile = fileName.equals(new File(fileName).getAbsoluteFile()) ? new File(fileName) : null;
+		
 		try
 		{
-			File settingsFile = new File(new File(getRoot()), fileName);
+			if ( settingsFile == null  ) {
+				settingsFile = new File(new File(getRoot()), DEFAULT_SETTINGS_FILE);
+				if ( !settingsFile.exists() ) {
+					settingsFile = new File( new File( System.getProperty("user.home")), DEFAULT_SETTINGS_FILE);
+				}
+			} else {
+				settingsFile = new File(fileName);
+			}
 			if (!settingsFile.exists())
 			{
 				if (settingsDocument == null)
@@ -209,7 +216,7 @@ public class DefaultSoapUICore implements SoapUICore
 			settings = new XmlBeansSettingsImpl(null, null, settingsDocument.getSoapuiSettings());
 		}
 
-		this.settingsFile = fileName;
+		this.settingsFile = settingsFile.getAbsolutePath();
 
 		if (!settings.isSet(WsdlSettings.EXCLUDED_TYPES))
 		{
@@ -263,14 +270,10 @@ public class DefaultSoapUICore implements SoapUICore
 	 */
 	public void importSettings(File file) throws Exception
 	{
-		File toFile = null;
 		if (file != null)
 		{
 			log.info("Importing preferences from [" + file.getAbsolutePath() + "]");
-			toFile = new File(getRoot(), file.getName());
-			log.info("Copy preferences from [" + file.getAbsolutePath() + "] to [" + toFile.getAbsolutePath() + "]");
-			Tools.copyFile(file, toFile, true);
-			initSettings(file.getName());
+			initSettings(file.getAbsolutePath());
 		}
 	}
 
@@ -317,7 +320,12 @@ public class DefaultSoapUICore implements SoapUICore
 		if (settingsFile == null)
 			settingsFile = DEFAULT_SETTINGS_FILE;
 
-		File file = new File(new File(getRoot()), settingsFile);
+		// Save settings to root or user.home
+		File file = new File(new File(getRoot()), DEFAULT_SETTINGS_FILE);
+		if ( !file.canWrite() ) {
+			file = new File( new File( System.getProperty("user.home")), DEFAULT_SETTINGS_FILE);
+		}
+		
 
 		SoapuiSettingsDocumentConfig settingsDocument = (SoapuiSettingsDocumentConfig) this.settingsDocument.copy();
 		String password = settings.getString(SecuritySettings.SHADOW_PASSWORD, null);
