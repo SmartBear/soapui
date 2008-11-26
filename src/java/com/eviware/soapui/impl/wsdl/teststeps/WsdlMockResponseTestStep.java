@@ -15,10 +15,7 @@ package com.eviware.soapui.impl.wsdl.teststeps;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.*;
 import com.eviware.soapui.impl.wsdl.*;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
+import com.eviware.soapui.impl.wsdl.mock.*;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.QueryMatchMockOperationDispatcher;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResultMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
@@ -72,6 +69,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
    private AssertionsSupport assertionsSupport;
    private InternalMockRunListener mockRunListener;
+   private StartStepMockRunListener startStepMockRunListener;
 
    private final InternalProjectListener projectListener = new InternalProjectListener();
    private final InternalInterfaceListener interfaceListener = new InternalInterfaceListener();
@@ -118,14 +116,22 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       initProperties();
 
       testCase.addTestRunListener( testRunListener );
-
-      startTestStep = testCase.getTestStepByName( getStartStep() );
-      if( startTestStep != null )
-      {
-         startTestStep.addPropertyChangeListener( this );
-      }
-
       testCase.addPropertyChangeListener( this );
+   }
+
+   @Override
+   public void afterLoad()
+   {
+      super.afterLoad();
+
+      if( mockResponseStepConfig.isSetStartStep() )
+      {
+         startTestStep = getTestCase().getTestStepByName( mockResponseStepConfig.getStartStep() );
+         if( startTestStep != null )
+         {
+            startTestStep.addPropertyChangeListener( this );
+         }
+      }
    }
 
    private void initProperties()
@@ -199,7 +205,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
          if( mockResponseStepConfig.getHandleResponse() )
             mockService.setDispatchResponseMessages( true );
-         
+
          mockResponse = mockOperation.addNewMockResponse( "MockResponse", false );
          mockResponse.setConfig( mockResponseConfig );
 
@@ -332,7 +338,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
          }
 
          result.stopTimer();
-         if( mockRunner != null && mockRunner.isRunning())
+         if( mockRunner != null && mockRunner.isRunning() )
             mockRunner.stop();
 
          AssertedWsdlMockResultMessageExchange messageExchange = new AssertedWsdlMockResultMessageExchange( mockRunListener
@@ -437,6 +443,12 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
       if( testMockResponse != null )
       {
+         if( startStepMockRunListener != null )
+         {
+            mockService.removeMockRunListener( startStepMockRunListener );
+            startStepMockRunListener = null;
+         }
+
          if( testMockResponse != mockResponse )
          {
             mockOperation.removeMockResponse( testMockResponse );
@@ -980,6 +992,9 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
       getTestCase().removeTestRunListener( testRunListener );
       getTestCase().removePropertyChangeListener( this );
+
+      if( startTestStep != null )
+         startTestStep.removePropertyChangeListener( this );
    }
 
    public AssertableType getAssertableType()
@@ -1242,9 +1257,34 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       {
          if( runContext.getCurrentStep() == startTestStep && testMockResponse == null )
          {
-            initTestMockResponse( runContext );
-            mockRunListener.setWaiting( true );
+            if( startTestStep instanceof WsdlMockResponseTestStep && ( (WsdlMockResponseTestStep) startTestStep ).getMockResponse().getMockResult() == null )
+            {
+               startStepMockRunListener = new StartStepMockRunListener( runContext );
+               mockService.addMockRunListener( startStepMockRunListener );
+            }
+            else
+            {
+               initTestMockResponse( runContext );
+               mockRunListener.setWaiting( true );
+            }
          }
+      }
+   }
+
+   private class StartStepMockRunListener extends MockRunListenerAdapter
+   {
+      private final TestRunContext runContext;
+
+      public StartStepMockRunListener( TestRunContext runContext )
+      {
+         this.runContext = runContext;
+      }
+
+      @Override
+      public void onMockResult( MockResult result )
+      {
+         initTestMockResponse( runContext );
+         mockRunListener.setWaiting( true );
       }
    }
 
