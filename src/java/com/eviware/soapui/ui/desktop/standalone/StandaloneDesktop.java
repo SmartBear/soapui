@@ -43,6 +43,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.PanelBuilder;
 import com.eviware.soapui.model.util.PanelBuilderRegistry;
 import com.eviware.soapui.model.workspace.Workspace;
+import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
@@ -226,8 +227,12 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 		frame.setToolTipText( desktopPanel.getDescription() );
 		frame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
 		frame.setLocation(xOffset * (openFrameCount % 10), yOffset * (openFrameCount % 10));
-		frame.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
-				.createEmptyBorder(2, 2, 2, 2)));
+		if( !SoapUI.getSettings().getBoolean( UISettings.NATIVE_LAF ))
+		{
+		   // This creates an empty frame on Mac OS X native L&F.
+   		frame.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
+   				.createEmptyBorder(2, 2, 2, 2)));
+		}
 		openFrameCount++;
 		return frame;
 	}
