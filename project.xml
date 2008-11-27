@@ -41,7 +41,7 @@
       <report>maven-news-plugin</report>
       <report>jutils-lint4j-plugin</report>  -->
     </reports>
-    <currentVersion>2.5</currentVersion>
+    <currentVersion>2.5.1</currentVersion>
     <package>com.eviware.soapui</package>
     <url>http://www.soapui.org</url>
     <versions>
