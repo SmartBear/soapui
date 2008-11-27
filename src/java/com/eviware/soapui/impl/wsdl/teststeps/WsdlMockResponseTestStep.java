@@ -247,6 +247,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
          mockOperation.setDefaultResponse( mockResponse.getName() );
 
          mockResponse.addPropertyChangeListener( this );
+         mockResponse.getWsaConfig().addPropertyChangeListener( this );
       }
    }
 
@@ -270,7 +271,9 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       }
 
       if( mockRunListener != null )
+      {
          mockRunListener.cancel();
+      }
 
       return true;
    }
@@ -817,8 +820,9 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
    public void propertyChange( PropertyChangeEvent evt )
    {
-      if( evt.getSource() == mockResponse )
+      if( evt.getSource() == mockResponse || evt.getSource() == mockResponse.getWsaConfig() )
       {
+         mockResponse.beforeSave();
          mockResponseConfig.set( mockResponse.getConfig() );
          notifyPropertyChanged( evt.getPropertyName(), evt.getOldValue(), evt.getNewValue() );
       }
@@ -1014,10 +1018,15 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       assertionsSupport.release();
 
       if( mockResponse != null )
+      {
          mockResponse.removePropertyChangeListener( this );
+         mockResponse.getWsaConfig().removePropertyChangeListener( this );
+      }
 
       if( mockService != null )
+      {
          mockService.release();
+      }
 
       if( iface != null )
       {
@@ -1029,7 +1038,9 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       getTestCase().removePropertyChangeListener( this );
 
       if( startTestStep != null )
+      {
          startTestStep.removePropertyChangeListener( this );
+      }
    }
 
    public AssertableType getAssertableType()

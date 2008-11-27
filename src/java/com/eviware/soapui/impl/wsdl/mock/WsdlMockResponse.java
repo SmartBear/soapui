@@ -138,6 +138,14 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
    {
       super.setConfig( config );
 
+      if( wsaConfig != null )
+      {
+         if( config.isSetWsaConfig() )
+            wsaConfig.setConfig( config.getWsaConfig() );
+         else
+            wsaConfig = null;
+      }
+
       if( scriptEnginePool != null )
          scriptEnginePool.setScript( getScript() );
    }
