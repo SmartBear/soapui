@@ -87,6 +87,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
@@ -482,6 +483,9 @@ public class SoapUI
 
    public static SoapUI startSoapUI( String[] args, String title, String splashImage, SwingSoapUICore core ) throws Exception
    {
+      System.setProperty("apple.laf.useScreenMenuBar", "true");
+      System.setProperty("com.apple.mrj.application.apple.menu.about.name", "SoapUI");
+
       frame = new JFrame( title );
 
       SoapUISplash splash = new SoapUISplash( splashImage, frame );
