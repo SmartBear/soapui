@@ -538,6 +538,67 @@ urchinTracker();
         <jsl:applyTemplates trim="false"/>
       </jsl:template>
 
+
+   <jsl:template match="didYouKnow">
+        <j:set var="_readMore"><x:expr select="@readMore"/></j:set>
+       <table class="relatedInfo" cellspacing="0" cellpadding="0">
+            <tr class="a">
+                <td width="75" style="padding-top:5px">
+                    <img src="/images/where_do_i_start.jpg" alt="Start soapUI Testing"
+                         longdesc="http://www.soapui.org"></img>
+                </td>
+                <td>
+                    <table class="relatedInner">
+                        <tr>
+                            <td>
+                                <span class="relatedInfoHeader"><x:expr select="@title"/></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div>
+                                   <jsl:applyTemplates select="*"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr align="right">
+                            <td>
+                                <span class="relatedLinks">
+
+                                     <j:if test="${!empty(_readMore)}">
+
+                                           <x:element name="a">
+     <x:attribute name="title">ReadMore</x:attribute>
+     <x:attribute name="href"><x:expr select="@readMore"/></x:attribute>
+     <x:attribute name="onclick">javascript:urchinTracker:('<x:expr select="@readMoreUrchin"/>');</x:attribute>
+                                        <img src="/images/readmore_100.png" alt="Read More"
+                                             width="101" height="20" longdesc="Read more here"/>
+                                   </x:element>
+
+                                   &amp;nbsp;| &amp;nbsp;
+
+                                       </j:if>
+
+                                     <x:element name="a">
+     <x:attribute name="title">try soapUI Pro</x:attribute>
+
+                                        <x:attribute name="href"><x:expr select="@tryIt"/></x:attribute>
+     <x:attribute name="onclick">javascript:urchinTracker:('<x:expr select="@tryItUrchin"/>');</x:attribute>
+                                        <img src="/images/try_pro_100.png" alt="Try soapUI Pro to soap test"
+                                             width="101" height="20" longdesc="http://www.eviware.com"/>
+                                    </x:element>
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+         
+       
+
+   </jsl:template>
+
 <!-- remove the space at the end of parsed "a" anchors and fix local hrefs -->
   <jsl:template match="a" trim="true">
     <x:element name="a" trim="true">
