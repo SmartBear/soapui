@@ -902,8 +902,22 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
                  responseHeaders, key ), "value" ) );
       }
 
+      addWsaPropertyExpansions(result, getWsaConfig(), this);
       return result.toArray( new PropertyExpansion[result.size()] );
    }
+
+	public void addWsaPropertyExpansions(List<PropertyExpansion> result, WsaConfig wsaConfig, ModelItem modelItem) {
+	      result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem,wsaConfig, "action"));
+	      result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem,wsaConfig, "from"));
+	      result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem,wsaConfig, "to"));
+	      result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem,wsaConfig, "replyTo"));
+	      result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem,wsaConfig, "replyToRefParams"));
+	      result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem,wsaConfig, "faultTo"));
+	      result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem,wsaConfig, "faultToRefParams"));
+	      result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem,wsaConfig, "relatesTo"));
+	      result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem,wsaConfig, "relationshipType"));
+	      result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem,wsaConfig, "messageID"));
+	}
 
    public class ResponseHeaderHolder
    {
