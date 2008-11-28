@@ -10,35 +10,6 @@
 		continuously accumulate and analyze mock requests or responses and add their coverage to the Coverage Panel. This
 		collects the following 2 measurements:</p>
 		
-		   				<table class="relatedInner">
-                            <tr>
-                            	<td>
-                                    <span class="relatedInfoHeader">Did you know?</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div>
-                                        <p>soapUI pro  Mock Service Coverage gives you graphical information for you to easily monitor and </p>
-                                        <p>analyze. This will give you an edge and make you more productive when carrying out you web services. </p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr align="right">
-                                <td>
-                                    <span class="relatedLinks">
-                                        <a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/"
-                                           title="try soapUI Pro"
-                                           onclick="javascript:urchinTracker:('/downloadTrial');">
-                                            <img src="images/try_pro_100.png" alt="Try soapUI pro to soap test"
-                                                 width="101" height="20" longdesc="http://www.eviware.com"/>
-                                        </a>
-                                    </span>
-                                </td>
-                            </tr>
-                        </table>
-
-		
 		<ul>
 		<li>Client Coverage : how much of the WSDL contract that your client is actually submitting.</li>
 		<li>Mock Coverage : how much of the contract your Mock is actually mocking</li>
