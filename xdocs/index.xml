@@ -303,26 +303,27 @@ Eviware's CTO Ole Matzura and CSO Niclas Reimertz will both make a guest appeara
                             written:
                         </p>
                         <ul>
-                           <li>
+                        
+                            <li>
+                                <a target="_new"
+                                  href="http://groovyinsoapui.wordpress.com/2008/11/27/using-script-assertion-in-soap-ui/">Using Script Assertion...
+                                </a>
+                                from Devakara´s Blog
+                            </li>
+                            
+                            <li>
+                                <a target="_new"
+                                   href="http://ladysign-apps.com/blog/archives/175">soapUI 2.5 goes RESTfull...
+                                   </a>
+                            </li>
+                        
+                            <li>
                                 <a target="_new" 
-                                   href="maven xdoc
-                                   http://solutionslog.blogspot.com/2008/11/gui-tool-for-working-with-web-services.html">GUI Tool for working...</a>
-                                from Arge´s Blog
+                                   href="http://solutionslog.blogspot.com/2008/11/gui-tool-for-working-with-web-services.html">GUI Tool for working...
+                                   </a>
+                                from Devakara´s Blog
                             </li>
-                            <li>
-                                <a target="_new"
-                                   href="http://sleeplessinslc.blogspot.com/2008/10/soapui-rest-support.html">soapUI
-                                    Rest Support...
-                                </a>
-                                from Sanjay´s Blog
-                            </li>
-                            <li>
-                                <a target="_new"
-                                   href="http://dimosthenes.blogspot.com/2008/10/testing-web-services.html">Testing Web
-                                    Services...
-                                </a>
-                                from Dimosthenes
-                            </li>
+
                         </ul>
                         <p>
                             <b>
