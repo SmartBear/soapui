@@ -208,7 +208,7 @@ Request and a second Property Transfer Step to move the sessionID we got in the 
    <soapenv:Header/>
    <soapenv:Body>
       <sam:logout>
-         <sessionid>3169505463059118</sessionid>
+         <sessionid>9566789304322459</sessionid>
       </sam:logout>
    </soapenv:Body>
 </soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Simple Login and Logout Property Expansion" searchProperties="true" id="42f75612-b163-4f61-9a8c-5c8ded5c6097" maxResults="0"><con:description>TestCase: Simple Login and Logout
@@ -345,7 +345,7 @@ These tests are for login alone.</con:description><con:settings/><con:testStep t
       </sam:login>
    </soapenv:Body>
 </soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>declare namespace sam='http://www.example.org/sample/';
-//detail/sam:loginFault</path><content>The login credentials are invalid</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request: To short User/Pass Combo (9)"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>SampleServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request: To short User/Pass Combo (9)" wssPasswordType=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
+//detail/sam:loginFault</path><content>The login credentials are invalid</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request: To short User/Pass Combo (9)"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>SampleServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request: To short User/Pass Combo (9)" wssPasswordType=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockSampleServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
    <soapenv:Header/>
    <soapenv:Body>
       <sam:login>
@@ -665,7 +665,7 @@ return "Ok Response"
          <sessionid>${sessionid}</sessionid>
       </sam:loginResponse>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:responseContent></con:response><con:response name="Invalid Login Fault" encoding="UTF-8"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Invalid Login Fault" encoding="UTF-8"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.example.org/sample/">
   <soapenv:Body>
     <soapenv:Fault>
       <faultcode>Client</faultcode>
@@ -685,7 +685,7 @@ return "Ok Response"
       </detail>
     </soapenv:Fault>
   </soapenv:Body>
-</soapenv:Envelope>]]></con:responseContent></con:response><con:dispatchConfig/></con:mockOperation><con:mockOperation name="logout" interface="SampleServiceSoapBinding" operation="logout"><con:settings/><con:dispatchPath>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:dispatchConfig/></con:mockOperation><con:mockOperation name="logout" interface="SampleServiceSoapBinding" operation="logout"><con:settings/><con:dispatchPath>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
 def holder = groovyUtils.getXmlHolder( mockRequest.requestContent )
 
 def sessionid = holder.getNodeValue( "//sessionid" )
@@ -707,7 +707,7 @@ return "Ok Response"
          <sessioninfo>${sessioninfo}</sessioninfo>
       </sam:logoutResponse>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:responseContent></con:response><con:response name="Invalid Session Id Fault" encoding="UTF-8"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Invalid Session Id Fault" encoding="UTF-8"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
   <soapenv:Body>
     <soapenv:Fault>
       <faultcode>Client</faultcode>

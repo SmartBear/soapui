@@ -22,7 +22,7 @@
                             <tr>
                                 <td>
                                     <div>
-                                        <p>soapUI pro allows you to input into a form making it easier and faster with its user friendly layout.</p>
+                                        <p>soapUI Pro allows you to view your requests as forms. No more XML! This makes your work easier and faster.</p>
                                         <p>The different editors in soapUI pro will improve your productivity and make Web Service Testing fun.</p>
                                     </div>
                                 </td>
@@ -32,7 +32,7 @@
                                     <span class="relatedLinks">
                                         <a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/"
                                            title="try soapUI Pro"
-                                           onclick="javascript:urchinTracker:('/downloadTrial');">
+                                           onclick="javascript:urchinTracker:('/downloadPro');">
                                             <img src="images/try_pro_100.png" alt="Try soapUI pro to soap test"
                                                  width="101" height="20" longdesc="http://www.eviware.com"/>
                                         </a>
