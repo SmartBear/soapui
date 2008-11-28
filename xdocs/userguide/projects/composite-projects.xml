@@ -23,7 +23,7 @@
 				<table class="relatedInfo" cellspacing="0" cellpadding="0">
 	<tr class="a">
     	<td width="75" style="padding-top:5px">
-        	<img src="../images/where_do_i_start.jpg" alt="Start soapUI Testing" longdesc="http://www.soapui.org"></img>
+        	<img src="../../images/where_do_i_start.jpg" alt="Start soapUI Testing" longdesc="http://www.soapui.org"></img>
         </td>
         <td>
             <table class="relatedInner">
