@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Groovy scripting Web Service Tests</title>
+    </properties>
+    <body>
+		<section name="soapUI Scripting">
+		<p>soapUI provides extensive options for scripting, using Groovy as its scripting language 
+		(you can get more information, tutorials, etc on the <a target="_new" href="http://groovy.codehaus.org">Groovy Web Site</a>).
+		Scripts can be used	at the following places in soapUI:</p>
+		<ul>
+		<li>As part of a TestCase with the <a href="functional/groovystep.html">Groovy Script TestStep</a>, allowing your tests to perform virtually 
+		any desired	functionality</li>
+		<li>Before and after running a <a href="functional/testcases.html">TestCase</a> or 
+		<a href="functional/testsuites.html">TestSuite</a> for initializing and cleaning up before or after running your tests.</li>
+		<li>When starting/stopping a <a href="mock/services.html">MockService</a> to initializing or cleaning-up MockService state</li>
+		<li>When opening/closing a <a href="projects/index.html">Project</a>, for initializing or cleaning-up Project related settings</li>
+		<li>As a dynamic <a href="functional/datasourcestep.html#Groovy_DataSource">DataSource</a> or 
+		<a href="functional/datasinkstep.html#Groovy_DataSink">DataSink</a> with the corresponding DataSource/DataSink test steps</li>
+		<li>For providing dynamic <a href="mock/operations.html#Groovy_Script_Dispatching">MockOperation dispatching</a>.</li>
+		<li>For creating <a href="mock/responses.html#Response_Scripts">dynamic MockResponse content</a></li>
+		<li>For creating arbitrary assertions with the 
+		<a href="functional/response-assertions.html#Script_Assertion">Script Assertion</a></li>
+		<li>To extend soapUI itself (see <a href="../architecture/extensions.html">Extending soapUI</a>), for adding arbitrary functionality to the soapUI core</li>
+		</ul>
+		<p>All scripts have access to a number of situation-specific variables, always including a <code>log</code> object
+		for logging to the Groovy Log and a <code>context</code> object for perform context-specific PropertyExpansions or
+		property handling if applicable. A context-specific variable is always available for directly accessing the soapUI 
+		object model.</p>
+		<subsection name="Script Editors">
+		<p>Script editors are generally available as inspectors at the bottom of the corresponding objects editor, each having
+		a run button, a drop-down edit menu (same as the right-click popup), an information label, and a help button;</p>
+		<p align="center"><img src="images/script_editor.gif" alt="script editor"/></p>
+		<p>The popup-menu (as shown above) contains standard edit-related actions and will in soapUI Pro contain a 
+		"Get Data" menu option that expands to show all properties available within the current scope. Selecting a property
+		(or the option to create a new one) will eventually create a script to get the variable, for example</p>
+		<source>def test = context.expand( '${#Project#test}' )</source>
+		<p>Which gets the Project-level "test" property.</p>
+		<p>It is also possible to drag a property from the navigator tree when it is in 
+		<a href="overview.html#Property-Mode">Property Mode</a> into the script; if 
+		the dragged property is "within scope" (i.e. can be accessed via property expansion), the corresponding access script
+		will be created at the caret location</p>
+		</subsection>
+	    <subsection name="Groovy Script Library">
+		<p>soapUI Pro adds the possibility to have a central library of Groovy Classes that can be accessed from
+		any script within soapUI, which can be useful for centralizing common tasks and functionality and for 
+		creating <a href="../architecture/extensions.html">soapUI extensions</a>. Use as follows;</p>
+		<ul>
+		<li>Specify which folder to use in the soapUI Pro Preferences tab (default is &lt;working directory&gt;/scripts). 
+		soapUI Pro will check this folder for files with the "Groovy" extension and compile these upon startup. The folder
+		is then checked	periodically (every 5 seconds) for updates and new or existing scripts are compiled and re-compiled if 
+		necessary.</li>
+		<li>Scripts should be placed in folders named after their containing package, ie a script in the package 
+		<code>soapui.demo</code> should be in a <code>soapui/demo</code> folder under the specified scripts folder.</li>
+		<li>The compiled classes are added to the parent class loader of all Groovy scripts, you can access them as standard
+		java classes.</li>
+		</ul>
+		<p>Remember that the script files must be valid classes, not just arbitrary scripts... see example below.</p>
+</subsection>
+		<subsection name="Example">
+		<p>The following example is included with the soapUI Pro distribution, it consists of the following Greet.groovy file 
+		that is located in the default scripts folder:</p>
+		<source>package soapui.demo
+
+class Greet 
+{
+   def name
+   def log
+   
+   Greet(who, log) 
+   { 
+      name = who;
+      this.log = log 
+   }
+ 
+   def salute() { log.info "Hello $name" }
+ 
+   def static salute( who, log ) { log.info "Hello again $who!" }
+}</source>
+
+		<p>If we create a Groovy Script Step in a TestCase, we can use the above class with the following:</p>
+		<source>def greet = new soapui.demo.Greet( "Ole", log )
+greet.salute()</source>
+        <p>Running this from within the Groovy Editor will show (roughly) the following in the Groovy Editors log:</p>
+        <source>Wed Jun 27 01:36:14 CEST 2007:INFO:Hello Ole</source>
+        <p>We can also call the static salute method:</p>
+        <source>soapui.demo.Greet.salute( "Ole", log )</source>
+        <p>Which will produce the following output:</p>
+        <source>Wed Jun 27 01:36:14 CEST 2007:INFO:Hello again Ole!</source>
+        
+        <p>If we now modify the above Greet.groovy file and change the first salute method to include an exclamation mark
+        at the end, soapUI will pick up the modified file (once it has been saved), which is seen in the soapUI log:</p>
+        <source>Wed Jun 27 01:39:20 CEST 2007:INFO:C:\workspace\soapui-pro\scripts\Greet.groovy is new or has changed, reloading...</source>
+        <p>And now when we rerun our initial script we get;</p>
+        <source>Wed Jun 27 01:40:16 CEST 2007:INFO:Hello Ole!</source>
+		</subsection>
+
+        <subsection name="Dynamic Properties">
+            <p>soapUI 2.5 introduces the possibility to write groovy scripts directly inside a PropertyExpansion;
+            prefix the content with a '=' and the remaining content up to the closing brace will be evaluated as a
+            script and its result will be inserted. For example</p>
+            <source>${=(int)(Math.random()*1000)}</source>
+            <p>will be replaced with a random number between 0 and 999 every time it is evaluated.</p>
+            <p>Of course this applies to all places where property-expansions can be used; requests, property values,
+            file names, endpoints, etc.. etc..</p>
+            <p>Depending on the context of the expansion, relevant variables will be available for accessing the
+            soapUI object model. For example in a request message or parameter, the containing Request object will
+            be available through the "request" variable, allowing you to (for example) insert its name in your request</p>
+            <source>...
+&lt;name&gt;${=request.name}&lt;/name&gt;
+...</source>
+
+            <p>or if you want the name of the project just navigate up the soapUI ModelItem tree:</p>
+            <source>...
+&lt;name&gt;${=request.operation.interface.project.name}&lt;/name&gt;
+...</source>
+
+        <p>The following variables are (almost) always available in these scripts:</p>
+            <ul>
+                <li>log : a log4j Logger logging to the groovy log window</li>
+                <li>modelItem : the current modelItem (for example a Request, MockResponse, etc..).</li>
+                <li>context : the current run-context (for example when running a TestCase och MockService)</li>
+            </ul>
+            <p>For soapUI Pro users, the global script library is available just as in any other script,
+            allowing you to call into objects/methods defined there for reuse.</p>
+        </subsection>
+        <subsection name="Code Templates">
+         <p>soapUI Pro 2.5 adds rudimentary support for configurable code templates which will be activated when
+         typing the correspondig template ID and pressing Ctrl-Space in an editor. Templates can be added/changed
+         in the Preferences\Code Templates page, the following templates are available by default:</p>
+         <ul>
+            <li><code>grut</code> - <code>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )\n|</code></li>
+             <li><code>xhre</code> - <code>def holder = groovyUtils.getXmlHolder( "|#Response" )</code></li>
+         </ul>
+         <p>The '|' designates the position of the caret after inserting the template.</p>
+
+            
+        </subsection>
+
+		 <p><hr size="1"/>Next: <a href="properties.html">Using Properties in soapUI</a></p>
+		</section>
+    </body>
+</document>
