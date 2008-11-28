@@ -6,13 +6,44 @@
     <body>
     <section name="soapUI Releases">
                 
+       
+       
+       
+   <subsection name="Groovy in soapUI ">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/solutions.gif" alt="Groovy in soapui"/>
+	    		</column>
+	    		<column align="left">
+	    			<p>The post starts: "Script assertion in SOAP UI helps the developer to..."<br/>
+	    			<a href="http://groovyinsoapui.wordpress.com/2008/11/27/using-script-assertion-in-soap-ui/">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+		</subsection>    
+        
+        <subsection name="soapUI 2.5 goes RESTfull">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/sleepless.gif" alt="soapUI goes RESTfull"/>
+	    		</column>
+	    		<column align="left">
+	    			<p>The post starts: "Some time ago, I had blogged lamenting the absense of a nice..." <br/>
+	    			<a href="http://ladysign-apps.com/blog/archives/175">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	</subsection>     
+       
+       
+       
+       
+       
        <subsection name="Solutions Blog">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/solutions.gif" alt="soapUI Rest Support"/>
 	    		</column>
 	    		<column align="left">
-	    			<p>The post starts: "soapUI is a free and open source desktop application" <br/>
+	    			<p>The post starts: "Eviware released a new version of soapUI. You can..." <br/>
 	    			<a href="http://solutionslog.blogspot.com/2008/11/gui-tool-for-working-with-web-services.html">[Read more]</a></p>
 	    		</column>
 	    	</columns>
