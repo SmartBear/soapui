@@ -15,9 +15,10 @@
 			 [<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=571745">Download</a>]</td>
 			 <td align="center" bgcolor="white"><span class="webstartheader">soapUI 2.0.2 Pro</span><div>
 				<a href="http://www.eviware.com/jnlp/2.0.1/soapui-pro.jnlp" urchinTracker="/jnlp/soapui/2_0_2-pro"><img class="webstart" src="images/webstart_orange.png" border="0" alt="soapUI Pro WebStart"/></a></div>
-			 [<a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" title="try soapUI Pro" onclick="javascript:urchinTracker:('/downloadTrial');">
-              <img src="images/try_pro_100.png" alt="Try soapUI pro to soap test" width="101" height="20" longdesc="http://www.eviware.com"/>
-      				</a> ]
+			  
+			 [<a target="_new" href="http://www.eviware.com" class="externalLink" title="External Link">Trial/Buy</a>]
+
+              
 			 [<a target="_new" href="http://www.eviware.com/content/view/42/36/">soapUI FAQ</a>]</td>
 	
 			</tr>
