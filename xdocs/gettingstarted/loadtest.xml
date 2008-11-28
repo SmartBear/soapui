@@ -67,12 +67,12 @@
 		button. Select the "Step Maximum" assertion and configure it as follows in the displayed dialog:</p>
 	
 	<columns><column><div>
-		The Step Maximum assertion checks that a steps max-time does not exceed a specified value. </div>
+		The Step Maximum assertion checks that a steps max time does not exceed a specified value. </div>
 		<ul>
-			<li><b>Name</b> - the name of the assertion, leave it it for now</li>
+			<li><b>Name</b> - the name of the assertion, leave it for now</li>
 			<li><b>Minimum Requests</b> - the minimum number of runs that must have been executed before applying this
 			assertion. We will allow the first 10 TestCase runs to pass.</li>
-			<li><b>Max Time</b> - the maximum allowed step time, we set it to 500 m.</li>
+			<li><b>Max Time</b> - the maximum allowed step time, we set it to 500 ms.</li>
 			<li><b>Max Errors</b> - the maximum number of errors to allow before canceling the LoadTest, we will allow
 			5 "breaches" of the 500ms limit before the LoadTest should fail</li>
 			<li><b>TestStep</b> - the target step to assert. We select the request in our TestCase</li>
