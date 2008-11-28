@@ -60,7 +60,8 @@
 		<p>The MockResponse Step is the basically the same as the standard <a href="../mock/responses.html">soapUI Pro MockResponse editor</a>
 		 with the addition of the same assertions/log tabs in the bottom as the TestRequest editor and a number
 		of context-sensitive wizards in the Outline Editor for creating assertions and Property Transfers.</p>
-		<p>At the top there is a toolbar that adds input fields for the path and port to listen on during execution, the 
+		
+        <p>At the top there is a toolbar that adds input fields for the path and port to listen on during execution, the 
 		rest is the same as the MockResponse editor. These are grayed out during execution of the MockResponse step.
 		Assertions can be added/managed just as for the 
 		<a href="testrequests.html#The_Assertions_Tab">TestRequest editor</a>, the list of available assertions is the 
