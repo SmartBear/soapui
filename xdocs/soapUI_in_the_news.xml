@@ -12,7 +12,7 @@
    <subsection name="Groovy in soapUI ">
 	    	<columns>
 	    		<column width="200">
-	    		<img src="images/inthenews/solutions.gif" alt="Groovy in soapui"/>
+	    		<img src="images/inthenews/groovyin.gif" alt="Groovy in soapui"/>
 	    		</column>
 	    		<column align="left">
 	    			<p>The post starts: "Script assertion in SOAP UI helps the developer to..."<br/>
@@ -24,7 +24,7 @@
         <subsection name="soapUI 2.5 goes RESTfull">
 	    	<columns>
 	    		<column width="200">
-	    		<img src="images/inthenews/sleepless.gif" alt="soapUI goes RESTfull"/>
+	    		<img src="images/inthenews/ladysign.gif" alt="soapUI goes RESTfull"/>
 	    		</column>
 	    		<column align="left">
 	    			<p>The post starts: "Some time ago, I had blogged lamenting the absense of a nice..." <br/>
