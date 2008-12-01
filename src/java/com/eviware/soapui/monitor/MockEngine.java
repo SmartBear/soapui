@@ -658,6 +658,9 @@ public class MockEngine
    {
       public void log( Request request, Response response )
       {
+         if( !SoapUI.getSettings().getBoolean( HttpSettings.ENABLE_MOCK_WIRE_LOG ))
+            return;
+
          if( SoapUI.getLogMonitor() == null || SoapUI.getLogMonitor().getLogArea( "jetty log" ) == null ||
                  SoapUI.getLogMonitor().getLogArea( "jetty log" ).getLoggers() == null )
             return;
@@ -684,7 +687,7 @@ public class MockEngine
          }
          catch( Throwable e )
          {
-            log.error( "Failed to log request: " + e );
+            SoapUI.logError( e );
          }
 
          try
@@ -707,31 +710,8 @@ public class MockEngine
          }
          catch( Throwable e )
          {
-            log.error( "Failed to log response: " + e );
+            SoapUI.logError( e );
          }
-
-//         log.info( ">> " + request.getMethod() + " " + request.getUri().toString() + " " + request.getProtocol());
-//         for( Enumeration headerNames = request.getHeaderNames(); headerNames.hasMoreElements(); )
-//         {
-//            String header = String.valueOf( headerNames.nextElement() );
-//            for( Enumeration headers = request.getHeaders( header ); headers.hasMoreElements(); )
-//            {
-//               log.info( ">> " + header + " : " + headers.nextElement());
-//            }
-//         }
-//
-//         log.info( "<< " + request.getProtocol() + " " + response.getStatus() );
-//         HttpFields httpFields = response.getHttpFields();
-//         for( Enumeration headerNames = httpFields.getFieldNames(); headerNames.hasMoreElements(); )
-//         {
-//            String header = String.valueOf( headerNames.nextElement() );
-//            for( Enumeration headers = httpFields.getValues( header ); headers.hasMoreElements(); )
-//            {
-//               log.info( "<< " + header + " : " + headers.nextElement());
-//            }
-//         }
-
-//         log.info( request.getSt)
       }
    }
 }

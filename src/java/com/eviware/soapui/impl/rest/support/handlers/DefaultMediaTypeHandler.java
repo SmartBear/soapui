@@ -30,6 +30,8 @@ public class DefaultMediaTypeHandler implements MediaTypeHandler
       String content = response.getContentAsString();
       if( XmlUtils.seemsToBeXml( content ) )
          return content;
+      else if( content == null )
+         content = "";
 
       String result = "<data contentType=\"" + response.getContentType() + "\" contentLength=\"" +
                response.getContentLength() + "\">";

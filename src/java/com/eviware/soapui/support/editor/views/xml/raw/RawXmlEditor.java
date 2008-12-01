@@ -40,7 +40,7 @@ public abstract class RawXmlEditor<T extends XmlDocument> extends AbstractXmlEdi
 	@Override
 	public void setXml( String xml )
 	{
-		textArea.setText( xml == null ? "" : getContent() );
+		textArea.setText( getContent() );
 		textArea.setCaretPosition( 0 );
 	}
 

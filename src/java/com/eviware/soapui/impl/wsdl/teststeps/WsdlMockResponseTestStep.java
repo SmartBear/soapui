@@ -12,30 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
-import com.eviware.soapui.config.MockResponseConfig;
-import com.eviware.soapui.config.MockResponseStepConfig;
-import com.eviware.soapui.config.MockServiceConfig;
-import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
+import com.eviware.soapui.config.*;
+import com.eviware.soapui.impl.wsdl.*;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
@@ -59,25 +38,9 @@ import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
-import com.eviware.soapui.model.support.DefaultTestStepProperty;
-import com.eviware.soapui.model.support.InterfaceListenerAdapter;
-import com.eviware.soapui.model.support.MockRunListenerAdapter;
-import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.model.support.ProjectListenerAdapter;
-import com.eviware.soapui.model.support.TestRunListenerAdapter;
-import com.eviware.soapui.model.support.TestStepBeanProperty;
-import com.eviware.soapui.model.testsuite.Assertable;
-import com.eviware.soapui.model.testsuite.AssertedXPath;
+import com.eviware.soapui.model.support.*;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.AssertionError;
-import com.eviware.soapui.model.testsuite.AssertionsListener;
-import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.OperationTestStep;
-import com.eviware.soapui.model.testsuite.RequestAssertedMessageExchange;
-import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
-import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.resolver.ChangeOperationResolver;
@@ -86,6 +49,12 @@ import com.eviware.soapui.support.resolver.RemoveTestStepResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
 import com.eviware.soapui.support.types.StringToStringMap;
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.*;
 
 public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties implements OperationTestStep,
         PropertyChangeListener, Assertable, PropertyExpansionContainer
@@ -325,6 +294,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       else
       {
          testMockResponse = mockResponse;
+         testMockResponse.setMockResult( null );
       }
    }
 
@@ -361,12 +331,12 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
       try
       {
+         result.startTimer();
+
          if( !mockRunListener.hasResult() )
          {
             if( testMockResponse == null )
                initTestMockResponse( context );
-
-            result.startTimer();
 
             long timeout = getTimeout();
             synchronized( mockRunListener )
@@ -520,15 +490,16 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
             // save
             this.setResult( (WsdlMockResult) result );
 
-            // stop runner -> NO, we can't stop, mockengine is still writing response.. 
+            // stop runner -> NO, we can't stop, mockengine is still writing response..
             //  mockRunner.stop();
 
-            if( waiting )
+            testMockResponse.setMockResult( null );
+
+            waiting = false;
+            System.out.println( "Got mockrequest to [" + getName() + "]");
+            synchronized( this )
             {
-               synchronized( this )
-               {
-                  notifyAll();
-               }
+               notifyAll();
             }
          }
       }
@@ -822,8 +793,12 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
    {
       if( evt.getSource() == mockResponse || evt.getSource() == mockResponse.getWsaConfig() )
       {
-         mockResponse.beforeSave();
-         mockResponseConfig.set( mockResponse.getConfig() );
+         if( !evt.getPropertyName().equals( WsdlMockResponse.ICON_PROPERTY ) )
+         {
+            mockResponse.beforeSave();
+            mockResponseConfig.set( mockResponse.getConfig() );
+         }
+
          notifyPropertyChanged( evt.getPropertyName(), evt.getOldValue(), evt.getNewValue() );
       }
       else if( evt.getSource() == getTestCase() && evt.getPropertyName().equals( "testSteps" ) &&
@@ -1163,11 +1138,11 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
          result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, new ResponseHeaderHolder( responseHeaders,
                  key ), "value" ) );
       }
-      mockResponse.addWsaPropertyExpansions(result, mockResponse.getWsaConfig(), this);
+      mockResponse.addWsaPropertyExpansions( result, mockResponse.getWsaConfig(), this );
 
       return result.toArray( new PropertyExpansion[result.size()] );
    }
-   
+
    public class ResponseHeaderHolder
    {
       private final StringToStringMap valueMap;
@@ -1330,6 +1305,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       @Override
       public void onMockResult( MockResult result )
       {
+         System.out.println( "Starting to listen for request to " + getName() );
          initTestMockResponse( runContext );
          mockRunListener.setWaiting( true );
       }

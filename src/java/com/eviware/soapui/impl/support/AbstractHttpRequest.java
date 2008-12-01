@@ -552,7 +552,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
             getConfig().addNewRequest();
 
          CompressedStringSupport.setString( getConfig().getRequest(), requestContent );
-         requestContent = null;
+//         requestContent = null;
       }
    }
 

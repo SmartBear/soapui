@@ -872,7 +872,6 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
       if( responseContent != null )
       {
          CompressedStringSupport.setString( getConfig().getResponseContent(), responseContent );
-         responseContent = null;
       }
    }
 
