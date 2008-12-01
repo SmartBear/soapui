@@ -330,6 +330,7 @@ public class WsaValidator
 			NodeList existingResponseRefs = XmlUtils.getChildElementsByTagName(header, refPropName);
 			if (existingResponseRefs != null
 					&& existingResponseRefs.getLength() > 0) {
+				//TODO check if tag is well formed: wsa:IsReferenceParameter
 				continue;
 			} else {
 				cumulativeErrorMsg.append("Response does not have request ReferenceProperty "+ refPropName + ". ");
@@ -436,8 +437,7 @@ public class WsaValidator
 			} else if (!StringUtils.isNullOrEmpty(expectedValue)) {
 				if (!actionValue.equals(expectedValue)) {
 					cumulativeErrorMsg
-							.append(propertyName + " property should be "
-									+ expectedValue + ". ");
+							.append(propertyName + " expecting [" + expectedValue + "], actual value is [" + actionValue + "]." );
 				}
 			}
 		}
