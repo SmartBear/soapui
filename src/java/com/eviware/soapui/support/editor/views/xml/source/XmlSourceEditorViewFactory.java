@@ -225,7 +225,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		protected void buildPopup(JPopupMenu inputPopup, JXEditTextArea editArea )
 		{
 			super.buildPopup(inputPopup, editArea );
-			inputPopup.insert( new JSeparator(), 2 );
+//			inputPopup.insert( new JSeparator(), 2 );
 		}
 	}
 	
