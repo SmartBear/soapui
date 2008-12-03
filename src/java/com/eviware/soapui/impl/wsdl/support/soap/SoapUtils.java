@@ -261,7 +261,21 @@ public class SoapUtils
 							int j = 0;
 							while( ( j < parts.size() ) && ( !item.getNodeName().equals( parts.get( j ).getName() ) ) )
 							{
-								j++;
+                        Part part = parts.get( j );
+                        if( part.getElementName() != null )
+                        {
+                           QName qn = part.getElementName();
+                           if( item.getLocalName().equals( qn.getLocalPart()) &&
+                               item.getNamespaceURI().equals( qn.getNamespaceURI() ))
+                              break;
+                        }
+                        else
+                        {
+                           if( item.getNodeName().equals( parts.get( j ).getName()))
+                              break;
+                        }
+
+                        j++;
 							}
 
 							if( j == parts.size() )
@@ -356,6 +370,20 @@ public class SoapUtils
 							int j = 0;
 							while( ( j < parts.size() ) && ( !item.getNodeName().equals( parts.get( j ).getName() ) ) )
 							{
+                        Part part = parts.get( j );
+                        if( part.getElementName() != null )
+                        {
+                           QName qn = part.getElementName();
+                           if( item.getLocalName().equals( qn.getLocalPart()) &&
+                               item.getNamespaceURI().equals( qn.getNamespaceURI() ))
+                              break;
+                        }
+                        else
+                        {
+                           if( item.getNodeName().equals( parts.get( j ).getName()))
+                              break;
+                        }
+
 								j++;
 							}
 
