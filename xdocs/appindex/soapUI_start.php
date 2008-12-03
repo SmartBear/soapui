@@ -10,6 +10,7 @@
 <link href="startpage.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 <!--
+.style1 {font-size: small}
 -->
 </style>
 <script type="text/javascript">_uacct = "UA-92447-1";
@@ -30,7 +31,7 @@ urchinTracker();</script>
     <td height="720" width="150" valign="top" cellpadding="0">
     <table height="720" width="150" border="0" cellpadding="5">
       <tr>
-        <td height="240" valign="top"><h2>The benefits of going Pro</h2>
+        <td height="200" valign="top"><h2>The benefits of going Pro</h2>
           <p align="left">As you might know, soapUI is also available in a Pro version.<br />
             <br />
             Let us explain the <em><strong>advantages</strong></em> and show you the <em><strong>extra features </strong></em>you get.<br />
@@ -38,43 +39,50 @@ urchinTracker();</script>
             <a onclick="javascript:urchinTracker('/appindexsoapUIReadMorePro')" href="http://www.eviware.com/new.htm" title="Read more about soapUI 2.1" target="_blank">Read more here</a></p>          </td>
       </tr>
       <tr>
-        <td height="240" class="greyBox" valign="top"><h2>eviware I turn</h2>
+        <td height="240" class="greyBox" valign="top"><h2>First soapUI Pro Training Workshop - London, UK</h2>
+          <p class="style1">To support its 180,000 strong user community, Eviware has partnered with Think88, Skills Matter and PushToTest to offer   	an intensive</strong></em><em><strong><a href="http://skillsmatter.com/course/soa-rest/soapui-pro-training" target="_blank" title="soapUI Pro   Training workshop" onclick="javascript:urchinTracker('/skillmatterProTraining');">3-day SoapUI Pro training workshop </a></p>
+          <p><span class="style1">As part of our community, you will be entitled to <em><strong>20% discount</strong></em> off the course fees, quoting promotion code <em><strong>SM1247-622237-6BW</strong></em> when <a href="http://skillsmatter.com/course/soa-rest/soapui-pro-training" target="_blank" title="Register Now!">registering for this course</a> </span>. <br />
+            <br />
+            <a onclick="javascript:urchinTracker('/appindexsoapUITraining')" href="http://www.eviware.com/content/view/131/16/" title="Read more about soapUI training" target="_blank">More  Information</a></p></td>
+      </tr>
+      <tr>
+        <td height="240"  class="greyBox" valign="top"><h2>eviware I turn</h2>
           <p>Ole Matzura presents in his blog Tips &amp; Tricks for your soapUI usage.</p>
           <p>Learn all the latest ins and outs of the Tool at eviware.com.<br />
               <br />
-            <a onclick="javascript:urchinTracker('/appindexsoapUIProOleBlog')"href="http://www.eviware.com/blogs/oleblog" title="Read it Here">Read it Here</a></p></td>
-      </tr>
-      <tr>
-        <td height="240"  class="greyBox" valign="top"><h2>soapUI Training</h2>
-          <p>Our partner PushToTest deliver soapUI training world wide this autumn.<br />
-              <br />
-              <strong>Places:</strong><br />
-              - Silicon Valley<br />
-              - London<br />
-              - New York<br />
-            <br />
-            <a onclick="javascript:urchinTracker('/appindexsoapUITraining')" href="http://www.eviware.com/content/view/121/16/" title="Read more about soapUI training" target="_blank">Training Information</a></p></td>
+            <a onclick="javascript:urchinTracker('/appindexsoapUIProOleBlog')"href="http://www.eviware.com/blogs/oleblog" title="Read it Here">Read it Here</a></p>          <p>&nbsp;</p></td>
       </tr>
     </table>      <p>&nbsp;</p>    </td>
     <td height="720" width="400" valign="top" class="greyBox"><h1><img src="Images/soapui-logo.png" alt="soapUI" width="50" height="50" /> Latest News</h1>
-      <p class="center_p"><em><strong>September 26 2008- SoapUI 2.5: The REST Release beta 1 is out.</strong></em></p>
+      <p class="center_p"><em><strong>November 19 2008- SoapUI 2.5: The REST Release  is out.</strong></em></p>
       <p class="center_p">soapUI is now <strong>restUI</strong> as well! <br />
         <br />
       In the new release you get full support for REST Testing. We would like to think it's a gem! soapUI REST Testing makes it possible for you to do complete RestTests with or without a WADL.<br />
       <p align="center" class="center_p"><a onclick="javascript:urchinTracker('/appindexsoapUIReadMore')" href="http://www.eviware.com/new.htm" title="Read more about soapUI 2.1" target="_blank">Read more here</a> | <a onclick="javascript:urchinTracker('/appindexsoapUIDownloadNewest')" href="http://www.sourceforge.net" title="download soapUI" target="_blank">Download it here</a>|</p>
       <hr/>
-	  
-<h1>Latest news and posts:</h1>
-<p>
-- October 7 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=52">REST Resources, Parameters, etc</a><br/>
-- October 5 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=264">Using XPath Assertions in soapUI</a><br/>
-- October 4 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=217">Send email from your groovy scripts</a><br/>
-- October 1 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=17">Improving soapUI Memory Usage</a><br/>
-- October 1 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=126">Building and running from SVN</a><br/>
-- October 1 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=110">Deploying MockServices as Servlets</a><br/>
-- September 30 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=74">Test your feeds with soapUI</a><br/>
-- September 30 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=11">Testing REST Services with soapUI</a><br/>
-</p>
+	<h1><img src="Images/Pro-Icon-50.png" alt="soapUI" width="50" height="50" />Meet the three Ghosts of Web Services</h1>
+<ul  class="evilist">
+  <li>Look at the Ghost of Web Services Past and remember the dark ages of uninteroperability and how they continue to haunt us to this day.</li>
+    <li>Meet the Ghost of Web Services Present and look at the horrors of Standards Creep.</li>
+    <li>See the Ghost of Web Services Future where Business Critical ad hoc REST services rule supreme with no reigns to define them.</li>
+    </ul>
+
+ <p> <em><strong>Entrance is free. </strong></em> </p>
+ <p> <a href="http://skillsmatter.com/event/soa-rest/the-tale-of-web-services-a-christmas-carol" target="_blank" title="Register here!"><strong>Read more  and register here! </strong></a> </p>
+ <hr/>  
+<h1><img src="Images/soapui-logo.png" alt="soapUI" width="50" height="50" /> Latest blogposts:</h1>
+
+<ul>
+  <li>October 7 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=52">REST Resources, Parameters, etc</a></li>
+    <li>October 5 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=264">Using XPath Assertions in soapUI</a></li>
+      <li>October 4 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=217">Send email from your groovy scripts</a></li>
+      <li>October 1 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=17">Improving soapUI Memory Usage</a></li>
+      <li>October 1 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=126">Building and running from SVN</a></li>
+      <li>October 1 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=110">Deploying MockServices as Servlets</a></li>
+      <li>September 30 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=74">Test your feeds with soapUI</a></li>
+      <li>September 30 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=11">Testing REST Services with soapUI</a></li>
+</ul>
+
       <hr/>
       <h1><img src="Images/soapui-logo.png" alt="soapUI" width="50" height="50" /> Vote soapUI!</h1>
       <p class="center_p"><strong>Vote for soapUI in SOA World Magazine Reader's Choice Vote.</strong></p>
