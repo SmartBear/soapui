@@ -605,7 +605,9 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
          }
          else
          {
-            return new QName( definition.getTargetNamespace(), part.getName() );
+//            return new QName( definition.getTargetNamespace(), part.getName() );
+            // changed to comply with soapmessagebuilder -> behaviour is not really defined
+            return new QName( part.getName() );
          }
       }
    }
@@ -660,7 +662,8 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
          }
          else
          {
-            return new QName( definition.getTargetNamespace(), part.getName() );
+           // return new QName( definition.getTargetNamespace(), part.getName() );
+            return new QName( part.getName() );
          }
       }
    }
