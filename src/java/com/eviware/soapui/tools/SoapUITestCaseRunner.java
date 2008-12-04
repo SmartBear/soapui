@@ -143,7 +143,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
       {
          setGlobalProperties( cmd.getOptionValues( "G" ) );
       }
-
+      
+      setIgnoreError(cmd.hasOption("I"));
       setEnableUI( cmd.hasOption( "i" ) );
       setPrintReport( cmd.hasOption( "r" ) );
       setExportAll( cmd.hasOption( "a" ) );
@@ -183,6 +184,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
       options.addOption( "v", true, "Sets password for soapui-settings.xml file" );
       options.addOption( "D", true, "Sets system property with name=value");
       options.addOption( "G", true, "Sets global property with name=value" );
+      options.addOption( "I", false, "Do not stop if error occurs, ignore them"); 
       
       return options;
    }
