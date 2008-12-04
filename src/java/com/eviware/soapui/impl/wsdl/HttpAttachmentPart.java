@@ -36,6 +36,7 @@ public final class HttpAttachmentPart extends MessagePart.AttachmentPart
 	{
 		anonymous = true;
 		name = ANONYMOUS_NAME;
+      type = Attachment.AttachmentType.UNKNOWN;
 	}
 	
 	public HttpAttachmentPart(String name, List<String> types )
