@@ -65,7 +65,7 @@ return sdf.format( new Date())</source>
 		
 		<subsection name="Number">
 		
-		<p align="center"><img src="images/datagen_number.gif" alt="The soapUI Pro DataGen Number property configuration"/></p>
+		<p align="center"><img src="images/datagen-number.png" alt="The soapUI Pro DataGen Number property configuration"/></p>
 		
 		<p>This property type is used for generating lists of numbers; the start/end/step values specify the range of the sequence and 
 		its increment (or decrement). The pattern specifies how to format the property value using the java 
@@ -78,13 +78,13 @@ return sdf.format( new Date())</source>
 		<p>So for example if you want to generate random USD currencies between 100 and 1000 USD with a 50 USD increment you could specify 
 		the following:</p>
 		
-		<p align="center"><img src="images/datagen_number_example.gif" alt="The soapUI Pro DataGen Number example"/></p>
+		<p align="center"><img src="images/datagen-number-example.png" alt="The soapUI Pro DataGen Number example"/></p>
 		</subsection> 
 		
 		<subsection name="List">
 		<p>Another straight-forward configuration:</p>
 		
-		<p align="center"><img src="images/datagen_list.gif" alt="The soapUI Pro DataGen List property configuration"/></p>
+		<p align="center"><img src="images/datagen-list.png" alt="The soapUI Pro DataGen List property configuration"/></p>
 		
 		<p>The above screen shot configures a list of weekdays and sets the property to select a random line each time 
 		it is read, if the Randomize check box is not checked, the values are used sequentially.</p>

@@ -90,12 +90,19 @@
 		<p>The following settings are available:</p>
 		<ul>
 		<li><b>Shared</b> - controls whether this DataSource should be shared between threads in a LoadTest (see below)</li>
+        <li><b>Restart Shared</b> - controls if a shared DataSource can be restarted during a LoadTest</li>
+        <li><b>Restart On Run</b> - controls if the DataSource should be restarted every time the TestStep is executed</li>
 		<li><b>Preload</b> - preloads the data before running the TestCase</li>
 		<li><b>Fail on Empty</b> - fails the DataSource step if no data is available. This option can be used
 		to do data-driven assertions, if for example the SQL query of a JDBC datasource contains a WHERE clause that
 		uses property expansion to select data corresponding a previously returned response</li>
+        <li><b>Goto Loop on Empty</b> - if the DataSource is empty on initial execution, this option will
+        transfer TestCase execution to the first matching DataSourceLoop step after the DataSource in the TestCase</li>
 		<li><b>Start Row</b> - the first row in the configured DataSource to use (first row = 0)</li>
 		<li><b>Last Row</b> - the last row in the configured DataSource to use</li>
+        <li><b>Trim</b> - trims values retreived from the DataSource</li>
+        <li><b>Entitize</b> - entitize values retreived from the DataSource</li>
+        <li><b>Expand</b> - expand property-expansions in DataSource values</li>
 		</ul>
 		
 		</subsection>
@@ -110,6 +117,7 @@
 		DataSource step or when a DataSourceLoop Step checks for the next available row.</p>
 		<p>The "Shared" option in the toolbar control if the DataSource should be shared between threads during a LoadTest, meaning
 		that all running threads will read from the same source of data instead of each creating their own.</p>
+        <p>Read More in our blog about <a href="http://www.eviware.com/blogs/oleblog/?p=194" target="_new">DataDriven Load Testing</a>.</p>    
 		</subsection>
 
 		<subsection name="JDBC DataSource">
