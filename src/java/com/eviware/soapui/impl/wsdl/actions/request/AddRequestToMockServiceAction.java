@@ -57,7 +57,7 @@ public class AddRequestToMockServiceAction extends AbstractSoapUIAction<WsdlRequ
 		if( mockOperation != null )
 			mockService = mockOperation.getMockService();
 		
-		WsdlProject project = ( WsdlProject ) request.getOperation().getInterface().getProject();
+		WsdlProject project = request.getOperation().getInterface().getProject();
 		
 		while( mockService == null )
 		{
@@ -66,11 +66,11 @@ public class AddRequestToMockServiceAction extends AbstractSoapUIAction<WsdlRequ
 				String[] mockServices = ModelSupport.getNames( project.getMockServiceList(), new String[] {CREATE_MOCKSUITE_OPTION});
 	
 				// prompt
-				String option = ( String ) UISupport.prompt( "Select MockService for MockOperation", title, mockServices );
+				String option = UISupport.prompt( "Select MockService for MockOperation", title, mockServices );
 				if( option == null )
 					return;
 				
-				mockService = ( WsdlMockService ) project.getMockServiceByName( option );
+				mockService = project.getMockServiceByName( option );
 			}
 	
 			// create new mocksuite?
@@ -80,7 +80,7 @@ public class AddRequestToMockServiceAction extends AbstractSoapUIAction<WsdlRequ
 				if( mockServiceName == null || mockServiceName.trim().length() == 0 )
 					return;
 				
-				mockService = ( WsdlMockService ) project.addNewMockService( mockServiceName );
+				mockService = project.addNewMockService( mockServiceName );
 			}
 			
 			mockOperation = mockService.getMockOperation( request.getOperation() );
@@ -100,14 +100,14 @@ public class AddRequestToMockServiceAction extends AbstractSoapUIAction<WsdlRequ
 		
 		// add mockoperation
 		if( mockOperation == null )
-			mockOperation = ( WsdlMockOperation ) mockService.addNewMockOperation( request.getOperation() );
+			mockOperation =  mockService.addNewMockOperation( request.getOperation() );
 		
 		WsdlMockResponse mockResponse = mockOperation.addNewMockResponse( "Response " + (1+mockOperation.getMockResponseCount()), false );
 		
 		// add expected response if available
 		if( request != null && request.getResponse() != null )
 		{
-			WsdlResponse response = ( WsdlResponse ) request.getResponse();
+			WsdlResponse response =  request.getResponse();
 			mockResponse.setResponseContent( response.getContentAsString() );
 			
 			Attachment[] attachments = response.getAttachments();

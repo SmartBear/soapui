@@ -19,6 +19,8 @@ import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
+import com.eviware.soapui.impl.WsdlInterfaceFactory;
+import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -41,10 +43,11 @@ public class AddNewMockOperationAction extends AbstractSoapUIAction<WsdlMockServ
    public void perform( WsdlMockService mockService, Object param )
 	{
       List<OperationWrapper> operations = new ArrayList<OperationWrapper>();
-      
-      for( int c = 0; c < mockService.getProject().getInterfaceCount(); c++ )
+
+      List<AbstractInterface> interfaces = mockService.getProject().getInterfaces( WsdlInterfaceFactory.WSDL_TYPE );
+
+      for( Interface iface : interfaces )
       {
-      	Interface iface = mockService.getProject().getInterfaceAt( c );
       	for( int i = 0; i < iface.getOperationCount(); i++ )
       	{
       		if( !mockService.hasMockOperation( iface.getOperationAt( i  )))
