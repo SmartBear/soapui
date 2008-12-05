@@ -20,6 +20,7 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
@@ -121,12 +122,12 @@ public class MockResponseScriptInspector extends AbstractXmlInspector
 
                for( String name : values.keySet() )
                {
-                  msg += name + " : " + values.get( name ) + "<br>";
+                  msg += XmlUtils.entitize( name ) + " : " + XmlUtils.entitize( values.get( name )) + "<br>";
                }
 
                msg += "</body></html>";
 
-               UISupport.showInfoMessage( msg );
+               UISupport.showExtendedInfo( "Result", "Result of MockResponse Script", msg, new Dimension( 500, 400 ) );
             }
          }
          catch( Throwable e1 )
