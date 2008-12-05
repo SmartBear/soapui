@@ -5,7 +5,7 @@ set JAVA=%SOAPUI_HOME%..\jre\bin\java
 
 rem init classpath
 
-@SOAPUICLASSPATH@
+set CLASSPATH=%SOAPUI_HOME%soapui-pro-2.5.jar;%SOAPUI_HOME%..\lib\*;
 
 rem JVM parameters, modify as appropriate
 set JAVA_OPTS=-Xms128m -Xmx256m -Dsoapui.properties=soapui.properties "-Dsoapui.home=%SOAPUI_HOME%\"
@@ -19,5 +19,5 @@ if "%SOAPUI_HOME%\" == "" goto START
 
 rem ********* run soapui ***********
 
-"%JAVA%" %JAVA_OPTS% -cp "%CLASSPATH%" com.eviware.soapui.SoapUI %*
+"%JAVA%" %JAVA_OPTS% com.eviware.soapui.SoapUI %*
 
