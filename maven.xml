@@ -211,6 +211,8 @@
             </j:if>
         </j:forEach>
 
+		<j:set var="soapuiclasspathcompact" trim="false" value="set CLASSPATH=%SOAPUI_HOME%${pom.artifactId}-${pom.currentVersion}.jar;%SOAPUI_HOME%..\lib\*;"/>
+
         <ant:copy todir="target/dist">
             <ant:fileset dir="src/dist">
                 <ant:include name="**/*.sh"/>
@@ -220,6 +222,7 @@
                 <ant:filter token="SOAPUICLASSPATH" value="${soapuiclasspath}"/>
                 <ant:filter token="SOAPUISHCLASSPATH" value="${soapuishclasspath}"/>
                 <ant:filter token="SOAPUIVERSION" value="${pom.currentVersion}"/>
+                <ant:filter token="SOAPUICLASSPATHCOMPACT" value="${soapuiclasspathcompact}"/>
             </ant:filterset>
         </ant:copy>
 
@@ -400,6 +403,8 @@
             </j:if>
         </j:forEach>
 
+		<j:set var="soapuiclasspathcompact" trim="false" value="set CLASSPATH=%SOAPUI_HOME%${pom.artifactId}-${pom.currentVersion}.jar;%SOAPUI_HOME%..\lib\*;"/>
+		
         <ant:delete>
             <ant:fileset dir="target/standalone/bin" includes="*.sh"/>
         </ant:delete>
@@ -414,6 +419,7 @@
             <ant:filterset>
                 <ant:filter token="SOAPUICLASSPATH" value="${soapuiclasspath}"/>
                 <ant:filter token="SOAPUIVERSION" value="${pom.currentVersion}"/>
+                <ant:filter token="SOAPUICLASSPATHCOMPACT" value="${soapuiclasspathcompact}"/>
             </ant:filterset>
         </ant:copy>
 
