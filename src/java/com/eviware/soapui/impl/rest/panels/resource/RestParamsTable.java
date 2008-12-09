@@ -175,15 +175,9 @@ public class RestParamsTable extends JPanel
 
       public void actionPerformed( ActionEvent e )
       {
-         String name = UISupport.prompt( "Specify unique parameter name", "Add Parameter", "" );
+         String name = UISupport.prompt( "Specify parameter name", "Add Parameter", "" );
          if( StringUtils.hasContent( name ) )
          {
-            if( params.hasProperty( name ) )
-            {
-               UISupport.showErrorMessage( "Param name [" + name + "] already exists.." );
-               return;
-            }
-
             params.addProperty( name );
             final int row = params.getPropertyNames().length - 1;
             SwingUtilities.invokeLater( new Runnable()
