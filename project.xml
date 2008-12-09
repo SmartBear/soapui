@@ -636,7 +636,7 @@
         <dependency>
             <groupId>jtidy</groupId>
             <artifactId>jtidy</artifactId>
-            <version>20000804r7-noxml</version>
+            <version>8.0-SNAPSHOT</version>
             <type>jar</type>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
