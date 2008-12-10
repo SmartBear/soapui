@@ -179,7 +179,7 @@ public class SoapMonitor extends JPanel
       logTable.setColumnControlVisible( true );
       logTable.setModel( tableModel );
       logTable.setHorizontalScrollEnabled( true );
-      logTable.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION );
+      logTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 
       operationFilter = new PatternFilter( ".*", 0, 4 );
       operationFilter.setAcceptNull( true );
@@ -806,7 +806,7 @@ public class SoapMonitor extends JPanel
 
       public int getColumnCount()
       {
-         return 8;
+         return 9;
       }
 
       public WsdlMonitorMessageExchange getMessageExchangeAt( int tableRow )
@@ -819,21 +819,23 @@ public class SoapMonitor extends JPanel
       {
          switch( column )
          {
-            case 0:
-               return "Time";
+         	case 0:
+         		return "Count.";
             case 1:
-               return "Request Host";
+               return "Time";
             case 2:
-               return "Target Host";
+               return "Request Host";
             case 3:
-               return "Interface";
+               return "Target Host";
             case 4:
-               return "Operation";
+               return "Interface";
             case 5:
-               return "Time Taken";
+               return "Operation";
             case 6:
-               return "Req Sz";
+               return "Time Taken";
             case 7:
+               return "Req Sz";
+            case 8:
                return "Resp Sz";
          }
 
@@ -856,21 +858,23 @@ public class SoapMonitor extends JPanel
 
          switch( columnIndex )
          {
-            case 0:
-               return sdf.format( new Date( exchange.getTimestamp() ) );
+         	case 0:
+         		return rowIndex;
             case 1:
-               return exchange.getRequestHost();
+               return sdf.format( new Date( exchange.getTimestamp() ) );
             case 2:
-               return exchange.getTargetUrl().getHost();
+               return exchange.getRequestHost();
             case 3:
-               return exchange.getOperation() == null ? "- unknown -" : exchange.getOperation().getInterface().getName();
+               return exchange.getTargetUrl().getHost();
             case 4:
-               return exchange.getOperation() == null ? "- unknown -" : exchange.getOperation().getName();
+               return exchange.getOperation() == null ? "- unknown -" : exchange.getOperation().getInterface().getName();
             case 5:
-               return String.valueOf( exchange.getTimeTaken() );
+               return exchange.getOperation() == null ? "- unknown -" : exchange.getOperation().getName();
             case 6:
-               return String.valueOf( exchange.getRequestContentLength() );
+               return String.valueOf( exchange.getTimeTaken() );
             case 7:
+               return String.valueOf( exchange.getRequestContentLength() );
+            case 8:
                return String.valueOf( exchange.getResponseContentLength() );
          }
 
@@ -1027,10 +1031,6 @@ public class SoapMonitor extends JPanel
                  project.getWssContainer().getIncomingWssByName( incomingResponseWss ) );
 
          tableModel.addMessageExchange( messageExchange );
-         if( logTable.getSelectedRow() == logTable.getRowCount() - 2 )
-         {
-            logTable.setRowSelectionInterval( logTable.getRowCount() - 1, logTable.getRowCount() - 1 );
-         }
 
          fireOnMessageExchange( messageExchange );
       }
