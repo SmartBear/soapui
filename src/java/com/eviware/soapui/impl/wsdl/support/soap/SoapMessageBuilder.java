@@ -29,10 +29,7 @@ import org.apache.xmlbeans.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import javax.wsdl.BindingOperation;
-import javax.wsdl.BindingOutput;
-import javax.wsdl.Message;
-import javax.wsdl.Part;
+import javax.wsdl.*;
 import javax.xml.namespace.QName;
 import java.io.StringWriter;
 import java.util.List;
@@ -199,9 +196,13 @@ public class SoapMessageBuilder implements MessageBuilder
       
       if(alwaysBuildHeaders)
       {
-         List extensibilityElements = bindingOperation.getBindingInput().getExtensibilityElements();
-         List<SoapHeader> soapHeaders = WsdlUtils.getSoapHeaders( extensibilityElements);
-         addHeaders( soapHeaders, cursor, xmlGenerator);
+         BindingInput bindingInput = bindingOperation.getBindingInput();
+         if( bindingInput != null )
+         {
+            List extensibilityElements = bindingInput.getExtensibilityElements();
+            List<SoapHeader> soapHeaders = WsdlUtils.getSoapHeaders( extensibilityElements);
+            addHeaders( soapHeaders, cursor, xmlGenerator);
+         }
       }
       cursor.dispose();
 
@@ -404,8 +405,8 @@ public class SoapMessageBuilder implements MessageBuilder
    private void buildRpcResponse(BindingOperation bindingOperation, XmlCursor cursor, SampleXmlUtil xmlGenerator) throws Exception
    {
       // rpc requests use the operation name as root element
-   	String ns = WsdlUtils.getSoapBodyNamespace( bindingOperation.getBindingOutput()
-                .getExtensibilityElements() );
+      BindingOutput bindingOutput = bindingOperation.getBindingOutput();
+      String ns = bindingOutput == null ? null : WsdlUtils.getSoapBodyNamespace( bindingOutput.getExtensibilityElements() );
        
    	if( ns == null )
       {
@@ -530,9 +531,12 @@ public class SoapMessageBuilder implements MessageBuilder
          // bindingOutput will be null for one way operations,
          // but then we shouldn't be here in the first place???
          BindingOutput bindingOutput = bindingOperation.getBindingOutput();
-         List extensibilityElements = bindingOutput.getExtensibilityElements();
-         List<SoapHeader> soapHeaders = WsdlUtils.getSoapHeaders( extensibilityElements );
-         addHeaders(soapHeaders, cursor, xmlGenerator);
+         if( bindingOutput != null )
+         {
+            List extensibilityElements = bindingOutput.getExtensibilityElements();
+            List<SoapHeader> soapHeaders = WsdlUtils.getSoapHeaders( extensibilityElements );
+            addHeaders( soapHeaders, cursor, xmlGenerator );
+         }
       }
       cursor.dispose();
 

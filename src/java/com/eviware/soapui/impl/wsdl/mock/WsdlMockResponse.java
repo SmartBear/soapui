@@ -67,6 +67,7 @@ import javax.mail.internet.PreencodedMimeBodyPart;
 import javax.swing.*;
 import javax.wsdl.BindingOperation;
 import javax.wsdl.Message;
+import javax.wsdl.BindingOutput;
 import javax.servlet.http.HttpServletResponse;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayOutputStream;
@@ -406,8 +407,9 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
             return new MessagePart[0];
 
          // header parts
-         List<SoapHeader> headers = WsdlUtils.getSoapHeaders( bindingOperation.getBindingOutput()
-                 .getExtensibilityElements() );
+         BindingOutput bindingOutput = bindingOperation.getBindingOutput();
+         List<SoapHeader> headers = bindingOutput == null ? new ArrayList<SoapHeader>() :
+                 WsdlUtils.getSoapHeaders( bindingOutput.getExtensibilityElements() );
 
          for( int i = 0; i < headers.size(); i++ )
          {

@@ -509,7 +509,7 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
 
       if( bindingInput != null )
       {
-         MIMEMultipartRelated multipartInput = WsdlUtils.getExtensiblityElement( operation.getBindingInput()
+         MIMEMultipartRelated multipartInput = WsdlUtils.getExtensiblityElement( bindingInput
                  .getExtensibilityElements(), MIMEMultipartRelated.class );
 
          getConfig().setSendsAttachments( multipartInput != null );
@@ -567,7 +567,11 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
       BindingOperation bindingOperation = findBindingOperation( definition );
       if( WsdlUtils.isRpc( definition, bindingOperation ) )
       {
-         String ns = WsdlUtils.getSoapBodyNamespace( bindingOperation.getBindingInput().getExtensibilityElements() );
+         BindingInput bindingInput = bindingOperation.getBindingInput();
+         if( bindingInput == null )
+            return null;
+         
+         String ns = WsdlUtils.getSoapBodyNamespace( bindingInput.getExtensibilityElements() );
          if( ns == null )
          {
             ns = definition.getTargetNamespace();
@@ -624,7 +628,8 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
       BindingOperation bindingOperation = findBindingOperation( definition );
       if( WsdlUtils.isRpc( definition, bindingOperation ) )
       {
-         String ns = WsdlUtils.getSoapBodyNamespace( bindingOperation.getBindingOutput().getExtensibilityElements() );
+         BindingOutput bindingOutput = bindingOperation.getBindingOutput();
+         String ns = bindingOutput == null ? null : WsdlUtils.getSoapBodyNamespace( bindingOutput.getExtensibilityElements() );
          if( ns == null )
          {
             ns = definition.getTargetNamespace();
@@ -758,8 +763,11 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
             return new MessagePart[0];
 
          // header parts
-         List<SoapHeader> headers = WsdlUtils.getSoapHeaders( bindingOperation.getBindingInput()
-                 .getExtensibilityElements() );
+         BindingInput bindingInput = bindingOperation.getBindingInput();
+         if( bindingInput == null )
+            return new MessagePart[0];
+         
+         List<SoapHeader> headers = WsdlUtils.getSoapHeaders( bindingInput.getExtensibilityElements() );
 
          for( int i = 0; i < headers.size(); i++ )
          {
@@ -823,8 +831,11 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
             return new MessagePart[0];
 
          // header parts
-         List<SoapHeader> headers = WsdlUtils.getSoapHeaders( bindingOperation.getBindingOutput()
-                 .getExtensibilityElements() );
+         BindingOutput bindingOutput = bindingOperation.getBindingOutput();
+         if( bindingOutput == null )
+            return new MessagePart[0];
+
+         List<SoapHeader> headers = WsdlUtils.getSoapHeaders( bindingOutput.getExtensibilityElements() );
 
          for( int i = 0; i < headers.size(); i++ )
          {

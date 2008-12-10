@@ -460,7 +460,11 @@ public class WsdlUtils
 
 	public static MIMEContent[] getOutputMultipartContent(Part part, BindingOperation operation)
 	{
-		MIMEMultipartRelated multipartOutput = WsdlUtils.getExtensiblityElement(operation.getBindingOutput()
+      BindingOutput output = operation.getBindingOutput();
+      if( output == null )
+         return new MIMEContent[0];
+
+      MIMEMultipartRelated multipartOutput = WsdlUtils.getExtensiblityElement( output
 				.getExtensibilityElements(), MIMEMultipartRelated.class);
 
 		return getContentParts(part, multipartOutput);
@@ -468,7 +472,11 @@ public class WsdlUtils
 
 	public static MIMEContent[] getInputMultipartContent(Part part, BindingOperation operation)
 	{
-		MIMEMultipartRelated multipartInput = WsdlUtils.getExtensiblityElement(operation.getBindingInput()
+      BindingInput bindingInput = operation.getBindingInput();
+      if( bindingInput == null )
+         return new MIMEContent[0];
+      
+      MIMEMultipartRelated multipartInput = WsdlUtils.getExtensiblityElement( bindingInput
 				.getExtensibilityElements(), MIMEMultipartRelated.class);
 
 		return getContentParts(part, multipartInput);
@@ -1158,7 +1166,8 @@ public class WsdlUtils
 
 	public static boolean isHeaderOutputPart(Part part, Message message, BindingOperation bindingOperation)
 	{
-		List<SOAPHeader> headers = WsdlUtils.getExtensiblityElements(bindingOperation.getBindingOutput()
+      BindingOutput bindingOutput = bindingOperation.getBindingOutput();
+      List<SOAPHeader> headers = bindingOutput == null ? null : WsdlUtils.getExtensiblityElements( bindingOutput
 				.getExtensibilityElements(), SOAPHeader.class);
 
 		if (headers == null || headers.isEmpty())
