@@ -248,6 +248,13 @@ public class PathUtils
 					e.printStackTrace();
 				}
 			}
+
+         // different drives on windows? (can't relativize)
+         if( rootPath.toUpperCase().charAt( 0 ) != path.toUpperCase().charAt( 0 ) &&
+             rootPath.indexOf( ":\\" ) == 1 && path.indexOf( ":\\") == 1 )
+         {
+            return path;
+         }
 			
 			while( rootPath != null )
 			{
