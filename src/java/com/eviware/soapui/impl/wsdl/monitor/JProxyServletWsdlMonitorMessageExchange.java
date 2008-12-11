@@ -253,7 +253,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
       }
 
       return SoapUtils.findOperationForRequest( soapVersion, soapAction, XmlObject.Factory.parse( getRequestContent() ),
-              operations, true, false );
+              operations, true, false, getRequestAttachments() );
    }
 
    private void processRequestWss( IncomingWss incomingRequestWss ) throws IOException

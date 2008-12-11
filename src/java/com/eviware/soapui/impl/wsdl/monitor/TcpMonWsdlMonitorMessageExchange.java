@@ -364,7 +364,7 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
       }
 
       return SoapUtils.findOperationForRequest( soapVersion, soapAction,
-              XmlObject.Factory.parse( getRequestContent() ), operations, true, false );
+              XmlObject.Factory.parse( getRequestContent() ), operations, true, false, getRequestAttachments() );
    }
 
    public void setRequestHost( String requestHost )

@@ -254,7 +254,7 @@ public class WsdlMockRunner extends AbstractMockRunner
             {
                operation = SoapUtils.findOperationForRequest( soapVersion, soapAction, mockRequest
                        .getRequestXmlObject(), mockService.getMockedOperations(),
-                       mockService.isRequireSoapVersion(), mockService.isRequireSoapAction() );
+                       mockService.isRequireSoapVersion(), mockService.isRequireSoapAction(), mockRequest.getRequestAttachments() );
             }
             catch( Exception e )
             {
