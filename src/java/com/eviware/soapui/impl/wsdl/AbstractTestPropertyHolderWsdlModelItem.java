@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl;
 
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -73,7 +74,17 @@ public abstract class AbstractTestPropertyHolderWsdlModelItem<T extends ModelIte
 		return result.toString();
 	}
 
-	public TestProperty addProperty( String name )
+   public int addPropertiesFromFile( String propFile )
+   {
+      return propertyHolderSupport.addPropertiesFromFile( propFile );
+   }
+
+   public void saveProperties( Properties props )
+   {
+      propertyHolderSupport.saveTo( props );
+   }
+
+   public TestProperty addProperty( String name )
 	{
 		return propertyHolderSupport.addProperty( name );
 	}
