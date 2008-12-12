@@ -85,7 +85,7 @@ public abstract class BaseHttpResponse implements HttpResponse
    {
       try
       {
-         rawResponseData.write( httpMethod.getStatusLine().toString().getBytes() );
+         rawResponseData.write( String.valueOf( httpMethod.getStatusLine() ).getBytes() );
          rawResponseData.write( "\r\n".getBytes() );
          rawRequestData.write( ( method + " " + url.toString() + " " + version + "\r\n" ).getBytes() );
 
@@ -105,7 +105,7 @@ public abstract class BaseHttpResponse implements HttpResponse
             rawResponseData.write( header.toExternalForm().getBytes() );
          }
 
-         responseHeaders.put( "#status#", httpMethod.getStatusLine().toString() );
+         responseHeaders.put( "#status#", String.valueOf(httpMethod.getStatusLine()) );
 
          if( httpMethod.getRequestEntity() != null )
          {
