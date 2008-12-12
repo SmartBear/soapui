@@ -17,6 +17,7 @@ import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.BindingImporter;
+import com.eviware.soapui.impl.wsdl.support.policy.PolicyUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.Soap11HttpBindingImporter;
 import com.eviware.soapui.impl.wsdl.support.soap.Soap12HttpBindingImporter;
 import com.eviware.soapui.settings.WsdlSettings;
@@ -140,7 +141,7 @@ public class WsdlImporter
                      iface.setWsaVersion( WsdlUtils.getUsingAddressing( port ) );
                   if( iface.getWsaVersion().equals( WsaVersionTypeConfig.NONE.toString() ) )
                   {
-                     iface.processPolicy( WsdlUtils.getAttachedPolicy( port, wsdlContext.getDefinition() ) );
+                     iface.processPolicy( PolicyUtils.getAttachedPolicy( port, wsdlContext.getDefinition() ) );
                   }
 
                   result.add( iface );

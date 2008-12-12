@@ -22,6 +22,7 @@ import javax.wsdl.Definition;
 import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.support.BindingImporter;
+import com.eviware.soapui.impl.wsdl.support.policy.PolicyUtils;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 
 public abstract class AbstractSoapBindingImporter implements BindingImporter
@@ -40,7 +41,7 @@ public abstract class AbstractSoapBindingImporter implements BindingImporter
 	   	iface.setWsaVersion(WsdlUtils.getUsingAddressing(binding));
 	   	if (iface.getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString()))
 			{
-				iface.processPolicy(WsdlUtils.getAttachedPolicy(binding, def));
+				iface.processPolicy(PolicyUtils.getAttachedPolicy(binding, def));
 			}
 	}
 

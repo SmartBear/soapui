@@ -114,7 +114,6 @@ public class WsdlUtils
 	private final static Logger log = Logger.getLogger(WsdlUtils.class);
 	private static WSDLReader wsdlReader;
 	private final static String WSDL_NAMESPACE = "http://schemas.xmlsoap.org/wsdl/";
-	private final static String WSU_NAMESPACE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
 
 	public static <T extends ExtensibilityElement> T getExtensiblityElement(List<?> list, Class<T> clazz)
 	{
@@ -675,97 +674,6 @@ public class WsdlUtils
 
 		}
 		return version;
-	}
-
-	public static Policy getAttachedPolicy(ElementExtensible item, Definition def)
-	{
-
-		Policy rtnPolicy = null;
-		Element[] policyReferences = WsdlUtils.getExentsibilityElements(item, new QName(PolicyUtils.WS_POLICY_NAMESPACE,
-				"PolicyReference"));
-		if (policyReferences.length > 0)
-		{
-			String policyId = policyReferences[0].getAttribute("URI");
-			if (!StringUtils.isNullOrEmpty(policyId))
-			{
-				Element[] policies = WsdlUtils.getExentsibilityElements(def, new QName(PolicyUtils.WS_POLICY_NAMESPACE,
-						"Policy"));
-				Element policy = null;
-				for (int i = 0; i < policies.length; i++)
-				{
-					policy = policies[i];
-					String policyIdx = policy.getAttributeNS(WSU_NAMESPACE, "Id");
-					if (policyId.equals("#" + policyIdx))
-					{
-						rtnPolicy = getPolicy(policy);
-						continue;
-					}
-
-				}
-			}
-		}
-		else
-		{
-			// get policies of item itself
-			Element[] itemPolicies = WsdlUtils.getExentsibilityElements(item, new QName(PolicyUtils.WS_POLICY_NAMESPACE,
-					"Policy"));
-			if (itemPolicies.length > 0)
-			{
-				for (int i = 0; i < itemPolicies.length; i++)
-				{
-					Element policy = itemPolicies[i];
-					rtnPolicy = getPolicy(policy);
-
-				}
-			}
-		}
-		return rtnPolicy;
-	}
-
-	public static Policy getPolicy(Element policy)
-	{
-		// policy = PolicyUtils.normalize(policy);
-
-		// check if found reference is addressing policy
-		Element wsAddressing = XmlUtils.getFirstChildElementNS(policy, WsaUtils.WSAM_NAMESPACE, "Addressing");
-		Element addressingPolicy = null;
-		Policy newPolicy = PolicyDocument.Factory.newInstance().addNewPolicy();
-		Addressing newAddressing = null;
-		if (wsAddressing != null)
-		{
-			addressingPolicy = XmlUtils.getFirstChildElementNS(wsAddressing, PolicyUtils.WS_POLICY_NAMESPACE, "Policy");
-			if (addressingPolicy != null)
-			{
-				newAddressing = newPolicy.addNewAddressing();
-				String optional = wsAddressing.getAttributeNS(PolicyUtils.WS_POLICY_NAMESPACE, "Optional");
-				if (!StringUtils.isNullOrEmpty(optional) && optional.equals(OptionalType.TRUE.toString()))
-				{
-					newAddressing.setOptional(OptionalType.TRUE);
-				}
-				else
-				{
-					newAddressing.setOptional(OptionalType.FALSE);
-				}
-				Policy innerPolicy = newAddressing.addNewPolicy();
-				// check if policy has Anonymous
-				Element anonymousElm = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(WsaUtils.WSAM_NAMESPACE,
-						"AnonymousResponses"));
-				if (anonymousElm != null)
-				{
-					AnonymousResponses anr = innerPolicy.addNewAnonymousResponses();
-				}
-				else
-				{
-					Element nonAnonymousElement = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(
-							WsaUtils.WSAM_NAMESPACE, "NonAnonymousResponses"));
-					if (nonAnonymousElement != null)
-					{
-						innerPolicy.addNewNonAnonymousResponses();
-					}
-				}
-			}
-		}
-		return newPolicy;
 	}
 
 	private static String checkIfWsaPolicy(String version, Element policy)
