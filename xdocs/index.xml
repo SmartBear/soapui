@@ -98,69 +98,37 @@
                 </tr>
             </table>
 
-<subsection name="Meet the three Ghosts of Web Services  - in London, UK">
+<subsection name="Win a Moosepad!">
 	<p>
 		<em><strong>
-			Come listen to Ole Matzura of eviware in London 04 Dec 2008.
+			Put your mouse on a moose! Answer our survey and win a Moosepad! 
 		</strong></em>
 	</p>
 	
 	<p>
-		The theme: "The Tale of Web Services, A Christmas Carol."
-		<ul class="evilist">
-			<li>Look at the Ghost of Web Services Past and remember the dark ages of uninteroperability and how they continue to haunt us to this day.</li>
-			<li>Meet the Ghost of Web Services Present and look at the horrors of Standards Creep.</li>
-			<li>See the Ghost of Web Services Future where Business Critical ad hoc REST services rule supreme with no reigns to define them.</li>
-		</ul>
+		In our constant ambition to continue delivering the best software and services avaiblable, we would like to know what you 
+		think Great Software and Services actually are.
+	</p>
+
+
+
+
+	
+	<p>
+		In order to understand you need better, we have set up a small survey in order to know what what you think of certain 
+		issues.The survey is less than 15 questions and only take a few minutes to answer.
 	</p>
 	
 	<p>
-		Entrance is free.
+	As a small thank you we are giving out a number of exclusive eviware mousepads in genuine Nordic moose leather. The moosepad 
+	is luxurious, sturdy and will only get better with age.
 	</p>
 	<p>
-		<a href="http://skillsmatter.com/event/soa-rest/the-tale-of-web-services-a-christmas-carol" target="_blank" title="Free soapUI 
-	Event!" onclick="javascript:urchinTracker('/skillmatterChristmasCarol');"> Read more and register here! </a>
+		<a href="http://www.surveymonkey.com/s.aspx?sm=_2flqVjMGpXDPJF7xMp8emfA_3d_3d" target="_blank" title="Take the survey" 
+		onclick="javascript:urchinTracker('/survey1208');">Take the survey  here </a>
 	</p>
  </subsection>
 
-
-
-<subsection name="Don't miss... First SoapUI Pro Training Workshop - in London, UK">
-<p>
-	<em><strong>
-	To support its 150,000 strong user community, Eviware has partnered with Think88, Skills Matter and PushToTest to offer 
-	an intensive 
-	<a href="http://skillsmatter.com/course/soa-rest/soapui-pro-training" target="_blank" title="soapUI Pro 
-	Training workshop" onclick="javascript:urchinTracker('/skillmatterProTraining');">
-		3-day SoapUI Pro training workshop
-	</a>
-	</strong></em>
-</p>
-<p>
-<br/>
-<img style="margin: 5px; float: left;" src="images/partners/think88.png" alt="think88" title="think88" width="213" height="75"/>The first scheduled date of this course will take place in London on December 3-5th and will be taught by Robert D. Schneider of our partners Think88, and will be hosted by Skills Matter, Europe's largest provider of training and events on Open Source technology and Agile software development.
-</p>
-<p>
-<br/>
-As part of our community, you will be entitled to <em><strong>20% discount</strong></em> off the course fees, quoting promotion code <span style="color: rgb(255, 153, 0);"><em><strong>SM1247-622237-6BW</strong></em></span> when <a href="http://skillsmatter.com/course/soa-rest/soapui-pro-training" target="_blank" title="Register Now!" onclick="javascript:urchinTracker('/skillmatterProTraining');">registering for this course</a> .
-
-</p>
-<p>
-<br/>
-Eviware's CTO Ole Matzura and CSO Niclas Reimertz will both make a guest appearance at this event - so if you want to learn how to construct robust functional, scalability, and reliability tests for your Service Oriented Architecture (SOA), Web services, and REST-based services and hear where SoapUI is heading first hand from Ole, Niclas and Robert, this is your chance!<br/>
-</p>
-<p>
-<img style="margin: 5px; width: 150px; height: 57px; float: right;" src="images/partners/sm-logo-black-manga.gif" alt="Skills Matter" title="Skills Matter" width="150" height="57"/>For more information and registration, please go to<a href="http://skillsmatter.com/course/soa-rest/soapui-pro-training" target="_blank" title="soapUI Pro training" onclick="javascript:urchinTracker('/skillmatterProTraining');"> http://skillsmatter.com/course/soa-rest/soapui-pro-training</a>  and don't forget to use Promotion code <span style="color: rgb(255, 153, 0);"><em><strong>SM1247-622237-6BW</strong></em></span> to claim your community discount!
-</p>
-
-<p>
-<br/>
-<br/>
-</p>
-
-
-
-            </subsection>
 
 
 
