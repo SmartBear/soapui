@@ -15,10 +15,7 @@ package com.eviware.soapui.support.resolver;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 import javax.swing.AbstractCellEditor;
@@ -60,8 +57,9 @@ public class ResolveDialog
 	private String title;
 	private String description;
 	private String helpUrl;
+   private JXTable table;
 
-	public ResolveDialog(String title, String description, String helpUrl)
+   public ResolveDialog(String title, String description, String helpUrl)
 	{
 		this.title = title;
 
@@ -79,14 +77,32 @@ public class ResolveDialog
 			protected Component buildContent()
 			{
 				JPanel panel = new JPanel(new BorderLayout());
-				JXTable table = new JXTable(resolveContextTableModel);
+            table = new JXTable(resolveContextTableModel);
 				table.setHorizontalScrollEnabled(true);
 				table.setDefaultRenderer(JComboBox.class, new ResolverRenderer());
 				table.setDefaultEditor(JComboBox.class, new ResolverEditor());
 				table.getColumn(2).setCellRenderer(new PathCellRenderer());
 				table.getColumn(3).setWidth(100);
+            table.addMouseListener( new MouseAdapter() {
+               @Override
+               public void mouseClicked( MouseEvent e )
+               {
+                  if( e.getClickCount() > 1 )
+                  {
+                     int ix = table.getSelectedRow();
+                     if( ix != -1 )
+                     {
+                        ResolveContext<? extends AbstractWsdlModelItem<?>>.PathToResolve pathToResolve =
+                                resolveContextTableModel.getContext().getPathsToResolve().get( ix );
 
-				panel.add(new JScrollPane(table), BorderLayout.CENTER);
+                        if( pathToResolve != null )
+                           UISupport.selectAndShow( pathToResolve.getOwner() );
+                     }
+                  }
+               }
+            } );
+
+				panel.add(new JScrollPane( table ), BorderLayout.CENTER);
 				panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 				return panel;
