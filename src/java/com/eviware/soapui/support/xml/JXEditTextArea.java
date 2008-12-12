@@ -86,8 +86,8 @@ public class JXEditTextArea extends JEditTextArea implements
 			inputPopup.add(editArea.getGoToLineAction());
 			
 			inputPopup.addSeparator(); 
-			inputPopup.add(new SaveXmlTextAreaAction( editArea, "Save SAML Assertion" ));
-			inputPopup.add(new LoadXmlTextAreaAction( editArea, "Load SAML Assertion" ));
+			inputPopup.add(new SaveXmlTextAreaAction( editArea, "Save Editor Content" ));
+			inputPopup.add(new LoadXmlTextAreaAction( editArea, "Load Editor Content" ));
 			
 			editArea.setRightClickPopup( inputPopup );
 		}

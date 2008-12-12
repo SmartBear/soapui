@@ -15,6 +15,7 @@ package com.eviware.soapui.support;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.support.components.JUndoableTextArea;
+import com.eviware.soapui.support.xml.JXEditTextArea;
 
 import javax.swing.*;
 import javax.swing.text.Document;
@@ -31,10 +32,11 @@ public class DefaultEditorFactory implements EditorFactory
 
    public JComponent buildXmlEditor( EditorModel editorModel )
    {
-      JUndoableTextArea textArea = new JUndoableTextArea( );
-      textArea.setText( editorModel.getEditorText() );
-      textArea.getDocument().addDocumentListener( new EditorModelDocumentListener( editorModel ) );
-      return new JScrollPane( textArea );
+      JXEditTextArea xmlEditor = JXEditTextArea.createXmlEditor( true );
+      xmlEditor.getDocument().addDocumentListener( new EditorModelDocumentListener( editorModel ) );
+      JScrollPane scrollPane = new JScrollPane( xmlEditor );
+      UISupport.addPreviewCorner( scrollPane, false );
+      return scrollPane;
    }
 
    public JComponent buildGroovyEditor( GroovyEditorModel editorModel )
