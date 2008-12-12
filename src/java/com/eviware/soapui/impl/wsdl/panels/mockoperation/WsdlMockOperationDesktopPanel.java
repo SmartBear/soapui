@@ -185,6 +185,7 @@ public class WsdlMockOperationDesktopPanel extends ModelItemDesktopPanel<WsdlMoc
       builder.addFixed( new JLabel( "Dispatch: " ) );
       builder.addRelatedGap();
       dispatchCombo = new JComboBox( MockOperationDispatchRegistry.getDispatchTypes() );
+      dispatchCombo.setSelectedItem( null );
 
       dispatchCombo.addItemListener( new ItemListener()
       {
