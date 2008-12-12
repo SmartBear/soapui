@@ -119,7 +119,7 @@
                     <item href="/userguide/functional/gotostep.html" name="Conditional Gotos"/>
                     <item href="/userguide/functional/groovystep.html" name="Groovy Scripts">
                         <item href="/userguide/functional/groovystep.html#Groovy_Script_Examples" name="Examples"/>
-                        <item href="/userguide/functional/groovystep.html#GroovyUtils" name="GroovyUtils"/>
+                        <item href="/userguide/functional/groovystep.html#soapUI_GroovyUtils" name="GroovyUtils"/>
                     </item>
                     <item href="/userguide/functional/propertiesstep.html" name="Properties Step"/>
                     <item href="/userguide/functional/delaystep.html" name="Delay Step"/>
