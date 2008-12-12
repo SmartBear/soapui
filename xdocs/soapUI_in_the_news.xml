@@ -44,10 +44,7 @@
 	</subsection>     
        
        
-       
-       
-       
-       <subsection name="Solutions Blog">
+      <subsection name="Solutions Blog">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/solutions.gif" alt="soapUI Rest Support"/>
