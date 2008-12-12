@@ -25,6 +25,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -365,7 +366,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
    public WsdlTestStep addTestStep( TestStepConfig stepConfig )
    {
-      return insertTestStep( stepConfig, -1 );
+      return insertTestStep( stepConfig, -1, true );
    }
 
    public WsdlTestStep addTestStep( String type, String name )
@@ -386,7 +387,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
               name );
       if( newStepConfig != null )
       {
-         return insertTestStep( newStepConfig, index );
+         return insertTestStep( newStepConfig, index, false );
       }
       else
          return null;
@@ -397,10 +398,12 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
       testStep.beforeSave();
       TestStepConfig newStepConfig = (TestStepConfig) testStep.getConfig().copy();
       newStepConfig.setName( name );
-      if( createCopy && newStepConfig.isSetId() )
-         newStepConfig.unsetId();
 
-      WsdlTestStep result = insertTestStep( newStepConfig, index );
+      WsdlTestStep result = insertTestStep( newStepConfig, index, createCopy );
+
+      if( createCopy )
+         ModelSupport.unsetIds( result );
+
       resolveTestCase();
       return result;
    }
@@ -420,16 +423,20 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
       {
          testSteps[c].beforeSave();
          newStepConfigs[c] = (TestStepConfig) testSteps[c].getConfig().copy();
-         if( createCopies && newStepConfigs[c].isSetId() )
-            newStepConfigs[c].unsetId();
       }
 
-      WsdlTestStep[] result = insertTestSteps( newStepConfigs, index );
+      WsdlTestStep[] result = insertTestSteps( newStepConfigs, index, createCopies );
+
       resolveTestCase();
       return result;
    }
 
    public WsdlTestStep insertTestStep( TestStepConfig stepConfig, int ix )
+   {
+      return insertTestStep( stepConfig, ix, true );
+   }
+   
+   public WsdlTestStep insertTestStep( TestStepConfig stepConfig, int ix, boolean clearIds )
    {
       TestStepConfig newStepConfig = ix == -1 ? getConfig().addNewTestStep() : getConfig().insertNewTestStep( ix );
       newStepConfig.set( stepConfig );
@@ -437,6 +444,9 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
       if( !ensureUniqueName( testStep ) )
          return null;
+
+      if( clearIds )
+         ModelSupport.unsetIds( testStep );
 
       if( ix == -1 )
          testSteps.add( testStep );
@@ -451,7 +461,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
       return testStep;
    }
 
-   public WsdlTestStep[] insertTestSteps( TestStepConfig[] stepConfig, int ix )
+   public WsdlTestStep[] insertTestSteps( TestStepConfig[] stepConfig, int ix, boolean clearIds )
    {
       WsdlTestStep[] result = new WsdlTestStep[stepConfig.length];
 
@@ -464,6 +474,9 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
          if( !ensureUniqueName( testStep ) )
             return null;
+
+         if( clearIds )
+            ModelSupport.unsetIds( testStep );
 
          if( ix == -1 )
             testSteps.add( testStep );
@@ -696,6 +709,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
       WsdlLoadTest newLoadTest = new WsdlLoadTest( this, loadTestConfig );
       newLoadTest.setName( name );
+      ModelSupport.unsetIds( newLoadTest );
+      newLoadTest.afterLoad();
       loadTests.add( newLoadTest );
 
       ( getTestSuite() ).fireLoadTestAdded( newLoadTest );
@@ -873,7 +888,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
       catch( IOException e )
       {
          e.printStackTrace();
-		}
-		
-	}
+      }
+
+   }
 }

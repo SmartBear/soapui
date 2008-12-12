@@ -23,6 +23,7 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.wss.DefaultWssContainer;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.EndpointStrategy;
@@ -1084,15 +1085,15 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
       ifaceConfig = (InterfaceConfig) getConfig().addNewInterface().set( ifaceConfig );
 
       AbstractInterface<?> imported = InterfaceFactoryRegistry.build( this, ifaceConfig );
-      if( ifaceConfig.isSetId() && createCopy )
-         ifaceConfig.unsetId();
-
       interfaces.add( imported );
 
       if( iface.getProject() != this && importEndpoints )
       {
          endpointStrategy.importEndpoints( iface );
       }
+
+      if( createCopy )
+         ModelSupport.unsetIds( imported );
 
       imported.afterLoad();
       fireInterfaceAdded( imported );
@@ -1106,11 +1107,13 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
       TestSuiteConfig testSuiteConfig = (TestSuiteConfig) getConfig().addNewTestSuite().set(
               testSuite.getConfig().copy() );
       testSuiteConfig.setName( name );
-      if( testSuiteConfig.isSetId() && createCopy )
-         testSuiteConfig.unsetId();
 
       testSuite = new WsdlTestSuite( this, testSuiteConfig );
       testSuites.add( testSuite );
+
+      if( createCopy )
+         ModelSupport.unsetIds( testSuite );
+      
       testSuite.afterLoad();
       fireTestSuiteAdded( testSuite );
 
@@ -1129,6 +1132,9 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
          mockServiceConfig.unsetId();
       mockService = new WsdlMockService( this, mockServiceConfig );
       mockServices.add( mockService );
+      if( createCopy )
+         ModelSupport.unsetIds( mockService );
+      
       mockService.afterLoad();
 
       fireMockServiceAdded( mockService );
@@ -1379,8 +1385,10 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
       }
       else
       {
-         WsdlTestSuite testSuite = new WsdlTestSuite( this, newTestSuiteConfig.getTestSuite() );
-         projectDocument.getSoapuiProject().addNewTestSuite().set( testSuite.getConfig() );
+         TestSuiteConfig config = (TestSuiteConfig) projectDocument.getSoapuiProject().addNewTestSuite().set( newTestSuiteConfig.getTestSuite() );
+         WsdlTestSuite testSuite = new WsdlTestSuite( this, config );
+         
+         ModelSupport.unsetIds( testSuite );
          testSuite.afterLoad();
 
          testSuites.add( testSuite );

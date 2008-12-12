@@ -14,6 +14,7 @@ package com.eviware.soapui.model.support;
 
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.project.Project;
@@ -161,6 +162,26 @@ public class ModelSupport
          return null;
 
       return PropertyExpansionUtils.expandProperties( project, project.getResourceRoot() );
+   }
+
+   public static void unsetIds( AbstractWsdlModelItem modelItem )
+   {
+      if( modelItem.getConfig().isSetId())
+         modelItem.getConfig().unsetId();
+
+      for( ModelItem child : modelItem.getChildren())
+      {
+         if( child instanceof AbstractWsdlModelItem )
+         {
+            unsetIds( (AbstractWsdlModelItem) child );
+         }
+      }
+   }
+
+   public static void unsetIds( AbstractWsdlModelItem[] modelItems )
+   {
+      for( AbstractWsdlModelItem modelItem : modelItems )
+         unsetIds( modelItem );
    }
 
    public interface ModelItemFilter<T extends ModelItem>

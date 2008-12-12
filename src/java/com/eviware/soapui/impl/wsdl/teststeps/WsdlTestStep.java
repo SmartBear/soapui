@@ -18,6 +18,7 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.PanelBuilder;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.propertyexpansion.MutablePropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
@@ -169,7 +170,9 @@ abstract public class WsdlTestStep extends AbstractWsdlModelItem<TestStepConfig>
       beforeSave();
       TestStepConfig newConfig = (TestStepConfig) getConfig().copy();
       newConfig.setName( name );
-      return targetTestCase.addTestStep( newConfig );
+      WsdlTestStep result = targetTestCase.addTestStep( newConfig );
+      ModelSupport.unsetIds( result );
+      return result;
    }
 
    public void finish( TestRunner testRunner, TestRunContext testRunContext )

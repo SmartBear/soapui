@@ -19,6 +19,7 @@ import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.TestCase;
@@ -129,6 +130,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
       newTestCase.set( testCase.getConfig() );
       newTestCase.setName( name );
       WsdlTestCase newWsdlTestCase = new WsdlTestCase( this, newTestCase, false );
+      ModelSupport.unsetIds( newWsdlTestCase );
       newWsdlTestCase.afterLoad();
 
       testCases.add( newWsdlTestCase );
@@ -163,13 +165,16 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
               testCase.getConfig().copy() ) : (TestCaseConfig) getConfig().insertNewTestCase( index ).set(
               testCase.getConfig().copy() );
       testCaseConfig.setName( name );
-      if( createCopy && testCaseConfig.isSetId() )
-         testCaseConfig.unsetId();
 
       if( !includeLoadTests )
          testCaseConfig.setLoadTestArray( new LoadTestConfig[0] );
 
       testCase = new WsdlTestCase( this, testCaseConfig, false );
+
+      if( createCopy )
+      {
+         ModelSupport.unsetIds( testCase );
+      }
 
       if( index == -1 )
          testCases.add( testCase );
@@ -575,6 +580,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
          TestCaseConfig newConfig = (TestCaseConfig) getConfig().addNewTestCase().set( testCaseNewConfig ).changeType(
                  TestCaseConfig.type );
          WsdlTestCase newTestCase = new WsdlTestCase( this, newConfig, false );
+         ModelSupport.unsetIds( newTestCase );
          newTestCase.afterLoad();
          testCases.add( newTestCase );
          fireTestCaseAdded( newTestCase );
