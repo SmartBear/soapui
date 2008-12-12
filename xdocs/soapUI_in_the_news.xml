@@ -7,9 +7,19 @@
     <section name="soapUI Releases">
                 
        
+     <subsection name="soapUI a great way to do integration">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/marcusoft.gif" alt="Groovy in soapui"/>
+	    		</column>
+	    		<column align="left">
+	    			<p>The post starts: "Just found this tool - or actually I´ve used but..."<br/>
+	    			<a href="http://www.marcusoft.net/2008/12/soap-ui-great-way-to-do-integration.html">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+		</subsection>      
        
-       
-   <subsection name="Groovy in soapUI ">
+   <subsection name="Groovy in soapUI">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/groovyin.gif" alt="Groovy in soapui"/>
