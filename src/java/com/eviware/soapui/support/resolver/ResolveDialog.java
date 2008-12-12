@@ -158,6 +158,7 @@ public class ResolveDialog
 		};
 
 		dialog.setSize(550, 300);
+      dialog.setModal( false );
 		dialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		dialog.addWindowListener(new WindowAdapter()
 		{
