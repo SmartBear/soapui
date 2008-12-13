@@ -88,7 +88,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
             scriptEngine.setVariable( "context", context );
             scriptEngine.setVariable( "requestContext", request == null ? null : request.getRequestContext() );
             scriptEngine.setVariable( "mockRequest", request );
-            scriptEngine.setVariable( "mockOperation", this );
+            scriptEngine.setVariable( "mockOperation", getMockOperation() );
             scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 
             scriptEngine.setScript( dispatchScript );
