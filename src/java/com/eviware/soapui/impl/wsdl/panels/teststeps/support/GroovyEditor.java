@@ -81,6 +81,11 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget
          editArea.getActionMap().put( "run-action", runAction );
       }
 
+      editArea.getInputMap().put( KeyStroke.getKeyStroke( "F3" ), "find-action" );
+      editArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F" ), "find-action" );
+      RSyntaxTextAreaFindAndReplaceable findAndReplaceable = new RSyntaxTextAreaFindAndReplaceable();
+      editArea.getActionMap().put( "find-action", new FindAndReplaceDialog( findAndReplaceable ) );
+
       groovyDocumentListener = new GroovyDocumentListener();
       editArea.getDocument().addDocumentListener( groovyDocumentListener );
 
@@ -102,7 +107,7 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget
       );
 
       RSyntaxAreaPopupMenu popup = RSyntaxAreaPopupMenu.add( editArea );
-      popup.add( new FindAndReplaceDialog( new RSyntaxTextAreaFindAndReplaceable() ) );
+      popup.add( new FindAndReplaceDialog( findAndReplaceable ) );
       popup.addSeparator();
       popup.add( new GoToLineAction() );
 
