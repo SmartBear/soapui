@@ -348,7 +348,7 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
 
 		for (PropertyTransfer pTransfer : transfers)
 		{
-			pTransfer.resolver( context , this);
+			pTransfer.resolve( context , this);
 			
 		}
 	}
