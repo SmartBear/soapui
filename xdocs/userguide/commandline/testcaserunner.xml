@@ -136,6 +136,10 @@
 					<td>G</td>
 					<td>Sets global property with name=value</td>
 				</tr>
+                <tr>
+					<td>P</td>
+					<td>Sets project property with name=value</td>
+				</tr>
 				<tr>
 					<td>g</td>
 					<td>Sets the output to include Coverage HTML reports ( soapUI Pro only )</td>

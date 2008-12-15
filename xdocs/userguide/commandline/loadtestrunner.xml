@@ -89,6 +89,10 @@
 	 		<td>G</td>
 	 		<td>Sets global property with name=value</td>
 	 	</tr>
+ <tr>
+					<td>P</td>
+					<td>Sets project property with name=value</td>
+				</tr>             
 		</table>
 		 <p>The distribution contains a loadtestrunner.bat script for running tests from within the bin directory, 
 		 for example;</p>	
