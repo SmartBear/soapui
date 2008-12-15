@@ -28,13 +28,14 @@ final public class ExtensionFileFilter extends FileFilter
 
 	public ExtensionFileFilter(String extension, String description)
 	{
-		this.extension = extension;
+		this.extension = extension.toLowerCase(  );
 		this.description = description;
 	}
 
 	public boolean accept(File f)
 	{
-		return f.isDirectory() || f.getName().toLowerCase( Locale.getDefault() ).endsWith(extension);
+		return f.isDirectory() || "*".equals( extension ) ||
+              f.getName().toLowerCase( Locale.getDefault() ).endsWith(extension);
 	}
 
 	public String getDescription()
