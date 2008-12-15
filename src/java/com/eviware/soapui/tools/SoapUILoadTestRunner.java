@@ -130,6 +130,11 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
          setGlobalProperties( cmd.getOptionValues( "G" ) );
       }
 
+      if( cmd.hasOption( "P" ) )
+      {
+         setProjectProperties( cmd.getOptionValues( "G" ) );
+      }
+
       return true;
    }
 
@@ -164,6 +169,7 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
       options.addOption( "v", true, "Sets password for soapui-settings.xml file" );
       options.addOption( "D", true, "Sets system property with name=value" );
       options.addOption( "G", true, "Sets global property with name=value" );
+      options.addOption( "P", true, "Sets or overrides project property with name=value" );
 
       return options;
    }
@@ -208,6 +214,9 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 
       if( project.isDisabled() )
          throw new Exception( "Failed to load soapUI project file [" + projectFile + "]" );
+
+      initProjectProperties( project );
+
       int suiteCount = 0;
 
       for( int c = 0; c < project.getTestSuiteCount(); c++ )

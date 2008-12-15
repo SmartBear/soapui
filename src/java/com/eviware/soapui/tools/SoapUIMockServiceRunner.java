@@ -120,7 +120,27 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
       if( block )
       {
          System.out.println( "Press any key to terminate..." );
-         System.in.read();
+         while( System.in.available() == 0 )
+         {
+            Thread.sleep( 1000 );
+
+            // check if runners are still running
+            for( int c = 0; c < runners.size(); c++ )
+            {
+               if( !runners.get( c ).isRunning() )
+               {
+                  runners.remove( c );
+                  c--;
+               }
+            }
+
+            if( runners.isEmpty() )
+               break;
+         }
+
+         if( System.in.available() > 0 )
+            System.in.read();
+
          for( MockRunner runner : runners )
             runner.stop();
       }
@@ -135,6 +155,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 
    protected void initProject() throws Exception
    {
+      initProjectProperties( project );
    }
 
    protected void exportReports() throws Exception
@@ -202,9 +223,10 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
       options.addOption( "b", false, "Turns off blocking read for termination" );
       options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
       options.addOption( "v", true, "Sets password for soapui-settings.xml file" );
-      options.addOption( "D", true, "Sets system property with name=value");
+      options.addOption( "D", true, "Sets system property with name=value" );
       options.addOption( "G", true, "Sets global property with name=value" );
-      
+      options.addOption( "P", true, "Sets or overrides project property with name=value" );
+
       return options;
    }
 
@@ -245,6 +267,11 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
          setGlobalProperties( cmd.getOptionValues( "G" ) );
       }
 
+      if( cmd.hasOption( "P" ) )
+      {
+         setProjectProperties( cmd.getOptionValues( "G" ) );
+      }
+
       return true;
    }
 
@@ -266,5 +293,5 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
    public WsdlProject getProject()
    {
       return project;
-	   }
+   }
 }

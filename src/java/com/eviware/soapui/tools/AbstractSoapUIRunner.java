@@ -16,6 +16,7 @@ import com.eviware.soapui.DefaultSoapUICore;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SoapUICore;
 import com.eviware.soapui.StandaloneSoapUICore;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
@@ -39,6 +40,7 @@ public abstract class AbstractSoapUIRunner
 
    private boolean enableUI;
    private String outputFolder;
+   private String[] projectProperties;
 
    public AbstractSoapUIRunner( String title )
    {
@@ -273,6 +275,26 @@ public abstract class AbstractSoapUIRunner
          if( ix != -1 )
          {
             PropertyExpansionUtils.getGlobalProperties().setPropertyValue( option.substring( 0, ix ), option.substring( ix + 1 ) );
+         }
+      }
+   }
+
+   protected void setProjectProperties( String[] projectProperties )
+   {
+      this.projectProperties = projectProperties;
+   }
+
+   protected void initProjectProperties( WsdlProject project )
+   {
+      if( projectProperties != null )
+      {
+         for( String option : projectProperties )
+         {
+            int ix = option.indexOf( '=' );
+            if( ix != -1 )
+            {
+               project.setPropertyValue( option.substring( 0, ix ), option.substring( ix + 1 ) );
+            }
          }
       }
    }

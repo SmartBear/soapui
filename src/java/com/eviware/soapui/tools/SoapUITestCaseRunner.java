@@ -74,7 +74,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
    private boolean junitReport;
    private int exportCount;
    private JUnitReportCollector reportCollector;
-   private String wssPasswordType;
    private WsdlProject project;
 
    private String projectPassword;
@@ -143,8 +142,13 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
       {
          setGlobalProperties( cmd.getOptionValues( "G" ) );
       }
-      
-      setIgnoreError(cmd.hasOption("I"));
+
+      if( cmd.hasOption( "P" ) )
+      {
+         setProjectProperties( cmd.getOptionValues( "G" ) );
+      }
+
+      setIgnoreError( cmd.hasOption( "I" ) );
       setEnableUI( cmd.hasOption( "i" ) );
       setPrintReport( cmd.hasOption( "r" ) );
       setExportAll( cmd.hasOption( "a" ) );
@@ -182,10 +186,11 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
       options.addOption( "t", true, "Sets the soapui-settings.xml file to use" );
       options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
       options.addOption( "v", true, "Sets password for soapui-settings.xml file" );
-      options.addOption( "D", true, "Sets system property with name=value");
+      options.addOption( "D", true, "Sets system property with name=value" );
       options.addOption( "G", true, "Sets global property with name=value" );
-      options.addOption( "I", false, "Do not stop if error occurs, ignore them"); 
-      
+      options.addOption( "P", true, "Sets or overrides project property with name=value" );
+      options.addOption( "I", false, "Do not stop if error occurs, ignore them" );
+
       return options;
    }
 
@@ -303,6 +308,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
    protected void initProject() throws Exception
    {
+      initProjectProperties( project );
    }
 
    protected void exportReports( WsdlProject project ) throws Exception
