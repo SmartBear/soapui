@@ -583,7 +583,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
          {
             mp = new MimeMultipart();
 
-            MessageXmlObject requestXmlObject = new MessageXmlObject( operation, getResponseContent(), false );
+            MessageXmlObject requestXmlObject = new MessageXmlObject( operation, responseContent, false );
             MessageXmlPart[] requestParts = requestXmlObject.getMessageParts();
             for( MessageXmlPart requestPart : requestParts )
             {
