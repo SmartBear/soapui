@@ -92,7 +92,7 @@ public class RestRequestFilter extends AbstractRequestFilter
                httpMethod.setRequestHeader( param.getName(), value );
                break;
             case QUERY:
-               if( formMp == null )
+               if( formMp == null || !request.isPostQueryString())
                {
                   if( query.length() > 0 )
                      query.append( '&' );
