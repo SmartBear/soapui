@@ -288,14 +288,18 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
                for( int i = 0; i < runners.length; i++ )
                {
                   TestRunner runner = runners[i];
+
                   if( i > 0 )
-                     buf.append( ',' );
+                     buf.append( ", " );
 
                   buf.append( runner.getTestCase().getName() ).append( ':' );
+                  buf.append( runner.getStatus() ).append( ':');
 
                   TestStep currentStep = runner.getRunContext().getCurrentStep();
                   if( currentStep != null )
+                  {
                      buf.append( currentStep.getName() );
+                  }
                   else
                   {
                      buf.append( "currentStep is null" );
@@ -610,7 +614,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
          failedTests.add( testRunner.getTestCase() );
       }
 
-      runningTests.remove( testRunner.getTestCase() );
+      runningTests.remove( testRunner );
 
       testCaseCount++;
    }
