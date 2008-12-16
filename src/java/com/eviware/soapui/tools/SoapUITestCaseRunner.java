@@ -311,7 +311,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
                }
 
                log.info( "Waiting for " + runners.length + " tests to finish: " + buf.toString() );
-               Thread.sleep( 1000 );
+               Thread.sleep( 5000 );
             }
          }
       }
