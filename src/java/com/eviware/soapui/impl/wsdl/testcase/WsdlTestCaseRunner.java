@@ -57,6 +57,7 @@ public class WsdlTestCaseRunner implements Runnable, TestRunner
    private static int idCounter = 0;
    private Timer timeoutTimer;
    private TimeoutTimerTask timeoutTimerTask;
+   private Thread thread;
 
    public WsdlTestCaseRunner(WsdlTestCase testCase, StringToObjectMap properties)
    {
@@ -112,13 +113,19 @@ public class WsdlTestCaseRunner implements Runnable, TestRunner
       return id;
    }
 
+   public Thread getThread()
+   {
+      return thread;
+   }
+
    public void run()
    {
       int initCount = 0;
 
       if( future != null )
       {
-         Thread.currentThread().setName( "TestCaseRunner Thread for " + testCase.getName() );
+         thread = Thread.currentThread();
+         thread.setName( "TestCaseRunner Thread for " + testCase.getName() );
       }
 
       try

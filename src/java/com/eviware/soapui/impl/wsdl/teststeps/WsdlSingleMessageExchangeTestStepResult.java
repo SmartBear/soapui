@@ -12,33 +12,46 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.io.PrintWriter;
-
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
+import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.xml.XmlUtils;
+
+import java.io.PrintWriter;
 
 /**
  * TestStep Result for a WsdlMessageExchange
- * 
+ *
  * @author ole.matzura
  */
 
 public class WsdlSingleMessageExchangeTestStepResult extends WsdlTestStepResult
 {
-	private WsdlMessageExchange messageExchange;
+   private WsdlMessageExchange messageExchange;
+   private boolean addedAction;
 //	private StringToStringMap properties;
-	
-	public WsdlSingleMessageExchangeTestStepResult(WsdlTestStep step )
-	{
-		super( step );
-	}
-	
-	public void setMessageExchange( WsdlMessageExchange messageExchange )
-	{
-		this.messageExchange = messageExchange;
-		addAction( new ShowMessageExchangeAction( messageExchange, "StepResult" ), true );
-	}
+
+   public WsdlSingleMessageExchangeTestStepResult( WsdlTestStep step )
+   {
+      super( step );
+   }
+
+   public void setMessageExchange( WsdlMessageExchange messageExchange )
+   {
+      this.messageExchange = messageExchange;
+   }
+
+   @Override
+   public ActionList getActions()
+   {
+      if( !addedAction )
+      {
+         addAction( new ShowMessageExchangeAction( messageExchange, "StepResult" ), true );
+         addedAction = true;
+      }
+
+      return super.getActions();
+   }
 
 //	public String getRequestContent()
 //	{
@@ -58,22 +71,22 @@ public class WsdlSingleMessageExchangeTestStepResult extends WsdlTestStepResult
 //		
 //		properties.put( name, value );
 //	}
-	
-	public void discard()
-	{
-		super.discard();
-		
-		messageExchange = null;
-//		properties = null;
-	}
 
-	public void writeTo(PrintWriter writer)
-	{
-		super.writeTo( writer );
-		
-		if( isDiscarded() )
-			return;
-		
+   public void discard()
+   {
+      super.discard();
+
+      messageExchange = null;
+//		properties = null;
+   }
+
+   public void writeTo( PrintWriter writer )
+   {
+      super.writeTo( writer );
+
+      if( isDiscarded() )
+         return;
+
 //		writer.println( "---------------- Properties ------------------------" );
 //		if( properties == null  )
 //		{
@@ -85,26 +98,26 @@ public class WsdlSingleMessageExchangeTestStepResult extends WsdlTestStepResult
 //				writer.println( name + ": " + properties.get( name ) );
 //		}
 
-		writer.println( "---------------- Message Exchange ------------------" );
-		if( messageExchange == null )
-		{
-			writer.println( "Missing MessageExchange" );
-		}
-		else
-		{
-			writer.println( "--- Request" );
-			if( messageExchange.getRequestHeaders() != null )
-				writer.println( "Request Headers: " + messageExchange.getRequestHeaders().toString() );
-			
-			writer.println( XmlUtils.prettyPrintXml( messageExchange.getRequestContent() ) );
+      writer.println( "---------------- Message Exchange ------------------" );
+      if( messageExchange == null )
+      {
+         writer.println( "Missing MessageExchange" );
+      }
+      else
+      {
+         writer.println( "--- Request" );
+         if( messageExchange.getRequestHeaders() != null )
+            writer.println( "Request Headers: " + messageExchange.getRequestHeaders().toString() );
 
-			writer.println( "--- Response" );
-			if( messageExchange.getResponseHeaders() != null )
-				writer.println( "Response Headers: " + messageExchange.getResponseHeaders().toString() );
-			
-			writer.println( XmlUtils.prettyPrintXml( messageExchange.getResponseContent() ) );
-		}
-	}
+         writer.println( XmlUtils.prettyPrintXml( messageExchange.getRequestContent() ) );
+
+         writer.println( "--- Response" );
+         if( messageExchange.getResponseHeaders() != null )
+            writer.println( "Response Headers: " + messageExchange.getResponseHeaders().toString() );
+
+         writer.println( XmlUtils.prettyPrintXml( messageExchange.getResponseContent() ) );
+      }
+   }
 
 //	public StringToStringMap getProperties()
 //	{

@@ -28,7 +28,9 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.resolver.ResolveContext;
+import com.eviware.soapui.SoapUI;
 
 import javax.swing.*;
 import java.io.PrintWriter;
@@ -112,8 +114,6 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
 	public TestStepResult run(TestRunner runner, TestRunContext context, PropertyTransfer transfer)
 	{
 		PropertyTransferResult result = new PropertyTransferResult();
-		result.addAction(new ShowTransferValuesResultsAction(result), true);
-
 		canceled = false;
 
 		long startTime = System.currentTimeMillis();
@@ -225,8 +225,9 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
 	{
 		private List<PropertyTransferConfig> transfers = new ArrayList<PropertyTransferConfig>();
 		private List<String[]> values = new ArrayList<String[]>();
+      private boolean addedAction;
 
-		public PropertyTransferResult()
+      public PropertyTransferResult()
 		{
 			super(PropertyTransfersTestStep.this);
 		}
@@ -237,6 +238,18 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
 			transfers.add((PropertyTransferConfig) transfer.getConfig().copy());
 			this.values.add(values);
 		}
+
+      @Override
+      public ActionList getActions()
+      {
+         if( !addedAction )
+         {
+            addAction( new ShowTransferValuesResultsAction( this ), true );
+            addedAction = true;
+         }
+
+         return super.getActions();
+      }
 
 		public int getTransferCount()
 		{
