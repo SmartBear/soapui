@@ -358,7 +358,10 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
       getConfig().setPostQueryString( b );
       notifyPropertyChanged( "postQueryString", old, b );
 
-      setMediaType( b ? "application/x-www-form-urlencoded" : "");
+      if( !"multipart/form-data".equals( getMediaType() ))
+      {
+         setMediaType( b ? "application/x-www-form-urlencoded" : "" );
+      }
    }
 
    public final static class ParameterMessagePart extends MessagePart.ParameterPart
