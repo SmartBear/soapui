@@ -16,6 +16,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStepResult;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepResult;
@@ -289,14 +290,24 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
                   TestRunner runner = runners[i];
                   if( i > 0 )
                      buf.append( ',' );
-                  
+
                   buf.append( runner.getTestCase().getName() ).append( ':' );
 
                   TestStep currentStep = runner.getRunContext().getCurrentStep();
                   if( currentStep != null )
                      buf.append( currentStep.getName() );
                   else
-                     buf.append( "currentStep is null");
+                  {
+                     buf.append( "currentStep is null" );
+                  }
+
+                  Thread thread = ( (WsdlTestCaseRunner) runner ).getThread();
+                  if( thread != null )
+                  {
+                     StackTraceElement[] trace = thread.getStackTrace();
+                     for( int y = 0; y < trace.length; y++ )
+                        buf.append( "\tat " + trace[i] );
+                  }
                }
 
                log.info( "Waiting for " + runners.length + " tests to finish: " + buf.toString() );
