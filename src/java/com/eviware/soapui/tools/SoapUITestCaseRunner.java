@@ -290,8 +290,13 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
                   if( i > 0 )
                      buf.append( ',' );
                   
-                  buf.append( runner.getTestCase().getName() ).append( ':' ).append(
-                          runner.getRunContext().getCurrentStep().getName() );
+                  buf.append( runner.getTestCase().getName() ).append( ':' );
+
+                  TestStep currentStep = runner.getRunContext().getCurrentStep();
+                  if( currentStep != null )
+                     buf.append( currentStep.getName() );
+                  else
+                     buf.append( "currentStep is null");
                }
 
                log.info( "Waiting for " + runners.length + " tests to finish: " + buf.toString() );
