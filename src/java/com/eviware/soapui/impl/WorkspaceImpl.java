@@ -22,6 +22,7 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlProjectFactory;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.testsuite.LoadTestRunListener;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.model.settings.Settings;
@@ -77,6 +78,11 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
       this.path = file.getAbsolutePath();
       loadWorkspace( file );
       workspaceIcon = UISupport.createImageIcon( "/workspace.gif" );
+
+      for( WorkspaceListener listener : SoapUI.getListenerRegistry().getListeners( WorkspaceListener.class ) )
+      {
+         addWorkspaceListener( listener );
+      }
    }
 
    public void switchWorkspace( File file ) throws SoapUIException
