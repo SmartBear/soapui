@@ -60,7 +60,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
    private String testCase;
    private List<TestAssertion> assertions = new ArrayList<TestAssertion>();
    private Map<TestAssertion, WsdlTestStepResult> assertionResults = new HashMap<TestAssertion, WsdlTestStepResult>();
-   private List<TestCase> runningTests = new ArrayList<TestCase>();
+   private List<TestRunner> runningTests = new ArrayList<TestRunner>();
    private List<TestCase> failedTests = new ArrayList<TestCase>();
 
    private int testSuiteCount;
@@ -279,12 +279,23 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
             testSuiteCount++;
 
             // wait for tests to finish if running in parallell mode
-            if( !runningTests.isEmpty() )
-               log.info( "Waiting for " + runningTests.size() + " tests to finish" );
-
             while( !runningTests.isEmpty() )
             {
-               Thread.sleep( 100 );
+               StringBuffer buf = new StringBuffer();
+               TestRunner[] runners = runningTests.toArray( new TestRunner[runningTests.size()] );
+
+               for( int i = 0; i < runners.length; i++ )
+               {
+                  TestRunner runner = runners[i];
+                  if( i > 0 )
+                     buf.append( ',' );
+                  
+                  buf.append( runner.getTestCase().getName() ).append( ':' ).append(
+                          runner.getRunContext().getCurrentStep().getName() );
+               }
+
+               log.info( "Waiting for " + runners.length + " tests to finish: " + buf.toString() );
+               Thread.sleep( 1000 );
             }
          }
       }
@@ -438,8 +449,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
    private void runTestCase( TestCase testCase )
    {
-      runningTests.add( testCase );
-      testCase.run( new StringToObjectMap(), testCase.getTestSuite().getRunType() == TestSuiteRunType.PARALLEL );
+      runningTests.add( testCase.run( new StringToObjectMap(), testCase.getTestSuite().getRunType() == TestSuiteRunType.PARALLEL ) );
    }
 
    /**

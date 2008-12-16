@@ -17,6 +17,7 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.model.testsuite.TestRunContext;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -72,6 +73,11 @@ public class MockTestRunner implements TestRunner
    public void start( boolean async )
    {
 
+   }
+
+   public TestRunContext getRunContext()
+   {
+      return mockRunContext;
    }
 
    public TestStepResult runTestStepByName( String name )

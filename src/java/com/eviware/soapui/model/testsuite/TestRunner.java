@@ -108,4 +108,10 @@ public interface TestRunner
     */
 
    public TestStepResult runTestStepByName( String name );
+
+   /**
+    * Returns the context used by this runner
+    */
+
+   public TestRunContext getRunContext();
 }
