@@ -10,7 +10,6 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.w3.x2007.x05.addressing.metadata.AddressingDocument.Addressing;
-import org.w3.x2007.x05.addressing.metadata.AnonymousResponsesDocument.AnonymousResponses;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
