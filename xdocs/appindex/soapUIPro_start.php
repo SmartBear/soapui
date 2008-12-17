@@ -60,15 +60,13 @@ urchinTracker();</script>
       In the new release you get full support for REST Testing. We would like to think it's a gem! soapUI REST Testing makes it possible for you to do complete RestTests with or without a WADL.<br />
       <p align="center" class="center_p"><a onclick="javascript:urchinTracker('/appindexsoapUIProReadMore')" href="http://www.eviware.com/new.htm" title="Read more about soapUI 2.1" target="_blank">Read more here</a> | <a onclick="javascript:urchinTracker('/appindexsoapUIProDownloadNewest')" href="http://www.eviware.com/download/" title="download soapUI" target="_blank">Download it here</a></p>
   <hr/>
-<h1><img src="Images/Pro-Icon-50.png" alt="soapUI" width="50" height="50" />Meet the three Ghosts of Web Services</h1>
-<ul  class="evilist">
-  <li>Look at the Ghost of Web Services Past and remember the dark ages of uninteroperability and how they continue to haunt us to this day.</li>
-    <li>Meet the Ghost of Web Services Present and look at the horrors of Standards Creep.</li>
-    <li>See the Ghost of Web Services Future where Business Critical ad hoc REST services rule supreme with no reigns to define them.</li>
-    </ul>
-
- <p> <em><strong>Entrance is free. </strong></em> </p>
- <p> <a href="http://skillsmatter.com/event/soa-rest/the-tale-of-web-services-a-christmas-carol" target="_blank" title="Register here!"><strong>Read more  and register here! </strong></a> </p>
+<h1><img src="Images/Pro-Icon-50.png" alt="soapUI" width="50" height="50" />Win a Moosepad!</h1>
+   <p>Put your mouse on a moose! Answer our survey and win a Moosepad!</p>
+    <p>In our constant ambition to continue delivering the best software and services avaiblable, we would like to know what you think Great Software and Services actually are.</p>
+    <p>In order to understand you need better, we have set up a small survey in order to know what what you think of certain issues.The survey is less than 15 questions and only take a few minutes to answer.</p>
+   <p> As a small thank you we are giving out a number of exclusive eviware mousepads in genuine Nordic moose leather. The moosepad is luxurious, sturdy and will only get better with age.</p>
+    
+ <p><a href="http://www.surveymonkey.com/s.aspx?sm=_2flqVjMGpXDPJF7xMp8emfA_3d_3d" target="_blank" title="Take the survey" onclick="javascript:urchinTracker('/survey1208');">Take the survey  here</a>! </p>
  <hr/>
 <h1><img src="Images/Pro-Icon-50.png" alt="soapUI" width="50" height="50" />Latest blogposts:</h1>
 <ul  class="evilist">
@@ -142,7 +140,7 @@ and much more...<br />
 </p>
       <p class="RighColumnList">We have in depth information available at the soapui.org web site</p>
       <p class="RighColumnList"><br />
-        <a onclick="javascript:urchinTracker('/appindexsoapUIProReadMoreRight')" href="http://www.soapui.org/new_and_noteworthy_2_5.html" title="Read more about soapUI 2.1" target="_blank">Read more here</a>
+        <a onclick="javascript:urchinTracker('/appindexsoapUIProReadMoreRight')" href="http://www.eviware.com/content/view/134/1/" title="Read more about soapUI 2.5" target="_blank">Read more here</a>
         </li>
       </p>
       <p>&nbsp;</p></td>
