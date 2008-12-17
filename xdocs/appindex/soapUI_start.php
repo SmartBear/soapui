@@ -39,11 +39,11 @@ urchinTracker();</script>
             <a onclick="javascript:urchinTracker('/appindexsoapUIReadMorePro')" href="http://www.eviware.com/content/view/134/1/" title="Read more about soapUI 2.5" target="_blank">Read more here</a></p>          </td>
       </tr>
       <tr>
-        <td height="240" class="greyBox" valign="top"><h2>First soapUI Pro Training Workshop - London, UK</h2>
-          <p class="style1">To support its 180,000 strong user community, Eviware has partnered with Think88, Skills Matter and PushToTest to offer   	an intensive</strong></em><em><strong><a href="http://skillsmatter.com/course/soa-rest/soapui-pro-training" target="_blank" title="soapUI Pro   Training workshop" onclick="javascript:urchinTracker('/skillmatterProTraining');">3-day SoapUI Pro training workshop </a></p>
-          <p><span class="style1">As part of our community, you will be entitled to <em><strong>20% discount</strong></em> off the course fees, quoting promotion code <em><strong>SM1247-622237-6BW</strong></em> when <a href="http://skillsmatter.com/course/soa-rest/soapui-pro-training" target="_blank" title="Register Now!">registering for this course</a> </span>. <br />
-            <br />
-            <a onclick="javascript:urchinTracker('/appindexsoapUITraining')" href="http://www.eviware.com/content/view/131/16/" title="Read more about soapUI training" target="_blank">More  Information</a></p></td>
+        <td height="240" class="greyBox" valign="top"><h2>Have you voted yet?</h2>
+          <p>The final push is on its way. </p>
+          <p>Support soapUI by voting for us at SOA World Magazine Reader's Choice Vote.</p>
+          <p><br />
+            <a onclick="javascript:urchinTracker('/appindexsoapUITraining')" href="http://soa.sys-con.com/general/readerschoice.htm" title="Vote here!" target="_blank">Vote here!</a></p></td>
       </tr>
       <tr>
         <td height="240"  class="greyBox" valign="top"><h2>eviware I turn</h2>
