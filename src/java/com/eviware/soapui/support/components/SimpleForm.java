@@ -13,6 +13,7 @@
 package com.eviware.soapui.support.components;
 
 import com.eviware.soapui.support.swing.JTextComponentPopupMenu;
+import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
@@ -336,7 +337,7 @@ public class SimpleForm
    public JPasswordField appendPasswordField( String label, String tooltip )
    {
       JPasswordField textField = new JPasswordField();
-      textField.setColumns( 30 );
+      textField.setColumns( defaultTextFieldColumns );
       textField.setToolTipText( tooltip );
       textField.getAccessibleContext().setAccessibleDescription( tooltip );
 		append( label, textField );
@@ -347,6 +348,10 @@ public class SimpleForm
    {
       JComponent component = getComponent( label );
 
+      if( component instanceof JScrollPane )
+    	  component = (JComponent) ((JScrollPane)component).getViewport().getComponent(0);
+      
+      
       if( component instanceof JTextComponent )
       {
          ((JTextComponent) component).setText( value );
@@ -368,6 +373,10 @@ public class SimpleForm
       {
       	((JFormComponent) component).setValue( value );
       }      	
+      else if( component instanceof JXEditTextArea )
+      {
+    	  ((JXEditTextArea)component).setText( value );
+      }
    }
    
    public String getComponentValue( String label )
