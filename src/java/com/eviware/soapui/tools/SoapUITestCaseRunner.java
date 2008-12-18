@@ -288,12 +288,17 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
                for( int i = 0; i < runners.length; i++ )
                {
                   TestRunner runner = runners[i];
+                  if( runner.getStatus() == TestRunner.Status.FINISHED )
+                  {
+                     runningTests.remove( runner );
+                     continue;
+                  }
 
                   if( i > 0 )
                      buf.append( ", " );
 
                   buf.append( runner.getTestCase().getName() ).append( ':' );
-                  buf.append( runner.getStatus() ).append( ':');
+                  buf.append( runner.getStatus() ).append( ':' );
 
                   TestStep currentStep = runner.getRunContext().getCurrentStep();
                   if( currentStep != null )
@@ -305,17 +310,23 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
                      buf.append( "currentStep is null" );
                   }
 
-                  Thread thread = ( (WsdlTestCaseRunner) runner ).getThread();
-                  if( thread != null )
+                  if( System.getProperty( "soapui.dumpstacktrace", "false" ).equals( "true" ) )
                   {
-                     StackTraceElement[] trace = thread.getStackTrace();
-                     for( int y = 0; y < trace.length; y++ )
-                        buf.append( "\tat " + trace[i] );
+                     Thread thread = ( (WsdlTestCaseRunner) runner ).getThread();
+                     if( thread != null )
+                     {
+                        StackTraceElement[] trace = thread.getStackTrace();
+                        for( int y = 0; y < trace.length; y++ )
+                           buf.append( "\tat " + trace[i] );
+                     }
                   }
                }
 
-               log.info( "Waiting for " + runners.length + " tests to finish: " + buf.toString() );
-               Thread.sleep( 5000 );
+               if( runningTests.size() > 0 )
+               {
+                  log.info( "Waiting for " + runners.length + " tests to finish: " + buf.toString() );
+                  Thread.sleep( 5000 );
+               }
             }
          }
       }
@@ -469,7 +480,9 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
    private void runTestCase( TestCase testCase )
    {
-      runningTests.add( testCase.run( new StringToObjectMap(), testCase.getTestSuite().getRunType() == TestSuiteRunType.PARALLEL ) );
+      TestRunner testRunner = testCase.run( new StringToObjectMap(), testCase.getTestSuite().getRunType() == TestSuiteRunType.PARALLEL );
+      if( testRunner.getStatus() == TestRunner.Status.RUNNING )
+         runningTests.add( testRunner );
    }
 
    /**
