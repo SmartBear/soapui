@@ -316,17 +316,16 @@
         <attainGoal name="clean"/>
         <ant:mkdir dir="target"/>
 
+        <!--
+            Create soapui-xmlbeans
+        -->
+
         <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/soapui-xmlbeans-${pom.currentVersion}.jar"
                      classpathref="xmlbeans-classpath" javasource="1.5">
             <fileset dir="src/xsd/soapui" excludes="coverage.xsd"/>
         </ant:xmlbean>
 
-        <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/soapui-coverage-xmlbeans-${pom.currentVersion}.jar"
-                     classpathref="xmlbeans-classpath" javasource="1.5">
-            <fileset dir="src/xsd/soapui" includes="coverage.xsd"/>
-        </ant:xmlbean>
-
-        <ant:mkdir dir="${user.home}/.m2/repository/eviware/soapui-xmlbeans/${pom.currentVersion}"/>
+<ant:mkdir dir="${user.home}/.m2/repository/eviware/soapui-xmlbeans/${pom.currentVersion}"/>
         <ant:copy todir="${user.home}/.m2/repository/eviware/soapui-xmlbeans/${pom.currentVersion}"
                   file="${maven.repo.local}/eviware/jars/soapui-xmlbeans-${pom.currentVersion}.jar"/>
 
@@ -340,38 +339,168 @@
 </project>]]>
         </j:file>
 
-        <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/ext-xmlbeans-1.0.jar"
+        <!--
+            Create soapui-coverage-xmlbeans
+        -->
+
+        <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/soapui-coverage-xmlbeans-${pom.currentVersion}.jar"
+                     classpathref="xmlbeans-classpath" javasource="1.5">
+            <fileset dir="src/xsd/soapui" includes="coverage.xsd"/>
+        </ant:xmlbean>
+
+        <ant:mkdir dir="${user.home}/.m2/repository/eviware/soapui-coverage-xmlbeans/${pom.currentVersion}"/>
+        <ant:copy todir="${user.home}/.m2/repository/eviware/soapui-coverage-xmlbeans/${pom.currentVersion}"
+                  file="${maven.repo.local}/eviware/jars/soapui-coverage-xmlbeans-${pom.currentVersion}.jar"/>
+
+        <j:file name="${user.home}/.m2/repository/eviware/soapui-coverage-xmlbeans/${pom.currentVersion}/soapui-coverage-xmlbeans-${pom.currentVersion}.pom"
+                escapeText="false">
+            <![CDATA[<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>eviware</groupId>
+  <artifactId>soapui-coverage-xmlbeans</artifactId>
+  <version>${pom.currentVersion}</version>
+</project>]]>
+        </j:file>
+
+          <!--
+            Create ext-xmlbeans
+        -->
+
+        <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/ext-xmlbeans-1.1.jar"
                      classpathref="xmlbeans-classpath" javasource="1.5">
             <fileset dir="src/xsd/wsi"/>
             <fileset dir="src/xsd/jboss"/>
             <fileset dir="src/xsd/junit"/>
         </ant:xmlbean>
 
+        <ant:mkdir dir="${user.home}/.m2/repository/eviware/ext-xmlbeans/1.1"/>
+        <ant:copy todir="${user.home}/.m2/repository/eviware/ext-xmlbeans/1.1"
+                  file="${maven.repo.local}/eviware/jars/ext-xmlbeans-1.1.jar"/>
+
+         <j:file name="${user.home}/.m2/repository/eviware/ext-xmlbeans/1.1/ext-xmlbeans-1.1.pom"
+                escapeText="false">
+            <![CDATA[<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>eviware</groupId>
+  <artifactId>ext-xmlbeans</artifactId>
+  <version>1.1</version>
+</project>]]>
+        </j:file>
+
+         <!--
+            Create wsdl-xmlbeans
+        -->
+
         <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/wsdl-xmlbeans-1.1.jar"
                      classpathref="xmlbeans-classpath" javasource="1.5">
             <fileset dir="src/xsd/wsdl"/>
         </ant:xmlbean>
+
+        <ant:mkdir dir="${user.home}/.m2/repository/eviware/wsdl-xmlbeans/1.1"/>
+        <ant:copy todir="${user.home}/.m2/repository/eviware/wsdl-xmlbeans/1.1"
+                  file="${maven.repo.local}/eviware/jars/wsdl-xmlbeans-1.1.jar"/>
+
+         <j:file name="${user.home}/.m2/repository/eviware/wsdl-xmlbeans/1.1/wsdl-xmlbeans-1.1.pom"
+                escapeText="false">
+            <![CDATA[<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>eviware</groupId>
+  <artifactId>wsdl-xmlbeans</artifactId>
+  <version>1.1</version>
+</project>]]>
+        </j:file>
+
+         <!--
+            Create policy-xmlbeans
+        -->
 
         <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/policy-xmlbeans-1.5.jar"
                      classpathref="xmlbeans-classpath" javasource="1.5">
             <fileset dir="src/xsd/policy"/>
         </ant:xmlbean>
 
+        <ant:mkdir dir="${user.home}/.m2/repository/eviware/policy-xmlbeans/1.5"/>
+        <ant:copy todir="${user.home}/.m2/repository/eviware/policy-xmlbeans/1.5"
+                  file="${maven.repo.local}/eviware/jars/policy-xmlbeans-1.5.jar"/>
+
+         <j:file name="${user.home}/.m2/repository/eviware/policy-xmlbeans/1.5/policy-xmlbeans-1.5.pom"
+                escapeText="false">
+            <![CDATA[<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>eviware</groupId>
+  <artifactId>policy-xmlbeans</artifactId>
+  <version>1.5</version>
+</project>]]>
+        </j:file>
+
+         <!--
+            Create wadl-xmlbeans
+        -->
+
         <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/wadl-xmlbeans-1.0.jar"
                      classpathref="xmlbeans-classpath" javasource="1.5">
             <fileset dir="src/xsd/wadl"/>
         </ant:xmlbean>
 
+        <ant:mkdir dir="${user.home}/.m2/repository/eviware/wadl-xmlbeans/1.0"/>
+        <ant:copy todir="${user.home}/.m2/repository/eviware/wadl-xmlbeans/1.0"
+                  file="${maven.repo.local}/eviware/jars/wadl-xmlbeans-1.0.jar"/>
+
+         <j:file name="${user.home}/.m2/repository/eviware/wadl-xmlbeans/1.0/wadl-xmlbeans-1.0.pom"
+                escapeText="false">
+            <![CDATA[<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>eviware</groupId>
+  <artifactId>wadl-xmlbeans</artifactId>
+  <version>1.0</version>
+</project>]]>
+        </j:file>
+
+        <!--
+            Create soap-xmlbeans
+        -->
 
         <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/soap-xmlbeans-1.2.jar"
                      classpathref="xmlbeans-classpath" javasource="1.5">
             <fileset dir="src/xsd/soap"/>
         </ant:xmlbean>
 
+        <ant:mkdir dir="${user.home}/.m2/repository/eviware/soap-xmlbeans/1.2"/>
+        <ant:copy todir="${user.home}/.m2/repository/eviware/soap-xmlbeans/1.2"
+                  file="${maven.repo.local}/eviware/jars/soap-xmlbeans-1.2.jar"/>
+
+         <j:file name="${user.home}/.m2/repository/eviware/soap-xmlbeans/1.2/soap-xmlbeans-1.2.pom"
+                escapeText="false">
+            <![CDATA[<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>eviware</groupId>
+  <artifactId>soap-xmlbeans</artifactId>
+  <version>1.2</version>
+</project>]]>
+        </j:file>
+
+         <!--
+            Create j2ee-xmlbeans
+        -->
+
         <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/j2ee-xmlbeans-1.4.jar"
                      classpathref="xmlbeans-classpath" javasource="1.5" download="yes">
             <fileset dir="src/xsd/j2ee"/>
         </ant:xmlbean>
+
+        <ant:mkdir dir="${user.home}/.m2/repository/eviware/j2ee-xmlbeans/1.4"/>
+        <ant:copy todir="${user.home}/.m2/repository/eviware/j2ee-xmlbeans/1.4"
+                  file="${maven.repo.local}/eviware/jars/j2ee-xmlbeans-1.4.jar"/>
+
+         <j:file name="${user.home}/.m2/repository/eviware/j2ee-xmlbeans/1.4/j2ee-xmlbeans-1.4.pom"
+                escapeText="false">
+            <![CDATA[<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>eviware</groupId>
+  <artifactId>j2ee-xmlbeans</artifactId>
+  <version>1.4</version>
+</project>]]>
+        </j:file>
 
     </goal>
 
