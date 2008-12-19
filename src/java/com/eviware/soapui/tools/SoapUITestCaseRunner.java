@@ -340,7 +340,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
       exportReports( project );
 
-      if( assertions.size() > 0 || failedTests.size() > 0 && !ignoreErrors )
+      if( (assertions.size() > 0 || failedTests.size() > 0) && !ignoreErrors )
       {
          throwFailureException();
       }
