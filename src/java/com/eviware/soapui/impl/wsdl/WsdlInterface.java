@@ -19,6 +19,7 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.impl.wsdl.support.policy.PolicyUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapMessageBuilder;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
@@ -70,6 +71,9 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
    private WsdlContext wsdlContext;
    private boolean updating = false;
    private BeanPathPropertySupport definitionProperty;
+   private String interfaceAnonymous;
+   private String interfaceWsaVersion;
+   boolean policyFlag = false;
 
    public WsdlInterface( WsdlProject project, WsdlInterfaceConfig interfaceConfig )
    {
@@ -290,10 +294,36 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 
       transferEndpoints( tuple.port );
 
+      updateWsaPolicy(url, newContext);
+      
       getProject().fireInterfaceUpdated( this );
 
       return true;
    }
+
+private void updateWsaPolicy(String url, WsdlContext newContext)
+		throws Exception {
+	    
+	Definition definition = newContext.getDefinition();
+    policyFlag = false;
+    processPolicy(PolicyUtils.getAttachedPolicy( getBinding(), definition ) );
+	Map<?, ?> serviceMap = definition.getAllServices();
+	if (serviceMap.isEmpty())
+		log.info("Missing services in [" + url + "], check for bindings");
+	else {
+		Iterator<?> i = serviceMap.values().iterator();
+		while (i.hasNext()) {
+			Service service = (Service) i.next();
+			Map<?, ?> portMap = service.getPorts();
+			Iterator<?> i2 = portMap.values().iterator();
+			while (i2.hasNext()) {
+				Port port = (Port) i2.next();
+				processPolicy(PolicyUtils.getAttachedPolicy(port,
+						definition));
+			}
+		}
+	}
+}
 
    public BindingTuple prepareUpdateDefinition( String url ) throws Exception
    {
@@ -417,6 +447,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
          {
             log.info( "Synchronizing existing operation [" + bindingOperationName + "]" );
             WsdlOperation wsdlOperation = oldOperations.get( bindingOperationName );
+            WsdlUtils.getAnonymous( wsdlOperation );
             wsdlOperation.initFromBindingOperation( newOperation );
             fireOperationUpdated( wsdlOperation );
 
@@ -891,24 +922,32 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
     * @param policy
     * @return this interface changed in a proper way indicated by the policy
     */
-   public WsdlInterface processPolicy( Policy policy ) throws Exception
+   public void processPolicy( Policy policy ) throws Exception
    {
 
       // default is optional
       // String anonymous = AnonymousTypeConfig.OPTIONAL.toString();
-      String wsaVersion = WsaVersionTypeConfig.NONE.toString();
-      setAnonymous( AnonymousTypeConfig.OPTIONAL.toString() );
+//	  if (StringUtils.isNullOrEmpty(interfaceAnonymous) || policyFlag)
+//		  interfaceAnonymous = AnonymousTypeConfig.OPTIONAL.toString() ;
+//	  if (StringUtils.isNullOrEmpty(interfaceWsaVersion)|| policyFlag)
+//		  interfaceWsaVersion = WsaVersionTypeConfig.NONE.toString();
+	   if (!policyFlag) {
+		   interfaceAnonymous = AnonymousTypeConfig.OPTIONAL.toString() ;
+		   interfaceWsaVersion = WsaVersionTypeConfig.NONE.toString();
+	   }
+	   policyFlag = true;
 
       if( policy != null )
       {
          List<Addressing> addressingList = policy.getAddressingList();
          for( Addressing addressing : addressingList )
          {
-            String optional = addressing.getOptional().toString();
+             policyFlag = true;
+        	 String optional = addressing.getOptional().toString();
             if( StringUtils.isNullOrEmpty( optional ) || optional.equals( "false" )
                     || ( optional.equals( "true" ) && SoapUI.getSettings().getBoolean( WsaSettings.ENABLE_FOR_OPTIONAL ) ) )
             {
-               wsaVersion = WsaVersionTypeConfig.X_200508.toString();
+            	interfaceWsaVersion = WsaVersionTypeConfig.X_200508.toString();
             }
             Policy innerPolicy = addressing.getPolicy();
             if( innerPolicy != null )
@@ -923,21 +962,22 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
                if( anonymousList.size() > 0 )
                {
                   AnonymousResponses anonResp = anonymousList.get( 0 );
-                  setAnonymous( AnonymousTypeConfig.REQUIRED.toString() );
+                  interfaceAnonymous = AnonymousTypeConfig.REQUIRED.toString();
                }
                else
                {
                   if( nonAnonymousList.size() > 0 )
                   {
                      NonAnonymousResponses nonAnonResp = nonAnonymousList.get( 0 );
-                     setAnonymous( AnonymousTypeConfig.PROHIBITED.toString() );
+                     interfaceAnonymous = AnonymousTypeConfig.PROHIBITED.toString() ;
                   }
                }
             }
          }
       }
-      setWsaVersion( wsaVersion );
-		return this;
+      setAnonymous(interfaceAnonymous);
+      setWsaVersion( interfaceWsaVersion );
+		
 	}
 
 }

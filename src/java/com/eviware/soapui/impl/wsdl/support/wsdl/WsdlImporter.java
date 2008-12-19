@@ -136,13 +136,16 @@ public class WsdlImporter
                   String endpoint = WsdlUtils.getSoapEndpoint( port );
                   if( endpoint != null )
                      iface.addEndpoint( endpoint );
+                  //NOTE: question is what has priority wsaw:usingAddressing or wsam:Addressing policy 
+                  //in case addressing is defined both ways in the wsdl and there is conflict
+                  //this way policy steps over wsaw:UsingAddressing 
 
-                  if( iface.getWsaVersion().equals( WsaVersionTypeConfig.NONE.toString() ) )
+//                  if( iface.getWsaVersion().equals( WsaVersionTypeConfig.NONE.toString() ) )
                      iface.setWsaVersion( WsdlUtils.getUsingAddressing( port ) );
-                  if( iface.getWsaVersion().equals( WsaVersionTypeConfig.NONE.toString() ) )
-                  {
+//                  if( iface.getWsaVersion().equals( WsaVersionTypeConfig.NONE.toString() ) )
+//                  {
                      iface.processPolicy( PolicyUtils.getAttachedPolicy( port, wsdlContext.getDefinition() ) );
-                  }
+//                  }
 
                   result.add( iface );
                   importedBindings.put( binding, iface );

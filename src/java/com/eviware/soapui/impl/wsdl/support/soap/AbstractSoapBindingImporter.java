@@ -39,10 +39,10 @@ public abstract class AbstractSoapBindingImporter implements BindingImporter
 	protected void initWsAddressing(Binding binding, WsdlInterface iface, Definition def) throws Exception
 	{
 	   	iface.setWsaVersion(WsdlUtils.getUsingAddressing(binding));
-	   	if (iface.getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString()))
-			{
+//	   	if (iface.getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString()))
+//			{
 				iface.processPolicy(PolicyUtils.getAttachedPolicy(binding, def));
-			}
+//			}
 	}
 
 	public AbstractSoapBindingImporter()

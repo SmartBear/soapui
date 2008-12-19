@@ -221,6 +221,7 @@ public class PolicyUtils
 
 		Policy newPolicy = null;
 		//check for ExactlyOne and All
+		//TODO ExactlyOne and All are idempotent all empty ones should be skipped and found the real ones
 		Element exactlyOne = XmlUtils.getFirstChildElementNS(policy, PolicyUtils.WS_POLICY_NAMESPACE, "ExactlyOne");
 		if (exactlyOne != null) {
 			Element all = XmlUtils.getFirstChildElementNS(exactlyOne, PolicyUtils.WS_POLICY_NAMESPACE, "All");
