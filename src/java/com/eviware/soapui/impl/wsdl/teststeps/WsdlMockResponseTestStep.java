@@ -273,6 +273,12 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
             }
          }
       }
+
+      if( startTestStep instanceof WsdlMockResponseTestStep )
+      {
+         System.out.println( "Adding StartStepMockRunListener from [" + getName() + "] to [" + startTestStep.getName() + "]" );
+         startStepMockRunListener = new StartStepMockRunListener( testRunContext, (WsdlMockResponseTestStep) startTestStep );
+      }
    }
 
    protected void initTestMockResponse( TestRunContext testRunContext )
@@ -473,17 +479,25 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       }
    }
 
+   private WsdlMockResult lastResult;
+
+   public WsdlMockResult getLastResult()
+   {
+      return lastResult;
+   }
+
    public class InternalMockRunListener extends MockRunListenerAdapter
    {
-      private WsdlMockResult result;
       private boolean canceled;
       private boolean waiting;
 
-      public void onMockResult( MockResult result )
+      public synchronized void onMockResult( MockResult result )
       {
          // is this for us?
-         if( this.result == null && waiting && result.getMockResponse() == testMockResponse )
+         if( WsdlMockResponseTestStep.this.lastResult == null && waiting && result.getMockResponse() == testMockResponse )
          {
+            waiting = false;
+
             // save
             this.setResult( (WsdlMockResult) result );
 
@@ -492,8 +506,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
             //testMockResponse.setMockResult( null );
 
-            waiting = false;
-            System.out.println( "Got mockrequest to [" + getName() + "]");
+            System.out.println( "Got mockrequest to [" + getName() + "]" );
             synchronized( this )
             {
                notifyAll();
@@ -516,12 +529,12 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
       private void setResult( WsdlMockResult result )
       {
-         this.result = result;
+         WsdlMockResponseTestStep.this.lastResult = result;
       }
 
       public WsdlMockResult getResult()
       {
-         return result;
+         return lastResult;
       }
 
       public boolean isCanceled()
@@ -531,7 +544,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
       public boolean hasResult()
       {
-         return result != null;
+         return lastResult != null;
       }
 
       public boolean isWaiting()
@@ -554,7 +567,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       public void onMockRunnerStart( MockRunner mockRunner )
       {
          waiting = false;
-         result = null;
+         lastResult = null;
          canceled = false;
       }
    }
@@ -1013,6 +1026,11 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       {
          startTestStep.removePropertyChangeListener( this );
       }
+
+      if( lastResult != null )
+      {
+         lastResult = null;
+      }
    }
 
    public AssertableType getAssertableType()
@@ -1278,9 +1296,19 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
          {
             if( startTestStep instanceof WsdlMockResponseTestStep )
             {
-               System.out.println( "Adding StartStepMockRunListener from " + getName() + " to " + startTestStep.getName() ) ;
-               startStepMockRunListener = new StartStepMockRunListener( runContext, (WsdlMockResponseTestStep) startTestStep );
-
+//               WsdlMockResponseTestStep testStep = (WsdlMockResponseTestStep) startTestStep;
+//
+//               if( testStep.getLastResult() != null )
+//               {
+//                  System.out.println( "StartStep [" + testStep.getName() + "] already has result; preparing [" + getName() + "]" );
+//                  initTestMockResponse( runContext );
+//                  mockRunListener.setWaiting( true );
+//               }
+//               else
+//               {
+//                  System.out.println( "Adding StartStepMockRunListener from [" + getName() + "] to [" + startTestStep.getName() + "]" );
+//                  startStepMockRunListener = new StartStepMockRunListener( runContext, (WsdlMockResponseTestStep) startTestStep );
+//               }
             }
             else
             {
@@ -1313,7 +1341,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
       public void release()
       {
-         mockService.removeMockRunListener( this  );
+         mockService.removeMockRunListener( this );
          mockService = null;
          runContext = null;
       }

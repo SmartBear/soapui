@@ -83,64 +83,67 @@ public class MockEngine
       if( server == null )
          initServer();
 
-      WsdlMockService mockService = (WsdlMockService) runner.getMockService();
-      int port = mockService.getPort();
-
-      if( !runners.containsKey( port ) )
+      synchronized( server )
       {
-         SoapUIConnector connector = new SoapUIConnector();
+         WsdlMockService mockService = (WsdlMockService) runner.getMockService();
+         int port = mockService.getPort();
 
-         connector.setPort( port );
-         if( sslConnector != null )
-            connector.setConfidentialPort( sslConnector.getPort() );
-
-         if( mockService.getBindToHostOnly() )
+         if( !runners.containsKey( port ) )
          {
-            String host = mockService.getHost();
-            if( StringUtils.hasContent( host ) )
+            SoapUIConnector connector = new SoapUIConnector();
+
+            connector.setPort( port );
+            if( sslConnector != null )
+               connector.setConfidentialPort( sslConnector.getPort() );
+
+            if( mockService.getBindToHostOnly() )
             {
-               connector.setHost( host );
+               String host = mockService.getHost();
+               if( StringUtils.hasContent( host ) )
+               {
+                  connector.setHost( host );
+               }
             }
-         }
 
-         boolean wasRunning = server.isRunning();
+            boolean wasRunning = server.isRunning();
 
-         if( wasRunning )
-         {
-            server.stop();
-         }
-
-         server.addConnector( connector );
-         try
-         {
-            server.start();
-         }
-         catch( RuntimeException e )
-         {
-            UISupport.showErrorMessage( e );
-
-            server.removeConnector( connector );
             if( wasRunning )
             {
-               server.start();
-               return;
+               server.stop();
             }
+
+            server.addConnector( connector );
+            try
+            {
+               server.start();
+            }
+            catch( RuntimeException e )
+            {
+               UISupport.showErrorMessage( e );
+
+               server.removeConnector( connector );
+               if( wasRunning )
+               {
+                  server.start();
+                  return;
+               }
+            }
+
+            connectors.put( new Integer( port ), connector );
+            runners.put( new Integer( port ), new HashMap<String, List<MockRunner>>() );
          }
 
-         connectors.put( new Integer( port ), connector );
-         runners.put( new Integer( port ), new HashMap<String, List<MockRunner>>() );
-      }
+         Map<String, List<MockRunner>> map = runners.get( port );
+         String path = mockService.getPath();
+         if( !map.containsKey( path ) )
+         {
+            map.put( path, new ArrayList<MockRunner>() );
+         }
+         map.get( path ).add( runner );
+         mockRunners.add( runner );
 
-      Map<String, List<MockRunner>> map = runners.get( port );
-      String path = mockService.getPath();
-      if( !map.containsKey( path ) )
-      {
-         map.put( path, new ArrayList<MockRunner>() );
+         log.info( "Started mockService [" + mockService.getName() + "] on port [" + port + "] at path [" + path + "]" );
       }
-      map.get( path ).add( runner );
-      mockRunners.add( runner );
-
-      log.info( "Started mockService [" + mockService.getName() + "] on port [" + port + "] at path [" + path + "]" );
    }
 
    private void initServer() throws Exception
@@ -171,65 +174,68 @@ public class MockEngine
       }
    }
 
-   public synchronized void stopMockService( WsdlMockRunner runner )
+   public void stopMockService( WsdlMockRunner runner )
    {
-      MockService mockService = runner.getMockService();
-      final Integer port = new Integer( mockService.getPort() );
-      Map<String, List<MockRunner>> map = runners.get( port );
-
-      if( map == null )
-         return;
-
-      map.get( mockService.getPath() ).remove( runner );
-      if( map.get( mockService.getPath() ).isEmpty() )
+      synchronized( server )
       {
-         map.remove( mockService.getPath() );
-      }
+         MockService mockService = runner.getMockService();
+         final Integer port = new Integer( mockService.getPort() );
+         Map<String, List<MockRunner>> map = runners.get( port );
 
-      mockRunners.remove( runner );
-
-      log.info( "Stopped MockService [" + mockService.getName() + "] on port [" + port + "]" );
-
-      if( map.isEmpty() && !SoapUI.getSettings().getBoolean( HttpSettings.LEAVE_MOCKENGINE ) )
-      {
-         SoapUIConnector connector = connectors.get( port );
-         if( connector == null )
-         {
-            log.warn( "Missing connectors on port [" + port + "]" );
+         if( map == null )
             return;
+
+         map.get( mockService.getPath() ).remove( runner );
+         if( map.get( mockService.getPath() ).isEmpty() )
+         {
+            map.remove( mockService.getPath() );
          }
 
-         try
+         mockRunners.remove( runner );
+
+         log.info( "Stopped MockService [" + mockService.getName() + "] on port [" + port + "]" );
+
+         if( map.isEmpty() && !SoapUI.getSettings().getBoolean( HttpSettings.LEAVE_MOCKENGINE ) )
          {
-            log.info( "Stopping connector on port " + port );
-            if( !connector.waitUntilIdle( 5000 ) )
+            SoapUIConnector connector = connectors.get( port );
+            if( connector == null )
             {
-               log.warn( "Failed to wait for idle.. stopping connector anyway.." );
+               log.warn( "Missing connectors on port [" + port + "]" );
+               return;
             }
-            connector.stop();
-         }
-         catch( Exception e )
-         {
-            SoapUI.logError( e );
-         }
-         server.removeConnector( connector );
-         runners.remove( port );
-         if( runners.isEmpty() )
-         {
+
             try
             {
-               log.info( "No more connectors.. stopping server" );
-               server.stop();
-               if( sslConnector != null )
+               log.info( "Stopping connector on port " + port );
+               if( !connector.waitUntilIdle( 5000 ) )
                {
-                  server.removeConnector( sslConnector );
-                  sslConnector.stop();
-                  sslConnector = null;
+                  log.warn( "Failed to wait for idle.. stopping connector anyway.." );
                }
+               connector.stop();
             }
             catch( Exception e )
             {
                SoapUI.logError( e );
+            }
+            server.removeConnector( connector );
+            runners.remove( port );
+            if( runners.isEmpty() )
+            {
+               try
+               {
+                  log.info( "No more connectors.. stopping server" );
+                  server.stop();
+                  if( sslConnector != null )
+                  {
+                     server.removeConnector( sslConnector );
+                     sslConnector.stop();
+                     sslConnector = null;
+                  }
+               }
+               catch( Exception e )
+               {
+                  SoapUI.logError( e );
+               }
             }
          }
       }
@@ -542,91 +548,95 @@ public class MockEngine
       public void handle( String target, HttpServletRequest request, HttpServletResponse response, int dispatch )
               throws IOException, ServletException
       {
-         // find mockService
-         Map<String, List<MockRunner>> map = runners.get( request.getLocalPort() );
-
-         // ssl?
-         if( map == null && sslConnector != null && request.getLocalPort() == sslConnector.getPort() )
+         synchronized( server )
          {
-            for( Map<String, List<MockRunner>> runnerMap : runners.values() )
-            {
-               if( runnerMap.containsKey( request.getPathInfo() ) )
-               {
-                  map = runnerMap;
-                  break;
-               }
-            }
-         }
 
-         if( map != null )
-         {
-            List<MockRunner> wsdlMockRunners = map.get( request.getPathInfo() );
-            if( wsdlMockRunners == null && request.getMethod().equals( "GET" ) )
+            // find mockService
+            Map<String, List<MockRunner>> map = runners.get( request.getLocalPort() );
+
+            // ssl?
+            if( map == null && sslConnector != null && request.getLocalPort() == sslConnector.getPort() )
             {
-               for( String root : map.keySet() )
+               for( Map<String, List<MockRunner>> runnerMap : runners.values() )
                {
-                  if( request.getPathInfo().startsWith( root ) )
+                  if( runnerMap.containsKey( request.getPathInfo() ) )
                   {
-                     wsdlMockRunners = map.get( root );
+                     map = runnerMap;
+                     break;
                   }
                }
             }
 
-            if( wsdlMockRunners != null )
+            if( map != null )
             {
-               synchronized( wsdlMockRunners )
+               List<MockRunner> wsdlMockRunners = map.get( request.getPathInfo() );
+               if( wsdlMockRunners == null && request.getMethod().equals( "GET" ) )
                {
-                  try
+                  for( String root : map.keySet() )
                   {
-                     DispatchException ex = null;
-
-                     for( MockRunner wsdlMockRunner : wsdlMockRunners )
+                     if( request.getPathInfo().startsWith( root ) )
                      {
-                        try
-                        {
-                           MockResult result = wsdlMockRunner.dispatchRequest( request, response );
-                           if( result != null )
-                              result.finish();
-
-                           // if we get here, we got dispatched..
-                           break;
-                        }
-                        catch( DispatchException e )
-                        {
-                           log.debug( wsdlMockRunner.getMockService().getName()
-                                   + " was unable to dispatch mock request ", e );
-
-                           ex = e;
-                        }
+                        wsdlMockRunners = map.get( root );
                      }
-
-                     if( ex != null )
-                        throw ex;
                   }
-                  catch( Exception e )
+               }
+
+               if( wsdlMockRunners != null )
+               {
+                  synchronized( wsdlMockRunners )
                   {
-                     SoapUI.logError( e );
+                     try
+                     {
+                        DispatchException ex = null;
 
-                     response.setStatus( HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
-                     response.setContentType( "text/html" );
-                     response.getWriter().print(
-                             SoapMessageBuilder.buildFault( "Server", e.getMessage(), SoapVersion.Utils
-                                     .getSoapVersionForContentType( request.getContentType(), SoapVersion.Soap11 ) ) );
-                     // throw new ServletException( e );
+                        for( MockRunner wsdlMockRunner : wsdlMockRunners )
+                        {
+                           try
+                           {
+                              MockResult result = wsdlMockRunner.dispatchRequest( request, response );
+                              if( result != null )
+                                 result.finish();
+
+                              // if we get here, we got dispatched..
+                              break;
+                           }
+                           catch( DispatchException e )
+                           {
+                              log.debug( wsdlMockRunner.getMockService().getName()
+                                      + " was unable to dispatch mock request ", e );
+
+                              ex = e;
+                           }
+                        }
+
+                        if( ex != null )
+                           throw ex;
+                     }
+                     catch( Exception e )
+                     {
+                        SoapUI.logError( e );
+
+                        response.setStatus( HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
+                        response.setContentType( "text/html" );
+                        response.getWriter().print(
+                                SoapMessageBuilder.buildFault( "Server", e.getMessage(), SoapVersion.Utils
+                                        .getSoapVersionForContentType( request.getContentType(), SoapVersion.Soap11 ) ) );
+                        // throw new ServletException( e );
+                     }
                   }
+               }
+               else
+               {
+                  printMockServiceList( response );
                }
             }
             else
             {
                printMockServiceList( response );
             }
-         }
-         else
-         {
-            printMockServiceList( response );
-         }
 
-         response.flushBuffer();     
+            response.flushBuffer();
+         }
       }
 
       private void printMockServiceList( HttpServletResponse response ) throws IOException
@@ -658,7 +668,7 @@ public class MockEngine
    {
       public void log( Request request, Response response )
       {
-         if( !SoapUI.getSettings().getBoolean( HttpSettings.ENABLE_MOCK_WIRE_LOG ))
+         if( !SoapUI.getSettings().getBoolean( HttpSettings.ENABLE_MOCK_WIRE_LOG ) )
             return;
 
          if( SoapUI.getLogMonitor() == null || SoapUI.getLogMonitor().getLogArea( "jetty log" ) == null ||
