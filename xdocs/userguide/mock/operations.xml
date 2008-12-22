@@ -93,7 +93,7 @@
 		<a href="../xpath_selector.html">XPath Selector</a>.</p>
 		</subsection>
             
-        <subsection name="XPath Dispatching">
+        <subsection name="Query-Match Dispatching">
         <p>The QUERY_MATCH dispatch option has the following configuration panel:</p>    
         <p align="center"><img src="images/querymatch-dispatch-config.gif"></img></p>
             <p>The list to the left contains a list of queries with a toolbar for adding/removing/etc these.
