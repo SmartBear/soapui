@@ -136,9 +136,7 @@ public class DefaultSoapUICore implements SoapUICore
 
 	protected Settings initSettings(String fileName)
 	{
-		log.info("SOAP::" + fileName);
 		File settingsFile = new File(fileName).exists() ? new File(fileName) : null;
-		log.info("SOAP::" + settingsFile.getAbsolutePath());
 		try
 		{
 			if ( settingsFile == null  ) {
