@@ -16,7 +16,7 @@ public class SwingPluginSoapUICore extends SwingSoapUICore
 {
 	public SwingPluginSoapUICore()
 	{
-		this( System.getProperty( "user.home" ), SoapUICore.DEFAULT_SETTINGS_FILE );
+		this( System.getProperty( "user.home", "." ), SoapUICore.DEFAULT_SETTINGS_FILE );
 	}
 	
 	public SwingPluginSoapUICore( String root )

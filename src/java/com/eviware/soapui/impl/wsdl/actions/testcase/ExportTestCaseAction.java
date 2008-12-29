@@ -20,7 +20,7 @@ public class ExportTestCaseAction extends AbstractSoapUIAction<WsdlTestCase>
 	public void perform(WsdlTestCase testCase, Object param)
 	{
 		testCase.beforeSave();
-		String defaultFileName = System.getProperty("user.home") + File.separator + testCase.getName() + ".xml";
+		String defaultFileName = System.getProperty("user.home", ".") + File.separator + testCase.getName() + ".xml";
 		File file = UISupport.getFileDialogs().saveAs(this, "Select test case file", "xml", "XML", new File(defaultFileName));
 		
 		if( file == null ) return;

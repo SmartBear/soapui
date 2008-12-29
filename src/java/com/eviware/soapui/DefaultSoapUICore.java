@@ -130,7 +130,7 @@ public class DefaultSoapUICore implements SoapUICore
 	public String getRoot()
 	{
 		if (root == null || root.length() == 0)
-			root = System.getProperty("soapui.home", new File("").getAbsolutePath());
+			root = System.getProperty("soapui.home", new File(".").getAbsolutePath());
 		return root;
 	}
 
@@ -142,7 +142,7 @@ public class DefaultSoapUICore implements SoapUICore
 			if ( settingsFile == null  ) {
 				settingsFile = new File(new File(getRoot()), DEFAULT_SETTINGS_FILE);
 				if ( !settingsFile.exists() ) {
-					settingsFile = new File( new File( System.getProperty("user.home")), DEFAULT_SETTINGS_FILE);
+					settingsFile = new File( new File( System.getProperty("user.home", ".")), DEFAULT_SETTINGS_FILE);
 				}
 			} else {
 				settingsFile = new File(fileName);
@@ -322,7 +322,7 @@ public class DefaultSoapUICore implements SoapUICore
 		// Save settings to root or user.home
 		File file = new File(new File(getRoot()), DEFAULT_SETTINGS_FILE);
 		if ( !file.canWrite() ) {
-			file = new File( new File( System.getProperty("user.home")), DEFAULT_SETTINGS_FILE);
+			file = new File( new File( System.getProperty("user.home", ".")), DEFAULT_SETTINGS_FILE);
 		}
 		
 
