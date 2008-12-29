@@ -114,6 +114,13 @@ public abstract class AbstractSoapUIRunner
       return processCommandLine( cmd );
    }
 
+   /**
+    * Main method to use for running the configured tests. Call after setting properties, etc as desired.
+    *
+    * @return true if execution should be blocked
+    * @throws Exception if an error or failure occurs during test execution
+    */
+
    public final boolean run() throws Exception
    {
       SoapUI.setSoapUICore( createSoapUICore() );
