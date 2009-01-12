@@ -17,6 +17,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
@@ -225,6 +226,8 @@ public class ResolveDialog
 			resolveContextTableModel = new ResolveContextTableModel(context);
 			if (dialog == null)
 				buildDialog();
+         else
+            table.setModel( resolveContextTableModel );
 
 			UISupport.centerDialog(dialog);
 			dialog.setVisible(true);
@@ -450,11 +453,12 @@ public class ResolveDialog
 		{
 			Component comp = super.getTableCellRendererComponent(arg0, arg1, arg2, arg3, arg4, arg5);
 
-			PathToResolve ptr = resolveContextTableModel.getContext().getPathsToResolve().get(arg4);
+         List<? extends PathToResolve> paths = resolveContextTableModel.getContext().getPathsToResolve();
+         PathToResolve ptr = arg4 >= paths.size() ? null : paths.get(arg4);
 			// boolean resolved = ptr.getResolver() != null &&
 			// ptr.getResolver().isResolved();
 
-			if (ptr.isResolved())
+			if ( ptr != null &&  ptr.isResolved())
 			{
 				comp.setForeground(greenColor);
 				setText(ptr.getPath());
