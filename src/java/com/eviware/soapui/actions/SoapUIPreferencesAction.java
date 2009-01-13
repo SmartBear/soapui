@@ -23,6 +23,7 @@ import javax.swing.JTabbedPane;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.SSLSettings;
 import com.eviware.soapui.settings.SecuritySettings;
@@ -41,7 +42,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 public class SoapUIPreferencesAction extends AbstractAction
 {
-	private static final String GLOBAL_SECURITY_SETTINGS = "Global Security Settings";
+	public static final String GLOBAL_SECURITY_SETTINGS = "Global Security Settings";
 	public static final String WS_I_SETTINGS = "WS-I Settings";
 	public static final String WSDL_SETTINGS = "WSDL Settings";
 	public static final String UI_SETTINGS = "UI Settings";
@@ -64,7 +65,8 @@ public class SoapUIPreferencesAction extends AbstractAction
 		putValue( Action.SHORT_DESCRIPTION, "Sets global soapUI preferences" );
 		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu alt P"));
 		
-		addPrefs( new HttpPrefs( HTTP_SETTINGS));
+		//addPrefs( new HttpPrefs( HTTP_SETTINGS));
+		addPrefs( new AnnotatedSettingsPrefs( HttpSettings.class, HTTP_SETTINGS ));
 		addPrefs( new AnnotatedSettingsPrefs( ProxySettings.class, PROXY_SETTINGS ));
 		addPrefs( new AnnotatedSettingsPrefs( SSLSettings.class, SSL_SETTINGS ));
 		addPrefs( new AnnotatedSettingsPrefs( WsdlSettings.class, WSDL_SETTINGS ));

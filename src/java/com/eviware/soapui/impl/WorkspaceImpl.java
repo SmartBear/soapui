@@ -412,7 +412,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
       }
 
 //		WsdlProject project = new WsdlProject( projectFile == null ? null : projectFile.getAbsolutePath(), this );
-      WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory( WsdlProjectFactory.WSDL_TYPE ).createNew( projectFile == null ? null : projectFile.getAbsolutePath(), this );
+      WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory( WsdlProjectFactory.WSDL_TYPE ).createNew( null, this );
 
       project.setName( name );
       projectList.add( project );
@@ -422,7 +422,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
       try
       {
          if( projectFile != null )
-            project.save();
+            project.saveAs(projectFile.getAbsolutePath());
       }
       catch( IOException e )
       {

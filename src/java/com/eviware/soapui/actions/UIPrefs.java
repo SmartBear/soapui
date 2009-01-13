@@ -77,7 +77,7 @@ public class UIPrefs implements Prefs
 
          editorForm.appendCheckBox( AUTOSAVE_ONEXIT, "(automatically save all projects on exit)", true );
          backupCheckBox = editorForm.appendCheckBox( CREATE_BACKUP, "(backup project files before they are saved)", true );
-         backupFolder = editorForm.appendTextField( BACKUP_FOLDER, "(folder to backup to, can be both relative or absolut)" );
+         backupFolder = editorForm.appendTextField( BACKUP_FOLDER, "(folder to backup to, can be both relative or absolute)" );
          backupCheckBox.addActionListener( new ActionListener()
          {
 
