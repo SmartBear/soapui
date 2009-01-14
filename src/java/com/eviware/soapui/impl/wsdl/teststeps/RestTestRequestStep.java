@@ -22,6 +22,8 @@ import org.apache.log4j.Logger;
 
 import java.beans.PropertyChangeEvent;
 import java.util.List;
+import java.util.Collection;
+import java.util.ArrayList;
 
 public class RestTestRequestStep extends HttpTestRequestStep
 {
@@ -79,6 +81,14 @@ public class RestTestRequestStep extends HttpTestRequestStep
    protected String createDefaultRequestContent()
    {
       return restResource == null ? null : restResource.createRequest( true );
+   }
+
+   @Override
+   public Collection<Interface> getRequiredInterfaces()
+   {
+      ArrayList<Interface> result = new ArrayList<Interface>();
+      result.add( findRestResource().getInterface() );
+      return result;
    }
 
    private RestResource findRestResource()

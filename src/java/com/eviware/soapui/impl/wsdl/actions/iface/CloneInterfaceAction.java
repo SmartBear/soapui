@@ -58,7 +58,7 @@ public class CloneInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
 			
 			try
 			{
-				targetProject = workspace.createProject( targetProjectName );
+				targetProject = workspace.createProject( targetProjectName, null );
 			}
 			catch( SoapUIException e )
 			{

@@ -671,9 +671,9 @@ public class WsdlAsyncResponseTestStep extends WsdlTestStepWithProperties implem
       return TestAssertionRegistry.AssertableType.REQUEST;
    }
 
-   public Collection<WsdlInterface> getRequiredInterfaces()
+   public Collection<Interface> getRequiredInterfaces()
    {
-      ArrayList<WsdlInterface> interfaces = new ArrayList<WsdlInterface>();
+      ArrayList<Interface> interfaces = new ArrayList<Interface>();
       interfaces.add( getInterface() );
 
       return interfaces;

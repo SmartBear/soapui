@@ -106,7 +106,7 @@ public class CloneMockServiceAction extends AbstractSoapUIAction<WsdlMockService
 			
 			try
 			{
-				targetProject = workspace.createProject( targetProjectName );
+				targetProject = workspace.createProject( targetProjectName, null );
 			}
 			catch( SoapUIException e )
 			{
@@ -124,7 +124,7 @@ public class CloneMockServiceAction extends AbstractSoapUIAction<WsdlMockService
 			String msg = "Target project [" + targetProjectName  +"] is missing required interfaces;\r\n\r\n";
 			for( WsdlInterface iface : requiredInterfaces )
 			{
-				msg += iface.getName() + " [" + iface.getBindingName() + "]\r\n";
+				msg += iface.getName() + " [" + iface.getTechnicalId() + "]\r\n";
 			}
 			msg += "\r\nThese will be cloned to the targetProject as well";
 			
@@ -162,10 +162,10 @@ public class CloneMockServiceAction extends AbstractSoapUIAction<WsdlMockService
 		
 		if( requiredInterfaces.size() > 0 && targetProject.getInterfaceCount() > 0 )
 		{
-			Map<QName,WsdlInterface> bindings = new HashMap<QName,WsdlInterface>();
+			Map<String,WsdlInterface> bindings = new HashMap<String,WsdlInterface>();
 			for( WsdlInterface iface : requiredInterfaces )
 			{
-				bindings.put( iface.getBindingName(), iface );
+				bindings.put( iface.getTechnicalId(), iface );
 			}
 			
 			for( Interface iface : targetProject.getInterfaceList() )

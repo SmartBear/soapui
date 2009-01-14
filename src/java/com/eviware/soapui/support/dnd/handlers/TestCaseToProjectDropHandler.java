@@ -22,6 +22,7 @@ import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.support.UISupport;
 
 public class TestCaseToProjectDropHandler extends AbstractAfterModelItemDropHandler<WsdlTestCase, WsdlProject>
@@ -78,7 +79,7 @@ public class TestCaseToProjectDropHandler extends AbstractAfterModelItemDropHand
 			testSuite = target.addNewTestSuite( name );
 		}
 		
-		Set<WsdlInterface> requiredInterfaces = new HashSet<WsdlInterface>();
+		Set<Interface> requiredInterfaces = new HashSet<Interface>();
 		
 		for( int i = 0; i < testSuite.getTestCaseCount(); i++ )
 		{

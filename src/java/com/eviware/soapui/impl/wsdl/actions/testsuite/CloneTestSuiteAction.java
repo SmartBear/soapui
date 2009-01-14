@@ -20,6 +20,7 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import com.eviware.soapui.impl.WorkspaceImpl;
+import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
@@ -102,7 +103,7 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 			
 			try
 			{
-				targetProject = workspace.createProject( targetProjectName );
+				targetProject = workspace.createProject( targetProjectName, null );
 			}
 			catch( SoapUIException e )
 			{
@@ -113,23 +114,23 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 				return null;
 		}
 		
-		Set<WsdlInterface> requiredInterfaces = getRequiredInterfaces( testSuite, targetProject );
+		Set<Interface> requiredInterfaces = getRequiredInterfaces( testSuite, targetProject );
 		
 		if( requiredInterfaces.size() > 0 )
 		{
-			String msg = "Target project [" + targetProjectName  +"] is missing required interfaces;\r\n\r\n";
-			for( WsdlInterface iface : requiredInterfaces )
+			String msg = "Target project [" + targetProjectName  +"] is missing required Interfaces;\r\n\r\n";
+			for( Interface iface : requiredInterfaces )
 			{
-				msg += iface.getName() + " [" + iface.getBindingName() + "]\r\n";
+				msg += iface.getName() + " [" + iface.getTechnicalId() + "]\r\n";
 			}
 			msg += "\r\nThese will be cloned to the targetProject as well";
 			
 			if( !UISupport.confirm( msg, "Clone TestSuite" ))
 				return null;
 			
-			for( WsdlInterface iface : requiredInterfaces )
+			for( Interface iface : requiredInterfaces )
 			{
-				targetProject.importInterface( iface, true, true );
+				targetProject.importInterface( (AbstractInterface<?>) iface, true, true );
 			}
 		}
 		
@@ -146,9 +147,9 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 		return true;
 	}
 
-	public static Set<WsdlInterface> getRequiredInterfaces( WsdlTestSuite testSuite, WsdlProject targetProject )
+	public static Set<Interface> getRequiredInterfaces( WsdlTestSuite testSuite, WsdlProject targetProject )
 	{
-		Set<WsdlInterface> requiredInterfaces = new HashSet<WsdlInterface>();
+		Set<Interface> requiredInterfaces = new HashSet<Interface>();
 		
 		for( int i = 0; i < testSuite.getTestCaseCount(); i++ )
 		{
@@ -163,10 +164,10 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 		
 		if( requiredInterfaces.size() > 0 && targetProject.getInterfaceCount() > 0 )
 		{
-			Map<QName,WsdlInterface> bindings = new HashMap<QName,WsdlInterface>();
-			for( WsdlInterface iface : requiredInterfaces )
+			Map<String,Interface> bindings = new HashMap<String,Interface>();
+			for( Interface iface : requiredInterfaces )
 			{
-				bindings.put( iface.getBindingName(), iface );
+				bindings.put( iface.getTechnicalId(), iface );
 			}
 			
 			for( Interface iface : targetProject.getInterfaceList() )

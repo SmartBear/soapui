@@ -21,6 +21,7 @@ import javax.xml.namespace.QName;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.WorkspaceImpl;
+import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
@@ -68,7 +69,10 @@ public class CloneTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 				{
 					if( newValue.equals( CREATE_NEW_OPTION ))
-						dialog.setOptions( Form.TESTSUITE, new String[] {CREATE_NEW_OPTION} );
+               {
+                  dialog.setOptions( Form.TESTSUITE, new String[]{CREATE_NEW_OPTION} );
+                  dialog.setOptions( Form.TESTCASE, new String[] {CREATE_NEW_OPTION} );
+               }
 					else
 					{
 						Project project = SoapUI.getWorkspace().getProjectByName( newValue );
@@ -135,7 +139,7 @@ public class CloneTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 			WsdlProject project = testStep.getTestCase().getTestSuite().getProject();
 			WsdlTestSuite targetTestSuite = null;
 			WsdlTestCase targetTestCase = null;
-			Set<WsdlInterface> requiredInterfaces = new HashSet<WsdlInterface>();
+			Set<Interface> requiredInterfaces = new HashSet<Interface>();
 			
 			// to another project project?
 			if( !targetProjectName.equals( project.getName() ))
@@ -152,7 +156,7 @@ public class CloneTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 					
 					try
 					{
-						project = workspace.createProject( targetProjectName );
+						project = workspace.createProject( targetProjectName, null );
 					}
 					catch( SoapUIException e )
 					{
@@ -165,10 +169,10 @@ public class CloneTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 				
 				if( requiredInterfaces.size() > 0 && project.getInterfaceCount() > 0 )
 				{
-					Map<QName,WsdlInterface> bindings = new HashMap<QName,WsdlInterface>();
-					for( WsdlInterface iface : requiredInterfaces )
+					Map<String,Interface> bindings = new HashMap<String,Interface>();
+					for( Interface iface : requiredInterfaces )
 					{
-						bindings.put( iface.getBindingName(), iface );
+						bindings.put( iface.getTechnicalId(), iface );
 					}
 					
 					for( Interface iface : project.getInterfaceList() )
@@ -181,19 +185,19 @@ public class CloneTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 				
 				if( requiredInterfaces.size() > 0 )
 				{
-					String msg = "Target project [" + targetProjectName  +"] is missing required interfaces;\r\n\r\n";
-					for( WsdlInterface iface : requiredInterfaces )
+					String msg = "Target project [" + targetProjectName  +"] is missing required Interfaces;\r\n\r\n";
+					for( Interface iface : requiredInterfaces )
 					{
-						msg += iface.getName() + " [" + iface.getBindingName() + "]\r\n";
+						msg += iface.getName() + " [" + iface.getTechnicalId() + "]\r\n";
 					}
 					msg += "\r\nThese will be cloned to the targetProject as well";
 					
 					if( !UISupport.confirm( msg, "Clone TestStep" ))
 						return;
 					
-					for( WsdlInterface iface : requiredInterfaces )
+					for( Interface iface : requiredInterfaces )
 					{
-						project.importInterface( iface, true, true );
+						project.importInterface( (AbstractInterface<?>) iface, true, true );
 					}
 				}
 			}

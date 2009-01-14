@@ -22,6 +22,7 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
+import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.support.UISupport;
 
@@ -40,7 +41,7 @@ public class DragAndDropSupport
 		
 		if( sourceProject != targetProject )
 		{
-			if( !importRequiredInterfaces( targetProject, new HashSet<WsdlInterface>( source.getRequiredInterfaces() ), "Copy Test Step" ))
+			if( !importRequiredInterfaces( targetProject, new HashSet<Interface>( source.getRequiredInterfaces() ), "Copy Test Step" ))
 				return false;
 		}
 	
@@ -49,12 +50,12 @@ public class DragAndDropSupport
 		return true;
 	}
 
-	public static boolean importRequiredInterfaces( WsdlProject project, Set<WsdlInterface> requiredInterfaces, String title )
+	public static boolean importRequiredInterfaces( WsdlProject project, Set<Interface> requiredInterfaces, String title )
 	{
 		if( requiredInterfaces.size() > 0 && project.getInterfaceCount() > 0 )
 		{
-			Map<String,WsdlInterface> bindings = new HashMap<String,WsdlInterface>();
-			for( WsdlInterface iface : requiredInterfaces )
+			Map<String,Interface> bindings = new HashMap<String,Interface>();
+			for( Interface iface : requiredInterfaces )
 			{
 				bindings.put( iface.getTechnicalId(), iface );
 			}
@@ -69,19 +70,19 @@ public class DragAndDropSupport
 		
 		if( requiredInterfaces.size() > 0 )
 		{
-			String msg = "Target project [" + project.getName()  +"] is missing required interfaces;\r\n\r\n";
-			for( WsdlInterface iface : requiredInterfaces )
+			String msg = "Target project [" + project.getName()  +"] is missing required Interfaces;\r\n\r\n";
+			for( Interface iface : requiredInterfaces )
 			{
-				msg += iface.getName() + " [" + iface.getBindingName() + "]\r\n";
+				msg += iface.getName() + " [" + iface.getTechnicalId() + "]\r\n";
 			}
 			msg += "\r\nThese will be cloned to the target project as well";
 			
 			if( !UISupport.confirm( msg, title))
 				return false;
 			
-			for( WsdlInterface iface : requiredInterfaces )
+			for( Interface iface : requiredInterfaces )
 			{
-				project.importInterface( iface, true, true );
+				project.importInterface( (AbstractInterface<?>) iface, true, true );
 			}
 		}
 		
@@ -117,7 +118,7 @@ public class DragAndDropSupport
 			
 			if( sourceProject != targetProject )
 			{
-				if( !importRequiredInterfaces( targetProject, new HashSet<WsdlInterface>( source.getRequiredInterfaces() ), "Move Test Step" ))
+				if( !importRequiredInterfaces( targetProject, new HashSet<Interface>( source.getRequiredInterfaces() ), "Move Test Step" ))
 					return false;
 			}
 			

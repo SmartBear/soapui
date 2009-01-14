@@ -18,6 +18,7 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.PanelBuilder;
+import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.propertyexpansion.MutablePropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -183,9 +184,9 @@ abstract public class WsdlTestStep extends AbstractWsdlModelItem<TestStepConfig>
    {
    }
 
-   public Collection<WsdlInterface> getRequiredInterfaces()
+   public Collection<Interface> getRequiredInterfaces()
    {
-      return new ArrayList<WsdlInterface>();
+      return new ArrayList<Interface>();
    }
 
    public boolean isDisabled()
