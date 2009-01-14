@@ -422,7 +422,6 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 			if( getRunType() == TestSuiteRunType.PARALLEL )
 				testRunLog.addText( "<log disabled during parallell execution>" );
 			
-			context = new DefaultPropertyExpansionContext( getModelItem() );
 			try
 			{
 				getModelItem().runSetupScript( context );
