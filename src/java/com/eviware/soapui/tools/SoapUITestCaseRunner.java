@@ -440,7 +440,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
             {
                if( !tc.isDisabled() )
                {
-                  runTestCase( tc );
+                  runTestCase( tc, context );
                }
                else
                {
@@ -476,11 +476,12 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
     * Runs the specified TestCase
     *
     * @param testCase the testcase to run
+    * @param context
     */
 
-   private void runTestCase( TestCase testCase )
+   private void runTestCase( TestCase testCase, PropertyExpansionContext context )
    {
-      TestRunner testRunner = testCase.run( new StringToObjectMap(), testCase.getTestSuite().getRunType() == TestSuiteRunType.PARALLEL );
+      TestRunner testRunner = testCase.run( context.getProperties(), testCase.getTestSuite().getRunType() == TestSuiteRunType.PARALLEL );
       if( testRunner.getStatus() == TestRunner.Status.RUNNING )
          runningTests.add( testRunner );
    }
