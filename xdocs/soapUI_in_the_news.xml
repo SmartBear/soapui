@@ -7,7 +7,7 @@
     <section name="soapUI Releases">
                 
        
-     <subsection name="soapUI a great way to do integration">
+    <subsection name="soapUI a great way to do integration">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/marcusoft.gif" alt="Groovy in soapui"/>
@@ -17,9 +17,21 @@
 	    			<a href="http://www.marcusoft.net/2008/12/soap-ui-great-way-to-do-integration.html">[Read more]</a></p>
 	    		</column>
 	    	</columns>
-		</subsection>      
-       
-   <subsection name="Groovy in soapUI">
+	 </subsection>
+
+     <subsection name="WSDL styles, mock objects, and soapUI">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/searchsoa.gif" alt="web services WSDL"/>
+	    		</column>
+	    		<column align="left">
+	    			<p>The post starts: WSDL has been around long enough to take root in the ..."<br/>
+	    			<a href="http://soa-talk.blogs.techtarget.com/2008/11/28/wsdl-styles-mock-objects-and-soap-ui/">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	 </subsection>
+   
+     <subsection name="Groovy in soapUI">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/groovyin.gif" alt="Groovy in soapui"/>
