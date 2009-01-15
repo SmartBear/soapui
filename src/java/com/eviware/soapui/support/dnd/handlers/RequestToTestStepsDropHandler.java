@@ -21,6 +21,7 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.actions.request.AddRequestToTestCaseAction;
 import com.eviware.soapui.model.tree.nodes.support.WsdlTestStepsModelItem;
+import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.SoapUIAction;
 
@@ -58,7 +59,7 @@ public class RequestToTestStepsDropHandler extends AbstractAfterModelItemDropHan
 		WsdlProject targetProject = target.getTestCase().getTestSuite().getProject();
 		if( targetProject != source.getOperation().getInterface().getProject() )
 		{
-			HashSet<WsdlInterface> requiredInterfaces = new HashSet<WsdlInterface>();
+			HashSet<Interface> requiredInterfaces = new HashSet<Interface>();
 			requiredInterfaces.add( source.getOperation().getInterface() );
 			
 			if( !DragAndDropSupport.importRequiredInterfaces( targetProject,  

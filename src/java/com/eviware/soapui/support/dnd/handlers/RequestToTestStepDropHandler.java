@@ -16,6 +16,7 @@ package com.eviware.soapui.support.dnd.handlers;
 import java.util.HashSet;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -59,7 +60,7 @@ public class RequestToTestStepDropHandler extends AbstractBeforeAfterModelItemDr
 		WsdlProject targetProject = testCase.getTestSuite().getProject();
 		if( targetProject != source.getOperation().getInterface().getProject() )
 		{
-			HashSet<WsdlInterface> requiredInterfaces = new HashSet<WsdlInterface>();
+			HashSet<Interface> requiredInterfaces = new HashSet<Interface>();
 			requiredInterfaces.add( source.getOperation().getInterface() );
 			
 			if( !DragAndDropSupport.importRequiredInterfaces( targetProject,  
