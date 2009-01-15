@@ -152,7 +152,7 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 		{
 			super();
 			putValue( AbstractAction.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ));
-			putValue( AbstractAction.SHORT_DESCRIPTION, "Adds a custom HTTP Header to this messagae" );
+			putValue( AbstractAction.SHORT_DESCRIPTION, "Adds a custom HTTP Header to this message" );
 		}
 
 		public void actionPerformed( ActionEvent arg0 )
