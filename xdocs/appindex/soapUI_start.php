@@ -59,14 +59,7 @@ urchinTracker();</script>
         <br />
       In the new release you get full support for REST Testing. We would like to think it's a gem! soapUI REST Testing makes it possible for you to do complete RestTests with or without a WADL.<br />
       <p align="center" class="center_p"><a onclick="javascript:urchinTracker('/appindexsoapUIReadMore')" href="http://www.eviware.com/new.htm" title="Read more about soapUI 2.1" target="_blank">Read more here</a> | <a onclick="javascript:urchinTracker('/appindexsoapUIDownloadNewest')" href="http://sourceforge.net/project/showfiles.php?group_id=136013&package_id=163662&release_id=641323" title="download soapUI" target="_blank">Download it here</a>|</p>
-      <hr/>
-	<h1><img src="Images/soapui-logo.png" alt="soapUI" width="50" height="50" /> Win a Moosepad!</h1>
-    <p>Put your mouse on a moose! Answer our survey and win a Moosepad!</p>
-    <p>In our constant ambition to continue delivering the best software and services avaiblable, we would like to know what you think Great Software and Services actually are.</p>
-    <p>In order to understand you need better, we have set up a small survey in order to know what what you think of certain issues.The survey is less than 15 questions and only take a few minutes to answer.</p>
-    <p> As a small thank you we are giving out a number of exclusive eviware mousepads in genuine Nordic moose leather. The moosepad is luxurious, sturdy and will only get better with age.</p>
-    <p><a href="http://www.surveymonkey.com/s.aspx?sm=_2flqVjMGpXDPJF7xMp8emfA_3d_3d" target="_blank" title="Take the survey" onclick="javascript:urchinTracker('/survey1208');">Take the survey  here</a>! </p>
-    <hr/>  
+     <hr/>  
 <h1><img src="Images/soapui-logo.png" alt="soapUI" width="50" height="50" /> Latest blogposts:</h1>
 
 <ul>
