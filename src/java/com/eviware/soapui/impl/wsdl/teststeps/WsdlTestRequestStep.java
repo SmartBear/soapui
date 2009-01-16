@@ -553,6 +553,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 
       wsdlOperation.addPropertyChangeListener( this );
 
+      initTestRequest( this.getConfig(), false );
       testRequest.setOperation( wsdlOperation );
    }
 
@@ -730,10 +731,11 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
                     @Override
                     public boolean update()
                     {
-                       wsdlOperation = (WsdlOperation) getSelectedOperation();
+                       WsdlOperation wsdlOperation = (WsdlOperation) getSelectedOperation();
                        if( wsdlOperation == null )
                           return false;
-
+                       
+							  setOperation(wsdlOperation);
                        initTestRequest( getConfig(), false );
                        initRequestProperties();
                        setDisabled( false );
@@ -762,4 +764,5 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
          }
       }
    }
+   
 }
