@@ -87,7 +87,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
@@ -118,10 +117,10 @@ public class SoapUI
    private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
    public static final String BUILDINFO_RESOURCE = "/com/eviware/soapui/resources/conf/buildinfo.txt";
 
-   public static String PUSH_PAGE_URL = "http://www.soapui.org/appindex/soapui_start.php";
+   public static String PUSH_PAGE_URL = "http://www.soapui.org/appindex/soapui_start.php?version=" + URLEncoder.encode( SOAPUI_VERSION );
    public static String FRAME_ICON = "/16-perc.gif";
    public static String PUSH_PAGE_ERROR_URL =
-              SoapUI.class.getResource( "/com/eviware/soapui/resources/html/starter-page.html" ).toString();
+           SoapUI.class.getResource( "/com/eviware/soapui/resources/html/starter-page.html" ).toString();
 
    // ------------------------------ FIELDS ------------------------------
 
@@ -483,8 +482,8 @@ public class SoapUI
 
    public static SoapUI startSoapUI( String[] args, String title, String splashImage, SwingSoapUICore core ) throws Exception
    {
-      System.setProperty("apple.laf.useScreenMenuBar", "true");
-      System.setProperty("com.apple.mrj.application.apple.menu.about.name", "SoapUI");
+      System.setProperty( "apple.laf.useScreenMenuBar", "true" );
+      System.setProperty( "com.apple.mrj.application.apple.menu.about.name", "SoapUI" );
 
       frame = new JFrame( title );
 
@@ -828,12 +827,12 @@ public class SoapUI
       {
          urlDesktopPanel = new URLDesktopPanel( "soapUI Starter Page", "Info on soapUI", null );
       }
-      
+
       DesktopPanel dp = UISupport.showDesktopPanel( urlDesktopPanel );
       desktop.maximize( dp );
 
-      urlDesktopPanel.navigate( PUSH_PAGE_URL + "?version=" + URLEncoder.encode( SOAPUI_VERSION ),
-              PUSH_PAGE_ERROR_URL, true);
+      urlDesktopPanel.navigate( PUSH_PAGE_URL,
+              PUSH_PAGE_ERROR_URL, true );
    }
 
    private static class ShowSystemPropertiesAction extends AbstractAction
