@@ -58,7 +58,7 @@ urchinTracker();</script>
       <p class="center_p">soapUI is now <strong>restUI</strong> as well! <br />
         <br />
       In the new release you get full support for REST Testing. We would like to think it's a gem! soapUI REST Testing makes it possible for you to do complete RestTests with or without a WADL.<br />
-      <p align="center" class="center_p"><a onclick="javascript:urchinTracker('/appindexsoapUIReadMore')" href="http://www.eviware.com/new.htm" title="Read more about soapUI 2.1" target="_blank">Read more here</a> | <a onclick="javascript:urchinTracker('/appindexsoapUIDownloadNewest')" href="http://sourceforge.net/project/showfiles.php?group_id=136013&package_id=163662&release_id=641323" title="download soapUI" target="_blank">Download it here</a>|</p>
+      <p align="center" class="center_p"><a onclick="javascript:urchinTracker('/appindexsoapUIReadMore')" href="http://www.eviware.com/content/view/134/1/" title="Read more about soapUI 2.5" target="_blank">Read more here</a> | <a onclick="javascript:urchinTracker('/appindexsoapUIDownloadNewest')" href="http://sourceforge.net/project/showfiles.php?group_id=136013&package_id=163662&release_id=641323" title="download soapUI" target="_blank">Download it here</a>|</p>
      <hr/>  
 <h1><img src="Images/soapui-logo.png" alt="soapUI" width="50" height="50" /> Latest blogposts:</h1>
 
