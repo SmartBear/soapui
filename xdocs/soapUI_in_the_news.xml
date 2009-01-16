@@ -1,16 +1,28 @@
 <?xml version="1.0"?>
 <document>
-    <properties>
+    <properties> 
         <title>news</title>
     </properties>
     <body>
     <section name="soapUI Releases">
+    
+    <subsection name="Testing soapUI encrypting and decrypting">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/pascal.gif" alt="Groovy in soapui"/>
+	    		</column>
+	    		<column align="left">
+	    			<p>The post starts: "Just found this tool - or actually I´ve used but..."<br/>
+	    			<a href="http://www.pascalalma.net/2009/01/16/testing-soap-encrypting-and-decrypting-with-soapui/">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	</subsection>
                 
        
     <subsection name="soapUI a great way to do integration">
 	    	<columns>
 	    		<column width="200">
-	    		<img src="images/inthenews/marcusoft.gif" alt="Groovy in soapui"/>
+	    		<img src="images/inthenews/pascals.gif" alt="Groovy in soapui"/>
 	    		</column>
 	    		<column align="left">
 	    			<p>The post starts: "Just found this tool - or actually I´ve used but..."<br/>
