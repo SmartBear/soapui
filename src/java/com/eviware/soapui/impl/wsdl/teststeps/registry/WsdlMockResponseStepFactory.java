@@ -19,6 +19,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.registry;
 import com.eviware.soapui.config.MockResponseConfig;
 import com.eviware.soapui.config.MockResponseStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -97,10 +98,10 @@ public class WsdlMockResponseStepFactory extends WsdlTestStepFactory
 		WsdlMockResponseStepFactory.project = project;
 
 		List<Interface> interfaces = new ArrayList<Interface>();
-		for( int c = 0; c < project.getInterfaceCount(); c++ )
+		for( Interface iface : project.getInterfaces( WsdlInterfaceFactory.WSDL_TYPE ) )
 		{
-			if( project.getInterfaceAt( c ).getOperationCount() > 0 )
-				interfaces.add( project.getInterfaceAt( c ));
+			if( iface.getOperationCount() > 0 )
+				interfaces.add( iface );
 		}
 
 		if( interfaces.isEmpty())
