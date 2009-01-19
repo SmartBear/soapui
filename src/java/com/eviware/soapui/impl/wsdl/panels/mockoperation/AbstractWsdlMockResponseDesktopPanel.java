@@ -20,6 +20,7 @@ import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.wsdl.actions.mockresponse.OpenRequestForMockResponseAction;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.CreateEmptyMockResponseAction;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.CreateFaultMockResponseAction;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.RecreateMockResponseAction;
@@ -271,7 +272,8 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		{
 			if( evt.getPropertyName().equals( WsdlMockResponse.MOCKRESULT_PROPERTY ))
 			{
-				WsdlMockRequest mockRequest = mockResponse.getMockResult().getMockRequest();
+				WsdlMockResult mockResult = mockResponse.getMockResult();
+				WsdlMockRequest mockRequest = mockResult == null ? null : mockResult.getMockRequest();
 				requestEditor.getDocument().setXml( mockRequest == null ? "" : mockRequest.getRequestContent());
 				
 				boolean bidirectional = mockResponse.getMockOperation().getOperation().isBidirectional();

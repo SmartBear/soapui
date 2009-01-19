@@ -185,6 +185,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
       MockServiceConfig mockServiceConfig = MockServiceConfig.Factory.newInstance();
       mockServiceConfig.setPath( mockResponseStepConfig.getPath() );
       mockServiceConfig.setPort( mockResponseStepConfig.getPort() );
+      mockServiceConfig.setHost( mockResponseStepConfig.getHost() );
 
       mockService = new WsdlTestMockService( this, mockServiceConfig );
       mockService.setName( getName() );
@@ -589,6 +590,11 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
    {
       return mockResponseStepConfig.getPath();
    }
+   
+   public String getHost()
+   {
+   	return mockResponseStepConfig.getHost();
+   }
 
    public long getContentLength()
    {
@@ -797,6 +803,12 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
    {
       mockService.setPath( path );
       mockResponseStepConfig.setPath( path );
+   }
+   
+   public void setHost( String host )
+   {
+      mockService.setHost( host );
+      mockResponseStepConfig.setHost( host );
    }
 
    public void propertyChange( PropertyChangeEvent evt )
