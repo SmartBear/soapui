@@ -156,6 +156,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
       this.path = path;
       this.projectPassword = projectPassword;
 
+      for( ProjectListener listener : SoapUI.getListenerRegistry().getListeners( ProjectListener.class ) )
+      {
+         addProjectListener( listener );
+      }
+
       try
       {
          if( path != null && open )
@@ -225,13 +230,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
             setProjectRoot( path );
          }
 
-         for( ProjectListener listener : SoapUI.getListenerRegistry().getListeners( ProjectListener.class ) )
-         {
-            addProjectListener( listener );
-         }
-
          addPropertyChangeListener( this );
-
       }
    }
 
@@ -414,6 +413,13 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
       try
       {
+      	ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+
+         for( int c = 0; c < a.length; c++ )
+         {
+            a[c].afterLoad( this );
+         }
+         
          runAfterLoadScript();
       }
       catch( Exception e )
@@ -709,6 +715,13 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
    {
       try
       {
+      	ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+
+         for( int c = 0; c < a.length; c++ )
+         {
+            a[c].beforeSave( this );
+         }
+         
          runBeforeSaveScript();
       }
       catch( Exception e )
