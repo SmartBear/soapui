@@ -137,6 +137,8 @@ public class TunnelServlet extends ProxyServlet
 						+ settings.getString(LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD, ""));
 		hostConfiguration.setHost(new URI(this.prot + sslEndPoint, true));
 
+		postMethod.setPath(sslEndPoint.substring(sslEndPoint.indexOf("/"), sslEndPoint.length()));
+
 		if (settings.getBoolean(LaunchForm.SSLTUNNEL_REUSESTATE))
 		{
 			if (httpState == null)
