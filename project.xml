@@ -125,6 +125,20 @@
             <organization>eviware</organization>
             <timezone>-1</timezone>
         </developer>
+         <developer>
+            <name>Dain Nilsson</name>
+            <id>dnilsson</id>
+            <email>dain@eviware.com</email>
+            <organization>eviware</organization>
+            <timezone>-1</timezone>
+        </developer>
+         <developer>
+            <name>Nenad Ristic</name>
+            <id>nristic</id>
+            <email>nenadr@eviware.com</email>
+            <organization>eviware</organization>
+            <timezone>-1</timezone>
+        </developer>
     </developers>
     <dependencies>
         <dependency>
