@@ -392,15 +392,27 @@ public final class XmlUtils
                   Element elm2 = (Element) paths[0].getDomNode();
 
                   // transfer attributes
-                  NamedNodeMap attributes = elm.getAttributes();
-                  for( int c = 0; c < attributes.getLength(); c++ )
-                  {
-                     Attr attr = (Attr) attributes.item( c );
-                     elm2.setAttributeNodeNS( (Attr) elm2.getOwnerDocument().importNode( attr, true ) );
-                  }
+                  transferAttributes(elm, elm2);
 
                   // transfer text
                   setElementText( elm2, getElementText( elm ) );
+                  
+                  while( elm.getNextSibling() != null && elm2.getNextSibling() != null &&
+                  	 elm.getNextSibling().getNodeName().equals(elm.getNodeName()) && 
+                  	 !elm2.getNextSibling().getNodeName().equals( elm2.getNodeName() ))
+                  {
+                  	elm2 = (Element) elm2.getParentNode().insertBefore( elm2.getOwnerDocument().createElementNS(
+                  			elm2.getNamespaceURI(), elm2.getLocalName()), elm2.getNextSibling() );
+                  	
+                  	elm = (Element) elm.getNextSibling();
+                  	
+                  	 // transfer attributes
+                     transferAttributes(elm, elm2);
+
+                     // transfer text
+                     setElementText( elm2, getElementText( elm ) );
+                  }
+                  
                }
 
                cursor.toNextToken();
@@ -421,6 +433,16 @@ public final class XmlUtils
 
       return dest;
    }
+
+	private static void transferAttributes(Element elm, Element elm2)
+	{
+		NamedNodeMap attributes = elm.getAttributes();
+		for( int c = 0; c < attributes.getLength(); c++ )
+		{
+		   Attr attr = (Attr) attributes.item( c );
+		   elm2.setAttributeNodeNS( (Attr) elm2.getOwnerDocument().importNode( attr, true ) );
+		}
+	}
 
    /**
     * Returns absolute xpath for specified element, ignores namespaces

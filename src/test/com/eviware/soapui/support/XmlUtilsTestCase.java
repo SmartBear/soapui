@@ -51,6 +51,15 @@ public class XmlUtilsTestCase extends TestCase
 		assertEquals( "<h1><p>p1</p><h2 test=\"bil\">lkj</h2><p>p2</p></h1>", result );
 	}
 	
+	public void testTransferValuesWithList() throws Exception
+	{
+		String doc1 = "<h1><p>p1</p><p>p2</p><h2 test=\"bil\">lkj</h2></h1>";
+		String doc2 = "<h1><p>string</p><h2>string</h2><p>p2</p></h1>";
+		
+		String result = XmlUtils.transferValues( doc1, doc2 );
+		assertEquals( "<h1><p>p1</p><p>p2</p><h2 test=\"bil\">lkj</h2><p>p2</p></h1>", result );
+	}
+	
 	public void testTransferValuesNS() throws Exception
 	{
 		String doc1 = "<ns:h1 xmlns:ns=\"test\"><ns:p>p1</ns:p><ns:h2 test=\"bil\">lkj</ns:h2></ns:h1>";
