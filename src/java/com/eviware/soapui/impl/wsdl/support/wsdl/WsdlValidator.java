@@ -18,6 +18,7 @@ import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.settings.WsdlSettings;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.*;
@@ -537,22 +538,33 @@ public class WsdlValidator
       try
       {
          String response = messageExchange.getResponseContent();
-         wsdlContext.getSoapVersion().validateSoapEnvelope( response, errors );
-
-         if( errors.isEmpty() && !envelopeOnly )
+         
+         if( StringUtils.isNullOrEmpty(response))
          {
-            WsdlOperation operation = messageExchange.getOperation();
-            BindingOperation bindingOperation = operation.getBindingOperation();
-            if( bindingOperation == null )
-            {
-               errors.add( XmlError.forMessage( "Missing operation ["
-                       + operation.getBindingOperationName() + "] in wsdl definition" ) );
-            }
-            else
-            {
-               Part[] outputParts = WsdlUtils.getOutputParts( bindingOperation );
-               validateMessage( messageExchange, response, bindingOperation, outputParts, errors, true );
-            }
+         	if( !messageExchange.getOperation().isOneWay())
+         	{
+         		errors.add(XmlError.forMessage("Response is missing or empty"));
+         	}
+         }
+         else
+         {
+	         wsdlContext.getSoapVersion().validateSoapEnvelope( response, errors );
+	
+	         if( errors.isEmpty() && !envelopeOnly )
+	         {
+	            WsdlOperation operation = messageExchange.getOperation();
+	            BindingOperation bindingOperation = operation.getBindingOperation();
+	            if( bindingOperation == null )
+	            {
+	               errors.add( XmlError.forMessage( "Missing operation ["
+	                       + operation.getBindingOperationName() + "] in wsdl definition" ) );
+	            }
+	            else
+	            {
+	               Part[] outputParts = WsdlUtils.getOutputParts( bindingOperation );
+	               validateMessage( messageExchange, response, bindingOperation, outputParts, errors, true );
+	            }
+	         }
          }
       }
       catch( Exception e )
