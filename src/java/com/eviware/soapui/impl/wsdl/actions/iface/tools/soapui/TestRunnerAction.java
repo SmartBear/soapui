@@ -144,7 +144,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 		mainForm.addSeparator();
 		mainForm.addCheckBox(ENABLEUI, "Enables UI components in scripts");
 		mainForm.addTextField(TESTRUNNERPATH, "Folder containing TestRunner.bat to use", XForm.FieldType.FOLDER);
-		mainForm.addCheckBox(SAVEPROJECT, "Saves project before running");
+		mainForm.addCheckBox(SAVEPROJECT, "Saves project before running").setEnabled(!modelItem.isRemote());
 		mainForm.addCheckBox(ADDSETTINGS, "Adds global settings to command-line");
 
 		advForm = builder.createForm("Overrides");
@@ -236,6 +236,8 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 				mainForm.getFormField(TESTSUITE).setValue(((WsdlTestSuite) param).getName());
 				values.put(TESTSUITE, ((WsdlTestSuite) param).getName());
 			}
+			
+			mainForm.getComponent(SAVEPROJECT).setEnabled( !modelItem.isRemote());
 		}
 
 		return values;
@@ -256,6 +258,11 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 		if (mainForm.getComponentValue(SAVEPROJECT).equals(Boolean.TRUE.toString()))
 		{
 			modelItem.save();
+		}
+		else if( StringUtils.isNullOrEmpty( modelItem.getPath() ))
+		{
+			UISupport.showErrorMessage("Project [" + modelItem.getName() + "] has not been saved to file." );
+			return;
 		}
 
 		if (log.isDebugEnabled())

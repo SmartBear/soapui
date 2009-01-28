@@ -69,6 +69,9 @@ public class ArgumentBuilder
 
 	private String escapeUnixArg( String str )
 	{
+		if( str == null )
+			return "";
+		
 		StringBuffer buf = new StringBuffer();
 		
 		for( int c = 0; c < str.length(); c++ )
