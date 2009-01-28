@@ -630,7 +630,7 @@
         <dependency>
             <groupId>wss4j</groupId>
             <artifactId>wss4j</artifactId>
-            <version>1.5.4</version>
+            <version>1.5.5</version>
             <type>jar</type>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
