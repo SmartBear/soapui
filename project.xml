@@ -594,7 +594,7 @@
         <dependency>
             <groupId>xml-security</groupId>
             <artifactId>xmlsec</artifactId>
-            <version>1.4.0</version>
+            <version>1.4.2</version>
             <type>jar</type>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
@@ -612,7 +612,7 @@
         <dependency>
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
-            <version>2.7.0</version>
+            <version>2.7.1</version>
             <type>jar</type>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
@@ -639,7 +639,7 @@
         <dependency>
             <groupId>bouncycastle</groupId>
             <artifactId>bcprov</artifactId>
-            <version>jdk15-138</version>
+            <version>jdk15-141</version>
             <type>jar</type>
             <properties>
                 <jnlp.extension.dir>.</jnlp.extension.dir>
