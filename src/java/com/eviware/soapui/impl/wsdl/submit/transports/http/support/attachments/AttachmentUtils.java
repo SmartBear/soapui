@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.PartsConfig;
 import com.eviware.soapui.config.PartsConfig.Part;
 import com.eviware.soapui.impl.wsdl.AttachmentContainer;
@@ -444,6 +445,8 @@ public class AttachmentUtils
          }
          catch( Exception e )
          {
+         	if( e instanceof NullPointerException )
+         		SoapUI.logError(e);
             log.warn( e.getMessage() );
          }
       }
