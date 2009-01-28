@@ -12,6 +12,48 @@
 
 package com.eviware.soapui;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragSource;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTree;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.PosixParser;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 import com.eviware.soapui.actions.SaveAllProjectsAction;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
@@ -56,7 +98,11 @@ import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.*;
+import com.eviware.soapui.support.components.JComponentInspector;
+import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
+import com.eviware.soapui.support.components.JPropertiesTable;
+import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.dnd.DropType;
 import com.eviware.soapui.support.dnd.NavigatorDragAndDropable;
 import com.eviware.soapui.support.dnd.SoapUIDragAndDropHandler;
@@ -79,28 +125,6 @@ import com.eviware.soapui.ui.desktop.standalone.StandaloneDesktop;
 import com.eviware.soapui.ui.support.DesktopListenerAdapter;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.PosixParser;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DragSource;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.util.*;
-import java.util.List;
-import java.util.Timer;
 
 /**
  * Main SoapUI entry point.
