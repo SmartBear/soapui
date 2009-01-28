@@ -9,7 +9,7 @@
 		<all-permissions/>
 	</security>
 	<resources>
-		<jar href="bcprov-jdk15-138.jar"/>
+		<jar href="bcprov-jdk15-141.jar"/>
 	</resources>
 	<component-desc/>
 </jnlp>
