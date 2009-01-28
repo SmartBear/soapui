@@ -350,6 +350,7 @@ private void updateWsaPolicy(String url, WsdlContext newContext)
 
       // update context
       wsdlContext = tuple.context;
+      wsdlContext.setInterface(this);
       if( soapMessageBuilder != null )
          soapMessageBuilder.setWsdlContext( wsdlContext );
    }
