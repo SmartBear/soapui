@@ -239,6 +239,13 @@
                         <ul>
                             <li>
                                 <a target="_new"
+                                   href="http://joshdevins.blogspot.com/2009/01/web-service-testing.html">Web service testing...
+                                   </a>
+                                from Josh´s Blog
+                            </li>
+                        
+                            <li>
+                                <a target="_new"
                                   href="http://www.pascalalma.net/2009/01/16/testing-soap-encrypting-and-decrypting-with-soapui/">Using Script Assertion...
                                 </a>
                                 from Pascal´s Blog
@@ -251,13 +258,7 @@
                                 from Marcus´s Blog
                             </li>
                             
-                            <li>
-                                <a target="_new"
-                                   href="http://soa-talk.blogs.techtarget.com/2008/11/28/wsdl-styles-mock-objects-and-soap-ui/">WSDL styles, mock...
-                                   </a>
-                                from jvaughan´s Blog
-                            </li>
-                            
+
                         </ul>
                         <p>
                             <b>

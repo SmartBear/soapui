@@ -6,6 +6,18 @@
     <body>
     <section name="soapUI Releases">
     
+    <subsection name="Web Service Testing">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/josh.gif" alt="Groovy in soapui"/>
+	    	    </column>
+	    		<column align="left">
+	    			<p>The post starts: "soapUI has a maven plugin? I think this might..."<br/>
+	    			<a href="http://joshdevins.blogspot.com/2009/01/web-service-testing.html">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	</subsection>
+    
     <subsection name="Testing soapUI encrypting and decrypting">
 	    	<columns>
 	    		<column width="200">
