@@ -165,7 +165,8 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 		}
 		else
 		{
-			inputStream = new BufferedInputStream( new FileInputStream( urlProperty.expand() ));
+			String url = urlProperty.expand();
+			inputStream = new BufferedInputStream( url == null ? new ByteArrayInputStream( new byte[0] ) :  new FileInputStream( url ));
 		}
 		
 		AttachmentEncoding encoding = getEncoding();
@@ -191,9 +192,21 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 	public long getSize()
 	{
 		if( isCached() ) 
+		{
 			return config.getSize();
-		else
-			return new File( urlProperty.expand() ).length();
+		}
+		else 
+		{
+			String url = urlProperty.expand();
+			if( url != null )
+			{
+				File file = new File( url );
+				if( file.exists() ) 
+					return file.length();
+			}
+		}
+		
+		return -1;
 	}
 
 	public void release()

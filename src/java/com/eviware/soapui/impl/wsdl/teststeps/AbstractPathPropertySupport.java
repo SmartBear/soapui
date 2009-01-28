@@ -111,20 +111,23 @@ public abstract class AbstractPathPropertySupport
 	public String expandUrl()
 	{
 		String result = expand();
-		try
+		if( StringUtils.hasContent( result ))
 		{
-			if (PathUtils.isFilePath(result) && !result.startsWith("file:"))
+			try
 			{
-				result = new File(result).toURI().toURL().toString();
+				if (PathUtils.isFilePath(result) && !result.startsWith("file:"))
+				{
+					result = new File(result).toURI().toURL().toString();
+				}
+				else
+				{
+					result = new URL(result).toString();
+				}
 			}
-			else
+			catch (MalformedURLException e)
 			{
-				result = new URL(result).toString();
+				SoapUI.logError(e);
 			}
-		}
-		catch (MalformedURLException e)
-		{
-			SoapUI.logError(e);
 		}
 
 		return result;
