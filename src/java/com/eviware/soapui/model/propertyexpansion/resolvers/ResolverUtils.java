@@ -20,6 +20,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.xmlbeans.XmlObject;
+import org.w3c.dom.Node;
 
 public class ResolverUtils
 {
@@ -89,7 +90,8 @@ public class ResolverUtils
          String value = property instanceof TestProperty ? ( (TestProperty) property ).getValue() : property.toString();
          XmlObject xmlObject = XmlObject.Factory.parse( value );
          String ns = xpath.trim().startsWith( "declare namespace" ) ? "" : XmlUtils.declareXPathNamespaces( xmlObject );
-         return XmlUtils.getValueForMatch( XmlUtils.selectFirstDomNode( xmlObject, ns + xpath ), false );
+         Node domNode = XmlUtils.selectFirstDomNode( xmlObject, ns + xpath );
+			return domNode == null ? null : XmlUtils.getValueForMatch( domNode, false );
       }
       catch( Exception e )
       {
