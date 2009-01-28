@@ -300,23 +300,13 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
                }
 
                log.info( host + ":" + port + " requires authentication with the realm '" + authscheme.getRealm() + "'" );
-               if( basicDialog == null )
-                  buildBasicDialog();
+               ShowDialog showDialog = new ShowDialog();
+               showDialog.values.put( "Info", "Authentication required for [" + host + ":" + port + "]" );
 
-               StringToStringMap values = new StringToStringMap();
-               values.put( "Info", "Authentication required for [" + host + ":" + port + "]" );
-               basicDialog.setValues( values );
-               
-               // Show the dialog in the UI thread. This was a problem in the Eclipse plug-in.
-               ShowDialog showBasicDialog = new ShowDialog(basicDialog);
-               log.info( "show basicDialog in UI thread" );
-               UISupport.getUIUtils().runInUIThreadIfSWT( showBasicDialog );
-               log.info( "basicDialog.show finished" );
-               
-               if( showBasicDialog.result )
+               UISupport.getUIUtils().runInUIThreadIfSWT( showDialog );
+               if( showDialog.result )
                {
-                  values = basicDialog.getValues();
-                  return new UsernamePasswordCredentials( values.get( "Username" ), values.get( "Password" ) );
+                  return new UsernamePasswordCredentials( showDialog.values.get( "Username" ), showDialog.values.get( "Password" ) );
                }
                else
                   throw new CredentialsNotAvailableException( "Operation cancelled" );
@@ -358,26 +348,29 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
          ntDialog = builder.buildDialog( builder.buildOkCancelActions(),
                  "Specify NT Authentication Credentials", UISupport.OPTIONS_ICON );
       }
+
+      private class ShowDialog implements Runnable
+      {
+         StringToStringMap values = new StringToStringMap();
+         boolean result;
+
+         public void run()
+         {
+            if( basicDialog == null )
+               buildBasicDialog();
+
+            basicDialog.setValues( values );
+            
+            result = basicDialog.show();
+            if( result )
+            {
+               values = basicDialog.getValues();
+            }        
+         }
+      }
    }
 
    public void close()
 	{
 	}
-   
-   private class ShowDialog implements Runnable
-   {
-      XFormDialog dialog;
-      boolean result;
-      
-      public ShowDialog(XFormDialog dialog)
-      {
-         this.dialog = dialog;
-      }
-      
-      public void run()
-      {
-         log.info( "ShowDialog.run" );
-         result = dialog.show();  
-      }
-   }
 }
