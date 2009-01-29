@@ -1,5 +1,54 @@
 Welcome to soapUI!
 
+2009-01-30 : 2.5.1
+---------------------------------------------------------------------------------
+A large amount of fixes and minor improvements:
+
+** Bug
+    * [SOAPUI-275] - proxy not working when calling mockservices
+    * [SOAPUI-278] - errornous variable export in .sh files
+    * [SOAPUI-298] - Update project-nature functionality / popups to support 2.5 features
+    * [SOAPUI-307] - Fix triggering of TestSuite tearDown script with parallell run
+    * [SOAPUI-310] - Eclipse plugin icons don't work
+    * [SOAPUI-311] - MockResponseStep creation shows REST interfaces
+    * [SOAPUI-312] - Eclipse plugin desktop tab icons
+    * [SOAPUI-313] - Eclipse plugin Project Viewer can be opened twice
+    * [SOAPUI-314] - Cache Definitions should be true for new projects
+    * [SOAPUI-319] - ProjectListener.afterLoad not called for custom ProjectListeners
+    * [SOAPUI-326] - TestCase child icons do not show, and an error is displayed.
+    * [SOAPUI-327] - Several sub-menu items are incorrectly named
+    * [SOAPUI-332] - NPE with xpath in property-expansion referring to non-existant node(s)
+    * [SOAPUI-336] - missing non-cached attachments cause NPE when trying to show file size
+
+** Improvement
+    * [SOAPUI-276] - support PropertyExpansionContainer in WssContainer class
+    * [SOAPUI-308] - Add host property to MockResponse TestStep
+    * [SOAPUI-321] - Improve validation error message on empty response
+    * [SOAPUI-325] - Support for lists in "recreate request"
+    * [SOAPUI-330] - After adding the SoapUI nature to a project, switch to the Project Explorer and select the project.
+    * [SOAPUI-331] - Add option to "Add to soapUI project" for WADL.
+
+** Task
+    * [SOAPUI-210] - Create Test for WSTF WS-A Scenario
+    * [SOAPUI-280] - Update maven plugins to 2.5 status
+    * [SOAPUI-286] - automate maven-plugin build and dist in luntbuild
+    * [SOAPUI-296] - update preferences - sync with std soapUI 
+    * [SOAPUI-297] - automate build and nightly build 
+    * [SOAPUI-305] - upgrade jetty dependency to 6.1.14
+    * [SOAPUI-309] - Create 2.5.1 NetBeans Plugin
+    * [SOAPUI-329] - Update dependencies for release
+    * [SOAPUI-333] - Upgrade to wss4j 1.5.5
+    * [SOAPUI-337] - update splash images
+
+** Document
+    * [SOAPUI-334] - upgrade maven plugins
+    * [SOAPUI-335] - Upgrade eclipse plugin
+
+** Sub-task
+    * [SOAPUI-281] - update maven 1.x plugin
+    * [SOAPUI-282] - update maven 2.x plugin
+    * [SOAPUI-287] - automate core maven plugins
+
 2008-11-18 : 2.5 Final
 ---------------------------------------------------------------------------------
 A bunch of bug-fixes and minor improvements, thanks to our awesome customers and
