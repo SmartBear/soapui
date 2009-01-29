@@ -137,7 +137,7 @@ public class SoapUI
    public final static Logger log = Logger.getLogger( SoapUI.class );
    public final static String SOAPUI_VERSION = "2.5.1";
    public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
-   public static final String SOAPUI_SPLASH_GIF = "soapui-splash.jpg";
+   public static final String SOAPUI_SPLASH = "soapui-splash-2.5.1.jpg";
    private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
    public static final String BUILDINFO_RESOURCE = "/com/eviware/soapui/resources/conf/buildinfo.txt";
 
@@ -501,7 +501,7 @@ public class SoapUI
 
    public static void main( String[] args ) throws Exception
    {
-      startSoapUI( args, "soapUI " + SOAPUI_VERSION, "soapui-splash.gif", new StandaloneSoapUICore( true ) );
+      startSoapUI( args, "soapUI " + SOAPUI_VERSION, SOAPUI_SPLASH, new StandaloneSoapUICore( true ) );
    }
 
    public static SoapUI startSoapUI( String[] args, String title, String splashImage, SwingSoapUICore core ) throws Exception
@@ -913,7 +913,7 @@ public class SoapUI
          URI splashURI = null;
          try
          {
-            splashURI = UISupport.findSplash( SoapUI.SOAPUI_SPLASH_GIF ).toURI();
+            splashURI = UISupport.findSplash( SoapUI.SOAPUI_SPLASH ).toURI();
          }
          catch( URISyntaxException e1 )
          {
