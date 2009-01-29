@@ -379,7 +379,7 @@ public class DefaultSoapUICore implements SoapUICore
 			}
 			else
 			{
-				URL url = getClass().getResource("/com/eviware/soapui/resources/conf/soapui-log4j.xml");
+				URL url = SoapUI.class.getResource("/com/eviware/soapui/resources/conf/soapui-log4j.xml");
 				if (url != null)
 				{
 					DOMConfigurator.configure(url);
