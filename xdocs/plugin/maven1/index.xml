@@ -71,7 +71,7 @@ build:start:
 
 soapui:test:
     [echo] Running soapUI project sample-soapui-project.xml with endpoint []
-    [java] SoapUI 1.6 TestRunner
+    [java] SoapUI 2.5.1 TestRunner
     [java] 23:57:56,258 INFO  [SoapUITestCaseRunner] setting projectFile to [sample-soapui-project.xml]
     [java] 23:57:56,838 INFO  [WsdlProject] Loaded project from [sample-soapui-project.xml]
     [java] 23:57:57,219 INFO  [SoapUITestCaseRunner] Running soapui tests in project [Sample Project]
@@ -114,7 +114,7 @@ build:start:
 
 soapui:loadtest:
     [echo] Running soapui project jbossws-soapui-project.xml with endpoint []
-    [java] SoapUI 1.6 LoadTestRunner
+    [java] SoapUI 2.5.1 LoadTestRunner
     [java] 22:48:13,116 INFO  [SoapUILoadTestRunner] setting projectFile to [jbossws-soapui-project.xml]
     [java] 22:48:13,116 INFO  [SoapUILoadTestRunner] setting testSuite to [test]
     [java] 22:48:13,116 INFO  [SoapUILoadTestRunner] setting testCase to [testcase3]
