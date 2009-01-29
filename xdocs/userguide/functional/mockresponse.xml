@@ -45,14 +45,19 @@
         <subsection name="MockResponse Step Properties">
          <p>The bottom-left properties are the same as for a standard MockResponse with the following exceptions:</p>
             <ul>
-                <li>Handle Fault - tells the MockResponse to accept an incoming SOAP Fault</li>
-                <li>Handle Response - tells the MockResponse to accept an incoming Response Message if it matches
+                <li><b>Timeout</b> - Fails the MockResponse Step if no request has been received within the specified number of milliseconds.
+                Specifying 0 will wait indefinitely.</li>
+                <li><b>Handle Fault</b> - tells the MockResponse to accept an incoming SOAP Fault</li>
+                <li><b>Handle Response</b> - tells the MockResponse to accept an incoming Response Message if it matches
                     the WSDL Operation</li>
-                <li>Start Step - Configures at which step in the TestCase this MockResponse should start "listening"
+                <li><b>Start Step</b> - Configures at which step in the TestCase this MockResponse should start "listening"
                 for a request. This can be usefull if you first are making a request to a service that calls back to
                 the MockResponse Step within the execution of that request, in which case you would set the Start Step
                 to the request (otherwise the MockResponse would not be listening for requests when the request comes).
                 Leaving this empty will start listening when the step is executed.</li>
+                <li><b>Port</b> - the port to listen on</li>
+                <li><b>Path</b> - the path to listen on</li>
+                <li><b>Host</b> - the hostname to use in the hosted WSDL</li>
             </ul>
         </subsection>
 
