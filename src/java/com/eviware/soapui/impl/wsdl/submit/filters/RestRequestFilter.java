@@ -65,7 +65,7 @@ public class RestRequestFilter extends AbstractRequestFilter
    {
       HttpMethod httpMethod = (HttpMethod) context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 
-      String path = request.getPath();
+      String path = PropertyExpansionUtils.expandProperties(context,request.getPath());
       StringBuffer query = new StringBuffer();
 
       StringToStringMap responseProperties = (StringToStringMap) context.getProperty( BaseHttpRequestTransport.RESPONSE_PROPERTIES );
