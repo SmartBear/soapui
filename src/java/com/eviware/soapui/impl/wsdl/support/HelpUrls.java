@@ -168,6 +168,9 @@ public interface HelpUrls
    public static final String WADL_PARAMS_HELP_URL =  HELP_URL_ROOT + "rest/params.html";
 
    public static final String RESTRESOURCEEDITOR_HELPURL =  HELP_URL_ROOT + "rest/resources.html";
+   
    public static final String MOCKOPERATION_QUERYMATCHDISPATCH_HELP_URL = HELP_URL_ROOT + "mock/operations.html#Query/Match_Dispatching";
+
+	public static final String FORUMS_HELP_URL = "http://www.eviware.com/forums";
    
 }

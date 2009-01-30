@@ -39,14 +39,24 @@ public class ShowOnlineHelpAction extends AbstractAction implements HelpActionMa
 	
 	public ShowOnlineHelpAction( String title, String url )
 	{
-		this( title, url, null );
+		this( title, url, null, null );
+	}
+	
+	public ShowOnlineHelpAction( String title, String url, String description )
+	{
+		this( title, url, null, description );
 	}
 	
 	public ShowOnlineHelpAction( String title, String url, KeyStroke accelerator )
+	{
+		this( title, url, accelerator, null );
+	}
+	
+	public ShowOnlineHelpAction( String title, String url, KeyStroke accelerator, String description )
    {
       super( title );
 		this.url = url;
-      putValue( Action.SHORT_DESCRIPTION, "Show online help" );
+      putValue( Action.SHORT_DESCRIPTION, description == null ? "Show online help" : description );
       if( accelerator != null )
       	putValue( Action.ACCELERATOR_KEY, accelerator );
       
