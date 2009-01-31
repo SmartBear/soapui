@@ -23,6 +23,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.*;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import javax.wsdl.*;
 import javax.wsdl.extensions.mime.MIMEContent;
@@ -613,6 +614,21 @@ public class WsdlValidator
             if( elm != null )
             {
                validateMessageBody( errors, elm.getType(), paths[0] );
+               
+               // ensure no other elements in body
+               NodeList children = XmlUtils.getChildElements( (Element) paths[0].getDomNode().getParentNode() );
+               for( int c = 0; c < children.getLength(); c++ )
+               {
+               	QName childName = XmlUtils.getQName( children.item(c));
+						if( !elementName.equals(childName))
+               	{
+							XmlCursor cur = paths[0].newCursor();
+							cur.toParent();
+							cur.toChild(childName);
+               		errors.add( XmlError.forCursor( "Invalid element [" + childName + "] in SOAP Body", cur ));
+               		cur.dispose();
+               	}
+               }
             }
             else errors.add( XmlError.forMessage( "Missing part type [" + elementName + "] in associated schema" ) );
          }
