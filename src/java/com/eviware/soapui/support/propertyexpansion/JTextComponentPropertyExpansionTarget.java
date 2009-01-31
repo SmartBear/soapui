@@ -14,7 +14,6 @@ package com.eviware.soapui.support.propertyexpansion;
 
 import java.awt.Point;
 
-import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
 import com.eviware.soapui.model.ModelItem;
@@ -36,7 +35,7 @@ public class JTextComponentPropertyExpansionTarget extends AbstractPropertyExpan
 		if( pos == -1 )
 			pos = textField.getCaretPosition();
 		
-		if( pos == -1 || textField instanceof JTextField )
+		if( pos == -1 || textField.getSelectionStart() == textField.getSelectionEnd() )
 		{
 			textField.setText( expansion.toString() );
 			textField.requestFocusInWindow();

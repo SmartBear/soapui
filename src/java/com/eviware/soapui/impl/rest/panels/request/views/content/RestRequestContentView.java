@@ -24,6 +24,7 @@ import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
+import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.types.TupleList;
 import com.eviware.soapui.support.xml.JXEditTextArea;
@@ -148,6 +149,8 @@ public class RestRequestContentView extends AbstractXmlEditorView<RestRequestDoc
 
       contentPanel.add( new JScrollPane( contentEditor ) );
 
+      PropertyExpansionPopupListener.enable( contentEditor, restRequest );
+      
       enableBodyComponents();
 
       return contentPanel;

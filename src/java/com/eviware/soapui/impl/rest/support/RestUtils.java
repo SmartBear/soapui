@@ -44,7 +44,7 @@ public class RestUtils
          if( endIx == -1 )
             break;
 
-         if( endIx > ix + 1 )
+         if( endIx > ix + 1 && (ix > 0 && path.charAt(ix-1) != '$' ))
             result.add( path.substring( ix + 1, endIx ) );
 
          ix = path.indexOf( '{', ix + 1 );

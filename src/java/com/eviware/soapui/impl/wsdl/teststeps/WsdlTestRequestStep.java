@@ -580,8 +580,6 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
          result.extractAndAddAll( new RequestHeaderHolder( requestHeaders, key ), "value" );
       }
 
-      // result.addAll( testRequest.getWssContainer().getPropertyExpansions() );
-
       testRequest.addWsaPropertyExpansions(result, testRequest.getWsaConfig(), this);
       return result.toArray( new PropertyExpansion[result.size()] );
    }

@@ -1,5 +1,16 @@
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.ImageIcon;
+import javax.xml.namespace.QName;
+
+import org.apache.log4j.Logger;
+
 import com.eviware.soapui.config.RequestStepConfig;
 import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
@@ -16,28 +27,27 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
-import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Submit;
+import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
 import com.eviware.soapui.model.support.TestStepBeanProperty;
-import com.eviware.soapui.model.testsuite.*;
+import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
+import com.eviware.soapui.model.testsuite.AssertionsListener;
+import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestRunContext;
+import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestStepProperty;
+import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringToStringMap;
-import org.apache.log4j.Logger;
-
-import javax.swing.*;
-import javax.xml.namespace.QName;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 public class HttpTestRequestStep extends WsdlTestStepWithProperties implements PropertyChangeListener,
         PropertyExpansionContainer, Assertable, HttpRequestTestStep
@@ -82,6 +92,7 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
       addProperty( new TestStepBeanProperty( "Username", false, testRequest, "username", this ) );
       addProperty( new TestStepBeanProperty( "Password", false, testRequest, "password", this ) );
       addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this ) );
+      addProperty( new TestStepBeanProperty( "Path", false, testRequest, "path", this ) );
 
       // init properties
       addProperty( new TestStepBeanProperty( "Request", false, testRequest, "requestContent", this )
@@ -387,7 +398,7 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
       PropertyExpansionsResult result = new PropertyExpansionsResult( this, testRequest );
 
       result.extractAndAddAll( "requestContent" );
-      result.extractAndAddAll( "endpoint" );
+      result.extractAndAddAll( "path" );
       result.extractAndAddAll( "username" );
       result.extractAndAddAll( "password" );
       result.extractAndAddAll( "domain" );
@@ -397,13 +408,16 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
       {
          result.extractAndAddAll( new RequestHeaderHolder( requestHeaders, key ), "value" );
       }
-
-//		result.addAll( testRequest.getWssContainer().getPropertyExpansions() );
+      
+      for( String key : testRequest.getParams().getPropertyNames() )
+      {
+         result.extractAndAddAll( new RequestParamHolder( key ), "value" );
+      }
 
       return result.toArray( new PropertyExpansion[result.size()] );
    }
 
-   public AbstractHttpRequest getHttpRequest()
+   public AbstractHttpRequest<?> getHttpRequest()
    {
       return testRequest;
    }
@@ -428,6 +442,26 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
       {
          valueMap.put( key, value );
          testRequest.setRequestHeaders( valueMap );
+      }
+   }
+   
+   public class RequestParamHolder
+   {
+      private final String name;
+
+      public RequestParamHolder( String name )
+      {
+         this.name = name;
+      }
+
+      public String getValue()
+      {
+         return testRequest.getParams().getPropertyValue(name);
+      }
+
+      public void setValue( String value )
+      {
+         testRequest.setPropertyValue(name, value);
       }
    }
 

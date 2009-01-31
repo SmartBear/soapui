@@ -12,6 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.ImageIcon;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
@@ -35,14 +41,9 @@ import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 public class RestTestRequest extends RestRequest implements Assertable, TestRequest
 {
-   public static final String RESPONSE_PROPERTY = RestTestRequest.class.getName() + "@response";
+	public static final String RESPONSE_PROPERTY = RestTestRequest.class.getName() + "@response";
    public static final String STATUS_PROPERTY = RestTestRequest.class.getName() + "@status";
 
    private ImageIcon validRequestIcon;

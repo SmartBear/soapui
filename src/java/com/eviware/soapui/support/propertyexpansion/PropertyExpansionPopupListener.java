@@ -112,7 +112,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
       }
       else if( modelItem instanceof AbstractHttpRequest )
       {
-         project = ( (AbstractHttpRequest) modelItem ).getOperation().getInterface().getProject();
+         project = ( (AbstractHttpRequest<?>) modelItem ).getOperation().getInterface().getProject();
       }
       else if( modelItem instanceof Operation )
       {
