@@ -7,7 +7,9 @@
 		<section name="SoapUI Projects for testing WSTF scenario">
 		<p>
 		New features in SoapUI 2.5.1 are Projects containing TestSuites/TestCases for validating <a href="http://www.wstf.org/" >WSTF scenario </a> 
-		implementation. </p>
+		implementation. Current TetsRequest are configured for soap1.1 version of WSTF scenarios part( see the Interface property of 
+		particular TestRequest). This can be reverted to soap1.2 version by changing the operation of the request to soap12binding which already
+		is included in Projects as one of the interfaces. </p>
         <p>Two different projects, for two scenarios are added</p>
         <ul>
             <li><a href="#WSTF_SC002_Project">WSTF SC002 Project</a> - for testing if 
@@ -19,7 +21,7 @@
 						
 		<subsection name="WSTF SC002 Project">
 		<p>Project is divided into TestSteps and TestCases as specified in <a href="http://www.wstf.org/docs/scenarios/sc002/sc002.xml#sec4">
-		WSTF specification</a> and every TestRequest has assertions in order to validate the given scenario </p>
+		WSTF specification</a> and every TestRequest has assertions in order to validate the given scenario.</p>
 		<p align="center"><img src="images/wstfSc002_project.gif" alt="WSTF sc002 project"/></p>
 		<p>XML project file which can be used for project import can be found here //TODO add link to the project .xml.</p>
 		</subsection>
