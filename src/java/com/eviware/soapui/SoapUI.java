@@ -141,7 +141,8 @@ public class SoapUI
    private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
    public static final String BUILDINFO_RESOURCE = "/com/eviware/soapui/resources/conf/buildinfo.txt";
 
-   public static String PUSH_PAGE_URL = "http://www.soapui.org/appindex/soapui_start.php?version=" + URLEncoder.encode( SOAPUI_VERSION );
+   @SuppressWarnings("deprecation")
+	public static String PUSH_PAGE_URL = "http://www.soapui.org/appindex/soapui_start.php?version=" + URLEncoder.encode( SOAPUI_VERSION );
    public static String FRAME_ICON = "/16-perc.gif";
    public static String PUSH_PAGE_ERROR_URL =
            SoapUI.class.getResource( "/com/eviware/soapui/resources/html/starter-page.html" ).toString();
@@ -181,6 +182,7 @@ public class SoapUI
    private static String workspaceName;
    private static StringToStringMap projectOptions = new StringToStringMap();
    private static URLDesktopPanel urlDesktopPanel;
+	private static JXToolBar mainToolbar;
 
    // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -229,25 +231,27 @@ public class SoapUI
 
    private JComponent buildToolbar()
    {
-      JXToolBar toolbar = new JXToolBar();
-      toolbar.setRollover( true );
-      toolbar.putClientProperty( Options.HEADER_STYLE_KEY, HeaderStyle.BOTH );
-      toolbar.add( new NewWsdlProjectActionDelegate() );
-      toolbar.add( new ImportWsdlProjectActionDelegate() );
-      toolbar.add( new SaveAllActionDelegate() );
-      toolbar.addSeparator();
-      toolbar.add( new ShowOnlineHelpAction( "User Guide", HelpUrls.USERGUIDE_HELP_URL, "Opens the soapUI User-Guide in a browser" ) );
-      toolbar.add( new ShowOnlineHelpAction( "Forum", HelpUrls.FORUMS_HELP_URL, "Opens the soapUI Forum in a browser", "/group_go.png" ) );
-      toolbar.addSeparator();
-      toolbar.add( new PreferencesActionDelegate() );
-      toolbar.add( new ExitButtonAction() );
-      toolbar.addGlue();
+      mainToolbar = new JXToolBar();
+      mainToolbar.setRollover( true );
+      mainToolbar.putClientProperty( Options.HEADER_STYLE_KEY, HeaderStyle.BOTH );
+      mainToolbar.add( new NewWsdlProjectActionDelegate() );
+      mainToolbar.add( new ImportWsdlProjectActionDelegate() );
+      mainToolbar.add( new SaveAllActionDelegate() );
+      mainToolbar.addSeparator();
+      mainToolbar.add( new ShowOnlineHelpAction( "User Guide", HelpUrls.USERGUIDE_HELP_URL, "Opens the soapUI User-Guide in a browser" ) );
+      mainToolbar.add( new ShowOnlineHelpAction( "Forum", HelpUrls.FORUMS_HELP_URL, "Opens the soapUI Forum in a browser", "/group_go.png" ) );
+      mainToolbar.addSeparator();
+      mainToolbar.add( new ShowOnlineHelpAction( "Trial", HelpUrls.TRIAL_URL, "Apply for soapUI Pro Trial License", "/favicon.png" ) );
+      mainToolbar.addSeparator();
+      mainToolbar.add( new PreferencesActionDelegate() );
+      mainToolbar.add( new ExitButtonAction() );
+      mainToolbar.addGlue();
 
-      toolbar.add( new ShowOnlineHelpAction( HelpUrls.USERGUIDE_HELP_URL ) );
+      mainToolbar.add( new ShowOnlineHelpAction( HelpUrls.USERGUIDE_HELP_URL ) );
 
-      toolbar.setBorder( BorderFactory.createEtchedBorder() );
+      mainToolbar.setBorder( BorderFactory.createEtchedBorder() );
 
-      return toolbar;
+      return mainToolbar;
    }
 
    private JMenuBar buildMainMenu()
@@ -287,15 +291,16 @@ public class SoapUI
       helpMenu.setMnemonic( KeyEvent.VK_H );
 
       helpMenu.add( new ShowPushPageAction() );
-      helpMenu.add( new ShowOnlineHelpAction( "User Guide", HelpUrls.USERGUIDE_HELP_URL ) );
-      helpMenu.add( new ShowOnlineHelpAction( "Getting Started",
-              HelpUrls.GETTINGSTARTED_HELP_URL ) );
       helpMenu.addSeparator();
-
+      helpMenu.add( new ShowOnlineHelpAction( "User Guide", HelpUrls.USERGUIDE_HELP_URL ) );
+      helpMenu.add( new ShowOnlineHelpAction( "Getting Started", HelpUrls.GETTINGSTARTED_HELP_URL ) );
+      helpMenu.add( new ShowOnlineHelpAction( "Forum", HelpUrls.FORUMS_HELP_URL, "Opens the soapUI Forum in a browser", "/group_go.png" ) );
+      helpMenu.addSeparator();
       helpMenu.add( new ShowSystemPropertiesAction() );
-
       helpMenu.addSeparator();
       helpMenu.add( new OpenUrlAction( "soapui.org", "http://www.soapui.org" ) );
+      helpMenu.add( new ShowOnlineHelpAction( "soapUI Pro Trial", HelpUrls.TRIAL_URL, "Apply for soapUI Pro Trial License", "/favicon.png" ) );
+      helpMenu.addSeparator();
       helpMenu.add( new AboutAction() );
       return helpMenu;
    }
@@ -1239,4 +1244,9 @@ public class SoapUI
          ( (WorkspaceImpl) SoapUI.getWorkspace() ).save( false, true );
       }
    }
+
+	public static JXToolBar getToolBar()
+	{
+		return mainToolbar;
+	}
 }
