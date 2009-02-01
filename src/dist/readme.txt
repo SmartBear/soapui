@@ -1,14 +1,13 @@
 Welcome to soapUI!
 
-2009-01-30 : 2.5.1
+2009-02-02 : 2.5.1
 ---------------------------------------------------------------------------------
-A large amount of fixes and minor improvements:
+A large amount of fixes and minor improvements, including
 
 ** Bug
     * [SOAPUI-275] - proxy not working when calling mockservices
     * [SOAPUI-278] - errornous variable export in .sh files
     * [SOAPUI-298] - Update project-nature functionality / popups to support 2.5 features
-    * [SOAPUI-307] - Fix triggering of TestSuite tearDown script with parallell run
     * [SOAPUI-310] - Eclipse plugin icons don't work
     * [SOAPUI-311] - MockResponseStep creation shows REST interfaces
     * [SOAPUI-312] - Eclipse plugin desktop tab icons
@@ -19,14 +18,19 @@ A large amount of fixes and minor improvements:
     * [SOAPUI-327] - Several sub-menu items are incorrectly named
     * [SOAPUI-332] - NPE with xpath in property-expansion referring to non-existant node(s)
     * [SOAPUI-336] - missing non-cached attachments cause NPE when trying to show file size
+    * [SOAPUI-340] - Fix property-expansions support in rest resource paths
+    * [SOAPUI-342] - Validating DocLiteral messages does not show errors for superfluous elements in body.
 
 ** Improvement
     * [SOAPUI-276] - support PropertyExpansionContainer in WssContainer class
+    * [SOAPUI-290] - Add "count" column to soap-monitor log
     * [SOAPUI-308] - Add host property to MockResponse TestStep
     * [SOAPUI-321] - Improve validation error message on empty response
     * [SOAPUI-325] - Support for lists in "recreate request"
     * [SOAPUI-330] - After adding the SoapUI nature to a project, switch to the Project Explorer and select the project.
     * [SOAPUI-331] - Add option to "Add to soapUI project" for WADL.
+    * [SOAPUI-341] - Add forum and user-guide buttons to toolbar
+    * [SOAPUI-344] - Improve property-expansion functionality for REST/HTTP Requests
 
 ** Task
     * [SOAPUI-210] - Create Test for WSTF WS-A Scenario
