@@ -237,7 +237,7 @@ public class SoapUI
       toolbar.add( new SaveAllActionDelegate() );
       toolbar.addSeparator();
       toolbar.add( new ShowOnlineHelpAction( "User Guide", HelpUrls.USERGUIDE_HELP_URL, "Opens the soapUI User-Guide in a browser" ) );
-      toolbar.add( new ShowOnlineHelpAction( "Forum", HelpUrls.FORUMS_HELP_URL, "Opens the soapUI Forum in a browser" ) );
+      toolbar.add( new ShowOnlineHelpAction( "Forum", HelpUrls.FORUMS_HELP_URL, "Opens the soapUI Forum in a browser", "/group_go.png" ) );
       toolbar.addSeparator();
       toolbar.add( new PreferencesActionDelegate() );
       toolbar.add( new ExitButtonAction() );

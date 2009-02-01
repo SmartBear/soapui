@@ -39,13 +39,19 @@ public class ShowOnlineHelpAction extends AbstractAction implements HelpActionMa
 	
 	public ShowOnlineHelpAction( String title, String url )
 	{
-		this( title, url, null, null );
+		this( title, url, null, null, null );
 	}
 	
 	public ShowOnlineHelpAction( String title, String url, String description )
 	{
-		this( title, url, null, description );
+		this( title, url, null, description, null );
 	}
+
+	public ShowOnlineHelpAction( String title, String url, String description, String iconPath )
+	{
+		this( title, url, null, description, iconPath );
+	}
+
 	
 	public ShowOnlineHelpAction( String title, String url, KeyStroke accelerator )
 	{
@@ -53,6 +59,11 @@ public class ShowOnlineHelpAction extends AbstractAction implements HelpActionMa
 	}
 	
 	public ShowOnlineHelpAction( String title, String url, KeyStroke accelerator, String description )
+	{
+		this( title, url, accelerator, description, null );
+	}
+	
+	public ShowOnlineHelpAction( String title, String url, KeyStroke accelerator, String description, String iconPath )
    {
       super( title );
 		this.url = url;
@@ -60,7 +71,7 @@ public class ShowOnlineHelpAction extends AbstractAction implements HelpActionMa
       if( accelerator != null )
       	putValue( Action.ACCELERATOR_KEY, accelerator );
       
-      putValue( Action.SMALL_ICON, UISupport.HELP_ICON );
+      putValue( Action.SMALL_ICON, iconPath == null ? UISupport.HELP_ICON : UISupport.createImageIcon(iconPath) );
    }
    
    public void actionPerformed(ActionEvent e)
