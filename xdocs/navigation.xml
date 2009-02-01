@@ -4,16 +4,17 @@
     <body>
         <links>
             <item name="user guide" href="/userguide/index.html"/>
-            <item name="blog" href="http://www.eviware.com/blogs/oleblog"/>
+            
             <item name="eclipse" href="/eclipse/index.html"/>
             <item name="intellij" href="/intellij/index.html"/>
             <item name="netbeans" href="/netbeans/index.html"/>
             <item name="maven" href="/plugin/index.html"/>
-            <item name="PDF" href="soapui.pdf"/>
-            <item name="files" href="http://sourceforge.net/project/showfiles.php?group_id=136013"/>
-            <item name="forums" href="http://www.eviware.com/component/option,com_smf/Itemid,53/"/>
+           <!--  <item name="PDF" href="soapui.pdf"/>  -->
+            <item name="download" href="http://sourceforge.net/project/showfiles.php?group_id=136013"/>
+            <item name="forum" href="http://www.eviware.com/component/option,com_smf/Itemid,53/"/>
 <!--            <item name="forums" href="http://sourceforge.net/forum/?group_id=136013"/> -->
             <item name="bugs" href="http://sourceforge.net/tracker/?group_id=136013&amp;atid=737763"/>
+            <item name="blog" href="http://www.eviware.com/blogs/oleblog"/>
             <item name="sourceforge" href="http://sourceforge.net/projects/soapui/?abmode=1"/>
             <item name="eviware.com" href="http://www.eviware.com"/>
         </links>
