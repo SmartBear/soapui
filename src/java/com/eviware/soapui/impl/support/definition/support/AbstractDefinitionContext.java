@@ -115,6 +115,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
 
    public synchronized boolean load( T2 wsdlLoader ) throws Exception
    {
+   	// only use cache if iface has been specified
       if( !loaded && iface != null )
       {
          // FIXME Refactoring: loaded = (definition != null) ?
@@ -379,6 +380,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
    public void reload() throws Exception
    {
       getDefinitionCache().clear();
+      definitionCache.remove(url);
       loaded = false;
       load();
    }
