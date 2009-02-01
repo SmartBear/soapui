@@ -34,9 +34,9 @@
         <attainGoal name="soapui:create-standalone-binary-dist"/>
         <attainGoal name="soapui:make-installer"/>
 
-        <ant:copy todir="target/docs/repository/eviware/jars">
+        <ant:copy todir="${maven.build.dir}/docs/repository/eviware/jars">
             <ant:fileset file="${maven.repo.local}/eviware/jars/*-xmlbeans-${pom.currentVersion}.jar"/>
-            <ant:fileset file="target/soapui-${pom.currentVersion}.jar"/>
+            <ant:fileset file="${maven.build.dir}/soapui-${pom.currentVersion}.jar"/>
         </ant:copy>
 
         <attainGoal name="soapui:changelog"/>
@@ -45,7 +45,7 @@
     </goal>
 
     <preGoal name="pdf:pdf">
-        <ant:copy todir="target/pdf/images" flatten="true">
+        <ant:copy todir="${maven.build.dir}/pdf/images" flatten="true">
             <fileset dir="xdocs" includes="**/*.gif"/>
         </ant:copy>
     </preGoal>
@@ -69,9 +69,9 @@
 
         <!-- <attainGoal name="soapui:create-standalone-binary-dist"/> -->
 
-        <ant:copy todir="target/docs/repository/eviware/jars">
+        <ant:copy todir="${maven.build.dir}/docs/repository/eviware/jars">
             <ant:fileset file="${maven.repo.local}/eviware/jars/*-xmlbeans-${pom.currentVersion}.jar"/>
-            <ant:fileset file="target/soapui-${pom.currentVersion}.jar"/>
+            <ant:fileset file="${maven.build.dir}/soapui-${pom.currentVersion}.jar"/>
         </ant:copy>
 
     </goal>
@@ -95,9 +95,9 @@
 
     <goal name="soapui:changelog">
         <attainGoal name="maven-changelog-plugin:report"/>
-        <util:file name="target/changelog.xml" var="changelogFile"/>
+        <util:file name="${maven.build.dir}/changelog.xml" var="changelogFile"/>
         <x:parse var="doc" xml="${changelogFile}"/>
-        <j:file name="target/distributions/${pom.artifactId}-changelog.txt" omitXmlDeclaration="true" trim="true">
+        <j:file name="${maven.build.dir}/distributions/${pom.artifactId}-changelog.txt" omitXmlDeclaration="true" trim="true">
             <j:include file="src/jsl/changelog2txt.jsl"/>
         </j:file>
     </goal>
@@ -106,8 +106,8 @@
 
     <postGoal name="xdoc">
 
-        <ant:copy todir="target">
-            <ant:fileset dir="target/docs">
+        <ant:copy todir="${maven.build.dir}">
+            <ant:fileset dir="${maven.build.dir}/docs">
                 <ant:include name="index.html"/>
                 <ant:include name="snapshot.html"/>
                 <ant:include name="new_and_noteworthy_*.html"/>
@@ -124,13 +124,20 @@
         </ant:copy>
 
         <!-- copy back -->
-        <ant:copy todir="target/docs">
-            <ant:fileset dir="target">
+        <ant:copy todir="${maven.build.dir}/docs">
+            <ant:fileset dir="${maven.build.dir}">
                 <ant:include name="index.html"/>
                 <ant:include name="snapshot.html"/>
                 <ant:include name="new_and_noteworthy_*.html"/>
                 <ant:include name="snapshot.html"/>
             </ant:fileset>
+        </ant:copy>
+        
+        <!-- copy wstf projects -->
+        <ant:copy todir="${maven.build.dir}/docs/wstf/projects">
+        	<ant:fileset dir="src/wstf">
+        	    <ant:include name="*.xml"/>
+        	</ant:fileset>
         </ant:copy>
 
     </postGoal>
@@ -174,8 +181,8 @@
 
     <!-- create doc zipz -->
     <goal name="soapui:create-docs-zip">
-        <ant:zip destfile="target/distributions/soapui-docs-${pom.currentVersion}.zip">
-            <ant:fileset dir="target/docs">
+        <ant:zip destfile="${maven.build.dir}/distributions/soapui-docs-${pom.currentVersion}.zip">
+            <ant:fileset dir="${maven.build.dir}/docs">
                 <ant:exclude name="jnlp/${pom.currentVersion}/*.*"/>
                 <ant:exclude name="repository/eviware/jars/*.*"/>
                 <ant:exclude name="*.pdf"/>
@@ -186,12 +193,12 @@
     <!-- create binary dist -->
 
     <goal name="soapui:create-binary-dist">
-        <ant:delete dir="target/dist"/>
-        <ant:mkdir dir="target/dist"/>
-        <ant:mkdir dir="target/distributions"/>
-        <!-- <ant:mkdir dir="target/dist/docs"/>  -->
-        <ant:mkdir dir="target/dist/lib"/>
-        <ant:mkdir dir="target/dist/bin"/>
+        <ant:delete dir="${maven.build.dir}/dist"/>
+        <ant:mkdir dir="${maven.build.dir}/dist"/>
+        <ant:mkdir dir="${maven.build.dir}/distributions"/>
+        <!-- <ant:mkdir dir="${maven.build.dir}/dist/docs"/>  -->
+        <ant:mkdir dir="${maven.build.dir}/dist/lib"/>
+        <ant:mkdir dir="${maven.build.dir}/dist/bin"/>
 
         
 
@@ -213,7 +220,7 @@
 
 		<j:set var="soapuiclasspathcompact" trim="false" value="set CLASSPATH=%SOAPUI_HOME%${pom.artifactId}-${pom.currentVersion}.jar;%SOAPUI_HOME%..\lib\*;"/>
 
-        <ant:copy todir="target/dist">
+        <ant:copy todir="${maven.build.dir}/dist">
             <ant:fileset dir="src/dist">
                 <ant:include name="**/*.sh"/>
                 <ant:include name="**/*.bat"/>
@@ -226,7 +233,7 @@
             </ant:filterset>
         </ant:copy>
 
-        <ant:copy todir="target/dist">
+        <ant:copy todir="${maven.build.dir}/dist">
             <ant:fileset dir="src/dist">
                 <ant:exclude name="**/*.sh"/>
                 <ant:exclude name="**/*.bat"/>
@@ -235,7 +242,7 @@
 
         <!-- create a scanner for sh files so we can replace linebreaks.. -->
         <ant:fileScanner var="shscanner">
-            <ant:fileset dir="target/dist/bin">
+            <ant:fileset dir="${maven.build.dir}/dist/bin">
                 <ant:include name="*.sh"/>
             </ant:fileset>
         </ant:fileScanner>
@@ -244,25 +251,25 @@
         <j:forEach var="sh" items="${shscanner.iterator()}" trim="yes">
             <util:loadText file="${sh}" var="shfile"/>
             <j:set var="shfile" value="${shfile.replace( '\r', ' ' )}"/>
-            <j:file name="target/dist/bin/${sh.name}" omitXmlDeclaration="true">${shfile}</j:file>
+            <j:file name="${maven.build.dir}/dist/bin/${sh.name}" omitXmlDeclaration="true">${shfile}</j:file>
         </j:forEach>
 
-        <ant:copy todir="target/dist/lib">
-            <ant:fileset dir="target/docs/jnlp/${pom.currentVersion}" excludes="**/soapui-${pom.currentVersion}.jar"/>
+        <ant:copy todir="${maven.build.dir}/dist/lib">
+            <ant:fileset dir="${maven.build.dir}/docs/jnlp/${pom.currentVersion}" excludes="**/soapui-${pom.currentVersion}.jar"/>
         </ant:copy>
 
-        <ant:copy todir="target/dist/bin">
-            <ant:fileset dir="target/docs/jnlp/${pom.currentVersion}" includes="**/soapui-${pom.currentVersion}.jar"/>
+        <ant:copy todir="${maven.build.dir}/dist/bin">
+            <ant:fileset dir="${maven.build.dir}/docs/jnlp/${pom.currentVersion}" includes="**/soapui-${pom.currentVersion}.jar"/>
         </ant:copy>
 
-        <ant:zip destfile="target/distributions/soapui-${pom.currentVersion}-bin.zip">
-            <zipfileset dir="target/dist" prefix="soapui-${pom.currentVersion}"/>
+        <ant:zip destfile="${maven.build.dir}/distributions/soapui-${pom.currentVersion}-bin.zip">
+            <zipfileset dir="${maven.build.dir}/dist" prefix="soapui-${pom.currentVersion}"/>
         </ant:zip>
 
         <j:if test="${pom.currentVersion == 'SNAPSHOT'}">
-            <ant:mkdir dir="target/docs/download"/>
-            <ant:copy file="target/distributions/soapui-SNAPSHOT-bin.zip"
-                      tofile="target/docs/download/soapui-SNAPSHOT-bin.zip"/>
+            <ant:mkdir dir="${maven.build.dir}/docs/download"/>
+            <ant:copy file="${maven.build.dir}/distributions/soapui-SNAPSHOT-bin.zip"
+                      tofile="${maven.build.dir}/docs/download/soapui-SNAPSHOT-bin.zip"/>
         </j:if>
 
     </goal>
@@ -273,8 +280,8 @@
 
         <maven:maven goals="clean,plugin,plugin:install" descriptor="src/maven-soapui-plugin/project.xml"/>
 
-        <ant:mkdir dir="target/docs/repository/eviware/plugins"/>
-        <ant:copy todir="target/docs/repository/eviware/plugins">
+        <ant:mkdir dir="${maven.build.dir}/docs/repository/eviware/plugins"/>
+        <ant:copy todir="${maven.build.dir}/docs/repository/eviware/plugins">
             <ant:fileset dir="src/maven-soapui-plugin/target" includes="*.jar"/>
         </ant:copy>
 
@@ -283,7 +290,7 @@
     <postGoal name="jar:install">
         <ant:mkdir dir="${user.home}/.m2/repository/eviware/soapui/${pom.currentVersion}"/>
         <ant:copy todir="${user.home}/.m2/repository/eviware/soapui/${pom.currentVersion}">
-            <ant:fileset dir="target" includes="*.jar"/>
+            <ant:fileset dir="${maven.build.dir}" includes="*.jar"/>
         </ant:copy>
         <j:file name="${user.home}/.m2/repository/eviware/soapui/${pom.currentVersion}/soapui-${pom.currentVersion}.pom"
                 escapeText="false">
@@ -300,8 +307,8 @@
 
     <goal name="soapui:generate-xml-beans">
 
-        <ant:mkdir dir="target"/>
-        <ant:mkdir dir="target/classes"/>
+        <ant:mkdir dir="${maven.build.dir}"/>
+        <ant:mkdir dir="${maven.build.dir}/classes"/>
 
         <ant:path id="xmlbeans-classpath">
             <ant:pathelement location="${pom.getDependencyPath('xmlbeans:xbean')}"/>
@@ -314,7 +321,7 @@
                      classpathref="xmlbeans-classpath"/>
 
         <attainGoal name="clean"/>
-        <ant:mkdir dir="target"/>
+        <ant:mkdir dir="${maven.build.dir}"/>
 
         <!--
             Create soapui-xmlbeans
@@ -507,18 +514,18 @@
     <!-- sets up the target/standalone directory -->
 
     <goal name="soapui:create-standalone-binary-dist">
-        <ant:delete dir="target/standalone"/>
-        <ant:mkdir dir="target/standalone"/>
-        <ant:mkdir dir="target/standalone/source"/>
-        <ant:mkdir dir="target/standalone/jre"/>
+        <ant:delete dir="${maven.build.dir}/standalone"/>
+        <ant:mkdir dir="${maven.build.dir}/standalone"/>
+        <ant:mkdir dir="${maven.build.dir}/standalone/source"/>
+        <ant:mkdir dir="${maven.build.dir}/standalone/jre"/>
 
-        <ant:copy todir="target/standalone">
-            <ant:fileset dir="target/dist"/>
+        <ant:copy todir="${maven.build.dir}/standalone">
+            <ant:fileset dir="${maven.build.dir}/dist"/>
         </ant:copy>
 
-        <util:available file="target/standalone/docs/apidocs">
-            <ant:move todir="target/standalone/apidocs">
-                <ant:fileset dir="target/standalone/docs/apidocs"/>
+        <util:available file="${maven.build.dir}/standalone/docs/apidocs">
+            <ant:move todir="${maven.build.dir}/standalone/apidocs">
+                <ant:fileset dir="${maven.build.dir}/standalone/docs/apidocs"/>
             </ant:move>
         </util:available>
 
@@ -535,15 +542,15 @@
 		<j:set var="soapuiclasspathcompact" trim="false" value="set CLASSPATH=%SOAPUI_HOME%${pom.artifactId}-${pom.currentVersion}.jar;%SOAPUI_HOME%..\lib\*;"/>
 		
         <ant:delete>
-            <ant:fileset dir="target/standalone/bin" includes="*.sh"/>
+            <ant:fileset dir="${maven.build.dir}/standalone/bin" includes="*.sh"/>
         </ant:delete>
 
-        <ant:mkdir dir="target/standalone/bin_nojre"/>
-        <ant:copy todir="target/standalone/bin_nojre">
-            <ant:fileset dir="target/standalone/bin"/>
+        <ant:mkdir dir="${maven.build.dir}/standalone/bin_nojre"/>
+        <ant:copy todir="${maven.build.dir}/standalone/bin_nojre">
+            <ant:fileset dir="${maven.build.dir}/standalone/bin"/>
         </ant:copy>
 
-        <ant:copy todir="target/standalone/bin" overwrite="true">
+        <ant:copy todir="${maven.build.dir}/standalone/bin" overwrite="true">
             <ant:fileset dir="src/dist_standalone/bin"/>
             <ant:filterset>
                 <ant:filter token="SOAPUICLASSPATH" value="${soapuiclasspath}"/>
@@ -552,11 +559,11 @@
             </ant:filterset>
         </ant:copy>
 
-        <util:available file="target/distributions/${maven.final.name}-src.zip">
-            <ant:unzip src="target/distributions/${maven.final.name}-src.zip" dest="target/standalone/source"/>
+        <util:available file="${maven.build.dir}/distributions/${maven.final.name}-src.zip">
+            <ant:unzip src="${maven.build.dir}/distributions/${maven.final.name}-src.zip" dest="${maven.build.dir}/standalone/source"/>
         </util:available>
 
-        <ant:copy todir="target/standalone/jre">
+        <ant:copy todir="${maven.build.dir}/standalone/jre">
             <ant:fileset dir="${maven.soapui.standalone.jre}">
                 <ant:exclude name="bin/rmid.exe"/>
                 <ant:exclude name="bin/rmiregistry.exe"/>
@@ -609,21 +616,21 @@
         </ant:copy>
 
         <!-- create standalone zip for win32 -->
-        <ant:zip destfile="target/distributions/soapui-${pom.currentVersion}-win32-standalone-bin.zip">
-            <ant:zipfileset dir="target/standalone" prefix="soapui-${pom.currentVersion}" includes="*.*"/>
-            <ant:zipfileset dir="target/standalone/bin" prefix="soapui-${pom.currentVersion}/bin"/>
-            <ant:zipfileset dir="target/standalone/source" prefix="soapui-${pom.currentVersion}/source"/>
-            <ant:zipfileset dir="target/standalone/licenses" prefix="soapui-${pom.currentVersion}/licenses"/>
-            <!--    		  <ant:zipfileset dir="target/standalone/docs" prefix="soapui-${pom.currentVersion}/docs"/>  -->
-            <ant:zipfileset dir="target/standalone/jre" prefix="soapui-${pom.currentVersion}/jre"/>
-            <ant:zipfileset dir="target/standalone/lib" prefix="soapui-${pom.currentVersion}/lib"/>
+        <ant:zip destfile="${maven.build.dir}/distributions/soapui-${pom.currentVersion}-win32-standalone-bin.zip">
+            <ant:zipfileset dir="${maven.build.dir}/standalone" prefix="soapui-${pom.currentVersion}" includes="*.*"/>
+            <ant:zipfileset dir="${maven.build.dir}/standalone/bin" prefix="soapui-${pom.currentVersion}/bin"/>
+            <ant:zipfileset dir="${maven.build.dir}/standalone/source" prefix="soapui-${pom.currentVersion}/source"/>
+            <ant:zipfileset dir="${maven.build.dir}/standalone/licenses" prefix="soapui-${pom.currentVersion}/licenses"/>
+            <!--    		  <ant:zipfileset dir="${maven.build.dir}/standalone/docs" prefix="soapui-${pom.currentVersion}/docs"/>  -->
+            <ant:zipfileset dir="${maven.build.dir}/standalone/jre" prefix="soapui-${pom.currentVersion}/jre"/>
+            <ant:zipfileset dir="${maven.build.dir}/standalone/lib" prefix="soapui-${pom.currentVersion}/lib"/>
         </ant:zip>
     </goal>
 
     <!-- builds installer -->
     <goal name="soapui:make-installer">
 
-        <util:available file="target/standalone">
+        <util:available file="${maven.build.dir}/standalone">
             <j:set var="standaloneExists" value="true"/>
         </util:available>
 
@@ -632,8 +639,8 @@
         </j:if>
 
         <!-- create temporary copy of nsis script with expanded variables -->
-        <ant:mkdir dir="target/nsis"/>
-        <ant:copy todir="target/nsis" overwrite="true">
+        <ant:mkdir dir="${maven.build.dir}/nsis"/>
+        <ant:copy todir="${maven.build.dir}/nsis" overwrite="true">
             <ant:fileset dir="src/nsis">
                 <ant:include name="*.nsi"/>
             </ant:fileset>
@@ -642,14 +649,14 @@
             </ant:filterset>
         </ant:copy>
 
-        <ant:copy todir="target/nsis" overwrite="true">
+        <ant:copy todir="${maven.build.dir}/nsis" overwrite="true">
             <ant:fileset dir="src/nsis">
                 <ant:exclude name="*.nsi"/>
             </ant:fileset>
         </ant:copy>
 
         <ant:exec dir="." executable="${maven.soapui.nsis.home}\makensis.exe">
-            <ant:arg value="target\nsis\Install soapui Standalone.nsi"/>
+            <ant:arg value="${maven.build.dir}\nsis\Install soapui Standalone.nsi"/>
         </ant:exec>
     </goal>
 
@@ -659,7 +666,7 @@
         <attainGoal name="jar"/>
         <ant:java fork="true" failonerror="true" classname="com.eviware.soapui.SoapUI">
             <ant:classpath>
-                <ant:path location="target/classes"/>
+                <ant:path location="${maven.build.dir}/classes"/>
                 <ant:path refid="maven.dependency.classpath"/>
             </ant:classpath>
         </ant:java>
@@ -676,7 +683,7 @@
             <echo>Publishing distributions to ${dist}</echo>
             <ant:mkdir dir="${dist}"/>
             <ant:copy todir="${dist}" overwrite="true">
-                <ant:fileset dir="target/distributions"/>
+                <ant:fileset dir="${maven.build.dir}/distributions"/>
             </ant:copy>
         </j:if>
 
@@ -684,7 +691,7 @@
             <echo>Publishing docs to ${site}</echo>
             <ant:mkdir dir="${site}"/>
             <ant:copy todir="${site}" overwrite="true">
-                <ant:fileset dir="target/docs"/>
+                <ant:fileset dir="${maven.build.dir}/docs"/>
             </ant:copy>
         </j:if>
 
@@ -692,7 +699,7 @@
             <echo>Publishing plugins to ${plugins}</echo>
             <ant:mkdir dir="${plugins}"/>
             <ant:copy todir="${plugins}" overwrite="true">
-                <ant:fileset dir="target/docs/repository/eviware/plugins"/>
+                <ant:fileset dir="${maven.build.dir}/docs/repository/eviware/plugins"/>
             </ant:copy>
         </j:if>
 
