@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2008 eviware.com 
+ *  soapUI, copyright (C) 2004-2009 eviware.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -935,7 +935,7 @@ public class SoapUI
 
          UISupport.showExtendedInfo( "About soapUI", null,
                  "<html><body><p align=center><img src=\"" + splashURI + "\"><br>soapUI " +
-                         SOAPUI_VERSION + ", copyright (C) 2004-2008 eviware.com<br>" +
+                         SOAPUI_VERSION + ", copyright (C) 2004-2009 eviware.com<br>" +
                          "<a href=\"http://www.soapui.org\">http://www.soapui.org</a> | " +
                          "<a href=\"http://www.eviware.com\">http://www.eviware.com</a><br>" +
                          "Build " + props.getProperty( "build.number" ) + ", Build Date " +
