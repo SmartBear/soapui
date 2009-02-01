@@ -14,22 +14,22 @@
             <table class="webstartlinkstable">
                 <tr>
                     <td align="center" bgcolor="white">
-                        <span class="webstartheader">soapUI 2.5</span>
+                        <span class="webstartheader">soapUI 2.5.1</span>
                         <div>
-                            <a href="http://www.soapui.org/jnlp/2.5/soapui.jnlp"
-                               urchinTracker="/jnlp/soapui/2_5">
+                            <a href="http://www.soapui.org/jnlp/2.5.1/soapui.jnlp"
+                               urchinTracker="/jnlp/soapui/2_5_1">
                                 <img class="webstart" src="images/webstart_green.png" border="0" alt="soapUI WebStart"/>
                             </a>
                         </div>
                         [<a target="_new"
-                            href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=641323">
+                            href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=657327">
                         Download</a>]
                     </td>
                     <td align="center" bgcolor="white">
-                        <span class="webstartheader">soapUI 2.5</span>
+                        <span class="webstartheader">soapUI Pro 2.5.1</span>
                         <div>
-                            <a href="http://www.eviware.com/jnlp/2.5/soapui-pro.jnlp"
-                               urchinTracker="/jnlp/soapui/2_5-pro">
+                            <a href="http://www.eviware.com/jnlp/2.5.1/soapui-pro.jnlp"
+                               urchinTracker="/jnlp/soapui/2_5_1-pro">
                                 <img class="webstart" src="images/webstart_orange.png" border="0"
                                      alt="soapUI Pro WebStart"/>
                             </a>
@@ -60,6 +60,20 @@
                 <a target="_new" href="http://www.eviware.com/blogs/oleblog/">http://www.eviware.com/blogs/oleblog/</a>
                 for more info, tips and tricks, updates, etc.
             </p>
+            
+            <subsection name="2.5.1 Release">
+            <p>The 2.5.1 release is plug-in and bug-fix release, most notable issues resolved are:</p>
+            <ul>
+            <li>Updated plugins for NetBeans, IDEA, Eclipse and maven 1/2</li>
+            <li>Updated dependencies for wss4j (WS-Security) and jetty (Mocking)</li>
+            <li>Fixed critical issues with SOAP Monitor and Composite Projects</li>
+            <li>WSTF testing project for the WSTF Scenario nr 3, <a href="wstf/index.html">Read More</a></li> 
+            </ul>
+            
+            <p>Many issues have been resolved thanks to feedback from 
+            our customers and community, we are grateful for your help and patience!</p>
+            
+            </subsection>
 
              <subsection name="New and Noteworthy in soapUI 2.5 Final">
 

@@ -37,6 +37,7 @@
             <item href="/architecture/integration.html" name="Integrating"/>
             <item href="/architecture/extensions.html" name="Extending"/>
             <item href="/future.html" name="Future Plans"/>
+            <item href="/wstf/index.html" name="WSTF Scenario Tests"/>
             <item href="/faq.html" name="FAQ"/>
             <item href="/contact.html" name="Contact Us"/>
         </menu>
@@ -200,6 +201,7 @@
                 <item href="/eclipse/soapui_nature.html" name="soapUI Nature"/>
             </item>
 
+<!-- 
             <item name="JBossWS Plugin" href="/jbossws/index.html">
                 <item href="/jbossws/newandnoteworthy-2.0.0-beta2.html" name="New in 2.0.0 beta2"/>
                 <item href="/jbossws/gettingstarted.html" name="Getting Started"/>
@@ -214,7 +216,7 @@
                     <item href="/jbossws/annotations_example.html" name="EJB3/WS Annotate Example"/>
                 </item>
             </item>
-
+ -->
         </menu>
         <!--
        <menu name="Eclipse Plugin" collapse="true" href="/eclipse/index.html">

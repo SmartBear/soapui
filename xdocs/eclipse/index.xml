@@ -7,7 +7,7 @@
 		<section name="soapUI eclipse-plugin">
 		
 		<p>The soapUI eclipse plugin provides full soapUI functionality from within eclipse. Apart from "standard" 
-		soapUI 2.0 functionality, the eclipse plugin contains a soapUI project nature and also adds a new soapUI 
+		soapUI 2.5 functionality, the eclipse plugin contains a soapUI project nature and also adds a new soapUI 
 		perspective which mimics the layout of the standalone soapUI version.The plugin makes use of the 
 		SWT_AWT bridge which greatly eases our development effort but may result in graphical glitches with dialogs 
 		and some window updates... but all core functionality should be working	OK (let us know otherwise)...</p>
@@ -25,8 +25,8 @@
 		<thumbnail src="images/eclipse3.gif" size="250" caption="(Axis2 Wizard with WS-I Basic Profile Report in background)" alt="the soapUI Axis2 Wizard with WS-I Basic Profile Report in background in eclipse"/>
 		</column></columns>
 		
-		<subsection name="soapUI eclispe Update Site">
-		<p>An eclipse update site is now available at http://www.soapui.org/eclipse/update/site.xml, Install the 
+		<subsection name="soapUI eclipse Update Site">
+		<p>An eclipse update site is now available at http://www.soapui.org/eclipse/update/site.xml, install the 
 		soapui-eclipse-plugin with the following steps:</p>
 		<columns>
 		<column><div><ol>
