@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Untitled Document</title>
+<title>soapUI Startup Page</title>
 <style type="text/css">
 <!--
 -->
@@ -54,11 +54,13 @@ urchinTracker();</script>
       </tr>
     </table>      <p>&nbsp;</p>    </td>
     <td height="720" width="400" valign="top" class="greyBox"><h1><img src="Images/soapui-logo.png" alt="soapUI" width="50" height="50" /> Latest News</h1>
-      <p class="center_p"><em><strong>November 19 2008- SoapUI 2.5: The REST Release  is out.</strong></em></p>
-      <p class="center_p">soapUI is now <strong>restUI</strong> as well! <br />
-        <br />
-      In the new release you get full support for REST Testing. We would like to think it's a gem! soapUI REST Testing makes it possible for you to do complete RestTests with or without a WADL.<br />
-      <p align="center" class="center_p"><a onclick="javascript:urchinTracker('/appindexsoapUIReadMore')" href="http://www.eviware.com/content/view/134/1/" title="Read more about soapUI 2.5" target="_blank">Read more here</a> | <a onclick="javascript:urchinTracker('/appindexsoapUIDownloadNewest')" href="http://sourceforge.net/project/showfiles.php?group_id=136013&package_id=163662&release_id=641323" title="download soapUI" target="_blank">Download it here</a>|</p>
+      <p class="center_p"><em><strong>February 2 2009 - SoapUI 2.5.1</strong></em></p>
+      <p class="center_p">Fixes, Improvements and IDE Plugins!<br />
+        <br />This release fixes a large number of minor an major issues and also brings the IDEA, Eclipse, NetBeans and maven 
+        up to date with the latest features. <br /><br />
+        Updating is definitely recommended!
+      <p align="center" class="center_p"><a onclick="javascript:urchinTracker('/appindexsoapUIReadMore')" href="http://www.eviware.com/content/view/134/1/" title="Read more about soapUI 2.5" target="_blank">Read more here</a> | 
+      <a onclick="javascript:urchinTracker('/appindexsoapUIDownloadNewest')" href="http://sourceforge.net/project/showfiles.php?group_id=136013&package_id=163662&release_id=657327" title="download soapUI" target="_blank">Download it here</a>|</p>
      <hr/>  
 <h1><img src="Images/soapui-logo.png" alt="soapUI" width="50" height="50" /> Latest blogposts:</h1>
 

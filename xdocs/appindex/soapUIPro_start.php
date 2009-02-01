@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Untitled Document</title>
+<title>soapUI Pro Startup Page</title>
 <style type="text/css">
 <!--
 -->
@@ -53,11 +53,11 @@ urchinTracker();</script>
       </tr>
     </table>      <p>&nbsp;</p>    </td>
     <td height="720" width="400" class="greyBox" valign="top"><h1><img src="Images/Pro-Icon-50.png" alt="soapUI" width="50" height="50" /> Latest News</h1>
-      <p class="center_p"><em><strong>November 19 2008- SoapUI 2.5: The REST Release  is out.</strong></em></p>
-      <p class="center_p">soapUI is now <strong>restUI</strong> as well! <br />
-        <br />
-      In the new release you get full support for REST Testing. We would like to think it's a gem! soapUI REST Testing makes it possible for you to do complete RestTests with or without a WADL.<br />
-      <p align="center" class="center_p"><a onclick="javascript:urchinTracker('/appindexsoapUIProReadMore')" href="http://www.eviware.com/content/view/134/1/" title="Read more about soapUI 2.5" target="_blank">Read more here</a> | <a onclick="javascript:urchinTracker('/appindexsoapUIProDownloadNewest')" href="http://www.eviware.com/download/" title="download soapUI" target="_blank">Download it here</a></p>
+ <p class="center_p"><em><strong>February 2 2009 - SoapUI Pro 2.5.1</strong></em></p>
+      <p class="center_p">Fixes and Improvements!<br />
+        <br />This release fixes a large number of minor an major issues and updates the Pro maven plugin to 2.5.1 status.<br/>
+        <br/>Updating is definetely recommended!<br />
+       <p align="center" class="center_p"><a onclick="javascript:urchinTracker('/appindexsoapUIProReadMore')" href="http://www.eviware.com/content/view/134/1/" title="Read more about soapUI 2.5" target="_blank">Read more here</a> | <a onclick="javascript:urchinTracker('/appindexsoapUIProDownloadNewest')" href="http://www.eviware.com/download/" title="download soapUI" target="_blank">Download it here</a></p>
  <hr/>
 <h1><img src="Images/Pro-Icon-50.png" alt="soapUI" width="50" height="50" />Latest blogposts:</h1>
 <ul  class="evilist">
