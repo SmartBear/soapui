@@ -9,6 +9,15 @@
 	<atom:link href="http://www.soapui.org/news.rss" rel="self" type="application/rss+xml" />
 
 		<item>	
+			<title>soapUI 2.5.1</title>
+			<link>http://www.soapui.org/new_and_noteworthy_2_5.html</link>
+			<guid isPermaLink="false">2.5.1</guid>
+			<pubDate>Mon, 02 Feb 2009 09:00:00 +0100</pubDate>
+			<description>soapUI 2.5.1, an update to 2.5 The REST Release, is out. 2.5.1 Contains bugfixes and performance improvements.</description> 	  
+		</item>
+
+
+		<item>	
 			<title>soapUI 2.5</title>
 			<link>http://www.soapui.org/new_and_noteworthy_2_5.html</link>
 			<guid isPermaLink="false">2.5 final</guid>
