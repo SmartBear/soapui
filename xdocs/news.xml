@@ -6,6 +6,21 @@
     <body>
     <section name="soapUI Releases">
 
+		<subsection name="2009-02-02: soapUI 2.5.1">
+	    	<columns>
+	    		<column width="75">
+	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		</column>
+	    		<column>
+	    			<p align="left">soapUI 2.5.1, is out!</p>
+	    			<p align="left">soapUI 2.5.1, an update to 2.5, The REST Release is out. 
+	    			This release contains bugfixes and performance improvements.
+	    			<a href="new_and_noteworthy_2_5.html#New and Noteworthy in soapUI 2.5 beta1">[Read more]</a>
+	    			</p>
+	    		</column>
+	    	</columns>
+		</subsection>
+		
         <subsection name="2008-11-17: soapUI 2.5">
 	    	<columns>
 	    		<column width="75">
