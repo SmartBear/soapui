@@ -258,6 +258,11 @@ public class DefaultSoapUICore implements SoapUICore
 		{
 			settings.setBoolean(WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE, true);
 		}
+		
+		if (!settings.isSet(UISettings.SHOW_STARTUP_PAGE))
+		{
+			settings.setBoolean(UISettings.SHOW_STARTUP_PAGE, true);
+		}
 
 		return settings;
 	}
