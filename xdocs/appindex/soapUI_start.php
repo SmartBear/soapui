@@ -39,11 +39,12 @@ urchinTracker();</script>
             <a onclick="javascript:urchinTracker('/appindexsoapUIReadMorePro')" href="http://www.eviware.com/content/view/134/1/" title="Read more about soapUI 2.5" target="_blank">Read more here</a></p>          </td>
       </tr>
       <tr>
-        <td height="240" class="greyBox" valign="top"><h2>Have you voted yet?</h2>
-          <p>The final push is on its way. </p>
-          <p>Support soapUI by voting for us at SOA World Magazine Reader's Choice Vote.</p>
-          <p><br />
-            <a onclick="javascript:urchinTracker('/appindexsoapUITraining')" href="http://soa.sys-con.com/general/readerschoice.htm" title="Vote here!" target="_blank">Vote here!</a></p></td>
+        <td height="240" class="greyBox" valign="top"><h2>soapUI Training in Silicon Valley</h2>
+          <p>Become a soapUI Pro!</p>
+          <p>Get training for soapUI. Next Date:<br />
+          Silicon Valley, March 3-5<br />
+<br />
+            <a onclick="javascript:urchinTracker('/appindexsoapUITraining')" href="http://www.pushtotest.com/Docs/training/soapUI#top" title="Read Here!" target="_blank">Read about it here</a></p></td>
       </tr>
       <tr>
         <td height="240"  class="greyBox" valign="top"><h2>eviware I turn</h2>
@@ -61,19 +62,8 @@ urchinTracker();</script>
         Updating is definitely recommended!
       <p align="center" class="center_p"><a onclick="javascript:urchinTracker('/appindexsoapUIReadMore')" href="http://www.eviware.com/content/view/134/1/" title="Read more about soapUI 2.5" target="_blank">Read more here</a> | 
       <a onclick="javascript:urchinTracker('/appindexsoapUIDownloadNewest')" href="http://sourceforge.net/project/showfiles.php?group_id=136013&package_id=163662&release_id=657327" title="download soapUI" target="_blank">Download it here</a>|</p>
-     <hr/>  
-<h1><img src="Images/soapui-logo.png" alt="soapUI" width="50" height="50" /> Latest blogposts:</h1>
 
-<ul>
-  <li>October 7 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=52">REST Resources, Parameters, etc</a></li>
-    <li>October 5 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=264">Using XPath Assertions in soapUI</a></li>
-      <li>October 4 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=217">Send email from your groovy scripts</a></li>
-      <li>October 1 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=17">Improving soapUI Memory Usage</a></li>
-      <li>October 1 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=126">Building and running from SVN</a></li>
-      <li>October 1 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=110">Deploying MockServices as Servlets</a></li>
-      <li>September 30 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=74">Test your feeds with soapUI</a></li>
-      <li>September 30 2008 : <a href="http://www.eviware.com/blogs/oleblog/?p=11">Testing REST Services with soapUI</a></li>
-</ul>
+
 
       <hr/>
       <h1><img src="Images/soapui-logo.png" alt="soapUI" width="50" height="50" /> Vote soapUI!</h1>
