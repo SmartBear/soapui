@@ -21,7 +21,7 @@
 		 
 		 <subsection name="Building soapUI from SVN">
 		 <p>If you want to build the latest version of soapUI, you need to get the soapUI sources from its SourceForge
-		 subversion repository located at <code>https://svn.eviware.com/soapui/trunk/core</code>. Once you
+		 subversion repository located at <code>svn://svn.eviware.com/soapui/trunk/core</code>. Once you
 		 have checked out the sources you should rebuild the XMLBeans classes used by soapUI to make sure you have up-to-date
 		 versions on your local system; open a command-prompt in the soapUI directory and type 
 		 <code>maven soapui:generate-xml-beans</code>, which will create all required classes for you. Now you can 
