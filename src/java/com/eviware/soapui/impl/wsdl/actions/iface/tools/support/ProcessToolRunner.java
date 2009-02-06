@@ -99,7 +99,7 @@ public class ProcessToolRunner implements ToolRunner
 			
 			for( int c = 0; c < builders.length; c++ )
 			{
-				beforeProcess( process, context );
+				beforeProcess( builders[c], context );
 
 				logRunInfo( builders[c] );
 				process = builders[c].start();
@@ -173,7 +173,7 @@ public class ProcessToolRunner implements ToolRunner
 	{
 	}
 
-	protected void beforeProcess(Process process2, RunnerContext context)
+	protected void beforeProcess(ProcessBuilder processBuilder, RunnerContext context)
 	{
 	}
 

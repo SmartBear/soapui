@@ -62,6 +62,7 @@ public class WSIAnalyzeAction extends AbstractToolsAction<Interface>
 	public final static Logger log = Logger.getLogger( WSIAnalyzeAction.class );
 	
 	private String configFile;
+	private String wsiDir;
 	
    public WSIAnalyzeAction()
    {
@@ -70,7 +71,7 @@ public class WSIAnalyzeAction extends AbstractToolsAction<Interface>
 
 	protected void generate(StringToStringMap values, ToolHost toolHost, Interface modelItem) throws Exception
 	{
-		String wsiDir = SoapUI.getSettings().getString( WSISettings.WSI_LOCATION, System.getenv("WSI_HOME") );
+		wsiDir = SoapUI.getSettings().getString( WSISettings.WSI_LOCATION, System.getenv("WSI_HOME") );
 		if( Tools.isEmpty( wsiDir ) )
 		{
 			UISupport.showErrorMessage( "WSI Test Tools directory must be set in global preferences" );
@@ -248,6 +249,12 @@ public class WSIAnalyzeAction extends AbstractToolsAction<Interface>
 		public boolean showLog()
 		{
 			return modelItem.getSettings().getBoolean( WSISettings.SHOW_LOG );
+		}
+
+		@Override
+		protected void beforeProcess(ProcessBuilder processBuilder, RunnerContext context)
+		{
+			processBuilder.environment().put( "WSI_HOME", wsiDir );
 		}
 	}
 }

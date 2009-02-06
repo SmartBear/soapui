@@ -45,6 +45,7 @@ public class WSIValidateResponseAction extends AbstractToolsAction<WsdlMockRespo
 {
 	private String configFile;
 	private File logFile;
+	private String wsiDir;
 
 	public WSIValidateResponseAction()
 	{
@@ -62,7 +63,7 @@ public class WSIValidateResponseAction extends AbstractToolsAction<WsdlMockRespo
 			return;
 		}
 		
-		String wsiDir = SoapUI.getSettings().getString( WSISettings.WSI_LOCATION, null );
+		wsiDir = SoapUI.getSettings().getString( WSISettings.WSI_LOCATION, null );
 		if( wsiDir == null )
 		{
 			UISupport.showErrorMessage( "WSI Test Tools directory must be set in global preferences" );
@@ -311,6 +312,12 @@ public class WSIValidateResponseAction extends AbstractToolsAction<WsdlMockRespo
 		public boolean showLog()
 		{
 			return modelItem.getSettings().getBoolean( WSISettings.SHOW_LOG );
+		}
+		
+		@Override
+		protected void beforeProcess(ProcessBuilder processBuilder, RunnerContext context)
+		{
+			processBuilder.environment().put( "WSI_HOME", wsiDir );
 		}
 	}
 }
