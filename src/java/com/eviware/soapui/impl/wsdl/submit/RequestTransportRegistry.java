@@ -49,7 +49,6 @@ public class RequestTransportRegistry
 		httpTransport.addRequestFilter( new StripWhitespacesRequestFilter() );
 		httpTransport.addRequestFilter( new EndpointStrategyRequestFilter() );
 		httpTransport.addRequestFilter( new WsaRequestFilter() );
-      httpTransport.addRequestFilter( new HttpCompressionRequestFilter() );
       httpTransport.addRequestFilter( new WssRequestFilter() );
 		
 		for( RequestFilter filter : SoapUI.getListenerRegistry().getListeners( RequestFilter.class ))
@@ -58,6 +57,7 @@ public class RequestTransportRegistry
 		}
 
       httpTransport.addRequestFilter( new WsdlPackagingRequestFilter() );
+      httpTransport.addRequestFilter( new HttpCompressionRequestFilter() );
 		httpTransport.addRequestFilter( new WsdlPackagingResponseFilter() );
 		
 		transports.put( HTTP, httpTransport );
