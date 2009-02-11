@@ -58,7 +58,7 @@
         <tr>
           <td>printReport</td>
           <td>Yes</td>
-          <td>Controls if a small test report should be printed to the console (yes/no)</td>
+          <td>Controls if a small test report should be printed to the console (true/false)</td>
         </tr>
         <tr>
           <td>outputFolder</td>
@@ -68,12 +68,12 @@
          <tr>
           <td>junitReport</td>
           <td>Yes</td>
-          <td>Turns on creation of <a href="../../userguide/commandline/functional.html#JUnit_Reports">JUnit-reports</a>, (yes/no)</td>
+          <td>Turns on creation of <a href="../../userguide/commandline/functional.html#JUnit_Reports">JUnit-reports</a>, (true/false)</td>
         </tr>
         <tr>
           <td>exportAll</td>
           <td>Yes</td>
-          <td>Controls if all test requests should be exported (default only exports errors), (yes/no)</td>
+          <td>Controls if all test requests should be exported (default only exports errors), (true/false)</td>
         </tr>
          <tr>
           <td>settingsFile</td>
@@ -144,7 +144,7 @@
         <tr>
           <td>printReport</td>
           <td>Yes</td>
-          <td>Controls if a small test report should be printed to the console (yes/no)</td>
+          <td>Controls if a small test report should be printed to the console (true/false)</td>
         </tr>
         <tr>
           <td>outputFolder</td>
