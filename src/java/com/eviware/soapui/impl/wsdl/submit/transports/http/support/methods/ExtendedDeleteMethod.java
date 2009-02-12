@@ -12,18 +12,18 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods;
 
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
-import org.apache.commons.httpclient.Header;
+import java.io.IOException;
+
 import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 
-import java.io.IOException;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -118,7 +118,6 @@ public final class ExtendedDeleteMethod extends DeleteMethod implements Extended
 
    public RequestEntity getRequestEntity()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 
@@ -126,5 +125,21 @@ public final class ExtendedDeleteMethod extends DeleteMethod implements Extended
    {
       return AbstractHttpRequest.RequestMethod.DELETE;
    }
+   
+   public Throwable getFailureCause()
+	{
+		return httpMethodSupport.getFailureCause();
+	}
+
+	public boolean isFailed()
+	{
+		return httpMethodSupport.isFailed();
+	}
+
+	public void setFailed(Throwable t)
+	{
+		httpMethodSupport.setFailed( t );
+	}
+
 
 }

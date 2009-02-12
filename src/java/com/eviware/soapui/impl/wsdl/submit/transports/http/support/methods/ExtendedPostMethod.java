@@ -117,4 +117,18 @@ public final class ExtendedPostMethod extends PostMethod implements ExtendedHttp
       return AbstractHttpRequest.RequestMethod.POST;
    }
 
+   public Throwable getFailureCause()
+	{
+		return httpMethodSupport.getFailureCause();
+	}
+
+	public boolean isFailed()
+	{
+		return httpMethodSupport.isFailed();
+	}
+
+	public void setFailed(Throwable t)
+	{
+		httpMethodSupport.setFailed( t );
+	}
 }

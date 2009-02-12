@@ -155,6 +155,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		}
 		catch( Throwable t )
 		{
+			httpMethod.setFailed( t );
 			throw new Exception( t );
 		}
 		finally

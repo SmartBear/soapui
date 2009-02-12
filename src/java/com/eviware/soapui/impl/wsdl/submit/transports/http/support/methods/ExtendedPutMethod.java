@@ -12,17 +12,17 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods;
 
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
-import org.apache.commons.httpclient.Header;
+import java.io.IOException;
+
 import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.PutMethod;
 
-import java.io.IOException;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -119,4 +119,19 @@ public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMe
    {
       return AbstractHttpRequest.RequestMethod.PUT;
    }
+ 
+   public Throwable getFailureCause()
+	{
+		return httpMethodSupport.getFailureCause();
+	}
+
+	public boolean isFailed()
+	{
+		return httpMethodSupport.isFailed();
+	}
+
+	public void setFailed(Throwable t)
+	{
+		httpMethodSupport.setFailed( t );
+	}
 }

@@ -41,4 +41,10 @@ public interface ExtendedHttpMethod extends HttpMethod
 	public void setDumpFile( String dumpFile );
 
    public AbstractHttpRequest.RequestMethod getMethod();
+
+	public void setFailed(Throwable t);
+	
+	public boolean isFailed();
+	
+	public Throwable getFailureCause();
 }

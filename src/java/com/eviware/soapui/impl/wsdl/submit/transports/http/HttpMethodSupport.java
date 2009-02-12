@@ -44,6 +44,7 @@ public final class HttpMethodSupport
    private SSLInfo sslInfo;
    private String dumpFile;
    private final HttpMethodBase httpMethod;
+	private Throwable failureCause;
 
    public HttpMethodSupport( HttpMethodBase httpMethod )
    {
@@ -246,4 +247,19 @@ public final class HttpMethodSupport
 
       return null;
    }
+
+	public Throwable getFailureCause()
+	{
+		return failureCause;
+	}
+
+	public boolean isFailed()
+	{
+		return failureCause != null;
+	}
+
+	public void setFailed(Throwable t)
+	{
+		this.failureCause = t;
+	}
 }
