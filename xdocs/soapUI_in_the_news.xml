@@ -6,6 +6,18 @@
     <body>
     <section name="soapUI Releases">
     
+    <subsection name="soapUI property Expansion">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/techwheel.gif" alt="Groovy in soapui"/>
+	    	    </column>
+	    		<column align="left">
+	    			<p>The post starts: "While profiling one of my web services I was..."<br/>
+	    			<a href="http://techwheel.blogspot.com/2009/02/soapui-property-expansion.html">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	</subsection>
+    
     <subsection name="Web Service Testing">
 	    	<columns>
 	    		<column width="200">
