@@ -183,7 +183,7 @@ public class StringUtils
 				while (ix < row.length())
 				{
 					char ch = row.charAt(ix);
-					if (ch == quote && last != '\\')
+					if ((quote == 0 || ch == quote) && last != '\\')
 					{
 						result.add(buf.toString());
 						row = row.length() > ix + 1 ? row.substring(ix + 1) : null;
