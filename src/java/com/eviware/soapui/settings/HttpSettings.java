@@ -30,7 +30,8 @@ public interface HttpSettings
    public static final String HTTP_VERSION_1_1 = "1.1";
    
    @Setting( name="HTTP Version", description="Select HTTP Version to use", 
-			type=SettingType.ENUMERATION, values={HTTP_VERSION_0_9, HTTP_VERSION_1_0, HTTP_VERSION_1_1 } )
+			type=SettingType.ENUMERATION, values={HTTP_VERSION_0_9, HTTP_VERSION_1_0, HTTP_VERSION_1_1 },
+			defaultValue=HTTP_VERSION_1_1)
    public static final String HTTP_VERSION = HttpSettings.class.getSimpleName() + "@" + "http_version";
    
    @Setting( name="User-Agent Header", description="User-Agent HTTP header to send, blank will send default")
