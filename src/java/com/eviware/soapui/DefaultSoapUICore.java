@@ -234,11 +234,26 @@ public class DefaultSoapUICore implements SoapUICore
 			settings.setLong(HttpSettings.MAX_CONNECTIONS_PER_HOST, 500);
 		}
 
+		if( !settings.isSet( HttpSettings.HTTP_VERSION ))
+		{
+			settings.setString(HttpSettings.HTTP_VERSION, HttpSettings.HTTP_VERSION_1_1 );
+		}
+		
 		if (!settings.isSet(HttpSettings.MAX_TOTAL_CONNECTIONS))
 		{
 			settings.setLong(HttpSettings.MAX_TOTAL_CONNECTIONS, 2000);
 		}
 
+		if (!settings.isSet(HttpSettings.RESPONSE_COMPRESSION))
+		{
+			settings.setBoolean(HttpSettings.RESPONSE_COMPRESSION, true);
+		}
+		
+		if (!settings.isSet(HttpSettings.LEAVE_MOCKENGINE))
+		{
+			settings.setBoolean(HttpSettings.LEAVE_MOCKENGINE, true);
+		}
+		
 		if (!settings.isSet(UISettings.AUTO_SAVE_PROJECTS_ON_EXIT))
 		{
 			settings.setBoolean(UISettings.AUTO_SAVE_PROJECTS_ON_EXIT, true);
@@ -301,8 +316,11 @@ public class DefaultSoapUICore implements SoapUICore
 		settings.setBoolean(WsdlSettings.CACHE_WSDLS, true);
 		settings.setBoolean(WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES, true);
 
+		settings.setString( HttpSettings.HTTP_VERSION, HttpSettings.HTTP_VERSION_1_1);
+		settings.setBoolean(HttpSettings.RESPONSE_COMPRESSION, true);
 		settings.setBoolean(HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN, true);
 		settings.setBoolean(HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN, true);
+		settings.setBoolean(HttpSettings.LEAVE_MOCKENGINE, true);
 
 		settings.setString(UISettings.AUTO_SAVE_INTERVAL, "0");
 		settings.setBoolean(UISettings.SHOW_STARTUP_PAGE, true);
