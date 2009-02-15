@@ -348,7 +348,28 @@ public class AttachmentUtils
       if( part != null )
       {
          QName typeName = part.getTypeName();
-         if( typeName.getNamespaceURI().equals( "http://www.w3.org/2001/XMLSchema" ) )
+         if( typeName == null && part.getElementName() != null )
+         {
+         	try
+				{
+					SchemaGlobalElement elm = operation.getInterface().getWsdlContext().getSchemaTypeLoader().findElement(part.getElementName());
+					if( elm != null && elm.getType() != null )
+					{
+						SchemaType schemaType = elm.getType();
+						
+						while( !schemaType.isBuiltinType() && schemaType.getBaseType() != null )
+							schemaType = schemaType.getBaseType();
+						
+						typeName = schemaType.getName();
+					}
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+         }
+         
+         if( typeName != null && typeName.getNamespaceURI().equals( "http://www.w3.org/2001/XMLSchema" ) )
          {
             if( typeName.getLocalPart().equals( "base64Binary" ) )
             {
