@@ -19,6 +19,8 @@ import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.net.ssl.SSLSocket;
+
 import org.apache.commons.httpclient.contrib.ssl.EasySSLProtocolSocketFactory;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.ssl.KeyMaterial;
@@ -41,12 +43,15 @@ public class SoapUIEasySSLProtocolSocketFactory extends EasySSLProtocolSocketFac
 		String sslConfig = ( String ) params.getParameter( SoapUIHostConfiguration.SOAPUI_SSL_CONFIG );
 
 		if( StringUtils.isNullOrEmpty( sslConfig ))
-			return super.createSocket( host, port, localAddress, localPort, params );
+		{
+			return enableSocket((SSLSocket) super.createSocket( host, port, localAddress, localPort, params ));
+		}
 		
 		EasySSLProtocolSocketFactory factory = factoryMap.get( sslConfig );
 		if( factory != null )
-			return factory.createSocket( host, port, localAddress, localPort, params );
-		
+		{
+			return enableSocket( (SSLSocket) factory.createSocket( host, port, localAddress, localPort, params ));
+		}
 		try
 		{
 			// try to create new factory for specified config
@@ -59,12 +64,20 @@ public class SoapUIEasySSLProtocolSocketFactory extends EasySSLProtocolSocketFac
 			factory.setKeyMaterial( new KeyMaterial( keyStore, pwd.toCharArray() ) );
 			factoryMap.put( sslConfig, factory );
 			
-			return factory.createSocket( host, port, localAddress, localPort, params );
+			return enableSocket( (SSLSocket) factory.createSocket( host, port, localAddress, localPort, params ));
 		}
 		catch( Exception gse )
 		{
 			SoapUI.logError( gse );
-			return super.createSocket( host, port, localAddress, localPort, params );
+			return enableSocket( (SSLSocket) super.createSocket( host, port, localAddress, localPort, params ));
 		}
+	}
+
+	private Socket enableSocket(SSLSocket socket)
+	{
+		socket.setEnabledProtocols( socket.getSupportedProtocols() );
+		socket.setEnabledCipherSuites( socket.getSupportedCipherSuites());
+		
+		return socket;
 	}
 }
