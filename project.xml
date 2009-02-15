@@ -610,6 +610,7 @@
             </properties>
         </dependency>
         
+        <!-- 
           <dependency>
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
@@ -628,8 +629,8 @@
                 <jnlp.jar>true</jnlp.jar>
             </properties>
         </dependency>
-                
-        <!--  
+                 -->
+       
         <dependency>
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
@@ -665,7 +666,7 @@
             <properties>
                 <jnlp.jar>true</jnlp.jar>
             </properties>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>wss4j</groupId>
             <artifactId>wss4j</artifactId>
