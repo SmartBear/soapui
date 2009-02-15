@@ -51,6 +51,7 @@ public class AddSAMLEntry extends WssEntryBase
       JPanel panel = new JPanel( new BorderLayout() );
 
       editor = JXEditTextArea.createXmlEditor( true );
+      editor.setText(samlAssertion);
       editor.getDocument().addDocumentListener( new DocumentListenerAdapter()
       {
 
