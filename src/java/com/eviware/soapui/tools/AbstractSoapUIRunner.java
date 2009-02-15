@@ -262,7 +262,7 @@ public abstract class AbstractSoapUIRunner
       this.soapUISettingsPassword = soapUISettingsPassword;
    }
 
-   protected void setSystemProperties( String[] optionValues )
+   public void setSystemProperties( String[] optionValues )
    {
       for( String option : optionValues )
       {
@@ -274,7 +274,7 @@ public abstract class AbstractSoapUIRunner
       }
    }
 
-   protected void setGlobalProperties( String[] optionValues )
+   public void setGlobalProperties( String[] optionValues )
    {
       for( String option : optionValues )
       {
@@ -286,7 +286,7 @@ public abstract class AbstractSoapUIRunner
       }
    }
 
-   protected void setProjectProperties( String[] projectProperties )
+   public void setProjectProperties( String[] projectProperties )
    {
       this.projectProperties = projectProperties;
    }
