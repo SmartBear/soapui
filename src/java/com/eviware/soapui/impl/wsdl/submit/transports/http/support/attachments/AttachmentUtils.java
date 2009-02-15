@@ -363,9 +363,9 @@ public class AttachmentUtils
 						typeName = schemaType.getName();
 					}
 				}
-				catch (Exception e)
+				catch (Throwable e)
 				{
-					e.printStackTrace();
+					SoapUI.logError(e);
 				}
          }
          
