@@ -40,7 +40,9 @@ public class ProjectDirProvider implements ValueProvider
 		{
 			File file = new File( project.getPath() );
 			if( file.exists())
-				return file.getParentFile().getAbsolutePath();
+			{
+				return new File( file.getAbsolutePath() ).getParent();
+			}
 			else
 			{
 				try
