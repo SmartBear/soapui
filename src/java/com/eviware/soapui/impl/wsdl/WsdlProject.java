@@ -165,7 +165,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
       {
          if( path != null && open )
          {
-            File file = new File( path );
+            File file = new File( path.trim() );
             if( file.exists() )
             {
                try
