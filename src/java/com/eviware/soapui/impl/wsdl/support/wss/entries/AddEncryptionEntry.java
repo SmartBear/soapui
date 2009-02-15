@@ -28,6 +28,7 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.jgoodies.binding.PresentationModel;
 import org.apache.ws.security.WSConstants;
+import org.apache.ws.security.WSEncryptionPart;
 import org.apache.ws.security.components.crypto.Crypto;
 import org.apache.ws.security.message.WSSecEncrypt;
 import org.apache.ws.security.message.WSSecHeader;
@@ -38,6 +39,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Vector;
 
 public class AddEncryptionEntry extends WssEntryBase
 {
@@ -282,7 +284,9 @@ public class AddEncryptionEntry extends WssEntryBase
 
 			if( parts.size() > 0 )
 			{
-				wsEncrypt.setParts( createWSParts( parts ) );
+				Vector<WSEncryptionPart> wsParts = createWSParts( parts );
+				if( !wsParts.isEmpty())
+					wsEncrypt.setParts( wsParts );
 			}
 
 			// create backup

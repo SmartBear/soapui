@@ -196,7 +196,12 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 				String ns = map.get( "namespace");
 				if( ns == null )
 					ns = "";
-				result.add( new WSEncryptionPart( map.get(  "name" ), ns, map.get( "enc")) );
+				
+				String name = map.get("name");
+				if( StringUtils.hasContent(name))
+				{
+					result.add( new WSEncryptionPart( name, ns, map.get( "enc")) );
+				}
 			}
 		}
 		

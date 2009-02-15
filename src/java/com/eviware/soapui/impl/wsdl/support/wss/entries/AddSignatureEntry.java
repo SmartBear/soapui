@@ -157,7 +157,7 @@ public class AddSignatureEntry extends WssEntryBase
 			wssSign.setUseSingleCertificate( useSingleCert );
 
 			Vector<WSEncryptionPart> wsParts = createWSParts( parts );
-			if( wsParts.size() > 0 )
+			if( !wsParts.isEmpty() )
 			{
 				wssSign.setParts( wsParts );
 			}
