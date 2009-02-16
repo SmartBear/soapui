@@ -37,6 +37,13 @@
 		want to narrow down which TestSuites/TestCases/LoadTest to run, use the <code>testSuite</code>,  
 		<code>testCase</code> and <code>loadTest</code> properties for that purpose.</p>
 		</subsection>
+		<subsection name="soapUI Pro Version">
+		<p>The Pro version of the maven 2 plugin uses the same configuration except that the artifactId should be 
+		<code>maven-soapui-pro-plugin</code>. Pro-specific properties are documented in the <a href="properties.html">properties</a> 
+		page.</p>
+		
+		</subsection>
+		
 		<subsection name="Integrated Tools">
 		<p>If you configure any of the integrated code generation tools in soapUI for an interface in your
 		project, you can invoke this code generation functionality with</p>

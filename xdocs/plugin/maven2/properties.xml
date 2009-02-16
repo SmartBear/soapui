@@ -6,6 +6,14 @@
   </properties>
   <body>
     <section name="maven 2.X plugin settings">
+    <p>See tables of all properties for all goals below. The globalProperties and projectProperties overrides 
+    are specified with for example
+    <source><![CDATA[<projectProperties>
+    <param>property=value</param>
+    <param>anotherproperty=anothervalue</param>
+</projectProperties>]]></source>
+    </p> 
+    
     <subsection name="eviware:soapui:test settings">
     
       <table>
@@ -46,6 +54,11 @@
           <td>Overrides the username used by any TestRequests run</td>
         </tr>
         <tr>
+          <td>wssPasswordType</td>
+          <td>Yes</td>
+          <td>Sets the WSS Password type to use, must be either 'Text' or 'Digest'</td>
+        </tr>
+         <tr>
           <td>password</td>
           <td>Yes</td>
           <td>Overrides the password used by any TestRequests run</td>
@@ -80,6 +93,46 @@
           <td>Yes</td>
           <td>Specifies soapUI settings file to use</td>
         </tr>
+        <tr>
+          <td>skip</td>
+          <td>Yes</td>
+          <td>Tells TestRunner to skip all tests, (true/false)</td>
+        </tr>
+          <tr>
+          <td>ignoreErrors</td>
+          <td>Yes</td>
+          <td>Tells TestRunner to not fail the build if there are failed tests, (true/false)</td>
+        </tr>
+         <tr>
+          <td>projectPassword</td>
+          <td>Yes</td>
+          <td>Password to use for encrypted project file</td>
+        </tr>
+         <tr>
+          <td>settingsPassword</td>
+          <td>Yes</td>
+          <td>Password to use for encrypted settings file</td>
+        </tr>
+         <tr>
+          <td>globalProperties</td>
+          <td>Yes</td>
+          <td>Array for overriding global properties</td>
+        </tr>
+         <tr>
+          <td>projectProperties</td>
+          <td>Yes</td>
+          <td>Array for overriding project properties</td>
+        </tr>
+         <tr>
+          <td>openReport</td>
+          <td>Yes</td>
+          <td>soapUI Pro only : Opens generated HTML reports in browser, (true/false)</td>
+        </tr>
+         <tr>
+          <td>coverage</td>
+          <td>Yes</td>
+          <td>soapUI Pro only : Generate WSDL Coverage reports, (true/false)</td>
+        </tr>
       </table>
       </subsection>
       <subsection name="eviware:soapui:loadtest settings">
@@ -109,12 +162,17 @@
         <tr>
           <td>loadTest</td>
           <td>Yes</td>
-          <td>Specifies the name of the LoadTest to run (if running the soapui:loadtest goal)</td>
+          <td>Specifies the name of the LoadTest to run </td>
         </tr>
         <tr>
           <td>limit</td>
           <td>Yes</td>
-          <td>Overrides the limit of executed LoadTests (if running the soapui:loadtest goal)</td>
+          <td>Overrides the limit of executed LoadTests</td>
+        </tr>
+          <tr>
+          <td>threadCount</td>
+          <td>Yes</td>
+          <td>Overrides the initial ThreadCount of the specified test(s) </td>
         </tr>
         <tr>
           <td>endpoint</td>
@@ -136,6 +194,11 @@
           <td>Yes</td>
           <td>Overrides the password used by any TestRequests run</td>
         </tr>
+         <tr>
+          <td>wssPasswordType</td>
+          <td>Yes</td>
+          <td>Sets the WSS Password type to use, must be either 'Text' or 'Digest'</td>
+        </tr>
         <tr>
           <td>domain</td>
           <td>Yes</td>
@@ -155,6 +218,26 @@
           <td>settingsFile</td>
           <td>Yes</td>
           <td>Specifies soapUI settings file to use</td>
+        </tr>
+            <tr>
+          <td>projectPassword</td>
+          <td>Yes</td>
+          <td>Password to use for encrypted project file</td>
+        </tr>
+         <tr>
+          <td>settingsPassword</td>
+          <td>Yes</td>
+          <td>Password to use for encrypted settings file</td>
+        </tr>
+         <tr>
+          <td>globalProperties</td>
+          <td>Yes</td>
+          <td>Array for overriding global properties</td>
+        </tr>
+         <tr>
+          <td>projectProperties</td>
+          <td>Yes</td>
+          <td>Array for overriding project properties</td>
         </tr>
       </table>
       </subsection>
@@ -229,6 +312,26 @@
           <td>settingsFile</td>
           <td>No</td>
           <td>Specifies soapUI settings file to use, will contain path to integrated tool to run</td>
+        </tr>
+            <tr>
+          <td>projectPassword</td>
+          <td>Yes</td>
+          <td>Password to use for encrypted project file</td>
+        </tr>
+         <tr>
+          <td>settingsPassword</td>
+          <td>Yes</td>
+          <td>Password to use for encrypted settings file</td>
+        </tr>
+         <tr>
+          <td>globalProperties</td>
+          <td>Yes</td>
+          <td>Array for overriding global properties</td>
+        </tr>
+         <tr>
+          <td>projectProperties</td>
+          <td>Yes</td>
+          <td>Array for overriding project properties</td>
         </tr>
       </table>
       </subsection>
