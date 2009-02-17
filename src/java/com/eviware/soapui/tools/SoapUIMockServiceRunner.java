@@ -269,7 +269,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 
       if( cmd.hasOption( "P" ) )
       {
-         setProjectProperties( cmd.getOptionValues( "G" ) );
+         setProjectProperties( cmd.getOptionValues( "P" ) );
       }
 
       return true;

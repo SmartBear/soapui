@@ -132,7 +132,7 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 
       if( cmd.hasOption( "P" ) )
       {
-         setProjectProperties( cmd.getOptionValues( "G" ) );
+         setProjectProperties( cmd.getOptionValues( "P" ) );
       }
 
       return true;

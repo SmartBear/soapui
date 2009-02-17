@@ -157,7 +157,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
       if( cmd.hasOption( "P" ) )
       {
-         setProjectProperties( cmd.getOptionValues( "G" ) );
+         setProjectProperties( cmd.getOptionValues( "P" ) );
       }
 
       setIgnoreError( cmd.hasOption( "I" ) );
