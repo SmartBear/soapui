@@ -46,6 +46,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
    private boolean block;
    private String projectPassword;
    private WsdlProject project;
+	private boolean saveAfterRun;
 
    public static String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " MockService Runner";
 
@@ -143,6 +144,18 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 
          for( MockRunner runner : runners )
             runner.stop();
+         
+         if( saveAfterRun && !project.isRemote() )
+         {
+         	try
+         	{
+         		project.save();
+         	}
+         	catch( Throwable t )
+         	{
+         		log.error( "Failed to save project", t );
+         	}
+         }
       }
 
       long timeTaken = ( System.nanoTime() - startTime ) / 1000000;
@@ -226,6 +239,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
       options.addOption( "D", true, "Sets system property with name=value" );
       options.addOption( "G", true, "Sets global property with name=value" );
       options.addOption( "P", true, "Sets or overrides project property with name=value" );
+      options.addOption( "S", false, "Saves the project after running the mockService(s)" );
 
       return options;
    }
@@ -246,7 +260,8 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
          setSettingsFile( getCommandLineOptionSubstSpace( cmd, "s" ) );
 
       setBlock( !cmd.hasOption( 'b' ) );
-
+      setSaveAfterRun(cmd.hasOption('S'));
+      
       if( cmd.hasOption( "x" ) )
       {
          setProjectPassword( cmd.getOptionValue( "x" ) );
@@ -290,6 +305,11 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
       this.block = block;
    }
 
+   public void setSaveAfterRun(boolean saveAfterRun)
+	{
+		this.saveAfterRun = saveAfterRun;
+	}
+   
    public WsdlProject getProject()
    {
       return project;

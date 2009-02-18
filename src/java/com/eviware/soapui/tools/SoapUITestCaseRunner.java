@@ -90,6 +90,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
    private String projectPassword;
 
+	private boolean saveAfterRun;
+
    /**
     * Runs the tests in the specified soapUI project file, see soapUI xdocs for
     * details.
@@ -165,11 +167,17 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
       setPrintReport( cmd.hasOption( "r" ) );
       setExportAll( cmd.hasOption( "a" ) );
       setJUnitReport( cmd.hasOption( "j" ) );
+      setSaveAfterRun( cmd.hasOption( "S" ));
 
       return true;
    }
 
-   public void setProjectPassword( String projectPassword )
+   public void setSaveAfterRun(boolean saveAfterRun)
+	{
+		this.saveAfterRun = saveAfterRun;
+	}
+
+	public void setProjectPassword( String projectPassword )
    {
       this.projectPassword = projectPassword;
    }
@@ -202,6 +210,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
       options.addOption( "G", true, "Sets global property with name=value" );
       options.addOption( "P", true, "Sets or overrides project property with name=value" );
       options.addOption( "I", false, "Do not stop if error occurs, ignore them" );
+      options.addOption( "S", false, "Saves the project after running the tests" );
 
       return options;
    }
@@ -351,6 +360,18 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
       exportReports( project );
 
+      if( saveAfterRun && !project.isRemote() )
+      {
+      	try
+      	{
+      		project.save();
+      	}
+      	catch( Throwable t )
+      	{
+      		log.error( "Failed to save project", t );
+      	}
+      }
+      
       if( (assertions.size() > 0 || failedTests.size() > 0) && !ignoreErrors )
       {
          throwFailureException();
