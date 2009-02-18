@@ -281,7 +281,10 @@ public abstract class AbstractSoapUIRunner
          int ix = option.indexOf( '=' );
          if( ix != -1 )
          {
-            PropertyExpansionUtils.getGlobalProperties().setPropertyValue( option.substring( 0, ix ), option.substring( ix + 1 ) );
+            String name = option.substring( 0, ix );
+				String value = option.substring( ix + 1 );
+         	log.info( "Setting global property [" + name + "] to [" + value + "]" );
+            PropertyExpansionUtils.getGlobalProperties().setPropertyValue( name, value );
          }
       }
    }
@@ -300,7 +303,10 @@ public abstract class AbstractSoapUIRunner
             int ix = option.indexOf( '=' );
             if( ix != -1 )
             {
-               project.setPropertyValue( option.substring( 0, ix ), option.substring( ix + 1 ) );
+               String name = option.substring( 0, ix );
+					String value = option.substring( ix + 1 );
+            	log.info( "Setting project property [" + name + "] to [" + value + "]" );
+					project.setPropertyValue( name, value );
             }
          }
       }
