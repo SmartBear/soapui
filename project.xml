@@ -376,7 +376,7 @@
         <dependency>
             <groupId>groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>1.5.7</version>
+            <version>1.6.0</version>
             <type>jar</type>
             <url>http://groovy.codehaus.org/</url>
             <properties>
