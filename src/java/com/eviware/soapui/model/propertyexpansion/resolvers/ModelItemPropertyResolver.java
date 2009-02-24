@@ -113,6 +113,12 @@ public class ModelItemPropertyResolver implements PropertyResolver
 			testSuite = testCase.getTestSuite();
 			project = testSuite.getProject();
 		}
+		else if( modelItem instanceof WsdlLoadTest )
+		{
+			testCase = (( WsdlLoadTest ) modelItem).getTestCase();
+			testSuite = testCase.getTestSuite();
+			project = testSuite.getProject();
+		}
 		else if( modelItem instanceof WsdlTestSuite )
 		{
 			testSuite = ( WsdlTestSuite ) modelItem;
@@ -133,7 +139,7 @@ public class ModelItemPropertyResolver implements PropertyResolver
 		}	
 		else if( modelItem instanceof AbstractHttpRequest )
 		{
-			project = ((AbstractHttpRequest)modelItem).getOperation().getInterface().getProject();
+			project = ((AbstractHttpRequest<?>)modelItem).getOperation().getInterface().getProject();
 		}
 		else if( modelItem instanceof WsdlMockOperation )
 		{
