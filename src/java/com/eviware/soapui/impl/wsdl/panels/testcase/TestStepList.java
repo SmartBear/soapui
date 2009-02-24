@@ -18,8 +18,6 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.dnd.Autoscroll;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -87,7 +85,7 @@ public class TestStepList extends JPanel
 		testStepList = new TestStepJList(testStepListModel);
 		testStepList.setCellRenderer(new TestStepCellRenderer());
 		testStepList.setFixedCellHeight( 22 );
-		testStepList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		testStepList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		testStepList.addKeyListener(new TestStepListKeyHandler());
 		
 		testStepList.addMouseListener(new ModelItemListMouseListener());
@@ -151,13 +149,13 @@ public class TestStepList extends JPanel
 			if( location != null )
 			{
 				int index = testStepList.locationToIndex( location );
-				if( index != -1 && testStepList.getSelectedIndex() != index && 
+				if( index != -1 && !testStepList.isSelectedIndex(index) && 
 							testStepList.getCellBounds( index, index ).contains( location ))
 				{
-					testStepList.setSelectedIndex( index );
+					testStepList.addSelectionInterval( index, index );
 					ix = index;
 				}
-				else if( index != -1 && testStepList.getSelectedIndex() == index && 
+				else if( index != -1 && testStepList.isSelectedIndex(index) && 
 							testStepList.getCellBounds( index, index ).contains( location ))
 				{
 					ix = index;
@@ -166,8 +164,20 @@ public class TestStepList extends JPanel
 			
 			if( ix >= 0 )
 			{
-				TestStep testStep = (TestStep) testCase.getTestStepAt(ix);
-				ActionSupport.addActions(ActionListBuilder.buildActions( testStep ), testListPopup);
+				int[] indices = testStepList.getSelectedIndices();
+				if( indices.length == 1 )
+				{
+					TestStep testStep = (TestStep) testCase.getTestStepAt(ix);
+					ActionSupport.addActions(ActionListBuilder.buildActions( testStep ), testListPopup);
+				}
+				else
+				{
+					ModelItem [] modelItems = new ModelItem[indices.length];
+					for( int c = 0; c < indices.length; c++ )
+						modelItems[c] = testCase.getTestStepAt(indices[c]).getModelItem();
+					
+					ActionSupport.addActions(ActionListBuilder.buildMultiActions(modelItems), testListPopup);
+				}
 			}
 			else
 			{
@@ -185,24 +195,24 @@ public class TestStepList extends JPanel
 		}
 	}
 
-	private final class StepListMouseListener extends MouseAdapter
-	{
-		public void mouseClicked(MouseEvent e)
-		{
-			if (e.getClickCount() < 2)
-			{
-				return;
-			}
-			
-			ModelItem modelItem = (ModelItem) testStepList.getSelectedValue();
-			if (modelItem == null)
-				return;
-
-			Action defaultAction = ActionListBuilder.buildActions( modelItem ).getDefaultAction();
-			if( defaultAction != null )
-				defaultAction.actionPerformed( new ActionEvent( TestStepList.this, 0, null ));
-		}
-	}
+//	private final class StepListMouseListener extends MouseAdapter
+//	{
+//		public void mouseClicked(MouseEvent e)
+//		{
+//			if (e.getClickCount() < 2)
+//			{
+//				return;
+//			}
+//			
+//			ModelItem modelItem = (ModelItem) testStepList.getSelectedValue();
+//			if (modelItem == null)
+//				return;
+//
+//			Action defaultAction = ActionListBuilder.buildActions( modelItem ).getDefaultAction();
+//			if( defaultAction != null )
+//				defaultAction.actionPerformed( new ActionEvent( TestStepList.this, 0, null ));
+//		}
+//	}
 
 	/**
 	 * Renderer which sets icon and wider border for teststeps

@@ -171,12 +171,12 @@
 	<tns:action id="CloneMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.CloneMockResponseAction"/>
 	<tns:action id="RenameMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.RenameMockResponseAction"/>
 	<tns:action id="DeleteMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.DeleteMockResponseAction"/>
-   <tns:action id="AddMockResponseToTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.AddMockResponseToTestCaseAction"/>
-
-   <tns:action id="SetMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.SetMockOperationAction"/>
-
-	<!-- AsyncResponse Actions -->
-	<tns:action id="SetAsyncResponseMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.SetAsyncResponseMockOperationAction"/>
+    <tns:action id="AddMockResponseToTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.AddMockResponseToTestCaseAction"/>
+    <tns:action id="SetMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.SetMockOperationAction"/>
+   
+    <!-- MultiActions -->
+	<tns:action id="MultiTestStepDeleteAction" actionClass="com.eviware.soapui.impl.actions.multi.MultiTestStepDeleteAction"/>
+   
 
 	<!-- Workspace Action Group -->
 	<tns:actionGroup name="Workspace Actions" id="WorkspaceImplActions"
@@ -602,5 +602,10 @@
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="mock/responses.html"/>
 	</tns:actionGroup>
 
+    <!-- MultiActions Group -->
 
+    <tns:actionGroup name="SoapUIMultiActions" id="SoapUIMultiActions">
+        <tns:actionMapping actionId="MultiTestStepDeleteAction" keyStroke="DELETE"/>
+    </tns:actionGroup>
+    
 </tns:soapui-actions>
