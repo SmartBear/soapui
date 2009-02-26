@@ -505,7 +505,7 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 		}
 	}
 
-	public void saveTo(String fileName) throws IOException
+	public void savePropertiesToFile(String fileName) throws IOException
 	{
 		propertyHolderSupport.saveTo(fileName);
 	}
