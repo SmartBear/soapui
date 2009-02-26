@@ -28,6 +28,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Request;
+import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestSuite;
@@ -95,10 +97,12 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
    	if( !dialog.show() )
    		return;
    	
+		PropertyExpansionContext context = new DefaultPropertyExpansionContext(iface.getProject().getModelItem()) ;
       String url = dialog.getValue( Form.DEFINITION_URL );
       if (url == null || url.trim().length() == 0 )
          return;
       
+  		url = PropertyExpansionUtils.expandProperties( context, url );
       String expUrl = PropertyExpansionUtils.expandProperties(iface, url);
       if( expUrl.trim().length() ==  0 )
       	return;
