@@ -12,25 +12,24 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.PanelBuilder;
 import com.eviware.soapui.model.iface.Interface;
-import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.propertyexpansion.MutablePropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.UISupport;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Base class for WSDL TestCase test steps.

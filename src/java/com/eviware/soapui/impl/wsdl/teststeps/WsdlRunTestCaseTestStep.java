@@ -34,6 +34,7 @@ import com.eviware.soapui.support.resolver.RunTestCaseRemoveResolver;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -475,6 +476,8 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 	{
 		return propertyHolderSupport.getPropertyCount();
 	}
+	
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -500,5 +503,10 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 					+ stepConfig.getTargetTestCase()).setSolved(true);
 			}
 		}
+	}
+
+	public void saveTo(String fileName) throws IOException
+	{
+		propertyHolderSupport.saveTo(fileName);
 	}
 }

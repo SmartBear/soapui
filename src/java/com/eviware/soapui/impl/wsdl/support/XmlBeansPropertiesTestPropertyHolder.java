@@ -28,6 +28,8 @@ import org.apache.xmlbeans.XmlString;
 import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
@@ -295,6 +297,13 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 			props.setProperty( name, value );
 			cnt++;
 		}
+	}
+	
+	public void saveTo( String fileName ) throws IOException
+	{
+		Properties props = new Properties();
+		saveTo( props );
+		props.store(new FileWriter( fileName), "Properties exported from [" + modelItem.getName() + "]" );
 	}
 
 	public int getPropertyCount()
