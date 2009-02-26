@@ -29,6 +29,9 @@ import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.rest.support.WadlImporter;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -62,6 +65,7 @@ public class AddWadlAction extends AbstractSoapUIAction<WsdlProject>
 
    public void perform( WsdlProject project, Object param )
    {
+		PropertyExpansionContext context = new DefaultPropertyExpansionContext(project.getModelItem()) ;
       if( dialog == null )
       {
          dialog = ADialogBuilder.buildDialog( Form.class );
@@ -86,6 +90,7 @@ public class AddWadlAction extends AbstractSoapUIAction<WsdlProject>
          try
          {
             String url = dialog.getValue( Form.INITIALWSDL ).trim();
+      		url = PropertyExpansionUtils.expandProperties( context, url );
             if( url.length() > 0 )
             {
                if( new File( url ).exists() )
