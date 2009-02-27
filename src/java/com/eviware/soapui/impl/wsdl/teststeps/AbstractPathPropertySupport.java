@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.teststeps;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.resolver.ResolveContext;
@@ -140,9 +141,25 @@ public abstract class AbstractPathPropertySupport
 		resolveFile(context, errorDescription, null, null, true);
 	}
 
+	public boolean containsPropertyExpansion()
+	{
+		try
+		{
+			return PropertyExpansionUtils.containsPropertyExpansion( getPropertyValue());
+		}
+		catch (Exception e1)
+		{
+			SoapUI.logError(e1);
+			return false;
+		}
+	}
+	
 	public void resolveFile(ResolveContext context, String errorDescription, String extension, String fileType,
 			final boolean notify)
 	{
+		if( containsPropertyExpansion())
+			return;
+		
 		String source = expand();
 		if (StringUtils.hasContent(source))
 		{
@@ -153,7 +170,7 @@ public abstract class AbstractPathPropertySupport
 			catch (Exception e)
 			{
 				File file = new File(source);
-				if (!file.exists())
+				if (!file.exists() )
 				{
 					if (context.hasThisModelItem(modelItem, errorDescription, source))
 						return;
@@ -180,6 +197,9 @@ public abstract class AbstractPathPropertySupport
 
 	public void resolveFolder(ResolveContext context, String errorDescription, final boolean notify)
 	{
+		if( containsPropertyExpansion())
+			return;
+		
 		String source = expand();
 		if (StringUtils.hasContent(source))
 		{

@@ -488,7 +488,8 @@ public class PropertyExpansionUtils
 
 	public static String expandProperties( ModelItem contextModelItem, String content )
 	{
-		return expandProperties( new DefaultPropertyExpansionContext( contextModelItem ), content );
+		return contextModelItem == null ? expandProperties( content ) : 
+			expandProperties( new DefaultPropertyExpansionContext( contextModelItem ), content );
 	}
 
    public static class GlobalPropertyExpansionContext implements PropertyExpansionContext
@@ -540,4 +541,9 @@ public class PropertyExpansionUtils
          return result;
       }
    }
+
+	public static boolean containsPropertyExpansion(String str)
+	{
+		return str != null && str.indexOf("${") >= 0 && str.indexOf('}') > 2;
+	}
 }

@@ -62,7 +62,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 
 	public XmlEditorView createEditorView(XmlEditor editor)
 	{
-		return new XmlSourceEditorView( editor );
+		return new XmlSourceEditorView<ModelItem>( editor, null );
 	}
 
 	public String getViewId()
@@ -82,7 +82,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		}
 		else if( modelItem instanceof MessageExchangeModelItem )
 		{
-			return new XmlSourceEditorView( (XmlEditor) editor );
+			return new XmlSourceEditorView<MessageExchangeModelItem>( (XmlEditor) editor, (MessageExchangeModelItem)modelItem );
 		}
 		
 		return null;
@@ -104,7 +104,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		}
 		else if( modelItem instanceof MessageExchangeModelItem )
 		{
-			return new XmlSourceEditorView( (XmlEditor) editor );
+			return new XmlSourceEditorView<MessageExchangeModelItem>( (XmlEditor) editor, (MessageExchangeModelItem)modelItem );
 		}
 		
 		return null;
@@ -116,24 +116,22 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 	 * @author ole.matzura
 	 */
 	
-	public static class WsdlRequestXmlSourceEditor extends XmlSourceEditorView
+	public static class WsdlRequestXmlSourceEditor extends XmlSourceEditorView<WsdlRequest>
 	{
-		private final WsdlRequest request;
 		private JMenu applyMenu;
 		private JMenu wsaApplyMenu;
 
 		public WsdlRequestXmlSourceEditor(XmlEditor xmlEditor, WsdlRequest request )
 		{
-			super(xmlEditor);
-			this.request = request;
+			super(xmlEditor, request);
 		}
 
 		protected ValidationError[] validateXml( String xml )
 		{
-			WsdlOperation operation = request.getOperation();
+			WsdlOperation operation = getModelItem().getOperation();
 			WsdlValidator validator = new WsdlValidator((operation.getInterface()).getWsdlContext());
 
-			WsdlResponseMessageExchange wsdlResponseMessageExchange = new WsdlResponseMessageExchange( request );
+			WsdlResponseMessageExchange wsdlResponseMessageExchange = new WsdlResponseMessageExchange( getModelItem() );
 			wsdlResponseMessageExchange.setRequestContent( xml );
 			return validator.assertRequest( wsdlResponseMessageExchange, false );
 		}
@@ -142,7 +140,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		protected void buildUI()
 		{
 			super.buildUI();
-			PropertyExpansionPopupListener.enable( getInputArea(), request );
+			PropertyExpansionPopupListener.enable( getInputArea(), getModelItem() );
 		}
 
 		protected void buildPopup(JPopupMenu inputPopup, JXEditTextArea editArea )
@@ -150,8 +148,8 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 			super.buildPopup(inputPopup, editArea );
 
 			inputPopup.insert( new JSeparator(), 2 );
-			inputPopup.insert(new AddWSSUsernameTokenAction(request),3);
-			inputPopup.insert(new AddWSTimestampAction(request),4);
+			inputPopup.insert(new AddWSSUsernameTokenAction(getModelItem()),3);
+			inputPopup.insert(new AddWSTimestampAction(getModelItem()),4);
 			inputPopup.insert( applyMenu = new JMenu( "Outgoing WSS"),5);
 			inputPopup.insert( wsaApplyMenu = new JMenu( "WS-A headers"),6 );
 			
@@ -170,26 +168,26 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 				public void popupMenuWillBecomeVisible( PopupMenuEvent e )
 				{
 					applyMenu.removeAll();
-					DefaultWssContainer wss = request.getOperation().getInterface().getProject().getWssContainer();
+					DefaultWssContainer wss = getModelItem().getOperation().getInterface().getProject().getWssContainer();
 					List<OutgoingWss> outgoingWssList = wss.getOutgoingWssList();
 					applyMenu.setEnabled( !outgoingWssList.isEmpty() );
 					
 					for( OutgoingWss outgoing : outgoingWssList )
 					{
-						applyMenu.add( new ApplyOutgoingWSSToRequestAction( request, outgoing ) );
+						applyMenu.add( new ApplyOutgoingWSSToRequestAction( getModelItem(), outgoing ) );
 					}
-					applyMenu.add( new RemoveAllOutgoingWSSFromRequestAction( request ) );
+					applyMenu.add( new RemoveAllOutgoingWSSFromRequestAction( getModelItem() ) );
 					
 					wsaApplyMenu.removeAll();
-					wsaApplyMenu.add( new AddWsaHeadersToRequestAction(request));
-					wsaApplyMenu.add( new RemoveWsaHeadersFromRequestAction(request));
-					wsaApplyMenu.setEnabled( request.getWsaConfig().isWsaEnabled() );
+					wsaApplyMenu.add( new AddWsaHeadersToRequestAction(getModelItem()));
+					wsaApplyMenu.add( new RemoveWsaHeadersFromRequestAction(getModelItem()));
+					wsaApplyMenu.setEnabled( getModelItem().getWsaConfig().isWsaEnabled() );
 				}} );
 		}
 
 		public WsdlRequest getRequest()
 		{
-			return request;
+			return getModelItem();
 		}
 	}
 	
@@ -199,19 +197,16 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 	 * @author ole.matzura
 	 */
 	
-	public static class WsdlMockRequestXmlSourceEditor extends XmlSourceEditorView
+	public static class WsdlMockRequestXmlSourceEditor extends XmlSourceEditorView<WsdlMockResponse>
 	{
-		private final WsdlMockResponse mockResponse;
-
 		public WsdlMockRequestXmlSourceEditor(XmlEditor xmlEditor, WsdlMockResponse mockResponse )
 		{
-			super(xmlEditor);
-			this.mockResponse = mockResponse;
+			super(xmlEditor,mockResponse);
 		}
 
 		protected ValidationError[] validateXml( String xml )
 		{
-			WsdlOperation operation = mockResponse.getMockOperation().getOperation();
+			WsdlOperation operation = getModelItem().getMockOperation().getOperation();
 			
 			if( operation == null )
 			{
@@ -219,7 +214,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 			}
 			
 			WsdlValidator validator = new WsdlValidator((operation.getInterface()).getWsdlContext());
-			return validator.assertRequest( new WsdlMockResultMessageExchange( mockResponse.getMockResult(), mockResponse ), false );
+			return validator.assertRequest( new WsdlMockResultMessageExchange( getModelItem().getMockResult(), getModelItem() ), false );
 		}
 
 		protected void buildPopup(JPopupMenu inputPopup, JXEditTextArea editArea )
@@ -235,28 +230,25 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 	 * @author ole.matzura
 	 */
 	
-	public static class WsdlResponseXmlSourceEditor extends XmlSourceEditorView
+	public static class WsdlResponseXmlSourceEditor extends XmlSourceEditorView<WsdlRequest>
 	{
-		private final WsdlRequest request;
-
 		public WsdlResponseXmlSourceEditor(XmlEditor xmlEditor, WsdlRequest request )
 		{
-			super(xmlEditor);
-			this.request = request;
+			super(xmlEditor, request);
 		}
 
 		protected ValidationError[] validateXml( String xml )
 		{
-			if( request instanceof WsdlTestRequest )
+			if( getModelItem() instanceof WsdlTestRequest )
 			{
-				WsdlTestRequest testRequest = (WsdlTestRequest)request;
+				WsdlTestRequest testRequest = (WsdlTestRequest)getModelItem();
 				testRequest.assertResponse( new WsdlTestRunContext(  testRequest.getTestStep() ));
 			}
 			
-			WsdlOperation operation = request.getOperation();
+			WsdlOperation operation = getModelItem().getOperation();
 			WsdlValidator validator = new WsdlValidator((operation.getInterface()).getWsdlContext());
 
-			return validator.assertResponse( new WsdlResponseMessageExchange( request ), false );
+			return validator.assertResponse( new WsdlResponseMessageExchange( getModelItem() ), false );
 		}
 	}
 	
@@ -266,16 +258,14 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 	 * @author ole.matzura
 	 */
 	
-	public static class WsdlMockResponseXmlSourceEditor extends XmlSourceEditorView
+	public static class WsdlMockResponseXmlSourceEditor extends XmlSourceEditorView<WsdlMockResponse>
 	{
-		private final WsdlMockResponse mockResponse;
 		private JMenu applyMenu;
 		private JMenu wsaApplyMenu;
 
 		public WsdlMockResponseXmlSourceEditor(XmlEditor xmlEditor, WsdlMockResponse mockResponse)
 		{
-			super(xmlEditor);
-			this.mockResponse = mockResponse;
+			super(xmlEditor, mockResponse);
 		}
 		
 		@Override
@@ -283,24 +273,24 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		{
 			super.buildUI();
 			
-			getValidateXmlAction().setEnabled( mockResponse.getMockOperation().getOperation().isBidirectional() );
+			getValidateXmlAction().setEnabled( getModelItem().getMockOperation().getOperation().isBidirectional() );
 		}
 
 		protected ValidationError[] validateXml( String xml )
 		{
-			WsdlOperation operation = mockResponse.getMockOperation().getOperation();
+			WsdlOperation operation = getModelItem().getMockOperation().getOperation();
 			if( operation == null )
 			{
 				return new ValidationError[] { new AssertionError( "Missing operation for MockResponse")};
 			}
 			
 			WsdlValidator validator = new WsdlValidator((operation.getInterface()).getWsdlContext());
-			return validator.assertResponse( new WsdlMockResponseMessageExchange( mockResponse ), false );
+			return validator.assertResponse( new WsdlMockResponseMessageExchange( getModelItem() ), false );
 		}
 
 		public WsdlMockResponse getMockResponse()
 		{
-			return mockResponse;
+			return getModelItem();
 		}
 		
 		protected void buildPopup(JPopupMenu inputPopup, JXEditTextArea editArea )
@@ -325,42 +315,39 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 				public void popupMenuWillBecomeVisible( PopupMenuEvent e )
 				{
 					applyMenu.removeAll();
-					DefaultWssContainer wss = mockResponse.getMockOperation().getMockService().getProject().getWssContainer();
+					DefaultWssContainer wss = getModelItem().getMockOperation().getMockService().getProject().getWssContainer();
 					List<OutgoingWss> outgoingWssList = wss.getOutgoingWssList();
 					applyMenu.setEnabled( !outgoingWssList.isEmpty() );
 					
 					for( OutgoingWss outgoing : outgoingWssList )
 					{
-						applyMenu.add( new ApplyOutgoingWSSToMockResponseAction( mockResponse, outgoing ) );
+						applyMenu.add( new ApplyOutgoingWSSToMockResponseAction( getModelItem(), outgoing ) );
 					}
-					applyMenu.add(new RemoveAllOutgoingWSSFromMockResponseAction(mockResponse));
+					applyMenu.add(new RemoveAllOutgoingWSSFromMockResponseAction(getModelItem()));
 					
 					wsaApplyMenu.removeAll();
-					wsaApplyMenu.add( new AddWsaHeadersToMockResponseAction(mockResponse));
-					wsaApplyMenu.add( new RemoveWsaHeadersFromMockResponseAction(mockResponse));
-					wsaApplyMenu.setEnabled(mockResponse.getWsaConfig().isWsaEnabled());
+					wsaApplyMenu.add( new AddWsaHeadersToMockResponseAction(getModelItem()));
+					wsaApplyMenu.add( new RemoveWsaHeadersFromMockResponseAction(getModelItem()));
+					wsaApplyMenu.setEnabled(getModelItem().getWsaConfig().isWsaEnabled());
 					
 				}} );
 		}
 	}
 
-   private class RestResponseXmlSourceEditor extends XmlSourceEditorView
+   private class RestResponseXmlSourceEditor extends XmlSourceEditorView<RestRequest>
    {
-      private RestRequest restRequest;
-
       public RestResponseXmlSourceEditor( XmlEditor<XmlDocument> xmlEditor, RestRequest restRequest )
       {
-         super( xmlEditor );
-         this.restRequest = restRequest;
+         super( xmlEditor, restRequest );
       }
 
       protected ValidationError[] validateXml( String xml )
       {
-         if( restRequest.getResource() == null )
+         if( getModelItem().getResource() == null )
             return new ValidationError[0];
 
-         WadlValidator validator = new WadlValidator( restRequest.getResource().getService().getWadlContext() );
-         return validator.assertResponse( new RestResponseMessageExchange( restRequest ) );
+         WadlValidator validator = new WadlValidator( getModelItem().getResource().getService().getWadlContext() );
+         return validator.assertResponse( new RestResponseMessageExchange( getModelItem() ) );
       }
    }
 }

@@ -14,6 +14,8 @@ package com.eviware.soapui.support.editor.views.xml.source;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.LineNumbersPanel;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
@@ -50,7 +52,7 @@ import java.util.List;
  * @author ole.matzura
  */
 
-public class XmlSourceEditorView extends AbstractXmlEditorView<XmlDocument> implements PropertyChangeListener
+public class XmlSourceEditorView <T extends ModelItem> extends AbstractXmlEditorView<XmlDocument> implements PropertyChangeListener
 {
 	private JXEditTextArea editArea;
 	private ValidateMessageXmlAction validateXmlAction;
@@ -68,10 +70,12 @@ public class XmlSourceEditorView extends AbstractXmlEditorView<XmlDocument> impl
 	private LineNumbersPanel lineNumbersPanel;
 	private JCheckBoxMenuItem toggleLineNumbersMenuItem;
 	private PreviewCorner previewCorner;
+	private final T modelItem;
 
-	public XmlSourceEditorView( XmlEditor<XmlDocument> xmlEditor )
+	public XmlSourceEditorView( XmlEditor<XmlDocument> xmlEditor, T modelItem )
    {
    	super( "XML", xmlEditor, XmlSourceEditorViewFactory.VIEW_ID );
+		this.modelItem = modelItem;
    }
 	
 	protected void buildUI()
@@ -159,6 +163,11 @@ public class XmlSourceEditorView extends AbstractXmlEditorView<XmlDocument> impl
 	public JScrollPane getEditorScrollPane()
 	{
 		return editorScrollPane;
+	}
+	
+	public T getModelItem()
+	{
+		return modelItem;
 	}
 
 	protected void buildPopup(JPopupMenu inputPopup, JXEditTextArea editArea )
@@ -374,7 +383,7 @@ public class XmlSourceEditorView extends AbstractXmlEditorView<XmlDocument> impl
 
 	public boolean validate()
 	{
-		ValidationError[] errors = validateXml( editArea.getText() );
+		ValidationError[] errors = validateXml( PropertyExpansionUtils.expandProperties( getModelItem(), editArea.getText() ));
 		
 		errorListModel.clear();
 		if( errors == null || errors.length == 0 )
