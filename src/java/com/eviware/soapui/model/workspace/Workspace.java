@@ -13,6 +13,7 @@
 package com.eviware.soapui.model.workspace;
 
 import java.io.File;
+import java.util.Map;
 
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
@@ -29,6 +30,8 @@ public interface Workspace extends ModelItem
    public Project getProjectAt( int index );
    
    public Project getProjectByName( String projectName );
+   
+   public Map<String,Project> getProjects();
    
    public int getProjectCount();
 

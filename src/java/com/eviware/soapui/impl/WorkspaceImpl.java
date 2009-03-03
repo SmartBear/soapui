@@ -192,9 +192,16 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
       this.path = path;
    }
 
-   public Project[] getProjects()
+   public Map<String,Project> getProjects()
    {
-      return projectList.toArray( new Project[projectList.size()] );
+   	Map<String,Project> result = new HashMap<String,Project>();
+   	
+   	for( Project project : projectList )
+   	{
+   		result.put( project.getName(), project );
+   	}
+   	
+      return result;
    }
 
    public void setName( String name )
