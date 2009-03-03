@@ -24,15 +24,18 @@
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
+import java.io.File;
+
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.rest.support.WadlImporter;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.MessageSupport;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
@@ -40,10 +43,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
-
-import java.io.File;
+import com.eviware.x.form.support.AField.AFieldType;
 
 /**
  * Action for creating a new WSDL project
@@ -90,13 +91,18 @@ public class AddWadlAction extends AbstractSoapUIAction<WsdlProject>
          try
          {
             String url = dialog.getValue( Form.INITIALWSDL ).trim();
-      		url = PropertyExpansionUtils.expandProperties( context, url );
-            if( url.length() > 0 )
+            if( StringUtils.hasContent(url) )
             {
-               if( new File( url ).exists() )
-                  url = new File( url ).toURI().toURL().toString();
+            	String expUrl = PathUtils.expandPath(url, project );
+            	
+               if( new File( expUrl ).exists() )
+               	expUrl = new File( expUrl ).toURI().toURL().toString();
 
-               importWadl( project, url );
+               RestService result = importWadl( project, expUrl );
+               if( !url.equals(expUrl) && result != null )
+               {
+               	result.setWadlUrl(url);
+               }
                break;
             }
          }
@@ -107,7 +113,7 @@ public class AddWadlAction extends AbstractSoapUIAction<WsdlProject>
       }
    }
 
-   private void importWadl( WsdlProject project, String url )
+   private RestService importWadl( WsdlProject project, String url )
    {
       RestService restService = (RestService) project.addNewInterface( project.getName(), RestServiceFactory.REST_TYPE );
       UISupport.select( restService );
@@ -119,6 +125,8 @@ public class AddWadlAction extends AbstractSoapUIAction<WsdlProject>
       {
          UISupport.showErrorMessage( e );
       }
+      
+      return restService;
    }
 
    @AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH )

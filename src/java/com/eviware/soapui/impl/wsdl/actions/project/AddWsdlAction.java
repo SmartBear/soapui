@@ -30,8 +30,10 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateMockServiceAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateWsdlTestSuiteAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.SoapUIException;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
@@ -94,12 +96,22 @@ public class AddWsdlAction extends AbstractSoapUIAction<WsdlProject>
          try
          {
             String url = dialog.getValue( Form.INITIALWSDL ).trim();
-            if( url.length() > 0 )
+            if( StringUtils.hasContent( url ))
             {
-               if( new File( url ).exists() )
-                  url = new File( url ).toURI().toURL().toString();
+            	String expUrl = PathUtils.expandPath(url, project);
+               if( new File( expUrl ).exists() )
+                  url = new File( expUrl ).toURI().toURL().toString();
 
-               importWsdl( project, url );
+               WsdlInterface[] results = importWsdl( project, expUrl );
+               
+               if( !url.equals(expUrl))
+               {
+               	for( WsdlInterface iface : results )
+               	{
+               		iface.setDefinition(url, false);
+               	}
+               }
+               
                break;
             }
          }
@@ -110,7 +122,7 @@ public class AddWsdlAction extends AbstractSoapUIAction<WsdlProject>
       }
    }
 
-   private void importWsdl( WsdlProject project, String url )
+   private WsdlInterface[] importWsdl( WsdlProject project, String url )
            throws SoapUIException
    {
       WsdlInterface[] results = WsdlInterfaceFactory.importWsdl( project, url, dialog.getValue( Form.CREATEREQUEST ).equals( "true" ) );
@@ -130,6 +142,8 @@ public class AddWsdlAction extends AbstractSoapUIAction<WsdlProject>
             generateMockAction.generateMockService( iface, false );
          }
       }
+      
+      return results;
    }
 
    @AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH )

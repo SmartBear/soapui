@@ -28,9 +28,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Request;
-import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.support.UISupport;
@@ -93,17 +90,16 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
 				}} );
    	}
    	
-   	dialog.setValue( Form.DEFINITION_URL, PathUtils.expandPath( iface.getDefinition(), iface ));
+   	dialog.setValue( Form.DEFINITION_URL, iface.getDefinition());
+   	dialog.getFormField( Form.DEFINITION_URL ).setToolTip( PathUtils.expandPath( iface.getDefinition(), iface ));
    	if( !dialog.show() )
    		return;
    	
-		PropertyExpansionContext context = new DefaultPropertyExpansionContext(iface.getProject().getModelItem()) ;
       String url = dialog.getValue( Form.DEFINITION_URL );
       if (url == null || url.trim().length() == 0 )
          return;
       
-  		url = PropertyExpansionUtils.expandProperties( context, url );
-      String expUrl = PropertyExpansionUtils.expandProperties(iface, url);
+      String expUrl = PathUtils.expandPath( url, iface );
       if( expUrl.trim().length() ==  0 )
       	return;
       
