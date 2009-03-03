@@ -21,6 +21,8 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestMockService;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -38,6 +40,11 @@ public class ModelItemPropertyResolver implements PropertyResolver
 		ModelItem modelItem = context.getModelItem();
 		if( modelItem instanceof WsdlLoadTest )
 			modelItem = ((WsdlLoadTest)modelItem).getTestCase();
+		else if( modelItem instanceof TestRequest )
+			modelItem = ((TestRequest)modelItem).getTestStep();
+		else if( modelItem instanceof WsdlMockResponse && 
+				((WsdlMockResponse)modelItem).getMockOperation().getMockService() instanceof WsdlTestMockService )
+			modelItem = ((WsdlTestMockService) ((WsdlMockResponse)modelItem).getMockOperation().getMockService()).getMockResponseStep();
 		
 		if( modelItem instanceof WsdlTestStep || modelItem instanceof WsdlTestCase )
 		{
