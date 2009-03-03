@@ -156,6 +156,11 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		catch( Throwable t )
 		{
 			httpMethod.setFailed( t );
+			
+			if( t instanceof Exception )
+				throw (Exception)t;
+
+			SoapUI.logError(t);
 			throw new Exception( t );
 		}
 		finally
