@@ -318,7 +318,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
          if( overrideProperties != null && overrideProperties.containsKey( getName() ) )
             return overrideProperties.getProperty( getName() );
 
-         return propertyConfig.getValue();
+         return propertyConfig.getValue() == null ? "" : propertyConfig.getValue();
       }
 
       public void setValue( String value )
