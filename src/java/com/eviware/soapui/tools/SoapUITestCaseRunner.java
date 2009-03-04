@@ -308,15 +308,14 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
                for( int i = 0; i < runners.length; i++ )
                {
                   TestRunner runner = runners[i];
-                  if( runner.getStatus() == TestRunner.Status.FINISHED )
+                  if( runner.getStatus() != TestRunner.Status.RUNNING )
                   {
-                     runningTests.remove( runner );
+                  	runningTests.remove( runner );
                      continue;
                   }
 
-                  if( i > 0 )
-                     buf.append( ", " );
-
+                  buf.append( "\r\n- " );
+                  buf.append( runner.getTestCase().getTestSuite().getName() ).append( ':' );
                   buf.append( runner.getTestCase().getName() ).append( ':' );
                   buf.append( runner.getStatus() ).append( ':' );
 
