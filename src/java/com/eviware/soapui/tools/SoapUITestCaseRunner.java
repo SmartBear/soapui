@@ -336,7 +336,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
                      {
                         StackTraceElement[] trace = thread.getStackTrace();
                         for( int y = 0; y < trace.length; y++ )
-                           buf.append( "\tat " + trace[i] );
+                           buf.append( "\tat " + trace[y] );
                      }
                   }
                }
