@@ -378,7 +378,7 @@ public class WsaUtils {
 			}
 
 			if (wsaContainer.getWsaConfig().isGenerateMessageId()) {
-				String generatedMessageId = UUID.randomUUID().toString();
+				String generatedMessageId = "uuid:" + UUID.randomUUID().toString();
 				header = processWsaProperty(header, override, wsaPrefix
 						+ ":MessageID", generatedMessageId, false);
 			} else {
@@ -615,7 +615,7 @@ public class WsaUtils {
 			}
 
 			if (wsaContainer.getWsaConfig().isGenerateMessageId()) {
-				String generatedMessageId = UUID.randomUUID().toString();
+				String generatedMessageId = "uuid:" + UUID.randomUUID().toString();
 				header = processWsaProperty(header, override, wsaPrefix
 						+ ":MessageID", generatedMessageId, false);
 			} else {
