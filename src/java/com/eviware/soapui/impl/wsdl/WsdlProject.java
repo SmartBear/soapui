@@ -494,9 +494,9 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
       String name = getName();
 
       if( isDisabled() )
-         name += " - disabled";
+         name += " - disabled [" + getPath() + "]";
       else
-         name += " - closed";
+         name += " - closed [" + getPath() + "]";
 
       return name;
    }
