@@ -12,11 +12,12 @@
 
 package com.eviware.soapui.impl.rest.support.handlers;
 
+import sun.misc.BASE64Encoder;
+
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.xmlbeans.XmlBase64Binary;
-import sun.misc.BASE64Encoder;
 
 public class DefaultMediaTypeHandler implements MediaTypeHandler
 {
@@ -27,13 +28,18 @@ public class DefaultMediaTypeHandler implements MediaTypeHandler
 
    public String createXmlRepresentation( HttpResponse response )
    {
+      String contentType = response.getContentType();
       String content = response.getContentAsString();
+
+      if( StringUtils.hasContent(contentType) && contentType.toUpperCase().endsWith("XML"))
+      	return content;
+      
       if( XmlUtils.seemsToBeXml( content ) )
          return content;
       else if( content == null )
          content = "";
 
-      String result = "<data contentType=\"" + response.getContentType() + "\" contentLength=\"" +
+      String result = "<data contentType=\"" + contentType + "\" contentLength=\"" +
                response.getContentLength() + "\">";
 
       for( int c = 0; c < content.length(); c++ )
