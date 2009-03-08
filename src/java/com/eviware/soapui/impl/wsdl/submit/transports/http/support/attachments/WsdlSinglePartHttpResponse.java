@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.filters.WssRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
@@ -58,6 +59,7 @@ public class WsdlSinglePartHttpResponse extends SinglePartHttpResponse implement
 				if( wssResult == null )
 					wssResult = new Vector<Object>();
 				wssResult.add( e );
+				SoapUI.logError(e);
 			}
 		}
 	}

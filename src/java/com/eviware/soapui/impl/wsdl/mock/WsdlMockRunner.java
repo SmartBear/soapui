@@ -402,7 +402,7 @@ public class WsdlMockRunner extends AbstractMockRunner
    {
       try
       {
-         if( request.getQueryString() != null && request.getQueryString().startsWith( "WSDL" ) )
+         if( request.getQueryString() != null && request.getQueryString().toUpperCase().startsWith( "WSDL" ) )
          {
             dispatchWsdlRequest( request, response );
          }

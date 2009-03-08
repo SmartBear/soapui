@@ -12,27 +12,57 @@
 
 package com.eviware.soapui.support.xml;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import net.sf.saxon.expr.Token;
+import net.sf.saxon.expr.Tokenizer;
+
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlAnySimpleType;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+import org.apache.xmlbeans.XmlCursor.TokenType;
+import org.w3c.dom.Attr;
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.ProcessingInstruction;
+import org.w3c.dom.Text;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToStringMap;
-import net.sf.saxon.expr.Token;
-import net.sf.saxon.expr.Tokenizer;
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.*;
-import org.apache.xmlbeans.XmlCursor.TokenType;
-import org.w3c.dom.*;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
-import java.util.*;
 
 /**
  * General XML-related utilities
@@ -1028,7 +1058,6 @@ public final class XmlUtils
       if( prefix == null )
       {
          prefix = generatePrefixForNamespace( name.getNamespaceURI() );
-         int cnt = 1;
          while( findNamespaceForPrefix( elm, prefix ) != null )
          {
             prefix = generatePrefixForNamespace( name.getNamespaceURI() );
@@ -1224,7 +1253,7 @@ public final class XmlUtils
          if( StringUtils.isNullOrEmpty( str ) )
             return false;
 
-         return XmlObject.Factory.parse( str ) != null;
+         return null != XmlObject.Factory.parse(str);
       }
       catch( Throwable e )
       {
