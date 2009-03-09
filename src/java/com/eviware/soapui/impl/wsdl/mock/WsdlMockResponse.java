@@ -600,7 +600,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 
       if( isRemoveEmptyContent() )
       {
-         responseContent = RemoveEmptyContentRequestFilter.removeEmptyContent( responseContent );
+         responseContent = RemoveEmptyContentRequestFilter.removeEmptyContent( responseContent, getSoapVersion().getEnvelopeNamespace() );
       }
 
       if( isStripWhitespaces() )

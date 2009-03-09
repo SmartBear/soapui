@@ -35,6 +35,6 @@ public class RemoveEmptyContentRequestFilterTestCase extends TestCase
 	
 	public void doRemoval( String request, String expected ) throws Exception
 	{
-		assertEquals( expected, RemoveEmptyContentRequestFilter.removeEmptyContent(request) );
+		assertEquals( expected, RemoveEmptyContentRequestFilter.removeEmptyContent(request, null) );
 	}
 }

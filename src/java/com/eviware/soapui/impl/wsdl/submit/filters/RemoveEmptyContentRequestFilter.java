@@ -21,8 +21,10 @@ import org.w3c.dom.Node;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
@@ -42,12 +44,30 @@ public class RemoveEmptyContentRequestFilter extends AbstractRequestFilter
 			return;
 		
 		String content = (String) context.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
-		content = removeEmptyContent( content );
-		if( content != null )
-			context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, content );
+		if( !StringUtils.hasContent(content))
+			return;
+
+		String soapNamespace = null;
+		String newContent = null;
+		
+		if( wsdlRequest instanceof WsdlRequest )
+			soapNamespace = ((WsdlRequest)wsdlRequest).getOperation().getInterface().getSoapVersion().getEnvelopeNamespace();
+		
+		while( !content.equals( newContent ))
+		{
+			if( newContent != null )
+				content = newContent;
+			
+			newContent = removeEmptyContent( content, soapNamespace );
+			if( !context.hasProperty("RemoveEmptyRecursive"))
+				break;
+		}
+		
+		if( newContent != null )
+			context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, newContent );
 	}
 
-	public static String removeEmptyContent( String content )
+	public static String removeEmptyContent( String content, String soapNamespace )
 	{
 		XmlCursor cursor = null;
 		
@@ -65,7 +85,8 @@ public class RemoveEmptyContentRequestFilter extends AbstractRequestFilter
 			while( !cursor.isEnddoc() )
 			{
 				boolean flag = false;
-				if( cursor.isContainer() )
+				if( cursor.isContainer() && 
+					 (soapNamespace == null ||	!soapNamespace.equals(cursor.getName().getNamespaceURI())))
 				{
 					Element elm = ( Element ) cursor.getDomNode();
 					NamedNodeMap attributes = elm.getAttributes();
