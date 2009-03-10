@@ -734,15 +734,15 @@ private void updateWsaPolicy(String url, WsdlContext newContext)
    {
       if( modelItem instanceof AbstractHttpRequest )
       {
-         AbstractHttpRequest wsdlRequest = (AbstractHttpRequest) modelItem;
-         if( wsdlRequest.getOperation().getInterface() == this )
+         AbstractHttpRequest<?> wsdlRequest = (AbstractHttpRequest<?>) modelItem;
+         if( wsdlRequest.getOperation() != null && wsdlRequest.getOperation().getInterface() == this )
             list.add( wsdlRequest );
       }
       else if( modelItem instanceof WsdlTestRequestStep )
       {
          WsdlTestRequestStep testRequestStep = (WsdlTestRequestStep) modelItem;
          WsdlTestRequest testRequest = testRequestStep.getTestRequest();
-         if( testRequest.getOperation().getInterface() == this )
+         if( testRequest != null && testRequest.getOperation() != null && testRequest.getOperation().getInterface() == this )
             list.add( testRequest );
       }
       else if( modelItem instanceof WsdlMockResponse )
