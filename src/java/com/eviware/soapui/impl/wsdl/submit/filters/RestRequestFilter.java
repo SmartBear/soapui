@@ -291,11 +291,23 @@ public class RestRequestFilter extends AbstractRequestFilter
 
       if( value.startsWith( "file:" ) )
       {
-         File file = new File( value.substring( 5 ) );
+         String fileName = value.substring( 5 );
+			File file = new File( fileName );
          part.setDisposition( "form-data; name=\"" + name + "\"; filename=\"" + file.getName() + "\"" );
          if( file.exists() )
          {
             part.setDataHandler( new DataHandler( new FileDataSource( file ) ) );
+         }
+         else 
+         {
+         	for( Attachment attachment : request.getAttachments())
+         	{
+         		if( attachment.getName().equals(fileName))
+         		{
+         			part.setDataHandler(new DataHandler( new AttachmentDataSource( attachment )));
+         			break;
+         		}
+         	}
          }
 
          part.setHeader( "Content-Type", ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
