@@ -9,8 +9,8 @@
         <subsection name="Using the WS-I Testing Tools">
 	    	<columns>
 	    		<column width="200">
-	    		<img src="images/inthenews/ebm.gif" alt="Validate wsdl"/>
-	    	    </column>
+	    		<img src="images/inthenews/ebm.gif" alt="Validate wsdl"/>	    	    
+	    		</column>
 	    		<column align="left">
 	    			<p>The post starts: "The Web Services Interoperability Organization (WS-I) is..."<br/>
 	    			<a href="http://blog.ebmwebsourcing.com/home/mbeldame/2009/03/06/using-the-ws-i-testing-tools-to-to-validate-wsdls/">[Read more]</a></p>
