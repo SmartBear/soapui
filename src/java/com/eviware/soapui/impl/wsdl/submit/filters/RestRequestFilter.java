@@ -150,7 +150,7 @@ public class RestRequestFilter extends AbstractRequestFilter
             e.printStackTrace();
          }
       }
-      else
+      else if( StringUtils.hasContent(path))
       {
          httpMethod.setPath( path );
       }
