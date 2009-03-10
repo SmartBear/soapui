@@ -6,6 +6,42 @@
     <body>
     <section name="soapUI Releases">
     
+        <subsection name="Using the WS-I Testing Tools">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/ebm.gif" alt="Validate wsdl"/>
+	    	    </column>
+	    		<column align="left">
+	    			<p>The post starts: "The Web Services Interoperability Organization (WS-I) is..."<br/>
+	    			<a href="http://blog.ebmwebsourcing.com/home/mbeldame/2009/03/06/using-the-ws-i-testing-tools-to-to-validate-wsdls/">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	</subsection>
+    
+    <subsection name="Building Web Services Clients">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/think.gif" alt="Web Services Clients"/>
+	    	    </column>
+	    		<column align="left">
+	    			<p>The post starts: "When building Web Services (SOAP WS) clients in ..."<br/>
+	    			<a href="http://thinkinginsoftware.blogspot.com/2009/03/building-web-services-clients.html">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	</subsection>
+    
+    <subsection name="Working with Web Services">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/chow.gif" alt="Web Services"/>
+	    		</column>
+	    		<column align="left">
+	    			<p>The post starts: "I've recently been working on a..."<br/>
+	    			<a href="http://www.chowamigo.co.uk/2009/02/working-with-web-services-checking-web.html">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	</subsection>
+                
     <subsection name="soapUI property Expansion">
 	    	<columns>
 	    		<column width="200">
