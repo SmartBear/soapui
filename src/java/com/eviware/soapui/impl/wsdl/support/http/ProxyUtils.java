@@ -61,7 +61,7 @@ public class ProxyUtils
 					String proxyUsername = PropertyExpansionUtils.expandProperties( context, settings.getString( ProxySettings.USERNAME, null ));
 					String proxyPassword = PropertyExpansionUtils.expandProperties( context, settings.getString( ProxySettings.PASSWORD, null ));
 
-					if( proxyUsername != null && proxyPassword != null )
+					if( StringUtils.hasContent(proxyUsername) && proxyPassword != null )
 					{
 						Credentials proxyCreds = new UsernamePasswordCredentials( proxyUsername, proxyPassword == null ? "" : proxyPassword );
 
