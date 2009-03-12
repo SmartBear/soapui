@@ -264,25 +264,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
       final JComboBox endpointCombo = new JComboBox( endpointsModel );
       endpointCombo.setToolTipText( endpointsModel.getSelectedItem().toString() );
 
-      endpointCombo.addItemListener( new ItemListener()
-      {
-         // set tooltip, property is set by model directly
-         public void itemStateChanged( ItemEvent e )
-         {
-            Object item = endpointCombo.getSelectedItem();
-            if( item == null )
-            {
-               endpointCombo.setToolTipText( "- no endpoint set for request -" );
-            }
-            else
-            {
-               String selectedItem = item.toString();
-               endpointCombo.setToolTipText( selectedItem );
-            }
-         }
-      } );
-
-      return endpointCombo;
+      return UISupport.addTooltipListener( endpointCombo, "- no endpoint set for request -" );
    }
 
    public void propertyChange( PropertyChangeEvent evt )
