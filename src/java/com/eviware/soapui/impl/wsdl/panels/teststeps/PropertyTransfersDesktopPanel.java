@@ -482,7 +482,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
          }
       } );
 
-      toolbar.add( UISupport.setFixedSize( targetStepCombo, 180, 21 ) );
+      toolbar.add( UISupport.setFixedSize( targetStepCombo, 200, 21 ) );
       toolbar.addUnrelatedGap();
 
       toolbar.addFixed( new JLabel( "Property:" ) );
@@ -508,7 +508,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
          }
       } );
 
-      toolbar.add( UISupport.setFixedSize( targetPropertyCombo, 180, 21 ) );
+      toolbar.add( UISupport.setFixedSize( targetPropertyCombo, 200, 21 ) );
       toolbar.addGlue();
       return toolbar;
    }
@@ -520,18 +520,18 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
       toolbar.addFixed( new JLabel( "<html><b>Source:</b></html>" ) );
       toolbar.addUnrelatedGap();
 
-      sourcePropertyCombo = new JComboBox();
+      sourcePropertyCombo = UISupport.addTooltipListener(new JComboBox(), "Source Property" );
       sourceStepModel = new DefaultComboBoxModel();
-      sourceStepCombo = new JComboBox( sourceStepModel );
+      sourceStepCombo = UISupport.addTooltipListener(new JComboBox( sourceStepModel ), "Source Step or Property Container" );
       sourceStepCombo.setRenderer( new StepComboRenderer() );
       sourcePropertyCombo.setRenderer( new PropertyComboRenderer() );
 
       componentEnabler.add( sourcePropertyCombo );
       componentEnabler.add( sourceStepCombo );
 
-      targetPropertyCombo = new JComboBox();
+      targetPropertyCombo = UISupport.addTooltipListener(new JComboBox(), "Target Property" );
       targetStepModel = new DefaultComboBoxModel();
-      targetStepCombo = new JComboBox( targetStepModel );
+      targetStepCombo = UISupport.addTooltipListener( new JComboBox( targetStepModel ), "Target Step or Property Container" );
       targetStepCombo.setRenderer( new StepComboRenderer() );
       targetPropertyCombo.setRenderer( new PropertyComboRenderer() );
 
@@ -559,7 +559,6 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
          targetStepModel.addElement( sourceStepModel.getElementAt( c ) );
 
       sourceStepCombo.setSelectedItem( null );
-      sourceStepCombo.setToolTipText( "The step the value will be transferred from" );
       sourceStepCombo.setEnabled( false );
       sourceStepCombo.addItemListener(
               new StepComboItemListener( sourcePropertyCombo, sourceStepPropertiesListener ) );
@@ -593,8 +592,8 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
             }
          }
       } );
-
-      toolbar.add( UISupport.setFixedSize( sourceStepCombo, 180, 21 ) );
+      
+      toolbar.add( UISupport.setFixedSize( sourceStepCombo, 200, 21 ) );
       toolbar.addUnrelatedGap();
 
       toolbar.addFixed( new JLabel( "Property:" ) );
@@ -620,7 +619,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
          }
       } );
 
-      toolbar.add( UISupport.setFixedSize( sourcePropertyCombo, 180, 21 ) );
+      toolbar.add( UISupport.setFixedSize( sourcePropertyCombo, 200, 21 ) );
       toolbar.addGlue();
       return toolbar;
    }
@@ -1400,6 +1399,8 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
          {
             setText( "Global" );
          }
+         
+         setToolTipText(getText());
 
          return result;
       }
@@ -1417,6 +1418,8 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
             TestProperty item = (TestProperty) value;
             setText( item.getName() );
          }
+         
+         setToolTipText(getText());
 
          return result;
       }
