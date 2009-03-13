@@ -278,6 +278,11 @@ public class DefaultSoapUICore implements SoapUICore
 		{
 			settings.setBoolean(UISettings.SHOW_STARTUP_PAGE, true);
 		}
+		
+		if( settings.getString(HttpSettings.HTTP_VERSION, HttpSettings.HTTP_VERSION_1_1).equals( HttpSettings.HTTP_VERSION_0_9))
+		{
+			settings.setString(HttpSettings.HTTP_VERSION, HttpSettings.HTTP_VERSION_1_1);
+		}
 
 		return settings;
 	}
