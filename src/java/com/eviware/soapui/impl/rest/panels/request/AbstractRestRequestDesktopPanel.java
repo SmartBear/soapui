@@ -343,7 +343,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
       public void setXml( String xml )
       {
-         if( !updating )
+         if( !updating && xml != null )
          {
             updating = true;
             getRequest().setRequestContent( xml );
