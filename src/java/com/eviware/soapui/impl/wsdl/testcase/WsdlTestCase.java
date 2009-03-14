@@ -402,8 +402,10 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
       WsdlTestStep result = insertTestStep( newStepConfig, index, createCopy );
 
       if( createCopy )
+      {
          ModelSupport.unsetIds( result );
-
+      }
+      
       resolveTestCase();
       return result;
    }
@@ -446,7 +448,9 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
          return null;
 
       if( clearIds )
+      {
          ModelSupport.unsetIds( testStep );
+      }
 
       if( ix == -1 )
          testSteps.add( testStep );
@@ -891,4 +895,10 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
       }
 
    }
+
+	public void afterCopy(WsdlTestSuite oldTestSuite, WsdlTestCase oldTestCase )
+	{
+		for( WsdlTestStep testStep : testSteps )
+			testStep.afterCopy( oldTestSuite, oldTestCase );
+	}
 }

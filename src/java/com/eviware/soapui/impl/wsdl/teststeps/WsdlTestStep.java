@@ -18,6 +18,7 @@ import java.util.List;
 
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.PanelBuilder;
@@ -239,4 +240,8 @@ abstract public class WsdlTestStep extends AbstractWsdlModelItem<TestStepConfig>
    {
       return null;
    }
+
+	public void afterCopy(WsdlTestSuite oldTestSuite, WsdlTestCase oldTestCase )
+	{
+	}
 }

@@ -1121,13 +1121,22 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
               testSuite.getConfig().copy() );
       testSuiteConfig.setName( name );
 
+      WsdlTestSuite oldTestSuite = testSuite;
       testSuite = new WsdlTestSuite( this, testSuiteConfig );
       testSuites.add( testSuite );
 
       if( createCopy )
+      {
          ModelSupport.unsetIds( testSuite );
+      }
       
       testSuite.afterLoad();
+      
+      if( createCopy)
+      {
+         testSuite.afterCopy( oldTestSuite );
+      }
+      
       fireTestSuiteAdded( testSuite );
 
       resolveImportedTestSuite( testSuite );

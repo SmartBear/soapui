@@ -169,6 +169,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
       if( !includeLoadTests )
          testCaseConfig.setLoadTestArray( new LoadTestConfig[0] );
 
+      WsdlTestCase oldTestCase = testCase;
       testCase = new WsdlTestCase( this, testCaseConfig, false );
 
       if( createCopy )
@@ -182,8 +183,13 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
          testCases.add( index, testCase );
 
       testCase.afterLoad();
-      fireTestCaseAdded( testCase );
 
+      if( createCopy )
+      {
+         testCase.afterCopy(null, oldTestCase);
+      }
+      
+      fireTestCaseAdded( testCase );
       resolveImportedTestCase( testCase );
 
       return testCase;
@@ -611,4 +617,10 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
          e.printStackTrace();
       }
    }
+
+	public void afterCopy(WsdlTestSuite oldTestSuite)
+	{
+		for( WsdlTestCase testCase : testCases )
+			testCase.afterCopy( oldTestSuite, null );
+	}
 }

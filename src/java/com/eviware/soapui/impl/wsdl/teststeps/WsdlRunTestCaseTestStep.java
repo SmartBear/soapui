@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.teststeps;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.*;
 import com.eviware.soapui.config.RunTestCaseRunModeTypeConfig.Enum;
+import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder.PropertiesStepProperty;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -79,6 +80,21 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 		propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder(this, stepConfig.getProperties());
 	}
 
+	/**
+	 * We need to check that we are not pointing at testcase in original testsuite
+	 */
+	
+	@Override
+	public void afterCopy(WsdlTestSuite oldTestSuite, WsdlTestCase oldTestCase)
+	{
+		super.afterCopy(oldTestSuite, oldTestCase);
+		
+		if( targetTestCase != null && oldTestSuite == targetTestCase.getTestSuite() ) 
+		{
+			setTargetTestCase( getTestCase().getTestSuite().getTestCaseByName(targetTestCase.getName()));
+		}
+	}
+	
 	@Override
 	public void afterLoad()
 	{
@@ -509,4 +525,5 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 	{
 		propertyHolderSupport.saveTo(fileName);
 	}
+
 }
