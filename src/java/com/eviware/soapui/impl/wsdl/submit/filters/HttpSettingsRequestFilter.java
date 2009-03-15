@@ -72,7 +72,7 @@ public class HttpSettingsRequestFilter extends AbstractRequestFilter
       }
       else if( httpVersion.equals( HttpSettings.HTTP_VERSION_0_9 ) )
       {
-         httpMethod.getParams().setVersion( HttpVersion.HTTP_0_9 );
+         httpMethod.getParams().setVersion( HttpVersion.HTTP_1_1 );
       }
 
       // max size..

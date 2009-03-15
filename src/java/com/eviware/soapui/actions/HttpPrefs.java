@@ -71,7 +71,7 @@ public class HttpPrefs implements Prefs
          httpForm = new SimpleForm();
          httpForm.addSpace( 5 );
          httpForm.appendComboBox( HttpPrefs.HTTP_VERSION, new String[]
-                 {HttpSettings.HTTP_VERSION_1_1, HttpSettings.HTTP_VERSION_1_0, HttpSettings.HTTP_VERSION_0_9},
+                 {HttpSettings.HTTP_VERSION_1_1, HttpSettings.HTTP_VERSION_1_0},
                  "Select HTTP Version to use" );
          httpForm.appendTextField( HttpPrefs.USER_AGENT_HEADER, "User-Agent HTTP header to send, blank will send default" );
          httpForm.appendComboBox( HttpPrefs.REQUEST_COMPRESSION, compressionAlgs );
