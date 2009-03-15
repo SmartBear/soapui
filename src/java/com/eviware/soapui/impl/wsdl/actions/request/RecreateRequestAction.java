@@ -19,6 +19,7 @@ import javax.swing.Action;
 
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -53,7 +54,8 @@ public class RecreateRequestAction extends AbstractAction
     	   createOptional = create.booleanValue();
       }
       
-      String req = ((WsdlOperation)request.getOperation()).createRequest( createOptional );
+      WsdlOperation wsdlOperation = (WsdlOperation)request.getOperation();
+		String req = wsdlOperation.createRequest( createOptional );
       if( req == null )
       {
       	UISupport.showErrorMessage( "Request creation failed" );
@@ -64,6 +66,9 @@ public class RecreateRequestAction extends AbstractAction
    	{
          if( UISupport.confirm( "Keep existing values", "Recreate Request" ))
          {
+         	req = SoapUtils.transferSoapHeaders(request.getRequestContent(), req, 
+         			wsdlOperation.getInterface().getSoapVersion());
+         	
         		req = XmlUtils.transferValues( request.getRequestContent(), req );
          }         	
    	}

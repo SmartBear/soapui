@@ -17,6 +17,7 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.support.ModelSupport;
@@ -113,6 +114,7 @@ public class ChangeOperationAction extends AbstractSoapUIAction<WsdlTestRequestS
 		      WsdlTestRequest request = target.getTestRequest();
 	         if( dialog.getBooleanValue( Form.KEEP_EXISTING ))
 	         {
+	         	req = SoapUtils.transferSoapHeaders(request.getRequestContent(), req, operation.getInterface().getSoapVersion());
 	        		req = XmlUtils.transferValues( request.getRequestContent(), req );
 	         }         	
 		      

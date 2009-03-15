@@ -22,6 +22,7 @@ import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
@@ -141,13 +142,14 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
       	boolean buildOptional = dialog.getBooleanValue( Form.RECREATE_OPTIONAL );
       	boolean createBackups = dialog.getBooleanValue( Form.CREATE_BACKUPS );
       	boolean keepExisting = dialog.getBooleanValue( Form.KEEP_EXISTING );
+      	boolean keepHeaders = dialog.getBooleanValue( Form.KEEP_HEADERS );
       	
       	List<ModelItem> updated = new ArrayList<ModelItem>();
       	
-      	updated.addAll( recreateRequests( iface, buildOptional, createBackups, keepExisting));
+      	updated.addAll( recreateRequests( iface, buildOptional, createBackups, keepExisting, keepHeaders));
       	
       	if( dialog.getBooleanValue( Form.UPDATE_TESTREQUESTS ))
-      		updated.addAll( recreateTestRequests( iface, buildOptional, createBackups, keepExisting ));
+      		updated.addAll( recreateTestRequests( iface, buildOptional, createBackups, keepExisting, keepHeaders ));
       	
       	UISupport.showInfoMessage(	"Update of interface successfull, [" + updated.size() + "] Requests/TestRequests have" +
       			" been updated.",  "Update Definition" );
@@ -164,7 +166,8 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
       }
    }
 
-	protected List<Request> recreateRequests( WsdlInterface iface, boolean buildOptional, boolean createBackups, boolean keepExisting )
+	protected List<Request> recreateRequests( WsdlInterface iface, boolean buildOptional, boolean createBackups, boolean keepExisting, 
+			boolean keepHeaders)
 	{
 		int count = 0;
 		
@@ -180,6 +183,12 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
 			for( Request request : requests )
 			{
 				String requestContent = request.getRequestContent();
+				
+				if( keepHeaders )
+				{
+					newRequest = SoapUtils.transferSoapHeaders( requestContent, newRequest, iface.getSoapVersion() );
+				}
+				
 				String req = XmlUtils.transferValues( requestContent, newRequest );
 				
 				// changed?
@@ -206,7 +215,8 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
 		return result;
 	}
 
-	private List<WsdlTestRequestStep> recreateTestRequests( WsdlInterface iface, boolean buildOptional, boolean createBackups, boolean keepExisting )
+	private List<WsdlTestRequestStep> recreateTestRequests( WsdlInterface iface, boolean buildOptional, boolean createBackups, 
+			boolean keepExisting, boolean keepHeaders )
 	{
 		int count = 0;
 		
@@ -227,6 +237,11 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
 						if( testRequest.getOperation().getInterface() == iface )
 						{
 							String newRequest = testRequest.getOperation().createRequest( buildOptional );
+
+							if( keepHeaders )
+							{
+								newRequest = SoapUtils.transferSoapHeaders( testRequest.getRequestContent(), newRequest, iface.getSoapVersion() );
+							}
 							
 							if( keepExisting )
 								newRequest = XmlUtils.transferValues( testRequest.getRequestContent(), newRequest );
@@ -272,6 +287,9 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
    	
    	@AField( name="Keep Existing", description = "Keeps existing values when recreating requests", type=AFieldType.BOOLEAN )
 		public final static String KEEP_EXISTING = "Keep Existing";
+
+   	@AField( name="Keep SOAP Headers", description = "Keeps any SOAP Headers when recreating requests", type=AFieldType.BOOLEAN )
+		public final static String KEEP_HEADERS = "Keep SOAP Headers";
    	
    	@AField( name="Create Backups", description = "Create backup copies of changed requests", type=AFieldType.BOOLEAN )
 		public final static String CREATE_BACKUPS = "Create Backups";

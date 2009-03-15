@@ -482,4 +482,53 @@ public class SoapUtils
          return deduceSoapVersion( requestContentType, (XmlObject) null );
       }
    }
+
+	public static String transferSoapHeaders(String requestContent, String newRequest, SoapVersion soapVersion )
+	{
+		try
+		{
+			XmlObject source = XmlObject.Factory.parse( requestContent );
+			String headerXPath = "declare namespace ns='" + soapVersion.getEnvelopeNamespace() + "'; //ns:Header";
+			XmlObject[] header = source.selectPath( headerXPath );
+			if( header.length == 1 )
+			{
+				Element headerElm = (Element) header[0].getDomNode();
+				NodeList childNodes = headerElm.getChildNodes();
+				if( childNodes.getLength() > 0 )
+				{
+					XmlObject dest = XmlObject.Factory.parse( newRequest );
+					header = dest.selectPath(headerXPath);
+					Element destElm = null;
+					
+					if( header.length == 0 )
+					{
+						Element docElm = ((Document)dest.getDomNode()).getDocumentElement();
+						
+						destElm = (Element) docElm.insertBefore(docElm.getOwnerDocument().createElementNS(
+								soapVersion.getEnvelopeNamespace(),	docElm.getPrefix() + ":Header" ),
+								XmlUtils.getFirstChildElementNS(docElm, soapVersion.getBodyQName())
+						);
+					}
+					else
+					{
+						destElm = (Element) header[0].getDomNode();
+					}
+					
+					for( int c = 0; c < childNodes.getLength(); c++ )
+					{
+						destElm.appendChild( destElm.getOwnerDocument().importNode(childNodes.item(c), true));
+					}
+
+					
+					return dest.xmlText();
+				}
+			}
+		}
+		catch (XmlException e)
+		{
+			SoapUI.logError(e);
+		}
+		
+		return newRequest;
+	}
 }

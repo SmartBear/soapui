@@ -19,6 +19,7 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -120,6 +121,7 @@ public class ChangeMockOperationAction extends AbstractSoapUIAction<WsdlMockOper
 						
 			         if( dialog.getBooleanValue( Form.KEEP_EXISTING ))
 			         {
+			         	msg = SoapUtils.transferSoapHeaders(mockResponse.getResponseContent(), req, iface.getSoapVersion() );
 							msg = XmlUtils.transferValues( mockResponse.getResponseContent(), req );
 			         }         	
 				      
@@ -149,7 +151,7 @@ public class ChangeMockOperationAction extends AbstractSoapUIAction<WsdlMockOper
 		@AField( name = "Create Optional", description = "Creates optional content when recreating the response", type = AFieldType.BOOLEAN )
 		public final static String CREATE_OPTIONAL = "Create Optional";
 		
-		@AField( name = "Keep Existing", description = "Tries to keep existing values when recreating the response", type = AFieldType.BOOLEAN )
+		@AField( name = "Keep Existing", description = "Tries to keep existing values and headers when recreating the response", type = AFieldType.BOOLEAN )
 		public final static String KEEP_EXISTING = "Keep Existing";
 	}
 }
