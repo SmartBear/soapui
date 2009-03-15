@@ -227,6 +227,11 @@ public class FindAndReplaceDialog extends AbstractAction
             txt = txt.toUpperCase();
          }
 
+         if( txt.substring( pos, pos+value.length()).equals(value))
+         {
+         	pos += forwardButton.isSelected() ? 1 : -1;
+         }
+         
          int ix = findNext( pos, txt, value );
 
          if( ix != -1 )
