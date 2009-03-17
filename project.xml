@@ -384,10 +384,10 @@
                 <eclipse>true</eclipse>
             </properties>
         </dependency>
-        <dependency>
+       <dependency>
             <groupId>jetty</groupId>
             <artifactId>jetty</artifactId>
-            <version>6.1.14</version>
+            <version>6.1.15</version>
             <type>jar</type>
             <url>http://www.mortbay.org/jetty/index.html</url>
             <properties>
@@ -398,7 +398,7 @@
         <dependency>
             <groupId>jetty</groupId>
             <artifactId>jetty-util</artifactId>
-            <version>6.1.14</version>
+            <version>6.1.15</version>
             <type>jar</type>
             <url>http://www.mortbay.org/jetty/index.html</url>
             <properties>
@@ -409,7 +409,7 @@
         <dependency>
             <groupId>jetty</groupId>
             <artifactId>servlet-api</artifactId>
-            <version>2.5-6.1.14</version>
+            <version>2.5-20081211</version>
             <type>jar</type>
             <url>http://www.mortbay.org/jetty/index.html</url>
             <properties>
