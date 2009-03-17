@@ -566,6 +566,9 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 
    public PropertyExpansion[] getPropertyExpansions()
    {
+   	if( testRequest == null )
+   		return new PropertyExpansion[0];
+   	
       PropertyExpansionsResult result = new PropertyExpansionsResult( this, testRequest );
 
       result.extractAndAddAll( "requestContent" );
