@@ -35,7 +35,7 @@ urchinTracker();</script>
           <p>Get training for soapUI. Next Date:<br />
           Silicon Valley, March 3-5<br />
 <br />
-            <a onclick="javascript:urchinTracker('/appindexsoapUITraining')" href="http://www.pushtotest.com/Docs/training/soapUI#top" title="Read Here!" target="_blank">Read about it here</a></p></td>
+            <a onclick="javascript:urchinTracker('/appindexsoapUITraining')" href="http://www.pushtotest.com/services/soapui-training/" title="Read Here!" target="_blank">Read about it here</a></p></td>
       </tr>
       <tr>
         <td height="240" class="greyBox" valign="top"><h2>eviware I turn</h2>
