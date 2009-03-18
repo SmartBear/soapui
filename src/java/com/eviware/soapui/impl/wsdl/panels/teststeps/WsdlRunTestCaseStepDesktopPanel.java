@@ -75,6 +75,12 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 		project = getModelItem().getTestCase().getTestSuite().getProject();
 		
 		getModelItem().addPropertyChangeListener( WsdlRunTestCaseTestStep.TARGET_TESTCASE, this );
+		WsdlTestCase targetTestCase = getModelItem().getTargetTestCase();
+		if( targetTestCase != null )
+		{
+			targetTestCase.addPropertyChangeListener( WsdlTestCase.NAME_PROPERTY, this );
+			targetTestCase.getTestSuite().addPropertyChangeListener( WsdlTestCase.NAME_PROPERTY, this );
+		}
 		
 		buildUI();
 		setEnabledState();
@@ -107,7 +113,6 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 	private Component buildContent()
 	{
       inspectorPanel = JInspectorPanelFactory.build( createPropertiesTable() );
-		
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildLog(), "TestCase Log", "log output from testcase run", true ) );
 		
 		return inspectorPanel.getComponent();
@@ -132,7 +137,8 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 	private String createTitleForBorder()
 	{
 		WsdlTestCase targetTestCase = getModelItem().getTargetTestCase();
-		return "TestCase [" + (targetTestCase == null ? "-none selected-" : targetTestCase.getName() ) + "] Run Properties";
+		return "TestCase [" + (targetTestCase == null ? "- none selected -" : 
+			targetTestCase.getTestSuite().getName() + ":" + targetTestCase.getName() ) + "] Run Properties";
 	}
 
 	private Component buildToolbar()
@@ -163,6 +169,14 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 	public boolean onClose( boolean canCancel )
 	{
 		getModelItem().removePropertyChangeListener( WsdlRunTestCaseTestStep.TARGET_TESTCASE, this );
+		
+		WsdlTestCase targetTestCase = getModelItem().getTargetTestCase();
+		if( targetTestCase != null )
+		{
+			targetTestCase.removePropertyChangeListener( WsdlTestCase.NAME_PROPERTY, this );
+			targetTestCase.getTestSuite().removePropertyChangeListener( WsdlTestCase.NAME_PROPERTY, this );
+		}
+		
 		testRunLog.release();
 		if( optionsDialog != null )
 		{
@@ -333,6 +347,8 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 					((XFormMultiSelectList)optionsDialog.getFormField( OptionsForm.RETURN_PROPERTIES )).getSelectedOptions()) );
 				getModelItem().setRunMode( optionsDialog.getValueIndex( OptionsForm.RUN_MODE ) == 0 ? 
 							RunTestCaseRunModeTypeConfig.PARALLELL : RunTestCaseRunModeTypeConfig.SINGLETON_AND_FAIL );
+				
+				titledBorder.setTitle( createTitleForBorder() );
 			}
 		}
 	}
@@ -359,6 +375,25 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
+		super.propertyChange(evt);
+		
+		if( evt.getPropertyName().equals(WsdlRunTestCaseTestStep.TARGET_TESTCASE))
+		{
+			WsdlTestCase targetTestCase = (WsdlTestCase) evt.getOldValue();
+			if( targetTestCase != null )
+			{
+				targetTestCase.removePropertyChangeListener( WsdlTestCase.NAME_PROPERTY, this );
+				targetTestCase.getTestSuite().removePropertyChangeListener( WsdlTestCase.NAME_PROPERTY, this );
+			}
+			
+			targetTestCase = (WsdlTestCase) evt.getNewValue();
+			if( targetTestCase != null )
+			{
+				targetTestCase.addPropertyChangeListener( WsdlTestCase.NAME_PROPERTY, this );
+				targetTestCase.getTestSuite().addPropertyChangeListener( WsdlTestCase.NAME_PROPERTY, this );
+			}
+		}
+		
 		setEnabledState();
 		titledBorder.setTitle( createTitleForBorder() );
 		repaint();
