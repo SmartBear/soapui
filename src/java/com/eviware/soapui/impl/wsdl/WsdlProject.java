@@ -61,6 +61,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -677,12 +678,16 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
          removeDefinitionCaches( config );
 
          config.getSoapuiProject().setSoapuiVersion( SoapUI.SOAPUI_VERSION );
-         ByteArrayOutputStream writer = new ByteArrayOutputStream( 8192 );
-         config.save( writer, options );
-         FileOutputStream out = new FileOutputStream( projectFile );
-         writer.writeTo( out );
-         out.close();
-         size = writer.size();
+         ByteArrayOutputStream writer = new ByteArrayOutputStream(8192);
+			FileWriter fwriter = new FileWriter(projectFile);
+			config.save(fwriter, options);
+			FileOutputStream out = new FileOutputStream(projectFile);
+			String tmpBuffer = fixLineSeparator(writer);
+			ByteArrayOutputStream writer2 = new ByteArrayOutputStream(8192);
+			writer2.write(tmpBuffer.getBytes());
+			writer2.writeTo(out);
+			out.close();
+			size = writer.size();
       }
       else
       {
@@ -690,12 +695,16 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
          {
             // save to temporary buffer to avoid corruption of file
             projectDocument.getSoapuiProject().setSoapuiVersion( SoapUI.SOAPUI_VERSION );
-            ByteArrayOutputStream writer = new ByteArrayOutputStream( 8192 );
-            projectDocument.save( writer, options );
-            FileOutputStream out = new FileOutputStream( projectFile );
-            writer.writeTo( out );
-            out.close();
-            size = writer.size();
+            ByteArrayOutputStream writer = new ByteArrayOutputStream(8192);
+				FileWriter fwriter = new FileWriter(projectFile);
+				projectDocument.save(fwriter, options);
+				FileOutputStream out = new FileOutputStream(projectFile);
+				String tmpBuffer = fixLineSeparator(writer);
+				ByteArrayOutputStream writer2 = new ByteArrayOutputStream(8192);
+				writer2.write(tmpBuffer.getBytes());
+				writer2.writeTo(out);
+				out.close();
+				size = writer.size();
          }
          catch( Throwable t )
          {
@@ -710,6 +719,20 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
       setProjectRoot( path );
       return true;
    }
+
+	protected String fixLineSeparator(ByteArrayOutputStream writer)
+	{
+		String tmpBuffer = writer.toString();
+		if ("\r\n".equals(System.getProperty("line.separator")))
+		{
+			tmpBuffer = tmpBuffer.replaceAll("\r[^\n]", System.getProperty("line.separator"));
+		}
+		else
+		{
+			tmpBuffer = tmpBuffer.replaceAll("\r\n", System.getProperty("line.separator"));
+		}
+		return tmpBuffer;
+	}
 
    public void beforeSave()
    {
