@@ -676,6 +676,7 @@ public class SchemaUtils
 
    public static boolean isAnyType( SchemaType schemaType )
    {
-       return schemaType.getBuiltinTypeCode() == SchemaType.BTC_ANY_TYPE;
+       return schemaType.getBuiltinTypeCode() == SchemaType.BTC_ANY_TYPE || 
+          (schemaType.getBaseType() != null && schemaType.getBaseType().getBuiltinTypeCode() == SchemaType.BTC_ANY_TYPE);
    }
 }
