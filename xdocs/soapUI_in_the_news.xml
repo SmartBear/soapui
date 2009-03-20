@@ -6,7 +6,19 @@
     <body>
     <section name="soapUI Releases">
     
-        <subsection name="Using the WS-I Testing Tools">
+    <subsection name="Rails, Rest and soapUI">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/jardins.gif" alt="Rest support"/>	    	    
+	    		</column>
+	    		<column align="left">
+	    			<p>I used to use soapUI back when I was creating a..."<br/>
+	    			<a href="http://mikedesjardins.us/wordpress/2009/03/rails-rest-and-soapui/">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	</subsection>
+    
+    <subsection name="Using the WS-I Testing Tools">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/ebm.gif" alt="Validate wsdl"/>	    	    
