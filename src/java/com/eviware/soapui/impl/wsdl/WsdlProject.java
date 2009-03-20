@@ -679,8 +679,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
          config.getSoapuiProject().setSoapuiVersion( SoapUI.SOAPUI_VERSION );
          ByteArrayOutputStream writer = new ByteArrayOutputStream(8192);
-			FileWriter fwriter = new FileWriter(projectFile);
-			config.save(fwriter, options);
+			config.save(writer, options);
 			FileOutputStream out = new FileOutputStream(projectFile);
 			String tmpBuffer = fixLineSeparator(writer);
 			ByteArrayOutputStream writer2 = new ByteArrayOutputStream(8192);
@@ -696,8 +695,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
             // save to temporary buffer to avoid corruption of file
             projectDocument.getSoapuiProject().setSoapuiVersion( SoapUI.SOAPUI_VERSION );
             ByteArrayOutputStream writer = new ByteArrayOutputStream(8192);
-				FileWriter fwriter = new FileWriter(projectFile);
-				projectDocument.save(fwriter, options);
+				projectDocument.save(writer, options);
 				FileOutputStream out = new FileOutputStream(projectFile);
 				String tmpBuffer = fixLineSeparator(writer);
 				ByteArrayOutputStream writer2 = new ByteArrayOutputStream(8192);
