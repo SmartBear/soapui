@@ -77,7 +77,7 @@ public class HttpPrefs implements Prefs
          httpForm.appendComboBox( HttpPrefs.REQUEST_COMPRESSION, compressionAlgs );
          httpForm.appendCheckBox( HttpPrefs.RESPONSE_COMPRESSION, "Accept compressed responses from hosts", true );
          httpForm.appendCheckBox( HttpPrefs.DISABLE_RESPONSE_DECOMPRESSION, "Disable decompression of compressed responses", true );
-         httpForm.appendCheckBox( HttpPrefs.CLOSE_CONNECTIONS_AFTER_REQUEST, "Closes the HTTP connection after each SOAP request", true );
+         httpForm.appendCheckBox( HttpPrefs.CLOSE_CONNECTIONS_AFTER_REQUEST, "Closes the HTTP connection after each HTTP request", true );
          httpForm.appendCheckBox( HttpPrefs.DISABLE_CHUNKING, "Disables content-chunking", true );
          httpForm.appendCheckBox( HttpPrefs.AUTHENTICATE_PREEMPTIVELY, "Adds authentication information to outgoing request", true );
          httpForm.appendCheckBox( HttpPrefs.ENCODED_URLS, "Do not URL-escape service endpoints", true );
