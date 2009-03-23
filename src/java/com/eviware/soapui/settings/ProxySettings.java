@@ -22,20 +22,19 @@ import com.eviware.soapui.settings.Setting.SettingType;
 
 public interface ProxySettings
 {
-	@Setting( name="Host", description="proxy host to use" )
+	@Setting( name = "Host", description = "Proxy host to use" )
 	public final static String HOST = ProxySettings.class.getSimpleName() + "@" + "host";
-	
-	@Setting( name="Port", description="proxy port to use", type=SettingType.INT )
+
+	@Setting( name = "Port", description = "Proxy port to use", type = SettingType.INT )
 	public final static String PORT = ProxySettings.class.getSimpleName() + "@" + "port";
-	
-	@Setting( name="Username", description="proxy username to use" )
+
+	@Setting( name = "Username", description = "Proxy username to use" )
 	public final static String USERNAME = ProxySettings.class.getSimpleName() + "@" + "username";
-	
-	@Setting( name="Password", description="proxy password to use", type=SettingType.PASSWORD )
+
+	@Setting( name = "Password", description = "Proxy password to use", type = SettingType.PASSWORD )
 	public final static String PASSWORD = ProxySettings.class.getSimpleName() + "@" + "password";
-	
-	@Setting( name="Excludes", description="Comma-seperated list of hosts to exclude" )
+
+	@Setting( name = "Excludes", description = "Comma-seperated list of hosts to exclude" )
 	public final static String EXCLUDES = ProxySettings.class.getSimpleName() + "@" + "excludes";
 
 }
-

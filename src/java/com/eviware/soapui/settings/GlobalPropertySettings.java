@@ -15,5 +15,5 @@ package com.eviware.soapui.settings;
 public interface GlobalPropertySettings
 {
 	public static final String PROPERTIES = GlobalPropertySettings.class.getSimpleName() + "@properties";
-   public final static String ENABLE_OVERRIDE = GlobalPropertySettings.class.getSimpleName() + "@enableOverride";
+	public final static String ENABLE_OVERRIDE = GlobalPropertySettings.class.getSimpleName() + "@enableOverride";
 }

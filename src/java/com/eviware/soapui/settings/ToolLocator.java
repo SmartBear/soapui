@@ -19,12 +19,14 @@ package com.eviware.soapui.settings;
 
 public interface ToolLocator
 {
-   /**
-    * Get the location of Ant.
-    * @param mandatory If mandatory==true and Ant is not found, show an error dialog.
-    * @return
-    */
-   String getAntDir(boolean mandatory);
+	/**
+	 * Get the location of Ant.
+	 * 
+	 * @param mandatory
+	 *           If mandatory==true and Ant is not found, show an error dialog.
+	 * @return
+	 */
+	String getAntDir( boolean mandatory );
 
-   String getJavacLocation(boolean mandatory);
+	String getJavacLocation( boolean mandatory );
 }
