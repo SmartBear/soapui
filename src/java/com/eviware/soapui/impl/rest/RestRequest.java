@@ -481,7 +481,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
    {
       String old = getPath();
 
-      if( getResource() != null && getResource().getFullPath().equals( fullPath ) )
+      if( getResource() != null && getResource().getFullPath().equals( fullPath ) && getConfig().isSetFullPath())
          getConfig().unsetFullPath();
       else
          getConfig().setFullPath( fullPath );

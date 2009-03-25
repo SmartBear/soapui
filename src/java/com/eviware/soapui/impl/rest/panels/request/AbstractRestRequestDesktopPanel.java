@@ -99,7 +99,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
          acceptCombo.setModel( new DefaultComboBoxModel( (Object[]) evt.getNewValue() ) );
          acceptCombo.setSelectedItem( item );
       }
-      else if( evt.getPropertyName().equals( "path" ) &&
+      else if( (evt.getPropertyName().equals( "path" ) || evt.getPropertyName().equals( "resource" )) &&
               ( getRequest().getResource() == null || getRequest().getResource() == evt.getSource() ) )
       {
          if( pathLabel != null )
@@ -223,18 +223,18 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
             pathCombo.setRenderer( new ModelItemListCellRenderer() );
             pathCombo.setPreferredSize( new Dimension( 200, 20 ) );
             pathCombo.setSelectedItem( getRequest().getResource().getPath() );
-            pathCombo.addItemListener( new ItemListener()
-            {
-               public void itemStateChanged( ItemEvent e )
-               {
-                  if( updating )
-                     return;
-
-                  updating = true;
-                  getRequest().getResource().setPath( String.valueOf( pathCombo.getSelectedItem() ) );
-                  updating = false;
-               }
-            } );
+//            pathCombo.addItemListener( new ItemListener()
+//            {
+//               public void itemStateChanged( ItemEvent e )
+//               {
+//                  if( updating )
+//                     return;
+//
+//                  updating = true;
+////                  ((RestTestRequest)getRequest()).setPath( ((RestResource)pathCombo.getSelectedItem() ).getPath() );
+//                  updating = false;
+//               }
+//            } );
 
             toolbar.addLabeledFixed( "Resource:", pathCombo );
             toolbar.addSeparator();

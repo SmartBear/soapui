@@ -416,6 +416,10 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
       {
          setEndpoint( fullPath );
       }
+      else
+      {
+      	
+      }
    }
 
    public void setResource( RestResource restResource )
@@ -423,9 +427,13 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
       if( this.restResource != null )
          this.restResource.removePropertyChangeListener( this );
 
+      RestResource old = this.restResource;
+      
       this.restResource = restResource;
 
       restResource.addPropertyChangeListener( this );
+      
+      notifyPropertyChanged( "resource", old, restResource );
    }
 
    public RestResource getResource()
