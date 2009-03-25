@@ -305,7 +305,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
       {
          if( arg0.getSource() == testRequest && arg0.getPropertyName().equals( WsdlTestRequest.NAME_PROPERTY ) )
          {
-            if( !super.getName().equals( (String) arg0.getNewValue() ) )
+            if( !super.getName().equals( arg0.getNewValue() ) )
                super.setName( (String) arg0.getNewValue() );
          }
 
@@ -316,6 +316,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
    public TestStepResult run( TestRunner runner, TestRunContext runContext )
    {
       WsdlTestRequestStepResult testStepResult = new WsdlTestRequestStepResult( this );
+      runContext.setProperty( AssertedXPathsContainer.ASSERTEDXPATHSCONTAINER_PROPERTY, testStepResult );
 
       try
       {
@@ -340,7 +341,6 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
             }
             else
             {
-               runContext.setProperty( AssertedXPathsContainer.ASSERTEDXPATHSCONTAINER_PROPERTY, testStepResult );
                testRequest.setResponse( response, runContext );
 
                testStepResult.setTimeTaken( response.getTimeTaken() );
