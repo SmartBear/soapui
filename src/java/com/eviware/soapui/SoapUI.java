@@ -135,7 +135,7 @@ public class SoapUI
    public static final String DEFAULT_DESKTOP = "Default";
    public static final String CURRENT_SOAPUI_WORKSPACE = SoapUI.class.getName() + "@workspace";
    public final static Logger log = Logger.getLogger( SoapUI.class );
-   public final static String SOAPUI_VERSION = "2.5.1";
+   public final static String SOAPUI_VERSION = "2.5.2";
    public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
    public static final String SOAPUI_SPLASH = "soapui-splash-2.5.1.jpg";
    private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
@@ -547,7 +547,22 @@ public class SoapUI
       {
          String wsfile = soapUICore.getSettings().getString( CURRENT_SOAPUI_WORKSPACE, System.getProperty( "user.home" ) + File.separatorChar
                  + DEFAULT_WORKSPACE_FILE );
-         workspace = WorkspaceFactory.getInstance().openWorkspace( wsfile, projectOptions );
+         try
+			{
+				workspace = WorkspaceFactory.getInstance().openWorkspace( wsfile, projectOptions );
+			}
+			catch (Exception e)
+			{
+				if( UISupport.confirm("Failed to open workspace: [" + e.toString() + "], create new one instead?", "Error"))
+				{
+					new File( wsfile ).delete();
+					workspace = WorkspaceFactory.getInstance().openWorkspace( wsfile, projectOptions );
+				}
+				else
+				{
+					System.exit( 1 );
+				}
+			}
       }
 
       core.prepareUI();
@@ -727,16 +742,30 @@ public class SoapUI
 
    public static void logError( Throwable e )
    {
+   	logError( e, null );
+   }
+   
+   public static void logError( Throwable e, String message )
+   {
       String msg = e.getMessage();
       if( msg == null )
          msg = e.toString();
 
       log.error( "An error occured [" + msg + "], see error log for details" );
+      
+      if( message != null )
+      	errorLog.error( message );
+      
       errorLog.error( e.toString(), e );
       if( !isStandalone() || "true".equals( System.getProperty( "soapui.stacktrace" ) ) )
          e.printStackTrace();
    }
 
+   public static Logger getErrorLog()
+   {
+   	return errorLog;
+   }
+   
    public static synchronized Logger ensureGroovyLog()
    {
       if( !checkedGroovyLogMonitor )

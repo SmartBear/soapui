@@ -132,7 +132,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
       }
       catch( URIException e )
       {
-         SoapUI.logError( e );
+         SoapUI.logError( e, "Error for path: " + httpMethod.getPath() + ", QueryString: " + httpMethod.getQueryString() );
          return;
       }
 
@@ -153,10 +153,10 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
             return;
       }
 
-      applyDefaultsToWsdlRequest( context, (AbstractHttpRequest) wsdlRequest, def );
+      applyDefaultsToWsdlRequest( context, (AbstractHttpRequest<?>) wsdlRequest, def );
    }
 
-   protected void applyDefaultsToWsdlRequest( SubmitContext context, AbstractHttpRequest wsdlRequest, EndpointDefaults def )
+   protected void applyDefaultsToWsdlRequest( SubmitContext context, AbstractHttpRequest<?> wsdlRequest, EndpointDefaults def )
    {
       String requestUsername = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getUsername() );
       String requestPassword = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getPassword() );
@@ -184,7 +184,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
    }
 
    private void overrideRequest(
-           SubmitContext context, AbstractHttpRequest wsdlRequest, EndpointDefaults def,
+           SubmitContext context, AbstractHttpRequest<?> wsdlRequest, EndpointDefaults def,
            String requestUsername, String requestPassword, String requestDomain, String defUsername,
            String defPassword, String defDomain
    )
@@ -225,7 +225,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
    }
 
    private void copyToRequest(
-           SubmitContext context, AbstractHttpRequest wsdlRequest, EndpointDefaults def,
+           SubmitContext context, AbstractHttpRequest<?> wsdlRequest, EndpointDefaults def,
            String requestUsername, String requestPassword, String requestDomain, String defUsername,
            String defPassword, String defDomain
    )
@@ -258,7 +258,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
    }
 
    private void complementRequest(
-           SubmitContext context, AbstractHttpRequest httpRequest, EndpointDefaults def,
+           SubmitContext context, AbstractHttpRequest<?> httpRequest, EndpointDefaults def,
            String requestUsername, String requestPassword, String requestDomain, String defUsername,
            String defPassword, String defDomain
    )
