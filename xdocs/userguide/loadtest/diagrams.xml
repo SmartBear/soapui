@@ -28,7 +28,7 @@
 		you can open the diagram after running your LoadTests and see the results. This is recommended as it 
 		does not take any performance from the UI during LoadTesting.</p>
 		
-		<subsection name="The LoadTest Statistics Grapgh">
+		<subsection name="The LoadTest Statistics Graph">
 		<p>The statistics diagram shows a number of statistics for a selected TestStep or the TestCase
 		Total. The toolbar at the top contains a combo-box for selecting which step to display and a 
 		button to the far right for exporting the currently selected steps data to a comma separated file.</p>
