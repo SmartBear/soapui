@@ -737,6 +737,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		}
 		catch( UnsupportedEncodingException e )
 		{
+			e.printStackTrace();
 			return null;
 		}
 	}
