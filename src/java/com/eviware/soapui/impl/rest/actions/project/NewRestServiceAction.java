@@ -12,6 +12,9 @@
 
 package com.eviware.soapui.impl.rest.actions.project;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
@@ -22,18 +25,16 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+import com.eviware.x.form.ValidationMessage;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
+import com.eviware.x.form.XFormFieldValidator;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.validators.RequiredValidator;
-import org.apache.log4j.Logger;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Actions for importing an existing soapUI project file into the current workspace
@@ -46,7 +47,7 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
    public static final String SOAPUI_ACTION_ID = "NewRestServiceAction";
    public static final MessageSupport messages = MessageSupport.getMessages( NewRestServiceAction.class );
    private XFormDialog dialog;
-   private final static Logger log = Logger.getLogger( NewRestServiceAction.class );
+	private WsdlProject currentProject;
 
    public NewRestServiceAction()
    {
@@ -55,10 +56,24 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
 
    public void perform( WsdlProject project, Object param )
    {
-      if( dialog == null )
+      this.currentProject = project;
+      
+		if( dialog == null )
       {
          dialog = ADialogBuilder.buildDialog( Form.class );
          dialog.getFormField( Form.SERVICENAME ).addFormFieldValidator( new RequiredValidator( "Service Name is required" ) );
+         dialog.getFormField( Form.SERVICENAME ).addFormFieldValidator( new XFormFieldValidator() {
+
+				public ValidationMessage[] validateField( XFormField formField )
+				{
+					if( currentProject.getInterfaceByName( formField.getValue() ) != null )
+					{
+						return new ValidationMessage[] { new ValidationMessage( "Service Name must be unique in project", formField )};
+					}
+					
+					return null;
+				}});
+         
          dialog.getFormField( Form.SERVICEENDPOINT ).addFormFieldListener( new XFormFieldListener()
          {
             public void valueChanged( XFormField sourceField, String newValue, String oldValue )
