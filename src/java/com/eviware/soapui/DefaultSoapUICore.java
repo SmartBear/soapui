@@ -136,7 +136,11 @@ public class DefaultSoapUICore implements SoapUICore
 
 	protected Settings initSettings(String fileName)
 	{
+	   // TODO Why try to load settings from current directory before using root?
+	   // This caused a bug in Eclipse:
+	   // https://sourceforge.net/tracker/?func=detail&atid=737763&aid=2620284&group_id=136013
 		File settingsFile = new File(fileName).exists() ? new File(fileName) : null;
+		
 		try
 		{
 			if ( settingsFile == null  ) {
