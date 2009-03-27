@@ -104,8 +104,7 @@ public class WsdlGotoTestStep extends WsdlTestStepWithProperties implements XPat
 		
 		result.startTimer();
 		
-		WsdlTestRequestStep previousStep = (WsdlTestRequestStep) getTestCase().findPreviousStepOfType( 
-				this, WsdlTestRequestStep.class );
+		HttpTestRequestStep previousStep = getTestCase().findPreviousStepOfType( this, HttpTestRequestStep.class );
 		
 		if( previousStep == null )
 		{
@@ -132,7 +131,7 @@ public class WsdlGotoTestStep extends WsdlTestStepWithProperties implements XPat
 		return result;
 	}
 
-	public GotoCondition runConditions(WsdlTestRequestStep previousStep, TestRunContext context)
+	public GotoCondition runConditions(HttpTestRequestStep previousStep, TestRunContext context)
 	{
 		for( GotoCondition condition : conditions )
 		{
@@ -251,7 +250,7 @@ public class WsdlGotoTestStep extends WsdlTestStepWithProperties implements XPat
 				currentStep.removePropertyChangeListener( this );
 		}
 	
-		public boolean evaluate(WsdlTestRequestStep previousStep, TestRunContext context) throws Exception
+		public boolean evaluate(HttpTestRequestStep previousStep, TestRunContext context) throws Exception
 		{
 			if( getExpression() == null || getExpression().trim().length() == 0 )
 				throw new Exception( "Missing expression in condition [" + getName() + "]" );
@@ -261,7 +260,8 @@ public class WsdlGotoTestStep extends WsdlTestStepWithProperties implements XPat
 			
 			if( getType().equals( GotoConditionTypeConfig.XPATH.toString() ))
 			{
-				XmlObject xmlObject = XmlObject.Factory.parse( previousStep.getTestRequest().getResponse().getContentAsString());
+				RestTestRequest testRequest = previousStep.getTestRequest();
+				XmlObject xmlObject = XmlObject.Factory.parse( testRequest.getResponseContentAsXml());
 				
 				String expression = PropertyExpansionUtils.expandProperties( context, getExpression() );
 				XmlObject[] selectPath = xmlObject.selectPath( expression );

@@ -98,7 +98,6 @@ public class PropertyExpansionUtils
 		return expandProperties(context, content, false );
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static String expandProperties(PropertyExpansionContext context, String content, boolean entitize )
 	{
 		if( StringUtils.isNullOrEmpty( content ))
@@ -417,7 +416,7 @@ public class PropertyExpansionUtils
 		}	
 		else if( modelItem instanceof AbstractHttpRequest )
 		{
-			project = ((AbstractHttpRequest)modelItem).getOperation().getInterface().getProject();
+			project = ((AbstractHttpRequest<?>)modelItem).getOperation().getInterface().getProject();
 		}
 		else if( modelItem instanceof WsdlMockOperation )
 		{

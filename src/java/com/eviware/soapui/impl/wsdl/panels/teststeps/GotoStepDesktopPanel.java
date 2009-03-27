@@ -19,6 +19,7 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GotoTestStepsComboB
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlGotoTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlGotoTestStep.GotoCondition;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
@@ -450,8 +451,7 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 				return;
 			}
 
-			WsdlTestRequestStep previousStep = (WsdlTestRequestStep) gotoStep.getTestCase().findPreviousStepOfType( 
-					gotoStep, WsdlTestRequestStep.class );
+			HttpTestRequestStep previousStep = gotoStep.getTestCase().findPreviousStepOfType( gotoStep, HttpTestRequestStep.class );
 			
 			if( previousStep == null ) 
 			{
@@ -492,8 +492,8 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 		
 		public void actionPerformed(ActionEvent e)
 		{
-			WsdlTestRequestStep previousStep = (WsdlTestRequestStep) gotoStep.getTestCase().findPreviousStepOfType( 
-					gotoStep, WsdlTestRequestStep.class );
+			HttpTestRequestStep previousStep = gotoStep.getTestCase().findPreviousStepOfType( 
+					gotoStep, HttpTestRequestStep.class );
 			
 			if( previousStep == null ) 
 			{

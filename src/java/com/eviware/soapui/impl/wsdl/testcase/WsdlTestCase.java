@@ -655,28 +655,28 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
       return -1;
    }
 
-   public TestStep findPreviousStepOfType( TestStep referenceStep, Class<? extends TestStep> stepClass )
+   public <T extends TestStep> T findPreviousStepOfType( TestStep referenceStep, Class<T> stepClass )
    {
       int currentStepIndex = getIndexOfTestStep( referenceStep );
       int ix = currentStepIndex - 1;
-      while( ix >= 0 && !getTestStepAt( ix ).getClass().equals( stepClass ) )
+      while( ix >= 0 && !getTestStepAt( ix ).getClass().isInstance( stepClass ) )
       {
          ix--;
       }
 
-      return ix < 0 ? null : getTestStepAt( ix );
+      return ( T )( ix < 0 ? null : getTestStepAt( ix ) );
    }
 
-   public TestStep findNextStepOfType( TestStep referenceStep, Class<? extends TestStep> stepClass )
+   public <T extends TestStep> T findNextStepOfType( TestStep referenceStep, Class<T> stepClass )
    {
       int currentStepIndex = getIndexOfTestStep( referenceStep );
       int ix = currentStepIndex + 1;
-      while( ix < getTestStepCount() && !getTestStepAt( ix ).getClass().equals( stepClass ) )
+      while( ix < getTestStepCount() && !getTestStepAt( ix ).getClass().isInstance( stepClass ) )
       {
          ix++;
       }
 
-      return ix >= getTestStepCount() ? null : getTestStepAt( ix );
+      return ( T )( ix >= getTestStepCount() ? null : getTestStepAt( ix ) );
    }
 
    public List<TestStep> getTestStepList()

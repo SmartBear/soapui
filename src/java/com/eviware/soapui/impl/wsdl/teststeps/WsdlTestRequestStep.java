@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.config.RequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
@@ -77,7 +76,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
  */
 
 public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements OperationTestStep,
-        PropertyChangeListener, PropertyExpansionContainer, Assertable, HttpRequestTestStep
+        PropertyChangeListener, PropertyExpansionContainer, Assertable, HttpRequestTestStep<WsdlTestRequest>
 {
    private final static Logger log = Logger.getLogger( WsdlTestRequestStep.class );
    private RequestStepConfig requestStepConfig;
@@ -432,7 +431,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
       return testRequest == null ? 0 : testRequest.getAssertionCount();
    }
 
-   public AbstractHttpRequest<?> getHttpRequest()
+   public WsdlTestRequest getHttpRequest()
    {
       return testRequest;
    }

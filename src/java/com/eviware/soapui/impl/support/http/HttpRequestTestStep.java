@@ -14,7 +14,7 @@ package com.eviware.soapui.impl.support.http;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 
-public interface HttpRequestTestStep
+public interface HttpRequestTestStep<T extends AbstractHttpRequest<?>>
 {
-   public AbstractHttpRequest getHttpRequest();
+   public T getHttpRequest();
 }

@@ -56,9 +56,9 @@ public interface TestCase extends TestModelItem, ResultContainer
 
 	public int getTestStepIndexByName( String stepName );
 	
-	public TestStep findPreviousStepOfType( TestStep referenceStep, Class<? extends TestStep> stepClass );
+	public <T extends TestStep> T findPreviousStepOfType( TestStep referenceStep, Class<T> stepClass );
 	
-	public TestStep findNextStepOfType( TestStep referenceStep, Class<? extends TestStep> stepClass );
+	public <T extends TestStep> T findNextStepOfType( TestStep referenceStep, Class<T> stepClass );
 	
 	public <T extends TestStep> List<T> getTestStepsOfType( Class<T> stepType );
 	
