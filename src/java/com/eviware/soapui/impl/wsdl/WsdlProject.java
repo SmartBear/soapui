@@ -63,6 +63,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
@@ -720,16 +721,24 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 	protected String fixLineSeparator(ByteArrayOutputStream writer)
 	{
-		String tmpBuffer = writer.toString();
-		if ("\r\n".equals(System.getProperty("line.separator")))
+		try
 		{
-			tmpBuffer = tmpBuffer.replaceAll("\r[^\n]", System.getProperty("line.separator"));
+			String tmpBuffer = writer.toString("utf-8");
+			if ("\r\n".equals(System.getProperty("line.separator")))
+			{
+				tmpBuffer = tmpBuffer.replaceAll("\r[^\n]", System.getProperty("line.separator"));
+			}
+			else
+			{
+				tmpBuffer = tmpBuffer.replaceAll("\r\n", System.getProperty("line.separator"));
+			}
+			
+			return tmpBuffer;
 		}
-		else
+		catch( UnsupportedEncodingException e )
 		{
-			tmpBuffer = tmpBuffer.replaceAll("\r\n", System.getProperty("line.separator"));
+			return null;
 		}
-		return tmpBuffer;
 	}
 
    public void beforeSave()
