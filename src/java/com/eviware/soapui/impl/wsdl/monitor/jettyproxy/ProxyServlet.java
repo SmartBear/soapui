@@ -31,7 +31,6 @@ import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
-import org.apache.commons.httpclient.params.HostParams;
 import org.mortbay.util.IO;
 
 import com.eviware.soapui.SoapUI;
@@ -42,7 +41,6 @@ import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.model.settings.Settings;
-import com.sun.swing.internal.plaf.synth.resources.synth;
 
 public class ProxyServlet implements Servlet
 {
