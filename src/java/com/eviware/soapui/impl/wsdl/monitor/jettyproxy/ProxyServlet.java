@@ -27,9 +27,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
+import org.apache.commons.httpclient.params.HostParams;
 import org.mortbay.util.IO;
 
 import com.eviware.soapui.SoapUI;
@@ -37,8 +39,10 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.LaunchForm;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.model.settings.Settings;
+import com.sun.swing.internal.plaf.synth.resources.synth;
 
 public class ProxyServlet implements Servlet
 {
@@ -96,13 +100,20 @@ public class ProxyServlet implements Servlet
 
 	}
 
-	public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException
+	public synchronized void service(ServletRequest request, ServletResponse response) throws ServletException,
+			IOException
 	{
 
+		HttpMethodBase method;
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		if (httpRequest.getMethod().equals("GET"))
+			method = new ExtendedGetMethod();
+		else
+			method = new ExtendedPostMethod();
+
+		System.err.println(httpRequest.getMethod());
 
 		// for this create ui server and port, properties.
-		ExtendedPostMethod postMethod = new ExtendedPostMethod();
 
 		if (capturedData == null)
 		{
@@ -147,55 +158,73 @@ public class ProxyServlet implements Servlet
 				String val = (String) vals.nextElement();
 				if (val != null)
 				{
-					postMethod.setRequestHeader(lhdr, val);
+					method.setRequestHeader(lhdr, val);
 					xForwardedFor |= "X-Forwarded-For".equalsIgnoreCase(hdr);
 				}
 			}
 		}
 
 		// Proxy headers
-		postMethod.setRequestHeader("Via", "SoapUI Monitor");
+		method.setRequestHeader("Via", "SoapUI Monitor");
 		if (!xForwardedFor)
-			postMethod.addRequestHeader("X-Forwarded-For", request.getRemoteAddr());
+			method.addRequestHeader("X-Forwarded-For", request.getRemoteAddr());
 
-		postMethod.setRequestEntity(new InputStreamRequestEntity(capture, "text/xml; charset=utf-8"));
-		
+		if (method instanceof ExtendedPostMethod)
+			((ExtendedPostMethod) method)
+					.setRequestEntity(new InputStreamRequestEntity(capture, "text/xml; charset=utf-8"));
+
 		HostConfiguration hostConfiguration = new HostConfiguration();
-		
-		String url = "http://"+httpRequest.getServerName()+ ":" + httpRequest.getServerPort() + httpRequest.getServletPath();
-		hostConfiguration.setHost(new URI(url, true));
-		postMethod.setPath(url);
-		
-		SoapUI.log("PROXY to:"+url);
-		
+
+		StringBuffer url = new StringBuffer("http://");
+		url.append(httpRequest.getServerName());
+		if (httpRequest.getServerPort() != 80)
+			url.append(":" + httpRequest.getServerPort());
+		if (httpRequest.getServletPath() != null)
+		{
+			url.append(httpRequest.getServletPath());
+			method.setPath(httpRequest.getServletPath());
+			if (httpRequest.getQueryString() != null) {
+				url.append("?" + httpRequest.getQueryString());
+ 				method.setPath(httpRequest.getServletPath() + "?" + httpRequest.getQueryString());
+			}
+		}
+		hostConfiguration.setHost(new URI(url.toString(), true));
+
+		SoapUI.log("PROXY to:" + url);
+
 		if (settings.getBoolean(LaunchForm.SSLTUNNEL_REUSESTATE))
 		{
-			if ( httpState == null ) 
+			if (httpState == null)
 				httpState = new HttpState();
-			client.executeMethod(hostConfiguration, postMethod, httpState);
+			client.executeMethod(hostConfiguration, method, httpState);
 		}
 		else
 		{
-			client.executeMethod(hostConfiguration, postMethod);
+			client.executeMethod(hostConfiguration, method);
 		}
-		
+
 		// wait for transaction to end and store it.
+		if (capturedData == null)
+		{
+
+			int i = 0;
+			i++;
+		}
 		capturedData.stopCapture();
-		byte[] res = postMethod.getResponseBody();
-		IO.copy(new ByteArrayInputStream(postMethod.getResponseBody()), response.getOutputStream());
+		byte[] res = method.getResponseBody();
+		IO.copy(new ByteArrayInputStream(method.getResponseBody()), response.getOutputStream());
 		capturedData.setRequest(capture.getCapturedData());
 		capturedData.setResponse(res);
-		capturedData.setResponseHeader(postMethod);
-		capturedData.setRawRequestData(getRequestToBytes(postMethod, capture));
-		capturedData.setRawResponseData(getResponseToBytes(postMethod, res));
+		capturedData.setResponseHeader(method);
+		capturedData.setRawRequestData(getRequestToBytes(method, capture));
+		capturedData.setRawResponseData(getResponseToBytes(method, res));
 		monitor.addMessageExchange(capturedData);
 		capturedData = null;
 
-		postMethod.releaseConnection();
+		method.releaseConnection();
 	}
 
-
-	private byte[] getResponseToBytes(ExtendedPostMethod postMethod, byte[] res)
+	private byte[] getResponseToBytes(HttpMethodBase postMethod, byte[] res)
 	{
 		String response = "";
 
@@ -210,7 +239,7 @@ public class ProxyServlet implements Servlet
 		return response.getBytes();
 	}
 
-	private byte[] getRequestToBytes(ExtendedPostMethod postMethod, CaptureInputStream capture)
+	private byte[] getRequestToBytes(HttpMethodBase postMethod, CaptureInputStream capture)
 	{
 		String request = "";
 

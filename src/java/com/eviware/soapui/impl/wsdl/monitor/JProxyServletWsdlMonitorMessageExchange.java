@@ -30,6 +30,7 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Document;
 
@@ -462,7 +463,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
       return null;
    }
 
-   public void setResponseHeader( ExtendedPostMethod method )
+   public void setResponseHeader( HttpMethodBase method )
    {
       Header[] headers = method.getResponseHeaders();
       for( Header header : headers )
