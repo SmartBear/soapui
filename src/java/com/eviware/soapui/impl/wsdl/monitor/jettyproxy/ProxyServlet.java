@@ -111,8 +111,6 @@ public class ProxyServlet implements Servlet
 		else
 			method = new ExtendedPostMethod();
 
-		System.err.println(httpRequest.getMethod());
-
 		// for this create ui server and port, properties.
 
 		if (capturedData == null)
@@ -204,12 +202,6 @@ public class ProxyServlet implements Servlet
 		}
 
 		// wait for transaction to end and store it.
-		if (capturedData == null)
-		{
-
-			int i = 0;
-			i++;
-		}
 		capturedData.stopCapture();
 		byte[] res = method.getResponseBody();
 		IO.copy(new ByteArrayInputStream(method.getResponseBody()), response.getOutputStream());
