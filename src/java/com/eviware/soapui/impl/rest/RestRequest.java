@@ -506,6 +506,9 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
    private String createXmlResponse( HttpResponse response )
    {
+   	if( response == null )
+   		return "<xml/>";
+   	
       MediaTypeHandler typeHandler = MediaTypeHandlerRegistry.getTypeHandler( response.getContentType() );
       if( typeHandler != null )
          return typeHandler.createXmlRepresentation( response );
