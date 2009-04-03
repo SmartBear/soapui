@@ -94,7 +94,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
       String projectFile = getProjectFile();
 
 //		WsdlProject project = new WsdlProject( projectFile, getProjectPassword() );
-      WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew( projectFile, getProjectPassword() );
+      project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew( projectFile, getProjectPassword() );
       if( project.isDisabled() )
          throw new Exception( "Failed to load soapUI project file [" + projectFile + "]" );
 
