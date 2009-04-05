@@ -12,29 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.monitor;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MultipartMessageSupport;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
-import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
-import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
-import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.settings.WsdlSettings;
-import com.eviware.soapui.support.Tools;
-import com.eviware.soapui.support.types.StringToStringMap;
-import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpMethodBase;
-import org.apache.xmlbeans.XmlObject;
-import org.w3c.dom.Document;
-
-import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -44,6 +21,29 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HttpMethodBase;
+import org.apache.xmlbeans.XmlObject;
+import org.w3c.dom.Document;
+
+import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MultipartMessageSupport;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
+import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.model.iface.Operation;
+import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
+import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 {
@@ -130,15 +130,12 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
    @Override
    public void prepare( IncomingWss incomingRequestWss, IncomingWss incomingResponseWss )
    {
-
       parseRequestData( incomingRequestWss );
       parseReponseData( incomingResponseWss );
-
    }
 
    private void parseReponseData( IncomingWss incomingResponseWss )
    {
-
       ByteArrayInputStream in = new ByteArrayInputStream( response == null ? new byte[0] : response );
       try
       {
@@ -148,13 +145,13 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
          {
             StringToStringMap values = StringToStringMap.fromHttpHeader( responseContentType );
             responseMmSupport = new MultipartMessageSupport( new MonitorMessageExchangeDataSource( "monitor response",
-                    in, responseContentType ), values.get( "start" ), null, true, SoapUI.getSettings().getBoolean(
-                    WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES ) );
+                    in, responseContentType ), values.get( "start" ), null, true, false );
             responseContentType = responseMmSupport.getRootPart().getContentType();
          }
          else
          {
-            this.responseContent = XmlUtils.prettyPrintXml( Tools.readAll( in, 0 ).toString() );
+         	String charset = getCharset( responseHeaders );
+            this.responseContent = charset == null ? Tools.readAll( in, 0 ).toString() : Tools.readAll( in, 0 ).toString( charset );
          }
 
          processResponseWss( incomingResponseWss );
@@ -211,13 +208,13 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
          {
             StringToStringMap values = StringToStringMap.fromHttpHeader( requestContentType );
             requestMmSupport = new MultipartMessageSupport( new MonitorMessageExchangeDataSource( "monitor request", in,
-                    requestContentType ), values.get( "start" ), null, true, SoapUI.getSettings().getBoolean(
-                    WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES ) );
+                    requestContentType ), values.get( "start" ), null, true, false );
             requestContentType = requestMmSupport.getRootPart().getContentType();
          }
          else
          {
-            this.requestContent = XmlUtils.prettyPrintXml( Tools.readAll( in, 0 ).toString() );
+         	String charset = getCharset( requestHeaders );
+            this.requestContent = charset == null ? Tools.readAll( in, 0 ).toString() : Tools.readAll( in, 0 ).toString( charset );
          }
 
          processRequestWss( incomingRequestWss );
@@ -235,9 +232,37 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
             e1.printStackTrace();
          }
       }
-
    }
 
+   private static String getCharset( StringToStringMap headers )
+   {
+   	 String requestContentType = headers.get( "Content-Type" );
+       if( requestContentType != null )
+       {
+      	 StringToStringMap values = StringToStringMap.fromHttpHeader( requestContentType );
+      	 if( values.containsKey( "charset" ))
+                return values.get( "charset");
+       }
+
+       String contentEncodingHeader = headers.get( "Content-Encoding" );
+       if( contentEncodingHeader != null )
+       {
+          try
+          {
+             if( CompressionSupport.getAvailableAlgorithm( contentEncodingHeader ) == null )
+             {
+                new String( "" ).getBytes( contentEncodingHeader );
+                return contentEncodingHeader;
+             }
+          }
+          catch( Exception e )
+          {
+          }
+       }
+
+       return null;
+   }
+   
    private WsdlOperation findOperation() throws Exception
    {
       soapVersion = SoapUtils.deduceSoapVersion( requestContentType, XmlObject.Factory.parse( getRequestContent() ) );
