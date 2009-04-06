@@ -21,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
@@ -35,6 +36,7 @@ import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 public class TunnelServlet extends ProxyServlet
 {
@@ -152,14 +154,25 @@ public class TunnelServlet extends ProxyServlet
 		capturedData.stopCapture();
 
 		byte[] res = postMethod.getResponseBody();
-		IO.copy(new ByteArrayInputStream(postMethod.getResponseBody()), response.getOutputStream());
 		capturedData.setRequest(capture.getCapturedData());
 		capturedData.setResponse(res);
 		capturedData.setResponseHeader(postMethod);
 		capturedData.setRawRequestData(getRequestToBytes(postMethod, capture));
 		capturedData.setRawResponseData(getResponseToBytes(postMethod, res));
 		monitor.addMessageExchange(capturedData);
+
+		StringToStringMap responseHeaders = capturedData.getResponseHeaders();
 		capturedData = null;
+		// copy headers to response
+		HttpServletResponse httpResponse =  (HttpServletResponse) response;
+		for (String name: responseHeaders.keySet())
+		{
+			String header = responseHeaders.get(name);
+			httpResponse.addHeader(name, header);
+			
+		}
+		
+		IO.copy(new ByteArrayInputStream(res), httpResponse.getOutputStream());
 
 		postMethod.releaseConnection();
 

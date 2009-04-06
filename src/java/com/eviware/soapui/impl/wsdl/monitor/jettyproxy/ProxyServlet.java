@@ -23,6 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
@@ -41,6 +42,7 @@ import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 public class ProxyServlet implements Servlet
 {
@@ -179,9 +181,10 @@ public class ProxyServlet implements Servlet
 		{
 			url.append(httpRequest.getServletPath());
 			method.setPath(httpRequest.getServletPath());
-			if (httpRequest.getQueryString() != null) {
+			if (httpRequest.getQueryString() != null)
+			{
 				url.append("?" + httpRequest.getQueryString());
- 				method.setPath(httpRequest.getServletPath() + "?" + httpRequest.getQueryString());
+				method.setPath(httpRequest.getServletPath() + "?" + httpRequest.getQueryString());
 			}
 		}
 		hostConfiguration.setHost(new URI(url.toString(), true));
@@ -201,16 +204,29 @@ public class ProxyServlet implements Servlet
 
 		// wait for transaction to end and store it.
 		capturedData.stopCapture();
+		
 		byte[] res = method.getResponseBody();
-		IO.copy(new ByteArrayInputStream(method.getResponseBody()), response.getOutputStream());
+
 		capturedData.setRequest(capture.getCapturedData());
 		capturedData.setResponse(res);
 		capturedData.setResponseHeader(method);
 		capturedData.setRawRequestData(getRequestToBytes(method, capture));
 		capturedData.setRawResponseData(getResponseToBytes(method, res));
 		monitor.addMessageExchange(capturedData);
-		capturedData = null;
 
+		StringToStringMap responseHeaders = capturedData.getResponseHeaders();
+		capturedData = null;
+		
+		// copy headers to response
+		HttpServletResponse httpResponse = (HttpServletResponse) response;
+		for (String name : responseHeaders.keySet())
+		{
+			String header = responseHeaders.get(name);
+			httpResponse.addHeader(name, header);
+
+		}
+		IO.copy(new ByteArrayInputStream(res), httpResponse.getOutputStream());
+		
 		method.releaseConnection();
 	}
 
