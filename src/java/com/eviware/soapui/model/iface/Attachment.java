@@ -49,4 +49,6 @@ public interface Attachment
 	public enum AttachmentEncoding { BASE64, HEX, NONE }
 	
 	public AttachmentEncoding getEncoding();
+
+	public String getContentEncoding();
 }

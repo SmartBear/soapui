@@ -12,18 +12,25 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+
+import javax.mail.BodyPart;
+import javax.mail.MessagingException;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpOperation;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.support.Tools;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
-
-import javax.mail.BodyPart;
-import javax.mail.MessagingException;
-import java.io.*;
-import java.net.MalformedURLException;
 
 /**
  * Attachment for a BodyPart
@@ -226,4 +233,15 @@ public class BodyPartAttachment implements Attachment
    {
       this.attachmentType = attachmentType;
    }
+
+	public String getContentEncoding()
+	{
+		AttachmentEncoding encoding = getEncoding();
+		if( encoding == AttachmentEncoding.BASE64)
+			return "base64";
+		else if( encoding == AttachmentEncoding.HEX)
+			return "hex";
+		else
+			return "binary";
+	}
 }

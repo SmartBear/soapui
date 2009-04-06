@@ -1025,7 +1025,11 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 
    public AttachmentEncoding getAttachmentEncoding( String partName )
    {
-      return AttachmentUtils.getAttachmentEncoding( getMockOperation().getOperation(), partName, true );
+   	HttpAttachmentPart attachmentPart = getAttachmentPart( partName );
+		if( attachmentPart == null )
+			return AttachmentUtils.getAttachmentEncoding( getOperation(), partName, true );
+		else
+			return AttachmentUtils.getAttachmentEncoding( getOperation(), attachmentPart, true );
    }
 
    public WsaConfig getWsaConfig()

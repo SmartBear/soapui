@@ -15,6 +15,8 @@ package com.eviware.soapui.impl.wsdl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.xmlbeans.SchemaType;
+
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.MessagePart;
 
@@ -31,6 +33,7 @@ public final class HttpAttachmentPart extends MessagePart.AttachmentPart
 	private List<String> contentTypes = new ArrayList<String>();
 	private Attachment.AttachmentType type;
 	private boolean anonymous;
+	private SchemaType schemaType;
 	
 	public HttpAttachmentPart()
 	{
@@ -88,5 +91,15 @@ public final class HttpAttachmentPart extends MessagePart.AttachmentPart
 	public boolean isAnonymous()
 	{
 		return anonymous;
-	}; 
+	}
+
+	public SchemaType getSchemaType()
+	{
+		return schemaType;
+	}
+
+	public void setSchemaType( SchemaType schemaType )
+	{
+		this.schemaType = schemaType;
+	}
 }

@@ -12,6 +12,22 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.log4j.Logger;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
@@ -19,14 +35,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.BeanPathPropertySupport;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.resolver.ResolveContext;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
-import org.apache.log4j.Logger;
-
-import java.io.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 /**
  * Attachments cached locally for each request
@@ -150,7 +158,11 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 
 	public String getContentType()
 	{
-		return config.getContentType();
+		AttachmentEncoding encoding = getEncoding();
+		if( encoding == AttachmentEncoding.NONE)
+			return config.getContentType();
+		else
+			return "application/octet-stream";
 	}
 
 	public InputStream getInputStream() throws IOException
@@ -294,11 +306,23 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 		return config.getContentId();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void resolve( ResolveContext context)
 	{
 		if( isCached() )
 			return;
 		
 		urlProperty.resolveFile( context, "Missing attachment [" + getName() + "]", null, null, false );
+	}
+	
+	public String getContentEncoding()
+	{
+		AttachmentEncoding encoding = getEncoding();
+		if( encoding == AttachmentEncoding.BASE64)
+			return "base64";
+		else if( encoding == AttachmentEncoding.HEX)
+			return "hex";
+		else
+			return "binary";
 	}
 }
