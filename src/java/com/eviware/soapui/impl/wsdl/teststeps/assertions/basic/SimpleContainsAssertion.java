@@ -124,6 +124,17 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 		setConfiguration( createConfiguration() );
 		return true;
 	}
+	
+	public boolean isUseRegEx()
+	{
+		return useRegEx;
+	}
+
+	public void setUseRegEx( boolean useRegEx )
+	{
+		this.useRegEx = useRegEx;
+		setConfiguration( createConfiguration() );
+	}
 
 	public boolean isIgnoreCase()
 	{
