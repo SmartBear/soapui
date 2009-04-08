@@ -131,6 +131,31 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 			dialog.setVisible(true);
 		}
 	}
+	
+	/**
+	 * Perform an 
+	 * @param target
+	 * @param param
+	 */
+	public void performHeadless( T target, Object param )
+    {
+        this.valuesSettingID = this.getClass().getName() + "@values";
+        if (target == null)
+            this.valuesSettingID += "-global";
+        else
+            this.valuesSettingID += "-local";
+        
+        modelItem = target;
+        
+        try
+        {
+            generate(initValues( ( T ) target, param ), UISupport.getToolHost(), ( T ) target );
+        }
+        catch (Exception e1)
+        {
+            UISupport.showErrorMessage(e1);
+        }
+    }
 
 	protected StringToStringMap initValues( T modelItem, Object param )
 	{
