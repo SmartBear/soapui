@@ -14,24 +14,10 @@ package com.eviware.soapui.tools;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.axis1.Axis1XWSDL2JavaAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.axis2.Axis2WSDL2CodeAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.cxf.CXFAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.dotnet.DotNetWsdlAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.gsoap.GSoapAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.jaxb.JaxbXjcAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.JBossWSConsumeAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.WSToolsWsdl2JavaAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.oracle.OracleWsaGenProxyAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.RunnerContext;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolHost;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolRunner;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.wscompile.WSCompileAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIAnalyzeAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsimport.WSImportAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.xfire.XFireAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans.XmlBeans2Action;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.support.UISupport;
@@ -47,6 +33,7 @@ import java.io.File;
  * calling run</p>
  *
  * @author Ole.Matzura
+ * @author <a href="mailto:nenadn@eviware.com">Nenad V. Nikolic</a>
  */
 
 public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, RunnerContext
@@ -105,7 +92,6 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
       if( !new File( projectFile ).exists() )
          throw new Exception( "soapUI project file [" + projectFile + "] not found" );
 
-//		WsdlProject project = new WsdlProject( projectFile, getProjectPassword() );
       WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew( projectFile, getProjectPassword() );
 
       log.info( "Running tools [" + tool + "] for interface [" + iface + "] in project [" + project.getName() + "]" );
@@ -128,84 +114,31 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
    }
 
    /**
-    * Runs the configured tool(s) for the specified interface.. needs to be refactored to use
-    * some kind of registry/factory pattern for tools
+    * Runs the configured tool(s) for the specified interface.
     *
-    * @param iface
+    * @param iface an interface that exposes an invokable operation
     */
-
    public void runTool( Interface iface )
    {
       AbstractToolsAction<Interface> action = null;
 
       String[] tools = tool.split( "," );
-      for( String tool : tools )
+      for( String toolName : tools )
       {
-         if( tool == null || tool.trim().length() == 0 )
+         if( toolName == null || toolName.trim().length() == 0 )
             continue;
 
-         if( tool.equals( "axis1" ) )
-         {
-            action = new Axis1XWSDL2JavaAction();
-         }
-         else if( tool.equals( "axis2" ) )
-         {
-            action = new Axis2WSDL2CodeAction();
-         }
-         else if( tool.equals( "dotnet" ) )
-         {
-            action = new DotNetWsdlAction();
-         }
-         else if( tool.equals( "gsoap" ) )
-         {
-            action = new GSoapAction();
-         }
-         else if( tool.equals( "jaxb" ) )
-         {
-            action = new JaxbXjcAction();
-         }
-         else if( tool.equals( "wstools" ) )
-         {
-            action = new WSToolsWsdl2JavaAction();
-         }
-         else if( tool.equals( "wscompile" ) )
-         {
-            action = new WSCompileAction();
-         }
-         else if( tool.equals( "wsimport" ) )
-         {
-            action = new WSImportAction();
-         }
-         else if( tool.equals( "wsconsume" ) )
-         {
-            action = new JBossWSConsumeAction();
-         }
-         else if( tool.equals( "xfire" ) )
-         {
-            action = new XFireAction();
-         }
-         else if( tool.equals( "cxf" ) )
-         {
-            action = new CXFAction();
-         }
-         else if( tool.equals( "xmlbeans" ) )
-         {
-            action = new XmlBeans2Action();
-         }
-         else if( tool.equals( "ora" ) )
-         {
-            action = new OracleWsaGenProxyAction();
-         }
-         else if( tool.equals( "wsi" ) )
-         {
-            action = new WSIAnalyzeAction();
-         }
-
+         action = ToolActionFactory.createToolAction(toolName);
          try
          {
-            log.info( "Running tool [" + tool +
-                    "] for Interface [" + iface.getName() + "]" );
-            action.perform( iface, null );
+         	if (action != null) {
+	            log.info( "Running tool [" + toolName +
+	                    "] for Interface [" + iface.getName() + "]" );
+	            action.performHeadless( iface, null );
+         	} else {
+         		log.error( "Specified tool [" + toolName + 
+         				"] is unknown or unsupported." );         		
+         	}
          }
          catch( Exception e )
          {
