@@ -70,7 +70,8 @@ public class RestRequestFilter extends AbstractRequestFilter
 
       StringToStringMap responseProperties = (StringToStringMap) context.getProperty( BaseHttpRequestTransport.RESPONSE_PROPERTIES );
 
-      MimeMultipart formMp = "multipart/form-data".equals( request.getMediaType() ) ? new MimeMultipart() : null;
+      MimeMultipart formMp = "multipart/form-data".equals( request.getMediaType() ) && 
+      	httpMethod instanceof EntityEnclosingMethod ? new MimeMultipart() :	null;
 
       XmlBeansRestParamsTestPropertyHolder params = request.getParams();
       for( int c = 0; c < params.getPropertyCount(); c++ )
