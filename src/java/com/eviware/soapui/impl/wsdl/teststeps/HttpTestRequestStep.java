@@ -316,7 +316,7 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
       testStepResult.setUsername( PropertyExpansionUtils.expandProperties( runContext, testRequest.getUsername() ) );
       testStepResult.setEndpoint( PropertyExpansionUtils.expandProperties( runContext, testRequest.getEndpoint() ) );
       testStepResult.setPassword( PropertyExpansionUtils.expandProperties( runContext, testRequest.getPassword() ) );
-      testStepResult.setEncoding( PropertyExpansionUtils.expandProperties( runContext, testRequest.getEncoding() ) );
+      testStepResult.setEncoding( testRequest.getEncoding() );
 
       if( testStepResult.getStatus() != TestStepStatus.CANCELED )
       {

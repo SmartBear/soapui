@@ -18,6 +18,8 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
+
+import org.apache.commons.codec.binary.Base64;
 import org.apache.ws.security.WSPasswordCallback;
 import org.apache.ws.security.WSSecurityEngine;
 import org.apache.ws.security.WSSecurityException;
@@ -25,6 +27,8 @@ import org.apache.ws.security.components.crypto.Crypto;
 import org.apache.ws.security.util.WSSecurityUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import sun.misc.BASE64Decoder;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -112,7 +116,7 @@ public class IncomingWss
 				dec = sig;
 			
 			return wssecurityEngine.processSecurityHeader( soapDocument, (String)null, 
-								new WSSCallbackHandler(), sig, dec );
+								new WSSCallbackHandler( dec ), sig, dec );
 		}
 		catch( WSSecurityException e )
 		{
@@ -123,6 +127,13 @@ public class IncomingWss
 
 	public class WSSCallbackHandler implements CallbackHandler
 	{
+		private final Crypto dec;
+
+		public WSSCallbackHandler(Crypto dec)
+		{
+			this.dec = dec;
+		}
+
 		public void handle( Callback[] callbacks ) throws IOException, UnsupportedCallbackException
 		{
 			for( Callback callback : callbacks )
@@ -134,6 +145,11 @@ public class IncomingWss
 						cb.setPassword( getDecryptPassword() );
 					else
 						cb.setPassword( UISupport.prompt( "Password required for WSS processing", "Specify Password", "" ));
+					
+					if( cb.getUsage() == WSPasswordCallback.ENCRYPTED_KEY_TOKEN )
+					{
+						byte[] str = Base64.decodeBase64( cb.getIdentifier().getBytes());
+					}
 				}
 			}
 		}

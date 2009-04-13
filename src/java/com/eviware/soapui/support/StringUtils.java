@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
@@ -326,6 +327,20 @@ public class StringUtils
 		}
 		buf.append(data.substring(i));
 		return buf.toString();
+	}
+
+	public static String fixLineSeparator( String xml ) throws UnsupportedEncodingException
+	{
+		if( "\r\n".equals( System.getProperty( "line.separator" ) ) )
+		{
+			xml = xml.replaceAll( "\r[^\n]", System.getProperty( "line.separator" ) );
+		}
+		else
+		{
+			xml = xml.replaceAll( "\r\n", System.getProperty( "line.separator" ) );
+		}
+	
+		return xml;
 	}
 
 }

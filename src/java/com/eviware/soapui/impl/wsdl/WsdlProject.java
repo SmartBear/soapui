@@ -15,11 +15,9 @@ package com.eviware.soapui.impl.wsdl;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
@@ -639,8 +637,17 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		// working with it
 		// if user choose save project, save all etc.
 		SoapuiProjectDocumentConfig projectDocument = ( SoapuiProjectDocumentConfig )this.projectDocument.copy();
+
+		// check for caching
+		if( !getSettings().getBoolean( WsdlSettings.CACHE_WSDLS ) )
+		{
+			// no caching -> create copy and remove definition cachings
+			removeDefinitionCaches( projectDocument );
+		}
+
 		// check for encryption
 		String passwordForEncryption = getSettings().getString( ProjectSettings.SHADOW_PASSWORD, null );
+
 		// if it has encryptedContend that means it is not decrypted corectly( bad
 		// password, etc ), so do not encrypt it again.
 		if( projectDocument.getSoapuiProject().getEncryptedContent() == null )
@@ -680,67 +687,38 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		if( SoapUI.getSettings().getBoolean( WsdlSettings.PRETTY_PRINT_PROJECT_FILES ) )
 			options.setSavePrettyPrint();
 
-		// check for caching
-		if( !getSettings().getBoolean( WsdlSettings.CACHE_WSDLS ) )
-		{
-			// no caching -> create copy and remove definition cachings
-			SoapuiProjectDocumentConfig config = ( SoapuiProjectDocumentConfig )projectDocument.copy();
-			removeDefinitionCaches( config );
+		projectDocument.getSoapuiProject().setSoapuiVersion( SoapUI.SOAPUI_VERSION );
 
-			config.getSoapuiProject().setSoapuiVersion( SoapUI.SOAPUI_VERSION );
-			ByteArrayOutputStream writer = new ByteArrayOutputStream( 8192 );
-			config.save( writer, options );
-			FileOutputStream out = new FileOutputStream( projectFile );
-			String tmpBuffer = fixLineSeparator( writer );
-			ByteArrayOutputStream writer2 = new ByteArrayOutputStream( 8192 );
-			writer2.write( tmpBuffer.getBytes( "utf-8" ) );
-			writer2.writeTo( out );
-			out.close();
-			size = writer.size();
-		}
-		else
+		try
 		{
-			try
-			{
-				// save to temporary buffer to avoid corruption of file
-				projectDocument.getSoapuiProject().setSoapuiVersion( SoapUI.SOAPUI_VERSION );
-				ByteArrayOutputStream writer = new ByteArrayOutputStream( 8192 );
-				projectDocument.save( writer, options );
-				FileOutputStream out = new FileOutputStream( projectFile );
-				String tmpBuffer = fixLineSeparator( writer );
-				ByteArrayOutputStream writer2 = new ByteArrayOutputStream( 8192 );
-				writer2.write( tmpBuffer.getBytes( "utf-8" ) );
-				writer2.writeTo( out );
-				out.close();
-				size = writer.size();
-			}
-			catch( Throwable t )
-			{
-				SoapUI.logError( t );
-				UISupport.showErrorMessage( "Failed to save project [" + getName() + "]: " + t.toString() );
-				return false;
-			}
+			String xml = projectDocument.xmlText( options );
+			xml = StringUtils.fixLineSeparator( xml );
+			FileOutputStream out = new FileOutputStream( projectFile );
+			out.write( xml.getBytes( "utf-8" ) );
+			out.close();
+			size = projectFile.length();
+
+			// ByteArrayOutputStream writer = new ByteArrayOutputStream(8192);
+			// projectDocument.save(writer, options);
+			// FileOutputStream out = new FileOutputStream(projectFile);
+			// String tmpBuffer = StringUtils.fixLineSeparator(writer);
+			// ByteArrayOutputStream writer2 = new ByteArrayOutputStream(8192);
+			// writer2.write(tmpBuffer.getBytes("utf-8"));
+			// writer2.writeTo(out);
+			// out.close();
+			// size = writer.size();
+		}
+		catch( Throwable t )
+		{
+			SoapUI.logError( t );
+			UISupport.showErrorMessage( "Failed to save project [" + getName() + "]: " + t.toString() );
+			return false;
 		}
 
 		lastModified = projectFile.lastModified();
 		log.info( "Saved project [" + getName() + "] to [" + projectFile.getAbsolutePath() + " - " + size + " bytes" );
-		setProjectRoot( path );
+		setProjectRoot( getPath() );
 		return true;
-	}
-
-	protected String fixLineSeparator( ByteArrayOutputStream writer ) throws UnsupportedEncodingException
-	{
-		String tmpBuffer = writer.toString( "utf-8" );
-		if( "\r\n".equals( System.getProperty( "line.separator" ) ) )
-		{
-			tmpBuffer = tmpBuffer.replaceAll( "\r[^\n]", System.getProperty( "line.separator" ) );
-		}
-		else
-		{
-			tmpBuffer = tmpBuffer.replaceAll( "\r\n", System.getProperty( "line.separator" ) );
-		}
-
-		return tmpBuffer;
 	}
 
 	public void beforeSave()
@@ -1299,6 +1277,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		return wssContainer;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void resolve( ResolveContext context )
 	{
@@ -1392,7 +1371,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	{
 		int result = 0;
 
-		for( AbstractInterface iface : interfaces )
+		for( AbstractInterface<?> iface : interfaces )
 		{
 			if( iface.getType().equals( type ) )
 				result++ ;
@@ -1401,11 +1380,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		return result;
 	}
 
-	public List<AbstractInterface> getInterfaces( String type )
+	public List<AbstractInterface<?>> getInterfaces( String type )
 	{
-		ArrayList<AbstractInterface> result = new ArrayList<AbstractInterface>();
+		ArrayList<AbstractInterface<?>> result = new ArrayList<AbstractInterface<?>>();
 
-		for( AbstractInterface iface : interfaces )
+		for( AbstractInterface<?> iface : interfaces )
 		{
 			if( iface.getType().equals( type ) )
 				result.add( iface );

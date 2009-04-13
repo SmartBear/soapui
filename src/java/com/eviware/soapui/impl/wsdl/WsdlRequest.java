@@ -576,4 +576,10 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		setWsAddressing( arg0 );
 
 	}
+
+	@Override
+	public String getResponseContentAsXml()
+	{
+		return getResponse() == null ? null : getResponse().getContentAsString();
+	}
 }

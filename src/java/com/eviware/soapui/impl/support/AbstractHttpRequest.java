@@ -612,4 +612,6 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
    {
       return StringUtils.hasContent( getEndpoint() );
    }
+
+	public abstract String getResponseContentAsXml();
 }
