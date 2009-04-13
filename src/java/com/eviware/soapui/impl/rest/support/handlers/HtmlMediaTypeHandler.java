@@ -12,16 +12,18 @@
 
 package com.eviware.soapui.impl.rest.support.handlers;
 
+import java.io.ByteArrayInputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+import org.apache.xmlbeans.XmlObject;
+import org.w3c.dom.Document;
+import org.w3c.tidy.Tidy;
+
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.w3c.dom.Document;
-import org.w3c.tidy.Tidy;
-
-import java.io.ByteArrayInputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 public class HtmlMediaTypeHandler implements MediaTypeHandler
 {
@@ -36,8 +38,19 @@ public class HtmlMediaTypeHandler implements MediaTypeHandler
       if( !StringUtils.hasContent( content ) )
          return "<xml/>";
 
+   	try
+		{
+			XmlObject xmlObject = XmlObject.Factory.parse( new ByteArrayInputStream( content.getBytes() ) );
+			return xmlObject.xmlText();
+		}
+		catch( Exception e )
+		{
+			// fall through, this wasn't xml
+		}
+            
       try
       {
+      	
          Tidy tidy = new Tidy();
          tidy.setXmlOut( true );
          tidy.setShowWarnings( false );
