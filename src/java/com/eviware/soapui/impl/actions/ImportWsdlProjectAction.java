@@ -43,7 +43,8 @@ public class ImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		
 		if( param == null )
 		{
-			file = UISupport.getFileDialogs().openXML(this, messages.get( "prompt.title"));
+			String path = new File( workspace.getPath()).getParentFile().getAbsolutePath();
+			file = UISupport.getFileDialogs().open(this, messages.get( "prompt.title"), "xml", "soapUI Project File", path );
 		}
 		else
 		{

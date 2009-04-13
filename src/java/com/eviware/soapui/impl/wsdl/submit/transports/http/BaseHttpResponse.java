@@ -19,6 +19,7 @@ import java.net.URL;
 
 import org.apache.commons.httpclient.Header;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.settings.Settings;
@@ -56,7 +57,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 		}
 		catch (Exception e1)
 		{
-			e1.printStackTrace();
+			SoapUI.logError( e1 );
 		}
 
       if( !httpMethod.isFailed() )
@@ -101,7 +102,7 @@ public abstract class BaseHttpResponse implements HttpResponse
          	rawResponseData.write( "\r\n".getBytes() );
       	}
       	
-         rawRequestData.write( ( method + " " + url.toString() + " " + version + "\r\n" ).getBytes() );
+         rawRequestData.write( ( method + " " + String.valueOf( url ) + " " + version + "\r\n" ).getBytes() );
 
          requestHeaders = new StringToStringMap();
          Header[] headers = httpMethod.getRequestHeaders();

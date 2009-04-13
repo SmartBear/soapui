@@ -38,6 +38,7 @@ import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.Request.SubmitException;
@@ -222,7 +223,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
             pathCombo = new JComboBox( new PathComboBoxModel() );
             pathCombo.setRenderer( new ModelItemListCellRenderer() );
             pathCombo.setPreferredSize( new Dimension( 200, 20 ) );
-            pathCombo.setSelectedItem( getRequest().getResource().getPath() );
+//            pathCombo.setSelectedItem( getRequest().getResource().getPath() );
 //            pathCombo.addItemListener( new ItemListener()
 //            {
 //               public void itemStateChanged( ItemEvent e )
@@ -464,7 +465,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
       public void setSelectedItem( Object anItem )
       {
-         ( (RestTestRequest) getRequest() ).setResource( (RestResource) anItem );
+         ((RestTestRequestStep) ((RestTestRequest)getRequest()).getTestStep()).setResource( (RestResource) anItem );
       }
 
       public Object getSelectedItem()

@@ -500,7 +500,9 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
    public void setResponse( HttpResponse response, SubmitContext context )
    {
-      response.setProperty( REST_XML_RESPONSE, createXmlResponse( response ) );
+   	if( response != null )
+   		response.setProperty( REST_XML_RESPONSE, createXmlResponse( response ) );
+   	
       super.setResponse( response, context );
    }
 
