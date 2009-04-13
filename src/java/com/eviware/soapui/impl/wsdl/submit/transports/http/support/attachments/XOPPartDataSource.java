@@ -38,14 +38,14 @@ public final class XOPPartDataSource implements DataSource
 	private final SchemaType schemaType;
 	private File source;
 
-	public XOPPartDataSource(String content, String contentType, SchemaType schemaType)
+	public XOPPartDataSource( String content, String contentType, SchemaType schemaType )
 	{
 		this.content = content;
 		this.contentType = contentType;
 		this.schemaType = schemaType;
 	}
-	
-	public XOPPartDataSource(File source, String contentType, SchemaType schemaType)
+
+	public XOPPartDataSource( File source, String contentType, SchemaType schemaType )
 	{
 		this.source = source;
 		this.contentType = contentType;
@@ -65,21 +65,25 @@ public final class XOPPartDataSource implements DataSource
 			{
 				return new FileInputStream( source );
 			}
-			if (SchemaUtils.isInstanceOf( schemaType, XmlHexBinary.type ))
+			if( SchemaUtils.isInstanceOf( schemaType, XmlHexBinary.type ) )
 			{
-				return new ByteArrayInputStream(Hex.decodeHex(content.toCharArray()));
+				return new ByteArrayInputStream( Hex.decodeHex( content.toCharArray() ) );
 			}
-			else if (SchemaUtils.isInstanceOf( schemaType, XmlBase64Binary.type ))
+			else if( SchemaUtils.isInstanceOf( schemaType, XmlBase64Binary.type ) )
 			{
-				return new ByteArrayInputStream( Base64.decodeBase64( content.getBytes() ));
+				return new ByteArrayInputStream( Base64.decodeBase64( content.getBytes() ) );
 			}
-			else throw new IOException( "Invalid type for XOPPartDataSource; " + schemaType.getName() );
+			else
+			{
+				SoapUI.log.warn( "Unexpected type for XOPPartDataSource; " + schemaType.getName() );
+				return new ByteArrayInputStream( content.getBytes() );
+			}
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
 			SoapUI.logError( e );
 			throw new IOException( e.toString() );
-		}			
+		}
 	}
 
 	public String getName()
