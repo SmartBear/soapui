@@ -75,7 +75,6 @@ public class WsdlLoadTestRunner implements LoadTestRunner
       startTime = System.currentTimeMillis();
 
       runners.clear();
-      loadTest.addPropertyChangeListener( WsdlLoadTest.THREADCOUNT_PROPERTY, internalPropertyChangeListener );
       runCount = 0;
       threadCount = 0;
       threadsWaitingToStart = 0;
@@ -89,7 +88,6 @@ public class WsdlLoadTestRunner implements LoadTestRunner
       {
          SoapUI.logError( e1 );
       }
-      ;
 
       status = Status.RUNNING;
 
@@ -104,6 +102,8 @@ public class WsdlLoadTestRunner implements LoadTestRunner
             SoapUI.logError( e );
          }
       }
+      
+      loadTest.addPropertyChangeListener( WsdlLoadTest.THREADCOUNT_PROPERTY, internalPropertyChangeListener );
 
       loadTest.getLoadTestLog().addEntry(
               new LoadTestLogMessageEntry( "LoadTest started at " + new Date( startTime ) ) );
@@ -218,11 +218,14 @@ public class WsdlLoadTestRunner implements LoadTestRunner
       }
    }
 
+   /**
+    * Starts thread the calls the current strategy to recalculate
+    */
+   
    private void startStrategyThread()
    {
       new Thread( new Runnable()
       {
-
          public void run()
          {
             while( getStatus() == Status.RUNNING )
@@ -368,7 +371,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
       }
 
       runners.remove( runner );
-      if( runners.size() == 0 && threadsWaitingToStart == 0 )
+      if( runners.size() == 0 && threadsWaitingToStart == 0 && (getProgress() >= 1 || status != Status.RUNNING))
       {
          loadTest.removePropertyChangeListener( WsdlLoadTest.THREADCOUNT_PROPERTY,
                  internalPropertyChangeListener );

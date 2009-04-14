@@ -215,7 +215,7 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
    public void setThreadCount( long threadCount )
    {
       long oldCount = getThreadCount();
-      if( threadCount < 1 || threadCount == oldCount )
+      if( threadCount == oldCount )
          return;
 
       if( getLogStatisticsOnThreadChange() && isRunning() )

@@ -20,9 +20,7 @@ import javax.swing.text.Document;
 
 import org.apache.xmlbeans.XmlObject;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
-import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTestRunner;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.LoadTestRunner.Status;
@@ -44,81 +42,101 @@ public class BurstLoadStrategy extends AbstractLoadStrategy
 	private static final String BURST_DELAY_ELEMENT = "burstDelay";
 	private static final int DEFAULT_BURST_DURATION = 10000;
 	private static final int DEFAULT_BURST_DELAY = 60000;
-	private static final int SLEEP_DELAY = 500;
 	public static final String STRATEGY_TYPE = "Burst";
-	private JPanel configPanel;	
-	
+	private JPanel configPanel;
+
 	private int burstDelay = DEFAULT_BURST_DELAY;
 	private int burstDuration = DEFAULT_BURST_DURATION;
 	private long startTime;
 	private JTextField delayField;
 	private JTextField durationField;
 	private JLabel infoLabel;
+	private long threadCount;
 
 	public BurstLoadStrategy( WsdlLoadTest loadTest )
 	{
 		super( STRATEGY_TYPE, loadTest );
-		
+
 		burstDelay = DEFAULT_BURST_DELAY;
 		burstDuration = DEFAULT_BURST_DURATION;
 	}
 
-	public BurstLoadStrategy(XmlObject config, WsdlLoadTest loadTest)
+	public BurstLoadStrategy( XmlObject config, WsdlLoadTest loadTest )
 	{
 		super( STRATEGY_TYPE, loadTest );
-		
+
 		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( config );
 		burstDelay = reader.readInt( BURST_DELAY_ELEMENT, DEFAULT_BURST_DELAY );
 		burstDuration = reader.readInt( BURST_DURATION_ELEMENT, DEFAULT_BURST_DURATION );
 	}
 
-	public void beforeLoadTest(LoadTestRunner loadTestRunner, LoadTestRunContext context)
+	public void beforeLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
 		startTime = System.currentTimeMillis();
 		if( infoLabel != null )
 			infoLabel.setText( "starting.." );
+
+		WsdlLoadTest wsdlLoadTest = ( WsdlLoadTest )loadTestRunner.getLoadTest();
+		threadCount = wsdlLoadTest.getThreadCount();
+		wsdlLoadTest.setThreadCount( 0 );
 	}
 
 	public void recalculate( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
 		// get time passed since start of test
 		long timePassed = System.currentTimeMillis() - startTime;
-		
+
 		// wait during burstDelay period
-		long mod = timePassed % (burstDelay + burstDuration);
-		while( (mod < burstDelay) && (loadTestRunner.getStatus() == Status.RUNNING || loadTestRunner.getStatus() == Status.INITIALIZED ))
-		{
-			try
-			{
-				String label = (burstDelay-mod)/1000 + "s delay left";
-				if( infoLabel != null && !infoLabel.getText().equals( label ))
-					infoLabel.setText( label );
-				
-				Thread.sleep( SLEEP_DELAY );
-				if( ((WsdlLoadTestRunner)loadTestRunner).getProgress() >= 1 && infoLabel != null )
-				{
-					infoLabel.setText( "" );
-					return;
-				}
-				
-				timePassed = System.currentTimeMillis() - startTime;
-				mod = timePassed % (burstDelay + burstDuration);
-			}
-			catch (InterruptedException e)
-			{
-				SoapUI.logError( e );
-			}
-		}
-		
+
+		// while( (mod < burstDelay) && (loadTestRunner.getStatus() ==
+		// Status.RUNNING || loadTestRunner.getStatus() == Status.INITIALIZED ))
+		// {
+		// try
+		// {
+		// String label = (burstDelay-mod)/1000 + "s delay left";
+		// if( infoLabel != null && !infoLabel.getText().equals( label ))
+		// infoLabel.setText( label );
+		//				
+		// Thread.sleep( SLEEP_DELAY );
+		// if( ((WsdlLoadTestRunner)loadTestRunner).getProgress() >= 1 &&
+		// infoLabel != null )
+		// {
+		// infoLabel.setText( "" );
+		// return;
+		// }
+		//				
+		// timePassed = System.currentTimeMillis() - startTime;
+		// mod = timePassed % (burstDelay + burstDuration);
+		// }
+		// catch (InterruptedException e)
+		// {
+		// SoapUI.logError( e );
+		// }
+		// }
+
 		if( loadTestRunner.getStatus() == Status.RUNNING )
 		{
-			String label = ((burstDelay + burstDuration) - mod)/1000 + "s burst left";
-			if( infoLabel != null && !infoLabel.getText().equals( label ))
+			WsdlLoadTest wsdlLoadTest = ( WsdlLoadTest )loadTestRunner.getLoadTest();
+			String label = null;
+			
+			long mod = timePassed % ( burstDelay + burstDuration );
+			if( mod < burstDelay )
+			{
+				wsdlLoadTest.setThreadCount( 0 );
+				label = ( burstDelay - mod ) / 1000 + "s delay left";
+			}
+			else
+			{
+				wsdlLoadTest.setThreadCount( threadCount );
+				label = ( ( burstDelay + burstDuration ) - mod ) / 1000 + "s burst left";
+			}
+			
+			if( infoLabel != null && !infoLabel.getText().equals( label ) )
 				infoLabel.setText( label );
 		}
 	}
 
-	public void afterLoadTest(LoadTestRunner loadTestRunner, LoadTestRunContext context)
+	public void afterLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
 		if( infoLabel != null )
 			infoLabel.setText( "" );
@@ -129,60 +147,62 @@ public class BurstLoadStrategy extends AbstractLoadStrategy
 		if( configPanel == null )
 		{
 			ButtonBarBuilder builder = new ButtonBarBuilder();
-			
+
 			infoLabel = new JLabel();
 			delayField = new JTextField( 4 );
 			UISupport.setPreferredHeight( delayField, 18 );
 			delayField.setHorizontalAlignment( JTextField.RIGHT );
-			delayField.setText( String.valueOf( burstDelay/1000 ));
+			delayField.setText( String.valueOf( burstDelay / 1000 ) );
 			delayField.setToolTipText( "Sets the delay before each burst run in seconds" );
-			delayField.getDocument().addDocumentListener( new DocumentListenerAdapter(){
+			delayField.getDocument().addDocumentListener( new DocumentListenerAdapter()
+			{
 
 				public void update( Document doc )
 				{
 					try
 					{
-						burstDelay = Integer.parseInt(delayField.getText())*1000;
+						burstDelay = Integer.parseInt( delayField.getText() ) * 1000;
 						notifyConfigurationChanged();
 					}
-					catch (NumberFormatException e)
+					catch( NumberFormatException e )
 					{
 					}
-				}}
-				);
-			
-			builder.addFixed( new JLabel( "Burst Delay" ));
+				}
+			} );
+
+			builder.addFixed( new JLabel( "Burst Delay" ) );
 			builder.addRelatedGap();
-			
+
 			builder.addFixed( delayField );
 			builder.addRelatedGap();
 
-			durationField = new JTextField(4);
+			durationField = new JTextField( 4 );
 			UISupport.setPreferredHeight( durationField, 18 );
 			durationField.setHorizontalAlignment( JTextField.RIGHT );
-			durationField.setText( String.valueOf( burstDuration/1000 ));
+			durationField.setText( String.valueOf( burstDuration / 1000 ) );
 			durationField.setToolTipText( "Specifies the duration of a burst run in seconds" );
-			durationField.getDocument().addDocumentListener( new DocumentListenerAdapter(){
+			durationField.getDocument().addDocumentListener( new DocumentListenerAdapter()
+			{
 
 				public void update( Document doc )
 				{
 					try
 					{
-						burstDuration = Integer.parseInt(durationField.getText())*1000;
+						burstDuration = Integer.parseInt( durationField.getText() ) * 1000;
 						notifyConfigurationChanged();
 					}
-					catch (NumberFormatException e)
+					catch( NumberFormatException e )
 					{
 					}
-				}}
-				);
-			
-			builder.addFixed( new JLabel( "Burst Duration" ));
+				}
+			} );
+
+			builder.addFixed( new JLabel( "Burst Duration" ) );
 			builder.addRelatedGap();
-			builder.addFixed( durationField);
+			builder.addFixed( durationField );
 			builder.addRelatedGap();
 			builder.addFixed( infoLabel );
-			
+
 			configPanel = builder.getPanel();
 		}
 
@@ -193,10 +213,16 @@ public class BurstLoadStrategy extends AbstractLoadStrategy
 	{
 		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
 		builder.add( BURST_DELAY_ELEMENT, burstDelay );
-      builder.add( BURST_DURATION_ELEMENT, burstDuration );
-      return builder.finish();
+		builder.add( BURST_DURATION_ELEMENT, burstDuration );
+		return builder.finish();
 	}
-	
+
+	@Override
+	public boolean allowThreadCountChangeDuringRun()
+	{
+		return false;
+	}
+
 	/**
 	 * Factory for BurstLoadStrategy class
 	 * 
@@ -210,12 +236,12 @@ public class BurstLoadStrategy extends AbstractLoadStrategy
 			return STRATEGY_TYPE;
 		}
 
-		public LoadStrategy build(XmlObject config, WsdlLoadTest loadTest)
+		public LoadStrategy build( XmlObject config, WsdlLoadTest loadTest )
 		{
 			return new BurstLoadStrategy( config, loadTest );
 		}
 
-		public LoadStrategy create(WsdlLoadTest loadTest)
+		public LoadStrategy create( WsdlLoadTest loadTest )
 		{
 			return new BurstLoadStrategy( loadTest );
 		}
