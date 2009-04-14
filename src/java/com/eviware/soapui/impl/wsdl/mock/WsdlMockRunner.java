@@ -319,7 +319,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 			}
 
 			throw new DispatchException( "Missing operation for soapAction [" + soapAction + "] and body element ["
-					+ XmlUtils.getQName( mockRequest.getContentElement().getDomNode() ) + "] with SOAP Version ["
+					+ XmlUtils.getQName( mockRequest.getContentElement() ) + "] with SOAP Version ["
 					+ mockRequest.getSoapVersion() + "]" );
 		}
 		catch( Exception e )

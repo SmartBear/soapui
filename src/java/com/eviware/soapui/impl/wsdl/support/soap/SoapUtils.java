@@ -199,7 +199,15 @@ public class SoapUtils
    {
       XmlObject contentElm = getContentElement( requestContent, soapVersion );
       if( contentElm == null )
-         throw new DispatchException( "Missing content element in body" );
+      {
+      	for( WsdlOperation operation : operations )
+      	{
+      		if( operation.getAction().equals( soapAction ) && operation.getBindingOperation().getOperation().getInput().getMessage().getParts().size() == 0 )
+      		{
+      			return operation;
+      		}
+      	}
+      }
 
       QName contentQName = XmlUtils.getQName( contentElm.getDomNode() );
       NodeList contentChildNodes = null;
@@ -351,7 +359,7 @@ public class SoapUtils
    {
       XmlObject contentElm = getContentElement( responseContent, soapVersion );
       if( contentElm == null )
-         throw new DispatchException( "Missing content element in body" );
+         return null;
 
       QName contentQName = XmlUtils.getQName( contentElm.getDomNode() );
       NodeList contentChildNodes = null;

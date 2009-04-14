@@ -48,7 +48,8 @@ import java.util.List;
 
 public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig> implements MockOperation, PropertyChangeListener
 {
-   private final static Logger log = Logger.getLogger( WsdlMockOperation.class );
+   @SuppressWarnings("unused")
+	private final static Logger log = Logger.getLogger( WsdlMockOperation.class );
 
    public final static String DISPATCH_STYLE_PROPERTY = WsdlMockOperation.class.getName() + "@dispatchstyle";
    public final static String DEFAULT_RESPONSE_PROPERTY = WsdlMockOperation.class.getName() + "@defaultresponse";
