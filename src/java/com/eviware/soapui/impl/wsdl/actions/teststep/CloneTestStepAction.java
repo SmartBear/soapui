@@ -17,12 +17,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.support.AbstractInterface;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -227,7 +224,11 @@ public class CloneTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 	      boolean move = dialog.getBooleanValue( Form.MOVE );
 	      
 	      WsdlTestStep newTestStep = targetTestCase.importTestStep( testStep, name, -1, !move );
-			UISupport.select( newTestStep );
+	      
+	      if( dialog.getBooleanValue( Form.OPEN ))
+	      	UISupport.selectAndShow( newTestStep );
+	      else
+	      	UISupport.select( newTestStep );
 			
 			if( move )
 			{
@@ -252,7 +253,11 @@ public class CloneTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 		@AField( name="Target Project", description = "The target Project for the cloned TestStep", type=AFieldType.ENUMERATION )
 		public final static String PROJECT = "Target Project";
 		
-		@AField( name="Move instead", description = "Moves the selected TestStep instead of copying", type=AFieldType.BOOLEAN )
+		@AField( name="Move Instead", description = "Moves the selected TestStep instead of copying", type=AFieldType.BOOLEAN )
 		public final static String MOVE = "Move instead";
+
+		@AField( name="Open Editor", description = "Opens the editor for the cloned TestStep", type=AFieldType.BOOLEAN )
+		public final static String OPEN = "Open Editor";
+
 	}
 }
