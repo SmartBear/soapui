@@ -16,18 +16,17 @@ import org.mortbay.jetty.bio.SocketConnector;
 import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
-import org.mortbay.thread.BoundedThreadPool;
+import org.mortbay.thread.QueuedThreadPool;
 
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction;
-import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.TunnelServlet;
 import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.ProxyServlet;
 import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.Server;
+import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.TunnelServlet;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.UISupport;
 
 public class SoapMonitorEngineImpl implements SoapMonitorEngine
 {
-
 	private static final String ROOT = "/";
 	private static final String HTTP = "http://";
 	private static final String HTTPS = "https://";
@@ -46,7 +45,7 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 	{
 
 		Settings settings = soapMonitor.getProject().getSettings();
-		BoundedThreadPool threadPool = new BoundedThreadPool();
+		QueuedThreadPool threadPool = new QueuedThreadPool();
 		threadPool.setMaxThreads(100);
 		server.setThreadPool(threadPool);
 		Context context = new Context(server, ROOT, 0);
