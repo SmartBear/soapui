@@ -35,319 +35,322 @@ import java.util.List;
 
 /**
  * TestStepResult for a WsdlTestRequestStep
- *
+ * 
  * @author ole.matzura
  */
 
-public class RestRequestStepResult extends WsdlTestStepResult implements
-        ResponseAssertedMessageExchange, AssertedXPathsContainer, MessageExchangeTestStepResult
+public class RestRequestStepResult extends WsdlTestStepResult implements ResponseAssertedMessageExchange,
+		AssertedXPathsContainer, MessageExchangeTestStepResult
 {
-   private String requestContent;
-   private HttpResponse response;
-   private String domain;
-   private String username;
-   private String endpoint;
-   private String encoding;
-   private String password;
-   private StringToStringMap properties;
-   private boolean addedAction;
-   private List<AssertedXPath> assertedXPaths;
+	private String requestContent;
+	private HttpResponse response;
+	private String domain;
+	private String username;
+	private String endpoint;
+	private String encoding;
+	private String password;
+	private StringToStringMap properties;
+	private boolean addedAction;
+	private List<AssertedXPath> assertedXPaths;
 
-   public RestRequestStepResult( HttpTestRequestStep step )
-   {
-      super( step );
-   }
+	public RestRequestStepResult( HttpTestRequestStep step )
+	{
+		super( step );
+	}
 
-   public RestRequestStepResult( RestTestRequestStep step )
-   {
-      super( step );
-   }
+	public RestRequestStepResult( RestTestRequestStep step )
+	{
+		super( step );
+	}
 
-   public Operation getOperation()
-   {
-      return response == null ? null : response.getRequest().getOperation();
-   }
+	public Operation getOperation()
+	{
+		return response == null ? null : response.getRequest().getOperation();
+	}
 
-   public ModelItem getModelItem()
-   {
-      if( response != null )
-         return response.getRequest();
-      else
-         return null;
-   }
+	public ModelItem getModelItem()
+	{
+		if( response != null )
+			return response.getRequest();
+		else
+			return null;
+	}
 
-   public String getRequestContent()
-   {
-      if( isDiscarded() )
-         return "<discarded>";
+	public String getRequestContent()
+	{
+		if( isDiscarded() )
+			return "<discarded>";
 
-      return requestContent;
-   }
+		return requestContent;
+	}
 
-   public void setRequestContent( String requestContent )
-   {
-      this.requestContent = requestContent;
-   }
+	public void setRequestContent( String requestContent )
+	{
+		this.requestContent = requestContent;
+	}
 
-   public HttpResponse getResponse()
-   {
-      return response;
-   }
+	public HttpResponse getResponse()
+	{
+		return response;
+	}
 
-   @Override
-   public ActionList getActions()
-   {
-      if( !addedAction )
-      {
-         addAction( new ShowMessageExchangeAction( this, "TestStep" ), true );
-         addedAction = true;
-      }
+	@Override
+	public ActionList getActions()
+	{
+		if( !addedAction )
+		{
+			addAction( new ShowMessageExchangeAction( this, "TestStep" ), true );
+			addedAction = true;
+		}
 
-      return super.getActions();
-   }
+		return super.getActions();
+	}
 
-   public void setResponse( HttpResponse response )
-   {
-      this.response = response;
-   }
+	public void setResponse( HttpResponse response )
+	{
+		this.response = response;
+	}
 
-   public String getDomain()
-   {
-      return domain;
-   }
+	public String getDomain()
+	{
+		return domain;
+	}
 
-   public void setDomain( String domain )
-   {
-      this.domain = domain;
-      addProperty( "domain", domain );
-   }
+	public void setDomain( String domain )
+	{
+		this.domain = domain;
+		addProperty( "Domain", domain );
+	}
 
-   public void addProperty( String key, String value )
-   {
-      if( properties == null )
-         properties = new StringToStringMap();
+	public void addProperty( String key, String value )
+	{
+		if( properties == null )
+			properties = new StringToStringMap();
 
-      properties.put( key, value );
-   }
+		properties.put( key, value );
+	}
 
-   public String getEncoding()
-   {
-      return encoding;
-   }
+	public String getEncoding()
+	{
+		return encoding;
+	}
 
-   public void setEncoding( String encoding )
-   {
-      this.encoding = encoding;
-      addProperty( "encoding", encoding );
-   }
+	public void setEncoding( String encoding )
+	{
+		this.encoding = encoding;
+		addProperty( "Encoding", encoding );
+	}
 
-   public String getEndpoint()
-   {
-      return endpoint;
-   }
+	public String getEndpoint()
+	{
+		return endpoint;
+	}
 
-   public void setEndpoint( String endpoint )
-   {
-      this.endpoint = endpoint;
-      addProperty( "endpoint", endpoint );
-   }
+	public void setEndpoint( String endpoint )
+	{
+		this.endpoint = endpoint;
+		addProperty( "Endpoint", endpoint );
+	}
 
-   public String getPassword()
-   {
-      return password;
-   }
+	public String getPassword()
+	{
+		return password;
+	}
 
-   public void setPassword( String password )
-   {
-      this.password = password;
-      addProperty( "password", password );
-   }
+	public void setPassword( String password )
+	{
+		this.password = password;
+		addProperty( "Password", password );
+	}
 
-   public String getUsername()
-   {
-      return username;
-   }
+	public String getUsername()
+	{
+		return username;
+	}
 
-   public void setUsername( String username )
-   {
-      this.username = username;
-      addProperty( "username", username );
-   }
+	public void setUsername( String username )
+	{
+		this.username = username;
+		addProperty( "Username", username );
+	}
 
-   public void discard()
-   {
-      super.discard();
+	public void discard()
+	{
+		super.discard();
 
-      requestContent = null;
-      response = null;
-      properties = null;
-      assertedXPaths = null;
-   }
+		requestContent = null;
+		response = null;
+		properties = null;
+		assertedXPaths = null;
+	}
 
-   public void writeTo( PrintWriter writer )
-   {
-      super.writeTo( writer );
+	public void writeTo( PrintWriter writer )
+	{
+		super.writeTo( writer );
 
-      writer.println( "----------------------------------------------------" );
-      writer.println( "Encoding: " + getEncoding() );
-      writer.println( "Endpoint: " + getEndpoint() );
-      writer.println( "Username: " + getUsername() );
-      writer.println( "Password: " + getPassword() );
-      writer.println( "Domain: " + getDomain() );
+		writer.println( "\r\n----------------- Properties ------------------------------" );
+		if( properties != null )
+		{
+			for( String key : properties.keySet() )
+			{
+				if( properties.get( key ) != null )
+				   writer.println( key + ": " + properties.get( key ) );
+			}
+		}
+		
+		writer.println( "\r\n---------------- Request ---------------------------" );
+		if( response != null )
+		{
+			writer.println( "Request Headers: " + response.getRequestHeaders().toString() + "\r\n" );
+		}
 
-      writer.println( "---------------- Request ---------------------------" );
-      if( requestContent != null )
-         writer.println( XmlUtils.prettyPrintXml( requestContent ) );
-      else
-         writer.println( "- missing request / garbage collected -" );
+		if( requestContent != null )
+			writer.println( requestContent );
+		else
+			writer.println( "- missing request / garbage collected -" );
 
-      if( response != null )
-      {
-         writer.println( "Request Headers: " + response.getRequestHeaders().toString() );
-      }
+		writer.println( "\r\n---------------- Response --------------------------" );
+		if( response != null )
+		{
+			writer.println( "Response Headers: " + response.getResponseHeaders().toString() + "\r\n" );
+			
+			String respContent = response.getContentAsString();
+			if( respContent != null )
+				writer.println( respContent );
+		}
+		else
+			writer.println( "- missing response / garbage collected -" );
+	}
 
-      writer.println( "---------------- Response --------------------------" );
-      if( response != null )
-      {
-         String respContent = response.getContentAsString();
-         if( respContent != null )
-            writer.println( XmlUtils.prettyPrintXml( respContent ) );
+	public StringToStringMap getProperties()
+	{
+		return properties;
+	}
 
-         writer.println( "Response Headers: " + response.getResponseHeaders().toString() );
-      }
-      else
-         writer.println( "- missing response / garbage collected -" );
-   }
+	public String getProperty( String name )
+	{
+		return properties == null ? null : properties.get( name );
+	}
 
-   public StringToStringMap getProperties()
-   {
-      return properties;
-   }
+	public Attachment[] getRequestAttachments()
+	{
+		if( response == null || response.getRequest() == null )
+			return new Attachment[0];
 
-   public String getProperty( String name )
-   {
-      return properties == null ? null : properties.get( name );
-   }
+		return response.getRequest().getAttachments();
+	}
 
-   public Attachment[] getRequestAttachments()
-   {
-      if( response == null || response.getRequest() == null )
-         return new Attachment[0];
+	public StringToStringMap getRequestHeaders()
+	{
+		if( response == null )
+			return null;
 
-      return response.getRequest().getAttachments();
-   }
+		return response.getRequestHeaders();
+	}
 
-   public StringToStringMap getRequestHeaders()
-   {
-      if( response == null )
-         return null;
+	public Attachment[] getResponseAttachments()
+	{
+		if( response == null )
+			return new Attachment[0];
 
-      return response.getRequestHeaders();
-   }
+		return response.getAttachments();
+	}
 
-   public Attachment[] getResponseAttachments()
-   {
-      if( response == null )
-         return new Attachment[0];
+	public String getResponseContent()
+	{
+		if( isDiscarded() )
+			return "<discarded>";
 
-      return response.getAttachments();
-   }
+		if( response == null )
+			return "<missing response>";
 
-   public String getResponseContent()
-   {
-      if( isDiscarded() )
-         return "<discarded>";
+		return response.getContentAsString();
+	}
 
-      if( response == null )
-         return "<missing response>";
+	public String getRequestContentAsXml()
+	{
+		return XmlUtils.seemsToBeXml( requestContent ) ? requestContent : "<not-xml/>";
+	}
 
-      return response.getContentAsString();
-   }
+	public String getResponseContentAsXml()
+	{
+		if( response.getProperty( RestRequest.REST_XML_RESPONSE ) == null )
+		{
+			MediaTypeHandler typeHandler = MediaTypeHandlerRegistry.getTypeHandler( response.getContentType() );
+			if( typeHandler != null )
+				response.setProperty( RestRequest.REST_XML_RESPONSE, typeHandler.createXmlRepresentation( response ) );
+		}
 
-   public String getRequestContentAsXml()
-   {
-      return XmlUtils.seemsToBeXml( requestContent ) ? requestContent : "<not-xml/>";
-   }
+		return response.getProperty( RestRequest.REST_XML_RESPONSE );
+	}
 
-   public String getResponseContentAsXml()
-   {
-      if( response.getProperty( RestRequest.REST_XML_RESPONSE ) == null )
-      {
-         MediaTypeHandler typeHandler = MediaTypeHandlerRegistry.getTypeHandler( response.getContentType() );
-         if( typeHandler != null )
-            response.setProperty( RestRequest.REST_XML_RESPONSE, typeHandler.createXmlRepresentation( response ));
-      }
+	public StringToStringMap getResponseHeaders()
+	{
+		if( response == null )
+			return null;
 
-      return response.getProperty( RestRequest.REST_XML_RESPONSE );
-   }
+		return response.getResponseHeaders();
+	}
 
-   public StringToStringMap getResponseHeaders()
-   {
-      if( response == null )
-         return null;
+	public long getTimestamp()
+	{
+		if( isDiscarded() || response == null )
+			return -1;
 
-      return response.getResponseHeaders();
-   }
+		return response.getTimestamp();
+	}
 
-   public long getTimestamp()
-   {
-      if( isDiscarded() || response == null )
-         return -1;
+	public AssertedXPath[] getAssertedXPathsForResponse()
+	{
+		return assertedXPaths == null ? new AssertedXPath[0] : assertedXPaths.toArray( new AssertedXPath[assertedXPaths
+				.size()] );
+	}
 
-      return response.getTimestamp();
-   }
+	public void addAssertedXPath( AssertedXPath assertedXPath )
+	{
+		if( assertedXPaths == null )
+			assertedXPaths = new ArrayList<AssertedXPath>();
 
-   public AssertedXPath[] getAssertedXPathsForResponse()
-   {
-      return assertedXPaths == null ? new AssertedXPath[0] :
-              assertedXPaths.toArray( new AssertedXPath[assertedXPaths.size()] );
-   }
+		assertedXPaths.add( assertedXPath );
+	}
 
-   public void addAssertedXPath( AssertedXPath assertedXPath )
-   {
-      if( assertedXPaths == null )
-         assertedXPaths = new ArrayList<AssertedXPath>();
+	public MessageExchange[] getMessageExchanges()
+	{
+		return new MessageExchange[] { this };
+	}
 
-      assertedXPaths.add( assertedXPath );
-   }
+	public byte[] getRawRequestData()
+	{
+		return response.getRawRequestData();
+	}
 
-   public MessageExchange[] getMessageExchanges()
-   {
-      return new MessageExchange[] { this };
-   }
+	public byte[] getRawResponseData()
+	{
+		return response.getRawResponseData();
+	}
 
-   public byte[] getRawRequestData()
-   {
-      return response.getRawRequestData();
-   }
+	public Attachment[] getRequestAttachmentsForPart( String partName )
+	{
+		return null;
+	}
 
-   public byte[] getRawResponseData()
-   {
-      return response.getRawResponseData();
-   }
+	public Attachment[] getResponseAttachmentsForPart( String partName )
+	{
+		return null;
+	}
 
-   public Attachment[] getRequestAttachmentsForPart( String partName )
-   {
-      return null;
-   }
+	public boolean hasRawData()
+	{
+		return getRawResponseData() != null || getRawRequestData() != null;
+	}
 
-   public Attachment[] getResponseAttachmentsForPart( String partName )
-   {
-      return null;
-   }
+	public boolean hasRequest( boolean b )
+	{
+		return true;
+	}
 
-   public boolean hasRawData()
-   {
-      return getRawResponseData() != null || getRawRequestData() != null;
-   }
-
-   public boolean hasRequest( boolean b )
-   {
-      return true;
-   }
-
-   public boolean hasResponse()
-   {
-      return response != null;
-   }
+	public boolean hasResponse()
+	{
+		return response != null;
+	}
 }

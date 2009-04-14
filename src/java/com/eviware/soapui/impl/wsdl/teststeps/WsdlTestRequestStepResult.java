@@ -139,7 +139,7 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
    public void setEncoding( String encoding )
    {
       this.encoding = encoding;
-      addProperty( "encoding", encoding );
+      addProperty( "Encoding", encoding );
    }
 
    public String getEndpoint()
@@ -150,7 +150,7 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
    public void setEndpoint( String endpoint )
    {
       this.endpoint = endpoint;
-      addProperty( "endpoint", endpoint );
+      addProperty( "Endpoint", endpoint );
    }
 
    public String getPassword()
@@ -161,7 +161,7 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
    public void setPassword( String password )
    {
       this.password = password;
-      addProperty( "password", password );
+      addProperty( "Password", password );
    }
 
    public String getUsername()
@@ -172,7 +172,7 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
    public void setUsername( String username )
    {
       this.username = username;
-      addProperty( "username", username );
+      addProperty( "Username", username );
    }
 
    public void discard()
@@ -188,36 +188,38 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
    public void writeTo( PrintWriter writer )
    {
       super.writeTo( writer );
+		writer.println( "\r\n----------------- Properties ------------------------------" );
+		if( properties != null )
+		{
+			for( String key : properties.keySet() )
+			{
+				if( properties.get( key ) != null )
+				   writer.println( key + ": " + properties.get( key ) );
+			}
+		}
+		
+		writer.println( "\r\n---------------- Request ---------------------------" );
+		if( response != null )
+		{
+			writer.println( "Request Headers: " + response.getRequestHeaders().toString() + "\r\n" );
+		}
 
-      writer.println( "----------------------------------------------------" );
-      writer.println( "Encoding: " + getEncoding() );
-      writer.println( "Endpoint: " + getEndpoint() );
-      writer.println( "Username: " + getUsername() );
-      writer.println( "Password: " + getPassword() );
-      writer.println( "Domain: " + getDomain() );
+		if( requestContent != null )
+			writer.println( XmlUtils.prettyPrintXml( requestContent ));
+		else
+			writer.println( "- missing request / garbage collected -" );
 
-      writer.println( "---------------- Request ---------------------------" );
-      if( requestContent != null )
-         writer.println( XmlUtils.prettyPrintXml( requestContent ) );
-      else
-         writer.println( "- missing request / garbage collected -" );
-
-      if( response != null )
-      {
-         writer.println( "Request Headers: " + response.getRequestHeaders().toString() );
-      }
-
-      writer.println( "---------------- Response --------------------------" );
-      if( response != null )
-      {
-         String respContent = response.getContentAsString();
-         if( respContent != null )
-            writer.println( XmlUtils.prettyPrintXml( respContent ) );
-
-         writer.println( "Response Headers: " + response.getResponseHeaders().toString() );
-      }
-      else
-         writer.println( "- missing response / garbage collected -" );
+		writer.println( "\r\n---------------- Response --------------------------" );
+		if( response != null )
+		{
+			writer.println( "Response Headers: " + response.getResponseHeaders().toString() + "\r\n" );
+			
+			String respContent = response.getContentAsString();
+			if( respContent != null )
+				writer.println( XmlUtils.prettyPrintXml( respContent ));
+		}
+		else
+			writer.println( "- missing response / garbage collected -" );
    }
 
    public StringToStringMap getProperties()
