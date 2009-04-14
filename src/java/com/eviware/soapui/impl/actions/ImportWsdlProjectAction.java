@@ -31,6 +31,7 @@ public class ImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 {
 	public static final String SOAPUI_ACTION_ID = "ImportWsdlProjectAction"; 
 	public static final MessageSupport messages = MessageSupport.getMessages( ImportWsdlProjectAction.class );
+	private String previous;
 
 	public ImportWsdlProjectAction()
    {
@@ -43,7 +44,7 @@ public class ImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		
 		if( param == null )
 		{
-			String path = new File( workspace.getPath()).getParentFile().getAbsolutePath();
+			String path = new File( previous == null ? workspace.getPath() : previous ).getParentFile().getAbsolutePath();
 			file = UISupport.getFileDialogs().open(this, messages.get( "prompt.title"), "xml", "soapUI Project File", path );
 		}
 		else
@@ -55,6 +56,8 @@ public class ImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
       
       String fileName = file.getAbsolutePath();
       if( fileName == null ) return;
+      
+      previous = fileName;
       
       ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
    	Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
