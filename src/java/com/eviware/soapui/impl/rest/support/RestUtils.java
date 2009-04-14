@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.rest.support;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
@@ -216,7 +217,17 @@ public class RestUtils
 
          String value = PropertyExpansionUtils.expandProperties( context, param.getValue() );
          if( value != null && !param.isDisableUrlEncoding() )
-            value = URLEncoder.encode( value );
+         {
+				try
+				{
+					value = URLEncoder.encode( value, System.getProperty( "soapui.request.encoding", request.getEncoding()) );
+				}
+				catch( UnsupportedEncodingException e1 )
+				{
+					SoapUI.logError( e1 );
+					value = URLEncoder.encode( value );
+				}
+			}
 
          if( !StringUtils.hasContent( value ) && !param.getRequired() )
             continue;

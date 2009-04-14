@@ -83,8 +83,18 @@ public class RestRequestFilter extends AbstractRequestFilter
 			responseProperties.put( param.getName(), value );
 
 			if( value != null && formMp == null && !param.isDisableUrlEncoding() )
-				value = URLEncoder.encode( value );
-
+			{
+				try
+				{
+					value = URLEncoder.encode( value, System.getProperty( "soapui.request.encoding", request.getEncoding()) );
+				}
+				catch( UnsupportedEncodingException e1 )
+				{
+					SoapUI.logError( e1 );
+					value = URLEncoder.encode( value );
+				}
+			}
+			
 			if( !StringUtils.hasContent( value ) && !param.getRequired() )
 				continue;
 
