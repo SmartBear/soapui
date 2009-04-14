@@ -871,7 +871,9 @@ public final class XmlUtils
 
    public static QName getQName( Node node )
    {
-      if( node.getNamespaceURI() == null )
+   	if( node == null )
+   		return null;
+   	else if( node.getNamespaceURI() == null )
          return new QName( node.getNodeName() );
       else
          return new QName( node.getNamespaceURI(), node.getLocalName() );
@@ -1376,5 +1378,10 @@ public final class XmlUtils
       System.out.println( "returning " + result.toString() );
       return result.toString();
    }
+
+	public static QName getQName( XmlObject contentElement )
+	{
+		return contentElement == null ? null : getQName( contentElement.getDomNode() );
+	}
 }
 
