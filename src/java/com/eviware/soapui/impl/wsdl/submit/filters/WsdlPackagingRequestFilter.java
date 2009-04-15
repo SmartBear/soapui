@@ -89,7 +89,7 @@ public class WsdlPackagingRequestFilter extends AbstractRequestFilter
 		if( !isXOP && (mp == null || mp.getCount() == 0 ) && hasContentAttachmentsOnly( wsdlRequest ) )
 		{
 			String encoding = System.getProperty( "soapui.request.encoding", StringUtils.unquote( wsdlRequest.getEncoding()));
-			byte[] content = encoding == null ? requestContent.getBytes() : requestContent.getBytes(encoding);
+			byte[] content = StringUtils.isNullOrEmpty( encoding ) ? requestContent.getBytes() : requestContent.getBytes(encoding);
 			postMethod.setRequestEntity(new ByteArrayRequestEntity(content));
 		}
 		else

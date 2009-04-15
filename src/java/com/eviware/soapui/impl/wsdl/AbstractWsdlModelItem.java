@@ -156,8 +156,7 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends A
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	public void resolve( ResolveContext context )
+	public void resolve( ResolveContext<?> context )
 	{
 		List<? extends ModelItem> children = getChildren();
 		if( children == null )

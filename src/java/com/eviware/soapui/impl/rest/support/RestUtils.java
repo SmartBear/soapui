@@ -220,7 +220,12 @@ public class RestUtils
          {
 				try
 				{
-					value = URLEncoder.encode( value, System.getProperty( "soapui.request.encoding", request.getEncoding()) );
+					String encoding = System.getProperty( "soapui.request.encoding", request.getEncoding());
+					
+					if( StringUtils.hasContent( encoding ))
+						value = URLEncoder.encode( value, encoding );
+					else
+						value = URLEncoder.encode( value );
 				}
 				catch( UnsupportedEncodingException e1 )
 				{

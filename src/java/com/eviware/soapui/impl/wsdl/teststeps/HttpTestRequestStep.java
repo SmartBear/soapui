@@ -293,14 +293,17 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 
          if( response != null )
          {
-            testStepResult.setRequestContent( response.getRequestContent() );
             testStepResult.addProperty( "URL", response.getURL() == null ? "<missing>" : response.getURL().toString() );
             testStepResult.addProperty( "Method", String.valueOf( response.getMethod() ) );
             testStepResult.addProperty( "StatusCode", String.valueOf( response.getStatusCode() ) );
             testStepResult.addProperty( "HTTP Version", response.getHttpVersion() );
          }
          else
-            testStepResult.setRequestContent( testRequest.getRequestContent() );
+         {
+         	testStepResult.addMessage( "Missing Response" );
+         }
+
+         testStepResult.setRequestContent( testRequest.getRequestContent() );
       }
       catch( SubmitException e )
       {
@@ -399,7 +402,8 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
          testRequest.setDescription( description );
    }
 
-   @Override
+   @SuppressWarnings("unchecked")
+	@Override
    public List<? extends ModelItem> getChildren()
    {
       return testRequest == null ? Collections.EMPTY_LIST : testRequest.getAssertionList();
@@ -572,7 +576,7 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
       return testRequest.getDefaultAssertableContent();
    }
 
-   public void resolve( ResolveContext context )
+   public void resolve( ResolveContext<?> context )
    {
       super.resolve( context );
 
