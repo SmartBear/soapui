@@ -25,6 +25,7 @@ import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.testsuite.AssertedXPath;
 import com.eviware.soapui.model.testsuite.MessageExchangeTestStepResult;
 import com.eviware.soapui.model.testsuite.ResponseAssertedMessageExchange;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -201,25 +202,35 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 		writer.println( "\r\n---------------- Request ---------------------------" );
 		if( response != null )
 		{
-			writer.println( "Request Headers: " + response.getRequestHeaders().toString() + "\r\n" );
+			StringToStringMap headers = response.getRequestHeaders();
+			for( String key : headers.keySet() )
+			{
+				if( headers.get( key ) != null )
+				   writer.println( key + ": " + headers.get( key ) );
+			}
 		}
 
-		if( requestContent != null )
-			writer.println( requestContent );
+		if( StringUtils.hasContent( requestContent ) )
+			writer.println( "\r\n" + requestContent );
 		else
-			writer.println( "- missing request / garbage collected -" );
+			writer.println( "\r\n- missing request / garbage collected -" );
 
 		writer.println( "\r\n---------------- Response --------------------------" );
 		if( response != null )
 		{
-			writer.println( "Response Headers: " + response.getResponseHeaders().toString() + "\r\n" );
+			StringToStringMap headers = response.getResponseHeaders();
+			for( String key : headers.keySet() )
+			{
+				if( headers.get( key ) != null )
+				   writer.println( key + ": " + headers.get( key ) );
+			}
 			
 			String respContent = response.getContentAsString();
 			if( respContent != null )
-				writer.println( respContent );
+				writer.println( "\r\n" + respContent );
 		}
 		else
-			writer.println( "- missing response / garbage collected -" );
+			writer.println( "\r\n- missing response / garbage collected -" );
 	}
 
 	public StringToStringMap getProperties()
