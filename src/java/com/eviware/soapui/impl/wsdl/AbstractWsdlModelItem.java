@@ -50,19 +50,7 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends A
 
    public boolean dependsOn( ModelItem modelItem )
    {
-      if( modelItem == this )
-         return true;
-
-      ModelItem p = parent;
-      while( p != null )
-      {
-         if( p == modelItem )
-            return true;
-
-         p = p.getParent();
-      }
-
-      return false;
+      return ModelSupport.dependsOn( this, modelItem );
    }
 	
    public ModelItem getParent()
@@ -168,6 +156,7 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends A
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void resolve( ResolveContext context )
 	{
 		List<? extends ModelItem> children = getChildren();

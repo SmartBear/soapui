@@ -16,7 +16,9 @@ package com.eviware.soapui.impl.wsdl.teststeps.actions;
  import com.eviware.soapui.impl.wsdl.panels.request.StringToStringMapTableModel;
  import com.eviware.soapui.impl.wsdl.support.MessageExchangeRequestMessageEditor;
  import com.eviware.soapui.impl.wsdl.support.MessageExchangeResponseMessageEditor;
+import com.eviware.soapui.model.ModelItem;
  import com.eviware.soapui.model.iface.MessageExchange;
+import com.eviware.soapui.model.support.ModelSupport;
  import com.eviware.soapui.model.testsuite.AssertedXPath;
  import com.eviware.soapui.model.testsuite.RequestAssertedMessageExchange;
  import com.eviware.soapui.model.testsuite.ResponseAssertedMessageExchange;
@@ -33,7 +35,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.actions;
  import java.util.ArrayList;
  import java.util.Arrays;
  import java.util.Date;
- import java.util.List;
+import java.util.List;
 
 /**
  * Shows a desktop-panel with the TestStepResult for a WsdlTestRequestStepResult
@@ -43,6 +45,29 @@ package com.eviware.soapui.impl.wsdl.teststeps.actions;
 
 public class ShowMessageExchangeAction extends AbstractAction
 {
+	private final class MessageExchangeDesktopPanel extends DefaultDesktopPanel
+	{
+		private MessageExchangeDesktopPanel( String title, String description, JComponent component )
+		{
+			super( title, description, component );
+		}
+
+		@Override
+		public boolean onClose( boolean canCancel )
+		{
+			requestMessageEditor.release();
+			responseMessageEditor.release();
+			
+			return super.onClose( canCancel );
+		}
+
+		@Override
+		public boolean dependsOn( ModelItem modelItem )
+		{
+			return ModelSupport.dependsOn( messageExchange.getModelItem(), modelItem );
+		}
+	}
+
 	private DefaultDesktopPanel desktopPanel;
 	private final MessageExchange messageExchange;
 	private final String ownerName;
@@ -72,18 +97,7 @@ public class ShowMessageExchangeAction extends AbstractAction
 	{
 		if( desktopPanel == null )
 		{
-			desktopPanel = new DefaultDesktopPanel( "Message Viewer", 
-						"Message for " + ownerName, buildContent() )
-			{
-				@Override
-				public boolean onClose( boolean canCancel )
-				{
-//					requestMessageEditor.release();
-//					responseMessageEditor.release();
-					
-					return super.onClose( canCancel );
-				}
-			};
+			desktopPanel = new MessageExchangeDesktopPanel( "Message Viewer", "Message for " + ownerName, buildContent() );
 		}
 		
 		return desktopPanel;

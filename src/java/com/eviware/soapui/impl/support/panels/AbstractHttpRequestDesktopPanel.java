@@ -309,7 +309,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
       {
          super( document, request );
 
-         XmlSourceEditorView editor = getSourceEditor();
+         XmlSourceEditorView<?> editor = getSourceEditor();
          if( editor != null )
          {
             inputArea = editor.getInputArea();
@@ -341,7 +341,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
       {
          super( document, request );
 
-         XmlSourceEditorView editor = getSourceEditor();
+         XmlSourceEditorView<?> editor = getSourceEditor();
 
          inputArea = editor.getInputArea();
          if( inputArea != null )
@@ -368,9 +368,9 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
    protected final class InputAreaFocusListener implements FocusListener
    {
-      private final XmlSourceEditorView sourceEditor;
+      private final XmlSourceEditorView<?> sourceEditor;
 
-      public InputAreaFocusListener( XmlSourceEditorView editor )
+      public InputAreaFocusListener( XmlSourceEditorView<?> editor )
       {
          this.sourceEditor = editor;
       }
@@ -409,9 +409,9 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
    protected final class ResultAreaFocusListener implements FocusListener
    {
-      private final XmlSourceEditorView sourceEditor;
+      private final XmlSourceEditorView<?> sourceEditor;
 
-      public ResultAreaFocusListener( XmlSourceEditorView editor )
+      public ResultAreaFocusListener( XmlSourceEditorView<?> editor )
       {
          this.sourceEditor = editor;
       }
