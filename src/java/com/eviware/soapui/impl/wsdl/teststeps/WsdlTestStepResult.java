@@ -199,10 +199,13 @@ public class WsdlTestStepResult implements TestStepResult
 			writer.println( "Error:" + error.toString() );
 		
 		if( messages != null )
+		{
+			writer.println( "\r\n----------------- Messages ------------------------------" );
 			for( String message : messages )
 				if( message != null ) 
 					writer.println( message );
-
+		}
+		
 		if( isDiscarded() )
 			writer.println( "Result has been Discarded!" );
 	}

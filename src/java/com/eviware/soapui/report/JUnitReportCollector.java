@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -123,8 +122,8 @@ public class JUnitReportCollector implements TestRunListener {
 			} else
 				failures.put(testCase, buf);
 			
-			buf.append( "<h3><b>" + result.getTestStep().getName() + " Failed</b></h3>" );
-			buf.append( "<pre>" + XmlUtils.entitize( Arrays.toString( result.getMessages() )) + "\n" );
+			buf.append( "<h3><b>" + result.getTestStep().getName() + " Failed</b></h3><pre>" );
+//			buf.append( "<pre>" + XmlUtils.entitize( Arrays.toString( result.getMessages() )) + "\n" );
 			
 			StringWriter stringWriter = new StringWriter();
 			PrintWriter writer = new PrintWriter( stringWriter );
