@@ -180,6 +180,7 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
    protected void createGetMethod( String url )
    {
       getMethod = new GetMethod( url );
+      getMethod.setFollowRedirects( true );
       getMethod.setDoAuthentication( true );
       getMethod.getParams().setParameter( CredentialsProvider.PROVIDER, new WsdlCredentialsProvider() );
 

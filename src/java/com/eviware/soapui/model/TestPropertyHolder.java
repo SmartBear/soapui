@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.model;
 
+import java.util.List;
 import java.util.Map;
 
 import com.eviware.soapui.model.testsuite.TestProperty;
@@ -38,6 +39,8 @@ public interface TestPropertyHolder
 	public ModelItem getModelItem();
 	
 	public int getPropertyCount();
+	
+	public List<TestProperty> getPropertyList();
 	
 	public TestProperty getPropertyAt( int index );
 	

@@ -113,6 +113,11 @@ public class MapTestPropertyHolder implements MutableTestPropertyHolder
 		return result.toStringArray();
 	}
 
+	public List<TestProperty> getPropertyList()
+	{
+		return Collections.unmodifiableList( properties );
+	}
+
 	public String getPropertyValue( String name )
 	{
 		TestProperty property = getProperty( name );

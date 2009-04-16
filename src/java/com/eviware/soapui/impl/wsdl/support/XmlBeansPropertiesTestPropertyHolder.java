@@ -12,22 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.PropertiesTypeConfig;
-import com.eviware.soapui.config.PropertyConfig;
-import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
-import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
-import com.eviware.soapui.model.testsuite.RenameableTestProperty;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestPropertyListener;
-import com.eviware.soapui.support.StringUtils;
-
-import org.apache.xmlbeans.XmlString;
-
-import javax.xml.namespace.QName;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -42,6 +26,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
+import javax.xml.namespace.QName;
+
+import org.apache.xmlbeans.XmlString;
+
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.PropertiesTypeConfig;
+import com.eviware.soapui.config.PropertyConfig;
+import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
+import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+import com.eviware.soapui.model.testsuite.RenameableTestProperty;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
+import com.eviware.soapui.support.StringUtils;
 
 public class XmlBeansPropertiesTestPropertyHolder implements MutableTestPropertyHolder, Map<String,TestProperty>
 {
@@ -145,6 +145,16 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 		String [] result = new String[properties.size()];
 		for( int c = 0; c < properties.size(); c++ )
 			result[c] = properties.get( c ).getName();
+		
+		return result;
+	}
+	
+	public List<TestProperty> getPropertyList()
+	{
+		List<TestProperty> result = new ArrayList<TestProperty>();
+		
+		for( TestProperty property : properties )
+			result.add( property );
 		
 		return result;
 	}

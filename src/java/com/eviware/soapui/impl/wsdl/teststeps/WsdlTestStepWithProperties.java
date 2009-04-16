@@ -217,6 +217,11 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 		return propertyList.size();
 	}
 	
+	public List<TestProperty> getPropertyList()
+	{
+		return Collections.unmodifiableList( propertyList );
+	}
+	
 	protected void firePropertyMoved( String name, int oldIndex, int newIndex )
 	{
 		TestPropertyListener [] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );

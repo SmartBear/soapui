@@ -456,6 +456,16 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
       return properties.get( index );
    }
 
+   public List<TestProperty> getPropertyList()
+	{
+		List<TestProperty> result = new ArrayList<TestProperty>();
+		
+		for( TestProperty property : properties )
+			result.add( property );
+		
+		return result;
+	}
+   
    public Map<String, TestProperty> getProperties()
    {
       Map<String, TestProperty> result = new HashMap<String, TestProperty>();

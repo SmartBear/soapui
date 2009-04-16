@@ -1017,6 +1017,11 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
    {
       return propertyHolder.getPropertyCount();
    }
+   
+   public List<TestProperty> getPropertyList()
+   {
+   	return propertyHolder.getPropertyList();
+   }
 
    public String getPropertiesLabel()
    {

@@ -37,6 +37,7 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -336,6 +337,11 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 	public String[] getPropertyNames()
 	{
 		return propertyHolderSupport.getPropertyNames();
+	}
+	
+	public List<TestProperty> getPropertyList()
+	{
+		return propertyHolderSupport.getPropertyList();
 	}
 
 	public String getPropertyValue(String name)

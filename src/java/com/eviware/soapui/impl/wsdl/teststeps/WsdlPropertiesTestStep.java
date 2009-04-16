@@ -34,6 +34,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -396,6 +397,11 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 	{
 		return propertyHolderSupport.getPropertyAt( index );
 	}
+	
+	public List<TestProperty> getPropertyList()
+	{
+		return propertyHolderSupport.getPropertyList();
+	}
 
 	public int getPropertyCount()
 	{
@@ -432,7 +438,7 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 	}
 
 	@Override
-	public void resolve( ResolveContext context )
+	public void resolve( ResolveContext<?> context )
 	{
 		super.resolve( context );
 		

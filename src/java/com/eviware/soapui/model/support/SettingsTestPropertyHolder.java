@@ -13,6 +13,7 @@
 package com.eviware.soapui.model.support;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -81,6 +82,11 @@ public class SettingsTestPropertyHolder implements MutableTestPropertyHolder, Ma
 		return propertyHolderSupport.getPropertyNames();
 	}
 
+	public List<TestProperty> getPropertyList()
+   {
+   	return propertyHolderSupport.getPropertyList();
+   }
+	
 	public String getPropertyValue( String name )
 	{
 		return propertyHolderSupport.getPropertyValue( name );

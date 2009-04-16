@@ -310,7 +310,12 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
    {
       return params.getPropertyValue( name );
    }
-
+   
+   public List<TestProperty> getPropertyList()
+   {
+   	return params.getPropertyList();
+   }
+   
    public boolean hasProperty( String name )
    {
       return params.hasProperty( name );

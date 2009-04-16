@@ -345,6 +345,11 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	{
 		return params.getPropertyCount();
 	}
+	
+	public List<TestProperty> getPropertyList()
+   {
+   	return params.getPropertyList();
+   }
 
 	public String[] getPropertyNames()
 	{

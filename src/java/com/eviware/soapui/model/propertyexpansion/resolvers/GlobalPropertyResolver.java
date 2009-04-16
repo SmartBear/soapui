@@ -23,7 +23,10 @@ import com.eviware.soapui.support.types.StringList;
 import org.apache.xmlbeans.XmlString;
 
 import javax.xml.namespace.QName;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -50,6 +53,16 @@ public class GlobalPropertyResolver implements PropertyResolver
 			{
 				result.put(key.toString(), new EnviromentTestProperty( key ));
 			}
+			
+			return result;
+		}
+		
+		public List<TestProperty> getPropertyList()
+		{
+			List<TestProperty> result = new ArrayList<TestProperty>();
+			
+			for( TestProperty property : getProperties().values() )
+				result.add( property );
 			
 			return result;
 		}
@@ -198,6 +211,16 @@ public class GlobalPropertyResolver implements PropertyResolver
 			return System.getProperties().size();
 		}
 
+		public List<TestProperty> getPropertyList()
+		{
+			List<TestProperty> result = new ArrayList<TestProperty>();
+			
+			for( TestProperty property : getProperties().values() )
+				result.add( property );
+			
+			return result;
+		}
+		
 		public String[] getPropertyNames()
 		{
 			Set<Object> keys = System.getProperties().keySet();
