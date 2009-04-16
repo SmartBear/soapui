@@ -297,13 +297,13 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
             testStepResult.addProperty( "Method", String.valueOf( response.getMethod() ) );
             testStepResult.addProperty( "StatusCode", String.valueOf( response.getStatusCode() ) );
             testStepResult.addProperty( "HTTP Version", response.getHttpVersion() );
+            testStepResult.setRequestContent( response.getRequestContent() );
          }
          else
          {
          	testStepResult.addMessage( "Missing Response" );
+         	testStepResult.setRequestContent( testRequest.getRequestContent() );
          }
-
-         testStepResult.setRequestContent( testRequest.getRequestContent() );
       }
       catch( SubmitException e )
       {

@@ -41,8 +41,9 @@ public abstract class BaseHttpResponse implements HttpResponse
    private AbstractHttpRequest.RequestMethod method;
    private String version;
    private StringToStringMap properties;
-   private ByteArrayOutputStream rawRequestData = new ByteArrayOutputStream();
-   private ByteArrayOutputStream rawResponseData = new ByteArrayOutputStream();
+   private byte [] rawRequestData;
+   private byte [] rawResponseData;
+	private int requestContentPos = -1;
 
    public BaseHttpResponse( ExtendedHttpMethod httpMethod, AbstractHttpRequest<?> httpRequest )
    {
@@ -96,20 +97,23 @@ public abstract class BaseHttpResponse implements HttpResponse
    {
       try
       {
+      	ByteArrayOutputStream rawResponse = new ByteArrayOutputStream();
+      	ByteArrayOutputStream rawRequest = new ByteArrayOutputStream();
+      	
       	if( !httpMethod.isFailed() )
       	{
-      		rawResponseData.write( String.valueOf( httpMethod.getStatusLine() ).getBytes() );
-         	rawResponseData.write( "\r\n".getBytes() );
+      		rawResponse.write( String.valueOf( httpMethod.getStatusLine() ).getBytes() );
+      		rawResponse.write( "\r\n".getBytes() );
       	}
       	
-         rawRequestData.write( ( method + " " + String.valueOf( url ) + " " + version + "\r\n" ).getBytes() );
+      	rawRequest.write( ( method + " " + String.valueOf( url ) + " " + version + "\r\n" ).getBytes() );
 
          requestHeaders = new StringToStringMap();
          Header[] headers = httpMethod.getRequestHeaders();
          for( Header header : headers )
          {
             requestHeaders.put( header.getName(), header.getValue() );
-            rawRequestData.write( header.toExternalForm().getBytes() );
+            rawRequest.write( header.toExternalForm().getBytes() );
          }
 
          if( !httpMethod.isFailed() )
@@ -119,7 +123,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 	         for( Header header : headers )
 	         {
 	            responseHeaders.put( header.getName(), header.getValue() );
-	            rawResponseData.write( header.toExternalForm().getBytes() );
+	            rawResponse.write( header.toExternalForm().getBytes() );
 	         }
 	
 	         responseHeaders.put( "#status#", String.valueOf(httpMethod.getStatusLine()) );
@@ -127,18 +131,24 @@ public abstract class BaseHttpResponse implements HttpResponse
 
          if( httpMethod.getRequestEntity() != null )
          {
-            rawRequestData.write( "\r\n".getBytes() );
+         	rawRequest.write( "\r\n".getBytes() );
             if( httpMethod.getRequestEntity().isRepeatable() )
-               httpMethod.getRequestEntity().writeRequest( rawRequestData );
+            {
+            	requestContentPos  = rawRequest.size();
+               httpMethod.getRequestEntity().writeRequest( rawRequest );
+            }
             else
-               rawRequestData.write( "<request data not available>".getBytes() );
+            	rawResponse.write( "<request data not available>".getBytes() );
          }
 
          if( !httpMethod.isFailed() )
          {
-         	rawResponseData.write( "\r\n".getBytes() );
-         	rawResponseData.write( httpMethod.getResponseBody() );
+         	rawResponse.write( "\r\n".getBytes() );
+         	rawResponse.write( httpMethod.getResponseBody() );
          }
+         
+         rawResponseData = rawResponse.toByteArray();
+         rawRequestData = rawRequest.toByteArray();
       }
       catch( Throwable e )
       {
@@ -203,12 +213,12 @@ public abstract class BaseHttpResponse implements HttpResponse
 
    public byte[] getRawRequestData()
    {
-      return rawRequestData.toByteArray();
+      return rawRequestData;
    }
 
    public byte[] getRawResponseData()
    {
-      return rawResponseData.toByteArray();
+      return rawResponseData;
    }
 
    public AbstractHttpRequest.RequestMethod getMethod()
@@ -238,4 +248,11 @@ public abstract class BaseHttpResponse implements HttpResponse
    {
       return properties == null ? new String[0] : properties.getKeys();
    }
+
+	public String getRequestContent()
+	{
+		return requestContentPos == -1 ? null : new String( rawRequestData, requestContentPos, rawRequestData.length-requestContentPos);
+	}
+   
+   
 }

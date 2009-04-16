@@ -29,7 +29,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
 public class SinglePartHttpResponse extends BaseHttpResponse
 {
    private String responseContent;
-   private final String requestContent;
+   private String requestContent;
    private boolean prettyPrint;
    private long responseSize;
 //	private byte[] requestData;
@@ -38,7 +38,9 @@ public class SinglePartHttpResponse extends BaseHttpResponse
    public SinglePartHttpResponse( AbstractHttpRequest<?> httpRequest, ExtendedHttpMethod httpMethod, String requestContent, PropertyExpansionContext context )
    {
       super( httpMethod, httpRequest );
-      this.requestContent = requestContent;
+      
+      if( getRequestContent() == null )
+      	this.requestContent = requestContent;
 
       try
       {
@@ -107,7 +109,7 @@ public class SinglePartHttpResponse extends BaseHttpResponse
 
    public String getRequestContent()
    {
-      return requestContent;
+      return requestContent == null ? super.getRequestContent() : requestContent;
    }
 
    public void setResponseContent( String responseContent )
