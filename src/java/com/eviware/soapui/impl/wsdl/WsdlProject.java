@@ -47,6 +47,7 @@ import com.eviware.soapui.config.TestSuiteConfig;
 import com.eviware.soapui.config.TestSuiteDocumentConfig;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
+import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategy;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
@@ -644,6 +645,10 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			// no caching -> create copy and remove definition cachings
 			removeDefinitionCaches( projectDocument );
 		}
+		
+		// remove project root
+		XmlBeansSettingsImpl tempSettings = new XmlBeansSettingsImpl(this, null, projectDocument.getSoapuiProject().getSettings() );
+		tempSettings.clearSetting( ProjectSettings.PROJECT_ROOT );
 
 		// check for encryption
 		String passwordForEncryption = getSettings().getString( ProjectSettings.SHADOW_PASSWORD, null );
