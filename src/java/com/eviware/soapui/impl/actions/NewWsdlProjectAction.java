@@ -28,6 +28,7 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.SoapUIException;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
@@ -74,6 +75,20 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
                dialog.getFormField( Form.GENERATEMOCKSERVICE ).setEnabled( newValue.trim().length() > 0 && !newValue.endsWith( ".wadl" ));
                dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( newValue.trim().length() > 0 );
                dialog.getFormField( Form.ADDRESTSERVICE ).setEnabled( newValue.trim().length() == 0 );
+               
+               if( StringUtils.isNullOrEmpty( dialog.getValue( Form.PROJECTNAME ) )&& StringUtils.hasContent( newValue ))
+               {
+                  int ix = newValue.lastIndexOf( '.' );
+                  if( ix > 0 )
+                  	newValue = newValue.substring( 0, ix );
+                  
+                  ix = newValue.lastIndexOf( '/' );
+                  if( ix == -1 )
+                  	ix = newValue.lastIndexOf( '\\' );
+                  
+                  if( ix != -1 )
+                  	dialog.setValue( Form.PROJECTNAME, newValue.substring( ix+1 ) );
+               }
             }
          } );
       }
