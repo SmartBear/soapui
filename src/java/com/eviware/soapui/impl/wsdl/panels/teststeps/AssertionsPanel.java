@@ -35,6 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -79,6 +80,7 @@ public class AssertionsPanel extends JPanel
       assertionList = new JList( assertionListModel );
       assertionList.setToolTipText( "Assertions for this request" );
       assertionList.setCellRenderer( new AssertionCellRenderer() );
+      assertionList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
       
       assertionListPopup = new JPopupMenu();
       addAssertionAction = new AddAssertionAction( assertable );
