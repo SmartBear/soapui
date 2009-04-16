@@ -676,10 +676,17 @@ public class WsdlValidator
             map.put( cur.getName().getLocalPart(), cur.getTextValue() );
       }
 
-      String xmlText = msg.copy().changeType( type ).xmlText( xmlOptions.setSaveOuter() );
+      xmlOptions.setUseDefaultNamespace();
+      xmlOptions.setSaveOuter();
+      
+      // problem: prefixes might get redefined/changed when saving which can cause xsi:type refs to 
+      // reference wrong/non-existing namespace.. solution would probably be to manually walk through document and
+      // update xsi:type refs with new prefix. The setUseDefaultNamespace() above helps here but is not a definitive fix
+      
+      String xmlText = msg.copy().changeType( type ).xmlText( xmlOptions );
 
       xmlOptions.setLoadAdditionalNamespaces( map );
-
+      
       XmlObject obj = type.getTypeSystem().parse( xmlText, type, xmlOptions );
       obj = obj.changeType( type );
 
