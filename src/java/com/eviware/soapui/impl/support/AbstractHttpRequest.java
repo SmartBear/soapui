@@ -495,7 +495,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
    public String getDumpFile()
    {
-      return dumpFile.expand();
+      return dumpFile.get();
    }
 
    public void setDumpFile( String df )
@@ -600,7 +600,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
    }
 
    @Override
-   public void resolve( ResolveContext context )
+   public void resolve( ResolveContext<?> context )
    {
       super.resolve( context );
 

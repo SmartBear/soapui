@@ -52,7 +52,7 @@ public class CachedWsdlLoader extends WsdlLoader
       this.config = config;
    }
 
-   public CachedWsdlLoader(AbstractInterface iface) throws Exception
+   public CachedWsdlLoader(AbstractInterface<?> iface) throws Exception
    {
       this(WsdlUtils.cacheWsdl(new UrlWsdlLoader(PathUtils.expandPath(iface.getDefinition(), iface), iface)));
    }

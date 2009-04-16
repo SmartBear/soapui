@@ -136,7 +136,7 @@ public abstract class AbstractPathPropertySupport
 
 	public abstract String getPropertyValue() throws Exception;
 
-	public void resolveFile(ResolveContext context, String errorDescription)
+	public void resolveFile(ResolveContext<?> context, String errorDescription)
 	{
 		resolveFile(context, errorDescription, null, null, true);
 	}
@@ -154,7 +154,7 @@ public abstract class AbstractPathPropertySupport
 		}
 	}
 	
-	public void resolveFile(ResolveContext context, String errorDescription, String extension, String fileType,
+	public void resolveFile(ResolveContext<?> context, String errorDescription, String extension, String fileType,
 			final boolean notify)
 	{
 		if( containsPropertyExpansion())
@@ -195,7 +195,7 @@ public abstract class AbstractPathPropertySupport
 		}
 	}
 
-	public void resolveFolder(ResolveContext context, String errorDescription, final boolean notify)
+	public void resolveFolder(ResolveContext<?> context, String errorDescription, final boolean notify)
 	{
 		if( containsPropertyExpansion())
 			return;

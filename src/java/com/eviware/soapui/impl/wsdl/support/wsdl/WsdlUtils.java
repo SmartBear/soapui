@@ -65,17 +65,12 @@ import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
-import org.w3.x2007.x05.addressing.metadata.AddressingDocument.Addressing;
-import org.w3.x2007.x05.addressing.metadata.AnonymousResponsesDocument.AnonymousResponses;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import org.xmlsoap.schemas.ws.x2004.x09.policy.OptionalType;
-import org.xmlsoap.schemas.ws.x2004.x09.policy.Policy;
-import org.xmlsoap.schemas.ws.x2004.x09.policy.PolicyDocument;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AnonymousTypeConfig;

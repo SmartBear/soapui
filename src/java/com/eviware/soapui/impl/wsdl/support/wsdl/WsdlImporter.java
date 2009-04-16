@@ -12,8 +12,22 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.wsdl.Binding;
+import javax.wsdl.Definition;
+import javax.wsdl.Port;
+import javax.wsdl.PortType;
+import javax.wsdl.Service;
+import javax.xml.namespace.QName;
+
+import org.apache.log4j.Logger;
+
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.BindingImporter;
@@ -22,11 +36,6 @@ import com.eviware.soapui.impl.wsdl.support.soap.Soap11HttpBindingImporter;
 import com.eviware.soapui.impl.wsdl.support.soap.Soap12HttpBindingImporter;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
-import org.apache.log4j.Logger;
-
-import javax.wsdl.*;
-import javax.xml.namespace.QName;
-import java.util.*;
 
 /**
  * Importer for WsdlInterfaces from WSDL urls / files
