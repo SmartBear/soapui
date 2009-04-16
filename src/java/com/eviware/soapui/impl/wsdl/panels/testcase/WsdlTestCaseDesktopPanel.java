@@ -65,7 +65,7 @@ import java.util.Date;
 public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase>
 {
    private JProgressBar progressBar;
-   private TestStepList testStepList;
+   private JTestStepList testStepList;
    private InternalTestRunListener testRunListener = new InternalTestRunListener();
    private JButton runButton;
    private JButton cancelButton;
@@ -76,7 +76,6 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
    private ComponentBag stateDependantComponents = new ComponentBag();
    private TestRunLog testCaseLog;
    private JToggleButton loopButton;
-   @SuppressWarnings( "unused" )
    private ProgressBarTestCaseAdapter progressBarAdapter;
    private InternalTestMonitorListener testMonitorListener;
    public boolean canceled;
@@ -143,7 +142,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
       add( inspectorPanel.getComponent(), BorderLayout.CENTER );
    }
 
-   protected TestStepList getTestStepList()
+   protected JTestStepList getTestStepList()
    {
       return testStepList;
    }
@@ -181,7 +180,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
       }
 
       p.add( toolbar, BorderLayout.NORTH );
-      testStepList = new TestStepList( getModelItem() );
+      testStepList = new JTestStepList( getModelItem() );
       stateDependantComponents.add( testStepList );
 
       p.add( new JScrollPane( testStepList ), BorderLayout.CENTER );

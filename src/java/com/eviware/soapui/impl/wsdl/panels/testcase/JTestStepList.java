@@ -57,7 +57,7 @@ import com.eviware.soapui.support.swing.ModelItemListMouseListener;
  * @author Ole.Matzura
  */
 
-public class TestStepList extends JPanel
+public class JTestStepList extends JPanel
 {
 	private TestStepListModel testStepListModel;
 	private JList testStepList;
@@ -65,7 +65,7 @@ public class TestStepList extends JPanel
 	private JMenu appendStepMenu;
 	private final WsdlTestCase testCase;
 
-	public TestStepList(WsdlTestCase testCase)
+	public JTestStepList(WsdlTestCase testCase)
 	{
 		super(new BorderLayout());
 		setDoubleBuffered( true );
