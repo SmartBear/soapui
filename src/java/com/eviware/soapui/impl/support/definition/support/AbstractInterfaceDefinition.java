@@ -19,7 +19,7 @@ import com.eviware.soapui.impl.support.definition.InterfaceDefinitionPart;
 
 import java.util.List;
 
-public abstract class AbstractInterfaceDefinition<T extends AbstractInterface> implements InterfaceDefinition<T>
+public abstract class AbstractInterfaceDefinition<T extends AbstractInterface<?>> implements InterfaceDefinition<T>
 {
    private DefinitionCache definitionCache;
    private T iface;
@@ -44,7 +44,7 @@ public abstract class AbstractInterfaceDefinition<T extends AbstractInterface> i
       return definitionCache == null ? null : definitionCache.getRootPart();
    }
 
-   public List getDefinitionParts() throws Exception
+   public List<InterfaceDefinitionPart> getDefinitionParts() throws Exception
    {
       return definitionCache == null ? null : definitionCache.getDefinitionParts();
    }

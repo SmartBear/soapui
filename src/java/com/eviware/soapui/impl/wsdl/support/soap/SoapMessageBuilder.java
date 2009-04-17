@@ -199,7 +199,7 @@ public class SoapMessageBuilder implements MessageBuilder
          BindingInput bindingInput = bindingOperation.getBindingInput();
          if( bindingInput != null )
          {
-            List extensibilityElements = bindingInput.getExtensibilityElements();
+            List<?> extensibilityElements = bindingInput.getExtensibilityElements();
             List<SoapHeader> soapHeaders = WsdlUtils.getSoapHeaders( extensibilityElements);
             addHeaders( soapHeaders, cursor, xmlGenerator);
          }
@@ -533,7 +533,7 @@ public class SoapMessageBuilder implements MessageBuilder
          BindingOutput bindingOutput = bindingOperation.getBindingOutput();
          if( bindingOutput != null )
          {
-            List extensibilityElements = bindingOutput.getExtensibilityElements();
+            List<?> extensibilityElements = bindingOutput.getExtensibilityElements();
             List<SoapHeader> soapHeaders = WsdlUtils.getSoapHeaders( extensibilityElements );
             addHeaders( soapHeaders, cursor, xmlGenerator );
          }

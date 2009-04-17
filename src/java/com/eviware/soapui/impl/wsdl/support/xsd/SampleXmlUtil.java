@@ -470,7 +470,8 @@ public class SampleXmlUtil
       return sb.toString();
    }
 
-   private String pickDigits( int digits )
+   @SuppressWarnings("unused")
+	private String pickDigits( int digits )
    {
       StringBuffer sb = new StringBuffer();
       while( digits-- > 0 )
@@ -685,7 +686,8 @@ public class SampleXmlUtil
          maxExclusive = d.getGDurationValue();
 
       GDurationBuilder gdurb = new GDurationBuilder();
-      BigInteger min, max;
+      @SuppressWarnings("unused")
+		BigInteger min, max;
 
       gdurb.setSecond( pick( 800000 ) );
       gdurb.setMonth( pick( 20 ) );
@@ -778,7 +780,8 @@ public class SampleXmlUtil
       GDateBuilder gdateb = new GDateBuilder( new Date( 1000L * pick( 365 * 24 * 60 * 60 ) + (30L + pick( 20 )) * 365
               * 24 * 60 * 60 * 1000 ) );
       GDate min = null, max = null;
-      GDate temp;
+      @SuppressWarnings("unused")
+		GDate temp;
 
       // Find the min and the max according to the type
       switch( sType.getPrimitiveType().getBuiltinTypeCode() )
@@ -1105,7 +1108,8 @@ public class SampleXmlUtil
      * Return a name for the element or the particle type to use in the comment
      * for minoccurs, max occurs
      */
-   private String getItemNameOrType( SchemaParticle sp, XmlCursor xmlc )
+   @SuppressWarnings("unused")
+	private String getItemNameOrType( SchemaParticle sp, XmlCursor xmlc )
    {
       String elementOrTypeName = null;
       if( sp.getParticleType() == SchemaParticle.ELEMENT )
@@ -1154,7 +1158,8 @@ public class SampleXmlUtil
       xmlc.toNextToken();
    }
 
-   private void moveToken( int numToMove, XmlCursor xmlc )
+   @SuppressWarnings("unused")
+	private void moveToken( int numToMove, XmlCursor xmlc )
    {
       for( int i = 0; i < Math.abs( numToMove ); i++ )
       {
@@ -1295,7 +1300,8 @@ public class SampleXmlUtil
     * This method will get the base type for the schema type
     */
 
-   private static QName getClosestName( SchemaType sType )
+   @SuppressWarnings("unused")
+	private static QName getClosestName( SchemaType sType )
    {
       while( sType.getName() == null )
          sType = sType.getBaseType();

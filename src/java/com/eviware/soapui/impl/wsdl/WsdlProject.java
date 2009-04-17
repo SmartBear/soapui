@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -180,7 +181,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 				{
 					try
 					{
-						loadProject( file.toURI().toURL() );
+						loadProject( new URL( "file:" + file.getAbsolutePath()) );
 						lastModified = file.lastModified();
 					}
 					catch( MalformedURLException e )

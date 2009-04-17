@@ -41,7 +41,7 @@ import java.util.Map;
  * @author Ole.Matzura
  */
 
-public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 extends DefinitionLoader, T3 extends AbstractInterfaceDefinition<T>> implements DefinitionContext
+public abstract class AbstractDefinitionContext<T extends AbstractInterface<?>, T2 extends DefinitionLoader, T3 extends AbstractInterfaceDefinition<T>> implements DefinitionContext<T>
 {
    private String url;
    private T3 definition;
@@ -53,7 +53,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
    private T2 currentLoader;
    private T iface;
 
-   private static Map<String, InterfaceDefinition> definitionCache = new HashMap<String, InterfaceDefinition>();
+   private static Map<String, InterfaceDefinition<?>> definitionCache = new HashMap<String, InterfaceDefinition<?>>();
    private static Map<String, Integer> urlReferences = new HashMap<String, Integer>();
 
    public AbstractDefinitionContext( String url, T iface )
@@ -72,7 +72,8 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
       return iface;
    }
 
-   public T3 getInterfaceDefinition() throws Exception
+   @SuppressWarnings("unchecked")
+	public T3 getInterfaceDefinition() throws Exception
    {
       loadIfNecessary();
       return (T3) ( definition == null ? definitionCache.get( url ) : definition );
@@ -329,7 +330,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
          return false;
       }
 
-      InterfaceDefinition def = (definition != null ? definition : definitionCache.get( url ));
+      InterfaceDefinition<?> def = (definition != null ? definition : definitionCache.get( url ));
       return def != null && def.hasSchemaTypes();
    }
 
@@ -346,7 +347,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface, T2 
          {
             if( definition.getDefinitionCache().validate() )
             {
-               InterfaceConfigDefinitionCache cache = new InterfaceConfigDefinitionCache( iface );
+               InterfaceConfigDefinitionCache<T> cache = new InterfaceConfigDefinitionCache<T>( iface );
                try
                {
                   cache.importCache( definition.getDefinitionCache() );
