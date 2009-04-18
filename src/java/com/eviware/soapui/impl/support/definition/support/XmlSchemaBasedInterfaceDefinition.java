@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class XmlSchemaBasedInterfaceDefinition<T extends AbstractInterface> extends AbstractInterfaceDefinition<T>
+public abstract class XmlSchemaBasedInterfaceDefinition<T extends AbstractInterface<?>> extends AbstractInterfaceDefinition<T>
 {
    private SchemaTypeSystem schemaTypes;
    private SchemaTypeLoader schemaTypeLoader;
