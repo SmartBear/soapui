@@ -12,22 +12,22 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
-import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
-import com.eviware.soapui.model.iface.Operation;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.wsdl.BindingOperation;
+import javax.wsdl.Part;
+import javax.xml.namespace.QName;
+
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 
-import javax.wsdl.*;
-import javax.xml.namespace.QName;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
+import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 
 /**
  * XmlObject based wrapper for manipulation, etc..
