@@ -43,7 +43,7 @@ public class MessageXmlObject
 	
 	private final static Logger log = Logger.getLogger( MessageXmlObject.class );
 	private final String messageContent;
-	private Operation operation;
+	private WsdlOperation operation;
 	private final boolean isRequest;
 
 	public MessageXmlObject( WsdlOperation operation, String messageContent, boolean isRequest )
@@ -82,7 +82,7 @@ public class MessageXmlObject
 	public MessageXmlPart [] getMessageParts() throws Exception
    {
    	String operationName = operation.getName();
-		BindingOperation bindingOperation = findBindingOperation( operationName );
+		BindingOperation bindingOperation = operation.getBindingOperation();
 		if (bindingOperation == null)
 		{
 			throw new Exception("Missing operation ["	+ operationName + "] in wsdl definition");
@@ -194,34 +194,4 @@ public class MessageXmlObject
    	
    	return messageParts.toArray( new MessageXmlPart[messageParts.size()] );
    }
-	
-	private BindingOperation findBindingOperation(String operationName) throws Exception
-	{
-		Map<?,?> services = wsdlContext.getDefinition().getAllServices();
-		Iterator<?> i = services.keySet().iterator();
-		while( i.hasNext() )
-		{
-			Service service = (Service) wsdlContext.getDefinition().getService( (QName) i.next());
-			Map<?,?> ports = service.getPorts();
-			
-			Iterator<?> iterator = ports.keySet().iterator();
-			while( iterator.hasNext() )
-			{
-				Port port = (Port) service.getPort( (String) iterator.next() );
-				BindingOperation bindingOperation = port.getBinding().getBindingOperation( operationName, null, null );
-				if( bindingOperation != null ) return bindingOperation;
-			}
-		}
-		
-		Map<?,?> bindings = wsdlContext.getDefinition().getAllBindings();
-		i = bindings.keySet().iterator();
-		while( i.hasNext() )
-		{
-			Binding binding = (Binding) bindings.get( i.next() );
-			BindingOperation bindingOperation = binding.getBindingOperation( operationName, null, null );
-			if( bindingOperation != null ) return bindingOperation;
-		}
-		
-		return null;
-	}
 }
