@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -699,8 +698,10 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		{
 			String xml = projectDocument.xmlText( options );
 			xml = StringUtils.fixLineSeparator( xml );
+			byte[] bytes = xml.getBytes( "utf-8" );
+
 			FileOutputStream out = new FileOutputStream( projectFile );
-			out.write( xml.getBytes( "utf-8" ) );
+			out.write( bytes );
 			out.close();
 			size = projectFile.length();
 
