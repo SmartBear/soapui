@@ -670,7 +670,7 @@
         <dependency>
             <groupId>wss4j</groupId>
             <artifactId>wss4j</artifactId>
-            <version>1.5.6</version>
+            <version>1.5.7</version>
             <type>jar</type>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
