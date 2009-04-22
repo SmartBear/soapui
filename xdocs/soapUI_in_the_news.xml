@@ -5,6 +5,20 @@
     </properties>
     <body>
     <section name="soapUI Releases">
+    
+    
+        <subsection name="ickydime">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/icky.gif" alt="Web service testing tool"/>	    	    
+	    		</column>
+	    		<column align="left">
+	    			<p>The post starts: "SOAP is my least favourite server side web service to..."<br/>
+	    			<a href="http://blog.ickydime.com/2009/04/soapui-open-source-way-to-explore-wsdl.html">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	</subsection>
+    
      
     <subsection name="One Byte at a Time">
 	    	<columns>
