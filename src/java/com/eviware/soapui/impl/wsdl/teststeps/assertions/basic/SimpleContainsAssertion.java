@@ -172,7 +172,7 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Contains Assertion" );
 		XForm mainForm = builder.createForm( "Basic" );
 
-		mainForm.addTextField( CONTENT, "Content to check for", XForm.FieldType.TEXT ).setWidth( 20 );
+		mainForm.addTextField( CONTENT, "Content to check for", XForm.FieldType.TEXTAREA ).setWidth( 40 );
 		mainForm.addCheckBox( IGNORE_CASE, "Ignore case in comparison" );
 		mainForm.addCheckBox( USE_REGEX, "Use token as Regular Expression" );
 

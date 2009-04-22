@@ -137,7 +137,7 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 		XFormDialogBuilder builder = XFormFactory.createDialogBuilder("NotContains Assertion");
 		XForm mainForm = builder.createForm( "Basic" );
 		
-		mainForm.addTextField( CONTENT, "Content to check for", XForm.FieldType.TEXT ).setWidth( 20 );
+		mainForm.addTextField( CONTENT, "Content to check for", XForm.FieldType.TEXTAREA ).setWidth( 40 );
 		mainForm.addCheckBox( IGNORE_CASE, "Ignore case in comparison" );
 		mainForm.addCheckBox( USE_REGEX, "Use token as Regular Expression" );
 		
