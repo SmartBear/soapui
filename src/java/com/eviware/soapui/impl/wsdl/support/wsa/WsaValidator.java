@@ -68,25 +68,25 @@ public class WsaValidator
 			   return null;
 			}
 
-			String wsaNameSpace = XmlUtils.findPrefixForNamespace(hdr, WsaUtils.WS_A_VERSION_200508 );
+			String wsaNameSpace = XmlUtils.findPrefixForNamespace(hdr, WsaUtils.WS_A_NAMESPACE_200508 );
 			if (wsaNameSpace != null)
 			{
-				wsaVns = WsaUtils.WS_A_VERSION_200508;
+				wsaVns = WsaUtils.WS_A_NAMESPACE_200508;
 			} else {
-				wsaNameSpace = XmlUtils.findPrefixForNamespace(hdr, WsaUtils.WS_A_VERSION_200408 );
+				wsaNameSpace = XmlUtils.findPrefixForNamespace(hdr, WsaUtils.WS_A_NAMESPACE_200408 );
 				if (wsaNameSpace != null)
 				{
-					wsaVns = WsaUtils.WS_A_VERSION_200408;
+					wsaVns = WsaUtils.WS_A_NAMESPACE_200408;
 				} else {
-					wsaNameSpace = XmlUtils.findPrefixForNamespace(envelope, WsaUtils.WS_A_VERSION_200508 );
+					wsaNameSpace = XmlUtils.findPrefixForNamespace(envelope, WsaUtils.WS_A_NAMESPACE_200508 );
 					if (wsaNameSpace != null)
 					{
-						wsaVns = WsaUtils.WS_A_VERSION_200508;
+						wsaVns = WsaUtils.WS_A_NAMESPACE_200508;
 					} else {
-						wsaNameSpace = XmlUtils.findPrefixForNamespace(envelope, WsaUtils.WS_A_VERSION_200408 );
+						wsaNameSpace = XmlUtils.findPrefixForNamespace(envelope, WsaUtils.WS_A_NAMESPACE_200408 );
 						if (wsaNameSpace != null)
 						{
-							wsaVns = WsaUtils.WS_A_VERSION_200408;
+							wsaVns = WsaUtils.WS_A_NAMESPACE_200408;
 						} else {
 							return null;
 						}
@@ -109,9 +109,9 @@ public class WsaValidator
      			toNode = XmlUtils.getFirstChildElementNS(header, wsaVersionNameSpace, "To");
      			parseToNode(toNode);
     		} else {
-    			toNode = XmlUtils.getFirstChildElementNS(header, WsaUtils.WS_A_VERSION_200508, "To");
+    			toNode = XmlUtils.getFirstChildElementNS(header, WsaUtils.WS_A_NAMESPACE_200508, "To");
     			if (toNode == null) {
-    				toNode = XmlUtils.getFirstChildElementNS(header, WsaUtils.WS_A_VERSION_200408, "To");
+    				toNode = XmlUtils.getFirstChildElementNS(header, WsaUtils.WS_A_NAMESPACE_200408, "To");
     			}
 				parseToNode(toNode);
     		}
@@ -205,11 +205,11 @@ public class WsaValidator
 					replyToNode = XmlUtils.getFirstChildElementNS(header, wsaVersionNameSpace, "ReplyTo");
 					parseReplyToNode(replyToNode, wsaVersionNameSpace);
 				} else {
-					replyToNode = XmlUtils.getFirstChildElementNS(header, WsaUtils.WS_A_VERSION_200508, "ReplyTo");
-					currentTagWsaNs = WsaUtils.WS_A_VERSION_200508;
+					replyToNode = XmlUtils.getFirstChildElementNS(header, WsaUtils.WS_A_NAMESPACE_200508, "ReplyTo");
+					currentTagWsaNs = WsaUtils.WS_A_NAMESPACE_200508;
 	    			if (replyToNode == null) {
-	    				replyToNode = XmlUtils.getFirstChildElementNS(header, WsaUtils.WS_A_VERSION_200408, "ReplyTo");
-	    				currentTagWsaNs = WsaUtils.WS_A_VERSION_200408;
+	    				replyToNode = XmlUtils.getFirstChildElementNS(header, WsaUtils.WS_A_NAMESPACE_200408, "ReplyTo");
+	    				currentTagWsaNs = WsaUtils.WS_A_NAMESPACE_200408;
 	    			}
 	    			parseReplyToNode(replyToNode, currentTagWsaNs);
 				}
@@ -290,9 +290,9 @@ public class WsaValidator
 				relatesToNode = XmlUtils.getFirstChildElementNS(header, wsaVersionNameSpace, "RelatesTo");
 				parseRelatesToNode(soapVersion, requestXmlObject, relatesToNode);
 			} else{
-				relatesToNode = XmlUtils.getFirstChildElementNS(header, WsaUtils.WS_A_VERSION_200508, "RelatesTo");
+				relatesToNode = XmlUtils.getFirstChildElementNS(header, WsaUtils.WS_A_NAMESPACE_200508, "RelatesTo");
     			if (relatesToNode == null) {
-    				relatesToNode = XmlUtils.getFirstChildElementNS(header, WsaUtils.WS_A_VERSION_200408, "RelatesTo");
+    				relatesToNode = XmlUtils.getFirstChildElementNS(header, WsaUtils.WS_A_NAMESPACE_200408, "RelatesTo");
     			}
     			parseRelatesToNode(soapVersion, requestXmlObject, relatesToNode);
 			}
@@ -414,9 +414,9 @@ public class WsaValidator
 					wsaVersionNameSpace, wsaProperty);
 			parsePropertyNode(propertyName, propertyNode, expectedValue);
 		} else {
-			propertyNode = XmlUtils.getFirstChildElementNS(header, WsaUtils.WS_A_VERSION_200508, wsaProperty);
+			propertyNode = XmlUtils.getFirstChildElementNS(header, WsaUtils.WS_A_NAMESPACE_200508, wsaProperty);
 			if (propertyNode == null) {
-				propertyNode = XmlUtils.getFirstChildElementNS(header, WsaUtils.WS_A_VERSION_200408, wsaProperty);
+				propertyNode = XmlUtils.getFirstChildElementNS(header, WsaUtils.WS_A_NAMESPACE_200408, wsaProperty);
 			}
 			parsePropertyNode(propertyName, propertyNode, expectedValue);
 		}

@@ -49,9 +49,20 @@ import com.eviware.soapui.support.xml.XmlUtils;
  */
 
 public class WsaUtils {
-	public static final String WS_A_VERSION_200508 = "http://www.w3.org/2005/08/addressing";
-	public static final String WS_A_VERSION_200408 = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
-	public static final String WSAM_NAMESPACE = "http://www.w3.org/2007/05/addressing/metadata";
+	public static final String WS_A_NAMESPACE_200508 = "http://www.w3.org/2005/08/addressing";
+	public static final String WS_A_NAMESPACE_200408 = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
+	/*
+	 * see http://www.w3.org/TR/2006/WD-ws-addr-wsdl-20060216/#actioninwsdl
+	 */
+	public static final String WS_A_NAMESPACE_200602 = "http://www.w3.org/2006/02/addressing/wsdl";
+	public static final String WS_A_NAMESPACE_200605 = "http://www.w3.org/2006/05/addressing/wsdl";
+	/*
+	 * see http://www.w3.org/TR/2007/REC-ws-addr-metadata-20070904/#actioninwsdl
+	 */
+	public static final String WS_A_NAMESPACE_200705 = "http://www.w3.org/2007/05/addressing/metadata";
+	
+	public static final String[] wsaNamespaces = {WS_A_NAMESPACE_200705,WS_A_NAMESPACE_200508,
+		WS_A_NAMESPACE_200408,WS_A_NAMESPACE_200605,WS_A_NAMESPACE_200602};
 
 	SoapVersion soapVersion;
 	WsdlOperation operation;
@@ -92,10 +103,10 @@ public class WsaUtils {
 	private Element getHeader(WsaContainer wsaContainer) throws XmlException {
 
 		// version="2005/08" is default
-		wsaVersionNameSpace = WS_A_VERSION_200508;
+		wsaVersionNameSpace = WS_A_NAMESPACE_200508;
 		if (wsaContainer.getWsaConfig().getVersion().equals(
 				WsaVersionTypeConfig.X_200408.toString())) {
-			wsaVersionNameSpace = WS_A_VERSION_200408;
+			wsaVersionNameSpace = WS_A_NAMESPACE_200408;
 		}
 		anonymousAddress = wsaVersionNameSpace + "/anonymous";
 		noneAddress = wsaVersionNameSpace + "/none";
@@ -115,24 +126,24 @@ public class WsaUtils {
 				soapVersion, true).getDomNode();
 
 		wsaPrefix = XmlUtils.findPrefixForNamespace(header,
-				WsaUtils.WS_A_VERSION_200508);
+				WsaUtils.WS_A_NAMESPACE_200508);
 		if (wsaPrefix != null) {
-			wsaVersionNamespaceOld = WsaUtils.WS_A_VERSION_200508;
+			wsaVersionNamespaceOld = WsaUtils.WS_A_NAMESPACE_200508;
 		} else {
 			wsaPrefix = XmlUtils.findPrefixForNamespace(header,
-					WsaUtils.WS_A_VERSION_200408);
+					WsaUtils.WS_A_NAMESPACE_200408);
 			if (wsaPrefix != null) {
-				wsaVersionNamespaceOld = WsaUtils.WS_A_VERSION_200408;
+				wsaVersionNamespaceOld = WsaUtils.WS_A_NAMESPACE_200408;
 			} else {
 				wsaPrefix = XmlUtils.findPrefixForNamespace(header,
-						WsaUtils.WS_A_VERSION_200508);
+						WsaUtils.WS_A_NAMESPACE_200508);
 				if (wsaPrefix != null) {
-					wsaVersionNamespaceOld = WsaUtils.WS_A_VERSION_200508;
+					wsaVersionNamespaceOld = WsaUtils.WS_A_NAMESPACE_200508;
 				} else {
 					wsaPrefix = XmlUtils.findPrefixForNamespace(header,
-							WsaUtils.WS_A_VERSION_200408);
+							WsaUtils.WS_A_NAMESPACE_200408);
 					if (wsaPrefix != null) {
-						wsaVersionNamespaceOld = WsaUtils.WS_A_VERSION_200408;
+						wsaVersionNamespaceOld = WsaUtils.WS_A_NAMESPACE_200408;
 					} else {
 						wsaPrefix = "wsa";
 					}

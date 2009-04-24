@@ -941,16 +941,17 @@ private void updateWsaPolicy(String url, WsdlContext newContext)
       if( policy != null )
       {
          List<Addressing> addressingList = policy.getAddressingList();
+         List<?> usingAddressingList = policy.getUsingAddressingList();
          for( Addressing addressing : addressingList )
          {
-             policyFlag = true;
-        	 String optional = addressing.getOptional().toString();
+            policyFlag = true;
+        	   String optional = addressing.getOptional().toString();
             if( StringUtils.isNullOrEmpty( optional ) || optional.equals( "false" )
                     || ( optional.equals( "true" ) && SoapUI.getSettings().getBoolean( WsaSettings.ENABLE_FOR_OPTIONAL ) ) )
             {
             	interfaceWsaVersion = WsaVersionTypeConfig.X_200508.toString();
             }
-            Policy innerPolicy = addressing.getPolicy();
+				Policy innerPolicy = addressing.getPolicy();
             if( innerPolicy != null )
             {
                List<AnonymousResponses> anonymousList = innerPolicy.getAnonymousResponsesList();
@@ -975,6 +976,14 @@ private void updateWsaPolicy(String url, WsdlContext newContext)
                }
             }
          }
+         if (interfaceWsaVersion == WsaVersionTypeConfig.NONE.toString() && !usingAddressingList.isEmpty())
+			{
+         	/*
+				 * UsingAddressing can also be specified insde Policy
+				 * check http://www.w3.org/TR/ws-addr-wsdl/#id2263339
+				 */
+         	interfaceWsaVersion = WsaVersionTypeConfig.X_200508.toString();
+			}
       }
       setAnonymous(interfaceAnonymous);
       setWsaVersion( interfaceWsaVersion );

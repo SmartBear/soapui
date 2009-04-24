@@ -721,12 +721,12 @@ public class WsdlUtils
 		String version = WsaVersionTypeConfig.NONE.toString();
 		String anonymous = AnonymousTypeConfig.OPTIONAL.toString();
 		// check if found reference is addressing policy
-		Element wsAddressing = XmlUtils.getFirstChildElementNS(policy, WsaUtils.WSAM_NAMESPACE, "Addressing");
+		Element wsAddressing = XmlUtils.getFirstChildElementNS(policy, WsaUtils.WS_A_NAMESPACE_200705, "Addressing");
 		Element addressingPolicy = null;
 		if (wsAddressing != null)
 		{
-			String optional = wsAddressing.getAttributeNS(PolicyUtils.WS_POLICY_NAMESPACE, "Optional");
-			addressingPolicy = XmlUtils.getFirstChildElementNS(wsAddressing, PolicyUtils.WS_POLICY_NAMESPACE, "Policy");
+			String optional = wsAddressing.getAttributeNS(PolicyUtils.WS_W3_POLICY_NAMESPACE, "Optional");
+			addressingPolicy = XmlUtils.getFirstChildElementNS(wsAddressing, PolicyUtils.WS_W3_POLICY_NAMESPACE, "Policy");
 			if (addressingPolicy != null)
 			{
 				if (StringUtils.isNullOrEmpty(optional) || optional.equals("false")
@@ -735,7 +735,7 @@ public class WsdlUtils
 					version = WsaVersionTypeConfig.X_200508.toString();
 				}
 				// check if policy has Anonymous
-				Element anonymousElm = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(WsaUtils.WSAM_NAMESPACE,
+				Element anonymousElm = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(WsaUtils.WS_A_NAMESPACE_200705,
 						"AnonymousResponses"));
 				if (anonymousElm != null)
 				{
@@ -744,7 +744,7 @@ public class WsdlUtils
 				else
 				{
 					Element nonAnonymousElement = XmlUtils.getFirstChildElementNS(addressingPolicy, new QName(
-							WsaUtils.WSAM_NAMESPACE, "NonAnonymousResponses"));
+							WsaUtils.WS_A_NAMESPACE_200705, "NonAnonymousResponses"));
 					if (nonAnonymousElement != null)
 					{
 						anonymous = AnonymousTypeConfig.PROHIBITED.toString();
@@ -1155,14 +1155,23 @@ public class WsdlUtils
 			if (attributeExtensible == null)
 				return null;
 
-			String[] attrs = WsdlUtils.getExentsibilityAttributes(attributeExtensible, new QName(
-					WsaUtils.WS_A_VERSION_200408, "Action"));
-			if (attrs == null || attrs.length == 0)
-				attrs = WsdlUtils.getExentsibilityAttributes(attributeExtensible, new QName(WsaUtils.WS_A_VERSION_200508,
-						"Action"));
-			if (attrs != null && attrs.length > 0)
+//			String[] attrs = WsdlUtils.getExentsibilityAttributes(attributeExtensible, new QName(
+//					WsaUtils.WS_A_NAMESPACE_200408, "Action"));
+//			if (attrs == null || attrs.length == 0)
+//				attrs = WsdlUtils.getExentsibilityAttributes(attributeExtensible, new QName(WsaUtils.WS_A_NAMESPACE_200508,
+//						"Action"));
+//			if (attrs != null && attrs.length > 0)
+//			{
+//				return attrs[0];
+//			}
+			String[] attrs;
+			for (String namespace : WsaUtils.wsaNamespaces)
 			{
-				return attrs[0];
+				attrs = WsdlUtils.getExentsibilityAttributes(attributeExtensible, new QName(namespace, "Action"));
+				if (attrs != null && attrs.length > 0)
+				{
+					return attrs[0];
+				}
 			}
 
 			WsdlInterface iface = operation.getInterface();
@@ -1177,7 +1186,7 @@ public class WsdlUtils
 				if (op != null)
 				{
 					attributeExtensible = output ? op.getOutput() : op.getInput();
-					attrs = WsdlUtils.getExentsibilityAttributes(attributeExtensible, new QName(WsaUtils.WSAM_NAMESPACE,
+					attrs = WsdlUtils.getExentsibilityAttributes(attributeExtensible, new QName(WsaUtils.WS_A_NAMESPACE_200705,
 							"Action"));
 					if (attrs != null && attrs.length > 0)
 					{
