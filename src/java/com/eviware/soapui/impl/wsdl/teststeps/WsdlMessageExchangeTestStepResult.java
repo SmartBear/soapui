@@ -29,18 +29,21 @@ public class WsdlMessageExchangeTestStepResult extends WsdlTestStepResult implem
 
 	public MessageExchange[] getMessageExchanges()
 	{
-		return exchanges.toArray( new MessageExchange[exchanges.size()] );
+		return exchanges == null ? new MessageExchange[0] : 
+			exchanges.toArray( new MessageExchange[exchanges.size()] );
 	}
 	
 	public void addMessageExchange( MessageExchange messageExchange )
 	{
-		exchanges.add( messageExchange );
+		if( exchanges != null )
+			exchanges.add( messageExchange );
 	}
 	
 	public void addMessages( MessageExchange[] messageExchanges )
 	{
-		for( MessageExchange messageExchange : messageExchanges )
-			exchanges.add( messageExchange );
+		if( exchanges != null )
+			for( MessageExchange messageExchange : messageExchanges )
+				exchanges.add( messageExchange );
 	}
 
 	@Override
