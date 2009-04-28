@@ -209,7 +209,7 @@ public class WadlImporter
             initParam( param, p );
          }
 
-         for( RepresentationType representationType : method.getResponse().getRepresentationList() )
+         for( RepresentationType representationType : method.getRequest().getRepresentationList() )
          {
             representationType = resolveRepresentation( representationType );
             addRepresentationFromConfig( request, representationType, RestRepresentation.Type.REQUEST );
