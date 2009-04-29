@@ -15,8 +15,12 @@ package com.eviware.soapui.impl.wsdl;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -180,7 +184,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 				{
 					try
 					{
-						loadProject( new URL( "file:" + file.getAbsolutePath()) );
+						loadProject( new URL( "file:" + file.getAbsolutePath() ) );
 						lastModified = file.lastModified();
 					}
 					catch( MalformedURLException e )
@@ -645,9 +649,10 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			// no caching -> create copy and remove definition cachings
 			removeDefinitionCaches( projectDocument );
 		}
-		
+
 		// remove project root
-		XmlBeansSettingsImpl tempSettings = new XmlBeansSettingsImpl(this, null, projectDocument.getSoapuiProject().getSettings() );
+		XmlBeansSettingsImpl tempSettings = new XmlBeansSettingsImpl( this, null, projectDocument.getSoapuiProject()
+				.getSettings() );
 		tempSettings.clearSetting( ProjectSettings.PROJECT_ROOT );
 
 		// check for encryption
@@ -696,13 +701,44 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 		try
 		{
-			String xml = projectDocument.xmlText( options );
-			xml = StringUtils.fixLineSeparator( xml );
-			byte[] bytes = xml.getBytes( "utf-8" );
+			File tempFile = File.createTempFile( "project-temp-", ".xml", projectFile.getParentFile() );
+			// ByteArrayOutputStream writer = new ByteArrayOutputStream(8192);
+			
+			// save once to make sure it can be saved 
+			projectDocument.save( tempFile, options );
 
-			FileOutputStream out = new FileOutputStream( projectFile );
-			out.write( bytes );
-			out.close();
+//			BufferedReader br = new BufferedReader( new FileReader( tempFile ) );
+//			FileWriter w = new FileWriter( projectFile );
+//			String ls = System.getProperty( "line.separator" );
+//			String ln = null;
+//
+//			while( ( ln = br.readLine() ) != null )
+//			{
+//				w.write( ln );
+//				w.write( ls );
+//			}
+//			
+//			w.close();
+//			br.close(
+			
+			// now save it for real
+			projectDocument.save( projectFile, options );
+
+			// delete tempFile here so we have it as backup in case second save fails
+			tempFile.delete();
+
+			//			 
+			// FileOutputStream out = new FileOutputStream(projectFile);
+			// writer.writeTo(out);
+			// out.close();
+
+			// String xml = projectDocument.xmlText( options );
+			// xml = StringUtils.fixLineSeparator( xml );
+			// byte[] bytes = xml.getBytes( "utf-8" );
+			//
+			// FileOutputStream out = new FileOutputStream( projectFile );
+			// out.write( bytes );
+			// out.close();
 			size = projectFile.length();
 
 			// ByteArrayOutputStream writer = new ByteArrayOutputStream(8192);
@@ -1284,7 +1320,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		return wssContainer;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	@Override
 	public void resolve( ResolveContext context )
 	{
