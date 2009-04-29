@@ -655,7 +655,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
       return -1;
    }
 
-   public <T extends TestStep> T findPreviousStepOfType( TestStep referenceStep, Class<T> stepClass )
+   @SuppressWarnings("unchecked")
+	public <T extends TestStep> T findPreviousStepOfType( TestStep referenceStep, Class<T> stepClass )
    {
       int currentStepIndex = getIndexOfTestStep( referenceStep );
       int ix = currentStepIndex - 1;
@@ -667,7 +668,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
       return ( T )( ix < 0 ? null : getTestStepAt( ix ) );
    }
 
-   public <T extends TestStep> T findNextStepOfType( TestStep referenceStep, Class<T> stepClass )
+   @SuppressWarnings("unchecked")
+	public <T extends TestStep> T findNextStepOfType( TestStep referenceStep, Class<T> stepClass )
    {
       int currentStepIndex = getIndexOfTestStep( referenceStep );
       int ix = currentStepIndex + 1;
@@ -747,9 +749,9 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
       return createActions;
    }
 
-   public void resetConfigOnMove( TestCaseConfig testCaseArray )
+   public void resetConfigOnMove( TestCaseConfig testCaseConfig )
    {
-      setConfig( testCaseArray );
+      setConfig( testCaseConfig );
       int mod = 0;
 
       List<TestStepConfig> configs = getConfig().getTestStepList();
@@ -768,6 +770,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
       {
          loadTests.get( c ).resetConfigOnMove( loadTestConfigs.get( c ) );
       }
+      
+      setPropertiesConfig( testCaseConfig.getProperties() );
    }
 
    public List<LoadTest> getLoadTestList()
