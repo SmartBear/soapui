@@ -32,7 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractDefinitionCache<T extends AbstractInterface> implements DefinitionCache
+public abstract class AbstractDefinitionCache<T extends AbstractInterface<?>> implements DefinitionCache
 {
    protected DefinitionCacheConfig definitionCache;
    private T container;
@@ -71,7 +71,7 @@ public abstract class AbstractDefinitionCache<T extends AbstractInterface> imple
       if( cache instanceof AbstractDefinitionCache )
       {
          definitionCache = reinit( container );
-         definitionCache.set( ((AbstractDefinitionCache)cache).getConfig() );
+         definitionCache.set( ((AbstractDefinitionCache<?>)cache).getConfig() );
          initParts();
       }
       else

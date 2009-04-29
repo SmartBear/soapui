@@ -15,7 +15,7 @@ package com.eviware.soapui.impl.support.definition.support;
 import com.eviware.soapui.config.DefinitionCacheConfig;
 import com.eviware.soapui.impl.support.AbstractInterface;
 
-public class StandaloneDefinitionCache<T extends AbstractInterface> extends AbstractDefinitionCache<T>
+public class StandaloneDefinitionCache<T extends AbstractInterface<?>> extends AbstractDefinitionCache<T>
 {
    public StandaloneDefinitionCache()
    {

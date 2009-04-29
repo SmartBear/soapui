@@ -16,7 +16,7 @@ import com.eviware.soapui.config.DefinitionCacheConfig;
 import com.eviware.soapui.config.InterfaceConfig;
 import com.eviware.soapui.impl.support.AbstractInterface;
 
-public class InterfaceConfigDefinitionCache<T extends AbstractInterface> extends AbstractDefinitionCache<T>
+public class InterfaceConfigDefinitionCache<T extends AbstractInterface<?>> extends AbstractDefinitionCache<T>
 {
    public InterfaceConfigDefinitionCache(T iface)
    {

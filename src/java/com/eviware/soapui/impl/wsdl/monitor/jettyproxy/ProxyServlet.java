@@ -206,7 +206,7 @@ public class ProxyServlet implements Servlet
 		capturedData.stopCapture();
 		
 		byte[] res = method.getResponseBody();
-
+		IO.copy(new ByteArrayInputStream(method.getResponseBody()), response.getOutputStream());
 		capturedData.setRequest(capture.getCapturedData());
 		capturedData.setResponse(res);
 		capturedData.setResponseHeader(method);
