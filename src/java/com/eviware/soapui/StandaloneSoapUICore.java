@@ -40,6 +40,13 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 		super( null, settingsFile );
 	}
 	
+	public StandaloneSoapUICore( boolean init, boolean settingPassword,String soapUISettingsPassword )
+	{
+		super(true,soapUISettingsPassword);
+		
+		if( init )
+			init( DEFAULT_SETTINGS_FILE );
+	}
 	public void prepareUI()
 	{
 		super.prepareUI();

@@ -129,7 +129,8 @@ public abstract class AbstractSoapUIRunner
 
    protected SoapUICore createSoapUICore()
    {
-      if( enableUI )
+      
+   	if( enableUI )
       {
          StandaloneSoapUICore core = new StandaloneSoapUICore( settingsFile );
          log.info( "Enabling UI Components" );
@@ -311,4 +312,9 @@ public abstract class AbstractSoapUIRunner
          }
       }
    }
+
+	protected boolean isEnableUI()
+	{
+		return enableUI;
+	}
 }

@@ -44,6 +44,12 @@ public class SwingSoapUICore extends DefaultSoapUICore
 		super(root, settingsFile);
 	}
 
+	public SwingSoapUICore(boolean settingPassword,String soapUISettingsPassword)
+	{
+		super(settingPassword,soapUISettingsPassword);
+	}
+
+
 	public void prepareUI()
 	{
 		UISupport.setToolHost(new SwingToolHost());

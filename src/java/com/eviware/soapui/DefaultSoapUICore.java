@@ -77,6 +77,14 @@ public class DefaultSoapUICore implements SoapUICore
 	{
 	}
 
+	/*
+	 * this method is added for enabling settings password (like in core) all the way down in hierarchy 
+	 * boolean setingPassword is a dummy parameter, because the constructor with only one string parameter already existed 
+	 */
+	public DefaultSoapUICore(boolean settingPassword, String soapUISettingsPassword)
+	{
+		this.password = soapUISettingsPassword;
+	}
 	public DefaultSoapUICore(String root)
 	{
 		this.root = root;

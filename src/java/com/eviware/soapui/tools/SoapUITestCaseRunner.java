@@ -92,6 +92,16 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
 	private boolean saveAfterRun;
 
+   public SoapUITestCaseRunner()
+   {
+      super( SoapUITestCaseRunner.TITLE );
+   }
+
+   public SoapUITestCaseRunner( String title )
+   {
+      super( title );
+   }
+
    /**
     * Runs the tests in the specified soapUI project file, see soapUI xdocs for
     * details.
@@ -229,16 +239,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
       this.junitReport = junitReport;
       if( junitReport )
          reportCollector = new JUnitReportCollector();
-   }
-
-   public SoapUITestCaseRunner()
-   {
-      super( SoapUITestCaseRunner.TITLE );
-   }
-
-   public SoapUITestCaseRunner( String title )
-   {
-      super( title );
    }
 
    /**
@@ -668,4 +668,5 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
    {
       return project;
    }
+
 }
