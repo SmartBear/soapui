@@ -342,7 +342,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
             return;
 
          TestStep testStep = runContext.getCurrentStep();
-         testStepList.setSelectedValue( testStep, true );
+         if( testStep != null )
+         	testStepList.setSelectedValue( testStep, true );
       }
 
       public void afterRun( TestRunner testRunner, TestRunContext runContext )

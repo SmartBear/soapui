@@ -104,8 +104,11 @@ public class ProgressBarTestCaseAdapter
 				return;
 
 			TestStep testStep = runContext.getCurrentStep();
-			progressBar.setString( testStep.getName() );
-			progressBar.setValue( runContext.getCurrentStepIndex() );
+			if( testStep != null )
+			{
+				progressBar.setString( testStep.getName() );
+				progressBar.setValue( runContext.getCurrentStepIndex() );
+			}
 		}
 		
 		public void afterStep(TestRunner testRunner, TestRunContext runContext, TestStepResult result)

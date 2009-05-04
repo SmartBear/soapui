@@ -31,398 +31,397 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * WSDL TestCase Runner - runs all steps in a testcase and collects performance data
- *
+ * WSDL TestCase Runner - runs all steps in a testcase and collects performance
+ * data
+ * 
  * @author Ole.Matzura
  */
 
 public class WsdlTestCaseRunner implements Runnable, TestRunner
 {
-   private TestRunListener[] listeners;
-   private final WsdlTestCase testCase;
-   private Status status;
-   private Throwable error;
-   private WsdlTestRunContext runContext;
-   private List<TestStepResult> testStepResults = new LinkedList<TestStepResult>();
-   private int gotoStepIndex;
-   private long startTime;
-   private String reason;
-   private volatile Future<?> future;
-   private int id;
-   private int resultCount;
-   private final static ExecutorService threadPool = Executors.newCachedThreadPool();
-   
-   private final static Logger log = Logger.getLogger(WsdlTestCaseRunner.class);
+	private TestRunListener[] listeners;
+	private final WsdlTestCase testCase;
+	private Status status;
+	private Throwable error;
+	private WsdlTestRunContext runContext;
+	private List<TestStepResult> testStepResults = new LinkedList<TestStepResult>();
+	private int gotoStepIndex;
+	private long startTime;
+	private String reason;
+	private volatile Future<?> future;
+	private int id;
+	private int resultCount;
+	private final static ExecutorService threadPool = Executors.newCachedThreadPool();
 
-   private static int idCounter = 0;
-   private Timer timeoutTimer;
-   private TimeoutTimerTask timeoutTimerTask;
-   private Thread thread;
+	private final static Logger log = Logger.getLogger( WsdlTestCaseRunner.class );
 
-   public WsdlTestCaseRunner(WsdlTestCase testCase, StringToObjectMap properties)
-   {
-      this.testCase = testCase;
-      status = Status.INITIALIZED;
-      runContext = new WsdlTestRunContext(this, properties);
-      id = ++idCounter;
-   }
+	private static int idCounter = 0;
+	private Timer timeoutTimer;
+	private TimeoutTimerTask timeoutTimerTask;
+	private Thread thread;
 
-   public WsdlTestRunContext getRunContext()
-   {
-      return runContext;
-   }
+	public WsdlTestCaseRunner( WsdlTestCase testCase, StringToObjectMap properties )
+	{
+		this.testCase = testCase;
+		status = Status.INITIALIZED;
+		runContext = new WsdlTestRunContext( this, properties );
+		id = ++idCounter;
+	}
 
-   public void start(boolean async)
-   {
-      status = Status.RUNNING;
-      if (async)
-         future = threadPool.submit(this);
-      else
-         run();
-   }
+	public WsdlTestRunContext getRunContext()
+	{
+		return runContext;
+	}
 
-   public void cancel(String reason)
-   {
-      if (status == Status.CANCELED || status == Status.FINISHED || status == Status.FAILED ||
-              runContext == null) return;
-      TestStep currentStep = runContext.getCurrentStep();
-      if (currentStep != null)
-         currentStep.cancel();
-      status = Status.CANCELED;
-      this.reason = reason;
-   }
+	public void start( boolean async )
+	{
+		status = Status.RUNNING;
+		if( async )
+			future = threadPool.submit( this );
+		else
+			run();
+	}
 
-   public void fail(String reason)
-   {
-      if (status == Status.CANCELED || status == Status.FAILED ||
-              runContext == null) return;
-      TestStep currentStep = runContext.getCurrentStep();
-      if (currentStep != null)
-         currentStep.cancel();
-      status = Status.FAILED;
-      this.reason = reason;
-   }
+	public void cancel( String reason )
+	{
+		if( status == Status.CANCELED || status == Status.FINISHED || status == Status.FAILED || runContext == null )
+			return;
+		TestStep currentStep = runContext.getCurrentStep();
+		if( currentStep != null )
+			currentStep.cancel();
+		status = Status.CANCELED;
+		this.reason = reason;
+	}
 
-   public Status getStatus()
-   {
-      return status;
-   }
+	public void fail( String reason )
+	{
+		if( status == Status.CANCELED || status == Status.FAILED || runContext == null )
+			return;
+		TestStep currentStep = runContext.getCurrentStep();
+		if( currentStep != null )
+			currentStep.cancel();
+		status = Status.FAILED;
+		this.reason = reason;
+	}
 
-   public int getId()
-   {
-      return id;
-   }
+	public Status getStatus()
+	{
+		return status;
+	}
 
-   public Thread getThread()
-   {
-      return thread;
-   }
+	public int getId()
+	{
+		return id;
+	}
 
-   public void run()
-   {
-      int initCount = 0;
+	public Thread getThread()
+	{
+		return thread;
+	}
 
-      if( future != null )
-      {
-         thread = Thread.currentThread();
-         thread.setName( "TestCaseRunner Thread for " + testCase.getName() );
-      }
+	public void run()
+	{
+		int initCount = 0;
 
-      try
-      {
-         gotoStepIndex = -1;
-         testStepResults.clear();
+		if( future != null )
+		{
+			thread = Thread.currentThread();
+			thread.setName( "TestCaseRunner Thread for " + testCase.getName() );
+		}
 
-         // create state for testcase if specified
-         if (testCase.getKeepSession())
-         {
-            runContext.setProperty(SubmitContext.HTTP_STATE_PROPERTY, new HttpState());
-         }
+		try
+		{
+			gotoStepIndex = -1;
+			testStepResults.clear();
 
-         testCase.runSetupScript(runContext, this);
+			// create state for testcase if specified
+			if( testCase.getKeepSession() )
+			{
+				runContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, new HttpState() );
+			}
 
-         status = Status.RUNNING;
-         startTime = System.currentTimeMillis();
+			testCase.runSetupScript( runContext, this );
 
-         if (testCase.getTimeout() > 0)
-         {
-            timeoutTimer = new Timer();
-            timeoutTimerTask = new TimeoutTimerTask();
-            timeoutTimer.schedule(timeoutTimerTask, testCase.getTimeout());
-         }
+			status = Status.RUNNING;
+			startTime = System.currentTimeMillis();
 
-         listeners = testCase.getTestRunListeners();
-         notifyBeforeRun();
+			if( testCase.getTimeout() > 0 )
+			{
+				timeoutTimer = new Timer();
+				timeoutTimerTask = new TimeoutTimerTask();
+				timeoutTimer.schedule( timeoutTimerTask, testCase.getTimeout() );
+			}
 
-         for (; initCount < testCase.getTestStepCount() && status == Status.RUNNING; initCount++)
-         {
-            WsdlTestStep testStep = testCase.getTestStepAt(initCount);
-            if (testStep.isDisabled())
-               continue;
+			listeners = testCase.getTestRunListeners();
+			notifyBeforeRun();
 
-            try
-            {
-               testStep.prepare(this, runContext);
-            }
-            catch (Exception e)
-            {
-               status = Status.FAILED;
-               SoapUI.logError(e);
-               throw new Exception("Failed to prepare testStep [" + testStep.getName() + "]; " + e.toString());
-            }
-         }
+			for( ; initCount < testCase.getTestStepCount() && status == Status.RUNNING; initCount++ )
+			{
+				WsdlTestStep testStep = testCase.getTestStepAt( initCount );
+				if( testStep.isDisabled() )
+					continue;
 
-         int currentStepIndex = 0;
+				try
+				{
+					testStep.prepare( this, runContext );
+				}
+				catch( Exception e )
+				{
+					status = Status.FAILED;
+					SoapUI.logError( e );
+					throw new Exception( "Failed to prepare testStep [" + testStep.getName() + "]; " + e.toString() );
+				}
+			}
 
-         for (; status == Status.RUNNING && currentStepIndex < testCase.getTestStepCount(); currentStepIndex++)
-         {
-            TestStep currentStep = runContext.getCurrentStep();
-            if (!currentStep.isDisabled())
-            {
-               TestStepResult stepResult = runTestStep(currentStep, true, true);
-               if (stepResult == null)
-                  return;
+			int currentStepIndex = 0;
 
-               if (status == Status.CANCELED || status == Status.FAILED)
-                  return;
+			for( ; status == Status.RUNNING && currentStepIndex < testCase.getTestStepCount(); currentStepIndex++ )
+			{
+				TestStep currentStep = runContext.getCurrentStep();
+				if( currentStep != null && !currentStep.isDisabled() )
+				{
+					TestStepResult stepResult = runTestStep( currentStep, true, true );
+					if( stepResult == null )
+						return;
 
-               if (gotoStepIndex != -1)
-               {
-                  currentStepIndex = gotoStepIndex - 1;
-                  gotoStepIndex = -1;
-               }
-            }
+					if( status == Status.CANCELED || status == Status.FAILED )
+						return;
 
-            runContext.setCurrentStep(currentStepIndex + 1);
-         }
+					if( gotoStepIndex != -1 )
+					{
+						currentStepIndex = gotoStepIndex - 1;
+						gotoStepIndex = -1;
+					}
+				}
 
-         if (runContext.getProperty(TestRunner.Status.class.getName()) == TestRunner.Status.FAILED &&
-                 testCase.getFailTestCaseOnErrors())
-         {
-            fail("Failing due to failed test step");
-         }
-      }
-      catch (Throwable t)
-      {
-         log.error("Exception during TestCase Execution", t);
+				runContext.setCurrentStep( currentStepIndex + 1 );
+			}
 
-         if (t instanceof OutOfMemoryError &&
-                 UISupport.confirm("Exit now without saving?", "Out of Memory Error"))
-         {
-            System.exit(0);
-         }
+			if( runContext.getProperty( TestRunner.Status.class.getName() ) == TestRunner.Status.FAILED
+					&& testCase.getFailTestCaseOnErrors() )
+			{
+				fail( "Failing due to failed test step" );
+			}
+		}
+		catch( Throwable t )
+		{
+			log.error( "Exception during TestCase Execution", t );
 
-         status = Status.FAILED;
-         error = t;
-         reason = t.toString();
-      }
-      finally
-      {
-         if (timeoutTimer != null)
-         {                                                             
-            timeoutTimer.cancel();
-         }
+			if( t instanceof OutOfMemoryError && UISupport.confirm( "Exit now without saving?", "Out of Memory Error" ) )
+			{
+				System.exit( 0 );
+			}
 
-         if (status == Status.RUNNING)
-         {
-            status = Status.FINISHED;
-         }
+			status = Status.FAILED;
+			error = t;
+			reason = t.toString();
+		}
+		finally
+		{
+			if( timeoutTimer != null )
+			{
+				timeoutTimer.cancel();
+			}
 
-         for (int c = 0; c < initCount; c++)
-         {
-            WsdlTestStep testStep = testCase.getTestStepAt(c);
-            if (!testStep.isDisabled())
-               testStep.finish(this, runContext);
-         }
+			if( status == Status.RUNNING )
+			{
+				status = Status.FINISHED;
+			}
 
-         notifyAfterRun();
+			for( int c = 0; c < initCount; c++ )
+			{
+				WsdlTestStep testStep = testCase.getTestStepAt( c );
+				if( !testStep.isDisabled() )
+					testStep.finish( this, runContext );
+			}
 
-         try
-         {
-            testCase.runTearDownScript(runContext, this);
-         }
-         catch (Exception e)
-         {
-            SoapUI.logError(e);
-         }
+			notifyAfterRun();
 
-         runContext.clear();
-         listeners = null;
-      }
-   }
+			try
+			{
+				testCase.runTearDownScript( runContext, this );
+			}
+			catch( Exception e )
+			{
+				SoapUI.logError( e );
+			}
 
-   public TestStepResult runTestStepByName( String name )
-   {
-      return runTestStep( getTestCase().getTestStepByName( name ), true, true );
-   }
+			runContext.clear();
+			listeners = null;
+		}
+	}
 
-   public TestStepResult runTestStep(TestStep testStep )
-   {
-      return runTestStep( testStep, true, true );
-   }
+	public TestStepResult runTestStepByName( String name )
+	{
+		return runTestStep( getTestCase().getTestStepByName( name ), true, true );
+	}
 
-   public TestStepResult runTestStep(TestStep testStep, boolean discard, boolean process)
-   {
-      for (int i = 0; i < listeners.length; i++)
-      {
-         listeners[i].beforeStep(this, runContext);
-         if (status == Status.CANCELED || status == Status.FAILED)
-            return null;
-      }
+	public TestStepResult runTestStep( TestStep testStep )
+	{
+		return runTestStep( testStep, true, true );
+	}
 
-      TestStepResult stepResult = testStep.run(this, runContext);
-      testStepResults.add(stepResult);
-      resultCount++;
-      enforceMaxResults( testCase.getMaxResults());
+	public TestStepResult runTestStep( TestStep testStep, boolean discard, boolean process )
+	{
+		for( int i = 0; i < listeners.length; i++ )
+		{
+			listeners[i].beforeStep( this, runContext );
+			if( status == Status.CANCELED || status == Status.FAILED )
+				return null;
+		}
 
-      for (int i = 0; i < listeners.length; i++)
-      {
-         listeners[i].afterStep(this, runContext, stepResult);
-      }
+		TestStepResult stepResult = testStep.run( this, runContext );
+		testStepResults.add( stepResult );
+		resultCount++ ;
+		enforceMaxResults( testCase.getMaxResults() );
 
-      // discard?
-      if (discard && stepResult.getStatus() == TestStepStatus.OK && testCase.getDiscardOkResults() &&
-              !stepResult.isDiscarded())
-      {
-         stepResult.discard();
-      }
+		for( int i = 0; i < listeners.length; i++ )
+		{
+			listeners[i].afterStep( this, runContext, stepResult );
+		}
 
-      if (process && stepResult.getStatus() == TestStepStatus.FAILED)
-      {
-         if (testCase.getFailOnError())
-         {
-            error = stepResult.getError();
-            fail("Cancelling due to failed test step");
-         }
-         else
-         {
-            runContext.setProperty(TestRunner.Status.class.getName(), TestRunner.Status.FAILED);
-         }
-      }
+		// discard?
+		if( discard && stepResult.getStatus() == TestStepStatus.OK && testCase.getDiscardOkResults()
+				&& !stepResult.isDiscarded() )
+		{
+			stepResult.discard();
+		}
 
-      return stepResult;
-   }
+		if( process && stepResult.getStatus() == TestStepStatus.FAILED )
+		{
+			if( testCase.getFailOnError() )
+			{
+				error = stepResult.getError();
+				fail( "Cancelling due to failed test step" );
+			}
+			else
+			{
+				runContext.setProperty( TestRunner.Status.class.getName(), TestRunner.Status.FAILED );
+			}
+		}
 
-   private void notifyAfterRun()
-   {
-      if (listeners == null || listeners.length == 0)
-         return;
+		return stepResult;
+	}
 
-      for (int i = 0; i < listeners.length; i++)
-      {
-         listeners[i].afterRun(this, runContext);
-      }
-   }
+	private void notifyAfterRun()
+	{
+		if( listeners == null || listeners.length == 0 )
+			return;
 
-   private void notifyBeforeRun()
-   {
-      if (listeners == null || listeners.length == 0)
-         return;
+		for( int i = 0; i < listeners.length; i++ )
+		{
+			listeners[i].afterRun( this, runContext );
+		}
+	}
 
-      for (int i = 0; i < listeners.length; i++)
-      {
-         listeners[i].beforeRun(this, runContext);
-      }
-   }
+	private void notifyBeforeRun()
+	{
+		if( listeners == null || listeners.length == 0 )
+			return;
 
-   public TestCase getTestCase()
-   {
-      return testCase;
-   }
+		for( int i = 0; i < listeners.length; i++ )
+		{
+			listeners[i].beforeRun( this, runContext );
+		}
+	}
 
-   public synchronized Status waitUntilFinished()
-   {
-      if (future != null)
-      {
-         if (!future.isDone())
-         {
-            try
-            {
-               future.get();
-            }
-            catch (Exception e)
-            {
-               SoapUI.logError(e);
-            }
-         }
-      }
-      else
-         throw new RuntimeException("cannot wait on null future");
+	public TestCase getTestCase()
+	{
+		return testCase;
+	}
 
+	public synchronized Status waitUntilFinished()
+	{
+		if( future != null )
+		{
+			if( !future.isDone() )
+			{
+				try
+				{
+					future.get();
+				}
+				catch( Exception e )
+				{
+					SoapUI.logError( e );
+				}
+			}
+		}
+		else
+			throw new RuntimeException( "cannot wait on null future" );
 
-      return getStatus();
-   }
+		return getStatus();
+	}
 
-   public long getTimeTaken()
-   {
-      long sum = 0;
-      for (int c = 0; c < testStepResults.size(); c++)
-      {
-         TestStepResult testStepResult = testStepResults.get(c);
-         if (testStepResult != null)
-            sum += testStepResult.getTimeTaken();
-      }
+	public long getTimeTaken()
+	{
+		long sum = 0;
+		for( int c = 0; c < testStepResults.size(); c++ )
+		{
+			TestStepResult testStepResult = testStepResults.get( c );
+			if( testStepResult != null )
+				sum += testStepResult.getTimeTaken();
+		}
 
-      return sum;
-   }
+		return sum;
+	}
 
-   public long getStartTime()
-   {
-      return startTime;
-   }
+	public long getStartTime()
+	{
+		return startTime;
+	}
 
-   public Throwable getError()
-   {
-      return error;
-   }
+	public Throwable getError()
+	{
+		return error;
+	}
 
-   public String getReason()
-   {
-      return reason == null ? error == null ? null : error.toString() : reason;
-   }
+	public String getReason()
+	{
+		return reason == null ? error == null ? null : error.toString() : reason;
+	}
 
-   public List<TestStepResult> getResults()
-   {
-      return testStepResults;
-   }
+	public List<TestStepResult> getResults()
+	{
+		return testStepResults;
+	}
 
-   public int getResultCount()
-   {
-      return resultCount;
-   }
+	public int getResultCount()
+	{
+		return resultCount;
+	}
 
-   public void gotoStep(int index)
-   {
-      gotoStepIndex = index;
-   }
+	public void gotoStep( int index )
+	{
+		gotoStepIndex = index;
+	}
 
-   public void enforceMaxResults( long maxResults )
-   {
-      if (maxResults < 1)
-         return;
+	public void enforceMaxResults( long maxResults )
+	{
+		if( maxResults < 1 )
+			return;
 
-      synchronized (this)
-      {
-         while (testStepResults.size() > maxResults)
-         {
-            testStepResults.remove(0);
-         }
-      }
-   }
+		synchronized( this )
+		{
+			while( testStepResults.size() > maxResults )
+			{
+				testStepResults.remove( 0 );
+			}
+		}
+	}
 
-   public void gotoStepByName(String stepName)
-   {
-      TestStep testStep = getTestCase().getTestStepByName(stepName);
-      if (testStep != null)
-         gotoStep(getTestCase().getIndexOfTestStep(testStep));
-   }
+	public void gotoStepByName( String stepName )
+	{
+		TestStep testStep = getTestCase().getTestStepByName( stepName );
+		if( testStep != null )
+			gotoStep( getTestCase().getIndexOfTestStep( testStep ) );
+	}
 
-   private final class TimeoutTimerTask extends TimerTask
-   {
-      @Override
-      public void run()
-      {
-         fail("TestCase timed out");
-      }
-   }
+	private final class TimeoutTimerTask extends TimerTask
+	{
+		@Override
+		public void run()
+		{
+			fail( "TestCase timed out" );
+		}
+	}
 }

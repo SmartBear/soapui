@@ -550,7 +550,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
       super.beforeStep( testRunner, runContext );
 
       TestStep currentStep = runContext.getCurrentStep();
-      log.info( "running step [" + currentStep.getName() + "]" );
+      if( currentStep != null )
+      	log.info( "running step [" + currentStep.getName() + "]" );
    }
 
    public void afterStep( TestRunner testRunner, TestRunContext runContext, TestStepResult result )

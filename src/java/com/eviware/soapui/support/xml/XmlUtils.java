@@ -176,6 +176,12 @@ public final class XmlUtils
       options.setSavePrettyPrintIndent( 3 );
       options.setSaveNoXmlDecl();
       options.setSaveAggressiveNamespaces();
+//      StringToStringMap map = new StringToStringMap();
+//      map.put(  SoapVersion.Soap11.getEnvelopeNamespace(), "SOAPENV" );
+//      map.put(  SoapVersion.Soap12.getEnvelopeNamespace(), "SOAPENV" );
+//
+//      options.setSaveSuggestedPrefixes( map );
+      
       xmlObject.save( writer, options );
    }
 
