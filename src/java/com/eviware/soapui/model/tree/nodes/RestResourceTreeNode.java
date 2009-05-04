@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * SoapUITreeNode for Operation implementations
+ * SoapUITreeNode for RestResource implementations
  *
  * @author Ole.Matzura
  */
@@ -90,6 +90,11 @@ public class RestResourceTreeNode extends OperationTreeNode
    public void release()
    {
       super.release();
+      
+      for( RestResourceTreeNode child : resourceNodes )
+      {
+      	child.release();
+      }
    }
 
    public void addChildResource( RestResource restResource )
