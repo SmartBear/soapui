@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.StringTokenizer;
+import java.util.concurrent.Future;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractListModel;
@@ -73,9 +74,9 @@ public class JLogList extends JPanel
 	private Stack<Object> linesToAdd = new Stack<Object>();
 	private EnableAction enableAction;
 	private JCheckBoxMenuItem enableMenuItem;
-	private Thread modelThread;
 	private final String title;
 	private boolean released;
+	private Future<?> future;
 
 	public JLogList( String title )
 	{
@@ -148,11 +149,10 @@ public class JLogList extends JPanel
 		if( !isEnabled() )
 			return;
 
-		if( modelThread == null )
+		if( future == null )
 		{
 			released = false;
-			modelThread = new Thread( model, title + " LogListUpdater" );
-			modelThread.start();
+			future = SoapUI.getThreadPool().submit( model );
 		}
 
 		if( line instanceof LoggingEvent )
@@ -471,6 +471,11 @@ public class JLogList extends JPanel
 
 		public void run()
 		{
+			if( future != null )
+			{
+				Thread.currentThread().setName( "LogList Updater for " + getName() );
+			}
+			
 			while( !released && !linesToAdd.isEmpty() )
 			{
 				try
@@ -519,7 +524,7 @@ public class JLogList extends JPanel
 				}
 			}
 
-			modelThread = null;
+			future = null;
 		}
 	}
 

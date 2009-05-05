@@ -12,23 +12,26 @@
 
 package com.eviware.soapui.impl.wsdl.testcase;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
-import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.testsuite.*;
-import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.types.StringToObjectMap;
-import org.apache.commons.httpclient.HttpState;
-import org.apache.log4j.Logger;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import org.apache.commons.httpclient.HttpState;
+import org.apache.log4j.Logger;
+
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
+import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.model.testsuite.TestRunListener;
+import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
  * WSDL TestCase Runner - runs all steps in a testcase and collects performance
@@ -51,7 +54,6 @@ public class WsdlTestCaseRunner implements Runnable, TestRunner
 	private volatile Future<?> future;
 	private int id;
 	private int resultCount;
-	private final static ExecutorService threadPool = Executors.newCachedThreadPool();
 
 	private final static Logger log = Logger.getLogger( WsdlTestCaseRunner.class );
 
@@ -77,7 +79,7 @@ public class WsdlTestCaseRunner implements Runnable, TestRunner
 	{
 		status = Status.RUNNING;
 		if( async )
-			future = threadPool.submit( this );
+			future = SoapUI.getThreadPool().submit( this );
 		else
 			run();
 	}

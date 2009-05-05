@@ -422,7 +422,7 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
       return getOperation().createResponse( true );
    }
 
-   public void resolve( ResolveContext context )
+   public void resolve( ResolveContext<?> context )
    {
       super.resolve( context );
 

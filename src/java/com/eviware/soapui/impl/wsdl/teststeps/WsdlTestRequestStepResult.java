@@ -29,6 +29,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 import java.io.PrintWriter;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -43,7 +44,7 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
         ResponseAssertedMessageExchange, AssertedXPathsContainer, MessageExchangeTestStepResult, WsdlMessageExchange
 {
    private String requestContent;
-   private WsdlResponse response;
+   private SoftReference<WsdlResponse> response;
    private String domain;
    private String username;
    private String endpoint;
@@ -71,8 +72,8 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
 
    public ModelItem getModelItem()
    {
-      if( response != null )
-         return response.getRequest();
+      if( response != null && response.get() != null )
+         return response.get().getRequest();
       else
          return null;
    }
@@ -92,7 +93,7 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
 
    public WsdlResponse getResponse()
    {
-      return response;
+      return response == null ? null : response.get();
    }
 
    @Override
@@ -109,7 +110,7 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
 
    public void setResponse( WsdlResponse response )
    {
-      this.response = response;
+      this.response = new SoftReference<WsdlResponse>(response);
    }
 
    public String getDomain()
@@ -199,9 +200,9 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
 		}
 		
 		writer.println( "\r\n---------------- Request ---------------------------" );
-		if( response != null )
+		if( response != null && response.get() != null )
 		{
-			writer.println( "Request Headers: " + response.getRequestHeaders().toString() + "\r\n" );
+			writer.println( "Request Headers: " + response.get().getRequestHeaders().toString() + "\r\n" );
 		}
 
 		if( requestContent != null )
@@ -210,11 +211,11 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
 			writer.println( "- missing request / garbage collected -" );
 
 		writer.println( "\r\n---------------- Response --------------------------" );
-		if( response != null )
+		if( response != null  && response.get() != null)
 		{
-			writer.println( "Response Headers: " + response.getResponseHeaders().toString() + "\r\n" );
+			writer.println( "Response Headers: " + response.get().getResponseHeaders().toString() + "\r\n" );
 			
-			String respContent = response.getContentAsString();
+			String respContent = response.get().getContentAsString();
 			if( respContent != null )
 				writer.println( XmlUtils.prettyPrintXml( respContent ));
 		}
@@ -234,26 +235,26 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
 
    public Attachment[] getRequestAttachments()
    {
-      if( response == null || response.getRequest() == null )
+      if( response == null || response.get() == null || response.get().getRequest() == null )
          return new Attachment[0];
 
-      return response.getRequest().getAttachments();
+      return response.get().getRequest().getAttachments();
    }
 
    public StringToStringMap getRequestHeaders()
    {
-      if( response == null )
+      if( response == null || response.get() == null )
          return null;
 
-      return response.getRequestHeaders();
+      return response.get().getRequestHeaders();
    }
 
    public Attachment[] getResponseAttachments()
    {
-      if( response == null )
+      if( response == null || response.get() == null )
          return new Attachment[0];
 
-      return response.getAttachments();
+      return response.get().getAttachments();
    }
 
    public String getResponseContent()
@@ -261,10 +262,10 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
       if( isDiscarded() )
          return "<discarded>";
 
-      if( response == null )
+      if( response == null || response.get() == null )
          return "<missing response>";
 
-      return response.getContentAsString();
+      return response.get().getContentAsString();
    }
 
    public String getRequestContentAsXml()
@@ -280,18 +281,18 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
 
    public StringToStringMap getResponseHeaders()
    {
-      if( response == null )
+      if( response == null || response.get() == null )
          return null;
 
-      return response.getResponseHeaders();
+      return response.get().getResponseHeaders();
    }
 
    public long getTimestamp()
    {
-      if( isDiscarded() || response == null )
+      if( isDiscarded() || response == null || response.get() == null )
          return -1;
 
-      return response.getTimestamp();
+      return response.get().getTimestamp();
    }
 
    public AssertedXPath[] getAssertedXPathsForResponse()
@@ -315,12 +316,12 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
 
    public byte[] getRawRequestData()
    {
-      return response == null ? null : response.getRawRequestData();
+      return response == null || response.get() == null ? null : response.get().getRawRequestData();
    }
 
    public byte[] getRawResponseData()
    {
-      return response == null ? null : response.getRawResponseData();
+      return response == null || response.get() == null ? null : response.get().getRawResponseData();
    }
 
    public Attachment[] getRequestAttachmentsForPart( String partName )
@@ -355,16 +356,16 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
 
    public Vector<?> getResponseWssResult()
    {
-      return response == null ? null : response.getWssResult();
+      return response == null || response.get() == null ? null : response.get().getWssResult();
    }
 
    public int getResponseStatusCode()
    {
-      return response == null ? 0 : response.getStatusCode();
+      return response == null || response.get() == null ? null : response.get().getStatusCode();
    }
 
    public String getResponseContentType()
    {
-      return response == null ? null : response.getContentType();
+      return response == null || response.get() == null ? null : response.get().getContentType();
    }
 }

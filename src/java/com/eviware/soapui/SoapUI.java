@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -184,12 +186,14 @@ public class SoapUI
    private static URLDesktopPanel urlDesktopPanel;
 	private static JXToolBar mainToolbar;
 
+	private final static ExecutorService threadPool = Executors.newCachedThreadPool();
+	
    // --------------------------- CONSTRUCTORS ---------------------------
 
    private SoapUI()
    {
    }
-
+   
    private void buildUI()
    {
       frame.addWindowListener( new MainFrameWindowListener() );
@@ -267,6 +271,11 @@ public class SoapUI
       return menuBar;
    }
 
+   public static ExecutorService getThreadPool()
+   {
+   	return threadPool;
+   }
+   
    public static Workspace getWorkspace()
    {
       return workspace;

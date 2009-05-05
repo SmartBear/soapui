@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
+import java.util.concurrent.Future;
+
 import javax.swing.ImageIcon;
 
 import com.eviware.soapui.SoapUI;
@@ -28,86 +30,91 @@ public class ModelItemIconAnimator<T extends AbstractWsdlModelItem<?>> implement
 {
 	private final T target;
 	private int index = 0;
-   private boolean stopped = true;
-   private boolean enabled = true;
-   private ImageIcon baseIcon;
-   private ImageIcon [] animateIcons;
-	private Thread iconAnimationThread;
+	private boolean stopped = true;
+	private boolean enabled = true;
+	private ImageIcon baseIcon;
+	private ImageIcon[] animateIcons;
+	private Future<?> future;
 
-   public ModelItemIconAnimator(T target, String baseIcon, String animationBaseIcon, int num, String type )
-   {
-      this.target = target;
-		this.baseIcon = UISupport.createImageIcon(baseIcon);
+	public ModelItemIconAnimator( T target, String baseIcon, String animationBaseIcon, int num, String type )
+	{
+		this.target = target;
+		this.baseIcon = UISupport.createImageIcon( baseIcon );
 
-      animateIcons = new ImageIcon[num];
-      
-      for( int c = 0; c < animateIcons.length; c++ )
-      	animateIcons[c] = UISupport.createImageIcon( animationBaseIcon + "_" + (c+1) + "." + type );
-   }
-   
-   public void stop()
-   {
-      stopped = true;
-   }
-   
-   public int getIndex()
-   {
-      return index;
-   }
+		animateIcons = new ImageIcon[num];
 
-   public boolean isStopped()
-   {
-      return stopped;
-   }
-   
-   public void start()
-   {
-   	if( !enabled || iconAnimationThread != null )
-   		return;
-   	
-      stopped = false;
-      iconAnimationThread = new Thread( this, target.getName() + " ModelItemIconAnimator" );
-		iconAnimationThread.start();
-   }
-   
-   public ImageIcon getBaseIcon()
-   {
-   	return baseIcon;
-   }
-   
-   public ImageIcon getIcon()
-   {
-      if( !isStopped())
-      {
-         return animateIcons[getIndex()];
-      }
-      
-      return baseIcon;
-   }
+		for( int c = 0; c < animateIcons.length; c++ )
+			animateIcons[c] = UISupport.createImageIcon( animationBaseIcon + "_" + ( c + 1 ) + "." + type );
+	}
 
-   public void run()
-   {
-      while( !stopped )
-      {
-         try
-         {
-         	if( stopped )
-         		break;
-         	
-            index = index >= animateIcons.length-1 ? 0 : index+1;
-            target.setIcon( getIcon() );
-            Thread.sleep( 500 );
-         }
-         catch (InterruptedException e)
-         {
-            SoapUI.logError( e );
-         }
-      }
-      
-      target.setIcon( getIcon() );
-      iconAnimationThread = null;
-   }
-	
+	public void stop()
+	{
+		stopped = true;
+	}
+
+	public int getIndex()
+	{
+		return index;
+	}
+
+	public boolean isStopped()
+	{
+		return stopped;
+	}
+
+	public void start()
+	{
+		if( !enabled || future != null )
+			return;
+
+		stopped = false;
+		future = SoapUI.getThreadPool().submit( this );
+	}
+
+	public ImageIcon getBaseIcon()
+	{
+		return baseIcon;
+	}
+
+	public ImageIcon getIcon()
+	{
+		if( !isStopped() )
+		{
+			return animateIcons[getIndex()];
+		}
+
+		return baseIcon;
+	}
+
+	public void run()
+	{
+		if( future != null )
+		{
+			Thread.currentThread().setName( "ModelItemIconAnimator for " + target.getName() );
+		}
+
+		while( !stopped )
+		{
+			try
+			{
+				if( stopped )
+					break;
+
+				index = index >= animateIcons.length - 1 ? 0 : index + 1;
+				target.setIcon( getIcon() );
+				Thread.sleep( 500 );
+			}
+			catch( InterruptedException e )
+			{
+				SoapUI.logError( e );
+			}
+		}
+
+		target.setIcon( getIcon() );
+		future = null;
+		// iconAnimationThread = null;
+	}
+
 	public T getTarget()
 	{
 		return target;
@@ -118,7 +125,7 @@ public class ModelItemIconAnimator<T extends AbstractWsdlModelItem<?>> implement
 		return enabled;
 	}
 
-	public void setEnabled(boolean enabled)
+	public void setEnabled( boolean enabled )
 	{
 		this.enabled = enabled;
 		if( !stopped )

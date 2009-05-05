@@ -13,9 +13,8 @@
 package com.eviware.soapui.report;
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -43,12 +42,12 @@ public class JUnitReportCollector implements TestRunListener
 {
 
 	HashMap<String, JUnitReport> reports;
-	HashMap<TestCase, StringBuffer> failures;
+	HashMap<TestCase, String> failures;
 
 	public JUnitReportCollector()
 	{
 		reports = new HashMap<String, JUnitReport>();
-		failures = new HashMap<TestCase, StringBuffer>();
+		failures = new HashMap<TestCase, String>();
 	}
 
 	public List<String> saveReports( String path ) throws Exception
@@ -130,23 +129,22 @@ public class JUnitReportCollector implements TestRunListener
 		if( result.getStatus() == TestStepStatus.FAILED )
 		{
 			StringBuffer buf = new StringBuffer();
-			if( failures.containsKey( testCase ) )
-			{
-				buf = failures.get( testCase );
-			}
-			else
-				failures.put( testCase, buf );
+//			if( failures.containsKey( testCase ) )
+//			{
+//				buf.append( failures.get( testCase ));
+//			}
 
 			buf.append( "<h3><b>" + result.getTestStep().getName() + " Failed</b></h3><pre>" );
-			// buf.append( "<pre>" + XmlUtils.entitize( Arrays.toString(
-			// result.getMessages() )) + "\n" );
+			buf.append( "<pre>" + XmlUtils.entitize( Arrays.toString( result.getMessages() )) + "\n" );
 
-			StringWriter stringWriter = new StringWriter();
-			PrintWriter writer = new PrintWriter( stringWriter );
-			result.writeTo( writer );
-
-			buf.append( XmlUtils.entitize( stringWriter.toString() ) );
+//			StringWriter stringWriter = new StringWriter();
+//			PrintWriter writer = new PrintWriter( stringWriter );
+//			result.writeTo( writer );
+//
+//			buf.append( XmlUtils.entitize( stringWriter.toString() ) );
 			buf.append( "</pre><hr/>" );
+			
+			failures.put( testCase, buf.toString() );
 		}
 	}
 

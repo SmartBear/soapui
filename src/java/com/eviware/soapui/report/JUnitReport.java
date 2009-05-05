@@ -119,7 +119,7 @@ public class JUnitReport {
 	}
 	
 	private void setSystemProperties(Properties properties) {
-		Set keys = System.getProperties().keySet();
+		Set<?> keys = System.getProperties().keySet();
 		for (Object keyO : keys) {
 			String key = keyO.toString();
 			String value = System.getProperty(key);

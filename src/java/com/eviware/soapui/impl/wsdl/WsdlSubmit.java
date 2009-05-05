@@ -13,8 +13,6 @@
 package com.eviware.soapui.impl.wsdl;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
@@ -43,7 +41,6 @@ public final class WsdlSubmit<T extends AbstractHttpRequest<?>>  implements Runn
 	private Response response;
 	private volatile Future<?> future;
 	private SubmitContext submitContext;
-	private final static ExecutorService threadPool = Executors.newCachedThreadPool();
 	private RequestTransport transport;
 
 	public WsdlSubmit(T wsdlRequest, SubmitListener[] listeners, RequestTransport transport)
@@ -73,7 +70,7 @@ public final class WsdlSubmit<T extends AbstractHttpRequest<?>>  implements Runn
 			throw new RuntimeException( "Submit already running" );
 		
 		if( async )
-			future = threadPool.submit(this);
+			future = SoapUI.getThreadPool().submit(this);
 		else
 			run();
 	}

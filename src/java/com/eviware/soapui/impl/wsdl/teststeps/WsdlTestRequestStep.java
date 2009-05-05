@@ -414,9 +414,11 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 
                break;
             }
-            // default : testStepResult.setStatus( TestStepStatus.OK ); break;
          }
       }
+      
+      if( !runContext.hasProperty( TestRunContext.INTERACTIVE ))
+      	testRequest.setResponse( null, runContext );
 
       return testStepResult;
    }
@@ -685,6 +687,8 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
    {
       super.prepare( testRunner, testRunContext );
 
+      testRequest.setResponse( null, testRunContext );
+      
       for( TestAssertion assertion : testRequest.getAssertionList() )
       {
          assertion.prepare( testRunner, testRunContext );

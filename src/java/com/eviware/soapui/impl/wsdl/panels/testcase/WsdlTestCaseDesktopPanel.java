@@ -64,7 +64,8 @@ import java.util.Date;
 
 public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase>
 {
-   private JProgressBar progressBar;
+   public static final String DESKTOPPANEL_MARKER = "WsdlTestCaseDeskopPanel";
+	private JProgressBar progressBar;
    private JTestStepList testStepList;
    private InternalTestRunListener testRunListener = new InternalTestRunListener();
    private JButton runButton;
@@ -414,6 +415,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
       StringToObjectMap properties = new StringToObjectMap();
       properties.put( "loopButton", loopButton );
+      properties.put( TestRunContext.INTERACTIVE, Boolean.TRUE );
       runner = getModelItem().run( properties, true );
    }
 

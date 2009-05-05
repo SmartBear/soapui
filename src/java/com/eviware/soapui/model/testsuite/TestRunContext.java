@@ -25,6 +25,7 @@ public interface TestRunContext extends SubmitContext, PropertyExpansionContext
 	public static final String THREAD_INDEX = "ThreadIndex";
 	public static final String RUN_COUNT = "RunCount";
 	public static final String LOAD_TEST_CONTEXT = "LoadTestContext";
+	public static final String INTERACTIVE = "Headless";
 
 	public TestStep getCurrentStep();
 
