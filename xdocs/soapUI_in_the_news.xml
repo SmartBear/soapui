@@ -5,6 +5,21 @@
     </properties>
     <body>
     <section name="soapUI Releases">
+     
+    <subsection name="Dr Q´s workshop">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/drq.gif" alt="Web service testing tool"/>	    	    
+	    		</column>
+	    		<column align="left">
+	    			<p>The post starts: "Alfresco supports two types of CMIS API rest and Web Services..."<br/>
+	    			<a href="http://drquyong.com/myblog/?cat=25">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	</subsection>
+    
+    
+    
     
     
         <subsection name="ickydime">
