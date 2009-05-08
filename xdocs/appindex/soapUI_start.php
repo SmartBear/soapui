@@ -43,7 +43,7 @@ urchinTracker();</script>
         <td height="240" class="greyBox" valign="top"><h2>soapUI Training in Silicon Valley</h2>
           <p>Become a soapUI Pro!</p>
           <p>Get training for soapUI. Next Date:<br />
-          Silicon Valley, March 3-5<br />
+          Chicago, USA, May 19-21<br />
 <br />
             <a onclick="javascript:urchinTracker('/appindexsoapUITraining')" href="http://www.pushtotest.com/Docs/training/soapUI#top" title="Read Here!" target="_blank">Read about it here</a></p></td>
       </tr>
