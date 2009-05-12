@@ -40,12 +40,12 @@ urchinTracker();</script>
             <a onclick="javascript:urchinTracker('/appindexsoapUIReadMorePro')" href="http://www.eviware.com/content/view/134/1/" title="Read more about soapUI 2.5" target="_blank">Read more here</a></p>          </td>
       </tr>
       <tr>
-        <td height="240" class="greyBox" valign="top"><h2>soapUI Training in Silicon Valley</h2>
+        <td height="240" class="greyBox" valign="top"><h2>soapUI Training in Washington DC</h2>
           <p>Become a soapUI Pro!</p>
           <p>Get training for soapUI. Next Date:<br />
           Chicago, USA, May 19-21<br />
 <br />
-            <a onclick="javascript:urchinTracker('/appindexsoapUITraining')" href="http://www.pushtotest.com/Docs/training/soapUI#top" title="Read Here!" target="_blank">Read about it here</a></p></td>
+            <a onclick="javascript:urchinTracker('/appindexsoapUITraining')"href="http://www.pushtotest.com/Docs/training/soapUI#top" title="Read Here!" target="_blank">Read about it here</a></p></td>
       </tr>
       <tr>
         <td height="240"  class="greyBox" valign="top"><h2>eviware I turn</h2>
