@@ -30,7 +30,7 @@ urchinTracker();</script>
     <td height="720" width="150" valign="top">
     <table height="720" width="150" border="0" cellpadding="5">
       <tr>
-        <td height="240" class="greyBox" valign="top"><h2>soapUI Training in Silicon Valley</h2>
+        <td height="240" class="greyBox" valign="top"><h2>soapUI Training in Washington DC, USA</h2>
           <p>Become a soapUI Pro!</p>
           <p>Get training for soapUI. Next Date:<br />
           Silicon Valley, March 3-5<br />
