@@ -55,6 +55,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 	private String reason;
 	private int threadCount;
 	private int threadsWaitingToStart;
+	private int startedCount;
 	private boolean hasTearedDown;
 
 	public WsdlLoadTestRunner( WsdlLoadTest test )
@@ -79,6 +80,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		runCount = 0;
 		threadCount = 0;
 		threadsWaitingToStart = 0;
+		startedCount = 0;
 		context = new WsdlLoadTestContext( this );
 
 		try
@@ -460,6 +462,10 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 						runner.getRunContext().setProperty( TestRunContext.RUN_COUNT, runCount );
 						runner.getRunContext().setProperty( TestRunContext.LOAD_TEST_RUNNER, WsdlLoadTestRunner.this );
 						runner.getRunContext().setProperty( TestRunContext.LOAD_TEST_CONTEXT, context );
+						synchronized( this )
+						{
+							runner.getRunContext().setProperty( TestRunContext.TOTAL_RUN_COUNT, startedCount++ );
+						}
 
 						runner.run();
 					}
