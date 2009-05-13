@@ -50,8 +50,11 @@ public interface HttpSettings
 	@Setting( name = "Close connections after request", description = "Closes the HTTP connection after each SOAP request", type = SettingType.BOOLEAN )
 	public final static String CLOSE_CONNECTIONS = HttpSettings.class.getSimpleName() + "@" + "close-connections";
 
-	@Setting( name = "Disable Chunking", description = "Disables content-chunking", type = SettingType.BOOLEAN )
-	public static final String DISABLE_CHUNKING = HttpSettings.class.getSimpleName() + "@" + "disable_chunking";
+	//@Setting( name = "Disable Chunking", description = "Disables content-chunking", type = SettingType.BOOLEAN )
+	//public static final String DISABLE_CHUNKING = HttpSettings.class.getSimpleName() + "@" + "disable_chunking";
+	
+	@Setting( name = "Chunking Threshold", description = "Uses content-chunking for requests larger than threshold, blank to disable", type = SettingType.INT )
+	public static final String CHUNKING_THRESHOLD = HttpSettings.class.getSimpleName() + "@" + "chunking_threshold";
 
 	@Setting( name = "Authenticate Preemptively", description = "Adds authentication information to outgoing request", type = SettingType.BOOLEAN )
 	public final static String AUTHENTICATE_PREEMPTIVELY = HttpSettings.class.getSimpleName() + "@"

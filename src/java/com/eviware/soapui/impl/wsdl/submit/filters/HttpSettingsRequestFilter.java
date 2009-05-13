@@ -56,12 +56,6 @@ public class HttpSettingsRequestFilter extends AbstractRequestFilter
 			httpMethod.setRequestHeader( "Accept-Encoding", CompressionSupport.getAvailableAlgorithms( "," ) );
 		}
 
-		// no chunking?
-		if( settings.getBoolean( HttpSettings.DISABLE_CHUNKING ) && httpMethod instanceof EntityEnclosingMethod )
-		{
-			( ( EntityEnclosingMethod )httpMethod ).setContentChunked( false );
-		}
-
 		String httpVersion = settings.getString( HttpSettings.HTTP_VERSION, "1.1" );
 		if( httpVersion.equals( HttpSettings.HTTP_VERSION_1_1 ) )
 		{
