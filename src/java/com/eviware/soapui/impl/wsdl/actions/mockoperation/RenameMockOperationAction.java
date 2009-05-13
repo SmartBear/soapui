@@ -25,16 +25,17 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 public class RenameMockOperationAction extends AbstractSoapUIAction<WsdlMockOperation>
 {
 	public RenameMockOperationAction()
-   {
-      super( "Rename", "Renames this MockOperation" );
-   }
-   
-   public void perform( WsdlMockOperation mockOperation, Object param )
 	{
-      String name = UISupport.prompt( "Specify name of MockOperation", "Rename MockOperation", mockOperation.getName() );
-      if( name == null || name.equals( mockOperation.getName() )) return;
-      
-      mockOperation.setName( name );
-   }
+		super( "Rename", "Renames this MockOperation" );
+	}
+
+	public void perform( WsdlMockOperation mockOperation, Object param )
+	{
+		String name = UISupport.prompt( "Specify name of MockOperation", "Rename MockOperation", mockOperation.getName() );
+		if( name == null || name.equals( mockOperation.getName() ) )
+			return;
+
+		mockOperation.setName( name );
+	}
 
 }

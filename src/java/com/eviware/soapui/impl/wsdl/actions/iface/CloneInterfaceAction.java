@@ -32,30 +32,31 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 public class CloneInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
 {
-	public CloneInterfaceAction() 
-   {
-      super( "Clone Interface", "Clones this Interface to another project" );
-   }
-	
-   public void perform( WsdlInterface iface, Object param )
+	public CloneInterfaceAction()
 	{
-   	WorkspaceImpl workspace = iface.getProject().getWorkspace();
-		String[] names = ModelSupport.getNames( workspace.getOpenProjectList(), new String[]{"<Create New>"} );
-   	
-   	List<String> asList = new ArrayList<String>( Arrays.asList( names ));
-   	asList.remove( iface.getProject().getName() );
-   	
-		String targetProjectName = UISupport.prompt( "Select target Project for cloned Interface", "Clone Interface", asList );
+		super( "Clone Interface", "Clones this Interface to another project" );
+	}
+
+	public void perform( WsdlInterface iface, Object param )
+	{
+		WorkspaceImpl workspace = iface.getProject().getWorkspace();
+		String[] names = ModelSupport.getNames( workspace.getOpenProjectList(), new String[] { "<Create New>" } );
+
+		List<String> asList = new ArrayList<String>( Arrays.asList( names ) );
+		asList.remove( iface.getProject().getName() );
+
+		String targetProjectName = UISupport.prompt( "Select target Project for cloned Interface", "Clone Interface",
+				asList );
 		if( targetProjectName == null )
 			return;
-		
-		WsdlProject targetProject = ( WsdlProject ) workspace.getProjectByName( targetProjectName );
+
+		WsdlProject targetProject = ( WsdlProject )workspace.getProjectByName( targetProjectName );
 		if( targetProject == null )
 		{
 			targetProjectName = UISupport.prompt( "Enter name for new Project", "Clone TestSuite", "" );
 			if( targetProjectName == null )
 				return;
-			
+
 			try
 			{
 				targetProject = workspace.createProject( targetProjectName, null );
@@ -64,12 +65,12 @@ public class CloneInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
 			{
 				UISupport.showErrorMessage( e );
 			}
-			
+
 			if( targetProject == null )
 				return;
 		}
-		
-		WsdlInterface targetIface = (WsdlInterface) targetProject.getInterfaceByTechnicalId( iface.getTechnicalId());
+
+		WsdlInterface targetIface = ( WsdlInterface )targetProject.getInterfaceByTechnicalId( iface.getTechnicalId() );
 		if( targetIface != null )
 		{
 			UISupport.showErrorMessage( "Target Project already contains Interface for binding" );
@@ -79,5 +80,5 @@ public class CloneInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
 			boolean importEndpoints = UISupport.confirm( "Import endpoint defaults also?", getName() );
 			UISupport.select( targetProject.importInterface( iface, importEndpoints, true ) );
 		}
-   }
+	}
 }

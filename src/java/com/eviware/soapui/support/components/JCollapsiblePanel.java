@@ -31,20 +31,20 @@ public class JCollapsiblePanel extends JPanel
 {
 	private static ImageIcon minusIcon = UISupport.createImageIcon( "/button1.gif" );
 	private static ImageIcon plusIcon = UISupport.createImageIcon( "/button2.gif" );
-	
+
 	private JPanel contentPanel;
 	private JXToolBar toolbar;
 	private ToggleAction toggleAction;
-	
+
 	public JCollapsiblePanel( JPanel contentPanel, String title )
 	{
 		super( new BorderLayout() );
 		this.contentPanel = contentPanel;
-		
+
 		add( contentPanel, BorderLayout.CENTER );
 		add( startToolbar( title ), BorderLayout.NORTH );
 	}
-	
+
 	public JCollapsiblePanel( String title )
 	{
 		this( new JPanel(), title );
@@ -55,32 +55,32 @@ public class JCollapsiblePanel extends JPanel
 		toolbar = UISupport.createToolbar();
 		toolbar.setBorder( null );
 		toolbar.setPreferredSize( new Dimension( 22, 22 ) );
-		
+
 		toggleAction = new ToggleAction();
-		JButton toggleButton = new JButton( toggleAction  );
+		JButton toggleButton = new JButton( toggleAction );
 		toggleButton.setBorder( null );
-		toggleButton.setPreferredSize( new Dimension( 15, 15) );
-		
+		toggleButton.setPreferredSize( new Dimension( 15, 15 ) );
+
 		toolbar.addSpace( 3 );
-		toolbar.addFixed( toggleButton);
+		toolbar.addFixed( toggleButton );
 		toolbar.addSpace( 3 );
 
 		if( title != null )
 		{
 			JLabel titleLabel = new JLabel( title );
 			titleLabel.setFont( titleLabel.getFont().deriveFont( Font.BOLD ) );
-			toolbar.addFixed(titleLabel);
+			toolbar.addFixed( titleLabel );
 			toolbar.addSpace( 3 );
 		}
-		
+
 		return toolbar;
 	}
-	
+
 	public boolean isExpanded()
 	{
 		return toggleAction.getValue( Action.SMALL_ICON ) == minusIcon;
 	}
-	
+
 	public void setExpanded( boolean expanded )
 	{
 		if( !expanded )
@@ -91,7 +91,7 @@ public class JCollapsiblePanel extends JPanel
 		{
 			toggleAction.setHide();
 		}
-		
+
 		contentPanel.setVisible( expanded );
 		refresh();
 	}
@@ -100,18 +100,18 @@ public class JCollapsiblePanel extends JPanel
 	{
 		contentPanel.revalidate();
 		if( contentPanel.getParent() instanceof JComponent )
-			((JComponent)contentPanel.getParent()).revalidate();
+			( ( JComponent )contentPanel.getParent() ).revalidate();
 	}
-	
+
 	public void setContentPanel( JPanel panel )
 	{
 		remove( contentPanel );
 		add( panel, BorderLayout.CENTER );
 		contentPanel = panel;
-		
+
 		refresh();
 	}
-	
+
 	private class ToggleAction extends AbstractAction
 	{
 		public ToggleAction()
@@ -124,7 +124,7 @@ public class JCollapsiblePanel extends JPanel
 			putValue( Action.SMALL_ICON, minusIcon );
 			putValue( Action.SHORT_DESCRIPTION, "Hides the content of this block" );
 		}
-		
+
 		public void setShow()
 		{
 			putValue( Action.SMALL_ICON, plusIcon );

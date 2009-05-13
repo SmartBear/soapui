@@ -25,25 +25,25 @@ import com.eviware.soapui.support.action.swing.ActionList;
 
 public interface SoapUIDesktop
 {
-	public boolean closeDesktopPanel(DesktopPanel desktopPanel);
+	public boolean closeDesktopPanel( DesktopPanel desktopPanel );
 
-	public boolean hasDesktopPanel(ModelItem modelItem);
+	public boolean hasDesktopPanel( ModelItem modelItem );
 
-	public void addDesktopListener(DesktopListener listener);
+	public void addDesktopListener( DesktopListener listener );
 
-	public void removeDesktopListener(DesktopListener listener);
+	public void removeDesktopListener( DesktopListener listener );
 
-	public DesktopPanel showDesktopPanel(ModelItem modelItem);
+	public DesktopPanel showDesktopPanel( ModelItem modelItem );
 
-	public boolean closeDesktopPanel(ModelItem modelItem);
+	public boolean closeDesktopPanel( ModelItem modelItem );
 
 	public ActionList getActions();
 
 	public DesktopPanel[] getDesktopPanels();
 
-	public DesktopPanel getDesktopPanel(ModelItem modelItem);
+	public DesktopPanel getDesktopPanel( ModelItem modelItem );
 
-	public DesktopPanel showDesktopPanel(DesktopPanel desktopPanel);
+	public DesktopPanel showDesktopPanel( DesktopPanel desktopPanel );
 
 	public JComponent getDesktopComponent();
 
@@ -52,10 +52,10 @@ public interface SoapUIDesktop
 	public boolean closeAll();
 
 	public void release();
-	
+
 	public void init();
 
 	public void minimize( DesktopPanel desktopPanel );
 
-	public void maximize(DesktopPanel dp);
+	public void maximize( DesktopPanel dp );
 }

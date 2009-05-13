@@ -24,55 +24,49 @@ import com.eviware.soapui.model.testsuite.TestCase;
 
 public class LoadTestRunListenerImpl extends LoadTestRunListenerAdapter
 {
-	private final static Logger log = 
-		Logger.getLogger(LoadTestRunListenerImpl.class);
+	private final static Logger log = Logger.getLogger( LoadTestRunListenerImpl.class );
 
 	@Override
-	public void loadTestStarted(LoadTestRunner loadTestRunner, 
-			LoadTestRunContext context)
+	public void loadTestStarted( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
 		TestCase testCase = loadTestRunner.getLoadTest().getTestCase();
 
-		if (needsMockRunnerManager(testCase))
+		if( needsMockRunnerManager( testCase ) )
 		{
-			MockRunnerManager manager = MockRunnerManagerImpl.getInstance(
-					testCase);
+			MockRunnerManager manager = MockRunnerManagerImpl.getInstance( testCase );
 
 			try
 			{
 				manager.start();
 			}
-			catch (MockRunnerManagerException e)
+			catch( MockRunnerManagerException e )
 			{
-				log.error("Unable to start MockRunnerManager", e);
+				log.error( "Unable to start MockRunnerManager", e );
 			}
 		}
 	}
 
 	@Override
-	public void loadTestStopped(LoadTestRunner loadTestRunner, 
-			LoadTestRunContext context)
+	public void loadTestStopped( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
 		TestCase testCase = loadTestRunner.getLoadTest().getTestCase();
 
-		MockRunnerManager manager = MockRunnerManagerImpl.getInstance(
-				testCase);
+		MockRunnerManager manager = MockRunnerManagerImpl.getInstance( testCase );
 
-		if (manager != null && manager.isStarted())
+		if( manager != null && manager.isStarted() )
 		{
 			manager.stop();
 		}
 	}
 
 	@Override
-	public void afterLoadTest(LoadTestRunner loadTestRunner, LoadTestRunContext context)
+	public void afterLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
-		loadTestStopped(loadTestRunner, context);
+		loadTestStopped( loadTestRunner, context );
 	}
 
-	private boolean needsMockRunnerManager(TestCase testCase)
+	private boolean needsMockRunnerManager( TestCase testCase )
 	{
-		return testCase.getTestStepsOfType(
-				WsdlAsyncResponseTestStep.class).size() > 0;
+		return testCase.getTestStepsOfType( WsdlAsyncResponseTestStep.class ).size() > 0;
 	}
 }

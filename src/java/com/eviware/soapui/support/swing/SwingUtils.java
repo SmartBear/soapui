@@ -21,9 +21,9 @@ import com.eviware.soapui.support.UIUtils;
  */
 public class SwingUtils implements UIUtils
 {
-	public void invokeLater(Runnable runnable)
+	public void invokeLater( Runnable runnable )
 	{
-		SwingUtilities.invokeLater(runnable);	
+		SwingUtilities.invokeLater( runnable );
 	}
 
 	public void invokeAndWait( Runnable runnable ) throws Exception
@@ -31,9 +31,10 @@ public class SwingUtils implements UIUtils
 		SwingUtilities.invokeAndWait( runnable );
 	}
 
-	// TODO Change this to run in the UI thread on Swing too, and then rename the function to "runInUIThread".
-   public void runInUIThreadIfSWT(Runnable runnable)
-   {
-      runnable.run();
-   }
+	// TODO Change this to run in the UI thread on Swing too, and then rename the
+	// function to "runInUIThread".
+	public void runInUIThreadIfSWT( Runnable runnable )
+	{
+		runnable.run();
+	}
 }

@@ -30,19 +30,21 @@ public class CloneMockResponseAction extends AbstractSoapUIAction<WsdlMockRespon
 	{
 		super( "Clone", "Clones this MockResponse" );
 	}
-	
+
 	public void perform( WsdlMockResponse mockResponse, Object param )
 	{
-		String name = UISupport.prompt( "Specify name of cloned MockResponse", getName(), "Copy of " + mockResponse.getName() );
-      if( name == null ) return;
-      
-      WsdlMockOperation mockOperation = mockResponse.getMockOperation();
-      mockOperation.beforeSave();
+		String name = UISupport.prompt( "Specify name of cloned MockResponse", getName(), "Copy of "
+				+ mockResponse.getName() );
+		if( name == null )
+			return;
+
+		WsdlMockOperation mockOperation = mockResponse.getMockOperation();
+		mockOperation.beforeSave();
 		MockResponseConfig config = mockOperation.getConfig().addNewResponse();
-      config.set( mockResponse.getConfig().copy() );
-      config.setName( name );
+		config.set( mockResponse.getConfig().copy() );
+		config.setName( name );
 		WsdlMockResponse newResponse = mockOperation.addNewMockResponse( config );
-      
-      UISupport.selectAndShow( newResponse );
+
+		UISupport.selectAndShow( newResponse );
 	}
 }

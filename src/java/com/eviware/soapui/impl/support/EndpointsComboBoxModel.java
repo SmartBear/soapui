@@ -12,17 +12,19 @@
 
 package com.eviware.soapui.impl.support;
 
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.support.UISupport;
-
-import javax.swing.*;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import javax.swing.ComboBoxModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+
+import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.support.UISupport;
 
 /**
  * ComboBox model for a request endpoint
@@ -40,74 +42,74 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 	private String[] endpoints;
 	private AbstractHttpRequest<?> request;
 
-	public EndpointsComboBoxModel(AbstractHttpRequest<?> request)
+	public EndpointsComboBoxModel( AbstractHttpRequest<?> request )
 	{
 		this.request = request;
 		initEndpoints();
-		request.addPropertyChangeListener(this);
-		if (request.getOperation() != null)
-			request.getOperation().getInterface().addPropertyChangeListener(this);
+		request.addPropertyChangeListener( this );
+		if( request.getOperation() != null )
+			request.getOperation().getInterface().addPropertyChangeListener( this );
 	}
 
-	public void setSelectedItem(Object anItem)
+	public void setSelectedItem( Object anItem )
 	{
 		final String endpoint = request.getEndpoint();
-		if (anItem != null && anItem.equals(ADD_NEW_ENDPOINT))
+		if( anItem != null && anItem.equals( ADD_NEW_ENDPOINT ) )
 		{
-			SwingUtilities.invokeLater(new Runnable()
+			SwingUtilities.invokeLater( new Runnable()
 			{
 				public void run()
 				{
-					String value = UISupport.prompt("Add new endpoint for interface ["
-							+ request.getOperation().getInterface().getName() + "]", "Add new endpoint", endpoint);
+					String value = UISupport.prompt( "Add new endpoint for interface ["
+							+ request.getOperation().getInterface().getName() + "]", "Add new endpoint", endpoint );
 
-					if (value != null)
+					if( value != null )
 					{
-						if (request.getOperation() != null)
-							request.getOperation().getInterface().addEndpoint(value);
-						request.setEndpoint(value);
+						if( request.getOperation() != null )
+							request.getOperation().getInterface().addEndpoint( value );
+						request.setEndpoint( value );
 					}
 
 				}
-			});
+			} );
 
 		}
-		else if (anItem != null && anItem.equals(EDIT_ENDPOINT))
+		else if( anItem != null && anItem.equals( EDIT_ENDPOINT ) )
 		{
-			SwingUtilities.invokeLater(new Runnable()
+			SwingUtilities.invokeLater( new Runnable()
 			{
 				public void run()
 				{
-					String value = UISupport.prompt("Edit endpoint for interface ["
-							+ request.getOperation().getInterface().getName() + "]", "Edit endpoint", endpoint);
+					String value = UISupport.prompt( "Edit endpoint for interface ["
+							+ request.getOperation().getInterface().getName() + "]", "Edit endpoint", endpoint );
 
-					if (value != null)
+					if( value != null )
 					{
-						if (request.getOperation() != null)
-							request.getOperation().getInterface().changeEndpoint(endpoint, value);
-						request.setEndpoint(value);
+						if( request.getOperation() != null )
+							request.getOperation().getInterface().changeEndpoint( endpoint, value );
+						request.setEndpoint( value );
 					}
 				}
-			});
+			} );
 		}
-		else if (anItem != null && anItem.equals(DELETE_ENDPOINT))
+		else if( anItem != null && anItem.equals( DELETE_ENDPOINT ) )
 		{
-			SwingUtilities.invokeLater(new Runnable()
+			SwingUtilities.invokeLater( new Runnable()
 			{
 				public void run()
 				{
-					if (UISupport.confirm("Delete endpoint [" + endpoint + "]", "Delete endpoint"))
+					if( UISupport.confirm( "Delete endpoint [" + endpoint + "]", "Delete endpoint" ) )
 					{
-						if (request.getOperation() != null)
-							request.getOperation().getInterface().removeEndpoint(endpoint);
-						request.setEndpoint(null);
+						if( request.getOperation() != null )
+							request.getOperation().getInterface().removeEndpoint( endpoint );
+						request.setEndpoint( null );
 					}
 				}
-			});
+			} );
 		}
 		else
 		{
-			request.setEndpoint((String) anItem);
+			request.setEndpoint( ( String )anItem );
 		}
 
 		notifyContentsChanged();
@@ -121,7 +123,7 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 
 	private void initEndpoints()
 	{
-		if (request.getOperation() != null)
+		if( request.getOperation() != null )
 			endpoints = request.getOperation().getInterface().getEndpoints();
 		else
 			endpoints = new String[0];
@@ -130,10 +132,10 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 	private void notifyContentsChanged()
 	{
 		Iterator<ListDataListener> iterator = listeners.iterator();
-		ListDataEvent e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, getSize());
-		while (iterator.hasNext())
+		ListDataEvent e = new ListDataEvent( this, ListDataEvent.CONTENTS_CHANGED, 0, getSize() );
+		while( iterator.hasNext() )
 		{
-			iterator.next().contentsChanged(e);
+			iterator.next().contentsChanged( e );
 		}
 	}
 
@@ -148,37 +150,37 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 		return endpoints.length + 3;
 	}
 
-	public Object getElementAt(int index)
+	public Object getElementAt( int index )
 	{
-		if (index == endpoints.length)
+		if( index == endpoints.length )
 			return EndpointsComboBoxModel.EDIT_ENDPOINT;
-		else if (index == endpoints.length + 1)
+		else if( index == endpoints.length + 1 )
 			return EndpointsComboBoxModel.ADD_NEW_ENDPOINT;
-		else if (index == endpoints.length + 2)
+		else if( index == endpoints.length + 2 )
 			return EndpointsComboBoxModel.DELETE_ENDPOINT;
 		else
 			return endpoints[index];
 	}
 
-	public void addListDataListener(ListDataListener l)
+	public void addListDataListener( ListDataListener l )
 	{
-		listeners.add(l);
+		listeners.add( l );
 	}
 
-	public void removeListDataListener(ListDataListener l)
+	public void removeListDataListener( ListDataListener l )
 	{
-		listeners.remove(l);
+		listeners.remove( l );
 	}
 
-	public void propertyChange(PropertyChangeEvent evt)
+	public void propertyChange( PropertyChangeEvent evt )
 	{
 		String propertyName = evt.getPropertyName();
 
-		if (propertyName.equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
+		if( propertyName.equals( AbstractHttpRequest.ENDPOINT_PROPERTY ) )
 		{
 			notifyContentsChanged();
 		}
-		else if (propertyName.equals(WsdlInterface.ENDPOINT_PROPERTY))
+		else if( propertyName.equals( WsdlInterface.ENDPOINT_PROPERTY ) )
 		{
 			refresh();
 		}
@@ -186,8 +188,8 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 
 	public void release()
 	{
-		request.removePropertyChangeListener(this);
-		if (request.getOperation() != null)
-			request.getOperation().getInterface().removePropertyChangeListener(this);
+		request.removePropertyChangeListener( this );
+		if( request.getOperation() != null )
+			request.getOperation().getInterface().removePropertyChangeListener( this );
 	}
 }

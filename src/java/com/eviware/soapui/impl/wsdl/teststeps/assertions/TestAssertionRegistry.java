@@ -12,20 +12,32 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.*;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.*;
-import com.eviware.soapui.model.testsuite.Assertable;
-import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.support.types.StringToStringMap;
-import org.apache.log4j.Logger;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.log4j.Logger;
+
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.GroovyScriptAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.ResponseSLAAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SchemaComplianceAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleContainsAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleNotContainsAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XPathContainsAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XQueryContainsAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.NotSoapFaultAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.SoapFaultAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.SoapResponseAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.WSARequestAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.WSAResponseAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.WSSStatusAssertion;
+import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * Registry for WsdlAssertions
@@ -35,11 +47,11 @@ import java.util.Map;
 
 public class TestAssertionRegistry
 {
-   private static TestAssertionRegistry instance;
-	private Map<String, TestAssertionFactory > availableAssertions = new HashMap<String,TestAssertionFactory >();
+	private static TestAssertionRegistry instance;
+	private Map<String, TestAssertionFactory> availableAssertions = new HashMap<String, TestAssertionFactory>();
 	private StringToStringMap assertionLabels = new StringToStringMap();
 	private final static Logger log = Logger.getLogger( TestAssertionRegistry.class );
-	
+
 	public TestAssertionRegistry()
 	{
 		addAssertion( new SoapResponseAssertion.Factory() );
@@ -56,77 +68,80 @@ public class TestAssertionRegistry
 		addAssertion( new WSAResponseAssertion.Factory() );
 		addAssertion( new WSARequestAssertion.Factory() );
 	}
-	
-	public void addAssertion( TestAssertionFactory factory)
+
+	public void addAssertion( TestAssertionFactory factory )
 	{
 		availableAssertions.put( factory.getAssertionId(), factory );
-		assertionLabels.put(factory.getAssertionLabel(), factory.getAssertionId() );
+		assertionLabels.put( factory.getAssertionLabel(), factory.getAssertionId() );
 	}
 
 	public static synchronized TestAssertionRegistry getInstance()
 	{
 		if( instance == null )
 			instance = new TestAssertionRegistry();
-		
+
 		return instance;
 	}
 
-	public WsdlMessageAssertion buildAssertion(TestAssertionConfig config, Assertable assertable)
+	public WsdlMessageAssertion buildAssertion( TestAssertionConfig config, Assertable assertable )
 	{
-	   try
+		try
 		{
 			String type = config.getType();
-			TestAssertionFactory factory = availableAssertions.get(type);
+			TestAssertionFactory factory = availableAssertions.get( type );
 			if( factory == null )
 			{
 				log.error( "Missing assertion for type [" + type + "]" );
 			}
 			else
 			{
-				return (WsdlMessageAssertion) factory.buildAssertion(config, assertable);
+				return ( WsdlMessageAssertion )factory.buildAssertion( config, assertable );
 			}
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
 			SoapUI.logError( e );
 		}
-		
+
 		return null;
 	}
-	
+
 	public boolean canBuildAssertion( TestAssertionConfig config )
 	{
-		return availableAssertions.containsKey(config.getType());
+		return availableAssertions.containsKey( config.getType() );
 	}
-	
+
 	public String getAssertionTypeForName( String name )
 	{
 		return assertionLabels.get( name );
 	}
-	
-	public enum AssertableType { REQUEST, RESPONSE, BOTH }
-	
+
+	public enum AssertableType
+	{
+		REQUEST, RESPONSE, BOTH
+	}
+
 	public String[] getAvailableAssertionNames( Assertable assertable )
 	{
 		List<String> result = new ArrayList<String>();
-		
+
 		for( TestAssertionFactory assertion : availableAssertions.values() )
 		{
-			if( assertion.canAssert( assertable ))
+			if( assertion.canAssert( assertable ) )
 				result.add( assertion.getAssertionLabel() );
 		}
-		
-      return result.toArray( new String[result.size()] );
+
+		return result.toArray( new String[result.size()] );
 	}
 
 	public String getAssertionNameForType( String type )
 	{
 		for( String assertion : assertionLabels.keySet() )
 		{
-			if( assertionLabels.get( assertion ).equals( type  ))
+			if( assertionLabels.get( assertion ).equals( type ) )
 				return assertion;
 		}
-		
+
 		return null;
 	}
 
@@ -137,29 +152,29 @@ public class TestAssertionRegistry
 			TestAssertion assertion = assertable.getAssertionAt( c );
 			if( assertion.isAllowMultiple() )
 				continue;
-			
-			if( assertion.getClass().equals( availableAssertions.get( getAssertionTypeForName( name ))))
+
+			if( assertion.getClass().equals( availableAssertions.get( getAssertionTypeForName( name ) ) ) )
 			{
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
 	public boolean canAddAssertion( WsdlMessageAssertion assertion, Assertable assertable )
 	{
-		if( assertion.isAllowMultiple())
+		if( assertion.isAllowMultiple() )
 			return true;
-		
+
 		for( int c = 0; c < assertable.getAssertionCount(); c++ )
 		{
-			if( assertion.getClass().equals( assertable.getAssertionAt( c ).getClass()))
+			if( assertion.getClass().equals( assertable.getAssertionAt( c ).getClass() ) )
 			{
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 }

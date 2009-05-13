@@ -31,7 +31,7 @@ public class DefaultXmlDocument extends AbstractXmlDocument
 	{
 		this.xml = xml;
 	}
-	
+
 	public DefaultXmlDocument()
 	{
 	}
@@ -45,13 +45,13 @@ public class DefaultXmlDocument extends AbstractXmlDocument
 	{
 		if( typeSystem != null )
 			return typeSystem;
-		
+
 		try
 		{
 			typeSystem = XmlObject.Factory.parse( xml ).schemaType().getTypeSystem();
 			return typeSystem;
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
 			return XmlBeans.getBuiltinTypeSystem();
 		}
@@ -62,11 +62,11 @@ public class DefaultXmlDocument extends AbstractXmlDocument
 		return xml;
 	}
 
-	public void setXml(String xml)
+	public void setXml( String xml )
 	{
 		String oldXml = this.xml;
 		this.xml = xml;
-		
+
 		fireXmlChanged( oldXml, xml );
 	}
 

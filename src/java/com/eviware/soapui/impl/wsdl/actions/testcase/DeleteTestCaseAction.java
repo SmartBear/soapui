@@ -27,22 +27,22 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 public class DeleteTestCaseAction extends AbstractSoapUIAction<WsdlTestCase>
 {
 	public DeleteTestCaseAction()
-   {
-      super( "Remove", "Removes this TestCase from the TestSuite" );
-   }
-   
-   public void perform( WsdlTestCase testCase, Object param )
 	{
-   	if( SoapUI.getTestMonitor().hasRunningTest( testCase ))
-   	{
-   		UISupport.showErrorMessage( "Cannot remove RestCase while tests are running" );
-   		return;
-   	}
-   	
-      if( UISupport.confirm( "Remove TestCase [" + testCase.getName() + "] from TestSuite", "Remove TestCase" ))
-      {
-      	((WsdlTestSuite)testCase.getTestSuite()).removeTestCase( testCase );
-      }
-   }
+		super( "Remove", "Removes this TestCase from the TestSuite" );
+	}
+
+	public void perform( WsdlTestCase testCase, Object param )
+	{
+		if( SoapUI.getTestMonitor().hasRunningTest( testCase ) )
+		{
+			UISupport.showErrorMessage( "Cannot remove RestCase while tests are running" );
+			return;
+		}
+
+		if( UISupport.confirm( "Remove TestCase [" + testCase.getName() + "] from TestSuite", "Remove TestCase" ) )
+		{
+			( ( WsdlTestSuite )testCase.getTestSuite() ).removeTestCase( testCase );
+		}
+	}
 
 }

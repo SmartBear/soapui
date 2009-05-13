@@ -32,16 +32,16 @@ public class WsaInspectorFactory implements RequestInspectorFactory, ResponseIns
 	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof WsdlRequest )
-			return new WsdlRequestWsaInspector( ((WsdlRequest)modelItem) );
-		
+			return new WsdlRequestWsaInspector( ( ( WsdlRequest )modelItem ) );
+
 		return null;
 	}
 
-	public EditorInspector<?> createResponseInspector(Editor<?> editor, ModelItem modelItem)
+	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof WsdlMockResponse )
-			return new WsdlMockresponseWsaInspector( ((WsdlMockResponse)modelItem) );
-		
+			return new WsdlMockresponseWsaInspector( ( ( WsdlMockResponse )modelItem ) );
+
 		return null;
 	}
 }

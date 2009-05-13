@@ -25,16 +25,16 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 public class GotoStepPanelBuilder extends EmptyPanelBuilder<WsdlGotoTestStep>
 {
 	public GotoStepPanelBuilder()
-   {
-   }
+	{
+	}
 
-   public DesktopPanel buildDesktopPanel(WsdlGotoTestStep testStep)
-   {
-      return new GotoStepDesktopPanel( testStep );
-   }
+	public DesktopPanel buildDesktopPanel( WsdlGotoTestStep testStep )
+	{
+		return new GotoStepDesktopPanel( testStep );
+	}
 
-   public boolean hasDesktopPanel()
-   {
-      return true;
-   }
+	public boolean hasDesktopPanel()
+	{
+		return true;
+	}
 }

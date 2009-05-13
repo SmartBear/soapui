@@ -61,7 +61,7 @@ import com.eviware.x.form.support.AField.AFieldType;
 
 /**
  * Panel for displaying TestStepResults
- *  
+ * 
  * @author Ole.Matzura
  */
 
@@ -73,44 +73,44 @@ public class TestRunLog extends JPanel
 	private final Settings settings;
 	private Set<String> boldTexts = new HashSet<String>();
 	private boolean follow = true;
-	protected int selectedIndex; 
+	protected int selectedIndex;
 	private XFormDialog optionsDialog;
-	
+
 	public TestRunLog( Settings settings )
 	{
-		super(new BorderLayout());
+		super( new BorderLayout() );
 		this.settings = settings;
 
 		errorsOnly = settings.getBoolean( OptionsForm.class.getName() + "@errors_only" );
-		
+
 		buildUI();
 	}
 
 	private void buildUI()
 	{
 		logListModel = new TestCaseLogModel();
-		logListModel.setMaxSize( ( int ) settings.getLong(OptionsForm.class.getName() + "@max_rows", 1000 ) );
-		
-		testLogList = new JList(logListModel);
-		testLogList.setCellRenderer(new TestLogCellRenderer());
+		logListModel.setMaxSize( ( int )settings.getLong( OptionsForm.class.getName() + "@max_rows", 1000 ) );
+
+		testLogList = new JList( logListModel );
+		testLogList.setCellRenderer( new TestLogCellRenderer() );
 		testLogList.setPrototypeCellValue( "Testing 123" );
 		testLogList.setFixedCellWidth( -1 );
-		testLogList.addMouseListener(new LogListMouseListener());
+		testLogList.addMouseListener( new LogListMouseListener() );
 
-		JScrollPane scrollPane = new JScrollPane(testLogList);
-		add(scrollPane, BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane( testLogList );
+		add( scrollPane, BorderLayout.CENTER );
 		add( buildToolbar(), BorderLayout.NORTH );
 	}
 
-	private Component buildToolbar( )
+	private Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createSmallToolbar();
-		
+
 		addToolbarButtons( toolbar );
-		
+
 		return toolbar;
 	}
-	
+
 	protected JList getTestLogList()
 	{
 		return testLogList;
@@ -127,54 +127,54 @@ public class TestRunLog extends JPanel
 	{
 		private Font boldFont;
 		private Font normalFont;
-		private JHyperlinkLabel hyperlinkLabel = new JHyperlinkLabel("");
-		
+		private JHyperlinkLabel hyperlinkLabel = new JHyperlinkLabel( "" );
+
 		public TestLogCellRenderer()
 		{
-			setOpaque(true);
-			setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-			setIcon(null);
+			setOpaque( true );
+			setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
+			setIcon( null );
 			boldFont = getFont().deriveFont( Font.BOLD );
 			normalFont = getFont();
-			
+
 			hyperlinkLabel.setOpaque( true );
 			hyperlinkLabel.setForeground( Color.BLUE.darker().darker().darker() );
 			hyperlinkLabel.setUnderlineColor( Color.GRAY );
 			hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 4, 3, 3 ) );
 		}
-		
-		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-				boolean cellHasFocus)
+
+		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
+				boolean cellHasFocus )
 		{
-			if (isSelected)
+			if( isSelected )
 			{
-				setBackground(list.getSelectionBackground());
-				setForeground(list.getSelectionForeground());
+				setBackground( list.getSelectionBackground() );
+				setForeground( list.getSelectionForeground() );
 			}
 			else
 			{
-				setBackground(list.getBackground());
-				setForeground(list.getForeground());
+				setBackground( list.getBackground() );
+				setForeground( list.getForeground() );
 			}
-			
-			if (value instanceof String)
+
+			if( value instanceof String )
 			{
-				setText(value.toString());
+				setText( value.toString() );
 			}
-			else if (value instanceof TestCaseLogItem)
+			else if( value instanceof TestCaseLogItem )
 			{
-				TestCaseLogItem logItem = (TestCaseLogItem) value;
+				TestCaseLogItem logItem = ( TestCaseLogItem )value;
 				String msg = logItem.getMsg();
-				setText(msg == null ? "" : msg);
+				setText( msg == null ? "" : msg );
 			}
-			
-			TestStepResult result = logListModel.getResultAt(index);
-			if( result != null && !result.isDiscarded() && result.getActions() != null && !getText().startsWith( " ->" ))
+
+			TestStepResult result = logListModel.getResultAt( index );
+			if( result != null && !result.isDiscarded() && result.getActions() != null && !getText().startsWith( " ->" ) )
 			{
 				hyperlinkLabel.setText( getText() );
 				hyperlinkLabel.setBackground( getBackground() );
 				hyperlinkLabel.setEnabled( list.isEnabled() );
-				
+
 				if( result.getStatus() == TestStepStatus.OK )
 				{
 					hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
@@ -183,19 +183,19 @@ public class TestRunLog extends JPanel
 				{
 					hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
 				}
-				else 
+				else
 				{
 					hyperlinkLabel.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
 				}
-				
+
 				return hyperlinkLabel;
 			}
 
-			setEnabled(list.isEnabled());
-			
-			if( boldTexts.contains( getText() ))
+			setEnabled( list.isEnabled() );
+
+			if( boldTexts.contains( getText() ) )
 			{
-				setFont( boldFont);
+				setFont( boldFont );
 			}
 			else
 			{
@@ -207,60 +207,61 @@ public class TestRunLog extends JPanel
 	}
 
 	/**
-	 * Mouse Listener for triggering default action and showing popup for log list items
+	 * Mouse Listener for triggering default action and showing popup for log
+	 * list items
 	 * 
 	 * @author Ole.Matzura
 	 */
 
 	private final class LogListMouseListener extends MouseAdapter
 	{
-		public void mouseClicked(MouseEvent e)
+		public void mouseClicked( MouseEvent e )
 		{
 			int index = testLogList.getSelectedIndex();
-			if ( index != -1 && (index == selectedIndex || e.getClickCount() > 1))
+			if( index != -1 && ( index == selectedIndex || e.getClickCount() > 1 ) )
 			{
-				TestStepResult result = logListModel.getResultAt(index);
-				if (result != null && result.getActions() != null)
-					result.getActions().performDefaultAction(new ActionEvent(this, 0, null));
+				TestStepResult result = logListModel.getResultAt( index );
+				if( result != null && result.getActions() != null )
+					result.getActions().performDefaultAction( new ActionEvent( this, 0, null ) );
 			}
-			
+
 			selectedIndex = index;
 		}
 
-		public void mousePressed(MouseEvent e)
+		public void mousePressed( MouseEvent e )
 		{
-			if (e.isPopupTrigger())
-				showPopup(e);
+			if( e.isPopupTrigger() )
+				showPopup( e );
 		}
 
-		public void mouseReleased(MouseEvent e)
+		public void mouseReleased( MouseEvent e )
 		{
-			if (e.isPopupTrigger())
-				showPopup(e);
+			if( e.isPopupTrigger() )
+				showPopup( e );
 		}
 
-		public void showPopup(MouseEvent e)
+		public void showPopup( MouseEvent e )
 		{
-			int row = testLogList.locationToIndex(e.getPoint());
-			if (row == -1)
+			int row = testLogList.locationToIndex( e.getPoint() );
+			if( row == -1 )
 				return;
 
-			if (testLogList.getSelectedIndex() != row)
+			if( testLogList.getSelectedIndex() != row )
 			{
-				testLogList.setSelectedIndex(row);
+				testLogList.setSelectedIndex( row );
 			}
 
-			TestStepResult result = logListModel.getResultAt(row);
-			if (result == null)
+			TestStepResult result = logListModel.getResultAt( row );
+			if( result == null )
 				return;
 
 			ActionList actions = result.getActions();
 
-			if (actions == null || actions.getActionCount() == 0)
+			if( actions == null || actions.getActionCount() == 0 )
 				return;
 
-			JPopupMenu popup = ActionSupport.buildPopup(actions);
-			UISupport.showPopup(popup, testLogList, e.getPoint());
+			JPopupMenu popup = ActionSupport.buildPopup( actions );
+			UISupport.showPopup( popup, testLogList, e.getPoint() );
 		}
 	}
 
@@ -270,20 +271,20 @@ public class TestRunLog extends JPanel
 		boldTexts.clear();
 	}
 
-	public synchronized void addText(String string)
+	public synchronized void addText( String string )
 	{
 		logListModel.addText( string );
-		if( follow  )
-			testLogList.ensureIndexIsVisible( logListModel.getSize()-1 );
+		if( follow )
+			testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
 	}
 
-	public synchronized void addTestStepResult(TestStepResult stepResult)
+	public synchronized void addTestStepResult( TestStepResult stepResult )
 	{
 		if( errorsOnly && stepResult.getStatus() != TestStepResult.TestStepStatus.FAILED )
 			return;
-		
+
 		logListModel.addTestStepResult( stepResult );
-		if( follow  )
+		if( follow )
 		{
 			try
 			{
@@ -300,80 +301,79 @@ public class TestRunLog extends JPanel
 		return logListModel;
 	}
 
-	public void setLogListModel(TestCaseLogModel logListModel)
+	public void setLogListModel( TestCaseLogModel logListModel )
 	{
 		this.logListModel = logListModel;
 		testLogList.setModel( logListModel );
 	}
-	
+
 	private class SetLogOptionsAction extends AbstractAction
 	{
 		public SetLogOptionsAction()
 		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/options.gif" ));
-			putValue( Action.SHORT_DESCRIPTION, "Sets TestCase Log Options");
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/options.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Sets TestCase Log Options" );
 		}
-		
+
 		public void actionPerformed( ActionEvent e )
 		{
 			if( optionsDialog == null )
 				optionsDialog = ADialogBuilder.buildDialog( OptionsForm.class );
-			
-			optionsDialog.setIntValue( OptionsForm.MAXROWS, ( int ) settings.getLong( 
-						OptionsForm.class.getName() + "@max_rows", 1000 ));
-			optionsDialog.setBooleanValue( OptionsForm.ERRORSONLY, settings.getBoolean(  
-						OptionsForm.class.getName() + "@errors_only" ));
+
+			optionsDialog.setIntValue( OptionsForm.MAXROWS, ( int )settings.getLong( OptionsForm.class.getName()
+					+ "@max_rows", 1000 ) );
+			optionsDialog.setBooleanValue( OptionsForm.ERRORSONLY, settings.getBoolean( OptionsForm.class.getName()
+					+ "@errors_only" ) );
 			optionsDialog.setBooleanValue( OptionsForm.FOLLOW, follow );
-			
+
 			if( optionsDialog.show() )
 			{
 				int maxRows = optionsDialog.getIntValue( OptionsForm.MAXROWS, 1000 );
 				logListModel.setMaxSize( maxRows );
 				settings.setLong( OptionsForm.class.getName() + "@max_rows", maxRows );
 				errorsOnly = optionsDialog.getBooleanValue( OptionsForm.ERRORSONLY );
-				settings.setBoolean( OptionsForm.class.getName() + "@errors_only", 
-							errorsOnly );
-				
+				settings.setBoolean( OptionsForm.class.getName() + "@errors_only", errorsOnly );
+
 				follow = optionsDialog.getBooleanValue( OptionsForm.FOLLOW );
 			}
 		}
 	}
-	
-	@AForm( name="Log Options", description="Set options for the run log below" )
-	private static interface OptionsForm 
+
+	@AForm( name = "Log Options", description = "Set options for the run log below" )
+	private static interface OptionsForm
 	{
-		@AField( name="Max Rows", description="Sets the maximum number of rows to keep in the log", type=AFieldType.INT)
+		@AField( name = "Max Rows", description = "Sets the maximum number of rows to keep in the log", type = AFieldType.INT )
 		public static final String MAXROWS = "Max Rows";
 
-		@AField( name="Errors Only", description="Logs only TestStep errors in the log", type=AFieldType.BOOLEAN)
+		@AField( name = "Errors Only", description = "Logs only TestStep errors in the log", type = AFieldType.BOOLEAN )
 		public static final String ERRORSONLY = "Errors Only";
-		
-		@AField( name="Follow", description="Follow log content", type=AFieldType.BOOLEAN)
+
+		@AField( name = "Follow", description = "Follow log content", type = AFieldType.BOOLEAN )
 		public static final String FOLLOW = "Follow";
 	}
-	
+
 	private class ClearLogAction extends AbstractAction
 	{
 		public ClearLogAction()
 		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/clear_loadtest.gif" ));
-			putValue( Action.SHORT_DESCRIPTION, "Clears the log");
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/clear_loadtest.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Clears the log" );
 		}
-		
+
 		public void actionPerformed( ActionEvent e )
 		{
 			logListModel.clear();
 		}
 	}
-	
+
 	private class ExportLogAction extends AbstractAction
 	{
 		public ExportLogAction()
 		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/export.gif" ));
-			putValue( Action.SHORT_DESCRIPTION, "Exports this log to a file");
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/export.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Exports this log to a file" );
 		}
-		
+
 		public void actionPerformed( ActionEvent e )
 		{
 			File file = UISupport.getFileDialogs().saveAs( this, "Save Log" );
@@ -385,19 +385,19 @@ public class TestRunLog extends JPanel
 					for( int c = 0; c < logListModel.getSize(); c++ )
 					{
 						Object value = logListModel.getElementAt( c );
-						if (value instanceof String)
+						if( value instanceof String )
 						{
-							out.println(value.toString());
+							out.println( value.toString() );
 						}
-						else if (value instanceof TestCaseLogItem)
+						else if( value instanceof TestCaseLogItem )
 						{
-							TestCaseLogItem logItem = (TestCaseLogItem) value;
+							TestCaseLogItem logItem = ( TestCaseLogItem )value;
 							String msg = logItem.getMsg();
-							if( StringUtils.hasContent( msg ))
-								out.println( msg);
+							if( StringUtils.hasContent( msg ) )
+								out.println( msg );
 						}
 					}
-					
+
 					out.close();
 				}
 				catch( FileNotFoundException e1 )
@@ -407,7 +407,7 @@ public class TestRunLog extends JPanel
 			}
 		}
 	}
-	
+
 	public static class TestRunLogTestRunListener extends TestRunListenerAdapter
 	{
 		private SimpleDateFormat dateFormat;
@@ -439,28 +439,29 @@ public class TestRunLog extends JPanel
 			if( SoapUI.getTestMonitor().hasRunningLoadTest( testRunner.getTestCase() ) )
 				return;
 
-			WsdlTestCaseRunner wsdlRunner = ( WsdlTestCaseRunner ) testRunner;
+			WsdlTestCaseRunner wsdlRunner = ( WsdlTestCaseRunner )testRunner;
 
 			String testCaseName = testRunner.getTestCase().getName();
 			if( testRunner.getStatus() == TestRunner.Status.CANCELED )
 				runLog.addText( "TestCase [" + testCaseName + "] canceled [" + testRunner.getReason() + "], time taken = "
-							+ wsdlRunner.getTimeTaken() );
+						+ wsdlRunner.getTimeTaken() );
 			else if( testRunner.getStatus() == TestRunner.Status.FAILED )
 			{
 				String msg = wsdlRunner.getReason();
-				if(  wsdlRunner.getError() != null )
+				if( wsdlRunner.getError() != null )
 				{
 					if( msg != null )
 						msg += ":";
-				
+
 					msg += wsdlRunner.getError();
 				}
-				
+
 				runLog.addText( "TestCase [" + testCaseName + "] failed [" + msg + "], time taken = "
-							+ wsdlRunner.getTimeTaken() );
+						+ wsdlRunner.getTimeTaken() );
 			}
-			else 
-				runLog.addText( "TestCase [" + testCaseName + "] finished with status [" + testRunner.getStatus() + "], time taken = " + wsdlRunner.getTimeTaken() );
+			else
+				runLog.addText( "TestCase [" + testCaseName + "] finished with status [" + testRunner.getStatus()
+						+ "], time taken = " + wsdlRunner.getTimeTaken() );
 		}
 
 		public void afterStep( TestRunner testRunner, TestRunContext runContext, TestStepResult stepResult )

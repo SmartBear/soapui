@@ -33,72 +33,72 @@ public abstract class AbstractTableMouseListener extends MouseAdapter
 {
 	private boolean enablePopup;
 	private JPopupMenu menu;
-	
+
 	protected abstract ActionList getActionsForRow( JTable table, int row );
-	
+
 	public AbstractTableMouseListener()
 	{
 		this( true );
 	}
-	
+
 	public AbstractTableMouseListener( boolean enablePopup )
 	{
 		this.enablePopup = enablePopup;
 	}
-	
+
 	public void mouseClicked( MouseEvent e )
 	{
-		if (e.getClickCount() < 2)
+		if( e.getClickCount() < 2 )
 			return;
-		
-		JTable list = ( JTable ) e.getSource();
-		
+
+		JTable list = ( JTable )e.getSource();
+
 		int selectedIndex = list.getSelectedRow();
-		if (selectedIndex == -1)
+		if( selectedIndex == -1 )
 			return;
-		
+
 		ActionList actions = getActionsForRow( list, selectedIndex );
-		
-		if(actions != null)
-			actions.performDefaultAction(new ActionEvent(this, 0, null));
+
+		if( actions != null )
+			actions.performDefaultAction( new ActionEvent( this, 0, null ) );
 	}
 
 	public void mousePressed( MouseEvent e )
 	{
-		if (e.isPopupTrigger())
-			showPopup(e);
+		if( e.isPopupTrigger() )
+			showPopup( e );
 	}
 
 	public void mouseReleased( MouseEvent e )
 	{
-		if (e.isPopupTrigger())
-			showPopup(e);
+		if( e.isPopupTrigger() )
+			showPopup( e );
 	}
 
 	public void showPopup( MouseEvent e )
 	{
 		if( !enablePopup )
 			return;
-		
-		JTable list = ( JTable ) e.getSource();
-		int row = list.rowAtPoint(e.getPoint());
-		if (row == -1)
+
+		JTable list = ( JTable )e.getSource();
+		int row = list.rowAtPoint( e.getPoint() );
+		if( row == -1 )
 			return;
-	
-		if (list.getSelectedRow() != row)
+
+		if( list.getSelectedRow() != row )
 		{
-			list.setRowSelectionInterval(row, row);
+			list.setRowSelectionInterval( row, row );
 		}
-	
+
 		ActionList actions = getActionsForRow( list, row );
-	
-		if (actions == null || actions.getActionCount() == 0)
+
+		if( actions == null || actions.getActionCount() == 0 )
 			return;
-	
-		JPopupMenu popup = menu == null ? ActionSupport.buildPopup(actions) : menu;
-		UISupport.showPopup(popup, list, e.getPoint());
+
+		JPopupMenu popup = menu == null ? ActionSupport.buildPopup( actions ) : menu;
+		UISupport.showPopup( popup, list, e.getPoint() );
 	}
-	
+
 	public void setPopupMenu( JPopupMenu menu )
 	{
 		this.menu = menu;

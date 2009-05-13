@@ -19,52 +19,52 @@ import com.eviware.x.dialogs.XProgressDialog;
 
 public class ConsoleDialogs implements XDialogs
 {
-	public boolean confirm(String question, String title)
+	public boolean confirm( String question, String title )
 	{
 		return false;
 	}
 
-	public Boolean confirmOrCancel(String question, String title)
+	public Boolean confirmOrCancel( String question, String title )
 	{
 		return null;
 	}
 
-	public String prompt(String question, String title, String value)
+	public String prompt( String question, String title, String value )
 	{
 		return null;
 	}
 
-	public String prompt(String question, String title)
+	public String prompt( String question, String title )
 	{
 		return null;
 	}
 
-	public String prompt(String question, String title, Object[] objects)
+	public String prompt( String question, String title, Object[] objects )
 	{
 		return null;
 	}
 
-	public String prompt(String question, String title, Object[] objects, String value)
+	public String prompt( String question, String title, Object[] objects, String value )
 	{
 		return null;
 	}
 
-	public void showErrorMessage(String message)
+	public void showErrorMessage( String message )
 	{
 		System.err.println( message );
 	}
 
-	public void showInfoMessage(String message)
+	public void showInfoMessage( String message )
 	{
 		System.out.println( message );
 	}
 
-	public void showInfoMessage(String message, String title)
+	public void showInfoMessage( String message, String title )
 	{
 		System.out.println( title + ": " + message );
 	}
 
-	public XProgressDialog createProgressDialog(String label, int length, String initialValue, boolean canCancel)
+	public XProgressDialog createProgressDialog( String label, int length, String initialValue, boolean canCancel )
 	{
 		return new NullProgressDialog();
 	}
@@ -89,7 +89,8 @@ public class ConsoleDialogs implements XDialogs
 		return null;
 	}
 
-	public char[] promptPassword(String question, String title) {
+	public char[] promptPassword( String question, String title )
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

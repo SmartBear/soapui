@@ -17,42 +17,48 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 public interface XForm
 {
-	public enum FieldType { TEXT, FOLDER, FILE, URL, JAVA_PACKAGE, JAVA_CLASS, PASSWORD, PROJECT_FILE, PROJECT_FOLDER, TEXTAREA }
+	public enum FieldType
+	{
+		TEXT, FOLDER, FILE, URL, JAVA_PACKAGE, JAVA_CLASS, PASSWORD, PROJECT_FILE, PROJECT_FOLDER, TEXTAREA
+	}
 
-	public XFormTextField addTextField(String name, String description, FieldType type );
+	public XFormTextField addTextField( String name, String description, FieldType type );
 
-	public XFormField addCheckBox(String name, String description);
+	public XFormField addCheckBox( String name, String description );
 
-	public XFormOptionsField addComboBox(String name, Object[] values, String description);
+	public XFormOptionsField addComboBox( String name, Object[] values, String description );
 
-	public void setOptions( String name, Object [] values );
+	public void setOptions( String name, Object[] values );
 
-	public void addSeparator(String label);
+	public void addSeparator( String label );
 
 	public XFormField addComponent( String name, XFormField component );
-	
+
 	public StringToStringMap getValues();
-	
+
 	public void setValues( StringToStringMap values );
-   
-   public String getComponentValue( String name );
-	
+
+	public String getComponentValue( String name );
+
 	public XFormField getComponent( String name );
-	
-	public enum ToolkitType { SWING, SWT }
+
+	public enum ToolkitType
+	{
+		SWING, SWT
+	}
 
 	public String getName();
 
-   public void setName(String name);
+	public void setName( String name );
 
-   public XFormField addNameSpaceTable(String label, Interface modelItem);
+	public XFormField addNameSpaceTable( String label, Interface modelItem );
 
 	public void addLabel( String name, String label );
-	
-	public XFormField [] getFormFields();
+
+	public XFormField[] getFormFields();
 
 	public void setFormFieldProperty( String name, Object value );
-	
+
 	public void addSeparator();
 
 	public String[] getOptions( String name );

@@ -54,53 +54,53 @@ public class StatisticsHistoryDesktopPanel extends DefaultDesktopPanel
 
 	public StatisticsHistoryDesktopPanel( WsdlLoadTest loadTest )
 	{
-		super( "Statistics History for [" + loadTest.getName() + "]", null, null);
+		super( "Statistics History for [" + loadTest.getName() + "]", null, null );
 		this.loadTest = loadTest;
-	
+
 		propertyChangeListener = new InternalPropertyChangeListener();
-		loadTest.addPropertyChangeListener( WsdlLoadTest.NAME_PROPERTY, propertyChangeListener);
-		
+		loadTest.addPropertyChangeListener( WsdlLoadTest.NAME_PROPERTY, propertyChangeListener );
+
 		buildUI();
 	}
 
 	private void buildUI()
 	{
 		historyGraph = new JStatisticsHistoryGraph( loadTest );
-		
+
 		JScrollPane scrollPane = new JScrollPane( historyGraph );
 		scrollPane.getViewport().setBackground( Color.WHITE );
 		scrollPane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS );
-		
-		panel = UISupport.buildPanelWithToolbarAndStatusBar( buildToolbar(), 
-				scrollPane, historyGraph.getLegend() );
-		panel.setPreferredSize( new Dimension( 600, 400 ));
+
+		panel = UISupport.buildPanelWithToolbarAndStatusBar( buildToolbar(), scrollPane, historyGraph.getLegend() );
+		panel.setPreferredSize( new Dimension( 600, 400 ) );
 	}
 
 	private JComponent buildToolbar()
 	{
 		exportButton = UISupport.createToolbarButton( new ExportSamplesHistoryAction( historyGraph ) );
-		
+
 		JXToolBar toolbar = UISupport.createToolbar();
-		
+
 		toolbar.addSpace( 5 );
 		toolbar.addLabeledFixed( "Select Statistic:", buildSelectStatisticCombo() );
 		toolbar.addUnrelatedGap();
 		toolbar.addLabeledFixed( "Resolution:", buildResolutionCombo() );
 		toolbar.addGlue();
 		toolbar.addFixed( exportButton );
-		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.STATISTICSGRAPH_HELP_URL )));
+		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.STATISTICSGRAPH_HELP_URL ) ) );
 
 		return toolbar;
 	}
 
 	private JComponent buildResolutionCombo()
 	{
-		resolutionCombo = new JComboBox( new String[] {"data", "250", "500", "1000"} );
+		resolutionCombo = new JComboBox( new String[] { "data", "250", "500", "1000" } );
 		resolutionCombo.setEditable( true );
 		resolutionCombo.setToolTipText( "Sets update interval of graph in milliseconds" );
 		long resolution = historyGraph.getResolution();
-		resolutionCombo.setSelectedItem( resolution == 0 ? "data" : String.valueOf( resolution ));
-		resolutionCombo.addItemListener( new ItemListener() {
+		resolutionCombo.setSelectedItem( resolution == 0 ? "data" : String.valueOf( resolution ) );
+		resolutionCombo.addItemListener( new ItemListener()
+		{
 
 			public void itemStateChanged( ItemEvent e )
 			{
@@ -116,12 +116,13 @@ public class StatisticsHistoryDesktopPanel extends DefaultDesktopPanel
 				catch( Exception ex )
 				{
 					long resolution = historyGraph.getResolution();
-					resolutionCombo.setSelectedItem( resolution == 0 ? "data" : String.valueOf( resolution ));
+					resolutionCombo.setSelectedItem( resolution == 0 ? "data" : String.valueOf( resolution ) );
 				}
-			}} );
+			}
+		} );
 		return resolutionCombo;
 	}
-	
+
 	private JComponent buildSelectStatisticCombo()
 	{
 		DefaultComboBoxModel model = new DefaultComboBoxModel();
@@ -129,15 +130,17 @@ public class StatisticsHistoryDesktopPanel extends DefaultDesktopPanel
 		model.addElement( Statistic.TPS );
 		model.addElement( Statistic.ERRORS );
 		model.addElement( Statistic.BPS );
-		
-		selectStatisticCombo = new JComboBox( model );
-		selectStatisticCombo.addItemListener( new ItemListener() {
 
-			public void itemStateChanged(ItemEvent e)
+		selectStatisticCombo = new JComboBox( model );
+		selectStatisticCombo.addItemListener( new ItemListener()
+		{
+
+			public void itemStateChanged( ItemEvent e )
 			{
-				historyGraph.setStatistic( Statistic.valueOf( selectStatisticCombo.getSelectedItem().toString() ));
-			}} );
-		
+				historyGraph.setStatistic( Statistic.valueOf( selectStatisticCombo.getSelectedItem().toString() ) );
+			}
+		} );
+
 		return selectStatisticCombo;
 	}
 
@@ -146,17 +149,17 @@ public class StatisticsHistoryDesktopPanel extends DefaultDesktopPanel
 		return panel;
 	}
 
-	public boolean onClose(boolean canCancel)
+	public boolean onClose( boolean canCancel )
 	{
-		loadTest.removePropertyChangeListener( WsdlLoadTest.NAME_PROPERTY, propertyChangeListener);
+		loadTest.removePropertyChangeListener( WsdlLoadTest.NAME_PROPERTY, propertyChangeListener );
 		historyGraph.release();
-		
+
 		return super.onClose( canCancel );
 	}
-	
+
 	private final class InternalPropertyChangeListener implements PropertyChangeListener
 	{
-		public void propertyChange(PropertyChangeEvent evt)
+		public void propertyChange( PropertyChangeEvent evt )
 		{
 			setTitle( "Statistics History for [" + loadTest.getName() + "]" );
 		}

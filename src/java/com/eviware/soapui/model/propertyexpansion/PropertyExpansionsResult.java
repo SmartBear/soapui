@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui.model.propertyexpansion;
 
 import java.util.ArrayList;
@@ -32,18 +32,17 @@ public class PropertyExpansionsResult extends ArrayList<PropertyExpansion>
 		this.defaultTarget = defaultTarget;
 	}
 
-	
-	public boolean extractAndAddAll( Object target, String propertyName  )
+	public boolean extractAndAddAll( Object target, String propertyName )
 	{
-		return addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, target, propertyName) );
+		return addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, target, propertyName ) );
 	}
 
-	public boolean extractAndAddAll( String propertyName  )
+	public boolean extractAndAddAll( String propertyName )
 	{
-		return addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, defaultTarget, propertyName) );
+		return addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, defaultTarget, propertyName ) );
 	}
-	
-	public PropertyExpansion [] toArray()
+
+	public PropertyExpansion[] toArray()
 	{
 		return toArray( new PropertyExpansion[size()] );
 	}
@@ -52,7 +51,7 @@ public class PropertyExpansionsResult extends ArrayList<PropertyExpansion>
 	{
 		if( propertyExpansions == null )
 			return;
-		
+
 		for( PropertyExpansion pe : propertyExpansions )
 			add( pe );
 	}

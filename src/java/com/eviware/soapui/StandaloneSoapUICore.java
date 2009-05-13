@@ -9,8 +9,8 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
- package com.eviware.soapui;
+
+package com.eviware.soapui;
 
 import java.awt.Color;
 import java.awt.Insets;
@@ -30,23 +30,24 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 	public StandaloneSoapUICore( boolean init )
 	{
 		super();
-		
+
 		if( init )
 			init( DEFAULT_SETTINGS_FILE );
 	}
-	
+
 	public StandaloneSoapUICore( String settingsFile )
 	{
 		super( null, settingsFile );
 	}
-	
-	public StandaloneSoapUICore( boolean init, boolean settingPassword,String soapUISettingsPassword )
+
+	public StandaloneSoapUICore( boolean init, boolean settingPassword, String soapUISettingsPassword )
 	{
-		super(true,soapUISettingsPassword);
-		
+		super( true, soapUISettingsPassword );
+
 		if( init )
 			init( DEFAULT_SETTINGS_FILE );
 	}
+
 	public void prepareUI()
 	{
 		super.prepareUI();
@@ -54,14 +55,14 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 		initSoapUILookAndFeel();
 		DesktopRegistry.getInstance().addDesktop( SoapUI.DEFAULT_DESKTOP, new StandaloneDesktopFactory() );
 	}
-	
+
 	public void initSoapUILookAndFeel()
 	{
 		try
 		{
-			if( getSettings().getBoolean( UISettings.NATIVE_LAF ))
+			if( getSettings().getBoolean( UISettings.NATIVE_LAF ) )
 			{
-				javax.swing.UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+				javax.swing.UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
 			}
 			else
 			{
@@ -74,7 +75,7 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 				UIManager.put( "TabbedPane.tabAreaInsets", new Insets( 3, 2, 0, 0 ) );
 				UIManager.put( "TabbedPane.unselectedBackground", new Color( 220, 220, 220 ) );
 				UIManager.put( "TabbedPane.selected", new Color( 240, 240, 240 ) );
-				
+
 				PlasticXPLookAndFeel.setPlasticTheme( theme );
 			}
 		}
@@ -83,27 +84,27 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 			System.err.println( "Error initializing PlasticXPLookAndFeel; " + e.getMessage() );
 		}
 	}
-	
+
 	/**
 	 * Adapted theme for soapUI Look and Feel
 	 * 
 	 * @author ole.matzura
 	 */
-	
+
 	public static class SoapUITheme extends SkyBluer
 	{
 		public static final Color BACKGROUND_COLOR = new Color( 240, 240, 240 );
-	
+
 		public ColorUIResource getControl()
 		{
 			return new ColorUIResource( BACKGROUND_COLOR );
 		}
-	
+
 		public ColorUIResource getMenuBackground()
 		{
 			return getControl();
 		}
-	
+
 		public ColorUIResource getMenuItemBackground()
 		{
 			return new ColorUIResource( new Color( 248, 248, 248 ) );

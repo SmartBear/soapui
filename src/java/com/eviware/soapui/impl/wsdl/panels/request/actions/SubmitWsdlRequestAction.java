@@ -22,8 +22,8 @@ public class SubmitWsdlRequestAction extends AbstractSoapUIAction<WsdlRequest>
 		super( "Submit", "Submits Request to configured endpoint" );
 	}
 
-	public void perform(WsdlRequest target, Object param)
+	public void perform( WsdlRequest target, Object param )
 	{
-		
+
 	}
 }

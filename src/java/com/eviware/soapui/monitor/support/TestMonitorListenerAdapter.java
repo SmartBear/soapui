@@ -25,19 +25,19 @@ import com.eviware.soapui.monitor.TestMonitorListener;
 
 public class TestMonitorListenerAdapter implements TestMonitorListener
 {
-	public void loadTestStarted(LoadTestRunner runner)
+	public void loadTestStarted( LoadTestRunner runner )
 	{
 	}
 
-	public void loadTestFinished(LoadTestRunner runner)
+	public void loadTestFinished( LoadTestRunner runner )
 	{
 	}
 
-	public void testCaseStarted(TestRunner runner)
+	public void testCaseStarted( TestRunner runner )
 	{
 	}
 
-	public void testCaseFinished(TestRunner runner)
+	public void testCaseFinished( TestRunner runner )
 	{
 	}
 

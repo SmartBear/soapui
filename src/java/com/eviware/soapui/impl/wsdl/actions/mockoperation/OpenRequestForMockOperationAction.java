@@ -43,32 +43,34 @@ public class OpenRequestForMockOperationAction extends AbstractSoapUIAction<Wsdl
 			UISupport.showErrorMessage( "Missing operation for this mock response" );
 			return;
 		}
-		
+
 		String[] names = ModelSupport.getNames( operation.getRequestList(), new String[] { "-> Create New" } );
-		
-		String name = ( String ) UISupport.prompt(  "Select Request for Operation [" + operation.getName() + "] " +
-				"to open or create", "Open Request", names );
+
+		String name = ( String )UISupport.prompt( "Select Request for Operation [" + operation.getName() + "] "
+				+ "to open or create", "Open Request", names );
 		if( name != null )
 		{
 			WsdlRequest request = operation.getRequestByName( name );
 			if( request == null )
 			{
-				name = UISupport.prompt( "Specify name of new request", "Open Request", "Request " + (operation.getRequestCount()+1 ));
+				name = UISupport.prompt( "Specify name of new request", "Open Request", "Request "
+						+ ( operation.getRequestCount() + 1 ) );
 				if( name == null )
 					return;
-				
-			   boolean createOptional = operation.getSettings().getBoolean(WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS);
-		      if (!createOptional)
-		    	  createOptional =  UISupport.confirm(	"Create optional elements from schema?", "Create Request" );
-		      
-		      request = operation.addNewRequest( name );
-		      String requestContent = operation.createRequest( createOptional );
-		      if(requestContent != null)
-		      {
-		      	request.setRequestContent( requestContent );
-		      }
+
+				boolean createOptional = operation.getSettings().getBoolean(
+						WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS );
+				if( !createOptional )
+					createOptional = UISupport.confirm( "Create optional elements from schema?", "Create Request" );
+
+				request = operation.addNewRequest( name );
+				String requestContent = operation.createRequest( createOptional );
+				if( requestContent != null )
+				{
+					request.setRequestContent( requestContent );
+				}
 			}
-			
+
 			request.setEndpoint( mockOperation.getMockService().getLocalEndpoint() );
 			UISupport.selectAndShow( request );
 		}

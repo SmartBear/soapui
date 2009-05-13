@@ -33,7 +33,7 @@ public class DefaultActionMapping<T extends ModelItem> implements SoapUIActionMa
 	private String description;
 	private String name;
 	private boolean enabled = true;
-	
+
 	public DefaultActionMapping( String actionId, String keyStroke, String iconPath, boolean isDefault, Object param )
 	{
 		super();
@@ -43,13 +43,13 @@ public class DefaultActionMapping<T extends ModelItem> implements SoapUIActionMa
 		this.isDefault = isDefault;
 		this.param = param;
 	}
-	
-	@SuppressWarnings("unchecked")
+
+	@SuppressWarnings( "unchecked" )
 	public SoapUIAction<T> getAction()
 	{
 		return SoapUI.getActionRegistry().getAction( actionId );
 	}
-	
+
 	public boolean isDefault()
 	{
 		return isDefault;
@@ -59,7 +59,7 @@ public class DefaultActionMapping<T extends ModelItem> implements SoapUIActionMa
 	{
 		return iconPath;
 	}
-	
+
 	public String getKeyStroke()
 	{
 		return keyStroke;
@@ -125,7 +125,7 @@ public class DefaultActionMapping<T extends ModelItem> implements SoapUIActionMa
 
 	public boolean isEnabled()
 	{
-		return enabled ;
+		return enabled;
 	}
 
 	public SoapUIActionMapping<T> setEnabled( boolean enabled )

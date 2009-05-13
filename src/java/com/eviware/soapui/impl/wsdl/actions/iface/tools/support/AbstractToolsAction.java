@@ -51,9 +51,9 @@ import com.eviware.x.form.XFormTextField;
 
 public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractSoapUIAction<T>
 {
-   @SuppressWarnings("unused")
-	private static final Logger log = Logger.getLogger(AbstractToolsAction.class);
-   
+	@SuppressWarnings( "unused" )
+	private static final Logger log = Logger.getLogger( AbstractToolsAction.class );
+
 	protected static final String WSDL = "WSDL";
 	protected static final String CACHED_WSDL = "Use cached WSDL";
 	protected static final String JAVA_ARGS = "Java Args";
@@ -68,9 +68,9 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 	private boolean fixedWSDL = false;
 	private Action toolsSettingsAction = new ShowIntegratedToolsSettingsAction();;
 
-	public AbstractToolsAction( String name, String description)
+	public AbstractToolsAction( String name, String description )
 	{
-		super(name, description);
+		super( name, description );
 	}
 
 	public String getValuesSettingID()
@@ -78,7 +78,7 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 		return valuesSettingID;
 	}
 
-	public void setValuesSettingID(String valuesSettingID)
+	public void setValuesSettingID( String valuesSettingID )
 	{
 		this.valuesSettingID = valuesSettingID;
 	}
@@ -88,11 +88,11 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 	 * 
 	 * @param b
 	 */
-	public void setFixedWSDL(boolean b)
+	public void setFixedWSDL( boolean b )
 	{
 		this.fixedWSDL = b;
 	}
-	
+
 	public T getModelItem()
 	{
 		return modelItem;
@@ -101,80 +101,81 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 	public void perform( T target, Object param )
 	{
 		this.valuesSettingID = this.getClass().getName() + "@values";
-		if (target == null)
+		if( target == null )
 			this.valuesSettingID += "-global";
 		else
 			this.valuesSettingID += "-local";
-		
+
 		modelItem = target;
-		
+
 		// Could reuse the dialog in Swing, but not in Eclipse.
 		// if( dialog == null )
-		dialog = buildDialog( ( T ) target );
+		dialog = buildDialog( ( T )target );
 
-		if (dialog == null)
+		if( dialog == null )
 		{
 			try
 			{
-				generate(initValues( ( T ) target, param ), UISupport.getToolHost(), ( T ) target );
+				generate( initValues( ( T )target, param ), UISupport.getToolHost(), ( T )target );
 			}
-			catch (Exception e1)
+			catch( Exception e1 )
 			{
-				UISupport.showErrorMessage(e1);
+				UISupport.showErrorMessage( e1 );
 			}
 		}
 		else
 		{
-			StringToStringMap values = initValues( ( T ) target, param );
+			StringToStringMap values = initValues( ( T )target, param );
 
-			dialog.setValues(values);
-			dialog.setVisible(true);
+			dialog.setValues( values );
+			dialog.setVisible( true );
 		}
 	}
-	
+
 	/**
-	 * Perform an 
+	 * Perform an
+	 * 
 	 * @param target
 	 * @param param
 	 */
 	public void performHeadless( T target, Object param )
-    {
-        this.valuesSettingID = this.getClass().getName() + "@values";
-        if (target == null)
-            this.valuesSettingID += "-global";
-        else
-            this.valuesSettingID += "-local";
-        
-        modelItem = target;
-        
-        try
-        {
-            generate(initValues( ( T ) target, param ), UISupport.getToolHost(), ( T ) target );
-        }
-        catch (Exception e1)
-        {
-            UISupport.showErrorMessage(e1);
-        }
-    }
+	{
+		this.valuesSettingID = this.getClass().getName() + "@values";
+		if( target == null )
+			this.valuesSettingID += "-global";
+		else
+			this.valuesSettingID += "-local";
+
+		modelItem = target;
+
+		try
+		{
+			generate( initValues( ( T )target, param ), UISupport.getToolHost(), ( T )target );
+		}
+		catch( Exception e1 )
+		{
+			UISupport.showErrorMessage( e1 );
+		}
+	}
 
 	protected StringToStringMap initValues( T modelItem, Object param )
 	{
-		String settingValues = modelItem == null ? SoapUI.getSettings().getString(valuesSettingID, null) : modelItem
-				.getSettings().getString(valuesSettingID, null);
+		String settingValues = modelItem == null ? SoapUI.getSettings().getString( valuesSettingID, null ) : modelItem
+				.getSettings().getString( valuesSettingID, null );
 
 		StringToStringMap result = settingValues == null ? new StringToStringMap() : StringToStringMap
-				.fromXml(settingValues);
+				.fromXml( settingValues );
 
-		if (modelItem instanceof WsdlInterface)
+		if( modelItem instanceof WsdlInterface )
 		{
-			initWSDL(result, (WsdlInterface) modelItem);
+			initWSDL( result, ( WsdlInterface )modelItem );
 		}
 
-		if (dialog != null && modelItem != null)
+		if( dialog != null && modelItem != null )
 		{
-			String projectRoot = modelItem.getSettings().getString( ProjectSettings.PROJECT_ROOT, null);
-			if( projectRoot != null ) 
-				dialog.setFormFieldProperty(ProjectSettings.PROJECT_ROOT, projectRoot);
+			String projectRoot = modelItem.getSettings().getString( ProjectSettings.PROJECT_ROOT, null );
+			if( projectRoot != null )
+				dialog.setFormFieldProperty( ProjectSettings.PROJECT_ROOT, projectRoot );
 		}
 
 		return result;
@@ -185,45 +186,45 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 		return null;
 	}
 
-	protected void addWSDLFields(XForm mainForm, T modelItem )
+	protected void addWSDLFields( XForm mainForm, T modelItem )
 	{
-		if (!fixedWSDL)
+		if( !fixedWSDL )
 		{
-			XFormTextField tf = mainForm.addTextField(WSDL, "url to wsdl", XForm.FieldType.URL);
+			XFormTextField tf = mainForm.addTextField( WSDL, "url to wsdl", XForm.FieldType.URL );
 
-			if (modelItem instanceof Interface)
+			if( modelItem instanceof Interface )
 			{
-				useCached = mainForm.addCheckBox(CACHED_WSDL, null);
-				useCached.addComponentEnabler(tf, "false");
+				useCached = mainForm.addCheckBox( CACHED_WSDL, null );
+				useCached.addComponentEnabler( tf, "false" );
 			}
 		}
 		else
 		{
-			if (modelItem instanceof Interface)
+			if( modelItem instanceof Interface )
 			{
-				useCached = mainForm.addCheckBox(CACHED_WSDL, null);
+				useCached = mainForm.addCheckBox( CACHED_WSDL, null );
 			}
 		}
 	}
 
-	protected void initWSDL(StringToStringMap values, WsdlInterface iface)
+	protected void initWSDL( StringToStringMap values, WsdlInterface iface )
 	{
 		boolean cached = iface.isCached();
-      if (useCached != null)
-			useCached.setEnabled(cached);
+		if( useCached != null )
+			useCached.setEnabled( cached );
 
-		if (!values.containsKey(CACHED_WSDL))
-			values.put(CACHED_WSDL, Boolean.toString(cached));
+		if( !values.containsKey( CACHED_WSDL ) )
+			values.put( CACHED_WSDL, Boolean.toString( cached ) );
 
-		if (values.getBoolean(CACHED_WSDL) || !values.hasValue(WSDL))
-			values.put(WSDL, PathUtils.expandPath(iface.getDefinition(), iface) );
+		if( values.getBoolean( CACHED_WSDL ) || !values.hasValue( WSDL ) )
+			values.put( WSDL, PathUtils.expandPath( iface.getDefinition(), iface ) );
 	}
 
-	protected abstract void generate(StringToStringMap values, ToolHost toolHost, T modelItem ) throws Exception;
+	protected abstract void generate( StringToStringMap values, ToolHost toolHost, T modelItem ) throws Exception;
 
-	public void run(ToolHost toolHost, T modelItem, Object param) throws Exception
+	public void run( ToolHost toolHost, T modelItem, Object param ) throws Exception
 	{
-		generate(initValues( modelItem, param ), toolHost, modelItem );
+		generate( initValues( modelItem, param ), toolHost, modelItem );
 	}
 
 	/**
@@ -232,47 +233,48 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 
 	public void onClose( T modelItem )
 	{
-		if (dialog == null)
+		if( dialog == null )
 			return;
 
-		if (modelItem == null)
+		if( modelItem == null )
 		{
-			SoapUI.getSettings().setString(valuesSettingID, dialog.getValues().toXml());
+			SoapUI.getSettings().setString( valuesSettingID, dialog.getValues().toXml() );
 		}
 		else
 		{
-			modelItem.getSettings().setString(valuesSettingID, dialog.getValues().toXml());
+			modelItem.getSettings().setString( valuesSettingID, dialog.getValues().toXml() );
 		}
 	}
 
-	protected String getWsdlUrl(StringToStringMap values, T modelItem)
+	protected String getWsdlUrl( StringToStringMap values, T modelItem )
 	{
-		String wsdl = values.get(WSDL);
-		boolean useCached = values.getBoolean(CACHED_WSDL);
+		String wsdl = values.get( WSDL );
+		boolean useCached = values.getBoolean( CACHED_WSDL );
 
 		if( modelItem instanceof AbstractInterface )
 		{
-			AbstractInterface<?> iface = (AbstractInterface<?>) modelItem;
-		
-			boolean hasDefinition = StringUtils.hasContent(iface.getDefinition());
-			if (wsdl == null && !useCached && hasDefinition)
+			AbstractInterface<?> iface = ( AbstractInterface<?> )modelItem;
+
+			boolean hasDefinition = StringUtils.hasContent( iface.getDefinition() );
+			if( wsdl == null && !useCached && hasDefinition )
 			{
 				return PathUtils.expandPath( iface.getDefinition(), iface );
 			}
-		
-			if (!hasDefinition || (useCached && iface.getDefinitionContext().isCached()))
+
+			if( !hasDefinition || ( useCached && iface.getDefinitionContext().isCached() ) )
 			{
 				try
 				{
-					File tempFile = File.createTempFile("tempdir", null);
+					File tempFile = File.createTempFile( "tempdir", null );
 					String path = tempFile.getAbsolutePath();
 					tempFile.delete();
 					wsdl = iface.getDefinitionContext().export( path );
-					
-	//				CachedWsdlLoader loader = (CachedWsdlLoader) iface.createWsdlLoader();
-	//				wsdl = loader.saveDefinition(path);
+
+					// CachedWsdlLoader loader = (CachedWsdlLoader)
+					// iface.createWsdlLoader();
+					// wsdl = loader.saveDefinition(path);
 				}
-				catch (Exception e)
+				catch( Exception e )
 				{
 					SoapUI.logError( e );
 				}
@@ -282,56 +284,56 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 		return wsdl;
 	}
 
-	protected String buildClasspath(File jarDir)
+	protected String buildClasspath( File jarDir )
 	{
-		String[] jars = jarDir.list(new FilenameFilter()
+		String[] jars = jarDir.list( new FilenameFilter()
 		{
 
-			public boolean accept(File dir, String name)
+			public boolean accept( File dir, String name )
 			{
-				return name.endsWith(".jar");
+				return name.endsWith( ".jar" );
 			}
-		});
+		} );
 
 		StringBuilder classpath = new StringBuilder();
 
-		for (int c = 0; c < jars.length; c++)
+		for( int c = 0; c < jars.length; c++ )
 		{
-			if (c > 0)
-				classpath.append(File.pathSeparatorChar);
+			if( c > 0 )
+				classpath.append( File.pathSeparatorChar );
 
-			classpath.append(jars[c]);
+			classpath.append( jars[c] );
 		}
 		return classpath.toString();
 	}
 
-	protected ActionList buildDefaultActions(String helpUrl, T modelItem )
+	protected ActionList buildDefaultActions( String helpUrl, T modelItem )
 	{
-		ActionList actions = new DefaultActionList("Actions");
+		ActionList actions = new DefaultActionList( "Actions" );
 
-		if (helpUrl != null)
+		if( helpUrl != null )
 		{
-			actions.addAction(new ShowOnlineHelpAction(helpUrl));
+			actions.addAction( new ShowOnlineHelpAction( helpUrl ) );
 			actions.addSeparator();
 		}
 
 		Action runAction = createRunOption( modelItem );
-		actions.addAction(runAction);
+		actions.addAction( runAction );
 		actions.setDefaultAction( runAction );
-		actions.addAction(new CloseAction( modelItem ));
-		
-		if( toolsSettingsAction != null)
-			actions.addAction(toolsSettingsAction);
+		actions.addAction( new CloseAction( modelItem ) );
+
+		if( toolsSettingsAction != null )
+			actions.addAction( toolsSettingsAction );
 
 		return actions;
 	}
-	
+
 	public Action getToolsSettingsAction()
 	{
 		return toolsSettingsAction;
 	}
 
-	public void setToolsSettingsAction(Action toolsSettingsAction)
+	public void setToolsSettingsAction( Action toolsSettingsAction )
 	{
 		this.toolsSettingsAction = toolsSettingsAction;
 	}
@@ -343,37 +345,37 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 
 	protected String getDefinition( T modelItem )
 	{
-		if (modelItem == null)
+		if( modelItem == null )
 			return "";
-		WsdlInterface iface = (WsdlInterface) modelItem;
-		String definition = PathUtils.expandPath(iface.getDefinition(), iface );
-		if (definition.startsWith("file:"))
-			definition = definition.substring(5);
+		WsdlInterface iface = ( WsdlInterface )modelItem;
+		String definition = PathUtils.expandPath( iface.getDefinition(), iface );
+		if( definition.startsWith( "file:" ) )
+			definition = definition.substring( 5 );
 
 		return definition;
 	}
 
-	protected void addJavaArgs(StringToStringMap values, ArgumentBuilder builder)
+	protected void addJavaArgs( StringToStringMap values, ArgumentBuilder builder )
 	{
-		String[] javaArgs = Tools.tokenizeArgs(values.get(JAVA_ARGS));
-		if (javaArgs != null)
-			builder.addArgs(javaArgs);
+		String[] javaArgs = Tools.tokenizeArgs( values.get( JAVA_ARGS ) );
+		if( javaArgs != null )
+			builder.addArgs( javaArgs );
 	}
 
-	protected void addToolArgs(StringToStringMap values, ArgumentBuilder builder)
+	protected void addToolArgs( StringToStringMap values, ArgumentBuilder builder )
 	{
-		String[] toolArgs = Tools.tokenizeArgs(values.get(TOOL_ARGS));
-		if (toolArgs != null)
-			builder.addArgs(toolArgs);
+		String[] toolArgs = Tools.tokenizeArgs( values.get( TOOL_ARGS ) );
+		if( toolArgs != null )
+			builder.addArgs( toolArgs );
 	}
 
-	protected XForm buildArgsForm(XFormDialogBuilder builder, boolean addJavaArgs, String toolName)
+	protected XForm buildArgsForm( XFormDialogBuilder builder, boolean addJavaArgs, String toolName )
 	{
-		XForm argsForm = builder.createForm("Custom Args");
-		if (addJavaArgs)
-			argsForm.addTextField(JAVA_ARGS, "additional arguments to java", XForm.FieldType.TEXT);
+		XForm argsForm = builder.createForm( "Custom Args" );
+		if( addJavaArgs )
+			argsForm.addTextField( JAVA_ARGS, "additional arguments to java", XForm.FieldType.TEXT );
 
-		argsForm.addTextField(TOOL_ARGS, "additional arguments to " + toolName, XForm.FieldType.TEXT);
+		argsForm.addTextField( TOOL_ARGS, "additional arguments to " + toolName, XForm.FieldType.TEXT );
 		return argsForm;
 	}
 
@@ -381,12 +383,12 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 	{
 		public ShowIntegratedToolsSettingsAction()
 		{
-			super("Tools");
+			super( "Tools" );
 		}
 
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed( ActionEvent e )
 		{
-			SoapUIPreferencesAction.getInstance().show(SoapUIPreferencesAction.INTEGRATED_TOOLS);
+			SoapUIPreferencesAction.getInstance().show( SoapUIPreferencesAction.INTEGRATED_TOOLS );
 		}
 	}
 
@@ -396,11 +398,11 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 
 		public CloseAction( T modelItem )
 		{
-			super("Close");
+			super( "Close" );
 			this.modelItem = modelItem;
 		}
 
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed( ActionEvent e )
 		{
 			closeDialog( modelItem );
 		}
@@ -409,32 +411,32 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 	public void closeDialog( T modelItem )
 	{
 		onClose( modelItem );
-		if (dialog != null)
-			dialog.setVisible(false);
+		if( dialog != null )
+			dialog.setVisible( false );
 	}
 
 	protected final class GenerateAction extends AbstractAction
 	{
 		private final T modelItem;
 
-		public GenerateAction(T modelItem)
+		public GenerateAction( T modelItem )
 		{
-			super("Generate");
+			super( "Generate" );
 			this.modelItem = modelItem;
 		}
 
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed( ActionEvent e )
 		{
 			try
 			{
-				if (dialog.validate())
+				if( dialog.validate() )
 				{
-					generate(dialog.getValues(), UISupport.getToolHost(), modelItem );
+					generate( dialog.getValues(), UISupport.getToolHost(), modelItem );
 				}
 			}
-			catch (Exception e1)
+			catch( Exception e1 )
 			{
-				UISupport.showErrorMessage(e1);
+				UISupport.showErrorMessage( e1 );
 			}
 		}
 	}

@@ -27,22 +27,22 @@ import com.eviware.soapui.support.PropertyChangeNotifier;
 
 public interface ModelItem extends PropertyChangeNotifier
 {
-   public final static String NAME_PROPERTY = ModelItem.class.getName() + "@name";
-   public final static String ICON_PROPERTY = ModelItem.class.getName() + "@icon";
-   public final static String DESCRIPTION_PROPERTY = ModelItem.class.getName()  + "@description";
-   public final static String LABEL_PROPERTY = ModelItem.class.getName() + "@label";
-   
-   public String getName();
-   
-   public String getId();
-   
-   public ImageIcon getIcon();
-   
-   public String getDescription();
-   
-   public Settings getSettings();
-   
-   public List<? extends ModelItem> getChildren();
-   
-   public ModelItem getParent();
+	public final static String NAME_PROPERTY = ModelItem.class.getName() + "@name";
+	public final static String ICON_PROPERTY = ModelItem.class.getName() + "@icon";
+	public final static String DESCRIPTION_PROPERTY = ModelItem.class.getName() + "@description";
+	public final static String LABEL_PROPERTY = ModelItem.class.getName() + "@label";
+
+	public String getName();
+
+	public String getId();
+
+	public ImageIcon getIcon();
+
+	public String getDescription();
+
+	public Settings getSettings();
+
+	public List<? extends ModelItem> getChildren();
+
+	public ModelItem getParent();
 }

@@ -51,106 +51,110 @@ public class ChangeMockOperationAction extends AbstractSoapUIAction<WsdlMockOper
 	public void perform( WsdlMockOperation target, Object param )
 	{
 		this.testStep = target;
-		
+
 		if( dialog == null )
-   	{
-		   dialog = ADialogBuilder.buildDialog( Form.class );
-		   dialog.getFormField( Form.INTERFACE ).addFormFieldListener( new XFormFieldListener() {
+		{
+			dialog = ADialogBuilder.buildDialog( Form.class );
+			dialog.getFormField( Form.INTERFACE ).addFormFieldListener( new XFormFieldListener()
+			{
 
 				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 				{
 					WsdlProject project = testStep.getMockService().getProject();
-					dialog.setOptions( Form.OPERATION, 
-								ModelSupport.getNames( project.getInterfaceByName( newValue ).getOperationList() ));
+					dialog.setOptions( Form.OPERATION, ModelSupport.getNames( project.getInterfaceByName( newValue )
+							.getOperationList() ) );
 					WsdlOperation operation = testStep.getOperation();
 					dialog.setValue( Form.OPERATION, operation == null ? "" : operation.getName() );
-				}} );
-		   
-		   dialog.getFormField( Form.RECREATE_REQUEST ).addFormFieldListener( new XFormFieldListener() {
+				}
+			} );
+
+			dialog.getFormField( Form.RECREATE_REQUEST ).addFormFieldListener( new XFormFieldListener()
+			{
 
 				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 				{
 					boolean enabled = Boolean.parseBoolean( newValue );
-					
+
 					dialog.getFormField( Form.CREATE_OPTIONAL ).setEnabled( enabled );
 					dialog.getFormField( Form.KEEP_EXISTING ).setEnabled( enabled );
-				}} );
-		   
-		   dialog.getFormField( Form.CREATE_OPTIONAL ).setEnabled( false );
+				}
+			} );
+
+			dialog.getFormField( Form.CREATE_OPTIONAL ).setEnabled( false );
 			dialog.getFormField( Form.KEEP_EXISTING ).setEnabled( false );
-   	}
-		
+		}
+
 		WsdlOperation operation = testStep.getOperation();
 		WsdlProject project = testStep.getMockService().getProject();
-		String[] interfaceNames = ModelSupport.getNames( project.getInterfaceList(), 
-				new ModelSupport.InterfaceTypeFilter( WsdlInterfaceFactory.WSDL_TYPE ));
-		dialog.setOptions( Form.INTERFACE, interfaceNames);
+		String[] interfaceNames = ModelSupport.getNames( project.getInterfaceList(),
+				new ModelSupport.InterfaceTypeFilter( WsdlInterfaceFactory.WSDL_TYPE ) );
+		dialog.setOptions( Form.INTERFACE, interfaceNames );
 		dialog.setValue( Form.INTERFACE, operation == null ? interfaceNames[0] : operation.getInterface().getName() );
-		
-		dialog.setOptions( Form.OPERATION, 
-					ModelSupport.getNames( project.getInterfaceByName( dialog.getValue( Form.INTERFACE ) ).getOperationList() ));
+
+		dialog.setOptions( Form.OPERATION, ModelSupport.getNames( project.getInterfaceByName(
+				dialog.getValue( Form.INTERFACE ) ).getOperationList() ) );
 		dialog.setValue( Form.OPERATION, operation == null ? null : operation.getName() );
 		dialog.setValue( Form.NAME, target.getName() );
-		
+
 		if( dialog.show() )
 		{
 			String ifaceName = dialog.getValue( Form.INTERFACE );
 			String operationName = dialog.getValue( Form.OPERATION );
-			
-			WsdlInterface iface = (WsdlInterface) project.getInterfaceByName( ifaceName );
+
+			WsdlInterface iface = ( WsdlInterface )project.getInterfaceByName( ifaceName );
 			operation = iface.getOperationByName( operationName );
 			target.setOperation( operation );
-			
+
 			String name = dialog.getValue( Form.NAME ).trim();
 			if( name.length() > 0 && !target.getName().equals( name ) )
 				target.setName( name );
-			
-			if( dialog.getBooleanValue( Form.RECREATE_REQUEST ))
+
+			if( dialog.getBooleanValue( Form.RECREATE_REQUEST ) )
 			{
 				String req = operation.createResponse( dialog.getBooleanValue( Form.CREATE_OPTIONAL ) );
-		      if( req == null )
-		      {
-		      	UISupport.showErrorMessage( "Response creation failed" );
-		      }
-		      else
-		      {
+				if( req == null )
+				{
+					UISupport.showErrorMessage( "Response creation failed" );
+				}
+				else
+				{
 					for( int c = 0; c < target.getMockResponseCount(); c++ )
 					{
 						String msg = req;
 						WsdlMockResponse mockResponse = target.getMockResponseAt( c );
-						
-			         if( dialog.getBooleanValue( Form.KEEP_EXISTING ))
-			         {
-			         	msg = SoapUtils.transferSoapHeaders(mockResponse.getResponseContent(), req, iface.getSoapVersion() );
+
+						if( dialog.getBooleanValue( Form.KEEP_EXISTING ) )
+						{
+							msg = SoapUtils.transferSoapHeaders( mockResponse.getResponseContent(), req, iface
+									.getSoapVersion() );
 							msg = XmlUtils.transferValues( mockResponse.getResponseContent(), req );
-			         }         	
-				      
-				      mockResponse.setResponseContent( msg );
+						}
+
+						mockResponse.setResponseContent( msg );
 					}
-		      }
+				}
 			}
 		}
 	}
 
-	@AForm( description = "Specify Interface/Operation for MockOperation", name = "Change Operation",
-				helpUrl=HelpUrls.CHANGEMOCKOPERATION_HELP_URL, icon=UISupport.TOOL_ICON_PATH )
+	@AForm( description = "Specify Interface/Operation for MockOperation", name = "Change Operation", helpUrl = HelpUrls.CHANGEMOCKOPERATION_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
 	protected interface Form
 	{
 		@AField( name = "Name", description = "The Name of the MockOperation", type = AFieldType.STRING )
 		public final static String NAME = "Name";
-		
+
 		@AField( name = "Interface", description = "The MockOperations Interface", type = AFieldType.ENUMERATION )
 		public final static String INTERFACE = "Interface";
 
 		@AField( name = "Operation", description = "The MockOperations Operation", type = AFieldType.ENUMERATION )
 		public final static String OPERATION = "Operation";
-		
+
 		@AField( name = "Recreate Responses", description = "Recreates all MockResponses content from the new Operations Definition", type = AFieldType.BOOLEAN )
 		public final static String RECREATE_REQUEST = "Recreate Responses";
-		
+
 		@AField( name = "Create Optional", description = "Creates optional content when recreating the response", type = AFieldType.BOOLEAN )
 		public final static String CREATE_OPTIONAL = "Create Optional";
-		
+
 		@AField( name = "Keep Existing", description = "Tries to keep existing values and headers when recreating the response", type = AFieldType.BOOLEAN )
 		public final static String KEEP_EXISTING = "Keep Existing";
 	}

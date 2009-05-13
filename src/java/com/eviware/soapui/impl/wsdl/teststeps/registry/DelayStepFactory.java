@@ -29,21 +29,20 @@ public class DelayStepFactory extends WsdlTestStepFactory
 
 	public DelayStepFactory()
 	{
-		super( DELAY_TYPE, "Delay", 
-					"Delays TestCase execution for a specified number of milliseconds", "/wait.gif" );
+		super( DELAY_TYPE, "Delay", "Delays TestCase execution for a specified number of milliseconds", "/wait.gif" );
 	}
 
-	public WsdlTestStep buildTestStep(WsdlTestCase testCase,	TestStepConfig config, boolean forLoadTest)
+	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
 		return new WsdlDelayTestStep( testCase, config, forLoadTest );
 	}
 
-	public TestStepConfig createNewTestStep(WsdlTestCase testCase, String name)
+	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
 	{
 		TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
-      testStepConfig.setType( DELAY_TYPE );
-      testStepConfig.setName( name );
-      return testStepConfig;
+		testStepConfig.setType( DELAY_TYPE );
+		testStepConfig.setName( name );
+		return testStepConfig;
 	}
 
 	public boolean canCreate()

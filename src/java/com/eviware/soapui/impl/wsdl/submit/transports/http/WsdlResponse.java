@@ -25,6 +25,6 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 public interface WsdlResponse extends HttpResponse
 {
 	public Vector<?> getWssResult();
-	
+
 	public WsdlRequest getRequest();
 }

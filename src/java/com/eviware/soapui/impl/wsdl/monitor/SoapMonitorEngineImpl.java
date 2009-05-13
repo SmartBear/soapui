@@ -41,42 +41,44 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 		return server.isRunning();
 	}
 
-	public void start(SoapMonitor soapMonitor, int localPort)
+	public void start( SoapMonitor soapMonitor, int localPort )
 	{
 
 		Settings settings = soapMonitor.getProject().getSettings();
 		QueuedThreadPool threadPool = new QueuedThreadPool();
-		threadPool.setMaxThreads(100);
-		server.setThreadPool(threadPool);
-		Context context = new Context(server, ROOT, 0);
+		threadPool.setMaxThreads( 100 );
+		server.setThreadPool( threadPool );
+		Context context = new Context( server, ROOT, 0 );
 
-		if (sslEndpoint != null)
+		if( sslEndpoint != null )
 		{
-			if (sslEndpoint.startsWith(HTTPS))
+			if( sslEndpoint.startsWith( HTTPS ) )
 			{
 				sslConnector = new SslSocketConnector();
-				sslConnector.setKeystore(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_KEYSTORE, "JKS"));
-				sslConnector.setPassword(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_PASSWORD, ""));
-				sslConnector.setKeyPassword(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_KEYPASSWORD, ""));
-				sslConnector.setTruststore(settings.getString(SoapMonitorAction.LaunchForm.SSLTUNNEL_TRUSTSTORE, "JKS"));
-				sslConnector.setTrustPassword(settings.getString(
-						SoapMonitorAction.LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, ""));
-				sslConnector.setNeedClientAuth(false);
-				sslConnector.setMaxIdleTime(30000);
-				sslConnector.setPort(localPort);
+				sslConnector.setKeystore( settings.getString( SoapMonitorAction.LaunchForm.SSLTUNNEL_KEYSTORE, "JKS" ) );
+				sslConnector.setPassword( settings.getString( SoapMonitorAction.LaunchForm.SSLTUNNEL_PASSWORD, "" ) );
+				sslConnector.setKeyPassword( settings.getString( SoapMonitorAction.LaunchForm.SSLTUNNEL_KEYPASSWORD, "" ) );
+				sslConnector.setTruststore( settings.getString( SoapMonitorAction.LaunchForm.SSLTUNNEL_TRUSTSTORE, "JKS" ) );
+				sslConnector.setTrustPassword( settings.getString(
+						SoapMonitorAction.LaunchForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, "" ) );
+				sslConnector.setNeedClientAuth( false );
+				sslConnector.setMaxIdleTime( 30000 );
+				sslConnector.setPort( localPort );
 
-				server.addConnector(sslConnector);
-				context.addServlet(new ServletHolder(new TunnelServlet(soapMonitor, sslEndpoint)), ROOT);
+				server.addConnector( sslConnector );
+				context.addServlet( new ServletHolder( new TunnelServlet( soapMonitor, sslEndpoint ) ), ROOT );
 			}
 			else
 			{
-				if (sslEndpoint.startsWith(HTTP))
+				if( sslEndpoint.startsWith( HTTP ) )
 				{
-					connector.setPort(localPort);
-					server.addConnector(connector);
-					context.addServlet(new ServletHolder(new TunnelServlet(soapMonitor, sslEndpoint)), ROOT);
-				} else {
-					UISupport.showErrorMessage("Unsupported/unknown protocol tunnel will not start");
+					connector.setPort( localPort );
+					server.addConnector( connector );
+					context.addServlet( new ServletHolder( new TunnelServlet( soapMonitor, sslEndpoint ) ), ROOT );
+				}
+				else
+				{
+					UISupport.showErrorMessage( "Unsupported/unknown protocol tunnel will not start" );
 					return;
 				}
 			}
@@ -85,17 +87,17 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 		else
 		{
 			proxyOrTunnel = true;
-			connector.setPort(localPort);
-			server.addConnector(connector);
-			context.addServlet(new ServletHolder(new ProxyServlet(soapMonitor)), ROOT);
+			connector.setPort( localPort );
+			server.addConnector( connector );
+			context.addServlet( new ServletHolder( new ProxyServlet( soapMonitor ) ), ROOT );
 		}
 		try
 		{
 			server.start();
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
-			UISupport.showErrorMessage("Error starting monitor: " + e.getMessage());
+			UISupport.showErrorMessage( "Error starting monitor: " + e.getMessage() );
 		}
 
 	}
@@ -105,18 +107,18 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 
 		try
 		{
-			if (server != null)
+			if( server != null )
 			{
 				server.stop();
 			}
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
 			e.printStackTrace();
 		}
 		finally
 		{
-			if (server != null)
+			if( server != null )
 			{
 				server.destroy();
 			}
@@ -124,7 +126,7 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 
 	}
 
-	protected void setSslEndpoint(String sslEndpoint)
+	protected void setSslEndpoint( String sslEndpoint )
 	{
 		this.sslEndpoint = sslEndpoint;
 	}

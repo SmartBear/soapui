@@ -24,17 +24,17 @@ public class XPathReferenceImpl implements XPathReference
 	private Object target;
 	private String xpathPropertyName;
 	private String xpath;
-	
+
 	public XPathReferenceImpl( String label, TestProperty targetProperty, Object target, String xpathPropertyName )
 	{
 		this.label = label;
 		this.targetProperty = targetProperty;
 		this.target = target;
 		this.xpathPropertyName = xpathPropertyName;
-		
+
 		try
 		{
-			this.xpath = ( String ) PropertyUtils.getProperty( target, xpathPropertyName );
+			this.xpath = ( String )PropertyUtils.getProperty( target, xpathPropertyName );
 		}
 		catch( Exception e )
 		{

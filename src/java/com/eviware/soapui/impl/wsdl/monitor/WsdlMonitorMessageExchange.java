@@ -20,9 +20,9 @@ import com.eviware.soapui.model.iface.Operation;
 
 public abstract class WsdlMonitorMessageExchange extends AbstractWsdlMessageExchange<Operation>
 {
-	public WsdlMonitorMessageExchange(Operation modelItem)
+	public WsdlMonitorMessageExchange( Operation modelItem )
 	{
-		super(modelItem);
+		super( modelItem );
 	}
 
 	public abstract URL getTargetUrl();
@@ -35,5 +35,5 @@ public abstract class WsdlMonitorMessageExchange extends AbstractWsdlMessageExch
 
 	public abstract long getResponseContentLength();
 
-	public abstract void prepare(IncomingWss incomingRequestWss, IncomingWss incomingResponseWss);
+	public abstract void prepare( IncomingWss incomingRequestWss, IncomingWss incomingResponseWss );
 }

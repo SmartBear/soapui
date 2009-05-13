@@ -23,11 +23,11 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 public interface MockRequest
 {
-	public Attachment [] getRequestAttachments();
-	
+	public Attachment[] getRequestAttachments();
+
 	public StringToStringMap getRequestHeaders();
-	
+
 	public String getRequestContent();
-	
+
 	public MockRunContext getContext();
 }

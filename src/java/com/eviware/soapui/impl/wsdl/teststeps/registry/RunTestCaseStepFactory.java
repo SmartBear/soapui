@@ -29,20 +29,21 @@ public class RunTestCaseStepFactory extends WsdlTestStepFactory
 
 	public RunTestCaseStepFactory()
 	{
-		super( RUNTESTCASE_TYPE, "Run TestCase", "Runs another TestCase with the specified properties", "/run_testcase_step.gif" );
+		super( RUNTESTCASE_TYPE, "Run TestCase", "Runs another TestCase with the specified properties",
+				"/run_testcase_step.gif" );
 	}
 
-	public WsdlTestStep buildTestStep(WsdlTestCase testCase,	TestStepConfig config, boolean forLoadTest)
+	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
 		return new WsdlRunTestCaseTestStep( testCase, config, forLoadTest );
 	}
 
-	public TestStepConfig createNewTestStep(WsdlTestCase testCase, String name)
+	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
 	{
 		TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
-      testStepConfig.setType( RUNTESTCASE_TYPE );
-      testStepConfig.setName( name );
-      return testStepConfig;
+		testStepConfig.setType( RUNTESTCASE_TYPE );
+		testStepConfig.setName( name );
+		return testStepConfig;
 	}
 
 	public boolean canCreate()

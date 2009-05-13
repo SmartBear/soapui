@@ -25,22 +25,22 @@ import com.eviware.soapui.SoapUI;
 
 public class SoapUIAppender extends AppenderSkeleton
 {
-   public SoapUIAppender()
-   {
-   }
-   
-   protected void append(LoggingEvent event)
-   {
-      SoapUI.log( event );
-   }
+	public SoapUIAppender()
+	{
+	}
 
-   public void close()
-   {
-   }
+	protected void append( LoggingEvent event )
+	{
+		SoapUI.log( event );
+	}
 
-   public boolean requiresLayout()
-   {
-      return false;
-   }
+	public void close()
+	{
+	}
+
+	public boolean requiresLayout()
+	{
+		return false;
+	}
 
 }

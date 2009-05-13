@@ -24,13 +24,17 @@
 
 package com.eviware.soapui.support.swing;
 
-import com.eviware.soapui.support.UISupport;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import java.awt.event.ActionEvent;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import java.awt.event.ActionEvent;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import com.eviware.soapui.support.UISupport;
 
 public final class RSyntaxAreaPopupMenu extends JPopupMenu implements PopupMenuListener
 {
@@ -47,14 +51,14 @@ public final class RSyntaxAreaPopupMenu extends JPopupMenu implements PopupMenuL
 	{
 		// double-check
 		if( textComponent.getComponentPopupMenu() instanceof RSyntaxAreaPopupMenu )
-			return (RSyntaxAreaPopupMenu) textComponent.getComponentPopupMenu();
+			return ( RSyntaxAreaPopupMenu )textComponent.getComponentPopupMenu();
 
 		RSyntaxAreaPopupMenu popupMenu = new RSyntaxAreaPopupMenu( textComponent );
 		textComponent.setComponentPopupMenu( popupMenu );
 		return popupMenu;
 	}
 
-	private RSyntaxAreaPopupMenu(RSyntaxTextArea textComponent)
+	private RSyntaxAreaPopupMenu( RSyntaxTextArea textComponent )
 	{
 		super( "Edit" );
 		this.textComponent = textComponent;
@@ -87,7 +91,7 @@ public final class RSyntaxAreaPopupMenu extends JPopupMenu implements PopupMenuL
 		public CutAction()
 		{
 			super( "Cut" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu X" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu X" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -101,7 +105,7 @@ public final class RSyntaxAreaPopupMenu extends JPopupMenu implements PopupMenuL
 		public CopyAction()
 		{
 			super( "Copy" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu C" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu C" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -115,7 +119,7 @@ public final class RSyntaxAreaPopupMenu extends JPopupMenu implements PopupMenuL
 		public PasteAction()
 		{
 			super( "Paste" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu V" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu V" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -142,7 +146,7 @@ public final class RSyntaxAreaPopupMenu extends JPopupMenu implements PopupMenuL
 		public SelectAllAction()
 		{
 			super( "Select All" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu A" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu A" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -156,7 +160,7 @@ public final class RSyntaxAreaPopupMenu extends JPopupMenu implements PopupMenuL
 		public UndoAction()
 		{
 			super( "Undo" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu Z" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu Z" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -170,7 +174,7 @@ public final class RSyntaxAreaPopupMenu extends JPopupMenu implements PopupMenuL
 		public RedoAction()
 		{
 			super( "Redo" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu Y" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu Y" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -178,7 +182,6 @@ public final class RSyntaxAreaPopupMenu extends JPopupMenu implements PopupMenuL
 			textComponent.redoLastAction();
 		}
 	}
-
 
 	public void popupMenuCanceled( PopupMenuEvent e )
 	{
@@ -190,10 +193,10 @@ public final class RSyntaxAreaPopupMenu extends JPopupMenu implements PopupMenuL
 
 	public void popupMenuWillBecomeVisible( PopupMenuEvent e )
 	{
-//		undoAction.setEnabled( textComponent.canUndo() );
-//		redoAction.setEnabled( textComponent.canRedo() );
+		// undoAction.setEnabled( textComponent.canUndo() );
+		// redoAction.setEnabled( textComponent.canRedo() );
 
-		cutAction.setEnabled( textComponent.getSelectionEnd() !=  textComponent.getSelectionStart() );
+		cutAction.setEnabled( textComponent.getSelectionEnd() != textComponent.getSelectionStart() );
 		copyAction.setEnabled( cutAction.isEnabled() );
 		clearAction.setEnabled( cutAction.isEnabled() );
 		selectAllAction.setEnabled( textComponent.getText().length() > 0 );

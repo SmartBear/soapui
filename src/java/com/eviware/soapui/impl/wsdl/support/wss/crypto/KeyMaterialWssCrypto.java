@@ -12,6 +12,19 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss.crypto;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.util.Properties;
+
+import org.apache.commons.ssl.KeyStoreBuilder;
+import org.apache.commons.ssl.Util;
+import org.apache.ws.security.components.crypto.CredentialException;
+import org.apache.ws.security.components.crypto.Crypto;
+import org.apache.ws.security.components.crypto.Merlin;
+
 import com.eviware.soapui.config.KeyMaterialCryptoConfig;
 import com.eviware.soapui.config.WSSCryptoConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
@@ -22,18 +35,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.BeanPathPropertySupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
-import org.apache.commons.ssl.KeyStoreBuilder;
-import org.apache.commons.ssl.Util;
-import org.apache.ws.security.components.crypto.CredentialException;
-import org.apache.ws.security.components.crypto.Crypto;
-import org.apache.ws.security.components.crypto.Merlin;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyStore;
-import java.util.Properties;
 
 public class KeyMaterialWssCrypto implements WssCrypto
 {
@@ -53,11 +54,12 @@ public class KeyMaterialWssCrypto implements WssCrypto
 	{
 		config = cryptoConfig;
 		container = container2;
-		
-		sourceProperty = new BeanPathPropertySupport( (AbstractWsdlModelItem<?>)container.getModelItem(), config, "source" )
+
+		sourceProperty = new BeanPathPropertySupport( ( AbstractWsdlModelItem<?> )container.getModelItem(), config,
+				"source" )
 		{
 			@Override
-			protected void notifyUpdate(String value, String old)
+			protected void notifyUpdate( String value, String old )
 			{
 				getWssContainer().fireCryptoUpdated( KeyMaterialWssCrypto.this );
 			}
@@ -71,11 +73,11 @@ public class KeyMaterialWssCrypto implements WssCrypto
 			Properties properties = new Properties();
 			properties.put( "org.apache.ws.security.crypto.merlin.file", sourceProperty.expand() );
 			properties.put( "org.apache.ws.security.crypto.merlin.keystore.provider", "this" );
-			if( StringUtils.hasContent( getDefaultAlias() ))
+			if( StringUtils.hasContent( getDefaultAlias() ) )
 				properties.put( "org.apache.ws.security.crypto.merlin.keystore.alias", getDefaultAlias() );
-			if( StringUtils.hasContent( getAliasPassword() ))
+			if( StringUtils.hasContent( getAliasPassword() ) )
 				properties.put( "org.apache.ws.security.crypto.merlin.alias.password", getAliasPassword() );
-			
+
 			return new KeyMaterialCrypto( properties );
 		}
 		catch( Exception e )
@@ -84,18 +86,18 @@ public class KeyMaterialWssCrypto implements WssCrypto
 		}
 		return null;
 	}
-	
+
 	public String getLabel()
 	{
 		String source = getSource();
-		
+
 		int ix = source.lastIndexOf( File.separatorChar );
 		if( ix == -1 )
 			ix = source.lastIndexOf( '/' );
-		
+
 		if( ix != -1 )
-			source = source.substring( ix+1 );
-		
+			source = source.substring( ix + 1 );
+
 		return source;
 	}
 
@@ -120,18 +122,20 @@ public class KeyMaterialWssCrypto implements WssCrypto
 	{
 		if( keyStore != null )
 			return keyStore;
-		
+
 		try
 		{
 			UISupport.setHourglassCursor();
-			
-			if( StringUtils.hasContent( getDefaultAlias() ) && StringUtils.hasContent( getAliasPassword() ))
+
+			if( StringUtils.hasContent( getDefaultAlias() ) && StringUtils.hasContent( getAliasPassword() ) )
 			{
-				keyStore = KeyStoreBuilder.build( Util.streamToBytes( new FileInputStream( sourceProperty.expand() ) ), 
+				keyStore = KeyStoreBuilder.build( Util.streamToBytes( new FileInputStream( sourceProperty.expand() ) ),
 						getDefaultAlias().getBytes(), getPassword().toCharArray(), getAliasPassword().toCharArray() );
 			}
-			else keyStore = KeyStoreBuilder.build( Util.streamToBytes( new FileInputStream( sourceProperty.expand() ) ), getPassword().toCharArray() );
-			
+			else
+				keyStore = KeyStoreBuilder.build( Util.streamToBytes( new FileInputStream( sourceProperty.expand() ) ),
+						getPassword().toCharArray() );
+
 			return keyStore;
 		}
 		catch( Throwable t )
@@ -143,12 +147,12 @@ public class KeyMaterialWssCrypto implements WssCrypto
 			UISupport.resetCursor();
 		}
 	}
-	
-	public String getStatus() 
+
+	public String getStatus()
 	{
 		try
 		{
-			if( StringUtils.hasContent( getSource() ) && StringUtils.hasContent( getPassword() ))
+			if( StringUtils.hasContent( getSource() ) && StringUtils.hasContent( getPassword() ) )
 			{
 				load();
 				return "OK";
@@ -163,7 +167,7 @@ public class KeyMaterialWssCrypto implements WssCrypto
 			return "<error: " + e.getMessage() + ">";
 		}
 	}
-	
+
 	public String getPassword()
 	{
 		return config.getPassword();
@@ -198,9 +202,9 @@ public class KeyMaterialWssCrypto implements WssCrypto
 
 	public void udpateConfig( WSSCryptoConfig config )
 	{
-//		this.config = config;
+		// this.config = config;
 	}
-	
+
 	public String toString()
 	{
 		return getLabel();
@@ -208,20 +212,21 @@ public class KeyMaterialWssCrypto implements WssCrypto
 
 	public DefaultWssContainer getWssContainer()
 	{
-		return ( DefaultWssContainer ) container;
+		return ( DefaultWssContainer )container;
 	}
-	
+
 	private class KeyMaterialCrypto extends Merlin
 	{
-		private KeyMaterialCrypto(Properties properties) throws CredentialException, IOException
+		private KeyMaterialCrypto( Properties properties ) throws CredentialException, IOException
 		{
 			super( properties );
 		}
 
 		@Override
-		public KeyStore load( InputStream input, String storepass, String provider, String type ) throws CredentialException
+		public KeyStore load( InputStream input, String storepass, String provider, String type )
+				throws CredentialException
 		{
-			if( "this".equals( provider ))
+			if( "this".equals( provider ) )
 			{
 				try
 				{
@@ -232,7 +237,8 @@ public class KeyMaterialWssCrypto implements WssCrypto
 					throw new CredentialException( 0, null, e );
 				}
 			}
-			else return super.load( input, storepass, provider, type );
+			else
+				return super.load( input, storepass, provider, type );
 		}
 
 		@Override
@@ -254,8 +260,8 @@ public class KeyMaterialWssCrypto implements WssCrypto
 		getWssContainer().fireCryptoUpdated( this );
 	}
 
-	public void resolve( ResolveContext context)
+	public void resolve( ResolveContext context )
 	{
-		sourceProperty.resolveFile( context, "Missing keystore/certificate file");
+		sourceProperty.resolveFile( context, "Missing keystore/certificate file" );
 	}
 }

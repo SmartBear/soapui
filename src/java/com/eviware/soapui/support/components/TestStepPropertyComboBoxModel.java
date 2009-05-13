@@ -32,22 +32,22 @@ public class TestStepPropertyComboBoxModel extends AbstractListModel implements 
 	public TestStepPropertyComboBoxModel( WsdlTestStep testStep )
 	{
 		this.testStep = testStep;
-	
+
 		names = new ArrayList<String>();
-		
-		if( testStep != null ) 
+
+		if( testStep != null )
 		{
-			names.addAll( Arrays.asList( testStep.getPropertyNames() ));
+			names.addAll( Arrays.asList( testStep.getPropertyNames() ) );
 			testStep.addTestPropertyListener( testStepListener );
 		}
 	}
-	
+
 	public void release()
 	{
 		if( testStep != null )
 			testStep.removeTestPropertyListener( testStepListener );
 	}
-	
+
 	public WsdlTestStep getTestStep()
 	{
 		return testStep;
@@ -59,25 +59,25 @@ public class TestStepPropertyComboBoxModel extends AbstractListModel implements 
 		{
 			this.testStep.removeTestPropertyListener( testStepListener );
 		}
-		
+
 		int sz = names.size();
 		if( sz > 0 )
 		{
 			names.clear();
-			fireIntervalRemoved( this, 0, sz-1 );
+			fireIntervalRemoved( this, 0, sz - 1 );
 		}
-		
+
 		this.testStep = testStep;
 		if( testStep != null )
 		{
 			testStep.addTestPropertyListener( testStepListener );
-			names.addAll( Arrays.asList( testStep.getPropertyNames() ));
-			if( !names.isEmpty())
+			names.addAll( Arrays.asList( testStep.getPropertyNames() ) );
+			if( !names.isEmpty() )
 			{
-				fireIntervalAdded( this, 0, names.size()-1 );
+				fireIntervalAdded( this, 0, names.size() - 1 );
 			}
 		}
-		
+
 		setSelectedItem( null );
 	}
 
@@ -90,14 +90,14 @@ public class TestStepPropertyComboBoxModel extends AbstractListModel implements 
 	{
 		return names.size();
 	}
-	
+
 	private final class InternalTestPropertyListener extends TestPropertyListenerAdapter
 	{
 		@Override
 		public void propertyAdded( String name )
 		{
 			names.add( name );
-			fireIntervalAdded( TestStepPropertyComboBoxModel.this, names.size()-1, names.size()-1 );
+			fireIntervalAdded( TestStepPropertyComboBoxModel.this, names.size() - 1, names.size() - 1 );
 		}
 
 		@Override
@@ -108,8 +108,8 @@ public class TestStepPropertyComboBoxModel extends AbstractListModel implements 
 			{
 				names.remove( ix );
 				fireIntervalRemoved( TestStepPropertyComboBoxModel.this, ix, ix );
-				
-				if( name.equals( selectedName ))
+
+				if( name.equals( selectedName ) )
 					setSelectedItem( null );
 			}
 		}
@@ -119,17 +119,17 @@ public class TestStepPropertyComboBoxModel extends AbstractListModel implements 
 		{
 			int ix = names.indexOf( oldName );
 			fireContentsChanged( TestStepPropertyComboBoxModel.this, ix, ix );
-			
-			if( oldName.equals( selectedName ))
+
+			if( oldName.equals( selectedName ) )
 				setSelectedItem( newName );
 		}
 
 		@Override
-		public void propertyMoved(String name, int oldIndex, int newIndex)
+		public void propertyMoved( String name, int oldIndex, int newIndex )
 		{
-			fireContentsChanged(TestStepPropertyComboBoxModel.this, 0, getSize()-1);
+			fireContentsChanged( TestStepPropertyComboBoxModel.this, 0, getSize() - 1 );
 		}
-		
+
 	}
 
 	public Object getSelectedItem()
@@ -141,12 +141,12 @@ public class TestStepPropertyComboBoxModel extends AbstractListModel implements 
 	{
 		if( anItem == null && selectedName == null )
 			return;
-		
-		if( anItem != null && selectedName != null && anItem.equals( selectedName))
+
+		if( anItem != null && selectedName != null && anItem.equals( selectedName ) )
 			return;
-		
+
 		selectedName = anItem == null ? null : anItem.toString();
-		
+
 		fireContentsChanged( this, -1, -1 );
 	}
 }

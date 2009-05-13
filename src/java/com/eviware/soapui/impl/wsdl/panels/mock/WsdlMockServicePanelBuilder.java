@@ -12,13 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.panels.mock;
 
+import java.awt.Component;
+
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.support.components.JPropertiesTable;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
-
-import java.awt.*;
 
 /**
  * PanelBuilder for WsdlMockServices
@@ -42,31 +42,31 @@ public class WsdlMockServicePanelBuilder extends EmptyPanelBuilder<WsdlMockServi
 	{
 		return true;
 	}
-	
+
 	public Component buildOverviewPanel( WsdlMockService mockService )
-   {
-   	JPropertiesTable<WsdlMockService> table = new JPropertiesTable<WsdlMockService>( "MockService Properties" );
-   	table.addProperty( "Name", "name", true );
-   	table.addProperty( "Description", "description", true );
-   	table.addProperty( "Path", "path" );
-   	table.addProperty( "Port", "port" );
-   	table.addProperty( "Match SOAP Version", "requireSoapVersion", JPropertiesTable.BOOLEAN_OPTIONS ).setDescription(
-   			"Matches incoming SOAP Version against corresponding Interface");
-   	table.addProperty( "Require SOAP Action", "requireSoapAction", JPropertiesTable.BOOLEAN_OPTIONS );
-      table.addProperty( "Dispatch Responses", "dispatchResponseMessages", JPropertiesTable.BOOLEAN_OPTIONS );
-   	StringList incomingNames = new StringList( mockService.getProject().getWssContainer().getIncomingWssNames() );
-   	incomingNames.add( "" );
+	{
+		JPropertiesTable<WsdlMockService> table = new JPropertiesTable<WsdlMockService>( "MockService Properties" );
+		table.addProperty( "Name", "name", true );
+		table.addProperty( "Description", "description", true );
+		table.addProperty( "Path", "path" );
+		table.addProperty( "Port", "port" );
+		table.addProperty( "Match SOAP Version", "requireSoapVersion", JPropertiesTable.BOOLEAN_OPTIONS ).setDescription(
+				"Matches incoming SOAP Version against corresponding Interface" );
+		table.addProperty( "Require SOAP Action", "requireSoapAction", JPropertiesTable.BOOLEAN_OPTIONS );
+		table.addProperty( "Dispatch Responses", "dispatchResponseMessages", JPropertiesTable.BOOLEAN_OPTIONS );
+		StringList incomingNames = new StringList( mockService.getProject().getWssContainer().getIncomingWssNames() );
+		incomingNames.add( "" );
 		table.addProperty( "Incoming WSS", "incomingWss", incomingNames.toStringArray() );
 		StringList outgoingNames = new StringList( mockService.getProject().getWssContainer().getOutgoingWssNames() );
 		outgoingNames.add( "" );
 		table.addProperty( "Default Outgoing WSS", "outgoingWss", outgoingNames.toStringArray() );
-   	table.setPropertyObject( mockService );
-   	
-   	return table;
-   }
+		table.setPropertyObject( mockService );
 
-   public boolean hasOverviewPanel()
-   {
-      return true;
-   }
+		return table;
+	}
+
+	public boolean hasOverviewPanel()
+	{
+		return true;
+	}
 }

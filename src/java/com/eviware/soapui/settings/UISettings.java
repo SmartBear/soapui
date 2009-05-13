@@ -35,25 +35,26 @@ public interface UISettings
 	public final static String AUTO_VALIDATE_RESPONSE = UISettings.class.getSimpleName() + "@auto_validate_response";
 	public final static String CREATE_BACKUP = UISettings.class.getSimpleName() + "@create_backup";
 	public final static String BACKUP_FOLDER = UISettings.class.getSimpleName() + "@backup_folder";
-	
+
 	public static final String SHOW_XML_LINE_NUMBERS = UISettings.class.getSimpleName() + "@show_xml_line_numbers";
 	public static final String SHOW_GROOVY_LINE_NUMBERS = UISettings.class.getSimpleName() + "@show_groovy_line_numbers";
 
 	public static final String ORDER_MOCKOPERATION = UISettings.class.getSimpleName() + "@order-mockoperations";
 	public static final String ORDER_MOCKCASES = UISettings.class.getSimpleName() + "@order-mockcases";
-	
+
 	public static final String DESKTOP_TYPE = UISettings.class.getSimpleName() + "@desktop-type";
 	public static final String NATIVE_LAF = UISettings.class.getSimpleName() + "@native-laf";
-	public static final String DONT_DISABLE_GROOVY_LOG =  UISettings.class.getSimpleName() + "@dont-disable-groovy-log";
-	public static final String SHOW_LOGS_AT_STARTUP =  UISettings.class.getSimpleName() + "@show_logs_at_startup";
-	
+	public static final String DONT_DISABLE_GROOVY_LOG = UISettings.class.getSimpleName() + "@dont-disable-groovy-log";
+	public static final String SHOW_LOGS_AT_STARTUP = UISettings.class.getSimpleName() + "@show_logs_at_startup";
+
 	public static final String SHOW_PROPERTIES_IN_TREE = UISettings.class.getSimpleName() + "@show_properties_in_tree";
 
 	public static final String AUTO_SAVE_INTERVAL = UISettings.class.getSimpleName() + "@auto_save_interval";
-   public static final String SHOW_STARTUP_PAGE = UISettings.class.getSimpleName() + "@show_startup_page";
+	public static final String SHOW_STARTUP_PAGE = UISettings.class.getSimpleName() + "@show_startup_page";
 
-   public static final String SHOW_DESCRIPTIONS = UISettings.class.getSimpleName() + "@show_descriptions";
+	public static final String SHOW_DESCRIPTIONS = UISettings.class.getSimpleName() + "@show_descriptions";
 
-   public static final String AUTO_SAVE_PROJECTS_ON_EXIT = UISettings.class.getSimpleName() + "@auto_save_projects_on_exit";
+	public static final String AUTO_SAVE_PROJECTS_ON_EXIT = UISettings.class.getSimpleName()
+			+ "@auto_save_projects_on_exit";
 
 }

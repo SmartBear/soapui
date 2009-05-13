@@ -12,12 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.IncomingWssConfig;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.resolver.ResolveContext;
+import java.io.IOException;
+import java.util.Vector;
+
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.UnsupportedCallbackException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.ws.security.WSPasswordCallback;
@@ -28,13 +28,12 @@ import org.apache.ws.security.util.WSSecurityUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import sun.misc.BASE64Decoder;
-
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.callback.UnsupportedCallbackException;
-import java.io.IOException;
-import java.util.Vector;
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.IncomingWssConfig;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.resolver.ResolveContext;
 
 public class IncomingWss
 {
@@ -46,12 +45,12 @@ public class IncomingWss
 		this.wssConfig = wssConfig;
 		this.container = container;
 	}
-	
+
 	public WssContainer getWssContainer()
 	{
 		return container;
 	}
-	
+
 	public String getDecryptCrypto()
 	{
 		return wssConfig.getDecryptCrypto();
@@ -91,11 +90,13 @@ public class IncomingWss
 	{
 		wssConfig.setSignatureCrypto( arg0 );
 	}
-	
-	@SuppressWarnings("unchecked")
-	public Vector<Object> processIncoming( Document soapDocument, PropertyExpansionContext context ) throws WSSecurityException
+
+	@SuppressWarnings( "unchecked" )
+	public Vector<Object> processIncoming( Document soapDocument, PropertyExpansionContext context )
+			throws WSSecurityException
 	{
-		Element header = WSSecurityUtil.findWsseSecurityHeaderBlock( soapDocument, soapDocument.getDocumentElement(), false );
+		Element header = WSSecurityUtil.findWsseSecurityHeaderBlock( soapDocument, soapDocument.getDocumentElement(),
+				false );
 		if( header == null )
 			return null;
 
@@ -106,17 +107,17 @@ public class IncomingWss
 			WssCrypto decryptCrypto = getWssContainer().getCryptoByName( getDecryptCrypto() );
 			Crypto sig = signatureCrypto == null ? null : signatureCrypto.getCrypto();
 			Crypto dec = decryptCrypto == null ? null : decryptCrypto.getCrypto();
-			
+
 			if( sig == null && dec == null )
 				throw new WSSecurityException( "Missing cryptos" );
-			
+
 			if( sig == null )
 				sig = dec;
 			else if( dec == null )
 				dec = sig;
-			
-			return wssecurityEngine.processSecurityHeader( soapDocument, (String)null, 
-								new WSSCallbackHandler( dec ), sig, dec );
+
+			return wssecurityEngine.processSecurityHeader( soapDocument, ( String )null, new WSSCallbackHandler( dec ),
+					sig, dec );
 		}
 		catch( WSSecurityException e )
 		{
@@ -129,7 +130,7 @@ public class IncomingWss
 	{
 		private final Crypto dec;
 
-		public WSSCallbackHandler(Crypto dec)
+		public WSSCallbackHandler( Crypto dec )
 		{
 			this.dec = dec;
 		}
@@ -140,15 +141,15 @@ public class IncomingWss
 			{
 				if( callback instanceof WSPasswordCallback )
 				{
-					WSPasswordCallback cb = ( WSPasswordCallback ) callback;
-					if( StringUtils.hasContent( getDecryptPassword()))
+					WSPasswordCallback cb = ( WSPasswordCallback )callback;
+					if( StringUtils.hasContent( getDecryptPassword() ) )
 						cb.setPassword( getDecryptPassword() );
 					else
-						cb.setPassword( UISupport.prompt( "Password required for WSS processing", "Specify Password", "" ));
-					
+						cb.setPassword( UISupport.prompt( "Password required for WSS processing", "Specify Password", "" ) );
+
 					if( cb.getUsage() == WSPasswordCallback.ENCRYPTED_KEY_TOKEN )
 					{
-						byte[] str = Base64.decodeBase64( cb.getIdentifier().getBytes());
+						byte[] str = Base64.decodeBase64( cb.getIdentifier().getBytes() );
 					}
 				}
 			}
@@ -160,7 +161,7 @@ public class IncomingWss
 		this.wssConfig = config;
 	}
 
-	public void resolve(ResolveContext context)
+	public void resolve( ResolveContext context )
 	{
 	}
 }

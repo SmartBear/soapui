@@ -10,7 +10,6 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
- 
 package com.eviware.soapui.support.propertyexpansion;
 
 import java.awt.Point;
@@ -34,9 +33,9 @@ public class JXEditTextAreaPropertyExpansionTarget extends AbstractPropertyExpan
 		int pos = pt == null ? -1 : textField.pointToOffset( pt );
 		if( pos == -1 )
 			pos = textField.getCaretPosition();
-		
+
 		textField.setSelectedText( expansion.toString() );
-		
+
 		if( pos >= 0 )
 		{
 			textField.setCaretPosition( pos );

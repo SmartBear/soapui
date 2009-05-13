@@ -32,7 +32,7 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.jgoodies.binding.PresentationModel;
 
-public class AddUsernameEntry extends WssEntryBase 
+public class AddUsernameEntry extends WssEntryBase
 {
 	private static final String PASSWORD_DIGEST_EXT = "PasswordDigest Ext";
 
@@ -41,7 +41,7 @@ public class AddUsernameEntry extends WssEntryBase
 	private static final String PASSWORD_TEXT = "PasswordText";
 
 	public static final String TYPE = "Username";
-	
+
 	private boolean addCreated;
 	private boolean addNonce;
 	private String passwordType;
@@ -56,54 +56,54 @@ public class AddUsernameEntry extends WssEntryBase
 		WSSecUsernameToken token = new WSSecUsernameToken();
 		if( addCreated )
 			token.addCreated();
-		
+
 		if( addNonce )
 			token.addNonce();
-		
-		if( StringUtils.hasContent( passwordType ))
+
+		if( StringUtils.hasContent( passwordType ) )
 		{
-			if( passwordType.equals( PASSWORD_TEXT ))
+			if( passwordType.equals( PASSWORD_TEXT ) )
 				token.setPasswordType( WSConstants.PASSWORD_TEXT );
-			else if( passwordType.equals( PASSWORD_DIGEST ) || passwordType.equals( PASSWORD_DIGEST_EXT ))
+			else if( passwordType.equals( PASSWORD_DIGEST ) || passwordType.equals( PASSWORD_DIGEST_EXT ) )
 				token.setPasswordType( WSConstants.PASSWORD_DIGEST );
 		}
-		
+
 		String password = context.expand( getPassword() );
-		
-		if( PASSWORD_DIGEST_EXT.equals( password ))
+
+		if( PASSWORD_DIGEST_EXT.equals( password ) )
 		{
 			try
 			{
-				MessageDigest sha = MessageDigest.getInstance("SHA-1");
+				MessageDigest sha = MessageDigest.getInstance( "SHA-1" );
 				sha.reset();
-				sha.update(password.getBytes("UTF-8"));
-				password = Base64.encode(sha.digest());
+				sha.update( password.getBytes( "UTF-8" ) );
+				password = Base64.encode( sha.digest() );
 			}
 			catch( Exception e )
 			{
 				SoapUI.logError( e );
 			}
 		}
-		
-		token.setUserInfo( context.expand( getUsername()), password);
-		
+
+		token.setUserInfo( context.expand( getUsername() ), password );
+
 		token.build( doc, secHeader );
 	}
 
 	@Override
 	protected JComponent buildUI()
 	{
-		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<AddUsernameEntry>( this ) ); 
-		form.addSpace(5);
+		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<AddUsernameEntry>( this ) );
+		form.addSpace( 5 );
 		form.appendTextField( "username", "Username", "The username for this token" );
 		form.appendPasswordField( "password", "Password", "The password for this token" );
-		
+
 		form.appendCheckBox( "addNonce", "Add Nonce", "Adds a nonce" );
 		form.appendCheckBox( "addCreated", "Add Created", "Adds a created" );
-		
-		form.appendComboBox( "passwordType", "Password Type", new String[] 
-		       {PASSWORD_TEXT, PASSWORD_DIGEST, PASSWORD_DIGEST_EXT}, "The password type to generate" );
-		
+
+		form.appendComboBox( "passwordType", "Password Type", new String[] { PASSWORD_TEXT, PASSWORD_DIGEST,
+				PASSWORD_DIGEST_EXT }, "The password type to generate" );
+
 		return form.getPanel();
 	}
 

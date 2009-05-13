@@ -56,7 +56,7 @@ public abstract class AbstractWssInspector extends AbstractXmlInspector
 			mainPanel.add( buildContent(), BorderLayout.CENTER );
 
 			UISupport.addTitledBorder( mainPanel, "WS-Security processing results" );
-			
+
 			update();
 		}
 
@@ -65,7 +65,7 @@ public abstract class AbstractWssInspector extends AbstractXmlInspector
 
 	private Component buildContent()
 	{
-		resultList = new JList( new ResultVectorListModel( getWssResults() ));
+		resultList = new JList( new ResultVectorListModel( getWssResults() ) );
 		return new JScrollPane( resultList );
 	}
 
@@ -78,7 +78,7 @@ public abstract class AbstractWssInspector extends AbstractXmlInspector
 		setTitle( "WSS (" + size + ")" );
 		setEnabled( size > 0 );
 	}
-	
+
 	private static class ResultVectorListModel extends AbstractListModel
 	{
 		private final Vector<?> result;
@@ -98,7 +98,7 @@ public abstract class AbstractWssInspector extends AbstractXmlInspector
 			return result == null ? 0 : result.size();
 		}
 	}
-	
+
 	@Override
 	public boolean isEnabledFor( EditorView<XmlDocument> view )
 	{

@@ -39,7 +39,7 @@ public class MetricsPanel extends JPanel
 {
 	private Map<String, Metric> metrics = new HashMap<String, Metric>();
 	private Map<String, MetricsSection> sections = new HashMap<String, MetricsSection>();
-	
+
 	public MetricsPanel()
 	{
 		super( new VerticalLayout() );
@@ -49,13 +49,16 @@ public class MetricsPanel extends JPanel
 	public MetricsSection addSection( String name )
 	{
 		MetricsSection section = new MetricsSection( name );
-		sections.put(  name, section );
+		sections.put( name, section );
 		add( section );
 		return section;
 	}
-	
-	public enum MetricType { STRING, URL };
-	
+
+	public enum MetricType
+	{
+		STRING, URL
+	};
+
 	public class Metric
 	{
 		private final JLabel label;
@@ -72,18 +75,18 @@ public class MetricsPanel extends JPanel
 
 		public void set( int value )
 		{
-			set( String.valueOf( value ));
+			set( String.valueOf( value ) );
 		}
 	}
-	
+
 	public class MetricsSection extends JCollapsiblePanel
 	{
 		private MetricsForm form;
-		
+
 		public MetricsSection( String name )
 		{
 			super( name );
-			
+
 			form = new MetricsForm();
 			setContentPanel( form.getPanel() );
 		}
@@ -97,12 +100,12 @@ public class MetricsPanel extends JPanel
 		{
 			return addMetric( icon, label, MetricType.STRING );
 		}
-		
+
 		public Metric addMetric( String label )
 		{
 			return addMetric( null, label, MetricType.STRING );
 		}
-		
+
 		public void finish()
 		{
 			form.finish();
@@ -112,7 +115,7 @@ public class MetricsPanel extends JPanel
 		{
 			form = new MetricsForm();
 			setContentPanel( form.getPanel() );
-			
+
 			return this;
 		}
 
@@ -130,30 +133,31 @@ public class MetricsPanel extends JPanel
 			table.setSortable( false );
 			table.getColumn( 0 ).setWidth( 195 );
 			table.getColumn( 0 ).setMinWidth( 195 );
-			
-			InternalHeaderRenderer internalHeaderRenderer = new InternalHeaderRenderer(  table.getTableHeader().getBackground()  );
+
+			InternalHeaderRenderer internalHeaderRenderer = new InternalHeaderRenderer( table.getTableHeader()
+					.getBackground() );
 			InternalCellRenderer internalCellRenderer = new InternalCellRenderer();
-			
+
 			for( int c = 0; c < table.getColumnCount(); c++ )
 			{
-				table.getColumn( c ).setHeaderRenderer( internalHeaderRenderer  );
+				table.getColumn( c ).setHeaderRenderer( internalHeaderRenderer );
 				table.getColumn( c ).setCellRenderer( internalCellRenderer );
 			}
-			
+
 			table.getTableHeader().setReorderingAllowed( false );
 			table.getTableHeader().setBackground( Color.WHITE );
-			
+
 			JScrollPane scrollPane = new JScrollPane( table );
-			scrollPane.setBorder( BorderFactory.createEmptyBorder( 0, 14, 0, 14  ));
-			form.addComponent( scrollPane);
+			scrollPane.setBorder( BorderFactory.createEmptyBorder( 0, 14, 0, 14 ) );
+			form.addComponent( scrollPane );
 			table.setPreferredScrollableViewportSize( new Dimension( 100, 250 ) );
 			scrollPane.setBackground( Color.WHITE );
 			scrollPane.getViewport().setBackground( Color.WHITE );
 			scrollPane.setOpaque( true );
-			
+
 			table.setBackground( Color.WHITE );
 			table.setOpaque( true );
-			
+
 			return table;
 		}
 	}
@@ -165,14 +169,14 @@ public class MetricsPanel extends JPanel
 
 	public boolean setMetric( String label, int value )
 	{
-		return setMetric( label, String.valueOf( value ));
+		return setMetric( label, String.valueOf( value ) );
 	}
 
 	public boolean setMetric( String label, String value )
 	{
-		if( !hasMetric( label ))
+		if( !hasMetric( label ) )
 			return false;
-		
+
 		metrics.get( label ).set( value );
 		return true;
 	}
@@ -181,7 +185,7 @@ public class MetricsPanel extends JPanel
 	{
 		return metrics.containsKey( name );
 	}
-	
+
 	private class MetricsForm extends SimpleForm
 	{
 		private Dimension labelDimensions = new Dimension( 200, 16 );
@@ -224,10 +228,10 @@ public class MetricsPanel extends JPanel
 			label.setBorder( BorderFactory.createEmptyBorder( 2, icon == null ? 16 : 14, 0, 0 ) );
 
 			JLabel textField = null;
-			
+
 			if( isHyperlink )
 			{
-				textField = append( labelText, label, new JHyperlinkLabel( text ));
+				textField = append( labelText, label, new JHyperlinkLabel( text ) );
 			}
 			else
 			{
@@ -236,60 +240,61 @@ public class MetricsPanel extends JPanel
 
 			textField.setBorder( BorderFactory.createEmptyBorder( 2, 0, 0, 0 ) );
 			textField.setBackground( Color.WHITE );
-			
+
 			Metric metric = new Metric( textField );
-			metrics.put( labelText, metric);
+			metrics.put( labelText, metric );
 			return metric;
 		}
 	}
-	
+
 	public static class InternalHeaderRenderer extends DefaultTableCellRenderer
 	{
 		private Font boldFont;
 		private final Color color;
 
-		public InternalHeaderRenderer(Color color)
+		public InternalHeaderRenderer( Color color )
 		{
 			super();
 			this.color = color;
-			
+
 			setHorizontalAlignment( SwingConstants.LEFT );
 			boldFont = getFont().deriveFont( Font.BOLD );
 		}
-		
+
 		public InternalHeaderRenderer()
 		{
 			this( null );
 		}
-		
+
 		@Override
-		public Component getTableCellRendererComponent( JTable arg0, Object arg1, boolean arg2, boolean arg3, int arg4, int arg5 )
+		public Component getTableCellRendererComponent( JTable arg0, Object arg1, boolean arg2, boolean arg3, int arg4,
+				int arg5 )
 		{
-			JComponent result = ( JComponent ) super.getTableCellRendererComponent( arg0, arg1, arg2, arg3, arg4, arg5 );
-			setFont( boldFont);
+			JComponent result = ( JComponent )super.getTableCellRendererComponent( arg0, arg1, arg2, arg3, arg4, arg5 );
+			setFont( boldFont );
 			if( color != null )
 				setBackground( color );
-			setBorder( BorderFactory.createCompoundBorder( 					
-						BorderFactory.createEtchedBorder(),
-						BorderFactory.createEmptyBorder( 0, 2, 1, 2 )));
+			setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEtchedBorder(), BorderFactory
+					.createEmptyBorder( 0, 2, 1, 2 ) ) );
 			return result;
 		}
 	}
-	
+
 	private class InternalCellRenderer extends DefaultTableCellRenderer
 	{
 		public InternalCellRenderer()
 		{
 			super();
-			
+
 			setHorizontalAlignment( SwingConstants.LEFT );
 		}
-		
+
 		@Override
-		public Component getTableCellRendererComponent( JTable arg0, Object arg1, boolean arg2, boolean arg3, int arg4, int arg5 )
+		public Component getTableCellRendererComponent( JTable arg0, Object arg1, boolean arg2, boolean arg3, int arg4,
+				int arg5 )
 		{
 			Component result = super.getTableCellRendererComponent( arg0, arg1, arg2, arg3, arg4, arg5 );
-			setBorder( BorderFactory.createEmptyBorder( 3, 1, 3, 2 ));
+			setBorder( BorderFactory.createEmptyBorder( 3, 1, 3, 2 ) );
 			return result;
 		}
 	}

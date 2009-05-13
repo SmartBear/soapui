@@ -26,22 +26,22 @@ public class MockLoadTestRunner implements LoadTestRunner
 	private final WsdlLoadTest loadTest;
 	private final Logger logger;
 	private Status status = Status.RUNNING;
-	
-	public MockLoadTestRunner(WsdlLoadTest modelItem, Logger logger)
+
+	public MockLoadTestRunner( WsdlLoadTest modelItem, Logger logger )
 	{
 		loadTest = modelItem;
 		this.logger = logger == null ? SoapUI.ensureGroovyLog() : logger;
 		startTime = System.currentTimeMillis();
 	}
 
-	public void cancel(String reason)
+	public void cancel( String reason )
 	{
 		this.reason = reason;
 		status = Status.CANCELED;
 		logger.info( "Canceled with reason [" + reason + "]" );
 	}
 
-	public void fail(String reason)
+	public void fail( String reason )
 	{
 		this.reason = reason;
 		status = Status.CANCELED;
@@ -65,7 +65,7 @@ public class MockLoadTestRunner implements LoadTestRunner
 
 	public int getRunningThreadCount()
 	{
-		return (int) loadTest.getThreadCount();
+		return ( int )loadTest.getThreadCount();
 	}
 
 	public Status getStatus()
@@ -75,6 +75,6 @@ public class MockLoadTestRunner implements LoadTestRunner
 
 	public long getTimeTaken()
 	{
-		return System.currentTimeMillis()-startTime;
+		return System.currentTimeMillis() - startTime;
 	}
 }

@@ -29,35 +29,37 @@ public class CloseProjectAction extends AbstractSoapUIAction<WsdlProject>
 	public static final String SOAPUI_ACTION_ID = "CloseProjectAction";
 
 	public CloseProjectAction()
-   {
-      super( "Close Project", "Closes this project" );
-   }
-	
-   public void perform( WsdlProject project, Object param )
 	{
-   	if( project.isRemote() )
-   	{
-   		if( UISupport.confirm( "Close remote project?", getName() ));
-   			project.getWorkspace().closeProject( project );
-   	}
-   	else
-   	{
-	   	Boolean retval = UISupport.confirmOrCancel( "Save project [" + project.getName() + "] before closing?", "Close Project" );
-	   	
-	   	if( retval == null )
-	   		return;
-	   	
+		super( "Close Project", "Closes this project" );
+	}
+
+	public void perform( WsdlProject project, Object param )
+	{
+		if( project.isRemote() )
+		{
+			if( UISupport.confirm( "Close remote project?", getName() ) )
+				;
+			project.getWorkspace().closeProject( project );
+		}
+		else
+		{
+			Boolean retval = UISupport.confirmOrCancel( "Save project [" + project.getName() + "] before closing?",
+					"Close Project" );
+
+			if( retval == null )
+				return;
+
 			try
 			{
 				if( retval )
 					project.save();
-				
+
 				project.getWorkspace().closeProject( project );
 			}
 			catch( IOException e )
 			{
 				UISupport.showErrorMessage( e );
 			}
-   	}
-   }
+		}
+	}
 }

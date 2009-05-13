@@ -38,7 +38,7 @@ public class MockResponseXmlDocument extends AbstractXmlDocument implements Prop
 	public MockResponseXmlDocument( WsdlMockResponse response )
 	{
 		this.mockResponse = response;
-		
+
 		mockResponse.addPropertyChangeListener( WsdlMockResponse.RESPONSE_CONTENT_PROPERTY, this );
 	}
 
@@ -54,11 +54,11 @@ public class MockResponseXmlDocument extends AbstractXmlDocument implements Prop
 				return wsdlContext.getSchemaTypeSystem();
 			}
 		}
-		catch (Exception e1)
+		catch( Exception e1 )
 		{
 			SoapUI.logError( e1 );
 		}
-		
+
 		return XmlBeans.getBuiltinTypeSystem();
 	}
 
@@ -74,13 +74,13 @@ public class MockResponseXmlDocument extends AbstractXmlDocument implements Prop
 
 	public void propertyChange( PropertyChangeEvent arg0 )
 	{
-		fireXmlChanged( (String)arg0.getOldValue(), (String)arg0.getNewValue() );
+		fireXmlChanged( ( String )arg0.getOldValue(), ( String )arg0.getNewValue() );
 	}
 
 	@Override
 	public void release()
 	{
 		mockResponse.removePropertyChangeListener( WsdlMockResponse.RESPONSE_CONTENT_PROPERTY, this );
-      super.release();
+		super.release();
 	}
 }

@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.util.Vector;
+
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange;
@@ -19,11 +21,9 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.support.types.StringToStringMap;
 
-import java.util.Vector;
-
 /**
  * WsdlMessageExchange for a WsdlRequest and its response
- *  
+ * 
  * @author ole.matzura
  */
 
@@ -37,25 +37,25 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 		super( request );
 		response = request.getResponse();
 
-      if( response != null )
-      {
-         for( String key : response.getPropertyNames() )
-         {
-            addProperty( key, response.getProperty( key ));
-         }
-      }
+		if( response != null )
+		{
+			for( String key : response.getPropertyNames() )
+			{
+				addProperty( key, response.getProperty( key ) );
+			}
+		}
 	}
-	
-   public WsdlRequest getRequest()
-   {
-      return getModelItem();
-   }
-   
-   public WsdlResponse getResponse()
-   {
-      return response;
-   }
-   
+
+	public WsdlRequest getRequest()
+	{
+		return getModelItem();
+	}
+
+	public WsdlResponse getResponse()
+	{
+		return response;
+	}
+
 	public void setResponse( WsdlResponse response )
 	{
 		this.response = response;
@@ -65,18 +65,18 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 	{
 		if( requestContent != null )
 			return requestContent;
-		
+
 		if( response == null )
 			response = getModelItem().getResponse();
-		
-		return response == null ? getModelItem().getRequestContent() : response.getRequestContent(); 
+
+		return response == null ? getModelItem().getRequestContent() : response.getRequestContent();
 	}
 
 	public StringToStringMap getRequestHeaders()
 	{
-		return response == null ? getModelItem().getRequestHeaders() : response.getRequestHeaders(); 
+		return response == null ? getModelItem().getRequestHeaders() : response.getRequestHeaders();
 	}
-	
+
 	public Attachment[] getRequestAttachments()
 	{
 		return getModelItem().getAttachments();
@@ -86,7 +86,7 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 	{
 		if( response == null )
 			response = getModelItem().getResponse();
-		
+
 		return response == null ? null : response.getAttachments();
 	}
 
@@ -94,7 +94,7 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 	{
 		if( response == null )
 			response = getModelItem().getResponse();
-		
+
 		return response == null ? null : response.getContentAsString();
 	}
 
@@ -102,11 +102,11 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 	{
 		if( response == null )
 			response = getModelItem().getResponse();
-		
+
 		return response == null ? null : response.getResponseHeaders();
 	}
 
-   public WsdlOperation getOperation()
+	public WsdlOperation getOperation()
 	{
 		return getModelItem().getOperation();
 	}
@@ -115,7 +115,7 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 	{
 		if( response == null )
 			response = getModelItem().getResponse();
-		
+
 		return response == null ? 0 : response.getTimeTaken();
 	}
 
@@ -123,7 +123,7 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 	{
 		if( response == null )
 			response = getModelItem().getResponse();
-		
+
 		return response == null ? 0 : response.getTimestamp();
 	}
 
@@ -147,13 +147,13 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 		return response.getWssResult();
 	}
 
-   public String getResponseContentType()
-   {
-      return response.getContentType();
-   }
+	public String getResponseContentType()
+	{
+		return response.getContentType();
+	}
 
-   public int getResponseStatusCode()
-   {
-      return response.getStatusCode();
-   }
+	public int getResponseStatusCode()
+	{
+		return response.getStatusCode();
+	}
 }

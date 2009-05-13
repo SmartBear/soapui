@@ -38,26 +38,26 @@ public final class JXEditAreaPopupMenu extends JPopupMenu implements PopupMenuLi
 	{
 		// double-check
 		if( textComponent.getRightClickPopup() instanceof JXEditAreaPopupMenu )
-			return ( JXEditAreaPopupMenu ) textComponent.getRightClickPopup();
-		
+			return ( JXEditAreaPopupMenu )textComponent.getRightClickPopup();
+
 		JXEditAreaPopupMenu popupMenu = new JXEditAreaPopupMenu( textComponent );
 		textComponent.setRightClickPopup( popupMenu );
 		return popupMenu;
 	}
-	
-	private JXEditAreaPopupMenu(JXEditTextArea textComponent)
+
+	private JXEditAreaPopupMenu( JXEditTextArea textComponent )
 	{
 		super( "Edit" );
 		this.textComponent = textComponent;
-		
+
 		undoAction = new UndoAction();
 		add( undoAction );
-		
+
 		redoAction = new RedoAction();
 		add( redoAction );
-		
+
 		addSeparator();
-		
+
 		cutAction = new CutAction();
 		add( cutAction );
 		copyAction = new CopyAction();
@@ -69,16 +69,16 @@ public final class JXEditAreaPopupMenu extends JPopupMenu implements PopupMenuLi
 		addSeparator();
 		selectAllAction = new SelectAllAction();
 		add( selectAllAction );
-		
+
 		addPopupMenuListener( this );
 	}
-	
+
 	private final class CutAction extends AbstractAction
 	{
 		public CutAction()
 		{
 			super( "Cut" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu X" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu X" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -86,13 +86,13 @@ public final class JXEditAreaPopupMenu extends JPopupMenu implements PopupMenuLi
 			textComponent.cut();
 		}
 	}
-	
+
 	private final class CopyAction extends AbstractAction
 	{
 		public CopyAction()
 		{
 			super( "Copy" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu C" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu C" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -100,13 +100,13 @@ public final class JXEditAreaPopupMenu extends JPopupMenu implements PopupMenuLi
 			textComponent.copy();
 		}
 	}
-	
+
 	private final class PasteAction extends AbstractAction
 	{
 		public PasteAction()
 		{
 			super( "Paste" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu V" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu V" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -114,7 +114,7 @@ public final class JXEditAreaPopupMenu extends JPopupMenu implements PopupMenuLi
 			textComponent.paste();
 		}
 	}
-	
+
 	private final class ClearAction extends AbstractAction
 	{
 		public ClearAction()
@@ -127,13 +127,13 @@ public final class JXEditAreaPopupMenu extends JPopupMenu implements PopupMenuLi
 			textComponent.setText( "" );
 		}
 	}
-	
+
 	private final class SelectAllAction extends AbstractAction
 	{
 		public SelectAllAction()
 		{
 			super( "Select All" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu A" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu A" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -141,13 +141,13 @@ public final class JXEditAreaPopupMenu extends JPopupMenu implements PopupMenuLi
 			textComponent.selectAll();
 		}
 	}
-	
+
 	private final class UndoAction extends AbstractAction
 	{
 		public UndoAction()
 		{
 			super( "Undo" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu Z" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu Z" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -155,13 +155,13 @@ public final class JXEditAreaPopupMenu extends JPopupMenu implements PopupMenuLi
 			textComponent.undo();
 		}
 	}
-	
+
 	private final class RedoAction extends AbstractAction
 	{
 		public RedoAction()
 		{
 			super( "Redo" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu Y" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu Y" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -169,7 +169,6 @@ public final class JXEditAreaPopupMenu extends JPopupMenu implements PopupMenuLi
 			textComponent.redo();
 		}
 	}
-	
 
 	public void popupMenuCanceled( PopupMenuEvent e )
 	{
@@ -183,8 +182,8 @@ public final class JXEditAreaPopupMenu extends JPopupMenu implements PopupMenuLi
 	{
 		undoAction.setEnabled( textComponent.canUndo() );
 		redoAction.setEnabled( textComponent.canRedo() );
-		
-		cutAction.setEnabled( textComponent.getSelectionEnd() !=  textComponent.getSelectionStart() );
+
+		cutAction.setEnabled( textComponent.getSelectionEnd() != textComponent.getSelectionStart() );
 		copyAction.setEnabled( cutAction.isEnabled() );
 		clearAction.setEnabled( cutAction.isEnabled() );
 		selectAllAction.setEnabled( textComponent.getText().length() > 0 );

@@ -29,32 +29,32 @@ public abstract class DocumentListenerAdapter implements DocumentListener
 	{
 	}
 
-	public void insertUpdate(DocumentEvent e)
+	public void insertUpdate( DocumentEvent e )
 	{
 		update( e.getDocument() );
 	}
 
 	public abstract void update( Document document );
-	
-	public void removeUpdate(DocumentEvent e)
+
+	public void removeUpdate( DocumentEvent e )
 	{
 		update( e.getDocument() );
 	}
 
-	public void changedUpdate(DocumentEvent e)
+	public void changedUpdate( DocumentEvent e )
 	{
 	}
 
-   public String getText( Document document )
-   {
-      try
-      {
-         return document.getText( 0, document.getLength() );
-      }
-      catch( BadLocationException e )
-      {
-         e.printStackTrace();
-         return "";
-      }
-   }
+	public String getText( Document document )
+	{
+		try
+		{
+			return document.getText( 0, document.getLength() );
+		}
+		catch( BadLocationException e )
+		{
+			e.printStackTrace();
+			return "";
+		}
+	}
 }

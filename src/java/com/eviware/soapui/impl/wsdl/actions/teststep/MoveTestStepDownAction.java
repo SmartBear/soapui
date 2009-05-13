@@ -18,7 +18,8 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
- * Moves the specified WsdlTestStep down one step in the WsdlTestCases list of WsdlTestSteps
+ * Moves the specified WsdlTestStep down one step in the WsdlTestCases list of
+ * WsdlTestSteps
  * 
  * @author ole.matzura
  */
@@ -29,15 +30,15 @@ public class MoveTestStepDownAction extends AbstractSoapUIAction<WsdlTestStep>
 	{
 		super( "Move Step Down", "Moves this TestStep down" );
 	}
-	
+
 	public void perform( WsdlTestStep testStep, Object param )
 	{
 		WsdlTestCase testCase = testStep.getTestCase();
 		int ix = testCase.getIndexOfTestStep( testStep );
-		if (ix == -1 || ix >= testCase.getTestStepCount() - 1)
+		if( ix == -1 || ix >= testCase.getTestStepCount() - 1 )
 			return;
 
-		testCase.moveTestStep(ix, 1);
+		testCase.moveTestStep( ix, 1 );
 		UISupport.select( testStep );
 	}
 }

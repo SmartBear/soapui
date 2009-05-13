@@ -30,7 +30,7 @@ public class ModelItemListMouseListener extends AbstractListMouseListener
 	{
 		this( true );
 	}
-	
+
 	public ModelItemListMouseListener( boolean enablePopup )
 	{
 		super( enablePopup );
@@ -39,7 +39,7 @@ public class ModelItemListMouseListener extends AbstractListMouseListener
 	@Override
 	protected ActionList getActionsForRow( JList list, int row )
 	{
-		ModelItem item = ( ModelItem ) list.getModel().getElementAt( row );
+		ModelItem item = ( ModelItem )list.getModel().getElementAt( row );
 		try
 		{
 			return item == null ? null : ActionListBuilder.buildActions( item );

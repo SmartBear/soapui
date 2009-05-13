@@ -33,7 +33,7 @@ public class ReloadProjectAction extends AbstractSoapUIAction<WsdlProject>
 	{
 		super( "Reload Project", "Reloads this project from file" );
 	}
-	
+
 	public void perform( WsdlProject project, Object param )
 	{
 		if( project.isRemote() )
@@ -53,7 +53,8 @@ public class ReloadProjectAction extends AbstractSoapUIAction<WsdlProject>
 		}
 		else
 		{
-			File file = UISupport.getFileDialogs().open( this, "Reload Project", ".xml", "soapUI Project Files (*.xml)", project.getPath() );
+			File file = UISupport.getFileDialogs().open( this, "Reload Project", ".xml", "soapUI Project Files (*.xml)",
+					project.getPath() );
 			if( file != null )
 			{
 				try

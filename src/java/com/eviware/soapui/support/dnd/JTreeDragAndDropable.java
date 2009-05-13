@@ -21,18 +21,19 @@ import javax.swing.JTree;
 public abstract class JTreeDragAndDropable<T> implements SoapUIDragAndDropable<T>
 {
 	private JTree tree;
-	
+
 	public JTreeDragAndDropable( JTree tree )
 	{
 		this.tree = tree;
 	}
-	
+
 	public JTree getTree()
 	{
 		return tree;
 	}
-	
-	public Component getCellRendererComponent( Object lastPathComponent, boolean b, boolean object, boolean object2, int i, boolean c )
+
+	public Component getCellRendererComponent( Object lastPathComponent, boolean b, boolean object, boolean object2,
+			int i, boolean c )
 	{
 		return tree.getCellRenderer().getTreeCellRendererComponent( tree, lastPathComponent, b, object, object2, i, c );
 	}
@@ -57,8 +58,8 @@ public abstract class JTreeDragAndDropable<T> implements SoapUIDragAndDropable<T
 		int rowForLocation = tree.getRowForLocation( x, y );
 		if( rowForLocation == -1 )
 			rowForLocation = tree.getClosestRowForLocation( x, y );
-		
-		return getModelItemAtRow( rowForLocation);
+
+		return getModelItemAtRow( rowForLocation );
 	}
 
 	public void selectModelItem( T path )
@@ -70,14 +71,14 @@ public abstract class JTreeDragAndDropable<T> implements SoapUIDragAndDropable<T
 	public void toggleExpansion( T last )
 	{
 		int row = getRowForModelItem( last );
-		if( tree.isExpanded( row ))
+		if( tree.isExpanded( row ) )
 			tree.collapseRow( row );
 		else
 			tree.expandRow( row );
 	}
-	
+
 	public abstract int getRowForModelItem( T modelItem );
-	
+
 	public abstract T getModelItemAtRow( int row );
-	
+
 }

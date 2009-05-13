@@ -31,20 +31,20 @@ import com.eviware.soapui.model.testsuite.LoadTestRunner;
 public interface LoadStrategy extends LoadTestRunListener
 {
 	public final static String CONFIGURATION_PROPERTY = "configuration_property";
-	
+
 	public void addConfigurationChangeListener( PropertyChangeListener listener );
-	
+
 	public void removeConfigurationChangeListener( PropertyChangeListener listener );
-	
+
 	public XmlObject getConfig();
-	
+
 	public String getType();
 
 	public JComponent getConfigurationPanel();
-	
+
 	public void updateConfig( XmlObject config );
-	
+
 	public boolean allowThreadCountChangeDuringRun();
-	
+
 	public void recalculate( LoadTestRunner loadTestRunner, LoadTestRunContext context );
 }

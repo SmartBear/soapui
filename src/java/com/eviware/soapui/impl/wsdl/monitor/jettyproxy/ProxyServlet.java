@@ -58,18 +58,18 @@ public class ProxyServlet implements Servlet
 
 	static HashSet<String> dontProxyHeaders = new HashSet<String>();
 	{
-		dontProxyHeaders.add("proxy-connection");
-		dontProxyHeaders.add("connection");
-		dontProxyHeaders.add("keep-alive");
-		dontProxyHeaders.add("transfer-encoding");
-		dontProxyHeaders.add("te");
-		dontProxyHeaders.add("trailer");
-		dontProxyHeaders.add("proxy-authorization");
-		dontProxyHeaders.add("proxy-authenticate");
-		dontProxyHeaders.add("upgrade");
+		dontProxyHeaders.add( "proxy-connection" );
+		dontProxyHeaders.add( "connection" );
+		dontProxyHeaders.add( "keep-alive" );
+		dontProxyHeaders.add( "transfer-encoding" );
+		dontProxyHeaders.add( "te" );
+		dontProxyHeaders.add( "trailer" );
+		dontProxyHeaders.add( "proxy-authorization" );
+		dontProxyHeaders.add( "proxy-authenticate" );
+		dontProxyHeaders.add( "upgrade" );
 	}
 
-	public ProxyServlet(SoapMonitor soapMonitor)
+	public ProxyServlet( SoapMonitor soapMonitor )
 	{
 		this.monitor = soapMonitor;
 		this.project = monitor.getProject();
@@ -90,7 +90,7 @@ public class ProxyServlet implements Servlet
 		return "SoapUI Monitor";
 	}
 
-	public void init(ServletConfig config) throws ServletException
+	public void init( ServletConfig config ) throws ServletException
 	{
 
 		this.config = config;
@@ -100,162 +100,163 @@ public class ProxyServlet implements Servlet
 
 	}
 
-	public synchronized void service(ServletRequest request, ServletResponse response) throws ServletException,
+	public synchronized void service( ServletRequest request, ServletResponse response ) throws ServletException,
 			IOException
 	{
 
 		HttpMethodBase method;
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
-		if (httpRequest.getMethod().equals("GET"))
+		HttpServletRequest httpRequest = ( HttpServletRequest )request;
+		if( httpRequest.getMethod().equals( "GET" ) )
 			method = new ExtendedGetMethod();
 		else
 			method = new ExtendedPostMethod();
 
 		// for this create ui server and port, properties.
 
-		if (capturedData == null)
+		if( capturedData == null )
 		{
-			capturedData = new JProxyServletWsdlMonitorMessageExchange(project);
-			capturedData.setRequestHost(httpRequest.getServerName());
-			capturedData.setRequestHeader(httpRequest);
-			capturedData.setTargetURL(httpRequest.getRequestURL().toString());
+			capturedData = new JProxyServletWsdlMonitorMessageExchange( project );
+			capturedData.setRequestHost( httpRequest.getServerName() );
+			capturedData.setRequestHeader( httpRequest );
+			capturedData.setTargetURL( httpRequest.getRequestURL().toString() );
 		}
 
-		CaptureInputStream capture = new CaptureInputStream(httpRequest.getInputStream());
+		CaptureInputStream capture = new CaptureInputStream( httpRequest.getInputStream() );
 
 		// check connection header
-		String connectionHeader = httpRequest.getHeader("Connection");
-		if (connectionHeader != null)
+		String connectionHeader = httpRequest.getHeader( "Connection" );
+		if( connectionHeader != null )
 		{
 			connectionHeader = connectionHeader.toLowerCase();
-			if (connectionHeader.indexOf("keep-alive") < 0 && connectionHeader.indexOf("close") < 0)
+			if( connectionHeader.indexOf( "keep-alive" ) < 0 && connectionHeader.indexOf( "close" ) < 0 )
 				connectionHeader = null;
 		}
 
 		// copy headers
 		boolean xForwardedFor = false;
-		@SuppressWarnings("unused")
+		@SuppressWarnings( "unused" )
 		long contentLength = -1;
 		Enumeration<?> headerNames = httpRequest.getHeaderNames();
-		while (headerNames.hasMoreElements())
+		while( headerNames.hasMoreElements() )
 		{
-			String hdr = (String) headerNames.nextElement();
+			String hdr = ( String )headerNames.nextElement();
 			String lhdr = hdr.toLowerCase();
 
-			if (dontProxyHeaders.contains(lhdr))
+			if( dontProxyHeaders.contains( lhdr ) )
 				continue;
-			if (connectionHeader != null && connectionHeader.indexOf(lhdr) >= 0)
+			if( connectionHeader != null && connectionHeader.indexOf( lhdr ) >= 0 )
 				continue;
 
-			if ("content-length".equals(lhdr))
+			if( "content-length".equals( lhdr ) )
 				contentLength = request.getContentLength();
 
-			Enumeration<?> vals = httpRequest.getHeaders(hdr);
-			while (vals.hasMoreElements())
+			Enumeration<?> vals = httpRequest.getHeaders( hdr );
+			while( vals.hasMoreElements() )
 			{
-				String val = (String) vals.nextElement();
-				if (val != null)
+				String val = ( String )vals.nextElement();
+				if( val != null )
 				{
-					method.setRequestHeader(lhdr, val);
-					xForwardedFor |= "X-Forwarded-For".equalsIgnoreCase(hdr);
+					method.setRequestHeader( lhdr, val );
+					xForwardedFor |= "X-Forwarded-For".equalsIgnoreCase( hdr );
 				}
 			}
 		}
 
 		// Proxy headers
-		method.setRequestHeader("Via", "SoapUI Monitor");
-		if (!xForwardedFor)
-			method.addRequestHeader("X-Forwarded-For", request.getRemoteAddr());
+		method.setRequestHeader( "Via", "SoapUI Monitor" );
+		if( !xForwardedFor )
+			method.addRequestHeader( "X-Forwarded-For", request.getRemoteAddr() );
 
-		if (method instanceof ExtendedPostMethod)
-			((ExtendedPostMethod) method)
-					.setRequestEntity(new InputStreamRequestEntity(capture, "text/xml; charset=utf-8"));
+		if( method instanceof ExtendedPostMethod )
+			( ( ExtendedPostMethod )method ).setRequestEntity( new InputStreamRequestEntity( capture,
+					"text/xml; charset=utf-8" ) );
 
 		HostConfiguration hostConfiguration = new HostConfiguration();
 
-		StringBuffer url = new StringBuffer("http://");
-		url.append(httpRequest.getServerName());
-		if (httpRequest.getServerPort() != 80)
-			url.append(":" + httpRequest.getServerPort());
-		if (httpRequest.getServletPath() != null)
+		StringBuffer url = new StringBuffer( "http://" );
+		url.append( httpRequest.getServerName() );
+		if( httpRequest.getServerPort() != 80 )
+			url.append( ":" + httpRequest.getServerPort() );
+		if( httpRequest.getServletPath() != null )
 		{
-			url.append(httpRequest.getServletPath());
-			method.setPath(httpRequest.getServletPath());
-			if (httpRequest.getQueryString() != null)
+			url.append( httpRequest.getServletPath() );
+			method.setPath( httpRequest.getServletPath() );
+			if( httpRequest.getQueryString() != null )
 			{
-				url.append("?" + httpRequest.getQueryString());
-				method.setPath(httpRequest.getServletPath() + "?" + httpRequest.getQueryString());
+				url.append( "?" + httpRequest.getQueryString() );
+				method.setPath( httpRequest.getServletPath() + "?" + httpRequest.getQueryString() );
 			}
 		}
-		hostConfiguration.setHost(new URI(url.toString(), true));
+		hostConfiguration.setHost( new URI( url.toString(), true ) );
 
-		SoapUI.log("PROXY to:" + url);
+		SoapUI.log( "PROXY to:" + url );
 
-		if (settings.getBoolean(LaunchForm.SSLTUNNEL_REUSESTATE))
+		if( settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) )
 		{
-			if (httpState == null)
+			if( httpState == null )
 				httpState = new HttpState();
-			client.executeMethod(hostConfiguration, method, httpState);
+			client.executeMethod( hostConfiguration, method, httpState );
 		}
 		else
 		{
-			client.executeMethod(hostConfiguration, method);
+			client.executeMethod( hostConfiguration, method );
 		}
 
 		// wait for transaction to end and store it.
 		capturedData.stopCapture();
-		
+
 		byte[] res = method.getResponseBody();
-//		IO.copy(new ByteArrayInputStream(method.getResponseBody()), response.getOutputStream());
-		capturedData.setRequest(capture.getCapturedData());
-		capturedData.setResponse(res);
-		capturedData.setResponseHeader(method);
-		capturedData.setRawRequestData(getRequestToBytes(method, capture));
-		capturedData.setRawResponseData(getResponseToBytes(method, res));
-		monitor.addMessageExchange(capturedData);
+		// IO.copy(new ByteArrayInputStream(method.getResponseBody()),
+		// response.getOutputStream());
+		capturedData.setRequest( capture.getCapturedData() );
+		capturedData.setResponse( res );
+		capturedData.setResponseHeader( method );
+		capturedData.setRawRequestData( getRequestToBytes( method, capture ) );
+		capturedData.setRawResponseData( getResponseToBytes( method, res ) );
+		monitor.addMessageExchange( capturedData );
 
 		StringToStringMap responseHeaders = capturedData.getResponseHeaders();
 		capturedData = null;
-		
+
 		// copy headers to response
-		HttpServletResponse httpResponse = (HttpServletResponse) response;
-		for (String name : responseHeaders.keySet())
+		HttpServletResponse httpResponse = ( HttpServletResponse )response;
+		for( String name : responseHeaders.keySet() )
 		{
-			String header = responseHeaders.get(name);
-			httpResponse.addHeader(name, header);
+			String header = responseHeaders.get( name );
+			httpResponse.addHeader( name, header );
 
 		}
-		IO.copy(new ByteArrayInputStream(res), httpResponse.getOutputStream());
-		
+		IO.copy( new ByteArrayInputStream( res ), httpResponse.getOutputStream() );
+
 		method.releaseConnection();
 	}
 
-	private byte[] getResponseToBytes(HttpMethodBase postMethod, byte[] res)
+	private byte[] getResponseToBytes( HttpMethodBase postMethod, byte[] res )
 	{
 		String response = "";
 
 		Header[] headers = postMethod.getResponseHeaders();
-		for (Header header : headers)
+		for( Header header : headers )
 		{
 			response += header.toString();
 		}
 		response += "\n";
-		response += new String(res);
+		response += new String( res );
 
 		return response.getBytes();
 	}
 
-	private byte[] getRequestToBytes(HttpMethodBase postMethod, CaptureInputStream capture)
+	private byte[] getRequestToBytes( HttpMethodBase postMethod, CaptureInputStream capture )
 	{
 		String request = "";
 
 		Header[] headers = postMethod.getRequestHeaders();
-		for (Header header : headers)
+		for( Header header : headers )
 		{
 			request += header.toString();
 		}
 		request += "\n";
-		request += new String(capture.getCapturedData());
+		request += new String( capture.getCapturedData() );
 
 		return request.getBytes();
 	}

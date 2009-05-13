@@ -33,39 +33,39 @@ public final class GroovyUtils
 	{
 		this.context = context;
 	}
-	
+
 	public String getProjectPath()
 	{
 		Project project = ModelSupport.getModelItemProject( context.getModelItem() );
-			
+
 		String path = project.getPath();
 		int ix = path.lastIndexOf( File.separatorChar );
 		return ix == -1 ? "" : path.substring( 0, ix );
 	}
-	
+
 	public XmlHolder getXmlHolder( String xmlPropertyOrString ) throws Exception
 	{
 		try
 		{
-			return new XmlHolder( XmlObject.Factory.parse( xmlPropertyOrString ));
+			return new XmlHolder( XmlObject.Factory.parse( xmlPropertyOrString ) );
 		}
 		catch( Exception e )
 		{
 			return new XmlHolder( context, xmlPropertyOrString );
 		}
 	}
-	
+
 	public String expand( String property )
 	{
 		return PropertyExpansionUtils.expandProperties( context, property );
 	}
-	
+
 	public void setPropertyValue( String testStep, String property, String value ) throws Exception
 	{
-		if( !(context instanceof TestRunContext ))
+		if( !( context instanceof TestRunContext ) )
 			return;
-		
-		TestStep step = ((TestRunContext)context).getTestCase().getTestStepByName( testStep );
+
+		TestStep step = ( ( TestRunContext )context ).getTestCase().getTestStepByName( testStep );
 		if( step != null )
 		{
 			step.setPropertyValue( property, value );
@@ -75,7 +75,7 @@ public final class GroovyUtils
 			throw new Exception( "Missing TestStep [" + testStep + "] in TestCase" );
 		}
 	}
-	
+
 	public String getXml( Node node ) throws XmlException
 	{
 		return XmlObject.Factory.parse( node ).xmlText();

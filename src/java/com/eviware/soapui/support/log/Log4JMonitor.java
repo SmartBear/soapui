@@ -20,21 +20,21 @@ import javax.swing.JComponent;
  * @author Ole.Matzura
  */
 
-public interface Log4JMonitor 
+public interface Log4JMonitor
 {
 	public JLogList addLogArea( String title, String loggerName, boolean isDefault );
 
-	public void logEvent(Object msg);
-	
+	public void logEvent( Object msg );
+
 	public JLogList getLogArea( String title );
 
-	public boolean hasLogArea(String loggerName);
+	public boolean hasLogArea( String loggerName );
 
 	public JComponent getComponent();
 
 	public JLogList getCurrentLog();
 
 	public void setCurrentLog( JLogList lastLog );
-	
+
 	public boolean removeLogArea( String loggerName );
 }

@@ -20,18 +20,19 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 public class RestServiceFactory implements InterfaceFactory<RestService>
 {
 	public final static String REST_TYPE = "rest";
-	
-	public RestService build(WsdlProject project, InterfaceConfig config)
+
+	public RestService build( WsdlProject project, InterfaceConfig config )
 	{
-		return new RestService( project, (RestServiceConfig) config.changeType(RestServiceConfig.type));
+		return new RestService( project, ( RestServiceConfig )config.changeType( RestServiceConfig.type ) );
 	}
 
-	public RestService createNew(WsdlProject project, String name)
+	public RestService createNew( WsdlProject project, String name )
 	{
-		RestServiceConfig config = (RestServiceConfig) project.getConfig().addNewInterface().changeType(RestServiceConfig.type);
-		RestService iface = new RestService( project, config);
-      iface.setName( name );
-		
+		RestServiceConfig config = ( RestServiceConfig )project.getConfig().addNewInterface().changeType(
+				RestServiceConfig.type );
+		RestService iface = new RestService( project, config );
+		iface.setName( name );
+
 		return iface;
 	}
 }

@@ -24,7 +24,7 @@ import com.eviware.soapui.model.settings.Settings;
 
 public interface GroovyEditorModel
 {
-	public String [] getKeywords();
+	public String[] getKeywords();
 
 	public String getScript();
 
@@ -33,6 +33,6 @@ public interface GroovyEditorModel
 	public Action getRunAction();
 
 	public Settings getSettings();
-	
+
 	public String getScriptName();
 }

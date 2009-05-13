@@ -25,14 +25,14 @@ import com.eviware.soapui.model.project.EndpointStrategy;
 
 public class EndpointStrategyRequestFilter extends AbstractRequestFilter
 {
-	public void filterRequest(SubmitContext context, Request wsdlRequest)
+	public void filterRequest( SubmitContext context, Request wsdlRequest )
 	{
-      Operation operation = wsdlRequest.getOperation();
-      if( operation != null )
-      {
-         EndpointStrategy endpointStrategy = operation.getInterface().getProject().getEndpointStrategy();
-         if( endpointStrategy != null )
-            endpointStrategy.filterRequest( context, wsdlRequest );
-      }
-   }
+		Operation operation = wsdlRequest.getOperation();
+		if( operation != null )
+		{
+			EndpointStrategy endpointStrategy = operation.getInterface().getProject().getEndpointStrategy();
+			if( endpointStrategy != null )
+				endpointStrategy.filterRequest( context, wsdlRequest );
+		}
+	}
 }

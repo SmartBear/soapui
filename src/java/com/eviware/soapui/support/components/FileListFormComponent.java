@@ -9,8 +9,8 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
- package com.eviware.soapui.support.components;
+
+package com.eviware.soapui.support.components;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -40,39 +40,41 @@ public class FileListFormComponent extends JPanel implements JFormComponent, Act
 	public FileListFormComponent( String tooltip )
 	{
 		listModel = new DefaultListModel();
-		list = new JList(listModel);
+		list = new JList( listModel );
 		list.setToolTipText( tooltip );
-		JScrollPane scrollPane = new JScrollPane( list);
+		JScrollPane scrollPane = new JScrollPane( list );
 		scrollPane.setPreferredSize( new Dimension( 300, 70 ) );
-		add( scrollPane, BorderLayout.CENTER);
-		Box box = new Box(BoxLayout.Y_AXIS);
-		addButton = new JButton( "Add..");
+		add( scrollPane, BorderLayout.CENTER );
+		Box box = new Box( BoxLayout.Y_AXIS );
+		addButton = new JButton( "Add.." );
 		addButton.addActionListener( this );
 		box.add( addButton );
-		box.add( Box.createVerticalStrut( 5 ));
-		removeButton = new JButton( "Remove..");
+		box.add( Box.createVerticalStrut( 5 ) );
+		removeButton = new JButton( "Remove.." );
 		removeButton.addActionListener( this );
-		box.add( removeButton);
+		box.add( removeButton );
 		box.add( Box.createVerticalGlue() );
-		
+
 		add( box, BorderLayout.EAST );
-		
-		list.addListSelectionListener( new ListSelectionListener() {
+
+		list.addListSelectionListener( new ListSelectionListener()
+		{
 
 			public void valueChanged( ListSelectionEvent e )
 			{
 				removeButton.setEnabled( list.getSelectedIndex() != -1 );
-			}} );
-		
+			}
+		} );
+
 		removeButton.setEnabled( list.getSelectedIndex() != -1 );
 	}
-	
-	public void setValue(String value)
+
+	public void setValue( String value )
 	{
 		listModel.clear();
 		String[] files = value.split( ";" );
 		for( String file : files )
-			if( file.trim().length() > 0)
+			if( file.trim().length() > 0 )
 				listModel.addElement( file );
 	}
 
@@ -84,10 +86,10 @@ public class FileListFormComponent extends JPanel implements JFormComponent, Act
 		{
 			if( c > 0 )
 				buf.append( ';' );
-			
+
 			buf.append( values[c] );
 		}
-		
+
 		return buf.toString();
 	}
 
@@ -95,16 +97,16 @@ public class FileListFormComponent extends JPanel implements JFormComponent, Act
 	{
 		if( arg0.getSource() == addButton )
 		{
-			File file = UISupport.getFileDialogs().open(this, "Add file", null, null, null );
-         if( file != null )
-		   {
-		     	listModel.addElement( file.getAbsolutePath() );
-		   }
+			File file = UISupport.getFileDialogs().open( this, "Add file", null, null, null );
+			if( file != null )
+			{
+				listModel.addElement( file.getAbsolutePath() );
+			}
 		}
 		else if( arg0.getSource() == removeButton && list.getSelectedIndex() != -1 )
 		{
 			Object elm = listModel.getElementAt( list.getSelectedIndex() );
-			if( UISupport.confirm( "Remove [" + elm.toString() + "] from list", "Remove" ))
+			if( UISupport.confirm( "Remove [" + elm.toString() + "] from list", "Remove" ) )
 			{
 				listModel.remove( list.getSelectedIndex() );
 			}

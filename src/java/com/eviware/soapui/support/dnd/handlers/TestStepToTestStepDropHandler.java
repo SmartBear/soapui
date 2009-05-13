@@ -10,27 +10,28 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-
 package com.eviware.soapui.support.dnd.handlers;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 
-public class TestStepToTestStepDropHandler extends AbstractBeforeAfterModelItemDropHandler<WsdlTestStep,WsdlTestStep>
+public class TestStepToTestStepDropHandler extends AbstractBeforeAfterModelItemDropHandler<WsdlTestStep, WsdlTestStep>
 {
 	public TestStepToTestStepDropHandler()
 	{
 		super( WsdlTestStep.class, WsdlTestStep.class );
 	}
-	
+
 	boolean copyAfter( WsdlTestStep source, WsdlTestStep target )
 	{
-		return DragAndDropSupport.copyTestStep( source, target.getTestCase(), target.getTestCase().getIndexOfTestStep( target )+1 );
+		return DragAndDropSupport.copyTestStep( source, target.getTestCase(), target.getTestCase().getIndexOfTestStep(
+				target ) + 1 );
 	}
 
 	boolean moveAfter( WsdlTestStep source, WsdlTestStep target )
 	{
-		return DragAndDropSupport.moveTestStep( source, target.getTestCase(), target.getTestCase().getIndexOfTestStep( target )+1 );
+		return DragAndDropSupport.moveTestStep( source, target.getTestCase(), target.getTestCase().getIndexOfTestStep(
+				target ) + 1 );
 	}
 
 	@Override
@@ -44,21 +45,21 @@ public class TestStepToTestStepDropHandler extends AbstractBeforeAfterModelItemD
 	{
 		return source != target;
 	}
-	
+
 	@Override
 	String getCopyAfterInfo( WsdlTestStep source, WsdlTestStep target )
 	{
-		return source.getTestCase() == target.getTestCase() ? 
-					"Copy TestStep [" + source.getName() + "] within TestCase [" + target.getTestCase().getName() + "]" :
-					"Copy TestStep [" + source.getName() + "] to TestCase [" + target.getTestCase().getName() + "]";
+		return source.getTestCase() == target.getTestCase() ? "Copy TestStep [" + source.getName()
+				+ "] within TestCase [" + target.getTestCase().getName() + "]" : "Copy TestStep [" + source.getName()
+				+ "] to TestCase [" + target.getTestCase().getName() + "]";
 	}
 
 	@Override
 	String getMoveAfterInfo( WsdlTestStep source, WsdlTestStep target )
 	{
-		return source.getTestCase() == target.getTestCase() ? 
-					"Move TestStep [" + source.getName() + "] within TestCase [" + target.getTestCase().getName() + "]" :
-					"Move TestStep [" + source.getName() + "] to TestCase [" + target.getTestCase().getName() + "]";
+		return source.getTestCase() == target.getTestCase() ? "Move TestStep [" + source.getName()
+				+ "] within TestCase [" + target.getTestCase().getName() + "]" : "Move TestStep [" + source.getName()
+				+ "] to TestCase [" + target.getTestCase().getName() + "]";
 	}
 
 	@Override
@@ -76,7 +77,8 @@ public class TestStepToTestStepDropHandler extends AbstractBeforeAfterModelItemD
 	@Override
 	boolean copyBefore( WsdlTestStep source, WsdlTestStep target )
 	{
-		return DragAndDropSupport.copyTestStep( source, target.getTestCase(), target.getTestCase().getIndexOfTestStep( target ) );
+		return DragAndDropSupport.copyTestStep( source, target.getTestCase(), target.getTestCase().getIndexOfTestStep(
+				target ) );
 	}
 
 	@Override
@@ -94,6 +96,7 @@ public class TestStepToTestStepDropHandler extends AbstractBeforeAfterModelItemD
 	@Override
 	boolean moveBefore( WsdlTestStep source, WsdlTestStep target )
 	{
-		return DragAndDropSupport.moveTestStep( source, target.getTestCase(), target.getTestCase().getIndexOfTestStep( target ) );
+		return DragAndDropSupport.moveTestStep( source, target.getTestCase(), target.getTestCase().getIndexOfTestStep(
+				target ) );
 	}
 }

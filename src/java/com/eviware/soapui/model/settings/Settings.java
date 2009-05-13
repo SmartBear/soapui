@@ -21,24 +21,24 @@ package com.eviware.soapui.model.settings;
 public interface Settings
 {
 	public String getString( String id, String defaultValue );
-	
+
 	public void setString( String id, String value );
-	
+
 	/**
 	 * booleans always default to false..
 	 */
-	
+
 	public boolean getBoolean( String id );
 
 	public void setBoolean( String id, boolean value );
-	
+
 	public void addSettingsListener( SettingsListener listener );
-	
+
 	public void removeSettingsListener( SettingsListener listener );
 
 	public void clearSetting( String id );
 
-	public long getLong(String id, long defaultValue );
+	public long getLong( String id, long defaultValue );
 
 	public boolean isSet( String id );
 

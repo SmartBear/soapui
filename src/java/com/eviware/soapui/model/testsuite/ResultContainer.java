@@ -11,9 +11,8 @@
  */
 package com.eviware.soapui.model.testsuite;
 
-
 /**
- * A marker for objects that contain test results. 
+ * A marker for objects that contain test results.
  * 
  * @author lars
  */

@@ -26,12 +26,12 @@ public class SaveAllProjectsAction extends AbstractSoapUIAction<WorkspaceImpl>
 	public static final String SOAPUI_ACTION_ID = "SaveAllProjectsAction";
 
 	public SaveAllProjectsAction()
-   {
-      super( "Save All Projects", "Saves all projects in the current Workspace" );
-   }
-	
+	{
+		super( "Save All Projects", "Saves all projects in the current Workspace" );
+	}
+
 	public void perform( WorkspaceImpl workspace, Object param )
 	{
-      workspace.save( false );
-   }
+		workspace.save( false );
+	}
 }

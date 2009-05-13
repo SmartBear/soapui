@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
 import javax.swing.Action;
@@ -28,7 +28,7 @@ public abstract class AbstractGroovyEditorModel implements GroovyEditorModel
 		this.keywords = keywords;
 		this.settings = settings;
 		this.name = name;
-		
+
 		runAction = createRunAction();
 	}
 
@@ -41,7 +41,7 @@ public abstract class AbstractGroovyEditorModel implements GroovyEditorModel
 	{
 		return runAction;
 	}
-	
+
 	public Action createRunAction()
 	{
 		return null;

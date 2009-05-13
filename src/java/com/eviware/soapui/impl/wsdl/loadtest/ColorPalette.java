@@ -24,11 +24,11 @@ import com.eviware.soapui.model.ModelItem;
 
 public class ColorPalette
 {
-   public static Color getColor( Object object )
-   {
-   	if( object instanceof ModelItem )
-   		return new Color( ((ModelItem)object).getName().hashCode() ).brighter();
-   	else 
-   		return new Color( object.hashCode() );
-   }
+	public static Color getColor( Object object )
+	{
+		if( object instanceof ModelItem )
+			return new Color( ( ( ModelItem )object ).getName().hashCode() ).brighter();
+		else
+			return new Color( object.hashCode() );
+	}
 }

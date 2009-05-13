@@ -698,28 +698,30 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		{
 			File tempFile = File.createTempFile( "project-temp-", ".xml", projectFile.getParentFile() );
 			// ByteArrayOutputStream writer = new ByteArrayOutputStream(8192);
-			
-			// save once to make sure it can be saved 
+
+			// save once to make sure it can be saved
 			projectDocument.save( tempFile, options );
 
-//			BufferedReader br = new BufferedReader( new FileReader( tempFile ) );
-//			FileWriter w = new FileWriter( projectFile );
-//			String ls = System.getProperty( "line.separator" );
-//			String ln = null;
-//
-//			while( ( ln = br.readLine() ) != null )
-//			{
-//				w.write( ln );
-//				w.write( ls );
-//			}
-//			
-//			w.close();
-//			br.close(
-			
+			// BufferedReader br = new BufferedReader( new FileReader( tempFile )
+			// );
+			// FileWriter w = new FileWriter( projectFile );
+			// String ls = System.getProperty( "line.separator" );
+			// String ln = null;
+			//
+			// while( ( ln = br.readLine() ) != null )
+			// {
+			// w.write( ln );
+			// w.write( ls );
+			// }
+			//			
+			// w.close();
+			// br.close(
+
 			// now save it for real
 			projectDocument.save( projectFile, options );
 
-			// delete tempFile here so we have it as backup in case second save fails
+			// delete tempFile here so we have it as backup in case second save
+			// fails
 			tempFile.delete();
 
 			//			 

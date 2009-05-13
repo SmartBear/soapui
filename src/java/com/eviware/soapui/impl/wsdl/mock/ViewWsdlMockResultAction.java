@@ -1,4 +1,4 @@
- /*
+/*
  *  soapUI, copyright (C) 2004-2009 eviware.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui.impl.wsdl.mock;
 
 import java.awt.BorderLayout;
@@ -48,26 +48,26 @@ public class ViewWsdlMockResultAction extends AbstractAction
 	private final WsdlMockResult result;
 	private DefaultDesktopPanel desktopPanel;
 
-	public ViewWsdlMockResultAction(WsdlMockResult result)
+	public ViewWsdlMockResultAction( WsdlMockResult result )
 	{
 		super( "Show Results" );
-		
+
 		this.result = result;
 	}
 
-	public void actionPerformed(ActionEvent e)
+	public void actionPerformed( ActionEvent e )
 	{
 		try
 		{
 			if( result.isDiscarded() )
 				UISupport.showInfoMessage( "Request has been discarded.." );
 			else
-				UISupport.showDesktopPanel(buildFrame());
+				UISupport.showDesktopPanel( buildFrame() );
 		}
-		catch (Exception ex)
+		catch( Exception ex )
 		{
 			SoapUI.logError( ex );
-		}		
+		}
 	}
 
 	private DesktopPanel buildFrame()
@@ -77,7 +77,7 @@ public class ViewWsdlMockResultAction extends AbstractAction
 			String title = "Mock Result for [" + result.getMockResponse().getName() + "]";
 			desktopPanel = new DefaultDesktopPanel( title, title, buildContent() );
 		}
-		
+
 		return desktopPanel;
 	}
 
@@ -86,18 +86,18 @@ public class ViewWsdlMockResultAction extends AbstractAction
 		JTabbedPane messageTabs = new JTabbedPane();
 		messageTabs.addTab( "Request", buildRequestTab() );
 		messageTabs.addTab( "Response", buildResponseTab() );
-		messageTabs.setPreferredSize( new Dimension( 500, 400 ));
-		
+		messageTabs.setPreferredSize( new Dimension( 500, 400 ) );
+
 		JPanel panel = new JPanel( new BorderLayout() );
 		panel.add( UISupport.createTabPanel( messageTabs, true ), BorderLayout.CENTER );
 
 		ButtonBarBuilder builder = new ButtonBarBuilder();
-		builder.addFixed( new JLabel( "Mock Request handled at " + new Date( result.getTimestamp() ) + 
-					", time taken: " + result.getTimeTaken() + "ms"));
+		builder.addFixed( new JLabel( "Mock Request handled at " + new Date( result.getTimestamp() ) + ", time taken: "
+				+ result.getTimeTaken() + "ms" ) );
 		builder.addGlue();
 		builder.setBorder( BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) );
 		panel.add( builder.getPanel(), BorderLayout.PAGE_START );
-		
+
 		return panel;
 	}
 
@@ -105,12 +105,12 @@ public class ViewWsdlMockResultAction extends AbstractAction
 	{
 		JXEditTextArea responseArea = JXEditTextArea.createXmlEditor( false );
 		responseArea.setText( XmlUtils.prettyPrintXml( result.getResponseContent() ) );
-      responseArea.setEditable( false );
-      responseArea.setToolTipText( "Response Content" );
+		responseArea.setEditable( false );
+		responseArea.setToolTipText( "Response Content" );
 		JScrollPane scrollPane = new JScrollPane( responseArea );
-		
-		JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( new JTable( 
-					new StringToStringMapTableModel( result.getResponseHeaders(), "Header", "Value", false)) ), scrollPane );
+
+		JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( new JTable( new StringToStringMapTableModel(
+				result.getResponseHeaders(), "Header", "Value", false ) ) ), scrollPane );
 		split.setDividerLocation( 150 );
 		return split;
 	}
@@ -118,13 +118,13 @@ public class ViewWsdlMockResultAction extends AbstractAction
 	private Component buildRequestTab()
 	{
 		JXEditTextArea resultArea = JXEditTextArea.createXmlEditor( false );
-     	resultArea.setText( XmlUtils.prettyPrintXml( result.getMockRequest().getRequestContent() ) );
-      resultArea.setEditable( false );
-      resultArea.setToolTipText( "Request Content" );
+		resultArea.setText( XmlUtils.prettyPrintXml( result.getMockRequest().getRequestContent() ) );
+		resultArea.setEditable( false );
+		resultArea.setToolTipText( "Request Content" );
 		JScrollPane scrollPane = new JScrollPane( resultArea );
-		
-		JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( new JTable( 
-					new StringToStringMapTableModel( result.getMockRequest().getRequestHeaders(), "Header", "Value", false)) ), scrollPane );
+
+		JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( new JTable( new StringToStringMapTableModel(
+				result.getMockRequest().getRequestHeaders(), "Header", "Value", false ) ) ), scrollPane );
 		split.setDividerLocation( 150 );
 		return split;
 	}

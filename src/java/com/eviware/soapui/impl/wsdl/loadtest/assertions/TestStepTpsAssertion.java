@@ -52,78 +52,79 @@ public class TestStepTpsAssertion extends AbstractLoadTestAssertion implements C
 	private static final String MINIMUM_REQUESTS_FIELD = "Minimum Requests";
 	private static final String MAX_ERRORS_ELEMENT = "max-errors";
 	private static final String MAX_ERRORS_FIELD = "Max Errors";
-	
+
 	private int minRequests;
 	private int minValue;
 	private int maxErrors;
 	private XFormDialog dialog;
 	public static final String STEP_TPS_TYPE = "Step TPS";
 
-	public TestStepTpsAssertion(LoadTestAssertionConfig assertionConfig, WsdlLoadTest loadTest)
+	public TestStepTpsAssertion( LoadTestAssertionConfig assertionConfig, WsdlLoadTest loadTest )
 	{
-		super(assertionConfig, loadTest);
+		super( assertionConfig, loadTest );
 
-		init(assertionConfig);
+		init( assertionConfig );
 		initIcon( "/tps_loadtest_assertion.gif" );
 	}
 
-	private void init(LoadTestAssertionConfig assertionConfig)
+	private void init( LoadTestAssertionConfig assertionConfig )
 	{
 		XmlObject configuration = assertionConfig.getConfiguration();
-		
+
 		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( configuration );
-		setName( reader.readString( TestStepTpsAssertion.NAME_ELEMENT, "Step TPS" ));
+		setName( reader.readString( TestStepTpsAssertion.NAME_ELEMENT, "Step TPS" ) );
 		minRequests = reader.readInt( TestStepTpsAssertion.MIN_REQUESTS_ELEMENT, 100 );
 		minValue = reader.readInt( TestStepTpsAssertion.MIN_VALUE_ELEMENT, 10 );
-		setTargetStep( reader.readString( TestStepTpsAssertion.TEST_STEP_ELEMENT, TestStepTpsAssertion.ANY_TEST_STEP ));
+		setTargetStep( reader.readString( TestStepTpsAssertion.TEST_STEP_ELEMENT, TestStepTpsAssertion.ANY_TEST_STEP ) );
 		maxErrors = reader.readInt( MAX_ERRORS_ELEMENT, -1 );
 	}
 
-	public String assertResult(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestStepResult result, TestRunner testRunner, TestRunContext runContext)
+	public String assertResult( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestStepResult result,
+			TestRunner testRunner, TestRunContext runContext )
 	{
 		TestStep step = result.getTestStep();
-		if( targetStepMatches( step ))
+		if( targetStepMatches( step ) )
 		{
-			WsdlLoadTest loadTest = (WsdlLoadTest) loadTestRunner.getLoadTest();
+			WsdlLoadTest loadTest = ( WsdlLoadTest )loadTestRunner.getLoadTest();
 			LoadTestStatistics statisticsModel = loadTest.getStatisticsModel();
 
 			int index = step.getTestCase().getIndexOfTestStep( step );
-			
+
 			long tps = statisticsModel.getStatistic( index, Statistic.TPS );
-			if( statisticsModel.getStatistic( index, Statistic.COUNT ) >= minRequests &&
-				 tps < minValue )
+			if( statisticsModel.getStatistic( index, Statistic.COUNT ) >= minRequests && tps < minValue )
 			{
-				return returnErrorOrFail( "TPS [" + tps + "] is less than limit [" + minValue + "]", maxErrors, 
+				return returnErrorOrFail( "TPS [" + tps + "] is less than limit [" + minValue + "]", maxErrors,
 						loadTestRunner, context );
 			}
 		}
 
 		return null;
 	}
-	
-	public String assertResults(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner, TestRunContext runContext)
+
+	public String assertResults( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
+			TestRunContext runContext )
 	{
-		if( ALL_TEST_STEPS.equals( getTargetStep()) )
+		if( ALL_TEST_STEPS.equals( getTargetStep() ) )
 		{
-			WsdlLoadTest loadTest = (WsdlLoadTest) loadTestRunner.getLoadTest();
+			WsdlLoadTest loadTest = ( WsdlLoadTest )loadTestRunner.getLoadTest();
 			LoadTestStatistics statisticsModel = loadTest.getStatisticsModel();
 
 			long tps = statisticsModel.getStatistic( LoadTestStatistics.TOTAL, Statistic.TPS );
-			
-			if( statisticsModel.getStatistic( LoadTestStatistics.TOTAL, Statistic.COUNT ) > minRequests &&
-				 tps < minValue )
+
+			if( statisticsModel.getStatistic( LoadTestStatistics.TOTAL, Statistic.COUNT ) > minRequests && tps < minValue )
 			{
-				return returnErrorOrFail( "TPS [" + tps + "] is less than limit [" + minValue + "]", maxErrors, 
+				return returnErrorOrFail( "TPS [" + tps + "] is less than limit [" + minValue + "]", maxErrors,
 						loadTestRunner, context );
 			}
 		}
 
 		return null;
 	}
-	
+
 	public String getDescription()
 	{
-		return "testStep: " + getTargetStep() + ", minRequests: " + minRequests + ", minValue: " + minValue + ", maxErrors: " + maxErrors;
+		return "testStep: " + getTargetStep() + ", minRequests: " + minRequests + ", minValue: " + minValue
+				+ ", maxErrors: " + maxErrors;
 	}
 
 	public boolean configure()
@@ -132,66 +133,67 @@ public class TestStepTpsAssertion extends AbstractLoadTestAssertion implements C
 		{
 			buildDialog();
 		}
-		
+
 		StringToStringMap values = new StringToStringMap();
-		
+
 		values.put( TestStepTpsAssertion.NAME_FIELD, getName() );
-		values.put( TestStepTpsAssertion.MINIMUM_REQUESTS_FIELD, String.valueOf( minRequests ));
-		values.put( TestStepTpsAssertion.MIN_VALUE_FIELD, String.valueOf( minValue ));
+		values.put( TestStepTpsAssertion.MINIMUM_REQUESTS_FIELD, String.valueOf( minRequests ) );
+		values.put( TestStepTpsAssertion.MIN_VALUE_FIELD, String.valueOf( minValue ) );
 		values.put( TestStepTpsAssertion.TEST_STEP_FIELD, getTargetStep() );
-		values.put( TestStepTpsAssertion.MAX_ERRORS_FIELD, String.valueOf( maxErrors ));
-		
+		values.put( TestStepTpsAssertion.MAX_ERRORS_FIELD, String.valueOf( maxErrors ) );
+
 		dialog.setOptions( TestStepTpsAssertion.TEST_STEP_FIELD, getTargetStepOptions( true ) );
 		values = dialog.show( values );
-		
+
 		if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
 		{
 			try
 			{
-				minRequests = Integer.parseInt( values.get( TestStepTpsAssertion.MINIMUM_REQUESTS_FIELD ));
-				minValue = Integer.parseInt( values.get( TestStepTpsAssertion.MIN_VALUE_FIELD ));
-				maxErrors = Integer.parseInt( values.get( TestStepTpsAssertion.MAX_ERRORS_FIELD ));
-				setTargetStep( values.get( TestStepTpsAssertion.TEST_STEP_FIELD ));
-				setName( values.get( TestStepTpsAssertion.NAME_FIELD ));
+				minRequests = Integer.parseInt( values.get( TestStepTpsAssertion.MINIMUM_REQUESTS_FIELD ) );
+				minValue = Integer.parseInt( values.get( TestStepTpsAssertion.MIN_VALUE_FIELD ) );
+				maxErrors = Integer.parseInt( values.get( TestStepTpsAssertion.MAX_ERRORS_FIELD ) );
+				setTargetStep( values.get( TestStepTpsAssertion.TEST_STEP_FIELD ) );
+				setName( values.get( TestStepTpsAssertion.NAME_FIELD ) );
 			}
 			catch( Exception e )
 			{
 				UISupport.showErrorMessage( e.getMessage() );
 			}
-			
+
 			updateConfiguration();
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	protected void updateConfiguration()
 	{
 		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
-		
+
 		builder.add( TestStepTpsAssertion.NAME_ELEMENT, getName() );
 		builder.add( TestStepTpsAssertion.MIN_REQUESTS_ELEMENT, minRequests );
 		builder.add( TestStepTpsAssertion.MIN_VALUE_ELEMENT, minValue );
 		builder.add( TestStepTpsAssertion.TEST_STEP_ELEMENT, getTargetStep() );
 		builder.add( TestStepTpsAssertion.MAX_ERRORS_ELEMENT, maxErrors );
-		
+
 		setConfiguration( builder.finish() );
 	}
 
 	private void buildDialog()
 	{
 		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "TestStep TPS Assertion" );
-	   XForm form = builder.createForm( "Basic" );
-		
-	   form.addTextField( TestStepTpsAssertion.NAME_FIELD, "Name of this assertion", FieldType.TEXT );
-	   form.addTextField( TestStepTpsAssertion.MINIMUM_REQUESTS_FIELD, "Minimum steps before asserting", FieldType.TEXT );
-	   form.addTextField( TestStepTpsAssertion.MIN_VALUE_FIELD, "Minimum required step TPS", FieldType.TEXT );
-	   form.addTextField( TestStepTpsAssertion.MAX_ERRORS_FIELD, "Maximum number of errors before failing", FieldType.TEXT );
-	   form.addComboBox( TestStepTpsAssertion.TEST_STEP_FIELD, new String[0], "TestStep to assert" );
-	   
-	   dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.STEP_TPS_LOAD_TEST_ASSERTION_HELP_URL), 
-			"Specify options for this TestStep TPS Assertion", UISupport.OPTIONS_ICON );
+		XForm form = builder.createForm( "Basic" );
+
+		form.addTextField( TestStepTpsAssertion.NAME_FIELD, "Name of this assertion", FieldType.TEXT );
+		form.addTextField( TestStepTpsAssertion.MINIMUM_REQUESTS_FIELD, "Minimum steps before asserting", FieldType.TEXT );
+		form.addTextField( TestStepTpsAssertion.MIN_VALUE_FIELD, "Minimum required step TPS", FieldType.TEXT );
+		form.addTextField( TestStepTpsAssertion.MAX_ERRORS_FIELD, "Maximum number of errors before failing",
+				FieldType.TEXT );
+		form.addComboBox( TestStepTpsAssertion.TEST_STEP_FIELD, new String[0], "TestStep to assert" );
+
+		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.STEP_TPS_LOAD_TEST_ASSERTION_HELP_URL ),
+				"Specify options for this TestStep TPS Assertion", UISupport.OPTIONS_ICON );
 	}
 }

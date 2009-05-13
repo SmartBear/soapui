@@ -17,11 +17,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.support.AbstractInterface;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -48,59 +45,60 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 {
 	private XFormDialog dialog;
 
-	public CloneTestSuiteAction() 
-   {
-      super( "Clone TestSuite", "Clones this TestSuite" );
-   }
-	
-   public void perform( WsdlTestSuite testSuite, Object param )
+	public CloneTestSuiteAction()
 	{
-   	if( dialog == null )
-		   dialog = ADialogBuilder.buildDialog( Form.class );
-   	
-   	dialog.setValue( Form.NAME, "Copy of " + testSuite.getName() );
-   	dialog.setBooleanValue(Form.MOVE, false);
-   	WorkspaceImpl workspace = testSuite.getProject().getWorkspace();
-		dialog.setOptions( Form.PROJECT, 
-					ModelSupport.getNames( workspace.getOpenProjectList(), new String[] {"<Create New>"} ) );
-		
+		super( "Clone TestSuite", "Clones this TestSuite" );
+	}
+
+	public void perform( WsdlTestSuite testSuite, Object param )
+	{
+		if( dialog == null )
+			dialog = ADialogBuilder.buildDialog( Form.class );
+
+		dialog.setValue( Form.NAME, "Copy of " + testSuite.getName() );
+		dialog.setBooleanValue( Form.MOVE, false );
+		WorkspaceImpl workspace = testSuite.getProject().getWorkspace();
+		dialog.setOptions( Form.PROJECT, ModelSupport.getNames( workspace.getOpenProjectList(),
+				new String[] { "<Create New>" } ) );
+
 		dialog.setValue( Form.PROJECT, testSuite.getProject().getName() );
-		
+
 		if( dialog.show() )
 		{
 			String targetProjectName = dialog.getValue( Form.PROJECT );
 			String name = dialog.getValue( Form.NAME );
-			
-			WsdlProject project = (WsdlProject) testSuite.getProject();
-			
+
+			WsdlProject project = ( WsdlProject )testSuite.getProject();
+
 			// within same project?
 			boolean move = dialog.getBooleanValue( Form.MOVE );
-			if( targetProjectName.equals( testSuite.getProject().getName() ))
+			if( targetProjectName.equals( testSuite.getProject().getName() ) )
 			{
-		      cloneTestSuiteWithinProject( testSuite, name, project );
+				cloneTestSuiteWithinProject( testSuite, name, project );
 			}
 			else
 			{
 				cloneToAnotherProject( testSuite, targetProjectName, name, move );
 			}
-			
-			if( move)
+
+			if( move )
 			{
-			   testSuite.getProject().removeTestSuite( testSuite );
+				testSuite.getProject().removeTestSuite( testSuite );
 			}
 		}
-   }
+	}
 
-	public static WsdlTestSuite cloneToAnotherProject( WsdlTestSuite testSuite, String targetProjectName, String name, boolean move )
+	public static WsdlTestSuite cloneToAnotherProject( WsdlTestSuite testSuite, String targetProjectName, String name,
+			boolean move )
 	{
 		WorkspaceImpl workspace = testSuite.getProject().getWorkspace();
-		WsdlProject targetProject = ( WsdlProject ) workspace.getProjectByName( targetProjectName );
+		WsdlProject targetProject = ( WsdlProject )workspace.getProjectByName( targetProjectName );
 		if( targetProject == null )
 		{
 			targetProjectName = UISupport.prompt( "Enter name for new Project", "Clone TestSuite", "" );
 			if( targetProjectName == null )
 				return null;
-			
+
 			try
 			{
 				targetProject = workspace.createProject( targetProjectName, null );
@@ -109,34 +107,34 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 			{
 				UISupport.showErrorMessage( e );
 			}
-			
+
 			if( targetProject == null )
 				return null;
 		}
-		
+
 		Set<Interface> requiredInterfaces = getRequiredInterfaces( testSuite, targetProject );
-		
+
 		if( requiredInterfaces.size() > 0 )
 		{
-			String msg = "Target project [" + targetProjectName  +"] is missing required Interfaces;\r\n\r\n";
+			String msg = "Target project [" + targetProjectName + "] is missing required Interfaces;\r\n\r\n";
 			for( Interface iface : requiredInterfaces )
 			{
 				msg += iface.getName() + " [" + iface.getTechnicalId() + "]\r\n";
 			}
 			msg += "\r\nThese will be cloned to the targetProject as well";
-			
-			if( !UISupport.confirm( msg, "Clone TestSuite" ))
+
+			if( !UISupport.confirm( msg, "Clone TestSuite" ) )
 				return null;
-			
+
 			for( Interface iface : requiredInterfaces )
 			{
-				targetProject.importInterface( (AbstractInterface<?>) iface, true, true );
+				targetProject.importInterface( ( AbstractInterface<?> )iface, true, true );
 			}
 		}
-		
+
 		testSuite = targetProject.importTestSuite( testSuite, name, !move );
-		UISupport.select( testSuite);
-		
+		UISupport.select( testSuite );
+
 		return testSuite;
 	}
 
@@ -150,47 +148,46 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 	public static Set<Interface> getRequiredInterfaces( WsdlTestSuite testSuite, WsdlProject targetProject )
 	{
 		Set<Interface> requiredInterfaces = new HashSet<Interface>();
-		
+
 		for( int i = 0; i < testSuite.getTestCaseCount(); i++ )
 		{
 			WsdlTestCase testCase = testSuite.getTestCaseAt( i );
-			
+
 			for( int y = 0; y < testCase.getTestStepCount(); y++ )
 			{
 				WsdlTestStep testStep = testCase.getTestStepAt( y );
 				requiredInterfaces.addAll( testStep.getRequiredInterfaces() );
 			}
 		}
-		
+
 		if( requiredInterfaces.size() > 0 && targetProject.getInterfaceCount() > 0 )
 		{
-			Map<String,Interface> bindings = new HashMap<String,Interface>();
+			Map<String, Interface> bindings = new HashMap<String, Interface>();
 			for( Interface iface : requiredInterfaces )
 			{
 				bindings.put( iface.getTechnicalId(), iface );
 			}
-			
+
 			for( Interface iface : targetProject.getInterfaceList() )
 			{
-				bindings.remove( iface.getTechnicalId());
+				bindings.remove( iface.getTechnicalId() );
 			}
 
 			requiredInterfaces.retainAll( bindings.values() );
 		}
 		return requiredInterfaces;
 	}
-   
-   @AForm(description = "Specify target Project and name of cloned TestSuite", name = "Clone TestSuite",
-   			helpUrl=HelpUrls.CLONETESTSUITE_HELP_URL, icon=UISupport.TOOL_ICON_PATH)
+
+	@AForm( description = "Specify target Project and name of cloned TestSuite", name = "Clone TestSuite", helpUrl = HelpUrls.CLONETESTSUITE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
 	protected interface Form
 	{
-   	@AField( name="TestSuite Name", description = "The name of the cloned TestSuite", type=AFieldType.STRING )
+		@AField( name = "TestSuite Name", description = "The name of the cloned TestSuite", type = AFieldType.STRING )
 		public final static String NAME = "TestSuite Name";
-   	
-   	@AField( name="Target Project", description = "The target Project for the cloned TestSuite", type=AFieldType.ENUMERATION )
+
+		@AField( name = "Target Project", description = "The target Project for the cloned TestSuite", type = AFieldType.ENUMERATION )
 		public final static String PROJECT = "Target Project";
-   	
-   	@AField( name="Move instead", description = "Moves the selected TestSuite instead of copying", type=AFieldType.BOOLEAN )
+
+		@AField( name = "Move instead", description = "Moves the selected TestSuite instead of copying", type = AFieldType.BOOLEAN )
 		public final static String MOVE = "Move instead";
 	}
 }

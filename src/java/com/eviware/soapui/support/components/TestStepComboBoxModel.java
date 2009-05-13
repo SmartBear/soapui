@@ -34,7 +34,7 @@ public class TestStepComboBoxModel extends AbstractListModel implements ComboBox
 	public TestStepComboBoxModel( WsdlTestCase testCase )
 	{
 		this.testCase = testCase;
-		
+
 		testSuiteListener = new InternalTestSuiteListener();
 		testCase.getTestSuite().addTestSuiteListener( testSuiteListener );
 	}
@@ -43,7 +43,7 @@ public class TestStepComboBoxModel extends AbstractListModel implements ComboBox
 	{
 		testCase.getTestSuite().removeTestSuiteListener( testSuiteListener );
 	}
-	
+
 	public Object getElementAt( int index )
 	{
 		return testCase.getTestStepAt( index ).getName();
@@ -53,7 +53,7 @@ public class TestStepComboBoxModel extends AbstractListModel implements ComboBox
 	{
 		return testCase.getTestStepCount();
 	}
-	
+
 	private final class InternalTestSuiteListener extends TestSuiteListenerAdapter
 	{
 		@Override
@@ -67,7 +67,7 @@ public class TestStepComboBoxModel extends AbstractListModel implements ComboBox
 		public void testStepMoved( TestStep testStep, int fromIndex, int offset )
 		{
 			if( testStep.getTestCase() == testCase )
-				fireContentsChanged( TestStepComboBoxModel.this, fromIndex, fromIndex+offset );
+				fireContentsChanged( TestStepComboBoxModel.this, fromIndex, fromIndex + offset );
 		}
 
 		@Override
@@ -75,7 +75,7 @@ public class TestStepComboBoxModel extends AbstractListModel implements ComboBox
 		{
 			if( testStep.getTestCase() == testCase )
 				fireIntervalRemoved( TestStepComboBoxModel.this, index, index );
-			
+
 			if( index == selectedStepIndex )
 				setSelectedItem( null );
 		}
@@ -89,33 +89,34 @@ public class TestStepComboBoxModel extends AbstractListModel implements ComboBox
 	public void setSelectedItem( Object anItem )
 	{
 		if( selectedStep != null )
-			selectedStep.removePropertyChangeListener( testStepNameListener  );
-		
-		selectedStep = testCase.getTestStepByName( ( String ) anItem );
+			selectedStep.removePropertyChangeListener( testStepNameListener );
+
+		selectedStep = testCase.getTestStepByName( ( String )anItem );
 		if( selectedStep != null )
 		{
 			selectedStep.addPropertyChangeListener( WsdlTestStep.NAME_PROPERTY, testStepNameListener );
 			selectedStepIndex = testCase.getIndexOfTestStep( selectedStep );
 		}
-		else selectedStepIndex = -1;
-		
+		else
+			selectedStepIndex = -1;
+
 		fireContentsChanged( this, -1, -1 );
 	}
-	
+
 	/**
 	 * Listen for testStep name changes and modify comboBox model accordingly
 	 */
-	
+
 	private final class TestStepNameListener implements PropertyChangeListener
 	{
-		public void propertyChange(PropertyChangeEvent evt)
+		public void propertyChange( PropertyChangeEvent evt )
 		{
 			Object oldItem = evt.getOldValue();
-			int stepIndex = testCase.getTestStepIndexByName( ( String ) oldItem );
+			int stepIndex = testCase.getTestStepIndexByName( ( String )oldItem );
 			if( stepIndex != -1 )
 			{
 				fireContentsChanged( TestStepComboBoxModel.this, stepIndex, stepIndex );
-				
+
 				if( selectedStep != null && testCase.getIndexOfTestStep( selectedStep ) == stepIndex )
 					fireContentsChanged( this, -1, -1 );
 			}

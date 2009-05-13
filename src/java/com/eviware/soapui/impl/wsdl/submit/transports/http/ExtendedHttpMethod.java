@@ -12,15 +12,16 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
+
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 
 public interface ExtendedHttpMethod extends HttpMethod
 {
 	public long getMaxSize();
 
-	public void setMaxSize(long maxSize);
+	public void setMaxSize( long maxSize );
 
 	public long getResponseReadTime();
 
@@ -33,18 +34,18 @@ public interface ExtendedHttpMethod extends HttpMethod
 	public SSLInfo getSSLInfo();
 
 	public String getResponseCharSet();
-	
+
 	public String getResponseContentType();
 
 	public RequestEntity getRequestEntity();
-	
+
 	public void setDumpFile( String dumpFile );
 
-   public AbstractHttpRequest.RequestMethod getMethod();
+	public AbstractHttpRequest.RequestMethod getMethod();
 
-	public void setFailed(Throwable t);
-	
+	public void setFailed( Throwable t );
+
 	public boolean isFailed();
-	
+
 	public Throwable getFailureCause();
 }

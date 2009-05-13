@@ -33,27 +33,30 @@ public abstract class AbstractWsaInspector extends AbstractXmlInspector
 	private SimpleBindingForm form;
 	private final WsaContainer wsaContainer;
 
-	protected AbstractWsaInspector( WsaContainer wsaContainer)
+	protected AbstractWsaInspector( WsaContainer wsaContainer )
 	{
 		super( "WS-A", "WS-Addressing related settings", true, WsaInspectorFactory.INSPECTOR_ID );
 		this.wsaContainer = wsaContainer;
 	}
+
 	public JComponent getComponent()
 	{
 		if( mainPanel == null )
 		{
 			mainPanel = new JPanel( new BorderLayout() );
 			form = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( wsaContainer.getWsaConfig() ) );
-			buildContent(form);
+			buildContent( form );
 			mainPanel.add( new JScrollPane( form.getPanel() ), BorderLayout.CENTER );
 		}
 		return mainPanel;
 	}
 
-	public void buildContent(SimpleBindingForm form){};
+	public void buildContent( SimpleBindingForm form )
+	{
+	};
 
 	@Override
-	public boolean isEnabledFor(EditorView<XmlDocument> view)
+	public boolean isEnabledFor( EditorView<XmlDocument> view )
 	{
 		return !view.getViewId().equals( RawXmlEditorFactory.VIEW_ID );
 	}

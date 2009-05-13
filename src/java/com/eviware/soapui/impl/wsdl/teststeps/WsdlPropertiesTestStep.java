@@ -12,20 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import com.eviware.soapui.config.PropertiesStepConfig;
-import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
-import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
-import com.eviware.soapui.model.testsuite.*;
-import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.resolver.ResolveContext;
-import com.eviware.soapui.support.types.StringList;
-
-import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,6 +22,25 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+
+import javax.swing.ImageIcon;
+
+import com.eviware.soapui.config.PropertiesStepConfig;
+import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
+import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
+import com.eviware.soapui.model.testsuite.TestRunContext;
+import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.resolver.ResolveContext;
+import com.eviware.soapui.support.types.StringList;
 
 /**
  * TestStep that holds an arbitrary number of custom properties
@@ -51,83 +56,83 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 	private XmlBeansPropertiesTestPropertyHolder propertyHolderSupport;
 	private BeanPathPropertySupport sourceProperty;
 	private BeanPathPropertySupport targetProperty;
-	
+
 	public static final String SOURCE_PROPERTY = WsdlPropertiesTestStep.class.getName() + "@source";
 	public static final String TARGET_PROPERTY = WsdlPropertiesTestStep.class.getName() + "@target";
 
-	public WsdlPropertiesTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest)
+	public WsdlPropertiesTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
-		super(testCase, config, true, forLoadTest);
-		
+		super( testCase, config, true, forLoadTest );
+
 		if( !forLoadTest )
 		{
-		   okIcon = UISupport.createImageIcon("/properties_step.gif");
-		   failedIcon = UISupport.createImageIcon("/properties_step_failed.gif");
-		   
+			okIcon = UISupport.createImageIcon( "/properties_step.gif" );
+			failedIcon = UISupport.createImageIcon( "/properties_step_failed.gif" );
+
 			setIcon( okIcon );
 		}
 
-	   if( config.getConfig() == null )
+		if( config.getConfig() == null )
 		{
-			propertiesStepConfig = (PropertiesStepConfig) config.addNewConfig().changeType( PropertiesStepConfig.type );
+			propertiesStepConfig = ( PropertiesStepConfig )config.addNewConfig().changeType( PropertiesStepConfig.type );
 			propertiesStepConfig.addNewProperties();
 			propertiesStepConfig.setCreateMissingOnLoad( true );
 		}
 		else
 		{
-			propertiesStepConfig = (PropertiesStepConfig) config.getConfig().changeType(PropertiesStepConfig.type);
+			propertiesStepConfig = ( PropertiesStepConfig )config.getConfig().changeType( PropertiesStepConfig.type );
 			if( !propertiesStepConfig.isSetProperties() )
-			{	
+			{
 				propertiesStepConfig.addNewProperties();
 			}
-			
+
 			if( !propertiesStepConfig.isSetSaveFirst() )
 				propertiesStepConfig.setSaveFirst( true );
 		}
-	   
-	   propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder( this, propertiesStepConfig.getProperties() );
-	   sourceProperty = new BeanPathPropertySupport( this, propertiesStepConfig, "source" );
-	   targetProperty = new BeanPathPropertySupport( this, propertiesStepConfig, "target" );
+
+		propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder( this, propertiesStepConfig.getProperties() );
+		sourceProperty = new BeanPathPropertySupport( this, propertiesStepConfig, "source" );
+		targetProperty = new BeanPathPropertySupport( this, propertiesStepConfig, "target" );
 	}
-	
-	public TestStepResult run(TestRunner testRunner, TestRunContext testRunContext)
+
+	public TestStepResult run( TestRunner testRunner, TestRunContext testRunContext )
 	{
 		WsdlTestStepResult result = new WsdlTestStepResult( this );
-		
+
 		if( okIcon != null )
 			setIcon( okIcon );
-		
+
 		result.setStatus( TestStepStatus.OK );
 		result.startTimer();
-		
-		if( isSaveFirst() ) 
+
+		if( isSaveFirst() )
 			saveDuringRun( result, testRunContext );
-		
+
 		String source = sourceProperty.expand( testRunContext );
-		if( StringUtils.hasContent(source)  )
+		if( StringUtils.hasContent( source ) )
 		{
 			try
 			{
-				int cnt = loadProperties( source, isCreateMissingOnLoad());
-				
+				int cnt = loadProperties( source, isCreateMissingOnLoad() );
+
 				result.setStatus( TestStepStatus.OK );
 				result.addMessage( "Loaded " + cnt + " properties from [" + source + "]" );
 			}
-			catch (IOException e)
+			catch( IOException e )
 			{
 				result.stopTimer();
 				result.addMessage( "Failed to load properties from [" + source + "]" );
 				result.setStatus( TestStepStatus.FAILED );
 				result.setError( e );
-				
+
 				if( failedIcon != null )
 					setIcon( failedIcon );
-			}			
+			}
 		}
-		
+
 		if( !isSaveFirst() )
 			saveDuringRun( result, testRunContext );
-		
+
 		result.stopTimer();
 
 		return result;
@@ -135,30 +140,30 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 
 	private boolean saveDuringRun( WsdlTestStepResult result, TestRunContext context )
 	{
-		String target = targetProperty.expand(context);
-		if( StringUtils.hasContent(target) )
+		String target = targetProperty.expand( context );
+		if( StringUtils.hasContent( target ) )
 		{
 			try
 			{
-				int cnt = saveProperties(target);
-				
+				int cnt = saveProperties( target );
+
 				result.setStatus( TestStepStatus.OK );
 				result.addMessage( "Saved " + cnt + " properties to [" + target + "]" );
 			}
-			catch (IOException e)
+			catch( IOException e )
 			{
 				result.stopTimer();
 				result.addMessage( "Failed to save properties to [" + target + "]" );
 				result.setStatus( TestStepStatus.FAILED );
 				result.setError( e );
-				
+
 				if( failedIcon != null )
 					setIcon( failedIcon );
-				
+
 				return false;
-			}			
+			}
 		}
-		
+
 		return true;
 	}
 
@@ -166,22 +171,22 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 	{
 		java.util.Properties props = new java.util.Properties();
 		propertyHolderSupport.saveTo( props );
-		FileOutputStream out = getPropertiesOutputStream(target);
-		props.store(out, "TestStep [" + getName() + "] properties");
+		FileOutputStream out = getPropertiesOutputStream( target );
+		props.store( out, "TestStep [" + getName() + "] properties" );
 		out.close();
 		return props.size();
 	}
 
-	private FileOutputStream getPropertiesOutputStream(String target) throws FileNotFoundException
+	private FileOutputStream getPropertiesOutputStream( String target ) throws FileNotFoundException
 	{
 		String fileProperty = System.getProperty( target );
 		if( fileProperty != null )
 			target = fileProperty;
-		
+
 		return new FileOutputStream( target );
 	}
-	
-	private int loadProperties(String source, boolean createMissing) throws IOException
+
+	private int loadProperties( String source, boolean createMissing ) throws IOException
 	{
 		// override methods so propertynames are returned in readorder
 		java.util.Properties props = new java.util.Properties()
@@ -201,11 +206,11 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 				return Collections.enumeration( names );
 			}
 		};
-		
-		InputStream in = getPropertiesInputStream(source);
-		props.load(in);
+
+		InputStream in = getPropertiesInputStream( source );
+		props.load( in );
 		in.close();
-		
+
 		int cnt = 0;
 		Enumeration<?> names = props.propertyNames();
 		while( names.hasMoreElements() )
@@ -215,26 +220,26 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 			if( property != null )
 			{
 				property.setValue( props.get( name ).toString() );
-				cnt++;
+				cnt++ ;
 			}
 			else if( createMissing )
 			{
 				addProperty( name ).setValue( props.get( name ).toString() );
-				cnt++;
+				cnt++ ;
 			}
 		}
-		
+
 		return cnt;
 	}
 
-	private InputStream getPropertiesInputStream(String source) throws IOException
+	private InputStream getPropertiesInputStream( String source ) throws IOException
 	{
 		String fileProperty = System.getProperty( source );
 		if( fileProperty != null )
 			source = fileProperty;
-		
+
 		URL url;
-		
+
 		try
 		{
 			url = new URL( source );
@@ -246,57 +251,57 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 
 		return url.openStream();
 	}
-	
+
 	public TestProperty getTestStepPropertyAt( int index )
 	{
 		return propertyHolderSupport.getPropertyAt( index );
 	}
-	
+
 	public int getStepPropertyCount()
 	{
 		return propertyHolderSupport.getPropertyCount();
 	}
-	
+
 	public String getSource()
 	{
 		return sourceProperty.get();
 	}
-	
+
 	public void setSource( String source )
 	{
 		sourceProperty.set( source, true );
 	}
-	
+
 	public String getTarget()
 	{
 		return targetProperty.get();
 	}
-	
+
 	public String getLabel()
 	{
 		String str = super.getName() + " (" + getPropertyCount() + ")";
-		
+
 		if( isDisabled() )
 			str += " (disabled)";
-		
+
 		return str;
 	}
 
-   public void setTarget( String target )
+	public void setTarget( String target )
 	{
-		targetProperty.set(target, true);
+		targetProperty.set( target, true );
 	}
 
-	public void resetConfigOnMove(TestStepConfig config)
+	public void resetConfigOnMove( TestStepConfig config )
 	{
 		super.resetConfigOnMove( config );
-		
-		propertiesStepConfig = (PropertiesStepConfig) config.getConfig().changeType(PropertiesStepConfig.type);
+
+		propertiesStepConfig = ( PropertiesStepConfig )config.getConfig().changeType( PropertiesStepConfig.type );
 		propertyHolderSupport.resetPropertiesConfig( propertiesStepConfig.getProperties() );
 		sourceProperty.setConfig( propertiesStepConfig );
 		targetProperty.setConfig( propertiesStepConfig );
 	}
-	
+
 	public int loadProperties( boolean createMissing ) throws IOException
 	{
 		return loadProperties( sourceProperty.expand(), createMissing );
@@ -304,25 +309,25 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 
 	public int saveProperties() throws IOException
 	{
-		String target = PropertyExpansionUtils.expandProperties( this, targetProperty.expand(  ));
+		String target = PropertyExpansionUtils.expandProperties( this, targetProperty.expand() );
 		return saveProperties( target );
 	}
-	
+
 	public boolean isCreateMissingOnLoad()
 	{
 		return propertiesStepConfig.getCreateMissingOnLoad();
 	}
-	
+
 	public void setCreateMissingOnLoad( boolean b )
 	{
 		propertiesStepConfig.setCreateMissingOnLoad( b );
 	}
-	
+
 	public boolean isSaveFirst()
 	{
 		return propertiesStepConfig.getSaveFirst();
 	}
-	
+
 	public void setSaveFirst( boolean b )
 	{
 		propertiesStepConfig.setSaveFirst( b );
@@ -332,17 +337,17 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 	{
 		return propertiesStepConfig.getDiscardValuesOnSave();
 	}
-	
+
 	public void setDiscardValuesOnSave( boolean b )
 	{
 		propertiesStepConfig.setDiscardValuesOnSave( b );
 	}
-	
+
 	public void setPropertyValue( String name, String value )
 	{
 		if( isCreateMissingOnLoad() && getProperty( name ) == null )
 			addProperty( name );
-		
+
 		propertyHolderSupport.setPropertyValue( name, value );
 	}
 
@@ -350,7 +355,7 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 	public void beforeSave()
 	{
 		super.beforeSave();
-		
+
 		if( isDiscardValuesOnSave() )
 		{
 			clearPropertyValues();
@@ -371,10 +376,10 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 	public TestProperty addProperty( String name )
 	{
 		String oldLabel = getLabel();
-		
+
 		TestProperty property = propertyHolderSupport.addProperty( name );
-	   notifyPropertyChanged( WsdlTestStep.LABEL_PROPERTY, oldLabel, getLabel() );
-		
+		notifyPropertyChanged( WsdlTestStep.LABEL_PROPERTY, oldLabel, getLabel() );
+
 		return property;
 	}
 
@@ -397,7 +402,7 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 	{
 		return propertyHolderSupport.getPropertyAt( index );
 	}
-	
+
 	public List<TestProperty> getPropertyList()
 	{
 		return propertyHolderSupport.getPropertyList();
@@ -421,10 +426,10 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 	public TestProperty removeProperty( String propertyName )
 	{
 		String oldLabel = getLabel();
-		
+
 		TestProperty result = propertyHolderSupport.removeProperty( propertyName );
-	   notifyPropertyChanged( WsdlTestStep.LABEL_PROPERTY, oldLabel, getLabel() );
-	   return result;
+		notifyPropertyChanged( WsdlTestStep.LABEL_PROPERTY, oldLabel, getLabel() );
+		return result;
 	}
 
 	public void removeTestPropertyListener( TestPropertyListener listener )
@@ -441,23 +446,25 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 	public void resolve( ResolveContext<?> context )
 	{
 		super.resolve( context );
-		
-		targetProperty.resolveFile( context, "Missing target property file", "properties", "Properties Files (*.properties)", true );
-		sourceProperty.resolveFile( context, "Missing source property file", "properties", "Properties Files (*.properties)", true );
+
+		targetProperty.resolveFile( context, "Missing target property file", "properties",
+				"Properties Files (*.properties)", true );
+		sourceProperty.resolveFile( context, "Missing source property file", "properties",
+				"Properties Files (*.properties)", true );
 	}
 
-	public void moveProperty(String propertyName, int targetIndex)
+	public void moveProperty( String propertyName, int targetIndex )
 	{
-		propertyHolderSupport.moveProperty(propertyName, targetIndex);
+		propertyHolderSupport.moveProperty( propertyName, targetIndex );
 	}
 
-   public String getSource( boolean expand )
-   {
-      return expand ? sourceProperty.expand() : getSource();
-   }
+	public String getSource( boolean expand )
+	{
+		return expand ? sourceProperty.expand() : getSource();
+	}
 
-   public String getTarget( boolean expand )
-   {
-      return expand ? targetProperty.expand() : getTarget();
-   }
+	public String getTarget( boolean expand )
+	{
+		return expand ? targetProperty.expand() : getTarget();
+	}
 }

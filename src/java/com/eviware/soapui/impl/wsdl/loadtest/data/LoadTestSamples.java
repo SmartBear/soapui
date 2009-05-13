@@ -38,21 +38,21 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
 
 public class LoadTestSamples extends AbstractTableModel
 {
-   private final LoadTest loadTest;
-   private List<List<LoadTestStepSample[]> > samples = new ArrayList< List<LoadTestStepSample[]> >();
-   private List<Long> timestamps = new ArrayList<Long>();
+	private final LoadTest loadTest;
+	private List<List<LoadTestStepSample[]>> samples = new ArrayList<List<LoadTestStepSample[]>>();
+	private List<Long> timestamps = new ArrayList<Long>();
 	private InternalLoadTestRunListener loadTestRunListener = new InternalLoadTestRunListener();
 	private InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
-   private final static Logger log = Logger.getLogger(LoadTestSamples.class);
-	
+	private final static Logger log = Logger.getLogger( LoadTestSamples.class );
+
 	public LoadTestSamples( LoadTest loadTest )
-   {
+	{
 		this.loadTest = loadTest;
-		
+
 		loadTest.addLoadTestRunListener( loadTestRunListener );
 		loadTest.getTestCase().getTestSuite().addTestSuiteListener( testSuiteListener );
 	}
-	
+
 	public int getRowCount()
 	{
 		return samples.size();
@@ -63,47 +63,46 @@ public class LoadTestSamples extends AbstractTableModel
 		loadTest.removeLoadTestRunListener( loadTestRunListener );
 		loadTest.getTestCase().getTestSuite().removeTestSuiteListener( testSuiteListener );
 	}
-	
+
 	public int getColumnCount()
 	{
-		return loadTest.getTestCase().getTestStepCount()+1;
+		return loadTest.getTestCase().getTestStepCount() + 1;
 	}
 
-	public Object getValueAt(int rowIndex, int columnIndex)
+	public Object getValueAt( int rowIndex, int columnIndex )
 	{
-		return columnIndex == 0 ? new Date( timestamps.get( rowIndex )) : 
-			samples.get( rowIndex ).get( columnIndex-1 );
+		return columnIndex == 0 ? new Date( timestamps.get( rowIndex ) ) : samples.get( rowIndex ).get( columnIndex - 1 );
 	}
-	
-	public Class<?> getColumnClass(int columnIndex)
+
+	public Class<?> getColumnClass( int columnIndex )
 	{
 		return columnIndex == 0 ? Date.class : LoadTestStepSample[].class;
 	}
 
-	public String getColumnName(int columnIndex)
+	public String getColumnName( int columnIndex )
 	{
-		return columnIndex == 0 ? "Timestamp" : loadTest.getTestCase().getTestStepAt( columnIndex-1 ).getName();
+		return columnIndex == 0 ? "Timestamp" : loadTest.getTestCase().getTestStepAt( columnIndex - 1 ).getName();
 	}
-	
+
 	public synchronized void clear()
 	{
 		int size = samples.size();
 		samples.clear();
 		timestamps.clear();
-		fireTableRowsDeleted( 0, size-1 );
+		fireTableRowsDeleted( 0, size - 1 );
 	}
 
 	private final class InternalTestSuiteListener extends TestSuiteListenerAdapter
 	{
-		public void loadTestRemoved(LoadTest loadTest)
+		public void loadTestRemoved( LoadTest loadTest )
 		{
-			if( loadTest.equals( LoadTestSamples.this.loadTest ))
+			if( loadTest.equals( LoadTestSamples.this.loadTest ) )
 			{
 				loadTest.removeLoadTestRunListener( loadTestRunListener );
 			}
 		}
 
-		public void testStepAdded(TestStep testStep, int index)
+		public void testStepAdded( TestStep testStep, int index )
 		{
 			if( testStep.getTestCase() == loadTest.getTestCase() )
 			{
@@ -114,7 +113,7 @@ public class LoadTestSamples extends AbstractTableModel
 			}
 		}
 
-		public void testStepMoved(TestStep testStep, int fromIndex, int offset)
+		public void testStepMoved( TestStep testStep, int fromIndex, int offset )
 		{
 			if( testStep.getTestCase() == loadTest.getTestCase() )
 			{
@@ -126,7 +125,7 @@ public class LoadTestSamples extends AbstractTableModel
 			}
 		}
 
-		public void testStepRemoved(TestStep testStep, int index)
+		public void testStepRemoved( TestStep testStep, int index )
 		{
 			if( testStep.getTestCase() == loadTest.getTestCase() )
 			{
@@ -140,17 +139,18 @@ public class LoadTestSamples extends AbstractTableModel
 
 	private class InternalLoadTestRunListener extends LoadTestRunListenerAdapter
 	{
-		public void afterTestCase(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner, TestRunContext runContext)
+		public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
+				TestRunContext runContext )
 		{
 			long timestamp = System.currentTimeMillis();
 			List<LoadTestStepSample[]> s = new ArrayList<LoadTestStepSample[]>();
 			List<TestStepResult> testResults = testRunner.getResults();
-			
+
 			for( int c = 0; c < loadTest.getTestCase().getTestStepCount(); c++ )
 			{
 				TestStep testStep = loadTest.getTestCase().getTestStepAt( c );
 				List<LoadTestStepSample> results = new ArrayList<LoadTestStepSample>();
-				
+
 				for( int i = 0; i < testResults.size(); i++ )
 				{
 					TestStepResult stepResult = testResults.get( i );
@@ -159,19 +159,19 @@ public class LoadTestSamples extends AbstractTableModel
 						log.warn( "Result [" + c + "] is null in TestCase [" + testRunner.getTestCase().getName() + "]" );
 						continue;
 					}
-					
-					if( stepResult.getTestStep().equals( testStep ))
-						results.add( new LoadTestStepSample( stepResult ));
+
+					if( stepResult.getTestStep().equals( testStep ) )
+						results.add( new LoadTestStepSample( stepResult ) );
 				}
-				
-				s.add( results.toArray( new LoadTestStepSample[results.size()] ));
+
+				s.add( results.toArray( new LoadTestStepSample[results.size()] ) );
 			}
-			
+
 			synchronized( this )
 			{
 				samples.add( s );
 				timestamps.add( timestamp );
-				fireTableRowsInserted( samples.size()-1, samples.size()-1 );
+				fireTableRowsInserted( samples.size() - 1, samples.size() - 1 );
 			}
 		}
 	}

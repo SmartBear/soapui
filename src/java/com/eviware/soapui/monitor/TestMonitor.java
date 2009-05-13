@@ -56,12 +56,12 @@ public class TestMonitor
 	private Set<TestRunner> runningTestCases = new HashSet<TestRunner>();
 	private Set<LoadTestRunner> runningLoadTests = new HashSet<LoadTestRunner>();
 	private Set<MockRunner> runningMockServices = new HashSet<MockRunner>();
-	private Map<String,TestRunner.Status> runStatusHistory = new HashMap<String, TestRunner.Status>();
-	
+	private Map<String, TestRunner.Status> runStatusHistory = new HashMap<String, TestRunner.Status>();
+
 	public TestMonitor()
 	{
 	}
-	
+
 	public TestRunner.Status getLastRunStatus( TestCase testCase )
 	{
 		return runStatusHistory.get( testCase.getId() );
@@ -243,7 +243,7 @@ public class TestMonitor
 		public void afterRun( TestRunner testRunner, TestRunContext runContext )
 		{
 			runStatusHistory.put( testRunner.getTestCase().getId(), testRunner.getStatus() );
-			
+
 			runningTestCases.remove( testRunner );
 			notifyTestCaseFinished( testRunner );
 		}
@@ -464,7 +464,7 @@ public class TestMonitor
 			if( testRunner.getTestCase() == testCase )
 				return testRunner;
 		}
-		
+
 		return null;
 	}
 }

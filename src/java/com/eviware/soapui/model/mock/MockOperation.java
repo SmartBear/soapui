@@ -18,7 +18,8 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Operation;
 
 /**
- * A MockOperation for mocking an Interfaces Operation and returning a MockResponse
+ * A MockOperation for mocking an Interfaces Operation and returning a
+ * MockResponse
  * 
  * @author ole.matzura
  */
@@ -26,16 +27,16 @@ import com.eviware.soapui.model.iface.Operation;
 public interface MockOperation extends ModelItem
 {
 	public MockService getMockService();
-	
+
 	public int getMockResponseCount();
-	
+
 	public MockResponse getMockResponseAt( int index );
-	
+
 	public MockResponse getMockResponseByName( String name );
-	
+
 	public Operation getOperation();
-	
+
 	public MockResult getLastMockResult();
-	
+
 	public List<MockResponse> getMockResponses();
 }

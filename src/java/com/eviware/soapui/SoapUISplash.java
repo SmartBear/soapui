@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui;
 
 import java.awt.BorderLayout;
@@ -26,39 +26,38 @@ import javax.swing.JWindow;
 import com.eviware.soapui.support.UISupport;
 
 public class SoapUISplash extends JWindow
+{
+	private final JFrame frame;
+
+	public SoapUISplash( String fileName, JFrame frame )
 	{
-		private final JFrame frame;
-
-		public SoapUISplash( String fileName, JFrame frame )
+		super( frame );
+		this.frame = frame;
+		JLabel l = new JLabel( new ImageIcon( UISupport.findSplash( fileName ) ) );
+		getContentPane().add( l, BorderLayout.CENTER );
+		pack();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension labelSize = l.getPreferredSize();
+		setLocation( screenSize.width / 2 - ( labelSize.width / 2 ), screenSize.height / 2 - ( labelSize.height / 2 ) );
+		addMouseListener( new MouseAdapter()
 		{
-			super( frame );
-			this.frame = frame;
-			JLabel l = new JLabel( new ImageIcon( UISupport.findSplash( fileName ) ) );
-			getContentPane().add( l, BorderLayout.CENTER );
-			pack();
-			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-			Dimension labelSize = l.getPreferredSize();
-			setLocation( screenSize.width / 2 - ( labelSize.width / 2 ), screenSize.height / 2
-						- ( labelSize.height / 2 ) );
-			addMouseListener( new MouseAdapter()
+			public void mousePressed( MouseEvent e )
 			{
-				public void mousePressed( MouseEvent e )
+				if( SoapUISplash.this.frame.isVisible() )
 				{
-					if( SoapUISplash.this.frame.isVisible())
-					{
-						setVisible( false );
-						dispose();
-					}
+					setVisible( false );
+					dispose();
 				}
-			} );
-			setVisible( true );
-		}
-
-		@Override
-		public void setVisible( boolean b )
-		{
-			super.setVisible( b );
-			if( !b )
-				dispose();
-		}
+			}
+		} );
+		setVisible( true );
 	}
+
+	@Override
+	public void setVisible( boolean b )
+	{
+		super.setVisible( b );
+		if( !b )
+			dispose();
+	}
+}

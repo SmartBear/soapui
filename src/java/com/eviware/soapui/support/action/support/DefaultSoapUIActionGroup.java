@@ -42,7 +42,7 @@ public class DefaultSoapUIActionGroup<T extends ModelItem> extends AbstractSoapU
 	{
 		if( index == -1 || index >= mappings.size() )
 			return addMapping( id, mapping );
-		
+
 		mappings.add( index, mapping );
 		ids.add( index, id );
 		return mapping;

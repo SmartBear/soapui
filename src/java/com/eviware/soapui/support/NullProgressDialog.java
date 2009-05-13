@@ -19,24 +19,24 @@ import com.eviware.x.dialogs.XProgressMonitor;
 
 public class NullProgressDialog implements XProgressDialog
 {
-	public void run(Worker worker) throws Exception
-   {
-      SwingWorkerDelegator swingWorker = new SwingWorkerDelegator(new NullProgressMonitor(), this, worker);
-      swingWorker.start();
-      swingWorker.get();  
-   }
+	public void run( Worker worker ) throws Exception
+	{
+		SwingWorkerDelegator swingWorker = new SwingWorkerDelegator( new NullProgressMonitor(), this, worker );
+		swingWorker.start();
+		swingWorker.get();
+	}
 
-   public void setVisible(boolean visible)
-   {
-   }
-
-   public void setCancelLabel(String label)
+	public void setVisible( boolean visible )
 	{
 	}
-   
-   private final static class NullProgressMonitor implements XProgressMonitor
-   {
-		public void setProgress(int value, String string)
+
+	public void setCancelLabel( String label )
+	{
+	}
+
+	private final static class NullProgressMonitor implements XProgressMonitor
+	{
+		public void setProgress( int value, String string )
 		{
 			System.out.println( "Progress: " + value + " - " + string );
 		}

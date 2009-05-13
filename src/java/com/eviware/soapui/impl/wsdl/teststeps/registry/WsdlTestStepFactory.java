@@ -17,7 +17,7 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 
 /**
- * Abstract factory behaviour for WsdlTestStep factories 
+ * Abstract factory behaviour for WsdlTestStep factories
  * 
  * @author Ole.Matzura
  */
@@ -44,15 +44,15 @@ public abstract class WsdlTestStepFactory
 		return typeName;
 	}
 
-	public abstract TestStepConfig createNewTestStep(WsdlTestCase testCase, String name);
-	
+	public abstract TestStepConfig createNewTestStep( WsdlTestCase testCase, String name );
+
 	public abstract boolean canCreate();
 
 	public String getTestStepName()
 	{
 		return name;
 	}
-	
+
 	public String getTestStepDescription()
 	{
 		return description;

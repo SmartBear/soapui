@@ -42,4 +42,3 @@ public interface TestAssertion extends ModelItem
 
 	public void prepare( TestRunner testRunner, TestRunContext testRunContext ) throws Exception;
 }
-

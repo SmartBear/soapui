@@ -24,5 +24,5 @@ import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 
 public interface RequestAssertion
 {
-	public AssertionStatus assertRequest( MessageExchange messageExchange, SubmitContext context);
+	public AssertionStatus assertRequest( MessageExchange messageExchange, SubmitContext context );
 }

@@ -9,8 +9,8 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
- package com.eviware.soapui;
+
+package com.eviware.soapui;
 
 import java.io.File;
 
@@ -22,7 +22,7 @@ import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
 public interface SoapUICore
 {
 	public final static String DEFAULT_SETTINGS_FILE = "soapui-settings.xml";
-	
+
 	public Settings getSettings();
 
 	public MockEngine getMockEngine();

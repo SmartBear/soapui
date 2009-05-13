@@ -32,27 +32,27 @@ import com.eviware.soapui.support.xml.XmlUtils;
 public class FormatXmlAction extends AbstractAction
 {
 	private final static Logger log = Logger.getLogger( FormatXmlAction.class );
-   private final JXEditTextArea textArea;
+	private final JXEditTextArea textArea;
 
-	public FormatXmlAction( JXEditTextArea textArea)
-   {
-      super( "Format XML" );
-      putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/format_request.gif"));
-      putValue( Action.SHORT_DESCRIPTION, "Pretty-prints the request xml" );
-      putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "alt F" ));
-		this.textArea = textArea;
-   }
-   
-	public void actionPerformed(ActionEvent e)
+	public FormatXmlAction( JXEditTextArea textArea )
 	{
-     try
-      {
-         textArea.setText(XmlUtils.prettyPrintXml( textArea.getText() )); 
-         textArea.setCaretPosition( 0 );
-      }
-      catch (Exception e1)
-      {
-         log.error( e1.getMessage() );
-      }  
-   }
+		super( "Format XML" );
+		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/format_request.gif" ) );
+		putValue( Action.SHORT_DESCRIPTION, "Pretty-prints the request xml" );
+		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "alt F" ) );
+		this.textArea = textArea;
+	}
+
+	public void actionPerformed( ActionEvent e )
+	{
+		try
+		{
+			textArea.setText( XmlUtils.prettyPrintXml( textArea.getText() ) );
+			textArea.setCaretPosition( 0 );
+		}
+		catch( Exception e1 )
+		{
+			log.error( e1.getMessage() );
+		}
+	}
 }

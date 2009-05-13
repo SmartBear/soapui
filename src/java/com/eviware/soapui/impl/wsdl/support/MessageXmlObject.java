@@ -35,12 +35,12 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
  * @author Ole.Matzura
  */
 
-public class MessageXmlObject 
+public class MessageXmlObject
 {
 	private XmlObject messageObj;
 	private WsdlContext wsdlContext;
 	private List<MessageXmlPart> messageParts = new ArrayList<MessageXmlPart>();
-	
+
 	private final static Logger log = Logger.getLogger( MessageXmlObject.class );
 	private final String messageContent;
 	private WsdlOperation operation;
@@ -64,7 +64,7 @@ public class MessageXmlObject
 		{
 			for( int c = 0; c < messageParts.size(); c++ )
 				messageParts.get( c ).update();
-				
+
 			return messageObj.xmlText();
 		}
 	}
@@ -73,125 +73,133 @@ public class MessageXmlObject
 	{
 		if( messageObj == null )
 		{
-		   messageObj = XmlObject.Factory.parse( getMessageContent() );	
+			messageObj = XmlObject.Factory.parse( getMessageContent() );
 		}
-		
+
 		return messageObj;
 	}
 
-	public MessageXmlPart [] getMessageParts() throws Exception
-   {
-   	String operationName = operation.getName();
+	public MessageXmlPart[] getMessageParts() throws Exception
+	{
+		String operationName = operation.getName();
 		BindingOperation bindingOperation = operation.getBindingOperation();
-		if (bindingOperation == null)
+		if( bindingOperation == null )
 		{
-			throw new Exception("Missing operation ["	+ operationName + "] in wsdl definition");
+			throw new Exception( "Missing operation [" + operationName + "] in wsdl definition" );
 		}
 
-		 if( !wsdlContext.hasSchemaTypes() )
-       {
-			 throw new Exception("Missing schema types for message");
-       }
-		
-       XmlObject msgXml = getMessageObj();
-       Part[] inputParts = isRequest ? WsdlUtils.getInputParts(bindingOperation) : WsdlUtils.getOutputParts(bindingOperation);
-       messageParts.clear();
-       
-       if( WsdlUtils.isRpc( wsdlContext.getDefinition(), bindingOperation ))
-       {
-      	 //  	 get root element
-          XmlObject[] paths = msgXml.selectPath( "declare namespace env='" + 
-                   		wsdlContext.getSoapVersion().getEnvelopeNamespace() + "';" +
-                "declare namespace ns='" + wsdlContext.getDefinition().getTargetNamespace() + "';" +
-                "$this/env:Envelope/env:Body/ns:" + bindingOperation.getName() );
-          
-          if( paths.length != 1 )
-          {
-         	 throw new Exception("Missing message wrapper element [" + 
-                   wsdlContext.getDefinition().getTargetNamespace() + "@" + bindingOperation.getName() );
-          }  
-          else
-          {
-             XmlObject wrapper = paths[0];
-             
-             for (int i = 0; i < inputParts.length; i++)
-             {
-                Part part = inputParts[i];
-                
-                
-                QName partName = part.getElementName();
-                if( partName == null )
-               	 partName = new QName( part.getName() );
-                
-                XmlObject[] children = wrapper.selectChildren( partName );
-                
-                // attachment part?
-                if( WsdlUtils.isAttachmentInputPart( part, bindingOperation ))
-                {
-               	 // not required
-               	 if( children.length == 1 )
-               	 {               	 
-	               	 QName typeName = part.getTypeName();
-	               	 SchemaType type = typeName == null ? null : wsdlContext.getSchemaTypeLoader().findType( typeName );
-	               	 messageParts.add( new MessageXmlPart( children[0], type, part, bindingOperation, isRequest ));
-               	 }
-                }
-                else if( children.length != 1 )
-                {
-                   log.error("Missing message part [" + part.getName() + "]" );
-                }
-                else
-                {
-                   QName typeName = part.getTypeName();
-                   if( typeName == null )
-                   {
-                  	 typeName = partName;
-                  	 SchemaGlobalElement type = wsdlContext.getSchemaTypeLoader().findElement( typeName );
-                  	 
-                  	 if( type != null )
-	                   {
-                  		 messageParts.add( new MessageXmlPart( children[0], type.getType(), part, bindingOperation, isRequest ) );
-	                   }
-	                   else log.error( "Missing element [" + typeName + "] in associated schema for part [" + part.getName() + "]" );
-                   }
-                   else
-                   {
-	                   SchemaType type = wsdlContext.getSchemaTypeLoader().findType( typeName );
-	                   if( type != null )
-	                   {
-	                  	 messageParts.add( new MessageXmlPart( children[0], type, part, bindingOperation, isRequest ));
-	                   }
-	                   else log.error( "Missing type [" + typeName + "] in associated schema for part [" + part.getName() + "]" );
-                   }
-                }
-             }
-          }
-       }
-       else
-       {
-          Part part = inputParts[0];
-          QName elementName = part.getElementName();
-          if( elementName != null )
-          {
-          	// just check for correct message element, other elements are avoided (should create an error)
-             XmlObject[] paths = msgXml.selectPath( "declare namespace env='" + 
-                   		wsdlContext.getSoapVersion().getEnvelopeNamespace() + "';" +
-                   "declare namespace ns='" + elementName.getNamespaceURI() + "';" +
-                   "$this/env:Envelope/env:Body/ns:" + elementName.getLocalPart() );
-             
-             if( paths.length == 1 )
-             {
-                SchemaGlobalElement elm = wsdlContext.getSchemaTypeLoader().findElement( elementName );
-                if( elm != null )
-                {
-               	 messageParts.add( new MessageXmlPart( paths[0], elm.getType(), part, bindingOperation, isRequest ));
-                }
-                else throw new Exception("Missing part type in associated schema" );
-             }
-             else throw new Exception("Missing message part with name [" + elementName + "]" );
-          }
-       }
-   	
-   	return messageParts.toArray( new MessageXmlPart[messageParts.size()] );
-   }
+		if( !wsdlContext.hasSchemaTypes() )
+		{
+			throw new Exception( "Missing schema types for message" );
+		}
+
+		XmlObject msgXml = getMessageObj();
+		Part[] inputParts = isRequest ? WsdlUtils.getInputParts( bindingOperation ) : WsdlUtils
+				.getOutputParts( bindingOperation );
+		messageParts.clear();
+
+		if( WsdlUtils.isRpc( wsdlContext.getDefinition(), bindingOperation ) )
+		{
+			// get root element
+			XmlObject[] paths = msgXml.selectPath( "declare namespace env='"
+					+ wsdlContext.getSoapVersion().getEnvelopeNamespace() + "';" + "declare namespace ns='"
+					+ wsdlContext.getDefinition().getTargetNamespace() + "';" + "$this/env:Envelope/env:Body/ns:"
+					+ bindingOperation.getName() );
+
+			if( paths.length != 1 )
+			{
+				throw new Exception( "Missing message wrapper element [" + wsdlContext.getDefinition().getTargetNamespace()
+						+ "@" + bindingOperation.getName() );
+			}
+			else
+			{
+				XmlObject wrapper = paths[0];
+
+				for( int i = 0; i < inputParts.length; i++ )
+				{
+					Part part = inputParts[i];
+
+					QName partName = part.getElementName();
+					if( partName == null )
+						partName = new QName( part.getName() );
+
+					XmlObject[] children = wrapper.selectChildren( partName );
+
+					// attachment part?
+					if( WsdlUtils.isAttachmentInputPart( part, bindingOperation ) )
+					{
+						// not required
+						if( children.length == 1 )
+						{
+							QName typeName = part.getTypeName();
+							SchemaType type = typeName == null ? null : wsdlContext.getSchemaTypeLoader().findType( typeName );
+							messageParts.add( new MessageXmlPart( children[0], type, part, bindingOperation, isRequest ) );
+						}
+					}
+					else if( children.length != 1 )
+					{
+						log.error( "Missing message part [" + part.getName() + "]" );
+					}
+					else
+					{
+						QName typeName = part.getTypeName();
+						if( typeName == null )
+						{
+							typeName = partName;
+							SchemaGlobalElement type = wsdlContext.getSchemaTypeLoader().findElement( typeName );
+
+							if( type != null )
+							{
+								messageParts.add( new MessageXmlPart( children[0], type.getType(), part, bindingOperation,
+										isRequest ) );
+							}
+							else
+								log.error( "Missing element [" + typeName + "] in associated schema for part ["
+										+ part.getName() + "]" );
+						}
+						else
+						{
+							SchemaType type = wsdlContext.getSchemaTypeLoader().findType( typeName );
+							if( type != null )
+							{
+								messageParts.add( new MessageXmlPart( children[0], type, part, bindingOperation, isRequest ) );
+							}
+							else
+								log.error( "Missing type [" + typeName + "] in associated schema for part [" + part.getName()
+										+ "]" );
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			Part part = inputParts[0];
+			QName elementName = part.getElementName();
+			if( elementName != null )
+			{
+				// just check for correct message element, other elements are
+				// avoided (should create an error)
+				XmlObject[] paths = msgXml.selectPath( "declare namespace env='"
+						+ wsdlContext.getSoapVersion().getEnvelopeNamespace() + "';" + "declare namespace ns='"
+						+ elementName.getNamespaceURI() + "';" + "$this/env:Envelope/env:Body/ns:"
+						+ elementName.getLocalPart() );
+
+				if( paths.length == 1 )
+				{
+					SchemaGlobalElement elm = wsdlContext.getSchemaTypeLoader().findElement( elementName );
+					if( elm != null )
+					{
+						messageParts.add( new MessageXmlPart( paths[0], elm.getType(), part, bindingOperation, isRequest ) );
+					}
+					else
+						throw new Exception( "Missing part type in associated schema" );
+				}
+				else
+					throw new Exception( "Missing message part with name [" + elementName + "]" );
+			}
+		}
+
+		return messageParts.toArray( new MessageXmlPart[messageParts.size()] );
+	}
 }

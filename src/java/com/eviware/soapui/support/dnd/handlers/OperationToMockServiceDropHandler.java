@@ -10,7 +10,6 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-
 package com.eviware.soapui.support.dnd.handlers;
 
 import com.eviware.soapui.SoapUI;
@@ -19,13 +18,14 @@ import com.eviware.soapui.impl.wsdl.actions.operation.AddOperationToMockServiceA
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.support.action.SoapUIAction;
 
-public class OperationToMockServiceDropHandler extends AbstractAfterModelItemDropHandler<WsdlOperation, WsdlMockService>
+public class OperationToMockServiceDropHandler extends
+		AbstractAfterModelItemDropHandler<WsdlOperation, WsdlMockService>
 {
 	public OperationToMockServiceDropHandler()
 	{
 		super( WsdlOperation.class, WsdlMockService.class );
 	}
-	
+
 	@Override
 	boolean canCopyAfter( WsdlOperation source, WsdlMockService target )
 	{
@@ -41,9 +41,10 @@ public class OperationToMockServiceDropHandler extends AbstractAfterModelItemDro
 	@Override
 	boolean copyAfter( WsdlOperation source, WsdlMockService target )
 	{
-		SoapUIAction<WsdlOperation> action = SoapUI.getActionRegistry().getAction( AddOperationToMockServiceAction.SOAPUI_ACTION_ID );
-		AddOperationToMockServiceAction a = ( AddOperationToMockServiceAction ) action;
-		
+		SoapUIAction<WsdlOperation> action = SoapUI.getActionRegistry().getAction(
+				AddOperationToMockServiceAction.SOAPUI_ACTION_ID );
+		AddOperationToMockServiceAction a = ( AddOperationToMockServiceAction )action;
+
 		return a.addOperationToMockService( source, target );
 	}
 
@@ -64,6 +65,5 @@ public class OperationToMockServiceDropHandler extends AbstractAfterModelItemDro
 	{
 		return getCopyAfterInfo( source, target );
 	}
-	
-	
+
 }

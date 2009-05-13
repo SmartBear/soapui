@@ -20,32 +20,31 @@ import java.util.ResourceBundle;
 
 public final class MessageSupport
 {
-	private static final Map<String,ResourceBundle> bundles = new HashMap<String, ResourceBundle>();
-	private final Class<? extends Object> clazz; 
+	private static final Map<String, ResourceBundle> bundles = new HashMap<String, ResourceBundle>();
+	private final Class<? extends Object> clazz;
 
-	public MessageSupport(Class<? extends Object> clazz)
+	public MessageSupport( Class<? extends Object> clazz )
 	{
 		this.clazz = clazz;
 	}
-	
-	public static String get( Class<? extends Object> clazz, String key, Object ... args )
+
+	public static String get( Class<? extends Object> clazz, String key, Object... args )
 	{
 		String result = get( clazz, key );
 		return MessageFormat.format( result, args );
 	}
-	
 
 	public static String get( Class<? extends Object> clazz, String key )
 	{
 		ResourceBundle bundle = null;
-		
+
 		try
 		{
 			bundle = getResourceBundleForClass( clazz );
-			
+
 			if( bundle == null )
 				return key;
-			
+
 			String name = clazz.isMemberClass() ? clazz.getEnclosingClass().getSimpleName() : clazz.getSimpleName();
 			return bundle.getString( name + '.' + key );
 		}
@@ -62,19 +61,19 @@ public final class MessageSupport
 		}
 	}
 
-	public static String [] getArray( Class<? extends Object> clazz, String key )
+	public static String[] getArray( Class<? extends Object> clazz, String key )
 	{
 		ResourceBundle bundle = null;
-		
+
 		try
 		{
 			bundle = getResourceBundleForClass( clazz );
-			
+
 			if( bundle == null )
-				return new String[] {key};
-			
+				return new String[] { key };
+
 			String name = clazz.isMemberClass() ? clazz.getEnclosingClass().getSimpleName() : clazz.getSimpleName();
-			
+
 			return bundle.getStringArray( name + '.' + key );
 		}
 		catch( MissingResourceException e )
@@ -88,17 +87,16 @@ public final class MessageSupport
 				if( clazz.isMemberClass() )
 					return getArray( clazz.getEnclosingClass(), key );
 				else
-					return new String[] {key};
+					return new String[] { key };
 			}
 		}
 	}
 
-	
 	private static ResourceBundle getResourceBundleForClass( Class<? extends Object> clazz )
 	{
 		String packageName = clazz.getPackage().getName();
-		
-		if( !bundles.containsKey( packageName ))
+
+		if( !bundles.containsKey( packageName ) )
 		{
 			try
 			{
@@ -115,7 +113,7 @@ public final class MessageSupport
 				}
 			}
 		}
-		
+
 		return bundles.get( packageName );
 	}
 
@@ -128,8 +126,8 @@ public final class MessageSupport
 	{
 		return MessageSupport.get( clazz, key );
 	}
-	
-	public String get( String key, Object ... args )
+
+	public String get( String key, Object... args )
 	{
 		return MessageSupport.get( clazz, key, args );
 	}
@@ -144,7 +142,7 @@ public final class MessageSupport
 		ResourceBundle bundle = getResourceBundleForClass( clazz );
 		if( bundle == null )
 			return false;
-		
+
 		try
 		{
 			return bundle.getString( key ) != null;
@@ -159,11 +157,11 @@ public final class MessageSupport
 	{
 		if( strings == null || strings.length == 0 )
 			return strings;
-		
+
 		String[] array = getArray( strings[0] );
-		if( array[0].equals( strings[0] ))
+		if( array[0].equals( strings[0] ) )
 			return strings;
-		
+
 		return array;
 	}
 }

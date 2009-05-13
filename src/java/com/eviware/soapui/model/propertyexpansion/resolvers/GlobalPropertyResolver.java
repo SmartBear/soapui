@@ -12,6 +12,17 @@
 
 package com.eviware.soapui.model.propertyexpansion.resolvers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
+
+import org.apache.xmlbeans.XmlString;
+
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -20,22 +31,12 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.types.StringList;
-import org.apache.xmlbeans.XmlString;
-
-import javax.xml.namespace.QName;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 
 public class GlobalPropertyResolver implements PropertyResolver
 {
 	public class EnvironmentPropertyHolder implements TestPropertyHolder
 	{
-		public void addTestPropertyListener(TestPropertyListener listener)
+		public void addTestPropertyListener( TestPropertyListener listener )
 		{
 		}
 
@@ -47,23 +48,23 @@ public class GlobalPropertyResolver implements PropertyResolver
 		public Map<String, TestProperty> getProperties()
 		{
 			Map<String, String> properties = System.getenv();
-			Map<String,TestProperty> result = new HashMap<String, TestProperty>();
-			
+			Map<String, TestProperty> result = new HashMap<String, TestProperty>();
+
 			for( Object key : properties.keySet() )
 			{
-				result.put(key.toString(), new EnviromentTestProperty( key ));
+				result.put( key.toString(), new EnviromentTestProperty( key ) );
 			}
-			
+
 			return result;
 		}
-		
+
 		public List<TestProperty> getPropertyList()
 		{
 			List<TestProperty> result = new ArrayList<TestProperty>();
-			
+
 			for( TestProperty property : getProperties().values() )
 				result.add( property );
-			
+
 			return result;
 		}
 
@@ -72,15 +73,15 @@ public class GlobalPropertyResolver implements PropertyResolver
 			return "Environment Properties";
 		}
 
-		public TestProperty getProperty(String name)
+		public TestProperty getProperty( String name )
 		{
 			Map<String, String> properties = System.getenv();
-			return properties.containsKey(name ) ? new EnviromentTestProperty( name ) : null;
+			return properties.containsKey( name ) ? new EnviromentTestProperty( name ) : null;
 		}
 
-		public TestProperty getPropertyAt(int index)
+		public TestProperty getPropertyAt( int index )
 		{
-			return getProperty(getPropertyNames()[index]);
+			return getProperty( getPropertyNames()[index] );
 		}
 
 		public int getPropertyCount()
@@ -97,30 +98,30 @@ public class GlobalPropertyResolver implements PropertyResolver
 			return result.toStringArray();
 		}
 
-		public String getPropertyValue(String name)
+		public String getPropertyValue( String name )
 		{
-			TestProperty property = getProperty(name);
+			TestProperty property = getProperty( name );
 			return property == null ? null : property.getValue();
 		}
 
-		public boolean hasProperty(String name)
+		public boolean hasProperty( String name )
 		{
-			return System.getenv().containsKey(name);
+			return System.getenv().containsKey( name );
 		}
 
-		public void removeTestPropertyListener(TestPropertyListener listener)
+		public void removeTestPropertyListener( TestPropertyListener listener )
 		{
 		}
 
-		public void setPropertyValue(String name, String value)
+		public void setPropertyValue( String name, String value )
 		{
 		}
-		
+
 		private class EnviromentTestProperty implements TestProperty
 		{
 			private final Object key;
 
-			public EnviromentTestProperty(Object key)
+			public EnviromentTestProperty( Object key )
 			{
 				this.key = key;
 			}
@@ -152,7 +153,7 @@ public class GlobalPropertyResolver implements PropertyResolver
 
 			public String getValue()
 			{
-				return System.getenv(key.toString());
+				return System.getenv( key.toString() );
 			}
 
 			public boolean isReadOnly()
@@ -160,7 +161,7 @@ public class GlobalPropertyResolver implements PropertyResolver
 				return true;
 			}
 
-			public void setValue(String value)
+			public void setValue( String value )
 			{
 			}
 		}
@@ -168,7 +169,7 @@ public class GlobalPropertyResolver implements PropertyResolver
 
 	public class SystemPropertyHolder implements TestPropertyHolder
 	{
-		public void addTestPropertyListener(TestPropertyListener listener)
+		public void addTestPropertyListener( TestPropertyListener listener )
 		{
 		}
 
@@ -180,13 +181,13 @@ public class GlobalPropertyResolver implements PropertyResolver
 		public Map<String, TestProperty> getProperties()
 		{
 			Properties properties = System.getProperties();
-			Map<String,TestProperty> result = new HashMap<String, TestProperty>();
-			
+			Map<String, TestProperty> result = new HashMap<String, TestProperty>();
+
 			for( Object key : properties.keySet() )
 			{
-				result.put(key.toString(), new SystemTestProperty( key ));
+				result.put( key.toString(), new SystemTestProperty( key ) );
 			}
-			
+
 			return result;
 		}
 
@@ -195,15 +196,15 @@ public class GlobalPropertyResolver implements PropertyResolver
 			return "System Properties";
 		}
 
-		public TestProperty getProperty(String name)
+		public TestProperty getProperty( String name )
 		{
 			Properties properties = System.getProperties();
-			return properties.containsKey(name ) ? new SystemTestProperty( name ) : null;
+			return properties.containsKey( name ) ? new SystemTestProperty( name ) : null;
 		}
 
-		public TestProperty getPropertyAt(int index)
+		public TestProperty getPropertyAt( int index )
 		{
-			return getProperty(getPropertyNames()[index]);
+			return getProperty( getPropertyNames()[index] );
 		}
 
 		public int getPropertyCount()
@@ -214,13 +215,13 @@ public class GlobalPropertyResolver implements PropertyResolver
 		public List<TestProperty> getPropertyList()
 		{
 			List<TestProperty> result = new ArrayList<TestProperty>();
-			
+
 			for( TestProperty property : getProperties().values() )
 				result.add( property );
-			
+
 			return result;
 		}
-		
+
 		public String[] getPropertyNames()
 		{
 			Set<Object> keys = System.getProperties().keySet();
@@ -230,31 +231,31 @@ public class GlobalPropertyResolver implements PropertyResolver
 			return result.toStringArray();
 		}
 
-		public String getPropertyValue(String name)
+		public String getPropertyValue( String name )
 		{
-			TestProperty property = getProperty(name);
+			TestProperty property = getProperty( name );
 			return property == null ? null : property.getValue();
 		}
 
-		public boolean hasProperty(String name)
+		public boolean hasProperty( String name )
 		{
-			return System.getProperties().containsKey(name);
+			return System.getProperties().containsKey( name );
 		}
 
-		public void removeTestPropertyListener(TestPropertyListener listener)
+		public void removeTestPropertyListener( TestPropertyListener listener )
 		{
 		}
 
-		public void setPropertyValue(String name, String value)
+		public void setPropertyValue( String name, String value )
 		{
-			System.setProperty(name, value);
+			System.setProperty( name, value );
 		}
-		
+
 		private class SystemTestProperty implements TestProperty
 		{
 			private final Object key;
 
-			public SystemTestProperty(Object key)
+			public SystemTestProperty( Object key )
 			{
 				this.key = key;
 			}
@@ -286,7 +287,7 @@ public class GlobalPropertyResolver implements PropertyResolver
 
 			public String getValue()
 			{
-				return System.getProperty(key.toString());
+				return System.getProperty( key.toString() );
 			}
 
 			public boolean isReadOnly()
@@ -294,9 +295,9 @@ public class GlobalPropertyResolver implements PropertyResolver
 				return false;
 			}
 
-			public void setValue(String value)
+			public void setValue( String value )
 			{
-				System.setProperty(key.toString(), value);
+				System.setProperty( key.toString(), value );
 			}
 		}
 	}
@@ -309,28 +310,31 @@ public class GlobalPropertyResolver implements PropertyResolver
 		systemPropertyHolder = new SystemPropertyHolder();
 		environmentPropertyHolder = new EnvironmentPropertyHolder();
 	}
-	
+
 	public String resolveProperty( PropertyExpansionContext context, String name, boolean globalOverride )
 	{
-      String result = ResolverUtils.checkForExplicitReference( name, PropertyExpansion.GLOBAL_REFERENCE, PropertyExpansionUtils.getGlobalProperties(), context, false );
-      if( result != null )
-         return result;
+		String result = ResolverUtils.checkForExplicitReference( name, PropertyExpansion.GLOBAL_REFERENCE,
+				PropertyExpansionUtils.getGlobalProperties(), context, false );
+		if( result != null )
+			return result;
 
-		result = ResolverUtils.checkForExplicitReference( name, PropertyExpansion.SYSTEM_REFERENCE, systemPropertyHolder, context, globalOverride );
+		result = ResolverUtils.checkForExplicitReference( name, PropertyExpansion.SYSTEM_REFERENCE, systemPropertyHolder,
+				context, globalOverride );
 		if( result != null )
 			return result;
-		
-		result = ResolverUtils.checkForExplicitReference( name, PropertyExpansion.ENV_REFERENCE, environmentPropertyHolder, context, globalOverride );
+
+		result = ResolverUtils.checkForExplicitReference( name, PropertyExpansion.ENV_REFERENCE,
+				environmentPropertyHolder, context, globalOverride );
 		if( result != null )
 			return result;
-		
-		//	if not, check for explicit global property (stupid 1.7.6 syntax that should be removed..)
-		if(  name.length() > 2 && name.charAt( 0 ) == PropertyExpansion.PROPERTY_SEPARATOR 
-					&& name.charAt( 1 ) == PropertyExpansion.PROPERTY_SEPARATOR )
+
+		// if not, check for explicit global property (stupid 1.7.6 syntax that
+		// should be removed..)
+		if( name.length() > 2 && name.charAt( 0 ) == PropertyExpansion.PROPERTY_SEPARATOR
+				&& name.charAt( 1 ) == PropertyExpansion.PROPERTY_SEPARATOR )
 			return PropertyExpansionUtils.getGlobalProperty( name.substring( 2 ) );
 		else
 			return PropertyExpansionUtils.getGlobalProperty( name );
-		
-		
+
 	}
 }

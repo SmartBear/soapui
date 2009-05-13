@@ -30,13 +30,13 @@ public class PropertyTransferException extends Exception
 	private String targetPropertyName;
 	private String targetPropertyValue;
 
-	public PropertyTransferException( String message, String sourceStepName, TestProperty source, 
-			String targetStepName, TestProperty target )
+	public PropertyTransferException( String message, String sourceStepName, TestProperty source, String targetStepName,
+			TestProperty target )
 	{
 		this.message = message;
 		this.sourceStepName = sourceStepName;
 		this.targetStepName = targetStepName;
-		
+
 		if( source != null )
 		{
 			sourcePropertyName = source.getName();

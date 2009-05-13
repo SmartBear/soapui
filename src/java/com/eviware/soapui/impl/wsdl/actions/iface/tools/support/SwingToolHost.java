@@ -23,21 +23,22 @@ import com.eviware.soapui.support.UISupport;
 
 public class SwingToolHost implements ToolHost
 {
-	public void run(ToolRunner runner) throws Exception
+	public void run( ToolRunner runner ) throws Exception
 	{
 		ProcessDialog processDialog = null;
-		
+
 		try
 		{
-			processDialog = new ProcessDialog( runner.getName(), runner.getDescription(), runner.showLog(), runner.canCancel() );
+			processDialog = new ProcessDialog( runner.getName(), runner.getDescription(), runner.showLog(), runner
+					.canCancel() );
 			ModelItem modelItem = runner.getModelItem();
 			if( modelItem == null )
-				processDialog.log("Running " + runner.getName() + "\r\n");
+				processDialog.log( "Running " + runner.getName() + "\r\n" );
 			else
-				processDialog.log("Running " + runner.getName() + " for [" + modelItem.getName() + "]\r\n");
+				processDialog.log( "Running " + runner.getName() + " for [" + modelItem.getName() + "]\r\n" );
 			processDialog.run( runner );
 		}
-		catch (Exception ex)
+		catch( Exception ex )
 		{
 			UISupport.showErrorMessage( ex );
 			throw ex;

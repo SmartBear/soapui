@@ -12,6 +12,14 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.ws.security.message.WSSecHeader;
+import org.apache.ws.security.util.WSSecurityUtil;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.OutgoingWssConfig;
 import com.eviware.soapui.config.WSSEntryConfig;
@@ -21,18 +29,11 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.resolver.ResolveContext;
-import org.apache.ws.security.message.WSSecHeader;
-import org.apache.ws.security.util.WSSecurityUtil;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class OutgoingWss implements PropertyExpansionContainer
 {
 	public static final String WSSENTRY_PROPERTY = OutgoingWss.class.getName() + "@wssEntry";
-	
+
 	private OutgoingWssConfig config;
 	private List<WssEntry> entries = new ArrayList<WssEntry>();
 	private final DefaultWssContainer container;
@@ -49,7 +50,7 @@ public class OutgoingWss implements PropertyExpansionContainer
 				entries.add( entry );
 		}
 	}
-	
+
 	public WssContainer getWssContainer()
 	{
 		return container;
@@ -95,23 +96,23 @@ public class OutgoingWss implements PropertyExpansionContainer
 		return config.getMustUnderstand();
 	}
 
-	public void setActor(String arg0)
+	public void setActor( String arg0 )
 	{
-		config.setActor(arg0);
+		config.setActor( arg0 );
 	}
 
-	public void setMustUnderstand(boolean arg0)
+	public void setMustUnderstand( boolean arg0 )
 	{
-		config.setMustUnderstand(arg0);
+		config.setMustUnderstand( arg0 );
 	}
 
 	public WssEntry addEntry( String type )
 	{
 		WssEntry newEntry = WssEntryRegistry.get().create( type, this );
 		entries.add( newEntry );
-		
+
 		container.fireWssEntryAdded( newEntry );
-		
+
 		return newEntry;
 	}
 
@@ -132,7 +133,7 @@ public class OutgoingWss implements PropertyExpansionContainer
 	public void processOutgoing( Document soapDocument, PropertyExpansionContext context )
 	{
 		Element header = WSSecurityUtil.findWsseSecurityHeaderBlock( soapDocument, soapDocument.getDocumentElement(),
-					false );
+				false );
 
 		while( header != null )
 		{
@@ -141,12 +142,12 @@ public class OutgoingWss implements PropertyExpansionContainer
 		}
 
 		WSSecHeader secHeader = new WSSecHeader();
-		
-		if( StringUtils.hasContent(getActor()))
-			secHeader.setActor(getActor());
-		
-		secHeader.setMustUnderstand(getMustUnderstand());
-		
+
+		if( StringUtils.hasContent( getActor() ) )
+			secHeader.setActor( getActor() );
+
+		secHeader.setMustUnderstand( getMustUnderstand() );
+
 		secHeader.insertSecurityHeader( soapDocument );
 
 		for( WssEntry entry : entries )
@@ -170,13 +171,13 @@ public class OutgoingWss implements PropertyExpansionContainer
 	public void updateConfig( OutgoingWssConfig config )
 	{
 		this.config = config;
-		
+
 		for( int c = 0; c < entries.size(); c++ )
 		{
 			entries.get( c ).udpateConfig( this.config.getEntryArray( c ) );
 		}
 	}
-	
+
 	public void release()
 	{
 		for( WssEntry entry : entries )
@@ -186,20 +187,20 @@ public class OutgoingWss implements PropertyExpansionContainer
 	public PropertyExpansion[] getPropertyExpansions()
 	{
 		PropertyExpansionsResult result = new PropertyExpansionsResult( getWssContainer().getModelItem(), this );
-		
+
 		result.extractAndAddAll( "username" );
 		result.extractAndAddAll( "password" );
-		
+
 		for( WssEntry entry : entries )
 		{
 			if( entry instanceof PropertyExpansionContainer )
-				result.addAll( ((PropertyExpansionContainer)entry).getPropertyExpansions() );
+				result.addAll( ( ( PropertyExpansionContainer )entry ).getPropertyExpansions() );
 		}
-		
+
 		return result.toArray();
 	}
 
-	public void resolve(ResolveContext context)
+	public void resolve( ResolveContext context )
 	{
 	}
 }

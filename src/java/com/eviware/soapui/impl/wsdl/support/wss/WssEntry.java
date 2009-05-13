@@ -23,15 +23,15 @@ import com.eviware.soapui.support.registry.RegistryEntry;
 
 public interface WssEntry extends RegistryEntry<WSSEntryConfig, OutgoingWss>
 {
-   public void process( WSSecHeader secHeader, Document doc, PropertyExpansionContext context );
-   
-   public JComponent getConfigurationPanel();
+	public void process( WSSecHeader secHeader, Document doc, PropertyExpansionContext context );
+
+	public JComponent getConfigurationPanel();
 
 	public String getLabel();
-	
+
 	public OutgoingWss getOutgoingWss();
 
 	public void udpateConfig( WSSEntryConfig config );
-	
+
 	public void release();
 }

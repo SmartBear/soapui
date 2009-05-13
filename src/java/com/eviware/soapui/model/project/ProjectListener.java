@@ -24,21 +24,21 @@ import com.eviware.soapui.model.testsuite.TestSuite;
 
 public interface ProjectListener
 {
-   void interfaceAdded( Interface iface );
-   
-   void interfaceRemoved( Interface iface );
-   
-   void interfaceUpdated( Interface iface );
-   
-   void testSuiteAdded( TestSuite testSuite );
-   
-   void testSuiteRemoved( TestSuite testSuite );
-   
-   void mockServiceAdded( MockService mockService );
-   
-   void mockServiceRemoved( MockService mockService );
-   
-   void afterLoad(Project project);
-   
-   void beforeSave(Project project);
+	void interfaceAdded( Interface iface );
+
+	void interfaceRemoved( Interface iface );
+
+	void interfaceUpdated( Interface iface );
+
+	void testSuiteAdded( TestSuite testSuite );
+
+	void testSuiteRemoved( TestSuite testSuite );
+
+	void mockServiceAdded( MockService mockService );
+
+	void mockServiceRemoved( MockService mockService );
+
+	void afterLoad( Project project );
+
+	void beforeSave( Project project );
 }

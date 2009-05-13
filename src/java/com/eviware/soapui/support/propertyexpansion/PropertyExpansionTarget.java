@@ -19,11 +19,11 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 
 public interface PropertyExpansionTarget
 {
-   public void insertPropertyExpansion( PropertyExpansion expansion, Point point );
-   
-   public ModelItem getContextModelItem();
-   
-   public String getValueForCreation();
-   
-   public String getNameForCreation();
+	public void insertPropertyExpansion( PropertyExpansion expansion, Point point );
+
+	public ModelItem getContextModelItem();
+
+	public String getValueForCreation();
+
+	public String getNameForCreation();
 }

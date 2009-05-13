@@ -28,18 +28,18 @@ public class RestResponseMessageEditor extends RequestMessageEditor<RestDocument
 	{
 		private final RestRequest modelItem;
 
-		public RestResponseDocument(RestRequest modelItem)
+		public RestResponseDocument( RestRequest modelItem )
 		{
 			this.modelItem = modelItem;
 		}
-		
+
 		public HttpResponse getResponse()
 		{
 			return modelItem.getResponse();
 		}
 	}
 
-	public RestResponseMessageEditor( RestRequest modelItem  )
+	public RestResponseMessageEditor( RestRequest modelItem )
 	{
 		super( new RestResponseDocument( modelItem ), modelItem );
 	}

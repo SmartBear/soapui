@@ -26,16 +26,16 @@ final public class ExtensionFileFilter extends FileFilter
 	private final String extension;
 	private final String description;
 
-	public ExtensionFileFilter(String extension, String description)
+	public ExtensionFileFilter( String extension, String description )
 	{
-		this.extension = extension.toLowerCase(  );
+		this.extension = extension.toLowerCase();
 		this.description = description;
 	}
 
-	public boolean accept(File f)
+	public boolean accept( File f )
 	{
-		return f.isDirectory() || "*".equals( extension ) ||
-              f.getName().toLowerCase( Locale.getDefault() ).endsWith(extension);
+		return f.isDirectory() || "*".equals( extension )
+				|| f.getName().toLowerCase( Locale.getDefault() ).endsWith( extension );
 	}
 
 	public String getDescription()

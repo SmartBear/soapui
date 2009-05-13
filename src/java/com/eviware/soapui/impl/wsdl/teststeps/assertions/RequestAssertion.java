@@ -19,6 +19,6 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions;
  * @deprecated
  */
 
-public interface RequestAssertion extends com.eviware.soapui.model.testsuite.RequestAssertion 
+public interface RequestAssertion extends com.eviware.soapui.model.testsuite.RequestAssertion
 {
 }

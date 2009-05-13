@@ -25,15 +25,15 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 public class DeleteRestServiceAction extends AbstractSoapUIAction<RestService>
 {
 	public DeleteRestServiceAction()
-   {
-      super( "Delete", "Deletes this Service" );
-   }
-	
-   public void perform( RestService service, Object param )
 	{
-      if( UISupport.confirm( "Delete Service [" + service.getName() + "]", "Delete Service" ))
-      {
-      	service.getProject().removeInterface(service);
-      }
-   }
+		super( "Delete", "Deletes this Service" );
+	}
+
+	public void perform( RestService service, Object param )
+	{
+		if( UISupport.confirm( "Delete Service [" + service.getName() + "]", "Delete Service" ) )
+		{
+			service.getProject().removeInterface( service );
+		}
+	}
 }

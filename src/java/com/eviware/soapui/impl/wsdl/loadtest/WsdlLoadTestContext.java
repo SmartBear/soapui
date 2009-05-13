@@ -25,8 +25,8 @@ import com.eviware.soapui.model.testsuite.LoadTestRunner;
 public class WsdlLoadTestContext extends DefaultPropertyExpansionContext implements LoadTestRunContext
 {
 	private final WsdlLoadTestRunner runner;
-	
-	public WsdlLoadTestContext(WsdlLoadTestRunner runner)
+
+	public WsdlLoadTestContext( WsdlLoadTestRunner runner )
 	{
 		super( runner.getLoadTest().getTestCase() );
 		this.runner = runner;
@@ -38,11 +38,11 @@ public class WsdlLoadTestContext extends DefaultPropertyExpansionContext impleme
 	}
 
 	@Override
-	public Object get(Object key)
+	public Object get( Object key )
 	{
-		if( "loadTestRunner".equals(key))
+		if( "loadTestRunner".equals( key ) )
 			return runner;
-		
-		return super.get(key);
+
+		return super.get( key );
 	}
 }

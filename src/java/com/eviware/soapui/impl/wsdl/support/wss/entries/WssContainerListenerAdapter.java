@@ -71,7 +71,7 @@ public class WssContainerListenerAdapter implements WssContainerListener
 	public void cryptoUpdated( WssCrypto crypto )
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

@@ -12,6 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.panels.monitor;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
@@ -21,52 +27,50 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 
-import javax.swing.*;
-import java.awt.*;
-
 public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 {
 	private SoapMonitor soapMonitor;
 	private final WsdlProject project;
 
-	public SoapMonitorDesktopPanel( WsdlProject project, int sourcePort, String incomingRequestWss, String incomingResponseWss, boolean setAsProxy, String sslEndpoint )
+	public SoapMonitorDesktopPanel( WsdlProject project, int sourcePort, String incomingRequestWss,
+			String incomingResponseWss, boolean setAsProxy, String sslEndpoint )
 	{
 		super( "SOAP Monitor [" + project.getName() + "]", null, new JPanel( new BorderLayout() ) );
 		this.project = project;
 
-		JPanel p = ( JPanel ) getComponent();
+		JPanel p = ( JPanel )getComponent();
 		JTabbedPane tabs = new JTabbedPane();
 
 		JXToolBar toolbar = UISupport.createToolbar();
-		soapMonitor = new SoapMonitor( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy, sslEndpoint );
-		
-		
+		soapMonitor = new SoapMonitor( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy,
+				sslEndpoint );
+
 		tabs.add( soapMonitor, "Traffic Log" );
-		
+
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.SOAPMONITOR_HELP_URL ) ) );
-		
+
 		p.add( toolbar, BorderLayout.NORTH );
 		p.add( UISupport.createTabPanel( tabs, true ), BorderLayout.CENTER );
-		
+
 		p.setPreferredSize( new Dimension( 700, 600 ) );
 	}
-	
+
 	@Override
 	public boolean onClose( boolean canCancel )
 	{
 		if( soapMonitor.isRunning() && canCancel )
 		{
-			if( !UISupport.confirm( "Close and stop SOAP Monitor", "Close SOAP Monitor" ))
+			if( !UISupport.confirm( "Close and stop SOAP Monitor", "Close SOAP Monitor" ) )
 			{
 				return false;
 			}
 		}
-		
+
 		soapMonitor.stop();
 		soapMonitor.release();
 		return true;
 	}
-	
+
 	@Override
 	public boolean dependsOn( ModelItem modelItem )
 	{

@@ -23,15 +23,15 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 public class DesktopListenerAdapter implements DesktopListener
 {
-	public void desktopPanelSelected(DesktopPanel desktopPanel)
+	public void desktopPanelSelected( DesktopPanel desktopPanel )
 	{
 	}
 
-	public void desktopPanelCreated(DesktopPanel desktopPanel)
+	public void desktopPanelCreated( DesktopPanel desktopPanel )
 	{
 	}
 
-	public void desktopPanelClosed(DesktopPanel desktopPanel)
+	public void desktopPanelClosed( DesktopPanel desktopPanel )
 	{
 	}
 }

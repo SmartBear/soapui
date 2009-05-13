@@ -12,6 +12,12 @@
 
 package com.eviware.soapui.support.editor.inspectors.aut;
 
+import java.awt.BorderLayout;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.support.components.SimpleBindingForm;
@@ -21,9 +27,6 @@ import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.types.StringList;
 import com.jgoodies.binding.PresentationModel;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class RequestAutInspector extends AbstractXmlInspector
 {
@@ -51,28 +54,28 @@ public class RequestAutInspector extends AbstractXmlInspector
 
 			if( request instanceof WsdlRequest )
 			{
-            StringList outgoingNames = new StringList( request.getOperation().getInterface().getProject()
+				StringList outgoingNames = new StringList( request.getOperation().getInterface().getProject()
 						.getWssContainer().getOutgoingWssNames() );
-            outgoingNames.add( "" );
-            StringList incomingNames = new StringList( request.getOperation().getInterface().getProject()
-                     .getWssContainer().getIncomingWssNames() );
-            incomingNames.add( "" );
+				outgoingNames.add( "" );
+				StringList incomingNames = new StringList( request.getOperation().getInterface().getProject()
+						.getWssContainer().getIncomingWssNames() );
+				incomingNames.add( "" );
 
-            form.addSpace( 5 );
+				form.addSpace( 5 );
 				form.appendComboBox( "outgoingWss", "Outgoing WSS", outgoingNames.toStringArray(),
-							"The outgoing WS-Security configuration to use" );
+						"The outgoing WS-Security configuration to use" );
 				form.appendComboBox( "incomingWss", "Incoming WSS", incomingNames.toStringArray(),
-							"The incoming WS-Security configuration to use" );
+						"The incoming WS-Security configuration to use" );
 			}
-			
+
 			form.addSpace( 5 );
-			
+
 			mainPanel.add( new JScrollPane( form.getPanel() ), BorderLayout.CENTER );
 		}
 
 		return mainPanel;
 	}
-	
+
 	@Override
 	public boolean isEnabledFor( EditorView<XmlDocument> view )
 	{

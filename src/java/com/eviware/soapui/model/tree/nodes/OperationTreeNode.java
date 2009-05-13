@@ -12,15 +12,15 @@
 
 package com.eviware.soapui.model.tree.nodes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
 import com.eviware.soapui.settings.UISettings;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * SoapUITreeNode for Operation implementations
@@ -33,25 +33,25 @@ public class OperationTreeNode extends AbstractModelItemTreeNode<Operation>
 	private List<RequestTreeNode> requestNodes = new ArrayList<RequestTreeNode>();
 	private ReorderPropertyChangeListener propertyChangeListener = new ReorderPropertyChangeListener();
 
-	public OperationTreeNode(Operation operation, SoapUITreeModel treeModel )
-   {
-      super( operation, operation.getInterface(), treeModel );
-      
-      for( int c = 0; c < operation.getRequestCount(); c++ )
-      {
-      	Request request = operation.getRequestAt( c );
-      	request.addPropertyChangeListener( Request.NAME_PROPERTY, propertyChangeListener );
-			requestNodes.add( new RequestTreeNode( request, getTreeModel() ));
-      }
-      
-      initOrdering( requestNodes, UISettings.ORDER_REQUESTS );
-      treeModel.mapModelItems( requestNodes );
-   }
-	
-   public void release()
+	public OperationTreeNode( Operation operation, SoapUITreeModel treeModel )
+	{
+		super( operation, operation.getInterface(), treeModel );
+
+		for( int c = 0; c < operation.getRequestCount(); c++ )
+		{
+			Request request = operation.getRequestAt( c );
+			request.addPropertyChangeListener( Request.NAME_PROPERTY, propertyChangeListener );
+			requestNodes.add( new RequestTreeNode( request, getTreeModel() ) );
+		}
+
+		initOrdering( requestNodes, UISettings.ORDER_REQUESTS );
+		treeModel.mapModelItems( requestNodes );
+	}
+
+	public void release()
 	{
 		super.release();
-		
+
 		for( RequestTreeNode treeNode : requestNodes )
 		{
 			treeNode.getModelItem().removePropertyChangeListener( Request.NAME_PROPERTY, propertyChangeListener );
@@ -60,28 +60,29 @@ public class OperationTreeNode extends AbstractModelItemTreeNode<Operation>
 	}
 
 	public Operation getOperation()
-   {
-   	return (Operation) getModelItem();
-   }
-   
-	public void requestAdded(Request request)
+	{
+		return ( Operation )getModelItem();
+	}
+
+	public void requestAdded( Request request )
 	{
 		RequestTreeNode requestTreeNode = new RequestTreeNode( request, getTreeModel() );
 		requestNodes.add( requestTreeNode );
-		reorder(false);
+		reorder( false );
 		request.addPropertyChangeListener( Request.NAME_PROPERTY, propertyChangeListener );
 		getTreeModel().notifyNodeInserted( requestTreeNode );
 	}
 
-	public void requestRemoved(Request request)
+	public void requestRemoved( Request request )
 	{
 		SoapUITreeNode requestTreeNode = getTreeModel().getTreeNode( request );
-		if( requestNodes.contains( requestTreeNode ))
+		if( requestNodes.contains( requestTreeNode ) )
 		{
-		   getTreeModel().notifyNodeRemoved( requestTreeNode );
-		   requestNodes.remove( requestTreeNode );
-		   request.removePropertyChangeListener( propertyChangeListener );
+			getTreeModel().notifyNodeRemoved( requestTreeNode );
+			requestNodes.remove( requestTreeNode );
+			request.removePropertyChangeListener( propertyChangeListener );
 		}
-		else throw new RuntimeException( "Removing unkown request" );
+		else
+			throw new RuntimeException( "Removing unkown request" );
 	}
 }

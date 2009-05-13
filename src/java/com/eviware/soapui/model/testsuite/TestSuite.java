@@ -28,28 +28,31 @@ public interface TestSuite extends TestModelItem, ResultContainer
 {
 	public final static String RUNTYPE_PROPERTY = ModelItem.class.getName() + "@runtype";
 	public final static String DISABLED_PROPERTY = TestSuite.class.getName() + "@disabled";
-	
-   public Project getProject();
-   
-   public int getTestCaseCount();
-   
-   public TestCase getTestCaseAt( int index );
-   
-   public TestCase getTestCaseByName( String testCaseName );
-   
-   public List<TestCase> getTestCaseList();
-   
-   public void addTestSuiteListener( TestSuiteListener listener );
-   
-   public void removeTestSuiteListener( TestSuiteListener listener );
-   
-   public enum TestSuiteRunType { PARALLEL, SEQUENTIAL };
-   
-   public TestSuiteRunType getRunType();
+
+	public Project getProject();
+
+	public int getTestCaseCount();
+
+	public TestCase getTestCaseAt( int index );
+
+	public TestCase getTestCaseByName( String testCaseName );
+
+	public List<TestCase> getTestCaseList();
+
+	public void addTestSuiteListener( TestSuiteListener listener );
+
+	public void removeTestSuiteListener( TestSuiteListener listener );
+
+	public enum TestSuiteRunType
+	{
+		PARALLEL, SEQUENTIAL
+	};
+
+	public TestSuiteRunType getRunType();
 
 	public int getIndexOfTestCase( TestCase testCase );
-	
+
 	public boolean isDisabled();
-	
+
 	public String getLabel();
 }

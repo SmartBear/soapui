@@ -18,21 +18,21 @@ public class SimplePathPropertySupport extends AbstractPathPropertySupport
 {
 	private String value;
 
-	public SimplePathPropertySupport(AbstractWsdlModelItem<?> modelItem )
+	public SimplePathPropertySupport( AbstractWsdlModelItem<?> modelItem )
 	{
 		super( modelItem, null );
 	}
-	
-	public void setPropertyValue(String value)
+
+	public void setPropertyValue( String value )
 	{
 		this.value = value;
 	}
 
-	public String getPropertyValue() 
+	public String getPropertyValue()
 	{
 		return value;
 	}
-	
+
 	public void set( String value )
 	{
 		super.set( value, false );

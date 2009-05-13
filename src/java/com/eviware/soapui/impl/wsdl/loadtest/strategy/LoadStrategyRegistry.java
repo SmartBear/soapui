@@ -24,8 +24,8 @@ import java.util.Map;
 public class LoadStrategyRegistry
 {
 	private static LoadStrategyRegistry instance;
-	private Map<String,LoadStrategyFactory> factories = new HashMap<String,LoadStrategyFactory>();
-	
+	private Map<String, LoadStrategyFactory> factories = new HashMap<String, LoadStrategyFactory>();
+
 	public LoadStrategyRegistry()
 	{
 		addFactory( new SimpleLoadStrategy.Factory() );
@@ -34,12 +34,12 @@ public class LoadStrategyRegistry
 		addFactory( new ThreadCountChangeLoadStrategy.Factory() );
 	}
 
-	public void addFactory(LoadStrategyFactory factory)
+	public void addFactory( LoadStrategyFactory factory )
 	{
 		factories.put( factory.getType(), factory );
 	}
 
-	public Object [] getStrategies()
+	public Object[] getStrategies()
 	{
 		return factories.keySet().toArray();
 	}
@@ -48,11 +48,11 @@ public class LoadStrategyRegistry
 	{
 		if( instance == null )
 			instance = new LoadStrategyRegistry();
-			
+
 		return instance;
 	}
 
-	public LoadStrategyFactory getFactory(String type )
+	public LoadStrategyFactory getFactory( String type )
 	{
 		return factories.get( type );
 	}

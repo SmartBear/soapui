@@ -23,56 +23,56 @@ import com.eviware.soapui.model.iface.SubmitContext;
 
 public abstract class AbstractRequestFilter implements RequestFilter
 {
-	public void filterRequest(SubmitContext context, Request request)
+	public void filterRequest( SubmitContext context, Request request )
 	{
 		if( request instanceof AbstractHttpRequest )
-			filterAbstractHttpRequest( context, (AbstractHttpRequest<?>)request );
+			filterAbstractHttpRequest( context, ( AbstractHttpRequest<?> )request );
 	}
 
 	public void filterAbstractHttpRequest( SubmitContext context, AbstractHttpRequest<?> request )
 	{
 		if( request instanceof WsdlRequest )
-			filterWsdlRequest(context, (WsdlRequest) request );
+			filterWsdlRequest( context, ( WsdlRequest )request );
 		else if( request instanceof RestRequest )
-			filterRestRequest(context, (RestRequest) request );
+			filterRestRequest( context, ( RestRequest )request );
 	}
-	
-	public void filterWsdlRequest(SubmitContext context, WsdlRequest request)
+
+	public void filterWsdlRequest( SubmitContext context, WsdlRequest request )
 	{
 	}
-	
-	public void filterRestRequest(SubmitContext context, RestRequest request)
+
+	public void filterRestRequest( SubmitContext context, RestRequest request )
 	{
 	}
 
 	public void afterRequest( SubmitContext context, Request request )
 	{
 		// do this for backwards compatibility
-		Response response = (Response) context.getProperty(BaseHttpRequestTransport.RESPONSE);
+		Response response = ( Response )context.getProperty( BaseHttpRequestTransport.RESPONSE );
 		if( response != null )
 			afterRequest( context, response );
-		
+
 		if( request instanceof AbstractHttpRequest )
-			afterAbstractHttpResponse( context, (AbstractHttpRequest<?>)request );
+			afterAbstractHttpResponse( context, ( AbstractHttpRequest<?> )request );
 	}
 
 	public void afterAbstractHttpResponse( SubmitContext context, AbstractHttpRequest<?> request )
 	{
 		if( request instanceof WsdlRequest )
-			afterWsdlRequest(context, (WsdlRequest) request );
+			afterWsdlRequest( context, ( WsdlRequest )request );
 		else if( request instanceof RestRequest )
-			afterRestRequest(context, (RestRequest) request );
+			afterRestRequest( context, ( RestRequest )request );
 	}
 
-	public void afterWsdlRequest(SubmitContext context, WsdlRequest request)
+	public void afterWsdlRequest( SubmitContext context, WsdlRequest request )
 	{
 	}
 
-	public void afterRestRequest(SubmitContext context, RestRequest request)
+	public void afterRestRequest( SubmitContext context, RestRequest request )
 	{
 	}
 
-	public void afterRequest(SubmitContext context, Response response)
+	public void afterRequest( SubmitContext context, Response response )
 	{
 	}
 }

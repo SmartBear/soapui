@@ -25,10 +25,10 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 public interface PanelBuilder<T extends ModelItem>
 {
 	public boolean hasOverviewPanel();
-   
+
 	public Component buildOverviewPanel( T modelItem );
-   
+
 	public boolean hasDesktopPanel();
-   
+
 	public DesktopPanel buildDesktopPanel( T modelItem );
 }

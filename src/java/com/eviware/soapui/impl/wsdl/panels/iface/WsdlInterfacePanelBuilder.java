@@ -30,45 +30,43 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 public class WsdlInterfacePanelBuilder extends EmptyPanelBuilder<WsdlInterface>
 {
-   public WsdlInterfacePanelBuilder()
-   {
-   }
+	public WsdlInterfacePanelBuilder()
+	{
+	}
 
-   public Component buildOverviewPanel(WsdlInterface iface)
-   {
-   	JPropertiesTable<WsdlInterface> table = new JPropertiesTable<WsdlInterface>( "Interface Properties" );
-   	table.addProperty( "PortType", "name" );
-   	table.addProperty( "Description", "description", true );
-   	table.addProperty( "Definition URL", "definition", true );
-   	table.addProperty( "Binding", "bindingName" );
-   	table.addProperty( "SOAP Version", "soapVersion", new Object[]{ SoapVersion.Soap11, SoapVersion.Soap12 });
-   	table.addProperty( "Cached", "cached", false );
-   	table.addProperty( "Style", "style", false );
-   	//TODO extract info from wsdl if by default ws addresing is implemented 
-   	table.addProperty( "WS-A version", "wsaVersion", 
-   			new Object[]{ WsaVersionTypeConfig.NONE.toString(), 
-   			WsaVersionTypeConfig.X_200408.toString(), WsaVersionTypeConfig.X_200508.toString() } );
-   	table.addProperty( "WS-A anonymous", "anonymous", 
-   			new Object[]{ AnonymousTypeConfig.OPTIONAL.toString(), 
-   			AnonymousTypeConfig.REQUIRED.toString(), AnonymousTypeConfig.PROHIBITED.toString() } );
-   	
-   	table.setPropertyObject( iface );
-   	
-   	return table;
-   }
+	public Component buildOverviewPanel( WsdlInterface iface )
+	{
+		JPropertiesTable<WsdlInterface> table = new JPropertiesTable<WsdlInterface>( "Interface Properties" );
+		table.addProperty( "PortType", "name" );
+		table.addProperty( "Description", "description", true );
+		table.addProperty( "Definition URL", "definition", true );
+		table.addProperty( "Binding", "bindingName" );
+		table.addProperty( "SOAP Version", "soapVersion", new Object[] { SoapVersion.Soap11, SoapVersion.Soap12 } );
+		table.addProperty( "Cached", "cached", false );
+		table.addProperty( "Style", "style", false );
+		// TODO extract info from wsdl if by default ws addresing is implemented
+		table.addProperty( "WS-A version", "wsaVersion", new Object[] { WsaVersionTypeConfig.NONE.toString(),
+				WsaVersionTypeConfig.X_200408.toString(), WsaVersionTypeConfig.X_200508.toString() } );
+		table.addProperty( "WS-A anonymous", "anonymous", new Object[] { AnonymousTypeConfig.OPTIONAL.toString(),
+				AnonymousTypeConfig.REQUIRED.toString(), AnonymousTypeConfig.PROHIBITED.toString() } );
 
-   public boolean hasOverviewPanel()
-   {
-      return true;
-   }
+		table.setPropertyObject( iface );
 
-   public DesktopPanel buildDesktopPanel(WsdlInterface iface)
-   {
-      return new WsdlInterfaceDesktopPanel( iface );
-   }
+		return table;
+	}
 
-   public boolean hasDesktopPanel()
-   {
-      return true;
-   }
+	public boolean hasOverviewPanel()
+	{
+		return true;
+	}
+
+	public DesktopPanel buildDesktopPanel( WsdlInterface iface )
+	{
+		return new WsdlInterfaceDesktopPanel( iface );
+	}
+
+	public boolean hasDesktopPanel()
+	{
+		return true;
+	}
 }

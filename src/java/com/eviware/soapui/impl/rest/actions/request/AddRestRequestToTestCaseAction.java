@@ -37,52 +37,53 @@ import com.eviware.x.form.XFormField;
 public class AddRestRequestToTestCaseAction extends AbstractAddToTestCaseAction<RestRequest>
 {
 	public static final String SOAPUI_ACTION_ID = "AddRestRequestToTestCaseAction";
-	
-   private static final String STEP_NAME = "Name";
+
+	private static final String STEP_NAME = "Name";
 	private static final String CLOSE_REQUEST = "Close Request Window";
 	private static final String SHOW_TESTCASE = "Shows TestCase Editor";
 	private static final String SHOW_REQUEST = "Shows Request Editor";
-	
+
 	private XFormDialog dialog;
 	private StringToStringMap dialogValues = new StringToStringMap();
 	private XFormField closeRequestCheckBox;
 
 	public AddRestRequestToTestCaseAction()
-   {
-      super( "Add to TestCase", "Adds this REST Request to a TestCase" );
-   }
-
-   public void perform( RestRequest request, Object param )
 	{
-      WsdlProject project = request.getOperation().getInterface().getProject();
-      
-      WsdlTestCase testCase = getTargetTestCase( project );
-      if( testCase != null )
-      	addRequest( testCase, request, -1 );
-	}   
+		super( "Add to TestCase", "Adds this REST Request to a TestCase" );
+	}
 
-	public RestTestRequestStep addRequest(WsdlTestCase testCase, RestRequest request, int position)
+	public void perform( RestRequest request, Object param )
+	{
+		WsdlProject project = request.getOperation().getInterface().getProject();
+
+		WsdlTestCase testCase = getTargetTestCase( project );
+		if( testCase != null )
+			addRequest( testCase, request, -1 );
+	}
+
+	public RestTestRequestStep addRequest( WsdlTestCase testCase, RestRequest request, int position )
 	{
 		if( dialog == null )
 			buildDialog();
-		
+
 		dialogValues.put( STEP_NAME, request.getOperation().getName() + " - " + request.getName() );
 		dialogValues.put( CLOSE_REQUEST, "true" );
 		dialogValues.put( SHOW_TESTCASE, "true" );
 		dialogValues.put( SHOW_REQUEST, "true" );
-		
+
 		SoapUIDesktop desktop = SoapUI.getDesktop();
-		closeRequestCheckBox.setEnabled( desktop != null && desktop.hasDesktopPanel( request ));
-		
+		closeRequestCheckBox.setEnabled( desktop != null && desktop.hasDesktopPanel( request ) );
+
 		dialogValues = dialog.show( dialogValues );
 		if( dialog.getReturnValue() != XFormDialog.OK_OPTION )
-			return null;;
+			return null;
+		;
 
 		String name = dialogValues.get( STEP_NAME );
-		
-		RestTestRequestStep testStep = (RestTestRequestStep) testCase.insertTestStep( 
-				RestRequestStepFactory.createConfig( request, name ), position );
-		
+
+		RestTestRequestStep testStep = ( RestTestRequestStep )testCase.insertTestStep( RestRequestStepFactory
+				.createConfig( request, name ), position );
+
 		if( testStep == null )
 			return null;
 
@@ -90,32 +91,32 @@ public class AddRestRequestToTestCaseAction extends AbstractAddToTestCaseAction<
 		{
 			desktop.closeDesktopPanel( request );
 		}
-		
+
 		if( dialogValues.getBoolean( SHOW_TESTCASE ) )
 		{
 			UISupport.selectAndShow( testCase );
 		}
-		
-		if( dialogValues.getBoolean( SHOW_REQUEST) )
+
+		if( dialogValues.getBoolean( SHOW_REQUEST ) )
 		{
 			UISupport.selectAndShow( testStep );
 		}
-			
+
 		return testStep;
 	}
-	
+
 	private void buildDialog()
 	{
-		XFormDialogBuilder builder = XFormFactory.createDialogBuilder("Add Request to TestCase");
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Add Request to TestCase" );
 		XForm mainForm = builder.createForm( "Basic" );
-		
+
 		mainForm.addTextField( STEP_NAME, "Name of TestStep", XForm.FieldType.URL ).setWidth( 30 );
 
 		closeRequestCheckBox = mainForm.addCheckBox( CLOSE_REQUEST, "(closes the current window for this request)" );
 		mainForm.addCheckBox( SHOW_TESTCASE, "(opens the TestCase editor for the target TestCase)" );
 		mainForm.addCheckBox( SHOW_REQUEST, "(opens the Request editor for the created TestStep)" );
-		
-		dialog = builder.buildDialog( builder.buildOkCancelActions(), 
-      		"Specify options for adding the request to a TestCase", UISupport.OPTIONS_ICON );		
+
+		dialog = builder.buildDialog( builder.buildOkCancelActions(),
+				"Specify options for adding the request to a TestCase", UISupport.OPTIONS_ICON );
 	}
 }

@@ -22,59 +22,63 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
- * Actions for importing an existing soapUI project file into the current workspace
+ * Actions for importing an existing soapUI project file into the current
+ * workspace
  * 
  * @author Ole.Matzura
  */
 
 public class ImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 {
-	public static final String SOAPUI_ACTION_ID = "ImportWsdlProjectAction"; 
+	public static final String SOAPUI_ACTION_ID = "ImportWsdlProjectAction";
 	public static final MessageSupport messages = MessageSupport.getMessages( ImportWsdlProjectAction.class );
 	private String previous;
 
 	public ImportWsdlProjectAction()
-   {
-      super( messages.get( "title"), messages.get( "description") ); 
-   }
+	{
+		super( messages.get( "title" ), messages.get( "description" ) );
+	}
 
 	public void perform( WorkspaceImpl workspace, Object param )
 	{
 		File file = null;
-		
+
 		if( param == null )
 		{
 			String path = new File( previous == null ? workspace.getPath() : previous ).getParentFile().getAbsolutePath();
-			file = UISupport.getFileDialogs().open(this, messages.get( "prompt.title"), "xml", "soapUI Project File", path );
+			file = UISupport.getFileDialogs().open( this, messages.get( "prompt.title" ), "xml", "soapUI Project File",
+					path );
 		}
 		else
 		{
 			file = new File( param.toString() );
 		}
-		
-      if( file == null ) return;
-      
-      String fileName = file.getAbsolutePath();
-      if( fileName == null ) return;
-      
-      previous = fileName;
-      
-      ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-   	Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
-   	
+
+		if( file == null )
+			return;
+
+		String fileName = file.getAbsolutePath();
+		if( fileName == null )
+			return;
+
+		previous = fileName;
+
+		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+		Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
+
 		try
 		{
-			WsdlProject project = (WsdlProject) workspace.importProject(fileName);
+			WsdlProject project = ( WsdlProject )workspace.importProject( fileName );
 			if( project != null )
-				UISupport.select(project);
+				UISupport.select( project );
 		}
-		catch (Exception ex)
+		catch( Exception ex )
 		{
 			UISupport.showErrorMessage( ex );
-		}      
+		}
 		finally
-   	{
-   		Thread.currentThread().setContextClassLoader( contextClassLoader );
-   	}
-   }
+		{
+			Thread.currentThread().setContextClassLoader( contextClassLoader );
+		}
+	}
 }

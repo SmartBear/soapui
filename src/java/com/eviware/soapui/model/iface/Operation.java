@@ -12,9 +12,9 @@
 
 package com.eviware.soapui.model.iface;
 
-import com.eviware.soapui.model.ModelItem;
-
 import java.util.List;
+
+import com.eviware.soapui.model.ModelItem;
 
 /**
  * Operation interface
@@ -24,21 +24,21 @@ import java.util.List;
 
 public interface Operation extends ModelItem
 {
-   public final static String ACTION_PROPERTY = Operation.class.getName() + "@action";
-   
-   public boolean isUnidirectional();
+	public final static String ACTION_PROPERTY = Operation.class.getName() + "@action";
 
-   public boolean isBidirectional();
-   
-   public Request getRequestAt( int index );
-   
-   public Request getRequestByName( String requestName );
-   
-   public List<Request> getRequestList();
+	public boolean isUnidirectional();
 
-   public int getRequestCount();
+	public boolean isBidirectional();
 
-   public Interface getInterface();
+	public Request getRequestAt( int index );
+
+	public Request getRequestByName( String requestName );
+
+	public List<Request> getRequestList();
+
+	public int getRequestCount();
+
+	public Interface getInterface();
 
 	public MessagePart[] getDefaultRequestParts();
 

@@ -20,13 +20,13 @@ package com.eviware.soapui.model.iface;
 
 public interface InterfaceListener
 {
-   void operationAdded( Operation operation );
-   
-   void operationRemoved( Operation operation );
-   
-   void operationUpdated( Operation operation );
-   
-   void requestAdded( Request request );
-   
-   void requestRemoved( Request request );
+	void operationAdded( Operation operation );
+
+	void operationRemoved( Operation operation );
+
+	void operationUpdated( Operation operation );
+
+	void requestAdded( Request request );
+
+	void requestRemoved( Request request );
 }

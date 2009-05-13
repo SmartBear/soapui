@@ -35,26 +35,26 @@ public class SoapUIActionMappingList<T extends ModelItem> extends ArrayList<Soap
 	{
 		super( arg0 );
 	}
-	
+
 	public int getMappingIndex( String id )
 	{
 		for( int c = 0; c < size(); c++ )
 		{
-			if( get( c ).getActionId().equals( id ))
+			if( get( c ).getActionId().equals( id ) )
 				return c;
 		}
-		
+
 		return -1;
 	}
-	
+
 	public SoapUIActionMapping<T> getMapping( String id )
 	{
 		for( SoapUIActionMapping<T> mapping : this )
 		{
-			if( mapping.getActionId().equals( id ))
+			if( mapping.getActionId().equals( id ) )
 				return mapping;
 		}
-		
+
 		return null;
 	}
 }

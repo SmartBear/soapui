@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui.support.editor;
 
 /**
@@ -20,5 +20,5 @@ package com.eviware.soapui.support.editor;
 
 public interface EditorLocationListener<T extends EditorDocument>
 {
-   public void locationChanged( EditorLocation<T> location );
+	public void locationChanged( EditorLocation<T> location );
 }

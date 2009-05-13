@@ -40,8 +40,8 @@ public class RequestFileAttachment extends FileAttachment<AbstractHttpRequest<?>
 	public AttachmentEncoding getEncoding()
 	{
 		AbstractHttpRequest<?> request = getModelItem();
-		if( request instanceof WsdlAttachmentContainer && ((WsdlAttachmentContainer)request).isEncodeAttachments() )
-			return ((WsdlAttachmentContainer)request).getAttachmentEncoding( getPart() );
+		if( request instanceof WsdlAttachmentContainer && ( ( WsdlAttachmentContainer )request ).isEncodeAttachments() )
+			return ( ( WsdlAttachmentContainer )request ).getAttachmentEncoding( getPart() );
 		else
 			return AttachmentEncoding.NONE;
 	}

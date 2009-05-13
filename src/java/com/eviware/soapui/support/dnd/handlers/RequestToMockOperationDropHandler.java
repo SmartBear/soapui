@@ -19,13 +19,14 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.SoapUIAction;
 
-public class RequestToMockOperationDropHandler extends AbstractAfterModelItemDropHandler<WsdlRequest, WsdlMockOperation>
+public class RequestToMockOperationDropHandler extends
+		AbstractAfterModelItemDropHandler<WsdlRequest, WsdlMockOperation>
 {
 	public RequestToMockOperationDropHandler()
 	{
 		super( WsdlRequest.class, WsdlMockOperation.class );
 	}
-	
+
 	@Override
 	boolean canCopyAfter( WsdlRequest source, WsdlMockOperation target )
 	{
@@ -46,11 +47,12 @@ public class RequestToMockOperationDropHandler extends AbstractAfterModelItemDro
 
 	private boolean addRequestToMockOperation( WsdlRequest request, WsdlMockOperation mockOperation )
 	{
-		if( !UISupport.confirm( "Add request to MockOperation [" + mockOperation.getName() + "]", "Add Request" ))
+		if( !UISupport.confirm( "Add request to MockOperation [" + mockOperation.getName() + "]", "Add Request" ) )
 			return false;
-		
-		SoapUIAction<WsdlRequest> action = SoapUI.getActionRegistry().getAction( AddRequestToMockServiceAction.SOAPUI_ACTION_ID );
-		((AddRequestToMockServiceAction)action).perform( request, mockOperation );
+
+		SoapUIAction<WsdlRequest> action = SoapUI.getActionRegistry().getAction(
+				AddRequestToMockServiceAction.SOAPUI_ACTION_ID );
+		( ( AddRequestToMockServiceAction )action ).perform( request, mockOperation );
 		return true;
 	}
 

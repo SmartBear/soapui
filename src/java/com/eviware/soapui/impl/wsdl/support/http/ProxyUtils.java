@@ -12,17 +12,22 @@
 
 package com.eviware.soapui.impl.wsdl.support.http;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.commons.httpclient.HttpState;
+import org.apache.commons.httpclient.NTCredentials;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.support.StringUtils;
-import org.apache.commons.httpclient.*;
-import org.apache.commons.httpclient.auth.AuthScope;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Utilities for setting proxy-servers corectly
@@ -33,22 +38,23 @@ import java.net.URL;
 public class ProxyUtils
 {
 	public static HostConfiguration initProxySettings( Settings settings, HttpState httpState,
-				HostConfiguration hostConfiguration, String urlString, PropertyExpansionContext context )
+			HostConfiguration hostConfiguration, String urlString, PropertyExpansionContext context )
 	{
 		// check system properties first
 		String proxyHost = System.getProperty( "http.proxyHost" );
 		String proxyPort = System.getProperty( "http.proxyPort" );
 
 		if( proxyHost == null )
-			proxyHost = PropertyExpansionUtils.expandProperties( context, settings.getString( ProxySettings.HOST, "" ));
+			proxyHost = PropertyExpansionUtils.expandProperties( context, settings.getString( ProxySettings.HOST, "" ) );
 
 		if( proxyPort == null )
-			proxyPort = PropertyExpansionUtils.expandProperties( context, settings.getString( ProxySettings.PORT, "" ));
+			proxyPort = PropertyExpansionUtils.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
 
 		if( !StringUtils.isNullOrEmpty( proxyHost ) && !StringUtils.isNullOrEmpty( proxyPort ) )
 		{
 			// check excludes
-			String[] excludes =  PropertyExpansionUtils.expandProperties( context, settings.getString( ProxySettings.EXCLUDES, "" )).split( "," );
+			String[] excludes = PropertyExpansionUtils.expandProperties( context,
+					settings.getString( ProxySettings.EXCLUDES, "" ) ).split( "," );
 
 			try
 			{
@@ -58,12 +64,15 @@ public class ProxyUtils
 				{
 					hostConfiguration.setProxy( proxyHost, Integer.parseInt( proxyPort ) );
 
-					String proxyUsername = PropertyExpansionUtils.expandProperties( context, settings.getString( ProxySettings.USERNAME, null ));
-					String proxyPassword = PropertyExpansionUtils.expandProperties( context, settings.getString( ProxySettings.PASSWORD, null ));
+					String proxyUsername = PropertyExpansionUtils.expandProperties( context, settings.getString(
+							ProxySettings.USERNAME, null ) );
+					String proxyPassword = PropertyExpansionUtils.expandProperties( context, settings.getString(
+							ProxySettings.PASSWORD, null ) );
 
-					if( StringUtils.hasContent(proxyUsername) && proxyPassword != null )
+					if( StringUtils.hasContent( proxyUsername ) && proxyPassword != null )
 					{
-						Credentials proxyCreds = new UsernamePasswordCredentials( proxyUsername, proxyPassword == null ? "" : proxyPassword );
+						Credentials proxyCreds = new UsernamePasswordCredentials( proxyUsername, proxyPassword == null ? ""
+								: proxyPassword );
 
 						// check for nt-username
 						int ix = proxyUsername.indexOf( '\\' );

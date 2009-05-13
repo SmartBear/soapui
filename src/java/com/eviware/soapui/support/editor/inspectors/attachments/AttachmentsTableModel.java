@@ -12,17 +12,18 @@
 
 package com.eviware.soapui.support.editor.inspectors.attachments;
 
-import com.eviware.soapui.impl.wsdl.AttachmentContainer;
-import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
-import com.eviware.soapui.impl.wsdl.support.WsdlAttachment;
-import com.eviware.soapui.model.iface.Attachment;
-
-import javax.swing.table.AbstractTableModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+
+import javax.swing.table.AbstractTableModel;
+
+import com.eviware.soapui.impl.wsdl.AttachmentContainer;
+import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
+import com.eviware.soapui.impl.wsdl.support.WsdlAttachment;
+import com.eviware.soapui.model.iface.Attachment;
 
 /**
  * TableModel for Request Attachments
@@ -30,8 +31,7 @@ import java.util.Arrays;
  * @author emibre
  */
 
-public class AttachmentsTableModel extends AbstractTableModel implements PropertyChangeListener,
-			AttachmentTableModel
+public class AttachmentsTableModel extends AbstractTableModel implements PropertyChangeListener, AttachmentTableModel
 {
 
 	private AttachmentContainer container;
@@ -52,14 +52,15 @@ public class AttachmentsTableModel extends AbstractTableModel implements Propert
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.impl.wsdl.panels.attachments.AttachmentTableModel#addFile(java.io.File,
-	 *      boolean)
+	 * @see
+	 * com.eviware.soapui.impl.wsdl.panels.attachments.AttachmentTableModel#addFile
+	 * (java.io.File, boolean)
 	 */
 	public void addFile( File file, boolean cacheInRequest ) throws IOException
 	{
 		if( container instanceof MutableAttachmentContainer )
 		{
-			((MutableAttachmentContainer)container).attachFile( file, cacheInRequest );
+			( ( MutableAttachmentContainer )container ).attachFile( file, cacheInRequest );
 		}
 
 		this.fireTableRowsInserted( container.getAttachmentCount(), container.getAttachmentCount() );
@@ -76,7 +77,7 @@ public class AttachmentsTableModel extends AbstractTableModel implements Propert
 	{
 		if( container instanceof MutableAttachmentContainer )
 		{
-			((MutableAttachmentContainer)container).removeAttachment( container.getAttachmentAt( rowIndex ) );
+			( ( MutableAttachmentContainer )container ).removeAttachment( container.getAttachmentAt( rowIndex ) );
 			this.fireTableRowsDeleted( rowIndex, rowIndex );
 		}
 	}
@@ -105,21 +106,21 @@ public class AttachmentsTableModel extends AbstractTableModel implements Propert
 
 		switch( columnIndex )
 		{
-		case 0:
+		case 0 :
 			return att.isCached() ? att.getName() : att.getUrl();
-		case 1:
+		case 1 :
 			return att.getContentType();
-		case 2:
+		case 2 :
 			return att.getSize();
-		case 3:
+		case 3 :
 			return att.getPart();
-		case 4:
+		case 4 :
 			return att.getAttachmentType();
-		case 5:
+		case 5 :
 			return att.getContentID();
-		case 6:
+		case 6 :
 			return att.isCached();
-		default:
+		default :
 			return null;
 		}
 	}
@@ -161,36 +162,36 @@ public class AttachmentsTableModel extends AbstractTableModel implements Propert
 	}
 
 	@Override
-	public Class<?> getColumnClass(int columnIndex)
+	public Class<?> getColumnClass( int columnIndex )
 	{
-		return columnIndex == 6 ? Boolean.class : super.getColumnClass(columnIndex);
+		return columnIndex == 6 ? Boolean.class : super.getColumnClass( columnIndex );
 	}
 
 	public boolean isCellEditable( int rowIndex, int columnIndex )
 	{
-		return container instanceof MutableAttachmentContainer && 
-		    ( columnIndex == 0 || columnIndex == 1 || columnIndex == 3 || columnIndex == 5 );
+		return container instanceof MutableAttachmentContainer
+				&& ( columnIndex == 0 || columnIndex == 1 || columnIndex == 3 || columnIndex == 5 );
 	}
 
 	public void setValueAt( Object aValue, int rowIndex, int columnIndex )
 	{
-		if( !(container instanceof MutableAttachmentContainer) )
+		if( !( container instanceof MutableAttachmentContainer ) )
 			return;
 
-		WsdlAttachment att = ( WsdlAttachment ) container.getAttachmentAt( rowIndex );
+		WsdlAttachment att = ( WsdlAttachment )container.getAttachmentAt( rowIndex );
 		if( columnIndex == 0 )
 		{
-			if( att.isCached())
-				att.setName( ( String ) aValue );
+			if( att.isCached() )
+				att.setName( ( String )aValue );
 			else
 				att.setUrl( aValue.toString() );
 		}
 		else if( columnIndex == 1 )
-			att.setContentType( ( String ) aValue );
+			att.setContentType( ( String )aValue );
 		else if( columnIndex == 3 )
-			att.setPart( ( String ) aValue );
+			att.setPart( ( String )aValue );
 		else if( columnIndex == 5 )
-			att.setContentID( ( String ) aValue );
+			att.setContentID( ( String )aValue );
 
 		fireTableRowsUpdated( rowIndex, rowIndex );
 	}

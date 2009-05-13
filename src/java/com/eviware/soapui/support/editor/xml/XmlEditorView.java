@@ -14,7 +14,6 @@ package com.eviware.soapui.support.editor.xml;
 
 import com.eviware.soapui.support.editor.EditorView;
 
-
 /**
  * Views available for the XmlDocument of a XmlEditor
  * 

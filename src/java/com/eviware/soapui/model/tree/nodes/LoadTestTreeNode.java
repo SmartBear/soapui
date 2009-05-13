@@ -23,10 +23,10 @@ import com.eviware.soapui.model.tree.SoapUITreeModel;
  * @author Ole.Matzura
  */
 
-public class LoadTestTreeNode extends AbstractModelItemTreeNode<LoadTest> 
+public class LoadTestTreeNode extends AbstractModelItemTreeNode<LoadTest>
 {
-   public LoadTestTreeNode(LoadTest loadTest, ModelItem parent, SoapUITreeModel treeModel )
-   {
-      super( loadTest, parent, treeModel );
-   }
+	public LoadTestTreeNode( LoadTest loadTest, ModelItem parent, SoapUITreeModel treeModel )
+	{
+		super( loadTest, parent, treeModel );
+	}
 }

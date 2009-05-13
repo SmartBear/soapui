@@ -27,24 +27,23 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 public class DeleteTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 {
 	public DeleteTestStepAction()
-   {
-      super( "Delete", "Deletes this TestStep" );
-   }
-   
-	
-   public void perform( WsdlTestStep testStep, Object param )
 	{
-   	if( SoapUI.getTestMonitor().hasRunningTest( testStep.getTestCase() ))
-   	{
-   		UISupport.showErrorMessage( "Cannot remove step while tests are running" );
-   		return;
-   	}
-   	
-      if( UISupport.confirm( "Delete TestStep [" + testStep.getName() + "] from Testcase [" + 
-      		testStep.getTestCase().getName() + "]", "Delete TestStep" ))
-      {
-      	((WsdlTestCase)testStep.getTestCase()).removeTestStep( testStep );
-      }
-   }
+		super( "Delete", "Deletes this TestStep" );
+	}
+
+	public void perform( WsdlTestStep testStep, Object param )
+	{
+		if( SoapUI.getTestMonitor().hasRunningTest( testStep.getTestCase() ) )
+		{
+			UISupport.showErrorMessage( "Cannot remove step while tests are running" );
+			return;
+		}
+
+		if( UISupport.confirm( "Delete TestStep [" + testStep.getName() + "] from Testcase ["
+				+ testStep.getTestCase().getName() + "]", "Delete TestStep" ) )
+		{
+			( ( WsdlTestCase )testStep.getTestCase() ).removeTestStep( testStep );
+		}
+	}
 
 }

@@ -21,7 +21,7 @@ import com.eviware.soapui.model.testsuite.MessageExchangeTestStepResult;
 public class WsdlMessageExchangeTestStepResult extends WsdlTestStepResult implements MessageExchangeTestStepResult
 {
 	private List<MessageExchange> exchanges = new ArrayList<MessageExchange>();
-	
+
 	public WsdlMessageExchangeTestStepResult( WsdlTestStep testStep )
 	{
 		super( testStep );
@@ -29,16 +29,15 @@ public class WsdlMessageExchangeTestStepResult extends WsdlTestStepResult implem
 
 	public MessageExchange[] getMessageExchanges()
 	{
-		return exchanges == null ? new MessageExchange[0] : 
-			exchanges.toArray( new MessageExchange[exchanges.size()] );
+		return exchanges == null ? new MessageExchange[0] : exchanges.toArray( new MessageExchange[exchanges.size()] );
 	}
-	
+
 	public void addMessageExchange( MessageExchange messageExchange )
 	{
 		if( exchanges != null )
 			exchanges.add( messageExchange );
 	}
-	
+
 	public void addMessages( MessageExchange[] messageExchanges )
 	{
 		if( exchanges != null )
@@ -50,7 +49,7 @@ public class WsdlMessageExchangeTestStepResult extends WsdlTestStepResult implem
 	public void discard()
 	{
 		super.discard();
-		
+
 		exchanges = null;
 	}
 }

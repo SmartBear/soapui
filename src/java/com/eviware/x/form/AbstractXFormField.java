@@ -20,63 +20,62 @@ import java.util.Set;
 
 import com.eviware.x.form.validators.RequiredValidator;
 
-
 public abstract class AbstractXFormField<T> implements XFormField
 {
 	private Set<XFormFieldListener> listeners;
 	private List<XFormFieldValidator> validators;
 	private RequiredValidator requiredValidator;
 	private ComponentEnabler enabler = null;
-   
-   public AbstractXFormField()
-   {
-   }
 
-   public abstract T getComponent();
-   
-	public void addFormFieldListener(XFormFieldListener listener)
+	public AbstractXFormField()
+	{
+	}
+
+	public abstract T getComponent();
+
+	public void addFormFieldListener( XFormFieldListener listener )
 	{
 		if( listeners == null )
 			listeners = new HashSet<XFormFieldListener>();
-		
+
 		listeners.add( listener );
 	}
 
-	public void addFormFieldValidator(XFormFieldValidator validator)
+	public void addFormFieldValidator( XFormFieldValidator validator )
 	{
 		if( validators == null )
 			validators = new ArrayList<XFormFieldValidator>();
-		
+
 		validators.add( validator );
 	}
 
-   public void addComponentEnabler(XFormField tf, String value)
-   {
-      if(enabler == null)
-      {
-         enabler = new ComponentEnabler(this);
-      }
-      enabler.add(tf, value);
-   }
+	public void addComponentEnabler( XFormField tf, String value )
+	{
+		if( enabler == null )
+		{
+			enabler = new ComponentEnabler( this );
+		}
+		enabler.add( tf, value );
+	}
 
 	public boolean isRequired()
 	{
 		return requiredValidator != null;
 	}
 
-	public void removeFieldListener(XFormFieldListener listener)
+	public void removeFieldListener( XFormFieldListener listener )
 	{
 		if( listeners != null )
 			listeners.remove( listener );
 	}
 
-	public void removeFormFieldValidator(XFormFieldValidator validator)
+	public void removeFormFieldValidator( XFormFieldValidator validator )
 	{
 		if( validators != null )
 			validators.remove( validator );
 	}
 
-	public void setRequired(boolean required, String message)
+	public void setRequired( boolean required, String message )
 	{
 		if( requiredValidator != null )
 			removeFormFieldValidator( requiredValidator );
@@ -87,41 +86,41 @@ public abstract class AbstractXFormField<T> implements XFormField
 			addFormFieldValidator( requiredValidator );
 		}
 	}
-	
+
 	public ValidationMessage[] validate()
 	{
 		if( validators == null || validators.isEmpty() )
 			return null;
-		
+
 		ArrayList<ValidationMessage> messages = new ArrayList<ValidationMessage>();
-		
+
 		for( XFormFieldValidator validator : validators )
 		{
 			ValidationMessage[] validateField = validator.validateField( this );
 			if( validateField != null && validateField.length > 0 )
-				messages.addAll( Arrays.asList( validateField));
+				messages.addAll( Arrays.asList( validateField ) );
 		}
-		
+
 		return messages.toArray( new ValidationMessage[messages.size()] );
 	}
 
-	protected void fireValueChanged(String newValue, String oldValue )
+	protected void fireValueChanged( String newValue, String oldValue )
 	{
 		if( listeners == null )
 			return;
-		
+
 		for( XFormFieldListener listener : listeners )
 		{
 			listener.valueChanged( this, newValue, oldValue );
 		}
 	}
 
-	public Object getProperty(String name)
+	public Object getProperty( String name )
 	{
 		return null;
 	}
 
-	public abstract void setProperty(String name, Object value);
+	public abstract void setProperty( String name, Object value );
 
 	public boolean isMultiRow()
 	{

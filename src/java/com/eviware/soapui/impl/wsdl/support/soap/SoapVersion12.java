@@ -36,44 +36,44 @@ import com.eviware.soapui.support.StringUtils;
 
 public class SoapVersion12 extends AbstractSoapVersion
 {
-   private final static QName envelopeQName  = new QName(Constants.SOAP12_ENVELOPE_NS, "Envelope");
-   private final static QName bodyQName = new QName(Constants.SOAP12_ENVELOPE_NS, "Body");
-   private final static QName faultQName = new QName(Constants.SOAP11_ENVELOPE_NS, "Fault");
-   private final static QName headerQName = new QName(Constants.SOAP12_ENVELOPE_NS, "Header");
+	private final static QName envelopeQName = new QName( Constants.SOAP12_ENVELOPE_NS, "Envelope" );
+	private final static QName bodyQName = new QName( Constants.SOAP12_ENVELOPE_NS, "Body" );
+	private final static QName faultQName = new QName( Constants.SOAP11_ENVELOPE_NS, "Fault" );
+	private final static QName headerQName = new QName( Constants.SOAP12_ENVELOPE_NS, "Header" );
 	public final static SoapVersion12 instance = new SoapVersion12();
-	
-   private SchemaTypeLoader soapSchema;
+
+	private SchemaTypeLoader soapSchema;
 	private XmlObject soapSchemaXml;
 	private XmlObject soapEncodingXml;
 
-   private SoapVersion12()
-   {
-   	ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-   	Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
-   	
-   	try
-   	{
-			soapSchemaXml = XmlObject.Factory.parse(
-						SoapUI.class.getResource("/com/eviware/soapui/resources/xsds/soapEnvelope12.xsd"));
-			soapSchema = XmlBeans.loadXsd(new XmlObject[] { soapSchemaXml });
-	   	soapEncodingXml = XmlObject.Factory.parse(
-	   				SoapUI.class.getResource("/com/eviware/soapui/resources/xsds/soapEncoding12.xsd"));
-   	}
-   	catch( Exception e )
-   	{
-   		SoapUI.logError( e );
-   	}
-   	finally
-   	{
-   		Thread.currentThread().setContextClassLoader( contextClassLoader );
-   	}
-   }
-   
-   public String getEncodingNamespace()
+	private SoapVersion12()
+	{
+		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+		Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
+
+		try
+		{
+			soapSchemaXml = XmlObject.Factory.parse( SoapUI.class
+					.getResource( "/com/eviware/soapui/resources/xsds/soapEnvelope12.xsd" ) );
+			soapSchema = XmlBeans.loadXsd( new XmlObject[] { soapSchemaXml } );
+			soapEncodingXml = XmlObject.Factory.parse( SoapUI.class
+					.getResource( "/com/eviware/soapui/resources/xsds/soapEncoding12.xsd" ) );
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+		}
+		finally
+		{
+			Thread.currentThread().setContextClassLoader( contextClassLoader );
+		}
+	}
+
+	public String getEncodingNamespace()
 	{
 		return "http://www.w3.org/2003/05/soap-encoding";
 	}
-   
+
 	public XmlObject getSoapEncodingSchema() throws XmlException, IOException
 	{
 		return soapEncodingXml;
@@ -83,7 +83,7 @@ public class SoapVersion12 extends AbstractSoapVersion
 	{
 		return soapSchemaXml;
 	}
-	
+
 	public String getEnvelopeNamespace()
 	{
 		return Constants.SOAP12_ENVELOPE_NS;
@@ -98,17 +98,17 @@ public class SoapVersion12 extends AbstractSoapVersion
 	{
 		return "SOAP 1.2";
 	}
-	
-	public String getContentTypeHttpHeader(String encoding, String soapAction)
+
+	public String getContentTypeHttpHeader( String encoding, String soapAction )
 	{
 		String result = getContentType();
-		
-		if (encoding != null && encoding.trim().length() > 0)
+
+		if( encoding != null && encoding.trim().length() > 0 )
 			result += ";charset=" + encoding;
-		
+
 		if( StringUtils.hasContent( soapAction ) )
 			result += ";action=" + StringUtils.quote( soapAction );
-		
+
 		return result;
 	}
 
@@ -122,7 +122,7 @@ public class SoapVersion12 extends AbstractSoapVersion
 	{
 		return "application/soap+xml";
 	}
-	
+
 	public QName getBodyQName()
 	{
 		return bodyQName;
@@ -142,7 +142,7 @@ public class SoapVersion12 extends AbstractSoapVersion
 	{
 		return soapSchema;
 	}
-	
+
 	public static QName getFaultQName()
 	{
 		return faultQName;

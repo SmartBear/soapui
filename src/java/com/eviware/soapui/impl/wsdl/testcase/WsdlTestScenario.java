@@ -30,7 +30,7 @@ public class WsdlTestScenario implements Runnable
 	{
 		this.runType = runType;
 	}
-	
+
 	public void cancel()
 	{
 		canceled = true;
@@ -49,9 +49,9 @@ public class WsdlTestScenario implements Runnable
 	public void run()
 	{
 		canceled = false;
-		
+
 		context = createContext();
-		
+
 		beforeRun( context );
 
 		try
@@ -59,8 +59,8 @@ public class WsdlTestScenario implements Runnable
 			for( int c = 0; c < testCaseList.size(); c++ )
 			{
 				TestCase testCase = testCaseList.get( c );
-				if( testCase.isDisabled() ||
-					(skipTestCasesWithRunningLoadTest  && SoapUI.getTestMonitor().hasRunningLoadTest( testCase ) ))
+				if( testCase.isDisabled()
+						|| ( skipTestCasesWithRunningLoadTest && SoapUI.getTestMonitor().hasRunningLoadTest( testCase ) ) )
 				{
 					continue;
 				}
@@ -69,7 +69,7 @@ public class WsdlTestScenario implements Runnable
 				{
 					testCase.addTestRunListener( internalTestRunListener );
 				}
-				
+
 				beforeTestCase( testCase );
 
 				TestRunner runner = testCase.run( context.getProperties(), true );
@@ -80,7 +80,7 @@ public class WsdlTestScenario implements Runnable
 					runner.waitUntilFinished();
 					afterTestCase( testCase, runner );
 					runners.remove( runner );
-					
+
 					if( abortOnFail && runner.getStatus() == TestRunner.Status.FAILED )
 						break;
 				}
@@ -107,7 +107,7 @@ public class WsdlTestScenario implements Runnable
 
 	protected void afterTestCase( TestCase testCase, TestRunner runner )
 	{
-		for( TestScenarioListener listener : listeners.toArray( new TestScenarioListener[listeners.size()] ))
+		for( TestScenarioListener listener : listeners.toArray( new TestScenarioListener[listeners.size()] ) )
 		{
 			listener.afterTestCase( testCase, runner );
 		}
@@ -115,25 +115,25 @@ public class WsdlTestScenario implements Runnable
 
 	protected void beforeTestCase( TestCase testCase )
 	{
-		for( TestScenarioListener listener : listeners.toArray( new TestScenarioListener[listeners.size()] ))
+		for( TestScenarioListener listener : listeners.toArray( new TestScenarioListener[listeners.size()] ) )
 		{
 			listener.beforeTestCase( testCase );
 		}
 	}
 
-	protected void beforeRun(PropertyExpansionContext context)
+	protected void beforeRun( PropertyExpansionContext context )
 	{
-		for( TestScenarioListener listener : listeners.toArray( new TestScenarioListener[listeners.size()] ))
+		for( TestScenarioListener listener : listeners.toArray( new TestScenarioListener[listeners.size()] ) )
 		{
-			listener.beforeRun(context);
+			listener.beforeRun( context );
 		}
 	}
 
-	protected void afterRun(PropertyExpansionContext context)
+	protected void afterRun( PropertyExpansionContext context )
 	{
-		for( TestScenarioListener listener : listeners.toArray( new TestScenarioListener[listeners.size()] ))
+		for( TestScenarioListener listener : listeners.toArray( new TestScenarioListener[listeners.size()] ) )
 		{
-			listener.afterRun(context);
+			listener.afterRun( context );
 		}
 	}
 
@@ -146,9 +146,9 @@ public class WsdlTestScenario implements Runnable
 		public void afterRun( TestRunner testRunner, TestRunContext runContext )
 		{
 			runners.remove( testRunner );
-			
-			WsdlTestCase testCase = ( WsdlTestCase ) testRunner.getTestCase();
-			
+
+			WsdlTestCase testCase = ( WsdlTestCase )testRunner.getTestCase();
+
 			testRunner.getTestCase().removeTestRunListener( this );
 			afterTestCase( testCase, testRunner );
 
@@ -158,7 +158,7 @@ public class WsdlTestScenario implements Runnable
 			if( testRunner.getStatus() == TestRunner.Status.FAILED )
 			{
 				testCaseFailed( testCase );
-				
+
 				if( abortOnFail && !canceled )
 					cancel();
 			}
@@ -208,12 +208,12 @@ public class WsdlTestScenario implements Runnable
 	{
 		return runners;
 	}
-	
+
 	public void addTestScenarioListener( TestScenarioListener listener )
 	{
 		listeners.add( listener );
 	}
-	
+
 	public void removeTestScenarioListener( TestScenarioListener listener )
 	{
 		listeners.remove( listener );
@@ -223,22 +223,22 @@ public class WsdlTestScenario implements Runnable
 	{
 		return testCaseList;
 	}
-	
+
 	public int getTestCaseCount()
 	{
 		return testCaseList.size();
 	}
-	
+
 	public TestCase getTestCaseAt( int index )
 	{
 		return testCaseList.get( index );
 	}
-	
+
 	public void removeTestCase( TestCase testCase )
 	{
 		testCaseList.remove( testCase );
 	}
-	
+
 	public void removeAllTestCases()
 	{
 		testCaseList.clear();

@@ -22,19 +22,19 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
  * @author Ole.Matzura
  */
 
-public class WsdlLoadTestPanelBuilder  extends EmptyPanelBuilder<WsdlLoadTest>
+public class WsdlLoadTestPanelBuilder extends EmptyPanelBuilder<WsdlLoadTest>
 {
-   public WsdlLoadTestPanelBuilder()
-   {
-   }
+	public WsdlLoadTestPanelBuilder()
+	{
+	}
 
-   public DesktopPanel buildDesktopPanel(WsdlLoadTest loadTest)
-   {
-      return new WsdlLoadTestDesktopPanel( loadTest );
-   }
+	public DesktopPanel buildDesktopPanel( WsdlLoadTest loadTest )
+	{
+		return new WsdlLoadTestDesktopPanel( loadTest );
+	}
 
-   public boolean hasDesktopPanel()
-   {
-      return true;
-   }
+	public boolean hasDesktopPanel()
+	{
+		return true;
+	}
 }

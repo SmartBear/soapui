@@ -31,32 +31,32 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 
 public class RandomMockOperationDispatcher extends AbstractMockOperationDispatcher
 {
-   public RandomMockOperationDispatcher( WsdlMockOperation mockOperation )
-   {
-     super( mockOperation );
-   }
+	public RandomMockOperationDispatcher( WsdlMockOperation mockOperation )
+	{
+		super( mockOperation );
+	}
 
-   public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result )
-   {
-      synchronized( result.getMockOperation() )
-      {
-         synchronized( this )
-         {
-            int currentDispatchIndex = (int) ( ( Math.random() * getMockOperation().getMockResponseCount() ) + 0.5F );
+	public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result )
+	{
+		synchronized( result.getMockOperation() )
+		{
+			synchronized( this )
+			{
+				int currentDispatchIndex = ( int )( ( Math.random() * getMockOperation().getMockResponseCount() ) + 0.5F );
 
-            if( currentDispatchIndex >= getMockOperation().getMockResponseCount() )
-               currentDispatchIndex = 0;
+				if( currentDispatchIndex >= getMockOperation().getMockResponseCount() )
+					currentDispatchIndex = 0;
 
-            return getMockOperation().getMockResponseAt( currentDispatchIndex );
-         }
-      }
-   }
+				return getMockOperation().getMockResponseAt( currentDispatchIndex );
+			}
+		}
+	}
 
-   public static class Factory implements MockOperationDispatchFactory
-   {
-      public MockOperationDispatcher build( WsdlMockOperation mockOperation )
-      {
-         return new RandomMockOperationDispatcher( mockOperation );
-      }
-   }
+	public static class Factory implements MockOperationDispatchFactory
+	{
+		public MockOperationDispatcher build( WsdlMockOperation mockOperation )
+		{
+			return new RandomMockOperationDispatcher( mockOperation );
+		}
+	}
 }

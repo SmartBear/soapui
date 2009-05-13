@@ -30,8 +30,8 @@ public class SSLInspectorFactory implements ResponseInspectorFactory
 	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof AbstractHttpRequest<?> )
-			return new ResponseSSLInspector( ( AbstractHttpRequest<?> ) modelItem );
-		
+			return new ResponseSSLInspector( ( AbstractHttpRequest<?> )modelItem );
+
 		return null;
 	}
 }

@@ -35,79 +35,80 @@ public class SettingsImpl implements Settings
 	{
 		this( null );
 	}
-	
+
 	public SettingsImpl( Settings parent )
 	{
 		this.parent = parent;
 	}
-	
+
 	public boolean isSet( String id )
 	{
 		return values.containsKey( id );
 	}
 
-	public String getString(String id, String defaultValue)
+	public String getString( String id, String defaultValue )
 	{
-		if( values.containsKey( id )) return values.get( id ) ;
+		if( values.containsKey( id ) )
+			return values.get( id );
 		return parent == null ? defaultValue : parent.getString( id, defaultValue );
 	}
 
-	public void setString(String id, String value)
+	public void setString( String id, String value )
 	{
 		String oldValue = getString( id, null );
 		values.put( id, value );
-		
+
 		for( SettingsListener listener : listeners )
 		{
 			listener.settingChanged( id, oldValue, value );
 		}
 	}
 
-	public boolean getBoolean(String id )
+	public boolean getBoolean( String id )
 	{
-		if( values.containsKey( id ))
+		if( values.containsKey( id ) )
 			return Boolean.parseBoolean( values.get( id ) );
 		return parent == null ? false : parent.getBoolean( id );
 	}
 
-	public void setBoolean(String id, boolean value)
+	public void setBoolean( String id, boolean value )
 	{
 		String oldValue = getString( id, null );
-		values.put( id, Boolean.toString( value ));
-		
+		values.put( id, Boolean.toString( value ) );
+
 		for( SettingsListener listener : listeners )
 		{
-			listener.settingChanged( id, oldValue, Boolean.toString( value ));
+			listener.settingChanged( id, oldValue, Boolean.toString( value ) );
 		}
 	}
 
-	public long getLong(String id, long defaultValue)
+	public long getLong( String id, long defaultValue )
 	{
-		if( values.containsKey( id ))
+		if( values.containsKey( id ) )
 		{
 			try
 			{
-				return Long.parseLong(values.get(id));
+				return Long.parseLong( values.get( id ) );
 			}
-			catch (NumberFormatException e)
+			catch( NumberFormatException e )
 			{
-			}			
+			}
 		}
-		
+
 		return defaultValue;
 	}
-	
-	public void addSettingsListener(SettingsListener listener)
+
+	public void addSettingsListener( SettingsListener listener )
 	{
 		listeners.add( listener );
 	}
 
-	public void removeSettingsListener(SettingsListener listener)
+	public void removeSettingsListener( SettingsListener listener )
 	{
 		listeners.remove( listener );
 	}
 
-	public void clearSetting(String id)
+	public void clearSetting( String id )
 	{
 		values.remove( id );
 	}

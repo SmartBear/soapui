@@ -3,10 +3,11 @@ package com.eviware.soapui.support.monitor;
 /**
  * @author Angelo De Caro
  */
-public interface MonitorSource {
+public interface MonitorSource
+{
 
-    float getTotal();
+	float getTotal();
 
-    float getUsed();
+	float getUsed();
 
 }

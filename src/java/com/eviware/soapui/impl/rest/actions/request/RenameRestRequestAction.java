@@ -25,15 +25,16 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 public class RenameRestRequestAction extends AbstractSoapUIAction<RestRequest>
 {
 	public RenameRestRequestAction()
-   {
-      super( "Rename", "Renames this Request" );
-   }
-   
-   public void perform( RestRequest request, Object param )
 	{
-      String name = UISupport.prompt( "Specify name of Request", "Rename Request", request.getName() );
-      if( name == null || name.equals( request.getName() )) return;
-      
-      request.setName( name );
-   }
+		super( "Rename", "Renames this Request" );
+	}
+
+	public void perform( RestRequest request, Object param )
+	{
+		String name = UISupport.prompt( "Specify name of Request", "Rename Request", request.getName() );
+		if( name == null || name.equals( request.getName() ) )
+			return;
+
+		request.setName( name );
+	}
 }

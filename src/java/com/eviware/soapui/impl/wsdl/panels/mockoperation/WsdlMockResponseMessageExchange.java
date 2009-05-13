@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 
+import java.util.Vector;
+
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
@@ -19,8 +21,6 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.support.types.StringToStringMap;
-
-import java.util.Vector;
 
 /**
  * WsdlMessageExchange for a WsdlMockResponse, required for validations
@@ -34,7 +34,7 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 	{
 		super( mockResponse );
 	}
-	
+
 	public Attachment[] getRequestAttachments()
 	{
 		return null;
@@ -43,8 +43,8 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 	public String getRequestContent()
 	{
 		WsdlMockResult mockResult = getModelItem().getMockResult();
-      WsdlMockRequest mockRequest = mockResult.getMockRequest();
-      return mockRequest.getRequestContent();
+		WsdlMockRequest mockRequest = mockResult.getMockRequest();
+		return mockRequest.getRequestContent();
 	}
 
 	public StringToStringMap getRequestHeaders()
@@ -68,7 +68,7 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 	}
 
 	@Override
-   public WsdlOperation getOperation()
+	public WsdlOperation getOperation()
 	{
 		return getModelItem().getMockOperation().getOperation();
 	}
@@ -98,13 +98,13 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 		return null;
 	}
 
-   public int getResponseStatusCode()
-   {
-      return getModelItem().getMockResult().getResponseStatus();
-   }
+	public int getResponseStatusCode()
+	{
+		return getModelItem().getMockResult().getResponseStatus();
+	}
 
-   public String getResponseContentType()
-   {
-      return getModelItem().getMockResult().getResponseContentType();
-   }
+	public String getResponseContentType()
+	{
+		return getModelItem().getMockResult().getResponseContentType();
+	}
 }

@@ -1,4 +1,4 @@
- /*
+/*
  *  soapUI, copyright (C) 2004-2009 eviware.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
@@ -46,19 +46,19 @@ public class LoadTestLogErrorEntry implements LoadTestLogEntry
 		this.result = result;
 		this.threadIndex = threadIndex;
 		this.targetStepName = result.getTestStep().getName();
-		
+
 		timestamp = result == null ? System.currentTimeMillis() : result.getTimeStamp();
 	}
 
-	public LoadTestLogErrorEntry(String type, String message, ImageIcon icon, int threadIndex )
+	public LoadTestLogErrorEntry( String type, String message, ImageIcon icon, int threadIndex )
 	{
-	   this.type = type;
+		this.type = type;
 		this.error = message;
 		this.icon = icon;
 		this.threadIndex = threadIndex;
-		
+
 		targetStepName = "- Total -";
-		
+
 		timestamp = System.currentTimeMillis();
 	}
 
@@ -74,7 +74,7 @@ public class LoadTestLogErrorEntry implements LoadTestLogEntry
 	{
 		return result;
 	}
-	
+
 	public long getTimeStamp()
 	{
 		return timestamp;
@@ -104,10 +104,10 @@ public class LoadTestLogErrorEntry implements LoadTestLogEntry
 	{
 		return result == null ? null : result.getActions();
 	}
-	
-	public void exportToFile(String fileName) throws IOException
+
+	public void exportToFile( String fileName ) throws IOException
 	{
-		PrintWriter writer = new PrintWriter(fileName );
+		PrintWriter writer = new PrintWriter( fileName );
 
 		writer.write( new Date( timestamp ).toString() );
 		writer.write( ":" );
@@ -126,16 +126,16 @@ public class LoadTestLogErrorEntry implements LoadTestLogEntry
 		{
 			writer.println( "-> Discarded" );
 		}
-		
+
 		writer.close();
 	}
-	
+
 	public void discard()
 	{
 		result = null;
 		discarded = true;
 	}
-	
+
 	public boolean isDiscarded()
 	{
 		return discarded;

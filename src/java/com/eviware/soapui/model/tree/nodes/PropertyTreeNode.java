@@ -33,13 +33,14 @@ public class PropertyTreeNode extends AbstractModelItemTreeNode<PropertyTreeNode
 	private boolean readOnly;
 	private final TestProperty property;
 
-	protected PropertyTreeNode( TestProperty property, ModelItem parent, TestPropertyHolder holder, SoapUITreeModel treeModel )
+	protected PropertyTreeNode( TestProperty property, ModelItem parent, TestPropertyHolder holder,
+			SoapUITreeModel treeModel )
 	{
 		super( new PropertyModelItem( property, property.isReadOnly() ), parent, treeModel );
 		this.property = property;
 		readOnly = property.isReadOnly();
 	}
-	
+
 	public static String buildName( TestProperty property )
 	{
 		String name = property.getName();
@@ -50,13 +51,13 @@ public class PropertyTreeNode extends AbstractModelItemTreeNode<PropertyTreeNode
 		{
 			if( value.length() > 12 )
 				value = value.substring( 0, 12 ) + "..";
-			
+
 			value = "'" + value + "'";
 		}
-		
+
 		return name + " : " + value;
 	}
-	
+
 	@Override
 	public ActionList getActions()
 	{
@@ -81,9 +82,9 @@ public class PropertyTreeNode extends AbstractModelItemTreeNode<PropertyTreeNode
 
 		public PropertyModelItem( TestProperty property, boolean readOnly )
 		{
-			super( buildName( property ), readOnly ? UISupport.createImageIcon( "/bullet_black.gif" ) : 
-				UISupport.createImageIcon( "/bullet_green.gif" ) );
-			
+			super( buildName( property ), readOnly ? UISupport.createImageIcon( "/bullet_black.gif" ) : UISupport
+					.createImageIcon( "/bullet_green.gif" ) );
+
 			this.property = property;
 		}
 
@@ -102,19 +103,19 @@ public class PropertyTreeNode extends AbstractModelItemTreeNode<PropertyTreeNode
 			this.xpath = xpath;
 		}
 	}
-	
+
 	private class SetPropertyValueAction extends AbstractAction
 	{
 		public SetPropertyValueAction()
 		{
 			super( "Set Value" );
-			putValue(Action.SHORT_DESCRIPTION, "Prompts to set the value of this property");
+			putValue( Action.SHORT_DESCRIPTION, "Prompts to set the value of this property" );
 		}
 
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed( ActionEvent e )
 		{
-			String value = UISupport.prompt("Specify property value", "Set Value", property.getValue() );
-			if ( StringUtils.hasContent( value ))
+			String value = UISupport.prompt( "Specify property value", "Set Value", property.getValue() );
+			if( StringUtils.hasContent( value ) )
 			{
 				property.setValue( value );
 			}

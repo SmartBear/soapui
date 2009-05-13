@@ -37,22 +37,22 @@ public abstract class AbstractSoapUIAction<T extends ModelItem> implements SoapU
 		this.id = id;
 		propertySupport = new PropertyChangeSupport( this );
 	}
-	
+
 	public AbstractSoapUIAction( String name, String description )
 	{
 		this( null, name, description );
 		id = getClass().getSimpleName();
 	}
-	
+
 	public AbstractSoapUIAction( String id, String name, String description )
 	{
 		this.id = id;
 		this.name = name;
 		this.description = description;
-		
+
 		propertySupport = new PropertyChangeSupport( this );
 	}
-	
+
 	public String getId()
 	{
 		return id;
@@ -63,14 +63,14 @@ public abstract class AbstractSoapUIAction<T extends ModelItem> implements SoapU
 		return description;
 	}
 
-	public void setEnabled(boolean enabled)
+	public void setEnabled( boolean enabled )
 	{
 		if( enabled == this.enabled )
 			return;
-		
+
 		boolean oldEnabled = this.enabled;
 		this.enabled = enabled;
-		
+
 		propertySupport.firePropertyChange( ENABLED_PROPERTY, oldEnabled, enabled );
 	}
 
@@ -94,22 +94,22 @@ public abstract class AbstractSoapUIAction<T extends ModelItem> implements SoapU
 		return enabled;
 	}
 
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
+	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
 		propertySupport.addPropertyChangeListener( propertyName, listener );
 	}
 
-	public void addPropertyChangeListener(PropertyChangeListener listener)
+	public void addPropertyChangeListener( PropertyChangeListener listener )
 	{
 		propertySupport.addPropertyChangeListener( listener );
 	}
 
-	public void removePropertyChangeListener(PropertyChangeListener listener)
+	public void removePropertyChangeListener( PropertyChangeListener listener )
 	{
 		propertySupport.removePropertyChangeListener( listener );
 	}
 
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
+	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
 		propertySupport.removePropertyChangeListener( propertyName, listener );
 	}

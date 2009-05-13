@@ -13,13 +13,13 @@
 package com.eviware.soapui.model.testsuite;
 
 /**
- * Listener for TestRun-related events, schedule events will only be triggered for
- * LoadTest runs.
+ * Listener for TestRun-related events, schedule events will only be triggered
+ * for LoadTest runs.
  * 
  * @author Ole.Matzura
  */
 
-public interface TestRunListener 
+public interface TestRunListener
 {
 	void beforeRun( TestRunner testRunner, TestRunContext runContext );
 

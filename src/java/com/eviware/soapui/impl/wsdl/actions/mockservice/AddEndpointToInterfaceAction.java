@@ -28,27 +28,27 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 public class AddEndpointToInterfaceAction extends AbstractSoapUIAction<WsdlMockService>
 {
 	public AddEndpointToInterfaceAction()
-   {
-      super( "Add Endpoint to Interface", "Adds this MockService's endpoint to the selected Interface" );
-   }
-   
-   public void perform( WsdlMockService mockService, Object param )
 	{
-   	String[] names = ModelSupport.getNames( mockService.getProject().getInterfaceList(), 
-   			new ModelSupport.InterfaceTypeFilter( WsdlInterfaceFactory.WSDL_TYPE ));
-   	
-   	String ifaceName = UISupport.prompt( "Select Interface to add MockService endpoint to", "Add Endpoint", 
-   				names, null );
-   	
-   	if( ifaceName != null )
-   	{
-   		AbstractInterface<?> iface = mockService.getProject().getInterfaceByName( ifaceName );
-   		if( iface != null )
-   		{
-   			iface.addEndpoint( mockService.getLocalEndpoint() );
-   			UISupport.showInfoMessage( "Add endpoint [" + mockService.getLocalEndpoint() + "] to " +
-   					"Interface [" + ifaceName + "]" );
-   		}
-   	}
-   }
+		super( "Add Endpoint to Interface", "Adds this MockService's endpoint to the selected Interface" );
+	}
+
+	public void perform( WsdlMockService mockService, Object param )
+	{
+		String[] names = ModelSupport.getNames( mockService.getProject().getInterfaceList(),
+				new ModelSupport.InterfaceTypeFilter( WsdlInterfaceFactory.WSDL_TYPE ) );
+
+		String ifaceName = UISupport.prompt( "Select Interface to add MockService endpoint to", "Add Endpoint", names,
+				null );
+
+		if( ifaceName != null )
+		{
+			AbstractInterface<?> iface = mockService.getProject().getInterfaceByName( ifaceName );
+			if( iface != null )
+			{
+				iface.addEndpoint( mockService.getLocalEndpoint() );
+				UISupport.showInfoMessage( "Add endpoint [" + mockService.getLocalEndpoint() + "] to " + "Interface ["
+						+ ifaceName + "]" );
+			}
+		}
+	}
 }

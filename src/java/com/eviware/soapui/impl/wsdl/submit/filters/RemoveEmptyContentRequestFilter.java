@@ -35,34 +35,35 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 public class RemoveEmptyContentRequestFilter extends AbstractRequestFilter
 {
-	@SuppressWarnings("unused")
-	private final static Logger log = Logger.getLogger(PropertyExpansionRequestFilter.class);
-	
-	public void filterAbstractHttpRequest(SubmitContext context, AbstractHttpRequest<?> wsdlRequest)
+	@SuppressWarnings( "unused" )
+	private final static Logger log = Logger.getLogger( PropertyExpansionRequestFilter.class );
+
+	public void filterAbstractHttpRequest( SubmitContext context, AbstractHttpRequest<?> wsdlRequest )
 	{
-		if( wsdlRequest != null && !wsdlRequest.isRemoveEmptyContent())
+		if( wsdlRequest != null && !wsdlRequest.isRemoveEmptyContent() )
 			return;
-		
-		String content = (String) context.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
-		if( !StringUtils.hasContent(content))
+
+		String content = ( String )context.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
+		if( !StringUtils.hasContent( content ) )
 			return;
 
 		String soapNamespace = null;
 		String newContent = null;
-		
+
 		if( wsdlRequest instanceof WsdlRequest )
-			soapNamespace = ((WsdlRequest)wsdlRequest).getOperation().getInterface().getSoapVersion().getEnvelopeNamespace();
-		
-		while( !content.equals( newContent ))
+			soapNamespace = ( ( WsdlRequest )wsdlRequest ).getOperation().getInterface().getSoapVersion()
+					.getEnvelopeNamespace();
+
+		while( !content.equals( newContent ) )
 		{
 			if( newContent != null )
 				content = newContent;
-			
+
 			newContent = removeEmptyContent( content, soapNamespace );
-			if( !context.hasProperty("RemoveEmptyRecursive"))
+			if( !context.hasProperty( "RemoveEmptyRecursive" ) )
 				break;
 		}
-		
+
 		if( newContent != null )
 			context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, newContent );
 	}
@@ -70,57 +71,57 @@ public class RemoveEmptyContentRequestFilter extends AbstractRequestFilter
 	public static String removeEmptyContent( String content, String soapNamespace )
 	{
 		XmlCursor cursor = null;
-		
+
 		try
 		{
 			XmlObject xmlObject = XmlObject.Factory.parse( content );
 			cursor = xmlObject.newCursor();
-			
+
 			cursor.toNextToken();
-			
+
 			// skip root element
 			cursor.toNextToken();
 			boolean removed = false;
-			
+
 			while( !cursor.isEnddoc() )
 			{
 				boolean flag = false;
-				if( cursor.isContainer() && 
-					 (soapNamespace == null ||	!soapNamespace.equals(cursor.getName().getNamespaceURI())))
+				if( cursor.isContainer()
+						&& ( soapNamespace == null || !soapNamespace.equals( cursor.getName().getNamespaceURI() ) ) )
 				{
-					Element elm = ( Element ) cursor.getDomNode();
+					Element elm = ( Element )cursor.getDomNode();
 					NamedNodeMap attributes = elm.getAttributes();
 					if( attributes != null && attributes.getLength() > 0 )
 					{
-					   for( int c = 0; c < attributes.getLength(); c++ )
-					   {
-					   	Node node = attributes.item( c );
-					   	if( node.getNodeValue() == null || node.getNodeValue().trim().length() == 0 )
-					   	{
-					   		cursor.removeAttribute( XmlUtils.getQName( node ) );
-					   		removed = true;
-					   	}
-					   }
+						for( int c = 0; c < attributes.getLength(); c++ )
+						{
+							Node node = attributes.item( c );
+							if( node.getNodeValue() == null || node.getNodeValue().trim().length() == 0 )
+							{
+								cursor.removeAttribute( XmlUtils.getQName( node ) );
+								removed = true;
+							}
+						}
 					}
-					
-					if( cursor.getTextValue() == null || cursor.getTextValue().trim().length() == 0 && 
-								XmlUtils.getFirstChildElement( elm ) == null )
+
+					if( cursor.getTextValue() == null || cursor.getTextValue().trim().length() == 0
+							&& XmlUtils.getFirstChildElement( elm ) == null )
 					{
-						if( cursor.removeXml())
+						if( cursor.removeXml() )
 						{
 							removed = true;
 							flag = true;
 						}
 					}
 				}
-				
+
 				if( !flag )
 					cursor.toNextToken();
 			}
-			
+
 			if( removed )
 			{
-				return xmlObject.xmlText(); 
+				return xmlObject.xmlText();
 			}
 		}
 		catch( Exception e )
@@ -132,7 +133,7 @@ public class RemoveEmptyContentRequestFilter extends AbstractRequestFilter
 			if( cursor != null )
 				cursor.dispose();
 		}
-		
+
 		return content;
 	}
 }

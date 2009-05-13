@@ -38,16 +38,16 @@ public class TestRunComponentEnabler extends TestMonitorListenerAdapter
 	public TestRunComponentEnabler( TestCase testCase )
 	{
 		this.testCase = testCase;
-		
+
 		SoapUI.getTestMonitor().addTestMonitorListener( this );
 	}
-	
+
 	public void release()
 	{
 		SoapUI.getTestMonitor().removeTestMonitorListener( this );
 	}
 
-	public void loadTestStarted(LoadTestRunner runner)
+	public void loadTestStarted( LoadTestRunner runner )
 	{
 		disable();
 	}
@@ -68,38 +68,38 @@ public class TestRunComponentEnabler extends TestMonitorListenerAdapter
 	{
 		if( !states.isEmpty() )
 		{
-			for( int c = 0; c < components.size(); c++  )
+			for( int c = 0; c < components.size(); c++ )
 			{
 				JComponent component = components.get( c );
-				component.setEnabled( states.get( c ));
+				component.setEnabled( states.get( c ) );
 			}
 
 			states.clear();
 		}
 	}
-	
-	public void loadTestFinished(LoadTestRunner runner)
+
+	public void loadTestFinished( LoadTestRunner runner )
 	{
 		if( !SoapUI.getTestMonitor().hasRunningTest( testCase ) )
 			enable();
 	}
 
-	public void testCaseStarted(TestRunner runner)
+	public void testCaseStarted( TestRunner runner )
 	{
 		disable();
 	}
 
-	public void testCaseFinished(TestRunner runner)
+	public void testCaseFinished( TestRunner runner )
 	{
 		if( !SoapUI.getTestMonitor().hasRunningTest( testCase ) )
 			enable();
 	}
 
-	public void add(JComponent component)
+	public void add( JComponent component )
 	{
 		components.add( component );
-		
-		if( SoapUI.getTestMonitor().hasRunningTest( testCase ))
+
+		if( SoapUI.getTestMonitor().hasRunningTest( testCase ) )
 		{
 			states.add( component.isEnabled() );
 			component.setEnabled( false );

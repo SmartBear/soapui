@@ -129,21 +129,21 @@ public class JUnitReportCollector implements TestRunListener
 		if( result.getStatus() == TestStepStatus.FAILED )
 		{
 			StringBuffer buf = new StringBuffer();
-//			if( failures.containsKey( testCase ) )
-//			{
-//				buf.append( failures.get( testCase ));
-//			}
+			// if( failures.containsKey( testCase ) )
+			// {
+			// buf.append( failures.get( testCase ));
+			// }
 
 			buf.append( "<h3><b>" + result.getTestStep().getName() + " Failed</b></h3><pre>" );
-			buf.append( "<pre>" + XmlUtils.entitize( Arrays.toString( result.getMessages() )) + "\n" );
+			buf.append( "<pre>" + XmlUtils.entitize( Arrays.toString( result.getMessages() ) ) + "\n" );
 
-//			StringWriter stringWriter = new StringWriter();
-//			PrintWriter writer = new PrintWriter( stringWriter );
-//			result.writeTo( writer );
-//
-//			buf.append( XmlUtils.entitize( stringWriter.toString() ) );
+			// StringWriter stringWriter = new StringWriter();
+			// PrintWriter writer = new PrintWriter( stringWriter );
+			// result.writeTo( writer );
+			//
+			// buf.append( XmlUtils.entitize( stringWriter.toString() ) );
 			buf.append( "</pre><hr/>" );
-			
+
 			failures.put( testCase, buf.toString() );
 		}
 	}

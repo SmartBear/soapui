@@ -51,7 +51,6 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 {
 	public final static String NO_STATS_TESTCASE_CANCEL_REASON = "NO_STATS_TESTCASE_CANCEL_REASON";
 	private final static Logger log = Logger.getLogger( LoadTestStatistics.class );
-
 	private final WsdlLoadTest loadTest;
 	private long[][] data;
 

@@ -103,10 +103,10 @@ public class JLogList extends JPanel
 		listPopup.add( new ExportToFileAction() );
 
 		logList.setComponentPopupMenu( listPopup );
-		
+
 		setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
 		JScrollPane scrollPane = new JScrollPane( logList );
-		UISupport.addPreviewCorner(scrollPane, true);
+		UISupport.addPreviewCorner( scrollPane, true );
 		add( scrollPane, BorderLayout.CENTER );
 
 		requestAttributes = new SimpleAttributeSet();
@@ -157,7 +157,7 @@ public class JLogList extends JPanel
 
 		if( line instanceof LoggingEvent )
 		{
-			LoggingEvent ev = ( LoggingEvent ) line;
+			LoggingEvent ev = ( LoggingEvent )line;
 			linesToAdd.push( new LoggingEventWrapper( ev ) );
 
 			if( ev.getThrowableInformation() != null )
@@ -168,7 +168,7 @@ public class JLogList extends JPanel
 				t.printStackTrace( pw );
 				StringTokenizer st = new StringTokenizer( sw.toString(), "\r\n" );
 				while( st.hasMoreElements() )
-					linesToAdd.push( "   " +  st.nextElement() );
+					linesToAdd.push( "   " + st.nextElement() );
 			}
 		}
 		else
@@ -197,14 +197,13 @@ public class JLogList extends JPanel
 		}
 
 		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
-					boolean cellHasFocus )
+				boolean cellHasFocus )
 		{
-			JLabel component = ( JLabel ) super
-						.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
+			JLabel component = ( JLabel )super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
 
 			if( value instanceof LoggingEventWrapper )
 			{
-				LoggingEventWrapper eventWrapper = ( LoggingEventWrapper ) value;
+				LoggingEventWrapper eventWrapper = ( LoggingEventWrapper )value;
 
 				if( levelColors.containsKey( eventWrapper.getLevel() ) )
 					component.setForeground( levelColors.get( eventWrapper.getLevel() ) );
@@ -212,10 +211,10 @@ public class JLogList extends JPanel
 
 			// Limit the length of the tool tip, to prevent long delays.
 			String toolTip = component.getText();
-			if(toolTip != null && toolTip.length() > 1000)
-			   toolTip = toolTip.substring(0, 1000);
+			if( toolTip != null && toolTip.length() > 1000 )
+				toolTip = toolTip.substring( 0, 1000 );
 			component.setToolTipText( toolTip );
-			
+
 			return component;
 		}
 	}
@@ -257,8 +256,8 @@ public class JLogList extends JPanel
 
 		loggers.add( logger );
 	}
-	
-	public Logger [] getLoggers()
+
+	public Logger[] getLoggers()
 	{
 		return loggers.toArray( new Logger[loggers.size()] );
 	}
@@ -270,7 +269,7 @@ public class JLogList extends JPanel
 			logger.setLevel( level );
 		}
 	}
-	
+
 	public Logger getLogger( String loggerName )
 	{
 		for( Logger logger : loggers )
@@ -278,7 +277,7 @@ public class JLogList extends JPanel
 			if( logger.getName().equals( loggerName ) )
 				return logger;
 		}
-		
+
 		return null;
 	}
 
@@ -354,7 +353,7 @@ public class JLogList extends JPanel
 		public void actionPerformed( ActionEvent e )
 		{
 			String val = UISupport.prompt( "Set maximum number of log rows to keep", "Set Max Rows", String
-						.valueOf( maxRows ) );
+					.valueOf( maxRows ) );
 			if( val != null )
 			{
 				try
@@ -475,7 +474,7 @@ public class JLogList extends JPanel
 			{
 				Thread.currentThread().setName( "LogList Updater for " + getName() );
 			}
-			
+
 			while( !released && !linesToAdd.isEmpty() )
 			{
 				try
@@ -498,7 +497,7 @@ public class JLogList extends JPanel
 								while( lines.size() > maxRows )
 								{
 									lines.remove( 0 );
-									cnt++;
+									cnt++ ;
 								}
 
 								if( cnt > 0 )

@@ -56,16 +56,16 @@ public interface WssContainer extends PropertyExpansionContainer
 	public void removeOutgoingWssAt( int row );
 
 	public WssCrypto getCryptoByName( String cryptoName );
-	
+
 	public OutgoingWss getOutgoingWssByName( String outgoingName );
-	
+
 	public IncomingWss getIncomingWssByName( String incomingName );
 
-	public String [] getCryptoNames();
-	
-	public String [] getOutgoingWssNames();
-	
-	public String [] getIncomingWssNames();
+	public String[] getCryptoNames();
+
+	public String[] getOutgoingWssNames();
+
+	public String[] getIncomingWssNames();
 
 	public void importConfig( WssContainer wssContainer );
 }

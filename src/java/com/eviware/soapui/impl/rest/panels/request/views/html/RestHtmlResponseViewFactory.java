@@ -22,15 +22,16 @@ import com.eviware.soapui.support.editor.registry.ResponseEditorViewFactory;
 public class RestHtmlResponseViewFactory implements ResponseEditorViewFactory
 {
 	public final static String VIEW_ID = "HTML Response";
-	
-	@SuppressWarnings("unchecked")
-	public EditorView<?> createResponseEditorView(Editor<?> editor, ModelItem modelItem)
+
+	@SuppressWarnings( "unchecked" )
+	public EditorView<?> createResponseEditorView( Editor<?> editor, ModelItem modelItem )
 	{
 		if( editor instanceof RestResponseMessageEditor && modelItem instanceof RestRequest )
 		{
-//			return new RestHtmlResponseView( (RestResponseMessageEditor) editor, (RestRequest) modelItem );
+			// return new RestHtmlResponseView( (RestResponseMessageEditor) editor,
+			// (RestRequest) modelItem );
 		}
-		
+
 		return null;
 	}
 

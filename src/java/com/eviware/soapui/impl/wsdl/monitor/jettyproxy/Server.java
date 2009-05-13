@@ -32,51 +32,51 @@ import com.eviware.soapui.SoapUI;
 public class Server extends org.mortbay.jetty.Server
 {
 
-	private Logger log = Logger.getLogger(Server.class);
+	private Logger log = Logger.getLogger( Server.class );
 
 	public Server()
 	{
 		super();
-		if (SoapUI.getLogMonitor() == null || SoapUI.getLogMonitor().getLogArea("jetty log") == null)
+		if( SoapUI.getLogMonitor() == null || SoapUI.getLogMonitor().getLogArea( "jetty log" ) == null )
 			return;
-		SoapUI.getLogMonitor().getLogArea("jetty log").addLogger(log.getName(), true);
+		SoapUI.getLogMonitor().getLogArea( "jetty log" ).addLogger( log.getName(), true );
 	}
 
 	@Override
-	public void handle(final org.mortbay.jetty.HttpConnection connection) throws IOException, ServletException
+	public void handle( final org.mortbay.jetty.HttpConnection connection ) throws IOException, ServletException
 	{
 		final Request request = connection.getRequest();
 
-		if (!request.getMethod().equals("CONNECT"))
+		if( !request.getMethod().equals( "CONNECT" ) )
 		{
-			super.handle(connection);
+			super.handle( connection );
 			return;
 		}
 
 		final String uri = request.getUri().toString();
 
-		final int c = uri.indexOf(':');
-		final String port = uri.substring(c + 1);
-		final String host = uri.substring(0, c);
+		final int c = uri.indexOf( ':' );
+		final String port = uri.substring( c + 1 );
+		final String host = uri.substring( 0, c );
 
-		final InetSocketAddress inetAddress = new InetSocketAddress(host, Integer.parseInt(port));
+		final InetSocketAddress inetAddress = new InetSocketAddress( host, Integer.parseInt( port ) );
 
-		final Socket clientSocket = connection.getEndPoint().getTransport() instanceof Socket ? (Socket) connection
-				.getEndPoint().getTransport() : ((SocketChannel) connection.getEndPoint().getTransport()).socket();
+		final Socket clientSocket = connection.getEndPoint().getTransport() instanceof Socket ? ( Socket )connection
+				.getEndPoint().getTransport() : ( ( SocketChannel )connection.getEndPoint().getTransport() ).socket();
 		final InputStream in = clientSocket.getInputStream();
 		final OutputStream out = clientSocket.getOutputStream();
 
-		final SSLSocket socket = (SSLSocket) SSLSocketFactory.getDefault().createSocket(inetAddress.getAddress(),
-				inetAddress.getPort());
+		final SSLSocket socket = ( SSLSocket )SSLSocketFactory.getDefault().createSocket( inetAddress.getAddress(),
+				inetAddress.getPort() );
 
 		final Response response = connection.getResponse();
-		response.setStatus(200);
+		response.setStatus( 200 );
 		// response.setHeader("Connection", "close");
 		response.flushBuffer();
 
-		IO.copyThread(socket.getInputStream(), out);
+		IO.copyThread( socket.getInputStream(), out );
 
-		IO.copyThread(in, socket.getOutputStream());
+		IO.copyThread( in, socket.getOutputStream() );
 
 	}
 

@@ -1,4 +1,4 @@
- /*
+/*
  *  soapUI, copyright (C) 2004-2009 eviware.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui.impl.wsdl.teststeps.actions;
 
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;

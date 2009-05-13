@@ -1,4 +1,4 @@
- /*
+/*
  *  soapUI, copyright (C) 2004-2009 eviware.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui.impl.wsdl.teststeps.actions;
 
 import java.awt.event.ActionEvent;
@@ -34,22 +34,22 @@ public class CreateRequestAction extends AbstractAction
 {
 	private final WsdlTestRequestStepResult result;
 
-	public CreateRequestAction(WsdlTestStepResult result)
+	public CreateRequestAction( WsdlTestStepResult result )
 	{
-		this.result = (WsdlTestRequestStepResult) result;
-		
-		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/create_request_from_result.gif" ));
+		this.result = ( WsdlTestRequestStepResult )result;
+
+		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/create_request_from_result.gif" ) );
 		putValue( Action.SHORT_DESCRIPTION, "Creates a new request from this result" );
 	}
 
-	public void actionPerformed(ActionEvent e)
+	public void actionPerformed( ActionEvent e )
 	{
-		WsdlTestRequestStep step = (WsdlTestRequestStep) result.getTestStep();
-		String name = UISupport.prompt( "Specify name of request", "Create Request",  "Result from " + step.getName() );
+		WsdlTestRequestStep step = ( WsdlTestRequestStep )result.getTestStep();
+		String name = UISupport.prompt( "Specify name of request", "Create Request", "Result from " + step.getName() );
 
 		if( name != null )
 		{
-			WsdlOperation operation = (WsdlOperation) step.getTestRequest().getOperation();
+			WsdlOperation operation = ( WsdlOperation )step.getTestRequest().getOperation();
 			WsdlRequest request = operation.addNewRequest( name );
 			request.setRequestContent( result.getRequestContent() );
 			request.setDomain( result.getDomain() );
@@ -57,8 +57,8 @@ public class CreateRequestAction extends AbstractAction
 			request.setEndpoint( result.getEndpoint() );
 			request.setPassword( result.getPassword() );
 			request.setUsername( result.getUsername() );
-			
-         UISupport.showDesktopPanel( request );
+
+			UISupport.showDesktopPanel( request );
 		}
 	}
 }

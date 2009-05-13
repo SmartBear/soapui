@@ -29,32 +29,33 @@ import com.eviware.soapui.settings.HttpSettings;
 
 public class HttpCompressionRequestFilter extends AbstractRequestFilter
 {
-	private final static Logger log = Logger.getLogger(HttpCompressionRequestFilter.class);
+	private final static Logger log = Logger.getLogger( HttpCompressionRequestFilter.class );
 
 	@Override
-	public void filterAbstractHttpRequest(SubmitContext context, AbstractHttpRequest<?> httpRequest)
+	public void filterAbstractHttpRequest( SubmitContext context, AbstractHttpRequest<?> httpRequest )
 	{
 		Settings settings = httpRequest.getSettings();
-		String compressionAlg = settings.getString(HttpSettings.REQUEST_COMPRESSION, "None");
-		if (!"None".equals(compressionAlg))
+		String compressionAlg = settings.getString( HttpSettings.REQUEST_COMPRESSION, "None" );
+		if( !"None".equals( compressionAlg ) )
 		{
 			try
 			{
-				ExtendedHttpMethod method = (ExtendedHttpMethod) context.getProperty(BaseHttpRequestTransport.HTTP_METHOD);
-				if (method instanceof EntityEnclosingMethod)
+				ExtendedHttpMethod method = ( ExtendedHttpMethod )context
+						.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
+				if( method instanceof EntityEnclosingMethod )
 				{
 					RequestEntity requestEntity = method.getRequestEntity();
-					if (requestEntity != null)
+					if( requestEntity != null )
 					{
 						ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
-						requestEntity.writeRequest(tempOut);
+						requestEntity.writeRequest( tempOut );
 
-						byte[] compressedData = CompressionSupport.compress(compressionAlg, tempOut.toByteArray());
-						((EntityEnclosingMethod) method).setRequestEntity(new ByteArrayRequestEntity(compressedData));
+						byte[] compressedData = CompressionSupport.compress( compressionAlg, tempOut.toByteArray() );
+						( ( EntityEnclosingMethod )method ).setRequestEntity( new ByteArrayRequestEntity( compressedData ) );
 					}
 				}
 			}
-			catch (Exception e)
+			catch( Exception e )
 			{
 				e.printStackTrace();
 			}

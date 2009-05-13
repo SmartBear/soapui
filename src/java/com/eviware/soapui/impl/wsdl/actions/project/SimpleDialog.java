@@ -34,56 +34,57 @@ public abstract class SimpleDialog extends JDialog
 {
 	protected JButtonBar buttons = null;
 
-	public SimpleDialog(String title, String description, String helpUrl, boolean okAndCancel)
+	public SimpleDialog( String title, String description, String helpUrl, boolean okAndCancel )
 	{
-		super(UISupport.getMainFrame(), title, true);
+		super( UISupport.getMainFrame(), title, true );
 
-		buttons = UISupport.initDialogActions(buildActions(helpUrl, okAndCancel), this);
-		buttons.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+		buttons = UISupport.initDialogActions( buildActions( helpUrl, okAndCancel ), this );
+		buttons.setBorder( BorderFactory.createEmptyBorder( 5, 0, 0, 0 ) );
 
 		getContentPane().add(
-				UISupport.buildDescription(title, description, UISupport.createImageIcon(UISupport.TOOL_ICON_PATH)),
-				BorderLayout.NORTH);
+				UISupport.buildDescription( title, description, UISupport.createImageIcon( UISupport.TOOL_ICON_PATH ) ),
+				BorderLayout.NORTH );
 
-		getContentPane().add(buildContent(), BorderLayout.CENTER);
+		getContentPane().add( buildContent(), BorderLayout.CENTER );
 
-		buttons.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createMatteBorder(1, 0, 0, 0, Color.GRAY), BorderFactory.createMatteBorder(1, 0, 0, 0, Color.WHITE)),
-				BorderFactory.createEmptyBorder(3, 5, 3, 5)));
+		buttons.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createCompoundBorder( BorderFactory
+				.createMatteBorder( 1, 0, 0, 0, Color.GRAY ), BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.WHITE ) ),
+				BorderFactory.createEmptyBorder( 3, 5, 3, 5 ) ) );
 
-		getContentPane().add(buttons, BorderLayout.SOUTH);
+		getContentPane().add( buttons, BorderLayout.SOUTH );
 		modifyButtons();
-		
+
 		pack();
 	}
 
 	/*
-	 * overide this to change buttons at bottom of dialog.
-	 * I did not make it abstrac because it would require 
-	 * refactoring when SimpleDialog is used. 
+	 * overide this to change buttons at bottom of dialog. I did not make it
+	 * abstrac because it would require refactoring when SimpleDialog is used.
 	 * Robert.
 	 */
-	protected void modifyButtons() {};
-
-	public SimpleDialog(String title, String description, String helpUrl)
+	protected void modifyButtons()
 	{
-		this(title, description, helpUrl, true);
+	};
+
+	public SimpleDialog( String title, String description, String helpUrl )
+	{
+		this( title, description, helpUrl, true );
 	}
 
 	protected abstract Component buildContent();
 
-	public ActionList buildActions(String url, boolean okAndCancel)
+	public ActionList buildActions( String url, boolean okAndCancel )
 	{
-		DefaultActionList actions = new DefaultActionList("Actions");
-		if (url != null)
-			actions.addAction(new HelpAction(url));
+		DefaultActionList actions = new DefaultActionList( "Actions" );
+		if( url != null )
+			actions.addAction( new HelpAction( url ) );
 
 		OKAction okAction = new OKAction();
-		actions.addAction(okAction);
-		if (okAndCancel)
+		actions.addAction( okAction );
+		if( okAndCancel )
 		{
-			actions.addAction(new CancelAction());
-			actions.setDefaultAction(okAction);
+			actions.addAction( new CancelAction() );
+			actions.setDefaultAction( okAction );
 		}
 		return actions;
 	}
@@ -91,17 +92,17 @@ public abstract class SimpleDialog extends JDialog
 	protected abstract boolean handleOk();
 
 	@Override
-	public void setVisible(boolean b)
+	public void setVisible( boolean b )
 	{
-		if (b)
+		if( b )
 			beforeShow();
 		else
 			beforeHide();
 
-		UISupport.centerDialog(this);
-		super.setVisible(b);
+		UISupport.centerDialog( this );
+		super.setVisible( b );
 
-		if (b)
+		if( b )
 			afterShow();
 		else
 			afterHide();
@@ -132,14 +133,14 @@ public abstract class SimpleDialog extends JDialog
 	{
 		public OKAction()
 		{
-			super("OK");
+			super( "OK" );
 		}
 
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed( ActionEvent e )
 		{
-			if (handleOk())
+			if( handleOk() )
 			{
-				setVisible(false);
+				setVisible( false );
 			}
 		}
 	}
@@ -148,14 +149,14 @@ public abstract class SimpleDialog extends JDialog
 	{
 		public CancelAction()
 		{
-			super("Cancel");
+			super( "Cancel" );
 		}
 
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed( ActionEvent e )
 		{
-			if (handleCancel())
+			if( handleCancel() )
 			{
-				setVisible(false);
+				setVisible( false );
 			}
 		}
 	}
@@ -164,30 +165,30 @@ public abstract class SimpleDialog extends JDialog
 	{
 		private final String url;
 
-		public HelpAction(String url)
+		public HelpAction( String url )
 		{
-			this("Online Help", url, UISupport.getKeyStroke("F1"));
+			this( "Online Help", url, UISupport.getKeyStroke( "F1" ) );
 		}
 
-		public HelpAction(String title, String url)
+		public HelpAction( String title, String url )
 		{
-			this(title, url, null);
+			this( title, url, null );
 		}
 
-		public HelpAction(String title, String url, KeyStroke accelerator)
+		public HelpAction( String title, String url, KeyStroke accelerator )
 		{
-			super(title);
+			super( title );
 			this.url = url;
-			putValue(Action.SHORT_DESCRIPTION, "Show online help");
-			if (accelerator != null)
-				putValue(Action.ACCELERATOR_KEY, accelerator);
+			putValue( Action.SHORT_DESCRIPTION, "Show online help" );
+			if( accelerator != null )
+				putValue( Action.ACCELERATOR_KEY, accelerator );
 
-			putValue(Action.SMALL_ICON, UISupport.HELP_ICON);
+			putValue( Action.SMALL_ICON, UISupport.HELP_ICON );
 		}
 
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed( ActionEvent e )
 		{
-			Tools.openURL(url);
+			Tools.openURL( url );
 		}
 	}
 }

@@ -12,6 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl.mock.dispatch;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
@@ -20,64 +23,61 @@ import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunListener;
 import com.eviware.soapui.model.mock.MockRunner;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 public class SequenceMockOperationDispatcher extends AbstractMockOperationDispatcher implements MockRunListener
 {
-   private int currentDispatchIndex;
+	private int currentDispatchIndex;
 
-   public SequenceMockOperationDispatcher( WsdlMockOperation mockOperation )
-   {
-      super( mockOperation );
+	public SequenceMockOperationDispatcher( WsdlMockOperation mockOperation )
+	{
+		super( mockOperation );
 
-      mockOperation.getMockService().addMockRunListener( this );
-   }
+		mockOperation.getMockService().addMockRunListener( this );
+	}
 
-   public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result )
-   {
-      synchronized( result.getMockOperation() )
-      {
-         if( currentDispatchIndex >= getMockOperation().getMockResponseCount() )
-            currentDispatchIndex = 0;
+	public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result )
+	{
+		synchronized( result.getMockOperation() )
+		{
+			if( currentDispatchIndex >= getMockOperation().getMockResponseCount() )
+				currentDispatchIndex = 0;
 
-         WsdlMockResponse mockResponse = getMockOperation().getMockResponseAt( currentDispatchIndex );
+			WsdlMockResponse mockResponse = getMockOperation().getMockResponseAt( currentDispatchIndex );
 
-         currentDispatchIndex++;
-         return mockResponse;
-      }
-   }
+			currentDispatchIndex++ ;
+			return mockResponse;
+		}
+	}
 
-   @Override
-   public void release()
-   {
-      getMockOperation().getMockService().removeMockRunListener( this );
-      super.release();
-   }
+	@Override
+	public void release()
+	{
+		getMockOperation().getMockService().removeMockRunListener( this );
+		super.release();
+	}
 
-   public void onMockRunnerStart( MockRunner mockRunner )
-   {
-      currentDispatchIndex = 0;
-   }
+	public void onMockRunnerStart( MockRunner mockRunner )
+	{
+		currentDispatchIndex = 0;
+	}
 
-   public void onMockResult( MockResult result )
-   {
-   }
+	public void onMockResult( MockResult result )
+	{
+	}
 
-   public void onMockRunnerStop( MockRunner mockRunner )
-   {
-   }
+	public void onMockRunnerStop( MockRunner mockRunner )
+	{
+	}
 
-   public MockResult onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
-   {
-      return null;
-   }
+	public MockResult onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
+	{
+		return null;
+	}
 
-   public static class Factory implements MockOperationDispatchFactory
-   {
-      public MockOperationDispatcher build( WsdlMockOperation mockOperation )
-      {
-         return new SequenceMockOperationDispatcher( mockOperation );
-      }
-   }
+	public static class Factory implements MockOperationDispatchFactory
+	{
+		public MockOperationDispatcher build( WsdlMockOperation mockOperation )
+		{
+			return new SequenceMockOperationDispatcher( mockOperation );
+		}
+	}
 }

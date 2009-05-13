@@ -12,36 +12,37 @@
 
 package com.eviware.soapui.impl.wadl.support;
 
-import com.eviware.soapui.impl.rest.RestService;
-import com.eviware.soapui.impl.rest.WadlGenerator;
-import com.eviware.soapui.impl.support.definition.support.AbstractDefinitionLoader;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
+import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.WadlGenerator;
+import com.eviware.soapui.impl.support.definition.support.AbstractDefinitionLoader;
+
 public class GeneratedWadlDefinitionLoader extends AbstractDefinitionLoader
 {
-   private RestService restService;
+	private RestService restService;
 
-   public GeneratedWadlDefinitionLoader(RestService restService)
-   {
-      this.restService = restService;
-   }
+	public GeneratedWadlDefinitionLoader( RestService restService )
+	{
+		this.restService = restService;
+	}
 
-   public XmlObject loadXmlObject(String wsdlUrl, XmlOptions options) throws Exception
-   {
-      return new WadlGenerator(restService).generateWadl();
-   }
+	public XmlObject loadXmlObject( String wsdlUrl, XmlOptions options ) throws Exception
+	{
+		return new WadlGenerator( restService ).generateWadl();
+	}
 
-   public String getBaseURI()
-   {
-      return restService.getName() + ".wadl";
-   }
-	
-	public void setNewBaseURI(String uri)
+	public String getBaseURI()
+	{
+		return restService.getName() + ".wadl";
+	}
+
+	public void setNewBaseURI( String uri )
 	{
 		// not implemented
 	}
-	
+
 	public String getFirstNewURI()
 	{
 		return getBaseURI();

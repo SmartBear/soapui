@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui.support.xml;
 
 import org.apache.xmlbeans.XmlObject;
@@ -25,16 +25,17 @@ public interface XmlObjectPersistable
 	/**
 	 * Persisits this object to an XmlObject
 	 * 
-	 * @return the persisted XmlObject 
+	 * @return the persisted XmlObject
 	 */
-	
+
 	public XmlObject save();
-	
+
 	/**
 	 * Restores this object from the specified XmlObject
 	 * 
-	 * @param xmlObject the xmlObject to restore from
+	 * @param xmlObject
+	 *           the xmlObject to restore from
 	 */
-	
+
 	public void restore( XmlObject xmlObject );
 }

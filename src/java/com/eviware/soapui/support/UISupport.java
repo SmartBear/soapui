@@ -114,12 +114,12 @@ public class UISupport
 
 	public static final String DEFAULT_EDITOR_FONT = "Courier plain";
 	public static final int DEFAULT_EDITOR_FONT_SIZE = 11;
-	
+
 	static
 	{
 		setDialogs( new ConsoleDialogs() );
 		uiUtils = new SwingUtils();
-		
+
 		if( !isHeadless() )
 			TOOLBAR_BUTTON_DIMENSION = new Dimension( 22, 21 );
 	}
@@ -127,9 +127,9 @@ public class UISupport
 	public static ImageIcon TOOL_ICON = UISupport.createImageIcon( TOOL_ICON_PATH );
 	public static ImageIcon OPTIONS_ICON = UISupport.createImageIcon( OPTIONS_ICON_PATH );
 	public static ImageIcon HELP_ICON = UISupport.createImageIcon( "/help-browser.png" );
-   private static EditorFactory editorFactory = new DefaultEditorFactory();
+	private static EditorFactory editorFactory = new DefaultEditorFactory();
 
-   /**
+	/**
 	 * Add a classloader to find resources.
 	 * 
 	 * @param loader
@@ -157,10 +157,10 @@ public class UISupport
 		dialogs = xDialogs;
 	}
 
-   public static EditorFactory getEditorFactory()
-   {
-      return editorFactory;
-   }
+	public static EditorFactory getEditorFactory()
+	{
+		return editorFactory;
+	}
 
 	public static void setFileDialogs( XFileDialogs xFileDialogs )
 	{
@@ -179,19 +179,19 @@ public class UISupport
 
 	public static Frame getMainFrame()
 	{
-		return ( Frame ) ( frame instanceof Frame ? frame : null );
+		return ( Frame )( frame instanceof Frame ? frame : null );
 	}
-	
-	public static Frame getParentFrame(Component component)
-   {
-      for(Container c = component.getParent(); c != null; c = c.getParent() )
-      {
-         if (c instanceof Frame)
-            return (Frame) c;
-      }
-      return getMainFrame();
-   }
-	
+
+	public static Frame getParentFrame( Component component )
+	{
+		for( Container c = component.getParent(); c != null; c = c.getParent() )
+		{
+			if( c instanceof Frame )
+				return ( Frame )c;
+		}
+		return getMainFrame();
+	}
+
 	public static XDialogs getDialogs()
 	{
 		return dialogs;
@@ -208,7 +208,7 @@ public class UISupport
 
 	@Deprecated
 	public static ConfigurationDialog createConfigurationDialog( String name, String helpUrl, String description,
-				ImageIcon icon )
+			ImageIcon icon )
 	{
 		return new SwingConfigurationDialogImpl( name, helpUrl, description, icon );
 	}
@@ -365,9 +365,8 @@ public class UISupport
 			b = ge.getDefaultScreenDevice().getDefaultConfiguration().getBounds();
 		}
 
-		dialog.setLocation( ( int ) ( ( b.getWidth() - sz.getWidth() ) / 2 ) + ( int ) b.getX(), ( int ) ( ( b
-					.getHeight() - sz.getHeight() ) / 2 )
-					+ ( int ) b.getY() );
+		dialog.setLocation( ( int )( ( b.getWidth() - sz.getWidth() ) / 2 ) + ( int )b.getX(),
+				( int )( ( b.getHeight() - sz.getHeight() ) / 2 ) + ( int )b.getY() );
 	}
 
 	public static void showDialog( JDialog dialog )
@@ -378,12 +377,12 @@ public class UISupport
 
 	public static ImageIcon createImageIcon( String path )
 	{
-		if( StringUtils.isNullOrEmpty(path))
+		if( StringUtils.isNullOrEmpty( path ) )
 			return null;
-		
+
 		if( isHeadless() )
 			return null;
-		
+
 		if( iconCache.containsKey( path ) )
 			return iconCache.get( path );
 
@@ -393,7 +392,10 @@ public class UISupport
 		{
 			if( path.indexOf( '/', 1 ) == -1 )
 				path = "/com/eviware/soapui/resources/images" + path;
-			
+
+			if( iconCache.containsKey( path ) )
+				return iconCache.get( path );
+
 			imgURL = SoapUI.class.getResource( path );
 
 			if( imgURL == null && path.endsWith( ".gif" ) )
@@ -408,7 +410,8 @@ public class UISupport
 		}
 		catch( Throwable t )
 		{
-			System.err.println( "Failed to find icon: " + t );  // FIXME "Failed to find icon: java.lang.StackOverflowError"
+			System.err.println( "Failed to find icon: " + t ); // FIXME
+																				// "Failed to find icon: java.lang.StackOverflowError"
 			return null;
 		}
 
@@ -426,7 +429,7 @@ public class UISupport
 					isHeadless = true;
 				else
 					System.err.println( "Failed to create icon: " + e );
-				
+
 				return null;
 			}
 		}
@@ -441,7 +444,7 @@ public class UISupport
 	{
 		if( isHeadless == null )
 			isHeadless = GraphicsEnvironment.isHeadless();
-		
+
 		return isHeadless.booleanValue();
 	}
 
@@ -471,13 +474,13 @@ public class UISupport
 	@SuppressWarnings( "unchecked" )
 	public static <T extends Object> T prompt( String question, String title, T[] objects )
 	{
-		return ( T ) dialogs.prompt( question, title, objects );
+		return ( T )dialogs.prompt( question, title, objects );
 	}
 
 	@SuppressWarnings( "unchecked" )
 	public static <T extends Object> T prompt( String question, String title, T[] objects, String value )
 	{
-		return ( T ) dialogs.prompt( question, title, objects, value );
+		return ( T )dialogs.prompt( question, title, objects, value );
 	}
 
 	public static JButton createToolbarButton( Action action )
@@ -502,7 +505,7 @@ public class UISupport
 		Color color = UIManager.getDefaults().getColor( "Panel.background" );
 		Color darker = color.darker();
 		panel.setForeground( new Color( ( color.getRed() + darker.getRed() ) / 2,
-					( color.getGreen() + darker.getGreen() ) / 2, ( color.getBlue() + darker.getBlue() ) / 2 ) );
+				( color.getGreen() + darker.getGreen() ) / 2, ( color.getBlue() + darker.getBlue() ) / 2 ) );
 
 		if( tabs.getTabPlacement() == JTabbedPane.LEFT || tabs.getTabPlacement() == JTabbedPane.RIGHT )
 			panel.setDirection( GradientPanel.VERTICAL );
@@ -526,8 +529,8 @@ public class UISupport
 	{
 		popup.setInvoker( invoker );
 
-		popup.setLocation( ( int ) ( invoker.getLocationOnScreen().getX() + p.getX() ), ( int ) ( invoker
-					.getLocationOnScreen().getY() + p.getY() ) );
+		popup.setLocation( ( int )( invoker.getLocationOnScreen().getX() + p.getX() ), ( int )( invoker
+				.getLocationOnScreen().getY() + p.getY() ) );
 		popup.setVisible( true );
 	}
 
@@ -604,7 +607,7 @@ public class UISupport
 		if( ex.toString().length() > 100 )
 		{
 			dialogs.showExtendedInfo( "Error", "An error of type " + ex.getClass().getSimpleName() + " occured.", ex
-						.toString(), null );
+					.toString(), null );
 		}
 		else
 		{
@@ -655,10 +658,10 @@ public class UISupport
 	{
 		UISupport.uiUtils = utils;
 	}
-	
+
 	public static UIUtils getUIUtils()
 	{
-	   return uiUtils;
+		return uiUtils;
 	}
 
 	public static void invokeLater( Runnable runnable )
@@ -724,23 +727,23 @@ public class UISupport
 
 	public static void setPreferredHeight( Component component, int heigth )
 	{
-		component.setPreferredSize( new Dimension( ( int ) component.getPreferredSize().getWidth(), heigth ) );
+		component.setPreferredSize( new Dimension( ( int )component.getPreferredSize().getWidth(), heigth ) );
 	}
 
 	public static JButtonBar initDialogActions( ActionList actions, final JDialog dialog )
 	{
 		return initWindowActions( actions, dialog.getRootPane(), dialog );
 	}
-	
+
 	public static JButtonBar initFrameActions( ActionList actions, final JFrame frame )
 	{
 		return initWindowActions( actions, frame.getRootPane(), frame );
 	}
-	
+
 	private static JButtonBar initWindowActions( ActionList actions, JRootPane rootPane, final Window dialog )
 	{
 		rootPane.getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put(
-					KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESCAPE" );
+				KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESCAPE" );
 		rootPane.getActionMap().put( "ESCAPE", new AbstractAction()
 		{
 			public void actionPerformed( ActionEvent e )
@@ -761,7 +764,7 @@ public class UISupport
 				if( action instanceof HelpActionMarker )
 				{
 					rootPane.getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put(
-								KeyStroke.getKeyStroke( KeyEvent.VK_F1, 0 ), "HELP" );
+							KeyStroke.getKeyStroke( KeyEvent.VK_F1, 0 ), "HELP" );
 					rootPane.getActionMap().put( "HELP", action );
 					break;
 				}
@@ -776,7 +779,7 @@ public class UISupport
 	public static void initDialogActions( final JDialog dialog, Action helpAction, JButton defaultButton )
 	{
 		dialog.getRootPane().getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put(
-					KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESCAPE" );
+				KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESCAPE" );
 		dialog.getRootPane().getActionMap().put( "ESCAPE", new AbstractAction()
 		{
 			public void actionPerformed( ActionEvent e )
@@ -791,7 +794,7 @@ public class UISupport
 		if( helpAction != null )
 		{
 			dialog.getRootPane().getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put(
-						KeyStroke.getKeyStroke( KeyEvent.VK_F1, 0 ), "HELP" );
+					KeyStroke.getKeyStroke( KeyEvent.VK_F1, 0 ), "HELP" );
 			dialog.getRootPane().getActionMap().put( "HELP", helpAction );
 		}
 	}
@@ -799,8 +802,8 @@ public class UISupport
 	public static <T extends JComponent> T addTitledBorder( T component, String title )
 	{
 		component.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 3, 0, 0, 0 ),
-					BorderFactory.createCompoundBorder( BorderFactory.createTitledBorder( BorderFactory.createEmptyBorder(),
-								title ), component.getBorder() ) ) );
+				BorderFactory.createCompoundBorder( BorderFactory.createTitledBorder( BorderFactory.createEmptyBorder(),
+						title ), component.getBorder() ) ) );
 
 		return component;
 	}
@@ -813,13 +816,13 @@ public class UISupport
 	@SuppressWarnings( "unchecked" )
 	public static <T extends Object> T prompt( String question, String title, List<T> objects )
 	{
-		return ( T ) dialogs.prompt( question, title, objects.toArray() );
+		return ( T )dialogs.prompt( question, title, objects.toArray() );
 	}
 
 	@SuppressWarnings( "unchecked" )
 	public static <T extends Object> T prompt( String question, String title, List<T> objects, String value )
 	{
-		return ( T ) dialogs.prompt( question, title, objects.toArray(), value );
+		return ( T )dialogs.prompt( question, title, objects.toArray(), value );
 	}
 
 	public static void showExtendedInfo( String title, String description, String content, Dimension size )
@@ -933,41 +936,41 @@ public class UISupport
 	{
 		return getEditorFont( SoapUI.getSettings() );
 	}
-	
-	public static Font getEditorFont(Settings settings)
+
+	public static Font getEditorFont( Settings settings )
 	{
 		String editorFont = settings.getString( UISettings.EDITOR_FONT, null );
-		if( StringUtils.hasContent(editorFont) )
-			return Font.decode(editorFont);
-		
-		Integer fontSize = (Integer) UIManager.get("customFontSize"); 
-		if (fontSize == null) 
+		if( StringUtils.hasContent( editorFont ) )
+			return Font.decode( editorFont );
+
+		Integer fontSize = ( Integer )UIManager.get( "customFontSize" );
+		if( fontSize == null )
 		{
 			fontSize = DEFAULT_EDITOR_FONT_SIZE;
 		}
-		
+
 		return Font.decode( DEFAULT_EDITOR_FONT + " " + fontSize );
 	}
-	
+
 	public static char[] promptPassword( String question, String title )
 	{
 		return dialogs.promptPassword( question, title );
 	}
 
-	public static JComboBox addTooltipListener(JComboBox combo, String defaultTooltip)
+	public static JComboBox addTooltipListener( JComboBox combo, String defaultTooltip )
 	{
-		combo.setToolTipText(defaultTooltip);
-      combo.addItemListener( new ItemListenerImplementation( combo, defaultTooltip) );
+		combo.setToolTipText( defaultTooltip );
+		combo.addItemListener( new ItemListenerImplementation( combo, defaultTooltip ) );
 
-      return combo;
+		return combo;
 	}
-	
+
 	private static final class ItemListenerImplementation implements ItemListener
 	{
 		private final JComboBox combo;
 		private final String defaultTooltip;
 
-		public ItemListenerImplementation(JComboBox combo, String defaultTooltip)
+		public ItemListenerImplementation( JComboBox combo, String defaultTooltip )
 		{
 			this.combo = combo;
 			this.defaultTooltip = defaultTooltip;
@@ -976,28 +979,28 @@ public class UISupport
 		// set tooltip, property is set by model directly
 		public void itemStateChanged( ItemEvent e )
 		{
-		   Object item = combo.getSelectedItem();
-		   if( item == null )
-		   {
-		      combo.setToolTipText( defaultTooltip );
-		   }
-		   else
-		   {
-		      String selectedItem = item.toString();
-		      
-		      if( item instanceof ModelItem )
-		      	selectedItem = ((ModelItem)item).getName();
-		      else if( item instanceof TestProperty )
-		      	selectedItem = ((TestProperty)item).getName();
-		      
-		      combo.setToolTipText( selectedItem );
-		   }
+			Object item = combo.getSelectedItem();
+			if( item == null )
+			{
+				combo.setToolTipText( defaultTooltip );
+			}
+			else
+			{
+				String selectedItem = item.toString();
+
+				if( item instanceof ModelItem )
+					selectedItem = ( ( ModelItem )item ).getName();
+				else if( item instanceof TestProperty )
+					selectedItem = ( ( TestProperty )item ).getName();
+
+				combo.setToolTipText( selectedItem );
+			}
 		}
 	}
 
-	public static JComboBox createComboBox(int width, String defaultTooltip)
+	public static JComboBox createComboBox( int width, String defaultTooltip )
 	{
-		JComboBox comboBox = UISupport.addTooltipListener(new JComboBox(), defaultTooltip);
-		return UISupport.setFixedSize(comboBox, width, 20);
+		JComboBox comboBox = UISupport.addTooltipListener( new JComboBox(), defaultTooltip );
+		return UISupport.setFixedSize( comboBox, width, 20 );
 	}
 }

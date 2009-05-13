@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui.support.components;
 
 import java.awt.event.MouseAdapter;
@@ -38,7 +38,7 @@ public final class HyperlinkLabelMouseAdapter extends MouseAdapter
 	@Override
 	public void mouseClicked( MouseEvent e )
 	{
-		String text = label instanceof JLabel ? ((JLabel)label).getText() : ((JTextComponent)label).getText();
+		String text = label instanceof JLabel ? ( ( JLabel )label ).getText() : ( ( JTextComponent )label ).getText();
 		Tools.openURL( text );
 	}
 }

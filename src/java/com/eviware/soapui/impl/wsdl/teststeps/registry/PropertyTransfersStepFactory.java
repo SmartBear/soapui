@@ -30,22 +30,22 @@ public class PropertyTransfersStepFactory extends WsdlTestStepFactory
 
 	public PropertyTransfersStepFactory()
 	{
-		super( TRANSFER_TYPE, "Property Transfer", 
-					"Transfers values from the previous response to the next request", "/value_transfer.gif" );
+		super( TRANSFER_TYPE, "Property Transfer", "Transfers values from the previous response to the next request",
+				"/value_transfer.gif" );
 	}
 
-   public WsdlTestStep buildTestStep(WsdlTestCase testCase,	TestStepConfig config, boolean forLoadTest)
+	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
 		return new PropertyTransfersTestStep( testCase, config, forLoadTest );
 	}
 
-	public TestStepConfig createNewTestStep(WsdlTestCase testCase, String name)
+	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
 	{
 		TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
-      testStepConfig.setType( TRANSFER_TYPE );
-      testStepConfig.setName( name );
-      testStepConfig.setConfig( PropertyTransfersStepConfig.Factory.newInstance() );
-      return testStepConfig;
+		testStepConfig.setType( TRANSFER_TYPE );
+		testStepConfig.setName( name );
+		testStepConfig.setConfig( PropertyTransfersStepConfig.Factory.newInstance() );
+		return testStepConfig;
 	}
 
 	public boolean canCreate()

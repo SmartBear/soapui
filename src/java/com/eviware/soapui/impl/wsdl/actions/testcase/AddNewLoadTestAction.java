@@ -27,18 +27,19 @@ public class AddNewLoadTestAction extends AbstractSoapUIAction<WsdlTestCase>
 {
 	public static final String SOAPUI_ACTION_ID = "AddNewLoadTestAction";
 
-	public AddNewLoadTestAction() 
-   {
-      super( "New LoadTest", "Creates a new LoadTest for this TestCase" );
-   }
-   
-   public void perform( WsdlTestCase testCase, Object param )
+	public AddNewLoadTestAction()
 	{
-      String name = UISupport.prompt( "Specify name of LoadTest", "New LoadTest", 
-      		"LoadTest " + (testCase.getLoadTestCount()+1) );
-      if( name == null ) return;
-      
-      WsdlLoadTest loadTest = testCase.addNewLoadTest( name );
-      UISupport.selectAndShow( loadTest );
-   }
+		super( "New LoadTest", "Creates a new LoadTest for this TestCase" );
+	}
+
+	public void perform( WsdlTestCase testCase, Object param )
+	{
+		String name = UISupport.prompt( "Specify name of LoadTest", "New LoadTest", "LoadTest "
+				+ ( testCase.getLoadTestCount() + 1 ) );
+		if( name == null )
+			return;
+
+		WsdlLoadTest loadTest = testCase.addNewLoadTest( name );
+		UISupport.selectAndShow( loadTest );
+	}
 }

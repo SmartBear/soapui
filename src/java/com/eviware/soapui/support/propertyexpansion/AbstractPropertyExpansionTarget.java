@@ -10,14 +10,13 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
- 
 package com.eviware.soapui.support.propertyexpansion;
 
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.model.ModelItem;
 
-public abstract class AbstractPropertyExpansionTarget  implements PropertyExpansionTarget
+public abstract class AbstractPropertyExpansionTarget implements PropertyExpansionTarget
 {
 	private ModelItem modelItem;
 
@@ -25,23 +24,25 @@ public abstract class AbstractPropertyExpansionTarget  implements PropertyExpans
 	{
 		this.modelItem = modelItem;
 	}
-	
+
 	public ModelItem getContextModelItem()
 	{
 		if( modelItem instanceof WsdlTestRequest )
 		{
-			modelItem = ((WsdlTestRequest)modelItem).getTestStep();
+			modelItem = ( ( WsdlTestRequest )modelItem ).getTestStep();
 		}
-      else if( modelItem instanceof RestTestRequest )
-      {
-         modelItem = ((RestTestRequest)modelItem).getTestStep();
-      }
-//		else if( modelItem instanceof WsdlMockResponse && 
-//					((WsdlMockResponse)modelItem).getMockOperation().getMockService() instanceof WsdlTestMockService )
-//		{
-//			modelItem = ((WsdlTestMockService)((WsdlMockResponse)modelItem).getMockOperation().getMockService()).getMockResponseStep();
-//		}
-		
+		else if( modelItem instanceof RestTestRequest )
+		{
+			modelItem = ( ( RestTestRequest )modelItem ).getTestStep();
+		}
+		// else if( modelItem instanceof WsdlMockResponse &&
+		// ((WsdlMockResponse)modelItem).getMockOperation().getMockService()
+		// instanceof WsdlTestMockService )
+		// {
+		// modelItem =
+		// ((WsdlTestMockService)((WsdlMockResponse)modelItem).getMockOperation().getMockService()).getMockResponseStep();
+		// }
+
 		return modelItem;
 	}
 }

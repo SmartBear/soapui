@@ -14,41 +14,47 @@ package com.eviware.soapui.impl.wsdl.support.http;
 
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.util.LangUtils;
- 
-public class SoapUIHostConfiguration extends HostConfiguration {
 
-    public static final String SOAPUI_SSL_CONFIG = "soapui.sslConfig";
+public class SoapUIHostConfiguration extends HostConfiguration
+{
 
-    public SoapUIHostConfiguration() {
-        super();
-    }
-    
-    public SoapUIHostConfiguration (final HostConfiguration hostConfiguration) {
-       super( hostConfiguration );
-    }
+	public static final String SOAPUI_SSL_CONFIG = "soapui.sslConfig";
 
-    public Object clone() {
-        return new SoapUIHostConfiguration(this);
-    }    
-    
-    public synchronized boolean equals(final Object o) {
-   	 
-   	 boolean result = super.equals( o );
-   	 if( result && o instanceof SoapUIHostConfiguration)
-   	 {
-           SoapUIHostConfiguration that = (SoapUIHostConfiguration) o;
-            return LangUtils.equals(getParams().getParameter( SOAPUI_SSL_CONFIG ),
-            			that.getParams().getParameter( SOAPUI_SSL_CONFIG ) );
-       } 
-   	 else 
-       {
-          return false;
-       }
-    }
+	public SoapUIHostConfiguration()
+	{
+		super();
+	}
 
-    public synchronized int hashCode() {
-        int hash = super.hashCode();
-        hash = LangUtils.hashCode( hash, getParams().getParameter( SOAPUI_SSL_CONFIG ) );
-        return hash;
-    }
+	public SoapUIHostConfiguration( final HostConfiguration hostConfiguration )
+	{
+		super( hostConfiguration );
+	}
+
+	public Object clone()
+	{
+		return new SoapUIHostConfiguration( this );
+	}
+
+	public synchronized boolean equals( final Object o )
+	{
+
+		boolean result = super.equals( o );
+		if( result && o instanceof SoapUIHostConfiguration )
+		{
+			SoapUIHostConfiguration that = ( SoapUIHostConfiguration )o;
+			return LangUtils.equals( getParams().getParameter( SOAPUI_SSL_CONFIG ), that.getParams().getParameter(
+					SOAPUI_SSL_CONFIG ) );
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public synchronized int hashCode()
+	{
+		int hash = super.hashCode();
+		hash = LangUtils.hashCode( hash, getParams().getParameter( SOAPUI_SSL_CONFIG ) );
+		return hash;
+	}
 }

@@ -60,83 +60,82 @@ public class WSIAnalyzeAction extends AbstractToolsAction<Interface>
 {
 	public final static String SOAPUI_ACTION_ID = "WSIAnalyzeAction";
 	public final static Logger log = Logger.getLogger( WSIAnalyzeAction.class );
-	
+
 	private String configFile;
 	private String wsiDir;
-	
-   public WSIAnalyzeAction()
-   {
-      super( "Check WSI Compliance", "Validate this WSDL for WSI Basic Profile compliance");
-   }
 
-	protected void generate(StringToStringMap values, ToolHost toolHost, Interface modelItem) throws Exception
+	public WSIAnalyzeAction()
 	{
-		wsiDir = SoapUI.getSettings().getString( WSISettings.WSI_LOCATION, System.getenv("WSI_HOME") );
+		super( "Check WSI Compliance", "Validate this WSDL for WSI Basic Profile compliance" );
+	}
+
+	protected void generate( StringToStringMap values, ToolHost toolHost, Interface modelItem ) throws Exception
+	{
+		wsiDir = SoapUI.getSettings().getString( WSISettings.WSI_LOCATION, System.getenv( "WSI_HOME" ) );
 		if( Tools.isEmpty( wsiDir ) )
 		{
 			UISupport.showErrorMessage( "WSI Test Tools directory must be set in global preferences" );
-			
+
 			if( UISupport.getMainFrame() != null )
 			{
-				if( SoapUIPreferencesAction.getInstance().show( SoapUIPreferencesAction.WS_I_SETTINGS ))
+				if( SoapUIPreferencesAction.getInstance().show( SoapUIPreferencesAction.WS_I_SETTINGS ) )
 				{
 					wsiDir = SoapUI.getSettings().getString( WSISettings.WSI_LOCATION, null );
 				}
 			}
 		}
-		
+
 		if( Tools.isEmpty( wsiDir ) )
 			return;
-		
+
 		ProcessBuilder builder = new ProcessBuilder();
-		
+
 		File reportFile = File.createTempFile( "wsi-report", ".xml" );
-		
+
 		ArgumentBuilder args = buildArgs( reportFile, modelItem );
-		builder.command(args.getArgs());
-		File wsiToolDir = new File(wsiDir + File.separatorChar + "cs" + File.separatorChar + "bin" );
+		builder.command( args.getArgs() );
+		File wsiToolDir = new File( wsiDir + File.separatorChar + "cs" + File.separatorChar + "bin" );
 		if( !wsiToolDir.exists() )
-			wsiToolDir = new File(wsiDir + File.separatorChar + "java" + File.separatorChar + "bin" );
-		
-		builder.directory(wsiToolDir);
-		
-		toolHost.run( new WSIProcessToolRunner( builder, reportFile, modelItem ));
+			wsiToolDir = new File( wsiDir + File.separatorChar + "java" + File.separatorChar + "bin" );
+
+		builder.directory( wsiToolDir );
+
+		toolHost.run( new WSIProcessToolRunner( builder, reportFile, modelItem ) );
 	}
 
-	private ArgumentBuilder buildArgs(File reportFile, Interface modelItem) throws IOException
+	private ArgumentBuilder buildArgs( File reportFile, Interface modelItem ) throws IOException
 	{
 		Settings settings = modelItem.getSettings();
-		
-		ConfigurationDocument configDoc = createConfigFile(reportFile, settings, (WsdlInterface) modelItem);
+
+		ConfigurationDocument configDoc = createConfigFile( reportFile, settings, ( WsdlInterface )modelItem );
 		configFile = configDoc.toString();
-		
+
 		File file = File.createTempFile( "wsi-analyzer-config", ".xml" );
-		
+
 		configDoc.save( file );
-		
+
 		ArgumentBuilder builder = new ArgumentBuilder( new StringToStringMap() );
 		builder.startScript( "Analyzer", "", ".sh" );
-			
+
 		builder.addArgs( "-config", file.getAbsolutePath() );
-		
+
 		// add this to command-line due to bug in wsi-tools (?)
-		if( settings.getBoolean( WSISettings.ASSERTION_DESCRIPTION ))
+		if( settings.getBoolean( WSISettings.ASSERTION_DESCRIPTION ) )
 			builder.addArgs( "-assertionDescription", "true" );
-		
+
 		return builder;
 	}
 
-	private ConfigurationDocument createConfigFile(File reportFile, Settings settings, WsdlInterface iface)
+	private ConfigurationDocument createConfigFile( File reportFile, Settings settings, WsdlInterface iface )
 	{
 		ConfigurationDocument configDoc = ConfigurationDocument.Factory.newInstance();
 		Configuration config = configDoc.addNewConfiguration();
-		
+
 		config.setVerbose( settings.getBoolean( WSISettings.VERBOSE ) );
 		AssertionResults results = config.addNewAssertionResults();
-		results.setType( 
-				AssertionResults.Type.Enum.forString( 
-						settings.getString( WSISettings.RESULTS_TYPE, AssertionResults.Type.ONLY_FAILED.toString() )));
-		
+		results.setType( AssertionResults.Type.Enum.forString( settings.getString( WSISettings.RESULTS_TYPE,
+				AssertionResults.Type.ONLY_FAILED.toString() ) ) );
+
 		results.setMessageEntry( settings.getBoolean( WSISettings.MESSAGE_ENTRY ) );
 		results.setFailureMessage( settings.getBoolean( WSISettings.FAILURE_MESSAGE ) );
 		results.setAssertionDescription( settings.getBoolean( WSISettings.ASSERTION_DESCRIPTION ) );
@@ -148,15 +147,15 @@ public class WSIAnalyzeAction extends AbstractToolsAction<Interface>
 		stylesheet.setHref( "./../common/Profiles/SSBP10_BP11_TAD.xml" );
 		stylesheet.setType( "text/xsl" );
 		stylesheet.setAlternate( false );
-		
+
 		config.setTestAssertionsFile( "../../common/profiles/SSBP10_BP11_TAD.xml" );
-		
+
 		WsdlReference wsdlRef = config.addNewWsdlReference();
-		
+
 		StringToStringMap values = new StringToStringMap();
 		values.put( WSDL, iface.getDefinition() );
-		values.put( CACHED_WSDL, Boolean.toString( iface.isCached() ));
-		
+		values.put( CACHED_WSDL, Boolean.toString( iface.isCached() ) );
+
 		wsdlRef.setWsdlURI( getWsdlUrl( values, iface ) );
 		WsdlElementReference wsdlElement = wsdlRef.addNewWsdlElement();
 		wsdlElement.setType( WsdlElementType.BINDING );
@@ -164,51 +163,51 @@ public class WSIAnalyzeAction extends AbstractToolsAction<Interface>
 		wsdlElement.setNamespace( iface.getBindingName().getNamespaceURI() );
 		return configDoc;
 	}
-	
-	protected void showReport(File reportFile, String configFile ) throws Exception
+
+	protected void showReport( File reportFile, String configFile ) throws Exception
 	{
 		WSIReportPanel panel = new WSIReportPanel( reportFile, configFile, null, true );
-		panel.setPreferredSize( new Dimension( 600, 400 ));
-		
-		UISupport.showDesktopPanel( 
-				new DefaultDesktopPanel( "WS-I Report", "WS-I Report for Interface [" + getModelItem().getName() + "]", panel ));
+		panel.setPreferredSize( new Dimension( 600, 400 ) );
+
+		UISupport.showDesktopPanel( new DefaultDesktopPanel( "WS-I Report", "WS-I Report for Interface ["
+				+ getModelItem().getName() + "]", panel ) );
 	}
 
 	public static File transformReport( File reportFile ) throws Exception
 	{
 		String dir = SoapUI.getSettings().getString( WSISettings.WSI_LOCATION, null );
-      File xsltFile = new File( dir + File.separatorChar + "common" + File.separatorChar + "xsl" + 
-      		File.separatorChar + "report.xsl" );
+		File xsltFile = new File( dir + File.separatorChar + "common" + File.separatorChar + "xsl" + File.separatorChar
+				+ "report.xsl" );
 
-      Source xmlSource = new StreamSource(reportFile);
-      Source xsltSource = new StreamSource(xsltFile);
+		Source xmlSource = new StreamSource( reportFile );
+		Source xsltSource = new StreamSource( xsltFile );
 
 		TransformerFactory transFact = TransformerFactory.newInstance();
-		Transformer trans = transFact.newTransformer(xsltSource);
+		Transformer trans = transFact.newTransformer( xsltSource );
 
 		String outputFolder = SoapUI.getSettings().getString( WSISettings.OUTPUT_FOLDER, null );
 		File output = outputFolder == null || outputFolder.trim().length() == 0 ? null : new File( outputFolder );
-		
+
 		File tempFile = File.createTempFile( "wsi-report", ".html", output );
-		trans.transform(xmlSource, new StreamResult( new FileWriter( tempFile )));
-		
+		trans.transform( xmlSource, new StreamResult( new FileWriter( tempFile ) ) );
+
 		log.info( "WSI Report created at [" + tempFile.getAbsolutePath() + "]" );
-		
+
 		return tempFile;
 	}
-	
+
 	private class WSIProcessToolRunner extends ProcessToolRunner
 	{
 		private File reportFile;
 		private final Interface modelItem;
 
-		public WSIProcessToolRunner(ProcessBuilder builder, File reportFile, Interface modelItem )
+		public WSIProcessToolRunner( ProcessBuilder builder, File reportFile, Interface modelItem )
 		{
-			super(builder, "WSI Analyzer", modelItem);
+			super( builder, "WSI Analyzer", modelItem );
 			this.reportFile = reportFile;
 			this.modelItem = modelItem;
 		}
-		
+
 		public String getDescription()
 		{
 			return "Running WSI Analysis tools..";
@@ -226,8 +225,8 @@ public class WSIAnalyzeAction extends AbstractToolsAction<Interface>
 				{
 					SoapUI.logError( e1 );
 				}
-				
-				SwingUtilities.invokeLater( new Runnable() 
+
+				SwingUtilities.invokeLater( new Runnable()
 				{
 					public void run()
 					{
@@ -235,24 +234,24 @@ public class WSIAnalyzeAction extends AbstractToolsAction<Interface>
 						{
 							showReport( reportFile, configFile );
 						}
-	      			catch( Exception e )
-	      			{
-	      				UISupport.showErrorMessage( e );
-	      			}
+						catch( Exception e )
+						{
+							UISupport.showErrorMessage( e );
+						}
 					}
 				} );
 			}
-			
+
 			closeDialog( modelItem );
 		}
-		
+
 		public boolean showLog()
 		{
 			return modelItem.getSettings().getBoolean( WSISettings.SHOW_LOG );
 		}
 
 		@Override
-		protected void beforeProcess(ProcessBuilder processBuilder, RunnerContext context)
+		protected void beforeProcess( ProcessBuilder processBuilder, RunnerContext context )
 		{
 			processBuilder.environment().put( "WSI_HOME", wsiDir );
 		}

@@ -25,7 +25,7 @@ public interface Inspector
 	public final static String ENABLED_PROPERTY = Inspector.class.getName() + "@enabled";
 
 	public abstract String getTitle();
-	
+
 	public abstract ImageIcon getIcon();
 
 	public abstract JComponent getComponent();

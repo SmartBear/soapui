@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 
+import java.util.Vector;
+
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
@@ -19,8 +21,6 @@ import com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.support.types.StringToStringMap;
-
-import java.util.Vector;
 
 /**
  * WsdlMessageExchange for a WsdlMockResult, required for validations
@@ -36,7 +36,7 @@ public class WsdlMockResultMessageExchange extends AbstractWsdlMessageExchange<M
 	public WsdlMockResultMessageExchange( WsdlMockResult mockResult, WsdlMockResponse mockResponse )
 	{
 		super( mockResponse );
-		
+
 		this.mockResult = mockResult;
 		this.mockResponse = mockResponse;
 	}
@@ -66,7 +66,8 @@ public class WsdlMockResultMessageExchange extends AbstractWsdlMessageExchange<M
 
 	public Attachment[] getResponseAttachments()
 	{
-		return mockResult == null || mockResponse == null ? new Attachment[0] : mockResult.getMockResponse().getAttachments();
+		return mockResult == null || mockResponse == null ? new Attachment[0] : mockResult.getMockResponse()
+				.getAttachments();
 	}
 
 	public String getResponseContent()
@@ -83,7 +84,7 @@ public class WsdlMockResultMessageExchange extends AbstractWsdlMessageExchange<M
 	{
 		if( mockResult.getMockOperation() != null )
 			return mockResult.getMockOperation().getOperation();
-		
+
 		return mockResponse == null ? null : mockResponse.getMockOperation().getOperation();
 	}
 
@@ -106,7 +107,7 @@ public class WsdlMockResultMessageExchange extends AbstractWsdlMessageExchange<M
 	{
 		mockResponse = null;
 	}
-	
+
 	public Vector<?> getRequestWssResult()
 	{
 		return mockResult == null ? null : mockResult.getRequestWssResult();
@@ -117,13 +118,13 @@ public class WsdlMockResultMessageExchange extends AbstractWsdlMessageExchange<M
 		return null;
 	}
 
-   public int getResponseStatusCode()
-   {
-      return mockResult.getResponseStatus();
-   }
+	public int getResponseStatusCode()
+	{
+		return mockResult.getResponseStatus();
+	}
 
-   public String getResponseContentType()
-   {
-      return mockResult.getResponseContentType();
-   }
+	public String getResponseContentType()
+	{
+		return mockResult.getResponseContentType();
+	}
 }

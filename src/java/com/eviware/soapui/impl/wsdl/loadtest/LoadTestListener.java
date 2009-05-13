@@ -21,6 +21,6 @@ package com.eviware.soapui.impl.wsdl.loadtest;
 public interface LoadTestListener
 {
 	public void assertionAdded( LoadTestAssertion assertion );
-	
+
 	public void assertionRemoved( LoadTestAssertion assertion );
 }

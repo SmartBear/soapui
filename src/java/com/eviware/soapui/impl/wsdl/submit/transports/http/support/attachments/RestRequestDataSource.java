@@ -24,17 +24,18 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
-import com.eviware.soapui.impl.rest.RestRequest;
-
-import javax.activation.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import javax.activation.DataSource;
+
+import com.eviware.soapui.impl.rest.RestRequest;
+
 /**
  * DataSource for an existing WsdlRequest
- *
+ * 
  * @author ole.matzura
  */
 
@@ -43,7 +44,7 @@ public class RestRequestDataSource implements DataSource
 	private final RestRequest restRequest;
 	private final String requestContent;
 
-   public RestRequestDataSource(RestRequest restRequest, String requestContent)
+	public RestRequestDataSource( RestRequest restRequest, String requestContent )
 	{
 		this.restRequest = restRequest;
 		this.requestContent = requestContent;
@@ -51,13 +52,13 @@ public class RestRequestDataSource implements DataSource
 
 	public String getContentType()
 	{
-      return restRequest.getMediaType();
+		return restRequest.getMediaType();
 	}
 
 	public InputStream getInputStream() throws IOException
 	{
-		byte[] bytes = requestContent.getBytes( "UTF-8");
-		return new ByteArrayInputStream( bytes);
+		byte[] bytes = requestContent.getBytes( "UTF-8" );
+		return new ByteArrayInputStream( bytes );
 	}
 
 	public String getName()

@@ -20,7 +20,7 @@ import com.eviware.soapui.model.project.Project;
 
 /**
  * ModelItem for mocking a number of Interfaces and their Operations
- *  
+ * 
  * @author ole.matzura
  */
 
@@ -28,25 +28,25 @@ public interface MockService extends TestModelItem
 {
 	public final static String PATH_PROPERTY = WsdlMockService.class.getName() + "@path";
 	public final static String PORT_PROPERTY = MockService.class.getName() + "@port";
-	
+
 	public Project getProject();
-	
+
 	public int getMockOperationCount();
-	
+
 	public MockOperation getMockOperationAt( int index );
-	
+
 	public MockOperation getMockOperationByName( String name );
-	
+
 	public String getPath();
-	
+
 	public int getPort();
-	
+
 	public MockRunner start() throws Exception;
-	
+
 	public void addMockRunListener( MockRunListener listener );
-	
+
 	public void removeMockRunListener( MockRunListener listener );
-	
+
 	public void addMockServiceListener( MockServiceListener listener );
 
 	public void removeMockServiceListener( MockServiceListener listener );

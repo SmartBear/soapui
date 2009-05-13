@@ -28,231 +28,231 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 public abstract class BaseHttpResponse implements HttpResponse
 {
-   private StringToStringMap requestHeaders;
-   private StringToStringMap responseHeaders;
+	private StringToStringMap requestHeaders;
+	private StringToStringMap responseHeaders;
 
-   private long timeTaken;
-   private long timestamp;
-   private String contentType;
-   private int statusCode;
-   private SSLInfo sslInfo;
-   private URL url;
-   private WeakReference<AbstractHttpRequest<?>> httpRequest;
-   private AbstractHttpRequest.RequestMethod method;
-   private String version;
-   private StringToStringMap properties;
-   private byte [] rawRequestData;
-   private byte [] rawResponseData;
+	private long timeTaken;
+	private long timestamp;
+	private String contentType;
+	private int statusCode;
+	private SSLInfo sslInfo;
+	private URL url;
+	private WeakReference<AbstractHttpRequest<?>> httpRequest;
+	private AbstractHttpRequest.RequestMethod method;
+	private String version;
+	private StringToStringMap properties;
+	private byte[] rawRequestData;
+	private byte[] rawResponseData;
 	private int requestContentPos = -1;
 
-   public BaseHttpResponse( ExtendedHttpMethod httpMethod, AbstractHttpRequest<?> httpRequest )
-   {
-      this.httpRequest = new WeakReference<AbstractHttpRequest<?>>( httpRequest );
-      this.timeTaken = httpMethod.getTimeTaken();
+	public BaseHttpResponse( ExtendedHttpMethod httpMethod, AbstractHttpRequest<?> httpRequest )
+	{
+		this.httpRequest = new WeakReference<AbstractHttpRequest<?>>( httpRequest );
+		this.timeTaken = httpMethod.getTimeTaken();
 
-      method = httpMethod.getMethod();
-      version = httpMethod.getParams().getVersion().toString();
-      try
+		method = httpMethod.getMethod();
+		version = httpMethod.getParams().getVersion().toString();
+		try
 		{
 			this.url = new URL( httpMethod.getURI().toString() );
 		}
-		catch (Exception e1)
+		catch( Exception e1 )
 		{
 			SoapUI.logError( e1 );
 		}
 
-      if( !httpMethod.isFailed() )
-      {
-	      Settings settings = httpRequest.getSettings();
-	      if( settings.getBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN ) )
-	      {
-	         try
-	         {
-	            httpMethod.getResponseBody();
-	         }
-	         catch( IOException e )
-	         {
-	            e.printStackTrace();
-	         }
-	         timeTaken += httpMethod.getResponseReadTime();
-	      }
-	
-	      try
-	      {
-	         this.timestamp = System.currentTimeMillis();
-	         this.contentType = httpMethod.getResponseContentType();
-	         this.statusCode = httpMethod.getStatusCode();
-	         this.sslInfo = httpMethod.getSSLInfo();
-	      }
-	      catch( Throwable e )
-	      {
-	         e.printStackTrace();
-	      }
-      }
-      
-      initHeaders( httpMethod );
-   }
+		if( !httpMethod.isFailed() )
+		{
+			Settings settings = httpRequest.getSettings();
+			if( settings.getBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN ) )
+			{
+				try
+				{
+					httpMethod.getResponseBody();
+				}
+				catch( IOException e )
+				{
+					e.printStackTrace();
+				}
+				timeTaken += httpMethod.getResponseReadTime();
+			}
 
-   protected void initHeaders( ExtendedHttpMethod httpMethod )
-   {
-      try
-      {
-      	ByteArrayOutputStream rawResponse = new ByteArrayOutputStream();
-      	ByteArrayOutputStream rawRequest = new ByteArrayOutputStream();
-      	
-      	if( !httpMethod.isFailed() )
-      	{
-      		rawResponse.write( String.valueOf( httpMethod.getStatusLine() ).getBytes() );
-      		rawResponse.write( "\r\n".getBytes() );
-      	}
-      	
-      	rawRequest.write( ( method + " " + String.valueOf( url ) + " " + version + "\r\n" ).getBytes() );
+			try
+			{
+				this.timestamp = System.currentTimeMillis();
+				this.contentType = httpMethod.getResponseContentType();
+				this.statusCode = httpMethod.getStatusCode();
+				this.sslInfo = httpMethod.getSSLInfo();
+			}
+			catch( Throwable e )
+			{
+				e.printStackTrace();
+			}
+		}
 
-         requestHeaders = new StringToStringMap();
-         Header[] headers = httpMethod.getRequestHeaders();
-         for( Header header : headers )
-         {
-            requestHeaders.put( header.getName(), header.getValue() );
-            rawRequest.write( header.toExternalForm().getBytes() );
-         }
+		initHeaders( httpMethod );
+	}
 
-         if( !httpMethod.isFailed() )
-      	{
-	         responseHeaders = new StringToStringMap();
-	         headers = httpMethod.getResponseHeaders();
-	         for( Header header : headers )
-	         {
-	            responseHeaders.put( header.getName(), header.getValue() );
-	            rawResponse.write( header.toExternalForm().getBytes() );
-	         }
-	
-	         responseHeaders.put( "#status#", String.valueOf(httpMethod.getStatusLine()) );
-      	}
+	protected void initHeaders( ExtendedHttpMethod httpMethod )
+	{
+		try
+		{
+			ByteArrayOutputStream rawResponse = new ByteArrayOutputStream();
+			ByteArrayOutputStream rawRequest = new ByteArrayOutputStream();
 
-         if( httpMethod.getRequestEntity() != null )
-         {
-         	rawRequest.write( "\r\n".getBytes() );
-            if( httpMethod.getRequestEntity().isRepeatable() )
-            {
-            	requestContentPos  = rawRequest.size();
-               httpMethod.getRequestEntity().writeRequest( rawRequest );
-            }
-            else
-            	rawResponse.write( "<request data not available>".getBytes() );
-         }
+			if( !httpMethod.isFailed() )
+			{
+				rawResponse.write( String.valueOf( httpMethod.getStatusLine() ).getBytes() );
+				rawResponse.write( "\r\n".getBytes() );
+			}
 
-         if( !httpMethod.isFailed() )
-         {
-         	rawResponse.write( "\r\n".getBytes() );
-         	rawResponse.write( httpMethod.getResponseBody() );
-         }
-         
-         rawResponseData = rawResponse.toByteArray();
-         rawRequestData = rawRequest.toByteArray();
-      }
-      catch( Throwable e )
-      {
-         e.printStackTrace();
-      }
-   }
+			rawRequest.write( ( method + " " + String.valueOf( url ) + " " + version + "\r\n" ).getBytes() );
 
-   public StringToStringMap getRequestHeaders()
-   {
-      return requestHeaders;
-   }
+			requestHeaders = new StringToStringMap();
+			Header[] headers = httpMethod.getRequestHeaders();
+			for( Header header : headers )
+			{
+				requestHeaders.put( header.getName(), header.getValue() );
+				rawRequest.write( header.toExternalForm().getBytes() );
+			}
 
-   public StringToStringMap getResponseHeaders()
-   {
-      return responseHeaders;
-   }
+			if( !httpMethod.isFailed() )
+			{
+				responseHeaders = new StringToStringMap();
+				headers = httpMethod.getResponseHeaders();
+				for( Header header : headers )
+				{
+					responseHeaders.put( header.getName(), header.getValue() );
+					rawResponse.write( header.toExternalForm().getBytes() );
+				}
 
-   public long getTimeTaken()
-   {
-      return timeTaken;
-   }
+				responseHeaders.put( "#status#", String.valueOf( httpMethod.getStatusLine() ) );
+			}
 
-   public SSLInfo getSSLInfo()
-   {
-      return sslInfo;
-   }
+			if( httpMethod.getRequestEntity() != null )
+			{
+				rawRequest.write( "\r\n".getBytes() );
+				if( httpMethod.getRequestEntity().isRepeatable() )
+				{
+					requestContentPos = rawRequest.size();
+					httpMethod.getRequestEntity().writeRequest( rawRequest );
+				}
+				else
+					rawResponse.write( "<request data not available>".getBytes() );
+			}
 
-   public long getTimestamp()
-   {
-      return timestamp;
-   }
+			if( !httpMethod.isFailed() )
+			{
+				rawResponse.write( "\r\n".getBytes() );
+				rawResponse.write( httpMethod.getResponseBody() );
+			}
 
-   public String getContentType()
-   {
-      return contentType;
-   }
+			rawResponseData = rawResponse.toByteArray();
+			rawRequestData = rawRequest.toByteArray();
+		}
+		catch( Throwable e )
+		{
+			e.printStackTrace();
+		}
+	}
 
-   public URL getURL()
-   {
-      return url;
-   }
+	public StringToStringMap getRequestHeaders()
+	{
+		return requestHeaders;
+	}
 
-   public AbstractHttpRequest<?> getRequest()
-   {
-      return httpRequest.get();
-   }
+	public StringToStringMap getResponseHeaders()
+	{
+		return responseHeaders;
+	}
 
-   public int getStatusCode()
-   {
-      return statusCode;
-   }
+	public long getTimeTaken()
+	{
+		return timeTaken;
+	}
 
-   public Attachment[] getAttachments()
-   {
-      return new Attachment[0];
-   }
+	public SSLInfo getSSLInfo()
+	{
+		return sslInfo;
+	}
 
-   public Attachment[] getAttachmentsForPart( String partName )
-   {
-      return new Attachment[0];
-   }
+	public long getTimestamp()
+	{
+		return timestamp;
+	}
 
-   public byte[] getRawRequestData()
-   {
-      return rawRequestData;
-   }
+	public String getContentType()
+	{
+		return contentType;
+	}
 
-   public byte[] getRawResponseData()
-   {
-      return rawResponseData;
-   }
+	public URL getURL()
+	{
+		return url;
+	}
 
-   public AbstractHttpRequest.RequestMethod getMethod()
-   {
-      return method;
-   }
+	public AbstractHttpRequest<?> getRequest()
+	{
+		return httpRequest.get();
+	}
 
-   public String getHttpVersion()
-   {
-      return version;
-   }
+	public int getStatusCode()
+	{
+		return statusCode;
+	}
 
-   public void setProperty( String name, String value )
-   {
-      if( properties == null )
-         properties = new StringToStringMap();
+	public Attachment[] getAttachments()
+	{
+		return new Attachment[0];
+	}
 
-      properties.put( name, value );
-   }
+	public Attachment[] getAttachmentsForPart( String partName )
+	{
+		return new Attachment[0];
+	}
 
-   public String getProperty( String name )
-   {
-      return properties == null ? null : properties.get( name );
-   }
+	public byte[] getRawRequestData()
+	{
+		return rawRequestData;
+	}
 
-   public String[] getPropertyNames()
-   {
-      return properties == null ? new String[0] : properties.getKeys();
-   }
+	public byte[] getRawResponseData()
+	{
+		return rawResponseData;
+	}
+
+	public AbstractHttpRequest.RequestMethod getMethod()
+	{
+		return method;
+	}
+
+	public String getHttpVersion()
+	{
+		return version;
+	}
+
+	public void setProperty( String name, String value )
+	{
+		if( properties == null )
+			properties = new StringToStringMap();
+
+		properties.put( name, value );
+	}
+
+	public String getProperty( String name )
+	{
+		return properties == null ? null : properties.get( name );
+	}
+
+	public String[] getPropertyNames()
+	{
+		return properties == null ? new String[0] : properties.getKeys();
+	}
 
 	public String getRequestContent()
 	{
-		return requestContentPos == -1 ? null : new String( rawRequestData, requestContentPos, rawRequestData.length-requestContentPos);
+		return requestContentPos == -1 ? null : new String( rawRequestData, requestContentPos, rawRequestData.length
+				- requestContentPos );
 	}
-   
-   
+
 }

@@ -20,32 +20,32 @@ import java.awt.Dimension;
 
 public interface XDialogs
 {
-   void showErrorMessage(String message);
-   
-   void showInfoMessage( String message );
-   
-   void showInfoMessage(String message, String title);
-   
-   void showExtendedInfo( String title, String description, String content, Dimension size );
+	void showErrorMessage( String message );
 
-   boolean confirm(String question, String title);
-   
-   Boolean confirmOrCancel(String question, String title );
+	void showInfoMessage( String message );
 
-   String prompt(String question, String title, String value);
+	void showInfoMessage( String message, String title );
 
-   String prompt(String question, String title);
+	void showExtendedInfo( String title, String description, String content, Dimension size );
 
-   Object prompt(String question, String title, Object[] objects);
-   
-   Object prompt(String question, String title, Object[] objects, String value );
-   
-   char[] promptPassword(String question, String title);
-   
-	XProgressDialog createProgressDialog(String label, int length, String initialValue, boolean canCancel );
+	boolean confirm( String question, String title );
+
+	Boolean confirmOrCancel( String question, String title );
+
+	String prompt( String question, String title, String value );
+
+	String prompt( String question, String title );
+
+	Object prompt( String question, String title, Object[] objects );
+
+	Object prompt( String question, String title, Object[] objects, String value );
+
+	char[] promptPassword( String question, String title );
+
+	XProgressDialog createProgressDialog( String label, int length, String initialValue, boolean canCancel );
 
 	boolean confirmExtendedInfo( String title, String description, String content, Dimension size );
-	
+
 	Boolean confirmOrCancleExtendedInfo( String title, String description, String content, Dimension size );
 
 	String selectXPath( String title, String info, String xml, String xpath );

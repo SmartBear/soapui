@@ -21,26 +21,26 @@ import java.util.Map;
  * @author Ole.Matzura
  */
 
-public class StringToObjectMap extends HashMap<String,Object>
+public class StringToObjectMap extends HashMap<String, Object>
 {
 	public StringToObjectMap()
 	{
 		super();
 	}
 
-	public StringToObjectMap(int initialCapacity, float loadFactor)
+	public StringToObjectMap( int initialCapacity, float loadFactor )
 	{
-		super(initialCapacity, loadFactor);
+		super( initialCapacity, loadFactor );
 	}
 
-	public StringToObjectMap(int initialCapacity)
+	public StringToObjectMap( int initialCapacity )
 	{
-		super(initialCapacity);
+		super( initialCapacity );
 	}
 
-	public StringToObjectMap(Map<? extends String, ? extends Object> m)
+	public StringToObjectMap( Map<? extends String, ? extends Object> m )
 	{
-		super(m);
+		super( m );
 	}
 
 }

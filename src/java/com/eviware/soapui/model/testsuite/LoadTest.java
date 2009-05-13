@@ -25,8 +25,8 @@ public interface LoadTest extends ModelItem
 	public TestCase getTestCase();
 
 	public LoadTestRunner run();
-	
+
 	public void addLoadTestRunListener( LoadTestRunListener listener );
-	
+
 	public void removeLoadTestRunListener( LoadTestRunListener listener );
 }

@@ -33,27 +33,27 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author ole.matzura
  */
 
-public abstract class AbstractSubmitContext implements SubmitContext, Map<String,Object>
+public abstract class AbstractSubmitContext implements SubmitContext, Map<String, Object>
 {
 	private DefaultPropertyExpansionContext properties;
 	private final ModelItem modelItem;
-	
+
 	public AbstractSubmitContext( ModelItem modelItem )
 	{
 		this.modelItem = modelItem;
 		setProperty( TestRunContext.RUN_COUNT, 0 );
 		setProperty( TestRunContext.THREAD_INDEX, 0 );
 	}
-	
-	public AbstractSubmitContext(ModelItem modelItem, StringToObjectMap properties)
+
+	public AbstractSubmitContext( ModelItem modelItem, StringToObjectMap properties )
 	{
 		this( modelItem );
-		
+
 		if( properties != null && properties.size() > 0 )
 		{
 			if( this.properties == null )
 				this.properties = new DefaultPropertyExpansionContext( modelItem );
-			
+
 			this.properties.putAll( properties );
 		}
 	}
@@ -63,9 +63,9 @@ public abstract class AbstractSubmitContext implements SubmitContext, Map<String
 		return modelItem;
 	}
 
-	public Object getProperty(String name, TestStep testStep, WsdlTestCase testCase )
+	public Object getProperty( String name, TestStep testStep, WsdlTestCase testCase )
 	{
-		if( properties != null && properties.containsKey( name ))
+		if( properties != null && properties.containsKey( name ) )
 			return properties.get( name );
 
 		if( testCase != null )
@@ -73,58 +73,58 @@ public abstract class AbstractSubmitContext implements SubmitContext, Map<String
 			int ix = name.indexOf( PROPERTY_SEPARATOR );
 			if( ix > 0 )
 			{
-				String teststepname = name.substring(0, ix);
+				String teststepname = name.substring( 0, ix );
 				TestStep refTestStep = testCase.getTestStepByName( teststepname );
 				if( refTestStep != null )
 				{
-					TestProperty property = refTestStep.getProperty( name.substring(ix+1));
+					TestProperty property = refTestStep.getProperty( name.substring( ix + 1 ) );
 					return property == null ? null : property.getValue();
 				}
 			}
-			
+
 			if( testCase.getSearchProperties() )
 			{
-				ix = testStep == null ? testCase.getTestStepCount()-1 : testCase.getIndexOfTestStep( testStep );
+				ix = testStep == null ? testCase.getTestStepCount() - 1 : testCase.getIndexOfTestStep( testStep );
 				if( ix >= testCase.getTestStepCount() )
-					ix = testCase.getTestStepCount()-1;
-				
+					ix = testCase.getTestStepCount() - 1;
+
 				while( ix >= 0 )
 				{
 					TestProperty property = testCase.getTestStepAt( ix ).getProperty( name );
 					if( property != null )
 						return property.getValue();
-					
-					ix--;
+
+					ix-- ;
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
-	public Object removeProperty(String name)
+
+	public Object removeProperty( String name )
 	{
 		return properties == null ? null : properties.remove( name );
 	}
 
-	public void setProperty(String name, Object value)
+	public void setProperty( String name, Object value )
 	{
 		if( properties == null )
 			properties = new DefaultPropertyExpansionContext( modelItem );
-		
+
 		properties.put( name, value );
 	}
-	
-	public void setProperty(String name, Object value, TestCase testCase )
+
+	public void setProperty( String name, Object value, TestCase testCase )
 	{
 		int ix = name.indexOf( PROPERTY_SEPARATOR );
 		if( ix > 0 )
 		{
-			String teststepname = name.substring(0, ix);
+			String teststepname = name.substring( 0, ix );
 			TestStep refTestStep = testCase.getTestStepByName( teststepname );
 			if( refTestStep != null )
 			{
-				TestProperty property = refTestStep.getProperty( name.substring(ix+1));
+				TestProperty property = refTestStep.getProperty( name.substring( ix + 1 ) );
 				if( property != null && !property.isReadOnly() )
 				{
 					property.setValue( value.toString() );
@@ -132,18 +132,18 @@ public abstract class AbstractSubmitContext implements SubmitContext, Map<String
 				}
 			}
 		}
-		
+
 		if( properties == null )
 			properties = new DefaultPropertyExpansionContext( modelItem );
-		
+
 		properties.put( name, value );
 	}
 
-	public boolean hasProperty(String name)
+	public boolean hasProperty( String name )
 	{
 		return properties == null ? false : properties.containsKey( name );
 	}
-	
+
 	public void resetProperties()
 	{
 		if( properties != null )
@@ -229,7 +229,7 @@ public abstract class AbstractSubmitContext implements SubmitContext, Map<String
 	{
 		return properties.values();
 	}
-	
+
 	public DefaultPropertyExpansionContext getProperties()
 	{
 		return properties;
@@ -239,7 +239,7 @@ public abstract class AbstractSubmitContext implements SubmitContext, Map<String
 	{
 		return properties.keySet().toArray( new String[properties.size()] );
 	}
-	
+
 	public String expand( String content )
 	{
 		return PropertyExpansionUtils.expandProperties( this, content );

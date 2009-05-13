@@ -27,7 +27,7 @@ import com.eviware.soapui.support.UISupport;
 
 /**
  * Handles drop of files on the AttachmentPanel
- *  
+ * 
  * @author emibre
  */
 
@@ -37,22 +37,22 @@ public class FileTransferHandler extends TransferHandler
 	private AttachmentTableModel attachmentModel;
 
 	/** Creates a new instance of FileTransferHandler */
-	public FileTransferHandler(AttachmentTableModel attachmentModel)
+	public FileTransferHandler( AttachmentTableModel attachmentModel )
 	{
 		fileFlavor = DataFlavor.javaFileListFlavor;
 		this.attachmentModel = attachmentModel;
 	}
 
-	public boolean canImport(JComponent c, DataFlavor[] flavors)
+	public boolean canImport( JComponent c, DataFlavor[] flavors )
 	{
-		return hasFileFlavor(flavors);
+		return hasFileFlavor( flavors );
 	}
 
-	private boolean hasFileFlavor(DataFlavor[] flavors)
+	private boolean hasFileFlavor( DataFlavor[] flavors )
 	{
-		for (int i = 0; i < flavors.length; i++)
+		for( int i = 0; i < flavors.length; i++ )
 		{
-			if (fileFlavor.equals(flavors[i]))
+			if( fileFlavor.equals( flavors[i] ) )
 			{
 				return true;
 			}
@@ -60,35 +60,35 @@ public class FileTransferHandler extends TransferHandler
 		return false;
 	}
 
-	@SuppressWarnings("unchecked")
-	public boolean importData(JComponent c, Transferable t)
+	@SuppressWarnings( "unchecked" )
+	public boolean importData( JComponent c, Transferable t )
 	{
 		try
 		{
-			List<File> files = (List<File>) t.getTransferData(fileFlavor);
-			for (File f : files)
+			List<File> files = ( List<File> )t.getTransferData( fileFlavor );
+			for( File f : files )
 			{
-				System.out.println("Got a file: " + f.getName());
-				Boolean retval = UISupport.confirmOrCancel("Cache attachment in request?", "Att Attachment");
-				if (retval == null)
+				System.out.println( "Got a file: " + f.getName() );
+				Boolean retval = UISupport.confirmOrCancel( "Cache attachment in request?", "Att Attachment" );
+				if( retval == null )
 					return false;
 
-				attachmentModel.addFile(f, retval);
+				attachmentModel.addFile( f, retval );
 			}
 
 		}
-		catch (IOException ex)
+		catch( IOException ex )
 		{
 			SoapUI.logError( ex );
 		}
-		catch (UnsupportedFlavorException ex)
+		catch( UnsupportedFlavorException ex )
 		{
 			SoapUI.logError( ex );
 		}
 		return false;
 	}
 
-	public int getSourceActions(JComponent c)
+	public int getSourceActions( JComponent c )
 	{
 		return COPY_OR_MOVE;
 	}

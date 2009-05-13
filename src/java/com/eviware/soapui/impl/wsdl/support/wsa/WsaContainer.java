@@ -17,10 +17,10 @@ public interface WsaContainer
 {
 	boolean isWsaEnabled();
 
-	void setWsaEnabled(boolean arg0);
+	void setWsaEnabled( boolean arg0 );
 
 	WsaConfig getWsaConfig();
 
 	WsdlOperation getOperation();
-	
+
 }

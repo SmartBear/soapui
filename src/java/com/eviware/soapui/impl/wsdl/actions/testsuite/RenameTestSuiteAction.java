@@ -25,16 +25,17 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 public class RenameTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 {
 	public RenameTestSuiteAction()
-   {
-      super( "Rename", "Renames this TestSuite" );
-//      putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "F2" ));
-   }
-   
-   public void perform( WsdlTestSuite testSuite, Object param )
 	{
-      String name = UISupport.prompt( "Specify name of TestSuite", "Rename TestSuite", testSuite.getName() );
-      if( name == null || name.equals( testSuite.getName() )) return;
-      
-      testSuite.setName( name );
-   }
+		super( "Rename", "Renames this TestSuite" );
+		// putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "F2" ));
+	}
+
+	public void perform( WsdlTestSuite testSuite, Object param )
+	{
+		String name = UISupport.prompt( "Specify name of TestSuite", "Rename TestSuite", testSuite.getName() );
+		if( name == null || name.equals( testSuite.getName() ) )
+			return;
+
+		testSuite.setName( name );
+	}
 }

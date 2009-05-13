@@ -24,7 +24,7 @@ public class JEditorStatusBarWithProgress extends JEditorStatusBar
 	public JEditorStatusBarWithProgress()
 	{
 		super();
-		
+
 		initProgressBar();
 	}
 
@@ -32,18 +32,16 @@ public class JEditorStatusBarWithProgress extends JEditorStatusBar
 	{
 		progressBar = new JProgressBar();
 		progressBar.setBackground( Color.WHITE );
-		progressBar.setBorder( 
-				BorderFactory.createCompoundBorder(
-						BorderFactory.createEmptyBorder( 2, 2, 2, 3 ),
-						BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) ));
-	
+		progressBar.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 2, 2, 2, 3 ),
+				BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) ) );
+
 		setStatusComponent( progressBar );
 	}
 
-	public JEditorStatusBarWithProgress(JEditorStatusBarTarget target)
+	public JEditorStatusBarWithProgress( JEditorStatusBarTarget target )
 	{
-		super(target);
-		
+		super( target );
+
 		initProgressBar();
 	}
 
@@ -52,13 +50,13 @@ public class JEditorStatusBarWithProgress extends JEditorStatusBar
 		return progressBar;
 	}
 
-	public void setIndeterminate(boolean newValue)
+	public void setIndeterminate( boolean newValue )
 	{
-		progressBar.setIndeterminate(newValue);
+		progressBar.setIndeterminate( newValue );
 	}
 
-	public void setValue(int n)
+	public void setValue( int n )
 	{
-		progressBar.setValue(n);
+		progressBar.setValue( n );
 	}
 }

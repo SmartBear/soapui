@@ -20,5 +20,5 @@ package com.eviware.soapui.impl.wsdl.actions.iface.tools.support;
 
 public interface ToolHost
 {
-   public void run( ToolRunner runner ) throws Exception;
+	public void run( ToolRunner runner ) throws Exception;
 }

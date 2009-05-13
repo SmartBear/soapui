@@ -21,14 +21,14 @@ public class RunTestCaseRemoveResolver implements Resolver
 	private WsdlTestStep testStep;
 	private boolean resolved;
 
-	public RunTestCaseRemoveResolver(WsdlTestStep testStep)
+	public RunTestCaseRemoveResolver( WsdlTestStep testStep )
 	{
 		this.testStep = testStep;
 	}
 
-	public void perform(WsdlTestStep target, Object param)
+	public void perform( WsdlTestStep target, Object param )
 	{
-		target.setDisabled(true);
+		target.setDisabled( true );
 	}
 
 	@Override
@@ -55,9 +55,10 @@ public class RunTestCaseRemoveResolver implements Resolver
 
 	public boolean resolve()
 	{
-		
-		if ( UISupport.confirm("Are you sure to disable test step?", "Disable Test Step") && testStep != null ) {
-			testStep.setDisabled(true);
+
+		if( UISupport.confirm( "Are you sure to disable test step?", "Disable Test Step" ) && testStep != null )
+		{
+			testStep.setDisabled( true );
 			resolved = true;
 		}
 		return resolved;

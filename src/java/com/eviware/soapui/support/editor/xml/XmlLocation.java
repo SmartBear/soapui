@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui.support.editor.xml;
 
 import org.apache.xmlbeans.SchemaType;
@@ -31,7 +31,7 @@ public class XmlLocation implements EditorLocation<XmlDocument>
 	private final SchemaType schemaType;
 	private String documentation;
 
-	public XmlLocation( int line,  int column)
+	public XmlLocation( int line, int column )
 	{
 		this( line, column, null, null, null );
 	}
@@ -45,16 +45,24 @@ public class XmlLocation implements EditorLocation<XmlDocument>
 		this.documentation = documentation;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.impl.wsdl.panels.request.components.editor.EditorLocation#getColumn()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.impl.wsdl.panels.request.components.editor.EditorLocation
+	 * #getColumn()
 	 */
 	public int getColumn()
 	{
 		return column;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.impl.wsdl.panels.request.components.editor.EditorLocation#getLine()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.impl.wsdl.panels.request.components.editor.EditorLocation
+	 * #getLine()
 	 */
 	public int getLine()
 	{
@@ -80,6 +88,5 @@ public class XmlLocation implements EditorLocation<XmlDocument>
 	{
 		this.documentation = documentation;
 	}
-	
-	
+
 }

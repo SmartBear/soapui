@@ -10,10 +10,6 @@
  * See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-/*
- *  soapUI Pro, copyright (C) 2007-2008 eviware software ab 
- */
-
 package com.eviware.soapui.impl.wsdl.teststeps;
 
 import com.eviware.soapui.config.MockServiceConfig;

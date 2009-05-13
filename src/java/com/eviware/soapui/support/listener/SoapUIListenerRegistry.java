@@ -48,7 +48,7 @@ public class SoapUIListenerRegistry
 		}
 		classes.add( listenerClass );
 		listeners.put( listenerInterface, classes );
-		
+
 		if( config != null )
 		{
 			listenerConfigs.put( listenerClass, config );
@@ -70,10 +70,10 @@ public class SoapUIListenerRegistry
 		{
 			listeners.remove( listenerInterface );
 		}
-		
+
 		listenerConfigs.remove( listenerClass );
 	}
-	
+
 	public SoapUIListenerRegistry( InputStream config )
 	{
 		if( config != null )
@@ -103,7 +103,7 @@ public class SoapUIListenerRegistry
 					if( !listenerInterface.isAssignableFrom( listenerClass ) )
 					{
 						throw new RuntimeException( "Listener class: " + listenerClassName + " must implement interface: "
-									+ listenerInterfaceName );
+								+ listenerInterfaceName );
 					}
 					// make sure the class can be instantiated even if factory
 					// will instantiate interfaces only on demand
@@ -112,9 +112,9 @@ public class SoapUIListenerRegistry
 					{
 						if( obj instanceof InitializableListener )
 						{
-							((InitializableListener)obj).init( listenerConfig );
+							( ( InitializableListener )obj ).init( listenerConfig );
 						}
-						
+
 						getLog().info( "Adding singleton listener [" + listenerClass + "]" );
 						addSingletonListener( listenerInterface, obj );
 					}
@@ -150,24 +150,24 @@ public class SoapUIListenerRegistry
 
 	private Logger getLog()
 	{
-		return DefaultSoapUICore.log == null ? log  : DefaultSoapUICore.log;
+		return DefaultSoapUICore.log == null ? log : DefaultSoapUICore.log;
 	}
 
 	public void addSingletonListener( Class<?> listenerInterface, Object listener )
 	{
-		if( !singletonListeners.containsKey( listenerInterface ))
+		if( !singletonListeners.containsKey( listenerInterface ) )
 			singletonListeners.put( listenerInterface, new ArrayList<Object>() );
-		
+
 		singletonListeners.get( listenerInterface ).add( listener );
 	}
-	
+
 	public void removeSingletonListener( Class<?> listenerInterface, Object listener )
 	{
-		if( singletonListeners.containsKey( listenerInterface ))
+		if( singletonListeners.containsKey( listenerInterface ) )
 			singletonListeners.get( listenerInterface ).remove( listener );
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	public <T extends Object> List<T> getListeners( Class<T> listenerType )
 	{
 		List<T> result = new ArrayList<T>();
@@ -178,10 +178,10 @@ public class SoapUIListenerRegistry
 			{
 				try
 				{
-					T listener = ( T ) listenerClass.newInstance();
+					T listener = ( T )listenerClass.newInstance();
 					if( listenerConfigs.containsKey( listenerClass ) && listener instanceof InitializableListener )
-						((InitializableListener)listener).init( listenerConfigs.get( listenerClass ) );
-					
+						( ( InitializableListener )listener ).init( listenerConfigs.get( listenerClass ) );
+
 					result.add( listener );
 				}
 				catch( Exception e )
@@ -190,10 +190,10 @@ public class SoapUIListenerRegistry
 				}
 			}
 		}
-		
-		if( singletonListeners.containsKey( listenerType ))
-			result.addAll( ( Collection<? extends T> ) singletonListeners.get( listenerType) );
-		
+
+		if( singletonListeners.containsKey( listenerType ) )
+			result.addAll( ( Collection<? extends T> )singletonListeners.get( listenerType ) );
+
 		return result;
 	}
 }

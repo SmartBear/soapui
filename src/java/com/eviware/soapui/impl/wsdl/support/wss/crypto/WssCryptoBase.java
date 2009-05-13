@@ -37,30 +37,30 @@ public abstract class WssCryptoBase implements WssCrypto, PropertyExpansionConta
 		this.config = config;
 		this.container = container;
 		this.label = label;
-		
+
 		if( config.getConfiguration() == null )
 			config.addNewConfiguration();
-		
-		load( new XmlObjectConfigurationReader( config.getConfiguration() ));
+
+		load( new XmlObjectConfigurationReader( config.getConfiguration() ) );
 	}
 
 	public JComponent getConfigurationPanel()
 	{
 		if( configComponent == null )
 			configComponent = buildUI();
-		
+
 		return configComponent;
 	}
-	
+
 	public String getLabel()
 	{
 		return label;
 	}
 
 	protected abstract JComponent buildUI();
-	
+
 	protected abstract void load( XmlObjectConfigurationReader reader );
-	
+
 	public void setConfig( WSSCryptoConfig config )
 	{
 		this.config = config;
@@ -72,26 +72,28 @@ public abstract class WssCryptoBase implements WssCrypto, PropertyExpansionConta
 		save( builder );
 		config.getConfiguration().set( builder.finish() );
 	}
-	
+
 	protected abstract void save( XmlObjectConfigurationBuilder builder );
 
 	public WssContainer getContainer()
 	{
 		return container;
 	}
-	
+
 	public void addPropertyChangeListener( PropertyChangeListener listener )
-	{}
-	
+	{
+	}
+
 	public void removePropertyChangeListener( PropertyChangeListener listener )
-	{}
-	
+	{
+	}
+
 	public PropertyExpansion[] getPropertyExpansions()
 	{
 		PropertyExpansionsResult result = new PropertyExpansionsResult( getContainer().getModelItem(), this );
-		
+
 		addPropertyExpansions( result );
-		
+
 		return result.toArray();
 	}
 
@@ -106,10 +108,9 @@ public abstract class WssCryptoBase implements WssCrypto, PropertyExpansionConta
 	{
 		return getLabel();
 	}
-	
+
 	public void udpateConfig( WSSCryptoConfig config )
 	{
 		this.config = config;
 	}
 }
-

@@ -25,12 +25,12 @@ public class VerticalTabbedPaneUI extends MetalTabbedPaneUI
 		super.installDefaults();
 
 		textIconGap = 0;
-		tabInsets = new Insets(0, 0, 0, 0);
+		tabInsets = new Insets( 0, 0, 0, 0 );
 	}
 
-	protected int calculateTabWidth(int tabPlacement, int tabIndex, FontMetrics metrics)
+	protected int calculateTabWidth( int tabPlacement, int tabIndex, FontMetrics metrics )
 	{
-		Icon icon = getIconForTab(tabIndex);
-		return icon == null ? 2 : icon.getIconWidth()+2;
+		Icon icon = getIconForTab( tabIndex );
+		return icon == null ? 2 : icon.getIconWidth() + 2;
 	}
 }

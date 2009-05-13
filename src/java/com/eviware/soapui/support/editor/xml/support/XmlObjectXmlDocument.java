@@ -31,8 +31,8 @@ public class XmlObjectXmlDocument extends AbstractXmlDocument
 	public XmlObjectXmlDocument( XmlObject xmlObject )
 	{
 		this.xmlObject = xmlObject;
-   }
-	
+	}
+
 	public SchemaTypeSystem getTypeSystem()
 	{
 		return xmlObject == null ? XmlBeans.getBuiltinTypeSystem() : xmlObject.schemaType().getTypeSystem();
@@ -43,7 +43,7 @@ public class XmlObjectXmlDocument extends AbstractXmlDocument
 		return xmlObject.toString();
 	}
 
-	public void setXml(String xml)
+	public void setXml( String xml )
 	{
 		try
 		{
@@ -51,7 +51,7 @@ public class XmlObjectXmlDocument extends AbstractXmlDocument
 			xmlObject = XmlObject.Factory.parse( xml );
 			fireXmlChanged( old, getXml() );
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
 			SoapUI.logError( e );
 		}

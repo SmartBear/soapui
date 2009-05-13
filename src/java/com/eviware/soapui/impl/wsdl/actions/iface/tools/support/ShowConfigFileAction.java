@@ -45,78 +45,78 @@ public abstract class ShowConfigFileAction extends AbstractAction
 	public ShowConfigFileAction( String title, String description )
 	{
 		super( "Show Config" );
-		
+
 		this.title = title;
 		this.description = description;
 	}
-	
-	public void actionPerformed(ActionEvent e)
+
+	public void actionPerformed( ActionEvent e )
 	{
 		if( dialog == null )
 			dialog = new ContentDialog( title, description );
-		
+
 		dialog.showDialog();
 	}
-	
+
 	protected abstract String getConfigFile();
-	
-	public class ContentDialog extends JDialog 
+
+	public class ContentDialog extends JDialog
 	{
 		private JTextArea contentArea;
 
-	   public ContentDialog( String title, String description ) throws HeadlessException
-	   {
-	   	super( UISupport.getMainFrame() );
-	   	setTitle( title );
-	   	setModal( true );
-	   	
-	      getContentPane().setLayout(new BorderLayout());
-		   JLabel label = new JLabel( description );
-		   label.setBorder( BorderFactory.createEmptyBorder(10, 10, 0, 10) );
-			getContentPane().add( label, BorderLayout.NORTH);
-      	getContentPane().add( buildContent(), BorderLayout.CENTER );
-	      
-	      ButtonBarBuilder builder = ButtonBarBuilder.createLeftToRightBuilder();	
-	      builder.addGlue();
-			JButton closeButton = new JButton( new CloseAction() );
-			builder.addFixed( closeButton);
-	      
-	      builder.setBorder( BorderFactory.createEmptyBorder(0, 10, 10, 10) );
-	      getContentPane().add( builder.getPanel(), BorderLayout.SOUTH );
-	      
-	      pack();
-	      
-	      UISupport.initDialogActions( this, null, closeButton );
-	   }
-	   
-	   public void showDialog()
-	   {
-	   	contentArea.setText( getConfigFile() );
-	   	setVisible( true );
-	   }
-	   
-	   private Component buildContent()
+		public ContentDialog( String title, String description ) throws HeadlessException
 		{
-	   	contentArea = new JTextArea();
-	   	contentArea.setEditable( false );
-	   	contentArea.setBackground( Color.WHITE );
+			super( UISupport.getMainFrame() );
+			setTitle( title );
+			setModal( true );
+
+			getContentPane().setLayout( new BorderLayout() );
+			JLabel label = new JLabel( description );
+			label.setBorder( BorderFactory.createEmptyBorder( 10, 10, 0, 10 ) );
+			getContentPane().add( label, BorderLayout.NORTH );
+			getContentPane().add( buildContent(), BorderLayout.CENTER );
+
+			ButtonBarBuilder builder = ButtonBarBuilder.createLeftToRightBuilder();
+			builder.addGlue();
+			JButton closeButton = new JButton( new CloseAction() );
+			builder.addFixed( closeButton );
+
+			builder.setBorder( BorderFactory.createEmptyBorder( 0, 10, 10, 10 ) );
+			getContentPane().add( builder.getPanel(), BorderLayout.SOUTH );
+
+			pack();
+
+			UISupport.initDialogActions( this, null, closeButton );
+		}
+
+		public void showDialog()
+		{
+			contentArea.setText( getConfigFile() );
+			setVisible( true );
+		}
+
+		private Component buildContent()
+		{
+			contentArea = new JTextArea();
+			contentArea.setEditable( false );
+			contentArea.setBackground( Color.WHITE );
 			JScrollPane scrollPane = new JScrollPane( contentArea );
-			scrollPane.setPreferredSize( new Dimension (500, 300 ));
-			
+			scrollPane.setPreferredSize( new Dimension( 500, 300 ) );
+
 			return UISupport.wrapInEmptyPanel( scrollPane, BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
 		}
 
-	   private final class CloseAction extends AbstractAction
-	   {
-	   	public CloseAction()
-	   	{
-	   		super( "Close" );
-	   	}
-	   	
-			public void actionPerformed(ActionEvent e)
+		private final class CloseAction extends AbstractAction
+		{
+			public CloseAction()
+			{
+				super( "Close" );
+			}
+
+			public void actionPerformed( ActionEvent e )
 			{
 				setVisible( false );
 			}
-	   }
+		}
 	}
 }

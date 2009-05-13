@@ -25,16 +25,16 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 public class DeleteRestResourceAction extends AbstractSoapUIAction<RestResource>
 {
 	public DeleteRestResourceAction()
-   {
-      super( "Delete", "Deletes this Resource" );
-   }
-	
-   public void perform( RestResource resource, Object param )
 	{
-      if( UISupport.confirm( "Delete Resource [" + resource.getName() + "] from [" + resource.getResourceContainer().getName() + 
-            "]", "Delete Resource" ))
-      {
-      	resource.getResourceContainer().deleteResource( resource );
-      }
-   }
+		super( "Delete", "Deletes this Resource" );
+	}
+
+	public void perform( RestResource resource, Object param )
+	{
+		if( UISupport.confirm( "Delete Resource [" + resource.getName() + "] from ["
+				+ resource.getResourceContainer().getName() + "]", "Delete Resource" ) )
+		{
+			resource.getResourceContainer().deleteResource( resource );
+		}
+	}
 }

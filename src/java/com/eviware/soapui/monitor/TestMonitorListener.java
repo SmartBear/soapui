@@ -26,12 +26,12 @@ public interface TestMonitorListener
 {
 	public void loadTestStarted( LoadTestRunner runner );
 
-	public void loadTestFinished( LoadTestRunner runner  );
-	
+	public void loadTestFinished( LoadTestRunner runner );
+
 	public void testCaseStarted( TestRunner runner );
 
 	public void testCaseFinished( TestRunner runner );
-	
+
 	public void mockServiceStarted( MockRunner runner );
 
 	public void mockServiceStopped( MockRunner runner );

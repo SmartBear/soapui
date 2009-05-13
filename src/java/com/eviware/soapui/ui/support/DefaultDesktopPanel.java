@@ -45,10 +45,10 @@ public class DefaultDesktopPanel implements DesktopPanel
 		this.title = title;
 		this.description = description;
 		this.component = component;
-		
+
 		propertyChangeSupport = new PropertyChangeSupport( this );
 	}
-	
+
 	public void loadIcon( String path )
 	{
 		icon = UISupport.createImageIcon( path );
@@ -58,7 +58,7 @@ public class DefaultDesktopPanel implements DesktopPanel
 	{
 		return title;
 	}
-	
+
 	public String getDescription()
 	{
 		return description;
@@ -68,10 +68,10 @@ public class DefaultDesktopPanel implements DesktopPanel
 	{
 		String oldTitle = this.title;
 		this.title = title;
-		
+
 		propertyChangeSupport.firePropertyChange( TITLE_PROPERTY, oldTitle, title );
 	}
-	
+
 	public ModelItem getModelItem()
 	{
 		return null;
@@ -87,32 +87,32 @@ public class DefaultDesktopPanel implements DesktopPanel
 		return component;
 	}
 
-	public boolean dependsOn(ModelItem modelItem)
+	public boolean dependsOn( ModelItem modelItem )
 	{
 		return depends != null && depends.contains( modelItem );
 	}
-	
+
 	public void addDependency( ModelItem modelItem )
 	{
 		depends.add( modelItem );
 	}
 
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
+	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
 		propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
 	}
 
-	public void addPropertyChangeListener(PropertyChangeListener listener)
+	public void addPropertyChangeListener( PropertyChangeListener listener )
 	{
 		propertyChangeSupport.addPropertyChangeListener( listener );
 	}
 
-	public void removePropertyChangeListener(PropertyChangeListener listener)
+	public void removePropertyChangeListener( PropertyChangeListener listener )
 	{
 		propertyChangeSupport.removePropertyChangeListener( listener );
 	}
 
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
+	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
 		propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
 	}

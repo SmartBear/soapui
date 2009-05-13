@@ -20,7 +20,7 @@ import com.eviware.soapui.support.action.swing.ActionComponentFactory;
 
 public class EndpointsActionComponentFactory implements ActionComponentFactory
 {
-	public JComponent buildActionComponent(SoapUIAction<?> action, ModelItem modelItem)
+	public JComponent buildActionComponent( SoapUIAction<?> action, ModelItem modelItem )
 	{
 		// TODO Auto-generated method stub
 		return null;

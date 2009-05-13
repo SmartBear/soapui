@@ -46,87 +46,85 @@ public class JDesktopPanelsList extends JPanel
 	private DesktopPanelPropertyChangeListener desktopPanelPropertyListener = new DesktopPanelPropertyChangeListener();
 	private InternalDesktopListener desktopListener = new InternalDesktopListener();
 
-	public JDesktopPanelsList(SoapUIDesktop desktop)
+	public JDesktopPanelsList( SoapUIDesktop desktop )
 	{
-		super(new BorderLayout());
+		super( new BorderLayout() );
 		setDesktop( desktop );
-		
+
 		desktopPanels = new DefaultListModel();
-		desktopPanelsList = new JList(desktopPanels);
-		desktopPanelsList.setCellRenderer(new DesktopItemsCellRenderer());
-		desktopPanelsList.setToolTipText("Open windows");
-		desktopPanelsList.addMouseListener(new MouseAdapter()
+		desktopPanelsList = new JList( desktopPanels );
+		desktopPanelsList.setCellRenderer( new DesktopItemsCellRenderer() );
+		desktopPanelsList.setToolTipText( "Open windows" );
+		desktopPanelsList.addMouseListener( new MouseAdapter()
 		{
-			public void mouseClicked(MouseEvent e)
+			public void mouseClicked( MouseEvent e )
 			{
-				if (e.getClickCount() < 2)
+				if( e.getClickCount() < 2 )
 					return;
 
-				JDesktopPanelsList.this.desktop.showDesktopPanel((DesktopPanel) desktopPanelsList.getSelectedValue());
+				JDesktopPanelsList.this.desktop.showDesktopPanel( ( DesktopPanel )desktopPanelsList.getSelectedValue() );
 			}
-		});
-		
-		add( new JScrollPane( desktopPanelsList ), BorderLayout.CENTER);
+		} );
+
+		add( new JScrollPane( desktopPanelsList ), BorderLayout.CENTER );
 	}
-	
+
 	private class DesktopPanelPropertyChangeListener implements PropertyChangeListener
 	{
-		public void propertyChange(PropertyChangeEvent evt)
+		public void propertyChange( PropertyChangeEvent evt )
 		{
-			DesktopPanel desktopPanel = (DesktopPanel) evt.getSource();
-			int ix = desktopPanels.indexOf(desktopPanel);
-			if (ix >= 0)
-				desktopPanels.set(ix, desktopPanel);
+			DesktopPanel desktopPanel = ( DesktopPanel )evt.getSource();
+			int ix = desktopPanels.indexOf( desktopPanel );
+			if( ix >= 0 )
+				desktopPanels.set( ix, desktopPanel );
 		}
 	}
 
 	private static class DesktopItemsCellRenderer extends DefaultListCellRenderer
 	{
-		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-				boolean cellHasFocus)
+		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
+				boolean cellHasFocus )
 		{
 			super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
-			
-			DesktopPanel desktopPanel = (DesktopPanel) value;
+
+			DesktopPanel desktopPanel = ( DesktopPanel )value;
 			String title = desktopPanel.getTitle();
-			setText(title);
-			setToolTipText(desktopPanel.getDescription());
+			setText( title );
+			setToolTipText( desktopPanel.getDescription() );
 			setIcon( desktopPanel.getIcon() );
-			
-			setBorder( BorderFactory.createCompoundBorder( 
-						BorderFactory.createEmptyBorder( 2, 2, 2, 2 ),
-						getBorder() ));
-			
+
+			setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 2, 2, 2, 2 ), getBorder() ) );
+
 			return this;
 		}
 	}
-	
+
 	public List<DesktopPanel> getDesktopPanels()
 	{
 		List<DesktopPanel> result = new ArrayList<DesktopPanel>();
-		
+
 		for( int c = 0; c < desktopPanels.getSize(); c++ )
-			result.add( ( DesktopPanel ) desktopPanels.get( c ));
-		
+			result.add( ( DesktopPanel )desktopPanels.get( c ) );
+
 		return result;
 	}
 
 	private class InternalDesktopListener implements DesktopListener
 	{
-		public void desktopPanelSelected(DesktopPanel desktopPanel)
+		public void desktopPanelSelected( DesktopPanel desktopPanel )
 		{
 			desktopPanelsList.setSelectedValue( desktopPanel, false );
 		}
 
-		public void desktopPanelCreated(DesktopPanel desktopPanel)
+		public void desktopPanelCreated( DesktopPanel desktopPanel )
 		{
-			desktopPanels.addElement(desktopPanel);
-			desktopPanelsList.setSelectedValue(desktopPanel, false);
-			
+			desktopPanels.addElement( desktopPanel );
+			desktopPanelsList.setSelectedValue( desktopPanel, false );
+
 			desktopPanel.addPropertyChangeListener( desktopPanelPropertyListener );
 		}
 
-		public void desktopPanelClosed(DesktopPanel desktopPanel)
+		public void desktopPanelClosed( DesktopPanel desktopPanel )
 		{
 			desktopPanels.removeElement( desktopPanel );
 			desktopPanel.removePropertyChangeListener( desktopPanelPropertyListener );
@@ -138,20 +136,20 @@ public class JDesktopPanelsList extends JPanel
 		if( desktop != null )
 		{
 			desktop.removeDesktopListener( desktopListener );
-			
+
 			while( desktopPanels.size() > 0 )
 			{
-				DesktopPanel desktopPanel = ( DesktopPanel ) desktopPanels.getElementAt( 0 );
+				DesktopPanel desktopPanel = ( DesktopPanel )desktopPanels.getElementAt( 0 );
 				desktopPanel.removePropertyChangeListener( desktopPanelPropertyListener );
 				desktopPanels.remove( 0 );
 			}
-			
+
 		}
-		
+
 		desktop = newDesktop;
-		
+
 		desktop.addDesktopListener( desktopListener );
-		
+
 		for( DesktopPanel desktopPanel : desktop.getDesktopPanels() )
 		{
 			desktopPanel.addPropertyChangeListener( desktopPanelPropertyListener );
@@ -163,7 +161,7 @@ public class JDesktopPanelsList extends JPanel
 	{
 		return desktopPanelsList;
 	}
-	
+
 	public int getItemsCount()
 	{
 		return desktopPanels.size();

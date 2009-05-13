@@ -25,21 +25,22 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 public class AddNewTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite>
 {
-   public static final String SOAPUI_ACTION_ID = "AddNewTestCaseAction";
+	public static final String SOAPUI_ACTION_ID = "AddNewTestCaseAction";
 
-	public AddNewTestCaseAction() 
-   {
-      super( "New TestCase", "Creates a new TestCase in this test suite" );
-//      putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu N" ));
-   }
-   
-   public void perform( WsdlTestSuite testSuite, Object param )
+	public AddNewTestCaseAction()
 	{
-      String name = UISupport.prompt( "Specify name of TestCase", "New TestCase", "TestCase " +
-      		(testSuite.getTestCaseCount()+1) );
-      if( name == null ) return;
-      
-      WsdlTestCase testCase = testSuite.addNewTestCase( name );
-      UISupport.showDesktopPanel( testCase );
-   }
+		super( "New TestCase", "Creates a new TestCase in this test suite" );
+		// putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu N" ));
+	}
+
+	public void perform( WsdlTestSuite testSuite, Object param )
+	{
+		String name = UISupport.prompt( "Specify name of TestCase", "New TestCase", "TestCase "
+				+ ( testSuite.getTestCaseCount() + 1 ) );
+		if( name == null )
+			return;
+
+		WsdlTestCase testCase = testSuite.addNewTestCase( name );
+		UISupport.showDesktopPanel( testCase );
+	}
 }

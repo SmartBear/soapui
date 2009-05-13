@@ -17,18 +17,18 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.support.action.SoapUIAction;
 
-public class MockResponseToTestCaseDropHandler extends AbstractAfterModelItemDropHandler<WsdlMockResponse, WsdlTestCase>
+public class MockResponseToTestCaseDropHandler extends
+		AbstractAfterModelItemDropHandler<WsdlMockResponse, WsdlTestCase>
 {
 	public MockResponseToTestCaseDropHandler()
 	{
 		super( WsdlMockResponse.class, WsdlTestCase.class );
 	}
-	
+
 	@Override
 	boolean canCopyAfter( WsdlMockResponse source, WsdlTestCase target )
 	{
-		return source.getMockOperation().getMockService().getProject() ==
-			target.getTestSuite().getProject();
+		return source.getMockOperation().getMockService().getProject() == target.getTestSuite().getProject();
 	}
 
 	@Override
@@ -40,9 +40,10 @@ public class MockResponseToTestCaseDropHandler extends AbstractAfterModelItemDro
 	@Override
 	boolean copyAfter( WsdlMockResponse source, WsdlTestCase target )
 	{
-		SoapUIAction<WsdlMockResponse> action = SoapUI.getActionRegistry().getAction( AddMockResponseToTestCaseAction.SOAPUI_ACTION_ID );
-		AddMockResponseToTestCaseAction a = (AddMockResponseToTestCaseAction)action;
-		
+		SoapUIAction<WsdlMockResponse> action = SoapUI.getActionRegistry().getAction(
+				AddMockResponseToTestCaseAction.SOAPUI_ACTION_ID );
+		AddMockResponseToTestCaseAction a = ( AddMockResponseToTestCaseAction )action;
+
 		a.addMockResponseToTestCase( source, target, -1 );
 		return true;
 	}

@@ -20,7 +20,7 @@ public class MockLoadTestRunContext extends AbstractSubmitContext implements Loa
 {
 	private final MockLoadTestRunner mockTestRunner;
 
-	public MockLoadTestRunContext(MockLoadTestRunner mockTestRunner)
+	public MockLoadTestRunContext( MockLoadTestRunner mockTestRunner )
 	{
 		super( mockTestRunner.getLoadTest() );
 		this.mockTestRunner = mockTestRunner;
@@ -31,11 +31,11 @@ public class MockLoadTestRunContext extends AbstractSubmitContext implements Loa
 		return mockTestRunner;
 	}
 
-	public Object getProperty(String name)
+	public Object getProperty( String name )
 	{
-		if( "loadTestRunner".equals(name))
+		if( "loadTestRunner".equals( name ) )
 			return getLoadTestRunner();
-		
+
 		return get( name );
 	}
 }

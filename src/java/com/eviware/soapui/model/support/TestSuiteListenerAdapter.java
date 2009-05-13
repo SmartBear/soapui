@@ -25,31 +25,31 @@ import com.eviware.soapui.model.testsuite.TestSuiteListener;
 
 public class TestSuiteListenerAdapter implements TestSuiteListener
 {
-	public void testCaseAdded(TestCase testCase)
+	public void testCaseAdded( TestCase testCase )
 	{
 	}
 
-	public void testCaseRemoved(TestCase testCase)
+	public void testCaseRemoved( TestCase testCase )
 	{
 	}
 
-	public void testStepAdded(TestStep testStep, int index)
+	public void testStepAdded( TestStep testStep, int index )
 	{
 	}
 
-	public void testStepRemoved(TestStep testStep, int index)
+	public void testStepRemoved( TestStep testStep, int index )
 	{
 	}
 
-	public void loadTestAdded(LoadTest loadTest)
+	public void loadTestAdded( LoadTest loadTest )
 	{
 	}
 
-	public void loadTestRemoved(LoadTest loadTest)
+	public void loadTestRemoved( LoadTest loadTest )
 	{
 	}
 
-	public void testStepMoved(TestStep testStep, int fromIndex, int offset)
+	public void testStepMoved( TestStep testStep, int fromIndex, int offset )
 	{
 	}
 

@@ -45,7 +45,7 @@ import com.eviware.soapui.support.resolver.ResolveContext;
 public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> implements WsdlAttachment
 {
 	private AttachmentConfig config;
-	private final static Logger log = Logger.getLogger(FileAttachment.class);
+	private final static Logger log = Logger.getLogger( FileAttachment.class );
 	private final T modelItem;
 	private BeanPathPropertySupport urlProperty;
 
@@ -53,70 +53,70 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 	{
 		this.modelItem = modelItem;
 		this.config = config;
-		
+
 		if( config.getTempFilename() != null )
 		{
 			try
 			{
 				log.info( "Moving locally cached file [" + config.getTempFilename() + "] to internal cache.." );
 				File tempFile = new File( config.getTempFilename() );
-				cacheFileLocally( tempFile);
+				cacheFileLocally( tempFile );
 			}
-			catch (IOException e)
+			catch( IOException e )
 			{
 				if( !config.isSetData() )
 				{
 					config.setData( new byte[0] );
 					config.setSize( 0 );
 				}
-				
+
 				SoapUI.logError( e );
 			}
 		}
-		
+
 		if( isCached() )
 		{
-			if( config.isSetTempFilename())
+			if( config.isSetTempFilename() )
 				config.unsetTempFilename();
-			
+
 			if( config.isSetUrl() )
 				config.unsetUrl();
 		}
-		
+
 		urlProperty = new BeanPathPropertySupport( modelItem, config, "url" );
 	}
-	
+
 	public FileAttachment( T modelItem, File file, boolean cache, AttachmentConfig config ) throws IOException
 	{
 		this( modelItem, config );
-		
+
 		config.setName( file.getName() );
 		config.setContentType( ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
-		
+
 		// cache locally if specified
 		if( cache )
 		{
 			cacheFileLocally( file );
 		}
-		
+
 		urlProperty.set( file.getPath(), false );
 	}
-	
-	public void setName(String value)
+
+	public void setName( String value )
 	{
-		config.setName(value);
+		config.setName( value );
 	}
-	
+
 	public void setUrl( String url )
 	{
-		urlProperty.set(url, true);
+		urlProperty.set( url, true );
 	}
-	
+
 	public void reload( File file, boolean cache ) throws IOException
 	{
 		config.setName( file.getName() );
 		config.setContentType( ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
-		
+
 		// cache locally if specified
 		if( cache )
 		{
@@ -128,38 +128,38 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 			config.unsetData();
 		}
 	}
-	
+
 	public T getModelItem()
 	{
 		return modelItem;
 	}
 
-	private void cacheFileLocally(File file) throws FileNotFoundException, IOException
+	private void cacheFileLocally( File file ) throws FileNotFoundException, IOException
 	{
 		// write attachment-data to tempfile
 		ByteArrayOutputStream data = new ByteArrayOutputStream();
 		ZipOutputStream out = new ZipOutputStream( data );
-		out.putNextEntry( new ZipEntry( config.getName() ));
-		
+		out.putNextEntry( new ZipEntry( config.getName() ) );
+
 		InputStream in = new FileInputStream( file );
 		long sz = file.length();
 		config.setSize( sz );
-		
+
 		Tools.writeAll( out, in );
-		
+
 		in.close();
 		out.closeEntry();
 		out.finish();
 		out.close();
 		data.close();
-		
+
 		config.setData( data.toByteArray() );
 	}
 
 	public String getContentType()
 	{
 		AttachmentEncoding encoding = getEncoding();
-		if( encoding == AttachmentEncoding.NONE)
+		if( encoding == AttachmentEncoding.NONE )
 			return config.getContentType();
 		else
 			return "application/octet-stream";
@@ -168,34 +168,35 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 	public InputStream getInputStream() throws IOException
 	{
 		BufferedInputStream inputStream = null;
-		
+
 		if( isCached() )
 		{
-			ZipInputStream zipInputStream = new ZipInputStream( new ByteArrayInputStream( config.getData() ));
+			ZipInputStream zipInputStream = new ZipInputStream( new ByteArrayInputStream( config.getData() ) );
 			zipInputStream.getNextEntry();
 			inputStream = new BufferedInputStream( zipInputStream );
 		}
 		else
 		{
 			String url = urlProperty.expand();
-			inputStream = new BufferedInputStream( url == null ? new ByteArrayInputStream( new byte[0] ) :  new FileInputStream( url ));
+			inputStream = new BufferedInputStream( url == null ? new ByteArrayInputStream( new byte[0] )
+					: new FileInputStream( url ) );
 		}
-		
+
 		AttachmentEncoding encoding = getEncoding();
 		if( encoding == AttachmentEncoding.BASE64 )
 		{
 			ByteArrayOutputStream data = Tools.readAll( inputStream, Tools.READ_ALL );
-			return new ByteArrayInputStream( Base64.encodeBase64( data.toByteArray() ));
+			return new ByteArrayInputStream( Base64.encodeBase64( data.toByteArray() ) );
 		}
 		else if( encoding == AttachmentEncoding.HEX )
 		{
 			ByteArrayOutputStream data = Tools.readAll( inputStream, Tools.READ_ALL );
-			return new ByteArrayInputStream( new String( Hex.encodeHex( data.toByteArray() )).getBytes() );
+			return new ByteArrayInputStream( new String( Hex.encodeHex( data.toByteArray() ) ).getBytes() );
 		}
-		
+
 		return inputStream;
 	}
-	
+
 	public String getName()
 	{
 		return config.getName();
@@ -203,21 +204,21 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 
 	public long getSize()
 	{
-		if( isCached() ) 
+		if( isCached() )
 		{
 			return config.getSize();
 		}
-		else 
+		else
 		{
 			String url = urlProperty.expand();
 			if( url != null )
 			{
 				File file = new File( url );
-				if( file.exists() ) 
+				if( file.exists() )
 					return file.length();
 			}
 		}
-		
+
 		return -1;
 	}
 
@@ -232,46 +233,47 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 		return config.getPart();
 	}
 
-	public void setContentType(String contentType)
+	public void setContentType( String contentType )
 	{
 		config.setContentType( contentType );
 	}
 
-	public void setPart(String part)
+	public void setPart( String part )
 	{
 		config.setPart( part );
 	}
 
 	public String getUrl()
 	{
-//		if( isCached() )
-//		{
-//			String name = config.getName();
-//			int ix = name.lastIndexOf( "." );
-//			
-//			try
-//			{
-//				File tempFile = File.createTempFile( "attachment-" + name.substring( 0, ix), name.substring(ix)  );
-//				FileOutputStream out = new FileOutputStream( tempFile );
-//				InputStream in = getInputStream();
-//				
-//				Tools.writeAll( out, in );
-//				
-//				out.close();
-//				in.close();
-//				
-//				return tempFile.getAbsoluteFile().toURI().toURL().toString();
-//			}
-//			catch (IOException e)
-//			{
-//				SoapUI.logError( e );
-//			}
-//		}
-//		else
-//		{
-//			return urlProperty.expand();
-//		}
-		
+		// if( isCached() )
+		// {
+		// String name = config.getName();
+		// int ix = name.lastIndexOf( "." );
+		//			
+		// try
+		// {
+		// File tempFile = File.createTempFile( "attachment-" + name.substring( 0,
+		// ix), name.substring(ix) );
+		// FileOutputStream out = new FileOutputStream( tempFile );
+		// InputStream in = getInputStream();
+		//				
+		// Tools.writeAll( out, in );
+		//				
+		// out.close();
+		// in.close();
+		//				
+		// return tempFile.getAbsoluteFile().toURI().toURL().toString();
+		// }
+		// catch (IOException e)
+		// {
+		// SoapUI.logError( e );
+		// }
+		// }
+		// else
+		// {
+		// return urlProperty.expand();
+		// }
+
 		return urlProperty.get();
 	}
 
@@ -282,10 +284,10 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 
 	abstract public AttachmentType getAttachmentType();
 
-	public void updateConfig(AttachmentConfig config)
+	public void updateConfig( AttachmentConfig config )
 	{
 		this.config = config;
-		urlProperty.setConfig(config);
+		urlProperty.setConfig( config );
 	}
 
 	public AttachmentConfig getConfig()
@@ -295,7 +297,7 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 
 	public void setContentID( String contentID )
 	{
-		if( (contentID == null || contentID.length() == 0) && config.isSetContentId() )
+		if( ( contentID == null || contentID.length() == 0 ) && config.isSetContentId() )
 			config.unsetContentId();
 		else
 			config.setContentId( contentID );
@@ -306,21 +308,21 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 		return config.getContentId();
 	}
 
-	@SuppressWarnings("unchecked")
-	public void resolve( ResolveContext context)
+	@SuppressWarnings( "unchecked" )
+	public void resolve( ResolveContext context )
 	{
 		if( isCached() )
 			return;
-		
+
 		urlProperty.resolveFile( context, "Missing attachment [" + getName() + "]", null, null, false );
 	}
-	
+
 	public String getContentEncoding()
 	{
 		AttachmentEncoding encoding = getEncoding();
-		if( encoding == AttachmentEncoding.BASE64)
+		if( encoding == AttachmentEncoding.BASE64 )
 			return "base64";
-		else if( encoding == AttachmentEncoding.HEX)
+		else if( encoding == AttachmentEncoding.HEX )
 			return "hex";
 		else
 			return "binary";

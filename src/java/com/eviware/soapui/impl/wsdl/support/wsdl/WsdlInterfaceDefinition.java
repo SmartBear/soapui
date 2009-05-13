@@ -12,57 +12,58 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
-import com.eviware.soapui.impl.support.definition.support.XmlSchemaBasedInterfaceDefinition;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import org.apache.log4j.Logger;
-
 import javax.wsdl.Definition;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 
+import org.apache.log4j.Logger;
+
+import com.eviware.soapui.impl.support.definition.support.XmlSchemaBasedInterfaceDefinition;
+import com.eviware.soapui.impl.wsdl.WsdlInterface;
+
 public class WsdlInterfaceDefinition extends XmlSchemaBasedInterfaceDefinition<WsdlInterface>
 {
-   private Definition definition;
+	private Definition definition;
 
-   private static WSDLFactory factory;
-   private static WSDLReader wsdlReader;
-   private Logger log = Logger.getLogger(WsdlInterfaceDefinition.class);
+	private static WSDLFactory factory;
+	private static WSDLReader wsdlReader;
+	private Logger log = Logger.getLogger( WsdlInterfaceDefinition.class );
 
-   public WsdlInterfaceDefinition(WsdlInterface iface)
-   {
-      super(iface);
-   }
+	public WsdlInterfaceDefinition( WsdlInterface iface )
+	{
+		super( iface );
+	}
 
-   public WsdlInterfaceDefinition load(WsdlDefinitionLoader loader) throws Exception
-   {
-      if (factory == null)
-      {
-         factory = WSDLFactory.newInstance();
-         wsdlReader = factory.newWSDLReader();
-         wsdlReader.setFeature("javax.wsdl.verbose", true);
-         wsdlReader.setFeature("javax.wsdl.importDocuments", true);
-      }
+	public WsdlInterfaceDefinition load( WsdlDefinitionLoader loader ) throws Exception
+	{
+		if( factory == null )
+		{
+			factory = WSDLFactory.newInstance();
+			wsdlReader = factory.newWSDLReader();
+			wsdlReader.setFeature( "javax.wsdl.verbose", true );
+			wsdlReader.setFeature( "javax.wsdl.importDocuments", true );
+		}
 
-      definition = wsdlReader.readWSDL(loader);
-      log.debug("Loaded WSDL: " + (definition != null ? "ok" : "null"));
+		definition = wsdlReader.readWSDL( loader );
+		log.debug( "Loaded WSDL: " + ( definition != null ? "ok" : "null" ) );
 
-      if (!loader.isAborted())
-      {
-         super.loadSchemaTypes(loader);
-      }
-      else
-         throw new Exception("Loading of WSDL from [" + loader.getBaseURI() + "] was aborted");
+		if( !loader.isAborted() )
+		{
+			super.loadSchemaTypes( loader );
+		}
+		else
+			throw new Exception( "Loading of WSDL from [" + loader.getBaseURI() + "] was aborted" );
 
-      return this;
-   }
+		return this;
+	}
 
-   public String getTargetNamespace()
-   {
-      return definition.getTargetNamespace();
-   }
+	public String getTargetNamespace()
+	{
+		return definition.getTargetNamespace();
+	}
 
-   public Definition getWsdlDefinition()
-   {
-      return definition;
-   }
+	public Definition getWsdlDefinition()
+	{
+		return definition;
+	}
 }

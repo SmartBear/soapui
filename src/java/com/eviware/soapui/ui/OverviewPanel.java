@@ -19,8 +19,8 @@ import com.eviware.soapui.model.ModelItem;
 public interface OverviewPanel
 {
 	public JComponent getComponent();
-	
+
 	public ModelItem getModelItem();
-	
+
 	public void setModelItem( ModelItem modelItem );
 }

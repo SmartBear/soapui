@@ -20,29 +20,29 @@ import com.eviware.soapui.support.action.swing.ActionList;
 
 public abstract class XFormDialogBuilder
 {
-   private ArrayList<XForm> forms = new ArrayList<XForm>();
-   
-   public XFormDialogBuilder()
-   {
-   }
-   
-   protected void addForm(XForm form)
-   {
-      forms.add(form);
-   }
-   
-   protected XForm[] getForms()
-   {
-      return forms.toArray(new XForm[forms.size()]);
-   }
-   
-   public abstract XForm createForm(String name);
- 
-   public abstract XFormDialog buildDialog(ActionList actions, String description, ImageIcon icon);
+	private ArrayList<XForm> forms = new ArrayList<XForm>();
 
-   public abstract XFormDialog buildWizard(String description, ImageIcon icon, String helpURL );
-   
+	public XFormDialogBuilder()
+	{
+	}
+
+	protected void addForm( XForm form )
+	{
+		forms.add( form );
+	}
+
+	protected XForm[] getForms()
+	{
+		return forms.toArray( new XForm[forms.size()] );
+	}
+
+	public abstract XForm createForm( String name );
+
+	public abstract XFormDialog buildDialog( ActionList actions, String description, ImageIcon icon );
+
+	public abstract XFormDialog buildWizard( String description, ImageIcon icon, String helpURL );
+
 	public abstract ActionList buildOkCancelActions();
 
-	public abstract ActionList buildOkCancelHelpActions(String url);
+	public abstract ActionList buildOkCancelHelpActions( String url );
 }

@@ -14,11 +14,11 @@ package com.eviware.soapui.impl.wsdl.monitor;
 
 public interface SoapMonitorEngine
 {
-	void start(SoapMonitor soapMonitor, int localPort);
+	void start( SoapMonitor soapMonitor, int localPort );
 
 	void stop();
 
 	boolean isRunning();
-	
+
 	boolean isProxy();
 }

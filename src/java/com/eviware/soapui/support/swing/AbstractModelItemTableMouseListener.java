@@ -30,7 +30,7 @@ public abstract class AbstractModelItemTableMouseListener extends AbstractTableM
 	{
 		this( true );
 	}
-	
+
 	public AbstractModelItemTableMouseListener( boolean enablePopup )
 	{
 		super( enablePopup );
@@ -39,7 +39,7 @@ public abstract class AbstractModelItemTableMouseListener extends AbstractTableM
 	@Override
 	protected ActionList getActionsForRow( JTable table, int row )
 	{
-		ModelItem item = ( ModelItem ) getModelItemAt( row );
+		ModelItem item = ( ModelItem )getModelItemAt( row );
 		try
 		{
 			return item == null ? null : ActionListBuilder.buildActions( item );

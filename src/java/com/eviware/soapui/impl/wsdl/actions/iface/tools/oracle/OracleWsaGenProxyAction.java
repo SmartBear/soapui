@@ -43,67 +43,67 @@ public class OracleWsaGenProxyAction extends AbstractToolsAction<Interface>
 	private static final String OUTPUT = "Output Directory";
 	private static final String PACKAGE = "Destination Package";
 	public static final String SOAPUI_ACTION_ID = "OracleWsaGenProxyAction";
-	
-   public OracleWsaGenProxyAction()
-   {
-      super( "Oracle Proxy Artifacts", "Generates Oracle Proxy artifacts using the wsa.jar utility");
-   }
 
-   protected XFormDialog buildDialog( Interface modelItem )
+	public OracleWsaGenProxyAction()
 	{
-      XFormDialogBuilder builder = XFormFactory.createDialogBuilder("Oracle Artifacts");
+		super( "Oracle Proxy Artifacts", "Generates Oracle Proxy artifacts using the wsa.jar utility" );
+	}
+
+	protected XFormDialog buildDialog( Interface modelItem )
+	{
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Oracle Artifacts" );
 
 		XForm mainForm = builder.createForm( "Basic" );
 		addWSDLFields( mainForm, modelItem );
-		
+
 		mainForm.addTextField( OUTPUT, "The root directory for all emitted files.", XForm.FieldType.PROJECT_FOLDER );
 		mainForm.addTextField( PACKAGE, "The target package for generated classes", XForm.FieldType.JAVA_PACKAGE );
 
-      buildArgsForm( builder, true, "wsa" );
-      
-		ActionList actions = buildDefaultActions(HelpUrls.ORACLEWSA_HELP_URL, modelItem);
-		return builder.buildDialog( actions,
-      		"Specify arguments for Oracle wsa.jar genProxy functionality", UISupport.TOOL_ICON );
+		buildArgsForm( builder, true, "wsa" );
+
+		ActionList actions = buildDefaultActions( HelpUrls.ORACLEWSA_HELP_URL, modelItem );
+		return builder.buildDialog( actions, "Specify arguments for Oracle wsa.jar genProxy functionality",
+				UISupport.TOOL_ICON );
 	}
-   
-	protected void generate(StringToStringMap values, ToolHost toolHost, Interface modelItem) throws Exception
+
+	protected void generate( StringToStringMap values, ToolHost toolHost, Interface modelItem ) throws Exception
 	{
 		String wsaDir = SoapUI.getSettings().getString( ToolsSettings.ORACLE_WSA_LOCATION, null );
-		if( Tools.isEmpty( wsaDir ))
+		if( Tools.isEmpty( wsaDir ) )
 		{
 			UISupport.showErrorMessage( "wsa.jar directory must be set in global preferences" );
 			return;
 		}
-		
+
 		File wsaFile = new File( wsaDir + File.separatorChar + "wsa.jar" );
 		if( !wsaFile.exists() )
 		{
 			UISupport.showErrorMessage( "Could not find wsa.jar at [" + wsaFile + "]" );
 			return;
 		}
-		
+
 		ProcessBuilder builder = new ProcessBuilder();
-		ArgumentBuilder args = buildArgs(modelItem);
-		builder.command(args.getArgs());
-		builder.directory(new File(wsaDir));
-		
-		toolHost.run( new ProcessToolRunner( builder, "Oracle wsa.jar", modelItem ));
+		ArgumentBuilder args = buildArgs( modelItem );
+		builder.command( args.getArgs() );
+		builder.directory( new File( wsaDir ) );
+
+		toolHost.run( new ProcessToolRunner( builder, "Oracle wsa.jar", modelItem ) );
 	}
 
-	private ArgumentBuilder buildArgs(Interface modelItem) throws IOException
+	private ArgumentBuilder buildArgs( Interface modelItem ) throws IOException
 	{
 		StringToStringMap values = dialog.getValues();
-		
-		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ));
-		
+
+		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ) );
+
 		ArgumentBuilder builder = new ArgumentBuilder( values );
 		builder.addArgs( "java", "-jar", "wsa.jar", "-genProxy" );
 		addJavaArgs( values, builder );
-		
+
 		builder.addArgs( "-wsdl", getWsdlUrl( values, modelItem ) );
 		builder.addString( OUTPUT, "-output" );
 		builder.addString( PACKAGE, "-packageName" );
-		
+
 		addToolArgs( values, builder );
 		return builder;
 	}

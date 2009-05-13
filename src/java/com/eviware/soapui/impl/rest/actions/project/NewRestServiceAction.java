@@ -37,130 +37,136 @@ import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.validators.RequiredValidator;
 
 /**
- * Actions for importing an existing soapUI project file into the current workspace
- *
+ * Actions for importing an existing soapUI project file into the current
+ * workspace
+ * 
  * @author Ole.Matzura
  */
 
 public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
 {
-   public static final String SOAPUI_ACTION_ID = "NewRestServiceAction";
-   public static final MessageSupport messages = MessageSupport.getMessages( NewRestServiceAction.class );
-   private XFormDialog dialog;
+	public static final String SOAPUI_ACTION_ID = "NewRestServiceAction";
+	public static final MessageSupport messages = MessageSupport.getMessages( NewRestServiceAction.class );
+	private XFormDialog dialog;
 	private WsdlProject currentProject;
 
-   public NewRestServiceAction()
-   {
-      super( messages.get( "title" ), messages.get( "description" ) );
-   }
+	public NewRestServiceAction()
+	{
+		super( messages.get( "title" ), messages.get( "description" ) );
+	}
 
-   public void perform( WsdlProject project, Object param )
-   {
-      this.currentProject = project;
-      
+	public void perform( WsdlProject project, Object param )
+	{
+		this.currentProject = project;
+
 		if( dialog == null )
-      {
-         dialog = ADialogBuilder.buildDialog( Form.class );
-         dialog.getFormField( Form.SERVICENAME ).addFormFieldValidator( new RequiredValidator( "Service Name is required" ) );
-         dialog.getFormField( Form.SERVICENAME ).addFormFieldValidator( new XFormFieldValidator() {
+		{
+			dialog = ADialogBuilder.buildDialog( Form.class );
+			dialog.getFormField( Form.SERVICENAME ).addFormFieldValidator(
+					new RequiredValidator( "Service Name is required" ) );
+			dialog.getFormField( Form.SERVICENAME ).addFormFieldValidator( new XFormFieldValidator()
+			{
 
 				public ValidationMessage[] validateField( XFormField formField )
 				{
 					if( currentProject.getInterfaceByName( formField.getValue() ) != null )
 					{
-						return new ValidationMessage[] { new ValidationMessage( "Service Name must be unique in project", formField )};
+						return new ValidationMessage[] { new ValidationMessage( "Service Name must be unique in project",
+								formField ) };
 					}
-					
+
 					return null;
-				}});
-         
-         dialog.getFormField( Form.SERVICEENDPOINT ).addFormFieldListener( new XFormFieldListener()
-         {
-            public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-            {
-               boolean enable = false;
+				}
+			} );
 
-               try
-               {
-                  URL url = new URL( newValue );
-                  enable = url.getPath().length() > 0 &&
-                          !( url.getPath().length() == 1 && url.getPath().charAt( 0 ) == '/' );
-               }
-               catch( MalformedURLException e )
-               {
-               }
+			dialog.getFormField( Form.SERVICEENDPOINT ).addFormFieldListener( new XFormFieldListener()
+			{
+				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+				{
+					boolean enable = false;
 
-               dialog.getFormField( Form.EXTRACTPARAMS ).setEnabled( enable );
-            }
-         } );
+					try
+					{
+						URL url = new URL( newValue );
+						enable = url.getPath().length() > 0
+								&& !( url.getPath().length() == 1 && url.getPath().charAt( 0 ) == '/' );
+					}
+					catch( MalformedURLException e )
+					{
+					}
 
-         dialog.getFormField( Form.EXTRACTPARAMS ).setEnabled( false );
-         dialog.getFormField( Form.EXTRACTPARAMS ).addFormFieldListener( new XFormFieldListener()
-         {
-            public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-            {
-               dialog.getFormField( Form.CREATERESOURCE ).setEnabled( !dialog.getBooleanValue( Form.EXTRACTPARAMS ) );
-            }
-         } );
-      }
-      else
-      {
-         dialog.setValue( Form.SERVICEENDPOINT, "" );
-         dialog.setBooleanValue( Form.EXTRACTPARAMS, false );
-      }
+					dialog.getFormField( Form.EXTRACTPARAMS ).setEnabled( enable );
+				}
+			} );
 
-      if( param instanceof ModelItem )
-         dialog.setValue( Form.SERVICENAME, ( (ModelItem) param ).getName() );
-      else
-         dialog.setValue( Form.SERVICENAME, project.getName() );
+			dialog.getFormField( Form.EXTRACTPARAMS ).setEnabled( false );
+			dialog.getFormField( Form.EXTRACTPARAMS ).addFormFieldListener( new XFormFieldListener()
+			{
+				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+				{
+					dialog.getFormField( Form.CREATERESOURCE ).setEnabled( !dialog.getBooleanValue( Form.EXTRACTPARAMS ) );
+				}
+			} );
+		}
+		else
+		{
+			dialog.setValue( Form.SERVICEENDPOINT, "" );
+			dialog.setBooleanValue( Form.EXTRACTPARAMS, false );
+		}
 
-      if( dialog.show() )
-      {
-         RestService restService = (RestService) project.addNewInterface( dialog.getValue( Form.SERVICENAME ), RestServiceFactory.REST_TYPE );
-         UISupport.select( restService );
-         URL url = null;
+		if( param instanceof ModelItem )
+			dialog.setValue( Form.SERVICENAME, ( ( ModelItem )param ).getName() );
+		else
+			dialog.setValue( Form.SERVICENAME, project.getName() );
 
-         try
-         {
-            url = new URL( dialog.getValue( Form.SERVICEENDPOINT ) );
-            String endpoint = url.getProtocol() + "://" + url.getHost();
-            if( url.getPort() > 0 )
-               endpoint += ":" + url.getPort();
+		if( dialog.show() )
+		{
+			RestService restService = ( RestService )project.addNewInterface( dialog.getValue( Form.SERVICENAME ),
+					RestServiceFactory.REST_TYPE );
+			UISupport.select( restService );
+			URL url = null;
 
-            restService.addEndpoint( endpoint );
-            restService.setBasePath( url.getPath() );
-         }
-         catch( Exception e )
-         {
-         }
+			try
+			{
+				url = new URL( dialog.getValue( Form.SERVICEENDPOINT ) );
+				String endpoint = url.getProtocol() + "://" + url.getHost();
+				if( url.getPort() > 0 )
+					endpoint += ":" + url.getPort();
 
-         if( dialog.getFormField( Form.EXTRACTPARAMS ).isEnabled() && dialog.getBooleanValue( Form.EXTRACTPARAMS ) )
-         {
-            restService.setBasePath( "" );
-            SoapUI.getActionRegistry().getAction( NewRestResourceAction.SOAPUI_ACTION_ID ).perform( restService, url );
-         }
+				restService.addEndpoint( endpoint );
+				restService.setBasePath( url.getPath() );
+			}
+			catch( Exception e )
+			{
+			}
 
-         if( dialog.getFormField( Form.CREATERESOURCE ).isEnabled() && dialog.getBooleanValue( Form.CREATERESOURCE ) )
-         {
-            SoapUI.getActionRegistry().getAction( NewRestResourceAction.SOAPUI_ACTION_ID ).perform( restService, null );
-         }
-      }
-   }
+			if( dialog.getFormField( Form.EXTRACTPARAMS ).isEnabled() && dialog.getBooleanValue( Form.EXTRACTPARAMS ) )
+			{
+				restService.setBasePath( "" );
+				SoapUI.getActionRegistry().getAction( NewRestResourceAction.SOAPUI_ACTION_ID ).perform( restService, url );
+			}
 
-   @AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
-   public interface Form
-   {
-      @AField( description = "Form.ServiceName.Description", type = AFieldType.STRING )
-      public final static String SERVICENAME = messages.get( "Form.ServiceName.Label" );
+			if( dialog.getFormField( Form.CREATERESOURCE ).isEnabled() && dialog.getBooleanValue( Form.CREATERESOURCE ) )
+			{
+				SoapUI.getActionRegistry().getAction( NewRestResourceAction.SOAPUI_ACTION_ID ).perform( restService, null );
+			}
+		}
+	}
 
-      @AField( description = "Form.ServiceUrl.Description", type = AFieldType.STRING )
-      public final static String SERVICEENDPOINT = messages.get( "Form.ServiceUrl.Label" );
+	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	public interface Form
+	{
+		@AField( description = "Form.ServiceName.Description", type = AFieldType.STRING )
+		public final static String SERVICENAME = messages.get( "Form.ServiceName.Label" );
 
-      @AField( description = "Form.ExtractParams.Description", type = AFieldType.BOOLEAN )
-      public final static String EXTRACTPARAMS = messages.get( "Form.ExtractParams.Label" );
+		@AField( description = "Form.ServiceUrl.Description", type = AFieldType.STRING )
+		public final static String SERVICEENDPOINT = messages.get( "Form.ServiceUrl.Label" );
 
-      @AField( description = "Form.CreateResource.Description", type = AFieldType.BOOLEAN )
-      public final static String CREATERESOURCE = messages.get( "Form.CreateResource.Label" );
+		@AField( description = "Form.ExtractParams.Description", type = AFieldType.BOOLEAN )
+		public final static String EXTRACTPARAMS = messages.get( "Form.ExtractParams.Label" );
 
-   }
+		@AField( description = "Form.CreateResource.Description", type = AFieldType.BOOLEAN )
+		public final static String CREATERESOURCE = messages.get( "Form.CreateResource.Label" );
+
+	}
 }

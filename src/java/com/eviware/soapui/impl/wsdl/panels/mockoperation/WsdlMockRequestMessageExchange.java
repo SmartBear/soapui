@@ -12,14 +12,14 @@
 
 package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 
+import java.util.Vector;
+
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.support.types.StringToStringMap;
-
-import java.util.Vector;
 
 public class WsdlMockRequestMessageExchange extends AbstractWsdlMessageExchange<WsdlMockOperation>
 {
@@ -30,7 +30,7 @@ public class WsdlMockRequestMessageExchange extends AbstractWsdlMessageExchange<
 		super( mockOperation );
 		this.request = request;
 	}
-	
+
 	@Override
 	public WsdlOperation getOperation()
 	{
@@ -92,13 +92,13 @@ public class WsdlMockRequestMessageExchange extends AbstractWsdlMessageExchange<
 		return false;
 	}
 
-   public int getResponseStatusCode()
-   {
-      return 0;
-   }
+	public int getResponseStatusCode()
+	{
+		return 0;
+	}
 
-   public String getResponseContentType()
-   {
-      return null; 
-   }
+	public String getResponseContentType()
+	{
+		return null;
+	}
 }

@@ -22,5 +22,5 @@ import com.eviware.soapui.model.tree.SoapUITreeNode;
 
 public interface NavigatorListener
 {
-   public void nodeSelected( SoapUITreeNode treeNode );
+	public void nodeSelected( SoapUITreeNode treeNode );
 }

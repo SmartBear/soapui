@@ -25,7 +25,7 @@ public class TestCaseLogItem
 	private final TestStep testStep;
 	private final String msg;
 
-	public TestCaseLogItem(TestStep testStep, String msg)
+	public TestCaseLogItem( TestStep testStep, String msg )
 	{
 		this.testStep = testStep;
 		this.msg = msg;

@@ -51,7 +51,7 @@ public class ResponseXmlDocument extends AbstractXmlDocument implements Property
 
 	public void setXml( String xml )
 	{
-		HttpResponse response = ( HttpResponse ) request.getResponse();
+		HttpResponse response = ( HttpResponse )request.getResponse();
 		if( response != null )
 		{
 			try
@@ -73,17 +73,17 @@ public class ResponseXmlDocument extends AbstractXmlDocument implements Property
 
 		if( evt.getPropertyName().equals( WsdlRequest.RESPONSE_PROPERTY ) )
 		{
-			Response oldResponse = ( Response ) evt.getOldValue();
-			Response newResponse = ( Response ) evt.getNewValue();
+			Response oldResponse = ( Response )evt.getOldValue();
+			Response newResponse = ( Response )evt.getNewValue();
 
 			fireXmlChanged( oldResponse == null ? null : oldResponse.getContentAsString(), newResponse == null ? null
-						: newResponse.getContentAsString() );
+					: newResponse.getContentAsString() );
 		}
 
 		if( evt.getPropertyName().equals( WsdlRequest.RESPONSE_CONTENT_PROPERTY ) )
 		{
-			String oldResponse = ( String ) evt.getOldValue();
-			String newResponse = ( String ) evt.getNewValue();
+			String oldResponse = ( String )evt.getOldValue();
+			String newResponse = ( String )evt.getNewValue();
 
 			fireXmlChanged( oldResponse, newResponse );
 		}
@@ -91,7 +91,7 @@ public class ResponseXmlDocument extends AbstractXmlDocument implements Property
 
 	public SchemaTypeSystem getTypeSystem()
 	{
-		WsdlInterface iface = ( WsdlInterface ) request.getOperation().getInterface();
+		WsdlInterface iface = ( WsdlInterface )request.getOperation().getInterface();
 		WsdlContext wsdlContext = iface.getWsdlContext();
 		try
 		{

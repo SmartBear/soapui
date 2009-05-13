@@ -29,18 +29,18 @@ public class PropertiesMap extends StringToObjectMap
 		super();
 	}
 
-	public PropertiesMap(int initialCapacity, float loadFactor)
+	public PropertiesMap( int initialCapacity, float loadFactor )
 	{
-		super(initialCapacity, loadFactor);
+		super( initialCapacity, loadFactor );
 	}
 
-	public PropertiesMap(int initialCapacity)
+	public PropertiesMap( int initialCapacity )
 	{
-		super(initialCapacity);
+		super( initialCapacity );
 	}
 
-	public PropertiesMap(Map<? extends String, ? extends Object> m)
+	public PropertiesMap( Map<? extends String, ? extends Object> m )
 	{
-		super(m);
+		super( m );
 	}
 }

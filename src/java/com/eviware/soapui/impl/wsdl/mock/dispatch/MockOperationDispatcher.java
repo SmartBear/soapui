@@ -12,18 +12,19 @@
 
 package com.eviware.soapui.impl.wsdl.mock.dispatch;
 
+import javax.swing.JComponent;
+
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 
-import javax.swing.*;
-
 public interface MockOperationDispatcher
 {
-   public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result ) throws DispatchException;
+	public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result )
+			throws DispatchException;
 
-   public JComponent buildEditorComponent();
+	public JComponent buildEditorComponent();
 
-   public void release();
+	public void release();
 }

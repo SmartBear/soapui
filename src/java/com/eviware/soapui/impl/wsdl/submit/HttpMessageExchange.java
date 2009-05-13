@@ -16,7 +16,7 @@ import com.eviware.soapui.model.iface.MessageExchange;
 
 public interface HttpMessageExchange extends MessageExchange
 {
-   public int getResponseStatusCode();
+	public int getResponseStatusCode();
 
-   public String getResponseContentType();
+	public String getResponseContentType();
 }

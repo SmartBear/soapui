@@ -23,10 +23,10 @@ import com.eviware.soapui.support.components.Inspector;
 public interface EditorInspector<T extends EditorDocument> extends EditorLocationListener<T>, Inspector
 {
 	public void init( Editor<T> editor );
-	
+
 	public Editor<T> getEditor();
-	
+
 	public boolean isContentHandler();
-	
+
 	public boolean isEnabledFor( EditorView<T> view );
 }

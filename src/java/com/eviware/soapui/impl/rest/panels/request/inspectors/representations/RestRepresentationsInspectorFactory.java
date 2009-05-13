@@ -28,19 +28,19 @@ public class RestRepresentationsInspectorFactory implements ResponseInspectorFac
 		return INSPECTOR_ID;
 	}
 
-	public EditorInspector<?> createResponseInspector(Editor<?> editor, ModelItem modelItem)
+	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof RestRequest )
-			return new RestResponseRepresentationsInspector( (RestRequest)modelItem );
-		
+			return new RestResponseRepresentationsInspector( ( RestRequest )modelItem );
+
 		return null;
 	}
 
-   public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
-   {
-      if( modelItem instanceof RestRequest )
-			return new RestRequestRepresentationsInspector( (RestRequest)modelItem );
+	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
+	{
+		if( modelItem instanceof RestRequest )
+			return new RestRequestRepresentationsInspector( ( RestRequest )modelItem );
 
-      return null;
-   }
+		return null;
+	}
 }

@@ -40,7 +40,7 @@ public class XmlDocumentAdapter implements XmlDocument
 	{
 		this.typeSystem = typeSystem;
 	}
-	
+
 	public String getXml()
 	{
 		return xml;
@@ -51,30 +51,30 @@ public class XmlDocumentAdapter implements XmlDocument
 		return typeSystem != null;
 	}
 
-	public void setXml(String xml)
+	public void setXml( String xml )
 	{
 		String oldXml = this.xml;
 		this.xml = xml;
-		
+
 		propertyChangeSupport.firePropertyChange( XML_PROPERTY, oldXml, xml );
 	}
 
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
+	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
 		propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
 	}
 
-	public void addPropertyChangeListener(PropertyChangeListener listener)
+	public void addPropertyChangeListener( PropertyChangeListener listener )
 	{
 		propertyChangeSupport.addPropertyChangeListener( listener );
 	}
 
-	public void removePropertyChangeListener(PropertyChangeListener listener)
+	public void removePropertyChangeListener( PropertyChangeListener listener )
 	{
 		propertyChangeSupport.removePropertyChangeListener( listener );
 	}
 
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
+	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
 		propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
 	}

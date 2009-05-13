@@ -27,24 +27,24 @@ import com.eviware.soapui.support.scripting.groovy.GroovyScriptEngineFactory;
 public class SoapUIScriptEngineRegistry
 {
 	public static final String GROOVY_ID = GroovyScriptEngineFactory.ID;
-	
-	private static Map<String,SoapUIScriptEngineFactory> factories = new HashMap<String, SoapUIScriptEngineFactory>();
-	
+
+	private static Map<String, SoapUIScriptEngineFactory> factories = new HashMap<String, SoapUIScriptEngineFactory>();
+
 	public static void registerScriptEngine( String id, SoapUIScriptEngineFactory factory )
 	{
 		factories.put( id, factory );
 	}
-	
+
 	public static SoapUIScriptEngineFactory getFactory( String id )
 	{
 		return factories.get( id );
 	}
-	
+
 	public static SoapUIScriptEngine create( String id, ModelItem modelItem )
 	{
 		return factories.get( id ).createScriptEngine( modelItem );
 	}
-	
+
 	static
 	{
 		registerScriptEngine( GroovyScriptEngineFactory.ID, new GroovyScriptEngineFactory() );

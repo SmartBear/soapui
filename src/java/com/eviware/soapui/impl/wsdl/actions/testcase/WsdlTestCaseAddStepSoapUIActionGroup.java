@@ -20,8 +20,8 @@ import com.eviware.soapui.support.action.support.DefaultSoapUIActionGroup;
 import com.eviware.soapui.support.action.support.SoapUIActionMappingList;
 
 /**
- * SoapUIActionGroup for WsdlTestCases, dynamically creates "Append Step" submenu contents from 
- * the WsdlTestStepRegistry
+ * SoapUIActionGroup for WsdlTestCases, dynamically creates "Append Step"
+ * submenu contents from the WsdlTestStepRegistry
  * 
  * @author ole.matzura
  */
@@ -36,25 +36,25 @@ public class WsdlTestCaseAddStepSoapUIActionGroup extends DefaultSoapUIActionGro
 	public SoapUIActionMappingList<WsdlTestCase> getActionMappings( WsdlTestCase modelItem )
 	{
 		SoapUIActionMappingList<WsdlTestCase> actions = new SoapUIActionMappingList<WsdlTestCase>();
-		
-		WsdlTestStepRegistry registry = WsdlTestStepRegistry.getInstance();
-		WsdlTestStepFactory[] factories = (WsdlTestStepFactory[]) registry.getFactories();
 
-		for (int c = 0; c < factories.length; c++)
+		WsdlTestStepRegistry registry = WsdlTestStepRegistry.getInstance();
+		WsdlTestStepFactory[] factories = ( WsdlTestStepFactory[] )registry.getFactories();
+
+		for( int c = 0; c < factories.length; c++ )
 		{
 			WsdlTestStepFactory factory = factories[c];
-			if (factory.canCreate())
+			if( factory.canCreate() )
 			{
-				DefaultActionMapping<WsdlTestCase> actionMapping = new DefaultActionMapping<WsdlTestCase>( AddWsdlTestStepAction.SOAPUI_ACTION_ID, null,
-											factory.getTestStepIconPath(), false, factory );
-				
+				DefaultActionMapping<WsdlTestCase> actionMapping = new DefaultActionMapping<WsdlTestCase>(
+						AddWsdlTestStepAction.SOAPUI_ACTION_ID, null, factory.getTestStepIconPath(), false, factory );
+
 				actionMapping.setName( factory.getTestStepName() );
 				actionMapping.setDescription( factory.getTestStepDescription() );
-				
+
 				actions.add( actionMapping );
 			}
 		}
-		
+
 		return actions;
 	}
 }

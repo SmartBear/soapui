@@ -50,10 +50,10 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 
 	protected HttpHeadersInspector( HttpHeadersInspectorModel response )
 	{
-		super( "Headers (" + (response.getHeaders() == null ? "0" : response.getHeaders().size()) + ")", "Additional HTTP Headers for this message", 
-					true, HttpHeadersInspectorFactory.INSPECTOR_ID );
+		super( "Headers (" + ( response.getHeaders() == null ? "0" : response.getHeaders().size() ) + ")",
+				"Additional HTTP Headers for this message", true, HttpHeadersInspectorFactory.INSPECTOR_ID );
 		this.model = response;
-		
+
 		response.addPropertyChangeListener( this );
 	}
 
@@ -61,51 +61,54 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 	{
 		if( panel != null )
 			return panel;
-		
+
 		headersTableModel = new StringToStringMapTableModel( model.getHeaders(), "Header", "Value", !model.isReadOnly() );
-		headersTableModel.addTableModelListener( new TableModelListener() 
+		headersTableModel.addTableModelListener( new TableModelListener()
 		{
 			public void tableChanged( TableModelEvent arg0 )
 			{
 				model.setHeaders( headersTableModel.getData() );
-				setTitle( "Headers (" + (model.getHeaders() == null ? "0" : model.getHeaders().size()) + ")" );
-			}} );
-		
+				setTitle( "Headers (" + ( model.getHeaders() == null ? "0" : model.getHeaders().size() ) + ")" );
+			}
+		} );
+
 		headersTable = new JTable( headersTableModel );
-		
+
 		panel = new JPanel( new BorderLayout() );
 		panel.add( new JScrollPane( headersTable ), BorderLayout.CENTER );
-		
+
 		if( !model.isReadOnly() )
 		{
 			headersTable.setSurrendersFocusOnKeystroke( true );
-			headersTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-			
+			headersTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
+
 			JXToolBar builder = UISupport.createSmallToolbar();
-			builder.addFixed( UISupport.createToolbarButton( new AddAction() ));
+			builder.addFixed( UISupport.createToolbarButton( new AddAction() ) );
 			removeButton = UISupport.createToolbarButton( new RemoveAction() );
-			builder.addFixed( removeButton);
+			builder.addFixed( removeButton );
 			builder.addGlue();
-			builder.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction(HelpUrls.HEADERS_HELP_URL)));
-	
+			builder.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.HEADERS_HELP_URL ) ) );
+
 			panel.add( builder, BorderLayout.NORTH );
-			
-			headersTable.getSelectionModel().addListSelectionListener( new ListSelectionListener() {
-	
+
+			headersTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
+			{
+
 				public void valueChanged( ListSelectionEvent e )
 				{
 					removeButton.setEnabled( headersTable.getSelectedRow() != -1 );
-				}} );
-			
+				}
+			} );
+
 			if( headersTable.getRowCount() > 0 )
 				headersTable.setRowSelectionInterval( 0, 0 );
 			else
 				removeButton.setEnabled( false );
 		}
-		
+
 		return panel;
 	}
-	
+
 	public JTable getHeadersTable()
 	{
 		return headersTable;
@@ -116,7 +119,7 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 	{
 		super.release();
 		model.release();
-		model.removePropertyChangeListener(this );
+		model.removePropertyChangeListener( this );
 	}
 
 	public void propertyChange( PropertyChangeEvent evt )
@@ -124,13 +127,13 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 		if( !changing )
 			headersTableModel.setData( model.getHeaders() );
 	}
-	
+
 	private final class RemoveAction extends AbstractAction
 	{
 		private RemoveAction()
 		{
 			super();
-			putValue( AbstractAction.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ));
+			putValue( AbstractAction.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
 			putValue( AbstractAction.SHORT_DESCRIPTION, "Removes the selected custom HTTP Header from this message" );
 		}
 
@@ -151,7 +154,7 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 		private AddAction()
 		{
 			super();
-			putValue( AbstractAction.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ));
+			putValue( AbstractAction.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
 			putValue( AbstractAction.SHORT_DESCRIPTION, "Adds a custom HTTP Header to this message" );
 		}
 
@@ -166,26 +169,26 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 				{
 					public void run()
 					{
-						int row = headersTable.getRowCount()-1;
-						headersTable.scrollRectToVisible( headersTable.getCellRect( row,1,true ) );
+						int row = headersTable.getRowCount() - 1;
+						headersTable.scrollRectToVisible( headersTable.getCellRect( row, 1, true ) );
 						headersTable.setRowSelectionInterval( row, row );
-						
+
 						SwingUtilities.invokeLater( new Runnable()
 						{
 							public void run()
 							{
-								headersTable.editCellAt(headersTable.getRowCount()-1, 1);
+								headersTable.editCellAt( headersTable.getRowCount() - 1, 1 );
 								headersTable.getEditorComponent().requestFocusInWindow();
 							}
 						} );
 					}
 				} );
-				
+
 				changing = false;
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isEnabledFor( EditorView<XmlDocument> view )
 	{

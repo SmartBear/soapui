@@ -380,7 +380,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 
 	public String getResponseContent()
 	{
-		return XmlUtils.prettyPrintXml(responseContent);
+		return XmlUtils.prettyPrintXml( responseContent );
 	}
 
 	public StringToStringMap getResponseHeaders()

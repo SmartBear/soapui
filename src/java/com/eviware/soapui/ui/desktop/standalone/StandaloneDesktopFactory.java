@@ -26,6 +26,6 @@ public class StandaloneDesktopFactory implements DesktopFactory
 {
 	public SoapUIDesktop createDesktop( Workspace workspace )
 	{
-		return new StandaloneDesktop(workspace);
+		return new StandaloneDesktop( workspace );
 	}
 }

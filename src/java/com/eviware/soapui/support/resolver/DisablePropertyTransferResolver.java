@@ -21,7 +21,7 @@ public class DisablePropertyTransferResolver implements Resolver
 	PropertyTransfer transfer = null;
 	private boolean resolved;
 
-	public DisablePropertyTransferResolver(PropertyTransfer transfer)
+	public DisablePropertyTransferResolver( PropertyTransfer transfer )
 	{
 		this.transfer = transfer;
 	}
@@ -48,8 +48,9 @@ public class DisablePropertyTransferResolver implements Resolver
 
 	public boolean resolve()
 	{
-		if ( UISupport.confirm("Are you sure you want to disable property?", "Property Disable") && transfer != null) {
-			transfer.setDisabled(true);
+		if( UISupport.confirm( "Are you sure you want to disable property?", "Property Disable" ) && transfer != null )
+		{
+			transfer.setDisabled( true );
 			resolved = true;
 		}
 		return resolved;

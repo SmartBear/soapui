@@ -55,32 +55,32 @@ public class SoapUIPreferencesAction extends AbstractAction
 	private SwingConfigurationDialogImpl dialog;
 	private JTabbedPane tabs;
 	private List<Prefs> prefs = new ArrayList<Prefs>();
-	
+
 	private static SoapUIPreferencesAction instance;
-	
+
 	public SoapUIPreferencesAction()
 	{
 		super( "Preferences" );
-		
+
 		putValue( Action.SHORT_DESCRIPTION, "Sets global soapUI preferences" );
-		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu alt P"));
-		
-		//addPrefs( new HttpPrefs( HTTP_SETTINGS));
-		addPrefs( new AnnotatedSettingsPrefs( HttpSettings.class, HTTP_SETTINGS ));
-		addPrefs( new AnnotatedSettingsPrefs( ProxySettings.class, PROXY_SETTINGS ));
-		addPrefs( new AnnotatedSettingsPrefs( SSLSettings.class, SSL_SETTINGS ));
-		addPrefs( new AnnotatedSettingsPrefs( WsdlSettings.class, WSDL_SETTINGS ));
-		addPrefs( new UIPrefs( UI_SETTINGS ));
-		addPrefs( new EditorPrefs( EDITOR_SETTINGS ));
-		addPrefs( new ToolsPrefs( INTEGRATED_TOOLS ));
-		addPrefs( new AnnotatedSettingsPrefs( WSISettings.class, WS_I_SETTINGS ));
+		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu alt P" ) );
+
+		// addPrefs( new HttpPrefs( HTTP_SETTINGS));
+		addPrefs( new AnnotatedSettingsPrefs( HttpSettings.class, HTTP_SETTINGS ) );
+		addPrefs( new AnnotatedSettingsPrefs( ProxySettings.class, PROXY_SETTINGS ) );
+		addPrefs( new AnnotatedSettingsPrefs( SSLSettings.class, SSL_SETTINGS ) );
+		addPrefs( new AnnotatedSettingsPrefs( WsdlSettings.class, WSDL_SETTINGS ) );
+		addPrefs( new UIPrefs( UI_SETTINGS ) );
+		addPrefs( new EditorPrefs( EDITOR_SETTINGS ) );
+		addPrefs( new ToolsPrefs( INTEGRATED_TOOLS ) );
+		addPrefs( new AnnotatedSettingsPrefs( WSISettings.class, WS_I_SETTINGS ) );
 		addPrefs( new GlobalPropertiesPrefs() );
-		addPrefs( new AnnotatedSettingsPrefs( SecuritySettings.class, GLOBAL_SECURITY_SETTINGS));
-		addPrefs( new AnnotatedSettingsPrefs( WsaSettings.class, WSA_SETTINGS));
-	
+		addPrefs( new AnnotatedSettingsPrefs( SecuritySettings.class, GLOBAL_SECURITY_SETTINGS ) );
+		addPrefs( new AnnotatedSettingsPrefs( WsaSettings.class, WSA_SETTINGS ) );
+
 		instance = this;
 	}
-	
+
 	public void addPrefs( Prefs pref )
 	{
 		prefs.add( pref );
@@ -90,20 +90,20 @@ public class SoapUIPreferencesAction extends AbstractAction
 	{
 		if( instance == null )
 			instance = new SoapUIPreferencesAction();
-		
+
 		return instance;
 	}
-	
-	public void actionPerformed(ActionEvent e)
+
+	public void actionPerformed( ActionEvent e )
 	{
 		show( HTTP_SETTINGS );
 	}
-	
+
 	public boolean show( String initialTab )
 	{
 		if( dialog == null )
 			buildDialog();
-	
+
 		Settings settings = SoapUI.getSettings();
 		for( Prefs pref : prefs )
 			pref.setFormValues( settings );
@@ -114,25 +114,25 @@ public class SoapUIPreferencesAction extends AbstractAction
 			if( ix != -1 )
 				tabs.setSelectedIndex( ix );
 		}
-		
-		if( dialog.show( new StringToStringMap() ))
+
+		if( dialog.show( new StringToStringMap() ) )
 		{
 			for( Prefs pref : prefs )
 				pref.getFormValues( settings );
-         
-         return true;
+
+			return true;
 		}
-		
+
 		return false;
 	}
-   
-   private void buildDialog()
+
+	private void buildDialog()
 	{
-		dialog = new SwingConfigurationDialogImpl( "soapUI Preferences", HelpUrls.PREFERENCES_HELP_URL, 
+		dialog = new SwingConfigurationDialogImpl( "soapUI Preferences", HelpUrls.PREFERENCES_HELP_URL,
 				"Set global soapUI settings", UISupport.OPTIONS_ICON );
-		
+
 		tabs = new JTabbedPane();
-		tabs.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+		tabs.setTabLayoutPolicy( JTabbedPane.SCROLL_TAB_LAYOUT );
 		tabs.setTabPlacement( JTabbedPane.LEFT );
 		for( Prefs pref : prefs )
 		{

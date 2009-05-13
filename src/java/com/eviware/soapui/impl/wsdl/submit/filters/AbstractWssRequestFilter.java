@@ -37,14 +37,14 @@ public abstract class AbstractWssRequestFilter extends AbstractRequestFilter
 	static
 	{
 		dbf = DocumentBuilderFactory.newInstance();
-		dbf.setValidating(false);
-	   dbf.setNamespaceAware(true);
-	   
-	   try
+		dbf.setValidating( false );
+		dbf.setNamespaceAware( true );
+
+		try
 		{
 			db = dbf.newDocumentBuilder();
 		}
-		catch (ParserConfigurationException e)
+		catch( ParserConfigurationException e )
 		{
 			SoapUI.logError( e );
 		}
@@ -52,15 +52,15 @@ public abstract class AbstractWssRequestFilter extends AbstractRequestFilter
 
 	protected static Document getWssDocument( SubmitContext context ) throws SAXException, IOException
 	{
-		String request = (String) context.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
-		Document doc = ( Document ) context.getProperty( WSS_DOC );
-		
+		String request = ( String )context.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
+		Document doc = ( Document )context.getProperty( WSS_DOC );
+
 		// this should be solved with pooling for performance-reasons..
 		if( doc == null )
 		{
 			synchronized( db )
 			{
-				doc = db.parse(new InputSource( new StringReader( request )));	
+				doc = db.parse( new InputSource( new StringReader( request ) ) );
 				context.setProperty( WSS_DOC, doc );
 			}
 		}

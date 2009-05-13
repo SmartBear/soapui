@@ -26,18 +26,18 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 public class DeleteRequestAction extends AbstractSoapUIAction<WsdlRequest>
 {
 	public DeleteRequestAction()
-   {
-      super( "Delete", "Deletes this request" );
-   }
-	
-   public void perform( WsdlRequest request, Object param )
 	{
-      if( UISupport.confirm( "Delete request [" + request.getName() + "] from operation [" + request.getOperation().getName() + 
-            "]", "Delete Request" ))
-      {
-      	WsdlOperation operation = (WsdlOperation) request.getOperation();
-         operation.removeRequest( request );
-      }
-   }
+		super( "Delete", "Deletes this request" );
+	}
+
+	public void perform( WsdlRequest request, Object param )
+	{
+		if( UISupport.confirm( "Delete request [" + request.getName() + "] from operation ["
+				+ request.getOperation().getName() + "]", "Delete Request" ) )
+		{
+			WsdlOperation operation = ( WsdlOperation )request.getOperation();
+			operation.removeRequest( request );
+		}
+	}
 
 }

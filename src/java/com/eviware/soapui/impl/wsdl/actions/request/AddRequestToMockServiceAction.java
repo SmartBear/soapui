@@ -25,7 +25,8 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
- * Adds a WsdlRequest to a WsdlMockService, will create required WsdlMockOperation if neccessary
+ * Adds a WsdlRequest to a WsdlMockService, will create required
+ * WsdlMockOperation if neccessary
  * 
  * @author ole.matzura
  */
@@ -46,86 +47,89 @@ public class AddRequestToMockServiceAction extends AbstractSoapUIAction<WsdlRequ
 
 		if( request != null && request.getResponse() == null )
 		{
-			if( !UISupport.confirm( "Request is missing response, create default mock response instead?", title ))
+			if( !UISupport.confirm( "Request is missing response, create default mock response instead?", title ) )
 			{
 				return;
 			}
 		}
 
 		WsdlMockService mockService = null;
-		WsdlMockOperation mockOperation = ( WsdlMockOperation ) param;
+		WsdlMockOperation mockOperation = ( WsdlMockOperation )param;
 		if( mockOperation != null )
 			mockService = mockOperation.getMockService();
-		
+
 		WsdlProject project = request.getOperation().getInterface().getProject();
-		
+
 		while( mockService == null )
 		{
 			if( project.getMockServiceCount() > 0 )
 			{
-				String[] mockServices = ModelSupport.getNames( project.getMockServiceList(), new String[] {CREATE_MOCKSUITE_OPTION});
-	
+				String[] mockServices = ModelSupport.getNames( project.getMockServiceList(),
+						new String[] { CREATE_MOCKSUITE_OPTION } );
+
 				// prompt
 				String option = UISupport.prompt( "Select MockService for MockOperation", title, mockServices );
 				if( option == null )
 					return;
-				
+
 				mockService = project.getMockServiceByName( option );
 			}
-	
+
 			// create new mocksuite?
 			if( mockService == null )
 			{
-				String mockServiceName = UISupport.prompt( "Enter name of new MockService", title, "MockService " + (project.getMockServiceCount()+1) );
+				String mockServiceName = UISupport.prompt( "Enter name of new MockService", title, "MockService "
+						+ ( project.getMockServiceCount() + 1 ) );
 				if( mockServiceName == null || mockServiceName.trim().length() == 0 )
 					return;
-				
+
 				mockService = project.addNewMockService( mockServiceName );
 			}
-			
+
 			mockOperation = mockService.getMockOperation( request.getOperation() );
-			if( mockOperation != null)
+			if( mockOperation != null )
 			{
-				Boolean retval = UISupport.confirmOrCancel( "MockService [" + mockService.getName() + "] already has a MockOperation for [" +  
-							request.getOperation().getName() + "],\r\nShould MockResponse be added to this MockOperation instead", 
-							"Add Request to MockService" );
-				
+				Boolean retval = UISupport.confirmOrCancel( "MockService [" + mockService.getName()
+						+ "] already has a MockOperation for [" + request.getOperation().getName()
+						+ "],\r\nShould MockResponse be added to this MockOperation instead", "Add Request to MockService" );
+
 				if( retval == null )
 					return;
-				
-				if( !retval.booleanValue())
+
+				if( !retval.booleanValue() )
 					mockService = null;
 			}
 		}
-		
+
 		// add mockoperation
 		if( mockOperation == null )
-			mockOperation =  mockService.addNewMockOperation( request.getOperation() );
-		
-		WsdlMockResponse mockResponse = mockOperation.addNewMockResponse( "Response " + (1+mockOperation.getMockResponseCount()), false );
-		
+			mockOperation = mockService.addNewMockOperation( request.getOperation() );
+
+		WsdlMockResponse mockResponse = mockOperation.addNewMockResponse( "Response "
+				+ ( 1 + mockOperation.getMockResponseCount() ), false );
+
 		// add expected response if available
 		if( request != null && request.getResponse() != null )
 		{
-			WsdlResponse response =  request.getResponse();
+			WsdlResponse response = request.getResponse();
 			mockResponse.setResponseContent( response.getContentAsString() );
-			
+
 			Attachment[] attachments = response.getAttachments();
 			for( Attachment attachment : attachments )
 			{
 				mockResponse.addAttachment( attachment );
 			}
-			
-			if( mockResponse.getResponseHeaders() != null && mockResponse.getResponseHeaders().size() > 0 &&
-						UISupport.confirm( "Add current Response HTTP Headers to MockResponse", title ))
+
+			if( mockResponse.getResponseHeaders() != null && mockResponse.getResponseHeaders().size() > 0
+					&& UISupport.confirm( "Add current Response HTTP Headers to MockResponse", title ) )
 				mockResponse.setResponseHeaders( response.getResponseHeaders() );
 		}
 		else
 		{
-			mockResponse.setResponseContent( request.getOperation().createResponse( true ));
+			mockResponse.setResponseContent( request.getOperation().createResponse( true ) );
 		}
-		
-		if( UISupport.confirm( "Open MockResponse editor?", title ))
+
+		if( UISupport.confirm( "Open MockResponse editor?", title ) )
 		{
 			SoapUI.getDesktop().showDesktopPanel( mockResponse );
 		}

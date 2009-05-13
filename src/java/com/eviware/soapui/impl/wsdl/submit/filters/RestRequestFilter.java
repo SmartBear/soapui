@@ -12,6 +12,28 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.PreencodedMimeBodyPart;
+
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.URI;
+import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
+import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
+import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.xmlbeans.XmlBoolean;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
@@ -28,28 +50,6 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
-
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.URI;
-import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
-import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
-import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.apache.xmlbeans.XmlBoolean;
-
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.PreencodedMimeBodyPart;
-
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * RequestFilter that adds SOAP specific headers
@@ -86,9 +86,9 @@ public class RestRequestFilter extends AbstractRequestFilter
 			{
 				try
 				{
-					String encoding = System.getProperty( "soapui.request.encoding", request.getEncoding());
-					
-					if( StringUtils.hasContent( encoding ))
+					String encoding = System.getProperty( "soapui.request.encoding", request.getEncoding() );
+
+					if( StringUtils.hasContent( encoding ) )
 						value = URLEncoder.encode( value, encoding );
 					else
 						value = URLEncoder.encode( value );
@@ -99,7 +99,7 @@ public class RestRequestFilter extends AbstractRequestFilter
 					value = URLEncoder.encode( value );
 				}
 			}
-			
+
 			if( !StringUtils.hasContent( value ) && !param.getRequired() )
 				continue;
 

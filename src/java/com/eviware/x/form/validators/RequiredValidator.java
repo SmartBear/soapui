@@ -25,21 +25,20 @@ public class RequiredValidator implements XFormFieldValidator
 	{
 		this.message = "Field requires a value";
 	}
-	
-	public RequiredValidator(String message)
+
+	public RequiredValidator( String message )
 	{
 		this.message = message;
 	}
 
-	public ValidationMessage[] validateField(XFormField formField)
+	public ValidationMessage[] validateField( XFormField formField )
 	{
 		String value = formField.getValue();
-		if( value == null || value.length() == 0 ||
-		   (trim && value.trim().length() == 0 ))
+		if( value == null || value.length() == 0 || ( trim && value.trim().length() == 0 ) )
 		{
-			return new ValidationMessage[] { new ValidationMessage( message, formField )}; 
+			return new ValidationMessage[] { new ValidationMessage( message, formField ) };
 		}
-		
+
 		return null;
 	}
 
@@ -48,7 +47,7 @@ public class RequiredValidator implements XFormFieldValidator
 		return trim;
 	}
 
-	public void setTrim(boolean trim)
+	public void setTrim( boolean trim )
 	{
 		this.trim = trim;
 	}

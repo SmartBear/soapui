@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.model.propertyexpansion.resolvers;
 
+import org.apache.log4j.Logger;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
@@ -23,118 +25,122 @@ import com.eviware.soapui.model.mock.MockRunContext;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.model.testsuite.*;
+import com.eviware.soapui.model.testsuite.LoadTest;
+import com.eviware.soapui.model.testsuite.LoadTestRunContext;
+import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.model.testsuite.TestRunContext;
+import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.types.StringToObjectMap;
-import org.apache.log4j.Logger;
 
 public class EvalPropertyResolver implements PropertyResolver
 {
-	private Logger log = Logger.getLogger(EvalPropertyResolver.class);
+	private Logger log = Logger.getLogger( EvalPropertyResolver.class );
 	private ScriptEnginePool scriptEnginePool = new ScriptEnginePool( null );
-	
-	public String resolveProperty(PropertyExpansionContext context, String name, boolean globalOverride)
+
+	public String resolveProperty( PropertyExpansionContext context, String name, boolean globalOverride )
 	{
-		if (name.length() == 0 || name.charAt(0) != '=')
+		if( name.length() == 0 || name.charAt( 0 ) != '=' )
 			return null;
 
-		name = name.substring(1);
-		
+		name = name.substring( 1 );
+
 		StringToObjectMap objects = new StringToObjectMap();
-		objects.put( "context", context);
+		objects.put( "context", context );
 		objects.put( "log", SoapUI.ensureGroovyLog() );
-		
+
 		if( context instanceof TestRunContext )
 		{
-			objects.put( "testRunner", ((TestRunContext)context).getTestRunner() );
+			objects.put( "testRunner", ( ( TestRunContext )context ).getTestRunner() );
 		}
 
 		if( context instanceof LoadTestRunContext )
 		{
-			objects.put( "loadTestRunner", ((LoadTestRunContext)context).getLoadTestRunner() );
+			objects.put( "loadTestRunner", ( ( LoadTestRunContext )context ).getLoadTestRunner() );
 		}
-		
+
 		if( context instanceof MockRunContext )
 		{
-			objects.put( "mockRunner", ((MockRunContext)context).getMockRunner() );
+			objects.put( "mockRunner", ( ( MockRunContext )context ).getMockRunner() );
 		}
-		
+
 		ModelItem modelItem = context.getModelItem();
-		if (modelItem instanceof TestCase)
+		if( modelItem instanceof TestCase )
 		{
 			objects.put( "testCase", modelItem );
 		}
-		else if (modelItem instanceof TestStep)
+		else if( modelItem instanceof TestStep )
 		{
 			objects.put( "testStep", modelItem );
 		}
-		else if (modelItem instanceof TestSuite)
+		else if( modelItem instanceof TestSuite )
 		{
 			objects.put( "testSuite", modelItem );
 		}
-		if (modelItem instanceof LoadTest )
+		if( modelItem instanceof LoadTest )
 		{
 			objects.put( "loadTest", modelItem );
 		}
-		else if (modelItem instanceof Project)
+		else if( modelItem instanceof Project )
 		{
 			objects.put( "project", modelItem );
 		}
-		else if (modelItem instanceof MockService)
+		else if( modelItem instanceof MockService )
 		{
 			objects.put( "mockService", modelItem );
 		}
-		else if (modelItem instanceof MockOperation)
+		else if( modelItem instanceof MockOperation )
 		{
 			objects.put( "mockOperation", modelItem );
 		}
-		else if (modelItem instanceof MockResponse)
+		else if( modelItem instanceof MockResponse )
 		{
 			objects.put( "mockResponse", modelItem );
 		}
-		else if (modelItem instanceof Request)
+		else if( modelItem instanceof Request )
 		{
 			objects.put( "request", modelItem );
 		}
-		else if (modelItem instanceof Operation)
+		else if( modelItem instanceof Operation )
 		{
 			objects.put( "operation", modelItem );
 		}
-		else if (modelItem instanceof Interface)
+		else if( modelItem instanceof Interface )
 		{
 			objects.put( "interface", modelItem );
 		}
 
-      if( modelItem != null )
-      {
-         objects.put( "modelItem", modelItem );
-      }
+		if( modelItem != null )
+		{
+			objects.put( "modelItem", modelItem );
+		}
 
-		return doEval(name, modelItem, objects );
+		return doEval( name, modelItem, objects );
 	}
 
-	private String doEval(String name, ModelItem modelItem, StringToObjectMap objects)
+	private String doEval( String name, ModelItem modelItem, StringToObjectMap objects )
 	{
 		SoapUIScriptEngine scriptEngine = scriptEnginePool.getScriptEngine();
 		try
 		{
-			scriptEngine.setScript(name);
-			for( String key : objects.keySet())
-				scriptEngine.setVariable(key, objects.get(key));
-			
+			scriptEngine.setScript( name );
+			for( String key : objects.keySet() )
+				scriptEngine.setVariable( key, objects.get( key ) );
+
 			Object result = scriptEngine.run();
 			return result == null ? null : result.toString();
 		}
-		catch (Throwable e)
+		catch( Throwable e )
 		{
-			log.error("Error evaluating script", e);
+			log.error( "Error evaluating script", e );
 			return e.getMessage();
 		}
 		finally
 		{
 			scriptEngine.clearVariables();
-			scriptEnginePool.returnScriptEngine(scriptEngine);
+			scriptEnginePool.returnScriptEngine( scriptEngine );
 		}
 	}
 }

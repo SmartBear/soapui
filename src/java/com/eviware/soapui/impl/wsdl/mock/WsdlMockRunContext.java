@@ -12,6 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.mock;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.MockRunContext;
@@ -20,32 +24,32 @@ import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContex
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.testsuite.*;
+import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestRunContext;
+import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.types.StringToStringMap;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-
 /**
  * MockRunContext available during dispatching of a WsdlMockRequest
- *  
+ * 
  * @author ole.matzura
  */
 
-public class WsdlMockRunContext implements MockRunContext, Map<String,Object>, TestRunContext
+public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, TestRunContext
 {
 	private DefaultPropertyExpansionContext properties;
 	private final WsdlMockService mockService;
 	private final WsdlTestRunContext context;
 	private WsdlMockResponse mockResponse;
-	
+
 	public WsdlMockRunContext( WsdlMockService mockService, WsdlTestRunContext context )
 	{
 		this.mockService = mockService;
 		this.context = context;
-		
+
 		properties = context == null ? new DefaultPropertyExpansionContext( mockService ) : context.getProperties();
 	}
 
@@ -76,11 +80,11 @@ public class WsdlMockRunContext implements MockRunContext, Map<String,Object>, T
 			int ix = name.indexOf( PropertyExpansion.PROPERTY_SEPARATOR );
 			if( ix > 0 )
 			{
-				String teststepname = name.substring(0, ix);
+				String teststepname = name.substring( 0, ix );
 				TestStep refTestStep = context.getTestCase().getTestStepByName( teststepname );
 				if( refTestStep != null )
 				{
-					TestProperty property = refTestStep.getProperty( name.substring(ix+1));
+					TestProperty property = refTestStep.getProperty( name.substring( ix + 1 ) );
 					if( property != null && !property.isReadOnly() )
 					{
 						property.setValue( value.toString() );
@@ -89,21 +93,21 @@ public class WsdlMockRunContext implements MockRunContext, Map<String,Object>, T
 				}
 			}
 		}
-		
+
 		properties.put( name, value );
 	}
 
 	public StringToStringMap toStringToStringMap()
 	{
 		StringToStringMap result = new StringToStringMap();
-		
+
 		for( String key : properties.keySet() )
 		{
 			Object value = properties.get( key );
 			if( value != null )
 				result.put( key, value.toString() );
 		}
-		
+
 		return result;
 	}
 
@@ -139,30 +143,30 @@ public class WsdlMockRunContext implements MockRunContext, Map<String,Object>, T
 
 	public Object get( Object arg0 )
 	{
-		if( "mockService".equals( arg0 ))
+		if( "mockService".equals( arg0 ) )
 			return getMockService();
-		
-		if( "mockResponse".equals( arg0 ))
+
+		if( "mockResponse".equals( arg0 ) )
 			return getMockResponse();
-		
-		if( "modelItem".equals( arg0 ))
+
+		if( "modelItem".equals( arg0 ) )
 			return getModelItem();
-		
-		if( "currentStep".equals(arg0))
+
+		if( "currentStep".equals( arg0 ) )
 			return getCurrentStep();
 
-		if( "currentStepIndex".equals(arg0))
+		if( "currentStepIndex".equals( arg0 ) )
 			return getCurrentStepIndex();
 
-		if( "settings".equals(arg0))
+		if( "settings".equals( arg0 ) )
 			return getSettings();
 
-		if( "testCase".equals(arg0))
+		if( "testCase".equals( arg0 ) )
 			return getTestCase();
 
-		if( "testRunner".equals(arg0))
+		if( "testRunner".equals( arg0 ) )
 			return getTestRunner();
-		
+
 		return properties.get( arg0 );
 	}
 
@@ -260,7 +264,7 @@ public class WsdlMockRunContext implements MockRunContext, Map<String,Object>, T
 	{
 		return PropertyExpansionUtils.expandProperties( this, content );
 	}
-	
+
 	public String[] getPropertyNames()
 	{
 		return properties.keySet().toArray( new String[properties.size()] );

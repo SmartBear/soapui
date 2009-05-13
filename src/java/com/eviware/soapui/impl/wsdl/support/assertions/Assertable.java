@@ -22,5 +22,3 @@ package com.eviware.soapui.impl.wsdl.support.assertions;
 public interface Assertable extends com.eviware.soapui.model.testsuite.Assertable
 {
 }
-
-

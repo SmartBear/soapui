@@ -12,6 +12,38 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
+
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlAnySimpleType;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.Difference;
+import org.custommonkey.xmlunit.DifferenceEngine;
+import org.custommonkey.xmlunit.DifferenceListener;
+import org.custommonkey.xmlunit.XMLAssert;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -29,8 +61,13 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
 import com.eviware.soapui.model.support.XPathReferenceImpl;
-import com.eviware.soapui.model.testsuite.*;
+import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
+import com.eviware.soapui.model.testsuite.AssertionException;
+import com.eviware.soapui.model.testsuite.RequestAssertion;
+import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JUndoableTextArea;
@@ -39,21 +76,6 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlAnySimpleType;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-import org.custommonkey.xmlunit.*;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Assertion that matches a specified XQuery expression and its expected result
@@ -62,7 +84,8 @@ import java.util.List;
  * @author Ole.Matzura
  */
 
-public class XQueryContainsAssertion extends WsdlMessageAssertion implements RequestAssertion, ResponseAssertion, XPathReferenceContainer
+public class XQueryContainsAssertion extends WsdlMessageAssertion implements RequestAssertion, ResponseAssertion,
+		XPathReferenceContainer
 {
 	private final static Logger log = Logger.getLogger( XQueryContainsAssertion.class );
 	private String expectedContent;
@@ -97,11 +120,11 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 		this.expectedContent = expectedContent;
 		setConfiguration( createConfiguration() );
 	}
-	
+
 	/**
 	 * @deprecated
 	 */
-	
+
 	public void setContent( String content )
 	{
 		setExpectedContent( content );
@@ -129,12 +152,12 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 	}
 
 	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
-				throws AssertionException
+			throws AssertionException
 	{
-       if( !messageExchange.hasResponse() )
-         return "Missing Response";
-      else
-         return assertContent( messageExchange.getResponseContentAsXml(), context, "Response" );
+		if( !messageExchange.hasResponse() )
+			return "Missing Response";
+		else
+			return assertContent( messageExchange.getResponseContentAsXml(), context, "Response" );
 	}
 
 	public String assertContent( String response, SubmitContext context, String type ) throws AssertionException
@@ -179,7 +202,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 					{
 						if( items[c] instanceof XmlAnySimpleType )
 						{
-							String value = ( ( XmlAnySimpleType ) items[c] ).getStringValue();
+							String value = ( ( XmlAnySimpleType )items[c] ).getStringValue();
 							String expandedValue = PropertyExpansionUtils.expandProperties( context, value );
 							XMLAssert.assertEquals( expandedContent, expandedValue );
 						}
@@ -189,12 +212,13 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 							if( domNode.getNodeType() == Node.ELEMENT_NODE )
 							{
 								String expandedValue = PropertyExpansionUtils.expandProperties( context, XmlUtils
-											.getElementText( ( Element ) domNode ) );
+										.getElementText( ( Element )domNode ) );
 								XMLAssert.assertEquals( expandedContent, expandedValue );
 							}
 							else
 							{
-								String expandedValue = PropertyExpansionUtils.expandProperties( context, items[c].xmlText( options ) );
+								String expandedValue = PropertyExpansionUtils.expandProperties( context, items[c]
+										.xmlText( options ) );
 								XMLAssert.assertEquals( expandedContent, expandedValue );
 							}
 						}
@@ -216,7 +240,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 		catch( Throwable e )
 		{
 			String msg = "XQuery Match Assertion failed for path [" + path + "] : " + e.getClass().getSimpleName() + ":"
-						+ e.getMessage();
+					+ e.getMessage();
 
 			throw new AssertionException( new AssertionError( msg ) );
 		}
@@ -233,8 +257,8 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 			public int differenceFound( Difference diff )
 			{
 				if( allowWildcards
-							&& ( diff.getId() == DifferenceEngine.TEXT_VALUE.getId() || diff.getId() == DifferenceEngine.ATTR_VALUE
-										.getId() ) )
+						&& ( diff.getId() == DifferenceEngine.TEXT_VALUE.getId() || diff.getId() == DifferenceEngine.ATTR_VALUE
+								.getId() ) )
 				{
 					if( diff.getControlNodeDetail().getValue().equals( "*" ) )
 						return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
@@ -286,8 +310,8 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 
 		JPanel contentPanel = new JPanel( new BorderLayout() );
 		contentPanel.add( UISupport.buildDescription( "Specify XQuery expression and expected result",
-					"declare namespaces with <code>declare namespace &lt;prefix&gt;='&lt;namespace&gt;';</code>", null ),
-					BorderLayout.NORTH );
+				"declare namespaces with <code>declare namespace &lt;prefix&gt;='&lt;namespace&gt;';</code>", null ),
+				BorderLayout.NORTH );
 
 		JSplitPane splitPane = UISupport.createVerticalSplit();
 
@@ -373,7 +397,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 
 	public void selectFromCurrent()
 	{
-//		XmlCursor cursor = null;
+		// XmlCursor cursor = null;
 
 		try
 		{
@@ -394,7 +418,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 			if( txt == null )
 				txt = pathArea == null ? "" : pathArea.getText();
 
-			WsdlTestRunContext context = new WsdlTestRunContext( ( TestStep ) getAssertable().getModelItem() );
+			WsdlTestRunContext context = new WsdlTestRunContext( ( TestStep )getAssertable().getModelItem() );
 
 			String expandedPath = PropertyExpansionUtils.expandProperties( context, txt.trim() );
 
@@ -423,7 +447,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 				{
 					if( domNode.getNodeType() == Node.ELEMENT_NODE )
 					{
-						Element elm = ( Element ) domNode;
+						Element elm = ( Element )domNode;
 						if( elm.getChildNodes().getLength() == 1 && elm.getAttributes().getLength() == 0 )
 							stringValue = XmlUtils.getElementText( elm );
 						else
@@ -434,7 +458,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 						stringValue = paths[0].xmlText( options );
 					}
 				}
-				
+
 				if( contentArea != null && contentArea.isVisible() )
 					contentArea.setText( stringValue );
 				else
@@ -448,8 +472,8 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 		}
 		finally
 		{
-//			if( cursor != null )
-//				cursor.dispose();
+			// if( cursor != null )
+			// cursor.dispose();
 		}
 	}
 
@@ -504,9 +528,8 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 				}
 				else if( UISupport.confirm( "Declare namespaces from schema instead?", "Missing Response" ) )
 				{
-					pathArea
-								.setText( XmlUtils.declareXPathNamespaces( (WsdlInterface) getAssertable().getInterface() )
-											+ pathArea.getText() );
+					pathArea.setText( XmlUtils.declareXPathNamespaces( ( WsdlInterface )getAssertable().getInterface() )
+							+ pathArea.getText() );
 				}
 			}
 			catch( Exception e )
@@ -522,7 +545,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 		{
 			super( "Test" );
 			putValue( Action.SHORT_DESCRIPTION,
-						"Tests the XQuery expression for the current message against the Expected Content field" );
+					"Tests the XQuery expression for the current message against the Expected Content field" );
 		}
 
 		public void actionPerformed( ActionEvent arg0 )
@@ -537,8 +560,8 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 
 			try
 			{
-				String msg = assertContent( getAssertable().getAssertableContent(), new WsdlTestRunContext( ( TestStep ) getAssertable()
-							.getModelItem() ), "Response" );
+				String msg = assertContent( getAssertable().getAssertableContent(), new WsdlTestRunContext(
+						( TestStep )getAssertable().getModelItem() ), "Response" );
 				UISupport.showInfoMessage( msg, "Success" );
 			}
 			catch( AssertionException e )
@@ -558,7 +581,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 		{
 			super( "Select from current" );
 			putValue( Action.SHORT_DESCRIPTION,
-						"Selects the XQuery expression from the current message into the Expected Content field" );
+					"Selects the XQuery expression from the current message into the Expected Content field" );
 		}
 
 		public void actionPerformed( ActionEvent arg0 )
@@ -569,7 +592,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 
 	@Override
 	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
-				throws AssertionException
+			throws AssertionException
 	{
 		if( !messageExchange.hasRequest( true ) )
 			return "Missing Request";
@@ -586,36 +609,39 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 	{
 		return pathArea;
 	}
-	
+
 	public PropertyExpansion[] getPropertyExpansions()
 	{
 		List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
-		
-		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( getAssertable().getModelItem(), this, "expectedContent") );
-		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( getAssertable().getModelItem(), this, "path") );
-		
+
+		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( getAssertable().getModelItem(), this,
+				"expectedContent" ) );
+		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( getAssertable().getModelItem(), this, "path" ) );
+
 		return result.toArray( new PropertyExpansion[result.size()] );
 	}
-	
+
 	public XPathReference[] getXPathReferences()
 	{
 		List<XPathReference> result = new ArrayList<XPathReference>();
-			
-		if( StringUtils.hasContent( getPath() ))
+
+		if( StringUtils.hasContent( getPath() ) )
 		{
-			TestModelItem testStep = ( TestModelItem ) getAssertable().getModelItem();
-			TestProperty property = testStep instanceof WsdlTestRequestStep ? testStep.getProperty( "Response" ) : testStep.getProperty( "Request" );
-			result.add( new XPathReferenceImpl( "XQuery for " + getName() + " XQueryContainsAssertion in " + testStep.getName(), property, this, "path" ));
+			TestModelItem testStep = ( TestModelItem )getAssertable().getModelItem();
+			TestProperty property = testStep instanceof WsdlTestRequestStep ? testStep.getProperty( "Response" )
+					: testStep.getProperty( "Request" );
+			result.add( new XPathReferenceImpl( "XQuery for " + getName() + " XQueryContainsAssertion in "
+					+ testStep.getName(), property, this, "path" ) );
 		}
-		
+
 		return result.toArray( new XPathReference[result.size()] );
 	}
-	
+
 	public static class Factory extends AbstractTestAssertionFactory
 	{
 		public Factory()
 		{
-			super(XQueryContainsAssertion.ID, XQueryContainsAssertion.LABEL, XQueryContainsAssertion.class);
+			super( XQueryContainsAssertion.ID, XQueryContainsAssertion.LABEL, XQueryContainsAssertion.class );
 		}
 	}
 }

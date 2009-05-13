@@ -10,7 +10,6 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-
 package com.eviware.soapui.support.dnd.handlers;
 
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -22,7 +21,7 @@ public class TestCaseToTestCaseDropHandler extends AbstractBeforeAfterModelItemD
 	{
 		super( WsdlTestCase.class, WsdlTestCase.class );
 	}
-	
+
 	@Override
 	boolean canCopyAfter( WsdlTestCase source, WsdlTestCase target )
 	{
@@ -38,27 +37,27 @@ public class TestCaseToTestCaseDropHandler extends AbstractBeforeAfterModelItemD
 	@Override
 	boolean copyAfter( WsdlTestCase source, WsdlTestCase target )
 	{
-		WsdlTestCase testCase = TestCaseToTestSuiteDropHandler.copyTestCase( source, target.getTestSuite(), 
-					target.getTestSuite().getIndexOfTestCase( target )+1 );
-		
+		WsdlTestCase testCase = TestCaseToTestSuiteDropHandler.copyTestCase( source, target.getTestSuite(), target
+				.getTestSuite().getIndexOfTestCase( target ) + 1 );
+
 		if( testCase != null )
 			UISupport.select( testCase );
-		
+
 		return testCase != null;
 	}
 
 	@Override
 	boolean moveAfter( WsdlTestCase source, WsdlTestCase target )
 	{
-		WsdlTestCase testCase = TestCaseToTestSuiteDropHandler.moveTestCase( source, target.getTestSuite(), 
-					target.getTestSuite().getIndexOfTestCase( target )+1 );
-		
+		WsdlTestCase testCase = TestCaseToTestSuiteDropHandler.moveTestCase( source, target.getTestSuite(), target
+				.getTestSuite().getIndexOfTestCase( target ) + 1 );
+
 		if( testCase != null )
 			UISupport.select( testCase );
-		
+
 		return testCase != null;
 	}
-	
+
 	@Override
 	String getCopyAfterInfo( WsdlTestCase source, WsdlTestCase target )
 	{
@@ -68,8 +67,8 @@ public class TestCaseToTestCaseDropHandler extends AbstractBeforeAfterModelItemD
 	@Override
 	String getMoveAfterInfo( WsdlTestCase source, WsdlTestCase target )
 	{
-		return source == target ? "Move TestCase [" + source.getName() + "] within TestSuite" : 
-			"Move TestCase [" + source.getName() + "] to TestSuite in Project [" + target.getName() + "]";
+		return source == target ? "Move TestCase [" + source.getName() + "] within TestSuite" : "Move TestCase ["
+				+ source.getName() + "] to TestSuite in Project [" + target.getName() + "]";
 	}
 
 	@Override
@@ -87,12 +86,12 @@ public class TestCaseToTestCaseDropHandler extends AbstractBeforeAfterModelItemD
 	@Override
 	boolean copyBefore( WsdlTestCase source, WsdlTestCase target )
 	{
-		WsdlTestCase testCase = TestCaseToTestSuiteDropHandler.copyTestCase( source, target.getTestSuite(), 
-					target.getTestSuite().getIndexOfTestCase( target ) );
-		
+		WsdlTestCase testCase = TestCaseToTestSuiteDropHandler.copyTestCase( source, target.getTestSuite(), target
+				.getTestSuite().getIndexOfTestCase( target ) );
+
 		if( testCase != null )
 			UISupport.select( testCase );
-		
+
 		return testCase != null;
 	}
 
@@ -111,12 +110,12 @@ public class TestCaseToTestCaseDropHandler extends AbstractBeforeAfterModelItemD
 	@Override
 	boolean moveBefore( WsdlTestCase source, WsdlTestCase target )
 	{
-		WsdlTestCase testCase = TestCaseToTestSuiteDropHandler.moveTestCase( source, target.getTestSuite(), 
-					target.getTestSuite().getIndexOfTestCase( target ) );
-		
+		WsdlTestCase testCase = TestCaseToTestSuiteDropHandler.moveTestCase( source, target.getTestSuite(), target
+				.getTestSuite().getIndexOfTestCase( target ) );
+
 		if( testCase != null )
 			UISupport.select( testCase );
-		
+
 		return testCase != null;
 	}
 }

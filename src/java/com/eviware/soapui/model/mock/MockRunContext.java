@@ -16,15 +16,15 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 
 /**
  * Context available for the duration of a MockServices execution
- *  
+ * 
  * @author ole.matzura
  */
 
 public interface MockRunContext extends PropertyExpansionContext
 {
 	public MockService getMockService();
-	
+
 	public MockResponse getMockResponse();
-	
+
 	public MockRunner getMockRunner();
 }

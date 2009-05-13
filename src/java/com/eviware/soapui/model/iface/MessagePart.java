@@ -27,39 +27,42 @@ import org.apache.xmlbeans.SchemaType;
 public interface MessagePart
 {
 	public String getName();
-	
+
 	public String getDescription();
-	
+
 	public PartType getPartType();
-	
-	public enum PartType { HEADER, CONTENT, ATTACHMENT, FAULT, PARAMETER };
-	
+
+	public enum PartType
+	{
+		HEADER, CONTENT, ATTACHMENT, FAULT, PARAMETER
+	};
+
 	public abstract static class ContentPart implements MessagePart
 	{
 		public abstract SchemaType getSchemaType();
-		
+
 		public abstract QName getPartElementName();
-		
+
 		public abstract SchemaGlobalElement getPartElement();
-		
+
 		public PartType getPartType()
 		{
 			return PartType.CONTENT;
 		}
 	}
-	
+
 	public abstract static class AttachmentPart implements MessagePart
 	{
 		public abstract String[] getContentTypes();
-		
+
 		public abstract boolean isAnonymous();
-		
+
 		public PartType getPartType()
 		{
 			return PartType.ATTACHMENT;
 		}
 	}
-	
+
 	public abstract static class HeaderPart extends ContentPart
 	{
 		public PartType getPartType()
@@ -67,7 +70,7 @@ public interface MessagePart
 			return PartType.HEADER;
 		}
 	}
-	
+
 	public abstract static class ParameterPart extends ContentPart
 	{
 		public PartType getPartType()
@@ -75,7 +78,7 @@ public interface MessagePart
 			return PartType.PARAMETER;
 		}
 	}
-	
+
 	public abstract static class FaultPart extends ContentPart
 	{
 		public PartType getPartType()
@@ -83,6 +86,6 @@ public interface MessagePart
 			return PartType.FAULT;
 		}
 
-		public abstract Part [] getWsdlParts();
+		public abstract Part[] getWsdlParts();
 	}
 }

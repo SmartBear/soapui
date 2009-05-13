@@ -34,12 +34,12 @@ public class LoadTestLogMessageEntry implements LoadTestLogEntry
 	private ImageIcon icon;
 	private boolean discarded;
 
-	public LoadTestLogMessageEntry(String message)
+	public LoadTestLogMessageEntry( String message )
 	{
 		this.message = message;
 		timestamp = System.currentTimeMillis();
-		
-		icon = UISupport.createImageIcon( "/loadtest_log_message.gif");
+
+		icon = UISupport.createImageIcon( "/loadtest_log_message.gif" );
 	}
 
 	public String getMessage()
@@ -77,10 +77,10 @@ public class LoadTestLogMessageEntry implements LoadTestLogEntry
 		return null;
 	}
 
-	public void exportToFile(String fileName) throws IOException
+	public void exportToFile( String fileName ) throws IOException
 	{
-		PrintWriter writer = new PrintWriter(fileName );
-		writer.write( new Date(timestamp).toString() );
+		PrintWriter writer = new PrintWriter( fileName );
+		writer.write( new Date( timestamp ).toString() );
 		writer.write( ":" );
 		writer.write( message );
 		writer.close();

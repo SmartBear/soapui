@@ -16,7 +16,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 public interface DefinitionExporter
 {
-   String export(String folderName) throws Exception;
+	String export( String folderName ) throws Exception;
 
-   StringToStringMap createFilesForExport(String urlPrefix) throws Exception;
+	StringToStringMap createFilesForExport( String urlPrefix ) throws Exception;
 }

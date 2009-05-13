@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui.support.editor.inspectors.httpheaders;
 
 import java.beans.PropertyChangeEvent;
@@ -32,16 +32,17 @@ public interface HttpHeadersInspectorModel
 	public void removePropertyChangeListener( PropertyChangeListener listener );
 
 	public boolean isReadOnly();
-	
+
 	public void release();
-	
-	public static abstract class AbstractHeadersModel<T extends ModelItem> implements HttpHeadersInspectorModel, PropertyChangeListener 
+
+	public static abstract class AbstractHeadersModel<T extends ModelItem> implements HttpHeadersInspectorModel,
+			PropertyChangeListener
 	{
 		private boolean readOnly;
 		private PropertyChangeSupport propertyChangeSupport;
 		private final T modelItem;
 		private final String propertyName;
-		
+
 		protected AbstractHeadersModel( boolean readOnly, T modelItem, String propertyName )
 		{
 			this.readOnly = readOnly;
@@ -70,12 +71,12 @@ public interface HttpHeadersInspectorModel
 		{
 			propertyChangeSupport.firePropertyChange( evt );
 		}
-		
+
 		public void release()
 		{
 			modelItem.removePropertyChangeListener( propertyName, this );
 		}
-		
+
 		public T getModelItem()
 		{
 			return modelItem;

@@ -20,11 +20,11 @@ public class MessageExchangeModelItem extends EmptyModelItem
 {
 	public final static String MESSAGE_EXCHANGE = "messageExchange";
 	private MessageExchange messageExchange;
-	
+
 	public MessageExchangeModelItem( String title, MessageExchange messageExchange )
 	{
 		super( title, null );
-		this.messageExchange = messageExchange; 
+		this.messageExchange = messageExchange;
 	}
 
 	public MessageExchange getMessageExchange()
@@ -36,7 +36,7 @@ public class MessageExchangeModelItem extends EmptyModelItem
 	{
 		MessageExchange oldExchange = this.messageExchange;
 		this.messageExchange = messageExchange;
-		
+
 		propertyChangeSupport.firePropertyChange( MESSAGE_EXCHANGE, oldExchange, messageExchange );
 	}
 
@@ -50,6 +50,5 @@ public class MessageExchangeModelItem extends EmptyModelItem
 	{
 		return messageExchange == null ? null : messageExchange.getModelItem();
 	}
-	
-	
+
 }

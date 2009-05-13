@@ -26,28 +26,28 @@ public class AssertionError implements ValidationError
 {
 	private String message;
 	private XmlError xmlError;
-	
+
 	public AssertionError( String message )
 	{
 		this.message = message;
 	}
-	
+
 	public AssertionError( XmlError xmlError )
 	{
 		this.xmlError = xmlError;
 		this.message = xmlError.getMessage();
 	}
-	
+
 	public String getMessage()
 	{
 		return message;
 	}
-	
+
 	public int getLineNumber()
 	{
 		return xmlError == null ? -1 : xmlError.getLine();
 	}
-	
+
 	public XmlError getXmlError()
 	{
 		return xmlError;
@@ -55,9 +55,9 @@ public class AssertionError implements ValidationError
 
 	public String toString()
 	{
-		if( xmlError == null ) 
+		if( xmlError == null )
 			return message;
-		
+
 		return "line " + getLineNumber() + ": " + message;
 	}
 
@@ -66,20 +66,20 @@ public class AssertionError implements ValidationError
 		final int PRIME = 31;
 		int result = 1;
 		String msg = toString();
-		result = PRIME * result + ((msg == null) ? 0 : msg.hashCode());
+		result = PRIME * result + ( ( msg == null ) ? 0 : msg.hashCode() );
 		return result;
 	}
 
-	public boolean equals(Object obj)
+	public boolean equals( Object obj )
 	{
-		if (this == obj)
+		if( this == obj )
 			return true;
-		if (obj == null)
+		if( obj == null )
 			return false;
-		if (getClass() != obj.getClass())
+		if( getClass() != obj.getClass() )
 			return false;
-		final AssertionError other = (AssertionError) obj;
-		
+		final AssertionError other = ( AssertionError )obj;
+
 		return other.toString().equals( toString() );
 	}
 }

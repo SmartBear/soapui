@@ -34,7 +34,7 @@ import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
  * @author Ole.Matzura
  */
 
-public class ProgressBarTestCaseAdapter 
+public class ProgressBarTestCaseAdapter
 {
 	private final JProgressBar progressBar;
 	private final WsdlTestCase testCase;
@@ -45,24 +45,24 @@ public class ProgressBarTestCaseAdapter
 	{
 		this.progressBar = progressBar;
 		this.testCase = testCase;
-		
+
 		setLoadTestingState();
-		
+
 		internalTestRunListener = new InternalTestRunListener();
 		testCase.addTestRunListener( internalTestRunListener );
 		internalTestMonitorListener = new InternalTestMonitorListener();
 		SoapUI.getTestMonitor().addTestMonitorListener( internalTestMonitorListener );
 	}
-	
+
 	public void release()
 	{
 		testCase.removeTestRunListener( internalTestRunListener );
 		SoapUI.getTestMonitor().removeTestMonitorListener( internalTestMonitorListener );
 	}
-	
+
 	private void setLoadTestingState()
 	{
-		if( SoapUI.getTestMonitor().hasRunningLoadTest( testCase ))
+		if( SoapUI.getTestMonitor().hasRunningLoadTest( testCase ) )
 		{
 			progressBar.setIndeterminate( true );
 			progressBar.setString( "loadTesting" );
@@ -73,32 +73,32 @@ public class ProgressBarTestCaseAdapter
 			progressBar.setString( "" );
 		}
 	}
-	
+
 	private class InternalTestMonitorListener extends TestMonitorListenerAdapter
 	{
-		public void loadTestStarted(LoadTestRunner loadTestRunner)
+		public void loadTestStarted( LoadTestRunner loadTestRunner )
 		{
 			setLoadTestingState();
 		}
-	
-		public void loadTestFinished(LoadTestRunner loadTestRunner)
+
+		public void loadTestFinished( LoadTestRunner loadTestRunner )
 		{
 			setLoadTestingState();
 		}
 	}
-	
+
 	public class InternalTestRunListener implements TestRunListener
 	{
-		public void beforeRun(TestRunner testRunner, TestRunContext runContext) 
+		public void beforeRun( TestRunner testRunner, TestRunContext runContext )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
-			
+
 			progressBar.getModel().setMaximum( testRunner.getTestCase().getTestStepCount() );
 			progressBar.setForeground( Color.GREEN.darker() );
 		}
-	
-		public void beforeStep(TestRunner testRunner, TestRunContext runContext) 
+
+		public void beforeStep( TestRunner testRunner, TestRunContext runContext )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
@@ -110,8 +110,8 @@ public class ProgressBarTestCaseAdapter
 				progressBar.setValue( runContext.getCurrentStepIndex() );
 			}
 		}
-		
-		public void afterStep(TestRunner testRunner, TestRunContext runContext, TestStepResult result)
+
+		public void afterStep( TestRunner testRunner, TestRunContext runContext, TestStepResult result )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
@@ -120,15 +120,15 @@ public class ProgressBarTestCaseAdapter
 			{
 				progressBar.setForeground( Color.RED );
 			}
-			else if( !testCase.getFailTestCaseOnErrors())
+			else if( !testCase.getFailTestCaseOnErrors() )
 			{
 				progressBar.setForeground( Color.GREEN.darker() );
 			}
-			
-			progressBar.setValue( runContext.getCurrentStepIndex()+1 );
+
+			progressBar.setValue( runContext.getCurrentStepIndex() + 1 );
 		}
-	
-		public void afterRun(TestRunner testRunner, TestRunContext runContext) 
+
+		public void afterRun( TestRunner testRunner, TestRunContext runContext )
 		{
 			if( testRunner.getStatus() == Status.FAILED )
 			{
@@ -138,13 +138,13 @@ public class ProgressBarTestCaseAdapter
 			{
 				progressBar.setForeground( Color.GREEN.darker() );
 			}
-			
+
 			if( progressBar.isIndeterminate() )
 				return;
 
 			if( testRunner.getStatus() == TestRunner.Status.FINISHED )
 				progressBar.setValue( testRunner.getTestCase().getTestStepCount() );
-			
+
 			progressBar.setString( testRunner.getStatus().toString() );
 		}
 	}

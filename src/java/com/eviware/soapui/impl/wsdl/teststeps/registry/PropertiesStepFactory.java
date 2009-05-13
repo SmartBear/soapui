@@ -33,18 +33,18 @@ public class PropertiesStepFactory extends WsdlTestStepFactory
 		super( PROPERTIES_TYPE, "Properties", "Defines / Loads global TestCase properties", "/properties_step.gif" );
 	}
 
-	public WsdlTestStep buildTestStep(WsdlTestCase testCase,	TestStepConfig config, boolean forLoadTest)
+	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
 		return new WsdlPropertiesTestStep( testCase, config, forLoadTest );
 	}
 
-	public TestStepConfig createNewTestStep(WsdlTestCase testCase, String name)
+	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
 	{
 		TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
-      testStepConfig.setType( PROPERTIES_TYPE );
-      testStepConfig.setName( name );
-      testStepConfig.setConfig( PropertiesStepConfig.Factory.newInstance() );
-      return testStepConfig;
+		testStepConfig.setType( PROPERTIES_TYPE );
+		testStepConfig.setName( name );
+		testStepConfig.setConfig( PropertiesStepConfig.Factory.newInstance() );
+		return testStepConfig;
 	}
 
 	public boolean canCreate()

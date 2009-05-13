@@ -26,7 +26,7 @@ public class CreateMissingPropertyResolver implements Resolver
 	private PropertyTransfersTestStep parentPropertyTestStep = null;
 	private PropertyTransfer badTransfer = null;
 
-	public CreateMissingPropertyResolver(PropertyTransfer transfer, PropertyTransfersTestStep parent)
+	public CreateMissingPropertyResolver( PropertyTransfer transfer, PropertyTransfersTestStep parent )
 	{
 		parentPropertyTestStep = parent;
 		badTransfer = transfer;
@@ -57,29 +57,32 @@ public class CreateMissingPropertyResolver implements Resolver
 	{
 		WsdlProject project = parentPropertyTestStep.getTestCase().getTestSuite().getProject();
 
-		String name = UISupport.prompt("Specify unique property name", "Add Property", "");
-		if (StringUtils.hasContent(name))
+		String name = UISupport.prompt( "Specify unique property name", "Add Property", "" );
+		if( StringUtils.hasContent( name ) )
 		{
-			if (project.hasProperty(name))
+			if( project.hasProperty( name ) )
 			{
-				UISupport.showErrorMessage("Property name [" + name + "] already exists. Property transfer will be disabled.");
-				badTransfer.setDisabled(true);
-				
+				UISupport.showErrorMessage( "Property name [" + name
+						+ "] already exists. Property transfer will be disabled." );
+				badTransfer.setDisabled( true );
+
 			}
 			else
 			{
-				TestProperty newProperty = project.addProperty(name);
-				name = UISupport.prompt("What is default value for property " + name, "Add Property Value", "");
-				if (StringUtils.hasContent(name))
-					newProperty.setValue(name);
+				TestProperty newProperty = project.addProperty( name );
+				name = UISupport.prompt( "What is default value for property " + name, "Add Property Value", "" );
+				if( StringUtils.hasContent( name ) )
+					newProperty.setValue( name );
 				else
-					newProperty.setValue(newProperty.getName());
-				badTransfer.setSourcePropertyName(newProperty.getName());
+					newProperty.setValue( newProperty.getName() );
+				badTransfer.setSourcePropertyName( newProperty.getName() );
 				resolved = true;
 			}
-		} else {
-			UISupport.showInfoMessage("Canceled. Property transfer will be disabled.");
-			badTransfer.setDisabled(true);
+		}
+		else
+		{
+			UISupport.showInfoMessage( "Canceled. Property transfer will be disabled." );
+			badTransfer.setDisabled( true );
 		}
 		return resolved;
 	}

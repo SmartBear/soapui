@@ -9,8 +9,8 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
- package com.eviware.soapui.support.components;
+
+package com.eviware.soapui.support.components;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -37,10 +37,10 @@ public class DirectoryFormComponent extends JPanel implements JFormComponent
 		textField.setToolTipText( tooltip );
 		builder.addGriddedGrowing( textField );
 		builder.addRelatedGap();
-		builder.addFixed( new JButton( new SelectDirectoryAction()) );
+		builder.addFixed( new JButton( new SelectDirectoryAction() ) );
 	}
-	
-	public void setValue(String value)
+
+	public void setValue( String value )
 	{
 		textField.setText( value );
 	}
@@ -49,24 +49,24 @@ public class DirectoryFormComponent extends JPanel implements JFormComponent
 	{
 		return textField.getText();
 	}
-	
+
 	public class SelectDirectoryAction extends AbstractAction
 	{
 		public SelectDirectoryAction()
 		{
 			super( "Browse..." );
 		}
-		
-		public void actionPerformed(ActionEvent e)
+
+		public void actionPerformed( ActionEvent e )
 		{
-         File currentDirectory = StringUtils.hasContent( initialFolder ) ? new File( initialFolder ) : null;
-         if( textField.getText().length() > 0 )
-            currentDirectory = new File( textField.getText() );
-         File file = UISupport.getFileDialogs().openDirectory(this, "Select directory", currentDirectory);
-         if( file != null )
-		   {
-		     	textField.setText( file.getAbsolutePath());
-		   }
+			File currentDirectory = StringUtils.hasContent( initialFolder ) ? new File( initialFolder ) : null;
+			if( textField.getText().length() > 0 )
+				currentDirectory = new File( textField.getText() );
+			File file = UISupport.getFileDialogs().openDirectory( this, "Select directory", currentDirectory );
+			if( file != null )
+			{
+				textField.setText( file.getAbsolutePath() );
+			}
 		}
 	}
 
@@ -75,7 +75,7 @@ public class DirectoryFormComponent extends JPanel implements JFormComponent
 		return textField;
 	}
 
-	public void setInitialFolder(String initialFolder)
+	public void setInitialFolder( String initialFolder )
 	{
 		this.initialFolder = initialFolder;
 	}

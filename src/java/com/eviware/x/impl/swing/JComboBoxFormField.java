@@ -21,18 +21,18 @@ import javax.swing.JComboBox;
 
 import com.eviware.x.form.XFormOptionsField;
 
-public class JComboBoxFormField extends AbstractSwingXFormField<JComboBox> implements ItemListener, XFormOptionsField 
+public class JComboBoxFormField extends AbstractSwingXFormField<JComboBox> implements ItemListener, XFormOptionsField
 {
-	public JComboBoxFormField(Object[] values)
+	public JComboBoxFormField( Object[] values )
 	{
 		super( new JComboBox() );
-		
+
 		setOptions( values );
-		
+
 		getComponent().addItemListener( this );
 	}
 
-	public void setValue(String value)
+	public void setValue( String value )
 	{
 		getComponent().setSelectedItem( value );
 	}
@@ -43,22 +43,22 @@ public class JComboBoxFormField extends AbstractSwingXFormField<JComboBox> imple
 		return selectedItem == null ? null : selectedItem.toString();
 	}
 
-	public void itemStateChanged(ItemEvent e)
+	public void itemStateChanged( ItemEvent e )
 	{
 		Object selectedItem = getComponent().getSelectedItem();
 		fireValueChanged( selectedItem == null ? null : selectedItem.toString(), null );
 	}
 
-   public void addItem(String value)
-   {
-      getComponent().addItem(value);
-   }
+	public void addItem( String value )
+	{
+		getComponent().addItem( value );
+	}
 
-	public void setOptions(Object[] values)
+	public void setOptions( Object[] values )
 	{
 		String selectedItem = getValue();
 		DefaultComboBoxModel model = new DefaultComboBoxModel( values );
-		
+
 		if( values.length > 0 && values[0] == null )
 		{
 			model.removeElementAt( 0 );
@@ -69,8 +69,8 @@ public class JComboBoxFormField extends AbstractSwingXFormField<JComboBox> imple
 			getComponent().setEditable( false );
 		}
 
-		getComponent().setModel( model);
-		
+		getComponent().setModel( model );
+
 		if( selectedItem != null )
 			getComponent().setSelectedItem( selectedItem );
 		else if( getComponent().isEditable() )
@@ -80,11 +80,11 @@ public class JComboBoxFormField extends AbstractSwingXFormField<JComboBox> imple
 	public String[] getOptions()
 	{
 		ComboBoxModel model = getComponent().getModel();
-		
-		String [] result = new String[model.getSize()];
+
+		String[] result = new String[model.getSize()];
 		for( int c = 0; c < result.length; c++ )
 			result[c] = model.getElementAt( c ).toString();
-		
+
 		return result;
 	}
 
@@ -100,6 +100,6 @@ public class JComboBoxFormField extends AbstractSwingXFormField<JComboBox> imple
 
 	public int[] getSelectedIndexes()
 	{
-		return new int[] {getComponent().getSelectedIndex()};
+		return new int[] { getComponent().getSelectedIndex() };
 	}
 }

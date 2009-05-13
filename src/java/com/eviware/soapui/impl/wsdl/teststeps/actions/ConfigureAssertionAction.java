@@ -23,15 +23,15 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 public class ConfigureAssertionAction extends AbstractSoapUIAction<WsdlMessageAssertion>
 {
-   public static final String SOAPUI_ACTION_ID = "ConfigureAssertionAction";
+	public static final String SOAPUI_ACTION_ID = "ConfigureAssertionAction";
 
 	public ConfigureAssertionAction()
-   {
-      super( "Configure", "Configures this assertion" );
-   }
-   
-   public void perform( WsdlMessageAssertion target, Object param )
 	{
-   	target.configure();
-   }
+		super( "Configure", "Configures this assertion" );
+	}
+
+	public void perform( WsdlMessageAssertion target, Object param )
+	{
+		target.configure();
+	}
 }

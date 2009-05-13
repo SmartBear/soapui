@@ -38,8 +38,8 @@ public abstract class ModelItemListKeyListener extends KeyAdapter
 		}
 		else
 		{
-			ModelItem [] modelItems = new ModelItem[ix.length];
-			
+			ModelItem[] modelItems = new ModelItem[ix.length];
+
 			for( int c = 0; c < ix.length; c++ )
 				modelItems[c] = getModelItemAt( ix[c] );
 

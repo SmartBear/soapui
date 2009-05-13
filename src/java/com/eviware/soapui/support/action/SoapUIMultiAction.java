@@ -18,11 +18,11 @@ import com.eviware.soapui.model.ModelItem;
  * Extend SoapUIAction for multi-target actions
  * 
  * @author ole
- *
+ * 
  * @param <T>
  */
 
 public interface SoapUIMultiAction extends SoapUIAction<ModelItem>
 {
-	public void perform( ModelItem [] targets, Object param );
+	public void perform( ModelItem[] targets, Object param );
 }

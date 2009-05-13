@@ -12,12 +12,12 @@
 
 package com.eviware.soapui.model.support;
 
-import com.eviware.soapui.model.ModelItem;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Collections;
 import java.util.List;
+
+import com.eviware.soapui.model.ModelItem;
 
 /**
  * Base-class for ModelItem implementations
@@ -27,43 +27,43 @@ import java.util.List;
 
 public abstract class AbstractModelItem implements ModelItem
 {
-   private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport( this );
+	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport( this );
 
-   public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
-   {
-      propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
-   }
-
-   public void addPropertyChangeListener(PropertyChangeListener listener)
-   {
-      propertyChangeSupport.addPropertyChangeListener( listener );
-   }
-
-   public void removePropertyChangeListener(PropertyChangeListener listener)
-   {
-      propertyChangeSupport.removePropertyChangeListener( listener );
-   }
-   
-   public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
+	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
-   	propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
+		propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
+	}
+
+	public void addPropertyChangeListener( PropertyChangeListener listener )
+	{
+		propertyChangeSupport.addPropertyChangeListener( listener );
+	}
+
+	public void removePropertyChangeListener( PropertyChangeListener listener )
+	{
+		propertyChangeSupport.removePropertyChangeListener( listener );
+	}
+
+	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
+	{
+		propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
 	}
 
 	public void notifyPropertyChanged( String name, Object oldValue, Object newValue )
-   {
-      propertyChangeSupport.firePropertyChange( name, oldValue, newValue );
-   }
+	{
+		propertyChangeSupport.firePropertyChange( name, oldValue, newValue );
+	}
 
-   public void notifyPropertyChanged( String name, int oldValue, int newValue )
-   {
-      propertyChangeSupport.firePropertyChange( name, oldValue, newValue );
-   }
+	public void notifyPropertyChanged( String name, int oldValue, int newValue )
+	{
+		propertyChangeSupport.firePropertyChange( name, oldValue, newValue );
+	}
 
-   public void notifyPropertyChanged( String name, boolean oldValue, boolean newValue )
-   {
-      propertyChangeSupport.firePropertyChange( name, oldValue, newValue );
-   }
-   
+	public void notifyPropertyChanged( String name, boolean oldValue, boolean newValue )
+	{
+		propertyChangeSupport.firePropertyChange( name, oldValue, newValue );
+	}
+
 	public void fireIndexedPropertyChange( String propertyName, int index, boolean oldValue, boolean newValue )
 	{
 		propertyChangeSupport.fireIndexedPropertyChange( propertyName, index, oldValue, newValue );
@@ -79,10 +79,10 @@ public abstract class AbstractModelItem implements ModelItem
 		propertyChangeSupport.fireIndexedPropertyChange( propertyName, index, oldValue, newValue );
 	}
 
-   @SuppressWarnings("unchecked")
-   public List<? extends ModelItem> getChildren()
-   {
-      return Collections.EMPTY_LIST;
-   }
+	@SuppressWarnings( "unchecked" )
+	public List<? extends ModelItem> getChildren()
+	{
+		return Collections.EMPTY_LIST;
+	}
 
 }

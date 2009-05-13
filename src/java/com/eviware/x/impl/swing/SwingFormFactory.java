@@ -21,8 +21,8 @@ import com.eviware.x.form.XFormFactory;
  */
 public class SwingFormFactory extends XFormFactory
 {
-   public XFormDialogBuilder createDialogBuilder2( String name )
-   {
-      return new SwingXFormDialogBuilder( name );
-   }
+	public XFormDialogBuilder createDialogBuilder2( String name )
+	{
+		return new SwingXFormDialogBuilder( name );
+	}
 }

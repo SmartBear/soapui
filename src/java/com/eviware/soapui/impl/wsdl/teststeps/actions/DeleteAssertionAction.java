@@ -24,17 +24,17 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 public class DeleteAssertionAction extends AbstractSoapUIAction<WsdlMessageAssertion>
 {
-   public DeleteAssertionAction()
-   {
-      super( "Remove", "Removes this assertion from its request" );
-   }
-   
-   public void perform( WsdlMessageAssertion target, Object param )
+	public DeleteAssertionAction()
 	{
-      if( UISupport.confirm( "Remove assertion [" + target.getName() + "] from [" + 
-            target.getAssertable().getModelItem().getName() + "]", "Remove Assertion" ))
-      {
-         target.getAssertable().removeAssertion( target );
-      }
-   }
+		super( "Remove", "Removes this assertion from its request" );
+	}
+
+	public void perform( WsdlMessageAssertion target, Object param )
+	{
+		if( UISupport.confirm( "Remove assertion [" + target.getName() + "] from ["
+				+ target.getAssertable().getModelItem().getName() + "]", "Remove Assertion" ) )
+		{
+			target.getAssertable().removeAssertion( target );
+		}
+	}
 }

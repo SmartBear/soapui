@@ -99,7 +99,7 @@ public class SlowLinkSimulator
 
 			// we have overshot. lets find out how far
 			int delaysize = currentBytes / delayBytes;
-			long delay = delaysize * ( long ) delayTime;
+			long delay = delaysize * ( long )delayTime;
 
 			// move byte counter down to the remainder of bytes
 			currentBytes = currentBytes % delayBytes;

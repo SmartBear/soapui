@@ -12,31 +12,31 @@
 
 package com.eviware.soapui.support.swing;
 
-import com.eviware.soapui.model.ModelItem;
+import java.awt.Component;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
+
+import com.eviware.soapui.model.ModelItem;
 
 @SuppressWarnings( "serial" )
 public class ModelItemListCellRenderer extends DefaultListCellRenderer
 {
 
-   @Override
-   public Component getListCellRendererComponent(
-           JList list, Object value, int index, boolean isSelected,
-           boolean cellHasFocus
-   )
-   {
-      Component result = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
+	@Override
+	public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
+			boolean cellHasFocus )
+	{
+		Component result = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
 
-      if( value instanceof ModelItem )
-      {
-         ModelItem item = (ModelItem) value;
-         setIcon( item.getIcon() );
-         setText( item.getName() );
-      }
+		if( value instanceof ModelItem )
+		{
+			ModelItem item = ( ModelItem )value;
+			setIcon( item.getIcon() );
+			setText( item.getName() );
+		}
 
-      return result;
-   }
+		return result;
+	}
 
 }

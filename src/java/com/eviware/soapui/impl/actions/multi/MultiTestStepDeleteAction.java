@@ -23,22 +23,22 @@ public class MultiTestStepDeleteAction extends AbstractSoapUIMultiAction<ModelIt
 
 	public MultiTestStepDeleteAction()
 	{
-		super(SOAPUI_ACTION_ID, "Delete", "Delete selected items");
+		super( SOAPUI_ACTION_ID, "Delete", "Delete selected items" );
 	}
 
-	public void perform(ModelItem[] targets, Object param)
+	public void perform( ModelItem[] targets, Object param )
 	{
-		if (UISupport.confirm("Delete selected Test Steps?", "Delete Items"))
+		if( UISupport.confirm( "Delete selected Test Steps?", "Delete Items" ) )
 		{
-			for (ModelItem target : targets)
+			for( ModelItem target : targets )
 			{
-				((WsdlTestStep) target).getTestCase().removeTestStep((WsdlTestStep) target);
+				( ( WsdlTestStep )target ).getTestCase().removeTestStep( ( WsdlTestStep )target );
 			}
 		}
 	}
 
-	public boolean applies(ModelItem target)
+	public boolean applies( ModelItem target )
 	{
-		return (target instanceof WsdlTestStep);
+		return( target instanceof WsdlTestStep );
 	}
 }

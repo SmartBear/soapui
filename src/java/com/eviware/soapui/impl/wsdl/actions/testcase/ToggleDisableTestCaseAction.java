@@ -26,12 +26,12 @@ public class ToggleDisableTestCaseAction extends AbstractSoapUIAction<WsdlTestCa
 	public static final String SOAPUI_ACTION_ID = "ToggleDisableTestCaseAction";
 
 	public ToggleDisableTestCaseAction()
-   {
-      super( "Disable", "Disables this TestCase" );
-   }
-   
-   public void perform( WsdlTestCase testCase, Object param )
 	{
-      testCase.setDisabled( !testCase.isDisabled() );
-   }
+		super( "Disable", "Disables this TestCase" );
+	}
+
+	public void perform( WsdlTestCase testCase, Object param )
+	{
+		testCase.setDisabled( !testCase.isDisabled() );
+	}
 }

@@ -32,35 +32,36 @@ public class RemoveProjectAction extends AbstractSoapUIAction<WsdlProject>
 	public static final String SOAPUI_ACTION_ID = "RemoveProjectAction";
 
 	public RemoveProjectAction()
-   {
-      super( "Remove", "Removes this project from the workspace" );
-   }
-	
-   public void perform( WsdlProject project, Object param )
-   {
-   	if( hasRunningTests( project ))
-   	{
-   		UISupport.showErrorMessage( "Cannot remove Interface due to running tests" );
-   		return;
-   	}
-   	
-   	Boolean retval = Boolean.FALSE;
-   	
-   	if( project.isOpen() )
-   	{
-	   	retval = UISupport.confirmOrCancel( "Save project [" + project.getName() + "] before removing?", "Remove Project" );
-	   	if( retval == null )
-	   		return;
-   	}
-   	else
-   	{
-   		if( !UISupport.confirm( "Remove project [" + project.getName() + "] from workspace", "Remove Project" ))
-   			return;
-   	}
-   	
-   	if( retval.booleanValue() )
-      {
-         try
+	{
+		super( "Remove", "Removes this project from the workspace" );
+	}
+
+	public void perform( WsdlProject project, Object param )
+	{
+		if( hasRunningTests( project ) )
+		{
+			UISupport.showErrorMessage( "Cannot remove Interface due to running tests" );
+			return;
+		}
+
+		Boolean retval = Boolean.FALSE;
+
+		if( project.isOpen() )
+		{
+			retval = UISupport.confirmOrCancel( "Save project [" + project.getName() + "] before removing?",
+					"Remove Project" );
+			if( retval == null )
+				return;
+		}
+		else
+		{
+			if( !UISupport.confirm( "Remove project [" + project.getName() + "] from workspace", "Remove Project" ) )
+				return;
+		}
+
+		if( retval.booleanValue() )
+		{
+			try
 			{
 				project.save();
 			}
@@ -68,10 +69,10 @@ public class RemoveProjectAction extends AbstractSoapUIAction<WsdlProject>
 			{
 				UISupport.showErrorMessage( e1 );
 			}
-      }
+		}
 
-      project.getWorkspace().removeProject( project );
-   }
+		project.getWorkspace().removeProject( project );
+	}
 
 	private boolean hasRunningTests( WsdlProject project )
 	{
@@ -80,16 +81,16 @@ public class RemoveProjectAction extends AbstractSoapUIAction<WsdlProject>
 			TestSuite testSuite = project.getTestSuiteAt( c );
 			for( int i = 0; i < testSuite.getTestCaseCount(); i++ )
 			{
-				if( SoapUI.getTestMonitor().hasRunningTest( testSuite.getTestCaseAt( i )))
+				if( SoapUI.getTestMonitor().hasRunningTest( testSuite.getTestCaseAt( i ) ) )
 				{
 					return true;
 				}
 			}
 		}
-		
+
 		for( MockService mockService : project.getMockServiceList() )
 		{
-			if( SoapUI.getTestMonitor().hasRunningMock( mockService ))
+			if( SoapUI.getTestMonitor().hasRunningMock( mockService ) )
 			{
 				return true;
 			}

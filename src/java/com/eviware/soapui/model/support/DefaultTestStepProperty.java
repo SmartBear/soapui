@@ -23,7 +23,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepProperty;
 
 /***
- * Default implementation of TestStepProperty interface 
+ * Default implementation of TestStepProperty interface
  * 
  * @author Ole.Matzura
  */
@@ -35,21 +35,21 @@ public class DefaultTestStepProperty implements TestStepProperty, RenameableTest
 	private String description;
 	private PropertyHandler handler;
 	private final WsdlTestStep testStep;
-	
-	public DefaultTestStepProperty(String name, boolean isReadOnly, PropertyHandler handler, WsdlTestStep testStep )
+
+	public DefaultTestStepProperty( String name, boolean isReadOnly, PropertyHandler handler, WsdlTestStep testStep )
 	{
 		this.name = name;
 		this.isReadOnly = isReadOnly;
 		this.handler = handler;
 		this.testStep = testStep;
 	}
-	
-	public DefaultTestStepProperty(String name, WsdlTestStep testStep)
+
+	public DefaultTestStepProperty( String name, WsdlTestStep testStep )
 	{
 		this( name, false, new SimplePropertyHandler(), testStep );
 	}
 
-	public DefaultTestStepProperty(String name, boolean isReadOnly, WsdlTestStep testStep)
+	public DefaultTestStepProperty( String name, boolean isReadOnly, WsdlTestStep testStep )
 	{
 		this( name, isReadOnly, new SimplePropertyHandler(), testStep );
 	}
@@ -59,7 +59,7 @@ public class DefaultTestStepProperty implements TestStepProperty, RenameableTest
 		return description;
 	}
 
-	public void setDescription(String description)
+	public void setDescription( String description )
 	{
 		this.description = description;
 	}
@@ -68,7 +68,7 @@ public class DefaultTestStepProperty implements TestStepProperty, RenameableTest
 	{
 		return name;
 	}
-	
+
 	public void setName( String name )
 	{
 		this.name = name;
@@ -88,23 +88,23 @@ public class DefaultTestStepProperty implements TestStepProperty, RenameableTest
 	{
 		this.handler = handler;
 	}
-	
+
 	public String getValue()
 	{
 		return handler == null ? null : handler.getValue( this );
 	}
-	
+
 	public void setValue( String value )
 	{
 		if( isReadOnly() )
 			throw new RuntimeException( "Trying to set read-only property [" + getName() + "]" );
-		
+
 		if( handler != null )
 		{
 			handler.setValue( this, value );
 		}
 	}
-	
+
 	public TestStep getTestStep()
 	{
 		return testStep;
@@ -115,20 +115,20 @@ public class DefaultTestStepProperty implements TestStepProperty, RenameableTest
 	 * 
 	 * @author Ole.Matzura
 	 */
-	
+
 	public interface PropertyHandler
 	{
 		public String getValue( DefaultTestStepProperty property );
-		
+
 		public void setValue( DefaultTestStepProperty property, String value );
 	}
-	
+
 	/**
 	 * Empty implementation of PropertyHandler interface
 	 * 
 	 * @author Ole.Matzura
 	 */
-	
+
 	public static class PropertyHandlerAdapter implements PropertyHandler
 	{
 		public String getValue( DefaultTestStepProperty property )
@@ -136,30 +136,31 @@ public class DefaultTestStepProperty implements TestStepProperty, RenameableTest
 			return null;
 		}
 
-		public void setValue(DefaultTestStepProperty property, String value)
+		public void setValue( DefaultTestStepProperty property, String value )
 		{
 		}
 	}
-	
+
 	/**
 	 * Simple implementation of PropertyHandler interface
 	 * 
 	 * @author Ole.Matzura
 	 */
-	
+
 	public static class SimplePropertyHandler implements PropertyHandler
 	{
 		private String value;
 
-		public String getValue(DefaultTestStepProperty property)
+		public String getValue( DefaultTestStepProperty property )
 		{
 			return value;
 		}
 
-		public void setValue(DefaultTestStepProperty property,String value)
+		public void setValue( DefaultTestStepProperty property, String value )
 		{
 			this.value = value;
-		}}
+		}
+	}
 
 	public QName getType()
 	{

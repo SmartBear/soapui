@@ -20,7 +20,7 @@ public class RestDocument implements EditorDocument
 	public void release()
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

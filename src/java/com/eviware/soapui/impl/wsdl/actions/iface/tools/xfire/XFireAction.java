@@ -54,131 +54,139 @@ public class XFireAction extends AbstractToolsAction<Interface>
 	private static final String EXPLICIT_ANNOTATION = "Explicit Annotations";
 	private static final String SERVER_STUBS = "Generate Server Stubs";
 	public static final String SOAPUI_ACTION_ID = "XFireAction";
-	
-   public XFireAction()
-   {
-      super("XFire 1.X Stubs", "Generates XFire 1.X stubs using the wsgen utility");
-   }
 
-   protected XFormDialog buildDialog(Interface modelItem)
+	public XFireAction()
 	{
-      XFormDialogBuilder builder = XFormFactory.createDialogBuilder("XFire 1.X Stubs");
+		super( "XFire 1.X Stubs", "Generates XFire 1.X stubs using the wsgen utility" );
+	}
+
+	protected XFormDialog buildDialog( Interface modelItem )
+	{
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "XFire 1.X Stubs" );
 
 		XForm mainForm = builder.createForm( "Basic" );
-		addWSDLFields(mainForm, modelItem);
-		
+		addWSDLFields( mainForm, modelItem );
+
 		mainForm.addTextField( OUTPUT, "Root directory for all emitted files.", XForm.FieldType.PROJECT_FOLDER );
-		mainForm.addTextField( PACKAGE, "Package for generated classes", XForm.FieldType.JAVA_PACKAGE ).setRequired( true, "Package is required" );
-		XFormField bindingCombo = mainForm.addComboBox( BINDING, new String[] {"jaxb","xmlbeans"}, "Binding framework to use" );
-		
-		XFormTextField cpField = mainForm.addTextField( CLASSPATH, "Classpath to generated xmlbeans for binding", XForm.FieldType.PROJECT_FILE );
-		XFormTextField extBindingsField = mainForm.addTextField( EXTERNAL_BINDINGS, "External jaxb binding file(s)", XForm.FieldType.PROJECT_FILE );
-      bindingCombo.addComponentEnabler(cpField, "xmlbeans");
-      bindingCombo.addComponentEnabler(extBindingsField, "jaxb");
-      
+		mainForm.addTextField( PACKAGE, "Package for generated classes", XForm.FieldType.JAVA_PACKAGE ).setRequired(
+				true, "Package is required" );
+		XFormField bindingCombo = mainForm.addComboBox( BINDING, new String[] { "jaxb", "xmlbeans" },
+				"Binding framework to use" );
+
+		XFormTextField cpField = mainForm.addTextField( CLASSPATH, "Classpath to generated xmlbeans for binding",
+				XForm.FieldType.PROJECT_FILE );
+		XFormTextField extBindingsField = mainForm.addTextField( EXTERNAL_BINDINGS, "External jaxb binding file(s)",
+				XForm.FieldType.PROJECT_FILE );
+		bindingCombo.addComponentEnabler( cpField, "xmlbeans" );
+		bindingCombo.addComponentEnabler( extBindingsField, "jaxb" );
+
 		mainForm.addTextField( PROFILE, "Profile to use for generating artifacts", XForm.FieldType.TEXT );
 		mainForm.addTextField( BASE_URI, "Base URI to use", XForm.FieldType.URL );
 		mainForm.addCheckBox( OVERWRITE, null );
 		mainForm.addCheckBox( EXPLICIT_ANNOTATION, null );
 		mainForm.addCheckBox( SERVER_STUBS, null );
-		
-      buildArgsForm( builder, true, "WsGen");
-      
-		return builder.buildDialog( buildDefaultActions(HelpUrls.XFIRE_HELP_URL, modelItem),
-      		"Specify arguments for XFire 1.X WsGen", UISupport.TOOL_ICON );
+
+		buildArgsForm( builder, true, "WsGen" );
+
+		return builder.buildDialog( buildDefaultActions( HelpUrls.XFIRE_HELP_URL, modelItem ),
+				"Specify arguments for XFire 1.X WsGen", UISupport.TOOL_ICON );
 	}
-   
-	protected StringToStringMap initValues(Interface modelItem, Object param)
+
+	protected StringToStringMap initValues( Interface modelItem, Object param )
 	{
-		StringToStringMap values = super.initValues(modelItem, param);
+		StringToStringMap values = super.initValues( modelItem, param );
 		values.putIfMissing( BINDING, "jaxb" );
 		return values;
 	}
 
-	protected void generate(StringToStringMap values, ToolHost toolHost, Interface modelItem) throws Exception
+	protected void generate( StringToStringMap values, ToolHost toolHost, Interface modelItem ) throws Exception
 	{
 		String xfireDir = SoapUI.getSettings().getString( ToolsSettings.XFIRE_LOCATION, null );
-		if( Tools.isEmpty( xfireDir ))
+		if( Tools.isEmpty( xfireDir ) )
 		{
 			UISupport.showErrorMessage( "XFire 1.X directory must be set in global preferences" );
 			return;
 		}
-		
-      String antDir = ToolsSupport.getToolLocator().getAntDir(true);
-      if( Tools.isEmpty( antDir ))
+
+		String antDir = ToolsSupport.getToolLocator().getAntDir( true );
+		if( Tools.isEmpty( antDir ) )
 		{
 			UISupport.showErrorMessage( "ANT directory must be set in global preferences" );
 			return;
 		}
-		
+
 		ProcessBuilder builder = new ProcessBuilder();
 		ArgumentBuilder args = buildArgs( buildClasspath( xfireDir, antDir, values.get( CLASSPATH ) ), modelItem );
-		builder.command(args.getArgs());
-		builder.directory(new File(xfireDir));
-		
-		toolHost.run( new ProcessToolRunner( builder, "XFire 1.X WsGen", modelItem ));
+		builder.command( args.getArgs() );
+		builder.directory( new File( xfireDir ) );
+
+		toolHost.run( new ProcessToolRunner( builder, "XFire 1.X WsGen", modelItem ) );
 	}
-   
-	private String buildClasspath(String xfireDir, String antDir, String additional )
+
+	private String buildClasspath( String xfireDir, String antDir, String additional )
 	{
 		String libDir = xfireDir + File.separatorChar + "lib";
-		String [] xfireLibs = new File( libDir ).list( new FilenameFilter() {
+		String[] xfireLibs = new File( libDir ).list( new FilenameFilter()
+		{
 
-			public boolean accept(File dir, String name)
+			public boolean accept( File dir, String name )
 			{
-				if( !name.endsWith( ".jar"))
+				if( !name.endsWith( ".jar" ) )
 					return false;
-				
-				if( name.startsWith( "jaxb"))
-					return name.indexOf( "2.0") > 0;
-					
-				return true;	
-			}});
-		
-		String modulesDir = xfireDir + File.separatorChar + "modules";
-		String [] xfireJars = new File( modulesDir ).list( new FilenameFilter() {
 
-			public boolean accept(File dir, String name)
+				if( name.startsWith( "jaxb" ) )
+					return name.indexOf( "2.0" ) > 0;
+
+				return true;
+			}
+		} );
+
+		String modulesDir = xfireDir + File.separatorChar + "modules";
+		String[] xfireJars = new File( modulesDir ).list( new FilenameFilter()
+		{
+
+			public boolean accept( File dir, String name )
 			{
-				return name.endsWith( ".jar");
-			}});
-		
+				return name.endsWith( ".jar" );
+			}
+		} );
+
 		StringBuilder classpath = new StringBuilder();
-		
+
 		for( int c = 0; c < xfireLibs.length; c++ )
 		{
 			if( c > 0 )
 				classpath.append( File.pathSeparatorChar );
-			
+
 			classpath.append( libDir + File.separatorChar + xfireLibs[c] );
 		}
-		
+
 		for( int c = 0; c < xfireJars.length; c++ )
 		{
 			classpath.append( File.pathSeparatorChar );
 			classpath.append( modulesDir ).append( File.separatorChar ).append( xfireJars[c] );
 		}
-		
+
 		classpath.append( File.pathSeparatorChar );
-		classpath.append( antDir ).append( File.separatorChar ).append( "lib" ).
-			append( File.separatorChar ).append( "ant.jar" );
-		
+		classpath.append( antDir ).append( File.separatorChar ).append( "lib" ).append( File.separatorChar ).append(
+				"ant.jar" );
+
 		if( additional != null && additional.trim().length() > 0 )
 			classpath.append( File.pathSeparatorChar ).append( additional.trim() );
-		
+
 		return classpath.toString();
 	}
 
 	private ArgumentBuilder buildArgs( String classpath, Interface modelItem ) throws IOException
 	{
 		StringToStringMap values = dialog.getValues();
-		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ));
-		
+		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ) );
+
 		ArgumentBuilder builder = new ArgumentBuilder( values );
-		
+
 		builder.addArgs( "java" );
 		addJavaArgs( values, builder );
-		
+
 		builder.addArgs( "-cp", classpath, "org.codehaus.xfire.gen.WsGen" );
 		builder.addArgs( "-wsdl", getWsdlUrl( values, modelItem ) );
 		builder.addString( OUTPUT, "-o" );

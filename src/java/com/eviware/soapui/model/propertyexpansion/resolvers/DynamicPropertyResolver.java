@@ -21,24 +21,24 @@ import com.eviware.soapui.model.propertyexpansion.resolvers.providers.WorkspaceD
 
 public class DynamicPropertyResolver implements PropertyResolver
 {
-	private static Map<String,ValueProvider> providers = new HashMap<String, ValueProvider>();
-	
+	private static Map<String, ValueProvider> providers = new HashMap<String, ValueProvider>();
+
 	static
 	{
 		addProvider( "projectDir", new ProjectDirProvider() );
 		addProvider( "workspaceDir", new WorkspaceDirProvider() );
 	}
-	
+
 	public DynamicPropertyResolver()
 	{
 	}
-	
+
 	public String resolveProperty( PropertyExpansionContext context, String name, boolean globalOverride )
 	{
 		ValueProvider provider = providers.get( name );
 		if( provider != null )
 			return provider.getValue( context );
-		
+
 		return null;
 	}
 
@@ -46,7 +46,7 @@ public class DynamicPropertyResolver implements PropertyResolver
 	{
 		providers.put( propertyName, provider );
 	}
-	
+
 	public interface ValueProvider
 	{
 		String getValue( PropertyExpansionContext context );

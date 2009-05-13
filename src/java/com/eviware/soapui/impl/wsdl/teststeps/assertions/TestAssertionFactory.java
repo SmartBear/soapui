@@ -19,10 +19,10 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 public interface TestAssertionFactory
 {
 	public boolean canAssert( Assertable assertable );
-	
-	public TestAssertion buildAssertion(TestAssertionConfig config, Assertable assertable);
-	
+
+	public TestAssertion buildAssertion( TestAssertionConfig config, Assertable assertable );
+
 	public String getAssertionId();
-	
+
 	public String getAssertionLabel();
 }

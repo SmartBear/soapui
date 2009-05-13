@@ -12,16 +12,25 @@
 
 package com.eviware.x.form.support;
 
+import java.lang.reflect.Field;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.x.form.*;
+import com.eviware.x.form.XForm;
+import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.XFormDialogBuilder;
+import com.eviware.x.form.XFormFactory;
+import com.eviware.x.form.XFormField;
+import com.eviware.x.form.XFormTextField;
 import com.eviware.x.form.XForm.FieldType;
 import com.eviware.x.form.support.AField.AFieldType;
-import com.eviware.x.impl.swing.*;
-
-import java.lang.reflect.Field;
+import com.eviware.x.impl.swing.ActionFormFieldComponent;
+import com.eviware.x.impl.swing.JComponentFormField;
+import com.eviware.x.impl.swing.JPasswordFieldFormField;
+import com.eviware.x.impl.swing.JStringListFormField;
+import com.eviware.x.impl.swing.JTableFormField;
 
 /**
  * Builds XFormDialogs from AForm/AField annotated classes/interfaces
@@ -31,34 +40,34 @@ import java.lang.reflect.Field;
 
 public class ADialogBuilder
 {
-	public static XFormDialog buildDialog(Class<? extends Object> formClass)
+	public static XFormDialog buildDialog( Class<? extends Object> formClass )
 	{
-		return buildDialog(formClass, null);
+		return buildDialog( formClass, null );
 	}
 
-	public static XFormDialog buildDialog(Class<? extends Object> formClass, ActionList actions)
+	public static XFormDialog buildDialog( Class<? extends Object> formClass, ActionList actions )
 	{
-		AForm formAnnotation = formClass.getAnnotation(AForm.class);
-		if (formAnnotation == null)
+		AForm formAnnotation = formClass.getAnnotation( AForm.class );
+		if( formAnnotation == null )
 		{
-			throw new RuntimeException("formClass is not annotated correctly..");
+			throw new RuntimeException( "formClass is not annotated correctly.." );
 		}
 
-		MessageSupport messages = MessageSupport.getMessages(formClass);
+		MessageSupport messages = MessageSupport.getMessages( formClass );
 
-		XFormDialogBuilder builder = XFormFactory.createDialogBuilder(messages.get(formAnnotation.name()));
-		XForm form = builder.createForm("Basic");
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( messages.get( formAnnotation.name() ) );
+		XForm form = builder.createForm( "Basic" );
 
-		for (Field field : formClass.getFields())
+		for( Field field : formClass.getFields() )
 		{
-			AField fieldAnnotation = field.getAnnotation(AField.class);
-			if (fieldAnnotation != null)
+			AField fieldAnnotation = field.getAnnotation( AField.class );
+			if( fieldAnnotation != null )
 			{
 				try
 				{
-					addFormField(form, field, fieldAnnotation, messages);
+					addFormField( form, field, fieldAnnotation, messages );
 				}
-				catch (Exception e)
+				catch( Exception e )
 				{
 					e.printStackTrace();
 				}
@@ -66,106 +75,106 @@ public class ADialogBuilder
 		}
 
 		ActionList defaultActions = formAnnotation.helpUrl() == null ? builder.buildOkCancelActions() : builder
-				.buildOkCancelHelpActions(formAnnotation.helpUrl());
+				.buildOkCancelHelpActions( formAnnotation.helpUrl() );
 
-		if (actions == null)
+		if( actions == null )
 			actions = defaultActions;
 		else
-			actions.addActions(defaultActions);
+			actions.addActions( defaultActions );
 
-		XFormDialog dialog = builder.buildDialog(actions, messages.get(formAnnotation.description()), UISupport
-				.createImageIcon(formAnnotation.icon()));
+		XFormDialog dialog = builder.buildDialog( actions, messages.get( formAnnotation.description() ), UISupport
+				.createImageIcon( formAnnotation.icon() ) );
 
 		return dialog;
 	}
 
-	public static XFormDialog buildTabbedDialog(Class<? extends Object> tabbedFormClass, ActionList actions)
+	public static XFormDialog buildTabbedDialog( Class<? extends Object> tabbedFormClass, ActionList actions )
 	{
-		AForm formAnnotation = tabbedFormClass.getAnnotation(AForm.class);
-		if (formAnnotation == null)
+		AForm formAnnotation = tabbedFormClass.getAnnotation( AForm.class );
+		if( formAnnotation == null )
 		{
-			throw new RuntimeException("formClass is not annotated correctly..");
+			throw new RuntimeException( "formClass is not annotated correctly.." );
 		}
 
-		MessageSupport messages = MessageSupport.getMessages(tabbedFormClass);
-		XFormDialogBuilder builder = XFormFactory.createDialogBuilder(formAnnotation.name());
+		MessageSupport messages = MessageSupport.getMessages( tabbedFormClass );
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( formAnnotation.name() );
 
-		for (Field field : tabbedFormClass.getFields())
+		for( Field field : tabbedFormClass.getFields() )
 		{
-			APage pageAnnotation = field.getAnnotation(APage.class);
-			if (pageAnnotation != null)
+			APage pageAnnotation = field.getAnnotation( APage.class );
+			if( pageAnnotation != null )
 			{
-				buildForm(builder, pageAnnotation.name(), field.getType(), messages);
+				buildForm( builder, pageAnnotation.name(), field.getType(), messages );
 			}
 
-			AField fieldAnnotation = field.getAnnotation(AField.class);
-			if (fieldAnnotation != null)
+			AField fieldAnnotation = field.getAnnotation( AField.class );
+			if( fieldAnnotation != null )
 			{
 				try
 				{
-					Class<?> formClass = Class.forName(fieldAnnotation.description());
-					buildForm(builder, fieldAnnotation.name(), formClass, messages);
+					Class<?> formClass = Class.forName( fieldAnnotation.description() );
+					buildForm( builder, fieldAnnotation.name(), formClass, messages );
 				}
-				catch (Exception e)
+				catch( Exception e )
 				{
-					SoapUI.logError(e);
+					SoapUI.logError( e );
 				}
 			}
 		}
 
 		ActionList defaultActions = formAnnotation.helpUrl().length() == 0 ? builder.buildOkCancelActions() : builder
-				.buildOkCancelHelpActions(formAnnotation.helpUrl());
+				.buildOkCancelHelpActions( formAnnotation.helpUrl() );
 
-		if (actions == null)
+		if( actions == null )
 			actions = defaultActions;
 		else
-			actions.addActions(defaultActions);
+			actions.addActions( defaultActions );
 
-		XFormDialog dialog = builder.buildDialog(actions, formAnnotation.description(), UISupport
-				.createImageIcon(formAnnotation.icon()));
+		XFormDialog dialog = builder.buildDialog( actions, formAnnotation.description(), UISupport
+				.createImageIcon( formAnnotation.icon() ) );
 
 		return dialog;
 	}
 
-	public static XFormDialog buildWizard(Class<? extends Object> tabbedFormClass)
+	public static XFormDialog buildWizard( Class<? extends Object> tabbedFormClass )
 	{
-		AForm formAnnotation = tabbedFormClass.getAnnotation(AForm.class);
-		if (formAnnotation == null)
+		AForm formAnnotation = tabbedFormClass.getAnnotation( AForm.class );
+		if( formAnnotation == null )
 		{
-			throw new RuntimeException("formClass is not annotated correctly..");
+			throw new RuntimeException( "formClass is not annotated correctly.." );
 		}
 
-		MessageSupport messages = MessageSupport.getMessages(tabbedFormClass);
-		XFormDialogBuilder builder = XFormFactory.createDialogBuilder(formAnnotation.name());
+		MessageSupport messages = MessageSupport.getMessages( tabbedFormClass );
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( formAnnotation.name() );
 
-		for (Field field : tabbedFormClass.getFields())
+		for( Field field : tabbedFormClass.getFields() )
 		{
-			APage pageAnnotation = field.getAnnotation(APage.class);
-			if (pageAnnotation != null)
+			APage pageAnnotation = field.getAnnotation( APage.class );
+			if( pageAnnotation != null )
 			{
-				buildForm(builder, pageAnnotation.name(), field.getType(), messages);
+				buildForm( builder, pageAnnotation.name(), field.getType(), messages );
 			}
 		}
 
-		XFormDialog dialog = builder.buildWizard(formAnnotation.description(), UISupport.createImageIcon(formAnnotation
-				.icon()), formAnnotation.helpUrl());
+		XFormDialog dialog = builder.buildWizard( formAnnotation.description(), UISupport.createImageIcon( formAnnotation
+				.icon() ), formAnnotation.helpUrl() );
 
 		return dialog;
 	}
 
-	private static void buildForm(XFormDialogBuilder builder, String name, Class<?> formClass, MessageSupport messages)
+	private static void buildForm( XFormDialogBuilder builder, String name, Class<?> formClass, MessageSupport messages )
 	{
-		XForm form = builder.createForm(name);
-		for (Field formField : formClass.getFields())
+		XForm form = builder.createForm( name );
+		for( Field formField : formClass.getFields() )
 		{
-			AField formFieldAnnotation = formField.getAnnotation(AField.class);
-			if (formFieldAnnotation != null)
+			AField formFieldAnnotation = formField.getAnnotation( AField.class );
+			if( formFieldAnnotation != null )
 			{
 				try
 				{
-					addFormField(form, formField, formFieldAnnotation, messages);
+					addFormField( form, formField, formFieldAnnotation, messages );
 				}
-				catch (Exception e)
+				catch( Exception e )
 				{
 					e.printStackTrace();
 				}
@@ -173,70 +182,70 @@ public class ADialogBuilder
 		}
 	}
 
-	private static void addFormField(XForm form, Field formField, AField fieldAnnotation, MessageSupport messages)
+	private static void addFormField( XForm form, Field formField, AField fieldAnnotation, MessageSupport messages )
 			throws Exception
 	{
 		AFieldType type = fieldAnnotation.type();
 		String fieldName = fieldAnnotation.name();
-		String name = messages.get(fieldName.length() == 0 ? formField.get(null).toString() : fieldName);
-		String description = messages.get(fieldAnnotation.description());
-		String[] values = messages.getArray(fieldAnnotation.values());
-		String defaultValue = messages.get(fieldAnnotation.defaultValue());
+		String name = messages.get( fieldName.length() == 0 ? formField.get( null ).toString() : fieldName );
+		String description = messages.get( fieldAnnotation.description() );
+		String[] values = messages.getArray( fieldAnnotation.values() );
+		String defaultValue = messages.get( fieldAnnotation.defaultValue() );
 		boolean enabled = fieldAnnotation.enabled();
 
 		XFormField field = null;
-		switch (type)
+		switch( type )
 		{
-		case STRING:
-			field = form.addTextField(name, description, FieldType.TEXT);
+		case STRING :
+			field = form.addTextField( name, description, FieldType.TEXT );
 			break;
-		case INT:
-			field = form.addTextField(name, description, FieldType.TEXT);
-			((XFormTextField) field).setWidth(10);
+		case INT :
+			field = form.addTextField( name, description, FieldType.TEXT );
+			( ( XFormTextField )field ).setWidth( 10 );
 			break;
-		case STRINGAREA:
-			field = form.addTextField(name, description, FieldType.TEXTAREA);
+		case STRINGAREA :
+			field = form.addTextField( name, description, FieldType.TEXTAREA );
 			break;
-		case BOOLEAN:
-			field = form.addCheckBox(name, description);
+		case BOOLEAN :
+			field = form.addCheckBox( name, description );
 			break;
-		case FILE:
-			field = form.addTextField(name, description, FieldType.FILE);
+		case FILE :
+			field = form.addTextField( name, description, FieldType.FILE );
 			break;
-		case FOLDER:
-			field = form.addTextField(name, description, FieldType.FOLDER);
+		case FOLDER :
+			field = form.addTextField( name, description, FieldType.FOLDER );
 			break;
-		case ENUMERATION:
-			field = form.addComboBox(name, values, description);
+		case ENUMERATION :
+			field = form.addComboBox( name, values, description );
 			break;
-		case RADIOGROUP:
-			field = form.addComponent(name, new XFormRadioGroup(values));
+		case RADIOGROUP :
+			field = form.addComponent( name, new XFormRadioGroup( values ) );
 			break;
-		case MULTILIST:
-			field = form.addComponent(name, new XFormMultiSelectList(values));
+		case MULTILIST :
+			field = form.addComponent( name, new XFormMultiSelectList( values ) );
 			break;
-		case STRINGLIST:
-			field = form.addComponent(name, new JStringListFormField(description, defaultValue));
+		case STRINGLIST :
+			field = form.addComponent( name, new JStringListFormField( description, defaultValue ) );
 			break;
-		case TABLE:
-			field = form.addComponent(name, new JTableFormField(description));
+		case TABLE :
+			field = form.addComponent( name, new JTableFormField( description ) );
 			break;
-		case ACTION:
-			field = form.addComponent(name, new ActionFormFieldComponent(name, description));
+		case ACTION :
+			field = form.addComponent( name, new ActionFormFieldComponent( name, description ) );
 			break;
-		case COMPONENT:
-			field = form.addComponent(name, new JComponentFormField(name, description));
+		case COMPONENT :
+			field = form.addComponent( name, new JComponentFormField( name, description ) );
 			break;
-		case PASSWORD:
-			field = form.addComponent(name, new JPasswordFieldFormField());
+		case PASSWORD :
+			field = form.addComponent( name, new JPasswordFieldFormField() );
 			break;
-      case SEPARATOR:
-         form.addSeparator( description );
-		default:
-			System.out.println("Unsupported field type: " + type);
+		case SEPARATOR :
+			form.addSeparator( description );
+		default :
+			System.out.println( "Unsupported field type: " + type );
 		}
 
-		if (field != null)
-			field.setEnabled(enabled);
+		if( field != null )
+			field.setEnabled( enabled );
 	}
 }

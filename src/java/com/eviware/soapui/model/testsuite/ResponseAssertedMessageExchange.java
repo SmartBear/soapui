@@ -16,5 +16,5 @@ import com.eviware.soapui.model.iface.MessageExchange;
 
 public interface ResponseAssertedMessageExchange extends MessageExchange
 {
-   public AssertedXPath [] getAssertedXPathsForResponse(); 
+	public AssertedXPath[] getAssertedXPathsForResponse();
 }

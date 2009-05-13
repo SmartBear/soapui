@@ -27,7 +27,8 @@ import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 
 /**
- * Assertion that checks that the associated WsdlTestRequests response is not a SOAP Fault
+ * Assertion that checks that the associated WsdlTestRequests response is not a
+ * SOAP Fault
  * 
  * @author Ole.Matzura
  */
@@ -37,40 +38,43 @@ public class NotSoapFaultAssertion extends WsdlMessageAssertion implements Respo
 	public static final String ID = "SOAP Fault Assertion";
 	public static final String LABEL = "Not SOAP Fault";
 
-	public NotSoapFaultAssertion(TestAssertionConfig assertionConfig, Assertable assertable )
-   {
-      super(assertionConfig, assertable, false, false, false, true);
-   }
-	
-   public String internalAssertResponse( MessageExchange messageExchange, SubmitContext context ) throws AssertionException
-   {
-      String responseContent = messageExchange.getResponseContent();
-      try
-      {
-      	// check manually before resource intensive xpath
-      	SoapVersion soapVersion = ((WsdlMessageExchange)messageExchange).getOperation().getInterface().getSoapVersion();
-      	if( SoapUtils.isSoapFault( responseContent, soapVersion ))
-            throw new AssertionException( new AssertionError("Response is a SOAP Fault") );
-      }
-      catch (Exception e)
-      {
-         throw new AssertionException( new AssertionError(e.getMessage()) );
-      }
-      
-      return "Response is not a SOAP Fault";
-   }
+	public NotSoapFaultAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
+	{
+		super( assertionConfig, assertable, false, false, false, true );
+	}
+
+	public String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
+			throws AssertionException
+	{
+		String responseContent = messageExchange.getResponseContent();
+		try
+		{
+			// check manually before resource intensive xpath
+			SoapVersion soapVersion = ( ( WsdlMessageExchange )messageExchange ).getOperation().getInterface()
+					.getSoapVersion();
+			if( SoapUtils.isSoapFault( responseContent, soapVersion ) )
+				throw new AssertionException( new AssertionError( "Response is a SOAP Fault" ) );
+		}
+		catch( Exception e )
+		{
+			throw new AssertionException( new AssertionError( e.getMessage() ) );
+		}
+
+		return "Response is not a SOAP Fault";
+	}
 
 	@Override
-	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context ) throws AssertionException
+	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
+			throws AssertionException
 	{
 		return null;
 	}
-	
+
 	public static class Factory extends AbstractTestAssertionFactory
 	{
 		public Factory()
 		{
-			super(NotSoapFaultAssertion.ID, NotSoapFaultAssertion.LABEL, NotSoapFaultAssertion.class, WsdlRequest.class);
+			super( NotSoapFaultAssertion.ID, NotSoapFaultAssertion.LABEL, NotSoapFaultAssertion.class, WsdlRequest.class );
 		}
 	}
 }

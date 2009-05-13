@@ -32,11 +32,11 @@ public class DeleteMockResponseAction extends AbstractSoapUIAction<WsdlMockRespo
 
 	public void perform( WsdlMockResponse mockResponse, Object param )
 	{
-		if( UISupport.confirm( "Delete MockResponse [" + mockResponse.getName() + "] from MockOperation [" + 
-					 mockResponse.getMockOperation().getName() + "]", getName() ))
-      {
-      	WsdlMockOperation operation = (WsdlMockOperation) mockResponse.getMockOperation();
-         operation.removeMockResponse( mockResponse );
-      }
+		if( UISupport.confirm( "Delete MockResponse [" + mockResponse.getName() + "] from MockOperation ["
+				+ mockResponse.getMockOperation().getName() + "]", getName() ) )
+		{
+			WsdlMockOperation operation = ( WsdlMockOperation )mockResponse.getMockOperation();
+			operation.removeMockResponse( mockResponse );
+		}
 	}
 }

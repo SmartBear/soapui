@@ -12,28 +12,29 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
-import com.eviware.soapui.impl.wsdl.support.xsd.SchemaLoader;
+import java.net.URL;
+
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
-import java.net.URL;
+import com.eviware.soapui.impl.wsdl.support.xsd.SchemaLoader;
 
 public class UrlSchemaLoader implements SchemaLoader
 {
-   private String baseURI;
+	private String baseURI;
 
-   public UrlSchemaLoader(String baseURI)
-   {
-      this.baseURI = baseURI;
-   }
+	public UrlSchemaLoader( String baseURI )
+	{
+		this.baseURI = baseURI;
+	}
 
-   public XmlObject loadXmlObject(String wsdlUrl, XmlOptions options) throws Exception
-   {
-      return XmlObject.Factory.parse(new URL(wsdlUrl), options );
-   }
+	public XmlObject loadXmlObject( String wsdlUrl, XmlOptions options ) throws Exception
+	{
+		return XmlObject.Factory.parse( new URL( wsdlUrl ), options );
+	}
 
-   public String getBaseURI()
-   {
-      return baseURI;
-   }
+	public String getBaseURI()
+	{
+		return baseURI;
+	}
 }

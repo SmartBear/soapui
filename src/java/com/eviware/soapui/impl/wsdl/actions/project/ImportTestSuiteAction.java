@@ -21,21 +21,21 @@ public class ImportTestSuiteAction extends AbstractSoapUIAction<WsdlProject>
 {
 	public ImportTestSuiteAction()
 	{
-		super("Import Test Suite", "Import test suite for this interface");
+		super( "Import Test Suite", "Import test suite for this interface" );
 	}
 
-	public void perform(WsdlProject project, Object param)
+	public void perform( WsdlProject project, Object param )
 	{
-		File file = UISupport.getFileDialogs().openXML(this, "Choose test suite to import");
+		File file = UISupport.getFileDialogs().openXML( this, "Choose test suite to import" );
 
-		if (file == null)
+		if( file == null )
 			return;
 
 		String fileName = file.getAbsolutePath();
-		if (fileName == null)
+		if( fileName == null )
 			return;
-		
-		project.importTestSuite(file);
-		
+
+		project.importTestSuite( file );
+
 	}
 }

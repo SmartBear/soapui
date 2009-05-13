@@ -30,12 +30,12 @@ public class WsdlTestStepsModelItem extends EmptyModelItem
 {
 	private TestCase testCase;
 	private TestSuiteListener listener = new InternalTestSuiteListener();
-	
+
 	public WsdlTestStepsModelItem( TestCase testCase )
 	{
-		super( createLabel( testCase ),  UISupport.createImageIcon("/teststeps.gif") );
+		super( createLabel( testCase ), UISupport.createImageIcon( "/teststeps.gif" ) );
 		this.testCase = testCase;
-		
+
 		testCase.getTestSuite().addTestSuiteListener( listener );
 	}
 
@@ -48,30 +48,30 @@ public class WsdlTestStepsModelItem extends EmptyModelItem
 	{
 		return testCase.getSettings();
 	}
-	
+
 	@Override
 	public String getName()
 	{
-		return createLabel(testCase);
+		return createLabel( testCase );
 	}
 
 	public WsdlTestCase getTestCase()
 	{
-		return ( WsdlTestCase ) testCase;
+		return ( WsdlTestCase )testCase;
 	}
-	
+
 	@Override
 	public void release()
 	{
 		super.release();
 		testCase.getTestSuite().removeTestSuiteListener( listener );
 	}
-	
+
 	public void updateLabel()
 	{
-		setName( createLabel( testCase ) ); 
+		setName( createLabel( testCase ) );
 	}
-	
+
 	public class InternalTestSuiteListener extends TestSuiteListenerAdapter implements TestSuiteListener
 	{
 		@Override
@@ -80,14 +80,14 @@ public class WsdlTestStepsModelItem extends EmptyModelItem
 			if( testStep.getTestCase() == testCase )
 				updateLabel();
 		}
-		
+
 		@Override
 		public void testStepRemoved( TestStep testStep, int index )
 		{
 			if( testStep.getTestCase() == testCase )
 				updateLabel();
 		}
-		
+
 		@Override
 		public void testCaseRemoved( TestCase testCase )
 		{
@@ -97,5 +97,5 @@ public class WsdlTestStepsModelItem extends EmptyModelItem
 			}
 		}
 	}
-	
+
 }

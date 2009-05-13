@@ -33,17 +33,17 @@ public class DefaultActionList implements ActionList
 	private List<Action> actions = new ArrayList<Action>();
 	private Action defaultAction;
 	private final String label;
-	
+
 	public DefaultActionList()
 	{
 		this( null );
 	}
-	
+
 	public DefaultActionList( String label )
 	{
 		this.label = label;
 	}
-	
+
 	public String getLabel()
 	{
 		return label;
@@ -54,7 +54,7 @@ public class DefaultActionList implements ActionList
 		return actions.size();
 	}
 
-	public Action getActionAt(int index)
+	public Action getActionAt( int index )
 	{
 		return actions.get( index );
 	}
@@ -63,29 +63,29 @@ public class DefaultActionList implements ActionList
 	{
 		return defaultAction;
 	}
-	
+
 	public void setDefaultAction( Action defaultAction )
 	{
 		this.defaultAction = defaultAction;
 	}
-	
+
 	public void addAction( Action action )
 	{
 		actions.add( action );
 	}
-	
+
 	public void addAction( Action action, boolean isDefault )
 	{
 		actions.add( action );
 		if( isDefault )
 			setDefaultAction( action );
 	}
-	
+
 	public void addSeparator()
 	{
 		actions.add( ActionSupport.SEPARATOR_ACTION );
 	}
-	
+
 	public void insertAction( Action action, int index )
 	{
 		actions.add( index, action );
@@ -101,7 +101,7 @@ public class DefaultActionList implements ActionList
 		return defaultAction != null;
 	}
 
-	public void performDefaultAction(ActionEvent event)
+	public void performDefaultAction( ActionEvent event )
 	{
 		if( defaultAction != null )
 			defaultAction.actionPerformed( event );
@@ -113,11 +113,11 @@ public class DefaultActionList implements ActionList
 		defaultAction = null;
 	}
 
-	public void dispatchKeyEvent(KeyEvent e)
+	public void dispatchKeyEvent( KeyEvent e )
 	{
 		if( e.getKeyChar() == KeyEvent.VK_ENTER && defaultAction != null )
 		{
-			performDefaultAction( new ActionEvent( e.getSource(), 0, null ));
+			performDefaultAction( new ActionEvent( e.getSource(), 0, null ) );
 			e.consume();
 		}
 		else
@@ -125,11 +125,11 @@ public class DefaultActionList implements ActionList
 			for( int c = 0; c < actions.size(); c++ )
 			{
 				Action action = actions.get( c );
-				KeyStroke acc = (KeyStroke) action.getValue( Action.ACCELERATOR_KEY );
+				KeyStroke acc = ( KeyStroke )action.getValue( Action.ACCELERATOR_KEY );
 				if( acc == null )
 					continue;
-				
-				if( acc.equals( KeyStroke.getKeyStrokeForEvent( e )))
+
+				if( acc.equals( KeyStroke.getKeyStrokeForEvent( e ) ) )
 				{
 					action.actionPerformed( new ActionEvent( e.getSource(), 0, null ) );
 					e.consume();
@@ -142,7 +142,7 @@ public class DefaultActionList implements ActionList
 	public void addActions( ActionList defaultActions )
 	{
 		for( int c = 0; c < defaultActions.getActionCount(); c++ )
-			addAction( defaultActions.getActionAt( c ));
+			addAction( defaultActions.getActionAt( c ) );
 	}
 
 	public void setEnabled( boolean b )
@@ -158,19 +158,19 @@ public class DefaultActionList implements ActionList
 	{
 		actions.remove( index );
 	}
-	
+
 	/**
 	 * Update all actions that are instances of UpdateableAction.
 	 */
-   public void update()
-   {
-      for(Action a : actions)
-      {
-         if(a instanceof UpdateableAction)
-         {
-            ((UpdateableAction)a).update();
-         }
-      }
-   }
-   
+	public void update()
+	{
+		for( Action a : actions )
+		{
+			if( a instanceof UpdateableAction )
+			{
+				( ( UpdateableAction )a ).update();
+			}
+		}
+	}
+
 }

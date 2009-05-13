@@ -21,15 +21,15 @@ import com.eviware.soapui.settings.impl.SettingsToolLocatorImpl;
 
 public class ToolsSupport
 {
-   private static ToolLocator toolLocations = new SettingsToolLocatorImpl();
+	private static ToolLocator toolLocations = new SettingsToolLocatorImpl();
 
-   public static void setToolLocator(ToolLocator locations)
-   {
-      toolLocations = locations;
-   }
+	public static void setToolLocator( ToolLocator locations )
+	{
+		toolLocations = locations;
+	}
 
-   public static ToolLocator getToolLocator()
-   {
-      return toolLocations;
-   }
+	public static ToolLocator getToolLocator()
+	{
+		return toolLocations;
+	}
 }

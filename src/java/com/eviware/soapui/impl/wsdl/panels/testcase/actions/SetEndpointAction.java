@@ -37,58 +37,59 @@ public class SetEndpointAction extends AbstractAction
 	private final WsdlTestCase testCase;
 
 	public SetEndpointAction( WsdlTestCase testCase )
-   {
+	{
 		this.testCase = testCase;
-		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/set_endpoint.gif"));
-      putValue( Action.SHORT_DESCRIPTION, "Sets the endpoint for all requests in this testcase" );
-   }
-   
-	public void actionPerformed(ActionEvent e)
+		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/set_endpoint.gif" ) );
+		putValue( Action.SHORT_DESCRIPTION, "Sets the endpoint for all requests in this testcase" );
+	}
+
+	public void actionPerformed( ActionEvent e )
 	{
 		Set<String> endpointSet = new HashSet<String>();
 		Set<String> currentEndpointSet = new HashSet<String>();
-		
+
 		endpointSet.add( USE_CURRENT );
-		
+
 		for( int c = 0; c < testCase.getTestStepCount(); c++ )
-   	{
-   		TestStep step = testCase.getTestStepAt( c );
-   		if( step instanceof WsdlTestRequestStep )
-   		{
-   			WsdlTestRequestStep requestStep = (WsdlTestRequestStep) step;
-   			String [] endpoints = requestStep.getTestRequest().getOperation().getInterface().getEndpoints();
-   			for( int i = 0; i < endpoints.length; i++ )
-   			{
-   				endpointSet.add( endpoints[i] );
-   			}
-   			
-   			currentEndpointSet.add( requestStep.getTestRequest().getEndpoint() );
-   		}
-   	}
-		
-		String selected = (String) UISupport.prompt(	"Select endpoint to set for all requests", "Set Endpoint", endpointSet.toArray(), 
-				currentEndpointSet.size() == 1 ? currentEndpointSet.iterator().next() : USE_CURRENT );
-		
-		if( selected == null || selected.equals( USE_CURRENT )) return;
-		
+		{
+			TestStep step = testCase.getTestStepAt( c );
+			if( step instanceof WsdlTestRequestStep )
+			{
+				WsdlTestRequestStep requestStep = ( WsdlTestRequestStep )step;
+				String[] endpoints = requestStep.getTestRequest().getOperation().getInterface().getEndpoints();
+				for( int i = 0; i < endpoints.length; i++ )
+				{
+					endpointSet.add( endpoints[i] );
+				}
+
+				currentEndpointSet.add( requestStep.getTestRequest().getEndpoint() );
+			}
+		}
+
+		String selected = ( String )UISupport.prompt( "Select endpoint to set for all requests", "Set Endpoint",
+				endpointSet.toArray(), currentEndpointSet.size() == 1 ? currentEndpointSet.iterator().next() : USE_CURRENT );
+
+		if( selected == null || selected.equals( USE_CURRENT ) )
+			return;
+
 		int cnt = 0;
-		
+
 		for( int c = 0; c < testCase.getTestStepCount(); c++ )
-   	{
-   		TestStep step = testCase.getTestStepAt( c );
-   		if( step instanceof WsdlTestRequestStep )
-   		{
-   			WsdlTestRequestStep requestStep = (WsdlTestRequestStep) step;
-   			WsdlTestRequest testRequest = requestStep.getTestRequest();
-   			
-   			if( testRequest.getEndpoint() == null || !testRequest.getEndpoint().equals( selected ))
-   			{
-   				testRequest.setEndpoint( selected );
-   				cnt++;
-   			}
-   		}
-   	}
-		
+		{
+			TestStep step = testCase.getTestStepAt( c );
+			if( step instanceof WsdlTestRequestStep )
+			{
+				WsdlTestRequestStep requestStep = ( WsdlTestRequestStep )step;
+				WsdlTestRequest testRequest = requestStep.getTestRequest();
+
+				if( testRequest.getEndpoint() == null || !testRequest.getEndpoint().equals( selected ) )
+				{
+					testRequest.setEndpoint( selected );
+					cnt++ ;
+				}
+			}
+		}
+
 		UISupport.showInfoMessage( "Changed endpoint to [" + selected + "] for " + cnt + " requests" );
-   }
+	}
 }

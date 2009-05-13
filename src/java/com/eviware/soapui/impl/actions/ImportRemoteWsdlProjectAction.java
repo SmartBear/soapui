@@ -20,44 +20,45 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
- * Actions for importing an existing remote soapUI project file into the current workspace
+ * Actions for importing an existing remote soapUI project file into the current
+ * workspace
  * 
  * @author Ole.Matzura
  */
 
 public class ImportRemoteWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 {
-	public static final String SOAPUI_ACTION_ID = "ImportRemoteWsdlProjectAction"; 
+	public static final String SOAPUI_ACTION_ID = "ImportRemoteWsdlProjectAction";
 	public static final MessageSupport messages = MessageSupport.getMessages( ImportRemoteWsdlProjectAction.class );
-	
+
 	public ImportRemoteWsdlProjectAction()
-   {
-      super( messages.get( "title"), messages.get( "description") ); 
-   }
+	{
+		super( messages.get( "title" ), messages.get( "description" ) );
+	}
 
 	public void perform( WorkspaceImpl workspace, Object param )
 	{
-      ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-   	Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
-   	
+		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+		Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
+
 		try
 		{
-			String url = UISupport.prompt( messages.get( "prompt.text"), messages.get( "prompt.title" ), "" ); 
-			
+			String url = UISupport.prompt( messages.get( "prompt.text" ), messages.get( "prompt.title" ), "" );
+
 			if( url != null )
 			{
-				WsdlProject project = (WsdlProject) workspace.importRemoteProject(url);
+				WsdlProject project = ( WsdlProject )workspace.importRemoteProject( url );
 				if( project != null )
-					UISupport.select(project);
+					UISupport.select( project );
 			}
 		}
-		catch (Exception ex)
+		catch( Exception ex )
 		{
 			UISupport.showErrorMessage( ex );
-		}      
+		}
 		finally
-   	{
-   		Thread.currentThread().setContextClassLoader( contextClassLoader );
-   	}
-   }
+		{
+			Thread.currentThread().setContextClassLoader( contextClassLoader );
+		}
+	}
 }

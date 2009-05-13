@@ -12,12 +12,18 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
-
-import java.util.*;
 
 /**
  * Base class for WSDL TestCase test steps.
@@ -31,7 +37,8 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 	private List<TestProperty> propertyList = new ArrayList<TestProperty>();
 	private Set<TestPropertyListener> listeners = new HashSet<TestPropertyListener>();
 
-	protected WsdlTestStepWithProperties( WsdlTestCase testCase, TestStepConfig config, boolean hasEditor, boolean forLoadTest )
+	protected WsdlTestStepWithProperties( WsdlTestCase testCase, TestStepConfig config, boolean hasEditor,
+			boolean forLoadTest )
 	{
 		super( testCase, config, hasEditor, forLoadTest );
 	}
@@ -44,7 +51,7 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 		String[] result = new String[properties.size()];
 		int ix = 0;
 		for( TestProperty property : properties.values() )
-			result[ix++] = property.getName();
+			result[ix++ ] = property.getName();
 
 		return result;
 	}
@@ -75,10 +82,10 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 		}
 	}
 
-   protected void addProperty( TestProperty property )
-   {
-      addProperty( property, false );
-   }
+	protected void addProperty( TestProperty property )
+	{
+		addProperty( property, false );
+	}
 
 	protected void addProperty( TestProperty property, boolean notify )
 	{
@@ -86,12 +93,12 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 			properties = new HashMap<String, TestProperty>();
 
 		properties.put( property.getName().toUpperCase(), property );
-		propertyList.add(property);
+		propertyList.add( property );
 
-      if( notify )
-      {
-         firePropertyAdded( property.getName() );
-      }
+		if( notify )
+		{
+			firePropertyAdded( property.getName() );
+		}
 	}
 
 	protected TestProperty deleteProperty( String name, boolean notify )
@@ -101,15 +108,15 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 			TestProperty result = properties.remove( name.toUpperCase() );
 			if( result != null )
 			{
-				propertyList.remove( result);
-		
+				propertyList.remove( result );
+
 				if( notify )
 					firePropertyRemoved( name );
-				
+
 				return result;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -188,11 +195,11 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 	{
 		Map<String, TestProperty> result = new HashMap<String, TestProperty>();
 
-      if( properties != null )
-      {
-         for( String name : properties.keySet() )
-            result.put( properties.get( name ).getName(), properties.get( name ) );
-      }
+		if( properties != null )
+		{
+			for( String name : properties.keySet() )
+				result.put( properties.get( name ).getName(), properties.get( name ) );
+		}
 
 		return result;
 	}
@@ -207,51 +214,51 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 		return true;
 	}
 
-	public TestProperty getPropertyAt(int index)
+	public TestProperty getPropertyAt( int index )
 	{
-		return propertyList.get(index);
+		return propertyList.get( index );
 	}
 
 	public int getPropertyCount()
 	{
 		return propertyList.size();
 	}
-	
+
 	public List<TestProperty> getPropertyList()
 	{
 		return Collections.unmodifiableList( propertyList );
 	}
-	
+
 	protected void firePropertyMoved( String name, int oldIndex, int newIndex )
 	{
-		TestPropertyListener [] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
+		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
 		for( TestPropertyListener listener : listenersArray )
 		{
 			listener.propertyMoved( name, oldIndex, newIndex );
 		}
 	}
-	
-	public void moveProperty(String propertyName, int targetIndex)
+
+	public void moveProperty( String propertyName, int targetIndex )
 	{
-		TestProperty property = getProperty(propertyName);
-		int ix = propertyList.indexOf(property);
-		
+		TestProperty property = getProperty( propertyName );
+		int ix = propertyList.indexOf( property );
+
 		if( ix == targetIndex )
 			return;
-		
+
 		if( targetIndex < 0 )
 			targetIndex = 0;
-		
-		if( targetIndex < properties.size())
-			propertyList.add(targetIndex, propertyList.remove(ix));
+
+		if( targetIndex < properties.size() )
+			propertyList.add( targetIndex, propertyList.remove( ix ) );
 		else
-			propertyList.add( propertyList.remove( ix ));
-		
-		if( targetIndex > properties.size())
+			propertyList.add( propertyList.remove( ix ) );
+
+		if( targetIndex > properties.size() )
 			targetIndex = properties.size();
-		
-		firePropertyMoved(propertyName, ix, targetIndex);
-		
+
+		firePropertyMoved( propertyName, ix, targetIndex );
+
 	}
-	
+
 }

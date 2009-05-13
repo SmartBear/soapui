@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.support.editor.views.xml.raw;
 
+import java.beans.PropertyChangeEvent;
+
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
@@ -26,8 +28,6 @@ import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.types.StringToStringMap;
 
-import java.beans.PropertyChangeEvent;
-
 public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEditorViewFactory
 {
 	public static final String VIEW_ID = "Raw";
@@ -37,44 +37,44 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		return VIEW_ID;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	public EditorView<?> createResponseEditorView( Editor<?> editor, ModelItem modelItem )
 	{
-		if( modelItem instanceof MessageExchangeModelItem  )
+		if( modelItem instanceof MessageExchangeModelItem )
 		{
-			return new WsdlMessageExchangeResponseRawXmlEditor( (MessageExchangeModelItem) modelItem, (XmlEditor) editor );
+			return new WsdlMessageExchangeResponseRawXmlEditor( ( MessageExchangeModelItem )modelItem, ( XmlEditor )editor );
 		}
-		else if( modelItem instanceof AbstractHttpRequest)
+		else if( modelItem instanceof AbstractHttpRequest )
 		{
-			return new HttpResponseRawXmlEditor( (AbstractHttpRequest) modelItem, (XmlEditor) editor );
+			return new HttpResponseRawXmlEditor( ( AbstractHttpRequest )modelItem, ( XmlEditor )editor );
 		}
 		else if( modelItem instanceof WsdlMockResponse )
 		{
-			return new WsdlMockResponseRawXmlEditor( (WsdlMockResponse) modelItem, (XmlEditor) editor );
+			return new WsdlMockResponseRawXmlEditor( ( WsdlMockResponse )modelItem, ( XmlEditor )editor );
 		}
 
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	public EditorView<XmlDocument> createRequestEditorView( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof MessageExchangeModelItem )
 		{
-			return new WsdlMessageExchangeRequestRawXmlEditor( (MessageExchangeModelItem) modelItem, (XmlEditor) editor );
+			return new WsdlMessageExchangeRequestRawXmlEditor( ( MessageExchangeModelItem )modelItem, ( XmlEditor )editor );
 		}
 		else if( modelItem instanceof AbstractHttpRequest )
 		{
-			return new HttpRequestRawXmlEditor( (AbstractHttpRequest) modelItem, (XmlEditor) editor );
+			return new HttpRequestRawXmlEditor( ( AbstractHttpRequest )modelItem, ( XmlEditor )editor );
 		}
 		else if( modelItem instanceof WsdlMockResponse )
 		{
-			return new WsdlMockRequestRawXmlEditor( (WsdlMockResponse) modelItem, (XmlEditor) editor );
+			return new WsdlMockRequestRawXmlEditor( ( WsdlMockResponse )modelItem, ( XmlEditor )editor );
 		}
-		
+
 		return null;
 	}
-	
+
 	private static class HttpRequestRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
 		private final AbstractHttpRequest request;
@@ -83,14 +83,14 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		{
 			super( "Raw", editor, "The actual content of the last submitted request" );
 			this.request = request;
-			
+
 			request.addPropertyChangeListener( WsdlRequest.RESPONSE_PROPERTY, this );
 		}
 
-      @Override
+		@Override
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			if( evt.getPropertyName().equals( WsdlRequest.RESPONSE_PROPERTY  ))
+			if( evt.getPropertyName().equals( WsdlRequest.RESPONSE_PROPERTY ) )
 			{
 				setXml( "" );
 			}
@@ -99,10 +99,10 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		@Override
 		public String getContent()
 		{
-         if( request.getResponse() == null || request.getResponse().getRawRequestData() == null )
-            return "";
-         else
-			   return new String( request.getResponse().getRawRequestData());
+			if( request.getResponse() == null || request.getResponse().getRawRequestData() == null )
+				return "";
+			else
+				return new String( request.getResponse().getRawRequestData() );
 		}
 
 		@Override
@@ -112,7 +112,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 			super.release();
 		}
 	}
-	
+
 	private static class HttpResponseRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
 		private final AbstractHttpRequest request;
@@ -121,14 +121,14 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		{
 			super( "Raw", editor, "The actual content of the last received response" );
 			this.request = request;
-			
+
 			request.addPropertyChangeListener( WsdlRequest.RESPONSE_PROPERTY, this );
 		}
 
-      @Override
+		@Override
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			if( evt.getPropertyName().equals( WsdlRequest.RESPONSE_PROPERTY  ))
+			if( evt.getPropertyName().equals( WsdlRequest.RESPONSE_PROPERTY ) )
 			{
 				setXml( "" );
 			}
@@ -138,9 +138,9 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		public String getContent()
 		{
 			if( request.getResponse() == null )
-				return"<missing response>";
-			
-			return new String( request.getResponse().getRawResponseData());
+				return "<missing response>";
+
+			return new String( request.getResponse().getRawResponseData() );
 		}
 
 		@Override
@@ -148,7 +148,8 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		{
 			request.removePropertyChangeListener( WsdlRequest.RESPONSE_PROPERTY, this );
 			super.release();
-		}}
+		}
+	}
 
 	private static class WsdlMockRequestRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
@@ -158,14 +159,14 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		{
 			super( "Raw", editor, "The actual content of the last received mock request" );
 			this.request = response;
-			
+
 			response.addPropertyChangeListener( WsdlMockResponse.MOCKRESULT_PROPERTY, this );
 		}
-		
+
 		@Override
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			if( evt.getPropertyName().equals( WsdlMockResponse.MOCKRESULT_PROPERTY  ))
+			if( evt.getPropertyName().equals( WsdlMockResponse.MOCKRESULT_PROPERTY ) )
 			{
 				setXml( "" );
 			}
@@ -175,10 +176,10 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		public String getContent()
 		{
 			if( request.getMockResult() == null )
-				return"<missing request>";
+				return "<missing request>";
 
-			return buildRawContent( request.getMockResult().getMockRequest().getRequestHeaders(), 
-						request.getMockResult().getMockRequest().getRawRequestData());
+			return buildRawContent( request.getMockResult().getMockRequest().getRequestHeaders(), request.getMockResult()
+					.getMockRequest().getRawRequestData() );
 		}
 
 		@Override
@@ -188,7 +189,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 			super.release();
 		}
 	}
-	
+
 	private static class WsdlMockResponseRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
 		private final WsdlMockResponse request;
@@ -197,14 +198,14 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		{
 			super( "Raw", editor, "The actual content of the last returned Mock Response" );
 			this.request = response;
-			
+
 			response.addPropertyChangeListener( WsdlMockResponse.MOCKRESULT_PROPERTY, this );
 		}
-		
+
 		@Override
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			if( evt.getPropertyName().equals( WsdlMockResponse.MOCKRESULT_PROPERTY  ))
+			if( evt.getPropertyName().equals( WsdlMockResponse.MOCKRESULT_PROPERTY ) )
 			{
 				setXml( "" );
 			}
@@ -214,11 +215,11 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		public String getContent()
 		{
 			if( request.getMockResult() == null )
-				return"<missing response>";
-			
+				return "<missing response>";
+
 			StringToStringMap headers = request.getMockResult().getResponseHeaders();
 			byte[] data = request.getMockResult().getRawResponseData();
-			
+
 			return buildRawContent( headers, data );
 		}
 
@@ -227,31 +228,31 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		{
 			request.removePropertyChangeListener( WsdlMockResponse.MOCKRESULT_PROPERTY, this );
 			super.release();
-		}}
+		}
+	}
 
 	private static String buildRawContent( StringToStringMap headers, byte[] data )
 	{
 		StringBuffer result = new StringBuffer();
-		String status = headers.get( "#status#");
+		String status = headers.get( "#status#" );
 		if( status != null )
-			result.append(  status ).append( '\n' );
+			result.append( status ).append( '\n' );
 
 		for( String header : headers.keySet() )
 		{
-			if( header.equals( "#status#" ))
+			if( header.equals( "#status#" ) )
 				continue;
 
-			result.append( header ).append( ": ").append( headers.get( header )).append( '\n' );
+			result.append( header ).append( ": " ).append( headers.get( header ) ).append( '\n' );
 		}
-		result.append(  '\n' );
+		result.append( '\n' );
 
+		if( data != null )
+			result.append( new String( data ).trim() );
 
-      if( data != null )
-         result.append( new String( data ).trim());
-		
 		return result.toString().trim();
 	}
-	
+
 	private static class WsdlMessageExchangeResponseRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
 		private final MessageExchangeModelItem response;
@@ -262,14 +263,14 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 			this.response = response;
 		}
 
-      @Override
+		@Override
 		public String getContent()
 		{
 			MessageExchange me = response.getMessageExchange();
-			return me == null || me.getRawResponseData() == null ? "" : new String( me.getRawResponseData());
+			return me == null || me.getRawResponseData() == null ? "" : new String( me.getRawResponseData() );
 		}
 	}
-	
+
 	private static class WsdlMessageExchangeRequestRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
 		private final MessageExchangeModelItem request;
@@ -279,12 +280,12 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 			super( "Raw", editor, "The raw request data" );
 			this.request = request;
 		}
-		
+
 		@Override
 		public String getContent()
 		{
 			MessageExchange me = request.getMessageExchange();
-			return me == null || me.getRawRequestData() == null ? "" : new String( me.getRawRequestData());
+			return me == null || me.getRawRequestData() == null ? "" : new String( me.getRawRequestData() );
 		}
 	}
 }

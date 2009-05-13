@@ -28,32 +28,32 @@ public class ResponseMessageEditor<T1 extends EditorDocument, T2 extends ModelIt
 {
 	private final T2 modelItem;
 
-	@SuppressWarnings("unchecked")
-	public ResponseMessageEditor( T1 xmlDocument, T2 modelItem  )
+	@SuppressWarnings( "unchecked" )
+	public ResponseMessageEditor( T1 xmlDocument, T2 modelItem )
 	{
 		super( xmlDocument );
 		this.modelItem = modelItem;
-		
+
 		EditorViewFactory[] editorFactories = EditorViewFactoryRegistry.getInstance().getFactoriesOfType(
-					ResponseEditorViewFactory.class );
-		
+				ResponseEditorViewFactory.class );
+
 		for( EditorViewFactory factory : editorFactories )
 		{
-			ResponseEditorViewFactory f = ( ResponseEditorViewFactory ) factory;
-			EditorView<T1> editorView = (EditorView<T1>) f.createResponseEditorView( this, modelItem );
+			ResponseEditorViewFactory f = ( ResponseEditorViewFactory )factory;
+			EditorView<T1> editorView = ( EditorView<T1> )f.createResponseEditorView( this, modelItem );
 			if( editorView != null )
-				addEditorView( editorView);
+				addEditorView( editorView );
 		}
-		
-		InspectorFactory[] inspectorFactories = InspectorRegistry.getInstance().getFactoriesOfType( 
-					ResponseInspectorFactory.class );
-		
+
+		InspectorFactory[] inspectorFactories = InspectorRegistry.getInstance().getFactoriesOfType(
+				ResponseInspectorFactory.class );
+
 		for( InspectorFactory factory : inspectorFactories )
 		{
-			ResponseInspectorFactory f = ( ResponseInspectorFactory ) factory;
-			EditorInspector<T1> inspector = (EditorInspector<T1>) f.createResponseInspector( this, modelItem );
+			ResponseInspectorFactory f = ( ResponseInspectorFactory )factory;
+			EditorInspector<T1> inspector = ( EditorInspector<T1> )f.createResponseInspector( this, modelItem );
 			if( inspector != null )
-				addInspector( inspector);
+				addInspector( inspector );
 		}
 	}
 

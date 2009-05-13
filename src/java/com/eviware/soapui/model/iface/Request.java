@@ -22,49 +22,49 @@ import com.eviware.soapui.model.ModelItem;
 
 public interface Request extends ModelItem
 {
-	public final static String REQUEST_PROPERTY = "request";   
-   public final static String ENDPOINT_PROPERTY = "endpoint";   
-   public final static String ENCODING_PROPERTY = "encoding";   
+	public final static String REQUEST_PROPERTY = "request";
+	public final static String ENDPOINT_PROPERTY = "endpoint";
+	public final static String ENCODING_PROPERTY = "encoding";
 
-   public String getRequestContent();
-   
-   public void setEndpoint(String string);
+	public String getRequestContent();
 
-   public String getEndpoint();
+	public void setEndpoint( String string );
 
-   public String getEncoding();
+	public String getEndpoint();
 
-   public void setEncoding(String string);
+	public String getEncoding();
 
-   public Operation getOperation();
-   
-   public void addSubmitListener( SubmitListener listener );
-   
-   public void removeSubmitListener( SubmitListener listener );
-   
-   public Submit submit( SubmitContext submitContext, boolean async ) throws SubmitException;
-   
-   public Attachment [] getAttachments();
-   
-   public MessagePart [] getRequestParts();
+	public void setEncoding( String string );
 
-   public MessagePart [] getResponseParts();
+	public Operation getOperation();
 
-   public static class SubmitException extends Exception
+	public void addSubmitListener( SubmitListener listener );
+
+	public void removeSubmitListener( SubmitListener listener );
+
+	public Submit submit( SubmitContext submitContext, boolean async ) throws SubmitException;
+
+	public Attachment[] getAttachments();
+
+	public MessagePart[] getRequestParts();
+
+	public MessagePart[] getResponseParts();
+
+	public static class SubmitException extends Exception
 	{
-   	public SubmitException( String msg )
-   	{
-   		super( msg );
-   	}
-
-		public SubmitException(String message, Throwable cause)
+		public SubmitException( String msg )
 		{
-			super(message, cause);
+			super( msg );
 		}
 
-		public SubmitException(Throwable cause)
+		public SubmitException( String message, Throwable cause )
 		{
-			super(cause);
+			super( message, cause );
+		}
+
+		public SubmitException( Throwable cause )
+		{
+			super( cause );
 		}
 	}
 }

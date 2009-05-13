@@ -25,9 +25,9 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.UISupport;
 
 /**
- * Simple statistics exporter, creates a comma-separated file containing a header row
- * and values for each test step
- *  
+ * Simple statistics exporter, creates a comma-separated file containing a
+ * header row and values for each test step
+ * 
  * @author Ole.Matzura
  */
 
@@ -35,14 +35,14 @@ public class ExportStatisticsAction extends AbstractAction
 {
 	private final TableModel model;
 
-	public ExportStatisticsAction(TableModel model)
-   {
+	public ExportStatisticsAction( TableModel model )
+	{
 		this.model = model;
-		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/export.gif"));
-      putValue( Action.SHORT_DESCRIPTION, "Export statistics to a file" );
-   }
-   
-	public void actionPerformed(ActionEvent e)
+		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/export.gif" ) );
+		putValue( Action.SHORT_DESCRIPTION, "Export statistics to a file" );
+	}
+
+	public void actionPerformed( ActionEvent e )
 	{
 		try
 		{
@@ -51,59 +51,59 @@ public class ExportStatisticsAction extends AbstractAction
 				UISupport.showErrorMessage( "No data to export!" );
 				return;
 			}
-			
-         File file = UISupport.getFileDialogs().saveAs(this, "Select file for export");
-         if( file == null )
-            return;
 
-			int cnt = exportToFile(file);
+			File file = UISupport.getFileDialogs().saveAs( this, "Select file for export" );
+			if( file == null )
+				return;
+
+			int cnt = exportToFile( file );
 			UISupport.showInfoMessage( "Saved " + cnt + " rows to file [" + file.getName() + "]" );
 		}
-		catch (IOException e1)
+		catch( IOException e1 )
 		{
 			SoapUI.logError( e1 );
 		}
-   }
+	}
 
-	public int exportToFile(File file) throws IOException
+	public int exportToFile( File file ) throws IOException
 	{
-		PrintWriter writer = new PrintWriter(file);
-		writerHeader(writer);
-		int cnt = writeData( writer);
+		PrintWriter writer = new PrintWriter( file );
+		writerHeader( writer );
+		int cnt = writeData( writer );
 		writer.flush();
 		writer.close();
 		return cnt;
 	}
 
-	private int writeData(PrintWriter writer)
-	{ 
+	private int writeData( PrintWriter writer )
+	{
 		int c = 0;
-		for(; c < model.getRowCount(); c++)
+		for( ; c < model.getRowCount(); c++ )
 		{
 			for( int i = 1; i < model.getColumnCount(); i++ )
 			{
 				if( i > 1 )
 					writer.print( ',' );
-				
-				writer.print( model.getValueAt( c, i ));
+
+				writer.print( model.getValueAt( c, i ) );
 			}
-			
+
 			writer.println();
 		}
-		
+
 		return c;
 	}
 
-	private void writerHeader(PrintWriter writer)
+	private void writerHeader( PrintWriter writer )
 	{
 		for( int i = 1; i < model.getColumnCount(); i++ )
 		{
 			if( i > 1 )
 				writer.print( ',' );
-			
-			writer.print( model.getColumnName( i ));
+
+			writer.print( model.getColumnName( i ) );
 		}
-		
+
 		writer.println();
 	}
 }

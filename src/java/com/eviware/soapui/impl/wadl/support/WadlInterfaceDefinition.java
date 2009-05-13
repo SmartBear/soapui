@@ -12,43 +12,44 @@
 
 package com.eviware.soapui.impl.wadl.support;
 
+import org.apache.log4j.Logger;
+
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.support.definition.DefinitionLoader;
 import com.eviware.soapui.impl.support.definition.support.XmlSchemaBasedInterfaceDefinition;
 import com.sun.research.wadl.x2006.x10.ApplicationDocument;
-import org.apache.log4j.Logger;
 
 public class WadlInterfaceDefinition extends XmlSchemaBasedInterfaceDefinition<RestService>
 {
-   private ApplicationDocument applicationDocument;
-   private Logger log = Logger.getLogger(WadlInterfaceDefinition.class);
+	private ApplicationDocument applicationDocument;
+	private Logger log = Logger.getLogger( WadlInterfaceDefinition.class );
 
-   public WadlInterfaceDefinition(RestService iface)
-   {
-      super(iface);
-   }
+	public WadlInterfaceDefinition( RestService iface )
+	{
+		super( iface );
+	}
 
-   public WadlInterfaceDefinition load( DefinitionLoader loader) throws Exception
-   {
-      applicationDocument = (ApplicationDocument) loader.loadXmlObject(loader.getBaseURI(), null);
+	public WadlInterfaceDefinition load( DefinitionLoader loader ) throws Exception
+	{
+		applicationDocument = ( ApplicationDocument )loader.loadXmlObject( loader.getBaseURI(), null );
 
-      if (!loader.isAborted())
-      {
-         super.loadSchemaTypes(loader);
-      }
-      else
-         throw new Exception("Loading of WADL from [" + loader.getBaseURI() + "] was aborted");
+		if( !loader.isAborted() )
+		{
+			super.loadSchemaTypes( loader );
+		}
+		else
+			throw new Exception( "Loading of WADL from [" + loader.getBaseURI() + "] was aborted" );
 
-      return this;
-   }
+		return this;
+	}
 
-   public String getTargetNamespace()
-   {
-      return null;
-   }
+	public String getTargetNamespace()
+	{
+		return null;
+	}
 
-   public ApplicationDocument.Application getApplication()
-   {
-      return applicationDocument.getApplication();
-   }
+	public ApplicationDocument.Application getApplication()
+	{
+		return applicationDocument.getApplication();
+	}
 }

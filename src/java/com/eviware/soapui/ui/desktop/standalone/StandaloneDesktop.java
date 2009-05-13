@@ -67,34 +67,34 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 	private ActionList actions;
 
 	private DesktopPanel currentPanel;
-	
+
 	private CloseCurrentAction closeCurrentAction = new CloseCurrentAction();
 	private CloseOtherAction closeOtherAction = new CloseOtherAction();
 	private CloseAllAction closeAllAction = new CloseAllAction();
-	
+
 	private static int openFrameCount = 0;
 	private static final int xOffset = 30, yOffset = 30;
 	private JPanel desktopPanel = new JPanel( new BorderLayout() );
-	
+
 	private boolean transferring;
 
-	public StandaloneDesktop(Workspace workspace)
+	public StandaloneDesktop( Workspace workspace )
 	{
 		super( workspace );
 
 		buildUI();
 
 		actions = new DefaultActionList( "Desktop" );
-		actions.addAction(closeCurrentAction);
-		actions.addAction(closeOtherAction);
-		actions.addAction(closeAllAction);
-		
+		actions.addAction( closeCurrentAction );
+		actions.addAction( closeOtherAction );
+		actions.addAction( closeAllAction );
+
 		enableWindowActions();
 	}
-	
+
 	private void enableWindowActions()
 	{
-		closeCurrentAction.setEnabled( currentPanel != null && internalFrameToDesktopPanelMap.size() > 0  );
+		closeCurrentAction.setEnabled( currentPanel != null && internalFrameToDesktopPanelMap.size() > 0 );
 		closeOtherAction.setEnabled( currentPanel != null && internalFrameToDesktopPanelMap.size() > 1 );
 		closeAllAction.setEnabled( internalFrameToDesktopPanelMap.size() > 0 );
 	}
@@ -102,8 +102,8 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 	private void buildUI()
 	{
 		desktopPane = new SoapUIDesktopPane();
-		JScrollPane scrollPane = new JScrollPane(desktopPane);
-		desktopPanel.add(scrollPane, BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane( desktopPane );
+		desktopPanel.add( scrollPane, BorderLayout.CENTER );
 	}
 
 	public JComponent getDesktopComponent()
@@ -111,13 +111,13 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 		return desktopPanel;
 	}
 
-	public boolean closeDesktopPanel(DesktopPanel desktopPanel)
+	public boolean closeDesktopPanel( DesktopPanel desktopPanel )
 	{
 		try
 		{
 			if( desktopPanel.getModelItem() != null )
 			{
-				return closeDesktopPanel(desktopPanel.getModelItem());
+				return closeDesktopPanel( desktopPanel.getModelItem() );
 			}
 			else
 			{
@@ -127,9 +127,10 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 					frame.doDefaultCloseAction();
 					return frame.isClosed();
 				}
-//				else
-//					throw new RuntimeException( "Cannot close unkown DesktopPanel: " + desktopPanel.getTitle() );
-				
+				// else
+				// throw new RuntimeException( "Cannot close unkown DesktopPanel: "
+				// + desktopPanel.getTitle() );
+
 				return false;
 			}
 		}
@@ -138,7 +139,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 			enableWindowActions();
 		}
 	}
-	
+
 	private JInternalFrame getFrameForDesktopPanel( DesktopPanel desktopPanel )
 	{
 		for( JInternalFrame frame : internalFrameToDesktopPanelMap.keySet() )
@@ -148,56 +149,56 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 				return frame;
 			}
 		}
-		
+
 		return null;
 	}
 
-	public boolean hasDesktopPanel(ModelItem modelItem)
+	public boolean hasDesktopPanel( ModelItem modelItem )
 	{
-		return modelItemToInternalFrameMap.containsKey(modelItem);
+		return modelItemToInternalFrameMap.containsKey( modelItem );
 	}
 
-	public DesktopPanel showDesktopPanel(ModelItem modelItem)
+	public DesktopPanel showDesktopPanel( ModelItem modelItem )
 	{
 		PanelBuilder<ModelItem> panelBuilder = PanelBuilderRegistry.getPanelBuilder( modelItem );
-		if (modelItemToInternalFrameMap.containsKey(modelItem))
+		if( modelItemToInternalFrameMap.containsKey( modelItem ) )
 		{
-			JInternalFrame frame = modelItemToInternalFrameMap.get(modelItem);
+			JInternalFrame frame = modelItemToInternalFrameMap.get( modelItem );
 			try
 			{
-				desktopPane.getDesktopManager().deiconifyFrame(frame);
-				frame.setSelected(true);
+				desktopPane.getDesktopManager().deiconifyFrame( frame );
+				frame.setSelected( true );
 				frame.moveToFront();
 				currentPanel = internalFrameToDesktopPanelMap.get( frame );
 			}
-			catch (PropertyVetoException e)
+			catch( PropertyVetoException e )
 			{
 				SoapUI.logError( e );
 			}
 		}
-		else if (panelBuilder != null && panelBuilder.hasDesktopPanel())
+		else if( panelBuilder != null && panelBuilder.hasDesktopPanel() )
 		{
 			DesktopPanel desktopPanel = panelBuilder.buildDesktopPanel( modelItem );
 			if( desktopPanel == null )
 				return null;
-			
-			JInternalFrame frame = createContentFrame(desktopPanel);
 
-			desktopPane.add(frame);
+			JInternalFrame frame = createContentFrame( desktopPanel );
+
+			desktopPane.add( frame );
 			try
 			{
-				frame.setSelected(true);
+				frame.setSelected( true );
 			}
-			catch (PropertyVetoException e)
+			catch( PropertyVetoException e )
 			{
 				SoapUI.logError( e );
 			}
 
-			modelItemToInternalFrameMap.put(modelItem, frame);
-			internalFrameToDesktopPanelMap.put(frame, desktopPanel);
+			modelItemToInternalFrameMap.put( modelItem, frame );
+			internalFrameToDesktopPanelMap.put( frame, desktopPanel );
 
-			fireDesktopPanelCreated(desktopPanel);
-			
+			fireDesktopPanelCreated( desktopPanel );
+
 			currentPanel = desktopPanel;
 			desktopPanel.getComponent().requestFocusInWindow();
 		}
@@ -205,49 +206,49 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 			Toolkit.getDefaultToolkit().beep();
 
 		enableWindowActions();
-		
+
 		return currentPanel;
 	}
-	
-	private JInternalFrame createContentFrame(DesktopPanel desktopPanel)
+
+	private JInternalFrame createContentFrame( DesktopPanel desktopPanel )
 	{
-		desktopPanel.addPropertyChangeListener(desktopPanelPropertyChangeListener);
-		
+		desktopPanel.addPropertyChangeListener( desktopPanelPropertyChangeListener );
+
 		JComponent panel = desktopPanel.getComponent();
-		panel.setOpaque(true);
+		panel.setOpaque( true );
 
 		String title = desktopPanel.getTitle();
 
-		JInternalFrame frame = new JInternalFrame(title, true, true, true, true);
-		frame.addInternalFrameListener(internalFrameListener);
-		frame.setContentPane(panel);
-		frame.setSize(panel.getPreferredSize());
-		frame.setVisible(true);
+		JInternalFrame frame = new JInternalFrame( title, true, true, true, true );
+		frame.addInternalFrameListener( internalFrameListener );
+		frame.setContentPane( panel );
+		frame.setSize( panel.getPreferredSize() );
+		frame.setVisible( true );
 		frame.setFrameIcon( desktopPanel.getIcon() );
 		frame.setToolTipText( desktopPanel.getDescription() );
-		frame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
-		frame.setLocation(xOffset * (openFrameCount % 10), yOffset * (openFrameCount % 10));
-		if( !SoapUI.getSettings().getBoolean( UISettings.NATIVE_LAF ))
+		frame.setDefaultCloseOperation( JInternalFrame.DO_NOTHING_ON_CLOSE );
+		frame.setLocation( xOffset * ( openFrameCount % 10 ), yOffset * ( openFrameCount % 10 ) );
+		if( !SoapUI.getSettings().getBoolean( UISettings.NATIVE_LAF ) )
 		{
-		   // This creates an empty frame on Mac OS X native L&F.
-   		frame.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
-   				.createEmptyBorder(2, 2, 2, 2)));
+			// This creates an empty frame on Mac OS X native L&F.
+			frame.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createRaisedBevelBorder(), BorderFactory
+					.createEmptyBorder( 2, 2, 2, 2 ) ) );
 		}
-		openFrameCount++;
+		openFrameCount++ ;
 		return frame;
 	}
 
-	public boolean closeDesktopPanel(ModelItem modelItem)
+	public boolean closeDesktopPanel( ModelItem modelItem )
 	{
 		try
 		{
-			if (modelItemToInternalFrameMap.containsKey(modelItem))
+			if( modelItemToInternalFrameMap.containsKey( modelItem ) )
 			{
-				JInternalFrame frame = modelItemToInternalFrameMap.get(modelItem);
+				JInternalFrame frame = modelItemToInternalFrameMap.get( modelItem );
 				frame.doDefaultCloseAction();
 				return frame.isClosed();
 			}
-		
+
 			return false;
 		}
 		finally
@@ -258,15 +259,15 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 	private class InternalDesktopFrameListener extends InternalFrameAdapter
 	{
-		public void internalFrameClosing(InternalFrameEvent e)
+		public void internalFrameClosing( InternalFrameEvent e )
 		{
-			DesktopPanel desktopPanel = internalFrameToDesktopPanelMap.get(e.getInternalFrame());
-			if ( !transferring && !desktopPanel.onClose( true ))
+			DesktopPanel desktopPanel = internalFrameToDesktopPanelMap.get( e.getInternalFrame() );
+			if( !transferring && !desktopPanel.onClose( true ) )
 			{
 				return;
 			}
 
-			desktopPanel.removePropertyChangeListener(desktopPanelPropertyChangeListener);
+			desktopPanel.removePropertyChangeListener( desktopPanelPropertyChangeListener );
 
 			modelItemToInternalFrameMap.remove( desktopPanel.getModelItem() );
 			internalFrameToDesktopPanelMap.remove( e.getInternalFrame() );
@@ -274,20 +275,20 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 			e.getInternalFrame().dispose();
 
 			if( !transferring )
-				fireDesktopPanelClosed(desktopPanel);
-			
+				fireDesktopPanelClosed( desktopPanel );
+
 			if( currentPanel == desktopPanel )
 				currentPanel = null;
 		}
 
-		public void internalFrameActivated(InternalFrameEvent e)
+		public void internalFrameActivated( InternalFrameEvent e )
 		{
-			currentPanel = internalFrameToDesktopPanelMap.get(e.getInternalFrame());
-			if (currentPanel != null)
+			currentPanel = internalFrameToDesktopPanelMap.get( e.getInternalFrame() );
+			if( currentPanel != null )
 			{
-				fireDesktopPanelSelected(currentPanel);
+				fireDesktopPanelSelected( currentPanel );
 			}
-			
+
 			enableWindowActions();
 		}
 
@@ -302,17 +303,17 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 	{
 		public CloseCurrentAction()
 		{
-			super("Close Current");
-			putValue(Action.SHORT_DESCRIPTION, "Closes the current window");
-			putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu F4" ));
+			super( "Close Current" );
+			putValue( Action.SHORT_DESCRIPTION, "Closes the current window" );
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu F4" ) );
 
 		}
 
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed( ActionEvent e )
 		{
 			JInternalFrame frame = desktopPane.getSelectedFrame();
-			if (frame != null)
-				closeDesktopPanel(internalFrameToDesktopPanelMap.get(frame));
+			if( frame != null )
+				closeDesktopPanel( internalFrameToDesktopPanelMap.get( frame ) );
 		}
 	}
 
@@ -320,23 +321,24 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 	{
 		public CloseOtherAction()
 		{
-			super("Close Others");
-			putValue(Action.SHORT_DESCRIPTION, "Closes all windows except the current one");
-			putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu alt O" ));
+			super( "Close Others" );
+			putValue( Action.SHORT_DESCRIPTION, "Closes all windows except the current one" );
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu alt O" ) );
 		}
 
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed( ActionEvent e )
 		{
 			JInternalFrame frame = desktopPane.getSelectedFrame();
-			if (frame == null)
+			if( frame == null )
 				return;
 
-			JInternalFrame[] frames = internalFrameToDesktopPanelMap.keySet().toArray( new JInternalFrame[internalFrameToDesktopPanelMap.size()] );
-			for (JInternalFrame f : frames)
+			JInternalFrame[] frames = internalFrameToDesktopPanelMap.keySet().toArray(
+					new JInternalFrame[internalFrameToDesktopPanelMap.size()] );
+			for( JInternalFrame f : frames )
 			{
-				if (f != frame)
+				if( f != frame )
 				{
-					closeDesktopPanel(internalFrameToDesktopPanelMap.get(f));
+					closeDesktopPanel( internalFrameToDesktopPanelMap.get( f ) );
 				}
 			}
 		}
@@ -346,12 +348,12 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 	{
 		public CloseAllAction()
 		{
-			super("Close All");
-			putValue(Action.SHORT_DESCRIPTION, "Closes all windows");
-			putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu alt L" ));
+			super( "Close All" );
+			putValue( Action.SHORT_DESCRIPTION, "Closes all windows" );
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu alt L" ) );
 		}
 
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed( ActionEvent e )
 		{
 			closeAll();
 		}
@@ -364,19 +366,19 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 	private class DesktopPanelPropertyChangeListener implements PropertyChangeListener
 	{
-		public void propertyChange(PropertyChangeEvent evt)
+		public void propertyChange( PropertyChangeEvent evt )
 		{
-			DesktopPanel desktopPanel = (DesktopPanel) evt.getSource();
+			DesktopPanel desktopPanel = ( DesktopPanel )evt.getSource();
 			JInternalFrame frame = getFrameForDesktopPanel( desktopPanel );
 			if( frame != null )
 			{
-				if (evt.getPropertyName().equals(DesktopPanel.TITLE_PROPERTY))
+				if( evt.getPropertyName().equals( DesktopPanel.TITLE_PROPERTY ) )
 				{
-					frame.setTitle(desktopPanel.getTitle());
+					frame.setTitle( desktopPanel.getTitle() );
 				}
-				else if (evt.getPropertyName().equals(DesktopPanel.ICON_PROPERTY))
+				else if( evt.getPropertyName().equals( DesktopPanel.ICON_PROPERTY ) )
 				{
-					frame.setFrameIcon(desktopPanel.getIcon());
+					frame.setFrameIcon( desktopPanel.getIcon() );
 				}
 			}
 		}
@@ -384,10 +386,10 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 	public DesktopPanel[] getDesktopPanels()
 	{
-		return internalFrameToDesktopPanelMap.values().toArray(new DesktopPanel[internalFrameToDesktopPanelMap.size()]);
+		return internalFrameToDesktopPanelMap.values().toArray( new DesktopPanel[internalFrameToDesktopPanelMap.size()] );
 	}
 
-	public DesktopPanel getDesktopPanel(ModelItem modelItem)
+	public DesktopPanel getDesktopPanel( ModelItem modelItem )
 	{
 		return internalFrameToDesktopPanelMap.get( modelItem );
 	}
@@ -399,35 +401,35 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 		{
 			try
 			{
-				desktopPane.getDesktopManager().deiconifyFrame(frame);
-				frame.setSelected(true);
+				desktopPane.getDesktopManager().deiconifyFrame( frame );
+				frame.setSelected( true );
 				frame.moveToFront();
 			}
-			catch (Exception e)
+			catch( Exception e )
 			{
 				SoapUI.logError( e );
-			}			
+			}
 		}
 		else
 		{
 			frame = createContentFrame( desktopPanel );
 			desktopPane.add( frame );
-			
+
 			if( desktopPanel.getModelItem() != null )
-				modelItemToInternalFrameMap.put(desktopPanel.getModelItem(), frame);
-			
+				modelItemToInternalFrameMap.put( desktopPanel.getModelItem(), frame );
+
 			internalFrameToDesktopPanelMap.put( frame, desktopPanel );
-			fireDesktopPanelCreated(desktopPanel);
+			fireDesktopPanelCreated( desktopPanel );
 			frame.moveToFront();
 			desktopPanel.getComponent().requestFocusInWindow();
 		}
-		
+
 		currentPanel = desktopPanel;
 		enableWindowActions();
 
 		return desktopPanel;
 	}
-	
+
 	class SoapUIDesktopPane extends JDesktopPane
 	{
 		Image img;
@@ -438,61 +440,62 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 		{
 			try
 			{
-				File file = new File("soapui-background.gif");
-				if( !file.exists())
-					file = new File("soapui-background.jpg");
-				if( !file.exists())
-					file = new File("soapui-background.png");
-				
-				if( file.exists())
+				File file = new File( "soapui-background.gif" );
+				if( !file.exists() )
+					file = new File( "soapui-background.jpg" );
+				if( !file.exists() )
+					file = new File( "soapui-background.png" );
+
+				if( file.exists() )
 				{
-					img = javax.imageio.ImageIO.read(file);
-					imageWidth = img.getWidth(this);
-					imageHeight = img.getHeight(this);
+					img = javax.imageio.ImageIO.read( file );
+					imageWidth = img.getWidth( this );
+					imageHeight = img.getHeight( this );
 				}
 			}
-			catch (Exception e)
-			{}
+			catch( Exception e )
+			{
+			}
 		}
 
-		public void paintComponent(Graphics g)
+		public void paintComponent( Graphics g )
 		{
-			super.paintComponent(g);
-			
-			if (img == null)
+			super.paintComponent( g );
+
+			if( img == null )
 				return;
 
-			int x = (this.getWidth() - imageWidth) / 2;
-			int y = (this.getHeight() - imageHeight) / 2;
+			int x = ( this.getWidth() - imageWidth ) / 2;
+			int y = ( this.getHeight() - imageHeight ) / 2;
 
-			g.drawImage(img, x, y, imageWidth, imageHeight, this);
+			g.drawImage( img, x, y, imageWidth, imageHeight, this );
 		}
 	}
 
 	public void transferTo( SoapUIDesktop newDesktop )
 	{
 		transferring = true;
-		
-		List<DesktopPanel> values = new ArrayList<DesktopPanel>(internalFrameToDesktopPanelMap.values());
+
+		List<DesktopPanel> values = new ArrayList<DesktopPanel>( internalFrameToDesktopPanelMap.values() );
 		for( DesktopPanel desktopPanel : values )
 		{
 			closeDesktopPanel( desktopPanel );
 			newDesktop.showDesktopPanel( desktopPanel );
 		}
-		
+
 		transferring = false;
 	}
 
 	public boolean closeAll()
 	{
-		while (internalFrameToDesktopPanelMap.size() > 0)
+		while( internalFrameToDesktopPanelMap.size() > 0 )
 		{
 			Iterator<JInternalFrame> i = internalFrameToDesktopPanelMap.keySet().iterator();
 			try
 			{
-				i.next().setClosed(true);
+				i.next().setClosed( true );
 			}
-			catch (PropertyVetoException e1)
+			catch( PropertyVetoException e1 )
 			{
 				SoapUI.logError( e1 );
 			}
@@ -502,11 +505,11 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 		modelItemToInternalFrameMap.clear();
 
 		JInternalFrame[] allFrames = desktopPane.getAllFrames();
-		for (JInternalFrame frame : allFrames)
+		for( JInternalFrame frame : allFrames )
 		{
 			frame.doDefaultCloseAction();
 		}
-		
+
 		enableWindowActions();
 		return true;
 	}
@@ -516,7 +519,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 		desktopPane.getDesktopManager().iconifyFrame( getFrameForDesktopPanel( desktopPanel ) );
 	}
 
-	public void maximize(DesktopPanel desktopPanel)
+	public void maximize( DesktopPanel desktopPanel )
 	{
 		desktopPane.getDesktopManager().maximizeFrame( getFrameForDesktopPanel( desktopPanel ) );
 	}

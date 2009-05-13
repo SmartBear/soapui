@@ -1,4 +1,4 @@
- /*
+/*
  *  soapUI, copyright (C) 2004-2009 eviware.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
@@ -27,22 +27,22 @@ import com.eviware.soapui.support.action.swing.ActionList;
 public interface LoadTestLogEntry
 {
 	public String getMessage();
-   
-   public long getTimeStamp();
 
-   public String getType();
-   
-   public String getTargetStepName();
+	public long getTimeStamp();
 
-   public ActionList getActions();
-   
+	public String getType();
+
+	public String getTargetStepName();
+
+	public ActionList getActions();
+
 	public ImageIcon getIcon();
-	
+
 	public boolean isError();
 
 	public void discard();
-	
+
 	public boolean isDiscarded();
-	
-	public void exportToFile(String fileName) throws IOException;
+
+	public void exportToFile( String fileName ) throws IOException;
 }

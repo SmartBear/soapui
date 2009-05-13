@@ -33,5 +33,6 @@ public abstract class ListDataListenerAdapter implements ListDataListener
 	}
 
 	protected void update( ListDataEvent e )
-	{}
+	{
+	}
 }

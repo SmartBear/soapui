@@ -44,24 +44,25 @@ public abstract class MerlinCrypto extends WssCryptoBase
 	@Override
 	protected JComponent buildUI()
 	{
-		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<MerlinCrypto>( this ) ); 
-		
+		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<MerlinCrypto>( this ) );
+
 		form.appendTextField( "keystore", "Keystore", "The keystore file" );
 		form.appendTextField( "password", "Password", "The keystore password" );
-		form.appendComboBox( "type", "Type", new String[] {"JKS", "PKCS12"}, "The keystore type" );
-		
+		form.appendComboBox( "type", "Type", new String[] { "JKS", "PKCS12" }, "The keystore type" );
+
 		form.addRightComponent( validateButton = new JButton( "Validate" ) );
-		
-		validateButton.addActionListener( new ActionListener() {
+
+		validateButton.addActionListener( new ActionListener()
+		{
 
 			public void actionPerformed( ActionEvent e )
 			{
-				if( StringUtils.isNullOrEmpty( getPassword() ))
+				if( StringUtils.isNullOrEmpty( getPassword() ) )
 				{
 					UISupport.showErrorMessage( "Missing password" );
 					return;
 				}
-				
+
 				try
 				{
 					Crypto crypto = getCrypto();
@@ -71,9 +72,10 @@ public abstract class MerlinCrypto extends WssCryptoBase
 				{
 					UISupport.showErrorMessage( t );
 				}
-				
-			}} );
-		
+
+			}
+		} );
+
 		return form.getPanel();
 	}
 
@@ -100,15 +102,15 @@ public abstract class MerlinCrypto extends WssCryptoBase
 
 	public Crypto getCrypto()
 	{
-		Properties properties = new Properties(); 
+		Properties properties = new Properties();
 
-		properties.put( "org.apache.ws.security.crypto.provider", "org.apache.ws.security.components.crypto.Merlin");
+		properties.put( "org.apache.ws.security.crypto.provider", "org.apache.ws.security.components.crypto.Merlin" );
 		properties.put( "org.apache.ws.security.crypto.merlin.keystore.type", type.toLowerCase() );
-		properties.put( "org.apache.ws.security.crypto.merlin.keystore.password" , getPassword() );
+		properties.put( "org.apache.ws.security.crypto.merlin.keystore.password", getPassword() );
 		properties.put( "org.apache.ws.security.crypto.merlin.file", getKeystore() );
-		
+
 		Crypto crypto = CryptoFactory.getInstance( properties );
-		
+
 		return crypto;
 	}
 
@@ -149,23 +151,23 @@ public abstract class MerlinCrypto extends WssCryptoBase
 		this.type = type;
 		saveConfig();
 	}
-	
+
 	@Override
 	protected void addPropertyExpansions( PropertyExpansionsResult result )
 	{
 		super.addPropertyExpansions( result );
-		
+
 		result.extractAndAddAll( "keystore" );
 	}
 
 	@Override
 	public String getLabel()
 	{
-		if( StringUtils.isNullOrEmpty( keystore ))
+		if( StringUtils.isNullOrEmpty( keystore ) )
 			return super.getLabel();
-		
-	   int ix = keystore.lastIndexOf( File.separatorChar );
-	   return ix == -1 ? keystore : keystore.substring( ix+1 );
+
+		int ix = keystore.lastIndexOf( File.separatorChar );
+		return ix == -1 ? keystore : keystore.substring( ix + 1 );
 	}
 
 	public WssContainer getWssContainer()

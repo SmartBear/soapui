@@ -36,39 +36,40 @@ public class ModelItemPropertyResolver implements PropertyResolver
 	{
 		if( pe.charAt( 0 ) == PropertyExpansion.SCOPE_PREFIX )
 			return getScopedProperty( context, pe, globalOverride );
-		
+
 		ModelItem modelItem = context.getModelItem();
 		if( modelItem instanceof WsdlLoadTest )
-			modelItem = ((WsdlLoadTest)modelItem).getTestCase();
+			modelItem = ( ( WsdlLoadTest )modelItem ).getTestCase();
 		else if( modelItem instanceof TestRequest )
-			modelItem = ((TestRequest)modelItem).getTestStep();
-		else if( modelItem instanceof WsdlMockResponse && 
-				((WsdlMockResponse)modelItem).getMockOperation().getMockService() instanceof WsdlTestMockService )
-			modelItem = ((WsdlTestMockService) ((WsdlMockResponse)modelItem).getMockOperation().getMockService()).getMockResponseStep();
-		
+			modelItem = ( ( TestRequest )modelItem ).getTestStep();
+		else if( modelItem instanceof WsdlMockResponse
+				&& ( ( WsdlMockResponse )modelItem ).getMockOperation().getMockService() instanceof WsdlTestMockService )
+			modelItem = ( ( WsdlTestMockService )( ( WsdlMockResponse )modelItem ).getMockOperation().getMockService() )
+					.getMockResponseStep();
+
 		if( modelItem instanceof WsdlTestStep || modelItem instanceof WsdlTestCase )
 		{
-			WsdlTestStep testStep = ( WsdlTestStep ) ( modelItem instanceof WsdlTestStep ? modelItem : null );
-			WsdlTestCase testCase = ( WsdlTestCase ) ( testStep == null ? modelItem : testStep.getTestCase() );
-			
+			WsdlTestStep testStep = ( WsdlTestStep )( modelItem instanceof WsdlTestStep ? modelItem : null );
+			WsdlTestCase testCase = ( WsdlTestCase )( testStep == null ? modelItem : testStep.getTestCase() );
+
 			int sepIx = pe.indexOf( PropertyExpansion.PROPERTY_SEPARATOR );
 			Object property = null;
 
 			if( sepIx > 0 )
 			{
 				String step = pe.substring( 0, sepIx );
-				String name = pe.substring( sepIx+1 );
+				String name = pe.substring( sepIx + 1 );
 				String xpath = null;
-				
+
 				sepIx = name.indexOf( PropertyExpansion.PROPERTY_SEPARATOR );
 				WsdlTestStep ts = testCase.getTestStepByName( step );
-				
+
 				if( sepIx != -1 )
 				{
-					xpath = name.substring( sepIx+1 );
+					xpath = name.substring( sepIx + 1 );
 					name = name.substring( 0, sepIx );
 				}
-				
+
 				if( step != null )
 				{
 					if( ts != null )
@@ -82,106 +83,112 @@ public class ModelItemPropertyResolver implements PropertyResolver
 				{
 					property = context.getProperty( name );
 				}
-				
+
 				if( property != null && xpath != null )
 				{
-					property = ResolverUtils.extractXPathPropertyValue( property, PropertyExpansionUtils.expandProperties( context, xpath ) );
+					property = ResolverUtils.extractXPathPropertyValue( property, PropertyExpansionUtils.expandProperties(
+							context, xpath ) );
 				}
 			}
-			
+
 			if( property != null )
 				return property.toString();
 		}
-		
+
 		return null;
 	}
 
 	private String getScopedProperty( PropertyExpansionContext context, String pe, boolean globalOverride )
 	{
 		ModelItem modelItem = context.getModelItem();
-		
+
 		WsdlTestStep testStep = null;
 		WsdlTestCase testCase = null;
 		WsdlTestSuite testSuite = null;
 		WsdlProject project = null;
 		WsdlMockService mockService = null;
 		WsdlMockResponse mockResponse = null;
-		
+
 		if( modelItem instanceof WsdlTestStep )
 		{
-			testStep = ( WsdlTestStep ) modelItem;
+			testStep = ( WsdlTestStep )modelItem;
 			testCase = testStep.getTestCase();
 			testSuite = testCase.getTestSuite();
 			project = testSuite.getProject();
 		}
 		else if( modelItem instanceof WsdlTestCase )
 		{
-			testCase = ( WsdlTestCase ) modelItem;
+			testCase = ( WsdlTestCase )modelItem;
 			testSuite = testCase.getTestSuite();
 			project = testSuite.getProject();
 		}
 		else if( modelItem instanceof WsdlLoadTest )
 		{
-			testCase = (( WsdlLoadTest ) modelItem).getTestCase();
+			testCase = ( ( WsdlLoadTest )modelItem ).getTestCase();
 			testSuite = testCase.getTestSuite();
 			project = testSuite.getProject();
 		}
 		else if( modelItem instanceof WsdlTestSuite )
 		{
-			testSuite = ( WsdlTestSuite ) modelItem;
+			testSuite = ( WsdlTestSuite )modelItem;
 			project = testSuite.getProject();
 		}
 		else if( modelItem instanceof WsdlInterface )
 		{
-			project = ((WsdlInterface)modelItem).getProject();
+			project = ( ( WsdlInterface )modelItem ).getProject();
 		}
 		else if( modelItem instanceof WsdlProject )
 		{
-			project = ( WsdlProject ) modelItem;
+			project = ( WsdlProject )modelItem;
 		}
 		else if( modelItem instanceof WsdlMockService )
 		{
-			mockService = ( WsdlMockService ) modelItem;
+			mockService = ( WsdlMockService )modelItem;
 			project = mockService.getProject();
-		}	
+		}
 		else if( modelItem instanceof AbstractHttpRequest )
 		{
-			project = ((AbstractHttpRequest<?>)modelItem).getOperation().getInterface().getProject();
+			project = ( ( AbstractHttpRequest<?> )modelItem ).getOperation().getInterface().getProject();
 		}
 		else if( modelItem instanceof WsdlMockOperation )
 		{
-			mockService = (( WsdlMockOperation ) modelItem).getMockService();
+			mockService = ( ( WsdlMockOperation )modelItem ).getMockService();
 			project = mockService.getProject();
-		}	
+		}
 		else if( modelItem instanceof WsdlMockResponse )
 		{
-			mockResponse = ( WsdlMockResponse ) modelItem;
+			mockResponse = ( WsdlMockResponse )modelItem;
 			mockService = mockResponse.getMockOperation().getMockService();
 			project = mockService.getProject();
 		}
-		
+
 		// no project -> nothing
 		if( project == null )
 			return null;
-		
+
 		// explicit item reference?
-		String result = ResolverUtils.checkForExplicitReference( pe, PropertyExpansion.PROJECT_REFERENCE, project, context, globalOverride );
+		String result = ResolverUtils.checkForExplicitReference( pe, PropertyExpansion.PROJECT_REFERENCE, project,
+				context, globalOverride );
 		if( result != null )
 			return result;
-		
-		result = ResolverUtils.checkForExplicitReference( pe, PropertyExpansion.TESTSUITE_REFERENCE, testSuite, context, globalOverride );
+
+		result = ResolverUtils.checkForExplicitReference( pe, PropertyExpansion.TESTSUITE_REFERENCE, testSuite, context,
+				globalOverride );
 		if( result != null )
 			return result;
-		
-		result = ResolverUtils.checkForExplicitReference( pe, PropertyExpansion.TESTCASE_REFERENCE, testCase, context, globalOverride );
+
+		result = ResolverUtils.checkForExplicitReference( pe, PropertyExpansion.TESTCASE_REFERENCE, testCase, context,
+				globalOverride );
 		if( result != null )
 			return result;
-		
-		result = ResolverUtils.checkForExplicitReference( pe, PropertyExpansion.MOCKSERVICE_REFERENCE, mockService, context, globalOverride );
+
+		result = ResolverUtils.checkForExplicitReference( pe, PropertyExpansion.MOCKSERVICE_REFERENCE, mockService,
+				context, globalOverride );
 		if( result != null )
 			return result;
-		
-		result = ResolverUtils.checkForExplicitReference( pe, PropertyExpansion.MOCKRESPONSE_REFERENCE, mockResponse, context, globalOverride );
+
+		result = ResolverUtils.checkForExplicitReference( pe, PropertyExpansion.MOCKRESPONSE_REFERENCE, mockResponse,
+				context, globalOverride );
 		if( result != null )
 			return result;
 

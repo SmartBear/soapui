@@ -52,425 +52,431 @@ import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.swing.ModelItemListCellRenderer;
 
-public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 extends RestRequest>
-        extends AbstractHttpRequestDesktopPanel<T, T2>
+public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 extends RestRequest> extends
+		AbstractHttpRequestDesktopPanel<T, T2>
 {
-   private boolean updatingRequest;
-   private JComboBox methodCombo;
-   private JUndoableTextField pathTextField;
-   private JComboBox acceptCombo;
-   private JLabel pathLabel;
-   private boolean updating;
-   private AbstractRestRequestDesktopPanel<T, T2>.InternalTestPropertyListener testPropertyListener = new AbstractRestRequestDesktopPanel.InternalTestPropertyListener();
-   private AbstractRestRequestDesktopPanel<T, T2>.RestParamPropertyChangeListener restParamPropertyChangeListener = new AbstractRestRequestDesktopPanel.RestParamPropertyChangeListener();
-   private JComboBox pathCombo;
+	private boolean updatingRequest;
+	private JComboBox methodCombo;
+	private JUndoableTextField pathTextField;
+	private JComboBox acceptCombo;
+	private JLabel pathLabel;
+	private boolean updating;
+	private AbstractRestRequestDesktopPanel<T, T2>.InternalTestPropertyListener testPropertyListener = new AbstractRestRequestDesktopPanel.InternalTestPropertyListener();
+	private AbstractRestRequestDesktopPanel<T, T2>.RestParamPropertyChangeListener restParamPropertyChangeListener = new AbstractRestRequestDesktopPanel.RestParamPropertyChangeListener();
+	private JComboBox pathCombo;
 
-   public AbstractRestRequestDesktopPanel( T modelItem, T2 requestItem )
-   {
-      super( modelItem, requestItem );
+	public AbstractRestRequestDesktopPanel( T modelItem, T2 requestItem )
+	{
+		super( modelItem, requestItem );
 
-      if( requestItem.getResource() != null )
-      {
-         requestItem.getResource().addPropertyChangeListener( this );
-      }
+		if( requestItem.getResource() != null )
+		{
+			requestItem.getResource().addPropertyChangeListener( this );
+		}
 
-      requestItem.addTestPropertyListener( testPropertyListener );
+		requestItem.addTestPropertyListener( testPropertyListener );
 
-      for( TestProperty param : requestItem.getParams().getProperties().values() )
-      {
-         ( (XmlBeansRestParamsTestPropertyHolder.RestParamProperty) param ).addPropertyChangeListener( restParamPropertyChangeListener );
-      }
-   }
+		for( TestProperty param : requestItem.getParams().getProperties().values() )
+		{
+			( ( XmlBeansRestParamsTestPropertyHolder.RestParamProperty )param )
+					.addPropertyChangeListener( restParamPropertyChangeListener );
+		}
+	}
 
-   public void propertyChange( PropertyChangeEvent evt )
-   {
-      updateFullPathLabel();
+	public void propertyChange( PropertyChangeEvent evt )
+	{
+		updateFullPathLabel();
 
-      if( evt.getPropertyName().equals( "method" ) && !updatingRequest )
-      {
-         methodCombo.setSelectedItem( evt.getNewValue() );
-      }
-      else if( evt.getPropertyName().equals( "accept" ) && !updatingRequest )
-      {
-         acceptCombo.setSelectedItem( evt.getNewValue() );
-      }
-      else if( evt.getPropertyName().equals( "responseMediaTypes" ) && !updatingRequest )
-      {
-         Object item = acceptCombo.getSelectedItem();
-         acceptCombo.setModel( new DefaultComboBoxModel( (Object[]) evt.getNewValue() ) );
-         acceptCombo.setSelectedItem( item );
-      }
-      else if( (evt.getPropertyName().equals( "path" ) || evt.getPropertyName().equals( "resource" )) &&
-              ( getRequest().getResource() == null || getRequest().getResource() == evt.getSource() ) )
-      {
-         if( pathLabel != null )
-         {
-            updateFullPathLabel();
-         }
+		if( evt.getPropertyName().equals( "method" ) && !updatingRequest )
+		{
+			methodCombo.setSelectedItem( evt.getNewValue() );
+		}
+		else if( evt.getPropertyName().equals( "accept" ) && !updatingRequest )
+		{
+			acceptCombo.setSelectedItem( evt.getNewValue() );
+		}
+		else if( evt.getPropertyName().equals( "responseMediaTypes" ) && !updatingRequest )
+		{
+			Object item = acceptCombo.getSelectedItem();
+			acceptCombo.setModel( new DefaultComboBoxModel( ( Object[] )evt.getNewValue() ) );
+			acceptCombo.setSelectedItem( item );
+		}
+		else if( ( evt.getPropertyName().equals( "path" ) || evt.getPropertyName().equals( "resource" ) )
+				&& ( getRequest().getResource() == null || getRequest().getResource() == evt.getSource() ) )
+		{
+			if( pathLabel != null )
+			{
+				updateFullPathLabel();
+			}
 
-         if( !updating && pathTextField != null )
-         {
-            updating = true;
-            pathTextField.setText( (String) evt.getNewValue() );
-            pathTextField.setToolTipText( pathTextField.getText() );
-            updating = false;
-         }
-      }
+			if( !updating && pathTextField != null )
+			{
+				updating = true;
+				pathTextField.setText( ( String )evt.getNewValue() );
+				pathTextField.setToolTipText( pathTextField.getText() );
+				updating = false;
+			}
+		}
 
-      super.propertyChange( evt );
-   }
+		super.propertyChange( evt );
+	}
 
-   @Override
-   protected ModelItemXmlEditor<?, ?> buildRequestEditor()
-   {
-      return new RestRequestMessageEditor( getRequest() );
-   }
+	@Override
+	protected ModelItemXmlEditor<?, ?> buildRequestEditor()
+	{
+		return new RestRequestMessageEditor( getRequest() );
+	}
 
-   @Override
-   protected ModelItemXmlEditor<?, ?> buildResponseEditor()
-   {
-      return new RestResponseMessageEditor( getRequest() );
-   }
+	@Override
+	protected ModelItemXmlEditor<?, ?> buildResponseEditor()
+	{
+		return new RestResponseMessageEditor( getRequest() );
+	}
 
-   @Override
-   protected Submit doSubmit() throws SubmitException
-   {
-      return getRequest().submit( new WsdlSubmitContext( getModelItem() ), true );
-   }
+	@Override
+	protected Submit doSubmit() throws SubmitException
+	{
+		return getRequest().submit( new WsdlSubmitContext( getModelItem() ), true );
+	}
 
-   @Override
-   protected String getHelpUrl()
-   {
-      return null;
-   }
+	@Override
+	protected String getHelpUrl()
+	{
+		return null;
+	}
 
-   @Override
-   protected void insertButtons( JXToolBar toolbar )
-   {
-      if( getRequest().getResource() == null )
-      {
-         addToolbarComponents( toolbar );
-      }
-   }
+	@Override
+	protected void insertButtons( JXToolBar toolbar )
+	{
+		if( getRequest().getResource() == null )
+		{
+			addToolbarComponents( toolbar );
+		}
+	}
 
-   protected JComponent buildEndpointComponent()
-   {
-      return getRequest().getResource() == null ? null : super.buildEndpointComponent();
-   }
+	protected JComponent buildEndpointComponent()
+	{
+		return getRequest().getResource() == null ? null : super.buildEndpointComponent();
+	}
 
-   @Override
-   protected JComponent buildToolbar()
-   {
-      if( getRequest().getResource() != null )
-      {
-         JPanel panel = new JPanel( new BorderLayout() );
-         panel.add( super.buildToolbar(), BorderLayout.NORTH );
+	@Override
+	protected JComponent buildToolbar()
+	{
+		if( getRequest().getResource() != null )
+		{
+			JPanel panel = new JPanel( new BorderLayout() );
+			panel.add( super.buildToolbar(), BorderLayout.NORTH );
 
-         JXToolBar toolbar = UISupport.createToolbar();
-         addToolbarComponents( toolbar );
+			JXToolBar toolbar = UISupport.createToolbar();
+			addToolbarComponents( toolbar );
 
-         panel.add( toolbar, BorderLayout.SOUTH );
-         return panel;
-      }
-      else
-      {
-         return super.buildToolbar();
-      }
-   }
+			panel.add( toolbar, BorderLayout.SOUTH );
+			return panel;
+		}
+		else
+		{
+			return super.buildToolbar();
+		}
+	}
 
-   protected void addToolbarComponents( JXToolBar toolbar )
-   {
-      toolbar.addSeparator();
-      methodCombo = new JComboBox( new Object[]{RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
-              RequestMethod.DELETE, RequestMethod.HEAD} );
+	protected void addToolbarComponents( JXToolBar toolbar )
+	{
+		toolbar.addSeparator();
+		methodCombo = new JComboBox( new Object[] { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+				RequestMethod.DELETE, RequestMethod.HEAD } );
 
-      methodCombo.setSelectedItem( getRequest().getMethod() );
-      methodCombo.setToolTipText( "Set desired HTTP method" );
-      methodCombo.addItemListener( new ItemListener()
-      {
-         public void itemStateChanged( ItemEvent e )
-         {
-            updatingRequest = true;
-            getRequest().setMethod( (RequestMethod) methodCombo.getSelectedItem() );
-            updatingRequest = false;
-         }
-      } );
+		methodCombo.setSelectedItem( getRequest().getMethod() );
+		methodCombo.setToolTipText( "Set desired HTTP method" );
+		methodCombo.addItemListener( new ItemListener()
+		{
+			public void itemStateChanged( ItemEvent e )
+			{
+				updatingRequest = true;
+				getRequest().setMethod( ( RequestMethod )methodCombo.getSelectedItem() );
+				updatingRequest = false;
+			}
+		} );
 
-      toolbar.addLabeledFixed( "Method", methodCombo );
-      toolbar.addSeparator();
+		toolbar.addLabeledFixed( "Method", methodCombo );
+		toolbar.addSeparator();
 
-      if( getRequest().getResource() != null )
-      {
-         acceptCombo = new JComboBox( getRequest().getResponseMediaTypes() );
-         acceptCombo.setEditable( true );
-         acceptCombo.setToolTipText( "Sets accepted encoding(s) for response" );
-         acceptCombo.setSelectedItem( getRequest().getAccept() );
-         acceptCombo.addItemListener( new ItemListener()
-         {
-            public void itemStateChanged( ItemEvent e )
-            {
-               updatingRequest = true;
-               getRequest().setAccept( String.valueOf( acceptCombo.getSelectedItem() ) );
-               updatingRequest = false;
-            }
-         } );
+		if( getRequest().getResource() != null )
+		{
+			acceptCombo = new JComboBox( getRequest().getResponseMediaTypes() );
+			acceptCombo.setEditable( true );
+			acceptCombo.setToolTipText( "Sets accepted encoding(s) for response" );
+			acceptCombo.setSelectedItem( getRequest().getAccept() );
+			acceptCombo.addItemListener( new ItemListener()
+			{
+				public void itemStateChanged( ItemEvent e )
+				{
+					updatingRequest = true;
+					getRequest().setAccept( String.valueOf( acceptCombo.getSelectedItem() ) );
+					updatingRequest = false;
+				}
+			} );
 
-         toolbar.addLabeledFixed( "Accept", acceptCombo );
-         toolbar.addSeparator();
+			toolbar.addLabeledFixed( "Accept", acceptCombo );
+			toolbar.addSeparator();
 
-         if( getRequest() instanceof RestTestRequest )
-         {
-            pathCombo = new JComboBox( new PathComboBoxModel() );
-            pathCombo.setRenderer( new ModelItemListCellRenderer() );
-            pathCombo.setPreferredSize( new Dimension( 200, 20 ) );
-//            pathCombo.setSelectedItem( getRequest().getResource().getPath() );
-//            pathCombo.addItemListener( new ItemListener()
-//            {
-//               public void itemStateChanged( ItemEvent e )
-//               {
-//                  if( updating )
-//                     return;
-//
-//                  updating = true;
-////                  ((RestTestRequest)getRequest()).setPath( ((RestResource)pathCombo.getSelectedItem() ).getPath() );
-//                  updating = false;
-//               }
-//            } );
+			if( getRequest() instanceof RestTestRequest )
+			{
+				pathCombo = new JComboBox( new PathComboBoxModel() );
+				pathCombo.setRenderer( new ModelItemListCellRenderer() );
+				pathCombo.setPreferredSize( new Dimension( 200, 20 ) );
+				// pathCombo.setSelectedItem( getRequest().getResource().getPath()
+				// );
+				// pathCombo.addItemListener( new ItemListener()
+				// {
+				// public void itemStateChanged( ItemEvent e )
+				// {
+				// if( updating )
+				// return;
+				//
+				// updating = true;
+				// // ((RestTestRequest)getRequest()).setPath(
+				// ((RestResource)pathCombo.getSelectedItem() ).getPath() );
+				// updating = false;
+				// }
+				// } );
 
-            toolbar.addLabeledFixed( "Resource:", pathCombo );
-            toolbar.addSeparator();
-         }
-         else
-         {
-            toolbar.add( new JLabel( "Full Path: " ));
-         }
+				toolbar.addLabeledFixed( "Resource:", pathCombo );
+				toolbar.addSeparator();
+			}
+			else
+			{
+				toolbar.add( new JLabel( "Full Path: " ) );
+			}
 
-         pathLabel = new JLabel();
-         updateFullPathLabel();
+			pathLabel = new JLabel();
+			updateFullPathLabel();
 
-         toolbar.add( pathLabel );
-      }
-      else
-      {
-         pathTextField = new JUndoableTextField();
-         pathTextField.setPreferredSize( new Dimension( 300, 20 ) );
-         pathTextField.setText( getRequest().getPath() );
-         pathTextField.setToolTipText( pathTextField.getText() );
-         pathTextField.getDocument().addDocumentListener( new DocumentListenerAdapter()
-         {
-            @Override
-            public void update( Document document )
-            {
-               if( updating )
-                  return;
-               
-               updating = true;
-               getRequest().setPath( pathTextField.getText() );
-               updating = false;
-            }
-         } );
-         
-         PropertyExpansionPopupListener.enable(pathTextField, getModelItem());
+			toolbar.add( pathLabel );
+		}
+		else
+		{
+			pathTextField = new JUndoableTextField();
+			pathTextField.setPreferredSize( new Dimension( 300, 20 ) );
+			pathTextField.setText( getRequest().getPath() );
+			pathTextField.setToolTipText( pathTextField.getText() );
+			pathTextField.getDocument().addDocumentListener( new DocumentListenerAdapter()
+			{
+				@Override
+				public void update( Document document )
+				{
+					if( updating )
+						return;
 
-         toolbar.addLabeledFixed( "Request URL:", pathTextField );
-      }
+					updating = true;
+					getRequest().setPath( pathTextField.getText() );
+					updating = false;
+				}
+			} );
 
-      toolbar.addSeparator();
-   }
+			PropertyExpansionPopupListener.enable( pathTextField, getModelItem() );
 
-   protected boolean release()
-   {
-      if( getRequest().getResource() != null )
-      {
-         getRequest().getResource().removePropertyChangeListener( this );
-      }
+			toolbar.addLabeledFixed( "Request URL:", pathTextField );
+		}
 
-      getRequest().removeTestPropertyListener( testPropertyListener );
+		toolbar.addSeparator();
+	}
 
-      for( TestProperty param : getRequest().getParams().getProperties().values() )
-      {
-         ( (XmlBeansRestParamsTestPropertyHolder.RestParamProperty) param ).removePropertyChangeListener( restParamPropertyChangeListener );
-      }
+	protected boolean release()
+	{
+		if( getRequest().getResource() != null )
+		{
+			getRequest().getResource().removePropertyChangeListener( this );
+		}
 
-      return super.release();
-   }
+		getRequest().removeTestPropertyListener( testPropertyListener );
 
-   public class RestRequestMessageEditor extends
-           AbstractHttpRequestDesktopPanel<?, ?>.AbstractHttpRequestMessageEditor<RestRequestDocument>
-   {
-      public RestRequestMessageEditor( RestRequest modelItem )
-      {
-         super( new RestRequestDocument( modelItem ) );
-      }
-   }
+		for( TestProperty param : getRequest().getParams().getProperties().values() )
+		{
+			( ( XmlBeansRestParamsTestPropertyHolder.RestParamProperty )param )
+					.removePropertyChangeListener( restParamPropertyChangeListener );
+		}
 
-   public class RestResponseMessageEditor extends
-           AbstractHttpRequestDesktopPanel<?, ?>.AbstractHttpResponseMessageEditor<RestResponseDocument>
-   {
-      public RestResponseMessageEditor( RestRequest modelItem )
-      {
-         super( new RestResponseDocument( modelItem ) );
-      }
-   }
+		return super.release();
+	}
 
-   public class RestRequestDocument extends AbstractXmlDocument implements PropertyChangeListener
-   {
-      private final RestRequest modelItem;
-      private boolean updating;
+	public class RestRequestMessageEditor extends
+			AbstractHttpRequestDesktopPanel<?, ?>.AbstractHttpRequestMessageEditor<RestRequestDocument>
+	{
+		public RestRequestMessageEditor( RestRequest modelItem )
+		{
+			super( new RestRequestDocument( modelItem ) );
+		}
+	}
 
-      public RestRequestDocument( RestRequest modelItem )
-      {
-         this.modelItem = modelItem;
+	public class RestResponseMessageEditor extends
+			AbstractHttpRequestDesktopPanel<?, ?>.AbstractHttpResponseMessageEditor<RestResponseDocument>
+	{
+		public RestResponseMessageEditor( RestRequest modelItem )
+		{
+			super( new RestResponseDocument( modelItem ) );
+		}
+	}
 
-         modelItem.addPropertyChangeListener( this );
-      }
+	public class RestRequestDocument extends AbstractXmlDocument implements PropertyChangeListener
+	{
+		private final RestRequest modelItem;
+		private boolean updating;
 
-      public RestRequest getRequest()
-      {
-         return modelItem;
-      }
+		public RestRequestDocument( RestRequest modelItem )
+		{
+			this.modelItem = modelItem;
 
-      public String getXml()
-      {
-         return getRequest().getRequestContent();
-      }
+			modelItem.addPropertyChangeListener( this );
+		}
 
-      @Override
-      public void release()
-      {
-         super.release();
-         modelItem.removePropertyChangeListener( this );
-      }
+		public RestRequest getRequest()
+		{
+			return modelItem;
+		}
 
-      public void setXml( String xml )
-      {
-         if( !updating && xml != null )
-         {
-            updating = true;
-            getRequest().setRequestContent( xml );
-            updating = false;
-         }
-      }
+		public String getXml()
+		{
+			return getRequest().getRequestContent();
+		}
 
-      public void propertyChange( PropertyChangeEvent evt )
-      {
-         if( evt.getPropertyName().equals( RestRequest.REQUEST_PROPERTY ) && !updating )
-         {
-            updating = true;
-            fireXmlChanged( (String) evt.getOldValue(), (String) evt.getNewValue() );
-            updating = false;
-         }
-      }
-   }
+		@Override
+		public void release()
+		{
+			super.release();
+			modelItem.removePropertyChangeListener( this );
+		}
 
-   public class RestResponseDocument extends AbstractXmlDocument implements PropertyChangeListener
-   {
-      private final RestRequest modelItem;
+		public void setXml( String xml )
+		{
+			if( !updating && xml != null )
+			{
+				updating = true;
+				getRequest().setRequestContent( xml );
+				updating = false;
+			}
+		}
 
-      public RestResponseDocument( RestRequest modelItem )
-      {
-         this.modelItem = modelItem;
+		public void propertyChange( PropertyChangeEvent evt )
+		{
+			if( evt.getPropertyName().equals( RestRequest.REQUEST_PROPERTY ) && !updating )
+			{
+				updating = true;
+				fireXmlChanged( ( String )evt.getOldValue(), ( String )evt.getNewValue() );
+				updating = false;
+			}
+		}
+	}
 
-         modelItem.addPropertyChangeListener( RestRequest.RESPONSE_PROPERTY, this );
-      }
+	public class RestResponseDocument extends AbstractXmlDocument implements PropertyChangeListener
+	{
+		private final RestRequest modelItem;
 
-      public RestRequest getRequest()
-      {
-         return modelItem;
-      }
+		public RestResponseDocument( RestRequest modelItem )
+		{
+			this.modelItem = modelItem;
 
-      public String getXml()
-      {
-         return modelItem.getResponseContentAsXml();
-      }
+			modelItem.addPropertyChangeListener( RestRequest.RESPONSE_PROPERTY, this );
+		}
 
-      public void setXml( String xml )
-      {
-         HttpResponse response = getRequest().getResponse();
-         if( response != null )
-            response.setResponseContent( xml );
-      }
+		public RestRequest getRequest()
+		{
+			return modelItem;
+		}
 
-      public void propertyChange( PropertyChangeEvent evt )
-      {
-         fireXmlChanged( evt.getOldValue() == null ? null : ( (HttpResponse) evt.getOldValue() ).getContentAsString(),
-                 getXml() );
-      }
+		public String getXml()
+		{
+			return modelItem.getResponseContentAsXml();
+		}
 
-      public void release()
-      {
-         super.release();
-         modelItem.removePropertyChangeListener( RestRequest.RESPONSE_PROPERTY, this );
-      }
-   }
+		public void setXml( String xml )
+		{
+			HttpResponse response = getRequest().getResponse();
+			if( response != null )
+				response.setResponseContent( xml );
+		}
 
-   private class InternalTestPropertyListener extends TestPropertyListenerAdapter
-   {
-      @Override
-      public void propertyValueChanged( String name, String oldValue, String newValue )
-      {
-         updateFullPathLabel();
-      }
+		public void propertyChange( PropertyChangeEvent evt )
+		{
+			fireXmlChanged( evt.getOldValue() == null ? null : ( ( HttpResponse )evt.getOldValue() ).getContentAsString(),
+					getXml() );
+		}
 
-      @Override
-      public void propertyAdded( String name )
-      {
-         updateFullPathLabel();
+		public void release()
+		{
+			super.release();
+			modelItem.removePropertyChangeListener( RestRequest.RESPONSE_PROPERTY, this );
+		}
+	}
 
-         getRequest().getParams().getProperty( name ).addPropertyChangeListener( restParamPropertyChangeListener );
-      }
+	private class InternalTestPropertyListener extends TestPropertyListenerAdapter
+	{
+		@Override
+		public void propertyValueChanged( String name, String oldValue, String newValue )
+		{
+			updateFullPathLabel();
+		}
 
-      @Override
-      public void propertyRemoved( String name )
-      {
-         updateFullPathLabel();
-      }
+		@Override
+		public void propertyAdded( String name )
+		{
+			updateFullPathLabel();
 
-      @Override
-      public void propertyRenamed( String oldName, String newName )
-      {
-         updateFullPathLabel();
-      }
-   }
+			getRequest().getParams().getProperty( name ).addPropertyChangeListener( restParamPropertyChangeListener );
+		}
 
-   private void updateFullPathLabel()
-   {
-      if( pathLabel != null && getRequest().getResource() != null )
-      {
-         String text = RestUtils.expandPath( getRequest().getResource().getFullPath(), getRequest().getParams(), getRequest() );
-         pathLabel.setText( "[" + text + "]" );
-         pathLabel.setToolTipText( text );
-      }
-   }
+		@Override
+		public void propertyRemoved( String name )
+		{
+			updateFullPathLabel();
+		}
 
-   private class RestParamPropertyChangeListener implements PropertyChangeListener
-   {
-      public void propertyChange( PropertyChangeEvent evt )
-      {
-         updateFullPathLabel();
-      }
-   }
+		@Override
+		public void propertyRenamed( String oldName, String newName )
+		{
+			updateFullPathLabel();
+		}
+	}
 
-   private class PathComboBoxModel extends AbstractListModel implements ComboBoxModel
-   {
-      public int getSize()
-      {
-         return getRequest().getResource().getService().getAllResources().size();
-      }
+	private void updateFullPathLabel()
+	{
+		if( pathLabel != null && getRequest().getResource() != null )
+		{
+			String text = RestUtils.expandPath( getRequest().getResource().getFullPath(), getRequest().getParams(),
+					getRequest() );
+			pathLabel.setText( "[" + text + "]" );
+			pathLabel.setToolTipText( text );
+		}
+	}
 
-      public Object getElementAt( int index )
-      {
-         return getRequest().getResource().getService().getAllResources().get( index );
-      }
+	private class RestParamPropertyChangeListener implements PropertyChangeListener
+	{
+		public void propertyChange( PropertyChangeEvent evt )
+		{
+			updateFullPathLabel();
+		}
+	}
 
-      public void setSelectedItem( Object anItem )
-      {
-         ((RestTestRequestStep) ((RestTestRequest)getRequest()).getTestStep()).setResource( (RestResource) anItem );
-      }
+	private class PathComboBoxModel extends AbstractListModel implements ComboBoxModel
+	{
+		public int getSize()
+		{
+			return getRequest().getResource().getService().getAllResources().size();
+		}
 
-      public Object getSelectedItem()
-      {
-         return getRequest().getResource();
-      }
-   }
+		public Object getElementAt( int index )
+		{
+			return getRequest().getResource().getService().getAllResources().get( index );
+		}
+
+		public void setSelectedItem( Object anItem )
+		{
+			( ( RestTestRequestStep )( ( RestTestRequest )getRequest() ).getTestStep() )
+					.setResource( ( RestResource )anItem );
+		}
+
+		public Object getSelectedItem()
+		{
+			return getRequest().getResource();
+		}
+	}
 }

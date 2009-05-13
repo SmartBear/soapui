@@ -21,7 +21,7 @@ public class RemoveTestStepResolver implements Resolver
 	private WsdlTestStep testStep;
 	private boolean resolve;
 
-	public RemoveTestStepResolver(WsdlTestStep testStep)
+	public RemoveTestStepResolver( WsdlTestStep testStep )
 	{
 		this.testStep = testStep;
 	}
@@ -49,11 +49,11 @@ public class RemoveTestStepResolver implements Resolver
 
 	public boolean resolve()
 	{
-		if (UISupport.confirm("Are you sure to remove this test step?", "Remove Test Step"))
+		if( UISupport.confirm( "Are you sure to remove this test step?", "Remove Test Step" ) )
 		{
-			if (testStep != null)
+			if( testStep != null )
 			{
-				testStep.getTestCase().removeTestStep(testStep);
+				testStep.getTestCase().removeTestStep( testStep );
 				resolve = true;
 			}
 		}

@@ -118,7 +118,7 @@ public class BurstLoadStrategy extends AbstractLoadStrategy
 		{
 			WsdlLoadTest wsdlLoadTest = ( WsdlLoadTest )loadTestRunner.getLoadTest();
 			String label = null;
-			
+
 			long mod = timePassed % ( burstDelay + burstDuration );
 			if( mod < burstDelay )
 			{
@@ -130,7 +130,7 @@ public class BurstLoadStrategy extends AbstractLoadStrategy
 				wsdlLoadTest.setThreadCount( threadCount );
 				label = ( ( burstDelay + burstDuration ) - mod ) / 1000 + "s burst left";
 			}
-			
+
 			if( infoLabel != null && !infoLabel.getText().equals( label ) )
 				infoLabel.setText( label );
 		}

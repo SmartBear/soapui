@@ -12,6 +12,17 @@
 
 package com.eviware.soapui.model.propertyexpansion;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
@@ -29,26 +40,34 @@ import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.Project;
-import com.eviware.soapui.model.propertyexpansion.resolvers.*;
+import com.eviware.soapui.model.propertyexpansion.resolvers.ContextPropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.DynamicPropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.EvalPropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.GlobalPropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.MockRunPropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.ModelItemPropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.PropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.SubmitPropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.TestRunPropertyResolver;
 import com.eviware.soapui.model.support.SettingsTestPropertyHolder;
-import com.eviware.soapui.model.testsuite.*;
+import com.eviware.soapui.model.testsuite.RenameableTestProperty;
+import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.settings.GlobalPropertySettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.log4j.Logger;
-
-import java.util.*;
 
 public class PropertyExpansionUtils
 {
-	public final static Logger log = Logger.getLogger(PropertyExpansionUtils.class);
-	
+	public final static Logger log = Logger.getLogger( PropertyExpansionUtils.class );
+
 	private static SettingsTestPropertyHolder globalTestPropertyHolder;
 	private static List<PropertyResolver> propertyResolvers = new ArrayList<PropertyResolver>();
-	
+
 	static
 	{
 		propertyResolvers.add( new ModelItemPropertyResolver() );
@@ -60,23 +79,23 @@ public class PropertyExpansionUtils
 		propertyResolvers.add( new GlobalPropertyResolver() );
 		propertyResolvers.add( new EvalPropertyResolver() );
 	}
-	
+
 	public static String getGlobalProperty( String propertyName )
 	{
 		if( globalTestPropertyHolder == null )
 		{
 			initGlobalProperties();
 		}
-		
+
 		return globalTestPropertyHolder.getPropertyValue( propertyName );
 	}
 
 	private synchronized static void initGlobalProperties()
 	{
 		globalTestPropertyHolder = new SettingsTestPropertyHolder( SoapUI.getSettings(), null );
-		
+
 		String propFile = System.getProperty( "soapui.properties" );
-		if( StringUtils.hasContent( propFile ))
+		if( StringUtils.hasContent( propFile ) )
 			globalTestPropertyHolder.addPropertiesFromFile( propFile );
 	}
 
@@ -88,111 +107,114 @@ public class PropertyExpansionUtils
 		}
 	}
 
-   public static String expandProperties( String content )
-   {
-      return expandProperties( new GlobalPropertyExpansionContext(), content );
-   }
-
-	public static String expandProperties(PropertyExpansionContext context, String content)
+	public static String expandProperties( String content )
 	{
-		return expandProperties(context, content, false );
+		return expandProperties( new GlobalPropertyExpansionContext(), content );
 	}
-	
-	public static String expandProperties(PropertyExpansionContext context, String content, boolean entitize )
+
+	public static String expandProperties( PropertyExpansionContext context, String content )
 	{
-		if( StringUtils.isNullOrEmpty( content ))
+		return expandProperties( context, content, false );
+	}
+
+	public static String expandProperties( PropertyExpansionContext context, String content, boolean entitize )
+	{
+		if( StringUtils.isNullOrEmpty( content ) )
 			return content;
-		
+
 		int ix = content.indexOf( "${" );
 		if( ix == -1 )
 			return content;
-		
+
 		StringBuffer buf = new StringBuffer();
 		int lastIx = 0;
 		while( ix != -1 )
 		{
 			if( ix > lastIx )
-			   buf.append( content.substring( lastIx, ix ));
-			
-			int ix2 = content.indexOf( '}', ix+2 );
+				buf.append( content.substring( lastIx, ix ) );
+
+			int ix2 = content.indexOf( '}', ix + 2 );
 			if( ix2 == -1 )
 				break;
-	
+
 			// check for nesting
 			int ix3 = content.lastIndexOf( "${", ix2 );
 			if( ix3 != ix )
 			{
-				//buf.append( content.substring( ix, ix3 ));
-				content = content.substring( 0, ix3 ) + expandProperties( context, content.substring( ix3, ix2+1 )) + 
-				          content.substring( ix2+1 );
-				
+				// buf.append( content.substring( ix, ix3 ));
+				content = content.substring( 0, ix3 ) + expandProperties( context, content.substring( ix3, ix2 + 1 ) )
+						+ content.substring( ix2 + 1 );
+
 				lastIx = ix;
 				continue;
 			}
-			
-			String propertyName = content.substring( ix+2, ix2 );
+
+			String propertyName = content.substring( ix + 2, ix2 );
 			String propertyValue = null;
-			
-			if( StringUtils.hasContent(propertyName))
+
+			if( StringUtils.hasContent( propertyName ) )
 			{
 				boolean globalOverrideEnabled = SoapUI.getSettings().getBoolean( GlobalPropertySettings.ENABLE_OVERRIDE );
-				
-				for( int c = 0; c < propertyResolvers.size() && propertyValue == null; c++  )
+
+				for( int c = 0; c < propertyResolvers.size() && propertyValue == null; c++ )
 				{
-					propertyValue = propertyResolvers.get( c ).resolveProperty( context, propertyName, globalOverrideEnabled );
+					propertyValue = propertyResolvers.get( c )
+							.resolveProperty( context, propertyName, globalOverrideEnabled );
 				}
 			}
-				
+
 			// found a value?
 			if( propertyValue != null )
 			{
-				if( !content.equals( propertyValue ))
+				if( !content.equals( propertyValue ) )
 					propertyValue = expandProperties( context, propertyValue );
-				
+
 				if( entitize )
 					propertyValue = XmlUtils.entitizeContent( propertyValue );
-				
+
 				buf.append( propertyValue );
 			}
 			else
 			{
-//				if( log.isEnabledFor( Priority.WARN ))
-//					log.warn( "Missing property value for [" + propertyName + "]" );
-				
-			   //buf.append( "${" ).append( propertyName ).append( '}' );
+				// if( log.isEnabledFor( Priority.WARN ))
+				// log.warn( "Missing property value for [" + propertyName + "]" );
+
+				// buf.append( "${" ).append( propertyName ).append( '}' );
 			}
-			
-			lastIx = ix2+1;
+
+			lastIx = ix2 + 1;
 			ix = content.indexOf( "${", lastIx );
 		}
-		
+
 		if( lastIx < content.length() )
-			buf.append( content.substring( lastIx ));
-		
+			buf.append( content.substring( lastIx ) );
+
 		return buf.toString();
 	}
 
 	/**
-	 * Checks if a property can be transferred to another specified property via a property-transfer
+	 * Checks if a property can be transferred to another specified property via
+	 * a property-transfer
 	 */
-	
+
 	public static boolean canTransferToProperty( TestProperty source, TestProperty target )
 	{
 		return false;
 	}
-	
+
 	/**
-	 * Checks if a modelItem can acces a specified property via property-expansion
+	 * Checks if a modelItem can acces a specified property via
+	 * property-expansion
 	 */
 
 	public static boolean canExpandProperty( ModelItem contextModelItem, TestProperty property )
 	{
 		ModelItem propertyModelItem = property.getModelItem();
-		
+
 		// global / anonymous reference?
 		if( propertyModelItem == null || propertyModelItem instanceof Project )
 			return true;
-		
+
 		if( contextModelItem instanceof TestSuite )
 		{
 			return propertyModelItem == contextModelItem;
@@ -200,42 +222,45 @@ public class PropertyExpansionUtils
 
 		if( contextModelItem instanceof TestCase )
 		{
-			return propertyModelItem == contextModelItem || 
-				(propertyModelItem instanceof TestSuite && ((TestCase)contextModelItem).getTestSuite() == propertyModelItem);
+			return propertyModelItem == contextModelItem
+					|| ( propertyModelItem instanceof TestSuite && ( ( TestCase )contextModelItem ).getTestSuite() == propertyModelItem );
 		}
 
 		if( contextModelItem instanceof TestStep )
 		{
-			TestStep testStep = ((TestStep)contextModelItem);
-			
-			return propertyModelItem == contextModelItem || 
-			   (propertyModelItem instanceof TestSuite && testStep.getTestCase().getTestSuite() == propertyModelItem) ||
-			   (propertyModelItem instanceof TestCase && testStep.getTestCase() == propertyModelItem) ||
-			   (propertyModelItem instanceof TestStep && testStep.getTestCase() == ((TestStep)propertyModelItem).getTestCase());
+			TestStep testStep = ( ( TestStep )contextModelItem );
+
+			return propertyModelItem == contextModelItem
+					|| ( propertyModelItem instanceof TestSuite && testStep.getTestCase().getTestSuite() == propertyModelItem )
+					|| ( propertyModelItem instanceof TestCase && testStep.getTestCase() == propertyModelItem )
+					|| ( propertyModelItem instanceof TestStep && testStep.getTestCase() == ( ( TestStep )propertyModelItem )
+							.getTestCase() );
 		}
-		
+
 		if( contextModelItem instanceof MockService )
 		{
 			return propertyModelItem == contextModelItem;
 		}
-		
+
 		if( contextModelItem instanceof MockOperation )
 		{
-			return propertyModelItem == contextModelItem || 
-			(propertyModelItem instanceof MockService && ((MockOperation)contextModelItem).getMockService() == propertyModelItem);
+			return propertyModelItem == contextModelItem
+					|| ( propertyModelItem instanceof MockService && ( ( MockOperation )contextModelItem ).getMockService() == propertyModelItem );
 		}
-		
+
 		if( contextModelItem instanceof MockResponse )
 		{
-			MockResponse testStep = ((MockResponse)contextModelItem);
-			
-			return propertyModelItem == contextModelItem || 
-			   (propertyModelItem instanceof MockService && testStep.getMockOperation().getMockService() == propertyModelItem) ||
-			   (propertyModelItem instanceof MockOperation && testStep.getMockOperation() == propertyModelItem) ||
-			   (propertyModelItem instanceof MockResponse && testStep.getMockOperation() == ((MockResponse)propertyModelItem).getMockOperation());
+			MockResponse testStep = ( ( MockResponse )contextModelItem );
+
+			return propertyModelItem == contextModelItem
+					|| ( propertyModelItem instanceof MockService && testStep.getMockOperation().getMockService() == propertyModelItem )
+					|| ( propertyModelItem instanceof MockOperation && testStep.getMockOperation() == propertyModelItem )
+					|| ( propertyModelItem instanceof MockResponse && testStep.getMockOperation() == ( ( MockResponse )propertyModelItem )
+							.getMockOperation() );
 		}
-		
-		System.out.println( "property " + property.getName() + " can not be transferred to " + contextModelItem.getName() );
+
+		System.out
+				.println( "property " + property.getName() + " can not be transferred to " + contextModelItem.getName() );
 		return false;
 	}
 
@@ -245,32 +270,33 @@ public class PropertyExpansionUtils
 		{
 			initGlobalProperties();
 		}
-		
-		return globalTestPropertyHolder ;
+
+		return globalTestPropertyHolder;
 	}
-	
-	public static MutablePropertyExpansion[] renameProperty( RenameableTestProperty property, String newName, ModelItem root )
+
+	public static MutablePropertyExpansion[] renameProperty( RenameableTestProperty property, String newName,
+			ModelItem root )
 	{
 		UISupport.setHourglassCursor();
-		
+
 		try
 		{
 			List<MutablePropertyExpansion> result = new ArrayList<MutablePropertyExpansion>();
 			List<MutablePropertyExpansion> properties = new ArrayList<MutablePropertyExpansion>();
-			
+
 			PropertyExpansion[] propertyExpansions = getPropertyExpansions( root, true, true );
 			for( PropertyExpansion pe : propertyExpansions )
 			{
-				MutablePropertyExpansion mpe = ( MutablePropertyExpansion ) pe;
-				if( mpe.getProperty().equals( property ))
+				MutablePropertyExpansion mpe = ( MutablePropertyExpansion )pe;
+				if( mpe.getProperty().equals( property ) )
 				{
 					mpe.setProperty( property );
 					properties.add( mpe );
 				}
 			}
-			
+
 			property.setName( newName );
-			
+
 			for( MutablePropertyExpansion mpe : properties )
 			{
 				try
@@ -283,34 +309,34 @@ public class PropertyExpansionUtils
 					e.printStackTrace();
 				}
 			}
-						
-			return result.toArray( new MutablePropertyExpansion[result.size()]);
+
+			return result.toArray( new MutablePropertyExpansion[result.size()] );
 		}
 		finally
 		{
 			UISupport.resetCursor();
 		}
 	}
-	
-	public static PropertyExpansion [] getPropertyExpansions( ModelItem modelItem, boolean mutableOnly, boolean deep )
+
+	public static PropertyExpansion[] getPropertyExpansions( ModelItem modelItem, boolean mutableOnly, boolean deep )
 	{
 		List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
-		
+
 		if( modelItem instanceof PropertyExpansionContainer )
 		{
-			PropertyExpansion[] pes = ((PropertyExpansionContainer)modelItem).getPropertyExpansions();
+			PropertyExpansion[] pes = ( ( PropertyExpansionContainer )modelItem ).getPropertyExpansions();
 			if( pes != null && pes.length > 0 )
 			{
-		   	for( PropertyExpansion pe : pes )
-		   	{
-		   		if( mutableOnly && !(pe instanceof MutablePropertyExpansion))
-		   			continue;
-		   		
-		   		result.add( pe );
-		   	}
+				for( PropertyExpansion pe : pes )
+				{
+					if( mutableOnly && !( pe instanceof MutablePropertyExpansion ) )
+						continue;
+
+					result.add( pe );
+				}
 			}
 		}
-		
+
 		if( deep )
 		{
 			List<? extends ModelItem> children = modelItem.getChildren();
@@ -322,43 +348,45 @@ public class PropertyExpansionUtils
 				}
 			}
 		}
-		
+
 		return result.toArray( new PropertyExpansion[result.size()] );
 	}
 
-	public static Collection<? extends PropertyExpansion> extractPropertyExpansions( ModelItem modelItem, Object target, String propertyName )
+	public static Collection<? extends PropertyExpansion> extractPropertyExpansions( ModelItem modelItem, Object target,
+			String propertyName )
 	{
 		List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
 		Set<String> expansions = new HashSet<String>();
-		
+
 		try
 		{
 			Object property = PropertyUtils.getProperty( target, propertyName );
-			if( property instanceof String && PropertyUtils.isWriteable( target, propertyName ))
+			if( property instanceof String && PropertyUtils.isWriteable( target, propertyName ) )
 			{
 				String str = property.toString();
-				
-				if( !StringUtils.isNullOrEmpty( str ))
+
+				if( !StringUtils.isNullOrEmpty( str ) )
 				{
 					int ix = str.indexOf( "${" );
 					while( ix != -1 )
 					{
 						// TODO handle nested property-expansions..
-						int ix2 = str.indexOf( '}', ix+2 );
+						int ix2 = str.indexOf( '}', ix + 2 );
 						if( ix2 == -1 )
 							break;
-						
-						String expansion = str.substring( ix+2, ix2  );
-						if( !expansions.contains( expansion ))
+
+						String expansion = str.substring( ix + 2, ix2 );
+						if( !expansions.contains( expansion ) )
 						{
-							MutablePropertyExpansion tp = createMutablePropertyExpansion( expansion, modelItem, target, propertyName );
+							MutablePropertyExpansion tp = createMutablePropertyExpansion( expansion, modelItem, target,
+									propertyName );
 							if( tp != null )
 							{
 								result.add( tp );
 								expansions.add( expansion );
 							}
 						}
-						
+
 						str = str.substring( ix2 );
 						ix = str.indexOf( "${" );
 					}
@@ -369,11 +397,12 @@ public class PropertyExpansionUtils
 		{
 			SoapUI.logError( e );
 		}
-		
+
 		return result;
 	}
-	
-	public static MutablePropertyExpansionImpl createMutablePropertyExpansion( String pe, ModelItem modelItem, Object target, String propertyName )
+
+	public static MutablePropertyExpansionImpl createMutablePropertyExpansion( String pe, ModelItem modelItem,
+			Object target, String propertyName )
 	{
 		WsdlTestStep testStep = null;
 		WsdlTestCase testCase = null;
@@ -382,76 +411,76 @@ public class PropertyExpansionUtils
 		WsdlMockService mockService = null;
 		WsdlMockResponse mockResponse = null;
 		TestPropertyHolder holder = null;
-		
+
 		if( modelItem instanceof WsdlTestStep )
 		{
-			testStep = ( WsdlTestStep ) modelItem;
+			testStep = ( WsdlTestStep )modelItem;
 			testCase = testStep.getTestCase();
 			testSuite = testCase.getTestSuite();
 			project = testSuite.getProject();
 		}
 		else if( modelItem instanceof WsdlTestCase )
 		{
-			testCase = ( WsdlTestCase ) modelItem;
+			testCase = ( WsdlTestCase )modelItem;
 			testSuite = testCase.getTestSuite();
 			project = testSuite.getProject();
 		}
 		else if( modelItem instanceof WsdlTestSuite )
 		{
-			testSuite = ( WsdlTestSuite ) modelItem;
+			testSuite = ( WsdlTestSuite )modelItem;
 			project = testSuite.getProject();
 		}
 		else if( modelItem instanceof WsdlInterface )
 		{
-			project = ((WsdlInterface)modelItem).getProject();
+			project = ( ( WsdlInterface )modelItem ).getProject();
 		}
 		else if( modelItem instanceof WsdlProject )
 		{
-			project = ( WsdlProject ) modelItem;
+			project = ( WsdlProject )modelItem;
 		}
 		else if( modelItem instanceof WsdlMockService )
 		{
-			mockService = ( WsdlMockService ) modelItem;
+			mockService = ( WsdlMockService )modelItem;
 			project = mockService.getProject();
-		}	
+		}
 		else if( modelItem instanceof AbstractHttpRequest )
 		{
-			project = ((AbstractHttpRequest<?>)modelItem).getOperation().getInterface().getProject();
+			project = ( ( AbstractHttpRequest<?> )modelItem ).getOperation().getInterface().getProject();
 		}
 		else if( modelItem instanceof WsdlMockOperation )
 		{
-			mockService = (( WsdlMockOperation ) modelItem).getMockService();
+			mockService = ( ( WsdlMockOperation )modelItem ).getMockService();
 			project = mockService.getProject();
-		}	
+		}
 		else if( modelItem instanceof WsdlMockResponse )
 		{
-			mockResponse = ( WsdlMockResponse ) modelItem;
+			mockResponse = ( WsdlMockResponse )modelItem;
 			mockService = mockResponse.getMockOperation().getMockService();
 			project = mockService.getProject();
 		}
-		
+
 		// explicit item reference?
-		if( pe.startsWith( PropertyExpansion.PROJECT_REFERENCE ))
+		if( pe.startsWith( PropertyExpansion.PROJECT_REFERENCE ) )
 		{
 			holder = project;
 			pe = pe.substring( PropertyExpansion.PROJECT_REFERENCE.length() );
 		}
-		else if( pe.startsWith( PropertyExpansion.TESTSUITE_REFERENCE ))
+		else if( pe.startsWith( PropertyExpansion.TESTSUITE_REFERENCE ) )
 		{
 			holder = testSuite;
 			pe = pe.substring( PropertyExpansion.TESTSUITE_REFERENCE.length() );
 		}
-		else if( pe.startsWith( PropertyExpansion.TESTCASE_REFERENCE ))
+		else if( pe.startsWith( PropertyExpansion.TESTCASE_REFERENCE ) )
 		{
 			holder = testCase;
 			pe = pe.substring( PropertyExpansion.TESTCASE_REFERENCE.length() );
 		}
-		else if( pe.startsWith( PropertyExpansion.MOCKSERVICE_REFERENCE ))
+		else if( pe.startsWith( PropertyExpansion.MOCKSERVICE_REFERENCE ) )
 		{
 			holder = mockService;
 			pe = pe.substring( PropertyExpansion.MOCKSERVICE_REFERENCE.length() );
 		}
-		else if( pe.startsWith( PropertyExpansion.MOCKRESPONSE_REFERENCE ))
+		else if( pe.startsWith( PropertyExpansion.MOCKRESPONSE_REFERENCE ) )
 		{
 			holder = mockResponse;
 			pe = pe.substring( PropertyExpansion.MOCKRESPONSE_REFERENCE.length() );
@@ -464,7 +493,7 @@ public class PropertyExpansionUtils
 				holder = testCase.getTestStepByName( pe.substring( 0, sepIx ) );
 				if( holder != null )
 				{
-					pe = pe.substring( sepIx+1 );
+					pe = pe.substring( sepIx + 1 );
 				}
 			}
 		}
@@ -474,75 +503,75 @@ public class PropertyExpansionUtils
 
 		if( sepIx > 0 )
 		{
-			xpath = pe.substring( sepIx+1 );
+			xpath = pe.substring( sepIx + 1 );
 			pe = pe.substring( 0, sepIx );
 		}
-		
+
 		if( holder == null )
 			holder = getGlobalProperties();
-		
+
 		TestProperty tp = holder.getProperty( pe );
 		return tp == null ? null : new MutablePropertyExpansionImpl( tp, xpath, target, propertyName );
 	}
 
 	public static String expandProperties( ModelItem contextModelItem, String content )
 	{
-		return contextModelItem == null ? expandProperties( content ) : 
-			expandProperties( new DefaultPropertyExpansionContext( contextModelItem ), content );
+		return contextModelItem == null ? expandProperties( content ) : expandProperties(
+				new DefaultPropertyExpansionContext( contextModelItem ), content );
 	}
 
-   public static class GlobalPropertyExpansionContext implements PropertyExpansionContext
-   {
-      public Object getProperty( String name )
-      {
-         return getGlobalProperties().getProperty( name );
-      }
-
-      public void setProperty( String name, Object value )
-      {
-         getGlobalProperties().setPropertyValue( name, String.valueOf( value ) );
-      }
-
-      public boolean hasProperty( String name )
-      {
-         return getGlobalProperties().hasProperty( name );
-      }
-
-      public Object removeProperty( String name )
-      {
-         return getGlobalProperties().removeProperty( name );
-      }
-
-      public String[] getPropertyNames()
-      {
-         return getGlobalProperties().getPropertyNames();
-      }
-
-      public ModelItem getModelItem()
-      {
-         return null;
-      }
-
-      public String expand( String content )
-      {
-         return expandProperties( this, content );
-      }
-
-      public StringToObjectMap getProperties()
-      {
-         StringToObjectMap result = new StringToObjectMap( );
-         Map<String, TestProperty> props = getGlobalProperties().getProperties();
-         for( String key : props.keySet() )
-         {
-            result.put( key, props.get( key ));
-         }
-
-         return result;
-      }
-   }
-
-	public static boolean containsPropertyExpansion(String str)
+	public static class GlobalPropertyExpansionContext implements PropertyExpansionContext
 	{
-		return str != null && str.indexOf("${") >= 0 && str.indexOf('}') > 2;
+		public Object getProperty( String name )
+		{
+			return getGlobalProperties().getProperty( name );
+		}
+
+		public void setProperty( String name, Object value )
+		{
+			getGlobalProperties().setPropertyValue( name, String.valueOf( value ) );
+		}
+
+		public boolean hasProperty( String name )
+		{
+			return getGlobalProperties().hasProperty( name );
+		}
+
+		public Object removeProperty( String name )
+		{
+			return getGlobalProperties().removeProperty( name );
+		}
+
+		public String[] getPropertyNames()
+		{
+			return getGlobalProperties().getPropertyNames();
+		}
+
+		public ModelItem getModelItem()
+		{
+			return null;
+		}
+
+		public String expand( String content )
+		{
+			return expandProperties( this, content );
+		}
+
+		public StringToObjectMap getProperties()
+		{
+			StringToObjectMap result = new StringToObjectMap();
+			Map<String, TestProperty> props = getGlobalProperties().getProperties();
+			for( String key : props.keySet() )
+			{
+				result.put( key, props.get( key ) );
+			}
+
+			return result;
+		}
+	}
+
+	public static boolean containsPropertyExpansion( String str )
+	{
+		return str != null && str.indexOf( "${" ) >= 0 && str.indexOf( '}' ) > 2;
 	}
 }

@@ -40,24 +40,24 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 	public static JTextComponentPopupMenu add( JTextComponent textComponent )
 	{
 		JPopupMenu componentPopupMenu = textComponent.getComponentPopupMenu();
-		
+
 		// double-check
 		if( componentPopupMenu instanceof JTextComponentPopupMenu )
-			return ( JTextComponentPopupMenu ) componentPopupMenu;
-		
+			return ( JTextComponentPopupMenu )componentPopupMenu;
+
 		JTextComponentPopupMenu popupMenu = new JTextComponentPopupMenu( textComponent );
-		if( componentPopupMenu != null && componentPopupMenu.getComponentCount() > 0)
+		if( componentPopupMenu != null && componentPopupMenu.getComponentCount() > 0 )
 		{
 			popupMenu.insert( new JSeparator(), 0 );
-			
+
 			while( componentPopupMenu.getComponentCount() > 0 )
 			{
-				Component comp = componentPopupMenu.getComponent( componentPopupMenu.getComponentCount()-1 );
+				Component comp = componentPopupMenu.getComponent( componentPopupMenu.getComponentCount() - 1 );
 				componentPopupMenu.remove( comp );
-				popupMenu.insert( comp, 0 ); 
+				popupMenu.insert( comp, 0 );
 			}
 		}
-		
+
 		if( componentPopupMenu != null )
 		{
 			for( PopupMenuListener listener : componentPopupMenu.getPopupMenuListeners() )
@@ -65,27 +65,27 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 				popupMenu.addPopupMenuListener( listener );
 			}
 		}
-		
+
 		textComponent.setComponentPopupMenu( popupMenu );
 		return popupMenu;
 	}
-	
-	private JTextComponentPopupMenu(JTextComponent textComponent)
+
+	private JTextComponentPopupMenu( JTextComponent textComponent )
 	{
 		super( "Edit" );
 		this.textComponent = textComponent;
-		
+
 		if( textComponent instanceof Undoable )
 		{
 			undoAction = new UndoAction();
 			add( undoAction );
-			
+
 			redoAction = new RedoAction();
 			add( redoAction );
-			
+
 			addSeparator();
 		}
-		
+
 		cutAction = new CutAction();
 		add( cutAction );
 		copyAction = new CopyAction();
@@ -97,16 +97,16 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 		addSeparator();
 		selectAllAction = new SelectAllAction();
 		add( selectAllAction );
-		
+
 		addPopupMenuListener( this );
 	}
-	
+
 	private final class CutAction extends AbstractAction
 	{
 		public CutAction()
 		{
 			super( "Cut" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu X" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu X" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -114,13 +114,13 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 			textComponent.cut();
 		}
 	}
-	
+
 	private final class CopyAction extends AbstractAction
 	{
 		public CopyAction()
 		{
 			super( "Copy" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu C" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu C" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -128,13 +128,13 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 			textComponent.copy();
 		}
 	}
-	
+
 	private final class PasteAction extends AbstractAction
 	{
 		public PasteAction()
 		{
 			super( "Paste" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu V" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu V" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -142,7 +142,7 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 			textComponent.paste();
 		}
 	}
-	
+
 	private final class ClearAction extends AbstractAction
 	{
 		public ClearAction()
@@ -155,13 +155,13 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 			textComponent.setText( "" );
 		}
 	}
-	
+
 	private final class SelectAllAction extends AbstractAction
 	{
 		public SelectAllAction()
 		{
 			super( "Select All" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu A" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu A" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -169,35 +169,34 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 			textComponent.selectAll();
 		}
 	}
-	
+
 	private final class UndoAction extends AbstractAction
 	{
 		public UndoAction()
 		{
 			super( "Undo" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu Z" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu Z" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
 		{
-			((Undoable)textComponent).undo();
+			( ( Undoable )textComponent ).undo();
 		}
 	}
-	
+
 	private final class RedoAction extends AbstractAction
 	{
 		public RedoAction()
 		{
 			super( "Redo" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu Y" ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu Y" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
 		{
-			((Undoable)textComponent).redo();
+			( ( Undoable )textComponent ).redo();
 		}
 	}
-	
 
 	public void popupMenuCanceled( PopupMenuEvent e )
 	{
@@ -211,11 +210,11 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 	{
 		if( textComponent instanceof Undoable )
 		{
-			undoAction.setEnabled( ((Undoable)textComponent ).canUndo() );
-			redoAction.setEnabled( ((Undoable)textComponent ).canRedo() );
+			undoAction.setEnabled( ( ( Undoable )textComponent ).canUndo() );
+			redoAction.setEnabled( ( ( Undoable )textComponent ).canRedo() );
 		}
-		
-		cutAction.setEnabled( textComponent.getSelectionEnd() !=  textComponent.getSelectionStart() );
+
+		cutAction.setEnabled( textComponent.getSelectionEnd() != textComponent.getSelectionStart() );
 		copyAction.setEnabled( cutAction.isEnabled() );
 		clearAction.setEnabled( cutAction.isEnabled() );
 		selectAllAction.setEnabled( textComponent.getText().length() > 0 );

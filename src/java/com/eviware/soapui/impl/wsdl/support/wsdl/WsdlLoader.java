@@ -12,21 +12,22 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.support.definition.support.AbstractDefinitionLoader;
-import com.eviware.soapui.impl.wsdl.support.PathUtils;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.Tools;
+import java.io.InputStream;
+import java.net.URL;
+
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.xml.sax.InputSource;
 
-import java.io.InputStream;
-import java.net.URL;
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.definition.support.AbstractDefinitionLoader;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
 
 /**
- * Abstract WSDLLocator for loading definitions from either URL or cache.. 
+ * Abstract WSDLLocator for loading definitions from either URL or cache..
  * 
  * @author ole.matzura
  */
@@ -40,11 +41,11 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 	private String password;
 	protected static final Logger log = Logger.getLogger( WsdlLoader.class );
 
-   public WsdlLoader( String url )
+	public WsdlLoader( String url )
 	{
 		this.url = url;
-		
-		if( !PathUtils.isFilePath(url) && !PathUtils.isRelativePath(url))
+
+		if( !PathUtils.isFilePath( url ) && !PathUtils.isRelativePath( url ) )
 		{
 			// check for username/password
 			try
@@ -55,11 +56,11 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 				{
 					int ix1 = authority.indexOf( '@' );
 					int ix2 = authority.indexOf( ':' );
-					
+
 					if( ix1 > ix2 && ix2 > 0 )
 					{
 						username = authority.substring( 0, ix2 );
-						password = authority.substring( ix2+1, ix1 );
+						password = authority.substring( ix2 + 1, ix1 );
 					}
 				}
 			}
@@ -69,13 +70,11 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 			}
 		}
 	}
-	
+
 	public String getUrl()
 	{
 		return url;
 	}
-
-
 
 	public InputSource getBaseInputSource()
 	{
@@ -84,14 +83,14 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 			log.debug( "Returning baseInputSource [" + url + "]" );
 			return new InputSource( load( url ) );
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
 			throw new RuntimeException( e.toString() );
 		}
 	}
 
 	public abstract InputStream load( String url ) throws Exception;
-	
+
 	public XmlObject loadXmlObject( String url, XmlOptions options ) throws Exception
 	{
 		try
@@ -100,9 +99,9 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 			{
 				options = new XmlOptions();
 			}
-			
+
 			if( monitor != null )
-				monitor.setProgress(progressIndex, "Loading [" + url + "]" );
+				monitor.setProgress( progressIndex, "Loading [" + url + "]" );
 
 			options.setLoadLineNumbers();
 			return XmlObject.Factory.parse( load( url ), options );
@@ -116,43 +115,43 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 
 	public String getBaseURI()
 	{
-//		log.debug( "Returning baseURI [" + url + "]" );
+		// log.debug( "Returning baseURI [" + url + "]" );
 		return url;
 	}
-	
+
 	public void setNewBaseURI( String newUrl )
 	{
-		if (firstNewURI == null)
+		if( firstNewURI == null )
 		{
 			firstNewURI = newUrl;
 		}
 		url = newUrl;
 	}
-	
+
 	public String getFirstNewURI()
 	{
 		return firstNewURI == null ? url : firstNewURI;
 	}
-	 
-	public InputSource getImportInputSource(String parent, String imp)
+
+	public InputSource getImportInputSource( String parent, String imp )
 	{
-		if( isAbsoluteUrl( imp ))
+		if( isAbsoluteUrl( imp ) )
 			last = imp;
 		else
-			last = Tools.joinRelativeUrl( parent, imp);
-		
+			last = Tools.joinRelativeUrl( parent, imp );
+
 		try
 		{
 			InputStream input = load( last );
 			return input == null ? null : new InputSource( input );
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
 			throw new RuntimeException( e.toString() );
 		}
 	}
 
-	protected boolean isAbsoluteUrl(String tempImp)
+	protected boolean isAbsoluteUrl( String tempImp )
 	{
 		tempImp = tempImp.toUpperCase();
 		return tempImp.startsWith( "HTTP:" ) || tempImp.startsWith( "HTTPS:" ) || tempImp.startsWith( "FILE:" );
@@ -164,7 +163,7 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 		log.debug( "Returning latest import URI [" + result + "]" );
 		return result;
 	}
-	
+
 	public boolean hasCredentials()
 	{
 		return !StringUtils.isNullOrEmpty( username ) && !StringUtils.isNullOrEmpty( password );

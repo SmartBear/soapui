@@ -34,13 +34,13 @@ public class StandaloneActionMapping<T extends ModelItem> implements SoapUIActio
 
 	public StandaloneActionMapping( SoapUIAction<T> action, String keyStroke, String iconPath )
 	{
-      if(action == null)
-         throw new IllegalArgumentException("action can't be null");
+		if( action == null )
+			throw new IllegalArgumentException( "action can't be null" );
 		this.action = action;
 		this.keyStroke = keyStroke;
 		this.iconPath = iconPath;
 	}
-	
+
 	public StandaloneActionMapping( SoapUIAction<T> action, String keyStroke )
 	{
 		this.action = action;
@@ -117,12 +117,12 @@ public class StandaloneActionMapping<T extends ModelItem> implements SoapUIActio
 
 	public boolean isEnabled()
 	{
-		return enabled  ;
+		return enabled;
 	}
 
 	public SoapUIActionMapping<T> setEnabled( boolean enabled )
 	{
 		this.enabled = enabled;
 		return this;
-	}	
+	}
 }

@@ -37,7 +37,7 @@ public final class PropertyExpansionDropTarget implements DropTargetListener
 	{
 		this.target = target;
 	}
-	
+
 	public void dragEnter( DropTargetDragEvent dtde )
 	{
 		if( !isAcceptable( dtde.getTransferable() ) )
@@ -47,19 +47,19 @@ public final class PropertyExpansionDropTarget implements DropTargetListener
 	public void dragExit( DropTargetEvent dtde )
 	{
 		if( dtde.getDropTargetContext().getComponent() instanceof JTextComponent )
-			((JTextComponent)dtde.getDropTargetContext().getComponent()).getCaret().setVisible( false );
+			( ( JTextComponent )dtde.getDropTargetContext().getComponent() ).getCaret().setVisible( false );
 		else if( dtde.getDropTargetContext().getComponent() instanceof JXEditTextArea )
-			((JXEditTextArea)dtde.getDropTargetContext().getComponent()).setCaretVisible( false );
+			( ( JXEditTextArea )dtde.getDropTargetContext().getComponent() ).setCaretVisible( false );
 	}
 
 	public void dragOver( DropTargetDragEvent dtde )
 	{
 		if( !isAcceptable( dtde.getTransferable() ) )
 			dtde.rejectDrag();
-		
+
 		if( dtde.getDropTargetContext().getComponent() instanceof JTextComponent )
 		{
-			JTextComponent textField = ( JTextComponent ) dtde.getDropTargetContext().getComponent();
+			JTextComponent textField = ( JTextComponent )dtde.getDropTargetContext().getComponent();
 			int pos = textField.viewToModel( dtde.getLocation() );
 			if( pos != -1 )
 			{
@@ -67,10 +67,10 @@ public final class PropertyExpansionDropTarget implements DropTargetListener
 				textField.getCaret().setVisible( true );
 			}
 		}
-		
+
 		if( dtde.getDropTargetContext().getComponent() instanceof JXEditTextArea )
 		{
-			JXEditTextArea textField = ( JXEditTextArea ) dtde.getDropTargetContext().getComponent();
+			JXEditTextArea textField = ( JXEditTextArea )dtde.getDropTargetContext().getComponent();
 			int pos = textField.pointToOffset( dtde.getLocation() );
 			if( pos != -1 )
 			{
@@ -78,7 +78,7 @@ public final class PropertyExpansionDropTarget implements DropTargetListener
 				textField.setCaretVisible( true );
 			}
 		}
-		
+
 		dtde.acceptDrag( dtde.getDropAction() );
 	}
 
@@ -95,20 +95,21 @@ public final class PropertyExpansionDropTarget implements DropTargetListener
 				if( transferData instanceof PropertyModelItem )
 				{
 					dtde.acceptDrop( dtde.getDropAction() );
-					PropertyModelItem modelItem =  ( PropertyModelItem ) transferData;
-					
+					PropertyModelItem modelItem = ( PropertyModelItem )transferData;
+
 					String xpath = modelItem.getXPath();
-					if( xpath == null && XmlUtils.seemsToBeXml( modelItem.getProperty().getValue()  ))
+					if( xpath == null && XmlUtils.seemsToBeXml( modelItem.getProperty().getValue() ) )
 					{
-						xpath = UISupport.selectXPath( "Create PropertyExpansion", "Select XPath below", 
-									modelItem.getProperty().getValue(), null );
-						
+						xpath = UISupport.selectXPath( "Create PropertyExpansion", "Select XPath below", modelItem
+								.getProperty().getValue(), null );
+
 						if( xpath != null )
 							xpath = XmlUtils.removeXPathNamespaceDeclarations( xpath );
 					}
 
-					target.insertPropertyExpansion( new PropertyExpansionImpl( modelItem.getProperty(), xpath ), dtde.getLocation() );
-					
+					target.insertPropertyExpansion( new PropertyExpansionImpl( modelItem.getProperty(), xpath ), dtde
+							.getLocation() );
+
 					dtde.dropComplete( true );
 				}
 			}
@@ -116,18 +117,18 @@ public final class PropertyExpansionDropTarget implements DropTargetListener
 			{
 				SoapUI.logError( e );
 			}
-			
+
 			if( dtde.getDropTargetContext().getComponent() instanceof JTextComponent )
-				((JTextComponent)dtde.getDropTargetContext().getComponent()).getCaret().setVisible( false );
+				( ( JTextComponent )dtde.getDropTargetContext().getComponent() ).getCaret().setVisible( false );
 			else if( dtde.getDropTargetContext().getComponent() instanceof JXEditTextArea )
-				((JXEditTextArea)dtde.getDropTargetContext().getComponent()).setCaretVisible( false );
+				( ( JXEditTextArea )dtde.getDropTargetContext().getComponent() ).setCaretVisible( false );
 		}
 	}
 
 	public void dropActionChanged( DropTargetDragEvent dtde )
 	{
 	}
-	
+
 	public boolean isAcceptable( Transferable transferable )
 	{
 		DataFlavor[] flavors = transferable.getTransferDataFlavors();
@@ -141,8 +142,8 @@ public final class PropertyExpansionDropTarget implements DropTargetListener
 					Object modelItem = transferable.getTransferData( flavor );
 					if( modelItem instanceof PropertyModelItem )
 					{
-						return PropertyExpansionUtils.canExpandProperty( target.getContextModelItem(), 
-									((PropertyModelItem)modelItem).getProperty() );
+						return PropertyExpansionUtils.canExpandProperty( target.getContextModelItem(),
+								( ( PropertyModelItem )modelItem ).getProperty() );
 					}
 				}
 				catch( Exception ex )
@@ -151,7 +152,7 @@ public final class PropertyExpansionDropTarget implements DropTargetListener
 				}
 			}
 		}
-		
+
 		return false;
 	}
 }

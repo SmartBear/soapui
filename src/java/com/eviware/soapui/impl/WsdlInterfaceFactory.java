@@ -34,76 +34,80 @@ public class WsdlInterfaceFactory implements InterfaceFactory<WsdlInterface>
 {
 	public final static String WSDL_TYPE = "wsdl";
 	private final static Logger log = Logger.getLogger( WsdlInterfaceFactory.class );
-	
-	public WsdlInterface build(WsdlProject project, InterfaceConfig config)
+
+	public WsdlInterface build( WsdlProject project, InterfaceConfig config )
 	{
-		return new WsdlInterface( project, (WsdlInterfaceConfig) config.changeType(WsdlInterfaceConfig.type));
+		return new WsdlInterface( project, ( WsdlInterfaceConfig )config.changeType( WsdlInterfaceConfig.type ) );
 	}
 
-	public WsdlInterface createNew(WsdlProject project, String name)
+	public WsdlInterface createNew( WsdlProject project, String name )
 	{
-		WsdlInterface iface = new WsdlInterface( project, (WsdlInterfaceConfig) project.getConfig().addNewInterface().changeType(WsdlInterfaceConfig.type));
-      iface.setName( name );
-		
+		WsdlInterface iface = new WsdlInterface( project, ( WsdlInterfaceConfig )project.getConfig().addNewInterface()
+				.changeType( WsdlInterfaceConfig.type ) );
+		iface.setName( name );
+
 		return iface;
 	}
-	
-	public static WsdlInterface [] importWsdl( WsdlProject project, String url, boolean createRequests ) throws SoapUIException
+
+	public static WsdlInterface[] importWsdl( WsdlProject project, String url, boolean createRequests )
+			throws SoapUIException
 	{
 		return importWsdl( project, url, createRequests, null, null );
 	}
-   
-	public static WsdlInterface [] importWsdl( WsdlProject project, String url, boolean createRequests, WsdlLoader wsdlLoader ) throws SoapUIException
+
+	public static WsdlInterface[] importWsdl( WsdlProject project, String url, boolean createRequests,
+			WsdlLoader wsdlLoader ) throws SoapUIException
 	{
 		return importWsdl( project, url, createRequests, null, wsdlLoader );
 	}
-	
-   public static WsdlInterface [] importWsdl( WsdlProject project, String url, boolean createRequests, QName bindingName, WsdlLoader wsdlLoader ) throws SoapUIException
-   {
-   	WsdlInterface[] result;
-   	
-		PropertyExpansionContext context = new DefaultPropertyExpansionContext(project.getModelItem()) ;
+
+	public static WsdlInterface[] importWsdl( WsdlProject project, String url, boolean createRequests,
+			QName bindingName, WsdlLoader wsdlLoader ) throws SoapUIException
+	{
+		WsdlInterface[] result;
+
+		PropertyExpansionContext context = new DefaultPropertyExpansionContext( project.getModelItem() );
 		url = PropertyExpansionUtils.expandProperties( context, url );
-      try
-      {
-         result = WsdlImporter.importWsdl( project, url, bindingName, wsdlLoader );
-      }
-      catch (Exception e)
-      {
-         log.error( "Error importing wsdl: " + e );
-         SoapUI.logError( e );
-         throw new SoapUIException( "Error importing wsdl", e );
-      }
-      
-      try
-      {      
+		try
+		{
+			result = WsdlImporter.importWsdl( project, url, bindingName, wsdlLoader );
+		}
+		catch( Exception e )
+		{
+			log.error( "Error importing wsdl: " + e );
+			SoapUI.logError( e );
+			throw new SoapUIException( "Error importing wsdl", e );
+		}
+
+		try
+		{
 			if( createRequests && result != null )
-         {
-         	for (WsdlInterface iface : result)
+			{
+				for( WsdlInterface iface : result )
 				{
-         		for( int c = 0; c < iface.getOperationCount(); c++ )
-         		{
-         			WsdlOperation operation = iface.getOperationAt( c );
-         			WsdlRequest request = operation.addNewRequest( "Request 1");
-                  try
-                  {
-                     String requestContent = operation.createRequest( true );
-							request.setRequestContent( requestContent);
-                  }
-                  catch (Exception e)
-                  {
-                     SoapUI.logError( e );
-                  }
-         		}
+					for( int c = 0; c < iface.getOperationCount(); c++ )
+					{
+						WsdlOperation operation = iface.getOperationAt( c );
+						WsdlRequest request = operation.addNewRequest( "Request 1" );
+						try
+						{
+							String requestContent = operation.createRequest( true );
+							request.setRequestContent( requestContent );
+						}
+						catch( Exception e )
+						{
+							SoapUI.logError( e );
+						}
+					}
 				}
-         }
-      }
-      catch (Exception e)
-      {
-      	log.error( "Error creating requests: " + e.getMessage() );
-         throw new SoapUIException( "Error creating requests", e );
-      }
-      
-      return result;
-   }
+			}
+		}
+		catch( Exception e )
+		{
+			log.error( "Error creating requests: " + e.getMessage() );
+			throw new SoapUIException( "Error creating requests", e );
+		}
+
+		return result;
+	}
 }

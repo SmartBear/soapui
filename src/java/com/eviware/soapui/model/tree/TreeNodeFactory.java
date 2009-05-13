@@ -21,13 +21,13 @@ import com.eviware.soapui.model.tree.nodes.RestResourceTreeNode;
 
 public class TreeNodeFactory
 {
-	public static SoapUITreeNode createTreeNode( ModelItem modelItem, SoapUITreeModel treeModel)
+	public static SoapUITreeNode createTreeNode( ModelItem modelItem, SoapUITreeModel treeModel )
 	{
 		if( modelItem instanceof WsdlOperation )
-			return new OperationTreeNode( (Operation) modelItem, treeModel );
+			return new OperationTreeNode( ( Operation )modelItem, treeModel );
 		else if( modelItem instanceof RestResource )
-			return new RestResourceTreeNode( (RestResource) modelItem, treeModel );
-		
+			return new RestResourceTreeNode( ( RestResource )modelItem, treeModel );
+
 		return null;
 	}
 }

@@ -23,7 +23,7 @@ public interface ToolsSettings
 	public final static String JWSDP_WSCOMPILE_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "jwsdp_wscompile";
 	public final static String JWSDP_WSIMPORT_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "jwsdp_wsimport";
 	public final static String JBOSSWS_WSTOOLS_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "jbossws_wstools";
-	public final static String JAVAC_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "javac"; 
+	public final static String JAVAC_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "javac";
 	public final static String AXIS_1_X_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "axis_1_X";
 	public final static String AXIS_2_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "axis_2";
 	public final static String DOTNET_WSDL_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "dotnet_wsdl";
@@ -36,5 +36,6 @@ public interface ToolsSettings
 	public final static String TCPMON_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "tcpmon";
 	public static final String ORACLE_WSA_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "wsa";
 	public static final String WADL2JAVA_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "wadl2java";
-	//public static final String SCRIPT_LIBRARIES = ToolsSettings.class.getSimpleName() + "@" + "libraries";
+	// public static final String SCRIPT_LIBRARIES =
+	// ToolsSettings.class.getSimpleName() + "@" + "libraries";
 }

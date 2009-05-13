@@ -16,7 +16,7 @@ import org.apache.ws.security.components.crypto.Crypto;
 
 import com.eviware.soapui.config.WSSCryptoConfig;
 
-public interface WssCrypto 
+public interface WssCrypto
 {
 	String STATUS_OK = "OK";
 
@@ -27,10 +27,10 @@ public interface WssCrypto
 	public WssContainer getWssContainer();
 
 	public void udpateConfig( WSSCryptoConfig config );
-	
+
 	public String getSource();
-	
+
 	public String getPassword();
-	
+
 	public String getStatus();
 }

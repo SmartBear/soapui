@@ -29,52 +29,52 @@ import com.eviware.soapui.model.workspace.Workspace;
 
 public interface Project extends TestModelItem
 {
-   /** The id of the JBossWS project nature */
-   public static final String JBOSSWS_NATURE_ID = "com.eviware.soapui.jbosside.jbosswsNature";
-   
-   /** The id of the SoapUI project nature */
-   public static final String SOAPUI_NATURE_ID = "com.eviware.soapui.soapuiNature";
+	/** The id of the JBossWS project nature */
+	public static final String JBOSSWS_NATURE_ID = "com.eviware.soapui.jbosside.jbosswsNature";
 
-   public Workspace getWorkspace();
-   
-   public Interface getInterfaceAt(int index);
+	/** The id of the SoapUI project nature */
+	public static final String SOAPUI_NATURE_ID = "com.eviware.soapui.soapuiNature";
 
-   public Interface getInterfaceByName( String interfaceName );
-   
-   public int getInterfaceCount();
+	public Workspace getWorkspace();
 
-   public void addProjectListener( ProjectListener listener );
-   
-   public void removeProjectListener( ProjectListener listener );
-   
-   public int getTestSuiteCount();
-   
-   public TestSuite getTestSuiteAt( int index );
-   
-   public TestSuite getTestSuiteByName( String testSuiteName );
-   
-   public TestSuite addNewTestSuite(String name);
-   
-   public int getMockServiceCount();
-   
-   public MockService getMockServiceAt( int index );
-   
-   public MockService getMockServiceByName( String mockServiceName );
-   
-   public MockService addNewMockService(String name);
-   
-   public boolean save() throws IOException;
+	public Interface getInterfaceAt( int index );
+
+	public Interface getInterfaceByName( String interfaceName );
+
+	public int getInterfaceCount();
+
+	public void addProjectListener( ProjectListener listener );
+
+	public void removeProjectListener( ProjectListener listener );
+
+	public int getTestSuiteCount();
+
+	public TestSuite getTestSuiteAt( int index );
+
+	public TestSuite getTestSuiteByName( String testSuiteName );
+
+	public TestSuite addNewTestSuite( String name );
+
+	public int getMockServiceCount();
+
+	public MockService getMockServiceAt( int index );
+
+	public MockService getMockServiceByName( String mockServiceName );
+
+	public MockService addNewMockService( String name );
+
+	public boolean save() throws IOException;
 
 	public List<TestSuite> getTestSuiteList();
 
 	public List<MockService> getMockServiceList();
-	
-	public List<Interface> getInterfaceList();
-     
-   public boolean hasNature(String natureId);
 
-   public EndpointStrategy getEndpointStrategy();
-   
+	public List<Interface> getInterfaceList();
+
+	public boolean hasNature( String natureId );
+
+	public EndpointStrategy getEndpointStrategy();
+
 	public void release();
 
 	public boolean isOpen();
@@ -82,12 +82,12 @@ public interface Project extends TestModelItem
 	public boolean isDisabled();
 
 	public String getPath();
-	
+
 	public String getResourceRoot();
-	
+
 	public String getShadowPassword();
-	
-	public void setShadowPassword(String password);
+
+	public void setShadowPassword( String password );
 
 	public void inspect();
 }

@@ -9,12 +9,12 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
- package com.eviware.soapui.support.components;
+
+package com.eviware.soapui.support.components;
 
 public interface JFormComponent
 {
-	void setValue(String value);
+	void setValue( String value );
 
 	String getValue();
 }

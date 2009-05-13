@@ -30,16 +30,17 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
 public class TestCaseLogModel extends AbstractListModel
 {
 	private List<Object> items = Collections.synchronizedList( new LinkedList<Object>() );
-	private List<SoftReference<TestStepResult>> results = Collections.synchronizedList( new LinkedList<SoftReference<TestStepResult>>());
+	private List<SoftReference<TestStepResult>> results = Collections
+			.synchronizedList( new LinkedList<SoftReference<TestStepResult>>() );
 	private int stepCount;
 	private int maxSize = 0;
 
-	public synchronized void addText(String msg)
+	public synchronized void addText( String msg )
 	{
-		items.add(msg);
-		results.add(null);
-		fireIntervalAdded(this, items.size() - 1, items.size()-1 );
-		
+		items.add( msg );
+		results.add( null );
+		fireIntervalAdded( this, items.size() - 1, items.size() - 1 );
+
 		enforceMaxSize();
 	}
 
@@ -49,25 +50,26 @@ public class TestCaseLogModel extends AbstractListModel
 		{
 			items.remove( 0 );
 			results.remove( 0 );
-			fireIntervalRemoved(this, 0, 0 );
+			fireIntervalRemoved( this, 0, 0 );
 		}
 	}
 
-	public synchronized void addTestStepResult(TestStepResult result)
+	public synchronized void addTestStepResult( TestStepResult result )
 	{
-		stepCount++;
+		stepCount++ ;
 
 		int size = items.size();
-		items.add("Step " + stepCount + " [" + result.getTestStep().getName() + "] " + result.getStatus() + ": took " + result.getTimeTaken() + " ms");
-		SoftReference<TestStepResult> ref = new SoftReference<TestStepResult>(result);
-		results.add( ref);
-		for (String msg : result.getMessages())
-		{ 
-			items.add(" -> " + msg);
-			results.add(ref);
+		items.add( "Step " + stepCount + " [" + result.getTestStep().getName() + "] " + result.getStatus() + ": took "
+				+ result.getTimeTaken() + " ms" );
+		SoftReference<TestStepResult> ref = new SoftReference<TestStepResult>( result );
+		results.add( ref );
+		for( String msg : result.getMessages() )
+		{
+			items.add( " -> " + msg );
+			results.add( ref );
 		}
 
-		fireIntervalAdded(this, size, items.size()-1 );
+		fireIntervalAdded( this, size, items.size() - 1 );
 		enforceMaxSize();
 	}
 
@@ -77,7 +79,7 @@ public class TestCaseLogModel extends AbstractListModel
 		items.clear();
 		results.clear();
 		stepCount = 0;
-		fireIntervalRemoved(this, 0, sz);
+		fireIntervalRemoved( this, 0, sz );
 	}
 
 	public int getMaxSize()
@@ -96,24 +98,24 @@ public class TestCaseLogModel extends AbstractListModel
 		return items.size();
 	}
 
-	public synchronized Object getElementAt(int arg0)
+	public synchronized Object getElementAt( int arg0 )
 	{
 		try
 		{
-			return items.get(arg0);
+			return items.get( arg0 );
 		}
-		catch (Throwable e)
+		catch( Throwable e )
 		{
 			return null;
 		}
 	}
 
-	public synchronized TestStepResult getResultAt(int index)
+	public synchronized TestStepResult getResultAt( int index )
 	{
-		if( index >= results.size())
+		if( index >= results.size() )
 			return null;
-		
-		SoftReference<TestStepResult> result = results.get(index);
+
+		SoftReference<TestStepResult> result = results.get( index );
 		return result == null ? null : result.get();
 	}
 

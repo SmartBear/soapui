@@ -12,6 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HeaderElement;
+import org.apache.commons.httpclient.NameValuePair;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -20,9 +24,6 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.settings.HttpSettings;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HeaderElement;
-import org.apache.commons.httpclient.NameValuePair;
 
 /**
  * WsdlMockResponse for a MimeResponse
@@ -30,7 +31,7 @@ import org.apache.commons.httpclient.NameValuePair;
  * @author ole.matzura
  */
 
-public class MimeMessageResponse  extends BaseHttpResponse
+public class MimeMessageResponse extends BaseHttpResponse
 {
 	private long timeTaken;
 	private long responseContentLength;
@@ -38,40 +39,41 @@ public class MimeMessageResponse  extends BaseHttpResponse
 	private MultipartMessageSupport mmSupport;
 	private PostResponseDataSource postResponseDataSource;
 
-	public MimeMessageResponse(AbstractHttpRequest<?> httpRequest, ExtendedHttpMethod httpMethod, String requestContent, PropertyExpansionContext context)
+	public MimeMessageResponse( AbstractHttpRequest<?> httpRequest, ExtendedHttpMethod httpMethod,
+			String requestContent, PropertyExpansionContext context )
 	{
 		super( httpMethod, httpRequest );
-		
+
 		this.requestContent = requestContent;
-		
+
 		try
 		{
 			postResponseDataSource = new PostResponseDataSource( httpMethod );
 			responseContentLength = postResponseDataSource.getDataSize();
-			
+
 			Header h = httpMethod.getResponseHeader( "Content-Type" );
 			HeaderElement[] elements = h.getElements();
-			
+
 			String rootPartId = null;
-			
+
 			for( HeaderElement element : elements )
 			{
 				String name = element.getName().toUpperCase();
-				if( name.startsWith( "MULTIPART/" ))
+				if( name.startsWith( "MULTIPART/" ) )
 				{
-					NameValuePair parameter = element.getParameterByName("start");
-					if (parameter != null)
+					NameValuePair parameter = element.getParameterByName( "start" );
+					if( parameter != null )
 						rootPartId = parameter.getValue();
 				}
 			}
-			
-			mmSupport = new MultipartMessageSupport( postResponseDataSource, rootPartId, httpRequest.getOperation(), false,
-					httpRequest.isPrettyPrint());
-			
-			if (httpRequest.getSettings().getBoolean(HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN))
+
+			mmSupport = new MultipartMessageSupport( postResponseDataSource, rootPartId, httpRequest.getOperation(),
+					false, httpRequest.isPrettyPrint() );
+
+			if( httpRequest.getSettings().getBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN ) )
 				this.timeTaken += httpMethod.getResponseReadTime();
 		}
-		catch ( Exception e)
+		catch( Exception e )
 		{
 			SoapUI.logError( e );
 		}
@@ -96,7 +98,7 @@ public class MimeMessageResponse  extends BaseHttpResponse
 	{
 		String oldContent = getContentAsString();
 		mmSupport.setResponseContent( responseContent );
-		
+
 		getRequest().notifyPropertyChanged( WsdlRequest.RESPONSE_CONTENT_PROPERTY, oldContent, responseContent );
 	}
 
@@ -115,13 +117,13 @@ public class MimeMessageResponse  extends BaseHttpResponse
 		return mmSupport.getContentAsString();
 	}
 
-//	public byte[] getRawRequestData()
-//	{
-//		return requestData;
-//	}
-//
-//	public byte[] getRawResponseData()
-//	{
-//		return postResponseDataSource.getData();
-//	}
+	// public byte[] getRawRequestData()
+	// {
+	// return requestData;
+	// }
+	//
+	// public byte[] getRawResponseData()
+	// {
+	// return postResponseDataSource.getData();
+	// }
 }

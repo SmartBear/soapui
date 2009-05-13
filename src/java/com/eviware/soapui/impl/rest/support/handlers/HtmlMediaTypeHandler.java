@@ -27,18 +27,18 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 public class HtmlMediaTypeHandler implements MediaTypeHandler
 {
-   public boolean canHandle( String contentType )
-   {
-      return contentType != null && contentType.equals( "text/html" );
-   }
+	public boolean canHandle( String contentType )
+	{
+		return contentType != null && contentType.equals( "text/html" );
+	}
 
-   public String createXmlRepresentation( HttpResponse response )
-   {
-      String content = response == null ? null : response.getContentAsString();
-      if( !StringUtils.hasContent( content ) )
-         return "<xml/>";
+	public String createXmlRepresentation( HttpResponse response )
+	{
+		String content = response == null ? null : response.getContentAsString();
+		if( !StringUtils.hasContent( content ) )
+			return "<xml/>";
 
-   	try
+		try
 		{
 			XmlObject xmlObject = XmlObject.Factory.parse( new ByteArrayInputStream( content.getBytes() ) );
 			return xmlObject.xmlText();
@@ -47,27 +47,27 @@ public class HtmlMediaTypeHandler implements MediaTypeHandler
 		{
 			// fall through, this wasn't xml
 		}
-            
-      try
-      {
-      	
-         Tidy tidy = new Tidy();
-         tidy.setXmlOut( true );
-         tidy.setShowWarnings( false );
-         tidy.setErrout( new PrintWriter( new StringWriter() ) );
-//         tidy.setQuiet(true);
-         tidy.setNumEntities( true );
-         tidy.setQuoteNbsp( true );
 
-         Document document = tidy.parseDOM( new ByteArrayInputStream( content.getBytes() ), null );
-         StringWriter writer = new StringWriter();
-         XmlUtils.serializePretty( document, writer );
-         return writer.toString();
-      }
-      catch( Throwable e )
-      {
-         e.printStackTrace();
-      }
-      return null;
-   }
+		try
+		{
+
+			Tidy tidy = new Tidy();
+			tidy.setXmlOut( true );
+			tidy.setShowWarnings( false );
+			tidy.setErrout( new PrintWriter( new StringWriter() ) );
+			// tidy.setQuiet(true);
+			tidy.setNumEntities( true );
+			tidy.setQuoteNbsp( true );
+
+			Document document = tidy.parseDOM( new ByteArrayInputStream( content.getBytes() ), null );
+			StringWriter writer = new StringWriter();
+			XmlUtils.serializePretty( document, writer );
+			return writer.toString();
+		}
+		catch( Throwable e )
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

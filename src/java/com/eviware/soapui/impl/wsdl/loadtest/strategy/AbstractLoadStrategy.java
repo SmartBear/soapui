@@ -38,17 +38,17 @@ public abstract class AbstractLoadStrategy implements LoadStrategy
 	private PropertyChangeSupport propertyChangeSupport;
 	private final String type;
 	private final WsdlLoadTest loadTest;
-	
+
 	public AbstractLoadStrategy( String type, WsdlLoadTest loadTest )
 	{
 		this.type = type;
 		this.loadTest = loadTest;
 		propertyChangeSupport = new PropertyChangeSupport( this );
 	}
-	
+
 	public XmlObject getConfig()
 	{
-      return null;
+		return null;
 	}
 
 	public JComponent getConfigurationPanel()
@@ -60,18 +60,18 @@ public abstract class AbstractLoadStrategy implements LoadStrategy
 	{
 		return type;
 	}
-	
+
 	public WsdlLoadTest getLoadTest()
 	{
 		return loadTest;
 	}
 
-	public void addConfigurationChangeListener(PropertyChangeListener listener)
+	public void addConfigurationChangeListener( PropertyChangeListener listener )
 	{
 		propertyChangeSupport.addPropertyChangeListener( CONFIGURATION_PROPERTY, listener );
 	}
 
-	public void removeConfigurationChangeListener(PropertyChangeListener listener)
+	public void removeConfigurationChangeListener( PropertyChangeListener listener )
 	{
 		propertyChangeSupport.removePropertyChangeListener( CONFIGURATION_PROPERTY, listener );
 	}
@@ -80,45 +80,49 @@ public abstract class AbstractLoadStrategy implements LoadStrategy
 	{
 		propertyChangeSupport.firePropertyChange( CONFIGURATION_PROPERTY, null, null );
 	}
-	
+
 	public boolean allowThreadCountChangeDuringRun()
 	{
 		return true;
 	}
 
-	public void afterLoadTest(LoadTestRunner loadTestRunner, LoadTestRunContext context)
+	public void afterLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
 	}
 
-	public void afterTestCase(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner, TestRunContext runContext)
+	public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
+			TestRunContext runContext )
 	{
 	}
 
-	public void afterTestStep(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner, TestRunContext runContext, TestStepResult testStepResult)
+	public void afterTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
+			TestRunContext runContext, TestStepResult testStepResult )
 	{
 	}
 
-	public void beforeLoadTest(LoadTestRunner loadTestRunner, LoadTestRunContext context)
+	public void beforeLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
 	}
 
-	public void beforeTestCase(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner, TestRunContext runContext)
+	public void beforeTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
+			TestRunContext runContext )
 	{
 	}
 
-	public void beforeTestStep(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner, TestRunContext runContext, TestStep testStep)
-	{
-	}
-	
-	public void loadTestStarted(LoadTestRunner loadTestRunner, LoadTestRunContext context)
+	public void beforeTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
+			TestRunContext runContext, TestStep testStep )
 	{
 	}
 
-	public void loadTestStopped(LoadTestRunner loadTestRunner, LoadTestRunContext context)
+	public void loadTestStarted( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
 	}
-	
-	public void recalculate(LoadTestRunner loadTestRunner, LoadTestRunContext context)
+
+	public void loadTestStopped( LoadTestRunner loadTestRunner, LoadTestRunContext context )
+	{
+	}
+
+	public void recalculate( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
 	}
 

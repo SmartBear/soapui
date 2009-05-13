@@ -24,49 +24,47 @@ import com.eviware.soapui.support.swing.GradientPanel;
 
 public class DescriptionPanel extends GradientPanel
 {
-   private JLabel titleLabel;
-   private JLabel descriptionLabel;
-   
-   public DescriptionPanel(String title, String description, ImageIcon icon)
-   {
-      super( new BorderLayout() );
-      setBackground( UIManager.getColor( "control" ) );
-      setForeground( Color.WHITE );
-      setBorder( BorderFactory.createCompoundBorder( BorderFactory.createMatteBorder( 0, 0,
-               1, 0, Color.DARK_GRAY ), BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) ) );
+	private JLabel titleLabel;
+	private JLabel descriptionLabel;
 
-      descriptionLabel = new JLabel();
-      setDescription(description);
-      
-      JPanel innerPanel = new JPanel( new BorderLayout() );
-      innerPanel.add( descriptionLabel, BorderLayout.CENTER );
-      innerPanel.setOpaque( false );
+	public DescriptionPanel( String title, String description, ImageIcon icon )
+	{
+		super( new BorderLayout() );
+		setBackground( UIManager.getColor( "control" ) );
+		setForeground( Color.WHITE );
+		setBorder( BorderFactory.createCompoundBorder( BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.DARK_GRAY ),
+				BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) ) );
 
-      if( title != null )
-      {
-         descriptionLabel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 0, 0 ) );
-         titleLabel = new JLabel( "<html><div style=\"font-size: 9px\"><b>" + title
-                  + "</b></div></html>" );
-         innerPanel.add( titleLabel, BorderLayout.NORTH );
-      }
-      add( innerPanel, BorderLayout.CENTER );
+		descriptionLabel = new JLabel();
+		setDescription( description );
 
-      if( icon != null )
-      {
-         JLabel iconLabel = new JLabel( icon );
-         iconLabel.setBorder( BorderFactory.createEmptyBorder( 0, 10, 0, 0 ) );
-         add( iconLabel, BorderLayout.EAST );
-      }
-   }
+		JPanel innerPanel = new JPanel( new BorderLayout() );
+		innerPanel.add( descriptionLabel, BorderLayout.CENTER );
+		innerPanel.setOpaque( false );
 
-   public void setTitle(String title)
-   {
-      titleLabel.setText( "<html><div style=\"font-size: 9px\"><b>" + title
-            + "</b></div></html>" );
-   }
+		if( title != null )
+		{
+			descriptionLabel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 0, 0 ) );
+			titleLabel = new JLabel( "<html><div style=\"font-size: 9px\"><b>" + title + "</b></div></html>" );
+			innerPanel.add( titleLabel, BorderLayout.NORTH );
+		}
+		add( innerPanel, BorderLayout.CENTER );
 
-   public void setDescription(String description)
-   {
-      descriptionLabel.setText( "<html><div style=\"font-size: 9px\">" + description + "</div></html>" );
-   }
+		if( icon != null )
+		{
+			JLabel iconLabel = new JLabel( icon );
+			iconLabel.setBorder( BorderFactory.createEmptyBorder( 0, 10, 0, 0 ) );
+			add( iconLabel, BorderLayout.EAST );
+		}
+	}
+
+	public void setTitle( String title )
+	{
+		titleLabel.setText( "<html><div style=\"font-size: 9px\"><b>" + title + "</b></div></html>" );
+	}
+
+	public void setDescription( String description )
+	{
+		descriptionLabel.setText( "<html><div style=\"font-size: 9px\">" + description + "</div></html>" );
+	}
 }

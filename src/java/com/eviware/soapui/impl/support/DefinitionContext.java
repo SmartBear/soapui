@@ -21,11 +21,11 @@ public interface DefinitionContext<T extends Interface>
 
 	public boolean isCached();
 
-   public T getInterface();
+	public T getInterface();
 
-   public InterfaceDefinition<T> getInterfaceDefinition() throws Exception;
+	public InterfaceDefinition<T> getInterfaceDefinition() throws Exception;
 
-   public String export(String path) throws Exception;
+	public String export( String path ) throws Exception;
 
-   public boolean loadIfNecessary() throws Exception;
+	public boolean loadIfNecessary() throws Exception;
 }

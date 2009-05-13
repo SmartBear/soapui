@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.model.testsuite;
 
-
 /**
  * Listener for TestSuite-related events
  * 
@@ -22,18 +21,18 @@ package com.eviware.soapui.model.testsuite;
 public interface TestSuiteListener
 {
 	void testCaseAdded( TestCase testCase );
-	   
-   void testCaseRemoved( TestCase testCase );
 
-   void testCaseMoved( TestCase testCase, int index, int offset );
-   
+	void testCaseRemoved( TestCase testCase );
+
+	void testCaseMoved( TestCase testCase, int index, int offset );
+
 	void loadTestAdded( LoadTest loadTest );
-   
-   void loadTestRemoved( LoadTest loadTest );
 
-   void testStepAdded( TestStep testStep, int index );
-	   
+	void loadTestRemoved( LoadTest loadTest );
+
+	void testStepAdded( TestStep testStep, int index );
+
 	void testStepRemoved( TestStep testStep, int index );
-	
+
 	void testStepMoved( TestStep testStep, int fromIndex, int offset );
 }

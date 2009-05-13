@@ -25,15 +25,16 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 public class RenameLoadTestAction extends AbstractSoapUIAction<WsdlLoadTest>
 {
 	public RenameLoadTestAction()
-   {
-      super( "Rename", "Renames this LoadTest" );
-   }
-   
-   public void perform( WsdlLoadTest loadTest, Object param )
 	{
-      String name = UISupport.prompt( "Specify name of LoadTest", "Rename LoadTest", loadTest.getName() );
-      if( name == null || name.equals( loadTest.getName() )) return;
-      
-      loadTest.setName( name );
-   }
+		super( "Rename", "Renames this LoadTest" );
+	}
+
+	public void perform( WsdlLoadTest loadTest, Object param )
+	{
+		String name = UISupport.prompt( "Specify name of LoadTest", "Rename LoadTest", loadTest.getName() );
+		if( name == null || name.equals( loadTest.getName() ) )
+			return;
+
+		loadTest.setName( name );
+	}
 }

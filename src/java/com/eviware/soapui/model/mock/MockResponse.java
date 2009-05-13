@@ -27,20 +27,20 @@ public interface MockResponse extends TestModelItem
 	public final static String RESPONSE_CONTENT_PROPERTY = MockResponse.class.getName() + "@responsecontent";
 	public final static String ENCODING_PROPERTY = MockResponse.class.getName() + "@encoding";
 	public final static String MTOM_NABLED_PROPERTY = MockResponse.class.getName() + "@mtom_enabled";
-	
+
 	public String getResponseContent();
-	
+
 	public void setResponseContent( String responseContent );
-	
+
 	public String getEncoding();
-	
+
 	public boolean isMtomEnabled();
-	
-	public Attachment [] getAttachments();
+
+	public Attachment[] getAttachments();
 
 	public MockOperation getMockOperation();
-	
+
 	public StringToStringMap getResponseHeaders();
-	
+
 	public MockResult getMockResult();
 }

@@ -12,6 +12,15 @@
 
 package com.eviware.soapui.model.tree.nodes;
 
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestModelItem;
@@ -26,17 +35,10 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class PropertiesTreeNode<T extends ModelItem> extends AbstractModelItemTreeNode<T>
 {
 	private List<PropertyTreeNode> propertyNodes = new ArrayList<PropertyTreeNode>();
-	private Map<String,PropertyTreeNode> propertyMap = new HashMap<String, PropertyTreeNode>();
+	private Map<String, PropertyTreeNode> propertyMap = new HashMap<String, PropertyTreeNode>();
 	private InternalTestPropertyListener testPropertyListener;
 	private final TestPropertyHolder holder;
 
@@ -44,25 +46,26 @@ public class PropertiesTreeNode<T extends ModelItem> extends AbstractModelItemTr
 	{
 		super( modelItem, parentItem, treeModel );
 		this.holder = holder;
-		
+
 		for( String name : holder.getPropertyNames() )
 		{
-			PropertyTreeNode propertyTreeNode = new PropertyTreeNode( holder.getProperty( name ), getModelItem(), holder, treeModel );
-			propertyNodes.add( propertyTreeNode);
+			PropertyTreeNode propertyTreeNode = new PropertyTreeNode( holder.getProperty( name ), getModelItem(), holder,
+					treeModel );
+			propertyNodes.add( propertyTreeNode );
 			propertyMap.put( name, propertyTreeNode );
 			getTreeModel().mapModelItem( propertyTreeNode );
 		}
-		
+
 		testPropertyListener = new InternalTestPropertyListener();
 		holder.addTestPropertyListener( testPropertyListener );
 	}
 
 	public static PropertiesTreeNode<?> createDefaultPropertiesNode( TestModelItem modelItem, SoapUITreeModel treeModel )
 	{
-		return new PropertiesTreeNode<PropertiesTreeNode.PropertiesModelItem>( 
-					new PropertiesTreeNode.PropertiesModelItem( modelItem ), modelItem, modelItem, treeModel );
+		return new PropertiesTreeNode<PropertiesTreeNode.PropertiesModelItem>(
+				new PropertiesTreeNode.PropertiesModelItem( modelItem ), modelItem, modelItem, treeModel );
 	}
-	
+
 	public int getChildCount()
 	{
 		return getTreeModel().isShowProperties() ? propertyNodes.size() : 0;
@@ -80,13 +83,13 @@ public class PropertiesTreeNode<T extends ModelItem> extends AbstractModelItemTr
 
 	public void release()
 	{
-      super.release();
-      
+		super.release();
+
 		holder.removeTestPropertyListener( testPropertyListener );
-		
+
 		for( PropertyTreeNode node : propertyNodes )
 			getTreeModel().unmapModelItem( node.getModelItem() );
-		
+
 		propertyNodes.clear();
 		propertyMap.clear();
 	}
@@ -95,32 +98,34 @@ public class PropertiesTreeNode<T extends ModelItem> extends AbstractModelItemTr
 	{
 		public void propertyAdded( String name )
 		{
-			PropertyTreeNode propertyTreeNode = new PropertyTreeNode( holder.getProperty( name ), getModelItem(), holder, getTreeModel() );
-			propertyNodes.add( propertyTreeNode);
+			PropertyTreeNode propertyTreeNode = new PropertyTreeNode( holder.getProperty( name ), getModelItem(), holder,
+					getTreeModel() );
+			propertyNodes.add( propertyTreeNode );
 			propertyMap.put( name, propertyTreeNode );
-         getTreeModel().notifyNodeInserted( propertyTreeNode );
-         
-         if( getModelItem() instanceof PropertiesModelItem )
-         {
-         	((PropertiesModelItem)getModelItem()).updateName();
-         }
+			getTreeModel().notifyNodeInserted( propertyTreeNode );
+
+			if( getModelItem() instanceof PropertiesModelItem )
+			{
+				( ( PropertiesModelItem )getModelItem() ).updateName();
+			}
 		}
 
 		public void propertyRemoved( String name )
 		{
 			SoapUITreeNode treeNode = getTreeModel().getTreeNode( propertyMap.get( name ).getModelItem() );
-      	if( propertyNodes.contains( treeNode ))
-      	{
-      		getTreeModel().notifyNodeRemoved( treeNode );
-      		propertyNodes.remove( treeNode);
-      		propertyMap.remove( name );
+			if( propertyNodes.contains( treeNode ) )
+			{
+				getTreeModel().notifyNodeRemoved( treeNode );
+				propertyNodes.remove( treeNode );
+				propertyMap.remove( name );
 
-      		if( getModelItem() instanceof PropertiesModelItem )
-            {
-            	((PropertiesModelItem)getModelItem()).updateName();
-            }
-      	}
-      	else throw new RuntimeException( "Removing unkown property" );
+				if( getModelItem() instanceof PropertiesModelItem )
+				{
+					( ( PropertiesModelItem )getModelItem() ).updateName();
+				}
+			}
+			else
+				throw new RuntimeException( "Removing unkown property" );
 		}
 
 		public void propertyRenamed( String oldName, String newName )
@@ -137,34 +142,35 @@ public class PropertiesTreeNode<T extends ModelItem> extends AbstractModelItemTr
 				propertyTreeNode.getModelItem().setName( PropertyTreeNode.buildName( holder.getProperty( name ) ) );
 		}
 
-		public void propertyMoved(String name, int oldIndex, int newIndex)
+		public void propertyMoved( String name, int oldIndex, int newIndex )
 		{
-			PropertyTreeNode node = propertyNodes.get(oldIndex);
-			getTreeModel().notifyNodeRemoved(node, false);
+			PropertyTreeNode node = propertyNodes.get( oldIndex );
+			getTreeModel().notifyNodeRemoved( node, false );
 
-			propertyNodes.remove(oldIndex);
-			propertyNodes.add(newIndex, node);
-			
-			getTreeModel().notifyNodeInserted(node);
+			propertyNodes.remove( oldIndex );
+			propertyNodes.add( newIndex, node );
+
+			getTreeModel().notifyNodeInserted( node );
 		}
 	}
-	
+
 	public static class PropertiesModelItem extends EmptyModelItem
 	{
 		private final TestPropertyHolder holder;
 
 		public PropertiesModelItem( TestPropertyHolder holder )
 		{
-			super( "Properties (" + holder.getPropertyNames().length + ")", UISupport.createImageIcon( "/properties_step.gif" ));
+			super( "Properties (" + holder.getPropertyNames().length + ")", UISupport
+					.createImageIcon( "/properties_step.gif" ) );
 			this.holder = holder;
 		}
-		
+
 		public void updateName()
 		{
 			setName( "Properties (" + holder.getPropertyNames().length + ")" );
 		}
 	}
-	
+
 	public ActionList getActions()
 	{
 		if( getModelItem() instanceof PropertiesModelItem && holder instanceof MutableTestPropertyHolder )
@@ -173,31 +179,31 @@ public class PropertiesTreeNode<T extends ModelItem> extends AbstractModelItemTr
 			actions.addAction( new AddPropertyAction() );
 			return actions;
 		}
-		
+
 		return super.getActions();
 	}
-	
+
 	private class AddPropertyAction extends AbstractAction
 	{
 		public AddPropertyAction()
 		{
 			super( "Add Property" );
-			putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
-			putValue(Action.SHORT_DESCRIPTION, "Adds a property to the property list");
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Adds a property to the property list" );
 		}
 
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed( ActionEvent e )
 		{
-			String name = UISupport.prompt("Specify unique property name", "Add Property", "");
-			if ( StringUtils.hasContent( name ))
+			String name = UISupport.prompt( "Specify unique property name", "Add Property", "" );
+			if( StringUtils.hasContent( name ) )
 			{
-				if( holder.hasProperty( name ))
+				if( holder.hasProperty( name ) )
 				{
 					UISupport.showErrorMessage( "Property name [" + name + "] already exists.." );
 					return;
 				}
-				
-				((MutableTestPropertyHolder)holder).addProperty(name);
+
+				( ( MutableTestPropertyHolder )holder ).addProperty( name );
 			}
 		}
 	}

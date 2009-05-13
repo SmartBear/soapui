@@ -36,22 +36,22 @@ public class OpenUrlAction extends AbstractAction implements HelpActionMarker
 	{
 		this( title, url, null );
 	}
-	
+
 	public OpenUrlAction( String title, String url, KeyStroke accelerator )
-   {
-      super( title );
-		this.url = url;
-		
-		putValue( Action.SHORT_DESCRIPTION, title );
-      if( accelerator != null )
-      	putValue( Action.ACCELERATOR_KEY, accelerator );
-   }
-   
-   public void actionPerformed(ActionEvent e)
 	{
-   	if( url == null )
-   		UISupport.showErrorMessage( "Missing url" );
-   	else
-   		Tools.openURL( url );
+		super( title );
+		this.url = url;
+
+		putValue( Action.SHORT_DESCRIPTION, title );
+		if( accelerator != null )
+			putValue( Action.ACCELERATOR_KEY, accelerator );
+	}
+
+	public void actionPerformed( ActionEvent e )
+	{
+		if( url == null )
+			UISupport.showErrorMessage( "Missing url" );
+		else
+			Tools.openURL( url );
 	}
 }

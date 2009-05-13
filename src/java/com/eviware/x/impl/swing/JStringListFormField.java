@@ -17,19 +17,19 @@ import com.eviware.x.form.XFormTextField;
 
 public class JStringListFormField extends AbstractSwingXFormField<StringListFormComponent> implements XFormTextField
 {
-	public JStringListFormField(String tooltip)
+	public JStringListFormField( String tooltip )
 	{
-	   this(tooltip, null);
-	}
-	
-	public JStringListFormField(String tooltip, String defaultValue)
-   {
-		super( new StringListFormComponent(tooltip, false, defaultValue) );
+		this( tooltip, null );
 	}
 
-	public void setValue(String value)
+	public JStringListFormField( String tooltip, String defaultValue )
 	{
-	   getComponent().setValue(value);
+		super( new StringListFormComponent( tooltip, false, defaultValue ) );
+	}
+
+	public void setValue( String value )
+	{
+		getComponent().setValue( value );
 	}
 
 	public String getValue()
@@ -37,7 +37,7 @@ public class JStringListFormField extends AbstractSwingXFormField<StringListForm
 		return getComponent().getValue();
 	}
 
-   public void setWidth(int columns)
-   {
-   }
+	public void setWidth( int columns )
+	{
+	}
 }

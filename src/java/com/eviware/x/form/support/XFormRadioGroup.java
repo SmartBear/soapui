@@ -36,16 +36,16 @@ import com.eviware.x.impl.swing.AbstractSwingXFormField;
 public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements XFormOptionsField
 {
 	private ButtonGroup buttonGroup;
-	private Map<String,ButtonModel> models = new HashMap<String,ButtonModel>();
+	private Map<String, ButtonModel> models = new HashMap<String, ButtonModel>();
 	private StringList items = new StringList();
 
-	public XFormRadioGroup( String [] values )
+	public XFormRadioGroup( String[] values )
 	{
 		super( new JPanel() );
-		
+
 		buttonGroup = new ButtonGroup();
-		getComponent().setLayout( new BoxLayout( getComponent(), BoxLayout.Y_AXIS ));
-		
+		getComponent().setLayout( new BoxLayout( getComponent(), BoxLayout.Y_AXIS ) );
+
 		for( String value : values )
 		{
 			addItem( value );
@@ -60,20 +60,22 @@ public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements 
 
 	public void setValue( String value )
 	{
-		buttonGroup.setSelected( models.get( value ), true ); 
+		buttonGroup.setSelected( models.get( value ), true );
 	}
 
 	public void addItem( String value )
 	{
 		JRadioButton button = new JRadioButton( value );
 		button.setActionCommand( value );
-		button.addActionListener( new ActionListener() {
+		button.addActionListener( new ActionListener()
+		{
 
 			public void actionPerformed( ActionEvent e )
 			{
 				fireValueChanged( e.getActionCommand(), null );
-			}} );
-		
+			}
+		} );
+
 		getComponent().add( button );
 		buttonGroup.add( button );
 		models.put( value, button.getModel() );
@@ -87,18 +89,18 @@ public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements 
 
 	public String[] getSelectedOptions()
 	{
-		return new String[] {getValue()};
+		return new String[] { getValue() };
 	}
 
 	public void setOptions( Object[] values )
 	{
 		while( buttonGroup.getButtonCount() > 0 )
 			buttonGroup.remove( buttonGroup.getElements().nextElement() );
-		
+
 		models.clear();
 		items.clear();
 		getComponent().removeAll();
-		
+
 		for( Object value : values )
 		{
 			addItem( value.toString() );
@@ -107,11 +109,11 @@ public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements 
 
 	public void setSelectedOptions( String[] options )
 	{
-		
+
 	}
 
 	public int[] getSelectedIndexes()
 	{
-		return new int[] { items.indexOf( getValue() )};
+		return new int[] { items.indexOf( getValue() ) };
 	}
 }

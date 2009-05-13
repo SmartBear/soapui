@@ -23,8 +23,7 @@ import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContex
 import com.eviware.soapui.support.UISupport;
 
 /**
- * Adds WS-A headers to the specified WsdlRequests
- * requestContent
+ * Adds WS-A headers to the specified WsdlRequests requestContent
  * 
  * @author dragica.soldo
  */
@@ -33,7 +32,7 @@ public class AddWsaHeadersToMockResponseAction extends AbstractAction
 {
 	private final WsdlMockResponse mockResponse;
 
-	public AddWsaHeadersToMockResponseAction( WsdlMockResponse mockResponse)
+	public AddWsaHeadersToMockResponseAction( WsdlMockResponse mockResponse )
 	{
 		super( "Add WS-A headers" );
 		this.mockResponse = mockResponse;
@@ -45,9 +44,10 @@ public class AddWsaHeadersToMockResponseAction extends AbstractAction
 		{
 			SoapVersion soapVersion = mockResponse.getOperation().getInterface().getSoapVersion();
 			String content = mockResponse.getResponseContent();
-			WsaUtils wsaUtils = new WsaUtils(content, soapVersion, mockResponse.getOperation(),new DefaultPropertyExpansionContext(mockResponse));
-			content = wsaUtils.addWSAddressingMockResponse(mockResponse);
-			mockResponse.setResponseContent(content);
+			WsaUtils wsaUtils = new WsaUtils( content, soapVersion, mockResponse.getOperation(),
+					new DefaultPropertyExpansionContext( mockResponse ) );
+			content = wsaUtils.addWSAddressingMockResponse( mockResponse );
+			mockResponse.setResponseContent( content );
 		}
 		catch( Exception e1 )
 		{

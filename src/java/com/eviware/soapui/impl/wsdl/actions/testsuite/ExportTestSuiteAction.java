@@ -22,21 +22,24 @@ public class ExportTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 
 	public ExportTestSuiteAction()
 	{
-		super("Export", "Export this test suite");
+		super( "Export", "Export this test suite" );
 	}
 
-	public void perform(WsdlTestSuite tSuite, Object param)
+	public void perform( WsdlTestSuite tSuite, Object param )
 	{
 		tSuite.beforeSave();
-		String defaultFileName = System.getProperty("user.home") + File.separator + tSuite.getName() + ".xml";
-		File file = UISupport.getFileDialogs().saveAs(this, "Select test case file", "xml", "XML", new File(defaultFileName));
-		
-		if( file == null ) return;
-      
-      String fileName = file.getAbsolutePath();
-      if( fileName == null ) return;
-       
-      tSuite.export(file);
+		String defaultFileName = System.getProperty( "user.home" ) + File.separator + tSuite.getName() + ".xml";
+		File file = UISupport.getFileDialogs().saveAs( this, "Select test case file", "xml", "XML",
+				new File( defaultFileName ) );
+
+		if( file == null )
+			return;
+
+		String fileName = file.getAbsolutePath();
+		if( fileName == null )
+			return;
+
+		tSuite.export( file );
 	}
 
 }

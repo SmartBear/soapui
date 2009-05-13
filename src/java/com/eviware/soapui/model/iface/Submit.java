@@ -23,14 +23,17 @@ public interface Submit
 	public Request getRequest();
 
 	public Response getResponse();
-	
+
 	public Status waitUntilFinished();
-	
-   public void cancel();
-   
-   public Status getStatus();
-   
-   public Exception getError();
-   
-   public enum Status { INITIALIZED, RUNNING, CANCELED, FINISHED, ERROR };
+
+	public void cancel();
+
+	public Status getStatus();
+
+	public Exception getError();
+
+	public enum Status
+	{
+		INITIALIZED, RUNNING, CANCELED, FINISHED, ERROR
+	};
 }

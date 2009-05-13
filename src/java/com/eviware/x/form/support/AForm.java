@@ -23,12 +23,15 @@ import java.lang.annotation.Target;
  * @author ole.matzura
  */
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Retention( RetentionPolicy.RUNTIME )
+@Target( ElementType.TYPE )
 public @interface AForm
 {
 	public String name();
-   public String description();
-   public String helpUrl() default "";
+
+	public String description();
+
+	public String helpUrl() default "";
+
 	public String icon() default "";
 }

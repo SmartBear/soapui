@@ -12,6 +12,11 @@
 
 package com.eviware.soapui.model.tree.nodes;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.event.TreeModelEvent;
+
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.support.WorkspaceListenerAdapter;
 import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
@@ -19,10 +24,6 @@ import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
 import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.settings.UISettings;
-
-import javax.swing.event.TreeModelEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * SoapUITreeNode for Workspace implementations
@@ -36,67 +37,69 @@ public class WorkspaceTreeNode extends AbstractModelItemTreeNode<Workspace>
 	private List<ProjectTreeNode> projectNodes = new ArrayList<ProjectTreeNode>();
 	private ReorderPropertyChangeListener propertyChangeListener = new ReorderPropertyChangeListener();
 
-	public WorkspaceTreeNode( Workspace workspace, SoapUITreeModel treeModel  )
-   {
-      super( workspace, null, treeModel );
-      
+	public WorkspaceTreeNode( Workspace workspace, SoapUITreeModel treeModel )
+	{
+		super( workspace, null, treeModel );
+
 		workspace.addWorkspaceListener( workspaceListener );
-		
+
 		for( int c = 0; c < workspace.getProjectCount(); c++ )
 		{
 			Project project = workspace.getProjectAt( c );
 			project.addPropertyChangeListener( Project.NAME_PROPERTY, propertyChangeListener );
-			projectNodes.add( new ProjectTreeNode( project, this ));
+			projectNodes.add( new ProjectTreeNode( project, this ) );
 		}
-		
+
 		initOrdering( projectNodes, UISettings.ORDER_PROJECTS );
 		getTreeModel().mapModelItems( projectNodes );
-   }
-   
-   public void release()
-   {
-   	super.release();
-   	getWorkspace().removeWorkspaceListener( workspaceListener );
-   	
-   	for( ProjectTreeNode treeNode : projectNodes )
-   	{
-   		treeNode.getModelItem().removePropertyChangeListener( Project.NAME_PROPERTY, propertyChangeListener );
-   		treeNode.release();
-   	}
-   }
+	}
 
-   public Workspace getWorkspace()
-   {
-      return (Workspace) getModelItem();
-   }
+	public void release()
+	{
+		super.release();
+		getWorkspace().removeWorkspaceListener( workspaceListener );
 
-   private class InternalWorkspaceListener extends WorkspaceListenerAdapter
-   {
-      public void projectAdded(Project project)
-      {
-      	ProjectTreeNode projectTreeNode = new ProjectTreeNode( project, WorkspaceTreeNode.this );
-			projectNodes.add( projectTreeNode);
+		for( ProjectTreeNode treeNode : projectNodes )
+		{
+			treeNode.getModelItem().removePropertyChangeListener( Project.NAME_PROPERTY, propertyChangeListener );
+			treeNode.release();
+		}
+	}
+
+	public Workspace getWorkspace()
+	{
+		return ( Workspace )getModelItem();
+	}
+
+	private class InternalWorkspaceListener extends WorkspaceListenerAdapter
+	{
+		public void projectAdded( Project project )
+		{
+			ProjectTreeNode projectTreeNode = new ProjectTreeNode( project, WorkspaceTreeNode.this );
+			projectNodes.add( projectTreeNode );
 			project.addPropertyChangeListener( Project.NAME_PROPERTY, propertyChangeListener );
 			reorder( false );
-      	getTreeModel().notifyNodeInserted( projectTreeNode );
-      }
+			getTreeModel().notifyNodeInserted( projectTreeNode );
+		}
 
-      public void projectRemoved(Project project)
-      {
-      	SoapUITreeNode treeNode = getTreeModel().getTreeNode( project );
-			if( projectNodes.contains( treeNode))
-      	{
-      		getTreeModel().notifyNodeRemoved( treeNode );
-      		projectNodes.remove( treeNode );
-      		project.removePropertyChangeListener( propertyChangeListener );
-      	}
-			else throw new RuntimeException( "Removing unkown project" ); 
-      }
-      
-      public void projectChanged( Project project )
-      {
-      	getTreeModel().notifyStructureChanged( new TreeModelEvent( WorkspaceTreeNode.this, 
-               new Object[] { getTreeModel().getPath( WorkspaceTreeNode.this ) } ));
-      }
-   }
+		public void projectRemoved( Project project )
+		{
+			SoapUITreeNode treeNode = getTreeModel().getTreeNode( project );
+			if( projectNodes.contains( treeNode ) )
+			{
+				getTreeModel().notifyNodeRemoved( treeNode );
+				projectNodes.remove( treeNode );
+				project.removePropertyChangeListener( propertyChangeListener );
+			}
+			else
+				throw new RuntimeException( "Removing unkown project" );
+		}
+
+		public void projectChanged( Project project )
+		{
+			getTreeModel().notifyStructureChanged(
+					new TreeModelEvent( WorkspaceTreeNode.this, new Object[] { getTreeModel().getPath(
+							WorkspaceTreeNode.this ) } ) );
+		}
+	}
 }

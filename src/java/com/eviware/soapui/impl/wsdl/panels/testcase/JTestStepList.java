@@ -65,9 +65,9 @@ public class JTestStepList extends JPanel
 	private JMenu appendStepMenu;
 	private final WsdlTestCase testCase;
 
-	public JTestStepList(WsdlTestCase testCase)
+	public JTestStepList( WsdlTestCase testCase )
 	{
-		super(new BorderLayout());
+		super( new BorderLayout() );
 		setDoubleBuffered( true );
 		this.testCase = testCase;
 
@@ -82,40 +82,40 @@ public class JTestStepList extends JPanel
 	private void buildUI()
 	{
 		testStepListModel = new TestStepListModel();
-		testStepList = new TestStepJList(testStepListModel);
-		testStepList.setCellRenderer(new TestStepCellRenderer());
+		testStepList = new TestStepJList( testStepListModel );
+		testStepList.setCellRenderer( new TestStepCellRenderer() );
 		testStepList.setFixedCellHeight( 22 );
-		testStepList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		testStepList.addKeyListener(new TestStepListKeyHandler());
-		
-		testStepList.addMouseListener(new ModelItemListMouseListener());
+		testStepList.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION );
+		testStepList.addKeyListener( new TestStepListKeyHandler() );
+
+		testStepList.addMouseListener( new ModelItemListMouseListener() );
 		testListPopup = new JPopupMenu();
 		testListPopup.addSeparator();
 
-		appendStepMenu = new JMenu("Append Step");
+		appendStepMenu = new JMenu( "Append Step" );
 
 		WsdlTestStepRegistry registry = WsdlTestStepRegistry.getInstance();
-		WsdlTestStepFactory[] factories = (WsdlTestStepFactory[]) registry.getFactories();
+		WsdlTestStepFactory[] factories = ( WsdlTestStepFactory[] )registry.getFactories();
 
-		for (int c = 0; c < factories.length; c++)
+		for( int c = 0; c < factories.length; c++ )
 		{
-			if (factories[c].canCreate())
-				appendStepMenu.add(new InsertTestStepAction(factories[c]));
+			if( factories[c].canCreate() )
+				appendStepMenu.add( new InsertTestStepAction( factories[c] ) );
 		}
 
-		testListPopup.add(appendStepMenu);
-		
-		testListPopup.addPopupMenuListener(new StepListPopupMenuListener(testCase));
-		testStepList.setComponentPopupMenu(testListPopup);
-		
+		testListPopup.add( appendStepMenu );
+
+		testListPopup.addPopupMenuListener( new StepListPopupMenuListener( testCase ) );
+		testStepList.setComponentPopupMenu( testListPopup );
+
 		add( testStepList, BorderLayout.CENTER );
 	}
-	
-	public void setEnabled(boolean enabled)
+
+	public void setEnabled( boolean enabled )
 	{
 		testStepList.setEnabled( enabled );
-		
-		super.setEnabled(enabled);
+
+		super.setEnabled( enabled );
 	}
 
 	private final class TestStepListKeyHandler extends ModelItemListKeyListener
@@ -123,60 +123,60 @@ public class JTestStepList extends JPanel
 		@Override
 		public ModelItem getModelItemAt( int ix )
 		{
-			return testCase.getTestStepAt(ix);
+			return testCase.getTestStepAt( ix );
 		}
 	}
 
 	private final class StepListPopupMenuListener implements PopupMenuListener
 	{
-		private StepListPopupMenuListener(WsdlTestCase case1)
+		private StepListPopupMenuListener( WsdlTestCase case1 )
 		{
 			super();
 		}
 
-		public void popupMenuWillBecomeVisible(PopupMenuEvent e)
+		public void popupMenuWillBecomeVisible( PopupMenuEvent e )
 		{
 			testListPopup.removeAll();
-			
-			if( SoapUI.getTestMonitor().hasRunningLoadTest( testCase ))
+
+			if( SoapUI.getTestMonitor().hasRunningLoadTest( testCase ) )
 			{
 				testListPopup.add( "<disabled during LoadTest>" ).setEnabled( false );
 				return;
 			}
-			
+
 			Point location = testStepList.getMousePosition();
 			int ix = -1;
 			if( location != null )
 			{
 				int index = testStepList.locationToIndex( location );
-				if( index != -1 && !testStepList.isSelectedIndex(index) && 
-							testStepList.getCellBounds( index, index ).contains( location ))
+				if( index != -1 && !testStepList.isSelectedIndex( index )
+						&& testStepList.getCellBounds( index, index ).contains( location ) )
 				{
 					testStepList.addSelectionInterval( index, index );
 					ix = index;
 				}
-				else if( index != -1 && testStepList.isSelectedIndex(index) && 
-							testStepList.getCellBounds( index, index ).contains( location ))
+				else if( index != -1 && testStepList.isSelectedIndex( index )
+						&& testStepList.getCellBounds( index, index ).contains( location ) )
 				{
 					ix = index;
 				}
 			}
-			
+
 			if( ix >= 0 )
 			{
 				int[] indices = testStepList.getSelectedIndices();
 				if( indices.length == 1 )
 				{
-					TestStep testStep = (TestStep) testCase.getTestStepAt(ix);
-					ActionSupport.addActions(ActionListBuilder.buildActions( testStep ), testListPopup);
+					TestStep testStep = ( TestStep )testCase.getTestStepAt( ix );
+					ActionSupport.addActions( ActionListBuilder.buildActions( testStep ), testListPopup );
 				}
 				else
 				{
-					ModelItem [] modelItems = new ModelItem[indices.length];
+					ModelItem[] modelItems = new ModelItem[indices.length];
 					for( int c = 0; c < indices.length; c++ )
-						modelItems[c] = testCase.getTestStepAt(indices[c]).getModelItem();
-					
-					ActionSupport.addActions(ActionListBuilder.buildMultiActions(modelItems), testListPopup);
+						modelItems[c] = testCase.getTestStepAt( indices[c] ).getModelItem();
+
+					ActionSupport.addActions( ActionListBuilder.buildMultiActions( modelItems ), testListPopup );
 				}
 			}
 			else
@@ -186,33 +186,35 @@ public class JTestStepList extends JPanel
 			}
 		}
 
-		public void popupMenuWillBecomeInvisible(PopupMenuEvent e)
+		public void popupMenuWillBecomeInvisible( PopupMenuEvent e )
 		{
 		}
 
-		public void popupMenuCanceled(PopupMenuEvent e)
+		public void popupMenuCanceled( PopupMenuEvent e )
 		{
 		}
 	}
 
-//	private final class StepListMouseListener extends MouseAdapter
-//	{
-//		public void mouseClicked(MouseEvent e)
-//		{
-//			if (e.getClickCount() < 2)
-//			{
-//				return;
-//			}
-//			
-//			ModelItem modelItem = (ModelItem) testStepList.getSelectedValue();
-//			if (modelItem == null)
-//				return;
-//
-//			Action defaultAction = ActionListBuilder.buildActions( modelItem ).getDefaultAction();
-//			if( defaultAction != null )
-//				defaultAction.actionPerformed( new ActionEvent( TestStepList.this, 0, null ));
-//		}
-//	}
+	// private final class StepListMouseListener extends MouseAdapter
+	// {
+	// public void mouseClicked(MouseEvent e)
+	// {
+	// if (e.getClickCount() < 2)
+	// {
+	// return;
+	// }
+	//			
+	// ModelItem modelItem = (ModelItem) testStepList.getSelectedValue();
+	// if (modelItem == null)
+	// return;
+	//
+	// Action defaultAction = ActionListBuilder.buildActions( modelItem
+	// ).getDefaultAction();
+	// if( defaultAction != null )
+	// defaultAction.actionPerformed( new ActionEvent( TestStepList.this, 0, null
+	// ));
+	// }
+	// }
 
 	/**
 	 * Renderer which sets icon and wider border for teststeps
@@ -224,31 +226,31 @@ public class JTestStepList extends JPanel
 	{
 		public TestStepCellRenderer()
 		{
-			setOpaque(true);
-			setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+			setOpaque( true );
+			setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
 		}
-		
-		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-				boolean cellHasFocus)
-		{
-			WsdlTestStep testStep = (WsdlTestStep) value;
-			
-			setText(testStep.getLabel());
-			setIcon(testStep.getIcon());
 
-			if (isSelected)
+		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
+				boolean cellHasFocus )
+		{
+			WsdlTestStep testStep = ( WsdlTestStep )value;
+
+			setText( testStep.getLabel() );
+			setIcon( testStep.getIcon() );
+
+			if( isSelected )
 			{
-				setBackground(list.getSelectionBackground());
-				setForeground(list.getSelectionForeground());
+				setBackground( list.getSelectionBackground() );
+				setForeground( list.getSelectionForeground() );
 			}
 			else
 			{
-				setBackground(list.getBackground());
-				setForeground(list.getForeground());
+				setBackground( list.getBackground() );
+				setForeground( list.getForeground() );
 			}
 
-			setEnabled(list.isEnabled() && !testStep.isDisabled());
-			
+			setEnabled( list.isEnabled() && !testStep.isDisabled() );
+
 			String toolTipText = list.getToolTipText();
 			if( toolTipText == null )
 				setToolTipText( testStep.getDescription() );
@@ -265,10 +267,10 @@ public class JTestStepList extends JPanel
 
 		public TestStepListModel()
 		{
-			for (int c = 0; c < getSize(); c++)
-				testCase.getTestStepAt(c).addPropertyChangeListener(this);
+			for( int c = 0; c < getSize(); c++ )
+				testCase.getTestStepAt( c ).addPropertyChangeListener( this );
 
-			testCase.getTestSuite().addTestSuiteListener(testStepListTestSuiteListener);
+			testCase.getTestSuite().addTestSuiteListener( testStepListTestSuiteListener );
 		}
 
 		public int getSize()
@@ -276,45 +278,45 @@ public class JTestStepList extends JPanel
 			return testCase.getTestStepCount();
 		}
 
-		public Object getElementAt(int index)
+		public Object getElementAt( int index )
 		{
-			return testCase.getTestStepAt(index);
+			return testCase.getTestStepAt( index );
 		}
 
-		public void propertyChange(PropertyChangeEvent arg0)
+		public void propertyChange( PropertyChangeEvent arg0 )
 		{
-			int ix = testCase.getIndexOfTestStep((TestStep) arg0.getSource());
-			if (ix == -1)
+			int ix = testCase.getIndexOfTestStep( ( TestStep )arg0.getSource() );
+			if( ix == -1 )
 				return;
 
-			fireContentsChanged(this, ix, ix);
+			fireContentsChanged( this, ix, ix );
 		}
 
 		public void release()
 		{
-			testCase.getTestSuite().removeTestSuiteListener(testStepListTestSuiteListener);
+			testCase.getTestSuite().removeTestSuiteListener( testStepListTestSuiteListener );
 
-			for (int c = 0; c < getSize(); c++)
-				testCase.getTestStepAt(c).removePropertyChangeListener(this);
+			for( int c = 0; c < getSize(); c++ )
+				testCase.getTestStepAt( c ).removePropertyChangeListener( this );
 		}
 
 		private class TestStepListTestSuiteListener extends TestSuiteListenerAdapter
 		{
-			public void testStepAdded(TestStep testStep, int ix)
+			public void testStepAdded( TestStep testStep, int ix )
 			{
 				if( testStep.getTestCase() == testCase )
 				{
-					testStep.addPropertyChangeListener(TestStepListModel.this);
-					fireIntervalAdded(TestStepListModel.this, ix, ix);
+					testStep.addPropertyChangeListener( TestStepListModel.this );
+					fireIntervalAdded( TestStepListModel.this, ix, ix );
 				}
 			}
 
-			public void testStepRemoved(TestStep testStep, int ix)
+			public void testStepRemoved( TestStep testStep, int ix )
 			{
 				if( testStep.getTestCase() == testCase )
 				{
-					testStep.removePropertyChangeListener(TestStepListModel.this);
-					fireIntervalRemoved(TestStepListModel.this, ix, ix);
+					testStep.removePropertyChangeListener( TestStepListModel.this );
+					fireIntervalRemoved( TestStepListModel.this, ix, ix );
 				}
 			}
 
@@ -323,19 +325,19 @@ public class JTestStepList extends JPanel
 			{
 				if( testStep.getTestCase() == testCase )
 				{
-					fireContentsChanged( TestStepListModel.this, fromIndex, fromIndex+offset);
+					fireContentsChanged( TestStepListModel.this, fromIndex, fromIndex + offset );
 					int selectedIndex = testStepList.getSelectedIndex();
 					if( selectedIndex == fromIndex )
 					{
-						testStepList.setSelectedIndex( fromIndex+offset );
+						testStepList.setSelectedIndex( fromIndex + offset );
 					}
-					else if( selectedIndex < fromIndex && selectedIndex >= fromIndex+offset )
+					else if( selectedIndex < fromIndex && selectedIndex >= fromIndex + offset )
 					{
-						testStepList.setSelectedIndex( selectedIndex+1 );
+						testStepList.setSelectedIndex( selectedIndex + 1 );
 					}
-					else if( selectedIndex > fromIndex && selectedIndex <= fromIndex+offset )
+					else if( selectedIndex > fromIndex && selectedIndex <= fromIndex + offset )
 					{
-						testStepList.setSelectedIndex( selectedIndex-1 );
+						testStepList.setSelectedIndex( selectedIndex - 1 );
 					}
 				}
 			}
@@ -346,39 +348,39 @@ public class JTestStepList extends JPanel
 	{
 		private final WsdlTestStepFactory factory;
 
-		public InsertTestStepAction(WsdlTestStepFactory factory)
+		public InsertTestStepAction( WsdlTestStepFactory factory )
 		{
-			super(factory.getTestStepName());
-			putValue( Action.SHORT_DESCRIPTION, factory.getTestStepDescription());
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( factory.getTestStepIconPath() ));
+			super( factory.getTestStepName() );
+			putValue( Action.SHORT_DESCRIPTION, factory.getTestStepDescription() );
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( factory.getTestStepIconPath() ) );
 			this.factory = factory;
 		}
 
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed( ActionEvent e )
 		{
-			String name = UISupport.prompt( "Specify name for new step", "Insert Step", factory.getTestStepName());
+			String name = UISupport.prompt( "Specify name for new step", "Insert Step", factory.getTestStepName() );
 			if( name != null )
 			{
-				TestStepConfig newTestStepConfig = factory.createNewTestStep(testCase, name);
+				TestStepConfig newTestStepConfig = factory.createNewTestStep( testCase, name );
 				if( newTestStepConfig != null )
 				{
-					WsdlTestStep testStep = testCase.addTestStep(newTestStepConfig);
+					WsdlTestStep testStep = testCase.addTestStep( newTestStepConfig );
 					UISupport.selectAndShow( testStep );
 				}
 			}
 		}
 	}
 
-	public void setSelectedIndex(int i)
+	public void setSelectedIndex( int i )
 	{
-		testStepList.setSelectedIndex(i);
+		testStepList.setSelectedIndex( i );
 	}
 
-	public void setSelectedValue(TestStep testStep, boolean b)
+	public void setSelectedValue( TestStep testStep, boolean b )
 	{
 		try
 		{
-			testStepList.setSelectedValue(testStep, true);
+			testStepList.setSelectedValue( testStep, true );
 		}
 		catch( RuntimeException e )
 		{
@@ -390,26 +392,26 @@ public class JTestStepList extends JPanel
 	{
 		testStepListModel.release();
 	}
-	
+
 	private static class TestStepJList extends JList implements Autoscroll
 	{
-		private AutoscrollSupport autoscrollSupport; 
+		private AutoscrollSupport autoscrollSupport;
 
 		public TestStepJList( TestStepListModel testStepListModel )
 		{
 			super( testStepListModel );
-			
-			autoscrollSupport = new AutoscrollSupport( this, new Insets(10, 10, 10, 10) );
+
+			autoscrollSupport = new AutoscrollSupport( this, new Insets( 10, 10, 10, 10 ) );
 		}
 
 		public void autoscroll( Point cursorLoc )
 		{
 			autoscrollSupport.autoscroll( cursorLoc );
 		}
-		
+
 		public Insets getAutoscrollInsets()
 		{
-			 return autoscrollSupport.getAutoscrollInsets();
+			return autoscrollSupport.getAutoscrollInsets();
 		}
 	}
 }

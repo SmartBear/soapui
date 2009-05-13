@@ -12,11 +12,10 @@
 
 package com.eviware.soapui.support.components;
 
-import com.jgoodies.looks.HeaderStyle;
-import com.jgoodies.looks.Options;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -25,16 +24,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
+
+import com.jgoodies.looks.HeaderStyle;
+import com.jgoodies.looks.Options;
+
 public class JInspectorPanelImpl extends JPanel implements PropertyChangeListener, JInspectorPanel
-{	
+{
 	private float defaultDividerLocation = 0.7F;
-	
+
 	private final JSplitPane mainSplit;
 	private JPanel inspectorPanel;
 	private int lastDividerLocation = 0;
 	private JXToolBar inspectToolbar;
 	private List<Inspector> inspectors = new ArrayList<Inspector>();
-	private Map<Inspector,JToggleButton> inspectorButtons = new HashMap<Inspector,JToggleButton>();
+	private Map<Inspector, JToggleButton> inspectorButtons = new HashMap<Inspector, JToggleButton>();
 	public Inspector currentInspector;
 
 	private final int orientation;
@@ -43,61 +54,61 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 	{
 		this( contentComponent, SwingConstants.BOTTOM );
 	}
-	
-	public JInspectorPanelImpl(JComponent contentComponent, int orientation )
+
+	public JInspectorPanelImpl( JComponent contentComponent, int orientation )
 	{
 		super( new BorderLayout() );
 		this.orientation = orientation;
 
-		inspectorPanel = new JPanel(new CardLayout());
+		inspectorPanel = new JPanel( new CardLayout() );
 		inspectorPanel.setVisible( false );
-		
-		mainSplit = new JSplitPane( orientation == SwingConstants.LEFT || orientation == SwingConstants.RIGHT ?
-					JSplitPane.HORIZONTAL_SPLIT : JSplitPane.VERTICAL_SPLIT);
+
+		mainSplit = new JSplitPane(
+				orientation == SwingConstants.LEFT || orientation == SwingConstants.RIGHT ? JSplitPane.HORIZONTAL_SPLIT
+						: JSplitPane.VERTICAL_SPLIT );
 		mainSplit.setDividerSize( 5 );
 		mainSplit.setBorder( null );
 		mainSplit.setOneTouchExpandable( false );
-		
+
 		JXToolBar toolbar = createInspectButtons();
 		if( orientation == SwingConstants.BOTTOM )
 		{
 			mainSplit.setTopComponent( contentComponent );
 			mainSplit.setBottomComponent( inspectorPanel );
 			mainSplit.setResizeWeight( 0.8 );
-			toolbar.setBorder( BorderFactory.createEmptyBorder( 1, 2, 3, 2 ));
-			add( toolbar, BorderLayout.SOUTH  );
+			toolbar.setBorder( BorderFactory.createEmptyBorder( 1, 2, 3, 2 ) );
+			add( toolbar, BorderLayout.SOUTH );
 		}
 		else if( orientation == SwingConstants.LEFT )
 		{
 			mainSplit.setRightComponent( contentComponent );
-			
+
 			JPanel p = new JPanel( new BorderLayout() );
 			p.add( toolbar );
-			toolbar.setBorder( BorderFactory.createEmptyBorder( 2, 3, 0, 4 ));
+			toolbar.setBorder( BorderFactory.createEmptyBorder( 2, 3, 0, 4 ) );
 			mainSplit.setLeftComponent( inspectorPanel );
 			mainSplit.setResizeWeight( 0.2 );
-			
+
 			toolbar.setOrientation( JToolBar.VERTICAL );
-			
-			
-			add(p, BorderLayout.WEST  );
+
+			add( p, BorderLayout.WEST );
 		}
 		else if( orientation == SwingConstants.RIGHT )
 		{
 			mainSplit.setLeftComponent( contentComponent );
-			
+
 			JPanel p = new JPanel( new BorderLayout() );
 			p.add( toolbar );
-			toolbar.setBorder( BorderFactory.createEmptyBorder( 2, 1, 0, 3 ));
+			toolbar.setBorder( BorderFactory.createEmptyBorder( 2, 1, 0, 3 ) );
 			mainSplit.setRightComponent( inspectorPanel );
 			mainSplit.setResizeWeight( 0.8 );
 			toolbar.setOrientation( JToolBar.VERTICAL );
-			add( p, BorderLayout.EAST  );
+			add( p, BorderLayout.EAST );
 		}
 
-		add(mainSplit, BorderLayout.CENTER);
+		add( mainSplit, BorderLayout.CENTER );
 	}
-	
+
 	private JXToolBar createInspectButtons()
 	{
 		inspectToolbar = new JXToolBar()
@@ -108,7 +119,7 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 				return new Dimension( 10, 10 );
 			}
 		};
-		
+
 		inspectToolbar.setRollover( true );
 		inspectToolbar.putClientProperty( Options.HEADER_STYLE_KEY, HeaderStyle.SINGLE );
 		inspectToolbar.setBorder( BorderFactory.createEmptyBorder( 3, 0, 3, 0 ) );
@@ -119,7 +130,7 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 		inspectToolbar.setOpaque( true );
 		return inspectToolbar;
 	}
-	
+
 	public float getDefaultDividerLocation()
 	{
 		return defaultDividerLocation;
@@ -135,92 +146,93 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 	{
 		if( inspectors.size() > 0 )
 		{
-			inspectToolbar.addSpace(5);
+			inspectToolbar.addSpace( 5 );
 		}
-		
+
 		inspectors.add( inspector );
 		inspector.addPropertyChangeListener( JInspectorPanelImpl.this );
-		
+
 		inspectorPanel.add( inspector.getComponent(), inspector.getInspectorId() );
-		JToggleButton button = new JToggleButton( new SelectInspectorAction( inspector ));
-		
+		JToggleButton button = new JToggleButton( new SelectInspectorAction( inspector ) );
+
 		inspectorButtons.put( inspector, button );
-		if( orientation == SwingConstants.LEFT  )
+		if( orientation == SwingConstants.LEFT )
 		{
 			String text = button.getText();
 			button.setText( null );
 			button.setPreferredSize( new Dimension( 17, 10 ) );
-			button.setIcon( new VTextIcon( inspectToolbar, text, VTextIcon.ROTATE_LEFT) );
+			button.setIcon( new VTextIcon( inspectToolbar, text, VTextIcon.ROTATE_LEFT ) );
 			inspectToolbar.add( button );
 		}
-		else if( orientation == SwingConstants.RIGHT  )
+		else if( orientation == SwingConstants.RIGHT )
 		{
 			String text = button.getText();
 			button.setText( null );
 			button.setPreferredSize( new Dimension( 17, 10 ) );
-			button.setIcon( new VTextIcon( inspectToolbar, text, VTextIcon.ROTATE_RIGHT) );
+			button.setIcon( new VTextIcon( inspectToolbar, text, VTextIcon.ROTATE_RIGHT ) );
 			inspectToolbar.add( button );
 		}
 		else
 			inspectToolbar.add( button );
-		
+
 		button.setMinimumSize( new Dimension( 10, 10 ) );
-		
+
 		inspectToolbar.invalidate();
 		repaint();
 
 		return inspector;
 	}
-	
-	public Inspector getInspector( String inspectorId  )
+
+	public Inspector getInspector( String inspectorId )
 	{
 		for( Inspector inspector : inspectors )
 		{
-			if( inspector.getInspectorId().equals( inspectorId ))
+			if( inspector.getInspectorId().equals( inspectorId ) )
 				return inspector;
 		}
-		
+
 		return null;
 	}
-	
+
 	public Inspector getInspectorByTitle( String title )
 	{
 		for( Inspector inspector : inspectors )
 		{
-			if( inspector.getTitle().equals( title ))
+			if( inspector.getTitle().equals( title ) )
 				return inspector;
 		}
-		
+
 		return null;
 	}
-	
-	public void propertyChange(PropertyChangeEvent evt)
+
+	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if( evt.getPropertyName().equals( Inspector.ENABLED_PROPERTY ))
+		if( evt.getPropertyName().equals( Inspector.ENABLED_PROPERTY ) )
 		{
 			JToggleButton toggleButton = inspectorButtons.get( evt.getSource() );
 			if( toggleButton != null )
-				toggleButton.setEnabled( ( Boolean ) evt.getNewValue() );
+				toggleButton.setEnabled( ( Boolean )evt.getNewValue() );
 		}
 	}
 
-   public JComponent getComponent() {
-      return this;
-   }
+	public JComponent getComponent()
+	{
+		return this;
+	}
 
-   public class SelectInspectorAction extends AbstractAction implements PropertyChangeListener
+	public class SelectInspectorAction extends AbstractAction implements PropertyChangeListener
 	{
 		private final Inspector inspector;
 
 		public SelectInspectorAction( Inspector inspector )
 		{
-			super( inspector.getTitle());
+			super( inspector.getTitle() );
 			this.inspector = inspector;
-			
+
 			putValue( AbstractAction.SHORT_DESCRIPTION, inspector.getDescription() );
-			putValue( AbstractAction.SMALL_ICON, inspector.getIcon());
+			putValue( AbstractAction.SMALL_ICON, inspector.getIcon() );
 			setEnabled( inspector.isEnabled() );
-			
+
 			inspector.addPropertyChangeListener( this );
 		}
 
@@ -230,10 +242,10 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 			if( !button.isSelected() )
 			{
 				deactivate();
-//				currentInspector = null;
-//				button.setBackground( inspectToolbar.getBackground() );
-//				lastDividerLocation = mainSplit.getDividerLocation();
-//				inspectorPanel.setVisible( false );
+				// currentInspector = null;
+				// button.setBackground( inspectToolbar.getBackground() );
+				// lastDividerLocation = mainSplit.getDividerLocation();
+				// inspectorPanel.setVisible( false );
 			}
 			else
 			{
@@ -243,17 +255,17 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			if( evt.getPropertyName().equals( Inspector.TITLE_PROPERTY ))
+			if( evt.getPropertyName().equals( Inspector.TITLE_PROPERTY ) )
 				putValue( AbstractAction.NAME, evt.getNewValue() );
-			else if( evt.getPropertyName().equals( Inspector.ICON_PROPERTY ))
+			else if( evt.getPropertyName().equals( Inspector.ICON_PROPERTY ) )
 				putValue( AbstractAction.SMALL_ICON, evt.getNewValue() );
-			else if( evt.getPropertyName().equals( Inspector.DESCRIPTION_PROPERTY ))
+			else if( evt.getPropertyName().equals( Inspector.DESCRIPTION_PROPERTY ) )
 				putValue( AbstractAction.SHORT_DESCRIPTION, evt.getNewValue() );
-			else if( evt.getPropertyName().equals( Inspector.ENABLED_PROPERTY ))
+			else if( evt.getPropertyName().equals( Inspector.ENABLED_PROPERTY ) )
 			{
-				boolean enable = ((Boolean)evt.getNewValue()).booleanValue();
+				boolean enable = ( ( Boolean )evt.getNewValue() ).booleanValue();
 				setEnabled( enable );
-				
+
 				if( !enable && currentInspector == inspector )
 				{
 					inspectorButtons.get( currentInspector ).setSelected( false );
@@ -261,7 +273,7 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 			}
 		}
 	}
-	
+
 	public void release()
 	{
 		for( Inspector inspector : inspectors )
@@ -269,7 +281,7 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 			inspector.removePropertyChangeListener( this );
 			inspector.release();
 		}
-		
+
 		inspectors.clear();
 		inspectorPanel.removeAll();
 		mainSplit.removeAll();
@@ -289,10 +301,10 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 	{
 		inspectorPanel.setVisible( b );
 	}
-	
+
 	public void setInspectorVisible( Inspector inspector, boolean b )
 	{
-		if( inspectorButtons.containsKey( inspector ))
+		if( inspectorButtons.containsKey( inspector ) )
 		{
 			if( !b && inspector == currentInspector )
 			{
@@ -337,30 +349,30 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 	{
 		for( Inspector inspector : inspectors )
 		{
-			if( inspector.getTitle().equals( string ))
+			if( inspector.getTitle().equals( string ) )
 			{
 				activate( inspector );
 				break;
 			}
 		}
 	}
-	
+
 	public void deactivate()
 	{
 		activate( null );
 	}
-	
+
 	public void activate( Inspector inspector )
 	{
 		if( inspector == currentInspector )
 			return;
-		
+
 		if( currentInspector != null )
 		{
 			inspectorButtons.get( currentInspector ).setSelected( false );
 			currentInspector.deactivate();
 		}
-		
+
 		if( inspector == null )
 		{
 			currentInspector = null;
@@ -370,10 +382,10 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 		{
 			JToggleButton button = inspectorButtons.get( inspector );
 			currentInspector = inspector;
-			
+
 			button.setSelected( true );
 			button.setBackground( Color.WHITE );
-			
+
 			if( !inspectorPanel.isVisible() )
 			{
 				inspectorPanel.setVisible( true );
@@ -382,10 +394,10 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 				else
 					mainSplit.setDividerLocation( lastDividerLocation );
 			}
-			
-			CardLayout cards = ( CardLayout ) inspectorPanel.getLayout();
+
+			CardLayout cards = ( CardLayout )inspectorPanel.getLayout();
 			cards.show( inspectorPanel, inspector.getInspectorId() );
-			
+
 			currentInspector.activate();
 		}
 	}
@@ -394,23 +406,23 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 	{
 		mainSplit.setTopComponent( content );
 	}
-	
+
 	public void removeInspector( Inspector inspector )
 	{
 		if( currentInspector == inspector )
 		{
 			deactivate();
 		}
-		
+
 		inspector.release();
 		inspectors.remove( inspector );
 		JToggleButton toggleButton = inspectorButtons.get( inspector );
-		
+
 		int ix = inspectToolbar.getComponentIndex( toggleButton );
 		if( ix > 1 )
-			inspectToolbar.remove( ix-1 );
-		
-		inspectToolbar.remove( toggleButton);
+			inspectToolbar.remove( ix - 1 );
+
+		inspectToolbar.remove( toggleButton );
 		inspectorPanel.remove( inspector.getComponent() );
 		inspectToolbar.repaint();
 		inspectorButtons.remove( inspector );

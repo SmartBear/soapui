@@ -12,12 +12,12 @@
 
 package com.eviware.soapui.model.testsuite;
 
+import java.util.List;
+import java.util.Map;
+
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Behaviour for an object that can be asserted
@@ -25,7 +25,7 @@ import java.util.Map;
  * @author ole.matzura
  */
 
-public interface Assertable 
+public interface Assertable
 {
 	public TestAssertion addAssertion( String selection );
 
@@ -36,30 +36,31 @@ public interface Assertable
 	public TestAssertion getAssertionAt( int c );
 
 	public void removeAssertionsListener( AssertionsListener listener );
-	
-	public void removeAssertion(TestAssertion assertion);
-	
+
+	public void removeAssertion( TestAssertion assertion );
+
 	public AssertionStatus getAssertionStatus();
-	
-	public enum AssertionStatus { UNKNOWN, VALID, FAILED }
+
+	public enum AssertionStatus
+	{
+		UNKNOWN, VALID, FAILED
+	}
 
 	public String getAssertableContent();
-	
+
 	public String getDefaultAssertableContent();
-	
+
 	public AssertableType getAssertableType();
-	
+
 	public List<TestAssertion> getAssertionList();
-	
+
 	public TestAssertion getAssertionByName( String name );
 
 	public ModelItem getModelItem();
 
 	public Interface getInterface();
-	
+
 	public TestAssertion cloneAssertion( TestAssertion source, String name );
-	
-	public Map<String,TestAssertion> getAssertions();
+
+	public Map<String, TestAssertion> getAssertions();
 }
-
-

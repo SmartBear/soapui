@@ -12,35 +12,36 @@
 
 package com.eviware.soapui.impl.support.definition.support;
 
-import com.eviware.soapui.impl.support.definition.DefinitionCache;
-import com.eviware.soapui.impl.support.definition.InterfaceDefinitionPart;
-import com.eviware.soapui.impl.wsdl.support.wsdl.AbstractWsdlDefinitionLoader;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+
+import com.eviware.soapui.impl.support.definition.DefinitionCache;
+import com.eviware.soapui.impl.support.definition.InterfaceDefinitionPart;
+import com.eviware.soapui.impl.wsdl.support.wsdl.AbstractWsdlDefinitionLoader;
+
 /**
  * WsdlLoader for cached definitions
- *
+ * 
  * @author ole.matzura
  */
 
 public class InterfaceCacheDefinitionLoader extends AbstractWsdlDefinitionLoader
 {
 	private String rootInConfig = "";
-   private DefinitionCache config;
+	private DefinitionCache config;
 
-   public InterfaceCacheDefinitionLoader( DefinitionCache config )
+	public InterfaceCacheDefinitionLoader( DefinitionCache config )
 	{
 		super( config.getRootPart().getUrl() );
 		this.config = config;
 	}
 
-   public InputStream load( String url ) throws Exception
+	public InputStream load( String url ) throws Exception
 	{
 		XmlObject xmlObject = loadXmlObject( url, null );
 		return xmlObject == null ? null : xmlObject.newInputStream();
@@ -49,7 +50,7 @@ public class InterfaceCacheDefinitionLoader extends AbstractWsdlDefinitionLoader
 	public XmlObject loadXmlObject( String url, XmlOptions options ) throws Exception
 	{
 		// required for backwards compatibility when the entire path was stored
-		if( url.endsWith( config.getRootPart().getUrl() ))
+		if( url.endsWith( config.getRootPart().getUrl() ) )
 		{
 			rootInConfig = url.substring( 0, url.length() - config.getRootPart().getUrl().length() );
 		}
@@ -57,7 +58,7 @@ public class InterfaceCacheDefinitionLoader extends AbstractWsdlDefinitionLoader
 		List<InterfaceDefinitionPart> partList = config.getDefinitionParts();
 		for( InterfaceDefinitionPart part : partList )
 		{
-			if( (rootInConfig + part.getUrl()).equalsIgnoreCase( url ) )
+			if( ( rootInConfig + part.getUrl() ).equalsIgnoreCase( url ) )
 			{
 				return getPartContent( part );
 			}
@@ -70,7 +71,7 @@ public class InterfaceCacheDefinitionLoader extends AbstractWsdlDefinitionLoader
 
 			for( InterfaceDefinitionPart part : partList )
 			{
-				if( (rootInConfig + part.getUrl()).equalsIgnoreCase( url ) )
+				if( ( rootInConfig + part.getUrl() ).equalsIgnoreCase( url ) )
 				{
 					return getPartContent( part );
 				}
@@ -83,9 +84,9 @@ public class InterfaceCacheDefinitionLoader extends AbstractWsdlDefinitionLoader
 
 			for( InterfaceDefinitionPart part : partList )
 			{
-				if( (rootInConfig + part.getUrl()).equalsIgnoreCase( url ) )
+				if( ( rootInConfig + part.getUrl() ).equalsIgnoreCase( url ) )
 				{
-					return getPartContent(  part );
+					return getPartContent( part );
 				}
 			}
 		}
@@ -101,12 +102,12 @@ public class InterfaceCacheDefinitionLoader extends AbstractWsdlDefinitionLoader
 	public void close()
 	{
 	}
-	
-	public void setNewBaseURI(String uri)
+
+	public void setNewBaseURI( String uri )
 	{
 		// not implemented
 	}
-	
+
 	public String getFirstNewURI()
 	{
 		return getBaseURI();

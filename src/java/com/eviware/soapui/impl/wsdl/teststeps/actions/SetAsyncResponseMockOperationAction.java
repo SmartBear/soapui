@@ -34,54 +34,54 @@ public class SetAsyncResponseMockOperationAction extends AbstractSoapUIAction<Ws
 
 	public SetAsyncResponseMockOperationAction()
 	{
-		super("Set MockOperation", "Sets the operation to mock");
+		super( "Set MockOperation", "Sets the operation to mock" );
 	}
 
-	public void perform(WsdlAsyncResponseTestStep target, Object param)
+	public void perform( WsdlAsyncResponseTestStep target, Object param )
 	{
 		this.testStep = target;
 
-		if (dialog == null)
+		if( dialog == null )
 		{
-			dialog = ADialogBuilder.buildDialog(Form.class);
-			dialog.getFormField(Form.INTERFACE).addFormFieldListener(new XFormFieldListener()
+			dialog = ADialogBuilder.buildDialog( Form.class );
+			dialog.getFormField( Form.INTERFACE ).addFormFieldListener( new XFormFieldListener()
 			{
-				public void valueChanged(XFormField sourceField, String newValue, String oldValue)
+				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 				{
 					WsdlProject project = testStep.getTestCase().getTestSuite().getProject();
-					dialog.setOptions(Form.OPERATION, ModelSupport.getNames(project
-							.getInterfaceByName(newValue).getOperationList()));
+					dialog.setOptions( Form.OPERATION, ModelSupport.getNames( project.getInterfaceByName( newValue )
+							.getOperationList() ) );
 				}
-			});
+			} );
 		}
 
 		WsdlProject project = target.getTestCase().getTestSuite().getProject();
-		dialog.setOptions(Form.INTERFACE, ModelSupport.getNames(project.getInterfaceList(),
-				new ModelSupport.InterfaceTypeFilter( WsdlInterfaceFactory.WSDL_TYPE )));
-		dialog.setValue(Form.INTERFACE, target.getInterface().getName());
+		dialog.setOptions( Form.INTERFACE, ModelSupport.getNames( project.getInterfaceList(),
+				new ModelSupport.InterfaceTypeFilter( WsdlInterfaceFactory.WSDL_TYPE ) ) );
+		dialog.setValue( Form.INTERFACE, target.getInterface().getName() );
 
-		dialog.setOptions(Form.OPERATION, ModelSupport.getNames(project.getInterfaceByName(
-				target.getInterface().getName()).getOperationList()));
-		dialog.setValue(Form.OPERATION, target.getOperation().getName());
+		dialog.setOptions( Form.OPERATION, ModelSupport.getNames( project.getInterfaceByName(
+				target.getInterface().getName() ).getOperationList() ) );
+		dialog.setValue( Form.OPERATION, target.getOperation().getName() );
 
-		if (dialog.show())
+		if( dialog.show() )
 		{
-			String ifaceName = dialog.getValue(Form.INTERFACE);
-			String operationName = dialog.getValue(Form.OPERATION);
+			String ifaceName = dialog.getValue( Form.INTERFACE );
+			String operationName = dialog.getValue( Form.OPERATION );
 
-			WsdlInterface iface = (WsdlInterface) project.getInterfaceByName(ifaceName);
+			WsdlInterface iface = ( WsdlInterface )project.getInterfaceByName( ifaceName );
 			WsdlOperation operation = iface.getOperationByName( operationName );
-			target.setOperation(operation.getName());
+			target.setOperation( operation.getName() );
 		}
 	}
 
-	@AForm(description = "Specify Interface/Operation for AsyncResponse", name = "Set Mock Operation")
+	@AForm( description = "Specify Interface/Operation for AsyncResponse", name = "Set Mock Operation" )
 	protected interface Form
 	{
-		@AField(name = "Interface", description = "The interface to mock", type = AFieldType.ENUMERATION)
+		@AField( name = "Interface", description = "The interface to mock", type = AFieldType.ENUMERATION )
 		public final static String INTERFACE = "Interface";
 
-		@AField(name = "Operation", description = "The operation to mock", type = AFieldType.ENUMERATION)
+		@AField( name = "Operation", description = "The operation to mock", type = AFieldType.ENUMERATION )
 		public final static String OPERATION = "Operation";
 	}
 }

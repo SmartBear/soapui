@@ -34,16 +34,16 @@ public class WsdlTestCaseSoapUIActionGroup extends DefaultSoapUIActionGroup<Wsdl
 	{
 		SoapUIActionMappingList<WsdlTestCase> actions = super.getActionMappings( modelItem );
 		SoapUIActionMapping<WsdlTestCase> toggleDisabledActionMapping = null;
-		
+
 		for( int c = 0; c < actions.size(); c++ )
 		{
-			if( actions.get( c ).getActionId().equals( ToggleDisableTestCaseAction.SOAPUI_ACTION_ID ))
+			if( actions.get( c ).getActionId().equals( ToggleDisableTestCaseAction.SOAPUI_ACTION_ID ) )
 			{
 				toggleDisabledActionMapping = actions.get( c );
 				break;
 			}
 		}
-		
+
 		if( toggleDisabledActionMapping != null )
 		{
 			if( modelItem.isDisabled() )
@@ -57,7 +57,7 @@ public class WsdlTestCaseSoapUIActionGroup extends DefaultSoapUIActionGroup<Wsdl
 				toggleDisabledActionMapping.setDescription( "Disables this TestCase" );
 			}
 		}
-		
+
 		return actions;
 	}
 }

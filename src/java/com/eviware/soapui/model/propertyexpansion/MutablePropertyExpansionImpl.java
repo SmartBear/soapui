@@ -27,7 +27,7 @@ public class MutablePropertyExpansionImpl extends PropertyExpansionImpl implemen
 		super( tp, xpath );
 		this.container = container;
 		this.propertyName = propertyName;
-		
+
 		stringRep = toString();
 	}
 
@@ -44,15 +44,15 @@ public class MutablePropertyExpansionImpl extends PropertyExpansionImpl implemen
 	public void update() throws Exception
 	{
 		String rep = toString();
-		
+
 		// not changed
-		if( stringRep.equals( rep ))
+		if( stringRep.equals( rep ) )
 			return;
-		
+
 		Object obj = PropertyUtils.getProperty( container, propertyName );
 		if( obj == null )
 			throw new Exception( "property value is null" );
-		
+
 		String str = obj.toString();
 		int ix = str.indexOf( stringRep );
 		if( ix == -1 )
@@ -60,12 +60,12 @@ public class MutablePropertyExpansionImpl extends PropertyExpansionImpl implemen
 
 		while( ix != -1 )
 		{
-			str = str.substring( 0, ix ) + rep + str.substring( ix+stringRep.length() );
+			str = str.substring( 0, ix ) + rep + str.substring( ix + stringRep.length() );
 			ix = str.indexOf( stringRep, ix + rep.length() );
 		}
-		
+
 		PropertyUtils.setProperty( container, propertyName, str );
-		
+
 		stringRep = rep;
 	}
 }

@@ -44,63 +44,65 @@ public class AddOperationToMockServiceAction extends AbstractSoapUIAction<WsdlOp
 
 		WsdlMockService mockService = null;
 		WsdlProject project = operation.getInterface().getProject();
-		
+
 		while( mockService == null )
 		{
 			if( project.getMockServiceCount() > 0 )
 			{
-				String[] mockServices = ModelSupport.getNames( project.getMockServiceList(), new String[] {CREATE_MOCKSUITE_OPTION});
-	
+				String[] mockServices = ModelSupport.getNames( project.getMockServiceList(),
+						new String[] { CREATE_MOCKSUITE_OPTION } );
+
 				// prompt
 				String option = UISupport.prompt( "Select MockService for MockOperation", title, mockServices );
 				if( option == null )
 					return;
-				
+
 				mockService = project.getMockServiceByName( option );
 			}
-	
+
 			// create new mocksuite?
 			if( mockService == null )
 			{
-				String mockServiceName = UISupport.prompt( "Enter name of new MockService", title, "MockService " + (project.getMockServiceCount()+1) );
+				String mockServiceName = UISupport.prompt( "Enter name of new MockService", title, "MockService "
+						+ ( project.getMockServiceCount() + 1 ) );
 				if( mockServiceName == null || mockServiceName.trim().length() == 0 )
 					return;
-				
+
 				mockService = project.addNewMockService( mockServiceName );
 			}
-			
-			if( mockService.hasMockOperation( operation ))
+
+			if( mockService.hasMockOperation( operation ) )
 			{
-				UISupport.showErrorMessage( "MockService [" + mockService.getName() + "] already has a MockOperation for [" +  
-							operation.getName() + "], please select another MockService" );
+				UISupport.showErrorMessage( "MockService [" + mockService.getName() + "] already has a MockOperation for ["
+						+ operation.getName() + "], please select another MockService" );
 				mockService = null;
 			}
 		}
-		
+
 		// add mockoperation
 		addOperationToMockService( operation, mockService );
 	}
 
 	public boolean addOperationToMockService( WsdlOperation operation, WsdlMockService mockService )
 	{
-		if( mockService.hasMockOperation( operation ))
+		if( mockService.hasMockOperation( operation ) )
 		{
-			UISupport.showErrorMessage( "MockService [" + mockService.getName() + "] already has a MockOperation for [" +  
-						operation.getName() + "]" );
+			UISupport.showErrorMessage( "MockService [" + mockService.getName() + "] already has a MockOperation for ["
+					+ operation.getName() + "]" );
 			return false;
 		}
-		
+
 		WsdlMockOperation mockOperation = mockService.addNewMockOperation( operation );
 		WsdlMockResponse mockResponse = mockOperation.addNewMockResponse( "Response 1", false );
-		
+
 		if( operation.isBidirectional() )
-			mockResponse.setResponseContent( operation.createResponse( true ));
-		
-		if( UISupport.confirm( "Open MockResponse editor?", getName() ))
+			mockResponse.setResponseContent( operation.createResponse( true ) );
+
+		if( UISupport.confirm( "Open MockResponse editor?", getName() ) )
 		{
 			SoapUI.getDesktop().showDesktopPanel( mockResponse );
 		}
-		
+
 		return true;
 	}
 }

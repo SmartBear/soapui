@@ -10,7 +10,6 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-
 package com.eviware.soapui.support.dnd.handlers;
 
 import com.eviware.soapui.SoapUI;
@@ -26,7 +25,7 @@ public class MockServiceToProjectDropHandler extends AbstractAfterModelItemDropH
 	{
 		super( WsdlMockService.class, WsdlProject.class );
 	}
-	
+
 	@Override
 	boolean canCopyAfter( WsdlMockService source, WsdlProject target )
 	{
@@ -42,10 +41,12 @@ public class MockServiceToProjectDropHandler extends AbstractAfterModelItemDropH
 	@Override
 	boolean copyAfter( WsdlMockService source, WsdlProject target )
 	{
-		SoapUIAction<WsdlMockService> action = SoapUI.getActionRegistry().getAction( CloneMockServiceAction.SOAPUI_ACTION_ID );
-		CloneMockServiceAction a = ( CloneMockServiceAction ) action;
-		
-		String name = UISupport.prompt( "Specify name for copied MockService", "Copy MockService", "Copy of " + source.getName() );
+		SoapUIAction<WsdlMockService> action = SoapUI.getActionRegistry().getAction(
+				CloneMockServiceAction.SOAPUI_ACTION_ID );
+		CloneMockServiceAction a = ( CloneMockServiceAction )action;
+
+		String name = UISupport.prompt( "Specify name for copied MockService", "Copy MockService", "Copy of "
+				+ source.getName() );
 		if( name == null )
 			return false;
 
@@ -57,16 +58,17 @@ public class MockServiceToProjectDropHandler extends AbstractAfterModelItemDropH
 		{
 			a.cloneToAnotherProject( source, target.getName(), name );
 		}
-		
+
 		return true;
 	}
 
 	@Override
 	boolean moveAfter( WsdlMockService source, WsdlProject target )
 	{
-		SoapUIAction<WsdlMockService> action = SoapUI.getActionRegistry().getAction( CloneMockServiceAction.SOAPUI_ACTION_ID );
-		CloneMockServiceAction a = ( CloneMockServiceAction ) action;
-		
+		SoapUIAction<WsdlMockService> action = SoapUI.getActionRegistry().getAction(
+				CloneMockServiceAction.SOAPUI_ACTION_ID );
+		CloneMockServiceAction a = ( CloneMockServiceAction )action;
+
 		String name = UISupport.prompt( "Specify name for moved MockService", "Move MockService", source.getName() );
 		if( name == null )
 			return false;
@@ -89,6 +91,5 @@ public class MockServiceToProjectDropHandler extends AbstractAfterModelItemDropH
 	{
 		return "Move MockService [" + source.getName() + "] to Project [" + target.getName() + "]";
 	}
-	
-	
+
 }

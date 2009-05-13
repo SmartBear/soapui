@@ -29,7 +29,8 @@ public class JFocusableComponentInspector<T extends JComponent> implements Inspe
 	private String id;
 	private final JComponent target;
 
-	public JFocusableComponentInspector( T component, JComponent target, String title, String description, boolean enabled )
+	public JFocusableComponentInspector( T component, JComponent target, String title, String description,
+			boolean enabled )
 	{
 		this.component = component;
 		this.target = target;
@@ -48,7 +49,7 @@ public class JFocusableComponentInspector<T extends JComponent> implements Inspe
 	{
 		if( propertyChangeSupport == null )
 			propertyChangeSupport = new PropertyChangeSupport( this );
-		
+
 		propertyChangeSupport.addPropertyChangeListener( listener );
 	}
 
@@ -85,8 +86,8 @@ public class JFocusableComponentInspector<T extends JComponent> implements Inspe
 	{
 		String old = this.description;
 		this.description = description;
-		
-		if( propertyChangeSupport != null ) 
+
+		if( propertyChangeSupport != null )
 			propertyChangeSupport.firePropertyChange( Inspector.DESCRIPTION_PROPERTY, old, description );
 	}
 
@@ -94,9 +95,9 @@ public class JFocusableComponentInspector<T extends JComponent> implements Inspe
 	{
 		if( enabled == this.enabled )
 			return;
-		
+
 		this.enabled = enabled;
-		if( propertyChangeSupport != null ) 
+		if( propertyChangeSupport != null )
 			propertyChangeSupport.firePropertyChange( Inspector.ENABLED_PROPERTY, !enabled, enabled );
 	}
 
@@ -104,8 +105,8 @@ public class JFocusableComponentInspector<T extends JComponent> implements Inspe
 	{
 		String old = this.title;
 		this.title = title;
-		
-		if( propertyChangeSupport != null ) 
+
+		if( propertyChangeSupport != null )
 			propertyChangeSupport.firePropertyChange( Inspector.TITLE_PROPERTY, old, title );
 	}
 
@@ -123,9 +124,9 @@ public class JFocusableComponentInspector<T extends JComponent> implements Inspe
 	public void setIcon( ImageIcon imageIcon )
 	{
 		ImageIcon old = this.imageIcon;
-		
+
 		this.imageIcon = imageIcon;
-		if( propertyChangeSupport != null ) 
+		if( propertyChangeSupport != null )
 			propertyChangeSupport.firePropertyChange( Inspector.ICON_PROPERTY, old, imageIcon );
 	}
 

@@ -14,10 +14,10 @@ package com.eviware.x.form;
 
 public class ValidationMessage
 {
-   private String message;
+	private String message;
 	private XFormField formField;
 
-	public ValidationMessage(String message, XFormField formField)
+	public ValidationMessage( String message, XFormField formField )
 	{
 		super();
 		this.message = message;
@@ -25,21 +25,21 @@ public class ValidationMessage
 	}
 
 	public XFormField getFormField()
-   {
+	{
 		return formField;
-   }
-   
-   public String getMessage()
-   {
-   	return message;
-   }
+	}
 
-	public void setFormField(XFormField formField)
+	public String getMessage()
+	{
+		return message;
+	}
+
+	public void setFormField( XFormField formField )
 	{
 		this.formField = formField;
 	}
 
-	public void setMessage(String message)
+	public void setMessage( String message )
 	{
 		this.message = message;
 	}

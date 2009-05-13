@@ -29,12 +29,12 @@ public class WsdlLoadTestsModelItem extends EmptyModelItem
 {
 	private TestCase testCase;
 	private TestSuiteListener listener = new InternalTestSuiteListener();
-	
+
 	public WsdlLoadTestsModelItem( TestCase testCase )
 	{
-		super( createLabel( testCase ),  UISupport.createImageIcon("/loadtests.gif") );
+		super( createLabel( testCase ), UISupport.createImageIcon( "/loadtests.gif" ) );
 		this.testCase = testCase;
-		
+
 		testCase.getTestSuite().addTestSuiteListener( listener );
 	}
 
@@ -54,18 +54,18 @@ public class WsdlLoadTestsModelItem extends EmptyModelItem
 		super.release();
 		testCase.getTestSuite().removeTestSuiteListener( listener );
 	}
-	
+
 	@Override
 	public String getName()
 	{
-		return createLabel(testCase);
+		return createLabel( testCase );
 	}
 
 	public void updateLabel()
 	{
-		setName( createLabel( testCase ) ); 
+		setName( createLabel( testCase ) );
 	}
-	
+
 	public class InternalTestSuiteListener extends TestSuiteListenerAdapter implements TestSuiteListener
 	{
 		@Override

@@ -25,29 +25,29 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 public class AddNewMockServiceAction extends AbstractSoapUIAction<WsdlProject>
 {
-   public static final String SOAPUI_ACTION_ID = "AddNewMockServiceAction";
+	public static final String SOAPUI_ACTION_ID = "AddNewMockServiceAction";
 
-	public AddNewMockServiceAction() 
-   {
-      super( "New MockService", "Creates a new MockService in this project" );
-     // putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu O" ));
-   }
-   
-   public void perform( WsdlProject target, Object param )
+	public AddNewMockServiceAction()
 	{
-      createMockService( target );
-   }
+		super( "New MockService", "Creates a new MockService in this project" );
+		// putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu O" ));
+	}
+
+	public void perform( WsdlProject target, Object param )
+	{
+		createMockService( target );
+	}
 
 	public WsdlMockService createMockService( WsdlProject project )
 	{
-		String name = UISupport.prompt( "Specify name of MockService", "New MockService", 
-      		"MockService " + (project.getMockServiceCount()+1) );
-      if( name == null ) 
-      	return null;
-      
-      WsdlMockService mockService = project.addNewMockService( name );
-      UISupport.select( mockService );
-      
-      return mockService;
+		String name = UISupport.prompt( "Specify name of MockService", "New MockService", "MockService "
+				+ ( project.getMockServiceCount() + 1 ) );
+		if( name == null )
+			return null;
+
+		WsdlMockService mockService = project.addNewMockService( name );
+		UISupport.select( mockService );
+
+		return mockService;
 	}
 }

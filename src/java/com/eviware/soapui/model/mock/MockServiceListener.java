@@ -20,11 +20,11 @@ package com.eviware.soapui.model.mock;
 
 public interface MockServiceListener
 {
-   void mockOperationAdded( MockOperation operation );
-   
-   void mockOperationRemoved( MockOperation operation );
-   
-   void mockResponseAdded( MockResponse request );
-   
-   void mockResponseRemoved( MockResponse request );
+	void mockOperationAdded( MockOperation operation );
+
+	void mockOperationRemoved( MockOperation operation );
+
+	void mockResponseAdded( MockResponse request );
+
+	void mockResponseRemoved( MockResponse request );
 }

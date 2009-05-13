@@ -55,11 +55,11 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 		this.config = config;
 		this.outgoingWss = outgoingWss;
 		this.label = label;
-		
+
 		if( config.getConfiguration() == null )
 			config.addNewConfiguration();
-		
-		load( new XmlObjectConfigurationReader( config.getConfiguration() ));
+
+		load( new XmlObjectConfigurationReader( config.getConfiguration() ) );
 	}
 
 	public OutgoingWss getOutgoingWss()
@@ -70,18 +70,18 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 	public String getPassword()
 	{
 		String password = config.getPassword();
-		if( StringUtils.isNullOrEmpty( password ))
+		if( StringUtils.isNullOrEmpty( password ) )
 			password = outgoingWss.getPassword();
-		
+
 		return password;
 	}
 
 	public String getUsername()
 	{
 		String username = config.getUsername();
-		if( StringUtils.isNullOrEmpty( username ))
+		if( StringUtils.isNullOrEmpty( username ) )
 			username = outgoingWss.getUsername();
-		
+
 		return username;
 	}
 
@@ -99,19 +99,19 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 	{
 		if( configComponent == null )
 			configComponent = buildUI();
-		
+
 		return configComponent;
 	}
-	
+
 	public String getLabel()
 	{
 		return label;
 	}
 
 	protected abstract JComponent buildUI();
-	
+
 	protected abstract void load( XmlObjectConfigurationReader reader );
-	
+
 	public void setConfig( WSSEntryConfig config )
 	{
 		this.config = config;
@@ -123,35 +123,37 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 		save( builder );
 		config.getConfiguration().set( builder.finish() );
 	}
-	
+
 	protected abstract void save( XmlObjectConfigurationBuilder builder );
 
 	public WssContainer getWssContainer()
 	{
 		return outgoingWss.getWssContainer();
 	}
-	
+
 	public void addPropertyChangeListener( PropertyChangeListener listener )
-	{}
-	
+	{
+	}
+
 	public void removePropertyChangeListener( PropertyChangeListener listener )
-	{}
-	
+	{
+	}
+
 	public PropertyExpansion[] getPropertyExpansions()
 	{
 		PropertyExpansionsResult result = new PropertyExpansionsResult( getWssContainer().getModelItem(), this );
-		
+
 		addPropertyExpansions( result );
-		
+
 		return result.toArray();
 	}
 
 	protected void addPropertyExpansions( PropertyExpansionsResult result )
 	{
-		if( StringUtils.hasContent( config.getUsername() ))
+		if( StringUtils.hasContent( config.getUsername() ) )
 			result.extractAndAddAll( "username" );
-		
-		if( StringUtils.hasContent( config.getPassword() ))
+
+		if( StringUtils.hasContent( config.getPassword() ) )
 			result.extractAndAddAll( "password" );
 	}
 
@@ -165,7 +167,7 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 	{
 		return getLabel();
 	}
-	
+
 	protected List<StringToStringMap> readParts( XmlObjectConfigurationReader reader, String parameterName )
 	{
 		List<StringToStringMap> result = new ArrayList<StringToStringMap>();
@@ -174,40 +176,40 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 		{
 			for( String part : parts )
 			{
-				result.add( StringToStringMap.fromXml( part ));
+				result.add( StringToStringMap.fromXml( part ) );
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	protected Vector<WSEncryptionPart> createWSParts( List<StringToStringMap> parts )
 	{
 		Vector<WSEncryptionPart> result = new Vector<WSEncryptionPart>();
-		
+
 		for( StringToStringMap map : parts )
 		{
-			if( map.hasValue( "id" ))
+			if( map.hasValue( "id" ) )
 			{
-				result.add( new WSEncryptionPart( map.get( "id" ), map.get( "enc" )) );
+				result.add( new WSEncryptionPart( map.get( "id" ), map.get( "enc" ) ) );
 			}
 			else
 			{
-				String ns = map.get( "namespace");
+				String ns = map.get( "namespace" );
 				if( ns == null )
 					ns = "";
-				
-				String name = map.get("name");
-				if( StringUtils.hasContent(name))
+
+				String name = map.get( "name" );
+				if( StringUtils.hasContent( name ) )
 				{
-					result.add( new WSEncryptionPart( name, ns, map.get( "enc")) );
+					result.add( new WSEncryptionPart( name, ns, map.get( "enc" ) ) );
 				}
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	protected void saveParts( XmlObjectConfigurationBuilder builder, List<StringToStringMap> parts, String string )
 	{
 		for( StringToStringMap part : parts )
@@ -215,12 +217,12 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 			builder.add( string, part.toXml() );
 		}
 	}
-	
+
 	protected class KeyIdentifierTypeRenderer extends DefaultListCellRenderer
 	{
 		@Override
 		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
-					boolean cellHasFocus )
+				boolean cellHasFocus )
 		{
 			Component result = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
 
@@ -248,7 +250,7 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 			return result;
 		}
 	}
-	
+
 	protected class KeyAliasComboBoxModel extends AbstractListModel implements ComboBoxModel
 	{
 		private KeyStore keyStore;
@@ -263,24 +265,24 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 		void update( WssCrypto crypto )
 		{
 			keyStore = crypto == null || crypto.getCrypto() == null ? null : crypto.getCrypto().getKeyStore();
-			
+
 			if( keyStore != null )
 			{
 				if( !aliases.isEmpty() )
 				{
 					int sz = aliases.size();
 					aliases.clear();
-					fireIntervalRemoved( this, 0, sz-1 );
+					fireIntervalRemoved( this, 0, sz - 1 );
 				}
-				
+
 				try
 				{
 					for( Enumeration e = keyStore.aliases(); e.hasMoreElements(); )
 					{
 						aliases.add( e.nextElement().toString() );
 					}
-					
-					fireIntervalAdded( this, 0, aliases.size()-1 );
+
+					fireIntervalAdded( this, 0, aliases.size() - 1 );
 				}
 				catch( KeyStoreException e )
 				{
@@ -288,7 +290,7 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 				}
 			}
 		}
-		
+
 		public Object getSelectedItem()
 		{
 			return alias;
@@ -309,8 +311,8 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 			return aliases.size();
 		}
 	}
-	
-	public void release()
-	{}
-}
 
+	public void release()
+	{
+	}
+}

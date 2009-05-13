@@ -12,50 +12,51 @@
 
 package com.eviware.soapui.support;
 
+import javax.swing.JComponent;
+import javax.swing.JScrollPane;
+import javax.swing.text.Document;
+
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 
-import javax.swing.*;
-import javax.swing.text.Document;
-
 public class DefaultEditorFactory implements EditorFactory
 {
-   public JComponent buildXPathEditor( EditorModel editorModel )
-   {
-      JUndoableTextArea textArea = new JUndoableTextArea( );
-      textArea.setText( editorModel.getEditorText() );
-      textArea.getDocument().addDocumentListener( new EditorModelDocumentListener( editorModel ) );
-      return new JScrollPane( textArea );
-   }
+	public JComponent buildXPathEditor( EditorModel editorModel )
+	{
+		JUndoableTextArea textArea = new JUndoableTextArea();
+		textArea.setText( editorModel.getEditorText() );
+		textArea.getDocument().addDocumentListener( new EditorModelDocumentListener( editorModel ) );
+		return new JScrollPane( textArea );
+	}
 
-   public JComponent buildXmlEditor( EditorModel editorModel )
-   {
-      JXEditTextArea xmlEditor = JXEditTextArea.createXmlEditor( true );
-      xmlEditor.getDocument().addDocumentListener( new EditorModelDocumentListener( editorModel ) );
-      JScrollPane scrollPane = new JScrollPane( xmlEditor );
-      UISupport.addPreviewCorner( scrollPane, false );
-      return scrollPane;
-   }
+	public JComponent buildXmlEditor( EditorModel editorModel )
+	{
+		JXEditTextArea xmlEditor = JXEditTextArea.createXmlEditor( true );
+		xmlEditor.getDocument().addDocumentListener( new EditorModelDocumentListener( editorModel ) );
+		JScrollPane scrollPane = new JScrollPane( xmlEditor );
+		UISupport.addPreviewCorner( scrollPane, false );
+		return scrollPane;
+	}
 
-   public JComponent buildGroovyEditor( GroovyEditorModel editorModel )
-   {
-      return new GroovyEditor( editorModel );
-   }
+	public JComponent buildGroovyEditor( GroovyEditorModel editorModel )
+	{
+		return new GroovyEditor( editorModel );
+	}
 
-   private static class EditorModelDocumentListener extends DocumentListenerAdapter
-   {
-      private EditorModel editorModel;
+	private static class EditorModelDocumentListener extends DocumentListenerAdapter
+	{
+		private EditorModel editorModel;
 
-      public EditorModelDocumentListener( EditorModel editorModel )
-      {
-         this.editorModel = editorModel;
-      }
+		public EditorModelDocumentListener( EditorModel editorModel )
+		{
+			this.editorModel = editorModel;
+		}
 
-      public void update( Document document )
-      {
-         editorModel.setEditorText( getText( document ));
-      }
-   }
+		public void update( Document document )
+		{
+			editorModel.setEditorText( getText( document ) );
+		}
+	}
 }

@@ -28,12 +28,13 @@ public class RenameMockResponseAction extends AbstractSoapUIAction<WsdlMockRespo
 	{
 		super( "Rename", "Renames this MockResponse" );
 	}
-	
+
 	public void perform( WsdlMockResponse mockResponse, Object param )
 	{
 		String name = UISupport.prompt( "Specify name of MockResponse", getName(), mockResponse.getName() );
-      if( name == null || name.equals( mockResponse.getName() )) return;
-      
-      mockResponse.setName( name );
+		if( name == null || name.equals( mockResponse.getName() ) )
+			return;
+
+		mockResponse.setName( name );
 	}
 }

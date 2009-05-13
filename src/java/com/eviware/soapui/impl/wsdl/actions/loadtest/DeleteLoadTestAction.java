@@ -26,21 +26,21 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 public class DeleteLoadTestAction extends AbstractSoapUIAction<WsdlLoadTest>
 {
 	public DeleteLoadTestAction()
-   {
-      super( "Remove", "Removes this Test Schedule from the test-case" );
-   }
-	
-   public void perform( WsdlLoadTest loadTest, Object param )
 	{
-   	if( loadTest.isRunning() )
-   	{
-   		UISupport.showErrorMessage( "Can not remove running LoadTest" );
-   		return;
-   	}
-   	
-      if( UISupport.confirm( "Remove LoadTest [" + loadTest.getName() + "] from test-casee", "Remove LoadTest" ))
-      {
-      	((WsdlTestCase)loadTest.getTestCase()).removeLoadTest( loadTest );
-      }
-   }
+		super( "Remove", "Removes this Test Schedule from the test-case" );
+	}
+
+	public void perform( WsdlLoadTest loadTest, Object param )
+	{
+		if( loadTest.isRunning() )
+		{
+			UISupport.showErrorMessage( "Can not remove running LoadTest" );
+			return;
+		}
+
+		if( UISupport.confirm( "Remove LoadTest [" + loadTest.getName() + "] from test-casee", "Remove LoadTest" ) )
+		{
+			( ( WsdlTestCase )loadTest.getTestCase() ).removeLoadTest( loadTest );
+		}
+	}
 }

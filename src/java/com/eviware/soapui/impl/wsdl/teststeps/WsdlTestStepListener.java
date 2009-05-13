@@ -22,5 +22,5 @@ import com.eviware.soapui.model.testsuite.TestPropertyListener;
 
 public interface WsdlTestStepListener extends TestPropertyListener
 {
-	
+
 }

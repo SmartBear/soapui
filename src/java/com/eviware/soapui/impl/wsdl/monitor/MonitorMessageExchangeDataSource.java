@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui.impl.wsdl.monitor;
 
 import java.io.ByteArrayInputStream;
@@ -34,7 +34,7 @@ public class MonitorMessageExchangeDataSource implements DataSource
 	private String contentType;
 	private String name;
 
-	public MonitorMessageExchangeDataSource(String name, InputStream in, String contentType )
+	public MonitorMessageExchangeDataSource( String name, InputStream in, String contentType )
 	{
 		try
 		{
@@ -42,10 +42,10 @@ public class MonitorMessageExchangeDataSource implements DataSource
 			this.contentType = contentType;
 			this.name = name;
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
 			SoapUI.logError( e );
-		}		
+		}
 	}
 
 	public String getContentType()

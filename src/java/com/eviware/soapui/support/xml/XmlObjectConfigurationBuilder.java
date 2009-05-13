@@ -32,14 +32,14 @@ public class XmlObjectConfigurationBuilder
 		cursor = config.newCursor();
 		cursor.toNextToken();
 	}
-	
+
 	public XmlObjectConfigurationBuilder()
 	{
 		this( XmlObject.Factory.newInstance() );
 		cursor = config.newCursor();
 		cursor.toNextToken();
 	}
-	
+
 	public XmlObjectConfigurationBuilder add( String name, String value )
 	{
 		cursor.insertElementWithText( name, value );
@@ -48,31 +48,31 @@ public class XmlObjectConfigurationBuilder
 
 	public XmlObjectConfigurationBuilder add( String name, int value )
 	{
-		cursor.insertElementWithText( name, String.valueOf( value ));
+		cursor.insertElementWithText( name, String.valueOf( value ) );
 		return this;
 	}
-	
+
 	public XmlObjectConfigurationBuilder add( String name, long value )
 	{
-		cursor.insertElementWithText( name, String.valueOf( value ));
+		cursor.insertElementWithText( name, String.valueOf( value ) );
 		return this;
 	}
 
 	public XmlObjectConfigurationBuilder add( String name, float value )
 	{
-		cursor.insertElementWithText( name, String.valueOf( value ));
+		cursor.insertElementWithText( name, String.valueOf( value ) );
 		return this;
 	}
-	
-	public XmlObject finish() 
+
+	public XmlObject finish()
 	{
 		cursor.dispose();
-      return config;
+		return config;
 	}
 
-	public XmlObjectConfigurationBuilder add(String name, boolean value)
+	public XmlObjectConfigurationBuilder add( String name, boolean value )
 	{
-		cursor.insertElementWithText( name, String.valueOf( value ));
+		cursor.insertElementWithText( name, String.valueOf( value ) );
 		return this;
 	}
 

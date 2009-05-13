@@ -28,33 +28,33 @@ import com.eviware.soapui.support.editor.xml.XmlDocument;
 
 public abstract class AbstractXmlDocument implements XmlDocument
 {
-   private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport( this );
-	
-   public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
-   {
-      propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
-   }
+	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport( this );
 
-   public void addPropertyChangeListener(PropertyChangeListener listener)
-   {
-      propertyChangeSupport.addPropertyChangeListener( listener );
-   }
-
-   public void removePropertyChangeListener(PropertyChangeListener listener)
-   {
-      propertyChangeSupport.removePropertyChangeListener( listener );
-   }
-   
-   public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
+	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
-   	propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
+		propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
 	}
-   
-   protected void fireXmlChanged( String oldValue, String newValue )
-   {
-   	propertyChangeSupport.firePropertyChange( XML_PROPERTY, oldValue, newValue );
-   }
-   
+
+	public void addPropertyChangeListener( PropertyChangeListener listener )
+	{
+		propertyChangeSupport.addPropertyChangeListener( listener );
+	}
+
+	public void removePropertyChangeListener( PropertyChangeListener listener )
+	{
+		propertyChangeSupport.removePropertyChangeListener( listener );
+	}
+
+	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
+	{
+		propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
+	}
+
+	protected void fireXmlChanged( String oldValue, String newValue )
+	{
+		propertyChangeSupport.firePropertyChange( XML_PROPERTY, oldValue, newValue );
+	}
+
 	public void release()
 	{
 	}

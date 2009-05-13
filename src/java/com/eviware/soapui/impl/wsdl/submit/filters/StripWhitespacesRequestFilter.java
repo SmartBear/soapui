@@ -27,14 +27,14 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 public class StripWhitespacesRequestFilter extends AbstractRequestFilter
 {
-	private final static Logger log = Logger.getLogger(PropertyExpansionRequestFilter.class);
-	
-	public void filterAbstractHttpRequest(SubmitContext context, AbstractHttpRequest<?> wsdlRequest)
+	private final static Logger log = Logger.getLogger( PropertyExpansionRequestFilter.class );
+
+	public void filterAbstractHttpRequest( SubmitContext context, AbstractHttpRequest<?> wsdlRequest )
 	{
-		if( !wsdlRequest.isStripWhitespaces())
+		if( !wsdlRequest.isStripWhitespaces() )
 			return;
-		
-		String content = (String) context.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
+
+		String content = ( String )context.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
 		if( content == null )
 		{
 			log.warn( "Missing request content in context, skipping stripWhitespaces" );

@@ -12,6 +12,12 @@
 
 package com.eviware.soapui.impl.rest.actions.support;
 
+import java.awt.event.ActionEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.swing.AbstractAction;
+
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
@@ -28,157 +34,152 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.validators.RequiredValidator;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 /**
- * Actions for importing an existing soapUI project file into the current workspace
- *
+ * Actions for importing an existing soapUI project file into the current
+ * workspace
+ * 
  * @author Ole.Matzura
  */
 
 public abstract class NewRestResourceActionBase<T extends ModelItem> extends AbstractSoapUIAction<T>
 {
-   private XFormDialog dialog;
-   private XmlBeansRestParamsTestPropertyHolder params;
-   private RestParamsTable paramsTable;
-   public static final MessageSupport messages = MessageSupport.getMessages( NewRestResourceActionBase.class );
+	private XFormDialog dialog;
+	private XmlBeansRestParamsTestPropertyHolder params;
+	private RestParamsTable paramsTable;
+	public static final MessageSupport messages = MessageSupport.getMessages( NewRestResourceActionBase.class );
 
-   public NewRestResourceActionBase( String title, String description )
-   {
-      super( title, description );
-   }
+	public NewRestResourceActionBase( String title, String description )
+	{
+		super( title, description );
+	}
 
-   public void perform( T service, Object param )
-   {
-      if( dialog == null )
-      {
-         dialog = ADialogBuilder.buildDialog( Form.class );
-         dialog.getFormField( Form.RESOURCENAME ).addFormFieldValidator( new RequiredValidator() );
-         dialog.getFormField( Form.EXTRACTPARAMS ).setProperty( "action", new ExtractParamsAction() );
-         dialog.setBooleanValue( Form.CREATEREQUEST, true );
-      }
-      else
-      {
-         dialog.setValue( Form.RESOURCENAME, "" );
-         dialog.setValue( Form.RESOURCEPATH, "" );
-      }
+	public void perform( T service, Object param )
+	{
+		if( dialog == null )
+		{
+			dialog = ADialogBuilder.buildDialog( Form.class );
+			dialog.getFormField( Form.RESOURCENAME ).addFormFieldValidator( new RequiredValidator() );
+			dialog.getFormField( Form.EXTRACTPARAMS ).setProperty( "action", new ExtractParamsAction() );
+			dialog.setBooleanValue( Form.CREATEREQUEST, true );
+		}
+		else
+		{
+			dialog.setValue( Form.RESOURCENAME, "" );
+			dialog.setValue( Form.RESOURCEPATH, "" );
+		}
 
-      params = new XmlBeansRestParamsTestPropertyHolder( service,
-              RestParametersConfig.Factory.newInstance() );
+		params = new XmlBeansRestParamsTestPropertyHolder( service, RestParametersConfig.Factory.newInstance() );
 
-      if( param instanceof URL )
-      {
-         String path = RestUtils.extractParams( param.toString(), params, false );
-         dialog.setValue( Form.RESOURCEPATH, path );
+		if( param instanceof URL )
+		{
+			String path = RestUtils.extractParams( param.toString(), params, false );
+			dialog.setValue( Form.RESOURCEPATH, path );
 
-         setNameFromPath( path );
+			setNameFromPath( path );
 
-         if( paramsTable != null )
-            paramsTable.refresh();
-      }
+			if( paramsTable != null )
+				paramsTable.refresh();
+		}
 
-      paramsTable = new RestParamsTable( params, false );
-      dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
+		paramsTable = new RestParamsTable( params, false );
+		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 
-      if( dialog.show() )
-      {
-         String path = dialog.getValue( Form.RESOURCEPATH );
+		if( dialog.show() )
+		{
+			String path = dialog.getValue( Form.RESOURCEPATH );
 
-         try
-         {
-            URL url = new URL( path );
-            path = url.getPath();
-         }
-         catch( MalformedURLException e )
-         {
-         }
+			try
+			{
+				URL url = new URL( path );
+				path = url.getPath();
+			}
+			catch( MalformedURLException e )
+			{
+			}
 
-         RestResource resource = createRestResource( service, path, dialog );
+			RestResource resource = createRestResource( service, path, dialog );
 
-         resource.getParams().addParameters( params );
+			resource.getParams().addParameters( params );
 
-         UISupport.select( resource );
+			UISupport.select( resource );
 
-         if( dialog.getBooleanValue( Form.CREATEREQUEST ) )
-         {
-            createRequest( resource );
-         }
-      }
+			if( dialog.getBooleanValue( Form.CREATEREQUEST ) )
+			{
+				createRequest( resource );
+			}
+		}
 
-      paramsTable.release();
-      paramsTable = null;
-      params = null;
-      dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
-   }
+		paramsTable.release();
+		paramsTable = null;
+		params = null;
+		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
+	}
 
-   protected abstract RestResource createRestResource( T service, String path, XFormDialog dialog );
+	protected abstract RestResource createRestResource( T service, String path, XFormDialog dialog );
 
-   private void setNameFromPath( String path )
-   {
-      String[] items = path.split( "/" );
+	private void setNameFromPath( String path )
+	{
+		String[] items = path.split( "/" );
 
-      if( items.length > 0 )
-      {
-         dialog.setValue( Form.RESOURCENAME, items[items.length - 1] );
-      }
-   }
+		if( items.length > 0 )
+		{
+			dialog.setValue( Form.RESOURCENAME, items[items.length - 1] );
+		}
+	}
 
-   protected void createRequest( RestResource resource )
-   {
-      RestRequest request = resource.addNewRequest( dialog.getValue( Form.RESOURCENAME ) );
-      request.setMethod( RequestMethod.GET );
-      UISupport.showDesktopPanel( request );
-   }
+	protected void createRequest( RestResource resource )
+	{
+		RestRequest request = resource.addNewRequest( dialog.getValue( Form.RESOURCENAME ) );
+		request.setMethod( RequestMethod.GET );
+		UISupport.showDesktopPanel( request );
+	}
 
-   private class ExtractParamsAction extends AbstractAction
-   {
-      public ExtractParamsAction()
-      {
-         super( "Extract Params" );
-      }
+	private class ExtractParamsAction extends AbstractAction
+	{
+		public ExtractParamsAction()
+		{
+			super( "Extract Params" );
+		}
 
-      public void actionPerformed( ActionEvent e )
-      {
-         try
-         {
-            String path = RestUtils.extractParams( dialog.getValue( Form.RESOURCEPATH ), params, false );
-            dialog.setValue( Form.RESOURCEPATH, path );
+		public void actionPerformed( ActionEvent e )
+		{
+			try
+			{
+				String path = RestUtils.extractParams( dialog.getValue( Form.RESOURCEPATH ), params, false );
+				dialog.setValue( Form.RESOURCEPATH, path );
 
-            if( StringUtils.isNullOrEmpty( dialog.getValue( Form.RESOURCENAME ) ) )
-               setNameFromPath( path );
+				if( StringUtils.isNullOrEmpty( dialog.getValue( Form.RESOURCENAME ) ) )
+					setNameFromPath( path );
 
-            paramsTable.refresh();
-         }
-         catch( Exception e1 )
-         {
-            UISupport.showInfoMessage( "No parameters to extract!" );
-         }
-      }
-   }
+				paramsTable.refresh();
+			}
+			catch( Exception e1 )
+			{
+				UISupport.showInfoMessage( "No parameters to extract!" );
+			}
+		}
+	}
 
-   @AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
-   public interface Form
-   {
-      @AField( description = "Form.ServiceName.Description", type = AFieldType.STRING )
-      public final static String RESOURCENAME = messages.get( "Form.ResourceName.Label" );
+	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	public interface Form
+	{
+		@AField( description = "Form.ServiceName.Description", type = AFieldType.STRING )
+		public final static String RESOURCENAME = messages.get( "Form.ResourceName.Label" );
 
-      @AField( description = "Form.ServiceUrl.Description", type = AFieldType.STRING )
-      public final static String RESOURCEPATH = messages.get( "Form.ResourcePath.Label" );
+		@AField( description = "Form.ServiceUrl.Description", type = AFieldType.STRING )
+		public final static String RESOURCEPATH = messages.get( "Form.ResourcePath.Label" );
 
-      @AField( description = "Form.ExtractParams.Description", type = AFieldType.ACTION )
-      public final static String EXTRACTPARAMS = messages.get( "Form.ExtractParams.Label" );
+		@AField( description = "Form.ExtractParams.Description", type = AFieldType.ACTION )
+		public final static String EXTRACTPARAMS = messages.get( "Form.ExtractParams.Label" );
 
-      @AField( description = "Form.ParamsTable.Description", type = AFieldType.COMPONENT )
-      public final static String PARAMSTABLE = messages.get( "Form.ParamsTable.Label" );
+		@AField( description = "Form.ParamsTable.Description", type = AFieldType.COMPONENT )
+		public final static String PARAMSTABLE = messages.get( "Form.ParamsTable.Label" );
 
-      @AField( description = "Form.CreateRequest.Description", type = AFieldType.BOOLEAN )
-      public final static String CREATEREQUEST = messages.get( "Form.CreateRequest.Label" );
-   }
+		@AField( description = "Form.CreateRequest.Description", type = AFieldType.BOOLEAN )
+		public final static String CREATEREQUEST = messages.get( "Form.CreateRequest.Label" );
+	}
 }

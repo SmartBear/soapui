@@ -26,17 +26,17 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 public class DeleteMockOperationAction extends AbstractSoapUIAction<WsdlMockOperation>
 {
 	public DeleteMockOperationAction()
-   {
-      super( "Remove", "Removes this MockOperation" );
-   }
-   
-   public void perform( WsdlMockOperation mockOperation, Object param )
 	{
-      if( UISupport.confirm( "Remove MockOperation [" + mockOperation.getName() + "] from MockService [" + mockOperation.getMockService().getName() + 
-            "]", "Remove MockOperation" ))
-      {
-      	WsdlMockService mockService = mockOperation.getMockService();
-         mockService.removeMockOperation( mockOperation );
-      }
-   }
+		super( "Remove", "Removes this MockOperation" );
+	}
+
+	public void perform( WsdlMockOperation mockOperation, Object param )
+	{
+		if( UISupport.confirm( "Remove MockOperation [" + mockOperation.getName() + "] from MockService ["
+				+ mockOperation.getMockService().getName() + "]", "Remove MockOperation" ) )
+		{
+			WsdlMockService mockService = mockOperation.getMockService();
+			mockService.removeMockOperation( mockOperation );
+		}
+	}
 }

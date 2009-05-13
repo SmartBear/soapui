@@ -12,13 +12,14 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import com.eviware.soapui.model.iface.Attachment;
-
 import java.io.File;
 import java.io.IOException;
 
+import com.eviware.soapui.model.iface.Attachment;
+
 /**
- * Behaviour for ModelItems that contain attachments (Requests and MockResponses)
+ * Behaviour for ModelItems that contain attachments (Requests and
+ * MockResponses)
  * 
  * @author ole.matzura
  */

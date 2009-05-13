@@ -12,8 +12,16 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.registry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.*;
+import com.eviware.soapui.config.CredentialsConfig;
+import com.eviware.soapui.config.RequestStepConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.config.WsaConfigConfig;
+import com.eviware.soapui.config.WsdlRequestConfig;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
@@ -34,9 +42,6 @@ import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Factory for WsdlTestRequestSteps
@@ -60,39 +65,39 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory
 		super( REQUEST_TYPE, "Test Request", "Submits a request and validates its response", "/request.gif" );
 	}
 
-	public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest)
+	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
 		return new WsdlTestRequestStep( testCase, config, forLoadTest );
 	}
 
-	public static TestStepConfig createConfig(WsdlRequest request, String stepName)
+	public static TestStepConfig createConfig( WsdlRequest request, String stepName )
 	{
 		RequestStepConfig requestStepConfig = RequestStepConfig.Factory.newInstance();
-		
-      requestStepConfig.setInterface( request.getOperation().getInterface().getName() );
-      requestStepConfig.setOperation( request.getOperation().getName() );
 
-      WsdlRequestConfig testRequestConfig = requestStepConfig.addNewRequest();
-      
-      testRequestConfig.setName( stepName );
-      testRequestConfig.setEncoding( request.getEncoding() );
-      testRequestConfig.setEndpoint( request.getEndpoint() );
-      testRequestConfig.addNewRequest().setStringValue( request.getRequestContent() );
-      testRequestConfig.setOutgoingWss( request.getOutgoingWss() );
-      testRequestConfig.setIncomingWss( request.getIncomingWss() );
-      if( request.getConfig().isSetWsaConfig())
-         testRequestConfig.setWsaConfig((WsaConfigConfig) request.getConfig().getWsaConfig().copy());
+		requestStepConfig.setInterface( request.getOperation().getInterface().getName() );
+		requestStepConfig.setOperation( request.getOperation().getName() );
 
-      if( (CredentialsConfig) request.getConfig().getCredentials() != null )
-      {
-      	testRequestConfig.setCredentials( (CredentialsConfig) request.getConfig().getCredentials().copy() );
-      }
+		WsdlRequestConfig testRequestConfig = requestStepConfig.addNewRequest();
 
-      testRequestConfig.setWssPasswordType( request.getConfig().getWssPasswordType() );
-      
-      TestStepConfig testStep = TestStepConfig.Factory.newInstance();
-      testStep.setType( REQUEST_TYPE );
-      testStep.setConfig( requestStepConfig );
+		testRequestConfig.setName( stepName );
+		testRequestConfig.setEncoding( request.getEncoding() );
+		testRequestConfig.setEndpoint( request.getEndpoint() );
+		testRequestConfig.addNewRequest().setStringValue( request.getRequestContent() );
+		testRequestConfig.setOutgoingWss( request.getOutgoingWss() );
+		testRequestConfig.setIncomingWss( request.getIncomingWss() );
+		if( request.getConfig().isSetWsaConfig() )
+			testRequestConfig.setWsaConfig( ( WsaConfigConfig )request.getConfig().getWsaConfig().copy() );
+
+		if( ( CredentialsConfig )request.getConfig().getCredentials() != null )
+		{
+			testRequestConfig.setCredentials( ( CredentialsConfig )request.getConfig().getCredentials().copy() );
+		}
+
+		testRequestConfig.setWssPasswordType( request.getConfig().getWssPasswordType() );
+
+		TestStepConfig testStep = TestStepConfig.Factory.newInstance();
+		testStep.setType( REQUEST_TYPE );
+		testStep.setConfig( requestStepConfig );
 
 		return testStep;
 	}
@@ -100,36 +105,36 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory
 	public static TestStepConfig createConfig( WsdlOperation operation, String stepName )
 	{
 		RequestStepConfig requestStepConfig = RequestStepConfig.Factory.newInstance();
-		
-      requestStepConfig.setInterface( operation.getInterface().getName() );
-      requestStepConfig.setOperation( operation.getName() );
 
-      WsdlRequestConfig testRequestConfig = requestStepConfig.addNewRequest();
-      testRequestConfig.addNewWsaConfig();
-      
-      testRequestConfig.setName( stepName );
-      testRequestConfig.setEncoding( "UTF-8" );
-      String[] endpoints = operation.getInterface().getEndpoints();
-      if( endpoints.length > 0 )
-      	testRequestConfig.setEndpoint( endpoints[0] );
-      
-      String requestContent = operation.createRequest( 
-      			SoapUI.getSettings().getBoolean( WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS ));
-      testRequestConfig.addNewRequest().setStringValue( requestContent );
+		requestStepConfig.setInterface( operation.getInterface().getName() );
+		requestStepConfig.setOperation( operation.getName() );
 
-		//add ws-a action
-      String defaultAction = WsdlUtils.getDefaultWsaAction(operation, false);
-      if( StringUtils.hasContent(defaultAction))
-      	testRequestConfig.getWsaConfig().setAction(defaultAction);
+		WsdlRequestConfig testRequestConfig = requestStepConfig.addNewRequest();
+		testRequestConfig.addNewWsaConfig();
 
-      TestStepConfig testStep = TestStepConfig.Factory.newInstance();
-      testStep.setType( REQUEST_TYPE );
-      testStep.setConfig( requestStepConfig );
+		testRequestConfig.setName( stepName );
+		testRequestConfig.setEncoding( "UTF-8" );
+		String[] endpoints = operation.getInterface().getEndpoints();
+		if( endpoints.length > 0 )
+			testRequestConfig.setEndpoint( endpoints[0] );
+
+		String requestContent = operation.createRequest( SoapUI.getSettings().getBoolean(
+				WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS ) );
+		testRequestConfig.addNewRequest().setStringValue( requestContent );
+
+		// add ws-a action
+		String defaultAction = WsdlUtils.getDefaultWsaAction( operation, false );
+		if( StringUtils.hasContent( defaultAction ) )
+			testRequestConfig.getWsaConfig().setAction( defaultAction );
+
+		TestStepConfig testStep = TestStepConfig.Factory.newInstance();
+		testStep.setType( REQUEST_TYPE );
+		testStep.setConfig( requestStepConfig );
 
 		return testStep;
 	}
-	
-	public TestStepConfig createNewTestStep(WsdlTestCase testCase, String name)
+
+	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
 	{
 		// build list of available interfaces / operations
 		Project project = testCase.getTestSuite().getProject();
@@ -142,68 +147,67 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory
 			for( int i = 0; i < iface.getOperationCount(); i++ )
 			{
 				options.add( iface.getName() + " -> " + iface.getOperationAt( i ).getName() );
-				operations.add( iface.getOperationAt( i ));
+				operations.add( iface.getOperationAt( i ) );
 			}
 		}
-		
+
 		Object op = UISupport.prompt( "Select operation to invoke for request", "New TestRequest", options.toArray() );
 		if( op != null )
 		{
 			int ix = options.indexOf( op );
 			if( ix != -1 )
 			{
-				WsdlOperation operation = (WsdlOperation) operations.get( ix );
-				
+				WsdlOperation operation = ( WsdlOperation )operations.get( ix );
+
 				if( dialog == null )
 					buildDialog();
-				
+
 				dialogValues.put( STEP_NAME, name );
 				dialogValues = dialog.show( dialogValues );
 				if( dialog.getReturnValue() != XFormDialog.OK_OPTION )
 					return null;
 
-				return createNewTestStep(operation, dialogValues);
+				return createNewTestStep( operation, dialogValues );
 			}
 		}
-		
+
 		return null;
 	}
 
-	public TestStepConfig createNewTestStep(WsdlOperation operation, StringToStringMap values )
+	public TestStepConfig createNewTestStep( WsdlOperation operation, StringToStringMap values )
 	{
 		String name;
 		name = values.get( STEP_NAME );
-		
-		String requestContent = operation.createRequest( 
-				values.getBoolean( CREATE_OPTIONAL_ELEMENTS_IN_REQUEST ));
-		
+
+		String requestContent = operation.createRequest( values.getBoolean( CREATE_OPTIONAL_ELEMENTS_IN_REQUEST ) );
+
 		RequestStepConfig requestStepConfig = RequestStepConfig.Factory.newInstance();
-		
+
 		requestStepConfig.setInterface( operation.getInterface().getName() );
 		requestStepConfig.setOperation( operation.getName() );
 
 		WsdlRequestConfig testRequestConfig = requestStepConfig.addNewRequest();
-		
+
 		testRequestConfig.setName( name );
 		testRequestConfig.setEncoding( "UTF-8" );
 		String[] endpoints = operation.getInterface().getEndpoints();
 		if( endpoints.length > 0 )
 			testRequestConfig.setEndpoint( endpoints[0] );
 		testRequestConfig.addNewRequest().setStringValue( requestContent );
-		
-		if( values.getBoolean( ADD_SOAP_RESPONSE_ASSERTION ))
+
+		if( values.getBoolean( ADD_SOAP_RESPONSE_ASSERTION ) )
 		{
 			TestAssertionConfig assertionConfig = testRequestConfig.addNewAssertion();
 			assertionConfig.setType( SoapResponseAssertion.ID );
 		}
-		
-		if( values.getBoolean( ADD_SCHEMA_ASSERTION ))
+
+		if( values.getBoolean( ADD_SCHEMA_ASSERTION ) )
 		{
 			TestAssertionConfig assertionConfig = testRequestConfig.addNewAssertion();
 			assertionConfig.setType( SchemaComplianceAssertion.ID );
 		}
-		
-		if( values.getBoolean( ADD_SOAP_FAULT_ASSERTION ))
+
+		if( values.getBoolean( ADD_SOAP_FAULT_ASSERTION ) )
 		{
 			TestAssertionConfig assertionConfig = testRequestConfig.addNewAssertion();
 			assertionConfig.setType( NotSoapFaultAssertion.ID );
@@ -221,22 +225,22 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory
 	{
 		return true;
 	}
-	
+
 	private void buildDialog()
 	{
-		XFormDialogBuilder builder = XFormFactory.createDialogBuilder("Add Request to TestCase");
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Add Request to TestCase" );
 		XForm mainForm = builder.createForm( "Basic" );
-		
+
 		mainForm.addTextField( STEP_NAME, "Name of TestStep", XForm.FieldType.URL ).setWidth( 30 );
 
 		mainForm.addCheckBox( ADD_SOAP_RESPONSE_ASSERTION, "(adds validation that response is a SOAP message)" );
 		mainForm.addCheckBox( ADD_SCHEMA_ASSERTION, "(adds validation that response complies with its schema)" );
 		mainForm.addCheckBox( ADD_SOAP_FAULT_ASSERTION, "(adds validation that response is not a SOAP Fault)" );
 		mainForm.addCheckBox( CREATE_OPTIONAL_ELEMENTS_IN_REQUEST, "(creates optional content i sample request)" );
-		
-		dialog = builder.buildDialog( builder.buildOkCancelActions(), 
-				"Specify options for adding a new request to a TestCase", UISupport.OPTIONS_ICON);		
-		
+
+		dialog = builder.buildDialog( builder.buildOkCancelActions(),
+				"Specify options for adding a new request to a TestCase", UISupport.OPTIONS_ICON );
+
 		dialogValues.put( ADD_SOAP_RESPONSE_ASSERTION, Boolean.TRUE.toString() );
 	}
 }

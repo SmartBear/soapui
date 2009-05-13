@@ -34,12 +34,13 @@ import com.eviware.soapui.support.components.JEditorStatusBar.JEditorStatusBarTa
 import com.eviware.soapui.support.swing.JTextComponentPopupMenu;
 
 /**
- * JTextArea with Undo/Redo keyboard/popup support 
- *
+ * JTextArea with Undo/Redo keyboard/popup support
+ * 
  * @author Ole.Matzura
  */
 
-public class JUndoableTextArea extends JTextArea implements	Undoable, UndoableEditListener, FocusListener, FindAndReplaceable, JEditorStatusBarTarget
+public class JUndoableTextArea extends JTextArea implements Undoable, UndoableEditListener, FocusListener,
+		FindAndReplaceable, JEditorStatusBarTarget
 {
 	public static final int UNDO_LIMIT = 1500;
 
@@ -52,31 +53,33 @@ public class JUndoableTextArea extends JTextArea implements	Undoable, UndoableEd
 		super();
 		init();
 	}
-	
+
 	private void init()
 	{
-		//setBorder(BorderFactory.createEtchedBorder());
-		getDocument().addUndoableEditListener(this);
-		addFocusListener(this);
-		
-		setMinimumSize( new Dimension( 50, 50 ));
-		addKeyListener( new KeyAdapter() {
+		// setBorder(BorderFactory.createEtchedBorder());
+		getDocument().addUndoableEditListener( this );
+		addFocusListener( this );
 
-			public void keyPressed(KeyEvent e)
+		setMinimumSize( new Dimension( 50, 50 ) );
+		addKeyListener( new KeyAdapter()
+		{
+
+			public void keyPressed( KeyEvent e )
 			{
-				if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu Z" )))
-				   undo();
-				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu Y" )))
+				if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu Z" ) ) )
+					undo();
+				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu Y" ) ) )
 					redo();
-				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu X" )))
+				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu X" ) ) )
 					cut();
-				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu C" )))
+				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu C" ) ) )
 					copy();
-				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "F3" )))
+				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "F3" ) ) )
 					findAndReplace();
-			}} );
-		
-		JTextComponentPopupMenu.add(  this  );
+			}
+		} );
+
+		JTextComponentPopupMenu.add( this );
 	}
 
 	public JUndoableTextArea( int i, int j )
@@ -95,25 +98,25 @@ public class JUndoableTextArea extends JTextArea implements	Undoable, UndoableEd
 	{
 		if( findAndReplaceAction == null )
 			findAndReplaceAction = new FindAndReplaceDialog( this );
-		
+
 		findAndReplaceAction.show();
 	}
 
-	public void setText(String text)
+	public void setText( String text )
 	{
 		ensureUndoManager();
-		super.setText(text == null ? "" : text);
-		
+		super.setText( text == null ? "" : text );
+
 		if( discardEditsOnSet && undoManager != null )
 			undoManager.discardAllEdits();
 	}
-	
+
 	public boolean isDiscardEditsOnSet()
 	{
 		return discardEditsOnSet;
 	}
 
-	public void setDiscardEditsOnSet(boolean discardEditsOnSet)
+	public void setDiscardEditsOnSet( boolean discardEditsOnSet )
 	{
 		this.discardEditsOnSet = discardEditsOnSet;
 	}
@@ -122,46 +125,46 @@ public class JUndoableTextArea extends JTextArea implements	Undoable, UndoableEd
 	{
 		return undoManager;
 	}
-	
+
 	private void ensureUndoManager()
 	{
-		if (isEditable() && undoManager == null )
+		if( isEditable() && undoManager == null )
 		{
 			undoManager = new UndoManager();
-			undoManager.setLimit(UNDO_LIMIT);
+			undoManager.setLimit( UNDO_LIMIT );
 		}
 	}
-	
-	public void focusGained(FocusEvent fe)
+
+	public void focusGained( FocusEvent fe )
 	{
 		ensureUndoManager();
 	}
 
-	public void focusLost(FocusEvent fe)
+	public void focusLost( FocusEvent fe )
 	{
-		//removeUndoMananger();
+		// removeUndoMananger();
 	}
 
-	public void undoableEditHappened(UndoableEditEvent e)
+	public void undoableEditHappened( UndoableEditEvent e )
 	{
-		if (undoManager != null)
-			undoManager.addEdit(e.getEdit());
+		if( undoManager != null )
+			undoManager.addEdit( e.getEdit() );
 	}
 
 	public void undo()
 	{
-		if( !isEditable()  )
+		if( !isEditable() )
 		{
 			getToolkit().beep();
 			return;
 		}
-		
+
 		try
 		{
 			if( undoManager != null )
 				undoManager.undo();
 		}
-		catch (CannotUndoException cue)
+		catch( CannotUndoException cue )
 		{
 			Toolkit.getDefaultToolkit().beep();
 		}
@@ -169,24 +172,24 @@ public class JUndoableTextArea extends JTextArea implements	Undoable, UndoableEd
 
 	public void redo()
 	{
-		if( !isEditable()  )
+		if( !isEditable() )
 		{
 			getToolkit().beep();
 			return;
 		}
-		
+
 		try
 		{
 			if( undoManager != null )
 				undoManager.redo();
 		}
-		catch (CannotRedoException cue)
+		catch( CannotRedoException cue )
 		{
 			Toolkit.getDefaultToolkit().beep();
 		}
 	}
 
-	public void setSelectedText(String txt)
+	public void setSelectedText( String txt )
 	{
 		replaceSelection( txt );
 	}

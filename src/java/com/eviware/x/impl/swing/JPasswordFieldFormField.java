@@ -23,26 +23,24 @@ public class JPasswordFieldFormField extends AbstractSwingXFormField<JPasswordFi
 {
 	public JPasswordFieldFormField()
 	{
-		super( new JPasswordField(15) );
-	}
-	
-	public void setRequired(boolean required, String message)
-	{
-		super.setRequired(required, message);
-		
-		if( required )
-			getComponent().setBorder( 
-					BorderFactory.createCompoundBorder(
-							BorderFactory.createLineBorder( Color.RED ), 
-							BorderFactory.createEmptyBorder( 2, 2, 2, 2 )));
-		else
-			getComponent().setBorder( 
-					BorderFactory.createCompoundBorder(
-							BorderFactory.createLineBorder( Color.GRAY ), 
-							BorderFactory.createEmptyBorder( 2, 2, 2, 2 )));
+		super( new JPasswordField( 15 ) );
 	}
 
-	public void setValue(String value)
+	public void setRequired( boolean required, String message )
+	{
+		super.setRequired( required, message );
+
+		if( required )
+			getComponent().setBorder(
+					BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( Color.RED ), BorderFactory
+							.createEmptyBorder( 2, 2, 2, 2 ) ) );
+		else
+			getComponent().setBorder(
+					BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( Color.GRAY ), BorderFactory
+							.createEmptyBorder( 2, 2, 2, 2 ) ) );
+	}
+
+	public void setValue( String value )
 	{
 		getComponent().setText( value );
 	}
@@ -52,7 +50,7 @@ public class JPasswordFieldFormField extends AbstractSwingXFormField<JPasswordFi
 		return new String( getComponent().getPassword() );
 	}
 
-	public void setWidth(int columns)
+	public void setWidth( int columns )
 	{
 		getComponent().setColumns( columns );
 	}

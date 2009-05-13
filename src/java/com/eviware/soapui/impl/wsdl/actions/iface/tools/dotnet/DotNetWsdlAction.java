@@ -50,7 +50,7 @@ public class DotNetWsdlAction extends AbstractToolsAction<Interface>
 	private static final String ENABLEDATABINDING = "enableDataBinding";
 	private static final String URLKEY = "url key";
 	private static final String BASEURL = "base url";
-	
+
 	private static final String USERNAME = "username";
 	private static final String PASSWORD = "password";
 	private static final String DOMAIN = "domain";
@@ -59,43 +59,43 @@ public class DotNetWsdlAction extends AbstractToolsAction<Interface>
 	private static final String PROXYPASSWORD = "proxy password";
 	private static final String PROXYDOMAIN = "proxy domain";
 	public static final String SOAPUI_ACTION_ID = "DotNetWsdlAction";
-	
-   public DotNetWsdlAction()
-   {
-      super( ".NET 2.0 Artifacts", "Generates .NET 2.0 artifacts using wsdl.exe");
-   }
+
+	public DotNetWsdlAction()
+	{
+		super( ".NET 2.0 Artifacts", "Generates .NET 2.0 artifacts using wsdl.exe" );
+	}
 
 	protected StringToStringMap initValues( Interface modelItem, Object param )
 	{
-		StringToStringMap values = super.initValues(modelItem, param);
+		StringToStringMap values = super.initValues( modelItem, param );
 		values.putIfMissing( LANGUAGE, "CS" );
 		return values;
 	}
 
-	protected XFormDialog buildDialog(Interface modelItem)
+	protected XFormDialog buildDialog( Interface modelItem )
 	{
-      XFormDialogBuilder builder = XFormFactory.createDialogBuilder(".NET 2.0 artifacts");
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( ".NET 2.0 artifacts" );
 
-      XForm mainForm = builder.createForm( "Basic" );
-      addWSDLFields( mainForm, modelItem );
-		
+		XForm mainForm = builder.createForm( "Basic" );
+		addWSDLFields( mainForm, modelItem );
+
 		mainForm.addTextField( OUTPUT, "root directory for generated files.", XForm.FieldType.PROJECT_FOLDER );
 		mainForm.addTextField( NAMESPACE, "The namespace for the generated proxy or template", XForm.FieldType.TEXT );
 
 		mainForm.addCheckBox( SERVER, "(Generates interfaces for server-side implementation of an ASP.Net Web Service)" );
-		mainForm.addComboBox( LANGUAGE, new String[] { "CS", "VB", "JS", "VJS", "CPP" }, 
-			"add scope to deploy.wsdd");
+		mainForm.addComboBox( LANGUAGE, new String[] { "CS", "VB", "JS", "VJS", "CPP" }, "add scope to deploy.wsdd" );
 
-		mainForm.addComboBox( PROTOCOL, new String[] { "SOAP", "SOAP12", "HttpGet", "HttpPost" }, 
-			"override the default protocol to implement" );
+		mainForm.addComboBox( PROTOCOL, new String[] { "SOAP", "SOAP12", "HttpGet", "HttpPost" },
+				"override the default protocol to implement" );
 
 		XForm advForm = builder.createForm( "Advanced" );
-		
+
 		advForm.addCheckBox( SHARETYPES, "(turns on type sharing feature)" );
 		advForm.addCheckBox( FIELDS, "(generate fields instead of properties)" );
 		advForm.addCheckBox( ORDER, "(generate explicit order identifiers on particle members)" );
 		advForm.addCheckBox( ENABLEDATABINDING, "(implement INotifyPropertyChanged interface on all generated types)" );
-		advForm.addTextField( URLKEY, "configuration key to use in the code generation to read the default URL value", XForm.FieldType.URL );
+		advForm.addTextField( URLKEY, "configuration key to use in the code generation to read the default URL value",
+				XForm.FieldType.URL );
 		advForm.addTextField( BASEURL, "base url to use when calculating the url fragment", XForm.FieldType.URL );
 
 		XForm httpForm = builder.createForm( "HTTP settings" );
@@ -107,13 +107,13 @@ public class DotNetWsdlAction extends AbstractToolsAction<Interface>
 		httpForm.addTextField( PROXYPASSWORD, "proxy password to access the WSDL-URI", XForm.FieldType.TEXT );
 		httpForm.addTextField( PROXYDOMAIN, "proxy domain to access the WSDL-URI", XForm.FieldType.TEXT );
 
-      buildArgsForm( builder, false, "wsdl.exe" );
-      
+		buildArgsForm( builder, false, "wsdl.exe" );
+
 		return builder.buildDialog( buildDefaultActions( HelpUrls.DOTNET_HELP_URL, modelItem ),
-      		"Specify arguments for .NET 2 wsdl.exe", UISupport.TOOL_ICON );
+				"Specify arguments for .NET 2 wsdl.exe", UISupport.TOOL_ICON );
 	}
 
-	protected void generate(StringToStringMap values, ToolHost toolHost, Interface modelItem) throws Exception
+	protected void generate( StringToStringMap values, ToolHost toolHost, Interface modelItem ) throws Exception
 	{
 		String dotnetDir = SoapUI.getSettings().getString( ToolsSettings.DOTNET_WSDL_LOCATION, null );
 		if( Tools.isEmpty( dotnetDir ) )
@@ -121,22 +121,22 @@ public class DotNetWsdlAction extends AbstractToolsAction<Interface>
 			UISupport.showErrorMessage( ".NET 2.0 wsdl.exe directory must be set in global preferences" );
 			return;
 		}
-		
+
 		ProcessBuilder builder = new ProcessBuilder();
 		ArgumentBuilder args = buildArgs( values, modelItem );
-		builder.command(args.getArgs());
-		builder.directory(new File(dotnetDir));
-		
-		toolHost.run( new ProcessToolRunner( builder, ".NET wsdl.exe", modelItem ));
+		builder.command( args.getArgs() );
+		builder.directory( new File( dotnetDir ) );
+
+		toolHost.run( new ProcessToolRunner( builder, ".NET wsdl.exe", modelItem ) );
 	}
 
-	private ArgumentBuilder buildArgs(StringToStringMap values, Interface modelItem )
+	private ArgumentBuilder buildArgs( StringToStringMap values, Interface modelItem )
 	{
-		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ));
-		
+		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ) );
+
 		ArgumentBuilder builder = new ArgumentBuilder( values );
 		builder.addArgs( "cmd.exe", "/C", "wsdl.exe", "/nologo", "/verbose" );
-		
+
 		builder.addString( NAMESPACE, "/namespace", ":" );
 		builder.addString( OUTPUT, "/out", ":" );
 		builder.addString( PROTOCOL, "/protocol", ":" );
@@ -147,10 +147,10 @@ public class DotNetWsdlAction extends AbstractToolsAction<Interface>
 		builder.addBoolean( FIELDS, "/fields" );
 		builder.addBoolean( ORDER, "/order" );
 		builder.addBoolean( ENABLEDATABINDING, "/enableDataBinding" );
-		
+
 		builder.addString( URLKEY, "/appsettingurlkey", ":" );
 		builder.addString( BASEURL, "/appsettingbaseurl", ":" );
-		
+
 		builder.addString( USERNAME, "/username", ":" );
 		builder.addString( PASSWORD, "/password", ":" );
 		builder.addString( DOMAIN, "/domain", ":" );
@@ -158,9 +158,9 @@ public class DotNetWsdlAction extends AbstractToolsAction<Interface>
 		builder.addString( PROXYUSERNAME, "/proxyusername", ":" );
 		builder.addString( PROXYPASSWORD, "/proxypassword", ":" );
 		builder.addString( PROXYDOMAIN, "/proxydomain", ":" );
-		
+
 		addToolArgs( values, builder );
-		
+
 		builder.addArgs( getWsdlUrl( values, modelItem ) );
 
 		return builder;

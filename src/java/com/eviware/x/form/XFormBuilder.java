@@ -16,7 +16,7 @@ import java.awt.Component;
 
 public class XFormBuilder
 {
-	public static Component buildForm(XForm form)
+	public static Component buildForm( XForm form )
 	{
 		return null;
 	}

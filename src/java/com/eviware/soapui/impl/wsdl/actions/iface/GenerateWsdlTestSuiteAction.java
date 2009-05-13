@@ -12,6 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl.actions.iface;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -26,15 +29,12 @@ import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormOptionsField;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
-
-import java.util.Arrays;
-import java.util.List;
+import com.eviware.x.form.support.AField.AFieldType;
 
 /**
  * Generates a TestSuite for the specified Interface
- *  
+ * 
  * @author ole.matzura
  */
 
@@ -45,7 +45,7 @@ public class GenerateWsdlTestSuiteAction extends AbstractSoapUIAction<WsdlInterf
 		super( "Generate TestSuite", "Generates TestSuite with TestCase(s) for all Operations in this Interface" );
 	}
 
-   public void perform( WsdlInterface target, Object param )
+	public void perform( WsdlInterface target, Object param )
 	{
 		generateTestSuite( target, false );
 	}
@@ -57,7 +57,7 @@ public class GenerateWsdlTestSuiteAction extends AbstractSoapUIAction<WsdlInterf
 		dialog.setValue( GenerateForm.REQUEST_CONTENT, "Create new empty requests" );
 		String[] names = ModelSupport.getNames( iface.getOperationList() );
 		dialog.setOptions( GenerateForm.OPERATIONS, names );
-		XFormOptionsField operationsFormField = ( XFormOptionsField ) dialog.getFormField( GenerateForm.OPERATIONS );
+		XFormOptionsField operationsFormField = ( XFormOptionsField )dialog.getFormField( GenerateForm.OPERATIONS );
 		operationsFormField.setSelectedOptions( names );
 
 		WsdlProject project = iface.getProject();
@@ -72,13 +72,13 @@ public class GenerateWsdlTestSuiteAction extends AbstractSoapUIAction<WsdlInterf
 				UISupport.showErrorMessage( "No Operations selected.." );
 				return null;
 			}
-			
+
 			String testSuiteName = dialog.getValue( GenerateForm.TESTSUITE );
 
 			if( testSuiteName.equals( "<create>" ) )
 				testSuiteName = UISupport.prompt( "Enter name of TestSuite to create", "Generate TestSuite", iface
-							.getName()
-							+ " TestSuite" );
+						.getName()
+						+ " TestSuite" );
 
 			if( testSuiteName != null && testSuiteName.trim().length() > 0 )
 			{
@@ -105,7 +105,7 @@ public class GenerateWsdlTestSuiteAction extends AbstractSoapUIAction<WsdlInterf
 				{
 					UISupport.showDesktopPanel( testSuite );
 				}
-				
+
 				return testSuite;
 			}
 		}
@@ -114,14 +114,14 @@ public class GenerateWsdlTestSuiteAction extends AbstractSoapUIAction<WsdlInterf
 	}
 
 	private void generateSingleTestCase( WsdlTestSuite testSuite, WsdlInterface iface, boolean useExisting,
-				boolean createLoadTest, List<String> operations )
+			boolean createLoadTest, List<String> operations )
 	{
 		WsdlTestCase testCase = testSuite.addNewTestCase( iface.getName() + " TestSuite" );
 
 		for( int i = 0; i < iface.getOperationCount(); i++ )
 		{
 			WsdlOperation operation = iface.getOperationAt( i );
-			if( !operations.contains( operation.getName() ))
+			if( !operations.contains( operation.getName() ) )
 				continue;
 
 			if( useExisting && operation.getRequestCount() > 0 )
@@ -129,7 +129,7 @@ public class GenerateWsdlTestSuiteAction extends AbstractSoapUIAction<WsdlInterf
 				for( int x = 0; x < operation.getRequestCount(); x++ )
 				{
 					testCase.addTestStep( WsdlTestRequestStepFactory.createConfig( operation.getRequestAt( x ), operation
-								.getName() ) );
+							.getName() ) );
 				}
 			}
 			else
@@ -145,14 +145,14 @@ public class GenerateWsdlTestSuiteAction extends AbstractSoapUIAction<WsdlInterf
 	}
 
 	private void generateMulipleTestCases( WsdlTestSuite testSuite, WsdlInterface iface, boolean useExisting,
-				boolean createLoadTest, List<String> operations )
+			boolean createLoadTest, List<String> operations )
 	{
 		for( int i = 0; i < iface.getOperationCount(); i++ )
 		{
 			WsdlOperation operation = iface.getOperationAt( i );
-			if( !operations.contains( operation.getName() ))
+			if( !operations.contains( operation.getName() ) )
 				continue;
-			
+
 			WsdlTestCase testCase = testSuite.addNewTestCase( operation.getName() + " TestCase" );
 
 			if( useExisting && operation.getRequestCount() > 0 )
@@ -160,7 +160,7 @@ public class GenerateWsdlTestSuiteAction extends AbstractSoapUIAction<WsdlInterf
 				for( int x = 0; x < operation.getRequestCount(); x++ )
 				{
 					testCase.addTestStep( WsdlTestRequestStepFactory.createConfig( operation.getRequestAt( x ), operation
-								.getName() ) );
+							.getName() ) );
 				}
 			}
 			else
@@ -175,19 +175,18 @@ public class GenerateWsdlTestSuiteAction extends AbstractSoapUIAction<WsdlInterf
 		}
 	}
 
-	@AForm( name = "Generate TestSuite", description = "Generates TestSuite with TestCase(s) for all Operations in this Interface",
-				helpUrl=HelpUrls.GENERATE_TESTSUITE_HELP_URL, icon=UISupport.TOOL_ICON_PATH )
+	@AForm( name = "Generate TestSuite", description = "Generates TestSuite with TestCase(s) for all Operations in this Interface", helpUrl = HelpUrls.GENERATE_TESTSUITE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
 	private class GenerateForm
 	{
 		@AField( name = "TestSuite", description = "The TestSuite to create or use", type = AFieldType.ENUMERATION )
 		public final static String TESTSUITE = "TestSuite";
 
 		@AField( name = "Style", description = "Select the style of TestCases to create", type = AFieldType.RADIOGROUP, values = {
-					"One TestCase for each Operation", "Single TestCase with one Request for each Operation" } )
+				"One TestCase for each Operation", "Single TestCase with one Request for each Operation" } )
 		public final static String STYLE = "Style";
 
 		@AField( name = "Request Content", description = "Select how to create Test Requests", type = AFieldType.RADIOGROUP, values = {
-					"Use existing Requests in Interface", "Create new empty requests" } )
+				"Use existing Requests in Interface", "Create new empty requests" } )
 		public final static String REQUEST_CONTENT = "Request Content";
 
 		@AField( name = "Operations", description = "The Operations for which to Generate Tests", type = AFieldType.MULTILIST )

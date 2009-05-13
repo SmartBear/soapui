@@ -40,7 +40,7 @@ public class StringToStringMapTableModel extends AbstractTableModel implements T
 		this.keyCaption = keyCaption;
 		this.valueCaption = valueCaption;
 		this.editable = editable;
-		
+
 		keyList = data == null ? new ArrayList<String>() : new ArrayList<String>( data.keySet() );
 	}
 
@@ -48,7 +48,7 @@ public class StringToStringMapTableModel extends AbstractTableModel implements T
 	{
 		return 2;
 	}
-	
+
 	public String getColumnName( int arg0 )
 	{
 		return arg0 == 0 ? keyCaption : valueCaption;
@@ -58,7 +58,7 @@ public class StringToStringMapTableModel extends AbstractTableModel implements T
 	{
 		return editable;
 	}
-	
+
 	public Class<?> getColumnClass( int arg0 )
 	{
 		return String.class;
@@ -67,14 +67,14 @@ public class StringToStringMapTableModel extends AbstractTableModel implements T
 	public void setValueAt( Object arg0, int arg1, int arg2 )
 	{
 		String oldKey = keyList.get( arg1 );
-		
+
 		if( arg2 == 0 )
 		{
 			String value = data.get( oldKey );
-			
+
 			data.remove( oldKey );
 			data.put( arg0.toString(), value );
-			
+
 			keyList.set( arg1, arg0.toString() );
 		}
 		else
@@ -93,12 +93,12 @@ public class StringToStringMapTableModel extends AbstractTableModel implements T
 	public Object getValueAt( int arg0, int arg1 )
 	{
 		String str = keyList.get( arg0 );
-		return arg1 == 0 ? str : data.get( str);
+		return arg1 == 0 ? str : data.get( str );
 	}
 
 	public void add( String key, String value )
 	{
-		if( keyList.contains( key ))
+		if( keyList.contains( key ) )
 		{
 			data.put( key, value );
 			fireTableCellUpdated( keyList.indexOf( key ), 1 );
@@ -107,7 +107,7 @@ public class StringToStringMapTableModel extends AbstractTableModel implements T
 		{
 			data.put( key, value );
 			keyList.add( key );
-			fireTableRowsInserted( keyList.size()-1, keyList.size()-1 );
+			fireTableRowsInserted( keyList.size() - 1, keyList.size() - 1 );
 		}
 	}
 
@@ -116,7 +116,7 @@ public class StringToStringMapTableModel extends AbstractTableModel implements T
 		String key = keyList.get( row );
 		keyList.remove( row );
 		data.remove( key );
-		
+
 		fireTableRowsDeleted( row, row );
 	}
 
@@ -128,7 +128,7 @@ public class StringToStringMapTableModel extends AbstractTableModel implements T
 	public void setData( StringToStringMap data )
 	{
 		this.data = data == null ? new StringToStringMap() : data;
-		
+
 		keyList = new ArrayList<String>( this.data.keySet() );
 		fireTableDataChanged();
 	}

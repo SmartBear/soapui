@@ -34,6 +34,12 @@ public class WsdlProjectTestCase extends TestCaseWithJetty
 		WsdlProject project = new WsdlProject( str );
 	}
 
+	public void testInit() throws Exception
+	{
+		assertTrue( new WsdlProject().isCacheDefinitions() );
+	}
+	
+	
 //	public void testImport() throws Exception
 //	{
 //		String url = "http://queue.amazonaws.com/doc/2006-04-01/QueueService.wsdl";

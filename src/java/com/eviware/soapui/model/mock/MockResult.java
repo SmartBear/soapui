@@ -24,17 +24,17 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public interface MockResult
 {
 	public MockRequest getMockRequest();
-	
+
 	public StringToStringMap getResponseHeaders();
 
 	public String getResponseContent();
-	
+
 	public MockResponse getMockResponse();
-	
+
 	public ActionList getActions();
-	
+
 	public long getTimeTaken();
-	
+
 	public long getTimestamp();
 
 	public void finish();

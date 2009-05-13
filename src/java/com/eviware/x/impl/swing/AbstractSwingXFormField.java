@@ -21,19 +21,19 @@ import com.eviware.x.form.AbstractXFormField;
 
 public abstract class AbstractSwingXFormField<T extends JComponent> extends AbstractXFormField<T>
 {
-   private T component;
-   
-	public AbstractSwingXFormField(T component)
+	private T component;
+
+	public AbstractSwingXFormField( T component )
 	{
-      this.component = component;
+		this.component = component;
 	}
-	
+
 	public T getComponent()
 	{
-	   return component;
+		return component;
 	}
-   
-	public void setToolTip(String tooltip)
+
+	public void setToolTip( String tooltip )
 	{
 		component.setToolTipText( tooltip );
 		component.getAccessibleContext().setAccessibleDescription( tooltip );
@@ -44,16 +44,16 @@ public abstract class AbstractSwingXFormField<T extends JComponent> extends Abst
 		return component.isEnabled();
 	}
 
-	public void setEnabled(boolean enabled)
+	public void setEnabled( boolean enabled )
 	{
-      component.setEnabled( enabled );	
+		component.setEnabled( enabled );
 	}
 
-   public void setProperty(String name, Object value)
-   {
-      if( name.equals("dimension"))
-      {
-         UISupport.setFixedSize(getComponent(), (Dimension)value);
-      }
-   }
+	public void setProperty( String name, Object value )
+	{
+		if( name.equals( "dimension" ) )
+		{
+			UISupport.setFixedSize( getComponent(), ( Dimension )value );
+		}
+	}
 }

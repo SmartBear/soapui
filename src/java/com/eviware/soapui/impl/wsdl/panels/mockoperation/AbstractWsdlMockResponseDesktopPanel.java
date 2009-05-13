@@ -12,6 +12,29 @@
 
 package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
@@ -40,24 +63,17 @@ import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 /**
  * Abstract base DesktopPanel for WsdlMockResponses
  * 
  * @author Ole.Matzura
  */
 
-public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extends WsdlMockResponse> extends ModelItemDesktopPanel<T>
+public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extends WsdlMockResponse> extends
+		ModelItemDesktopPanel<T>
 {
-	//private final static Log log = Logger.getLogger(WsdlMockOperationDesktopPanel.class);
+	// private final static Log log =
+	// Logger.getLogger(WsdlMockOperationDesktopPanel.class);
 	private JEditorStatusBarWithProgress statusBar;
 	private JButton splitButton;
 	private MockRunner mockRunner;
@@ -67,8 +83,8 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 	private MoveFocusAction moveFocusAction;
 	private ClosePanelAction closePanelAction = new ClosePanelAction();
 
-	private ModelItemXmlEditor<?,?> requestEditor;
-	private ModelItemXmlEditor<?,?> responseEditor;
+	private ModelItemXmlEditor<?, ?> requestEditor;
+	private ModelItemXmlEditor<?, ?> responseEditor;
 
 	public AbstractAction wsiValidateAction;
 
@@ -83,24 +99,25 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 	private T2 mockResponse;
 	private JButton openRequestButton;
 
-	public AbstractWsdlMockResponseDesktopPanel(T modelItem)
+	public AbstractWsdlMockResponseDesktopPanel( T modelItem )
 	{
-		super(modelItem);
+		super( modelItem );
 	}
-	
+
 	protected void init( T2 mockResponse )
 	{
 		this.mockResponse = mockResponse;
-		
-		add(buildContent(), BorderLayout.CENTER);
-		add(buildToolbar(), BorderLayout.NORTH);
-		add(buildStatusLabel(), BorderLayout.SOUTH);
 
-		setPreferredSize(new Dimension(600, 500));
-		
+		add( buildContent(), BorderLayout.CENTER );
+		add( buildToolbar(), BorderLayout.NORTH );
+		add( buildStatusLabel(), BorderLayout.SOUTH );
+
+		setPreferredSize( new Dimension( 600, 500 ) );
+
 		mockResponse.addPropertyChangeListener( propertyChangeListener );
-		
-		addFocusListener( new FocusAdapter() {
+
+		addFocusListener( new FocusAdapter()
+		{
 
 			@Override
 			public void focusGained( FocusEvent e )
@@ -109,20 +126,21 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 					responseEditor.requestFocus();
 				else
 					requestEditor.requestFocus();
-			}} );
+			}
+		} );
 
-       try
-      {
-         // required to avoid deadlock in UI when opening attachments inspector
-         if( mockResponse.getAttachmentCount() > 0 )
-         {
-            mockResponse.getOperation().getInterface().getDefinitionContext().loadIfNecessary();
-         }
-      }
-      catch( Exception e )
-      {
-         e.printStackTrace();
-      }
+		try
+		{
+			// required to avoid deadlock in UI when opening attachments inspector
+			if( mockResponse.getAttachmentCount() > 0 )
+			{
+				mockResponse.getOperation().getInterface().getDefinitionContext().loadIfNecessary();
+			}
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+		}
 	}
 
 	protected WsdlMockResponse getMockResponse()
@@ -130,16 +148,16 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		return mockResponse;
 	}
 
-	public final ModelItemXmlEditor<?,?> getRequestEditor()
+	public final ModelItemXmlEditor<?, ?> getRequestEditor()
 	{
 		return requestEditor;
 	}
 
-	public final ModelItemXmlEditor<?,?> getResponseEditor()
+	public final ModelItemXmlEditor<?, ?> getResponseEditor()
 	{
 		return responseEditor;
 	}
-	
+
 	public MockRunner getSubmit()
 	{
 		return mockRunner;
@@ -148,8 +166,8 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 	protected JComponent buildStatusLabel()
 	{
 		statusBar = new JEditorStatusBarWithProgress();
-		statusBar.setBorder( BorderFactory.createEmptyBorder( 1, 0, 0, 0 ));
-		
+		statusBar.setBorder( BorderFactory.createEmptyBorder( 1, 0, 0, 0 ) );
+
 		return statusBar;
 	}
 
@@ -158,89 +176,88 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		return statusBar;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	protected JComponent buildContent()
 	{
 		requestSplitPane = UISupport.createHorizontalSplit();
-		requestSplitPane.setResizeWeight(0.5);
-		requestSplitPane.setBorder(null);
-		
-		splitButton = createActionButton(new ChangeSplitPaneOrientationAction(requestSplitPane), true);
-		
+		requestSplitPane.setResizeWeight( 0.5 );
+		requestSplitPane.setBorder( null );
+
+		splitButton = createActionButton( new ChangeSplitPaneOrientationAction( requestSplitPane ), true );
+
 		tabsButton = new JToggleButton( new ChangeToTabsAction() );
 		tabsButton.setPreferredSize( UISupport.TOOLBAR_BUTTON_DIMENSION );
-		
-		openRequestButton = createActionButton(
-					SwingActionDelegate.createDelegate( OpenRequestForMockResponseAction.SOAPUI_ACTION_ID, mockResponse, null,
-						"/open_request.gif"), true);
-		
-// TODO Ericsson: This was removed and replaced with "true" below.
+
+		openRequestButton = createActionButton( SwingActionDelegate.createDelegate(
+				OpenRequestForMockResponseAction.SOAPUI_ACTION_ID, mockResponse, null, "/open_request.gif" ), true );
+
+		// TODO Ericsson: This was removed and replaced with "true" below.
 		boolean bidirectional = mockResponse.getMockOperation().getOperation().isBidirectional();
-		
-		recreateButton = createActionButton(new RecreateMockResponseAction( mockResponse ), bidirectional);
-		createEmptyButton = createActionButton(new CreateEmptyMockResponseAction(mockResponse), bidirectional);
-		createFaultButton = createActionButton(new CreateFaultMockResponseAction(mockResponse), bidirectional);
+
+		recreateButton = createActionButton( new RecreateMockResponseAction( mockResponse ), bidirectional );
+		createEmptyButton = createActionButton( new CreateEmptyMockResponseAction( mockResponse ), bidirectional );
+		createFaultButton = createActionButton( new CreateFaultMockResponseAction( mockResponse ), bidirectional );
 
 		moveFocusAction = new MoveFocusAction();
-		wsiValidateAction = //new WSIValidateResponseAction( mockResponse );
-			SwingActionDelegate.createDelegate( new WSIValidateResponseAction(), mockResponse, "alt W" ); 
+		wsiValidateAction = // new WSIValidateResponseAction( mockResponse );
+		SwingActionDelegate.createDelegate( new WSIValidateResponseAction(), mockResponse, "alt W" );
 
 		requestEditor = buildRequestEditor();
 		responseEditor = buildResponseEditor();
-		
+
 		requestTabs = new JTabbedPane();
-	   requestTabPanel = UISupport.createTabPanel( requestTabs, true );
-	   
+		requestTabPanel = UISupport.createTabPanel( requestTabs, true );
+
 		JComponent component = null;
-		
-		if( mockResponse.getSettings().getBoolean( UISettings.START_WITH_REQUEST_TABS ))
-	   {
-	   	requestTabs.addTab( "Last Request", requestEditor );
-	   	requestTabs.addTab( "Mock Response", responseEditor );
-	   	splitButton.setEnabled( false );
-	   	tabsButton.setSelected( true );
-	   	component = requestTabPanel;
-	   	
-	   	requestTabs.setSelectedIndex( 1 );
-	   }
-	   else
-	   {
-	   	requestSplitPane.setTopComponent(requestEditor);
-	   	requestSplitPane.setBottomComponent(responseEditor);
-	   	requestSplitPane.setDividerLocation(0.5);
-	   	component = requestSplitPane;
-	   }
-		
+
+		if( mockResponse.getSettings().getBoolean( UISettings.START_WITH_REQUEST_TABS ) )
+		{
+			requestTabs.addTab( "Last Request", requestEditor );
+			requestTabs.addTab( "Mock Response", responseEditor );
+			splitButton.setEnabled( false );
+			tabsButton.setSelected( true );
+			component = requestTabPanel;
+
+			requestTabs.setSelectedIndex( 1 );
+		}
+		else
+		{
+			requestSplitPane.setTopComponent( requestEditor );
+			requestSplitPane.setBottomComponent( responseEditor );
+			requestSplitPane.setDividerLocation( 0.5 );
+			component = requestSplitPane;
+		}
+
 		return component;
 	}
 
-	protected ModelItemXmlEditor<?,?> buildResponseEditor()
+	protected ModelItemXmlEditor<?, ?> buildResponseEditor()
 	{
-		return new WsdlMockResponseMessageEditor( new MockResponseXmlDocument( mockResponse ));
+		return new WsdlMockResponseMessageEditor( new MockResponseXmlDocument( mockResponse ) );
 	}
 
-	protected ModelItemXmlEditor<?,?> buildRequestEditor()
+	protected ModelItemXmlEditor<?, ?> buildRequestEditor()
 	{
-		return new WsdlMockRequestMessageEditor( new MockRequestXmlDocument( mockResponse ));
+		return new WsdlMockRequestMessageEditor( new MockRequestXmlDocument( mockResponse ) );
 	}
 
 	protected JComponent buildToolbar()
 	{
-		JXToolBar toolbar =  UISupport.createToolbar(); 
-		
-		toolbar.add( openRequestButton);
+		JXToolBar toolbar = UISupport.createToolbar();
+
+		toolbar.add( openRequestButton );
 		toolbar.addUnrelatedGap();
-		toolbar.add(recreateButton);
-		toolbar.add(createEmptyButton);
-		toolbar.add(createFaultButton);
-		
+		toolbar.add( recreateButton );
+		toolbar.add( createEmptyButton );
+		toolbar.add( createFaultButton );
+
 		createToolbar( toolbar );
-		
+
 		toolbar.add( Box.createHorizontalGlue() );
 		toolbar.add( tabsButton );
-		toolbar.add(splitButton);
-		toolbar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction(getHelpUrl())));
-		
+		toolbar.add( splitButton );
+		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( getHelpUrl() ) ) );
+
 		return toolbar;
 	}
 
@@ -253,40 +270,41 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		return HelpUrls.REQUESTEDITOR_HELP_URL;
 	}
 
-	protected void insertButtons(JToolBar toolbar)
+	protected void insertButtons( JToolBar toolbar )
 	{
 	}
 
-	public void setEnabled(boolean enabled)
+	public void setEnabled( boolean enabled )
 	{
-		requestEditor.getSourceEditor().setEditable(enabled);
-		responseEditor.getSourceEditor().setEditable(enabled);
-		recreateButton.setEnabled(enabled);
-		createEmptyButton.setEnabled(enabled);
+		requestEditor.getSourceEditor().setEditable( enabled );
+		responseEditor.getSourceEditor().setEditable( enabled );
+		recreateButton.setEnabled( enabled );
+		createEmptyButton.setEnabled( enabled );
 		statusBar.setIndeterminate( !enabled );
 	}
 
 	private final class InternalPropertyChangeListener implements PropertyChangeListener
 	{
-		public void propertyChange(PropertyChangeEvent evt)
+		public void propertyChange( PropertyChangeEvent evt )
 		{
-			if( evt.getPropertyName().equals( WsdlMockResponse.MOCKRESULT_PROPERTY ))
+			if( evt.getPropertyName().equals( WsdlMockResponse.MOCKRESULT_PROPERTY ) )
 			{
 				WsdlMockResult mockResult = mockResponse.getMockResult();
 				WsdlMockRequest mockRequest = mockResult == null ? null : mockResult.getMockRequest();
-				requestEditor.getDocument().setXml( mockRequest == null ? "" : mockRequest.getRequestContent());
-				
+				requestEditor.getDocument().setXml( mockRequest == null ? "" : mockRequest.getRequestContent() );
+
 				boolean bidirectional = mockResponse.getMockOperation().getOperation().isBidirectional();
-				wsiValidateAction.setEnabled( bidirectional );  // TODO Ericsson: Had "true" here. Why?
+				wsiValidateAction.setEnabled( bidirectional ); // TODO Ericsson: Had
+																				// "true" here. Why?
 			}
 		}
 	}
 
-	public class WsdlMockRequestMessageEditor extends RequestMessageXmlEditor<WsdlMockResponse,XmlDocument>
+	public class WsdlMockRequestMessageEditor extends RequestMessageXmlEditor<WsdlMockResponse, XmlDocument>
 	{
-		public WsdlMockRequestMessageEditor(XmlDocument document)
+		public WsdlMockRequestMessageEditor( XmlDocument document )
 		{
-			super(document, mockResponse);
+			super( document, mockResponse );
 		}
 
 		protected XmlSourceEditorView buildSourceEditor()
@@ -294,11 +312,11 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 			XmlSourceEditorView editor = getSourceEditor();
 			JXEditTextArea inputArea = editor.getInputArea();
 
-			inputArea.addFocusListener(new InputAreaFocusListener());
-			
-			inputArea.getInputHandler().addKeyBinding("AC+TAB", moveFocusAction);
-			inputArea.getInputHandler().addKeyBinding("F5", recreateButton.getAction());
-			inputArea.getInputHandler().addKeyBinding("C+F4", closePanelAction);
+			inputArea.addFocusListener( new InputAreaFocusListener() );
+
+			inputArea.getInputHandler().addKeyBinding( "AC+TAB", moveFocusAction );
+			inputArea.getInputHandler().addKeyBinding( "F5", recreateButton.getAction() );
+			inputArea.getInputHandler().addKeyBinding( "C+F4", closePanelAction );
 
 			return editor;
 		}
@@ -306,113 +324,113 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 
 	public class WsdlMockResponseMessageEditor extends ResponseMessageXmlEditor<WsdlMockResponse, XmlDocument>
 	{
-		public WsdlMockResponseMessageEditor(XmlDocument document)
+		public WsdlMockResponseMessageEditor( XmlDocument document )
 		{
-			super(document, mockResponse );
+			super( document, mockResponse );
 
 			XmlSourceEditorView editor = getSourceEditor();
-			
+
 			if( getModelItem().getMockOperation().isBidirectional() )
 			{
-			   JXEditTextArea inputArea = editor.getInputArea();
-			   inputArea.addFocusListener(new ResultAreaFocusListener());
-			
-			   inputArea.getInputHandler().addKeyBinding("AC+TAB", moveFocusAction);
-			   inputArea.getInputHandler().addKeyBinding("C+F4", closePanelAction);
-	
-// TODO Ericsson: This if test was changed and moved up. Ok?		
-//			if( !getModelItem().getMockOperation().isOneWay())
-//			{
+				JXEditTextArea inputArea = editor.getInputArea();
+				inputArea.addFocusListener( new ResultAreaFocusListener() );
+
+				inputArea.getInputHandler().addKeyBinding( "AC+TAB", moveFocusAction );
+				inputArea.getInputHandler().addKeyBinding( "C+F4", closePanelAction );
+
+				// TODO Ericsson: This if test was changed and moved up. Ok?
+				// if( !getModelItem().getMockOperation().isOneWay())
+				// {
 				JPopupMenu inputPopup = editor.getEditorPopup();
 				inputPopup.insert( new JSeparator(), 2 );
 				inputPopup.insert( wsiValidateAction, 3 );
 			}
 		}
 	}
-	
+
 	protected final class InputAreaFocusListener implements FocusListener
 	{
-		public void focusGained(FocusEvent e)
+		public void focusGained( FocusEvent e )
 		{
 			responseHasFocus = false;
-			
+
 			statusBar.setTarget( requestEditor.getSourceEditor().getInputArea() );
 			if( !splitButton.isEnabled() )
 			{
 				requestTabs.setSelectedIndex( 0 );
 				return;
 			}
-			
-			if (getModelItem().getSettings().getBoolean(UISettings.NO_RESIZE_REQUEST_EDITOR))
+
+			if( getModelItem().getSettings().getBoolean( UISettings.NO_RESIZE_REQUEST_EDITOR ) )
 				return;
 
 			// dont resize if split has been dragged
-			if (((SoapUISplitPaneUI) requestSplitPane.getUI()).hasBeenDragged())
+			if( ( ( SoapUISplitPaneUI )requestSplitPane.getUI() ).hasBeenDragged() )
 				return;
 
 			int pos = requestSplitPane.getDividerLocation();
-			if (pos >= 600)
+			if( pos >= 600 )
 				return;
-			if (requestSplitPane.getMaximumDividerLocation() > 700)
-				requestSplitPane.setDividerLocation(600);
+			if( requestSplitPane.getMaximumDividerLocation() > 700 )
+				requestSplitPane.setDividerLocation( 600 );
 			else
-				requestSplitPane.setDividerLocation(0.8);
+				requestSplitPane.setDividerLocation( 0.8 );
 		}
 
-		public void focusLost(FocusEvent e)
+		public void focusLost( FocusEvent e )
 		{
 		}
 	}
 
 	protected final class ResultAreaFocusListener implements FocusListener
 	{
-		public void focusGained(FocusEvent e)
+		public void focusGained( FocusEvent e )
 		{
 			responseHasFocus = true;
-			
+
 			statusBar.setTarget( responseEditor.getSourceEditor().getInputArea() );
 			if( !splitButton.isEnabled() )
 			{
 				requestTabs.setSelectedIndex( 1 );
 				return;
 			}
-			
-			if (getModelItem().getSettings().getBoolean(UISettings.NO_RESIZE_REQUEST_EDITOR))
+
+			if( getModelItem().getSettings().getBoolean( UISettings.NO_RESIZE_REQUEST_EDITOR ) )
 				return;
 
 			// dont resize if split has been dragged or result is empty
-			if (((SoapUISplitPaneUI) requestSplitPane.getUI()).hasBeenDragged() )
+			if( ( ( SoapUISplitPaneUI )requestSplitPane.getUI() ).hasBeenDragged() )
 				return;
 
 			int pos = requestSplitPane.getDividerLocation();
 			int maximumDividerLocation = requestSplitPane.getMaximumDividerLocation();
-			if (pos + 600 < maximumDividerLocation)
+			if( pos + 600 < maximumDividerLocation )
 				return;
 
-			if (maximumDividerLocation > 700)
-				requestSplitPane.setDividerLocation(maximumDividerLocation - 600);
+			if( maximumDividerLocation > 700 )
+				requestSplitPane.setDividerLocation( maximumDividerLocation - 600 );
 			else
-				requestSplitPane.setDividerLocation(0.2);
+				requestSplitPane.setDividerLocation( 0.2 );
 		}
 
-		public void focusLost(FocusEvent e)
+		public void focusLost( FocusEvent e )
 		{
 		}
 	}
 
 	private class ClosePanelAction extends AbstractAction
 	{
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed( ActionEvent e )
 		{
-			SoapUI.getDesktop().closeDesktopPanel(getModelItem());
+			SoapUI.getDesktop().closeDesktopPanel( getModelItem() );
 		}
 	}
 
 	private class MoveFocusAction extends AbstractAction
 	{
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed( ActionEvent e )
 		{
-			if (requestEditor.hasFocus())
+			if( requestEditor.hasFocus() )
 			{
 				responseEditor.requestFocus();
 			}
@@ -423,7 +441,7 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		}
 	}
 
-	public boolean dependsOn(ModelItem modelItem)
+	public boolean dependsOn( ModelItem modelItem )
 	{
 		return modelItem == getModelItem() || modelItem == mockResponse.getMockOperation()
 				|| modelItem == mockResponse.getMockOperation().getMockService()
@@ -434,11 +452,11 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 	{
 		public ChangeToTabsAction()
 		{
-			putValue(Action.SMALL_ICON, UISupport.createImageIcon("/toggle_tabs.gif"));
-			putValue(Action.SHORT_DESCRIPTION, "Toggles to tab-based layout");
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/toggle_tabs.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Toggles to tab-based layout" );
 		}
-		
-		public void actionPerformed(ActionEvent e)
+
+		public void actionPerformed( ActionEvent e )
 		{
 			if( splitButton.isEnabled() )
 			{
@@ -451,46 +469,46 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 			else
 			{
 				int selectedIndex = requestTabs.getSelectedIndex();
-				
+
 				splitButton.setEnabled( true );
 				removeContent( requestTabPanel );
 				setContent( requestSplitPane );
-				requestSplitPane.setTopComponent(requestEditor);
-		   	requestSplitPane.setBottomComponent(responseEditor);
-		   	requestSplitPane.setDividerLocation(0.5);
-		   	
-		   	if( selectedIndex == 0 )
-		   		requestEditor.requestFocus();
-		   	else
-		   		responseEditor.requestFocus();
+				requestSplitPane.setTopComponent( requestEditor );
+				requestSplitPane.setBottomComponent( responseEditor );
+				requestSplitPane.setDividerLocation( 0.5 );
+
+				if( selectedIndex == 0 )
+					requestEditor.requestFocus();
+				else
+					responseEditor.requestFocus();
 			}
-			
+
 			revalidate();
 		}
 	}
 
-	public void setContent(JComponent content)
+	public void setContent( JComponent content )
 	{
 		add( content, BorderLayout.CENTER );
 	}
 
-	public void removeContent(JComponent content)
+	public void removeContent( JComponent content )
 	{
 		remove( content );
 	}
-	
+
 	public boolean onClose( boolean canCancel )
 	{
 		mockResponse.removePropertyChangeListener( propertyChangeListener );
-		
+
 		requestEditor.release();
 		responseEditor.release();
-		
+
 		responseEditor.getParent().remove( responseEditor );
 		responseEditor = null;
 		requestEditor.getParent().remove( requestEditor );
 		requestEditor = null;
-		
+
 		return release();
 	}
 }

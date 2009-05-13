@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
+import org.apache.xmlbeans.XmlObject;
+
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
@@ -24,7 +26,6 @@ import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
-import org.apache.xmlbeans.XmlObject;
 
 /**
  * Assertion for verifiying that responses occurred in the desired amount of
@@ -32,7 +33,7 @@ import org.apache.xmlbeans.XmlObject;
  * 
  * @author Cory Lewis cory.lewis@genworth.com
  * 
- * with help from
+ *         with help from
  * @author Ole.Matzura
  */
 
@@ -56,20 +57,20 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 	}
 
 	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
-				throws AssertionException
+			throws AssertionException
 	{
 		return null;
 	}
 
 	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
-				throws AssertionException
+			throws AssertionException
 	{
 
 		// assert!
 		if( messageExchange.getTimeTaken() > Long.parseLong( SLA ) )
 		{
 			throw new AssertionException( new AssertionError( "Response did not meet SLA "
-						+ messageExchange.getTimeTaken() + "/" + SLA ) );
+					+ messageExchange.getTimeTaken() + "/" + SLA ) );
 		}
 
 		return "Response meets SLA";
@@ -104,8 +105,6 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 		return true;
 	}
 
-	
-	
 	public String getSLA()
 	{
 		return SLA;
@@ -125,12 +124,12 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
 		return builder.add( "SLA", SLA ).finish();
 	}
-	
+
 	public static class Factory extends AbstractTestAssertionFactory
 	{
 		public Factory()
 		{
-			super(ResponseSLAAssertion.ID, ResponseSLAAssertion.LABEL, ResponseSLAAssertion.class);
+			super( ResponseSLAAssertion.ID, ResponseSLAAssertion.LABEL, ResponseSLAAssertion.class );
 		}
 	}
 }

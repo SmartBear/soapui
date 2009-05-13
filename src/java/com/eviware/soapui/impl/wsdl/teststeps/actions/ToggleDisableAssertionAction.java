@@ -26,12 +26,12 @@ public class ToggleDisableAssertionAction extends AbstractSoapUIAction<WsdlMessa
 	public static final String SOAPUI_ACTION_ID = "ToggleDisableAssertionAction";
 
 	public ToggleDisableAssertionAction()
-   {
-      super( "Disable", "Disables this TestCase" );
-   }
-   
-   public void perform( WsdlMessageAssertion testCase, Object param )
 	{
-      testCase.setDisabled( !testCase.isDisabled() );
-   }
+		super( "Disable", "Disables this TestCase" );
+	}
+
+	public void perform( WsdlMessageAssertion testCase, Object param )
+	{
+		testCase.setDisabled( !testCase.isDisabled() );
+	}
 }

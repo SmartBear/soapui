@@ -22,7 +22,7 @@ public class DefaultXPathModifier implements XPathModifier
 		this.before = before;
 		this.after = after;
 	}
-	
+
 	public void afterSelector( StringBuffer xpath )
 	{
 		if( after != null )

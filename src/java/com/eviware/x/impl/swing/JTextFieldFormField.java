@@ -12,54 +12,55 @@
 
 package com.eviware.x.impl.swing;
 
+import java.awt.Color;
+
+import javax.swing.BorderFactory;
+import javax.swing.text.Document;
+
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.x.form.XFormTextField;
-
-import javax.swing.*;
-import javax.swing.text.Document;
-import java.awt.*;
 
 public class JTextFieldFormField extends AbstractSwingXFormField<JUndoableTextField> implements XFormTextField
 {
 	private boolean updating;
 	private String oldValue;
-	
+
 	public JTextFieldFormField()
 	{
 		super( new JUndoableTextField() );
-		
-		getComponent().getDocument().addDocumentListener( new DocumentListenerAdapter() {
+
+		getComponent().getDocument().addDocumentListener( new DocumentListenerAdapter()
+		{
 
 			@Override
 			public void update( Document document )
 			{
 				String text = getComponent().getText();
-				
+
 				if( !updating )
 					fireValueChanged( text, oldValue );
-				
+
 				oldValue = text;
-			}} );
-	}
-	
-	public void setRequired(boolean required, String message)
-	{
-		super.setRequired(required, message);
-		
-		if( required )
-			getComponent().setBorder( 
-					BorderFactory.createCompoundBorder(
-							BorderFactory.createLineBorder( Color.RED ), 
-							BorderFactory.createEmptyBorder( 2, 2, 2, 2 )));
-		else
-			getComponent().setBorder( 
-					BorderFactory.createCompoundBorder(
-							BorderFactory.createLineBorder( Color.GRAY ), 
-							BorderFactory.createEmptyBorder( 2, 2, 2, 2 )));
+			}
+		} );
 	}
 
-	public void setValue(String value)
+	public void setRequired( boolean required, String message )
+	{
+		super.setRequired( required, message );
+
+		if( required )
+			getComponent().setBorder(
+					BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( Color.RED ), BorderFactory
+							.createEmptyBorder( 2, 2, 2, 2 ) ) );
+		else
+			getComponent().setBorder(
+					BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( Color.GRAY ), BorderFactory
+							.createEmptyBorder( 2, 2, 2, 2 ) ) );
+	}
+
+	public void setValue( String value )
 	{
 		updating = true;
 		oldValue = null;
@@ -72,7 +73,7 @@ public class JTextFieldFormField extends AbstractSwingXFormField<JUndoableTextFi
 		return getComponent().getText();
 	}
 
-	public void setWidth(int columns)
+	public void setWidth( int columns )
 	{
 		getComponent().setColumns( columns );
 	}

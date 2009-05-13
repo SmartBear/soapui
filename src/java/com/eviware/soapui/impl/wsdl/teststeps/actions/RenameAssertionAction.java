@@ -24,16 +24,17 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 public class RenameAssertionAction extends AbstractSoapUIAction<WsdlMessageAssertion>
 {
-   public RenameAssertionAction()
-   {
-      super( "Rename", "Renames this assertion" );
-   }
-   
-   public void perform( WsdlMessageAssertion target, Object param )
+	public RenameAssertionAction()
 	{
-      String name = UISupport.prompt("Specify name for this assertion", "Rename Assertion", target.getName() );
-      if( name == null || name.equals( target.getName() )) return;
-      
-      target.setName( name );
-   }
+		super( "Rename", "Renames this assertion" );
+	}
+
+	public void perform( WsdlMessageAssertion target, Object param )
+	{
+		String name = UISupport.prompt( "Specify name for this assertion", "Rename Assertion", target.getName() );
+		if( name == null || name.equals( target.getName() ) )
+			return;
+
+		target.setName( name );
+	}
 }

@@ -50,34 +50,34 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 	private DefaultListModel listModel;
 	private List<Boolean> selected = new ArrayList<Boolean>();
 
-	public XFormMultiSelectList( String [] values )
+	public XFormMultiSelectList( String[] values )
 	{
 		super( new JPanel( new BorderLayout() ) );
-		
+
 		listModel = new DefaultListModel();
 		for( String value : values )
 		{
 			selected.add( false );
 			listModel.addElement( value );
 		}
-		
+
 		list = new JList( listModel );
 		list.setCellRenderer( new CheckListCellRenderer() );
 		list.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-		list.addMouseListener(new MouseAdapter()
-      {
-         public void mousePressed(MouseEvent e)
-         {
-            int index = list.locationToIndex(e.getPoint());
+		list.addMouseListener( new MouseAdapter()
+		{
+			public void mousePressed( MouseEvent e )
+			{
+				int index = list.locationToIndex( e.getPoint() );
 
-            if (index != -1) 
-            {
-            	selected.set( index, !selected.get(  index ));
-               list.repaint();
-            }
-         }
-      });
-		
+				if( index != -1 )
+				{
+					selected.set( index, !selected.get( index ) );
+					list.repaint();
+				}
+			}
+		} );
+
 		getComponent().add( new JScrollPane( list ), BorderLayout.CENTER );
 		getComponent().add( buildToolbar(), BorderLayout.SOUTH );
 		getComponent().setSize( new Dimension( 400, 120 ) );
@@ -89,17 +89,17 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 	private Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createSmallToolbar();
-		
-		toolbar.addFixed( new JButton( new SelectAllAction() ));
+
+		toolbar.addFixed( new JButton( new SelectAllAction() ) );
 		toolbar.addRelatedGap();
-		toolbar.addFixed( new JButton( new UnselectAllAction() ));
-		
+		toolbar.addFixed( new JButton( new UnselectAllAction() ) );
+
 		return toolbar;
 	}
 
 	public String getValue()
 	{
-		return ( String ) list.getSelectedValue();
+		return ( String )list.getSelectedValue();
 	}
 
 	public void setValue( String value )
@@ -112,27 +112,27 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 	public void addItem( String value )
 	{
 		listModel.addElement( value );
-		selected.add(  false );
+		selected.add( false );
 	}
 
 	public String[] getOptions()
 	{
-		String [] options = new String[listModel.size()];
+		String[] options = new String[listModel.size()];
 		for( int c = 0; c < options.length; c++ )
-			options[c] = ( String ) listModel.get( c );
+			options[c] = ( String )listModel.get( c );
 		return options;
 	}
 
 	public String[] getSelectedOptions()
 	{
 		List<String> result = new ArrayList<String>();
-		
+
 		for( int c = 0; c < selected.size(); c++ )
 		{
-			if( selected.get( c ))
-				result.add( ( String ) listModel.get( c ));
+			if( selected.get( c ) )
+				result.add( ( String )listModel.get( c ) );
 		}
-		
+
 		return result.toArray( new String[result.size()] );
 	}
 
@@ -146,31 +146,31 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 			listModel.addElement( value );
 		}
 	}
-	
+
 	public class CheckListCellRenderer extends JCheckBox implements ListCellRenderer
 	{
 		public CheckListCellRenderer()
 		{
-			setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3  ) );
+			setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
 		}
-		
+
 		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
-					boolean cellHasFocus )
+				boolean cellHasFocus )
 		{
 			setText( value.toString() );
 			setSelected( selected.get( index ) );
-			
-			if (isSelected)
+
+			if( isSelected )
 			{
-				setBackground(list.getSelectionBackground());
-				setForeground(list.getSelectionForeground());
+				setBackground( list.getSelectionBackground() );
+				setForeground( list.getSelectionForeground() );
 			}
 			else
 			{
-				setBackground(list.getBackground());
-				setForeground(list.getForeground());
+				setBackground( list.getBackground() );
+				setForeground( list.getForeground() );
 			}
-			
+
 			return this;
 		}
 	}
@@ -178,15 +178,15 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 	public void setSelectedOptions( String[] options )
 	{
 		List<String> asList = Arrays.asList( options );
-		
+
 		for( int c = 0; c < selected.size(); c++ )
 		{
-			selected.set( c, asList.contains( listModel.get( c )));
+			selected.set( c, asList.contains( listModel.get( c ) ) );
 		}
-		
+
 		list.repaint();
 	}
-	
+
 	private class SelectAllAction extends AbstractAction
 	{
 		public SelectAllAction()
@@ -194,7 +194,7 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 			super( "Select all" );
 			putValue( SHORT_DESCRIPTION, "Selects all items in the list" );
 		}
-		
+
 		public void actionPerformed( ActionEvent e )
 		{
 			setSelectedOptions( getOptions() );
@@ -208,7 +208,7 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 			super( "Unselect all" );
 			putValue( SHORT_DESCRIPTION, "Unselects all items in the list" );
 		}
-		
+
 		public void actionPerformed( ActionEvent e )
 		{
 			setSelectedOptions( new String[0] );
@@ -218,22 +218,22 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 	public int[] getSelectedIndexes()
 	{
 		int cnt = 0;
-		
+
 		for( int c = 0; c < selected.size(); c++ )
 		{
-			if( selected.get( c ))
-				cnt++;
+			if( selected.get( c ) )
+				cnt++ ;
 		}
-		
-		int [] result = new int[cnt];
+
+		int[] result = new int[cnt];
 		cnt = 0;
-		
+
 		for( int c = 0; c < selected.size(); c++ )
 		{
-			if( selected.get( c ))
-				result[cnt++] = c;
+			if( selected.get( c ) )
+				result[cnt++ ] = c;
 		}
-		
+
 		return result;
 	}
 }

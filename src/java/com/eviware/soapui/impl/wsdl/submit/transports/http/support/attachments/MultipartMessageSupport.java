@@ -12,6 +12,17 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.activation.DataSource;
+import javax.mail.BodyPart;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpOperation;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
@@ -21,23 +32,13 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-import javax.activation.DataSource;
-import javax.mail.BodyPart;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Utility class for managing large MultiParts
  * 
  * @author ole.matzura
  */
 
-public class MultipartMessageSupport 
+public class MultipartMessageSupport
 {
 	private final List<BodyPartAttachment> attachments = new ArrayList<BodyPartAttachment>();
 	private Attachment rootPart;
@@ -45,37 +46,38 @@ public class MultipartMessageSupport
 	private String responseContent;
 	private final boolean prettyPrint;
 
-	public MultipartMessageSupport( DataSource dataSource, String rootPartId, AbstractHttpOperation operation, boolean isRequest, boolean prettyPrint ) throws MessagingException
+	public MultipartMessageSupport( DataSource dataSource, String rootPartId, AbstractHttpOperation operation,
+			boolean isRequest, boolean prettyPrint ) throws MessagingException
 	{
 		this.prettyPrint = prettyPrint;
-		MimeMultipart mp = new MimeMultipart( dataSource);
+		MimeMultipart mp = new MimeMultipart( dataSource );
 		message = new MimeMessage( AttachmentUtils.JAVAMAIL_SESSION );
 		message.setContent( mp );
-		
+
 		AttachmentType attachmentType = AttachmentType.MIME;
-		
+
 		for( int c = 0; c < mp.getCount(); c++ )
 		{
 			BodyPart bodyPart = mp.getBodyPart( c );
-			
+
 			String contentType = bodyPart.getContentType().toUpperCase();
-			if( contentType.startsWith( "APPLICATION/XOP+XML"))
+			if( contentType.startsWith( "APPLICATION/XOP+XML" ) )
 				attachmentType = AttachmentType.XOP;
-			
-			if( contentType.startsWith( "MULTIPART/"))
+
+			if( contentType.startsWith( "MULTIPART/" ) )
 			{
-				MimeMultipart mp2 = new MimeMultipart( new BodyPartDataSource( bodyPart ));
+				MimeMultipart mp2 = new MimeMultipart( new BodyPartDataSource( bodyPart ) );
 				for( int i = 0; i < mp2.getCount(); i++ )
 				{
-					attachments.add( new BodyPartAttachment( mp2.getBodyPart(i), operation, isRequest, attachmentType ));
+					attachments.add( new BodyPartAttachment( mp2.getBodyPart( i ), operation, isRequest, attachmentType ) );
 				}
 			}
-			else 
+			else
 			{
 				BodyPartAttachment attachment = new BodyPartAttachment( bodyPart, operation, isRequest, attachmentType );
-				
-				String[] contentIdHeaders = bodyPart.getHeader( "Content-ID");
-				if( contentIdHeaders != null && contentIdHeaders.length > 0 && contentIdHeaders[0].equals( rootPartId ))
+
+				String[] contentIdHeaders = bodyPart.getHeader( "Content-ID" );
+				if( contentIdHeaders != null && contentIdHeaders.length > 0 && contentIdHeaders[0].equals( rootPartId ) )
 				{
 					rootPart = attachment;
 				}
@@ -83,14 +85,14 @@ public class MultipartMessageSupport
 					attachments.add( attachment );
 			}
 		}
-		
+
 		// if no explicit root part has been set, use the first one in the result
 		if( rootPart == null )
 			rootPart = attachments.remove( 0 );
-		
-		((BodyPartAttachment)rootPart).setAttachmentType( AttachmentType.CONTENT );
+
+		( ( BodyPartAttachment )rootPart ).setAttachmentType( AttachmentType.CONTENT );
 	}
-	
+
 	public void setOperation( WsdlOperation operation )
 	{
 		for( BodyPartAttachment attachment : attachments )
@@ -101,7 +103,7 @@ public class MultipartMessageSupport
 
 	public Attachment[] getAttachments()
 	{
-		return attachments.toArray( new Attachment[attachments.size()]);
+		return attachments.toArray( new Attachment[attachments.size()] );
 	}
 
 	public Attachment getRootPart()
@@ -109,105 +111,104 @@ public class MultipartMessageSupport
 		return rootPart;
 	}
 
-	public Attachment[] getAttachmentsForPart(String partName)
+	public Attachment[] getAttachmentsForPart( String partName )
 	{
 		List<Attachment> results = new ArrayList<Attachment>();
-		
+
 		for( Attachment attachment : attachments )
 		{
-			if( attachment.getPart().equals( partName ))
+			if( attachment.getPart().equals( partName ) )
 				results.add( attachment );
 		}
-		
-		return results.toArray( new Attachment[results.size()]);
+
+		return results.toArray( new Attachment[results.size()] );
 	}
 
 	public String getContentAsString()
 	{
 		if( rootPart == null )
 			return null;
-		
+
 		if( responseContent == null )
 		{
 			try
 			{
 				InputStream in = rootPart.getInputStream();
 				ByteArrayOutputStream out = Tools.readAll( in, Tools.READ_ALL );
-				byte [] data = out.toByteArray();
+				byte[] data = out.toByteArray();
 				int contentOffset = 0;
-				
+
 				String contentType = rootPart.getContentType();
-				if( contentType != null && data.length  > 0 )
+				if( contentType != null && data.length > 0 )
 				{
 					String charset = null;
-					if( contentType.indexOf( "charset=" ) > 0)
+					if( contentType.indexOf( "charset=" ) > 0 )
 					{
 						try
 						{
 							int ix = contentType.indexOf( "charset=" );
 							int ix2 = contentType.indexOf( ";", ix );
-						
-							charset = ix2 == -1 ? contentType.substring( ix+8 ) : 
-								contentType.substring( ix+8, ix2 );
+
+							charset = ix2 == -1 ? contentType.substring( ix + 8 ) : contentType.substring( ix + 8, ix2 );
 						}
 						catch( Throwable e )
 						{
 							SoapUI.logError( e );
 						}
 					}
-					
-					int ix = contentType.indexOf( ';');
+
+					int ix = contentType.indexOf( ';' );
 					if( ix > 0 )
 					{
-						contentType = contentType.substring(0, ix);
-						if( contentType.toLowerCase().endsWith("xml"))
+						contentType = contentType.substring( 0, ix );
+						if( contentType.toLowerCase().endsWith( "xml" ) )
 						{
-							if( data.length > 3 && data[0] == (byte)239 && data[1] == (byte)187 && data[2] == (byte)191 )
+							if( data.length > 3 && data[0] == ( byte )239 && data[1] == ( byte )187 && data[2] == ( byte )191 )
 							{
 								charset = "UTF-8";
 								contentOffset = 3;
 							}
 						}
 					}
-					
+
 					charset = StringUtils.unquote( charset );
-					
-					responseContent = charset == null ? new String(data) : 
-						new String(	data, contentOffset, (int)(data.length-contentOffset), charset );
+
+					responseContent = charset == null ? new String( data ) : new String( data, contentOffset,
+							( int )( data.length - contentOffset ), charset );
 				}
-				
+
 				if( responseContent == null )
 				{
 					responseContent = data.toString();
 				}
-				
+
 				if( prettyPrint )
-		   	{
+				{
 					responseContent = XmlUtils.prettyPrintXml( responseContent );
-		   	}
-				
+				}
+
 				return responseContent;
 			}
-			catch (Exception e)
+			catch( Exception e )
 			{
 				SoapUI.logError( e );
 			}
 		}
-		
+
 		return responseContent;
 	}
-	
-	public void setResponseContent(String responseContent)
+
+	public void setResponseContent( String responseContent )
 	{
 		this.responseContent = responseContent;
 	}
 
 	public Attachment getAttachmentWithContentId( String contentId )
 	{
-		for( Attachment attachment : attachments)
-		   if( contentId.equals( attachment.getContentID() ))
-		   	return attachment;
-		
+		for( Attachment attachment : attachments )
+			if( contentId.equals( attachment.getContentID() ) )
+				return attachment;
+
 		return null;
 	}
 }

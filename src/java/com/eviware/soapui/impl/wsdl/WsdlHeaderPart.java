@@ -31,17 +31,17 @@ public class WsdlHeaderPart extends MessagePart.HeaderPart
 	private SchemaType schemaType;
 	private QName partElementName;
 	private final SchemaGlobalElement partElement;
-	
-	public WsdlHeaderPart(String name, SchemaType schemaType, QName partElementName, SchemaGlobalElement partElement )
+
+	public WsdlHeaderPart( String name, SchemaType schemaType, QName partElementName, SchemaGlobalElement partElement )
 	{
 		super();
-		
+
 		this.name = name;
 		this.schemaType = schemaType;
 		this.partElementName = partElementName;
 		this.partElement = partElement;
 	}
-	
+
 	public SchemaType getSchemaType()
 	{
 		return schemaType;
@@ -56,7 +56,7 @@ public class WsdlHeaderPart extends MessagePart.HeaderPart
 	{
 		return name;
 	}
-	
+
 	public QName getPartElementName()
 	{
 		return partElementName;

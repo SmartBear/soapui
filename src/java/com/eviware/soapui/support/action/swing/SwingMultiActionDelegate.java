@@ -27,7 +27,8 @@ import com.eviware.soapui.support.action.SoapUIActionMapping;
 import com.eviware.soapui.support.action.SoapUIMultiAction;
 
 /**
- * Delegates a SwingAction to a SoapUIActionMapping containgin a SoapUIMultiAction
+ * Delegates a SwingAction to a SoapUIActionMapping containgin a
+ * SoapUIMultiAction
  * 
  * @author ole.matzura
  */
@@ -37,31 +38,31 @@ public class SwingMultiActionDelegate extends AbstractAction implements Property
 	private final SoapUIActionMapping<?> mapping;
 	private ModelItem[] targets;
 
-	public SwingMultiActionDelegate(SoapUIActionMapping<?> mapping, ModelItem[] targets)
+	public SwingMultiActionDelegate( SoapUIActionMapping<?> mapping, ModelItem[] targets )
 	{
-		super(mapping.getName());
+		super( mapping.getName() );
 		this.mapping = mapping;
 		this.targets = targets;
 
-		if (mapping.getDescription() != null)
-			putValue(Action.SHORT_DESCRIPTION, mapping.getDescription());
+		if( mapping.getDescription() != null )
+			putValue( Action.SHORT_DESCRIPTION, mapping.getDescription() );
 
-		if (mapping.getIconPath() != null)
-			putValue(Action.SMALL_ICON, UISupport.createImageIcon(mapping.getIconPath()));
+		if( mapping.getIconPath() != null )
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( mapping.getIconPath() ) );
 
-		if (mapping.getKeyStroke() != null)
-			putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke(mapping.getKeyStroke()));
+		if( mapping.getKeyStroke() != null )
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( mapping.getKeyStroke() ) );
 
-		setEnabled(mapping.getAction().isEnabled());
+		setEnabled( mapping.getAction().isEnabled() );
 
 		String name = mapping.getName();
-		int ix = name.indexOf('&');
-		if (ix >= 0)
+		int ix = name.indexOf( '&' );
+		if( ix >= 0 )
 		{
-			putValue(Action.NAME, name.substring(0, ix) + name.substring(ix + 1));
+			putValue( Action.NAME, name.substring( 0, ix ) + name.substring( ix + 1 ) );
 			// This doesn't seem to work in Java 5:
 			// putValue( Action.DISPLAYED_MNEMONIC_INDEX_KEY, new Integer( ix ));
-			putValue(Action.MNEMONIC_KEY, new Integer(name.charAt(ix + 1)));
+			putValue( Action.MNEMONIC_KEY, new Integer( name.charAt( ix + 1 ) ) );
 		}
 	}
 
@@ -70,47 +71,47 @@ public class SwingMultiActionDelegate extends AbstractAction implements Property
 		return mapping;
 	}
 
-	public void actionPerformed(ActionEvent e)
+	public void actionPerformed( ActionEvent e )
 	{
 		// required by IDE plugins
-		if (SwingActionDelegate.switchClassloader)
+		if( SwingActionDelegate.switchClassloader )
 		{
 			ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-			Thread.currentThread().setContextClassLoader(SoapUI.class.getClassLoader());
+			Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
 
 			try
 			{
-				((SoapUIMultiAction) mapping.getAction()).perform(targets, mapping.getParam());
+				( ( SoapUIMultiAction )mapping.getAction() ).perform( targets, mapping.getParam() );
 			}
-			catch (Throwable t)
+			catch( Throwable t )
 			{
-				SoapUI.logError(t);
+				SoapUI.logError( t );
 			}
 			finally
 			{
-				Thread.currentThread().setContextClassLoader(contextClassLoader);
+				Thread.currentThread().setContextClassLoader( contextClassLoader );
 			}
 		}
 		else
 		{
 			try
 			{
-				((SoapUIMultiAction) mapping.getAction()).perform(targets, mapping.getParam());
+				( ( SoapUIMultiAction )mapping.getAction() ).perform( targets, mapping.getParam() );
 			}
-			catch (Throwable t)
+			catch( Throwable t )
 			{
-				SoapUI.logError(t);
+				SoapUI.logError( t );
 			}
 		}
 	}
 
-	public void propertyChange(PropertyChangeEvent evt)
+	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if (evt.getPropertyName().equals(SoapUIAction.ENABLED_PROPERTY))
-			setEnabled(((Boolean) evt.getNewValue()).booleanValue());
+		if( evt.getPropertyName().equals( SoapUIAction.ENABLED_PROPERTY ) )
+			setEnabled( ( ( Boolean )evt.getNewValue() ).booleanValue() );
 	}
 
-	public ModelItem [] getTargets()
+	public ModelItem[] getTargets()
 	{
 		return targets;
 	}

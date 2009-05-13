@@ -40,51 +40,52 @@ public class WsdlTestStepSoapUIActionGroup extends DefaultSoapUIActionGroup<Wsdl
 	{
 		SoapUIActionMappingList<WsdlTestStep> actions = super.getActionMappings( modelItem );
 		SoapUIActionMapping<WsdlTestStep> toggleDisabledActionMapping = null;
-		
+
 		if( !initialized )
 		{
 			int insertIndex = 0;
-			
+
 			// add open-editor action
 			if( modelItem.hasEditor() )
 			{
-				DefaultActionMapping<WsdlTestStep> actionMapping = new DefaultActionMapping<WsdlTestStep>( ShowDesktopPanelAction.SOAPUI_ACTION_ID, 
-										"ENTER", null, true, null );
-				
+				DefaultActionMapping<WsdlTestStep> actionMapping = new DefaultActionMapping<WsdlTestStep>(
+						ShowDesktopPanelAction.SOAPUI_ACTION_ID, "ENTER", null, true, null );
+
 				actionMapping.setName( "Open Editor" );
 				actionMapping.setDescription( "Opens the editor for this TestStep" );
-				
-				actions.add( 0, actionMapping);
-				insertIndex++;
+
+				actions.add( 0, actionMapping );
+				insertIndex++ ;
 			}
-			
-			toggleDisabledActionMapping = new DefaultActionMapping<WsdlTestStep>( ToggleDisableTestStepAction.SOAPUI_ACTION_ID, 
-									null, null, false, null );
-			
-			actions.add( insertIndex, toggleDisabledActionMapping);
-			insertIndex++;
-	
+
+			toggleDisabledActionMapping = new DefaultActionMapping<WsdlTestStep>(
+					ToggleDisableTestStepAction.SOAPUI_ACTION_ID, null, null, false, null );
+
+			actions.add( insertIndex, toggleDisabledActionMapping );
+			insertIndex++ ;
+
 			// add default teststep actions
-			SoapUIActionGroup<WsdlTestStep> actionGroup = SoapUI.getActionRegistry().getActionGroup( "WsdlTestStepActions" );
+			SoapUIActionGroup<WsdlTestStep> actionGroup = SoapUI.getActionRegistry()
+					.getActionGroup( "WsdlTestStepActions" );
 			if( actionGroup != null )
 			{
-				actions.addAll( insertIndex, actionGroup.getActionMappings( modelItem ));
+				actions.addAll( insertIndex, actionGroup.getActionMappings( modelItem ) );
 			}
-			
+
 			initialized = true;
 		}
 		else
 		{
 			for( int c = 0; c < actions.size(); c++ )
 			{
-				if( actions.get( c ).getActionId().equals( ToggleDisableTestStepAction.SOAPUI_ACTION_ID ))
+				if( actions.get( c ).getActionId().equals( ToggleDisableTestStepAction.SOAPUI_ACTION_ID ) )
 				{
 					toggleDisabledActionMapping = actions.get( c );
 					break;
 				}
 			}
 		}
-		
+
 		if( toggleDisabledActionMapping != null )
 		{
 			if( modelItem.isDisabled() )
@@ -98,7 +99,7 @@ public class WsdlTestStepSoapUIActionGroup extends DefaultSoapUIActionGroup<Wsdl
 				toggleDisabledActionMapping.setDescription( "Disables this TestStep during TestCase execution" );
 			}
 		}
-		
+
 		return actions;
 	}
 }

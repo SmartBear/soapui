@@ -31,35 +31,35 @@ public class WsdlProjectFactory implements ProjectFactory<WsdlProject>
 		return new WsdlProject();
 	}
 
-	public WsdlProject createNew(String path) throws XmlException, IOException, SoapUIException
+	public WsdlProject createNew( String path ) throws XmlException, IOException, SoapUIException
 	{
-		return new WsdlProject(path);
+		return new WsdlProject( path );
 	}
 
-	public WsdlProject createNew(String projectFile, String projectPassword)
+	public WsdlProject createNew( String projectFile, String projectPassword )
 	{
-		return new WsdlProject(projectFile, (WorkspaceImpl) null, true, true, null, projectPassword);
+		return new WsdlProject( projectFile, ( WorkspaceImpl )null, true, true, null, projectPassword );
 	}
 
-	public WsdlProject createNew(Workspace workspace)
+	public WsdlProject createNew( Workspace workspace )
 	{
-		return new WsdlProject(null, (WorkspaceImpl)workspace, true);
+		return new WsdlProject( null, ( WorkspaceImpl )workspace, true );
 	}
 
-	public WsdlProject createNew(String path, Workspace workspace)
+	public WsdlProject createNew( String path, Workspace workspace )
 	{
-		return new WsdlProject(path, (WorkspaceImpl)workspace, true);
+		return new WsdlProject( path, ( WorkspaceImpl )workspace, true );
 	}
 
-	public WsdlProject createNew(String path, Workspace workspace, boolean create)
+	public WsdlProject createNew( String path, Workspace workspace, boolean create )
 	{
-		return new WsdlProject(path, (WorkspaceImpl)workspace, create, true, null, null);
+		return new WsdlProject( path, ( WorkspaceImpl )workspace, create, true, null, null );
 	}
 
-	public WsdlProject createNew(String path, Workspace workspace, boolean create, boolean open, String tempName,
-			String projectPassword)
+	public WsdlProject createNew( String path, Workspace workspace, boolean create, boolean open, String tempName,
+			String projectPassword )
 	{
-		return new WsdlProject(path, (WorkspaceImpl)workspace, create, open, tempName, projectPassword);
+		return new WsdlProject( path, ( WorkspaceImpl )workspace, create, open, tempName, projectPassword );
 	}
 
 }

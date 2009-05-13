@@ -20,9 +20,9 @@ package com.eviware.soapui.ui.desktop;
 
 public interface DesktopListener
 {
-   public void desktopPanelSelected( DesktopPanel desktopPanel );
-   
-   public void desktopPanelCreated( DesktopPanel desktopPanel );
-   
-   public void desktopPanelClosed( DesktopPanel desktopPanel );
+	public void desktopPanelSelected( DesktopPanel desktopPanel );
+
+	public void desktopPanelCreated( DesktopPanel desktopPanel );
+
+	public void desktopPanelClosed( DesktopPanel desktopPanel );
 }

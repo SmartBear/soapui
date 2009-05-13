@@ -12,6 +12,24 @@
 
 package com.eviware.soapui.impl.wsdl.panels.project;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.text.Document;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -26,25 +44,29 @@ import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.Project;
-import com.eviware.soapui.model.testsuite.*;
+import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.LoadTest;
+import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.util.ModelItemIconFactory;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.*;
+import com.eviware.soapui.support.components.GroovyEditorComponent;
+import com.eviware.soapui.support.components.GroovyEditorInspector;
+import com.eviware.soapui.support.components.JComponentInspector;
+import com.eviware.soapui.support.components.JFocusableComponentInspector;
+import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
+import com.eviware.soapui.support.components.JUndoableTextArea;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.MetricsPanel;
 import com.eviware.soapui.support.components.MetricsPanel.MetricType;
 import com.eviware.soapui.support.components.MetricsPanel.MetricsSection;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
-
-import javax.swing.*;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.text.Document;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.util.HashSet;
-import java.util.Set;
 
 public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 {
@@ -64,9 +86,9 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 	private MetricsPanel metrics;
 	private GroovyEditorComponent loadScriptGroovyEditor;
 	private GroovyEditorComponent saveScriptGroovyEditor;
-   private JInspectorPanel inspectorPanel;
+	private JInspectorPanel inspectorPanel;
 
-   public WsdlProjectDesktopPanel( WsdlProject modelItem )
+	public WsdlProjectDesktopPanel( WsdlProject modelItem )
 	{
 		super( modelItem );
 
@@ -85,9 +107,9 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 	protected void addTabs( JTabbedPane mainTabs )
 	{
 		mainTabs.addTab( "Overview", null, buildOverviewTab(), "Shows General Project information and metrics" );
-		mainTabs.addTab( "Security Configurations", null, buildWSSTab(), "Manages Security-related configurations");
+		mainTabs.addTab( "Security Configurations", null, buildWSSTab(), "Manages Security-related configurations" );
 	}
-	
+
 	private Component buildWSSTab()
 	{
 		wssTabPanel = new WSSTabPanel( getModelItem().getWssContainer() );
@@ -96,25 +118,26 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 
 	private Component buildOverviewTab()
 	{
-      inspectorPanel = JInspectorPanelFactory.build( buildProjectOverview() );
+		inspectorPanel = JInspectorPanelFactory.build( buildProjectOverview() );
 
-		inspectorPanel.addInspector(  new JFocusableComponentInspector<JPanel>( buildDescriptionPanel(), 
-					descriptionArea, "Description", "Project description", true ) );
+		inspectorPanel.addInspector( new JFocusableComponentInspector<JPanel>( buildDescriptionPanel(), descriptionArea,
+				"Description", "Project description", true ) );
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildPropertiesPanel(), "Properties",
-					"Project level properties", true ) );
+				"Project level properties", true ) );
 		inspectorPanel.addInspector( new GroovyEditorInspector( buildLoadScriptPanel(), "Load Script",
-					"Script to run after loading the project" ) );
+				"Script to run after loading the project" ) );
 		inspectorPanel.addInspector( new GroovyEditorInspector( buildSaveScriptPanel(), "Save Script",
-					"Script to run before saving the project" ) );
+				"Script to run before saving the project" ) );
 
 		inspectorPanel.setCurrentInspector( "Properties" );
 
-      if( StringUtils.hasContent( getModelItem().getDescription() ) && getModelItem().getSettings().getBoolean( UISettings.SHOW_DESCRIPTIONS ) )
-      {
-         inspectorPanel.setCurrentInspector( "Description" );
-      }
+		if( StringUtils.hasContent( getModelItem().getDescription() )
+				&& getModelItem().getSettings().getBoolean( UISettings.SHOW_DESCRIPTIONS ) )
+		{
+			inspectorPanel.setCurrentInspector( "Description" );
+		}
 
-      treeModelListener = new InternalTreeModelListener();
+		treeModelListener = new InternalTreeModelListener();
 		SoapUI.getNavigator().getMainTree().getModel().addTreeModelListener( treeModelListener );
 
 		updateStatistics();
@@ -173,7 +196,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 				{
 					if( testStep instanceof Assertable )
 					{
-						assertionsCount += ((Assertable)testStep).getAssertionCount();
+						assertionsCount += ( ( Assertable )testStep ).getAssertionCount();
 					}
 				}
 			}
@@ -204,29 +227,29 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 
 	private JComponent buildProjectOverview()
 	{
-	    metrics = new MetricsPanel();
-		
-	      JXToolBar toolbar = UISupport.createSmallToolbar();
-	      toolbar.addGlue();
-	      toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.PROJECT_OVERVIEW_HELP_URL ) ) );
-	      metrics.add(toolbar,BorderLayout.NORTH );
-		
-		
+		metrics = new MetricsPanel();
+
+		JXToolBar toolbar = UISupport.createSmallToolbar();
+		toolbar.addGlue();
+		toolbar
+				.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.PROJECT_OVERVIEW_HELP_URL ) ) );
+		metrics.add( toolbar, BorderLayout.NORTH );
+
 		MetricsSection section = metrics.addSection( "Project Summary" );
 		section.addMetric( ModelItemIconFactory.getIcon( Project.class ), "File Path", MetricType.URL );
 		section.finish();
-		
+
 		section = metrics.addSection( "Interface Summary" );
 		buildInterfaceSummary( section );
-		
+
 		section = metrics.addSection( "Test Summary" );
 		section.addMetric( ModelItemIconFactory.getIcon( TestSuite.class ), TESTSUITES_STATISTICS );
-		section.addMetric( ModelItemIconFactory.getIcon( TestCase.class ), TESTCASES_STATISTICS  );
+		section.addMetric( ModelItemIconFactory.getIcon( TestCase.class ), TESTCASES_STATISTICS );
 		section.addMetric( ModelItemIconFactory.getIcon( TestStep.class ), TESTSTEPS_STATISTICS );
 		section.addMetric( ModelItemIconFactory.getIcon( TestAssertion.class ), ASSERTIONS_STATISTICS );
 		section.addMetric( ModelItemIconFactory.getIcon( LoadTest.class ), LOADTESTS_STATISTICS );
 		section.finish();
-		
+
 		section = metrics.addSection( "Mock Summary" );
 		section.addMetric( ModelItemIconFactory.getIcon( MockService.class ), MOCKSERVICES_STATISTICS );
 		section.addMetric( ModelItemIconFactory.getIcon( MockOperation.class ), MOCKOPERATIONS_STATISTICS );
@@ -235,25 +258,25 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 		return new JScrollPane( metrics );
 	}
 
-	private void buildInterfaceSummary(MetricsSection section)
+	private void buildInterfaceSummary( MetricsSection section )
 	{
 		interfaceNameSet.clear();
 		for( Interface ic : getModelItem().getInterfaceList() )
 		{
 			if( ic instanceof WsdlInterface )
 			{
-				WsdlInterface iface = (WsdlInterface) ic;
+				WsdlInterface iface = ( WsdlInterface )ic;
 				section.addMetric( iface.getIcon(), iface.getName(), MetricType.URL ).set( iface.getDefinition() );
 			}
 			else if( ic instanceof RestService )
 			{
-				RestService iface = (RestService) ic;
+				RestService iface = ( RestService )ic;
 				section.addMetric( iface.getIcon(), iface.getName(), MetricType.URL ).set( iface.getWadlUrl() );
 			}
 
 			interfaceNameSet.add( ic.getName() );
 		}
-		
+
 		section.finish();
 	}
 
@@ -308,11 +331,11 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 		propertiesTable.release();
 		loadScriptGroovyEditor.getEditor().release();
 		saveScriptGroovyEditor.getEditor().release();
-		
+
 		SoapUI.getNavigator().getMainTree().getModel().removeTreeModelListener( treeModelListener );
 		wssTabPanel.release();
 
-      inspectorPanel.release();
+		inspectorPanel.release();
 		return release();
 	}
 
@@ -433,5 +456,4 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 		}
 	}
 
-	
 }

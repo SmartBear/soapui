@@ -51,7 +51,7 @@ public class MockRequestXmlDocument extends AbstractXmlDocument implements XmlDo
 				return wsdlContext.getSchemaTypeSystem();
 			}
 		}
-		catch (Exception e1)
+		catch( Exception e1 )
 		{
 			SoapUI.logError( e1 );
 		}
@@ -68,7 +68,7 @@ public class MockRequestXmlDocument extends AbstractXmlDocument implements XmlDo
 	public void setXml( String xml )
 	{
 		WsdlMockResult mockResult = mockResponse.getMockResult();
-		if( mockResult != null ) 
+		if( mockResult != null )
 		{
 			String oldXml = getXml();
 			mockResult.getMockRequest().setRequestContent( xml );

@@ -21,7 +21,7 @@ public class ContextPropertyResolver implements PropertyResolver
 	public String resolveProperty( PropertyExpansionContext context, String propertyName, boolean globalOverride )
 	{
 		Object property = null;
-		String xpath = null ;
+		String xpath = null;
 
 		int sepIx = propertyName.indexOf( PropertyExpansion.PROPERTY_SEPARATOR );
 		if( sepIx == 0 )
@@ -29,23 +29,23 @@ public class ContextPropertyResolver implements PropertyResolver
 			propertyName = propertyName.substring( 1 );
 			sepIx = propertyName.indexOf( PropertyExpansion.PROPERTY_SEPARATOR );
 		}
-		
+
 		if( sepIx > 0 )
 		{
-			xpath = propertyName.substring( sepIx+1 );
+			xpath = propertyName.substring( sepIx + 1 );
 			propertyName = propertyName.substring( 0, sepIx );
 		}
-		
+
 		if( globalOverride )
 			property = PropertyExpansionUtils.getGlobalProperty( propertyName );
-		
+
 		if( property == null )
 			property = context.getProperty( propertyName );
-			
+
 		if( property != null && xpath != null )
 		{
-			property = ResolverUtils.extractXPathPropertyValue( property, 
-						PropertyExpansionUtils.expandProperties( context, xpath ));
+			property = ResolverUtils.extractXPathPropertyValue( property, PropertyExpansionUtils.expandProperties(
+					context, xpath ) );
 		}
 
 		return property == null ? null : property.toString();

@@ -24,18 +24,17 @@ import com.eviware.soapui.model.workspace.WorkspaceListener;
 
 public class WorkspaceListenerAdapter implements WorkspaceListener
 {
-   public void projectAdded(Project project)
-   {
-   }
+	public void projectAdded( Project project )
+	{
+	}
 
-   public void projectRemoved(Project project)
-   {
-   }
+	public void projectRemoved( Project project )
+	{
+	}
 
-   public void projectChanged(Project project)
-   {
-   }
-
+	public void projectChanged( Project project )
+	{
+	}
 
 	public void workspaceSwitched( Workspace workspace )
 	{

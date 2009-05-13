@@ -24,8 +24,8 @@ import com.eviware.soapui.model.tree.SoapUITreeModel;
 
 public class RequestTreeNode extends AbstractModelItemTreeNode<Request>
 {
-   public RequestTreeNode(Request request, SoapUITreeModel treeModel )
-   {
-      super( request, request.getOperation(), treeModel );
-   }
+	public RequestTreeNode( Request request, SoapUITreeModel treeModel )
+	{
+		super( request, request.getOperation(), treeModel );
+	}
 }

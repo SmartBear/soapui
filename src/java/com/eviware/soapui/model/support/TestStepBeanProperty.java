@@ -26,58 +26,60 @@ import com.eviware.soapui.model.ModelItem;
 
 public class TestStepBeanProperty extends DefaultTestStepProperty
 {
-	public TestStepBeanProperty(String name, boolean isReadOnly, Object targetObject, String targetName, WsdlTestStep testStep )
+	public TestStepBeanProperty( String name, boolean isReadOnly, Object targetObject, String targetName,
+			WsdlTestStep testStep )
 	{
-		super(name, isReadOnly, new BeanPropertyHandler( targetObject, targetName ), testStep );
+		super( name, isReadOnly, new BeanPropertyHandler( targetObject, targetName ), testStep );
 	}
-	
+
 	/**
 	 * PropertyHandler for setting/getting bean properties
 	 * 
 	 * @author Ole.Matzura
 	 */
-	
+
 	public static class BeanPropertyHandler implements PropertyHandler
 	{
 		private final Object target;
 		private final String targetName;
-		
-		public BeanPropertyHandler(Object targetObject, String targetName)
+
+		public BeanPropertyHandler( Object targetObject, String targetName )
 		{
 			this.target = targetObject;
 			this.targetName = targetName;
 		}
 
-		public String getValue(DefaultTestStepProperty prop)
+		public String getValue( DefaultTestStepProperty prop )
 		{
 			try
 			{
-				Object property = PropertyUtils.getProperty(target, targetName );
+				Object property = PropertyUtils.getProperty( target, targetName );
 				return property == null ? null : property.toString();
 			}
-			catch (Exception e)
+			catch( Exception e )
 			{
 				if( target instanceof ModelItem )
 				{
-					SoapUI.logError( new Exception( "Error getting property [" + targetName + "] from modelItem [" + 
-							((ModelItem)target).getName() + "]", e) );
+					SoapUI.logError( new Exception( "Error getting property [" + targetName + "] from modelItem ["
+							+ ( ( ModelItem )target ).getName() + "]", e ) );
 				}
 				else
 				{
-					SoapUI.logError( new Exception( "Error getting property [" + targetName + "] from bean [" + target + "]", e) );
+					SoapUI.logError( new Exception(
+							"Error getting property [" + targetName + "] from bean [" + target + "]", e ) );
 				}
-				
+
 				return null;
-			}			
+			}
 		}
 
-		public void setValue(DefaultTestStepProperty property,String value)
+		public void setValue( DefaultTestStepProperty property, String value )
 		{
 			try
 			{
 				PropertyUtils.setProperty( target, targetName, value );
 			}
-			catch (Exception e)
+			catch( Exception e )
 			{
 				SoapUI.logError( e );
 			}

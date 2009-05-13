@@ -12,88 +12,90 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.rest.RestRequest;
-import org.apache.commons.httpclient.methods.RequestEntity;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
+import org.apache.commons.httpclient.methods.RequestEntity;
+
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.rest.RestRequest;
+
 /**
  * MimeMessage request class
- *
+ * 
  * @author ole.matzura
  */
 
 public class RestRequestMimeMessageRequestEntity implements RequestEntity
 {
-   private final MimeMessage message;
-   private byte[] buffer;
-   private final RestRequest restRequest;
+	private final MimeMessage message;
+	private byte[] buffer;
+	private final RestRequest restRequest;
 
-   public RestRequestMimeMessageRequestEntity( MimeMessage message, RestRequest restRequest )
-   {
-      this.message = message;
-      this.restRequest = restRequest;
-   }
+	public RestRequestMimeMessageRequestEntity( MimeMessage message, RestRequest restRequest )
+	{
+		this.message = message;
+		this.restRequest = restRequest;
+	}
 
-   public long getContentLength()
-   {
-      try
-      {
-         ByteArrayOutputStream out = new ByteArrayOutputStream();
-         writeRequest( out );
-         buffer = out.toByteArray();
-         return buffer.length;
-      }
-      catch( Exception e )
-      {
-         SoapUI.logError( e );
-         return -1;
-      }
-   }
+	public long getContentLength()
+	{
+		try
+		{
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			writeRequest( out );
+			buffer = out.toByteArray();
+			return buffer.length;
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+			return -1;
+		}
+	}
 
-   public String getContentType()
-   {
-      try
-      {
-         String header = message.getHeader( "Content-Type" )[0];
-         int ix = header.indexOf( "boundary" );
+	public String getContentType()
+	{
+		try
+		{
+			String header = message.getHeader( "Content-Type" )[0];
+			int ix = header.indexOf( "boundary" );
 
-         return restRequest.getMediaType() + "; " + header.substring( ix );
-      }
-      catch( MessagingException e )
-      {
-         SoapUI.logError( e );
-      }
+			return restRequest.getMediaType() + "; " + header.substring( ix );
+		}
+		catch( MessagingException e )
+		{
+			SoapUI.logError( e );
+		}
 
-      return restRequest.getMediaType();
-   }
+		return restRequest.getMediaType();
+	}
 
-   public boolean isRepeatable()
-   {
-      return true;
-   }
+	public boolean isRepeatable()
+	{
+		return true;
+	}
 
-   public void writeRequest( OutputStream arg0 ) throws IOException
-   {
-      try
-      {
-         if( buffer == null )
-         {
-            arg0.write( "\r\n".getBytes() );
-            ( (MimeMultipart) message.getContent() ).writeTo( arg0 );
-         }
-         else
-            arg0.write( buffer );
-      }
-      catch( Exception e )
-      {
-         SoapUI.logError( e );
-      }
-   }
+	public void writeRequest( OutputStream arg0 ) throws IOException
+	{
+		try
+		{
+			if( buffer == null )
+			{
+				arg0.write( "\r\n".getBytes() );
+				( ( MimeMultipart )message.getContent() ).writeTo( arg0 );
+			}
+			else
+				arg0.write( buffer );
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+		}
+	}
 }

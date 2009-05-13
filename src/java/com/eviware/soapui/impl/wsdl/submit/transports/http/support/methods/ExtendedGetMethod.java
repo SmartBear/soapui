@@ -28,103 +28,101 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 /**
  * Extended PostMethod that supports limiting of response size and detailed
  * timestamps
- *
+ * 
  * @author Ole.Matzura
  */
 
 public final class ExtendedGetMethod extends GetMethod implements ExtendedHttpMethod
 {
-   private HttpMethodSupport httpMethodSupport;
+	private HttpMethodSupport httpMethodSupport;
 
-   public ExtendedGetMethod()
-   {
-      httpMethodSupport = new HttpMethodSupport( this );
-   }
+	public ExtendedGetMethod()
+	{
+		httpMethodSupport = new HttpMethodSupport( this );
+	}
 
-   public String getDumpFile()
-   {
-      return httpMethodSupport.getDumpFile();
-   }
+	public String getDumpFile()
+	{
+		return httpMethodSupport.getDumpFile();
+	}
 
-   public void setDumpFile( String dumpFile )
-   {
-      httpMethodSupport.setDumpFile( dumpFile );
-   }
+	public void setDumpFile( String dumpFile )
+	{
+		httpMethodSupport.setDumpFile( dumpFile );
+	}
 
-   protected void readResponse( HttpState arg0, HttpConnection arg1 )
-           throws IOException, HttpException
-   {
-      super.readResponse( arg0, arg1 );
-      httpMethodSupport.afterReadResponse( arg0, arg1 );
-   }
+	protected void readResponse( HttpState arg0, HttpConnection arg1 ) throws IOException, HttpException
+	{
+		super.readResponse( arg0, arg1 );
+		httpMethodSupport.afterReadResponse( arg0, arg1 );
+	}
 
-   @Override
-   public String getResponseCharSet()
-   {
-      return httpMethodSupport.getResponseCharset();
-   }
+	@Override
+	public String getResponseCharSet()
+	{
+		return httpMethodSupport.getResponseCharset();
+	}
 
-   public long getMaxSize()
-   {
-      return httpMethodSupport.getMaxSize();
-   }
+	public long getMaxSize()
+	{
+		return httpMethodSupport.getMaxSize();
+	}
 
-   public void setMaxSize( long maxSize )
-   {
-      httpMethodSupport.setMaxSize( maxSize );
-   }
+	public void setMaxSize( long maxSize )
+	{
+		httpMethodSupport.setMaxSize( maxSize );
+	}
 
-   public long getResponseReadTime()
-   {
-      return httpMethodSupport.getResponseReadTime();
-   }
+	public long getResponseReadTime()
+	{
+		return httpMethodSupport.getResponseReadTime();
+	}
 
-   protected void writeRequest( HttpState arg0, HttpConnection arg1 )
-           throws IOException, HttpException
-   {
-      super.writeRequest( arg0, arg1 );
-      httpMethodSupport.afterWriteRequest( arg0, arg1 );
-   }
+	protected void writeRequest( HttpState arg0, HttpConnection arg1 ) throws IOException, HttpException
+	{
+		super.writeRequest( arg0, arg1 );
+		httpMethodSupport.afterWriteRequest( arg0, arg1 );
+	}
 
-   public void initStartTime()
-   {
-      httpMethodSupport.initStartTime();
-   }
+	public void initStartTime()
+	{
+		httpMethodSupport.initStartTime();
+	}
 
-   public long getTimeTaken()
-   {
-      return httpMethodSupport.getTimeTaken();
-   }
+	public long getTimeTaken()
+	{
+		return httpMethodSupport.getTimeTaken();
+	}
 
-   public long getStartTime()
-   {
-      return httpMethodSupport.getStartTime();
-   }
+	public long getStartTime()
+	{
+		return httpMethodSupport.getStartTime();
+	}
 
-   public byte[] getResponseBody() throws IOException
-   {
-      return httpMethodSupport.getResponseBody();
-   }
+	public byte[] getResponseBody() throws IOException
+	{
+		return httpMethodSupport.getResponseBody();
+	}
 
-   public SSLInfo getSSLInfo()
-   {
-      return httpMethodSupport.getSSLInfo();
-   }
+	public SSLInfo getSSLInfo()
+	{
+		return httpMethodSupport.getSSLInfo();
+	}
 
-   public String getResponseContentType()
-   {
-      return httpMethodSupport.getResponseContentType();
-   }
+	public String getResponseContentType()
+	{
+		return httpMethodSupport.getResponseContentType();
+	}
 
-   public RequestEntity getRequestEntity()
-   {
-      return null;
-   }
+	public RequestEntity getRequestEntity()
+	{
+		return null;
+	}
 
-   public AbstractHttpRequest.RequestMethod getMethod()
-   {
-      return AbstractHttpRequest.RequestMethod.GET;
-   }
+	public AbstractHttpRequest.RequestMethod getMethod()
+	{
+		return AbstractHttpRequest.RequestMethod.GET;
+	}
 
 	public Throwable getFailureCause()
 	{
@@ -136,7 +134,7 @@ public final class ExtendedGetMethod extends GetMethod implements ExtendedHttpMe
 		return httpMethodSupport.isFailed();
 	}
 
-	public void setFailed(Throwable t)
+	public void setFailed( Throwable t )
 	{
 		httpMethodSupport.setFailed( t );
 	}

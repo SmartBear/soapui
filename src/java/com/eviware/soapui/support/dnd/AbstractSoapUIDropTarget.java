@@ -27,10 +27,10 @@ import com.eviware.soapui.SoapUI;
 
 public abstract class AbstractSoapUIDropTarget implements DropTargetListener
 {
-	public AbstractSoapUIDropTarget( )
+	public AbstractSoapUIDropTarget()
 	{
 	}
-	
+
 	public void dragEnter( DropTargetDragEvent dtde )
 	{
 		if( !isAcceptable( dtde.getTransferable(), dtde.getLocation() ) )
@@ -67,9 +67,9 @@ public abstract class AbstractSoapUIDropTarget implements DropTargetListener
 				if( testCase != null )
 				{
 					dtde.acceptDrop( dtde.getDropAction() );
-					
+
 					handleDrop( testCase, dtde.getLocation() );
-					
+
 					dtde.dropComplete( true );
 				}
 			}
@@ -81,19 +81,19 @@ public abstract class AbstractSoapUIDropTarget implements DropTargetListener
 	}
 
 	protected abstract boolean handleDrop( Object target, Point point );
-	
+
 	protected abstract boolean isAcceptable( Object target, Point point );
 
 	public void dropActionChanged( DropTargetDragEvent dtde )
 	{
 	}
-	
+
 	public boolean isAcceptable( Transferable transferable, Point point )
 	{
-		return isAcceptable( getTransferData( transferable ), point);
+		return isAcceptable( getTransferData( transferable ), point );
 	}
-	
-	@SuppressWarnings("unchecked")
+
+	@SuppressWarnings( "unchecked" )
 	private Object getTransferData( Transferable transferable )
 	{
 		DataFlavor[] flavors = transferable.getTransferDataFlavors();
@@ -104,7 +104,7 @@ public abstract class AbstractSoapUIDropTarget implements DropTargetListener
 			{
 				try
 				{
-					return  transferable.getTransferData( flavor );
+					return transferable.getTransferData( flavor );
 				}
 				catch( Exception ex )
 				{
@@ -112,10 +112,10 @@ public abstract class AbstractSoapUIDropTarget implements DropTargetListener
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public static void addDropTarget( Component component, AbstractSoapUIDropTarget target )
 	{
 		DropTarget dropTarget = new DropTarget( component, target );

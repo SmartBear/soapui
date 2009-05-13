@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui.support.scripting;
 
 import java.util.Stack;
@@ -23,13 +23,13 @@ import com.eviware.soapui.model.ModelItem;
  * @author ole.matzura
  */
 
-public class ScriptEnginePool 
+public class ScriptEnginePool
 {
 	private Stack<SoapUIScriptEngine> scriptEngines = new Stack<SoapUIScriptEngine>();
 	private String script;
 	private ModelItem modelItem;
 	private int borrowed;
-	
+
 	public ScriptEnginePool( ModelItem modelItem )
 	{
 		this.modelItem = modelItem;
@@ -42,26 +42,26 @@ public class ScriptEnginePool
 
 	public void returnScriptEngine( SoapUIScriptEngine scriptEngine )
 	{
-		synchronized( this ) 
+		synchronized( this )
 		{
 			scriptEngines.push( scriptEngine );
-			borrowed--;
+			borrowed-- ;
 		}
 	}
 
 	public SoapUIScriptEngine getScriptEngine()
 	{
-		synchronized( this ) 
+		synchronized( this )
 		{
 			if( scriptEngines.isEmpty() )
-				scriptEngines.push( SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, modelItem ));
-			
+				scriptEngines.push( SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, modelItem ) );
+
 			SoapUIScriptEngine result = scriptEngines.pop();
 			if( script != null )
 				result.setScript( script );
-			
-			borrowed++;
-			
+
+			borrowed++ ;
+
 			return result;
 		}
 	}
@@ -69,8 +69,8 @@ public class ScriptEnginePool
 	public void release()
 	{
 		int waitcount = 10;
-		
-		while( borrowed > 0 && waitcount--  > 0 )
+
+		while( borrowed > 0 && waitcount-- > 0 )
 		{
 			try
 			{
@@ -82,14 +82,14 @@ public class ScriptEnginePool
 				SoapUI.logError( e );
 			}
 		}
-		
+
 		for( SoapUIScriptEngine scriptEngine : scriptEngines )
 		{
 			scriptEngine.release();
 		}
-		
+
 		scriptEngines.clear();
-		
+
 		if( borrowed > 0 )
 			System.out.println( "Failed to release " + borrowed + " script engines" );
 	}

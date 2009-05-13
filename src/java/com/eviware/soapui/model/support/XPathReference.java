@@ -17,20 +17,20 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 public interface XPathReference
 {
 	public String getXPath();
-	
+
 	public void setXPath( String xpath );
-	
+
 	public String getLabel();
 
 	/**
 	 * Gets the property this xpath selects from
 	 */
-	
+
 	public TestProperty getTargetProperty();
 
 	/**
 	 * apply updates
 	 */
-	
+
 	public void update();
 }

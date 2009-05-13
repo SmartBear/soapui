@@ -23,27 +23,27 @@ import com.eviware.soapui.support.action.swing.ActionList;
  * @author Ole.Matzura
  */
 
-public interface SoapUITreeNode 
+public interface SoapUITreeNode
 {
-   public int getChildCount();
+	public int getChildCount();
 
-   public int getIndexOfChild(Object child);
+	public int getIndexOfChild( Object child );
 
-   public boolean valueChanged(Object newValue);
+	public boolean valueChanged( Object newValue );
 
-   public SoapUITreeNode getChildNode(int index);
+	public SoapUITreeNode getChildNode( int index );
 
-   public boolean isLeaf();
-   
-   public JPopupMenu getPopup();
-   
-   public SoapUITreeNode getParentTreeNode();
-   
-   public void release();
-   
-   public ActionList getActions();
-   
-   public void reorder( boolean notify );
+	public boolean isLeaf();
+
+	public JPopupMenu getPopup();
+
+	public SoapUITreeNode getParentTreeNode();
+
+	public void release();
+
+	public ActionList getActions();
+
+	public void reorder( boolean notify );
 
 	public ModelItem getModelItem();
 }

@@ -12,6 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.io.PrintWriter;
+import java.lang.ref.SoftReference;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
@@ -28,177 +34,171 @@ import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-import java.io.PrintWriter;
-import java.lang.ref.SoftReference;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
 /**
  * TestStepResult for a WsdlTestRequestStep
- *
+ * 
  * @author ole.matzura
  */
 
-public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
-        ResponseAssertedMessageExchange, AssertedXPathsContainer, MessageExchangeTestStepResult, WsdlMessageExchange
+public class WsdlTestRequestStepResult extends WsdlTestStepResult implements ResponseAssertedMessageExchange,
+		AssertedXPathsContainer, MessageExchangeTestStepResult, WsdlMessageExchange
 {
-   private String requestContent;
-   private SoftReference<WsdlResponse> response;
-   private String domain;
-   private String username;
-   private String endpoint;
-   private String encoding;
-   private String password;
-   private StringToStringMap properties;
-   private boolean addedAction;
-   private List<AssertedXPath> assertedXPaths;
+	private String requestContent;
+	private SoftReference<WsdlResponse> response;
+	private String domain;
+	private String username;
+	private String endpoint;
+	private String encoding;
+	private String password;
+	private StringToStringMap properties;
+	private boolean addedAction;
+	private List<AssertedXPath> assertedXPaths;
 
-   public WsdlTestRequestStepResult( WsdlTestRequestStep step )
-   {
-      super( step );
-   }
+	public WsdlTestRequestStepResult( WsdlTestRequestStep step )
+	{
+		super( step );
+	}
 
-   public WsdlOperation getOperation()
-   {
-      WsdlTestRequestStep testStep = (WsdlTestRequestStep) getTestStep();
-      return testStep.getOperation();
-   }
+	public WsdlOperation getOperation()
+	{
+		WsdlTestRequestStep testStep = ( WsdlTestRequestStep )getTestStep();
+		return testStep.getOperation();
+	}
 
-   public SoapVersion getSoapVersion()
-   {
-      return ((WsdlOperation) getOperation()).getInterface().getSoapVersion();
-   }
+	public SoapVersion getSoapVersion()
+	{
+		return ( ( WsdlOperation )getOperation() ).getInterface().getSoapVersion();
+	}
 
-   public ModelItem getModelItem()
-   {
-      if( response != null && response.get() != null )
-         return response.get().getRequest();
-      else
-         return null;
-   }
+	public ModelItem getModelItem()
+	{
+		if( response != null && response.get() != null )
+			return response.get().getRequest();
+		else
+			return null;
+	}
 
-   public String getRequestContent()
-   {
-      if( isDiscarded() )
-         return "<discarded>";
+	public String getRequestContent()
+	{
+		if( isDiscarded() )
+			return "<discarded>";
 
-      return requestContent;
-   }
+		return requestContent;
+	}
 
-   public void setRequestContent( String requestContent )
-   {
-      this.requestContent = requestContent;
-   }
+	public void setRequestContent( String requestContent )
+	{
+		this.requestContent = requestContent;
+	}
 
-   public WsdlResponse getResponse()
-   {
-      return response == null ? null : response.get();
-   }
+	public WsdlResponse getResponse()
+	{
+		return response == null ? null : response.get();
+	}
 
-   @Override
-   public ActionList getActions()
-   {
-      if( !addedAction )
-      {
-         addAction( new ShowMessageExchangeAction( this, "TestStep" ), true );
-         addedAction = true;
-      }
+	@Override
+	public ActionList getActions()
+	{
+		if( !addedAction )
+		{
+			addAction( new ShowMessageExchangeAction( this, "TestStep" ), true );
+			addedAction = true;
+		}
 
-      return super.getActions();
-   }
+		return super.getActions();
+	}
 
-   public void setResponse( WsdlResponse response )
-   {
-      this.response = new SoftReference<WsdlResponse>(response);
-   }
+	public void setResponse( WsdlResponse response )
+	{
+		this.response = new SoftReference<WsdlResponse>( response );
+	}
 
-   public String getDomain()
-   {
-      return domain;
-   }
+	public String getDomain()
+	{
+		return domain;
+	}
 
-   public void setDomain( String domain )
-   {
-      this.domain = domain;
-      addProperty( "domain", domain );
-   }
+	public void setDomain( String domain )
+	{
+		this.domain = domain;
+		addProperty( "domain", domain );
+	}
 
-   private void addProperty( String key, String value )
-   {
-      if( properties == null )
-         properties = new StringToStringMap();
+	private void addProperty( String key, String value )
+	{
+		if( properties == null )
+			properties = new StringToStringMap();
 
-      properties.put( key, value );
-   }
+		properties.put( key, value );
+	}
 
-   public String getEncoding()
-   {
-      return encoding;
-   }
+	public String getEncoding()
+	{
+		return encoding;
+	}
 
-   public void setEncoding( String encoding )
-   {
-      this.encoding = encoding;
-      addProperty( "Encoding", encoding );
-   }
+	public void setEncoding( String encoding )
+	{
+		this.encoding = encoding;
+		addProperty( "Encoding", encoding );
+	}
 
-   public String getEndpoint()
-   {
-      return endpoint;
-   }
+	public String getEndpoint()
+	{
+		return endpoint;
+	}
 
-   public void setEndpoint( String endpoint )
-   {
-      this.endpoint = endpoint;
-      addProperty( "Endpoint", endpoint );
-   }
+	public void setEndpoint( String endpoint )
+	{
+		this.endpoint = endpoint;
+		addProperty( "Endpoint", endpoint );
+	}
 
-   public String getPassword()
-   {
-      return password;
-   }
+	public String getPassword()
+	{
+		return password;
+	}
 
-   public void setPassword( String password )
-   {
-      this.password = password;
-      addProperty( "Password", password );
-   }
+	public void setPassword( String password )
+	{
+		this.password = password;
+		addProperty( "Password", password );
+	}
 
-   public String getUsername()
-   {
-      return username;
-   }
+	public String getUsername()
+	{
+		return username;
+	}
 
-   public void setUsername( String username )
-   {
-      this.username = username;
-      addProperty( "Username", username );
-   }
+	public void setUsername( String username )
+	{
+		this.username = username;
+		addProperty( "Username", username );
+	}
 
-   public void discard()
-   {
-      super.discard();
+	public void discard()
+	{
+		super.discard();
 
-      requestContent = null;
-      response = null;
-      properties = null;
-      assertedXPaths = null;
-   }
+		requestContent = null;
+		response = null;
+		properties = null;
+		assertedXPaths = null;
+	}
 
-   public void writeTo( PrintWriter writer )
-   {
-      super.writeTo( writer );
+	public void writeTo( PrintWriter writer )
+	{
+		super.writeTo( writer );
 		writer.println( "\r\n----------------- Properties ------------------------------" );
 		if( properties != null )
 		{
 			for( String key : properties.keySet() )
 			{
 				if( properties.get( key ) != null )
-				   writer.println( key + ": " + properties.get( key ) );
+					writer.println( key + ": " + properties.get( key ) );
 			}
 		}
-		
+
 		writer.println( "\r\n---------------- Request ---------------------------" );
 		if( response != null && response.get() != null )
 		{
@@ -206,166 +206,166 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements
 		}
 
 		if( requestContent != null )
-			writer.println( XmlUtils.prettyPrintXml( requestContent ));
+			writer.println( XmlUtils.prettyPrintXml( requestContent ) );
 		else
 			writer.println( "- missing request / garbage collected -" );
 
 		writer.println( "\r\n---------------- Response --------------------------" );
-		if( response != null  && response.get() != null)
+		if( response != null && response.get() != null )
 		{
 			writer.println( "Response Headers: " + response.get().getResponseHeaders().toString() + "\r\n" );
-			
+
 			String respContent = response.get().getContentAsString();
 			if( respContent != null )
-				writer.println( XmlUtils.prettyPrintXml( respContent ));
+				writer.println( XmlUtils.prettyPrintXml( respContent ) );
 		}
 		else
 			writer.println( "- missing response / garbage collected -" );
-   }
+	}
 
-   public StringToStringMap getProperties()
-   {
-      return properties;
-   }
+	public StringToStringMap getProperties()
+	{
+		return properties;
+	}
 
-   public String getProperty( String name )
-   {
-      return properties.get( name );
-   }
+	public String getProperty( String name )
+	{
+		return properties.get( name );
+	}
 
-   public Attachment[] getRequestAttachments()
-   {
-      if( response == null || response.get() == null || response.get().getRequest() == null )
-         return new Attachment[0];
+	public Attachment[] getRequestAttachments()
+	{
+		if( response == null || response.get() == null || response.get().getRequest() == null )
+			return new Attachment[0];
 
-      return response.get().getRequest().getAttachments();
-   }
+		return response.get().getRequest().getAttachments();
+	}
 
-   public StringToStringMap getRequestHeaders()
-   {
-      if( response == null || response.get() == null )
-         return null;
+	public StringToStringMap getRequestHeaders()
+	{
+		if( response == null || response.get() == null )
+			return null;
 
-      return response.get().getRequestHeaders();
-   }
+		return response.get().getRequestHeaders();
+	}
 
-   public Attachment[] getResponseAttachments()
-   {
-      if( response == null || response.get() == null )
-         return new Attachment[0];
+	public Attachment[] getResponseAttachments()
+	{
+		if( response == null || response.get() == null )
+			return new Attachment[0];
 
-      return response.get().getAttachments();
-   }
+		return response.get().getAttachments();
+	}
 
-   public String getResponseContent()
-   {
-      if( isDiscarded() )
-         return "<discarded>";
+	public String getResponseContent()
+	{
+		if( isDiscarded() )
+			return "<discarded>";
 
-      if( response == null || response.get() == null )
-         return "<missing response>";
+		if( response == null || response.get() == null )
+			return "<missing response>";
 
-      return response.get().getContentAsString();
-   }
+		return response.get().getContentAsString();
+	}
 
-   public String getRequestContentAsXml()
-   {
-      return XmlUtils.seemsToBeXml( requestContent ) ? requestContent : "<not-xml/>";
-   }
+	public String getRequestContentAsXml()
+	{
+		return XmlUtils.seemsToBeXml( requestContent ) ? requestContent : "<not-xml/>";
+	}
 
-   public String getResponseContentAsXml()
-   {
-      String responseContent = getResponseContent();
-      return XmlUtils.seemsToBeXml( responseContent ) ? responseContent : null;
-   }
+	public String getResponseContentAsXml()
+	{
+		String responseContent = getResponseContent();
+		return XmlUtils.seemsToBeXml( responseContent ) ? responseContent : null;
+	}
 
-   public StringToStringMap getResponseHeaders()
-   {
-      if( response == null || response.get() == null )
-         return null;
+	public StringToStringMap getResponseHeaders()
+	{
+		if( response == null || response.get() == null )
+			return null;
 
-      return response.get().getResponseHeaders();
-   }
+		return response.get().getResponseHeaders();
+	}
 
-   public long getTimestamp()
-   {
-      if( isDiscarded() || response == null || response.get() == null )
-         return -1;
+	public long getTimestamp()
+	{
+		if( isDiscarded() || response == null || response.get() == null )
+			return -1;
 
-      return response.get().getTimestamp();
-   }
+		return response.get().getTimestamp();
+	}
 
-   public AssertedXPath[] getAssertedXPathsForResponse()
-   {
-      return assertedXPaths == null ? new AssertedXPath[0] :
-              assertedXPaths.toArray( new AssertedXPath[assertedXPaths.size()] );
-   }
+	public AssertedXPath[] getAssertedXPathsForResponse()
+	{
+		return assertedXPaths == null ? new AssertedXPath[0] : assertedXPaths.toArray( new AssertedXPath[assertedXPaths
+				.size()] );
+	}
 
-   public void addAssertedXPath( AssertedXPath assertedXPath )
-   {
-      if( assertedXPaths == null )
-         assertedXPaths = new ArrayList<AssertedXPath>();
+	public void addAssertedXPath( AssertedXPath assertedXPath )
+	{
+		if( assertedXPaths == null )
+			assertedXPaths = new ArrayList<AssertedXPath>();
 
-      assertedXPaths.add( assertedXPath );
-   }
+		assertedXPaths.add( assertedXPath );
+	}
 
-   public MessageExchange[] getMessageExchanges()
-   {
-      return new MessageExchange[] { this };
-   }
+	public MessageExchange[] getMessageExchanges()
+	{
+		return new MessageExchange[] { this };
+	}
 
-   public byte[] getRawRequestData()
-   {
-      return response == null || response.get() == null ? null : response.get().getRawRequestData();
-   }
+	public byte[] getRawRequestData()
+	{
+		return response == null || response.get() == null ? null : response.get().getRawRequestData();
+	}
 
-   public byte[] getRawResponseData()
-   {
-      return response == null || response.get() == null ? null : response.get().getRawResponseData();
-   }
+	public byte[] getRawResponseData()
+	{
+		return response == null || response.get() == null ? null : response.get().getRawResponseData();
+	}
 
-   public Attachment[] getRequestAttachmentsForPart( String partName )
-   {
-      return null;
-   }
+	public Attachment[] getRequestAttachmentsForPart( String partName )
+	{
+		return null;
+	}
 
-   public Attachment[] getResponseAttachmentsForPart( String partName )
-   {
-      return null;
-   }
+	public Attachment[] getResponseAttachmentsForPart( String partName )
+	{
+		return null;
+	}
 
-   public boolean hasRawData()
-   {
-      return false;
-   }
+	public boolean hasRawData()
+	{
+		return false;
+	}
 
-   public boolean hasRequest( boolean b )
-   {
-      return true;
-   }
+	public boolean hasRequest( boolean b )
+	{
+		return true;
+	}
 
-   public boolean hasResponse()
-   {
-      return response != null;
-   }
+	public boolean hasResponse()
+	{
+		return response != null;
+	}
 
-   public Vector<?> getRequestWssResult()
-   {
-      return null;
-   }
+	public Vector<?> getRequestWssResult()
+	{
+		return null;
+	}
 
-   public Vector<?> getResponseWssResult()
-   {
-      return response == null || response.get() == null ? null : response.get().getWssResult();
-   }
+	public Vector<?> getResponseWssResult()
+	{
+		return response == null || response.get() == null ? null : response.get().getWssResult();
+	}
 
-   public int getResponseStatusCode()
-   {
-      return response == null || response.get() == null ? null : response.get().getStatusCode();
-   }
+	public int getResponseStatusCode()
+	{
+		return response == null || response.get() == null ? null : response.get().getStatusCode();
+	}
 
-   public String getResponseContentType()
-   {
-      return response == null || response.get() == null ? null : response.get().getContentType();
-   }
+	public String getResponseContentType()
+	{
+		return response == null || response.get() == null ? null : response.get().getContentType();
+	}
 }

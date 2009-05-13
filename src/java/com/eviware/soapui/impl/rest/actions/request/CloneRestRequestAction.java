@@ -27,17 +27,19 @@ public class CloneRestRequestAction extends AbstractSoapUIAction<RestRequest>
 	public static final String SOAPUI_ACTION_ID = "CloneRestRequestAction";
 
 	public CloneRestRequestAction()
-   {
-      super( "Clone Request", "Creates a copy of this Request" );
-   }
-   
-   public void perform( RestRequest request, Object param )
 	{
-      String name = UISupport.prompt( "Specify name of cloned Request", "Clone Request", "Copy of " + request.getName() );
-      if( name == null ) return;
-      
-      RestRequest newRequest = request.getResource().cloneRequest(request, name );
-      
-      UISupport.selectAndShow( newRequest );
-   }
+		super( "Clone Request", "Creates a copy of this Request" );
+	}
+
+	public void perform( RestRequest request, Object param )
+	{
+		String name = UISupport
+				.prompt( "Specify name of cloned Request", "Clone Request", "Copy of " + request.getName() );
+		if( name == null )
+			return;
+
+		RestRequest newRequest = request.getResource().cloneRequest( request, name );
+
+		UISupport.selectAndShow( newRequest );
+	}
 }

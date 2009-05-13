@@ -38,31 +38,33 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 	{
 		return INSPECTOR_ID;
 	}
-	
+
 	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof AbstractHttpRequest<?> )
-			return new AttachmentsInspector( ( AttachmentContainer ) modelItem );
+			return new AttachmentsInspector( ( AttachmentContainer )modelItem );
 		else if( modelItem instanceof WsdlMockResponse )
-			return new AttachmentsInspector( new MockRequestAttachmentsContainer( (WsdlMockResponse)modelItem ) );
- 		else if( modelItem instanceof MessageExchangeModelItem )
- 			return new AttachmentsInspector( new WsdlMessageExchangeRequestAttachmentsContainer( (MessageExchangeModelItem)modelItem ));
-		
+			return new AttachmentsInspector( new MockRequestAttachmentsContainer( ( WsdlMockResponse )modelItem ) );
+		else if( modelItem instanceof MessageExchangeModelItem )
+			return new AttachmentsInspector( new WsdlMessageExchangeRequestAttachmentsContainer(
+					( MessageExchangeModelItem )modelItem ) );
+
 		return null;
 	}
 
 	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof AbstractHttpRequest<?> )
-			return new AttachmentsInspector( new ResponseAttachmentsContainer( (AbstractHttpRequest<?>)modelItem ) );
+			return new AttachmentsInspector( new ResponseAttachmentsContainer( ( AbstractHttpRequest<?> )modelItem ) );
 		else if( modelItem instanceof WsdlMockResponse )
-			return new AttachmentsInspector( ( WsdlMockResponse ) modelItem );
+			return new AttachmentsInspector( ( WsdlMockResponse )modelItem );
 		else if( modelItem instanceof MessageExchangeModelItem )
- 			return new AttachmentsInspector( new WsdlMessageExchangeResponseAttachmentsContainer( (MessageExchangeModelItem)modelItem ));
-		
+			return new AttachmentsInspector( new WsdlMessageExchangeResponseAttachmentsContainer(
+					( MessageExchangeModelItem )modelItem ) );
+
 		return null;
 	}
-	
+
 	protected static class WsdlMessageExchangeRequestAttachmentsContainer implements AttachmentContainer
 	{
 		private final MessageExchangeModelItem request;
@@ -79,7 +81,8 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 
 		public Attachment getAttachmentAt( int index )
 		{
-			return request.getMessageExchange() == null ? null : request.getMessageExchange().getRequestAttachments()[index];
+			return request.getMessageExchange() == null ? null
+					: request.getMessageExchange().getRequestAttachments()[index];
 		}
 
 		public int getAttachmentCount()
@@ -91,7 +94,7 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 		{
 			return null;
 		}
-		
+
 		public ModelItem getModelItem()
 		{
 			return request.getParent();
@@ -104,22 +107,23 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 
 		public Attachment[] getAttachmentsForPart( String partName )
 		{
-			return request.getMessageExchange() == null ? null : request.getMessageExchange().getRequestAttachmentsForPart( partName );
+			return request.getMessageExchange() == null ? null : request.getMessageExchange()
+					.getRequestAttachmentsForPart( partName );
 		}
 
 		public HttpAttachmentPart[] getDefinedAttachmentParts()
 		{
 			if( request.getMessageExchange() == null || request.getMessageExchange().getOperation() == null )
 				return new HttpAttachmentPart[0];
-			
+
 			MessagePart[] responseParts = request.getMessageExchange().getOperation().getDefaultRequestParts();
-			
+
 			List<HttpAttachmentPart> result = new ArrayList<HttpAttachmentPart>();
-			
+
 			for( MessagePart part : responseParts )
 				if( part instanceof HttpAttachmentPart )
-					result.add( ( HttpAttachmentPart ) part );
-			
+					result.add( ( HttpAttachmentPart )part );
+
 			return result.toArray( new HttpAttachmentPart[result.size()] );
 		}
 
@@ -133,7 +137,7 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 			request.removePropertyChangeListener( listener );
 		}
 	}
-	
+
 	protected static class WsdlMessageExchangeResponseAttachmentsContainer implements AttachmentContainer
 	{
 		private final MessageExchangeModelItem response;
@@ -150,19 +154,21 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 
 		public Attachment getAttachmentAt( int index )
 		{
-			return response.getMessageExchange() == null ? null : response.getMessageExchange().getResponseAttachments()[index];
+			return response.getMessageExchange() == null ? null
+					: response.getMessageExchange().getResponseAttachments()[index];
 		}
 
 		public int getAttachmentCount()
 		{
-			return response.getMessageExchange() == null ? 0 : response.getMessageExchange().getResponseAttachments().length;
+			return response.getMessageExchange() == null ? 0
+					: response.getMessageExchange().getResponseAttachments().length;
 		}
 
 		public HttpAttachmentPart getAttachmentPart( String partName )
 		{
 			return null;
 		}
-		
+
 		public ModelItem getModelItem()
 		{
 			return response.getParent();
@@ -175,22 +181,23 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 
 		public Attachment[] getAttachmentsForPart( String partName )
 		{
-			return response.getMessageExchange() == null ? null : response.getMessageExchange().getResponseAttachmentsForPart( partName );
+			return response.getMessageExchange() == null ? null : response.getMessageExchange()
+					.getResponseAttachmentsForPart( partName );
 		}
 
 		public HttpAttachmentPart[] getDefinedAttachmentParts()
 		{
 			if( response.getMessageExchange() == null || response.getMessageExchange().getOperation() == null )
 				return new HttpAttachmentPart[0];
-			
+
 			MessagePart[] responseParts = response.getMessageExchange().getOperation().getDefaultResponseParts();
-			
+
 			List<HttpAttachmentPart> result = new ArrayList<HttpAttachmentPart>();
-			
+
 			for( MessagePart part : responseParts )
 				if( part instanceof HttpAttachmentPart )
-					result.add( ( HttpAttachmentPart ) part );
-			
+					result.add( ( HttpAttachmentPart )part );
+
 			return result.toArray( new HttpAttachmentPart[result.size()] );
 		}
 
@@ -204,7 +211,7 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 			response.removePropertyChangeListener( listener );
 		}
 	}
-	
+
 	protected static class ResponseAttachmentsContainer implements AttachmentContainer
 	{
 		private final AbstractHttpRequest<?> request;
@@ -252,13 +259,13 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 		public HttpAttachmentPart[] getDefinedAttachmentParts()
 		{
 			MessagePart[] responseParts = request.getResponseParts();
-			
+
 			List<HttpAttachmentPart> result = new ArrayList<HttpAttachmentPart>();
-			
+
 			for( MessagePart part : responseParts )
 				if( part instanceof HttpAttachmentPart )
-					result.add( ( HttpAttachmentPart ) part );
-			
+					result.add( ( HttpAttachmentPart )part );
+
 			return result.toArray( new HttpAttachmentPart[result.size()] );
 		}
 
@@ -289,12 +296,14 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 
 		public Attachment getAttachmentAt( int index )
 		{
-			return mockResponse.getMockResult() == null ? null : mockResponse.getMockResult().getMockRequest().getRequestAttachments()[index];
+			return mockResponse.getMockResult() == null ? null : mockResponse.getMockResult().getMockRequest()
+					.getRequestAttachments()[index];
 		}
 
 		public int getAttachmentCount()
 		{
-			return mockResponse.getMockResult() == null ? 0 : mockResponse.getMockResult().getMockRequest().getRequestAttachments().length;
+			return mockResponse.getMockResult() == null ? 0 : mockResponse.getMockResult().getMockRequest()
+					.getRequestAttachments().length;
 		}
 
 		public HttpAttachmentPart getAttachmentPart( String partName )
@@ -304,14 +313,15 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 
 		public Attachment[] getAttachments()
 		{
-			return mockResponse.getMockResult() == null ? null : mockResponse.getMockResult().getMockRequest().getRequestAttachments();
+			return mockResponse.getMockResult() == null ? null : mockResponse.getMockResult().getMockRequest()
+					.getRequestAttachments();
 		}
 
 		public Attachment[] getAttachmentsForPart( String partName )
 		{
 			return null;
 		}
-		
+
 		public ModelItem getModelItem()
 		{
 			return mockResponse;
@@ -320,13 +330,13 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 		public HttpAttachmentPart[] getDefinedAttachmentParts()
 		{
 			MessagePart[] responseParts = mockResponse.getRequestParts();
-			
+
 			List<HttpAttachmentPart> result = new ArrayList<HttpAttachmentPart>();
-			
+
 			for( MessagePart part : responseParts )
 				if( part instanceof HttpAttachmentPart )
-					result.add( ( HttpAttachmentPart ) part );
-			
+					result.add( ( HttpAttachmentPart )part );
+
 			return result.toArray( new HttpAttachmentPart[result.size()] );
 		}
 
@@ -337,7 +347,7 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 
 		public void removeAttachmentsChangeListener( PropertyChangeListener listener )
 		{
-			mockResponse.removePropertyChangeListener(  WsdlMockResponse.MOCKRESULT_PROPERTY, listener );
+			mockResponse.removePropertyChangeListener( WsdlMockResponse.MOCKRESULT_PROPERTY, listener );
 		}
 	}
 }

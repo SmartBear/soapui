@@ -31,69 +31,70 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
- * Prompts to add a WSS Username Token to the specified WsdlRequests requestContent
+ * Prompts to add a WSS Username Token to the specified WsdlRequests
+ * requestContent
  * 
  * @author Ole.Matzura
  */
 
 public class AddWSSUsernameTokenAction extends AbstractAction
 {
-   private final WsdlRequest request;
+	private final WsdlRequest request;
 
 	public AddWSSUsernameTokenAction( WsdlRequest request )
-   {
-      super( "Add WSS Username Token" );
+	{
+		super( "Add WSS Username Token" );
 		this.request = request;
-   }
-   
-   public void actionPerformed(ActionEvent e)
-   {
-   	if( (request.getUsername() == null || request.getUsername().length() == 0) &&
-   		 (request.getPassword() == null || request.getPassword().length() == 0 ))
-   	{
-   		UISupport.showErrorMessage( "Request is missing username and password" );
-   		return;
-   	}
-   	
-   	String req = request.getRequestContent();
-   	
-   	try
+	}
+
+	public void actionPerformed( ActionEvent e )
+	{
+		if( ( request.getUsername() == null || request.getUsername().length() == 0 )
+				&& ( request.getPassword() == null || request.getPassword().length() == 0 ) )
 		{
-   		String passwordType = (String) UISupport.prompt( "Add WSS Username Token", "Specify Password Type", 
-   				new String [] { WsdlRequest.PW_TYPE_TEXT, WsdlRequest.PW_TYPE_DIGEST });
-   		
-   		if( passwordType == null )
-   			return;
-   		
+			UISupport.showErrorMessage( "Request is missing username and password" );
+			return;
+		}
+
+		String req = request.getRequestContent();
+
+		try
+		{
+			String passwordType = ( String )UISupport.prompt( "Add WSS Username Token", "Specify Password Type",
+					new String[] { WsdlRequest.PW_TYPE_TEXT, WsdlRequest.PW_TYPE_DIGEST } );
+
+			if( passwordType == null )
+				return;
+
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			dbf.setNamespaceAware( true );
 			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse( new InputSource( new StringReader( req )));
+			Document doc = db.parse( new InputSource( new StringReader( req ) ) );
 			WSSecUsernameToken addUsernameToken = new WSSecUsernameToken();
-			
-			if (WsdlRequest.PW_TYPE_DIGEST.equals(passwordType)) 
-         {
-				addUsernameToken.setPasswordType(WSConstants.PASSWORD_DIGEST);
-         } 
-         else 
-         {
-            addUsernameToken.setPasswordType(WSConstants.PASSWORD_TEXT);
-         }
-			 
-			addUsernameToken.setUserInfo(request.getUsername(), request.getPassword() ); 
+
+			if( WsdlRequest.PW_TYPE_DIGEST.equals( passwordType ) )
+			{
+				addUsernameToken.setPasswordType( WSConstants.PASSWORD_DIGEST );
+			}
+			else
+			{
+				addUsernameToken.setPasswordType( WSConstants.PASSWORD_TEXT );
+			}
+
+			addUsernameToken.setUserInfo( request.getUsername(), request.getPassword() );
 			addUsernameToken.addNonce();
 			addUsernameToken.addCreated();
-			 
+
 			StringWriter writer = new StringWriter();
-			
+
 			WSSecHeader secHeader = new WSSecHeader();
 			secHeader.insertSecurityHeader( doc );
 			XmlUtils.serializePretty( addUsernameToken.build( doc, secHeader ), writer );
 			request.setRequestContent( writer.toString() );
 		}
-		catch ( Exception e1)
+		catch( Exception e1 )
 		{
 			UISupport.showErrorMessage( e1 );
 		}
-   }
+	}
 }

@@ -28,20 +28,20 @@ public class StartMinimizedMockServiceAction extends AbstractSoapUIAction<WsdlMo
 {
 	public final static String SOAPUI_ACTION_ID = "StartMinimizedMockServiceAction";
 
-	public StartMinimizedMockServiceAction() 
-   {
-      super( "Start Minimized", "Starts this MockService and minimizes its desktop window" );
-   }
-	
-   public void perform( WsdlMockService mockService, Object param )
+	public StartMinimizedMockServiceAction()
 	{
-   	try
+		super( "Start Minimized", "Starts this MockService and minimizes its desktop window" );
+	}
+
+	public void perform( WsdlMockService mockService, Object param )
+	{
+		try
 		{
-   		UISupport.setHourglassCursor();
+			UISupport.setHourglassCursor();
 			DesktopPanel desktopPanel = UISupport.showDesktopPanel( mockService );
 			if( mockService.getMockRunner() == null )
 				mockService.start();
-			
+
 			SoapUI.getDesktop().minimize( desktopPanel );
 		}
 		catch( Exception e )

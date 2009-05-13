@@ -18,7 +18,8 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
- * Moves the specified WsdlTestCase up one step in the WsdlTestSuites list of WsdlTestCases
+ * Moves the specified WsdlTestCase up one step in the WsdlTestSuites list of
+ * WsdlTestCases
  * 
  * @author ole.matzura
  */
@@ -29,15 +30,15 @@ public class MoveTestCaseUpAction extends AbstractSoapUIAction<WsdlTestCase>
 	{
 		super( "Move TestCase Up", "Moves this TestCase up" );
 	}
-	
+
 	public void perform( WsdlTestCase testCase, Object param )
 	{
 		WsdlTestSuite testSuite = testCase.getTestSuite();
 		int ix = testSuite.getIndexOfTestCase( testCase );
-		if (ix == -1 || ix == 0 )
+		if( ix == -1 || ix == 0 )
 			return;
 
-		testSuite.moveTestCase(ix, -1);
+		testSuite.moveTestCase( ix, -1 );
 		UISupport.select( testCase );
 	}
 }

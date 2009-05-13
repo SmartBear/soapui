@@ -26,11 +26,12 @@ import com.eviware.soapui.model.iface.Attachment;
  * @author ole.matzura
  */
 
-public abstract class AbstractWsdlMessageExchange<T extends ModelItem> extends AbstractMessageExchange<T> implements WsdlMessageExchange
+public abstract class AbstractWsdlMessageExchange<T extends ModelItem> extends AbstractMessageExchange<T> implements
+		WsdlMessageExchange
 {
-	public AbstractWsdlMessageExchange(T modelItem)
+	public AbstractWsdlMessageExchange( T modelItem )
 	{
-		super(modelItem);
+		super( modelItem );
 	}
 
 	public boolean hasResponse()
@@ -38,43 +39,46 @@ public abstract class AbstractWsdlMessageExchange<T extends ModelItem> extends A
 		String responseContent = getResponseContent();
 		return responseContent != null && responseContent.trim().length() > 0;
 	}
-	
+
 	public abstract WsdlOperation getOperation();
 
 	public Attachment[] getResponseAttachmentsForPart( String name )
 	{
 		List<Attachment> result = new ArrayList<Attachment>();
-		
+
 		for( Attachment attachment : getResponseAttachments() )
 		{
-			if( attachment.getPart().equals( name ))
+			if( attachment.getPart().equals( name ) )
 				result.add( attachment );
 		}
-		
+
 		return result.toArray( new Attachment[result.size()] );
 	}
-	
+
 	public Attachment[] getRequestAttachmentsForPart( String name )
 	{
 		List<Attachment> result = new ArrayList<Attachment>();
-		
+
 		for( Attachment attachment : getRequestAttachments() )
 		{
-			if( attachment.getPart().equals( name ))
+			if( attachment.getPart().equals( name ) )
 				result.add( attachment );
 		}
-		
+
 		return result.toArray( new Attachment[result.size()] );
 	}
 
 	public boolean hasRequest( boolean ignoreEmpty )
 	{
 		String requestContent = getRequestContent();
-		return !(requestContent == null || (ignoreEmpty && requestContent.trim().length() == 0 ));
+		return !( requestContent == null || ( ignoreEmpty && requestContent.trim().length() == 0 ) );
 	}
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange#getSoapVersion()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange#getSoapVersion()
 	 */
 	public SoapVersion getSoapVersion()
 	{
@@ -90,7 +94,7 @@ public abstract class AbstractWsdlMessageExchange<T extends ModelItem> extends A
 	{
 		return null;
 	}
-	
+
 	public byte[] getRawResponseData()
 	{
 		return null;

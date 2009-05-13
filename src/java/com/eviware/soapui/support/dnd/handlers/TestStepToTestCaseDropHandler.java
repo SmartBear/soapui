@@ -15,13 +15,13 @@ package com.eviware.soapui.support.dnd.handlers;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 
-public class TestStepToTestCaseDropHandler extends AbstractBeforeAfterModelItemDropHandler<WsdlTestStep,WsdlTestCase>
+public class TestStepToTestCaseDropHandler extends AbstractBeforeAfterModelItemDropHandler<WsdlTestStep, WsdlTestCase>
 {
 	public TestStepToTestCaseDropHandler()
 	{
 		super( WsdlTestStep.class, WsdlTestCase.class );
 	}
-	
+
 	@Override
 	boolean copyAfter( WsdlTestStep source, WsdlTestCase target )
 	{
@@ -49,17 +49,17 @@ public class TestStepToTestCaseDropHandler extends AbstractBeforeAfterModelItemD
 	@Override
 	String getCopyAfterInfo( WsdlTestStep source, WsdlTestCase target )
 	{
-		return source.getTestCase() == target ? 
-					"Copy TestStep [" + source.getName() + "] within TestCase [" + target.getName() + "]" :
-					"Copy TestStep [" + source.getName() + "] to TestCase [" + target.getName() + "]";
+		return source.getTestCase() == target ? "Copy TestStep [" + source.getName() + "] within TestCase ["
+				+ target.getName() + "]" : "Copy TestStep [" + source.getName() + "] to TestCase [" + target.getName()
+				+ "]";
 	}
 
 	@Override
 	String getMoveAfterInfo( WsdlTestStep source, WsdlTestCase target )
 	{
-		return source.getTestCase() == target ? 
-					"Move TestStep [" + source.getName() + "] within TestCase [" + target.getName() + "]" :
-					"Move TestStep [" + source.getName() + "] to TestCase [" + target.getName() + "]";
+		return source.getTestCase() == target ? "Move TestStep [" + source.getName() + "] within TestCase ["
+				+ target.getName() + "]" : "Move TestStep [" + source.getName() + "] to TestCase [" + target.getName()
+				+ "]";
 	}
 
 	@Override

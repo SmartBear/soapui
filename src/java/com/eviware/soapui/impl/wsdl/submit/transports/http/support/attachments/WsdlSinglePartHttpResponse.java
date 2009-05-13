@@ -12,6 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
+import java.io.StringWriter;
+import java.util.Vector;
+
+import org.w3c.dom.Document;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.filters.WssRequestFilter;
@@ -21,26 +26,22 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.w3c.dom.Document;
-
-import java.io.StringWriter;
-import java.util.Vector;
 
 public class WsdlSinglePartHttpResponse extends SinglePartHttpResponse implements WsdlResponse
 {
 	private Vector<Object> wssResult;
-	
-	public WsdlSinglePartHttpResponse(WsdlRequest wsdlRequest, ExtendedHttpMethod postMethod,
-			String requestContent, PropertyExpansionContext context)
+
+	public WsdlSinglePartHttpResponse( WsdlRequest wsdlRequest, ExtendedHttpMethod postMethod, String requestContent,
+			PropertyExpansionContext context )
 	{
-		super(wsdlRequest, postMethod, requestContent, context);
-		
+		super( wsdlRequest, postMethod, requestContent, context );
+
 		processIncomingWss( wsdlRequest, context );
 	}
-	
+
 	private void processIncomingWss( WsdlRequest wsdlRequest, PropertyExpansionContext context )
 	{
-		IncomingWss incomingWss = ( IncomingWss ) context.getProperty( WssRequestFilter.INCOMING_WSS_PROPERTY );
+		IncomingWss incomingWss = ( IncomingWss )context.getProperty( WssRequestFilter.INCOMING_WSS_PROPERTY );
 		if( incomingWss != null )
 		{
 			try
@@ -59,11 +60,11 @@ public class WsdlSinglePartHttpResponse extends SinglePartHttpResponse implement
 				if( wssResult == null )
 					wssResult = new Vector<Object>();
 				wssResult.add( e );
-				SoapUI.logError(e);
+				SoapUI.logError( e );
 			}
 		}
 	}
-	
+
 	public Vector<?> getWssResult()
 	{
 		return wssResult;
@@ -72,6 +73,6 @@ public class WsdlSinglePartHttpResponse extends SinglePartHttpResponse implement
 	@Override
 	public WsdlRequest getRequest()
 	{
-		return (WsdlRequest) super.getRequest();
+		return ( WsdlRequest )super.getRequest();
 	}
 }

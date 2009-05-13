@@ -31,9 +31,9 @@ import com.eviware.soapui.model.iface.SubmitListener;
  * @author Ole.Matzura
  */
 
-public final class WsdlSubmit<T extends AbstractHttpRequest<?>>  implements Runnable, Submit
+public final class WsdlSubmit<T extends AbstractHttpRequest<?>> implements Runnable, Submit
 {
-	private final static Logger logger = Logger.getLogger(WsdlSubmit.class);
+	private final static Logger logger = Logger.getLogger( WsdlSubmit.class );
 	private T request;
 	private SubmitListener[] listeners;
 	private Status status;
@@ -43,54 +43,54 @@ public final class WsdlSubmit<T extends AbstractHttpRequest<?>>  implements Runn
 	private SubmitContext submitContext;
 	private RequestTransport transport;
 
-	public WsdlSubmit(T wsdlRequest, SubmitListener[] listeners, RequestTransport transport)
+	public WsdlSubmit( T wsdlRequest, SubmitListener[] listeners, RequestTransport transport )
 	{
 		this.request = wsdlRequest;
 		this.transport = transport;
-		
+
 		List<SubmitListener> regListeners = SoapUI.getListenerRegistry().getListeners( SubmitListener.class );
-		
+
 		this.listeners = new SubmitListener[listeners.length + regListeners.size()];
 		for( int c = 0; c < listeners.length; c++ )
 			this.listeners[c] = listeners[c];
-		
+
 		for( int c = 0; c < regListeners.size(); c++ )
-			this.listeners[listeners.length+c] = regListeners.get( c );
-		
+			this.listeners[listeners.length + c] = regListeners.get( c );
+
 		error = null;
 		status = Status.INITIALIZED;
 		future = null;
 	}
 
-	public void submitRequest(SubmitContext submitContext, boolean async )
+	public void submitRequest( SubmitContext submitContext, boolean async )
 	{
 		this.submitContext = submitContext;
 
 		if( async && future != null )
 			throw new RuntimeException( "Submit already running" );
-		
+
 		if( async )
-			future = SoapUI.getThreadPool().submit(this);
+			future = SoapUI.getThreadPool().submit( this );
 		else
 			run();
 	}
 
 	public void cancel()
 	{
-		if (status == Status.CANCELED)
+		if( status == Status.CANCELED )
 			return;
 
-		logger.info("Canceling request..");
-		if (status == Status.RUNNING )
+		logger.info( "Canceling request.." );
+		if( status == Status.RUNNING )
 		{
 			transport.abortRequest( submitContext );
 		}
 
 		status = Status.CANCELED;
 
-		for (int i = 0; i < listeners.length; i++)
+		for( int i = 0; i < listeners.length; i++ )
 		{
-			listeners[i].afterSubmit(this, submitContext);
+			listeners[i].afterSubmit( this, submitContext );
 		}
 	}
 
@@ -99,46 +99,46 @@ public final class WsdlSubmit<T extends AbstractHttpRequest<?>>  implements Runn
 		try
 		{
 			submitContext.setProperty( RequestTransport.REQUEST_TRANSPORT, transport );
-	      submitContext.setProperty( RequestTransport.WSDL_REQUEST, request );
-			
-			for (int i = 0; i < listeners.length; i++)
+			submitContext.setProperty( RequestTransport.WSDL_REQUEST, request );
+
+			for( int i = 0; i < listeners.length; i++ )
 			{
-				if (!listeners[i].beforeSubmit(this, submitContext))
+				if( !listeners[i].beforeSubmit( this, submitContext ) )
 				{
 					status = Status.CANCELED;
-					System.err.println("listener cancelled submit..");
+					System.err.println( "listener cancelled submit.." );
 					return;
 				}
 			}
 
 			status = Status.RUNNING;
-			response = transport.sendRequest(submitContext, request);
-			
-			if (status != Status.CANCELED)
+			response = transport.sendRequest( submitContext, request );
+
+			if( status != Status.CANCELED )
 			{
 				status = Status.FINISHED;
 			}
 
 			if( response.getTimeTaken() == 0 )
 			{
-				logger.warn( "Request took 0 in thread " + Thread.currentThread().getId() + 
-						", response length = " + response.getContentLength() );
+				logger.warn( "Request took 0 in thread " + Thread.currentThread().getId() + ", response length = "
+						+ response.getContentLength() );
 			}
 		}
-		catch (Exception e1)
+		catch( Exception e1 )
 		{
 			error = e1;
 			status = Status.ERROR;
-			logger.error("Exception in request: " + e1);
+			logger.error( "Exception in request: " + e1 );
 			SoapUI.logError( e1 );
 		}
 		finally
 		{
-			if (status != Status.CANCELED)
+			if( status != Status.CANCELED )
 			{
-				for (int i = 0; i < listeners.length; i++)
+				for( int i = 0; i < listeners.length; i++ )
 				{
-					listeners[i].afterSubmit(this, submitContext);
+					listeners[i].afterSubmit( this, submitContext );
 				}
 			}
 		}
@@ -161,22 +161,22 @@ public final class WsdlSubmit<T extends AbstractHttpRequest<?>>  implements Runn
 
 	public synchronized Status waitUntilFinished()
 	{
-		if (future != null)
+		if( future != null )
 		{
-			if (!future.isDone())
+			if( !future.isDone() )
 			{
 				try
 				{
 					future.get();
 				}
-				catch (Exception e)
+				catch( Exception e )
 				{
 					SoapUI.logError( e );
 				}
 			}
 		}
 		else
-			throw new RuntimeException("cannot wait on null future");
+			throw new RuntimeException( "cannot wait on null future" );
 
 		return getStatus();
 	}

@@ -12,37 +12,38 @@
 
 package com.eviware.soapui.support.editor.inspectors.attachments;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.JComponent;
+
 import com.eviware.soapui.impl.wsdl.AttachmentContainer;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 
-import javax.swing.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 public class AttachmentsInspector extends AbstractXmlInspector implements PropertyChangeListener
 {
 	private AttachmentContainer container;
 	private AttachmentsPanel attachmentsPanel;
 
-	public AttachmentsInspector( AttachmentContainer container)
+	public AttachmentsInspector( AttachmentContainer container )
 	{
-		super( "Attachments (" + container.getAttachmentCount() + ")", "Files attached to this message",
-					true, AttachmentsInspectorFactory.INSPECTOR_ID );
+		super( "Attachments (" + container.getAttachmentCount() + ")", "Files attached to this message", true,
+				AttachmentsInspectorFactory.INSPECTOR_ID );
 		this.container = container;
-		
+
 		container.addAttachmentsChangeListener( this );
 	}
 
 	public JComponent getComponent()
 	{
 		if( attachmentsPanel == null )
-      {
+		{
 			attachmentsPanel = new AttachmentsPanel( container );
-      }
-		
+		}
+
 		return attachmentsPanel;
 	}
 
@@ -56,7 +57,7 @@ public class AttachmentsInspector extends AbstractXmlInspector implements Proper
 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		setTitle( "Attachments (" + container.getAttachmentCount() + ")");
+		setTitle( "Attachments (" + container.getAttachmentCount() + ")" );
 	}
 
 	@Override

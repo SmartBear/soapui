@@ -12,72 +12,75 @@
 
 package com.eviware.soapui.impl.wsdl.mock.dispatch;
 
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.support.PropertyChangeNotifier;
-import org.apache.xmlbeans.XmlObject;
-
-import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+
+import org.apache.xmlbeans.XmlObject;
+
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
+import com.eviware.soapui.support.PropertyChangeNotifier;
+
 public abstract class AbstractMockOperationDispatcher implements PropertyChangeNotifier, MockOperationDispatcher
 {
-   private WsdlMockOperation mockOperation;
-   private PropertyChangeSupport propertyChangeSupport;
+	private WsdlMockOperation mockOperation;
+	private PropertyChangeSupport propertyChangeSupport;
 
-   protected AbstractMockOperationDispatcher( WsdlMockOperation mockOperation )
-   {
-      this.mockOperation = mockOperation;
-      propertyChangeSupport = new PropertyChangeSupport( this );
-   }
+	protected AbstractMockOperationDispatcher( WsdlMockOperation mockOperation )
+	{
+		this.mockOperation = mockOperation;
+		propertyChangeSupport = new PropertyChangeSupport( this );
+	}
 
-   public JComponent buildEditorComponent()
-   {
-      return new JPanel();
-   }
+	public JComponent buildEditorComponent()
+	{
+		return new JPanel();
+	}
 
-   public void release()
-   {
-      mockOperation = null;
-   }
+	public void release()
+	{
+		mockOperation = null;
+	}
 
-   public XmlObject getConfig()
-   {
-      return mockOperation.getConfig().getDispatchConfig();
-   }
+	public XmlObject getConfig()
+	{
+		return mockOperation.getConfig().getDispatchConfig();
+	}
 
-   protected void saveConfig( XmlObject xmlObject )
-   {
-      mockOperation.getConfig().getDispatchConfig().set( xmlObject );
-   }
+	protected void saveConfig( XmlObject xmlObject )
+	{
+		mockOperation.getConfig().getDispatchConfig().set( xmlObject );
+	}
 
-   public WsdlMockOperation getMockOperation()
-   {
-      return mockOperation;
-   }
+	public WsdlMockOperation getMockOperation()
+	{
+		return mockOperation;
+	}
 
-   public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
-   {
-      propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
-   }
+	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
+	{
+		propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
+	}
 
-   public void addPropertyChangeListener( PropertyChangeListener listener )
-   {
-      propertyChangeSupport.addPropertyChangeListener( listener );
-   }
+	public void addPropertyChangeListener( PropertyChangeListener listener )
+	{
+		propertyChangeSupport.addPropertyChangeListener( listener );
+	}
 
-   public void removePropertyChangeListener( PropertyChangeListener listener )
-   {
-      propertyChangeSupport.removePropertyChangeListener( listener );
-   }
+	public void removePropertyChangeListener( PropertyChangeListener listener )
+	{
+		propertyChangeSupport.removePropertyChangeListener( listener );
+	}
 
-   public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
-   {
-      propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
-   }
+	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
+	{
+		propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
+	}
 
-   protected PropertyChangeSupport getPropertyChangeSupport()
-   {
-      return propertyChangeSupport;
-   }
+	protected PropertyChangeSupport getPropertyChangeSupport()
+	{
+		return propertyChangeSupport;
+	}
 }

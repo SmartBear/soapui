@@ -27,8 +27,13 @@ public class GroovyScriptEngineFactory implements SoapUIScriptEngineFactory
 {
 	public static final String ID = "groovy";
 
+	public GroovyScriptEngineFactory()
+	{
+		SoapUIGroovyScriptEngine.init( SoapUI.class.getClassLoader() );
+	}
+	
 	public SoapUIScriptEngine createScriptEngine( ModelItem modelItem )
 	{
-		return new SoapUIGroovyScriptEngine( SoapUI.class.getClassLoader() );
+		return new SoapUIGroovyScriptEngine();
 	}
 }

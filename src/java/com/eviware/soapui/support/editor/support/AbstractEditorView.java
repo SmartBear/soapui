@@ -41,8 +41,8 @@ public abstract class AbstractEditorView<T extends EditorDocument> implements Ed
 	private Editor<T> editor;
 	private JComponent component;
 	private final String viewId;
-	
-	public AbstractEditorView(String title, Editor<T> editor, String viewId)
+
+	public AbstractEditorView( String title, Editor<T> editor, String viewId )
 	{
 		super();
 		this.title = title;
@@ -54,17 +54,15 @@ public abstract class AbstractEditorView<T extends EditorDocument> implements Ed
 	{
 		return propertyChangeSupport;
 	}
-	
-	
+
 	public JComponent getComponent()
 	{
 		if( component == null )
 			component = buildUI();
-		
+
 		return component;
 	}
 
-	
 	public String getViewId()
 	{
 		return viewId;
@@ -78,7 +76,7 @@ public abstract class AbstractEditorView<T extends EditorDocument> implements Ed
 
 	public abstract JComponent buildUI();
 
-	public boolean activate(EditorLocation<T> location)
+	public boolean activate( EditorLocation<T> location )
 	{
 		isActive = true;
 		return true;
@@ -89,7 +87,7 @@ public abstract class AbstractEditorView<T extends EditorDocument> implements Ed
 		isActive = false;
 		return true;
 	}
-	
+
 	public boolean isActive()
 	{
 		return isActive;
@@ -104,36 +102,36 @@ public abstract class AbstractEditorView<T extends EditorDocument> implements Ed
 	{
 		String oldTitle = this.title;
 		this.title = title;
-		
+
 		propertyChangeSupport.firePropertyChange( TITLE_PROPERTY, oldTitle, title );
 	}
-	
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
+
+	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
-	   propertyChangeSupport.addPropertyChangeListener(propertyName, listener);	
+		propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
 	}
 
-	public void addPropertyChangeListener(PropertyChangeListener listener)
+	public void addPropertyChangeListener( PropertyChangeListener listener )
 	{
 		propertyChangeSupport.addPropertyChangeListener( listener );
 	}
 
-	public void removePropertyChangeListener(PropertyChangeListener listener)
+	public void removePropertyChangeListener( PropertyChangeListener listener )
 	{
 		propertyChangeSupport.removePropertyChangeListener( listener );
 	}
 
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
+	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
 		propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
 	}
-	
+
 	public T getDocument()
 	{
 		return xmlDocument;
 	}
 
-	public void setDocument(T xmlDocument)
+	public void setDocument( T xmlDocument )
 	{
 		this.xmlDocument = xmlDocument;
 	}
@@ -143,45 +141,44 @@ public abstract class AbstractEditorView<T extends EditorDocument> implements Ed
 		if( this.xmlDocument != null )
 		{
 			this.xmlDocument = null;
-		}		
+		}
 	}
 
-	public void addLocationListener(EditorLocationListener<T> listener)
+	public void addLocationListener( EditorLocationListener<T> listener )
 	{
 		listeners.add( listener );
 	}
 
-	public void removeLocationListener(EditorLocationListener<T> listener)
+	public void removeLocationListener( EditorLocationListener<T> listener )
 	{
 		listeners.remove( listener );
 	}
-	
+
 	public void fireLocationChanged( EditorLocation<T> location )
 	{
 		for( EditorLocationListener<T> listener : listeners )
 			listener.locationChanged( location );
 	}
-	
+
 	public EditorLocation<T> getEditorLocation()
 	{
 		return null;
 	}
-	
-	public void setLocation(EditorLocation<T> location)
-	{
-	}
-	
-	public void locationChanged(EditorLocation<T> location)
+
+	public void setLocation( EditorLocation<T> location )
 	{
 	}
 
-	
+	public void locationChanged( EditorLocation<T> location )
+	{
+	}
+
 	public Editor<T> getEditor()
 	{
 		return editor;
 	}
-	
-	public void setEditable(boolean enabled)
+
+	public void setEditable( boolean enabled )
 	{
 	}
 }

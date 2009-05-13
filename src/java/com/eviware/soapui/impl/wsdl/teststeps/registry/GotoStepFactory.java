@@ -30,22 +30,22 @@ public class GotoStepFactory extends WsdlTestStepFactory
 
 	public GotoStepFactory()
 	{
-		super( GOTO_TYPE, "Conditional Goto", 
-					"Transfers the execution to another TestStep based on xpath expressions", "/goto.gif" );
+		super( GOTO_TYPE, "Conditional Goto", "Transfers the execution to another TestStep based on xpath expressions",
+				"/goto.gif" );
 	}
 
-	public WsdlTestStep buildTestStep(WsdlTestCase testCase,	TestStepConfig config, boolean forLoadTest)
+	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
 		return new WsdlGotoTestStep( testCase, config, forLoadTest );
 	}
 
-	public TestStepConfig createNewTestStep(WsdlTestCase testCase, String name)
+	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
 	{
 		TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
-      testStepConfig.setType( GOTO_TYPE );
-      testStepConfig.setName( name );
-      testStepConfig.setConfig( GotoStepConfig.Factory.newInstance() );
-      return testStepConfig;
+		testStepConfig.setType( GOTO_TYPE );
+		testStepConfig.setName( name );
+		testStepConfig.setConfig( GotoStepConfig.Factory.newInstance() );
+		return testStepConfig;
 	}
 
 	public boolean canCreate()

@@ -23,7 +23,8 @@ import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
 
 /**
- * Recreates an SOAP response message for WsdlMockResponse from its WSDL/XSD definition
+ * Recreates an SOAP response message for WsdlMockResponse from its WSDL/XSD
+ * definition
  * 
  * @author ole.matzura
  */
@@ -48,17 +49,16 @@ public class RecreateMockResponseAction extends AbstractAction
 			UISupport.showErrorMessage( "Missing operation for this mock response" );
 			return;
 		}
-		
+
 		String response = mockResponse.getResponseContent();
-		if( response != null && response.trim().length() > 0 && 
-			!UISupport.confirm( "Overwrite current response?", "Recreate response" ))
+		if( response != null && response.trim().length() > 0
+				&& !UISupport.confirm( "Overwrite current response?", "Recreate response" ) )
 			return;
-		
+
 		boolean createOptional = mockResponse.getSettings().getBoolean(
-					WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS );
+				WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS );
 		if( !createOptional )
-			createOptional = UISupport.confirm( "Create optional elements in schema?",
-						"Create Request" );
+			createOptional = UISupport.confirm( "Create optional elements in schema?", "Create Request" );
 
 		String req = operation.createResponse( createOptional );
 		if( req == null )

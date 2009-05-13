@@ -12,16 +12,18 @@
 
 package com.eviware.soapui.actions;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JCheckBox;
+import javax.swing.JTextField;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.ui.desktop.DesktopRegistry;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Preferences class for UISettings
@@ -87,7 +89,8 @@ public class UIPrefs implements Prefs
 				}
 			} );
 
-			editorForm.appendTextField( AUTOSAVE_INTERVAL, "Sets the autosave interval in minutes (0 means autosave is off)" );
+			editorForm.appendTextField( AUTOSAVE_INTERVAL,
+					"Sets the autosave interval in minutes (0 means autosave is off)" );
 
 			if( SoapUI.isStandalone() )
 			{

@@ -19,7 +19,8 @@ import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.MessagePart.AttachmentPart;
 
 /**
- * Behaviour for ModelItems that contain attachments (Requests and MockResponses)
+ * Behaviour for ModelItems that contain attachments (Requests and
+ * MockResponses)
  * 
  * @author ole.matzura
  */
@@ -39,16 +40,16 @@ public interface AttachmentContainer
 	public AttachmentPart getAttachmentPart( String partName );
 
 	public static final String ATTACHMENTS_PROPERTY = WsdlRequest.class.getName() + "@attachments";
-	
+
 	public void addAttachmentsChangeListener( PropertyChangeListener listener );
-	
+
 	public void removeAttachmentsChangeListener( PropertyChangeListener listener );
 
 	public boolean isMultipartEnabled();
-	
+
 	/**
 	 * Returns ModelItem associated with this container
 	 */
-	
+
 	public ModelItem getModelItem();
 }

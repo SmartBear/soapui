@@ -40,13 +40,13 @@ public class WssInspectorFactory implements RequestInspectorFactory, ResponseIns
 	{
 		if( modelItem instanceof WsdlMockResponse )
 		{
-			return new WsdlMockRequestWssInspector( (WsdlMockResponse)modelItem );
+			return new WsdlMockRequestWssInspector( ( WsdlMockResponse )modelItem );
 		}
 		else if( modelItem instanceof MessageExchangeModelItem )
 		{
-			return new RequestMessageExchangeWssInspector( (MessageExchangeModelItem)modelItem );
+			return new RequestMessageExchangeWssInspector( ( MessageExchangeModelItem )modelItem );
 		}
-		
+
 		return null;
 	}
 
@@ -54,24 +54,25 @@ public class WssInspectorFactory implements RequestInspectorFactory, ResponseIns
 	{
 		if( modelItem instanceof WsdlRequest )
 		{
-			return new WsdlResponseWssInspector( (WsdlRequest)modelItem ) ;
+			return new WsdlResponseWssInspector( ( WsdlRequest )modelItem );
 		}
 		else if( modelItem instanceof MessageExchangeModelItem )
 		{
-			return new ResponseMessageExchangeWssInspector( (MessageExchangeModelItem)modelItem );
+			return new ResponseMessageExchangeWssInspector( ( MessageExchangeModelItem )modelItem );
 		}
-		
+
 		return null;
 	}
-	
-	public class WsdlMockRequestWssInspector extends AbstractWssInspector implements XmlInspector, PropertyChangeListener
+
+	public class WsdlMockRequestWssInspector extends AbstractWssInspector implements XmlInspector,
+			PropertyChangeListener
 	{
 		private final WsdlMockResponse response;
 
 		public WsdlMockRequestWssInspector( WsdlMockResponse response )
 		{
 			this.response = response;
-			
+
 			response.addPropertyChangeListener( WsdlMockResponse.MOCKRESULT_PROPERTY, this );
 		}
 
@@ -92,23 +93,24 @@ public class WssInspectorFactory implements RequestInspectorFactory, ResponseIns
 			response.removePropertyChangeListener( WsdlMockResponse.MOCKRESULT_PROPERTY, this );
 		}
 	}
-	
-	public class RequestMessageExchangeWssInspector extends AbstractWssInspector implements XmlInspector, PropertyChangeListener
+
+	public class RequestMessageExchangeWssInspector extends AbstractWssInspector implements XmlInspector,
+			PropertyChangeListener
 	{
 		private final MessageExchangeModelItem item;
 
 		public RequestMessageExchangeWssInspector( MessageExchangeModelItem item )
 		{
 			this.item = item;
-			
+
 			item.addPropertyChangeListener( MessageExchangeModelItem.MESSAGE_EXCHANGE, this );
 		}
 
 		@Override
 		public Vector<?> getWssResults()
 		{
-			return item.getMessageExchange() instanceof WsdlMessageExchange ? 
-					((WsdlMessageExchange)item.getMessageExchange()).getRequestWssResult() : null;
+			return item.getMessageExchange() instanceof WsdlMessageExchange ? ( ( WsdlMessageExchange )item
+					.getMessageExchange() ).getRequestWssResult() : null;
 		}
 
 		public void propertyChange( PropertyChangeEvent evt )
@@ -119,10 +121,10 @@ public class WssInspectorFactory implements RequestInspectorFactory, ResponseIns
 		@Override
 		public void release()
 		{
-			item.removePropertyChangeListener(MessageExchangeModelItem.MESSAGE_EXCHANGE, this );
+			item.removePropertyChangeListener( MessageExchangeModelItem.MESSAGE_EXCHANGE, this );
 		}
 	}
-	
+
 	public class WsdlResponseWssInspector extends AbstractWssInspector implements XmlInspector, PropertyChangeListener
 	{
 		private final WsdlRequest response;
@@ -130,7 +132,7 @@ public class WssInspectorFactory implements RequestInspectorFactory, ResponseIns
 		public WsdlResponseWssInspector( WsdlRequest response )
 		{
 			this.response = response;
-			
+
 			response.addPropertyChangeListener( WsdlRequest.RESPONSE_PROPERTY, this );
 		}
 
@@ -148,26 +150,27 @@ public class WssInspectorFactory implements RequestInspectorFactory, ResponseIns
 		@Override
 		public void release()
 		{
-			response.removePropertyChangeListener(  WsdlRequest.RESPONSE_PROPERTY, this );
+			response.removePropertyChangeListener( WsdlRequest.RESPONSE_PROPERTY, this );
 		}
 	}
-	
-	public class ResponseMessageExchangeWssInspector extends AbstractWssInspector implements XmlInspector, PropertyChangeListener
+
+	public class ResponseMessageExchangeWssInspector extends AbstractWssInspector implements XmlInspector,
+			PropertyChangeListener
 	{
 		private final MessageExchangeModelItem item;
 
 		public ResponseMessageExchangeWssInspector( MessageExchangeModelItem item )
 		{
 			this.item = item;
-			
+
 			item.addPropertyChangeListener( MessageExchangeModelItem.MESSAGE_EXCHANGE, this );
 		}
 
 		@Override
 		public Vector<?> getWssResults()
 		{
-			return item.getMessageExchange() instanceof WsdlMessageExchange ? 
-					((WsdlMessageExchange)item.getMessageExchange()).getResponseWssResult() : null;
+			return item.getMessageExchange() instanceof WsdlMessageExchange ? ( ( WsdlMessageExchange )item
+					.getMessageExchange() ).getResponseWssResult() : null;
 		}
 
 		public void propertyChange( PropertyChangeEvent evt )
@@ -178,7 +181,7 @@ public class WssInspectorFactory implements RequestInspectorFactory, ResponseIns
 		@Override
 		public void release()
 		{
-			item.removePropertyChangeListener(MessageExchangeModelItem.MESSAGE_EXCHANGE, this );
+			item.removePropertyChangeListener( MessageExchangeModelItem.MESSAGE_EXCHANGE, this );
 		}
 	}
 }

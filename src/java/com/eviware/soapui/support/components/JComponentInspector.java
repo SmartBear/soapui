@@ -45,7 +45,7 @@ public class JComponentInspector<T extends JComponent> implements Inspector
 	{
 		if( propertyChangeSupport == null )
 			propertyChangeSupport = new PropertyChangeSupport( this );
-		
+
 		propertyChangeSupport.addPropertyChangeListener( listener );
 	}
 
@@ -82,8 +82,8 @@ public class JComponentInspector<T extends JComponent> implements Inspector
 	{
 		String old = this.description;
 		this.description = description;
-		
-		if( propertyChangeSupport != null ) 
+
+		if( propertyChangeSupport != null )
 			propertyChangeSupport.firePropertyChange( Inspector.DESCRIPTION_PROPERTY, old, description );
 	}
 
@@ -91,9 +91,9 @@ public class JComponentInspector<T extends JComponent> implements Inspector
 	{
 		if( enabled == this.enabled )
 			return;
-		
+
 		this.enabled = enabled;
-		if( propertyChangeSupport != null ) 
+		if( propertyChangeSupport != null )
 			propertyChangeSupport.firePropertyChange( Inspector.ENABLED_PROPERTY, !enabled, enabled );
 	}
 
@@ -101,8 +101,8 @@ public class JComponentInspector<T extends JComponent> implements Inspector
 	{
 		String old = this.title;
 		this.title = title;
-		
-		if( propertyChangeSupport != null ) 
+
+		if( propertyChangeSupport != null )
 			propertyChangeSupport.firePropertyChange( Inspector.TITLE_PROPERTY, old, title );
 	}
 
@@ -120,9 +120,9 @@ public class JComponentInspector<T extends JComponent> implements Inspector
 	public void setIcon( ImageIcon imageIcon )
 	{
 		ImageIcon old = this.imageIcon;
-		
+
 		this.imageIcon = imageIcon;
-		if( propertyChangeSupport != null ) 
+		if( propertyChangeSupport != null )
 			propertyChangeSupport.firePropertyChange( Inspector.ICON_PROPERTY, old, imageIcon );
 	}
 

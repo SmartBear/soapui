@@ -23,39 +23,39 @@ import com.eviware.soapui.support.components.JFormComponent;
 public class JComponentFormField extends AbstractSwingXFormField<JPanel>
 {
 	private JComponent component;
-	
-	public JComponentFormField(String label, String description)
+
+	public JComponentFormField( String label, String description )
 	{
 		super( new JPanel( new BorderLayout() ) );
-		getComponent().setPreferredSize(new Dimension( 350, 200 ));
+		getComponent().setPreferredSize( new Dimension( 350, 200 ) );
 	}
 
-	public void setValue(String value)
+	public void setValue( String value )
 	{
 		if( component instanceof JFormComponent )
-			((JFormComponent)component).setValue(value);
+			( ( JFormComponent )component ).setValue( value );
 	}
 
 	public String getValue()
 	{
 		if( component instanceof JFormComponent )
-			return ((JFormComponent)component).getValue();
+			return ( ( JFormComponent )component ).getValue();
 		else
 			return null;
 	}
 
 	@Override
-	public void setProperty(String name, Object value)
+	public void setProperty( String name, Object value )
 	{
-		if( name.equals("component"))
+		if( name.equals( "component" ) )
 		{
 			getComponent().removeAll();
 			if( value != null )
-				getComponent().add( (JComponent)value, BorderLayout.CENTER );
+				getComponent().add( ( JComponent )value, BorderLayout.CENTER );
 		}
-		else 
+		else
 		{
-			super.setProperty(name, value);
+			super.setProperty( name, value );
 		}
 	}
 }

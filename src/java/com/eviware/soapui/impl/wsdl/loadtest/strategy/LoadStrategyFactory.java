@@ -25,7 +25,7 @@ import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 public interface LoadStrategyFactory
 {
 	public String getType();
-	
+
 	public LoadStrategy build( XmlObject config, WsdlLoadTest loadTest );
 
 	public LoadStrategy create( WsdlLoadTest loadTest );

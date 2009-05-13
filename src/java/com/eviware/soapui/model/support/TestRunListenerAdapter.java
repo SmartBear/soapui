@@ -23,17 +23,22 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
  * @author Ole.Matzura
  */
 
-public class TestRunListenerAdapter implements TestRunListener {
+public class TestRunListenerAdapter implements TestRunListener
+{
 
-	public void beforeRun(TestRunner testRunner, TestRunContext runContext) {
+	public void beforeRun( TestRunner testRunner, TestRunContext runContext )
+	{
 	}
 
-	public void beforeStep(TestRunner testRunner, TestRunContext runContext) {
+	public void beforeStep( TestRunner testRunner, TestRunContext runContext )
+	{
 	}
 
-	public void afterStep(TestRunner testRunner, TestRunContext runContext, TestStepResult result) {
+	public void afterStep( TestRunner testRunner, TestRunContext runContext, TestStepResult result )
+	{
 	}
 
-	public void afterRun(TestRunner testRunner, TestRunContext runContext) {
+	public void afterRun( TestRunner testRunner, TestRunContext runContext )
+	{
 	}
 }

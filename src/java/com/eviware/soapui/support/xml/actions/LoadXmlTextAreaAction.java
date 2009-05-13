@@ -34,28 +34,28 @@ public class LoadXmlTextAreaAction extends AbstractAction
 {
 	private final JXEditTextArea textArea;
 	private String dialogTitle;
-	
+
 	public LoadXmlTextAreaAction( JXEditTextArea textArea, String dialogTitle )
 	{
 		super( "Load from.." );
 		this.textArea = textArea;
 		this.dialogTitle = dialogTitle;
-		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu L" ));
+		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu L" ) );
 	}
-	
-	public void actionPerformed(ActionEvent e)
+
+	public void actionPerformed( ActionEvent e )
 	{
-      File file = UISupport.getFileDialogs().open(this, dialogTitle, ".xml", "XML Files (*.xml)", null);
-      if( file == null )
-         return;
-		
+		File file = UISupport.getFileDialogs().open( this, dialogTitle, ".xml", "XML Files (*.xml)", null );
+		if( file == null )
+			return;
+
 		try
 		{
-			textArea.setText( Tools.readAll( new FileInputStream( file ), 0 ).toString());
+			textArea.setText( Tools.readAll( new FileInputStream( file ), 0 ).toString() );
 		}
-		catch (IOException e1)
+		catch( IOException e1 )
 		{
-			UISupport.showErrorMessage( "Error loading xml from file: " + e1.getMessage());
+			UISupport.showErrorMessage( "Error loading xml from file: " + e1.getMessage() );
 		}
 	}
 }

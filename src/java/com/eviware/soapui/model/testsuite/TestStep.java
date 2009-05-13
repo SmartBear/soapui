@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui.model.testsuite;
 
 import com.eviware.soapui.model.TestModelItem;
@@ -23,18 +23,18 @@ import com.eviware.soapui.model.TestModelItem;
 public interface TestStep extends TestModelItem, ResultContainer
 {
 	public final static String DISABLED_PROPERTY = TestStep.class.getName() + "@disabled";
-	
-   public TestCase getTestCase();
 
-   public void prepare( TestRunner testRunner, TestRunContext testRunContext ) throws Exception;
-   
-   public void finish( TestRunner testRunner, TestRunContext testRunContext );
-   
+	public TestCase getTestCase();
+
+	public void prepare( TestRunner testRunner, TestRunContext testRunContext ) throws Exception;
+
+	public void finish( TestRunner testRunner, TestRunContext testRunContext );
+
 	public boolean cancel();
 
 	public TestStepResult run( TestRunner testRunner, TestRunContext testRunContext );
-	
+
 	public boolean isDisabled();
-	
+
 	public String getLabel();
 }

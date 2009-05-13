@@ -27,39 +27,42 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 public class SaveProjectAsAction extends AbstractSoapUIAction<WsdlProject>
 {
-   public static final String SOAPUI_ACTION_ID = "SaveProjectAsAction";
+	public static final String SOAPUI_ACTION_ID = "SaveProjectAsAction";
 
 	public SaveProjectAsAction()
-   {
-      super( "Save Project As", "Saves this project to a new file" );
-   }
-   
-   public void perform( WsdlProject project, Object param )
 	{
-      try
+		super( "Save Project As", "Saves this project to a new file" );
+	}
+
+	public void perform( WsdlProject project, Object param )
+	{
+		try
 		{
-      	String path = project.getPath();
-      	if( path == null )
-      	{
-      		project.save();
-      	}
-      	else
-      	{
-				File file = UISupport.getFileDialogs().saveAs(this, "Select soapui project file", "xml", "XML", new File( path));
-	         if( file == null ) return;
-	          
-	         String fileName = file.getAbsolutePath();
-	         if( fileName == null ) return;
-	          
-				if( project.saveAs( fileName ))
+			String path = project.getPath();
+			if( path == null )
+			{
+				project.save();
+			}
+			else
+			{
+				File file = UISupport.getFileDialogs().saveAs( this, "Select soapui project file", "xml", "XML",
+						new File( path ) );
+				if( file == null )
+					return;
+
+				String fileName = file.getAbsolutePath();
+				if( fileName == null )
+					return;
+
+				if( project.saveAs( fileName ) )
 				{
-	            project.getWorkspace().save( true );
+					project.getWorkspace().save( true );
 				}
-      	}
+			}
 		}
-		catch (IOException e1)
+		catch( IOException e1 )
 		{
-			UISupport.showErrorMessage( "Failed to save project; " + e1 ); 
+			UISupport.showErrorMessage( "Failed to save project; " + e1 );
 		}
-   }
+	}
 }

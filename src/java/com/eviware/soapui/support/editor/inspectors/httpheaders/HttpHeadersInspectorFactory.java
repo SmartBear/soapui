@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.support.editor.inspectors.httpheaders;
 
-
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
@@ -38,27 +37,29 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof AbstractHttpRequest<?> )
-			return new HttpHeadersInspector( new WsdlRequestHeadersModel( (AbstractHttpRequest<?>)modelItem ) );
+			return new HttpHeadersInspector( new WsdlRequestHeadersModel( ( AbstractHttpRequest<?> )modelItem ) );
 		else if( modelItem instanceof WsdlMockResponse )
-			return new HttpHeadersInspector( new WsdlMockResponseRequestHeadersModel( ( WsdlMockResponse ) modelItem ) );
+			return new HttpHeadersInspector( new WsdlMockResponseRequestHeadersModel( ( WsdlMockResponse )modelItem ) );
 		else if( modelItem instanceof MessageExchangeModelItem )
-			return new HttpHeadersInspector( new WsdlMessageExchangeRequestHeadersModel( (MessageExchangeModelItem)modelItem ) );
-		
+			return new HttpHeadersInspector( new WsdlMessageExchangeRequestHeadersModel(
+					( MessageExchangeModelItem )modelItem ) );
+
 		return null;
 	}
 
 	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof AbstractHttpRequest<?> )
-			return new HttpHeadersInspector( new WsdlRequestResponseHeadersModel( ( AbstractHttpRequest<?> ) modelItem ) );
+			return new HttpHeadersInspector( new WsdlRequestResponseHeadersModel( ( AbstractHttpRequest<?> )modelItem ) );
 		else if( modelItem instanceof WsdlMockResponse )
-			return new HttpHeadersInspector( new WsdlMockResponseHeadersModel( ( WsdlMockResponse ) modelItem ) );
+			return new HttpHeadersInspector( new WsdlMockResponseHeadersModel( ( WsdlMockResponse )modelItem ) );
 		else if( modelItem instanceof MessageExchangeModelItem )
-			return new HttpHeadersInspector( new WsdlMessageExchangeResponseHeadersModel( (MessageExchangeModelItem)modelItem ) );
-		
+			return new HttpHeadersInspector( new WsdlMessageExchangeResponseHeadersModel(
+					( MessageExchangeModelItem )modelItem ) );
+
 		return null;
 	}
-	
+
 	private class WsdlMessageExchangeRequestHeadersModel extends AbstractHeadersModel<MessageExchangeModelItem>
 	{
 		public WsdlMessageExchangeRequestHeadersModel( MessageExchangeModelItem request )
@@ -72,7 +73,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			return messageExchange == null ? new StringToStringMap() : messageExchange.getRequestHeaders();
 		}
 	}
-	
+
 	private class WsdlMessageExchangeResponseHeadersModel extends AbstractHeadersModel<MessageExchangeModelItem>
 	{
 		public WsdlMessageExchangeResponseHeadersModel( MessageExchangeModelItem response )
@@ -86,7 +87,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			return messageExchange == null ? new StringToStringMap() : messageExchange.getResponseHeaders();
 		}
 	}
-	
+
 	private class WsdlRequestHeadersModel extends AbstractHeadersModel<AbstractHttpRequest<?>>
 	{
 		public WsdlRequestHeadersModel( AbstractHttpRequest<?> abstractHttpRequest )
@@ -104,7 +105,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			getModelItem().setRequestHeaders( headers );
 		}
 	}
-	
+
 	private class WsdlMockResponseHeadersModel extends AbstractHeadersModel<WsdlMockResponse>
 	{
 		public WsdlMockResponseHeadersModel( WsdlMockResponse request )
@@ -122,7 +123,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			getModelItem().setResponseHeaders( headers );
 		}
 	}
-	
+
 	private class WsdlRequestResponseHeadersModel extends AbstractHeadersModel<AbstractHttpRequest<?>>
 	{
 		public WsdlRequestResponseHeadersModel( AbstractHttpRequest<?> request )
@@ -133,10 +134,10 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 		public StringToStringMap getHeaders()
 		{
 			AbstractHttpRequest<?> request = getModelItem();
-			return request.getResponse() == null ? new StringToStringMap()	: request.getResponse().getResponseHeaders();
+			return request.getResponse() == null ? new StringToStringMap() : request.getResponse().getResponseHeaders();
 		}
 	}
-	
+
 	private class WsdlMockResponseRequestHeadersModel extends AbstractHeadersModel<WsdlMockResponse>
 	{
 		public WsdlMockResponseRequestHeadersModel( WsdlMockResponse request )
@@ -147,7 +148,8 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 		public StringToStringMap getHeaders()
 		{
 			WsdlMockResponse request = getModelItem();
-			return request.getMockResult() == null ? new StringToStringMap()	: request.getMockResult().getMockRequest().getRequestHeaders();
+			return request.getMockResult() == null ? new StringToStringMap() : request.getMockResult().getMockRequest()
+					.getRequestHeaders();
 		}
 	}
 }

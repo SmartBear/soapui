@@ -47,21 +47,21 @@ public class SetCredentialsAction extends AbstractAction
 	private static final String USERNAME = "Username";
 
 	public SetCredentialsAction( WsdlTestCase testCase )
-   {
-      this.testCase = testCase;
-		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/set_credentials.gif"));
-      putValue( Action.SHORT_DESCRIPTION, "Sets the credentials for all requests in this testcase" );
-   }
-   
-	public void actionPerformed(ActionEvent e)
+	{
+		this.testCase = testCase;
+		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/set_credentials.gif" ) );
+		putValue( Action.SHORT_DESCRIPTION, "Sets the credentials for all requests in this testcase" );
+	}
+
+	public void actionPerformed( ActionEvent e )
 	{
 		if( dialog == null )
 		{
 			buildDialog();
 		}
-		
+
 		UISupport.showDialog( dialog );
-   }
+	}
 
 	private void buildDialog()
 	{
@@ -70,41 +70,42 @@ public class SetCredentialsAction extends AbstractAction
 		form.appendTextField( USERNAME, "Username to use for authentication" );
 		form.appendTextField( PASSWORD, "Password to use for authentication" );
 		form.appendTextField( DOMAIN, "Domain to specify (for NTLM)" );
-		form.getPanel().setBorder( BorderFactory.createEmptyBorder( 0, 0, 10, 0 ));
-		
+		form.getPanel().setBorder( BorderFactory.createEmptyBorder( 0, 0, 10, 0 ) );
+
 		JPanel panel = new JPanel( new BorderLayout() );
 		panel.add( form.getPanel(), BorderLayout.CENTER );
-		
-		JPanel buttonBar = ButtonBarFactory.buildOKCancelBar( new JButton( new OkAction() ), new JButton( new CancelAction() ));
+
+		JPanel buttonBar = ButtonBarFactory.buildOKCancelBar( new JButton( new OkAction() ), new JButton(
+				new CancelAction() ) );
 		panel.add( buttonBar, BorderLayout.SOUTH );
-		panel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ));
-		panel.setPreferredSize( new Dimension( 270, (int) panel.getPreferredSize().getHeight() ));
-		
+		panel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
+		panel.setPreferredSize( new Dimension( 270, ( int )panel.getPreferredSize().getHeight() ) );
+
 		dialog.getContentPane().add( panel );
 		dialog.pack();
 	}
-	
+
 	private class OkAction extends AbstractAction
 	{
 		public OkAction()
 		{
 			super( "Ok" );
 		}
-		
-		public void actionPerformed(ActionEvent e)
+
+		public void actionPerformed( ActionEvent e )
 		{
 			for( int c = 0; c < testCase.getTestStepCount(); c++ )
-	   	{
-	   		TestStep step = testCase.getTestStepAt( c );
-	   		if( step instanceof WsdlTestRequestStep )
-	   		{
-	   			WsdlTestRequestStep requestStep = (WsdlTestRequestStep) step;
-	   			requestStep.getTestRequest().setUsername( form.getComponentValue( USERNAME ));
-	   			requestStep.getTestRequest().setPassword( form.getComponentValue( PASSWORD ));
-	   			requestStep.getTestRequest().setDomain( form.getComponentValue( DOMAIN ));
-	   		}
-	   	}
-			
+			{
+				TestStep step = testCase.getTestStepAt( c );
+				if( step instanceof WsdlTestRequestStep )
+				{
+					WsdlTestRequestStep requestStep = ( WsdlTestRequestStep )step;
+					requestStep.getTestRequest().setUsername( form.getComponentValue( USERNAME ) );
+					requestStep.getTestRequest().setPassword( form.getComponentValue( PASSWORD ) );
+					requestStep.getTestRequest().setDomain( form.getComponentValue( DOMAIN ) );
+				}
+			}
+
 			dialog.setVisible( false );
 		}
 	}
@@ -116,7 +117,7 @@ public class SetCredentialsAction extends AbstractAction
 			super( "Cancel" );
 		}
 
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed( ActionEvent e )
 		{
 			dialog.setVisible( false );
 		}

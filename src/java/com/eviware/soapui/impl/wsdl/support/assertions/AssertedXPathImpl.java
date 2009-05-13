@@ -19,20 +19,20 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 
 public class AssertedXPathImpl implements AssertedXPath
 {
-   private final TestAssertion assertion;
+	private final TestAssertion assertion;
 	private final String path;
 	private XmlObject assertedContent;
-	
+
 	public AssertedXPathImpl( TestAssertion assertion, String path, XmlObject assertedContent )
 	{
-	   this.assertion = assertion;
+		this.assertion = assertion;
 		this.path = path;
 		this.assertedContent = assertedContent;
 	}
-	
+
 	public TestAssertion getAssertion()
 	{
-	   return assertion;
+		return assertion;
 	}
 
 	public String getLabel()
@@ -44,16 +44,15 @@ public class AssertedXPathImpl implements AssertedXPath
 	{
 		return path;
 	}
-	
+
 	public XmlObject getAssertedContent()
 	{
-	   return assertedContent;
+		return assertedContent;
 	}
 
 	public void setAssertedContent( XmlObject assertedContent )
 	{
 		this.assertedContent = assertedContent;
 	}
-	
-	
+
 }

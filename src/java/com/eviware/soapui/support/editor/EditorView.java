@@ -25,29 +25,29 @@ import com.eviware.soapui.support.PropertyChangeNotifier;
 public interface EditorView<T extends EditorDocument> extends PropertyChangeNotifier, EditorLocationListener<T>
 {
 	public final static String TITLE_PROPERTY = EditorView.class.getName() + "@title";
-	
+
 	public Editor<T> getEditor();
-	
+
 	public String getTitle();
-	
+
 	public JComponent getComponent();
-	
+
 	public boolean deactivate();
-	
+
 	public boolean activate( EditorLocation<T> location );
-	
+
 	public EditorLocation<T> getEditorLocation();
-	
+
 	public void setLocation( EditorLocation<T> location );
-	
-	public void setDocument( T document);
-	
+
+	public void setDocument( T document );
+
 	public T getDocument();
-	 
+
 	public void addLocationListener( EditorLocationListener<T> listener );
-	
+
 	public void removeLocationListener( EditorLocationListener<T> listener );
-	
+
 	public void release();
 
 	public void setEditable( boolean enabled );

@@ -26,32 +26,33 @@ import com.eviware.soapui.support.Tools;
 public class JHyperlinkLabel extends JLabel
 {
 	private Color underlineColor = null;
-	
+
 	public JHyperlinkLabel( String label )
 	{
 		super( label );
-		
+
 		setForeground( Color.BLUE.darker() );
-		setCursor( new Cursor( Cursor.HAND_CURSOR ));
+		setCursor( new Cursor( Cursor.HAND_CURSOR ) );
 		addMouseListener( new HyperlinkLabelMouseAdapter() );
 	}
-	
+
 	@Override
 	protected void paintComponent( Graphics g )
 	{
 		super.paintComponent( g );
-		
+
 		g.setColor( underlineColor == null ? getForeground() : underlineColor );
-		
+
 		Insets insets = getInsets();
-		
+
 		int left = insets.left;
 		if( getIcon() != null )
 			left += getIcon().getIconWidth() + getIconTextGap();
-		
-		g.drawLine( left, getHeight()-1-insets.bottom, ( int ) getPreferredSize().getWidth()-insets.right, getHeight()-1-insets.bottom );
+
+		g.drawLine( left, getHeight() - 1 - insets.bottom, ( int )getPreferredSize().getWidth() - insets.right,
+				getHeight() - 1 - insets.bottom );
 	}
-	
+
 	public class HyperlinkLabelMouseAdapter extends MouseAdapter
 	{
 		@Override

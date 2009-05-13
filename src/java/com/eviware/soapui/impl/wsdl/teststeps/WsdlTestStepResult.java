@@ -29,7 +29,7 @@ import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 
 /**
- * Default implementation of TestStepResult interface 
+ * Default implementation of TestStepResult interface
  * 
  * @author Ole.Matzura
  */
@@ -47,18 +47,18 @@ public class WsdlTestStepResult implements TestStepResult
 	private DefaultActionList actionList;
 	private long startTime;
 	private boolean discarded;
-	
-	private static DefaultActionList discardedActionList = new DefaultActionList(null);
-	
-	static 
+
+	private static DefaultActionList discardedActionList = new DefaultActionList( null );
+
+	static
 	{
 		discardedActionList.setDefaultAction( new AbstractAction()
 		{
 			public void actionPerformed( ActionEvent arg0 )
 			{
 				UISupport.showErrorMessage( "Result has been discarded" );
-			} 
-		});
+			}
+		} );
 	}
 
 	public WsdlTestStepResult( WsdlTestStep testStep )
@@ -76,7 +76,7 @@ public class WsdlTestStepResult implements TestStepResult
 	{
 		this.status = status;
 	}
-	
+
 	public TestStep getTestStep()
 	{
 		return testStep;
@@ -90,7 +90,8 @@ public class WsdlTestStepResult implements TestStepResult
 		if( actionList == null )
 		{
 			actionList = new DefaultActionList( testStep.getName() );
-			actionList.setDefaultAction( new AbstractAction() {
+			actionList.setDefaultAction( new AbstractAction()
+			{
 
 				public void actionPerformed( ActionEvent e )
 				{
@@ -99,39 +100,40 @@ public class WsdlTestStepResult implements TestStepResult
 						StringBuffer buf = new StringBuffer();
 						if( getError() != null )
 							buf.append( getError().toString() ).append( "\r\n" );
-						
+
 						for( String s : getMessages() )
-							buf.append( s ).append(  "\r\n" );
-						
-						UISupport.showExtendedInfo( "TestStep Result", "Step [" + testStep.getName() +
-									"] ran with status [" + getStatus() + "]", buf.toString(), null );
+							buf.append( s ).append( "\r\n" );
+
+						UISupport.showExtendedInfo( "TestStep Result", "Step [" + testStep.getName() + "] ran with status ["
+								+ getStatus() + "]", buf.toString(), null );
 					}
 					else if( getError() != null )
 					{
-						UISupport.showExtendedInfo( "TestStep Result", "Step [" + testStep.getName() +
-									"] ran with status [" + getStatus() + "]", getError().toString(), null );
+						UISupport.showExtendedInfo( "TestStep Result", "Step [" + testStep.getName() + "] ran with status ["
+								+ getStatus() + "]", getError().toString(), null );
 					}
 					else
 					{
-						UISupport.showInfoMessage( "Step [" + testStep.getName() +
-									"] ran with status [" + getStatus() + "]", "TestStep Result");
+						UISupport.showInfoMessage( "Step [" + testStep.getName() + "] ran with status [" + getStatus() + "]",
+								"TestStep Result" );
 					}
-				}} );
+				}
+			} );
 		}
-		
+
 		return actionList;
 	}
-	
+
 	public void addAction( Action action, boolean isDefault )
 	{
 		if( isDiscarded() )
 			return;
-		
+
 		if( actionList == null )
 		{
 			actionList = new DefaultActionList( testStep.getName() );
 		}
-		
+
 		actionList.addAction( action );
 		if( isDefault )
 			actionList.setDefaultAction( action );
@@ -141,7 +143,7 @@ public class WsdlTestStepResult implements TestStepResult
 	{
 		return error;
 	}
-	
+
 	public void setError( Throwable error )
 	{
 		this.error = error;
@@ -157,13 +159,13 @@ public class WsdlTestStepResult implements TestStepResult
 		if( messages != null )
 			messages.add( message );
 	}
-	
+
 	public long getTimeTaken()
 	{
 		return timeTaken;
 	}
-	
-	public void setTimeTaken(long timeTaken)
+
+	public void setTimeTaken( long timeTaken )
 	{
 		this.timeTaken = timeTaken;
 	}
@@ -173,22 +175,22 @@ public class WsdlTestStepResult implements TestStepResult
 		return timeStamp;
 	}
 
-	public void setTimeStamp(long timeStamp)
+	public void setTimeStamp( long timeStamp )
 	{
 		this.timeStamp = timeStamp;
 	}
-	
+
 	public void setSize( long size )
 	{
 		this.size = size;
 	}
-	
+
 	public long getSize()
 	{
 		return size;
 	}
 
-	public void writeTo(PrintWriter writer)
+	public void writeTo( PrintWriter writer )
 	{
 		writer.println( "Status: " + getStatus() );
 		writer.println( "Time Taken: " + getTimeTaken() );
@@ -197,15 +199,15 @@ public class WsdlTestStepResult implements TestStepResult
 		writer.println( "TestStep: " + getTestStep().getName() );
 		if( error != null )
 			writer.println( "Error:" + error.toString() );
-		
+
 		if( messages != null )
 		{
 			writer.println( "\r\n----------------- Messages ------------------------------" );
 			for( String message : messages )
-				if( message != null ) 
+				if( message != null )
 					writer.println( message );
 		}
-		
+
 		if( isDiscarded() )
 			writer.println( "Result has been Discarded!" );
 	}
@@ -217,23 +219,23 @@ public class WsdlTestStepResult implements TestStepResult
 
 	public void stopTimer()
 	{
-		timeTaken = ( (System.nanoTime()-startTime)/1000000 );
+		timeTaken = ( ( System.nanoTime() - startTime ) / 1000000 );
 	}
-	
+
 	public void discard()
 	{
 		discarded = true;
-		
+
 		messages = null;
 		error = null;
 		actionList = null;
 	}
-	
+
 	public boolean isDiscarded()
 	{
 		return discarded;
 	}
-	
+
 	public void addMessages( String[] messages )
 	{
 		if( this.messages != null )

@@ -26,21 +26,21 @@ import com.eviware.soapui.model.testsuite.TestSuite;
 
 public class ProjectListenerAdapter implements ProjectListener
 {
-   public void interfaceAdded(Interface iface)
-   {
-   }
+	public void interfaceAdded( Interface iface )
+	{
+	}
 
-   public void interfaceRemoved(Interface iface)
-   {
-   }
+	public void interfaceRemoved( Interface iface )
+	{
+	}
 
-   public void testSuiteAdded(TestSuite testSuite)
-   {
-   }
+	public void testSuiteAdded( TestSuite testSuite )
+	{
+	}
 
-   public void testSuiteRemoved(TestSuite testSuite)
-   {
-   }
+	public void testSuiteRemoved( TestSuite testSuite )
+	{
+	}
 
 	public void mockServiceAdded( MockService mockService )
 	{
@@ -54,11 +54,11 @@ public class ProjectListenerAdapter implements ProjectListener
 	{
 	}
 
-	public void afterLoad(Project project)
+	public void afterLoad( Project project )
 	{
 	}
 
-	public void beforeSave(Project project)
+	public void beforeSave( Project project )
 	{
 	}
 }

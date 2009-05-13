@@ -33,7 +33,7 @@ public class MockFileAttachment extends FileAttachment<WsdlMockResponse>
 
 	public MockFileAttachment( File file, boolean cache, WsdlMockResponse response ) throws IOException
 	{
-		super(response, file, cache, response.getConfig().addNewAttachment());
+		super( response, file, cache, response.getConfig().addNewAttachment() );
 	}
 
 	@Override

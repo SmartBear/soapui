@@ -29,22 +29,22 @@ import com.eviware.soapui.support.UISupport;
 
 public class CreateEmptyRequestAction extends AbstractAction
 {
-   private final WsdlRequest request;
+	private final WsdlRequest request;
 
 	public CreateEmptyRequestAction( WsdlRequest request )
-   {
-      super( "Create empty" );
+	{
+		super( "Create empty" );
 		this.request = request;
-      putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/create_empty_request.gif"));
-      putValue( Action.SHORT_DESCRIPTION, "Creates an empty SOAP request" );
-   }
-   
-   public void actionPerformed(ActionEvent e)
-   {
-   	if( UISupport.confirm( "Overwrite existing request?", "Create Empty" ))
-   	{
-   		WsdlInterface iface = (WsdlInterface) request.getOperation().getInterface();
-   		request.setRequestContent( iface.getMessageBuilder().buildEmptyMessage() );
-   	}
-   }
+		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/create_empty_request.gif" ) );
+		putValue( Action.SHORT_DESCRIPTION, "Creates an empty SOAP request" );
+	}
+
+	public void actionPerformed( ActionEvent e )
+	{
+		if( UISupport.confirm( "Overwrite existing request?", "Create Empty" ) )
+		{
+			WsdlInterface iface = ( WsdlInterface )request.getOperation().getInterface();
+			request.setRequestContent( iface.getMessageBuilder().buildEmptyMessage() );
+		}
+	}
 }

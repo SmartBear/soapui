@@ -20,5 +20,5 @@ package com.eviware.x.form.support;
 
 public interface AFormHandler
 {
-	public Object [] getOptions( String field );
+	public Object[] getOptions( String field );
 }

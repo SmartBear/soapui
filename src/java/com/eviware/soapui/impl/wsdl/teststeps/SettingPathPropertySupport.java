@@ -20,24 +20,24 @@ public class SettingPathPropertySupport extends AbstractPathPropertySupport
 {
 	private final String defaultValue;
 
-	public SettingPathPropertySupport(AbstractWsdlModelItem<?> modelItem, String settingName)
+	public SettingPathPropertySupport( AbstractWsdlModelItem<?> modelItem, String settingName )
 	{
 		this( modelItem, settingName, null );
 	}
-	
-	public SettingPathPropertySupport(AbstractWsdlModelItem<?> modelItem, String settingName, String defaultValue)
+
+	public SettingPathPropertySupport( AbstractWsdlModelItem<?> modelItem, String settingName, String defaultValue )
 	{
 		super( modelItem, settingName );
 		this.defaultValue = defaultValue;
 	}
 
-	public void setPropertyValue(String value) throws IllegalAccessException, InvocationTargetException
+	public void setPropertyValue( String value ) throws IllegalAccessException, InvocationTargetException
 	{
-		getModelItem().getSettings().setString(getPropertyName(), value);
+		getModelItem().getSettings().setString( getPropertyName(), value );
 	}
 
 	public String getPropertyValue() throws IllegalAccessException, InvocationTargetException, NoSuchMethodException
 	{
-		return getModelItem().getSettings().getString(getPropertyName(), defaultValue);
+		return getModelItem().getSettings().getString( getPropertyName(), defaultValue );
 	}
 }

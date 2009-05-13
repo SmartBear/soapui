@@ -12,6 +12,38 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.activation.DataHandler;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.PreencodedMimeBodyPart;
+import javax.wsdl.Input;
+import javax.wsdl.Output;
+import javax.xml.namespace.QName;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.SchemaGlobalElement;
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlBase64Binary;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlHexBinary;
+import org.apache.xmlbeans.XmlObject;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.PartsConfig;
 import com.eviware.soapui.config.PartsConfig.Part;
@@ -31,26 +63,6 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.*;
-
-import javax.activation.DataHandler;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.PreencodedMimeBodyPart;
-import javax.wsdl.Input;
-import javax.wsdl.Output;
-import javax.xml.namespace.QName;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.util.*;
 
 /**
  * Attachment-related utility classes
@@ -643,8 +655,8 @@ public class AttachmentUtils
 			throws MessagingException
 	{
 		String contentType = att.getContentType();
-		MimeBodyPart part = contentType.startsWith( "text/" ) ? new MimeBodyPart()
-				: new PreencodedMimeBodyPart( att.getContentEncoding() );
+		MimeBodyPart part = contentType.startsWith( "text/" ) ? new MimeBodyPart() : new PreencodedMimeBodyPart( att
+				.getContentEncoding() );
 
 		part.setDataHandler( new DataHandler( new AttachmentDataSource( att ) ) );
 		initPartContentId( contentIds, part, att, false );

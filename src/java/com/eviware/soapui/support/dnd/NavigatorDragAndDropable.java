@@ -10,7 +10,6 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-
 package com.eviware.soapui.support.dnd;
 
 import java.awt.Component;
@@ -33,7 +32,7 @@ public class NavigatorDragAndDropable extends JTreeDragAndDropable<ModelItem>
 	public ModelItem getModelItemAtRow( int row )
 	{
 		TreePath pathForRow = getTree().getPathForRow( row );
-		return pathForRow == null ? null : ( ( SoapUITreeNode ) pathForRow.getLastPathComponent() ).getModelItem();
+		return pathForRow == null ? null : ( ( SoapUITreeNode )pathForRow.getLastPathComponent() ).getModelItem();
 	}
 
 	@Override
@@ -50,10 +49,10 @@ public class NavigatorDragAndDropable extends JTreeDragAndDropable<ModelItem>
 	{
 		TreePath treePath = SoapUI.getNavigator().getTreePath( modelItem );
 		int row = getTree().getRowForPath( treePath );
-		SoapUITreeNode treeNode = ( SoapUITreeNode ) treePath.getLastPathComponent();
+		SoapUITreeNode treeNode = ( SoapUITreeNode )treePath.getLastPathComponent();
 
 		return getTree().getCellRenderer().getTreeCellRendererComponent( getTree(), treeNode, true,
-					getTree().isExpanded( row ), treeNode.isLeaf(), row, true );
+				getTree().isExpanded( row ), treeNode.isLeaf(), row, true );
 	}
 
 	@Override

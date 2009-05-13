@@ -26,9 +26,9 @@ public interface SoapUIActionGroup<T extends ModelItem>
 	public String getId();
 
 	public String getName();
-	
+
 	public SoapUIActionMappingList<T> getActionMappings( T modelItem );
-	
+
 	public SoapUIActionMapping<? extends ModelItem> addMapping( String id, SoapUIActionMapping<T> mapping );
 
 	public SoapUIActionMapping<? extends ModelItem> addMapping( String id, int index, SoapUIActionMapping<T> mapping );

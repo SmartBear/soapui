@@ -31,14 +31,14 @@ import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.settings.GlobalPropertySettings;
 import com.eviware.soapui.support.StringUtils;
 
-public class SettingsTestPropertyHolder implements MutableTestPropertyHolder, Map<String,TestProperty>
+public class SettingsTestPropertyHolder implements MutableTestPropertyHolder, Map<String, TestProperty>
 {
-	public final static Logger log = Logger.getLogger(SettingsTestPropertyHolder.class);
+	public final static Logger log = Logger.getLogger( SettingsTestPropertyHolder.class );
 	private XmlBeansPropertiesTestPropertyHolder propertyHolderSupport;
 	private PropertiesTypeConfig config;
 	private final ModelItem modelItem;
 	private String propertiesLabel = "Test Properties";
-	
+
 	public SettingsTestPropertyHolder( Settings settings, ModelItem modelItem )
 	{
 		this.modelItem = modelItem;
@@ -46,14 +46,14 @@ public class SettingsTestPropertyHolder implements MutableTestPropertyHolder, Ma
 		try
 		{
 			String str = settings.getString( GlobalPropertySettings.PROPERTIES, null );
-			if( StringUtils.hasContent( str ))
+			if( StringUtils.hasContent( str ) )
 				config = PropertiesTypeConfig.Factory.parse( str );
 		}
 		catch( Exception e )
 		{
 			SoapUI.logError( e );
 		}
-		
+
 		propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder( null, config );
 	}
 
@@ -83,10 +83,10 @@ public class SettingsTestPropertyHolder implements MutableTestPropertyHolder, Ma
 	}
 
 	public List<TestProperty> getPropertyList()
-   {
-   	return propertyHolderSupport.getPropertyList();
-   }
-	
+	{
+		return propertyHolderSupport.getPropertyList();
+	}
+
 	public String getPropertyValue( String name )
 	{
 		return propertyHolderSupport.getPropertyValue( name );
@@ -132,14 +132,14 @@ public class SettingsTestPropertyHolder implements MutableTestPropertyHolder, Ma
 		return modelItem;
 	}
 
-	public void moveProperty(String propertyName, int targetIndex)
+	public void moveProperty( String propertyName, int targetIndex )
 	{
-		propertyHolderSupport.moveProperty(propertyName, targetIndex);
+		propertyHolderSupport.moveProperty( propertyName, targetIndex );
 	}
 
-	public TestProperty getPropertyAt(int index)
+	public TestProperty getPropertyAt( int index )
 	{
-		return propertyHolderSupport.getPropertyAt(index);
+		return propertyHolderSupport.getPropertyAt( index );
 	}
 
 	public int getPropertyCount()
@@ -152,14 +152,14 @@ public class SettingsTestPropertyHolder implements MutableTestPropertyHolder, Ma
 		propertyHolderSupport.clear();
 	}
 
-	public boolean containsKey(Object key)
+	public boolean containsKey( Object key )
 	{
-		return propertyHolderSupport.containsKey(key);
+		return propertyHolderSupport.containsKey( key );
 	}
 
-	public boolean containsValue(Object value)
+	public boolean containsValue( Object value )
 	{
-		return propertyHolderSupport.containsValue(value);
+		return propertyHolderSupport.containsValue( value );
 	}
 
 	public Set<java.util.Map.Entry<String, TestProperty>> entrySet()
@@ -167,9 +167,9 @@ public class SettingsTestPropertyHolder implements MutableTestPropertyHolder, Ma
 		return propertyHolderSupport.entrySet();
 	}
 
-	public TestProperty get(Object key)
+	public TestProperty get( Object key )
 	{
-		return propertyHolderSupport.get(key);
+		return propertyHolderSupport.get( key );
 	}
 
 	public boolean isEmpty()
@@ -182,19 +182,19 @@ public class SettingsTestPropertyHolder implements MutableTestPropertyHolder, Ma
 		return propertyHolderSupport.keySet();
 	}
 
-	public TestProperty put(String key, TestProperty value)
+	public TestProperty put( String key, TestProperty value )
 	{
-		return propertyHolderSupport.put(key, value);
+		return propertyHolderSupport.put( key, value );
 	}
 
-	public void putAll(Map<? extends String, ? extends TestProperty> m)
+	public void putAll( Map<? extends String, ? extends TestProperty> m )
 	{
-		propertyHolderSupport.putAll(m);
+		propertyHolderSupport.putAll( m );
 	}
 
-	public TestProperty remove(Object key)
+	public TestProperty remove( Object key )
 	{
-		return propertyHolderSupport.remove(key);
+		return propertyHolderSupport.remove( key );
 	}
 
 	public int size()
@@ -209,10 +209,10 @@ public class SettingsTestPropertyHolder implements MutableTestPropertyHolder, Ma
 
 	public String getPropertiesLabel()
 	{
-		return propertiesLabel ;
+		return propertiesLabel;
 	}
 
-	public void setPropertiesLabel(String propertiesLabel)
+	public void setPropertiesLabel( String propertiesLabel )
 	{
 		this.propertiesLabel = propertiesLabel;
 	}

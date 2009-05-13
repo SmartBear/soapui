@@ -26,12 +26,12 @@ public class ToggleDisableTestSuiteAction extends AbstractSoapUIAction<WsdlTestS
 	public static final String SOAPUI_ACTION_ID = "ToggleDisableTestSuiteAction";
 
 	public ToggleDisableTestSuiteAction()
-   {
-      super( "Disable", "Disables this TestSuite" );
-   }
-   
-   public void perform( WsdlTestSuite testSuite, Object param )
 	{
-      testSuite.setDisabled( !testSuite.isDisabled() );
-   }
+		super( "Disable", "Disables this TestSuite" );
+	}
+
+	public void perform( WsdlTestSuite testSuite, Object param )
+	{
+		testSuite.setDisabled( !testSuite.isDisabled() );
+	}
 }

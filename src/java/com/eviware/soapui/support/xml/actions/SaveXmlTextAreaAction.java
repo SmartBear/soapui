@@ -39,42 +39,42 @@ public class SaveXmlTextAreaAction extends AbstractAction
 	private final JXEditTextArea textArea;
 	private String dialogTitle;
 	private static final Logger log = Logger.getLogger( SaveXmlTextAreaAction.class );
-	
+
 	public SaveXmlTextAreaAction( JXEditTextArea textArea, String dialogTitle )
 	{
 		super( "Save as.." );
 		this.textArea = textArea;
 		this.dialogTitle = dialogTitle;
-		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu S" ));
+		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu S" ) );
 	}
-	
-	public void actionPerformed(ActionEvent e)
+
+	public void actionPerformed( ActionEvent e )
 	{
-      File file = UISupport.getFileDialogs().saveAs(this, dialogTitle, ".xml", "XML Files (*.xml)", null);
-      if( file == null )
-         return;
-		
+		File file = UISupport.getFileDialogs().saveAs( this, dialogTitle, ".xml", "XML Files (*.xml)", null );
+		if( file == null )
+			return;
+
 		FileWriter writer = null;
-		
+
 		try
 		{
 			try
 			{
-				XmlObject xml = XmlObject.Factory.parse(textArea.getText());
-				xml.save(file );
+				XmlObject xml = XmlObject.Factory.parse( textArea.getText() );
+				xml.save( file );
 			}
-			catch (XmlException e1)
+			catch( XmlException e1 )
 			{
-				writer = new FileWriter(file);
+				writer = new FileWriter( file );
 				writer.write( textArea.getText() );
 				writer.close();
 			}
-			
+
 			log.info( "XML written to [" + file.getAbsolutePath() + "]" );
 		}
-		catch (IOException e1)
+		catch( IOException e1 )
 		{
-			UISupport.showErrorMessage( "Error saving xml to file: " + e1.getMessage());
+			UISupport.showErrorMessage( "Error saving xml to file: " + e1.getMessage() );
 		}
 		finally
 		{
@@ -84,7 +84,7 @@ public class SaveXmlTextAreaAction extends AbstractAction
 				{
 					writer.close();
 				}
-				catch (IOException e1)
+				catch( IOException e1 )
 				{
 					SoapUI.logError( e1 );
 				}

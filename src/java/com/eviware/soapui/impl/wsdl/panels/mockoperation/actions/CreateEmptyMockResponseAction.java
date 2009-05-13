@@ -34,23 +34,23 @@ public class CreateEmptyMockResponseAction extends AbstractAction
 
 	public CreateEmptyMockResponseAction( WsdlMockResponse mockResponse )
 	{
-      super( "Create Empty" );
+		super( "Create Empty" );
 		this.mockResponse = mockResponse;
-      putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/create_empty_request.gif"));
-      putValue( Action.SHORT_DESCRIPTION, "Creates an empty SOAP response" );
+		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/create_empty_request.gif" ) );
+		putValue( Action.SHORT_DESCRIPTION, "Creates an empty SOAP response" );
 	}
 
 	public void actionPerformed( ActionEvent e )
 	{
 		WsdlOperation operation = mockResponse.getMockOperation().getOperation();
-		
+
 		if( operation == null )
 		{
 			UISupport.showErrorMessage( "Missing operation for this mock response" );
 			return;
 		}
-		
-		if( UISupport.confirm( "Overwrite current response with empty one?", "Create Empty" ))
+
+		if( UISupport.confirm( "Overwrite current response with empty one?", "Create Empty" ) )
 		{
 			WsdlInterface iface = operation.getInterface();
 			mockResponse.setResponseContent( iface.getMessageBuilder().buildEmptyMessage() );

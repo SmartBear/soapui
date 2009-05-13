@@ -12,20 +12,22 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
-import org.apache.commons.httpclient.methods.RequestEntity;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
+import org.apache.commons.httpclient.methods.RequestEntity;
+
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+
 /**
- * MimeMessage request class 
+ * MimeMessage request class
  * 
  * @author ole.matzura
  */
@@ -37,7 +39,7 @@ public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
 	private final boolean isXOP;
 	private final WsdlRequest wsdlRequest;
 
-	public WsdlRequestMimeMessageRequestEntity(MimeMessage message, boolean isXOP, WsdlRequest wsdlRequest )
+	public WsdlRequestMimeMessageRequestEntity( MimeMessage message, boolean isXOP, WsdlRequest wsdlRequest )
 	{
 		this.message = message;
 		this.isXOP = isXOP;
@@ -53,7 +55,7 @@ public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
 			buffer = out.toByteArray();
 			return buffer.length;
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
 			SoapUI.logError( e );
 			return -1;
@@ -65,27 +67,27 @@ public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
 		try
 		{
 			SoapVersion soapVersion = wsdlRequest.getOperation().getInterface().getSoapVersion();
-			
+
 			if( isXOP )
 			{
 				String header = message.getHeader( "Content-Type" )[0];
-				
-				return AttachmentUtils.buildMTOMContentType(header, wsdlRequest.getOperation().getAction(), soapVersion);
+
+				return AttachmentUtils.buildMTOMContentType( header, wsdlRequest.getOperation().getAction(), soapVersion );
 			}
 			else
 			{
 				String header = message.getHeader( "Content-Type" )[0];
 				int ix = header.indexOf( "boundary" );
-				
-				return "multipart/related; type=\"" + soapVersion.getContentType() + "\"; " +
-						"start=\"" + AttachmentUtils.ROOTPART_SOAPUI_ORG + "\"; "  + header.substring( ix );
+
+				return "multipart/related; type=\"" + soapVersion.getContentType() + "\"; " + "start=\""
+						+ AttachmentUtils.ROOTPART_SOAPUI_ORG + "\"; " + header.substring( ix );
 			}
 		}
-		catch (MessagingException e)
+		catch( MessagingException e )
 		{
 			SoapUI.logError( e );
 		}
-		
+
 		return null;
 	}
 
@@ -94,19 +96,19 @@ public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
 		return true;
 	}
 
-	public void writeRequest(OutputStream arg0) throws IOException
+	public void writeRequest( OutputStream arg0 ) throws IOException
 	{
 		try
 		{
 			if( buffer == null )
 			{
 				arg0.write( "\r\n".getBytes() );
-				((MimeMultipart)message.getContent()).writeTo( arg0 );
+				( ( MimeMultipart )message.getContent() ).writeTo( arg0 );
 			}
 			else
 				arg0.write( buffer );
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
 			SoapUI.logError( e );
 		}

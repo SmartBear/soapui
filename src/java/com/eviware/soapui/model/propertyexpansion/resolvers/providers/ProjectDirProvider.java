@@ -30,16 +30,16 @@ public class ProjectDirProvider implements ValueProvider
 		{
 			return getProjectFolder( project );
 		}
-		
+
 		return null;
 	}
-	
+
 	public static String getProjectFolder( Project project )
 	{
 		if( project.getPath() != null )
 		{
 			File file = new File( project.getPath() );
-			if( file.exists())
+			if( file.exists() )
 			{
 				return new File( file.getAbsolutePath() ).getParent();
 			}
@@ -48,7 +48,8 @@ public class ProjectDirProvider implements ValueProvider
 				try
 				{
 					URL url = new URL( project.getPath() );
-					String str = url.getProtocol() + "://" + url.getHost() + ((url.getPort() != -1 ? ":" + url.getPort() : "")) + url.getPath();
+					String str = url.getProtocol() + "://" + url.getHost()
+							+ ( ( url.getPort() != -1 ? ":" + url.getPort() : "" ) ) + url.getPath();
 					int ix = str.lastIndexOf( '/' );
 					if( ix != -1 )
 						return str.substring( 0, ix );

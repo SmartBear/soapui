@@ -23,7 +23,7 @@ public class TestSuiteToProjectDropHandler extends AbstractAfterModelItemDropHan
 	{
 		super( WsdlTestSuite.class, WsdlProject.class );
 	}
-	
+
 	@Override
 	boolean canCopyAfter( WsdlTestSuite source, WsdlProject target )
 	{
@@ -39,7 +39,8 @@ public class TestSuiteToProjectDropHandler extends AbstractAfterModelItemDropHan
 	@Override
 	boolean copyAfter( WsdlTestSuite source, WsdlProject target )
 	{
-		String name = UISupport.prompt( "Specify name for copied TestSuite", "Copy TestSuite", "Copy of " + source.getName() );
+		String name = UISupport.prompt( "Specify name for copied TestSuite", "Copy TestSuite", "Copy of "
+				+ source.getName() );
 		if( name == null )
 			return false;
 
@@ -66,16 +67,16 @@ public class TestSuiteToProjectDropHandler extends AbstractAfterModelItemDropHan
 			source.getProject().removeTestSuite( source );
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	@Override
 	String getCopyAfterInfo( WsdlTestSuite source, WsdlProject target )
 	{
-		return source.getProject() == target ? 
-			"Copy TestSuite [" + source.getName() + "] within Project [" + target.getName() + "]" :
-			"Copy TestSuite [" + source.getName() + "] to Project [" + target.getName() + "]";
+		return source.getProject() == target ? "Copy TestSuite [" + source.getName() + "] within Project ["
+				+ target.getName() + "]" : "Copy TestSuite [" + source.getName() + "] to Project [" + target.getName()
+				+ "]";
 	}
 
 	@Override
@@ -83,6 +84,5 @@ public class TestSuiteToProjectDropHandler extends AbstractAfterModelItemDropHan
 	{
 		return "Move TestSuite [" + source.getName() + "] to Project [" + target.getName() + "]";
 	}
-	
-	
+
 }

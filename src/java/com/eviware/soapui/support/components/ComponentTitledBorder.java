@@ -16,14 +16,17 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
 /**
- * MySwing: Advanced Swing Utilites Copyright (C) 2005 Santhosh Kumar T <p/>
+ * MySwing: Advanced Swing Utilites Copyright (C) 2005 Santhosh Kumar T
+ * <p/>
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version. <p/> This library is distributed in the hope that it will
- * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
- * General Public License for more details.
+ * any later version.
+ * <p/>
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  */
 
 public class ComponentTitledBorder implements Border, MouseListener, SwingConstants
@@ -56,7 +59,7 @@ public class ComponentTitledBorder implements Border, MouseListener, SwingConsta
 		border.paintBorder( c, g, x, y + temp, width, height - temp );
 		Dimension size = comp.getPreferredSize();
 		rect = new Rectangle( offset, 0, size.width, size.height );
-		SwingUtilities.paintComponent( g, comp, ( Container ) c, rect );
+		SwingUtilities.paintComponent( g, comp, ( Container )c, rect );
 	}
 
 	public Insets getBorderInsets( Component c )
@@ -75,7 +78,7 @@ public class ComponentTitledBorder implements Border, MouseListener, SwingConsta
 			pt.translate( -offset, 0 );
 			comp.setBounds( rect );
 			comp.dispatchEvent( new MouseEvent( comp, me.getID(), me.getWhen(), me.getModifiers(), pt.x, pt.y, me
-						.getClickCount(), me.isPopupTrigger(), me.getButton() ) );
+					.getClickCount(), me.isPopupTrigger(), me.getButton() ) );
 			if( !comp.isValid() )
 				container.repaint();
 		}

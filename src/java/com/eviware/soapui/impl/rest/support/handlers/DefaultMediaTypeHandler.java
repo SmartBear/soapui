@@ -21,35 +21,35 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 public class DefaultMediaTypeHandler implements MediaTypeHandler
 {
-   public boolean canHandle( String contentType )
-   {
-      return true;
-   }
+	public boolean canHandle( String contentType )
+	{
+		return true;
+	}
 
-   public String createXmlRepresentation( HttpResponse response )
-   {
-      String contentType = response.getContentType();
-      String content = response.getContentAsString();
+	public String createXmlRepresentation( HttpResponse response )
+	{
+		String contentType = response.getContentType();
+		String content = response.getContentAsString();
 
-      if( StringUtils.hasContent(contentType) && contentType.toUpperCase().endsWith("XML"))
-      	return content;
-      
-      if( XmlUtils.seemsToBeXml( content ) )
-         return content;
-      else if( content == null )
-         content = "";
+		if( StringUtils.hasContent( contentType ) && contentType.toUpperCase().endsWith( "XML" ) )
+			return content;
 
-      String result = "<data contentType=\"" + contentType + "\" contentLength=\"" +
-               response.getContentLength() + "\">";
+		if( XmlUtils.seemsToBeXml( content ) )
+			return content;
+		else if( content == null )
+			content = "";
 
-      for( int c = 0; c < content.length(); c++ )
-      {
-         if( content.charAt( c ) < 8 )
-         {
-            return result +  new BASE64Encoder().encode( content.getBytes())+ "</data>";
-         }
-      }
+		String result = "<data contentType=\"" + contentType + "\" contentLength=\"" + response.getContentLength()
+				+ "\">";
 
-      return result + "<![CDATA[" + content + "]]></data>";
-   }
+		for( int c = 0; c < content.length(); c++ )
+		{
+			if( content.charAt( c ) < 8 )
+			{
+				return result + new BASE64Encoder().encode( content.getBytes() ) + "</data>";
+			}
+		}
+
+		return result + "<![CDATA[" + content + "]]></data>";
+	}
 }

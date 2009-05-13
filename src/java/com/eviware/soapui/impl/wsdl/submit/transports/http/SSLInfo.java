@@ -37,7 +37,7 @@ public class SSLInfo
 	public SSLInfo( SSLSocket socket )
 	{
 		SSLSession session = socket.getSession();
-		
+
 		cipherSuite = session.getCipherSuite();
 		localPrincipal = session.getLocalPrincipal();
 		localCertificates = session.getLocalCertificates();

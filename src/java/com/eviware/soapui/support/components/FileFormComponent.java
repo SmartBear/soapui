@@ -9,8 +9,8 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
- package com.eviware.soapui.support.components;
+
+package com.eviware.soapui.support.components;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -38,10 +38,10 @@ public class FileFormComponent extends JPanel implements JFormComponent
 		textField.setToolTipText( tooltip );
 		builder.addGriddedGrowing( textField );
 		builder.addRelatedGap();
-		builder.addFixed( new JButton( new SelectFileAction()) );
+		builder.addFixed( new JButton( new SelectFileAction() ) );
 	}
-	
-	public void setValue(String value)
+
+	public void setValue( String value )
 	{
 		textField.setText( value );
 	}
@@ -55,35 +55,33 @@ public class FileFormComponent extends JPanel implements JFormComponent
 	{
 		return textField.getText();
 	}
-	
+
 	public void setFile( File file )
 	{
 		setValue( file.getAbsolutePath() );
 	}
-	
+
 	public void setModelItem( AbstractWsdlModelItem<?> modelItem )
 	{
 		this.modelItem = modelItem;
 	}
-	
+
 	public class SelectFileAction extends AbstractAction
 	{
 		public SelectFileAction()
 		{
 			super( "Browse..." );
 		}
-		
-		public void actionPerformed(ActionEvent e)
+
+		public void actionPerformed( ActionEvent e )
 		{
-         String value = FileFormComponent.this.getValue();
-			File file = UISupport.getFileDialogs().open(this, "Select file", null, null, 
-         		StringUtils.hasContent( value ) ? value : 
-         		PathUtils.getExpandedResourceRoot(modelItem)
-			);
-         if( file != null )
-		   {
-		     	setFile( file );
-		   }
+			String value = FileFormComponent.this.getValue();
+			File file = UISupport.getFileDialogs().open( this, "Select file", null, null,
+					StringUtils.hasContent( value ) ? value : PathUtils.getExpandedResourceRoot( modelItem ) );
+			if( file != null )
+			{
+				setFile( file );
+			}
 		}
 	}
 }

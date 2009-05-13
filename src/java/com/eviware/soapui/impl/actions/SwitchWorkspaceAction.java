@@ -29,62 +29,62 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 public class SwitchWorkspaceAction extends AbstractSoapUIAction<WorkspaceImpl>
 {
-	public static final String SOAPUI_ACTION_ID = "SwitchWorkspaceAction";  
+	public static final String SOAPUI_ACTION_ID = "SwitchWorkspaceAction";
 	public static final MessageSupport messages = MessageSupport.getMessages( SwitchWorkspaceAction.class );
 
 	public SwitchWorkspaceAction()
 	{
-		super( messages.get("SwitchWorkspaceAction.Title"), messages.get("SwitchWorkspaceAction.Description") ); 
+		super( messages.get( "SwitchWorkspaceAction.Title" ), messages.get( "SwitchWorkspaceAction.Description" ) );
 	}
-	
+
 	public void perform( WorkspaceImpl workspace, Object param )
 	{
 		if( SoapUI.getTestMonitor().hasRunningTests() )
 		{
-			UISupport.showErrorMessage( messages.get("SwitchWorkspaceAction.WhileTestsAreRunningError") ); 
+			UISupport.showErrorMessage( messages.get( "SwitchWorkspaceAction.WhileTestsAreRunningError" ) );
 			return;
 		}
-		
+
 		File newPath = null;
-		
+
 		if( param != null )
 		{
 			newPath = new File( param.toString() );
 		}
 		else
 		{
-			newPath = UISupport.getFileDialogs().open( this, messages.get("SwitchWorkspaceAction.FileOpenTitle"), ".xml", "soapUI Workspace (*.xml)",  
-					workspace.getPath() );
+			newPath = UISupport.getFileDialogs().open( this, messages.get( "SwitchWorkspaceAction.FileOpenTitle" ),
+					".xml", "soapUI Workspace (*.xml)", workspace.getPath() );
 		}
-		
+
 		if( newPath != null )
 		{
-			if( SoapUI.getDesktop().closeAll())
+			if( SoapUI.getDesktop().closeAll() )
 			{
 				boolean save = true;
-				
+
 				if( !newPath.exists() )
 				{
-					if( !UISupport.confirm( messages.get("SwitchWorkspaceAction.Confirm.Label", newPath.getName()),   
-								messages.get("SwitchWorkspaceAction.Confirm.Title") )) 
+					if( !UISupport.confirm( messages.get( "SwitchWorkspaceAction.Confirm.Label", newPath.getName() ),
+							messages.get( "SwitchWorkspaceAction.Confirm.Title" ) ) )
 					{
 						return;
-					}			
-					
+					}
+
 					save = false;
 				}
 				else if( workspace.getOpenProjectList().size() > 0 )
 				{
-					Boolean val = UISupport.confirmOrCancel( messages.get("SwitchWorkspaceAction.SaveOpenProjects.Label"), 
-							messages.get("SwitchWorkspaceAction.SaveOpenProjects.Title") );  
+					Boolean val = UISupport.confirmOrCancel( messages.get( "SwitchWorkspaceAction.SaveOpenProjects.Label" ),
+							messages.get( "SwitchWorkspaceAction.SaveOpenProjects.Title" ) );
 					if( val == null )
 						return;
-					
+
 					save = val.booleanValue();
 				}
-				
+
 				workspace.save( !save );
-				
+
 				try
 				{
 					workspace.switchWorkspace( newPath );

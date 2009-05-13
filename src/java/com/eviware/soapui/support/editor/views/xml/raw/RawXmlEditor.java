@@ -29,7 +29,7 @@ public abstract class RawXmlEditor<T extends XmlDocument> extends AbstractXmlEdi
 	public RawXmlEditor( String title, XmlEditor<T> xmlEditor, String tooltip )
 	{
 		super( title, xmlEditor, RawXmlEditorFactory.VIEW_ID );
-		
+
 		textArea = new JTextArea();
 		textArea.setEditable( false );
 		textArea.setToolTipText( tooltip );
@@ -45,7 +45,7 @@ public abstract class RawXmlEditor<T extends XmlDocument> extends AbstractXmlEdi
 	}
 
 	public abstract String getContent();
-	
+
 	public JComponent getComponent()
 	{
 		return scrollPane;
@@ -63,7 +63,7 @@ public abstract class RawXmlEditor<T extends XmlDocument> extends AbstractXmlEdi
 
 	public void setEditable( boolean enabled )
 	{
-		
+
 	}
 
 }

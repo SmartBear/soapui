@@ -14,7 +14,7 @@ package com.eviware.soapui.support;
 
 /**
  * General SoapUI exception class
- *  
+ * 
  * @author Ole.Matzura
  */
 
@@ -25,18 +25,18 @@ public class SoapUIException extends Exception
 		super();
 	}
 
-	public SoapUIException(String message)
+	public SoapUIException( String message )
 	{
-		super(message);
+		super( message );
 	}
 
-	public SoapUIException(String message, Throwable cause)
+	public SoapUIException( String message, Throwable cause )
 	{
-		super(message, cause);
+		super( message, cause );
 	}
 
-	public SoapUIException(Throwable cause)
+	public SoapUIException( Throwable cause )
 	{
-		super(cause);
+		super( cause );
 	}
 }

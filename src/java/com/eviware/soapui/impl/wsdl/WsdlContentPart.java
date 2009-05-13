@@ -31,17 +31,17 @@ public class WsdlContentPart extends MessagePart.ContentPart
 	private SchemaType schemaType;
 	private QName partElementName;
 	private final SchemaGlobalElement partElement;
-	
-	public WsdlContentPart(String name, SchemaType schemaType, QName partElementName, SchemaGlobalElement partElement )
+
+	public WsdlContentPart( String name, SchemaType schemaType, QName partElementName, SchemaGlobalElement partElement )
 	{
 		super();
-		
+
 		this.name = name;
 		this.schemaType = schemaType;
 		this.partElementName = partElementName;
 		this.partElement = partElement;
 	}
-	
+
 	public SchemaType getSchemaType()
 	{
 		return schemaType;

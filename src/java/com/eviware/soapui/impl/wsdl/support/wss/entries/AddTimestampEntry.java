@@ -12,6 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss.entries;
 
+import javax.swing.JComponent;
+
+import org.apache.ws.security.WSSConfig;
+import org.apache.ws.security.message.WSSecHeader;
+import org.apache.ws.security.message.WSSecTimestamp;
+import org.w3c.dom.Document;
+
 import com.eviware.soapui.config.WSSEntryConfig;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
@@ -19,17 +26,11 @@ import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.jgoodies.binding.PresentationModel;
-import org.apache.ws.security.WSSConfig;
-import org.apache.ws.security.message.WSSecHeader;
-import org.apache.ws.security.message.WSSecTimestamp;
-import org.w3c.dom.Document;
-
-import javax.swing.*;
 
 public class AddTimestampEntry extends WssEntryBase
 {
 	public static final String TYPE = "Timestamp";
-	
+
 	private int timeToLive;
 	private boolean strictTimestamp;
 
@@ -37,15 +38,15 @@ public class AddTimestampEntry extends WssEntryBase
 	{
 		super.init( config, container, TYPE );
 	}
-	
+
 	@Override
 	protected JComponent buildUI()
 	{
-		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<AddTimestampEntry>( this ) ); 
-		form.addSpace(5);
+		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<AddTimestampEntry>( this ) );
+		form.addSpace( 5 );
 		form.appendTextField( "timeToLive", "Time To Live", "Sets the TimeToLive value for the Timestamp Token" );
 		form.appendCheckBox( "strictTimestamp", "Millisecond Precision", "Sets precision of timestamp to milliseconds" );
-		
+
 		return form.getPanel();
 	}
 
@@ -67,26 +68,26 @@ public class AddTimestampEntry extends WssEntryBase
 	{
 		if( timeToLive <= 0 )
 			return;
-		
+
 		WSSecTimestamp timestamp = new WSSecTimestamp();
 		timestamp.setTimeToLive( timeToLive );
 
 		if( !strictTimestamp )
 		{
 			WSSConfig wsc = WSSConfig.getNewInstance();
-		   wsc.setPrecisionInMilliSeconds(false);
-		   wsc.setTimeStampStrict(false);
-		   timestamp.setWsConfig(wsc);
+			wsc.setPrecisionInMilliSeconds( false );
+			wsc.setTimeStampStrict( false );
+			timestamp.setWsConfig( wsc );
 		}
-		
+
 		timestamp.build( doc, secHeader );
 	}
-	
+
 	public String getTimeToLive()
 	{
 		return String.valueOf( timeToLive );
 	}
-	
+
 	public boolean isStrictTimestamp()
 	{
 		return strictTimestamp;
@@ -107,6 +108,6 @@ public class AddTimestampEntry extends WssEntryBase
 		}
 		catch( Exception e )
 		{
-		}		
+		}
 	}
 }

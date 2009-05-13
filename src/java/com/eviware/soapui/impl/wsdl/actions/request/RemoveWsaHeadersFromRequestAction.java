@@ -33,28 +33,29 @@ public class RemoveWsaHeadersFromRequestAction extends AbstractAction
 {
 	private final WsdlRequest request;
 
-	public RemoveWsaHeadersFromRequestAction(WsdlRequest request)
+	public RemoveWsaHeadersFromRequestAction( WsdlRequest request )
 	{
-		super("Remove WS-A headers");
+		super( "Remove WS-A headers" );
 		this.request = request;
 	}
 
-	public void actionPerformed(ActionEvent e)
+	public void actionPerformed( ActionEvent e )
 	{
 		try
 		{
-	      if( UISupport.confirm( "Remove WS-A headers", "Remove WS-A headers" ))
-	      {
+			if( UISupport.confirm( "Remove WS-A headers", "Remove WS-A headers" ) )
+			{
 				SoapVersion soapVersion = request.getOperation().getInterface().getSoapVersion();
 				String content = request.getRequestContent();
-				WsaUtils wsaUtils = new WsaUtils(content,soapVersion, request.getOperation(),new DefaultPropertyExpansionContext(request));
-				content = wsaUtils.removeWSAddressing(request);
-				request.setRequestContent(content);
-	      }
+				WsaUtils wsaUtils = new WsaUtils( content, soapVersion, request.getOperation(),
+						new DefaultPropertyExpansionContext( request ) );
+				content = wsaUtils.removeWSAddressing( request );
+				request.setRequestContent( content );
+			}
 		}
-		catch (Exception e1)
+		catch( Exception e1 )
 		{
-			SoapUI.logError(e1);
+			SoapUI.logError( e1 );
 		}
 	}
 }

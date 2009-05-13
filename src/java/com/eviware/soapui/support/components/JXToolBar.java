@@ -27,24 +27,24 @@ public class JXToolBar extends JToolBar
 {
 	public <T extends JComponent> T addFixed( T component )
 	{
-		if( !(component instanceof JButton) )
+		if( !( component instanceof JButton ) )
 			UISupport.setPreferredHeight( component, 18 );
-		
+
 		Dimension preferredSize = component.getPreferredSize();
 		component.setMinimumSize( preferredSize );
 		component.setMaximumSize( preferredSize );
-		
+
 		add( component );
-		
+
 		return component;
 	}
 
-	public Component add(Component component)
+	public Component add( Component component )
 	{
-		if( !(component instanceof JButton) )
+		if( !( component instanceof JButton ) )
 			UISupport.setPreferredHeight( component, 18 );
 
-		return super.add(component);
+		return super.add( component );
 	}
 
 	public void addGlue()
@@ -62,15 +62,15 @@ public class JXToolBar extends JToolBar
 		addSeparator();
 	}
 
-	public void addLabeledFixed(String string, JComponent component)
+	public void addLabeledFixed( String string, JComponent component )
 	{
-		addFixed( new JLabel( string ));
-		addSeparator( new Dimension( 3, 3 ));
+		addFixed( new JLabel( string ) );
+		addSeparator( new Dimension( 3, 3 ) );
 		addFixed( component );
 	}
 
-	public void addSpace(int i)
+	public void addSpace( int i )
 	{
-		addSeparator( new Dimension( i, 1 ));
+		addSeparator( new Dimension( i, 1 ) );
 	}
 }

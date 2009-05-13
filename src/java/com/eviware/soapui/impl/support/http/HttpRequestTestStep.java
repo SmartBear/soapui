@@ -17,5 +17,5 @@ import com.eviware.soapui.model.testsuite.TestStep;
 
 public interface HttpRequestTestStep<T extends AbstractHttpRequest<?>> extends TestStep
 {
-   public T getHttpRequest();
+	public T getHttpRequest();
 }

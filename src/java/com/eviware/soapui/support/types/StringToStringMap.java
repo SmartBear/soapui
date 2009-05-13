@@ -12,12 +12,12 @@
 
 package com.eviware.soapui.support.types;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.StringToStringMapConfig;
 import com.eviware.soapui.config.StringToStringMapConfig.Entry;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * HashMap&lt;String,String&gt;
@@ -25,7 +25,7 @@ import java.util.Map;
  * @author Ole.Matzura
  */
 
-public class StringToStringMap extends HashMap<String,String>
+public class StringToStringMap extends HashMap<String, String>
 {
 	private boolean equalsOnThis;
 
@@ -34,116 +34,116 @@ public class StringToStringMap extends HashMap<String,String>
 		super();
 	}
 
-	public StringToStringMap(int initialCapacity, float loadFactor)
+	public StringToStringMap( int initialCapacity, float loadFactor )
 	{
-		super(initialCapacity, loadFactor);
+		super( initialCapacity, loadFactor );
 	}
 
-	public StringToStringMap(int initialCapacity)
+	public StringToStringMap( int initialCapacity )
 	{
-		super(initialCapacity);
+		super( initialCapacity );
 	}
 
-	public StringToStringMap(Map<? extends String, ? extends String> m)
+	public StringToStringMap( Map<? extends String, ? extends String> m )
 	{
-		super(m);
+		super( m );
 	}
-	
+
 	public String get( String key, String defaultValue )
 	{
 		String value = get( key );
 		return value == null ? defaultValue : value;
 	}
-	
-   /**
-    * Get the inverse of this map.
-    */
-   public StringToStringMap inverse()
-   {
-      StringToStringMap inverse = new StringToStringMap();
-      for(String key : keySet())
-      {
-         String value = get(key);
-         inverse.put(value, key);
-      }
-      return inverse;
-   }
+
+	/**
+	 * Get the inverse of this map.
+	 */
+	public StringToStringMap inverse()
+	{
+		StringToStringMap inverse = new StringToStringMap();
+		for( String key : keySet() )
+		{
+			String value = get( key );
+			inverse.put( value, key );
+		}
+		return inverse;
+	}
 
 	public String toXml()
 	{
 		StringToStringMapConfig xmlConfig = StringToStringMapConfig.Factory.newInstance();
-		
+
 		for( String key : keySet() )
 		{
 			Entry entry = xmlConfig.addNewEntry();
 			entry.setKey( key );
-			entry.setValue( get( key ));
+			entry.setValue( get( key ) );
 		}
-		
+
 		return xmlConfig.toString();
 	}
 
-	public static StringToStringMap fromXml(String value)
+	public static StringToStringMap fromXml( String value )
 	{
 		StringToStringMap result = new StringToStringMap();
 		if( value == null || value.trim().length() == 0 )
 			return result;
-		
+
 		try
 		{
-			StringToStringMapConfig nsMapping = StringToStringMapConfig.Factory.parse(value);
-			
-			for (Entry entry : nsMapping.getEntryList())
+			StringToStringMapConfig nsMapping = StringToStringMapConfig.Factory.parse( value );
+
+			for( Entry entry : nsMapping.getEntryList() )
 			{
-				result.put(entry.getKey(), entry.getValue());
+				result.put( entry.getKey(), entry.getValue() );
 			}
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
 			SoapUI.logError( e );
-		}		
-		
+		}
+
 		return result;
 	}
 
-	public final boolean getBoolean(String key)
+	public final boolean getBoolean( String key )
 	{
-		return Boolean.parseBoolean( get( key ));
+		return Boolean.parseBoolean( get( key ) );
 	}
 
-	public boolean hasValue(String key)
+	public boolean hasValue( String key )
 	{
 		return containsKey( key ) && get( key ).length() > 0;
 	}
 
-	public void putIfMissing(String key, String value)
+	public void putIfMissing( String key, String value )
 	{
-		if( !containsKey( key )) 
+		if( !containsKey( key ) )
 			put( key, value );
 	}
 
-	public void put(String key, boolean value)
+	public void put( String key, boolean value )
 	{
-		put( key, Boolean.toString( value ));
+		put( key, Boolean.toString( value ) );
 	}
 
 	public static StringToStringMap fromHttpHeader( String value )
 	{
 		StringToStringMap result = new StringToStringMap();
-		
+
 		int ix = value.indexOf( ';' );
 		while( ix > 0 )
 		{
 			extractNVPair( value.substring( 0, ix ), result );
-			value = value.substring( ix+1 );
+			value = value.substring( ix + 1 );
 			ix = value.indexOf( ';' );
 		}
-		
+
 		if( value.length() > 2 )
 		{
 			extractNVPair( value, result );
 		}
-		
+
 		return result;
 	}
 
@@ -153,14 +153,14 @@ public class StringToStringMap extends HashMap<String,String>
 		ix = value.indexOf( '=' );
 		if( ix != -1 )
 		{
-			String str = value.substring( ix+1 ).trim();
-			if( str.startsWith( "\"" ) &&  str.endsWith( "\"" ))
-				str = str.substring( 1, str.length()-1 );
-				
+			String str = value.substring( ix + 1 ).trim();
+			if( str.startsWith( "\"" ) && str.endsWith( "\"" ) )
+				str = str.substring( 1, str.length() - 1 );
+
 			result.put( value.substring( 0, ix ).trim(), str );
 		}
 	}
-	
+
 	public void setEqualsOnThis( boolean equalsOnThis )
 	{
 		this.equalsOnThis = equalsOnThis;
@@ -181,11 +181,11 @@ public class StringToStringMap extends HashMap<String,String>
 		catch( Exception e )
 		{
 			return def;
-		}		
+		}
 	}
 
-   public String[] getKeys()
-   {
-      return keySet().toArray( new String[size()] );
-   }
+	public String[] getKeys()
+	{
+		return keySet().toArray( new String[size()] );
+	}
 }

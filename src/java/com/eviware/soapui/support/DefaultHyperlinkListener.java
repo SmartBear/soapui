@@ -16,7 +16,6 @@ import javax.swing.JEditorPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-
 public class DefaultHyperlinkListener implements HyperlinkListener
 {
 	private final JEditorPane editorPane;
@@ -26,7 +25,7 @@ public class DefaultHyperlinkListener implements HyperlinkListener
 		this.editorPane = editorPane;
 	}
 
-	public void hyperlinkUpdate(HyperlinkEvent e)
+	public void hyperlinkUpdate( HyperlinkEvent e )
 	{
 		if( e.getEventType() == HyperlinkEvent.EventType.ACTIVATED )
 		{
@@ -34,7 +33,7 @@ public class DefaultHyperlinkListener implements HyperlinkListener
 			{
 				editorPane.scrollToReference( e.getURL().getRef() );
 			}
-			else 
+			else
 				Tools.openURL( e.getURL().toString() );
 		}
 	}

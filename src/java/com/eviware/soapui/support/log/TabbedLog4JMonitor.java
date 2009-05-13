@@ -33,33 +33,33 @@ public class TabbedLog4JMonitor extends JTabbedPane implements Log4JMonitor
 	{
 		super( JTabbedPane.BOTTOM, JTabbedPane.SCROLL_TAB_LAYOUT );
 	}
-	
+
 	public JLogList addLogArea( String title, String loggerName, boolean isDefault )
 	{
 		JLogList logArea = new JLogList( title );
 		logArea.addLogger( loggerName, !isDefault );
-		addTab( title, logArea);
-		
+		addTab( title, logArea );
+
 		if( isDefault )
 			defaultLogArea = logArea;
-		
+
 		return logArea;
 	}
 
-	public void logEvent(Object msg)
+	public void logEvent( Object msg )
 	{
 		if( msg instanceof LoggingEvent )
 		{
-			LoggingEvent event = (LoggingEvent) msg;
+			LoggingEvent event = ( LoggingEvent )msg;
 			String loggerName = event.getLoggerName();
-			
+
 			for( int c = 0; c < getTabCount(); c++ )
 			{
 				Component tabComponent = getComponentAt( c );
 				if( tabComponent instanceof JLogList )
 				{
-					JLogList logArea = (JLogList) tabComponent;
-					if( logArea.monitors( loggerName ))
+					JLogList logArea = ( JLogList )tabComponent;
+					if( logArea.monitors( loggerName ) )
 					{
 						logArea.addLine( msg );
 					}
@@ -71,28 +71,28 @@ public class TabbedLog4JMonitor extends JTabbedPane implements Log4JMonitor
 			defaultLogArea.addLine( msg );
 		}
 	}
-	
+
 	public JLogList getLogArea( String title )
 	{
 		int ix = indexOfTab( title );
-		return ( JLogList ) ( ix == -1 ? null : getComponentAt( ix ) );
+		return ( JLogList )( ix == -1 ? null : getComponentAt( ix ) );
 	}
 
-	public boolean hasLogArea(String loggerName)
+	public boolean hasLogArea( String loggerName )
 	{
 		for( int c = 0; c < getTabCount(); c++ )
 		{
 			Component tabComponent = getComponentAt( c );
 			if( tabComponent instanceof JLogList )
 			{
-				JLogList logArea = (JLogList) tabComponent;
-				if( logArea.monitors( loggerName ))
+				JLogList logArea = ( JLogList )tabComponent;
+				if( logArea.monitors( loggerName ) )
 				{
 					return true;
 				}
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -104,7 +104,7 @@ public class TabbedLog4JMonitor extends JTabbedPane implements Log4JMonitor
 	public JLogList getCurrentLog()
 	{
 		int ix = getSelectedIndex();
-		return ix == -1 ? null : getLogArea( getTitleAt( ix ));
+		return ix == -1 ? null : getLogArea( getTitleAt( ix ) );
 	}
 
 	public void setCurrentLog( JLogList lastLog )
@@ -112,7 +112,7 @@ public class TabbedLog4JMonitor extends JTabbedPane implements Log4JMonitor
 		for( int c = 0; c < getTabCount(); c++ )
 		{
 			Component tabComponent = getComponentAt( c );
-			if( tabComponent == lastLog  )
+			if( tabComponent == lastLog )
 			{
 				setSelectedComponent( tabComponent );
 			}
@@ -123,14 +123,14 @@ public class TabbedLog4JMonitor extends JTabbedPane implements Log4JMonitor
 	{
 		for( int c = 0; c < getTabCount(); c++ )
 		{
-			JLogList tabComponent = ( JLogList ) getComponentAt( c );
+			JLogList tabComponent = ( JLogList )getComponentAt( c );
 			if( tabComponent.getLogger( loggerName ) != null )
 			{
 				removeTabAt( c );
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 }

@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.loadtest.strategy;
 
-
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -44,18 +43,18 @@ public class SimpleLoadStrategy extends AbstractLoadStrategy
 	private static final int DEFAULT_TEST_DELAY = 1000;
 	private static final float DEFAULT_RANDOM_FACTOR = 0.5F;
 	public static final String STRATEGY_TYPE = "Simple";
-	
+
 	private int testDelay = DEFAULT_TEST_DELAY;
 	private float randomFactor = DEFAULT_RANDOM_FACTOR;
 
 	private JPanel configPanel;
 	private JTextField testDelayField;
 	private JTextField randomFactorField;
-	
-	public SimpleLoadStrategy(XmlObject config, WsdlLoadTest loadTest)
+
+	public SimpleLoadStrategy( XmlObject config, WsdlLoadTest loadTest )
 	{
 		super( STRATEGY_TYPE, loadTest );
-		
+
 		if( config != null )
 		{
 			XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( config );
@@ -63,36 +62,38 @@ public class SimpleLoadStrategy extends AbstractLoadStrategy
 			randomFactor = reader.readFloat( "randomFactor", DEFAULT_RANDOM_FACTOR );
 		}
 	}
-	
+
 	public XmlObject getConfig()
 	{
 		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
 		builder.add( "testDelay", testDelay );
-      builder.add( "randomFactor", randomFactor );
-      return builder.finish();
+		builder.add( "randomFactor", randomFactor );
+		return builder.finish();
 	}
-	
-	public void beforeTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner, TestRunContext runContext)
+
+	public void beforeTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
+			TestRunContext runContext )
 	{
-		int delay = calculateDelay( testDelay);
-		if( delay == 0 ) return;
+		int delay = calculateDelay( testDelay );
+		if( delay == 0 )
+			return;
 		try
 		{
 			Thread.sleep( delay );
 		}
-		catch (InterruptedException e)
+		catch( InterruptedException e )
 		{
 			SoapUI.logError( e );
 		}
 	}
-	
+
 	public int calculateDelay( int delay )
 	{
 		if( delay == 0 || randomFactor == 0 )
 			return delay;
-		
-		int fixDelay = (int) ((float)delay*(1-randomFactor));
-		int randDelay = (int) (randomFactor == 0 ? 0 : (float)(delay-fixDelay)*Math.random());
+
+		int fixDelay = ( int )( ( float )delay * ( 1 - randomFactor ) );
+		int randDelay = ( int )( randomFactor == 0 ? 0 : ( float )( delay - fixDelay ) * Math.random() );
 		return fixDelay + randDelay;
 	}
 
@@ -101,56 +102,57 @@ public class SimpleLoadStrategy extends AbstractLoadStrategy
 		if( configPanel == null )
 		{
 			ButtonBarBuilder builder = new ButtonBarBuilder();
-			
+
 			testDelayField = new JTextField( 5 );
 			UISupport.setPreferredHeight( testDelayField, 18 );
 			testDelayField.setHorizontalAlignment( JTextField.RIGHT );
-			testDelayField.setText( String.valueOf( testDelay ));
+			testDelayField.setText( String.valueOf( testDelay ) );
 			testDelayField.setToolTipText( "Sets the delay between each test run in milliseconds" );
-			testDelayField.getDocument().addDocumentListener( new ConfigDocumentListener());
-			
-			builder.addFixed( new JLabel( "Test Delay" ));
+			testDelayField.getDocument().addDocumentListener( new ConfigDocumentListener() );
+
+			builder.addFixed( new JLabel( "Test Delay" ) );
 			builder.addRelatedGap();
-			
+
 			builder.addFixed( testDelayField );
 			builder.addRelatedGap();
 
 			randomFactorField = new JTextField( 4 );
 			UISupport.setPreferredHeight( randomFactorField, 18 );
 			randomFactorField.setHorizontalAlignment( JTextField.RIGHT );
-			randomFactorField.setText( String.valueOf( randomFactor ));
-			randomFactorField.setToolTipText( "Specifies the relative amount of randomization for delay (0 = no random, 1 = all random)" );
-			randomFactorField.getDocument().addDocumentListener( new ConfigDocumentListener());
-			
-			builder.addFixed( new JLabel( "Random" ));
+			randomFactorField.setText( String.valueOf( randomFactor ) );
+			randomFactorField
+					.setToolTipText( "Specifies the relative amount of randomization for delay (0 = no random, 1 = all random)" );
+			randomFactorField.getDocument().addDocumentListener( new ConfigDocumentListener() );
+
+			builder.addFixed( new JLabel( "Random" ) );
 			builder.addRelatedGap();
-			builder.addFixed( randomFactorField);
+			builder.addFixed( randomFactorField );
 
 			configPanel = builder.getPanel();
 		}
 
 		return configPanel;
 	}
-	
+
 	private final class ConfigDocumentListener extends DocumentListenerAdapter
 	{
-		public void update(Document document)
+		public void update( Document document )
 		{
 			try
 			{
-				if (document == testDelayField.getDocument())
-					testDelay = Integer.parseInt(testDelayField.getText());
-				if (document == randomFactorField.getDocument())
-					randomFactor = Float.parseFloat(randomFactorField.getText().replace( ',', '.' ));
+				if( document == testDelayField.getDocument() )
+					testDelay = Integer.parseInt( testDelayField.getText() );
+				if( document == randomFactorField.getDocument() )
+					randomFactor = Float.parseFloat( randomFactorField.getText().replace( ',', '.' ) );
 
 				notifyConfigurationChanged();
 			}
-			catch (NumberFormatException e)
+			catch( NumberFormatException e )
 			{
 			}
 		}
 	}
-	
+
 	public int getTestDelay()
 	{
 		return testDelay;
@@ -174,12 +176,12 @@ public class SimpleLoadStrategy extends AbstractLoadStrategy
 			return STRATEGY_TYPE;
 		}
 
-		public LoadStrategy build(XmlObject config, WsdlLoadTest loadTest)
+		public LoadStrategy build( XmlObject config, WsdlLoadTest loadTest )
 		{
 			return new SimpleLoadStrategy( config, loadTest );
 		}
 
-		public LoadStrategy create(WsdlLoadTest loadTest)
+		public LoadStrategy create( WsdlLoadTest loadTest )
 		{
 			return new SimpleLoadStrategy( null, loadTest );
 		}

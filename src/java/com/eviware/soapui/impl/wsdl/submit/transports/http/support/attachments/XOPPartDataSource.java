@@ -12,18 +12,25 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import javax.activation.DataSource;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlBase64Binary;
 import org.apache.xmlbeans.XmlHexBinary;
 
-import javax.activation.DataSource;
-import java.io.*;
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 
 /**
  * DataSource for XOP/MTOM attachments

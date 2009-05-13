@@ -34,8 +34,8 @@ public class EmptyModelItem implements ModelItem
 	private String name;
 	private ImageIcon icon;
 	protected PropertyChangeSupport propertyChangeSupport;
-	
-	public EmptyModelItem(String name, ImageIcon icon)
+
+	public EmptyModelItem( String name, ImageIcon icon )
 	{
 		this.name = name;
 		this.icon = icon;
@@ -45,7 +45,7 @@ public class EmptyModelItem implements ModelItem
 	{
 		String oldName = this.name;
 		this.name = name;
-		
+
 		if( propertyChangeSupport != null )
 		{
 			propertyChangeSupport.firePropertyChange( ModelItem.NAME_PROPERTY, oldName, name );
@@ -67,29 +67,29 @@ public class EmptyModelItem implements ModelItem
 		return name;
 	}
 
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
+	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
 		if( propertyChangeSupport == null )
 			propertyChangeSupport = new PropertyChangeSupport( this );
-		
+
 		propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
 	}
 
-	public void addPropertyChangeListener(PropertyChangeListener listener)
+	public void addPropertyChangeListener( PropertyChangeListener listener )
 	{
 		if( propertyChangeSupport == null )
 			propertyChangeSupport = new PropertyChangeSupport( this );
-		
+
 		propertyChangeSupport.addPropertyChangeListener( listener );
 	}
 
-	public void removePropertyChangeListener(PropertyChangeListener listener)
+	public void removePropertyChangeListener( PropertyChangeListener listener )
 	{
 		if( propertyChangeSupport != null )
 			propertyChangeSupport.removePropertyChangeListener( listener );
 	}
 
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
+	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
 		if( propertyChangeSupport != null )
 			propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
@@ -108,12 +108,12 @@ public class EmptyModelItem implements ModelItem
 	{
 		return String.valueOf( hashCode() );
 	}
-   
-   @SuppressWarnings("unchecked")
-   public List<? extends ModelItem> getChildren()
-   {
-      return Collections.EMPTY_LIST;
-   }
+
+	@SuppressWarnings( "unchecked" )
+	public List<? extends ModelItem> getChildren()
+	{
+		return Collections.EMPTY_LIST;
+	}
 
 	public ModelItem getParent()
 	{

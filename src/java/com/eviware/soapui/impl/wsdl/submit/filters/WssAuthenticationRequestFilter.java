@@ -33,7 +33,8 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
- * Modifies the request message to include WS-Securty Username and Timestamp tokens
+ * Modifies the request message to include WS-Securty Username and Timestamp
+ * tokens
  * 
  * @author Ole.Matzura
  */
@@ -43,52 +44,53 @@ public class WssAuthenticationRequestFilter extends AbstractWssRequestFilter
 	private static final String WSS_USERNAME_TOKEN = "WsSecurityAuthenticationRequestFilter@UsernameToken";
 	private static final String WSS_TIMESTAMP_TOKEN = "WsSecurityAuthenticationRequestFilter@TimestampToken";
 
-	public void filterWsdlRequest(SubmitContext context, WsdlRequest wsdlRequest)
+	public void filterWsdlRequest( SubmitContext context, WsdlRequest wsdlRequest )
 	{
-		String pwType = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getWssPasswordType());
-      String wsTimestamp = wsdlRequest.getWssTimeToLive();
-      
-		if (  (StringUtils.isNullOrEmpty( pwType ) || WsdlRequest.PW_TYPE_NONE.equals(pwType)) &&
-      		(StringUtils.isNullOrEmpty( wsTimestamp )))
-      		return;
-      try 
-      {
-      	String password = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getPassword() );
-      	String username = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getUsername());
-      	
-        	setWssHeaders( context, username, password, pwType, wsTimestamp );
-      } 
-		catch (Throwable e) 
+		String pwType = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getWssPasswordType() );
+		String wsTimestamp = wsdlRequest.getWssTimeToLive();
+
+		if( ( StringUtils.isNullOrEmpty( pwType ) || WsdlRequest.PW_TYPE_NONE.equals( pwType ) )
+				&& ( StringUtils.isNullOrEmpty( wsTimestamp ) ) )
+			return;
+		try
 		{
-          SoapUI.logError( e );
-      }
+			String password = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getPassword() );
+			String username = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getUsername() );
+
+			setWssHeaders( context, username, password, pwType, wsTimestamp );
+		}
+		catch( Throwable e )
+		{
+			SoapUI.logError( e );
+		}
 	}
 
-	public static void setWssHeaders( SubmitContext context, String username, String password, String pwType, String wsTimestamp ) throws SAXException, IOException
+	public static void setWssHeaders( SubmitContext context, String username, String password, String pwType,
+			String wsTimestamp ) throws SAXException, IOException
 	{
 		Document doc = getWssDocument( context );
-		
+
 		// create username token?
-		if( StringUtils.hasContent( pwType ) && !pwType.equals( WsdlRequest.PW_TYPE_NONE ) && 
-			 StringUtils.hasContent( username ) && StringUtils.hasContent( password ))
+		if( StringUtils.hasContent( pwType ) && !pwType.equals( WsdlRequest.PW_TYPE_NONE )
+				&& StringUtils.hasContent( username ) && StringUtils.hasContent( password ) )
 		{
 			// remove if already set
-			Element elm = ( Element ) context.getProperty( WSS_USERNAME_TOKEN );
+			Element elm = ( Element )context.getProperty( WSS_USERNAME_TOKEN );
 			if( elm != null )
 			{
-				Element parentNode = ( Element ) elm.getParentNode();
+				Element parentNode = ( Element )elm.getParentNode();
 				parentNode.removeChild( elm );
 			}
-			
-			// save it so it can be removed.. 
-			context.setProperty( WSS_USERNAME_TOKEN, setWssUsernameToken( username, password, pwType, doc ));
+
+			// save it so it can be removed..
+			context.setProperty( WSS_USERNAME_TOKEN, setWssUsernameToken( username, password, pwType, doc ) );
 		}
 		// remove if pwType is not null
 		else if( pwType != null && context.getProperty( WSS_USERNAME_TOKEN ) != null )
 		{
-			Element elm = ( Element ) context.getProperty( WSS_USERNAME_TOKEN );
+			Element elm = ( Element )context.getProperty( WSS_USERNAME_TOKEN );
 			context.removeProperty( WSS_USERNAME_TOKEN );
-			Element parentNode = ( Element ) elm.getParentNode();
+			Element parentNode = ( Element )elm.getParentNode();
 			parentNode.removeChild( elm );
 			if( XmlUtils.getChildElements( parentNode ).getLength() == 0 )
 				parentNode.getParentNode().removeChild( parentNode );
@@ -97,23 +99,23 @@ public class WssAuthenticationRequestFilter extends AbstractWssRequestFilter
 		// add timestamp?
 		if( StringUtils.hasContent( wsTimestamp ) )
 		{
-			//	 remove if already set
-			Element elm = ( Element ) context.getProperty( WSS_TIMESTAMP_TOKEN );
+			// remove if already set
+			Element elm = ( Element )context.getProperty( WSS_TIMESTAMP_TOKEN );
 			if( elm != null )
 			{
-				Element parentNode = ( Element ) elm.getParentNode();
+				Element parentNode = ( Element )elm.getParentNode();
 				parentNode.removeChild( elm );
 			}
-			
-			//	save it so it can be removed.. 
-			context.setProperty( WSS_TIMESTAMP_TOKEN, setWsTimestampToken( wsTimestamp, doc ));
+
+			// save it so it can be removed..
+			context.setProperty( WSS_TIMESTAMP_TOKEN, setWsTimestampToken( wsTimestamp, doc ) );
 		}
 		// remove
 		else if( wsTimestamp != null && context.getProperty( WSS_TIMESTAMP_TOKEN ) != null )
 		{
-			Element elm = ( Element ) context.getProperty( WSS_TIMESTAMP_TOKEN );
+			Element elm = ( Element )context.getProperty( WSS_TIMESTAMP_TOKEN );
 			context.removeProperty( WSS_TIMESTAMP_TOKEN );
-			Element parentNode = ( Element ) elm.getParentNode();
+			Element parentNode = ( Element )elm.getParentNode();
 			parentNode.removeChild( elm );
 			if( XmlUtils.getChildElements( parentNode ).getLength() == 0 )
 				parentNode.getParentNode().removeChild( parentNode );
@@ -127,13 +129,13 @@ public class WssAuthenticationRequestFilter extends AbstractWssRequestFilter
 	private static Element setWsTimestampToken( String ttl, Document doc )
 	{
 		WSSecTimestamp addTimestamp = new WSSecTimestamp();
-		addTimestamp.setTimeToLive( Integer.parseInt( ttl ));
-		
+		addTimestamp.setTimeToLive( Integer.parseInt( ttl ) );
+
 		WSSConfig wsc = WSSConfig.getNewInstance();
-	   wsc.setPrecisionInMilliSeconds(false);
-	   wsc.setTimeStampStrict(false);
-	   addTimestamp.setWsConfig(wsc);
-		
+		wsc.setPrecisionInMilliSeconds( false );
+		wsc.setTimeStampStrict( false );
+		addTimestamp.setWsConfig( wsc );
+
 		WSSecHeader secHeader = new WSSecHeader();
 		secHeader.insertSecurityHeader( doc );
 		addTimestamp.build( doc, secHeader );
@@ -143,22 +145,22 @@ public class WssAuthenticationRequestFilter extends AbstractWssRequestFilter
 	private static Element setWssUsernameToken( String username, String password, String pwType, Document doc )
 	{
 		WSSecUsernameToken wsa = new WSSecUsernameToken();
-		if (WsdlRequest.PW_TYPE_DIGEST.equals(pwType)) 
+		if( WsdlRequest.PW_TYPE_DIGEST.equals( pwType ) )
 		{
-		   wsa.setPasswordType(WSConstants.PASSWORD_DIGEST);
-		} 
-		else 
-		{
-		   wsa.setPasswordType(WSConstants.PASSWORD_TEXT);
+			wsa.setPasswordType( WSConstants.PASSWORD_DIGEST );
 		}
-		
-		wsa.setUserInfo(username, password ); 
+		else
+		{
+			wsa.setPasswordType( WSConstants.PASSWORD_TEXT );
+		}
+
+		wsa.setUserInfo( username, password );
 		wsa.addNonce();
 		wsa.addCreated();
-		
+
 		WSSecHeader secHeader = new WSSecHeader();
 		secHeader.insertSecurityHeader( doc );
-		wsa.build(doc, secHeader );
+		wsa.build( doc, secHeader );
 		return wsa.getUsernameTokenElement();
 	}
 }

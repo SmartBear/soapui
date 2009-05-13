@@ -25,14 +25,14 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public interface Prefs
 {
 	public SimpleForm getForm();
-	
-	public void setFormValues(Settings settings);
 
-	public void getFormValues(Settings settings);
-	
-	public void storeValues(StringToStringMap values, Settings settings);
-	
-	public StringToStringMap getValues(Settings settings);
-	
+	public void setFormValues( Settings settings );
+
+	public void getFormValues( Settings settings );
+
+	public void storeValues( StringToStringMap values, Settings settings );
+
+	public StringToStringMap getValues( Settings settings );
+
 	public String getTitle();
 }

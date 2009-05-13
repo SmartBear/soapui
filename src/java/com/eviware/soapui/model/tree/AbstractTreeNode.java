@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.model.tree;
 
-
 import javax.swing.JPopupMenu;
 
 import com.eviware.soapui.model.ModelItem;
@@ -34,8 +33,8 @@ public abstract class AbstractTreeNode<T extends ModelItem> implements SoapUITre
 	{
 		this.modelItem = modelItem;
 	}
-	
-	public boolean valueChanged(Object newValue)
+
+	public boolean valueChanged( Object newValue )
 	{
 		return false;
 	}
@@ -49,12 +48,12 @@ public abstract class AbstractTreeNode<T extends ModelItem> implements SoapUITre
 	{
 		return ActionSupport.buildPopup( getActions() );
 	}
-	
+
 	public ActionList getActions()
 	{
 		return ActionListBuilder.buildActions( modelItem );
 	}
-	
+
 	public T getModelItem()
 	{
 		return modelItem;
@@ -64,7 +63,7 @@ public abstract class AbstractTreeNode<T extends ModelItem> implements SoapUITre
 	{
 		return modelItem.getName();
 	}
-	
+
 	public void reorder( boolean notify )
 	{
 	}

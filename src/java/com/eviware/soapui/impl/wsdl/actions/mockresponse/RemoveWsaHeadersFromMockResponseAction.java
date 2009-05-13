@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.actions.mockresponse;
 
-	import java.awt.event.ActionEvent;
+import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
@@ -22,40 +22,40 @@ import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.support.UISupport;
 
-	/**
-	 * Removes WS-A headers from the specified WsdlRequests
-	 * requestContent
-	 * 
-	 * @author dragica.soldo
-	 */
+/**
+ * Removes WS-A headers from the specified WsdlRequests requestContent
+ * 
+ * @author dragica.soldo
+ */
 
-	public class RemoveWsaHeadersFromMockResponseAction extends AbstractAction
+public class RemoveWsaHeadersFromMockResponseAction extends AbstractAction
+{
+	private final WsdlMockResponse mockResponse;
+
+	public RemoveWsaHeadersFromMockResponseAction( WsdlMockResponse mockResponse )
 	{
-		private final WsdlMockResponse mockResponse;
+		super( "Remove WS-A headers" );
+		this.mockResponse = mockResponse;
+	}
 
-		public RemoveWsaHeadersFromMockResponseAction( WsdlMockResponse mockResponse)
+	public void actionPerformed( ActionEvent e )
+	{
+		try
 		{
-			super( "Remove WS-A headers" );
-			this.mockResponse = mockResponse;
+			SoapVersion soapVersion = mockResponse.getOperation().getInterface().getSoapVersion();
+			String content = mockResponse.getResponseContent();
+			WsaUtils wsaUtils = new WsaUtils( content, soapVersion, mockResponse.getOperation(),
+					new DefaultPropertyExpansionContext( mockResponse ) );
+			content = wsaUtils.removeWSAddressing( mockResponse );
+			mockResponse.setResponseContent( content );
 		}
-
-		public void actionPerformed( ActionEvent e )
+		catch( Exception e1 )
 		{
-			try
-			{
-				SoapVersion soapVersion = mockResponse.getOperation().getInterface().getSoapVersion();
-				String content = mockResponse.getResponseContent();
-				WsaUtils wsaUtils = new WsaUtils(content, soapVersion, mockResponse.getOperation(),new DefaultPropertyExpansionContext(mockResponse));
-				content = wsaUtils.removeWSAddressing(mockResponse);
-				mockResponse.setResponseContent(content);
-			}
-			catch( Exception e1 )
-			{
-				UISupport.showErrorMessage( e1 );
-			}
-			finally
-			{
-				UISupport.resetCursor();
-			}
+			UISupport.showErrorMessage( e1 );
 		}
+		finally
+		{
+			UISupport.resetCursor();
+		}
+	}
 }

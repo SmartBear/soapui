@@ -33,14 +33,14 @@ import com.eviware.soapui.support.action.support.SoapUIActionMappingList;
 
 public class ActionListBuilder
 {
-	public static ActionList buildMultiActions(ModelItem[] modelItems)
+	public static ActionList buildMultiActions( ModelItem[] modelItems )
 	{
 		DefaultActionList actions = new DefaultActionList();
 
-		SoapUIActionGroup<?> group = SoapUI.getActionRegistry().getActionGroup("SoapUIMultiActions");
-		if (group != null)
+		SoapUIActionGroup<?> group = SoapUI.getActionRegistry().getActionGroup( "SoapUIMultiActions" );
+		if( group != null )
 		{
-			addMultiActions(modelItems, actions, group);
+			addMultiActions( modelItems, actions, group );
 		}
 
 		return actions;
@@ -56,27 +56,27 @@ public class ActionListBuilder
 	 * @return the ActionList
 	 */
 
-	public static <T extends ModelItem> ActionList buildActions(T modelItem)
+	public static <T extends ModelItem> ActionList buildActions( T modelItem )
 	{
-		return buildActions(modelItem, "");
+		return buildActions( modelItem, "" );
 	}
 
 	/**
 	 * Creates an ActionList for the specified modelItem
 	 */
 
-	public static <T extends ModelItem> ActionList buildActions(T modelItem, String suffix)
+	public static <T extends ModelItem> ActionList buildActions( T modelItem, String suffix )
 	{
 		Class<?> clazz = modelItem.getClass();
-		ActionList actions = buildActions(clazz.getSimpleName() + suffix + "Actions", modelItem);
+		ActionList actions = buildActions( clazz.getSimpleName() + suffix + "Actions", modelItem );
 
-		if (actions.getActionCount() == 0)
+		if( actions.getActionCount() == 0 )
 		{
 			clazz = clazz.getSuperclass();
 
-			while (actions.getActionCount() == 0 && clazz != null && ModelItem.class.isAssignableFrom(clazz))
+			while( actions.getActionCount() == 0 && clazz != null && ModelItem.class.isAssignableFrom( clazz ) )
 			{
-				actions = buildActions(clazz.getSimpleName() + suffix + "Actions", modelItem);
+				actions = buildActions( clazz.getSimpleName() + suffix + "Actions", modelItem );
 				clazz = clazz.getSuperclass();
 			}
 		}
@@ -84,14 +84,14 @@ public class ActionListBuilder
 		return actions;
 	}
 
-	public static <T extends ModelItem> ActionList buildActions(String actionGroup, T modelItem)
+	public static <T extends ModelItem> ActionList buildActions( String actionGroup, T modelItem )
 	{
 		DefaultActionList actions = new DefaultActionList();
 
-		SoapUIActionGroup<T> group = SoapUI.getActionRegistry().getActionGroup(actionGroup);
-		if (group != null)
+		SoapUIActionGroup<T> group = SoapUI.getActionRegistry().getActionGroup( actionGroup );
+		if( group != null )
 		{
-			addActions(modelItem, actions, group);
+			addActions( modelItem, actions, group );
 		}
 
 		return actions;
@@ -102,49 +102,49 @@ public class ActionListBuilder
 	 * specified modelItem
 	 */
 
-	@SuppressWarnings("unchecked")
-	protected static <T extends ModelItem> void addActions(T modelItem, ActionList actions,
-			SoapUIActionGroup<T> actionGroup)
+	@SuppressWarnings( "unchecked" )
+	protected static <T extends ModelItem> void addActions( T modelItem, ActionList actions,
+			SoapUIActionGroup<T> actionGroup )
 	{
 		boolean prevWasSeparator = false;
-		for (SoapUIActionMapping<? extends ModelItem> mapping : actionGroup.getActionMappings(modelItem))
+		for( SoapUIActionMapping<? extends ModelItem> mapping : actionGroup.getActionMappings( modelItem ) )
 		{
-			if (mapping == null)
+			if( mapping == null )
 				continue;
 
-			SoapUIActionMapping<T> actionMapping = (com.eviware.soapui.support.action.SoapUIActionMapping<T>) mapping;
-			SoapUIAction<T> action = (SoapUIAction<T>) mapping.getAction();
+			SoapUIActionMapping<T> actionMapping = ( com.eviware.soapui.support.action.SoapUIActionMapping<T> )mapping;
+			SoapUIAction<T> action = ( SoapUIAction<T> )mapping.getAction();
 
-			if (action != null && !action.applies(modelItem))
+			if( action != null && !action.applies( modelItem ) )
 			{
-				System.out.println(action + " does not apply to " + modelItem);
+				System.out.println( action + " does not apply to " + modelItem );
 			}
-			else if (action instanceof SeperatorAction)
+			else if( action instanceof SeperatorAction )
 			{
-				if (!prevWasSeparator)
+				if( !prevWasSeparator )
 				{
-					actions.addAction(ActionSupport.SEPARATOR_ACTION);
+					actions.addAction( ActionSupport.SEPARATOR_ACTION );
 				}
 				prevWasSeparator = true;
 			}
-			else if (action instanceof SoapUIActionGroupAction)
+			else if( action instanceof SoapUIActionGroupAction )
 			{
-				DefaultActionList subActions = new DefaultActionList(mapping.getName());
-				SoapUIActionGroup<T> subGroup = ((SoapUIActionGroupAction<T>) action).getActionGroup();
-				addActions(modelItem, subActions, subGroup);
-				ActionSupport.ActionListAction actionListAction = new ActionSupport.ActionListAction(subActions);
-				actions.addAction(actionListAction);
-				actionListAction.setEnabled(mapping.isEnabled());
+				DefaultActionList subActions = new DefaultActionList( mapping.getName() );
+				SoapUIActionGroup<T> subGroup = ( ( SoapUIActionGroupAction<T> )action ).getActionGroup();
+				addActions( modelItem, subActions, subGroup );
+				ActionSupport.ActionListAction actionListAction = new ActionSupport.ActionListAction( subActions );
+				actions.addAction( actionListAction );
+				actionListAction.setEnabled( mapping.isEnabled() );
 				prevWasSeparator = false;
 			}
-			else if (action != null)
+			else if( action != null )
 			{
-				SwingActionDelegate<T> actionDelegate = new SwingActionDelegate<T>(actionMapping, modelItem);
-				actions.addAction(actionDelegate);
-				if (mapping.isDefault())
-					actions.setDefaultAction(actionDelegate);
+				SwingActionDelegate<T> actionDelegate = new SwingActionDelegate<T>( actionMapping, modelItem );
+				actions.addAction( actionDelegate );
+				if( mapping.isDefault() )
+					actions.setDefaultAction( actionDelegate );
 
-				actionDelegate.setEnabled(mapping.isEnabled());
+				actionDelegate.setEnabled( mapping.isEnabled() );
 				prevWasSeparator = false;
 			}
 		}
@@ -155,56 +155,56 @@ public class ActionListBuilder
 	 * specified modelItem
 	 */
 
-	@SuppressWarnings( { "unchecked" })
-	protected static void addMultiActions(ModelItem[] modelItems, ActionList actions, SoapUIActionGroup actionGroup)
+	@SuppressWarnings( { "unchecked" } )
+	protected static void addMultiActions( ModelItem[] modelItems, ActionList actions, SoapUIActionGroup actionGroup )
 	{
 		boolean prevWasSeparator = false;
-		SoapUIActionMappingList actionMappings = actionGroup.getActionMappings(null);
-		for (int c = 0; c < actionMappings.size(); c++)
+		SoapUIActionMappingList actionMappings = actionGroup.getActionMappings( null );
+		for( int c = 0; c < actionMappings.size(); c++ )
 		{
-			SoapUIActionMapping mapping = (SoapUIActionMapping) actionMappings.get(c);
-			if (mapping == null)
+			SoapUIActionMapping mapping = ( SoapUIActionMapping )actionMappings.get( c );
+			if( mapping == null )
 				continue;
 
 			SoapUIAction action = mapping.getAction();
 
-			if (action instanceof SeperatorAction)
+			if( action instanceof SeperatorAction )
 			{
-				if (!prevWasSeparator)
+				if( !prevWasSeparator )
 				{
-					actions.addAction(ActionSupport.SEPARATOR_ACTION);
+					actions.addAction( ActionSupport.SEPARATOR_ACTION );
 				}
 				prevWasSeparator = true;
 			}
-			else if (action instanceof SoapUIActionGroupAction)
+			else if( action instanceof SoapUIActionGroupAction )
 			{
-				DefaultActionList subActions = new DefaultActionList(mapping.getName());
-				SoapUIActionGroup subGroup = ((SoapUIActionGroupAction) action).getActionGroup();
-				addMultiActions(modelItems, subActions, subGroup);
-				ActionSupport.ActionListAction actionListAction = new ActionSupport.ActionListAction(subActions);
-				actions.addAction(actionListAction);
-				actionListAction.setEnabled(mapping.isEnabled());
+				DefaultActionList subActions = new DefaultActionList( mapping.getName() );
+				SoapUIActionGroup subGroup = ( ( SoapUIActionGroupAction )action ).getActionGroup();
+				addMultiActions( modelItems, subActions, subGroup );
+				ActionSupport.ActionListAction actionListAction = new ActionSupport.ActionListAction( subActions );
+				actions.addAction( actionListAction );
+				actionListAction.setEnabled( mapping.isEnabled() );
 				prevWasSeparator = false;
 			}
-			else if (action instanceof SoapUIMultiAction)
+			else if( action instanceof SoapUIMultiAction )
 			{
 				List<ModelItem> targets = new ArrayList<ModelItem>();
-				for (ModelItem target : modelItems)
+				for( ModelItem target : modelItems )
 				{
-					if (action.applies(target))
+					if( action.applies( target ) )
 					{
-						targets.add(target);
+						targets.add( target );
 					}
 				}
 
-				if (targets.size() > 0)
+				if( targets.size() > 0 )
 				{
-					SwingMultiActionDelegate actionDelegate = new SwingMultiActionDelegate(mapping, modelItems);
-					actions.addAction(actionDelegate);
-					if (mapping.isDefault())
-						actions.setDefaultAction(actionDelegate);
+					SwingMultiActionDelegate actionDelegate = new SwingMultiActionDelegate( mapping, modelItems );
+					actions.addAction( actionDelegate );
+					if( mapping.isDefault() )
+						actions.setDefaultAction( actionDelegate );
 
-					actionDelegate.setEnabled(mapping.isEnabled());
+					actionDelegate.setEnabled( mapping.isEnabled() );
 					prevWasSeparator = false;
 				}
 			}

@@ -52,11 +52,10 @@ public class SwitchDesktopPanelAction extends AbstractAction
 			desktopPanelsList.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
 
 			dialog = new JDialog( UISupport.getMainFrame(), "Switch Window", false );
-			dialog.getContentPane().add(
-						UISupport.buildDescription( null, "Select the window to switch to below", null ),
-						BorderLayout.NORTH );
+			dialog.getContentPane().add( UISupport.buildDescription( null, "Select the window to switch to below", null ),
+					BorderLayout.NORTH );
 			dialog.getContentPane().add( desktopPanelsList, BorderLayout.CENTER );
-			
+
 			UISupport.initDialogActions( null, dialog );
 			dialog.addWindowListener( new WindowAdapter()
 			{
@@ -68,14 +67,16 @@ public class SwitchDesktopPanelAction extends AbstractAction
 
 				private void initOnOpen()
 				{
-					SwingUtilities.invokeLater( new Runnable() {
+					SwingUtilities.invokeLater( new Runnable()
+					{
 
 						public void run()
 						{
 							desktopPanelsList.getDesktopPanelsList().requestFocus();
 							if( desktopPanelsList.getDesktopPanels().size() > 0 )
 								desktopPanelsList.getDesktopPanelsList().setSelectedIndex( 0 );
-						}} );
+						}
+					} );
 				}
 
 				@Override
@@ -107,7 +108,7 @@ public class SwitchDesktopPanelAction extends AbstractAction
 				{
 					if( e.getKeyChar() == '\n' )
 					{
-						DesktopPanel dp = ( DesktopPanel ) desktopPanelsList.getDesktopPanelsList().getSelectedValue();
+						DesktopPanel dp = ( DesktopPanel )desktopPanelsList.getDesktopPanelsList().getSelectedValue();
 						if( dp != null )
 						{
 							UISupport.showDesktopPanel( dp );
@@ -116,25 +117,27 @@ public class SwitchDesktopPanelAction extends AbstractAction
 					}
 				}
 			} );
-			
-			desktopPanelsList.getDesktopPanelsList().addMouseListener( new MouseAdapter() {
+
+			desktopPanelsList.getDesktopPanelsList().addMouseListener( new MouseAdapter()
+			{
 
 				@Override
 				public void mouseClicked( MouseEvent e )
 				{
 					if( e.getClickCount() > 1 )
 					{
-						DesktopPanel dp = ( DesktopPanel ) desktopPanelsList.getDesktopPanelsList().getSelectedValue();
+						DesktopPanel dp = ( DesktopPanel )desktopPanelsList.getDesktopPanelsList().getSelectedValue();
 						if( dp != null )
 						{
 							UISupport.showDesktopPanel( dp );
 							dialog.setVisible( false );
 						}
 					}
-				}} );
+				}
+			} );
 		}
-		
-		dialog.setSize( new Dimension( 300, 120 + desktopPanelsList.getItemsCount()*20 ) );
+
+		dialog.setSize( new Dimension( 300, 120 + desktopPanelsList.getItemsCount() * 20 ) );
 
 		UISupport.showDialog( dialog );
 	}

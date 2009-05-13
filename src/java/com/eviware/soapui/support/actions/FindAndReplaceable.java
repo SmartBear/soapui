@@ -21,18 +21,18 @@ package com.eviware.soapui.support.actions;
 public interface FindAndReplaceable
 {
 	public boolean isEditable();
-	
+
 	public int getCaretPosition();
-	
+
 	public String getText();
-	
+
 	public void select( int start, int end );
-	
+
 	public int getSelectionStart();
-	
+
 	public int getSelectionEnd();
-	
-	public void setSelectedText( String txt  );
+
+	public void setSelectedText( String txt );
 
 	public String getSelectedText();
 }

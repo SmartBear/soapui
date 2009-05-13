@@ -36,14 +36,15 @@ public class CaptureInputStream extends FilterInputStream
 	public int read( byte[] b ) throws IOException
 	{
 		int i = super.read( b );
-//		capture.write( b );
+		// capture.write( b );
 		return i;
 	}
-	
+
 	public int read( byte[] b, int off, int len ) throws IOException
 	{
 		int i = super.read( b, off, len );
-		if( i > 0 ) {
+		if( i > 0 )
+		{
 			capture.write( b, off, i );
 		}
 		return i;

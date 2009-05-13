@@ -23,21 +23,26 @@ import java.lang.annotation.Target;
  * @author ole.matzura
  */
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Retention( RetentionPolicy.RUNTIME )
+@Target( ElementType.FIELD )
 public @interface AField
 {
-   public enum AFieldType
+	public enum AFieldType
 	{
-       BOOLEAN, STRING, FILE, FOLDER, INT, ENUMERATION, PASSWORD, FILELIST, RADIOGROUP, STRINGAREA,
-      MULTILIST, STRINGLIST, TABLE, ACTION, COMPONENT, SEPARATOR 
+		BOOLEAN, STRING, FILE, FOLDER, INT, ENUMERATION, PASSWORD, FILELIST, RADIOGROUP, STRINGAREA, MULTILIST, STRINGLIST, TABLE, ACTION, COMPONENT, SEPARATOR
 	}
-   
+
 	public String name() default "";
-   public String description();
-   public AFieldType type() default AFieldType.STRING;
-   public String group() default "";
-   public String [] values() default "";
+
+	public String description();
+
+	public AFieldType type() default AFieldType.STRING;
+
+	public String group() default "";
+
+	public String[] values() default "";
+
 	public String defaultValue() default "";
+
 	boolean enabled() default true;
 }

@@ -30,54 +30,55 @@ import com.eviware.soapui.support.StringUtils;
 
 public class SoapUIEasySSLProtocolSocketFactory extends EasySSLProtocolSocketFactory
 {
-	private Map<String,EasySSLProtocolSocketFactory> factoryMap = new HashMap<String, EasySSLProtocolSocketFactory>();
-	
+	private Map<String, EasySSLProtocolSocketFactory> factoryMap = new HashMap<String, EasySSLProtocolSocketFactory>();
+
 	public SoapUIEasySSLProtocolSocketFactory() throws GeneralSecurityException, IOException
 	{
 		super();
 	}
 
 	@Override
-	public Socket createSocket( String host, int port, InetAddress localAddress, int localPort, HttpConnectionParams params ) throws IOException
+	public Socket createSocket( String host, int port, InetAddress localAddress, int localPort,
+			HttpConnectionParams params ) throws IOException
 	{
-		String sslConfig = ( String ) params.getParameter( SoapUIHostConfiguration.SOAPUI_SSL_CONFIG );
+		String sslConfig = ( String )params.getParameter( SoapUIHostConfiguration.SOAPUI_SSL_CONFIG );
 
-		if( StringUtils.isNullOrEmpty( sslConfig ))
+		if( StringUtils.isNullOrEmpty( sslConfig ) )
 		{
-			return enableSocket((SSLSocket) super.createSocket( host, port, localAddress, localPort, params ));
+			return enableSocket( ( SSLSocket )super.createSocket( host, port, localAddress, localPort, params ) );
 		}
-		
+
 		EasySSLProtocolSocketFactory factory = factoryMap.get( sslConfig );
 		if( factory != null )
 		{
-			return enableSocket( (SSLSocket) factory.createSocket( host, port, localAddress, localPort, params ));
+			return enableSocket( ( SSLSocket )factory.createSocket( host, port, localAddress, localPort, params ) );
 		}
 		try
 		{
 			// try to create new factory for specified config
 			factory = new EasySSLProtocolSocketFactory();
-			
+
 			int ix = sslConfig.lastIndexOf( ' ' );
 			String keyStore = sslConfig.substring( 0, ix );
-			String pwd = sslConfig.substring( ix+1 );
-			
+			String pwd = sslConfig.substring( ix + 1 );
+
 			factory.setKeyMaterial( new KeyMaterial( keyStore, pwd.toCharArray() ) );
 			factoryMap.put( sslConfig, factory );
-			
-			return enableSocket( (SSLSocket) factory.createSocket( host, port, localAddress, localPort, params ));
+
+			return enableSocket( ( SSLSocket )factory.createSocket( host, port, localAddress, localPort, params ) );
 		}
 		catch( Exception gse )
 		{
 			SoapUI.logError( gse );
-			return enableSocket( (SSLSocket) super.createSocket( host, port, localAddress, localPort, params ));
+			return enableSocket( ( SSLSocket )super.createSocket( host, port, localAddress, localPort, params ) );
 		}
 	}
 
-	private Socket enableSocket(SSLSocket socket)
+	private Socket enableSocket( SSLSocket socket )
 	{
 		socket.setEnabledProtocols( socket.getSupportedProtocols() );
-		socket.setEnabledCipherSuites( socket.getSupportedCipherSuites());
-		
+		socket.setEnabledCipherSuites( socket.getSupportedCipherSuites() );
+
 		return socket;
 	}
 }

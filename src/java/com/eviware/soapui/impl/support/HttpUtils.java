@@ -14,7 +14,7 @@ package com.eviware.soapui.impl.support;
 
 public class HttpUtils
 {
-	public static boolean isErrorStatus(int statusCode)
+	public static boolean isErrorStatus( int statusCode )
 	{
 		return statusCode >= 400;
 	}

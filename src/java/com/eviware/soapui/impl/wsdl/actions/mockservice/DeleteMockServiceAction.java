@@ -27,22 +27,23 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 public class DeleteMockServiceAction extends AbstractSoapUIAction<WsdlMockService>
 {
 	public DeleteMockServiceAction()
-   {
-      super( "Remove", "Removes this MockService from the MockService" );
-   }
-	
-   public void perform( WsdlMockService mockService, Object param )
 	{
-   	if( SoapUI.getMockEngine().hasRunningMock( mockService ))
-   	{
-   		UISupport.showErrorMessage( "Cannot remove MockService while mocks are running" );
-   		return;
-   	}
-   	
-      if( UISupport.confirm( "Remove MockService [" + mockService.getName() + "] from MockService", "Remove MockService" ))
-      {
-      	((WsdlProject)mockService.getProject()).removeMockService( mockService );
-      }
-   }
+		super( "Remove", "Removes this MockService from the MockService" );
+	}
+
+	public void perform( WsdlMockService mockService, Object param )
+	{
+		if( SoapUI.getMockEngine().hasRunningMock( mockService ) )
+		{
+			UISupport.showErrorMessage( "Cannot remove MockService while mocks are running" );
+			return;
+		}
+
+		if( UISupport.confirm( "Remove MockService [" + mockService.getName() + "] from MockService",
+				"Remove MockService" ) )
+		{
+			( ( WsdlProject )mockService.getProject() ).removeMockService( mockService );
+		}
+	}
 
 }

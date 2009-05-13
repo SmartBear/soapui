@@ -22,7 +22,7 @@ import org.apache.xmlbeans.XmlObject;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 
 /**
- * Wrapper for WSDL parts 
+ * Wrapper for WSDL parts
  * 
  * @author ole.matzura
  */
@@ -35,7 +35,8 @@ public class MessageXmlPart
 	private final BindingOperation bindingOperation;
 	private final boolean isRequest;
 
-	public MessageXmlPart(XmlObject sourceXmlObject, SchemaType type, Part part, BindingOperation bindingOperation, boolean isRequest)
+	public MessageXmlPart( XmlObject sourceXmlObject, SchemaType type, Part part, BindingOperation bindingOperation,
+			boolean isRequest )
 	{
 		this.sourceXmlObject = sourceXmlObject;
 		this.part = part;
@@ -56,8 +57,8 @@ public class MessageXmlPart
 
 	public boolean isAttachmentPart()
 	{
-		return isRequest ? WsdlUtils.isAttachmentInputPart( part, bindingOperation ) : 
-			WsdlUtils.isAttachmentOutputPart( part, bindingOperation );
+		return isRequest ? WsdlUtils.isAttachmentInputPart( part, bindingOperation ) : WsdlUtils.isAttachmentOutputPart(
+				part, bindingOperation );
 	}
 
 	public Part getPart()

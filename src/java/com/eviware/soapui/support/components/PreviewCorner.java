@@ -34,8 +34,8 @@ import com.eviware.soapui.support.UISupport;
 
 /**
  * This is a button which is designed to be the corner component of a
- * <code>JScrollPane</code>. It triggers a popup menu which holds a scaled
- * image of the component contained inside the <code>JScrollPane</code>.
+ * <code>JScrollPane</code>. It triggers a popup menu which holds a scaled image
+ * of the component contained inside the <code>JScrollPane</code>.
  */
 
 public class PreviewCorner extends JButton implements ActionListener
@@ -49,16 +49,15 @@ public class PreviewCorner extends JButton implements ActionListener
 	 * @param zoomIcon
 	 *           the icon to use for the button
 	 * @param doCloseAfterClick
-	 *           When <code>true</code> the preview popup menu is closed on
-	 *           mouse click.
+	 *           When <code>true</code> the preview popup menu is closed on mouse
+	 *           click.
 	 * @param corner
 	 *           Supposed to be one of the four corners of a
 	 *           <code>JScrollPane</code>, like
 	 *           <code>JScrollPane.LOWER_RIGHT_CORNER</code> for example, which
 	 *           should match the position of the corner component of the scroll
 	 *           pane. Note: If this parameter is not set correctly,
-	 *           <code>JScrollPane.UPPER_LEFT_CORNER</code> will be used
-	 *           instead.
+	 *           <code>JScrollPane.UPPER_LEFT_CORNER</code> will be used instead.
 	 */
 
 	public PreviewCorner( JScrollPane scrollPane, ImageIcon zoomIcon, boolean doCloseAfterClick, String corner )
@@ -102,7 +101,7 @@ class PreviewPopup extends JPopupMenu implements MouseListener, MouseMotionListe
 	private JLabel _zoomWindow; // the JLabel containing the scaled image
 
 	private JPanel _cursorLabel; // the JLabel mimicking the fake rectangle
-											// cursor
+	// cursor
 
 	// This component will hold both JLabels _zoomWindow and _cursorLabel,
 	// the latter on top of the other.
@@ -155,7 +154,7 @@ class PreviewPopup extends JPopupMenu implements MouseListener, MouseMotionListe
 
 		_layeredPane.removeMouseListener( this );
 		_layeredPane.removeMouseMotionListener( this );
-		
+
 		_scrollPane = null;
 		_layeredPane = null;
 		_viewPort = null;
@@ -177,7 +176,7 @@ class PreviewPopup extends JPopupMenu implements MouseListener, MouseMotionListe
 			return;
 
 		float scaleFactor = 1.1f; // _viewPort.getComponent( 0 ).getHeight() /
-											// _scrollPane.getHeight() * 2;
+		// _scrollPane.getHeight() * 2;
 
 		// if (_viewPort.getWidth() < (_viewPort.getHeight() * scaleFactor))
 		// _ratio =( int ) ( _viewPort.getComponent(0).getWidth() /
@@ -186,22 +185,21 @@ class PreviewPopup extends JPopupMenu implements MouseListener, MouseMotionListe
 		// else
 		// _ratio = ( int ) (( _viewPort.getComponent(0).getHeight() /
 		// (_viewPort.getHeight()) / scaleFactor ));
-		_ratio = ( ( ( float ) _viewPort.getComponent( 0 ).getHeight()
-					/ ( ( float ) _viewPort.getHeight() ) / scaleFactor ) );
+		_ratio = ( ( ( float )_viewPort.getComponent( 0 ).getHeight() / ( ( float )_viewPort.getHeight() ) / scaleFactor ) );
 
 		if( _ratio < 2 )
 			_ratio = 2;
 
 		// System.out.println( "ratio = " + _ratio );
 
-		int zoomWindowImageWidth = ( int ) ( _viewPort.getComponent( 0 ).getWidth() / _ratio );
+		int zoomWindowImageWidth = ( int )( _viewPort.getComponent( 0 ).getWidth() / _ratio );
 		if( zoomWindowImageWidth < 10 )
 		{
 			UISupport.showInfoMessage( "Viewport too large for readable image, use scrollbar instead" );
 			return;
 		}
 
-		int zoomWindowImageHeight = ( int ) ( _viewPort.getComponent( 0 ).getHeight() / _ratio );
+		int zoomWindowImageHeight = ( int )( _viewPort.getComponent( 0 ).getHeight() / _ratio );
 
 		// System.out.println( "ratio = " + _ratio + ", zoomWindowImageWidth = " +
 		// zoomWindowImageWidth +
@@ -219,7 +217,7 @@ class PreviewPopup extends JPopupMenu implements MouseListener, MouseMotionListe
 		 */
 		Image capture = captureComponentViewAsBufferedImage( _viewPort.getComponent( 0 ) );
 		Image componentImage = new BufferedImage( zoomWindowImageWidth, zoomWindowImageHeight, BufferedImage.TYPE_INT_RGB );
-		Graphics2D g2d = ( Graphics2D ) componentImage.getGraphics();
+		Graphics2D g2d = ( Graphics2D )componentImage.getGraphics();
 		/* if you want smoother scaling */
 		if( zoomWindowImageWidth > 15 )
 			g2d.setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR );
@@ -236,9 +234,9 @@ class PreviewPopup extends JPopupMenu implements MouseListener, MouseMotionListe
 
 		_zoomWindow.setBounds( 0, 0, _iconWidth, _iconHeight );
 
-		int cursorWidth = ( int ) ( _viewPort.getWidth() / _ratio );
+		int cursorWidth = ( int )( _viewPort.getWidth() / _ratio );
 
-		int cursorHeight = ( int ) ( _viewPort.getHeight() / _ratio );
+		int cursorHeight = ( int )( _viewPort.getHeight() / _ratio );
 
 		_cursorLabel.setBounds( 0, 0, cursorWidth, cursorHeight );
 
@@ -261,11 +259,11 @@ class PreviewPopup extends JPopupMenu implements MouseListener, MouseMotionListe
 
 		if( dy < 0 && Math.abs( dy ) > _viewPort.getHeight() )
 		{
-			dy = -_viewPort.getHeight()-10;
+			dy = -_viewPort.getHeight() - 10;
 		}
-		
-//		System.out.println( "Showing at " + dx + ", " + dy );
-		
+
+		// System.out.println( "Showing at " + dx + ", " + dy );
+
 		// Shows the popup menu at the right place.
 		this.show( c, dx, dy );
 
@@ -279,10 +277,10 @@ class PreviewPopup extends JPopupMenu implements MouseListener, MouseMotionListe
 			@Override
 			protected void paintComponent( Graphics g )
 			{
-				Composite composite = ( ( Graphics2D ) g ).getComposite();
-				( ( Graphics2D ) g ).setComposite( AlphaComposite.getInstance( AlphaComposite.SRC_OVER, 0.2f ) );
+				Composite composite = ( ( Graphics2D )g ).getComposite();
+				( ( Graphics2D )g ).setComposite( AlphaComposite.getInstance( AlphaComposite.SRC_OVER, 0.2f ) );
 				super.paintComponent( g );
-				( ( Graphics2D ) g ).setComposite( composite );
+				( ( Graphics2D )g ).setComposite( composite );
 			}
 
 		};
@@ -358,14 +356,14 @@ class PreviewPopup extends JPopupMenu implements MouseListener, MouseMotionListe
 	private void scrollViewPort()
 	{
 		Point cursorLocation = _cursorLabel.getLocation();
-		int dx = ( int ) Math.max( cursorLocation.getX(), 0 );
-		int dy = ( int ) Math.max( cursorLocation.getY(), 0 );
+		int dx = ( int )Math.max( cursorLocation.getX(), 0 );
+		int dy = ( int )Math.max( cursorLocation.getY(), 0 );
 
-		dx = ( int ) ( dx * _ratio );
-		dy = ( int ) ( dy * _ratio );
+		dx = ( int )( dx * _ratio );
+		dy = ( int )( dy * _ratio );
 
-		( ( JComponent ) _viewPort.getComponent( 0 ) ).scrollRectToVisible( new Rectangle( dx, dy, _viewPort.getWidth(),
-					_viewPort.getHeight() ) );
+		( ( JComponent )_viewPort.getComponent( 0 ) ).scrollRectToVisible( new Rectangle( dx, dy, _viewPort.getWidth(),
+				_viewPort.getHeight() ) );
 	}
 
 	/**

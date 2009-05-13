@@ -22,8 +22,8 @@ import com.eviware.soapui.support.action.support.DefaultSoapUIActionGroup;
 import com.eviware.soapui.support.action.support.SoapUIActionMappingList;
 
 /**
- * SoapUIActionGroup for WsdlProjects, returns different actions depending on if the project is
- * disabled or not.
+ * SoapUIActionGroup for WsdlProjects, returns different actions depending on if
+ * the project is disabled or not.
  * 
  * @author ole.matzura
  */
@@ -34,18 +34,18 @@ public class WorkspaceImplSoapUIActionGroup extends DefaultSoapUIActionGroup<Wor
 	{
 		super( id, name );
 	}
-	
+
 	public SoapUIActionMappingList<WorkspaceImpl> getActionMappings( WorkspaceImpl workspace )
 	{
 		SoapUIActionMappingList<WorkspaceImpl> mappings = super.getActionMappings( workspace );
-		
+
 		mappings.getMapping( SaveAllProjectsAction.SOAPUI_ACTION_ID ).setEnabled( workspace.getProjectCount() > 0 );
 		SoapUIActionMapping<WorkspaceImpl> openMapping = mappings.getMapping( OpenClosedProjectsAction.SOAPUI_ACTION_ID );
 		openMapping.setEnabled( false );
 		SoapUIActionMapping<WorkspaceImpl> closeMapping = mappings.getMapping( CloseOpenProjectsAction.SOAPUI_ACTION_ID );
 		closeMapping.setEnabled( false );
-		
-		for( Project project : workspace.getProjectList())
+
+		for( Project project : workspace.getProjectList() )
 		{
 			if( project.isOpen() )
 			{
@@ -58,7 +58,7 @@ public class WorkspaceImplSoapUIActionGroup extends DefaultSoapUIActionGroup<Wor
 				openMapping.setEnabled( true );
 				if( closeMapping.isEnabled() )
 					break;
-			}	
+			}
 		}
 
 		return mappings;

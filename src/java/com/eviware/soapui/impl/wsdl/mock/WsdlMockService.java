@@ -12,6 +12,19 @@
 
 package com.eviware.soapui.impl.wsdl.mock;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.ImageIcon;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MockOperationConfig;
 import com.eviware.soapui.config.MockServiceConfig;
@@ -24,20 +37,17 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.BeanPathPropertySupport;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.mock.*;
+import com.eviware.soapui.model.mock.MockOperation;
+import com.eviware.soapui.model.mock.MockResult;
+import com.eviware.soapui.model.mock.MockRunListener;
+import com.eviware.soapui.model.mock.MockRunner;
+import com.eviware.soapui.model.mock.MockService;
+import com.eviware.soapui.model.mock.MockServiceListener;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.swing.*;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.*;
 
 /**
  * A MockService for simulation WsdlInterfaces and their operations
@@ -67,59 +77,59 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	private SoapUIScriptEngine afterRequestScriptEngine;
 	private WsdlMockOperation faultMockOperation;
 
-	public WsdlMockService(Project project, MockServiceConfig config)
+	public WsdlMockService( Project project, MockServiceConfig config )
 	{
-		super(config, project, "/mockService.gif");
+		super( config, project, "/mockService.gif" );
 
 		List<MockOperationConfig> testStepConfigs = config.getMockOperationList();
-		for (MockOperationConfig tsc : testStepConfigs)
+		for( MockOperationConfig tsc : testStepConfigs )
 		{
-			WsdlMockOperation testStep = new WsdlMockOperation(this, tsc);
-			mockOperations.add(testStep);
+			WsdlMockOperation testStep = new WsdlMockOperation( this, tsc );
+			mockOperations.add( testStep );
 		}
 
-		if (!config.isSetPort() || config.getPort() < 1)
-			config.setPort(8080);
+		if( !config.isSetPort() || config.getPort() < 1 )
+			config.setPort( 8080 );
 
-		if (!config.isSetPath())
-			config.setPath("/");
-		
-		if( !getSettings().isSet( REQUIRE_SOAP_ACTION ))
+		if( !config.isSetPath() )
+			config.setPath( "/" );
+
+		if( !getSettings().isSet( REQUIRE_SOAP_ACTION ) )
 			setRequireSoapAction( true );
 
 		try
 		{
-			if (!config.isSetHost() || !StringUtils.hasContent(config.getHost()))
-				config.setHost(InetAddress.getLocalHost().getHostName());
+			if( !config.isSetHost() || !StringUtils.hasContent( config.getHost() ) )
+				config.setHost( InetAddress.getLocalHost().getHostName() );
 		}
-		catch (UnknownHostException e)
+		catch( UnknownHostException e )
 		{
-			SoapUI.logError(e);
+			SoapUI.logError( e );
 		}
 
 		iconAnimator = new MockServiceIconAnimator();
-		addMockRunListener(iconAnimator);
+		addMockRunListener( iconAnimator );
 
-		for (MockRunListener listener : SoapUI.getListenerRegistry().getListeners(MockRunListener.class))
+		for( MockRunListener listener : SoapUI.getListenerRegistry().getListeners( MockRunListener.class ) )
 		{
-			addMockRunListener(listener);
+			addMockRunListener( listener );
 		}
 
-		if (!getConfig().isSetProperties())
+		if( !getConfig().isSetProperties() )
 			getConfig().addNewProperties();
 
-		setPropertiesConfig(getConfig().getProperties());
-		docrootProperty = new BeanPathPropertySupport(this, "docroot");
+		setPropertiesConfig( getConfig().getProperties() );
+		docrootProperty = new BeanPathPropertySupport( this, "docroot" );
 
-		if (getConfig().isSetFaultMockOperation())
+		if( getConfig().isSetFaultMockOperation() )
 		{
-			faultMockOperation = getMockOperationByName(getConfig().getFaultMockOperation());
+			faultMockOperation = getMockOperationByName( getConfig().getFaultMockOperation() );
 		}
 	}
 
-	public void addMockRunListener(MockRunListener listener)
+	public void addMockRunListener( MockRunListener listener )
 	{
-		mockRunListeners.add(listener);
+		mockRunListeners.add( listener );
 	}
 
 	public String getPath()
@@ -127,14 +137,14 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		return getConfig().getPath();
 	}
 
-	public WsdlMockOperation getMockOperationAt(int index)
+	public WsdlMockOperation getMockOperationAt( int index )
 	{
-		return mockOperations.get(index);
+		return mockOperations.get( index );
 	}
 
-	public WsdlMockOperation getMockOperationByName(String name)
+	public WsdlMockOperation getMockOperationByName( String name )
 	{
-		return (WsdlMockOperation) getWsdlModelItemByName(mockOperations, name);
+		return ( WsdlMockOperation )getWsdlModelItemByName( mockOperations, name );
 	}
 
 	public int getMockOperationCount()
@@ -144,7 +154,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 
 	public WsdlProject getProject()
 	{
-		return (WsdlProject) getParent();
+		return ( WsdlProject )getParent();
 	}
 
 	public int getPort()
@@ -157,9 +167,9 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		return getConfig().getHost();
 	}
 
-	public void setHost(String host)
+	public void setHost( String host )
 	{
-		getConfig().setHost(host);
+		getConfig().setHost( host );
 	}
 
 	public boolean getBindToHostOnly()
@@ -167,23 +177,23 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		return getConfig().getBindToHostOnly();
 	}
 
-	public void setBindToHostOnly(boolean bindToHostOnly)
+	public void setBindToHostOnly( boolean bindToHostOnly )
 	{
-		getConfig().setBindToHostOnly(bindToHostOnly);
+		getConfig().setBindToHostOnly( bindToHostOnly );
 	}
 
-	public void removeMockRunListener(MockRunListener listener)
+	public void removeMockRunListener( MockRunListener listener )
 	{
-		mockRunListeners.remove(listener);
+		mockRunListeners.remove( listener );
 	}
 
-	public WsdlMockRunner start(WsdlTestRunContext context) throws Exception
+	public WsdlMockRunner start( WsdlTestRunContext context ) throws Exception
 	{
 		String path = getPath();
-		if (path == null || path.trim().length() == 0 || path.trim().charAt(0) != '/')
-			throw new Exception("Invalid path; must start with '/'");
+		if( path == null || path.trim().length() == 0 || path.trim().charAt( 0 ) != '/' )
+			throw new Exception( "Invalid path; must start with '/'" );
 
-		mockRunner = new WsdlMockRunner(this, context);
+		mockRunner = new WsdlMockRunner( this, context );
 		return mockRunner;
 	}
 
@@ -192,47 +202,47 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		return mockRunner;
 	}
 
-	public WsdlMockOperation getMockOperation(Operation operation)
+	public WsdlMockOperation getMockOperation( Operation operation )
 	{
-		for (int c = 0; c < getMockOperationCount(); c++)
+		for( int c = 0; c < getMockOperationCount(); c++ )
 		{
-			WsdlMockOperation mockOperation = mockOperations.get(c);
-			if (mockOperation.getOperation() == operation)
+			WsdlMockOperation mockOperation = mockOperations.get( c );
+			if( mockOperation.getOperation() == operation )
 				return mockOperation;
 		}
 
 		return null;
 	}
 
-	public WsdlMockOperation addNewMockOperation(WsdlOperation operation)
+	public WsdlMockOperation addNewMockOperation( WsdlOperation operation )
 	{
-		if (getMockOperation(operation) != null)
+		if( getMockOperation( operation ) != null )
 			return null;
 
 		MockOperationConfig config = getConfig().addNewMockOperation();
-		config.setName(operation.getName());
-		WsdlMockOperation mockOperation = new WsdlMockOperation(this, config, operation);
+		config.setName( operation.getName() );
+		WsdlMockOperation mockOperation = new WsdlMockOperation( this, config, operation );
 
-		mockOperations.add(mockOperation);
-		fireMockOperationAdded(mockOperation);
+		mockOperations.add( mockOperation );
+		fireMockOperationAdded( mockOperation );
 
 		return mockOperation;
 	}
 
-	public void setPort(int port)
+	public void setPort( int port )
 	{
 		String oldEndpoint = getLocalEndpoint();
 
 		int oldPort = getPort();
-		if (port != oldPort)
+		if( port != oldPort )
 		{
-			getConfig().setPort(port);
-			notifyPropertyChanged(PORT_PROPERTY, oldPort, port);
+			getConfig().setPort( port );
+			notifyPropertyChanged( PORT_PROPERTY, oldPort, port );
 
-			for (WsdlInterface iface : getMockedInterfaces())
+			for( WsdlInterface iface : getMockedInterfaces() )
 			{
-				if (Arrays.asList(iface.getEndpoints()).contains(oldEndpoint))
-					iface.changeEndpoint(oldEndpoint, getLocalEndpoint());
+				if( Arrays.asList( iface.getEndpoints() ).contains( oldEndpoint ) )
+					iface.changeEndpoint( oldEndpoint, getLocalEndpoint() );
 			}
 		}
 	}
@@ -241,14 +251,14 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	{
 		Set<WsdlInterface> result = new HashSet<WsdlInterface>();
 
-		for (WsdlMockOperation mockOperation : mockOperations)
+		for( WsdlMockOperation mockOperation : mockOperations )
 		{
 			WsdlOperation operation = mockOperation.getOperation();
-			if (operation != null)
-				result.add(operation.getInterface());
+			if( operation != null )
+				result.add( operation.getInterface() );
 		}
 
-		return result.toArray(new WsdlInterface[result.size()]);
+		return result.toArray( new WsdlInterface[result.size()] );
 	}
 
 	@Override
@@ -256,100 +266,100 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	{
 		super.release();
 
-		for (WsdlMockOperation operation : mockOperations)
+		for( WsdlMockOperation operation : mockOperations )
 			operation.release();
 
 		mockServiceListeners.clear();
 
-		if (startScriptEngine != null)
+		if( startScriptEngine != null )
 			startScriptEngine.release();
 
-		if (stopScriptEngine != null)
+		if( stopScriptEngine != null )
 			stopScriptEngine.release();
 	}
 
-	public void setPath(String path)
+	public void setPath( String path )
 	{
 		String oldEndpoint = getLocalEndpoint();
 
 		String oldPath = getPath();
-		if (!path.equals(oldPath))
+		if( !path.equals( oldPath ) )
 		{
-			getConfig().setPath(path);
-			notifyPropertyChanged(PATH_PROPERTY, oldPath, path);
+			getConfig().setPath( path );
+			notifyPropertyChanged( PATH_PROPERTY, oldPath, path );
 
-			for (WsdlInterface iface : getMockedInterfaces())
+			for( WsdlInterface iface : getMockedInterfaces() )
 			{
-				if (Arrays.asList(iface.getEndpoints()).contains(oldEndpoint))
-					iface.changeEndpoint(oldEndpoint, getLocalEndpoint());
+				if( Arrays.asList( iface.getEndpoints() ).contains( oldEndpoint ) )
+					iface.changeEndpoint( oldEndpoint, getLocalEndpoint() );
 			}
 		}
 	}
 
 	public MockRunListener[] getMockRunListeners()
 	{
-		return mockRunListeners.toArray(new MockRunListener[mockRunListeners.size()]);
+		return mockRunListeners.toArray( new MockRunListener[mockRunListeners.size()] );
 	}
 
-	public void removeMockOperation(WsdlMockOperation mockOperation)
+	public void removeMockOperation( WsdlMockOperation mockOperation )
 	{
-		int ix = mockOperations.indexOf(mockOperation);
-		if (ix == -1)
-			throw new RuntimeException("Unkonws MockOperation specified to removeMockOperation");
+		int ix = mockOperations.indexOf( mockOperation );
+		if( ix == -1 )
+			throw new RuntimeException( "Unkonws MockOperation specified to removeMockOperation" );
 
-		mockOperations.remove(ix);
-		fireMockOperationRemoved(mockOperation);
+		mockOperations.remove( ix );
+		fireMockOperationRemoved( mockOperation );
 		mockOperation.release();
-		getConfig().removeMockOperation(ix);
+		getConfig().removeMockOperation( ix );
 	}
 
-	public void addMockServiceListener(MockServiceListener listener)
+	public void addMockServiceListener( MockServiceListener listener )
 	{
-		mockServiceListeners.add(listener);
+		mockServiceListeners.add( listener );
 	}
 
-	public void removeMockServiceListener(MockServiceListener listener)
+	public void removeMockServiceListener( MockServiceListener listener )
 	{
-		mockServiceListeners.remove(listener);
+		mockServiceListeners.remove( listener );
 	}
 
-	protected void fireMockOperationAdded(WsdlMockOperation mockOperation)
+	protected void fireMockOperationAdded( WsdlMockOperation mockOperation )
 	{
-		MockServiceListener[] listeners = mockServiceListeners.toArray(new MockServiceListener[mockServiceListeners
-				.size()]);
-		for (MockServiceListener listener : listeners)
+		MockServiceListener[] listeners = mockServiceListeners.toArray( new MockServiceListener[mockServiceListeners
+				.size()] );
+		for( MockServiceListener listener : listeners )
 		{
-			listener.mockOperationAdded(mockOperation);
+			listener.mockOperationAdded( mockOperation );
 		}
 	}
 
-	protected void fireMockOperationRemoved(WsdlMockOperation mockOperation)
+	protected void fireMockOperationRemoved( WsdlMockOperation mockOperation )
 	{
-		MockServiceListener[] listeners = mockServiceListeners.toArray(new MockServiceListener[mockServiceListeners
-				.size()]);
-		for (MockServiceListener listener : listeners)
+		MockServiceListener[] listeners = mockServiceListeners.toArray( new MockServiceListener[mockServiceListeners
+				.size()] );
+		for( MockServiceListener listener : listeners )
 		{
-			listener.mockOperationRemoved(mockOperation);
+			listener.mockOperationRemoved( mockOperation );
 		}
 	}
 
-	protected void fireMockResponseAdded(WsdlMockResponse mockResponse)
+	protected void fireMockResponseAdded( WsdlMockResponse mockResponse )
 	{
-		MockServiceListener[] listeners = mockServiceListeners.toArray(new MockServiceListener[mockServiceListeners
-				.size()]);
-		for (MockServiceListener listener : listeners)
+		MockServiceListener[] listeners = mockServiceListeners.toArray( new MockServiceListener[mockServiceListeners
+				.size()] );
+		for( MockServiceListener listener : listeners )
 		{
-			listener.mockResponseAdded(mockResponse);
+			listener.mockResponseAdded( mockResponse );
 		}
 	}
 
-	protected void fireMockResponseRemoved(WsdlMockResponse mockResponse)
+	protected void fireMockResponseRemoved( WsdlMockResponse mockResponse )
 	{
-		MockServiceListener[] listeners = mockServiceListeners.toArray(new MockServiceListener[mockServiceListeners
-				.size()]);
-		for (MockServiceListener listener : listeners)
+		MockServiceListener[] listeners = mockServiceListeners.toArray( new MockServiceListener[mockServiceListeners
+				.size()] );
+		for( MockServiceListener listener : listeners )
 		{
-			listener.mockResponseRemoved(mockResponse);
+			listener.mockResponseRemoved( mockResponse );
 		}
 	}
 
@@ -364,19 +374,19 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		return faultMockOperation;
 	}
 
-	public void setFaultMockOperation(WsdlMockOperation mockOperation)
+	public void setFaultMockOperation( WsdlMockOperation mockOperation )
 	{
 		faultMockOperation = mockOperation;
-		if (faultMockOperation == null)
+		if( faultMockOperation == null )
 		{
-			if (getConfig().isSetFaultMockOperation())
+			if( getConfig().isSetFaultMockOperation() )
 			{
 				getConfig().unsetFaultMockOperation();
 			}
 		}
 		else
 		{
-			getConfig().setFaultMockOperation(faultMockOperation.getName());
+			getConfig().setFaultMockOperation( faultMockOperation.getName() );
 		}
 	}
 
@@ -384,24 +394,24 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	{
 		public MockServiceIconAnimator()
 		{
-			super(WsdlMockService.this, "/mockService.gif", "/mockService", 4, "gif");
+			super( WsdlMockService.this, "/mockService.gif", "/mockService", 4, "gif" );
 		}
 
-		public MockResult onMockRequest(MockRunner runner, HttpServletRequest request, HttpServletResponse response)
+		public MockResult onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
 		{
 			return null;
 		}
 
-		public void onMockResult(MockResult result)
+		public void onMockResult( MockResult result )
 		{
 		}
 
-		public void onMockRunnerStart(MockRunner mockRunner)
+		public void onMockRunnerStart( MockRunner mockRunner )
 		{
 			start();
 		}
 
-		public void onMockRunnerStop(MockRunner mockRunner)
+		public void onMockRunnerStop( MockRunner mockRunner )
 		{
 			stop();
 			WsdlMockService.this.mockRunner = null;
@@ -411,7 +421,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	public String getLocalEndpoint()
 	{
 		String host = getHost();
-		if (StringUtils.isNullOrEmpty(host))
+		if( StringUtils.isNullOrEmpty( host ) )
 			host = "127.0.0.1";
 
 		return "http://" + host + ":" + getPort() + getPath();
@@ -419,47 +429,47 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 
 	public boolean isRequireSoapVersion()
 	{
-		return getSettings().getBoolean(REQUIRE_SOAP_VERSION);
+		return getSettings().getBoolean( REQUIRE_SOAP_VERSION );
 	}
 
-	public void setRequireSoapVersion(boolean requireSoapVersion)
+	public void setRequireSoapVersion( boolean requireSoapVersion )
 	{
-		getSettings().setBoolean(REQUIRE_SOAP_VERSION, requireSoapVersion);
+		getSettings().setBoolean( REQUIRE_SOAP_VERSION, requireSoapVersion );
 	}
 
 	public boolean isRequireSoapAction()
 	{
-		return getSettings().getBoolean(REQUIRE_SOAP_ACTION);
+		return getSettings().getBoolean( REQUIRE_SOAP_ACTION );
 	}
 
-	public void setRequireSoapAction(boolean requireSoapAction)
+	public void setRequireSoapAction( boolean requireSoapAction )
 	{
-		getSettings().setBoolean(REQUIRE_SOAP_ACTION, requireSoapAction);
+		getSettings().setBoolean( REQUIRE_SOAP_ACTION, requireSoapAction );
 	}
 
 	public WsdlMockRunner start() throws Exception
 	{
-		return start(null);
+		return start( null );
 	}
 
-	public boolean hasMockOperation(Operation operation)
+	public boolean hasMockOperation( Operation operation )
 	{
-		return getMockOperation(operation) != null;
+		return getMockOperation( operation ) != null;
 	}
 
-	public void setStartScript(String script)
+	public void setStartScript( String script )
 	{
 		String oldScript = getStartScript();
 
-		if (!getConfig().isSetStartScript())
+		if( !getConfig().isSetStartScript() )
 			getConfig().addNewStartScript();
 
-		getConfig().getStartScript().setStringValue(script);
+		getConfig().getStartScript().setStringValue( script );
 
-		if (startScriptEngine != null)
-			startScriptEngine.setScript(script);
+		if( startScriptEngine != null )
+			startScriptEngine.setScript( script );
 
-		notifyPropertyChanged(START_SCRIPT_PROPERTY, oldScript, script);
+		notifyPropertyChanged( START_SCRIPT_PROPERTY, oldScript, script );
 	}
 
 	public String getStartScript()
@@ -467,18 +477,18 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		return getConfig().isSetStartScript() ? getConfig().getStartScript().getStringValue() : null;
 	}
 
-	public void setStopScript(String script)
+	public void setStopScript( String script )
 	{
 		String oldScript = getStopScript();
 
-		if (!getConfig().isSetStopScript())
+		if( !getConfig().isSetStopScript() )
 			getConfig().addNewStopScript();
 
-		getConfig().getStopScript().setStringValue(script);
-		if (stopScriptEngine != null)
-			stopScriptEngine.setScript(script);
+		getConfig().getStopScript().setStringValue( script );
+		if( stopScriptEngine != null )
+			stopScriptEngine.setScript( script );
 
-		notifyPropertyChanged(STOP_SCRIPT_PROPERTY, oldScript, script);
+		notifyPropertyChanged( STOP_SCRIPT_PROPERTY, oldScript, script );
 	}
 
 	public String getStopScript()
@@ -486,55 +496,55 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		return getConfig().isSetStopScript() ? getConfig().getStopScript().getStringValue() : null;
 	}
 
-	public Object runStartScript(WsdlMockRunContext runContext, WsdlMockRunner runner) throws Exception
+	public Object runStartScript( WsdlMockRunContext runContext, WsdlMockRunner runner ) throws Exception
 	{
 		String script = getStartScript();
-		if (StringUtils.isNullOrEmpty(script))
+		if( StringUtils.isNullOrEmpty( script ) )
 			return null;
 
-		if (startScriptEngine == null)
+		if( startScriptEngine == null )
 		{
-			startScriptEngine = SoapUIScriptEngineRegistry.create(SoapUIScriptEngineRegistry.GROOVY_ID, this);
-			startScriptEngine.setScript(script);
+			startScriptEngine = SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, this );
+			startScriptEngine.setScript( script );
 		}
 
-		startScriptEngine.setVariable("context", runContext);
-		startScriptEngine.setVariable("mockRunner", runner);
-		startScriptEngine.setVariable("log", SoapUI.ensureGroovyLog());
+		startScriptEngine.setVariable( "context", runContext );
+		startScriptEngine.setVariable( "mockRunner", runner );
+		startScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		return startScriptEngine.run();
 	}
 
-	public Object runStopScript(WsdlMockRunContext runContext, WsdlMockRunner runner) throws Exception
+	public Object runStopScript( WsdlMockRunContext runContext, WsdlMockRunner runner ) throws Exception
 	{
 		String script = getStopScript();
-		if (StringUtils.isNullOrEmpty(script))
+		if( StringUtils.isNullOrEmpty( script ) )
 			return null;
 
-		if (stopScriptEngine == null)
+		if( stopScriptEngine == null )
 		{
-			stopScriptEngine = SoapUIScriptEngineRegistry.create(SoapUIScriptEngineRegistry.GROOVY_ID, this);
-			stopScriptEngine.setScript(script);
+			stopScriptEngine = SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, this );
+			stopScriptEngine.setScript( script );
 		}
 
-		stopScriptEngine.setVariable("context", runContext);
-		stopScriptEngine.setVariable("mockRunner", runner);
-		stopScriptEngine.setVariable("log", SoapUI.ensureGroovyLog());
+		stopScriptEngine.setVariable( "context", runContext );
+		stopScriptEngine.setVariable( "mockRunner", runner );
+		stopScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		return stopScriptEngine.run();
 	}
 
-	public void setOnRequestScript(String script)
+	public void setOnRequestScript( String script )
 	{
 		String oldScript = getOnRequestScript();
 
-		if (!getConfig().isSetOnRequestScript())
+		if( !getConfig().isSetOnRequestScript() )
 			getConfig().addNewOnRequestScript();
 
-		getConfig().getOnRequestScript().setStringValue(script);
+		getConfig().getOnRequestScript().setStringValue( script );
 
-		if (onRequestScriptEngine != null)
-			onRequestScriptEngine.setScript(script);
+		if( onRequestScriptEngine != null )
+			onRequestScriptEngine.setScript( script );
 
-		notifyPropertyChanged("onRequestScript", oldScript, script);
+		notifyPropertyChanged( "onRequestScript", oldScript, script );
 	}
 
 	public String getOnRequestScript()
@@ -542,18 +552,18 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		return getConfig().isSetOnRequestScript() ? getConfig().getOnRequestScript().getStringValue() : null;
 	}
 
-	public void setAfterRequestScript(String script)
+	public void setAfterRequestScript( String script )
 	{
 		String oldScript = getAfterRequestScript();
 
-		if (!getConfig().isSetAfterRequestScript())
+		if( !getConfig().isSetAfterRequestScript() )
 			getConfig().addNewAfterRequestScript();
 
-		getConfig().getAfterRequestScript().setStringValue(script);
-		if (afterRequestScriptEngine != null)
-			afterRequestScriptEngine.setScript(script);
+		getConfig().getAfterRequestScript().setStringValue( script );
+		if( afterRequestScriptEngine != null )
+			afterRequestScriptEngine.setScript( script );
 
-		notifyPropertyChanged("afterRequestScript", oldScript, script);
+		notifyPropertyChanged( "afterRequestScript", oldScript, script );
 	}
 
 	public String getAfterRequestScript()
@@ -561,43 +571,43 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		return getConfig().isSetAfterRequestScript() ? getConfig().getAfterRequestScript().getStringValue() : null;
 	}
 
-	public Object runOnRequestScript(WsdlMockRunContext runContext, WsdlMockRunner runner, WsdlMockRequest mockRequest)
+	public Object runOnRequestScript( WsdlMockRunContext runContext, WsdlMockRunner runner, WsdlMockRequest mockRequest )
 			throws Exception
 	{
 		String script = getOnRequestScript();
-		if (StringUtils.isNullOrEmpty(script))
+		if( StringUtils.isNullOrEmpty( script ) )
 			return null;
 
-		if (onRequestScriptEngine == null)
+		if( onRequestScriptEngine == null )
 		{
-			onRequestScriptEngine = SoapUIScriptEngineRegistry.create(SoapUIScriptEngineRegistry.GROOVY_ID, this);
-			onRequestScriptEngine.setScript(script);
+			onRequestScriptEngine = SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, this );
+			onRequestScriptEngine.setScript( script );
 		}
 
-		onRequestScriptEngine.setVariable("context", runContext);
-		onRequestScriptEngine.setVariable("mockRequest", mockRequest);
-		onRequestScriptEngine.setVariable("mockRunner", runner);
-		onRequestScriptEngine.setVariable("log", SoapUI.ensureGroovyLog());
+		onRequestScriptEngine.setVariable( "context", runContext );
+		onRequestScriptEngine.setVariable( "mockRequest", mockRequest );
+		onRequestScriptEngine.setVariable( "mockRunner", runner );
+		onRequestScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		return onRequestScriptEngine.run();
 	}
 
-	public Object runAfterRequestScript(WsdlMockRunContext runContext, WsdlMockRunner runner, MockResult mockResult)
+	public Object runAfterRequestScript( WsdlMockRunContext runContext, WsdlMockRunner runner, MockResult mockResult )
 			throws Exception
 	{
 		String script = getAfterRequestScript();
-		if (StringUtils.isNullOrEmpty(script))
+		if( StringUtils.isNullOrEmpty( script ) )
 			return null;
 
-		if (afterRequestScriptEngine == null)
+		if( afterRequestScriptEngine == null )
 		{
-			afterRequestScriptEngine = SoapUIScriptEngineRegistry.create(SoapUIScriptEngineRegistry.GROOVY_ID, this);
-			afterRequestScriptEngine.setScript(script);
+			afterRequestScriptEngine = SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, this );
+			afterRequestScriptEngine.setScript( script );
 		}
 
-		afterRequestScriptEngine.setVariable("context", runContext);
-		afterRequestScriptEngine.setVariable("mockResult", mockResult);
-		afterRequestScriptEngine.setVariable("mockRunner", runner);
-		afterRequestScriptEngine.setVariable("log", SoapUI.ensureGroovyLog());
+		afterRequestScriptEngine.setVariable( "context", runContext );
+		afterRequestScriptEngine.setVariable( "mockResult", mockResult );
+		afterRequestScriptEngine.setVariable( "mockRunner", runner );
+		afterRequestScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		return afterRequestScriptEngine.run();
 	}
 
@@ -608,7 +618,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 
 	public List<MockOperation> getMockOperationList()
 	{
-		return Collections.unmodifiableList(new ArrayList<MockOperation>(mockOperations));
+		return Collections.unmodifiableList( new ArrayList<MockOperation>( mockOperations ) );
 	}
 
 	public String getIncomingWss()
@@ -616,11 +626,11 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		return getConfig().getIncomingWss();
 	}
 
-	public void setIncomingWss(String incomingWss)
+	public void setIncomingWss( String incomingWss )
 	{
 		String old = getIncomingWss();
-		getConfig().setIncomingWss(incomingWss);
-		notifyPropertyChanged(INCOMING_WSS, old, incomingWss);
+		getConfig().setIncomingWss( incomingWss );
+		notifyPropertyChanged( INCOMING_WSS, old, incomingWss );
 	}
 
 	public String getOutgoingWss()
@@ -628,11 +638,11 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		return getConfig().getOutgoingWss();
 	}
 
-	public void setOutgoingWss(String outgoingWss)
+	public void setOutgoingWss( String outgoingWss )
 	{
 		String old = getOutgoingWss();
-		getConfig().setOutgoingWss(outgoingWss);
-		notifyPropertyChanged(OUGOING_WSS, old, outgoingWss);
+		getConfig().setOutgoingWss( outgoingWss );
+		notifyPropertyChanged( OUGOING_WSS, old, outgoingWss );
 	}
 
 	public boolean isDispatchResponseMessages()
@@ -640,26 +650,26 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		return getConfig().getDispatchResponseMessages();
 	}
 
-	public void setDispatchResponseMessages(boolean dispatchResponseMessages)
+	public void setDispatchResponseMessages( boolean dispatchResponseMessages )
 	{
 		boolean old = isDispatchResponseMessages();
-		getConfig().setDispatchResponseMessages(dispatchResponseMessages);
-		notifyPropertyChanged("dispatchResponseMessages", old, dispatchResponseMessages);
+		getConfig().setDispatchResponseMessages( dispatchResponseMessages );
+		notifyPropertyChanged( "dispatchResponseMessages", old, dispatchResponseMessages );
 	}
 
 	public List<WsdlOperation> getMockedOperations()
 	{
 		List<WsdlOperation> result = new ArrayList<WsdlOperation>();
 
-		for (WsdlMockOperation mockOperation : mockOperations)
-			result.add(mockOperation.getOperation());
+		for( WsdlMockOperation mockOperation : mockOperations )
+			result.add( mockOperation.getOperation() );
 
 		return result;
 	}
 
-	public void setDocroot(String docroot)
+	public void setDocroot( String docroot )
 	{
-		docrootProperty.set(docroot, true);
+		docrootProperty.set( docroot, true );
 	}
 
 	public String getDocroot()
@@ -667,31 +677,31 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		return docrootProperty.get();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	@Override
-	public void resolve(ResolveContext context)
+	public void resolve( ResolveContext context )
 	{
-		super.resolve(context);
-		docrootProperty.resolveFile(context, "Missing MockService docroot");
+		super.resolve( context );
+		docrootProperty.resolveFile( context, "Missing MockService docroot" );
 	}
 
-	public void replace(WsdlMockOperation mockOperation, MockOperationConfig reloadedMockOperation)
+	public void replace( WsdlMockOperation mockOperation, MockOperationConfig reloadedMockOperation )
 	{
-		int ix = mockOperations.indexOf(mockOperation);
-		if (ix == -1)
-			throw new RuntimeException("Unkonws MockOperation specified to removeMockOperation");
+		int ix = mockOperations.indexOf( mockOperation );
+		if( ix == -1 )
+			throw new RuntimeException( "Unkonws MockOperation specified to removeMockOperation" );
 
-		mockOperations.remove(ix);
-		fireMockOperationRemoved(mockOperation);
+		mockOperations.remove( ix );
+		fireMockOperationRemoved( mockOperation );
 		mockOperation.release();
-		getConfig().removeMockOperation(ix);
+		getConfig().removeMockOperation( ix );
 
-		MockOperationConfig newConfig = (MockOperationConfig) getConfig().insertNewMockOperation(ix).set(
-				reloadedMockOperation).changeType(MockOperationConfig.type);
-		WsdlMockOperation newOperation = new WsdlMockOperation(this, newConfig);
-		mockOperations.add(ix, newOperation);
+		MockOperationConfig newConfig = ( MockOperationConfig )getConfig().insertNewMockOperation( ix ).set(
+				reloadedMockOperation ).changeType( MockOperationConfig.type );
+		WsdlMockOperation newOperation = new WsdlMockOperation( this, newConfig );
+		mockOperations.add( ix, newOperation );
 		newOperation.afterLoad();
-		fireMockOperationAdded(newOperation);
+		fireMockOperationAdded( newOperation );
 	}
 
 }

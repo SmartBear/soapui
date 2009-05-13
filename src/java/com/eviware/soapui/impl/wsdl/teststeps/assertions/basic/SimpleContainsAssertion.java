@@ -46,8 +46,7 @@ import com.eviware.x.form.XFormFactory;
  * @author Ole.Matzura
  */
 
-public class SimpleContainsAssertion extends WsdlMessageAssertion implements RequestAssertion,
-			ResponseAssertion
+public class SimpleContainsAssertion extends WsdlMessageAssertion implements RequestAssertion, ResponseAssertion
 {
 	private String token;
 	private XFormDialog dialog;
@@ -70,7 +69,7 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 	}
 
 	public String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
-				throws AssertionException
+			throws AssertionException
 	{
 		return assertContent( context, messageExchange.getResponseContent(), "Response" );
 	}
@@ -84,22 +83,21 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 		if( replToken.length() > 0 )
 		{
 			int ix = -1;
-			
+
 			if( useRegEx )
 			{
-				if( content.matches( replToken ))
+				if( content.matches( replToken ) )
 					ix = 0;
 			}
 			else
 			{
-				ix = ignoreCase ? content.toUpperCase().indexOf( replToken.toUpperCase() ) : content
-						.indexOf( replToken );
+				ix = ignoreCase ? content.toUpperCase().indexOf( replToken.toUpperCase() ) : content.indexOf( replToken );
 			}
 
 			if( ix == -1 )
 				throw new AssertionException( new AssertionError( "Missing token [" + replToken + "] in " + type ) );
 		}
-		
+
 		return "Response contains token [" + replToken + "]";
 	}
 
@@ -124,7 +122,7 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 		setConfiguration( createConfiguration() );
 		return true;
 	}
-	
+
 	public boolean isUseRegEx()
 	{
 		return useRegEx;
@@ -176,32 +174,31 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 		mainForm.addCheckBox( IGNORE_CASE, "Ignore case in comparison" );
 		mainForm.addCheckBox( USE_REGEX, "Use token as Regular Expression" );
 
-		dialog = builder.buildDialog( builder
-					.buildOkCancelHelpActions( HelpUrls.SIMPLE_CONTAINS_HELP_URL ), "Specify options",
-					UISupport.OPTIONS_ICON );
+		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.SIMPLE_CONTAINS_HELP_URL ),
+				"Specify options", UISupport.OPTIONS_ICON );
 	}
 
 	@Override
-	protected String internalAssertRequest( MessageExchange messageExchange,
-				SubmitContext context ) throws AssertionException
+	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
+			throws AssertionException
 	{
 		return assertContent( context, messageExchange.getRequestContent(), "Request" );
 	}
-	
+
 	public PropertyExpansion[] getPropertyExpansions()
 	{
 		List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
-		
-		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( getAssertable().getModelItem(), this, "token") );
-		
+
+		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( getAssertable().getModelItem(), this, "token" ) );
+
 		return result.toArray( new PropertyExpansion[result.size()] );
 	}
-	
+
 	public static class Factory extends AbstractTestAssertionFactory
 	{
 		public Factory()
 		{
-			super(SimpleContainsAssertion.ID, SimpleContainsAssertion.LABEL, SimpleContainsAssertion.class);
+			super( SimpleContainsAssertion.ID, SimpleContainsAssertion.LABEL, SimpleContainsAssertion.class );
 		}
 	}
 }

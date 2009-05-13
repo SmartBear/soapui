@@ -31,10 +31,10 @@ public interface PropertyExpansion
 	public static final char SCOPE_PREFIX = '#';
 
 	public TestProperty getProperty();
-	
+
 	public String toString();
 
 	public String getXPath();
-	
+
 	public String getContainerInfo();
 }

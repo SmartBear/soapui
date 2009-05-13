@@ -31,8 +31,8 @@ import com.eviware.soapui.support.UISupport;
 
 public class ModelItemIconFactory
 {
-	private static Map<Class<? extends ModelItem>, String > modelItemIcons = new HashMap<Class<? extends ModelItem>, String>(); 
-	
+	private static Map<Class<? extends ModelItem>, String> modelItemIcons = new HashMap<Class<? extends ModelItem>, String>();
+
 	static
 	{
 		modelItemIcons.put( Project.class, "/project.gif" );
@@ -45,22 +45,22 @@ public class ModelItemIconFactory
 		modelItemIcons.put( MockResponse.class, "/mockResponse.gif" );
 		modelItemIcons.put( MockOperation.class, "/mockOperation.gif" );
 	}
-	
+
 	public static ImageIcon getIcon( Class<? extends ModelItem> clazz )
 	{
-		if( modelItemIcons.containsKey( clazz ))
+		if( modelItemIcons.containsKey( clazz ) )
 			return UISupport.createImageIcon( modelItemIcons.get( clazz ) );
-		
+
 		for( Class<?> iface : clazz.getInterfaces() )
 		{
-			if( modelItemIcons.containsKey( iface ))
+			if( modelItemIcons.containsKey( iface ) )
 				return UISupport.createImageIcon( modelItemIcons.get( iface ) );
 		}
-		
+
 		return null;
 	}
-	
-	public static <T extends ModelItem>  ImageIcon getIcon( T modelItem )
+
+	public static <T extends ModelItem> ImageIcon getIcon( T modelItem )
 	{
 		return getIcon( modelItem.getClass() );
 	}

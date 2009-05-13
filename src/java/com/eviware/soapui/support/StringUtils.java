@@ -26,78 +26,78 @@ import com.eviware.soapui.support.types.StringList;
 
 public class StringUtils
 {
-	public static final String NEWLINE = System.getProperty("line.separator");
+	public static final String NEWLINE = System.getProperty( "line.separator" );
 
-	public static String unquote(String str)
+	public static String unquote( String str )
 	{
 		int length = str == null ? -1 : str.length();
-		if (str == null || length == 0)
+		if( str == null || length == 0 )
 			return str;
 
-		if (length > 1 && str.charAt(0) == '\"' && str.charAt(length - 1) == '\"')
+		if( length > 1 && str.charAt( 0 ) == '\"' && str.charAt( length - 1 ) == '\"' )
 		{
-			str = str.substring(1, length - 1);
+			str = str.substring( 1, length - 1 );
 		}
 
 		return str;
 	}
 
-	public static boolean isNullOrEmpty(String str)
+	public static boolean isNullOrEmpty( String str )
 	{
 		return str == null || str.length() == 0 || str.trim().length() == 0;
 	}
 
-	public static int parseInt(String str, int defaultValue)
+	public static int parseInt( String str, int defaultValue )
 	{
-		if (isNullOrEmpty(str))
+		if( isNullOrEmpty( str ) )
 			return defaultValue;
 
 		try
 		{
-			return Integer.parseInt(str);
+			return Integer.parseInt( str );
 		}
-		catch (NumberFormatException e)
+		catch( NumberFormatException e )
 		{
 			return defaultValue;
 		}
 	}
 
-	public static List<String> splitLines(String string)
+	public static List<String> splitLines( String string )
 	{
 		try
 		{
 			ArrayList<String> list = new ArrayList<String>();
 
-			LineNumberReader reader = new LineNumberReader(new StringReader(string));
+			LineNumberReader reader = new LineNumberReader( new StringReader( string ) );
 			String s;
-			while ((s = reader.readLine()) != null)
+			while( ( s = reader.readLine() ) != null )
 			{
-				list.add(s);
+				list.add( s );
 			}
 			return list;
 		}
-		catch (IOException e)
+		catch( IOException e )
 		{
 			// I don't think this can really happen with a StringReader.
-			throw new RuntimeException(e);
+			throw new RuntimeException( e );
 		}
 	}
 
-	public static String normalizeSpace(String str)
+	public static String normalizeSpace( String str )
 	{
-		if (!isNullOrEmpty(str))
+		if( !isNullOrEmpty( str ) )
 		{
-			StringTokenizer st = new StringTokenizer(str);
-			if (st.hasMoreTokens())
+			StringTokenizer st = new StringTokenizer( str );
+			if( st.hasMoreTokens() )
 			{
 
-				StringBuffer sb = new StringBuffer(str.length());
-				while (true)
+				StringBuffer sb = new StringBuffer( str.length() );
+				while( true )
 				{
-					sb.append(st.nextToken());
-					if (st.hasMoreTokens())
+					sb.append( st.nextToken() );
+					if( st.hasMoreTokens() )
 					{
-						sb.append(' ');
+						sb.append( ' ' );
 					}
 					else
 					{
@@ -117,111 +117,111 @@ public class StringUtils
 		}
 	}
 
-	public static boolean hasContent(String str)
+	public static boolean hasContent( String str )
 	{
 		return str != null && str.trim().length() > 0;
 	}
 
-	public static String stripStartAndEnd(String s, String start, String end)
+	public static String stripStartAndEnd( String s, String start, String end )
 	{
-		if (s.startsWith(start) && s.endsWith(end))
-			return s.substring(start.length(), s.length() - end.length());
+		if( s.startsWith( start ) && s.endsWith( end ) )
+			return s.substring( start.length(), s.length() - end.length() );
 		else
 			return s;
 	}
 
-	public static Writer createSeparatedRow(Writer writer, StringList values, char separator, char quote)
+	public static Writer createSeparatedRow( Writer writer, StringList values, char separator, char quote )
 			throws IOException
 	{
-		for (int c = 0; c < values.size(); c++)
+		for( int c = 0; c < values.size(); c++ )
 		{
-			String value = values.get(c);
+			String value = values.get( c );
 
-			if (c > 0)
-				writer.append(separator);
+			if( c > 0 )
+				writer.append( separator );
 
-			if (quote > 0)
+			if( quote > 0 )
 			{
-				writer.append(quote);
+				writer.append( quote );
 
-				if (value != null)
+				if( value != null )
 				{
-					for (int i = 0; i < value.length(); i++)
+					for( int i = 0; i < value.length(); i++ )
 					{
-						char ch = value.charAt(i);
+						char ch = value.charAt( i );
 
-						if (ch == quote)
-							writer.append('\\');
-						else if (ch == '\\')
-							writer.append('\\');
+						if( ch == quote )
+							writer.append( '\\' );
+						else if( ch == '\\' )
+							writer.append( '\\' );
 
-						writer.append(ch);
+						writer.append( ch );
 					}
 				}
 
-				writer.append(quote);
+				writer.append( quote );
 			}
-			else if (value != null)
+			else if( value != null )
 			{
-				writer.append(value);
+				writer.append( value );
 			}
 		}
 
 		return writer;
 	}
 
-	public static StringList readSeparatedRow(String row, char separator, char quote)
+	public static StringList readSeparatedRow( String row, char separator, char quote )
 	{
 		StringList result = new StringList();
 
-		while (row != null && row.length() > 0)
+		while( row != null && row.length() > 0 )
 		{
-			if (row.startsWith(String.valueOf(quote)))
+			if( row.startsWith( String.valueOf( quote ) ) )
 			{
 				StringBuffer buf = new StringBuffer();
-				char last = row.charAt(0);
+				char last = row.charAt( 0 );
 				int ix = 1;
-				while (ix < row.length())
+				while( ix < row.length() )
 				{
-					char ch = row.charAt(ix);
-					if ((quote == 0 || ch == quote) && last != '\\')
+					char ch = row.charAt( ix );
+					if( ( quote == 0 || ch == quote ) && last != '\\' )
 					{
-						result.add(buf.toString());
-						row = row.length() > ix + 1 ? row.substring(ix + 1) : null;
-						if (row != null && row.length() > 1 && row.charAt(0) == separator)
+						result.add( buf.toString() );
+						row = row.length() > ix + 1 ? row.substring( ix + 1 ) : null;
+						if( row != null && row.length() > 1 && row.charAt( 0 ) == separator )
 						{
-							row = row.substring(1);
+							row = row.substring( 1 );
 							ix = -1;
 						}
 						break;
 					}
-					else if (ch != '\\' || last == '\\')
+					else if( ch != '\\' || last == '\\' )
 					{
-						buf.append(ch);
+						buf.append( ch );
 					}
 
 					last = ch;
-					ix++;
+					ix++ ;
 				}
 
-				if (row != null && ix == row.length())
+				if( row != null && ix == row.length() )
 				{
-					result.add(row);
+					result.add( row );
 					row = null;
 				}
 			}
 			else
 			{
-				int ix = row.indexOf(separator);
-				if (ix == -1)
+				int ix = row.indexOf( separator );
+				if( ix == -1 )
 				{
-					result.add(row);
+					result.add( row );
 					row = null;
 				}
 				else
 				{
-					result.add(row.substring(0, ix));
-					row = row.substring(ix + 1);
+					result.add( row.substring( 0, ix ) );
+					row = row.substring( ix + 1 );
 				}
 			}
 		}
@@ -229,103 +229,103 @@ public class StringUtils
 		return result;
 	}
 
-	public static String createFileName(String str, char whitespaceChar)
+	public static String createFileName( String str, char whitespaceChar )
 	{
 		StringBuffer result = new StringBuffer();
 
-		for (int c = 0; c < str.length(); c++)
+		for( int c = 0; c < str.length(); c++ )
 		{
-			char ch = str.charAt(c);
+			char ch = str.charAt( c );
 
-			if (Character.isWhitespace(ch) && whitespaceChar != 0)
-				result.append(whitespaceChar);
-			else if (Character.isLetterOrDigit(ch))
-				result.append(ch);
+			if( Character.isWhitespace( ch ) && whitespaceChar != 0 )
+				result.append( whitespaceChar );
+			else if( Character.isLetterOrDigit( ch ) )
+				result.append( ch );
 		}
 
 		return result.toString();
 	}
 
-	public static String[] merge(String[] incomingNames, String string)
+	public static String[] merge( String[] incomingNames, String string )
 	{
-		StringList result = new StringList(incomingNames);
-		result.add(string);
+		StringList result = new StringList( incomingNames );
+		result.add( string );
 		return result.toStringArray();
 	}
 
-	public static String quote(String str)
+	public static String quote( String str )
 	{
-		if (str == null)
+		if( str == null )
 			return str;
 
-		if (str.length() < 2 || !str.startsWith("\"") || !str.endsWith("\""))
+		if( str.length() < 2 || !str.startsWith( "\"" ) || !str.endsWith( "\"" ) )
 			str = "\"" + str + "\"";
 
 		return str;
 	}
 
-	public static String join(String[] array, String separator)
+	public static String join( String[] array, String separator )
 	{
 		StringBuffer buf = new StringBuffer();
-		for (int i = 0; i < array.length; i++)
+		for( int i = 0; i < array.length; i++ )
 		{
-			if (i > 0)
-				buf.append(separator);
-			buf.append(array[i]);
+			if( i > 0 )
+				buf.append( separator );
+			buf.append( array[i] );
 		}
 		return buf.toString();
 	}
 
-	public static String toHtml(String string)
+	public static String toHtml( String string )
 	{
-		if (StringUtils.isNullOrEmpty(string))
+		if( StringUtils.isNullOrEmpty( string ) )
 			return "<html><body></body></html>";
 
-		BufferedReader st = new BufferedReader(new StringReader(string));
-		StringBuffer buf = new StringBuffer("<html><body>");
+		BufferedReader st = new BufferedReader( new StringReader( string ) );
+		StringBuffer buf = new StringBuffer( "<html><body>" );
 
 		try
 		{
 			String str = st.readLine();
 
-			while (str != null)
+			while( str != null )
 			{
-				if (str.equalsIgnoreCase("<br/>"))
+				if( str.equalsIgnoreCase( "<br/>" ) )
 				{
 					str = "<br>";
 				}
 
-				buf.append(str);
+				buf.append( str );
 
-				if (!str.equalsIgnoreCase("<br>"))
+				if( !str.equalsIgnoreCase( "<br>" ) )
 				{
-					buf.append("<br>");
+					buf.append( "<br>" );
 				}
 
 				str = st.readLine();
 			}
 		}
-		catch (IOException e)
+		catch( IOException e )
 		{
 			e.printStackTrace();
 		}
 
-		buf.append("</body></html>");
+		buf.append( "</body></html>" );
 		string = buf.toString();
 		return string;
 	}
 
-	public static String replace(String data, String from, String to)
+	public static String replace( String data, String from, String to )
 	{
-		StringBuffer buf = new StringBuffer(data.length());
+		StringBuffer buf = new StringBuffer( data.length() );
 		int pos = -1;
 		int i = 0;
-		while ((pos = data.indexOf(from, i)) != -1)
+		while( ( pos = data.indexOf( from, i ) ) != -1 )
 		{
-			buf.append(data.substring(i, pos)).append(to);
+			buf.append( data.substring( i, pos ) ).append( to );
 			i = pos + from.length();
 		}
-		buf.append(data.substring(i));
+		buf.append( data.substring( i ) );
 		return buf.toString();
 	}
 
@@ -339,7 +339,7 @@ public class StringUtils
 		{
 			xml = xml.replaceAll( "\r\n", System.getProperty( "line.separator" ) );
 		}
-	
+
 		return xml;
 	}
 

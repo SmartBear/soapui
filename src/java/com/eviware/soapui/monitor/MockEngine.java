@@ -71,7 +71,7 @@ import com.eviware.soapui.support.log.JettyLogger;
 
 public class MockEngine
 {
-	public final static Logger log = Logger.getLogger(MockEngine.class);
+	public final static Logger log = Logger.getLogger( MockEngine.class );
 
 	private Server server;
 	private Map<Integer, Map<String, List<MockRunner>>> runners = new HashMap<Integer, Map<String, List<MockRunner>>>();
@@ -82,83 +82,83 @@ public class MockEngine
 
 	public MockEngine()
 	{
-		System.setProperty("org.mortbay.log.class", JettyLogger.class.getName());
+		System.setProperty( "org.mortbay.log.class", JettyLogger.class.getName() );
 	}
 
-	public boolean hasRunningMock(MockService mockService)
+	public boolean hasRunningMock( MockService mockService )
 	{
-		for (MockRunner runner : mockRunners)
-			if (runner.getMockService() == mockService)
+		for( MockRunner runner : mockRunners )
+			if( runner.getMockService() == mockService )
 				return true;
 
 		return false;
 	}
 
-	public synchronized void startMockService(MockRunner runner) throws Exception
+	public synchronized void startMockService( MockRunner runner ) throws Exception
 	{
-		if (server == null)
+		if( server == null )
 			initServer();
 
-		synchronized (server)
+		synchronized( server )
 		{
-			WsdlMockService mockService = (WsdlMockService) runner.getMockService();
+			WsdlMockService mockService = ( WsdlMockService )runner.getMockService();
 			int port = mockService.getPort();
 
-			if (!runners.containsKey(port))
+			if( !runners.containsKey( port ) )
 			{
 				SoapUIConnector connector = new SoapUIConnector();
 
-				connector.setPort(port);
-				if (sslConnector != null)
-					connector.setConfidentialPort(sslConnector.getPort());
+				connector.setPort( port );
+				if( sslConnector != null )
+					connector.setConfidentialPort( sslConnector.getPort() );
 
-				if (mockService.getBindToHostOnly())
+				if( mockService.getBindToHostOnly() )
 				{
 					String host = mockService.getHost();
-					if (StringUtils.hasContent(host))
+					if( StringUtils.hasContent( host ) )
 					{
-						connector.setHost(host);
+						connector.setHost( host );
 					}
 				}
 
 				boolean wasRunning = server.isRunning();
 
-				if (wasRunning)
+				if( wasRunning )
 				{
 					server.stop();
 				}
 
-				server.addConnector(connector);
+				server.addConnector( connector );
 				try
 				{
 					server.start();
 				}
-				catch (RuntimeException e)
+				catch( RuntimeException e )
 				{
-					UISupport.showErrorMessage(e);
+					UISupport.showErrorMessage( e );
 
-					server.removeConnector(connector);
-					if (wasRunning)
+					server.removeConnector( connector );
+					if( wasRunning )
 					{
 						server.start();
 						return;
 					}
 				}
 
-				connectors.put(new Integer(port), connector);
-				runners.put(new Integer(port), new HashMap<String, List<MockRunner>>());
+				connectors.put( new Integer( port ), connector );
+				runners.put( new Integer( port ), new HashMap<String, List<MockRunner>>() );
 			}
 
-			Map<String, List<MockRunner>> map = runners.get(port);
+			Map<String, List<MockRunner>> map = runners.get( port );
 			String path = mockService.getPath();
-			if (!map.containsKey(path))
+			if( !map.containsKey( path ) )
 			{
-				map.put(path, new ArrayList<MockRunner>());
+				map.put( path, new ArrayList<MockRunner>() );
 			}
-			map.get(path).add(runner);
-			mockRunners.add(runner);
+			map.get( path ).add( runner );
+			mockRunners.add( runner );
 
-			log.info("Started mockService [" + mockService.getName() + "] on port [" + port + "] at path [" + path + "]");
+			log.info( "Started mockService [" + mockService.getName() + "] on port [" + port + "] at path [" + path + "]" );
 		}
 	}
 
@@ -167,90 +167,90 @@ public class MockEngine
 		server = new Server();
 		QueuedThreadPool threadPool = new QueuedThreadPool();
 		// threadPool.setMaxThreads( 100 );
-		server.setThreadPool(threadPool);
-		server.setHandler(new ServerHandler());
+		server.setThreadPool( threadPool );
+		server.setHandler( new ServerHandler() );
 
 		RequestLogHandler logHandler = new RequestLogHandler();
-		logHandler.setRequestLog(new MockRequestLog());
-		server.addHandler(logHandler);
+		logHandler.setRequestLog( new MockRequestLog() );
+		server.addHandler( logHandler );
 
-		if (SoapUI.getSettings().getBoolean(SSLSettings.ENABLE_MOCK_SSL))
+		if( SoapUI.getSettings().getBoolean( SSLSettings.ENABLE_MOCK_SSL ) )
 		{
 			sslConnector = new SslSocketConnector();
-			sslConnector.setKeystore(SoapUI.getSettings().getString(SSLSettings.MOCK_KEYSTORE, null));
-			sslConnector.setPassword(SoapUI.getSettings().getString(SSLSettings.MOCK_PASSWORD, null));
-			sslConnector.setKeyPassword(SoapUI.getSettings().getString(SSLSettings.MOCK_KEYSTORE_PASSWORD, null));
-			sslConnector.setTruststore(SoapUI.getSettings().getString(SSLSettings.MOCK_TRUSTSTORE, null));
-			sslConnector.setTrustPassword(SoapUI.getSettings().getString(SSLSettings.MOCK_TRUSTSTORE_PASSWORD, null));
-			sslConnector.setMaxIdleTime(30000);
-			sslConnector.setPort((int) SoapUI.getSettings().getLong(SSLSettings.MOCK_PORT, 443));
-			sslConnector.setNeedClientAuth(SoapUI.getSettings().getBoolean(SSLSettings.CLIENT_AUTHENTICATION));
+			sslConnector.setKeystore( SoapUI.getSettings().getString( SSLSettings.MOCK_KEYSTORE, null ) );
+			sslConnector.setPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_PASSWORD, null ) );
+			sslConnector.setKeyPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_KEYSTORE_PASSWORD, null ) );
+			sslConnector.setTruststore( SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE, null ) );
+			sslConnector.setTrustPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE_PASSWORD, null ) );
+			sslConnector.setMaxIdleTime( 30000 );
+			sslConnector.setPort( ( int )SoapUI.getSettings().getLong( SSLSettings.MOCK_PORT, 443 ) );
+			sslConnector.setNeedClientAuth( SoapUI.getSettings().getBoolean( SSLSettings.CLIENT_AUTHENTICATION ) );
 
-			server.addConnector(sslConnector);
+			server.addConnector( sslConnector );
 		}
 	}
 
-	public void stopMockService(WsdlMockRunner runner)
+	public void stopMockService( WsdlMockRunner runner )
 	{
-		synchronized (server)
+		synchronized( server )
 		{
 			MockService mockService = runner.getMockService();
-			final Integer port = new Integer(mockService.getPort());
-			Map<String, List<MockRunner>> map = runners.get(port);
+			final Integer port = new Integer( mockService.getPort() );
+			Map<String, List<MockRunner>> map = runners.get( port );
 
-			if (map == null)
+			if( map == null )
 				return;
 
-			map.get(mockService.getPath()).remove(runner);
-			if (map.get(mockService.getPath()).isEmpty())
+			map.get( mockService.getPath() ).remove( runner );
+			if( map.get( mockService.getPath() ).isEmpty() )
 			{
-				map.remove(mockService.getPath());
+				map.remove( mockService.getPath() );
 			}
 
-			mockRunners.remove(runner);
+			mockRunners.remove( runner );
 
-			log.info("Stopped MockService [" + mockService.getName() + "] on port [" + port + "]");
+			log.info( "Stopped MockService [" + mockService.getName() + "] on port [" + port + "]" );
 
-			if (map.isEmpty() && !SoapUI.getSettings().getBoolean(HttpSettings.LEAVE_MOCKENGINE))
+			if( map.isEmpty() && !SoapUI.getSettings().getBoolean( HttpSettings.LEAVE_MOCKENGINE ) )
 			{
-				SoapUIConnector connector = connectors.get(port);
-				if (connector == null)
+				SoapUIConnector connector = connectors.get( port );
+				if( connector == null )
 				{
-					log.warn("Missing connectors on port [" + port + "]");
+					log.warn( "Missing connectors on port [" + port + "]" );
 					return;
 				}
 
 				try
 				{
-					log.info("Stopping connector on port " + port);
-					if (!connector.waitUntilIdle(5000))
+					log.info( "Stopping connector on port " + port );
+					if( !connector.waitUntilIdle( 5000 ) )
 					{
-						log.warn("Failed to wait for idle.. stopping connector anyway..");
+						log.warn( "Failed to wait for idle.. stopping connector anyway.." );
 					}
 					connector.stop();
 				}
-				catch (Exception e)
+				catch( Exception e )
 				{
-					SoapUI.logError(e);
+					SoapUI.logError( e );
 				}
-				server.removeConnector(connector);
-				runners.remove(port);
-				if (runners.isEmpty())
+				server.removeConnector( connector );
+				runners.remove( port );
+				if( runners.isEmpty() )
 				{
 					try
 					{
-						log.info("No more connectors.. stopping server");
+						log.info( "No more connectors.. stopping server" );
 						server.stop();
-						if (sslConnector != null)
+						if( sslConnector != null )
 						{
-							server.removeConnector(sslConnector);
+							server.removeConnector( sslConnector );
 							sslConnector.stop();
 							sslConnector = null;
 						}
 					}
-					catch (Exception e)
+					catch( Exception e )
 					{
-						SoapUI.logError(e);
+						SoapUI.logError( e );
 					}
 				}
 			}
@@ -262,38 +262,38 @@ public class MockEngine
 		private Set<HttpConnection> connections = new HashSet<HttpConnection>();
 
 		@Override
-		protected void connectionClosed(HttpConnection arg0)
+		protected void connectionClosed( HttpConnection arg0 )
 		{
-			super.connectionClosed(arg0);
-			connections.remove(arg0);
+			super.connectionClosed( arg0 );
+			connections.remove( arg0 );
 		}
 
 		@Override
-		protected void connectionOpened(HttpConnection arg0)
+		protected void connectionOpened( HttpConnection arg0 )
 		{
-			super.connectionOpened(arg0);
-			connections.add(arg0);
+			super.connectionOpened( arg0 );
+			connections.add( arg0 );
 		}
 
 		@Override
-		protected Connection newConnection(SocketChannel socketChannel, SelectChannelEndPoint selectChannelEndPoint)
+		protected Connection newConnection( SocketChannel socketChannel, SelectChannelEndPoint selectChannelEndPoint )
 		{
-			if (SoapUI.getSettings().getBoolean(HttpSettings.ENABLE_MOCK_WIRE_LOG))
+			if( SoapUI.getSettings().getBoolean( HttpSettings.ENABLE_MOCK_WIRE_LOG ) )
 			{
-				return new SoapUIHttpConnection(SoapUIConnector.this, selectChannelEndPoint, getServer());
+				return new SoapUIHttpConnection( SoapUIConnector.this, selectChannelEndPoint, getServer() );
 			}
 			else
 			{
-				return super.newConnection(socketChannel, selectChannelEndPoint);
+				return super.newConnection( socketChannel, selectChannelEndPoint );
 			}
 		}
 
-		public boolean waitUntilIdle(long maxwait) throws Exception
+		public boolean waitUntilIdle( long maxwait ) throws Exception
 		{
-			while (maxwait > 0 && hasActiveConnections())
+			while( maxwait > 0 && hasActiveConnections() )
 			{
-				System.out.println("Waiting for active connections to finish..");
-				Thread.sleep(500);
+				System.out.println( "Waiting for active connections to finish.." );
+				Thread.sleep( 500 );
 				maxwait -= 500;
 			}
 
@@ -302,9 +302,9 @@ public class MockEngine
 
 		private boolean hasActiveConnections()
 		{
-			for (HttpConnection connection : connections)
+			for( HttpConnection connection : connections )
 			{
-				if (!connection.isIdle())
+				if( !connection.isIdle() )
 					return true;
 			}
 
@@ -317,17 +317,17 @@ public class MockEngine
 		private CapturingServletInputStream capturingServletInputStream;
 		private MockEngine.CapturingServletOutputStream capturingServletOutputStream;
 
-		public SoapUIHttpConnection(Connector connector, EndPoint endPoint, Server server)
+		public SoapUIHttpConnection( Connector connector, EndPoint endPoint, Server server )
 		{
-			super(connector, endPoint, server);
+			super( connector, endPoint, server );
 		}
 
 		@Override
 		public ServletInputStream getInputStream()
 		{
-			if (capturingServletInputStream == null)
+			if( capturingServletInputStream == null )
 			{
-				capturingServletInputStream = new CapturingServletInputStream(super.getInputStream());
+				capturingServletInputStream = new CapturingServletInputStream( super.getInputStream() );
 			}
 
 			return capturingServletInputStream;
@@ -336,9 +336,9 @@ public class MockEngine
 		@Override
 		public ServletOutputStream getOutputStream()
 		{
-			if (capturingServletOutputStream == null)
+			if( capturingServletOutputStream == null )
 			{
-				capturingServletOutputStream = new CapturingServletOutputStream(super.getOutputStream());
+				capturingServletOutputStream = new CapturingServletOutputStream( super.getOutputStream() );
 			}
 
 			return capturingServletOutputStream;
@@ -350,44 +350,44 @@ public class MockEngine
 		private ServletOutputStream outputStream;
 		private ByteArrayOutputStream captureOutputStream = new ByteArrayOutputStream();
 
-		public CapturingServletOutputStream(ServletOutputStream outputStream)
+		public CapturingServletOutputStream( ServletOutputStream outputStream )
 		{
 			this.outputStream = outputStream;
 		}
 
-		public void print(String s) throws IOException
+		public void print( String s ) throws IOException
 		{
-			outputStream.print(s);
+			outputStream.print( s );
 		}
 
-		public void print(boolean b) throws IOException
+		public void print( boolean b ) throws IOException
 		{
-			outputStream.print(b);
+			outputStream.print( b );
 		}
 
-		public void print(char c) throws IOException
+		public void print( char c ) throws IOException
 		{
-			outputStream.print(c);
+			outputStream.print( c );
 		}
 
-		public void print(int i) throws IOException
+		public void print( int i ) throws IOException
 		{
-			outputStream.print(i);
+			outputStream.print( i );
 		}
 
-		public void print(long l) throws IOException
+		public void print( long l ) throws IOException
 		{
-			outputStream.print(l);
+			outputStream.print( l );
 		}
 
-		public void print(float v) throws IOException
+		public void print( float v ) throws IOException
 		{
-			outputStream.print(v);
+			outputStream.print( v );
 		}
 
-		public void print(double v) throws IOException
+		public void print( double v ) throws IOException
 		{
-			outputStream.print(v);
+			outputStream.print( v );
 		}
 
 		public void println() throws IOException
@@ -395,57 +395,57 @@ public class MockEngine
 			outputStream.println();
 		}
 
-		public void println(String s) throws IOException
+		public void println( String s ) throws IOException
 		{
-			outputStream.println(s);
+			outputStream.println( s );
 		}
 
-		public void println(boolean b) throws IOException
+		public void println( boolean b ) throws IOException
 		{
-			outputStream.println(b);
+			outputStream.println( b );
 		}
 
-		public void println(char c) throws IOException
+		public void println( char c ) throws IOException
 		{
-			outputStream.println(c);
+			outputStream.println( c );
 		}
 
-		public void println(int i) throws IOException
+		public void println( int i ) throws IOException
 		{
-			outputStream.println(i);
+			outputStream.println( i );
 		}
 
-		public void println(long l) throws IOException
+		public void println( long l ) throws IOException
 		{
-			outputStream.println(l);
+			outputStream.println( l );
 		}
 
-		public void println(float v) throws IOException
+		public void println( float v ) throws IOException
 		{
-			outputStream.println(v);
+			outputStream.println( v );
 		}
 
-		public void println(double v) throws IOException
+		public void println( double v ) throws IOException
 		{
-			outputStream.println(v);
+			outputStream.println( v );
 		}
 
-		public void write(int b) throws IOException
+		public void write( int b ) throws IOException
 		{
-			captureOutputStream.write(b);
-			outputStream.write(b);
+			captureOutputStream.write( b );
+			outputStream.write( b );
 		}
 
-		public void write(byte[] b) throws IOException
+		public void write( byte[] b ) throws IOException
 		{
-			captureOutputStream.write(b);
-			outputStream.write(b);
+			captureOutputStream.write( b );
+			outputStream.write( b );
 		}
 
-		public void write(byte[] b, int off, int len) throws IOException
+		public void write( byte[] b, int off, int len ) throws IOException
 		{
-			captureOutputStream.write(b, off, len);
-			outputStream.write(b, off, len);
+			captureOutputStream.write( b, off, len );
+			outputStream.write( b, off, len );
 		}
 
 		public void flush() throws IOException
@@ -466,7 +466,7 @@ public class MockEngine
 		private ServletInputStream inputStream;
 		private ByteArrayOutputStream captureOutputStream = new ByteArrayOutputStream();
 
-		public CapturingServletInputStream(ServletInputStream inputStream)
+		public CapturingServletInputStream( ServletInputStream inputStream )
 		{
 			this.inputStream = inputStream;
 		}
@@ -474,35 +474,35 @@ public class MockEngine
 		public int read() throws IOException
 		{
 			int i = inputStream.read();
-			captureOutputStream.write(i);
+			captureOutputStream.write( i );
 			return i;
 		}
 
-		public int readLine(byte[] bytes, int i, int i1) throws IOException
+		public int readLine( byte[] bytes, int i, int i1 ) throws IOException
 		{
-			int result = inputStream.readLine(bytes, i, i1);
-			captureOutputStream.write(bytes, i, i1);
+			int result = inputStream.readLine( bytes, i, i1 );
+			captureOutputStream.write( bytes, i, i1 );
 			return result;
 		}
 
-		public int read(byte[] b) throws IOException
+		public int read( byte[] b ) throws IOException
 		{
-			int i = inputStream.read(b);
-			captureOutputStream.write(b);
+			int i = inputStream.read( b );
+			captureOutputStream.write( b );
 			return i;
 		}
 
-		public int read(byte[] b, int off, int len) throws IOException
+		public int read( byte[] b, int off, int len ) throws IOException
 		{
-			int result = inputStream.read(b, off, len);
-			if (result != -1)
-				captureOutputStream.write(b, off, result);
+			int result = inputStream.read( b, off, len );
+			if( result != -1 )
+				captureOutputStream.write( b, off, result );
 			return result;
 		}
 
-		public long skip(long n) throws IOException
+		public long skip( long n ) throws IOException
 		{
-			return inputStream.skip(n);
+			return inputStream.skip( n );
 		}
 
 		public int available() throws IOException
@@ -517,9 +517,9 @@ public class MockEngine
 			// captureOutputStream.toString() );
 		}
 
-		public void mark(int readlimit)
+		public void mark( int readlimit )
 		{
-			inputStream.mark(readlimit);
+			inputStream.mark( readlimit );
 		}
 
 		public boolean markSupported()
@@ -535,18 +535,18 @@ public class MockEngine
 
 	private class ServerHandler extends AbstractHandler
 	{
-		public void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch)
+		public void handle( String target, HttpServletRequest request, HttpServletResponse response, int dispatch )
 				throws IOException, ServletException
 		{
 			// find mockService
-			Map<String, List<MockRunner>> map = runners.get(request.getLocalPort());
+			Map<String, List<MockRunner>> map = runners.get( request.getLocalPort() );
 
 			// ssl?
-			if (map == null && sslConnector != null && request.getLocalPort() == sslConnector.getPort())
+			if( map == null && sslConnector != null && request.getLocalPort() == sslConnector.getPort() )
 			{
-				for (Map<String, List<MockRunner>> runnerMap : runners.values())
+				for( Map<String, List<MockRunner>> runnerMap : runners.values() )
 				{
-					if (runnerMap.containsKey(request.getPathInfo()))
+					if( runnerMap.containsKey( request.getPathInfo() ) )
 					{
 						map = runnerMap;
 						break;
@@ -554,161 +554,163 @@ public class MockEngine
 				}
 			}
 
-			if (map != null)
+			if( map != null )
 			{
-				List<MockRunner> wsdlMockRunners = map.get(request.getPathInfo());
-				if (wsdlMockRunners == null && request.getMethod().equals("GET"))
+				List<MockRunner> wsdlMockRunners = map.get( request.getPathInfo() );
+				if( wsdlMockRunners == null && request.getMethod().equals( "GET" ) )
 				{
-					for (String root : map.keySet())
+					for( String root : map.keySet() )
 					{
-						if (request.getPathInfo().startsWith(root))
+						if( request.getPathInfo().startsWith( root ) )
 						{
-							wsdlMockRunners = map.get(root);
+							wsdlMockRunners = map.get( root );
 						}
 					}
 				}
 
-				if (wsdlMockRunners != null)
+				if( wsdlMockRunners != null )
 				{
-					MockRunner[] runners = wsdlMockRunners.toArray(new MockRunner[wsdlMockRunners.size()]);
+					MockRunner[] runners = wsdlMockRunners.toArray( new MockRunner[wsdlMockRunners.size()] );
 
 					try
 					{
 						DispatchException ex = null;
 
-						for (MockRunner wsdlMockRunner : runners)
+						for( MockRunner wsdlMockRunner : runners )
 						{
-							if (!wsdlMockRunner.isRunning())
+							if( !wsdlMockRunner.isRunning() )
 								continue;
 
 							try
 							{
-								MockResult result = wsdlMockRunner.dispatchRequest(request, response);
-								if (result != null)
+								MockResult result = wsdlMockRunner.dispatchRequest( request, response );
+								if( result != null )
 									result.finish();
 
 								// if we get here, we got dispatched..
 								break;
 							}
-							catch (DispatchException e)
+							catch( DispatchException e )
 							{
-								log.debug(wsdlMockRunner.getMockService().getName() + " was unable to dispatch mock request ",
-										e);
+								log.debug( wsdlMockRunner.getMockService().getName() + " was unable to dispatch mock request ",
+										e );
 
 								ex = e;
 							}
 						}
 
-						if (ex != null)
+						if( ex != null )
 							throw ex;
 					}
-					catch (Exception e)
+					catch( Exception e )
 					{
-						SoapUI.logError(e);
+						SoapUI.logError( e );
 
-						response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-						response.setContentType("text/html");
+						response.setStatus( HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
+						response.setContentType( "text/html" );
 						response.getWriter().print(
-								SoapMessageBuilder.buildFault("Server", e.getMessage(), SoapVersion.Utils
-										.getSoapVersionForContentType(request.getContentType(), SoapVersion.Soap11)));
+								SoapMessageBuilder.buildFault( "Server", e.getMessage(), SoapVersion.Utils
+										.getSoapVersionForContentType( request.getContentType(), SoapVersion.Soap11 ) ) );
 						// throw new ServletException( e );
 					}
 				}
 				else
 				{
-					printMockServiceList(response);
+					printMockServiceList( response );
 				}
 			}
 			else
 			{
-				printMockServiceList(response);
+				printMockServiceList( response );
 			}
 
 			response.flushBuffer();
 		}
 
-		private void printMockServiceList(HttpServletResponse response) throws IOException
+		private void printMockServiceList( HttpServletResponse response ) throws IOException
 		{
-			response.setStatus(HttpServletResponse.SC_OK);
-			response.setContentType("text/html");
+			response.setStatus( HttpServletResponse.SC_OK );
+			response.setContentType( "text/html" );
 
 			MockRunner[] mockRunners = getMockRunners();
 			PrintWriter out = response.getWriter();
-			out.print("<html><body><p>There are currently " + mockRunners.length + " running soapUI MockServices</p><ul>");
+			out
+					.print( "<html><body><p>There are currently " + mockRunners.length
+							+ " running soapUI MockServices</p><ul>" );
 
-			for (MockRunner mockRunner : mockRunners)
+			for( MockRunner mockRunner : mockRunners )
 			{
-				out.print("<li><a href=\"");
-				out.print(mockRunner.getMockService().getPath() + "?WSDL");
-				out.print("\">" + mockRunner.getMockService().getName() + "</a></li>");
+				out.print( "<li><a href=\"" );
+				out.print( mockRunner.getMockService().getPath() + "?WSDL" );
+				out.print( "\">" + mockRunner.getMockService().getName() + "</a></li>" );
 			}
 
-			out.print("</ul></p></body></html>");
+			out.print( "</ul></p></body></html>" );
 		}
 	}
 
 	public MockRunner[] getMockRunners()
 	{
-		return mockRunners.toArray(new MockRunner[mockRunners.size()]);
+		return mockRunners.toArray( new MockRunner[mockRunners.size()] );
 	}
 
 	private class MockRequestLog extends AbstractLifeCycle implements RequestLog
 	{
-		public void log(Request request, Response response)
+		public void log( Request request, Response response )
 		{
-			if (!SoapUI.getSettings().getBoolean(HttpSettings.ENABLE_MOCK_WIRE_LOG))
+			if( !SoapUI.getSettings().getBoolean( HttpSettings.ENABLE_MOCK_WIRE_LOG ) )
 				return;
 
-			if (SoapUI.getLogMonitor() == null || SoapUI.getLogMonitor().getLogArea("jetty log") == null
-					|| SoapUI.getLogMonitor().getLogArea("jetty log").getLoggers() == null)
+			if( SoapUI.getLogMonitor() == null || SoapUI.getLogMonitor().getLogArea( "jetty log" ) == null
+					|| SoapUI.getLogMonitor().getLogArea( "jetty log" ).getLoggers() == null )
 				return;
 
-			Logger logger = SoapUI.getLogMonitor().getLogArea("jetty log").getLoggers()[0];
+			Logger logger = SoapUI.getLogMonitor().getLogArea( "jetty log" ).getLoggers()[0];
 
 			try
 			{
 				ServletInputStream inputStream = request.getInputStream();
-				if (inputStream instanceof CapturingServletInputStream)
+				if( inputStream instanceof CapturingServletInputStream )
 				{
-					ByteArrayOutputStream byteArrayOutputStream = ((CapturingServletInputStream) inputStream).captureOutputStream;
+					ByteArrayOutputStream byteArrayOutputStream = ( ( CapturingServletInputStream )inputStream ).captureOutputStream;
 					String str = request.toString() + byteArrayOutputStream.toString();
-					BufferedReader reader = new BufferedReader(new StringReader(str));
-					((CapturingServletInputStream) inputStream).captureOutputStream = new ByteArrayOutputStream();
+					BufferedReader reader = new BufferedReader( new StringReader( str ) );
+					( ( CapturingServletInputStream )inputStream ).captureOutputStream = new ByteArrayOutputStream();
 
 					String line = reader.readLine();
-					while (line != null)
+					while( line != null )
 					{
-						logger.info(">> \"" + line + "\"");
+						logger.info( ">> \"" + line + "\"" );
 						line = reader.readLine();
 					}
 				}
 			}
-			catch (Throwable e)
+			catch( Throwable e )
 			{
-				SoapUI.logError(e);
+				SoapUI.logError( e );
 			}
 
 			try
 			{
 				ServletOutputStream outputStream = response.getOutputStream();
-				if (outputStream instanceof CapturingServletOutputStream)
+				if( outputStream instanceof CapturingServletOutputStream )
 				{
-					ByteArrayOutputStream byteArrayOutputStream = ((CapturingServletOutputStream) outputStream).captureOutputStream;
+					ByteArrayOutputStream byteArrayOutputStream = ( ( CapturingServletOutputStream )outputStream ).captureOutputStream;
 					String str = request.toString() + byteArrayOutputStream.toString();
-					BufferedReader reader = new BufferedReader(new StringReader(str));
-					((CapturingServletOutputStream) outputStream).captureOutputStream = new ByteArrayOutputStream();
+					BufferedReader reader = new BufferedReader( new StringReader( str ) );
+					( ( CapturingServletOutputStream )outputStream ).captureOutputStream = new ByteArrayOutputStream();
 
 					String line = reader.readLine();
-					while (line != null)
+					while( line != null )
 					{
-						logger.info("<< \"" + line + "\"");
+						logger.info( "<< \"" + line + "\"" );
 						line = reader.readLine();
 					}
 				}
 			}
-			catch (Throwable e)
+			catch( Throwable e )
 			{
-				SoapUI.logError(e);
+				SoapUI.logError( e );
 			}
 		}
 	}

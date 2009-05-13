@@ -12,6 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
@@ -20,32 +24,28 @@ import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.resolver.ResolveContext;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 public abstract class AbstractPathPropertySupport
 {
 	private final String propertyName;
 	private final AbstractWsdlModelItem<?> modelItem;
 
-	public AbstractPathPropertySupport(AbstractWsdlModelItem<?> modelItem, String propertyName)
+	public AbstractPathPropertySupport( AbstractWsdlModelItem<?> modelItem, String propertyName )
 	{
 		this.modelItem = modelItem;
 		this.propertyName = propertyName;
 	}
 
-	public String set(String value, boolean notify)
+	public String set( String value, boolean notify )
 	{
 		String old = get();
-		value = PathUtils.relativizeResourcePath(value, modelItem);
+		value = PathUtils.relativizeResourcePath( value, modelItem );
 		try
 		{
-			setPropertyValue(PathUtils.normalizePath(value));
-			if (notify)
-				notifyUpdate(value, old);
+			setPropertyValue( PathUtils.normalizePath( value ) );
+			if( notify )
+				notifyUpdate( value, old );
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
 			e.printStackTrace();
 		}
@@ -59,7 +59,7 @@ public abstract class AbstractPathPropertySupport
 		{
 			return getPropertyValue();
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
 			e.printStackTrace();
 			return null;
@@ -76,20 +76,20 @@ public abstract class AbstractPathPropertySupport
 		return modelItem;
 	}
 
-	public abstract void setPropertyValue(String value) throws Exception;
+	public abstract void setPropertyValue( String value ) throws Exception;
 
-	protected void notifyUpdate(String value, String old)
+	protected void notifyUpdate( String value, String old )
 	{
-		modelItem.notifyPropertyChanged(modelItem.getClass().getName() + "@" + propertyName, old, value);
+		modelItem.notifyPropertyChanged( modelItem.getClass().getName() + "@" + propertyName, old, value );
 	}
 
-	public String expand(TestRunContext context)
+	public String expand( TestRunContext context )
 	{
 		try
 		{
-			return PathUtils.expandPath(getPropertyValue(), modelItem, context);
+			return PathUtils.expandPath( getPropertyValue(), modelItem, context );
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
 			e.printStackTrace();
 			return null;
@@ -100,9 +100,9 @@ public abstract class AbstractPathPropertySupport
 	{
 		try
 		{
-			return PathUtils.resolveResourcePath(getPropertyValue(), modelItem);
+			return PathUtils.resolveResourcePath( getPropertyValue(), modelItem );
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
 			e.printStackTrace();
 			return null;
@@ -112,22 +112,22 @@ public abstract class AbstractPathPropertySupport
 	public String expandUrl()
 	{
 		String result = expand();
-		if( StringUtils.hasContent( result ))
+		if( StringUtils.hasContent( result ) )
 		{
 			try
 			{
-				if (PathUtils.isFilePath(result) && !result.startsWith("file:"))
+				if( PathUtils.isFilePath( result ) && !result.startsWith( "file:" ) )
 				{
-					result = new File(result).toURI().toURL().toString();
+					result = new File( result ).toURI().toURL().toString();
 				}
 				else
 				{
-					result = new URL(result).toString();
+					result = new URL( result ).toString();
 				}
 			}
-			catch (MalformedURLException e)
+			catch( MalformedURLException e )
 			{
-				SoapUI.logError(e);
+				SoapUI.logError( e );
 			}
 		}
 
@@ -136,99 +136,99 @@ public abstract class AbstractPathPropertySupport
 
 	public abstract String getPropertyValue() throws Exception;
 
-	public void resolveFile(ResolveContext<?> context, String errorDescription)
+	public void resolveFile( ResolveContext<?> context, String errorDescription )
 	{
-		resolveFile(context, errorDescription, null, null, true);
+		resolveFile( context, errorDescription, null, null, true );
 	}
 
 	public boolean containsPropertyExpansion()
 	{
 		try
 		{
-			return PropertyExpansionUtils.containsPropertyExpansion( getPropertyValue());
+			return PropertyExpansionUtils.containsPropertyExpansion( getPropertyValue() );
 		}
-		catch (Exception e1)
+		catch( Exception e1 )
 		{
-			SoapUI.logError(e1);
+			SoapUI.logError( e1 );
 			return false;
 		}
 	}
-	
-	public void resolveFile(ResolveContext<?> context, String errorDescription, String extension, String fileType,
-			final boolean notify)
+
+	public void resolveFile( ResolveContext<?> context, String errorDescription, String extension, String fileType,
+			final boolean notify )
 	{
-		if( containsPropertyExpansion())
+		if( containsPropertyExpansion() )
 			return;
-		
+
 		String source = expand();
-		if (StringUtils.hasContent(source))
+		if( StringUtils.hasContent( source ) )
 		{
 			try
 			{
-				new URL(source);
+				new URL( source );
 			}
-			catch (Exception e)
+			catch( Exception e )
 			{
-				File file = new File(source);
-				if (!file.exists() )
+				File file = new File( source );
+				if( !file.exists() )
 				{
-					if (context.hasThisModelItem(modelItem, errorDescription, source))
+					if( context.hasThisModelItem( modelItem, errorDescription, source ) )
 						return;
-					context.addPathToResolve(modelItem, errorDescription, source, new ResolveContext.FileResolver(
-							"Select File", extension, fileType, file.getParent())
+					context.addPathToResolve( modelItem, errorDescription, source, new ResolveContext.FileResolver(
+							"Select File", extension, fileType, file.getParent() )
 					{
 
 						@Override
-						public boolean apply(File newFile)
+						public boolean apply( File newFile )
 						{
-							set(newFile.getAbsolutePath(), notify);
+							set( newFile.getAbsolutePath(), notify );
 							return true;
 						}
-					});
+					} );
 				}
 				else
 				{
-					if (context.hasThisModelItem(modelItem, errorDescription, source))
-						context.getPath(modelItem, errorDescription, source).setSolved(true);
+					if( context.hasThisModelItem( modelItem, errorDescription, source ) )
+						context.getPath( modelItem, errorDescription, source ).setSolved( true );
 				}
 			}
 		}
 	}
 
-	public void resolveFolder(ResolveContext<?> context, String errorDescription, final boolean notify)
+	public void resolveFolder( ResolveContext<?> context, String errorDescription, final boolean notify )
 	{
-		if( containsPropertyExpansion())
+		if( containsPropertyExpansion() )
 			return;
-		
+
 		String source = expand();
-		if (StringUtils.hasContent(source))
+		if( StringUtils.hasContent( source ) )
 		{
 			try
 			{
-				new URL(source);
+				new URL( source );
 			}
-			catch (Exception e)
+			catch( Exception e )
 			{
-				File file = new File(source);
-				if (!file.exists() || !file.isDirectory())
+				File file = new File( source );
+				if( !file.exists() || !file.isDirectory() )
 				{
-					if (context.hasThisModelItem(modelItem, errorDescription, source))
+					if( context.hasThisModelItem( modelItem, errorDescription, source ) )
 						return;
-					context.addPathToResolve(modelItem, errorDescription, source, new ResolveContext.DirectoryResolver(
-							"Select Directory", source)
+					context.addPathToResolve( modelItem, errorDescription, source, new ResolveContext.DirectoryResolver(
+							"Select Directory", source )
 					{
 						@Override
-						public boolean apply(File newFile)
+						public boolean apply( File newFile )
 						{
-							set(newFile.getAbsolutePath(), notify);
+							set( newFile.getAbsolutePath(), notify );
 							return true;
 						}
-					});
+					} );
 				}
 				else
 				{
-					if (context.hasThisModelItem(modelItem, errorDescription, source))
-						context.getPath(modelItem, errorDescription, source).setSolved(true);
+					if( context.hasThisModelItem( modelItem, errorDescription, source ) )
+						context.getPath( modelItem, errorDescription, source ).setSolved( true );
 				}
 			}
 		}

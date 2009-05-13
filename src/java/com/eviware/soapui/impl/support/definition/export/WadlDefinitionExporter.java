@@ -18,31 +18,28 @@ import com.eviware.soapui.impl.wsdl.support.Constants;
 
 public class WadlDefinitionExporter extends AbstractDefinitionExporter<RestService>
 {
-   public WadlDefinitionExporter(InterfaceDefinition<RestService> definition)
-   {
-      super(definition);
-   }
+	public WadlDefinitionExporter( InterfaceDefinition<RestService> definition )
+	{
+		super( definition );
+	}
 
-   public WadlDefinitionExporter(RestService restService) throws Exception
-   {
-      this( restService.getDefinitionContext().getInterfaceDefinition());
-   }
+	public WadlDefinitionExporter( RestService restService ) throws Exception
+	{
+		this( restService.getDefinitionContext().getInterfaceDefinition() );
+	}
 
-   public String export( String folderName ) throws Exception
-   {
-      if( getDefinition().getInterface().isGenerated() )
-         setDefinition( getDefinition().getInterface().getWadlContext().regenerateWadl());
+	public String export( String folderName ) throws Exception
+	{
+		if( getDefinition().getInterface().isGenerated() )
+			setDefinition( getDefinition().getInterface().getWadlContext().regenerateWadl() );
 
-      return super.export( folderName );    
-   }
+		return super.export( folderName );
+	}
 
-   protected String[] getLocationXPathsToReplace()
-   {
-      return new String[]
-              {
-                      "declare namespace s='" + Constants.WADL10_NS + "' .//s:grammars/s:include/@href",
-                      "declare namespace s='http://www.w3.org/2001/XMLSchema' .//s:import/@schemaLocation",
-                      "declare namespace s='http://www.w3.org/2001/XMLSchema' .//s:include/@schemaLocation"
-              };
-   }
+	protected String[] getLocationXPathsToReplace()
+	{
+		return new String[] { "declare namespace s='" + Constants.WADL10_NS + "' .//s:grammars/s:include/@href",
+				"declare namespace s='http://www.w3.org/2001/XMLSchema' .//s:import/@schemaLocation",
+				"declare namespace s='http://www.w3.org/2001/XMLSchema' .//s:include/@schemaLocation" };
+	}
 }

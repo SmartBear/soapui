@@ -41,7 +41,7 @@ public class CaptureInputStream extends FilterInputStream
 		capture.write( b );
 		return i;
 	}
-	
+
 	@Override
 	public int read( byte[] b, int off, int len ) throws IOException
 	{

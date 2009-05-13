@@ -12,62 +12,63 @@
 
 package com.eviware.soapui.ui;
 
-import com.eviware.soapui.support.components.BrowserComponent;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.ui.support.DefaultDesktopPanel;
+import java.awt.BorderLayout;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.components.BrowserComponent;
+import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 
 public class URLDesktopPanel extends DefaultDesktopPanel
 {
-   private BrowserComponent browser;
+	private BrowserComponent browser;
 
-   public URLDesktopPanel( String title, String description, String url )
-   {
-      super( title, description, new JPanel( new BorderLayout() ) );
+	public URLDesktopPanel( String title, String description, String url )
+	{
+		super( title, description, new JPanel( new BorderLayout() ) );
 
-      JPanel panel = (JPanel) getComponent();
+		JPanel panel = ( JPanel )getComponent();
 
-      browser = new BrowserComponent();
-      panel.add( browser.getComponent(), BorderLayout.CENTER );
+		browser = new BrowserComponent();
+		panel.add( browser.getComponent(), BorderLayout.CENTER );
 
-      if( StringUtils.hasContent( url ))
-         navigate( url, null, true );
-   }
+		if( StringUtils.hasContent( url ) )
+			navigate( url, null, true );
+	}
 
-   public void navigate( String url, String errorUrl, boolean async )
-   {
-      if( async )
-      {
-         new Thread( new Navigator( url, errorUrl ) ).start();
-      }
-      else
-      {
-         browser.navigate( url, errorUrl );
-      }
-   }
+	public void navigate( String url, String errorUrl, boolean async )
+	{
+		if( async )
+		{
+			new Thread( new Navigator( url, errorUrl ) ).start();
+		}
+		else
+		{
+			browser.navigate( url, errorUrl );
+		}
+	}
 
-   public boolean onClose( boolean canCancel )
-   {
-      browser.release();
-      return super.onClose( canCancel );
-   }
+	public boolean onClose( boolean canCancel )
+	{
+		browser.release();
+		return super.onClose( canCancel );
+	}
 
-   private class Navigator implements Runnable
-   {
-      private final String url;
-      private final String errorUrl;
+	private class Navigator implements Runnable
+	{
+		private final String url;
+		private final String errorUrl;
 
-      public Navigator( String url, String errorUrl )
-      {
-         this.url = url;
-         this.errorUrl = errorUrl;
-      }
+		public Navigator( String url, String errorUrl )
+		{
+			this.url = url;
+			this.errorUrl = errorUrl;
+		}
 
-      public void run()
-      {
-         browser.navigate( url, errorUrl );
-      }
-   }
+		public void run()
+		{
+			browser.navigate( url, errorUrl );
+		}
+	}
 }

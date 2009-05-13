@@ -12,6 +12,23 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss.entries;
 
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.StringWriter;
+import java.util.List;
+import java.util.Vector;
+
+import javax.swing.JComponent;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+
+import org.apache.ws.security.WSConstants;
+import org.apache.ws.security.WSEncryptionPart;
+import org.apache.ws.security.components.crypto.Crypto;
+import org.apache.ws.security.message.WSSecEncrypt;
+import org.apache.ws.security.message.WSSecHeader;
+import org.w3c.dom.Document;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.WSSEntryConfig;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
@@ -27,19 +44,6 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.jgoodies.binding.PresentationModel;
-import org.apache.ws.security.WSConstants;
-import org.apache.ws.security.WSEncryptionPart;
-import org.apache.ws.security.components.crypto.Crypto;
-import org.apache.ws.security.message.WSSecEncrypt;
-import org.apache.ws.security.message.WSSecHeader;
-import org.w3c.dom.Document;
-
-import javax.swing.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.io.StringWriter;
-import java.util.List;
-import java.util.Vector;
 
 public class AddEncryptionEntry extends WssEntryBase
 {
@@ -68,54 +72,58 @@ public class AddEncryptionEntry extends WssEntryBase
 	protected JComponent buildUI()
 	{
 		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<AddSignatureEntry>( this ) );
-		
-		form.addSpace(5);
+
+		form.addSpace( 5 );
 		wssContainerListener = new InternalWssContainerListener();
 		getWssContainer().addWssContainerListener( wssContainerListener );
 
-		KeystoresComboBoxModel keystoresComboBoxModel = new KeystoresComboBoxModel( getWssContainer(), getWssContainer().getCryptoByName( crypto ) );
-		form.appendComboBox( "crypto", "Keystore", keystoresComboBoxModel, "Selects the Keystore containing the key to use for signing" ).addItemListener( 
-								new ItemListener() {
+		KeystoresComboBoxModel keystoresComboBoxModel = new KeystoresComboBoxModel( getWssContainer(), getWssContainer()
+				.getCryptoByName( crypto ) );
+		form.appendComboBox( "crypto", "Keystore", keystoresComboBoxModel,
+				"Selects the Keystore containing the key to use for signing" ).addItemListener( new ItemListener()
+		{
 
-									public void itemStateChanged( ItemEvent e )
-									{
-										keyAliasComboBoxModel.update( getWssContainer().getCryptoByName( crypto ) );
-									}} );
+			public void itemStateChanged( ItemEvent e )
+			{
+				keyAliasComboBoxModel.update( getWssContainer().getCryptoByName( crypto ) );
+			}
+		} );
 
 		keyAliasComboBoxModel = new KeyAliasComboBoxModel( getWssContainer().getCryptoByName( crypto ) );
 		form.appendComboBox( "username", "Alias", keyAliasComboBoxModel, "The alias for the key to use for encryption" );
 
-		form.appendPasswordField( "password", "Password", "The password for the key to use for encryption (if it is private)" );
+		form.appendPasswordField( "password", "Password",
+				"The password for the key to use for encryption (if it is private)" );
 
 		form.appendComboBox( "keyIdentifierType", "Key Identifier Type", new Integer[] { 0, 1, 2, 3, 4, 5, 6, 8 },
-					"Sets which key identifier to use" ).setRenderer( new KeyIdentifierTypeRenderer() );
+				"Sets which key identifier to use" ).setRenderer( new KeyIdentifierTypeRenderer() );
 
-		( embeddedKeyNameTextField = form.appendTextField( "embeddedKeyName", "Embedded Key Name", "The embedded key name" ) )
-					.setEnabled( keyIdentifierType == WSConstants.EMBEDDED_KEYNAME );
-		( embeddedKeyNamePassword = form.appendPasswordField( "embeddedKeyPassword", "Embedded Key Password", "The embedded key password" ) )
-					.setEnabled( keyIdentifierType == WSConstants.EMBEDDED_KEYNAME );
+		( embeddedKeyNameTextField = form.appendTextField( "embeddedKeyName", "Embedded Key Name",
+				"The embedded key name" ) ).setEnabled( keyIdentifierType == WSConstants.EMBEDDED_KEYNAME );
+		( embeddedKeyNamePassword = form.appendPasswordField( "embeddedKeyPassword", "Embedded Key Password",
+				"The embedded key password" ) ).setEnabled( keyIdentifierType == WSConstants.EMBEDDED_KEYNAME );
 
 		form.appendComboBox( "symmetricEncAlgorithm", "Symmetric Encoding Algorithm", new String[] { DEFAULT_OPTION,
-					WSConstants.AES_128, WSConstants.AES_192, WSConstants.AES_256, WSConstants.TRIPLE_DES },
-					"Set the name of the symmetric encryption algorithm to use" );
+				WSConstants.AES_128, WSConstants.AES_192, WSConstants.AES_256, WSConstants.TRIPLE_DES },
+				"Set the name of the symmetric encryption algorithm to use" );
 
 		form.appendComboBox( "encKeyTransport", "Key Encryption Algorithm", new String[] { DEFAULT_OPTION,
-					WSConstants.KEYTRANSPORT_RSA15, WSConstants.KEYTRANSPORT_RSAOEP },
-					"Sets the algorithm to encode the symmetric key" );
+				WSConstants.KEYTRANSPORT_RSA15, WSConstants.KEYTRANSPORT_RSAOEP },
+				"Sets the algorithm to encode the symmetric key" );
 
 		form.appendComboBox( "encryptionCanonicalization", "Encryption Canonicalization", new String[] { DEFAULT_OPTION,
-					WSConstants.C14N_OMIT_COMMENTS, WSConstants.C14N_WITH_COMMENTS, WSConstants.C14N_EXCL_OMIT_COMMENTS,
-					WSConstants.C14N_EXCL_WITH_COMMENTS },
-					"Set the name of an optional canonicalization algorithm to use before encryption" );
+				WSConstants.C14N_OMIT_COMMENTS, WSConstants.C14N_WITH_COMMENTS, WSConstants.C14N_EXCL_OMIT_COMMENTS,
+				WSConstants.C14N_EXCL_WITH_COMMENTS },
+				"Set the name of an optional canonicalization algorithm to use before encryption" );
 
 		form.appendCheckBox( "encryptSymmetricKey", "Create Encrypted Key",
-					"Indicates whether to encrypt the symmetric key into an EncryptedKey or not" );
+				"Indicates whether to encrypt the symmetric key into an EncryptedKey or not" );
 
 		form.append( "Parts", new WSPartsTable( parts, this ) );
 
 		return new JScrollPane( form.getPanel() );
 	}
-	
+
 	public void release()
 	{
 		if( wssContainerListener != null )
@@ -237,7 +245,7 @@ public class AddEncryptionEntry extends WssEntryBase
 	{
 		if( DEFAULT_OPTION.equals( symmetricEncAlgorithm ) )
 			symmetricEncAlgorithm = null;
-		
+
 		this.symmetricEncAlgorithm = symmetricEncAlgorithm;
 		saveConfig();
 	}
@@ -245,14 +253,14 @@ public class AddEncryptionEntry extends WssEntryBase
 	public void process( WSSecHeader secHeader, Document doc, PropertyExpansionContext context )
 	{
 		StringWriter writer = null;
-		
+
 		try
 		{
 			WSSecEncrypt wsEncrypt = new WSSecEncrypt();
 			WssCrypto wssCrypto = getWssContainer().getCryptoByName( crypto );
 			Crypto crypto = wssCrypto.getCrypto();
 
-			wsEncrypt.setUserInfo( context.expand( getUsername() ));
+			wsEncrypt.setUserInfo( context.expand( getUsername() ) );
 
 			if( getKeyIdentifierType() != 0 )
 			{
@@ -269,42 +277,43 @@ public class AddEncryptionEntry extends WssEntryBase
 			{
 				wsEncrypt.setSymmetricEncAlgorithm( getSymmetricEncAlgorithm() );
 			}
-			
+
 			if( getEncKeyTransport() != null )
 			{
 				wsEncrypt.setKeyEnc( getEncKeyTransport() );
 			}
-			
+
 			if( getEncryptionCanonicalization() != null )
 			{
 				wsEncrypt.setEncCanonicalization( getEncryptionCanonicalization() );
 			}
-			
+
 			wsEncrypt.setEncryptSymmKey( isEncryptSymmetricKey() );
 
 			if( parts.size() > 0 )
 			{
 				Vector<WSEncryptionPart> wsParts = createWSParts( parts );
-				if( !wsParts.isEmpty())
+				if( !wsParts.isEmpty() )
 					wsEncrypt.setParts( wsParts );
 			}
 
 			// create backup
 			writer = new StringWriter();
 			XmlUtils.serialize( doc, writer );
-			
+
 			wsEncrypt.build( doc, crypto, secHeader );
 		}
 		catch( Exception e )
 		{
 			SoapUI.logError( e );
-			
-			if( writer != null && writer.getBuffer().length() > 0)
+
+			if( writer != null && writer.getBuffer().length() > 0 )
 			{
 				try
 				{
-					// try to restore.. 
-					doc.replaceChild( doc.importNode( XmlUtils.parseXml( writer.toString() ).getDocumentElement(), true ), doc.getDocumentElement() );
+					// try to restore..
+					doc.replaceChild( doc.importNode( XmlUtils.parseXml( writer.toString() ).getDocumentElement(), true ),
+							doc.getDocumentElement() );
 				}
 				catch( Exception e1 )
 				{
@@ -330,13 +339,13 @@ public class AddEncryptionEntry extends WssEntryBase
 		this.crypto = crypto;
 		saveConfig();
 	}
-	
+
 	private final class InternalWssContainerListener extends WssContainerListenerAdapter
 	{
 		@Override
 		public void cryptoUpdated( WssCrypto crypto )
 		{
-			if( crypto.getLabel().equals( getCrypto()))
+			if( crypto.getLabel().equals( getCrypto() ) )
 				keyAliasComboBoxModel.update( crypto );
 		}
 	}

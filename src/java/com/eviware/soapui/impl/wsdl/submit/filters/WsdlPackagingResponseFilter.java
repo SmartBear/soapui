@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
+import org.apache.commons.httpclient.Header;
+
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
@@ -20,31 +22,30 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.W
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
-import org.apache.commons.httpclient.Header;
 
 public class WsdlPackagingResponseFilter extends AbstractRequestFilter
 {
 	@Override
-	public void afterWsdlRequest(SubmitContext context, WsdlRequest request)
+	public void afterWsdlRequest( SubmitContext context, WsdlRequest request )
 	{
-		ExtendedPostMethod postMethod = (ExtendedPostMethod) context.getProperty(BaseHttpRequestTransport.HTTP_METHOD);
-		String requestContent = (String) context.getProperty(BaseHttpRequestTransport.REQUEST_CONTENT);
+		ExtendedPostMethod postMethod = ( ExtendedPostMethod )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
+		String requestContent = ( String )context.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
 		XmlBeansSettingsImpl settings = request.getSettings();
 
 		// check content-type for multiplart
-		Header responseContentTypeHeader = postMethod.getResponseHeader("Content-Type");
+		Header responseContentTypeHeader = postMethod.getResponseHeader( "Content-Type" );
 		Response response = null;
 
-		if (!settings.getBoolean(WsdlRequest.INLINE_RESPONSE_ATTACHMENTS) && responseContentTypeHeader != null
-				&& responseContentTypeHeader.getValue().toUpperCase().startsWith("MULTIPART"))
+		if( !settings.getBoolean( WsdlRequest.INLINE_RESPONSE_ATTACHMENTS ) && responseContentTypeHeader != null
+				&& responseContentTypeHeader.getValue().toUpperCase().startsWith( "MULTIPART" ) )
 		{
-			response = new WsdlMimeMessageResponse(request, postMethod, requestContent, context);
+			response = new WsdlMimeMessageResponse( request, postMethod, requestContent, context );
 		}
 		else
 		{
-			response = new WsdlSinglePartHttpResponse(request, postMethod, requestContent, context);
+			response = new WsdlSinglePartHttpResponse( request, postMethod, requestContent, context );
 		}
 
-		context.setProperty(BaseHttpRequestTransport.RESPONSE, response);
+		context.setProperty( BaseHttpRequestTransport.RESPONSE, response );
 	}
 }

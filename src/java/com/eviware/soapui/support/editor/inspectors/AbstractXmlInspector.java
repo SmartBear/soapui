@@ -39,22 +39,22 @@ public abstract class AbstractXmlInspector implements XmlInspector
 	private XmlEditor editor;
 	private final String inspectorId;
 	private boolean active;
-	
+
 	protected AbstractXmlInspector( String title, String description, boolean enabled, String inspectorId )
 	{
 		this.title = title;
 		this.description = description;
 		this.enabled = enabled;
 		this.inspectorId = inspectorId;
-	
+
 		propertySupport = new PropertyChangeSupport( this );
 	}
-	
+
 	public final String getInspectorId()
 	{
 		return inspectorId;
 	}
-	
+
 	public void deactivate()
 	{
 		active = false;
@@ -74,7 +74,7 @@ public abstract class AbstractXmlInspector implements XmlInspector
 	{
 		propertySupport.removePropertyChangeListener( listener );
 	}
-	
+
 	public String getDescription()
 	{
 		return description;
@@ -113,12 +113,12 @@ public abstract class AbstractXmlInspector implements XmlInspector
 
 	public void init( Editor<XmlDocument> editor )
 	{
-		this.editor = (XmlEditor) editor;
+		this.editor = ( XmlEditor )editor;
 	}
 
 	public Editor<XmlDocument> getEditor()
 	{
-		return (Editor<XmlDocument>)editor;
+		return ( Editor<XmlDocument> )editor;
 	}
 
 	public void release()

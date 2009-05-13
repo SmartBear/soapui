@@ -33,11 +33,14 @@ public class WsdlInterfaceSoapUIActionGroup extends DefaultSoapUIActionGroup<Wsd
 	public SoapUIActionMappingList<WsdlInterface> getActionMappings( WsdlInterface modelItem )
 	{
 		SoapUIActionMappingList<WsdlInterface> actionMappings = super.getActionMappings( modelItem );
-		
-//		SoapUIActionMapping<WsdlInterface> mapping = actionMappings.getMapping( WSToolsRegenerateJava2WsdlAction.SOAPUI_ACTION_ID );
-//		WSToolsRegenerateJava2WsdlAction action = ( WSToolsRegenerateJava2WsdlAction ) mapping.getAction();
-//		mapping.setEnabled( modelItem.getSettings().isSet( action.getValuesSettingID() ) );
-		
+
+		// SoapUIActionMapping<WsdlInterface> mapping = actionMappings.getMapping(
+		// WSToolsRegenerateJava2WsdlAction.SOAPUI_ACTION_ID );
+		// WSToolsRegenerateJava2WsdlAction action = (
+		// WSToolsRegenerateJava2WsdlAction ) mapping.getAction();
+		// mapping.setEnabled( modelItem.getSettings().isSet(
+		// action.getValuesSettingID() ) );
+
 		return actionMappings;
 	}
 }

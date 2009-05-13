@@ -28,7 +28,7 @@ import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 
 /**
- * Asserts that the specified message is a valid SOAP Message 
+ * Asserts that the specified message is a valid SOAP Message
  * 
  * @author ole.matzura
  */
@@ -42,61 +42,64 @@ public class SoapResponseAssertion extends WsdlMessageAssertion implements Respo
 	{
 		super( assertionConfig, assertable, false, false, false, true );
 	}
-	
+
 	@Override
 	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
-				throws AssertionException
+			throws AssertionException
 	{
-		WsdlContext wsdlContext = ((WsdlMessageExchange)messageExchange).getOperation().getInterface().getWsdlContext();
+		WsdlContext wsdlContext = ( ( WsdlMessageExchange )messageExchange ).getOperation().getInterface()
+				.getWsdlContext();
 		WsdlValidator validator = new WsdlValidator( wsdlContext );
-		
+
 		try
 		{
-			AssertionError[] errors = validator.assertResponse( (WsdlMessageExchange) messageExchange, true );
-			if (errors.length > 0)
-				throw new AssertionException(errors);
+			AssertionError[] errors = validator.assertResponse( ( WsdlMessageExchange )messageExchange, true );
+			if( errors.length > 0 )
+				throw new AssertionException( errors );
 		}
 		catch( AssertionException e )
 		{
 			throw e;
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
-			throw new AssertionException( new AssertionError( e.getMessage() ));
+			throw new AssertionException( new AssertionError( e.getMessage() ) );
 		}
-		
+
 		return "Response Envelope OK";
 	}
 
 	@Override
-	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context ) throws AssertionException
+	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
+			throws AssertionException
 	{
-		WsdlContext wsdlContext = ((WsdlMessageExchange)messageExchange).getOperation().getInterface().getWsdlContext();
+		WsdlContext wsdlContext = ( ( WsdlMessageExchange )messageExchange ).getOperation().getInterface()
+				.getWsdlContext();
 		WsdlValidator validator = new WsdlValidator( wsdlContext );
-		
+
 		try
 		{
-			AssertionError[] errors = validator.assertRequest( (WsdlMessageExchange) messageExchange, true );
-			if (errors.length > 0)
-				throw new AssertionException(errors);
+			AssertionError[] errors = validator.assertRequest( ( WsdlMessageExchange )messageExchange, true );
+			if( errors.length > 0 )
+				throw new AssertionException( errors );
 		}
 		catch( AssertionException e )
 		{
 			throw e;
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
-			throw new AssertionException( new AssertionError( e.getMessage() ));
+			throw new AssertionException( new AssertionError( e.getMessage() ) );
 		}
-		
+
 		return "Request Envelope OK";
 	}
-	
+
 	public static class Factory extends AbstractTestAssertionFactory
 	{
 		public Factory()
 		{
-			super(SoapResponseAssertion.ID, SoapResponseAssertion.LABEL, SoapResponseAssertion.class, WsdlRequest.class);
+			super( SoapResponseAssertion.ID, SoapResponseAssertion.LABEL, SoapResponseAssertion.class, WsdlRequest.class );
 		}
 	}
 }

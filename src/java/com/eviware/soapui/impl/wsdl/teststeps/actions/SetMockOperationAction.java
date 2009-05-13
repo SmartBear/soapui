@@ -12,6 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -26,11 +29,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.eviware.x.form.support.AField.AFieldType;
 
 public class SetMockOperationAction extends AbstractSoapUIAction<WsdlMockResponseTestStep>
 {
@@ -47,12 +47,14 @@ public class SetMockOperationAction extends AbstractSoapUIAction<WsdlMockRespons
 		if( dialog == null )
 		{
 			dialog = ADialogBuilder.buildDialog( CreateForm.class );
-			dialog.getFormField( CreateForm.INTERFACE ).addFormFieldListener( new XFormFieldListener() {
+			dialog.getFormField( CreateForm.INTERFACE ).addFormFieldListener( new XFormFieldListener()
+			{
 
 				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 				{
 					updateOperations( newValue );
-				}} );
+				}
+			} );
 		}
 
 		project = mockResponseTestStep.getTestCase().getTestSuite().getProject();
@@ -60,17 +62,16 @@ public class SetMockOperationAction extends AbstractSoapUIAction<WsdlMockRespons
 		for( int c = 0; c < project.getInterfaceCount(); c++ )
 		{
 			if( project.getInterfaceAt( c ).getOperationCount() > 0 )
-				interfaces.add( project.getInterfaceAt( c ));
+				interfaces.add( project.getInterfaceAt( c ) );
 		}
-		
-		
+
 		dialog.setOptions( CreateForm.INTERFACE, new ModelItemNames<Interface>( interfaces ).getNames() );
 		String ifaceName = mockResponseTestStep.getOperation().getInterface().getName();
 		updateOperations( ifaceName );
 
 		dialog.setValue( CreateForm.INTERFACE, ifaceName );
 		dialog.setValue( CreateForm.OPERATION, mockResponseTestStep.getOperation().getName() );
-		
+
 		if( dialog.show() )
 		{
 			mockResponseTestStep.setInterface( dialog.getValue( CreateForm.INTERFACE ) );
@@ -80,19 +81,17 @@ public class SetMockOperationAction extends AbstractSoapUIAction<WsdlMockRespons
 
 	private void updateOperations( String interfaceName )
 	{
-		WsdlInterface iface = (WsdlInterface) project.getInterfaceByName( interfaceName );
-		dialog.setOptions( CreateForm.OPERATION,  
-					new ModelItemNames<Operation>( iface.getOperationList() ).getNames() );
+		WsdlInterface iface = ( WsdlInterface )project.getInterfaceByName( interfaceName );
+		dialog.setOptions( CreateForm.OPERATION, new ModelItemNames<Operation>( iface.getOperationList() ).getNames() );
 	}
 
-	@AForm(description = "Set the Operation to mock (required for dispatch and validations)", name = "Set MockOperation",
-				helpUrl= HelpUrls.SETMOCKOPERATION_HELP_URL, icon=UISupport.TOOL_ICON_PATH)
+	@AForm( description = "Set the Operation to mock (required for dispatch and validations)", name = "Set MockOperation", helpUrl = HelpUrls.SETMOCKOPERATION_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
 	private interface CreateForm
 	{
-		@AField(description = "Specifies the operation to be mocked", name = "Operation", type = AFieldType.ENUMERATION)
+		@AField( description = "Specifies the operation to be mocked", name = "Operation", type = AFieldType.ENUMERATION )
 		public final static String OPERATION = "Operation";
-		
-		@AField(description = "Specifies the interface containing the operation to be mocked", name = "Interface", type = AFieldType.ENUMERATION)
+
+		@AField( description = "Specifies the interface containing the operation to be mocked", name = "Interface", type = AFieldType.ENUMERATION )
 		public final static String INTERFACE = "Interface";
 	}
 }

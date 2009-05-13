@@ -45,16 +45,17 @@ public class TestCaseTestRunLog extends TestRunLog
 		super( testCase.getSettings() );
 		this.testCase = testCase;
 	}
-	
+
 	@Override
 	protected void addToolbarButtons( JXToolBar toolbar )
 	{
 		super.addToolbarButtons( toolbar );
-		
-		toolbar.addFixed( addToMockServiceButton = UISupport.createToolbarButton(UISupport.createImageIcon( "/mockService.gif" ) ) );
+
+		toolbar.addFixed( addToMockServiceButton = UISupport.createToolbarButton( UISupport
+				.createImageIcon( "/mockService.gif" ) ) );
 		addToMockServiceButton.addActionListener( new AddToMockServiceAction() );
 	}
-	
+
 	public void release()
 	{
 		if( addDialog != null )
@@ -62,7 +63,7 @@ public class TestCaseTestRunLog extends TestRunLog
 			addDialog.release();
 			addDialog = null;
 		}
-		
+
 		super.release();
 	}
 
@@ -73,7 +74,7 @@ public class TestCaseTestRunLog extends TestRunLog
 
 		@AField( name = "Target MockService", description = "The target TestSuite", type = AFieldType.ENUMERATION )
 		public final static String MOCKSERVICE = "Target MockService";
-		
+
 		@AField( name = "Open Editor", description = "Open the created MockService", type = AFieldType.BOOLEAN )
 		public final static String OPENEDITOR = "Open Editor";
 
@@ -81,7 +82,7 @@ public class TestCaseTestRunLog extends TestRunLog
 		{
 			if( getLogListModel().getSize() == 0 )
 				return;
-			
+
 			if( testCase.getDiscardOkResults() )
 			{
 				UISupport.showInfoMessage( "Ok Results have been discarded" );
@@ -93,43 +94,46 @@ public class TestCaseTestRunLog extends TestRunLog
 				addDialog = ADialogBuilder.buildDialog( this.getClass() );
 			}
 
-			String[] testSuiteNames = ModelSupport.getNames( new String[] { CREATE_NEW_OPTION },  testCase.getTestSuite().getProject()
-						.getMockServiceList() );
+			String[] testSuiteNames = ModelSupport.getNames( new String[] { CREATE_NEW_OPTION }, testCase.getTestSuite()
+					.getProject().getMockServiceList() );
 			addDialog.setOptions( MOCKSERVICE, testSuiteNames );
 
 			if( addDialog.show() )
 			{
 				String targetMockServiceName = addDialog.getValue( MOCKSERVICE );
 
-				WsdlMockService mockService = testCase.getTestSuite().getProject().getMockServiceByName( targetMockServiceName );
+				WsdlMockService mockService = testCase.getTestSuite().getProject().getMockServiceByName(
+						targetMockServiceName );
 				if( mockService == null )
 				{
-					targetMockServiceName = ModelSupport.promptForUniqueName( "MockService",  testCase.getTestSuite().getProject(), "" );
+					targetMockServiceName = ModelSupport.promptForUniqueName( "MockService", testCase.getTestSuite()
+							.getProject(), "" );
 					if( targetMockServiceName == null )
 						return;
 
-					mockService =  testCase.getTestSuite().getProject().addNewMockService( targetMockServiceName );
+					mockService = testCase.getTestSuite().getProject().addNewMockService( targetMockServiceName );
 				}
 
 				int cnt = 0;
 				MessageExchangeTestStepResult result = null;
-				for( int c = 0; c < getLogListModel().getSize(); c++  )
+				for( int c = 0; c < getLogListModel().getSize(); c++ )
 				{
 					Object obj = getLogListModel().getResultAt( c );
 					if( result != obj && obj instanceof MessageExchangeTestStepResult )
 					{
-						result = ( MessageExchangeTestStepResult ) obj;
-						
+						result = ( MessageExchangeTestStepResult )obj;
+
 						for( MessageExchange me : result.getMessageExchanges() )
 						{
 							if( me.isDiscarded() )
 								continue;
-							
+
 							WsdlMockOperation mockOperation = mockService.getMockOperation( me.getOperation() );
 							if( mockOperation == null )
-								mockOperation = mockService.addNewMockOperation( ( WsdlOperation ) me.getOperation() );
+								mockOperation = mockService.addNewMockOperation( ( WsdlOperation )me.getOperation() );
 
-							WsdlMockResponse mockResponse = mockOperation.addNewMockResponse( "Recorded Test Response " + ( ++cnt ), false );
+							WsdlMockResponse mockResponse = mockOperation.addNewMockResponse( "Recorded Test Response "
+									+ ( ++cnt ), false );
 							mockResponse.setResponseContent( me.getResponseContent() );
 
 							Attachment[] requestAttachments = me.getResponseAttachments();
@@ -143,7 +147,7 @@ public class TestCaseTestRunLog extends TestRunLog
 						}
 					}
 				}
-				
+
 				if( cnt == 0 )
 				{
 					UISupport.showInfoMessage( "No response messages found" );
@@ -151,11 +155,11 @@ public class TestCaseTestRunLog extends TestRunLog
 				else
 				{
 					UISupport.showInfoMessage( "Added " + cnt + " MockResponses to MockService" );
-					
-					if( addDialog.getBooleanValue( OPENEDITOR ))
+
+					if( addDialog.getBooleanValue( OPENEDITOR ) )
 						UISupport.selectAndShow( mockService );
 				}
-				
+
 			}
 		}
 	}

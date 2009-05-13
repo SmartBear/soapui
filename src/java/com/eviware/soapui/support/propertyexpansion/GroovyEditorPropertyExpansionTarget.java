@@ -12,14 +12,16 @@
 
 package com.eviware.soapui.support.propertyexpansion;
 
+import java.awt.Point;
+
+import javax.swing.text.BadLocationException;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.support.UISupport;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
-import javax.swing.text.BadLocationException;
-import java.awt.*;
 
 public class GroovyEditorPropertyExpansionTarget extends AbstractPropertyExpansionTarget
 {
@@ -36,32 +38,32 @@ public class GroovyEditorPropertyExpansionTarget extends AbstractPropertyExpansi
 		int pos = pt == null ? -1 : textField.viewToModel( pt );
 		if( pos == -1 )
 			pos = textField.getCaretPosition();
-		
+
 		String name = expansion.getProperty().getName();
 		String javaName = createJavaName( name );
-		
+
 		javaName = UISupport.prompt( "Specify name of variable for property", "Get Property", javaName );
 		if( javaName == null )
 			return;
-		
-		String txt = "def " + javaName + " = context.expand( '" + expansion +"' )\n";
 
-      try
-      {
-         int line = textField.getLineOfOffset( pos );
-         pos = textField.getLineStartOffset( line );
+		String txt = "def " + javaName + " = context.expand( '" + expansion + "' )\n";
 
-         textField.setCaretPosition( pos );
-         textField.insert( txt,pos );
-         textField.setSelectionStart( pos );
-         textField.setSelectionEnd( pos + txt.length() );
-         textField.requestFocusInWindow();
-      }
-      catch( BadLocationException e )
-      {
-         e.printStackTrace();
-      }
-   }
+		try
+		{
+			int line = textField.getLineOfOffset( pos );
+			pos = textField.getLineStartOffset( line );
+
+			textField.setCaretPosition( pos );
+			textField.insert( txt, pos );
+			textField.setSelectionStart( pos );
+			textField.setSelectionEnd( pos + txt.length() );
+			textField.requestFocusInWindow();
+		}
+		catch( BadLocationException e )
+		{
+			e.printStackTrace();
+		}
+	}
 
 	private String createJavaName( String name )
 	{
@@ -69,12 +71,12 @@ public class GroovyEditorPropertyExpansionTarget extends AbstractPropertyExpansi
 		for( int c = 0; c < name.length(); c++ )
 		{
 			char ch = c == 0 ? name.toLowerCase().charAt( c ) : name.charAt( c );
-			if( buf.length() == 0 && Character.isJavaIdentifierStart( ch ))
+			if( buf.length() == 0 && Character.isJavaIdentifierStart( ch ) )
 				buf.append( ch );
-			else if( buf.length() > 0 && Character.isJavaIdentifierPart( ch ))
+			else if( buf.length() > 0 && Character.isJavaIdentifierPart( ch ) )
 				buf.append( ch );
 		}
-		
+
 		return buf.toString();
 	}
 

@@ -20,39 +20,37 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JXToolBar;
 
-public class RestRequestDesktopPanel extends AbstractRestRequestDesktopPanel<RestRequest, RestRequest> 
+public class RestRequestDesktopPanel extends AbstractRestRequestDesktopPanel<RestRequest, RestRequest>
 {
 	private JButton addToTestCaseButton;
-	
-	public RestRequestDesktopPanel(RestRequest modelItem)
+
+	public RestRequestDesktopPanel( RestRequest modelItem )
 	{
-		super(modelItem, modelItem);
+		super( modelItem, modelItem );
 	}
 
 	@Override
-	protected void init(RestRequest request)
+	protected void init( RestRequest request )
 	{
-		addToTestCaseButton = createActionButton(
-				SwingActionDelegate.createDelegate( AddRestRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), 
-							null, "/addToTestCase.gif"), true );
-		
-		super.init(request);
+		addToTestCaseButton = createActionButton( SwingActionDelegate.createDelegate(
+				AddRestRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), null, "/addToTestCase.gif" ), true );
+
+		super.init( request );
 	}
 
 	protected String getHelpUrl()
 	{
 		return HelpUrls.RESTREQUESTEDITOR_HELP_URL;
 	}
-	
 
-	public void setEnabled(boolean enabled)
+	public void setEnabled( boolean enabled )
 	{
-		super.setEnabled(enabled);
-		addToTestCaseButton.setEnabled(enabled);
+		super.setEnabled( enabled );
+		addToTestCaseButton.setEnabled( enabled );
 	}
 
-	protected void insertButtons(JXToolBar toolbar)
+	protected void insertButtons( JXToolBar toolbar )
 	{
-		toolbar.add(addToTestCaseButton);
+		toolbar.add( addToTestCaseButton );
 	}
 }

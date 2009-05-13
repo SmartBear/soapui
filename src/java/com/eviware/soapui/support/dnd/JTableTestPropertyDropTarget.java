@@ -79,13 +79,13 @@ public class JTableTestPropertyDropTarget implements DropTargetListener
 				if( transferData instanceof PropertyModelItem )
 				{
 					dtde.acceptDrop( dtde.getDropAction() );
-					PropertyModelItem modelItem = ( PropertyModelItem ) transferData;
+					PropertyModelItem modelItem = ( PropertyModelItem )transferData;
 
 					String xpath = modelItem.getXPath();
 					if( xpath == null && XmlUtils.seemsToBeXml( modelItem.getProperty().getValue() ) )
 					{
 						xpath = UISupport.selectXPath( "Create PropertyExpansion", "Select XPath below", modelItem
-									.getProperty().getValue(), null );
+								.getProperty().getValue(), null );
 
 						if( xpath != null )
 							xpath = XmlUtils.removeXPathNamespaceDeclarations( xpath );
@@ -130,8 +130,8 @@ public class JTableTestPropertyDropTarget implements DropTargetListener
 					Object modelItem = transferable.getTransferData( flavor );
 					if( modelItem instanceof PropertyModelItem )
 					{
-						return PropertyExpansionUtils.canExpandProperty( this.modelItem, ( ( PropertyModelItem ) modelItem )
-									.getProperty() );
+						return PropertyExpansionUtils.canExpandProperty( this.modelItem, ( ( PropertyModelItem )modelItem )
+								.getProperty() );
 					}
 				}
 				catch( Exception ex )

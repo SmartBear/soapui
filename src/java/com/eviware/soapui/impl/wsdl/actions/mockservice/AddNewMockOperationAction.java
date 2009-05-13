@@ -15,12 +15,12 @@ package com.eviware.soapui.impl.wsdl.actions.mockservice;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eviware.soapui.impl.WsdlInterfaceFactory;
+import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
-import com.eviware.soapui.impl.WsdlInterfaceFactory;
-import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -34,43 +34,44 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 public class AddNewMockOperationAction extends AbstractSoapUIAction<WsdlMockService>
 {
 	public final static String SOAPUI_ACTION_ID = "AddNewMockOperationAction";
-	
-	public AddNewMockOperationAction() 
-   {
-      super( "New MockOperation", "Creates a new MockOperation for this MockService" );
-   }
-   
-   public void perform( WsdlMockService mockService, Object param )
+
+	public AddNewMockOperationAction()
 	{
-      List<OperationWrapper> operations = new ArrayList<OperationWrapper>();
+		super( "New MockOperation", "Creates a new MockOperation for this MockService" );
+	}
 
-      List<AbstractInterface<?>> interfaces = mockService.getProject().getInterfaces( WsdlInterfaceFactory.WSDL_TYPE );
+	public void perform( WsdlMockService mockService, Object param )
+	{
+		List<OperationWrapper> operations = new ArrayList<OperationWrapper>();
 
-      for( Interface iface : interfaces )
-      {
-      	for( int i = 0; i < iface.getOperationCount(); i++ )
-      	{
-      		if( !mockService.hasMockOperation( iface.getOperationAt( i  )))
-      			operations.add( new OperationWrapper( ( WsdlOperation ) iface.getOperationAt( i )));
-      	}
-      }
-      
-      if( operations.isEmpty() )
-      {
-      	UISupport.showErrorMessage( "No unique operations to mock in project!" );
-      	return;
-      }
-      
-      Object result = UISupport.prompt( "Select Operation to Mock", "New MockOperation", operations.toArray() );
-      if( result != null )
-      {
-      	WsdlMockOperation mockOperation = mockService.addNewMockOperation( ((OperationWrapper)result).getOperation());
-      	WsdlMockResponse mockResponse = mockOperation.addNewMockResponse( "Response 1", true );
-      	UISupport.selectAndShow( mockResponse );
-      }
-   }
-   
-   public class OperationWrapper
+		List<AbstractInterface<?>> interfaces = mockService.getProject().getInterfaces( WsdlInterfaceFactory.WSDL_TYPE );
+
+		for( Interface iface : interfaces )
+		{
+			for( int i = 0; i < iface.getOperationCount(); i++ )
+			{
+				if( !mockService.hasMockOperation( iface.getOperationAt( i ) ) )
+					operations.add( new OperationWrapper( ( WsdlOperation )iface.getOperationAt( i ) ) );
+			}
+		}
+
+		if( operations.isEmpty() )
+		{
+			UISupport.showErrorMessage( "No unique operations to mock in project!" );
+			return;
+		}
+
+		Object result = UISupport.prompt( "Select Operation to Mock", "New MockOperation", operations.toArray() );
+		if( result != null )
+		{
+			WsdlMockOperation mockOperation = mockService.addNewMockOperation( ( ( OperationWrapper )result )
+					.getOperation() );
+			WsdlMockResponse mockResponse = mockOperation.addNewMockResponse( "Response 1", true );
+			UISupport.selectAndShow( mockResponse );
+		}
+	}
+
+	public class OperationWrapper
 	{
 		private final WsdlOperation operation;
 

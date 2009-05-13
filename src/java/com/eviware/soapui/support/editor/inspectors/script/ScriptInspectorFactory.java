@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui.support.editor.inspectors.script;
 
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
@@ -30,8 +30,8 @@ public class ScriptInspectorFactory implements ResponseInspectorFactory
 	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof WsdlMockResponse )
-			return new MockResponseScriptInspector( ( WsdlMockResponse ) modelItem );
-		
+			return new MockResponseScriptInspector( ( WsdlMockResponse )modelItem );
+
 		return null;
 	}
 }

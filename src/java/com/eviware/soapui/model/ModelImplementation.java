@@ -24,9 +24,9 @@ import com.eviware.soapui.support.components.SimpleForm;
 
 public interface ModelImplementation
 {
-   public SimpleForm [] getOptions();
-   
-   public ActionList getActions();
-   
-   public Project buildProject( String path );
+	public SimpleForm[] getOptions();
+
+	public ActionList getActions();
+
+	public Project buildProject( String path );
 }

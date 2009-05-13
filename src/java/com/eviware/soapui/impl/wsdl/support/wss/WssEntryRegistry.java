@@ -20,7 +20,7 @@ import com.eviware.soapui.impl.wsdl.support.wss.entries.AddTimestampEntry;
 import com.eviware.soapui.impl.wsdl.support.wss.entries.AddUsernameEntry;
 import com.eviware.soapui.support.registry.AbstractRegistry;
 
-public class WssEntryRegistry extends AbstractRegistry<WssEntry,WSSEntryConfig,OutgoingWss>
+public class WssEntryRegistry extends AbstractRegistry<WssEntry, WSSEntryConfig, OutgoingWss>
 {
 	private static WssEntryRegistry instance;
 
@@ -32,12 +32,12 @@ public class WssEntryRegistry extends AbstractRegistry<WssEntry,WSSEntryConfig,O
 		mapType( AddSignatureEntry.TYPE, AddSignatureEntry.class );
 		mapType( AddEncryptionEntry.TYPE, AddEncryptionEntry.class );
 	}
-	
+
 	public static synchronized WssEntryRegistry get()
 	{
 		if( instance == null )
 			instance = new WssEntryRegistry();
-		
+
 		return instance;
 	}
 

@@ -12,15 +12,16 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.support.Tools;
-
-import javax.activation.DataSource;
-import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import javax.activation.DataSource;
+import javax.servlet.http.HttpServletRequest;
+
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.support.Tools;
 
 /**
  * DataSource for a MockRequest
@@ -34,7 +35,7 @@ public class MockRequestDataSource implements DataSource
 	private String contentType;
 	private String name;
 
-	public MockRequestDataSource(HttpServletRequest request)
+	public MockRequestDataSource( HttpServletRequest request )
 	{
 		try
 		{
@@ -42,10 +43,10 @@ public class MockRequestDataSource implements DataSource
 			contentType = request.getContentType();
 			name = "Request for " + request.getPathInfo();
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
 			SoapUI.logError( e );
-		}		
+		}
 	}
 
 	public String getContentType()

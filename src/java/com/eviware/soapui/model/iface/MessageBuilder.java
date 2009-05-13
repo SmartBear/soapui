@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.model.iface;
 
-
 /**
  * Behavior for building requests
  * 
@@ -21,5 +20,5 @@ package com.eviware.soapui.model.iface;
 
 public interface MessageBuilder
 {
-   public Interface getInterface();
+	public Interface getInterface();
 }

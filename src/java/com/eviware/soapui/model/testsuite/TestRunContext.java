@@ -31,12 +31,12 @@ public interface TestRunContext extends SubmitContext, PropertyExpansionContext
 	public TestStep getCurrentStep();
 
 	public int getCurrentStepIndex();
-	
+
 	public TestRunner getTestRunner();
-	
+
 	public Object getProperty( String testStep, String propertyName );
-	
+
 	public TestCase getTestCase();
-	
+
 	public String expand( String content );
 }

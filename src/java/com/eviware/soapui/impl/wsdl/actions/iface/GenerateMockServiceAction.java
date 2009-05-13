@@ -50,7 +50,7 @@ public class GenerateMockServiceAction extends AbstractSoapUIAction<WsdlInterfac
 
 	public void perform( WsdlInterface iface, Object param )
 	{
-      generateMockService( iface, false );
+		generateMockService( iface, false );
 	}
 
 	public WsdlMockService generateMockService( WsdlInterface iface, boolean atCreation )
@@ -59,18 +59,19 @@ public class GenerateMockServiceAction extends AbstractSoapUIAction<WsdlInterfac
 		dialog.setBooleanValue( Form.ADD_ENDPOINT, true );
 		String[] names = ModelSupport.getNames( iface.getOperationList() );
 		dialog.setOptions( Form.OPERATIONS, names );
-		XFormOptionsField operationsFormField = ( XFormOptionsField ) dialog.getFormField( Form.OPERATIONS );
+		XFormOptionsField operationsFormField = ( XFormOptionsField )dialog.getFormField( Form.OPERATIONS );
 		operationsFormField.setSelectedOptions( names );
-		
+
 		dialog.getFormField( Form.START_MOCKSERVICE ).setEnabled( !atCreation );
-		
-		WsdlProject project = ( WsdlProject ) iface.getProject();
-		String[] mockServices = ModelSupport.getNames( new String[] {CREATE_MOCKSUITE_OPTION}, project.getMockServiceList());
+
+		WsdlProject project = ( WsdlProject )iface.getProject();
+		String[] mockServices = ModelSupport.getNames( new String[] { CREATE_MOCKSUITE_OPTION }, project
+				.getMockServiceList() );
 		dialog.setOptions( Form.MOCKSERVICE, mockServices );
-		
+
 		dialog.setValue( Form.PATH, "/mock" + iface.getName() );
 		dialog.setValue( Form.PORT, "8088" );
-		
+
 		if( dialog.show() )
 		{
 			List<String> operations = Arrays.asList( operationsFormField.getSelectedOptions() );
@@ -79,83 +80,82 @@ public class GenerateMockServiceAction extends AbstractSoapUIAction<WsdlInterfac
 				UISupport.showErrorMessage( "No Operations selected.." );
 				return null;
 			}
-			
+
 			String mockServiceName = dialog.getValue( Form.MOCKSERVICE );
-			WsdlMockService mockService = ( WsdlMockService ) project.getMockServiceByName( mockServiceName );
-			
-			if( mockService == null || mockServiceName.equals( CREATE_MOCKSUITE_OPTION ))
+			WsdlMockService mockService = ( WsdlMockService )project.getMockServiceByName( mockServiceName );
+
+			if( mockService == null || mockServiceName.equals( CREATE_MOCKSUITE_OPTION ) )
 			{
-				mockServiceName = UISupport.prompt( "Specify name of MockService to create", getName(), iface.getName() + " MockService" );
+				mockServiceName = UISupport.prompt( "Specify name of MockService to create", getName(), iface.getName()
+						+ " MockService" );
 				if( mockServiceName == null )
 					return null;
-				
-				mockService = ( WsdlMockService ) project.addNewMockService( mockServiceName );
+
+				mockService = ( WsdlMockService )project.addNewMockService( mockServiceName );
 			}
-			
+
 			mockService.setPath( dialog.getValue( Form.PATH ) );
 			try
 			{
-				mockService.setPort( Integer.parseInt( dialog.getValue( Form.PORT )) );
+				mockService.setPort( Integer.parseInt( dialog.getValue( Form.PORT ) ) );
 			}
 			catch( NumberFormatException e1 )
 			{
 			}
-			
+
 			for( int i = 0; i < iface.getOperationCount(); i++ )
 			{
-				WsdlOperation operation = ( WsdlOperation ) iface.getOperationAt( i );
-				if( !operations.contains( operation.getName() ))
+				WsdlOperation operation = ( WsdlOperation )iface.getOperationAt( i );
+				if( !operations.contains( operation.getName() ) )
 					continue;
-				
-				WsdlMockOperation mockOperation = ( WsdlMockOperation ) mockService.addNewMockOperation( operation );
+
+				WsdlMockOperation mockOperation = ( WsdlMockOperation )mockService.addNewMockOperation( operation );
 				if( mockOperation != null )
 					mockOperation.addNewMockResponse( "Response 1", true );
 			}
-			
-			if( dialog.getBooleanValue( Form.ADD_ENDPOINT ))
+
+			if( dialog.getBooleanValue( Form.ADD_ENDPOINT ) )
 			{
 				iface.addEndpoint( mockService.getLocalEndpoint() );
 			}
-			
+
 			if( !atCreation )
 			{
-				WsdlMockServiceDesktopPanel desktopPanel = ( WsdlMockServiceDesktopPanel ) UISupport.showDesktopPanel( mockService );
-				
-				if( dialog.getBooleanValue( Form.START_MOCKSERVICE ))
+				WsdlMockServiceDesktopPanel desktopPanel = ( WsdlMockServiceDesktopPanel )UISupport
+						.showDesktopPanel( mockService );
+
+				if( dialog.getBooleanValue( Form.START_MOCKSERVICE ) )
 				{
 					desktopPanel.startMockService();
 					SoapUI.getDesktop().minimize( desktopPanel );
 				}
 			}
-			
+
 			return mockService;
 		}
-		
+
 		return null;
 	}
-	
-	@AForm( name="Generate MockService", description = "Set options for generated MockOperations for this Interface",
-		helpUrl=HelpUrls.GENERATE_MOCKSERVICE_HELP_URL, icon=UISupport.TOOL_ICON_PATH )
-	private interface Form 
+
+	@AForm( name = "Generate MockService", description = "Set options for generated MockOperations for this Interface", helpUrl = HelpUrls.GENERATE_MOCKSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	private interface Form
 	{
-		@AField(name = "MockService", description = "The MockService to create or use", type = AFieldType.ENUMERATION )
+		@AField( name = "MockService", description = "The MockService to create or use", type = AFieldType.ENUMERATION )
 		public final static String MOCKSERVICE = "MockService";
-		
+
 		@AField( name = "Operations", description = "The Operations for which to Generate MockOperations", type = AFieldType.MULTILIST )
 		public final static String OPERATIONS = "Operations";
-		
-		@AField(name = "Path", description = "The URL path to mount on", type = AFieldType.STRING )
+
+		@AField( name = "Path", description = "The URL path to mount on", type = AFieldType.STRING )
 		public final static String PATH = "Path";
 
-		@AField(name = "Port", description = "The endpoint port to listen on", type = AFieldType.STRING )
+		@AField( name = "Port", description = "The endpoint port to listen on", type = AFieldType.STRING )
 		public final static String PORT = "Port";
-		
-		@AField(name = "Add Endpoint", description = "Adds the MockServices endpoint to the mocked Interface", 
-					type = AFieldType.BOOLEAN )
+
+		@AField( name = "Add Endpoint", description = "Adds the MockServices endpoint to the mocked Interface", type = AFieldType.BOOLEAN )
 		public final static String ADD_ENDPOINT = "Add Endpoint";
-		
-		@AField(name = "Start MockService", description = "Starts the MockService immediately", 
-					type = AFieldType.BOOLEAN )
+
+		@AField( name = "Start MockService", description = "Starts the MockService immediately", type = AFieldType.BOOLEAN )
 		public final static String START_MOCKSERVICE = "Start MockService";
 	}
 }

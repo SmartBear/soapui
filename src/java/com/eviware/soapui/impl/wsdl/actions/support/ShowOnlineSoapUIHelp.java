@@ -33,26 +33,26 @@ public class ShowOnlineSoapUIHelp extends AbstractSoapUIAction<ModelItem> implem
 	public ShowOnlineSoapUIHelp()
 	{
 		super( "Online Help", "Show Online Help" );
-   }
-	
+	}
+
 	public ShowOnlineSoapUIHelp( String name, String url )
 	{
 		super( name, url );
 		this.url = url;
 	}
-   
+
 	public void perform( ModelItem target, Object param )
 	{
-   	if( param == null && url == null )
-   	{
-   		UISupport.showErrorMessage( "Missing help URL" );
-   		return;
-   	}
-   	
-   	String url = param == null ? this.url : param.toString();
-   	if( !url.startsWith( "http://" ))
-   		url = HelpUrls.HELP_URL_ROOT + url;
-   	
-  		Tools.openURL( url );
+		if( param == null && url == null )
+		{
+			UISupport.showErrorMessage( "Missing help URL" );
+			return;
+		}
+
+		String url = param == null ? this.url : param.toString();
+		if( !url.startsWith( "http://" ) )
+			url = HelpUrls.HELP_URL_ROOT + url;
+
+		Tools.openURL( url );
 	}
 }

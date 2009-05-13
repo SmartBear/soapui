@@ -17,13 +17,13 @@ import com.eviware.soapui.impl.support.AbstractInterface;
 
 public class StandaloneDefinitionCache<T extends AbstractInterface<?>> extends AbstractDefinitionCache<T>
 {
-   public StandaloneDefinitionCache()
-   {
-      super(DefinitionCacheConfig.Factory.newInstance(), null );
-   }
+	public StandaloneDefinitionCache()
+	{
+		super( DefinitionCacheConfig.Factory.newInstance(), null );
+	}
 
-   protected DefinitionCacheConfig reinit(T owner)
-   {
-      return DefinitionCacheConfig.Factory.newInstance();
-   }
+	protected DefinitionCacheConfig reinit( T owner )
+	{
+		return DefinitionCacheConfig.Factory.newInstance();
+	}
 }

@@ -32,20 +32,21 @@ import com.eviware.soapui.support.xml.XmlUtils;
 public class WssRequestFilter extends AbstractWssRequestFilter implements RequestFilter
 {
 	public final static String INCOMING_WSS_PROPERTY = "WssRequestFilter#IncomingWss";
-	
+
 	public void filterWsdlRequest( SubmitContext context, WsdlRequest wsdlRequest )
 	{
 		WssContainer wssContainer = wsdlRequest.getOperation().getInterface().getProject().getWssContainer();
 		OutgoingWss outgoingWss = wssContainer.getOutgoingWssByName( wsdlRequest.getOutgoingWss() );
-		
-		DefaultEndpointStrategy des = ( DefaultEndpointStrategy ) wsdlRequest.getOperation().getInterface().getProject().getEndpointStrategy();
+
+		DefaultEndpointStrategy des = ( DefaultEndpointStrategy )wsdlRequest.getOperation().getInterface().getProject()
+				.getEndpointStrategy();
 		EndpointDefaults endpointDefaults = des.getEndpointDefaults( wsdlRequest.getEndpoint() );
-		if( StringUtils.hasContent( endpointDefaults.getOutgoingWss() ) && 
-					(outgoingWss == null || endpointDefaults.getMode() != EndpointConfig.Mode.COMPLEMENT ))
+		if( StringUtils.hasContent( endpointDefaults.getOutgoingWss() )
+				&& ( outgoingWss == null || endpointDefaults.getMode() != EndpointConfig.Mode.COMPLEMENT ) )
 		{
 			outgoingWss = wssContainer.getOutgoingWssByName( endpointDefaults.getOutgoingWss() );
 		}
-		
+
 		if( outgoingWss != null )
 		{
 			try
@@ -61,15 +62,15 @@ public class WssRequestFilter extends AbstractWssRequestFilter implements Reques
 				e.printStackTrace();
 			}
 		}
-		
+
 		IncomingWss incomingWss = wssContainer.getIncomingWssByName( wsdlRequest.getIncomingWss() );
-		
-		if( StringUtils.hasContent( endpointDefaults.getIncomingWss() ) && 
-					(incomingWss == null || endpointDefaults.getMode() != EndpointConfig.Mode.COMPLEMENT ))
+
+		if( StringUtils.hasContent( endpointDefaults.getIncomingWss() )
+				&& ( incomingWss == null || endpointDefaults.getMode() != EndpointConfig.Mode.COMPLEMENT ) )
 		{
 			incomingWss = wssContainer.getIncomingWssByName( endpointDefaults.getIncomingWss() );
 		}
-		
+
 		if( incomingWss != null )
 		{
 			context.setProperty( INCOMING_WSS_PROPERTY, incomingWss );

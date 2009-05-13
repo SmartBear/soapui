@@ -32,7 +32,7 @@ public abstract class ImportInterfaceResolver implements Resolver
 	private boolean resolved = false;
 	private WsdlTestStep item;
 
-	public ImportInterfaceResolver(WsdlTestStep item)
+	public ImportInterfaceResolver( WsdlTestStep item )
 	{
 		this.item = item;
 	}
@@ -51,72 +51,73 @@ public abstract class ImportInterfaceResolver implements Resolver
 	{
 		String[] options = { "File(Wsdl)", "Url(Wsdl)", "File(Wadl)", "Url(Wadl)", "Cancel" };
 		int choosed = JOptionPane
-				.showOptionDialog(UISupport.getMainFrame(), "Choose source for new interface from ...",
+				.showOptionDialog( UISupport.getMainFrame(), "Choose source for new interface from ...",
 						"New interface source", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-						options, null);
-		switch (choosed)
+						options, null );
+		switch( choosed )
 		{
-		case 0:
+		case 0 :
 			loadWsdlFromFile();
 			resolved = update();
 			break;
-		case 1:
+		case 1 :
 			loadWsdlFromUrl();
 			resolved = update();
 			break;
-		case 2:
+		case 2 :
 			loadWadlFromFile();
 			resolved = update();
 			break;
-		case 3:
+		case 3 :
 			loadWadlFromUrl();
 			resolved = update();
 			break;
-		default:
+		default :
 			resolved = false;
 			break;
 		}
-		
+
 		return resolved;
 	}
 
 	private void loadWadlFromUrl()
 	{
 		WsdlProject project = item.getTestCase().getTestSuite().getProject();
-		String url = UISupport.prompt("Enter WADL URL", "Add WADL from URL", "");
-		if (url == null)
+		String url = UISupport.prompt( "Enter WADL URL", "Add WADL from URL", "" );
+		if( url == null )
 			return;
-		
-		importWadl(project, url);
-      
+
+		importWadl( project, url );
+
 	}
 
 	private void loadWadlFromFile()
 	{
 		WsdlProject project = item.getTestCase().getTestSuite().getProject();
-		File file = UISupport.getFileDialogs().open(this, "Select WADL file", ".wadl", "WADL Files (*.wadl)",
-				ProjectDirProvider.getProjectFolder(project));
-		if (file == null)
+		File file = UISupport.getFileDialogs().open( this, "Select WADL file", ".wadl", "WADL Files (*.wadl)",
+				ProjectDirProvider.getProjectFolder( project ) );
+		if( file == null )
 			return;
 
 		String path = file.getAbsolutePath();
-		if (path == null)
+		if( path == null )
 			return;
-		
-		importWadl(project, "file:/" + path);
+
+		importWadl( project, "file:/" + path );
 	}
 
-	private void importWadl(WsdlProject project, String path)
+	private void importWadl( WsdlProject project, String path )
 	{
-		RestService restService = (RestService) project.addNewInterface( ((RestTestRequestStep) item).getRequestStepConfig().getService(), RestServiceFactory.REST_TYPE );
-      try
-      {
-         new WadlImporter( restService ).initFromWadl( path );
-      }
-      catch( Exception e )
-      {
-         UISupport.showErrorMessage( e );
-      }
+		RestService restService = ( RestService )project.addNewInterface( ( ( RestTestRequestStep )item )
+				.getRequestStepConfig().getService(), RestServiceFactory.REST_TYPE );
+		try
+		{
+			new WadlImporter( restService ).initFromWadl( path );
+		}
+		catch( Exception e )
+		{
+			UISupport.showErrorMessage( e );
+		}
 	}
 
 	protected abstract boolean update();
@@ -124,45 +125,45 @@ public abstract class ImportInterfaceResolver implements Resolver
 	private void loadWsdlFromUrl()
 	{
 		WsdlProject project = item.getTestCase().getTestSuite().getProject();
-		String url = UISupport.prompt("Enter WSDL URL", "Add WSDL from URL", "");
-		if (url == null)
+		String url = UISupport.prompt( "Enter WSDL URL", "Add WSDL from URL", "" );
+		if( url == null )
 			return;
 
-		importWsdl(project, url);
+		importWsdl( project, url );
 	}
 
 	private void loadWsdlFromFile()
 	{
 
 		WsdlProject project = item.getTestCase().getTestSuite().getProject();
-		File file = UISupport.getFileDialogs().open(this, "Select WSDL file", ".wsdl", "WSDL Files (*.wsdl)",
-				ProjectDirProvider.getProjectFolder(project));
-		if (file == null)
+		File file = UISupport.getFileDialogs().open( this, "Select WSDL file", ".wsdl", "WSDL Files (*.wsdl)",
+				ProjectDirProvider.getProjectFolder( project ) );
+		if( file == null )
 			return;
 
 		String path = file.getAbsolutePath();
-		if (path == null)
+		if( path == null )
 			return;
 
-		importWsdl(project, file.getAbsolutePath());
+		importWsdl( project, file.getAbsolutePath() );
 	}
 
-	private void importWsdl(WsdlProject project, String file)
+	private void importWsdl( WsdlProject project, String file )
 	{
 		try
 		{
-			Boolean createRequests = UISupport
-					.confirmOrCancel("Create default requests for all operations", "Import WSDL");
-			if (createRequests == null)
+			Boolean createRequests = UISupport.confirmOrCancel( "Create default requests for all operations",
+					"Import WSDL" );
+			if( createRequests == null )
 				return;
 
-			Interface[] ifaces = WsdlInterfaceFactory.importWsdl(project, file, createRequests);
-			if (ifaces.length > 0)
-				UISupport.select(ifaces[0]);
+			Interface[] ifaces = WsdlInterfaceFactory.importWsdl( project, file, createRequests );
+			if( ifaces.length > 0 )
+				UISupport.select( ifaces[0] );
 		}
-		catch (Exception ex)
+		catch( Exception ex )
 		{
-			UISupport.showErrorMessage(ex.getMessage() + ":" + ex.getCause());
+			UISupport.showErrorMessage( ex.getMessage() + ":" + ex.getCause() );
 		}
 	}
 

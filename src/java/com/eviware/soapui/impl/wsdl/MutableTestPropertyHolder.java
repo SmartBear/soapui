@@ -22,6 +22,6 @@ public interface MutableTestPropertyHolder extends TestPropertyHolder
 	public TestProperty removeProperty( String propertyName );
 
 	public boolean renameProperty( String name, String newName );
-	
+
 	public void moveProperty( String propertyName, int targetIndex );
 }

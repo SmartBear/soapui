@@ -26,12 +26,12 @@ public class ToggleDisableTestStepAction extends AbstractSoapUIAction<WsdlTestSt
 	public static final String SOAPUI_ACTION_ID = "ToggleDisableTestStepAction";
 
 	public ToggleDisableTestStepAction()
-   {
-      super( "Disable", "Disables this TestStep" );
-   }
-   
-   public void perform( WsdlTestStep testStep, Object param )
 	{
-      testStep.setDisabled( !testStep.isDisabled() );
-   }
+		super( "Disable", "Disables this TestStep" );
+	}
+
+	public void perform( WsdlTestStep testStep, Object param )
+	{
+		testStep.setDisabled( !testStep.isDisabled() );
+	}
 }

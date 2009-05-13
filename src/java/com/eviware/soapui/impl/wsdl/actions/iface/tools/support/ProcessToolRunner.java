@@ -12,10 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.support;
 
+import java.io.InputStream;
+
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.UISupport;
-
-import java.io.InputStream;
 
 /**
  * ToolRunner for running command-line processes
@@ -26,7 +26,7 @@ import java.io.InputStream;
 public class ProcessToolRunner implements ToolRunner
 {
 
-	private final ProcessBuilder [] builders;
+	private final ProcessBuilder[] builders;
 	private boolean running;
 	private Process process;
 	private RunnerContext context;
@@ -38,10 +38,10 @@ public class ProcessToolRunner implements ToolRunner
 
 	public ProcessToolRunner( ProcessBuilder builder, String name, ModelItem modelItem, ArgumentBuilder args )
 	{
-		this( new ProcessBuilder[] {builder}, name, modelItem, args);
+		this( new ProcessBuilder[] { builder }, name, modelItem, args );
 	}
-	
-	public ProcessToolRunner(ProcessBuilder [] builders, String name, ModelItem modelItem, ArgumentBuilder args)
+
+	public ProcessToolRunner( ProcessBuilder[] builders, String name, ModelItem modelItem, ArgumentBuilder args )
 	{
 		this.builders = builders;
 		this.name = name;
@@ -49,21 +49,21 @@ public class ProcessToolRunner implements ToolRunner
 		this.args = args;
 	}
 
-   public ProcessToolRunner( ProcessBuilder[] processBuilders, String s, ModelItem modelItem )
-   {
-     this( processBuilders, s, modelItem, null );
-   }
+	public ProcessToolRunner( ProcessBuilder[] processBuilders, String s, ModelItem modelItem )
+	{
+		this( processBuilders, s, modelItem, null );
+	}
 
-   public ProcessToolRunner( ProcessBuilder builder, String s, ModelItem modelItem )
-   {
-      this( builder, s, modelItem, null );
-   }
+	public ProcessToolRunner( ProcessBuilder builder, String s, ModelItem modelItem )
+	{
+		this( builder, s, modelItem, null );
+	}
 
-   public ProcessBuilder [] getBuilders()
+	public ProcessBuilder[] getBuilders()
 	{
 		return builders;
 	}
-	
+
 	public Process getProcess()
 	{
 		return process;
@@ -73,7 +73,7 @@ public class ProcessToolRunner implements ToolRunner
 	{
 		return running;
 	}
-	
+
 	public void cancel()
 	{
 		getProcess().destroy();
@@ -85,7 +85,7 @@ public class ProcessToolRunner implements ToolRunner
 		{
 			e.printStackTrace();
 		}
-		
+
 		running = false;
 	}
 
@@ -94,9 +94,9 @@ public class ProcessToolRunner implements ToolRunner
 		try
 		{
 			int exitCode = -1;
-			
+
 			beforeRun( context );
-			
+
 			for( int c = 0; c < builders.length; c++ )
 			{
 				beforeProcess( builders[c], context );
@@ -105,98 +105,98 @@ public class ProcessToolRunner implements ToolRunner
 				process = builders[c].start();
 				if( c == 0 )
 					context.setStatus( RunnerContext.RunnerStatus.RUNNING );
-				
+
 				running = true;
-				
+
 				InputStream in = process.getInputStream();
 				InputStream err = process.getErrorStream();
-				
+
 				exitCode = -1;
-				
+
 				while( exitCode == -1 && running )
 				{
-					try 
+					try
 					{
 						exitCode = process.exitValue();
 						break;
-					} 
-					catch (IllegalThreadStateException e) 
+					}
+					catch( IllegalThreadStateException e )
 					{
 					}
 					finally
 					{
-						while( in.available() > 0  )
+						while( in.available() > 0 )
 						{
-							byte [] data = new byte[in.available()];
+							byte[] data = new byte[in.available()];
 							in.read( data );
-	
+
 							context.log( new String( data ) );
 						}
-						
-						while( err.available() > 0  )
+
+						while( err.available() > 0 )
 						{
-							byte [] data = new byte[err.available()];
+							byte[] data = new byte[err.available()];
 							err.read( data );
-	
+
 							context.logError( new String( data ) );
 						}
 					}
-					
+
 					Thread.sleep( 25 );
 				}
-				
+
 				afterProcess( process, context );
 			}
-			
-         context.setStatus( RunnerContext.RunnerStatus.FINISHED );
-         
-         if( running )
+
+			context.setStatus( RunnerContext.RunnerStatus.FINISHED );
+
+			if( running )
 			{
 				running = false;
 				afterRun( exitCode, context );
 			}
 		}
-		catch (Exception ex)
+		catch( Exception ex )
 		{
 			context.setStatus( RunnerContext.RunnerStatus.ERROR );
 			UISupport.showErrorMessage( ex );
 			running = false;
 			afterRun( -1, context );
 		}
-      finally
-      {
-         context.disposeContext();
-      }
+		finally
+		{
+			context.disposeContext();
+		}
 	}
 
-	protected void beforeRun(RunnerContext context)
+	protected void beforeRun( RunnerContext context )
 	{
 	}
 
-	protected void beforeProcess(ProcessBuilder processBuilder, RunnerContext context)
+	protected void beforeProcess( ProcessBuilder processBuilder, RunnerContext context )
 	{
 	}
 
-	protected void afterProcess(Process process2, RunnerContext context)
+	protected void afterProcess( Process process2, RunnerContext context )
 	{
 	}
 
-	protected void afterRun(int exitCode, RunnerContext context)
+	protected void afterRun( int exitCode, RunnerContext context )
 	{
-		if (exitCode == 0)
-			UISupport.showInfoMessage("Execution finished successfully", context.getTitle() );
+		if( exitCode == 0 )
+			UISupport.showInfoMessage( "Execution finished successfully", context.getTitle() );
 		else
-			UISupport.showInfoMessage("Execution finished with errorCode " + exitCode
-					+ ",\r\nplease check log for error messages", context.getTitle());
+			UISupport.showInfoMessage( "Execution finished with errorCode " + exitCode
+					+ ",\r\nplease check log for error messages", context.getTitle() );
 	}
 
-	private void logRunInfo(ProcessBuilder builder)
+	private void logRunInfo( ProcessBuilder builder )
 	{
 		context.log( "directory: " + builder.directory().getAbsolutePath() + "\r\n" );
-		context.log( "command: " + (args == null ? builder.command() : args) + "\r\n" );
+		context.log( "command: " + ( args == null ? builder.command() : args ) + "\r\n" );
 	}
 
-	public void setContext(RunnerContext context)
+	public void setContext( RunnerContext context )
 	{
 		this.context = context;
 	}
@@ -221,12 +221,12 @@ public class ProcessToolRunner implements ToolRunner
 		return showLog;
 	}
 
-	public void setCanCancel(boolean canCancel )
+	public void setCanCancel( boolean canCancel )
 	{
 		this.canCancel = canCancel;
 	}
 
-	public void setShowLog(boolean showLog)
+	public void setShowLog( boolean showLog )
 	{
 		this.showLog = showLog;
 	}

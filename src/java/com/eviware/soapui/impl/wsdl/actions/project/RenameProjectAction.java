@@ -27,15 +27,16 @@ public class RenameProjectAction extends AbstractSoapUIAction<WsdlProject>
 	public static final String SOAPUI_ACTION_ID = "RenameProjectAction";
 
 	public RenameProjectAction()
-   {
-      super( "Rename", "Renames this project" );
-   }
-	
-   public void perform( WsdlProject project, Object param )
 	{
-      String name = UISupport.prompt( "Specify name of project", "Rename Project", project.getName() );
-      if( name == null || name.equals( project.getName() )) return;
-      
-      project.setName( name );
-   }
+		super( "Rename", "Renames this project" );
+	}
+
+	public void perform( WsdlProject project, Object param )
+	{
+		String name = UISupport.prompt( "Specify name of project", "Rename Project", project.getName() );
+		if( name == null || name.equals( project.getName() ) )
+			return;
+
+		project.setName( name );
+	}
 }

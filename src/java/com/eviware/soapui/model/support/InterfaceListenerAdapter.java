@@ -24,19 +24,19 @@ import com.eviware.soapui.model.iface.Request;
 
 public class InterfaceListenerAdapter implements InterfaceListener
 {
-	public void operationAdded(Operation operation)
+	public void operationAdded( Operation operation )
 	{
 	}
 
-	public void operationRemoved(Operation operation)
+	public void operationRemoved( Operation operation )
 	{
 	}
 
-	public void requestAdded(Request request)
+	public void requestAdded( Request request )
 	{
 	}
 
-	public void requestRemoved(Request request)
+	public void requestRemoved( Request request )
 	{
 	}
 

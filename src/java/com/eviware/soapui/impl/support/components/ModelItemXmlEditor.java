@@ -20,7 +20,7 @@ import com.eviware.soapui.support.editor.xml.XmlEditor;
 
 /**
  * Base XmlEditor class for editing SOAP Messages
- *
+ * 
  * @author ole.matzura
  */
 
@@ -28,7 +28,7 @@ public abstract class ModelItemXmlEditor<T extends ModelItem, T2 extends XmlDocu
 {
 	private final T modelItem;
 
-	public ModelItemXmlEditor( T2 xmlDocument, T modelItem  )
+	public ModelItemXmlEditor( T2 xmlDocument, T modelItem )
 	{
 		super( xmlDocument );
 		this.modelItem = modelItem;
@@ -41,6 +41,6 @@ public abstract class ModelItemXmlEditor<T extends ModelItem, T2 extends XmlDocu
 
 	public final XmlSourceEditorView getSourceEditor()
 	{
-		return ( XmlSourceEditorView ) getView( XmlSourceEditorViewFactory.VIEW_ID );
+		return ( XmlSourceEditorView )getView( XmlSourceEditorViewFactory.VIEW_ID );
 	}
 }

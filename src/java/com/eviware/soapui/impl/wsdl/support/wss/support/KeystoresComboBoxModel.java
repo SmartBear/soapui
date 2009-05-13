@@ -12,11 +12,18 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss.support;
 
-import com.eviware.soapui.impl.wsdl.support.wss.*;
-
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.AbstractListModel;
+import javax.swing.ComboBoxModel;
+
+import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
+import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
+import com.eviware.soapui.impl.wsdl.support.wss.WssContainer;
+import com.eviware.soapui.impl.wsdl.support.wss.WssContainerListener;
+import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
+import com.eviware.soapui.impl.wsdl.support.wss.WssEntry;
 
 public class KeystoresComboBoxModel extends AbstractListModel implements ComboBoxModel, WssContainerListener
 {
@@ -28,9 +35,9 @@ public class KeystoresComboBoxModel extends AbstractListModel implements ComboBo
 	{
 		this.container = container;
 		this.selectedCrypto = selectedCrypto;
-		
+
 		cryptos.addAll( container.getCryptoList() );
-		
+
 		container.addWssContainerListener( this );
 	}
 
@@ -42,9 +49,9 @@ public class KeystoresComboBoxModel extends AbstractListModel implements ComboBo
 	public void setSelectedItem( Object anItem )
 	{
 		selectedCrypto = null;
-		
+
 		for( WssCrypto crypto : cryptos )
-			if( crypto.getLabel().equals( anItem ))
+			if( crypto.getLabel().equals( anItem ) )
 				selectedCrypto = crypto;
 	}
 
@@ -57,11 +64,11 @@ public class KeystoresComboBoxModel extends AbstractListModel implements ComboBo
 	{
 		return cryptos == null ? 0 : cryptos.size();
 	}
-	
+
 	public void cryptoAdded( WssCrypto crypto )
 	{
 		cryptos.add( crypto );
-		fireIntervalAdded( this, getSize()-1, getSize()-1 );
+		fireIntervalAdded( this, getSize() - 1, getSize() - 1 );
 	}
 
 	public void cryptoRemoved( WssCrypto crypto )
@@ -98,7 +105,7 @@ public class KeystoresComboBoxModel extends AbstractListModel implements ComboBo
 	public void cryptoUpdated( WssCrypto crypto )
 	{
 	}
-	
+
 	public void release()
 	{
 		container.removeWssContainerListener( this );

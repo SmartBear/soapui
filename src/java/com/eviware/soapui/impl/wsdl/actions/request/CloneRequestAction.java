@@ -28,18 +28,20 @@ public class CloneRequestAction extends AbstractSoapUIAction<WsdlRequest>
 	public static final String SOAPUI_ACTION_ID = "CloneRequestAction";
 
 	public CloneRequestAction()
-   {
-      super( "Clone Request", "Creates a copy of this request" );
-   }
-   
-   public void perform( WsdlRequest request, Object param )
 	{
-      String name = UISupport.prompt( "Specify name of cloned request", "Clone Request", "Copy of " + request.getName() );
-      if( name == null ) return;
-      
-      WsdlRequest newRequest = ((WsdlOperation)request.getOperation()).addNewRequest( name );
-      request.copyTo( newRequest, true, true );
-      
-      UISupport.selectAndShow( newRequest );
-   }
+		super( "Clone Request", "Creates a copy of this request" );
+	}
+
+	public void perform( WsdlRequest request, Object param )
+	{
+		String name = UISupport
+				.prompt( "Specify name of cloned request", "Clone Request", "Copy of " + request.getName() );
+		if( name == null )
+			return;
+
+		WsdlRequest newRequest = ( ( WsdlOperation )request.getOperation() ).addNewRequest( name );
+		request.copyTo( newRequest, true, true );
+
+		UISupport.selectAndShow( newRequest );
+	}
 }

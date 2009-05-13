@@ -33,24 +33,24 @@ public class OpenClosedProjectsAction extends AbstractSoapUIAction<WorkspaceImpl
 	public static final String SOAPUI_ACTION_ID = "OpenClosedProjectsAction";
 
 	public OpenClosedProjectsAction()
-   {
-      super( "Open All Closed Projects", "Opens all closed projects in the current Workspace" );
-   }
-	
+	{
+		super( "Open All Closed Projects", "Opens all closed projects in the current Workspace" );
+	}
+
 	public void perform( WorkspaceImpl workspace, Object param )
 	{
 		List<Project> openProjects = new ArrayList<Project>();
-		for( Project project : workspace.getProjectList())
+		for( Project project : workspace.getProjectList() )
 			if( !project.isOpen() && !project.isDisabled() )
 				openProjects.add( project );
-		
+
 		if( openProjects.isEmpty() )
 		{
 			UISupport.showErrorMessage( "No closed projects in workspace" );
 			return;
 		}
 
-		for( Project project : openProjects)
+		for( Project project : openProjects )
 		{
 			try
 			{
@@ -61,5 +61,5 @@ public class OpenClosedProjectsAction extends AbstractSoapUIAction<WorkspaceImpl
 				SoapUI.logError( e );
 			}
 		}
-   }
+	}
 }

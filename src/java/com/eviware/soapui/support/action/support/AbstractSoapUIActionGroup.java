@@ -42,7 +42,7 @@ public abstract class AbstractSoapUIActionGroup<T extends ModelItem> implements 
 	{
 		return name;
 	}
-	
+
 	public SoapUIActionMapping<T> addMapping( String id, SoapUIActionMapping<T> mapping )
 	{
 		return null;

@@ -28,24 +28,29 @@ import com.eviware.soapui.support.UISupport;
  * @author dragica.soldo
  */
 
-public class RemoveAllOutgoingWSSFromRequestAction extends AbstractAction {
+public class RemoveAllOutgoingWSSFromRequestAction extends AbstractAction
+{
 	private final WsdlRequest request;
 
-	public RemoveAllOutgoingWSSFromRequestAction(WsdlRequest request) {
-		super("Remove all outgoing wss");
+	public RemoveAllOutgoingWSSFromRequestAction( WsdlRequest request )
+	{
+		super( "Remove all outgoing wss" );
 		this.request = request;
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		try {
-			if (UISupport.confirm( "Remove all outgoing wss", "Remove all outgoing wss" )) {
-				String content = request.getRequestContent();
-				request.setRequestContent(WssUtils.removeWSSOutgoing(content, request));
-			}
-		} 
-		catch (Exception e1)
+	public void actionPerformed( ActionEvent e )
+	{
+		try
 		{
-			SoapUI.logError(e1);
+			if( UISupport.confirm( "Remove all outgoing wss", "Remove all outgoing wss" ) )
+			{
+				String content = request.getRequestContent();
+				request.setRequestContent( WssUtils.removeWSSOutgoing( content, request ) );
+			}
+		}
+		catch( Exception e1 )
+		{
+			SoapUI.logError( e1 );
 		}
 
 	}

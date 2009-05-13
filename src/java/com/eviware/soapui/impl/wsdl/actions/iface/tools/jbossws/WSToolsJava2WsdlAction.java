@@ -56,7 +56,7 @@ import com.eviware.x.form.XFormFactory;
 public class WSToolsJava2WsdlAction extends AbstractToolsAction<WsdlProject>
 {
 	public static final String SOAPUI_ACTION_ID = "WSToolsJava2WsdlAction";
-	
+
 	private static final String CLASSPATH = "Classpath";
 	private static final String OUTPUT = "Output Directory";
 	private static final String ENDPOINT = "Endpoint";
@@ -68,22 +68,24 @@ public class WSToolsJava2WsdlAction extends AbstractToolsAction<WsdlProject>
 	private static final String TYPES_NAMESPACE = "Types Namespace";
 	private static final String EJB_LINK = "ejb-link";
 	private static final String SERVLET_LINK = "servlet-link";
-	
-   public WSToolsJava2WsdlAction()
-   {
-      super( "Generate WSDL with JBossWS", "Generates WSDL with the jbossws wstools utility");
-   }
 
-   protected XFormDialog buildDialog( WsdlProject project )
+	public WSToolsJava2WsdlAction()
 	{
-      XFormDialogBuilder builder = XFormFactory.createDialogBuilder("Generate JBossWS WSDL Artifacts");
+		super( "Generate WSDL with JBossWS", "Generates WSDL with the jbossws wstools utility" );
+	}
 
-      XForm mainForm = builder.createForm( "Basic" );
-		
+	protected XFormDialog buildDialog( WsdlProject project )
+	{
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Generate JBossWS WSDL Artifacts" );
+
+		XForm mainForm = builder.createForm( "Basic" );
+
 		mainForm.addTextField( ENDPOINT, "Serice Endpoint Interface", XForm.FieldType.JAVA_CLASS );
 		mainForm.addTextField( SERVICE_NAME, "The name of the generated Service", XForm.FieldType.TEXT );
-		mainForm.addComboBox( STYLE, new String [] {Style.DOCUMENT.toString(), Style.RPC.toString()},  "The style to use" );
-		mainForm.addComboBox( PARAMETER_STYLE, new String [] {ParameterStyle.BARE.toString(), ParameterStyle.WRAPPED.toString()},  "The style to use" );
+		mainForm
+				.addComboBox( STYLE, new String[] { Style.DOCUMENT.toString(), Style.RPC.toString() }, "The style to use" );
+		mainForm.addComboBox( PARAMETER_STYLE, new String[] { ParameterStyle.BARE.toString(),
+				ParameterStyle.WRAPPED.toString() }, "The style to use" );
 		mainForm.addTextField( CLASSPATH, "Classpath to use", XForm.FieldType.PROJECT_FOLDER );
 		mainForm.addTextField( OUTPUT, "The root directory for all emitted files.", XForm.FieldType.PROJECT_FOLDER );
 		mainForm.addTextField( MAPPING, "mapping file to generate", XForm.FieldType.PROJECT_FILE );
@@ -92,55 +94,56 @@ public class WSToolsJava2WsdlAction extends AbstractToolsAction<WsdlProject>
 		mainForm.addTextField( EJB_LINK, "The name of the source EJB to link to", XForm.FieldType.TEXT );
 		mainForm.addTextField( SERVLET_LINK, "The name of the source Servlet to link to", XForm.FieldType.TEXT );
 
-      buildArgsForm( builder, false, "wstools" );
-      
-		ActionList actions = buildDefaultActions( HelpUrls.WSTOOLS_HELP_URL, project  );
+		buildArgsForm( builder, false, "wstools" );
+
+		ActionList actions = buildDefaultActions( HelpUrls.WSTOOLS_HELP_URL, project );
 		actions.addAction( new ShowConfigFileAction( "JBossWS Java2Wsdl", "Contents of generated wsconfig.xml file" )
 		{
 			protected String getConfigFile()
 			{
-				ConfigurationDocument configDocument = createConfigFile(dialog.getValues());
+				ConfigurationDocument configDocument = createConfigFile( dialog.getValues() );
 				return configDocument.toString();
-			}});
-		
-		return builder.buildDialog( actions,
-      		"Specify arguments for JBossWS wstools java2wsdl functionality", UISupport.TOOL_ICON );
+			}
+		} );
+
+		return builder.buildDialog( actions, "Specify arguments for JBossWS wstools java2wsdl functionality",
+				UISupport.TOOL_ICON );
 	}
-   
-	protected void generate(StringToStringMap values, ToolHost toolHost, WsdlProject project ) throws Exception
+
+	protected void generate( StringToStringMap values, ToolHost toolHost, WsdlProject project ) throws Exception
 	{
 		String wstoolsDir = SoapUI.getSettings().getString( ToolsSettings.JBOSSWS_WSTOOLS_LOCATION, null );
-		if( Tools.isEmpty( wstoolsDir ))
+		if( Tools.isEmpty( wstoolsDir ) )
 		{
 			UISupport.showErrorMessage( "wstools directory must be set in global preferences" );
 			return;
 		}
-		
+
 		String wsToolsExtension = UISupport.isWindows() ? ".bat" : ".sh";
-		
+
 		File wstoolsFile = new File( wstoolsDir + File.separatorChar + "wstools" + wsToolsExtension );
 		if( !wstoolsFile.exists() )
 		{
 			UISupport.showErrorMessage( "Could not find wstools script at [" + wstoolsFile + "]" );
 			return;
 		}
-		
+
 		ProcessBuilder builder = new ProcessBuilder();
 		ArgumentBuilder args = buildArgs( UISupport.isWindows() );
-		builder.command(args.getArgs());
-		builder.directory(new File(wstoolsDir));
-		
-		toolHost.run( new ToolRunner( builder, new File( values.get( OUTPUT )), values.get( SERVICE_NAME ), project ));
+		builder.command( args.getArgs() );
+		builder.directory( new File( wstoolsDir ) );
+
+		toolHost.run( new ToolRunner( builder, new File( values.get( OUTPUT ) ), values.get( SERVICE_NAME ), project ) );
 	}
 
 	private ArgumentBuilder buildArgs( boolean isWindows ) throws IOException
 	{
 		StringToStringMap values = dialog.getValues();
-		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ));
-		
+		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ) );
+
 		ArgumentBuilder builder = new ArgumentBuilder( values );
 		builder.startScript( "wstools" );
-		
+
 		builder.addString( CLASSPATH, "-cp" );
 		builder.addArgs( "-config", buildConfigFile( values ) );
 		builder.addString( OUTPUT, "-dest" );
@@ -148,52 +151,52 @@ public class WSToolsJava2WsdlAction extends AbstractToolsAction<WsdlProject>
 		return builder;
 	}
 
-	private String buildConfigFile(StringToStringMap values ) throws IOException
+	private String buildConfigFile( StringToStringMap values ) throws IOException
 	{
 		File file = File.createTempFile( "wstools-config", ".xml" );
-		ConfigurationDocument configDocument = createConfigFile(values);
+		ConfigurationDocument configDocument = createConfigFile( values );
 
 		configDocument.save( file );
-		
+
 		return file.getAbsolutePath();
 	}
 
-	private ConfigurationDocument createConfigFile(StringToStringMap values)
+	private ConfigurationDocument createConfigFile( StringToStringMap values )
 	{
 		ConfigurationDocument configDocument = ConfigurationDocument.Factory.newInstance();
 		ConfigurationType config = configDocument.addNewConfiguration();
-		
+
 		JavaToWsdlType java2Wsdl = config.addNewJavaWsdl();
 		ServiceType service = java2Wsdl.addNewService();
-		service.setEndpoint( values.get( ENDPOINT ));
-		service.setStyle( Style.Enum.forString( values.get(STYLE)));
-		service.setParameterStyle( ParameterStyle.Enum.forString( values.get(PARAMETER_STYLE)));
-		service.setName( values.get( SERVICE_NAME ));
-		
+		service.setEndpoint( values.get( ENDPOINT ) );
+		service.setStyle( Style.Enum.forString( values.get( STYLE ) ) );
+		service.setParameterStyle( ParameterStyle.Enum.forString( values.get( PARAMETER_STYLE ) ) );
+		service.setName( values.get( SERVICE_NAME ) );
+
 		MappingType mapping = java2Wsdl.addNewMapping();
-		mapping.setFile( values.get( MAPPING ));
-		
+		mapping.setFile( values.get( MAPPING ) );
+
 		NamespacesType namespaces = java2Wsdl.addNewNamespaces();
-		namespaces.setTargetNamespace( values.get( TARGET_NAMESPACE ));
-		namespaces.setTypeNamespace( values.get( TYPES_NAMESPACE ));
-		
+		namespaces.setTargetNamespace( values.get( TARGET_NAMESPACE ) );
+		namespaces.setTypeNamespace( values.get( TYPES_NAMESPACE ) );
+
 		WsxmlType webservices = java2Wsdl.addNewWebservices();
 		if( values.get( EJB_LINK ) != null && values.get( EJB_LINK ).length() > 0 )
-			webservices.setEjbLink( values.get( EJB_LINK ));
+			webservices.setEjbLink( values.get( EJB_LINK ) );
 		if( values.get( SERVLET_LINK ) != null && values.get( SERVLET_LINK ).length() > 0 )
-			webservices.setServletLink( values.get( SERVLET_LINK ));
+			webservices.setServletLink( values.get( SERVLET_LINK ) );
 		return configDocument;
 	}
-	
+
 	private class ToolRunner extends ProcessToolRunner
 	{
 		private final File outDir;
 		private final String serviceName;
 		private final WsdlProject project;
 
-		public ToolRunner(ProcessBuilder builder, File outDir, String serviceName, WsdlProject modelItem )
+		public ToolRunner( ProcessBuilder builder, File outDir, String serviceName, WsdlProject modelItem )
 		{
-			super(builder, "JBossWS wstools", modelItem );
+			super( builder, "JBossWS wstools", modelItem );
 			this.outDir = outDir;
 			this.serviceName = serviceName;
 			this.project = modelItem;
@@ -203,21 +206,22 @@ public class WSToolsJava2WsdlAction extends AbstractToolsAction<WsdlProject>
 		{
 			if( context.getStatus() != RunnerContext.RunnerStatus.FINISHED )
 				return;
-			
+
 			try
 			{
-				String wsdlUrl = "file:" + outDir.getAbsolutePath() + File.separatorChar + "wsdl" + File.separatorChar + serviceName + ".wsdl";
-            Interface[] ifaces = WsdlInterfaceFactory.importWsdl( project, wsdlUrl, true );
-				
-				if (ifaces.length > 0)
+				String wsdlUrl = "file:" + outDir.getAbsolutePath() + File.separatorChar + "wsdl" + File.separatorChar
+						+ serviceName + ".wsdl";
+				Interface[] ifaces = WsdlInterfaceFactory.importWsdl( project, wsdlUrl, true );
+
+				if( ifaces.length > 0 )
 				{
 					context.log( "Added Interface [" + ifaces[0].getName() + "] to project" );
-					ifaces[0].getSettings().setString( WSToolsRegenerateJava2WsdlAction.class.getName() + "@values", 
+					ifaces[0].getSettings().setString( WSToolsRegenerateJava2WsdlAction.class.getName() + "@values",
 							dialog.getValues().toXml() );
-					UISupport.select(ifaces[0]);
+					UISupport.select( ifaces[0] );
 				}
 			}
-			catch (SoapUIException e)
+			catch( SoapUIException e )
 			{
 				SoapUI.logError( e );
 			}

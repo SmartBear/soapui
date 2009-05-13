@@ -28,11 +28,12 @@ import com.eviware.soapui.support.action.support.StandaloneActionMapping;
 
 /**
  * Delegates a SwingAction to a SoapUIActionMapping
- *
+ * 
  * @author ole.matzura
  */
 
-public class SwingActionDelegate<T extends ModelItem> extends AbstractAction implements PropertyChangeListener, SoapUIActionMarker
+public class SwingActionDelegate<T extends ModelItem> extends AbstractAction implements PropertyChangeListener,
+		SoapUIActionMarker
 {
 	private final T target;
 	private final SoapUIActionMapping<T> mapping;
@@ -44,7 +45,7 @@ public class SwingActionDelegate<T extends ModelItem> extends AbstractAction imp
 		super( mapping.getName() );
 		this.mapping = mapping;
 		this.target = target;
-		
+
 		if( mapping.getDescription() != null )
 			putValue( Action.SHORT_DESCRIPTION, mapping.getDescription() );
 
@@ -52,46 +53,46 @@ public class SwingActionDelegate<T extends ModelItem> extends AbstractAction imp
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( mapping.getIconPath() ) );
 
 		if( mapping.getKeyStroke() != null )
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( mapping.getKeyStroke() ));
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( mapping.getKeyStroke() ) );
 
 		setEnabled( mapping.getAction().isEnabled() );
-		
+
 		String name = mapping.getName();
 		int ix = name.indexOf( '&' );
 		if( ix >= 0 )
 		{
-			putValue( Action.NAME, name.substring( 0, ix ) + name.substring( ix+1 ) );
-// This doesn't seem to work in Java 5:
-//			putValue( Action.DISPLAYED_MNEMONIC_INDEX_KEY, new Integer( ix ));
-			putValue( Action.MNEMONIC_KEY, new Integer( name.charAt( ix+1 )) );
+			putValue( Action.NAME, name.substring( 0, ix ) + name.substring( ix + 1 ) );
+			// This doesn't seem to work in Java 5:
+			// putValue( Action.DISPLAYED_MNEMONIC_INDEX_KEY, new Integer( ix ));
+			putValue( Action.MNEMONIC_KEY, new Integer( name.charAt( ix + 1 ) ) );
 		}
 	}
-	
+
 	public SoapUIActionMapping<T> getMapping()
 	{
 		return mapping;
 	}
 
-	public void actionPerformed(ActionEvent e)
+	public void actionPerformed( ActionEvent e )
 	{
 		// required by IDE plugins
 		if( switchClassloader )
 		{
-			 ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-			 Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
-		
-			 try
-			 {
-				 mapping.getAction().perform( target, param == null ? mapping.getParam() : param );
-			 }
-			 catch( Throwable t )
-			 {
-				 SoapUI.logError( t );
-			 }
-			 finally
-			 {
-				 Thread.currentThread().setContextClassLoader( contextClassLoader );
-			 }
+			ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+			Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
+
+			try
+			{
+				mapping.getAction().perform( target, param == null ? mapping.getParam() : param );
+			}
+			catch( Throwable t )
+			{
+				SoapUI.logError( t );
+			}
+			finally
+			{
+				Thread.currentThread().setContextClassLoader( contextClassLoader );
+			}
 		}
 		else
 		{
@@ -99,17 +100,17 @@ public class SwingActionDelegate<T extends ModelItem> extends AbstractAction imp
 			{
 				mapping.getAction().perform( target, mapping.getParam() );
 			}
-			 catch( Throwable t )
-			 {
-				 SoapUI.logError( t );
-			 }
+			catch( Throwable t )
+			{
+				SoapUI.logError( t );
+			}
 		}
 	}
 
-	public void propertyChange(PropertyChangeEvent evt)
+	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if( evt.getPropertyName().equals( SoapUIAction.ENABLED_PROPERTY ))
-			setEnabled( ((Boolean)evt.getNewValue()).booleanValue() );
+		if( evt.getPropertyName().equals( SoapUIAction.ENABLED_PROPERTY ) )
+			setEnabled( ( ( Boolean )evt.getNewValue() ).booleanValue() );
 	}
 
 	public SoapUIAction<T> getAction()
@@ -121,7 +122,7 @@ public class SwingActionDelegate<T extends ModelItem> extends AbstractAction imp
 	{
 		return target;
 	}
-	
+
 	protected Object getParam()
 	{
 		return param;
@@ -132,21 +133,23 @@ public class SwingActionDelegate<T extends ModelItem> extends AbstractAction imp
 		this.param = param;
 	}
 
-	public static <T extends ModelItem> SwingActionDelegate<T> createDelegate( SoapUIAction<T> action, T target, String keyStroke, String iconPath )
+	public static <T extends ModelItem> SwingActionDelegate<T> createDelegate( SoapUIAction<T> action, T target,
+			String keyStroke, String iconPath )
 	{
 		return new SwingActionDelegate<T>( new StandaloneActionMapping<T>( action, keyStroke, iconPath ), target );
 	}
-	
-	public static <T extends ModelItem> SwingActionDelegate<T> createDelegate( SoapUIAction<T> action, T target, String keyStroke )
+
+	public static <T extends ModelItem> SwingActionDelegate<T> createDelegate( SoapUIAction<T> action, T target,
+			String keyStroke )
 	{
 		return new SwingActionDelegate<T>( new StandaloneActionMapping<T>( action, keyStroke ), target );
 	}
-	
+
 	public static <T extends ModelItem> SwingActionDelegate<T> createDelegate( SoapUIAction<T> action, T target )
 	{
 		return new SwingActionDelegate<T>( new StandaloneActionMapping<T>( action ), target );
 	}
-	
+
 	public static <T extends ModelItem> SwingActionDelegate<T> createDelegate( SoapUIAction<T> action )
 	{
 		return new SwingActionDelegate<T>( new StandaloneActionMapping<T>( action ), null );
@@ -154,20 +157,22 @@ public class SwingActionDelegate<T extends ModelItem> extends AbstractAction imp
 
 	public static SwingActionDelegate<?> createDelegate( String soapUIActionId )
 	{
-		return createDelegate( SoapUI.getActionRegistry().getAction( soapUIActionId ));
+		return createDelegate( SoapUI.getActionRegistry().getAction( soapUIActionId ) );
 	}
-	
+
 	public static <T extends ModelItem> SwingActionDelegate<?> createDelegate( String soapUIActionId, T target )
 	{
 		return createDelegate( SoapUI.getActionRegistry().getAction( soapUIActionId ), target );
 	}
-	
-	public static <T extends ModelItem> SwingActionDelegate<?> createDelegate( String soapUIActionId, T target, String keyStroke )
+
+	public static <T extends ModelItem> SwingActionDelegate<?> createDelegate( String soapUIActionId, T target,
+			String keyStroke )
 	{
 		return createDelegate( SoapUI.getActionRegistry().getAction( soapUIActionId ), target, keyStroke );
 	}
-	
-	public static <T extends ModelItem> SwingActionDelegate<?> createDelegate( String soapUIActionId, T target, String keyStroke, String iconPath )
+
+	public static <T extends ModelItem> SwingActionDelegate<?> createDelegate( String soapUIActionId, T target,
+			String keyStroke, String iconPath )
 	{
 		return createDelegate( SoapUI.getActionRegistry().getAction( soapUIActionId ), target, keyStroke, iconPath );
 	}

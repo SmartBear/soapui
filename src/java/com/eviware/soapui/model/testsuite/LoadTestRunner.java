@@ -23,45 +23,49 @@ public interface LoadTestRunner
 	/**
 	 * Gets the number of threads currently running
 	 */
-	
+
 	public int getRunningThreadCount();
 
 	public LoadTest getLoadTest();
 
 	/**
-	 * Cancels the loadtest with the specified reason. This should be used for "normal" cancellations, 
-	 * ie from a ui or some expected signal.
+	 * Cancels the loadtest with the specified reason. This should be used for
+	 * "normal" cancellations, ie from a ui or some expected signal.
 	 * 
 	 * @param reason
 	 */
-	
+
 	public void cancel( String reason );
 
 	/**
-	 * Fails the loadtest with the specified reason. This should be used for error conditions
+	 * Fails the loadtest with the specified reason. This should be used for
+	 * error conditions
 	 */
-	
+
 	public void fail( String reason );
 
 	/**
-	 * Gets the current status of this runner 
+	 * Gets the current status of this runner
 	 */
-	
+
 	public Status getStatus();
 
-	public enum Status { INITIALIZED, RUNNING, CANCELED, FINISHED, FAILED }
+	public enum Status
+	{
+		INITIALIZED, RUNNING, CANCELED, FINISHED, FAILED
+	}
 
 	/**
-	 * Returns the progress of the loadtest as a value between 0 and 1. Progress is measured depending
-	 * on the LoadTest limit configuration
+	 * Returns the progress of the loadtest as a value between 0 and 1. Progress
+	 * is measured depending on the LoadTest limit configuration
 	 */
-	
+
 	public float getProgress();
 
 	/**
 	 * Gets the reason why a loadtest was cancelled or failed
 	 */
-	
+
 	public String getReason();
 
 	/**

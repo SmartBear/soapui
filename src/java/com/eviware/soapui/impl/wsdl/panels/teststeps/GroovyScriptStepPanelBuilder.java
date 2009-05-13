@@ -25,16 +25,16 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 public class GroovyScriptStepPanelBuilder extends EmptyPanelBuilder<WsdlGroovyScriptTestStep>
 {
 	public GroovyScriptStepPanelBuilder()
-   {
-   }
+	{
+	}
 
-   public DesktopPanel buildDesktopPanel(WsdlGroovyScriptTestStep testStep)
-   {
-      return new GroovyScriptStepDesktopPanel( testStep );
-   }
+	public DesktopPanel buildDesktopPanel( WsdlGroovyScriptTestStep testStep )
+	{
+		return new GroovyScriptStepDesktopPanel( testStep );
+	}
 
-   public boolean hasDesktopPanel()
-   {
-      return true;
-   }
+	public boolean hasDesktopPanel()
+	{
+		return true;
+	}
 }

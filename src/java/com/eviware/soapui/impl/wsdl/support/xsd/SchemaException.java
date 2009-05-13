@@ -24,12 +24,12 @@ public class SchemaException extends Exception
 {
 	private ArrayList<?> errorList;
 
-	public SchemaException(String message, Throwable cause)
+	public SchemaException( String message, Throwable cause )
 	{
-		super(message, cause);
+		super( message, cause );
 	}
 
-	public SchemaException(Exception e, ArrayList<?> errorList)
+	public SchemaException( Exception e, ArrayList<?> errorList )
 	{
 		this.errorList = errorList;
 	}

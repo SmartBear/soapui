@@ -12,115 +12,118 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.io.PrintWriter;
+
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-import java.io.PrintWriter;
-
 /**
  * TestStep Result for a WsdlMessageExchange
- *
+ * 
  * @author ole.matzura
  */
 
 public class WsdlSingleMessageExchangeTestStepResult extends WsdlTestStepResult
 {
-   private WsdlMessageExchange messageExchange;
-   private boolean addedAction;
-//	private StringToStringMap properties;
+	private WsdlMessageExchange messageExchange;
+	private boolean addedAction;
 
-   public WsdlSingleMessageExchangeTestStepResult( WsdlTestStep step )
-   {
-      super( step );
-   }
+	// private StringToStringMap properties;
 
-   public void setMessageExchange( WsdlMessageExchange messageExchange )
-   {
-      this.messageExchange = messageExchange;
-   }
+	public WsdlSingleMessageExchangeTestStepResult( WsdlTestStep step )
+	{
+		super( step );
+	}
 
-   @Override
-   public ActionList getActions()
-   {
-      if( !addedAction )
-      {
-         addAction( new ShowMessageExchangeAction( messageExchange, "StepResult" ), true );
-         addedAction = true;
-      }
+	public void setMessageExchange( WsdlMessageExchange messageExchange )
+	{
+		this.messageExchange = messageExchange;
+	}
 
-      return super.getActions();
-   }
+	@Override
+	public ActionList getActions()
+	{
+		if( !addedAction )
+		{
+			addAction( new ShowMessageExchangeAction( messageExchange, "StepResult" ), true );
+			addedAction = true;
+		}
 
-//	public String getRequestContent()
-//	{
-//		if( isDiscarded() )
-//			return "<discarded>";
-//		
-//		return messageExchange == null ? null : messageExchange.getRequestContent();
-//	}
-//
-//	public void addProperty( String name, String value )
-//	{
-//		if( isDiscarded() )
-//			return;
-//		
-//		if( properties == null )
-//			properties = new StringToStringMap();
-//		
-//		properties.put( name, value );
-//	}
+		return super.getActions();
+	}
 
-   public void discard()
-   {
-      super.discard();
+	// public String getRequestContent()
+	// {
+	// if( isDiscarded() )
+	// return "<discarded>";
+	//		
+	// return messageExchange == null ? null :
+	// messageExchange.getRequestContent();
+	// }
+	//
+	// public void addProperty( String name, String value )
+	// {
+	// if( isDiscarded() )
+	// return;
+	//		
+	// if( properties == null )
+	// properties = new StringToStringMap();
+	//		
+	// properties.put( name, value );
+	// }
 
-      messageExchange = null;
-//		properties = null;
-   }
+	public void discard()
+	{
+		super.discard();
 
-   public void writeTo( PrintWriter writer )
-   {
-      super.writeTo( writer );
+		messageExchange = null;
+		// properties = null;
+	}
 
-      if( isDiscarded() )
-         return;
+	public void writeTo( PrintWriter writer )
+	{
+		super.writeTo( writer );
 
-//		writer.println( "---------------- Properties ------------------------" );
-//		if( properties == null  )
-//		{
-//			writer.println( "Missing Properties" );
-//		}
-//		else
-//		{
-//			for( String name : properties.keySet() )
-//				writer.println( name + ": " + properties.get( name ) );
-//		}
+		if( isDiscarded() )
+			return;
 
-      writer.println( "---------------- Message Exchange ------------------" );
-      if( messageExchange == null )
-      {
-         writer.println( "Missing MessageExchange" );
-      }
-      else
-      {
-         writer.println( "--- Request" );
-         if( messageExchange.getRequestHeaders() != null )
-            writer.println( "Request Headers: " + messageExchange.getRequestHeaders().toString() );
+		// writer.println( "---------------- Properties ------------------------"
+		// );
+		// if( properties == null )
+		// {
+		// writer.println( "Missing Properties" );
+		// }
+		// else
+		// {
+		// for( String name : properties.keySet() )
+		// writer.println( name + ": " + properties.get( name ) );
+		// }
 
-         writer.println( XmlUtils.prettyPrintXml( messageExchange.getRequestContent() ) );
+		writer.println( "---------------- Message Exchange ------------------" );
+		if( messageExchange == null )
+		{
+			writer.println( "Missing MessageExchange" );
+		}
+		else
+		{
+			writer.println( "--- Request" );
+			if( messageExchange.getRequestHeaders() != null )
+				writer.println( "Request Headers: " + messageExchange.getRequestHeaders().toString() );
 
-         writer.println( "--- Response" );
-         if( messageExchange.getResponseHeaders() != null )
-            writer.println( "Response Headers: " + messageExchange.getResponseHeaders().toString() );
+			writer.println( XmlUtils.prettyPrintXml( messageExchange.getRequestContent() ) );
 
-         writer.println( XmlUtils.prettyPrintXml( messageExchange.getResponseContent() ) );
-      }
-   }
+			writer.println( "--- Response" );
+			if( messageExchange.getResponseHeaders() != null )
+				writer.println( "Response Headers: " + messageExchange.getResponseHeaders().toString() );
 
-//	public StringToStringMap getProperties()
-//	{
-//		return properties;
-//	}
+			writer.println( XmlUtils.prettyPrintXml( messageExchange.getResponseContent() ) );
+		}
+	}
+
+	// public StringToStringMap getProperties()
+	// {
+	// return properties;
+	// }
 }

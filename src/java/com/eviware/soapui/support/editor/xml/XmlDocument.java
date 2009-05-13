@@ -26,10 +26,10 @@ import com.eviware.soapui.support.editor.EditorDocument;
 public interface XmlDocument extends PropertyChangeNotifier, EditorDocument
 {
 	public final static String XML_PROPERTY = XmlDocument.class.getName() + "@xml";
-	
+
 	public String getXml();
-	
+
 	public void setXml( String xml );
-	
+
 	public SchemaTypeSystem getTypeSystem();
 }

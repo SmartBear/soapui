@@ -28,35 +28,39 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
 
 public class LoadTestRunListenerAdapter implements LoadTestRunListener
 {
-	public void beforeLoadTest(LoadTestRunner loadTestRunner, LoadTestRunContext context)
+	public void beforeLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
 	}
 
-	public void beforeTestCase(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner, TestRunContext runContext)
+	public void beforeTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
+			TestRunContext runContext )
 	{
 	}
 
-	public void beforeTestStep(LoadTestRunner loadTestRunner, LoadTestRunContext context,TestRunner testRunner, TestRunContext runContext, TestStep testStep)
+	public void beforeTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
+			TestRunContext runContext, TestStep testStep )
 	{
 	}
 
-	public void afterTestStep(LoadTestRunner loadTestRunner, LoadTestRunContext context,TestRunner testRunner, TestRunContext runContext, TestStepResult testStepResult)
+	public void afterTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
+			TestRunContext runContext, TestStepResult testStepResult )
 	{
 	}
 
-	public void afterTestCase(LoadTestRunner loadTestRunner, LoadTestRunContext context,TestRunner testRunner, TestRunContext runContext)
+	public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
+			TestRunContext runContext )
 	{
 	}
 
-	public void afterLoadTest(LoadTestRunner loadTestRunner, LoadTestRunContext context)
+	public void afterLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
 	}
 
-	public void loadTestStarted(LoadTestRunner loadTestRunner, LoadTestRunContext context)
+	public void loadTestStarted( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
 	}
 
-	public void loadTestStopped(LoadTestRunner loadTestRunner, LoadTestRunContext context)
+	public void loadTestStopped( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
 	}
 

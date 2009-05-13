@@ -24,49 +24,49 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 public interface MessageExchange extends ResultContainer
 {
-   public Operation getOperation();
-   
-   public ModelItem getModelItem();
+	public Operation getOperation();
+
+	public ModelItem getModelItem();
 
 	public long getTimestamp();
-	
+
 	public long getTimeTaken();
-	
+
 	public StringToStringMap getProperties();
-	
-   public String getRequestContent();
 
-   public String getResponseContent();
+	public String getRequestContent();
 
-   public String getRequestContentAsXml();
+	public String getResponseContent();
 
-   public String getResponseContentAsXml();
-   
-   public StringToStringMap getRequestHeaders();
-   
-   public StringToStringMap getResponseHeaders();
-   
-   public Attachment [] getRequestAttachments();
-   
-   public Attachment [] getResponseAttachments();
-   
-   public String [] getMessages();
-   
-   public boolean isDiscarded();
+	public String getRequestContentAsXml();
 
-   public boolean hasRawData();
-   
-   public byte[] getRawRequestData();
-	
+	public String getResponseContentAsXml();
+
+	public StringToStringMap getRequestHeaders();
+
+	public StringToStringMap getResponseHeaders();
+
+	public Attachment[] getRequestAttachments();
+
+	public Attachment[] getResponseAttachments();
+
+	public String[] getMessages();
+
+	public boolean isDiscarded();
+
+	public boolean hasRawData();
+
+	public byte[] getRawRequestData();
+
 	public byte[] getRawResponseData();
-	
-	public Attachment [] getRequestAttachmentsForPart( String partName );
 
-	public Attachment [] getResponseAttachmentsForPart( String partName );
+	public Attachment[] getRequestAttachmentsForPart( String partName );
+
+	public Attachment[] getResponseAttachmentsForPart( String partName );
 
 	public boolean hasRequest( boolean ignoreEmpty );
 
 	public boolean hasResponse();
 
-   public String getProperty( String name );
+	public String getProperty( String name );
 }

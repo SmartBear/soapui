@@ -12,6 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.registry;
 
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+
 import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.config.RestRequestStepConfig;
@@ -34,159 +38,152 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-
 /**
  * Factory for WsdlTestRequestSteps
- *
+ * 
  * @author Ole.Matzura
  */
 
 public class HttpRequestStepFactory extends WsdlTestStepFactory
 {
-   public static final String HTTPREQUEST_TYPE = "httprequest";
-   private XFormDialog dialog;
-   public static final MessageSupport messages = MessageSupport.getMessages( HttpRequestStepFactory.class );
-   private XmlBeansRestParamsTestPropertyHolder params;
-   private RestParamsTable paramsTable;
+	public static final String HTTPREQUEST_TYPE = "httprequest";
+	private XFormDialog dialog;
+	public static final MessageSupport messages = MessageSupport.getMessages( HttpRequestStepFactory.class );
+	private XmlBeansRestParamsTestPropertyHolder params;
+	private RestParamsTable paramsTable;
 
-   public HttpRequestStepFactory()
-   {
-      super( HTTPREQUEST_TYPE, "HTTP Test Request", "Submits a HTTP Request and validates its response", "/http_request.gif" );
-   }
+	public HttpRequestStepFactory()
+	{
+		super( HTTPREQUEST_TYPE, "HTTP Test Request", "Submits a HTTP Request and validates its response",
+				"/http_request.gif" );
+	}
 
-   public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
-   {
-      return new HttpTestRequestStep( testCase, config, forLoadTest );
-   }
+	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
+	{
+		return new HttpTestRequestStep( testCase, config, forLoadTest );
+	}
 
-   public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
-   {
-      if( dialog == null )
-      {
-         buildDialog();
-      }
-      else
-      {
-         dialog.setValue( Form.ENDPOINT, "" );
-      }
+	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
+	{
+		if( dialog == null )
+		{
+			buildDialog();
+		}
+		else
+		{
+			dialog.setValue( Form.ENDPOINT, "" );
+		}
 
-      params = new XmlBeansRestParamsTestPropertyHolder( testCase,
-              RestParametersConfig.Factory.newInstance() );
+		params = new XmlBeansRestParamsTestPropertyHolder( testCase, RestParametersConfig.Factory.newInstance() );
 
-      paramsTable = new RestParamsTable( params, false );
-      dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
-      dialog.setValue( Form.STEPNAME, name );
+		paramsTable = new RestParamsTable( params, false );
+		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
+		dialog.setValue( Form.STEPNAME, name );
 
-      try
-      {
-         if( dialog.show() )
-         {
-            RestRequestStepConfig testStepConfig = RestRequestStepConfig.Factory.newInstance();
-            RestMethodConfig requestConfig = testStepConfig.addNewRestRequest();
-            requestConfig.setFullPath( dialog.getValue( Form.ENDPOINT ) );
-            requestConfig.setEndpoint( dialog.getValue( Form.ENDPOINT ) );
-            requestConfig.setMethod( dialog.getValue( Form.HTTPMETHOD ) );
+		try
+		{
+			if( dialog.show() )
+			{
+				RestRequestStepConfig testStepConfig = RestRequestStepConfig.Factory.newInstance();
+				RestMethodConfig requestConfig = testStepConfig.addNewRestRequest();
+				requestConfig.setFullPath( dialog.getValue( Form.ENDPOINT ) );
+				requestConfig.setEndpoint( dialog.getValue( Form.ENDPOINT ) );
+				requestConfig.setMethod( dialog.getValue( Form.HTTPMETHOD ) );
 
-            new XmlBeansRestParamsTestPropertyHolder( testCase,
-                    requestConfig.addNewParameters() ).addParameters( params );
+				new XmlBeansRestParamsTestPropertyHolder( testCase, requestConfig.addNewParameters() )
+						.addParameters( params );
 
-            TestStepConfig testStep = TestStepConfig.Factory.newInstance();
-            testStep.setType( HTTPREQUEST_TYPE );
-            testStep.setConfig( testStepConfig );
-            testStep.setName( dialog.getValue( Form.STEPNAME ) );
+				TestStepConfig testStep = TestStepConfig.Factory.newInstance();
+				testStep.setType( HTTPREQUEST_TYPE );
+				testStep.setConfig( testStepConfig );
+				testStep.setName( dialog.getValue( Form.STEPNAME ) );
 
-            return testStep;
-         }
-         else
-         {
-            return null;
-         }
-      }
-      finally
-      {
-         paramsTable.release();
-         paramsTable = null;
-         params = null;
-         dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
-      }
-   }
+				return testStep;
+			}
+			else
+			{
+				return null;
+			}
+		}
+		finally
+		{
+			paramsTable.release();
+			paramsTable = null;
+			params = null;
+			dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
+		}
+	}
 
-   public boolean canCreate()
-   {
-      return true;
-   }
+	public boolean canCreate()
+	{
+		return true;
+	}
 
-   private void buildDialog()
-   {
-      dialog = ADialogBuilder.buildDialog( Form.class );
-      dialog.getFormField( Form.STEPNAME ).addFormFieldValidator( new RequiredValidator() );
-      dialog.getFormField( Form.EXTRACTPARAMS ).setProperty( "action", new ExtractParamsAction() );
-      ( (XFormOptionsField) dialog.getFormField( Form.HTTPMETHOD ) ).setOptions( new Object[]{
-              RestRequest.RequestMethod.GET,
-              RestRequest.RequestMethod.POST,
-              RestRequest.RequestMethod.PUT,
-              RestRequest.RequestMethod.DELETE,
-              RestRequest.RequestMethod.HEAD
-      } );
-   }
+	private void buildDialog()
+	{
+		dialog = ADialogBuilder.buildDialog( Form.class );
+		dialog.getFormField( Form.STEPNAME ).addFormFieldValidator( new RequiredValidator() );
+		dialog.getFormField( Form.EXTRACTPARAMS ).setProperty( "action", new ExtractParamsAction() );
+		( ( XFormOptionsField )dialog.getFormField( Form.HTTPMETHOD ) ).setOptions( new Object[] {
+				RestRequest.RequestMethod.GET, RestRequest.RequestMethod.POST, RestRequest.RequestMethod.PUT,
+				RestRequest.RequestMethod.DELETE, RestRequest.RequestMethod.HEAD } );
+	}
 
-   @AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
-   public interface Form
-   {
-      @AField( description = "Form.TestStepName.Description", type = AField.AFieldType.STRING )
-      public final static String STEPNAME = messages.get( "Form.TestStepName.Label" );
+	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	public interface Form
+	{
+		@AField( description = "Form.TestStepName.Description", type = AField.AFieldType.STRING )
+		public final static String STEPNAME = messages.get( "Form.TestStepName.Label" );
 
-      @AField( description = "Form.Endpoint.Description", type = AField.AFieldType.STRING )
-      public final static String ENDPOINT = messages.get( "Form.Endpoint.Label" );
+		@AField( description = "Form.Endpoint.Description", type = AField.AFieldType.STRING )
+		public final static String ENDPOINT = messages.get( "Form.Endpoint.Label" );
 
-      @AField( description = "Form.ExtractParams.Description", type = AField.AFieldType.ACTION )
-      public final static String EXTRACTPARAMS = messages.get( "Form.ExtractParams.Label" );
+		@AField( description = "Form.ExtractParams.Description", type = AField.AFieldType.ACTION )
+		public final static String EXTRACTPARAMS = messages.get( "Form.ExtractParams.Label" );
 
-      @AField( description = "Form.ParamsTable.Description", type = AField.AFieldType.COMPONENT )
-      public final static String PARAMSTABLE = messages.get( "Form.ParamsTable.Label" );
+		@AField( description = "Form.ParamsTable.Description", type = AField.AFieldType.COMPONENT )
+		public final static String PARAMSTABLE = messages.get( "Form.ParamsTable.Label" );
 
-      @AField( description = "Form.HttpMethod.Description", type = AField.AFieldType.ENUMERATION )
-      public final static String HTTPMETHOD = messages.get( "Form.HttpMethod.Label" );
-   }
+		@AField( description = "Form.HttpMethod.Description", type = AField.AFieldType.ENUMERATION )
+		public final static String HTTPMETHOD = messages.get( "Form.HttpMethod.Label" );
+	}
 
-   private class ExtractParamsAction extends AbstractAction
-   {
-      public ExtractParamsAction()
-      {
-         super( "Extract Params" );
-      }
+	private class ExtractParamsAction extends AbstractAction
+	{
+		public ExtractParamsAction()
+		{
+			super( "Extract Params" );
+		}
 
-      public void actionPerformed( ActionEvent e )
-      {
-         try
-         {
-            String path = RestUtils.extractParams( dialog.getValue( Form.ENDPOINT ), params, true );
-            dialog.setValue( Form.ENDPOINT, path );
+		public void actionPerformed( ActionEvent e )
+		{
+			try
+			{
+				String path = RestUtils.extractParams( dialog.getValue( Form.ENDPOINT ), params, true );
+				dialog.setValue( Form.ENDPOINT, path );
 
-            if( StringUtils.isNullOrEmpty( dialog.getValue( Form.STEPNAME ) ) )
-            {
-               setNameFromPath( path );
-            }
+				if( StringUtils.isNullOrEmpty( dialog.getValue( Form.STEPNAME ) ) )
+				{
+					setNameFromPath( path );
+				}
 
-            paramsTable.refresh();
-         }
-         catch( Exception e1 )
-         {
-            UISupport.showInfoMessage( "No parameters to extract!" );
-         }
-      }
+				paramsTable.refresh();
+			}
+			catch( Exception e1 )
+			{
+				UISupport.showInfoMessage( "No parameters to extract!" );
+			}
+		}
 
-      private void setNameFromPath( String path )
-      {
-         String[] items = path.split( "/" );
+		private void setNameFromPath( String path )
+		{
+			String[] items = path.split( "/" );
 
-         if( items.length > 0 )
-         {
-            dialog.setValue( Form.STEPNAME, items[items.length - 1] );
-         }
-      }
-   }
+			if( items.length > 0 )
+			{
+				dialog.setValue( Form.STEPNAME, items[items.length - 1] );
+			}
+		}
+	}
 
 }

@@ -20,60 +20,63 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.x.form.XFormDialog;
 
 /**
- * Actions for importing an existing soapUI project file into the current workspace
- *
+ * Actions for importing an existing soapUI project file into the current
+ * workspace
+ * 
  * @author Ole.Matzura
  */
 
 public class NewRestResourceAction extends NewRestResourceActionBase<RestService>
 {
-   public static final String SOAPUI_ACTION_ID = "NewRestResourceAction";
-   public static final MessageSupport messages = MessageSupport.getMessages( NewRestResourceAction.class );
+	public static final String SOAPUI_ACTION_ID = "NewRestResourceAction";
+	public static final MessageSupport messages = MessageSupport.getMessages( NewRestResourceAction.class );
 
-   public NewRestResourceAction()
-   {
-      super( messages.get( "title" ), messages.get( "description" ) );
-   }
+	public NewRestResourceAction()
+	{
+		super( messages.get( "title" ), messages.get( "description" ) );
+	}
 
-   protected RestResource createRestResource( RestService service, String path, XFormDialog dialog )
-   {
-      RestResource possibleParent = null;
-      String p = service.getBasePath() + path;
+	protected RestResource createRestResource( RestService service, String path, XFormDialog dialog )
+	{
+		RestResource possibleParent = null;
+		String p = service.getBasePath() + path;
 
-      for( RestResource resource : service.getAllResources() )
-      {
-         if( p.startsWith( resource.getFullPath() ) )
-         {
-            int c = 0;
-            for( ; c < resource.getChildResourceCount(); c++ )
-            {
-               if( p.startsWith( resource.getChildResourceAt( c ).getFullPath() ) )
-                  break;
-            }
+		for( RestResource resource : service.getAllResources() )
+		{
+			if( p.startsWith( resource.getFullPath() ) )
+			{
+				int c = 0;
+				for( ; c < resource.getChildResourceCount(); c++ )
+				{
+					if( p.startsWith( resource.getChildResourceAt( c ).getFullPath() ) )
+						break;
+				}
 
-            // found subresource?
-            if( c != resource.getChildResourceCount() )
-               continue;
+				// found subresource?
+				if( c != resource.getChildResourceCount() )
+					continue;
 
-            possibleParent = resource;
-            break;
-         }
-      }
+				possibleParent = resource;
+				break;
+			}
+		}
 
-      RestResource resource;
+		RestResource resource;
 
-      if( possibleParent != null && UISupport.confirm( "Create resource as child to [" + possibleParent.getName() + "]", "New Child Resource" ) )
-      {
-         // adjust path
-         path = path.substring( p.length() - possibleParent.getFullPath().length() - 1 );
-         resource = possibleParent.addNewChildResource( dialog.getValue( Form.RESOURCENAME ), path );
-      }
-      else
-      {
-         resource = service.addNewResource( dialog.getValue( Form.RESOURCENAME ), path );
-      }
+		if( possibleParent != null
+				&& UISupport.confirm( "Create resource as child to [" + possibleParent.getName() + "]",
+						"New Child Resource" ) )
+		{
+			// adjust path
+			path = path.substring( p.length() - possibleParent.getFullPath().length() - 1 );
+			resource = possibleParent.addNewChildResource( dialog.getValue( Form.RESOURCENAME ), path );
+		}
+		else
+		{
+			resource = service.addNewResource( dialog.getValue( Form.RESOURCENAME ), path );
+		}
 
-      return resource;
-   }
+		return resource;
+	}
 
 }

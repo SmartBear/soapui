@@ -26,23 +26,22 @@ public class WorkspaceDirProvider implements ValueProvider
 	public String getValue( PropertyExpansionContext context )
 	{
 		Workspace workspace = SoapUI.getWorkspace();
-		
+
 		if( workspace == null )
 		{
 			ModelItem modelItem = context.getModelItem();
 			if( modelItem instanceof Workspace )
 			{
-			   workspace = (Workspace) modelItem;
+				workspace = ( Workspace )modelItem;
 			}
 			else
 			{
-				Project project = ModelSupport.getModelItemProject(modelItem);
+				Project project = ModelSupport.getModelItemProject( modelItem );
 				if( project != null )
 					workspace = project.getWorkspace();
 			}
-		}	
-		
-		
+		}
+
 		return workspace == null ? null : PathUtils.getAbsoluteFolder( workspace.getPath() );
 	}
 }

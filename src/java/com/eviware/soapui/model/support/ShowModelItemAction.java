@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui.model.support;
 
 import java.awt.event.ActionEvent;
@@ -25,11 +25,11 @@ public class ShowModelItemAction extends AbstractAction
 
 	public ShowModelItemAction( String title, ModelItem modelItem )
 	{
-		super(title);
+		super( title );
 		this.modelItem = modelItem;
 	}
 
-	public void actionPerformed(ActionEvent e)
+	public void actionPerformed( ActionEvent e )
 	{
 		UISupport.selectAndShow( modelItem );
 	}

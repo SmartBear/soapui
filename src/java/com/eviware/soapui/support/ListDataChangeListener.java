@@ -20,18 +20,18 @@ public abstract class ListDataChangeListener implements ListDataListener
 {
 	public void contentsChanged( ListDataEvent e )
 	{
-		dataChanged( ( ListModel ) e.getSource() );
+		dataChanged( ( ListModel )e.getSource() );
 	}
 
 	public void intervalAdded( ListDataEvent e )
 	{
-		dataChanged( ( ListModel ) e.getSource() );
+		dataChanged( ( ListModel )e.getSource() );
 	}
 
 	public void intervalRemoved( ListDataEvent e )
 	{
-		dataChanged( ( ListModel ) e.getSource() );
+		dataChanged( ( ListModel )e.getSource() );
 	}
-	
+
 	public abstract void dataChanged( ListModel model );
 }

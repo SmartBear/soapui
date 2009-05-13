@@ -34,36 +34,36 @@ public abstract class AbstractMessageExchange<T extends ModelItem> implements Me
 		return modelItem;
 	}
 
-   public String getRequestContentAsXml()
-   {
-      if( hasRequest( true ) && XmlUtils.seemsToBeXml( getRequestContent() ))
-         return getRequestContent();
-      else
-         return "<not-xml/>";
-   }
+	public String getRequestContentAsXml()
+	{
+		if( hasRequest( true ) && XmlUtils.seemsToBeXml( getRequestContent() ) )
+			return getRequestContent();
+		else
+			return "<not-xml/>";
+	}
 
-   public String getResponseContentAsXml()
-   {
-    if( hasResponse() && XmlUtils.seemsToBeXml( getResponseContent() ))
-         return getResponseContent();
-      else
-         return null;
-   }
+	public String getResponseContentAsXml()
+	{
+		if( hasResponse() && XmlUtils.seemsToBeXml( getResponseContent() ) )
+			return getResponseContent();
+		else
+			return null;
+	}
 
-   public void addProperty( String name, String value )
+	public void addProperty( String name, String value )
 	{
 		if( properties == null )
 			properties = new StringToStringMap();
-		
+
 		properties.put( name, value );
 	}
 
-   public String getProperty( String name )
-   {
-      return properties.get( name );
-   }
+	public String getProperty( String name )
+	{
+		return properties.get( name );
+	}
 
-   public StringToStringMap getProperties()
+	public StringToStringMap getProperties()
 	{
 		return properties;
 	}
@@ -73,7 +73,7 @@ public abstract class AbstractMessageExchange<T extends ModelItem> implements Me
 		return messages;
 	}
 
-	public void setMessages(String[] messages)
+	public void setMessages( String[] messages )
 	{
 		this.messages = messages;
 	}

@@ -47,191 +47,207 @@ import javax.swing.ListModel;
 
 import com.eviware.soapui.SoapUI;
 
+public class DNDList extends JList implements DropTargetListener, DragSourceListener, DragGestureListener
+{
 
+	/**
+	 * enables this component to be a dropTarget
+	 */
 
+	DropTarget dropTarget = null;
 
-public class DNDList extends JList
-    implements DropTargetListener,DragSourceListener, DragGestureListener    {
+	/**
+	 * enables this component to be a Drag Source
+	 */
+	DragSource dragSource = null;
 
-  /**
-   * enables this component to be a dropTarget
-   */
+	/**
+	 * constructor - initializes the DropTarget and DragSource.
+	 */
 
-  DropTarget dropTarget = null;
+	public DNDList( ListModel dataModel )
+	{
+		super( dataModel );
+		dropTarget = new DropTarget( this, this );
+		dragSource = new DragSource();
+		dragSource.createDefaultDragGestureRecognizer( this, DnDConstants.ACTION_MOVE, this );
+	}
 
-  /**
-   * enables this component to be a Drag Source
-   */
-  DragSource dragSource = null;
+	/**
+	 * is invoked when you are dragging over the DropSite
+	 * 
+	 */
 
+	public void dragEnter( DropTargetDragEvent event )
+	{
 
-  /**
-   * constructor - initializes the DropTarget and DragSource.
-   */
+		// debug messages for diagnostics
+		System.out.println( "dragEnter" );
+		event.acceptDrag( DnDConstants.ACTION_MOVE );
+	}
 
-  public DNDList( ListModel dataModel ) {
-    super( dataModel );
-    dropTarget = new DropTarget (this, this);
-    dragSource = new DragSource();
-    dragSource.createDefaultDragGestureRecognizer( this, DnDConstants.ACTION_MOVE, this);
-  }
+	/**
+	 * is invoked when you are exit the DropSite without dropping
+	 * 
+	 */
 
-  /**
-   * is invoked when you are dragging over the DropSite
-   * 
-   */
+	public void dragExit( DropTargetEvent event )
+	{
+		System.out.println( "dragExit" );
 
-  public void dragEnter (DropTargetDragEvent event) {
-    
-    // debug messages for diagnostics 
-    System.out.println( "dragEnter");
-    event.acceptDrag (DnDConstants.ACTION_MOVE);
-  }
+	}
 
-  /**
-   * is invoked when you are exit the DropSite without dropping
-   *
-   */
+	/**
+	 * is invoked when a drag operation is going on
+	 * 
+	 */
 
-  public void dragExit (DropTargetEvent event) {
-    System.out.println( "dragExit");
-    
-  }
+	public void dragOver( DropTargetDragEvent event )
+	{
+		System.out.println( "dragOver" );
+	}
 
-  /**
-   * is invoked when a drag operation is going on
-   * 
-   */
+	/**
+	 * a drop has occurred
+	 * 
+	 */
 
-  public void dragOver (DropTargetDragEvent event) {
-    System.out.println( "dragOver");
-  }
+	public void drop( DropTargetDropEvent event )
+	{
 
-  /**
-   * a drop has occurred
-   * 
-   */
+		try
+		{
+			Transferable transferable = event.getTransferable();
 
- 
-  public void drop (DropTargetDropEvent event) {
-    
-    try {
-        Transferable transferable = event.getTransferable();
-                   
-        // we accept only Strings      
-        if (transferable.isDataFlavorSupported (DataFlavor.stringFlavor)){
-        
-            event.acceptDrop(DnDConstants.ACTION_MOVE);
-            String s = (String)transferable.getTransferData ( DataFlavor.stringFlavor);
-            addElement( s );
-            event.getDropTargetContext().dropComplete(true);
-        } 
-        else{
-            event.rejectDrop();
-        }
-    }
-    catch (Exception exception) {
-   	 SoapUI.logError( exception );
-        System.err.println( "Exception" + exception.getMessage());
-        event.rejectDrop();
-    } 
-  }
+			// we accept only Strings
+			if( transferable.isDataFlavorSupported( DataFlavor.stringFlavor ) )
+			{
 
-  /**
-   * is invoked if the use modifies the current drop gesture
-   * 
-   */
-    
+				event.acceptDrop( DnDConstants.ACTION_MOVE );
+				String s = ( String )transferable.getTransferData( DataFlavor.stringFlavor );
+				addElement( s );
+				event.getDropTargetContext().dropComplete( true );
+			}
+			else
+			{
+				event.rejectDrop();
+			}
+		}
+		catch( Exception exception )
+		{
+			SoapUI.logError( exception );
+			System.err.println( "Exception" + exception.getMessage() );
+			event.rejectDrop();
+		}
+	}
 
-  public void dropActionChanged ( DropTargetDragEvent event ) {
-  }
+	/**
+	 * is invoked if the use modifies the current drop gesture
+	 * 
+	 */
 
-  /**
-   * a drag gesture has been initiated
-   * 
-   */
-  
-  public void dragGestureRecognized( DragGestureEvent event) {
-    
-    Object selected = getSelectedValue();
-    if ( selected != null ){
-        StringSelection text = new StringSelection( selected.toString()); 
-        
-        // as the name suggests, starts the dragging
-        dragSource.startDrag (event, DragSource.DefaultMoveDrop, text, this);
-    } else {
-        System.out.println( "nothing was selected");   
-    }
-  }
+	public void dropActionChanged( DropTargetDragEvent event )
+	{
+	}
 
-  /**
-   * this message goes to DragSourceListener, informing it that the dragging 
-   * has ended
-   * 
-   */
+	/**
+	 * a drag gesture has been initiated
+	 * 
+	 */
 
-  public void dragDropEnd (DragSourceDropEvent event) {   
-    if ( event.getDropSuccess()){
-        removeElement();
-    }
-  }
+	public void dragGestureRecognized( DragGestureEvent event )
+	{
 
-  /**
-   * this message goes to DragSourceListener, informing it that the dragging 
-   * has entered the DropSite
-   * 
-   */
+		Object selected = getSelectedValue();
+		if( selected != null )
+		{
+			StringSelection text = new StringSelection( selected.toString() );
 
-  public void dragEnter (DragSourceDragEvent event) {
-    System.out.println( " dragEnter");
-  }
+			// as the name suggests, starts the dragging
+			dragSource.startDrag( event, DragSource.DefaultMoveDrop, text, this );
+		}
+		else
+		{
+			System.out.println( "nothing was selected" );
+		}
+	}
 
-  /**
-   * this message goes to DragSourceListener, informing it that the dragging 
-   * has exited the DropSite
-   * 
-   */
+	/**
+	 * this message goes to DragSourceListener, informing it that the dragging
+	 * has ended
+	 * 
+	 */
 
-  public void dragExit (DragSourceEvent event) {
-    System.out.println( "dragExit");
-    
-  }
+	public void dragDropEnd( DragSourceDropEvent event )
+	{
+		if( event.getDropSuccess() )
+		{
+			removeElement();
+		}
+	}
 
-  /**
-   * this message goes to DragSourceListener, informing it that the dragging is currently 
-   * ocurring over the DropSite
-   * 
-   */
+	/**
+	 * this message goes to DragSourceListener, informing it that the dragging
+	 * has entered the DropSite
+	 * 
+	 */
 
-  public void dragOver (DragSourceDragEvent event) {
-    System.out.println( "dragExit");
-    
-  }
+	public void dragEnter( DragSourceDragEvent event )
+	{
+		System.out.println( " dragEnter" );
+	}
 
-  /**
-   * is invoked when the user changes the dropAction
-   * 
-   */
-   
-  public void dropActionChanged ( DragSourceDragEvent event) {
-    System.out.println( "dropActionChanged"); 
-  }
+	/**
+	 * this message goes to DragSourceListener, informing it that the dragging
+	 * has exited the DropSite
+	 * 
+	 */
 
-  /**
-   * adds elements to itself
-   * 
-   */
-   
-   public void addElement( Object s ){
-        (( DefaultListModel )getModel()).addElement (s.toString());
-  }
+	public void dragExit( DragSourceEvent event )
+	{
+		System.out.println( "dragExit" );
 
-  /**
-   * removes an element from itself
-   */
-   
-  public void removeElement(){
-    (( DefaultListModel)getModel()).removeElement( getSelectedValue());
-  }
-  
+	}
+
+	/**
+	 * this message goes to DragSourceListener, informing it that the dragging is
+	 * currently ocurring over the DropSite
+	 * 
+	 */
+
+	public void dragOver( DragSourceDragEvent event )
+	{
+		System.out.println( "dragExit" );
+
+	}
+
+	/**
+	 * is invoked when the user changes the dropAction
+	 * 
+	 */
+
+	public void dropActionChanged( DragSourceDragEvent event )
+	{
+		System.out.println( "dropActionChanged" );
+	}
+
+	/**
+	 * adds elements to itself
+	 * 
+	 */
+
+	public void addElement( Object s )
+	{
+		( ( DefaultListModel )getModel() ).addElement( s.toString() );
+	}
+
+	/**
+	 * removes an element from itself
+	 */
+
+	public void removeElement()
+	{
+		( ( DefaultListModel )getModel() ).removeElement( getSelectedValue() );
+	}
+
 }

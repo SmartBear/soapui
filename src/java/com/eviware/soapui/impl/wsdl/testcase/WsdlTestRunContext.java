@@ -43,7 +43,7 @@ public class WsdlTestRunContext extends AbstractSubmitContext implements TestRun
 	public WsdlTestRunContext( TestStep testStep )
 	{
 		super( testStep );
-		
+
 		testRunner = null;
 		testCase = testStep.getTestCase();
 		currentStepIndex = testCase.getIndexOfTestStep( testStep );
@@ -53,7 +53,7 @@ public class WsdlTestRunContext extends AbstractSubmitContext implements TestRun
 	{
 		if( currentStepIndex < 0 || currentStepIndex >= getTestCase().getTestStepCount() )
 			return null;
-		
+
 		return getTestCase().getTestStepAt( currentStepIndex );
 	}
 
@@ -67,7 +67,7 @@ public class WsdlTestRunContext extends AbstractSubmitContext implements TestRun
 	{
 		return currentStepIndex;
 	}
-	
+
 	public void setCurrentStep( int index )
 	{
 		currentStepIndex = index;
@@ -78,7 +78,7 @@ public class WsdlTestRunContext extends AbstractSubmitContext implements TestRun
 		return testRunner;
 	}
 
-	public Object getProperty(String testStepName, String propertyName)
+	public Object getProperty( String testStepName, String propertyName )
 	{
 		TestStep testStep = getTestCase().getTestStepByName( testStepName );
 		return testStep == null ? null : testStep.getPropertyValue( propertyName );
@@ -88,35 +88,35 @@ public class WsdlTestRunContext extends AbstractSubmitContext implements TestRun
 	{
 		return testRunner == null ? testCase : testRunner.getTestCase();
 	}
-	
+
 	@Override
 	public Object get( Object key )
 	{
-		if( "currentStep".equals(key))
+		if( "currentStep".equals( key ) )
 			return getCurrentStep();
 
-		if( "currentStepIndex".equals(key))
+		if( "currentStepIndex".equals( key ) )
 			return getCurrentStepIndex();
 
-		if( "settings".equals(key))
+		if( "settings".equals( key ) )
 			return getSettings();
 
-		if( "testCase".equals(key))
+		if( "testCase".equals( key ) )
 			return getTestCase();
 
-		if( "testRunner".equals(key))
+		if( "testRunner".equals( key ) )
 			return getTestRunner();
-		
+
 		Object result = getProperty( key.toString() );
-		
+
 		if( result == null )
 		{
 			result = super.get( key );
 		}
-		
+
 		return result;
 	}
-	
+
 	@Override
 	public Object put( String key, Object value )
 	{
@@ -125,13 +125,13 @@ public class WsdlTestRunContext extends AbstractSubmitContext implements TestRun
 		return oldValue;
 	}
 
-	public Object getProperty(String name)
+	public Object getProperty( String name )
 	{
-		WsdlTestCase testCase = (WsdlTestCase) getTestCase();
-		TestStep testStep = currentStepIndex >= 0 && currentStepIndex < testCase.getTestStepCount() ? 
-				testCase.getTestStepAt( currentStepIndex ) : null;
-		
-		return getProperty( name, testStep, testCase);
+		WsdlTestCase testCase = ( WsdlTestCase )getTestCase();
+		TestStep testStep = currentStepIndex >= 0 && currentStepIndex < testCase.getTestStepCount() ? testCase
+				.getTestStepAt( currentStepIndex ) : null;
+
+		return getProperty( name, testStep, testCase );
 	}
 
 	public void reset()
@@ -139,8 +139,8 @@ public class WsdlTestRunContext extends AbstractSubmitContext implements TestRun
 		resetProperties();
 		currentStepIndex = 0;
 	}
-	
-	public String expand(String content)
+
+	public String expand( String content )
 	{
 		return PropertyExpansionUtils.expandProperties( this, content );
 	}

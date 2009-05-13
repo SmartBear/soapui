@@ -9,12 +9,12 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
- 
+
 package com.eviware.soapui.model.testsuite;
 
 import com.eviware.soapui.model.iface.MessageExchange;
 
 public interface MessageExchangeTestStepResult extends TestStepResult
 {
-	public MessageExchange [] getMessageExchanges();
+	public MessageExchange[] getMessageExchanges();
 }

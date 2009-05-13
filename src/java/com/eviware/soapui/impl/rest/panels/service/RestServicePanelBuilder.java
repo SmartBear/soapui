@@ -12,11 +12,11 @@
 
 package com.eviware.soapui.impl.rest.panels.service;
 
+import java.awt.Component;
+
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.support.components.JPropertiesTable;
-
-import java.awt.*;
 
 /**
  * PanelBuilder for WsdlInterface
@@ -26,36 +26,36 @@ import java.awt.*;
 
 public class RestServicePanelBuilder extends EmptyPanelBuilder<RestService>
 {
-   public RestServicePanelBuilder()
-   {
-   }
-   
-   public RestServiceDesktopPanel buildDesktopPanel(RestService service)
-   {
-      return new RestServiceDesktopPanel(service);
-   }
+	public RestServicePanelBuilder()
+	{
+	}
 
-   public boolean hasDesktopPanel()
-   {
-      return true;
-   }
+	public RestServiceDesktopPanel buildDesktopPanel( RestService service )
+	{
+		return new RestServiceDesktopPanel( service );
+	}
 
-   public Component buildOverviewPanel(RestService service)
-   {
-   	JPropertiesTable<RestService> table = new JPropertiesTable<RestService>( "Service Properties" );
-   	table.addProperty( "Name", "name" );
-   	table.addProperty( "Description", "description", true );
-   	table.addProperty( "Base Path", "basePath", true );
-   	table.addProperty( "WADL", "wadlUrl", !service.isGenerated() );
-      table.addProperty( "Generated", "generated", false );
-   	
-   	table.setPropertyObject( service );
-   	
-   	return table;
-   }
+	public boolean hasDesktopPanel()
+	{
+		return true;
+	}
 
-   public boolean hasOverviewPanel()
-   {
-      return true;
-   }
+	public Component buildOverviewPanel( RestService service )
+	{
+		JPropertiesTable<RestService> table = new JPropertiesTable<RestService>( "Service Properties" );
+		table.addProperty( "Name", "name" );
+		table.addProperty( "Description", "description", true );
+		table.addProperty( "Base Path", "basePath", true );
+		table.addProperty( "WADL", "wadlUrl", !service.isGenerated() );
+		table.addProperty( "Generated", "generated", false );
+
+		table.setPropertyObject( service );
+
+		return table;
+	}
+
+	public boolean hasOverviewPanel()
+	{
+		return true;
+	}
 }

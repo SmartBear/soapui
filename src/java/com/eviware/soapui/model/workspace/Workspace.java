@@ -27,29 +27,29 @@ import com.eviware.soapui.support.SoapUIException;
 
 public interface Workspace extends ModelItem
 {
-   public Project getProjectAt( int index );
-   
-   public Project getProjectByName( String projectName );
-   
-   public Map<String,Project> getProjects();
-   
-   public int getProjectCount();
+	public Project getProjectAt( int index );
 
-   public void onClose();
-   
-   public void save( boolean workspaceOnly );
-   
-   public void addWorkspaceListener( WorkspaceListener listener );
-   
-   public void removeWorkspaceListener( WorkspaceListener listener );
+	public Project getProjectByName( String projectName );
 
-   public Project createProject(String name, File file) throws SoapUIException;
-   
-   public void removeProject(Project project);
-   
-   public Project importProject( String filename ) throws SoapUIException;
+	public Map<String, Project> getProjects();
 
-	public int getIndexOfProject(Project project);
+	public int getProjectCount();
+
+	public void onClose();
+
+	public void save( boolean workspaceOnly );
+
+	public void addWorkspaceListener( WorkspaceListener listener );
+
+	public void removeWorkspaceListener( WorkspaceListener listener );
+
+	public Project createProject( String name, File file ) throws SoapUIException;
+
+	public void removeProject( Project project );
+
+	public Project importProject( String filename ) throws SoapUIException;
+
+	public int getIndexOfProject( Project project );
 
 	public String getPath();
 

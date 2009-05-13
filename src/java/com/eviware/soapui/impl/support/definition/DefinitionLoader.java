@@ -17,15 +17,15 @@ import com.eviware.x.dialogs.XProgressMonitor;
 
 public interface DefinitionLoader extends SchemaLoader
 {
-   void setProgressMonitor(XProgressMonitor monitor, int i);
-   
-   void setProgressInfo( String info );
+	void setProgressMonitor( XProgressMonitor monitor, int i );
 
-   boolean isAborted();
+	void setProgressInfo( String info );
 
-   boolean abort();
-   
-   void setNewBaseURI(String uri);
-   
-   String getFirstNewURI();
+	boolean isAborted();
+
+	boolean abort();
+
+	void setNewBaseURI( String uri );
+
+	String getFirstNewURI();
 }

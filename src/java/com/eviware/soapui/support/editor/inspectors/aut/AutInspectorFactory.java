@@ -30,8 +30,8 @@ public class AutInspectorFactory implements RequestInspectorFactory
 	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof AbstractHttpRequest<?> )
-			return new RequestAutInspector( ((AbstractHttpRequest<?>)modelItem) );
-		
+			return new RequestAutInspector( ( ( AbstractHttpRequest<?> )modelItem ) );
+
 		return null;
 	}
 }

@@ -63,44 +63,43 @@ import com.eviware.soapui.support.swing.AutoscrollSupport;
  * @author Ole.Matzura
  */
 
-public class JTestSuiteTestCaseList extends JPanel 
+public class JTestSuiteTestCaseList extends JPanel
 {
-	private Map<TestCase,TestCaseListPanel> panels = new HashMap<TestCase,TestCaseListPanel>();
+	private Map<TestCase, TestCaseListPanel> panels = new HashMap<TestCase, TestCaseListPanel>();
 	private final WsdlTestSuite testSuite;
 	private final InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
 	private TestCaseListPanel selectedTestCase;
 
-	public JTestSuiteTestCaseList(WsdlTestSuite testSuite)
+	public JTestSuiteTestCaseList( WsdlTestSuite testSuite )
 	{
 		this.testSuite = testSuite;
-		setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ));
-		
+		setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ) );
+
 		for( int c = 0; c < testSuite.getTestCaseCount(); c++ )
 		{
 			TestCaseListPanel testCaseListPanel = createTestCaseListPanel( testSuite.getTestCaseAt( c ) );
 			panels.put( testSuite.getTestCaseAt( c ), testCaseListPanel );
 			add( testCaseListPanel );
 		}
-		
+
 		add( Box.createVerticalGlue() );
 		setBackground( Color.WHITE );
-		
+
 		testSuite.addTestSuiteListener( testSuiteListener );
-		
+
 		ActionList actions = ActionListBuilder.buildActions( testSuite );
 		actions.removeAction( 0 );
 		actions.removeAction( 0 );
-		setComponentPopupMenu( ActionSupport.buildPopup( actions ));
-		
+		setComponentPopupMenu( ActionSupport.buildPopup( actions ) );
+
 		DragSource dragSource = DragSource.getDefaultDragSource();
-		
-		SoapUIDragAndDropHandler dragAndDropHandler = new SoapUIDragAndDropHandler( 
-					new TestCaseListDragAndDropable( this ), DropType.AFTER );
-		
-		dragSource.createDefaultDragGestureRecognizer( this, DnDConstants.ACTION_COPY_OR_MOVE,
-				dragAndDropHandler );
+
+		SoapUIDragAndDropHandler dragAndDropHandler = new SoapUIDragAndDropHandler(
+				new TestCaseListDragAndDropable( this ), DropType.AFTER );
+
+		dragSource.createDefaultDragGestureRecognizer( this, DnDConstants.ACTION_COPY_OR_MOVE, dragAndDropHandler );
 	}
-	
+
 	public void reset()
 	{
 		for( TestCaseListPanel testCasePanel : panels.values() )
@@ -108,7 +107,7 @@ public class JTestSuiteTestCaseList extends JPanel
 			testCasePanel.reset();
 		}
 	}
-	
+
 	@Override
 	public void addNotify()
 	{
@@ -125,7 +124,7 @@ public class JTestSuiteTestCaseList extends JPanel
 
 	private final class InternalTestSuiteListener extends TestSuiteListenerAdapter
 	{
-		public void testCaseAdded(TestCase testCase)
+		public void testCaseAdded( TestCase testCase )
 		{
 			TestCaseListPanel testCaseListPanel = createTestCaseListPanel( testCase );
 			panels.put( testCase, testCaseListPanel );
@@ -134,7 +133,7 @@ public class JTestSuiteTestCaseList extends JPanel
 			repaint();
 		}
 
-		public void testCaseRemoved(TestCase testCase)
+		public void testCaseRemoved( TestCase testCase )
 		{
 			TestCaseListPanel testCaseListPanel = panels.get( testCase );
 			if( testCaseListPanel != null )
@@ -153,19 +152,19 @@ public class JTestSuiteTestCaseList extends JPanel
 			if( testCaseListPanel != null )
 			{
 				boolean hadFocus = testCaseListPanel.hasFocus();
-				
+
 				remove( testCaseListPanel );
-				add( testCaseListPanel, index+offset );
-				
+				add( testCaseListPanel, index + offset );
+
 				revalidate();
 				repaint();
-				
+
 				if( hadFocus )
 					testCaseListPanel.requestFocus();
 			}
 		}
 	}
-	
+
 	public final class TestCaseListPanel extends JPanel implements Autoscroll
 	{
 		private final WsdlTestCase testCase;
@@ -178,80 +177,83 @@ public class JTestSuiteTestCaseList extends JPanel
 		public TestCaseListPanel( WsdlTestCase testCase )
 		{
 			super( new BorderLayout() );
-			
+
 			setFocusable( true );
-			
+
 			this.testCase = testCase;
 			autoscrollSupport = new AutoscrollSupport( this );
-			
+
 			progressBar = new JProgressBar( 0, 100 )
 			{
-				protected void processMouseEvent(MouseEvent e) {
-			      if (e.getID() == MouseEvent.MOUSE_PRESSED ||
-			        e.getID() == MouseEvent.MOUSE_RELEASED) {
-			      	TestCaseListPanel.this.processMouseEvent(translateMouseEvent(e));
-			      }
-			    }
-			    
-			    protected void processMouseMotionEvent(MouseEvent e) {
-			   	 TestCaseListPanel.this.processMouseMotionEvent(translateMouseEvent(e));
-			    }
-			    
-			    /**
-			     * Translates the given mouse event to the enclosing map panel's
-			     * coordinate space.
-			     */
-			    private MouseEvent translateMouseEvent(MouseEvent e) {
-			      return new MouseEvent(TestCaseListPanel.this, e.getID(), e.getWhen(), 
-			        e.getModifiers(), e.getX() + getX(), e.getY() + getY(), 
-			        e.getClickCount(), e.isPopupTrigger(), e.getButton());
-			    }
+				protected void processMouseEvent( MouseEvent e )
+				{
+					if( e.getID() == MouseEvent.MOUSE_PRESSED || e.getID() == MouseEvent.MOUSE_RELEASED )
+					{
+						TestCaseListPanel.this.processMouseEvent( translateMouseEvent( e ) );
+					}
+				}
+
+				protected void processMouseMotionEvent( MouseEvent e )
+				{
+					TestCaseListPanel.this.processMouseMotionEvent( translateMouseEvent( e ) );
+				}
+
+				/**
+				 * Translates the given mouse event to the enclosing map panel's
+				 * coordinate space.
+				 */
+				private MouseEvent translateMouseEvent( MouseEvent e )
+				{
+					return new MouseEvent( TestCaseListPanel.this, e.getID(), e.getWhen(), e.getModifiers(), e.getX()
+							+ getX(), e.getY() + getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton() );
+				}
 			};
-			
+
 			JPanel progressPanel = UISupport.createProgressBarPanel( progressBar, 5, false );
-			
-		   progressBar.setMinimumSize( new Dimension( 0, 10 ));
-		   progressBar.setBackground( Color.WHITE );
-		   progressBar.setInheritsPopupMenu( true );
-		   
+
+			progressBar.setMinimumSize( new Dimension( 0, 10 ) );
+			progressBar.setBackground( Color.WHITE );
+			progressBar.setInheritsPopupMenu( true );
+
 			label = new JLabel( testCase.getLabel() );
-			label.setBorder( BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		   label.setInheritsPopupMenu( true );
-		   label.setEnabled( !testCase.isDisabled() );
+			label.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
+			label.setInheritsPopupMenu( true );
+			label.setEnabled( !testCase.isDisabled() );
 
 			add( progressPanel, BorderLayout.CENTER );
 			add( label, BorderLayout.NORTH );
-			
+
 			testCasePropertyChangeListener = new TestCasePropertyChangeListener();
-			
+
 			initPopup( testCase );
-			
-			addMouseListener( new MouseAdapter() {
-				
+
+			addMouseListener( new MouseAdapter()
+			{
+
 				@Override
 				public void mousePressed( MouseEvent e )
 				{
 					requestFocus();
 				}
 
-				public void mouseClicked(MouseEvent e)
+				public void mouseClicked( MouseEvent e )
 				{
-					if (e.getClickCount() < 2)
+					if( e.getClickCount() < 2 )
 					{
 						if( selectedTestCase != null )
 							selectedTestCase.setSelected( false );
-						
+
 						setSelected( true );
 						selectedTestCase = TestCaseListPanel.this;
 						return;
 					}
-					
+
 					UISupport.selectAndShow( TestCaseListPanel.this.testCase );
 				}
 			} );
-			
+
 			addKeyListener( new TestCaseListPanelKeyHandler() );
-			
+
 			// init border
 			setSelected( false );
 		}
@@ -259,19 +261,19 @@ public class JTestSuiteTestCaseList extends JPanel
 		public void reset()
 		{
 			progressBar.setValue( 0 );
-			progressBar.setString( "" ); 
+			progressBar.setString( "" );
 		}
 
 		private void initPopup( WsdlTestCase testCase )
 		{
 			ActionList actions = ActionListBuilder.buildActions( testCase );
-			actions.insertAction( SwingActionDelegate.createDelegate( AddNewTestCaseAction.SOAPUI_ACTION_ID, testSuite, null, 
-						null ), 0 );
+			actions.insertAction( SwingActionDelegate.createDelegate( AddNewTestCaseAction.SOAPUI_ACTION_ID, testSuite,
+					null, null ), 0 );
 			actions.insertAction( ActionSupport.SEPARATOR_ACTION, 1 );
-			
-			setComponentPopupMenu( ActionSupport.buildPopup( actions ));
+
+			setComponentPopupMenu( ActionSupport.buildPopup( actions ) );
 		}
-		
+
 		public void addNotify()
 		{
 			super.addNotify();
@@ -286,27 +288,27 @@ public class JTestSuiteTestCaseList extends JPanel
 			{
 				testCase.removePropertyChangeListener( testCasePropertyChangeListener );
 				progressBarAdapter.release();
-				
+
 				progressBarAdapter = null;
 			}
 		}
 
-		public Dimension getMaximumSize() 
+		public Dimension getMaximumSize()
 		{
-		    Dimension size = super.getMaximumSize();
-		    size.height = 50;
-		    return size;
+			Dimension size = super.getMaximumSize();
+			size.height = 50;
+			return size;
 		}
-		
+
 		public void setSelected( boolean selected )
 		{
 			if( selected )
 			{
-				setBorder( BorderFactory.createLineBorder( Color.GRAY ));
+				setBorder( BorderFactory.createLineBorder( Color.GRAY ) );
 			}
 			else
 			{
-				setBorder( BorderFactory.createLineBorder( Color.WHITE ));
+				setBorder( BorderFactory.createLineBorder( Color.WHITE ) );
 			}
 		}
 
@@ -314,17 +316,17 @@ public class JTestSuiteTestCaseList extends JPanel
 		{
 			return selectedTestCase != null && selectedTestCase.getTestCase() == testCase;
 		}
-		
+
 		private final class TestCasePropertyChangeListener implements PropertyChangeListener
 		{
-			public void propertyChange(PropertyChangeEvent evt)
+			public void propertyChange( PropertyChangeEvent evt )
 			{
-				if( evt.getPropertyName().equals( TestCase.LABEL_PROPERTY ))
+				if( evt.getPropertyName().equals( TestCase.LABEL_PROPERTY ) )
 				{
 					label.setEnabled( !testCase.isDisabled() );
 					label.setText( testCase.getLabel() );
 				}
-				else if( evt.getPropertyName().equals( TestCase.DISABLED_PROPERTY ))
+				else if( evt.getPropertyName().equals( TestCase.DISABLED_PROPERTY ) )
 				{
 					initPopup( testCase );
 				}
@@ -344,14 +346,14 @@ public class JTestSuiteTestCaseList extends JPanel
 		public void autoscroll( Point pt )
 		{
 			int ix = getIndexOf( this );
-			if( pt.getY() < 12 && ix > 0 ) 
+			if( pt.getY() < 12 && ix > 0 )
 			{
-				Rectangle bounds = JTestSuiteTestCaseList.this.getComponent( ix-1 ).getBounds();
+				Rectangle bounds = JTestSuiteTestCaseList.this.getComponent( ix - 1 ).getBounds();
 				JTestSuiteTestCaseList.this.scrollRectToVisible( bounds );
 			}
-			else if( pt.getY() > getHeight()-12 && ix < testSuite.getTestCaseCount()-1 )
+			else if( pt.getY() > getHeight() - 12 && ix < testSuite.getTestCaseCount() - 1 )
 			{
-				Rectangle bounds = JTestSuiteTestCaseList.this.getComponent( ix+1 ).getBounds();
+				Rectangle bounds = JTestSuiteTestCaseList.this.getComponent( ix + 1 ).getBounds();
 				JTestSuiteTestCaseList.this.scrollRectToVisible( bounds );
 			}
 		}
@@ -360,12 +362,12 @@ public class JTestSuiteTestCaseList extends JPanel
 		{
 			return autoscrollSupport.getAutoscrollInsets();
 		}
-		
+
 		private final class TestCaseListPanelKeyHandler extends KeyAdapter
 		{
-			public void keyPressed(KeyEvent e)
+			public void keyPressed( KeyEvent e )
 			{
-				if (e.getKeyChar() == KeyEvent.VK_ENTER)
+				if( e.getKeyChar() == KeyEvent.VK_ENTER )
 				{
 					UISupport.selectAndShow( testCase );
 					e.consume();
@@ -379,7 +381,7 @@ public class JTestSuiteTestCaseList extends JPanel
 			}
 		}
 	}
-	
+
 	protected int getIndexOf( TestCaseListPanel panel )
 	{
 		return Arrays.asList( getComponents() ).indexOf( panel );
@@ -387,24 +389,24 @@ public class JTestSuiteTestCaseList extends JPanel
 
 	protected TestCaseListPanel createTestCaseListPanel( TestCase testCase )
 	{
-		TestCaseListPanel testCaseListPanel = new TestCaseListPanel(( WsdlTestCase ) testCase);
-		
+		TestCaseListPanel testCaseListPanel = new TestCaseListPanel( ( WsdlTestCase )testCase );
+
 		DragSource dragSource = DragSource.getDefaultDragSource();
-		
-		SoapUIDragAndDropHandler dragAndDropHandler = new SoapUIDragAndDropHandler( 
-					new TestCaseListPanelDragAndDropable( testCaseListPanel ), DropType.BEFORE_AND_AFTER );
-		
+
+		SoapUIDragAndDropHandler dragAndDropHandler = new SoapUIDragAndDropHandler( new TestCaseListPanelDragAndDropable(
+				testCaseListPanel ), DropType.BEFORE_AND_AFTER );
+
 		dragSource.createDefaultDragGestureRecognizer( testCaseListPanel, DnDConstants.ACTION_COPY_OR_MOVE,
 				dragAndDropHandler );
-		
+
 		return testCaseListPanel;
 	}
-	
+
 	private class TestCaseListDragAndDropable implements SoapUIDragAndDropable<ModelItem>
 	{
 		private final JTestSuiteTestCaseList list;
 
-		public TestCaseListDragAndDropable(JTestSuiteTestCaseList list )
+		public TestCaseListDragAndDropable( JTestSuiteTestCaseList list )
 		{
 			this.list = list;
 		}
@@ -422,7 +424,7 @@ public class JTestSuiteTestCaseList extends JPanel
 		public ModelItem getModelItemForLocation( int x, int y )
 		{
 			int testCaseCount = testSuite.getTestCaseCount();
-			return testCaseCount == 0 ? testSuite : testSuite.getTestCaseAt( testCaseCount-1 );
+			return testCaseCount == 0 ? testSuite : testSuite.getTestCaseAt( testCaseCount - 1 );
 		}
 
 		public Component getRenderer( ModelItem modelItem )
@@ -441,8 +443,9 @@ public class JTestSuiteTestCaseList extends JPanel
 
 		public void toggleExpansion( ModelItem modelItem )
 		{
-		}}	
-	
+		}
+	}
+
 	private static class TestCaseListPanelDragAndDropable implements SoapUIDragAndDropable<ModelItem>
 	{
 		private final TestCaseListPanel testCasePanel;
@@ -484,5 +487,6 @@ public class JTestSuiteTestCaseList extends JPanel
 
 		public void toggleExpansion( ModelItem last )
 		{
-		}}
+		}
+	}
 }

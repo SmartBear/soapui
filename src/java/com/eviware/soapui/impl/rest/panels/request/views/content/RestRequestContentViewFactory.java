@@ -22,14 +22,14 @@ import com.eviware.soapui.support.editor.registry.RequestEditorViewFactory;
 public class RestRequestContentViewFactory implements RequestEditorViewFactory
 {
 	public final static String VIEW_ID = "REST Content";
-	
-	public EditorView<?> createRequestEditorView(Editor<?> editor, ModelItem modelItem)
+
+	public EditorView<?> createRequestEditorView( Editor<?> editor, ModelItem modelItem )
 	{
 		if( editor instanceof RestRequestMessageEditor && modelItem instanceof RestRequest )
 		{
-			return new RestRequestContentView( (RestRequestMessageEditor) editor, (RestRequest) modelItem );
+			return new RestRequestContentView( ( RestRequestMessageEditor )editor, ( RestRequest )modelItem );
 		}
-		
+
 		return null;
 	}
 

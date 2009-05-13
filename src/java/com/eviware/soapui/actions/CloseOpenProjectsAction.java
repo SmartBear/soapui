@@ -33,17 +33,17 @@ public class CloseOpenProjectsAction extends AbstractSoapUIAction<WorkspaceImpl>
 	public static final String SOAPUI_ACTION_ID = "CloseOpenProjectsAction";
 
 	public CloseOpenProjectsAction()
-   {
-      super( "Close All Open Projects", "Closes all open projects in the current Workspace" );
-   }
-	
+	{
+		super( "Close All Open Projects", "Closes all open projects in the current Workspace" );
+	}
+
 	public void perform( WorkspaceImpl workspace, Object param )
 	{
 		List<Project> openProjects = new ArrayList<Project>();
-		for( Project project : workspace.getProjectList())
+		for( Project project : workspace.getProjectList() )
 			if( project.isOpen() )
 				openProjects.add( project );
-		
+
 		if( openProjects.isEmpty() )
 		{
 			UISupport.showErrorMessage( "No open projects in workspace" );
@@ -53,14 +53,14 @@ public class CloseOpenProjectsAction extends AbstractSoapUIAction<WorkspaceImpl>
 		Boolean coc = UISupport.confirmOrCancel( "Save projects before closing?", getName() );
 		if( coc == null )
 			return;
-		
-		for( Project project : openProjects)
+
+		for( Project project : openProjects )
 		{
 			try
 			{
 				if( coc )
 					project.save();
-				
+
 				workspace.closeProject( project );
 			}
 			catch( IOException e )
@@ -68,5 +68,5 @@ public class CloseOpenProjectsAction extends AbstractSoapUIAction<WorkspaceImpl>
 				SoapUI.logError( e );
 			}
 		}
-   }
+	}
 }

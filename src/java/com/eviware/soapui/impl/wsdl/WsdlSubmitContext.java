@@ -26,27 +26,27 @@ import com.eviware.soapui.model.testsuite.TestStep;
 public class WsdlSubmitContext extends AbstractSubmitContext
 {
 	private final TestStep step;
-	
+
 	public WsdlSubmitContext( ModelItem context )
 	{
 		super( context );
-		step = context instanceof TestStep ? ( TestStep ) context : null;
+		step = context instanceof TestStep ? ( TestStep )context : null;
 	}
-	
-	public Object getProperty(String name)
+
+	public Object getProperty( String name )
 	{
-		return getProperty( name, step, (WsdlTestCase) (step == null ? null : step.getTestCase()) );
+		return getProperty( name, step, ( WsdlTestCase )( step == null ? null : step.getTestCase() ) );
 	}
-	
+
 	@Override
 	public Object get( Object key )
 	{
-		if( "settings".equals(key))
+		if( "settings".equals( key ) )
 			return getSettings();
-		
+
 		return getProperty( key.toString() );
 	}
-	
+
 	@Override
 	public Object put( String key, Object value )
 	{

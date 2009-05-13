@@ -17,5 +17,5 @@ package com.eviware.soapui.actions;
  */
 public interface UpdateableAction
 {
-   public void update();
+	public void update();
 }

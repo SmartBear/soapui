@@ -32,25 +32,25 @@ import com.eviware.soapui.settings.UISettings;
 public final class LogDisablingTestMonitorListener extends TestMonitorListenerAdapter
 {
 	private Set<LoadTestRunner> loadTestRunners = new HashSet<LoadTestRunner>();
-	
-	public void loadTestStarted(LoadTestRunner runner)
+
+	public void loadTestStarted( LoadTestRunner runner )
 	{
 		if( loadTestRunners.isEmpty() )
 		{
 			Logger.getLogger( SoapUI.class ).info( "Disabling logs during loadtests" );
 			Logger.getLogger( "httpclient.wire" ).setLevel( Level.OFF );
-			
-			if( !SoapUI.getSettings().getBoolean( UISettings.DONT_DISABLE_GROOVY_LOG ))
+
+			if( !SoapUI.getSettings().getBoolean( UISettings.DONT_DISABLE_GROOVY_LOG ) )
 				Logger.getLogger( "groovy.log" ).setLevel( Level.OFF );
 		}
-		
+
 		loadTestRunners.add( runner );
 	}
 
-	public void loadTestFinished(LoadTestRunner runner)
+	public void loadTestFinished( LoadTestRunner runner )
 	{
 		loadTestRunners.remove( runner );
-		
+
 		if( loadTestRunners.isEmpty() )
 		{
 			Logger.getLogger( "httpclient.wire" ).setLevel( Level.DEBUG );

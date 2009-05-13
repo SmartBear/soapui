@@ -16,5 +16,5 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 
 public interface MockOperationDispatchFactory
 {
-   MockOperationDispatcher build( WsdlMockOperation mockOperation );
+	MockOperationDispatcher build( WsdlMockOperation mockOperation );
 }

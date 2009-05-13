@@ -19,26 +19,26 @@ import com.eviware.soapui.model.ModelItem;
 public interface TestProperty
 {
 	public String getName();
-	
+
 	public String getDescription();
-	
+
 	public String getValue();
-	
+
 	public String getDefaultValue();
-	
+
 	public void setValue( String value );
-	
+
 	public boolean isReadOnly();
-	
+
 	public QName getType();
-	
-//	public enum Type { STRING };
-	
+
+	// public enum Type { STRING };
+
 	/**
 	 * Gets the modelItem containing this property
 	 * 
 	 * @return the modelItem containing this property
 	 */
-	
+
 	public ModelItem getModelItem();
 }

@@ -12,6 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
 import com.eviware.soapui.impl.rest.support.MediaTypeHandlerRegistry;
@@ -29,10 +33,6 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
-
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * TestStepResult for a WsdlTestRequestStep
@@ -195,10 +195,10 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 			for( String key : properties.keySet() )
 			{
 				if( properties.get( key ) != null )
-				   writer.println( key + ": " + properties.get( key ) );
+					writer.println( key + ": " + properties.get( key ) );
 			}
 		}
-		
+
 		writer.println( "\r\n---------------- Request ---------------------------" );
 		if( response != null )
 		{
@@ -206,7 +206,7 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 			for( String key : headers.keySet() )
 			{
 				if( headers.get( key ) != null )
-				   writer.println( key + ": " + headers.get( key ) );
+					writer.println( key + ": " + headers.get( key ) );
 			}
 		}
 
@@ -222,9 +222,9 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 			for( String key : headers.keySet() )
 			{
 				if( headers.get( key ) != null )
-				   writer.println( key + ": " + headers.get( key ) );
+					writer.println( key + ": " + headers.get( key ) );
 			}
-			
+
 			String respContent = response.getContentAsString();
 			if( respContent != null )
 				writer.println( "\r\n" + respContent );

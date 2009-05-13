@@ -34,7 +34,7 @@ public class JTextComponentPropertyExpansionTarget extends AbstractPropertyExpan
 		int pos = pt == null ? -1 : textField.viewToModel( pt );
 		if( pos == -1 )
 			pos = textField.getCaretPosition();
-		
+
 		if( pos == -1 || textField.getSelectionStart() == textField.getSelectionEnd() )
 		{
 			textField.setText( expansion.toString() );
@@ -45,16 +45,16 @@ public class JTextComponentPropertyExpansionTarget extends AbstractPropertyExpan
 			String text = textField.getText();
 			if( textField.getSelectionStart() < textField.getSelectionEnd() )
 			{
-				textField.setText( text.substring( 0, textField.getSelectionStart() ) + expansion + 
-							text.substring( textField.getSelectionEnd() ));
+				textField.setText( text.substring( 0, textField.getSelectionStart() ) + expansion
+						+ text.substring( textField.getSelectionEnd() ) );
 				textField.setCaretPosition( textField.getSelectionStart() );
 			}
 			else
 			{
-				textField.setText( text.substring( 0, pos ) + expansion + text.substring( pos ));
+				textField.setText( text.substring( 0, pos ) + expansion + text.substring( pos ) );
 				textField.setCaretPosition( pos );
 			}
-			
+
 			textField.requestFocusInWindow();
 		}
 	}
