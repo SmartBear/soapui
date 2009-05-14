@@ -43,7 +43,7 @@ urchinTracker();</script>
         <td height="240" class="greyBox" valign="top"><h2>soapUI Training in Washington DC</h2>
           <p>Become a soapUI Pro!</p>
           <p>Get training for soapUI. Next Date:<br />
-          Chicago, USA, May 19-21<br />
+          Washington DC, USA, May 19-21<br />
 <br />
             <a onclick="javascript:urchinTracker('/appindexsoapUITraining')"href="http://www.pushtotest.com/services/soapui-training/" title="Read Here!" target="_blank">Read about it here</a></p></td>
       </tr>
