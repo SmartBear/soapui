@@ -671,7 +671,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	{
 		int currentStepIndex = getIndexOfTestStep( referenceStep );
 		int ix = currentStepIndex - 1;
-		while( ix >= 0 && !getTestStepAt( ix ).getClass().isInstance( stepClass ) )
+		while( ix >= 0 && !stepClass.isAssignableFrom( getTestStepAt( ix ).getClass()) )
 		{
 			ix-- ;
 		}
@@ -684,7 +684,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	{
 		int currentStepIndex = getIndexOfTestStep( referenceStep );
 		int ix = currentStepIndex + 1;
-		while( ix < getTestStepCount() && !getTestStepAt( ix ).getClass().isInstance( stepClass ) )
+		while( ix < getTestStepCount() && !stepClass.isAssignableFrom( getTestStepAt( ix ).getClass()) )
 		{
 			ix++ ;
 		}
