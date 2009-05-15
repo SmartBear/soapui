@@ -98,6 +98,63 @@
                 </tr>
             </table>
 
+            <columns>
+                <column width="250">
+                    <subsection name="Latest News">
+                         <p>
+                            <i>2009-02-02: soapUI 2.5.1</i>
+                             <a href="new_and_noteworthy_2_5.html#2_5_1_Release">[Read more]</a>
+                        </p>
+                        <p>
+                            <i>2008-11-18: soapUI 2.5 - Final</i>
+                            <a href="new_and_noteworthy_2_5.html">[Read more]</a>
+                        </p>
+                        <p>
+                            <i>2008-01-28: soapUI 2.0.2</i>
+                            <a href="new_and_noteworthy_2.html#2.0.2_Release">[Read more]</a>
+                        </p>
+                        <p>
+                            <b>
+                                <a href="news.html">[More News]</a>
+                            </b>
+                        </p>
+                    </subsection>
+                </column>
+                <column align="left" width="350">
+                    <subsection name="soapUI on the web">
+                         <p>
+                            <i>2009-05-06:</i>
+                                <a target="_new"
+                                   href="http://drquyong.com/myblog/?p=58">Testing Alfresco CMIS Web...
+                                   </a>
+                                from Dr Q´s Blog
+                          </p>
+                            <p>
+                            <i>2009-04-04:</i>
+                                <a target="_new"
+                                  href="http://blog.ickydime.com/2009/04/soapui-open-source-way-to-explore-wsdl.html">soapUI: Open Source way to...
+                                </a>
+                                from Marks´s Blog
+                           </p>
+                        
+                            <p>
+                            <i>2009-02-02:</i>
+                                <a target="_new" 
+                                   href="http://onebyteatatime.wordpress.com/2009/04/01/soapui-tips-n-tricks-part-1/">soapUI Tips n Tricks - Part 1...
+                                   </a>
+                                from Sachin´s Blogs
+                            </p>                             
+                        <p>
+                            <b>
+                                <a href="soapui_in_the_news.html">[More...]</a>
+                            </b>
+                        </p>
+                    </subsection>
+                </column>
+            </columns>
+
+
+<!-- 
             <subsection name="Vote For soapUI">
                 <columns>
                     <column>
@@ -129,7 +186,7 @@
 
             </subsection>
 
-
+ -->
             <subsection name="What is soapUI?">
                 <p>soapUI is the most used testing tool in the world for:</p>
 
@@ -200,66 +257,6 @@
                     </td>
                 </tr>
             </table>
-
-            <columns>
-                <column>
-                    <subsection name="Latest News">
-                         <p>
-                            <i>2008-02-02: soapUI 2.5.1</i>
-                            : Bug-fixs and all IDE plugins!
-                            <a href="new_and_noteworthy_2_5.html#2_5_1_Release">[Read more]</a>
-                        </p>
-                        <p>
-                            <i>2008-11-18: soapUI 2.5 - Final</i>
-                            : The final release of soapUI 2.5 - The REST Release is out!
-                            <a href="new_and_noteworthy_2_5.html">[Read more]</a>
-                        </p>
-                        <p>
-                            <i>2008-01-28: soapUI 2.0.2</i>
-                            : Mostly bug-fixes and Plug-in updates
-                            <a href="new_and_noteworthy_2.html#2.0.2_Release">[Read more]</a>
-                        </p>
-                        <p>
-                            <b>
-                                <a href="news.html">[More News]</a>
-                            </b>
-                        </p>
-                    </subsection>
-                </column>
-                <column align="left">
-                    <subsection name="soapUI in the news">
-                        <p>Fortunately, we are not the only ones using soapUI, have a look at what some others have
-                            written:
-                        </p>
-                        <ul>
-                           <li>
-                                <a target="_new"
-                                   href="http://drquyong.com/myblog/?p=58">Testing Alfresco CMIS Web...
-                                   </a>
-                                from Dr Q´s Blog
-                           </li>
-                           <li>
-                                <a target="_new"
-                                  href="http://blog.ickydime.com/2009/04/soapui-open-source-way-to-explore-wsdl.html">soapUI: Open Source way to...
-                                </a>
-                                from Marks´s Blog
-                           </li>
-                        
-                           <li>
-                                <a target="_new" 
-                                   href="http://onebyteatatime.wordpress.com/2009/04/01/soapui-tips-n-tricks-part-1/">soapUI Tips n Tricks - Part 1...
-                                   </a>
-                                from Sachin´s Blogs
-                            </li>                             
-                        </ul>
-                        <p>
-                            <b>
-                                <a href="soapui_in_the_news.html">[More of soapUI in the News]</a>
-                            </b>
-                        </p>
-                    </subsection>
-                </column>
-            </columns>
 
 
             <table class="relatedInfo" cellspacing="0" cellpadding="0">
