@@ -66,6 +66,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 	private int threadsWaitingToStart;
 	private int startedCount;
 	private boolean hasTearedDown;
+	private TestCaseStarter testCaseStarter;
 
 	public WsdlLoadTestRunner( WsdlLoadTest test )
 	{
@@ -125,67 +126,8 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 					( int )loadTest.getThreadCount(), "", true );
 			try
 			{
-				progressDialog.run( new Worker.WorkerAdapter()
-				{
-
-					private List<WsdlTestCase> testCases = new ArrayList<WsdlTestCase>();
-					private boolean canceled;
-
-					public Object construct( XProgressMonitor monitor )
-					{
-						int startDelay = loadTest.getStartDelay();
-
-						for( int c = 0; c < loadTest.getThreadCount() && !canceled; c++ )
-						{
-							monitor.setProgress( 1, "Creating Virtual User " + ( c + 1 ) );
-							testCases.add( createTestCase() );
-						}
-
-						threadsWaitingToStart = testCases.size();
-						int cnt = 0;
-						while( !testCases.isEmpty() && !canceled )
-						{
-							if( startDelay > 0 )
-							{
-								try
-								{
-									Thread.sleep( startDelay );
-								}
-								catch( InterruptedException e )
-								{
-									SoapUI.logError( e );
-								}
-							}
-
-							if( status != Status.RUNNING
-									|| getProgress() >= 1
-									|| ( loadTest.getLimitType() == LoadTestLimitTypesConfig.COUNT && runners.size() >= loadTest
-											.getTestLimit() ) )
-								break;
-
-							// could have been canceled..
-							if( !testCases.isEmpty() )
-							{
-								startTestCase( testCases.remove( 0 ) );
-								monitor.setProgress( 1, "Started thread " + ( ++cnt ) );
-								threadsWaitingToStart-- ;
-							}
-						}
-
-						return null;
-					}
-
-					public boolean onCancel()
-					{
-						cancel( "Stopped from UI during start-up" );
-						canceled = true;
-						while( !testCases.isEmpty() )
-							testCases.remove( 0 ).release();
-
-						return false;
-					}
-				} );
-
+				testCaseStarter = new TestCaseStarter();
+				progressDialog.run( testCaseStarter );
 			}
 			catch( Exception e )
 			{
@@ -261,7 +203,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 	private TestCaseRunner startTestCase( WsdlTestCase testCase )
 	{
 		TestCaseRunner testCaseRunner = new TestCaseRunner( testCase, threadCount++ );
-		
+
 		SoapUI.getThreadPool().submit( testCaseRunner );
 		runners.add( testCaseRunner );
 		return testCaseRunner;
@@ -274,6 +216,9 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 
 		this.reason = reason;
 		status = Status.CANCELED;
+
+		if( testCaseStarter != null )
+			testCaseStarter.stop();
 
 		TestCaseRunner[] r = runners.toArray( new TestCaseRunner[runners.size()] );
 
@@ -303,6 +248,9 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 
 		this.reason = reason;
 		status = Status.FAILED;
+
+		if( testCaseStarter != null )
+			testCaseStarter.stop();
 
 		String msg = "LoadTest [" + loadTest.getName() + "] failed";
 		if( reason != null )
@@ -378,10 +326,13 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		}
 
 		runners.remove( runner );
-		if( runners.size() == 0 && threadsWaitingToStart == 0 && ( getProgress() >= 1 || status != Status.RUNNING ) )
+		if( runners.size() == 0 && ( getProgress() >= 1 || status != Status.RUNNING ) )
 		{
 			loadTest.removePropertyChangeListener( WsdlLoadTest.THREADCOUNT_PROPERTY, internalPropertyChangeListener );
 
+			if( testCaseStarter != null )
+				testCaseStarter.stop();
+			
 			if( status == Status.RUNNING )
 				status = Status.FINISHED;
 
@@ -438,6 +389,76 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		return true;
 	}
 
+	private final class TestCaseStarter extends Worker.WorkerAdapter
+	{
+		private List<WsdlTestCase> testCases = new ArrayList<WsdlTestCase>();
+		private boolean canceled;
+
+		public Object construct( XProgressMonitor monitor )
+		{
+			int startDelay = loadTest.getStartDelay();
+
+			for( int c = 0; c < loadTest.getThreadCount() && !canceled; c++ )
+			{
+				monitor.setProgress( 1, "Creating Virtual User " + ( c + 1 ) );
+				testCases.add( createTestCase() );
+			}
+
+			threadsWaitingToStart = testCases.size();
+			int cnt = 0;
+			while( !testCases.isEmpty() && !canceled )
+			{
+				if( startDelay > 0 )
+				{
+					try
+					{
+						Thread.sleep( startDelay );
+					}
+					catch( InterruptedException e )
+					{
+						SoapUI.logError( e );
+					}
+				}
+
+				if( status != Status.RUNNING
+						|| getProgress() >= 1
+						|| ( loadTest.getLimitType() == LoadTestLimitTypesConfig.COUNT && runners.size() >= loadTest
+								.getTestLimit() ) )
+					break;
+
+				// could have been canceled..
+				if( !testCases.isEmpty() )
+				{
+					startTestCase( testCases.remove( 0 ) );
+					monitor.setProgress( 1, "Started thread " + ( ++cnt ) );
+					threadsWaitingToStart-- ;
+				}
+			}
+
+			return null;
+		}
+
+		public boolean onCancel()
+		{
+			cancel( "Stopped from UI during start-up" );
+			stop();
+
+			return false;
+		}
+
+		public void stop()
+		{
+			if( !canceled )
+			{
+				canceled = true;
+				while( !testCases.isEmpty() )
+					testCases.remove( 0 ).release();
+
+				threadsWaitingToStart = 0;
+			}
+		}
+	}
+
 	public class TestCaseRunner implements Runnable
 	{
 		private final WsdlTestCase testCase;
@@ -456,7 +477,8 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		{
 			try
 			{
-				Thread.currentThread().setName( testCase.getName() + " - " + loadTest.getName() + " - ThreadIndex " + threadIndex );
+				Thread.currentThread().setName(
+						testCase.getName() + " - " + loadTest.getName() + " - ThreadIndex " + threadIndex );
 				runner = new WsdlTestCaseRunner( testCase, new StringToObjectMap() );
 
 				while( !canceled )

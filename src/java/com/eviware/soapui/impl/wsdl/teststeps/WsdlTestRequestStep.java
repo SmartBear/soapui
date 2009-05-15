@@ -417,8 +417,8 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 			}
 		}
 
-		if( !runContext.hasProperty( TestRunContext.INTERACTIVE ) )
-			testRequest.setResponse( null, runContext );
+//		if( !runContext.hasProperty( TestRunContext.INTERACTIVE ) )
+//			testRequest.setResponse( null, runContext );
 
 		return testStepResult;
 	}
