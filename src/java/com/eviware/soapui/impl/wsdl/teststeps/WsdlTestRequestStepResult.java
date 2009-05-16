@@ -43,8 +43,8 @@ import com.eviware.soapui.support.xml.XmlUtils;
 public class WsdlTestRequestStepResult extends WsdlTestStepResult implements ResponseAssertedMessageExchange,
 		AssertedXPathsContainer, MessageExchangeTestStepResult, WsdlMessageExchange
 {
-	private String requestContent;
-	private SoftReference<WsdlResponse> response;
+	private SoftReference<String> softRequestContent;
+	private SoftReference<WsdlResponse> softResponse;
 	private String domain;
 	private String username;
 	private String endpoint;
@@ -53,6 +53,8 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 	private StringToStringMap properties;
 	private boolean addedAction;
 	private List<AssertedXPath> assertedXPaths;
+	private WsdlResponse response;
+	private String requestContent;
 
 	public WsdlTestRequestStepResult( WsdlTestRequestStep step )
 	{
@@ -72,10 +74,7 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 
 	public ModelItem getModelItem()
 	{
-		if( response != null && response.get() != null )
-			return response.get().getRequest();
-		else
-			return null;
+		return getResponse() == null ? null : getResponse().getRequest();
 	}
 
 	public String getRequestContent()
@@ -83,17 +82,20 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 		if( isDiscarded() )
 			return "<discarded>";
 
-		return requestContent;
+		return requestContent != null ? requestContent : softRequestContent == null ? null : softRequestContent.get();
 	}
 
-	public void setRequestContent( String requestContent )
+	public void setRequestContent( String requestContent, boolean useSoftReference )
 	{
-		this.requestContent = requestContent;
+		if( useSoftReference )
+			this.softRequestContent = new SoftReference<String>( requestContent );
+		else
+			this.requestContent = requestContent;
 	}
 
 	public WsdlResponse getResponse()
 	{
-		return response == null ? null : response.get();
+		return response != null ? response : softResponse == null ? null : softResponse.get();
 	}
 
 	@Override
@@ -108,9 +110,12 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 		return super.getActions();
 	}
 
-	public void setResponse( WsdlResponse response )
+	public void setResponse( WsdlResponse response, boolean useSoftReference )
 	{
-		this.response = new SoftReference<WsdlResponse>( response );
+		if( useSoftReference )
+			this.softResponse = new SoftReference<WsdlResponse>( response );
+		else
+			this.response = response;
 	}
 
 	public String getDomain()
@@ -180,10 +185,11 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 	{
 		super.discard();
 
-		requestContent = null;
-		response = null;
+		softRequestContent = null;
+		softResponse = null;
 		properties = null;
 		assertedXPaths = null;
+		response = null;
 	}
 
 	public void writeTo( PrintWriter writer )
@@ -200,22 +206,23 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 		}
 
 		writer.println( "\r\n---------------- Request ---------------------------" );
-		if( response != null && response.get() != null )
+		WsdlResponse resp = getResponse();
+		if( resp != null )
 		{
-			writer.println( "Request Headers: " + response.get().getRequestHeaders().toString() + "\r\n" );
+			writer.println( "Request Headers: " + resp.getRequestHeaders().toString() + "\r\n" );
 		}
 
-		if( requestContent != null )
-			writer.println( XmlUtils.prettyPrintXml( requestContent ) );
+		if( getRequestContent() != null )
+			writer.println( XmlUtils.prettyPrintXml( getRequestContent() ) );
 		else
 			writer.println( "- missing request / garbage collected -" );
 
 		writer.println( "\r\n---------------- Response --------------------------" );
-		if( response != null && response.get() != null )
+		if( resp != null )
 		{
-			writer.println( "Response Headers: " + response.get().getResponseHeaders().toString() + "\r\n" );
+			writer.println( "Response Headers: " + resp.getResponseHeaders().toString() + "\r\n" );
 
-			String respContent = response.get().getContentAsString();
+			String respContent = resp.getContentAsString();
 			if( respContent != null )
 				writer.println( XmlUtils.prettyPrintXml( respContent ) );
 		}
@@ -235,26 +242,20 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 
 	public Attachment[] getRequestAttachments()
 	{
-		if( response == null || response.get() == null || response.get().getRequest() == null )
+		if( getResponse() == null || getResponse().getRequest() == null )
 			return new Attachment[0];
 
-		return response.get().getRequest().getAttachments();
+		return getResponse().getRequest().getAttachments();
 	}
 
 	public StringToStringMap getRequestHeaders()
 	{
-		if( response == null || response.get() == null )
-			return null;
-
-		return response.get().getRequestHeaders();
+		return getResponse() == null ? null : getResponse().getRequestHeaders();
 	}
 
 	public Attachment[] getResponseAttachments()
 	{
-		if( response == null || response.get() == null )
-			return new Attachment[0];
-
-		return response.get().getAttachments();
+		return getResponse() == null ? null : getResponse().getAttachments();
 	}
 
 	public String getResponseContent()
@@ -262,15 +263,15 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 		if( isDiscarded() )
 			return "<discarded>";
 
-		if( response == null || response.get() == null )
+		if( getResponse() == null )
 			return "<missing response>";
 
-		return response.get().getContentAsString();
+		return getResponse().getContentAsString();
 	}
 
 	public String getRequestContentAsXml()
 	{
-		return XmlUtils.seemsToBeXml( requestContent ) ? requestContent : "<not-xml/>";
+		return XmlUtils.seemsToBeXml( getRequestContent() ) ? getRequestContent() : "<not-xml/>";
 	}
 
 	public String getResponseContentAsXml()
@@ -281,18 +282,12 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 
 	public StringToStringMap getResponseHeaders()
 	{
-		if( response == null || response.get() == null )
-			return null;
-
-		return response.get().getResponseHeaders();
+		return getResponse() == null ? null : getResponse().getResponseHeaders();
 	}
 
 	public long getTimestamp()
 	{
-		if( isDiscarded() || response == null || response.get() == null )
-			return -1;
-
-		return response.get().getTimestamp();
+		return getResponse() == null ? null : getResponse().getTimestamp();
 	}
 
 	public AssertedXPath[] getAssertedXPathsForResponse()
@@ -316,12 +311,12 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 
 	public byte[] getRawRequestData()
 	{
-		return response == null || response.get() == null ? null : response.get().getRawRequestData();
+		return getResponse() == null ? null : getResponse().getRawRequestData();
 	}
 
 	public byte[] getRawResponseData()
 	{
-		return response == null || response.get() == null ? null : response.get().getRawResponseData();
+		return getResponse() == null ? null : getResponse().getRawResponseData();
 	}
 
 	public Attachment[] getRequestAttachmentsForPart( String partName )
@@ -346,7 +341,7 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 
 	public boolean hasResponse()
 	{
-		return response != null;
+		return getResponse() != null;
 	}
 
 	public Vector<?> getRequestWssResult()
@@ -356,16 +351,16 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 
 	public Vector<?> getResponseWssResult()
 	{
-		return response == null || response.get() == null ? null : response.get().getWssResult();
+		return getResponse() == null ? null : getResponse().getWssResult();
 	}
 
 	public int getResponseStatusCode()
 	{
-		return response == null || response.get() == null ? null : response.get().getStatusCode();
+		return getResponse() == null ? null : getResponse().getStatusCode();
 	}
 
 	public String getResponseContentType()
 	{
-		return response == null || response.get() == null ? null : response.get().getContentType();
+		return getResponse() == null ? null : getResponse().getContentType();
 	}
 }

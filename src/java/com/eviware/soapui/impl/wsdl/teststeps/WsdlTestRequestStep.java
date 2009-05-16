@@ -344,7 +344,6 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 
 					testStepResult.setTimeTaken( response.getTimeTaken() );
 					testStepResult.setSize( response.getContentLength() );
-					testStepResult.setResponse( response );
 
 					switch( testRequest.getAssertionStatus() )
 					{
@@ -358,6 +357,8 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 						testStepResult.setStatus( TestStepStatus.UNKNOWN );
 						break;
 					}
+
+					testStepResult.setResponse( response, testStepResult.getStatus() != TestStepStatus.FAILED );
 				}
 			}
 			else
@@ -367,9 +368,9 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 			}
 
 			if( response != null )
-				testStepResult.setRequestContent( response.getRequestContent() );
+				testStepResult.setRequestContent( response.getRequestContent(), testStepResult.getStatus() != TestStepStatus.FAILED );
 			else
-				testStepResult.setRequestContent( testRequest.getRequestContent() );
+				testStepResult.setRequestContent( testRequest.getRequestContent(), testStepResult.getStatus() != TestStepStatus.FAILED );
 		}
 		catch( SubmitException e )
 		{

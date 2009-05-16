@@ -56,29 +56,6 @@ import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 
 public class ShowMessageExchangeAction extends AbstractAction
 {
-	private final class MessageExchangeDesktopPanel extends DefaultDesktopPanel
-	{
-		private MessageExchangeDesktopPanel( String title, String description, JComponent component )
-		{
-			super( title, description, component );
-		}
-
-		@Override
-		public boolean onClose( boolean canCancel )
-		{
-			requestMessageEditor.release();
-			responseMessageEditor.release();
-
-			return super.onClose( canCancel );
-		}
-
-		@Override
-		public boolean dependsOn( ModelItem modelItem )
-		{
-			return ModelSupport.dependsOn( messageExchange.getModelItem(), modelItem );
-		}
-	}
-
 	private DefaultDesktopPanel desktopPanel;
 	private final MessageExchange messageExchange;
 	private final String ownerName;
@@ -189,13 +166,6 @@ public class ShowMessageExchangeAction extends AbstractAction
 		if( messageExchange != null && messageExchange.getProperties() != null )
 		{
 			properties.putAll( messageExchange.getProperties() );
-
-			// for( String name : messageExchange.getResponse().getPropertyNames())
-			// {
-			// properties.put( name, messageExchange.getResponse().getProperty(
-			// name ) );
-			// }
-
 			properties.put( "Timestamp", new Date( messageExchange.getTimestamp() ).toString() );
 			properties.put( "Time Taken", String.valueOf( messageExchange.getTimeTaken() ) );
 		}
@@ -220,5 +190,30 @@ public class ShowMessageExchangeAction extends AbstractAction
 	{
 		requestMessageEditor = new MessageExchangeRequestMessageEditor( messageExchange );
 		return requestMessageEditor;
+	}
+	
+	private final class MessageExchangeDesktopPanel extends DefaultDesktopPanel
+	{
+		private MessageExchangeDesktopPanel( String title, String description, JComponent component )
+		{
+			super( title, description, component );
+		}
+
+		@Override
+		public boolean onClose( boolean canCancel )
+		{
+			requestMessageEditor.release();
+			responseMessageEditor.release();
+
+			desktopPanel = null;
+			
+			return super.onClose( canCancel );
+		}
+
+		@Override
+		public boolean dependsOn( ModelItem modelItem )
+		{
+			return ModelSupport.dependsOn( messageExchange.getModelItem(), modelItem );
+		}
 	}
 }
