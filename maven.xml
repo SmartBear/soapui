@@ -719,49 +719,4 @@
         </j:if>
 
     </goal>
-
-    <!-- Get all necessary JAR files from the repository and update the libs plugin -->
-    <goal name="soapui:build-libs" prereqs="jar:install">
-
-        <ant:copy file="${user.home}/.maven/repository/eviware/jars/soapui-${pom.currentVersion}.jar"
-                  todir="../libs/lib"/>
-
-        <!-- Set up a clean classpath for Groovy that is not polluted with other Ant jars. -->
-        <ant:path id="groovy.classpath">
-            <ant:pathelement location="${pom.getDependencyPath('groovy:groovy-all')}"/>
-            <ant:pathelement location="${pom.getDependencyPath('commons-cli:commons-cli')}"/>
-            <ant:pathelement location="${pom.getDependencyPath('asm:asm')}"/>
-            <ant:pathelement location="${pom.getDependencyPath('ant:ant')}"/>
-            <ant:pathelement location="${pom.getDependencyPath('ant:ant-launcher')}"/>
-        </ant:path>
-
-        <java classname="groovy.lang.GroovyShell" fork="yes">
-            <classpath refid="groovy.classpath"/>
-            <arg value="BuildLibs.groovy"/>
-            <arg value="project.xml"/>
-            <arg value="../soapui-libs"/>
-            <arg value="${maven.repo.local}"/>
-            <arg value="${pom.currentVersion}"/>
-        </java>
-
-        <echo>
-            Now, refresh the libs project.
-        </echo>
-    </goal>
-
-    <!-- Build and copy the jar file to the soapui-libs project -->
-    <goal name="soapui:copy-to-eclipse" prereqs="jar:install">
-        <ant:delete>
-            <fileset dir="../soapui-libs/lib" includes="${pom.artifactId}-*.jar"/>
-        </ant:delete>
-        <ant:copy file="${user.home}/.maven/repository/${pom.groupId}/jars/${pom.artifactId}-${pom.currentVersion}.jar"
-                  todir="../soapui-libs/lib"/>
-        <ant:copy
-                file="${user.home}/.maven/repository/${pom.groupId}/jars/${pom.artifactId}-xmlbeans-${pom.currentVersion}.jar"
-                todir="../soapui-libs/lib"/>
-        <ant:copy
-                file="${user.home}/.maven/repository/${pom.groupId}/jars/${pom.artifactId}-coverage-xmlbeans-${pom.currentVersion}.jar"
-                todir="../soapui-libs/lib"/>
-    </goal>
-
 </project>
