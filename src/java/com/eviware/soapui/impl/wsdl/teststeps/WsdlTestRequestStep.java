@@ -702,7 +702,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 	}
 
 	@SuppressWarnings( "unchecked" )
-	public void resolve( ResolveContext context )
+	public void resolve( ResolveContext<?> context )
 	{
 		super.resolve( context );
 

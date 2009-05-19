@@ -134,7 +134,7 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 		return modelItem;
 	}
 
-	private void cacheFileLocally( File file ) throws FileNotFoundException, IOException
+	public void cacheFileLocally( File file ) throws FileNotFoundException, IOException
 	{
 		// write attachment-data to tempfile
 		ByteArrayOutputStream data = new ByteArrayOutputStream();
@@ -242,38 +242,37 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 	{
 		config.setPart( part );
 	}
+	
+	public void setData( byte[] data )
+	{
+		try
+		{
+			// write attachment-data to tempfile
+			ByteArrayOutputStream tempData = new ByteArrayOutputStream();
+			ZipOutputStream out = new ZipOutputStream( tempData );
+			out.putNextEntry( new ZipEntry( config.getName() ) );
+			config.setSize( data.length );
+			out.write( data );
+			out.closeEntry();
+			out.finish();
+			out.close();
+			config.setData( tempData.toByteArray() );
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+		}
+	}
+
+	public byte[] getData() throws IOException
+	{
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		Tools.writeAll( out, getInputStream() );
+		return out.toByteArray();
+	}
 
 	public String getUrl()
 	{
-		// if( isCached() )
-		// {
-		// String name = config.getName();
-		// int ix = name.lastIndexOf( "." );
-		//			
-		// try
-		// {
-		// File tempFile = File.createTempFile( "attachment-" + name.substring( 0,
-		// ix), name.substring(ix) );
-		// FileOutputStream out = new FileOutputStream( tempFile );
-		// InputStream in = getInputStream();
-		//				
-		// Tools.writeAll( out, in );
-		//				
-		// out.close();
-		// in.close();
-		//				
-		// return tempFile.getAbsoluteFile().toURI().toURL().toString();
-		// }
-		// catch (IOException e)
-		// {
-		// SoapUI.logError( e );
-		// }
-		// }
-		// else
-		// {
-		// return urlProperty.expand();
-		// }
-
 		return urlProperty.get();
 	}
 
@@ -308,8 +307,7 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 		return config.getContentId();
 	}
 
-	@SuppressWarnings( "unchecked" )
-	public void resolve( ResolveContext context )
+	public void resolve( ResolveContext<?> context )
 	{
 		if( isCached() )
 			return;
