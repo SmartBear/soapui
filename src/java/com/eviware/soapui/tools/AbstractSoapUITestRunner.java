@@ -155,9 +155,9 @@ public abstract class AbstractSoapUITestRunner extends AbstractSoapUIRunner impl
 		return wssPasswordType;
 	}
 
-	protected void prepareRequestStep( HttpRequestTestStep requestStep )
+	protected void prepareRequestStep( HttpRequestTestStep<?> requestStep )
 	{
-		AbstractHttpRequest httpRequest = requestStep.getHttpRequest();
+		AbstractHttpRequest<?> httpRequest = requestStep.getHttpRequest();
 		if( StringUtils.hasContent( endpoint ) )
 		{
 			httpRequest.setEndpoint( endpoint );
@@ -211,7 +211,7 @@ public abstract class AbstractSoapUITestRunner extends AbstractSoapUIRunner impl
 		TestStep currentStep = runContext.getCurrentStep();
 		if( currentStep instanceof HttpRequestTestStep )
 		{
-			prepareRequestStep( ( HttpRequestTestStep )currentStep );
+			prepareRequestStep( ( HttpRequestTestStep<?> )currentStep );
 		}
 		else if( currentStep instanceof WsdlRunTestCaseTestStep )
 		{

@@ -112,7 +112,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
 	public static void main( String[] args ) throws Exception
 	{
-		new SoapUITestCaseRunner().runFromCommandLine( args );
+		System.exit( new SoapUITestCaseRunner().runFromCommandLine( args ));
 	}
 
 	protected boolean processCommandLine( CommandLine cmd )

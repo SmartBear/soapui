@@ -68,26 +68,23 @@ public abstract class AbstractSoapUIRunner
 		}
 	}
 
-	public void runFromCommandLine( String[] args )
+	public int runFromCommandLine( String[] args )
 	{
 		try
 		{
-			if( initFromCommandLine( args, true ) )
+			if( !initFromCommandLine( args, true ) )
 			{
-				if( run() )
-					System.exit( 0 );
-			}
-			else
-			{
-				System.exit( 1 );
+				return -1;
 			}
 		}
 		catch( Throwable e )
 		{
 			log.error( e );
 			SoapUI.logError( e );
-			System.exit( 1 );
+			return -1;
 		}
+		
+		return 0;
 	}
 
 	public boolean initFromCommandLine( String[] args, boolean printHelp ) throws Exception

@@ -59,7 +59,7 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
 
 	public static void main( String[] args ) throws Exception
 	{
-		new SoapUIToolRunner().runFromCommandLine( args );
+		System.exit( new SoapUIToolRunner().runFromCommandLine( args ));
 	}
 
 	/**

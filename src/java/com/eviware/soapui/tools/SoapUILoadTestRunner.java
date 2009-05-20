@@ -76,7 +76,7 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 
 	public static void main( String[] args )
 	{
-		new SoapUILoadTestRunner().runFromCommandLine( args );
+		System.exit( new SoapUILoadTestRunner().runFromCommandLine( args ));
 	}
 
 	protected boolean processCommandLine( CommandLine cmd )

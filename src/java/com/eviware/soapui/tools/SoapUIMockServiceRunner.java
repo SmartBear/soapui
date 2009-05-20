@@ -62,7 +62,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 
 	public static void main( String[] args ) throws Exception
 	{
-		new SoapUIMockServiceRunner().runFromCommandLine( args );
+		System.exit( new SoapUIMockServiceRunner().runFromCommandLine( args ));
 	}
 
 	public void setMockService( String mockService )
