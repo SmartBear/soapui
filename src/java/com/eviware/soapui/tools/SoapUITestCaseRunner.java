@@ -564,7 +564,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	public void afterStep( TestRunner testRunner, TestRunContext runContext, TestStepResult result )
 	{
 		super.afterStep( testRunner, runContext, result );
-		TestStep currentStep = runContext.getCurrentStep();
+		TestStep currentStep = result.getTestStep();
 
 		if( currentStep instanceof Assertable )
 		{
