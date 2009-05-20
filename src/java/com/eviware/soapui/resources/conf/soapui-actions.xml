@@ -176,7 +176,6 @@
    
     <!-- MultiActions -->
 	<tns:action id="MultiTestStepDeleteAction" actionClass="com.eviware.soapui.impl.actions.multi.MultiTestStepDeleteAction"/>
-   
 
 	<!-- Workspace Action Group -->
 	<tns:actionGroup name="Workspace Actions" id="WorkspaceImplActions"
