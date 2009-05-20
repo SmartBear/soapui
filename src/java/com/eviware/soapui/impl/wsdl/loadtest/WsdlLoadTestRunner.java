@@ -424,8 +424,14 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 						|| getProgress() >= 1
 						|| ( loadTest.getLimitType() == LoadTestLimitTypesConfig.COUNT && runners.size() >= loadTest
 								.getTestLimit() ) )
-					break;
+				{
+					while( !testCases.isEmpty() )
+						testCases.remove( 0 ).release();
 
+					threadsWaitingToStart = 0;
+					break;
+				}
+				
 				// could have been canceled..
 				if( !testCases.isEmpty() )
 				{
