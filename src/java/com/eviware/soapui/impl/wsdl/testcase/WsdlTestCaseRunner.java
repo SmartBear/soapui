@@ -230,7 +230,7 @@ public class WsdlTestCaseRunner implements Runnable, TestRunner
 				status = Status.FINISHED;
 			}
 
-			for( int c = 0; c < initCount; c++ )
+			for( int c = 0; c < initCount && c < testCase.getTestStepCount(); c++ )
 			{
 				WsdlTestStep testStep = testCase.getTestStepAt( c );
 				if( !testStep.isDisabled() )
