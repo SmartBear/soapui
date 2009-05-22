@@ -12,7 +12,7 @@
 	    		<img src="images/inthenews/drguy.gif" alt="Web service testing tool"/>	    	    
 	    		</column>
 	    		<column align="left">
-	    		<i>2009-05-06:</i>
+	    		    <i>2009-05-06:</i>
 	    	        <p>The post starts: "Alfresco supports two types of CMIS API rest and Web Services..."<br/>
 	    			<a href="http://drquyong.com/myblog/?cat=25">[Read more]</a></p>
 	    		</column>
@@ -26,6 +26,7 @@
 	    		<img src="images/inthenews/ick.gif" alt="Web service testing tool"/>	    	    
 	    		</column>
 	    		<column align="left">
+	    		    <i>2009-04-22:</i>
 	    			<p>The post starts: "SOAP is my least favourite server side web service to..."<br/>
 	    			<a href="http://blog.ickydime.com/2009/04/soapui-open-source-way-to-explore-wsdl.html">[Read more]</a></p>
 	    		</column>
@@ -39,6 +40,7 @@
 	    		<img src="images/inthenews/one.gif" alt="Web Service testing tool"/>	    	    
 	    		</column>
 	    		<column align="left">
+	    		    <i>2009-04-01:</i>
 	    			<p>The post starts: "I used to use soapUI back when I was creating a..."<br/>
 	    			<a href="http://onebyteatatime.wordpress.com/2009/04/01/soapui-tips-n-tricks-part-1/">[Read more]</a></p>
 	    		</column>
@@ -51,6 +53,7 @@
 	    		<img src="images/inthenews/jardins.gif" alt="Rest support"/>	    	    
 	    		</column>
 	    		<column align="left">
+	    		    <i>2009-03-18:</i>
 	    			<p>The post starts: "I used to use soapUI back when I was creating a..."<br/>
 	    			<a href="http://mikedesjardins.us/wordpress/2009/03/rails-rest-and-soapui/">[Read more]</a></p>
 	    		</column>
@@ -63,6 +66,7 @@
 	    		<img src="images/inthenews/ebm.gif" alt="Validate wsdl"/>	    	    
 	    		</column>
 	    		<column align="left">
+	    		    <i>2009-03-06:</i>
 	    			<p>The post starts: "The Web Services Interoperability Organization (WS-I) is..."<br/>
 	    			<a href="http://blog.ebmwebsourcing.com/home/mbeldame/2009/03/06/using-the-ws-i-testing-tools-to-to-validate-wsdls/">[Read more]</a></p>
 	    		</column>
@@ -75,6 +79,7 @@
 	    		<img src="images/inthenews/think.gif" alt="Web Services Clients"/>
 	    	    </column>
 	    		<column align="left">
+	    		    <i>2009-03-04:</i>
 	    			<p>The post starts: "When building Web Services (SOAP WS) clients in ..."<br/>
 	    			<a href="http://thinkinginsoftware.blogspot.com/2009/03/building-web-services-clients.html">[Read more]</a></p>
 	    		</column>
@@ -87,6 +92,7 @@
 	    		<img src="images/inthenews/chow.gif" alt="Web Services"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2009-02-24:</i>
 	    			<p>The post starts: "I've recently been working on a..."<br/>
 	    			<a href="http://www.chowamigo.co.uk/2009/02/working-with-web-services-checking-web.html">[Read more]</a></p>
 	    		</column>
@@ -99,6 +105,7 @@
 	    		<img src="images/inthenews/techwheel.gif" alt="Groovy in soapui"/>
 	    	    </column>
 	    		<column align="left">
+	    		    <i>2009-02-10:</i> 
 	    			<p>The post starts: "While profiling one of my web services I was..."<br/>
 	    			<a href="http://techwheel.blogspot.com/2009/02/soapui-property-expansion.html">[Read more]</a></p>
 	    		</column>
@@ -111,6 +118,7 @@
 	    		<img src="images/inthenews/josh.gif" alt="Groovy in soapui"/>
 	    	    </column>
 	    		<column align="left">
+	    		    <i>2009-01-16:</i>
 	    			<p>The post starts: "soapUI has a maven plugin? I think this might..."<br/>
 	    			<a href="http://joshdevins.blogspot.com/2009/01/web-service-testing.html">[Read more]</a></p>
 	    		</column>
@@ -123,6 +131,7 @@
 	    		<img src="images/inthenews/pascal.gif" alt="Groovy in soapui"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2009-01-16:</i>
 	    			<p>The post starts: "As said before I am currently going through the..."<br/>
 	    			<a href="http://www.pascalalma.net/2009/01/16/testing-soap-encrypting-and-decrypting-with-soapui/">[Read more]</a></p>
 	    		</column>
@@ -136,6 +145,7 @@
 	    		<img src="images/inthenews/marcusoft.gif" alt="Groovy in soapui"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2008-12-10:</i>
 	    			<p>The post starts: "Just found this tool - or actually I´ve used but..."<br/>
 	    			<a href="http://www.marcusoft.net/2008/12/soap-ui-great-way-to-do-integration.html">[Read more]</a></p>
 	    		</column>
@@ -148,6 +158,7 @@
 	    		<img src="images/inthenews/searchsoa.gif" alt="web services WSDL"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2008-11-28:</i>
 	    			<p>The post starts: WSDL has been around long enough to take root in the ..."<br/>
 	    			<a href="http://soa-talk.blogs.techtarget.com/2008/11/28/wsdl-styles-mock-objects-and-soap-ui/">[Read more]</a></p>
 	    		</column>
@@ -160,31 +171,20 @@
 	    		<img src="images/inthenews/groovyin.gif" alt="Groovy in soapui"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2008-11-27:</i>
 	    			<p>The post starts: "Script assertion in SOAP UI helps the developer to..."<br/>
 	    			<a href="http://groovyinsoapui.wordpress.com/2008/11/27/using-script-assertion-in-soap-ui/">[Read more]</a></p>
 	    		</column>
 	    	</columns>
-		</subsection>    
-        
-        <subsection name="soapUI 2.5 goes RESTfull">
-	    	<columns>
-	    		<column width="200">
-	    		<img src="images/inthenews/ladysign.gif" alt="soapUI goes RESTfull"/>
-	    		</column>
-	    		<column align="left">
-	    			<p>The post starts: "Some time ago, I had blogged lamenting the absense of a nice..." <br/>
-	    			<a href="http://ladysign-apps.com/blog/archives/175">[Read more]</a></p>
-	    		</column>
-	    	</columns>
-	</subsection>     
-       
-       
+	  </subsection>    
+  
       <subsection name="Solutions Blog">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/solutions.gif" alt="soapUI Rest Support"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2008-11-18:</i>
 	    			<p>The post starts: "Eviware released a new version of soapUI. You can..." <br/>
 	    			<a href="http://solutionslog.blogspot.com/2008/11/gui-tool-for-working-with-web-services.html">[Read more]</a></p>
 	    		</column>
@@ -197,6 +197,7 @@
 	    		<img src="images/inthenews/sleepless.gif" alt="soapUI Rest Support"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2008-10-20:</i>
 	    			<p>The post starts: "Some time ago, I had blogged lamenting the absense of a nice..." <br/>
 	    			<a href="http://sleeplessinslc.blogspot.com/2008/10/soapui-rest-support.html">[Read more]</a></p>
 	    		</column>
@@ -209,24 +210,12 @@
 	    		<img src="images/inthenews/dimos.gif" alt="Testing Web Services"/>
 	    		</column>
 	    		<column align="left">
-	    			<p>The post starts: "Over the past year I have been working on several projects that have..." <br/>
+	 	    		<p>The post starts: "Over the past year I have been working on several projects that have..." <br/>
 	    			<a href="http://dimosthenes.blogspot.com/2008/10/testing-web-services.html">[Read more]</a></p>
 	    		</column>
 	    	</columns>
 		</subsection>   
  
-        <subsection name="Groovy in soapUI">
-	    	<columns>
-	    		<column width="200">
-	    		<img src="images/inthenews/groovyin.gif" alt="load testing with soapUI"/>
-	    		</column>
-	    		<column align="left">
-	    			<p>The post starts: "Load testing with SOAP  request having variable parameter(s)..." <br/>
-	    			<a href="http://groovyinsoapui.wordpress.com/">[Read more]</a></p>
-	    		</column>
-	    	</columns>
-		</subsection>  
-
 		<subsection name="soapUI - How to synchronize using threads during load test">
 	    	<columns>
 	    		<column width="200">
@@ -257,23 +246,27 @@
 	    		<img src="images/inthenews/pascals.gif" alt="Test database with soapUI"/>
 	    		</column>
 	    		<column align="left">
+	    		     <i>2008-07-09:</i>
+	    			<p>The post starts: "Load testing with SOAP  request having variable parameter(s)..." <br/>
 	    			<p>The post starts: "As I blogged a few posts ago, we are using the free editions of soapUI..." <br/>
 	    			<a href="http://www.pascalalma.net/2007/07/09/managing-the-test-database-with-soap-ui/">[Read more]</a></p>
 	    		</column>
 	    	</columns>
 		</subsection>
-
+		
 	    <subsection name="Another common issue solved with soapUI">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/pascals.gif" alt="solved with soapUI"/>
 	    		</column>
 	    		<column align="left">
+	    		    
 	    			<p>The post starts: "Well I think it is clear now I am a big fan of soapUI..." <br/>
 	    		    <a href="http://www.pascalalma.net/2007/07/11/another-common-issue-solved-with-soap-ui/">[Read more]</a></p>
 	    		</column>
 	    	</columns>
 		</subsection>
+		
 
         <subsection name="Mocking web services with soapUI">
 	    	<columns>
@@ -286,6 +279,7 @@
 	    		</column>
 	    	</columns>
 		</subsection>
+		
 	
 	    <subsection name="Using soapUI for testing your webservice">
 	    	<columns>
@@ -297,7 +291,8 @@
 	    			<a href="http://www.pascalalma.net/2007/05/23/using-soapui-for-testing-your-webservice/">[Read more]</a></p>
 	    		</column>
 	    	</columns>
-		</subsection>	
+		</subsection>
+			
 		
         <subsection name="soapUI vs. JUnit">
 	    	<columns>
