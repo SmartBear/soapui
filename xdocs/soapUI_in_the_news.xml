@@ -246,8 +246,7 @@
 	    		<img src="images/inthenews/pascals.gif" alt="Test database with soapUI"/>
 	    		</column>
 	    		<column align="left">
-	    		     <i>2008-07-09:</i>
-	    			<p>The post starts: "Load testing with SOAP  request having variable parameter(s)..." <br/>
+	    		    <i>2008-07-09:</i>
 	    			<p>The post starts: "As I blogged a few posts ago, we are using the free editions of soapUI..." <br/>
 	    			<a href="http://www.pascalalma.net/2007/07/09/managing-the-test-database-with-soap-ui/">[Read more]</a></p>
 	    		</column>
