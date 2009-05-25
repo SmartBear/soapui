@@ -210,7 +210,7 @@
 	    		<img src="images/inthenews/dimos.gif" alt="Testing Web Services"/>
 	    		</column>
 	    		<column align="left">
-	 	    		<p>The post starts: "Over the past year I have been working on several projects that have..." <br/>
+	    		  	<p>The post starts: "Over the past year I have been working on several projects that have..." <br/>
 	    			<a href="http://dimosthenes.blogspot.com/2008/10/testing-web-services.html">[Read more]</a></p>
 	    		</column>
 	    	</columns>
@@ -234,21 +234,22 @@
 	    		<img src="images/inthenews/techrep.gif" alt="test web services with soapUI"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2008-07-03:</i>
 	    			<p>The post starts: "The soapUI tool makes it much easier to test Web services during..." <br/>
 	    			<a href="http://blogs.techrepublic.com.com/programming-and-development/?p=699">[Read more]</a></p>
 	    		</column>
 	    	</columns>
-		</subsection>  
-  
-        <subsection name="Manging the test - database with soapUI">
+		</subsection> 
+		
+		<subsection name="soapUI 2.0: Web Service Testing Tool">
 	    	<columns>
 	    		<column width="200">
-	    		<img src="images/inthenews/pascals.gif" alt="Test database with soapUI"/>
+	    	    <img src="images/inthenews/gmj.gif" alt="soapUI Web Service Testing Tool"/>
 	    		</column>
 	    		<column align="left">
-	    		    <i>2008-07-09:</i>
-	    			<p>The post starts: "As I blogged a few posts ago, we are using the free editions of soapUI..." <br/>
-	    			<a href="http://www.pascalalma.net/2007/07/09/managing-the-test-database-with-soap-ui/">[Read more]</a></p>
+	    		<i>2007-12-14:</i>
+	    			<p>The post starts: "Recently my employer was having issues verifying if..." <br/>
+	    			<a href="http://www.gmjjavadesigns.com/gmjd/entry/soapui_2_0_web_service">[Read more]</a></p>
 	    		</column>
 	    	</columns>
 		</subsection>
@@ -259,13 +260,25 @@
 	    		<img src="images/inthenews/pascals.gif" alt="solved with soapUI"/>
 	    		</column>
 	    		<column align="left">
-	    		    
+	    		    <i>2007-07-11:</i>
 	    			<p>The post starts: "Well I think it is clear now I am a big fan of soapUI..." <br/>
 	    		    <a href="http://www.pascalalma.net/2007/07/11/another-common-issue-solved-with-soap-ui/">[Read more]</a></p>
 	    		</column>
 	    	</columns>
+		</subsection> 
+  
+        <subsection name="Manging the test - database with soapUI">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/pascals.gif" alt="Test database with soapUI"/>
+	    		</column>
+	    		<column align="left">
+	    		    <i>2007-07-09:</i>
+	    			<p>The post starts: "As I blogged a few posts ago, we are using the free editions of soapUI..." <br/>
+	    			<a href="http://www.pascalalma.net/2007/07/09/managing-the-test-database-with-soap-ui/">[Read more]</a></p>
+	    		</column>
+	    	</columns>
 		</subsection>
-		
 
         <subsection name="Mocking web services with soapUI">
 	    	<columns>
@@ -273,6 +286,7 @@
 	    		<img src="images/inthenews/temujin.gif" alt="mocking web services"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2007-06-06:</i>
 	    			<p>The post starts: "The latest release of my favorite web service testing tool..." <br/>
 	    			<a href="http://temujin.blogsome.com/2007/06/06/mocking-web-services-with-soapui/">[Read more]</a></p>
 	    		</column>
@@ -286,6 +300,7 @@
 	    		<img src="images/inthenews/pascal.gif" alt="soapUI for testing your web services"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2007-05-23:</i>
 	    			<p>The post starts: "In my previous post I showed you how you can use Ant and XFire to..." <br/>
 	    			<a href="http://www.pascalalma.net/2007/05/23/using-soapui-for-testing-your-webservice/">[Read more]</a></p>
 	    		</column>
@@ -299,6 +314,7 @@
 	    		<img src="images/inthenews/myarch.gif" alt="open source test tool."/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2007-04-28:</i>
 	    			<p>The post starts: "As a web service is something that has no user interface..." <br/>
 	    			<a href="http://myarch.com/soapui-vs-junit">[Read more]</a></p>
 	    		</column>
@@ -311,6 +327,7 @@
 	    		<img src="images/inthenews/jroller.gif" alt="soap test tutorial"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2007-04-23:</i>
 	    			<p>The post starts: "In the first post here, I wanted to jot down what I..." <br/>
 	    			<a href="http://jroller.com/cwap/entry/first_post">[Read more]</a></p>
 	    		</column>
@@ -323,6 +340,7 @@
 	    		<img src="images/inthenews/jroller.gif" alt="soapUI for testing web services"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2007-04-28:</i>
 	    			<p>The post starts: "I´ve become a fairly big fan of soapUI..." <br/>
 	    			<a href="http://jroller.com/n9ski/entry/the_right_tool_for_thehttp://jroller.com/n9ski/entry/the_right_tool_for_the">[Read more]</a></p>
 	    		</column>
@@ -332,9 +350,10 @@
         <subsection name="soapui, Testing ASP:NET Soap Web Services ">
 	    	<columns>
 	    		<column width="200">
-	    		<img src="images/inthenews/beams.gif" alt="Testing soap web services"/>
+	    	    <img src="images/inthenews/beams.gif" alt="Testing soap web services"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2007-04-05:</i>
 	    			<p>The post starts: I ´ve been developing some ASP.NET Soap services for..." <br/>
 	    			<a href="http://beamsblag.blogspot.com/2007/04/testing-aspnet-soap-web-services.html">[Read more]</a></p>
 	    		</column>
@@ -347,6 +366,7 @@
 	    		<img src="images/inthenews/ivanjo.gif" alt="freeware soap testing"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2007-03-27:</i>
 	    			<p>The post starts: "I have been searching for valid freeware soap testing tools..." <br/>
 	    			<a href="http://ivanjocic.blogspot.com/2007/03/freeware-soap-testing.html">[Read more]</a></p>
 	    		</column>
@@ -359,18 +379,20 @@
 	    		<img src="images/inthenews/wsrx.gif" alt="soaoUI for your soa testing quest"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2007-03-22:</i>
 	    			<p>The post starts: "If you are on the market for a tool that can help you..." <br/>
 	    			<a href="http://ws-rx.blogspot.com/2007/03/soap-ui-or-dream-come-true.html">[Read more]</a></p>
 	    		</column>
 	    	</columns>
 		</subsection>
-
+		
         <subsection name="Another look at soapUI: load test">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/chrismc.gif" alt="soapUI load test"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2006-11-09:</i>
 	    			<p>The post starts: "So more and more people have been reporting to me the coolness of soapui..." <br/>
 	    			<a href="http://chrismcmahonsblog.blogspot.com/2006/11/another-look-at-soapui-load-test.html">[Read more]</a></p>
 	    		</column>
@@ -383,7 +405,7 @@
 	    		<img src="images/inthenews/cognifide.gif" alt="soapUI load test"/>
 	    		</column>
 	    		<column align="left">
-	    			<p>The post starts: "Sorry, been online for a bit with project. Anyway we are..." <br/>
+	    		    <p>The post starts: "Sorry, been online for a bit with project. Anyway we are..." <br/>
 	    			<a href="http://blogs.cognifide.com/cleve/2006/11/03/soapui/">[Read more]</a></p>
 	    		</column>
 	    	</columns>
@@ -395,20 +417,9 @@
 	    		<img src="images/inthenews/vorburg.gif" alt="soap based web services"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2006-10-10:</i>
 	    			<p>The post starts: "If you develop SOAP-based Web Services, there is..." <br/>
 	    			<a href="http://www.vorburger.ch/blog1/2006/10/soapui.html">[Read more]</a></p>
-	    		</column>
-	    	</columns>
-		</subsection>
-
-        <subsection name="in Germain .toString();">
-	    	<columns>
-	    		<column width="200">
-	    		<img src="images/inthenews/stephan.gif" alt="soapUI news"/>
-	    		</column>
-	    		<column align="left">
-	    			<p>The post starts: "Nicht selten komme ich in die Verlegenheit einen..." <br/>
-	    			<a href="http://stephannoske.de/wp/?p=349">[Read more]</a></p>
 	    		</column>
 	    	</columns>
 		</subsection>
@@ -419,6 +430,7 @@
 	    		<img src="images/inthenews/mikehad.gif" alt="soap test tool called soapUI"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2006-08-15:</i>
 	    			<p>The post starts: "Do you manually code tests harnesses for your web services? its a..." <br/>
 	    			<a href="http://mikehadlow.blogspot.com/2006/08/nice-soap-test-tool-soapui.html">[Read more]</a></p>
 	    		</column>
@@ -431,6 +443,7 @@
 	    		<img src="images/inthenews/testingr.gif" alt="soapUI for wsdl testing"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2006-08-09:</i>
 	    			<p>The post starts: "I use to be a very strong advocate for SOAPscope. That´s berfore..." <br/>
 	    			<a href="http://www.testingreflections.com/node/view/4023">[Read more]</a></p>
 	    		</column>
@@ -443,8 +456,9 @@
 	    		<img src="images/inthenews/softwared.gif" alt="A tool called soapUI"/>
 	    		</column>
 	    		<column align="left">
-	    			<p>The post starts: "Recently, I learned about a tool called soapUI from..." <br/>
-	    			<a href="http://softwaredevscott.spaces.live.com/blog/cns!1A9E939F7373F3B7!173.entry">[Read more]</a></p>
+	    		<i>2006-08-09:</i>
+	    		    <p>The post starts: "Recently, I learned about a tool called soapUI from..." <br/>
+	    		    <a href="http://softwaredevscott.spaces.live.com/blog/cns!1A9E939F7373F3B7!173.entry">[Read more]</a></p>
 	    		</column>
 	    	</columns>
 		</subsection>
@@ -455,6 +469,7 @@
 	    		<img src="images/inthenews/chrism.gif" alt="SOAP test tool"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2006-07-17:</i>
 	    			<p>The post starts: "In a fit of coincidence and serendipity, I had a user report that..." <br/>
 	    			<a href="http://chrismcmahonsblog.blogspot.com/2006/07/another-fine-soap-test-tool.html">[Read more]</a></p>
 	    		</column>
@@ -467,7 +482,8 @@
 	    		<img src="images/inthenews/athar.gif" alt="how to debbug web services"/>
 	    		</column>
 	    		<column align="left">
-	    			<p>The post starts: "Ever wondered how to debug web services..." <br/>
+	    		    <i>2006-06-02:</i>
+	    		    <p>The post starts: "Ever wondered how to debug web services..." <br/>
 	    			<a href="http://atharvana.blogspot.com/2006/07/debugging-web-services.html">[Read more]</a></p>
 	    		</column>
 	    	</columns>
@@ -479,6 +495,7 @@
 	    		<img src="images/inthenews/nodal.gif" alt="Debugging Web Services"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2006-06-02:</i>
 	    			<p>The post starts: "There are a growing number of biomedical services out there on..." <br/>
 	    			<a href="http://www.nodalpoint.org/2006/06/02/debugging_web_services">[Read more]</a></p>
 	    		</column>
@@ -491,20 +508,9 @@
 	    		<img src="images/inthenews/netzooid.gif" alt="NetZoid. soapUI, your testing solution"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2006-05-16:</i>
 	    			<p>The post starts: "So more and more people have been reporting to me the coolness of soapui..." <br/>
 	    			<a href="http://netzooid.com/blog/2006/05/16/soapui-now-with-xfire-11/">[Read more]</a></p>
-	    		</column>
-	    	</columns>
-		</subsection>
-        
-        <subsection name="soapUI 2.0: Web Service Testing Tool">
-	    	<columns>
-	    		<column width="200">
-	    		<img src="images/inthenews/gmj.gif" alt="soapUI Web Service Testing Tool"/>
-	    		</column>
-	    		<column align="left">
-	    			<p>The post starts: "Recently my employer was having issues verifying if..." <br/>
-	    			<a href="http://www.gmjjavadesigns.com/gmjd/entry/soapui_2_0_web_service">[Read more]</a></p>
 	    		</column>
 	    	</columns>
 		</subsection>
@@ -515,6 +521,7 @@
                 <img src="images/inthenews/gwn.gif" alt="GWN. soapUI, your testing solution"/>
                 </column>
                 <column align="left">
+                     <i>2006-02-04:</i>
                      <p>The post starts: "Web Services development can be fun...seriously, it can..." <br/>
                          Quote "In my humbled opinion, soapui gets the cookie."<br/>
                      <a href="http://www.jroller.com/jdunlop/entry/tools_of_the_trade">[Read more]</a></p>
@@ -528,6 +535,7 @@
 	    		<img src="images/inthenews/FerdyC.png" alt="This an article on how to consume web services in PHP"/>
 	    		</column>
 	    		<column align="left">
+	    		    <i>2005-11-11:</i>
 	    			<p>The post starts: "Today I investigated how to create and consume web services in PHP..." <br/>
 	    			<a href="http://www.ferdychristant.com/blog/articles/DOMM-6J2QFF">[Read more]</a></p>
 	    		</column>
