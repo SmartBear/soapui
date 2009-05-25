@@ -72,19 +72,21 @@ public abstract class AbstractSoapUIRunner
 	{
 		try
 		{
-			if( !initFromCommandLine( args, true ) )
+			if( initFromCommandLine( args, true ) )
 			{
-				return -1;
+				if( run() )
+				{
+					return 0;
+				}
 			}
 		}
 		catch( Throwable e )
 		{
 			log.error( e );
 			SoapUI.logError( e );
-			return -1;
 		}
 		
-		return 0;
+		return -1;
 	}
 
 	public boolean initFromCommandLine( String[] args, boolean printHelp ) throws Exception
