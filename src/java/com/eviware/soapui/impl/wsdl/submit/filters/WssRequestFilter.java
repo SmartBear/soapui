@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import java.io.StringWriter;
-
 import org.w3c.dom.Document;
 
 import com.eviware.soapui.config.EndpointConfig;
@@ -21,13 +19,11 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategy;
 import com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategy.EndpointDefaults;
 import com.eviware.soapui.impl.wsdl.submit.RequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.impl.wsdl.support.wss.WssContainer;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.xml.XmlUtils;
 
 public class WssRequestFilter extends AbstractWssRequestFilter implements RequestFilter
 {
@@ -53,9 +49,7 @@ public class WssRequestFilter extends AbstractWssRequestFilter implements Reques
 			{
 				Document wssDocument = getWssDocument( context );
 				outgoingWss.processOutgoing( wssDocument, context );
-				StringWriter writer = new StringWriter();
-				XmlUtils.serialize( wssDocument, writer );
-				context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, writer.toString() );
+				updateWssDocument( context, wssDocument );
 			}
 			catch( Exception e )
 			{

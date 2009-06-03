@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
 import java.io.IOException;
-import java.io.StringWriter;
 
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSSConfig;
@@ -26,7 +25,6 @@ import org.xml.sax.SAXException;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.StringUtils;
@@ -121,9 +119,7 @@ public class WssAuthenticationRequestFilter extends AbstractWssRequestFilter
 				parentNode.getParentNode().removeChild( parentNode );
 		}
 
-		StringWriter writer = new StringWriter();
-		XmlUtils.serializePretty( doc, writer );
-		context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, writer.toString() );
+		updateWssDocument( context, doc );
 	}
 
 	private static Element setWsTimestampToken( String ttl, Document doc )

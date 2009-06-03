@@ -258,7 +258,7 @@ public class CloneTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 		public final static String PROJECT = "Target Project";
 
 		@AField( name = "Move Instead", description = "Moves the selected TestStep instead of copying", type = AFieldType.BOOLEAN )
-		public final static String MOVE = "Move instead";
+		public final static String MOVE = "Move Instead";
 
 		@AField( name = "Open Editor", description = "Opens the editor for the cloned TestStep", type = AFieldType.BOOLEAN )
 		public final static String OPEN = "Open Editor";
