@@ -56,14 +56,16 @@ public abstract class AbstractWssRequestFilter extends AbstractRequestFilter
 		Document doc = ( Document )context.getProperty( WSS_DOC );
 
 		// this should be solved with pooling for performance-reasons..
-		if( doc == null )
+		if( doc == null || ((Integer)doc.getUserData( "requestContentHashCode" )).intValue() != request.hashCode() )
 		{
 			synchronized( db )
 			{
 				doc = db.parse( new InputSource( new StringReader( request ) ) );
+				doc.setUserData( "requestContentHashCode", new Integer( request.hashCode()), null );
 				context.setProperty( WSS_DOC, doc );
 			}
 		}
+		
 		return doc;
 	}
 
