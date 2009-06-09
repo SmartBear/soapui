@@ -761,7 +761,8 @@ public class WsdlUtils
 	public static String getSoapEndpoint( Port port )
 	{
 		SOAPAddress soapAddress = WsdlUtils.getExtensiblityElement( port.getExtensibilityElements(), SOAPAddress.class );
-		if( soapAddress != null )
+		if( soapAddress != null && StringUtils.hasContent( soapAddress.getLocationURI() ) )
+		{
 			try
 			{
 				return URLDecoder.decode( soapAddress.getLocationURI(), "UTF-8" );
@@ -771,10 +772,12 @@ public class WsdlUtils
 				e.printStackTrace();
 				return soapAddress.getLocationURI();
 			}
-
+		}
+		
 		SOAP12Address soap12Address = WsdlUtils.getExtensiblityElement( port.getExtensibilityElements(),
 				SOAP12Address.class );
-		if( soap12Address != null )
+		if( soap12Address != null && StringUtils.hasContent( soap12Address.getLocationURI() ) )
+		{
 			try
 			{
 				return URLDecoder.decode( soap12Address.getLocationURI(), "UTF-8" );
@@ -784,6 +787,7 @@ public class WsdlUtils
 				e.printStackTrace();
 				return soap12Address.getLocationURI();
 			}
+		}
 
 		return null;
 	}
