@@ -58,10 +58,18 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 		this.modelItem = modelItem;
 		this.config = config;
 
-		for( PropertyConfig propertyConfig : config.getPropertyList() )
+		for( int c = 0; c < config.sizeOfPropertyArray(); c++ )
 		{
+			PropertyConfig propertyConfig = config.getPropertyArray( c );
 			if( StringUtils.hasContent( propertyConfig.getName()))
-				addProperty( propertyConfig, false );
+			{
+				addProperty( propertyConfig, false );		
+			}
+			else
+			{
+				config.removeProperty( c );
+				c--;
+			}
 		}
 	}
 
