@@ -152,7 +152,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 			workspaceConfig = SoapuiWorkspaceDocumentConfig.Factory.parse( file );
 			if( workspaceConfig.getSoapuiWorkspace().getSettings() == null )
 				workspaceConfig.getSoapuiWorkspace().addNewSettings();
-
+			setPath( file.getAbsolutePath() );
 			settings = new XmlBeansSettingsImpl( this, SoapUI.getSettings(), workspaceConfig.getSoapuiWorkspace()
 					.getSettings() );
 
