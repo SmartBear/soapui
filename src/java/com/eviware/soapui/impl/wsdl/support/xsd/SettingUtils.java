@@ -49,6 +49,17 @@ public class SettingUtils
 		return result;
 	}
 
+	public static String qnames2String(Collection<? extends QName> qnames)
+   {
+	   StringList names = new StringList();
+	   for(QName qname : qnames)
+	   {
+	      String string = qname2string(qname);
+	      names.add(string);
+	   }
+	   return names.toXml();
+   }
+	
 	private static QName string2qname( String name )
 	{
 		int ix = name.indexOf( '@' );

@@ -60,7 +60,7 @@ public class SettingsImpl implements Settings
 
 		for( SettingsListener listener : listeners )
 		{
-			listener.settingChanged( id, oldValue, value );
+			listener.settingChanged( id, value, oldValue );
 		}
 	}
 
@@ -78,7 +78,7 @@ public class SettingsImpl implements Settings
 
 		for( SettingsListener listener : listeners )
 		{
-			listener.settingChanged( id, oldValue, Boolean.toString( value ) );
+			listener.settingChanged( id, Boolean.toString( value ), oldValue );
 		}
 	}
 
