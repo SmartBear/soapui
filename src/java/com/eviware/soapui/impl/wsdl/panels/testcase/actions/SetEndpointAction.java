@@ -19,9 +19,10 @@ import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.UISupport;
 
@@ -53,16 +54,19 @@ public class SetEndpointAction extends AbstractAction
 		for( int c = 0; c < testCase.getTestStepCount(); c++ )
 		{
 			TestStep step = testCase.getTestStepAt( c );
-			if( step instanceof WsdlTestRequestStep )
+			if( step instanceof HttpRequestTestStep )
 			{
-				WsdlTestRequestStep requestStep = ( WsdlTestRequestStep )step;
-				String[] endpoints = requestStep.getTestRequest().getOperation().getInterface().getEndpoints();
-				for( int i = 0; i < endpoints.length; i++ )
+				HttpRequestTestStep requestStep = ( HttpRequestTestStep )step;
+				Operation operation = requestStep.getHttpRequest().getOperation();
+				if( operation != null )
 				{
-					endpointSet.add( endpoints[i] );
+					String[] endpoints = operation.getInterface().getEndpoints();
+					for( int i = 0; i < endpoints.length; i++ )
+					{
+						endpointSet.add( endpoints[i] );
+					}
 				}
-
-				currentEndpointSet.add( requestStep.getTestRequest().getEndpoint() );
+				currentEndpointSet.add( requestStep.getHttpRequest().getEndpoint() );
 			}
 		}
 
@@ -77,10 +81,10 @@ public class SetEndpointAction extends AbstractAction
 		for( int c = 0; c < testCase.getTestStepCount(); c++ )
 		{
 			TestStep step = testCase.getTestStepAt( c );
-			if( step instanceof WsdlTestRequestStep )
+			if( step instanceof HttpRequestTestStep )
 			{
-				WsdlTestRequestStep requestStep = ( WsdlTestRequestStep )step;
-				WsdlTestRequest testRequest = requestStep.getTestRequest();
+				HttpRequestTestStep requestStep = ( HttpRequestTestStep )step;
+				AbstractHttpRequest testRequest = requestStep.getHttpRequest();
 
 				if( testRequest.getEndpoint() == null || !testRequest.getEndpoint().equals( selected ) )
 				{
