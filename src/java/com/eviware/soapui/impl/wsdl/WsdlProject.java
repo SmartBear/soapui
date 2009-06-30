@@ -275,10 +275,20 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			}
 
 			log.info( "Loaded project from [" + file.toString() + "]" );
-			
-			int majorVersion = Integer.parseInt(projectDocument.getSoapuiProject().getSoapuiVersion().split("\\.")[0]);
-			if(majorVersion > Integer.parseInt(SoapUI.SOAPUI_VERSION.split("\\.")[0]))
-				log.warn("Project '"+projectDocument.getSoapuiProject().getName()+"' is from a newer version ("+projectDocument.getSoapuiProject().getSoapuiVersion()+") of soapUI than this ("+SoapUI.SOAPUI_VERSION+") and parts of it may be incompatible or incorrect. Saving this project with this version of soapUI may cause it to function differently.");
+
+			try
+			{
+				int majorVersion = Integer
+						.parseInt( projectDocument.getSoapuiProject().getSoapuiVersion().split( "\\." )[0] );
+				if( majorVersion > Integer.parseInt( SoapUI.SOAPUI_VERSION.split( "\\." )[0] ) )
+					log.warn( "Project '" + projectDocument.getSoapuiProject().getName() + "' is from a newer version ("
+							+ projectDocument.getSoapuiProject().getSoapuiVersion() + ") of soapUI than this ("
+							+ SoapUI.SOAPUI_VERSION + ") and parts of it may be incompatible or incorrect. "
+							+ "Saving this project with this version of soapUI may cause it to function differently." );
+			}
+			catch( Exception e )
+			{
+			}
 
 			List<InterfaceConfig> interfaceConfigs = getConfig().getInterfaceList();
 			for( InterfaceConfig config : interfaceConfigs )
