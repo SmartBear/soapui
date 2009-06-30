@@ -266,7 +266,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		if( factory != null )
 		{
 			//Forward incompatibility, test for incompatible future version of HttpTestStep:
-			if(((RestRequestStepConfig)tsc.getConfig().changeType(RestRequestStepConfig.type)).getRestRequest() == null)
+			if( tsc.getConfig() != null && ((RestRequestStepConfig)tsc.getConfig().changeType(RestRequestStepConfig.type)).getRestRequest() == null)
 				return null;
 			
 			WsdlTestStep testStep = factory.buildTestStep( this, tsc, forLoadTest );
