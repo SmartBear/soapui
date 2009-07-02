@@ -19,7 +19,8 @@ import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -78,7 +79,7 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 
 	private boolean changed;
 	private long updateFrequency = DEFAULT_SAMPLE_INTERVAL;
-	private Stack<SamplesHolder> samplesStack = new Stack<SamplesHolder>();
+	private Queue<SamplesHolder> samplesStack = new ConcurrentLinkedQueue<SamplesHolder>();
 	private long currentThreadCountStartTime;
 	private long totalAverageSum;
 	private boolean resetStatistics;
@@ -231,7 +232,7 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 		if( !running || samples.length == 0 || sizes.length == 0 )
 			return;
 
-		samplesStack.push( new SamplesHolder( samples, sizes, sampleCounts, startTime, timeTaken, complete ) );
+		samplesStack.add( new SamplesHolder( samples, sizes, sampleCounts, startTime, timeTaken, complete ) );
 	}
 
 	public void run()
@@ -242,7 +243,7 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 			{
 				while( !samplesStack.isEmpty() )
 				{
-					SamplesHolder holder = samplesStack.pop();
+					SamplesHolder holder = samplesStack.poll();
 					if( holder != null )
 						addSamples( holder );
 				}
@@ -741,19 +742,12 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 
 	public synchronized void finish()
 	{
-		int sz = samplesStack.size();
-		while( sz > 0 )
+		// push leftover samples
+		while( !samplesStack.isEmpty() )
 		{
-			log.info( "Waiting for " + sz + " samples.." );
-			try
-			{
-				Thread.sleep( 500 );
-			}
-			catch( InterruptedException e )
-			{
-				SoapUI.logError( e );
-			}
-			sz = samplesStack.size();
+			SamplesHolder holder = samplesStack.poll();
+			if( holder != null )
+				addSamples( holder );
 		}
 	}
 }
