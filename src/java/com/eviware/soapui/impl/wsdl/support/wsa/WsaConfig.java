@@ -33,7 +33,6 @@ public class WsaConfig implements PropertyChangeNotifier
 		this.wsaConfig = wsaConfig;
 		this.container = container;
 		propertyChangeSupport = new PropertyChangeSupport( this );
-		// TODO Auto-generated constructor stub
 		if( !wsaConfig.isSetMustUnderstand() )
 		{
 			wsaConfig.setMustUnderstand( MustUnderstandTypeConfig.NONE );

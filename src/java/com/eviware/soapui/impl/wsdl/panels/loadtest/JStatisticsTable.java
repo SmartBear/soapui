@@ -76,6 +76,7 @@ public class JStatisticsTable extends JPanel
 		columnModel.getColumn( 8 ).setPreferredWidth( 20 );
 		columnModel.getColumn( 9 ).setPreferredWidth( 20 );
 		columnModel.getColumn( 10 ).setPreferredWidth( 20 );
+		columnModel.getColumn( 11 ).setPreferredWidth( 20 );
 
 		JScrollPane scrollPane = new JScrollPane( statisticsTable );
 		scrollPane.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );

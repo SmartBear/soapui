@@ -77,6 +77,7 @@ public class SoapUIActionRegistry
 		}
 	}
 
+	@SuppressWarnings( "unused" )
 	public static class SoapUIActionGroupAction<T extends ModelItem> extends AbstractSoapUIAction<T>
 	{
 		private SoapUIActionGroup actionGroup;

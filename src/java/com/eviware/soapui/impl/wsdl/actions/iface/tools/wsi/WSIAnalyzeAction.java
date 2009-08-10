@@ -71,7 +71,8 @@ public class WSIAnalyzeAction extends AbstractToolsAction<Interface>
 
 	protected void generate( StringToStringMap values, ToolHost toolHost, Interface modelItem ) throws Exception
 	{
-		wsiDir = SoapUI.getSettings().getString( WSISettings.WSI_LOCATION, System.getenv( "WSI_HOME" ) );
+		wsiDir = SoapUI.getSettings().getString( WSISettings.WSI_LOCATION,
+				System.getProperty( "wsi.dir", System.getenv( "WSI_HOME" ) ) );
 		if( Tools.isEmpty( wsiDir ) )
 		{
 			UISupport.showErrorMessage( "WSI Test Tools directory must be set in global preferences" );
@@ -92,18 +93,18 @@ public class WSIAnalyzeAction extends AbstractToolsAction<Interface>
 
 		File reportFile = File.createTempFile( "wsi-report", ".xml" );
 
-		ArgumentBuilder args = buildArgs( reportFile, modelItem );
-		builder.command( args.getArgs() );
 		File wsiToolDir = new File( wsiDir + File.separatorChar + "cs" + File.separatorChar + "bin" );
 		if( !wsiToolDir.exists() )
 			wsiToolDir = new File( wsiDir + File.separatorChar + "java" + File.separatorChar + "bin" );
 
+		ArgumentBuilder args = buildArgs( wsiToolDir, reportFile, modelItem );
+		builder.command( args.getArgs() );
 		builder.directory( wsiToolDir );
 
 		toolHost.run( new WSIProcessToolRunner( builder, reportFile, modelItem ) );
 	}
 
-	private ArgumentBuilder buildArgs( File reportFile, Interface modelItem ) throws IOException
+	private ArgumentBuilder buildArgs( File wsiToolDir, File reportFile, Interface modelItem ) throws IOException
 	{
 		Settings settings = modelItem.getSettings();
 
@@ -115,7 +116,7 @@ public class WSIAnalyzeAction extends AbstractToolsAction<Interface>
 		configDoc.save( file );
 
 		ArgumentBuilder builder = new ArgumentBuilder( new StringToStringMap() );
-		builder.startScript( "Analyzer", "", ".sh" );
+		builder.startScript( wsiToolDir.getAbsolutePath() + File.separator + "Analyzer", ".bat", ".sh" );
 
 		builder.addArgs( "-config", file.getAbsolutePath() );
 

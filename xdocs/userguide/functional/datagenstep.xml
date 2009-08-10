@@ -17,16 +17,18 @@
     </properties>
     <body>
 		<section name="DataGen TestStep">
-		<p>The "DataGen" TestStep can be used to generate data to be used as input in your TestCases, for
+		<p>The "DataGen" TestStep can be used to generate data to be used as input in your TestCases, Requests, etc, for
 		example number or date sequences, random selections, etc. The generated data is available as properties and can 
 		thus be referred to with Property Transfers and Expansions just like any other property. Create a DataGen
-        step as usual from the TestCase popup menu. Double-clicking the TestStep will open the following editor:</p>
+        Step as usual from the TestCase popup menu. Double-clicking the TestStep will open the following editor:</p>
 		
 		<p align="center"><img src="images/datagen_editor.gif" alt="The soapUI Pro DataGen Editor Options"/></p>
 		
-		<p>The table at the top contains the defined DataGen properties with their common settings (see below),
-		selecting a property in the table shows the corresponding configuration panel at the bottom.</p>
-		
+		<p>The table at the top contains the defined DataGen properties with their common settings (see below) and
+		last returned value, selecting a property in the table shows the corresponding 
+		configuration panel at the bottom.</p>
+		<p>"Running" the DataGen step with the far left toolbar button will re-evaluate all properties and show their
+		values in the far right table column.</p>
 		<p>Add and delete properties using the toolbar buttons at the top, the Add button opens the following dialog:</p>
 
 		<p align="center"><img src="images/datagen_add.gif" alt="The soapUI Pro DataGen Add Panel"/></p>
@@ -73,7 +75,9 @@ return sdf.format( new Date())</source>
 		(see <a target="_new" href="http://www.exampledepot.com/egs/java.text/FormatNum.html">this page</a> for some examples). 
 		Selecting the Random check box will select a random number within the specified range instead 
 		(with specified step as modulus). The Persist options will save the last number when saving the project so the sequence can continue 
-		at its last value if required (remember though that projects are not saved after running through the command-line tools).</p>
+		at its last value if required, remember to use the -S option when running through the command-line tools to save
+		the project after running the tests. At the bottom the next value that will be returned by this property is displayed and
+		an option to set this to a specific value is available (these will be disabled if the number is configured to be random).</p>
 		
 		<p>So for example if you want to generate random USD currencies between 100 and 1000 USD with a 50 USD increment you could specify 
 		the following:</p>

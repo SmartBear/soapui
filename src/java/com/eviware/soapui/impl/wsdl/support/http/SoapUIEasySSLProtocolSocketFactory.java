@@ -72,7 +72,7 @@ public class SoapUIEasySSLProtocolSocketFactory extends EasySSLProtocolSocketFac
 			SoapUI.logError( gse );
 			return enableSocket( ( SSLSocket )super.createSocket( host, port, localAddress, localPort, params ) );
 		}
-	}
+		}
 
 	private Socket enableSocket( SSLSocket socket )
 	{

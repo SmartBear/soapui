@@ -167,8 +167,8 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface<?>, 
 	public SchemaTypeLoader getSchemaTypeLoader() throws Exception
 	{
 		loadIfNecessary();
-		return iface != null ? definitionCache.get( url ).getSchemaTypeLoader() : definition != null ? definition
-				.getSchemaTypeLoader() : null;
+		return iface != null && definitionCache.containsKey( url ) ? definitionCache.get( url ).getSchemaTypeLoader() : 
+			definition != null ? definition.getSchemaTypeLoader() : null;
 	}
 
 	public SchemaException getSchemaException()

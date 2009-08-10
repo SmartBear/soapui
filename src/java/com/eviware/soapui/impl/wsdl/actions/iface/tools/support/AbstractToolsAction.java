@@ -131,7 +131,7 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 			dialog.setVisible( true );
 		}
 	}
-
+	
 	/**
 	 * Perform an
 	 * 
@@ -157,6 +157,7 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 			UISupport.showErrorMessage( e1 );
 		}
 	}
+
 
 	protected StringToStringMap initValues( T modelItem, Object param )
 	{

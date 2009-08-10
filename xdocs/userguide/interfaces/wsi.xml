@@ -13,11 +13,10 @@
 		<li><b>Validating SOAP request/response messages</b> - from within the Request Editors response popup with the 
 		"Check WSI Compliance" option (as described under <a href="../requests.html#Message_Validation">Message Validation</a>)</li>
 		</ol>
-		<p>In either case, you first need to download either the java or C# version (soapUI will use whichever is available) of 
-		the WS-I Interoperability Testing Tools 1.1 from the WS-I 
-		<a href="http://www.ws-i.org/deliverables/workinggroup.aspx?wg=testingtools" target="_new">deliverables</a> page. 
-		Once downloaded, unzip the file into a local directory and specify the contained "wsi test tools" directory
-		in the soapUI together with the desired settings;</p>
+		<p>WS-I Interoperability Testing Tools 1.1 are distributed with soapUI (starting from version 3.0) and "wsi test tools" directory is set 
+		to distribution folder (by default it is "C:\Program Files\eviware\soapUI-Pro-3.0\wsi-test-tools").
+		For more info check the WS-I 
+		<a href="http://www.ws-i.org/deliverables/workinggroup.aspx?wg=testingtools" target="_new">deliverables</a> page.</p>
 		<p align="center"><img src="images/wsi_settings.gif" alt="WS-I Tool Setting"/></p>
 		<subsection name="Creating WS-I Reports">
 		<p>When running one of the integrated validations described above, the corresponding WS-I Analyzer configuration file 

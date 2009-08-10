@@ -85,24 +85,30 @@ public class StringToStringMap extends HashMap<String, String>
 
 	public static StringToStringMap fromXml( String value )
 	{
-		StringToStringMap result = new StringToStringMap();
 		if( value == null || value.trim().length() == 0 )
-			return result;
+			return new StringToStringMap();
 
 		try
 		{
 			StringToStringMapConfig nsMapping = StringToStringMapConfig.Factory.parse( value );
 
-			for( Entry entry : nsMapping.getEntryList() )
-			{
-				result.put( entry.getKey(), entry.getValue() );
-			}
+			return fromXml( nsMapping );
 		}
 		catch( Exception e )
 		{
 			SoapUI.logError( e );
 		}
 
+		return new StringToStringMap();
+	}
+
+	public static StringToStringMap fromXml( StringToStringMapConfig nsMapping )
+	{
+		StringToStringMap result = new StringToStringMap();
+		for( Entry entry : nsMapping.getEntryList() )
+		{
+			result.put( entry.getKey(), entry.getValue() );
+		}
 		return result;
 	}
 

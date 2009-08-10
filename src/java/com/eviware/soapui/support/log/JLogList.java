@@ -22,7 +22,6 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -149,12 +148,6 @@ public class JLogList extends JPanel
 		if( !isEnabled() )
 			return;
 
-		if( future == null )
-		{
-			released = false;
-			future = SoapUI.getThreadPool().submit( model );
-		}
-
 		if( line instanceof LoggingEvent )
 		{
 			LoggingEvent ev = ( LoggingEvent )line;
@@ -174,6 +167,12 @@ public class JLogList extends JPanel
 		else
 		{
 			linesToAdd.push( line );
+		}
+
+		if( future == null )
+		{
+			released = false;
+			future = SoapUI.getThreadPool().submit( model );
 		}
 	}
 
@@ -470,60 +469,65 @@ public class JLogList extends JPanel
 
 		public void run()
 		{
-			if( future != null )
-			{
-				Thread.currentThread().setName( "LogList Updater for " + getName() );
-			}
+			Thread.currentThread().setName( "LogList Updater for " + title );
 
-			while( !released && !linesToAdd.isEmpty() )
+			try
 			{
-				try
+				while( !released && !linesToAdd.isEmpty() )
 				{
-					if( !linesToAdd.isEmpty() )
+					try
 					{
-						SwingUtilities.invokeAndWait( new Runnable()
+						if( !linesToAdd.isEmpty() )
 						{
-							public void run()
+							SwingUtilities.invokeAndWait( new Runnable()
 							{
-								while( !linesToAdd.isEmpty() )
+								public void run()
 								{
-									int sz = lines.size();
-									lines.addAll( linesToAdd );
-									linesToAdd.clear();
-									fireIntervalAdded( LogListModel.this, sz, lines.size() - sz );
-								}
+									try
+									{
+										while( !linesToAdd.isEmpty() )
+										{
+											int sz = lines.size();
+											lines.addAll( linesToAdd );
+											linesToAdd.clear();
+											fireIntervalAdded( LogListModel.this, sz, lines.size() - sz );
+										}
 
-								int cnt = 0;
-								while( lines.size() > maxRows )
-								{
-									lines.remove( 0 );
-									cnt++ ;
-								}
+										int cnt = 0;
+										while( lines.size() > maxRows )
+										{
+											lines.remove( 0 );
+											cnt++ ;
+										}
 
-								if( cnt > 0 )
-									fireIntervalRemoved( LogListModel.this, 0, cnt - 1 );
+										if( cnt > 0 )
+											fireIntervalRemoved( LogListModel.this, 0, cnt - 1 );
 
-								if( tailing )
-								{
-									logList.ensureIndexIsVisible( lines.size() - 1 );
+										if( tailing )
+										{
+											logList.ensureIndexIsVisible( lines.size() - 1 );
+										}
+									}
+									catch( Throwable e )
+									{
+										SoapUI.logError( e );
+									}
 								}
-							}
-						} );
+							} );
+						}
+
+						Thread.sleep( 500 );
 					}
-
-					Thread.sleep( 500 );
-				}
-				catch( InterruptedException e )
-				{
-					SoapUI.logError( e );
-				}
-				catch( InvocationTargetException e )
-				{
-					SoapUI.logError( e );
+					catch( Throwable e )
+					{
+						SoapUI.logError( e );
+					}
 				}
 			}
-
-			future = null;
+			finally
+			{
+				future = null;
+			}
 		}
 	}
 

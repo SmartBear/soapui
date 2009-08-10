@@ -34,8 +34,8 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
-import com.eviware.soapui.impl.wsdl.panels.testcase.TestRunLog;
-import com.eviware.soapui.impl.wsdl.panels.testcase.TestRunLog.TestRunLogTestRunListener;
+import com.eviware.soapui.impl.wsdl.panels.testcase.JTestRunLog;
+import com.eviware.soapui.impl.wsdl.panels.testcase.TestRunLogTestRunListener;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -45,8 +45,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepResult;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
@@ -71,7 +71,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 	private OptionsAction optionsAction;
 	private RunAction runAction;
 	private OpenTestCaseAction openTestCaseAction;
-	private TestRunLog testRunLog;
+	private JTestRunLog testRunLog;
 	private CancelRunTestCaseAction cancelAction;
 	private XFormDialog optionsDialog;
 	private JInspectorPanel inspectorPanel;
@@ -123,6 +123,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 	private Component buildContent()
 	{
 		inspectorPanel = JInspectorPanelFactory.build( createPropertiesTable() );
+
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildLog(), "TestCase Log",
 				"log output from testcase run", true ) );
 
@@ -131,7 +132,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 
 	private JComponent buildLog()
 	{
-		testRunLog = new TestRunLog( getModelItem().getSettings() );
+		testRunLog = new JTestRunLog( getModelItem().getSettings() );
 		return testRunLog;
 	}
 
@@ -382,6 +383,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 	{
 		public static final String RUN_PRIMARY_TEST_CASE = "Run primary TestCase (fail if already running)";
 		public static final String CREATE_ISOLATED_COPY_FOR_EACH_RUN = "Create isolated copy for each run (Thread-Safe)";
+		public static final String RUN_SYNCHRONIZED_TESTCASE = "Run primary TestCase (wait for running to finish, Thread-Safe)";
 
 		@AField( name = "Target TestCase", description = "Selects the TestCase to run", type = AFieldType.ENUMERATION )
 		public static final String TESTCASE = "Target TestCase";
@@ -393,7 +395,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 		public static final String RETURN_PROPERTIES = "Return Properties";
 
 		@AField( name = "Run Mode", description = "Sets how to run the target TestCase", type = AFieldType.RADIOGROUP, values = {
-				CREATE_ISOLATED_COPY_FOR_EACH_RUN, RUN_PRIMARY_TEST_CASE } )
+				CREATE_ISOLATED_COPY_FOR_EACH_RUN, RUN_PRIMARY_TEST_CASE, RUN_SYNCHRONIZED_TESTCASE } )
 		public static final String RUN_MODE = "Run Mode";
 	}
 
@@ -430,13 +432,13 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 			super( testRunLog, true );
 		}
 
-		public void beforeRun( TestRunner testRunner, TestRunContext runContext )
+		public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			runAction.setEnabled( false );
 			cancelAction.setEnabled( true );
 		}
 
-		public void afterRun( TestRunner testRunner, TestRunContext runContext )
+		public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			runAction.setEnabled( true );
 			cancelAction.setEnabled( false );

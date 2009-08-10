@@ -23,7 +23,7 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author Ole.Matzura
  */
 
-public interface TestCase extends TestModelItem, ResultContainer
+public interface TestCase extends TestModelItem, ResultContainer, TestRunnable
 {
 	public final static String STATUS_PROPERTY = TestCase.class.getName() + "@status";
 	public final static String DISABLED_PROPERTY = TestCase.class.getName() + "@disabled";
@@ -48,7 +48,7 @@ public interface TestCase extends TestModelItem, ResultContainer
 
 	public List<LoadTest> getLoadTestList();
 
-	public TestRunner run( StringToObjectMap contextProperties, boolean async );
+	public TestCaseRunner run( StringToObjectMap context, boolean async );
 
 	public void addTestRunListener( TestRunListener listener );
 

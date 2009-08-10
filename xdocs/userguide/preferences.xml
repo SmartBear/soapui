@@ -1,62 +1,201 @@
 <?xml version="1.0"?>
 <document>
-    <properties>
-        <title>soapUI Preferences</title>
-    </properties>
-    <body>
+	<properties>
+		<title>soapUI Preferences</title>
+	</properties>
+	<body>
 		<section name="soapUI Preferences">
-		<p>The preferences dialog opened when selecting the "Preferences" option from the file menu contains the
-		following tabs:</p>
-		<table><tr><th>Tab</th><th>Description</th></tr>
-		<tr><td><a href="#HTTP_Settings">HTTP Settings</a></td><td>Sets various HTTP-related options</td></tr>
-		<tr><td><a href="#Proxy_Settings">Proxy Settings</a></td><td>Sets HTTP Proxy address and authentication</td></tr>
-		<tr><td><a href="#SSL_Settings">SSL Settings</a></td><td>Sets SSL-related options</td></tr>
-		<tr><td><a href="#WSDL_Settings">WSDL Settings</a></td><td>Sets WSDL-related options</td></tr>
-		<tr><td><a href="#UI_Settings">UI Settings</a></td><td>Sets UI-related options</td></tr>
-		<tr><td><a href="#Editor_Settings">Editor Settings</a></td><td>Sets editor-related options</td></tr>
-		<tr><td><a href="#Integrated_Tools">Tools</a></td><td>Sets paths to integrated tools</td></tr>
-		<tr><td><a href="#WSI_Settings">WSI Settings</a></td><td>Sets WS-I Basic Profile validation options</td></tr>
-		<tr><td><a href="#Global_Properties">Global Properties</a></td><td>Manages Global Properties</td></tr>
-		<tr><td><a href="#Global_Security Settings">Global Security Settings</a></td><td>Manages Global Security Settings</td></tr>
-		<tr><td><a href="#WS-A_Settings">WS-A Settings</a></td><td>Manages WS-A Settings</td></tr>
-		<tr><td><a href="#soapUI_Pro_Settings">soapUI Pro Settings</a></td><td>Sets soapUI-Pro specific settings</td></tr>
-		<tr><td><a href="#Coverage_Settings">Coverage Settings</a></td><td>Coverate related settings</td></tr>
-		<tr><td><a href="#Code_Templates">Code Templates</a></td><td>Code Templates settings</td></tr>
-		</table>
-		<subsection name="Import Preferences">
-		<p>The global File menu contains a menu action for importing global preferences from an existing installation.
-		In soapUI this will prompt for an existing soapui-settings file, in soapUI Pro the following dialog will be shown:</p>
-		<p align="center"><img src="images/import_prefs.gif" alt="Importing preferneces from an earlier soapUI Installation"/></p>
-		<p>The options are:</p>
-		<ul>
-		<li><b>Folder</b> - en existing soapUI installation folder</li>
-		<li><b>Import Preferences, Libraries, Scripts, and Extensions</b> - if the corresponding artifacts should be imported</li>
-		<li><b>Overwrite</b> - overwrites existing files..</li>
-		</ul>
-		<p>If importing more than the preferences, it is recommended to restart soapUI to avoid 
-		script or extension inconsistencies with the previous installation.</p>
-		</subsection>
-		
+			<p>The preferences dialog opened when selecting the "Preferences"
+				option from the file menu contains the
+				following tabs:</p>
+			<table>
+				<tr>
+					<th>Tab</th>
+					<th>Description</th>
+				</tr>
+				<tr>
+					<td>
+						<a href="#HTTP_Settings">HTTP Settings</a>
+					</td>
+					<td>Sets various HTTP-related options</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="#Proxy_Settings">Proxy Settings</a>
+					</td>
+					<td>Sets HTTP Proxy address and authentication</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="#SSL_Settings">SSL Settings</a>
+					</td>
+					<td>Sets SSL-related options</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="#WSDL_Settings">WSDL Settings</a>
+					</td>
+					<td>Sets WSDL-related options</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="#UI_Settings">UI Settings</a>
+					</td>
+					<td>Sets UI-related options</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="#Editor_Settings">Editor Settings</a>
+					</td>
+					<td>Sets editor-related options</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="#Integrated_Tools">Tools</a>
+					</td>
+					<td>Sets paths to integrated tools</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="#WSI_Settings">WSI Settings</a>
+					</td>
+					<td>Sets WS-I Basic Profile validation options</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="#Global_Properties">Global Properties</a>
+					</td>
+					<td>Manages Global Properties</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="#Global_Security Settings">Global Security Settings</a>
+					</td>
+					<td>Manages Global Security Settings</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="#WS-A_Settings">WS-A Settings</a>
+					</td>
+					<td>Manages WS-A Settings</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="#soapUI_Pro_Settings">soapUI Pro Settings</a>
+					</td>
+					<td>Sets soapUI-Pro specific settings</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="#Coverage_Settings">Coverage Settings</a>
+					</td>
+					<td>Coverage related settings</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="#Code_Templates">Code Templates</a>
+					</td>
+					<td>Code Templates settings</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="#JDBC_Drivers_Properties">JDBC Drivers Properties</a>
+					</td>
+					<td>JDBC Drivers Properties</td>
+				</tr>
+			</table>
+			<subsection name="Import Preferences">
+				<p>The global File menu contains a menu action for importing
+					global preferences from an existing installation.
+					In soapUI this will prompt for an existing soapui-settings file, in
+					soapUI Pro the following dialog will be shown:</p>
+				<p align="center">
+					<img src="images/import_prefs.gif"
+						alt="Importing preferneces from an earlier soapUI Installation" />
+				</p>
+				<p>The options are:</p>
+				<ul>
+					<li>
+						<b>Folder</b>
+						- en existing soapUI installation folder
+					</li>
+					<li>
+						<b>Import Preferences, Libraries, Scripts, and Extensions
+						</b>
+						- if the corresponding artifacts should be imported
+					</li>
+					<li>
+						<b>Overwrite</b>
+						- overwrites existing files..
+					</li>
+				</ul>
+				<p>If importing more than the preferences, it is recommended to
+					restart soapUI to avoid
+					script or extension inconsistencies with the previous installation.</p>
+			</subsection>
 
-		
-		<subsection name="HTTP Settings">
-		
-		<table><tr><th>Setting</th><th>Description</th></tr>
-		<tr><td>HTTP Version</td><td>Selects the HTTP version</td></tr>
-		<tr><td>User-Agent Header</td><td>Sets the HTTP User-Agent Header. If none is specified the default HttpClient header
-		is used</td></tr>
-		<tr><td>Request Compression</td><td>Selects the request compression type</td></tr>
-		<tr><td>Response Compression</td><td>Indicates if compressed responses from hosts are accepted</td></tr>
-		<tr><td>Disable Response Decompression</td><td>Disables decompression of compressed responses</td></tr>
-		<tr><td>Close connections after request</td><td>Disables HTTP Keep-Alives by requesting to close the HTTP connection
-		after each request. This will have a negative impact on performance but may give more realistic values during 
-		load testing</td></tr>
-		<tr><td>Disable Chunking</td><td>Disables content-chunking</td></tr>
-		<tr><td>Authenticate Preemptively</td><td>Send Authentication headers with each request without first 
-		receiving an authentication challenge. This is a potential security hazard but will improve performance since only one 
-		request will be required for authenticated endpoints instead of two</td></tr>
-		<tr><td>Preencoded Endpoints</td><td>Do not URL-encode endpoints, set this if your endpoint URLs are already
-		URL-encoded (containing for example %20 or %3A)</td></tr>
+
+
+			<subsection name="HTTP Settings">
+
+				<table>
+					<tr>
+						<th>Setting</th>
+						<th>Description</th>
+					</tr>
+					<tr>
+						<td>HTTP Version</td>
+						<td>Selects the HTTP version</td>
+					</tr>
+					<tr>
+						<td>User-Agent Header</td>
+						<td>Sets the HTTP User-Agent Header. If none is specified the
+							default HttpClient header
+							is used</td>
+					</tr>
+					<tr>
+						<td>Request Compression</td>
+						<td>Selects the request compression type</td>
+					</tr>
+					<tr>
+						<td>Response Compression</td>
+						<td>Indicates if compressed responses from hosts are
+							accepted</td>
+					</tr>
+					<tr>
+						<td>Disable Response Decompression</td>
+						<td>Disables decompression of compressed responses</td>
+					</tr>
+					<tr>
+						<td>Close connections after request</td>
+						<td>Disables HTTP Keep-Alives by requesting to close the
+							HTTP connection
+							after each request. This will have a negative impact on performance
+							but may give more realistic values during
+							load testing</td>
+					</tr>
+					<tr>
+						<td>Disable Chunking</td>
+						<td>Disables content-chunking</td>
+					</tr>
+					<tr>
+						<td>Authenticate Preemptively</td>
+						<td>Send Authentication headers with each request without
+							first
+							receiving an authentication challenge. This is a potential security hazard
+							but will improve performance since only one
+							request will be required for authenticated endpoints instead of two</td>
+					</tr>
+					<tr>
+						<td>Expect-Continue</td>
+						<td>Adds Expect-Continue header to outgoing request.For further info on this feature check 
+						<a href="http://tools.ietf.org/html/rfc2616#section-8.2.3" target="_new">here</a> </td>
+					</tr>
+					<tr>
+						<td>Preencoded Endpoints</td>
+						<td>Do not URL-encode endpoints, set this if your endpoint URLs
+							are already
+							URL-encoded (containing for example %20 or %3A)</td></tr>
 		<tr><td>Bind Address</td><td>The local address to bind to when sending requests, can be overridden
 		on a request level (with the corresponding request property) and on a system level by setting 
 		the soapui.bind.address system variable.</td></tr>
@@ -337,6 +476,39 @@
             <li>xhre - def holder = groovyUtils.getXmlHolder( "|#Response" )</li>
         </ul>
 		<p align="center"><img src="images/codetemplates_settings.gif" alt="Code Templates Tab in soapUI"/></p>
+		</subsection>		
+		
+		<subsection name="JDBC Drivers Properties">
+		<p>soapUI Pro provides functionality of defining JDBC Drivers which will be used for 
+		<a href="functional/datasourcestep.html#JDBC_DataSource_Configuration_wizard">JdbcDataSource Configuration Wizard </a> or 
+		<a href="functional/datasinkstep.html#JDBC_DataSink_Configuration_wizard">JdbcDataSink Configuration Wizard </a>. 
+		</p>
+		<p>Driver configuration table has two columns:</p>
+		<ul>
+		<li>Driver: which must be in form unique_identifier/actual_driver_class, for instance MySql /com.mysql.jdbc.Driver</li>
+		<li>Connection string template, for instance 
+		<source><![CDATA[jdbc:mysql://<HOST:localhost>:<PORT:3306>/<DB>?user=<USER>&password=<PASSWORD>]]></source>
+		Every property in the template can have default value set in form <![CDATA[<property:default_value> which will be than prepopulated in configuration wizard  ]]></li>
+		</ul>
+		<p>If there are no JDBC Drivers set wizard can't be used.</p>
+		<p align="center"><img src="images/jdbcdrivers_settings.gif" alt="JDBC Drivers Properties Tab in soapUI"/></p>
+		
+		 <subsection name="JDBC Drivers Properties Menu Bar">
+		 	<p>The Project JDBC Drivers Properties tab contains the following menu bar items:</p>
+		 	
+		 	<p>
+		 	<ul>
+		 	<li><b>Add driver setting</b>. Add a Driver setting to the list</li>
+		 	<li><b>Remove driver setting</b> Remove a Driver setting from the list</li>
+		 	<li><b>Load drivers settings</b> Load drivers settings from a file.</li>
+		 	<li><b>Reload default drivers settings</b> Replace all the existing settings with the default ones.</li>
+		 	</ul>
+		 	</p>
+		 	
+		 	</subsection>
+		
+		
+		<p>More information about drivers/connections strings and where to find them can be found <a href="jdbcDriversLinks.html">here</a></p>
 		</subsection>		
 		<p><hr size="1"/>Next: <a href="xpath_selector.html">soapUI Pro XPath Selection</a></p>
 		</section>

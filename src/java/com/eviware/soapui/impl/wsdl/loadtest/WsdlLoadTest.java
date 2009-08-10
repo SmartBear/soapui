@@ -53,15 +53,18 @@ import com.eviware.soapui.model.testsuite.LoadTest;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunListener;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.model.testsuite.LoadTestRunner.Status;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringList;
+import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
  * TestCase implementation for LoadTests
@@ -71,7 +74,7 @@ import com.eviware.soapui.support.types.StringList;
  * @todo create and return LoadTestAssertionResult from load-test assertions
  */
 
-public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implements LoadTest
+public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implements LoadTest, TestRunnable
 {
 	public final static String THREADCOUNT_PROPERTY = WsdlLoadTest.class.getName() + "@threadcount";
 	public final static String STARTDELAY_PROPERTY = WsdlLoadTest.class.getName() + "@startdelay";
@@ -103,6 +106,7 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 	private StatisticsLogger statisticsLogger = new StatisticsLogger();
 	private SoapUIScriptEngine setupScriptEngine;
 	private SoapUIScriptEngine tearDownScriptEngine;
+	@SuppressWarnings("unused")
 	private SimplePathPropertySupport logFolder;
 	private LoadTestRunListener[] loadTestRunListenersArray;
 
@@ -430,8 +434,8 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 		}
 
 		@Override
-		public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-				TestRunContext runContext )
+		public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+				TestCaseRunContext runContext )
 		{
 			if( !assertions.isEmpty() )
 			{
@@ -459,8 +463,8 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 		}
 
 		@Override
-		public void afterTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-				TestRunContext runContext, TestStepResult result )
+		public void afterTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+				TestCaseRunContext runContext, TestStepResult result )
 		{
 			if( !assertions.isEmpty() )
 			{
@@ -898,7 +902,7 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 
 		if( setupScriptEngine == null )
 		{
-			setupScriptEngine = SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, this );
+			setupScriptEngine = SoapUIScriptEngineRegistry.create( this );
 			setupScriptEngine.setScript( script );
 		}
 
@@ -916,7 +920,7 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 
 		if( tearDownScriptEngine == null )
 		{
-			tearDownScriptEngine = SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, this );
+			tearDownScriptEngine = SoapUIScriptEngineRegistry.create( this );
 			tearDownScriptEngine.setScript( script );
 		}
 
@@ -944,5 +948,11 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 	public void setUpdateStatisticsPerTestStep( boolean updateStatisticsPerTestStep )
 	{
 		getConfig().setUpdateStatisticsPerTestStep( updateStatisticsPerTestStep );
+	}
+
+	public TestRunner run( StringToObjectMap context, boolean async )
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -29,6 +29,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Request;
+import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.support.UISupport;
@@ -170,7 +172,7 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
 		}
 	}
 
-	protected List<Request> recreateRequests( WsdlInterface iface, boolean buildOptional, boolean createBackups,
+	public static List<Request> recreateRequests( WsdlInterface iface, boolean buildOptional, boolean createBackups,
 			boolean keepExisting, boolean keepHeaders )
 	{
 		int count = 0;
@@ -218,7 +220,7 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
 		return result;
 	}
 
-	private List<WsdlTestRequestStep> recreateTestRequests( WsdlInterface iface, boolean buildOptional,
+	public static List<WsdlTestRequestStep> recreateTestRequests( WsdlInterface iface, boolean buildOptional,
 			boolean createBackups, boolean keepExisting, boolean keepHeaders )
 	{
 		int count = 0;

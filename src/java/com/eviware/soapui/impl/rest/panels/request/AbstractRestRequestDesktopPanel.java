@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.rest.panels.request;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -22,23 +23,22 @@ import java.beans.PropertyChangeListener;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.text.Document;
 
-import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestUtils;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
-import com.eviware.soapui.impl.support.AbstractHttpRequest.RequestMethod;
-import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
-import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
+import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestInterface;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.Request.SubmitException;
@@ -48,21 +48,18 @@ import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
-import com.eviware.soapui.support.swing.ModelItemListCellRenderer;
 
-public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 extends RestRequest> extends
-		AbstractHttpRequestDesktopPanel<T, T2>
+public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 extends RestRequestInterface> extends
+		AbstractHttpXmlRequestDesktopPanel<T, T2>
 {
 	private boolean updatingRequest;
-	private JComboBox methodCombo;
 	private JUndoableTextField pathTextField;
 	private JComboBox acceptCombo;
 	private JLabel pathLabel;
 	private boolean updating;
-	private AbstractRestRequestDesktopPanel<T, T2>.InternalTestPropertyListener testPropertyListener = new AbstractRestRequestDesktopPanel.InternalTestPropertyListener();
-	private AbstractRestRequestDesktopPanel<T, T2>.RestParamPropertyChangeListener restParamPropertyChangeListener = new AbstractRestRequestDesktopPanel.RestParamPropertyChangeListener();
+	private InternalTestPropertyListener testPropertyListener = new InternalTestPropertyListener();
+	private RestParamPropertyChangeListener restParamPropertyChangeListener = new RestParamPropertyChangeListener();
 	private JComboBox pathCombo;
 
 	public AbstractRestRequestDesktopPanel( T modelItem, T2 requestItem )
@@ -78,8 +75,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 		for( TestProperty param : requestItem.getParams().getProperties().values() )
 		{
-			( ( XmlBeansRestParamsTestPropertyHolder.RestParamProperty )param )
-					.addPropertyChangeListener( restParamPropertyChangeListener );
+			( ( RestParamProperty )param ).addPropertyChangeListener( restParamPropertyChangeListener );
 		}
 	}
 
@@ -87,11 +83,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		updateFullPathLabel();
 
-		if( evt.getPropertyName().equals( "method" ) && !updatingRequest )
-		{
-			methodCombo.setSelectedItem( evt.getNewValue() );
-		}
-		else if( evt.getPropertyName().equals( "accept" ) && !updatingRequest )
+		if( evt.getPropertyName().equals( "accept" ) && !updatingRequest )
 		{
 			acceptCombo.setSelectedItem( evt.getNewValue() );
 		}
@@ -101,7 +93,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			acceptCombo.setModel( new DefaultComboBoxModel( ( Object[] )evt.getNewValue() ) );
 			acceptCombo.setSelectedItem( item );
 		}
-		else if( ( evt.getPropertyName().equals( "path" ) || evt.getPropertyName().equals( "resource" ) )
+		else if( (evt.getPropertyName().equals( "path" ) || evt.getPropertyName().equals( "restMethod" ))
 				&& ( getRequest().getResource() == null || getRequest().getResource() == evt.getSource() ) )
 		{
 			if( pathLabel != null )
@@ -119,18 +111,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 
 		super.propertyChange( evt );
-	}
-
-	@Override
-	protected ModelItemXmlEditor<?, ?> buildRequestEditor()
-	{
-		return new RestRequestMessageEditor( getRequest() );
-	}
-
-	@Override
-	protected ModelItemXmlEditor<?, ?> buildResponseEditor()
-	{
-		return new RestResponseMessageEditor( getRequest() );
 	}
 
 	@Override
@@ -152,11 +132,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		{
 			addToolbarComponents( toolbar );
 		}
-	}
-
-	protected JComponent buildEndpointComponent()
-	{
-		return getRequest().getResource() == null ? null : super.buildEndpointComponent();
 	}
 
 	@Override
@@ -182,23 +157,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	protected void addToolbarComponents( JXToolBar toolbar )
 	{
 		toolbar.addSeparator();
-		methodCombo = new JComboBox( new Object[] { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
-				RequestMethod.DELETE, RequestMethod.HEAD } );
-
-		methodCombo.setSelectedItem( getRequest().getMethod() );
-		methodCombo.setToolTipText( "Set desired HTTP method" );
-		methodCombo.addItemListener( new ItemListener()
-		{
-			public void itemStateChanged( ItemEvent e )
-			{
-				updatingRequest = true;
-				getRequest().setMethod( ( RequestMethod )methodCombo.getSelectedItem() );
-				updatingRequest = false;
-			}
-		} );
-
-		toolbar.addLabeledFixed( "Method", methodCombo );
-		toolbar.addSeparator();
 
 		if( getRequest().getResource() != null )
 		{
@@ -219,28 +177,14 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			toolbar.addLabeledFixed( "Accept", acceptCombo );
 			toolbar.addSeparator();
 
-			if( getRequest() instanceof RestTestRequest )
+			if( getRequest() instanceof RestTestRequestInterface )
 			{
 				pathCombo = new JComboBox( new PathComboBoxModel() );
-				pathCombo.setRenderer( new ModelItemListCellRenderer() );
+				pathCombo.setRenderer( new RestMethodListCellRenderer() );
 				pathCombo.setPreferredSize( new Dimension( 200, 20 ) );
-				// pathCombo.setSelectedItem( getRequest().getResource().getPath()
-				// );
-				// pathCombo.addItemListener( new ItemListener()
-				// {
-				// public void itemStateChanged( ItemEvent e )
-				// {
-				// if( updating )
-				// return;
-				//
-				// updating = true;
-				// // ((RestTestRequest)getRequest()).setPath(
-				// ((RestResource)pathCombo.getSelectedItem() ).getPath() );
-				// updating = false;
-				// }
-				// } );
+				pathCombo.setSelectedItem( getRequest().getRestMethod() );
 
-				toolbar.addLabeledFixed( "Resource:", pathCombo );
+				toolbar.addLabeledFixed( "Resource/Method:", pathCombo );
 				toolbar.addSeparator();
 			}
 			else
@@ -272,7 +216,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 					updating = false;
 				}
 			} );
-
 			PropertyExpansionPopupListener.enable( pathTextField, getModelItem() );
 
 			toolbar.addLabeledFixed( "Request URL:", pathTextField );
@@ -292,120 +235,10 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 		for( TestProperty param : getRequest().getParams().getProperties().values() )
 		{
-			( ( XmlBeansRestParamsTestPropertyHolder.RestParamProperty )param )
-					.removePropertyChangeListener( restParamPropertyChangeListener );
+			( ( RestParamProperty )param ).removePropertyChangeListener( restParamPropertyChangeListener );
 		}
 
 		return super.release();
-	}
-
-	public class RestRequestMessageEditor extends
-			AbstractHttpRequestDesktopPanel<?, ?>.AbstractHttpRequestMessageEditor<RestRequestDocument>
-	{
-		public RestRequestMessageEditor( RestRequest modelItem )
-		{
-			super( new RestRequestDocument( modelItem ) );
-		}
-	}
-
-	public class RestResponseMessageEditor extends
-			AbstractHttpRequestDesktopPanel<?, ?>.AbstractHttpResponseMessageEditor<RestResponseDocument>
-	{
-		public RestResponseMessageEditor( RestRequest modelItem )
-		{
-			super( new RestResponseDocument( modelItem ) );
-		}
-	}
-
-	public class RestRequestDocument extends AbstractXmlDocument implements PropertyChangeListener
-	{
-		private final RestRequest modelItem;
-		private boolean updating;
-
-		public RestRequestDocument( RestRequest modelItem )
-		{
-			this.modelItem = modelItem;
-
-			modelItem.addPropertyChangeListener( this );
-		}
-
-		public RestRequest getRequest()
-		{
-			return modelItem;
-		}
-
-		public String getXml()
-		{
-			return getRequest().getRequestContent();
-		}
-
-		@Override
-		public void release()
-		{
-			super.release();
-			modelItem.removePropertyChangeListener( this );
-		}
-
-		public void setXml( String xml )
-		{
-			if( !updating && xml != null )
-			{
-				updating = true;
-				getRequest().setRequestContent( xml );
-				updating = false;
-			}
-		}
-
-		public void propertyChange( PropertyChangeEvent evt )
-		{
-			if( evt.getPropertyName().equals( RestRequest.REQUEST_PROPERTY ) && !updating )
-			{
-				updating = true;
-				fireXmlChanged( ( String )evt.getOldValue(), ( String )evt.getNewValue() );
-				updating = false;
-			}
-		}
-	}
-
-	public class RestResponseDocument extends AbstractXmlDocument implements PropertyChangeListener
-	{
-		private final RestRequest modelItem;
-
-		public RestResponseDocument( RestRequest modelItem )
-		{
-			this.modelItem = modelItem;
-
-			modelItem.addPropertyChangeListener( RestRequest.RESPONSE_PROPERTY, this );
-		}
-
-		public RestRequest getRequest()
-		{
-			return modelItem;
-		}
-
-		public String getXml()
-		{
-			return modelItem.getResponseContentAsXml();
-		}
-
-		public void setXml( String xml )
-		{
-			HttpResponse response = getRequest().getResponse();
-			if( response != null )
-				response.setResponseContent( xml );
-		}
-
-		public void propertyChange( PropertyChangeEvent evt )
-		{
-			fireXmlChanged( evt.getOldValue() == null ? null : ( ( HttpResponse )evt.getOldValue() ).getContentAsString(),
-					getXml() );
-		}
-
-		public void release()
-		{
-			super.release();
-			modelItem.removePropertyChangeListener( RestRequest.RESPONSE_PROPERTY, this );
-		}
 	}
 
 	private class InternalTestPropertyListener extends TestPropertyListenerAdapter
@@ -460,23 +293,60 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		public int getSize()
 		{
-			return getRequest().getResource().getService().getAllResources().size();
+			int sz = 0; 
+			for( RestResource resource : getRequest().getResource().getService().getAllResources())
+			{
+				sz += resource.getRestMethodCount();
+			}
+			
+			return sz;
 		}
 
 		public Object getElementAt( int index )
 		{
-			return getRequest().getResource().getService().getAllResources().get( index );
+			int sz = 0; 
+			for( RestResource resource : getRequest().getResource().getService().getAllResources())
+			{
+				if( index < sz + resource.getRestMethodCount() )
+				{
+					return resource.getRestMethodAt( index-sz );
+				}
+				
+				sz += resource.getRestMethodCount();
+			}
+			
+			return null;
 		}
 
 		public void setSelectedItem( Object anItem )
 		{
-			( ( RestTestRequestStep )( ( RestTestRequest )getRequest() ).getTestStep() )
-					.setResource( ( RestResource )anItem );
+			( ( RestTestRequestInterface )getRequest() ).getTestStep().setRestMethod( (RestMethod)anItem );
 		}
 
 		public Object getSelectedItem()
 		{
-			return getRequest().getResource();
+			return getRequest().getRestMethod();
 		}
 	}
+
+	private class RestMethodListCellRenderer extends DefaultListCellRenderer
+	{
+		@Override
+		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
+				boolean cellHasFocus )
+		{
+			Component result = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
+
+			if( value instanceof RestMethod )
+			{
+				RestMethod item = ( RestMethod )value;
+				setIcon( item.getIcon() );
+				setText( item.getResource().getName() + " -> " + item.getName() );
+			}
+
+			return result;
+		}
+
+	}
+
 }

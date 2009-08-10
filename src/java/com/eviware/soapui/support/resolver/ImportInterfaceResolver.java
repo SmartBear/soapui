@@ -20,7 +20,7 @@ import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.rest.support.WadlImporter;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStepInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.propertyexpansion.resolvers.providers.ProjectDirProvider;
@@ -108,7 +108,7 @@ public abstract class ImportInterfaceResolver implements Resolver
 
 	private void importWadl( WsdlProject project, String path )
 	{
-		RestService restService = ( RestService )project.addNewInterface( ( ( RestTestRequestStep )item )
+		RestService restService = ( RestService )project.addNewInterface( ( ( RestTestRequestStepInterface )item )
 				.getRequestStepConfig().getService(), RestServiceFactory.REST_TYPE );
 		try
 		{

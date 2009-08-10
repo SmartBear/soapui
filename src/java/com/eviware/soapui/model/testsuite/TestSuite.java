@@ -17,6 +17,7 @@ import java.util.List;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
  * A TestSuite holding a number of TestCases
@@ -24,7 +25,7 @@ import com.eviware.soapui.model.project.Project;
  * @author Ole.Matzura
  */
 
-public interface TestSuite extends TestModelItem, ResultContainer
+public interface TestSuite extends TestModelItem, ResultContainer, TestRunnable
 {
 	public final static String RUNTYPE_PROPERTY = ModelItem.class.getName() + "@runtype";
 	public final static String DISABLED_PROPERTY = TestSuite.class.getName() + "@disabled";
@@ -55,4 +56,10 @@ public interface TestSuite extends TestModelItem, ResultContainer
 	public boolean isDisabled();
 
 	public String getLabel();
+
+	public TestSuiteRunner run( StringToObjectMap context, boolean async );
+
+	public void addTestSuiteRunListener( TestSuiteRunListener listener );
+
+	public void removeTestSuiteRunListener( TestSuiteRunListener listener );
 }

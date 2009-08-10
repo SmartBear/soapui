@@ -161,7 +161,7 @@ public class IncomingWss
 		this.wssConfig = config;
 	}
 
-	public void resolve( ResolveContext context )
+	public void resolve( ResolveContext<?> context )
 	{
 	}
 }

@@ -35,6 +35,7 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 {
 	private Map<String, TestProperty> properties;
 	private List<TestProperty> propertyList = new ArrayList<TestProperty>();
+	private Map<String, Set<String>> normalizedPropertyNames = new HashMap<String, Set<String>>();
 	private Set<TestPropertyListener> listeners = new HashSet<TestPropertyListener>();
 
 	protected WsdlTestStepWithProperties( WsdlTestCase testCase, TestStepConfig config, boolean hasEditor,
@@ -58,7 +59,7 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 
 	public TestProperty getProperty( String name )
 	{
-		return properties == null || name == null ? null : properties.get( name.toUpperCase() );
+		return properties == null || name == null ? null : properties.get( getPropertyKeyName( name ) );
 	}
 
 	public String getPropertyValue( String name )
@@ -66,7 +67,7 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 		if( properties == null )
 			return null;
 
-		TestProperty testStepProperty = properties.get( name.toUpperCase() );
+		TestProperty testStepProperty = properties.get( getPropertyKeyName( name ) );
 		return testStepProperty == null ? null : testStepProperty.getValue();
 	}
 
@@ -75,7 +76,7 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 		if( properties == null )
 			return;
 
-		TestProperty testStepProperty = properties.get( name.toUpperCase() );
+		TestProperty testStepProperty = properties.get( getPropertyKeyName( name ) );
 		if( testStepProperty != null )
 		{
 			testStepProperty.setValue( value );
@@ -91,23 +92,47 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 	{
 		if( properties == null )
 			properties = new HashMap<String, TestProperty>();
+		
+		String name = property.getName();
+		String upper = name.toUpperCase();
+		
+		if( !normalizedPropertyNames.containsKey( upper ) )
+			normalizedPropertyNames.put( upper, new HashSet<String>() );
+		
+		normalizedPropertyNames.get( upper ).add( name );
 
-		properties.put( property.getName().toUpperCase(), property );
+		properties.put( name, property );
 		propertyList.add( property );
 
 		if( notify )
 		{
-			firePropertyAdded( property.getName() );
+			firePropertyAdded( name );
 		}
+	}
+	
+	private String getPropertyKeyName(String name)
+	{
+		if(properties.containsKey( name ))
+			return name;
+		
+		Set<String> props = normalizedPropertyNames.get( name.toUpperCase() );
+		if(props != null && !props.isEmpty())
+		{
+			return props.iterator().next();
+		}
+		return name;
 	}
 
 	protected TestProperty deleteProperty( String name, boolean notify )
 	{
 		if( properties != null )
 		{
-			TestProperty result = properties.remove( name.toUpperCase() );
+			name = getPropertyKeyName(name);
+			TestProperty result = properties.remove( name );
+			
 			if( result != null )
 			{
+				normalizedPropertyNames.get( name.toUpperCase() ).remove( name );
 				propertyList.remove( result );
 
 				if( notify )
@@ -124,14 +149,24 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 	{
 		if( properties == null )
 			return;
+		
+		oldName = getPropertyKeyName( oldName );
+		String upper = oldName.toUpperCase();
 
-		TestProperty testStepProperty = properties.get( oldName.toUpperCase() );
+		TestProperty testStepProperty = properties.get( oldName );
 		if( testStepProperty == null )
 			return;
 
-		properties.remove( oldName.toUpperCase() );
+		Set<String> props = normalizedPropertyNames.get( upper );
+		properties.remove( oldName );		
+		props.remove( oldName );
 		String newName = testStepProperty.getName();
-		properties.put( newName.toUpperCase(), testStepProperty );
+		properties.put( newName, testStepProperty );
+		
+		upper = newName.toUpperCase();
+		if( !normalizedPropertyNames.containsKey( upper ) )
+			normalizedPropertyNames.put( upper, new HashSet<String>() );
+		normalizedPropertyNames.get( upper ).add( newName );
 
 		firePropertyRenamed( oldName, newName );
 	}
@@ -206,7 +241,7 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 
 	public boolean hasProperty( String name )
 	{
-		return properties != null && properties.containsKey( name.toUpperCase() );
+		return properties != null && properties.containsKey( getPropertyKeyName( name ) );
 	}
 
 	public boolean hasProperties()

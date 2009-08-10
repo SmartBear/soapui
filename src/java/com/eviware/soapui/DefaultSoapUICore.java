@@ -31,13 +31,16 @@ import com.eviware.soapui.config.SoapuiSettingsDocumentConfig;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.monitor.JettyMockEngine;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.SecuritySettings;
 import com.eviware.soapui.settings.UISettings;
+import com.eviware.soapui.settings.WSISettings;
 import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.ClasspathHacker;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
 import com.eviware.soapui.support.types.StringList;
@@ -249,69 +252,78 @@ public class DefaultSoapUICore implements SoapUICore
 			list.add( "schema@http://www.w3.org/2001/XMLSchema" );
 			settings.setString( WsdlSettings.EXCLUDED_TYPES, list.toXml() );
 		}
-
-		if( !settings.isSet( WsdlSettings.NAME_WITH_BINDING ) )
-		{
-			settings.setBoolean( WsdlSettings.NAME_WITH_BINDING, true );
-		}
-
-		if( !settings.isSet( HttpSettings.MAX_CONNECTIONS_PER_HOST ) )
-		{
-			settings.setLong( HttpSettings.MAX_CONNECTIONS_PER_HOST, 500 );
-		}
-
-		if( !settings.isSet( HttpSettings.HTTP_VERSION ) )
-		{
-			settings.setString( HttpSettings.HTTP_VERSION, HttpSettings.HTTP_VERSION_1_1 );
-		}
-
-		if( !settings.isSet( HttpSettings.MAX_TOTAL_CONNECTIONS ) )
-		{
-			settings.setLong( HttpSettings.MAX_TOTAL_CONNECTIONS, 2000 );
-		}
-
-		if( !settings.isSet( HttpSettings.RESPONSE_COMPRESSION ) )
-		{
-			settings.setBoolean( HttpSettings.RESPONSE_COMPRESSION, true );
-		}
-
-		if( !settings.isSet( HttpSettings.LEAVE_MOCKENGINE ) )
-		{
-			settings.setBoolean( HttpSettings.LEAVE_MOCKENGINE, true );
-		}
-
-		if( !settings.isSet( UISettings.AUTO_SAVE_PROJECTS_ON_EXIT ) )
-		{
-			settings.setBoolean( UISettings.AUTO_SAVE_PROJECTS_ON_EXIT, true );
-		}
-
-		if( !settings.isSet( UISettings.SHOW_DESCRIPTIONS ) )
-		{
-			settings.setBoolean( UISettings.SHOW_DESCRIPTIONS, true );
-		}
-
-		if( !settings.isSet( WsaSettings.USE_DEFAULT_RELATES_TO ) )
-		{
-			settings.setBoolean( WsaSettings.USE_DEFAULT_RELATES_TO, true );
-		}
-
-		if( !settings.isSet( WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE ) )
-		{
-			settings.setBoolean( WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE, true );
-		}
-
-		if( !settings.isSet( UISettings.SHOW_STARTUP_PAGE ) )
-		{
-			settings.setBoolean( UISettings.SHOW_STARTUP_PAGE, true );
-		}
-
+		
 		if( settings.getString( HttpSettings.HTTP_VERSION, HttpSettings.HTTP_VERSION_1_1 ).equals(
 				HttpSettings.HTTP_VERSION_0_9 ) )
 		{
 			settings.setString( HttpSettings.HTTP_VERSION, HttpSettings.HTTP_VERSION_1_1 );
 		}
 
+		setIfNotSet( WsdlSettings.NAME_WITH_BINDING, true );
+		setIfNotSet( WsdlSettings.NAME_WITH_BINDING, 500 );
+		setIfNotSet( HttpSettings.HTTP_VERSION, HttpSettings.HTTP_VERSION_1_1 );
+		setIfNotSet( HttpSettings.MAX_TOTAL_CONNECTIONS, 2000 );
+		setIfNotSet( HttpSettings.RESPONSE_COMPRESSION, true );
+		setIfNotSet( HttpSettings.LEAVE_MOCKENGINE, true );
+		setIfNotSet( UISettings.AUTO_SAVE_PROJECTS_ON_EXIT, true );
+		setIfNotSet( UISettings.SHOW_DESCRIPTIONS, true );
+		setIfNotSet( WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS, true );
+		setIfNotSet( WsaSettings.USE_DEFAULT_RELATES_TO, true );
+		setIfNotSet( WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE, true );
+		setIfNotSet( UISettings.SHOW_STARTUP_PAGE, true );
+		setIfNotSet( UISettings.GC_INTERVAL, "60" );
+		setIfNotSet( WsdlSettings.CACHE_WSDLS, true );
+		setIfNotSet( WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES, true );
+		setIfNotSet( HttpSettings.RESPONSE_COMPRESSION, true );
+		setIfNotSet( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN, true );
+		setIfNotSet( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN, true );
+		setIfNotSet( HttpSettings.LEAVE_MOCKENGINE, true );
+		setIfNotSet( UISettings.AUTO_SAVE_INTERVAL, "0" );
+		setIfNotSet( UISettings.GC_INTERVAL, "60" );
+		setIfNotSet( UISettings.SHOW_STARTUP_PAGE, true );
+		setIfNotSet( WsaSettings.SOAP_ACTION_OVERRIDES_WSA_ACTION, false );
+		setIfNotSet( WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE, true );
+		setIfNotSet( WsaSettings.USE_DEFAULT_RELATES_TO, true );
+		setIfNotSet( WsaSettings.OVERRIDE_EXISTING_HEADERS, false );
+		setIfNotSet( WsaSettings.ENABLE_FOR_OPTIONAL, false );
+
+		boolean setWsiDir = false;
+		String wsiLocationString = settings.getString( WSISettings.WSI_LOCATION, null );
+		if( StringUtils.isNullOrEmpty( wsiLocationString ) )
+		{
+			setWsiDir = true;
+		} else {
+			File wsiFile = new File(wsiLocationString);
+			if (!wsiFile.exists())
+			{
+				setWsiDir = true;
+			}
+		}
+		if (setWsiDir)
+		{
+			String wsiDir = System.getProperty( "wsi.dir", new File( "." ).getAbsolutePath() );
+			settings.setString( WSISettings.WSI_LOCATION, wsiDir );
+		}
+		
 		return settings;
+	}
+
+	private void setIfNotSet( String id, boolean value )
+	{
+		if( !settings.isSet( id ) )
+			settings.setBoolean( id, true );
+	}
+
+	private void setIfNotSet( String id, String value )
+	{
+		if( !settings.isSet( id ) )
+			settings.setString( id, value );
+	}
+
+	private void setIfNotSet( String id, long value )
+	{
+		if( !settings.isSet( id ) )
+			settings.setLong( id, value );
 	}
 
 	/*
@@ -345,23 +357,7 @@ public class DefaultSoapUICore implements SoapUICore
 
 	protected void initDefaultSettings( Settings settings2 )
 	{
-		settings.setBoolean( WsdlSettings.CACHE_WSDLS, true );
-		settings.setBoolean( WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES, true );
 
-		settings.setString( HttpSettings.HTTP_VERSION, HttpSettings.HTTP_VERSION_1_1 );
-		settings.setBoolean( HttpSettings.RESPONSE_COMPRESSION, true );
-		settings.setBoolean( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN, true );
-		settings.setBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN, true );
-		settings.setBoolean( HttpSettings.LEAVE_MOCKENGINE, true );
-
-		settings.setString( UISettings.AUTO_SAVE_INTERVAL, "0" );
-		settings.setBoolean( UISettings.SHOW_STARTUP_PAGE, true );
-
-		settings.setBoolean( WsaSettings.SOAP_ACTION_OVERRIDES_WSA_ACTION, false );
-		settings.setBoolean( WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE, true );
-		settings.setBoolean( WsaSettings.USE_DEFAULT_RELATES_TO, true );
-		settings.setBoolean( WsaSettings.OVERRIDE_EXISTING_HEADERS, false );
-		settings.setBoolean( WsaSettings.ENABLE_FOR_OPTIONAL, false );
 	}
 
 	/*
@@ -488,9 +484,14 @@ public class DefaultSoapUICore implements SoapUICore
 	public MockEngine getMockEngine()
 	{
 		if( mockEngine == null )
-			mockEngine = new MockEngine();
+			mockEngine = buildMockEngine();
 
 		return mockEngine;
+	}
+
+	protected MockEngine buildMockEngine()
+	{
+		return new JettyMockEngine();
 	}
 
 	/*

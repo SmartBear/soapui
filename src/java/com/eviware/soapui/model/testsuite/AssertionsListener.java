@@ -23,4 +23,6 @@ public interface AssertionsListener
 	public void assertionAdded( TestAssertion assertion );
 
 	public void assertionRemoved( TestAssertion assertion );
+
+	public void assertionMoved( TestAssertion assertion, int ix, int offset );
 }

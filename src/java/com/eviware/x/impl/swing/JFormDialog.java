@@ -15,7 +15,6 @@ package com.eviware.x.impl.swing;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.util.Arrays;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -23,12 +22,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JButtonBar;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.x.form.ValidationMessage;
+import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
 
@@ -37,6 +38,7 @@ public class JFormDialog extends SwingXFormDialog
 	private JDialog dialog;
 	private SwingXFormImpl form;
 	private JButtonBar buttons;
+	private boolean resized;
 
 	public JFormDialog( String name, SwingXFormImpl form, ActionList actions, String description, ImageIcon icon )
 	{
@@ -67,6 +69,17 @@ public class JFormDialog extends SwingXFormDialog
 		form.setValues( values );
 	}
 
+	public void setSize( int i, int j )
+	{
+		dialog.setSize( i, j );
+		resized = true;
+	}
+
+	public XForm[] getForms()
+	{
+		return new XForm[] { form };
+	}
+
 	public StringToStringMap getValues()
 	{
 		StringToStringMap result = new StringToStringMap();
@@ -82,17 +95,20 @@ public class JFormDialog extends SwingXFormDialog
 
 	public void setVisible( boolean visible )
 	{
-		dialog.pack();
-		if( dialog.getHeight() < 270 )
+		if( !resized )
 		{
-			dialog.setSize( new Dimension( dialog.getWidth(), 270 ) );
-		}
+			dialog.pack();
+			if( dialog.getHeight() < 270 )
+			{
+				dialog.setSize( new Dimension( dialog.getWidth(), 270 ) );
+			}
 
-		if( dialog.getWidth() < 450 )
-		{
-			dialog.setSize( new Dimension( 450, dialog.getHeight() ) );
+			if( dialog.getWidth() < 450 )
+			{
+				dialog.setSize( new Dimension( 450, dialog.getHeight() ) );
+			}
 		}
-
+		
 		UISupport.centerDialog( dialog );
 		dialog.setVisible( visible );
 	}
@@ -138,11 +154,11 @@ public class JFormDialog extends SwingXFormDialog
 
 	public int getValueIndex( String name )
 	{
-		String[] options = form.getOptions( name );
+		Object[] options = form.getOptions( name );
 		if( options == null )
 			return -1;
 
-		return Arrays.asList( options ).indexOf( form.getComponentValue( name ) );
+		return StringUtils.toStringList( options ).indexOf( form.getComponentValue( name ) );
 	}
 
 	public boolean show()

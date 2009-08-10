@@ -38,7 +38,7 @@ public class CloneRestRequestAction extends AbstractSoapUIAction<RestRequest>
 		if( name == null )
 			return;
 
-		RestRequest newRequest = request.getResource().cloneRequest( request, name );
+		RestRequest newRequest = request.getRestMethod().cloneRequest( request, name );
 
 		UISupport.selectAndShow( newRequest );
 	}

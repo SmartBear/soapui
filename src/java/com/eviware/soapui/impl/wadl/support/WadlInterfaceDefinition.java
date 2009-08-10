@@ -13,11 +13,12 @@
 package com.eviware.soapui.impl.wadl.support;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.support.definition.DefinitionLoader;
 import com.eviware.soapui.impl.support.definition.support.XmlSchemaBasedInterfaceDefinition;
-import com.sun.research.wadl.x2006.x10.ApplicationDocument;
+import net.java.dev.wadl.x2009.x02.ApplicationDocument;
 
 public class WadlInterfaceDefinition extends XmlSchemaBasedInterfaceDefinition<RestService>
 {
@@ -31,7 +32,8 @@ public class WadlInterfaceDefinition extends XmlSchemaBasedInterfaceDefinition<R
 
 	public WadlInterfaceDefinition load( DefinitionLoader loader ) throws Exception
 	{
-		applicationDocument = ( ApplicationDocument )loader.loadXmlObject( loader.getBaseURI(), null );
+		XmlObject obj = loader.loadXmlObject( loader.getBaseURI(), null );
+		applicationDocument = ( ApplicationDocument )obj.changeType( ApplicationDocument.type );
 
 		if( !loader.isAborted() )
 		{

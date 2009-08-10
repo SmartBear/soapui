@@ -14,11 +14,14 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -30,22 +33,22 @@ import javax.swing.event.CaretListener;
 import javax.swing.text.Document;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.SyntaxScheme;
-import org.fife.ui.rtextarea.LineNumberBorder;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
-import org.syntax.jedit.KeywordMap;
-import org.syntax.jedit.tokenmarker.GroovyTokenMarker;
-import org.syntax.jedit.tokenmarker.Token;
 
-import com.eviware.soapui.StandaloneSoapUICore;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.actions.FindAndReplaceDialog;
 import com.eviware.soapui.support.actions.FindAndReplaceable;
 import com.eviware.soapui.support.components.JEditorStatusBar.JEditorStatusBarTarget;
+import com.eviware.soapui.support.scripting.groovy.GroovyScriptEngineFactory;
+import com.eviware.soapui.support.scripting.groovy.SoapUIGroovyScriptEngine;
+import com.eviware.soapui.support.scripting.js.JsScriptEngineFactory;
 import com.eviware.soapui.support.swing.RSyntaxAreaPopupMenu;
 
 /**
@@ -54,7 +57,7 @@ import com.eviware.soapui.support.swing.RSyntaxAreaPopupMenu;
  * @author ole.matzura
  */
 
-public class GroovyEditor extends JPanel implements JEditorStatusBarTarget
+public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, PropertyChangeListener
 {
 	private RSyntaxTextArea editArea;
 	private GroovyEditorModel model;
@@ -62,6 +65,7 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget
 	private GroovyDocumentListener groovyDocumentListener;
 	private RTextScrollPane scrollPane;
 	private JCheckBoxMenuItem toggleLineNumbersMenuItem;
+	private boolean updating;
 
 	// private JPanel lineNumbersPanel;
 
@@ -69,21 +73,26 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget
 	{
 		super( new BorderLayout() );
 		this.model = model;
+		
+		model.addPropertyChangeListener( this );
 
 		Settings settings = model.getSettings();
 		Font editorFont = UISupport.getEditorFont( settings );
 
 		editArea = new RSyntaxTextArea();
-		editArea.restoreDefaultSyntaxHighlightingColorScheme();
+		editArea.restoreDefaultSyntaxScheme();
 
-		setEditorFont( editorFont );
-
-		editArea.setSyntaxEditingStyle( RSyntaxTextArea.GROOVY_SYNTAX_STYLE );
+		String defaultScriptLanguage = ((WsdlProject)ModelSupport.getModelItemProject( model.getModelItem() )).getDefaultScriptLanguage();
+		if( defaultScriptLanguage.equals( GroovyScriptEngineFactory.ID ))
+			editArea.setSyntaxEditingStyle( SyntaxConstants.SYNTAX_STYLE_GROOVY );
+		else if( defaultScriptLanguage.equals( JsScriptEngineFactory.ID ))
+			editArea.setSyntaxEditingStyle( SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT );
+		
 		editArea.setBorder( BorderFactory.createMatteBorder( 0, 2, 0, 0, Color.WHITE ) );
 
 		editArea.setText( model.getScript() );
 		editArea.setCaretPosition( 0 );
-		editArea.setCurrentLineHighlightEnabled( false );
+		editArea.setHighlightCurrentLine( false );
 		Action runAction = model.getRunAction();
 		if( runAction != null )
 		{
@@ -102,7 +111,9 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget
 		settingsListener = new InternalSettingsListener();
 		settings.addSettingsListener( settingsListener );
 
-		scrollPane = new RTextScrollPane( 500, 300, editArea, true );
+		//scrollPane = new RTextScrollPane( 500, 300, editArea, true );
+		scrollPane = new RTextScrollPane( editArea, true );
+		scrollPane.setPreferredSize(new Dimension(500, 300));
 		add( scrollPane );
 
 		UISupport.addPreviewCorner( scrollPane, true );
@@ -120,7 +131,7 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget
 		popup.addSeparator();
 		popup.add( new GoToLineAction() );
 
-		toggleLineNumbersMenuItem = new JCheckBoxMenuItem( "Show Line Numbers", scrollPane.areLineNumbersEnabled() );
+		toggleLineNumbersMenuItem = new JCheckBoxMenuItem( "Show Line Numbers", scrollPane.getLineNumbersEnabled() );
 		toggleLineNumbersMenuItem.setAccelerator( UISupport.getKeyStroke( "alt L" ) );
 		toggleLineNumbersMenuItem.addActionListener( new ActionListener()
 		{
@@ -134,14 +145,22 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget
 		{
 			public void actionPerformed( ActionEvent e )
 			{
-				enableLineNumbers( !scrollPane.areLineNumbersEnabled() );
+				enableLineNumbers( !scrollPane.getLineNumbersEnabled() );
 			}
 		} );
 
 		popup.add( toggleLineNumbersMenuItem );
-		editArea.setComponentPopupMenu( popup );
+		editArea.setPopupMenu( popup );
 
 		enableLineNumbers( settings.getBoolean( UISettings.SHOW_GROOVY_LINE_NUMBERS ) );
+	}
+
+	@Override
+	public void setEnabled( boolean enabled )
+	{
+		super.setEnabled( enabled );
+		
+		editArea.setEnabled( enabled );
 	}
 
 	public void enableLineNumbers( boolean enable )
@@ -149,9 +168,9 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget
 		scrollPane.setLineNumbersEnabled( enable );
 		try
 		{
-			if( scrollPane.areLineNumbersEnabled() )
+			/*if( scrollPane.getLineNumbersEnabled() )
 				( ( LineNumberBorder )scrollPane.getViewportBorder() )
-						.setBackground( StandaloneSoapUICore.SoapUITheme.BACKGROUND_COLOR );
+						.setBackground( StandaloneSoapUICore.SoapUITheme.BACKGROUND_COLOR );*/
 		}
 		catch( Exception e )
 		{
@@ -160,20 +179,6 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget
 
 		toggleLineNumbersMenuItem.setSelected( enable );
 	}
-
-	// private JComponent buildLineNumbers()
-	// {
-	// editArea.getInputHandler().addKeyBinding( "A+L", new ActionListener() {
-	//
-	// public void actionPerformed( ActionEvent e )
-	// {
-	// lineNumbersPanel.setVisible( !lineNumbersPanel.isVisible() );
-	// toggleLineNumbersMenuItem.setSelected( lineNumbersPanel.isVisible() );
-	// }} );
-	//
-	// lineNumbersPanel = new LineNumbersPanel( editArea );
-	// return lineNumbersPanel;
-	// }
 
 	public RSyntaxTextArea getEditArea()
 	{
@@ -185,16 +190,11 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget
 		if( model != null )
 		{
 			model.getSettings().removeSettingsListener( settingsListener );
+			model.removePropertyChangeListener( this );
 		}
+
 		model = null;
 		editArea.getDocument().removeDocumentListener( groovyDocumentListener );
-		// editArea.getInputHandler().removeAllKeyBindings();
-		// editArea.getRightClickPopup().removeAll();
-		// for( PopupMenuListener listener :
-		// editArea.getRightClickPopup().getPopupMenuListeners() )
-		// {
-		// editArea.getRightClickPopup().removePopupMenuListener( listener );
-		// }
 	}
 
 	public void selectError( String message )
@@ -229,25 +229,14 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget
 		}
 	}
 
-	private KeywordMap initKeywords()
-	{
-		KeywordMap keywords = GroovyTokenMarker.getKeywords();
-
-		String[] kw = model.getKeywords();
-		if( kw != null )
-		{
-			for( String keyword : kw )
-				keywords.add( keyword, Token.KEYWORD2 );
-		}
-
-		return keywords;
-	}
-
 	private final class GroovyDocumentListener extends DocumentListenerAdapter
 	{
 		public void update( Document document )
 		{
-			GroovyEditor.this.model.setScript( editArea.getText() );
+			if( !updating )
+			{
+				GroovyEditor.this.model.setScript( editArea.getText() );
+			}
 		}
 	}
 
@@ -267,14 +256,6 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget
 	public void setEditorFont( Font newFont )
 	{
 		editArea.setFont( newFont );
-
-		for( SyntaxScheme scheme : editArea.getSyntaxHighlightingColorScheme().syntaxSchemes )
-		{
-			if( scheme != null )
-			{
-				scheme.font = newFont;
-			}
-		}
 	}
 
 	public void addCaretListener( CaretListener listener )
@@ -374,6 +355,16 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget
 		public String getSelectedText()
 		{
 			return editArea.getSelectedText();
+		}
+	}
+
+	public void propertyChange( PropertyChangeEvent evt )
+	{
+		if( evt.getPropertyName().equals( "script" ))
+		{
+			updating = true;
+			editArea.setText( String.valueOf( evt.getNewValue() ));
+			updating = false;
 		}
 	}
 }

@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlAttachmentContainer;
 
 /**
@@ -27,9 +28,9 @@ import com.eviware.soapui.impl.wsdl.WsdlAttachmentContainer;
 
 public class RequestFileAttachment extends FileAttachment<AbstractHttpRequest<?>>
 {
-	public RequestFileAttachment( AttachmentConfig config, AbstractHttpRequest<?> request )
+	public RequestFileAttachment( AttachmentConfig config, AbstractHttpRequestInterface<?> request )
 	{
-		super( request, config );
+		super( ( AbstractHttpRequest<?> )request, config );
 	}
 
 	public RequestFileAttachment( File file, boolean cache, AbstractHttpRequest<?> request ) throws IOException
@@ -39,7 +40,7 @@ public class RequestFileAttachment extends FileAttachment<AbstractHttpRequest<?>
 
 	public AttachmentEncoding getEncoding()
 	{
-		AbstractHttpRequest<?> request = getModelItem();
+		AbstractHttpRequestInterface<?> request = getModelItem();
 		if( request instanceof WsdlAttachmentContainer && ( ( WsdlAttachmentContainer )request ).isEncodeAttachments() )
 			return ( ( WsdlAttachmentContainer )request ).getAttachmentEncoding( getPart() );
 		else

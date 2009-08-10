@@ -27,7 +27,6 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -131,6 +130,13 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 			{
 				getConfig().removeAssertion( ix );
 			}
+
+			public TestAssertionConfig insertAssertion( TestAssertionConfig source, int ix )
+			{
+				TestAssertionConfig conf = getConfig().insertNewAssertion( ix );
+				conf.set( source );
+				return conf;
+			}
 		} );
 	}
 
@@ -146,11 +152,8 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 
 	public void setResponse( HttpResponse response, SubmitContext context )
 	{
-		WsdlResponse oldResponse = getResponse();
 		super.setResponse( response, context );
-
-		if( response != oldResponse )
-			assertResponse( context );
+		assertResponse( context );
 	}
 
 	public void assertResponse( SubmitContext context )
@@ -158,12 +161,15 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 		if( notifier == null )
 			notifier = new PropertyChangeNotifier();
 
-		messageExchange = new WsdlResponseMessageExchange( this );
+		messageExchange = getResponse() == null ? null : new WsdlResponseMessageExchange( this );
 
-		// assert!
-		for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
+		if( messageExchange != null )
 		{
-			assertion.assertResponse( messageExchange, context );
+			// assert!
+			for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
+			{
+				assertion.assertResponse( messageExchange, context );
+			}
 		}
 
 		notifier.notifyChange();
@@ -237,6 +243,22 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 		}
 	}
 
+	public TestAssertion moveAssertion( int ix, int offset )
+	{
+		WsdlMessageAssertion assertion = getAssertionAt( ix );
+		PropertyChangeNotifier notifier = new PropertyChangeNotifier();
+
+		try
+		{
+			return assertionsSupport.moveAssertion( ix, offset );
+		}
+		finally
+		{
+			( ( WsdlMessageAssertion )assertion ).release();
+			notifier.notifyChange();
+		}
+	}
+
 	public AssertionStatus getAssertionStatus()
 	{
 		currentStatus = AssertionStatus.UNKNOWN;
@@ -255,8 +277,13 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 		if( cnt == 0 )
 			return currentStatus;
 
+		boolean hasEnabled = false;
+
 		for( int c = 0; c < cnt; c++ )
 		{
+			if( !getAssertionAt( c ).isDisabled() )
+				hasEnabled = true;
+
 			if( getAssertionAt( c ).getStatus() == AssertionStatus.FAILED )
 			{
 				currentStatus = AssertionStatus.FAILED;
@@ -264,7 +291,7 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 			}
 		}
 
-		if( currentStatus == AssertionStatus.UNKNOWN )
+		if( currentStatus == AssertionStatus.UNKNOWN && hasEnabled )
 			currentStatus = AssertionStatus.VALID;
 
 		return currentStatus;

@@ -19,8 +19,9 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.RestMethodConfig;
+import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
@@ -34,38 +35,33 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.A
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 
-public class RestTestRequest extends RestRequest implements Assertable, TestRequest
+public class RestTestRequest extends RestRequest implements RestTestRequestInterface
 {
-	public static final String RESPONSE_PROPERTY = RestTestRequest.class.getName() + "@response";
-	public static final String STATUS_PROPERTY = RestTestRequest.class.getName() + "@status";
-
 	private ImageIcon validRequestIcon;
 	private ImageIcon failedRequestIcon;
 	private ImageIcon disabledRequestIcon;
 	private ImageIcon unknownRequestIcon;
 
 	private AssertionStatus currentStatus;
-	private HttpTestRequestStep testStep;
+	private RestTestRequestStep testStep;
 
 	private AssertionsSupport assertionsSupport;
 	private RestResponseMessageExchange messageExchange;
 	private final boolean forLoadTest;
 	private PropertyChangeNotifier notifier;
-	private RestResource restResource;
 
-	public RestTestRequest( RestResource resource, RestMethodConfig callConfig, HttpTestRequestStep testStep,
+	public RestTestRequest( RestMethod method, RestRequestConfig callConfig, RestTestRequestStep testStep,
 			boolean forLoadTest )
 	{
-		super( resource, callConfig, forLoadTest );
+		super( method, callConfig, forLoadTest );
 		this.forLoadTest = forLoadTest;
-
+		
 		setSettings( new XmlBeansSettingsImpl( this, testStep.getSettings(), callConfig.getSettings() ) );
 
 		this.testStep = testStep;
@@ -86,20 +82,13 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
 
 	protected void initIcons()
 	{
-		boolean isRest = getTestStep() instanceof RestTestRequestStep;
+		validRequestIcon = UISupport.createImageIcon( "/valid_rest_request.gif" );
+		failedRequestIcon = UISupport.createImageIcon( "/invalid_rest_request.gif" );
+		unknownRequestIcon = UISupport.createImageIcon( "/unknown_rest_request.gif" );
+		disabledRequestIcon = UISupport.createImageIcon( "/disabled_rest_request.gif" );
 
-		validRequestIcon = !isRest ? UISupport.createImageIcon( "/valid_http_request.gif" ) : UISupport
-				.createImageIcon( "/valid_rest_request.gif" );
-
-		failedRequestIcon = !isRest ? UISupport.createImageIcon( "/invalid_http_request.gif" ) : UISupport
-				.createImageIcon( "/invalid_rest_request.gif" );
-
-		unknownRequestIcon = !isRest ? UISupport.createImageIcon( "/unknown_http_request.gif" ) : UISupport
-				.createImageIcon( "/unknown_rest_request.gif" );
-
-		disabledRequestIcon = !isRest ? UISupport.createImageIcon( "/disabled_http_request.gif" ) : UISupport
-				.createImageIcon( "/disabled_rest_request.gif" );
-
+		// setIconAnimator(new RequestIconAnimator<RestTestRequest>(this,
+		// "/rest_request.gif", "/exec_rest_request", 4, "gif"));
 		setIconAnimator( new TestRequestIconAnimator( this ) );
 	}
 
@@ -121,6 +110,14 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
 			{
 				getConfig().removeAssertion( ix );
 			}
+
+			public TestAssertionConfig insertAssertion( TestAssertionConfig source, int ix )
+			{
+				TestAssertionConfig conf = getConfig().insertNewAssertion( ix );
+				conf.set( source );
+				return conf;
+			}
+
 		} );
 	}
 
@@ -136,11 +133,8 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
 
 	public void setResponse( HttpResponse response, SubmitContext context )
 	{
-		HttpResponse oldResponse = getResponse();
 		super.setResponse( response, context );
-
-		if( response != oldResponse )
-			assertResponse( context );
+		assertResponse( context );
 	}
 
 	public void assertResponse( SubmitContext context )
@@ -148,12 +142,15 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
 		if( notifier == null )
 			notifier = new PropertyChangeNotifier();
 
-		messageExchange = new RestResponseMessageExchange( this );
+		messageExchange = getResponse() == null ? null :new RestResponseMessageExchange( this );
 
-		// assert!
-		for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
+		if( messageExchange != null )
 		{
-			assertion.assertResponse( messageExchange, context );
+			// assert!
+			for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
+			{
+				assertion.assertResponse( messageExchange, context );
+			}
 		}
 
 		notifier.notifyChange();
@@ -219,6 +216,21 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
 		{
 			assertionsSupport.removeAssertion( ( WsdlMessageAssertion )assertion );
 
+		}
+		finally
+		{
+			( ( WsdlMessageAssertion )assertion ).release();
+			notifier.notifyChange();
+		}
+	}
+
+	public TestAssertion moveAssertion( int ix, int offset )
+	{
+		PropertyChangeNotifier notifier = new PropertyChangeNotifier();
+		WsdlMessageAssertion assertion = getAssertionAt( ix );
+		try
+		{
+			return assertionsSupport.moveAssertion( ix, offset );
 		}
 		finally
 		{
@@ -299,7 +311,7 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
 	 * Called when a testrequest is moved in a testcase
 	 */
 
-	public void updateConfig( RestMethodConfig request )
+	public void updateConfig( RestRequestConfig request )
 	{
 		super.updateConfig( request );
 
@@ -318,7 +330,7 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
 		return getResponseContentAsXml();
 	}
 
-	public HttpTestRequestStep getTestStep()
+	public RestTestRequestStep getTestStep()
 	{
 		return testStep;
 	}
@@ -331,16 +343,15 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
 	@Override
 	public RestResource getOperation()
 	{
-		return testStep instanceof RestTestRequestStep ? ( ( RestTestRequestStep )testStep ).getResource() : null;
+		return testStep instanceof RestTestRequestStepInterface ? ( ( RestTestRequestStepInterface )testStep )
+				.getResource() : null;
 	}
 
 	protected static class TestRequestIconAnimator extends RequestIconAnimator<RestTestRequest>
 	{
-		public TestRequestIconAnimator( RestTestRequest modelItem )
+		public TestRequestIconAnimator( RestTestRequestInterface modelItem )
 		{
-			super( modelItem, modelItem.getTestStep() instanceof RestTestRequestStep ? "/rest_request.gif"
-					: "/http_request.gif", modelItem.getTestStep() instanceof RestTestRequestStep ? "/exec_rest_request"
-					: "/exec_http_request", 4, "gif" );
+			super( ( RestTestRequest )modelItem, "/rest_request.gif", "/exec_rest_request", 4, "gif" );
 		}
 
 		@Override
@@ -413,32 +424,34 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
 		{
 			setEndpoint( fullPath );
 		}
-		else
-		{
-
-		}
 	}
 
-	public void setResource( RestResource restResource )
+	public void setRestMethod( RestMethod restMethod )
 	{
-		if( this.restResource != null )
-			this.restResource.removePropertyChangeListener( this );
+		RestMethod old = this.getRestMethod();
+		
+		if( old != null )
+		{
+			old.getResource().removePropertyChangeListener( this );
+		}
 
-		RestResource old = this.restResource;
+		super.setRestMethod( restMethod );
 
-		this.restResource = restResource;
-
-		restResource.addPropertyChangeListener( this );
-
-		notifyPropertyChanged( "resource", old, restResource );
+		restMethod.getResource().addPropertyChangeListener( this );		
+		notifyPropertyChanged( "restMethod", old, restMethod );
 	}
 
 	public RestResource getResource()
 	{
-		return restResource;
+		return getRestMethod().getResource();
 	}
 
-	public void resolve( ResolveContext context )
+	public String getRestMethodName()
+	{
+		return getRestMethod().getName();
+	}
+
+	public void resolve( ResolveContext<?> context )
 	{
 		super.resolve( context );
 		assertionsSupport.resolve( context );
@@ -446,6 +459,8 @@ public class RestTestRequest extends RestRequest implements Assertable, TestRequ
 
 	public String getServiceName()
 	{
-		return testStep instanceof RestTestRequestStep ? ( ( RestTestRequestStep )testStep ).getService() : null;
+		return testStep instanceof RestTestRequestStepInterface ? ( ( RestTestRequestStepInterface )testStep )
+				.getService() : null;
 	}
+
 }

@@ -5,6 +5,35 @@
     </properties>
     <body>
     <section name="soapUI Releases">
+    
+      
+        <subsection name="Super Simple SoapUI Tests">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/ted.gif" alt="Web service testing tool"/>	    	    
+	    		</column>
+	    		<column align="left">
+	    		    <i>2009-08-04</i>
+	    	        <p>The post starts: "soapUI 3.0 comes with support for creating..."<br/>
+	    			<a href="http://tedwise.com/2009/08/04/super-simple-soapui-tests/">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	    </subsection>
+  
+    
+        <subsection name="Testing Web service- Simplifified with soapUI">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/monika.gif" alt="Web service testing tool"/>	    	    
+	    		</column>
+	    		<column align="left">
+	    		    <i>2009-06-29</i>
+	    	        <p>The post starts: "Testing web service during development time can be..."<br/>
+	    			<a href="http://memonika.blogspot.com/2009/05/testing-webservice-simplified-with.html">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	</subsection>
+    
      
     <subsection name="Testing Alfresco CMIS Web Services with soapUI">
 	    	<columns>

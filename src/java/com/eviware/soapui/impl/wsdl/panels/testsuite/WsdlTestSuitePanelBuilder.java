@@ -25,13 +25,13 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
  * @author Ole.Matzura
  */
 
-public class WsdlTestSuitePanelBuilder extends EmptyPanelBuilder<WsdlTestSuite>
+public class WsdlTestSuitePanelBuilder<T extends WsdlTestSuite> extends EmptyPanelBuilder<T>
 {
 	public WsdlTestSuitePanelBuilder()
 	{
 	}
 
-	public DesktopPanel buildDesktopPanel( WsdlTestSuite testSuite )
+	public DesktopPanel buildDesktopPanel( T testSuite )
 	{
 		return new WsdlTestSuiteDesktopPanel( testSuite );
 	}
@@ -41,7 +41,7 @@ public class WsdlTestSuitePanelBuilder extends EmptyPanelBuilder<WsdlTestSuite>
 		return true;
 	}
 
-	public Component buildOverviewPanel( WsdlTestSuite modelItem )
+	public Component buildOverviewPanel( T modelItem )
 	{
 		JPropertiesTable<WsdlTestSuite> table = new JPropertiesTable<WsdlTestSuite>( "TestSuite Properties", modelItem );
 

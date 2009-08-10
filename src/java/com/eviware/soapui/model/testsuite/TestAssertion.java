@@ -40,5 +40,5 @@ public interface TestAssertion extends ModelItem
 
 	public boolean isDisabled();
 
-	public void prepare( TestRunner testRunner, TestRunContext testRunContext ) throws Exception;
+	public void prepare( TestCaseRunner testRunner, TestCaseRunContext testRunContext ) throws Exception;
 }

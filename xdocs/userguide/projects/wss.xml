@@ -4,7 +4,7 @@
         <title>Web Service testing with WS-Security</title>
     </properties>
     <body>
-		<section name="WS-Security">
+		<section name="WS-Security Configuration">
 		<p>This document will give an overview on how to configure Web Services Security, WS-Security, related settings in soapUI. It does <i>not</i>
 		strive to explain WS-Security and related standards themselves, please seek this information elsewhere!</p>
 		
@@ -118,7 +118,7 @@
 		that can be added to a TestRequest step for validating that the WS-Security headers were valid in the received response.</p>
 		</subsection>
 
-		 <p><hr size="1"/>Next: <a href="encryption.html">Project Encryption</a></p>
+		 <p><hr size="1"/>Next: <a href="jdbcConnections.html">Project JDBC Connections</a></p>
 		</section>
     </body>
 </document>

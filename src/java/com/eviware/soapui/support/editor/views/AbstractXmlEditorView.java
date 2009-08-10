@@ -12,17 +12,17 @@
 
 package com.eviware.soapui.support.editor.views;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.EditorLocationListener;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.editor.xml.XmlEditorView;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Abstract base-class to be extended by XmlViews

@@ -29,6 +29,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public class HttpPrefs implements Prefs
 {
 	public static final String AUTHENTICATE_PREEMPTIVELY = "Authenticate Preemptively";
+	public static final String EXPECT_CONTINUE = "Expect Continue";
 	public static final String INCLUDE_REQUEST_IN_TIME_TAKEN = "Include request in time taken";
 	public static final String INCLUDE_RESPONSE_IN_TIME_TAKEN = "Include response in time taken";
 	public static final String REQUEST_COMPRESSION = "Request compression";
@@ -87,6 +88,8 @@ public class HttpPrefs implements Prefs
 					"Uses content-chunking for requests larger than threshold, blank to disable" );
 			httpForm.appendCheckBox( HttpPrefs.AUTHENTICATE_PREEMPTIVELY,
 					"Adds authentication information to outgoing request", true );
+			httpForm.appendCheckBox( HttpPrefs.EXPECT_CONTINUE,
+					"Activates 'Expect: 100-Continue' handshake for the entity enclosing methods", true );
 			httpForm.appendCheckBox( HttpPrefs.ENCODED_URLS, "Do not URL-escape service endpoints", true );
 			httpForm.appendTextField( HttpPrefs.BIND_ADDRESS, "Default local address to bind to when sending requests" );
 			httpForm.appendSeparator();
@@ -124,6 +127,7 @@ public class HttpPrefs implements Prefs
 		settings.setString( HttpSettings.USER_AGENT, httpValues.get( USER_AGENT_HEADER ) );
 		settings.setString( HttpSettings.REQUEST_COMPRESSION, httpValues.get( REQUEST_COMPRESSION ) );
 		settings.setString( HttpSettings.RESPONSE_COMPRESSION, httpValues.get( RESPONSE_COMPRESSION ) );
+		settings.setString( HttpSettings.EXPECT_CONTINUE, httpValues.get( EXPECT_CONTINUE ) );
 		settings
 				.setString( HttpSettings.DISABLE_RESPONSE_DECOMPRESSION, httpValues.get( DISABLE_RESPONSE_DECOMPRESSION ) );
 		settings.setString( HttpSettings.CLOSE_CONNECTIONS, httpValues.get( CLOSE_CONNECTIONS_AFTER_REQUEST ) );
@@ -159,6 +163,7 @@ public class HttpPrefs implements Prefs
 		httpValues.put( RESPONSE_COMPRESSION, settings.getString( HttpSettings.RESPONSE_COMPRESSION, null ) );
 		httpValues.put( DISABLE_RESPONSE_DECOMPRESSION, settings.getString( HttpSettings.DISABLE_RESPONSE_DECOMPRESSION,
 				null ) );
+		httpValues.put( EXPECT_CONTINUE, settings.getString( HttpSettings.EXPECT_CONTINUE, null ) );
 		httpValues.put( CLOSE_CONNECTIONS_AFTER_REQUEST, settings.getString( HttpSettings.CLOSE_CONNECTIONS, null ) );
 		httpValues.put( AUTHENTICATE_PREEMPTIVELY, settings.getString( HttpSettings.AUTHENTICATE_PREEMPTIVELY, null ) );
 		httpValues.put( INCLUDE_REQUEST_IN_TIME_TAKEN, settings.getString( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN,

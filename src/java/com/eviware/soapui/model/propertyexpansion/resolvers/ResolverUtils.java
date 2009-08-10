@@ -17,6 +17,7 @@ import org.w3c.dom.Node;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.TestPropertyHolder;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
@@ -60,7 +61,7 @@ public class ResolverUtils
 			if( property != null )
 			{
 				return context == null ? ResolverUtils.extractXPathPropertyValue( property, xpath ) : ResolverUtils
-						.extractXPathPropertyValue( property, PropertyExpansionUtils.expandProperties( context, xpath ) );
+						.extractXPathPropertyValue( property, PropertyExpander.expandProperties( context, xpath ) );
 			}
 		}
 		else

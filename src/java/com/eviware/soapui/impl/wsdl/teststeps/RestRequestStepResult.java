@@ -16,9 +16,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
-import com.eviware.soapui.impl.rest.support.MediaTypeHandlerRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
@@ -54,18 +51,17 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 	private boolean addedAction;
 	private List<AssertedXPath> assertedXPaths;
 
-	public RestRequestStepResult( HttpTestRequestStep step )
+	public RestRequestStepResult( HttpTestRequestStepInterface step )
 	{
-		super( step );
-	}
-
-	public RestRequestStepResult( RestTestRequestStep step )
-	{
-		super( step );
+		super( ( WsdlTestStep )step );
 	}
 
 	public Operation getOperation()
 	{
+		if( response == null )
+		{
+			response = null;
+		}
 		return response == null ? null : response.getRequest().getOperation();
 	}
 
@@ -223,7 +219,7 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 			{
 				if( headers.get( key ) != null )
 					writer.println( key + ": " + headers.get( key ) );
-			}
+		}
 
 			String respContent = response.getContentAsString();
 			if( respContent != null )
@@ -285,14 +281,7 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 
 	public String getResponseContentAsXml()
 	{
-		if( response.getProperty( RestRequest.REST_XML_RESPONSE ) == null )
-		{
-			MediaTypeHandler typeHandler = MediaTypeHandlerRegistry.getTypeHandler( response.getContentType() );
-			if( typeHandler != null )
-				response.setProperty( RestRequest.REST_XML_RESPONSE, typeHandler.createXmlRepresentation( response ) );
-		}
-
-		return response.getProperty( RestRequest.REST_XML_RESPONSE );
+		return response.getContentAsXml();
 	}
 
 	public StringToStringMap getResponseHeaders()

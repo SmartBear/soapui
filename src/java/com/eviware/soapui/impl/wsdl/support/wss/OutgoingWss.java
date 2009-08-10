@@ -200,7 +200,7 @@ public class OutgoingWss implements PropertyExpansionContainer
 		return result.toArray();
 	}
 
-	public void resolve( ResolveContext context )
+	public void resolve( ResolveContext<?> context )
 	{
 	}
 }

@@ -40,7 +40,6 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.QueryMatchMockOperationDispatcher;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResultMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
@@ -57,6 +56,7 @@ import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunner;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
@@ -75,8 +75,8 @@ import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.OperationTestStep;
 import com.eviware.soapui.model.testsuite.RequestAssertedMessageExchange;
 import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
@@ -102,6 +102,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	private WsdlTestMockService mockService;
 	private WsdlMockRunner mockRunner;
 	private WsdlMockResponse mockResponse;
+	private WsdlMockResult lastResult;
 
 	private AssertionsSupport assertionsSupport;
 	private InternalMockRunListener mockRunListener;
@@ -212,6 +213,13 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 			{
 				mockResponseStepConfig.removeAssertion( ix );
 			}
+
+			public TestAssertionConfig insertAssertion( TestAssertionConfig source, int ix )
+			{
+				TestAssertionConfig conf = mockResponseStepConfig.insertNewAssertion( ix );
+				conf.set( source );
+				return conf;
+			}
 		} );
 	}
 
@@ -281,12 +289,18 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	}
 
 	@Override
-	public void prepare( TestRunner testRunner, TestRunContext testRunContext ) throws Exception
+	public void prepare( TestCaseRunner testRunner, TestCaseRunContext testRunContext ) throws Exception
 	{
 		super.prepare( testRunner, testRunContext );
 
-		LoadTestRunner loadTestRunner = ( LoadTestRunner )testRunContext.getProperty( TestRunContext.LOAD_TEST_RUNNER );
+		LoadTestRunner loadTestRunner = ( LoadTestRunner )testRunContext
+				.getProperty( TestCaseRunContext.LOAD_TEST_RUNNER );
 		mockRunListener = new InternalMockRunListener();
+
+		for( TestAssertion assertion : getAssertionList() )
+		{
+			assertion.prepare( testRunner, testRunContext );
+		}
 
 		if( loadTestRunner == null )
 		{
@@ -319,18 +333,26 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		}
 	}
 
-	protected void initTestMockResponse( TestRunContext testRunContext )
+	protected void initTestMockResponse( TestCaseRunContext testRunContext )
 	{
 		if( StringUtils.hasContent( getQuery() ) && StringUtils.hasContent( getMatch() ) )
 		{
-			testMockResponse = mockOperation.addNewMockResponse( "MockResponse" + Math.random(), false );
-			testMockResponse.setConfig( mockResponse.getConfig() );
+			String name = "MockResponse" + Math.random();
+			testMockResponse = mockOperation.addNewMockResponse( name, false );
+			testMockResponse.setConfig( ( MockResponseConfig )mockResponse.getConfig().copy() );
+			testMockResponse.setName( name );
 
 			QueryMatchMockOperationDispatcher dispatcher = ( QueryMatchMockOperationDispatcher )mockOperation
 					.setDispatchStyle( MockOperationDispatchStyleConfig.QUERY_MATCH.toString() );
+
+			for( QueryMatchMockOperationDispatcher.Query query : dispatcher.getQueries() )
+				dispatcher.deleteQuery( query );
+
+			mockOperation.setDefaultResponse( null );
+
 			QueryMatchMockOperationDispatcher.Query query = dispatcher.addQuery( "Match" );
-			query.setQuery( PropertyExpansionUtils.expandProperties( testRunContext, getQuery() ) );
-			query.setMatch( PropertyExpansionUtils.expandProperties( testRunContext, getMatch() ) );
+			query.setQuery( PropertyExpander.expandProperties( testRunContext, getQuery() ) );
+			query.setMatch( PropertyExpander.expandProperties( testRunContext, getMatch() ) );
 			query.setResponse( testMockResponse.getName() );
 		}
 		else
@@ -340,9 +362,9 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		}
 	}
 
-	public TestStepResult run( TestRunner testRunner, TestRunContext context )
+	public TestStepResult run( TestCaseRunner testRunner, TestCaseRunContext context )
 	{
-		LoadTestRunner loadTestRunner = ( LoadTestRunner )context.getProperty( TestRunContext.LOAD_TEST_RUNNER );
+		LoadTestRunner loadTestRunner = ( LoadTestRunner )context.getProperty( TestCaseRunContext.LOAD_TEST_RUNNER );
 		if( loadTestRunner == null )
 		{
 			return internalRun( ( WsdlTestRunContext )context );
@@ -373,6 +395,9 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 		try
 		{
+			this.lastResult = null;
+			mockResponse.setMockResult( null );
+			
 			result.startTimer();
 
 			if( !mockRunListener.hasResult() )
@@ -392,16 +417,19 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 				mockRunner.stop();
 
 			AssertedWsdlMockResultMessageExchange messageExchange = new AssertedWsdlMockResultMessageExchange(
-					mockRunListener.getResult() );
+					mockRunListener.getLastResult() );
 			result.setMessageExchange( messageExchange );
 
-			if( mockRunListener.getResult() != null )
+			if( mockRunListener.getLastResult() != null )
 			{
+				lastResult = mockRunListener.getLastResult();
+				mockResponse.setMockResult( lastResult );
+
 				context.setProperty( AssertedXPathsContainer.ASSERTEDXPATHSCONTAINER_PROPERTY, messageExchange );
-				assertResult( mockRunListener.getResult(), context );
+				assertResult( lastResult, context );
 			}
 
-			if( mockRunListener.getResult() == null )
+			if( mockRunListener.getLastResult() == null )
 			{
 				if( mockRunListener.isCanceled() )
 				{
@@ -427,12 +455,13 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 					else
 						for( int c = 0; c < getAssertionCount(); c++ )
 						{
-							AssertionError[] errors = getAssertionAt( c ).getErrors();
+							WsdlMessageAssertion assertion = getAssertionAt( c );
+							AssertionError[] errors = assertion.getErrors();
 							if( errors != null )
 							{
 								for( AssertionError error : errors )
 								{
-									result.addMessage( error.getMessage() );
+									result.addMessage( "[" + assertion.getName() + "] " + error.getMessage() );
 								}
 							}
 						}
@@ -442,7 +471,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 					result.setStatus( TestStepStatus.OK );
 				}
 
-				mockRunListener.setResult( null );
+				mockRunListener.setLastResult( null );
 			}
 		}
 		catch( Exception e )
@@ -483,7 +512,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	}
 
 	@Override
-	public void finish( TestRunner testRunner, TestRunContext testRunContext )
+	public void finish( TestCaseRunner testRunner, TestCaseRunContext testRunContext )
 	{
 		if( mockRunListener != null )
 		{
@@ -491,14 +520,14 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 			mockRunListener = null;
 		}
 
+		if( startStepMockRunListener != null )
+		{
+			startStepMockRunListener.release();
+			startStepMockRunListener = null;
+		}
+
 		if( testMockResponse != null )
 		{
-			if( startStepMockRunListener != null )
-			{
-				startStepMockRunListener.release();
-				startStepMockRunListener = null;
-			}
-
 			if( testMockResponse != mockResponse )
 			{
 				mockOperation.removeMockResponse( testMockResponse );
@@ -518,8 +547,6 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		}
 	}
 
-	private WsdlMockResult lastResult;
-
 	public WsdlMockResult getLastResult()
 	{
 		return lastResult;
@@ -529,17 +556,19 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	{
 		private boolean canceled;
 		private boolean waiting;
+		private WsdlMockResult lastResult;
 
 		public synchronized void onMockResult( MockResult result )
 		{
 			// is this for us?
-			if( WsdlMockResponseTestStep.this.lastResult == null && waiting
+			if( this.lastResult == null && waiting
 					&& result.getMockResponse() == testMockResponse )
 			{
 				waiting = false;
-
+				System.out.println( "Got mockrequest to [" + getName() + "]" );
 				// save
-				this.setResult( ( WsdlMockResult )result );
+				this.lastResult = (WsdlMockResult)result;
+				notifyPropertyChanged( "lastResult", null, lastResult );
 
 				// stop runner -> NO, we can't stop, mockengine is still writing
 				// response..
@@ -547,12 +576,17 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 				// testMockResponse.setMockResult( null );
 
-				System.out.println( "Got mockrequest to [" + getName() + "]" );
+				
 				synchronized( this )
 				{
 					notifyAll();
 				}
 			}
+		}
+
+		public void setLastResult( WsdlMockResult lastResult )
+		{
+			this.lastResult = lastResult;
 		}
 
 		public void cancel()
@@ -568,12 +602,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 			// mockRunListener.onMockResult( null );
 		}
 
-		private void setResult( WsdlMockResult result )
-		{
-			WsdlMockResponseTestStep.this.lastResult = result;
-		}
-
-		public WsdlMockResult getResult()
+		public WsdlMockResult getLastResult()
 		{
 			return lastResult;
 		}
@@ -973,6 +1002,21 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		}
 	}
 
+	public TestAssertion moveAssertion( int ix, int offset )
+	{
+		PropertyChangeNotifier notifier = new PropertyChangeNotifier();
+		WsdlMessageAssertion assertion = getAssertionAt( ix );
+		try
+		{
+			return assertionsSupport.moveAssertion( ix, offset );
+		}
+		finally
+		{
+			( ( WsdlMessageAssertion )assertion ).release();
+			notifier.notifyChange();
+		}
+	}
+
 	public String getAssertableContent()
 	{
 		WsdlMockResult mockResult = getMockResponse().getMockResult();
@@ -1280,7 +1324,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public void resolve( ResolveContext context )
+	public void resolve( ResolveContext<?> context )
 	{
 		super.resolve( context );
 
@@ -1343,7 +1387,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	private class InternalTestRunListener extends TestRunListenerAdapter
 	{
 		@Override
-		public void beforeStep( TestRunner testRunner, TestRunContext runContext )
+		public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
 		{
 			if( runContext.getCurrentStep() == startTestStep && testMockResponse == null )
 			{
@@ -1376,31 +1420,30 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		}
 	}
 
-	private class StartStepMockRunListener extends MockRunListenerAdapter
+	private class StartStepMockRunListener implements PropertyChangeListener
 	{
-		private TestRunContext runContext;
-		private WsdlMockService mockService;
+		private TestCaseRunContext runContext;
+		private WsdlMockResponseTestStep wsdlMockResponseTestStep;
 
-		public StartStepMockRunListener( TestRunContext runContext, WsdlMockResponseTestStep wsdlMockResponseTestStep )
+		public StartStepMockRunListener( TestCaseRunContext runContext, WsdlMockResponseTestStep wsdlMockResponseTestStep )
 		{
 			this.runContext = runContext;
-			mockService = wsdlMockResponseTestStep.getMockResponse().getMockOperation().getMockService();
-			mockService.addMockRunListener( this );
-		}
-
-		@Override
-		public void onMockResult( MockResult result )
-		{
-			System.out.println( "Starting to listen for request to " + getName() );
-			initTestMockResponse( runContext );
-			mockRunListener.setWaiting( true );
+			this.wsdlMockResponseTestStep = wsdlMockResponseTestStep;
+			wsdlMockResponseTestStep.addPropertyChangeListener( "lastResult", this );
 		}
 
 		public void release()
 		{
-			mockService.removeMockRunListener( this );
-			mockService = null;
+			wsdlMockResponseTestStep.removePropertyChangeListener( "lastResult", this );
+			wsdlMockResponseTestStep = null;
 			runContext = null;
+		}
+
+		public void propertyChange( PropertyChangeEvent evt )
+		{
+			System.out.println( "Starting to listen for request to " + getName() );
+			initTestMockResponse( runContext );
+			mockRunListener.setWaiting( true );
 		}
 	}
 

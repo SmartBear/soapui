@@ -16,11 +16,10 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import com.eviware.soapui.config.RestMethodConfig;
+import com.eviware.soapui.config.HttpRequestConfig;
 import com.eviware.soapui.config.RestParametersConfig;
-import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
@@ -84,18 +83,14 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 		{
 			if( dialog.show() )
 			{
-				RestRequestStepConfig testStepConfig = RestRequestStepConfig.Factory.newInstance();
-				RestMethodConfig requestConfig = testStepConfig.addNewRestRequest();
-				requestConfig.setFullPath( dialog.getValue( Form.ENDPOINT ) );
-				requestConfig.setEndpoint( dialog.getValue( Form.ENDPOINT ) );
-				requestConfig.setMethod( dialog.getValue( Form.HTTPMETHOD ) );
-
-				new XmlBeansRestParamsTestPropertyHolder( testCase, requestConfig.addNewParameters() )
-						.addParameters( params );
+				HttpRequestConfig httpRequest = HttpRequestConfig.Factory.newInstance();
+				httpRequest.setEndpoint( dialog.getValue( Form.ENDPOINT ) );
+				httpRequest.setMethod( dialog.getValue( Form.HTTPMETHOD ) );
+				new XmlBeansRestParamsTestPropertyHolder( testCase, httpRequest.addNewParameters() ).addParameters( params );
 
 				TestStepConfig testStep = TestStepConfig.Factory.newInstance();
 				testStep.setType( HTTPREQUEST_TYPE );
-				testStep.setConfig( testStepConfig );
+				testStep.setConfig( httpRequest );
 				testStep.setName( dialog.getValue( Form.STEPNAME ) );
 
 				return testStep;
@@ -124,9 +119,8 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 		dialog = ADialogBuilder.buildDialog( Form.class );
 		dialog.getFormField( Form.STEPNAME ).addFormFieldValidator( new RequiredValidator() );
 		dialog.getFormField( Form.EXTRACTPARAMS ).setProperty( "action", new ExtractParamsAction() );
-		( ( XFormOptionsField )dialog.getFormField( Form.HTTPMETHOD ) ).setOptions( new Object[] {
-				RestRequest.RequestMethod.GET, RestRequest.RequestMethod.POST, RestRequest.RequestMethod.PUT,
-				RestRequest.RequestMethod.DELETE, RestRequest.RequestMethod.HEAD } );
+		( ( XFormOptionsField )dialog.getFormField( Form.HTTPMETHOD ) ).setOptions( RestRequestInterface.RequestMethod
+				.getMethods() );
 	}
 
 	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )

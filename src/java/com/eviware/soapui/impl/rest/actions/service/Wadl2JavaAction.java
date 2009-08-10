@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.rest.actions.service;
 
 import java.io.File;
-import java.io.IOException;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestService;
@@ -22,6 +21,7 @@ import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ArgumentBuilder;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolHost;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.settings.ToolsSettings;
 import com.eviware.soapui.support.Tools;
@@ -96,7 +96,7 @@ public class Wadl2JavaAction extends AbstractToolsAction<Interface>
 		toolHost.run( new ProcessToolRunner( builder, "WADL2Java", modelItem, args ) );
 	}
 
-	private ArgumentBuilder buildArgs( Interface modelItem ) throws IOException
+	private ArgumentBuilder buildArgs( Interface modelItem ) throws Exception
 	{
 		StringToStringMap values = dialog.getValues();
 		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ) );
@@ -112,7 +112,26 @@ public class Wadl2JavaAction extends AbstractToolsAction<Interface>
 		builder.addString( JAXB_CUSTOMIZATION, "-c" );
 
 		addToolArgs( values, builder );
-		builder.addArgs( getWsdlUrl( values, modelItem ) );
+		String wsdlUrl = getWadlUrl( values, ( RestService )modelItem );
+		if( PathUtils.isFilePath( wsdlUrl ))
+			wsdlUrl = new File( wsdlUrl ).toURI().toURL().toString();
+		builder.addArgs( wsdlUrl );
 		return builder;
+	}
+	
+	protected String getWadlUrl( StringToStringMap values, RestService modelItem ) throws Exception
+	{
+		String expandPath = PathUtils.expandPath( modelItem.getDefinition(), modelItem );
+		if( PathUtils.isHttpPath( expandPath ) && !modelItem.isGenerated())
+		{
+			return expandPath;
+		}
+		else
+		{
+			File tempFile = File.createTempFile( "tempdir", null );
+			String path = tempFile.getAbsolutePath();
+			tempFile.delete();
+			return modelItem.getDefinitionContext().export( path );
+		}
 	}
 }

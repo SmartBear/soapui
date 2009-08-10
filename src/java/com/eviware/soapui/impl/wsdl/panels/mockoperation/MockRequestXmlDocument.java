@@ -75,5 +75,9 @@ public class MockRequestXmlDocument extends AbstractXmlDocument implements XmlDo
 			oldXml = "";
 			fireXmlChanged( oldXml, xml );
 		}
+		else
+		{
+			fireXmlChanged( null, xml );
+		}
 	}
 }

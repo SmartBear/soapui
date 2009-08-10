@@ -23,7 +23,7 @@ import javax.mail.internet.MimeMultipart;
 import org.apache.commons.httpclient.methods.RequestEntity;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 
 /**
  * MimeMessage request class
@@ -35,9 +35,9 @@ public class RestRequestMimeMessageRequestEntity implements RequestEntity
 {
 	private final MimeMessage message;
 	private byte[] buffer;
-	private final RestRequest restRequest;
+	private final HttpRequestInterface<?> restRequest;
 
-	public RestRequestMimeMessageRequestEntity( MimeMessage message, RestRequest restRequest )
+	public RestRequestMimeMessageRequestEntity( MimeMessage message, HttpRequestInterface<?> restRequest )
 	{
 		this.message = message;
 		this.restRequest = restRequest;

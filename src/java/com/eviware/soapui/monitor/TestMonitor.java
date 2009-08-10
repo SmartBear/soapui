@@ -33,8 +33,8 @@ import com.eviware.soapui.model.testsuite.LoadTest;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.workspace.Workspace;
 
@@ -53,16 +53,16 @@ public class TestMonitor
 	private InternalTestRunListener testRunListener = new InternalTestRunListener();
 	private InternalMockRunListener mockRunListener = new InternalMockRunListener();
 	private InternalLoadTestRunListener loadTestRunListener = new InternalLoadTestRunListener();
-	private Set<TestRunner> runningTestCases = new HashSet<TestRunner>();
+	private Set<TestCaseRunner> runningTestCases = new HashSet<TestCaseRunner>();
 	private Set<LoadTestRunner> runningLoadTests = new HashSet<LoadTestRunner>();
 	private Set<MockRunner> runningMockServices = new HashSet<MockRunner>();
-	private Map<String, TestRunner.Status> runStatusHistory = new HashMap<String, TestRunner.Status>();
+	private Map<String, TestCaseRunner.Status> runStatusHistory = new HashMap<String, TestCaseRunner.Status>();
 
 	public TestMonitor()
 	{
 	}
 
-	public TestRunner.Status getLastRunStatus( TestCase testCase )
+	public TestCaseRunner.Status getLastRunStatus( TestCase testCase )
 	{
 		return runStatusHistory.get( testCase.getId() );
 	}
@@ -95,7 +95,7 @@ public class TestMonitor
 		}
 	}
 
-	protected void notifyTestCaseStarted( TestRunner runner )
+	protected void notifyTestCaseStarted( TestCaseRunner runner )
 	{
 		if( listeners.isEmpty() )
 			return;
@@ -107,7 +107,7 @@ public class TestMonitor
 		}
 	}
 
-	protected void notifyTestCaseFinished( TestRunner runner )
+	protected void notifyTestCaseFinished( TestCaseRunner runner )
 	{
 		if( listeners.isEmpty() )
 			return;
@@ -157,7 +157,7 @@ public class TestMonitor
 
 	public boolean hasRunningTestCase( TestCase testCase )
 	{
-		Iterator<TestRunner> iterator = runningTestCases.iterator();
+		Iterator<TestCaseRunner> iterator = runningTestCases.iterator();
 		while( iterator.hasNext() )
 		{
 			if( iterator.next().getTestCase() == testCase )
@@ -240,7 +240,7 @@ public class TestMonitor
 
 	private class InternalTestRunListener extends TestRunListenerAdapter
 	{
-		public void afterRun( TestRunner testRunner, TestRunContext runContext )
+		public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			runStatusHistory.put( testRunner.getTestCase().getId(), testRunner.getStatus() );
 
@@ -248,7 +248,7 @@ public class TestMonitor
 			notifyTestCaseFinished( testRunner );
 		}
 
-		public void beforeRun( TestRunner testRunner, TestRunContext runContext )
+		public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			runningTestCases.add( testRunner );
 			notifyTestCaseStarted( testRunner );
@@ -416,7 +416,7 @@ public class TestMonitor
 
 	public boolean hasRunningTests( WsdlProject project )
 	{
-		for( TestRunner testRunner : runningTestCases )
+		for( TestCaseRunner testRunner : runningTestCases )
 		{
 			if( testRunner.getTestCase().getTestSuite().getProject() == project )
 				return true;
@@ -439,7 +439,7 @@ public class TestMonitor
 
 	public void cancelAllTests( String reason )
 	{
-		for( TestRunner testRunner : runningTestCases )
+		for( TestCaseRunner testRunner : runningTestCases )
 		{
 			testRunner.cancel( reason );
 		}
@@ -455,16 +455,25 @@ public class TestMonitor
 		}
 	}
 
-	public TestRunner getTestRunner( WsdlTestCase testCase )
+	public TestCaseRunner getTestRunner( WsdlTestCase testCase )
 	{
-		Iterator<TestRunner> iterator = runningTestCases.iterator();
+		Iterator<TestCaseRunner> iterator = runningTestCases.iterator();
 		while( iterator.hasNext() )
 		{
-			TestRunner testRunner = iterator.next();
+			TestCaseRunner testRunner = iterator.next();
 			if( testRunner.getTestCase() == testCase )
 				return testRunner;
 		}
 
 		return null;
+	}
+
+	public boolean hasRunningLoadTest( TestSuite testSuite )
+	{
+		for( TestCase testCase : testSuite.getTestCaseList() )
+			if( hasRunningLoadTest( testCase ) )
+				return true;
+
+		return false;
 	}
 }

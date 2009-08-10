@@ -82,11 +82,6 @@ public class SettingsTestPropertyHolder implements MutableTestPropertyHolder, Ma
 		return propertyHolderSupport.getPropertyNames();
 	}
 
-	public List<TestProperty> getPropertyList()
-	{
-		return propertyHolderSupport.getPropertyList();
-	}
-
 	public String getPropertyValue( String name )
 	{
 		return propertyHolderSupport.getPropertyValue( name );
@@ -215,5 +210,10 @@ public class SettingsTestPropertyHolder implements MutableTestPropertyHolder, Ma
 	public void setPropertiesLabel( String propertiesLabel )
 	{
 		this.propertiesLabel = propertiesLabel;
+	}
+
+	public List<TestProperty> getPropertyList()
+	{
+		return propertyHolderSupport.getPropertyList();
 	}
 }

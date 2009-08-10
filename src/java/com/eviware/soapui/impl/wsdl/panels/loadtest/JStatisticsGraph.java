@@ -203,8 +203,6 @@ public class JStatisticsGraph extends JComponent implements Scrollable
 					g.setColor( ERRORS_COLOR );
 				else if( i == Statistic.TPS.getIndex() + 1 )
 					g.setColor( TPS_COLOR );
-				else if( i == Statistic.LAST.getIndex() + 1 )
-					g.setColor( LAST_COLOR );
 				else if( i == Statistic.BPS.getIndex() + 1 )
 					g.setColor( BPS_COLOR );
 				else
@@ -241,8 +239,6 @@ public class JStatisticsGraph extends JComponent implements Scrollable
 		builder.addFixed( new JLabel( "Transaction/Sec", createLegendIcon( TPS_COLOR ), JLabel.LEFT ) );
 		builder.addUnrelatedGap();
 		builder.addFixed( new JLabel( "Bytes/Sec", createLegendIcon( BPS_COLOR ), JLabel.LEFT ) );
-		builder.addUnrelatedGap();
-		builder.addFixed( new JLabel( "Last (ms)", createLegendIcon( LAST_COLOR ), JLabel.LEFT ) );
 
 		builder.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
 

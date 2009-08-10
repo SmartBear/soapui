@@ -83,6 +83,6 @@ public class OperationTreeNode extends AbstractModelItemTreeNode<Operation>
 			request.removePropertyChangeListener( propertyChangeListener );
 		}
 		else
-			throw new RuntimeException( "Removing unkown request" );
+			throw new RuntimeException( "Removing unknown request" );
 	}
 }

@@ -18,44 +18,54 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
+import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRepresentation;
-import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.impl.wsdl.support.UrlSchemaLoader;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
-import com.sun.research.wadl.x2006.x10.ApplicationDocument;
-import com.sun.research.wadl.x2006.x10.ParamStyle;
-import com.sun.research.wadl.x2006.x10.RepresentationType;
-import com.sun.research.wadl.x2006.x10.ResourceTypeDocument;
-import com.sun.research.wadl.x2006.x10.ApplicationDocument.Application;
-import com.sun.research.wadl.x2006.x10.DocDocument.Doc;
-import com.sun.research.wadl.x2006.x10.MethodDocument.Method;
-import com.sun.research.wadl.x2006.x10.ParamDocument.Param;
-import com.sun.research.wadl.x2006.x10.ResourceDocument.Resource;
-import com.sun.research.wadl.x2006.x10.ResourcesDocument.Resources;
+import com.eviware.soapui.support.xml.XmlUtils;
+
+import net.java.dev.wadl.x2009.x02.ApplicationDocument;
+import net.java.dev.wadl.x2009.x02.ParamStyle;
+import net.java.dev.wadl.x2009.x02.RepresentationDocument;
+import net.java.dev.wadl.x2009.x02.ResourceTypeDocument;
+import net.java.dev.wadl.x2009.x02.ApplicationDocument.Application;
+import net.java.dev.wadl.x2009.x02.DocDocument.Doc;
+import net.java.dev.wadl.x2009.x02.MethodDocument.Method;
+import net.java.dev.wadl.x2009.x02.ParamDocument.Param;
+import net.java.dev.wadl.x2009.x02.RepresentationDocument.Representation;
+import net.java.dev.wadl.x2009.x02.ResourceDocument.Resource;
+import net.java.dev.wadl.x2009.x02.ResourcesDocument.Resources;
+import net.java.dev.wadl.x2009.x02.ResponseDocument.Response;
 
 public class WadlImporter
 {
 	private RestService service;
 	private Application application;
-	private Resources resources;
+	private List<Resources> resourcesList;
 	private Map<String, ApplicationDocument> refCache = new HashMap<String, ApplicationDocument>();
+	private boolean isWADL11 = true;
 
 	public WadlImporter( RestService service )
 	{
@@ -72,28 +82,28 @@ public class WadlImporter
 
 			// try to allow older namespaces
 			if( element.getLocalName().equals( "application" )
-					&& element.getNamespaceURI().startsWith( "http://research.sun.com/wadl" )
-					&& !element.getNamespaceURI().equals( Constants.WADL10_NS ) )
+					&& element.getNamespaceURI().startsWith( "http://research.sun.com/wadl" ) )
 			{
+				isWADL11 = false;
 				String content = xmlObject.xmlText();
-				content = content.replaceAll( "\"" + element.getNamespaceURI() + "\"", "\"" + Constants.WADL10_NS + "\"" );
+				content = content.replaceAll( "\"" + element.getNamespaceURI() + "\"", "\"" + Constants.WADL11_NS + "\"" );
 				xmlObject = ApplicationDocument.Factory.parse( content );
 			}
 			else if( !element.getLocalName().equals( "application" )
-					|| !element.getNamespaceURI().equals( Constants.WADL10_NS ) )
+					|| !element.getNamespaceURI().equals( Constants.WADL11_NS ) )
 			{
-				throw new Exception( "Document is not a WADL application with " + Constants.WADL10_NS + " namespace" );
+				throw new Exception( "Document is not a WADL application with " + Constants.WADL11_NS + " namespace" );
 			}
 
 			ApplicationDocument applicationDocument = ( ApplicationDocument )xmlObject
 					.changeType( ApplicationDocument.type );
 			application = applicationDocument.getApplication();
 
-			resources = application.getResources();
+			resourcesList = application.getResourcesList();
 
 			service.setName( getFirstTitle( application.getDocList(), service.getName() ) );
 
-			String base = resources.getBase();
+			String base = resourcesList.size() == 1 ? resourcesList.get( 0 ).getBase() : "";
 
 			try
 			{
@@ -108,16 +118,27 @@ public class WadlImporter
 			}
 
 			service.setWadlUrl( wadlUrl );
+			service.getConfig().setWadlVersion( isWADL11 ? Constants.WADL11_NS : Constants.WADL10_NS );
 
-			for( Resource resource : resources.getResourceList() )
+			for( Resources resources : resourcesList )
 			{
-				String name = getFirstTitle( resource.getDocList(), resource.getPath() );
-				String path = resource.getPath();
+				RestResource baseResource = null;
+				if( resourcesList.size() > 1 )
+				{
+					String path = resources.getBase();
+					baseResource = service.addNewResource( path, path );
+				}
+				for( Resource resource : resources.getResourceList() )
+				{
+					String name = getFirstTitle( resource.getDocList(), resource.getPath() );
+					String path = resource.getPath();
 
-				RestResource newResource = service.addNewResource( name, path );
-				initResourceFromWadlResource( newResource, resource );
+					RestResource newResource = baseResource == null ? service.addNewResource( name, path ) : baseResource
+							.addNewChildResource( name, path );
+					initResourceFromWadlResource( newResource, resource );
 
-				addSubResources( newResource, resource );
+					addSubResources( newResource, resource );
+				}
 			}
 		}
 		catch( Exception e )
@@ -180,13 +201,13 @@ public class WadlImporter
 					for( Method method : type.getMethodList() )
 					{
 						method = resolveMethod( method );
-						RestRequest restRequest = initMethod( newResource, method );
+						RestMethod restMethod = initMethod( newResource, method );
 
 						for( Param param : type.getParamList() )
 						{
 							String nm = param.getName();
-							RestParamProperty prop = restRequest.hasProperty( nm ) ? restRequest.getProperty( nm )
-									: restRequest.addProperty( nm );
+							RestParamProperty prop = restMethod.hasProperty( nm ) ? restMethod.getProperty( nm ) : restMethod
+									.addProperty( nm );
 
 							initParam( param, prop );
 						}
@@ -196,57 +217,114 @@ public class WadlImporter
 		}
 	}
 
-	private RestRequest initMethod( RestResource newResource, Method method )
+	private RestMethod initMethod( RestResource newResource, Method method )
 	{
 		String name = method.getName();
 		if( StringUtils.hasContent( method.getId() ) )
 			name += " - " + method.getId();
 
-		RestRequest request = newResource.addNewRequest( getFirstTitle( method.getDocList(), name ) );
-		request.setMethod( RestRequest.RequestMethod.valueOf( method.getName() ) );
+		RestMethod restMethod = newResource.addNewMethod( getFirstTitle( method.getDocList(), name ) );
+		restMethod.setMethod( RestRequestInterface.RequestMethod.valueOf( method.getName() ) );
 
 		if( method.getRequest() != null )
 		{
 			for( Param param : method.getRequest().getParamList() )
 			{
-				RestParamProperty p = request.addProperty( param.getName() );
+				RestParamProperty p = restMethod.addProperty( param.getName() );
 				initParam( param, p );
 			}
 
-			for( RepresentationType representationType : method.getRequest().getRepresentationList() )
+			for( Representation representation : method.getRequest().getRepresentationList() )
 			{
-				representationType = resolveRepresentation( representationType );
-				addRepresentationFromConfig( request, representationType, RestRepresentation.Type.REQUEST );
+				representation = resolveRepresentation( representation );
+				addRepresentationFromConfig( restMethod, representation, RestRepresentation.Type.REQUEST, null );
 			}
 		}
 
-		if( method.getResponse() != null )
+		for( Response response : method.getResponseList() )
 		{
-			for( RepresentationType representationType : method.getResponse().getRepresentationList() )
+			for( Representation representation : response.getRepresentationList() )
 			{
-				representationType = resolveRepresentation( representationType );
-				addRepresentationFromConfig( request, representationType, RestRepresentation.Type.RESPONSE );
+				addRepresentation(response, restMethod, representation);
 			}
-
-			for( RepresentationType representationType : method.getResponse().getFaultList() )
+			if(!isWADL11)
 			{
-				representationType = resolveFault( representationType );
-				addRepresentationFromConfig( request, representationType, RestRepresentation.Type.FAULT );
+				NodeList children = response.getDomNode().getChildNodes();
+				for(int i=0; i<children.getLength(); i++)
+				{
+					Node n = children.item( i );
+					if( "fault".equals(n.getNodeName()) ) {
+						String content = XmlUtils.serialize( n, false );
+						try
+						{
+							Map<Object,Object> map = new HashMap<Object, Object>();
+							XmlCursor cursor = response.newCursor();
+							cursor.getAllNamespaces( map );
+							cursor.dispose();
+							XmlOptions options = new XmlOptions();
+							options.setLoadAdditionalNamespaces( map );
+							XmlObject obj = XmlObject.Factory.parse( content.replaceFirst( "<(([a-z]+:)?)fault ", "<$1representation " ), options );
+							RepresentationDocument representation = ( RepresentationDocument )obj.changeType( RepresentationDocument.type );
+							addRepresentation(response, restMethod, representation.getRepresentation());
+						}
+						catch( XmlException e )
+						{
+						}
+					}
+				}
 			}
 		}
 
-		return request;
+		RestRequestInterface request = restMethod.addNewRequest( "Request 1" );
+
+		return restMethod;
+	}
+	
+	private void addRepresentation(Response response, RestMethod restMethod, Representation representation)
+	{
+		representation = resolveRepresentation( representation );
+		List<Long> status = null;
+		if( isWADL11 )
+			status = response.getStatus();
+		else
+		{
+			Node n = representation.getDomNode().getAttributes().getNamedItem( "status" );
+			if(n != null)
+			{
+				status = new ArrayList<Long>();
+				for(String s : n.getNodeValue().split( " " ) )
+				{
+					status.add( Long.parseLong( s ) );
+				}
+			}
+		}
+		boolean fault = false;
+		if(status != null && status.size() > 0)
+		{
+			fault = true;
+			for( Long s : status )
+			{
+				if(s < 400)
+				{
+					fault = false;
+					break;
+				}
+			}
+		}
+		RestRepresentation.Type type = fault ? RestRepresentation.Type.FAULT : RestRepresentation.Type.RESPONSE;
+		addRepresentationFromConfig( restMethod, representation, type, status );
 	}
 
-	private void addRepresentationFromConfig( RestRequest request, RepresentationType representationType,
-			RestRepresentation.Type type )
+	private void addRepresentationFromConfig( RestMethod restMethod, Representation representation,
+			RestRepresentation.Type type, List<?> status )
 	{
-		RestRepresentation restRepresentation = request.addNewRepresentation( type );
-		restRepresentation.setMediaType( representationType.getMediaType() );
-		restRepresentation.setElement( representationType.getElement() );
-		restRepresentation.setStatus( representationType.getStatus() );
-		restRepresentation.setId( representationType.getId() );
-		restRepresentation.setDescription( getFirstTitle( representationType.getDocList(), null ) );
+		RestRepresentation restRepresentation = restMethod.addNewRepresentation( type );
+		restRepresentation.setMediaType( representation.getMediaType() );
+		restRepresentation.setElement( representation.getElement() );
+		if( status != null )
+			restRepresentation.setStatus( status );
+		restRepresentation.setId( representation.getId() );
+		restRepresentation.setDescription( getFirstTitle( representation.getDocList(), null ) );
 	}
 
 	private void initParam( Param param, RestParamProperty prop )
@@ -305,7 +383,7 @@ public class WadlImporter
 		return method;
 	}
 
-	private RepresentationType resolveRepresentation( RepresentationType representation )
+	private Representation resolveRepresentation( Representation representation )
 	{
 		String href = representation.getHref();
 		if( !StringUtils.hasContent( href ) )
@@ -320,7 +398,7 @@ public class WadlImporter
 				if( ix > 0 )
 					href = href.substring( ix + 1 );
 
-				for( RepresentationType m : application.getRepresentationList() )
+				for( Representation m : application.getRepresentationList() )
 				{
 					if( m.getId().equals( href ) )
 						return m;
@@ -335,35 +413,21 @@ public class WadlImporter
 		return representation;
 	}
 
-	private RepresentationType resolveFault( RepresentationType representation )
-	{
-		String href = representation.getHref();
-		if( !StringUtils.hasContent( href ) )
-			return representation;
-
-		try
-		{
-			ApplicationDocument applicationDocument = loadReferencedWadl( href );
-			if( applicationDocument != null )
-			{
-				int ix = href.lastIndexOf( '#' );
-				if( ix > 0 )
-					href = href.substring( ix + 1 );
-
-				for( RepresentationType m : application.getFaultList() )
-				{
-					if( m.getId().equals( href ) )
-						return m;
-				}
-			}
-		}
-		catch( Exception e )
-		{
-			e.printStackTrace();
-		}
-
-		return representation;
-	}
+	/*
+	 * private Representation resolveFault( Representation representation ) {
+	 * String href = representation.getHref(); if( !StringUtils.hasContent( href
+	 * ) ) return representation;
+	 * 
+	 * try { ApplicationDocument applicationDocument = loadReferencedWadl( href
+	 * ); if( applicationDocument != null ) { int ix = href.lastIndexOf( '#' );
+	 * if( ix > 0 ) href = href.substring( ix + 1 );
+	 * 
+	 * for( Representation m : application.getFaultList() ) { if(
+	 * m.getId().equals( href ) ) return m; } } } catch( Exception e ) {
+	 * e.printStackTrace(); }
+	 * 
+	 * return representation; }
+	 */
 
 	private ResourceTypeDocument.ResourceType resolveResource( String id )
 	{
@@ -436,7 +500,7 @@ public class WadlImporter
 		return result;
 	}
 
-	public static String extractParams( URL param, XmlBeansRestParamsTestPropertyHolder params )
+	public static String extractParams( URL param, RestParamsPropertyHolder params )
 	{
 		String path = param.getPath();
 		String[] items = path.split( "/" );

@@ -47,6 +47,7 @@ import com.eviware.soapui.model.workspace.WorkspaceListener;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.SoapUIException;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveDialog;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -297,7 +298,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 					else
 					{
 						String path = project.getPath();
-						if( path == null )
+						if( !StringUtils.hasContent( path ))
 						{
 							if( UISupport.confirm( messages.get( "ProjectHasNotBeenSaved.Label", project.getName() ), messages
 									.get( "ProjectHasNotBeenSaved.Title" ) ) )

@@ -13,9 +13,16 @@
 package com.eviware.soapui.impl.support.http;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
+import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestStep;
 
-public interface HttpRequestTestStep<T extends AbstractHttpRequest<?>> extends TestStep
+public interface HttpRequestTestStep extends TestStep, Assertable
 {
-	public T getHttpRequest();
+	public AbstractHttpRequest<?> getHttpRequest();
+
+	public TestRequest getTestRequest();
+
+	public TestStep getTestStep();
+
 }

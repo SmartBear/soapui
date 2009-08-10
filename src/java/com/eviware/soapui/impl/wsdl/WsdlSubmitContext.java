@@ -14,7 +14,7 @@ package com.eviware.soapui.impl.wsdl;
 
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.AbstractSubmitContext;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -62,6 +62,6 @@ public class WsdlSubmitContext extends AbstractSubmitContext
 
 	public String expand( String content )
 	{
-		return PropertyExpansionUtils.expandProperties( this, content );
+		return PropertyExpander.expandProperties( this, content );
 	}
 }

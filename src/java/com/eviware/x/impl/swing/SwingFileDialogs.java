@@ -13,6 +13,7 @@
 package com.eviware.x.impl.swing;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,7 @@ import javax.swing.JFileChooser;
 
 import com.eviware.soapui.support.ExtensionFileFilter;
 import com.eviware.x.dialogs.XFileDialogs;
+import com.l2fprod.common.swing.JDirectoryChooser;
 
 /**
  * @author Lars
@@ -137,17 +139,27 @@ public class SwingFileDialogs implements XFileDialogs
 
 	public File openDirectory( Object action, String title, File defaultDirectory )
 	{
-		JFileChooser chooser = getChooser( action );
+		JDirectoryChooser chooser = new JDirectoryChooser( defaultDirectory );
 		chooser.setDialogTitle( title );
-		chooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
-
-		if( defaultDirectory != null )
-			chooser.setCurrentDirectory( defaultDirectory );
-
-		if( chooser.showOpenDialog( getParent() ) != JFileChooser.APPROVE_OPTION )
+		chooser.setShowingCreateDirectory( true );
+		chooser.setPreferredSize( new Dimension( 400, 400 ) );
+		if( chooser.showSaveDialog( getParent() ) != JFileChooser.APPROVE_OPTION )
 			return null;
 
 		return chooser.getSelectedFile();
+
+		// JFileChooser chooser = getChooser( action );
+		// chooser.setDialogTitle( title );
+		// chooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
+		//
+		// if( defaultDirectory != null )
+		// chooser.setCurrentDirectory( defaultDirectory );
+		//
+		// if( chooser.showOpenDialog( getParent() ) !=
+		// JFileChooser.APPROVE_OPTION )
+		// return null;
+		//
+		// return chooser.getSelectedFile();
 	}
 
 	public File openFileOrDirectory( Object action, String title, File defaultDirectory )
@@ -167,19 +179,28 @@ public class SwingFileDialogs implements XFileDialogs
 
 	public File saveAsDirectory( Object action, String title, File defaultDirectory )
 	{
-		JFileChooser chooser = getChooser( action );
-		chooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
+		JDirectoryChooser chooser = new JDirectoryChooser( defaultDirectory );
 		chooser.setDialogTitle( title );
-		chooser.setAcceptAllFileFilterUsed( true );
-
-		if( defaultDirectory != null )
-			chooser.setSelectedFile( defaultDirectory );
-		else
-			chooser.setSelectedFile( null );
-
+		chooser.setShowingCreateDirectory( true );
 		if( chooser.showSaveDialog( getParent() ) != JFileChooser.APPROVE_OPTION )
 			return null;
 
 		return chooser.getSelectedFile();
+
+		// JFileChooser chooser = getChooser( action );
+		// chooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
+		// chooser.setDialogTitle( title );
+		// chooser.setAcceptAllFileFilterUsed( true );
+		//
+		// if( defaultDirectory != null )
+		// chooser.setSelectedFile( defaultDirectory );
+		// else
+		// chooser.setSelectedFile( null );
+		//
+		// if( chooser.showSaveDialog( getParent() ) !=
+		// JFileChooser.APPROVE_OPTION )
+		// return null;
+		//
+		// return chooser.getSelectedFile();
 	}
 }

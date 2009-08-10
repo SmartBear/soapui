@@ -15,6 +15,7 @@ package com.eviware.soapui.support.listener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -193,6 +194,38 @@ public class SoapUIListenerRegistry
 
 		if( singletonListeners.containsKey( listenerType ) )
 			result.addAll( ( Collection<? extends T> )singletonListeners.get( listenerType ) );
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends Object> List<T> joinListeners( Class<T> listenerType, Collection<T> existing )
+	{
+		List<T> result = new ArrayList<T>();
+		if( listeners.containsKey( listenerType ) )
+		{
+			List<Class<?>> list = listeners.get( listenerType );
+			for( Class<?> listenerClass : list )
+			{
+				try
+				{
+					T listener = ( T )listenerClass.newInstance();
+					if( listenerConfigs.containsKey( listenerClass ) && listener instanceof InitializableListener )
+						( ( InitializableListener )listener ).init( listenerConfigs.get( listenerClass ) );
+
+					result.add( listener );
+				}
+				catch( Exception e )
+				{
+					SoapUI.logError( e );
+				}
+			}
+		}
+
+		if( singletonListeners.containsKey( listenerType ) )
+			result.addAll( ( Collection<? extends T> )singletonListeners.get( listenerType ) );
+		
+		result.addAll( existing );
 
 		return result;
 	}

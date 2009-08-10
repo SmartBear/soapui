@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.rest.actions.resource;
 
+import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.support.MessageSupport;
@@ -77,5 +79,13 @@ public class NewRestChildResourceAction extends NewRestResourceActionBase<RestRe
 		}
 
 		return resource;
+	}
+
+	@Override
+	protected RestMethod createRestMethod( RestResource resource, XFormDialog dialog )
+	{
+		RestMethod method = resource.addNewMethod( dialog.getValue( Form.RESOURCENAME ) );
+		method.setMethod( RestRequestInterface.RequestMethod.GET );
+		return method;
 	}
 }

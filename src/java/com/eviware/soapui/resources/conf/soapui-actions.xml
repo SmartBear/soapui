@@ -76,11 +76,17 @@
 	<tns:action id="RelabelOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.operation.RelabelOperationAction"/>
 
 	<!-- RestResource Actions -->
-	<tns:action id="NewRestRequestAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.NewRestRequestAction"/>
-   <tns:action id="RenameRestResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.RenameRestResourceAction"/>
-   <tns:action id="NewChildResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.NewRestChildResourceAction"/>
+	<tns:action id="NewRestMethodAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.NewRestMethodAction"/>
+    <tns:action id="RenameRestResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.RenameRestResourceAction"/>
+    <tns:action id="NewChildResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.NewRestChildResourceAction"/>
 	<tns:action id="CloneRestResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.CloneRestResourceAction"/>
 	<tns:action id="DeleteRestResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.DeleteRestResourceAction"/>
+	
+	<!-- RestMethod Actions -->
+	<tns:action id="NewRestRequestAction" actionClass="com.eviware.soapui.impl.rest.actions.method.NewRestRequestAction"/>
+	<tns:action id="RenameRestMethodAction" actionClass="com.eviware.soapui.impl.rest.actions.method.RenameRestMethodAction"/>
+	<tns:action id="CloneRestMethodAction" actionClass="com.eviware.soapui.impl.rest.actions.method.CloneRestMethodAction"/>
+	<tns:action id="DeleteRestMethodAction" actionClass="com.eviware.soapui.impl.rest.actions.method.DeleteRestMethodAction"/>
 
 	<!-- RestRequest Actions -->
 	<tns:action id="AddRestRequestToTestCaseAction" actionClass="com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction"/>
@@ -105,6 +111,8 @@
 	<tns:action id="ToggleDisableTestSuiteAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.ToggleDisableTestSuiteAction"/>
 	<tns:action id="ExportTestSuite" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.ExportTestSuiteAction"/>
 	<tns:action id="ImportTestCase" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.ImportTestCaseAction"/>
+	<tns:action id="MoveTestSuiteDownAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.MoveTestSuiteDownAction"/>
+	<tns:action id="MoveTestSuiteUpAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.MoveTestSuiteUpAction"/>
 
 	<!-- TestCase Actions -->
 	<tns:action id="AddNewLoadTestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.AddNewLoadTestAction"/>
@@ -156,7 +164,11 @@
 	<tns:action id="AddEndpointToInterfaceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.AddEndpointToInterfaceAction"/>
 	<tns:action id="StartMinimizedMockServiceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.StartMinimizedMockServiceAction"/>
 	<tns:action id="StopMockServiceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.StopMockServiceAction"/>
-
+	<tns:action id="RestartMockServiceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.RestartMockServiceAction"/>
+	<tns:action id="ExportMockService" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.ExportMockService"/>
+	<tns:action id="ImportMockService" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.ImportMockService"/>
+	<tns:action id="MockAsWar" actionClass="com.eviware.soapui.actions.MockAsWarAction"/>
+	
 	<!-- MockOperation Actions -->
 	<tns:action id="OpenRequestForMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.OpenRequestForMockOperationAction"/>
 	<tns:action id="NewMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.NewMockResponseAction"/>
@@ -164,7 +176,9 @@
 	<tns:action id="ChangeMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.ChangeMockOperationAction"/>
 	<tns:action id="DeleteMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.DeleteMockOperationAction"/>
     <tns:action id="AddOperationAsMockResponseStepAction"	actionClass="com.eviware.soapui.impl.wsdl.actions.operation.AddOperationAsMockResponseStepAction"/>
-
+	<tns:action id="ExportMockOperation" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.ExportMockOperation"/>
+	<tns:action id="ImportMockOperation" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.ImportMockOperation"/>
+	
 	<!-- MockResponse Actions -->
 	<tns:action id="OpenRequestForMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.OpenRequestForMockResponseAction"/>
 	<tns:action id="CreateTestRequestForMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.CreateTestRequestForMockResponseAction"/>
@@ -173,7 +187,7 @@
 	<tns:action id="DeleteMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.DeleteMockResponseAction"/>
     <tns:action id="AddMockResponseToTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.AddMockResponseToTestCaseAction"/>
     <tns:action id="SetMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.SetMockOperationAction"/>
-   
+
     <!-- MultiActions -->
 	<tns:action id="MultiTestStepDeleteAction" actionClass="com.eviware.soapui.impl.actions.multi.MultiTestStepDeleteAction"/>
 
@@ -248,6 +262,9 @@
 		<tns:actionMapping actionId="SaveProjectAsAction" keyStroke="menu shift S"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
 	 	<tns:actionMapping actionId="ImportTestSuite"/>
+	 	<tns:actionMapping actionId="ImportMockService"/>
+	 	<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="MockAsWar"/>
 	 	<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="projects/index.html"/>
 	</tns:actionGroup>
@@ -333,12 +350,26 @@
  		<tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Resource Viewer"
  			description="Shows the Resource Viewer for this REST Resource" keyStroke="ENTER"/>
  			<tns:actionMapping actionId="SeperatorAction"/>
- 		<tns:actionMapping actionId="NewRestRequestAction"/>
+ 		<tns:actionMapping actionId="NewRestMethodAction"/>
  		<tns:actionMapping actionId="NewChildResourceAction"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="CloneRestResourceAction" keyStroke="F9" iconPath="/clone_request.gif"/>
       <tns:actionMapping actionId="RenameRestResourceAction" keyStroke="F2"/>
 		<tns:actionMapping actionId="DeleteRestResourceAction" keyStroke="DELETE"/>
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="rest/resources.html"/>
+	</tns:actionGroup>
+	
+	<!-- RestMethod ActionGroup -->
+ 	<tns:actionGroup name="REST Method Actions" id="RestMethodActions" default="ShowDesktopPanelAction">
+ 		<tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Method Viewer"
+ 			description="Shows the Method Viewer for this REST Method" keyStroke="ENTER"/>
+ 			<tns:actionMapping actionId="SeperatorAction"/>
+ 		<tns:actionMapping actionId="NewRestRequestAction"/>
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="CloneRestMethodAction" keyStroke="F9" iconPath="/clone_request.gif"/>
+      <tns:actionMapping actionId="RenameRestMethodAction" keyStroke="F2"/>
+		<tns:actionMapping actionId="DeleteRestMethodAction" keyStroke="DELETE"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="rest/resources.html"/>
 	</tns:actionGroup>
@@ -387,6 +418,9 @@
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="RenameTestSuiteAction" keyStroke="F2"/>
 		<tns:actionMapping actionId="DeleteTestSuiteAction" keyStroke="DELETE"/>
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="MoveTestSuiteUpAction" keyStroke="menu UP"/>
+		<tns:actionMapping actionId="MoveTestSuiteDownAction" keyStroke="menu DOWN"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ExportTestSuite"/>
 		<tns:actionMapping actionId="ImportTestCase"/>
@@ -557,6 +591,7 @@
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="StartMinimizedMockServiceAction"/>
 		<tns:actionMapping actionId="StopMockServiceAction"/>
+		<tns:actionMapping actionId="RestartMockServiceAction"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
  		<tns:actionMapping actionId="AddNewMockOperationAction" keyStroke="menu N"/>
 		<tns:actionMapping actionId="CloneMockServiceAction" keyStroke="F9"/>
@@ -566,6 +601,9 @@
 		<tns:actionMapping actionId="RenameMockServiceAction" keyStroke="F2"/>
 		<tns:actionMapping actionId="DeleteMockServiceAction" keyStroke="DELETE"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="ExportMockService"/>
+		<tns:actionMapping actionId="ImportMockOperation"/>
+		<tns:actionMapping actionId="SeperatorAction"/> 
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="mock/services.html"/>
 	</tns:actionGroup>
 
@@ -581,6 +619,8 @@
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="RenameMockOperationAction" keyStroke="F2"/>
 		<tns:actionMapping actionId="DeleteMockOperationAction" keyStroke="DELETE"/>
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="ExportMockOperation"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="mock/operations.html"/>
 	</tns:actionGroup>
@@ -601,7 +641,8 @@
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="mock/responses.html"/>
 	</tns:actionGroup>
 
-    <!-- MultiActions Group -->
+
+<!-- MultiActions Group -->
 
     <tns:actionGroup name="SoapUIMultiActions" id="SoapUIMultiActions">
         <tns:actionMapping actionId="MultiTestStepDeleteAction" keyStroke="DELETE"/>

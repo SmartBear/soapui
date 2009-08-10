@@ -95,7 +95,7 @@ public class JUnitReport
 	{
 		Testcase testcase = testsuiteDoc.getTestsuite().addNewTestcase();
 		testcase.setName( name );
-		testcase.setTime( time );
+		testcase.setTime( time / 1000 );
 		noofTestCases++ ;
 		totalTime += time;
 		return testcase;
@@ -105,7 +105,7 @@ public class JUnitReport
 	{
 		Testcase testcase = testsuiteDoc.getTestsuite().addNewTestcase();
 		testcase.setName( name );
-		testcase.setTime( time );
+		testcase.setTime( time / 1000 );
 		Failure fail = testcase.addNewFailure();
 		fail.setType( failure );
 		fail.setMessage( failure );
@@ -120,7 +120,7 @@ public class JUnitReport
 	{
 		Testcase testcase = testsuiteDoc.getTestsuite().addNewTestcase();
 		testcase.setName( name );
-		testcase.setTime( time );
+		testcase.setTime( time / 1000 );
 		com.eviware.soapui.junit.ErrorDocument.Error err = testcase.addNewError();
 		err.setType( error );
 		err.setMessage( error );
@@ -161,7 +161,7 @@ public class JUnitReport
 		testsuiteDoc.getTestsuite().setTests( noofTestCases );
 		testsuiteDoc.getTestsuite().setFailures( noofFailures );
 		testsuiteDoc.getTestsuite().setErrors( noofErrors );
-		testsuiteDoc.getTestsuite().setTime( new BigDecimal( totalTime ) );
+		testsuiteDoc.getTestsuite().setTime( new BigDecimal( totalTime / 1000 ) );
 
 		return testsuiteDoc;
 	}

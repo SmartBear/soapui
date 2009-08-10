@@ -60,6 +60,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.MockRunContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.StringUtils;
@@ -211,6 +212,19 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 		public String getScriptName()
 		{
 			return "Dispatch";
+		}
+
+		public void addPropertyChangeListener( PropertyChangeListener listener )
+		{
+		}
+
+		public void removePropertyChangeListener( PropertyChangeListener listener )
+		{
+		}
+
+		public ModelItem getModelItem()
+		{
+			return getMockOperation();
 		}
 	}
 

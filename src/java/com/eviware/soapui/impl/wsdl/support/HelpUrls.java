@@ -194,6 +194,8 @@ public interface HelpUrls
 
 	public static final String RESTREQUESTEDITOR_HELP_URL = HELP_URL_ROOT + "rest/requests.html";
 
+	public static final String RESTMETHODEDITOR_HELP_URL = HELP_URL_ROOT + "rest/methods.html";
+
 	public static final String CREATEWADLDOC_HELP_URL = HELP_URL_ROOT + "rest/index.html";
 
 	public static final String WADL2JAVA_HELP_URL = "https://wadl.dev.java.net/wadl2java.html";
@@ -208,5 +210,11 @@ public interface HelpUrls
 	public static final String FORUMS_HELP_URL = "http://www.eviware.com/forums";
 
 	public static final String TRIAL_URL = "http://www.eviware.com/soapui/trial";
+
+	public static final String TESTSUITELIST_HELP_URL = null;
+	
+	public static final String JDBC_CONNECTION_HELP_URL = HELP_URL_ROOT + "projects/jdbcConnections.html";
+
+	public static final String MOCKASWAR_HELP_URL = HELP_URL_ROOT + "mock/mock_as_war.html";
 
 }

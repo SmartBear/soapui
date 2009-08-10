@@ -19,8 +19,8 @@ import org.apache.xmlbeans.XmlObject;
 import com.eviware.soapui.config.LoadTestAssertionConfig;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.support.PropertyChangeNotifier;
 
@@ -48,10 +48,10 @@ public interface LoadTestAssertion extends PropertyChangeNotifier
 	public void updateConfiguration( LoadTestAssertionConfig configuration );
 
 	public String assertResult( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestStepResult result,
-			TestRunner testRunner, TestRunContext runContext );
+			TestCaseRunner testRunner, TestCaseRunContext runContext );
 
-	public String assertResults( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-			TestRunContext runContext );
+	public String assertResults( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+			TestCaseRunContext runContext );
 
 	public String getTargetStep();
 

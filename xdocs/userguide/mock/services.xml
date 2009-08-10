@@ -30,7 +30,8 @@
 		<ul>
 		<li><b>Show MockService Editor</b> - opens the MockService Editor, see below</li>
 		<li><b>Start Minimized</b> - opens/minimizes the MockService editor and starts the MockService</li>
-		<li><b>Stop</b> - stops the MockService</li>
+		<li><b>Stop</b> - stops the MockService if it is running</li>
+		<li><b>Restart</b> - restart the MockService (starts it if it is not running)</li>
 		<li><b>New MockOperation</b> - prompts to create a new MockOperation in the MockService</li>
 		<li><b>Clone MockService</b> - clones the entire MockService</li>
 		<li><b>Add Endpoint to Interface</b> - prompts to add this MockServices local endpoint to an Interface in the same project. The 

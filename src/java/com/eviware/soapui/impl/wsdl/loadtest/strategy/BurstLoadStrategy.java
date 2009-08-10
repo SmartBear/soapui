@@ -23,7 +23,7 @@ import org.apache.xmlbeans.XmlObject;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.LoadTestRunner.Status;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
@@ -72,6 +72,7 @@ public class BurstLoadStrategy extends AbstractLoadStrategy
 
 	public void beforeLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
+		super.beforeLoadTest( loadTestRunner, context );
 		startTime = System.currentTimeMillis();
 		if( infoLabel != null )
 			infoLabel.setText( "starting.." );
@@ -85,34 +86,6 @@ public class BurstLoadStrategy extends AbstractLoadStrategy
 	{
 		// get time passed since start of test
 		long timePassed = System.currentTimeMillis() - startTime;
-
-		// wait during burstDelay period
-
-		// while( (mod < burstDelay) && (loadTestRunner.getStatus() ==
-		// Status.RUNNING || loadTestRunner.getStatus() == Status.INITIALIZED ))
-		// {
-		// try
-		// {
-		// String label = (burstDelay-mod)/1000 + "s delay left";
-		// if( infoLabel != null && !infoLabel.getText().equals( label ))
-		// infoLabel.setText( label );
-		//				
-		// Thread.sleep( SLEEP_DELAY );
-		// if( ((WsdlLoadTestRunner)loadTestRunner).getProgress() >= 1 &&
-		// infoLabel != null )
-		// {
-		// infoLabel.setText( "" );
-		// return;
-		// }
-		//				
-		// timePassed = System.currentTimeMillis() - startTime;
-		// mod = timePassed % (burstDelay + burstDuration);
-		// }
-		// catch (InterruptedException e)
-		// {
-		// SoapUI.logError( e );
-		// }
-		// }
 
 		if( loadTestRunner.getStatus() == Status.RUNNING )
 		{

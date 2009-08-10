@@ -860,9 +860,8 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 		 */
 		public synchronized void shutdown()
 		{
-
 			// close all free connections
-			Iterator iter = freeConnections.iterator();
+			Iterator<?> iter = freeConnections.iterator();
 			while( iter.hasNext() )
 			{
 				HttpConnection conn = ( HttpConnection )iter.next();

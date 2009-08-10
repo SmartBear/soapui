@@ -218,7 +218,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 				{
 					for( int i = 0; i < operation.getRequestCount(); i++ )
 					{
-						AbstractHttpRequest request = ( AbstractHttpRequest )operation.getRequestAt( i );
+						AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )operation.getRequestAt( i );
 						String ep = request.getEndpoint();
 
 						if( endpoint.equals( ALL_REQUESTS ) || endpoint.equals( ALL_REQUESTS_AND_TEST_REQUESTS )
@@ -253,7 +253,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 						{
 							if( testStep instanceof HttpRequestTestStep )
 							{
-								AbstractHttpRequest httpRequest = ( ( HttpRequestTestStep )testStep ).getHttpRequest();
+								AbstractHttpRequest<?> httpRequest = ( ( HttpRequestTestStep )testStep ).getHttpRequest();
 								if( httpRequest.getOperation() != null && httpRequest.getOperation().getInterface() == iface )
 								{
 									httpRequest.setEndpoint( selectedEndpoint );

@@ -14,11 +14,12 @@ package com.eviware.soapui.impl.wsdl.panels.support;
 
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.AbstractSubmitContext;
 import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 
 /**
@@ -27,7 +28,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
  * @author ole.matzura
  */
 
-public class MockTestRunContext extends AbstractSubmitContext implements TestRunContext
+public class MockTestRunContext extends AbstractSubmitContext<ModelItem> implements TestCaseRunContext
 {
 	private final MockTestRunner mockTestRunner;
 	private final WsdlTestStep testStep;
@@ -57,7 +58,7 @@ public class MockTestRunContext extends AbstractSubmitContext implements TestRun
 		return testStep == null ? -1 : testStep.getTestCase().getIndexOfTestStep( testStep );
 	}
 
-	public TestRunner getTestRunner()
+	public TestCaseRunner getTestRunner()
 	{
 		return mockTestRunner;
 	}

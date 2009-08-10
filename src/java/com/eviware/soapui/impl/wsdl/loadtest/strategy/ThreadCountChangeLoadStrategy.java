@@ -80,6 +80,7 @@ public class ThreadCountChangeLoadStrategy extends AbstractLoadStrategy
 
 	public void beforeLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
+		super.beforeLoadTest( loadTestRunner, context );
 		stateDependantComponents.setEnabled( false );
 
 		WsdlLoadTest wsdlLoadTest = ( ( WsdlLoadTest )loadTestRunner.getLoadTest() );

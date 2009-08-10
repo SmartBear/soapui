@@ -34,7 +34,6 @@ import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
 import org.mortbay.util.IO;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.LaunchForm;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
@@ -43,6 +42,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.Exten
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class ProxyServlet implements Servlet
 {
@@ -50,7 +50,6 @@ public class ProxyServlet implements Servlet
 	protected ServletConfig config;
 	protected ServletContext context;
 	protected HttpClient client;
-	protected JProxyServletWsdlMonitorMessageExchange capturedData;
 	protected SoapMonitor monitor;
 	protected WsdlProject project;
 	protected HttpState httpState = null;
@@ -103,6 +102,9 @@ public class ProxyServlet implements Servlet
 	public synchronized void service( ServletRequest request, ServletResponse response ) throws ServletException,
 			IOException
 	{
+		monitor.fireOnRequest( request, response );
+		if( response.isCommitted() )
+			return;
 
 		HttpMethodBase method;
 		HttpServletRequest httpRequest = ( HttpServletRequest )request;
@@ -112,14 +114,10 @@ public class ProxyServlet implements Servlet
 			method = new ExtendedPostMethod();
 
 		// for this create ui server and port, properties.
-
-		if( capturedData == null )
-		{
-			capturedData = new JProxyServletWsdlMonitorMessageExchange( project );
-			capturedData.setRequestHost( httpRequest.getServerName() );
-			capturedData.setRequestHeader( httpRequest );
-			capturedData.setTargetURL( httpRequest.getRequestURL().toString() );
-		}
+		JProxyServletWsdlMonitorMessageExchange capturedData = new JProxyServletWsdlMonitorMessageExchange( project );
+		capturedData.setRequestHost( httpRequest.getServerName() );
+		capturedData.setRequestHeader( httpRequest );
+		capturedData.setTargetURL( httpRequest.getRequestURL().toString() );
 
 		CaptureInputStream capture = new CaptureInputStream( httpRequest.getInputStream() );
 
@@ -168,8 +166,8 @@ public class ProxyServlet implements Servlet
 			method.addRequestHeader( "X-Forwarded-For", request.getRemoteAddr() );
 
 		if( method instanceof ExtendedPostMethod )
-			( ( ExtendedPostMethod )method ).setRequestEntity( new InputStreamRequestEntity( capture,
-					"text/xml; charset=utf-8" ) );
+			( ( ExtendedPostMethod )method ).setRequestEntity( new InputStreamRequestEntity( capture, request
+					.getContentType() ) );
 
 		HostConfiguration hostConfiguration = new HostConfiguration();
 
@@ -189,7 +187,9 @@ public class ProxyServlet implements Servlet
 		}
 		hostConfiguration.setHost( new URI( url.toString(), true ) );
 
-		SoapUI.log( "PROXY to:" + url );
+		// SoapUI.log("PROXY to:" + url);
+
+		monitor.fireBeforeProxy( request, response, method, hostConfiguration );
 
 		if( settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) )
 		{
@@ -205,35 +205,38 @@ public class ProxyServlet implements Servlet
 		// wait for transaction to end and store it.
 		capturedData.stopCapture();
 
-		byte[] res = method.getResponseBody();
-		// IO.copy(new ByteArrayInputStream(method.getResponseBody()),
-		// response.getOutputStream());
 		capturedData.setRequest( capture.getCapturedData() );
-		capturedData.setResponse( res );
+		capturedData.setRawResponseBody( method.getResponseBody() );
 		capturedData.setResponseHeader( method );
-		capturedData.setRawRequestData( getRequestToBytes( method, capture ) );
-		capturedData.setRawResponseData( getResponseToBytes( method, res ) );
-		monitor.addMessageExchange( capturedData );
+		capturedData.setRawRequestData( getRequestToBytes( request.toString(), method, capture ) );
+		capturedData.setRawResponseData( getResponseToBytes( response.toString(), method, capturedData
+				.getRawResponseBody() ) );
 
-		StringToStringMap responseHeaders = capturedData.getResponseHeaders();
-		capturedData = null;
+		monitor.fireAfterProxy( request, response, method, capturedData );
 
-		// copy headers to response
-		HttpServletResponse httpResponse = ( HttpServletResponse )response;
-		for( String name : responseHeaders.keySet() )
+		if( !response.isCommitted() )
 		{
-			String header = responseHeaders.get( name );
-			httpResponse.addHeader( name, header );
+			StringToStringMap responseHeaders = capturedData.getResponseHeaders();
+			// capturedData = null;
 
+			// copy headers to response
+			HttpServletResponse httpResponse = ( HttpServletResponse )response;
+			for( String name : responseHeaders.keySet() )
+			{
+				String header = responseHeaders.get( name );
+				if( !httpResponse.containsHeader( name ) )
+					httpResponse.addHeader( name, header );
+			}
+
+			IO.copy( new ByteArrayInputStream( capturedData.getRawResponseBody() ), httpResponse.getOutputStream() );
 		}
-		IO.copy( new ByteArrayInputStream( res ), httpResponse.getOutputStream() );
 
-		method.releaseConnection();
+		monitor.addMessageExchange( capturedData );
 	}
 
-	private byte[] getResponseToBytes( HttpMethodBase postMethod, byte[] res )
+	private byte[] getResponseToBytes( String footer, HttpMethodBase postMethod, byte[] res )
 	{
-		String response = "";
+		String response = footer;
 
 		Header[] headers = postMethod.getResponseHeaders();
 		for( Header header : headers )
@@ -241,22 +244,22 @@ public class ProxyServlet implements Servlet
 			response += header.toString();
 		}
 		response += "\n";
-		response += new String( res );
+		response += XmlUtils.prettyPrintXml( new String( res ) );
 
 		return response.getBytes();
 	}
 
-	private byte[] getRequestToBytes( HttpMethodBase postMethod, CaptureInputStream capture )
+	private byte[] getRequestToBytes( String footer, HttpMethodBase postMethod, CaptureInputStream capture )
 	{
-		String request = "";
+		String request = footer;
 
-		Header[] headers = postMethod.getRequestHeaders();
-		for( Header header : headers )
-		{
-			request += header.toString();
-		}
+		// Header[] headers = postMethod.getRequestHeaders();
+		// for (Header header : headers)
+		// {
+		// request += header.toString();
+		// }
 		request += "\n";
-		request += new String( capture.getCapturedData() );
+		request += XmlUtils.prettyPrintXml( new String( capture.getCapturedData() ) );
 
 		return request.getBytes();
 	}

@@ -28,17 +28,16 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.LoadTest;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
-import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
+import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 public class EvalPropertyResolver implements PropertyResolver
 {
 	private Logger log = Logger.getLogger( EvalPropertyResolver.class );
-	private ScriptEnginePool scriptEnginePool = new ScriptEnginePool( null );
 
 	public String resolveProperty( PropertyExpansionContext context, String name, boolean globalOverride )
 	{
@@ -47,13 +46,13 @@ public class EvalPropertyResolver implements PropertyResolver
 
 		name = name.substring( 1 );
 
-		StringToObjectMap objects = new StringToObjectMap();
+		StringToObjectMap objects = new StringToObjectMap( context.getProperties() );
 		objects.put( "context", context );
 		objects.put( "log", SoapUI.ensureGroovyLog() );
-
-		if( context instanceof TestRunContext )
+		
+		if( context instanceof TestCaseRunContext )
 		{
-			objects.put( "testRunner", ( ( TestRunContext )context ).getTestRunner() );
+			objects.put( "testRunner", ( ( TestCaseRunContext )context ).getTestRunner() );
 		}
 
 		if( context instanceof LoadTestRunContext )
@@ -122,7 +121,7 @@ public class EvalPropertyResolver implements PropertyResolver
 
 	private String doEval( String name, ModelItem modelItem, StringToObjectMap objects )
 	{
-		SoapUIScriptEngine scriptEngine = scriptEnginePool.getScriptEngine();
+		SoapUIScriptEngine scriptEngine = SoapUIScriptEngineRegistry.create( modelItem );
 		try
 		{
 			scriptEngine.setScript( name );
@@ -140,7 +139,7 @@ public class EvalPropertyResolver implements PropertyResolver
 		finally
 		{
 			scriptEngine.clearVariables();
-			scriptEnginePool.returnScriptEngine( scriptEngine );
+			scriptEngine.release();
 		}
 	}
 }

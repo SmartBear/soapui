@@ -18,7 +18,7 @@
     <body>
 		<section name="REST Resources">
 		<p>As described in the <a href="index.html">REST Services Overview</a>, Resources are available as child
-        items to a REST Service and contain either child resources or requests. Resources are created either
+        items to a REST Service and contain either child resources or methods. Resources are created either
         when initially creating the REST Service or by selecting the "New Resource" option from the Service/Resource
         popup. Either way, the following dialog will be displayed:</p>
          <p align="center"><img src="images/new-resource.gif"></img></p>
@@ -29,7 +29,8 @@
                 <li>Extract Params : select this option to extract parameters/path information from the specified
                 endpoint/path.</li>
                 <li>Parameters : a table containing extracted or manually added parameters.</li>
-                <li>Create Request : option to create a default request for the resource</li>
+                <li>Create Request : option to create a default request for the resource. 
+                This also creates a Method in-between the Resource and Request.</li>
             </ul>
             <p>The Extract Params button will parse the specified endpoint and try to extract query, matrix and
             template parameters from it. Also a hostname will be removed and a path components corresponding to
@@ -65,7 +66,7 @@
                 all parameters for this resource as described in <a href="params.html">Parameters and Representations</a></p>
             </subsection>
 
-		 <p><hr size="1"/>Next: <a href="requests.html">REST Requests</a></p>
+		 <p><hr size="1"/>Next: <a href="methods.html">REST Methods</a></p>
 		</section>
     </body>
 </document>

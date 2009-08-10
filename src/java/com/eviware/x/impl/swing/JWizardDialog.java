@@ -98,6 +98,14 @@ public class JWizardDialog extends SwingXFormDialog
 		dialog.pack();
 	}
 
+	public XForm[] getForms()
+	{
+		List<XForm> result = new ArrayList<XForm>();
+		for( XForm form : forms )
+			result.add( form );
+		return result.toArray( new XForm[result.size()] );
+	}
+	
 	public void dispose()
 	{
 		dialog.dispose();
@@ -229,7 +237,7 @@ public class JWizardDialog extends SwingXFormDialog
 		{
 			if( form.getComponent( name ) != null )
 			{
-				String[] options = form.getOptions( name );
+				Object[] options = form.getOptions( name );
 				if( options == null )
 					return -1;
 

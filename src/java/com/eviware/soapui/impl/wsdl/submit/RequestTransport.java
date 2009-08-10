@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit;
 
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
 
@@ -33,5 +33,5 @@ public interface RequestTransport
 
 	public void abortRequest( SubmitContext submitContext );
 
-	public Response sendRequest( SubmitContext submitContext, AbstractHttpRequest<?> request ) throws Exception;
+	public Response sendRequest( SubmitContext submitContext, Request request ) throws Exception;
 }

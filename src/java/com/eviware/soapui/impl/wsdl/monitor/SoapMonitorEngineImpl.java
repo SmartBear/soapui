@@ -27,6 +27,7 @@ import com.eviware.soapui.support.UISupport;
 
 public class SoapMonitorEngineImpl implements SoapMonitorEngine
 {
+
 	private static final String ROOT = "/";
 	private static final String HTTP = "http://";
 	private static final String HTTPS = "https://";

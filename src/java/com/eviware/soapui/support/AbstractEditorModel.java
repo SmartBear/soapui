@@ -36,4 +36,9 @@ public abstract class AbstractEditorModel implements EditorModel
 			listener.editorTextChanged( oldText, newText );
 		}
 	}
+
+	public void release()
+	{
+		listeners.clear();
+	}
 }

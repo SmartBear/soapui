@@ -173,6 +173,12 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 			}
 		}
 	}
+	
+	@Override
+	public Operation getModelItem()
+	{
+		return operation;
+	}
 
 	private void processResponseWss( IncomingWss incomingResponseWss ) throws IOException
 	{
@@ -241,7 +247,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 				SoapUI.logError( e1 );
 			}
 		}
-	}
+			}
 
 	private static String getCharset( StringToStringMap headers )
 	{
@@ -358,9 +364,9 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 	public byte[] getRawResponseData()
 	{
 		if( responseRaw == null )
-			return responseRaw;
-		else
 			return response;
+		else
+			return responseRaw;
 	}
 
 	public void setRawResponseData( byte[] data )
@@ -380,7 +386,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 
 	public String getResponseContent()
 	{
-		return XmlUtils.prettyPrintXml( responseContent );
+		return responseContent;
 	}
 
 	public StringToStringMap getResponseHeaders()
@@ -405,10 +411,8 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 
 	public void stopCapture()
 	{
-
 		timestampEnd = System.currentTimeMillis();
 		capture = false;
-
 	}
 
 	public boolean isStopCapture()
@@ -421,7 +425,12 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		this.request = request;
 	}
 
-	public void setResponse( byte[] response )
+	public byte [] getRawResponseBody()
+	{
+		return response;
+	}
+	
+	public void setRawResponseBody( byte[] response )
 	{
 		if( this.response == null )
 		{

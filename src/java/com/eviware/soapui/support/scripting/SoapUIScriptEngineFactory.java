@@ -23,4 +23,6 @@ import com.eviware.soapui.model.ModelItem;
 public interface SoapUIScriptEngineFactory
 {
 	public SoapUIScriptEngine createScriptEngine( ModelItem modelItem );
+
+	public SoapUIScriptGenerator createCodeGenerator( ModelItem modelItem );
 }

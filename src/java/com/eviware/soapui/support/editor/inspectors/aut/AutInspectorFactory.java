@@ -13,6 +13,7 @@
 package com.eviware.soapui.support.editor.inspectors.aut;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
@@ -29,7 +30,7 @@ public class AutInspectorFactory implements RequestInspectorFactory
 
 	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
-		if( modelItem instanceof AbstractHttpRequest<?> )
+		if( modelItem instanceof AbstractHttpRequestInterface<?> )
 			return new RequestAutInspector( ( ( AbstractHttpRequest<?> )modelItem ) );
 
 		return null;

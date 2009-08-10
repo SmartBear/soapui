@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.wsdl.submit.AbstractRestMessageExchange;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
@@ -21,12 +21,12 @@ import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class RestResponseMessageExchange extends AbstractRestMessageExchange<RestRequest>
+public class RestResponseMessageExchange extends AbstractRestMessageExchange<RestRequestInterface>
 {
 	private HttpResponse response;
 	private String requestContent;
 
-	public RestResponseMessageExchange( RestRequest request )
+	public RestResponseMessageExchange( RestRequestInterface request )
 	{
 		super( request );
 
@@ -98,7 +98,7 @@ public class RestResponseMessageExchange extends AbstractRestMessageExchange<Res
 		if( response == null )
 			response = getModelItem().getResponse();
 
-		return response == null ? null : response.getProperty( RestRequest.REST_XML_RESPONSE );
+		return response == null ? null : response.getContentAsXml();
 	}
 
 	public StringToStringMap getResponseHeaders()
@@ -140,7 +140,7 @@ public class RestResponseMessageExchange extends AbstractRestMessageExchange<Res
 		return getModelItem().getResource();
 	}
 
-	public RestRequest getRestRequest()
+	public RestRequestInterface getRestRequest()
 	{
 		return getModelItem();
 	}

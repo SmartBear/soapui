@@ -29,11 +29,14 @@ import com.eviware.soapui.impl.wsdl.loadtest.log.LoadTestLogMessageEntry;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.LoadTestRunListener;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunListener;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestRunnable;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.WsdlSettings;
@@ -54,7 +57,7 @@ import com.eviware.x.dialogs.XProgressMonitor;
 public class WsdlLoadTestRunner implements LoadTestRunner
 {
 	private final WsdlLoadTest loadTest;
-	private Set<TestCaseRunner> runners = new HashSet<TestCaseRunner>();
+	private Set<InternalTestCaseRunner> runners = new HashSet<InternalTestCaseRunner>();
 	private long startTime = 0;
 	private InternalPropertyChangeListener internalPropertyChangeListener = new InternalPropertyChangeListener();
 	private InternalTestRunListener testRunListener = new InternalTestRunListener();
@@ -200,9 +203,9 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		} ).start();
 	}
 
-	private TestCaseRunner startTestCase( WsdlTestCase testCase )
+	private InternalTestCaseRunner startTestCase( WsdlTestCase testCase )
 	{
-		TestCaseRunner testCaseRunner = new TestCaseRunner( testCase, threadCount++ );
+		InternalTestCaseRunner testCaseRunner = new InternalTestCaseRunner( testCase, threadCount++ );
 
 		SoapUI.getThreadPool().submit( testCaseRunner );
 		runners.add( testCaseRunner );
@@ -220,9 +223,9 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		if( testCaseStarter != null )
 			testCaseStarter.stop();
 
-		TestCaseRunner[] r = runners.toArray( new TestCaseRunner[runners.size()] );
+		InternalTestCaseRunner[] r = runners.toArray( new InternalTestCaseRunner[runners.size()] );
 
-		for( TestCaseRunner runner : r )
+		for( InternalTestCaseRunner runner : r )
 		{
 			runner.cancel( reason, true );
 		}
@@ -263,9 +266,9 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 			listener.loadTestStopped( this, context );
 		}
 
-		TestCaseRunner[] r = runners.toArray( new TestCaseRunner[runners.size()] );
+		InternalTestCaseRunner[] r = runners.toArray( new InternalTestCaseRunner[runners.size()] );
 
-		for( TestCaseRunner runner : r )
+		for( InternalTestCaseRunner runner : r )
 		{
 			runner.cancel( reason, true );
 		}
@@ -281,6 +284,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		try
 		{
 			loadTest.runTearDownScript( context, this );
+
 		}
 		catch( Exception e1 )
 		{
@@ -291,7 +295,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		hasTearedDown = true;
 	}
 
-	public void waitUntilFinished()
+	public Status waitUntilFinished()
 	{
 		while( runners.size() > 0 || threadsWaitingToStart > 0 )
 		{
@@ -304,11 +308,13 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 				SoapUI.logError( e );
 			}
 		}
+
+		return getStatus();
 	}
 
 	public void finishTestCase( String reason, WsdlTestCase testCase )
 	{
-		for( TestCaseRunner runner : runners )
+		for( InternalTestCaseRunner runner : runners )
 		{
 			if( runner.getTestCase() == testCase )
 			{
@@ -318,7 +324,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		}
 	}
 
-	public synchronized void finishRunner( TestCaseRunner runner )
+	public synchronized void finishRunner( InternalTestCaseRunner runner )
 	{
 		if( !runners.contains( runner ) )
 		{
@@ -332,7 +338,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 
 			if( testCaseStarter != null )
 				testCaseStarter.stop();
-			
+
 			if( status == Status.RUNNING )
 				status = Status.FINISHED;
 
@@ -364,13 +370,16 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		if( loadTest.getLimitType() == LoadTestLimitTypesConfig.COUNT )
 			return ( float )runCount / ( float )testLimit;
 
+		if( loadTest.getLimitType() == LoadTestLimitTypesConfig.COUNT_PER_THREAD )
+			return ( float )runCount / ( float )testLimit;
+
 		if( loadTest.getLimitType() == LoadTestLimitTypesConfig.TIME )
 			return ( float )getTimeTaken() / ( float )( testLimit * 1000 );
 
 		return -1;
 	}
 
-	private synchronized boolean afterRun( TestCaseRunner runner )
+	private synchronized boolean afterRun( InternalTestCaseRunner runner )
 	{
 		if( status != Status.RUNNING )
 			return false;
@@ -379,6 +388,9 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 
 		if( loadTest.getTestLimit() < 1 )
 			return true;
+
+		if( loadTest.getLimitType() == LoadTestLimitTypesConfig.COUNT_PER_THREAD )
+			return runner.getRunCount() < loadTest.getTestLimit();
 
 		if( loadTest.getLimitType() == LoadTestLimitTypesConfig.COUNT )
 			return runCount + runners.size() + threadsWaitingToStart <= loadTest.getTestLimit();
@@ -421,9 +433,9 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 				}
 
 				if( status != Status.RUNNING
-						|| getProgress() >= 1
-						|| ( loadTest.getLimitType() == LoadTestLimitTypesConfig.COUNT && runners.size() >= loadTest
-								.getTestLimit() ) )
+						|| getProgress() >= 1 )
+						//|| ( loadTest.getLimitType() == LoadTestLimitTypesConfig.COUNT && runners.size() >= loadTest
+						//		.getTestLimit() ) )
 				{
 					while( !testCases.isEmpty() )
 						testCases.remove( 0 ).release();
@@ -431,7 +443,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 					threadsWaitingToStart = 0;
 					break;
 				}
-				
+
 				// could have been canceled..
 				if( !testCases.isEmpty() )
 				{
@@ -465,7 +477,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		}
 	}
 
-	public class TestCaseRunner implements Runnable
+	public class InternalTestCaseRunner implements Runnable
 	{
 		private final WsdlTestCase testCase;
 		private boolean canceled;
@@ -473,7 +485,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		private WsdlTestCaseRunner runner;
 		private final int threadIndex;
 
-		public TestCaseRunner( WsdlTestCase testCase, int threadIndex )
+		public InternalTestCaseRunner( WsdlTestCase testCase, int threadIndex )
 		{
 			this.testCase = testCase;
 			this.threadIndex = threadIndex;
@@ -484,7 +496,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 			try
 			{
 				Thread.currentThread().setName(
-						testCase.getName() + " - " + loadTest.getName() + " - ThreadIndex " + threadIndex );
+						testCase.getName() + " " + loadTest.getName() + " ThreadIndex = " + threadIndex );
 				runner = new WsdlTestCaseRunner( testCase, new StringToObjectMap() );
 
 				while( !canceled )
@@ -492,13 +504,13 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 					try
 					{
 						runner.getRunContext().reset();
-						runner.getRunContext().setProperty( TestRunContext.THREAD_INDEX, threadIndex );
-						runner.getRunContext().setProperty( TestRunContext.RUN_COUNT, runCount );
-						runner.getRunContext().setProperty( TestRunContext.LOAD_TEST_RUNNER, WsdlLoadTestRunner.this );
-						runner.getRunContext().setProperty( TestRunContext.LOAD_TEST_CONTEXT, context );
+						runner.getRunContext().setProperty( TestCaseRunContext.THREAD_INDEX, threadIndex );
+						runner.getRunContext().setProperty( TestCaseRunContext.RUN_COUNT, runCount );
+						runner.getRunContext().setProperty( TestCaseRunContext.LOAD_TEST_RUNNER, WsdlLoadTestRunner.this );
+						runner.getRunContext().setProperty( TestCaseRunContext.LOAD_TEST_CONTEXT, context );
 						synchronized( this )
 						{
-							runner.getRunContext().setProperty( TestRunContext.TOTAL_RUN_COUNT, startedCount++ );
+							runner.getRunContext().setProperty( TestCaseRunContext.TOTAL_RUN_COUNT, startedCount++ );
 						}
 
 						runner.run();
@@ -568,11 +580,11 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		long newCount = loadTest.getThreadCount();
 
 		// get list of active runners
-		Iterator<TestCaseRunner> iterator = runners.iterator();
-		List<TestCaseRunner> activeRunners = new ArrayList<TestCaseRunner>();
+		Iterator<InternalTestCaseRunner> iterator = runners.iterator();
+		List<InternalTestCaseRunner> activeRunners = new ArrayList<InternalTestCaseRunner>();
 		while( iterator.hasNext() )
 		{
-			TestCaseRunner runner = iterator.next();
+			InternalTestCaseRunner runner = iterator.next();
 			if( !runner.isCanceled() )
 				activeRunners.add( runner );
 		}
@@ -629,7 +641,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		config.setLoadTestArray( new LoadTestConfig[0] );
 
 		// clone entire testCase
-		WsdlTestCase tc = new WsdlTestCase( testCase.getTestSuite(), config, true );
+		WsdlTestCase tc = testCase.getTestSuite().buildTestCase( config, true );
 		tc.afterLoad();
 		tc.addTestRunListener( testRunListener );
 		Settings settings = tc.getSettings();
@@ -660,9 +672,9 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		return System.currentTimeMillis() - startTime;
 	}
 
-	private class InternalTestRunListener implements TestRunListener
+	private class InternalTestRunListener extends TestRunListenerAdapter
 	{
-		public void beforeRun( TestRunner testRunner, TestRunContext runContext )
+		public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			if( getProgress() > 1 && loadTest.getCancelOnReachedLimit() )
 			{
@@ -675,7 +687,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 				}
 		}
 
-		public void beforeStep( TestRunner testRunner, TestRunContext runContext )
+		public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
 		{
 			if( getProgress() > 1 && loadTest.getCancelOnReachedLimit() )
 			{
@@ -685,13 +697,12 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 			{
 				for( LoadTestRunListener listener : loadTest.getLoadTestRunListeners() )
 				{
-					listener.beforeTestStep( WsdlLoadTestRunner.this, context, testRunner, runContext, runContext
-							.getCurrentStep() );
+					listener.beforeTestStep( WsdlLoadTestRunner.this, context, testRunner, runContext, testStep );
 				}
 			}
 		}
 
-		public void afterStep( TestRunner testRunner, TestRunContext runContext, TestStepResult result )
+		public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
 		{
 			for( LoadTestRunListener listener : loadTest.getLoadTestRunListeners() )
 			{
@@ -699,12 +710,32 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 			}
 		}
 
-		public void afterRun( TestRunner testRunner, TestRunContext runContext )
+		public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			for( LoadTestRunListener listener : loadTest.getLoadTestRunListeners() )
 			{
 				listener.afterTestCase( WsdlLoadTestRunner.this, context, testRunner, runContext );
 			}
 		}
+	}
+
+	public TestRunContext getRunContext()
+	{
+		return context;
+	}
+
+	public long getStartTime()
+	{
+		return startTime;
+	}
+
+	public void start( boolean async )
+	{
+		start();
+	}
+
+	public TestRunnable getTestRunnable()
+	{
+		return loadTest;
 	}
 }

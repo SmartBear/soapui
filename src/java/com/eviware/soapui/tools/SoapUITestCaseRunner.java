@@ -27,31 +27,32 @@ import org.apache.commons.cli.CommandLine;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlProjectRunner;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestSuiteRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStepResult;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepResult;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
-import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
-import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.report.JUnitReportCollector;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
  * Standalone test-runner used from maven-plugin, can also be used from
@@ -72,7 +73,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	private String testCase;
 	private List<TestAssertion> assertions = new ArrayList<TestAssertion>();
 	private Map<TestAssertion, WsdlTestStepResult> assertionResults = new HashMap<TestAssertion, WsdlTestStepResult>();
-	private List<TestRunner> runningTests = new ArrayList<TestRunner>();
+//	private List<TestCaseRunner> runningTests = new ArrayList<TestCaseRunner>();
 	private List<TestCase> failedTests = new ArrayList<TestCase>();
 
 	private int testSuiteCount;
@@ -86,21 +87,9 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	private boolean junitReport;
 	private int exportCount;
 	private JUnitReportCollector reportCollector;
-	private WsdlProject project;
-
+//	private WsdlProject project;
 	private String projectPassword;
-
 	private boolean saveAfterRun;
-
-	public SoapUITestCaseRunner()
-	{
-		super( SoapUITestCaseRunner.TITLE );
-	}
-
-	public SoapUITestCaseRunner( String title )
-	{
-		super( title );
-	}
 
 	/**
 	 * Runs the tests in the specified soapUI project file, see soapUI xdocs for
@@ -241,6 +230,16 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 			reportCollector = new JUnitReportCollector();
 	}
 
+	public SoapUITestCaseRunner()
+	{
+		super( SoapUITestCaseRunner.TITLE );
+	}
+
+	public SoapUITestCaseRunner( String title )
+	{
+		super( title );
+	}
+
 	/**
 	 * Controls if a short test summary should be printed after the test runs
 	 * 
@@ -266,20 +265,21 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
 		String projectFile = getProjectFile();
 
-		// project = new WsdlProject(projectFile, getProjectPassword());
-		project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew( projectFile,
+		WsdlProject project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew( projectFile,
 				getProjectPassword() );
 
 		if( project.isDisabled() )
 			throw new Exception( "Failed to load soapUI project file [" + projectFile + "]" );
 
-		initProject();
+		initProject( project );
 		ensureOutputFolder( project );
 
 		log.info( "Running soapUI tests in project [" + project.getName() + "]" );
 
 		long startTime = System.nanoTime();
 
+		List<TestCase> testCasesToRun = new ArrayList<TestCase>();
+		
 		// start by listening to all testcases.. (since one testcase can call
 		// another)
 		for( int c = 0; c < project.getTestSuiteCount(); c++ )
@@ -288,68 +288,26 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 			for( int i = 0; i < suite.getTestCaseCount(); i++ )
 			{
 				TestCase tc = suite.getTestCaseAt( i );
+				if( (testSuite == null || suite.getName().equals( suite.getName() )) && testCase != null && tc.getName().equals( testCase ))
+					testCasesToRun.add( tc );
+					
 				addListeners( tc );
 			}
 		}
 
-		// now run tests..
-		for( int c = 0; c < project.getTestSuiteCount(); c++ )
+		// decide what to run
+		if( testCasesToRun.size() > 0 )
 		{
-			WsdlTestSuite ts = project.getTestSuiteAt( c );
-			if( !ts.isDisabled() && ( testSuite == null || ts.getName().equalsIgnoreCase( testSuite ) ) )
-			{
-				runSuite( ts );
-				testSuiteCount++ ;
-
-				// wait for tests to finish if running in parallell mode
-				while( !runningTests.isEmpty() )
-				{
-					StringBuffer buf = new StringBuffer();
-					TestRunner[] runners = runningTests.toArray( new TestRunner[runningTests.size()] );
-
-					for( int i = 0; i < runners.length; i++ )
-					{
-						TestRunner runner = runners[i];
-						if( runner.getStatus() != TestRunner.Status.RUNNING )
-						{
-							runningTests.remove( runner );
-							continue;
-						}
-
-						buf.append( "\r\n- " );
-						buf.append( runner.getTestCase().getTestSuite().getName() ).append( ':' );
-						buf.append( runner.getTestCase().getName() ).append( ':' );
-						buf.append( runner.getStatus() ).append( ':' );
-
-						TestStep currentStep = runner.getRunContext().getCurrentStep();
-						if( currentStep != null )
-						{
-							buf.append( currentStep.getName() );
-						}
-						else
-						{
-							buf.append( "currentStep is null" );
-						}
-
-						if( System.getProperty( "soapui.dumpstacktrace", "false" ).equals( "true" ) )
-						{
-							Thread thread = ( ( WsdlTestCaseRunner )runner ).getThread();
-							if( thread != null )
-							{
-								StackTraceElement[] trace = thread.getStackTrace();
-								for( int y = 0; y < trace.length; y++ )
-									buf.append( "\tat " + trace[y] );
-							}
-						}
-					}
-
-					if( runningTests.size() > 0 )
-					{
-						log.info( "Waiting for " + runners.length + " tests to finish: " + buf.toString() );
-						Thread.sleep( 5000 );
-					}
-				}
-			}
+			for( TestCase testCase : testCasesToRun )
+			   runTestCase( ( WsdlTestCase )testCase );
+		}
+		else if( testSuite != null )
+		{
+			runSuite( project.getTestSuiteByName( testSuite ) );
+		}
+		else
+		{
+			runProject( project );
 		}
 
 		long timeTaken = ( System.nanoTime() - startTime ) / 1000000;
@@ -381,7 +339,22 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		return true;
 	}
 
-	protected void initProject() throws Exception
+	protected void runProject( WsdlProject project )
+	{
+		try
+		{
+			log.info( ( "Running Project [" + project.getName() + "], runType = " + project.getRunType() ) );
+			WsdlProjectRunner runner = project.run( new StringToObjectMap(), false );
+			log.info( "Project [" + project.getName() + "] finished with status [" + runner.getStatus()
+					+"] in " + runner.getTimeTaken() + "ms" );
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+		}
+	}
+
+	protected void initProject( WsdlProject project ) throws Exception
 	{
 		initProjectProperties( project );
 	}
@@ -390,7 +363,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	{
 		if( junitReport )
 		{
-			exportJUnitReports( reportCollector, getAbsoluteOutputFolder( project ) );
+			exportJUnitReports( reportCollector, getAbsoluteOutputFolder( project ), project );
 		}
 	}
 
@@ -430,7 +403,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		throw new Exception( buf.toString() );
 	}
 
-	public void exportJUnitReports( JUnitReportCollector collector, String folder ) throws Exception
+	public void exportJUnitReports( JUnitReportCollector collector, String folder, WsdlProject project ) throws Exception
 	{
 		collector.saveReports( folder == null ? "" : folder );
 	}
@@ -456,54 +429,18 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	 *           the TestSuite to run
 	 */
 
-	public void runSuite( WsdlTestSuite suite )
+	protected void runSuite( WsdlTestSuite suite )
 	{
-		log.info( ( "Running soapUI suite [" + suite.getName() + "], runType = " + suite.getRunType() ) );
-		PropertyExpansionContext context = new DefaultPropertyExpansionContext( suite );
-		long start = System.currentTimeMillis();
-
 		try
 		{
-			suite.runSetupScript( context );
-			for( int c = 0; c < suite.getTestCaseCount(); c++ )
-			{
-				WsdlTestCase tc = suite.getTestCaseAt( c );
-
-				String name = tc.getName();
-				if( testCase == null || name.equalsIgnoreCase( testCase ) )
-				{
-					if( !tc.isDisabled() )
-					{
-						runTestCase( tc, context );
-					}
-					else
-					{
-						log.info( "Skipping disabled testcase [" + name + "]" );
-					}
-				}
-				else
-				{
-					log.info( "Skipping testcase [" + name + "], filter is [" + testCase + "]" );
-				}
-			}
+			log.info( ( "Running TestSuite [" + suite.getName() + "], runType = " + suite.getRunType() ) );
+		   WsdlTestSuiteRunner runner = suite.run( new StringToObjectMap(), false );
+		   log.info( "TestSuite [" + suite.getName() + "] finished with status [" + runner.getStatus() + "] in " + ( runner.getTimeTaken() ) + "ms" );
 		}
 		catch( Exception e )
 		{
 			e.printStackTrace();
 		}
-		finally
-		{
-			try
-			{
-				suite.runTearDownScript( context );
-			}
-			catch( Exception e )
-			{
-				e.printStackTrace();
-			}
-		}
-
-		log.info( "soapUI suite [" + suite.getName() + "] finished in " + ( System.currentTimeMillis() - start ) + "ms" );
 	}
 
 	/**
@@ -514,12 +451,18 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	 * @param context
 	 */
 
-	private void runTestCase( TestCase testCase, PropertyExpansionContext context )
+	protected void runTestCase( WsdlTestCase testCase )
 	{
-		TestRunner testRunner = testCase.run( context.getProperties(),
-				testCase.getTestSuite().getRunType() == TestSuiteRunType.PARALLEL );
-		if( testRunner.getStatus() == TestRunner.Status.RUNNING )
-			runningTests.add( testRunner );
+		try
+		{
+			log.info( "Running TestCase [" + testCase.getName() + "]" );
+			WsdlTestCaseRunner runner = testCase.run( new StringToObjectMap(), false );
+			log.info( "TestCase [" + testCase.getName() + "] finished with status [" + runner.getStatus() + "] in " + ( runner.getTimeTaken() ) + "ms" );
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -547,24 +490,23 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		this.testSuite = testSuite;
 	}
 
-	public void beforeRun( TestRunner testRunner, TestRunContext runContext )
+	public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
 		log.info( "Running soapUI testcase [" + testRunner.getTestCase().getName() + "]" );
 	}
 
-	public void beforeStep( TestRunner testRunner, TestRunContext runContext )
+	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep currentStep )
 	{
-		super.beforeStep( testRunner, runContext );
+		super.beforeStep( testRunner, runContext, currentStep );
 
-		TestStep currentStep = runContext.getCurrentStep();
 		if( currentStep != null )
-			log.info( "running step [" + currentStep.getName() + "]" );
+		   log.info( "running step [" + currentStep.getName() + "]" );
 	}
 
-	public void afterStep( TestRunner testRunner, TestRunContext runContext, TestStepResult result )
+	public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
 	{
 		super.afterStep( testRunner, runContext, result );
-		TestStep currentStep = result.getTestStep();
+		TestStep currentStep = runContext.getCurrentStep();
 
 		if( currentStep instanceof Assertable )
 		{
@@ -605,7 +547,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 						+ StringUtils.createFileName( currentStep.getName(), '_' ) + "-" + count.longValue() + "-"
 						+ result.getStatus();
 
-				String absoluteOutputFolder = getAbsoluteOutputFolder( project );
+				String absoluteOutputFolder = getAbsoluteOutputFolder( ModelSupport.getModelItemProject( tc ));
 				String fileName = absoluteOutputFolder + File.separator + nameBase + ".txt";
 
 				if( result.getStatus() == TestStepStatus.FAILED )
@@ -657,7 +599,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		testStepCount++ ;
 	}
 
-	public void afterRun( TestRunner testRunner, TestRunContext runContext )
+	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
 		log.info( "Finished running soapUI testcase [" + testRunner.getTestCase().getName() + "], time taken: "
 				+ testRunner.getTimeTaken() + "ms, status: " + testRunner.getStatus() );
@@ -667,14 +609,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 			failedTests.add( testRunner.getTestCase() );
 		}
 
-		runningTests.remove( testRunner );
-
 		testCaseCount++ ;
 	}
-
-	protected WsdlProject getProject()
-	{
-		return project;
-	}
-
 }

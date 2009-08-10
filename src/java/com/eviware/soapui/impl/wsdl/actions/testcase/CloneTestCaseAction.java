@@ -45,6 +45,11 @@ import com.eviware.x.form.support.AField.AFieldType;
  * @author Ole.Matzura
  */
 
+/*
+ * There is a separate class for the pro version ProCloneTestCaseAction
+ * any changes made here should reflect to that class too
+ * TODO refactor these two classes so that only one class needs to be changed in case of changing the core functionality
+ */
 public class CloneTestCaseAction extends AbstractSoapUIAction<WsdlTestCase>
 {
 	private static final String CREATE_NEW_OPTION = "<Create New>";
@@ -75,9 +80,28 @@ public class CloneTestCaseAction extends AbstractSoapUIAction<WsdlTestCase>
 					}
 				}
 			} );
+			dialog.getFormField( Form.CLONE_DESCRIPTION ).addFormFieldListener( new XFormFieldListener()
+			{
+
+				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+				{
+					if( dialog.getBooleanValue( Form.CLONE_DESCRIPTION ) )
+					{
+						dialog.getFormField( Form.DESCRIPTION ).setEnabled( false );
+					}
+					else
+					{
+						dialog.getFormField( Form.DESCRIPTION ).setEnabled( true );
+					}
+
+				}
+			} );
 		}
 
 		dialog.setBooleanValue( Form.MOVE, false );
+		dialog.setBooleanValue( Form.CLONE_DESCRIPTION, true );
+		dialog.getFormField( Form.DESCRIPTION ).setEnabled( false );
+		dialog.setValue( Form.DESCRIPTION, testCase.getDescription() );
 		dialog.setValue( Form.NAME, "Copy of " + testCase.getName() );
 		WorkspaceImpl workspace = testCase.getTestSuite().getProject().getWorkspace();
 		dialog.setOptions( Form.PROJECT, ModelSupport.getNames( workspace.getOpenProjectList(),
@@ -188,6 +212,11 @@ public class CloneTestCaseAction extends AbstractSoapUIAction<WsdlTestCase>
 			{
 				testCase.getTestSuite().removeTestCase( testCase );
 			}
+			boolean cloneDescription = dialog.getBooleanValue( Form.CLONE_DESCRIPTION );
+			if( !cloneDescription )
+			{
+				newTestCase.setDescription( dialog.getValue( Form.DESCRIPTION ) );
+			}
 		}
 	}
 
@@ -208,5 +237,11 @@ public class CloneTestCaseAction extends AbstractSoapUIAction<WsdlTestCase>
 
 		@AField( name = "Move instead", description = "Moves the selected TestCase instead of copying", type = AFieldType.BOOLEAN )
 		public final static String MOVE = "Move instead";
+
+		@AField( name = "Clone description", description = "Clones the description of selected TestCase", type = AFieldType.BOOLEAN )
+		public final static String CLONE_DESCRIPTION = "Clone description";
+
+		@AField( name = "Description", description = "Description of new TestCase", type = AFieldType.STRINGAREA )
+		public final static String DESCRIPTION = "Description";
 	}
 }

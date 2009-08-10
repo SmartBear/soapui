@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.eviware.soapui.impl.rest.panels.request.views.content.RestRequestContentViewFactory;
-import com.eviware.soapui.impl.rest.panels.request.views.html.RestHtmlResponseViewFactory;
-import com.eviware.soapui.impl.rest.panels.request.views.json.RestJsonResponseViewFactory;
+import com.eviware.soapui.impl.rest.panels.request.views.html.HttpHtmlResponseViewFactory;
+import com.eviware.soapui.impl.rest.panels.request.views.json.JsonResponseViewFactory;
+import com.eviware.soapui.impl.support.http.HttpRequestContentViewFactory;
 import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorViewFactory;
 
@@ -38,9 +38,9 @@ public class EditorViewFactoryRegistry
 		// this should obviously come from a configuration file..
 		addFactory( new XmlSourceEditorViewFactory() );
 		// addFactory( new RestRequestParamsViewFactory() );
-		addFactory( new RestRequestContentViewFactory() );
-		addFactory( new RestJsonResponseViewFactory() );
-		addFactory( new RestHtmlResponseViewFactory() );
+		addFactory( new HttpRequestContentViewFactory() );
+		addFactory( new JsonResponseViewFactory() );
+		addFactory( new HttpHtmlResponseViewFactory() );
 		addFactory( new RawXmlEditorFactory() );
 	}
 

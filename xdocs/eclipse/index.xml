@@ -11,6 +11,8 @@
 		perspective which mimics the layout of the standalone soapUI version.The plugin makes use of the 
 		SWT_AWT bridge which greatly eases our development effort but may result in graphical glitches with dialogs 
 		and some window updates... but all core functionality should be working	OK (let us know otherwise)...</p>
+			<p>The <a href="../userguide/commandline/index.html">command-line runners</a> are not included with the eclipse plug-in but must be installed
+			seperately by installing the standalone soapUI version.</p>
 		<p>Currently the eclipse plugin can be downloaded from 
 		<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013">soapUI SourceForge Download Page</a> or 
 		through the update site located at http://www.soapui.org/eclipse/update/site.xml (see below)</p>

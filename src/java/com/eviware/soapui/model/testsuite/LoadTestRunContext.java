@@ -12,13 +12,11 @@
 
 package com.eviware.soapui.model.testsuite;
 
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-
 /**
  * Context information for a loadtest run session
  */
 
-public interface LoadTestRunContext extends PropertyExpansionContext
+public interface LoadTestRunContext extends TestRunContext
 {
 	public LoadTestRunner getLoadTestRunner();
 }

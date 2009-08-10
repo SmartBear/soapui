@@ -15,7 +15,7 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps;
 import javax.swing.JPanel;
 
 import com.eviware.soapui.impl.EmptyPanelBuilder;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.support.components.JPropertiesTable;
 import com.eviware.soapui.support.types.StringList;
@@ -44,8 +44,9 @@ public class RestTestRequestPanelBuilder extends EmptyPanelBuilder<RestTestReque
 
 	public JPanel buildOverviewPanel( RestTestRequestStep testStep )
 	{
-		RestTestRequest request = testStep.getTestRequest();
-		JPropertiesTable<RestTestRequest> table = new JPropertiesTable<RestTestRequest>( "REST TestRequest Properties" );
+		RestTestRequestInterface request = testStep.getTestRequest();
+		JPropertiesTable<RestTestRequestInterface> table = new JPropertiesTable<RestTestRequestInterface>(
+				"REST TestRequest Properties" );
 
 		// basic properties
 		table.addProperty( "Name", "name", true );
@@ -62,6 +63,7 @@ public class RestTestRequestPanelBuilder extends EmptyPanelBuilder<RestTestReque
 			table.addProperty( "Endpoint", "endpoint", request.getInterface().getEndpoints() );
 			table.addProperty( "Service", "serviceName" );
 			table.addProperty( "Resource", "path" );
+			table.addProperty( "Method", "restMethodName" );
 		}
 
 		table.addProperty( "Bind Address", "bindAddress", true );

@@ -12,8 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
+import java.beans.PropertyChangeListener;
+
 import javax.swing.Action;
 
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
 
 /**
@@ -35,4 +38,10 @@ public interface GroovyEditorModel
 	public Settings getSettings();
 
 	public String getScriptName();
+	
+	public void addPropertyChangeListener( PropertyChangeListener listener );
+	
+	public void removePropertyChangeListener( PropertyChangeListener listener );
+
+	public ModelItem getModelItem();
 }

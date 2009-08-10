@@ -23,8 +23,8 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
@@ -53,7 +53,12 @@ public class PathUtils
 
 	public static String expandPath( String path, AbstractWsdlModelItem<?> modelItem, PropertyExpansionContext context )
 	{
-		path = context == null ? PropertyExpansionUtils.expandProperties( modelItem, path ) : PropertyExpansionUtils
+		// if ( path != null ) {
+		path = stripQuotes( path );
+		if( isHttpPath( path ) )
+			path = path.replaceAll( " ", "%20" );
+		// }
+		path = context == null ? PropertyExpander.expandProperties( modelItem, path ) : PropertyExpander
 				.expandProperties( context, path );
 
 		if( !isRelativePath( path ) )
@@ -71,6 +76,18 @@ public class PathUtils
 		return Tools.joinRelativeUrl( root, path );
 	}
 
+	private static String stripQuotes( String path )
+	{
+		if( path != null )
+		{
+			if( path.startsWith( "\"" ) & path.endsWith( "\"" ) )
+			{
+				path = path.substring( 1, path.length() - 1 );
+			}
+		}
+		return path;
+	}
+
 	public static String adjustRelativePath( String str, String root, ModelItem contextModelItem )
 	{
 		if( StringUtils.isNullOrEmpty( root ) || StringUtils.isNullOrEmpty( str ) )
@@ -79,7 +96,7 @@ public class PathUtils
 		if( !isRelativePath( str ) )
 			return str;
 
-		root = PropertyExpansionUtils.expandProperties( contextModelItem, root );
+		root = PropertyExpander.expandProperties( contextModelItem, root );
 
 		if( isHttpPath( root ) )
 			root += "/";
@@ -121,7 +138,7 @@ public class PathUtils
 		if( StringUtils.isNullOrEmpty( root ) )
 			return path;
 
-		root = PropertyExpansionUtils.expandProperties( contextModelItem, root );
+		root = PropertyExpander.expandProperties( contextModelItem, root );
 
 		return relativize( path, root );
 	}
@@ -152,7 +169,7 @@ public class PathUtils
 			}
 		}
 
-		String projectPath = PropertyExpansionUtils.expandProperties( project, project.getResourceRoot() );
+		String projectPath = PropertyExpander.expandProperties( project, project.getResourceRoot() );
 		if( StringUtils.isNullOrEmpty( projectPath ) )
 			return path;
 
@@ -165,7 +182,7 @@ public class PathUtils
 			return path;
 
 		path = PathUtils.denormalizePath( path );
-		path = PropertyExpansionUtils.expandProperties( new DefaultPropertyExpansionContext( modelItem ), path );
+		path = PropertyExpander.expandProperties( new DefaultPropertyExpansionContext( modelItem ), path );
 
 		String prefix = "";
 
@@ -329,8 +346,8 @@ public class PathUtils
 		if( !StringUtils.hasContent( docroot ) )
 			return new File( "" ).getAbsolutePath();
 
-		docroot = context == null ? PropertyExpansionUtils.expandProperties( modelItem, docroot )
-				: PropertyExpansionUtils.expandProperties( context, docroot );
+		docroot = context == null ? PropertyExpander.expandProperties( modelItem, docroot ) : PropertyExpander
+				.expandProperties( context, docroot );
 
 		return docroot;
 	}

@@ -44,9 +44,9 @@ import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.model.support.InterfaceListenerAdapter;
 import com.eviware.soapui.model.support.ModelSupport;
@@ -57,8 +57,8 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.OperationTestStep;
 import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
@@ -76,7 +76,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
  */
 
 public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements OperationTestStep,
-		PropertyChangeListener, PropertyExpansionContainer, Assertable, HttpRequestTestStep<WsdlTestRequest>
+		PropertyChangeListener, PropertyExpansionContainer, Assertable, HttpRequestTestStep
 {
 	private final static Logger log = Logger.getLogger( WsdlTestRequestStep.class );
 	private RequestStepConfig requestStepConfig;
@@ -304,7 +304,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		{
 			if( arg0.getSource() == testRequest && arg0.getPropertyName().equals( WsdlTestRequest.NAME_PROPERTY ) )
 			{
-				if( !super.getName().equals( arg0.getNewValue() ) )
+				if( !super.getName().equals( ( String )arg0.getNewValue() ) )
 					super.setName( ( String )arg0.getNewValue() );
 			}
 
@@ -312,9 +312,10 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		}
 	}
 
-	public TestStepResult run( TestRunner runner, TestRunContext runContext )
+	public TestStepResult run( TestCaseRunner runner, TestCaseRunContext runContext )
 	{
 		WsdlTestRequestStepResult testStepResult = new WsdlTestRequestStepResult( this );
+		testStepResult.startTimer();
 		runContext.setProperty( AssertedXPathsContainer.ASSERTEDXPATHSCONTAINER_PROPERTY, testStepResult );
 
 		try
@@ -328,6 +329,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 				{
 					testStepResult.setStatus( TestStepStatus.FAILED );
 					testStepResult.addMessage( submit.getError().toString() );
+					
 
 					testRequest.setResponse( null, runContext );
 				}
@@ -340,6 +342,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 				}
 				else
 				{
+					runContext.setProperty( AssertedXPathsContainer.ASSERTEDXPATHSCONTAINER_PROPERTY, testStepResult );
 					testRequest.setResponse( response, runContext );
 
 					testStepResult.setTimeTaken( response.getTimeTaken() );
@@ -371,22 +374,24 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 				testStepResult.setRequestContent( response.getRequestContent(), testStepResult.getStatus() != TestStepStatus.FAILED );
 			else
 				testStepResult.setRequestContent( testRequest.getRequestContent(), testStepResult.getStatus() != TestStepStatus.FAILED );
+			testStepResult.stopTimer();
 		}
 		catch( SubmitException e )
 		{
 			testStepResult.setStatus( TestStepStatus.FAILED );
 			testStepResult.addMessage( "SubmitException: " + e );
+			testStepResult.stopTimer();
 		}
 		finally
 		{
 			submit = null;
 		}
 
-		testStepResult.setDomain( PropertyExpansionUtils.expandProperties( runContext, testRequest.getDomain() ) );
-		testStepResult.setUsername( PropertyExpansionUtils.expandProperties( runContext, testRequest.getUsername() ) );
-		testStepResult.setPassword( PropertyExpansionUtils.expandProperties( runContext, testRequest.getPassword() ) );
-		testStepResult.setEndpoint( PropertyExpansionUtils.expandProperties( runContext, testRequest.getEndpoint() ) );
-		testStepResult.setEncoding( testRequest.getEncoding() );
+		testStepResult.setDomain( PropertyExpander.expandProperties( runContext, testRequest.getDomain() ) );
+		testStepResult.setUsername( PropertyExpander.expandProperties( runContext, testRequest.getUsername() ) );
+		testStepResult.setPassword( PropertyExpander.expandProperties( runContext, testRequest.getPassword() ) );
+		testStepResult.setEndpoint( PropertyExpander.expandProperties( runContext, testRequest.getEndpoint() ) );
+		testStepResult.setEncoding( PropertyExpander.expandProperties( runContext, testRequest.getEncoding() ) );
 
 		if( testStepResult.getStatus() != TestStepStatus.CANCELED )
 		{
@@ -403,18 +408,20 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 				else
 					for( int c = 0; c < getAssertionCount(); c++ )
 					{
-						AssertionError[] errors = getAssertionAt( c ).getErrors();
+						WsdlMessageAssertion assertion = getAssertionAt( c );
+						AssertionError[] errors = assertion.getErrors();
 						if( errors != null )
 						{
 							for( AssertionError error : errors )
 							{
-								testStepResult.addMessage( error.getMessage() );
+								testStepResult.addMessage( "[" + assertion.getName() + "] " + error.getMessage() );
 							}
 						}
 					}
 
 				break;
 			}
+				// default : testStepResult.setStatus( TestStepStatus.OK ); break;
 			}
 		}
 
@@ -673,6 +680,11 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		testRequest.removeAssertion( assertion );
 	}
 
+	public TestAssertion moveAssertion( int ix, int whereTo )
+	{
+		return testRequest.moveAssertion( ix, whereTo );
+	}
+
 	public void removeAssertionsListener( AssertionsListener listener )
 	{
 		testRequest.removeAssertionsListener( listener );
@@ -684,7 +696,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 	}
 
 	@Override
-	public void prepare( TestRunner testRunner, TestRunContext testRunContext ) throws Exception
+	public void prepare( TestCaseRunner testRunner, TestCaseRunContext testRunContext ) throws Exception
 	{
 		super.prepare( testRunner, testRunContext );
 

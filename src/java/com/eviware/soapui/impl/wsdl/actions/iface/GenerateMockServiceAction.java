@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.actions.iface;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.eviware.soapui.SoapUI;
@@ -24,6 +23,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.panels.mock.WsdlMockServiceDesktopPanel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
@@ -74,7 +74,7 @@ public class GenerateMockServiceAction extends AbstractSoapUIAction<WsdlInterfac
 
 		if( dialog.show() )
 		{
-			List<String> operations = Arrays.asList( operationsFormField.getSelectedOptions() );
+			List<String> operations = StringUtils.toStringList( operationsFormField.getSelectedOptions() );
 			if( operations.size() == 0 )
 			{
 				UISupport.showErrorMessage( "No Operations selected.." );

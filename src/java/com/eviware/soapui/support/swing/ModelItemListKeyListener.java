@@ -32,10 +32,10 @@ public abstract class ModelItemListKeyListener extends KeyAdapter
 		if( ix.length == 1 )
 		{
 			ModelItem modelItem = getModelItemAt( ix[0] );
-			ActionList actions = ActionListBuilder.buildActions( modelItem );
-			if( actions != null )
-				actions.dispatchKeyEvent( e );
-		}
+		ActionList actions = ActionListBuilder.buildActions( modelItem );
+		if( actions != null )
+			actions.dispatchKeyEvent( e );
+	}
 		else
 		{
 			ModelItem[] modelItems = new ModelItem[ix.length];

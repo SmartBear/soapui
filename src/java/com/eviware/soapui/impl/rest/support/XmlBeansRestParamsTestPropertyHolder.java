@@ -35,16 +35,14 @@ import org.apache.xmlbeans.XmlString;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.RestParametersConfig;
-import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
-import com.eviware.soapui.model.testsuite.RenameableTestProperty;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.StringUtils;
 
-public class XmlBeansRestParamsTestPropertyHolder implements MutableTestPropertyHolder, Map<String, TestProperty>
+public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyHolder
 {
 	private RestParametersConfig config;
 	private List<RestParamProperty> properties = new ArrayList<RestParamProperty>();
@@ -65,9 +63,9 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 		}
 	}
 
-	protected RestParamProperty addProperty( RestParameterConfig propertyConfig, boolean notify )
+	protected XmlBeansRestParamProperty addProperty( RestParameterConfig propertyConfig, boolean notify )
 	{
-		RestParamProperty propertiesStepProperty = new RestParamProperty( propertyConfig );
+		XmlBeansRestParamProperty propertiesStepProperty = new XmlBeansRestParamProperty( propertyConfig );
 		properties.add( propertiesStepProperty );
 		propertyMap.put( propertiesStepProperty.getName().toUpperCase(), propertiesStepProperty );
 
@@ -124,7 +122,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 		}
 	}
 
-	public RestParamProperty addProperty( String name )
+	public XmlBeansRestParamProperty addProperty( String name )
 	{
 		RestParameterConfig propertyConfig = config.addNewParameter();
 		propertyConfig.setName( name );
@@ -136,6 +134,13 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 		listeners.add( listener );
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder#getProperty
+	 * (java.lang.String)
+	 */
 	public RestParamProperty getProperty( String name )
 	{
 		return propertyMap.get( name.toUpperCase() );
@@ -164,9 +169,10 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 			int ix = properties.indexOf( property );
 			propertyMap.remove( propertyName.toUpperCase() );
 			properties.remove( ix );
-			config.removeParameter( ix );
 
 			firePropertyRemoved( propertyName );
+			
+			config.removeParameter( ix );
 			return property;
 		}
 
@@ -187,11 +193,18 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 			addProperty( name ).setValue( value );
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder#resetValues
+	 * ()
+	 */
 	public void resetValues()
 	{
 		for( RestParamProperty property : properties )
 		{
-			property.reset();
+			( ( XmlBeansRestParamProperty )property ).reset();
 		}
 	}
 
@@ -201,7 +214,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 
 		for( int c = 0; c < config.sizeOfParameterArray(); c++ )
 		{
-			properties.get( c ).setConfig( config.getParameterArray( c ) );
+			( ( XmlBeansRestParamProperty )properties.get( c ) ).setConfig( config.getParameterArray( c ) );
 		}
 	}
 
@@ -215,9 +228,18 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 			return false;
 
 		property.setName( newName );
+		
+		firePropertyRenamed( name, newName );
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder#getPropertyIndex
+	 * (java.lang.String)
+	 */
 	public int getPropertyIndex( String name )
 	{
 		for( int c = 0; c < properties.size(); c++ )
@@ -231,44 +253,59 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 		return -1;
 	}
 
-	/**
-	 * Internal property class
-	 * 
-	 * @author ole
-	 */
-
-	public enum ParameterStyle
-	{
-		MATRIX, HEADER, QUERY, TEMPLATE, PLAIN
-	}
-
-	public class RestParamProperty implements RenameableTestProperty, RestParameter
+	public class XmlBeansRestParamProperty implements RestParamProperty
 	{
 		private RestParameterConfig propertyConfig;
 		private PropertyChangeSupport propertySupport;
 
-		public RestParamProperty( RestParameterConfig propertyConfig )
+		public XmlBeansRestParamProperty( RestParameterConfig propertyConfig )
 		{
 			this.propertyConfig = propertyConfig;
 
 			propertySupport = new PropertyChangeSupport( this );
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @seecom.eviware.soapui.impl.rest.support.RestParamProperty#
+		 * addPropertyChangeListener(java.beans.PropertyChangeListener)
+		 */
 		public void addPropertyChangeListener( PropertyChangeListener listener )
 		{
 			propertySupport.addPropertyChangeListener( listener );
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @seecom.eviware.soapui.impl.rest.support.RestParamProperty#
+		 * addPropertyChangeListener(java.lang.String,
+		 * java.beans.PropertyChangeListener)
+		 */
 		public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
 		{
 			propertySupport.addPropertyChangeListener( propertyName, listener );
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @seecom.eviware.soapui.impl.rest.support.RestParamProperty#
+		 * removePropertyChangeListener(java.beans.PropertyChangeListener)
+		 */
 		public void removePropertyChangeListener( PropertyChangeListener listener )
 		{
 			propertySupport.removePropertyChangeListener( listener );
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @seecom.eviware.soapui.impl.rest.support.RestParamProperty#
+		 * removePropertyChangeListener(java.lang.String,
+		 * java.beans.PropertyChangeListener)
+		 */
 		public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
 		{
 			propertySupport.removePropertyChangeListener( propertyName, listener );
@@ -371,11 +408,24 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 			return propertyConfig.getRequired();
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * com.eviware.soapui.impl.rest.support.RestParamProperty#isDisableUrlEncoding
+		 * ()
+		 */
 		public boolean isDisableUrlEncoding()
 		{
 			return propertyConfig.getDisableUrlEncoding();
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @seecom.eviware.soapui.impl.rest.support.RestParamProperty#
+		 * setDisableUrlEncoding(boolean)
+		 */
 		public void setDisableUrlEncoding( boolean encode )
 		{
 			boolean old = isDisableUrlEncoding();
@@ -427,9 +477,9 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 		@Override
 		public boolean equals( Object obj )
 		{
-			if( obj instanceof RestParamProperty )
+			if( obj instanceof XmlBeansRestParamProperty )
 			{
-				return propertyConfig.toString().equals( ( ( RestParamProperty )obj ).propertyConfig.toString() );
+				return propertyConfig.toString().equals( ( ( XmlBeansRestParamProperty )obj ).propertyConfig.toString() );
 			}
 
 			return super.equals( obj );
@@ -441,6 +491,13 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder#saveTo(java
+	 * .util.Properties)
+	 */
 	public void saveTo( Properties props )
 	{
 		int cnt = 0;
@@ -461,6 +518,13 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 		return properties.size();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder#getPropertyAt
+	 * (int)
+	 */
 	public RestParamProperty getPropertyAt( int index )
 	{
 		return properties.get( index );
@@ -479,7 +543,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 	public Map<String, TestProperty> getProperties()
 	{
 		Map<String, TestProperty> result = new HashMap<String, TestProperty>();
-		for( TestProperty property : propertyMap.values() )
+		for( RestParamProperty property : propertyMap.values() )
 		{
 			result.put( property.getName(), property );
 		}
@@ -544,6 +608,12 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 		return modelItem;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seecom.eviware.soapui.impl.rest.support.RestParamsPropertyHolder#
+	 * getPropertyExpansions()
+	 */
 	public PropertyExpansion[] getPropertyExpansions()
 	{
 		List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
@@ -709,30 +779,35 @@ public class XmlBeansRestParamsTestPropertyHolder implements MutableTestProperty
 		return config;
 	}
 
-	public void addParameters( XmlBeansRestParamsTestPropertyHolder params )
+	public void addParameters( RestParamsPropertyHolder params )
 	{
 		for( int c = 0; c < params.getPropertyCount(); c++ )
 		{
 			RestParamProperty property = params.getPropertyAt( c );
 			if( !hasProperty( property.getName() ) )
 			{
-				RestParamProperty prop = addProperty( property.getName() );
-				prop.setStyle( property.getStyle() );
-				prop.setValue( property.getValue() );
-				prop.setType( property.getType() );
-				prop.setDefaultValue( property.getDefaultValue() );
-				prop.setDescription( property.getDescription() );
-				prop.setOptions( property.getOptions() );
-				prop.setRequired( property.getRequired() );
+				addParameter( property );
 			}
 		}
+	}
+
+	public void addParameter( RestParamProperty property )
+	{
+		RestParamProperty prop = addProperty( property.getName() );
+		prop.setStyle( property.getStyle() );
+		prop.setValue( property.getValue() );
+		prop.setType( property.getType() );
+		prop.setDefaultValue( property.getDefaultValue() );
+		prop.setDescription( property.getDescription() );
+		prop.setOptions( property.getOptions() );
+		prop.setRequired( property.getRequired() );
 	}
 
 	public void release()
 	{
 	}
 
-	public RestParamProperty addProperty( RestParamProperty prop )
+	public RestParamProperty addProperty( XmlBeansRestParamProperty prop )
 	{
 		RestParameterConfig propertyConfig = ( RestParameterConfig )config.addNewParameter().set( prop.getConfig() );
 		return addProperty( propertyConfig, true );

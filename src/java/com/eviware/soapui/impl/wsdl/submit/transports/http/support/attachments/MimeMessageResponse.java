@@ -17,7 +17,8 @@ import org.apache.commons.httpclient.HeaderElement;
 import org.apache.commons.httpclient.NameValuePair;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpOperation;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
@@ -35,16 +36,18 @@ public class MimeMessageResponse extends BaseHttpResponse
 {
 	private long timeTaken;
 	private long responseContentLength;
-	private final String requestContent;
+	private String requestContent;
 	private MultipartMessageSupport mmSupport;
 	private PostResponseDataSource postResponseDataSource;
 
-	public MimeMessageResponse( AbstractHttpRequest<?> httpRequest, ExtendedHttpMethod httpMethod,
+	public MimeMessageResponse( AbstractHttpRequestInterface<?> httpRequest, ExtendedHttpMethod httpMethod,
 			String requestContent, PropertyExpansionContext context )
 	{
 		super( httpMethod, httpRequest );
 
-		this.requestContent = requestContent;
+		if( getRequestContent() == null || !getRequestContent().equals( requestContent ))
+			this.requestContent = requestContent;
+
 
 		try
 		{
@@ -67,8 +70,8 @@ public class MimeMessageResponse extends BaseHttpResponse
 				}
 			}
 
-			mmSupport = new MultipartMessageSupport( postResponseDataSource, rootPartId, httpRequest.getOperation(),
-					false, httpRequest.isPrettyPrint() );
+			mmSupport = new MultipartMessageSupport( postResponseDataSource, rootPartId,
+					( AbstractHttpOperation )httpRequest.getOperation(), false, httpRequest.isPrettyPrint() );
 
 			if( httpRequest.getSettings().getBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN ) )
 				this.timeTaken += httpMethod.getResponseReadTime();
@@ -91,7 +94,7 @@ public class MimeMessageResponse extends BaseHttpResponse
 
 	public String getRequestContent()
 	{
-		return requestContent;
+		return requestContent == null ? super.getRequestContent() : requestContent;
 	}
 
 	public void setResponseContent( String responseContent )

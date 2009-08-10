@@ -12,12 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.io.PrintWriter;
-import java.lang.ref.SoftReference;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
@@ -33,6 +27,12 @@ import com.eviware.soapui.model.testsuite.ResponseAssertedMessageExchange;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+
+import java.io.PrintWriter;
+import java.lang.ref.SoftReference;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * TestStepResult for a WsdlTestRequestStep
@@ -55,16 +55,18 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 	private List<AssertedXPath> assertedXPaths;
 	private WsdlResponse response;
 	private String requestContent;
+	private WsdlOperation operation;
 
 	public WsdlTestRequestStepResult( WsdlTestRequestStep step )
 	{
 		super( step );
+		
+		operation = step.getOperation();
 	}
 
 	public WsdlOperation getOperation()
 	{
-		WsdlTestRequestStep testStep = ( WsdlTestRequestStep )getTestStep();
-		return testStep.getOperation();
+		return operation;
 	}
 
 	public SoapVersion getSoapVersion()
@@ -90,7 +92,7 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 		if( useSoftReference )
 			this.softRequestContent = new SoftReference<String>( requestContent );
 		else
-			this.requestContent = requestContent;
+		this.requestContent = requestContent;
 	}
 
 	public WsdlResponse getResponse()

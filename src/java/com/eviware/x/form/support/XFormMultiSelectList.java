@@ -55,12 +55,14 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 		super( new JPanel( new BorderLayout() ) );
 
 		listModel = new DefaultListModel();
-		for( String value : values )
+		if (values != null)
 		{
-			selected.add( false );
-			listModel.addElement( value );
+			for (String value : values)
+			{
+				selected.add(false);
+				listModel.addElement(value);
+			}
 		}
-
 		list = new JList( listModel );
 		list.setCellRenderer( new CheckListCellRenderer() );
 		list.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
@@ -99,7 +101,7 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 
 	public String getValue()
 	{
-		return ( String )list.getSelectedValue();
+		return String.valueOf( list.getSelectedValue());
 	}
 
 	public void setValue( String value )
@@ -109,31 +111,31 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 		list.setSelectedIndex( index );
 	}
 
-	public void addItem( String value )
+	public void addItem( Object value )
 	{
 		listModel.addElement( value );
 		selected.add( false );
 	}
 
-	public String[] getOptions()
+	public Object[] getOptions()
 	{
-		String[] options = new String[listModel.size()];
+		Object[] options = new Object[listModel.size()];
 		for( int c = 0; c < options.length; c++ )
-			options[c] = ( String )listModel.get( c );
+			options[c] = listModel.get( c );
 		return options;
 	}
 
-	public String[] getSelectedOptions()
+	public Object[] getSelectedOptions()
 	{
-		List<String> result = new ArrayList<String>();
+		List<Object> result = new ArrayList<Object>();
 
 		for( int c = 0; c < selected.size(); c++ )
 		{
 			if( selected.get( c ) )
-				result.add( ( String )listModel.get( c ) );
+				result.add( listModel.get( c ) );
 		}
 
-		return result.toArray( new String[result.size()] );
+		return result.toArray();
 	}
 
 	public void setOptions( Object[] values )
@@ -175,9 +177,9 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 		}
 	}
 
-	public void setSelectedOptions( String[] options )
+	public void setSelectedOptions( Object[] options )
 	{
-		List<String> asList = Arrays.asList( options );
+		List<Object> asList = Arrays.asList( options );
 
 		for( int c = 0; c < selected.size(); c++ )
 		{

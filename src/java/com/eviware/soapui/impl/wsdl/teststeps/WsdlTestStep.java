@@ -27,8 +27,8 @@ import com.eviware.soapui.model.propertyexpansion.MutablePropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.UISupport;
 
@@ -179,11 +179,11 @@ abstract public class WsdlTestStep extends AbstractWsdlModelItem<TestStepConfig>
 		return result;
 	}
 
-	public void finish( TestRunner testRunner, TestRunContext testRunContext )
+	public void finish( TestCaseRunner testRunner, TestCaseRunContext testRunContext )
 	{
 	}
 
-	public void prepare( TestRunner testRunner, TestRunContext testRunContext ) throws Exception
+	public void prepare( TestCaseRunner testRunner, TestCaseRunContext testRunContext ) throws Exception
 	{
 	}
 
@@ -245,7 +245,7 @@ abstract public class WsdlTestStep extends AbstractWsdlModelItem<TestStepConfig>
 	{
 		return null;
 	}
-
+	
 	public void afterCopy( WsdlTestSuite oldTestSuite, WsdlTestCase oldTestCase )
 	{
 	}

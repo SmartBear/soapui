@@ -30,10 +30,10 @@ public interface HttpSettings
 	public static final String HTTP_VERSION_1_1 = "1.1";
 
 	@Setting( name = "HTTP Version", description = "Select HTTP Version to use", type = SettingType.ENUMERATION, values = {
-			HTTP_VERSION_1_0, HTTP_VERSION_1_1 }, defaultValue = HTTP_VERSION_1_1 )
+			HTTP_VERSION_1_0, HTTP_VERSION_1_1 } )
 	public static final String HTTP_VERSION = HttpSettings.class.getSimpleName() + "@" + "http_version";
 
-	@Setting( name = "User-Agent Header", description = "User-Agent HTTP header to send (blank will send default)" )
+	@Setting( name = "User-Agent Header", description = "User-Agent HTTP header to send, blank will send default" )
 	public final static String USER_AGENT = HttpSettings.class.getSimpleName() + "@" + "user-agent";
 
 	@Setting( name = "Request compression", description = "", type = SettingType.ENUMERATION, values = { "None",
@@ -60,7 +60,10 @@ public interface HttpSettings
 	public final static String AUTHENTICATE_PREEMPTIVELY = HttpSettings.class.getSimpleName() + "@"
 			+ "authenticate-preemptively";
 
-	@Setting( name = "Pre-encoded Endpoints", description = "Do not URL-encode service endpoints URLs", type = SettingType.BOOLEAN )
+	@Setting( name = "Expect-Continue", description = "Adds Expect-Continue header to outgoing request", type = SettingType.BOOLEAN )
+	public final static String EXPECT_CONTINUE = HttpSettings.class.getSimpleName() + "@expect-continue";
+	
+	@Setting( name = "Pre-encoded Endpoints", description = "Do not URL-escape service endpoints", type = SettingType.BOOLEAN )
 	public static final String ENCODED_URLS = HttpSettings.class.getSimpleName() + "@" + "encoded_urls";
 
 	@Setting( name = "Bind Address", description = "Default local address to bind to when sending requests" )
@@ -80,11 +83,11 @@ public interface HttpSettings
 	@Setting( name = "Max response size", description = "Maximum size to read from response (0 = no limit)" )
 	public final static String MAX_RESPONSE_SIZE = HttpSettings.class.getSimpleName() + "@" + "max_response_size";
 
-	@Setting( name = "Max Connections Per Host", description = "Maximum number of connections per host" )
+	@Setting( name = "Max Connections Per Host", description = "Maximum number of Connections Per Host" )
 	public static final String MAX_CONNECTIONS_PER_HOST = HttpSettings.class.getSimpleName() + "@"
 			+ "max_connections_per_host";
 
-	@Setting( name = "Max Total Connections", description = "Maximum number of total connections" )
+	@Setting( name = "Max Total Connections", description = "Maximum number of Total Connections" )
 	public static final String MAX_TOTAL_CONNECTIONS = HttpSettings.class.getSimpleName() + "@"
 			+ "max_total_connections";
 

@@ -36,6 +36,7 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.RestRequestStepFactory;
 import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.types.StringList;
@@ -83,7 +84,7 @@ public class GenerateRestTestSuiteAction extends AbstractSoapUIAction<RestServic
 
 		if( dialog.show() )
 		{
-			List<String> resources = Arrays.asList( operationsFormField.getSelectedOptions() );
+			List<String> resources = Arrays.asList( StringUtils.toStringArray( operationsFormField.getSelectedOptions() ) );
 			if( resources.size() == 0 )
 			{
 				UISupport.showErrorMessage( "No Resources selected.." );

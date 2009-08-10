@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.mock;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -27,7 +29,9 @@ import javax.swing.ImageIcon;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MockOperationConfig;
+import com.eviware.soapui.config.MockOperationDocumentConfig;
 import com.eviware.soapui.config.MockServiceConfig;
+import com.eviware.soapui.config.TestCaseConfig;
 import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
@@ -44,8 +48,12 @@ import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.mock.MockServiceListener;
 import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
+import com.eviware.soapui.support.resolver.ResolveDialog;
+import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 
@@ -73,8 +81,8 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	private SoapUIScriptEngine startScriptEngine;
 	private SoapUIScriptEngine stopScriptEngine;
 	private BeanPathPropertySupport docrootProperty;
-	private SoapUIScriptEngine onRequestScriptEngine;
-	private SoapUIScriptEngine afterRequestScriptEngine;
+	private ScriptEnginePool onRequestScriptEnginePool;
+	private ScriptEnginePool afterRequestScriptEnginePool;
 	private WsdlMockOperation faultMockOperation;
 
 	public WsdlMockService( Project project, MockServiceConfig config )
@@ -95,7 +103,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 			config.setPath( "/" );
 
 		if( !getSettings().isSet( REQUIRE_SOAP_ACTION ) )
-			setRequireSoapAction( true );
+			setRequireSoapAction( false );
 
 		try
 		{
@@ -270,6 +278,12 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 			operation.release();
 
 		mockServiceListeners.clear();
+
+		if( onRequestScriptEnginePool != null )
+			onRequestScriptEnginePool.release();
+
+		if( afterRequestScriptEnginePool != null )
+			afterRequestScriptEnginePool.release();
 
 		if( startScriptEngine != null )
 			startScriptEngine.release();
@@ -504,7 +518,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 
 		if( startScriptEngine == null )
 		{
-			startScriptEngine = SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, this );
+			startScriptEngine = SoapUIScriptEngineRegistry.create( this );
 			startScriptEngine.setScript( script );
 		}
 
@@ -522,7 +536,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 
 		if( stopScriptEngine == null )
 		{
-			stopScriptEngine = SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, this );
+			stopScriptEngine = SoapUIScriptEngineRegistry.create( this );
 			stopScriptEngine.setScript( script );
 		}
 
@@ -541,8 +555,8 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 
 		getConfig().getOnRequestScript().setStringValue( script );
 
-		if( onRequestScriptEngine != null )
-			onRequestScriptEngine.setScript( script );
+		if( onRequestScriptEnginePool != null )
+			onRequestScriptEnginePool.setScript( script );
 
 		notifyPropertyChanged( "onRequestScript", oldScript, script );
 	}
@@ -560,8 +574,8 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 			getConfig().addNewAfterRequestScript();
 
 		getConfig().getAfterRequestScript().setStringValue( script );
-		if( afterRequestScriptEngine != null )
-			afterRequestScriptEngine.setScript( script );
+		if( afterRequestScriptEnginePool != null )
+			afterRequestScriptEnginePool.setScript( script );
 
 		notifyPropertyChanged( "afterRequestScript", oldScript, script );
 	}
@@ -578,17 +592,26 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		if( StringUtils.isNullOrEmpty( script ) )
 			return null;
 
-		if( onRequestScriptEngine == null )
+		if( onRequestScriptEnginePool == null )
 		{
-			onRequestScriptEngine = SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, this );
-			onRequestScriptEngine.setScript( script );
+			onRequestScriptEnginePool = new ScriptEnginePool( this );
+			onRequestScriptEnginePool.setScript( script );
 		}
 
-		onRequestScriptEngine.setVariable( "context", runContext );
-		onRequestScriptEngine.setVariable( "mockRequest", mockRequest );
-		onRequestScriptEngine.setVariable( "mockRunner", runner );
-		onRequestScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-		return onRequestScriptEngine.run();
+		SoapUIScriptEngine scriptEngine = onRequestScriptEnginePool.getScriptEngine();
+
+		try
+		{
+			scriptEngine.setVariable( "context", runContext );
+			scriptEngine.setVariable( "mockRequest", mockRequest );
+			scriptEngine.setVariable( "mockRunner", runner );
+			scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
+			return scriptEngine.run();
+		}
+		finally
+		{
+			onRequestScriptEnginePool.returnScriptEngine( scriptEngine );
+		}
 	}
 
 	public Object runAfterRequestScript( WsdlMockRunContext runContext, WsdlMockRunner runner, MockResult mockResult )
@@ -598,17 +621,26 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		if( StringUtils.isNullOrEmpty( script ) )
 			return null;
 
-		if( afterRequestScriptEngine == null )
+		if( afterRequestScriptEnginePool == null )
 		{
-			afterRequestScriptEngine = SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, this );
-			afterRequestScriptEngine.setScript( script );
+			afterRequestScriptEnginePool = new ScriptEnginePool( this );
+			afterRequestScriptEnginePool.setScript( script );
 		}
 
-		afterRequestScriptEngine.setVariable( "context", runContext );
-		afterRequestScriptEngine.setVariable( "mockResult", mockResult );
-		afterRequestScriptEngine.setVariable( "mockRunner", runner );
-		afterRequestScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-		return afterRequestScriptEngine.run();
+		SoapUIScriptEngine scriptEngine = afterRequestScriptEnginePool.getScriptEngine();
+
+		try
+		{
+			scriptEngine.setVariable( "context", runContext );
+			scriptEngine.setVariable( "mockResult", mockResult );
+			scriptEngine.setVariable( "mockRunner", runner );
+			scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
+			return scriptEngine.run();
+		}
+		finally
+		{
+			afterRequestScriptEnginePool.returnScriptEngine( scriptEngine );
+		}
 	}
 
 	public List<? extends ModelItem> getChildren()
@@ -677,9 +709,8 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		return docrootProperty.get();
 	}
 
-	@SuppressWarnings( "unchecked" )
 	@Override
-	public void resolve( ResolveContext context )
+	public void resolve( ResolveContext<?> context )
 	{
 		super.resolve( context );
 		docrootProperty.resolveFile( context, "Missing MockService docroot" );
@@ -702,6 +733,70 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		mockOperations.add( ix, newOperation );
 		newOperation.afterLoad();
 		fireMockOperationAdded( newOperation );
+	}
+
+	
+	public void export(File file)
+	{
+		try
+		{
+			this.getConfig().newCursor().save( file );
+		}
+		catch( IOException e )
+		{
+			e.printStackTrace();
+		}
+	}
+
+	
+	public void importMockOperation(File file)
+	{
+		MockOperationConfig mockOperationNewConfig = null;
+
+		if( !file.exists() )
+		{
+			UISupport.showErrorMessage( "Error loading mock operation." );
+			return;
+		}
+
+		try
+		{
+			mockOperationNewConfig = MockOperationDocumentConfig.Factory.parse( file ).getMockOperation();
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+		}
+
+		if( mockOperationNewConfig != null )
+		{
+			MockOperationConfig newConfig = ( MockOperationConfig )getConfig().addNewMockOperation().set( mockOperationNewConfig ).changeType(
+					TestCaseConfig.type );
+			WsdlMockOperation newMockOperation = new WsdlMockOperation(this, newConfig);
+			ModelSupport.unsetIds( newMockOperation );
+			newMockOperation.afterLoad();
+			mockOperations.add( newMockOperation );
+			fireMockOperationAdded( newMockOperation );
+
+			resolveImportedMockOperation( newMockOperation );
+			
+		}
+		else
+		{
+			UISupport.showErrorMessage( "Not valild mock operation xml" );
+		}		
+	}
+	
+	private void resolveImportedMockOperation( WsdlMockOperation mockOperation )
+	{
+		ResolveDialog resolver = new ResolveDialog( "Validate MockOperation", "Checks MockOperation for inconsistencies", null );
+		resolver.setShowOkMessage( false );
+		resolver.resolve( mockOperation );
+	}
+	
+	public String toString()
+	{
+		return getName();
 	}
 
 }

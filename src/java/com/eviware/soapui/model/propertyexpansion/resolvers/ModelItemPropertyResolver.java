@@ -13,6 +13,7 @@
 package com.eviware.soapui.model.propertyexpansion.resolvers;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
@@ -25,9 +26,9 @@ import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestMockService;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
 
 public class ModelItemPropertyResolver implements PropertyResolver
@@ -86,7 +87,7 @@ public class ModelItemPropertyResolver implements PropertyResolver
 
 				if( property != null && xpath != null )
 				{
-					property = ResolverUtils.extractXPathPropertyValue( property, PropertyExpansionUtils.expandProperties(
+					property = ResolverUtils.extractXPathPropertyValue( property, PropertyExpander.expandProperties(
 							context, xpath ) );
 				}
 			}
@@ -146,7 +147,7 @@ public class ModelItemPropertyResolver implements PropertyResolver
 			mockService = ( WsdlMockService )modelItem;
 			project = mockService.getProject();
 		}
-		else if( modelItem instanceof AbstractHttpRequest )
+		else if( modelItem instanceof AbstractHttpRequestInterface<?> )
 		{
 			project = ( ( AbstractHttpRequest<?> )modelItem ).getOperation().getInterface().getProject();
 		}

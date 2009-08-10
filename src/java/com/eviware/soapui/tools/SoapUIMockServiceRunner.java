@@ -319,4 +319,10 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 	{
 		return project;
 	}
+	
+	public void stopAll() {
+		for ( MockRunner runner : runners ) {
+			runner.stop();
+		}
+	}
 }

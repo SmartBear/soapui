@@ -219,6 +219,15 @@ public class SimpleForm
 		return comboBox;
 	}
 
+	public JButton appendButton( String label, String tooltip )
+	{
+		JButton button = new JButton();
+		button.setToolTipText( tooltip );
+		button.getAccessibleContext().setAccessibleDescription( tooltip );
+		append( label, button );
+		return button;
+	}
+
 	public void appendFixed( String label, JComponent component )
 	{
 		append( label, component, "left:pref" );

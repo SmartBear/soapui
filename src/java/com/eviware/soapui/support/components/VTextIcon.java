@@ -16,10 +16,14 @@ import java.awt.Component;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.Icon;
+
+import com.eviware.soapui.SoapUI;
 
 /**
  * VTextIcon is an Icon implementation which draws a short string vertically.
@@ -209,12 +213,11 @@ public class VTextIcon implements Icon, PropertyChangeListener
 		}
 		else if( fRotation == ROTATE_LEFT )
 		{
-
 			g.translate( x + fWidth, y + fHeight );
 			( ( Graphics2D )g ).rotate( -NINETY_DEGREES );
-			g.setColor( fComponent.getBackground() );
-			g.fillRect( 1, 1, fWidth - 2, fHeight - 2 );
-			g.setColor( fComponent.getForeground() );
+			//g.setColor( fComponent.getBackground() );
+			//g.fillRect( 1, 1, fWidth - 2, fHeight - 2 );
+			//g.setColor( fComponent.getForeground() );
 			g.drawString( fLabel, kBufferSpace, -fDescent );
 			g.setColor( fComponent.getBackground() );
 			( ( Graphics2D )g ).rotate( NINETY_DEGREES );

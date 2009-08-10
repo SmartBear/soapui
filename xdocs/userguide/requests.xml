@@ -265,6 +265,19 @@ Both will improve your productivity and make Web Service Testing more fun.
 		<p align="center"><img src="images/wsa_inspector.gif" alt="Viewing header properties in WS-A Inspector"/></p>
             <p>(note that all settings support property-expansion)</p>
 		</subsection>
+		
+		<subsection name="WS-RM Properties">
+		<p>The WS-RM Inspector displays properties used for setting up and using a WS-RM Sequence for the request
+		according to the <a href="http://docs.oasis-open.org/ws-rx/wsrm/200702" target="_new">WS Reliable Messaging specification</a></p>
+            <ul>
+		<li>Enable WS-Reliable Messaging</li>
+		<li>WS-RM Version indicates WS ReliableMessaging version to be used.</li>
+		<li>Acknowledgment to allows the user to specify where the Acknowledgments should be sent to. If left empty, it will use an 
+		anonymous address, and WS-MakeConnection to receive Acknowledgment messages. Note that WS-RM 1.0 does not provide support for WS-MC, so the AckTo should be specified for such servers. In such a case, consider using a MockService to receive the acknowledgments</li>
+         </ul>
+		<p align="center"><img src="images/wsrm_inspector.gif" alt="Viewing header properties in WS-RM Inspector"/></p>
+            <p>(note that all settings support property-expansion)</p>
+		</subsection>
 
 		<subsection name="XML Source Editor">	
 		  <columns><column><div>

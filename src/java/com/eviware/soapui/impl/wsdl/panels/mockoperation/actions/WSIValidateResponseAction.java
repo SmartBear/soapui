@@ -81,7 +81,8 @@ public class WSIValidateResponseAction extends AbstractToolsAction<WsdlMockRespo
 			return;
 		}
 
-		wsiDir = SoapUI.getSettings().getString( WSISettings.WSI_LOCATION, null );
+		wsiDir = SoapUI.getSettings().getString( WSISettings.WSI_LOCATION,
+				System.getProperty( "wsi.dir", System.getenv( "WSI_HOME" ) ) );
 		if( wsiDir == null )
 		{
 			UISupport.showErrorMessage( "WSI Test Tools directory must be set in global preferences" );

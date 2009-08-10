@@ -23,7 +23,6 @@ import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -626,37 +625,8 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
 				boolean cellHasFocus )
 		{
-			if( value instanceof String )
-			{
-				setText( value.toString() );
-			}
-			else if( value instanceof MockResult )
-			{
-				MockResult result = ( MockResult )value;
-				String msg = dateFormat.format( new Date( result.getTimestamp() ) );
-				MockResponse mockResponse = result.getMockResponse();
-
-				if( mockResponse == null )
-				{
-					msg += ": [dispatch error; missing response]";
-				}
-				else
-				{
-					try
-					{
-						msg += ": [" + mockResponse.getMockOperation().getName();
-					}
-					catch( Throwable e )
-					{
-						msg += ": [removed operation?]";
-					}
-
-					msg += "] " + result.getTimeTaken() + "ms";
-				}
-
-				setText( msg );
-			}
-
+			setText( value.toString() );
+			
 			if( isSelected )
 			{
 				setBackground( list.getSelectionBackground() );
@@ -722,6 +692,7 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 		{
 			synchronized( this )
 			{
+				if(elements.size() <= index) return null;
 				return elements.get( index );
 			}
 		}
@@ -832,17 +803,17 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 	{
 		public StartScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "context", "mockRunner" }, getModelItem().getSettings(), "Start" );
+			super( new String[] { "log", "context", "mockRunner" }, WsdlMockServiceDesktopPanel.this.getModelItem(), "Start" );
 		}
 
 		public String getScript()
 		{
-			return getModelItem().getStartScript();
+			return WsdlMockServiceDesktopPanel.this.getModelItem().getStartScript();
 		}
 
 		public void setScript( String text )
 		{
-			getModelItem().setStartScript( text );
+			WsdlMockServiceDesktopPanel.this.getModelItem().setStartScript( text );
 		}
 
 		@Override
@@ -855,9 +826,9 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 				{
 					try
 					{
-						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext( getModelItem(), null )
+						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext( WsdlMockServiceDesktopPanel.this.getModelItem(), null )
 								: mockRunner.getMockContext();
-						getModelItem().runStartScript( context, mockRunner );
+						WsdlMockServiceDesktopPanel.this.getModelItem().runStartScript( context, mockRunner );
 					}
 					catch( Exception e1 )
 					{
@@ -872,17 +843,17 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 	{
 		public StopScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "context", "mockRunner" }, getModelItem().getSettings(), "Stop" );
+			super( new String[] { "log", "context", "mockRunner" }, WsdlMockServiceDesktopPanel.this.getModelItem(), "Stop" );
 		}
 
 		public String getScript()
 		{
-			return getModelItem().getStopScript();
+			return WsdlMockServiceDesktopPanel.this.getModelItem().getStopScript();
 		}
 
 		public void setScript( String text )
 		{
-			getModelItem().setStopScript( text );
+			WsdlMockServiceDesktopPanel.this.getModelItem().setStopScript( text );
 		}
 
 		@Override
@@ -895,9 +866,9 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 				{
 					try
 					{
-						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext( getModelItem(), null )
+						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext( WsdlMockServiceDesktopPanel.this.getModelItem(), null )
 								: mockRunner.getMockContext();
-						getModelItem().runStopScript( context, mockRunner );
+						WsdlMockServiceDesktopPanel.this.getModelItem().runStopScript( context, mockRunner );
 					}
 					catch( Exception e1 )
 					{
@@ -912,18 +883,18 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 	{
 		public OnRequestScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "context", "mockRequest", "mockRunner" }, getModelItem().getSettings(),
+			super( new String[] { "log", "context", "mockRequest", "mockRunner" }, WsdlMockServiceDesktopPanel.this.getModelItem(),
 					"OnRequest" );
 		}
 
 		public String getScript()
 		{
-			return getModelItem().getOnRequestScript();
+			return WsdlMockServiceDesktopPanel.this.getModelItem().getOnRequestScript();
 		}
 
 		public void setScript( String text )
 		{
-			getModelItem().setOnRequestScript( text );
+			WsdlMockServiceDesktopPanel.this.getModelItem().setOnRequestScript( text );
 		}
 
 		@Override
@@ -936,9 +907,9 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 				{
 					try
 					{
-						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext( getModelItem(), null )
+						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext( WsdlMockServiceDesktopPanel.this.getModelItem(), null )
 								: mockRunner.getMockContext();
-						getModelItem().runOnRequestScript( context, mockRunner, null );
+						WsdlMockServiceDesktopPanel.this.getModelItem().runOnRequestScript( context, mockRunner, null );
 					}
 					catch( Exception e1 )
 					{
@@ -953,18 +924,18 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 	{
 		public AfterRequestScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "context", "mockResult", "mockRunner" }, getModelItem().getSettings(),
+			super( new String[] { "log", "context", "mockResult", "mockRunner" }, WsdlMockServiceDesktopPanel.this.getModelItem(),
 					"AfterRequest" );
 		}
 
 		public String getScript()
 		{
-			return getModelItem().getAfterRequestScript();
+			return WsdlMockServiceDesktopPanel.this.getModelItem().getAfterRequestScript();
 		}
 
 		public void setScript( String text )
 		{
-			getModelItem().setAfterRequestScript( text );
+			WsdlMockServiceDesktopPanel.this.getModelItem().setAfterRequestScript( text );
 		}
 
 		@Override
@@ -977,9 +948,9 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 				{
 					try
 					{
-						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext( getModelItem(), null )
+						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext( WsdlMockServiceDesktopPanel.this.getModelItem(), null )
 								: mockRunner.getMockContext();
-						getModelItem().runAfterRequestScript( context, mockRunner, null );
+						WsdlMockServiceDesktopPanel.this.getModelItem().runAfterRequestScript( context, mockRunner, null );
 					}
 					catch( Exception e1 )
 					{

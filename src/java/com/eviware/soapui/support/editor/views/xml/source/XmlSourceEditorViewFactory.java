@@ -21,6 +21,8 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wadl.support.WadlValidator;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -107,9 +109,9 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		{
 			return new WsdlMockResponseXmlSourceEditor( ( XmlEditor )editor, ( WsdlMockResponse )modelItem );
 		}
-		else if( modelItem instanceof RestRequest )
+		else if( modelItem instanceof HttpRequestInterface<?> )
 		{
-			return new RestResponseXmlSourceEditor( ( XmlEditor )editor, ( RestRequest )modelItem );
+			return new RestResponseXmlSourceEditor( ( XmlEditor )editor, ( HttpRequestInterface<?> )modelItem );
 		}
 		else if( modelItem instanceof MessageExchangeModelItem )
 		{
@@ -350,20 +352,22 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		}
 	}
 
-	private class RestResponseXmlSourceEditor extends XmlSourceEditorView<RestRequest>
+	private class RestResponseXmlSourceEditor extends XmlSourceEditorView<HttpRequestInterface<?>>
 	{
-		public RestResponseXmlSourceEditor( XmlEditor<XmlDocument> xmlEditor, RestRequest restRequest )
+		public RestResponseXmlSourceEditor( XmlEditor<XmlDocument> xmlEditor, HttpRequestInterface<?> restRequest )
 		{
 			super( xmlEditor, restRequest );
 		}
 
 		protected ValidationError[] validateXml( String xml )
 		{
-			if( getModelItem().getResource() == null )
+			if( getModelItem() instanceof HttpRequestInterface
+					|| ( ( RestRequestInterface )getModelItem() ).getResource() == null )
 				return new ValidationError[0];
 
-			WadlValidator validator = new WadlValidator( getModelItem().getResource().getService().getWadlContext() );
-			return validator.assertResponse( new RestResponseMessageExchange( getModelItem() ) );
+			WadlValidator validator = new WadlValidator( ( ( RestRequestInterface )getModelItem() ).getResource()
+					.getService().getWadlContext() );
+			return validator.assertResponse( new RestResponseMessageExchange( ( RestRequest )getModelItem() ) );
 		}
 	}
 }

@@ -12,8 +12,8 @@
 
 package com.eviware.soapui.impl.rest.actions.request;
 
+import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
@@ -35,8 +35,8 @@ public class DeleteRestRequestAction extends AbstractSoapUIAction<RestRequest>
 		if( UISupport.confirm( "Delete Request [" + request.getName() + "] from Resource ["
 				+ request.getOperation().getName() + "]", "Delete Request" ) )
 		{
-			RestResource resource = request.getResource();
-			resource.removeRequest( request );
+			RestMethod method = request.getRestMethod();
+			method.removeRequest( request );
 		}
 	}
 }

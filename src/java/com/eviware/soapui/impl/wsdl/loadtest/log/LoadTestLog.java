@@ -215,4 +215,9 @@ public class LoadTestLog extends AbstractListModel implements Runnable
 			}
 		}
 	}
+
+	public List<LoadTestLogEntry> getEntries()
+	{
+		return entries;
+	}
 }

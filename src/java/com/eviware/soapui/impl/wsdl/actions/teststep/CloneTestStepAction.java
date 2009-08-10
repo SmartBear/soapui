@@ -229,6 +229,8 @@ public class CloneTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 			boolean move = dialog.getBooleanValue( Form.MOVE );
 
 			WsdlTestStep newTestStep = targetTestCase.importTestStep( testStep, name, -1, !move );
+			if( newTestStep == null )
+				return;
 
 			if( dialog.getBooleanValue( Form.OPEN ) )
 				UISupport.selectAndShow( newTestStep );

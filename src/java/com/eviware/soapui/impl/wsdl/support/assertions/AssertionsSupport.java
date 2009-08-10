@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.xmlbeans.XmlObject;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
@@ -120,6 +122,44 @@ public class AssertionsSupport implements PropertyChangeListener
 		modelItemConfig.removeAssertion( ix );
 	}
 
+	public WsdlMessageAssertion moveAssertion( int ix, int offset )
+	{
+		// int ix = assertions.indexOf( assertion );
+		WsdlMessageAssertion assertion = getAssertionAt( ix );
+		if( ix == -1 )
+		{
+			throw new RuntimeException( "assertion [" + assertion.getName() + "] not available " );
+		}
+		// if first selected can't move up and if last selected can't move down
+		if( ( ix == 0 && offset == -1 ) || ( ix == assertions.size() - 1 && offset == 1 ) )
+		{
+			return assertion;
+		}
+		TestAssertionConfig conf = assertion.getConfig();
+		XmlObject newXmlObject = conf.copy();
+
+		TestAssertionConfig newConf = TestAssertionConfig.Factory.newInstance();
+		newConf.set( newXmlObject );
+		WsdlMessageAssertion newAssertion = TestAssertionRegistry.getInstance().buildAssertion( newConf, assertable );
+
+		assertion.removePropertyChangeListener( this );
+		assertions.remove( ix );
+
+		assertion.release();
+
+		modelItemConfig.removeAssertion( ix );
+
+		newAssertion.addPropertyChangeListener( this );
+		assertions.add( ix + offset, newAssertion );
+
+		newAssertion.release();
+
+		modelItemConfig.insertAssertion( newConf, ix + offset );
+		fireAssertionMoved( newAssertion, ix, offset );
+		return newAssertion;
+
+	}
+
 	public void release()
 	{
 		for( WsdlMessageAssertion assertion : assertions )
@@ -148,6 +188,16 @@ public class AssertionsSupport implements PropertyChangeListener
 		for( int c = 0; c < listeners.length; c++ )
 		{
 			listeners[c].assertionRemoved( assertion );
+		}
+	}
+
+	public void fireAssertionMoved( WsdlMessageAssertion assertion, int ix, int offset )
+	{
+		AssertionsListener[] listeners = assertionsListeners.toArray( new AssertionsListener[assertionsListeners.size()] );
+
+		for( int c = 0; c < listeners.length; c++ )
+		{
+			listeners[c].assertionMoved( assertion, ix, offset );
 		}
 	}
 
@@ -266,7 +316,7 @@ public class AssertionsSupport implements PropertyChangeListener
 		}
 	}
 
-	public void resolve( ResolveContext context )
+	public void resolve( ResolveContext<?> context )
 	{
 		for( WsdlMessageAssertion assertion : assertions )
 		{

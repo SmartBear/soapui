@@ -59,7 +59,7 @@ public class ContentTypeHandler
 
 		for( String key : suffixToContentType.keySet() )
 		{
-			if( suffixToContentType.get( key ).equals( contentType ) )
+			if( key.length() == 3 && suffixToContentType.get( key ).equals( contentType ) )
 				return key;
 		}
 
@@ -95,7 +95,6 @@ public class ContentTypeHandler
 		suffixToContentType.put( "ief", "image/ief" );
 		suffixToContentType.put( "jpeg", "image/jpeg" );
 		suffixToContentType.put( "jpg", "image/jpeg" );
-		suffixToContentType.put( "jpe", "image/jpeg" );
 		suffixToContentType.put( "tiff tif", "image/tiff" );
 		suffixToContentType.put( "tif", "image/tiff" );
 		suffixToContentType.put( "rgb", "image/rgb" );

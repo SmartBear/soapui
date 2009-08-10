@@ -14,7 +14,7 @@ package com.eviware.soapui.monitor.support;
 
 import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.monitor.TestMonitorListener;
 
 /**
@@ -33,11 +33,11 @@ public class TestMonitorListenerAdapter implements TestMonitorListener
 	{
 	}
 
-	public void testCaseStarted( TestRunner runner )
+	public void testCaseStarted( TestCaseRunner runner )
 	{
 	}
 
-	public void testCaseFinished( TestRunner runner )
+	public void testCaseFinished( TestCaseRunner runner )
 	{
 	}
 

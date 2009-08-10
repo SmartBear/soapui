@@ -32,6 +32,7 @@ import javax.wsdl.Import;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLWriter;
 
+import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
 
 import com.eviware.soapui.SoapUI;
@@ -47,10 +48,9 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunListener;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.support.AbstractMockRunner;
 import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
@@ -74,6 +74,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 	private final Map<String, StringToStringMap> wsdlCache = new HashMap<String, StringToStringMap>();
 	private boolean running;
 	private boolean logEnabled = true;
+	private final static Logger log = Logger.getLogger( WsdlMockRunner.class );
 
 	public WsdlMockRunner( WsdlMockService mockService, WsdlTestRunContext context ) throws Exception
 	{
@@ -137,7 +138,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 
 				wsdlCache.put( iface.getName(), parts );
 
-				MockEngine.log.info( "Mounted WSDL for interface [" + iface.getName() + "] at [" + getOverviewUrl() + "]" );
+				log.info( "Mounted WSDL for interface [" + iface.getName() + "] at [" + getOverviewUrl() + "]" );
 			}
 			catch( Exception e )
 			{
@@ -397,7 +398,10 @@ public class WsdlMockRunner extends AbstractMockRunner
 		}
 		catch( Exception e )
 		{
-			throw new DispatchException( e );
+			if( e instanceof DispatchException )
+				throw ( DispatchException )e;
+			else
+				throw new DispatchException( e );
 		}
 		finally
 		{
@@ -416,32 +420,40 @@ public class WsdlMockRunner extends AbstractMockRunner
 	{
 		try
 		{
-			if( request.getQueryString() != null && request.getQueryString().toUpperCase().startsWith( "WSDL" ) )
+			String qs = request.getQueryString();
+			if( qs != null && qs.toUpperCase().startsWith( "WSDL" ) )
 			{
 				dispatchWsdlRequest( request, response );
 			}
 			else
 			{
-				String docroot = PropertyExpansionUtils.expandProperties( mockContext, getMockService().getDocroot() );
-				if( StringUtils.hasContent( docroot ) )
+				if( qs != null && qs.startsWith( "cmd=" ) )
 				{
-					try
+					dispatchCommand( request.getParameter( "cmd" ), request, response );
+				}
+				else
+				{
+					String docroot = PropertyExpander.expandProperties( mockContext, getMockService().getDocroot() );
+					if( StringUtils.hasContent( docroot ) )
 					{
-						String pathInfo = request.getPathInfo();
-						if( mockService.getPath().length() > 1 && pathInfo.startsWith( mockService.getPath() ) )
-							pathInfo = pathInfo.substring( mockService.getPath().length() );
+						try
+						{
+							String pathInfo = request.getPathInfo();
+							if( mockService.getPath().length() > 1 && pathInfo.startsWith( mockService.getPath() ) )
+								pathInfo = pathInfo.substring( mockService.getPath().length() );
 
-						File file = new File( docroot + pathInfo.replace( '/', File.separatorChar ) );
-						FileInputStream in = new FileInputStream( file );
-						response.setStatus( HttpServletResponse.SC_OK );
-						long length = file.length();
-						response.setContentLength( ( int )length );
-						response.setContentType( ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
-						Tools.readAndWrite( in, length, response.getOutputStream() );
-					}
-					catch( Throwable e )
-					{
-						throw new DispatchException( e );
+							File file = new File( docroot + pathInfo.replace( '/', File.separatorChar ) );
+							FileInputStream in = new FileInputStream( file );
+							response.setStatus( HttpServletResponse.SC_OK );
+							long length = file.length();
+							response.setContentLength( ( int )length );
+							response.setContentType( ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
+							Tools.readAndWrite( in, length, response.getOutputStream() );
+						}
+						catch( Throwable e )
+						{
+							throw new DispatchException( e );
+						}
 					}
 				}
 			}
@@ -451,6 +463,70 @@ public class WsdlMockRunner extends AbstractMockRunner
 		catch( Exception e )
 		{
 			throw new DispatchException( e );
+		}
+	}
+
+	private void dispatchCommand( String cmd, HttpServletRequest request, HttpServletResponse response ) throws IOException
+	{
+		if( "stop".equals( cmd ))
+		{
+			response.setStatus( HttpServletResponse.SC_OK );
+			response.flushBuffer();
+			
+			SoapUI.getThreadPool().execute( new Runnable() {
+
+				public void run()
+				{
+					try
+					{
+						Thread.sleep( 500 );
+					}
+					catch( InterruptedException e )
+					{
+						e.printStackTrace();
+					}
+					stop();
+				}} );
+		}
+		else if( "restart".equals( cmd ))
+		{
+			response.setStatus( HttpServletResponse.SC_OK );
+			response.flushBuffer();
+			
+			SoapUI.getThreadPool().execute( new Runnable() {
+
+				public void run()
+				{
+					try
+					{
+						Thread.sleep( 500 );
+					}
+					catch( InterruptedException e )
+					{
+						e.printStackTrace();
+					}
+					
+					stop();
+//					
+//					try
+//					{
+//						Thread.sleep( 500 );
+//					}
+//					catch( InterruptedException e )
+//					{
+//						e.printStackTrace();
+//					}
+
+					try
+					{
+						mockService.start();
+					}
+					catch( Exception e )
+					{
+						e.printStackTrace();
+					}
+					
+				}} );
 		}
 	}
 
@@ -513,7 +589,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 					StringToStringMap parts = wsdlCache.get( iface.getName() );
 					Import wsdlImport = def.createImport();
 					wsdlImport.setLocationURI( getInterfacePrefix( iface ) + "&part=" + parts.get( "#root#" ) );
-					wsdlImport.setNamespaceURI( iface.getWsdlContext().getDefinition().getTargetNamespace() );
+					wsdlImport.setNamespaceURI( WsdlUtils.getTargetNamespace( iface.getWsdlContext().getDefinition()) );
 
 					def.addImport( wsdlImport );
 				}

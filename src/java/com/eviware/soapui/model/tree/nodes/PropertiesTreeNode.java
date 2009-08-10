@@ -139,7 +139,7 @@ public class PropertiesTreeNode<T extends ModelItem> extends AbstractModelItemTr
 		{
 			PropertyTreeNode propertyTreeNode = propertyMap.get( name );
 			if( propertyTreeNode != null )
-				propertyTreeNode.getModelItem().setName( PropertyTreeNode.buildName( holder.getProperty( name ) ) );
+			propertyTreeNode.getModelItem().setName( PropertyTreeNode.buildName( holder.getProperty( name ) ) );
 		}
 
 		public void propertyMoved( String name, int oldIndex, int newIndex )
@@ -148,7 +148,10 @@ public class PropertiesTreeNode<T extends ModelItem> extends AbstractModelItemTr
 			getTreeModel().notifyNodeRemoved( node, false );
 
 			propertyNodes.remove( oldIndex );
-			propertyNodes.add( newIndex, node );
+			if( newIndex >= propertyNodes.size() )
+				propertyNodes.add( node );
+			else
+				propertyNodes.add( newIndex, node );
 
 			getTreeModel().notifyNodeInserted( node );
 		}

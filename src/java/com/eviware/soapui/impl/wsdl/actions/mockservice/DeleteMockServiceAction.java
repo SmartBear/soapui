@@ -28,7 +28,7 @@ public class DeleteMockServiceAction extends AbstractSoapUIAction<WsdlMockServic
 {
 	public DeleteMockServiceAction()
 	{
-		super( "Remove", "Removes this MockService from the MockService" );
+		super( "Remove", "Removes this MockService from the Project" );
 	}
 
 	public void perform( WsdlMockService mockService, Object param )
@@ -39,7 +39,7 @@ public class DeleteMockServiceAction extends AbstractSoapUIAction<WsdlMockServic
 			return;
 		}
 
-		if( UISupport.confirm( "Remove MockService [" + mockService.getName() + "] from MockService",
+		if( UISupport.confirm( "Remove MockService [" + mockService.getName() + "] from Project",
 				"Remove MockService" ) )
 		{
 			( ( WsdlProject )mockService.getProject() ).removeMockService( mockService );

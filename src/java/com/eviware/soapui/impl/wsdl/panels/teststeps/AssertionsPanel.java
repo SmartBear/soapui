@@ -70,6 +70,8 @@ public class AssertionsPanel extends JPanel
 	private AddAssertionAction addAssertionAction;
 	private ConfigureAssertionAction configureAssertionAction;
 	private RemoveAssertionAction removeAssertionAction;
+	private MoveAssertionUpAction moveAssertionUpAction;
+	private MoveAssertionDownAction moveAssertionDownAction;
 
 	public AssertionsPanel( Assertable assertable )
 	{
@@ -187,6 +189,8 @@ public class AssertionsPanel extends JPanel
 	{
 		configureAssertionAction = new ConfigureAssertionAction();
 		removeAssertionAction = new RemoveAssertionAction();
+		moveAssertionUpAction = new MoveAssertionUpAction();
+		moveAssertionDownAction = new MoveAssertionDownAction();
 
 		JXToolBar toolbar = UISupport.createToolbar();
 		addToolbarButtons( toolbar );
@@ -203,6 +207,8 @@ public class AssertionsPanel extends JPanel
 
 				configureAssertionAction.setEnabled( ix >= 0 );
 				removeAssertionAction.setEnabled( ix >= 0 );
+				moveAssertionUpAction.setEnabled( ix >= 0 );
+				moveAssertionDownAction.setEnabled( ix >= 0 );
 
 				if( ix == -1 )
 					return;
@@ -219,6 +225,8 @@ public class AssertionsPanel extends JPanel
 		toolbar.addFixed( UISupport.createToolbarButton( addAssertionAction ) );
 		toolbar.addFixed( UISupport.createToolbarButton( configureAssertionAction ) );
 		toolbar.addFixed( UISupport.createToolbarButton( removeAssertionAction ) );
+		toolbar.addFixed( UISupport.createToolbarButton( moveAssertionUpAction ) );
+		toolbar.addFixed( UISupport.createToolbarButton( moveAssertionDownAction ) );
 	}
 
 	public void setEnabled( boolean enabled )
@@ -398,6 +406,42 @@ public class AssertionsPanel extends JPanel
 				}
 			}
 		}
+
+		public void assertionMoved( TestAssertion newAssertion, int ix, int offset )
+		{
+			synchronized( this )
+			{
+				// int ix = items.indexOf( assertion );
+				TestAssertion assertion = ( TestAssertion )items.get( ix );
+				// if first selected can't move up and if last selected can't move
+				// down
+				if( ( ix == 0 && offset == -1 ) || ( ix == items.size() - 1 && offset == 1 ) )
+				{
+					return;
+				}
+
+				assertion.removePropertyChangeListener( this );
+				items.remove( ix );
+				fireIntervalRemoved( this, ix, ix );
+
+				// remove associated errors
+				while( ix < items.size() && items.get( ix ) instanceof AssertionError )
+				{
+					items.remove( ix );
+					fireIntervalRemoved( this, ix, ix );
+				}
+				newAssertion.addPropertyChangeListener( this );
+				items.add( ix + offset, newAssertion );
+				fireIntervalAdded( this, ix + offset, ix + offset );
+				// add associated errors
+				while( ix < items.size() && items.get( ix ) instanceof AssertionError )
+				{
+					items.add( newAssertion );
+					fireIntervalAdded( this, ix + offset, ix + offset );
+				}
+			}
+		}
+
 	}
 
 	public void release()
@@ -452,6 +496,52 @@ public class AssertionsPanel extends JPanel
 			{
 				assertable.removeAssertion( assertion );
 			}
+		}
+	}
+
+	private class MoveAssertionUpAction extends AbstractAction
+	{
+		public MoveAssertionUpAction()
+		{
+			super( "Move Assertion Up" );
+			putValue( Action.SHORT_DESCRIPTION, "Moves selected asertion up one row" );
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/up_arrow.gif" ) );
+			setEnabled( false );
+
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			int ix = assertionList.getSelectedIndex();
+			TestAssertion assertion = assertionListModel.getAssertionAt( ix );
+			if( ix != -1 )
+			{
+				assertion = assertable.moveAssertion( ix, -1 );
+			}
+			assertionList.setSelectedValue( assertion, true );
+		}
+	}
+
+	private class MoveAssertionDownAction extends AbstractAction
+	{
+		public MoveAssertionDownAction()
+		{
+			super( "Move Assertion Down" );
+			putValue( Action.SHORT_DESCRIPTION, "Moves selected asertion down one row" );
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/down_arrow.gif" ) );
+			setEnabled( false );
+
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			int ix = assertionList.getSelectedIndex();
+			TestAssertion assertion = assertionListModel.getAssertionAt( ix );
+			if( ix != -1 )
+			{
+				assertion = assertable.moveAssertion( ix, 1 );
+			}
+			assertionList.setSelectedValue( assertion, true );
 		}
 	}
 }

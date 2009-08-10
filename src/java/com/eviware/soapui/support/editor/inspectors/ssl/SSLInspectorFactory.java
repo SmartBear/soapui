@@ -13,6 +13,7 @@
 package com.eviware.soapui.support.editor.inspectors.ssl;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
@@ -29,7 +30,7 @@ public class SSLInspectorFactory implements ResponseInspectorFactory
 
 	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
 	{
-		if( modelItem instanceof AbstractHttpRequest<?> )
+		if( modelItem instanceof AbstractHttpRequestInterface<?> )
 			return new ResponseSSLInspector( ( AbstractHttpRequest<?> )modelItem );
 
 		return null;

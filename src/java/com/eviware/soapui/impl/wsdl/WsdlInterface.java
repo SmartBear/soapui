@@ -42,6 +42,7 @@ import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.config.WsdlInterfaceConfig;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
@@ -56,7 +57,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
@@ -553,7 +554,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 
 				// expand properties..
 				for( int c = 0; c < list.size(); c++ )
-					list.set( c, PropertyExpansionUtils.expandProperties( this, list.get( c ) ) );
+					list.set( c, PropertyExpander.expandProperties( this, list.get( c ) ) );
 
 				if( !list.contains( endpoint ) )
 				{
@@ -747,10 +748,10 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 
 	private void getAllMessages( ModelItem modelItem, List<AbstractWsdlModelItem<?>> list )
 	{
-		if( modelItem instanceof AbstractHttpRequest )
+		if( modelItem instanceof AbstractHttpRequestInterface<?> )
 		{
 			AbstractHttpRequest<?> wsdlRequest = ( AbstractHttpRequest<?> )modelItem;
-			if( wsdlRequest.getOperation() != null && wsdlRequest.getOperation().getInterface() == this )
+			if( wsdlRequest.getOperation().getInterface() == this )
 				list.add( wsdlRequest );
 		}
 		else if( modelItem instanceof WsdlTestRequestStep )
@@ -778,7 +779,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public void resolve( ResolveContext context )
+	public void resolve( ResolveContext<?> context )
 	{
 		super.resolve( context );
 
@@ -980,14 +981,12 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 					}
 					if( anonymousList.size() > 0 )
 					{
-						AnonymousResponses anonResp = anonymousList.get( 0 );
 						interfaceAnonymous = AnonymousTypeConfig.REQUIRED.toString();
 					}
 					else
 					{
 						if( nonAnonymousList.size() > 0 )
 						{
-							NonAnonymousResponses nonAnonResp = nonAnonymousList.get( 0 );
 							interfaceAnonymous = AnonymousTypeConfig.PROHIBITED.toString();
 						}
 					}
@@ -1003,8 +1002,11 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 			}
 		}
 		setAnonymous( interfaceAnonymous );
-		setWsaVersion( interfaceWsaVersion );
+		//set wsaVersion to one from policy only if it was null from wsdl binding
+		if (getConfig().getWsaVersion().equals(equals(WsaVersionTypeConfig.NONE)))
+		{
+			setWsaVersion( interfaceWsaVersion );
+		}
 
 	}
-
 }

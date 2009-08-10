@@ -15,17 +15,16 @@ package com.eviware.soapui.impl.rest.panels.resource;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
-import com.eviware.soapui.support.StringUtils;
 
 public class RestParamsTableModel extends AbstractTableModel implements TableModel, TestPropertyListener
 {
-	private final XmlBeansRestParamsTestPropertyHolder params;
+	protected RestParamsPropertyHolder params;
 
-	public RestParamsTableModel( XmlBeansRestParamsTestPropertyHolder params )
+	public RestParamsTableModel( RestParamsPropertyHolder params )
 	{
 		this.params = params;
 
@@ -50,7 +49,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 		case 0 :
 			return "Name";
 		case 1 :
-			return "Value";
+			return "Default value";
 		case 2 :
 			return "Style";
 		}
@@ -84,7 +83,9 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 		case 0 :
 			return prop.getName();
 		case 1 :
-			return StringUtils.hasContent( prop.getValue() ) ? prop.getValue() : prop.getDefaultValue();
+			return prop.getValue();
+			// case 1 : return StringUtils.hasContent(prop.getValue()) ?
+			// prop.getValue() : prop.getDefaultValue();
 		case 2 :
 			return prop.getStyle();
 		}
@@ -100,7 +101,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 		switch( columnIndex )
 		{
 		case 0 :
-			prop.setName( value.toString() );
+			params.renameProperty( prop.getName(), value.toString() );
 			return;
 		case 1 :
 			prop.setValue( value.toString() );
@@ -138,6 +139,15 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
 	public void propertyMoved( String name, int oldIndex, int newIndex )
 	{
+		fireTableDataChanged();
+	}
+
+	public void setParams( RestParamsPropertyHolder params )
+	{
+		this.params.removeTestPropertyListener( this );
+		this.params = params;
+		this.params.addTestPropertyListener( this );
+		
 		fireTableDataChanged();
 	}
 }

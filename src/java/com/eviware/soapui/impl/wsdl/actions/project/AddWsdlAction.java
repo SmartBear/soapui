@@ -107,7 +107,7 @@ public class AddWsdlAction extends AbstractSoapUIAction<WsdlProject>
 					if( !url.equals( expUrl ) )
 					{
 						for( WsdlInterface iface : results )
-						{
+				{
 							iface.setDefinition( url, false );
 						}
 					}

@@ -26,6 +26,6 @@ public class RequestTreeNode extends AbstractModelItemTreeNode<Request>
 {
 	public RequestTreeNode( Request request, SoapUITreeModel treeModel )
 	{
-		super( request, request.getOperation(), treeModel );
+		super( request, request.getParent(), treeModel );
 	}
 }

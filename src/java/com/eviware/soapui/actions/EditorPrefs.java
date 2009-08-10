@@ -74,8 +74,8 @@ public class EditorPrefs implements Prefs
 			{
 				public void actionPerformed( ActionEvent e )
 				{
-					Font font = JFontChooser.showDialog( null, "Select XML Editor Font", Font.decode( editorFontTextField
-							.getText() ) );
+					Font font = JFontChooser.showDialog( UISupport.getMainFrame(), "Select XML Editor Font", Font
+							.decode( editorFontTextField.getText() ) );
 
 					if( font != null )
 						editorFontTextField.setText( encodeFont( font ) );

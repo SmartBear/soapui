@@ -20,10 +20,10 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
@@ -33,19 +33,19 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author ole.matzura
  */
 
-public abstract class AbstractSubmitContext implements SubmitContext, Map<String, Object>
+public abstract class AbstractSubmitContext<T extends ModelItem> implements SubmitContext, Map<String, Object>
 {
 	private DefaultPropertyExpansionContext properties;
-	private final ModelItem modelItem;
+	private final T modelItem;
 
-	public AbstractSubmitContext( ModelItem modelItem )
+	public AbstractSubmitContext( T modelItem )
 	{
 		this.modelItem = modelItem;
-		setProperty( TestRunContext.RUN_COUNT, 0 );
-		setProperty( TestRunContext.THREAD_INDEX, 0 );
+		setProperty( TestCaseRunContext.RUN_COUNT, 0 );
+		setProperty( TestCaseRunContext.THREAD_INDEX, 0 );
 	}
 
-	public AbstractSubmitContext( ModelItem modelItem, StringToObjectMap properties )
+	public AbstractSubmitContext( T modelItem, StringToObjectMap properties )
 	{
 		this( modelItem );
 
@@ -58,7 +58,7 @@ public abstract class AbstractSubmitContext implements SubmitContext, Map<String
 		}
 	}
 
-	public ModelItem getModelItem()
+	public T getModelItem()
 	{
 		return modelItem;
 	}
@@ -230,7 +230,7 @@ public abstract class AbstractSubmitContext implements SubmitContext, Map<String
 		return properties.values();
 	}
 
-	public DefaultPropertyExpansionContext getProperties()
+	public StringToObjectMap getProperties()
 	{
 		return properties;
 	}
@@ -242,6 +242,6 @@ public abstract class AbstractSubmitContext implements SubmitContext, Map<String
 
 	public String expand( String content )
 	{
-		return PropertyExpansionUtils.expandProperties( this, content );
+		return PropertyExpander.expandProperties( this, content );
 	}
 }

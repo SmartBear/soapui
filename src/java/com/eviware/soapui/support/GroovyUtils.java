@@ -19,22 +19,22 @@ import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Node;
 
 import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.model.testsuite.TestRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestStep;
 
-public final class GroovyUtils
+public class GroovyUtils
 {
-	private final PropertyExpansionContext context;
+	protected final PropertyExpansionContext context;
 
 	public GroovyUtils( PropertyExpansionContext context )
 	{
 		this.context = context;
 	}
 
-	public String getProjectPath()
+	public final String getProjectPath()
 	{
 		Project project = ModelSupport.getModelItemProject( context.getModelItem() );
 
@@ -43,7 +43,7 @@ public final class GroovyUtils
 		return ix == -1 ? "" : path.substring( 0, ix );
 	}
 
-	public XmlHolder getXmlHolder( String xmlPropertyOrString ) throws Exception
+	public final XmlHolder getXmlHolder( String xmlPropertyOrString ) throws Exception
 	{
 		try
 		{
@@ -55,17 +55,17 @@ public final class GroovyUtils
 		}
 	}
 
-	public String expand( String property )
+	public final String expand( String property )
 	{
-		return PropertyExpansionUtils.expandProperties( context, property );
+		return PropertyExpander.expandProperties( context, property );
 	}
 
-	public void setPropertyValue( String testStep, String property, String value ) throws Exception
+	public final void setPropertyValue( String testStep, String property, String value ) throws Exception
 	{
-		if( !( context instanceof TestRunContext ) )
+		if( !( context instanceof TestCaseRunContext ) )
 			return;
 
-		TestStep step = ( ( TestRunContext )context ).getTestCase().getTestStepByName( testStep );
+		TestStep step = ( ( TestCaseRunContext )context ).getTestCase().getTestStepByName( testStep );
 		if( step != null )
 		{
 			step.setPropertyValue( property, value );
@@ -76,7 +76,7 @@ public final class GroovyUtils
 		}
 	}
 
-	public String getXml( Node node ) throws XmlException
+	public final String getXml( Node node ) throws XmlException
 	{
 		return XmlObject.Factory.parse( node ).xmlText();
 	}

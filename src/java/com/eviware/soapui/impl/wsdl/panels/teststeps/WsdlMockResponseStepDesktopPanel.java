@@ -20,6 +20,7 @@ import java.util.Date;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,16 +37,21 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.AbstractWsdlMockResponseDesktopPanel;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMockResponseTestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
+import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.ModelItemPropertyEditorModel;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
@@ -62,6 +68,7 @@ public class WsdlMockResponseStepDesktopPanel extends
 	private JTextField pathField;
 	private InternalTestRunListener testRunListener;
 	private InternalTestMonitorListener testMonitorListener = new InternalTestMonitorListener();
+	private InternalAssertionsListener assertionsListener = new InternalAssertionsListener();
 	private JInspectorPanel inspectorPanel;
 	private JComponentInspector<JComponent> assertionInspector;
 	private JComponentInspector<JComponent> logInspector;
@@ -78,6 +85,8 @@ public class WsdlMockResponseStepDesktopPanel extends
 
 		SoapUI.getTestMonitor().addTestMonitorListener( testMonitorListener );
 		setEnabled( !SoapUI.getTestMonitor().hasRunningTest( mockResponseStep.getTestCase() ) );
+		
+		mockResponseStep.addAssertionsListener( assertionsListener );
 	}
 
 	@Override
@@ -201,10 +210,10 @@ public class WsdlMockResponseStepDesktopPanel extends
 		panel.add( buildQueryMatchToolbar(), BorderLayout.NORTH );
 		JSplitPane splitPane = UISupport.createHorizontalSplit( buildQueryEditor(), buildMatchEditor() );
 		panel.add( splitPane, BorderLayout.CENTER );
-		splitPane.setDividerLocation( 0.5f );
+		splitPane.setDividerLocation( 200 );
 		return panel;
 	}
-
+	
 	private Component buildMatchEditor()
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
@@ -229,10 +238,31 @@ public class WsdlMockResponseStepDesktopPanel extends
 		return panel;
 	}
 
-	private Component buildQueryMatchToolbar()
+	protected JXToolBar buildQueryMatchToolbar()
 	{
 		JXToolBar toolBar = UISupport.createSmallToolbar();
+		toolBar.addFixed( new JButton( new SelectFromCurrentAction() ) );
 		return toolBar;
+	}
+	
+	public class SelectFromCurrentAction extends AbstractAction
+	{
+		public SelectFromCurrentAction()
+		{
+			super( "Select from current" );
+			putValue( Action.SHORT_DESCRIPTION,
+					"Selects the Query XPath expression from the last request Match field" );
+		}
+
+		public void actionPerformed( ActionEvent arg0 )
+		{
+			if( getModelItem().getLastResult() != null && 
+					getModelItem().getLastResult().getMockRequest() != null && StringUtils.hasContent(  getModelItem().getQuery() ) )
+			{
+				getModelItem().setMatch( XmlUtils.getXPathValue( getModelItem().getLastResult().getMockRequest().getRequestContent(), 
+						PropertyExpander.expandProperties( getModelItem(), getModelItem().getQuery() )));
+			}
+		}
 	}
 
 	private AssertionsPanel buildAssertionsPanel()
@@ -261,6 +291,7 @@ public class WsdlMockResponseStepDesktopPanel extends
 
 		inspectorPanel.release();
 
+		getModelItem().removeAssertionsListener( assertionsListener );
 		return super.onClose( canCancel );
 	}
 
@@ -283,21 +314,21 @@ public class WsdlMockResponseStepDesktopPanel extends
 	public class InternalTestRunListener extends TestRunListenerAdapter
 	{
 		@Override
-		public void afterRun( TestRunner testRunner, TestRunContext runContext )
+		public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			setEnabled( true );
 		}
 
 		@Override
-		public void beforeRun( TestRunner testRunner, TestRunContext runContext )
+		public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			setEnabled( false );
 		}
 
 		@Override
-		public void beforeStep( TestRunner testRunner, TestRunContext runContext )
+		public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
 		{
-			if( runContext.getCurrentStep() == getModelItem() )
+			if( testStep == getModelItem() )
 			{
 				logArea.setText( logArea.getText() + new Date( System.currentTimeMillis() ).toString()
 						+ ": Waiting for request on http://127.0.0.1:" + getModelItem().getPort() + getModelItem().getPath()
@@ -306,7 +337,7 @@ public class WsdlMockResponseStepDesktopPanel extends
 		}
 
 		@Override
-		public void afterStep( TestRunner testRunner, TestRunContext runContext, TestStepResult result )
+		public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
 		{
 			if( result.getTestStep() == getModelItem() )
 			{
@@ -330,12 +361,12 @@ public class WsdlMockResponseStepDesktopPanel extends
 				setEnabled( false );
 		}
 
-		public void testCaseFinished( TestRunner runner )
+		public void testCaseFinished( TestCaseRunner runner )
 		{
 			setEnabled( !SoapUI.getTestMonitor().hasRunningTest( getModelItem().getTestCase() ) );
 		}
 
-		public void testCaseStarted( TestRunner runner )
+		public void testCaseStarted( TestCaseRunner runner )
 		{
 			if( runner.getTestCase() == getModelItem().getTestCase() )
 				setEnabled( false );
@@ -345,11 +376,12 @@ public class WsdlMockResponseStepDesktopPanel extends
 	public void propertyChange( PropertyChangeEvent evt )
 	{
 		super.propertyChange( evt );
-
+		
 		if( evt.getPropertyName().equals( WsdlMockResponseTestStep.STATUS_PROPERTY ) )
 			updateStatusIcon();
 	}
 
+	@SuppressWarnings("unused")
 	private final class DeclareNamespacesAction extends AbstractAction
 	{
 		public DeclareNamespacesAction()
@@ -393,4 +425,21 @@ public class WsdlMockResponseStepDesktopPanel extends
 		}
 	}
 
+	private final class InternalAssertionsListener implements AssertionsListener
+	{
+		public void assertionAdded( TestAssertion assertion )
+		{
+			assertionInspector.setTitle( "Assertions (" + getModelItem().getAssertionCount() + ")" );
+		}
+
+		public void assertionRemoved( TestAssertion assertion )
+		{
+			assertionInspector.setTitle( "Assertions (" + getModelItem().getAssertionCount() + ")" );
+		}
+
+		public void assertionMoved( TestAssertion assertion, int ix, int offset )
+		{
+			assertionInspector.setTitle( "Assertions (" + getModelItem().getAssertionCount() + ")" );
+		}
+	}
 }

@@ -13,12 +13,13 @@
 package com.eviware.soapui.impl.wsdl.testcase;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.TestModelItem;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.AbstractSubmitContext;
 import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
@@ -28,13 +29,13 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author Ole.Matzura
  */
 
-public class WsdlTestRunContext extends AbstractSubmitContext implements TestRunContext
+public class WsdlTestRunContext extends AbstractSubmitContext<TestModelItem> implements TestCaseRunContext
 {
-	private final TestRunner testRunner;
+	private final TestCaseRunner testRunner;
 	private int currentStepIndex;
 	private TestCase testCase;
 
-	public WsdlTestRunContext( TestRunner testRunner, StringToObjectMap properties )
+	public WsdlTestRunContext( TestCaseRunner testRunner, StringToObjectMap properties )
 	{
 		super( testRunner.getTestCase(), properties );
 		this.testRunner = testRunner;
@@ -73,7 +74,7 @@ public class WsdlTestRunContext extends AbstractSubmitContext implements TestRun
 		currentStepIndex = index;
 	}
 
-	public TestRunner getTestRunner()
+	public TestCaseRunner getTestRunner()
 	{
 		return testRunner;
 	}
@@ -142,7 +143,7 @@ public class WsdlTestRunContext extends AbstractSubmitContext implements TestRun
 
 	public String expand( String content )
 	{
-		return PropertyExpansionUtils.expandProperties( this, content );
+		return PropertyExpander.expandProperties( this, content );
 	}
 
 	public Settings getSettings()

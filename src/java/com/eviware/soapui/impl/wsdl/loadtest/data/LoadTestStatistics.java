@@ -35,7 +35,8 @@ import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
@@ -52,6 +53,7 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 {
 	public final static String NO_STATS_TESTCASE_CANCEL_REASON = "NO_STATS_TESTCASE_CANCEL_REASON";
 	private final static Logger log = Logger.getLogger( LoadTestStatistics.class );
+
 	private final WsdlLoadTest loadTest;
 	private long[][] data;
 
@@ -66,6 +68,7 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 	private final static int ERR_COLUMN = 8;
 	private final static int SUM_COLUMN = 9;
 	private final static int CURRENT_CNT_COLUMN = 10;
+	private final static int RATIO_COLUMN = 11;
 
 	public static final int TOTAL = -1;
 
@@ -131,7 +134,7 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 
 	public int getColumnCount()
 	{
-		return 11;
+		return 12;
 	}
 
 	public String getColumnName( int columnIndex )
@@ -160,6 +163,8 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 			return Statistic.BPS.getName();
 		case 10 :
 			return Statistic.ERRORS.getName();
+		case 11 :
+			return Statistic.ERRORRATIO.getName();
 		}
 		return null;
 	}
@@ -190,10 +195,18 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 		if( stepIndex == TOTAL )
 			stepIndex = data.length - 1;
 
-		if( statistic == Statistic.TPS || statistic == Statistic.AVERAGE )
+		switch( statistic )
+		{
+		case TPS :
+		case AVERAGE :
 			return data[stepIndex][statistic.getIndex()] / 100;
-		else
+		case ERRORRATIO :
+			return data[stepIndex][Statistic.COUNT.getIndex()] == 0 ? 0
+					: ( long )( ( ( float )data[stepIndex][Statistic.ERRORS.getIndex()] / ( float )data[stepIndex][Statistic.COUNT
+							.getIndex()] ) * 100 );
+		default :
 			return data[stepIndex][statistic.getIndex()];
+		}
 	}
 
 	public Object getValueAt( int rowIndex, int columnIndex )
@@ -219,6 +232,10 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 		case 4 :
 		case 7 :
 			return new Float( ( float )data[rowIndex][columnIndex - 2] / 100 );
+		case 11 :
+			return data[rowIndex][Statistic.COUNT.getIndex()] == 0 ? 0
+					: ( long )( ( ( float )data[rowIndex][Statistic.ERRORS.getIndex()] / ( float )data[rowIndex][Statistic.COUNT
+							.getIndex()] ) * 100 );
 		default :
 		{
 			return data == null || rowIndex >= data.length ? new Long( 0 ) : new Long( data[rowIndex][columnIndex - 2] );
@@ -237,6 +254,8 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 
 	public void run()
 	{
+		Thread.currentThread().setName( loadTest.getName() + " LoadTestStatistics" );
+
 		while( running || !samplesStack.isEmpty() )
 		{
 			try
@@ -413,6 +432,8 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 	{
 		public void run()
 		{
+			Thread.currentThread().setName( loadTest.getName() + " LoadTestStatistics Updater" );
+
 			// check all these for catching threading issues
 			while( running || changed || !samplesStack.isEmpty() )
 			{
@@ -452,17 +473,19 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 	{
 		public void beforeLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 		{
+			samplesStack.clear();
+
 			running = true;
-			new Thread( updater, loadTestRunner.getLoadTest().getName() + " LoadTestStatistics Updater" ).start();
-			new Thread( LoadTestStatistics.this ).start();
+			SoapUI.getThreadPool().submit( updater );
+			SoapUI.getThreadPool().submit( LoadTestStatistics.this );
 
 			currentThreadCountStartTime = System.currentTimeMillis();
 			totalAverageSum = 0;
 		}
 
 		@Override
-		public void afterTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-				TestRunContext runContext, TestStepResult testStepResult )
+		public void afterTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+				TestCaseRunContext runContext, TestStepResult testStepResult )
 		{
 			if( loadTest.getUpdateStatisticsPerTestStep() )
 			{
@@ -488,13 +511,13 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 			}
 		}
 
-		public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-				TestRunContext runContext )
+		public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+				TestCaseRunContext runContext )
 		{
 			if( testRunner.getStatus() == TestRunner.Status.CANCELED
 					&& testRunner.getReason().equals( NO_STATS_TESTCASE_CANCEL_REASON ) )
 				return;
-			
+
 			List<TestStepResult> results = testRunner.getResults();
 			TestCase testCase = testRunner.getTestCase();
 
@@ -676,7 +699,9 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 				"the number of transactions per second for this teststep" ), BYTES( BYTES_COLUMN, "bytes",
 				"the total number of bytes returned by this teststep" ), BPS( BPS_COLUMN, "bps",
 				"the number of bytes per second returned by this teststep" ), ERRORS( ERR_COLUMN, "err",
-				"the total number of assertion errors for this teststep" );
+				"the total number of assertion errors for this teststep" ), SUM( SUM_COLUMN, "sum", "internal sum" ), CURRENT_CNT(
+				CURRENT_CNT_COLUMN, "ccnt", "internal cnt" ), ERRORRATIO( RATIO_COLUMN, "rat",
+				"the ratio between exections and failures" );
 
 		private final String description;
 		private final String name;

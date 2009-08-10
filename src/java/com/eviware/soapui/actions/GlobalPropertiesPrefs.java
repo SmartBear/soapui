@@ -42,7 +42,6 @@ public class GlobalPropertiesPrefs implements Prefs
 		}
 
 		return globalPropertiesForm;
-
 	}
 
 	public void getFormValues( Settings settings )
@@ -73,5 +72,4 @@ public class GlobalPropertiesPrefs implements Prefs
 	{
 		settings.setBoolean( GlobalPropertySettings.ENABLE_OVERRIDE, values.getBoolean( ENABLE_OVERRIDE ) );
 	}
-
 }

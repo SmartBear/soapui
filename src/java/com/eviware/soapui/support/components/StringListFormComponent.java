@@ -233,4 +233,12 @@ public class StringListFormComponent extends JPanel implements JFormComponent, A
 	{
 		setData( options );
 	}
+
+	public void setEnabled( boolean b )
+	{
+		addButton.setEnabled( b );
+		list.setEnabled( b );
+		if( b )
+			setButtonState();
+	}
 }

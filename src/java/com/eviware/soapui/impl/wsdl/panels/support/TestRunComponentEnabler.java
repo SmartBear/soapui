@@ -20,7 +20,7 @@ import javax.swing.JComponent;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 
 /**
@@ -84,12 +84,12 @@ public class TestRunComponentEnabler extends TestMonitorListenerAdapter
 			enable();
 	}
 
-	public void testCaseStarted( TestRunner runner )
+	public void testCaseStarted( TestCaseRunner runner )
 	{
 		disable();
 	}
 
-	public void testCaseFinished( TestRunner runner )
+	public void testCaseFinished( TestCaseRunner runner )
 	{
 		if( !SoapUI.getTestMonitor().hasRunningTest( testCase ) )
 			enable();

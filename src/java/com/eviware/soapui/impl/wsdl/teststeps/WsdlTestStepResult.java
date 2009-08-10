@@ -47,6 +47,7 @@ public class WsdlTestStepResult implements TestStepResult
 	private DefaultActionList actionList;
 	private long startTime;
 	private boolean discarded;
+	private String testStepName;
 
 	private static DefaultActionList discardedActionList = new DefaultActionList( null );
 
@@ -64,6 +65,7 @@ public class WsdlTestStepResult implements TestStepResult
 	public WsdlTestStepResult( WsdlTestStep testStep )
 	{
 		this.testStep = testStep;
+		testStepName = testStep.getName();
 		timeStamp = System.currentTimeMillis();
 	}
 
@@ -79,7 +81,18 @@ public class WsdlTestStepResult implements TestStepResult
 
 	public TestStep getTestStep()
 	{
-		return testStep;
+		try
+		{
+			if( testStep != null )
+				testStep.getName();
+			
+			return testStep;
+		}
+		catch( Throwable t )
+		{
+		}
+		
+		return null;
 	}
 
 	public ActionList getActions()
@@ -89,7 +102,7 @@ public class WsdlTestStepResult implements TestStepResult
 
 		if( actionList == null )
 		{
-			actionList = new DefaultActionList( testStep.getName() );
+			actionList = new DefaultActionList( testStepName );
 			actionList.setDefaultAction( new AbstractAction()
 			{
 
@@ -97,24 +110,24 @@ public class WsdlTestStepResult implements TestStepResult
 				{
 					if( getMessages().length > 0 )
 					{
-						StringBuffer buf = new StringBuffer();
+						StringBuffer buf = new StringBuffer( "<html><body>");
 						if( getError() != null )
-							buf.append( getError().toString() ).append( "\r\n" );
+							buf.append( getError().toString() ).append( "<br/>" );
 
 						for( String s : getMessages() )
-							buf.append( s ).append( "\r\n" );
+							buf.append( s ).append( "<br/>" );
 
-						UISupport.showExtendedInfo( "TestStep Result", "Step [" + testStep.getName() + "] ran with status ["
+						UISupport.showExtendedInfo( "TestStep Result", "Step [" + testStepName + "] ran with status ["
 								+ getStatus() + "]", buf.toString(), null );
 					}
 					else if( getError() != null )
 					{
-						UISupport.showExtendedInfo( "TestStep Result", "Step [" + testStep.getName() + "] ran with status ["
+						UISupport.showExtendedInfo( "TestStep Result", "Step [" + testStepName + "] ran with status ["
 								+ getStatus() + "]", getError().toString(), null );
 					}
 					else
 					{
-						UISupport.showInfoMessage( "Step [" + testStep.getName() + "] ran with status [" + getStatus() + "]",
+						UISupport.showInfoMessage( "Step [" + testStepName + "] ran with status [" + getStatus() + "]",
 								"TestStep Result" );
 					}
 				}
@@ -131,7 +144,7 @@ public class WsdlTestStepResult implements TestStepResult
 
 		if( actionList == null )
 		{
-			actionList = new DefaultActionList( testStep.getName() );
+			actionList = new DefaultActionList( testStepName );
 		}
 
 		actionList.addAction( action );

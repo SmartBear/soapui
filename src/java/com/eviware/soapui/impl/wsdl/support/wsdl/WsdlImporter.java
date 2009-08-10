@@ -28,6 +28,7 @@ import javax.xml.namespace.QName;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.BindingImporter;
@@ -153,16 +154,16 @@ public class WsdlImporter
 						// wsam:Addressing policy
 						// in case addressing is defined both ways in the wsdl and
 						// there is conflict
-						// this way policy steps over wsaw:UsingAddressing
+						// currently the first one that's set is final
+						// first is checked wsdl binding and policy attachment
+						//and then for port in the same order
 
-						// if( iface.getWsaVersion().equals(
-						// WsaVersionTypeConfig.NONE.toString() ) )
-						iface.setWsaVersion( WsdlUtils.getUsingAddressing( port ) );
-						// if( iface.getWsaVersion().equals(
-						// WsaVersionTypeConfig.NONE.toString() ) )
-						// {
-						iface.processPolicy( PolicyUtils.getAttachedPolicy( port, wsdlContext.getDefinition() ) );
-						// }
+						 if( iface.getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString() ) )
+							 iface.setWsaVersion( WsdlUtils.getUsingAddressing( port ) );
+						 if( iface.getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString() ) )
+						 {
+							 iface.processPolicy( PolicyUtils.getAttachedPolicy( port, wsdlContext.getDefinition() ) );
+						 }
 
 						result.add( iface );
 						importedBindings.put( binding, iface );

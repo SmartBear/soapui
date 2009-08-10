@@ -37,7 +37,7 @@ public class CloseProjectAction extends AbstractSoapUIAction<WsdlProject>
 	{
 		if( project.isRemote() )
 		{
-			if( UISupport.confirm( "Close remote project?", getName() ) )
+			if( UISupport.confirm( "Close remote project? (changes will be lost)", getName() ) )
 				;
 			project.getWorkspace().closeProject( project );
 		}

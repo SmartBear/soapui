@@ -13,15 +13,10 @@
 .style1 {font-size: small}
 -->
 </style>
-<script type="text/javascript" src="http://www.google-analytics.com/urchin.js"></script>
-<script type="text/javascript">_uacct = "UA-92447-1";
-urchinTracker();</script>
+
 </head>
 
 <body>
-
-
-
 
 <table width="700" height="825" border="0" cellpadding="0">
   
@@ -40,12 +35,13 @@ urchinTracker();</script>
             <a onclick="javascript:urchinTracker('/appindexsoapUIReadMorePro')" href="http://www.eviware.com/content/view/134/1/" title="Read more about soapUI 2.5" target="_blank">Read more here</a></p>          </td>
       </tr>
       <tr>
-        <td height="240" class="greyBox" valign="top"><h2>soapUI Training in Washington DC</h2>
-          <p>Become a soapUI Pro!</p>
-          <p>Get training for soapUI. Next Date:<br />
-          Washington DC, USA, May 19-21<br />
-<br />
-            <a onclick="javascript:urchinTracker('/appindexsoapUITraining')"href="http://www.pushtotest.com/services/soapui-training/" title="Read Here!" target="_blank">Read about it here</a></p></td>
+        <td height="240" class="greyBox" valign="top"><h2>How to become a soapUI Pro!</h2>
+          <p>2 Day Courses</p>
+          <p>Hands-on Exercises</p>
+          <p>Register Today!</p>
+            
+            <br />
+            <a onclick="javascript:urchinTracker('/appindexsoapUITraining')"href="http://www.think88.com/soap.html" title="Read Here!" target="_blank">Read about it here</a></p></td>
       </tr>
       <tr>
         <td height="240"  class="greyBox" valign="top"><h2>eviware I turn</h2>
@@ -56,29 +52,36 @@ urchinTracker();</script>
       </tr>
     </table>      <p>&nbsp;</p>    </td>
     <td height="720" width="400" valign="top" class="greyBox"><h1><img src="Images/soapui-logo.png" alt="soapUI" width="50" height="50" /> Latest News</h1>
-      <p class="center_p"><em><strong>February 2 2009 - SoapUI 2.5.1</strong></em></p>
+    <p class="center_p"><em><strong>June 10 2009 - soapUI 3.0 beta2</strong></em></p>
+      <p class="center_p">Many bugfixes and minor improvements, check it out!<br /><br />
+        
+      <p align="center" class="center_p"><a onclick="javascript:urchinTracker('/appindexsoapUIReadMore')" href="http://www.soapui.org/new_and_noteworthy_3_0.html" title="Read more about soapUI 3.0 beta2" target="_blank">Read more here</a> | 
+      <a onclick="javascript:urchinTracker('/appindexsoapUIDownloadNewest')" href="https://sourceforge.net/project/showfiles.php?group_id=136013&package_id=163662&release_id=688496" title="download soapUI" target="_blank">Download it here</a>|</p>
+
+      <hr/>
+
+    <p class="center_p"><em><strong>May 22 2009 - soapUI 3.0 beta1</strong></em></p>
+      <p class="center_p">More REST, JavaScript, WS-RM, and much more!<br />
+        <br />Check out all the <a href="http://www.soapui.org/new_and_noteworthy_3_0.html">new features</a> and
+        don't hesitate to download from <a href="https://sourceforge.net/project/showfiles.php?group_id=136013&package_id=163662&release_id=683971">sourceforge</a><br /><br />
+        
+      <p align="center" class="center_p"><a onclick="javascript:urchinTracker('/appindexsoapUIReadMore')" href="http://www.soapui.org/new_and_noteworthy_3_0.html" title="Read more about soapUI 3.0 beta1" target="_blank">Read more here</a> | 
+      <a onclick="javascript:urchinTracker('/appindexsoapUIDownloadNewest')" href="https://sourceforge.net/project/showfiles.php?group_id=136013&package_id=163662&release_id=683971" title="download soapUI" target="_blank">Download it here</a>|</p>
+
+
+
+      <hr/>
+        <p class="center_p"><em><strong>February 2 2009 - SoapUI 2.5.1</strong></em></p>
       <p class="center_p">Fixes, Improvements and IDE Plugins!<br />
         <br />This release fixes a large number of minor an major issues and also brings the IDEA, Eclipse, NetBeans and maven 
-        up to date with the latest features. <br /><br />
-        Updating is definitely recommended!
+        up to date with the latest features. 
       <p align="center" class="center_p"><a onclick="javascript:urchinTracker('/appindexsoapUIReadMore')" href="http://www.eviware.com/content/view/134/1/" title="Read more about soapUI 2.5" target="_blank">Read more here</a> | 
       <a onclick="javascript:urchinTracker('/appindexsoapUIDownloadNewest')" href="http://sourceforge.net/project/showfiles.php?group_id=136013&package_id=163662&release_id=657327" title="download soapUI" target="_blank">Download it here</a>|</p>
 
 
 
       <hr/>
-      <h1><img src="Images/soapui-logo.png" alt="soapUI" width="50" height="50" /> Vote soapUI!</h1>
-      <p class="center_p"><strong>Vote for soapUI in SOA World Magazine Reader's Choice Vote.</strong></p>
-      <table width="381" border="0" cellpadding="0">
-        <tr>
-          <td width="125"><img src="images/WSJ-SOAReadersChoice-125_125px.jpg" width="125" height="125" /></td>
-          <td width="250" class="center_p">            We are participating in several categories and need your support.<br /> 
-              <span class="GreyText">If </span>you use soapUI and enjoy it; why not cast your vote on soapUI? <span class="GreyText">Thanks </span>for your support, we appreciate it!<br />
-              <br />
-          <div align="center"><a onclick="javascript:urchinTracker('/appindexsoapUIVote')" href="http://soa.sys-con.com/general/readerschoice.htm"> Vote Here! </a></div></td>
-        </tr>
-      </table>
-      <hr/>
+    
       <h1><img src="Images/soapui-logo.png" alt="soapUI" width="50" height="50" /> How do I start?</h1>
       <p class="center_p"><em><strong>New soapUI User?</strong></em></p>
     <p class="center_p"><em> Start by doing the following:</em></p>
@@ -92,43 +95,27 @@ urchinTracker();</script>
     </ul>
     <p>&nbsp;</p>
     <p>&nbsp;</p></td>
-    <td height="720" width="150" valign="top" class="greyBox" ><h2>What's new in soapUI 2.5?</h2>
-      <p class="RighColumnList">- Rest Testing<br />
-        - HTTP Testing<br />
-        - WADL Generation<br />
-        - WADL Documentation<br />
-        - Java Code from REST<br />
-        - JSON Viewer<br />
-        - REST TestStep<br />
-        - WS-Addressing<br />
-        - Encrypted Project 
-&nbsp;&nbsp;Files<br />
-        - Relative Projects<br />
-        - Script LoadTest <br />
-        &nbsp;&nbsp;&nbsp;Strategy <br />
-        - Grid <br />
-         &nbsp;&nbsp;LoadTest Strategy<br />
-        - Scripting before and <br />
-        &nbsp;&nbsp;after LoadTests<br />
-        - Improved HTTP &nbsp;&nbsp;Monitor<br />
-        - Improved <br />
-        &nbsp;&nbsp;MockService<br />
-        - Inline Scripting<span class="RighColumnList"><br />
- 
+    <td height="720" width="150" valign="top" class="greyBox" ><h2>What's new in soapUI 3.0?</h2>
+      <p class="RighColumnList">- REST Improvements<br />
+        - Schema Inference<br />
+        - JavaScript support<br />
+        - WS-RM support<br />
+        - Project TestRunner<br />
+        - WebBrowser component<br />
+        - Assertion reordering<br />
+        - and much much more!<br/>
+
       <p><span class="narrowcolumnheading">soapUI Pro users also get:</span><br />
-        <span class="RighColumnList">- The Pro Functionality for REST Testing<br />
-        - DatGen TestStep<br />
-        - Composite Project Files<br />
-- DataDriven <br />
-&nbsp;&nbsp;LoadTests<br />
-        - Coverage Reports <br />
-&nbsp;&nbsp;        from Command line</span><br />
+        <span class="RighColumnList">- Advanced Reporting<br />
+        - JDBC Drivers and Wizards<br/>
+        - WADL Coverage<br />
+        - Fixed-Rate Load Strategy<br />
 <br />
 and much more...<br />
 </p>
       <p class="RighColumnList">We have in depth information available at the soapui.org web site</p>
       <p class="RighColumnList"><br />
-        <a onclick="javascript:urchinTracker('/appindexsoapUIProReadMoreRight')" href="http://www.soapui.org/new_and_noteworthy_2_5.html" title="Read more about soapUI 2.1" target="_blank">Read more here</a>
+        <a onclick="javascript:urchinTracker('/appindexsoapUIProReadMoreRight')" href="http://www.soapui.org/new_and_noteworthy_3_0.html" title="Read more about soapUI 3.0" target="_blank">Read more here</a>
         </li>
       </p>
     <p>&nbsp;</p></td>

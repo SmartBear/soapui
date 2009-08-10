@@ -16,7 +16,7 @@ import javax.xml.namespace.QName;
 
 import com.eviware.soapui.model.ModelItem;
 
-public interface TestProperty
+public interface TestProperty 
 {
 	public String getName();
 

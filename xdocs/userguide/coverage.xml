@@ -4,10 +4,10 @@
         <title>WSDL Coverage for Web Service Tests</title>
     </properties>
     <body>
-		<section name="soapUI Pro WSDL Coverage">
-		<p>soapUI Pro introduces the unique concept of WSDL Coverage, which dynamically allows you to analyze how
-		much of a given Interface or WSDL is being covered by your Functional Tests, MockServices, Mock Clients and SOAP Monitor clients
-		and targets. This document aims at giving a brief overview of the concepts of WSDL Coverage, with links to the corresponding 
+		<section name="soapUI Pro Web Service Coverage">
+		<p>soapUI Pro introduces the unique concept of Web Service Coverage, which dynamically allows you to analyze how
+		much of a given SOAP or REST Web Service is being covered by your Functional Tests, MockServices, Mock Clients and SOAP Monitor clients
+		and targets. This document aims at giving a brief overview of the concepts of Web Service Coverage, with links to the corresponding 
 		documentation for each Coverage point in soapUI. The best way to learn is to play around with it!</p>
 	    
 			<table class="relatedInfo" cellspacing="0" cellpadding="0">
@@ -52,10 +52,11 @@
 		<p>Traditionally in environments such as Java or .Net , coverage is used to measure how much of the actual code base 
 		that is being used during a given execution scenario (usually during Unit Tests). The returned value tries to give an
 		estimate of how much of the code base that is actuality being used or tested.</p>
-		<p>Web Services in soapUI are defined by a WSDL contract, which specifies the operations, message, faults, etc... that 
-		make up the web services functionality. For each message there is generally a finite amount of defined elements attributes
+		<p>Web Services in soapUI are defined by a WSDL contract or REST model (with or without a WADL), which specifies the operations, 
+		messages, faults, representations, etc... that make up the web services functionality. 
+		For each message there is generally a finite amount of defined elements and attributes
 		that can be used to convey the message content, divided among message bodies, headers and faults.</p>
-		<p>The WSDL Coverage functionality analyzes each messages contract definition and then compares all corresponding messages
+		<p>The Web Service Coverage functionality analyzes each messages contract definition and then compares all corresponding messages
 		during for example a TestRun to calculate how many of the defined elements or attributes that were actually used during 
 		the tests. The result is in soapUI presented as both a percentage and a visualization of the actual message; 
 		"Message Coverage"</p>
@@ -90,11 +91,12 @@
 		<subsection name="The Coverage Tree">
 		<p>The Coverage Tree displayed to the left is divided into 2 parts:</p>
 		<ol>
-		<li>The Interface Part displays the current projects Interfaces and their Operations. For each operation the defined
-		Request and Response header/body/faults/attachments messages are shown. The displayed Coverage values are aggregated 
-		"upwards" in the tree, for example in the image above, the search Operations' Coverage is 8/9, which is the aggregate
+		<li>The Interface Part displays the current projects REST Services and SOAP Interfaces with their respective children. 
+		For each SOAP operation the defined Request and Response header/body/faults/attachments messages are shown. 
+		The displayed Coverage values are aggregated  "upwards" in the tree, for example in the image above, the search Operations' Coverage is 8/9, which is the aggregate
 		of the corresponding Request and Response message Coverage values. The values show that the Response Faults was not 
-		covered during the Test Run (0/1)</li>
+		covered during the Test Run (0/1).<br/>
+		For each REST method the defined Parameters and Representation body messages are shown.</li>
 		<li>The TestSuite part displays the current projects' TestSuites, TestCases and relevant TestSteps. Under each TestStep 
 		that was the source of a Message Exchange during the Test Run, there will be Message nodes corresponding to the sent
 		messages. Selecting a messages request or response node and then selecting the right Message Content inspector will 
@@ -107,7 +109,7 @@
 		
 		<subsection name="Assertion Coverage">
 		<p>As mentioned above, when running functional Tests, all performed XPath assertions are analyzed and a coverage
-		value measuring how large part of the WSDL contract that was actually asserted. Assertion Coverage is displayed
+		value measuring how large part of the Web Service contract that was actually asserted. Assertion Coverage is displayed
 		in dark-green in both the Coverage Tree and the Message Inspector. In the image below, the Message Coverage 
 		Inspector shows that the item and contained values have been asserted by an XPath expression, the assertion can 
 		also been seen in the Assertion Results Inspector at the bottom.</p>
@@ -133,8 +135,8 @@
 	    <subsection name="Coverage Measurement Points">
 		<p>soapUI allows you to measure coverage in 3 distinct scenarios:</p>
 		<ol>
-		<li><b>For Functional Tests</b> - for measuring how much of your WSDL contract is actually covered by your tests. The corresponding
-		Coverage Panel is available at the <a href="projects/coverage.html">Project</a>, 
+		<li><b>For Functional Tests</b> - for measuring how much of your Web Service contract is actually covered by your tests. 
+		The corresponding Coverage Panel is available at the <a href="projects/testsuites.html#Project_Coverage">Project</a>, 
 		<a href="functional/testsuites.html#TestSuite_Coverage">TestSuite</a> and 
 		<a href="functional/testcases.html#TestCase_Coverage">TestCase</a> level.</li>
 		<li><b>For <a href="mock/coverage.html">MockServices</a> </b>- for measuring both how much of your WSDL is being mocked 
@@ -144,7 +146,7 @@
 		</ol>
 		</subsection>
 
-		 <p><hr size="1"/>Next: <a href="workspaces.html">Workspaces</a></p>
+		 <p><hr size="1"/>Next: <a href="standards.html">Standards and specifications supported by soapUI</a></p>
 		</section>
     </body>
 </document>

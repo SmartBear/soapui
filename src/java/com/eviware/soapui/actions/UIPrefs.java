@@ -30,11 +30,11 @@ import com.eviware.soapui.ui.desktop.DesktopRegistry;
  * 
  * @author ole.matzura
  */
+
 public class UIPrefs implements Prefs
 {
 	public static final String CLOSE_PROJECTS = "Close Projects";
 	public static final String ORDER_PROJECTS = "Order Projects";
-	public static final String ORDER_TESTSUITES = "Order TestSuites";
 	public static final String ORDER_REQUESTS = "Order Requests";
 	public static final String SHOW_DESCRIPTIONS = "Show Descriptions";
 	public static final String CREATE_BACKUP = "Create Backup";
@@ -46,6 +46,8 @@ public class UIPrefs implements Prefs
 	public static final String AUTOSAVE_INTERVAL = "AutoSave Interval";
 	public static final String AUTOSAVE_ONEXIT = "Save projects on exit";
 	public static final String SHOW_STARTUP_PAGE = "Show Startup Page";
+	public static final String LINEBRAK = "Normalize line-break";
+	public static final String GC_INTERVAL = "Garbage Collection Interval";
 
 	private SimpleForm editorForm;
 	private final String title;
@@ -72,7 +74,6 @@ public class UIPrefs implements Prefs
 			editorForm.appendSeparator();
 			editorForm.appendCheckBox( ORDER_PROJECTS, "Order Projects alphabetically in tree", false );
 			editorForm.appendCheckBox( ORDER_REQUESTS, "Order Requests alphabetically in tree", false );
-			editorForm.appendCheckBox( ORDER_TESTSUITES, "Order TestSuites alphabetically in tree", false );
 			editorForm.appendCheckBox( SHOW_DESCRIPTIONS, "Show description content when available", false );
 			editorForm.appendSeparator();
 
@@ -82,7 +83,6 @@ public class UIPrefs implements Prefs
 					"Folder to backup to (can be both relative or absolute)" );
 			backupCheckBox.addActionListener( new ActionListener()
 			{
-
 				public void actionPerformed( ActionEvent e )
 				{
 					backupFolder.setEnabled( backupCheckBox.isSelected() );
@@ -109,6 +109,12 @@ public class UIPrefs implements Prefs
 				editorForm.appendCheckBox( SHOW_LOGS_AT_STARTUP, "Shows log tabs when starting soapUI", false );
 				editorForm.appendCheckBox( SHOW_STARTUP_PAGE, "Opens startup web page when starting soapUI", false );
 			}
+
+			editorForm.appendSeparator();
+			editorForm.appendCheckBox( LINEBRAK, "Normalize line-breaks when saving project", false );
+			editorForm.appendSeparator();
+			editorForm.appendTextField( GC_INTERVAL,
+				"Sets the Garbage Collector interval in seconds (0 means garbage collection is only performed by JRE)" );
 		}
 
 		return editorForm;
@@ -126,12 +132,12 @@ public class UIPrefs implements Prefs
 		settings.setBoolean( UISettings.CLOSE_PROJECTS, values.getBoolean( CLOSE_PROJECTS ) );
 		settings.setBoolean( UISettings.ORDER_PROJECTS, values.getBoolean( ORDER_PROJECTS ) );
 		settings.setBoolean( UISettings.ORDER_REQUESTS, values.getBoolean( ORDER_REQUESTS ) );
-		settings.setBoolean( UISettings.ORDER_TESTSUITES, values.getBoolean( ORDER_TESTSUITES ) );
 		settings.setBoolean( UISettings.SHOW_DESCRIPTIONS, values.getBoolean( SHOW_DESCRIPTIONS ) );
 		settings.setBoolean( UISettings.CREATE_BACKUP, values.getBoolean( CREATE_BACKUP ) );
 		settings.setString( UISettings.BACKUP_FOLDER, values.get( BACKUP_FOLDER ) );
 		settings.setString( UISettings.AUTO_SAVE_INTERVAL, values.get( AUTOSAVE_INTERVAL ) );
 		settings.setBoolean( UISettings.AUTO_SAVE_PROJECTS_ON_EXIT, values.getBoolean( AUTOSAVE_ONEXIT ) );
+		settings.setBoolean( UISettings.LINEBREAK, values.getBoolean( LINEBRAK ) );
 
 		if( SoapUI.isStandalone() )
 		{
@@ -145,8 +151,11 @@ public class UIPrefs implements Prefs
 			settings.setBoolean( UISettings.SHOW_LOGS_AT_STARTUP, values.getBoolean( SHOW_LOGS_AT_STARTUP ) );
 			settings.setBoolean( UISettings.SHOW_STARTUP_PAGE, values.getBoolean( SHOW_STARTUP_PAGE ) );
 		}
-
+		
+		settings.setString( UISettings.GC_INTERVAL, values.get( GC_INTERVAL ) );
+		
 		SoapUI.initAutoSaveTimer();
+		SoapUI.initGCTimer();
 	}
 
 	public void setFormValues( Settings settings )
@@ -161,12 +170,12 @@ public class UIPrefs implements Prefs
 		values.put( CLOSE_PROJECTS, settings.getBoolean( UISettings.CLOSE_PROJECTS ) );
 		values.put( ORDER_PROJECTS, settings.getBoolean( UISettings.ORDER_PROJECTS ) );
 		values.put( ORDER_REQUESTS, settings.getBoolean( UISettings.ORDER_REQUESTS ) );
-		values.put( ORDER_TESTSUITES, settings.getBoolean( UISettings.ORDER_TESTSUITES ) );
 		values.put( SHOW_DESCRIPTIONS, settings.getBoolean( UISettings.SHOW_DESCRIPTIONS ) );
 		values.put( CREATE_BACKUP, settings.getBoolean( UISettings.CREATE_BACKUP ) );
 		values.put( BACKUP_FOLDER, settings.getString( UISettings.BACKUP_FOLDER, "" ) );
 		values.put( AUTOSAVE_INTERVAL, settings.getString( UISettings.AUTO_SAVE_INTERVAL, "0" ) );
 		values.put( AUTOSAVE_ONEXIT, settings.getBoolean( UISettings.AUTO_SAVE_PROJECTS_ON_EXIT ) );
+		values.put( LINEBRAK, settings.getBoolean( UISettings.LINEBREAK ) );
 
 		if( SoapUI.isStandalone() )
 		{
@@ -180,6 +189,8 @@ public class UIPrefs implements Prefs
 			values.put( SHOW_LOGS_AT_STARTUP, settings.getBoolean( UISettings.SHOW_LOGS_AT_STARTUP ) );
 			values.put( SHOW_STARTUP_PAGE, settings.getBoolean( UISettings.SHOW_STARTUP_PAGE ) );
 		}
+		
+		values.put( GC_INTERVAL, settings.getString( UISettings.GC_INTERVAL, "0" ) );
 
 		return values;
 	}

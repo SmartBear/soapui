@@ -26,6 +26,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
@@ -36,16 +37,14 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlBeans;
 
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.components.StringListFormComponent;
@@ -53,25 +52,34 @@ import com.jgoodies.binding.PresentationModel;
 
 public class RestParamsTable extends JPanel
 {
-	private final XmlBeansRestParamsTestPropertyHolder params;
-	private RestParamsTableModel paramsTableModel;
-	private JTable paramsTable;
-	private AddParamAction addParamAction = new AddParamAction();
-	private RemoveParamAction removeParamAction = new RemoveParamAction();
-	private ClearParamsAction clearParamsAction = new ClearParamsAction();
-	private MovePropertyDownAction movePropertyDownAction = new MovePropertyDownAction();
-	private MovePropertyUpAction movePropertyUpAction = new MovePropertyUpAction();
+	protected RestParamsPropertyHolder params;
+	protected RestParamsTableModel paramsTableModel;
+	protected JTable paramsTable;
+	protected AddParamAction addParamAction = new AddParamAction();
+	protected RemoveParamAction removeParamAction = new RemoveParamAction();
+	protected ClearParamsAction clearParamsAction = new ClearParamsAction();
+	protected UseDefaultParamsAction defaultParamsAction = new UseDefaultParamsAction();
+	protected MovePropertyDownAction movePropertyDownAction = new MovePropertyDownAction();
+	protected MovePropertyUpAction movePropertyUpAction = new MovePropertyUpAction();
 	private PresentationModel<RestParamProperty> paramDetailsModel;
-	private JComponentInspector<JComponent> detailsInspector;
-	private JInspectorPanel inspectorPanel;
 	private StringListFormComponent optionsFormComponent;
+	private SimpleBindingForm detailsForm;
 
-	public RestParamsTable( XmlBeansRestParamsTestPropertyHolder params, boolean showInspector )
+	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector )
 	{
 		super( new BorderLayout() );
 		this.params = params;
+		init( params, showInspector );
+	}
 
-		paramsTableModel = new RestParamsTableModel( params );
+	protected RestParamsTableModel createTableModel( RestParamsPropertyHolder params )
+	{
+		return new RestParamsTableModel( params );
+	}
+
+	protected void init( RestParamsPropertyHolder params, boolean showInspector )
+	{
+		paramsTableModel = createTableModel( params );
 		paramsTable = new JTable( paramsTableModel );
 		paramsTable.setRowHeight( 19 );
 		paramsTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
@@ -89,21 +97,34 @@ public class RestParamsTable extends JPanel
 				movePropertyDownAction.setEnabled( selectedRow < paramsTable.getRowCount() - 1 );
 				movePropertyUpAction.setEnabled( selectedRow > 0 );
 
-				if( detailsInspector != null )
+				if( selectedRow != -1 )
 				{
-					detailsInspector.setEnabled( selectedRow != -1 );
-
-					if( selectedRow != -1 )
+					RestParamProperty selectedParameter = getSelectedParameter();
+					if( paramDetailsModel != null )
 					{
-						RestParamProperty selectedParameter = getSelectedParameter();
 						paramDetailsModel.setBean( selectedParameter );
+						detailsForm.setEnabled( true );
 					}
-					else
+				}
+				else
+				{
+					// inspectorPanel.deactivate();
+					if( paramDetailsModel != null )
 					{
-						inspectorPanel.deactivate();
+						detailsForm.setEnabled( false );
 						paramDetailsModel.setBean( null );
 					}
 				}
+
+				/*
+				 * if( detailsInspector != null ) { detailsInspector.setEnabled(
+				 * selectedRow != -1 );
+				 * 
+				 * if( selectedRow != -1 ) { RestParamProperty selectedParameter =
+				 * getSelectedParameter(); paramDetailsModel.setBean(
+				 * selectedParameter ); } else { inspectorPanel.deactivate();
+				 * paramDetailsModel.setBean( null ); } }
+				 */
 			}
 		} );
 
@@ -111,12 +132,16 @@ public class RestParamsTable extends JPanel
 
 		if( showInspector )
 		{
-			inspectorPanel = JInspectorPanelFactory.build( new JScrollPane( paramsTable ) );
-			detailsInspector = new JComponentInspector<JComponent>( buildDetails(), "Parameter Details",
-					"Details for the selected Parameter", false );
-			inspectorPanel.addInspector( detailsInspector );
+			final JSplitPane splitPane = UISupport.createVerticalSplit( new JScrollPane( paramsTable ), buildDetails() );
+			add( splitPane, BorderLayout.CENTER );
 
-			add( inspectorPanel.getComponent(), BorderLayout.CENTER );
+			SwingUtilities.invokeLater( new Runnable()
+			{
+				public void run()
+				{
+					splitPane.setDividerLocation( 0.5 );
+				}
+			} );
 		}
 		else
 		{
@@ -127,11 +152,12 @@ public class RestParamsTable extends JPanel
 	private JComponent buildDetails()
 	{
 		paramDetailsModel = new PresentationModel<RestParamProperty>( null );
-		SimpleBindingForm form = new SimpleBindingForm( paramDetailsModel );
+		detailsForm = new SimpleBindingForm( paramDetailsModel );
 
-		form.addSpace( 5 );
-		form.appendCheckBox( "required", "Required", "Sets if parameter is required" );
-		form.appendTextField( "defaultValue", "Default", "The default value for this parameter" );
+		detailsForm.addSpace( 5 );
+		detailsForm.appendCheckBox( "required", "Required", "Sets if parameter is required" );
+		// form.appendTextField( "defaultValue", "Default",
+		// "The default value for this parameter" );
 
 		List<QName> types = new ArrayList<QName>();
 		for( SchemaType type : XmlBeans.getBuiltinTypeSystem().globalTypes() )
@@ -139,16 +165,19 @@ public class RestParamsTable extends JPanel
 			types.add( type.getName() );
 		}
 
-		form.appendComboBox( "type", "Type", types.toArray(), "The type of the parameter" );
+		detailsForm.appendComboBox( "type", "Type", types.toArray(), "The type of the parameter" );
 		optionsFormComponent = new StringListFormComponent( "Available values for this Parameter" );
 		optionsFormComponent.setPreferredSize( new Dimension( 350, 80 ) );
-		form.appendComponent( "options", "Options", optionsFormComponent );
-		form.appendTextField( "description", "Description", "A short description of the parameter" );
-		form.appendCheckBox( "disableUrlEncoding", "Disable Encoding", "Disables URL-Encoding of the parameter value" );
+		detailsForm.appendComponent( "options", "Options", optionsFormComponent );
+		detailsForm.appendTextField( "description", "Description", "A short description of the parameter" );
+		detailsForm.appendCheckBox( "disableUrlEncoding", "Disable Encoding",
+				"Disables URL-Encoding of the parameter value" );
 
-		form.addSpace( 5 );
+		detailsForm.addSpace( 5 );
 
-		return new JScrollPane( form.getPanel() );
+		detailsForm.setEnabled( false );
+
+		return new JScrollPane( detailsForm.getPanel() );
 	}
 
 	protected RestParamProperty getSelectedParameter()
@@ -166,12 +195,9 @@ public class RestParamsTable extends JPanel
 		paramsTableModel.release();
 		if( paramDetailsModel != null )
 			paramDetailsModel.setBean( null );
-
-		if( inspectorPanel != null )
-			inspectorPanel.release();
 	}
 
-	private Component buildToolbar()
+	protected Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 
@@ -272,9 +298,26 @@ public class RestParamsTable extends JPanel
 		{
 			if( UISupport.confirm( "Clear all parameter values?", "Clear Parameters" ) )
 			{
-				for( String name : params.getPropertyNames() )
+				params.clear();
+			}
+		}
+	}
+
+	private class UseDefaultParamsAction extends AbstractAction
+	{
+		public UseDefaultParamsAction()
+		{
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/default_properties.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Reverts all current parameters to default values" );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			if( UISupport.confirm( "Revert all parameters to default values?", "Use Defaults" ) )
+			{
+				for( TestProperty property : params.getProperties().values() )
 				{
-					params.getProperty( name ).setValue( null );
+					property.setValue( null );
 				}
 			}
 		}
@@ -320,6 +363,12 @@ public class RestParamsTable extends JPanel
 		}
 	}
 
+	public void setParams( RestParamsPropertyHolder params )
+	{
+		this.params = params;
+		paramsTableModel.setParams( params );
+	}
+	
 	public void refresh()
 	{
 		paramsTableModel.fireTableDataChanged();

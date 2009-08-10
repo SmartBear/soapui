@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -40,45 +41,21 @@ import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.Project;
-import com.eviware.soapui.model.propertyexpansion.resolvers.ContextPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.DynamicPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.EvalPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.GlobalPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.MockRunPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.ModelItemPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.PropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.SubmitPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.TestRunPropertyResolver;
 import com.eviware.soapui.model.support.SettingsTestPropertyHolder;
 import com.eviware.soapui.model.testsuite.RenameableTestProperty;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
-import com.eviware.soapui.settings.GlobalPropertySettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToObjectMap;
-import com.eviware.soapui.support.xml.XmlUtils;
 
 public class PropertyExpansionUtils
 {
 	public final static Logger log = Logger.getLogger( PropertyExpansionUtils.class );
 
 	private static SettingsTestPropertyHolder globalTestPropertyHolder;
-	private static List<PropertyResolver> propertyResolvers = new ArrayList<PropertyResolver>();
-
-	static
-	{
-		propertyResolvers.add( new ModelItemPropertyResolver() );
-		propertyResolvers.add( new TestRunPropertyResolver() );
-		propertyResolvers.add( new MockRunPropertyResolver() );
-		propertyResolvers.add( new SubmitPropertyResolver() );
-		propertyResolvers.add( new ContextPropertyResolver() );
-		propertyResolvers.add( new DynamicPropertyResolver() );
-		propertyResolvers.add( new GlobalPropertyResolver() );
-		propertyResolvers.add( new EvalPropertyResolver() );
-	}
 
 	public static String getGlobalProperty( String propertyName )
 	{
@@ -107,89 +84,33 @@ public class PropertyExpansionUtils
 		}
 	}
 
+	/**
+	 * @deprecated Use {@link PropertyExpander#expandProperties(String)} instead
+	 */
 	public static String expandProperties( String content )
 	{
-		return expandProperties( new GlobalPropertyExpansionContext(), content );
+		return PropertyExpander.expandProperties( content );
 	}
 
+	/**
+	 * @deprecated Use
+	 *             {@link PropertyExpander#expandProperties(PropertyExpansionContext,String)}
+	 *             instead
+	 */
 	public static String expandProperties( PropertyExpansionContext context, String content )
 	{
-		return expandProperties( context, content, false );
+		return PropertyExpander.expandProperties( context, content );
 	}
+
+	/**
+	 * @deprecated Use
+	 *             {@link PropertyExpander#expandProperties(PropertyExpansionContext,String,boolean)}
+	 *             instead
+	 */
 
 	public static String expandProperties( PropertyExpansionContext context, String content, boolean entitize )
 	{
-		if( StringUtils.isNullOrEmpty( content ) )
-			return content;
-
-		int ix = content.indexOf( "${" );
-		if( ix == -1 )
-			return content;
-
-		StringBuffer buf = new StringBuffer();
-		int lastIx = 0;
-		while( ix != -1 )
-		{
-			if( ix > lastIx )
-				buf.append( content.substring( lastIx, ix ) );
-
-			int ix2 = content.indexOf( '}', ix + 2 );
-			if( ix2 == -1 )
-				break;
-
-			// check for nesting
-			int ix3 = content.lastIndexOf( "${", ix2 );
-			if( ix3 != ix )
-			{
-				// buf.append( content.substring( ix, ix3 ));
-				content = content.substring( 0, ix3 ) + expandProperties( context, content.substring( ix3, ix2 + 1 ) )
-						+ content.substring( ix2 + 1 );
-
-				lastIx = ix;
-				continue;
-			}
-
-			String propertyName = content.substring( ix + 2, ix2 );
-			String propertyValue = null;
-
-			if( StringUtils.hasContent( propertyName ) )
-			{
-				boolean globalOverrideEnabled = SoapUI.getSettings().getBoolean( GlobalPropertySettings.ENABLE_OVERRIDE );
-
-				for( int c = 0; c < propertyResolvers.size() && propertyValue == null; c++ )
-				{
-					propertyValue = propertyResolvers.get( c )
-							.resolveProperty( context, propertyName, globalOverrideEnabled );
-				}
-			}
-
-			// found a value?
-			if( propertyValue != null )
-			{
-				if( !content.equals( propertyValue ) )
-					propertyValue = expandProperties( context, propertyValue );
-
-				if( entitize )
-					propertyValue = XmlUtils.entitizeContent( propertyValue );
-
-				buf.append( propertyValue );
-			}
-			else
-			{
-				// if( log.isEnabledFor( Priority.WARN ))
-				// log.warn( "Missing property value for [" + propertyName + "]" );
-
-				// buf.append( "${" ).append( propertyName ).append( '}' );
-			}
-
-			lastIx = ix2 + 1;
-			ix = content.indexOf( "${", lastIx );
-		}
-
-		if( lastIx < content.length() )
-			buf.append( content.substring( lastIx ) );
-
-		return buf.toString();
+		return PropertyExpander.expandProperties( context, content, entitize );
 	}
 
 	/**
@@ -443,7 +364,7 @@ public class PropertyExpansionUtils
 			mockService = ( WsdlMockService )modelItem;
 			project = mockService.getProject();
 		}
-		else if( modelItem instanceof AbstractHttpRequest )
+		else if( modelItem instanceof AbstractHttpRequestInterface<?> )
 		{
 			project = ( ( AbstractHttpRequest<?> )modelItem ).getOperation().getInterface().getProject();
 		}
@@ -514,10 +435,14 @@ public class PropertyExpansionUtils
 		return tp == null ? null : new MutablePropertyExpansionImpl( tp, xpath, target, propertyName );
 	}
 
+	/**
+	 * @deprecated Use
+	 *             {@link PropertyExpander#expandProperties(ModelItem,String)}
+	 *             instead
+	 */
 	public static String expandProperties( ModelItem contextModelItem, String content )
 	{
-		return contextModelItem == null ? expandProperties( content ) : expandProperties(
-				new DefaultPropertyExpansionContext( contextModelItem ), content );
+		return PropertyExpander.expandProperties( contextModelItem, content );
 	}
 
 	public static class GlobalPropertyExpansionContext implements PropertyExpansionContext
@@ -554,7 +479,7 @@ public class PropertyExpansionUtils
 
 		public String expand( String content )
 		{
-			return expandProperties( this, content );
+			return PropertyExpander.expandProperties( this, content );
 		}
 
 		public StringToObjectMap getProperties()
@@ -569,7 +494,7 @@ public class PropertyExpansionUtils
 			return result;
 		}
 	}
-
+	
 	public static boolean containsPropertyExpansion( String str )
 	{
 		return str != null && str.indexOf( "${" ) >= 0 && str.indexOf( '}' ) > 2;

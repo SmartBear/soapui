@@ -31,6 +31,7 @@ import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.x.form.XFormTextField;
 import com.eviware.x.form.XForm.FieldType;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.l2fprod.common.swing.JDirectoryChooser;
 
 public class FileFormField extends AbstractSwingXFormField<JPanel> implements XFormTextField
 {
@@ -141,9 +142,10 @@ public class FileFormField extends AbstractSwingXFormField<JPanel> implements XF
 		{
 			if( fileChooser == null )
 			{
-				fileChooser = new JFileChooser();
 				if( type == FieldType.FOLDER || type == FieldType.PROJECT_FOLDER )
-					fileChooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
+					fileChooser = new JDirectoryChooser();
+				else
+					fileChooser = new JFileChooser();
 			}
 
 			String value = FileFormField.this.getValue();

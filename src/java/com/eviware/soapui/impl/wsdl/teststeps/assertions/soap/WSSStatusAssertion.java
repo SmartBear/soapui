@@ -90,6 +90,7 @@ public class WSSStatusAssertion extends WsdlMessageAssertion implements Response
 
 	public static class Factory extends AbstractTestAssertionFactory
 	{
+		@SuppressWarnings("unchecked")
 		public Factory()
 		{
 			super( WSSStatusAssertion.ID, WSSStatusAssertion.LABEL, WSSStatusAssertion.class, new Class[] {

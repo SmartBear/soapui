@@ -8,6 +8,8 @@
 		<p>The soapUI IntelliJ Plugin provides all soapUI functionality directly from within 
 		<a target="_new" href="http://www.jetbrains.com/idea/">IntelliJ IDEA</a> allowing one integrated development and 
 		testing environment for Web Services in Java.</p>
+		<p>The <a href="userguide/commandline/index.html">command-line runners</a> are not included with the IDEA plug-in but must be installed
+			seperately by installing the standalone soapUI version.</p>
         <p>Existing soapUI desktop components are made available through two ToolWindows:</p>
 		<ul>
 		<li>A "soapUI Navigator" ToolWindow at the left contains the 

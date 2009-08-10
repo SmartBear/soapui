@@ -21,7 +21,7 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.project.Project;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringList;
 
@@ -44,7 +44,6 @@ public class ModelSupport
 		return names;
 	}
 
-	@SuppressWarnings( "unchecked" )
 	public static <T extends ModelItem> List<T> getChildren( ModelItem modelItem, Class<T> childType )
 	{
 		List<T> result = new ArrayList<T>();
@@ -161,7 +160,7 @@ public class ModelSupport
 		if( project == null )
 			return null;
 
-		return PropertyExpansionUtils.expandProperties( project, project.getResourceRoot() );
+		return PropertyExpander.expandProperties( project, project.getResourceRoot() );
 	}
 
 	public static void unsetIds( AbstractWsdlModelItem<?> modelItem )

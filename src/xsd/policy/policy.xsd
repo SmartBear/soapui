@@ -19,30 +19,18 @@ The name and trademarks of the Authors may NOT be used in any manner, including 
 No other rights are granted by implication, estoppel or otherwise.
 
 
-  -->
-<xs:schema
-	targetNamespace="http://schemas.xmlsoap.org/ws/2004/09/policy"
-	xmlns:tns="http://schemas.xmlsoap.org/ws/2004/09/policy"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
-	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
-	elementFormDefault="qualified" blockDefault="#all"
-	xmlns:p="http://www.w3.org/2007/05/addressing/metadata"
-	xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl">
-	<xs:import schemaLocation="adressing-metadata.xsd"
-		namespace="http://www.w3.org/2007/05/addressing/metadata">
-	</xs:import>
-	<xs:import
-		namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
-		schemaLocation="oasis-200401-wss-wssecurity-secext-1.0.xsd" />
-	<xs:import
-		namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
-		schemaLocation="oasis-200401-wss-wssecurity-utility-1.0.xsd" />
-	<xs:import namespace="http://www.w3.org/2006/05/addressing/wsdl" schemaLocation="ws-addr-wsdl.xsd" />
-	<!--  ////////// WS-Policy ////////// 
-	-->
-	<xs:import></xs:import>
-	<xs:element name="Policy" type="tns:Policy"></xs:element>
+  --> 
+<xs:schema targetNamespace="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:tns="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" elementFormDefault="qualified" blockDefault="#all" 
+xmlns:p="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl">
+    <xs:import schemaLocation="ws-addr-wsdl.xsd" namespace="http://www.w3.org/2006/05/addressing/wsdl"></xs:import>
+    <xs:import schemaLocation="adressing-metadata.xsd" namespace="http://www.w3.org/2007/05/addressing/metadata"></xs:import>
+    <xs:import namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" schemaLocation="oasis-200401-wss-wssecurity-secext-1.0.xsd" /> 
+  <xs:import namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" schemaLocation="oasis-200401-wss-wssecurity-utility-1.0.xsd" />
+  <xs:import namespace="http://www.w3.org/2006/05/addressing/wsdl" schemaLocation="ws-addr-wsdl.xsd" />
+  <!--  ////////// WS-Policy ////////// 
+  --> 
+<xs:element name="Policy" type="tns:Policy">
+</xs:element>
 	<xs:complexType name="Policy">
 		<xs:complexContent>
 			<xs:extension base="tns:OperatorContentType">
@@ -55,81 +43,76 @@ No other rights are granted by implication, estoppel or otherwise.
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="All" type="tns:OperatorContentType" />
-	<xs:element name="ExactlyOne" type="tns:OperatorContentType" />
-	<xs:complexType name="OperatorContentType">
-		<xs:sequence>
-			<xs:choice minOccurs="0" maxOccurs="unbounded">
-				<xs:element ref="tns:Policy" />
-				<xs:element ref="tns:All" />
-				<xs:element ref="tns:ExactlyOne" />
-				<xs:element ref="tns:PolicyReference" />
-				<xs:element ref="p:Addressing"></xs:element>
-				<xs:element ref="p:AnonymousResponses"></xs:element>
-				<xs:element ref="p:NonAnonymousResponses"></xs:element>
-
+  <xs:element name="All" type="tns:OperatorContentType" /> 
+  <xs:element name="ExactlyOne" type="tns:OperatorContentType" /> 
+<xs:complexType name="OperatorContentType">
+	<xs:sequence>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element ref="tns:Policy" />
+			<xs:element ref="tns:All" />
+			<xs:element ref="tns:ExactlyOne" />
+			<xs:element ref="tns:PolicyReference" />
+			<xs:element ref="p:Addressing"></xs:element>
+			<xs:element ref="p:AnonymousResponses"></xs:element>
+			<xs:element ref="p:NonAnonymousResponses"></xs:element>
 
 			<xs:element ref="wsaw:UsingAddressing"></xs:element>
-			</xs:choice>
+		</xs:choice>
 
-		</xs:sequence>
-	</xs:complexType>
-	<xs:element name="PolicyReference">
-		<xs:complexType>
-			<xs:attribute name="URI" type="xs:anyURI" use="required" />
-			<xs:attribute name="Digest" type="xs:base64Binary" />
-			<xs:attribute name="DigestAlgorithm" type="xs:anyURI"
-				default="http://schemas.xmlsoap.org/ws/2004/09/policy/Sha1Exc" />
-			<xs:anyAttribute namespace="##any" processContents="lax" />
-		</xs:complexType>
-	</xs:element>
-	<xs:attribute name="Optional" type="xs:boolean" default="false" />
-	<!--  ////////// WS-PolicyAttachment ////////// 
-	-->
-	<xs:attribute name="PolicyURIs">
-		<xs:simpleType>
-			<xs:list itemType="xs:anyURI" />
-		</xs:simpleType>
-	</xs:attribute>
-	<xs:element name="PolicyAttachment">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="tns:AppliesTo" />
-				<xs:choice maxOccurs="unbounded">
-					<xs:element ref="tns:Policy" />
-					<xs:element ref="tns:PolicyReference" />
-				</xs:choice>
-				<!-- 
-					omitted only because it causes the content model to be non-determistic
-					<xs:element ref="wsse:Security" minOccurs="0" />
-					
-					
-				-->
-				<xs:any namespace="##other" processContents="lax"
-					minOccurs="0" maxOccurs="unbounded" />
-			</xs:sequence>
-			<xs:anyAttribute namespace="##any" processContents="lax" />
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="AppliesTo">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:any namespace="##any" processContents="lax"
-					maxOccurs="unbounded" />
-			</xs:sequence>
-			<xs:anyAttribute namespace="##any" processContents="lax" />
-		</xs:complexType>
-	</xs:element>
+	</xs:sequence>
+</xs:complexType>
+<xs:element name="PolicyReference">
+<xs:complexType>
+  <xs:attribute name="URI" type="xs:anyURI" use="required" /> 
+  <xs:attribute name="Digest" type="xs:base64Binary" /> 
+  <xs:attribute name="DigestAlgorithm" type="xs:anyURI" default="http://schemas.xmlsoap.org/ws/2004/09/policy/Sha1Exc" /> 
+  <xs:anyAttribute namespace="##any" processContents="lax" /> 
+  </xs:complexType>
+  </xs:element>
+  <xs:attribute name="Optional" type="xs:boolean" default="false" /> 
+<!--  ////////// WS-PolicyAttachment ////////// 
+  --> 
+<xs:attribute name="PolicyURIs">
+<xs:simpleType>
+  <xs:list itemType="xs:anyURI" /> 
+  </xs:simpleType>
+  </xs:attribute>
+<xs:element name="PolicyAttachment">
+<xs:complexType>
+<xs:sequence>
+  <xs:element ref="tns:AppliesTo" /> 
+<xs:choice maxOccurs="unbounded">
+  <xs:element ref="tns:Policy" /> 
+  <xs:element ref="tns:PolicyReference" /> 
+  </xs:choice>
+<!-- 
+ omitted only because it causes the content model to be non-determistic
+        <xs:element ref="wsse:Security" minOccurs="0" />
 
 
+  --> 
+  <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" /> 
+  </xs:sequence>
+  <xs:anyAttribute namespace="##any" processContents="lax" /> 
+  </xs:complexType>
+  </xs:element>
+<xs:element name="AppliesTo">
+<xs:complexType>
+<xs:sequence>
+  <xs:any namespace="##any" processContents="lax" maxOccurs="unbounded" /> 
+  </xs:sequence>
+  <xs:anyAttribute namespace="##any" processContents="lax" /> 
+  </xs:complexType>
+  </xs:element>
+  
 
-	<xs:simpleType name="OptionalType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="true"></xs:enumeration>
-			<xs:enumeration value="false"></xs:enumeration>
-		</xs:restriction>
-	</xs:simpleType>
 
+    <xs:simpleType name="OptionalType">
+    	<xs:restriction base="xs:string">
+    		<xs:enumeration value="true"></xs:enumeration>
+    		<xs:enumeration value="false"></xs:enumeration>
+    	</xs:restriction>
+    </xs:simpleType>
 
 
 

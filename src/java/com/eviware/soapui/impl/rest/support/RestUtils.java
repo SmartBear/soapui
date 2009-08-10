@@ -21,11 +21,10 @@ import java.net.URLEncoder;
 import org.apache.xmlbeans.XmlBoolean;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.ParameterStyle;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringList;
@@ -56,8 +55,7 @@ public class RestUtils
 
 	}
 
-	public static String extractParams( String pathOrEndpoint, XmlBeansRestParamsTestPropertyHolder params,
-			boolean keepHost )
+	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost )
 	{
 		if( StringUtils.isNullOrEmpty( pathOrEndpoint ) )
 			return "";
@@ -103,6 +101,7 @@ public class RestUtils
 
 					property.setStyle( ParameterStyle.TEMPLATE );
 					property.setValue( name );
+					property.setDefaultValue( name );
 				}
 				else
 				{
@@ -133,6 +132,7 @@ public class RestUtils
 
 								property.setStyle( ParameterStyle.MATRIX );
 								property.setValue( URLDecoder.decode( matrixParam.substring( ix + 1 ), "Utf-8" ) );
+								property.setDefaultValue( URLDecoder.decode( matrixParam.substring( ix + 1 ), "Utf-8" ) );
 							}
 						}
 					}
@@ -148,6 +148,7 @@ public class RestUtils
 
 					property.setStyle( ParameterStyle.TEMPLATE );
 					property.setValue( item );
+					property.setDefaultValue( item );
 
 					item = "{" + property.getName() + "}";
 				}
@@ -188,6 +189,7 @@ public class RestUtils
 
 						property.setStyle( ParameterStyle.QUERY );
 						property.setValue( URLDecoder.decode( item.substring( ix + 1 ), "Utf-8" ) );
+						property.setDefaultValue( URLDecoder.decode( item.substring( ix + 1 ), "Utf-8" ) );
 					}
 				}
 				catch( UnsupportedEncodingException e )
@@ -208,7 +210,8 @@ public class RestUtils
 		return resultPath.toString();
 	}
 
-	public static String expandPath( String path, XmlBeansRestParamsTestPropertyHolder params, RestRequest request )
+	@SuppressWarnings("deprecation")
+	public static String expandPath( String path, RestParamsPropertyHolder params, RestRequestInterface request )
 	{
 		StringBuffer query = request.isPostQueryString() || "multipart/form-data".equals( request.getMediaType() ) ? null
 				: new StringBuffer();
@@ -218,7 +221,7 @@ public class RestUtils
 		{
 			RestParamProperty param = params.getPropertyAt( c );
 
-			String value = PropertyExpansionUtils.expandProperties( context, param.getValue() );
+			String value = PropertyExpander.expandProperties( context, param.getValue() );
 			if( value != null && !param.isDisableUrlEncoding() )
 			{
 				try
@@ -240,6 +243,9 @@ public class RestUtils
 			if( !StringUtils.hasContent( value ) && !param.getRequired() )
 				continue;
 
+			if( value == null )
+				value = "";
+			
 			switch( param.getStyle() )
 			{
 			case QUERY :

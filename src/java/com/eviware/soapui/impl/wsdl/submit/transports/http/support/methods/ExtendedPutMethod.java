@@ -19,7 +19,7 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.PutMethod;
 
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
@@ -48,6 +48,11 @@ public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMe
 	public void setDumpFile( String dumpFile )
 	{
 		httpMethodSupport.setDumpFile( dumpFile );
+	}
+
+	public boolean hasResponse()
+	{
+		return httpMethodSupport.hasResponse();
 	}
 
 	protected void readResponse( HttpState arg0, HttpConnection arg1 ) throws IOException, HttpException
@@ -113,11 +118,11 @@ public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMe
 		return httpMethodSupport.getResponseContentType();
 	}
 
-	public AbstractHttpRequest.RequestMethod getMethod()
+	public RestRequestInterface.RequestMethod getMethod()
 	{
-		return AbstractHttpRequest.RequestMethod.PUT;
+		return RestRequestInterface.RequestMethod.PUT;
 	}
-
+	
 	public Throwable getFailureCause()
 	{
 		return httpMethodSupport.getFailureCause();

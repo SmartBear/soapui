@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.model.iface.SubmitContext;
 
 /**
@@ -24,7 +24,7 @@ import com.eviware.soapui.model.iface.SubmitContext;
 
 public class ScriptExpansionRequestFilter extends AbstractRequestFilter
 {
-	public void filterRequest( SubmitContext context, AbstractHttpRequest<?> wsdlRequest )
+	public void filterRequest( SubmitContext context, AbstractHttpRequestInterface<?> wsdlRequest )
 	{
 		/*
 		 * String content = (String) context.getProperty(

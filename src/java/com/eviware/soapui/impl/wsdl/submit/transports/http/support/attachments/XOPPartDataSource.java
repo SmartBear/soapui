@@ -81,10 +81,7 @@ public final class XOPPartDataSource implements DataSource
 				return new ByteArrayInputStream( Base64.decodeBase64( content.getBytes() ) );
 			}
 			else
-			{
-				SoapUI.log.warn( "Unexpected type for XOPPartDataSource; " + schemaType.getName() );
-				return new ByteArrayInputStream( content.getBytes() );
-			}
+				throw new IOException( "Invalid type for XOPPartDataSource; " + schemaType.getName() );
 		}
 		catch( Exception e )
 		{

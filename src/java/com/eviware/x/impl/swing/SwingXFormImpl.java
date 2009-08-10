@@ -48,8 +48,13 @@ public class SwingXFormImpl implements XForm
 
 	public SwingXFormImpl( String name )
 	{
+		this( name, 5 );
+	}
+
+	public SwingXFormImpl( String name, int leftIndent )
+	{
 		this.name = name;
-		layout = new FormLayout( "5px,left:pref,5px,left:default,5px:grow(1.0)" );
+		layout = new FormLayout( leftIndent + "px,left:pref,5px,left:default,5px:grow(1.0)" );
 		panel = new JPanel( layout );
 		rowSpec = new RowSpec( rowAlignment + ":pref" );
 	}
@@ -57,6 +62,16 @@ public class SwingXFormImpl implements XForm
 	public String getName()
 	{
 		return name;
+	}
+
+	public int getRowSpacing()
+	{
+		return rowSpacing;
+	}
+
+	public void setRowSpacing( int rowSpacing )
+	{
+		this.rowSpacing = rowSpacing;
 	}
 
 	public void setName( String name )
@@ -87,10 +102,10 @@ public class SwingXFormImpl implements XForm
 
 	public XFormField addComponent( String label, XFormField formComponent )
 	{
-		components.put( label, formComponent );
-
 		if( rowSpacing > 0 && !components.isEmpty() )
 			addSpace( rowSpacing );
+
+		components.put( label, formComponent );
 
 		layout.appendRow( rowSpec );
 
@@ -274,7 +289,7 @@ public class SwingXFormImpl implements XForm
 		}
 	}
 
-	public String[] getOptions( String name )
+	public Object[] getOptions( String name )
 	{
 		XFormField combo = getComponent( name );
 		if( combo instanceof XFormOptionsField )

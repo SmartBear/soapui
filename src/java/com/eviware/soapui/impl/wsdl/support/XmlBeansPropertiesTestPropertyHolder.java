@@ -14,7 +14,6 @@ package com.eviware.soapui.impl.wsdl.support;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -38,6 +37,7 @@ import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+import com.eviware.soapui.model.support.TestPropertyUtils;
 import com.eviware.soapui.model.testsuite.RenameableTestProperty;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
@@ -313,27 +313,9 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 		}
 	}
 
-	public void saveTo( Properties props )
+	public int saveTo( String fileName ) throws IOException
 	{
-		int cnt = 0;
-		for( PropertiesStepProperty p : properties )
-		{
-			String name = p.getName();
-			String value = p.getValue();
-			if( value == null )
-				value = "";
-
-			props.setProperty( name, value );
-			cnt++ ;
-		}
-	}
-
-	public void saveTo( String fileName ) throws IOException
-	{
-		Properties props = new Properties();
-		saveTo( props );
-		// Changed from FileWriter to FileOutputStream for Java 5 compatibility.
-		props.store( new FileOutputStream( fileName ), "Properties exported from [" + modelItem.getName() + "]" );
+		return TestPropertyUtils.saveTo( this, fileName );
 	}
 
 	public int getPropertyCount()

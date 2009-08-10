@@ -32,7 +32,7 @@
 		installation or if you want startup menu icons and an uninstaller.</li>
 		<li>By downloading the binary distribution from 
 		<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013">SourceForge</a> 
-		(for example "soapui-1.5-bin.zip") and unzipping it manually and running the included bin\soapui.bat (or .sh) 
+		(for example "soapui-3.0-bin.zip") and unzipping it manually and running the included bin\soapui.bat (or .sh) 
 		script (you	will need Java in your path).</li>
 		</ul>
 		<p>In any case, soapUI should start and display an empty Workspace to get started with.</p>

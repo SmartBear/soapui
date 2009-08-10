@@ -63,10 +63,10 @@ public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements 
 		buttonGroup.setSelected( models.get( value ), true );
 	}
 
-	public void addItem( String value )
+	public void addItem( Object value )
 	{
-		JRadioButton button = new JRadioButton( value );
-		button.setActionCommand( value );
+		JRadioButton button = new JRadioButton( String.valueOf( value ));
+		button.setActionCommand( String.valueOf( value ) );
 		button.addActionListener( new ActionListener()
 		{
 
@@ -78,16 +78,16 @@ public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements 
 
 		getComponent().add( button );
 		buttonGroup.add( button );
-		models.put( value, button.getModel() );
-		items.add( value );
+		models.put( String.valueOf( value ), button.getModel() );
+		items.add( String.valueOf( value ) );
 	}
 
-	public String[] getOptions()
+	public Object[] getOptions()
 	{
 		return items.toStringArray();
 	}
 
-	public String[] getSelectedOptions()
+	public Object[] getSelectedOptions()
 	{
 		return new String[] { getValue() };
 	}
@@ -107,7 +107,7 @@ public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements 
 		}
 	}
 
-	public void setSelectedOptions( String[] options )
+	public void setSelectedOptions( Object[] options )
 	{
 
 	}

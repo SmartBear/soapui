@@ -1393,9 +1393,26 @@ public final class XmlUtils
 		System.out.println( "returning " + result.toString() );
 		return result.toString();
 	}
-
+	
 	public static QName getQName( XmlObject contentElement )
 	{
 		return contentElement == null ? null : getQName( contentElement.getDomNode() );
+	}
+
+	public static String getXPathValue( String value, String xpath )
+	{
+		try
+		{
+			XmlObject xmlObject = XmlObject.Factory.parse( value );
+			XmlObject[] nodes = xmlObject.selectPath( xpath );
+			if( nodes.length > 0 )
+				return getNodeValue( nodes[0].getDomNode() );
+		}
+		catch( XmlException e )
+		{
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 }

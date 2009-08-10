@@ -29,8 +29,8 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
 import com.eviware.soapui.model.support.XPathReferenceImpl;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.StringUtils;
@@ -106,12 +106,12 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
 		}
 	}
 
-	public TestStepResult run( TestRunner runner, TestRunContext context )
+	public TestStepResult run( TestCaseRunner runner, TestCaseRunContext context )
 	{
 		return run( runner, context, null );
 	}
 
-	public TestStepResult run( TestRunner runner, TestRunContext context, PropertyTransfer transfer )
+	public TestStepResult run( TestCaseRunner runner, TestCaseRunContext context, PropertyTransfer transfer )
 	{
 		PropertyTransferResult result = new PropertyTransferResult();
 		canceled = false;
@@ -353,9 +353,8 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
 		return result.toArray( new XPathReference[result.size()] );
 	}
 
-	@SuppressWarnings( "unchecked" )
 	@Override
-	public void resolve( ResolveContext context )
+	public void resolve( ResolveContext<?> context )
 	{
 		super.resolve( context );
 

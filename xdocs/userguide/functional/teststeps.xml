@@ -148,6 +148,19 @@
                  <li><b>Online Help</b> - displays a TestStep specific page in a browser</li>
           </ul></p>
         </subsection>
+        
+		 <subsection name="Clone TestStep">
+		 <p>Selecting to clone a TestStep from the TestStep menu displays the following dialog:</p>
+		 <p align="center"><img src="images/clone_one_teststep.gif" alt="Clone TestStep dialog in soapUI for Functional Testing"/></p>
+		 <p>If selecting to clone to another project, soapUI will prompt to clone required interfaces to that
+		 project as well.</p>
+		 </subsection>
+		 
+		 <subsection name="MultiDelete of TestSteps">
+		 <p>Several TestSteps can be selected for deleting at the same time.</p>
+		 <p align="center"><img src="images/multi_step_delete.gif" alt="Delete several TestSteps"/></p>
+		 </subsection>
+		 
 
 		 <p><hr size="1"/>Next: <a href="testrequests.html">Web Service functional Testing- Working with TestRequests</a></p>
 		</section>

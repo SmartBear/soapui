@@ -492,7 +492,7 @@ public class SoapUtils
 			return deduceSoapVersion( requestContentType, ( XmlObject )null );
 		}
 	}
-
+	
 	public static String transferSoapHeaders( String requestContent, String newRequest, SoapVersion soapVersion )
 	{
 		try

@@ -32,22 +32,23 @@ import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.text.Document;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction;
-import com.eviware.soapui.impl.wsdl.panels.testcase.TestRunLog;
-import com.eviware.soapui.impl.wsdl.panels.testcase.TestRunLog.TestRunLogTestRunListener;
+import com.eviware.soapui.impl.wsdl.panels.support.MockTestSuiteRunner;
+import com.eviware.soapui.impl.wsdl.panels.testcase.JTestRunLog;
+import com.eviware.soapui.impl.wsdl.panels.testcase.TestRunLogTestRunListener;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestScenario;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestSuiteRunner;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestSuiteRunContext;
+import com.eviware.soapui.model.testsuite.TestSuiteRunListener;
+import com.eviware.soapui.model.testsuite.TestSuiteRunner;
 import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
@@ -62,6 +63,7 @@ import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
 /**
@@ -77,18 +79,18 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	private JTestSuiteTestCaseList testCaseList;
 	private RunAction runAction = new RunAction();
 	private CancelAction cancelAction = new CancelAction();
-	private TestSuiteRunner testSuiteRunner = new TestSuiteRunner();
 	private JToggleButton sequentialButton;
 	private JToggleButton parallellButton;
 	private final InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
+	private final InternalTestSuiteRunListener testSuiteRunListener = new InternalTestSuiteRunListener();
 	private JTextArea descriptionArea;
-	private boolean failedTests;
 	private PropertyHolderTable propertiesTable;
-	private TestRunLog testRunLog;
+	private JTestRunLog testRunLog;
 	private GroovyEditorComponent tearDownGroovyEditor;
 	private GroovyEditorComponent setupGroovyEditor;
 	private JInspectorPanel testCaseListInspectorPanel;
 	private JInspectorPanel inspectorPanel;
+	private WsdlTestSuiteRunner testSuiteRunner;
 
 	public WsdlTestSuiteDesktopPanel( WsdlTestSuite testSuite )
 	{
@@ -96,6 +98,7 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 
 		buildUI();
 		testSuite.addTestSuiteListener( testSuiteListener );
+		testSuite.addTestSuiteRunListener( testSuiteRunListener );
 	}
 
 	private void buildUI()
@@ -109,7 +112,7 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	private JComponent buildContent()
 	{
 		inspectorPanel = JInspectorPanelFactory.build( buildTabs() );
-		inspectorPanel.addInspector( new JComponentInspector( buildRunLog(), "TestSuite Log",
+		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildRunLog(), "TestSuite Log",
 				"Log of executed TestCases and TestSteps", true ) );
 
 		if( StringUtils.hasContent( getModelItem().getDescription() )
@@ -123,7 +126,7 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 
 	private JComponent buildRunLog()
 	{
-		testRunLog = new TestRunLog( getModelItem().getSettings() );
+		testRunLog = new JTestRunLog( getModelItem().getSettings() );
 		return testRunLog;
 	}
 
@@ -230,8 +233,7 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	{
 		inspectorPanel.addInspector( new JFocusableComponentInspector<JPanel>( buildDescriptionPanel(), descriptionArea,
 				"Description", "Description for this TestSuite", true ) );
-
-		inspectorPanel.addInspector( new JComponentInspector( buildPropertiesPanel(), "Properties",
+		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildPropertiesPanel(), "Properties",
 				"TestSuite level properties", true ) );
 		inspectorPanel.addInspector( new GroovyEditorInspector( buildSetupScriptPanel(), "Setup Script",
 				"Script to run before running TestSuite" ) );
@@ -331,27 +333,28 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 
 	protected void runTestSuite()
 	{
-		new Thread( testSuiteRunner, getModelItem().getName() + " TestSuiteRunner" ).start();
+		testSuiteRunner = getModelItem().run( new StringToObjectMap(), true );
+
+		// new Thread( testSuiteRunner, getModelItem().getName() +
+		// " TestSuiteRunner" ).start();
 	}
 
 	protected void beforeRun()
 	{
 		runAction.setEnabled( false );
-		cancelAction.setEnabled( true );
+		cancelAction.setEnabled( testSuiteRunner != null );
 		testCaseList.setEnabled( false );
 		progressBar.setForeground( Color.GREEN.darker() );
-
-		failedTests = false;
 	}
 
-	protected void afterRun()
+	protected void afterRun( WsdlTestSuiteRunner testSuiteRunner )
 	{
 		runAction.setEnabled( true );
 		cancelAction.setEnabled( false );
 		testCaseList.setEnabled( true );
 
-		progressBar.setString( failedTests ? "Failed" : testSuiteRunner.isCanceled() ? "Canceled" : "Passed" );
-		progressBar.setForeground( failedTests ? Color.RED : Color.GREEN.darker() );
+		progressBar.setString( String.valueOf( testSuiteRunner.getStatus() ) );
+		progressBar.setForeground( testSuiteRunner.isFailed() ? Color.RED : Color.GREEN.darker() );
 	}
 
 	private final class InternalTestSuiteListener extends TestSuiteListenerAdapter
@@ -391,115 +394,7 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 
 		public void actionPerformed( ActionEvent e )
 		{
-			testSuiteRunner.cancel();
-		}
-	}
-
-	/**
-	 * Runs the selected testsuites..
-	 * 
-	 * @author Ole.Matzura
-	 */
-
-	public class TestSuiteRunner extends WsdlTestScenario
-	{
-		private TestRunLogTestRunListener runLogListener;
-		private int finishCount;
-
-		public TestSuiteRunner()
-		{
-			super( TestSuiteRunType.SEQUENTIAL );
-		}
-
-		public void run()
-		{
-			setRunType( getModelItem().getRunType() );
-
-			removeAllTestCases();
-
-			testCaseList.reset();
-
-			for( TestCase testCase : getModelItem().getTestCaseList() )
-			{
-				if( !testCase.isDisabled() )
-					addTestCase( testCase );
-			}
-
-			super.run();
-		}
-
-		protected PropertyExpansionContext createContext()
-		{
-			return new DefaultPropertyExpansionContext( getModelItem() );
-		}
-
-		public void beforeRun( PropertyExpansionContext context )
-		{
-			super.beforeRun( context );
-
-			WsdlTestSuiteDesktopPanel.this.beforeRun();
-
-			progressBar.setMaximum( getTestCaseCount() );
-			progressBar.setValue( 0 );
-			progressBar.setString( "" );
-			finishCount = 0;
-
-			if( runLogListener == null )
-				runLogListener = new TestRunLog.TestRunLogTestRunListener( testRunLog, false );
-
-			testRunLog.clear();
-
-			if( getRunType() == TestSuiteRunType.PARALLEL )
-				testRunLog.addText( "<log disabled during parallell execution>" );
-
-			try
-			{
-				getModelItem().runSetupScript( context );
-			}
-			catch( Exception e )
-			{
-				SoapUI.logError( e );
-			}
-		}
-
-		@Override
-		protected void afterTestCase( TestCase testCase, TestRunner runner )
-		{
-			super.afterTestCase( testCase, runner );
-			progressBar.setValue( ++finishCount );
-			if( runner.getStatus() == TestRunner.Status.FAILED )
-				failedTests = true;
-
-			if( getRunType() == TestSuiteRunType.SEQUENTIAL )
-				testCase.removeTestRunListener( runLogListener );
-		}
-
-		@Override
-		protected void beforeTestCase( TestCase testCase )
-		{
-			super.beforeTestCase( testCase );
-			progressBar.setString( "Running " + testCase.getName() );
-
-			if( getRunType() == TestSuiteRunType.SEQUENTIAL )
-				testCase.addTestRunListener( runLogListener );
-		}
-
-		protected void afterRun( PropertyExpansionContext context )
-		{
-			super.afterRun( context );
-
-			try
-			{
-				getModelItem().runTearDownScript( context );
-			}
-			catch( Exception e )
-			{
-				SoapUI.logError( e );
-			}
-			finally
-			{
-				WsdlTestSuiteDesktopPanel.this.afterRun();
-			}
+			testSuiteRunner.cancel( "Cancelled from UI" );
 		}
 	}
 
@@ -507,17 +402,17 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	{
 		public SetupScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "context", "testSuite" }, getModelItem().getSettings(), "Setup" );
+			super( new String[] { "log", "runner", "context", "testSuite" }, WsdlTestSuiteDesktopPanel.this.getModelItem(), "Setup" );
 		}
 
 		public String getScript()
 		{
-			return getModelItem().getSetupScript();
+			return  WsdlTestSuiteDesktopPanel.this.getModelItem().getSetupScript();
 		}
 
 		public void setScript( String text )
 		{
-			getModelItem().setSetupScript( text );
+			 WsdlTestSuiteDesktopPanel.this.getModelItem().setSetupScript( text );
 		}
 
 		@Override
@@ -530,7 +425,8 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 				{
 					try
 					{
-						getModelItem().runSetupScript( null );
+						MockTestSuiteRunner mockRunner = new MockTestSuiteRunner(  WsdlTestSuiteDesktopPanel.this.getModelItem() );
+						 WsdlTestSuiteDesktopPanel.this.getModelItem().runSetupScript( ( TestSuiteRunContext )mockRunner.getRunContext(), mockRunner );
 					}
 					catch( Exception e1 )
 					{
@@ -545,17 +441,17 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	{
 		public TearDownScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "context", "testSuite" }, getModelItem().getSettings(), "TearDown" );
+			super( new String[] { "log", "runner", "context", "testSuite" },  WsdlTestSuiteDesktopPanel.this.getModelItem(), "TearDown" );
 		}
 
 		public String getScript()
 		{
-			return getModelItem().getTearDownScript();
+			return  WsdlTestSuiteDesktopPanel.this.getModelItem().getTearDownScript();
 		}
 
 		public void setScript( String text )
 		{
-			getModelItem().setTearDownScript( text );
+			 WsdlTestSuiteDesktopPanel.this.getModelItem().setTearDownScript( text );
 		}
 
 		@Override
@@ -568,7 +464,8 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 				{
 					try
 					{
-						getModelItem().runTearDownScript( null );
+						MockTestSuiteRunner mockRunner = new MockTestSuiteRunner(  WsdlTestSuiteDesktopPanel.this.getModelItem() );
+						 WsdlTestSuiteDesktopPanel.this.getModelItem().runTearDownScript( ( TestSuiteRunContext )mockRunner.getRunContext(), mockRunner );
 					}
 					catch( Exception e1 )
 					{
@@ -576,6 +473,59 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 					}
 				}
 			};
+		}
+	}
+
+	private class InternalTestSuiteRunListener implements TestSuiteRunListener
+	{
+		private TestRunLogTestRunListener runLogListener;
+		private int finishCount;
+
+		public void afterRun( TestSuiteRunner testRunner, TestSuiteRunContext runContext )
+		{
+			WsdlTestSuiteDesktopPanel.this.afterRun( ( WsdlTestSuiteRunner )testRunner );
+		}
+
+		public void afterTestCase( TestSuiteRunner testRunner, TestSuiteRunContext runContext,
+				TestCaseRunner testCaseRunner )
+		{
+			progressBar.setValue( ++finishCount );
+
+			if( getModelItem().getRunType() == TestSuiteRunType.SEQUENTIAL )
+				testCaseRunner.getTestCase().removeTestRunListener( runLogListener );
+		}
+
+		public void beforeRun( TestSuiteRunner testRunner, TestSuiteRunContext runContext )
+		{
+			WsdlTestSuiteDesktopPanel.this.beforeRun();
+
+			testCaseList.reset();
+
+			progressBar.setMaximum( getModelItem().getTestCaseCount() );
+			progressBar.setValue( 0 );
+			progressBar.setString( "" );
+			finishCount = 0;
+
+			if( runLogListener == null )
+				runLogListener = new TestRunLogTestRunListener( testRunLog, false );
+
+			testRunLog.clear();
+
+			if( getModelItem().getRunType() == TestSuiteRunType.PARALLEL )
+				testRunLog.addText( "<log disabled during parallell execution>" );
+		}
+
+		public void beforeTestCase( TestSuiteRunner testRunner, TestSuiteRunContext runContext, TestCase testCase )
+		{
+			if( getModelItem().getRunType() == TestSuiteRunType.SEQUENTIAL )
+			{
+				progressBar.setString( "Running " + testCase.getName() );
+				testCase.addTestRunListener( runLogListener );
+			}
+			else
+			{
+				progressBar.setString( "Starting " + testCase.getName() );
+			}
 		}
 	}
 }

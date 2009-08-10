@@ -18,10 +18,10 @@ import javax.swing.JProgressBar;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunListener;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
@@ -87,9 +87,9 @@ public class ProgressBarTestCaseAdapter
 		}
 	}
 
-	public class InternalTestRunListener implements TestRunListener
+	public class InternalTestRunListener extends TestRunListenerAdapter
 	{
-		public void beforeRun( TestRunner testRunner, TestRunContext runContext )
+		public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
@@ -98,12 +98,11 @@ public class ProgressBarTestCaseAdapter
 			progressBar.setForeground( Color.GREEN.darker() );
 		}
 
-		public void beforeStep( TestRunner testRunner, TestRunContext runContext )
+		public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
 
-			TestStep testStep = runContext.getCurrentStep();
 			if( testStep != null )
 			{
 				progressBar.setString( testStep.getName() );
@@ -111,7 +110,7 @@ public class ProgressBarTestCaseAdapter
 			}
 		}
 
-		public void afterStep( TestRunner testRunner, TestRunContext runContext, TestStepResult result )
+		public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
@@ -128,7 +127,7 @@ public class ProgressBarTestCaseAdapter
 			progressBar.setValue( runContext.getCurrentStepIndex() + 1 );
 		}
 
-		public void afterRun( TestRunner testRunner, TestRunContext runContext )
+		public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			if( testRunner.getStatus() == Status.FAILED )
 			{
@@ -142,7 +141,7 @@ public class ProgressBarTestCaseAdapter
 			if( progressBar.isIndeterminate() )
 				return;
 
-			if( testRunner.getStatus() == TestRunner.Status.FINISHED )
+			if( testRunner.getStatus() == TestCaseRunner.Status.FINISHED )
 				progressBar.setValue( testRunner.getTestCase().getTestStepCount() );
 
 			progressBar.setString( testRunner.getStatus().toString() );

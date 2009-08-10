@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.submit.filters;
 
 import org.apache.commons.httpclient.HttpVersion;
 import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
@@ -45,6 +46,12 @@ public class HttpSettingsRequestFilter extends AbstractRequestFilter
 			httpMethod.setRequestHeader( "Connection", "close" );
 		}
 
+		// close connections?
+		if( settings.getBoolean( HttpSettings.EXPECT_CONTINUE )  && httpMethod instanceof EntityEnclosingMethod)
+		{
+			httpMethod.getParams().setParameter( HttpMethodParams.USE_EXPECT_CONTINUE, Boolean.TRUE);
+		}
+		
 		// compress request?
 		String compressionAlg = settings.getString( HttpSettings.REQUEST_COMPRESSION, "None" );
 		if( !"None".equals( compressionAlg ) )

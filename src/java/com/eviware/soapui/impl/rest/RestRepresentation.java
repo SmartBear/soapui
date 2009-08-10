@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.rest;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -21,21 +22,23 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
-import org.w3c.dom.Document;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestResourceRepresentationConfig;
 import com.eviware.soapui.config.RestResourceRepresentationTypeConfig;
+import com.eviware.soapui.impl.rest.panels.request.inspectors.schema.InferredSchemaManager;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
+import com.eviware.soapui.impl.wsdl.support.xsd.SampleXmlUtil;
 import com.eviware.soapui.support.PropertyChangeNotifier;
-import com.eviware.soapui.support.xml.XmlUtils;
 
-public class RestRepresentation implements PropertyChangeNotifier
+public class RestRepresentation implements PropertyChangeNotifier, PropertyChangeListener
 {
-	private final RestRequest restRequest;
+	// private final RestRequest restRequest;
+	private final RestMethod restMethod;
 	private RestResourceRepresentationConfig config;
-	private XmlBeansRestParamsTestPropertyHolder params;
+	private RestParamsPropertyHolder params;
 	private PropertyChangeSupport propertyChangeSupport;
 	private SchemaType schemaType;
 
@@ -44,21 +47,41 @@ public class RestRepresentation implements PropertyChangeNotifier
 		REQUEST, RESPONSE, FAULT
 	}
 
-	public RestRepresentation( RestRequest restResource, RestResourceRepresentationConfig config )
+	/*
+	 * //TODO: Remove this? public RestRepresentation( RestRequest restResource,
+	 * RestResourceRepresentationConfig config ) { this.restMethod = null;
+	 * this.restRequest = restResource; this.config = config;
+	 * 
+	 * if( config.getParams() == null ) config.addNewParams();
+	 * 
+	 * params = new XmlBeansRestParamsTestPropertyHolder( restResource,
+	 * config.getParams() ); propertyChangeSupport = new PropertyChangeSupport(
+	 * this );
+	 * 
+	 * if(this.restRequest.getResource() != null &&
+	 * this.restRequest.getResource().getService() != null)
+	 * InferredSchemaManager.
+	 * addPropertyChangeListener(this.restRequest.getResource().getService(),
+	 * this); }
+	 */
+
+	public RestRepresentation( RestMethod restMethod, RestResourceRepresentationConfig config )
 	{
-		this.restRequest = restResource;
+		this.restMethod = restMethod;
 		this.config = config;
 
 		if( config.getParams() == null )
 			config.addNewParams();
 
-		params = new XmlBeansRestParamsTestPropertyHolder( restResource, config.getParams() );
+		params = new XmlBeansRestParamsTestPropertyHolder( restMethod, config.getParams() );
 		propertyChangeSupport = new PropertyChangeSupport( this );
+
+		InferredSchemaManager.addPropertyChangeListener( this.restMethod.getResource().getService(), this );
 	}
 
-	public RestRequest getRestRequest()
+	public RestMethod getRestMethod()
 	{
-		return restRequest;
+		return restMethod;
 	}
 
 	public RestResourceRepresentationConfig getConfig()
@@ -66,7 +89,7 @@ public class RestRepresentation implements PropertyChangeNotifier
 		return config;
 	}
 
-	public XmlBeansRestParamsTestPropertyHolder getParams()
+	public RestParamsPropertyHolder getParams()
 	{
 		return params;
 	}
@@ -123,14 +146,14 @@ public class RestRepresentation implements PropertyChangeNotifier
 		propertyChangeSupport.firePropertyChange( "element", old, name );
 	}
 
-	public List getStatus()
+	public List<?> getStatus()
 	{
-		return config.getStatus() == null ? new ArrayList() : config.getStatus();
+		return config.getStatus() == null ? new ArrayList<Object>() : config.getStatus();
 	}
 
-	public void setStatus( List arg0 )
+	public void setStatus( List<?> arg0 )
 	{
-		List old = getStatus();
+		List<?> old = getStatus();
 		config.setStatus( arg0 );
 		propertyChangeSupport.firePropertyChange( "status", old, arg0 );
 	}
@@ -143,7 +166,7 @@ public class RestRepresentation implements PropertyChangeNotifier
 			{
 				if( getElement() != null )
 				{
-					WadlDefinitionContext context = getRestRequest().getResource().getService().getWadlContext();
+					WadlDefinitionContext context = getRestMethod().getResource().getService().getWadlContext();
 					if( context.hasSchemaTypes() )
 					{
 						schemaType = context.getSchemaTypeSystem().findDocumentType( getElement() );
@@ -169,6 +192,7 @@ public class RestRepresentation implements PropertyChangeNotifier
 
 	public void release()
 	{
+		InferredSchemaManager.removePropertyChangeListener( getRestMethod().getResource().getService(), this );
 	}
 
 	public void setDescription( String description )
@@ -210,14 +234,22 @@ public class RestRepresentation implements PropertyChangeNotifier
 
 	public String getDefaultContent()
 	{
-		if( getElement() != null )
+		if( getSchemaType() != null )
 		{
-			Document document = XmlUtils.createDocument( getElement() );
-			return XmlUtils.serialize( document );
+			// Document document = XmlUtils.createDocument( getElement() );
+			SampleXmlUtil generator = new SampleXmlUtil( false );
+			generator.setIgnoreOptional( false );
+			return generator.createSample( getSchemaType() );
+			// return XmlUtils.serialize( document );
 		}
 		else
 		{
 			return "";
 		}
+	}
+
+	public void propertyChange( PropertyChangeEvent evt )
+	{
+		schemaType = null;
 	}
 }

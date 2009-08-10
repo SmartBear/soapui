@@ -58,6 +58,7 @@ import javax.wsdl.extensions.soap12.SOAP12Header;
 import javax.wsdl.extensions.soap12.SOAP12Operation;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
@@ -812,7 +813,7 @@ public class WsdlUtils
 		return false;
 	}
 
-	public static String getSoapBodyNamespace( List list )
+	public static String getSoapBodyNamespace( List<?> list )
 	{
 		SOAPBody soapBody = WsdlUtils.getExtensiblityElement( list, SOAPBody.class );
 		if( soapBody != null )
@@ -1187,7 +1188,7 @@ public class WsdlUtils
 			WsdlInterface iface = operation.getInterface();
 
 			Definition definition = iface.getWsdlContext().getDefinition();
-			String targetNamespace = definition.getTargetNamespace();
+			String targetNamespace = WsdlUtils.getTargetNamespace( definition );
 			String portTypeName = iface.getBinding().getPortType().getQName().getLocalPart();
 			String operationName = operation.getName();
 			if( !StringUtils.isNullOrEmpty( operationName ) )
@@ -1209,7 +1210,7 @@ public class WsdlUtils
 				operationInOutName = operation.getName() + ( output ? "Response" : "Request" );
 
 			StringBuffer result = new StringBuffer( targetNamespace );
-			if( targetNamespace.charAt( targetNamespace.length() - 1 ) != '/' && portTypeName.charAt( 0 ) != '/' )
+			if( targetNamespace.length() > 0 && targetNamespace.charAt( targetNamespace.length() - 1 ) != '/' && portTypeName.charAt( 0 ) != '/' )
 				result.append( '/' );
 			result.append( portTypeName );
 			if( portTypeName.charAt( portTypeName.length() - 1 ) != '/' && operationInOutName.charAt( 0 ) != '/' )
@@ -1327,5 +1328,10 @@ public class WsdlUtils
 			log.warn( e.toString() );
 		}
 		return null;
+	}
+	
+	public static String getTargetNamespace( Definition definition )
+	{
+		return definition.getTargetNamespace() == null ? XMLConstants.NULL_NS_URI : definition.getTargetNamespace();
 	}
 }

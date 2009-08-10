@@ -33,19 +33,6 @@ import com.eviware.soapui.support.action.support.SoapUIActionMappingList;
 
 public class ActionListBuilder
 {
-	public static ActionList buildMultiActions( ModelItem[] modelItems )
-	{
-		DefaultActionList actions = new DefaultActionList();
-
-		SoapUIActionGroup<?> group = SoapUI.getActionRegistry().getActionGroup( "SoapUIMultiActions" );
-		if( group != null )
-		{
-			addMultiActions( modelItems, actions, group );
-		}
-
-		return actions;
-	}
-
 	/**
 	 * Builds default ActionList for specified ModelItem
 	 * 
@@ -84,6 +71,7 @@ public class ActionListBuilder
 		return actions;
 	}
 
+	@SuppressWarnings( "hiding" )
 	public static <T extends ModelItem> ActionList buildActions( String actionGroup, T modelItem )
 	{
 		DefaultActionList actions = new DefaultActionList();
@@ -102,7 +90,7 @@ public class ActionListBuilder
 	 * specified modelItem
 	 */
 
-	@SuppressWarnings( "unchecked" )
+	@SuppressWarnings( { "hiding", "unchecked" } )
 	protected static <T extends ModelItem> void addActions( T modelItem, ActionList actions,
 			SoapUIActionGroup<T> actionGroup )
 	{
@@ -149,7 +137,20 @@ public class ActionListBuilder
 			}
 		}
 	}
+	
+	public static ActionList buildMultiActions( ModelItem[] modelItems )
+	{
+		DefaultActionList actions = new DefaultActionList();
 
+		SoapUIActionGroup<?> group = SoapUI.getActionRegistry().getActionGroup( "SoapUIMultiActions" );
+		if( group != null )
+		{
+			addMultiActions( modelItems, actions, group );
+		}
+
+		return actions;
+	}
+	
 	/**
 	 * Adds the specified ActionMappings to the specified ActionList for the
 	 * specified modelItem

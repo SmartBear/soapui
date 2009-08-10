@@ -70,23 +70,24 @@ import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
 public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 {
-	private static final String MOCKRESPONSES_STATISTICS = "MockResponses";
-	private static final String MOCKOPERATIONS_STATISTICS = "MockOperations";
-	private static final String MOCKSERVICES_STATISTICS = "MockServices";
-	private static final String LOADTESTS_STATISTICS = "LoadTests";
-	private static final String ASSERTIONS_STATISTICS = "Assertions";
-	private static final String TESTSTEPS_STATISTICS = "TestSteps";
-	private static final String TESTCASES_STATISTICS = "TestCases";
-	private static final String TESTSUITES_STATISTICS = "TestSuites";
+	protected static final String MOCKRESPONSES_STATISTICS = "MockResponses";
+	protected static final String MOCKOPERATIONS_STATISTICS = "MockOperations";
+	protected static final String MOCKSERVICES_STATISTICS = "MockServices";
+	protected static final String LOADTESTS_STATISTICS = "LoadTests";
+	protected static final String ASSERTIONS_STATISTICS = "Assertions";
+	protected static final String TESTSTEPS_STATISTICS = "TestSteps";
+	protected static final String TESTCASES_STATISTICS = "TestCases";
+	protected static final String TESTSUITES_STATISTICS = "TestSuites";
 	private PropertyHolderTable propertiesTable;
 	private JUndoableTextArea descriptionArea;
 	private InternalTreeModelListener treeModelListener;
 	private Set<String> interfaceNameSet = new HashSet<String>();
 	private WSSTabPanel wssTabPanel;
-	private MetricsPanel metrics;
+	protected MetricsPanel metrics;
 	private GroovyEditorComponent loadScriptGroovyEditor;
 	private GroovyEditorComponent saveScriptGroovyEditor;
 	private JInspectorPanel inspectorPanel;
+	private WsdlProjectTestSuitesTabPanel testSuitesPanel;
 
 	public WsdlProjectDesktopPanel( WsdlProject modelItem )
 	{
@@ -107,27 +108,27 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 	protected void addTabs( JTabbedPane mainTabs )
 	{
 		mainTabs.addTab( "Overview", null, buildOverviewTab(), "Shows General Project information and metrics" );
+		mainTabs.addTab( "TestSuites", null, testSuitesPanel = buildTestSuitesTab(),
+				"Shows and runs all TestSuites in project" );
 		mainTabs.addTab( "Security Configurations", null, buildWSSTab(), "Manages Security-related configurations" );
 	}
 
-	private Component buildWSSTab()
+	protected WsdlProjectTestSuitesTabPanel buildTestSuitesTab()
+	{
+		return new WsdlProjectTestSuitesTabPanel( getModelItem() );
+	}
+
+	protected Component buildWSSTab()
 	{
 		wssTabPanel = new WSSTabPanel( getModelItem().getWssContainer() );
 		return wssTabPanel;
 	}
 
-	private Component buildOverviewTab()
+	protected Component buildOverviewTab()
 	{
 		inspectorPanel = JInspectorPanelFactory.build( buildProjectOverview() );
 
-		inspectorPanel.addInspector( new JFocusableComponentInspector<JPanel>( buildDescriptionPanel(), descriptionArea,
-				"Description", "Project description", true ) );
-		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildPropertiesPanel(), "Properties",
-				"Project level properties", true ) );
-		inspectorPanel.addInspector( new GroovyEditorInspector( buildLoadScriptPanel(), "Load Script",
-				"Script to run after loading the project" ) );
-		inspectorPanel.addInspector( new GroovyEditorInspector( buildSaveScriptPanel(), "Save Script",
-				"Script to run before saving the project" ) );
+		addOverviewInspectors( inspectorPanel );
 
 		inspectorPanel.setCurrentInspector( "Properties" );
 
@@ -143,6 +144,18 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 		updateStatistics();
 
 		return inspectorPanel.getComponent();
+	}
+
+	protected void addOverviewInspectors(JInspectorPanel inspectorPanel )
+	{
+		inspectorPanel.addInspector( new JFocusableComponentInspector<JPanel>( buildDescriptionPanel(), descriptionArea,
+				"Description", "Project description", true ) );
+		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildPropertiesPanel(), "Properties",
+				"Project level properties", true ) );
+		inspectorPanel.addInspector( new GroovyEditorInspector( buildLoadScriptPanel(), "Load Script",
+				"Script to run after loading the project" ) );
+		inspectorPanel.addInspector( new GroovyEditorInspector( buildSaveScriptPanel(), "Save Script",
+				"Script to run before saving the project" ) );
 	}
 
 	private void updateStatistics()
@@ -229,10 +242,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 	{
 		metrics = new MetricsPanel();
 
-		JXToolBar toolbar = UISupport.createSmallToolbar();
-		toolbar.addGlue();
-		toolbar
-				.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.PROJECT_OVERVIEW_HELP_URL ) ) );
+		JXToolBar toolbar = buildOverviewToolbar();
 		metrics.add( toolbar, BorderLayout.NORTH );
 
 		MetricsSection section = metrics.addSection( "Project Summary" );
@@ -258,7 +268,16 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 		return new JScrollPane( metrics );
 	}
 
-	private void buildInterfaceSummary( MetricsSection section )
+	protected JXToolBar buildOverviewToolbar()
+	{
+		JXToolBar toolbar = UISupport.createSmallToolbar();
+		toolbar.addGlue();
+		toolbar
+				.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.PROJECT_OVERVIEW_HELP_URL ) ) );
+		return toolbar;
+	}
+
+	protected void buildInterfaceSummary( MetricsSection section )
 	{
 		interfaceNameSet.clear();
 		for( Interface ic : getModelItem().getInterfaceList() )
@@ -336,6 +355,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 		wssTabPanel.release();
 
 		inspectorPanel.release();
+		testSuitesPanel.release();
 		return release();
 	}
 
@@ -366,19 +386,19 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 	{
 		public LoadScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "project" }, getModelItem().getSettings(), "Load" );
+			super( new String[] { "log", "project" }, WsdlProjectDesktopPanel.this.getModelItem(), "Load" );
 		}
 
 		@Override
 		public String getScript()
 		{
-			return getModelItem().getAfterLoadScript();
+			return WsdlProjectDesktopPanel.this.getModelItem().getAfterLoadScript();
 		}
 
 		@Override
 		public void setScript( String text )
 		{
-			getModelItem().setAfterLoadScript( text );
+			WsdlProjectDesktopPanel.this.getModelItem().setAfterLoadScript( text );
 		}
 
 		@Override
@@ -399,7 +419,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 			{
 				try
 				{
-					getModelItem().runAfterLoadScript();
+					WsdlProjectDesktopPanel.this.getModelItem().runAfterLoadScript();
 				}
 				catch( Exception e1 )
 				{
@@ -413,19 +433,19 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 	{
 		public SaveScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "project" }, getModelItem().getSettings(), "Save" );
+			super( new String[] { "log", "project" }, WsdlProjectDesktopPanel.this.getModelItem(), "Save" );
 		}
 
 		@Override
 		public String getScript()
 		{
-			return getModelItem().getBeforeSaveScript();
+			return WsdlProjectDesktopPanel.this.getModelItem().getBeforeSaveScript();
 		}
 
 		@Override
 		public void setScript( String text )
 		{
-			getModelItem().setBeforeSaveScript( text );
+			WsdlProjectDesktopPanel.this.getModelItem().setBeforeSaveScript( text );
 		}
 
 		@Override
@@ -446,7 +466,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 			{
 				try
 				{
-					getModelItem().runBeforeSaveScript();
+					WsdlProjectDesktopPanel.this.getModelItem().runBeforeSaveScript();
 				}
 				catch( Exception e1 )
 				{

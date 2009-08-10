@@ -36,8 +36,8 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -45,11 +45,18 @@ import com.eviware.soapui.support.xml.XmlUtils;
 /**
  * WS Addressing-related utility-methods..
  * 
+ * ws-a Action element is created according to rules specified at {@link}
+ * http://www.w3.org/TR/2007/REC-ws-addr-metadata-20070904/#actioninwsdl {@link}
+ * http://www.w3.org/TR/2006/WD-ws-addr-wsdl-20060216/#actioninwsdl for
+ * explicitly using soap action check Global WS-A settings Soap action
+ * overides...
+ * 
  * @author dragica.soldo
  */
 
 public class WsaUtils
 {
+
 	public static final String WS_A_NAMESPACE_200508 = "http://www.w3.org/2005/08/addressing";
 	public static final String WS_A_NAMESPACE_200408 = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
 	/*
@@ -350,15 +357,15 @@ public class WsaUtils
 			}
 			else
 			{
-				action = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig().getAction() );
+				action = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig().getAction() );
 			}
 			if( !StringUtils.isNullOrEmpty( action ) )
 			{
 				header = processWsaProperty( header, override, wsaPrefix + ":Action", action, false );
 			}
 
-			String replyTo = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig().getReplyTo() );
-			String replyToRefParams = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig()
+			String replyTo = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig().getReplyTo() );
+			String replyToRefParams = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig()
 					.getReplyToRefParams() );
 			if( AnonymousTypeConfig.REQUIRED.toString().equals( anonymousType ) )
 			// TODO check if WsaSettings.USE_DEFAULT_REPLYTO is needed
@@ -396,22 +403,21 @@ public class WsaUtils
 			// }
 			// }
 
-			String from = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig().getFrom() );
+			String from = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig().getFrom() );
 			if( !StringUtils.isNullOrEmpty( from ) )
 			{
 				header = processWsaProperty( header, override, wsaPrefix + ":From", from, true );
 			}
-			String faultTo = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig().getFaultTo() );
-			String faultToRefParams = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig()
+			String faultTo = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig().getFaultTo() );
+			String faultToRefParams = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig()
 					.getFaultToRefParams() );
 			if( !StringUtils.isNullOrEmpty( faultTo ) )
 			{
 				header = processWsaProperty( header, override, wsaPrefix + ":FaultTo", faultTo, true, faultToRefParams );
 			}
 
-			String relatesTo = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig()
-					.getRelatesTo() );
-			String relationshipType = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig()
+			String relatesTo = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig().getRelatesTo() );
+			String relationshipType = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig()
 					.getRelationshipType() );
 			if( !StringUtils.isNullOrEmpty( relationshipType ) && !StringUtils.isNullOrEmpty( relatesTo ) )
 			{
@@ -426,8 +432,7 @@ public class WsaUtils
 			}
 			else
 			{
-				String msgId = PropertyExpansionUtils
-						.expandProperties( context, wsaContainer.getWsaConfig().getMessageID() );
+				String msgId = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig().getMessageID() );
 				if( !StringUtils.isNullOrEmpty( msgId ) )
 				{
 					header = processWsaProperty( header, override, wsaPrefix + ":MessageID", msgId, false );
@@ -441,7 +446,7 @@ public class WsaUtils
 			}
 			else
 			{
-				String to = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig().getTo() );
+				String to = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig().getTo() );
 				if( !StringUtils.isNullOrEmpty( to ) )
 				{
 					header = processWsaProperty( header, override, wsaPrefix + ":To", to, false );
@@ -493,7 +498,7 @@ public class WsaUtils
 			}
 			else
 			{
-				action = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig().getAction() );
+				action = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig().getAction() );
 			}
 			if( !StringUtils.isNullOrEmpty( action ) )
 			{
@@ -506,9 +511,8 @@ public class WsaUtils
 			}
 			else
 			{
-				String replyTo = PropertyExpansionUtils
-						.expandProperties( context, wsaContainer.getWsaConfig().getReplyTo() );
-				String replyToRefParams = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig()
+				String replyTo = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig().getReplyTo() );
+				String replyToRefParams = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig()
 						.getReplyToRefParams() );
 				if( !StringUtils.isNullOrEmpty( replyTo ) )
 				{
@@ -534,21 +538,20 @@ public class WsaUtils
 					requestMessageId = XmlUtils.getElementText( msgNode );
 				}
 
-				String from = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig().getFrom() );
+				String from = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig().getFrom() );
 				if( !StringUtils.isNullOrEmpty( from ) )
 				{
 					header = processWsaProperty( header, override, wsaPrefix + ":From", from, true );
 				}
-				String faultTo = PropertyExpansionUtils
-						.expandProperties( context, wsaContainer.getWsaConfig().getFaultTo() );
-				String faultToRefParams = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig()
+				String faultTo = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig().getFaultTo() );
+				String faultToRefParams = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig()
 						.getFaultToRefParams() );
 				if( !StringUtils.isNullOrEmpty( faultTo ) )
 				{
 					header = processWsaProperty( header, override, wsaPrefix + ":FaultTo", faultTo, true, faultToRefParams );
 				}
 
-				String relationshipType = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig()
+				String relationshipType = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig()
 						.getRelationshipType() );
 				if( !StringUtils.isNullOrEmpty( relationshipType ) )
 				{
@@ -598,7 +601,7 @@ public class WsaUtils
 					}
 				}
 
-				String to = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig().getTo() );
+				String to = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig().getTo() );
 				if( !StringUtils.isNullOrEmpty( to ) )
 				{
 					if( !( AnonymousTypeConfig.PROHIBITED.toString().equals( anonymousType ) && isAnonymousAddress( to,
@@ -626,7 +629,7 @@ public class WsaUtils
 			}
 			else
 			{
-				String to = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig().getTo() );
+				String to = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig().getTo() );
 				if( !StringUtils.isNullOrEmpty( to ) )
 				{
 					// header = removeWsaProperty(override, header, wsaPrefix +
@@ -636,10 +639,9 @@ public class WsaUtils
 					header = processWsaProperty( header, override, wsaPrefix + ":To", to, false );
 				}
 
-				String relationshipType = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig()
+				String relationshipType = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig()
 						.getRelationshipType() );
-				String relatesTo = PropertyExpansionUtils.expandProperties( context, wsaContainer.getWsaConfig()
-						.getRelatesTo() );
+				String relatesTo = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig().getRelatesTo() );
 				if( !StringUtils.isNullOrEmpty( relationshipType ) && !StringUtils.isNullOrEmpty( relatesTo ) )
 				{
 					header = processWsaRelatesToProperty( header, override, wsaPrefix + ":RelatesTo", relationshipType,
@@ -671,8 +673,7 @@ public class WsaUtils
 			}
 			else
 			{
-				String msgId = PropertyExpansionUtils
-						.expandProperties( context, wsaContainer.getWsaConfig().getMessageID() );
+				String msgId = PropertyExpander.expandProperties( context, wsaContainer.getWsaConfig().getMessageID() );
 				if( !StringUtils.isNullOrEmpty( msgId ) )
 				{
 					header = processWsaProperty( header, override, wsaPrefix + ":MessageID", msgId, false );
@@ -785,4 +786,12 @@ public class WsaUtils
 		return ( address.equals( wsaVersionNamespace + "/none" ) ) ? true : false;
 	}
 
+	public static String getNamespace( String Version )
+	{
+		if( Version.equals( WsaVersionTypeConfig.X_200408.toString() ) )
+		{
+			return WS_A_NAMESPACE_200408;
+		}
+		return WS_A_NAMESPACE_200508;
+	}
 }

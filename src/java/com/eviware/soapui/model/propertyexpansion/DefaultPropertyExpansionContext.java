@@ -27,7 +27,7 @@ public class DefaultPropertyExpansionContext extends StringToObjectMap implement
 
 	public String expand( String content )
 	{
-		return PropertyExpansionUtils.expandProperties( this, content );
+		return PropertyExpander.expandProperties( this, content );
 	}
 
 	public ModelItem getModelItem()

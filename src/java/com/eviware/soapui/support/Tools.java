@@ -77,12 +77,6 @@ public class Tools
 			char ch = str.charAt( c );
 			if( ch == '\n' )
 				result.append( "<br>" );
-			else if( ch == ' ' )
-				result.append( "&nbsp;" );
-			else if( ch == '>' )
-				result.append( "&gt;" );
-			else if( ch == '<' )
-				result.append( "&lt;" );
 			else
 				result.append( ch );
 		}

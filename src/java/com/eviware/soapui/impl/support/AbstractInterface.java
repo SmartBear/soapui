@@ -192,7 +192,8 @@ public abstract class AbstractInterface<T extends InterfaceConfig> extends Abstr
 		interfaceListeners.clear();
 	}
 
-	public abstract AbstractDefinitionContext<?, ?, ?> getDefinitionContext();
+	@SuppressWarnings( "unchecked" )
+	public abstract AbstractDefinitionContext getDefinitionContext();
 
 	/**
 	 * Return the URL for the current definition (ie a WSDL or WADL url)

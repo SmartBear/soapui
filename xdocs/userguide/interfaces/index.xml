@@ -60,6 +60,7 @@
 		 <li><b>Recreate Optional</b> - Set creation of optional elements/attributes when updating requests</li>
 		 <li><b>Keep Existing</b> - Keeps existing values in requests that are recreated (this is limited to
 		 elements/attributes that have the same namespace/name before and after the update)</li>
+		 <li><b>Keep SOAP Headers</b> - Keeps any SOAP Headers when recreating the request</li>
 		 <li><b>Create Backups</b> - Since recreating requests can potentially invalidate/modify the request in a way 
 		 not desired, selecting this option will create a backup request or disabled TestRequest Step containing the original 
 		 request.</li>

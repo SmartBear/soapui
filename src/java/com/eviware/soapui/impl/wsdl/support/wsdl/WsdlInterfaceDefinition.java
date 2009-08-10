@@ -59,7 +59,7 @@ public class WsdlInterfaceDefinition extends XmlSchemaBasedInterfaceDefinition<W
 
 	public String getTargetNamespace()
 	{
-		return definition.getTargetNamespace();
+		return WsdlUtils.getTargetNamespace( definition );
 	}
 
 	public Definition getWsdlDefinition()

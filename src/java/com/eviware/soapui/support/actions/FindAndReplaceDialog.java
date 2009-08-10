@@ -83,7 +83,7 @@ public class FindAndReplaceDialog extends AbstractAction
 
 	private void buildDialog()
 	{
-		dialog = new JDialog( UISupport.getMainFrame(), "Find / Replace", false );
+		dialog = new JDialog( UISupport.getMainFrame(), "Find / Replace", true );
 
 		JPanel panel = new JPanel( new BorderLayout() );
 		findCombo = new JComboBox();
@@ -208,9 +208,12 @@ public class FindAndReplaceDialog extends AbstractAction
 
 	private class FindAction extends AbstractAction
 	{
+		String lastSearchedItem = "";
+		int lastPositionF = -1;
+
 		public FindAction()
 		{
-			super( "Find" );
+			super( "Find/Find Next" );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -227,7 +230,7 @@ public class FindAndReplaceDialog extends AbstractAction
 				return;
 			}
 			String value = findCombo.getSelectedItem().toString();
-			if( value.length() == 0 || pos == txt.length() )
+			if( value.length() == 0 || (pos == txt.length() && !wrapCheck.isSelected()) )
 				return;
 
 			if( !caseCheck.isSelected() )
@@ -236,12 +239,16 @@ public class FindAndReplaceDialog extends AbstractAction
 				txt = txt.toUpperCase();
 			}
 
-			if( txt.substring( pos, pos + value.length() ).equals( value ) )
-			{
-				pos += forwardButton.isSelected() ? 1 : -1;
-			}
+			if( pos == lastPositionF && value.equals( lastSearchedItem ) )
+				if( forwardButton.isSelected() )
+					pos += value.length() + 1;
+				else
+					pos -= value.length() - 1;
 
 			int ix = findNext( pos, txt, value );
+
+			lastSearchedItem = value;
+			lastPositionF = ix;
 
 			if( ix != -1 )
 			{
@@ -265,31 +272,81 @@ public class FindAndReplaceDialog extends AbstractAction
 
 	private class ReplaceAction extends AbstractAction
 	{
+		String lastSearchedItem = "";
+		int lastPositionF = -1;
+
 		public ReplaceAction()
 		{
-			super( "Replace" );
+			super( "Replace/Replace Next" );
 		}
 
 		public void actionPerformed( ActionEvent e )
 		{
-			if( target.getSelectedText() == null )
+			int pos = target.getCaretPosition();
+			String txt = target.getText();
+
+			if( findCombo.getSelectedItem() == null )
+			{
+				return;
+			}
+			String value = findCombo.getSelectedItem().toString();
+			if( value.length() == 0 || txt.length() == 0 )
 				return;
 
-			String value = replaceCombo.getSelectedItem().toString();
-			int ix = target.getSelectionStart();
-			target.setSelectedText( value );
-			target.select( ix + value.length(), ix );
+			String newValue = replaceCombo.getSelectedItem() == null ? "" : replaceCombo.getSelectedItem().toString();
 
-			for( int c = 0; c < replaceCombo.getItemCount(); c++ )
+			if( !caseCheck.isSelected() )
 			{
-				if( replaceCombo.getItemAt( c ).equals( value ) )
+				if( newValue.equalsIgnoreCase( value ) )
+					return;
+				value = value.toUpperCase();
+				txt = txt.toUpperCase();
+			}
+			else if( newValue.equals( value ) )
+				return;
+
+			if( pos == lastPositionF && value.equals( lastSearchedItem ) )
+				if( forwardButton.isSelected() )
+					pos += value.length() + 1;
+				else
+					pos -= value.length() - 1;
+
+			int ix = findNext( pos, txt, value );
+
+			lastSearchedItem = value;
+			lastPositionF = ix;
+
+			int firstIx = ix;
+			int valueInNewValueIx = !caseCheck.isSelected() ? newValue.toUpperCase().indexOf( value ) : newValue
+					.indexOf( value );
+
+			if( ix != -1 )
+			{
+				System.out.println( "found match at " + ix + ", " + firstIx + ", " + valueInNewValueIx );
+				target.select( ix, ix + value.length() );
+
+				target.setSelectedText( newValue );
+				target.select( ix, ix + newValue.length() );
+
+				// adjust firstix
+				if( ix < firstIx )
+					firstIx += newValue.length() - value.length();
+
+				txt = target.getText();
+				if( !caseCheck.isSelected() )
 				{
-					replaceCombo.removeItem( c );
-					break;
+					txt = txt.toUpperCase();
+				}
+
+				if( forwardButton.isSelected() )
+				{
+					ix = findNext( ix + newValue.length(), txt, value );
+				}
+				else
+				{
+					ix = findNext( ix - 1, txt, value );
 				}
 			}
-
-			replaceCombo.insertItemAt( value, 0 );
 		}
 	}
 
@@ -312,7 +369,8 @@ public class FindAndReplaceDialog extends AbstractAction
 			String value = findCombo.getSelectedItem().toString();
 			if( value.length() == 0 || txt.length() == 0 )
 				return;
-			String newValue = replaceCombo.getSelectedItem().toString();
+
+			String newValue = replaceCombo.getSelectedItem() == null ? "" : replaceCombo.getSelectedItem().toString();
 
 			if( !caseCheck.isSelected() )
 			{
@@ -332,10 +390,10 @@ public class FindAndReplaceDialog extends AbstractAction
 			while( ix != -1 )
 			{
 				System.out.println( "found match at " + ix + ", " + firstIx + ", " + valueInNewValueIx );
-				target.select( ix + value.length(), ix );
+				target.select( ix, ix + value.length() );
 
 				target.setSelectedText( newValue );
-				target.select( ix + newValue.length(), ix );
+				target.select( ix, ix + newValue.length() );
 
 				// adjust firstix
 				if( ix < firstIx )

@@ -166,6 +166,13 @@ public class ShowMessageExchangeAction extends AbstractAction
 		if( messageExchange != null && messageExchange.getProperties() != null )
 		{
 			properties.putAll( messageExchange.getProperties() );
+
+			// for( String name : messageExchange.getResponse().getPropertyNames())
+			// {
+			// properties.put( name, messageExchange.getResponse().getProperty(
+			// name ) );
+			// }
+
 			properties.put( "Timestamp", new Date( messageExchange.getTimestamp() ).toString() );
 			properties.put( "Time Taken", String.valueOf( messageExchange.getTimeTaken() ) );
 		}

@@ -64,6 +64,7 @@ public abstract class AbstractWssRequestFilter extends AbstractRequestFilter
 			synchronized( db )
 			{
 				doc = db.parse( new InputSource( new StringReader( request ) ) );
+				context.setProperty( REQUEST_CONTENT_HASH_CODE, new Integer( request.hashCode()) );
 				context.setProperty( WSS_DOC, doc );
 			}
 		}

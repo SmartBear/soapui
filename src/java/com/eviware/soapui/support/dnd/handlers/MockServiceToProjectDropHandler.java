@@ -52,11 +52,11 @@ public class MockServiceToProjectDropHandler extends AbstractAfterModelItemDropH
 
 		if( source.getProject() == target )
 		{
-			a.cloneMockServiceWithinProject( source, name, target );
+			a.cloneMockServiceWithinProject( source, name, target, source.getDescription() );
 		}
 		else
 		{
-			a.cloneToAnotherProject( source, target.getName(), name );
+			a.cloneToAnotherProject( source, target.getName(), name, source.getDescription() );
 		}
 
 		return true;
@@ -73,7 +73,7 @@ public class MockServiceToProjectDropHandler extends AbstractAfterModelItemDropH
 		if( name == null )
 			return false;
 
-		if( a.cloneToAnotherProject( source, target.getName(), name ) == null )
+		if( a.cloneToAnotherProject( source, target.getName(), name, source.getDescription() ) == null )
 			return false;
 
 		source.getProject().removeMockService( source );

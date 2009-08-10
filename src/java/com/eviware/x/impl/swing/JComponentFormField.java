@@ -27,7 +27,7 @@ public class JComponentFormField extends AbstractSwingXFormField<JPanel>
 	public JComponentFormField( String label, String description )
 	{
 		super( new JPanel( new BorderLayout() ) );
-		getComponent().setPreferredSize( new Dimension( 350, 200 ) );
+		getComponent().setPreferredSize( new Dimension( 400, 200 ) );
 	}
 
 	public void setValue( String value )
@@ -51,7 +51,19 @@ public class JComponentFormField extends AbstractSwingXFormField<JPanel>
 		{
 			getComponent().removeAll();
 			if( value != null )
+			{
 				getComponent().add( ( JComponent )value, BorderLayout.CENTER );
+			}
+
+			getComponent().revalidate();
+			getComponent().getParent().repaint();
+		}
+		else if( name.equals( "preferredSize"))
+		{
+			getComponent().setPreferredSize( ( Dimension )value );
+			getComponent().setMaximumSize( ( Dimension )value );
+			getComponent().setMinimumSize( ( Dimension )value );
+			getComponent().setSize( ( Dimension )value );
 		}
 		else
 		{

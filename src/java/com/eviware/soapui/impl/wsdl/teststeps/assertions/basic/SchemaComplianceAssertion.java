@@ -42,8 +42,8 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
@@ -62,9 +62,9 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 	public static final String LABEL = "Schema Compliance";
 
 	private String definition;
-	private DefinitionContext definitionContext;
+	private DefinitionContext<?> definitionContext;
 	private String wsdlContextDef;
-	private static Map<String, WsdlContext> wsdlContextMap = new HashMap();
+	private static Map<String, WsdlContext> wsdlContextMap = new HashMap<String, WsdlContext>();
 	private static final String SCHEMA_COMPLIANCE_HAS_CLEARED_CACHE_FLAG = SchemaComplianceAssertion.class.getName()
 			+ "@SchemaComplianceHasClearedCacheFlag";
 
@@ -77,7 +77,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 	}
 
 	@Override
-	public void prepare( TestRunner testRunner, TestRunContext testRunContext ) throws Exception
+	public void prepare( TestCaseRunner testRunner, TestCaseRunContext testRunContext ) throws Exception
 	{
 		super.prepare( testRunner, testRunContext );
 
@@ -85,8 +85,8 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		wsdlContextDef = null;
 
 		// get correct context for checking if cache has been cleared for this run
-		PropertyExpansionContext context = testRunContext.hasProperty( TestRunContext.LOAD_TEST_CONTEXT ) ? ( PropertyExpansionContext )testRunContext
-				.getProperty( TestRunContext.LOAD_TEST_CONTEXT )
+		PropertyExpansionContext context = testRunContext.hasProperty( TestCaseRunContext.LOAD_TEST_CONTEXT ) ? ( PropertyExpansionContext )testRunContext
+				.getProperty( TestCaseRunContext.LOAD_TEST_CONTEXT )
 				: testRunContext;
 
 		synchronized( context )
@@ -180,7 +180,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		return "Schema compliance OK";
 	}
 
-	private DefinitionContext getWsdlContext( WsdlMessageExchange messageExchange, SubmitContext context )
+	private DefinitionContext<?> getWsdlContext( WsdlMessageExchange messageExchange, SubmitContext context )
 			throws Exception
 	{
 		WsdlOperation operation = messageExchange.getOperation();
@@ -220,7 +220,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		}
 	}
 
-	private DefinitionContext getWadlContext( RestMessageExchange messageExchange, SubmitContext context )
+	private DefinitionContext<?> getWadlContext( RestMessageExchange messageExchange, SubmitContext context )
 			throws Exception
 	{
 		RestResource operation = messageExchange.getResource();
@@ -250,7 +250,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 	{
 		String value = definition;
 
-		WsdlInterface iface = ( WsdlInterface )getAssertable().getInterface();
+		AbstractInterface<?> iface = ( AbstractInterface<?> )getAssertable().getInterface();
 		String orgDef = iface == null ? null : iface.getDefinition();
 
 		if( StringUtils.isNullOrEmpty( value ) )
@@ -321,7 +321,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		public boolean canAssert( Assertable assertable )
 		{
 			return super.canAssert( assertable ) && assertable.getInterface() instanceof AbstractInterface
-					&& ( ( AbstractInterface )assertable.getInterface() ).getDefinitionContext().hasSchemaTypes();
+					&& ( ( AbstractInterface<?> )assertable.getInterface() ).getDefinitionContext().hasSchemaTypes();
 		}
 	}
 }

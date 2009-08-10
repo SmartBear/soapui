@@ -42,6 +42,7 @@ public class SwingXFormDialogBuilder extends XFormDialogBuilder
 	public XForm createForm( String name )
 	{
 		XForm form = new SwingXFormImpl( name );
+		((SwingXFormImpl)form).addSpace( 5 );
 		addForm( form );
 		return form;
 	}

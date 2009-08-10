@@ -40,6 +40,7 @@ import javax.swing.KeyStroke;
 import javax.swing.ToolTipManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -65,7 +66,6 @@ import com.eviware.soapui.support.components.JXToolBar;
 
 public class Navigator extends JPanel
 {
-
 	private Workspace workspace;
 	private JTree mainTree;
 	private SoapUITreeModel treeModel;
@@ -86,6 +86,7 @@ public class Navigator extends JPanel
 		mainTree = new NavigatorTree( treeModel );
 		mainTree.setRootVisible( true );
 		mainTree.setExpandsSelectedPaths( true );
+		mainTree.setScrollsOnExpand( true );
 		mainTree.setToggleClickCount( 0 );
 		mainTree.addMouseListener( new TreeMouseListener() );
 		mainTree.addTreeSelectionListener( new InternalTreeSelectionListener() );
@@ -222,7 +223,10 @@ public class Navigator extends JPanel
 		public void keyPressed( KeyEvent e )
 		{
 			TreePath selectionPath = mainTree.getSelectionPath();
-			if( selectionPath != null )
+			if( selectionPath == null || mainTree.getSelectionCount() == 0 )
+				return;
+			
+			if( mainTree.getSelectionCount() == 1 )
 			{
 				SoapUITreeNode lastPathComponent = ( SoapUITreeNode )selectionPath.getLastPathComponent();
 				ActionList actions = lastPathComponent.getActions();
@@ -256,6 +260,26 @@ public class Navigator extends JPanel
 					}
 				}
 			}
+			else 
+			{
+				TreePath[] selectionPaths = mainTree.getSelectionPaths();
+				List<ModelItem> targets = new ArrayList<ModelItem>();
+				for( TreePath treePath : selectionPaths )
+				{
+					SoapUITreeNode node = ( SoapUITreeNode )treePath.getLastPathComponent();
+					targets.add( node.getModelItem() );
+				}
+
+				if( targets.size() > 0 )
+				{
+					ActionList actions = ActionListBuilder.buildMultiActions( targets
+							.toArray( new ModelItem[targets.size()] ) );
+					if( actions.getActionCount() > 0 )
+					{
+						actions.dispatchKeyEvent( e );
+					}
+				}
+			}
 		}
 	}
 
@@ -283,6 +307,76 @@ public class Navigator extends JPanel
 
 	public class TreeMouseListener extends MouseAdapter
 	{
+		private final class CollapseRowAction extends AbstractAction
+		{
+			private final int row;
+
+			public CollapseRowAction( int row )
+			{
+				this.row = row;
+			}
+
+			public void actionPerformed( ActionEvent e )
+			{
+				collapseAll( mainTree.getPathForRow( row ) );
+				mainTree.collapseRow( row );
+			}
+			
+			private void collapseAll( TreePath tp )
+			{
+				if( tp == null )
+					return;
+				
+				Object node = tp.getLastPathComponent();
+				TreeModel model = mainTree.getModel();
+				if( !model.isLeaf( node ) )
+				{
+					mainTree.collapsePath( tp );
+					for( int i = 0; i < model.getChildCount( node ); i++ )
+					{
+						// for (int i = node.childCount()-4;i>=0;i--){
+						collapseAll( tp.pathByAddingChild( model.getChild( node, i ) ) );
+					}
+					mainTree.collapsePath( tp );
+				}
+			}
+		}
+
+		private final class ExpandRowAction extends AbstractAction
+		{
+			private final int row;
+
+			public ExpandRowAction( int row )
+			{
+				this.row = row;
+			}
+
+			public void actionPerformed( ActionEvent e )
+			{
+				mainTree.expandRow( row );
+				expandAll( mainTree.getPathForRow( row ) );
+			}
+
+			private void expandAll( TreePath tp )
+			{
+				if( tp == null )
+					return;
+
+				Object node = tp.getLastPathComponent();
+				TreeModel model = mainTree.getModel();
+				if( !model.isLeaf( node ) )
+				{
+					mainTree.expandPath( tp );
+					for( int i = 0; i < model.getChildCount( node ); i++ )
+					{
+						expandAll( tp.pathByAddingChild( model.getChild( node, i ) ) );
+					}
+				}
+			}
+
+			
+		}
+
 		public void mouseClicked( MouseEvent e )
 		{
 			if( e.isPopupTrigger() )
@@ -324,7 +418,18 @@ public class Navigator extends JPanel
 			{
 				TreePath path = mainTree.getPathForLocation( ( int )e.getPoint().getX(), ( int )e.getPoint().getY() );
 				if( path == null )
+				{
+					int row = ( int )e.getPoint().getY() / mainTree.getRowHeight();
+					if( row != -1 )
+					{
+						JPopupMenu collapsePopup = new JPopupMenu();
+						collapsePopup.add( "Collapse" ).addActionListener( new CollapseRowAction( row ) );
+						collapsePopup.add( "Expand" ).addActionListener( new ExpandRowAction( row ) );
+						collapsePopup.show( mainTree, e.getX(), e.getY() );
+					}
+
 					return;
+				}
 				SoapUITreeNode node = ( SoapUITreeNode )path.getLastPathComponent();
 
 				JPopupMenu popupMenu = node.getPopup();

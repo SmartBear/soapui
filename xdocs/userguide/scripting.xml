@@ -5,9 +5,12 @@
     </properties>
     <body>
 		<section name="soapUI Scripting">
-		<p>soapUI provides extensive options for scripting, using Groovy as its scripting language 
+		<p>soapUI provides extensive options for scripting, using either Groovy or Javascript (since soapUI 3.0) as its scripting language, which 
+		to use is set a the project level in the project details tab at the bottom left. The majority of the documentation 
+		available here will be for the Groovy language, as it greatly simplifies the scripting of Java APIs 
 		(you can get more information, tutorials, etc on the <a target="_new" href="http://groovy.codehaus.org">Groovy Web Site</a>).
-		Scripts can be used	at the following places in soapUI:</p>
+		An overview of how to use JavaScript instead is further down in this document.</p>
+		<p>Scripts can be used	at the following places in soapUI:</p>
 		<ul>
 		<li>As part of a TestCase with the <a href="functional/groovystep.html">Groovy Script TestStep</a>, allowing your tests to perform virtually 
 		any desired	functionality</li>
@@ -135,6 +138,13 @@ greet.salute()</source>
          <p>The '|' designates the position of the caret after inserting the template.</p>
 
             
+        </subsection>
+        
+        <subsection name="JavaScript support">
+        <p>soapUI 3.0 adds support for JavaScript as an alternative scripting language. When configured, all scripts in
+        the containing project will be interpreted using a JavaScript engine (Rhino) instead (read more about the Rhino
+        engine and supported features at ... ). For those of you used to JavaScript this might be an easier language
+        to get started with, here are some examples in both languages to show some differences:</p>
         </subsection>
 
 		 <p><hr size="1"/>Next: <a href="properties.html">Using Properties in soapUI</a></p>

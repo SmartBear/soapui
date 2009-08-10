@@ -318,12 +318,12 @@ public class WsdlValidator
 			// get root element
 			XmlObject[] paths = msgXml.selectPath( "declare namespace env='"
 					+ wsdlContext.getSoapVersion().getEnvelopeNamespace() + "';" + "declare namespace ns='"
-					+ wsdlContext.getDefinition().getTargetNamespace() + "';" + "$this/env:Envelope/env:Body/ns:"
+					+ WsdlUtils.getTargetNamespace( wsdlContext.getDefinition()) + "';" + "$this/env:Envelope/env:Body/ns:"
 					+ bindingOperation.getName() + ( isResponse ? "Response" : "" ) );
 
 			if( paths.length != 1 )
 			{
-				throw new Exception( "Missing message wrapper element [" + wsdlContext.getDefinition().getTargetNamespace()
+				throw new Exception( "Missing message wrapper element [" + WsdlUtils.getTargetNamespace( wsdlContext.getDefinition())
 						+ "@" + bindingOperation.getName() + ( isResponse ? "Response" : "" ) );
 			}
 			else
@@ -804,7 +804,7 @@ public class WsdlValidator
 		if( bodyParts.length != 1 )
 		{
 			errors.add( XmlError.forMessage( "Missing message wrapper element ["
-					+ wsdlContext.getDefinition().getTargetNamespace() + "@" + bindingOperation.getName()
+					+ WsdlUtils.getTargetNamespace( wsdlContext.getDefinition()) + "@" + bindingOperation.getName()
 					+ ( isResponse ? "Response" : "" ) ) );
 		}
 		else
@@ -888,7 +888,7 @@ public class WsdlValidator
 				.getExtensibilityElements() : bindingOperation.getBindingInput().getExtensibilityElements() );
 
 		if( ns == null || ns.trim().length() == 0 )
-			ns = wsdlContext.getDefinition().getTargetNamespace();
+			ns = WsdlUtils.getTargetNamespace( wsdlContext.getDefinition());
 
 		// get root element
 		XmlObject[] paths = msgXml.selectPath( "declare namespace env='"

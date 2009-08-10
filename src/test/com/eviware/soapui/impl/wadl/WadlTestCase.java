@@ -1,7 +1,7 @@
 package com.eviware.soapui.impl.wadl;
 
-import com.sun.research.wadl.x2006.x10.ApplicationDocument;
-import com.sun.research.wadl.x2006.x10.ApplicationDocument.Application;
+import net.java.dev.wadl.x2009.x02.ApplicationDocument;
+import net.java.dev.wadl.x2009.x02.ApplicationDocument.Application;
 
 import junit.framework.TestCase;
 

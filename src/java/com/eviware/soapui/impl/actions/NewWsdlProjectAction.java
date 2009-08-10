@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.actions;
 
 import java.io.File;
+import java.net.URL;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.WorkspaceImpl;
@@ -78,34 +79,26 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 					dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( newValue.trim().length() > 0 );
 					dialog.getFormField( Form.ADDRESTSERVICE ).setEnabled( newValue.trim().length() == 0 );
 
-					if( StringUtils.isNullOrEmpty( dialog.getValue( Form.PROJECTNAME ) )
-							&& StringUtils.hasContent( newValue ) )
-					{
-						int ix = newValue.lastIndexOf( '.' );
-						if( ix > 0 )
-							newValue = newValue.substring( 0, ix );
-
-						ix = newValue.lastIndexOf( '/' );
-						if( ix == -1 )
-							ix = newValue.lastIndexOf( '\\' );
-
-						if( ix != -1 )
-							dialog.setValue( Form.PROJECTNAME, newValue.substring( ix + 1 ) );
-					}
+					initProjectName( newValue );
 				}
 			} );
 		}
 		else
 		{
-			dialog.setValue( Form.PROJECTNAME, "" );
 			dialog.setValue( Form.INITIALWSDL, "" );
-
+			dialog.setValue( Form.PROJECTNAME, "" );
 			dialog.setBooleanValue( Form.ADDRESTSERVICE, false );
 
 			dialog.getFormField( Form.CREATEREQUEST ).setEnabled( false );
 			dialog.getFormField( Form.GENERATEMOCKSERVICE ).setEnabled( false );
 			dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( false );
 			dialog.getFormField( Form.ADDRESTSERVICE ).setEnabled( true );
+		}
+		
+		if( param instanceof String )
+		{
+			dialog.setValue( Form.INITIALWSDL, param.toString() );
+			initProjectName( param.toString() );
 		}
 
 		while( dialog.show() )
@@ -175,6 +168,24 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 					workspace.removeProject( project );
 				}
 			}
+		}
+	}
+	
+	public void initProjectName( String newValue )
+	{
+		if( StringUtils.isNullOrEmpty( dialog.getValue( Form.PROJECTNAME ) )
+				&& StringUtils.hasContent( newValue ) )
+		{
+			int ix = newValue.lastIndexOf( '.' );
+			if( ix > 0 )
+				newValue = newValue.substring( 0, ix );
+
+			ix = newValue.lastIndexOf( '/' );
+			if( ix == -1 )
+				ix = newValue.lastIndexOf( '\\' );
+
+			if( ix != -1 )
+				dialog.setValue( Form.PROJECTNAME, newValue.substring( ix + 1 ) );
 		}
 	}
 

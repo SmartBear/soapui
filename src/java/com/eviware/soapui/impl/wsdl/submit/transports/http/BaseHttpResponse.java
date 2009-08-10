@@ -20,7 +20,10 @@ import java.net.URL;
 import org.apache.commons.httpclient.Header;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
+import com.eviware.soapui.impl.rest.support.MediaTypeHandlerRegistry;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.HttpSettings;
@@ -37,17 +40,18 @@ public abstract class BaseHttpResponse implements HttpResponse
 	private int statusCode;
 	private SSLInfo sslInfo;
 	private URL url;
-	private WeakReference<AbstractHttpRequest<?>> httpRequest;
-	private AbstractHttpRequest.RequestMethod method;
+	private WeakReference<AbstractHttpRequestInterface<?>> httpRequest;
+	private RestRequestInterface.RequestMethod method;
 	private String version;
 	private StringToStringMap properties;
 	private byte[] rawRequestData;
 	private byte[] rawResponseData;
 	private int requestContentPos = -1;
+	private String xmlContent;
 
-	public BaseHttpResponse( ExtendedHttpMethod httpMethod, AbstractHttpRequest<?> httpRequest )
+	public BaseHttpResponse( ExtendedHttpMethod httpMethod, AbstractHttpRequestInterface<?> httpRequest )
 	{
-		this.httpRequest = new WeakReference<AbstractHttpRequest<?>>( httpRequest );
+		this.httpRequest = new WeakReference<AbstractHttpRequestInterface<?>>( httpRequest );
 		this.timeTaken = httpMethod.getTimeTaken();
 
 		method = httpMethod.getMethod();
@@ -81,8 +85,14 @@ public abstract class BaseHttpResponse implements HttpResponse
 			{
 				this.timestamp = System.currentTimeMillis();
 				this.contentType = httpMethod.getResponseContentType();
-				this.statusCode = httpMethod.getStatusCode();
-				this.sslInfo = httpMethod.getSSLInfo();
+
+				if( httpMethod.hasResponse() )
+				{
+					this.statusCode = httpMethod.getStatusCode();
+					this.sslInfo = httpMethod.getSSLInfo();
+				}
+
+				this.url = new URL( httpMethod.getURI().toString() );
 			}
 			catch( Throwable e )
 			{
@@ -191,7 +201,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 		return url;
 	}
 
-	public AbstractHttpRequest<?> getRequest()
+	public AbstractHttpRequestInterface<?> getRequest()
 	{
 		return httpRequest.get();
 	}
@@ -221,7 +231,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 		return rawResponseData;
 	}
 
-	public AbstractHttpRequest.RequestMethod getMethod()
+	public RestRequestInterface.RequestMethod getMethod()
 	{
 		return method;
 	}
@@ -255,4 +265,13 @@ public abstract class BaseHttpResponse implements HttpResponse
 				- requestContentPos );
 	}
 
+	public String getContentAsXml()
+	{
+		if( xmlContent == null )
+		{
+			MediaTypeHandler typeHandler = MediaTypeHandlerRegistry.getTypeHandler( getContentType() );
+			xmlContent = ( typeHandler == null ) ? "<xml/>" : typeHandler.createXmlRepresentation( this );
+		}
+		return xmlContent;
+	}
 }

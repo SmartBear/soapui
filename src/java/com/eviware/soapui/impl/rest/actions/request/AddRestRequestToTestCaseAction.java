@@ -18,6 +18,7 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.support.AbstractAddToTestCaseAction;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStepInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.RestRequestStepFactory;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -61,12 +62,12 @@ public class AddRestRequestToTestCaseAction extends AbstractAddToTestCaseAction<
 			addRequest( testCase, request, -1 );
 	}
 
-	public RestTestRequestStep addRequest( WsdlTestCase testCase, RestRequest request, int position )
+	public RestTestRequestStepInterface addRequest( WsdlTestCase testCase, RestRequest request, int position )
 	{
 		if( dialog == null )
 			buildDialog();
 
-		dialogValues.put( STEP_NAME, request.getOperation().getName() + " - " + request.getName() );
+		dialogValues.put( STEP_NAME, request.getRestMethod().getName() + " - " + request.getName() );
 		dialogValues.put( CLOSE_REQUEST, "true" );
 		dialogValues.put( SHOW_TESTCASE, "true" );
 		dialogValues.put( SHOW_REQUEST, "true" );

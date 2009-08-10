@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.support.definition.support;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -69,7 +71,7 @@ public abstract class AbstractDefinitionCache<T extends AbstractInterface<?>> im
 
 	public void importCache( DefinitionCache cache ) throws Exception
 	{
-		if( cache instanceof AbstractDefinitionCache )
+		if( cache instanceof AbstractDefinitionCache<?> )
 		{
 			definitionCache = reinit( container );
 			definitionCache.set( ( ( AbstractDefinitionCache<?> )cache ).getConfig() );
@@ -90,10 +92,10 @@ public abstract class AbstractDefinitionCache<T extends AbstractInterface<?>> im
 	{
 		definitionCache = reinit( container );
 
+		String baseUri = loader.getBaseURI();
 		definitionCache.setType( DefinitionCacheTypeConfig.TEXT );
-
 		Map<String, XmlObject> urls = SchemaUtils.getDefinitionParts( loader );
-		definitionCache.setRootPart( loader.getFirstNewURI() );
+		definitionCache.setRootPart( baseUri );
 
 		for( Iterator<String> i = urls.keySet().iterator(); i.hasNext(); )
 		{
@@ -133,19 +135,30 @@ public abstract class AbstractDefinitionCache<T extends AbstractInterface<?>> im
 		return parts;
 	}
 
-	private void initParts()
+	private void initParts() 
 	{
 		parts = new ArrayList<InterfaceDefinitionPart>();
 
 		List<DefintionPartConfig> partList = definitionCache.getPartList();
 		for( DefintionPartConfig part : partList )
 		{
-			ConfigInterfaceDefinitionPart configInterfaceDefinitionPart = new ConfigInterfaceDefinitionPart( part, part
-					.getUrl().equals( definitionCache.getRootPart() ), definitionCache.getType() );
-			parts.add( configInterfaceDefinitionPart );
+			try
+			{
+				boolean rootElement = URLDecoder.decode( part.getUrl() , "UTF-8").equals( URLDecoder.decode( definitionCache.getRootPart(), "UTF-8") );
+				ConfigInterfaceDefinitionPart configInterfaceDefinitionPart = new ConfigInterfaceDefinitionPart( part, 
+						rootElement, definitionCache.getType() );
+				parts.add( configInterfaceDefinitionPart );
 
-			if( configInterfaceDefinitionPart.isRootPart() )
-				rootPart = configInterfaceDefinitionPart;
+				if( configInterfaceDefinitionPart.isRootPart() )
+					rootPart = configInterfaceDefinitionPart;
+			}
+			catch( UnsupportedEncodingException e )
+			{
+				e.printStackTrace();
+			}
+//			ConfigInterfaceDefinitionPart configInterfaceDefinitionPart = new ConfigInterfaceDefinitionPart( part, part
+//					.getUrl().equals( definitionCache.getRootPart() ), definitionCache.getType() );
+			
 		}
 	}
 

@@ -19,10 +19,12 @@ import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 
 import com.eviware.soapui.settings.UISettings;
+import com.eviware.soapui.support.components.BrowserComponent;
 import com.eviware.soapui.ui.desktop.DesktopRegistry;
 import com.eviware.soapui.ui.desktop.standalone.StandaloneDesktopFactory;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jgoodies.looks.plastic.theme.SkyBluer;
+import com.teamdev.xpcom.Xpcom;
 
 public class StandaloneSoapUICore extends SwingSoapUICore
 {
@@ -60,7 +62,11 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 	{
 		try
 		{
-			if( getSettings().getBoolean( UISettings.NATIVE_LAF ) )
+			if( !BrowserComponent.isJXBrowserDisabled() && Xpcom.isLinux() && !Xpcom.isSilentMode())
+			{
+				javax.swing.UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
+			}
+			else if( getSettings().getBoolean( UISettings.NATIVE_LAF ) )
 			{
 				javax.swing.UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
 			}

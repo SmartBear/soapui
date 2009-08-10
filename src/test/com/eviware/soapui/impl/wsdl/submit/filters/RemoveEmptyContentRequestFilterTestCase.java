@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2008 eviware.com 
+ *  soapUI, copyright (C) 2004-2009 eviware.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -35,6 +35,6 @@ public class RemoveEmptyContentRequestFilterTestCase extends TestCase
 	
 	public void doRemoval( String request, String expected ) throws Exception
 	{
-		assertEquals( expected, RemoveEmptyContentRequestFilter.removeEmptyContent(request, null) );
+		assertEquals( expected, RemoveEmptyContentRequestFilter.removeEmptyContent(request,null) );
 	}
 }

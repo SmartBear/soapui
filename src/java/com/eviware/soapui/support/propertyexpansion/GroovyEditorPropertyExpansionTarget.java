@@ -46,7 +46,7 @@ public class GroovyEditorPropertyExpansionTarget extends AbstractPropertyExpansi
 		if( javaName == null )
 			return;
 
-		String txt = "def " + javaName + " = context.expand( '" + expansion + "' )\n";
+		String txt = createContextExpansion( javaName, expansion );
 
 		try
 		{

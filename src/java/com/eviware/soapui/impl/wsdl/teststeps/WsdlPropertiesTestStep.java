@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -30,11 +28,12 @@ import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.StringUtils;
@@ -95,7 +94,7 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 		targetProperty = new BeanPathPropertySupport( this, propertiesStepConfig, "target" );
 	}
 
-	public TestStepResult run( TestRunner testRunner, TestRunContext testRunContext )
+	public TestStepResult run( TestCaseRunner testRunner, TestCaseRunContext testRunContext )
 	{
 		WsdlTestStepResult result = new WsdlTestStepResult( this );
 
@@ -138,7 +137,7 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 		return result;
 	}
 
-	private boolean saveDuringRun( WsdlTestStepResult result, TestRunContext context )
+	private boolean saveDuringRun( WsdlTestStepResult result, TestCaseRunContext context )
 	{
 		String target = targetProperty.expand( context );
 		if( StringUtils.hasContent( target ) )
@@ -169,21 +168,7 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 
 	private int saveProperties( String target ) throws IOException
 	{
-		java.util.Properties props = new java.util.Properties();
-		propertyHolderSupport.saveTo( props );
-		FileOutputStream out = getPropertiesOutputStream( target );
-		props.store( out, "TestStep [" + getName() + "] properties" );
-		out.close();
-		return props.size();
-	}
-
-	private FileOutputStream getPropertiesOutputStream( String target ) throws FileNotFoundException
-	{
-		String fileProperty = System.getProperty( target );
-		if( fileProperty != null )
-			target = fileProperty;
-
-		return new FileOutputStream( target );
+		return propertyHolderSupport.saveTo( System.getProperty( target, target ) );
 	}
 
 	private int loadProperties( String source, boolean createMissing ) throws IOException
@@ -309,7 +294,7 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 
 	public int saveProperties() throws IOException
 	{
-		String target = PropertyExpansionUtils.expandProperties( this, targetProperty.expand() );
+		String target = PropertyExpander.expandProperties( this, targetProperty.expand() );
 		return saveProperties( target );
 	}
 

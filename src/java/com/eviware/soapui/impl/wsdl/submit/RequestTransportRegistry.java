@@ -21,6 +21,7 @@ import com.eviware.soapui.impl.wsdl.submit.filters.EndpointStrategyRequestFilter
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpAuthenticationRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpCompressionRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpProxyRequestFilter;
+import com.eviware.soapui.impl.wsdl.submit.filters.HttpRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpSettingsRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.PostPackagingRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.PropertyExpansionRequestFilter;
@@ -31,6 +32,7 @@ import com.eviware.soapui.impl.wsdl.submit.filters.StripWhitespacesRequestFilter
 import com.eviware.soapui.impl.wsdl.submit.filters.WsaRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WsdlPackagingRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WsdlPackagingResponseFilter;
+import com.eviware.soapui.impl.wsdl.submit.filters.WsrmRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WssAuthenticationRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WssRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpClientRequestTransport;
@@ -56,6 +58,7 @@ public class RequestTransportRegistry
 
 		httpTransport.addRequestFilter( new EndpointRequestFilter() );
 		httpTransport.addRequestFilter( new HttpSettingsRequestFilter() );
+		httpTransport.addRequestFilter( new HttpRequestFilter() );
 		httpTransport.addRequestFilter( new RestRequestFilter() );
 		httpTransport.addRequestFilter( new SoapHeadersRequestFilter() );
 		httpTransport.addRequestFilter( new HttpProxyRequestFilter() );
@@ -66,6 +69,7 @@ public class RequestTransportRegistry
 		httpTransport.addRequestFilter( new StripWhitespacesRequestFilter() );
 		httpTransport.addRequestFilter( new EndpointStrategyRequestFilter() );
 		httpTransport.addRequestFilter( new WsaRequestFilter() );
+		httpTransport.addRequestFilter( new WsrmRequestFilter() );
 		httpTransport.addRequestFilter( new WssRequestFilter() );
 
 		for( RequestFilter filter : SoapUI.getListenerRegistry().getListeners( RequestFilter.class ) )

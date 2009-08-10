@@ -37,6 +37,10 @@
 	 		<td>Sets password for soapui-settings.xml file</td>
 	 	</tr>
 	 	<tr>
+	 		<td>f</td>
+	 		<td>Sets report output folder</td>
+	 	</tr>
+	 	<tr>
 	 		<td>D</td>
 	 		<td>Sets system property with name=value</td>
 	 	</tr>
@@ -50,7 +54,7 @@
 		 <source>toolrunner.bat -iAWSECommerceServicePortType -taxis1 G:\test\Amazon-soapui-project.xml</source>
 		 <p>will run all the axis 1.X code-generation as previously defined within soapUI and produce 
 		 the following output:</p>
-		 <source>SoapUI 1.6 beta1 Tool Runner
+		 <source>SoapUI 3.0 Tool Runner
 02:27:02,386 DEBUG [SoapUI] initialized soapui-settings from [soapui-settings.xml]
 02:27:02,506 INFO  [WsdlProject] Loaded project from [G:\test\Amazon-soapui-project.xml]
 02:27:08,765 INFO  [SoapUIToolRunner] Running tools for project [Amazon]

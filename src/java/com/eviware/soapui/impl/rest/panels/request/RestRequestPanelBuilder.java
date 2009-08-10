@@ -16,7 +16,6 @@ import java.awt.Component;
 
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.support.AbstractHttpRequest.RequestMethod;
 import com.eviware.soapui.support.components.JPropertiesTable;
 import com.eviware.soapui.support.types.StringList;
 
@@ -47,8 +46,9 @@ public class RestRequestPanelBuilder extends EmptyPanelBuilder<RestRequest>
 		JPropertiesTable<RestRequest> table = new JPropertiesTable<RestRequest>( "Request Properties" );
 		table.addProperty( "Name", "name" );
 		table.addProperty( "Description", "description", true );
-		table.addProperty( "Method", "method", new Object[] { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
-				RequestMethod.DELETE, RequestMethod.HEAD } );
+		// table.addProperty( "Method", "method", new Object[]{RequestMethod.GET,
+		// RequestMethod.POST,
+		// RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.HEAD} );
 		table.addProperty( "Encoding", "encoding", new String[] { null, "UTF-8", "iso-8859-1" } );
 		table.addProperty( "Endpoint", "endpoint", request.getOperation().getInterface().getEndpoints() );
 		table.addProperty( "Bind Address", "bindAddress", true );

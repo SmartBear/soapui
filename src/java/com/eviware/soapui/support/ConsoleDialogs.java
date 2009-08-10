@@ -94,4 +94,10 @@ public class ConsoleDialogs implements XDialogs
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public int yesYesToAllOrNo( String question, String title )
+	{
+		// TODO Auto-generated method stub
+		return 2;
+	}
 }

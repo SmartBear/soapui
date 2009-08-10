@@ -17,9 +17,11 @@ import java.util.Map;
 
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WorkspaceImplPanelBuilder;
+import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.panels.method.RestMethodPanelBuilder;
 import com.eviware.soapui.impl.rest.panels.request.RestRequestPanelBuilder;
 import com.eviware.soapui.impl.rest.panels.resource.RestResourcePanelBuilder;
 import com.eviware.soapui.impl.rest.panels.service.RestServicePanelBuilder;
@@ -41,7 +43,6 @@ import com.eviware.soapui.impl.wsdl.panels.operation.WsdlOperationPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.project.WsdlProjectPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.request.WsdlRequestPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.testcase.WsdlTestCasePanelBuilder;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.AsyncResponseStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.DelayTestStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.GotoStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.GroovyScriptStepPanelBuilder;
@@ -57,7 +58,6 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfersTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlAsyncResponseTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlDelayTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlGotoTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlGroovyScriptTestStep;
@@ -97,11 +97,12 @@ public class PanelBuilderRegistry
 		register( RestService.class, new RestServicePanelBuilder() );
 		register( WsdlOperation.class, new WsdlOperationPanelBuilder() );
 		register( RestResource.class, new RestResourcePanelBuilder() );
+		register( RestMethod.class, new RestMethodPanelBuilder() );
 		register( WsdlRequest.class, new WsdlRequestPanelBuilder() );
 		register( RestRequest.class, new RestRequestPanelBuilder() );
-		register( WsdlTestSuite.class, new WsdlTestSuitePanelBuilder() );
-		register( WsdlTestCase.class, new WsdlTestCasePanelBuilder() );
-		register( WsdlLoadTest.class, new WsdlLoadTestPanelBuilder() );
+		register( WsdlTestSuite.class, new WsdlTestSuitePanelBuilder<WsdlTestSuite>() );
+		register( WsdlTestCase.class, new WsdlTestCasePanelBuilder<WsdlTestCase>() );
+		register( WsdlLoadTest.class, new WsdlLoadTestPanelBuilder<WsdlLoadTest>() );
 		register( WsdlMockService.class, new WsdlMockServicePanelBuilder() );
 		register( WsdlMockOperation.class, new WsdlMockOperationPanelBuilder() );
 		register( WsdlMockResponse.class, new WsdlMockResponsePanelBuilder() );
@@ -114,7 +115,6 @@ public class PanelBuilderRegistry
 		register( WsdlGroovyScriptTestStep.class, new GroovyScriptStepPanelBuilder() );
 		register( PropertyTransfersTestStep.class, new PropertyTransfersTestStepPanelBuilder() );
 		register( WsdlRunTestCaseTestStep.class, new WsdlRunTestCaseTestStepPanelBuilder() );
-		register( WsdlAsyncResponseTestStep.class, new AsyncResponseStepPanelBuilder() );
 		register( WsdlMockResponseTestStep.class, new MockResponseStepPanelBuilder() );
 	}
 }

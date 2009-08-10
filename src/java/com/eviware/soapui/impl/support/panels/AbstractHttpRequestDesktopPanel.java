@@ -39,6 +39,7 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.EndpointsComboBoxModel;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
@@ -69,8 +70,8 @@ import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
  * @author Ole.Matzura
  */
 
-public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 extends AbstractHttpRequest<?>> extends
-		ModelItemDesktopPanel<T> implements SubmitListener
+public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 extends AbstractHttpRequestInterface<?>>
+		extends ModelItemDesktopPanel<T> implements SubmitListener
 {
 	private final static Logger log = Logger.getLogger( AbstractHttpRequestDesktopPanel.class );
 
@@ -108,7 +109,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		try
 		{
 			// required to avoid deadlock in UI when opening attachments inspector
-			if( request.getAttachmentCount() > 0 )
+			if( request.getAttachmentCount() > 0 && request.getOperation() != null)
 			{
 				request.getOperation().getInterface().getDefinitionContext().loadIfNecessary();
 			}
@@ -409,7 +410,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 				return;
 
 			// dont resize if split has been dragged
-			if( ( ( SoapUISplitPaneUI )requestSplitPane.getUI() ).hasBeenDragged() )
+			if( requestSplitPane.getUI() instanceof SoapUISplitPaneUI && ( ( SoapUISplitPaneUI )requestSplitPane.getUI() ).hasBeenDragged() )
 				return;
 
 			int pos = requestSplitPane.getDividerLocation();
@@ -450,7 +451,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 				return;
 
 			// dont resize if split has been dragged or result is empty
-			if( ( ( SoapUISplitPaneUI )requestSplitPane.getUI() ).hasBeenDragged() || request.getResponse() == null )
+			if( requestSplitPane.getUI() instanceof SoapUISplitPaneUI && ( ( SoapUISplitPaneUI )requestSplitPane.getUI() ).hasBeenDragged() || request.getResponse() == null )
 				return;
 
 			int pos = requestSplitPane.getDividerLocation();
@@ -557,7 +558,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
 		Status status = submit.getStatus();
 		HttpResponse response = ( HttpResponse )submit.getResponse();
-		if( status != Status.CANCELED )
+		if( status == Status.FINISHED )
 		{
 			request.setResponse( response, context );
 		}
@@ -772,4 +773,5 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		return hasClosed;
 	}
+
 }

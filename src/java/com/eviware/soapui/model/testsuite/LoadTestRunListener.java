@@ -47,8 +47,8 @@ public interface LoadTestRunListener
 	 * @param runContext
 	 */
 
-	public void beforeTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-			TestRunContext runContext );
+	public void beforeTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+			TestCaseRunContext runContext );
 
 	/**
 	 * Called before the execution of a teststep
@@ -60,8 +60,8 @@ public interface LoadTestRunListener
 	 * @param testStep
 	 */
 
-	public void beforeTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-			TestRunContext runContext, TestStep testStep );
+	public void beforeTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+			TestCaseRunContext runContext, TestStep testStep );
 
 	/**
 	 * Called after the execution of a teststep
@@ -73,8 +73,8 @@ public interface LoadTestRunListener
 	 * @param testStepResult
 	 */
 
-	public void afterTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-			TestRunContext runContext, TestStepResult testStepResult );
+	public void afterTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+			TestCaseRunContext runContext, TestStepResult testStepResult );
 
 	/**
 	 * Called after the execution of a testcase
@@ -85,8 +85,8 @@ public interface LoadTestRunListener
 	 * @param runContext
 	 */
 
-	public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-			TestRunContext runContext );
+	public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+			TestCaseRunContext runContext );
 
 	/**
 	 * Called when a loadtest has been stopped for some reason

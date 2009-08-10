@@ -260,7 +260,7 @@ public class KeyMaterialWssCrypto implements WssCrypto
 		getWssContainer().fireCryptoUpdated( this );
 	}
 
-	public void resolve( ResolveContext context )
+	public void resolve( ResolveContext<?> context )
 	{
 		sourceProperty.resolveFile( context, "Missing keystore/certificate file" );
 	}

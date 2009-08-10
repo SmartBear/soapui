@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.actions.testcase;
 
+import com.eviware.soapui.config.WsrmVersionTypeConfig;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.settings.HttpSettings;
@@ -43,6 +44,10 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase>
 	public static final String SOAPUI_ACTION_ID = "TestCaseOptionsAction";
 	private static final String TESTCASE_TIMEOUT = "TestCase timeout";
 	private static final String MAXRESULTS = "Max Results";
+	private static final String WS_RM_ENABLED = "WS-RM Enabled";
+	private static final String WS_RM_VERSION = "WS-RM Version";
+	private static final String WS_RM_ACK_TO = "WS-RM Ack To";
+	private static final String WS_RM_EXPIRES = "WS-RM Expires";
 
 	private XFormDialog dialog;
 	private XForm form;
@@ -58,7 +63,7 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase>
 		{
 			XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "TestCase Options" );
 			form = builder.createForm( "Basic" );
-			form.addCheckBox( SEARCH_PROPERTIES, "Search preceding teststeps for property values" );
+			form.addCheckBox( SEARCH_PROPERTIES, "Search preceding TestSteps for property values" );
 			form.addCheckBox( KEEP_SESSION, "Maintain HTTP session" );
 			form.addCheckBox( FAIL_ON_ERROR, "Fail on error" ).addFormFieldListener( new XFormFieldListener()
 			{
@@ -70,11 +75,18 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase>
 			} );
 
 			form.addCheckBox( FAIL_TESTCASE_ON_ERROR, "Fail TestCase if it has failed TestSteps" );
-			form.addCheckBox( DISCARD_OK_RESULTS, "Discards successfull testresults to preserve memory" );
+			form.addCheckBox( DISCARD_OK_RESULTS, "Discards successful TestStep results to preserve memory" );
 			form.addTextField( SOCKET_TIMEOUT, "Socket timeout in milliseconds", FieldType.TEXT );
 			form.addTextField( TESTCASE_TIMEOUT, "Timeout in milliseconds for entire TestCase", FieldType.TEXT );
-			form.addTextField( MAXRESULTS, "Maximum number of TestStep Results to keep in memory during a run",
+			form.addTextField( MAXRESULTS, "Maximum number of TestStep results to keep in memory during a run",
 					FieldType.TEXT );
+
+			form.addCheckBox( WS_RM_ENABLED, "Use WS-Reliable Messaging" );
+			form.addComboBox( WS_RM_VERSION, new String[] { WsrmVersionTypeConfig.X_1_0.toString(),
+					WsrmVersionTypeConfig.X_1_1.toString(), WsrmVersionTypeConfig.X_1_2.toString() },
+					"The  property for managing WS-RM version" );
+			form.addTextField( WS_RM_ACK_TO, "Acknowledgments To", FieldType.TEXT );
+			form.addTextField( WS_RM_EXPIRES, "Expires after", FieldType.TEXT );
 
 			dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.TESTCASEOPTIONS_HELP_URL ),
 					"Specify general options for this TestCase", UISupport.OPTIONS_ICON );
@@ -92,6 +104,13 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase>
 		values.put( TESTCASE_TIMEOUT, String.valueOf( testCase.getTimeout() ) );
 		values.put( MAXRESULTS, String.valueOf( testCase.getMaxResults() ) );
 
+		values.put( WS_RM_ENABLED, String.valueOf( testCase.getWsrmEnabled() ) );
+		values.put( WS_RM_VERSION, String.valueOf( testCase.getWsrmVersion() ) );
+		if( testCase.getWsrmAckTo() != null )
+			values.put( WS_RM_ACK_TO, String.valueOf( testCase.getWsrmAckTo() ) );
+		if( testCase.getWsrmExpires() != 0 )
+			values.put( WS_RM_EXPIRES, String.valueOf( testCase.getWsrmExpires() ) );
+
 		dialog.getFormField( FAIL_TESTCASE_ON_ERROR ).setEnabled(
 				!Boolean.parseBoolean( String.valueOf( testCase.getFailOnError() ) ) );
 
@@ -108,6 +127,11 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase>
 				testCase.setFailTestCaseOnErrors( Boolean.parseBoolean( values.get( FAIL_TESTCASE_ON_ERROR ) ) );
 				testCase.setTimeout( Long.parseLong( values.get( TESTCASE_TIMEOUT ) ) );
 				testCase.setMaxResults( Integer.parseInt( values.get( MAXRESULTS ) ) );
+				testCase.setWsrmEnabled( Boolean.parseBoolean( values.get( WS_RM_ENABLED ) ) );
+				testCase.setWsrmVersion( values.get( WS_RM_VERSION ) );
+				testCase.setWsrmAckTo( values.get( WS_RM_ACK_TO ) );
+				if( values.get( WS_RM_EXPIRES ) != null && values.get( WS_RM_EXPIRES ).length() > 0 )
+					testCase.setWsrmExpires( Long.parseLong( values.get( WS_RM_EXPIRES ) ) );
 
 				String timeout = values.get( SOCKET_TIMEOUT );
 				if( timeout.trim().length() == 0 )

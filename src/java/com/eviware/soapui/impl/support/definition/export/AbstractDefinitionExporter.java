@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.xmlbeans.SimpleValue;
 import org.apache.xmlbeans.XmlObject;
 
+import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.support.definition.InterfaceDefinition;
 import com.eviware.soapui.impl.support.definition.InterfaceDefinitionPart;
 import com.eviware.soapui.impl.wsdl.support.Constants;
@@ -31,7 +32,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 public abstract class AbstractDefinitionExporter<T extends Interface> implements DefinitionExporter
 {
-	private InterfaceDefinition<T> definition;
+	private InterfaceDefinition definition;
 
 	public AbstractDefinitionExporter( InterfaceDefinition<T> definition )
 	{
@@ -43,7 +44,7 @@ public abstract class AbstractDefinitionExporter<T extends Interface> implements
 		return definition;
 	}
 
-	public void setDefinition( InterfaceDefinition<T> definition )
+	public void setDefinition( InterfaceDefinition definition )
 	{
 		this.definition = definition;
 	}
@@ -71,6 +72,7 @@ public abstract class AbstractDefinitionExporter<T extends Interface> implements
 		{
 			XmlObject obj = XmlObject.Factory.parse( part.getContent() );
 			replaceImportsAndIncludes( obj, urlToFileMap, part.getUrl() );
+			postProcessing( obj, part );
 			obj.save( new File( outFolder, urlToFileMap.get( part.getUrl() ) ) );
 		}
 
@@ -112,6 +114,10 @@ public abstract class AbstractDefinitionExporter<T extends Interface> implements
 		return result;
 	}
 
+	protected void postProcessing( XmlObject obj, InterfaceDefinitionPart part )
+	{
+	}
+
 	private void setFilenameForPart( InterfaceDefinitionPart part, Map<String, String> urlToFileMap, String urlPrefix )
 			throws MalformedURLException
 	{
@@ -140,7 +146,7 @@ public abstract class AbstractDefinitionExporter<T extends Interface> implements
 			fileName += ".wsdl";
 		else if( part.getType().equals( Constants.XSD_NS ) )
 			fileName += ".xsd";
-		else if( part.getType().equals( Constants.WADL10_NS ) )
+		else if( part.getType().equals( ((RestService)getDefinition().getInterface()).getWadlVersion() ) )
 			fileName += ".wadl";
 		else
 			fileName += ".xml";

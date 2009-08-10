@@ -20,8 +20,11 @@ import java.util.List;
 
 import javax.swing.JCheckBox;
 
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
+
 import com.eviware.soapui.impl.rest.RestRepresentation;
-import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
@@ -36,47 +39,43 @@ public class RestResponseRepresentationsInspector extends AbstractRestRepresenta
 {
 	private JCheckBox enableRecordingCheckBox;
 	public static final String RECORD_RESPONSE_REPRESENTATIONS = "RecordResponseRepresentations";
+	private RestRequestInterface request;
 
-	protected RestResponseRepresentationsInspector( RestRequest request )
+	protected RestResponseRepresentationsInspector( RestRequestInterface request )
 	{
-		super( request, "Representations", "Response Representations", new RestRepresentation.Type[] {
+		super( request.getRestMethod(), "Representations", "Response Representations", new RestRepresentation.Type[] {
 				RestRepresentation.Type.RESPONSE, RestRepresentation.Type.FAULT } );
 
 		request.addSubmitListener( this );
+		this.request = request;
 	}
 
-	protected JXToolBar buildToolbar()
+	protected void addToToolbar( JXToolBar toolbar )
 	{
-		JXToolBar toolbar = super.buildToolbar();
-
-		toolbar.addSeparator();
-
 		enableRecordingCheckBox = new JCheckBox( "Auto-Create" );
 		enableRecordingCheckBox.setToolTipText( "Automatically create Representations from received Responses" );
 		enableRecordingCheckBox.setOpaque( false );
 		UISupport.setFixedSize( enableRecordingCheckBox, 150, 20 );
 		toolbar.addFixed( enableRecordingCheckBox );
-		XmlBeansSettingsImpl settings = getRequest().getSettings();
+		XmlBeansSettingsImpl settings = getMethod().getSettings();
 		if( settings.isSet( RECORD_RESPONSE_REPRESENTATIONS ) )
 		{
 			enableRecordingCheckBox.setSelected( settings.getBoolean( RECORD_RESPONSE_REPRESENTATIONS ) );
 		}
 		else
 		{
-			enableRecordingCheckBox.setSelected( getRequest().getResource() == null
-					|| getRequest().getResource().getService().isGenerated() );
+			enableRecordingCheckBox.setSelected( getMethod().getResource() == null
+					|| getMethod().getResource().getService().isGenerated() );
 		}
 
 		enableRecordingCheckBox.addItemListener( new ItemListener()
 		{
 			public void itemStateChanged( ItemEvent e )
 			{
-				getRequest().getSettings().setBoolean( RECORD_RESPONSE_REPRESENTATIONS,
-						enableRecordingCheckBox.isSelected() );
+				getMethod().getSettings()
+						.setBoolean( RECORD_RESPONSE_REPRESENTATIONS, enableRecordingCheckBox.isSelected() );
 			}
 		} );
-
-		return toolbar;
 	}
 
 	public boolean beforeSubmit( Submit submit, SubmitContext context )
@@ -86,7 +85,7 @@ public class RestResponseRepresentationsInspector extends AbstractRestRepresenta
 
 	public void afterSubmit( Submit submit, SubmitContext context )
 	{
-		HttpResponse response = getRequest().getResponse();
+		HttpResponse response = request.getResponse();
 		if( response != null && enableRecordingCheckBox.isSelected() )
 		{
 			if( HttpUtils.isErrorStatus( response.getStatusCode() ) )
@@ -103,7 +102,7 @@ public class RestResponseRepresentationsInspector extends AbstractRestRepresenta
 	@SuppressWarnings( "unchecked" )
 	protected void extractRepresentation( HttpResponse response, RestRepresentation.Type type )
 	{
-		RestRepresentation[] representations = getRequest().getRepresentations( type, null );
+		RestRepresentation[] representations = getMethod().getRepresentations( type, null );
 		int c = 0;
 		for( ; c < representations.length; c++ )
 		{
@@ -123,15 +122,33 @@ public class RestResponseRepresentationsInspector extends AbstractRestRepresenta
 
 		if( c == representations.length )
 		{
-			RestRepresentation representation = getRequest().addNewRepresentation( type );
+			RestRepresentation representation = getMethod().addNewRepresentation( type );
 			representation.setMediaType( response.getContentType() );
 			representation.setStatus( Arrays.asList( response.getStatusCode() ) );
+
+			String xmlContent = response.getContentAsXml();
+
+			if( !xmlContent.equals( "<xml/>" ) )
+			{
+				// if(response.getContentType().equals("text/xml") ||
+				// response.getContentType().equals("application/xml")) {
+				try
+				{
+					XmlCursor cursor = XmlObject.Factory.parse( xmlContent ).newCursor();
+					cursor.toFirstChild();
+					representation.setElement( cursor.getName() );
+				}
+				catch( Exception e )
+				{
+
+				}
+			}
 		}
 	}
 
 	public void release()
 	{
 		super.release();
-		getRequest().removeSubmitListener( this );
+		request.removeSubmitListener( this );
 	}
 }

@@ -24,22 +24,27 @@ import org.apache.commons.httpclient.HttpState;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
+import com.eviware.soapui.impl.support.http.HttpRequestInterface;
+import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.RequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MimeMessageResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedDeleteMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedHeadMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedOptionsMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPutMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedTraceMethod;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
+import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.settings.HttpSettings;
@@ -77,8 +82,10 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			postMethod.abort();
 	}
 
-	public Response sendRequest( SubmitContext submitContext, AbstractHttpRequest<?> httpRequest ) throws Exception
+	public Response sendRequest( SubmitContext submitContext, Request request ) throws Exception
 	{
+		AbstractHttpRequestInterface<?> httpRequest = ( AbstractHttpRequestInterface<?> )request;
+
 		HttpClient httpClient = HttpClientSupport.getHttpClient();
 		ExtendedHttpMethod httpMethod = createHttpMethod( httpRequest );
 		boolean createdState = false;
@@ -132,26 +139,28 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			for( String header : headers.keySet() )
 			{
 				String headerValue = headers.get( header );
-				headerValue = PropertyExpansionUtils.expandProperties( submitContext, headerValue );
+				headerValue = PropertyExpander.expandProperties( submitContext, headerValue );
 				httpMethod.setRequestHeader( header, headerValue );
 			}
 
 			// do request
 			WsdlProject project = ( WsdlProject )ModelSupport.getModelItemProject( httpRequest );
+			WssCrypto crypto = null;
 			if( project != null )
 			{
-				WssCrypto crypto = project.getWssContainer().getCryptoByName(
-						PropertyExpansionUtils.expandProperties( submitContext, httpRequest.getSslKeystore() ) );
+				crypto = project.getWssContainer().getCryptoByName(
+						PropertyExpander.expandProperties( submitContext, httpRequest.getSslKeystore() ) );
+			}
 
-				if( crypto != null && WssCrypto.STATUS_OK.equals( crypto.getStatus() ) )
-				{
-					hostConfiguration.getParams().setParameter( SoapUIHostConfiguration.SOAPUI_SSL_CONFIG,
-							crypto.getSource() + " " + crypto.getPassword() );
-				}
+			if( crypto != null && WssCrypto.STATUS_OK.equals( crypto.getStatus() ) )
+			{
+				hostConfiguration.getParams().setParameter( SoapUIHostConfiguration.SOAPUI_SSL_CONFIG,
+						crypto.getSource() + " " + crypto.getPassword() );
 			}
 
 			// dump file?
-			httpMethod.setDumpFile( PathUtils.expandPath( httpRequest.getDumpFile(), httpRequest, submitContext ) );
+			httpMethod.setDumpFile( PathUtils.expandPath( httpRequest.getDumpFile(),
+					( AbstractWsdlModelItem<?> )httpRequest, submitContext ) );
 
 			// include request time?
 			if( settings.getBoolean( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN ) )
@@ -208,7 +217,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		return ( Response )submitContext.getProperty( BaseHttpRequestTransport.RESPONSE );
 	}
 
-	private void createDefaultResponse( SubmitContext submitContext, AbstractHttpRequest<?> httpRequest,
+	private void createDefaultResponse( SubmitContext submitContext, AbstractHttpRequestInterface<?> httpRequest,
 			ExtendedHttpMethod httpMethod )
 	{
 		String requestContent = ( String )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
@@ -230,23 +239,32 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		submitContext.setProperty( BaseHttpRequestTransport.RESPONSE, response );
 	}
 
-	private ExtendedHttpMethod createHttpMethod( AbstractHttpRequest<?> httpRequest )
+	private ExtendedHttpMethod createHttpMethod( AbstractHttpRequestInterface<?> httpRequest )
 	{
-		if( httpRequest instanceof RestRequest )
+		if( httpRequest instanceof HttpRequestInterface<?> )
 		{
-			RestRequest restRequest = ( RestRequest )httpRequest;
+			HttpRequestInterface<?> restRequest = ( HttpRequestInterface<?> )httpRequest;
 			switch( restRequest.getMethod() )
 			{
 			case GET :
 				return new ExtendedGetMethod();
+			case HEAD :
+				return new ExtendedHeadMethod();
 			case DELETE :
 				return new ExtendedDeleteMethod();
 			case PUT :
 				return new ExtendedPutMethod();
+			case OPTIONS :
+				return new ExtendedOptionsMethod();
+			case TRACE :
+				return new ExtendedTraceMethod();
 			}
 		}
 
-		return new ExtendedPostMethod();
+		ExtendedPostMethod extendedPostMethod = new ExtendedPostMethod();
+
+		extendedPostMethod.setAfterRequestInjection( httpRequest.getAfterRequestInjection() );
+		return extendedPostMethod;
 	}
 
 }

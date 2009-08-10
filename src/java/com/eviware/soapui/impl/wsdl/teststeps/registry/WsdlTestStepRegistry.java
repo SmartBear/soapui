@@ -37,10 +37,15 @@ public class WsdlTestStepRegistry
 		addFactory( new GotoStepFactory() );
 		addFactory( new DelayStepFactory() );
 		addFactory( new RunTestCaseStepFactory() );
-		// addFactory( new AsyncResponseStepFactory() );
 		addFactory( new RestRequestStepFactory() );
 		addFactory( new HttpRequestStepFactory() );
 		addFactory( new WsdlMockResponseStepFactory() );
+
+		// soapUI Pro TestStep placeholders
+		addFactory( new ProPlaceholderStepFactory( "datasource", "soapUI Pro DataSource", "/datasource.gif" ) );
+		addFactory( new ProPlaceholderStepFactory( "datasourceloop", "soapUI Pro DataSourceLoop", "/datasource_loop.gif" ) );
+		addFactory( new ProPlaceholderStepFactory( "datasink", "soapUI Pro DataSink", "/datasink.gif" ) );
+		addFactory( new ProPlaceholderStepFactory( "datagen", "soapUI Pro DataGen", "/datagen.gif" ) );
 	}
 
 	public WsdlTestStepFactory getFactory( String type )
@@ -54,6 +59,7 @@ public class WsdlTestStepRegistry
 
 	public void addFactory( WsdlTestStepFactory factory )
 	{
+		removeFactory( factory.getType() );
 		factories.add( factory );
 	}
 

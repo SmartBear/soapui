@@ -55,6 +55,7 @@
 		<p>The following DataSources are currently supported:</p>
 		<ul>
 		<li><a href="#JDBC_DataSource">JDBC DataSource</a> - reads data from a JDBC data source</li>
+		<li><a href="#JDBC_Connection_DataSource">JDBC Connection DataSource</a> - reads data through a JDBCConnection configured on a project level</li>
 		<li><a href="#Excel_DataSource">Excel DataSource</a> - extracts data from an Excel (xls) file</li>
 		<li><a href="#Grid_DataSource">Grid DataSource</a> - allows entries or management of data from within the editor</li>
 		<li><a href="#XML_DataSource">XML DataSource</a> - extracts data from an XML property</li>
@@ -123,16 +124,37 @@
 		<subsection name="JDBC DataSource">
 		<p>The JDBC DataSource has the following configuration panel:</p>
 		<p align="center"><img src="images/jdbc_datasource_config_panel.gif" alt="soapUI Pro JDBC DataSource Options"/></p>
-		<p>The 4 available options are pretty straight-forward:</p>
+		<p>There are 5 available options pretty straight-forward, with buttons for using wizard for configuring them, and for testing if
+		properly configured:</p>
 		<ul>
 		<li><b>Driver</b> - the JDBC Driver to load and use for this DataSource. Must be available in the soapUI classpath 
 		either by placing it in a soapui/bin/ext directory, the jre/lib/ext directory or by directly modifying the 
 		soapui.bat/.sh files to include the required jar files</li>
-		<li><b>Connection String</b> - the connection string to use</li>
+		<li><b>Connection String</b> - the connection string to use, pass_value will be replaced with real password value at the time of connecting</li>
+		<li><b>Password</b> - the masked password value</li>
 		<li><b>SQL Query</b> - the query to issue for the created connection. It must return at least the same number of rows as specified
 		in the Properties List where there must be a column with the same name as its corresponding property.</li> 
 		<li><b>Stored Procedure</b> - select if the SQL statement calls a stored procedure</li>
 		</ul>
+		</subsection>
+		
+		<subsection name="JDBC DataSource Configuration wizard">
+		<ul>
+		Configuration wizard has several steps for setting driver/connection string, checking if stored procedure and creating query 
+		<p align="center"><img src="images/jdbc_connection_config_wizard.gif" alt="JDBC Connection configuration wizard"/></p>
+		<p align="center"><img src="images/jdbc_connection_storedproc_wizard.gif" alt="DB Connection stored procedure check"/></p>
+		<p align="center"><img src="images/jdbc_connection_query_wizard.gif" alt="JDBC Connection query wizard"/></p>
+		Notice that when using a wizard in case of stored procedures only procedures with no parameters will be listed because current 
+		configuration has no way of setting parameters
+		</ul>
+		</subsection>
+		
+		<subsection name="JDBC Connection DataSource">
+		<p>The JDBC Connection DataSource has the following configuration panel:</p>
+		<p align="center"><img src="images/jdbcconnection_datasource_config_panel.gif" alt="soapUI Pro JDBC Connection DataSource Options"/></p>
+		<p>Configuration options are pretty much the same as for JDBC DataSource except that here JDBC Connection set on project level
+		is selected instead of configuring driver/connection string for this particular data source. Here is also possible creating a new JDBC connection
+		for specified project which will be added to the project list.</p>
 		</subsection>
 		
 		<subsection name="Excel DataSource">

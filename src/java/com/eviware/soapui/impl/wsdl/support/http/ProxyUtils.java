@@ -12,8 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.support.http;
 
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
@@ -23,8 +27,8 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.support.StringUtils;
@@ -45,15 +49,15 @@ public class ProxyUtils
 		String proxyPort = System.getProperty( "http.proxyPort" );
 
 		if( proxyHost == null )
-			proxyHost = PropertyExpansionUtils.expandProperties( context, settings.getString( ProxySettings.HOST, "" ) );
+			proxyHost = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.HOST, "" ) );
 
 		if( proxyPort == null )
-			proxyPort = PropertyExpansionUtils.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
+			proxyPort = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
 
 		if( !StringUtils.isNullOrEmpty( proxyHost ) && !StringUtils.isNullOrEmpty( proxyPort ) )
 		{
 			// check excludes
-			String[] excludes = PropertyExpansionUtils.expandProperties( context,
+			String[] excludes = PropertyExpander.expandProperties( context,
 					settings.getString( ProxySettings.EXCLUDES, "" ) ).split( "," );
 
 			try
@@ -64,12 +68,12 @@ public class ProxyUtils
 				{
 					hostConfiguration.setProxy( proxyHost, Integer.parseInt( proxyPort ) );
 
-					String proxyUsername = PropertyExpansionUtils.expandProperties( context, settings.getString(
+					String proxyUsername = PropertyExpander.expandProperties( context, settings.getString(
 							ProxySettings.USERNAME, null ) );
-					String proxyPassword = PropertyExpansionUtils.expandProperties( context, settings.getString(
+					String proxyPassword = PropertyExpander.expandProperties( context, settings.getString(
 							ProxySettings.PASSWORD, null ) );
 
-					if( StringUtils.hasContent( proxyUsername ) && proxyPassword != null )
+					if( proxyUsername != null && proxyPassword != null )
 					{
 						Credentials proxyCreds = new UsernamePasswordCredentials( proxyUsername, proxyPassword == null ? ""
 								: proxyPassword );
@@ -123,10 +127,45 @@ public class ProxyUtils
 				}
 			}
 
-			if( proxyHost.endsWith( exclude ) )
+			/*
+			 * This will exclude addresses with wildcard *, too.
+			 */
+			// if( proxyHost.endsWith( exclude ) )
+			// return true;
+			String excludeIp = exclude.indexOf( '*' ) >= 0 ? exclude : nslookup( exclude, true );
+			String ip = nslookup( proxyHost, true );
+			Pattern pattern = Pattern.compile( excludeIp );
+			Matcher matcher = pattern.matcher( ip );
+			Matcher matcher2 = pattern.matcher( proxyHost );
+			if( matcher.find() || matcher2.find())
 				return true;
 		}
 
 		return false;
 	}
+
+	private static String nslookup( String s, boolean ip )
+	{
+
+		InetAddress host;
+		String address;
+
+		// get the bytes of the IP address
+		try
+		{
+			host = InetAddress.getByName( s );
+			if( ip )
+				address = host.getHostAddress();
+			else
+				address = host.getHostName();
+		}
+		catch( UnknownHostException ue )
+		{
+			return s; // no host
+		}
+
+		return address;
+
+	} // end lookup
+
 }

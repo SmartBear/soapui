@@ -47,8 +47,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlGotoTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlGotoTestStep.GotoCondition;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
@@ -428,12 +428,12 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 		{
 			try
 			{
-				HttpRequestTestStep<?> previousStep = ( HttpRequestTestStep )gotoStep.getTestCase().findPreviousStepOfType(
+				HttpRequestTestStep previousStep = ( HttpRequestTestStep )gotoStep.getTestCase().findPreviousStepOfType(
 						gotoStep, HttpRequestTestStep.class );
 
 				if( previousStep != null )
 				{
-					String xml = previousStep.getHttpRequest().getResponseContentAsXml();
+					String xml = previousStep.getHttpRequest().getResponse().getContentAsString();
 					if( StringUtils.hasContent( xml ) )
 					{
 						expressionArea.setText( XmlUtils.declareXPathNamespaces( xml ) + expressionArea.getText() );
@@ -472,7 +472,7 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 				return;
 			}
 
-			HttpRequestTestStep<?> previousStep = gotoStep.getTestCase().findPreviousStepOfType( gotoStep,
+			HttpRequestTestStep previousStep = gotoStep.getTestCase().findPreviousStepOfType( gotoStep,
 					HttpRequestTestStep.class );
 
 			if( previousStep == null )
@@ -482,7 +482,7 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 			else
 			{
 				if( previousStep.getHttpRequest().getResponse() == null
-						|| StringUtils.isNullOrEmpty( previousStep.getHttpRequest().getResponseContentAsXml() ) )
+						|| StringUtils.isNullOrEmpty( previousStep.getHttpRequest().getResponse().getContentAsXml() ) )
 				{
 					UISupport.showErrorMessage( "Missing response in previous message" );
 					return;
@@ -515,7 +515,7 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 
 		public void actionPerformed( ActionEvent e )
 		{
-			HttpRequestTestStep<?> previousStep = gotoStep.getTestCase().findPreviousStepOfType( gotoStep,
+			HttpRequestTestStep previousStep = gotoStep.getTestCase().findPreviousStepOfType( gotoStep,
 					HttpRequestTestStep.class );
 
 			if( previousStep == null )
@@ -525,7 +525,7 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 			else
 			{
 				if( previousStep.getHttpRequest().getResponse() == null
-						|| !StringUtils.hasContent( previousStep.getHttpRequest().getResponseContentAsXml() ) )
+						|| !StringUtils.hasContent( previousStep.getHttpRequest().getResponse().getContentAsXml() ) )
 				{
 					UISupport
 							.showErrorMessage( "Missing response in previous request step [" + previousStep.getName() + "]" );
@@ -597,7 +597,7 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 	private class InternalTestRunListener extends TestRunListenerAdapter
 	{
 		@Override
-		public void afterStep( TestRunner testRunner, TestRunContext runContext, TestStepResult result )
+		public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
 		{
 			if( result.getTestStep() == gotoStep )
 			{

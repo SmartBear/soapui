@@ -75,6 +75,12 @@ public class JUndoableTextField extends JTextField implements Undoable, Undoable
 					cut();
 				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu C" ) ) )
 					copy();
+				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu V" ) ) )
+					paste();
+				else
+					return;
+				
+				e.consume();
 			}
 		} );
 	}

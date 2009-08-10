@@ -34,7 +34,7 @@
             If a resolve action potentially resolved several other items use the Update button to re-resolve the project.
                 Closing the Resolve dialog if there are still unresolved item will prompt to leave them as they are.
             </p>
-		<p><hr size="1"/>Next: <a href="../interfaces/index.html">Interfaces</a></p>
+		<p><hr size="1"/>Next: <a href="encryption.html">Project Encryption</a></p>
 		</section>
     </body>
 </document>

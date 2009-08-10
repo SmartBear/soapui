@@ -34,15 +34,19 @@
         <p align="center"><img src="images/test_properties_tab.gif" alt="Test Properties in soapUI"/></p>
         <li>From the navigator itself when in <a href="overview.html#Property-Mode">Property_Mode</a>.</li>
         </ol>
-        <p>The table available in the first two options has buttons to Add, Remove, and Clear and Import properties from 
-        an external source. In the table both names and values of properties can be edited as desired.</p>
+        <p>The table available in the first two options has buttons to Add, Remove, Move Up and Down, Clear and Load properties from 
+        an external source as well as Save properties to a file. Loading properties has additional options of handling specific properties 
+        from a file, and properties already defined on SoapUI object. </p>
+        <p align="center"><img src="images/load_properties.gif" alt="Load Properties to Specific SoapUI object"/></p>
+        <p>In the table both names and values of properties can be edited as desired.</p>
         <p>When renaming a property, soapUI will attempt to refactor all references to that property in both 
         <a href="#Property_Expansion_in_soapUI">Property Expansions</a> and Property Transfers.</p>
         </subsection>
         
-        <subsection name="Global Properties in soapUI">
+        <subsection name="Setting properties from the command-line">
+       
 		 <p>Global properties are handled in the <a href="preferences.html#Global_Properties">Global Properties preferences tab</a>, 
-		 which contains a standard property-table as described above. Is is also possible to specify an external properties-file 
+		 which contains a standard property-table as described above. These can be specified/overridden 
 		 by adding a -Dsoapui.properties argument in the soapui.bat/.sh file.</p>
 		 <p>For example, create a properties-file named "properties.txt" containing</p>
 		 <source>test.a.property=hello!</source>
@@ -58,7 +62,17 @@
 
          <p>Both global and system properties can be set directly from the command-line when running any of
          the soapUI bat/sh files; -Dproperty.name=value sets a system property and -Gproperty.name=value sets a Global
-             Property.</p>   
+         Property.</p>
+        	
+       
+         <p>An extended possibility to override/set properties at the project/testsuite/testcase/mockservice level is also available by 
+         	adding a <source>soapui.properties.&lt;shortened-name-of-object&gt;=pathtopropertiesfile</source> value to the global or system properties, 
+         	where shortened-name-of-object is
+         the name of the corresponding object with only characters. For example if you have a TestSuite in your project named "TestSuite 1", you can set
+         	<source>-Dsoapui.properties.TestSuite1=testsuite1props.properties</source> which will load the properties in the 
+         	specified file ("testsuite1props.properties") into the "TestSuite 1" TestSuite properties (please note that any TestSuite names "TestSuite 1" in 
+         any of your projects will be affected).</p>
+        	
 		 </subsection>
 		
 		<subsection name="Property Expansion in soapUI">
@@ -132,7 +146,7 @@
 
             <ul><li>log : a log4j Logger logging to the groovy log window</li>
                 <li>modelItem : the current modelItem (for example a Request, MockResponse, etc..).</li>
-                <li>context : the current run-context (for example when running a TestCase och MockService)</li>
+                <li>context : the current run-context (for example when running a TestCase or MockService)</li>
                 </ul>
                 <p>For soapUI Pro users, the global script library is available just as in any other script,
                     allowing you to call into objects/methods defined there for reuse.
@@ -140,12 +154,6 @@
                 One current limitation is that although scripts can be multiple lines, they can not contain
                     nested braces (yet).. as always there is room for improvement!
                  </p>
-
-
-
-
-
-            
         </subsection>
 
 		<subsection name="Nested Properties">
@@ -164,6 +172,27 @@ testxpath = "//value[@id=${id}]/text()"
 id = "123"
 
 -> "${#testxml#${testxpath}}" evaluates to "hello"]]></source>
+		 </subsection>
+		 
+		  
+		 <subsection name="Navigator Property Mode">
+		 <columns><column>
+		 <div>The <a href="overview.html#The_Navigator">soapUI Navigator</a> contains a small toggle button on top of the tree. Pressing it will 
+		 put the Navigator into <i>Property Mode</i>, displaying all <a href="properties.html">Properties</a> for their 
+		 corresponding objects in the tree (green = read/write, black = read-only), giving an overview of all
+		 defined or available properties within a project.</div>
+		 <ul>
+		 <li>Items containing custom properties (Projects, TestSuites, TestCases, MockServices and MockResponse) will
+		 in the tree get a <i>Properties child node</i> contain that objects custom properties.</li>
+		 <li> Double clicking a property prompts to set its value.</li>
+		 <li> Right clicking the Properties node open a menu for adding new properties.</li>
+		 </ul>
+		 <p>One of the main Use cases for this mode is the possibility to drag a property from the tree into any
+		 text editor that supports <a href="properties.html#Property_Expansion">Property Expansion</a>, making it
+		 extremely easy to create property expansions as desired. If the property being dragged contains an XML value,
+		 the <a href="xpath_selector.html">XPath Selector</a> will be displayed after a drop, allowing for further
+		 property-expansion refinement</p>
+		 </column><column><img src="images/property_mode.gif" alt="Working in property mode"/></column></columns>
 		 </subsection>
 		 
 		 <subsection name="Property Expansion Points">

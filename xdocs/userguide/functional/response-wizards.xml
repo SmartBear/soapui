@@ -121,15 +121,23 @@
 		editor containing the created transfer</p>
 		</subsection>
 		
-		<subsection name="Add Assertion Wizard">
+		<subsection name="Add XPath Assertion Wizard">
 		<p>This wizard can be used to quickly create XPath assertions for either TestRequest response messages or MockResponse
 		request messages. The wizard is available from either messages Outline Editor as follows;</p>
-		<p align="center"><img src="images/xpath_wizard_popup.gif" alt="Add Assertion Wizard in soapUI Pro"/></p>
+		<p align="center"><img src="images/xpath_wizard_popup.gif" alt="Add XPath Assertion Wizard in soapUI Pro"/></p>
 		<p>Selecting one of the available XPath assertion types will create a XPath Match assertion with the corresponding
 		XPath expression and expected value, for example for the above when selecting "for Count", the following dialog is shown;</p>
-		<p align="center"><img src="images/xpath_wizard_dialog.gif"  alt="Add Assertion dialog in soapUI Pro"/></p>
+		<p align="center"><img src="images/xpath_wizard_dialog.gif"  alt="Add XPath Assertion dialog in soapUI Pro"/></p>
 		<p>The dialog has all fields filled out based on the selected node and its value. Here one can modify the XPath 
 		expression further and/or save/cancel the creation with the corresponding Save/Cancel buttons</p>
+		</subsection>
+		
+		<subsection name="Add Script Assertion Wizard">
+		<p>This wizard can be used to quickly create Script assertions for TestRequest response messages. 
+		It's available from Outline Editor as follows;</p>
+		<p align="center"><img src="images/script_wizard_popup.gif" alt="Add Script Assertion Wizard in soapUI Pro"/></p>
+		<p>Selecting "for Existence with Script" will create a Script assertion, for example for the above the following dialog is shown;</p>
+		<p align="center"><img src="images/script_wizard_dialog.gif"  alt="Add Script Assertion dialog in soapUI Pro"/></p>
 		</subsection>
 		
 		 <p><hr size="1"/>Next: <a href="propertytransfers.html">Property Transfers</a></p>

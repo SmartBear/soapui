@@ -140,6 +140,28 @@
 					<td>P</td>
 					<td>Sets project property with name=value</td>
 				</tr>
+                <tr>
+					<td>S</td>
+					<td>Sets to save the project file after tests have been run</td>
+				</tr>
+				<tr>
+					<td>I</td>
+					<td>Do not stop if error occurs, ignore them</td>
+				</tr>
+				<tr>
+					<td>R</td>
+					<td>Selects which report to generate for the test objects executed, for example if 
+					running the entire project, this could specify the name of a test-suite-level report
+					that would be generated for each TestSuite. The	report is saved as specified with the 
+					-F option to the folder specified with the -f option.
+					(soapUI Pro only)</td>
+				</tr>
+				<tr>
+					<td>F</td>
+					<td>Sets the format of the report specified with the -R option, for Printable reports this
+					is one of PDF, XLS, HTML, RTF, CSV, TXT, and XML. For Data Export this is either XML or CSV  
+					(soapUI Pro only)</td>
+				</tr>
 				<tr>
 					<td>g</td>
 					<td>Sets the output to include Coverage HTML reports ( soapUI Pro only )</td>
@@ -161,11 +183,13 @@
 				<p>
 					For getting started with the command line
 					testrunner, soapUI includes a "Launch
-					LoadTestRunner" action available from Project,
-					TestSuite or TestCase popup menus:
+					TestRunner" action available from Project,
+					TestSuite or TestCase popup menus, which launches the bundled command-line tools from inside soapUI. (The IDE plugins
+					do not include these runners, you will need to download/install soapUI seperately and point the "TestRunner Path" option 
+					in this dialog to the install directory). The dialog looks as follows: 
 				</p>
 				<p align="center">
-					<img src="images/testrunner_dialog.gif"
+					<img src="images/testrunner_dialog30.gif"
 						alt="Launch TestRunner" />
 				</p>
 				<p>
@@ -231,7 +255,7 @@
 				</p>
 				<source>testrunner.bat jbossws-soapui-project.xml -stest -ctesting -r -a -fmyresults</source>
 				<p>produced the following output:</p>
-				<source>SoapUI 1.5beta2 TestCase Runner 
+				<source>SoapUI 3.0 TestCase Runner 
 12:33:10,042 INFO [SoapUITestCaseRunner] setting projectFile to [jbossws-soapui-project.xml] 
 12:33:10,042 INFO [SoapUITestCaseRunner] setting testSuite to [test]	
 12:33:10,042 INFO [SoapUITestCaseRunner] setting testCase to [testing] 
@@ -253,7 +277,7 @@
 12:33:13,807 INFO [SoapUITestCaseRunner] Skipping testcase [Copy of	Copy of testing], filter is [testing] 
 12:33:13,807 INFO [SoapUITestCaseRunner] soapui suite [test] finished in 1892ms
 
-SoapUI 1.5beta2 TestCaseRunner Summary
+SoapUI 3.0 TestCaseRunner Summary
 ----------------------------- 
 Time Taken: 1895ms
 Total TestSuites: 1 
@@ -350,7 +374,7 @@ Domain: asdasd
 				</p>
 				<source><![CDATA[<target name="soapui-report">
 
-	<exec dir="C:\\Program Files\\eviware\\soapUI-1.7.5\\bin" executable="cmd.exe">
+	<exec dir="C:\\Program Files\\eviware\\soapUI-3.0\\bin" executable="cmd.exe">
 		<arg line="/c testrunner.bat -j -fg:\\reports g:\\projects\\sample-soapui-project.xml"/>
 	</exec>
 	

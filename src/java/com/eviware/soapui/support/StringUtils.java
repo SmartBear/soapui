@@ -184,7 +184,7 @@ public class StringUtils
 				while( ix < row.length() )
 				{
 					char ch = row.charAt( ix );
-					if( ( quote == 0 || ch == quote ) && last != '\\' )
+					if( ch == quote && last != '\\' )
 					{
 						result.add( buf.toString() );
 						row = row.length() > ix + 1 ? row.substring( ix + 1 ) : null;
@@ -244,6 +244,43 @@ public class StringUtils
 		}
 
 		return result.toString();
+	}
+	
+	public static String createXmlName( String str )
+	{
+		StringBuffer result = new StringBuffer();
+		boolean skipped = false;
+		boolean numbersOnly = true;
+		
+		for( int c = 0; c < str.length(); c++ )
+		{
+			char ch = str.charAt( c );
+
+			if( Character.isLetter( ch ))
+			{
+				if( skipped )
+					result.append(  Character.toUpperCase( ch ) );
+				else
+					result.append( ch );
+				numbersOnly = false;
+				skipped = false;
+			}
+			else if( Character.isDigit( ch ) )
+			{
+				result.append( ch );
+				skipped = false;
+			}
+			else
+			{
+				skipped = true;
+			}
+		}
+
+		str = result.toString();
+		if( numbersOnly && str.length() > 0 )
+			str = "_" + str;
+		
+		return str;
 	}
 
 	public static String[] merge( String[] incomingNames, String string )
@@ -343,4 +380,30 @@ public class StringUtils
 		return xml;
 	}
 
+	public static String capitalize( String string )
+	{
+		if( isNullOrEmpty( string ) )
+			return string;
+		return string.toUpperCase().substring( 0, 1 ) + string.toLowerCase().substring( 1 );
+	}
+
+	public static String[] toStringArray( Object[] selectedOptions )
+	{
+		String[] result = new String[selectedOptions.length];
+		for( int c = 0; c < selectedOptions.length; c++ )
+			result[c] = String.valueOf( selectedOptions[c] );
+		return result;
+	}
+
+	public static List<String> toStringList( Object[] selectedOptions )
+	{
+		StringList result = new StringList();
+		
+		for( Object o : selectedOptions )
+		{
+			result.add( o.toString() );
+		}
+		
+		return result;
+	}
 }

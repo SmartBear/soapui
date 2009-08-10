@@ -20,7 +20,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
-import com.eviware.soapui.model.testsuite.TestRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.resolver.ResolveContext;
 
@@ -83,7 +83,7 @@ public abstract class AbstractPathPropertySupport
 		modelItem.notifyPropertyChanged( modelItem.getClass().getName() + "@" + propertyName, old, value );
 	}
 
-	public String expand( TestRunContext context )
+	public String expand( TestCaseRunContext context )
 	{
 		try
 		{

@@ -30,7 +30,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.DefaultEndpointStrategyConfig;
 import com.eviware.soapui.config.EndpointConfig;
 import com.eviware.soapui.config.ProjectConfig;
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -44,9 +44,9 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.project.EndpointStrategy;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.project.ProjectListener;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
@@ -149,7 +149,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 		{
 			for( String ep : defaults.keySet() )
 			{
-				if( PropertyExpansionUtils.expandProperties( context, ep ).equals( uri.toString() ) )
+				if( PropertyExpander.expandProperties( context, ep ).equals( uri.toString() ) )
 				{
 					def = defaults.get( ep );
 					break;
@@ -160,19 +160,19 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 				return;
 		}
 
-		applyDefaultsToWsdlRequest( context, ( AbstractHttpRequest<?> )wsdlRequest, def );
+		applyDefaultsToWsdlRequest( context, ( AbstractHttpRequestInterface<?> )wsdlRequest, def );
 	}
 
-	protected void applyDefaultsToWsdlRequest( SubmitContext context, AbstractHttpRequest<?> wsdlRequest,
+	protected void applyDefaultsToWsdlRequest( SubmitContext context, AbstractHttpRequestInterface<?> wsdlRequest,
 			EndpointDefaults def )
 	{
-		String requestUsername = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getUsername() );
-		String requestPassword = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getPassword() );
-		String requestDomain = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getDomain() );
+		String requestUsername = PropertyExpander.expandProperties( context, wsdlRequest.getUsername() );
+		String requestPassword = PropertyExpander.expandProperties( context, wsdlRequest.getPassword() );
+		String requestDomain = PropertyExpander.expandProperties( context, wsdlRequest.getDomain() );
 
-		String defUsername = PropertyExpansionUtils.expandProperties( context, def.getUsername() );
-		String defPassword = PropertyExpansionUtils.expandProperties( context, def.getPassword() );
-		String defDomain = PropertyExpansionUtils.expandProperties( context, def.getDomain() );
+		String defUsername = PropertyExpander.expandProperties( context, def.getUsername() );
+		String defPassword = PropertyExpander.expandProperties( context, def.getPassword() );
+		String defDomain = PropertyExpander.expandProperties( context, def.getDomain() );
 
 		if( def.getMode() == EndpointConfig.Mode.OVERRIDE )
 		{
@@ -191,7 +191,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 		}
 	}
 
-	private void overrideRequest( SubmitContext context, AbstractHttpRequest<?> wsdlRequest, EndpointDefaults def,
+	private void overrideRequest( SubmitContext context, AbstractHttpRequestInterface<?> wsdlRequest, EndpointDefaults def,
 			String requestUsername, String requestPassword, String requestDomain, String defUsername, String defPassword,
 			String defDomain )
 	{
@@ -229,7 +229,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 		}
 	}
 
-	private void copyToRequest( SubmitContext context, AbstractHttpRequest<?> wsdlRequest, EndpointDefaults def,
+	private void copyToRequest( SubmitContext context, AbstractHttpRequestInterface<?> wsdlRequest, EndpointDefaults def,
 			String requestUsername, String requestPassword, String requestDomain, String defUsername, String defPassword,
 			String defDomain )
 	{
@@ -260,9 +260,9 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 		}
 	}
 
-	private void complementRequest( SubmitContext context, AbstractHttpRequest<?> httpRequest, EndpointDefaults def,
-			String requestUsername, String requestPassword, String requestDomain, String defUsername, String defPassword,
-			String defDomain )
+	private void complementRequest( SubmitContext context, AbstractHttpRequestInterface<?> httpRequest,
+			EndpointDefaults def, String requestUsername, String requestPassword, String requestDomain,
+			String defUsername, String defPassword, String defDomain )
 	{
 		String username = StringUtils.hasContent( requestUsername ) ? requestUsername : defUsername;
 		String password = StringUtils.hasContent( requestPassword ) ? requestPassword : defPassword;

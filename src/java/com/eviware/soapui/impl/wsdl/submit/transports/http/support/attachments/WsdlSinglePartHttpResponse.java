@@ -17,7 +17,6 @@ import java.util.Vector;
 
 import org.w3c.dom.Document;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.filters.WssRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
@@ -46,7 +45,7 @@ public class WsdlSinglePartHttpResponse extends SinglePartHttpResponse implement
 		{
 			try
 			{
-				Document document = XmlUtils.parseXml( getContentAsString() );
+				Document document = XmlUtils.parseXml( getResponseContent() );
 				wssResult = incomingWss.processIncoming( document, context );
 				if( wssResult != null && wssResult.size() > 0 )
 				{
@@ -60,7 +59,6 @@ public class WsdlSinglePartHttpResponse extends SinglePartHttpResponse implement
 				if( wssResult == null )
 					wssResult = new Vector<Object>();
 				wssResult.add( e );
-				SoapUI.logError( e );
 			}
 		}
 	}

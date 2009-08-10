@@ -351,7 +351,7 @@ public class DefaultWssContainer implements WssContainer
 		}
 	}
 
-	public void resolve( ResolveContext context )
+	public void resolve( ResolveContext<?> context )
 	{
 		for( int c = 0; c < cryptos.size(); c++ )
 		{
@@ -367,5 +367,9 @@ public class DefaultWssContainer implements WssContainer
 		{
 			outgoingWssConfigs.get( c ).resolve( context );
 		}
+	}
+
+	public void release()
+	{
 	}
 }

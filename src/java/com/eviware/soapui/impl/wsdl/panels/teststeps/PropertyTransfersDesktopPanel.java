@@ -72,10 +72,10 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.support.DocumentListenerAdapter;
@@ -1422,7 +1422,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 	private class InternalTestRunListener extends TestRunListenerAdapter
 	{
 		@Override
-		public void afterStep( TestRunner testRunner, TestRunContext runContext, TestStepResult result )
+		public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
 		{
 			if( result.getTestStep() == transferStep )
 			{

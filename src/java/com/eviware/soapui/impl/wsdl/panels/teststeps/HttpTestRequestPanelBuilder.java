@@ -15,10 +15,9 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps;
 import javax.swing.JPanel;
 
 import com.eviware.soapui.impl.EmptyPanelBuilder;
-import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.support.components.JPropertiesTable;
 import com.eviware.soapui.support.types.StringList;
 
@@ -34,10 +33,9 @@ public class HttpTestRequestPanelBuilder extends EmptyPanelBuilder<HttpTestReque
 	{
 	}
 
-	public AbstractRestRequestDesktopPanel buildDesktopPanel( HttpTestRequestStep testStep )
+	public HttpTestRequestDesktopPanel buildDesktopPanel( HttpTestRequestStep testStep )
 	{
-		return testStep instanceof RestTestRequestStep ? new RestTestRequestDesktopPanel( ( RestTestRequestStep )testStep )
-				: new HttpTestRequestDesktopPanel( testStep );
+		return new HttpTestRequestDesktopPanel( testStep );
 	}
 
 	public boolean hasDesktopPanel()
@@ -47,8 +45,9 @@ public class HttpTestRequestPanelBuilder extends EmptyPanelBuilder<HttpTestReque
 
 	public JPanel buildOverviewPanel( HttpTestRequestStep testStep )
 	{
-		RestTestRequest request = testStep.getTestRequest();
-		JPropertiesTable<RestTestRequest> table = new JPropertiesTable<RestTestRequest>( "REST TestRequest Properties" );
+		HttpTestRequestInterface<?> request = testStep.getTestRequest();
+		JPropertiesTable<HttpTestRequestInterface<?>> table = new JPropertiesTable<HttpTestRequestInterface<?>>(
+				"REST TestRequest Properties" );
 
 		// basic properties
 		table.addProperty( "Name", "name", true );
@@ -56,27 +55,28 @@ public class HttpTestRequestPanelBuilder extends EmptyPanelBuilder<HttpTestReque
 		// table.addProperty( "Message Size", "contentLength", false );
 		table.addProperty( "Encoding", "encoding", new String[] { null, "UTF-8", "iso-8859-1" } );
 
-		if( request.getOperation() != null )
-			table.addProperty( "Endpoint", "endpoint", request.getInterface().getEndpoints() );
+		/*
+		 * if( request.getOperation() != null ) table.addProperty( "Endpoint",
+		 * "endpoint", request.getInterface().getEndpoints() );
+		 */
 
-		table.addProperty( "Path", "path", true );
+		table.addProperty( "Endpoint", "endpoint", true );
 
 		table.addProperty( "Bind Address", "bindAddress", true );
 		table.addProperty( "Follow Redirects", "followRedirects", JPropertiesTable.BOOLEAN_OPTIONS );
 
-		if( request.getOperation() != null )
-		{
-			table.addProperty( "Service", "service" );
-			table.addProperty( "Resource", "path" );
-		}
+		/*
+		 * if( request.getOperation() != null ) { table.addProperty( "Service",
+		 * "service" ); table.addProperty( "Resource", "path" ); }
+		 */
 
 		// security / authentication
 		table.addProperty( "Username", "username", true );
 		table.addProperty( "Password", "password", true );
 		table.addProperty( "Domain", "domain", true );
 
-		StringList keystores = new StringList( request.getTestStep().getTestCase().getTestSuite().getProject()
-				.getWssContainer().getCryptoNames() );
+		StringList keystores = new StringList( ( ( WsdlProject )request.getTestStep().getTestCase().getTestSuite()
+				.getProject() ).getWssContainer().getCryptoNames() );
 		keystores.add( "" );
 		table.addProperty( "SSL Keystore", "sslKeystore", keystores.toStringArray() );
 

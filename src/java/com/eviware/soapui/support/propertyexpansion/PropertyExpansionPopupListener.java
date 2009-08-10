@@ -34,6 +34,7 @@ import javax.swing.text.JTextComponent;
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
@@ -52,6 +53,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.GroovyEditorComponent;
 import com.eviware.soapui.support.components.ShowPopupAction;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -121,7 +123,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 		{
 			project = ( WsdlProject )modelItem;
 		}
-		else if( modelItem instanceof AbstractHttpRequest )
+		else if( modelItem instanceof AbstractHttpRequestInterface<?> )
 		{
 			project = ( ( AbstractHttpRequest<?> )modelItem ).getOperation().getInterface().getProject();
 		}
@@ -153,7 +155,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 			for( int c = 0; c < testCase.getTestStepCount(); c++ )
 			{
 				testStep = testCase.getTestStepAt( c );
-				if( testStep == modelItem || testStep.getPropertyNames().length == 0 )
+				if( testStep.getPropertyNames().length == 0 )
 					continue;
 
 				if( targetMenu.getComponentCount() == 3 )
@@ -374,5 +376,10 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 
 	public static void disable( GroovyEditor editor )
 	{
+	}
+
+	public static void enable( GroovyEditorComponent gec, ModelItem modelItem  )
+	{
+		enable( gec.getEditor(), modelItem );
 	}
 }

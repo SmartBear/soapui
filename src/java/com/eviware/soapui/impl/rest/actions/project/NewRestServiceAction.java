@@ -115,9 +115,18 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
 		}
 
 		if( param instanceof ModelItem )
+		{
 			dialog.setValue( Form.SERVICENAME, ( ( ModelItem )param ).getName() );
-		else
-			dialog.setValue( Form.SERVICENAME, project.getName() );
+		}
+		else if( param instanceof URL )
+		{
+			URL url = ( URL )param;
+			dialog.setValue( Form.SERVICENAME, url.getHost() );
+			dialog.setValue( Form.SERVICEENDPOINT, url.toString() );
+			dialog.setBooleanValue( Form.EXTRACTPARAMS, true );
+			dialog.setBooleanValue( Form.CREATERESOURCE, false );
+			dialog.getFormField( Form.EXTRACTPARAMS ).setEnabled( true );
+		}
 
 		if( dialog.show() )
 		{

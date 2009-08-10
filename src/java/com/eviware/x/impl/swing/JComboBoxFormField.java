@@ -49,7 +49,7 @@ public class JComboBoxFormField extends AbstractSwingXFormField<JComboBox> imple
 		fireValueChanged( selectedItem == null ? null : selectedItem.toString(), null );
 	}
 
-	public void addItem( String value )
+	public void addItem( Object value )
 	{
 		getComponent().addItem( value );
 	}
@@ -77,25 +77,25 @@ public class JComboBoxFormField extends AbstractSwingXFormField<JComboBox> imple
 			getComponent().setSelectedItem( "" );
 	}
 
-	public String[] getOptions()
+	public Object[] getOptions()
 	{
 		ComboBoxModel model = getComponent().getModel();
 
-		String[] result = new String[model.getSize()];
+		Object[] result = new Object[model.getSize()];
 		for( int c = 0; c < result.length; c++ )
-			result[c] = model.getElementAt( c ).toString();
+			result[c] = model.getElementAt( c );
 
 		return result;
 	}
 
-	public String[] getSelectedOptions()
+	public Object[] getSelectedOptions()
 	{
-		return new String[] { getValue() };
+		return new Object[] {getComponent().getSelectedItem()};
 	}
 
-	public void setSelectedOptions( String[] options )
+	public void setSelectedOptions( Object[] options )
 	{
-		setValue( options.length > 0 ? options[0] : null );
+		getComponent().setSelectedItem( options.length > 0 ? options[0] : null );
 	}
 
 	public int[] getSelectedIndexes()

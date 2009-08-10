@@ -258,6 +258,11 @@ public class AddEncryptionEntry extends WssEntryBase
 		{
 			WSSecEncrypt wsEncrypt = new WSSecEncrypt();
 			WssCrypto wssCrypto = getWssContainer().getCryptoByName( crypto );
+			if( wssCrypto == null )
+			{
+				throw new Exception( "Missing crypto [" + crypto + "] for encryption entry" );
+			}
+
 			Crypto crypto = wssCrypto.getCrypto();
 
 			wsEncrypt.setUserInfo( context.expand( getUsername() ) );
@@ -273,17 +278,17 @@ public class AddEncryptionEntry extends WssEntryBase
 				wsEncrypt.setKey( crypto.getPrivateKey( getEmbeddedKeyName(), getEmbeddedKeyPassword() ).getEncoded() );
 			}
 
-			if( getSymmetricEncAlgorithm() != null )
+			if( !getSymmetricEncAlgorithm().equals(DEFAULT_OPTION) )
 			{
 				wsEncrypt.setSymmetricEncAlgorithm( getSymmetricEncAlgorithm() );
 			}
 
-			if( getEncKeyTransport() != null )
+			if( !getEncKeyTransport().equals(DEFAULT_OPTION)  )
 			{
 				wsEncrypt.setKeyEnc( getEncKeyTransport() );
 			}
 
-			if( getEncryptionCanonicalization() != null )
+			if( !getEncryptionCanonicalization().equals(DEFAULT_OPTION)  )
 			{
 				wsEncrypt.setEncCanonicalization( getEncryptionCanonicalization() );
 			}

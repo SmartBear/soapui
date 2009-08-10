@@ -18,7 +18,7 @@ import java.util.concurrent.Future;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransport;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.Submit;
@@ -31,7 +31,7 @@ import com.eviware.soapui.model.iface.SubmitListener;
  * @author Ole.Matzura
  */
 
-public final class WsdlSubmit<T extends AbstractHttpRequest<?>> implements Runnable, Submit
+public final class WsdlSubmit<T extends AbstractHttpRequestInterface<?>> implements Runnable, Submit
 {
 	private final static Logger logger = Logger.getLogger( WsdlSubmit.class );
 	private T request;
@@ -90,7 +90,14 @@ public final class WsdlSubmit<T extends AbstractHttpRequest<?>> implements Runna
 
 		for( int i = 0; i < listeners.length; i++ )
 		{
-			listeners[i].afterSubmit( this, submitContext );
+			try
+			{
+				listeners[i].afterSubmit( this, submitContext );
+			}
+			catch( Throwable e )
+			{
+				SoapUI.logError( e );
+			}
 		}
 	}
 
@@ -138,7 +145,14 @@ public final class WsdlSubmit<T extends AbstractHttpRequest<?>> implements Runna
 			{
 				for( int i = 0; i < listeners.length; i++ )
 				{
-					listeners[i].afterSubmit( this, submitContext );
+					try
+					{
+						listeners[i].afterSubmit( this, submitContext );
+					}
+					catch( Throwable e )
+					{
+						SoapUI.logError( e );
+					}
 				}
 			}
 		}

@@ -90,6 +90,7 @@ public class WsdlRequestPanelBuilder extends EmptyPanelBuilder<WsdlRequest>
 		table.addProperty( "Max Size", "maxSize", true ).setDescription( "The maximum number of bytes to receive" );
 
 		table.addProperty( "WS-Addressing", "wsAddressing", JPropertiesTable.BOOLEAN_OPTIONS );
+		table.addProperty( "WS-Reliable Messaging", "wsReliableMessaging", JPropertiesTable.BOOLEAN_OPTIONS );
 
 		table.setPropertyObject( request );
 

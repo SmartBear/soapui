@@ -18,14 +18,14 @@ import java.util.List;
 
 public class ClassUtils
 {
-	public static List<Class> getImplementedAndExtendedClasses( Object obj )
+	public static List<Class<?>> getImplementedAndExtendedClasses( Object obj )
 	{
-		ArrayList<Class> result = new ArrayList<Class>();
+		ArrayList<Class<?>> result = new ArrayList<Class<?>>();
 		addImplementedAndExtendedClasses( obj.getClass(), result );
 		return result;
 	}
 
-	private static void addImplementedAndExtendedClasses( Class clazz, ArrayList<Class> result )
+	private static void addImplementedAndExtendedClasses( Class<?> clazz, ArrayList<Class<?>> result )
 	{
 		result.add( clazz );
 		// result.addAll( Arrays.asList( clazz.getInterfaces() ));
@@ -36,7 +36,7 @@ public class ClassUtils
 		}
 	}
 
-	private static void addImplementedInterfaces( Class intrfc, ArrayList<Class> result )
+	private static void addImplementedInterfaces( Class<?> intrfc, ArrayList<Class<?>> result )
 	{
 		// result.add( intrfc.getClass() );
 		Class<?>[] interfacesArray = intrfc.getInterfaces();

@@ -15,6 +15,7 @@ package com.eviware.soapui.support.editor.inspectors.script;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -30,6 +31,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -177,6 +179,19 @@ public class MockResponseScriptInspector extends AbstractXmlInspector
 		public String getScriptName()
 		{
 			return null;
+		}
+
+		public void addPropertyChangeListener( PropertyChangeListener listener )
+		{
+		}
+
+		public void removePropertyChangeListener( PropertyChangeListener listener )
+		{
+		}
+
+		public ModelItem getModelItem()
+		{
+			return mockResponse;
 		}
 	}
 

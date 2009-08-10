@@ -30,6 +30,8 @@ import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.XFormField;
+import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
@@ -55,8 +57,27 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 		if( dialog == null )
 			dialog = ADialogBuilder.buildDialog( Form.class );
 
+		dialog.getFormField( Form.CLONE_DESCRIPTION ).addFormFieldListener( new XFormFieldListener()
+		{
+
+			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+			{
+				if( dialog.getBooleanValue( Form.CLONE_DESCRIPTION ) )
+				{
+					dialog.getFormField( Form.DESCRIPTION ).setEnabled( false );
+				}
+				else
+				{
+					dialog.getFormField( Form.DESCRIPTION ).setEnabled( true );
+				}
+
+			}
+		} );
 		dialog.setValue( Form.NAME, "Copy of " + testSuite.getName() );
 		dialog.setBooleanValue( Form.MOVE, false );
+		dialog.setBooleanValue( Form.CLONE_DESCRIPTION, true );
+		dialog.getFormField( Form.DESCRIPTION ).setEnabled( false );
+		dialog.setValue( Form.DESCRIPTION, testSuite.getDescription() );
 		WorkspaceImpl workspace = testSuite.getProject().getWorkspace();
 		dialog.setOptions( Form.PROJECT, ModelSupport.getNames( workspace.getOpenProjectList(),
 				new String[] { "<Create New>" } ) );
@@ -72,13 +93,19 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 
 			// within same project?
 			boolean move = dialog.getBooleanValue( Form.MOVE );
+			boolean cloneDescription = dialog.getBooleanValue( Form.CLONE_DESCRIPTION );
+			String description = testSuite.getDescription();
+			if( !cloneDescription )
+			{
+				description = dialog.getValue( Form.DESCRIPTION );
+			}
 			if( targetProjectName.equals( testSuite.getProject().getName() ) )
 			{
-				cloneTestSuiteWithinProject( testSuite, name, project );
+				cloneTestSuiteWithinProject( testSuite, name, project, description );
 			}
 			else
 			{
-				cloneToAnotherProject( testSuite, targetProjectName, name, move );
+				cloneToAnotherProject( testSuite, targetProjectName, name, move, description );
 			}
 
 			if( move )
@@ -89,7 +116,7 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 	}
 
 	public static WsdlTestSuite cloneToAnotherProject( WsdlTestSuite testSuite, String targetProjectName, String name,
-			boolean move )
+			boolean move, String description )
 	{
 		WorkspaceImpl workspace = testSuite.getProject().getWorkspace();
 		WsdlProject targetProject = ( WsdlProject )workspace.getProjectByName( targetProjectName );
@@ -132,15 +159,16 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 			}
 		}
 
-		testSuite = targetProject.importTestSuite( testSuite, name, !move );
+		testSuite = targetProject.importTestSuite( testSuite, name, -1, !move, description );
 		UISupport.select( testSuite );
 
 		return testSuite;
 	}
 
-	public static boolean cloneTestSuiteWithinProject( WsdlTestSuite testSuite, String name, WsdlProject project )
+	public static boolean cloneTestSuiteWithinProject( WsdlTestSuite testSuite, String name, WsdlProject project,
+			String description )
 	{
-		WsdlTestSuite newTestSuite = project.importTestSuite( testSuite, name, true );
+		WsdlTestSuite newTestSuite = project.importTestSuite( testSuite, name, -1, true, description );
 		UISupport.select( newTestSuite );
 		return true;
 	}
@@ -189,5 +217,11 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 
 		@AField( name = "Move instead", description = "Moves the selected TestSuite instead of copying", type = AFieldType.BOOLEAN )
 		public final static String MOVE = "Move instead";
+
+		@AField( name = "Clone description", description = "Clones the description of selected TestSuite", type = AFieldType.BOOLEAN )
+		public final static String CLONE_DESCRIPTION = "Clone description";
+
+		@AField( name = "Description", description = "Description of new TestSuite", type = AFieldType.STRINGAREA )
+		public final static String DESCRIPTION = "Description";
 	}
 }

@@ -51,10 +51,14 @@
 	 		<td>G</td>
 	 		<td>Sets global property with name=value</td>
 	 	</tr>
- <tr>
-					<td>P</td>
-					<td>Sets project property with name=value</td>
-				</tr>             
+        <tr>
+			<td>P</td>
+			<td>Sets project property with name=value</td>
+		</tr>
+		<tr>
+			<td>S</td>
+			<td>Saves the project after running the mockService(s)</td>
+		</tr>             
 	 	<tr>
 	 		<td>f</td>
 	 		<td>Sets the output folder to export results to ( soapUI Pro only )</td>

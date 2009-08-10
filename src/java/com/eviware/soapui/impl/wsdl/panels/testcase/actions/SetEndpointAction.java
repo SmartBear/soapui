@@ -19,9 +19,9 @@ import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.UISupport;
@@ -57,7 +57,7 @@ public class SetEndpointAction extends AbstractAction
 			if( step instanceof HttpRequestTestStep )
 			{
 				HttpRequestTestStep requestStep = ( HttpRequestTestStep )step;
-				Operation operation = requestStep.getHttpRequest().getOperation();
+				Operation operation = requestStep.getTestRequest().getOperation();
 				if( operation != null )
 				{
 					String[] endpoints = operation.getInterface().getEndpoints();
@@ -66,7 +66,7 @@ public class SetEndpointAction extends AbstractAction
 						endpointSet.add( endpoints[i] );
 					}
 				}
-				currentEndpointSet.add( requestStep.getHttpRequest().getEndpoint() );
+				currentEndpointSet.add( requestStep.getTestRequest().getEndpoint() );
 			}
 		}
 
@@ -84,7 +84,7 @@ public class SetEndpointAction extends AbstractAction
 			if( step instanceof HttpRequestTestStep )
 			{
 				HttpRequestTestStep requestStep = ( HttpRequestTestStep )step;
-				AbstractHttpRequest testRequest = requestStep.getHttpRequest();
+				TestRequest testRequest = requestStep.getTestRequest();
 
 				if( testRequest.getEndpoint() == null || !testRequest.getEndpoint().equals( selected ) )
 				{

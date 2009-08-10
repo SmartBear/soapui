@@ -15,8 +15,14 @@ package com.eviware.soapui.support.scripting;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.groovy.GroovyScriptEngineFactory;
+import com.eviware.soapui.support.scripting.js.JsScriptEngineFactory;
+import com.eviware.soapui.support.types.StringList;
 
 /**
  * Registry of available script engines
@@ -26,7 +32,7 @@ import com.eviware.soapui.support.scripting.groovy.GroovyScriptEngineFactory;
 
 public class SoapUIScriptEngineRegistry
 {
-	public static final String GROOVY_ID = GroovyScriptEngineFactory.ID;
+	public static final String DEFAULT_SCRIPT_ENGINE_ID = GroovyScriptEngineFactory.ID;
 
 	private static Map<String, SoapUIScriptEngineFactory> factories = new HashMap<String, SoapUIScriptEngineFactory>();
 
@@ -40,13 +46,41 @@ public class SoapUIScriptEngineRegistry
 		return factories.get( id );
 	}
 
-	public static SoapUIScriptEngine create( String id, ModelItem modelItem )
+	public static SoapUIScriptEngine create( ModelItem modelItem )
 	{
-		return factories.get( id ).createScriptEngine( modelItem );
+		WsdlProject project = ( WsdlProject )ModelSupport.getModelItemProject( modelItem );
+
+		String scriptEngineId = null;
+		if( project == null )
+			SoapUI.log.warn( "Project is null" );
+		else
+			scriptEngineId = project.getDefaultScriptLanguage();
+
+		if( StringUtils.isNullOrEmpty( scriptEngineId ) )
+			scriptEngineId = DEFAULT_SCRIPT_ENGINE_ID;
+
+		return factories.get( scriptEngineId ).createScriptEngine( modelItem );
+	}
+
+	public static SoapUIScriptGenerator createScriptGenerator( ModelItem modelItem )
+	{
+		WsdlProject project = ( WsdlProject )ModelSupport.getModelItemProject( modelItem );
+
+		String scriptEngineId = project.getDefaultScriptLanguage();
+		if( StringUtils.isNullOrEmpty( scriptEngineId ) )
+			scriptEngineId = DEFAULT_SCRIPT_ENGINE_ID;
+
+		return factories.get( scriptEngineId ).createCodeGenerator( modelItem );
 	}
 
 	static
 	{
 		registerScriptEngine( GroovyScriptEngineFactory.ID, new GroovyScriptEngineFactory() );
+		registerScriptEngine( JsScriptEngineFactory.ID, new JsScriptEngineFactory() );
+	}
+
+	public static String[] getAvailableEngineIds()
+	{
+		return new StringList( factories.keySet() ).toStringArray();
 	}
 }

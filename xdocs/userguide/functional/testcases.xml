@@ -60,6 +60,7 @@
 		 <p align="center"><img src="images/clone_testcase.gif" alt="Clone TestCase dialog in soapUI for Functional Testing"/></p>
 		 <p>If selecting to clone to another project, soapUI will prompt to clone required interfaces to that
 		 project as well.</p>
+		 <p>If selecting not to clone the description, you will be able to add a new description.</p>
 		 </subsection>
 		 
 		 <subsection name="Clone TestSteps">
@@ -183,7 +184,10 @@
 		<li><b>Socket timeout</b> : The timeout (in milliseconds) to be used for all requests in the TestCase</li>
 		<li><b>TestCase timeout</b> : The timeout (in milliseconds) to wait before canceling or failing a running TestCase</li>
 		<li><b>Max results</b> : The maximum number of TestStep Results to keep in memory during the execution of a TestCase</li>
-		
+		<li><b>WS-RM Enabled</b> : This determines whether <a href="http://docs.oasis-open.org/ws-rx/wsrm/200702" target="_new">WS-ReliableMessaging</a> will be used for any requests within the TestCase</li>
+		<li><b>WS-RM Version</b> : The version of WS-RM to use if WS-RM is enabled</li>
+		<li><b>WS-RM Ack To</b> : The endpoint to send Acknowledgments to if WS-RM is enabled. If it is left blank, it will use anonymous endpoints, with WS-MakeConnection for communication. Note that WS-RM 1.0 does not provide support for WS-MC, so the AckTo should be specified for such servers. In such a case, consider using a MockService to receive the acknowledgments</li>
+		<li><b>WS-RM Expires</b> : The time in Milliseconds for the WS-RM Expiry if WS-RM is enabled. If left empty, the default behaviour is determined by the server</li>
 		</ul>
 		<p align="center"><img src="images/testcase_options.gif" alt="Setting options for a Functional Testing of Web Services in TestCase Options"/></p>
 		 </subsection>

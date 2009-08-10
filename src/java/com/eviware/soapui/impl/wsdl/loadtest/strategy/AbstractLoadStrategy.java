@@ -19,11 +19,12 @@ import javax.swing.JComponent;
 
 import org.apache.xmlbeans.XmlObject;
 
+import com.eviware.soapui.config.LoadTestLimitTypesConfig;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 
@@ -90,27 +91,32 @@ public abstract class AbstractLoadStrategy implements LoadStrategy
 	{
 	}
 
-	public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-			TestRunContext runContext )
+	public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+			TestCaseRunContext runContext )
 	{
 	}
 
-	public void afterTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-			TestRunContext runContext, TestStepResult testStepResult )
+	public void afterTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+			TestCaseRunContext runContext, TestStepResult testStepResult )
 	{
 	}
 
 	public void beforeLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
+		if( getLoadTest().getLimitType() == LoadTestLimitTypesConfig.COUNT
+				&& getLoadTest().getTestLimit() < getLoadTest().getThreadCount() )
+		{
+			getLoadTest().setThreadCount( getLoadTest().getTestLimit() );
+		}
 	}
 
-	public void beforeTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-			TestRunContext runContext )
+	public void beforeTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+			TestCaseRunContext runContext )
 	{
 	}
 
-	public void beforeTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-			TestRunContext runContext, TestStep testStep )
+	public void beforeTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+			TestCaseRunContext runContext, TestStep testStep )
 	{
 	}
 

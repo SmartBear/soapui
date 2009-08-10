@@ -21,16 +21,18 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.text.html.HTMLEditorKit;
 
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.support.DefaultHyperlinkListener;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.BrowserComponent;
 import com.eviware.soapui.support.components.JXToolBar;
 
 /**
@@ -42,11 +44,12 @@ import com.eviware.soapui.support.components.JXToolBar;
 public class WSIReportPanel extends JPanel
 {
 	private File reportFile;
-	// private JEditorPane editorPane;
+	private JEditorPane editorPane;
 	private final String configFile;
 	private final File logFile;
 	private SaveReportAction saveReportAction;
-	private BrowserComponent browser;
+
+	// private BrowserComponent browser;
 
 	public WSIReportPanel( File reportFile, String configFile, File logFile, boolean addToolbar ) throws Exception
 	{
@@ -84,21 +87,22 @@ public class WSIReportPanel extends JPanel
 	{
 		JTabbedPane tabs = new JTabbedPane( JTabbedPane.BOTTOM );
 
-		// editorPane = new JEditorPane();
-		// editorPane.setEditorKit( new HTMLEditorKit() );
-		// editorPane.setEditable( false );
-		// editorPane.setPage( reportFile.toURI().toURL() );
-		// editorPane.addHyperlinkListener( new DefaultHyperlinkListener(
-		// editorPane ));
+		editorPane = new JEditorPane();
+		editorPane.setEditorKit( new HTMLEditorKit() );
+		editorPane.setEditable( false );
+		editorPane.setPage( reportFile.toURI().toURL() );
+		editorPane.addHyperlinkListener( new DefaultHyperlinkListener( editorPane ) );
 
 		JTextArea configContent = new JTextArea();
 		configContent.setEditable( false );
 		configContent.setText( configFile );
 
-		browser = new BrowserComponent();
-		browser.navigate( reportFile.toURI().toURL().toString(), null );
+		// browser = new BrowserComponent( false );
+		// browser.navigate( reportFile.toURI().toURL().toString(), null );
 
-		tabs.addTab( "Report", browser.getComponent() );
+		JScrollPane scrollPane = new JScrollPane( editorPane );
+		UISupport.addPreviewCorner( scrollPane, true );
+		tabs.addTab( "Report", scrollPane );
 		tabs.addTab( "Config", new JScrollPane( configContent ) );
 
 		if( logFile != null )
@@ -131,7 +135,7 @@ public class WSIReportPanel extends JPanel
 			try
 			{
 				FileWriter writer = new FileWriter( file );
-				writer.write( browser.getContent() );
+				writer.write( editorPane.getText() );
 				writer.close();
 
 				UISupport.showInfoMessage( "Report saved to [" + file.getAbsolutePath() + "]" );

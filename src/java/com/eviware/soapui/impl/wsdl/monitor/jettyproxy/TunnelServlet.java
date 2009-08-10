@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
@@ -33,14 +34,15 @@ import org.mortbay.util.IO;
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.LaunchForm;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class TunnelServlet extends ProxyServlet
 {
-
 	private String sslEndPoint;
 	private int sslPort = 443;
 	private String prot = "https://";
@@ -78,20 +80,24 @@ public class TunnelServlet extends ProxyServlet
 
 	public void service( ServletRequest request, ServletResponse response ) throws ServletException, IOException
 	{
+		monitor.fireOnRequest( request, response );
+		if( response.isCommitted() )
+			return;
 
-		HttpServletRequest httpRequest = ( HttpServletRequest )request;
+		HttpMethodBase postMethod;
 
 		// for this create ui server and port, properties.
 		InetSocketAddress inetAddress = new InetSocketAddress( sslEndPoint, sslPort );
-		ExtendedPostMethod postMethod = new ExtendedPostMethod();
+		HttpServletRequest httpRequest = ( HttpServletRequest )request;
+		if( httpRequest.getMethod().equals( "GET" ) )
+			postMethod = new ExtendedGetMethod();
+		else
+			postMethod = new ExtendedPostMethod();
 
-		if( capturedData == null )
-		{
-			capturedData = new JProxyServletWsdlMonitorMessageExchange( project );
+			JProxyServletWsdlMonitorMessageExchange capturedData = new JProxyServletWsdlMonitorMessageExchange( project );
 			capturedData.setRequestHost( httpRequest.getRemoteHost() );
 			capturedData.setRequestHeader( httpRequest );
 			capturedData.setTargetURL( this.prot + inetAddress.getHostName() );
-		}
 
 		CaptureInputStream capture = new CaptureInputStream( httpRequest.getInputStream() );
 
@@ -128,7 +134,9 @@ public class TunnelServlet extends ProxyServlet
 
 		}
 
-		postMethod.setRequestEntity( new InputStreamRequestEntity( capture, "text/xml; charset=utf-8" ) );
+		if( postMethod instanceof ExtendedPostMethod )
+			( ( ExtendedPostMethod )postMethod ).setRequestEntity( new InputStreamRequestEntity( capture,
+					 request.getContentType() ) );
 
 		HostConfiguration hostConfiguration = new HostConfiguration();
 
@@ -140,6 +148,8 @@ public class TunnelServlet extends ProxyServlet
 		hostConfiguration.setHost( new URI( this.prot + sslEndPoint, true ) );
 
 		postMethod.setPath( sslEndPoint.substring( sslEndPoint.indexOf( "/" ), sslEndPoint.length() ) );
+
+		monitor.fireBeforeProxy( request, response, postMethod, hostConfiguration );
 
 		if( settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) )
 		{
@@ -153,16 +163,16 @@ public class TunnelServlet extends ProxyServlet
 		}
 		capturedData.stopCapture();
 
-		byte[] res = postMethod.getResponseBody();
 		capturedData.setRequest( capture.getCapturedData() );
-		capturedData.setResponse( res );
+		capturedData.setRawResponseBody( postMethod.getResponseBody() );
 		capturedData.setResponseHeader( postMethod );
-		capturedData.setRawRequestData( getRequestToBytes( postMethod, capture ) );
-		capturedData.setRawResponseData( getResponseToBytes( postMethod, res ) );
-		monitor.addMessageExchange( capturedData );
+		capturedData.setRawRequestData( getRequestToBytes( request.toString(), postMethod, capture ) );
+		capturedData.setRawResponseData( getResponseToBytes( response.toString(), postMethod, capturedData
+				.getRawResponseBody() ) );
+
+		monitor.fireAfterProxy( request, response, postMethod, capturedData );
 
 		StringToStringMap responseHeaders = capturedData.getResponseHeaders();
-		capturedData = null;
 		// copy headers to response
 		HttpServletResponse httpResponse = ( HttpServletResponse )response;
 		for( String name : responseHeaders.keySet() )
@@ -172,15 +182,18 @@ public class TunnelServlet extends ProxyServlet
 
 		}
 
-		IO.copy( new ByteArrayInputStream( res ), httpResponse.getOutputStream() );
+		IO.copy( new ByteArrayInputStream( capturedData.getRawResponseBody() ), httpResponse.getOutputStream() );
 
 		postMethod.releaseConnection();
 
+		monitor.addMessageExchange( capturedData );
+		capturedData = null;
+
 	}
 
-	private byte[] getResponseToBytes( ExtendedPostMethod postMethod, byte[] res )
+	private byte[] getResponseToBytes( String footer, HttpMethodBase postMethod, byte[] res )
 	{
-		String response = "";
+		String response = footer;
 
 		Header[] headers = postMethod.getResponseHeaders();
 		for( Header header : headers )
@@ -188,22 +201,22 @@ public class TunnelServlet extends ProxyServlet
 			response += header.toString();
 		}
 		response += "\n";
-		response += new String( res );
+		response += XmlUtils.prettyPrintXml( new String( res ) );
 
 		return response.getBytes();
 	}
 
-	private byte[] getRequestToBytes( ExtendedPostMethod postMethod, CaptureInputStream capture )
+	private byte[] getRequestToBytes( String footer, HttpMethodBase postMethod, CaptureInputStream capture )
 	{
-		String request = "";
+		String request = footer;
 
-		Header[] headers = postMethod.getRequestHeaders();
-		for( Header header : headers )
-		{
-			request += header.toString();
-		}
+		// Header[] headers = postMethod.getRequestHeaders();
+		// for (Header header : headers)
+		// {
+		// request += header.toString();
+		// }
 		request += "\n";
-		request += new String( capture.getCapturedData() );
+		request += XmlUtils.prettyPrintXml( new String( capture.getCapturedData() ) );
 
 		return request.getBytes();
 	}

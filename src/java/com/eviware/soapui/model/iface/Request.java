@@ -50,6 +50,20 @@ public interface Request extends ModelItem
 
 	public MessagePart[] getResponseParts();
 
+	public boolean dependsOn( ModelItem modelItem );
+
+	public void notifyPropertyChanged( String name, Object oldValue, Object newValue );
+
+	public void notifyPropertyChanged( String name, int oldValue, int newValue );
+
+	public void notifyPropertyChanged( String name, boolean oldValue, boolean newValue );
+
+	public void fireIndexedPropertyChange( String propertyName, int index, boolean oldValue, boolean newValue );
+
+	public void fireIndexedPropertyChange( String propertyName, int index, int oldValue, int newValue );
+
+	public void fireIndexedPropertyChange( String propertyName, int index, Object oldValue, Object newValue );
+
 	public static class SubmitException extends Exception
 	{
 		public SubmitException( String msg )

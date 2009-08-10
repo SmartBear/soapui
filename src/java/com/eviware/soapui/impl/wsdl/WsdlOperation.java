@@ -585,7 +585,7 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
 			String ns = WsdlUtils.getSoapBodyNamespace( bindingInput.getExtensibilityElements() );
 			if( ns == null )
 			{
-				ns = definition.getTargetNamespace();
+				ns = WsdlUtils.getTargetNamespace( definition );
 			}
 
 			return new QName( ns, bindingOperation.getName() );
@@ -646,7 +646,7 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
 					.getExtensibilityElements() );
 			if( ns == null )
 			{
-				ns = definition.getTargetNamespace();
+				ns = WsdlUtils.getTargetNamespace( definition );
 			}
 
 			return new QName( ns, bindingOperation.getName() + "Response" );

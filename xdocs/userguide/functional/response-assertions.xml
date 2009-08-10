@@ -185,7 +185,7 @@
 		  	compare the XPath selection result with the previously selected value</li>
 		  </ol>
 		  <p>With soapUI Pro the creation is greatly simplified through the 
-		  <a href="response-wizards.html#Add_Assertion_Wizard">Add Assertion Wizard</a> which performs step 2 and forward
+		  <a href="response-wizards.html#Add_XPath_Assertion_Wizard">Add Xpath Assertion Wizard</a> which performs step 2 and forward
 		  through a simple right-click action.</p>
 		  <h4>Creating XPath Assertions with Wild cards</h4>
 		  <p>The wild card feature allows for assertion of large blocks of xml where selected attribute/element-values are 
@@ -266,6 +266,10 @@ count(//ns1:DetailPageURL) = count(//ns1:DetailPageURL[starts-with(text(), 'http
 def holder = groovyUtils.getXmlHolder( messageExchange.responseContent )
 
 assert holder["//ns1:RequestId"] != null</source>
+
+		  <p>With soapUI Pro the creation is greatly simplified through the 
+		  <a href="response-wizards.html#Add_Script_Assertion_Wizard">Add Script Assertion Wizard</a></p>
+
 		 </subsection>
 		 
 		 <subsection name="WS-Addressing Response Assertion">

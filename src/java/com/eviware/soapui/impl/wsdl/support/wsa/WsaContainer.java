@@ -23,4 +23,6 @@ public interface WsaContainer
 
 	WsdlOperation getOperation();
 
+	void setOperation( WsdlOperation operation );
+
 }

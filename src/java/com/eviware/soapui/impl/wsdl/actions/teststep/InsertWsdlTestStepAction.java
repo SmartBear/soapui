@@ -48,7 +48,8 @@ public class InsertWsdlTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 			{
 				int ix = testCase.getIndexOfTestStep( testStep );
 				testStep = testCase.insertTestStep( newTestStepConfig, ix );
-				UISupport.selectAndShow( testStep );
+				if( testStep != null )
+					UISupport.selectAndShow( testStep );
 			}
 		}
 	}

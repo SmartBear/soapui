@@ -17,11 +17,14 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import com.eviware.soapui.SoapUI;
@@ -232,6 +235,35 @@ public abstract class AbstractModelItemTreeNode<T extends ModelItem> implements 
 				}
 			}
 		} );
+	}
+
+	public Enumeration<?> children()
+	{
+		Vector<TreeNode> children = new Vector<TreeNode>();
+		for( int c = 0; c < getChildCount(); c++ )
+			children.add( getChildAt( c ) );
+
+		return children.elements();
+	}
+
+	public boolean getAllowsChildren()
+	{
+		return !isLeaf();
+	}
+
+	public TreeNode getChildAt( int childIndex )
+	{
+		return getChildNode( childIndex );
+	}
+
+	public int getIndex( TreeNode node )
+	{
+		return getIndexOfChild( node );
+	}
+
+	public TreeNode getParent()
+	{
+		return getParentTreeNode();
 	}
 
 	public class ReorderPropertyChangeListener implements PropertyChangeListener

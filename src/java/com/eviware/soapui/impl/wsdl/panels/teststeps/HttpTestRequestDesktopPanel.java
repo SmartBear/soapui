@@ -12,21 +12,31 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.ListModel;
+import javax.swing.text.Document;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
+import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Submit;
@@ -37,19 +47,22 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
+import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.ListDataChangeListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
+import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.log.JLogList;
 
-public class HttpTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel<HttpTestRequestStep, RestTestRequest>
+public class HttpTestRequestDesktopPanel extends
+		AbstractHttpXmlRequestDesktopPanel<HttpTestRequestStepInterface, HttpTestRequestInterface<?>>
 {
 	private JLogList logArea;
 	private InternalTestMonitorListener testMonitorListener = new InternalTestMonitorListener();
@@ -62,17 +75,20 @@ public class HttpTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 	private InternalAssertionsListener assertionsListener = new InternalAssertionsListener();
 	private long startTime;
 	private SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+	private boolean updating;
+	private JUndoableTextField pathTextField;
+	private JComboBox methodCombo;
 
-	public HttpTestRequestDesktopPanel( HttpTestRequestStep requestStep )
+	public HttpTestRequestDesktopPanel( HttpTestRequestStepInterface testStep )
 	{
-		super( requestStep, requestStep.getTestRequest() );
+		super( testStep, testStep.getTestRequest() );
 
 		SoapUI.getTestMonitor().addTestMonitorListener( testMonitorListener );
-		setEnabled( !SoapUI.getTestMonitor().hasRunningTest( requestStep.getTestCase() ) );
+		setEnabled( !SoapUI.getTestMonitor().hasRunningTest( testStep.getTestCase() ) );
 
-		requestStep.getTestRequest().addAssertionsListener( assertionsListener );
+		testStep.getTestRequest().addAssertionsListener( assertionsListener );
 
-		getSubmitButton().setEnabled( getSubmit() == null && StringUtils.hasContent( getRequest().getPath() ) );
+		getSubmitButton().setEnabled( getSubmit() == null && StringUtils.hasContent( getRequest().getEndpoint() ) );
 	}
 
 	protected JComponent buildLogPanel()
@@ -136,9 +152,14 @@ public class HttpTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 
 		updateStatusIcon();
 
-		getSubmitButton().setEnabled( getSubmit() == null && StringUtils.hasContent( getRequest().getPath() ) );
+		getSubmitButton().setEnabled( getSubmit() == null && StringUtils.hasContent( getRequest().getEndpoint() ) );
 
 		return inspectorPanel.getComponent();
+	}
+
+	protected JComponent buildEndpointComponent()
+	{
+		return null;
 	}
 
 	private void updateStatusIcon()
@@ -166,17 +187,73 @@ public class HttpTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 		}
 	}
 
+	protected void addMethodCombo( JXToolBar toolbar )
+	{
+		methodCombo = new JComboBox( RestRequestInterface.RequestMethod.getMethods() );
+
+		methodCombo.setSelectedItem( getRequest().getMethod() );
+		methodCombo.setToolTipText( "Set desired HTTP method" );
+		methodCombo.addItemListener( new ItemListener()
+		{
+			public void itemStateChanged( ItemEvent e )
+			{
+				updatingRequest = true;
+				getRequest().setMethod( ( RestRequestInterface.RequestMethod )methodCombo.getSelectedItem() );
+				updatingRequest = false;
+			}
+		} );
+
+		toolbar.addLabeledFixed( "Method", methodCombo );
+		toolbar.addSeparator();
+	}
+
+	protected void addToolbarComponents( JXToolBar toolbar )
+	{
+		toolbar.addSeparator();
+		addMethodCombo( toolbar );
+
+		pathTextField = new JUndoableTextField();
+		pathTextField.setPreferredSize( new Dimension( 300, 20 ) );
+		pathTextField.setText( getRequest().getEndpoint() );
+		pathTextField.setToolTipText( pathTextField.getText() );
+		pathTextField.getDocument().addDocumentListener( new DocumentListenerAdapter()
+		{
+			@Override
+			public void update( Document document )
+			{
+				if( updating )
+					return;
+
+				updating = true;
+				getRequest().setEndpoint( pathTextField.getText() );
+				updating = false;
+			}
+		} );
+
+		toolbar.addLabeledFixed( "Request URL:", pathTextField );
+
+		toolbar.addSeparator();
+	}
+
+	@Override
 	protected JComponent buildToolbar()
 	{
 		addAssertionButton = createActionButton( new AddAssertionAction( getRequest() ), true );
-		return super.buildToolbar();
+
+		JPanel panel = new JPanel( new BorderLayout() );
+		panel.add( super.buildToolbar(), BorderLayout.NORTH );
+
+		JXToolBar toolbar = UISupport.createToolbar();
+		addToolbarComponents( toolbar );
+
+		panel.add( toolbar, BorderLayout.SOUTH );
+		return panel;
+
 	}
 
 	protected void insertButtons( JXToolBar toolbar )
 	{
 		toolbar.add( addAssertionButton );
-
-		super.insertButtons( toolbar );
 	}
 
 	public void setEnabled( boolean enabled )
@@ -211,6 +288,11 @@ public class HttpTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 		}
 
 		public void assertionRemoved( TestAssertion assertion )
+		{
+			assertionInspector.setTitle( "Assertions (" + getModelItem().getAssertionCount() + ")" );
+		}
+
+		public void assertionMoved( TestAssertion assertion, int ix, int offset )
 		{
 			assertionInspector.setTitle( "Assertions (" + getModelItem().getAssertionCount() + ")" );
 		}
@@ -278,12 +360,12 @@ public class HttpTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 				setEnabled( false );
 		}
 
-		public void testCaseFinished( TestRunner runner )
+		public void testCaseFinished( TestCaseRunner runner )
 		{
 			setEnabled( !SoapUI.getTestMonitor().hasRunningTest( getModelItem().getTestCase() ) );
 		}
 
-		public void testCaseStarted( TestRunner runner )
+		public void testCaseStarted( TestCaseRunner runner )
 		{
 			if( runner.getTestCase() == getModelItem().getTestCase() )
 				setEnabled( false );
@@ -292,15 +374,25 @@ public class HttpTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if( evt.getPropertyName().equals( RestTestRequest.STATUS_PROPERTY ) )
+		if( evt.getPropertyName().equals( RestTestRequestInterface.STATUS_PROPERTY ) )
 		{
 			updateStatusIcon();
 		}
 		else if( evt.getPropertyName().equals( "path" ) )
 		{
-			getSubmitButton().setEnabled( getSubmit() == null && StringUtils.hasContent( getRequest().getPath() ) );
+			getSubmitButton().setEnabled( getSubmit() == null && StringUtils.hasContent( getRequest().getEndpoint() ) );
+		}
+		else if( evt.getPropertyName().equals( AbstractHttpRequest.ENDPOINT_PROPERTY ))
+		{
+			if(updating)
+				return;
+			
+			updating = true;
+			pathTextField.setText( String.valueOf( evt.getNewValue()) );
+			updating = false;
 		}
 
 		super.propertyChange( evt );
 	}
+
 }

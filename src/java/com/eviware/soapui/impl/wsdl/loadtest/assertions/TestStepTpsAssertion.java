@@ -22,8 +22,8 @@ import com.eviware.soapui.impl.wsdl.support.Configurable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.support.UISupport;
@@ -80,7 +80,7 @@ public class TestStepTpsAssertion extends AbstractLoadTestAssertion implements C
 	}
 
 	public String assertResult( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestStepResult result,
-			TestRunner testRunner, TestRunContext runContext )
+			TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
 		TestStep step = result.getTestStep();
 		if( targetStepMatches( step ) )
@@ -101,8 +101,8 @@ public class TestStepTpsAssertion extends AbstractLoadTestAssertion implements C
 		return null;
 	}
 
-	public String assertResults( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-			TestRunContext runContext )
+	public String assertResults( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+			TestCaseRunContext runContext )
 	{
 		if( ALL_TEST_STEPS.equals( getTargetStep() ) )
 		{

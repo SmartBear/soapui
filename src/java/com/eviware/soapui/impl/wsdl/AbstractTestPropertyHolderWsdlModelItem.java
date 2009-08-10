@@ -14,10 +14,10 @@ package com.eviware.soapui.impl.wsdl;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.config.PropertiesTypeConfig;
 import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder;
@@ -48,7 +48,11 @@ public abstract class AbstractTestPropertyHolderWsdlModelItem<T extends ModelIte
 		String propertyName = createPropertyName( getName() );
 		if( StringUtils.hasContent( propertyName ) )
 		{
-			String propFile = System.getProperty( "soapui.properties." + propertyName );
+			String propFileName = "soapui.properties." + propertyName;
+			String propFile = System.getProperty( propFileName );
+			if( !StringUtils.hasContent( propFile ))
+				propFile = SoapUI.getGlobalProperties().getPropertyValue( propFileName );
+			
 			if( StringUtils.hasContent( propFile ) )
 			{
 				int result = propertyHolderSupport.addPropertiesFromFile( propFile );
@@ -78,11 +82,6 @@ public abstract class AbstractTestPropertyHolderWsdlModelItem<T extends ModelIte
 	public int addPropertiesFromFile( String propFile )
 	{
 		return propertyHolderSupport.addPropertiesFromFile( propFile );
-	}
-
-	public void saveProperties( Properties props )
-	{
-		propertyHolderSupport.saveTo( props );
 	}
 
 	public TestProperty addProperty( String name )

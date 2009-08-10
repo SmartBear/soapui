@@ -44,7 +44,7 @@ public class MultipartMessageSupport
 	private Attachment rootPart;
 	private MimeMessage message;
 	private String responseContent;
-	private final boolean prettyPrint;
+	private boolean prettyPrint;
 
 	public MultipartMessageSupport( DataSource dataSource, String rootPartId, AbstractHttpOperation operation,
 			boolean isRequest, boolean prettyPrint ) throws MessagingException
@@ -124,7 +124,7 @@ public class MultipartMessageSupport
 		return results.toArray( new Attachment[results.size()] );
 	}
 
-	public String getContentAsString()
+	public String getResponseContent()
 	{
 		if( rootPart == null )
 			return null;
@@ -182,11 +182,6 @@ public class MultipartMessageSupport
 					responseContent = data.toString();
 				}
 
-				if( prettyPrint )
-				{
-					responseContent = XmlUtils.prettyPrintXml( responseContent );
-				}
-
 				return responseContent;
 			}
 			catch( Exception e )
@@ -198,6 +193,21 @@ public class MultipartMessageSupport
 		return responseContent;
 	}
 
+	public String getContentAsString()
+	{
+		if( responseContent == null )
+			getResponseContent();
+		
+		if( prettyPrint )
+		{
+			responseContent = XmlUtils.prettyPrintXml( responseContent );
+			prettyPrint = false;
+		}
+		
+		return responseContent;
+	}
+	
+	
 	public void setResponseContent( String responseContent )
 	{
 		this.responseContent = responseContent;

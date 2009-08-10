@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.model.tree.nodes.support;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,6 +20,7 @@ import javax.swing.ImageIcon;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.model.support.AbstractModelItem;
 
 /**
  * Empty ModelItem used by intermediary TreeNodes
@@ -29,11 +28,10 @@ import com.eviware.soapui.model.settings.Settings;
  * @author ole.matzura
  */
 
-public class EmptyModelItem implements ModelItem
+public class EmptyModelItem extends AbstractModelItem
 {
 	private String name;
 	private ImageIcon icon;
-	protected PropertyChangeSupport propertyChangeSupport;
 
 	public EmptyModelItem( String name, ImageIcon icon )
 	{
@@ -46,10 +44,7 @@ public class EmptyModelItem implements ModelItem
 		String oldName = this.name;
 		this.name = name;
 
-		if( propertyChangeSupport != null )
-		{
-			propertyChangeSupport.firePropertyChange( ModelItem.NAME_PROPERTY, oldName, name );
-		}
+		notifyPropertyChanged( ModelItem.NAME_PROPERTY, oldName, name );
 	}
 
 	public String getName()
@@ -65,34 +60,6 @@ public class EmptyModelItem implements ModelItem
 	public String getDescription()
 	{
 		return name;
-	}
-
-	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
-	{
-		if( propertyChangeSupport == null )
-			propertyChangeSupport = new PropertyChangeSupport( this );
-
-		propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
-	}
-
-	public void addPropertyChangeListener( PropertyChangeListener listener )
-	{
-		if( propertyChangeSupport == null )
-			propertyChangeSupport = new PropertyChangeSupport( this );
-
-		propertyChangeSupport.addPropertyChangeListener( listener );
-	}
-
-	public void removePropertyChangeListener( PropertyChangeListener listener )
-	{
-		if( propertyChangeSupport != null )
-			propertyChangeSupport.removePropertyChangeListener( listener );
-	}
-
-	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
-	{
-		if( propertyChangeSupport != null )
-			propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
 	}
 
 	public Settings getSettings()

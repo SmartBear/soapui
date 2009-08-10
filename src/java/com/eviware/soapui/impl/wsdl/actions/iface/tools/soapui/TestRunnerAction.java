@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.swing.Action;
 
@@ -44,6 +45,7 @@ import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
+import com.eviware.x.impl.swing.JTextAreaFormField;
 
 /**
  * Invokes soapUI TestRunner tool
@@ -72,6 +74,15 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 	private static final String ADDSETTINGS = "Add Settings";
 	private static final String OPEN_REPORT = "Open Report";
 	private static final String COVERAGE = "Coverage Report";
+	private static final String PROJECTPASSWORD = "Project Password";
+	private static final String SOAPUISETTINGSPASSWORD = "soapui-setings.xml Password";
+	private static final String IGNOREERRORS = "Ignore Errors";
+	private static final String GENERATEREPORTSEACHTESTCASE = "Report to Generate";
+	private static final String REPORTFORMAT = "Report Format(s)";
+	private static final String SAVEAFTER = "Save After";
+	private static final String GLOBALPROPERTIES = "Global Properties";
+	private static final String SYSTEMPROPERTIES = "System Properties";
+	private static final String PROJECTPROPERTIES = "Project Properties";
 
 	private XForm mainForm;
 
@@ -80,8 +91,12 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 	public static final String SOAPUI_ACTION_ID = "TestRunnerAction";
 
 	private XForm advForm;
+	private XForm propertyForm;
+	private XForm reportForm;
 
 	private List<TestSuite> testSuites;
+
+	private boolean proVersion;
 
 	public TestRunnerAction()
 	{
@@ -92,6 +107,8 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 	{
 		if( modelItem == null )
 			return null;
+
+		proVersion = isProVersion( modelItem );
 
 		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Launch TestRunner" );
 
@@ -135,17 +152,16 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 
 		mainForm.addComboBox( TESTCASE, new String[] {}, "The TestCase to run" );
 		mainForm.addSeparator();
-		mainForm.addCheckBox( PRINTREPORT, "Prints a summary report to the console" );
-		mainForm.addCheckBox( EXPORTJUNITRESULTS, "Exports results to a JUnit-Style report" );
-		mainForm.addCheckBox( EXPORTALL, "Exports all results (not only errors)" );
-		mainForm.addTextField( ROOTFOLDER, "Folder to export to", XForm.FieldType.FOLDER );
-		mainForm.addCheckBox( COVERAGE, "Generate WSDL Coverage report (soapUI Pro only)" );
-		mainForm.addCheckBox( OPEN_REPORT, "Open generated HTML report in browser (soapUI Pro only)" );
-		mainForm.addSeparator();
+
 		mainForm.addCheckBox( ENABLEUI, "Enables UI components in scripts" );
 		mainForm.addTextField( TESTRUNNERPATH, "Folder containing TestRunner.bat to use", XForm.FieldType.FOLDER );
 		mainForm.addCheckBox( SAVEPROJECT, "Saves project before running" ).setEnabled( !modelItem.isRemote() );
 		mainForm.addCheckBox( ADDSETTINGS, "Adds global settings to command-line" );
+		mainForm.addSeparator();
+		mainForm.addTextField( PROJECTPASSWORD, "Set project password", XForm.FieldType.PASSWORD );
+		mainForm.addTextField( SOAPUISETTINGSPASSWORD, "Set soapui-settings.xml password", XForm.FieldType.PASSWORD );
+		mainForm.addCheckBox( IGNOREERRORS, "Do not stop if error occurs, ignore them" );
+		mainForm.addCheckBox( SAVEAFTER, "Sets to save the project file after tests have been run" );
 
 		advForm = builder.createForm( "Overrides" );
 		advForm.addComboBox( ENDPOINT, new String[] { "" }, "endpoint to forward to" );
@@ -156,11 +172,54 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 		advForm.addTextField( DOMAIN, "The domain to set for all requests", XForm.FieldType.TEXT );
 		advForm.addComboBox( WSSTYPE, new String[] { "", "Text", "Digest" }, "The username to set for all requests" );
 
+		reportForm = builder.createForm( "Reports" );
+		reportForm.addCheckBox( PRINTREPORT, "Prints a summary report to the console" );
+		reportForm.addCheckBox( EXPORTJUNITRESULTS, "Exports results to a JUnit-Style report" );
+		reportForm.addCheckBox( EXPORTALL, "Exports all results (not only errors)" );
+		reportForm.addTextField( ROOTFOLDER, "Folder to export to", XForm.FieldType.FOLDER );
+		reportForm.addSeparator();
+		reportForm.addCheckBox( COVERAGE, "Generate WSDL Coverage report (soapUI Pro only)" ).setEnabled( proVersion );
+		reportForm.addCheckBox( OPEN_REPORT, "Open generated HTML report in browser (soapUI Pro only)" ).setEnabled(
+				proVersion );
+		reportForm.addTextField( GENERATEREPORTSEACHTESTCASE, "Report to Generate (soapUI Pro only)",
+				XForm.FieldType.TEXT ).setEnabled( proVersion );
+		reportForm.addTextField( REPORTFORMAT, "Choose report format(s), comma-separated (soapUI Pro only)",
+				XForm.FieldType.TEXT ).setEnabled( proVersion );
+
+		propertyForm = builder.createForm( "Properties" );
+		propertyForm.addComponent( GLOBALPROPERTIES, createTextArea() );
+		propertyForm.addComponent( SYSTEMPROPERTIES, createTextArea() );
+		propertyForm.addComponent( PROJECTPROPERTIES, createTextArea() );
+
 		setToolsSettingsAction( null );
 		buildArgsForm( builder, false, "TestRunner" );
 
 		return builder.buildDialog( buildDefaultActions( HelpUrls.TESTRUNNER_HELP_URL, modelItem ),
 				"Specify arguments for launching soapUI TestRunner", UISupport.TOOL_ICON );
+	}
+
+	private JTextAreaFormField createTextArea()
+	{
+		JTextAreaFormField textArea = new JTextAreaFormField();
+		textArea.setWidth( 40 );
+		textArea.getTextArea().setRows( 4 );
+		textArea.setToolTip( "name=value pairs separated by space or enter" );
+		return textArea;
+	}
+
+	/**
+	 * check whether this is Pro or Core version
+	 * 
+	 * @param modelItem
+	 * @return boolean
+	 */
+	private boolean isProVersion( WsdlProject modelItem )
+	{
+		if( modelItem.getClass().getName().contains( "WsdlProjectPro" ) )
+		{
+			return true;
+		}
+		return false;
 	}
 
 	protected Action createRunOption( WsdlProject modelItem )
@@ -305,8 +364,21 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 		builder.addBoolean( EXPORTALL, "-a" );
 		builder.addBoolean( EXPORTJUNITRESULTS, "-j" );
 		builder.addString( ROOTFOLDER, "-f" );
-		builder.addBoolean( OPEN_REPORT, "-o" );
-		builder.addBoolean( COVERAGE, "-g" );
+
+		if( proVersion )
+		{
+			builder.addBoolean( OPEN_REPORT, "-o" );
+			builder.addBoolean( COVERAGE, "-g" );
+			builder.addString( GENERATEREPORTSEACHTESTCASE, "-R", "" );
+			builder.addString( REPORTFORMAT, "-F", "" );
+		}
+
+		builder.addStringShadow( PROJECTPASSWORD, "-x", "" );
+		builder.addStringShadow( SOAPUISETTINGSPASSWORD, "-v", "" );
+		builder.addBoolean( IGNOREERRORS, "-I" );
+		builder.addBoolean( SAVEAFTER, "-S" );
+
+		addPropertyArguments( builder );
 
 		if( dialog.getBooleanValue( ADDSETTINGS ) )
 		{
@@ -326,5 +398,26 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 		addToolArgs( values, builder );
 
 		return builder;
+	}
+
+	private void addPropertyArguments( ArgumentBuilder builder )
+	{
+		List<String> propertyArguments = new ArrayList<String>();
+
+		addProperties( propertyArguments, GLOBALPROPERTIES, "-G" );
+		addProperties( propertyArguments, SYSTEMPROPERTIES, "-D" );
+		addProperties( propertyArguments, PROJECTPROPERTIES, "-P" );
+
+		builder.addArgs( propertyArguments.toArray( new String[propertyArguments.size()] ) );
+	}
+
+	private void addProperties( List<String> propertyArguments, String propertiyDomain, String arg )
+	{
+		StringTokenizer tokenizer = new StringTokenizer( dialog.getValue( propertiyDomain ) );
+
+		while( tokenizer.hasMoreTokens() )
+		{
+			propertyArguments.add( arg + tokenizer.nextToken() );
+		}
 	}
 }

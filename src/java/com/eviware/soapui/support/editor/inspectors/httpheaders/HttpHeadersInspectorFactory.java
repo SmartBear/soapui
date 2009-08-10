@@ -13,6 +13,7 @@
 package com.eviware.soapui.support.editor.inspectors.httpheaders;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
@@ -36,7 +37,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 
 	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
-		if( modelItem instanceof AbstractHttpRequest<?> )
+		if( modelItem instanceof AbstractHttpRequestInterface<?> )
 			return new HttpHeadersInspector( new WsdlRequestHeadersModel( ( AbstractHttpRequest<?> )modelItem ) );
 		else if( modelItem instanceof WsdlMockResponse )
 			return new HttpHeadersInspector( new WsdlMockResponseRequestHeadersModel( ( WsdlMockResponse )modelItem ) );
@@ -49,7 +50,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 
 	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
 	{
-		if( modelItem instanceof AbstractHttpRequest<?> )
+		if( modelItem instanceof AbstractHttpRequestInterface<?> )
 			return new HttpHeadersInspector( new WsdlRequestResponseHeadersModel( ( AbstractHttpRequest<?> )modelItem ) );
 		else if( modelItem instanceof WsdlMockResponse )
 			return new HttpHeadersInspector( new WsdlMockResponseHeadersModel( ( WsdlMockResponse )modelItem ) );
@@ -92,7 +93,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 	{
 		public WsdlRequestHeadersModel( AbstractHttpRequest<?> abstractHttpRequest )
 		{
-			super( false, abstractHttpRequest, AbstractHttpRequest.REQUEST_HEADERS_PROPERTY );
+			super( false, abstractHttpRequest, AbstractHttpRequestInterface.REQUEST_HEADERS_PROPERTY );
 		}
 
 		public StringToStringMap getHeaders()
@@ -133,7 +134,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 
 		public StringToStringMap getHeaders()
 		{
-			AbstractHttpRequest<?> request = getModelItem();
+			AbstractHttpRequestInterface<?> request = getModelItem();
 			return request.getResponse() == null ? new StringToStringMap() : request.getResponse().getResponseHeaders();
 		}
 	}

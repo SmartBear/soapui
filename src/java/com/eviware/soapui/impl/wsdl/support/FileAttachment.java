@@ -242,7 +242,7 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 	{
 		config.setPart( part );
 	}
-	
+
 	public void setData( byte[] data )
 	{
 		try

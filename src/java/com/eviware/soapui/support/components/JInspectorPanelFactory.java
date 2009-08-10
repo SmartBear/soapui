@@ -16,7 +16,6 @@ import javax.swing.JComponent;
 
 public class JInspectorPanelFactory
 {
-
 	public static Class<? extends JInspectorPanel> inspectorPanelClass = JInspectorPanelImpl.class;
 
 	public static JInspectorPanel build( JComponent contentComponent )

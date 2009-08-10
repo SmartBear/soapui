@@ -23,6 +23,7 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestRequestStepFactory;
 import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
@@ -66,7 +67,7 @@ public class GenerateWsdlTestSuiteAction extends AbstractSoapUIAction<WsdlInterf
 
 		if( dialog.show() )
 		{
-			List<String> operations = Arrays.asList( operationsFormField.getSelectedOptions() );
+			List<String> operations = StringUtils.toStringList( operationsFormField.getSelectedOptions() );
 			if( operations.size() == 0 )
 			{
 				UISupport.showErrorMessage( "No Operations selected.." );

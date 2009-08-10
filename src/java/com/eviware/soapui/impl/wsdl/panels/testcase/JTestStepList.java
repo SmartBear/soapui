@@ -18,6 +18,7 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.dnd.Autoscroll;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -88,7 +89,23 @@ public class JTestStepList extends JPanel
 		testStepList.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION );
 		testStepList.addKeyListener( new TestStepListKeyHandler() );
 
-		testStepList.addMouseListener( new ModelItemListMouseListener() );
+		testStepList.addMouseListener( new ModelItemListMouseListener()
+		{
+			@Override
+			public void mouseClicked( MouseEvent e )
+			{
+				int row = testStepList.locationToIndex( e.getPoint() );
+				if( row != -1 )
+				{
+					ModelItem item = ( ModelItem )testStepList.getModel().getElementAt( row );
+					if( item != null )
+						UISupport.select( item );
+				}
+				
+				super.mouseClicked( e );
+			}
+		} );
+
 		testListPopup = new JPopupMenu();
 		testListPopup.addSeparator();
 

@@ -92,6 +92,7 @@ public class NewWorkspaceAction extends AbstractSoapUIAction<WorkspaceImpl>
 			{
 				UISupport.showErrorMessage( e );
 			}
+
 		}
 	}
 }

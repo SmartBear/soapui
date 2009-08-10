@@ -12,7 +12,10 @@
 
 package com.eviware.soapui.impl.wadl;
 
+import org.apache.xmlbeans.SchemaTypeSystem;
+
 import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.panels.request.inspectors.schema.InferredSchemaManager;
 import com.eviware.soapui.impl.support.definition.DefinitionCache;
 import com.eviware.soapui.impl.support.definition.DefinitionLoader;
 import com.eviware.soapui.impl.support.definition.export.WadlDefinitionExporter;
@@ -77,5 +80,18 @@ public class WadlDefinitionContext extends
 		}
 
 		return null;
+	}
+
+	public boolean hasSchemaTypes()
+	{
+		return( super.hasSchemaTypes() || InferredSchemaManager.getInferredSchema( getInterface() ).getNamespaces().length > 0 );
+	}
+
+	public SchemaTypeSystem getSchemaTypeSystem() throws Exception
+	{
+		if( super.hasSchemaTypes() )
+			return InferredSchemaManager.getInferredSchema( getInterface() ).getSchemaTypeSystem(
+					super.getSchemaTypeSystem() );
+		return InferredSchemaManager.getInferredSchema( getInterface() ).getSchemaTypeSystem();
 	}
 }

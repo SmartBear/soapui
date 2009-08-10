@@ -14,7 +14,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlMockResponseStepFactory;
 import com.eviware.soapui.model.iface.Submit;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.support.TestCaseWithJetty;
 import com.eviware.soapui.support.types.StringToObjectMap;
@@ -54,7 +54,7 @@ public class MockResponseStepTestCase extends TestCaseWithJetty
       step.setPath( "/tjohoo" );
 
       // run testcase
-      TestRunner runner = testCase.run( new StringToObjectMap(), true );
+      TestCaseRunner runner = testCase.run( new StringToObjectMap(), true );
       Thread.sleep( 1000 );
 
       // submit request

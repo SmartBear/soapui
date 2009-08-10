@@ -16,6 +16,7 @@ import java.awt.Component;
 
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.support.components.JPropertiesTable;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
@@ -72,6 +73,9 @@ public class WsdlMockResponsePanelBuilder extends EmptyPanelBuilder<WsdlMockResp
 				.setDescription( "Enables inline file references [file:<path>] in elements with binary content" );
 		table.addProperty( "Response HTTP-Status", "responseHttpStatus", true );
 		table.addProperty( "Response Delay", "responseDelay", true );
+		table.addProperty( "Response Compression", "responseCompression", new String[] {
+				WsdlMockResponse.AUTO_RESPONSE_COMPRESSION, WsdlMockResponse.NO_RESPONSE_COMPRESSION,
+				CompressionSupport.ALG_DEFLATE, CompressionSupport.ALG_GZIP } );
 
 		table.addProperty( "WS-Addressing", "wsAddressing", JPropertiesTable.BOOLEAN_OPTIONS );
 

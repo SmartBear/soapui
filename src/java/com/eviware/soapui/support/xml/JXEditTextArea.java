@@ -282,7 +282,6 @@ public class JXEditTextArea extends JEditTextArea implements UndoableEditListene
 	{
 		new Thread( new Runnable()
 		{
-
 			public void run()
 			{
 				while( true )

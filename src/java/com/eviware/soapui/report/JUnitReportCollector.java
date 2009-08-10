@@ -13,6 +13,8 @@
 package com.eviware.soapui.report;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,13 +22,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.eviware.soapui.model.testsuite.ProjectRunContext;
+import com.eviware.soapui.model.testsuite.ProjectRunListener;
+import com.eviware.soapui.model.testsuite.ProjectRunner;
 import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunListener;
-import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.model.testsuite.TestSuiteRunContext;
+import com.eviware.soapui.model.testsuite.TestSuiteRunListener;
+import com.eviware.soapui.model.testsuite.TestSuiteRunner;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.StringUtils;
@@ -38,9 +46,8 @@ import com.eviware.soapui.support.xml.XmlUtils;
  * @author ole.matzura
  */
 
-public class JUnitReportCollector implements TestRunListener
+public class JUnitReportCollector implements TestRunListener, TestSuiteRunListener, ProjectRunListener
 {
-
 	HashMap<String, JUnitReport> reports;
 	HashMap<TestCase, String> failures;
 
@@ -93,7 +100,7 @@ public class JUnitReportCollector implements TestRunListener
 		return "No reports..:";
 	}
 
-	public void afterRun( TestRunner testRunner, TestRunContext runContext )
+	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
 		TestCase testCase = testRunner.getTestCase();
 		JUnitReport report = reports.get( testCase.getTestSuite().getName() );
@@ -121,7 +128,7 @@ public class JUnitReportCollector implements TestRunListener
 		}
 	}
 
-	public void afterStep( TestRunner testRunner, TestRunContext runContext, TestStepResult result )
+	public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
 	{
 		TestStep currentStep = result.getTestStep();
 		TestCase testCase = currentStep.getTestCase();
@@ -129,26 +136,31 @@ public class JUnitReportCollector implements TestRunListener
 		if( result.getStatus() == TestStepStatus.FAILED )
 		{
 			StringBuffer buf = new StringBuffer();
-			// if( failures.containsKey( testCase ) )
-			// {
-			// buf.append( failures.get( testCase ));
-			// }
+			if( failures.containsKey( testCase ) )
+			{
+				buf.append( failures.get( testCase ) );
+			}
 
 			buf.append( "<h3><b>" + result.getTestStep().getName() + " Failed</b></h3><pre>" );
 			buf.append( "<pre>" + XmlUtils.entitize( Arrays.toString( result.getMessages() ) ) + "\n" );
 
-			// StringWriter stringWriter = new StringWriter();
-			// PrintWriter writer = new PrintWriter( stringWriter );
-			// result.writeTo( writer );
-			//
-			// buf.append( XmlUtils.entitize( stringWriter.toString() ) );
+			// use string value since constant is defined in pro.. duh.. 
+			if( testRunner.getTestCase().getSettings().getBoolean( "Complete Message Logs" ) )
+			{
+				 StringWriter stringWriter = new StringWriter();
+				 PrintWriter writer = new PrintWriter( stringWriter );
+				 result.writeTo( writer );
+				
+				 buf.append( XmlUtils.entitize( stringWriter.toString() ) );
+			}
+
 			buf.append( "</pre><hr/>" );
 
 			failures.put( testCase, buf.toString() );
 		}
 	}
 
-	public void beforeRun( TestRunner testRunner, TestRunContext runContext )
+	public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
 		TestCase testCase = testRunner.getTestCase();
 		TestSuite testSuite = testCase.getTestSuite();
@@ -160,7 +172,11 @@ public class JUnitReportCollector implements TestRunListener
 		}
 	}
 
-	public void beforeStep( TestRunner testRunner, TestRunContext runContext )
+	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext )
+	{
+	}
+
+	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
 	{
 	}
 
@@ -168,5 +184,42 @@ public class JUnitReportCollector implements TestRunListener
 	{
 		reports.clear();
 		failures.clear();
+	}
+
+	public void afterRun( TestSuiteRunner testRunner, TestSuiteRunContext runContext )
+	{
+	}
+
+	public void afterTestCase( TestSuiteRunner testRunner, TestSuiteRunContext runContext, TestCaseRunner testCaseRunner )
+	{
+		testCaseRunner.getTestCase().removeTestRunListener( this );
+	}
+
+	public void beforeRun( TestSuiteRunner testRunner, TestSuiteRunContext runContext )
+	{
+	}
+
+	public void beforeTestCase( TestSuiteRunner testRunner, TestSuiteRunContext runContext, TestCase testCase )
+	{
+		testCase.addTestRunListener( this );
+	}
+
+	public void afterRun( ProjectRunner testScenarioRunner, ProjectRunContext runContext )
+	{
+	}
+
+	public void afterTestSuite( ProjectRunner testScenarioRunner, ProjectRunContext runContext,
+			TestSuiteRunner testRunner )
+	{
+		testRunner.getTestSuite().removeTestSuiteRunListener( this );
+	}
+
+	public void beforeRun( ProjectRunner testScenarioRunner, ProjectRunContext runContext )
+	{
+	}
+
+	public void beforeTestSuite( ProjectRunner testScenarioRunner, ProjectRunContext runContext, TestSuite testSuite )
+	{
+		testSuite.addTestSuiteRunListener( this );
 	}
 }

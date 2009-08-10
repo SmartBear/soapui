@@ -23,7 +23,7 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 
 /**
- * A Groovy ScriptEngine 
+ * A Groovy ScriptEngine
  * 
  * @author ole.matzura
  */
@@ -40,60 +40,51 @@ public class SoapUIGroovyScriptEngine implements SoapUIScriptEngine
 	{
 		classLoader = new GroovyClassLoader( parentClassLoader );
 		binding = new Binding();
+		CompilerConfiguration config = new CompilerConfiguration();
+		config.setDebug( true );
+		config.setVerbose( true );
+		shell = new GroovyShell( classLoader, binding, config );
 	}
 
 	public synchronized Object run() throws Exception
 	{
-		if( StringUtils.isNullOrEmpty( scriptText ))
+		if( StringUtils.isNullOrEmpty( scriptText ) )
 			return null;
-		
+
 		if( script == null )
 		{
 			compile();
 		}
-		
+
 		return script.run();
 	}
 
 	public synchronized void setScript( String scriptText )
 	{
-		if( scriptText != null && scriptText.equals( this.scriptText ))
+		if( scriptText != null && scriptText.equals( this.scriptText ) )
 			return;
-		
+
 		if( script != null )
 		{
 			script.setBinding( null );
 			script = null;
-			
+
 			if( shell != null )
 				shell.resetLoadedClasses();
-			
-			classLoader.clearCache();			
+
+			classLoader.clearCache();
 		}
-		
+
 		this.scriptText = scriptText;
 	}
-	
+
 	public void compile() throws Exception
 	{
 		if( script == null )
 		{
-			if( shell == null )
-			{
-				initShell();
-			}
-			
 			script = shell.parse( scriptText );
 			script.setBinding( binding );
 		}
-	}
-
-	protected void initShell()
-	{
-		CompilerConfiguration config = new CompilerConfiguration();
-		config.setDebug( true );
-		config.setVerbose( true );
-		shell = new GroovyShell( classLoader, binding, config );
 	}
 
 	public void setVariable( String name, Object value )
@@ -110,25 +101,25 @@ public class SoapUIGroovyScriptEngine implements SoapUIScriptEngine
 	public void release()
 	{
 		script = null;
-		
+
 		if( binding != null )
 		{
 			binding.getVariables().clear();
 			binding = null;
 		}
-		
+
 		if( shell != null )
 		{
 			shell.resetLoadedClasses();
 			shell = null;
 		}
 	}
-	
+
 	protected Binding getBinding()
 	{
 		return binding;
 	}
-	
+
 	protected GroovyClassLoader getClassLoader()
 	{
 		return classLoader;

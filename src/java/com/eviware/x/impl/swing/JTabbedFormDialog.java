@@ -73,6 +73,19 @@ public class JTabbedFormDialog extends SwingXFormDialog
 			dialog.setSize( new Dimension( ( int )size.getWidth(), 300 ) );
 		}
 	}
+	
+	public void setSize( int i, int j )
+	{
+		dialog.setSize( i, j );
+	}
+
+	public XForm[] getForms()
+	{
+		List<XForm> result = new ArrayList<XForm>();
+		for( XForm form : forms )
+			result.add( form );
+		return result.toArray( new XForm[result.size()] );
+	}
 
 	public void setValues( StringToStringMap values )
 	{
@@ -178,7 +191,7 @@ public class JTabbedFormDialog extends SwingXFormDialog
 		{
 			if( form.getComponent( name ) != null )
 			{
-				String[] options = form.getOptions( name );
+				Object[] options = form.getOptions( name );
 				if( options == null )
 					return -1;
 

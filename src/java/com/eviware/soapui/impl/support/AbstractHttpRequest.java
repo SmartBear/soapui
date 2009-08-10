@@ -22,17 +22,16 @@ import java.util.Set;
 
 import javax.swing.ImageIcon;
 
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AbstractRequestConfig;
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.CredentialsConfig;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
-import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.IAfterRequestInjection;
 import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
 import com.eviware.soapui.impl.wsdl.support.FileAttachment;
 import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
@@ -44,7 +43,6 @@ import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.settings.CommonSettings;
@@ -55,30 +53,8 @@ import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> extends AbstractWsdlModelItem<T> implements
-		Request, PropertyExpansionContainer, MutableAttachmentContainer
+		Request, AbstractHttpRequestInterface<T>
 {
-	public final static Logger log = Logger.getLogger( AbstractHttpRequest.class );
-
-	public static final String RESPONSE_PROPERTY = WsdlRequest.class.getName() + "@response";
-	public static final String REMOVE_EMPTY_CONTENT = WsdlRequest.class.getName() + "@remove_empty_content";
-	public static final String STRIP_WHITESPACES = WsdlRequest.class.getName() + "@strip-whitespaces";
-	public static final String REQUEST_HEADERS_PROPERTY = WsdlRequest.class.getName() + "@request-headers";
-	public static final String BIND_ADDRESS = WsdlRequest.class.getName() + "@bind_address";
-	public static final String DISABLE_MULTIPART_ATTACHMENTS = WsdlRequest.class.getName()
-			+ "@disable-multipart-attachments";
-	public static final String DUMP_FILE = AbstractHttpRequest.class.getName() + "@dump-file";
-	public static final String MAX_SIZE = AbstractHttpRequest.class.getName() + "@max-size";
-	public static final String FOLLOW_REDIRECTS = AbstractHttpRequest.class.getName() + "@follow-redirects";
-
-	public enum RequestMethod
-	{
-		GET, POST, PUT, DELETE, HEAD;
-
-		public static String[] getMethodsAsString()
-		{
-			return new String[] {};
-		}
-	}
 
 	private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
 	private String requestContent;
@@ -86,6 +62,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	private HttpResponse response;
 	private SettingPathPropertySupport dumpFile;
 	private List<FileAttachment<?>> attachments = new ArrayList<FileAttachment<?>>();
+	private IAfterRequestInjection afterRequestInjection;
 
 	protected AbstractHttpRequest( T config, AbstractHttpOperation parent, String icon, boolean forLoadTest )
 	{
@@ -132,7 +109,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		return fileAttachment;
 	}
 
-	public abstract RequestMethod getMethod();
+	public abstract RestRequestInterface.RequestMethod getMethod();
 
 	/**
 	 * Override just to get a better return type
@@ -626,7 +603,6 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		notifyPropertyChanged( RESPONSE_PROPERTY, oldResponse, response );
 	}
 
-	@Override
 	public void resolve( ResolveContext<?> context )
 	{
 		super.resolve( context );
@@ -640,5 +616,13 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		return StringUtils.hasContent( getEndpoint() );
 	}
 
-	public abstract String getResponseContentAsXml();
+	public void setAfterRequestInjection( IAfterRequestInjection afterRequestInjection )
+	{
+		this.afterRequestInjection = afterRequestInjection;
+	}
+
+	public IAfterRequestInjection getAfterRequestInjection()
+	{
+		return afterRequestInjection;
+	}
 }

@@ -17,6 +17,7 @@ import org.apache.xmlbeans.XmlOptions;
 
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.WadlGenerator;
+import com.eviware.soapui.impl.rest.panels.request.inspectors.schema.InferredSchemaManager;
 import com.eviware.soapui.impl.support.definition.support.AbstractDefinitionLoader;
 
 public class GeneratedWadlDefinitionLoader extends AbstractDefinitionLoader
@@ -30,6 +31,9 @@ public class GeneratedWadlDefinitionLoader extends AbstractDefinitionLoader
 
 	public XmlObject loadXmlObject( String wsdlUrl, XmlOptions options ) throws Exception
 	{
+		if( wsdlUrl.toLowerCase().endsWith( ".xsd" ) )
+			return XmlObject.Factory.parse( InferredSchemaManager.getInferredSchema( restService ).getXsdForNamespace(
+					InferredSchemaManager.namespaceForFilename( wsdlUrl ) ) );
 		return new WadlGenerator( restService ).generateWadl();
 	}
 

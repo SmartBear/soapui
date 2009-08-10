@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.AttachmentContainer;
 import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -41,7 +42,7 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 
 	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
-		if( modelItem instanceof AbstractHttpRequest<?> )
+		if( modelItem instanceof AbstractHttpRequestInterface<?> )
 			return new AttachmentsInspector( ( AttachmentContainer )modelItem );
 		else if( modelItem instanceof WsdlMockResponse )
 			return new AttachmentsInspector( new MockRequestAttachmentsContainer( ( WsdlMockResponse )modelItem ) );
@@ -54,7 +55,7 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 
 	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
 	{
-		if( modelItem instanceof AbstractHttpRequest<?> )
+		if( modelItem instanceof AbstractHttpRequestInterface<?> )
 			return new AttachmentsInspector( new ResponseAttachmentsContainer( ( AbstractHttpRequest<?> )modelItem ) );
 		else if( modelItem instanceof WsdlMockResponse )
 			return new AttachmentsInspector( ( WsdlMockResponse )modelItem );

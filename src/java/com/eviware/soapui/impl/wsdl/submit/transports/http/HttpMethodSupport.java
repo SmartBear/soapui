@@ -12,23 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.Socket;
-
-import javax.net.ssl.SSLSocket;
-
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HeaderElement;
-import org.apache.commons.httpclient.HttpConnection;
-import org.apache.commons.httpclient.HttpMethodBase;
-import org.apache.commons.httpclient.HttpState;
-import org.apache.commons.httpclient.NameValuePair;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.http.ConnectionWithSocket;
@@ -36,6 +19,11 @@ import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
+import org.apache.commons.httpclient.*;
+
+import javax.net.ssl.SSLSocket;
+import java.io.*;
+import java.net.Socket;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -274,5 +262,10 @@ public final class HttpMethodSupport
 	public void setFailed( Throwable t )
 	{
 		this.failureCause = t;
+	}
+
+	public boolean hasResponse()
+	{
+		return responseBody != null;
 	}
 }

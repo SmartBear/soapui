@@ -1,0 +1,826 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<install4j version="4.2.3" transformSequenceNumber="2">
+  <directoryPresets config="${compiler:DIST_ROOT}/wsi-scripts-usingbundled/Analyzer.sh" />
+  <application name="soapUI ${compiler:VERSION_NUMBER}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" keepModificationTimes="false" missingFilesStrategy="warn" shortName="soapUI" publisher="Eviware" publisherWeb="http://www.eviware.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="true" macSignature="????" installerName="" javaMinVersion="1.5" javaMaxVersion="" allowBetaVM="false" jdkMode="runtimeJre" jdkName="">
+    <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
+      <principalLanguage id="en" customLocalizationFile="" />
+      <additionalLanguages />
+    </languages>
+    <searchSequence>
+      <registry />
+      <envVar name="JAVA_HOME" />
+      <envVar name="JDK_HOME" />
+    </searchSequence>
+    <variables>
+      <variable name="SOAPUI_HOME" value="${installer:sys.installationDir}" />
+      <variable name="DIST_ROOT" value="D:\soapUI-workspace\SoapUI 3.0-alpha\target\dist" />
+      <variable name="RESOURCES_HOME" value="" />
+      <variable name="JXBROWSER_DIR" value="E:\dev\jxbrowser-1.3\" />
+      <variable name="VERSION_NUMBER" value="" />
+      <variable name="XULRUNNER" value="" />
+      <variable name="SRC_ROOT" value="" />
+      <variable name="SIGNTOOL_PATH" value="" />
+      <variable name="CERT_PATH" value="" />
+      <variable name="EXECUTABLE_NAME" value="soapUI-${compiler:VERSION_NUMBER}" />
+    </variables>
+  </application>
+  <files>
+    <filesets>
+      <fileset name="Source" id="711" />
+      <fileset name="Wsi-scripts-usingbundled" id="1140" />
+    </filesets>
+    <roots>
+      <root id="712" fileset="711" location="" />
+      <root id="1141" fileset="1140" location="" />
+    </roots>
+    <mountPoints>
+      <mountPoint id="321" root="" location="bin" mode="755" />
+      <mountPoint id="318" root="" location="lib" mode="755" />
+      <mountPoint id="399" root="" location="licences" mode="755" />
+      <mountPoint id="63" root="" location="" mode="755" />
+      <mountPoint id="776" root="712" location="source" mode="755" />
+      <mountPoint id="1142" root="1141" location="wsi-test-tools" mode="755" />
+      <mountPoint id="1143" root="1141" location="wsi-test-tools/java" mode="755" />
+      <mountPoint id="1144" root="1141" location="wsi-test-tools/java/bin" mode="755" />
+    </mountPoints>
+    <entries>
+      <dirEntry mountPoint="321" file="${compiler:DIST_ROOT}/bin" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
+        <exclude />
+      </dirEntry>
+      <dirEntry mountPoint="318" file="${compiler:DIST_ROOT}/lib" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
+        <exclude>
+          <entry location="activation.jnlp" fileType="regular" />
+          <entry location="bouncycastle.jnlp" fileType="regular" />
+          <entry location="javamail.jnlp" fileType="regular" />
+          <entry location="soapui.jnlp" fileType="regular" />
+        </exclude>
+      </dirEntry>
+      <dirEntry mountPoint="399" file="${compiler:DIST_ROOT}/licenses" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
+        <exclude />
+      </dirEntry>
+      <dirEntry mountPoint="63" file="${compiler:DIST_ROOT}" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
+        <exclude>
+          <entry location="bin" fileType="regular" />
+          <entry location="HelloWS-soapui-project.xml" fileType="regular" />
+          <entry location="lib" fileType="regular" />
+          <entry location="licenses" fileType="regular" />
+          <entry location="soapui-settings.xml" fileType="regular" />
+          <entry location="test-soapui-project.xml" fileType="regular" />
+          <entry location="vmoptions" fileType="regular" />
+          <entry location="wsi-scripts-mac" fileType="regular" />
+          <entry location="wsi-scripts-usingbundled" fileType="regular" />
+        </exclude>
+      </dirEntry>
+      <dirEntry mountPoint="776" file="${compiler:SRC_ROOT}" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes=".svn" dirMode="755">
+        <exclude>
+          <entry location="conf" fileType="regular" />
+          <entry location="demo" fileType="regular" />
+          <entry location="dist" fileType="regular" />
+          <entry location="dist_standalone" fileType="regular" />
+          <entry location="iistest" fileType="regular" />
+          <entry location="images" fileType="regular" />
+          <entry location="install4j" fileType="regular" />
+          <entry location="jsl" fileType="regular" />
+          <entry location="META-INF" fileType="regular" />
+          <entry location="nsis" fileType="regular" />
+          <entry location="wstf" fileType="regular" />
+        </exclude>
+      </dirEntry>
+      <fileEntry mountPoint="776" file="../../maven.xml" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="776" file="../../project.xml" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="1144" file="${compiler:DIST_ROOT}/wsi-scripts-usingbundled/Analyzer.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="1144" file="${compiler:DIST_ROOT}/wsi-scripts-usingbundled/Monitor.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="1144" file="${compiler:DIST_ROOT}/wsi-scripts-usingbundled/setenv.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="1144" file="${compiler:DIST_ROOT}/wsi-scripts-usingbundled/Analyzer.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="1144" file="${compiler:DIST_ROOT}/wsi-scripts-usingbundled/Monitor.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="1144" file="${compiler:DIST_ROOT}/wsi-scripts-usingbundled/setenv.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+    </entries>
+    <components>
+      <component name="SoapUI" id="132" displayDescription="false" selected="true" mandatory="true" downloadable="false">
+        <description>Mandatory distribution structure</description>
+        <include all="false">
+          <entry location=".i4j_fileset_" fileType="regular" />
+          <entry location=".i4j_fileset_1140" fileType="regular" />
+        </include>
+        <dependencies />
+      </component>
+      <component name="Source" id="714" displayDescription="false" selected="false" mandatory="false" downloadable="false">
+        <description>SoapUI open source</description>
+        <include all="false">
+          <entry location=".i4j_fileset_711" fileType="regular" />
+        </include>
+        <dependencies />
+      </component>
+    </components>
+  </files>
+  <launchers>
+    <launcher name="soapUI GUI" id="64" external="false" excludeFromMenu="false" menuName="soapUI-${compiler:VERSION_NUMBER}" icnsFile="${compiler:RESOURCES_HOME}/images/soapui.icns" pngIcon16File="${compiler:RESOURCES_HOME}/images/soapui16.png" pngIcon32File="${compiler:RESOURCES_HOME}/images/soapui32.png" macServiceDependencies="" swtApp="false" fileset="">
+      <executable name="${compiler:EXECUTABLE_NAME}" type="1" iconSet="true" iconFile="${compiler:RESOURCES_HOME}/images/soapui.ico" executableDir="bin" redirectStderr="true" stderrFile="error.log" redirectStdout="false" stdoutFile="output.log" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="${compiler:RESOURCES_HOME}/images/soapui-splash.bmp" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="com.eviware.soapui.SoapUI" vmParameters="" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <archive location="bin/soapui-${compiler:VERSION_NUMBER}.jar" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories />
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <customScript mode="1" file="${compiler:DIST_ROOT}/bin/soapui.sh">
+        <scriptLines />
+      </customScript>
+    </launcher>
+  </launchers>
+  <installerGui installerType="1" suggestPreviousProgramGroup="false" addOnAppId="" suggestPreviousLocations="false">
+    <customCode useInstalledFiles="true" />
+    <applications>
+      <application name="" id="installer" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" enabled="true" commentSet="false" comment="" customIcnsFile="" customIcoFile="${compiler:RESOURCES_HOME}/images/soapui.ico">
+        <serializedBean>
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.applications.InstallerApplication">
+              <void property="customHeaderImage">
+                <object class="com.install4j.api.beans.ExternalFile">
+                  <string>${compiler:RESOURCES_HOME}/images/soapui32.png</string>
+                </object>
+              </void>
+              <void property="customPngIcon16File">
+                <object class="com.install4j.api.beans.ExternalFile">
+                  <string>${compiler:RESOURCES_HOME}/images/soapui16.png</string>
+                </object>
+              </void>
+              <void property="customPngIcon32File">
+                <object class="com.install4j.api.beans.ExternalFile">
+                  <string>${compiler:RESOURCES_HOME}/images/soapui32.png</string>
+                </object>
+              </void>
+              <void property="useCustomIcon">
+                <boolean>true</boolean>
+              </void>
+            </object>
+          </java>
+        </serializedBean>
+        <startup>
+          <screen name="" id="1" beanClass="com.install4j.runtime.beans.screens.StartupScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.StartupScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions>
+              <action name="Set memory calculation for vmoptions" id="186" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>long xx = Math.round(SystemInfo.getPhysicalMemory() * 0.5 / 1024 / 1024);
+if (xx &gt; 1200) {
+    xx = 1200;
+}
+return xx;</string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>xmx</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+            </actions>
+            <formComponents />
+          </screen>
+        </startup>
+        <screens>
+          <screen name="" id="2" beanClass="com.install4j.runtime.beans.screens.WelcomeScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.WelcomeScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="410" beanClass="com.install4j.runtime.beans.screens.LicenseScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.LicenseScreen">
+                  <void property="displayedTextFile">
+                    <object class="com.install4j.api.beans.ExternalFile">
+                      <string>${compiler:DIST_ROOT}/LICENSE.txt</string>
+                    </object>
+                  </void>
+                </object>
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="3" beanClass="com.install4j.runtime.beans.screens.InstallationDirectoryScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.InstallationDirectoryScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions>
+              <action name="" id="4" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="true" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" />
+                  </java>
+                </serializedBean>
+                <condition>context.getVariable("sys.responseFile") == null</condition>
+              </action>
+            </actions>
+            <formComponents />
+          </screen>
+          <screen name="" id="5" beanClass="com.install4j.runtime.beans.screens.ComponentsScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.ComponentsScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="6" beanClass="com.install4j.runtime.beans.screens.StandardProgramGroupScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.StandardProgramGroupScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="430" beanClass="com.install4j.runtime.beans.screens.AdditionalConfirmationsScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.AdditionalConfirmationsScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents>
+              <formComponent name="Add a desktop link" id="527" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                      <void property="checkboxText">
+                        <string>${i18n:CreateDesktopIcon}</string>
+                      </void>
+                      <void property="initiallySelected">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="variableName">
+                        <string>createDesktopLinkAction</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibiltyScript />
+              </formComponent>
+            </formComponents>
+          </screen>
+          <screen name="" id="7" beanClass="com.install4j.runtime.beans.screens.InstallationScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="true" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.InstallationScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions>
+              <action name="" id="8" beanClass="com.install4j.runtime.beans.actions.InstallFilesAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.InstallFilesAction" />
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="470" beanClass="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction">
+                      <void property="programGroupEntryConfigs">
+                        <void method="add">
+                          <object class="com.install4j.runtime.beans.screens.components.ProgramGroupEntryConfig">
+                            <void property="iconFile">
+                              <object class="com.install4j.api.beans.ExternalFile">
+                                <string>${compiler:RESOURCES_HOME}/images/soapui.ico</string>
+                              </object>
+                            </void>
+                            <void property="name">
+                              <string>Online JavaDoc</string>
+                            </void>
+                            <void property="target">
+                              <object class="java.io.File">
+                                <string>${installer:sys.installationDir}/soapUI-${compiler:VERSION_NUMBER}-JavaDoc.url</string>
+                              </object>
+                            </void>
+                          </object>
+                        </void>
+                        <void method="add">
+                          <object class="com.install4j.runtime.beans.screens.components.ProgramGroupEntryConfig">
+                            <void property="name">
+                              <string>Online User Guide</string>
+                            </void>
+                            <void property="target">
+                              <object class="java.io.File">
+                                <string>${installer:sys.installationDir}/soapUI-${compiler:VERSION_NUMBER}-UserGuide.url</string>
+                              </object>
+                            </void>
+                          </object>
+                        </void>
+                        <void method="add">
+                          <object class="com.install4j.runtime.beans.screens.components.ProgramGroupEntryConfig">
+                            <void property="name">
+                              <string>soapui.org website</string>
+                            </void>
+                            <void property="target">
+                              <object class="java.io.File">
+                                <string>${installer:sys.installationDir}/soapUI-${compiler:VERSION_NUMBER}.url</string>
+                              </object>
+                            </void>
+                          </object>
+                        </void>
+                      </void>
+                      <void property="programGroupName">
+                        <string>${compiler:sys.fullName}</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="10" beanClass="com.install4j.runtime.beans.actions.desktop.RegisterAddRemoveAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="2" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.desktop.RegisterAddRemoveAction">
+                      <void property="icon">
+                        <object class="com.install4j.api.beans.ExternalFile">
+                          <string>${compiler:RESOURCES_HOME}/images/soapui.ico</string>
+                        </object>
+                      </void>
+                      <void property="itemName">
+                        <string>${compiler:sys.fullName} ${compiler:sys.version}</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="566" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="3" errorMessage="Could not install icon">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction">
+                      <void property="description">
+                        <string>Install Desktop ShortCut</string>
+                      </void>
+                      <void property="file">
+                        <object class="java.io.File">
+                          <string>bin/${compiler:EXECUTABLE_NAME}</string>
+                        </object>
+                      </void>
+                      <void property="name">
+                        <string>${compiler:sys.fullName}</string>
+                      </void>
+                      <void property="winIconFile">
+                        <object class="com.install4j.api.beans.ExternalFile">
+                          <string>${compiler:RESOURCES_HOME}/images/soapui.ico</string>
+                        </object>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>context.getBooleanVariable("createDesktopLinkAction")</condition>
+              </action>
+              <action name="" id="606" beanClass="com.install4j.runtime.beans.actions.text.ReplaceInstallerVariablesAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.text.ReplaceInstallerVariablesAction">
+                      <void property="file">
+                        <object class="java.io.File">
+                          <string>bin/soapUI-${compiler:VERSION_NUMBER}.vmoptions</string>
+                        </object>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="set root installation dir" id="1220" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>if (Util.isMacOS()) {
+    return  context.getVariable("sys.contentDir");
+} else {
+    return context.getVariable("sys.installationDir");
+} 
+</string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>rootInstallDir</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="1037" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Access mode for wsi-test-tools scripts couldn't be set">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
+                      <void property="file">
+                        <object class="java.io.File">
+                          <string>${installer:rootInstallDir}/wsi-test-tools/java/bin</string>
+                        </object>
+                      </void>
+                      <void property="mode">
+                        <string>700</string>
+                      </void>
+                      <void property="recursive">
+                        <boolean>true</boolean>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="1073" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction">
+                      <void property="launcherId">
+                        <string>64</string>
+                      </void>
+                      <void property="vmOptions">
+                        <array class="java.lang.String" length="10">
+                          <void index="0">
+                            <string>-Xms128m</string>
+                          </void>
+                          <void index="1">
+                            <string>-Xmx${installer:xmx}m</string>
+                          </void>
+                          <void index="2">
+                            <string>-Dsoapui.properties=soapui.properties</string>
+                          </void>
+                          <void index="3">
+                            <string>-Dsoapui.home=${installer:rootInstallDir}/bin</string>
+                          </void>
+                          <void index="4">
+                            <string>-Dsoapui.ext.libraries=${installer:rootInstallDir}/bin/ext</string>
+                          </void>
+                          <void index="5">
+                            <string>-Dsoapui.ext.listeners=${installer:rootInstallDir}/bin/listeners</string>
+                          </void>
+                          <void index="6">
+                            <string>-Dsoapui.ext.actions=${installer:rootInstallDir}/bin/actions</string>
+                          </void>
+                          <void index="7">
+                            <string>-Dwsi.dir=${installer:rootInstallDir}/wsi-test-tools</string>
+                          </void>
+                          <void index="8">
+                            <string>-Djava.library.path=${installer:rootInstallDir}/bin</string>
+                          </void>
+                          <void index="9">
+                            <string>-DGRE_HOME=${installer:rootInstallDir}/${compiler:XULRUNNER}</string>
+                          </void>
+                        </array>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+            </actions>
+            <formComponents />
+          </screen>
+          <screen name="" id="11" beanClass="com.install4j.runtime.beans.screens.FinishedScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="true">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.FinishedScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions>
+              <action name="" id="413" beanClass="com.install4j.runtime.beans.actions.finish.ShowFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.finish.ShowFileAction">
+                      <void property="file">
+                        <object class="java.io.File">
+                          <string>readme.txt</string>
+                        </object>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>context.getBooleanVariable("showFileAction") &amp;&amp; (!context.isUnattended())</condition>
+              </action>
+              <action name="" id="935" beanClass="com.install4j.runtime.beans.actions.finish.ExecuteLauncherAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.finish.ExecuteLauncherAction">
+                      <void property="launcherId">
+                        <string>64</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>context.getBooleanVariable("executeLauncherAction") &amp;&amp; (!context.isUnattended())</condition>
+              </action>
+            </actions>
+            <formComponents>
+              <formComponent name="Show file" id="414" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                      <void property="checkboxText">
+                        <string>${i18n:ShowReadmeCheck}</string>
+                      </void>
+                      <void property="initiallySelected">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="variableName">
+                        <string>showFileAction</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibiltyScript />
+              </formComponent>
+              <formComponent name="Execute launcher" id="936" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                      <void property="checkboxText">
+                        <string>${i18n:RunEntryExec("${compiler:sys.fullName}")}</string>
+                      </void>
+                      <void property="initiallySelected">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="variableName">
+                        <string>executeLauncherAction</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibiltyScript />
+              </formComponent>
+            </formComponents>
+          </screen>
+        </screens>
+      </application>
+      <application name="" id="uninstaller" beanClass="com.install4j.runtime.beans.applications.UninstallerApplication" enabled="true" commentSet="false" comment="" customIcnsFile="" customIcoFile="">
+        <serializedBean>
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.applications.UninstallerApplication" />
+          </java>
+        </serializedBean>
+        <startup>
+          <screen name="" id="12" beanClass="com.install4j.runtime.beans.screens.StartupScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.StartupScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions>
+              <action name="" id="18" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" />
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+            </actions>
+            <formComponents />
+          </screen>
+        </startup>
+        <screens>
+          <screen name="" id="13" beanClass="com.install4j.runtime.beans.screens.UninstallWelcomeScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.UninstallWelcomeScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="14" beanClass="com.install4j.runtime.beans.screens.UninstallationScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.UninstallationScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions>
+              <action name="" id="15" beanClass="com.install4j.runtime.beans.actions.UninstallFilesAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.UninstallFilesAction" />
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+            </actions>
+            <formComponents />
+          </screen>
+          <screen name="" id="17" beanClass="com.install4j.runtime.beans.screens.UninstallFailureScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="true">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.UninstallFailureScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="16" beanClass="com.install4j.runtime.beans.screens.UninstallSuccessScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="true">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.UninstallSuccessScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+        </screens>
+      </application>
+    </applications>
+  </installerGui>
+  <mediaSets>
+    <win32 name="Windows x32" id="23" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="eviware/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" runPostProcessor="true" postProcessor="${compiler:SIGNTOOL_PATH} sign /v /f ${compiler:CERT_PATH} $EXECUTABLE" failOnPostProcessorError="true" includedJRE="windows-x86-1.6.0_14" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="" runAsAdmin="false">
+      <excludedLaunchers />
+      <excludedComponents />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="bin/libjniwrap.so" fileType="regular" />
+        <entry location="bin/loadtestrunner.sh" fileType="regular" />
+        <entry location="bin/mockservicerunner.sh" fileType="regular" />
+        <entry location="bin/soapui.sh" fileType="regular" />
+        <entry location="bin/soapui32.png" fileType="regular" />
+        <entry location="bin/testrunner.sh" fileType="regular" />
+        <entry location="bin/toolrunner.sh" fileType="regular" />
+        <entry location="wsi-test-tools/java/bin" fileType="regular" />
+        <entry location="xulrunner-linux" fileType="regular" />
+        <entry location="xulrunner-mac" fileType="regular" />
+        <entry location=".i4j_fileset_967" fileType="regular" />
+        <entry location=".i4j_fileset_969" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="XULRUNNER" value="xulrunner-windows" />
+        <variable name="32-BIT-INSTALLER" value="true" />
+      </variables>
+    </win32>
+    <unixInstaller name="Unix Installer x32" id="196" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="eviware/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="linux-x86-1.6.0_14" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="">
+      <excludedLaunchers />
+      <excludedComponents />
+      <excludedBeans>
+        <bean refId="493" />
+      </excludedBeans>
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="bin/jniwrap.dll" fileType="regular" />
+        <entry location="bin/loadtestrunner.bat" fileType="regular" />
+        <entry location="bin/mockservicerunner.bat" fileType="regular" />
+        <entry location="bin/soapui.bat" fileType="regular" />
+        <entry location="bin/soapui32.png" fileType="regular" />
+        <entry location="bin/testrunner.bat" fileType="regular" />
+        <entry location="bin/toolrunner.bat" fileType="regular" />
+        <entry location="wsi-test-tools/java/bin" fileType="regular" />
+        <entry location="xulrunner-mac" fileType="regular" />
+        <entry location="xulrunner-windows" fileType="regular" />
+        <entry location=".i4j_fileset_601" fileType="regular" />
+        <entry location=".i4j_fileset_969" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="XULRUNNER" value="xulrunner-linux" />
+        <variable name="32-BIT-INSTALLER" value="true" />
+      </variables>
+      <installerScript mode="1" file="">
+        <scriptLines />
+      </installerScript>
+    </unixInstaller>
+    <macos name="Mac OS X Single Bundle" id="198" mediaFileName="soapUI-${compiler:VERSION_NUMBER}" installDir="eviware/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="" launcherId="64">
+      <excludedComponents />
+      <excludedBeans>
+        <bean refId="493" />
+      </excludedBeans>
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="bin/jniwrap.dll" fileType="regular" />
+        <entry location="bin/loadtestrunner.bat" fileType="regular" />
+        <entry location="bin/mockservicerunner.bat" fileType="regular" />
+        <entry location="bin/soapui.bat" fileType="regular" />
+        <entry location="bin/soapui32.png" fileType="regular" />
+        <entry location="bin/testrunner.bat" fileType="regular" />
+        <entry location="bin/toolrunner.bat" fileType="regular" />
+        <entry location="xulrunner-linux" fileType="regular" />
+        <entry location="xulrunner-windows" fileType="regular" />
+        <entry location=".i4j_fileset_601" fileType="regular" />
+        <entry location=".i4j_fileset_967" fileType="regular" />
+        <entry location=".i4j_fileset_1140" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="XULRUNNER" value="xulrunner-mac" />
+      </variables>
+    </macos>
+    <win32 name="Windows x64" id="1215" mediaFileName="soapUI-x64-no-bundle-${compiler:VERSION_NUMBER}" installDir="eviware/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="true" runPostProcessor="true" postProcessor="${compiler:SIGNTOOL_PATH} sign /v /f ${compiler:CERT_PATH} $EXECUTABLE" failOnPostProcessorError="true" includedJRE="" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="" runAsAdmin="false">
+      <excludedLaunchers />
+      <excludedComponents />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="bin/libjniwrap.so" fileType="regular" />
+        <entry location="bin/loadtestrunner.sh" fileType="regular" />
+        <entry location="bin/mockservicerunner.sh" fileType="regular" />
+        <entry location="bin/soapui.sh" fileType="regular" />
+        <entry location="bin/soapui32.png" fileType="regular" />
+        <entry location="bin/testrunner.sh" fileType="regular" />
+        <entry location="bin/toolrunner.sh" fileType="regular" />
+        <entry location="xulrunner-linux" fileType="regular" />
+        <entry location="xulrunner-mac" fileType="regular" />
+        <entry location=".i4j_fileset_967" fileType="regular" />
+        <entry location=".i4j_fileset_969" fileType="regular" />
+        <entry location=".i4j_fileset_1140" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="XULRUNNER" value="xulrunner-windows" />
+      </variables>
+    </win32>
+  </mediaSets>
+  <buildIds buildAll="true" />
+</install4j>
+

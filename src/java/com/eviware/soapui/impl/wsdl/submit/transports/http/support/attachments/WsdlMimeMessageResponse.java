@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.filters.WssRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
@@ -80,14 +80,14 @@ public class WsdlMimeMessageResponse extends MimeMessageResponse implements Wsdl
 		}
 	}
 
-	private void processIncomingWss( AbstractHttpRequest<?> wsdlRequest, PropertyExpansionContext context )
+	private void processIncomingWss( AbstractHttpRequestInterface<?> wsdlRequest, PropertyExpansionContext context )
 	{
 		IncomingWss incomingWss = ( IncomingWss )context.getProperty( WssRequestFilter.INCOMING_WSS_PROPERTY );
 		if( incomingWss != null )
 		{
 			try
 			{
-				Document document = XmlUtils.parseXml( getMmSupport().getContentAsString() );
+				Document document = XmlUtils.parseXml( getMmSupport().getResponseContent() );
 				wssResult = incomingWss.processIncoming( document, context );
 				if( wssResult != null && wssResult.size() > 0 )
 				{

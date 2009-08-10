@@ -65,6 +65,7 @@ import com.eviware.soapui.support.dnd.handlers.TestStepToTestCaseDropHandler;
 import com.eviware.soapui.support.dnd.handlers.TestStepToTestStepDropHandler;
 import com.eviware.soapui.support.dnd.handlers.TestStepToTestStepsDropHandler;
 import com.eviware.soapui.support.dnd.handlers.TestSuiteToProjectDropHandler;
+import com.eviware.soapui.support.dnd.handlers.TestSuiteToTestSuiteDropHandler;
 
 public class SoapUIDragAndDropHandler implements DragGestureListener, DragSourceListener
 {
@@ -97,6 +98,7 @@ public class SoapUIDragAndDropHandler implements DragGestureListener, DragSource
 		SoapUIDragAndDropHandler.addDropHandler( new MockResponseToTestCaseDropHandler() );
 		SoapUIDragAndDropHandler.addDropHandler( new MockResponseToTestStepDropHandler() );
 		SoapUIDragAndDropHandler.addDropHandler( new MockResponseToTestStepsDropHandler() );
+		SoapUIDragAndDropHandler.addDropHandler( new TestSuiteToTestSuiteDropHandler() );
 	}
 
 	@SuppressWarnings( "unchecked" )

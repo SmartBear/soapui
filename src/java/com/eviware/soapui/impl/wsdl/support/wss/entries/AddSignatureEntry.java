@@ -145,9 +145,14 @@ public class AddSignatureEntry extends WssEntryBase
 
 		try
 		{
+			WssCrypto wssCrypto = getWssContainer().getCryptoByName( crypto );
+			if( wssCrypto == null )
+			{
+				throw new Exception( "Missing crypto [" + crypto + "] for signature entry" );
+			}
+
 			WSSecSignature wssSign = new WSSecSignature();
 			wssSign.setUserInfo( context.expand( getUsername() ), context.expand( getPassword() ) );
-			WssCrypto wssCrypto = getWssContainer().getCryptoByName( crypto );
 
 			if( keyIdentifierType != 0 )
 				wssSign.setKeyIdentifierType( keyIdentifierType );

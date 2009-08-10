@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 
 import com.eviware.soapui.config.SoapuiSettingsDocumentConfig;
 import com.eviware.soapui.impl.rest.panels.request.inspectors.representations.RestRepresentationsInspectorFactory;
+import com.eviware.soapui.impl.rest.panels.request.inspectors.schema.InferredSchemaInspectorFactory;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.SwingToolHost;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.workspace.Workspace;
@@ -27,6 +28,7 @@ import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspe
 import com.eviware.soapui.support.editor.inspectors.script.ScriptInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.ssl.SSLInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.wsa.WsaInspectorFactory;
+import com.eviware.soapui.support.editor.inspectors.wsrm.WsrmInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.wss.WssInspectorFactory;
 import com.eviware.soapui.support.editor.registry.InspectorRegistry;
 import com.eviware.x.form.XFormFactory;
@@ -65,7 +67,10 @@ public class SwingSoapUICore extends DefaultSoapUICore
 		inspectorRegistry.addFactory( new SSLInspectorFactory() );
 		inspectorRegistry.addFactory( new WssInspectorFactory() );
 		inspectorRegistry.addFactory( new WsaInspectorFactory() );
+		inspectorRegistry.addFactory( new WsrmInspectorFactory() );
+		// inspectorRegistry.addFactory( new WsrmPiggybackInspectorFactory());
 		inspectorRegistry.addFactory( new RestRepresentationsInspectorFactory() );
+		inspectorRegistry.addFactory( new InferredSchemaInspectorFactory() );
 
 		String actionsDir = System.getProperty( "soapui.ext.actions" );
 		addExternalActions( actionsDir == null ? getRoot() == null ? "actions" : getRoot() + File.separatorChar

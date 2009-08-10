@@ -52,7 +52,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.AbstractPropertyChangeNotifier;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -228,7 +228,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 				if( query.isDisabled() )
 					continue;
 
-				String path = PropertyExpansionUtils.expandProperties( request.getContext(), query.getQuery() );
+				String path = PropertyExpander.expandProperties( request.getContext(), query.getQuery() );
 				if( StringUtils.hasContent( path ) )
 				{
 					XmlCursor cursor = cursorCache.get( path );
@@ -245,7 +245,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
 					if( cursor != null )
 					{
-						String value = PropertyExpansionUtils.expandProperties( request.getContext(), query.getMatch() );
+						String value = PropertyExpander.expandProperties( request.getContext(), query.getMatch() );
 
 						if( value.equals( XmlUtils.getValueForMatch( cursor ) ) )
 						{

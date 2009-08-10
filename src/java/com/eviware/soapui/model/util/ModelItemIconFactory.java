@@ -18,6 +18,9 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.model.iface.Operation;
+import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockService;
@@ -44,6 +47,10 @@ public class ModelItemIconFactory
 		modelItemIcons.put( MockService.class, "/mockService.gif" );
 		modelItemIcons.put( MockResponse.class, "/mockResponse.gif" );
 		modelItemIcons.put( MockOperation.class, "/mockOperation.gif" );
+		modelItemIcons.put( Request.class, "/request.gif" );
+		modelItemIcons.put( Operation.class, "/operation.gif" );
+		modelItemIcons.put( Interface.class, "/interface.gif" );
+		
 	}
 
 	public static ImageIcon getIcon( Class<? extends ModelItem> clazz )
@@ -58,6 +65,31 @@ public class ModelItemIconFactory
 		}
 
 		return null;
+	}
+
+	@SuppressWarnings( "unchecked" )
+	public static String getIconPath( Class<? extends ModelItem> clazz )
+	{
+		if( modelItemIcons.containsKey( clazz ) )
+			return modelItemIcons.get( clazz );
+
+		for( Class<?> iface : clazz.getInterfaces() )
+		{
+			if( modelItemIcons.containsKey( iface ) )
+				return modelItemIcons.get( iface );
+		}
+
+		while( clazz.getSuperclass() != null && ModelItem.class.isAssignableFrom( clazz.getSuperclass() ) )
+		{
+			return getIconPath( ( Class<? extends ModelItem> )clazz.getSuperclass() );
+		}
+
+		return null;
+	}
+
+	public static <T extends ModelItem> String getIconPath( T modelItem )
+	{
+		return getIconPath( modelItem.getClass() );
 	}
 
 	public static <T extends ModelItem> ImageIcon getIcon( T modelItem )

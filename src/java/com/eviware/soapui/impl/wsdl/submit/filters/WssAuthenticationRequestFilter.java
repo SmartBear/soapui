@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
 
@@ -44,7 +44,7 @@ public class WssAuthenticationRequestFilter extends AbstractWssRequestFilter
 
 	public void filterWsdlRequest( SubmitContext context, WsdlRequest wsdlRequest )
 	{
-		String pwType = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getWssPasswordType() );
+		String pwType = PropertyExpander.expandProperties( context, wsdlRequest.getWssPasswordType() );
 		String wsTimestamp = wsdlRequest.getWssTimeToLive();
 
 		if( ( StringUtils.isNullOrEmpty( pwType ) || WsdlRequest.PW_TYPE_NONE.equals( pwType ) )
@@ -52,8 +52,8 @@ public class WssAuthenticationRequestFilter extends AbstractWssRequestFilter
 			return;
 		try
 		{
-			String password = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getPassword() );
-			String username = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getUsername() );
+			String password = PropertyExpander.expandProperties( context, wsdlRequest.getPassword() );
+			String username = PropertyExpander.expandProperties( context, wsdlRequest.getUsername() );
 
 			setWssHeaders( context, username, password, pwType, wsTimestamp );
 		}

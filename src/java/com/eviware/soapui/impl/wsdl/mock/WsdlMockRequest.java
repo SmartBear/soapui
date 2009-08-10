@@ -18,6 +18,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.mail.MessagingException;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -77,7 +78,17 @@ public class WsdlMockRequest implements MockRequest
 		for( Enumeration<?> e = request.getHeaderNames(); e.hasMoreElements(); )
 		{
 			String header = ( String )e.nextElement();
-			requestHeaders.put( header, request.getHeader( header ) );
+			String lcHeader = header.toLowerCase();
+			if( lcHeader.equals( "soapaction" ))
+				requestHeaders.put( "SOAPAction", request.getHeader( header ) );
+			else if( lcHeader.equals( "content-type" ))
+				requestHeaders.put( "Content-Type", request.getHeader( header ) );
+			else if( lcHeader.equals( "content-length" ))
+				requestHeaders.put( "Content-Length", request.getHeader( header ) );
+			else if( lcHeader.equals( "content-encoding" ))
+				requestHeaders.put( "Content-Encoding", request.getHeader( header ) );
+			else
+				requestHeaders.put( header, request.getHeader( header ) );
 		}
 
 		protocol = request.getProtocol();
@@ -167,8 +178,16 @@ public class WsdlMockRequest implements MockRequest
 		if( encoding != null )
 			encoding = StringUtils.unquote( encoding );
 
-		ByteArrayOutputStream out = Tools.readAll( request.getInputStream(), Tools.READ_ALL );
+		ServletInputStream is = request.getInputStream();
+		if( is.markSupported() )
+			is.mark( Integer.MAX_VALUE );
+		
+		ByteArrayOutputStream out = Tools.readAll( is, Tools.READ_ALL );
 		byte[] data = out.toByteArray();
+		
+		if( is.markSupported())
+			is.reset();
+		
 		int contentOffset = 0;
 
 		String contentType = request.getContentType();

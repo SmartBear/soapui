@@ -15,6 +15,7 @@ package com.eviware.soapui.support.editor.views.xml.raw;
 import java.beans.PropertyChangeEvent;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
@@ -44,9 +45,9 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		{
 			return new WsdlMessageExchangeResponseRawXmlEditor( ( MessageExchangeModelItem )modelItem, ( XmlEditor )editor );
 		}
-		else if( modelItem instanceof AbstractHttpRequest )
+		else if( modelItem instanceof AbstractHttpRequestInterface<?> )
 		{
-			return new HttpResponseRawXmlEditor( ( AbstractHttpRequest )modelItem, ( XmlEditor )editor );
+			return new HttpResponseRawXmlEditor( ( AbstractHttpRequest<?> )modelItem, ( XmlEditor )editor );
 		}
 		else if( modelItem instanceof WsdlMockResponse )
 		{
@@ -63,9 +64,9 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		{
 			return new WsdlMessageExchangeRequestRawXmlEditor( ( MessageExchangeModelItem )modelItem, ( XmlEditor )editor );
 		}
-		else if( modelItem instanceof AbstractHttpRequest )
+		else if( modelItem instanceof AbstractHttpRequestInterface<?> )
 		{
-			return new HttpRequestRawXmlEditor( ( AbstractHttpRequest )modelItem, ( XmlEditor )editor );
+			return new HttpRequestRawXmlEditor( ( AbstractHttpRequest<?> )modelItem, ( XmlEditor )editor );
 		}
 		else if( modelItem instanceof WsdlMockResponse )
 		{
@@ -77,9 +78,9 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 
 	private static class HttpRequestRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
-		private final AbstractHttpRequest request;
+		private final AbstractHttpRequest<?> request;
 
-		public HttpRequestRawXmlEditor( AbstractHttpRequest request, XmlEditor<XmlDocument> editor )
+		public HttpRequestRawXmlEditor( AbstractHttpRequest<?> request, XmlEditor<XmlDocument> editor )
 		{
 			super( "Raw", editor, "The actual content of the last submitted request" );
 			this.request = request;
@@ -115,9 +116,9 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 
 	private static class HttpResponseRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
-		private final AbstractHttpRequest request;
+		private final AbstractHttpRequest<?> request;
 
-		public HttpResponseRawXmlEditor( AbstractHttpRequest request, XmlEditor<XmlDocument> editor )
+		public HttpResponseRawXmlEditor( AbstractHttpRequest<?> request, XmlEditor<XmlDocument> editor )
 		{
 			super( "Raw", editor, "The actual content of the last received response" );
 			this.request = request;

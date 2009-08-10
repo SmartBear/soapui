@@ -40,9 +40,9 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 
 	private Set<ListDataListener> listeners = new HashSet<ListDataListener>();
 	private String[] endpoints;
-	private AbstractHttpRequest<?> request;
+	private AbstractHttpRequestInterface<?> request;
 
-	public EndpointsComboBoxModel( AbstractHttpRequest<?> request )
+	public EndpointsComboBoxModel( AbstractHttpRequestInterface<?> request )
 	{
 		this.request = request;
 		initEndpoints();

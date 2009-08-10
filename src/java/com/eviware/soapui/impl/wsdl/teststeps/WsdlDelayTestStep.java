@@ -15,10 +15,10 @@ package com.eviware.soapui.impl.wsdl.teststeps;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.support.DefaultTestStepProperty;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.UISupport;
@@ -135,22 +135,26 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties
 
 	public int getDelay()
 	{
-		return delay;
+		try
+		{
+			return Integer.parseInt( PropertyExpander.expandProperties( this, delayString ));
+		}
+		catch( NumberFormatException e )
+		{
+			return -1;
+		}
 	}
 
 	public void setDelay( int delay )
 	{
-		if( this.delay == delay )
-			return;
-
 		String oldLabel = getLabel();
 
-		this.delay = delay;
+		this.delayString = String.valueOf( delay );
 		saveDelay( getConfig() );
 		notifyPropertyChanged( WsdlTestStep.LABEL_PROPERTY, oldLabel, getLabel() );
 	}
 
-	public TestStepResult run( TestRunner testRunner, TestRunContext context )
+	public TestStepResult run( TestCaseRunner testRunner, TestCaseRunContext context )
 	{
 		WsdlTestStepResult result = new WsdlTestStepResult( this );
 		result.startTimer();
@@ -163,7 +167,7 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties
 
 			try
 			{
-				delay = Integer.parseInt( PropertyExpansionUtils.expandProperties( context, delayString ) );
+				delay = Integer.parseInt( PropertyExpander.expandProperties( context, delayString ) );
 			}
 			catch( NumberFormatException e )
 			{
@@ -173,7 +177,7 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties
 			// sleep in chunks for canceling
 			for( timeWaited = 0; !canceled && timeWaited < delay; timeWaited += DELAY_CHUNK )
 			{
-				if( timeWaited % 1000 == 0 && context.getProperty( TestRunContext.LOAD_TEST_RUNNER ) == null )
+				if( timeWaited % 1000 == 0 && context.getProperty( TestCaseRunContext.LOAD_TEST_RUNNER ) == null )
 				{
 					String newLabel = getLabel();
 					notifyPropertyChanged( WsdlTestStep.LABEL_PROPERTY, oldLabel, newLabel );
@@ -197,7 +201,7 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties
 		timeWaited = 0;
 		running = false;
 
-		if( context.getProperty( TestRunContext.LOAD_TEST_RUNNER ) == null )
+		if( context.getProperty( TestCaseRunContext.LOAD_TEST_RUNNER ) == null )
 			notifyPropertyChanged( WsdlTestStep.LABEL_PROPERTY, oldLabel, getLabel() );
 
 		return result;

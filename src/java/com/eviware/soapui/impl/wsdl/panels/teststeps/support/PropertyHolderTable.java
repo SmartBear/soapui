@@ -24,9 +24,13 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.util.Properties;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -47,6 +51,7 @@ import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionImpl;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.support.TestPropertyUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.model.tree.nodes.PropertyTreeNode.PropertyModelItem;
@@ -55,6 +60,11 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.support.ADialogBuilder;
+import com.eviware.x.form.support.AField;
+import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
 
 public class PropertyHolderTable extends JPanel
 {
@@ -163,16 +173,22 @@ public class PropertyHolderTable extends JPanel
 			JButton removePropertyButton = UISupport.createToolbarButton( removePropertyAction );
 			toolbar.add( removePropertyButton );
 
+			toolbar.addRelatedGap();
 			JButton movePropertyUpButton = UISupport.createToolbarButton( movePropertyUpAction );
 			toolbar.add( movePropertyUpButton );
 			JButton movePropertyDownButton = UISupport.createToolbarButton( movePropertyDownAction );
 			toolbar.add( movePropertyDownButton );
+			
+			toolbar.addRelatedGap();
+			toolbar.add( UISupport.createToolbarButton( new SortPropertiesAction() ));
+			toolbar.addRelatedGap();
 		}
 
 		JButton clearPropertiesButton = UISupport.createToolbarButton( new ClearPropertiesAction() );
 		toolbar.add( clearPropertiesButton );
 		JButton loadPropertiesButton = UISupport.createToolbarButton( loadPropertiesAction );
 		toolbar.add( loadPropertiesButton );
+		toolbar.add( UISupport.createToolbarButton( new SavePropertiesAction() ) );
 
 		return toolbar;
 	}
@@ -209,11 +225,13 @@ public class PropertyHolderTable extends JPanel
 	{
 		private boolean enabled = true;
 
+		@SuppressWarnings( "unused" )
 		public boolean isEnabled()
 		{
 			return enabled;
 		}
 
+		@SuppressWarnings( "unused" )
 		public void setEnabled( boolean enabled )
 		{
 			this.enabled = enabled;
@@ -489,6 +507,8 @@ public class PropertyHolderTable extends JPanel
 
 	private class LoadPropertiesAction extends AbstractAction
 	{
+		private XFormDialog dialog;
+
 		public LoadPropertiesAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/load_properties.gif" ) );
@@ -497,38 +517,163 @@ public class PropertyHolderTable extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			File file = UISupport.getFileDialogs().open( this, "Set properties source", null, null, null );
+			if( dialog == null )
+				dialog = ADialogBuilder.buildDialog( LoadOptionsForm.class );
+
+			dialog.getFormField( LoadOptionsForm.DELETEREMAINING )
+					.setEnabled( holder instanceof MutableTestPropertyHolder );
+			dialog.getFormField( LoadOptionsForm.CREATEMISSING ).setEnabled( holder instanceof MutableTestPropertyHolder );
+
+			if( dialog.show() )
+			{
+				try
+				{
+					BufferedReader reader = new BufferedReader( new FileReader( dialog.getValue( LoadOptionsForm.FILE ) ) );
+
+					String line = reader.readLine();
+					int count = 0;
+
+					Set<String> names = new HashSet<String>( Arrays.asList( holder.getPropertyNames() ) );
+
+					while( line != null )
+					{
+						if( line.trim().length() > 0 && !( line.charAt( 0 ) == '#' ) )
+						{
+							int ix = line.indexOf( '=' );
+							if( ix > 0 )
+							{
+								String name = line.substring( 0, ix ).trim();
+								String value = line.length() > ix ? line.substring( ix + 1 ) : "";
+
+								// read multiline value
+								if( value.endsWith( "\\" ) )
+								{
+									value = value.substring( 0, value.length() - 1 );
+
+									String ln = reader.readLine();
+									while( ln != null && ln.endsWith( "\\" ) )
+									{
+										value += ln.substring( 0, ln.length() - 1 );
+										ln = reader.readLine();
+									}
+
+									if( ln != null )
+										value += ln;
+									if( ln == null )
+										break;
+								}
+
+								if( holder.hasProperty( name ) )
+								{
+									count++ ;
+									holder.setPropertyValue( name, value );
+								}
+								else if( dialog.getBooleanValue( LoadOptionsForm.CREATEMISSING )
+										&& holder instanceof MutableTestPropertyHolder )
+								{
+									( ( MutableTestPropertyHolder )holder ).addProperty( name ).setValue( value );
+									count++ ;
+								}
+
+								names.remove( name );
+							}
+						}
+
+						line = reader.readLine();
+					}
+
+					if( dialog.getBooleanValue( LoadOptionsForm.DELETEREMAINING )
+							&& holder instanceof MutableTestPropertyHolder )
+					{
+						for( String name : names )
+						{
+							( ( MutableTestPropertyHolder )holder ).removeProperty( name );
+						}
+					}
+
+					reader.close();
+					UISupport.showInfoMessage( "Added/Updated " + count + " properties from file" );
+				}
+				catch( Exception ex )
+				{
+					UISupport.showErrorMessage( ex );
+				}
+			}
+		}
+	}
+
+	private class SavePropertiesAction extends AbstractAction
+	{
+		public SavePropertiesAction()
+		{
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/set_properties_target.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Saves current property-values to a file" );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			if( holder.getPropertyCount() == 0 )
+			{
+				UISupport.showErrorMessage( "No properties to save!" );
+				return;
+			}
+
+			File file = UISupport.getFileDialogs().saveAs( this, "Save Properties" );
 			if( file != null )
 			{
 				try
 				{
-					boolean createMissing = holder instanceof MutableTestPropertyHolder
-							&& UISupport.confirm( "Create missing properties?", "Set Properties Source" );
-
-					Properties props = new Properties();
-					props.load( new FileInputStream( file ) );
-					for( Object obj : props.keySet() )
-					{
-						String name = obj.toString();
-						if( holder.hasProperty( name ) )
-						{
-							holder.setPropertyValue( name, props.getProperty( name ) );
-						}
-						else if( createMissing )
-						{
-							( ( MutableTestPropertyHolder )holder ).addProperty( name ).setValue( props.getProperty( name ) );
-						}
-					}
-
-					UISupport.showInfoMessage( "Loaded " + props.size() + " properties from [" + file.getAbsolutePath()
-							+ "]" );
+					int cnt = TestPropertyUtils.saveTo( holder, file.getAbsolutePath() );
+					UISupport.showInfoMessage( "Saved " + cnt + " propert" + ((cnt == 1)?"y":"ies") + " to file" );
 				}
-				catch( Exception e1 )
+				catch( IOException e1 )
 				{
-					UISupport.showErrorMessage( "Failed to load properties from [" + file.getAbsolutePath() + "]; " + e1 );
+					UISupport.showErrorMessage( e1 );
 				}
 			}
 		}
+	}
+	
+	private class SortPropertiesAction extends AbstractAction
+	{
+		public SortPropertiesAction()
+		{
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/arrow_down.png" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Sorts properties alphabetically" );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			if( holder.getPropertyCount() == 0 )
+			{
+				UISupport.showErrorMessage( "No properties to sort!" );
+				return;
+			}
+
+			try
+			{
+				UISupport.setHourglassCursor();
+				TestPropertyUtils.sortProperties( ( MutableTestPropertyHolder )holder );
+			}
+			finally
+			{
+				UISupport.resetCursor();
+			}
+			
+		}
+	}
+
+	@AForm( name = "Load Properties", description = "Set load options below" )
+	private static interface LoadOptionsForm
+	{
+		@AField( name = "File", description = "The Properties file to load", type = AFieldType.FILE )
+		public static final String FILE = "File";
+
+		@AField( name = "Create Missing", description = "Creates Missing Properties", type = AFieldType.BOOLEAN )
+		public static final String CREATEMISSING = "Create Missing";
+
+		@AField( name = "Delete Remaining", description = "Deletes properties not in file", type = AFieldType.BOOLEAN )
+		public static final String DELETEREMAINING = "Delete Remaining";
 	}
 
 	public TestPropertyHolder getHolder()

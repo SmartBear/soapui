@@ -20,7 +20,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.actions.resource.NewRestRequestAction;
+import com.eviware.soapui.impl.rest.actions.resource.NewRestMethodAction;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
@@ -83,8 +83,8 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 
-		toolbar.addFixed( createActionButton( SwingActionDelegate.createDelegate( NewRestRequestAction.SOAPUI_ACTION_ID,
-				getModelItem(), null, "/create_empty_request.gif" ), true ) );
+		toolbar.addFixed( createActionButton( SwingActionDelegate.createDelegate( NewRestMethodAction.SOAPUI_ACTION_ID,
+				getModelItem(), null, "/create_empty_method.gif" ), true ) );
 
 		toolbar.addSeparator();
 

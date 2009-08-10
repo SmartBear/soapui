@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.mock.dispatch;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -33,6 +34,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -159,6 +161,19 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 		public String getScriptName()
 		{
 			return null;
+		}
+
+		public void addPropertyChangeListener( PropertyChangeListener listener )
+		{
+		}
+
+		public void removePropertyChangeListener( PropertyChangeListener listener )
+		{
+		}
+
+		public ModelItem getModelItem()
+		{
+			return getMockOperation();
 		}
 	}
 

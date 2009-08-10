@@ -69,6 +69,11 @@ public class StatisticsHistory
 		} );
 	}
 
+	public Map<Integer, TestStepStatisticsHistory> getTestStepStatisticHistories()
+	{
+		return testStepStatisticHistories;
+	}
+
 	public long getResolution()
 	{
 		return resolution;
@@ -188,7 +193,7 @@ public class StatisticsHistory
 		public abstract void release();
 	}
 
-	private class TestStepStatisticsHistory extends StatisticsHistoryModel
+	public class TestStepStatisticsHistory extends StatisticsHistoryModel
 	{
 		private final int testStepIndex;
 

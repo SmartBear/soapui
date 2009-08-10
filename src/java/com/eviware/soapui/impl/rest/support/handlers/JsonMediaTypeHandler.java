@@ -12,11 +12,15 @@
 
 package com.eviware.soapui.impl.rest.support.handlers;
 
+import java.net.URL;
+
 import net.sf.json.JSON;
+import net.sf.json.JSONException;
 import net.sf.json.JSONSerializer;
 import net.sf.json.xml.XMLSerializer;
 
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
+import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -44,6 +48,9 @@ public class JsonMediaTypeHandler implements MediaTypeHandler
 			JSON json = JSONSerializer.toJSON( content );
 			XMLSerializer serializer = new XMLSerializer();
 			serializer.setTypeHintsEnabled( false );
+			serializer.setRootName( HttpUtils.isErrorStatus( response.getStatusCode() ) ? "Fault" : "Response" );
+			URL url = response.getURL();
+			serializer.setNamespace( "", url.getProtocol() + "://" + url.getHost() + url.getPath() );
 			content = serializer.write( json );
 			content = XmlUtils.prettyPrintXml( content );
 
@@ -51,8 +58,9 @@ public class JsonMediaTypeHandler implements MediaTypeHandler
 		}
 		catch( Throwable e )
 		{
-			e.printStackTrace();
+			if( !( e instanceof JSONException ) )
+				e.printStackTrace();
 		}
-		return null;
+		return "<xml/>";
 	}
 }

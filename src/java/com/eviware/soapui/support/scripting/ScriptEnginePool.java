@@ -54,7 +54,7 @@ public class ScriptEnginePool
 		synchronized( this )
 		{
 			if( scriptEngines.isEmpty() )
-				scriptEngines.push( SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, modelItem ) );
+				scriptEngines.push( SoapUIScriptEngineRegistry.create( modelItem ) );
 
 			SoapUIScriptEngine result = scriptEngines.pop();
 			if( script != null )

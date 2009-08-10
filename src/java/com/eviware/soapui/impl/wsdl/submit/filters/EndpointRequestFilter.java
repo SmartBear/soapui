@@ -19,7 +19,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 
@@ -37,7 +37,7 @@ public class EndpointRequestFilter extends AbstractRequestFilter
 		HttpMethod httpMethod = ( HttpMethod )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 
 		String strURL = request.getEndpoint();
-		strURL = PropertyExpansionUtils.expandProperties( context, strURL );
+		strURL = PropertyExpander.expandProperties( context, strURL );
 		try
 		{
 			if( StringUtils.hasContent( strURL ) )

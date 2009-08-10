@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.loadtest;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 
 /**
  * LoadTestRunContext implementation for WsdlLoadTests
@@ -44,5 +45,17 @@ public class WsdlLoadTestContext extends DefaultPropertyExpansionContext impleme
 			return runner;
 
 		return super.get( key );
+	}
+
+	public Object getProperty( String testStep, String propertyName )
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public TestCaseRunner getTestRunner()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

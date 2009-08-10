@@ -56,6 +56,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFa
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.XPathReference;
@@ -170,11 +171,11 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 				return "Missing content for XQuery Assertion";
 
 			XmlObject xml = XmlObject.Factory.parse( response );
-			String expandedPath = PropertyExpansionUtils.expandProperties( context, path );
+			String expandedPath = PropertyExpander.expandProperties( context, path );
 			XmlObject[] items = xml.execQuery( expandedPath );
 
 			XmlObject contentObj = null;
-			String expandedContent = PropertyExpansionUtils.expandProperties( context, expectedContent );
+			String expandedContent = PropertyExpander.expandProperties( context, expectedContent );
 
 			try
 			{
@@ -203,7 +204,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 						if( items[c] instanceof XmlAnySimpleType )
 						{
 							String value = ( ( XmlAnySimpleType )items[c] ).getStringValue();
-							String expandedValue = PropertyExpansionUtils.expandProperties( context, value );
+							String expandedValue = PropertyExpander.expandProperties( context, value );
 							XMLAssert.assertEquals( expandedContent, expandedValue );
 						}
 						else
@@ -211,14 +212,13 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 							Node domNode = items[c].getDomNode();
 							if( domNode.getNodeType() == Node.ELEMENT_NODE )
 							{
-								String expandedValue = PropertyExpansionUtils.expandProperties( context, XmlUtils
+								String expandedValue = PropertyExpander.expandProperties( context, XmlUtils
 										.getElementText( ( Element )domNode ) );
 								XMLAssert.assertEquals( expandedContent, expandedValue );
 							}
 							else
 							{
-								String expandedValue = PropertyExpansionUtils.expandProperties( context, items[c]
-										.xmlText( options ) );
+								String expandedValue = PropertyExpander.expandProperties( context, items[c].xmlText( options ) );
 								XMLAssert.assertEquals( expandedContent, expandedValue );
 							}
 						}
@@ -420,7 +420,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 
 			WsdlTestRunContext context = new WsdlTestRunContext( ( TestStep )getAssertable().getModelItem() );
 
-			String expandedPath = PropertyExpansionUtils.expandProperties( context, txt.trim() );
+			String expandedPath = PropertyExpander.expandProperties( context, txt.trim() );
 
 			if( contentArea != null && contentArea.isVisible() )
 				contentArea.setText( "" );

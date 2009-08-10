@@ -89,10 +89,26 @@
 	 		<td>G</td>
 	 		<td>Sets global property with name=value</td>
 	 	</tr>
- <tr>
-					<td>P</td>
-					<td>Sets project property with name=value</td>
-				</tr>             
+        <tr>
+		    <td>P</td>
+			<td>Sets project property with name=value</td>
+		</tr> 
+		<tr>
+		    <td>S</td>
+			<td>Saves the project after running the tests</td>
+		</tr>            
+		<tr>
+			<td>R</td>
+			<td>Selects which report to generate for the executed LoadTest(s), the report is 
+					saved as specified with the	-F option to the folder specified with the -f option.
+					(soapUI Pro only)</td>
+		</tr>
+		<tr>
+			<td>F</td>
+			<td>Sets the format of the report specified with the -R option, for Printable reports this
+					is one of PDF, XLS, HTML, RTF, CSV, TXT, and XML. For Data Export this is either XML or CSV  
+					(soapUI Pro only)</td>
+		</tr>
 		</table>
 		 <p>The distribution contains a loadtestrunner.bat script for running tests from within the bin directory, 
 		 for example;</p>	
@@ -100,9 +116,11 @@
 		 <p>will run all the LoadTests defined in the my-soapui-project.xml file against the specified service-endpoint.</p>
 		 
 		  <subsection name="Launch Load Test Dialog">
-		 <p>For getting started with the command-line LoadTestRunner, soapUI includes a "Launch Dialog" action available
-		 from Project/LoadTest popup menus:</p>
-		 <p align="center"><img src="images/loadtestrunner_dialog.gif" alt="Load Test Runner Dialog"/></p>
+		 <p>For getting started with the command-line LoadTestRunner, soapUI includes a "Launch LoadTestRunner" action available
+		 	from Project/LoadTest popup menus which can be used to launch the command-line runner from inside soapUI. (The IDE plugins
+		 	do not include the command-line runners, you will need to download/install soapUI seperately and point the "TestRunner Path" option 
+		 	in this dialog to the install directory). The dialog looks as follows: </p>
+		 <p align="center"><img src="images/loadtestrunner_dialog30.gif" alt="Load Test Runner Dialog"/></p>
 		<p>The options available include those described above and also add options to set if the project 
 		 should be saved, the path to the runner (leave empty for same as installation), etc. 
 		 When launching the specified LoadTestRunner will be 
@@ -119,7 +137,7 @@
 		 manner as for the TestCase runner.</p>
 		 <source><font size="-1">loadtestrunner -stest -ctestcase4 -l"LoadTest 1" -r "C:\Documents and Settings\ole.matzura\My Documents\jbossws-soapui-project.xml"</font></source>
 		 <p>produced the following output:</p>
-		 <source><font size="-1">SoapUI 1.5beta2 LoadTestRunner
+		 <source><font size="-1">SoapUI 3.0 LoadTestRunner
 15:31:50,397 INFO  [SoapUILoadTestRunner] setting projectFile to [C:\Documents and Settings\ole.matzura\
  My Documents\jbossws-soapui-project.xml]
 15:31:50,517 INFO  [SoapUILoadTestRunner] setting testSuite to [test]

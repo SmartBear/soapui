@@ -22,7 +22,6 @@ import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
-import com.eviware.soapui.settings.UISettings;
 
 /**
  * SoapUITreeNode for Project implementations
@@ -67,8 +66,6 @@ public class ProjectTreeNode extends AbstractModelItemTreeNode<Project>
 		getTreeModel().mapModelItems( interfaceNodes );
 		getTreeModel().mapModelItems( testSuiteNodes );
 		getTreeModel().mapModelItems( mockServiceNodes );
-
-		initOrdering( testSuiteNodes, UISettings.ORDER_TESTSUITES );
 
 		propertiesTreeNode = PropertiesTreeNode.createDefaultPropertiesNode( project, getTreeModel() );
 		getTreeModel().mapModelItem( propertiesTreeNode );
@@ -174,8 +171,7 @@ public class ProjectTreeNode extends AbstractModelItemTreeNode<Project>
 		public void testSuiteAdded( TestSuite testSuite )
 		{
 			TestSuiteTreeNode testSuiteNode = new TestSuiteTreeNode( testSuite, getTreeModel() );
-			testSuiteNodes.add( testSuiteNode );
-			reorder( false );
+			testSuiteNodes.add( testSuite.getProject().getIndexOfTestSuite( testSuite ), testSuiteNode );
 			getTreeModel().notifyNodeInserted( testSuiteNode );
 		}
 
@@ -189,6 +185,13 @@ public class ProjectTreeNode extends AbstractModelItemTreeNode<Project>
 			}
 			else
 				throw new RuntimeException( "Removing unkown testSuite" );
+		}
+
+		@Override
+		public void testSuiteMoved( TestSuite testSuite, int index, int offset )
+		{
+			testSuiteRemoved( testSuite );
+			testSuiteAdded( testSuite );
 		}
 
 		public void mockServiceAdded( MockService mockService )
@@ -208,10 +211,6 @@ public class ProjectTreeNode extends AbstractModelItemTreeNode<Project>
 			}
 			else
 				throw new RuntimeException( "Removing unkown mockService" );
-		}
-
-		public void interfaceUpdated( Interface iface )
-		{
 		}
 	}
 

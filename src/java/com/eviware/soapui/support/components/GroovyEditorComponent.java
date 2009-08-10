@@ -14,6 +14,8 @@ package com.eviware.soapui.support.components;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -30,20 +32,28 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.support.UISupport;
 
-public class GroovyEditorComponent extends JPanel
+public class GroovyEditorComponent extends JPanel implements PropertyChangeListener
 {
 	private GroovyEditor editor;
 	private JButton insertCodeButton;
+	private Action runAction;
+	private JXToolBar toolBar;
+	private final GroovyEditorModel editorModel;
+	private final String helpUrl;
 
 	public GroovyEditorComponent( GroovyEditorModel editorModel, String helpUrl )
 	{
 		super( new BorderLayout() );
+		this.editorModel = editorModel;
+		this.helpUrl = helpUrl;
 
 		editor = new GroovyEditor( editorModel );
 		editor.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 0, 3, 0, 3 ), editor
 				.getBorder() ) );
 		add( editor, BorderLayout.CENTER );
-		addToolbar( editorModel, helpUrl );
+		buildToolbar( editorModel, helpUrl );
+		
+		editorModel.addPropertyChangeListener( this );
 	}
 
 	public GroovyEditor getEditor()
@@ -51,11 +61,31 @@ public class GroovyEditorComponent extends JPanel
 		return editor;
 	}
 
-	private void addToolbar( GroovyEditorModel editorModel, String helpUrl )
+	@Override
+	public void setEnabled( boolean enabled )
 	{
-		JXToolBar toolBar = UISupport.createSmallToolbar();
+		super.setEnabled( enabled );
+		
+		editor.setEnabled( enabled );
+		if( runAction != null )
+			runAction.setEnabled( enabled );
+		
+		insertCodeButton.setEnabled( enabled );
+	}
 
-		Action runAction = editorModel.getRunAction();
+	private void buildToolbar( GroovyEditorModel editorModel, String helpUrl )
+	{
+		if( toolBar == null )
+		{
+			toolBar = UISupport.createSmallToolbar();
+		}
+		else
+		{
+			remove( toolBar );
+			toolBar.removeAll();
+		}
+
+		runAction = editorModel.getRunAction();
 		if( runAction != null )
 		{
 			JButton runButton = UISupport.createToolbarButton( runAction );
@@ -69,9 +99,13 @@ public class GroovyEditorComponent extends JPanel
 			toolBar.addRelatedGap();
 		}
 
-		insertCodeButton = new JButton( new InsertCodeAction() );
-		insertCodeButton.setIcon( UISupport.createImageIcon( "/down_arrow.gif" ) );
-		insertCodeButton.setHorizontalTextPosition( SwingConstants.LEFT );
+		if( insertCodeButton == null )
+		{
+			insertCodeButton = new JButton( new InsertCodeAction() );
+			insertCodeButton.setIcon( UISupport.createImageIcon( "/down_arrow.gif" ) );
+			insertCodeButton.setHorizontalTextPosition( SwingConstants.LEFT );
+		}
+		
 		toolBar.addFixed( insertCodeButton );
 
 		toolBar.add( Box.createHorizontalGlue() );
@@ -109,6 +143,8 @@ public class GroovyEditorComponent extends JPanel
 		}
 
 		add( toolBar, BorderLayout.NORTH );
+		revalidate();
+		repaint();
 	}
 
 	public class InsertCodeAction extends AbstractAction
@@ -123,6 +159,20 @@ public class GroovyEditorComponent extends JPanel
 		{
 			JPopupMenu popup = editor.getEditArea().getComponentPopupMenu();
 			popup.show( insertCodeButton, insertCodeButton.getWidth() / 2, insertCodeButton.getHeight() / 2 );
+		}
+	}
+
+	public void release()
+	{
+		editorModel.removePropertyChangeListener( this );
+		getEditor().release();
+	}
+
+	public void propertyChange( PropertyChangeEvent evt )
+	{
+		if( !evt.getPropertyName().equals( "script" ))
+		{
+			buildToolbar( editorModel, helpUrl );
 		}
 	}
 }

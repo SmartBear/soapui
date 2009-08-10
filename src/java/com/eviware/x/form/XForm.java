@@ -61,7 +61,7 @@ public interface XForm
 
 	public void addSeparator();
 
-	public String[] getOptions( String name );
+	public Object[] getOptions( String name );
 
 	public XFormField getFormField( String name );
 }

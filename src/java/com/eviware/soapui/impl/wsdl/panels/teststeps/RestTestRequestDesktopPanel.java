@@ -26,6 +26,7 @@ import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
 import com.eviware.soapui.model.ModelItem;
@@ -36,7 +37,7 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.support.ListDataChangeListener;
@@ -208,6 +209,11 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 		{
 			assertionInspector.setTitle( "Assertions (" + getModelItem().getAssertionCount() + ")" );
 		}
+
+		public void assertionMoved( TestAssertion assertion, int ix, int offset )
+		{
+			assertionInspector.setTitle( "Assertions (" + getModelItem().getAssertionCount() + ")" );
+		}
 	}
 
 	public boolean beforeSubmit( Submit submit, SubmitContext context )
@@ -276,12 +282,12 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 				setEnabled( false );
 		}
 
-		public void testCaseFinished( TestRunner runner )
+		public void testCaseFinished( TestCaseRunner runner )
 		{
 			setEnabled( !SoapUI.getTestMonitor().hasRunningTest( getModelItem().getTestCase() ) );
 		}
 
-		public void testCaseStarted( TestRunner runner )
+		public void testCaseStarted( TestCaseRunner runner )
 		{
 			if( runner.getTestCase() == getModelItem().getTestCase() )
 				setEnabled( false );
@@ -292,7 +298,7 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 	{
 		super.propertyChange( evt );
 
-		if( evt.getPropertyName().equals( RestTestRequest.STATUS_PROPERTY ) )
+		if( evt.getPropertyName().equals( RestTestRequestInterface.STATUS_PROPERTY ) )
 			updateStatusIcon();
 	}
 }

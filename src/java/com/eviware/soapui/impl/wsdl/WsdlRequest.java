@@ -23,17 +23,21 @@ import org.apache.log4j.Logger;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.config.WsdlRequestConfig;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaContainer;
+import com.eviware.soapui.impl.wsdl.support.wsrm.WsrmConfig;
+import com.eviware.soapui.impl.wsdl.support.wsrm.WsrmContainer;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
@@ -51,7 +55,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
  */
 
 public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implements WsdlAttachmentContainer,
-		PropertyExpansionContainer, WsaContainer
+		PropertyExpansionContainer, WsaContainer, WsrmContainer
 {
 	public final static Logger log = Logger.getLogger( WsdlRequest.class );
 
@@ -78,6 +82,7 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 	private InternalInterfaceListener interfaceListener = new InternalInterfaceListener();
 
 	private WsaConfig wsaConfig;
+	private WsrmConfig wsrmConfig;
 
 	public WsdlRequest( WsdlOperation operation, WsdlRequestConfig callConfig )
 	{
@@ -112,6 +117,11 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		if( wsaConfig != null )
 		{
 			wsaConfig.setConfig( request.getWsaConfig() );
+		}
+		
+		if( wsrmConfig != null )
+		{
+			wsrmConfig.setWsrmConfig( request.getWsrmConfig() );
 		}
 	}
 
@@ -198,7 +208,7 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 
 	public WsdlSubmit<WsdlRequest> submit( SubmitContext submitContext, boolean async ) throws SubmitException
 	{
-		String endpoint = PropertyExpansionUtils.expandProperties( submitContext, getEndpoint() );
+		String endpoint = PropertyExpander.expandProperties( submitContext, getEndpoint() );
 		if( endpoint == null || endpoint.trim().length() == 0 )
 		{
 			UISupport.showErrorMessage( "Missing endpoint for request [" + getName() + "]" );
@@ -285,9 +295,9 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		return definedAttachmentParts.toArray( new HttpAttachmentPart[definedAttachmentParts.size()] );
 	}
 
-	public RequestMethod getMethod()
+	public RestRequestInterface.RequestMethod getMethod()
 	{
-		return RequestMethod.POST;
+		return RestRequestInterface.RequestMethod.POST;
 	}
 
 	/*
@@ -544,7 +554,7 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 	{
 		HttpAttachmentPart attachmentPart = getAttachmentPart( partName );
 		if( attachmentPart == null )
-			return AttachmentUtils.getAttachmentEncoding( getOperation(), partName, false );
+		return AttachmentUtils.getAttachmentEncoding( getOperation(), partName, false );
 		else
 			return AttachmentUtils.getAttachmentEncoding( getOperation(), attachmentPart, false );
 	}
@@ -575,10 +585,43 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 	public void setWsaEnabled( boolean arg0 )
 	{
 		setWsAddressing( arg0 );
-
 	}
 
-	@Override
+	public boolean isWsReliableMessaging()
+	{
+		return getConfig().getUseWsReliableMessaging();
+	}
+
+	public void setWsReliableMessaging( boolean wsReliableMessaging )
+	{
+		boolean old = getConfig().getUseWsReliableMessaging();
+		getConfig().setUseWsReliableMessaging( wsReliableMessaging );
+		notifyPropertyChanged( "wsReliableMessaging", old, wsReliableMessaging );
+	}
+
+	public WsrmConfig getWsrmConfig()
+	{
+		if( wsrmConfig == null )
+		{
+			if( !getConfig().isSetWsrmConfig() )
+			{
+				getConfig().addNewWsrmConfig();
+			}
+			wsrmConfig = new WsrmConfig( getConfig().getWsrmConfig(), this );
+		}
+		return wsrmConfig;
+	}
+
+	public boolean isWsrmEnabled()
+	{
+		return isWsReliableMessaging();
+	}
+
+	public void setWsrmEnabled( boolean arg0 )
+	{
+		setWsReliableMessaging( arg0 );
+	}
+
 	public String getResponseContentAsXml()
 	{
 		return getResponse() == null ? null : getResponse().getContentAsString();

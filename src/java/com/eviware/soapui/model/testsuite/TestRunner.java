@@ -12,32 +12,8 @@
 
 package com.eviware.soapui.model.testsuite;
 
-import java.util.List;
-
-/**
- * Runs a TestCase
- * 
- * @author Ole.Matzura
- */
-
 public interface TestRunner
 {
-	/**
-	 * Gets the TestCase being run
-	 * 
-	 * @return the TestCase being run
-	 */
-
-	public TestCase getTestCase();
-
-	/**
-	 * Gets the accumulated results so far; each TestStep returns a
-	 * TestStepResult when running.
-	 * 
-	 * @return the accumulated results so far
-	 */
-
-	public List<TestStepResult> getResults();
 
 	/**
 	 * Gets the current status of this TestRunner
@@ -99,29 +75,8 @@ public interface TestRunner
 
 	public String getReason();
 
-	/**
-	 * Transfers execution of this TestRunner to the TestStep with the specified
-	 * index in the TestCase
-	 */
-
-	public void gotoStep( int index );
-
-	/**
-	 * Transfers execution of this TestRunner to the TestStep with the specified
-	 * name in the TestCase
-	 */
-
-	public void gotoStepByName( String stepName );
-
-	/**
-	 * Runs the specified TestStep and returns the result
-	 */
-
-	public TestStepResult runTestStepByName( String name );
-
-	/**
-	 * Returns the context used by this runner
-	 */
-
 	public TestRunContext getRunContext();
+
+	public TestRunnable getTestRunnable();
+
 }

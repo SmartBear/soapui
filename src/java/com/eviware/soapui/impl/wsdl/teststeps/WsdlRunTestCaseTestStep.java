@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -30,18 +29,20 @@ import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder
 import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder.PropertiesStepProperty;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
 import com.eviware.soapui.model.testsuite.MessageExchangeTestStepResult;
 import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
-import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.model.testsuite.TestRunListener;
 import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.UISupport;
@@ -97,7 +98,6 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 	 * testsuite
 	 */
 
-	@Override
 	public void afterCopy( WsdlTestSuite oldTestSuite, WsdlTestCase oldTestCase )
 	{
 		super.afterCopy( oldTestSuite, oldTestCase );
@@ -146,7 +146,7 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 		stepConfig.getReturnProperties().setEntryArray( returnProperties.toStringArray() );
 	}
 
-	public TestStepResult run( TestRunner testRunner, TestRunContext testRunContext )
+	public TestStepResult run( TestCaseRunner testRunner, TestCaseRunContext testRunContext )
 	{
 		WsdlMessageExchangeTestStepResult result = new WsdlMessageExchangeTestStepResult( this );
 
@@ -160,16 +160,25 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 			{
 				runningTestCase = createTestCase( targetTestCase );
 			}
-			else if( !SoapUI.getTestMonitor().hasRunningTestCase( targetTestCase ) )
-			{
-				runningTestCase = targetTestCase;
-			}
 			else
 			{
-				result.setStatus( TestStepStatus.FAILED );
-				result.addMessage( "Target TestCase is already running" );
-				result.stopTimer();
-				runningTestCase = null;
+				runningTestCase = targetTestCase;
+				
+				TestCaseRunner targetTestRunner = SoapUI.getTestMonitor().getTestRunner( targetTestCase );
+				if( targetTestRunner != null && targetTestRunner.getStatus() == TestRunner.Status.RUNNING )
+				{
+					if( runMode == RunTestCaseRunModeTypeConfig.SINGLETON_AND_FAIL )
+					{
+						result.setStatus( TestStepStatus.FAILED );
+						result.addMessage( "Target TestCase is already running" );
+						result.stopTimer();
+						runningTestCase = null;
+					}
+					else
+					{
+						targetTestRunner.waitUntilFinished();
+					}
+				}
 			}
 
 			if( runningTestCase != null )
@@ -186,8 +195,7 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 						if( runningTestCase.hasProperty( key ) && !returnProperties.contains( key ) )
 						{
 							String value = props.get( key ).getValue();
-							runningTestCase.setPropertyValue( key, PropertyExpansionUtils.expandProperties( testRunContext,
-									value ) );
+							runningTestCase.setPropertyValue( key, PropertyExpander.expandProperties( testRunContext, value ) );
 						}
 					}
 
@@ -212,7 +220,11 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 					// aggregate results
 					for( TestStepResult testStepResult : testCaseRunner.getResults() )
 					{
-						result.addMessages( testStepResult.getMessages() );
+						result.addMessage( testStepResult.getTestStep().getName() + " - " + testStepResult.getStatus() + " - " + testStepResult.getTimeTaken());
+						for( String msg : testStepResult.getMessages())
+						{
+							result.addMessage( "- " + msg );
+						}
 
 						if( testStepResult instanceof MessageExchangeTestStepResult )
 						{
@@ -322,13 +334,23 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 	{
 		// clone config and remove and loadtests
 		testCase.beforeSave();
-		TestCaseConfig config = ( TestCaseConfig )testCase.getConfig().copy();
-		config.setLoadTestArray( new LoadTestConfig[0] );
 
-		// clone entire testCase
-		WsdlTestCase wsdlTestCase = new WsdlTestCase( testCase.getTestSuite(), config, true );
-		wsdlTestCase.afterLoad();
-		return wsdlTestCase;
+		try
+		{
+			TestCaseConfig config = TestCaseConfig.Factory.parse( testCase.getConfig().xmlText() );
+			config.setLoadTestArray( new LoadTestConfig[0] );
+
+			// clone entire testCase
+			WsdlTestCase wsdlTestCase = testCase.getTestSuite().buildTestCase( config, true );
+			wsdlTestCase.afterLoad();
+			return wsdlTestCase;
+		}
+		catch( Throwable e )
+		{
+			SoapUI.logError( e );
+		}
+
+		return null;
 	}
 
 	public void addTestPropertyListener( TestPropertyListener listener )
@@ -412,25 +434,25 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 	private final class InternalTestRunListener extends TestRunListenerAdapter
 	{
 		@Override
-		public void beforeRun( TestRunner testRunner, TestRunContext runContext )
+		public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			updateLabelDuringRun();
 		}
 
 		@Override
-		public void afterRun( TestRunner testRunner, TestRunContext runContext )
+		public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			updateLabelDuringRun();
 		}
 
 		@Override
-		public void afterStep( TestRunner testRunner, TestRunContext runContext, TestStepResult result )
+		public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
 		{
 			updateLabelDuringRun();
 		}
 
 		@Override
-		public void beforeStep( TestRunner testRunner, TestRunContext runContext )
+		public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
 		{
 			updateLabelDuringRun();
 		}
@@ -511,9 +533,8 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 		return propertyHolderSupport.getPropertyCount();
 	}
 
-	@SuppressWarnings( "unchecked" )
 	@Override
-	public void resolve( ResolveContext context )
+	public void resolve( ResolveContext<?> context )
 	{
 		super.resolve( context );
 
@@ -538,10 +559,4 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 			}
 		}
 	}
-
-	public void savePropertiesToFile( String fileName ) throws IOException
-	{
-		propertyHolderSupport.saveTo( fileName );
-	}
-
 }

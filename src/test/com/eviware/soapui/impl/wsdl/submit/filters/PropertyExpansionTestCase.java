@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2008 eviware.com 
+ *  soapUI, copyright (C) 2004-2009 eviware.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -25,6 +25,7 @@ import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.GroovyScriptStepFactory;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.settings.GlobalPropertySettings;
 
@@ -36,14 +37,14 @@ public class PropertyExpansionTestCase extends TestCase
    	
    	context.setProperty( "test", "value" );
    	
-   	assertEquals( "value", PropertyExpansionUtils.expandProperties( context, "${test}" ));
-   	assertEquals( "value", PropertyExpansionUtils.expandProperties( context, "${#test}" ));
-   	assertEquals( " value ", PropertyExpansionUtils.expandProperties( context, " ${test} " ));
-   	assertEquals( "", PropertyExpansionUtils.expandProperties( context, "${testa}" ));
-   	assertEquals( "valuevalue", PropertyExpansionUtils.expandProperties( context, "${test}${test}" ));
+   	assertEquals( "value", PropertyExpander.expandProperties( context, "${test}" ));
+   	assertEquals( "value", PropertyExpander.expandProperties( context, "${#test}" ));
+   	assertEquals( " value ", PropertyExpander.expandProperties( context, " ${test} " ));
+   	assertEquals( "", PropertyExpander.expandProperties( context, "${testa}" ));
+   	assertEquals( "valuevalue", PropertyExpander.expandProperties( context, "${test}${test}" ));
 
    	context.setProperty( "testa", "" );
-   	assertEquals( "", PropertyExpansionUtils.expandProperties( context, "${testa}" ));
+   	assertEquals( "", PropertyExpander.expandProperties( context, "${testa}" ));
    }
    
    public void testRecursiveExpansion() throws Exception
@@ -53,10 +54,10 @@ public class PropertyExpansionTestCase extends TestCase
    	context.setProperty( "test", "value" );
    	context.setProperty( "testexp", "${test}" );
    	
-   	assertEquals( "value", PropertyExpansionUtils.expandProperties( context, "${testexp}" ));
+   	assertEquals( "value", PropertyExpander.expandProperties( context, "${testexp}" ));
 
    	context.setProperty( "exp", "${exp}" );
-   	assertEquals( "${exp}", PropertyExpansionUtils.expandProperties( context, "${exp}" ));
+   	assertEquals( "${exp}", PropertyExpander.expandProperties( context, "${exp}" ));
    }
    
    public void testNestedExpansion() throws Exception
@@ -67,16 +68,16 @@ public class PropertyExpansionTestCase extends TestCase
    	context.setProperty( "testexp", "${test}" );
    	context.setProperty( "exp", "exp" );
    	
-   	assertEquals( "value", PropertyExpansionUtils.expandProperties( context, "${test${exp}}" ));
+   	assertEquals( "value", PropertyExpander.expandProperties( context, "${test${exp}}" ));
    	
    	context.setProperty( "id", "123" );
    	context.setProperty( "testxml", "<test><value id=\"123\">hello</value></test>" );
    	assertEquals( "hello", 
-   				PropertyExpansionUtils.expandProperties( context, "${#testxml#//value[@id=${id}]/text()}" ));
+   				PropertyExpander.expandProperties( context, "${#testxml#//value[@id=${id}]/text()}" ));
 
    	context.setProperty( "testxpath", "//value[@id=${id}]/text()" );
    	assertEquals( "hello", 
-   				PropertyExpansionUtils.expandProperties( context, "${#testxml#${testxpath}}" ));
+   				PropertyExpander.expandProperties( context, "${#testxml#${testxpath}}" ));
    }
    
    public void testXPathExpansion() throws Exception 
@@ -84,7 +85,7 @@ public class PropertyExpansionTestCase extends TestCase
    	WsdlSubmitContext context = new WsdlSubmitContext( null );
    	
    	context.setProperty( "test", "<test><value>hello</value></test>" );
-   	assertEquals( "hello", PropertyExpansionUtils.expandProperties( context, "${#test#//value/text()}" ));
+   	assertEquals( "hello", PropertyExpander.expandProperties( context, "${#test#//value/text()}" ));
    }
    
    public void testScopedPropertyExpansion() throws Exception

@@ -33,8 +33,8 @@
 		 	<td>Gives an overview of the soapUI Pro only XPath Selection feature</td>
 	 	</tr>
         <tr>
-             <td><a href="coverage.html">WSDL Coverage</a></td>
-             <td>Gives an overview of WSDL Coverage functionality (soapUI Pro only)</td>
+             <td><a href="coverage.html">Web Service Coverage</a></td>
+             <td>Gives an overview of Web Service Coverage functionality (soapUI Pro only)</td>
          </tr>
             <tr><td colspan="2"><b>Project handling in soapUI</b></td></tr>
             
@@ -135,12 +135,27 @@
 
         <tr>
              <td><a href="rest/resources.html">Resources</a></td>
-             <td>Explains how to setup and use REST Resource</td>
+             <td>Explains how to setup and use REST Resources</td>
+         </tr>
+         
+         <tr>
+             <td><a href="rest/methods.html">Methods</a></td>
+             <td>Explains how to setup and use REST Methods</td>
          </tr>
 
         <tr>
              <td><a href="rest/requests.html">Requests</a></td>
              <td>Shows how to work with REST Requests</td>
+         </tr>
+         
+         <tr>
+             <td><a href="rest/inference.html">WADL and XSD inference</a></td>
+             <td>Explains how WADL and XSD files can be automatically generated</td>
+         </tr>
+         
+         <tr>
+             <td><a href="rest/tutorial.html">Getting Started with Schema Inference</a></td>
+             <td>Quick guide for getting started with these new functions</td>
          </tr>
             
         <tr><td colspan="2"><b>Scripting</b></td></tr>

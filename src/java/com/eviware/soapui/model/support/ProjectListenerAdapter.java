@@ -42,6 +42,11 @@ public class ProjectListenerAdapter implements ProjectListener
 	{
 	}
 
+	public void testSuiteMoved( TestSuite testSuite, int index, int offset )
+	{
+
+	}
+
 	public void mockServiceAdded( MockService mockService )
 	{
 	}

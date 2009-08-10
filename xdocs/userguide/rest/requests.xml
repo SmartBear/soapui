@@ -17,10 +17,10 @@
     </properties>
     <body>
 		<section name="REST Requests in soapUI">
-		<p>A REST Request in soapUI correspond roughly to a Method in WADL; it defines an HTTP call to
-        the containing Resource with settings for HTTP Method, Parameters, Message Content, Attachments, Representations, etc.
+		<p>A REST Request in soapUI defines an HTTP call to
+        the containing Resource using the containing Method. It specifies Parameters, Message Content, Attachments, etc.
         Requests are created either directly when creating Resources via the "Create Request" option in the "New Resource"
-        dialog, or alternatively from the "New Request" Resource popup which prompts for an initial name, HTTP Method and
+        dialog, or alternatively from the "New Request" Method popup which prompts for an initial name and
         if to open the request editor:</p>
             <p align="center"><img src="images/new-rest-request.gif"></img></p>
 
@@ -34,7 +34,6 @@
           <ul>
               <li><b>Name</b> - the name of the Request</li>
               <li><b>Description</b> - a description for the Request</li>
-              <li><b>Method</b> - the HTTP Method to use</li>
               <li><b>Encoding</b> - the encoding for the message body (if PUT or POST)</li>
               <li><b>Endpoint</b> - the target endpoint for the request</li>
               <li><b>Bind Address</b> - the local ip-address to bind to when sending the request</li>
@@ -76,9 +75,6 @@
 
                 <p>The top toolbar has two levels of which the second contains the following left-to-right options:</p>
                 <ul>
-                    <li><b>Method</b> - a drop-down selecting the HTTP Method to use. If POST or PUT are selected,
-                    a corresponding Message Content editor area is shown below the Parameters table in the root Request
-                    tab (see below).</li>
                     <li><b>Accept</b> - a drop-down for selecting the desired accept-encoding. This will be pre-populated
                     with the mediaTypes defined by all response representations for the request</li>
                     <li><b>Full path</b> - a label with tooltip showing the actual endpoint URL that would be used
@@ -101,13 +97,13 @@
                     and prompt to generate a default message based on the schema definition.</li>
                     <li><b>POST QueryString</b> - option to put Query Arguments in the message body instead of after the
                     path part of the URL; this is for simulating the behaviour of a standard HTML Form submitted with POST.</li>
-                </ul>                                      res
+                </ul>
 
             </subsection>
 
             <subsection name="Representations and Attachments">
                 <p>Request/Response Representations are defined and available via their corresponding inspectors at the bottom
-                of the requet/response editors and are used as <a href="params.html#REST_Representations">already described</a>.</p>
+                of the request/response editors and are used as <a href="params.html#REST_Representations">already described</a>.</p>
                 <p>Attachments are used in several ways;</p>
                 <ul>
                     <li>If the method is PUT or POST and the mediaType of the body is the same as that of a request attachment,
@@ -130,6 +126,15 @@
                <p>Or the soapUI Pro Overview view:</p>
                 <p align="center"><img src="images/rest-overview-response-view.gif"></img></p>
             </subsection>
+            
+            <subsection name="HTML Response View">
+            <p>The HTML Response view tries to disply the response using the bundled JXBrowser component (which wraps Mozilla 3), so for
+            example you can use it to view both images:</p>
+            <p align="center"><img src="images/html-response-view-gif.gif"></img></p>
+            <p>complex HTML:</p>
+             <p align="center"><img src="images/html-response-view-html.gif"></img></p>
+             <p>(any format supported by the browser is displayed; flash movies, SVG, etc.</p>
+            </subsection>
 
             <subsection name="soapUI Pro Form Editor">
             <p>soapUI Pro enhances REST requests in the same way as WSDL requests:</p>
@@ -147,7 +152,7 @@
             </subsection>
 
 
-		 <p><hr size="1"/>Next: <a href="services/index.html">REST Service overview</a></p>
+		 <p><hr size="1"/>Next: <a href="inference.html">WADL and XSD inference</a></p>
 		</section>
     </body>
 </document>

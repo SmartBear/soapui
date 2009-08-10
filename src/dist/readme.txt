@@ -1,57 +1,35 @@
 Welcome to soapUI!
 
-2009-02-02 : 2.5.1
+2009-08-09 : 3.0.1 release
 ---------------------------------------------------------------------------------
-A large amount of fixes and minor improvements, including
+bug-fixes galore! and a bunch of improvements :-)
 
-** Bug
-    * [SOAPUI-275] - proxy not working when calling mockservices
-    * [SOAPUI-278] - errornous variable export in .sh files
-    * [SOAPUI-298] - Update project-nature functionality / popups to support 2.5 features
-    * [SOAPUI-310] - Eclipse plugin icons don't work
-    * [SOAPUI-311] - MockResponseStep creation shows REST interfaces
-    * [SOAPUI-312] - Eclipse plugin desktop tab icons
-    * [SOAPUI-313] - Eclipse plugin Project Viewer can be opened twice
-    * [SOAPUI-314] - Cache Definitions should be true for new projects
-    * [SOAPUI-319] - ProjectListener.afterLoad not called for custom ProjectListeners
-    * [SOAPUI-326] - TestCase child icons do not show, and an error is displayed.
-    * [SOAPUI-327] - Several sub-menu items are incorrectly named
-    * [SOAPUI-332] - NPE with xpath in property-expansion referring to non-existant node(s)
-    * [SOAPUI-336] - missing non-cached attachments cause NPE when trying to show file size
-    * [SOAPUI-340] - Fix property-expansions support in rest resource paths
-    * [SOAPUI-342] - Validating DocLiteral messages does not show errors for superfluous elements in body.
+- Updated installers for Mac, Linux and 64-bit Windows (without JRE)
+- Updated components/libraries: JXBrowser 1.3 + hotfixes, Groovy 1.6.4, WSS4j 1.5.8, XML-Sec 1.4.3, 
+  Bouncycastle 1.43, JTidy r820
+- Fixed Java 1.5 compatibility
+- Updated Launch-dialogs to support all current command-line options
+- Null-pointer fixes in WS-Security handling
+- Fixed sorting of properties
+- Fixes related to names containing leading/trailing spaces
+- WSDL-loading-related fixes (redirects and schema overrides)
+- REST-related fixes and improvements
+- New: Possibility to insert file as base64 encoded string (Thank you Cory!)
+- New: Groovy scripts are now run in seperate thread when running in TestStep editor (Thank you Piotr!)
+- New: MockServices now don't require SOAP Action by default (Thank you azl!)
+- New and experimental: Deploy as WAR (from Project menu), packages the project as a WAR file for running 
+  MockServices inside an existing servlet container.
+- and many more fixes..
 
-** Improvement
-    * [SOAPUI-276] - support PropertyExpansionContainer in WssContainer class
-    * [SOAPUI-290] - Add "count" column to soap-monitor log
-    * [SOAPUI-308] - Add host property to MockResponse TestStep
-    * [SOAPUI-321] - Improve validation error message on empty response
-    * [SOAPUI-325] - Support for lists in "recreate request"
-    * [SOAPUI-330] - After adding the SoapUI nature to a project, switch to the Project Explorer and select the project.
-    * [SOAPUI-331] - Add option to "Add to soapUI project" for WADL.
-    * [SOAPUI-341] - Add forum and user-guide buttons to toolbar
-    * [SOAPUI-344] - Improve property-expansion functionality for REST/HTTP Requests
+Who can we thank more than our customers and users? no-one! Thank you all!
 
-** Task
-    * [SOAPUI-210] - Create Test for WSTF WS-A Scenario
-    * [SOAPUI-280] - Update maven plugins to 2.5 status
-    * [SOAPUI-286] - automate maven-plugin build and dist in luntbuild
-    * [SOAPUI-296] - update preferences - sync with std soapUI 
-    * [SOAPUI-297] - automate build and nightly build 
-    * [SOAPUI-305] - upgrade jetty dependency to 6.1.14
-    * [SOAPUI-309] - Create 2.5.1 NetBeans Plugin
-    * [SOAPUI-329] - Update dependencies for release
-    * [SOAPUI-333] - Upgrade to wss4j 1.5.5
-    * [SOAPUI-337] - update splash images
+/eviware-soapui-team
 
-** Document
-    * [SOAPUI-334] - upgrade maven plugins
-    * [SOAPUI-335] - Upgrade eclipse plugin
+2009-07-06 : 3.0 final release
+---------------------------------------------------------------------------------
+Please check out http://www.soapui.org/new_and_noteworthy_3_0.html for all the details on this release!
 
-** Sub-task
-    * [SOAPUI-281] - update maven 1.x plugin
-    * [SOAPUI-282] - update maven 2.x plugin
-    * [SOAPUI-287] - automate core maven plugins
+/eviware-soapui-team
 
 2008-11-18 : 2.5 Final
 ---------------------------------------------------------------------------------

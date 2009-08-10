@@ -23,6 +23,7 @@
             <attainGoal name="pdf"/>
         </j:if>
 
+ 		<attainGoal name="soapui:generate-xml-beans"/>
         <attainGoal name="jar:install"/>
         <attainGoal name="jnlp"/>
         <attainGoal name="site:generate"/>
@@ -32,7 +33,7 @@
         <attainGoal name="soapui:create-docs-zip"/>
         <attainGoal name="soapui:create-binary-dist"/>
         <attainGoal name="soapui:create-standalone-binary-dist"/>
-        <attainGoal name="soapui:make-installer"/>
+        <attainGoal name="soapui:create-install4j"/>
 
         <ant:copy todir="${maven.build.dir}/docs/repository/eviware/jars">
             <ant:fileset file="${maven.repo.local}/eviware/jars/*-xmlbeans-${pom.currentVersion}.jar"/>
@@ -87,7 +88,7 @@
 
         <attainGoal name="soapui:create-binary-dist"/>
         <attainGoal name="soapui:create-standalone-binary-dist"/>
-        <attainGoal name="soapui:make-installer"/>
+        <attainGoal name="soapui:create-install4j"/>
 
         <attainGoal name="soapui:changelog"/>
         <attainGoal name="soapui:publish"/>
@@ -168,6 +169,49 @@
             </ant:filterset>
         </ant:copy>
 
+<!--
+			copy licence files for jxbrowser into meta-inf folder of
+			soapui-xx.jar
+		-->
+		<echo>Adding license files for jxbrowser</echo>
+		<ant:jar destfile="target/jnlp_temp/soapui-${pom.currentVersion}.jar"
+			update="true">
+			<ant:metainf dir="${jxbrowser.dir}/license/runtime">
+				<ant:include name="jxbrowser.lic" />
+				<ant:include name="jniwrap.lic" />
+			</ant:metainf>
+		</ant:jar>
+
+		<echo>Signing soapui-${pom.currentVersion}.jar file </echo>
+		<ant:signjar jar="target/jnlp_temp/soapui-${pom.currentVersion}.jar"
+			alias="${maven.jnlp.signjar.alias}" storepass="${maven.jnlp.signjar.storepass}"
+			keystore="${maven.jnlp.signjar.store}" />
+
+		<echo>Copy soapui-${pom.currentVersion}.jar file to
+			${maven.jnlp.dir}</echo>
+		<ant:copy file="target/jnlp_temp/soapui-${pom.currentVersion}.jar"
+			todir="${maven.jnlp.dir}" overwrite="true" />
+
+	   	<echo>Adding dll files to jxbrowser jar</echo>
+      	<ant:jar destfile="target/jnlp_temp/${jxbrowser.jar}" update="true">
+			<ant:fileset dir="${jxbrowser.dir}/bin">
+				<ant:include name="jniwrap.dll" />
+				<ant:include name="libjniwrap.jnilib" />
+			    <ant:include name="libjniwrap.so" />
+		</ant:fileset>
+		</ant:jar>
+
+		<echo>Signing ${jxbrowser.jar} file </echo>
+		<ant:signjar jar="target/jnlp_temp/${jxbrowser.jar}"
+			alias="${maven.jnlp.signjar.alias}" storepass="${maven.jnlp.signjar.storepass}"
+			keystore="${maven.jnlp.signjar.store}" />
+
+		<echo>Copy ${jxbrowser.jar} file to  ${maven.jnlp.dir}</echo>
+		<ant:copy file="target/jnlp_temp/${jxbrowser.jar}"
+			todir="${maven.jnlp.dir}" overwrite="true" />
+
+
+
         <ant:copy todir="${maven.jnlp.dir}"
                   file="${pom.getDependencyPath('activation:activation')}"/>
 
@@ -176,6 +220,18 @@
 
         <ant:copy todir="${maven.jnlp.dir}"
                   file="${pom.getDependencyPath('bouncycastle:bcprov')}"/>
+                  
+        <ant:copy todir="${maven.jnlp.dir}"
+                  file="${pom.getDependencyPath('teamdev:jxbrowser')}"/>
+
+        <ant:copy todir="${maven.jnlp.dir}"
+                  file="${pom.getDependencyPath('teamdev:jniwrap')}"/>
+
+        <ant:copy todir="${maven.jnlp.dir}"
+                  file="${pom.getDependencyPath('teamdev:tuxpack')}"/>
+
+        <ant:copy todir="${maven.jnlp.dir}"
+                  file="${pom.getDependencyPath('teamdev:winpack')}"/>
 
     </postGoal>
 
@@ -205,7 +261,7 @@
         <!-- build classpath for batch files -->
         <j:set var="soapuiclasspath" trim="false" value="set CLASSPATH=%SOAPUI_HOME%soapui-${pom.currentVersion}.jar"/>
         <j:set var="soapuishclasspath" trim="false"
-               value="SOAPUI_CLASSPATH=$$SOAPUI_HOME/bin/soapui-${pom.currentVersion}.jar"/>
+               value="export SOAPUI_CLASSPATH=$$SOAPUI_HOME/bin/soapui-${pom.currentVersion}.jar"/>
         <j:forEach var="lib" items="${pom.artifacts}">
             <j:set var="dep" value="${lib.dependency}"/>
             <j:if test="${dep.getProperty('jnlp.jar')=='true' || dep.getProperty('eclipse.jar')=='true'}">
@@ -213,12 +269,12 @@
                     set CLASSPATH=%CLASSPATH%;%SOAPUI_HOME%..\lib\${lib.file.name}
                 </j:set>
                 <j:set var="soapuishclasspath">${soapuishclasspath}
-                    SOAPUI_CLASSPATH=$$SOAPUI_CLASSPATH:$$SOAPUI_HOME/lib/${lib.file.name}
+                    export SOAPUI_CLASSPATH=$$SOAPUI_CLASSPATH:$$SOAPUI_HOME/lib/${lib.file.name}
                 </j:set>
             </j:if>
         </j:forEach>
 
-		<j:set var="soapuiclasspathcompact" trim="false" value="set CLASSPATH=%SOAPUI_HOME%${pom.artifactId}-${pom.currentVersion}.jar;%SOAPUI_HOME%..\lib\*;"/>
+       <j:set var="soapuiclasspathcompact" trim="false" value="set CLASSPATH=%SOAPUI_HOME%${pom.artifactId}-${pom.currentVersion}.jar;%SOAPUI_HOME%..\lib\*;"/>
 
         <ant:copy todir="${maven.build.dir}/dist">
             <ant:fileset dir="src/dist">
@@ -255,23 +311,80 @@
         </j:forEach>
 
         <ant:copy todir="${maven.build.dir}/dist/lib">
-            <ant:fileset dir="${maven.build.dir}/docs/jnlp/${pom.currentVersion}" excludes="**/soapui-${pom.currentVersion}.jar"/>
+            <ant:fileset dir="${maven.build.dir}/docs/jnlp/${pom.currentVersion}" excludes="**/soapui-${pom.currentVersion}.jar">
+            <ant:exclude name="xulrunner*.jar"/>
+            <ant:exclude name="wsi-test-tools*.jar"/>
+            <ant:exclude name="*.jnlp"/>
+            </ant:fileset>
         </ant:copy>
 
+<echo>copy ${maven.build.dir}/jnlp_temp/soapui-${pom.currentVersion}.jar to ${maven.build.dir}/dist/bin</echo>
         <ant:copy todir="${maven.build.dir}/dist/bin">
-            <ant:fileset dir="${maven.build.dir}/docs/jnlp/${pom.currentVersion}" includes="**/soapui-${pom.currentVersion}.jar"/>
+            <ant:fileset dir="${maven.build.dir}/jnlp_temp" includes="**/soapui-${pom.currentVersion}.jar"/>
         </ant:copy>
 
-        <ant:zip destfile="${maven.build.dir}/distributions/soapui-${pom.currentVersion}-bin.zip">
-            <zipfileset dir="${maven.build.dir}/dist" prefix="soapui-${pom.currentVersion}"/>
+        <!-- add wsi-tools -->
+        <ant:mkdir dir="${maven.build.dir}\dist\wsi-test-tools"/>
+        <ant:copy todir="${maven.build.dir}\dist\wsi-test-tools" overwrite="true">
+            <ant:fileset dir="${maven.wsi.root}"/>
+        </ant:copy>
+        <ant:fixcrlf srcdir="${maven.build.dir}\dist\wsi-test-tools\java\bin" includes="**/*.sh" eol="lf"/>
+        
+        <ant:copy todir="${maven.build.dir}/dist/bin" file="${maven.build.dir}/docs/jnlp/${pom.currentVersion}/soapui-${pom.currentVersion}.jar"/>
+
+        <!-- add jxbrowser -->
+        <ant:mkdir dir="${maven.build.dir}\dist\xulrunner-linux"/>
+        <ant:copy todir="${maven.build.dir}\dist\xulrunner-linux" overwrite="true">
+            <ant:fileset dir="${jxbrowser.dir}\xulrunner-linux"/>
+        </ant:copy>
+        <ant:mkdir dir="${maven.build.dir}\dist\xulrunner-windows"/>
+        <ant:copy todir="${maven.build.dir}\dist\xulrunner-windows" overwrite="true">
+            <ant:fileset dir="${jxbrowser.dir}\xulrunner-windows"/>
+        </ant:copy>
+        <ant:mkdir dir="${maven.build.dir}\dist\xulrunner-mac"/>
+        <ant:copy todir="${maven.build.dir}\dist\xulrunner-mac" overwrite="true">
+            <ant:fileset dir="${jxbrowser.dir}\xulrunner-mac"/>
+        </ant:copy>
+      	<ant:copy file="${jxbrowser.dir}\bin\jniwrap.dll" 
+        	todir="${maven.build.dir}/dist/bin" overwrite="true"/>
+      	<ant:copy file="${jxbrowser.dir}\bin\libjniwrap.so" 
+        	todir="${maven.build.dir}/dist/bin" overwrite="true"/>
+      	<ant:copy file="${jxbrowser.dir}\bin\libjniwrap.jnilib" 
+        	todir="${maven.build.dir}/dist/bin" overwrite="true"/>
+      	<ant:copy file="${jxbrowser.dir}\license\runtime\jniwrap.lic" 
+        	todir="${maven.build.dir}/dist/bin" overwrite="true"/>
+      	<ant:copy file="${jxbrowser.dir}\license\runtime\jxbrowser.lic" 
+        	todir="${maven.build.dir}/dist/bin" overwrite="true"/>
+
+        <!-- create windows binary -->
+        <ant:zip destfile="${maven.build.dir}/distributions/soapui-${pom.currentVersion}-windows-bin.zip">
+            <zipfileset dir="${maven.build.dir}/dist" excludes="**/bin/*.sh, **/xulrunner-linux/** , **/xulrunner-mac/**, **/bin/libjniwrap.so, **/bin/libjniwrap.jnilib" 
+            prefix="soapui-${pom.currentVersion}"/>
         </ant:zip>
 
+        <!-- create linux binary -->
+        <ant:fixcrlf srcdir="${maven.build.dir}\dist\bin" includes="**/*.sh" eol="lf"/>
+        <ant:zip destfile="${maven.build.dir}/distributions/soapui-${pom.currentVersion}-linux-bin.zip">
+            <zipfileset dir="${maven.build.dir}/dist" excludes="**/bin/*.bat, **/xulrunner-windows/** , **/xulrunner-mac/**, **/bin/jniwrap.dll" 
+            prefix="soapui-${pom.currentVersion}"/>
+        </ant:zip>
+        
+        <!-- create mac binary -->
+        <ant:fixcrlf srcdir="${maven.build.dir}\dist\bin" includes="**/*.sh" eol="lf"/>
+        <ant:replace file="${maven.build.dir}\dist\bin\soapui.sh" token="xulrunner-linux" value="xulrunner-mac"/>
+        <ant:zip destfile="${maven.build.dir}/distributions/soapui-${pom.currentVersion}-mac-bin.zip">
+            <zipfileset dir="${maven.build.dir}/dist" excludes="**/bin/*.bat, **/xulrunner-linux/** , **/xulrunner-windows/**, **/bin/jniwrap.dll" 
+            prefix="soapui-${pom.currentVersion}"/>
+        </ant:zip>
+        <!-- replace back -->
+        <ant:replace file="${maven.build.dir}\dist\bin\soapui.sh" token="xulrunner-mac" value="xulrunner-linux"/>
+        
         <j:if test="${pom.currentVersion == 'SNAPSHOT'}">
             <ant:mkdir dir="${maven.build.dir}/docs/download"/>
             <ant:copy file="${maven.build.dir}/distributions/soapui-SNAPSHOT-bin.zip"
                       tofile="${maven.build.dir}/docs/download/soapui-SNAPSHOT-bin.zip"/>
         </j:if>
-
+        
     </goal>
 
     <!-- Create soapui maven-plugin, copy to target/docs/repository/eviware/plugins -->
@@ -323,16 +436,17 @@
         <attainGoal name="clean"/>
         <ant:mkdir dir="${maven.build.dir}"/>
 
-        <!--
-            Create soapui-xmlbeans
-        -->
-
         <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/soapui-xmlbeans-${pom.currentVersion}.jar"
                      classpathref="xmlbeans-classpath" javasource="1.5">
             <fileset dir="src/xsd/soapui" excludes="coverage.xsd"/>
         </ant:xmlbean>
 
-<ant:mkdir dir="${user.home}/.m2/repository/eviware/soapui-xmlbeans/${pom.currentVersion}"/>
+        <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/soapui-coverage-xmlbeans-${pom.currentVersion}.jar"
+                     classpathref="xmlbeans-classpath" javasource="1.5">
+            <fileset dir="src/xsd/soapui" includes="coverage.xsd"/>
+        </ant:xmlbean>
+
+        <ant:mkdir dir="${user.home}/.m2/repository/eviware/soapui-xmlbeans/${pom.currentVersion}"/>
         <ant:copy todir="${user.home}/.m2/repository/eviware/soapui-xmlbeans/${pom.currentVersion}"
                   file="${maven.repo.local}/eviware/jars/soapui-xmlbeans-${pom.currentVersion}.jar"/>
 
@@ -346,168 +460,38 @@
 </project>]]>
         </j:file>
 
-        <!--
-            Create soapui-coverage-xmlbeans
-        -->
-
-        <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/soapui-coverage-xmlbeans-${pom.currentVersion}.jar"
-                     classpathref="xmlbeans-classpath" javasource="1.5">
-            <fileset dir="src/xsd/soapui" includes="coverage.xsd"/>
-        </ant:xmlbean>
-
-        <ant:mkdir dir="${user.home}/.m2/repository/eviware/soapui-coverage-xmlbeans/${pom.currentVersion}"/>
-        <ant:copy todir="${user.home}/.m2/repository/eviware/soapui-coverage-xmlbeans/${pom.currentVersion}"
-                  file="${maven.repo.local}/eviware/jars/soapui-coverage-xmlbeans-${pom.currentVersion}.jar"/>
-
-        <j:file name="${user.home}/.m2/repository/eviware/soapui-coverage-xmlbeans/${pom.currentVersion}/soapui-coverage-xmlbeans-${pom.currentVersion}.pom"
-                escapeText="false">
-            <![CDATA[<project>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>eviware</groupId>
-  <artifactId>soapui-coverage-xmlbeans</artifactId>
-  <version>${pom.currentVersion}</version>
-</project>]]>
-        </j:file>
-
-          <!--
-            Create ext-xmlbeans
-        -->
-
-        <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/ext-xmlbeans-1.1.jar"
+        <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/ext-xmlbeans-1.0.jar"
                      classpathref="xmlbeans-classpath" javasource="1.5">
             <fileset dir="src/xsd/wsi"/>
             <fileset dir="src/xsd/jboss"/>
             <fileset dir="src/xsd/junit"/>
         </ant:xmlbean>
 
-        <ant:mkdir dir="${user.home}/.m2/repository/eviware/ext-xmlbeans/1.1"/>
-        <ant:copy todir="${user.home}/.m2/repository/eviware/ext-xmlbeans/1.1"
-                  file="${maven.repo.local}/eviware/jars/ext-xmlbeans-1.1.jar"/>
-
-         <j:file name="${user.home}/.m2/repository/eviware/ext-xmlbeans/1.1/ext-xmlbeans-1.1.pom"
-                escapeText="false">
-            <![CDATA[<project>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>eviware</groupId>
-  <artifactId>ext-xmlbeans</artifactId>
-  <version>1.1</version>
-</project>]]>
-        </j:file>
-
-         <!--
-            Create wsdl-xmlbeans
-        -->
-
         <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/wsdl-xmlbeans-1.1.jar"
                      classpathref="xmlbeans-classpath" javasource="1.5">
             <fileset dir="src/xsd/wsdl"/>
         </ant:xmlbean>
-
-        <ant:mkdir dir="${user.home}/.m2/repository/eviware/wsdl-xmlbeans/1.1"/>
-        <ant:copy todir="${user.home}/.m2/repository/eviware/wsdl-xmlbeans/1.1"
-                  file="${maven.repo.local}/eviware/jars/wsdl-xmlbeans-1.1.jar"/>
-
-         <j:file name="${user.home}/.m2/repository/eviware/wsdl-xmlbeans/1.1/wsdl-xmlbeans-1.1.pom"
-                escapeText="false">
-            <![CDATA[<project>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>eviware</groupId>
-  <artifactId>wsdl-xmlbeans</artifactId>
-  <version>1.1</version>
-</project>]]>
-        </j:file>
-
-         <!--
-            Create policy-xmlbeans
-        -->
 
         <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/policy-xmlbeans-1.5.jar"
                      classpathref="xmlbeans-classpath" javasource="1.5">
             <fileset dir="src/xsd/policy"/>
         </ant:xmlbean>
 
-        <ant:mkdir dir="${user.home}/.m2/repository/eviware/policy-xmlbeans/1.5"/>
-        <ant:copy todir="${user.home}/.m2/repository/eviware/policy-xmlbeans/1.5"
-                  file="${maven.repo.local}/eviware/jars/policy-xmlbeans-1.5.jar"/>
-
-         <j:file name="${user.home}/.m2/repository/eviware/policy-xmlbeans/1.5/policy-xmlbeans-1.5.pom"
-                escapeText="false">
-            <![CDATA[<project>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>eviware</groupId>
-  <artifactId>policy-xmlbeans</artifactId>
-  <version>1.5</version>
-</project>]]>
-        </j:file>
-
-         <!--
-            Create wadl-xmlbeans
-        -->
-
-        <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/wadl-xmlbeans-1.0.jar"
+        <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/wadl-xmlbeans-1.1.jar"
                      classpathref="xmlbeans-classpath" javasource="1.5">
             <fileset dir="src/xsd/wadl"/>
         </ant:xmlbean>
 
-        <ant:mkdir dir="${user.home}/.m2/repository/eviware/wadl-xmlbeans/1.0"/>
-        <ant:copy todir="${user.home}/.m2/repository/eviware/wadl-xmlbeans/1.0"
-                  file="${maven.repo.local}/eviware/jars/wadl-xmlbeans-1.0.jar"/>
-
-         <j:file name="${user.home}/.m2/repository/eviware/wadl-xmlbeans/1.0/wadl-xmlbeans-1.0.pom"
-                escapeText="false">
-            <![CDATA[<project>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>eviware</groupId>
-  <artifactId>wadl-xmlbeans</artifactId>
-  <version>1.0</version>
-</project>]]>
-        </j:file>
-
-        <!--
-            Create soap-xmlbeans
-        -->
 
         <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/soap-xmlbeans-1.2.jar"
                      classpathref="xmlbeans-classpath" javasource="1.5">
             <fileset dir="src/xsd/soap"/>
         </ant:xmlbean>
 
-        <ant:mkdir dir="${user.home}/.m2/repository/eviware/soap-xmlbeans/1.2"/>
-        <ant:copy todir="${user.home}/.m2/repository/eviware/soap-xmlbeans/1.2"
-                  file="${maven.repo.local}/eviware/jars/soap-xmlbeans-1.2.jar"/>
-
-         <j:file name="${user.home}/.m2/repository/eviware/soap-xmlbeans/1.2/soap-xmlbeans-1.2.pom"
-                escapeText="false">
-            <![CDATA[<project>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>eviware</groupId>
-  <artifactId>soap-xmlbeans</artifactId>
-  <version>1.2</version>
-</project>]]>
-        </j:file>
-
-         <!--
-            Create j2ee-xmlbeans
-        -->
-
         <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/j2ee-xmlbeans-1.4.jar"
                      classpathref="xmlbeans-classpath" javasource="1.5" download="yes">
             <fileset dir="src/xsd/j2ee"/>
         </ant:xmlbean>
-
-        <ant:mkdir dir="${user.home}/.m2/repository/eviware/j2ee-xmlbeans/1.4"/>
-        <ant:copy todir="${user.home}/.m2/repository/eviware/j2ee-xmlbeans/1.4"
-                  file="${maven.repo.local}/eviware/jars/j2ee-xmlbeans-1.4.jar"/>
-
-         <j:file name="${user.home}/.m2/repository/eviware/j2ee-xmlbeans/1.4/j2ee-xmlbeans-1.4.pom"
-                escapeText="false">
-            <![CDATA[<project>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>eviware</groupId>
-  <artifactId>j2ee-xmlbeans</artifactId>
-  <version>1.4</version>
-</project>]]>
-        </j:file>
 
     </goal>
 
@@ -539,8 +523,8 @@
             </j:if>
         </j:forEach>
 
-		<j:set var="soapuiclasspathcompact" trim="false" value="set CLASSPATH=%SOAPUI_HOME%${pom.artifactId}-${pom.currentVersion}.jar;%SOAPUI_HOME%..\lib\*;"/>
-		
+       <j:set var="soapuiclasspathcompact" trim="false" value="set CLASSPATH=%SOAPUI_HOME%${pom.artifactId}-${pom.currentVersion}.jar;%SOAPUI_HOME%..\lib\*;"/>
+
         <ant:delete>
             <ant:fileset dir="${maven.build.dir}/standalone/bin" includes="*.sh"/>
         </ant:delete>
@@ -614,16 +598,22 @@
                 <ant:exclude name="lib\javaws\miniSplash.jpg"/>
             </ant:fileset>
         </ant:copy>
+        <!-- overwrite wsi scripts to use bundled java -->
+        <ant:copy todir="${maven.build.dir}/standalone/wsi-test-tools/java/bin" overwrite="true">
+            <ant:fileset dir="src/wsi"/>
+        </ant:copy>
 
         <!-- create standalone zip for win32 -->
         <ant:zip destfile="${maven.build.dir}/distributions/soapui-${pom.currentVersion}-win32-standalone-bin.zip">
             <ant:zipfileset dir="${maven.build.dir}/standalone" prefix="soapui-${pom.currentVersion}" includes="*.*"/>
-            <ant:zipfileset dir="${maven.build.dir}/standalone/bin" prefix="soapui-${pom.currentVersion}/bin"/>
+            <ant:zipfileset dir="${maven.build.dir}/standalone/bin" prefix="soapui-${pom.currentVersion}/bin" excludes="libjniwrap.so"/>
             <ant:zipfileset dir="${maven.build.dir}/standalone/source" prefix="soapui-${pom.currentVersion}/source"/>
             <ant:zipfileset dir="${maven.build.dir}/standalone/licenses" prefix="soapui-${pom.currentVersion}/licenses"/>
             <!--    		  <ant:zipfileset dir="${maven.build.dir}/standalone/docs" prefix="soapui-${pom.currentVersion}/docs"/>  -->
             <ant:zipfileset dir="${maven.build.dir}/standalone/jre" prefix="soapui-${pom.currentVersion}/jre"/>
             <ant:zipfileset dir="${maven.build.dir}/standalone/lib" prefix="soapui-${pom.currentVersion}/lib"/>
+            <ant:zipfileset dir="${maven.build.dir}/standalone/wsi-test-tools" prefix="soapui-${pom.currentVersion}/wsi-test-tools"/>
+            <ant:zipfileset dir="${maven.build.dir}/standalone/xulrunner-windows" prefix="soapui-${pom.currentVersion}/xulrunner-windows"/>
         </ant:zip>
     </goal>
 
@@ -660,6 +650,59 @@
         </ant:exec>
     </goal>
 
+    <!-- install4j -->
+    <goal name="soapui:create-install4j">
+    
+        <util:available file="${maven.build.dir}/standalone">
+            <j:set var="standaloneExists" value="true"/>
+        </util:available>
+
+        <j:if test="${!standaloneExists}">
+            <attainGoal name="soapui:create-standalone-binary-dist"/>
+        </j:if>
+
+		<!-- for win and linux supply modified wsi scripts that will use bundled jre java -->
+		<ant:mkdir dir="${maven.build.dir}\dist\wsi-scripts-usingbundled"/>
+        <ant:copy todir="${maven.build.dir}/dist/wsi-scripts-usingbundled" overwrite="true">
+            <ant:fileset dir="src/wsi"/>
+        </ant:copy>
+        
+	    <taskdef name="install4j"
+               classname="com.install4j.Install4JTask"
+               classpath="${maven.install4j.dir}\bin\ant.jar"/>
+               
+        <ant:delete dir="${maven.build.dir}/media"/>
+        
+        <j:file name="${maven.build.dir}\dist\soapUI-${pom.currentVersion}-JavaDoc.url"
+                escapeText="false">
+            <![CDATA[[InternetShortcut]
+URL=http://www.soapui.org/apidocs/index.html]]>
+        </j:file>
+        <j:file name="${maven.build.dir}\dist\soapUI-${pom.currentVersion}-UserGuide.url"
+                escapeText="false">
+            <![CDATA[[InternetShortcut]
+URL=http://www.soapui.org/userguide/index.html]]>
+        </j:file>
+        <j:file name="${maven.build.dir}\dist\soapUI-${pom.currentVersion}.url"
+                escapeText="false">
+            <![CDATA[[InternetShortcut]
+URL=http://www.soapui.org]]>
+        </j:file>
+        <ant:target name="media">
+          <install4j projectfile="src/install4j/SoapUI.install4j" 
+          destination="${maven.build.dir}/media">
+          <variable name="DIST_ROOT" value="${maven.build.dir}/dist"/>
+          <variable name="RESOURCES_HOME" value="${maven.soapui.install4j.resources}"/>
+          <variable name="JXBROWSER_DIR" value="${jxbrowser.dir}"/>
+          <variable name="VERSION_NUMBER" value="${pom.currentVersion}"/>
+          <variable name="SRC_ROOT" value="../"/>
+          <variable name="SIGNTOOL_PATH" value="${maven.install4j.signtool}"/>
+          <variable name="CERT_PATH" value="${maven.install4j.cert}"/>
+          <variable name="WIN_DLLS_PATH" value="${maven.install4j.cert}"/>
+          </install4j>
+        </ant:target>
+      </goal>
+       
     <!-- compiles and runs soapui -->
 
     <goal name="soapui:compile-and-run">
@@ -678,12 +721,14 @@
         <j:set var="dist" value="${maven.soapui.publish.dist}"/>
         <j:set var="site" value="${maven.soapui.publish.site}"/>
         <j:set var="plugins" value="${maven.soapui.publish.plugins}"/>
+        <j:set var="jnlp" value="${maven.soapui.jnlp.source}"/>
 
         <j:if test="${!empty(dist)}">
             <echo>Publishing distributions to ${dist}</echo>
             <ant:mkdir dir="${dist}"/>
             <ant:copy todir="${dist}" overwrite="true">
                 <ant:fileset dir="${maven.build.dir}/distributions"/>
+                <ant:fileset dir="${maven.build.dir}/media"/>
             </ant:copy>
         </j:if>
 
@@ -703,6 +748,15 @@
             </ant:copy>
         </j:if>
 
+        <j:if test="${!empty(jnlp)}">
+            <echo>Publishing jnlp to ${jnlp}</echo>
+            <echo>making dir jnlp: ${jnlp}</echo>
+            <ant:mkdir dir="${jnlp}"/>
+            <ant:copy todir="${jnlp}" overwrite="true">
+                <ant:fileset dir="${maven.jnlp.dir}"/>
+            </ant:copy>
+        </j:if>
+
     </goal>
 
     <goal name="soapui:ftp-publish">
@@ -714,9 +768,70 @@
 
             <ant:ftp server="${maven.soapui.ftp.host}" port="${maven.soapui.ftp.port}" verbose="yes"
                      userid="${maven.soapui.ftp.username}" password="${maven.soapui.ftp.password}">
-                <ant:fileset dir="${source}"/>
+                <ant:fileset dir="${source}">
+                	<ant:exclude name="jnlp/*"/>
+                </ant:fileset>
+            </ant:ftp>
+        </j:if>
+        
+        <j:set var="jnlp" value="${maven.soapui.jnlp.source}"/>
+        
+        <j:if test="${!empty(jnlp)}">
+            <echo>Publishing jnlp to ${jnlp}</echo>
+            <taskdef name="ftp" classname="org.apache.tools.ant.taskdefs.optional.net.FTP"/>
+
+            <ant:ftp server="${maven.soapui.ftp.jnlp.host}" port="${maven.soapui.ftp.jnlp.port}" 
+            verbose="yes" remotedir="soapui/jnlp/nightly-build"
+                     userid="${maven.soapui.ftp.jnlp.username}" password="${maven.soapui.ftp.jnlp.password}">
+                <ant:fileset dir="${jnlp}"/>
             </ant:ftp>
         </j:if>
 
+
     </goal>
+
+    <!-- Get all necessary JAR files from the repository and update the libs plugin -->
+    <goal name="soapui:build-libs" prereqs="jar:install">
+
+        <ant:copy file="${user.home}/.maven/repository/eviware/jars/soapui-${pom.currentVersion}.jar"
+                  todir="../libs/lib"/>
+
+        <!-- Set up a clean classpath for Groovy that is not polluted with other Ant jars. -->
+        <ant:path id="groovy.classpath">
+            <ant:pathelement location="${pom.getDependencyPath('groovy:groovy-all')}"/>
+            <ant:pathelement location="${pom.getDependencyPath('commons-cli:commons-cli')}"/>
+            <ant:pathelement location="${pom.getDependencyPath('asm:asm')}"/>
+            <ant:pathelement location="${pom.getDependencyPath('ant:ant')}"/>
+            <ant:pathelement location="${pom.getDependencyPath('ant:ant-launcher')}"/>
+        </ant:path>
+
+        <java classname="groovy.lang.GroovyShell" fork="yes">
+            <classpath refid="groovy.classpath"/>
+            <arg value="BuildLibs.groovy"/>
+            <arg value="project.xml"/>
+            <arg value="../soapui-libs"/>
+            <arg value="${maven.repo.local}"/>
+            <arg value="${pom.currentVersion}"/>
+        </java>
+
+        <echo>
+            Now, refresh the libs project.
+        </echo>
+    </goal>
+
+    <!-- Build and copy the jar file to the soapui-libs project -->
+    <goal name="soapui:copy-to-eclipse" prereqs="jar:install">
+        <ant:delete>
+            <fileset dir="../soapui-libs/lib" includes="${pom.artifactId}-*.jar"/>
+        </ant:delete>
+        <ant:copy file="${user.home}/.maven/repository/${pom.groupId}/jars/${pom.artifactId}-${pom.currentVersion}.jar"
+                  todir="../soapui-libs/lib"/>
+        <ant:copy
+                file="${user.home}/.maven/repository/${pom.groupId}/jars/${pom.artifactId}-xmlbeans-${pom.currentVersion}.jar"
+                todir="../soapui-libs/lib"/>
+        <ant:copy
+                file="${user.home}/.maven/repository/${pom.groupId}/jars/${pom.artifactId}-coverage-xmlbeans-${pom.currentVersion}.jar"
+                todir="../soapui-libs/lib"/>
+    </goal>
+
 </project>

@@ -19,7 +19,7 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.PostMethod;
 
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
@@ -34,6 +34,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 public final class ExtendedPostMethod extends PostMethod implements ExtendedHttpMethod
 {
 	private HttpMethodSupport httpMethodSupport;
+	private IAfterRequestInjection afterRequestInjection;
 
 	public ExtendedPostMethod()
 	{
@@ -48,6 +49,11 @@ public final class ExtendedPostMethod extends PostMethod implements ExtendedHttp
 	public void setDumpFile( String dumpFile )
 	{
 		httpMethodSupport.setDumpFile( dumpFile );
+	}
+
+	public boolean hasResponse()
+	{
+		return httpMethodSupport.hasResponse();
 	}
 
 	protected void readResponse( HttpState arg0, HttpConnection arg1 ) throws IOException, HttpException
@@ -81,6 +87,8 @@ public final class ExtendedPostMethod extends PostMethod implements ExtendedHttp
 	{
 		super.writeRequest( arg0, arg1 );
 		httpMethodSupport.afterWriteRequest( arg0, arg1 );
+		if( afterRequestInjection != null )
+			afterRequestInjection.executeAfterRequest();
 	}
 
 	public void initStartTime()
@@ -113,11 +121,16 @@ public final class ExtendedPostMethod extends PostMethod implements ExtendedHttp
 		return httpMethodSupport.getResponseContentType();
 	}
 
-	public AbstractHttpRequest.RequestMethod getMethod()
+	public RestRequestInterface.RequestMethod getMethod()
 	{
-		return AbstractHttpRequest.RequestMethod.POST;
+		return RestRequestInterface.RequestMethod.POST;
 	}
 
+	public void setAfterRequestInjection( IAfterRequestInjection injection )
+	{
+		afterRequestInjection = injection;
+	}
+	
 	public Throwable getFailureCause()
 	{
 		return httpMethodSupport.getFailureCause();

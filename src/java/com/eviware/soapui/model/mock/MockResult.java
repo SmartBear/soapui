@@ -31,6 +31,8 @@ public interface MockResult
 
 	public MockResponse getMockResponse();
 
+	public MockOperation getMockOperation();
+	
 	public ActionList getActions();
 
 	public long getTimeTaken();

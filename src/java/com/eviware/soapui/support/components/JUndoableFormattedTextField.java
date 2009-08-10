@@ -68,6 +68,12 @@ public class JUndoableFormattedTextField extends JFormattedTextField implements 
 					cut();
 				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu C" ) ) )
 					copy();
+				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu V" ) ) )
+					paste();
+				else
+					return;
+				
+				e.consume();
 			}
 		} );
 	}

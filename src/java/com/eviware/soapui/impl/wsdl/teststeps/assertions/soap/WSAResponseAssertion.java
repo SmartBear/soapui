@@ -91,7 +91,6 @@ public class WSAResponseAssertion extends WsdlMessageAssertion implements Reques
 
 	public static class Factory extends AbstractTestAssertionFactory
 	{
-		@SuppressWarnings( "unchecked" )
 		public Factory()
 		{
 			super( WSAResponseAssertion.ID, WSAResponseAssertion.LABEL, WSAResponseAssertion.class, WsdlRequest.class );

@@ -54,7 +54,7 @@ public class ChooseAnotherTestCase implements Resolver
 
 	public String getDescription()
 	{
-		return "Choose another TestCase";
+		return "Choose another test step";
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class ChooseAnotherTestCase implements Resolver
 
 	public boolean resolve()
 	{
-		TestCaseChangeDialog dialog = new TestCaseChangeDialog( "Choose another TestCase" );
+		TestCaseChangeDialog dialog = new TestCaseChangeDialog( "Choose another test case" );
 		dialog.showAndChoose();
 
 		return resolved;
@@ -99,11 +99,11 @@ public class ChooseAnotherTestCase implements Resolver
 
 		private void init()
 		{
-			FormLayout layout = new FormLayout( "right:pref, 4dlu, 30dlu, 5dlu, 50dlu, min ",
+			FormLayout layout = new FormLayout( "right:pref, 4dlu, 30dlu, 5dlu, 30dlu, min ",
 					"min, pref, 4dlu, pref, 4dlu, pref, min" );
 			CellConstraints cc = new CellConstraints();
 			PanelBuilder panel = new PanelBuilder( layout );
-			panel.addLabel( "TestSuite:", cc.xy( 1, 2 ) );
+			panel.addLabel( "Interface:", cc.xy( 1, 2 ) );
 
 			List<TestSuite> tSuites = project.getTestSuiteList();
 			DefaultComboBoxModel sourceStepComboModel = new DefaultComboBoxModel();
@@ -118,7 +118,7 @@ public class ChooseAnotherTestCase implements Resolver
 			tCaseCombo = new JComboBox( ( ( TestSuite )tSuiteStepCombo.getSelectedItem() ).getTestCaseList().toArray() );
 			tCaseCombo.setRenderer( new TestCaseComboRender() );
 
-			panel.addLabel( "TestCase:", cc.xy( 1, 4 ) );
+			panel.addLabel( "Operation:", cc.xy( 1, 4 ) );
 			panel.add( tCaseCombo, cc.xyw( 3, 4, 3 ) );
 
 			panel.add( okBtn, cc.xy( 3, 6 ) );

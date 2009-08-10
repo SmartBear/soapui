@@ -32,6 +32,8 @@ public interface XDialogs
 
 	Boolean confirmOrCancel( String question, String title );
 
+	int yesYesToAllOrNo( String question, String title );
+
 	String prompt( String question, String title, String value );
 
 	String prompt( String question, String title );

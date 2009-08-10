@@ -35,14 +35,17 @@ import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResponseMessageExchange;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.RestResponseMessageExchange;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStepInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMockResponseTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
@@ -50,7 +53,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
@@ -88,7 +90,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( getConfiguration() );
 		scriptText = reader.readString( "scriptText", "" );
 
-		scriptEngine = SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, this );
+		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 		scriptEngine.setScript( scriptText );
 	}
 
@@ -137,8 +139,6 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 		}
 
 		UISupport.showDialog( dialog );
-
-		setConfiguration( createConfiguration() );
 		return true;
 	}
 
@@ -175,6 +175,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 	{
 		this.scriptText = scriptText;
 		scriptEngine.setScript( scriptText );
+		setConfiguration( createConfiguration() );
 	}
 
 	protected class GroovyScriptAssertionPanel extends JPanel
@@ -296,11 +297,11 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 			}
 		}
 
-		private class ScriptStepGroovyEditorModel implements GroovyEditorModel
+		private class ScriptStepGroovyEditorModel extends AbstractGroovyEditorModel
 		{
-			public String[] getKeywords()
+			public ScriptStepGroovyEditorModel()
 			{
-				return new String[] { "log", "context", "messageExchange" };
+				super( new String[] { "log", "context", "messageExchange" }, getAssertable().getModelItem(), "Assertion" );
 			}
 
 			public Action getRunAction()
@@ -316,16 +317,6 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 			public void setScript( String text )
 			{
 				setScriptText( text );
-			}
-
-			public Settings getSettings()
-			{
-				return SoapUI.getSettings();
-			}
-
-			public String getScriptName()
-			{
-				return "Assertion";
 			}
 		}
 
@@ -349,11 +340,17 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 					exchange = new WsdlResponseMessageExchange( testRequestStep.getTestRequest() );
 					( ( WsdlResponseMessageExchange )exchange ).setResponse( testRequestStep.getTestRequest().getResponse() );
 				}
-				else if( testStep instanceof RestTestRequestStep )
+				else if( testStep instanceof RestTestRequestStepInterface )
 				{
-					RestTestRequestStep testRequestStep = ( RestTestRequestStep )testStep;
-					exchange = new RestResponseMessageExchange( testRequestStep.getTestRequest() );
+					RestTestRequestStepInterface testRequestStep = ( RestTestRequestStepInterface )testStep;
+					exchange = new RestResponseMessageExchange( ( RestRequestInterface )testRequestStep.getTestRequest() );
 					( ( RestResponseMessageExchange )exchange ).setResponse( testRequestStep.getTestRequest().getResponse() );
+				}
+				else if( testStep instanceof HttpTestRequestStepInterface )
+				{
+					HttpTestRequestStepInterface testRequestStep = ( HttpTestRequestStepInterface )testStep;
+					exchange = new HttpResponseMessageExchange( testRequestStep.getTestRequest() );
+					( ( HttpResponseMessageExchange )exchange ).setResponse( testRequestStep.getTestRequest().getResponse() );
 				}
 				else if( testStep instanceof WsdlMockResponseTestStep )
 				{

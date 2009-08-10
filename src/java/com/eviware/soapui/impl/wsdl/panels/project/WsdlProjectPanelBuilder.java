@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.components.JPropertiesTable;
+import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 /**
@@ -46,6 +47,8 @@ public class WsdlProjectPanelBuilder extends EmptyPanelBuilder<WsdlProject>
 				table.addProperty( "Resource Root", "resourceRoot", new String[] { null, "${projectDir}" } );
 				table.addProperty( "Cache Definitions", "cacheDefinitions", JPropertiesTable.BOOLEAN_OPTIONS );
 				table.addPropertyShadow( "Project Password", "shadowPassword", true );
+				table.addProperty( "Script Language", "defaultScriptLanguage", SoapUIScriptEngineRegistry
+						.getAvailableEngineIds() );
 			}
 		}
 		else

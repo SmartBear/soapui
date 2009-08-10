@@ -37,7 +37,6 @@ import javax.xml.namespace.QName;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
-import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlBase64Binary;
 import org.apache.xmlbeans.XmlCursor;
@@ -329,7 +328,7 @@ public class AttachmentUtils
 			attributeText = cursor.getAttributeText( XMLMIME_CONTENTTYPE_200505 );
 		return attributeText;
 	}
-
+	
 	public static AttachmentEncoding getAttachmentEncoding( WsdlOperation operation,
 			HttpAttachmentPart httpAttachmentPart, boolean isResponse )
 	{
@@ -383,29 +382,7 @@ public class AttachmentUtils
 		if( part != null )
 		{
 			QName typeName = part.getTypeName();
-			if( typeName == null && part.getElementName() != null )
-			{
-				try
-				{
-					SchemaGlobalElement elm = operation.getInterface().getWsdlContext().getSchemaTypeLoader().findElement(
-							part.getElementName() );
-					if( elm != null && elm.getType() != null )
-					{
-						SchemaType schemaType = elm.getType();
-
-						if( SchemaUtils.isInstanceOf( schemaType, XmlBase64Binary.type ) )
-							return AttachmentEncoding.BASE64;
-						else if( SchemaUtils.isInstanceOf( schemaType, XmlHexBinary.type ) )
-							return AttachmentEncoding.HEX;
-					}
-				}
-				catch( Throwable e )
-				{
-					SoapUI.logError( e );
-				}
-			}
-
-			if( typeName != null && typeName.getNamespaceURI().equals( "http://www.w3.org/2001/XMLSchema" ) )
+			if( typeName.getNamespaceURI().equals( "http://www.w3.org/2001/XMLSchema" ) )
 			{
 				if( typeName.getLocalPart().equals( "base64Binary" ) )
 				{
@@ -462,7 +439,6 @@ public class AttachmentUtils
 							if( schemaType != null )
 							{
 								String attributeText = AttachmentUtils.getXmlMimeContentType( cursor );
-								HttpAttachmentPart attachmentPart = null;
 
 								// xop?
 								if( SchemaUtils.isBinaryType( schemaType ) || SchemaUtils.isAnyType( schemaType ) )
@@ -470,7 +446,8 @@ public class AttachmentUtils
 									String contentId = cursor.getTextValue();
 									if( contentId.startsWith( "cid:" ) )
 									{
-										attachmentPart = new HttpAttachmentPart( contentId.substring( 4 ), attributeText );
+										HttpAttachmentPart attachmentPart = new HttpAttachmentPart( contentId.substring( 4 ),
+												attributeText );
 										attachmentPart
 												.setType( attributeText == null && !forceMtom ? Attachment.AttachmentType.CONTENT
 														: Attachment.AttachmentType.XOP );
@@ -482,7 +459,7 @@ public class AttachmentUtils
 									String contentId = cursor.getAttributeText( new QName( "href" ) );
 									if( contentId != null && contentId.length() > 0 )
 									{
-										attachmentPart = new HttpAttachmentPart( contentId, attributeText );
+										HttpAttachmentPart attachmentPart = new HttpAttachmentPart( contentId, attributeText );
 										attachmentPart.setType( Attachment.AttachmentType.XOP );
 										result.add( attachmentPart );
 									}
@@ -493,14 +470,12 @@ public class AttachmentUtils
 									String contentId = cursor.getTextValue();
 									if( contentId.startsWith( "cid:" ) )
 									{
-										attachmentPart = new HttpAttachmentPart( contentId.substring( 4 ), attributeText );
+										HttpAttachmentPart attachmentPart = new HttpAttachmentPart( contentId.substring( 4 ),
+												attributeText );
 										attachmentPart.setType( Attachment.AttachmentType.SWAREF );
 										result.add( attachmentPart );
 									}
 								}
-
-								if( attachmentPart != null )
-									attachmentPart.setSchemaType( schemaType );
 							}
 						}
 
@@ -655,8 +630,8 @@ public class AttachmentUtils
 			throws MessagingException
 	{
 		String contentType = att.getContentType();
-		MimeBodyPart part = contentType.startsWith( "text/" ) ? new MimeBodyPart() : new PreencodedMimeBodyPart( att
-				.getContentEncoding() );
+		MimeBodyPart part = contentType.startsWith( "text/" ) ? new MimeBodyPart()
+				: new PreencodedMimeBodyPart( "binary" );
 
 		part.setDataHandler( new DataHandler( new AttachmentDataSource( att ) ) );
 		initPartContentId( contentIds, part, att, false );

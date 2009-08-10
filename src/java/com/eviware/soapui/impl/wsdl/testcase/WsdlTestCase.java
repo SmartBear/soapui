@@ -25,14 +25,16 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.LoadTestConfig;
-import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.TestCaseConfig;
 import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.config.WsrmVersionTypeConfig;
 import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.loadtest.LoadTestAssertion;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.loadtest.assertions.TestStepStatusAssertion;
+import com.eviware.soapui.impl.wsdl.support.wsrm.WsrmTestRunListener;
+import com.eviware.soapui.impl.wsdl.support.wsrm.WsrmUtils;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
@@ -40,9 +42,9 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.LoadTest;
 import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunListener;
-import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -88,6 +90,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		this.forLoadTest = forLoadTest;
 
 		List<TestStepConfig> testStepConfigs = config.getTestStepList();
+		List<TestStepConfig> removed = new ArrayList<TestStepConfig>();
 		for( TestStepConfig tsc : testStepConfigs )
 		{
 			WsdlTestStep testStep = createTestStepFromConfig( tsc );
@@ -96,14 +99,22 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 				ensureUniqueName( testStep );
 				testSteps.add( testStep );
 			}
+			else
+				removed.add( tsc );
 		}
+		
+//		if( removed.size() > 0 )
+//		{
+//			testStepConfigs.removeAll( removed );
+//			config.setTestStepArray( testStepConfigs.toArray( new TestStepConfig[] {} ) );
+//		}
 
 		if( !forLoadTest )
 		{
 			List<LoadTestConfig> loadTestConfigs = config.getLoadTestList();
 			for( LoadTestConfig tsc : loadTestConfigs )
 			{
-				WsdlLoadTest loadTest = new WsdlLoadTest( this, tsc );
+				WsdlLoadTest loadTest = buildLoadTest( tsc );
 				loadTests.add( loadTest );
 			}
 		}
@@ -130,6 +141,15 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 			getConfig().addNewProperties();
 
 		setPropertiesConfig( getConfig().getProperties() );
+
+		WsrmTestRunListener wsrmListener = new WsrmTestRunListener();
+
+		addTestRunListener( wsrmListener );
+	}
+
+	public WsdlLoadTest buildLoadTest( LoadTestConfig tsc )
+	{
+		return new WsdlLoadTest( this, tsc );
 	}
 
 	public boolean getKeepSession()
@@ -265,11 +285,6 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		WsdlTestStepFactory factory = WsdlTestStepRegistry.getInstance().getFactory( tsc.getType() );
 		if( factory != null )
 		{
-			//Forward incompatibility, test for incompatible future version of HttpTestStep:
-			if( tsc.getConfig() != null && tsc.getConfig() instanceof RestRequestStepConfig && 
-					((RestRequestStepConfig)tsc.getConfig().changeType(RestRequestStepConfig.type)).getRestRequest() == null)
-				return null;
-			
 			WsdlTestStep testStep = factory.buildTestStep( this, tsc, forLoadTest );
 			return testStep;
 		}
@@ -317,7 +332,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public WsdlLoadTest addNewLoadTest( String name )
 	{
-		WsdlLoadTest loadTest = new WsdlLoadTest( this, getConfig().addNewLoadTest() );
+		WsdlLoadTest loadTest = buildLoadTest( getConfig().addNewLoadTest() );
 		loadTest.setStartDelay( 0 );
 		loadTest.setName( name );
 		loadTests.add( loadTest );
@@ -417,11 +432,11 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		newStepConfig.setName( name );
 
 		WsdlTestStep result = insertTestStep( newStepConfig, index, createCopy );
-
+      if( result == null )
+      	return null;
+      
 		if( createCopy )
-		{
 			ModelSupport.unsetIds( result );
-		}
 
 		resolveTestCase();
 		return result;
@@ -462,12 +477,14 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		WsdlTestStep testStep = createTestStepFromConfig( newStepConfig );
 
 		if( !ensureUniqueName( testStep ) )
+		{
+			testStep.release();
+			getConfig().getTestStepList().remove( newStepConfig );
 			return null;
+		}
 
 		if( clearIds )
-		{
 			ModelSupport.unsetIds( testStep );
-		}
 
 		if( ix == -1 )
 			testSteps.add( testStep );
@@ -478,6 +495,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 		if( getTestSuite() != null )
 			( getTestSuite() ).fireTestStepAdded( testStep, ix == -1 ? testSteps.size() - 1 : ix );
+		
+		notifyPropertyChanged( "testSteps", null, testStep );
 
 		return testStep;
 	}
@@ -513,6 +532,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 			if( getTestSuite() != null )
 				( getTestSuite() ).fireTestStepAdded( result[c], getIndexOfTestStep( result[c] ) );
+			
+			notifyPropertyChanged( "testSteps", null, result[c] );
 		}
 
 		return result;
@@ -536,6 +557,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		}
 		finally
 		{
+			notifyPropertyChanged( "testSteps", testStep, null );
+			
 			testStep.release();
 
 			for( int c = 0; c < getConfig().sizeOfTestStepArray(); c++ )
@@ -730,7 +753,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		LoadTestConfig loadTestConfig = getConfig().addNewLoadTest();
 		loadTestConfig.set( loadTest.getConfig().copy() );
 
-		WsdlLoadTest newLoadTest = new WsdlLoadTest( this, loadTestConfig );
+		WsdlLoadTest newLoadTest = buildLoadTest( loadTestConfig );
 		newLoadTest.setName( name );
 		ModelSupport.unsetIds( newLoadTest );
 		newLoadTest.afterLoad();
@@ -800,25 +823,26 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		return result;
 	}
 
-	public Object runSetupScript( TestRunContext runContext, TestRunner runner ) throws Exception
+	public Object runSetupScript( TestCaseRunContext runContext, TestCaseRunner runner ) throws Exception
 	{
 		String script = getSetupScript();
-		if( StringUtils.isNullOrEmpty( script ) )
+		if( StringUtils.isNullOrEmpty( script ))
 			return null;
 
 		if( setupScriptEngine == null )
 		{
-			setupScriptEngine = SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, this );
+			setupScriptEngine = SoapUIScriptEngineRegistry.create( this );
 			setupScriptEngine.setScript( script );
 		}
 
+		setupScriptEngine.setVariable( "testCase", this );
 		setupScriptEngine.setVariable( "context", runContext );
 		setupScriptEngine.setVariable( "testRunner", runner );
 		setupScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		return setupScriptEngine.run();
 	}
 
-	public Object runTearDownScript( TestRunContext runContext, TestRunner runner ) throws Exception
+	public Object runTearDownScript( TestCaseRunContext runContext, TestCaseRunner runner ) throws Exception
 	{
 		String script = getTearDownScript();
 		if( StringUtils.isNullOrEmpty( script ) )
@@ -826,11 +850,12 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 		if( tearDownScriptEngine == null )
 		{
-			tearDownScriptEngine = SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, this );
+			tearDownScriptEngine = SoapUIScriptEngineRegistry.create( this );
 			tearDownScriptEngine.setScript( script );
 		}
 
 		tearDownScriptEngine.setVariable( "context", runContext );
+		tearDownScriptEngine.setVariable( "testCase", this );
 		tearDownScriptEngine.setVariable( "testRunner", runner );
 		tearDownScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		return tearDownScriptEngine.run();
@@ -914,7 +939,6 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		{
 			e.printStackTrace();
 		}
-
 	}
 
 	public void afterCopy( WsdlTestSuite oldTestSuite, WsdlTestCase oldTestCase )
@@ -922,4 +946,52 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		for( WsdlTestStep testStep : testSteps )
 			testStep.afterCopy( oldTestSuite, oldTestCase );
 	}
+
+	public void setWsrmEnabled( boolean enabled )
+	{
+		getConfig().setWsrmEnabled( enabled );
+	}
+
+	public void setWsrmAckTo( String ackTo )
+	{
+		getConfig().setWsrmAckTo( ackTo );
+	}
+
+	public void setWsrmExpires( Long expires )
+	{
+		getConfig().setWsrmExpires( expires );
+	}
+
+	public void setWsrmVersion( String version )
+	{
+		getConfig().setWsrmVersion( WsrmVersionTypeConfig.Enum.forString( version ) );
+	}
+
+	public boolean getWsrmEnabled()
+	{
+		return getConfig().getWsrmEnabled();
+	}
+
+	public String getWsrmAckTo()
+	{
+		return getConfig().getWsrmAckTo();
+	}
+
+	public long getWsrmExpires()
+	{
+		return getConfig().getWsrmExpires();
+	}
+
+	public String getWsrmVersion()
+	{
+		if( getConfig().getWsrmVersion() == null )
+			return WsrmVersionTypeConfig.X_1_0.toString();
+		return getConfig().getWsrmVersion().toString();
+	}
+
+	public String getWsrmVersionNamespace()
+	{
+		return WsrmUtils.getWsrmVersionNamespace( getConfig().getWsrmVersion() );
+	}
+
 }

@@ -3,9 +3,13 @@
   &lt;con:entry key="/home/robert/default-soapui-workspace.xml" value="Projects"/>
   &lt;con:entry key="C:\home\robert\workspace\soapui\TestPBE-workspace.xml" value="Projects"/>
 &lt;/xml-fragment></con:setting><con:setting id="com.eviware.soapui.SoapUI@workspace">C:\Documents and Settings\ole\My Documents\Demo-workspace.xml</con:setting><con:setting id="RecentProjects"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
-  <con:entry key="/home/robert/test2-soapui-project.xml" value="test2"/>
-  <con:entry key="/home/robert/workspace/soapui/test2-test2" value="test2"/>
-  <con:entry key="/home/robert/test4-soapui-project.xml" value="test4"/>
   <con:entry key="/home/robert/test3-soapui-project" value="test3"/>
   <con:entry key="/home/robert/test3-soapui-project.xml" value="test3"/>
-</xml-fragment>]]></con:setting><con:setting id="HttpSettings@request-compression">None</con:setting><con:setting id="HttpSettings@response-compression">false</con:setting><con:setting id="ToolsSettings@wadl2java"/><con:setting id="WsaSettings@useDefaultAction">false</con:setting><con:setting id="WsaSettings@generateMessageID">false</con:setting><con:setting id="WsaSettings@useDefaultReplyTo">false</con:setting><con:setting id="WsaSettings@useDefaultRelationshipType">false</con:setting><con:setting id="WsaSettings@overrideExistingHeaders">false</con:setting></con:soapui-settings>
+  <con:entry key="/dat/workspace2/DainCore2/demo_workspace.xml" value="demo_workspace.xml"/>
+  <con:entry key="/home/dain/default-soapui-workspace.xml" value="default-soapui-workspace.xml"/>
+  <con:entry key="/home/robert/test4-soapui-project.xml" value="test4"/>
+  <con:entry key="/home/robert/test2-soapui-project.xml" value="test2"/>
+  <con:entry key="/dat/workspace2/DainCore2/C:/Documents and Settings/ole/My Documents/Demo-workspace.xml" value="C:\Documents and Settings\ole\My Documents\Demo-workspace.xml"/>
+  <con:entry key="/home/robert/workspace/soapui/test2-test2" value="test2"/>
+  <con:entry key="" value="http://lpt-neri.mogul.com/ServiceModelSamples/service.svc?wsdl"/>
+</xml-fragment>]]></con:setting><con:setting id="HttpSettings@request-compression">None</con:setting><con:setting id="HttpSettings@response-compression">false</con:setting><con:setting id="ToolsSettings@wadl2java"/><con:setting id="WsaSettings@useDefaultAction">false</con:setting><con:setting id="WsaSettings@generateMessageID">false</con:setting><con:setting id="WsaSettings@useDefaultReplyTo">false</con:setting><con:setting id="WsaSettings@useDefaultRelationshipType">false</con:setting><con:setting id="WsaSettings@overrideExistingHeaders">false</con:setting><con:setting id="UISettings@auto_save_projects_on_exit">true</con:setting><con:setting id="UISettings@show_descriptions">true</con:setting><con:setting id="WsaSettings@useDefaultRelatesTo">true</con:setting><con:setting id="HttpSettings@disable_response_decompression">false</con:setting><con:setting id="HttpSettings@enable_mock_wire_log">false</con:setting><con:setting id="UISettings@show_startup_page">false</con:setting><con:setting id="WsaSettings@soapActionOverridesWsaAction">false</con:setting><con:setting id="WsaSettings@enableForOptional">false</con:setting></con:soapui-settings>

@@ -12,18 +12,6 @@
 
 package com.eviware.soapui.tools;
 
-import java.io.File;
-import java.io.OutputStreamWriter;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.PosixParser;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-
 import com.eviware.soapui.DefaultSoapUICore;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SoapUICore;
@@ -34,6 +22,13 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import org.apache.commons.cli.*;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+
+import java.io.File;
+import java.io.OutputStreamWriter;
 
 public abstract class AbstractSoapUIRunner
 {
@@ -316,9 +311,9 @@ public abstract class AbstractSoapUIRunner
 					log.info( "Setting project property [" + name + "] to [" + value + "]" );
 					project.setPropertyValue( name, value );
 				}
+				}
 			}
 		}
-	}
 
 	protected boolean isEnableUI()
 	{

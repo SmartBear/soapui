@@ -39,6 +39,7 @@ public abstract class AbstractTestAssertionFactory implements TestAssertionFacto
 		this.assertionClass = assertionClass;
 	}
 
+	@SuppressWarnings("unchecked")
 	public AbstractTestAssertionFactory( String id, String label, Class<? extends TestAssertion> assertionClass,
 			Class<? extends ModelItem> targetClass )
 	{
@@ -69,9 +70,9 @@ public abstract class AbstractTestAssertionFactory implements TestAssertionFacto
 
 	public boolean canAssert( Assertable assertable )
 	{
-		List classes = Arrays.asList( assertionClass.getInterfaces() );
+		List<?> classes = Arrays.asList( assertionClass.getInterfaces() );
 
-		List<Class> classList = ClassUtils.getImplementedAndExtendedClasses( assertable );
+		List<Class<?>> classList = ClassUtils.getImplementedAndExtendedClasses( assertable );
 		if( !targetClasses.isEmpty() && Collections.disjoint( classList, targetClasses ) )
 			return false;
 

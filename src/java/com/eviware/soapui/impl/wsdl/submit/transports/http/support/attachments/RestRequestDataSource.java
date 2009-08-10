@@ -31,7 +31,7 @@ import java.io.OutputStream;
 
 import javax.activation.DataSource;
 
-import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 
 /**
  * DataSource for an existing WsdlRequest
@@ -41,10 +41,10 @@ import com.eviware.soapui.impl.rest.RestRequest;
 
 public class RestRequestDataSource implements DataSource
 {
-	private final RestRequest restRequest;
+	private final HttpRequestInterface<?> restRequest;
 	private final String requestContent;
 
-	public RestRequestDataSource( RestRequest restRequest, String requestContent )
+	public RestRequestDataSource( HttpRequestInterface<?> restRequest, String requestContent )
 	{
 		this.restRequest = restRequest;
 		this.requestContent = requestContent;

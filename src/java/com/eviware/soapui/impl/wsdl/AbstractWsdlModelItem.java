@@ -23,6 +23,7 @@ import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 
@@ -77,7 +78,7 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends A
 	public String getDescription()
 	{
 		String description = config.getDescription();
-		return description == null || description.trim().length() == 0 ? null : description;
+		return StringUtils.hasContent( description ) ? description : "";
 	}
 
 	public void setDescription( String description )
@@ -95,6 +96,7 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends A
 	public void setName( String name )
 	{
 		String old = getName();
+		name = name.trim();
 		config.setName( name );
 		notifyPropertyChanged( NAME_PROPERTY, old, name );
 	}
@@ -112,6 +114,11 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends A
 	public void setConfig( T config )
 	{
 		this.config = config;
+		
+		if( config != null && config.isSetName())
+		{
+			config.setName( config.getName().trim() );
+		}
 
 		if( settings != null )
 			settings.release();
@@ -144,7 +151,7 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends A
 	{
 		for( AbstractWsdlModelItem<?> item : items )
 		{
-			if( item.getName().equals( name ) )
+			if( item.getName() != null && item.getName().equals( name ) )
 				return item;
 		}
 

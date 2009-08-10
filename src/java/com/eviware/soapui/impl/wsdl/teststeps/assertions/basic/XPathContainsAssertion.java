@@ -63,6 +63,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFa
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.XPathReference;
@@ -193,13 +194,13 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 				return "Missing content for XPath assertion";
 
 			XmlObject xml = XmlObject.Factory.parse( response );
-			String expandedPath = PropertyExpansionUtils.expandProperties( context, path );
+			String expandedPath = PropertyExpander.expandProperties( context, path );
 			XmlObject[] items = xml.selectPath( expandedPath );
 			AssertedXPathsContainer assertedXPathsContainer = ( AssertedXPathsContainer )context
 					.getProperty( AssertedXPathsContainer.ASSERTEDXPATHSCONTAINER_PROPERTY );
 
 			XmlObject contentObj = null;
-			String expandedContent = PropertyExpansionUtils.expandProperties( context, expectedContent );
+			String expandedContent = PropertyExpander.expandProperties( context, expectedContent );
 
 			// stupid check for text selection for those situation that the
 			// selected
@@ -250,7 +251,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 						if( items[c] instanceof XmlAnySimpleType && !( items[c] instanceof XmlQName ) )
 						{
 							String value = ( ( XmlAnySimpleType )items[c] ).getStringValue();
-							String expandedValue = PropertyExpansionUtils.expandProperties( context, value );
+							String expandedValue = PropertyExpander.expandProperties( context, value );
 							XMLAssert.assertEquals( expandedContent, expandedValue );
 						}
 						else
@@ -258,14 +259,13 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 							Node domNode = items[c].getDomNode();
 							if( domNode.getNodeType() == Node.ELEMENT_NODE )
 							{
-								String expandedValue = PropertyExpansionUtils.expandProperties( context, XmlUtils
+								String expandedValue = PropertyExpander.expandProperties( context, XmlUtils
 										.getElementText( ( Element )domNode ) );
 								XMLAssert.assertEquals( expandedContent, expandedValue );
 							}
 							else
 							{
-								String expandedValue = PropertyExpansionUtils
-										.expandProperties( context, domNode.getNodeValue() );
+								String expandedValue = PropertyExpander.expandProperties( context, domNode.getNodeValue() );
 								XMLAssert.assertEquals( expandedContent, expandedValue );
 							}
 						}
@@ -503,7 +503,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 
 			WsdlTestRunContext context = new WsdlTestRunContext( ( TestStep )getAssertable().getModelItem() );
 
-			String expandedPath = PropertyExpansionUtils.expandProperties( context, txt.trim() );
+			String expandedPath = PropertyExpander.expandProperties( context, txt.trim() );
 
 			if( contentArea != null && contentArea.isVisible() )
 				contentArea.setText( "" );

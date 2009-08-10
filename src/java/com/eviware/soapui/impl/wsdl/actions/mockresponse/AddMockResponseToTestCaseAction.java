@@ -88,6 +88,8 @@ public class AddMockResponseToTestCaseAction extends AbstractAddToTestCaseAction
 		mockResponseStepConfig.getResponse().set( mockResponse.getConfig() );
 
 		WsdlMockResponseTestStep testStep = ( WsdlMockResponseTestStep )testCase.insertTestStep( config, -1 );
+		if( testStep == null )
+			return;
 
 		if( dialog.getBooleanValue( Form.ADD_SCHEMA_ASSERTION ) )
 			testStep.addAssertion( SchemaComplianceAssertion.ID );

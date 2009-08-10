@@ -21,7 +21,7 @@
             <a href="https://wadl.dev.java.net/" target="_new">WADL</a>
         definition or just plain URLs. The REST/HTTP support is divided into two parts:</p>
             <ul>
-                <li>A new REST Service / Resource / Request model in the Navigator with corresponding editor windows/popups/etc</li>
+                <li>A new REST Service / Resource / Method / Request model in the Navigator with corresponding editor windows/popups/etc</li>
                 <li>REST-specific TestSteps for integrating REST testing with existing test-functionality</li>
             </ul>
             <p>Mocking of REST services is currently only supported via the possibility to specify a document root
@@ -40,10 +40,11 @@
                    can be made available in any number of representations (ie states), for example XML, JSON, PDF, etc. Also,
                    resource can contain child resources which will inherit parameter and path information from their
                    parent(s).</li>
-                    <li><b>Requests</b> -  A resource in WADL/REST is accessed through a number of Methods, which in soapUI are
-                        modelled as requests. A request is defined by it's HTTP method, Headers and parameters. The
+                    <li><b>Methods</b> -  A resource in WADL/REST is accessed through a number of Methods. A Method is defined by it's HTTP method, Headers and parameters. The
                     response is usually a representation of the invoked resource.</li>
-                    <li><b>Parameters</b> - can be defined on both the Resource and Request level, see more below.</li>
+                    <li><b>Requests</b> - A Request is an instance of a request for a Method. 
+                    Resources and Methods define Parameters by name and possibly default values, whereas Requests instantiate these with values.</li>
+                    <li><b>Parameters</b> - can be defined on both the Resource and Method level, see more below.</li>
                     <li><b>Representations</b> - are used to define the content of a request or response, see more below.</li>
                 </ul>
                 <p>A soapUI project can contain any number of both REST and WSDL services, allowing for integrated
@@ -54,8 +55,8 @@
                 <p>soapUI supports WADL in two ways:</p>
                 <ol>
                     <li>When defining a new REST Service one can do so from a WADL file/URL, which will import
-                    all defined resources and methods (as requests). Associated XML Schemas are also imported and
-                    used for validations and form-generation in soapUI Pro</li>
+                    all defined resources and methods. Associated XML Schemas are also imported and
+                    used for validations and form-generation in soapUI Pro.</li>
                     <li>When defining a new REST Service without a WADL by "manually" specifying endpoints, paths, parameters, etc
                     soapUI automatically generates a WADL from these configured items.</li>
                 </ol>

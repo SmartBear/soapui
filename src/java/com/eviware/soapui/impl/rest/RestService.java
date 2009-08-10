@@ -19,9 +19,11 @@ import java.util.Map;
 
 import com.eviware.soapui.config.RestResourceConfig;
 import com.eviware.soapui.config.RestServiceConfig;
+import com.eviware.soapui.impl.rest.panels.request.inspectors.schema.InferredSchemaManager;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.support.StringUtils;
 
@@ -44,6 +46,16 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 		{
 			resources.add( new RestResource( this, resourceConfig ) );
 		}
+		
+		if(!serviceConfig.isSetWadlVersion())
+		{
+			serviceConfig.setWadlVersion( serviceConfig.isSetDefinitionUrl() ? Constants.WADL10_NS : Constants.WADL11_NS );
+		}
+	}
+	
+	public String getWadlVersion()
+	{
+		return getConfig().getWadlVersion();
 	}
 
 	public String getInterfaceType()
@@ -82,6 +94,19 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 		getConfig().setBasePath( basePath );
 
 		notifyPropertyChanged( "basePath", old, basePath );
+	}
+
+	public String getInferredSchema()
+	{
+		return getConfig().getInferredSchema();
+	}
+
+	public void setInferredSchema( String inferredSchema )
+	{
+		String old = getInferredSchema();
+		getConfig().setInferredSchema( inferredSchema );
+
+		notifyPropertyChanged( "inferredSchema", old, inferredSchema );
 	}
 
 	public boolean isGenerated()
@@ -246,5 +271,12 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 			}
 		}
 
+	}
+
+	@Override
+	public void release()
+	{
+		InferredSchemaManager.release( this );
+		super.release();
 	}
 }

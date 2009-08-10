@@ -14,23 +14,24 @@ package com.eviware.soapui.impl.rest.panels.request;
 
 import javax.swing.JButton;
 
-import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JXToolBar;
 
-public class RestRequestDesktopPanel extends AbstractRestRequestDesktopPanel<RestRequest, RestRequest>
+public class RestRequestDesktopPanel extends
+		AbstractRestRequestDesktopPanel<RestRequestInterface, RestRequestInterface>
 {
 	private JButton addToTestCaseButton;
 
-	public RestRequestDesktopPanel( RestRequest modelItem )
+	public RestRequestDesktopPanel( RestRequestInterface modelItem )
 	{
 		super( modelItem, modelItem );
 	}
 
 	@Override
-	protected void init( RestRequest request )
+	protected void init( RestRequestInterface request )
 	{
 		addToTestCaseButton = createActionButton( SwingActionDelegate.createDelegate(
 				AddRestRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), null, "/addToTestCase.gif" ), true );

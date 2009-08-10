@@ -31,8 +31,8 @@ import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunListener;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestSuite;
@@ -277,15 +277,15 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 			}
 
 			if( !failedTests.isEmpty() )
+		{
+			log.info( failedTests.size() + " load tests failed:" );
+			for( LoadTestRunner loadTestRunner : failedTests )
 			{
-				log.info( failedTests.size() + " load tests failed:" );
-				for( LoadTestRunner loadTestRunner : failedTests )
-				{
-					log.info( loadTestRunner.getLoadTest().getName() + ": " + loadTestRunner.getReason() );
-				}
-
-				throw new SoapUIException( "LoadTests failed" );
+				log.info( loadTestRunner.getLoadTest().getName() + ": " + loadTestRunner.getReason() );
 			}
+
+			throw new SoapUIException( "LoadTests failed" );
+		}
 		}
 
 		return true;
@@ -342,7 +342,7 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 	 *           the loadTest to run
 	 */
 
-	private void runWsdlLoadTest( WsdlLoadTest loadTest )
+	protected void runWsdlLoadTest( WsdlLoadTest loadTest )
 	{
 		try
 		{
@@ -481,13 +481,13 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 		}
 	}
 
-	public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-			TestRunContext runContext )
+	public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+			TestCaseRunContext runContext )
 	{
 	}
 
-	public void afterTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-			TestRunContext runContext, TestStepResult testStepResult )
+	public void afterTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+			TestCaseRunContext runContext, TestStepResult testStepResult )
 	{
 		super.afterStep( testRunner, runContext, testStepResult );
 	}
@@ -496,15 +496,15 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 	{
 	}
 
-	public void beforeTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-			TestRunContext runContext )
+	public void beforeTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+			TestCaseRunContext runContext )
 	{
 	}
 
-	public void beforeTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-			TestRunContext runContext, TestStep testStep )
+	public void beforeTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+			TestCaseRunContext runContext, TestStep testStep )
 	{
-		super.beforeStep( testRunner, runContext );
+		super.beforeStep( testRunner, runContext, testStep );
 	}
 
 	public void loadTestStarted( LoadTestRunner loadTestRunner, LoadTestRunContext context )

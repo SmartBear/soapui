@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.wsdl.teststeps;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -23,12 +22,13 @@ import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
 
+import com.eviware.soapui.config.HttpRequestConfig;
 import com.eviware.soapui.config.RequestStepConfig;
-import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
-import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestRequestConverter;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.http.HttpRequest;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
@@ -40,19 +40,17 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.Request.SubmitException;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
 import com.eviware.soapui.model.support.TestStepBeanProperty;
-import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepProperty;
 import com.eviware.soapui.model.testsuite.TestStepResult;
@@ -60,14 +58,13 @@ import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringToStringMap;
 
-public class HttpTestRequestStep extends WsdlTestStepWithProperties implements PropertyChangeListener,
-		PropertyExpansionContainer, Assertable, HttpRequestTestStep<RestTestRequest>
+public class HttpTestRequestStep extends WsdlTestStepWithProperties implements HttpTestRequestStepInterface
 {
 	@SuppressWarnings( "unused" )
 	private final static Logger log = Logger.getLogger( HttpTestRequestStep.class );
-	private RestRequestStepConfig requestStepConfig;
-	private RestTestRequest testRequest;
-	private WsdlSubmit<RestRequest> submit;
+	private HttpRequestConfig httpRequestConfig;
+	private HttpTestRequest testRequest;
+	private WsdlSubmit<HttpRequest> submit;
 
 	public HttpTestRequestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
@@ -75,9 +72,14 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 
 		if( getConfig().getConfig() != null )
 		{
-			requestStepConfig = ( RestRequestStepConfig )getConfig().getConfig().changeType( RestRequestStepConfig.type );
-
-			testRequest = new RestTestRequest( null, requestStepConfig.getRestRequest(), this, forLoadTest );
+			// httpRequestConfig = (HttpRequestConfig)
+			// getConfig().getConfig().changeType( HttpRequestConfig.type );
+			httpRequestConfig = RestRequestConverter.updateIfNeeded( getConfig().getConfig() );
+			if( httpRequestConfig != getConfig().getConfig() )
+				getConfig().setConfig( httpRequestConfig );
+			testRequest = buildTestRequest( forLoadTest );
+			// testRequest = new RestTestRequest( null,
+			// requestStepConfig.getRestRequest(), this, forLoadTest );
 			testRequest.addPropertyChangeListener( this );
 			testRequest.addTestPropertyListener( new InternalTestPropertyListener() );
 
@@ -86,18 +88,16 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 			else
 				config.setName( testRequest.getName() );
 
-			if( testRequest.getPath() != null )
-				testRequest.setEndpoint( testRequest.getPath() );
+			// testRequest.setEndpoint( testRequest.getEndpoint() );
 		}
 		else
 		{
-			requestStepConfig = ( RestRequestStepConfig )getConfig().addNewConfig()
-					.changeType( RestRequestStepConfig.type );
+			httpRequestConfig = ( HttpRequestConfig )getConfig().addNewConfig().changeType( HttpRequestConfig.type );
 		}
 
 		for( TestProperty property : testRequest.getProperties().values() )
 		{
-			addProperty( new RestTestStepProperty( ( XmlBeansRestParamsTestPropertyHolder.RestParamProperty )property ) );
+			addProperty( new RestTestStepProperty( ( RestParamProperty )property ) );
 		}
 
 		// init default properties
@@ -105,7 +105,6 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 		addProperty( new TestStepBeanProperty( "Username", false, testRequest, "username", this ) );
 		addProperty( new TestStepBeanProperty( "Password", false, testRequest, "password", this ) );
 		addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this ) );
-		addProperty( new TestStepBeanProperty( "Path", false, testRequest, "path", this ) );
 
 		// init properties
 		addProperty( new TestStepBeanProperty( "Request", false, testRequest, "requestContent", this )
@@ -136,6 +135,11 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 		} );
 	}
 
+	protected HttpTestRequest buildTestRequest( boolean forLoadTest )
+	{
+		return new HttpTestRequest( httpRequestConfig, this, forLoadTest );
+	}
+
 	protected String createDefaultRawResponseContent()
 	{
 		return "";
@@ -151,9 +155,9 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 		return "";
 	}
 
-	public RestRequestStepConfig getRequestStepConfig()
+	public HttpRequestConfig getRequestStepConfig()
 	{
-		return requestStepConfig;
+		return httpRequestConfig;
 	}
 
 	@Override
@@ -194,8 +198,8 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 	{
 		super.resetConfigOnMove( config );
 
-		requestStepConfig = ( RestRequestStepConfig )config.getConfig().changeType( RestRequestStepConfig.type );
-		testRequest.updateConfig( requestStepConfig.getRestRequest() );
+		httpRequestConfig = ( HttpRequestConfig )config.getConfig().changeType( HttpRequestConfig.type );
+		testRequest.updateConfig( httpRequestConfig );
 	}
 
 	@Override
@@ -204,7 +208,7 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 		return testRequest == null ? null : testRequest.getIcon();
 	}
 
-	public RestTestRequest getTestRequest()
+	public HttpTestRequest getTestRequest()
 	{
 		return testRequest;
 	}
@@ -216,10 +220,10 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 		testRequest.setName( name );
 	}
 
-	public void propertyChange( PropertyChangeEvent arg0 )
+	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if( arg0.getPropertyName().equals( TestAssertion.CONFIGURATION_PROPERTY )
-				|| arg0.getPropertyName().equals( TestAssertion.DISABLED_PROPERTY ) )
+		if( evt.getPropertyName().equals( TestAssertion.CONFIGURATION_PROPERTY )
+				|| evt.getPropertyName().equals( TestAssertion.DISABLED_PROPERTY ) )
 		{
 			if( getTestRequest().getResponse() != null )
 			{
@@ -228,17 +232,17 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 		}
 		else
 		{
-			if( arg0.getSource() == testRequest && arg0.getPropertyName().equals( WsdlTestRequest.NAME_PROPERTY ) )
+			if( evt.getSource() == testRequest && evt.getPropertyName().equals( WsdlTestRequest.NAME_PROPERTY ) )
 			{
-				if( !super.getName().equals( ( String )arg0.getNewValue() ) )
-					super.setName( ( String )arg0.getNewValue() );
+				if( !super.getName().equals( ( String )evt.getNewValue() ) )
+					super.setName( ( String )evt.getNewValue() );
 			}
 
-			notifyPropertyChanged( arg0.getPropertyName(), arg0.getOldValue(), arg0.getNewValue() );
+			notifyPropertyChanged( evt.getPropertyName(), evt.getOldValue(), evt.getNewValue() );
 		}
 	}
 
-	public TestStepResult run( TestRunner runner, TestRunContext runContext )
+	public TestStepResult run( TestCaseRunner runner, TestCaseRunContext runContext )
 	{
 		RestRequestStepResult testStepResult = new RestRequestStepResult( this );
 
@@ -294,11 +298,11 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 
 			if( response != null )
 			{
+				testStepResult.setRequestContent( response.getRequestContent() );
 				testStepResult.addProperty( "URL", response.getURL() == null ? "<missing>" : response.getURL().toString() );
 				testStepResult.addProperty( "Method", String.valueOf( response.getMethod() ) );
 				testStepResult.addProperty( "StatusCode", String.valueOf( response.getStatusCode() ) );
 				testStepResult.addProperty( "HTTP Version", response.getHttpVersion() );
-				testStepResult.setRequestContent( response.getRequestContent() );
 			}
 			else
 			{
@@ -316,11 +320,11 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 			submit = null;
 		}
 
-		testStepResult.setDomain( PropertyExpansionUtils.expandProperties( runContext, testRequest.getDomain() ) );
-		testStepResult.setUsername( PropertyExpansionUtils.expandProperties( runContext, testRequest.getUsername() ) );
-		testStepResult.setEndpoint( PropertyExpansionUtils.expandProperties( runContext, testRequest.getEndpoint() ) );
-		testStepResult.setPassword( PropertyExpansionUtils.expandProperties( runContext, testRequest.getPassword() ) );
-		testStepResult.setEncoding( testRequest.getEncoding() );
+		testStepResult.setDomain( PropertyExpander.expandProperties( runContext, testRequest.getDomain() ) );
+		testStepResult.setUsername( PropertyExpander.expandProperties( runContext, testRequest.getUsername() ) );
+		testStepResult.setEndpoint( PropertyExpander.expandProperties( runContext, testRequest.getEndpoint() ) );
+		testStepResult.setPassword( PropertyExpander.expandProperties( runContext, testRequest.getPassword() ) );
+		testStepResult.setEncoding( PropertyExpander.expandProperties( runContext, testRequest.getEncoding() ) );
 
 		if( testStepResult.getStatus() != TestStepStatus.CANCELED )
 		{
@@ -337,12 +341,13 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 				else
 					for( int c = 0; c < getAssertionCount(); c++ )
 					{
-						AssertionError[] errors = getAssertionAt( c ).getErrors();
+						WsdlMessageAssertion assertion = getAssertionAt( c );
+						AssertionError[] errors = assertion.getErrors();
 						if( errors != null )
 						{
 							for( AssertionError error : errors )
 							{
-								testStepResult.addMessage( error.getMessage() );
+								testStepResult.addMessage( "[" + assertion.getName() + "] " + error.getMessage() );
 							}
 						}
 					}
@@ -419,7 +424,7 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 		PropertyExpansionsResult result = new PropertyExpansionsResult( this, testRequest );
 
 		result.extractAndAddAll( "requestContent" );
-		result.extractAndAddAll( "path" );
+		result.extractAndAddAll( "endpoint" );
 		result.extractAndAddAll( "username" );
 		result.extractAndAddAll( "password" );
 		result.extractAndAddAll( "domain" );
@@ -438,7 +443,7 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 		return result.toArray( new PropertyExpansion[result.size()] );
 	}
 
-	public RestTestRequest getHttpRequest()
+	public AbstractHttpRequest<?> getHttpRequest()
 	{
 		return testRequest;
 	}
@@ -547,15 +552,22 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 		testRequest.removeAssertionsListener( listener );
 	}
 
+	public TestAssertion moveAssertion( int ix, int offset )
+	{
+		return testRequest.moveAssertion( ix, offset );
+	}
+
 	public Map<String, TestAssertion> getAssertions()
 	{
 		return testRequest.getAssertions();
 	}
 
 	@Override
-	public void prepare( TestRunner testRunner, TestRunContext testRunContext ) throws Exception
+	public void prepare( TestCaseRunner testRunner, TestCaseRunContext testRunContext ) throws Exception
 	{
 		super.prepare( testRunner, testRunContext );
+
+		testRequest.setResponse( null, testRunContext );
 
 		for( TestAssertion assertion : testRequest.getAssertionList() )
 		{
@@ -590,7 +602,7 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 		@Override
 		public void propertyAdded( String name )
 		{
-			addProperty( new RestTestStepProperty( getTestRequest().getProperty( name ) ), true );
+			HttpTestRequestStep.this.addProperty( new RestTestStepProperty( getTestRequest().getProperty( name ) ), true );
 		}
 
 		@Override
@@ -620,9 +632,9 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 
 	private class RestTestStepProperty implements TestStepProperty
 	{
-		private XmlBeansRestParamsTestPropertyHolder.RestParamProperty property;
+		private RestParamProperty property;
 
-		public RestTestStepProperty( XmlBeansRestParamsTestPropertyHolder.RestParamProperty property )
+		public RestTestStepProperty( RestParamProperty property )
 		{
 			this.property = property;
 		}
@@ -672,4 +684,5 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements P
 			return getTestRequest();
 		}
 	}
+
 }

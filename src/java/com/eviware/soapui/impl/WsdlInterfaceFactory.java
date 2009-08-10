@@ -26,8 +26,8 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlImporter;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlLoader;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.SoapUIException;
 
 public class WsdlInterfaceFactory implements InterfaceFactory<WsdlInterface>
@@ -67,7 +67,7 @@ public class WsdlInterfaceFactory implements InterfaceFactory<WsdlInterface>
 		WsdlInterface[] result;
 
 		PropertyExpansionContext context = new DefaultPropertyExpansionContext( project.getModelItem() );
-		url = PropertyExpansionUtils.expandProperties( context, url );
+		url = PropertyExpander.expandProperties( context, url );
 		try
 		{
 			result = WsdlImporter.importWsdl( project, url, bindingName, wsdlLoader );

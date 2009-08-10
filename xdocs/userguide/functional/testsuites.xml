@@ -108,6 +108,14 @@
 				 </ul>
 		 </subsection>
 		 
+		 <subsection name="Clone TestSuite">
+		 <p>Selecting to clone a TestSuite from the TestSuite menu displays the following dialog:</p>
+		 <p align="center"><img src="images/clone_testsuite.gif" alt="Clone TestSuite dialog in soapUI for Functional Testing"/></p>
+		 <p>If selecting to clone to another project, soapUI will prompt to clone required interfaces to that
+		 project as well.</p>
+		 <p>If selecting not to clone the description, you will be able to add a new description.</p>
+		 </subsection>
+		 
 		  <subsection name="TestSuite Runner">
 		 <columns><column><div>
 		  Double Clicking a TestSuite in the navigator opens the TestSuite Runner containing a list of the contained

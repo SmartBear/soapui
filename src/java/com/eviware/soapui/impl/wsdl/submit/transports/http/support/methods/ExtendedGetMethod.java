@@ -20,7 +20,7 @@ import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
@@ -49,6 +49,11 @@ public final class ExtendedGetMethod extends GetMethod implements ExtendedHttpMe
 	public void setDumpFile( String dumpFile )
 	{
 		httpMethodSupport.setDumpFile( dumpFile );
+	}
+
+	public boolean hasResponse()
+	{
+		return httpMethodSupport.hasResponse();
 	}
 
 	protected void readResponse( HttpState arg0, HttpConnection arg1 ) throws IOException, HttpException
@@ -119,9 +124,9 @@ public final class ExtendedGetMethod extends GetMethod implements ExtendedHttpMe
 		return null;
 	}
 
-	public AbstractHttpRequest.RequestMethod getMethod()
+	public RestRequestInterface.RequestMethod getMethod()
 	{
-		return AbstractHttpRequest.RequestMethod.GET;
+		return RestRequestInterface.RequestMethod.GET;
 	}
 
 	public Throwable getFailureCause()
@@ -138,5 +143,4 @@ public final class ExtendedGetMethod extends GetMethod implements ExtendedHttpMe
 	{
 		httpMethodSupport.setFailed( t );
 	}
-
 }

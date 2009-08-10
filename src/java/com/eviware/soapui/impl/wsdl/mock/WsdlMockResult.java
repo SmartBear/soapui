@@ -14,6 +14,8 @@ package com.eviware.soapui.impl.wsdl.mock;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -23,6 +25,7 @@ import org.mortbay.jetty.HttpFields;
 
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResultMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
+import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
@@ -47,6 +50,8 @@ public class WsdlMockResult implements MockResult
 	private WsdlMockOperation mockOperation;
 	private String responseContentType;
 	private int responseStatus = 200;
+	
+	private SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
 
 	public WsdlMockResult( WsdlMockRequest request ) throws Exception
 	{
@@ -229,5 +234,30 @@ public class WsdlMockResult implements MockResult
 	public void setResponseContentType( String responseContentType )
 	{
 		this.responseContentType = responseContentType;
+	}
+	
+	public String toString()
+	{
+		StringBuilder msg = new StringBuilder( dateFormat.format( new Date( getTimestamp() ) ) );
+		MockResponse mockResponse = getMockResponse();
+
+		if( mockResponse == null )
+		{
+			msg.append( ": [dispatch error; missing response]" );
+		}
+		else
+		{
+			try
+			{
+				msg.append( ": [" + mockResponse.getMockOperation().getName() );
+			}
+			catch( Throwable e )
+			{
+				msg.append( ": [removed operation?]" );
+			}
+
+			msg.append( "] " + getTimeTaken() + "ms" );
+		}
+		return msg.toString();
 	}
 }

@@ -31,6 +31,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.ListModel;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
@@ -237,6 +238,19 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
 		{
 			return null;
 		}
+
+		public void addPropertyChangeListener( PropertyChangeListener listener )
+		{
+		}
+
+		public void removePropertyChangeListener( PropertyChangeListener listener )
+		{
+		}
+
+		public ModelItem getModelItem()
+		{
+			return groovyStep;
+		}
 	}
 
 	private class RunAction extends AbstractAction
@@ -244,28 +258,39 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
 		public RunAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/run_groovy_script.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Runs this script using a mock testRunner and testContext" );
+			putValue( Action.SHORT_DESCRIPTION,
+					"Runs this script in a seperate thread using a mock testRunner and testContext" );
 		}
 
 		public void actionPerformed( ActionEvent e )
 		{
-			MockTestRunner mockTestRunner = new MockTestRunner( groovyStep.getTestCase(), logger );
-			statusBar.setIndeterminate( true );
-			WsdlTestStepResult result = ( WsdlTestStepResult )groovyStep.run( mockTestRunner, new MockTestRunContext(
-					mockTestRunner, groovyStep ) );
-			statusBar.setIndeterminate( false );
-
-			Throwable er = result.getError();
-			if( er != null )
+			SoapUI.getThreadPool().execute( new Runnable()
 			{
-				String message = er.getMessage();
+				public void run()
+				{
+					MockTestRunner mockTestRunner = new MockTestRunner( groovyStep.getTestCase(), logger );
+					statusBar.setIndeterminate( true );
+					WsdlTestStepResult result = ( WsdlTestStepResult )groovyStep.run( mockTestRunner,
+							new MockTestRunContext( mockTestRunner, groovyStep ) );
+					statusBar.setIndeterminate( false );
 
-				// ugly...
-				editor.selectError( message );
+					Throwable er = result.getError();
+					if( er != null )
+					{
+						String message = er.getMessage();
 
-				UISupport.showErrorMessage( er.toString() );
-				editor.requestFocus();
-			}
+						// ugly...
+						editor.selectError( message );
+
+						UISupport.showErrorMessage( er.toString() );
+						editor.requestFocus();
+					}
+					else if( result.getMessages().length > 0 )
+					{
+						UISupport.showInfoMessage( StringUtils.join( result.getMessages(), "\n" ) );
+					}
+				}
+			} );
 		}
 	}
 

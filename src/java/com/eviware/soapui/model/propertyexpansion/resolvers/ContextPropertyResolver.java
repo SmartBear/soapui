@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.model.propertyexpansion.resolvers;
 
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
@@ -44,8 +45,8 @@ public class ContextPropertyResolver implements PropertyResolver
 
 		if( property != null && xpath != null )
 		{
-			property = ResolverUtils.extractXPathPropertyValue( property, PropertyExpansionUtils.expandProperties(
-					context, xpath ) );
+			property = ResolverUtils.extractXPathPropertyValue( property, PropertyExpander.expandProperties( context,
+					xpath ) );
 		}
 
 		return property == null ? null : property.toString();

@@ -34,7 +34,7 @@ import com.eviware.soapui.model.tree.TreeNodeFactory;
 public class InterfaceTreeNode extends AbstractModelItemTreeNode<Interface>
 {
 	private InternalInterfaceListener interfaceListener;
-	private List<OperationTreeNode> operationNodes = new ArrayList<OperationTreeNode>();
+	private List<SoapUITreeNode> operationNodes = new ArrayList<SoapUITreeNode>();
 
 	public InterfaceTreeNode( Interface iface, SoapUITreeModel treeModel )
 	{
@@ -45,8 +45,7 @@ public class InterfaceTreeNode extends AbstractModelItemTreeNode<Interface>
 
 		for( int c = 0; c < iface.getOperationCount(); c++ )
 		{
-			operationNodes.add( ( OperationTreeNode )TreeNodeFactory.createTreeNode( iface.getOperationAt( c ),
-					getTreeModel() ) );
+			operationNodes.add( TreeNodeFactory.createTreeNode( iface.getOperationAt( c ), getTreeModel() ) );
 		}
 
 		treeModel.mapModelItems( operationNodes );
@@ -58,7 +57,7 @@ public class InterfaceTreeNode extends AbstractModelItemTreeNode<Interface>
 
 		getInterface().removeInterfaceListener( interfaceListener );
 
-		for( OperationTreeNode treeNode : operationNodes )
+		for( SoapUITreeNode treeNode : operationNodes )
 			treeNode.release();
 	}
 
@@ -86,16 +85,16 @@ public class InterfaceTreeNode extends AbstractModelItemTreeNode<Interface>
 	{
 		public void requestAdded( Request request )
 		{
-			OperationTreeNode operationTreeNode = ( OperationTreeNode )getTreeModel().getTreeNode( request.getOperation() );
-			if( operationTreeNode != null )
-				operationTreeNode.requestAdded( request );
+			SoapUITreeNode operationTreeNode = getTreeModel().getTreeNode( request.getOperation() );
+			if( operationTreeNode != null && operationTreeNode instanceof OperationTreeNode )
+				( ( OperationTreeNode )operationTreeNode ).requestAdded( request );
 		}
 
 		public void requestRemoved( Request request )
 		{
-			OperationTreeNode operationTreeNode = ( OperationTreeNode )getTreeModel().getTreeNode( request.getOperation() );
-			if( operationTreeNode != null )
-				operationTreeNode.requestRemoved( request );
+			SoapUITreeNode operationTreeNode = getTreeModel().getTreeNode( request.getOperation() );
+			if( operationTreeNode != null && operationTreeNode instanceof OperationTreeNode )
+				( ( OperationTreeNode )operationTreeNode ).requestRemoved( request );
 		}
 
 		public void operationAdded( Operation operation )
@@ -112,8 +111,7 @@ public class InterfaceTreeNode extends AbstractModelItemTreeNode<Interface>
 				}
 			}
 
-			OperationTreeNode operationTreeNode = ( OperationTreeNode )TreeNodeFactory.createTreeNode( operation,
-					getTreeModel() );
+			SoapUITreeNode operationTreeNode = TreeNodeFactory.createTreeNode( operation, getTreeModel() );
 
 			operationNodes.add( operationTreeNode );
 			getTreeModel().notifyNodeInserted( operationTreeNode );
@@ -136,7 +134,7 @@ public class InterfaceTreeNode extends AbstractModelItemTreeNode<Interface>
 				}
 			}
 			else
-				throw new RuntimeException( "Removing unkown operation" );
+				throw new RuntimeException( "Removing unknown operation" );
 		}
 
 		public void operationUpdated( Operation operation )

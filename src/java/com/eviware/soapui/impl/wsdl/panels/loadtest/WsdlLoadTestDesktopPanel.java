@@ -59,7 +59,7 @@ import com.eviware.soapui.model.support.LoadTestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunListener;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.LoadTestRunner.Status;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
@@ -83,6 +83,7 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 {
 	private static final String SECONDS_LIMIT = "Seconds";
 	private static final String RUNS_LIMIT = "Total Runs";
+	private static final String RUNS_PER_THREAD_LIMIT = "Runs per Thread";
 	private JPanel contentPanel;
 	@SuppressWarnings( "unused" )
 	private JSplitPane mainSplit;
@@ -90,31 +91,31 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 	private JTabbedPane mainTabs;
 	@SuppressWarnings( "unused" )
 	private JPanel graphPanel;
-	private JButton runButton;
-	private JButton cancelButton;
-	private JButton statisticsGraphButton;
+	protected JButton runButton;
+	protected JButton cancelButton;
+	protected JButton statisticsGraphButton;
 	private WsdlLoadTestRunner runner;
-	private JSpinner threadsSpinner;
+	protected JSpinner threadsSpinner;
 	private LoadTestRunListener internalLoadTestListener = new InternalLoadTestListener();
-	private JComboBox strategyCombo;
-	private JPanel loadStrategyConfigurationPanel;
-	private JButton resetButton;
+	protected JComboBox strategyCombo;
+	protected JPanel loadStrategyConfigurationPanel;
+	protected JButton resetButton;
 	private LoadTestLog loadTestLog;
-	private JButton optionsButton;
-	private JButton testTimesGraphButton;
+	protected JButton optionsButton;
+	protected JButton testTimesGraphButton;
 	@SuppressWarnings( "unused" )
 	private Object limit;
 	private JSpinner limitSpinner;
 	private JComboBox limitTypeCombo;
 	private SpinnerNumberModel limitSpinnerModel;
-	private JProgressBar progressBar;
+	protected JProgressBar progressBar;
 	private long loadTestStartTime;
 	private StatisticsDesktopPanel statisticsDesktopPanel;
 	private StatisticsHistoryDesktopPanel statisticsHistoryDesktopPanel;
 
 	public boolean loadTestIsRunning;
 	private InternalDesktopListener desktopListener;
-	private JButton exportButton;
+	protected JButton exportButton;
 	private JLoadTestAssertionsTable assertionsTable;
 	private JStatisticsTable statisticsTable;
 	private GroovyEditorComponent tearDownGroovyEditor;
@@ -148,6 +149,15 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 	private JComponent buildContent()
 	{
 		inspectorPanel = JInspectorPanelFactory.build( buildStatistics() );
+		addInspectors( inspectorPanel );
+		inspectorPanel.setDefaultDividerLocation( 0.6F );
+		inspectorPanel.setCurrentInspector( "LoadTest Log" );
+
+		return inspectorPanel.getComponent();
+	}
+
+	protected void addInspectors(JInspectorPanel inspectorPanel)
+	{
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildLog(), "LoadTest Log",
 				"The current LoadTest execution log", true ) );
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildAssertions(), "LoadTest Assertions",
@@ -156,10 +166,6 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 				"Script to run before tunning a TestCase" ) );
 		inspectorPanel.addInspector( new GroovyEditorInspector( buildTearDownScriptPanel(), "TearDown Script",
 				"Script to run after a TestCase Run" ) );
-		inspectorPanel.setDefaultDividerLocation( 0.6F );
-		inspectorPanel.setCurrentInspector( "LoadTest Log" );
-
-		return inspectorPanel.getComponent();
 	}
 
 	protected GroovyEditorComponent buildTearDownScriptPanel()
@@ -309,7 +315,7 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 		toolbar.addSeparator();
 
 		limitTypeCombo = new JComboBox( new String[] { WsdlLoadTestDesktopPanel.RUNS_LIMIT,
-				WsdlLoadTestDesktopPanel.SECONDS_LIMIT } );
+				WsdlLoadTestDesktopPanel.SECONDS_LIMIT, WsdlLoadTestDesktopPanel.RUNS_PER_THREAD_LIMIT } );
 
 		if( getModelItem().getLimitType() == LoadTestLimitTypesConfig.TIME )
 			limitTypeCombo.setSelectedIndex( 1 );
@@ -329,6 +335,10 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 				else if( WsdlLoadTestDesktopPanel.SECONDS_LIMIT.equals( item ) )
 				{
 					getModelItem().setLimitType( LoadTestLimitTypesConfig.TIME );
+				}
+				else if( WsdlLoadTestDesktopPanel.RUNS_PER_THREAD_LIMIT.equals( item ) )
+				{
+					getModelItem().setLimitType( LoadTestLimitTypesConfig.COUNT_PER_THREAD );
 				}
 			}
 		} );
@@ -398,7 +408,7 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 				return;
 			}
 
-			if( loadtest.getLimitType() == LoadTestLimitTypesConfig.COUNT
+			if( loadtest.getLimitType() != LoadTestLimitTypesConfig.TIME
 					&& loadtest.getTestLimit() < loadtest.getThreadCount() )
 			{
 				if( !UISupport.confirm( "The run limit is set to a lower count than number of threads\nRun Anyway?",
@@ -589,7 +599,8 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 					int value = ( int )( ( timePassed * 100 ) / ( getModelItem().getTestLimit() * 1000 ) );
 					progressBar.setValue( value );
 				}
-				else if( getModelItem().getLimitType() == LoadTestLimitTypesConfig.COUNT )
+				else if( getModelItem().getLimitType() == LoadTestLimitTypesConfig.COUNT || 
+						getModelItem().getLimitType() == LoadTestLimitTypesConfig.COUNT_PER_THREAD )
 				{
 					if( loadTestIsRunning && progressBar.isIndeterminate() )
 					{
@@ -642,8 +653,8 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 				{
 					try
 					{
-						MockLoadTestRunner mockTestRunner = new MockLoadTestRunner( getModelItem(), SoapUI.ensureGroovyLog() );
-						getModelItem().runSetupScript( new MockLoadTestRunContext( mockTestRunner ), mockTestRunner );
+						MockLoadTestRunner mockTestRunner = new MockLoadTestRunner( WsdlLoadTestDesktopPanel.this.getModelItem(), SoapUI.ensureGroovyLog() );
+						WsdlLoadTestDesktopPanel.this.getModelItem().runSetupScript( new MockLoadTestRunContext( mockTestRunner ), mockTestRunner );
 					}
 					catch( Exception e1 )
 					{
@@ -655,17 +666,17 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 
 		public SetupScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "context", "loadTestRunner" }, getModelItem().getSettings(), "Setup" );
+			super( new String[] { "log", "context", "loadTestRunner" }, WsdlLoadTestDesktopPanel.this.getModelItem(), "Setup" );
 		}
 
 		public String getScript()
 		{
-			return getModelItem().getSetupScript();
+			return WsdlLoadTestDesktopPanel.this.getModelItem().getSetupScript();
 		}
 
 		public void setScript( String text )
 		{
-			getModelItem().setSetupScript( text );
+			WsdlLoadTestDesktopPanel.this.getModelItem().setSetupScript( text );
 		}
 	}
 
@@ -681,8 +692,8 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 				{
 					try
 					{
-						MockLoadTestRunner mockTestRunner = new MockLoadTestRunner( getModelItem(), SoapUI.ensureGroovyLog() );
-						getModelItem().runTearDownScript( new MockLoadTestRunContext( mockTestRunner ), mockTestRunner );
+						MockLoadTestRunner mockTestRunner = new MockLoadTestRunner( WsdlLoadTestDesktopPanel.this.getModelItem(), SoapUI.ensureGroovyLog() );
+						WsdlLoadTestDesktopPanel.this.getModelItem().runTearDownScript( new MockLoadTestRunContext( mockTestRunner ), mockTestRunner );
 					}
 					catch( Exception e1 )
 					{
@@ -694,17 +705,17 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 
 		public TearDownScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "context", "loadTestRunner" }, getModelItem().getSettings(), "TearDown" );
+			super( new String[] { "log", "context", "loadTestRunner" }, WsdlLoadTestDesktopPanel.this.getModelItem(), "TearDown" );
 		}
 
 		public String getScript()
 		{
-			return getModelItem().getTearDownScript();
+			return WsdlLoadTestDesktopPanel.this.getModelItem().getTearDownScript();
 		}
 
 		public void setScript( String text )
 		{
-			getModelItem().setTearDownScript( text );
+			WsdlLoadTestDesktopPanel.this.getModelItem().setTearDownScript( text );
 		}
 	}
 }

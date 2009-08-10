@@ -23,6 +23,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.Assertable;
@@ -79,7 +80,7 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 		if( token == null )
 			token = "";
 
-		String replToken = PropertyExpansionUtils.expandProperties( context, token );
+		String replToken = PropertyExpander.expandProperties( context, token );
 
 		if( replToken.length() > 0 )
 		{

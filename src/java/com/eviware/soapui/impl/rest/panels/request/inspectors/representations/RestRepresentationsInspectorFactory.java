@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.rest.panels.request.inspectors.representations;
 
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
@@ -30,7 +31,7 @@ public class RestRepresentationsInspectorFactory implements ResponseInspectorFac
 
 	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
 	{
-		if( modelItem instanceof RestRequest )
+		if( modelItem instanceof RestRequestInterface )
 			return new RestResponseRepresentationsInspector( ( RestRequest )modelItem );
 
 		return null;
@@ -38,7 +39,7 @@ public class RestRepresentationsInspectorFactory implements ResponseInspectorFac
 
 	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
-		if( modelItem instanceof RestRequest )
+		if( modelItem instanceof RestRequestInterface )
 			return new RestRequestRepresentationsInspector( ( RestRequest )modelItem );
 
 		return null;

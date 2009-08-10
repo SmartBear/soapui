@@ -20,12 +20,12 @@
     <body>
 		<section name="REST Parameters and Representations">
 		 <p>Parameters and Representations a key concepts in a REST-style service; Parameters for parameterizing
-         a resource and its access methods, Representations for defining how a Resource can be retreived and updated.</p>
+         a resource and its access methods, Representations for defining how a Resource can be retrieved and updated.</p>
 
         <subsection name="REST Parameters">
 
-            <p>Parameters can be defined on both resource/child-resource and request level and are managed via
-                a parameters table in the corresponding Resource/Request editors:</p>
+            <p>Parameters can be defined on both resource/child-resource and method level and are managed via
+                a parameters table in the corresponding Resource/Method editors:</p>
                <p align="center"><img src="images/parameters-table.gif"></img></p>
                <p>The toolbar at the top of the table has the following actions: (left to right)</p>
             <ul>
@@ -49,8 +49,20 @@
                        (before the query string) on submitting. If the parameter is defined as a Boolean, only the
                        parameter name is added when its value is set to "true".</li>
                    </ul>
+                   
+                   <p>When editing a Request, the following table is used, allowing you to change the values of existing parameters, 
+                   defined at the Method and Resource levels.</p>
+                   <p align="center"><img src="images/parameters-rest-table.gif"></img></p>
+                   <p>The toolbar at the top of the table has the following actions: (left to right)</p>
+            <ul>
+
+                <li><b>Defaults</b> - restores the default values for each parameter</li>
+                <li><b>Clear</b> - clears all current parameter values</li>
+                <li><b>Update from URL</b> - prompts for an endpoint and adds/extracts corresponding parameter values</li>
+            </ul>
+                   
                    <p>Furthermore, each parameter has a number of detailed settings that can be accessed via the "Details"
-                   tab below the parameter table;</p>
+                   tab below the parameter table in the Resource and Method views;</p>
                    <p align="center"><img src="images/parameter-details.gif"></img></p>
                    <p>The settings are as follows:</p>
                    <ul>

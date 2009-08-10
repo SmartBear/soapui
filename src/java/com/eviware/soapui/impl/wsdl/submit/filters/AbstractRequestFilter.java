@@ -12,8 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
+import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.RequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
@@ -25,7 +27,7 @@ public abstract class AbstractRequestFilter implements RequestFilter
 {
 	public void filterRequest( SubmitContext context, Request request )
 	{
-		if( request instanceof AbstractHttpRequest )
+		if( request instanceof AbstractHttpRequestInterface<?> )
 			filterAbstractHttpRequest( context, ( AbstractHttpRequest<?> )request );
 	}
 
@@ -33,15 +35,21 @@ public abstract class AbstractRequestFilter implements RequestFilter
 	{
 		if( request instanceof WsdlRequest )
 			filterWsdlRequest( context, ( WsdlRequest )request );
-		else if( request instanceof RestRequest )
-			filterRestRequest( context, ( RestRequest )request );
+		else if( request instanceof RestRequestInterface )
+			filterRestRequest( context, ( RestRequestInterface )request );
+		else if( request instanceof HttpRequestInterface<?> )
+			filterHttpRequest( context, ( HttpRequestInterface<?> )request );
 	}
 
 	public void filterWsdlRequest( SubmitContext context, WsdlRequest request )
 	{
 	}
 
-	public void filterRestRequest( SubmitContext context, RestRequest request )
+	public void filterRestRequest( SubmitContext context, RestRequestInterface request )
+	{
+	}
+
+	public void filterHttpRequest( SubmitContext context, HttpRequestInterface<?> request )
 	{
 	}
 
@@ -52,23 +60,23 @@ public abstract class AbstractRequestFilter implements RequestFilter
 		if( response != null )
 			afterRequest( context, response );
 
-		if( request instanceof AbstractHttpRequest )
-			afterAbstractHttpResponse( context, ( AbstractHttpRequest<?> )request );
+		if( request instanceof AbstractHttpRequestInterface<?> )
+			afterAbstractHttpResponse( context, ( AbstractHttpRequestInterface<?> )request );
 	}
 
-	public void afterAbstractHttpResponse( SubmitContext context, AbstractHttpRequest<?> request )
+	public void afterAbstractHttpResponse( SubmitContext context, AbstractHttpRequestInterface<?> request )
 	{
 		if( request instanceof WsdlRequest )
 			afterWsdlRequest( context, ( WsdlRequest )request );
-		else if( request instanceof RestRequest )
-			afterRestRequest( context, ( RestRequest )request );
+		else if( request instanceof RestRequestInterface )
+			afterRestRequest( context, ( RestRequestInterface )request );
 	}
 
 	public void afterWsdlRequest( SubmitContext context, WsdlRequest request )
 	{
 	}
 
-	public void afterRestRequest( SubmitContext context, RestRequest request )
+	public void afterRestRequest( SubmitContext context, RestRequestInterface request )
 	{
 	}
 

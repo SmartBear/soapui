@@ -26,13 +26,13 @@ public interface TestStep extends TestModelItem, ResultContainer
 
 	public TestCase getTestCase();
 
-	public void prepare( TestRunner testRunner, TestRunContext testRunContext ) throws Exception;
+	public void prepare( TestCaseRunner testRunner, TestCaseRunContext testRunContext ) throws Exception;
 
-	public void finish( TestRunner testRunner, TestRunContext testRunContext );
+	public void finish( TestCaseRunner testRunner, TestCaseRunContext testRunContext );
 
 	public boolean cancel();
 
-	public TestStepResult run( TestRunner testRunner, TestRunContext testRunContext );
+	public TestStepResult run( TestCaseRunner testRunner, TestCaseRunContext testRunContext );
 
 	public boolean isDisabled();
 

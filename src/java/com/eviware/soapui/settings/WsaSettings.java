@@ -21,7 +21,7 @@ import com.eviware.soapui.settings.Setting.SettingType;
  */
 public interface WsaSettings
 {
-	@Setting( name = "Soap action overrides wsa action", description = "SOAP action if present overrides wsa action", type = SettingType.BOOLEAN )
+	@Setting( name = "Soap action overrides wsa action", description = "Soap action if present overrides wsa action", type = SettingType.BOOLEAN )
 	public final static String SOAP_ACTION_OVERRIDES_WSA_ACTION = WsaSettings.class.getSimpleName() + "@"
 			+ "soapActionOverridesWsaAction";
 

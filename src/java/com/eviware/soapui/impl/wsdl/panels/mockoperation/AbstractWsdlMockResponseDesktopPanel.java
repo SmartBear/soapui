@@ -176,7 +176,6 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		return statusBar;
 	}
 
-	@SuppressWarnings( "unchecked" )
 	protected JComponent buildContent()
 	{
 		requestSplitPane = UISupport.createHorizontalSplit();
@@ -307,9 +306,9 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 			super( document, mockResponse );
 		}
 
-		protected XmlSourceEditorView buildSourceEditor()
+		protected XmlSourceEditorView<?> buildSourceEditor()
 		{
-			XmlSourceEditorView editor = getSourceEditor();
+			XmlSourceEditorView<?> editor = getSourceEditor();
 			JXEditTextArea inputArea = editor.getInputArea();
 
 			inputArea.addFocusListener( new InputAreaFocusListener() );
@@ -328,7 +327,7 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		{
 			super( document, mockResponse );
 
-			XmlSourceEditorView editor = getSourceEditor();
+			XmlSourceEditorView<?> editor = getSourceEditor();
 
 			if( getModelItem().getMockOperation().isBidirectional() )
 			{

@@ -36,7 +36,7 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.support.ListDataChangeListener;
@@ -214,6 +214,11 @@ public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel
 		{
 			assertionInspector.setTitle( "Assertions (" + getModelItem().getAssertionCount() + ")" );
 		}
+
+		public void assertionMoved( TestAssertion assertion, int ix, int offset )
+		{
+			assertionInspector.setTitle( "Assertions (" + getModelItem().getAssertionCount() + ")" );
+		}
 	}
 
 	public boolean beforeSubmit( Submit submit, SubmitContext context )
@@ -273,12 +278,12 @@ public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel
 				setEnabled( false );
 		}
 
-		public void testCaseFinished( TestRunner runner )
+		public void testCaseFinished( TestCaseRunner runner )
 		{
 			setEnabled( !SoapUI.getTestMonitor().hasRunningTest( getModelItem().getTestCase() ) );
 		}
 
-		public void testCaseStarted( TestRunner runner )
+		public void testCaseStarted( TestCaseRunner runner )
 		{
 			if( runner.getTestCase() == getModelItem().getTestCase() )
 				setEnabled( false );

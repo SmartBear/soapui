@@ -22,8 +22,8 @@ import com.eviware.soapui.impl.wsdl.support.Configurable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.support.UISupport;
@@ -84,7 +84,7 @@ public class TestStepAverageAssertion extends AbstractLoadTestAssertion implemen
 	}
 
 	public String assertResult( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestStepResult result,
-			TestRunner testRunner, TestRunContext runContext )
+			TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
 		WsdlLoadTest loadTest = ( WsdlLoadTest )loadTestRunner.getLoadTest();
 		LoadTestStatistics statisticsModel = loadTest.getStatisticsModel();
@@ -116,8 +116,8 @@ public class TestStepAverageAssertion extends AbstractLoadTestAssertion implemen
 		return null;
 	}
 
-	public String assertResults( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-			TestRunContext runContext )
+	public String assertResults( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+			TestCaseRunContext runContext )
 	{
 		return null;
 	}

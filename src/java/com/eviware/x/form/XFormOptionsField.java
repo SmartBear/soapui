@@ -15,17 +15,18 @@ package com.eviware.x.form;
  * 
  * @author Lars H
  */
+
 public interface XFormOptionsField extends XFormField
 {
-	public void addItem( String value );
+	public void addItem( Object value );
 
 	public void setOptions( Object[] values );
 
-	public String[] getOptions();
+	public Object[] getOptions();
 
-	public String[] getSelectedOptions();
+	public Object[] getSelectedOptions();
 
-	public void setSelectedOptions( String[] options );
+	public void setSelectedOptions( Object[] options );
 
 	public int[] getSelectedIndexes();
 }

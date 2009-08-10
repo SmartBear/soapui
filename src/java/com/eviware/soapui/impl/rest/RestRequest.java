@@ -13,50 +13,45 @@
 package com.eviware.soapui.impl.rest;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.apache.log4j.Logger;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlString;
 
 import com.eviware.soapui.config.AttachmentConfig;
-import com.eviware.soapui.config.RestMethodConfig;
-import com.eviware.soapui.config.RestResourceRepresentationConfig;
+import com.eviware.soapui.config.RestRequestConfig;
+import com.eviware.soapui.config.StringToStringMapConfig;
 import com.eviware.soapui.impl.rest.RestRepresentation.Type;
-import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
-import com.eviware.soapui.impl.rest.support.MediaTypeHandlerRegistry;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.RestRequestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
-import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.MessagePart.ContentPart;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringList;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * Request implementation holding a SOAP request
@@ -64,42 +59,37 @@ import com.eviware.soapui.support.types.StringList;
  * @author Ole.Matzura
  */
 
-public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implements MutableTestPropertyHolder,
-		PropertyChangeListener
+public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implements RestRequestInterface
 {
-	public final static Logger log = Logger.getLogger( RestRequest.class );
-	public static final String DEFAULT_MEDIATYPE = "application/xml";
-	private List<RestRepresentation> representations = new ArrayList<RestRepresentation>();
+	private RestMethod method;
+	private RestParamsPropertyHolder params;
+	private ParamUpdater paramUpdater;
 
-	private XmlBeansRestParamsTestPropertyHolder params;
-	public static final String REST_XML_RESPONSE = "restXmlResponse";
-	public static final String REST_XML_REQUEST = "restXmlRequest";
-	private PropertyChangeListener representationPropertyChangeListener = new RepresentationPropertyChangeListener();
-
-	public RestRequest( RestResource resource, RestMethodConfig requestConfig, boolean forLoadTest )
+	public RestRequest( RestMethod method, RestRequestConfig requestConfig, boolean forLoadTest )
 	{
-		super( requestConfig, resource, "/rest_request.gif", false );
+		super( requestConfig, method.getOperation(), "/rest_request.gif", false );
+		this.method = method;
 
 		if( requestConfig.getParameters() == null )
 			requestConfig.addNewParameters();
 
-		if( !requestConfig.isSetMethod() )
-			setMethod( RequestMethod.GET );
+		StringToStringMap paramValues = StringToStringMap.fromXml( requestConfig.getParameters() );
+		params = new RestRequestParamsPropertyHolder( method.getOverlayParams(), this, paramValues );
+		paramUpdater = new ParamUpdater( paramValues );
+		params.addTestPropertyListener( paramUpdater );
 
-		if( requestConfig.getParameters() == null )
-			requestConfig.addNewParameters();
+		if( method != null )
+			method.addPropertyChangeListener( this );
+	}
 
-		for( RestResourceRepresentationConfig config : requestConfig.getRepresentationList() )
-		{
-			RestRepresentation representation = new RestRepresentation( this, config );
-			representation.addPropertyChangeListener( representationPropertyChangeListener );
-			representations.add( representation );
-		}
+	public ModelItem getParent()
+	{
+		return getRestMethod();
+	}
 
-		params = new XmlBeansRestParamsTestPropertyHolder( this, requestConfig.getParameters() );
-
-		if( resource != null )
-			resource.addPropertyChangeListener( this );
+	public RestMethod getRestMethod()
+	{
+		return method;
 	}
 
 	protected RequestIconAnimator<?> initIconAnimator()
@@ -116,7 +106,8 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 			result.add( new ParameterMessagePart( getPropertyAt( c ) ) );
 		}
 
-		if( getMethod() == RequestMethod.POST || getMethod() == RequestMethod.PUT )
+		if( getMethod() == RestRequestInterface.RequestMethod.POST
+				|| getMethod() == RestRequestInterface.RequestMethod.PUT )
 		{
 			result.add( new RestContentPart() );
 		}
@@ -136,36 +127,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
 	public RestRepresentation[] getRepresentations( RestRepresentation.Type type, String mediaType )
 	{
-		List<RestRepresentation> result = new ArrayList<RestRepresentation>();
-		Set<String> addedTypes = new HashSet<String>();
-
-		for( RestRepresentation representation : representations )
-		{
-			if( ( type == null || type == representation.getType() )
-					&& ( mediaType == null || mediaType.equals( representation.getMediaType() ) ) )
-			{
-				result.add( representation );
-				addedTypes.add( representation.getMediaType() );
-			}
-		}
-
-		if( type == RestRepresentation.Type.REQUEST )
-		{
-			for( Attachment attachment : getAttachments() )
-			{
-				if( ( mediaType == null || mediaType.equals( attachment.getContentType() ) )
-						&& !addedTypes.contains( attachment.getContentType() ) )
-				{
-					RestRepresentation representation = new RestRepresentation( this,
-							RestResourceRepresentationConfig.Factory.newInstance() );
-					representation.setType( RestRepresentation.Type.REQUEST );
-					representation.setMediaType( attachment.getContentType() );
-					result.add( representation );
-				}
-			}
-		}
-
-		return result.toArray( new RestRepresentation[result.size()] );
+		return getRestMethod().getRepresentations( type, mediaType );
 	}
 
 	public MessagePart[] getResponseParts()
@@ -173,17 +135,9 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 		return new MessagePart[0];
 	}
 
-	public void setMethod( RequestMethod method )
+	public RestRequestInterface.RequestMethod getMethod()
 	{
-		RequestMethod old = getMethod();
-		getConfig().setMethod( method.toString() );
-		notifyPropertyChanged( "method", old, method );
-	}
-
-	public RequestMethod getMethod()
-	{
-		String method = getConfig().getMethod();
-		return method == null ? null : RequestMethod.valueOf( method );
+		return getRestMethod().getMethod();
 	}
 
 	public String getAccept()
@@ -208,13 +162,23 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
 	public String getMediaType()
 	{
-		String mediaType = getConfig().getMediaType();
-		return mediaType;
+		if( getConfig().getMediaType() == null )
+		{
+			String mediaType = getRestMethod().getDefaultRequestMediaType();
+			getConfig().setMediaType( mediaType );
+			notifyPropertyChanged( "mediaType", null, mediaType );
+		}
+		return getConfig().getMediaType();
+	}
+
+	public void setMethod( RequestMethod method )
+	{
+		getRestMethod().setMethod( method );
 	}
 
 	public WsdlSubmit<RestRequest> submit( SubmitContext submitContext, boolean async ) throws SubmitException
 	{
-		String endpoint = PropertyExpansionUtils.expandProperties( submitContext, getEndpoint() );
+		String endpoint = PropertyExpander.expandProperties( submitContext, getEndpoint() );
 
 		if( StringUtils.isNullOrEmpty( endpoint ) )
 		{
@@ -250,12 +214,12 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 	{
 		PropertyExpansionsResult result = new PropertyExpansionsResult( this, this );
 		result.addAll( super.getPropertyExpansions() );
-		result.addAll( params.getPropertyExpansions() );
+		result.addAll( getRestMethod().getPropertyExpansions() );
 
 		return result.toArray();
 	}
 
-	public RestParamProperty addProperty( String name )
+	public TestProperty addProperty( String name )
 	{
 		return params.addProperty( name );
 	}
@@ -265,7 +229,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 		params.moveProperty( propertyName, targetIndex );
 	}
 
-	public RestParamProperty removeProperty( String propertyName )
+	public TestProperty removeProperty( String propertyName )
 	{
 		return params.removeProperty( propertyName );
 	}
@@ -288,7 +252,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 	@Override
 	public RestResource getOperation()
 	{
-		return ( RestResource )super.getOperation();
+		return ( RestResource )method.getOperation();
 	}
 
 	public Map<String, TestProperty> getProperties()
@@ -321,11 +285,6 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 		return params.getPropertyValue( name );
 	}
 
-	public List<TestProperty> getPropertyList()
-	{
-		return params.getPropertyList();
-	}
-
 	public boolean hasProperty( String name )
 	{
 		return params.hasProperty( name );
@@ -341,11 +300,24 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 		params.setPropertyValue( name, value );
 	}
 
+	public void resetPropertyValues()
+	{
+		params.clear();
+		for( String name : params.getPropertyNames() )
+		{
+			params.getProperty( name ).setValue( params.getProperty( name ).getDefaultValue() );
+		}
+	}
+
 	public void propertyChange( PropertyChangeEvent evt )
 	{
 		if( evt.getPropertyName().equals( "path" ) )
 		{
 			notifyPropertyChanged( "path", null, getPath() );
+		}
+		else if( evt.getPropertyName().equals( "method" ) )
+		{
+			notifyPropertyChanged( "method", evt.getOldValue(), evt.getNewValue() );
 		}
 	}
 
@@ -364,7 +336,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
 	public boolean isPostQueryString()
 	{
-		return getConfig().getPostQueryString();
+		return hasRequestBody() && getConfig().getPostQueryString();
 	}
 
 	public void setPostQueryString( boolean b )
@@ -375,7 +347,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
 		if( !"multipart/form-data".equals( getMediaType() ) )
 		{
-			setMediaType( b ? "application/x-www-form-urlencoded" : "" );
+			setMediaType( b ? "application/x-www-form-urlencoded" : getMediaType() );
 		}
 	}
 
@@ -422,7 +394,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 		return "Request Params";
 	}
 
-	public XmlBeansRestParamsTestPropertyHolder getParams()
+	public RestParamsPropertyHolder getParams()
 	{
 		return params;
 	}
@@ -469,14 +441,13 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
 		public String getMediaType()
 		{
-			return "application/xml";
+			return getConfig().getMediaType();
 		}
 	}
 
 	public boolean hasRequestBody()
 	{
-		RequestMethod method = getMethod();
-		return method == RequestMethod.POST || method == RequestMethod.PUT;
+		return getRestMethod().hasRequestBody();
 	}
 
 	public RestResource getResource()
@@ -486,7 +457,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 
 	public String getPath()
 	{
-		if( getConfig().isSetFullPath() || getResource() == null )
+		if( !StringUtils.isNullOrEmpty( getConfig().getFullPath() ) || getResource() == null )
 			return getConfig().getFullPath();
 		else
 			return getResource().getFullPath();
@@ -496,7 +467,7 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 	{
 		String old = getPath();
 
-		if( getResource() != null && getResource().getFullPath().equals( fullPath ) && getConfig().isSetFullPath() )
+		if( getResource() != null && getResource().getFullPath().equals( fullPath ) )
 			getConfig().unsetFullPath();
 		else
 			getConfig().setFullPath( fullPath );
@@ -510,54 +481,25 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 		if( response == null )
 			return null;
 
-		return response.getProperty( REST_XML_RESPONSE );
-	}
-
-	public void setResponse( HttpResponse response, SubmitContext context )
-	{
-		if( response != null )
-			response.setProperty( REST_XML_RESPONSE, createXmlResponse( response ) );
-
-		super.setResponse( response, context );
-	}
-
-	private String createXmlResponse( HttpResponse response )
-	{
-		if( response == null )
-			return "<xml/>";
-
-		MediaTypeHandler typeHandler = MediaTypeHandlerRegistry.getTypeHandler( response.getContentType() );
-		if( typeHandler != null )
-			return typeHandler.createXmlRepresentation( response );
-		else
-			return "<xml/>";
+		return response.getContentAsXml();
 	}
 
 	@Override
 	public void release()
 	{
 		super.release();
-		params.release();
 
 		if( getResource() != null )
 			getResource().removePropertyChangeListener( this );
-
-		for( RestRepresentation representation : representations )
-		{
-			representation.release();
-		}
+		
+		
 	}
 
-	public void updateConfig( RestMethodConfig request )
+	public void updateConfig( RestRequestConfig request )
 	{
 		setConfig( request );
-
-		params.resetPropertiesConfig( request.getParameters() );
-
-		for( int c = 0; c < request.sizeOfRepresentationArray(); c++ )
-		{
-			representations.get( c ).setConfig( request.getRepresentationArray( c ) );
-		}
+		
+		updateParams();
 
 		List<AttachmentConfig> attachmentConfigs = getConfig().getAttachmentList();
 		for( int i = 0; i < attachmentConfigs.size(); i++ )
@@ -567,35 +509,11 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 		}
 	}
 
-	public RestParamProperty addProperty( RestParamProperty prop )
+	protected void updateParams()
 	{
-		return params.addProperty( prop );
-	}
-
-	public RestRepresentation addNewRepresentation( Type type )
-	{
-		RestRepresentation representation = new RestRepresentation( this, getConfig().addNewRepresentation() );
-		representation.setType( type );
-
-		representation.addPropertyChangeListener( representationPropertyChangeListener );
-
-		representations.add( representation );
-
-		notifyPropertyChanged( "representations", null, representation );
-
-		return representation;
-	}
-
-	public void removeRepresentation( RestRepresentation representation )
-	{
-		int ix = representations.indexOf( representation );
-
-		representations.remove( ix );
-		representation.removePropertyChangeListener( representationPropertyChangeListener );
-
-		notifyPropertyChanged( "representations", representation, null );
-		getConfig().removeRepresentation( ix );
-		representation.release();
+		StringToStringMap paramValues = StringToStringMap.fromXml( getConfig().getParameters() );
+		( ( RestRequestParamsPropertyHolder )params ).reset(getRestMethod().getOverlayParams(), paramValues);
+		paramUpdater.setValues( paramValues );
 	}
 
 	public boolean hasEndpoint()
@@ -603,15 +521,73 @@ public class RestRequest extends AbstractHttpRequest<RestMethodConfig> implement
 		return super.hasEndpoint() || PathUtils.isHttpPath( getPath() );
 	}
 
-	private class RepresentationPropertyChangeListener implements PropertyChangeListener
+	private class ParamUpdater implements TestPropertyListener
 	{
-		public void propertyChange( PropertyChangeEvent evt )
+		private StringToStringMap values;
+
+		public ParamUpdater( StringToStringMap paramValues )
 		{
-			if( evt.getPropertyName().equals( "mediaType" )
-					&& ( ( RestRepresentation )evt.getSource() ).getType() == Type.RESPONSE )
+			values = paramValues;
+		}
+
+		public void setValues( StringToStringMap paramValues )
+		{
+			values = paramValues;
+		}
+
+		private void sync()
+		{
+			try
 			{
-				RestRequest.this.notifyPropertyChanged( "responseMediaTypes", null, getResponseMediaTypes() );
+				getConfig().setParameters( StringToStringMapConfig.Factory.parse( values.toXml() ) );
+			}
+			catch( XmlException e )
+			{
+				e.printStackTrace();
 			}
 		}
+
+		public void propertyAdded( String name )
+		{
+			sync();
+		}
+
+		public void propertyMoved( String name, int oldIndex, int newIndex )
+		{
+			sync();
+		}
+
+		public void propertyRemoved( String name )
+		{
+			sync();
+		}
+
+		public void propertyRenamed( String oldName, String newName )
+		{
+			sync();
+		}
+
+		public void propertyValueChanged( String name, String oldValue, String newValue )
+		{
+			sync();
+		}
+	}
+
+	public List<TestProperty> getPropertyList()
+	{
+		return params.getPropertyList();
+	}
+	
+	protected void setRestMethod( RestMethod restMethod )
+	{
+		if( this.method != null )
+			this.method.removePropertyChangeListener( this );
+	
+		this.method = restMethod;
+		
+		if( method != null )
+			method.addPropertyChangeListener( this );
+		
+		updateParams();
 	}
 }

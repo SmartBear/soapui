@@ -37,7 +37,7 @@ public class MessageExchangeModelItem extends EmptyModelItem
 		MessageExchange oldExchange = this.messageExchange;
 		this.messageExchange = messageExchange;
 
-		propertyChangeSupport.firePropertyChange( MESSAGE_EXCHANGE, oldExchange, messageExchange );
+		notifyPropertyChanged( MESSAGE_EXCHANGE, oldExchange, messageExchange );
 	}
 
 	public boolean hasRawData()

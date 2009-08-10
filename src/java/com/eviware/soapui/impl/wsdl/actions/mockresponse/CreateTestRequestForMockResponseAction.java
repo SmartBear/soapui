@@ -83,6 +83,9 @@ public class CreateTestRequestForMockResponseAction extends AbstractAddToTestCas
 		WsdlTestRequestStep testStep = ( WsdlTestRequestStep )testCase.insertTestStep( WsdlTestRequestStepFactory
 				.createConfig( mockResponse.getMockOperation().getOperation(), name ), position );
 
+		if( testStep == null )
+			return null;
+
 		if( enabled )
 		{
 			if( dialogValues.getBoolean( ADD_SOAP_RESPONSE_ASSERTION ) )

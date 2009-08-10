@@ -18,7 +18,8 @@
 		</column><column>
 		<thumbnail src="images/netbeans3.gif" size="250" caption="(Axis2 Wizard with WS-I Basic Profile Report in background)" lat="Axis2 Wizard with WS-I Basic Profile Report in background in soapUI Netbeans Plugin"/>
 		</column></columns>
-		
+			<p>The <a href="../userguide/commandline/index.html">command-line runners</a> are not included with the NetBeans plug-in but must be installed
+				seperately by installing the standalone soapUI version.</p>
 		<subsection name="Getting Started with WS Testing in Netbeans">
 		<p>Download the NBM from <a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=210125">SourceForge soapUI Downloads</a> or 
 		via the NetBeans Plugin manager. If you downloaded it from SourceForge, install 

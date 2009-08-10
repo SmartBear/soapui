@@ -11,6 +11,8 @@
  */
 package com.eviware.soapui.model.testsuite;
 
+import com.eviware.soapui.model.ModelItem;
+
 /**
  * A marker for objects that contain test results.
  * 
@@ -18,4 +20,5 @@ package com.eviware.soapui.model.testsuite;
  */
 public interface ResultContainer
 {
+	public ModelItem getModelItem();
 }

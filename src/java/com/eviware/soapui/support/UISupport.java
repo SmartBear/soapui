@@ -93,6 +93,7 @@ import com.jgoodies.looks.Options;
 
 public class UISupport
 {
+	public static final String IMAGES_RESOURCE_PATH = "/com/eviware/soapui/resources/images";
 	public static final String TOOL_ICON_PATH = "/applications-system.png";
 	public static final String OPTIONS_ICON_PATH = "/preferences-system.png";
 
@@ -182,6 +183,14 @@ public class UISupport
 		return ( Frame )( frame instanceof Frame ? frame : null );
 	}
 
+	public static JComboBox addTooltipListener( JComboBox combo, String defaultTooltip )
+	{
+		combo.setToolTipText( defaultTooltip );
+		combo.addItemListener( new ItemListenerImplementation( combo, defaultTooltip ) );
+
+		return combo;
+	}
+	
 	public static Frame getParentFrame( Component component )
 	{
 		for( Container c = component.getParent(); c != null; c = c.getParent() )
@@ -248,6 +257,11 @@ public class UISupport
 	public static boolean confirm( String question, String title )
 	{
 		return dialogs.confirm( question, title );
+	}
+
+	public static int yesYesToAllOrNo( String question, String title )
+	{
+		return dialogs.yesYesToAllOrNo( question, title );
 	}
 
 	public static String prompt( String question, String title, String value )
@@ -386,15 +400,13 @@ public class UISupport
 		if( iconCache.containsKey( path ) )
 			return iconCache.get( path );
 
+		String orgPath = path;
 		java.net.URL imgURL = null;
 
 		try
 		{
 			if( path.indexOf( '/', 1 ) == -1 )
 				path = "/com/eviware/soapui/resources/images" + path;
-
-			if( iconCache.containsKey( path ) )
-				return iconCache.get( path );
 
 			imgURL = SoapUI.class.getResource( path );
 
@@ -420,7 +432,7 @@ public class UISupport
 			try
 			{
 				ImageIcon imageIcon = new ImageIcon( imgURL );
-				iconCache.put( path, imageIcon );
+				iconCache.put( orgPath, imageIcon );
 				return imageIcon;
 			}
 			catch( Throwable e )
@@ -956,15 +968,7 @@ public class UISupport
 	{
 		return dialogs.promptPassword( question, title );
 	}
-
-	public static JComboBox addTooltipListener( JComboBox combo, String defaultTooltip )
-	{
-		combo.setToolTipText( defaultTooltip );
-		combo.addItemListener( new ItemListenerImplementation( combo, defaultTooltip ) );
-
-		return combo;
-	}
-
+	
 	private static final class ItemListenerImplementation implements ItemListener
 	{
 		private final JComboBox combo;
@@ -996,11 +1000,5 @@ public class UISupport
 				combo.setToolTipText( selectedItem );
 			}
 		}
-	}
-
-	public static JComboBox createComboBox( int width, String defaultTooltip )
-	{
-		JComboBox comboBox = UISupport.addTooltipListener( new JComboBox(), defaultTooltip );
-		return UISupport.setFixedSize( comboBox, width, 20 );
 	}
 }

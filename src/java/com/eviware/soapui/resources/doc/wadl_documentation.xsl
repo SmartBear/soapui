@@ -29,7 +29,7 @@
 
 <xsl:stylesheet 
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
- xmlns:wadl="http://research.sun.com/wadl/2006/10"
+ xmlns:wadl="http://wadl.dev.java.net/2009/02"
  xmlns:xs="http://www.w3.org/2001/XMLSchema"
  xmlns:html="http://www.w3.org/1999/xhtml"
  xmlns:exsl="http://exslt.org/common"
@@ -47,7 +47,7 @@
         doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
     />
 
-    <xsl:variable name="wadl-ns">http://research.sun.com/wadl/2006/10</xsl:variable>
+    <xsl:variable name="wadl-ns">http://wadl.dev.java.net/2009/02</xsl:variable>
 
     
     <!-- expand @hrefs, @types into a full tree -->
@@ -532,7 +532,13 @@
 
             <xsl:apply-templates select="wadl:doc"/>                
             <xsl:apply-templates select="wadl:request"/>
-            <xsl:apply-templates select="wadl:response"/>
+            <xsl:if test="wadl:response">
+            	<p><em>available response representations:</em></p>
+           		<ul>
+                	<xsl:apply-templates select="wadl:response"/>
+            	</ul>
+            	<!--  <xsl:apply-templates select="wadl:response"/>-->
+            </xsl:if>
         </div>
     </xsl:template>
 
@@ -562,10 +568,11 @@
             <xsl:with-param name="style">header</xsl:with-param>
         </xsl:apply-templates> 
         <xsl:if test="wadl:representation">
-            <p><em>available response representations:</em></p>
+            <!--<p><em>available response representations:</em></p>
             <ul>
                 <xsl:apply-templates select="wadl:representation"/>
-            </ul>
+            </ul>-->
+            <xsl:apply-templates select="wadl:representation"/>
         </xsl:if>
 
         <xsl:if test="wadl:fault">
@@ -827,20 +834,20 @@
             <xsl:when test="wadl:doc[@title]">
 
                 <xsl:value-of select="wadl:doc[@title][1]/@title"/>
-                <xsl:if test="@status or @mediaType or @element"> (</xsl:if>
-                <xsl:if test="@status">Status Code </xsl:if><xsl:value-of select="@status"/>
-                <xsl:if test="@status and @mediaType"> - </xsl:if>
+                <xsl:if test="../@status or @mediaType or @element"> (</xsl:if>
+                <xsl:if test="../@status">Status Code </xsl:if><xsl:value-of select="../@status"/>
+                <xsl:if test="../@status and @mediaType"> - </xsl:if>
                 <xsl:value-of select="@mediaType"/>
-                <xsl:if test="(@status or @mediaType) and @element"> - </xsl:if>
+                <xsl:if test="(../@status or @mediaType) and @element"> - </xsl:if>
 
                 <xsl:if test="@element">
                     <abbr title="{$expanded-name}"><xsl:value-of select="@element"/></abbr>
                 </xsl:if>
-                <xsl:if test="@status or @mediaType or @element">)</xsl:if>
+                <xsl:if test="../@status or @mediaType or @element">)</xsl:if>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:if test="@status">Status Code </xsl:if><xsl:value-of select="@status"/>
-                <xsl:if test="@status and @mediaType"> - </xsl:if>
+                <xsl:if test="../@status">Status Code </xsl:if><xsl:value-of select="../@status"/>
+                <xsl:if test="../@status and @mediaType"> - </xsl:if>
 
                 <xsl:value-of select="@mediaType"/>
                 <xsl:if test="@element"> (</xsl:if>

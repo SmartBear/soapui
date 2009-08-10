@@ -16,17 +16,19 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.eviware.soapui.config.OldRestRequestConfig;
 import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.RestResourceConfig;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.RestRequestConverter;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder.RestParamProperty;
 import com.eviware.soapui.impl.support.AbstractHttpOperation;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
@@ -49,7 +51,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		MutableTestPropertyHolder, RestResourceContainer, PropertyChangeListener
 {
 	public static final String PATH_PROPERTY = "path";
-	private List<RestRequest> requests = new ArrayList<RestRequest>();
+	private List<RestMethod> methods = new ArrayList<RestMethod>();
 	private List<RestResource> resources = new ArrayList<RestResource>();
 	private RestResource parentResource;
 	private XmlBeansRestParamsTestPropertyHolder params;
@@ -58,9 +60,14 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	{
 		super( resourceConfig, service, "/rest_resource.gif" );
 
-		for( RestMethodConfig config : resourceConfig.getRequestList() )
+		if( resourceConfig.getParameters() == null )
+			resourceConfig.addNewParameters();
+
+		params = new XmlBeansRestParamsTestPropertyHolder( this, resourceConfig.getParameters() );
+
+		for( RestMethodConfig config : resourceConfig.getMethodList() )
 		{
-			requests.add( new RestRequest( this, config, false ) );
+			methods.add( new RestMethod( this, config ) );
 		}
 
 		for( RestResourceConfig config : resourceConfig.getResourceList() )
@@ -68,10 +75,11 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 			resources.add( new RestResource( this, config ) );
 		}
 
-		if( resourceConfig.getParameters() == null )
-			resourceConfig.addNewParameters();
-
-		params = new XmlBeansRestParamsTestPropertyHolder( this, resourceConfig.getParameters() );
+		for( OldRestRequestConfig config : resourceConfig.getRequestList() )
+		{
+			RestRequestConverter.convert( this, config );
+		}
+		resourceConfig.setRequestArray( new OldRestRequestConfig[] {} );
 
 		service.addPropertyChangeListener( this );
 	}
@@ -98,7 +106,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	{
 		List<ModelItem> result = new ArrayList<ModelItem>();
 
-		result.addAll( getRequestList() );
+		result.addAll( getRestMethodList() );
 		result.addAll( getChildResourceList() );
 
 		return result;
@@ -127,11 +135,6 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	public String[] getResponseMediaTypes()
 	{
 		return new String[0];
-	}
-
-	public RestResource getChildResourcetAt( int index )
-	{
-		return resources.get( index );
 	}
 
 	public RestResource getChildResourceByName( String name )
@@ -167,44 +170,73 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 
 	public RestRequest getRequestAt( int index )
 	{
-		return requests.get( index );
+		for( RestMethod m : methods )
+		{
+			if( index < m.getRequestCount() )
+				return m.getRequestAt( index );
+			else
+				index -= m.getRequestCount();
+		}
+		throw new IndexOutOfBoundsException();
 	}
 
 	public RestRequest getRequestByName( String name )
 	{
-		return ( RestRequest )getWsdlModelItemByName( requests, name );
+		for( RestMethod m : methods )
+		{
+			RestRequest r = m.getRequestByName( name );
+			if( r != null )
+				return r;
+		}
+		return null;
 	}
 
-	public RestRequest addNewRequest( String name )
+	public RestMethod addNewMethod( String name )
 	{
-		RestMethodConfig resourceConfig = getConfig().addNewRequest();
-		resourceConfig.setName( name );
+		RestMethodConfig methodConfig = getConfig().addNewMethod();
+		methodConfig.setName( name );
 
-		RestRequest request = new RestRequest( this, resourceConfig, false );
-		requests.add( request );
+		RestMethod method = new RestMethod( this, methodConfig );
+		/*
+		 * for (RestParamProperty prop : getDefaultParams()) { if
+		 * (!method.hasProperty(prop.getName()))
+		 * method.addProperty(prop.getName()).setValue(prop.getDefaultValue()); }
+		 */
+		methods.add( method );
 
-		for( RestParamProperty prop : getDefaultParams() )
-		{
-			if( !request.hasProperty( prop.getName() ) )
-				request.addProperty( prop );
-		}
+		notifyPropertyChanged( "childMethods", null, method );
+		return method;
+	}
 
-		String[] endpoints = getInterface().getEndpoints();
-		if( endpoints.length > 0 )
-			request.setEndpoint( endpoints[0] );
+	public int getRestMethodCount()
+	{
+		return methods.size();
+	}
 
-		getInterface().fireRequestAdded( request );
-		return request;
+	public List<RestMethod> getRestMethodList()
+	{
+		return new ArrayList<RestMethod>( methods );
+	}
+
+	public RestMethod getRestMethodByName( String name )
+	{
+		return ( RestMethod )getWsdlModelItemByName( methods, name );
 	}
 
 	public int getRequestCount()
 	{
-		return requests.size();
+		int size = 0;
+		for( RestMethod m : methods )
+			size += m.getRequestCount();
+		return size;
 	}
 
 	public List<Request> getRequestList()
 	{
-		return new ArrayList<Request>( requests );
+		List<Request> rs = new ArrayList<Request>();
+		for( RestMethod m : methods )
+			rs.addAll( m.getRequestList() );
+		return rs;
 	}
 
 	public String getPath()
@@ -322,7 +354,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		params.addTestPropertyListener( listener );
 	}
 
-	public XmlBeansRestParamsTestPropertyHolder getParams()
+	public RestParamsPropertyHolder getParams()
 	{
 		return params;
 	}
@@ -350,11 +382,6 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	public int getPropertyCount()
 	{
 		return params.getPropertyCount();
-	}
-
-	public List<TestProperty> getPropertyList()
-	{
-		return params.getPropertyList();
 	}
 
 	public String[] getPropertyNames()
@@ -392,34 +419,6 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		return getFullPath( true );
 	}
 
-	public void removeRequest( RestRequest request )
-	{
-		int ix = requests.indexOf( request );
-		requests.remove( ix );
-
-		try
-		{
-			( getInterface() ).fireRequestRemoved( request );
-		}
-		finally
-		{
-			request.release();
-			getConfig().removeRequest( ix );
-		}
-	}
-
-	public RestRequest cloneRequest( RestRequest request, String name )
-	{
-		RestMethodConfig requestConfig = ( RestMethodConfig )getConfig().addNewRequest().set( request.getConfig() );
-		requestConfig.setName( name );
-
-		RestRequest newRequest = new RestRequest( this, requestConfig, false );
-		requests.add( newRequest );
-
-		getInterface().fireRequestAdded( newRequest );
-		return newRequest;
-	}
-
 	public RestResource cloneChildResource( RestResource resource, String name )
 	{
 		return cloneResource( resource, name );
@@ -437,6 +436,18 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		return newResource;
 	}
 
+	public RestMethod cloneMethod( RestMethod method, String name )
+	{
+		RestMethodConfig methodConfig = ( RestMethodConfig )getConfig().addNewMethod().set( method.getConfig() );
+		methodConfig.setName( name );
+
+		RestMethod newMethod = new RestMethod( this, methodConfig );
+		methods.add( newMethod );
+
+		notifyPropertyChanged( "childMethods", null, newMethod );
+		return newMethod;
+	}
+
 	@Override
 	public void release()
 	{
@@ -450,11 +461,20 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		{
 			resource.release();
 		}
-
-		for( RestRequest request : requests )
+		for( RestMethod method : methods )
 		{
-			request.release();
+			method.release();
 		}
+	}
+
+	public void deleteMethod( RestMethod method )
+	{
+		int ix = methods.indexOf( method );
+		if( !methods.remove( method ) )
+			return;
+		notifyPropertyChanged( "childMethods", method, null );
+		method.release();
+		getConfig().removeMethod( ix );
 	}
 
 	public void deleteChildResource( RestResource resource )
@@ -491,6 +511,11 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		return resources.get( c );
 	}
 
+	public RestMethod getRestMethodAt( int c )
+	{
+		return methods.get( c );
+	}
+
 	public RestService getService()
 	{
 		return ( RestService )( getParentResource() == null ? getParent() : getParentResource().getService() );
@@ -525,15 +550,9 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		}
 	}
 
-	public Map<String, RestRequest> getRequests()
+	public List<TestProperty> getPropertyList()
 	{
-		Map<String, RestRequest> result = new HashMap<String, RestRequest>();
-
-		for( RestRequest request : requests )
-		{
-			result.put( request.getName(), request );
-		}
-
-		return result;
+		return params.getPropertyList();
 	}
+
 }

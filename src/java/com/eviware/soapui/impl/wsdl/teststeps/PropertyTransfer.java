@@ -32,6 +32,7 @@ import com.eviware.soapui.config.PropertyTransferConfig;
 import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
@@ -141,6 +142,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 			if( sourceStep != null )
 				config.setSourceStep( sourceStep );
 		}
+		else sourceStep = sourceStep.trim();
 
 		currentSourceStep = getPropertyHolder( sourceStep );
 
@@ -157,6 +159,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 			if( targetStep != null )
 				config.setTargetStep( targetStep );
 		}
+		else targetStep = targetStep.trim();
 
 		currentTargetStep = getPropertyHolder( targetStep );
 
@@ -333,7 +336,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 		{
 			List<String> result = new ArrayList<String>();
 
-			String tp = PropertyExpansionUtils.expandProperties( context, getTargetPath() );
+			String tp = PropertyExpander.expandProperties( context, getTargetPath() );
 			targetXml.selectPath( tp );
 
 			if( !targetXml.hasNextSelection() )
@@ -353,7 +356,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 			}
 			else if( getUseXQuery() )
 			{
-				String sp = PropertyExpansionUtils.expandProperties( context, getSourcePath() );
+				String sp = PropertyExpander.expandProperties( context, getSourcePath() );
 				XmlCursor resultCursor = sourceXml.execQuery( sp );
 				sourceXml.dispose();
 				sourceXml = resultCursor;
@@ -383,7 +386,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 			}
 			else
 			{
-				String sp = PropertyExpansionUtils.expandProperties( context, getSourcePath() );
+				String sp = PropertyExpander.expandProperties( context, getSourcePath() );
 				sourceXml.selectPath( sp );
 
 				if( !sourceXml.hasNextSelection() )
@@ -459,7 +462,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 		{
 			List<String> result = new ArrayList<String>();
 
-			String tp = PropertyExpansionUtils.expandProperties( context, getTargetPath() );
+			String tp = PropertyExpander.expandProperties( context, getTargetPath() );
 			targetCursor.selectPath( tp );
 
 			if( !targetCursor.toNextSelection() )
@@ -545,7 +548,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 		{
 			String value = null;
 
-			String xquery = PropertyExpansionUtils.expandProperties( context, getSourcePath() );
+			String xquery = PropertyExpander.expandProperties( context, getSourcePath() );
 			if( getUseXQuery() )
 			{
 				XmlCursor resultCursor = sourceCursor.execQuery( xquery );
@@ -869,7 +872,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 		if( testCase == null )
 			return null;
 
-		HttpRequestTestStep<?> step = testCase.findPreviousStepOfType( this.testStep, HttpRequestTestStep.class );
+		HttpRequestTestStep step = testCase.findPreviousStepOfType( this.testStep, HttpRequestTestStep.class );
 		return step == null ? null : step.getName();
 	}
 
@@ -925,7 +928,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 		if( testCase == null )
 			return null;
 
-		HttpRequestTestStep<?> step = testCase.findNextStepOfType( this.testStep, HttpRequestTestStep.class );
+		HttpRequestTestStep step = testCase.findNextStepOfType( this.testStep, HttpRequestTestStep.class );
 		return step == null ? null : step.getName();
 	}
 
@@ -1207,7 +1210,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 	}
 
 	@SuppressWarnings( "unchecked" )
-	public void resolve( ResolveContext context, PropertyTransfersTestStep parent )
+	public void resolve( ResolveContext<?> context, PropertyTransfersTestStep parent )
 	{
 		if( isDisabled() )
 			return;

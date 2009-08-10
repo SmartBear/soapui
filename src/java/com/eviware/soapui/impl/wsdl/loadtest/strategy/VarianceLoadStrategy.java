@@ -180,6 +180,7 @@ public class VarianceLoadStrategy extends AbstractLoadStrategy
 
 	public void beforeLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context )
 	{
+		super.beforeLoadTest( loadTestRunner, context );
 		baseThreadCount = ( ( WsdlLoadTest )loadTestRunner.getLoadTest() ).getThreadCount();
 		startTime = System.currentTimeMillis();
 		stateDependantComponents.setEnabled( false );

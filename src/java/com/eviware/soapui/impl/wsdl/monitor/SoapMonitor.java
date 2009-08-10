@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -30,6 +31,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -45,6 +48,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
+import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.commons.httpclient.HttpMethod;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.Filter;
 import org.jdesktop.swingx.decorator.FilterPipeline;
@@ -110,7 +115,7 @@ public class SoapMonitor extends JPanel
 	private final WsdlProject project;
 	private MessageExchangeRequestMessageEditor requestViewer;
 	private MessageExchangeResponseMessageEditor responseViewer;
-	private Set<SoapMonitorListener> listeners = new HashSet<SoapMonitorListener>();
+	private SoapUIListenerSupport<MonitorListener> listeners = new SoapUIListenerSupport<MonitorListener>( MonitorListener.class );
 	private MessageExchangeModelItem requestModelItem;
 	private JButton optionsButton;
 	private int listenPort;
@@ -1054,11 +1059,13 @@ public class SoapMonitor extends JPanel
 			fireOnMessageExchange( messageExchange );
 		}
 
+		@SuppressWarnings( "unused" )
 		public void cancel()
 		{
 			canceled = true;
 		}
 
+		@SuppressWarnings( "unused" )
 		protected boolean isCanceled()
 		{
 			return canceled;
@@ -1075,20 +1082,12 @@ public class SoapMonitor extends JPanel
 		return tableModel;
 	}
 
-	public void addSoapMonitorListener( SoapMonitorListener listener )
+	public void addSoapMonitorListener( MonitorListener listener )
 	{
 		listeners.add( listener );
 	}
 
-	public void fireOnMessageExchange( WsdlMonitorMessageExchange messageExchange )
-	{
-		for( SoapMonitorListener listener : listeners.toArray( new SoapMonitorListener[listeners.size()] ) )
-		{
-			listener.onMessageExchange( messageExchange );
-		}
-	}
-
-	public void removeSoapMonitorListener( SoapMonitorListener listener )
+	public void removeSoapMonitorListener( MonitorListener listener )
 	{
 		listeners.remove( listener );
 	}
@@ -1180,5 +1179,67 @@ public class SoapMonitor extends JPanel
 	public boolean isRunning()
 	{
 		return monitorEngine.isRunning();
+	}
+
+	public void fireOnMessageExchange( WsdlMonitorMessageExchange messageExchange )
+	{
+		for( MonitorListener listener : listeners.get() )
+		{
+			listener.onMessageExchange( messageExchange );
+		}
+	}
+
+	public void fireOnRequest( ServletRequest request, ServletResponse response )
+	{
+		for( MonitorListener listener : listeners.get() )
+		{
+			listener.onRequest( this, request, response );
+		}
+	}
+
+	public void fireBeforeProxy( ServletRequest request, ServletResponse response, HttpMethod method,
+			HostConfiguration hostConfiguration )
+	{
+		for( MonitorListener listener :listeners.get() )
+		{
+			listener.beforeProxy( this, request, response, method, hostConfiguration );
+		}
+	}
+
+	public void fireAfterProxy( ServletRequest request, ServletResponse response, HttpMethod method,
+			WsdlMonitorMessageExchange capturedData )
+	{
+		for( MonitorListener listener : listeners.get() )
+		{
+			listener.afterProxy( this, request, response, method, capturedData );
+		}
+	}
+
+	public static class SoapUIListenerSupport<T extends Object>
+	{
+		private Set<T> listeners = new HashSet<T>();
+		@SuppressWarnings( "unused" )
+		private final Class<T> listenerClass;
+
+		public SoapUIListenerSupport( Class<T> listenerClass )
+		{
+			this.listenerClass = listenerClass;
+			listeners.addAll( SoapUI.getListenerRegistry().getListeners( listenerClass ) );
+		}
+
+		public void add( T listener )
+		{
+			listeners.add( listener );
+		}
+
+		public void remove( T listener )
+		{
+			listeners.remove( listener );
+		}
+
+		public Collection<T> get()
+		{
+			return listeners;
+		}
 	}
 }

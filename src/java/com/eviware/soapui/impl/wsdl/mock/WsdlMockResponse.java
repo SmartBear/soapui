@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.GZIPOutputStream;
 
 import javax.activation.DataHandler;
 import javax.mail.MessagingException;
@@ -56,6 +55,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.B
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MimeMessageMockResponseEntity;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MockResponseDataSource;
 import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.FileAttachment;
 import com.eviware.soapui.impl.wsdl.support.MapTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.MessageXmlObject;
@@ -79,6 +79,7 @@ import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockRunContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
@@ -103,6 +104,9 @@ import com.eviware.soapui.support.xml.XmlUtils;
 public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> implements MockResponse,
 		MutableWsdlAttachmentContainer, PropertyExpansionContainer, TestPropertyHolder, WsaContainer
 {
+	public static final String AUTO_RESPONSE_COMPRESSION = "<auto>";
+	public static final String NO_RESPONSE_COMPRESSION = "<none>";
+
 	private final static Logger log = Logger.getLogger( WsdlMockResponse.class );
 
 	public final static String MOCKRESULT_PROPERTY = WsdlMockResponse.class.getName() + "@mockresult";
@@ -209,6 +213,27 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 		notifyPropertyChanged( RESPONSE_CONTENT_PROPERTY, oldContent, responseContent );
 	}
 
+	public void setResponseCompression( String compression )
+	{
+		if( CompressionSupport.ALG_DEFLATE.equals( compression ) || CompressionSupport.ALG_GZIP.equals( compression )
+				|| NO_RESPONSE_COMPRESSION.equals( compression ) )
+		{
+			getConfig().setCompression( compression );
+		}
+		else if( getConfig().isSetCompression() )
+		{
+			getConfig().unsetCompression();
+		}
+	}
+
+	public String getResponseCompression()
+	{
+		if( getConfig().isSetCompression() )
+			return getConfig().getCompression();
+		else
+			return AUTO_RESPONSE_COMPRESSION;
+	}
+
 	@Override
 	public ImageIcon getIcon()
 	{
@@ -249,10 +274,10 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			StringToStringMap responseHeaders = getResponseHeaders();
 			for( String name : responseHeaders.keySet() )
 			{
-				result.addHeader( name, PropertyExpansionUtils.expandProperties( context, responseHeaders.get( name ) ) );
+				result.addHeader( name, PropertyExpander.expandProperties( context, responseHeaders.get( name ) ) );
 			}
 
-			responseContent = PropertyExpansionUtils.expandProperties( context, responseContent, isEntitizeProperties() );
+			responseContent = PropertyExpander.expandProperties( context, responseContent, isEntitizeProperties() );
 
 			if( this.getWsaConfig().isWsaEnabled() )
 			{
@@ -659,6 +684,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 		ByteArrayOutputStream outData = new ByteArrayOutputStream();
 
 		// non-multipart request?
+		String responseCompression = getResponseCompression();
 		if( !isXOP && ( mp == null || mp.getCount() == 0 ) && getAttachmentCount() == 0 )
 		{
 			String encoding = getEncoding();
@@ -670,12 +696,17 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			response.setContentType( soapVersion.getContentTypeHttpHeader( encoding, null ) );
 
 			String acceptEncoding = response.getMockRequest().getRequestHeaders().get( "Accept-Encoding" );
-			if( acceptEncoding != null && acceptEncoding.toUpperCase().contains( "GZIP" ) )
+			if( AUTO_RESPONSE_COMPRESSION.equals( responseCompression ) && acceptEncoding != null
+					&& acceptEncoding.toUpperCase().contains( "GZIP" ) )
 			{
 				response.addHeader( "Content-Encoding", "gzip" );
-				GZIPOutputStream zipOut = new GZIPOutputStream( outData );
-				zipOut.write( content );
-				zipOut.close();
+				outData.write( CompressionSupport.compress( CompressionSupport.ALG_GZIP, content ) );
+			}
+			else if( AUTO_RESPONSE_COMPRESSION.equals( responseCompression ) && acceptEncoding != null
+					&& acceptEncoding.toUpperCase().contains( "DEFLATE" ) )
+			{
+				response.addHeader( "Content-Encoding", "deflate" );
+				outData.write( CompressionSupport.compress( CompressionSupport.ALG_DEFLATE, content ) );
 			}
 			else
 			{
@@ -707,7 +738,18 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 		}
 
 		if( outData.size() > 0 )
-			response.writeRawResponseData( outData.toByteArray() );
+		{
+			byte[] data = outData.toByteArray();
+
+			if( responseCompression.equals( CompressionSupport.ALG_DEFLATE )
+					|| responseCompression.equals( CompressionSupport.ALG_GZIP ) )
+			{
+				response.addHeader( "Content-Encoding", responseCompression );
+				data = CompressionSupport.compress( responseCompression, data );
+			}
+
+			response.writeRawResponseData( data );
+		}
 
 		return responseContent;
 	}
@@ -1096,6 +1138,11 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 	public WsdlOperation getOperation()
 	{
 		return getMockOperation().getOperation();
+	}
+
+	public void setOperation( WsdlOperation operation )
+	{
+		getMockOperation().setOperation( operation );
 	}
 
 }

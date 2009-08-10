@@ -12,11 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.panels.support;
 
+import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.model.support.AbstractSubmitContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 
-public class MockLoadTestRunContext extends AbstractSubmitContext implements LoadTestRunContext
+public class MockLoadTestRunContext extends AbstractSubmitContext<WsdlLoadTest> implements LoadTestRunContext
 {
 	private final MockLoadTestRunner mockTestRunner;
 
@@ -37,5 +39,17 @@ public class MockLoadTestRunContext extends AbstractSubmitContext implements Loa
 			return getLoadTestRunner();
 
 		return get( name );
+	}
+
+	public Object getProperty( String testStep, String propertyName )
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public TestCaseRunner getTestRunner()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

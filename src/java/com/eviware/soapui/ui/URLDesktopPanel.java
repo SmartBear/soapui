@@ -13,8 +13,10 @@
 package com.eviware.soapui.ui;
 
 import java.awt.BorderLayout;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.components.BrowserComponent;
@@ -23,25 +25,29 @@ import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 public class URLDesktopPanel extends DefaultDesktopPanel
 {
 	private BrowserComponent browser;
+	private boolean closed;
 
-	public URLDesktopPanel( String title, String description, String url )
+	public URLDesktopPanel( String title, String description, String url ) throws InterruptedException, InvocationTargetException
 	{
 		super( title, description, new JPanel( new BorderLayout() ) );
 
 		JPanel panel = ( JPanel )getComponent();
 
-		browser = new BrowserComponent();
+		browser = new BrowserComponent( true );
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
 
 		if( StringUtils.hasContent( url ) )
 			navigate( url, null, true );
 	}
 
-	public void navigate( String url, String errorUrl, boolean async )
+	public void navigate( String url, String errorUrl, boolean async ) 
 	{
+		//if (!browser.isBrowserInitialised()) {
+		//	browser.initBrowser();
+		//}
 		if( async )
 		{
-			new Thread( new Navigator( url, errorUrl ) ).start();
+			SwingUtilities.invokeLater( new Navigator( url, errorUrl ) );
 		}
 		else
 		{
@@ -52,7 +58,13 @@ public class URLDesktopPanel extends DefaultDesktopPanel
 	public boolean onClose( boolean canCancel )
 	{
 		browser.release();
+		closed = true;
 		return super.onClose( canCancel );
+	}
+
+	public boolean isClosed()
+	{
+		return closed;
 	}
 
 	private class Navigator implements Runnable
@@ -68,7 +80,9 @@ public class URLDesktopPanel extends DefaultDesktopPanel
 
 		public void run()
 		{
-			browser.navigate( url, errorUrl );
+			
+				browser.navigate( url, errorUrl );
+			
 		}
 	}
 }

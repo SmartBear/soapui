@@ -9,12 +9,12 @@
       <goal>
         <name>soapui:test</name>
         <description>Runs the soapUI tests as specified by the plugin properties. Internally invokes the
-        <a href="../../userguide/commandline/functional.html">SoapUITestCaseRunner</a> as described there.</description>
+        <a href="../../userguide/commandline/testcaserunner.html">SoapUITestCaseRunner</a> as described there.</description>
       </goal>
       <goal>
         <name>soapui:loadtest</name>
         <description>Runs the soapUI LoadTests as specified by the plugin properties. Internally invokes the
-        <a href="../../userguide/commandline/loadtest.html">SoapUILoadTestRunner</a> as described there.</description>
+        <a href="../../userguide/commandline/loadtestrunner.html">SoapUILoadTestRunner</a> as described there.</description>
       </goal>
        <goal>
         <name>soapui:mock</name>

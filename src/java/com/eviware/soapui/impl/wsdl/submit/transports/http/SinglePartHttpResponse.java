@@ -13,7 +13,7 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.settings.WsdlSettings;
@@ -33,15 +33,12 @@ public class SinglePartHttpResponse extends BaseHttpResponse
 	private boolean prettyPrint;
 	private long responseSize;
 
-	// private byte[] requestData;
-	// private byte[] responseBody;
-
-	public SinglePartHttpResponse( AbstractHttpRequest<?> httpRequest, ExtendedHttpMethod httpMethod,
+	public SinglePartHttpResponse( AbstractHttpRequestInterface<?> httpRequest, ExtendedHttpMethod httpMethod,
 			String requestContent, PropertyExpansionContext context )
 	{
 		super( httpMethod, httpRequest );
-
-		if( getRequestContent() == null )
+		
+		if( getRequestContent() == null || !getRequestContent().equals( requestContent ))
 			this.requestContent = requestContent;
 
 		try
@@ -105,6 +102,11 @@ public class SinglePartHttpResponse extends BaseHttpResponse
 		return responseContent;
 	}
 
+	protected String getResponseContent()
+	{
+		return responseContent;
+	}
+	
 	public long getContentLength()
 	{
 		return responseSize;

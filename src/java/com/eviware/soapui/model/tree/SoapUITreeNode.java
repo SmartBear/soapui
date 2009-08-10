@@ -13,6 +13,7 @@
 package com.eviware.soapui.model.tree;
 
 import javax.swing.JPopupMenu;
+import javax.swing.tree.TreeNode;
 
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.action.swing.ActionList;
@@ -23,7 +24,7 @@ import com.eviware.soapui.support.action.swing.ActionList;
  * @author Ole.Matzura
  */
 
-public interface SoapUITreeNode
+public interface SoapUITreeNode extends TreeNode
 {
 	public int getChildCount();
 

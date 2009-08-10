@@ -63,4 +63,6 @@ public interface Assertable
 	public TestAssertion cloneAssertion( TestAssertion source, String name );
 
 	public Map<String, TestAssertion> getAssertions();
+	
+	public TestAssertion moveAssertion( int ix, int offset );
 }

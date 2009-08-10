@@ -351,7 +351,7 @@ public class SoapMessageBuilder implements MessageBuilder
 		String ns = WsdlUtils.getSoapBodyNamespace( bindingOperation.getBindingInput().getExtensibilityElements() );
 		if( ns == null )
 		{
-			ns = wsdlContext.getDefinition().getTargetNamespace();
+			ns = WsdlUtils.getTargetNamespace( wsdlContext.getDefinition() );
 			log.warn( "missing namespace on soapbind:body for RPC request, using targetNamespace instead (BP violation)" );
 		}
 
@@ -428,7 +428,7 @@ public class SoapMessageBuilder implements MessageBuilder
 
 		if( ns == null )
 		{
-			ns = wsdlContext.getDefinition().getTargetNamespace();
+			ns = WsdlUtils.getTargetNamespace( wsdlContext.getDefinition());
 			log.warn( "missing namespace on soapbind:body for RPC response, using targetNamespace instead (BP violation)" );
 		}
 

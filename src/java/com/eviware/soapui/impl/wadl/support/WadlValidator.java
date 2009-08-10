@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRepresentation;
-import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
 import com.eviware.soapui.impl.wsdl.submit.RestMessageExchange;
 import com.eviware.soapui.model.testsuite.AssertionError;
@@ -40,7 +40,7 @@ public class WadlValidator
 
 	public AssertionError[] assertResponse( RestMessageExchange messageExchange )
 	{
-		RestRequest restRequest = messageExchange.getRestRequest();
+		RestRequestInterface restRequest = messageExchange.getRestRequest();
 		if( restRequest != null )
 		{
 			if( messageExchange.getResponseStatusCode() >= 400 )
@@ -60,7 +60,7 @@ public class WadlValidator
 	{
 		List<AssertionError> result = new ArrayList<AssertionError>();
 		QName responseBodyElementName = getResponseBodyElementName( messageExchange );
-		RestRequest restRequest = messageExchange.getRestRequest();
+		RestRequestInterface restRequest = messageExchange.getRestRequest();
 		boolean asserted = false;
 
 		for( RestRepresentation representation : restRequest.getRepresentations( type, messageExchange

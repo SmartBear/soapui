@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.resolvers.ResolverUtils;
 import com.eviware.soapui.settings.CommonSettings;
@@ -40,7 +41,7 @@ public class PropertyExpansionRequestFilter extends AbstractRequestFilter
 		}
 		else
 		{
-			content = PropertyExpansionUtils.expandProperties( context, content, httpRequest.getSettings().getBoolean(
+			content = PropertyExpander.expandProperties( context, content, httpRequest.getSettings().getBoolean(
 					CommonSettings.ENTITIZE_PROPERTIES ) );
 
 			if( content != null )
@@ -56,7 +57,7 @@ public class PropertyExpansionRequestFilter extends AbstractRequestFilter
 
 	public static String expandProperties( SubmitContext context, String content )
 	{
-		return PropertyExpansionUtils.expandProperties( context, content );
+		return PropertyExpander.expandProperties( context, content );
 	}
 
 	/**

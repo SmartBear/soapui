@@ -24,8 +24,8 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.model.support.DefaultTestStepProperty;
 import com.eviware.soapui.model.support.TestStepBeanProperty;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
@@ -82,7 +82,7 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 
 		addProperty( new TestStepBeanProperty( "script", false, this, "script", this ) );
 
-		scriptEngine = SoapUIScriptEngineRegistry.create( SoapUIScriptEngineRegistry.GROOVY_ID, this );
+		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 		scriptEngine.setScript( getScript() );
 		if( forLoadTest && !isDisabled() )
 			try
@@ -125,7 +125,7 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 		return "result";
 	}
 
-	public TestStepResult run( TestRunner testRunner, TestRunContext context )
+	public TestStepResult run( TestCaseRunner testRunner, TestCaseRunContext context )
 	{
 		SoapUI.ensureGroovyLog();
 

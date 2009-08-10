@@ -17,11 +17,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 
 /**
@@ -30,13 +29,8 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
  * @author ole.matzura
  */
 
-public class MockTestRunner implements TestRunner
+public class MockTestRunner extends AbstractMockTestRunner<WsdlTestCase> implements TestCaseRunner
 {
-	private long startTime;
-	private String reason;
-	private final WsdlTestCase testCase;
-	private final Logger logger;
-	private Status status = Status.RUNNING;
 	private MockTestRunContext mockRunContext;
 
 	public MockTestRunner( WsdlTestCase testCase )
@@ -46,19 +40,12 @@ public class MockTestRunner implements TestRunner
 
 	public MockTestRunner( WsdlTestCase testCase, Logger logger )
 	{
-		this.testCase = testCase;
-		this.logger = logger == null ? SoapUI.ensureGroovyLog() : logger;
-		startTime = System.currentTimeMillis();
+		super( testCase, logger );
 	}
 
-	public Logger getLog()
+	public WsdlTestCase getTestCase()
 	{
-		return logger;
-	}
-
-	public TestCase getTestCase()
-	{
-		return testCase;
+		return getTestRunnable();
 	}
 
 	public List<TestStepResult> getResults()
@@ -66,69 +53,29 @@ public class MockTestRunner implements TestRunner
 		return new ArrayList<TestStepResult>();
 	}
 
-	public Status getStatus()
-	{
-		return status;
-	}
-
-	public void start( boolean async )
-	{
-
-	}
-
-	public TestRunContext getRunContext()
+	public TestCaseRunContext getRunContext()
 	{
 		return mockRunContext;
+	}
+	
+	public TestStepResult runTestStep( TestStep testStep )
+	{
+		return testStep.run( this, mockRunContext );
 	}
 
 	public TestStepResult runTestStepByName( String name )
 	{
-		return testCase.getTestStepByName( name ).run( this, mockRunContext );
-	}
-
-	public long getTimeTaken()
-	{
-		return System.currentTimeMillis() - startTime;
-	}
-
-	public Status waitUntilFinished()
-	{
-		status = Status.FINISHED;
-		return status;
-	}
-
-	public void cancel( String reason )
-	{
-		this.reason = reason;
-		status = Status.CANCELED;
-		logger.info( "Canceled with reason [" + reason + "]" );
+		return getTestCase().getTestStepByName( name ).run( this, mockRunContext );
 	}
 
 	public void gotoStep( int index )
 	{
-		logger.info( "Going to step " + index + " [" + testCase.getTestStepAt( index ).getName() + "]" );
+		getLog().info( "Going to step " + index + " [" + getTestCase().getTestStepAt( index ).getName() + "]" );
 	}
 
 	public void gotoStepByName( String stepName )
 	{
-		logger.info( "Going to step [" + stepName + "]" );
-	}
-
-	public void fail( String reason )
-	{
-		this.reason = reason;
-		status = Status.FAILED;
-		logger.error( "Failed with reason [" + reason + "]" );
-	}
-
-	public long getStartTime()
-	{
-		return startTime;
-	}
-
-	public String getReason()
-	{
-		return reason;
+		getLog().info( "Going to step [" + stepName + "]" );
 	}
 
 	public void setMockRunContext( MockTestRunContext mockRunContext )

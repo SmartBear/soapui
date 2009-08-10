@@ -12,7 +12,11 @@
 
 package com.eviware.soapui.model.tree;
 
+import java.util.Enumeration;
+import java.util.Vector;
+
 import javax.swing.JPopupMenu;
+import javax.swing.tree.TreeNode;
 
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.action.swing.ActionList;
@@ -67,4 +71,34 @@ public abstract class AbstractTreeNode<T extends ModelItem> implements SoapUITre
 	public void reorder( boolean notify )
 	{
 	}
+
+	public Enumeration children()
+	{
+		Vector<TreeNode> children = new Vector<TreeNode>();
+		for( int c = 0; c < getChildCount(); c++ )
+			children.add( getChildAt( c ) );
+
+		return children.elements();
+	}
+
+	public boolean getAllowsChildren()
+	{
+		return !isLeaf();
+	}
+
+	public TreeNode getChildAt( int childIndex )
+	{
+		return getChildNode( childIndex );
+	}
+
+	public int getIndex( TreeNode node )
+	{
+		return getIndexOfChild( node );
+	}
+
+	public TreeNode getParent()
+	{
+		return getParentTreeNode();
+	}
+
 }

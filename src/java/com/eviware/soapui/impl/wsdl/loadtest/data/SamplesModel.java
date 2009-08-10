@@ -29,8 +29,8 @@ import com.eviware.soapui.model.testsuite.LoadTest;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 
@@ -121,8 +121,8 @@ public class SamplesModel extends AbstractTableModel
 
 	private class InternalTestRunListener extends LoadTestRunListenerAdapter
 	{
-		public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-				TestRunContext runContext )
+		public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+				TestCaseRunContext runContext )
 		{
 			Map<TestStep, TestSample> samplesMap = new HashMap<TestStep, TestSample>();
 			List<TestStepResult> results = testRunner.getResults();

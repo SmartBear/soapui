@@ -32,7 +32,7 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
@@ -46,21 +46,21 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 	@Override
 	public void filterAbstractHttpRequest( SubmitContext context, AbstractHttpRequest<?> wsdlRequest )
 	{
-		String username = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getUsername() );
+		String username = PropertyExpander.expandProperties( context, wsdlRequest.getUsername() );
 
 		// check for authorization prerequisites
 		if( username == null || username.length() == 0 )
 			return;
 
 		Settings settings = wsdlRequest.getSettings();
-		String password = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getPassword() );
-		String domain = PropertyExpansionUtils.expandProperties( context, wsdlRequest.getDomain() );
+		String password = PropertyExpander.expandProperties( context, wsdlRequest.getPassword() );
+		String domain = PropertyExpander.expandProperties( context, wsdlRequest.getDomain() );
 
 		String wssPasswordType = null;
 
 		if( wsdlRequest instanceof WsdlRequest )
 		{
-			wssPasswordType = PropertyExpansionUtils.expandProperties( context, ( ( WsdlRequest )wsdlRequest )
+			wssPasswordType = PropertyExpander.expandProperties( context, ( ( WsdlRequest )wsdlRequest )
 					.getWssPasswordType() );
 		}
 

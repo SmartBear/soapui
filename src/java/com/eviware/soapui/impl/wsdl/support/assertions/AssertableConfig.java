@@ -23,4 +23,6 @@ public interface AssertableConfig
 	void removeAssertion( int ix );
 
 	TestAssertionConfig addNewAssertion();
+
+	TestAssertionConfig insertAssertion( TestAssertionConfig newAssertion, int ix );
 }

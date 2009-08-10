@@ -46,11 +46,12 @@ public class TestSuiteToProjectDropHandler extends AbstractAfterModelItemDropHan
 
 		if( source.getProject() == target )
 		{
-			return CloneTestSuiteAction.cloneTestSuiteWithinProject( source, name, target );
+			return CloneTestSuiteAction.cloneTestSuiteWithinProject( source, name, target, source.getDescription() );
 		}
 		else
 		{
-			return CloneTestSuiteAction.cloneToAnotherProject( source, target.getName(), name, false ) != null;
+			return CloneTestSuiteAction.cloneToAnotherProject( source, target.getName(), name, false, source
+					.getDescription() ) != null;
 		}
 	}
 
@@ -61,7 +62,8 @@ public class TestSuiteToProjectDropHandler extends AbstractAfterModelItemDropHan
 		if( name == null )
 			return false;
 
-		WsdlTestSuite testSuite = CloneTestSuiteAction.cloneToAnotherProject( source, target.getName(), name, true );
+		WsdlTestSuite testSuite = CloneTestSuiteAction.cloneToAnotherProject( source, target.getName(), name, true,
+				source.getDescription() );
 		if( testSuite != null )
 		{
 			source.getProject().removeTestSuite( source );

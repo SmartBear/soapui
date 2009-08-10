@@ -46,7 +46,7 @@ import org.apache.xmlbeans.XmlOptions;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.LineNumbersPanel;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
@@ -59,6 +59,7 @@ import com.eviware.soapui.support.editor.xml.support.ValidationError;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.support.xml.actions.FormatXmlAction;
+import com.eviware.soapui.support.xml.actions.InsertBase64FileTextAreaAction;
 import com.eviware.soapui.support.xml.actions.LoadXmlTextAreaAction;
 import com.eviware.soapui.support.xml.actions.SaveXmlTextAreaAction;
 
@@ -88,6 +89,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 	private JCheckBoxMenuItem toggleLineNumbersMenuItem;
 	private PreviewCorner previewCorner;
 	private final T modelItem;
+	private InsertBase64FileTextAreaAction insertBase64FileTextAreaAction;
 
 	public XmlSourceEditorView( XmlEditor<XmlDocument> xmlEditor, T modelItem )
 	{
@@ -198,7 +200,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		formatXmlAction = new FormatXmlAction( editArea );
 		saveXmlTextAreaAction = new SaveXmlTextAreaAction( editArea, "Save" );
 		loadXmlTextAreaAction = new LoadXmlTextAreaAction( editArea, "Load" );
-
+		insertBase64FileTextAreaAction = new InsertBase64FileTextAreaAction( editArea, "Insert File as Base64" );
 		toggleLineNumbersMenuItem = new JCheckBoxMenuItem( "Show Line Numbers", lineNumbersPanel.isVisible() );
 		toggleLineNumbersMenuItem.setAccelerator( UISupport.getKeyStroke( "alt L" ) );
 		toggleLineNumbersMenuItem.addActionListener( new ActionListener()
@@ -227,6 +229,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		inputPopup.addSeparator();
 		inputPopup.add( saveXmlTextAreaAction );
 		inputPopup.add( loadXmlTextAreaAction );
+		inputPopup.add( insertBase64FileTextAreaAction );
 	}
 
 	@Override
@@ -405,8 +408,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 
 	public boolean validate()
 	{
-		ValidationError[] errors = validateXml( PropertyExpansionUtils.expandProperties( getModelItem(), editArea
-				.getText() ) );
+		ValidationError[] errors = validateXml( PropertyExpander.expandProperties( getModelItem(), editArea.getText() ) );
 
 		errorListModel.clear();
 		if( errors == null || errors.length == 0 )

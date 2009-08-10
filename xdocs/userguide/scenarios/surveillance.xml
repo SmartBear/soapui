@@ -68,7 +68,7 @@ Total Exported Results: 0</font></source>
 		<source>loadtestrunner.bat "C:\Documents and Settings\ole.matzura\My Documents\jbossws-soapui-project.xml" 
    -s"Organization Tests" -c"getContactInfo LoadTests" -r</source>
        <p>Producing the following:</p>
-       <source><font size="-1">SoapUI 1.5beta2 LoadTestRunner
+       <source><font size="-1">SoapUI 3.0 LoadTestRunner
 21:16:07,912 INFO  [SoapUILoadTestRunner] setting projectFile to [C:\Documents and Settings\ole.matzura\My Documents\j..
 21:16:07,932 INFO  [SoapUILoadTestRunner] setting testSuite to [Organization Tests]
 21:16:07,942 INFO  [SoapUILoadTestRunner] setting testCase to [getContactInfo LoadTests]

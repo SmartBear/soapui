@@ -4,24 +4,108 @@
         <title>soapUI Userguide Overview</title>
     </properties>
     <body>
-		<section name="soapUI Overview">
-		 
-		 <subsection name="Prerequisites">
-		 <p>Although soapUI should be easy to get started with, you should have a good grasp of the following
-		 concepts and technologies to get the most out of soapUI's functionality.</p>
+		<section name="The soapUI Interface">
+		 <p>soapUI is a standard desktop application adhering to established User Interface concepts for Integrated Development Environments, as available in for example
+		 Eclipse, NetBeans and IDEA. Most actions have keyboard shortcuts and tooltips, you should have no problems finding 
+		 your way around. soapUI makes heavy use of "Inspectors"; i.e. tabs that can be shown and hidden by selecting them.</p>
+
+		 <p>The soapUI window is divided into the following views:</p>
+		 <table><tr>
+		 <td><i>left</i><br/>The main navigator showing a hierarchy of all projects, interfaces, etc. (see below)
 		 <ul>
-		 	<li><b>WSDL</b> - You should have a grasp of basic concepts like services, ports, bindings, port types, and the relation to XML Schema</li>
-		 	<li><b>SOAP</b> - You should have a grasp of basic concepts and relation to WSDL (bindings, etc), different encoding types (soap encoded/literal) and 
-		 	message styles (document/rpc)</li>
-            <li><b>REST/HTTP</b> - Understand the concepts behind REST and HTTP-based services/resources.</li>
-		 	<li><b>XML and related technologies</b> - Useful knowledge is XPath, XML Schema, namespaces, etc</li>
+		 	<li> Selecting an item will show available overview information in the bottom left "Properties" panel</li>
+		 	<li> Double clicking or pressing enter on a selected item will open the items' editor
+		 	to the right if available</li>
 		 </ul>
-		 <p>You can find most specifications at <a target="_new" href="http://www.w3.org">W3C</a> and tutorials
-		 at several sites, for example <a target="_new" href="http://www.w3schools.com">W3Schools</a> and
-		 <a target="_new" href="http://www.zvon.org/o_html/group_web_services.html">zvon.org</a>.</p>
+		 </td>
+		 <td><i>right</i><br/>The soapUI desktop containing editors and viewers for those double clicked items in the navigator.
+		 <ul>
+		 <li>Cycle between active panes with Ctrl-Tab or use Ctrl-W to switch</li>
+		 <li>Maximize, Minimize, Resize or Move as usual using each panes window menu</li>
+		 <li>Focusing on a pane will automatically put focus on its item in the navigator, scrolling into view if necessary</li>
+		 </ul>
+		 </td></tr>
+		 <tr><td><i>bottom-left</i>
+		 <ul>
+		 <li>The <b>Properties</b> panel will show information on the item currently selected in the navigator</li>
+		 </ul>
+		 </td><td><i>bottom right</i><br/>A color coded log view showing log messages from soapUI</td></tr></table>
+		 <p align="center">
+			<img src="images/soapui_overview.gif" border="0" alt="an overview of the Web Testing tool, soapUI"/>
+		</p>
+		<p>You can set a centered background image for the default desktop by placing a soapui-backgroung.gif/jpg/png file in the
+		soapUI bin folder when using the default desktop</p>
+		 
+		 <subsection name="The Navigator">
+		 <p>
+             The following objects are currently shown in the navigator tree:
+		 
+		 <ul>
+		 	<li><b>Projects</b> node : the soapUI workspace
+		 	<ul>
+		 		<li><p><a href="projects/index.html">Project</a> node(s) : for each project in the workspace</p>
+		 		<ul>
+		 			<li><p><a href="interfaces/index.html">Interface</a>/<a href="rest/services/index.html">Service</a> node(s) : for each WSDL Interface or REST Service
+                         in the project</p>
+		 			<ul>
+		 				<li><p><a href="interfaces/index.html#Operations">Operation</a>/<a href="rest/resources.html">Resource</a> node(s) : for each WSDL Operation
+                             or REST Resource in the containing Interface/Service</p>
+		 				<ul>
+		 					<li><p><a href="requests.html">WSDL Request</a> node(s) : for each WSDL request created for the
+                                 containing WSDL Operation</p></li>
+                             <li><p><a href="rest/resources.html">REST Resource</a> node(s) : for each child REST Resource</p></li>
+                             <li><p><a href="rest/methods.html">REST Method</a> node(s) : for each REST Method defined for a Resource</p>
+                             <ul>
+                             
+                             <li><p><a href="requests.html">REST Request</a> node(s) : for each REST Request created for the
+                                 containing REST Method</p></li>
+                                 </ul>
+                              </li>
+		 				</ul>
+		 				</li>
+		 			</ul>
+		 			
+		 			</li>
+		 			<li><p><a href="functional/testsuites.html">TestSuite</a> node(s) : for each TestSuite in the project</p>
+					<ul>
+						<li><p><a href="functional/testcases.html">TestCase</a> node(s) : for each TestCase in the TestSuite</p>
+		    			<ul>
+							<li><p><b>TestSteps</b> node, contains the TestCases'</p>
+			    			<ul>
+			    				<li><p><a href="functional/testcases.html#Test_Steps">TestStep</a> node(s) : for each TestCase-step, together with a colored
+			    				icon indicating the status of that step.</p></li>
+			    			</ul>
+			    			</li>
+							<li><p><b>LoadTests</b> node, contains the TestCases'</p>
+			    			<ul>
+			    				<li><p><a href="loadtest/index.html">LoadTest</a> node(s) : for each LoadTest in the containing TestCase</p></li>
+			    			</ul>
+			    			</li>
+		    			</ul>
+						</li>
+		 			</ul>
+		 			</li>
+		 			<li><p><a href="mock/services.html">MockService</a> node(s) : for each MockService in the project</p>
+					<ul>
+						<li><p><a href="mock/operations.html">MockOperation</a> node(s) : for each MockOperation in the MockService</p>
+		    			<ul>
+							<li><p><a href="mock/responses.html">MockResponse</a> node(s) : for each MockResponse in the containing MockOperation</p>
+			    			</li>
+		    			</ul>
+						</li>
+		 			</ul>
+		 			</li>
+		 		</ul>
+		 		</li>
+		 	</ul>
+		 	</li>
+		 </ul>
+		 The tree can be navigated using the standard keyboard actions. An items' associated desktop panel can 
+		 	be opened by double clicking it or selecting it and pressing Enter.
+		</p>
 		 </subsection>
 		 
-		 
+		 		 
 		 				
 				<table class="relatedInfo" cellspacing="0" cellpadding="0">
 	<tr class="a">
@@ -57,126 +141,12 @@
 		</td>
 	</tr>
 </table>
-		 
-		 
-
-
-
-		
-		 <subsection name="The soapUI Interface">
-		 <p>soapUI is a standard desktop application adhering to established User Interface concepts for Integrated Development Environments, as available in for example
-		 Eclipse, NetBeans and IDEA. Most actions have keyboard shortcuts and tooltips, you should have no problems finding 
-		 your way around. soapUI makes heavy use of "Inspectors"; i.e. tabs that can be shown and hidden by selecting them.</p>
-
-		 <p>The soapUI window is divided into the following views:</p>
-		 <table><tr>
-		 <td><i>left</i><br/>The main navigator showing a hierarchy of all projects, interfaces, etc. (see below)
-		 <ul>
-		 	<li> Selecting an item will show available overview information in the bottom left "Properties" panel</li>
-		 	<li> Double clicking or pressing enter on a selected item will open the items' editor
-		 	to the right if available</li>
-		 </ul>
-		 </td>
-		 <td><i>right</i><br/>The soapUI desktop containing editors and viewers for those double clicked items in the navigator.
-		 <ul>
-		 <li>Cycle between active panes with Ctrl-Tab or use Ctrl-W to switch</li>
-		 <li>Maximize, Minimize, Resize or Move as usual using each panes window menu</li>
-		 <li>Focusing on a pane will automatically put focus on its item in the navigator, scrolling into view if necessary</li>
-		 </ul>
-		 </td></tr>
-		 <tr><td><i>bottom-left</i>
-		 <ul>
-		 <li>The <b>Properties</b> panel will show information on the item currently selected in the navigator</li>
-		 </ul>
-		 </td><td><i>bottom right</i><br/>A color coded log view showing log messages from soapUI</td></tr></table>
-		 <p align="center">
-			<img src="images/soapui_overview.gif" border="0" alt="an overview of the Web Testing tool, soapUI"/>
-		</p>
-		<p>You can set a centered background image for the default desktop by placing a soapui-backgroung.gif/jpg/png file in the
-		soapUI bin folder when using the default desktop</p>
-		 </subsection>
-		 
-		 <subsection name="The Navigator">
-		 <p>
-             The following objects are currently shown in the navigator tree:
-		 
-		 <ul>
-		 	<li><b>Projects</b> node : the soapUI workspace
-		 	<ul>
-		 		<li><p><a href="projects/index.html">Project</a> node(s) : for each project in the workspace</p>
-		 		<ul>
-		 			<li><p><a href="interfaces/index.html">Interface</a>/<a href="rest/services/index.html">Service</a> node(s) : for each WSDL Interface or REST Service
-                         in the project</p>
-		 			<ul>
-		 				<li><p><a href="interfaces/index.html#Operations">Operation</a>/<a href="rest/resources.html">Resource</a> node(s) : for each WSDL Operation
-                             or REST Resource in the containting Interface/Service</p>
-		 				<ul>
-		 					<li><p><a href="requests.html">Request</a> node(s) : for each WSDL or REST Request created for the
-                                 containing Operation or Resource</p></li>
-                             <li><p><a href="rest/resources.html">REST Resource</a> node(s) : for each child REST Resource</p></li>
-		 				</ul>
-		 				</li>
-		 			</ul>
-		 			
-		 			</li>
-		 			<li><p><a href="functional/testsuites.html">TestSuite</a> node(s) : for each TestSuite in the project</p>
-					<ul>
-						<li><p><a href="functional/testcases.html">TestCase</a> node(s) : for each TestCase in the testsuite</p>
-		    			<ul>
-							<li><p><b>TestSteps</b> node, contains the TestCases'</p>
-			    			<ul>
-			    				<li><p><a href="functional/testcases.html#Test_Steps">TestStep</a> node(s) : for each TestCase-step, together with a colored
-			    				icon indicating the status of that step.</p></li>
-			    			</ul>
-			    			</li>
-							<li><p><b>LoadTests</b> node, contains the TestCases'</p>
-			    			<ul>
-			    				<li><p><a href="loadtest/index.html">LoadTest</a> node(s) : for each loadtest in the containing TestCase</p></li>
-			    			</ul>
-			    			</li>
-		    			</ul>
-						</li>
-		 			</ul>
-		 			</li>
-		 			<li><p><a href="mock/services.html">MockService</a> node(s) : for each MockService in the project</p>
-					<ul>
-						<li><p><a href="mock/operations.html">MockOperation</a> node(s) : for each MockOperation in the MockService</p>
-		    			<ul>
-							<li><p><a href="mock/responses.html">MockResponse</a> node(s) : for each MockResponse in the containing MockOperation</p>
-			    			</li>
-		    			</ul>
-						</li>
-		 			</ul>
-		 			</li>
-		 		</ul>
-		 		</li>
-		 	</ul>
-		 	</li>
-		 </ul>
-		 The tree can be navigated using the standard keyboard actions. An items' associated desktop panel can 
-		 	be opened by double clicking it or selecting it and pressing Enter.
-		</p>
-		 </subsection>
-		 
-		 <subsection name="Property Mode">
-		 <columns><column>
-		 <div>The Navigator described above contains a small toggle button on top of the tree. Pressing it will 
-		 put the Navigator into <i>Property Mode</i>, displaying all <a href="properties.html">Properties</a> for their 
-		 corresponding objects in the tree (green = read/write, black = read-only), giving an overview of all
-		 defined or available properties within a project.</div>
-		 <ul>
-		 <li>Items containing custom properties (Projects, TestSuites, TestCases, MockServices and MockResponse) will
-		 in the tree get a <i>Properties child node</i> contain that objects custom properties.</li>
-		 <li> Double clicking a property prompts to set its value.</li>
-		 <li> Right clicking the Properties node open a menu for adding new properties.</li>
-		 </ul>
-		 <p>One of the main Use cases for this mode is the possibility to drag a property from the tree into any
-		 text editor that supports <a href="properties.html#Property_Expansion">Property Expansion</a>, making it
-		 extremely easy to create property expansions as desired. If the property being dragged contains an XML value,
-		 the <a href="xpath_selector.html">XPath Selector</a> will be displayed after a drop, allowing for further
-		 property-expansion refinement</p>
-		 </column><column><img src="images/property_mode.gif" alt="Working in property mode"/></column></columns>
-		 </subsection>
+		 <subsection name="Browser Component">
+		<p>soapUI bundles the JXBrowser component provided by TeamDev software for displaying HTML pages (the startup page, etc)
+		and REST responses in the <a href="rest/requests.html#HTML_Response_View">HTML Response Viewer</a>, which gives broad file format support (images, flash-movies, etc..). Unfortunately this component does not work 
+		under a 64-bit JRE and will in this situation disable itself. If you are experiencing other issues with soapUI that seem to be related
+		to JXBrowser, adding the -Dsoapui.jxbrowser.disable=true flag to the command-line options (see ) will disable it anyhow.</p>
+		</subsection>
 		 
 		 <subsection name="Drag and Drop">
 		 <p>soapUI provides extensive support for dragging and dropping items in the Navigator, resulting in corresponding Clone or Move 
@@ -266,7 +236,7 @@
 		 data sent and received on the socket (disabled during LoadTesting)</li>
 		 <li><b>jetty log</b> - mock-service related status notifications from</li>
 		 <li><b>groovy log</b> - log messages from groovy scripts using the available log object (disabled
-		 during loadtest but can be enabled from File/Preferences/UI Settings)</li>
+		 during LoadTest but can be enabled from File/Preferences/UI Settings)</li>
 		 <li><b>error log</b> - log with diagnostic information for errors that arise during execution, this log
 		 should be included in any bug-reports if it contains related error information. Please note that not
 		 all errors logged have to be actual errors in soapUI, for example if a target server or service is not

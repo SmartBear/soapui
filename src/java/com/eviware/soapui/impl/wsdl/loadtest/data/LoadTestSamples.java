@@ -25,8 +25,8 @@ import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
 import com.eviware.soapui.model.testsuite.LoadTest;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 
@@ -139,8 +139,8 @@ public class LoadTestSamples extends AbstractTableModel
 
 	private class InternalLoadTestRunListener extends LoadTestRunListenerAdapter
 	{
-		public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestRunner testRunner,
-				TestRunContext runContext )
+		public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+				TestCaseRunContext runContext )
 		{
 			long timestamp = System.currentTimeMillis();
 			List<LoadTestStepSample[]> s = new ArrayList<LoadTestStepSample[]>();

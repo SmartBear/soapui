@@ -21,11 +21,17 @@ package com.eviware.soapui.model.testsuite;
 
 public interface TestRunListener
 {
-	void beforeRun( TestRunner testRunner, TestRunContext runContext );
+	public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext );
 
-	void beforeStep( TestRunner testRunner, TestRunContext runContext );
+	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext );
 
-	void afterStep( TestRunner testRunner, TestRunContext runContext, TestStepResult result );
+	/**
+	 * @deprecated use {@link #beforeStep(TestCaseRunner, TestCaseRunContext, TestStep)} instead
+	 */
+	
+	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext );
 
-	void afterRun( TestRunner testRunner, TestRunContext runContext );
+	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep );
+	
+	public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result );
 }

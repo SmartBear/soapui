@@ -14,7 +14,7 @@ package com.eviware.soapui.monitor;
 
 import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 
 /**
  * Listener for TestMonitor events
@@ -28,9 +28,9 @@ public interface TestMonitorListener
 
 	public void loadTestFinished( LoadTestRunner runner );
 
-	public void testCaseStarted( TestRunner runner );
+	public void testCaseStarted( TestCaseRunner runner );
 
-	public void testCaseFinished( TestRunner runner );
+	public void testCaseFinished( TestCaseRunner runner );
 
 	public void mockServiceStarted( MockRunner runner );
 

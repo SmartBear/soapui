@@ -34,6 +34,8 @@ public interface ProjectListener
 
 	void testSuiteRemoved( TestSuite testSuite );
 
+	void testSuiteMoved( TestSuite testSuite, int index, int offset );
+
 	void mockServiceAdded( MockService mockService );
 
 	void mockServiceRemoved( MockService mockService );

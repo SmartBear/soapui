@@ -17,9 +17,9 @@ import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlRunTestCaseTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
-import com.eviware.soapui.model.testsuite.TestRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunListener;
-import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.support.StringUtils;
@@ -155,7 +155,7 @@ public abstract class AbstractSoapUITestRunner extends AbstractSoapUIRunner impl
 		return wssPasswordType;
 	}
 
-	protected void prepareRequestStep( HttpRequestTestStep<?> requestStep )
+	protected void prepareRequestStep( HttpRequestTestStep requestStep )
 	{
 		AbstractHttpRequest<?> httpRequest = requestStep.getHttpRequest();
 		if( StringUtils.hasContent( endpoint ) )
@@ -202,16 +202,19 @@ public abstract class AbstractSoapUITestRunner extends AbstractSoapUIRunner impl
 		}
 	}
 
-	public void beforeRun( TestRunner testRunner, TestRunContext runContext )
+	public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
 	}
 
-	public void beforeStep( TestRunner testRunner, TestRunContext runContext )
+	public final void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
-		TestStep currentStep = runContext.getCurrentStep();
+	}
+
+	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep currentStep )
+	{
 		if( currentStep instanceof HttpRequestTestStep )
 		{
-			prepareRequestStep( ( HttpRequestTestStep<?> )currentStep );
+			prepareRequestStep( ( HttpRequestTestStep )currentStep );
 		}
 		else if( currentStep instanceof WsdlRunTestCaseTestStep )
 		{
@@ -219,7 +222,7 @@ public abstract class AbstractSoapUITestRunner extends AbstractSoapUIRunner impl
 		}
 	}
 
-	public void afterStep( TestRunner testRunner, TestRunContext runContext, TestStepResult result )
+	public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
 	{
 		TestStep currentStep = runContext.getCurrentStep();
 		if( currentStep instanceof WsdlRunTestCaseTestStep )
@@ -228,7 +231,7 @@ public abstract class AbstractSoapUITestRunner extends AbstractSoapUIRunner impl
 		}
 	}
 
-	public void afterRun( TestRunner testRunner, TestRunContext runContext )
+	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
 	}
 

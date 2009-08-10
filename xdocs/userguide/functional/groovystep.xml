@@ -292,6 +292,35 @@ holder.namespaces["abc"] = "http://webservices.amazon.com/AWSECommerceService/20
 log.info( holder["//abc:RequestId"] )</source>
 		
 		</subsection>
+
+		<subsection name="soapUI Pro GroovyUtilsPro">
+		<p>The GroovyUtilsPro class has additional options for working with 
+		<a href="../projects/jdbcConnections.html">JDBC connections defined at the Project level</a>.
+		Instantiate	GroovyUtilsPro using:</p>
+		<source>def groovyUtils = new com.eviware.soapui.support.GroovyUtilsPro( context )</source>
+		<p>GroovyUtilsPro currently includes the following methods:</p>
+		<ul>
+		<li><code>getGroovySql(String connectionName)</code> - gets groovy.sql.Sql for given connection defined on project level.
+		<p>Example:</p>
+		<source>
+groovy.sql.Sql sql = new com.eviware.soapui.support.GroovyUtilsPro(context).getGroovySql("connName");
+sql.eachRow("select id,age,name,surrname from user") {
+    println "User: ${it.id}, ${it.name}"
+}</source> </li>
+
+		<li><code>getJdbcConnection(String connectionName)</code> - gets java.sql.Connection for given connection defined on project level.
+		<p>Example:</p>
+		<source>
+java.sql.Connection conn = new GroovyUtilsPro(context).getJdbcConnection("connName");
+java.sql.PreparedStatement ps = conn.prepareStatement("select id, name from user;")
+java.sql.ResultSet rs = ps.executeQuery();
+while(rs.next()) {
+	println "User: " + rs.getString(1)+", " + rs.getString(2);
+}</source> </li>
+		</ul>
+		(Read more about Database management with Groovy <a href="http://groovy.codehaus.org/Database+features" target="_new">here</a>)
+		</subsection>
+		
 		 <p><hr size="1"/>Next: <a href="propertiesstep.html">Testing Web Services - Property Steps</a></p>
 		
 		</section>

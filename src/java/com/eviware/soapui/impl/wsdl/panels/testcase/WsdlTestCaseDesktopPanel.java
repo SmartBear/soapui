@@ -61,8 +61,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
@@ -94,18 +94,17 @@ import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
 public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase>
 {
-	public static final String DESKTOPPANEL_MARKER = "WsdlTestCaseDeskopPanel";
 	private JProgressBar progressBar;
 	private JTestStepList testStepList;
 	private InternalTestRunListener testRunListener = new InternalTestRunListener();
 	private JButton runButton;
 	private JButton cancelButton;
-	private TestRunner runner;
+	private TestCaseRunner runner;
 	private JButton setEndpointButton;
 	private JButton setCredentialsButton;
 	private JButton optionsButton;
 	private ComponentBag stateDependantComponents = new ComponentBag();
-	private TestRunLog testCaseLog;
+	private JTestCaseTestRunLog testCaseLog;
 	private JToggleButton loopButton;
 	private ProgressBarTestCaseAdapter progressBarAdapter;
 	private InternalTestMonitorListener testMonitorListener;
@@ -182,7 +181,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
 	private JComponent buildTestLog()
 	{
-		testCaseLog = new TestCaseTestRunLog( getModelItem() );
+		testCaseLog = new JTestCaseTestRunLog( getModelItem() );
 		stateDependantComponents.add( testCaseLog );
 		return testCaseLog;
 	}
@@ -352,7 +351,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 			dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
 		}
 
-		public void beforeRun( TestRunner testRunner, TestRunContext runContext )
+		public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() ) )
 				return;
@@ -371,27 +370,26 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 				runner = testRunner;
 		}
 
-		public void beforeStep( TestRunner testRunner, TestRunContext runContext )
+		public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
 		{
 			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() ) )
 				return;
 
-			TestStep testStep = runContext.getCurrentStep();
 			if( testStep != null )
 				testStepList.setSelectedValue( testStep, true );
 		}
 
-		public void afterRun( TestRunner testRunner, TestRunContext runContext )
+		public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() ) )
 				return;
 
 			WsdlTestCaseRunner wsdlRunner = ( WsdlTestCaseRunner )testRunner;
 
-			if( testRunner.getStatus() == TestRunner.Status.CANCELED )
+			if( testRunner.getStatus() == TestCaseRunner.Status.CANCELED )
 				testCaseLog.addText( "TestCase canceled [" + testRunner.getReason() + "], time taken = "
 						+ wsdlRunner.getTimeTaken() );
-			else if( testRunner.getStatus() == TestRunner.Status.FAILED )
+			else if( testRunner.getStatus() == TestCaseRunner.Status.FAILED )
 			{
 				String msg = wsdlRunner.getReason();
 				if( wsdlRunner.getError() != null )
@@ -411,7 +409,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 			runner = null;
 
 			JToggleButton loopButton = ( JToggleButton )runContext.getProperty( "loopButton" );
-			if( loopButton != null && loopButton.isSelected() && testRunner.getStatus() == TestRunner.Status.FINISHED )
+			if( loopButton != null && loopButton.isSelected() && testRunner.getStatus() == TestCaseRunner.Status.FINISHED )
 			{
 				SwingUtilities.invokeLater( new Runnable()
 				{
@@ -427,7 +425,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 			}
 		}
 
-		public void afterStep( TestRunner testRunner, TestRunContext runContext, TestStepResult stepResult )
+		public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult stepResult )
 		{
 			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() ) )
 				return;
@@ -449,7 +447,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
 		StringToObjectMap properties = new StringToObjectMap();
 		properties.put( "loopButton", loopButton );
-		properties.put( TestRunContext.INTERACTIVE, Boolean.TRUE );
+		properties.put( TestCaseRunContext.INTERACTIVE, Boolean.TRUE );
 		runner = getModelItem().run( properties, true );
 	}
 
@@ -489,7 +487,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 	{
 		if( canCancel )
 		{
-			if( runner != null && runner.getStatus() == TestRunner.Status.RUNNING )
+			if( runner != null && runner.getStatus() == TestCaseRunner.Status.RUNNING )
 			{
 				Boolean retval = UISupport.confirmOrCancel( "Cancel running TestCase?", "Cancel Run" );
 
@@ -503,7 +501,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		}
 		else
 		{
-			if( runner != null && runner.getStatus() == TestRunner.Status.RUNNING )
+			if( runner != null && runner.getStatus() == TestCaseRunner.Status.RUNNING )
 			{
 				runner.cancel( null );
 			}
@@ -553,8 +551,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 				{
 					try
 					{
-						MockTestRunner mockTestRunner = new MockTestRunner( getModelItem(), SoapUI.ensureGroovyLog() );
-						getModelItem().runSetupScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
+						MockTestRunner mockTestRunner = new MockTestRunner( WsdlTestCaseDesktopPanel.this.getModelItem(), SoapUI.ensureGroovyLog() );
+						WsdlTestCaseDesktopPanel.this.getModelItem().runSetupScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
 					}
 					catch( Exception e1 )
 					{
@@ -566,17 +564,17 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
 		public SetupScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "context", "testRunner" }, getModelItem().getSettings(), "Setup" );
+			super( new String[] { "log", "testCase", "context", "testRunner" }, WsdlTestCaseDesktopPanel.this.getModelItem(), "Setup" );
 		}
 
 		public String getScript()
 		{
-			return getModelItem().getSetupScript();
+			return WsdlTestCaseDesktopPanel.this.getModelItem().getSetupScript();
 		}
 
 		public void setScript( String text )
 		{
-			getModelItem().setSetupScript( text );
+			WsdlTestCaseDesktopPanel.this.getModelItem().setSetupScript( text );
 		}
 	}
 
@@ -592,8 +590,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 				{
 					try
 					{
-						MockTestRunner mockTestRunner = new MockTestRunner( getModelItem(), SoapUI.ensureGroovyLog() );
-						getModelItem().runTearDownScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
+						MockTestRunner mockTestRunner = new MockTestRunner( WsdlTestCaseDesktopPanel.this.getModelItem(), SoapUI.ensureGroovyLog() );
+						WsdlTestCaseDesktopPanel.this.getModelItem().runTearDownScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
 					}
 					catch( Exception e1 )
 					{
@@ -605,17 +603,17 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
 		public TearDownScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "context", "testRunner" }, getModelItem().getSettings(), "TearDown" );
+			super( new String[] { "log", "testCase", "context", "testRunner" }, WsdlTestCaseDesktopPanel.this.getModelItem(), "TearDown" );
 		}
 
 		public String getScript()
 		{
-			return getModelItem().getTearDownScript();
+			return WsdlTestCaseDesktopPanel.this.getModelItem().getTearDownScript();
 		}
 
 		public void setScript( String text )
 		{
-			getModelItem().setTearDownScript( text );
+			WsdlTestCaseDesktopPanel.this.getModelItem().setTearDownScript( text );
 		}
 	}
 
@@ -642,7 +640,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 				if( newTestStepConfig != null )
 				{
 					WsdlTestStep testStep = getModelItem().insertTestStep( newTestStepConfig, ix );
-					UISupport.selectAndShow( testStep );
+					if( testStep != null )
+						UISupport.selectAndShow( testStep );
 				}
 			}
 

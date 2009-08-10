@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -212,7 +213,8 @@ public class SchemaUtils
 			}
 		}
 
-		if( !SoapUI.getSettings().getBoolean( WsdlSettings.STRICT_SCHEMA_TYPES ) )
+		boolean strictSchemaTypes = SoapUI.getSettings().getBoolean( WsdlSettings.STRICT_SCHEMA_TYPES );
+		if( !strictSchemaTypes )
 		{
 			Set<String> mdefNamespaces = new HashSet<String>();
 
@@ -249,7 +251,7 @@ public class SchemaUtils
 				// log.info( "schema for [" + tns + "] contained [" + map.toString()
 				// + "] namespaces" );
 
-				if( defaultSchemas.containsKey( tns ) )
+				if( strictSchemaTypes && defaultSchemas.containsKey( tns ) )
 				{
 					schemas.remove( c );
 					c-- ;
@@ -266,7 +268,7 @@ public class SchemaUtils
 			// schemas.add( soapVersion.getSoapEncodingSchema());
 			// schemas.add( soapVersion.getSoapEnvelopeSchema());
 			schemas.addAll( defaultSchemas.values() );
-
+			
 			SchemaTypeSystem sts = XmlBeans.compileXsd( schemas.toArray( new XmlObject[schemas.size()] ), XmlBeans
 					.getBuiltinTypeSystem(), options );
 
@@ -413,8 +415,22 @@ public class SchemaUtils
 						getSchemas( location, existing, loader, null );
 					}
 				}
+				
+				XmlObject[] wadl10Imports = xmlObject.selectPath( "declare namespace s='" + Constants.WADL10_NS
+						+ "' .//s:grammars/s:include/@href" );
+				for( int i = 0; i < wadl10Imports.length; i++ )
+				{
+					String location = ( ( SimpleValue )wadl10Imports[i] ).getStringValue();
+					if( location != null )
+					{
+						if( !location.startsWith( "file:" ) && location.indexOf( "://" ) == -1 )
+							location = Tools.joinRelativeUrl( wsdlUrl, location );
 
-				XmlObject[] wadlImports = xmlObject.selectPath( "declare namespace s='" + Constants.WADL10_NS
+						getSchemas( location, existing, loader, null );
+					}
+				}
+
+				XmlObject[] wadlImports = xmlObject.selectPath( "declare namespace s='" + Constants.WADL11_NS
 						+ "' .//s:grammars/s:include/@href" );
 				for( int i = 0; i < wadlImports.length; i++ )
 				{
@@ -427,6 +443,7 @@ public class SchemaUtils
 						getSchemas( location, existing, loader, null );
 					}
 				}
+				
 			}
 
 			existing.putAll( result );
@@ -484,7 +501,7 @@ public class SchemaUtils
 
 	public static Map<String, XmlObject> getDefinitionParts( SchemaLoader loader ) throws Exception
 	{
-		HashMap<String, XmlObject> result = new HashMap<String, XmlObject>();
+		Map<String, XmlObject> result = new LinkedHashMap<String, XmlObject>();
 		getDefinitionParts( loader.getBaseURI(), result, loader );
 		return result;
 	}
@@ -503,6 +520,8 @@ public class SchemaUtils
 		selectDefinitionParts( wsdlUrl, existing, loader, xmlObject, "declare namespace s='" + Constants.WSDL11_NS
 				+ "' .//s:import/@location" );
 		selectDefinitionParts( wsdlUrl, existing, loader, xmlObject, "declare namespace s='" + Constants.WADL10_NS
+				+ "' .//s:grammars/s:include/@href" );
+		selectDefinitionParts( wsdlUrl, existing, loader, xmlObject, "declare namespace s='" + Constants.WADL11_NS
 				+ "' .//s:grammars/s:include/@href" );
 		selectDefinitionParts( wsdlUrl, existing, loader, xmlObject, "declare namespace s='" + Constants.XSD_NS
 				+ "' .//s:import/@schemaLocation" );

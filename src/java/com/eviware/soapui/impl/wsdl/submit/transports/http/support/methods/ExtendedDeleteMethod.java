@@ -20,7 +20,7 @@ import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
@@ -78,6 +78,11 @@ public final class ExtendedDeleteMethod extends DeleteMethod implements Extended
 		return httpMethodSupport.getResponseReadTime();
 	}
 
+	public boolean hasResponse()
+	{
+		return httpMethodSupport.hasResponse();
+	}
+
 	protected void writeRequest( HttpState arg0, HttpConnection arg1 ) throws IOException, HttpException
 	{
 		super.writeRequest( arg0, arg1 );
@@ -116,12 +121,13 @@ public final class ExtendedDeleteMethod extends DeleteMethod implements Extended
 
 	public RequestEntity getRequestEntity()
 	{
+		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public AbstractHttpRequest.RequestMethod getMethod()
+	public RestRequestInterface.RequestMethod getMethod()
 	{
-		return AbstractHttpRequest.RequestMethod.DELETE;
+		return RestRequestInterface.RequestMethod.DELETE;
 	}
 
 	public Throwable getFailureCause()
@@ -138,5 +144,4 @@ public final class ExtendedDeleteMethod extends DeleteMethod implements Extended
 	{
 		httpMethodSupport.setFailed( t );
 	}
-
 }

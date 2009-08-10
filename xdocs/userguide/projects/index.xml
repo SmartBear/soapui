@@ -31,7 +31,7 @@
 		 these interfaces is for WSDL 1.1 and the SOAP/HTTP binding (as required by Basic Profile 1.0). Therefore, 
 		 all actions and functionality described will be in regard to this implementation.</p>
 		
-		 <subsection name="Creating a SoapUI Projects">
+		 <subsection name="Creating SoapUI Projects">
 		 <p>Selecting the New SoapUI Project option from the Workspace Menu opens this dialog which prompts for:
 		 <ul>
 		 	<li>A name for the project is required</li>
@@ -118,33 +118,14 @@
           <li><b>Composite Project</b> - Sets this project to be saved as a composite project
                  (<a href="composite-projects.html">Read More</a>).
              </li>
+          <li><b>Script Language</b> - Selects the script language to use for all scripts in the project. Changing this value 
+          might require reloading of the project, depending on if existing script in the project have been edited/executed. 
+          Read more at <a href="../scripting.html">Scripting</a>.</li>
 		 </ul>
 		 </p>
 		 </subsection>
 		 
-		 <subsection name="Project View">
-		<p>When double clicking a project you will get the Project View. The purpose of the project view is giving 
-		you a work area for project related functionality.
-		</p>
-
-		<p>
-		The Project view consist of a number of tabs available at the top and a number of inspectors available at the 
-		bottom of the project view. The inspectors are context sensitive and will change based on which tab you choose.
-		</p>
-
-		<p>
-		The Tabs are as follows:
-		<ul>
-		<li><b>Overview Tab</b> The overview tab gives you an quick overview of your project as well as general project metrics such as the number of TestSteps the project contains.<a href="projectview.html">Read More</a></li>
-		<li><b>Project Coverage Tab (Pro Only)</b> Project Coverage allows you to see how much of the interfaces contained in the project that is being covered by tests. This functionality will make you development process more efficient and will increase Test Quality considerably.<a href="coverage.html">Read More</a></li>
-		<li><b>Project Requirements Tab  (Pro Only)</b> The Project Requirements tab is an easy way of managing test requirements in soapUI.<a href="requirements.html">Read More</a></li>
-		<li><b>WS-Security Configuration Tab</b> The WS-Security Configuration Tab is the working area for creating WS-Security configurations to be used in Tests, SOAP Monitor or MockServices.<a href="wss.html">Read More</a></li>
-		</ul>
-		</p>
-		<p align="center"><img src="images/project_view.gif" border="0" alt="An example of a Web Service Test Project"/></p>
-		</subsection>
-		 
-		 <p><hr size="1"/>Next: <a href="projectview.html">Project Overview</a></p>
+		 <p><hr size="1"/>Next: <a href="projectview.html">Project View</a></p>
 		</section>
     </body>
 </document>
