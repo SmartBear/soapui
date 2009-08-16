@@ -36,6 +36,9 @@ import com.eviware.soapui.impl.wsdl.submit.filters.WsrmRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WssAuthenticationRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WssRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpClientRequestTransport;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestReceiveTransport;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestSendReceiveTransport;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestSendTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
 
 /**
@@ -49,13 +52,19 @@ public class RequestTransportRegistry
 {
 	public static final String HTTP = "http";
 	public static final String HTTPS = "https";
+	public static final String JMS_SEND = "jmsSend";
+	public static final String JMS_RECEIVE = "jmsReceive";
+	public static final String JMS_SEND_RECEIVE = "jmsSendReceive";
 
 	private static Map<String, RequestTransport> transports = new HashMap<String, RequestTransport>();
 
 	static
 	{
 		HttpClientRequestTransport httpTransport = new HttpClientRequestTransport();
-
+		HermesJmsRequestSendTransport jmsSendTransport = new HermesJmsRequestSendTransport();
+		HermesJmsRequestReceiveTransport jmsReceiveTransport = new HermesJmsRequestReceiveTransport();
+		HermesJmsRequestSendReceiveTransport jmsSendReceiveTransport = new HermesJmsRequestSendReceiveTransport();
+		
 		httpTransport.addRequestFilter( new EndpointRequestFilter() );
 		httpTransport.addRequestFilter( new HttpSettingsRequestFilter() );
 		httpTransport.addRequestFilter( new HttpRequestFilter() );
@@ -84,22 +93,44 @@ public class RequestTransportRegistry
 
 		transports.put( HTTP, httpTransport );
 		transports.put( HTTPS, httpTransport );
+		transports.put(JMS_SEND, jmsSendTransport);
+		transports.put(JMS_RECEIVE, jmsReceiveTransport);
+		transports.put(JMS_SEND_RECEIVE, jmsSendReceiveTransport);
 	}
 
 	public static RequestTransport getTransport( String endpoint, SubmitContext submitContext )
-			throws MissingTransportException
+			throws MissingTransportException, CannotResolveJmsTypeException
 	{
 		int ix = endpoint.indexOf( "://" );
 		if( ix == -1 )
 			throw new MissingTransportException( "Missing protocol in endpoint [" + endpoint + "]" );
 
 		String protocol = endpoint.substring( 0, ix ).toLowerCase();
+		if("jms".equalsIgnoreCase(protocol)){
+			protocol = resolveProtocol(protocol,endpoint,ix);
+		}
+		
 		RequestTransport transport = transports.get( protocol );
 
 		if( transport == null )
 			throw new MissingTransportException( "Missing transport for protocol [" + protocol + "]" );
 
 		return transport;
+	}
+
+	private static String resolveProtocol(String protocol, String endpoint, int ix) throws CannotResolveJmsTypeException
+	{
+		String[] params = endpoint.substring(ix+3).split("/");
+		if(params.length==2){
+			return JMS_SEND;
+		}else if(params.length==3 && params[1].equals("-")){
+			return JMS_RECEIVE;
+		}else if(params.length==3){
+			return JMS_SEND_RECEIVE;
+		}else {
+			throw new CannotResolveJmsTypeException("Bad jms alias! /nFor JMS please use this endpont pattern:\nfor sending 'jms://configfilename/queue' \nfor receive  'jms://configfilename/-/topic'\nfor send-receive 'jms://configfilename/queue/topic'");
+		}
+		
 	}
 
 	public static void addTransport( String key, RequestTransport rt )
@@ -111,7 +142,15 @@ public class RequestTransportRegistry
 	{
 		public MissingTransportException( String msg )
 		{
-			super( msg );
+			super(msg);
+		}
+	}
+	
+	public static class CannotResolveJmsTypeException extends Exception
+	{
+		public CannotResolveJmsTypeException( String msg )
+		{
+			super(msg);
 		}
 	}
 }
