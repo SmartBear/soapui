@@ -24,7 +24,6 @@ public abstract class AbstractHermesJmsRequestTransport implements RequestTransp
 {
 	protected List<RequestFilter> filters = new ArrayList<RequestFilter>();
 
-	@Override
 	public void abortRequest(SubmitContext submitContext)
 	{
 		throw new NotImplementedException();

@@ -38,14 +38,14 @@ public class JMSResponse implements Response, HttpResponse, WsdlResponse
 		this.request = request;
 	}
 
-	@Override
+	
 	public Attachment[] getAttachments()
 	{
 
 		return null;
 	}
 
-	@Override
+	
 	public Attachment[] getAttachmentsForPart(String partName)
 	{
 		// TODO Auto-generated method stub
@@ -62,145 +62,145 @@ public class JMSResponse implements Response, HttpResponse, WsdlResponse
 		return payload.length();
 	}
 
-	@Override
+	
 	public String getContentType()
 	{
 		return null;
 	}
 
-	@Override
+	
 	public String getProperty(String name)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public String[] getPropertyNames()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public byte[] getRawRequestData()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public byte[] getRawResponseData()
 	{
 
 		return payload.getBytes();
 	}
 
-	// @Override
+	// 
 	// public Request getRequest()
 	// {
 	// return request;
 	// }
 
-	@Override
+	
 	public String getRequestContent()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public StringToStringMap getRequestHeaders()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public StringToStringMap getResponseHeaders()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public long getTimeTaken()
 	{
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
+	
 	public long getTimestamp()
 	{
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
+	
 	public void setProperty(String name, String value)
 	{
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+	
 	public String getContentAsXml()
 	{
 
 		return payload;
 	}
 
-	@Override
+	
 	public String getHttpVersion()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public RequestMethod getMethod()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public SSLInfo getSSLInfo()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public int getStatusCode()
 	{
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
+	
 	public URL getURL()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public void setResponseContent(String responseContent)
 	{
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+	
 	public Vector<?> getWssResult()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public WsdlRequest getRequest()
 	{
 		// TODO Auto-generated method stub
