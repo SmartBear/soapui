@@ -855,14 +855,13 @@
 			</properties>
 		</dependency>
 		<dependency>
-			<groupId>geronimo</groupId>
-			<artifactId>geronimo-j2ee-management_1.0_spec</artifactId>
-			<version>1.0</version>
+			<groupId>hermesjms</groupId>
+			<artifactId>hermes</artifactId>
+			<version>1.13</version>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
 			</properties>
 		</dependency>
-
 	</dependencies>
 	<build>
 		<sourceDirectory>src/java</sourceDirectory>
