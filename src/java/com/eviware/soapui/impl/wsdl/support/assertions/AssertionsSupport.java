@@ -152,8 +152,6 @@ public class AssertionsSupport implements PropertyChangeListener
 		newAssertion.addPropertyChangeListener( this );
 		assertions.add( ix + offset, newAssertion );
 
-		newAssertion.release();
-
 		modelItemConfig.insertAssertion( newConf, ix + offset );
 		fireAssertionMoved( newAssertion, ix, offset );
 		return newAssertion;
