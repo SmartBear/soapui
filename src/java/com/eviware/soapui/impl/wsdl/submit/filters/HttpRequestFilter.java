@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.submit.filters;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +84,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			String value = PropertyExpansionUtils.expandProperties( context, param.getValue() );
 			responseProperties.put( param.getName(), value );
 
-			if( value != null /*&& formMp == null*/ && !param.isDisableUrlEncoding() )
+			if( value != null /* && formMp == null */&& !param.isDisableUrlEncoding() )
 			{
 				try
 				{
@@ -99,6 +100,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 					SoapUI.logError( e1 );
 					value = URLEncoder.encode( value );
 				}
+				// URLEncoder replaces space with "+", but we want "%20".
+				value = value.replaceAll( "\\+", "%20" );
 			}
 
 			if( !StringUtils.hasContent( value ) && !param.getRequired() )
@@ -161,7 +164,9 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		{
 			try
 			{
-				httpMethod.setURI( new URI( path ) );
+				// URI(String) automatically URLencodes the input, so we need to
+				// decode it first...
+				httpMethod.setURI( new URI( URLDecoder.decode( path ) ) );
 			}
 			catch( Exception e )
 			{
@@ -180,7 +185,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 
 		if( request instanceof RestRequest )
 		{
-			String acceptEncoding = ((RestRequest)request).getAccept();
+			String acceptEncoding = ( ( RestRequest )request ).getAccept();
 			if( StringUtils.hasContent( acceptEncoding ) )
 			{
 				httpMethod.setRequestHeader( "Accept", acceptEncoding );
@@ -341,8 +346,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		else
 		{
 			part.setDisposition( "form-data; name=\"" + name + "\"" );
-			part.setText( value, System
-					.getProperty( "soapui.request.encoding", request.getEncoding() ) );
+			part.setText( value, System.getProperty( "soapui.request.encoding", request.getEncoding() ) );
 		}
 
 		if( part != null )
