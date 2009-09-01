@@ -135,6 +135,7 @@ import com.eviware.soapui.ui.desktop.DesktopRegistry;
 import com.eviware.soapui.ui.desktop.SoapUIDesktop;
 import com.eviware.soapui.ui.desktop.standalone.StandaloneDesktop;
 import com.eviware.soapui.ui.support.DesktopListenerAdapter;
+import com.eviware.x.impl.swing.SwingDialogs;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
 import com.teamdev.xpcom.Xpcom;
@@ -700,10 +701,11 @@ public class SoapUI
 			}
 			catch( Exception e )
 			{
+				UISupport.setDialogs( new SwingDialogs( null ) );
 				if( UISupport
 						.confirm( "Failed to open workspace: [" + e.toString() + "], create new one instead?", "Error" ) )
 				{
-					new File( wsfile ).delete();
+					new File( wsfile ).renameTo( new File( wsfile + ".bak" ) );
 					workspace = WorkspaceFactory.getInstance().openWorkspace( wsfile, projectOptions );
 				}
 				else
