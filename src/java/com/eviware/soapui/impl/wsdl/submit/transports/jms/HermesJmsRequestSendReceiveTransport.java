@@ -17,12 +17,12 @@ import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
 
-public class HermesJmsRequestSendReceiveTransport extends AbstractHermesJmsRequestTransport
+public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransport
 {
 
 	private final static Logger log = Logger.getLogger(HermesJmsRequestSendReceiveTransport.class);
 
-	public Response sendRequest(SubmitContext submitContext, Request request) throws Exception
+	public Response execute(SubmitContext submitContext, Request request) throws Exception
 	{
 		ConnectionFactory connectionFactory = null;
 		Connection connection = null;

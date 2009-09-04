@@ -862,6 +862,14 @@
 				<jnlp.jar>true</jnlp.jar>
 			</properties>
 		</dependency>
+		<dependency>
+			<groupId>activesoap</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>1.5</version>
+			<properties>
+				<jnlp.jar>true</jnlp.jar>
+			</properties>
+		</dependency>
 	</dependencies>
 	<build>
 		<sourceDirectory>src/java</sourceDirectory>
