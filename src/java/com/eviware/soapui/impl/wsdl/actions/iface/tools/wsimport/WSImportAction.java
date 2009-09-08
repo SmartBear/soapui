@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.actions.iface.tools.wsimport;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
@@ -93,6 +94,11 @@ public class WSImportAction extends AbstractToolsAction<Interface>
 		String wsimportExtension = UISupport.isWindows() ? ".bat" : ".sh";
 
 		File wscompileFile = new File( wsimportDir + File.separatorChar + "wsimport" + wsimportExtension );
+		if( !wscompileFile.exists() && wsimportExtension.equals( ".bat" ))
+		{
+			wsimportExtension = ".exe";
+			wscompileFile = new File( wsimportDir + File.separatorChar + "wsimport" + wsimportExtension );
+		}
 		if( !wscompileFile.exists() )
 		{
 			UISupport.showErrorMessage( "Could not find wsimport script at [" + wscompileFile + "]" );
@@ -101,7 +107,14 @@ public class WSImportAction extends AbstractToolsAction<Interface>
 
 		ProcessBuilder builder = new ProcessBuilder();
 		ArgumentBuilder args = buildArgs( UISupport.isWindows(), modelItem );
-		builder.command( args.getArgs() );
+		List<String> argList = args.getArgs();
+		if( wsimportExtension.equals( ".exe" ) )
+		{
+			int i = argList.indexOf( "wsimport.bat" );
+			argList.remove( i );
+			argList.add( i, "wsimport.exe" );
+		}
+		builder.command( argList );
 		builder.directory( new File( wsimportDir ) );
 
 		toolHost.run( new ProcessToolRunner( builder, "JAX-WS wsimport", modelItem ) );
