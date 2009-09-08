@@ -28,6 +28,7 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlLoader;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.SoapUIException;
 
 public class WsdlInterfaceFactory implements InterfaceFactory<WsdlInterface>
@@ -91,7 +92,7 @@ public class WsdlInterfaceFactory implements InterfaceFactory<WsdlInterface>
 						WsdlRequest request = operation.addNewRequest( "Request 1" );
 						try
 						{
-							String requestContent = operation.createRequest( true );
+							String requestContent = operation.createRequest( project.getSettings().getBoolean( WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS ) );
 							request.setRequestContent( requestContent );
 						}
 						catch( Exception e )
