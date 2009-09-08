@@ -75,6 +75,7 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 			// consumer from session with queue
 			MessageConsumer messageConsumer = session.createConsumer(queueReceive);
 			Message message = messageConsumer.receive();
+			// TODO: IMPROVEMENT messageConsumer.receive(long timeout) - we can set how much time to wait for message to receive 
 
 			TextMessage textMessageReceive = null;
 			// print out received message
