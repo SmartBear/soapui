@@ -166,17 +166,18 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 
 	public boolean hasCredentials()
 	{
-		return !StringUtils.isNullOrEmpty( username ) && !StringUtils.isNullOrEmpty( password );
+		return !StringUtils.isNullOrEmpty( getUsername() ) && !StringUtils.isNullOrEmpty( getPassword() );
+		//return !StringUtils.isNullOrEmpty( username ) && !StringUtils.isNullOrEmpty( password );
 	}
 
 	public String getPassword()
 	{
-		return password;
+		return StringUtils.isNullOrEmpty( password ) ? System.getProperty( "soapui.loader.password", password ) : password ;
 	}
 
 	public String getUsername()
 	{
-		return username;
+		return StringUtils.isNullOrEmpty( username ) ? System.getProperty( "soapui.loader.username", username ) : username ;
 	}
 
 }
