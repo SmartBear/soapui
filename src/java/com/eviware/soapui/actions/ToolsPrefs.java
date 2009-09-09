@@ -45,6 +45,7 @@ public class ToolsPrefs implements Prefs
 	public static final String WSA = "Oracle wsa.jar";
 	public static final String WADL = "WADL2Java";
 	public static final String LIBRARIES = "Script libraries";
+	public static final String HERMES_1_13 = "Hermes 1.13";
 
 	private static final String[][] TOOLS = { { WSTOOLS, ToolsSettings.JBOSSWS_WSTOOLS_LOCATION },
 			{ AXIS_1_X, ToolsSettings.AXIS_1_X_LOCATION }, { AXIS_2, ToolsSettings.AXIS_2_LOCATION },
@@ -54,7 +55,7 @@ public class ToolsPrefs implements Prefs
 			{ GSOAP, ToolsSettings.GSOAP_LOCATION }, { ANT, ToolsSettings.ANT_LOCATION },
 			{ XMLBEANS, ToolsSettings.XMLBEANS_LOCATION }, { JAXB, ToolsSettings.JAXB_LOCATION },
 			{ TCPMON, ToolsSettings.TCPMON_LOCATION }, { WSA, ToolsSettings.ORACLE_WSA_LOCATION },
-			{ WADL, ToolsSettings.WADL2JAVA_LOCATION }, };
+			{ WADL, ToolsSettings.WADL2JAVA_LOCATION },  { HERMES_1_13, ToolsSettings.HERMES_1_13 },};
 
 	private SimpleForm toolsForm;
 	private final String title;
@@ -117,6 +118,7 @@ public class ToolsPrefs implements Prefs
 			toolsForm.append( ToolsPrefs.TCPMON, new DirectoryFormComponent( "Location of TcpMon directory" ) );
 			toolsForm.append( ToolsPrefs.WSA, new DirectoryFormComponent( "Location of Orace wsa.jar" ) );
 			toolsForm.append( ToolsPrefs.WADL, new DirectoryFormComponent( "Location of wadl2java script" ) );
+			toolsForm.append( ToolsPrefs.HERMES_1_13, new DirectoryFormComponent( "Location of HermesJMS" ) );
 			toolsForm.addSpace( 5 );
 		}
 
