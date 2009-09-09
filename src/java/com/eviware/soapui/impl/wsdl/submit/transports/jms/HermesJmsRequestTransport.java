@@ -15,6 +15,8 @@ import javax.naming.NamingException;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.RequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry.CannotResolveJmsTypeException;
@@ -22,6 +24,7 @@ import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry.MissingTrans
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.support.ModelSupport;
 
 public   class HermesJmsRequestTransport implements RequestTransport
 {
@@ -74,24 +77,25 @@ public   class HermesJmsRequestTransport implements RequestTransport
 		
 	}
 
-	protected Hermes getHermes(String sessionName) throws NamingException
+	protected Hermes getHermes(String sessionName,  Request request ) throws NamingException
 	{
+		WsdlProject project = (WsdlProject)ModelSupport.getModelItemProject(request);
+		
 		Properties props = new Properties();
 		props.put(Context.INITIAL_CONTEXT_FACTORY, HermesInitialContextFactory.class.getName());
-		props.put(Context.PROVIDER_URL, "D:\\.hermes\\hermes-config.xml");// path to hermes-config.xml
+		props.put(Context.PROVIDER_URL, project.getHermesConfig()+"\\hermes-config.xml");// path to hermes-config.xml
 		props.put("hermes.loader", JAXBHermesLoader.class.getName());
+		
 		try
 		{
 			Context ctx = new InitialContext(props);
 			Hermes hermes = (Hermes) ctx.lookup(sessionName);// lookup for session name configured in hermes
 			return hermes;
 		}
-		catch (Throwable t)
+		catch (NamingException ne)
 		{
-			log.info(t);
-			t.printStackTrace();
+			throw new NamingException("Session name '"+sessionName+"' does not exist in Hermes configuration or path to Hermes config ("+project.getHermesConfig()+" )is not valid !!!!");
 		}
-		return null;
 	}
 	
 	

@@ -30,4 +30,7 @@ public interface ProjectSettings
 	@Setting( name = "Shadowing Password", description = "password for shadowing project password", type = SettingType.PASSWORD )
 	public final static String SHADOW_PASSWORD = ProjectSettings.class.getSimpleName() + "@" + "shadowPassword";
 
+	@Setting( name = "Hermes Config", description = "hermes", type = SettingType.FOLDER )
+	public final static String HERMES_CONFIG = ProjectSettings.class.getSimpleName() + "@" + "hermesConfig";
+
 }

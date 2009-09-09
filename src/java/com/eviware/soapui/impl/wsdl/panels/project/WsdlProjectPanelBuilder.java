@@ -49,6 +49,7 @@ public class WsdlProjectPanelBuilder extends EmptyPanelBuilder<WsdlProject>
 				table.addPropertyShadow( "Project Password", "shadowPassword", true );
 				table.addProperty( "Script Language", "defaultScriptLanguage", SoapUIScriptEngineRegistry
 						.getAvailableEngineIds() );
+				table.addProperty("Hermes Config","hermesConfig" ,true);
 			}
 		}
 		else

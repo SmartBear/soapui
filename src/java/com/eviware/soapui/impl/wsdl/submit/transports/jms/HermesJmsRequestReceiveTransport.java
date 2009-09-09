@@ -12,6 +12,7 @@ import javax.jms.TextMessage;
 
 import org.apache.log4j.Logger;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -39,7 +40,7 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 			}
 			else
 				throw new Exception("bad jms alias!!!!!");
-			Hermes hermes = getHermes(sessionName);
+			Hermes hermes = getHermes(sessionName, request);
 			// connection factory
 			connectionFactory = (javax.jms.ConnectionFactory) hermes.getConnectionFactory();
 
@@ -71,8 +72,6 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 			if (message instanceof TextMessage)
 			{
 				textMessage = (TextMessage) message;
-				System.out.println("Read Message: " + textMessage.getText());
-
 			}
 		// make response
 			JMSResponse response = new JMSResponse(textMessage.getText(), textMessage, request);
@@ -80,7 +79,7 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 		}
 		catch (Throwable jmse)
 		{
-			log.info("Exception occurred : " + jmse.toString());
+			SoapUI.logError(jmse);
 
 		}
 		finally
