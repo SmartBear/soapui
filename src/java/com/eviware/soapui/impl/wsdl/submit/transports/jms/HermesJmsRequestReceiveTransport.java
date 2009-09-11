@@ -10,8 +10,6 @@ import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
@@ -20,14 +18,11 @@ import com.eviware.soapui.model.iface.SubmitContext;
 public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 {
 
-	private final static Logger log = Logger.getLogger(HermesJmsRequestReceiveTransport.class);
-
 	public Response execute (SubmitContext submitContext, Request request) throws Exception
 	{
 		ConnectionFactory connectionFactory = null;
 		Connection connection = null;
 		Session session = null;
-		// at this point we should load hermes beans !!!!!!!!!!
 		try
 		{
 			String queueName = null;
@@ -51,8 +46,7 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 			// session
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-			// queue
-			Queue queue;
+		
 			
 			if (parameters.length == 3)
 			{
@@ -61,7 +55,8 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 			else
 				throw new Exception("bad jms alias!!!!!");
 
-			queue = session.createQueue(queueName);
+			// queue
+			Queue queue = session.createQueue(queueName);
 
 			// consumer from session with queue
 			MessageConsumer messageConsumer = session.createConsumer(queue);

@@ -1470,7 +1470,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		}
 		else
 		{
-			return PropertyExpander.expandProperties(this, "${#System#user.home}\\.hermes");
+			return  "${#System#user.home}\\.hermes";
 		}
 
 	}

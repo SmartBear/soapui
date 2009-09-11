@@ -9,8 +9,6 @@ import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
@@ -18,8 +16,6 @@ import com.eviware.soapui.model.iface.SubmitContext;
 
 public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 {
-
-	private final static Logger log = Logger.getLogger(HermesJmsRequestSendTransport.class);
 
 	public Response execute(SubmitContext submitContext, Request request) throws Exception
 	{
@@ -52,9 +48,7 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
 			// queue
-			Queue queue;
-
-			queue = session.createQueue(queueName);
+			Queue queue = session.createQueue(queueName);
 
 			// producer
 			MessageProducer messageProducer = session.createProducer(queue);

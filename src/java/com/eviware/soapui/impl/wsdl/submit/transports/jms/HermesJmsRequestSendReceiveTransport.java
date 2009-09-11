@@ -11,8 +11,6 @@ import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
@@ -21,14 +19,11 @@ import com.eviware.soapui.model.iface.SubmitContext;
 public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransport
 {
 
-	private final static Logger log = Logger.getLogger(HermesJmsRequestSendReceiveTransport.class);
-
 	public Response execute(SubmitContext submitContext, Request request) throws Exception
 	{
 		ConnectionFactory connectionFactory = null;
 		Connection connection = null;
 		Session session = null;
-		// at this point we should load hermes beans !!!!!!!!!!
 		try
 		{
 			String queueNameSend = null;
@@ -54,13 +49,9 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 			// session
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-		// queue
-			Queue queueSend;
-			Queue queueReceive;
-		
-
-			queueSend = session.createQueue(queueNameSend);
-			queueReceive = session.createQueue(queueNameReceive);
+		   // queue
+			Queue queueSend = session.createQueue(queueNameSend);
+			Queue queueReceive = session.createQueue(queueNameReceive);
 			
 			// producer from session with queue
 			MessageProducer messageProducer = session.createProducer(queueSend);
