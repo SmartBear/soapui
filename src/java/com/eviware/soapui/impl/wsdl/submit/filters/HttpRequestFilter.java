@@ -159,6 +159,16 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				break;
 			}
 		}
+		
+		String prefix = null;
+		if( path.contains("://") )
+		{
+			prefix = path.substring(0, path.indexOf("://") + 3);
+			path = path.substring(prefix.length());
+		}
+		path = path.replaceAll("/{2,}", "/");
+		if( prefix != null )
+			path = prefix+path;
 
 		if( PathUtils.isHttpPath( path ) )
 		{
