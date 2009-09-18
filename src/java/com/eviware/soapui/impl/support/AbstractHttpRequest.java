@@ -363,6 +363,18 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		getConfig().setEncoding( encoding );
 		notifyPropertyChanged( ENCODING_PROPERTY, old, encoding );
 	}
+	
+	public String getTimeout()
+	{
+		return getConfig().getTimeout();
+	}
+
+	public void setTimeout( String timeout )
+	{
+		String old = getTimeout();
+		getConfig().setTimeout( timeout );
+		notifyPropertyChanged( "timeout", old, timeout );
+	}
 
 	public StringToStringMap getRequestHeaders()
 	{

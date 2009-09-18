@@ -1,15 +1,25 @@
+/*
+ *  soapUI, copyright (C) 2004-2009 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
 package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
-
-import org.apache.log4j.Logger;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -26,17 +36,17 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public class JMSResponse implements WsdlResponse
 {
 
-	private final static Logger log = Logger.getLogger(JMSResponse.class);
-
 	String payload;
 	Message message;
 	Request request;
+	long requestStartedTime;
 
-	public JMSResponse(String payload, Message message, Request request)
+	public JMSResponse(String payload, Message message, Request request, long requestStartedTime)
 	{
 		this.payload = payload;
 		this.message = message;
 		this.request = request;
+		this.requestStartedTime = requestStartedTime;
 	}
 
 	public Attachment[] getAttachments()
@@ -94,12 +104,19 @@ public class JMSResponse implements WsdlResponse
 		Enumeration temp;
 		try
 		{
-			temp = message.getPropertyNames();
-			while (temp.hasMoreElements())
+			if (message != null)
 			{
-				propertyNames.add((String) temp.nextElement());
+				temp = message.getPropertyNames();
+				while (temp.hasMoreElements())
+				{
+					propertyNames.add((String) temp.nextElement());
+				}
+				return propertyNames.toArray(new String[propertyNames.size()]);
 			}
-			return propertyNames.toArray(new String[propertyNames.size()]);
+			else
+			{
+				return new String[0];
+			}
 		}
 		catch (JMSException e)
 		{
@@ -112,20 +129,16 @@ public class JMSResponse implements WsdlResponse
 	public byte[] getRawRequestData()
 	{
 
-		return payload.getBytes();
+		return request.getRequestContent().getBytes();
 	}
 
 	public byte[] getRawResponseData()
 	{
-
-		return payload.getBytes();
+		if (message != null)
+			return message.toString().getBytes();
+		else
+			return "".getBytes();
 	}
-
-	// 
-	// public Request getRequest()
-	// {
-	// return request;
-	// }
 
 	public String getRequestContent()
 	{
@@ -134,18 +147,17 @@ public class JMSResponse implements WsdlResponse
 
 	public StringToStringMap getRequestHeaders()
 	{
-
 		return new StringToStringMap();
 	}
 
 	public StringToStringMap getResponseHeaders()
 	{
-		return new  StringToStringMap();
+		return new StringToStringMap();
 	}
 
 	public long getTimeTaken()
 	{
-		return 0;
+		return Calendar.getInstance().getTimeInMillis() - requestStartedTime;
 	}
 
 	public long getTimestamp()
@@ -176,56 +188,46 @@ public class JMSResponse implements WsdlResponse
 
 	public String getContentAsXml()
 	{
-
 		return payload;
 	}
 
 	public String getHttpVersion()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public RequestMethod getMethod()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public SSLInfo getSSLInfo()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public int getStatusCode()
 	{
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	public URL getURL()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void setResponseContent(String responseContent)
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	public Vector<?> getWssResult()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public WsdlRequest getRequest()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return (WsdlRequest) request;
 	}
 
 }

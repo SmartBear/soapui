@@ -224,27 +224,28 @@
     </xsd:simpleType>
 
     <xsd:complexType name="AbstractRequest" abstract="true">
-        <xsd:complexContent>
-            <xsd:extension base="tns:ModelItem">
-                <xsd:sequence>
-                    <xsd:element name="encoding" type="xsd:string"></xsd:element>
-                    <xsd:element name="endpoint" type="xsd:string"></xsd:element>
-                    <xsd:element name="request"
-                                 type="tns:CompressedString" minOccurs="1" maxOccurs="1">
-                    </xsd:element>
-                    <xsd:element name="assertion"
-                                 type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0">
-                    </xsd:element>
-                    <xsd:element name="credentials"
-                                 type="tns:Credentials" maxOccurs="1" minOccurs="1">
-                    </xsd:element>
-                    <xsd:element name="attachment" type="tns:Attachment"
-                                 maxOccurs="unbounded" minOccurs="0">
-                    </xsd:element>
-                </xsd:sequence>
-                <xsd:attribute name="sslKeystore" type="xsd:string"></xsd:attribute>
-            </xsd:extension>
-        </xsd:complexContent>
+    	<xsd:complexContent>
+    		<xsd:extension base="tns:ModelItem">
+    			<xsd:sequence>
+    				<xsd:element name="encoding" type="xsd:string"></xsd:element>
+    				<xsd:element name="endpoint" type="xsd:string"></xsd:element>
+    				<xsd:element name="request"
+    					type="tns:CompressedString" minOccurs="1" maxOccurs="1">
+    				</xsd:element>
+    				<xsd:element name="assertion"
+    					type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0">
+    				</xsd:element>
+    				<xsd:element name="credentials"
+    					type="tns:Credentials" maxOccurs="1" minOccurs="1">
+    				</xsd:element>
+    				<xsd:element name="attachment" type="tns:Attachment"
+    					maxOccurs="unbounded" minOccurs="0">
+    				</xsd:element>
+    			</xsd:sequence>
+    			<xsd:attribute name="sslKeystore" type="xsd:string"></xsd:attribute>
+    			<xsd:attribute name="timeout" type="xsd:string"></xsd:attribute>
+    		</xsd:extension>
+    	</xsd:complexContent>
     </xsd:complexType>
 
     <xsd:complexType name="WsdlRequest">

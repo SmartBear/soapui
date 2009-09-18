@@ -61,6 +61,7 @@ public class HttpTestRequestPanelBuilder extends EmptyPanelBuilder<HttpTestReque
 		 */
 
 		table.addProperty( "Endpoint", "endpoint", true );
+		table.addProperty( "Timeout", "timeout", true );
 
 		table.addProperty( "Bind Address", "bindAddress", true );
 		table.addProperty( "Follow Redirects", "followRedirects", JPropertiesTable.BOOLEAN_OPTIONS );

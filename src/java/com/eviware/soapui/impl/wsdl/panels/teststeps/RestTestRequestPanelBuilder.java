@@ -65,6 +65,8 @@ public class RestTestRequestPanelBuilder extends EmptyPanelBuilder<RestTestReque
 			table.addProperty( "Resource", "path" );
 			table.addProperty( "Method", "restMethodName" );
 		}
+		
+		table.addProperty( "Timeout", "timeout", true );
 
 		table.addProperty( "Bind Address", "bindAddress", true );
 		table.addProperty( "Follow Redirects", "followRedirects", JPropertiesTable.BOOLEAN_OPTIONS );

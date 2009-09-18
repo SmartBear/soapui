@@ -1,5 +1,18 @@
+/*
+ *  soapUI, copyright (C) 2004-2009 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
 package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
+import hermes.Domain;
 import hermes.Hermes;
 
 import javax.jms.Connection;
@@ -15,11 +28,12 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 
 public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransport
 {
 
-	public Response execute(SubmitContext submitContext, Request request) throws Exception
+	public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception
 	{
 		ConnectionFactory connectionFactory = null;
 		Connection connection = null;
@@ -28,13 +42,13 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 		{
 			String queueNameSend = null;
 			String queueNameReceive = null;
-			String sessionName=null;
+			String sessionName = null;
 			String[] parameters = request.getEndpoint().substring(request.getEndpoint().indexOf("://") + 3).split("/");
 			if (parameters.length == 3)
 			{
-				sessionName=parameters[0];
-				queueNameSend = parameters[1];
-				queueNameReceive=parameters[2];
+				sessionName = PropertyExpander.expandProperties(submitContext,parameters[0]);
+				queueNameSend = PropertyExpander.expandProperties(submitContext,parameters[1]).replaceFirst("queue_", "");
+				queueNameReceive = PropertyExpander.expandProperties(submitContext,parameters[2]).replaceFirst("queue_", "");
 			}
 			else
 				throw new Exception("bad jms alias!!!!!");
@@ -49,36 +63,46 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 			// session
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-		   // queue
-			Queue queueSend = session.createQueue(queueNameSend);
-			Queue queueReceive = session.createQueue(queueNameReceive);
-			
+			// queue
+			Queue queueSend = (Queue) hermes.getDestination(queueNameSend, Domain.QUEUE);
+			Queue queueReceive = (Queue) hermes.getDestination(queueNameReceive, Domain.QUEUE);
+
 			// producer from session with queue
 			MessageProducer messageProducer = session.createProducer(queueSend);
 
 			// message
 			TextMessage textMessageSend = session.createTextMessage();
 			textMessageSend.setText(request.getRequestContent());
-
-			// send message to producer
-			messageProducer.send(textMessageSend);
+          JMSHeader.setMessageHeaders(textMessageSend, request, hermes);
+			
+         // send message to producer
+			messageProducer.send(textMessageSend, 
+										Message.DEFAULT_DELIVERY_MODE, 
+										textMessageSend.getJMSPriority(),
+										textMessageSend.getLongProperty(JMSHeader.TIMETOLIVE));
 
 			// consumer from session with queue
 			MessageConsumer messageConsumer = session.createConsumer(queueReceive);
-			Message message = messageConsumer.receive();
-			// TODO: IMPROVEMENT messageConsumer.receive(long timeout) - we can set how much time to wait for message to receive 
 
-			TextMessage textMessageReceive = null;
-			// print out received message
-			if (message instanceof TextMessage)
+			long timeout = getTimeout(submitContext, request);
+
+			Message message = messageConsumer.receive(timeout);
+
+			if (message != null)
 			{
-				textMessageReceive = (TextMessage) message;
+				TextMessage textMessageReceive = null;
+				if (message instanceof TextMessage)
+				{
+					textMessageReceive = (TextMessage) message;
+				}
+				// make response
+				JMSResponse response = new JMSResponse(textMessageReceive.getText(), textMessageReceive, request, timeStarted);
+				return response;
 			}
-			
-			// make response
-			JMSResponse response = new JMSResponse(textMessageReceive.getText(), textMessageReceive, request);
-			return response;
-			
+			else
+			{
+				return new JMSResponse("", null, request, timeStarted);
+			}
 		}
 		catch (Throwable jmse)
 		{

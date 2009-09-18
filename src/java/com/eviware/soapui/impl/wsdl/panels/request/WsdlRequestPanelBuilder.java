@@ -51,6 +51,8 @@ public class WsdlRequestPanelBuilder extends EmptyPanelBuilder<WsdlRequest>
 		table.addProperty( "Message Size", "contentLength", false );
 		table.addProperty( "Encoding", "encoding", new String[] { null, "UTF-8", "iso-8859-1" } );
 		table.addProperty( "Endpoint", "endpoint", request.getOperation().getInterface().getEndpoints() );
+		table.addProperty( "Timeout", "timeout", true );
+		
 		table.addProperty( "Bind Address", "bindAddress", true );
 		table.addProperty( "Follow Redirects", "followRedirects", JPropertiesTable.BOOLEAN_OPTIONS );
 

@@ -33,6 +33,8 @@ public interface Request extends ModelItem
 	public String getEndpoint();
 
 	public String getEncoding();
+	
+	public String getTimeout();
 
 	public void setEncoding( String string );
 

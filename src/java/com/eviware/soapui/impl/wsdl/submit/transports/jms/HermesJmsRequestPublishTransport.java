@@ -9,18 +9,20 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
+
 package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
 import hermes.Domain;
 import hermes.Hermes;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
 import javax.jms.Message;
-import javax.jms.MessageProducer;
-import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+import javax.jms.Topic;
+import javax.jms.TopicConnection;
+import javax.jms.TopicConnectionFactory;
+import javax.jms.TopicPublisher;
+import javax.jms.TopicSession;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
@@ -28,57 +30,54 @@ import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 
-public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
+public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 {
 
 	public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception
 	{
-		ConnectionFactory connectionFactory = null;
-		Connection connection = null;
-		Session session = null;
+		TopicConnectionFactory connectionFactory = null;
+		TopicConnection connection = null;
+		TopicSession session = null;
 
 		try
 		{
-			String queueName = null;
+			String topicName = null;
 			String sessionName = null;
 			String[] parameters = request.getEndpoint().substring(request.getEndpoint().indexOf("://") + 3).split("/");
 			if (parameters.length == 2)
 			{
-				sessionName = PropertyExpander.expandProperties(submitContext,parameters[0]);
-				queueName = PropertyExpander.expandProperties(submitContext,parameters[1]).replaceFirst("queue_", "");
+				sessionName =PropertyExpander.expandProperties(submitContext, parameters[0]);
+				topicName = PropertyExpander.expandProperties(submitContext,parameters[1]).replaceFirst("topic_", "");
 			}
 			else
-				throw new Exception("bad jms alias!!!!!");
+				throw new UnresolvedJMSEndpointException("bad jms alias!!!!!");
 
 			Hermes hermes = getHermes(sessionName, request);
-			// connection factory
-			connectionFactory = (javax.jms.ConnectionFactory) hermes.getConnectionFactory();
+		   // connection factory
+			connectionFactory = (TopicConnectionFactory) hermes.getConnectionFactory();
 
 			// connection
-			connection = connectionFactory.createConnection();
+			connection = connectionFactory.createTopicConnection();
 			connection.start();
 
 			// session
-			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			session =  connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
 
-			// queue
-			Queue queue = (Queue)hermes.getDestination(queueName, Domain.QUEUE);
+			// destination
+			Topic topic =(Topic) hermes.getDestination(topicName, Domain.TOPIC);
 
-			// producer
-			MessageProducer messageProducer = session.createProducer(queue);
+			// publisher
+			TopicPublisher messageProducer = session.createPublisher(topic);
 
 			// message
 			TextMessage textMessage = session.createTextMessage();
 			textMessage.setText(request.getRequestContent());
-			JMSHeader.setMessageHeaders(textMessage, request, hermes);
 			
-         // send message to producer
-			messageProducer.send(textMessage, 
+			// publish message to producer
+			messageProducer.publish(textMessage, 
 										Message.DEFAULT_DELIVERY_MODE, 
 										textMessage.getJMSPriority(),
 										textMessage.getLongProperty(JMSHeader.TIMETOLIVE));
-			// send message
-			messageProducer.send(textMessage);
 
 			// make response
 			JMSResponse response = new JMSResponse("", null, request, timeStarted);
