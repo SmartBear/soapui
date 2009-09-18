@@ -38,8 +38,8 @@ public class JMSHeader
 	public static final String JMSPRIORITY = "JMSPriority";
 	public static final String DELIVERY_MODE = "DeliveryMode";
 	
-	private int deliveryMode;
-	private long timeTolive;
+	private int deliveryMode = Message.DEFAULT_DELIVERY_MODE;
+	private long timeTolive = Message.DEFAULT_TIME_TO_LIVE;
 	
 
 	
