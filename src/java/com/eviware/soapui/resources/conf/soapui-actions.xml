@@ -530,6 +530,12 @@
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/groovystep.html"/>
 	</tns:actionGroup>
 
+	<tns:actionGroup name="JdbcRequest Actions" id="JdbcRequestTestStepActions"
+		class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/groovystep.html"/>
+	</tns:actionGroup>
+
 	<tns:actionGroup name="GotoStep Actions" id="WsdlGotoTestStepActions"
 		class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 		<tns:actionMapping actionId="SeperatorAction"/>

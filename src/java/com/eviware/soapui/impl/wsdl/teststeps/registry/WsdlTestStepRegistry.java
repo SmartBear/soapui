@@ -40,6 +40,7 @@ public class WsdlTestStepRegistry
 		addFactory( new RestRequestStepFactory() );
 		addFactory( new HttpRequestStepFactory() );
 		addFactory( new WsdlMockResponseStepFactory() );
+		addFactory( new JdbcRequestTestStepFactory() );
 
 		// soapUI Pro TestStep placeholders
 		addFactory( new ProPlaceholderStepFactory( "datasource", "soapUI Pro DataSource", "/datasource.gif" ) );
@@ -48,6 +49,13 @@ public class WsdlTestStepRegistry
 		addFactory( new ProPlaceholderStepFactory( "datagen", "soapUI Pro DataGen", "/datagen.gif" ) );
 	}
 
+	public static synchronized WsdlTestStepRegistry get()
+	{
+		if( instance == null )
+			instance = new WsdlTestStepRegistry();
+		
+		return instance;
+	}	
 	public WsdlTestStepFactory getFactory( String type )
 	{
 		for( WsdlTestStepFactory factory : factories )

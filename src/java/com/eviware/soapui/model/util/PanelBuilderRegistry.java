@@ -47,6 +47,7 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.DelayTestStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.GotoStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.GroovyScriptStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.HttpTestRequestPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcRequestTestStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.MockResponseStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.PropertiesStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.PropertyTransfersTestStepPanelBuilder;
@@ -56,6 +57,7 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.WsdlTestRequestPanelBuilder
 import com.eviware.soapui.impl.wsdl.panels.testsuite.WsdlTestSuitePanelBuilder;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfersTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlDelayTestStep;
@@ -116,5 +118,6 @@ public class PanelBuilderRegistry
 		register( PropertyTransfersTestStep.class, new PropertyTransfersTestStepPanelBuilder() );
 		register( WsdlRunTestCaseTestStep.class, new WsdlRunTestCaseTestStepPanelBuilder() );
 		register( WsdlMockResponseTestStep.class, new MockResponseStepPanelBuilder() );
+		register( JdbcRequestTestStep.class, new JdbcRequestTestStepPanelBuilder() );
 	}
 }
