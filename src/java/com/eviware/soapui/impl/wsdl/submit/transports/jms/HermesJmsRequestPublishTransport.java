@@ -71,8 +71,8 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 
 			// message
 			TextMessage textMessage = session.createTextMessage();
-			textMessage.setText(request.getRequestContent());
-			
+			String messageBody = PropertyExpander.expandProperties(submitContext,request.getRequestContent());
+			textMessage.setText(messageBody);
 			JMSHeader jmsHeader= new JMSHeader();
          jmsHeader.setMessageHeaders(textMessage, request, hermes);
 			

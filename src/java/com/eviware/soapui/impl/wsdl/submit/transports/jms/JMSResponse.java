@@ -22,6 +22,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
@@ -147,12 +148,18 @@ public class JMSResponse implements WsdlResponse
 
 	public StringToStringMap getRequestHeaders()
 	{
-		return new StringToStringMap();
+		AbstractHttpRequest temp = (AbstractHttpRequest) request;
+		return temp.getRequestHeaders();
 	}
 
 	public StringToStringMap getResponseHeaders()
 	{
-		return new StringToStringMap();
+		if (message != null)
+		{
+			return JMSHeader.getReceivedMessageHeaders(message);
+		}
+		else
+			return new StringToStringMap();
 	}
 
 	public long getTimeTaken()

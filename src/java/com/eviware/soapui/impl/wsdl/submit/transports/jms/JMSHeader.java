@@ -15,6 +15,9 @@ package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 import hermes.Domain;
 import hermes.Hermes;
 
+import java.util.Enumeration;
+
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.naming.NamingException;
 
@@ -36,29 +39,34 @@ public class JMSHeader
 	public static final String JMSTYPE = "JMSType";
 	public static final String JMSPRIORITY = "JMSPriority";
 	public static final String JMSDELIVERYMODE = "JMSDeliveryMode";
-	
+	public static final String JMSEXPIRATION = "JMSExpiration";
+	public static final String JMSMESSAGEID = "JMSMessageID";
+	public static final String JMSTIMESTAMP = "JMSTimestamp";
+	public static final String JMSREDELIVERED = "JMSRedelivered";
+	public static final String JMSDESTINATION = "JMSDestination";
+
 	private long timeTolive = Message.DEFAULT_TIME_TO_LIVE;
-	
-	public  void setMessageHeaders(Message message, Request request, Hermes hermes)
+
+	public void setMessageHeaders(Message message, Request request, Hermes hermes)
 	{
 		AbstractHttpRequest temp = (AbstractHttpRequest) request;
 		StringToStringMap headersMap = temp.getRequestHeaders();
 		try
 		{
-			//JMSCORRELATIONID
+			// JMSCORRELATIONID
 			if (headersMap.containsKey(JMSCORRELATIONID))
 			{
 				message.setJMSCorrelationID(PropertyExpander.expandProperties(headersMap.get(JMSCORRELATIONID, "")));
 			}
 
-			//JMSREPLYTO
+			// JMSREPLYTO
 			if (headersMap.containsKey(JMSREPLYTO))
 			{
 				message.setJMSReplyTo(hermes.getDestination(PropertyExpander.expandProperties(headersMap
 						.get(JMSREPLYTO, "")), Domain.QUEUE));
 			}
 
-			//TIMETOLIVE
+			// TIMETOLIVE
 			if (headersMap.containsKey(TIMETOLIVE))
 			{
 				setTimeTolive(Long.parseLong(PropertyExpander.expandProperties(headersMap.get(TIMETOLIVE, "0"))));
@@ -68,38 +76,42 @@ public class JMSHeader
 				setTimeTolive(Message.DEFAULT_TIME_TO_LIVE);
 			}
 
-			//JMSTYPE
+			// JMSTYPE
 			if (headersMap.containsKey(JMSTYPE))
 			{
 				message.setJMSType(PropertyExpander.expandProperties(headersMap.get(JMSTYPE, "")));
 			}
 
-			//JMSPRIORITY
+			// JMSPRIORITY
 			if (headersMap.containsKey(JMSPRIORITY))
 			{
-				message
-						.setJMSPriority(Integer.parseInt(PropertyExpander.expandProperties(headersMap.get(JMSPRIORITY, String.valueOf(Message.DEFAULT_PRIORITY)))));
+				message.setJMSPriority(Integer.parseInt(PropertyExpander.expandProperties(headersMap.get(JMSPRIORITY,
+						String.valueOf(Message.DEFAULT_PRIORITY)))));
 			}
 			else
 			{
 				message.setJMSPriority(Message.DEFAULT_PRIORITY);
 			}
-			
-			//JMSDELIVERYMODE
+
+			// JMSDELIVERYMODE
 			if (headersMap.containsKey(JMSDELIVERYMODE))
 			{
-				message.setJMSDeliveryMode(Integer.parseInt(PropertyExpander.expandProperties(headersMap.get(JMSDELIVERYMODE,String.valueOf(Message.DEFAULT_DELIVERY_MODE)))));
+				message.setJMSDeliveryMode(Integer.parseInt(PropertyExpander.expandProperties(headersMap.get(
+						JMSDELIVERYMODE, String.valueOf(Message.DEFAULT_DELIVERY_MODE)))));
 			}
 			else
 			{
-					message.setJMSDeliveryMode(Message.DEFAULT_DELIVERY_MODE);
+				message.setJMSDeliveryMode(Message.DEFAULT_DELIVERY_MODE);
 			}
 
-			//CUSTOM PROPERTIES
-			String keys[]=headersMap.getKeys();
-			for(String key:keys){
-				if(!key.equals(JMSCORRELATIONID) && !key.equals(JMSREPLYTO) && !key.equals(TIMETOLIVE) && !key.equals(JMSTYPE) && !key.equals(JMSPRIORITY) && !key.equals(JMSDELIVERYMODE) ){
-					message.setStringProperty(key,PropertyExpander.expandProperties(headersMap.get(key)));
+			// CUSTOM PROPERTIES
+			String keys[] = headersMap.getKeys();
+			for (String key : keys)
+			{
+				if (!key.equals(JMSCORRELATIONID) && !key.equals(JMSREPLYTO) && !key.equals(TIMETOLIVE)
+						&& !key.equals(JMSTYPE) && !key.equals(JMSPRIORITY) && !key.equals(JMSDELIVERYMODE))
+				{
+					message.setStringProperty(key, PropertyExpander.expandProperties(headersMap.get(key)));
 				}
 			}
 		}
@@ -114,15 +126,45 @@ public class JMSHeader
 		}
 
 	}
-	
+
 	public long getTimeTolive()
 	{
 		return timeTolive;
 	}
 
-
 	public void setTimeTolive(long timeTolive)
 	{
 		this.timeTolive = timeTolive;
+	}
+
+	public static StringToStringMap getReceivedMessageHeaders(Message message)
+	{
+		StringToStringMap headermap = new StringToStringMap();
+		try
+		{
+			headermap.put(JMSDESTINATION, String.valueOf(message.getJMSDestination()));
+			headermap.put(JMSDELIVERYMODE, String.valueOf(message.getJMSDeliveryMode()));
+			headermap.put(JMSEXPIRATION, String.valueOf(message.getJMSExpiration()));
+			headermap.put(JMSMESSAGEID, String.valueOf(message.getJMSMessageID()));
+			headermap.put(JMSPRIORITY, String.valueOf(message.getJMSPriority()));
+			headermap.put(JMSTIMESTAMP, String.valueOf(message.getJMSTimestamp()));
+			headermap.put(JMSCORRELATIONID, String.valueOf(message.getJMSCorrelationID()));
+			headermap.put(JMSREPLYTO, String.valueOf(message.getJMSReplyTo()));
+			headermap.put(JMSTYPE, String.valueOf(message.getJMSType()));
+			headermap.put(JMSREDELIVERED, String.valueOf(message.getJMSRedelivered()));
+
+			Enumeration properties = message.getPropertyNames();
+			while (properties.hasMoreElements())
+			{
+				String key = (String) properties.nextElement();
+				headermap.put(key, message.getStringProperty(key));
+			}
+
+		}
+		catch (JMSException e)
+		{
+			SoapUI.logError(e);
+		}
+		return headermap;
 	}
 }
