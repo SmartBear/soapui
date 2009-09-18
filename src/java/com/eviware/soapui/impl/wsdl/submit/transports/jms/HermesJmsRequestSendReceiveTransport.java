@@ -78,7 +78,7 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 			
          // send message to producer
 			messageProducer.send(textMessageSend, 
-										jmsHeader.getDeliveryMode(), 
+										textMessageSend.getJMSDeliveryMode(), 
 										textMessageSend.getJMSPriority(),
 										jmsHeader.getTimeTolive());
 

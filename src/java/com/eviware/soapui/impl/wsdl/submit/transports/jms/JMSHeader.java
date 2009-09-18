@@ -35,15 +35,10 @@ public class JMSHeader
 	public static final String TIMETOLIVE = "TimeToLive";
 	public static final String JMSTYPE = "JMSType";
 	public static final String JMSPRIORITY = "JMSPriority";
-	public static final String DELIVERY_MODE = "DeliveryMode";
+	public static final String JMSDELIVERYMODE = "JMSDeliveryMode";
 	
-	private int deliveryMode = Message.DEFAULT_DELIVERY_MODE;
 	private long timeTolive = Message.DEFAULT_TIME_TO_LIVE;
 	
-
-	
-
-
 	public  void setMessageHeaders(Message message, Request request, Hermes hermes)
 	{
 		AbstractHttpRequest temp = (AbstractHttpRequest) request;
@@ -83,27 +78,27 @@ public class JMSHeader
 			if (headersMap.containsKey(JMSPRIORITY))
 			{
 				message
-						.setJMSPriority(Integer.parseInt(PropertyExpander.expandProperties(headersMap.get(JMSPRIORITY, ""))));
+						.setJMSPriority(Integer.parseInt(PropertyExpander.expandProperties(headersMap.get(JMSPRIORITY, String.valueOf(Message.DEFAULT_PRIORITY)))));
 			}
 			else
 			{
 				message.setJMSPriority(Message.DEFAULT_PRIORITY);
 			}
 			
-			//DELIVERY_MODE
-			if (headersMap.containsKey(DELIVERY_MODE))
+			//JMSDELIVERYMODE
+			if (headersMap.containsKey(JMSDELIVERYMODE))
 			{
-				setDeliveryMode(Integer.parseInt(PropertyExpander.expandProperties(headersMap.get(DELIVERY_MODE, "0"))));
+				message.setJMSDeliveryMode(Integer.parseInt(PropertyExpander.expandProperties(headersMap.get(JMSDELIVERYMODE,String.valueOf(Message.DEFAULT_DELIVERY_MODE)))));
 			}
 			else
 			{
-				setDeliveryMode(Message.DEFAULT_DELIVERY_MODE);
+					message.setJMSDeliveryMode(Message.DEFAULT_DELIVERY_MODE);
 			}
-			
+
 			//CUSTOM PROPERTIES
 			String keys[]=headersMap.getKeys();
 			for(String key:keys){
-				if(!key.equals(JMSCORRELATIONID) && !key.equals(JMSREPLYTO) && !key.equals(TIMETOLIVE) && !key.equals(JMSTYPE) && !key.equals(JMSPRIORITY) && !key.equals(DELIVERY_MODE) ){
+				if(!key.equals(JMSCORRELATIONID) && !key.equals(JMSREPLYTO) && !key.equals(TIMETOLIVE) && !key.equals(JMSTYPE) && !key.equals(JMSPRIORITY) && !key.equals(JMSDELIVERYMODE) ){
 					message.setStringProperty(key,PropertyExpander.expandProperties(headersMap.get(key)));
 				}
 			}
@@ -120,18 +115,6 @@ public class JMSHeader
 
 	}
 	
-	public int getDeliveryMode()
-	{
-		return deliveryMode;
-	}
-
-
-	public void setDeliveryMode(int deliveryMode)
-	{
-		this.deliveryMode = deliveryMode;
-	}
-
-
 	public long getTimeTolive()
 	{
 		return timeTolive;
