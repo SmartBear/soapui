@@ -15,7 +15,6 @@ package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 import hermes.Domain;
 import hermes.Hermes;
 
-import javax.jms.DeliveryMode;
 import javax.jms.Message;
 import javax.naming.NamingException;
 
@@ -62,15 +61,12 @@ public class JMSHeader
 			{
 				message.setJMSReplyTo(hermes.getDestination(PropertyExpander.expandProperties(headersMap
 						.get(JMSREPLYTO, "")), Domain.QUEUE));
-
 			}
 
 			//TIMETOLIVE
 			if (headersMap.containsKey(TIMETOLIVE))
 			{
 				setTimeTolive(Long.parseLong(PropertyExpander.expandProperties(headersMap.get(TIMETOLIVE, "0"))));
-//				message.setLongProperty(TIMETOLIVE, Long.parseLong(PropertyExpander.expandProperties(headersMap.get(
-//						TIMETOLIVE, ""))));
 			}
 			else
 			{
@@ -98,13 +94,10 @@ public class JMSHeader
 			if (headersMap.containsKey(DELIVERY_MODE))
 			{
 				setDeliveryMode(Integer.parseInt(PropertyExpander.expandProperties(headersMap.get(DELIVERY_MODE, "0"))));
-//				message.setIntProperty(DELIVERY_MODE, Integer.parseInt(PropertyExpander.expandProperties(headersMap.get(
-//						DELIVERY_MODE, ""))));
 			}
 			else
 			{
 				setDeliveryMode(Message.DEFAULT_DELIVERY_MODE);
-//				message.setIntProperty(DELIVERY_MODE, Message.DEFAULT_DELIVERY_MODE);
 			}
 			
 			//CUSTOM PROPERTIES
