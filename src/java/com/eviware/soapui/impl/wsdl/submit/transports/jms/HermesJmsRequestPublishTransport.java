@@ -73,11 +73,14 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 			TextMessage textMessage = session.createTextMessage();
 			textMessage.setText(request.getRequestContent());
 			
-			// publish message to producer
-			messageProducer.publish(textMessage, 
-										Message.DEFAULT_DELIVERY_MODE, 
+			JMSHeader jmsHeader= new JMSHeader();
+         jmsHeader.setMessageHeaders(textMessage, request, hermes);
+			
+         // publish message to producer
+			messageProducer.send(textMessage, 
+										jmsHeader.getDeliveryMode(), 
 										textMessage.getJMSPriority(),
-										textMessage.getLongProperty(JMSHeader.TIMETOLIVE));
+										jmsHeader.getTimeTolive());
 
 			// make response
 			JMSResponse response = new JMSResponse("", null, request, timeStarted);

@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 import hermes.Domain;
 import hermes.Hermes;
 
+import javax.jms.DeliveryMode;
 import javax.jms.Message;
 import javax.naming.NamingException;
 
@@ -36,8 +37,15 @@ public class JMSHeader
 	public static final String JMSTYPE = "JMSType";
 	public static final String JMSPRIORITY = "JMSPriority";
 	public static final String DELIVERY_MODE = "DeliveryMode";
+	
+	private int deliveryMode;
+	private long timeTolive;
+	
 
-	public static void setMessageHeaders(Message message, Request request, Hermes hermes)
+	
+
+
+	public  void setMessageHeaders(Message message, Request request, Hermes hermes)
 	{
 		AbstractHttpRequest temp = (AbstractHttpRequest) request;
 		StringToStringMap headersMap = temp.getRequestHeaders();
@@ -60,12 +68,13 @@ public class JMSHeader
 			//TIMETOLIVE
 			if (headersMap.containsKey(TIMETOLIVE))
 			{
-				message.setLongProperty(TIMETOLIVE, Long.parseLong(PropertyExpander.expandProperties(headersMap.get(
-						TIMETOLIVE, ""))));
+				setTimeTolive(Long.parseLong(PropertyExpander.expandProperties(headersMap.get(TIMETOLIVE, "0"))));
+//				message.setLongProperty(TIMETOLIVE, Long.parseLong(PropertyExpander.expandProperties(headersMap.get(
+//						TIMETOLIVE, ""))));
 			}
 			else
 			{
-				message.setLongProperty(TIMETOLIVE, Message.DEFAULT_TIME_TO_LIVE);
+				setTimeTolive(Message.DEFAULT_TIME_TO_LIVE);
 			}
 
 			//JMSTYPE
@@ -88,12 +97,14 @@ public class JMSHeader
 			//DELIVERY_MODE
 			if (headersMap.containsKey(DELIVERY_MODE))
 			{
-				message.setIntProperty(DELIVERY_MODE, Integer.parseInt(PropertyExpander.expandProperties(headersMap.get(
-						DELIVERY_MODE, ""))));
+				setDeliveryMode(Integer.parseInt(PropertyExpander.expandProperties(headersMap.get(DELIVERY_MODE, "0"))));
+//				message.setIntProperty(DELIVERY_MODE, Integer.parseInt(PropertyExpander.expandProperties(headersMap.get(
+//						DELIVERY_MODE, ""))));
 			}
 			else
 			{
-				message.setIntProperty(DELIVERY_MODE, Message.DEFAULT_DELIVERY_MODE);
+				setDeliveryMode(Message.DEFAULT_DELIVERY_MODE);
+//				message.setIntProperty(DELIVERY_MODE, Message.DEFAULT_DELIVERY_MODE);
 			}
 			
 			//CUSTOM PROPERTIES
@@ -114,5 +125,28 @@ public class JMSHeader
 			SoapUI.logError(e, "error while seting message header properties!");
 		}
 
+	}
+	
+	public int getDeliveryMode()
+	{
+		return deliveryMode;
+	}
+
+
+	public void setDeliveryMode(int deliveryMode)
+	{
+		this.deliveryMode = deliveryMode;
+	}
+
+
+	public long getTimeTolive()
+	{
+		return timeTolive;
+	}
+
+
+	public void setTimeTolive(long timeTolive)
+	{
+		this.timeTolive = timeTolive;
 	}
 }
