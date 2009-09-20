@@ -22,8 +22,6 @@ public interface HttpResponse extends Response
 {
 	public abstract AbstractHttpRequestInterface<?> getRequest();
 
-	public abstract String getRequestContent();
-
 	public abstract void setResponseContent( String responseContent );
 
 	public abstract String getContentAsXml();

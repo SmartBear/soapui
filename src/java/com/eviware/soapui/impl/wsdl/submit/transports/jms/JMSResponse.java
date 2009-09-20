@@ -224,6 +224,7 @@ public class JMSResponse implements WsdlResponse
 
 	public void setResponseContent(String responseContent)
 	{
+		this.payload = responseContent;
 	}
 
 	public Vector<?> getWssResult()
