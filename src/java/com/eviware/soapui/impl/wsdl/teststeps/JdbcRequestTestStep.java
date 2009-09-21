@@ -15,9 +15,16 @@ package com.eviware.soapui.impl.wsdl.teststeps;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -28,26 +35,50 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.text.Document;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
+import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
+import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
+import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.AssertionsListener;
+import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.PropertyChangeNotifier;
+import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.swing.JXEditAreaPopupMenu;
 import com.eviware.soapui.support.xml.JXEditTextArea;
+
 
 /**
  * WsdlTestStep that executes a WsdlTestRequest
@@ -55,7 +86,7 @@ import com.eviware.soapui.support.xml.JXEditTextArea;
  * @author dragica.soldo
  */
 
-public class JdbcRequestTestStep extends WsdlTestStepWithProperties
+public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements Assertable
 {
 	private final static Logger log = Logger.getLogger(WsdlTestRequestStep.class);
 	private JdbcRequestTestStepConfig jdbcRequestTestStepConfig;
@@ -63,7 +94,21 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties
 	private WsdlSubmit<WsdlRequest> submit;
 	private ImageIcon failedIcon;
 	private ImageIcon okIcon;
+   private String xmlResult;
+   public String getXmlResult()
+	{
+		return xmlResult;
+	}
+   public void setXmlResult(String xmlResult)
+	{
+		this.xmlResult = xmlResult;
+	}
+   private boolean runnable;
 
+	public boolean isRunnable()
+	{
+		return runnable;
+	}
 	protected static final String DRIVER_FIELD = "Driver";
 	protected static final String CONNSTR_FIELD = "Connection String";
 	protected static final String PASS_FIELD = "Password";
@@ -75,14 +120,27 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties
 	protected static final String STOREDPROCEDURE_ELEMENT = "stored-procedure";
 	protected JPanel panel;
 	protected String driver;
+	protected String connectionString;
+	protected String password;
+	protected String query;
+	//for start set to false...later to be implemented
+	protected boolean storedProcedure = false;
+	protected SimpleForm form;
+	protected Connection connection;
+	protected JXEditTextArea queryArea;
+	private JButton testConnectionButton;
+	private AssertionsSupport assertionsSupport;
+
 	public String getDriver()
 	{
 		return jdbcRequestTestStepConfig.getDriver();
 	}
 
-	public void setDriver(String driver)
+	public void setDriver(String d)
 	{
+		String old = getDriver();
 		jdbcRequestTestStepConfig.setDriver(driver);
+		notifyPropertyChanged( "driver", old, d );
 	}
 
 	public String getConnectionString()
@@ -90,9 +148,11 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties
 		return jdbcRequestTestStepConfig.getConnectionString();
 	}
 
-	public void setConnectionString(String connectionString)
+	public void setConnectionString(String c)
 	{
-		jdbcRequestTestStepConfig.setConnectionString(connectionString);
+		String old = getConnectionString();
+		jdbcRequestTestStepConfig.setConnectionString(c);
+		notifyPropertyChanged( "connectionString", old, c );
 	}
 
 	public String getQuery()
@@ -100,18 +160,12 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties
 		return jdbcRequestTestStepConfig.getQuery();
 	}
 
-	public void setQuery(String query)
+	public void setQuery(String q)
 	{
-		jdbcRequestTestStepConfig.setQuery(query);
+		String old = getQuery();
+		jdbcRequestTestStepConfig.setQuery(q);
+		notifyPropertyChanged( "query", old, q );
 	}
-	protected String connectionString;
-	protected String password;
-	protected String query;
-	protected SimpleForm form;
-	protected Connection connection;
-	protected JXEditTextArea queryArea;
-	private JButton testConnectionButton;
-
 	public JdbcRequestTestStepConfig getJdbcRequestTestStepConfig()
 	{
 		return jdbcRequestTestStepConfig;
@@ -138,6 +192,9 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties
 			jdbcRequestTestStepConfig = (JdbcRequestTestStepConfig) getConfig().addNewConfig().changeType(
 					JdbcRequestTestStepConfig.type);
 		}
+		driver = getDriver();
+		connectionString = getConnectionString();
+		query = getQuery();
 	}
 
 
@@ -172,7 +229,16 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties
 					{
 						testConnectionButton.setEnabled(true);
 					}
-				}
+					if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString) ||
+							StringUtils.isNullOrEmpty(query))
+					{
+						runnable = false;
+					}
+					else
+					{
+						runnable = true;
+					}
+			}
 			});
 
 			textField = form.appendTextField(CONNSTR_FIELD, "JDBC Driver Connection String");
@@ -194,6 +260,15 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties
 					else
 					{
 						testConnectionButton.setEnabled(true);
+					}
+					if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString) ||
+							StringUtils.isNullOrEmpty(query))
+					{
+						runnable = false;
+					}
+					else
+					{
+						runnable = true;
 					}
 				}
 			});
@@ -231,6 +306,15 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties
 				testConnectionButton.setEnabled(true);
 			}
 
+			if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString) ||
+					StringUtils.isNullOrEmpty(query))
+			{
+				runnable = false;
+			}
+			else
+			{
+				runnable = true;
+			}
 			queryArea = JXEditTextArea.createSqlEditor();
 			JXEditAreaPopupMenu.add(queryArea);
 			// PropertyExpansionPopupListener.enable( queryArea,
@@ -364,5 +448,247 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties
 		return DriverManager.getConnection(connStr);
 
 	}
+	//running
+   protected ResultSet resultSet;
+   protected Statement statement;
+   
+	public void runQuery() {
+		MockTestRunner mockRunner = new MockTestRunner( getTestCase() );
+		MockTestRunContext mockContext = new MockTestRunContext( mockRunner, this);
+		try
+		{
+			prepare( mockRunner, mockContext );
+			List<String> properties = new ArrayList<String> ();
+			load(mockRunner, mockContext, properties)	;	
+			createXmlResult();
+		}
+		catch( Exception e )
+		{
+			UISupport.showErrorMessage( e );
+		}
+	}
+
+   protected void getDatabaseConnection(PropertyExpansionContext context) throws Exception,
+	SQLException {
+	   String drvr ="";
+	   String connStr="";
+	   if (!StringUtils.isNullOrEmpty(driver) && !StringUtils.isNullOrEmpty(connectionString)) {
+			 drvr = PropertyExpander.expandProperties( context, driver ).trim();
+			 connStr = PropertyExpander.expandProperties( context, connectionString ).trim();
+	   } else {
+	   	UISupport.showErrorMessage( "Please supply connection settings for all DataSources" );
+	   	throw new SoapUIException("Please supply connection settings");
+	   }
+//		String masskedPass = connStr.replace(DatabaseConnection.PASS_TEMPLATE, "#####"); 
+//		connStr = connStr.replaceFirst(DatabaseConnection.PASS_TEMPLATE, password);
+	     try
+	     {
+	        DriverManager.getDriver( connStr );
+	     }
+	     catch( SQLException e )
+	     {
+	        try
+	        {
+	           Class.forName( drvr ).newInstance();
+	        }
+	        catch( Exception e1 )
+	        {
+	           throw new Exception( "Failed to init connection for drvr [" + drvr + "], connectionString [" + connectionString + "]" );
+	        }
+	     }
+	
+	     resultSet = null;
+	     connection = DriverManager.getConnection( connStr);
+//	     lastResult = new StringToStringMap();
+	}
+   public void load( TestCaseRunner testRunner, TestCaseRunContext context, List<String> properties ) throws Exception
+   {
+      if( storedProcedure )
+      {
+         ( (CallableStatement) statement ).execute();
+      }
+      else
+      {
+         String q = PropertyExpander.expandProperties( context, query );
+         statement.execute( q );
+      }
+
+      resultSet = statement.getResultSet();
+
+//      getColumnNamesForCurrentResultSet();
+//      resultSetCount = resultSet == null ? 0 : 1;
+   }
+   
+   @SuppressWarnings( "unchecked" )
+   @Override
+   public void prepare( TestCaseRunner testRunner, TestCaseRunContext context) throws Exception
+   {
+      getDatabaseConnection(context);
+
+      if( storedProcedure )
+      {
+         String sql = PropertyExpander.expandProperties( context, query );
+
+         if( !sql.startsWith( "{call " ) && !sql.endsWith( "}" ) )
+            sql = "{call " + sql + "}";
+
+         statement = connection.prepareCall( sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY );
+      }
+      else
+      {
+         statement = connection.createStatement( ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY );
+      }
+      super.prepare( testRunner, context );   
+    }
+   
+   public void createXmlResult() {
+      ResultSet rs = resultSet;
+      Statement stmt = statement;
+
+      try {
+        DocumentBuilderFactory factory = 
+           DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder =factory.newDocumentBuilder();
+        org.w3c.dom.Document doc = builder.newDocument();
+        Element results = doc.createElement("Results");
+        doc.appendChild(results);
+
+        // connection to an ACCESS MDB
+        ResultSetMetaData rsmd = rs.getMetaData();
+        int colCount = rsmd.getColumnCount();
+
+        while (rs.next()) {
+          Element row = doc.createElement("Row");
+          results.appendChild(row);
+          for (int ii = 1; ii <= colCount; ii++) {
+             String columnName = rsmd.getColumnName(ii);
+             String value = rs.getString(ii);
+             Element node = doc.createElement(columnName);
+             if (!StringUtils.isNullOrEmpty(value))
+				{
+					node.appendChild(doc.createTextNode(value.toString()));
+				}
+				row.appendChild(node);
+          }
+        }
+
+        String oldRes = getXmlResult();
+        xmlResult = getDocumentAsXml(doc);
+        notifyPropertyChanged("xmlResult", oldRes, xmlResult);
+
+      }
+      catch (Exception e) {
+          e.printStackTrace();
+      }
+      finally {
+        try {
+          if (connection != null) connection.close();
+          if (stmt != null) stmt.close();
+          if (rs != null) rs.close();
+        }
+        catch (Exception e) {
+        }
+      }
+   }
+   public static String getDocumentAsXml(org.w3c.dom.Document doc)
+   throws TransformerConfigurationException, TransformerException {
+		 DOMSource domSource = new DOMSource(doc);
+		 TransformerFactory tf = TransformerFactory.newInstance();
+		 Transformer transformer = tf.newTransformer();
+		 //transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION,"yes");
+		 transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+		 transformer.setOutputProperty(OutputKeys.ENCODING,"ISO-8859-1");
+		 // we want to pretty format the XML output
+		 // note : this is broken in jdk1.5 beta!
+		 transformer.setOutputProperty
+		    ("{http://xml.apache.org/xslt}indent-amount", "4");
+		 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		 //
+		 java.io.StringWriter sw = new java.io.StringWriter();
+		 StreamResult sr = new StreamResult(sw);
+		 transformer.transform(domSource, sr);
+		 return sw.toString();
+}
+	public TestAssertion addAssertion(String assertionLabel)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void addAssertionsListener(AssertionsListener listener)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	public TestAssertion cloneAssertion(TestAssertion source, String name)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getAssertableContent()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public AssertableType getAssertableType()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public TestAssertion getAssertionAt(int c)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public TestAssertion getAssertionByName(String name)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public int getAssertionCount()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public List<TestAssertion> getAssertionList()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public AssertionStatus getAssertionStatus()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public Map<String, TestAssertion> getAssertions()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getDefaultAssertableContent()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public Interface getInterface()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public TestAssertion moveAssertion(int ix, int offset)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void removeAssertion(TestAssertion assertion)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	public void removeAssertionsListener(AssertionsListener listener)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
 
 }
