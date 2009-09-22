@@ -129,7 +129,10 @@ public class JMSResponse implements WsdlResponse
 
 	public byte[] getRawRequestData()
 	{
-		return message.toString().getBytes();
+		if (message != null)
+			return message.toString().getBytes();
+		else
+			return "".getBytes();
 	}
 
 	public byte[] getRawResponseData()
