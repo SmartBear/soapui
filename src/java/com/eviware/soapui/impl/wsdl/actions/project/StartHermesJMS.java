@@ -78,19 +78,6 @@ public class StartHermesJMS extends AbstractSoapUIAction<WsdlProject>
 		return hermesConfigPath;
 	}
 
-	private SimpleForm toolsForm;
-
-	public SimpleForm getForm()
-	{
-		if (toolsForm == null)
-		{
-			toolsForm = new SimpleForm();
-			toolsForm.append("hermes-config.xml path", new DirectoryFormComponent(
-					"Location of desired HermesJMS configuration (hermes-config.xml)"));
-		}
-		return toolsForm;
-	}
-
 	private class HermesConfigDialog extends SimpleDialog
 	{
 
@@ -108,15 +95,8 @@ public class StartHermesJMS extends AbstractSoapUIAction<WsdlProject>
 		protected Component buildContent()
 		{
 
-			// name = new JTextField(20);
-			// editor = new ReportEditor();
-			// editor.setPreferredSize(new Dimension(500, 150));
-
 			SimpleForm form = new SimpleForm();
-			folderComponent = new DirectoryFormComponent(
-					"Location of desired HermesJMS configuration (hermes-config.xml)");
-//			folderComponent.setValue(getPath());
-//			String asdf=folderComponent.getValue();
+			folderComponent = new DirectoryFormComponent("Location of desired HermesJMS configuration (hermes-config.xml)");
 			form.addSpace(5);
 			form.append("Path", folderComponent);
 			form.addSpace(5);
@@ -124,7 +104,6 @@ public class StartHermesJMS extends AbstractSoapUIAction<WsdlProject>
 			return form.getPanel();
 		}
 
-		@Override
 		protected boolean handleOk()
 		{
 			setPath(folderComponent.getValue());
