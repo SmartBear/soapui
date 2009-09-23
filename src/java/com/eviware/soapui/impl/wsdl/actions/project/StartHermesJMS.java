@@ -49,6 +49,12 @@ public class StartHermesJMS extends AbstractSoapUIAction<WsdlProject>
 			UISupport.showErrorMessage("Please set Hermes 1.13 path in Preferences->Tools ! ");
 			return;
 		}
+		
+		startHermesJMS(hermesConfigPath, hermesHome);
+	}
+
+	private void startHermesJMS(String hermesConfigPath, String hermesHome)
+	{
 		String extension = UISupport.isWindows() ? ".bat" : ".sh";
 		String hermesBatPath = hermesHome + File.separator + "bin" + File.separator + "hermes" + extension;
 		try
