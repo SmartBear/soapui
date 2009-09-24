@@ -23,7 +23,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -62,6 +61,7 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.actions.SaveAllProjectsAction;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
+import com.eviware.soapui.actions.StartHermesJMSButtonAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
@@ -98,7 +98,6 @@ import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.model.workspace.WorkspaceFactory;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.monitor.TestMonitor;
-import com.eviware.soapui.settings.ToolsSettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
@@ -1033,33 +1032,6 @@ public class SoapUI
 			saveOnExit = true;
 			WindowEvent windowEvent = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
 			frame.dispatchEvent(windowEvent);
-		}
-	}
-
-	private class StartHermesJMSButtonAction extends AbstractAction
-	{
-		public StartHermesJMSButtonAction()
-		{
-			putValue(Action.SMALL_ICON, UISupport.createImageIcon("/hermes-16x16.gif"));
-			putValue(Action.SHORT_DESCRIPTION, "Start HermesJMS application");
-		}
-
-		public void actionPerformed(ActionEvent e)
-		{
-			try
-			{
-				String hermesHome =SoapUI.getSettings().getString(ToolsSettings.HERMES_1_13, "");
-				if("".equals(hermesHome)){
-					UISupport.showErrorMessage("Please set Hermes 1.13 path in Preferences->Tools ! ");
-					return;
-				}
-				String hermesBatPath =hermesHome  + File.separator + "bin"+ File.separator + "hermes.bat";
-				Runtime.getRuntime().exec(hermesBatPath);
-			}
-			catch (Throwable t)
-			{
-				SoapUI.logError(t);
-			}
 		}
 	}
 
