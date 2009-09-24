@@ -86,7 +86,7 @@ public class StartHermesJMS extends AbstractSoapUIAction<WsdlProject>
 
 		public HermesConfigDialog(String initialPath)
 		{
-			super("Hermes configuration", "Location of desired HermesJMS configuration (hermes-config.xml)", null, true);
+			super("Start  HermesJMS", "Hermes configuration", null, true);
 			folderComponent.setValue(initialPath);
 			folderComponent.setInitialFolder(initialPath);
 
