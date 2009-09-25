@@ -19,6 +19,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
@@ -70,6 +73,7 @@ import com.eviware.soapui.impl.wsdl.actions.iface.ExportDefinitionAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.UpdateInterfaceAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIAnalyzeAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIReportPanel;
+import com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategyConfigurationPanel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.LineNumbersPanel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
@@ -230,6 +234,16 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 
 	private Component buildEndpointsTab()
 	{
+		
+		iface.addPropertyChangeListener(new PropertyChangeListener(){
+
+			public void propertyChange(PropertyChangeEvent evt)
+			{
+//				DefaultEndpointStrategyConfigurationPanel temp = (DefaultEndpointStrategyConfigurationPanel)iface.getProject().getEndpointStrategy().getConfigurationPanel( iface );
+//		    	temp.propertyChange(evt);
+			}
+			
+		});
 		return iface.getProject().getEndpointStrategy().getConfigurationPanel( iface );
 	}
 

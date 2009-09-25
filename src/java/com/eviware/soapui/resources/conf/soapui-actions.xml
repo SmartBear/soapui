@@ -62,6 +62,7 @@
 	<tns:action id="WSIAnalyzeAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIAnalyzeAction"/>
 	<tns:action id="CloneInterfaceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.CloneInterfaceAction"/>
 	<tns:action id="CreateWsdlDocumentationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.CreateWsdlDocumentationAction"/>
+	<tns:action id="AddJMSEndpointAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.AddJMSEndpointAction"/>
 
 	<!-- RestService Actions -->
 	<tns:action id="NewRestResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.service.NewRestResourceAction"/>
@@ -248,7 +249,7 @@
 		<tns:actionMapping actionId="LoadTestRunnerAction"/>
 		<tns:actionMapping actionId="SoapMonitorAction"/>
 	<!-- 	<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="WSToolsJava2WsdlAction"/> -->
+		<tns:actionMapping actionId="WSToolsJava2WsdlAction"/>-->
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="AddNewTestSuiteAction" keyStroke="menu T"/>
 		<tns:actionMapping actionId="AddNewMockServiceAction" keyStroke="menu O"/>
@@ -299,6 +300,8 @@
      	class="com.eviware.soapui.impl.wsdl.actions.iface.WsdlInterfaceSoapUIActionGroup">
  		<tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Interface Viewer"
  			description="Shows the Interface Viewer for this Interface" keyStroke="ENTER"/>
+ 		<tns:actionMapping actionId="SeperatorAction"/>
+ 		<tns:actionMapping actionId="AddJMSEndpointAction"/>
  		<tns:actionMapping actionId="SeperatorAction"/>
  		<tns:actionMapping groupId="WsdlInterfaceGenerateActions" name="Generate Code"/>
  	<!-- 	<tns:actionMapping actionId="WSToolsRegenerateJava2WsdlAction"/>  -->

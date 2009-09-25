@@ -85,6 +85,8 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory
 		testRequestConfig.addNewRequest().setStringValue( request.getRequestContent() );
 		testRequestConfig.setOutgoingWss( request.getOutgoingWss() );
 		testRequestConfig.setIncomingWss( request.getIncomingWss() );
+		testRequestConfig.setTimeout(request.getTimeout());
+		
 		if( request.getConfig().isSetWsaConfig() )
 			testRequestConfig.setWsaConfig( ( WsaConfigConfig )request.getConfig().getWsaConfig().copy() );
 

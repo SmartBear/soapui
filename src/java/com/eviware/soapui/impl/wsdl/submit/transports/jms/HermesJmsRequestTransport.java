@@ -2,23 +2,14 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
 import hermes.Hermes;
-import hermes.HermesInitialContextFactory;
-import hermes.JAXBHermesLoader;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.apache.commons.lang.NotImplementedException;
@@ -29,20 +20,16 @@ import com.eviware.soapui.impl.wsdl.submit.RequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry.CannotResolveJmsTypeException;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry.MissingTransportException;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.settings.ToolsSettings;
-import com.eviware.soapui.support.HermesJMSClasspathHacker;
 
 public class HermesJmsRequestTransport implements RequestTransport
 {
 
-	private static boolean hermesJarsLoaded = false;
-	private static Map<String,Context> contextMap = new HashMap<String,Context>();
-	
 	protected List<RequestFilter> filters = new ArrayList<RequestFilter>();
 
 	public void abortRequest(SubmitContext submitContext)
@@ -155,13 +142,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 
 		try
 		{
-			if (!hermesJarsLoaded)
-			{
-				addHermesJarsToClasspath();
-				hermesJarsLoaded = true;
-			}
-
-			Context ctx = hermesContext(project);
+			Context ctx = HermesUtils.hermesContext(project);
 
 			Hermes hermes = (Hermes) ctx.lookup(sessionName);
 			return hermes;
@@ -188,42 +169,9 @@ public class HermesJmsRequestTransport implements RequestTransport
 	}
 
 	
-	private Context hermesContext(WsdlProject project) throws NamingException
-	{
-		if(contextMap.containsKey(project.getName())){
-			return contextMap.get(project.getName());
-		}
-		
-		String hermesConfigPath = PropertyExpander.expandProperties(project, project.getHermesConfig());
-		Properties props = new Properties();
-		props.put(Context.INITIAL_CONTEXT_FACTORY, HermesInitialContextFactory.class.getName());
-		props.put(Context.PROVIDER_URL, hermesConfigPath + "\\hermes-config.xml");
-		props.put("hermes.loader", JAXBHermesLoader.class.getName());
-
-		Context ctx = new InitialContext(props);
-		contextMap.put(project.getName(), ctx);
-		return ctx;
-	}
 	
-	// TODO: this could be called on souapui startup if hermes config path is set
-	private static void addHermesJarsToClasspath() throws IOException, MalformedURLException
-	{
-		String hermesLib = SoapUI.getSettings().getString(ToolsSettings.HERMES_1_13, null) + File.separator + "lib";
-
-		if (hermesLib == null || "".equals(hermesLib))
-		{
-			throw new FileNotFoundException("HermesJMS home not specified !!!");
-		}
-
-		File dir = new File(hermesLib);
-
-		String[] children = dir.list();
-		for (String filename : children)
-		{
-			HermesJMSClasspathHacker.addURL(new URL("file:" + File.separator + hermesLib + File.separator + filename));
-		}
-
-	}
+	
+	
 
 	protected long getTimeout(SubmitContext submitContext, Request request)
 	{
