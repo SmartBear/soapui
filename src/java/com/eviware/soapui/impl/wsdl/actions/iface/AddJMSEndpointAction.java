@@ -158,6 +158,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 		catch (Exception e)
 		{
 			SoapUI.logError(e);
+			UISupport.showErrorMessage("Project#Hermes Config property doesnt poing to proper hermes-config.xml folder");
 		}
 		return null;
 	}
