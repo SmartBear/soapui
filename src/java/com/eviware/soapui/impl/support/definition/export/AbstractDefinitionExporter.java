@@ -32,7 +32,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 public abstract class AbstractDefinitionExporter<T extends Interface> implements DefinitionExporter
 {
-	private InterfaceDefinition definition;
+	private InterfaceDefinition<T> definition;
 
 	public AbstractDefinitionExporter( InterfaceDefinition<T> definition )
 	{
@@ -44,7 +44,7 @@ public abstract class AbstractDefinitionExporter<T extends Interface> implements
 		return definition;
 	}
 
-	public void setDefinition( InterfaceDefinition definition )
+	public void setDefinition( InterfaceDefinition<T> definition )
 	{
 		this.definition = definition;
 	}

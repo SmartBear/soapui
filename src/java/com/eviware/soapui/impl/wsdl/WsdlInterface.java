@@ -777,7 +777,6 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 		}
 	}
 
-	@SuppressWarnings( "unchecked" )
 	@Override
 	public void resolve( ResolveContext<?> context )
 	{
@@ -894,42 +893,6 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 	public WsdlContext getDefinitionContext()
 	{
 		return getWsdlContext();
-	}
-
-	// need to fix removing mock response and test cases.
-	private void replace( WsdlOperation wsdlOperation, OperationConfig reloadedOperation )
-	{
-		int index = operations.indexOf( wsdlOperation );
-
-		int c = operations.indexOf( wsdlOperation );
-		if( c < 0 )
-			throw new IllegalArgumentException( wsdlOperation.getName() + " not found" );
-
-		log.info( "deleting operation [" + wsdlOperation.getName() + "]" );
-
-		// remove requests first (should this be done by some listener?)
-		while( wsdlOperation.getRequestCount() > 0 )
-			wsdlOperation.removeRequest( wsdlOperation.getRequestAt( 0 ) );
-
-		operations.remove( c );
-
-		try
-		{
-			fireOperationRemoved( wsdlOperation );
-		}
-		finally
-		{
-			wsdlOperation.release();
-			getConfig().removeOperation( c );
-		}
-
-		OperationConfig newConfig = ( OperationConfig )getConfig().addNewOperation().set( reloadedOperation ).changeType(
-				OperationConfig.type );
-		WsdlOperation newOperation = new WsdlOperation( this, newConfig );
-		operations.add( index, newOperation );
-		newOperation.afterLoad();
-		fireOperationAdded( newOperation );
-
 	}
 
 	/**

@@ -58,7 +58,7 @@ public interface Interface extends ModelItem
 
 	public void changeEndpoint( String endpoint, String string );
 
-	public DefinitionContext getDefinitionContext();
+	public DefinitionContext<?> getDefinitionContext();
 
 	public Operation[] getAllOperations();
 }

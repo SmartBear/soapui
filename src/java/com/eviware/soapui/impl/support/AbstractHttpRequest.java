@@ -273,7 +273,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
 	public Attachment importAttachment( Attachment attachment )
 	{
-		if( attachment instanceof FileAttachment )
+		if( attachment instanceof FileAttachment<?> )
 		{
 			AttachmentConfig oldConfig = ( ( FileAttachment<?> )attachment ).getConfig();
 			AttachmentConfig newConfig = ( AttachmentConfig )getConfig().addNewAttachment().set( oldConfig );

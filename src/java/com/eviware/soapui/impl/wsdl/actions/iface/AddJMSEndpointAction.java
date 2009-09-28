@@ -13,15 +13,11 @@ package com.eviware.soapui.impl.wsdl.actions.iface;
 
 import hermes.Domain;
 import hermes.Hermes;
-import hermes.HermesAdmin;
 import hermes.HermesContext;
-import hermes.HermesException;
 import hermes.JAXBHermesLoader;
-import hermes.browser.HermesBrowser;
 import hermes.config.impl.DestinationConfigImpl;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -207,7 +203,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 
 	private void extractDestinations(Hermes hermes, List<Destination> destinationList, List<Destination> queueList)
 	{
-		Iterator hermesDestionations = hermes.getDestinations();
+		Iterator<?> hermesDestionations = hermes.getDestinations();
 		while (hermesDestionations.hasNext())
 		{
 			DestinationConfigImpl dest = (DestinationConfigImpl) hermesDestionations.next();
@@ -252,6 +248,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 			return destinationName;
 		}
 
+		@SuppressWarnings( "unused" )
 		public Domain getDomain()
 		{
 			return domain;
