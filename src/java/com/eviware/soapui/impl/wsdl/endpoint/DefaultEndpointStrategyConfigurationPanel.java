@@ -127,7 +127,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 		add( scrollPane, BorderLayout.CENTER );
 		add( createButtons(), BorderLayout.NORTH );
 
-		iface.addPropertyChangeListener( "endpoints", this );
+		iface.addPropertyChangeListener( Interface.ENDPOINT_PROPERTY, this );
 	}
 
 	protected void enableButtons()
@@ -169,7 +169,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 			if( endpoint == null )
 				return;
 
-			tableModel.addEndpoint( endpoint );
+			iface.addEndpoint( endpoint );
 		}
 	}
 
@@ -297,7 +297,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 
 			if( UISupport.confirm( "Delete selected endpoint?", "Delete Endpoint" ) )
 			{
-				tableModel.removeEndpoint( index );
+				iface.removeEndpoint( tableModel.getEndpointAt( index ));
 			}
 		}
 	}
@@ -315,22 +315,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 			return strategy.getEndpointDefaults( endpoint );
 		}
 
-		public void addEndpoint( String endpoint )
-		{
-			int rowCount = getRowCount();
-			iface.addEndpoint( endpoint );
-
-			fireTableRowsInserted( rowCount, rowCount );
-		}
-
-		public void removeEndpoint( int index )
-		{
-			String ep = getEndpointAt( index );
-			iface.removeEndpoint( ep );
-			fireTableRowsDeleted( index, index );
-		}
-
-		public int getRowCount()
+			public int getRowCount()
 		{
 			return iface == null ? 0 : iface.getEndpoints().length;
 		}
@@ -613,7 +598,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 
 	public void release()
 	{
-		iface.removePropertyChangeListener( "endpoints", this );
+		iface.removePropertyChangeListener( Interface.ENDPOINT_PROPERTY, this );
 	}
 
 	public void propertyChange( PropertyChangeEvent evt )
