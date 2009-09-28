@@ -16,6 +16,7 @@ import org.apache.commons.httpclient.HttpVersion;
 import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
@@ -24,6 +25,7 @@ import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.HttpSettings;
+import com.eviware.soapui.support.StringUtils;
 
 /**
  * RequestFilter that applies SoapUI HTTP-settings to the current request
@@ -89,5 +91,18 @@ public class HttpSettingsRequestFilter extends AbstractRequestFilter
 
 		// apply global settings
 		HttpClientSupport.applyHttpSettings( httpMethod, settings );
+		
+		String timeout = context.expand( httpRequest.getTimeout() );
+		if( StringUtils.hasContent( timeout ))
+		{
+			try
+			{
+				httpMethod.getParams().setSoTimeout( Integer.parseInt( timeout ));
+			}
+			catch( NumberFormatException e )
+			{
+				SoapUI.logError( e );
+			}
+		}
 	}
 }
