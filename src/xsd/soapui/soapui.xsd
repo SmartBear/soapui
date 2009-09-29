@@ -1845,7 +1845,7 @@
     		<xsd:element name="driver" type="xsd:string"></xsd:element>
     		<xsd:element name="connectionString" type="xsd:string"></xsd:element>
     		<xsd:element name="query" type="xsd:string"></xsd:element>
-    		<xsd:element name="assertion" type="tns:TestAssertion"></xsd:element>
+    		<xsd:element name="assertion" type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0"></xsd:element>
     	</xsd:sequence>
     </xsd:complexType>
 </xsd:schema>

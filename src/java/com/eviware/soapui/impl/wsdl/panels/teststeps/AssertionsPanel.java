@@ -65,9 +65,9 @@ public class AssertionsPanel extends JPanel
 {
 	private AssertionListModel assertionListModel;
 	private JList assertionList;
-	private JPopupMenu assertionListPopup;
+	protected JPopupMenu assertionListPopup;
 	private final Assertable assertable;
-	private AddAssertionAction addAssertionAction;
+	protected AbstractAction addAssertionAction;
 	private ConfigureAssertionAction configureAssertionAction;
 	private RemoveAssertionAction removeAssertionAction;
 	private MoveAssertionUpAction moveAssertionUpAction;

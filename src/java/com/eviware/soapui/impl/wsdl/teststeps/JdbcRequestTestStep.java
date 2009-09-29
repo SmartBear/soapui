@@ -50,14 +50,17 @@ import org.w3c.dom.Element;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
+import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.JdbcXmlResponseAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
@@ -70,6 +73,7 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.PropertyChangeNotifier;
 import com.eviware.soapui.support.SoapUIException;
@@ -91,17 +95,23 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	private final static Logger log = Logger.getLogger(WsdlTestRequestStep.class);
 	private JdbcRequestTestStepConfig jdbcRequestTestStepConfig;
 	public final static String JDBCREQUEST = JdbcRequestTestStep.class.getName() + "@jdbcrequest";
+	public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";
 	private WsdlSubmit<WsdlRequest> submit;
 	private ImageIcon failedIcon;
 	private ImageIcon okIcon;
-   private String xmlResult;
-   public String getXmlResult()
+   private String xmlStringResult;
+	private org.w3c.dom.Document xmlDocumentResult;
+   public org.w3c.dom.Document getXmlDocumentResult()
 	{
-		return xmlResult;
+		return xmlDocumentResult;
 	}
-   public void setXmlResult(String xmlResult)
+	public String getXmlStringResult()
 	{
-		this.xmlResult = xmlResult;
+		return xmlStringResult;
+	}
+   public void setXmlStringResult(String xmlResult)
+	{
+		this.xmlStringResult = xmlResult;
 	}
    private boolean runnable;
 
@@ -195,6 +205,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		driver = getDriver();
 		connectionString = getConnectionString();
 		query = getQuery();
+		initAssertions();
 	}
 
 
@@ -549,32 +560,32 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
         DocumentBuilderFactory factory = 
            DocumentBuilderFactory.newInstance();
         DocumentBuilder builder =factory.newDocumentBuilder();
-        org.w3c.dom.Document doc = builder.newDocument();
-        Element results = doc.createElement("Results");
-        doc.appendChild(results);
+        xmlDocumentResult = builder.newDocument();
+        Element results = xmlDocumentResult.createElement("Results");
+        xmlDocumentResult.appendChild(results);
 
         // connection to an ACCESS MDB
         ResultSetMetaData rsmd = rs.getMetaData();
         int colCount = rsmd.getColumnCount();
 
         while (rs.next()) {
-          Element row = doc.createElement("Row");
+          Element row = xmlDocumentResult.createElement("Row");
           results.appendChild(row);
           for (int ii = 1; ii <= colCount; ii++) {
-             String columnName = rsmd.getColumnName(ii);
+             String columnName = (rsmd.getTableName(ii)+ "."+rsmd.getColumnName(ii)).toUpperCase();
              String value = rs.getString(ii);
-             Element node = doc.createElement(columnName);
+             Element node = xmlDocumentResult.createElement(columnName);
              if (!StringUtils.isNullOrEmpty(value))
 				{
-					node.appendChild(doc.createTextNode(value.toString()));
+					node.appendChild(xmlDocumentResult.createTextNode(value.toString()));
 				}
 				row.appendChild(node);
           }
         }
 
-        String oldRes = getXmlResult();
-        xmlResult = getDocumentAsXml(doc);
-        notifyPropertyChanged("xmlResult", oldRes, xmlResult);
+        String oldRes = getXmlStringResult();
+        xmlStringResult = getDocumentAsString(xmlDocumentResult);
+        notifyPropertyChanged("xmlStringResult", oldRes, xmlStringResult);
 
       }
       catch (Exception e) {
@@ -590,12 +601,12 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
         }
       }
    }
-   public static String getDocumentAsXml(org.w3c.dom.Document doc)
+   public static String getDocumentAsString(org.w3c.dom.Document doc)
    throws TransformerConfigurationException, TransformerException {
 		 DOMSource domSource = new DOMSource(doc);
 		 TransformerFactory tf = TransformerFactory.newInstance();
 		 Transformer transformer = tf.newTransformer();
-		 //transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION,"yes");
+		 transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION,"yes");
 		 transformer.setOutputProperty(OutputKeys.METHOD, "xml");
 		 transformer.setOutputProperty(OutputKeys.ENCODING,"ISO-8859-1");
 		 // we want to pretty format the XML output
@@ -608,11 +619,87 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		 StreamResult sr = new StreamResult(sw);
 		 transformer.transform(domSource, sr);
 		 return sw.toString();
-}
+   }
+   
+	private void initAssertions()
+	{
+		assertionsSupport = new AssertionsSupport( this, new AssertableConfig()
+		{
+
+			public TestAssertionConfig addNewAssertion()
+			{
+				return getJdbcRequestTestStepConfig().addNewAssertion();
+			}
+
+			public List<TestAssertionConfig> getAssertionList()
+			{
+				return getJdbcRequestTestStepConfig().getAssertionList();
+			}
+
+			public void removeAssertion( int ix )
+			{
+				getJdbcRequestTestStepConfig().removeAssertion( ix );
+			}
+
+			public TestAssertionConfig insertAssertion( TestAssertionConfig source, int ix )
+			{
+				TestAssertionConfig conf = getJdbcRequestTestStepConfig().insertNewAssertion( ix );
+				conf.set( source );
+				return conf;
+			}
+		} );
+	}
+   
+	private class PropertyChangeNotifier
+	{
+		private AssertionStatus oldStatus;
+		private ImageIcon oldIcon;
+
+		public PropertyChangeNotifier()
+		{
+			oldStatus = getAssertionStatus();
+			oldIcon = getIcon();
+		}
+
+		public void notifyChange()
+		{
+			AssertionStatus newStatus = getAssertionStatus();
+			ImageIcon newIcon = getIcon();
+
+			if( oldStatus != newStatus )
+				notifyPropertyChanged( STATUS_PROPERTY, oldStatus, newStatus );
+
+			if( oldIcon != newIcon )
+				notifyPropertyChanged( ICON_PROPERTY, oldIcon, getIcon() );
+
+			oldStatus = newStatus;
+			oldIcon = newIcon;
+		}
+	}
+
 	public TestAssertion addAssertion(String assertionLabel)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		PropertyChangeNotifier notifier = new PropertyChangeNotifier();
+
+		try
+		{
+			JdbcXmlResponseAssertion assertion = (JdbcXmlResponseAssertion)assertionsSupport.addJdbcXmlAssertion( assertionLabel );
+			if( assertion == null )
+				return null;
+
+			if( getXmlStringResult() != null )
+			{
+				assertion.assertContent(getXmlDocumentResult(), new WsdlTestRunContext( this ) );
+				notifier.notifyChange();
+			}
+
+			return assertion;
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+			return null;
+		}
 	}
 	public void addAssertionsListener(AssertionsListener listener)
 	{
@@ -631,8 +718,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	}
 	public AssertableType getAssertableType()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return AssertableType.BOTH;
 	}
 	public TestAssertion getAssertionAt(int c)
 	{

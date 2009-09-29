@@ -23,8 +23,11 @@ import org.jdesktop.swingx.JXTable;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.JdbcAssertionRegistry;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.support.ModelItemPropertyEditorModel;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JComponentInspector;
@@ -46,6 +49,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
    private JdbcRequestTestStep jdbcRequestTestStep;
 	private ModelItemPropertyEditorModel<JdbcRequestTestStep> resultEditorModel;
 	private JComponentInspector<?> assertionInspector;
+	private AssertionsPanel assertionsPanel;
    
    public ModelItemPropertyEditorModel<JdbcRequestTestStep> getResultEditorModel()
 	{
@@ -97,17 +101,26 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		return toolbar;
 
 	}
-//	protected AssertionsPanel buildAssertionsPanel()
-//	{
-//		return new AssertionsPanel( (Assertable) jdbcRequestTestStep) )
-//		{
-//			protected void selectError( AssertionError error )
-//			{
+	protected AssertionsPanel buildAssertionsPanel()
+	{
+		return new JdbcAssertionsPanel( jdbcRequestTestStep )
+		{
+			protected void selectError( AssertionError error )
+			{
 //				ModelItemXmlEditor<?, ?> editor = ( ModelItemXmlEditor<?, ?> )getResultEditorModel();
 //				editor.requestFocus();
-//			}
-//		};
-//	}
+			}
+		};
+	}
+	private class JdbcAssertionsPanel extends AssertionsPanel {
+
+		public JdbcAssertionsPanel(Assertable assertable)
+		{
+			super(assertable);
+			addAssertionAction = new AddAssertionAction( assertable );
+			assertionListPopup.add( addAssertionAction );		}
+		
+	}
 	private void buildUI()
 	{
       inspectorPanel = JInspectorPanelFactory.build( buildContent());
@@ -118,7 +131,14 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		
 		add( buildToolbar(), BorderLayout.NORTH );		
 		add( inspectorPanel.getComponent(), BorderLayout.CENTER);
-		add( buildStatusBar(), BorderLayout.SOUTH );
+		assertionsPanel = buildAssertionsPanel();
+
+		assertionInspector = new JComponentInspector<JComponent>( assertionsPanel, "Assertions ("
+				+ getModelItem().getAssertionCount() + ")", "Assertions for this Test Request", true );
+
+		inspectorPanel.addInspector( assertionInspector );
+
+//		add( buildStatusBar(), BorderLayout.SOUTH );
 		setPreferredSize( new Dimension( 600, 450 ));
 	}
 
@@ -149,7 +169,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
 
-		resultEditorModel = new ModelItemPropertyEditorModel<JdbcRequestTestStep>( getModelItem(), "xmlResult" );
+		resultEditorModel = new ModelItemPropertyEditorModel<JdbcRequestTestStep>( getModelItem(), "xmlStringResult" );
 		panel.add( UISupport.getEditorFactory().buildXmlEditor( resultEditorModel ), BorderLayout.CENTER );
 
 		return panel;
@@ -184,6 +204,52 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				jdbcRequestTestStep.runQuery();
 			} catch (Exception e) {
 				UISupport.showErrorMessage("There's been an error in executing query " + e.toString());
+			}
+		}
+	}
+	public class AddAssertionAction extends AbstractAction
+	{
+		private final Assertable assertable;
+
+		public AddAssertionAction( Assertable assertable )
+		{
+			super( "Add Assertion" );
+			this.assertable = assertable;
+
+			putValue( Action.SHORT_DESCRIPTION, "Adds an assertion to this item" );
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/addAssertion.gif" ) );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			String[] assertions = JdbcAssertionRegistry.getInstance().getAvailableAssertionNames( assertable );
+
+			if( assertions == null || assertions.length == 0 )
+			{
+				UISupport.showErrorMessage( "No assertions available for this message" );
+				return;
+			}
+
+			String selection = ( String )UISupport.prompt( "Select assertion to add", "Select Assertion", assertions );
+			if( selection == null )
+				return;
+
+			if( !TestAssertionRegistry.getInstance().canAddMultipleAssertions( selection, assertable ) )
+			{
+				UISupport.showErrorMessage( "This assertion can only be added once" );
+				return;
+			}
+
+			TestAssertion assertion = assertable.addAssertion( selection );
+			if( assertion == null )
+			{
+				UISupport.showErrorMessage( "Failed to add assertion" );
+				return;
+			}
+
+			if( assertion.isConfigurable() )
+			{
+				assertion.configure();
 			}
 		}
 	}
