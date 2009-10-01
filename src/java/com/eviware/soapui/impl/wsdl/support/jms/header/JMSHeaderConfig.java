@@ -9,115 +9,115 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
-package com.eviware.soapui.impl.wsdl.support.jms;
+package com.eviware.soapui.impl.wsdl.support.jms.header;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 import com.eviware.soapui.config.JMSDeliveryModeTypeConfig;
-import com.eviware.soapui.config.JmsConfConfig;
+import com.eviware.soapui.config.JMSHeaderConfConfig;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSHeader;
 import com.eviware.soapui.support.PropertyChangeNotifier;
 
-public class JMSConfig implements PropertyChangeNotifier
+public class JMSHeaderConfig implements PropertyChangeNotifier
 {
 
-	private JmsConfConfig jmsConfConfig;
+	private JMSHeaderConfConfig jmsHeaderConfConfig;
 
 	private PropertyChangeSupport propertyChangeSupport;
 
-	private final JMSContainer container;
+	private final JMSHeaderContainer container;
 
-	public JMSConfig(JmsConfConfig jmsConfConfig, JMSContainer container)
+	public JMSHeaderConfig(JMSHeaderConfConfig jmsHeaderConfConfig, JMSHeaderContainer container)
 	{
-		this.jmsConfConfig = jmsConfConfig;
+		this.jmsHeaderConfConfig = jmsHeaderConfConfig;
 		this.container = container;
 		propertyChangeSupport = new PropertyChangeSupport(this);
-		if (!jmsConfConfig.isSetJMSDeliveryMode())
+		if (!jmsHeaderConfConfig.isSetJMSDeliveryMode())
 		{
-			jmsConfConfig.setJMSDeliveryMode(JMSDeliveryModeTypeConfig.PERSISTENT);
+			jmsHeaderConfConfig.setJMSDeliveryMode(JMSDeliveryModeTypeConfig.PERSISTENT);
 		}
 	}
 
-	public JMSContainer getContainer()
+	public JMSHeaderContainer getContainer()
 	{
 		return container;
 	}
 
-	public void setJmsConfConfig(JmsConfConfig jmsConfConfig)
+	public void setJMSHeaderConfConfig(JMSHeaderConfConfig jmsHeaderConfConfig)
 	{
-		this.jmsConfConfig = jmsConfConfig;
+		this.jmsHeaderConfConfig = jmsHeaderConfConfig;
 	}
 
 	public String getJMSCorrelationID()
 	{
-		return jmsConfConfig.getJMSCorrelationID();
+		return jmsHeaderConfConfig.getJMSCorrelationID();
 	}
 
 	public String getJMSReplyTo()
 	{
-		return jmsConfConfig.getJMSReplyTo();
+		return jmsHeaderConfConfig.getJMSReplyTo();
 	}
 
 	public String getJMSDeliveryMode()
 	{
-		return jmsConfConfig.getJMSDeliveryMode().toString();
+		return jmsHeaderConfConfig.getJMSDeliveryMode().toString();
 	}
 
 	public String getJMSPriority()
 	{
-		return jmsConfConfig.getJMSPriority();
+		return jmsHeaderConfConfig.getJMSPriority();
 	}
 
 	public String getJMSType()
 	{
-		return jmsConfConfig.getJMSType();
+		return jmsHeaderConfConfig.getJMSType();
 	}
 
 	public String getTimeToLive()
 	{
-		return jmsConfConfig.getTimeToLive();
+		return jmsHeaderConfConfig.getTimeToLive();
 	}
 
 	public void setJMSCorrelationID(String newValue)
 	{
 		String oldValue = getJMSCorrelationID();
-		jmsConfConfig.setJMSCorrelationID(newValue);
+		jmsHeaderConfConfig.setJMSCorrelationID(newValue);
 		propertyChangeSupport.firePropertyChange(JMSHeader.JMSCORRELATIONID, oldValue, newValue);
 	}
 
 	public void setJMSDeliveryMode(String newValue)
 	{
 		String oldValue = getJMSDeliveryMode();
-		jmsConfConfig.setJMSDeliveryMode(JMSDeliveryModeTypeConfig.Enum.forString(newValue));
+		jmsHeaderConfConfig.setJMSDeliveryMode(JMSDeliveryModeTypeConfig.Enum.forString(newValue));
 		propertyChangeSupport.firePropertyChange(JMSHeader.JMSDELIVERYMODE, oldValue, newValue);
 	}
 
 	public void setJMSPriority(String newValue)
 	{
 		String oldValue = getJMSPriority();
-		jmsConfConfig.setJMSPriority(newValue);
+		jmsHeaderConfConfig.setJMSPriority(newValue);
 		propertyChangeSupport.firePropertyChange(JMSHeader.JMSPRIORITY, oldValue, newValue);
 	}
 
 	public void setJMSReplyTo(String newValue)
 	{
 		String oldValue = getJMSReplyTo();
-		jmsConfConfig.setJMSReplyTo(newValue);
+		jmsHeaderConfConfig.setJMSReplyTo(newValue);
 		propertyChangeSupport.firePropertyChange(JMSHeader.JMSREPLYTO, oldValue, newValue);
 	}
 
 	public void setJMSType(String newValue)
 	{
 		String oldValue = getJMSType();
-		jmsConfConfig.setJMSType(newValue);
+		jmsHeaderConfConfig.setJMSType(newValue);
 		propertyChangeSupport.firePropertyChange(JMSHeader.JMSTYPE, oldValue, newValue);
 	}
 
 	public void setTimeToLive(String newValue)
 	{
 		String oldValue = getTimeToLive();
-		jmsConfConfig.setTimeToLive(newValue);
+		jmsHeaderConfConfig.setTimeToLive(newValue);
 		propertyChangeSupport.firePropertyChange(JMSHeader.TIMETOLIVE, oldValue, newValue);
 	}
 

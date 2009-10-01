@@ -9,26 +9,13 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
+package com.eviware.soapui.impl.wsdl.support.jms.header;
 
-package com.eviware.soapui.impl.wsdl.support.jms;
 
-
-public class JMSContainerImpl  implements JMSContainer
+public interface JMSHeaderContainer
 {
 
-	JMSConfig jmsConfig;
+	JMSHeaderConfig getJMSHeaderConfig();
 
-	
-
-	public JMSConfig getJMSConfig()
-	{
-		return jmsConfig;
-	}
-
-
-
-	
-
-	
 
 }

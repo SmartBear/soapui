@@ -10,7 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.support.editor.inspectors.jms;
+package com.eviware.soapui.support.editor.inspectors.jms.header;
 
 import java.awt.BorderLayout;
 
@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.impl.wsdl.support.jms.JMSContainer;
+import com.eviware.soapui.impl.wsdl.support.jms.header.JMSHeaderContainer;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
@@ -27,15 +27,15 @@ import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.jgoodies.binding.PresentationModel;
 
-public abstract class AbstractJMSInspector extends AbstractXmlInspector
+public abstract class AbstractJMSHeaderInspector extends AbstractXmlInspector
 {
 	private JPanel mainPanel;
 	private SimpleBindingForm form;
-	private final JMSContainer jmsContainer;
+	private final JMSHeaderContainer jmsContainer;
 
-	protected AbstractJMSInspector(JMSContainer jmsContainer)
+	protected AbstractJMSHeaderInspector(JMSHeaderContainer jmsContainer)
 	{
-		super("JMS Headers", "JMS header settings and properties", true, JMSInspectorFactory.INSPECTOR_ID);
+		super("JMS Headers", "JMS header settings and properties", true, JMSHeaderInspectorFactory.INSPECTOR_ID);
 		this.jmsContainer = jmsContainer;
 	}
 
@@ -44,7 +44,7 @@ public abstract class AbstractJMSInspector extends AbstractXmlInspector
 		if (mainPanel == null)
 		{
 			mainPanel = new JPanel(new BorderLayout());
-			form = new SimpleBindingForm(new PresentationModel<AbstractHttpRequest<?>>(jmsContainer.getJMSConfig()));
+			form = new SimpleBindingForm(new PresentationModel<AbstractHttpRequest<?>>(jmsContainer.getJMSHeaderConfig()));
 			buildContent(form);
 			mainPanel.add(new JScrollPane(form.getPanel()), BorderLayout.CENTER);
 		}

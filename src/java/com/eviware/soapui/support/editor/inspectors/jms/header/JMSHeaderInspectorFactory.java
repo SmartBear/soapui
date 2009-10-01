@@ -10,17 +10,16 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.support.editor.inspectors.jms;
+package com.eviware.soapui.support.editor.inspectors.jms.header;
 
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
 import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
 
-public class JMSInspectorFactory implements RequestInspectorFactory, ResponseInspectorFactory
+public class JMSHeaderInspectorFactory implements RequestInspectorFactory, ResponseInspectorFactory
 {
 	public static final String INSPECTOR_ID = "JMS";
 
@@ -32,7 +31,7 @@ public class JMSInspectorFactory implements RequestInspectorFactory, ResponseIns
 	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof WsdlRequest )
-			return new WsdlRequestJMSInspector( ( ( WsdlRequest )modelItem ) );
+			return new WsdlRequestJMSHeaderInspector( ( ( WsdlRequest )modelItem ) );
 
 		return null;
 	}
@@ -40,7 +39,7 @@ public class JMSInspectorFactory implements RequestInspectorFactory, ResponseIns
 	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
 	{
 //		if( modelItem instanceof WsdlMockResponse )
-//			return new WsdlMockresponseJMSInspector( ( ( WsdlMockResponse )modelItem ) );
+//			return new WsdlResponseJMSInspector( ( ( JMSResponse )modelItem ) );
 
 		return null;
 	}

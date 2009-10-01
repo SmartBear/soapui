@@ -25,7 +25,7 @@ import javax.naming.NamingException;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JMSPropertyConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.support.jms.JMSConfig;
+import com.eviware.soapui.impl.wsdl.support.jms.header.JMSHeaderConfig;
 import com.eviware.soapui.impl.wsdl.support.jms.property.JMSPropertiesConfig;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -53,7 +53,7 @@ public class JMSHeader
 
 	public void setMessageHeaders(Message message, Request request, Hermes hermes)
 	{
-		JMSConfig jmsConfig = ((WsdlRequest) request).getJMSConfig();
+		JMSHeaderConfig jmsConfig = ((WsdlRequest) request).getJMSHeaderConfig();
 		try
 		{
 			// JMSCORRELATIONID

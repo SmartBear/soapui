@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.eviware.soapui.config.JMSPropertyConfig;
-import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.Editor;
@@ -37,10 +36,7 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 
 	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
-//		if( modelItem instanceof WsdlRequest )
-//			return new JMSPropertyInspector( ( ( WsdlRequest )modelItem ) );  
-
-		if( modelItem instanceof AbstractHttpRequestInterface<?> )
+		if( modelItem instanceof WsdlRequest )
 			return new JMSPropertyInspector( (JMSPropertyInspectorModel) new WsdlRequestJMSPropertiesModel( ( WsdlRequest )modelItem ) );
 		
 		return null;
@@ -86,7 +82,4 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 			
 		}
 	}
-	
-	
-	
 }

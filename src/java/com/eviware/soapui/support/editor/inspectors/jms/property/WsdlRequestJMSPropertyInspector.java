@@ -18,7 +18,6 @@ import java.beans.PropertyChangeListener;
 import com.eviware.soapui.config.JMSDeliveryModeTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.support.components.SimpleBindingForm;
-import com.eviware.soapui.support.editor.inspectors.jms.AbstractJMSInspector;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
 
 public class WsdlRequestJMSPropertyInspector extends AbstractJMSPropertyInspector implements XmlInspector, PropertyChangeListener

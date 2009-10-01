@@ -25,8 +25,6 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.support.jms.JMSConfig;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;

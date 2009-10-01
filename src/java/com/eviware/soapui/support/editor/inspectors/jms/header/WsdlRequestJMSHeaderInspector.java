@@ -10,7 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.support.editor.inspectors.jms;
+package com.eviware.soapui.support.editor.inspectors.jms.header;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -20,12 +20,12 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
 
-public class WsdlRequestJMSInspector extends AbstractJMSInspector implements XmlInspector, PropertyChangeListener
+public class WsdlRequestJMSHeaderInspector extends AbstractJMSHeaderInspector implements XmlInspector, PropertyChangeListener
 {
 
 	private SimpleBindingForm simpleform;
 	
-	public WsdlRequestJMSInspector(WsdlRequest request)
+	public WsdlRequestJMSHeaderInspector(WsdlRequest request)
 	{
 		super(request);
 	}

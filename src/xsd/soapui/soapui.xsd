@@ -258,7 +258,7 @@
                 	<xsd:element name="wsrmConfig" type="tns:WsrmConfig"
                 		maxOccurs="1" minOccurs="0">
                 	</xsd:element>
-                	<xsd:element name="jmsConfig" type="tns:JmsConf"
+                	<xsd:element name="jmsConfig" type="tns:JMSHeaderConf"
                 		maxOccurs="1" minOccurs="0">
                 	</xsd:element>
                 	<xsd:element name="jmsPropertyConfig" type="tns:JMSPropertiesConf" maxOccurs="1" minOccurs="0"></xsd:element>
@@ -1853,7 +1853,7 @@
     	</xsd:sequence>
     </xsd:complexType>
 
-    <xsd:complexType name="JmsConf">
+    <xsd:complexType name="JMSHeaderConf">
     	<xsd:attribute name="JMSCorrelationID" type="xsd:string"></xsd:attribute>
     	<xsd:attribute name="JMSReplyTo" type="xsd:string"></xsd:attribute>
     	<xsd:attribute name="JMSType" type="xsd:string"></xsd:attribute>
