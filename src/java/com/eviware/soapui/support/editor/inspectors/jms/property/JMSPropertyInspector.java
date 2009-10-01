@@ -29,9 +29,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
-import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.request.StringToStringMapTableModel;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.EditorView;
@@ -89,7 +87,7 @@ public class JMSPropertyInspector extends AbstractXmlInspector implements Proper
 			removeButton = UISupport.createToolbarButton( new RemoveAction() );
 			builder.addFixed( removeButton );
 			builder.addGlue();
-			builder.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.HEADERS_HELP_URL ) ) );
+//			builder.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.HEADERS_HELP_URL ) ) );
 
 			panel.add( builder, BorderLayout.NORTH );
 

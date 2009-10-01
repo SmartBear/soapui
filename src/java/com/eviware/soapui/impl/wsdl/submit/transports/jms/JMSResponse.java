@@ -31,7 +31,7 @@ import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 /*
- * IMPORTANT TODO:this class is NOT finished yet , and it contains lots of dummy data
+ * IMPORTANT TODO:this class is NOT finished yet 
  * 
  */
 public class JMSResponse implements WsdlResponse
@@ -39,6 +39,11 @@ public class JMSResponse implements WsdlResponse
 
 	String payload;
 	Message message;
+	public Message getMessage()
+	{
+		return message;
+	}
+
 	Request request;
 	long requestStartedTime;
 
@@ -156,11 +161,11 @@ public class JMSResponse implements WsdlResponse
 
 	public StringToStringMap getResponseHeaders()
 	{
-		if (message != null)
-		{
-			return JMSHeader.getReceivedMessageHeaders(message);
-		}
-		else
+		// if (message != null)
+		// {
+		// return JMSHeader.getReceivedMessageHeaders(message);
+		// }
+		// else
 			return new StringToStringMap();
 	}
 

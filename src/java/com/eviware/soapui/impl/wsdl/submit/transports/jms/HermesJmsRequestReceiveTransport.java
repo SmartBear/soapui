@@ -79,6 +79,8 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 				}
 				// make response
 				JMSResponse response = new JMSResponse(textMessage.getText(), textMessage, request, timeStarted);
+				attachResponseToRequest(submitContext, request, response);
+				
 				return response;
 			}
 			else

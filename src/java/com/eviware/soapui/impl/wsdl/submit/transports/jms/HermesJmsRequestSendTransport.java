@@ -85,6 +85,7 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 			
 			// make response
 			JMSResponse response = new JMSResponse("", null, request, timeStarted);
+			attachResponseToRequest(submitContext, request, response);
 			return response;
 		}
 		catch (Throwable jmse)

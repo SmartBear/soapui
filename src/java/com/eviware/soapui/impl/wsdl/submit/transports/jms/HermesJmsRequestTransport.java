@@ -16,6 +16,7 @@ import org.apache.commons.lang.NotImplementedException;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.RequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry.CannotResolveJmsTypeException;
@@ -184,6 +185,14 @@ public class HermesJmsRequestTransport implements RequestTransport
 		catch( Exception e )
 		{}
 		return to;
+	}
+
+	protected void attachResponseToRequest(SubmitContext submitContext, Request request, JMSResponse response)
+	{
+		if(request instanceof WsdlRequest)
+		{
+			((WsdlRequest)request).setResponse(response, submitContext);
+		}
 	}
 
 	public static class UnresolvedJMSEndpointException extends Exception

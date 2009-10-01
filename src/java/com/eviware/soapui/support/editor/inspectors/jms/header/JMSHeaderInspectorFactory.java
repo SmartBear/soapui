@@ -21,7 +21,7 @@ import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
 
 public class JMSHeaderInspectorFactory implements RequestInspectorFactory, ResponseInspectorFactory
 {
-	public static final String INSPECTOR_ID = "JMS";
+	public static final String INSPECTOR_ID = "JMS Header";
 
 	public String getInspectorId()
 	{
