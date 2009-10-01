@@ -64,18 +64,18 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.JdbcXmlResponseAssertio
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.support.DocumentListenerAdapter;
-import com.eviware.soapui.support.PropertyChangeNotifier;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -96,6 +96,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	private JdbcRequestTestStepConfig jdbcRequestTestStepConfig;
 	public final static String JDBCREQUEST = JdbcRequestTestStep.class.getName() + "@jdbcrequest";
 	public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";
+	public static final String RESPONSE_PROPERTY = WsdlTestRequest.class.getName() + "@response";
 	private WsdlSubmit<WsdlRequest> submit;
 	private ImageIcon failedIcon;
 	private ImageIcon okIcon;
@@ -140,6 +141,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	protected JXEditTextArea queryArea;
 	private JButton testConnectionButton;
 	private AssertionsSupport assertionsSupport;
+	private PropertyChangeNotifier notifier;
 
 	public String getDriver()
 	{
@@ -174,6 +176,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	{
 		String old = getQuery();
 		jdbcRequestTestStepConfig.setQuery(q);
+		this.query = q;
 		notifyPropertyChanged( "query", old, q );
 	}
 	public JdbcRequestTestStepConfig getJdbcRequestTestStepConfig()
@@ -208,161 +211,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		initAssertions();
 	}
 
-
-	public JComponent getComponent()
-	{
-		if (panel == null)
-		{
-			panel = new JPanel(new BorderLayout());
-
-			form = new SimpleForm();
-			form.addSpace(5);
-
-			form.setDefaultTextFieldColumns(50);
-
-			JTextField textField = form.appendTextField(DRIVER_FIELD, "JDBC Driver to use");
-			textField.setText(getDriver());
-			// PropertyExpansionPopupListener.enable( textField,
-			// getDataSourceStep() );
-			textField.getDocument().addDocumentListener(new DocumentListenerAdapter()
-			{
-
-				@Override
-				public void update(Document document)
-				{
-					driver = form.getComponentValue(DRIVER_FIELD);
-					setDriver(driver);
-					if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString))
-					{
-						testConnectionButton.setEnabled(false);
-					}
-					else
-					{
-						testConnectionButton.setEnabled(true);
-					}
-					if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString) ||
-							StringUtils.isNullOrEmpty(query))
-					{
-						runnable = false;
-					}
-					else
-					{
-						runnable = true;
-					}
-			}
-			});
-
-			textField = form.appendTextField(CONNSTR_FIELD, "JDBC Driver Connection String");
-			textField.setText(getConnectionString());
-			// PropertyExpansionPopupListener.enable( textField,
-			// getDataSourceStep() );
-			textField.getDocument().addDocumentListener(new DocumentListenerAdapter()
-			{
-
-				@Override
-				public void update(Document document)
-				{
-					connectionString = form.getComponentValue(CONNSTR_FIELD);
-					setConnectionString(connectionString);
-					if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString))
-					{
-						testConnectionButton.setEnabled(false);
-					}
-					else
-					{
-						testConnectionButton.setEnabled(true);
-					}
-					if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString) ||
-							StringUtils.isNullOrEmpty(query))
-					{
-						runnable = false;
-					}
-					else
-					{
-						runnable = true;
-					}
-				}
-			});
-
-			// JPasswordField passField = form.appendPasswordField(PASS_FIELD,
-			// "Connection string Password");
-			// passField.setText(password);
-			// passField.getDocument().addDocumentListener(new
-			// DocumentListenerAdapter() {
-			//		
-			// @Override
-			// public void update(Document document) {
-			// password = form
-			// .getComponentValue(PASS_FIELD);
-			// saveConfig();
-			// if (StringUtils.isNullOrEmpty(driver) ||
-			// StringUtils.isNullOrEmpty(connectionString) &&
-			// (DatabaseConnection.isNeededPassword(connectionString) &&
-			// StringUtils.isNullOrEmpty(password)))
-			// {
-			// testConnectionButton.setEnabled(false);
-			// } else {
-			// testConnectionButton.setEnabled(true);
-			// }
-			// }
-			// });
-			testConnectionButton = form.appendButton("TestConnection", "Test selected database connection");
-			testConnectionButton.setAction(new TestConnectionAction());
-			if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString))
-			{
-				testConnectionButton.setEnabled(false);
-			}
-			else
-			{
-				testConnectionButton.setEnabled(true);
-			}
-
-			if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString) ||
-					StringUtils.isNullOrEmpty(query))
-			{
-				runnable = false;
-			}
-			else
-			{
-				runnable = true;
-			}
-			queryArea = JXEditTextArea.createSqlEditor();
-			JXEditAreaPopupMenu.add(queryArea);
-			// PropertyExpansionPopupListener.enable( queryArea,
-			// getDataSourceStep() );
-			queryArea.setText(getQuery());
-			JScrollPane scrollPane = new JScrollPane(queryArea);
-			scrollPane.setPreferredSize(new Dimension(400, 150));
-			form.append(QUERY_FIELD, scrollPane);
-			queryArea.getDocument().addDocumentListener(new DocumentListenerAdapter()
-			{
-
-				@Override
-				public void update(Document document)
-				{
-					query = queryArea.getText();
-					setQuery(query);
-				}
-			});
-
-			// isStoredProcedureCheckBox = form.appendCheckBox(
-			// STOREDPROCEDURE_FIELD,
-			// "Select if this is a stored procedure", storedProcedure );
-			// isStoredProcedureCheckBox.addChangeListener(
-			// new ChangeListener()
-			// {
-			// public void stateChanged( ChangeEvent e )
-			// {
-			// storedProcedure = ( (JCheckBox) e.getSource() ).isSelected();
-			// saveConfig();
-			// }
-			// } );
-
-			panel.add(form.getPanel());
-		}
-
-		return panel;
-	}
 
 	@Override
 	public WsdlTestStep clone(WsdlTestCase targetTestCase, String name)
@@ -405,22 +253,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	public String getDefaultSourcePropertyName()
 	{
 		return "Response";
-	}
-
-	public class TestConnectionAction extends AbstractAction
-	{
-		public TestConnectionAction()
-		{
-			putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_testcase.gif"));
-			putValue(Action.SHORT_DESCRIPTION, "Test the current Connection");
-
-			setEnabled(false);
-		}
-
-		public void actionPerformed(ActionEvent arg0)
-		{
-			 testDatabaseConnection(getModelItem(), driver, connectionString);
-		}
 	}
 
 	public void testDatabaseConnection(ModelItem testingModelItem, String driver, String connectionString) {
@@ -775,6 +607,33 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		// TODO Auto-generated method stub
 		
 	}
+	public void assertResponse( SubmitContext context )
+	{
+		try
+		{
+			if( notifier == null )
+				notifier = new PropertyChangeNotifier();
+
+//		messageExchange = getResponse() == null ? null : new WsdlResponseMessageExchange( this );
+
+			if( this != null )
+			{
+				// assert!
+				for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
+				{
+					((JdbcXmlResponseAssertion )assertion ).assertContent(xmlDocumentResult, context);
+				}
+			}
+
+			notifier.notifyChange();
+		}
+		catch (AssertionException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	
 
 }
