@@ -331,7 +331,7 @@ public class AssertionsSupport implements PropertyChangeListener
 			TestAssertionConfig assertionConfig = modelItemConfig.addNewAssertion();
 			assertionConfig.setType( JdbcAssertionRegistry.getInstance().getAssertionTypeForName( assertionLabel ) );
 
-			WsdlMessageAssertion assertion = addWsdlAssertion( assertionConfig );
+			WsdlMessageAssertion assertion = addJdbcXmlAssertion( assertionConfig );
 			if( assertion == null )
 				return null;
 
