@@ -28,6 +28,10 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
+import com.eviware.soapui.impl.wsdl.support.jms.JMSConfig;
+import com.eviware.soapui.impl.wsdl.support.jms.JMSContainer;
+import com.eviware.soapui.impl.wsdl.support.jms.property.JMSPropertiesConfig;
+import com.eviware.soapui.impl.wsdl.support.jms.property.JMSPropertyContainer;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaContainer;
 import com.eviware.soapui.impl.wsdl.support.wsrm.WsrmConfig;
@@ -55,7 +59,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
  */
 
 public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implements WsdlAttachmentContainer,
-		PropertyExpansionContainer, WsaContainer, WsrmContainer
+		PropertyExpansionContainer, WsaContainer, WsrmContainer, JMSContainer, JMSPropertyContainer
 {
 	public final static Logger log = Logger.getLogger( WsdlRequest.class );
 
@@ -83,6 +87,8 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 
 	private WsaConfig wsaConfig;
 	private WsrmConfig wsrmConfig;
+	private JMSConfig jmsConfig;
+	private JMSPropertiesConfig jmsPropertyConfig;
 
 	public WsdlRequest( WsdlOperation operation, WsdlRequestConfig callConfig )
 	{
@@ -625,5 +631,31 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 	public String getResponseContentAsXml()
 	{
 		return getResponse() == null ? null : getResponse().getContentAsString();
+	}
+
+	public JMSConfig getJMSConfig()
+	{
+		if( jmsConfig == null )
+		{
+			if( !getConfig().isSetJmsConfig() )
+			{
+				getConfig().addNewJmsConfig();
+			}
+			jmsConfig = new JMSConfig( getConfig().getJmsConfig(), this );
+		}
+		return jmsConfig;
+	}
+
+	public JMSPropertiesConfig getJMSPropertiesConfig()
+	{
+		if( jmsPropertyConfig == null )
+		{
+			if( !getConfig().isSetJmsPropertyConfig() )
+			{
+				getConfig().addNewJmsPropertyConfig();
+			}
+			jmsPropertyConfig = new JMSPropertiesConfig( getConfig().getJmsPropertyConfig(), this );
+		}
+		return jmsPropertyConfig;
 	}
 }

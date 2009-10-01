@@ -10,7 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.support.editor.inspectors.httpheaders;
+package com.eviware.soapui.support.editor.inspectors.jms.property;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -39,37 +39,38 @@ import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 
-public class HttpHeadersInspector extends AbstractXmlInspector implements PropertyChangeListener
+public class JMSPropertyInspector extends AbstractXmlInspector implements PropertyChangeListener
 {
 	private StringToStringMapTableModel headersTableModel;
-	private final HttpHeadersInspectorModel model;
+	private final JMSPropertyInspectorModel model;
 	private JTable headersTable;
 	private JPanel panel;
 	private JButton removeButton;
 	public boolean changing;
 
-	protected HttpHeadersInspector( HttpHeadersInspectorModel model )
+	protected JMSPropertyInspector( JMSPropertyInspectorModel model )
 	{ 
-		super( "Headers (" + ( model.getHeaders() == null ? "0" : model.getHeaders().size() ) + ")",
-				"Additional HTTP Headers for this message", true, HttpHeadersInspectorFactory.INSPECTOR_ID );
+		super( "JMS Property (" + ( model.getJMSProperties() == null ? "0" : model.getJMSProperties().size() ) + ")",
+				"Additional JMS Property for this message", true, JMSPropertyInspectorFactory.INSPECTOR_ID );
 		
 		this.model = model;
 
 		model.addPropertyChangeListener( this );
 	}
 
+	
 	public JComponent getComponent()
 	{
 		if( panel != null )
 			return panel;
 
-		headersTableModel = new StringToStringMapTableModel( model.getHeaders(), "Header", "Value", !model.isReadOnly() );
+		headersTableModel = new StringToStringMapTableModel( model.getJMSProperties(), "Key", "Value", !model.isReadOnly() );
 		headersTableModel.addTableModelListener( new TableModelListener()
 		{
 			public void tableChanged( TableModelEvent arg0 )
 			{
-				model.setHeaders( headersTableModel.getData() );
-				setTitle( "Headers (" + ( model.getHeaders() == null ? "0" : model.getHeaders().size() ) + ")" );
+				model.setJMSProperties( headersTableModel.getData() );
+				setTitle( "JMS Property (" + ( model.getJMSProperties() == null ? "0" : model.getJMSProperties().size() ) + ")" );
 			}
 		} );
 
@@ -126,7 +127,7 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 	public void propertyChange( PropertyChangeEvent evt )
 	{
 		if( !changing )
-			headersTableModel.setData( model.getHeaders() );
+			headersTableModel.setData( model.getJMSProperties() );
 	}
 
 	private final class RemoveAction extends AbstractAction
@@ -135,13 +136,13 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 		{
 			super();
 			putValue( AbstractAction.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-			putValue( AbstractAction.SHORT_DESCRIPTION, "Removes the selected custom HTTP Header from this message" );
+			putValue( AbstractAction.SHORT_DESCRIPTION, "Removes the selected custom JMS Property from this message" );
 		}
 
 		public void actionPerformed( ActionEvent arg0 )
 		{
 			int row = headersTable.getSelectedRow();
-			if( row != -1 && UISupport.confirm( "Delete selected header?", "Remove Header" ) )
+			if( row != -1 && UISupport.confirm( "Delete selected JMS Property?", "Remove JMS Property" ) )
 			{
 				changing = true;
 				headersTableModel.remove( row );
@@ -156,12 +157,12 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 		{
 			super();
 			putValue( AbstractAction.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			putValue( AbstractAction.SHORT_DESCRIPTION, "Adds a custom HTTP Header to this message" );
+			putValue( AbstractAction.SHORT_DESCRIPTION, "Adds a custom JMS Property to this message" );
 		}
 
 		public void actionPerformed( ActionEvent arg0 )
 		{
-			Object header = UISupport.prompt( "Specify name of header to add", "Add HTTP Header", "" );
+			Object header = UISupport.prompt( "Specify name of JMS Property to add", "Add JMS Property", "" );
 			if( header != null )
 			{
 				changing = true;

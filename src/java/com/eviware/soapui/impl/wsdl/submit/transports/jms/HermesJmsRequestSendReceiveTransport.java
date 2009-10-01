@@ -25,6 +25,8 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.support.jms.JMSConfig;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -74,8 +76,10 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 			TextMessage textMessageSend = session.createTextMessage();
 			String messageBody = PropertyExpander.expandProperties(submitContext,request.getRequestContent());
 			textMessageSend.setText(messageBody);
-         JMSHeader jmsHeader= new JMSHeader();
+        
+			JMSHeader jmsHeader= new JMSHeader();
          jmsHeader.setMessageHeaders(textMessageSend, request, hermes);
+         JMSHeader.setMessageProperties(textMessageSend, request, hermes);
 			
          // send message to producer
 			messageProducer.send(textMessageSend, 
