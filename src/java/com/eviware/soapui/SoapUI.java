@@ -267,8 +267,6 @@ public class SoapUI
 		mainToolbar.add(new ShowOnlineHelpAction("Trial", HelpUrls.TRIAL_URL, "Apply for soapUI Pro Trial License",
 				"/favicon.png"));
 		mainToolbar.addSeparator();
-		mainToolbar.add(new StartHermesJMSButtonAction());
-		mainToolbar.addSeparator();
 		mainToolbar.add(new PreferencesActionDelegate());
 		mainToolbar.add(new ExitButtonAction());
 	
@@ -400,7 +398,10 @@ public class SoapUI
 		toolsMenu.add(SwingActionDelegate.createDelegate(TcpMonAction.SOAPUI_ACTION_ID));
 		// toolsMenu.addSeparator();
 		// toolsMenu.add( new XQueryXPathTesterAction());
-
+		toolsMenu.addSeparator();
+		toolsMenu.add(new StartHermesJMSButtonAction());
+	
+		
 		return toolsMenu;
 	}
 

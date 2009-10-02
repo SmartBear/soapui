@@ -31,6 +31,7 @@ public class StartHermesJMSButtonAction extends AbstractAction
 	{
 		putValue(Action.SMALL_ICON, UISupport.createImageIcon("/hermes-16x16.gif"));
 		putValue(Action.SHORT_DESCRIPTION, "Start HermesJMS application");
+		putValue(Action.NAME, "HermesJMS 1.13");
 	}
 
 	public void actionPerformed(ActionEvent e)
