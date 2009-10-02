@@ -118,6 +118,6 @@ public class PanelBuilderRegistry
 		register( PropertyTransfersTestStep.class, new PropertyTransfersTestStepPanelBuilder() );
 		register( WsdlRunTestCaseTestStep.class, new WsdlRunTestCaseTestStepPanelBuilder() );
 		register( WsdlMockResponseTestStep.class, new MockResponseStepPanelBuilder() );
-		register( JdbcRequestTestStep.class, new JdbcRequestTestStepPanelBuilder() );
+		register( JdbcRequestTestStep.class, new JdbcRequestTestStepPanelBuilder<JdbcRequestTestStep>() );
 	}
 }

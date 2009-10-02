@@ -24,13 +24,13 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
  * @author dragica.soldo
  */
 
-public class JdbcRequestTestStepPanelBuilder extends EmptyPanelBuilder<JdbcRequestTestStep>
+public class JdbcRequestTestStepPanelBuilder<T extends JdbcRequestTestStep> extends EmptyPanelBuilder<T>
 {
 	public JdbcRequestTestStepPanelBuilder()
 	{
 	}
 
-	public DesktopPanel buildDesktopPanel( JdbcRequestTestStep testStep )
+	public DesktopPanel buildDesktopPanel( T testStep )
 	{
 		return new JdbcRequestTestStepDesktopPanel( testStep );
 	}
@@ -40,7 +40,7 @@ public class JdbcRequestTestStepPanelBuilder extends EmptyPanelBuilder<JdbcReque
 		return true;
 	}
 	@Override
-	public Component buildOverviewPanel( JdbcRequestTestStep modelItem )
+	public Component buildOverviewPanel( T modelItem )
 	{
 		return buildDefaultProperties( modelItem, "JdbcRequestTestStep Properties" );
 	}
