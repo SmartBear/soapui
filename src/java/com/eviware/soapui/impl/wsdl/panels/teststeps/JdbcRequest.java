@@ -78,7 +78,7 @@ public class JdbcRequest extends AbstractModelItem implements Request
 
 	public String getTimeout()
 	{
-		return testStep.getTimeout();
+		return null;
 	}
 
 	public void removeSubmitListener( SubmitListener listener )

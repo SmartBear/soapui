@@ -46,9 +46,11 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
+import com.eviware.soapui.impl.wsdl.support.JdbcMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -346,7 +348,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		// resultSetCount = resultSet == null ? 0 : 1;
 	}
 
-	@SuppressWarnings( "unchecked" )
 	@Override
 	public void prepare( TestCaseRunner testRunner, TestCaseRunContext context ) throws Exception
 	{
@@ -516,8 +517,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 			if( getXmlStringResult() != null )
 			{
-				// assertion.assertContent(getXmlDocumentResult(), new
-				// WsdlTestRunContext( this ) );
+				assertion.assertResponse(new JdbcMessageExchange( this ), new WsdlTestRunContext( this ) );
 				notifier.notifyChange();
 			}
 
@@ -612,16 +612,14 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			if( notifier == null )
 				notifier = new PropertyChangeNotifier();
 
-			// messageExchange = getResponse() == null ? null : new
-			// WsdlResponseMessageExchange( this );
+			JdbcMessageExchange messageExchange = new JdbcMessageExchange( this );
 
 			if( this != null )
 			{
 				// assert!
 				for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
 				{
-					// ((JdbcXmlResponseAssertion )assertion
-					// ).assertContent(xmlDocumentResult, context);
+					assertion.assertResponse(messageExchange, context);
 				}
 			}
 
@@ -629,15 +627,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		}
 		catch( Exception e )
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
-	public String getTimeout()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
