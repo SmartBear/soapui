@@ -531,6 +531,13 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				jdbcRequestTestStep.setXmlStringResult( xml );
 		}
 
+		@Override
+		public void release()
+		{
+			super.release();
+			
+			jdbcRequestTestStep.removePropertyChangeListener( JdbcRequestTestStep.RESPONSE_PROPERTY, this );
+		}
 	}
 
 	public class TestConnectionAction extends AbstractAction
