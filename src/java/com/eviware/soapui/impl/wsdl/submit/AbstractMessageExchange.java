@@ -77,5 +77,7 @@ public abstract class AbstractMessageExchange<T extends ModelItem> implements Me
 	{
 		this.messages = messages;
 	}
+	
+	
 
 }

@@ -25,8 +25,6 @@ import org.apache.xmlbeans.XmlObject;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.JdbcAssertionRegistry;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.JdbcXmlResponseAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
@@ -323,51 +321,4 @@ public class AssertionsSupport implements PropertyChangeListener
 			assertion.resolve( context );
 		}
 	}
-	
-	public WsdlMessageAssertion addJdbcXmlAssertion( String assertionLabel )
-	{
-		try
-		{
-			TestAssertionConfig assertionConfig = modelItemConfig.addNewAssertion();
-			assertionConfig.setType( JdbcAssertionRegistry.getInstance().getAssertionTypeForName( assertionLabel ) );
-
-			WsdlMessageAssertion assertion = addJdbcXmlAssertion( assertionConfig );
-			if( assertion == null )
-				return null;
-
-			fireAssertionAdded( assertion );
-
-			return assertion;
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-			return null;
-		}
-	}
-	public WsdlMessageAssertion addJdbcXmlAssertion( TestAssertionConfig config )
-	{
-		try
-		{
-			WsdlMessageAssertion assertion = JdbcAssertionRegistry.getInstance().buildAssertion( config, assertable );
-			if( assertion == null )
-			{
-				return null;
-			}
-			else
-			{
-				assertions.add( assertion );
-				assertion.addPropertyChangeListener( this );
-
-				return assertion;
-			}
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-			return null;
-		}
-	}
-
-	
 }

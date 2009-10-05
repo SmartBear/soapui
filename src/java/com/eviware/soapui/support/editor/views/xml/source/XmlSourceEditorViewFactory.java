@@ -44,6 +44,7 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlValidator;
 import com.eviware.soapui.impl.wsdl.support.wss.DefaultWssContainer;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
+import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.RestResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
@@ -70,6 +71,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 {
 	public static final String VIEW_ID = "Source";
 
+	@SuppressWarnings( "unchecked" )
 	public XmlEditorView createEditorView( XmlEditor editor )
 	{
 		return new XmlSourceEditorView<ModelItem>( editor, null );
@@ -80,6 +82,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		return VIEW_ID;
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public EditorView<?> createRequestEditorView( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof WsdlRequest )
@@ -99,6 +102,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		return null;
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public EditorView<?> createResponseEditorView( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof WsdlRequest )
@@ -118,6 +122,10 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 			return new XmlSourceEditorView<MessageExchangeModelItem>( ( XmlEditor )editor,
 					( MessageExchangeModelItem )modelItem );
 		}
+		else if( modelItem instanceof JdbcRequestTestStep)
+		{
+			return new XmlSourceEditorView<JdbcRequestTestStep>( (XmlEditor) editor, (JdbcRequestTestStep)modelItem );
+		}
 
 		return null;
 	}
@@ -133,6 +141,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		private JMenu applyMenu;
 		private JMenu wsaApplyMenu;
 
+		@SuppressWarnings( "unchecked" )
 		public WsdlRequestXmlSourceEditor( XmlEditor xmlEditor, WsdlRequest request )
 		{
 			super( xmlEditor, request );
@@ -213,6 +222,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 
 	public static class WsdlMockRequestXmlSourceEditor extends XmlSourceEditorView<WsdlMockResponse>
 	{
+		@SuppressWarnings( "unchecked" )
 		public WsdlMockRequestXmlSourceEditor( XmlEditor xmlEditor, WsdlMockResponse mockResponse )
 		{
 			super( xmlEditor, mockResponse );
@@ -247,6 +257,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 
 	public static class WsdlResponseXmlSourceEditor extends XmlSourceEditorView<WsdlRequest>
 	{
+		@SuppressWarnings( "unchecked" )
 		public WsdlResponseXmlSourceEditor( XmlEditor xmlEditor, WsdlRequest request )
 		{
 			super( xmlEditor, request );
@@ -278,6 +289,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		private JMenu applyMenu;
 		private JMenu wsaApplyMenu;
 
+		@SuppressWarnings( "unchecked" )
 		public WsdlMockResponseXmlSourceEditor( XmlEditor xmlEditor, WsdlMockResponse mockResponse )
 		{
 			super( xmlEditor, mockResponse );
@@ -359,6 +371,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 			super( xmlEditor, restRequest );
 		}
 
+		@SuppressWarnings( "unchecked" )
 		protected ValidationError[] validateXml( String xml )
 		{
 			if( getModelItem() instanceof HttpRequestInterface

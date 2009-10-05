@@ -15,7 +15,7 @@ package com.eviware.soapui.model.iface;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
- * Request Response behaviour
+ * Request Response behavior
  * 
  * @author Ole.Matzura
  */

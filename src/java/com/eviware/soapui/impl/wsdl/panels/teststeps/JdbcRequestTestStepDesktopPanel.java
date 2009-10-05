@@ -36,7 +36,6 @@ import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.JdbcAssertionRegistry;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.Assertable;
@@ -478,7 +477,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 		public void actionPerformed( ActionEvent e )
 		{
-			String[] assertions = JdbcAssertionRegistry.getInstance().getAvailableAssertionNames( assertable );
+			String[] assertions = TestAssertionRegistry.getInstance().getAvailableAssertionNames( assertable );
 
 			if( assertions == null || assertions.length == 0 )
 			{

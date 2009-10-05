@@ -44,6 +44,7 @@ public class ModelSupport
 		return names;
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public static <T extends ModelItem> List<T> getChildren( ModelItem modelItem, Class<T> childType )
 	{
 		List<T> result = new ArrayList<T>();
@@ -163,6 +164,7 @@ public class ModelSupport
 		return PropertyExpander.expandProperties( project, project.getResourceRoot() );
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public static void unsetIds( AbstractWsdlModelItem<?> modelItem )
 	{
 		if( modelItem.getConfig().isSetId() )

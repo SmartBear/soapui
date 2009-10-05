@@ -131,5 +131,17 @@ public interface AbstractHttpRequestInterface<T extends AbstractRequestConfig> e
 	public abstract boolean hasEndpoint();
 
 	public IAfterRequestInjection getAfterRequestInjection();
+	
+	public void notifyPropertyChanged( String name, Object oldValue, Object newValue );
+
+	public void notifyPropertyChanged( String name, int oldValue, int newValue );
+
+	public void notifyPropertyChanged( String name, boolean oldValue, boolean newValue );
+
+	public void fireIndexedPropertyChange( String propertyName, int index, boolean oldValue, boolean newValue );
+
+	public void fireIndexedPropertyChange( String propertyName, int index, int oldValue, int newValue );
+
+	public void fireIndexedPropertyChange( String propertyName, int index, Object oldValue, Object newValue );
 
 }
