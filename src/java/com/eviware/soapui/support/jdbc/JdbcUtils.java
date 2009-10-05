@@ -6,22 +6,21 @@ import java.sql.SQLException;
 
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 
 public class JdbcUtils
 {
 
+	public static final String PASS_TEMPLATE = "PASS_VALUE";	
 	public static Connection testConnection( ModelItem modelItem, String driver, String connectionString, String password )
 			throws Exception, SQLException
 	{
 		PropertyExpansionContext context = new DefaultPropertyExpansionContext( modelItem );
 	
-		// String drvr = PropertyExpander.expandProperties(context,
-		// driver).trim();
-		// String connStr = PropertyExpander.expandProperties(context,
-		// connectionString).trim();
-		String drvr = driver;
-		String connStr = connectionString;
+		String drvr = PropertyExpander.expandProperties(context, driver).trim();
+		String connStr = PropertyExpander.expandProperties(context, connectionString).trim();
+		connStr = connStr.replaceFirst(PASS_TEMPLATE, password);
 		try
 		{
 			DriverManager.getDriver( connStr );
