@@ -84,7 +84,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	protected String connectionString;
 	protected String password;
 	protected String query;
-	
+
 	protected boolean storedProcedure = false;
 	protected Connection connection;
 	protected JXEditTextArea queryArea;
@@ -174,8 +174,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			jdbcRequestTestStep.setQuery( query );
 		}
 	}
-
-	
 
 	protected void buildUI()
 	{
@@ -421,12 +419,12 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 	public class JdbcResponseMessageEditor extends ResponseMessageXmlEditor<JdbcRequestTestStep, JdbcResponseDocument>
 	{
-		public JdbcResponseMessageEditor() 
+		public JdbcResponseMessageEditor()
 		{
 			super( new JdbcResponseDocument(), jdbcRequestTestStep );
 		}
 	}
-	
+
 	public boolean dependsOn( ModelItem modelItem )
 	{
 		return modelItem == getModelItem() || modelItem == getModelItem().getTestCase()
