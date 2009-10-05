@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.swing.ImageIcon;
 
+import com.eviware.soapui.config.JdbcRequestTestStepConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
@@ -63,7 +64,7 @@ public class JdbcRequest extends AbstractModelItem implements Request
 
 	public String getRequestContent()
 	{
-		return testStep.getQuery();
+		return ((JdbcRequestTestStepConfig)testStep.getConfig()).getQuery();
 	}
 
 	public MessagePart[] getRequestParts()
