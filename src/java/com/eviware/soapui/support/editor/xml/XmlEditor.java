@@ -21,7 +21,6 @@ import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
  * @author ole.matzura
  */
 
-@SuppressWarnings( "serial" )
 public abstract class XmlEditor<T extends XmlDocument> extends Editor<T>
 {
 	public XmlEditor( T xmlDocument )
@@ -31,9 +30,10 @@ public abstract class XmlEditor<T extends XmlDocument> extends Editor<T>
 
 	public boolean saveDocument( boolean validate )
 	{
-		XmlEditorView currentView = ( XmlEditorView )getCurrentView();
+		XmlEditorView<?> currentView = ( XmlEditorView<?> )getCurrentView();
 		return currentView == null ? true : currentView.saveDocument( validate );
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public abstract XmlSourceEditorView getSourceEditor();
 }
