@@ -49,16 +49,12 @@ import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
-import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.Assertable;
-import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
@@ -272,48 +268,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	public String getDefaultSourcePropertyName()
 	{
 		return "Response";
-	}
-
-	public void testDatabaseConnection( ModelItem testingModelItem, String driver, String connectionString,
-			String password )
-	{
-		try
-		{
-			testConn( testingModelItem, driver, connectionString, password );
-			UISupport.showInfoMessage( "The Connection Successfully Tested" );
-		}
-		catch( Exception e )
-		{
-			UISupport.showErrorMessage( "Can't get the Connection for specified properties; " + e.toString() );
-		}
-	}
-
-	public static Connection testConn( ModelItem modelItem, String driver, String connectionString, String password )
-			throws Exception, SQLException
-	{
-		PropertyExpansionContext context = new DefaultPropertyExpansionContext( modelItem );
-
-		String drvr = PropertyExpander.expandProperties( context, driver ).trim();
-		String connStr = PropertyExpander.expandProperties( context, connectionString ).trim();
-		connStr = connStr.replaceFirst( PASS_TEMPLATE, password );
-		try
-		{
-			DriverManager.getDriver( connStr );
-		}
-		catch( SQLException e )
-		{
-			try
-			{
-				Class.forName( drvr ).newInstance();
-			}
-			catch( Exception e1 )
-			{
-				throw new Exception( "Failed to init connection for drvr [" + drvr + "], connectionString ["
-						+ connectionString + "]" );
-			}
-		}
-		return DriverManager.getConnection( connStr );
-
 	}
 
 	// running

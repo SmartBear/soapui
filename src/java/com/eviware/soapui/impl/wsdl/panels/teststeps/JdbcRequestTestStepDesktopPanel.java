@@ -30,18 +30,16 @@ import javax.swing.text.Document;
 
 import org.jdesktop.swingx.JXTable;
 
-import com.eviware.soapui.config.JdbcRequestTestStepConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
+import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.support.DocumentListenerAdapter;
-import com.eviware.soapui.support.ModelItemPropertyEditorModel;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JComponentInspector;
@@ -50,6 +48,7 @@ import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
+import com.eviware.soapui.support.jdbc.JdbcUtils;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.swing.JXEditAreaPopupMenu;
 import com.eviware.soapui.support.xml.JXEditTextArea;
@@ -59,20 +58,19 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 {
 	protected JPanel configPanel;
 	private JXTable logTable;
-//	private JList propertyList;
+	// private JList propertyList;
 	protected JButton runButton;
 	private JButton addAssertionButton;
-//	private JButton removeButton;
+	// private JButton removeButton;
 	private JLabel statusLabel;
 	protected JInspectorPanel inspectorPanel;
 	protected JdbcRequestTestStep jdbcRequestTestStep;
-	protected ModelItemPropertyEditorModel<JdbcRequestTestStep> resultEditorModel;
 	protected JComponentInspector<?> assertionInspector;
 	protected AssertionsPanel assertionsPanel;
 	protected ModelItemXmlEditor<?, ?> responseEditor;
 	protected JPanel panel;
 	protected SimpleForm configForm;
-   private boolean runnable;
+	private boolean runnable;
 	protected static final String DRIVER_FIELD = "Driver";
 	protected static final String CONNSTR_FIELD = "Connection String";
 	protected static final String PASS_FIELD = "Password";
@@ -87,6 +85,12 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	protected String password;
 	protected String query;
 	
+	protected boolean storedProcedure = false;
+	protected Connection connection;
+	protected JXEditTextArea queryArea;
+	protected JCheckBox isStoredProcedureCheckBox;
+	private JButton testConnectionButton;
+
 	public JdbcRequestTestStepDesktopPanel( JdbcRequestTestStep modelItem )
 	{
 		super( modelItem );
@@ -95,105 +99,98 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		this.connectionString = jdbcRequestTestStep.getConnectionString();
 		this.query = jdbcRequestTestStep.getQuery();
 		this.password = jdbcRequestTestStep.getPassword();
-		
+
 		buildUI();
-		
-//		runButton.setEnabled( jdbcRequest != null && modelItem.getPropertyCount() > 0 );
-//		runButton.setEnabled( jdbcRequest.isRunnable());
-		runButton.setEnabled(true);
-//		removeButton.setEnabled( propertyList.getSelectedIndex() != -1 );
-		
-//		if( jdbcRequest != null )
-//		{
-//			comboBox.setSelectedItem( jdbcRequest.getType() );
-//			configPanel.add( jdbcRequest.getComponent(), BorderLayout.CENTER );
-//		}
-//		else
-//		{
-//			comboBox.setSelectedItem( null );
-//		}
-		
+
+		// runButton.setEnabled( jdbcRequest != null &&
+		// modelItem.getPropertyCount() > 0 );
+		// runButton.setEnabled( jdbcRequest.isRunnable());
+		runButton.setEnabled( true );
+		// removeButton.setEnabled( propertyList.getSelectedIndex() != -1 );
+
+		// if( jdbcRequest != null )
+		// {
+		// comboBox.setSelectedItem( jdbcRequest.getType() );
+		// configPanel.add( jdbcRequest.getComponent(), BorderLayout.CENTER );
+		// }
+		// else
+		// {
+		// comboBox.setSelectedItem( null );
+		// }
+
 	}
+
 	public JdbcRequestTestStep getJdbcRequestTestStep()
 	{
 		return jdbcRequestTestStep;
 	}
+
 	public boolean isRunnable()
 	{
 		return runnable;
 	}
-//	public void setDriver(String driver)
-//	{
-//      if( configForm != null )
-//      {
-//      	configForm.setComponentValue( DRIVER_FIELD, driver );
-//      }
-//      else
-//      {
-//         this.driver = driver;
-//         jdbcRequestTestStep.setConnectionString(driver);
-//      }
-//	}
-//
-//	public void setConnectionString(String connectionString)
-//	{
-//      if( configForm != null )
-//      {
-//      	configForm.setComponentValue( CONNSTR_FIELD, connectionString );
-//      }
-//      else
-//      {
-//         this.connectionString = connectionString;
-//         jdbcRequestTestStep.setConnectionString(connectionString);
-//      }
-//	}
 
-	public void setPassword(String password)
+	// public void setDriver(String driver)
+	// {
+	// if( configForm != null )
+	// {
+	// configForm.setComponentValue( DRIVER_FIELD, driver );
+	// }
+	// else
+	// {
+	// this.driver = driver;
+	// jdbcRequestTestStep.setConnectionString(driver);
+	// }
+	// }
+	//
+	// public void setConnectionString(String connectionString)
+	// {
+	// if( configForm != null )
+	// {
+	// configForm.setComponentValue( CONNSTR_FIELD, connectionString );
+	// }
+	// else
+	// {
+	// this.connectionString = connectionString;
+	// jdbcRequestTestStep.setConnectionString(connectionString);
+	// }
+	// }
+
+	public void setPassword( String password )
 	{
 		this.password = password;
 	}
 
-	public void setQuery(String query)
+	public void setQuery( String query )
 	{
-      if( configForm != null )
-      {
-      	configForm.setComponentValue( QUERY_FIELD, query );
-      	jdbcRequestTestStep.setQuery(query);
-      }
-      else
-      {
-         this.query = query;
-         jdbcRequestTestStep.setQuery(query);
-      }
-	}
-	//for start set to false...later to be implemented
-	protected boolean storedProcedure = false;
-	protected Connection connection;
-	protected JXEditTextArea queryArea;
-	protected JCheckBox isStoredProcedureCheckBox;
-	private JButton testConnectionButton;
-	private AssertionsSupport assertionsSupport;
-	
-  
-   public ModelItemPropertyEditorModel<JdbcRequestTestStep> getResultEditorModel()
-	{
-		return resultEditorModel;
+		if( configForm != null )
+		{
+			configForm.setComponentValue( QUERY_FIELD, query );
+			jdbcRequestTestStep.setQuery( query );
+		}
+		else
+		{
+			this.query = query;
+			jdbcRequestTestStep.setQuery( query );
+		}
 	}
 
+	
 
 	protected void buildUI()
 	{
-		JSplitPane split = UISupport.createHorizontalSplit( buildConfigPanel(), buildResultEditor() );
-		split.setDividerLocation( 180 ); 
-      
-		inspectorPanel = JInspectorPanelFactory.build( split);
-//		JComponentInspector<JComponent> insp = inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildPreview(), "Data Log", 
-//					"Read values", true ) );
-		inspectorPanel.setDefaultDividerLocation( 0.7F  );
-//		inspectorPanel.activate( insp );
-		
-		add( buildToolbar(), BorderLayout.NORTH );		
-		add( inspectorPanel.getComponent(), BorderLayout.CENTER);
+		JSplitPane split = UISupport.createHorizontalSplit( buildConfigPanel(), buildResponseEditor() );
+		split.setDividerLocation( 180 );
+
+		inspectorPanel = JInspectorPanelFactory.build( split );
+		// JComponentInspector<JComponent> insp = inspectorPanel.addInspector( new
+		// JComponentInspector<JComponent>( buildPreview(), "Data Log",
+		// "Read values", true ) );
+		inspectorPanel.setDefaultDividerLocation( 0.7F );
+		// inspectorPanel.activate( insp );
+
+		add( buildToolbar(), BorderLayout.NORTH );
+		add( inspectorPanel.getComponent(), BorderLayout.CENTER );
 		assertionsPanel = buildAssertionsPanel();
 
 		assertionInspector = new JComponentInspector<JComponent>( assertionsPanel, "Assertions ("
@@ -201,10 +198,10 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 		inspectorPanel.addInspector( assertionInspector );
 
-//		add( buildStatusBar(), BorderLayout.SOUTH );
-		setPreferredSize( new Dimension( 600, 450 ));
+		// add( buildStatusBar(), BorderLayout.SOUTH );
+		setPreferredSize( new Dimension( 600, 450 ) );
 	}
-	
+
 	protected JComponent buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
@@ -212,10 +209,10 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		toolbar.setBorder( BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) );
 
 		runButton = UISupport.createToolbarButton( new RunAction() );
-//		runButton.setEnabled( transferList.getSelectedIndex() != -1 );
+		// runButton.setEnabled( transferList.getSelectedIndex() != -1 );
 		toolbar.addFixed( runButton );
 
-		addAssertionButton = UISupport.createToolbarButton( new AddAssertionAction(jdbcRequestTestStep) );
+		addAssertionButton = UISupport.createToolbarButton( new AddAssertionAction( jdbcRequestTestStep ) );
 		addAssertionButton.setEnabled( true );
 		toolbar.addFixed( addAssertionButton );
 
@@ -225,216 +222,216 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		return toolbar;
 
 	}
+
 	protected AssertionsPanel buildAssertionsPanel()
 	{
 		return new JdbcAssertionsPanel( jdbcRequestTestStep )
 		{
 			protected void selectError( AssertionError error )
 			{
-//				ModelItemXmlEditor<?, ?> editor = ( ModelItemXmlEditor<?, ?> )getResultEditorModel();
-//				editor.requestFocus();
+				// ModelItemXmlEditor<?, ?> editor = ( ModelItemXmlEditor<?, ?>
+				// )getResultEditorModel();
+				// editor.requestFocus();
 			}
 		};
 	}
-	protected class JdbcAssertionsPanel extends AssertionsPanel {
 
-		public JdbcAssertionsPanel(Assertable assertable)
+	protected class JdbcAssertionsPanel extends AssertionsPanel
+	{
+
+		public JdbcAssertionsPanel( Assertable assertable )
 		{
-			super(assertable);
+			super( assertable );
 			addAssertionAction = new AddAssertionAction( assertable );
-			assertionListPopup.add( addAssertionAction );		}
-		
+			assertionListPopup.add( addAssertionAction );
+		}
+
 	}
 
 	protected Component buildStatusBar()
 	{
 		JPanel statusBar = new JPanel( new BorderLayout() );
-		statusBar.setBorder( BorderFactory.createEmptyBorder( 2, 2, 2, 2 ));
-		statusLabel = new JLabel(" ");
+		statusBar.setBorder( BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) );
+		statusLabel = new JLabel( " " );
 		statusBar.add( statusLabel, BorderLayout.WEST );
 		return statusBar;
 	}
 
-	
 	protected JComponent buildConfigPanel()
 	{
 		configPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ), "Configuration" );
-		if (panel == null)
+		if( panel == null )
 		{
-			panel = new JPanel(new BorderLayout());
+			panel = new JPanel( new BorderLayout() );
 			configForm = new SimpleForm();
 			createSimpleJdbcConfigForm();
-			panel.add(configForm.getPanel());
+			panel.add( configForm.getPanel() );
 		}
 		configPanel.add( panel, BorderLayout.CENTER );
 		return configPanel;
 
 	}
+
 	protected void createSimpleJdbcConfigForm()
 	{
-			configForm.addSpace(5);
+		configForm.addSpace( 5 );
 
-			configForm.setDefaultTextFieldColumns(50);
+		configForm.setDefaultTextFieldColumns( 50 );
 
-			JTextField textField = configForm.appendTextField(DRIVER_FIELD, "JDBC Driver to use");
-			textField.setText(jdbcRequestTestStep.getDriver());
-			PropertyExpansionPopupListener.enable( textField,jdbcRequestTestStep);
-			textField.getDocument().addDocumentListener(new DocumentListenerAdapter()
+		JTextField textField = configForm.appendTextField( DRIVER_FIELD, "JDBC Driver to use" );
+		textField.setText( jdbcRequestTestStep.getDriver() );
+		PropertyExpansionPopupListener.enable( textField, jdbcRequestTestStep );
+		textField.getDocument().addDocumentListener( new DocumentListenerAdapter()
+		{
+
+			@Override
+			public void update( Document document )
 			{
-
-				@Override
-				public void update(Document document)
+				driver = configForm.getComponentValue( DRIVER_FIELD );
+				jdbcRequestTestStep.setDriver( driver );
+				if( StringUtils.isNullOrEmpty( driver ) || StringUtils.isNullOrEmpty( connectionString )
+						|| StringUtils.isNullOrEmpty( password ) )
 				{
-					driver = configForm.getComponentValue(DRIVER_FIELD);
-					jdbcRequestTestStep.setDriver(driver);
-					if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString)|| 
-							 StringUtils.isNullOrEmpty(password))
-					{
-						testConnectionButton.setEnabled(false);
-					}
-					else
-					{
-						testConnectionButton.setEnabled(true);
-					}
-					if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString) || 
-							 StringUtils.isNullOrEmpty(password) || StringUtils.isNullOrEmpty(query))
-					{
-						runnable = false;
-					}
-					else
-					{
-						runnable = true;
-					}
-			}
-			});
-
-			textField = configForm.appendTextField(CONNSTR_FIELD, "JDBC Driver Connection String");
-			textField.setText(jdbcRequestTestStep.getConnectionString());
-			PropertyExpansionPopupListener.enable( textField,jdbcRequestTestStep);
-			textField.getDocument().addDocumentListener(new DocumentListenerAdapter()
-			{
-
-				@Override
-				public void update(Document document)
-				{
-					connectionString = configForm.getComponentValue(CONNSTR_FIELD);
-					jdbcRequestTestStep.setConnectionString(connectionString);
-					if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString) || 
-							 StringUtils.isNullOrEmpty(password))
-					{
-						testConnectionButton.setEnabled(false);
-					}
-					else
-					{
-						testConnectionButton.setEnabled(true);
-					}
-					if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString) || 
-							 StringUtils.isNullOrEmpty(password) || StringUtils.isNullOrEmpty(query))
-					{
-						runnable = false;
-					}
-					else
-					{
-						runnable = true;
-					}
+					testConnectionButton.setEnabled( false );
 				}
-			});
-
-			 JPasswordField passField = configForm.appendPasswordField(PASS_FIELD,"Connection string Password");
-			 passField.setText(password);
-			 passField.getDocument().addDocumentListener( new DocumentListenerAdapter() {
-					
-				 @Override
-				 public void update(Document document) {
-				 password = configForm.getComponentValue(PASS_FIELD);
-				 jdbcRequestTestStep.setPassword(password);
-				 if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString) && 
-						 StringUtils.isNullOrEmpty(password))
-				 {
-				 testConnectionButton.setEnabled(false);
-				 } else {
-				 testConnectionButton.setEnabled(true);
-				 }
-			 }
-			 });
-			testConnectionButton = configForm.appendButton("TestConnection", "Test selected database connection");
-			testConnectionButton.setAction(new TestConnectionAction());
-			if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString))
-			{
-				testConnectionButton.setEnabled(false);
-			}
-			else
-			{
-				testConnectionButton.setEnabled(true);
-			}
-
-			if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString) ||
-					StringUtils.isNullOrEmpty(query))
-			{
-				runnable = false;
-			}
-			else
-			{
-				runnable = true;
-			}
-			queryArea = JXEditTextArea.createSqlEditor();
-			JXEditAreaPopupMenu.add(queryArea);
-			PropertyExpansionPopupListener.enable( queryArea, jdbcRequestTestStep );
-			queryArea.setText(jdbcRequestTestStep.getQuery());
-			JScrollPane scrollPane = new JScrollPane(queryArea);
-			scrollPane.setPreferredSize(new Dimension(400, 150));
-			configForm.append(QUERY_FIELD, scrollPane);
-			queryArea.getDocument().addDocumentListener(new DocumentListenerAdapter()
-			{
-
-				@Override
-				public void update(Document document)
+				else
 				{
-					query = queryArea.getText();
-					jdbcRequestTestStep.setQuery(query);
+					testConnectionButton.setEnabled( true );
 				}
-			});
+				if( StringUtils.isNullOrEmpty( driver ) || StringUtils.isNullOrEmpty( connectionString )
+						|| StringUtils.isNullOrEmpty( password ) || StringUtils.isNullOrEmpty( query ) )
+				{
+					runnable = false;
+				}
+				else
+				{
+					runnable = true;
+				}
+			}
+		} );
 
-			 isStoredProcedureCheckBox = configForm.appendCheckBox(STOREDPROCEDURE_FIELD,
-					 "Select if this is a stored procedure", storedProcedure );
-			 isStoredProcedureCheckBox.addChangeListener( new ChangeListener()
-			 {
-				 public void stateChanged( ChangeEvent e )
-				 {
-				 storedProcedure = ( (JCheckBox) e.getSource() ).isSelected();
-				 jdbcRequestTestStep.setStoredProcedure(storedProcedure);
-				 }
-			 } );
+		textField = configForm.appendTextField( CONNSTR_FIELD, "JDBC Driver Connection String" );
+		textField.setText( jdbcRequestTestStep.getConnectionString() );
+		PropertyExpansionPopupListener.enable( textField, jdbcRequestTestStep );
+		textField.getDocument().addDocumentListener( new DocumentListenerAdapter()
+		{
+
+			@Override
+			public void update( Document document )
+			{
+				connectionString = configForm.getComponentValue( CONNSTR_FIELD );
+				jdbcRequestTestStep.setConnectionString( connectionString );
+				if( StringUtils.isNullOrEmpty( driver ) || StringUtils.isNullOrEmpty( connectionString )
+						|| StringUtils.isNullOrEmpty( password ) )
+				{
+					testConnectionButton.setEnabled( false );
+				}
+				else
+				{
+					testConnectionButton.setEnabled( true );
+				}
+				if( StringUtils.isNullOrEmpty( driver ) || StringUtils.isNullOrEmpty( connectionString )
+						|| StringUtils.isNullOrEmpty( password ) || StringUtils.isNullOrEmpty( query ) )
+				{
+					runnable = false;
+				}
+				else
+				{
+					runnable = true;
+				}
+			}
+		} );
+
+		JPasswordField passField = configForm.appendPasswordField( PASS_FIELD, "Connection string Password" );
+		passField.setText( password );
+		passField.getDocument().addDocumentListener( new DocumentListenerAdapter()
+		{
+
+			@Override
+			public void update( Document document )
+			{
+				password = configForm.getComponentValue( PASS_FIELD );
+				jdbcRequestTestStep.setPassword( password );
+				if( StringUtils.isNullOrEmpty( driver ) || StringUtils.isNullOrEmpty( connectionString )
+						&& StringUtils.isNullOrEmpty( password ) )
+				{
+					testConnectionButton.setEnabled( false );
+				}
+				else
+				{
+					testConnectionButton.setEnabled( true );
+				}
+			}
+		} );
+		testConnectionButton = configForm.appendButton( "TestConnection", "Test selected database connection" );
+		testConnectionButton.setAction( new TestConnectionAction() );
+		if( StringUtils.isNullOrEmpty( driver ) || StringUtils.isNullOrEmpty( connectionString ) )
+		{
+			testConnectionButton.setEnabled( false );
+		}
+		else
+		{
+			testConnectionButton.setEnabled( true );
+		}
+
+		if( StringUtils.isNullOrEmpty( driver ) || StringUtils.isNullOrEmpty( connectionString )
+				|| StringUtils.isNullOrEmpty( query ) )
+		{
+			runnable = false;
+		}
+		else
+		{
+			runnable = true;
+		}
+		queryArea = JXEditTextArea.createSqlEditor();
+		JXEditAreaPopupMenu.add( queryArea );
+		PropertyExpansionPopupListener.enable( queryArea, jdbcRequestTestStep );
+		queryArea.setText( jdbcRequestTestStep.getQuery() );
+		JScrollPane scrollPane = new JScrollPane( queryArea );
+		scrollPane.setPreferredSize( new Dimension( 400, 150 ) );
+		configForm.append( QUERY_FIELD, scrollPane );
+		queryArea.getDocument().addDocumentListener( new DocumentListenerAdapter()
+		{
+
+			@Override
+			public void update( Document document )
+			{
+				query = queryArea.getText();
+				jdbcRequestTestStep.setQuery( query );
+			}
+		} );
+
+		isStoredProcedureCheckBox = configForm.appendCheckBox( STOREDPROCEDURE_FIELD,
+				"Select if this is a stored procedure", storedProcedure );
+		isStoredProcedureCheckBox.addChangeListener( new ChangeListener()
+		{
+			public void stateChanged( ChangeEvent e )
+			{
+				storedProcedure = ( ( JCheckBox )e.getSource() ).isSelected();
+				jdbcRequestTestStep.setStoredProcedure( storedProcedure );
+			}
+		} );
 
 	}
-	protected Component buildResultEditor()
+
+	protected ModelItemXmlEditor<?, ?> buildResponseEditor()
 	{
-		JPanel panel = new JPanel( new BorderLayout() );
-
-		resultEditorModel = new ModelItemPropertyEditorModel<JdbcRequestTestStep>( getModelItem(), "xmlStringResult" );
-		panel.add( UISupport.getEditorFactory().buildXmlEditor( resultEditorModel ), BorderLayout.CENTER );
-
-		return panel;
+		return new JdbcResponseMessageEditor();
 	}
 
-//	protected ModelItemXmlEditor<?, ?> buildResponseEditor()
-//	{
-//		return new JdbcResponseMessageEditor();
-//	}
-//	
-//	public class JdbcResponseMessageEditor extends
-//	AbstractHttpRequestDesktopPanel<?, ?>.AbstractHttpResponseMessageEditor<JdbcResponseDocument>
-//	{
-//		public JdbcResponseMessageEditor( JdbcResponse<JdbcRequestTestStepConfig> modelItem )
-//		{
-//			super( new JdbcResponseDocument( modelItem ) );
-//		}
-//	}
-	public boolean dependsOn(ModelItem modelItem)
+	public class JdbcResponseMessageEditor extends ResponseMessageXmlEditor<JdbcRequestTestStep, JdbcResponseDocument>
 	{
-		return modelItem == getModelItem() || modelItem == getModelItem().getTestCase() ||
-				modelItem == getModelItem().getTestCase().getTestSuite() ||
-				modelItem == getModelItem().getTestCase().getTestSuite().getProject();
+		public JdbcResponseMessageEditor() 
+		{
+			super( new JdbcResponseDocument(), jdbcRequestTestStep );
+		}
+	}
+	
+	public boolean dependsOn( ModelItem modelItem )
+	{
+		return modelItem == getModelItem() || modelItem == getModelItem().getTestCase()
+				|| modelItem == getModelItem().getTestCase().getTestSuite()
+				|| modelItem == getModelItem().getTestCase().getTestSuite().getProject();
 	}
 
 	public boolean onClose( boolean canCancel )
@@ -444,7 +441,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 		return release();
 	}
-	
+
 	private final class RunAction extends AbstractAction
 	{
 		public RunAction()
@@ -453,15 +450,19 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			putValue( Action.SHORT_DESCRIPTION, "Runs selected JdbcRequest" );
 		}
 
-		public void actionPerformed(ActionEvent arg0)
+		public void actionPerformed( ActionEvent arg0 )
 		{
-			try {
+			try
+			{
 				jdbcRequestTestStep.runQuery();
-			} catch (Exception e) {
-				UISupport.showErrorMessage("There's been an error in executing query " + e.toString());
+			}
+			catch( Exception e )
+			{
+				UISupport.showErrorMessage( "There's been an error in executing query " + e.toString() );
 			}
 		}
 	}
+
 	public class AddAssertionAction extends AbstractAction
 	{
 		private final Assertable assertable;
@@ -511,19 +512,14 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 	public class JdbcResponseDocument extends AbstractXmlDocument implements PropertyChangeListener
 	{
-
-		private final JdbcResponse<JdbcRequestTestStepConfig> modelItem;	
-		
-		public JdbcResponseDocument( JdbcResponse<JdbcRequestTestStepConfig> modelItem )
+		public JdbcResponseDocument()
 		{
-			this.modelItem = modelItem;
-
 			jdbcRequestTestStep.addPropertyChangeListener( JdbcRequestTestStep.RESPONSE_PROPERTY, this );
 		}
-		public void propertyChange(PropertyChangeEvent evt)
+
+		public void propertyChange( PropertyChangeEvent evt )
 		{
-			fireXmlChanged( evt.getOldValue() == null ? null : ( ( String )evt.getOldValue() ),
-					getXml() );
+			fireXmlChanged( evt.getOldValue() == null ? null : ( ( String )evt.getOldValue() ), getXml() );
 		}
 
 		public String getXml()
@@ -531,34 +527,36 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			return jdbcRequestTestStep.getXmlStringResult();
 		}
 
-		public void setXml(String xml)
+		public void setXml( String xml )
 		{
 			if( jdbcRequestTestStep != null )
 				jdbcRequestTestStep.setXmlStringResult( xml );
 		}
-		
+
 	}
-		public class JdbcResponse<JdbcRequestTestStepConfig> 
-		{
-			public void updateConfig( JdbcRequestTestStepConfig request )
-			{
-			}
-		}	
-		public class TestConnectionAction extends AbstractAction
-		{
-			public TestConnectionAction()
-			{
-				putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_testcase.gif"));
-				putValue(Action.SHORT_DESCRIPTION, "Test the current Connection");
 
-				setEnabled(false);
-			}
+	public class TestConnectionAction extends AbstractAction
+	{
+		public TestConnectionAction()
+		{
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/run_testcase.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Test the current Connection" );
 
-			public void actionPerformed(ActionEvent arg0)
-			{
-				 jdbcRequestTestStep.testDatabaseConnection(getModelItem(), driver, connectionString, password);
-			}
+			setEnabled( false );
 		}
 
-	
+		public void actionPerformed( ActionEvent arg0 )
+		{
+			try
+			{
+				JdbcUtils.testConnection( getModelItem(), driver, connectionString, password );
+				UISupport.showInfoMessage( "The Connection Successfully Tested" );
+			}
+			catch( Exception e )
+			{
+				UISupport.showErrorMessage( "Can't get the Connection for specified properties; " + e.toString() );
+			}
+		}
+	}
+
 }
