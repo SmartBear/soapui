@@ -1848,8 +1848,12 @@
     	<xsd:sequence>
     		<xsd:element name="driver" type="xsd:string"></xsd:element>
     		<xsd:element name="connectionString" type="xsd:string"></xsd:element>
+    		<xsd:element name="password" type="xsd:string"></xsd:element>
     		<xsd:element name="query" type="xsd:string"></xsd:element>
-    		<xsd:element name="assertion" type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+            <xsd:element name="storedProcedure" type="xsd:boolean"></xsd:element>
+            <xsd:element name="assertion" type="tns:TestAssertion"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</xsd:element>
     	</xsd:sequence>
     </xsd:complexType>
 
