@@ -76,8 +76,8 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 			textMessageSend.setText(messageBody);
         
 			JMSHeader jmsHeader= new JMSHeader();
-         jmsHeader.setMessageHeaders(textMessageSend, request, hermes);
-         JMSHeader.setMessageProperties(textMessageSend, request, hermes);
+         jmsHeader.setMessageHeaders(textMessageSend, request, hermes,submitContext);
+         JMSHeader.setMessageProperties(textMessageSend, request, hermes,submitContext);
 			
          // send message to producer
 			messageProducer.send(textMessageSend, 

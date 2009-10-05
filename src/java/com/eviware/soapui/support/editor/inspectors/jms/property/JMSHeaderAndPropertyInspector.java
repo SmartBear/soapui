@@ -63,7 +63,7 @@ public class JMSHeaderAndPropertyInspector extends AbstractXmlInspector implemen
 			public void tableChanged( TableModelEvent arg0 )
 			{
 				StringToStringMap map =  model.getJMSHeadersAndProperties() ;
-				setTitle( "JMS Property (" + (map == null ? "0" : map.size() ) + ")" );
+				setTitle( "JMS (" + (map == null ? "0" : map.size() ) + ")" );
 			}
 		} );
 		headersTable = new JTable( headersTableModel );

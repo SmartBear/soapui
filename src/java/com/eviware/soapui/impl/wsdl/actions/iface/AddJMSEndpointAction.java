@@ -70,6 +70,11 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 				UISupport.showErrorMessage("Endpoint with blank send and receive field is discarded");
 				return;
 			}
+			if (destinationNameList.get(i).getDomain().equals(Domain.TOPIC) && queueNameList.get(j).getDomain().equals(Domain.QUEUE))
+			{
+				UISupport.showErrorMessage("Not supported endpoint");
+				return;
+			}
 
 			iface.addEndpoint(createEndpointString(session, send, receive));
 		}
@@ -136,8 +141,8 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 	{
 		destinationNameList = new ArrayList<Destination>();
 		queueNameList = new ArrayList<Destination>();
-		destinationNameList.add(new Destination("-", Domain.QUEUE));
-		queueNameList.add(new Destination("", Domain.QUEUE));
+		destinationNameList.add(new Destination("-", Domain.UNKNOWN));
+		queueNameList.add(new Destination("", Domain.UNKNOWN));
 		extractDestinations(hermes, destinationNameList, queueNameList);
 		mainForm.setOptions(SEND, destinationNameList.toArray());
 		mainForm.setOptions(RECEIVE, queueNameList.toArray());
