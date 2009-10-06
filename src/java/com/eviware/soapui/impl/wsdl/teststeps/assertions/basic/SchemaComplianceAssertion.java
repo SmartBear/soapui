@@ -185,14 +185,14 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 	{
 		WsdlOperation operation = messageExchange.getOperation();
 		WsdlInterface iface = operation.getInterface();
-		if( StringUtils.isNullOrEmpty( definition ) || definition.equals( iface.getDefinition() ) )
+		String def = PathUtils.expandPath( definition, iface, context );
+		if( StringUtils.isNullOrEmpty( def ) || def.equals( iface.getDefinition() ) )
 		{
 			definitionContext = ( iface ).getWsdlContext();
 			( ( WsdlContext )definitionContext ).loadIfNecessary();
 		}
 		else
 		{
-			String def = PathUtils.expandPath( definition, iface, context );
 			if( definitionContext == null || !def.equals( wsdlContextDef ) )
 			{
 				definitionContext = getContext( def, iface.getSoapVersion() );
