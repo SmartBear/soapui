@@ -699,6 +699,7 @@ URL=http://www.soapui.org]]>
           <variable name="SIGNTOOL_PATH" value="${maven.install4j.signtool}"/>
           <variable name="CERT_PATH" value="${maven.install4j.cert}"/>
           <variable name="WIN_DLLS_PATH" value="${maven.install4j.cert}"/>
+          <variable name="HERMES_INSTALLER" value="${maven.hermes.installer}"/>
           </install4j>
         </ant:target>
       </goal>
