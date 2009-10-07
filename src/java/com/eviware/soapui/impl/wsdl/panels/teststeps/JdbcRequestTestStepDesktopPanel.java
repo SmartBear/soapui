@@ -100,110 +100,25 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	{
 		super( modelItem );
 		jdbcRequestTestStep = modelItem;
+		buildUI();
+
+		runButton.setEnabled( true );
+	}
+	protected void init() {
 		jdbcRequestTestStepConfig = jdbcRequestTestStep.getJdbcRequestTestStepConfig();
 		this.driver = jdbcRequestTestStepConfig.getDriver();
 		this.connectionString = jdbcRequestTestStepConfig.getConnectionString();
 		this.query = jdbcRequestTestStepConfig.getQuery();
 		this.password = jdbcRequestTestStepConfig.getPassword();
 
-		buildUI();
-
-		// runButton.setEnabled( jdbcRequest != null &&
-		// modelItem.getPropertyCount() > 0 );
-		// runButton.setEnabled( jdbcRequest.isRunnable());
-		runButton.setEnabled( true );
-		// removeButton.setEnabled( propertyList.getSelectedIndex() != -1 );
-
-		// if( jdbcRequest != null )
-		// {
-		// comboBox.setSelectedItem( jdbcRequest.getType() );
-		// configPanel.add( jdbcRequest.getComponent(), BorderLayout.CENTER );
-		// }
-		// else
-		// {
-		// comboBox.setSelectedItem( null );
-		// }
-
 	}
-
-	public JdbcRequestTestStep getJdbcRequestTestStep()
-	{
-		return jdbcRequestTestStep;
-	}
-
-	public boolean isRunnable()
-	{
-		return runnable;
-	}
-
-//	public void setDriver(String driver)
-//	{
-//		if (configForm != null)
-//		{
-//			configForm.setComponentValue(DRIVER_FIELD, driver);
-//		}
-//		else
-//		{
-//			this.driver = driver;
-//			jdbcRequestTestStepConfig.setConnectionString(driver);
-//		}
-//	}
-//
-//	public void setConnectionString(String connectionString)
-//	{
-//		if (configForm != null)
-//		{
-//			configForm.setComponentValue(CONNSTR_FIELD, connectionString);
-//		}
-//		else
-//		{
-//			this.connectionString = connectionString;
-//			jdbcRequestTestStepConfig.setConnectionString(connectionString);
-//		}
-//	}
-//
-//	public void setPassword( String password )
-//	{
-//		if( configForm != null )
-//		{
-//			configForm.setComponentValue( PASS_FIELD, password );
-//			jdbcRequestTestStepConfig.setPassword( password );
-//		}
-//		else
-//		{
-//			this.password = password;
-//			jdbcRequestTestStepConfig.setPassword(password);
-//		}
-//	}
-
-	public void setQuery( String query )
-	{
-		if( configForm != null )
-		{
-			configForm.setComponentValue( QUERY_FIELD, query );
-			jdbcRequestTestStepConfig.setQuery( query );
-		}
-		else
-		{
-			this.query = query;
-			jdbcRequestTestStepConfig.setQuery( query );
-		}
-	}
-
-	
-
 	protected void buildUI()
 	{
 		JSplitPane split = UISupport.createHorizontalSplit( buildConfigPanel(), buildResponseEditor() );
 		split.setDividerLocation( 180 );
 
 		inspectorPanel = JInspectorPanelFactory.build( split );
-		// JComponentInspector<JComponent> insp = inspectorPanel.addInspector( new
-		// JComponentInspector<JComponent>( buildPreview(), "Data Log",
-		// "Read values", true ) );
 		inspectorPanel.setDefaultDividerLocation( 0.7F );
-		// inspectorPanel.activate( insp );
-
 		add( buildToolbar(), BorderLayout.NORTH );
 		add( inspectorPanel.getComponent(), BorderLayout.CENTER );
 		assertionsPanel = buildAssertionsPanel();
@@ -212,9 +127,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				+ getModelItem().getAssertionCount() + ")", "Assertions for this Test Request", true );
 
 		inspectorPanel.addInspector( assertionInspector );
-
-		// add( buildStatusBar(), BorderLayout.SOUTH );
 		setPreferredSize( new Dimension( 600, 450 ) );
+		init();
 	}
 
 	protected JComponent buildToolbar()
@@ -237,6 +151,32 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		return toolbar;
 
 	}
+
+	public JdbcRequestTestStep getJdbcRequestTestStep()
+	{
+		return jdbcRequestTestStep;
+	}
+
+	public boolean isRunnable()
+	{
+		return runnable;
+	}
+
+	public void setQuery( String query )
+	{
+		if( configForm != null )
+		{
+			configForm.setComponentValue( QUERY_FIELD, query );
+			jdbcRequestTestStepConfig.setQuery( query );
+		}
+		else
+		{
+			this.query = query;
+			jdbcRequestTestStepConfig.setQuery( query );
+		}
+	}
+
+	
 
 	protected AssertionsPanel buildAssertionsPanel()
 	{
