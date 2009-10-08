@@ -17,6 +17,8 @@ import hermes.HermesContext;
 import hermes.JAXBHermesLoader;
 import hermes.config.impl.DestinationConfigImpl;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +30,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XForm;
@@ -41,6 +44,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 {
 	public static final String SOAPUI_ACTION_ID = "AddJMSEndpointAction";
 	private static final String SESSION = "Session";
+	private static final String HERMES_CONFIG = "Hermes Config";
 	private static final String SEND = "Send Queue/Topic";
 	private static final String RECEIVE = "Receive Queue";
 	private XForm mainForm;
@@ -56,21 +60,31 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 	{
 
 		XFormDialog dialog = buildDialog(iface);
+
 		initValues(iface);
 
 		if (dialog.show())
 		{
 			String session = dialog.getValue(SESSION);
 			int i = dialog.getValueIndex(SEND);
+			if(i==-1){
+				UISupport.showErrorMessage("Not supported endpoint");
+				return;
+			}
 			String send = destinationNameList.get(i).getDestinationName();
 			int j = dialog.getValueIndex(RECEIVE);
+			if(j==-1){
+				UISupport.showErrorMessage("Not supported endpoint");
+				return;
+			}
 			String receive = queueNameList.get(j).getDestinationName();
 			if ("-".equals(send) && "".equals(receive))
 			{
 				UISupport.showErrorMessage("Endpoint with blank send and receive field is discarded");
 				return;
 			}
-			if (destinationNameList.get(i).getDomain().equals(Domain.TOPIC) && queueNameList.get(j).getDomain().equals(Domain.QUEUE))
+			if (destinationNameList.get(i).getDomain().equals(Domain.TOPIC)
+					&& queueNameList.get(j).getDomain().equals(Domain.QUEUE))
 			{
 				UISupport.showErrorMessage("Not supported endpoint");
 				return;
@@ -90,18 +104,19 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 		return sb.toString();
 	}
 
-	private String[] getSessionOptions(WsdlInterface iface)
+	private String[] getSessionOptions(WsdlInterface iface, String hermesConfigPath)
 	{
-		Context ctx = getHermesContext(iface);
-		List<Hermes> hermesList = null;
+
+		List<Hermes> hermesList = new ArrayList<Hermes>();
 		try
 		{
+			Context ctx = getHermesContext(iface, hermesConfigPath);
 			JAXBHermesLoader loader = (JAXBHermesLoader) ctx.lookup(HermesContext.LOADER);
 			hermesList = loader.load();
 		}
-		catch( Exception e)
+		catch (Exception e)
 		{
-			SoapUI.logError(e);
+			SoapUI.log.info("no hermes context");
 		}
 		List<String> hermesSessionList = new ArrayList<String>();
 		for (Hermes h : hermesList)
@@ -112,11 +127,33 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 		return hermesSessionList.toArray(new String[hermesSessionList.size()]);
 	}
 
+	// private HermesConfigDialog chooseFolderDialog(WsdlProject project)
+	// {
+	// HermesConfigDialog chooseHermesConfigPath = new
+	// HermesConfigDialog(PropertyExpander.expandProperties(project,
+	// project.getHermesConfig()));
+	// chooseHermesConfigPath.setVisible(true);
+	// project.setHermesConfig(chooseHermesConfigPath.getPath());
+	// return chooseHermesConfigPath;
+	// }
+
 	private void initValues(WsdlInterface iface)
 	{
-		String[] sessionOptions = getSessionOptions(iface);
+		String hermesConfigPath = PropertyExpander.expandProperties(iface, iface.getProject().getHermesConfig());
+		mainForm.getComponent(HERMES_CONFIG).setValue(hermesConfigPath);
+
+		String[] sessionOptions = getSessionOptions(iface, hermesConfigPath);
+
 		mainForm.setOptions(SESSION, sessionOptions);
-		Context ctx = getHermesContext(iface);
+		Context ctx = null;
+		try
+		{
+			ctx = getHermesContext(iface, hermesConfigPath);
+		}
+		catch (Exception e)
+		{
+			SoapUI.log.info("no hermes context");
+		}
 		Hermes hermes = null;
 		try
 		{
@@ -148,20 +185,14 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 		mainForm.setOptions(RECEIVE, queueNameList.toArray());
 	}
 
-	private Context getHermesContext(WsdlInterface iface)
+	private Context getHermesContext(WsdlInterface iface, String hermesConfigPath) throws MalformedURLException,
+			NamingException, IOException
 	{
 		WsdlProject project = iface.getProject();
-		try
-		{
-			Context ctx = HermesUtils.hermesContext(project);
-			return ctx;
-		}
-		catch (Exception e)
-		{
-			SoapUI.logError(e);
-			UISupport.showErrorMessage("Project#Hermes Config property doesnt point to the proper hermes-config.xml folder");
-		}
-		return null;
+
+		Context ctx = HermesUtils.hermesContext(project, hermesConfigPath);
+		return ctx;
+
 	}
 
 	protected XFormDialog buildDialog(final WsdlInterface iface)
@@ -172,19 +203,56 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 		XFormDialogBuilder builder = XFormFactory.createDialogBuilder("Add JMS endpoint");
 
 		mainForm = builder.createForm("Basic");
+		mainForm.addTextField(HERMES_CONFIG, "choose folder where hermes-config.xml is", XForm.FieldType.FOLDER)
+				.addFormFieldListener(new XFormFieldListener()
+				{
+					public void valueChanged(XFormField sourceField, String newValue, String oldValue)
+					{
+						if (!"".equals(newValue))
+						{
+							Hermes hermes = null;
+							try
+							{
+								Context ctx = HermesUtils.hermesContext(iface.getProject(), newValue);
+								iface.getProject().setHermesConfig(newValue);
+								String[] sessions = getSessionOptions(iface, newValue);
+								mainForm.setOptions(SESSION, sessions);
+								if (sessions != null && sessions.length > 0)
+								{
+									hermes = (Hermes) ctx.lookup(sessions[0]);
+								}
+							}
+							catch (Exception e)
+							{
+								SoapUI.logError(e);
+							}
+							if (hermes != null)
+							{
+								updateDestinations(hermes);
+							}
+							else
+							{
+								mainForm.setOptions(SEND, new String[] {});
+								mainForm.setOptions(RECEIVE, new String[] {});
+							}
+						}
+					}
+				});
 		mainForm.addComboBox(SESSION, new String[] {}, "Session name from HermesJMS").addFormFieldListener(
 				new XFormFieldListener()
 				{
 
 					public void valueChanged(XFormField sourceField, String newValue, String oldValue)
 					{
-						Context ctx = getHermesContext(iface);
+						String hermesConfigPath = mainForm.getComponent(HERMES_CONFIG).getValue();
+
 						Hermes hermes = null;
 						try
 						{
+							Context ctx = getHermesContext(iface, hermesConfigPath);
 							hermes = (Hermes) ctx.lookup(newValue);
 						}
-						catch (NamingException e)
+						catch (Exception e)
 						{
 							SoapUI.logError(e);
 						}
@@ -203,7 +271,8 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 		mainForm.addComboBox(SEND, new String[] {}, "Queue/Topic for sending/publishing");
 		mainForm.addComboBox(RECEIVE, new String[] {}, "Queue for receiving");
 
-		return builder.buildDialog(builder.buildOkCancelActions(), "create JMS endpoint by selecting proper values", null);
+		return builder
+				.buildDialog(builder.buildOkCancelActions(), "create JMS endpoint by selecting proper values", null);
 	}
 
 	private void extractDestinations(Hermes hermes, List<Destination> destinationList, List<Destination> queueList)
@@ -253,7 +322,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 			return destinationName;
 		}
 
-		@SuppressWarnings( "unused" )
+		@SuppressWarnings("unused")
 		public Domain getDomain()
 		{
 			return domain;

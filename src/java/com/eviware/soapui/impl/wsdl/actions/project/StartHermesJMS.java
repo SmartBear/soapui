@@ -18,6 +18,7 @@ import java.util.Map;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.settings.ToolsSettings;
 import com.eviware.soapui.support.UISupport;
@@ -59,6 +60,11 @@ public class StartHermesJMS extends AbstractSoapUIAction<WsdlProject>
 		String hermesBatPath = hermesHome + File.separator + "bin" + File.separator + "hermes" + extension;
 		try
 		{
+			File file = new File(hermesConfigPath+ File.separator + HermesUtils.HERMES_CONFIG_XML);
+			if(! file.exists()){
+				UISupport.showErrorMessage("No hermes-config.xml on this path!");
+				return;
+			}
 			ProcessBuilder pb = new ProcessBuilder(hermesBatPath);
 			Map<String, String> env = pb.environment();
 			env.put("HERMES_CONFIG", hermesConfigPath);

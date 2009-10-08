@@ -37,11 +37,26 @@ public class HermesUtils
 {
 	private static boolean hermesJarsLoaded = false;
 	private static Map<String,Context> contextMap = new HashMap<String,Context>();
+	public static String HERMES_CONFIG_XML="hermes-config.xml";
 
 	
 	public static Context hermesContext(WsdlProject project) throws NamingException, MalformedURLException, IOException
 	{
-		String key = project.getName()+project.getHermesConfig();
+		String expandedHermesConfigPath=PropertyExpander.expandProperties(project,project.getHermesConfig());
+		String key = project.getName()+expandedHermesConfigPath;
+		return getHermes( key, expandedHermesConfigPath);
+	}
+	
+	public static Context hermesContext(WsdlProject project, String hermesConfigPath) throws NamingException, MalformedURLException, IOException
+	{
+		String expandedHermesConfigPath=PropertyExpander.expandProperties(project,hermesConfigPath);
+		String key = project.getName()+expandedHermesConfigPath;
+		return getHermes( key, expandedHermesConfigPath);
+	}
+
+	private static Context getHermes( String key,String hermesConfigPath) throws IOException, MalformedURLException,
+			NamingException
+	{
 		if (!hermesJarsLoaded)
 		{
 			addHermesJarsToClasspath();
@@ -52,10 +67,10 @@ public class HermesUtils
 			return contextMap.get(key);
 		}
 		
-		String hermesConfigPath = PropertyExpander.expandProperties(project, project.getHermesConfig());
+	
 		Properties props = new Properties();
 		props.put(Context.INITIAL_CONTEXT_FACTORY, HermesInitialContextFactory.class.getName());
-		props.put(Context.PROVIDER_URL, hermesConfigPath + "\\hermes-config.xml");
+		props.put(Context.PROVIDER_URL, hermesConfigPath + File.separator+HERMES_CONFIG_XML);
 		props.put("hermes.loader", JAXBHermesLoader.class.getName());
 
 		Context ctx = new InitialContext(props);
