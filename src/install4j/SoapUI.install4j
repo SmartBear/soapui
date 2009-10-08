@@ -119,7 +119,7 @@
         <dependencies />
       </component>
       <component name="HermesJMS" id="1263" displayDescription="false" selected="true" mandatory="false" downloadable="false">
-        <description />
+        <description>This will install HermesJMS which is application that allows you to interact with JMS providers</description>
         <include all="false">
           <entry location=".i4j_fileset_1260" fileType="regular" />
         </include>
