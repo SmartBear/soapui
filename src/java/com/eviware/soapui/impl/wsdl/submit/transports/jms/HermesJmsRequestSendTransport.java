@@ -16,6 +16,7 @@ import hermes.Hermes;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.Session;
@@ -94,7 +95,7 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 			
 			return response;
 		}
-		catch (Throwable jmse)
+		catch (JMSException jmse)
 		{
 			SoapUI.logError(jmse);
 			submitContext.setProperty(JMS_ERROR, jmse);
@@ -102,6 +103,10 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 			submitContext.setProperty(JMS_RESPONSE, response);
 			
 			return response;
+		}
+		catch (Throwable t)
+		{
+			SoapUI.logError(t);
 		}
 		finally
 		{
@@ -111,6 +116,7 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 			if (connection != null)
 				connection.close();
 		}
+		return null;
 	}
 
 }

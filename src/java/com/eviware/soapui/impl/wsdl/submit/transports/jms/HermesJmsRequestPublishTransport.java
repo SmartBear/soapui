@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 import hermes.Domain;
 import hermes.Hermes;
 
+import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
@@ -93,7 +94,7 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 			
 			return response;
 		}
-		catch (Throwable jmse)
+		catch (JMSException jmse)
 		{
 			SoapUI.logError(jmse);
 			submitContext.setProperty(JMS_ERROR, jmse);
@@ -101,6 +102,10 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 			submitContext.setProperty(JMS_RESPONSE, response);
 			
 			return response;
+		}
+		catch (Throwable t)
+		{
+			SoapUI.logError(t);
 		}
 		finally
 		{
@@ -110,6 +115,7 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 			if (connection != null)
 				connection.close();
 		}
+		return null;
 	}
 
 }
