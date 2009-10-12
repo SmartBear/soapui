@@ -77,7 +77,7 @@ import com.eviware.soapui.support.xml.JXEditTextArea;
 public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements Assertable
 {
 	private final static Logger log = Logger.getLogger(WsdlTestRequestStep.class);
-	private JdbcRequestTestStepConfig jdbcRequestTestStepConfig;
+	protected JdbcRequestTestStepConfig jdbcRequestTestStepConfig;
 	public final static String JDBCREQUEST = JdbcRequestTestStep.class.getName() + "@jdbcrequest";
 	public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";
 	public static final String RESPONSE_PROPERTY = WsdlTestRequest.class.getName() + "@response";
@@ -290,13 +290,13 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	protected ResultSet resultSet;
 	protected Statement statement;
 
-	public void runQuery()
+	public void runQuery(String driver, String connStr)
 	{
 		MockTestRunner mockRunner = new MockTestRunner(getTestCase());
 		MockTestRunContext mockContext = new MockTestRunContext(mockRunner, this);
 		try
 		{
-			prepare(mockRunner, mockContext);
+			prepare(mockRunner, mockContext, driver, connStr);
 			List<String> properties = new ArrayList<String>();
 			load(mockRunner, mockContext, properties);
 			createXmlResult();
@@ -307,22 +307,36 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		}
 	}
 
-	protected void getDatabaseConnection(PropertyExpansionContext context) throws Exception, SQLException
+	protected void getDatabaseConnection(PropertyExpansionContext context, String drvr, String connStr) throws Exception, SQLException
 	{
-		String drvr = "";
-		String connStr = "";
-		if (!StringUtils.isNullOrEmpty(jdbcRequestTestStepConfig.getDriver())
-				&& !StringUtils.isNullOrEmpty(jdbcRequestTestStepConfig.getConnectionString()))
-		{
-			drvr = PropertyExpander.expandProperties(context, jdbcRequestTestStepConfig.getDriver()).trim();
-			connStr = PropertyExpander.expandProperties(context, jdbcRequestTestStepConfig.getConnectionString()).trim();
-		}
-		else
-		{
-			UISupport.showErrorMessage("Please supply connection settings for all DataSources");
-			throw new SoapUIException("Please supply connection settings");
-		}
-		connStr = connStr.replaceFirst(PASS_TEMPLATE, jdbcRequestTestStepConfig.getPassword());
+//		String drvr = "";
+//		String connStr = "";
+//	   if (!StringUtils.isNullOrEmpty(dbConnectionName)) {
+//         dbConnContainer = ((WsdlProjectPro)getTestCase().getTestSuite().getProject()).getDatabaseConnectionContainer();
+//	   	 databaseConnection = dbConnContainer.getDatabaseConnectionByName(dbConnectionName);
+//			 drvr = PropertyExpander.expandProperties( context, databaseConnection.getDriver() ).trim();
+//			 connStr = PropertyExpander.expandProperties( context, databaseConnection.getConnectionString() ).trim();
+//			 password = databaseConnection.getPassword();
+//	   } else if (!StringUtils.isNullOrEmpty(driver) && !StringUtils.isNullOrEmpty(connectionString)) {
+//			 drvr = PropertyExpander.expandProperties( context, driver ).trim();
+//			 connStr = PropertyExpander.expandProperties( context, connectionString ).trim();
+//	   } else {
+//	   	UISupport.showErrorMessage( "Please supply connection settings for all DataSources" );
+//	   	throw new SoapUIException("Please supply connection settings");
+//	   }
+
+//		if (!StringUtils.isNullOrEmpty(jdbcRequestTestStepConfig.getDriver())
+//				&& !StringUtils.isNullOrEmpty(jdbcRequestTestStepConfig.getConnectionString()))
+//		{
+//			drvr = PropertyExpander.expandProperties(context, jdbcRequestTestStepConfig.getDriver()).trim();
+//			connStr = PropertyExpander.expandProperties(context, jdbcRequestTestStepConfig.getConnectionString()).trim();
+//		}
+//		else
+//		{
+//			UISupport.showErrorMessage("Please supply connection settings for all DataSources");
+//			throw new SoapUIException("Please supply connection settings");
+//		}
+//		connStr = connStr.replaceFirst(PASS_TEMPLATE, jdbcRequestTestStepConfig.getPassword());
 		try
 		{
 			DriverManager.getDriver(connStr);
@@ -357,18 +371,19 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			statement.execute(q);
 		}
 
-		resultSet = statement.getResultSet();
-
 		// getColumnNamesForCurrentResultSet();
 		// resultSetCount = resultSet == null ? 0 : 1;
 	}
 
 
+	public void prepare(TestCaseRunner testRunner, TestCaseRunContext context, String drvr, String connStr) throws Exception {
+		getDatabaseConnection(context, drvr, connStr);
+		prepare(testRunner, context);
+	}
+
 	@Override
 	public void prepare(TestCaseRunner testRunner, TestCaseRunContext context) throws Exception
 	{
-		getDatabaseConnection(context);
-
 		if (jdbcRequestTestStepConfig.getStoredProcedure())
 		{
 			String sql = PropertyExpander.expandProperties(context, jdbcRequestTestStepConfig.getQuery());
@@ -385,6 +400,9 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		super.prepare(testRunner, context);
 	}
 
+	public void addResultSetResults() {
+		
+	}
 	public void createXmlResult()
 	{
 		ResultSet rs = resultSet;
@@ -398,29 +416,32 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			Element results = xmlDocumentResult.createElement("Results");
 			xmlDocumentResult.appendChild(results);
 
-			// connection to an ACCESS MDB
-			ResultSetMetaData rsmd = rs.getMetaData();
-			int colCount = rsmd.getColumnCount();
-
-			while (rs.next())
+			while (statement.getMoreResults())
 			{
-				Element row = xmlDocumentResult.createElement("Row");
-				results.appendChild(row);
-				for (int ii = 1; ii <= colCount; ii++)
+				rs = statement.getResultSet();
+				// connection to an ACCESS MDB
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int colCount = rsmd.getColumnCount();
+				while (rs.next())
 				{
-					String columnName = (rsmd.getTableName(ii) + "." + rsmd.getColumnName(ii)).toUpperCase();
-					String value = rs.getString(ii);
-					Element node = xmlDocumentResult.createElement(columnName);
-					if (!StringUtils.isNullOrEmpty(value))
+					Element row = xmlDocumentResult.createElement("Row");
+					results.appendChild(row);
+					for (int ii = 1; ii <= colCount; ii++)
 					{
-						node.appendChild(xmlDocumentResult.createTextNode(value.toString()));
+						String columnName = (rsmd.getTableName(ii) + "." + rsmd.getColumnName(ii)).toUpperCase();
+						String value = rs.getString(ii);
+						Element node = xmlDocumentResult.createElement(columnName);
+						if (!StringUtils.isNullOrEmpty(value))
+						{
+							node.appendChild(xmlDocumentResult.createTextNode(value.toString()));
+						}
+						row.appendChild(node);
 					}
-					row.appendChild(node);
 				}
 			}
-
 			String oldRes = getXmlStringResult();
 			xmlStringResult = getDocumentAsString(xmlDocumentResult);
+			setXmlStringResult(xmlStringResult);
 			notifyPropertyChanged("xmlStringResult", oldRes, xmlStringResult);
 
 		}
