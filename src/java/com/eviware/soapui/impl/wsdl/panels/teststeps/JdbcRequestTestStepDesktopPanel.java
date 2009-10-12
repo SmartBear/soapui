@@ -31,7 +31,6 @@ import javax.swing.text.Document;
 import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
-import com.eviware.soapui.config.impl.JdbcRequestTestStepConfigImpl;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
