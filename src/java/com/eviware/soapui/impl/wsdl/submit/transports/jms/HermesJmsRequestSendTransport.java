@@ -16,7 +16,6 @@ import hermes.Hermes;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
-import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.Session;
@@ -36,7 +35,7 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 		ConnectionFactory connectionFactory = null;
 		Connection connection = null;
 		Session session = null;
-
+		JMSResponse response =null;
 		try
 		{
 			String queueName = null;
@@ -49,6 +48,9 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 			}
 			else
 				throw new Exception("bad jms alias!!!!!");
+			
+			
+			submitContext.setProperty(HERMES_SESSION_NAME, sessionName);
 
 			Hermes hermes = getHermes(sessionName, request);
 			// connection factory
@@ -84,13 +86,22 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 
 			
 			// make response
-			JMSResponse response = new JMSResponse("", null, request, timeStarted);
-			attachResponseToRequest(submitContext, request, response);
+			response = new JMSResponse("", null, request, timeStarted);
+			
+			submitContext.setProperty(JMS_MESSAGE, textMessage);
+			submitContext.setProperty(JMS_RESPONSE, response);
+			
+			
 			return response;
 		}
 		catch (Throwable jmse)
 		{
 			SoapUI.logError(jmse);
+			submitContext.setProperty(JMS_ERROR, jmse);
+			response = new JMSResponse("", null, request, timeStarted);
+			submitContext.setProperty(JMS_RESPONSE, response);
+			
+			return response;
 		}
 		finally
 		{
@@ -100,7 +111,6 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 			if (connection != null)
 				connection.close();
 		}
-		return null;
 	}
 
 }

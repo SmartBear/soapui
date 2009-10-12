@@ -38,6 +38,7 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 		ConnectionFactory connectionFactory = null;
 		Connection connection = null;
 		Session session = null;
+		JMSResponse response=null;
 		try
 		{
 			String queueNameSend = null;
@@ -52,6 +53,9 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 			}
 			else
 				throw new Exception("bad jms alias!!!!!");
+			
+			submitContext.setProperty(HERMES_SESSION_NAME, sessionName);
+			
 			Hermes hermes = getHermes(sessionName, request);
 			// connection factory
 			connectionFactory = (javax.jms.ConnectionFactory) hermes.getConnectionFactory();
@@ -91,7 +95,7 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 			long timeout = getTimeout(submitContext, request);
 
 			Message message = messageConsumer.receive(timeout);
-
+			
 			if (message != null)
 			{
 				TextMessage textMessageReceive = null;
@@ -100,9 +104,13 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 					textMessageReceive = (TextMessage) message;
 				}
 				// make response
-				JMSResponse response = new JMSResponse(textMessageReceive.getText(), textMessageReceive, request, timeStarted);
+				response = new JMSResponse(textMessageReceive.getText(), textMessageReceive, request, timeStarted);
 				
-				attachResponseToRequest(submitContext, request, response);
+				
+				
+				submitContext.setProperty(JMS_MESSAGE, message);
+				submitContext.setProperty(JMS_RESPONSE, response);
+				
 				
 				return response;
 			}
@@ -114,7 +122,11 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 		catch (Throwable jmse)
 		{
 			SoapUI.logError(jmse);
-
+			submitContext.setProperty(JMS_ERROR, jmse);
+			response = new JMSResponse("", null, request, timeStarted);
+			submitContext.setProperty(JMS_RESPONSE, response);
+			
+			return response;
 		}
 		finally
 		{
@@ -124,7 +136,6 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 			if (connection != null)
 				connection.close();
 		}
-		return null;
 
 	}
 }

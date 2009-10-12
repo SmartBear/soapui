@@ -39,6 +39,7 @@ public class JMSResponse implements WsdlResponse
 
 	String payload;
 	Message message;
+
 	public Message getMessage()
 	{
 		return message;
@@ -166,7 +167,7 @@ public class JMSResponse implements WsdlResponse
 		// return JMSHeader.getReceivedMessageHeaders(message);
 		// }
 		// else
-			return new StringToStringMap();
+		return new StringToStringMap();
 	}
 
 	public long getTimeTaken()
@@ -178,7 +179,10 @@ public class JMSResponse implements WsdlResponse
 	{
 		try
 		{
-			return message.getJMSTimestamp();
+			if (message != null)
+				return message.getJMSTimestamp();
+			else
+				return 0;
 		}
 		catch (JMSException e)
 		{

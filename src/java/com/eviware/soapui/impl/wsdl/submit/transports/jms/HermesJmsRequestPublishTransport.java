@@ -15,7 +15,6 @@ package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 import hermes.Domain;
 import hermes.Hermes;
 
-import javax.jms.Message;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
@@ -38,7 +37,7 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 		TopicConnectionFactory connectionFactory = null;
 		TopicConnection connection = null;
 		TopicSession session = null;
-
+		JMSResponse response =null;
 		try
 		{
 			String topicName = null;
@@ -52,6 +51,8 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 			else
 				throw new UnresolvedJMSEndpointException("bad jms alias!!!!!");
 
+			
+			submitContext.setProperty(HERMES_SESSION_NAME, sessionName);
 			Hermes hermes = getHermes(sessionName, request);
 		   // connection factory
 			connectionFactory = (TopicConnectionFactory) hermes.getConnectionFactory();
@@ -85,13 +86,21 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 										jmsHeader.getTimeTolive());
 
 			// make response
-			JMSResponse response = new JMSResponse("", null, request, timeStarted);
-			attachResponseToRequest(submitContext, request, response);
+			response = new JMSResponse("", null, request, timeStarted);
+			
+			submitContext.setProperty(JMS_MESSAGE, textMessage);
+			submitContext.setProperty(JMS_RESPONSE, response);
+			
 			return response;
 		}
 		catch (Throwable jmse)
 		{
 			SoapUI.logError(jmse);
+			submitContext.setProperty(JMS_ERROR, jmse);
+			response = new JMSResponse("", null, request, timeStarted);
+			submitContext.setProperty(JMS_RESPONSE, response);
+			
+			return response;
 		}
 		finally
 		{
@@ -101,7 +110,6 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 			if (connection != null)
 				connection.close();
 		}
-		return null;
 	}
 
 }

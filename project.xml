@@ -148,6 +148,13 @@
 			<organization>eviware</organization>
 			<timezone>-1</timezone>
 		</developer>
+		<developer>
+			<name>Nebojsa Tasic</name>
+			<id>ntasic</id>
+			<email>nebojsa@eviware.com</email>
+			<organization>eviware</organization>
+			<timezone>+1</timezone>
+		</developer>
 	</developers>
 	<dependencies>
 		<dependency>

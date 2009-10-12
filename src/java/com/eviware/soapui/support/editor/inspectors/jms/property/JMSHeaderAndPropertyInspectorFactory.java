@@ -15,6 +15,7 @@ package com.eviware.soapui.support.editor.inspectors.jms.property;
 import javax.jms.Message;
 
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSHeader;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSResponse;
 import com.eviware.soapui.model.ModelItem;
@@ -58,6 +59,7 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 	{
 		WsdlRequest request;
 		JMSHeaderAndPropertyInspector inspector;
+		StringToStringMap headersAndProperties;
 			
 		public ResponseJMSHeaderAndPropertiesModel(WsdlRequest wsdlRequest)
 		{
@@ -68,19 +70,28 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 
 		public StringToStringMap getJMSHeadersAndProperties()
 		{
-			StringToStringMap stringToStringMap = new StringToStringMap();
-			if ((request.getResponse()) instanceof JMSResponse)
-			{
-				Message message = ((JMSResponse) request.getResponse()).getMessage();
-				if (message != null)
-					stringToStringMap.putAll(JMSHeader.getReceivedMessageHeaders(message));
-			}
-			return stringToStringMap;
+//			StringToStringMap stringToStringMap = new StringToStringMap();
+//			if ((request.getResponse()) instanceof JMSResponse)
+//			{
+//				Message message = ((JMSResponse) request.getSubmitListeners()Response()).getMessage();
+//				if (message != null)
+//					stringToStringMap.putAll(JMSHeader.getReceivedMessageHeaders(message));
+//			}
+			return headersAndProperties;
 		}
 		
 		public void afterSubmit(Submit submit, SubmitContext context)
 		{
-			inspector.getHeadersTableModel().setData(getJMSHeadersAndProperties());
+			 headersAndProperties = new StringToStringMap();
+			JMSResponse jmsResponse= (JMSResponse)context.getProperty(HermesJmsRequestTransport.JMS_RESPONSE);
+			if (jmsResponse instanceof JMSResponse)
+			{
+				Message message = jmsResponse.getMessage();
+				if (message != null)
+					headersAndProperties.putAll(JMSHeader.getReceivedMessageHeaders(message));
+			}
+			inspector.getHeadersTableModel().setData(headersAndProperties);
+			
 		}
 
 		public boolean beforeSubmit(Submit submit, SubmitContext context)

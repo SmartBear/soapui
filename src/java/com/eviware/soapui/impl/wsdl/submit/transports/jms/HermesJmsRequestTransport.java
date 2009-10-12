@@ -31,6 +31,13 @@ import com.eviware.soapui.model.support.ModelSupport;
 public class HermesJmsRequestTransport implements RequestTransport
 {
 
+	public static final String JMS_MESSAGE = "JMS_MESSAGE";
+	public static final String JMS_RESPONSE  = "JMS_RESPONSE";
+	public static final String JMS_ERROR  = "JMS_ERROR";
+	public static final String HERMES_SESSION_NAME  = "HERMES_SESSION_NAME";
+	public static final String JMS_RECEIVE_TIMEOUT = "JMS_RECEIVE_TIMEOUT";
+	
+	
 	protected List<RequestFilter> filters = new ArrayList<RequestFilter>();
 
 	public void abortRequest(SubmitContext submitContext)
@@ -50,6 +57,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 	public Response sendRequest(SubmitContext submitContext, Request request) throws Exception
 	{
 		long timeStarted = Calendar.getInstance().getTimeInMillis();
+		submitContext.setProperty(JMS_RECEIVE_TIMEOUT, getTimeout(submitContext, request));
 		return resolveType(submitContext,request).execute(submitContext, request, timeStarted);
 	}
 
@@ -184,17 +192,11 @@ public class HermesJmsRequestTransport implements RequestTransport
 		}
 		catch( Exception e )
 		{}
+		
 		return to;
 	}
 
-	protected void attachResponseToRequest(SubmitContext submitContext, Request request, JMSResponse response)
-	{
-		if(request instanceof WsdlRequest)
-		{
-			((WsdlRequest)request).setResponse(response, submitContext);
-		}
-	}
-
+	
 	public static class UnresolvedJMSEndpointException extends Exception
 	{
 		public UnresolvedJMSEndpointException(String msg)

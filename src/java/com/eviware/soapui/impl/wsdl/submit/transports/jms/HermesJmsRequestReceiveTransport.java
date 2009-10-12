@@ -30,12 +30,14 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 
 public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 {
-
+	
+	
 	public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception
 	{
 		ConnectionFactory connectionFactory = null;
 		Connection connection = null;
 		Session session = null;
+		JMSResponse response=null;
 		try
 		{
 			String queueName = null;
@@ -78,8 +80,11 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 					textMessage = (TextMessage) message;
 				}
 				// make response
-				JMSResponse response = new JMSResponse(textMessage.getText(), textMessage, request, timeStarted);
-				attachResponseToRequest(submitContext, request, response);
+				response = new JMSResponse(textMessage.getText(), textMessage, request, timeStarted);
+				
+				
+				submitContext.setProperty(JMS_MESSAGE, message);
+				submitContext.setProperty(JMS_RESPONSE, response);
 				
 				return response;
 			}
@@ -92,6 +97,11 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 		catch (Throwable jmse)
 		{
 			SoapUI.logError(jmse);
+			submitContext.setProperty(JMS_ERROR, jmse);
+			response = new JMSResponse("", null, request, timeStarted);
+			submitContext.setProperty(JMS_RESPONSE, response);
+			
+			return response;
 
 		}
 		finally
@@ -102,6 +112,5 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 			if (connection != null)
 				connection.close();
 		}
-		return null;
 	}
 }
