@@ -14,8 +14,10 @@ package com.eviware.soapui.support.editor.inspectors.jms.header;
 
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
+import com.eviware.soapui.support.editor.inspectors.jms.JMSUtil;
 import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
 
@@ -28,19 +30,18 @@ public class JMSHeaderInspectorFactory implements RequestInspectorFactory, Respo
 		return INSPECTOR_ID;
 	}
 
-	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
+	public EditorInspector<?> createRequestInspector(Editor<?> editor, ModelItem modelItem)
 	{
-		if( modelItem instanceof WsdlRequest )
-			return new WsdlRequestJMSHeaderInspector( ( ( WsdlRequest )modelItem ) );
-
+		if (modelItem instanceof WsdlRequest)
+		{
+			if (JMSUtil.checkIfJMS((Request) modelItem))
+				return new WsdlRequestJMSHeaderInspector(((WsdlRequest) modelItem));
+		}
 		return null;
 	}
 
-	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
+	public EditorInspector<?> createResponseInspector(Editor<?> editor, ModelItem modelItem)
 	{
-//		if( modelItem instanceof WsdlMockResponse )
-//			return new WsdlResponseJMSInspector( ( ( JMSResponse )modelItem ) );
-
 		return null;
 	}
 }

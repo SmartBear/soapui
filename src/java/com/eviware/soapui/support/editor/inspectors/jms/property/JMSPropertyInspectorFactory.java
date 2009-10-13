@@ -24,6 +24,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSResponse;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
+import com.eviware.soapui.support.editor.inspectors.jms.JMSUtil;
 import com.eviware.soapui.support.editor.inspectors.jms.property.JMSPropertyInspectorModel.AbstractJMSPropertyModel;
 import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
@@ -41,16 +42,16 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 	public EditorInspector<?> createRequestInspector(Editor<?> editor, ModelItem modelItem)
 	{
 		if (modelItem instanceof WsdlRequest)
-			return new JMSPropertyInspector((JMSPropertyInspectorModel) new WsdlRequestJMSPropertiesModel(
-					(WsdlRequest) modelItem));
-
+		{
+			if (JMSUtil.checkIfJMS( modelItem))
+				return new JMSPropertyInspector((JMSPropertyInspectorModel) new WsdlRequestJMSPropertiesModel(
+						(WsdlRequest) modelItem));
+		}
 		return null;
 	}
 
 	public EditorInspector<?> createResponseInspector(Editor<?> editor, ModelItem modelItem)
 	{
-
-
 
 		return null;
 	}
@@ -116,9 +117,9 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 			return stringToStringMap;
 		}
 
-		 public void setJMSProperties(StringToStringMap stringToStringMap2)
+		public void setJMSProperties(StringToStringMap stringToStringMap2)
 		{
-			StringToStringMap stringToStringMap =stringToStringMap2;
+			StringToStringMap stringToStringMap = stringToStringMap2;
 			if ((request.getResponse()) instanceof JMSResponse)
 			{
 

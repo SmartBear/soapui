@@ -20,11 +20,13 @@ import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSHeader;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSResponse;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
+import com.eviware.soapui.support.editor.inspectors.jms.JMSUtil;
 import com.eviware.soapui.support.editor.inspectors.jms.property.JMSHeaderAndPropertyInspectorModel.AbstractJMSHeaderAndPropertyModel;
 import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
@@ -43,9 +45,10 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 	{
 		if (modelItem instanceof MessageExchangeModelItem)
 		{
-			return new JMSHeaderAndPropertyInspector(
-					(JMSHeaderAndPropertyInspectorModel) new MessageExchangeRequestJMSHeaderAndPropertiesModel(
-							(MessageExchangeModelItem) modelItem));
+			if (JMSUtil.checkIfJMS( modelItem))
+				return new JMSHeaderAndPropertyInspector(
+						(JMSHeaderAndPropertyInspectorModel) new MessageExchangeRequestJMSHeaderAndPropertiesModel(
+								(MessageExchangeModelItem) modelItem));
 		}
 		return null;
 	}
@@ -55,14 +58,17 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 
 		if (modelItem instanceof WsdlRequest)
 		{
-			return new JMSHeaderAndPropertyInspector(
-					(JMSHeaderAndPropertyInspectorModel) new ResponseJMSHeaderAndPropertiesModel((WsdlRequest) modelItem));
+			if (JMSUtil.checkIfJMS(modelItem))
+				return new JMSHeaderAndPropertyInspector(
+						(JMSHeaderAndPropertyInspectorModel) new ResponseJMSHeaderAndPropertiesModel((WsdlRequest) modelItem));
 		}
 		else if (modelItem instanceof MessageExchangeModelItem)
 		{
-			return new JMSHeaderAndPropertyInspector(
-					(JMSHeaderAndPropertyInspectorModel) new MessageExchangeResponseJMSHeaderAndPropertiesModel(
-							(MessageExchangeModelItem) modelItem));
+			if (JMSUtil.checkIfJMS( modelItem))
+
+				return new JMSHeaderAndPropertyInspector(
+						(JMSHeaderAndPropertyInspectorModel) new MessageExchangeResponseJMSHeaderAndPropertiesModel(
+								(MessageExchangeModelItem) modelItem));
 		}
 		return null;
 	}
