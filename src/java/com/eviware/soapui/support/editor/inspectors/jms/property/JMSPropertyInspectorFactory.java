@@ -15,12 +15,8 @@ package com.eviware.soapui.support.editor.inspectors.jms.property;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jms.Message;
-
 import com.eviware.soapui.config.JMSPropertyConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSHeader;
-import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSResponse;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
@@ -95,52 +91,6 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 		}
 	}
 
-	private class WsdlRequestJMSHeaderAndPropertiesModel extends AbstractJMSPropertyModel<WsdlRequest>
-	{
-		WsdlRequest request;
 
-		public WsdlRequestJMSHeaderAndPropertiesModel(WsdlRequest wsdlRequest)
-		{
-			super(false, wsdlRequest, "jmsHeaderAndProperties");
-			this.request = wsdlRequest;
-		}
-
-		public StringToStringMap getJMSProperties()
-		{
-			StringToStringMap stringToStringMap = new StringToStringMap();
-			if ((request.getResponse()) instanceof JMSResponse)
-			{
-				Message message = ((JMSResponse) request.getResponse()).getMessageReceive();
-				if (message != null)
-					stringToStringMap.putAll(JMSHeader.getReceivedMessageHeaders(message));
-			}
-			return stringToStringMap;
-		}
-
-		public void setJMSProperties(StringToStringMap stringToStringMap2)
-		{
-			StringToStringMap stringToStringMap = stringToStringMap2;
-			if ((request.getResponse()) instanceof JMSResponse)
-			{
-
-				Message message = ((JMSResponse) request.getResponse()).getMessageReceive();
-				stringToStringMap.putAll(JMSHeader.getReceivedMessageHeaders(message));
-
-			}
-			String[] keyList = stringToStringMap.getKeys();
-			List<JMSPropertyConfig> propertyList = new ArrayList<JMSPropertyConfig>();
-			for (String key : keyList)
-			{
-				JMSPropertyConfig jmsPropertyConfig = JMSPropertyConfig.Factory.newInstance();
-				jmsPropertyConfig.setName(key);
-				jmsPropertyConfig.setValue(stringToStringMap.get(key));
-				propertyList.add(jmsPropertyConfig);
-			}
-			List<JMSPropertyConfig> propertyList2 = request.getJMSPropertiesConfig().getJMSProperties();
-			propertyList2.clear();
-			propertyList2.addAll(propertyList);
-
-		}
-	}
 
 }
