@@ -127,15 +127,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 		return hermesSessionList.toArray(new String[hermesSessionList.size()]);
 	}
 
-	// private HermesConfigDialog chooseFolderDialog(WsdlProject project)
-	// {
-	// HermesConfigDialog chooseHermesConfigPath = new
-	// HermesConfigDialog(PropertyExpander.expandProperties(project,
-	// project.getHermesConfig()));
-	// chooseHermesConfigPath.setVisible(true);
-	// project.setHermesConfig(chooseHermesConfigPath.getPath());
-	// return chooseHermesConfigPath;
-	// }
+	
 
 	private void initValues(WsdlInterface iface)
 	{
@@ -232,6 +224,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 							}
 							else
 							{
+								mainForm.setOptions(SESSION, new String[] {});
 								mainForm.setOptions(SEND, new String[] {});
 								mainForm.setOptions(RECEIVE, new String[] {});
 							}
