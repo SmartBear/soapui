@@ -31,6 +31,7 @@ import javax.swing.text.Document;
 import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
@@ -510,6 +511,11 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				jdbcRequestTestStep.setXmlStringResult(xml);
 		}
 
+		public void release()
+		{
+			super.release();
+			jdbcRequestTestStep.removePropertyChangeListener( RestRequestInterface.RESPONSE_PROPERTY, this );
+		}	
 	}
 
 	public class TestConnectionAction extends AbstractAction
