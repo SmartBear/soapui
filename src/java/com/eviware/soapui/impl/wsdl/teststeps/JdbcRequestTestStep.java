@@ -62,7 +62,6 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleForm;
@@ -98,11 +97,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	protected static final String STOREDPROCEDURE_ELEMENT = "stored-procedure";
 	protected JPanel panel;
 	protected String dbConnectionName;
-	// protected String driver;
-	// protected String connectionString;
-	// protected String password;
-	// protected String query;
-	// protected boolean storedProcedure;
 	protected SimpleForm form;
 	protected Connection connection;
 	protected JXEditTextArea queryArea;
@@ -115,8 +109,8 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 		if (!forLoadTest)
 		{
-			okIcon = UISupport.createImageIcon("/datasource.gif");
-			failedIcon = UISupport.createImageIcon("/datasource_failed.gif");
+			okIcon = UISupport.createImageIcon("/jdbcrequest.gif");
+			failedIcon = UISupport.createImageIcon("/jdbcrequest_failed.gif");
 			setIcon(okIcon);
 		}
 		if (getConfig().getConfig() != null)
@@ -130,10 +124,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			jdbcRequestTestStepConfig = (JdbcRequestTestStepConfig) getConfig().addNewConfig().changeType(
 					JdbcRequestTestStepConfig.type);
 		}
-		// driver = getDriver();
-		// connectionString = getConnectionString();
-		// query = getQuery();
-		// password = getPassword();
 		initAssertions();
 	}
 
@@ -159,84 +149,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		return runnable;
 	}
 
-//	public String getDbConnectionName()
-//	{
-//		return jdbcRequestTestStepConfig.getDbConnectionName();
-//	}
-//
-//	public void setDbConnectionName(String d)
-//	{
-//		String old = getDbConnectionName();
-//		jdbcRequestTestStepConfig.setDbConnectionName(d);
-//		dbConnectionName = d;
-//		notifyPropertyChanged("dbConnectionName", old, d);
-//	}
-//
-	// public String getDriver()
-	// {
-	// driver = jdbcRequestTestStepConfig.getDriver();
-	// return jdbcRequestTestStepConfig.getDriver();
-	// }
-	//
-	// public void setDriver( String d )
-	// {
-	// String old = getDriver();
-	// jdbcRequestTestStepConfig.setDriver( d );
-	// driver = d;
-	// notifyPropertyChanged( "driver", old, d );
-	// }
-	//
-	// public String getConnectionString()
-	// {
-	// return jdbcRequestTestStepConfig.getConnectionString();
-	// }
-	//
-	// public void setConnectionString( String c )
-	// {
-	// String old = getConnectionString();
-	// jdbcRequestTestStepConfig.setConnectionString( c );
-	// connectionString = c;
-	// notifyPropertyChanged( "connectionString", old, c );
-	// }
-	//
-	// public String getQuery()
-	// {
-	// return jdbcRequestTestStepConfig.getQuery();
-	// }
-	//
-	// public void setQuery( String q )
-	// {
-	// String old = getQuery();
-	// jdbcRequestTestStepConfig.setQuery( q );
-	// this.query = q;
-	// notifyPropertyChanged( "query", old, q );
-	// }
-	//
-	// public String getPassword()
-	// {
-	// return jdbcRequestTestStepConfig.getPassword();
-	// }
-	//
-	// public void setPassword( String p )
-	// {
-	// String old = getPassword();
-	// jdbcRequestTestStepConfig.setPassword( p );
-	// password = p;
-	// notifyPropertyChanged( "password", old, p );
-	// }
-	//
-	// public boolean isStoredProcedure()
-	// {
-	// return storedProcedure;
-	// }
-	//
-	// public void setStoredProcedure( boolean sp )
-	// {
-	// String old = getPassword();
-	// jdbcRequestTestStepConfig.setStoredProcedure( sp );
-	// storedProcedure = sp;
-	// notifyPropertyChanged( "password", old, sp );
-	// }
 
 	public JdbcRequestTestStepConfig getJdbcRequestTestStepConfig()
 	{
@@ -309,34 +221,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 	protected void getDatabaseConnection(PropertyExpansionContext context, String drvr, String connStr) throws Exception, SQLException
 	{
-//		String drvr = "";
-//		String connStr = "";
-//	   if (!StringUtils.isNullOrEmpty(dbConnectionName)) {
-//         dbConnContainer = ((WsdlProjectPro)getTestCase().getTestSuite().getProject()).getDatabaseConnectionContainer();
-//	   	 databaseConnection = dbConnContainer.getDatabaseConnectionByName(dbConnectionName);
-//			 drvr = PropertyExpander.expandProperties( context, databaseConnection.getDriver() ).trim();
-//			 connStr = PropertyExpander.expandProperties( context, databaseConnection.getConnectionString() ).trim();
-//			 password = databaseConnection.getPassword();
-//	   } else if (!StringUtils.isNullOrEmpty(driver) && !StringUtils.isNullOrEmpty(connectionString)) {
-//			 drvr = PropertyExpander.expandProperties( context, driver ).trim();
-//			 connStr = PropertyExpander.expandProperties( context, connectionString ).trim();
-//	   } else {
-//	   	UISupport.showErrorMessage( "Please supply connection settings for all DataSources" );
-//	   	throw new SoapUIException("Please supply connection settings");
-//	   }
-
-//		if (!StringUtils.isNullOrEmpty(jdbcRequestTestStepConfig.getDriver())
-//				&& !StringUtils.isNullOrEmpty(jdbcRequestTestStepConfig.getConnectionString()))
-//		{
-//			drvr = PropertyExpander.expandProperties(context, jdbcRequestTestStepConfig.getDriver()).trim();
-//			connStr = PropertyExpander.expandProperties(context, jdbcRequestTestStepConfig.getConnectionString()).trim();
-//		}
-//		else
-//		{
-//			UISupport.showErrorMessage("Please supply connection settings for all DataSources");
-//			throw new SoapUIException("Please supply connection settings");
-//		}
-//		connStr = connStr.replaceFirst(PASS_TEMPLATE, jdbcRequestTestStepConfig.getPassword());
 		try
 		{
 			DriverManager.getDriver(connStr);
@@ -442,7 +326,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			String oldRes = getXmlStringResult();
 			xmlStringResult = getDocumentAsString(xmlDocumentResult);
 			setXmlStringResult(xmlStringResult);
-			notifyPropertyChanged("xmlStringResult", oldRes, xmlStringResult);
+			notifyPropertyChanged(RESPONSE_PROPERTY, oldRes, xmlStringResult);
 
 		}
 		catch (Exception e)
