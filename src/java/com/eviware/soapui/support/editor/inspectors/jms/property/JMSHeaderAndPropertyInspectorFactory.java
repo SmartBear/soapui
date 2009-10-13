@@ -18,6 +18,7 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSHeader;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSResponse;
+import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -40,6 +41,12 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 
 	public EditorInspector<?> createRequestInspector(Editor<?> editor, ModelItem modelItem)
 	{
+		if (modelItem instanceof MessageExchangeModelItem)
+		{
+			return new JMSHeaderAndPropertyInspector(
+					(JMSHeaderAndPropertyInspectorModel) new MessageExchangeRequestJMSHeaderAndPropertiesModel(
+							(MessageExchangeModelItem) modelItem));
+		}
 		return null;
 	}
 
@@ -47,36 +54,47 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 	{
 
 		if (modelItem instanceof WsdlRequest)
-			return new JMSHeaderAndPropertyInspector((JMSHeaderAndPropertyInspectorModel) new ResponseJMSHeaderAndPropertiesModel(
-					(WsdlRequest) modelItem));
-
+		{
+			return new JMSHeaderAndPropertyInspector(
+					(JMSHeaderAndPropertyInspectorModel) new ResponseJMSHeaderAndPropertiesModel((WsdlRequest) modelItem));
+		}
+		else if (modelItem instanceof MessageExchangeModelItem)
+		{
+			return new JMSHeaderAndPropertyInspector(
+					(JMSHeaderAndPropertyInspectorModel) new MessageExchangeResponseJMSHeaderAndPropertiesModel(
+							(MessageExchangeModelItem) modelItem));
+		}
 		return null;
 	}
 
-	
-
-	private class ResponseJMSHeaderAndPropertiesModel extends AbstractJMSHeaderAndPropertyModel<WsdlRequest> implements SubmitListener
+	private class ResponseJMSHeaderAndPropertiesModel extends AbstractJMSHeaderAndPropertyModel<WsdlRequest> implements
+			SubmitListener
 	{
 		WsdlRequest request;
 		JMSHeaderAndPropertyInspector inspector;
 		StringToStringMap headersAndProperties;
-			
+
 		public ResponseJMSHeaderAndPropertiesModel(WsdlRequest wsdlRequest)
 		{
 			super(true, wsdlRequest, "jmsHeaderAndProperties");
 			this.request = wsdlRequest;
-			request.addSubmitListener( this );
+			request.addSubmitListener(this);
+		}
+
+		public void release()
+		{
+			request.removeSubmitListener(this);
 		}
 
 		public StringToStringMap getJMSHeadersAndProperties()
 		{
 			return headersAndProperties;
 		}
-		
+
 		public void afterSubmit(Submit submit, SubmitContext context)
 		{
-			 headersAndProperties = new StringToStringMap();
-			JMSResponse jmsResponse= (JMSResponse)context.getProperty(HermesJmsRequestTransport.JMS_RESPONSE);
+			headersAndProperties = new StringToStringMap();
+			JMSResponse jmsResponse = (JMSResponse) context.getProperty(HermesJmsRequestTransport.JMS_RESPONSE);
 			if (jmsResponse instanceof JMSResponse)
 			{
 				Message message = jmsResponse.getMessageReceive();
@@ -84,7 +102,7 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 					headersAndProperties.putAll(JMSHeader.getReceivedMessageHeaders(message));
 			}
 			inspector.getHeadersTableModel().setData(headersAndProperties);
-			
+
 		}
 
 		public boolean beforeSubmit(Submit submit, SubmitContext context)
@@ -94,8 +112,58 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 
 		public void setInspector(JMSHeaderAndPropertyInspector inspector)
 		{
-			this.inspector=inspector;
-		}	
+			this.inspector = inspector;
+		}
+	}
+
+	private class MessageExchangeResponseJMSHeaderAndPropertiesModel extends
+			AbstractJMSHeaderAndPropertyModel<MessageExchangeModelItem>
+
+	{
+		MessageExchangeModelItem messageExchangeModelItem;
+		JMSHeaderAndPropertyInspector inspector;
+
+		public MessageExchangeResponseJMSHeaderAndPropertiesModel(MessageExchangeModelItem messageExchangeModelItem)
+		{
+			super(true, messageExchangeModelItem, MessageExchangeModelItem.MESSAGE_EXCHANGE);
+			this.messageExchangeModelItem = messageExchangeModelItem;
+		}
+
+		public StringToStringMap getJMSHeadersAndProperties()
+		{
+			return getModelItem().getMessageExchange().getResponseHeaders();
+		}
+
+		public void setInspector(JMSHeaderAndPropertyInspector inspector)
+		{
+			this.inspector = inspector;
+		}
+
+	}
+
+	private class MessageExchangeRequestJMSHeaderAndPropertiesModel extends
+			AbstractJMSHeaderAndPropertyModel<MessageExchangeModelItem>
+
+	{
+		MessageExchangeModelItem messageExchangeModelItem;
+		JMSHeaderAndPropertyInspector inspector;
+
+		public MessageExchangeRequestJMSHeaderAndPropertiesModel(MessageExchangeModelItem messageExchangeModelItem)
+		{
+			super(true, messageExchangeModelItem, MessageExchangeModelItem.MESSAGE_EXCHANGE);
+			this.messageExchangeModelItem = messageExchangeModelItem;
+		}
+
+		public StringToStringMap getJMSHeadersAndProperties()
+		{
+			return getModelItem().getMessageExchange().getRequestHeaders();
+		}
+
+		public void setInspector(JMSHeaderAndPropertyInspector inspector)
+		{
+			this.inspector = inspector;
+		}
+
 	}
 
 }

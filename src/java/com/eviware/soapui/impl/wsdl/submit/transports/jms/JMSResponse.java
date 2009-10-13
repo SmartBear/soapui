@@ -20,6 +20,7 @@ import java.util.Vector;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.TextMessage;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
@@ -89,7 +90,6 @@ public class JMSResponse implements WsdlResponse
 
 	public String getProperty(String name)
 	{
-		// TODO Auto-generated method stub
 		try
 		{
 			return messageReceive.getStringProperty(name);
@@ -146,7 +146,22 @@ public class JMSResponse implements WsdlResponse
 
 	public String getRequestContent()
 	{
-		return payload;
+		if (messageSend != null)
+		{
+			try
+			{
+				if (messageSend instanceof TextMessage)
+				{
+					return ((TextMessage) messageSend).getText();
+				}
+			}
+			catch (JMSException e)
+			{
+				SoapUI.logError(e);
+			}
+			return messageSend.toString();
+		}
+		return "";
 	}
 
 	public StringToStringMap getRequestHeaders()
@@ -169,6 +184,8 @@ public class JMSResponse implements WsdlResponse
 		else
 			return new StringToStringMap();
 	}
+	
+	
 
 	public long getTimeTaken()
 	{
@@ -259,6 +276,4 @@ public class JMSResponse implements WsdlResponse
 		return messageSend;
 	}
 
-	
-	
 }
