@@ -71,27 +71,26 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 
 			long timeout = getTimeout(submitContext, request);
 
-			Message message = messageConsumer.receive(timeout);
+			Message messageReceive = messageConsumer.receive(timeout);
 
-			if (message != null)
+			if (messageReceive != null)
 			{
-				TextMessage textMessage = null;
-				if (message instanceof TextMessage)
+				TextMessage textMessageReceive = null;
+				if (messageReceive instanceof TextMessage)
 				{
-					textMessage = (TextMessage) message;
+					textMessageReceive = (TextMessage) messageReceive;
 				}
 				// make response
-				response = new JMSResponse(textMessage.getText(), textMessage, request, timeStarted);
+				response = new JMSResponse(textMessageReceive.getText(),null, textMessageReceive, request, timeStarted);
 				
-				
-				submitContext.setProperty(JMS_MESSAGE, message);
+				submitContext.setProperty(JMS_MESSAGE_RECEIVE, messageReceive);
 				submitContext.setProperty(JMS_RESPONSE, response);
 				
 				return response;
 			}
 			else
 			{
-				return new JMSResponse("",null,request,  timeStarted);
+				return new JMSResponse("",null,null,request,  timeStarted);
 			}
 
 		}
@@ -99,7 +98,7 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 		{
 			SoapUI.logError(jmse);
 			submitContext.setProperty(JMS_ERROR, jmse);
-			response = new JMSResponse("", null, request, timeStarted);
+			response = new JMSResponse("", null,null, request, timeStarted);
 			submitContext.setProperty(JMS_RESPONSE, response);
 			
 			return response;

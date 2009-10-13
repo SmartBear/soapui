@@ -205,6 +205,48 @@ public class JMSHeader
 		}
 		return headermap;
 	}
+	
+	
+	public static StringToStringMap getSendMessageHeaders(Message message)
+	{
+		StringToStringMap headermap = new StringToStringMap();
+		try
+		{
+			headermap.put(JMSDELIVERYMODE, String.valueOf(message.getJMSDeliveryMode()));
+			headermap.put(JMSEXPIRATION, String.valueOf(message.getJMSExpiration()));
+			headermap.put(JMSPRIORITY, String.valueOf(message.getJMSPriority()));
+			headermap.put(JMSTIMESTAMP, String.valueOf(message.getJMSTimestamp()));
+			headermap.put(JMSREDELIVERED, String.valueOf(message.getJMSRedelivered()));
+
+			if (message.getJMSDestination() != null)
+				headermap.put(JMSDESTINATION, String.valueOf(message.getJMSDestination()));
+
+			if (message.getJMSMessageID() != null)
+				headermap.put(JMSMESSAGEID, message.getJMSMessageID());
+
+			if (message.getJMSCorrelationID() != null)
+				headermap.put(JMSCORRELATIONID, message.getJMSCorrelationID());
+
+			if (message.getJMSReplyTo() != null)
+				headermap.put(JMSREPLYTO, String.valueOf(message.getJMSReplyTo()));
+
+			if (message.getJMSType() != null)
+				headermap.put(JMSTYPE, message.getJMSType());
+
+			Enumeration properties = message.getPropertyNames();
+			while (properties.hasMoreElements())
+			{
+				String key = (String) properties.nextElement();
+				headermap.put(key, message.getStringProperty(key));
+			}
+
+		}
+		catch (JMSException e)
+		{
+			SoapUI.logError(e);
+		}
+		return headermap;
+	}
 
 
 }

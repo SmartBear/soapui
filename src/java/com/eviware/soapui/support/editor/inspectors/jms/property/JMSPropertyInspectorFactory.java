@@ -15,10 +15,8 @@ package com.eviware.soapui.support.editor.inspectors.jms.property;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jms.JMSException;
 import javax.jms.Message;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JMSPropertyConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSHeader;
@@ -52,9 +50,7 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 	public EditorInspector<?> createResponseInspector(Editor<?> editor, ModelItem modelItem)
 	{
 
-//		if (modelItem instanceof WsdlRequest)
-//			return new JMSPropertyInspector((JMSPropertyInspectorModel) new WsdlRequestJMSHeaderAndPropertiesModel(
-//					(WsdlRequest) modelItem));
+
 
 		return null;
 	}
@@ -113,7 +109,7 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 			StringToStringMap stringToStringMap = new StringToStringMap();
 			if ((request.getResponse()) instanceof JMSResponse)
 			{
-				Message message = ((JMSResponse) request.getResponse()).getMessage();
+				Message message = ((JMSResponse) request.getResponse()).getMessageReceive();
 				if (message != null)
 					stringToStringMap.putAll(JMSHeader.getReceivedMessageHeaders(message));
 			}
@@ -126,7 +122,7 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 			if ((request.getResponse()) instanceof JMSResponse)
 			{
 
-				Message message = ((JMSResponse) request.getResponse()).getMessage();
+				Message message = ((JMSResponse) request.getResponse()).getMessageReceive();
 				stringToStringMap.putAll(JMSHeader.getReceivedMessageHeaders(message));
 
 			}

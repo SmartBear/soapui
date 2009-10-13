@@ -38,7 +38,7 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 		TopicConnectionFactory connectionFactory = null;
 		TopicConnection connection = null;
 		TopicSession session = null;
-		JMSResponse response =null;
+		JMSResponse response = null;
 		try
 		{
 			String topicName = null;
@@ -46,16 +46,15 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 			String[] parameters = request.getEndpoint().substring(request.getEndpoint().indexOf("://") + 3).split("/");
 			if (parameters.length == 2)
 			{
-				sessionName =PropertyExpander.expandProperties(submitContext, parameters[0]);
-				topicName = PropertyExpander.expandProperties(submitContext,parameters[1]).replaceFirst("topic_", "");
+				sessionName = PropertyExpander.expandProperties(submitContext, parameters[0]);
+				topicName = PropertyExpander.expandProperties(submitContext, parameters[1]).replaceFirst("topic_", "");
 			}
 			else
 				throw new UnresolvedJMSEndpointException("bad jms alias!!!!!");
 
-			
 			submitContext.setProperty(HERMES_SESSION_NAME, sessionName);
 			Hermes hermes = getHermes(sessionName, request);
-		   // connection factory
+			// connection factory
 			connectionFactory = (TopicConnectionFactory) hermes.getConnectionFactory();
 
 			// connection
@@ -63,44 +62,41 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 			connection.start();
 
 			// session
-			session =  connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+			session = connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
 
 			// destination
-			Topic topic =(Topic) hermes.getDestination(topicName, Domain.TOPIC);
+			Topic topic = (Topic) hermes.getDestination(topicName, Domain.TOPIC);
 
 			// publisher
 			TopicPublisher messageProducer = session.createPublisher(topic);
 
 			// message
-			TextMessage textMessage = session.createTextMessage();
-			String messageBody = PropertyExpander.expandProperties(submitContext,request.getRequestContent());
-			textMessage.setText(messageBody);
-		
-			JMSHeader jmsHeader= new JMSHeader();
-			 jmsHeader.setMessageHeaders(textMessage, request, hermes,submitContext);
-	         JMSHeader.setMessageProperties(textMessage, request, hermes,submitContext);
-         
-         // publish message to producer
-			messageProducer.send(textMessage, 
-										textMessage.getJMSDeliveryMode(),
-										textMessage.getJMSPriority(),
-										jmsHeader.getTimeTolive());
+			TextMessage textMessagePublish = session.createTextMessage();
+			String messageBody = PropertyExpander.expandProperties(submitContext, request.getRequestContent());
+			textMessagePublish.setText(messageBody);
+
+			JMSHeader jmsHeader = new JMSHeader();
+			jmsHeader.setMessageHeaders(textMessagePublish, request, hermes, submitContext);
+			JMSHeader.setMessageProperties(textMessagePublish, request, hermes, submitContext);
+
+			// publish message to producer
+			messageProducer.send(textMessagePublish, textMessagePublish.getJMSDeliveryMode(), textMessagePublish.getJMSPriority(), jmsHeader
+					.getTimeTolive());
 
 			// make response
-			response = new JMSResponse("", null, request, timeStarted);
-			
-			submitContext.setProperty(JMS_MESSAGE, textMessage);
+			response = new JMSResponse("", textMessagePublish, null, request, timeStarted);
+			submitContext.setProperty(JMS_MESSAGE_SEND, textMessagePublish);
 			submitContext.setProperty(JMS_RESPONSE, response);
-			
+
 			return response;
 		}
 		catch (JMSException jmse)
 		{
 			SoapUI.logError(jmse);
 			submitContext.setProperty(JMS_ERROR, jmse);
-			response = new JMSResponse("", null, request, timeStarted);
+			response = new JMSResponse("", null, null, request, timeStarted);
 			submitContext.setProperty(JMS_RESPONSE, response);
-			
+
 			return response;
 		}
 		catch (Throwable t)

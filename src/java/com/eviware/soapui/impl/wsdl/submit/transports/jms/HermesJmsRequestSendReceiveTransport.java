@@ -90,26 +90,28 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 										textMessageSend.getJMSPriority(),
 										jmsHeader.getTimeTolive());
 
+			submitContext.setProperty(JMS_MESSAGE_SEND, textMessageSend);
+			
+			
 			// consumer from session with queue
 			MessageConsumer messageConsumer = session.createConsumer(queueReceive);
 
 			long timeout = getTimeout(submitContext, request);
 
-			Message message = messageConsumer.receive(timeout);
+			Message messageReceive = messageConsumer.receive(timeout);
 			
-			if (message != null)
+			if (messageReceive != null)
 			{
 				TextMessage textMessageReceive = null;
-				if (message instanceof TextMessage)
+				if (messageReceive instanceof TextMessage)
 				{
-					textMessageReceive = (TextMessage) message;
+					textMessageReceive = (TextMessage) messageReceive;
 				}
 				// make response
-				response = new JMSResponse(textMessageReceive.getText(), textMessageReceive, request, timeStarted);
+				response = new JMSResponse(textMessageReceive.getText(), textMessageSend,textMessageReceive, request, timeStarted);
 				
 				
-				
-				submitContext.setProperty(JMS_MESSAGE, message);
+				submitContext.setProperty(JMS_MESSAGE_RECEIVE, messageReceive);
 				submitContext.setProperty(JMS_RESPONSE, response);
 				
 				
@@ -117,14 +119,14 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 			}
 			else
 			{
-				return new JMSResponse("", null, request, timeStarted);
+				return  new JMSResponse("", null,null, request, timeStarted);
 			}
 		}
 		catch (JMSException jmse)
 		{
 			SoapUI.logError(jmse);
 			submitContext.setProperty(JMS_ERROR, jmse);
-			response = new JMSResponse("", null, request, timeStarted);
+			response = new JMSResponse("", null,null, request, timeStarted);
 			submitContext.setProperty(JMS_RESPONSE, response);
 			
 			return response;

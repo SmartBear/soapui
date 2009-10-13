@@ -16,7 +16,6 @@ import org.apache.commons.lang.NotImplementedException;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.RequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry.CannotResolveJmsTypeException;
@@ -31,7 +30,8 @@ import com.eviware.soapui.model.support.ModelSupport;
 public class HermesJmsRequestTransport implements RequestTransport
 {
 
-	public static final String JMS_MESSAGE = "JMS_MESSAGE";
+	public static final String JMS_MESSAGE_RECEIVE = "JMS_MESSAGE_RECEIVE";
+	public static final String JMS_MESSAGE_SEND = "JMS_MESSAGE_SEND";
 	public static final String JMS_RESPONSE  = "JMS_RESPONSE";
 	public static final String JMS_ERROR  = "JMS_ERROR";
 	public static final String HERMES_SESSION_NAME  = "HERMES_SESSION_NAME";

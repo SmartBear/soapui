@@ -70,13 +70,6 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 
 		public StringToStringMap getJMSHeadersAndProperties()
 		{
-//			StringToStringMap stringToStringMap = new StringToStringMap();
-//			if ((request.getResponse()) instanceof JMSResponse)
-//			{
-//				Message message = ((JMSResponse) request.getSubmitListeners()Response()).getMessage();
-//				if (message != null)
-//					stringToStringMap.putAll(JMSHeader.getReceivedMessageHeaders(message));
-//			}
 			return headersAndProperties;
 		}
 		
@@ -86,7 +79,7 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 			JMSResponse jmsResponse= (JMSResponse)context.getProperty(HermesJmsRequestTransport.JMS_RESPONSE);
 			if (jmsResponse instanceof JMSResponse)
 			{
-				Message message = jmsResponse.getMessage();
+				Message message = jmsResponse.getMessageReceive();
 				if (message != null)
 					headersAndProperties.putAll(JMSHeader.getReceivedMessageHeaders(message));
 			}
