@@ -96,7 +96,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	protected static final String QUERY_ELEMENT = "query";
 	protected static final String STOREDPROCEDURE_ELEMENT = "stored-procedure";
 	protected JPanel panel;
-	protected String dbConnectionName;
 	protected SimpleForm form;
 	protected Connection connection;
 	protected JXEditTextArea queryArea;
