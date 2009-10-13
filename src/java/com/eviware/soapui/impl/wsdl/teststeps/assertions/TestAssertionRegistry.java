@@ -29,6 +29,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleContainsAss
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleNotContainsAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XPathContainsAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XQueryContainsAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.jdbc.JdbcResponseAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.jms.JMSStatusAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.jms.JMSTimeoutAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.NotSoapFaultAssertion;
@@ -71,6 +72,7 @@ public class TestAssertionRegistry
 		addAssertion( new WSARequestAssertion.Factory() );
 		addAssertion(new JMSStatusAssertion.Factory());
 		addAssertion(new JMSTimeoutAssertion.Factory());
+		addAssertion(new JdbcResponseAssertion.Factory());
 	}
 
 	public void addAssertion( TestAssertionFactory factory )
