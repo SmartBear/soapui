@@ -1,13 +1,30 @@
+/*
+ *  soapUI, copyright (C) 2004-2009 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
 package com.eviware.soapui.impl.wsdl.support;
 
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 
+/**
+ * 
+ * @author ole.matzura
+ */
 public class JdbcMessageExchange extends AbstractNonHttpMessageExchange<JdbcRequestTestStep>
 {
 
+	private JdbcRequestTestStep modelItem;
 	public JdbcMessageExchange( JdbcRequestTestStep modelItem )
 	{
 		super( modelItem );
+		this.modelItem = modelItem;
 	}
 
 	public String getRequestContent()
@@ -17,7 +34,7 @@ public class JdbcMessageExchange extends AbstractNonHttpMessageExchange<JdbcRequ
 
 	public String getResponseContent()
 	{
-		return null;
+		return modelItem.getXmlStringResult();
 	}
 
 	public long getTimeTaken()
@@ -37,7 +54,7 @@ public class JdbcMessageExchange extends AbstractNonHttpMessageExchange<JdbcRequ
 
 	public boolean hasResponse()
 	{
-		return false;
+		return getResponseContent()!= null ;
 	}
 
 	public boolean isDiscarded()
