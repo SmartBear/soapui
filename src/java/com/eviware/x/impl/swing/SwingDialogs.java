@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -27,6 +28,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 
 import com.eviware.soapui.support.DefaultHyperlinkListener;
 import com.eviware.soapui.support.UISupport;
@@ -234,8 +237,35 @@ public class SwingDialogs implements XDialogs
 	public char[] promptPassword( String question, String title )
 	{
 		JPasswordField passwordField = new JPasswordField();
+		passwordField.addAncestorListener( new FocusAncestorListener( passwordField ) );
 		JLabel qLabel = new JLabel( question );
 		JOptionPane.showConfirmDialog( null, new Object[] { qLabel, passwordField }, title, JOptionPane.OK_CANCEL_OPTION );
 		return passwordField.getPassword();
+	}
+
+	private final class FocusAncestorListener implements AncestorListener
+	{
+		private final JComponent component;
+
+		public FocusAncestorListener( JComponent component )
+		{
+			this.component = component;
+		}
+
+		@Override
+		public void ancestorAdded( AncestorEvent event )
+		{
+			component.requestFocusInWindow();
+		}
+
+		@Override
+		public void ancestorMoved( AncestorEvent event )
+		{
+		}
+
+		@Override
+		public void ancestorRemoved( AncestorEvent event )
+		{
+		}
 	}
 }
