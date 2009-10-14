@@ -238,7 +238,7 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory
 		mainForm.addCheckBox( ADD_SOAP_RESPONSE_ASSERTION, "(adds validation that response is a SOAP message)" );
 		mainForm.addCheckBox( ADD_SCHEMA_ASSERTION, "(adds validation that response complies with its schema)" );
 		mainForm.addCheckBox( ADD_SOAP_FAULT_ASSERTION, "(adds validation that response is not a SOAP Fault)" );
-		mainForm.addCheckBox( CREATE_OPTIONAL_ELEMENTS_IN_REQUEST, "(creates optional content i sample request)" );
+		mainForm.addCheckBox( CREATE_OPTIONAL_ELEMENTS_IN_REQUEST, "(creates optional content in sample request)" );
 
 		dialog = builder.buildDialog( builder.buildOkCancelActions(),
 				"Specify options for adding a new request to a TestCase", UISupport.OPTIONS_ICON );
