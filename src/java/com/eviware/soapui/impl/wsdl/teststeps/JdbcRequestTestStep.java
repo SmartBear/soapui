@@ -15,11 +15,13 @@ package com.eviware.soapui.impl.wsdl.teststeps;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +42,7 @@ import org.w3c.dom.Element;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
+import com.eviware.soapui.config.PropertyConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
@@ -260,8 +263,26 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		}
 		else
 		{
-			String q = PropertyExpander.expandProperties(context, jdbcRequestTestStepConfig.getQuery());
-			statement.execute(q);
+			List<PropertyConfig> props = jdbcRequestTestStepConfig.getProperties().getPropertyList();
+			//TODO 
+			/*
+			 * Since ((PreparedStatement)statement).getParameterMetaData() is not implemented in specific drivers
+			 * (except for mysql for now)
+			 * number of parameters should match number of properties in exact order
+			*/
+			
+//			int parameterCount = ((PreparedStatement)statement).getParameterMetaData().getParameterCount();
+//			for (int i = 0; i < parameterCount; i++)
+//			{
+//				String paramName = ((PreparedStatement)statement).getParameterMetaData().getParameterTypeName(i);
+				for (int j = 0; j < props.size(); j++)
+				{
+					PropertyConfig property = props.get(j);
+					((PreparedStatement) statement).setString(j+1, property.getValue());
+				}
+//			}
+			((PreparedStatement)statement).execute();
+
 		}
 
 		// getColumnNamesForCurrentResultSet();
@@ -288,7 +309,8 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		}
 		else
 		{
-			statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+			String sql = PropertyExpander.expandProperties(context, jdbcRequestTestStepConfig.getQuery());
+			statement = connection.prepareStatement(sql);
 		}
 		super.prepare(testRunner, context);
 	}
@@ -354,7 +376,12 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			results.appendChild(row);
 			for (int ii = 1; ii <= colCount; ii++)
 			{
-				String columnName = (rsmd.getTableName(ii) + "." + rsmd.getColumnName(ii)).toUpperCase();
+				String columnName = "";
+				if (!StringUtils.isNullOrEmpty(rsmd.getTableName(ii)))
+				{
+					columnName += (rsmd.getTableName(ii)).toUpperCase() + ".";
+				}
+				columnName += (rsmd.getColumnName(ii)).toUpperCase();
 				String value = rs.getString(ii);
 				Element node = xmlDocumentResult.createElement(columnName);
 				if (!StringUtils.isNullOrEmpty(value))
