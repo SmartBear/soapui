@@ -252,18 +252,15 @@ public class SwingDialogs implements XDialogs
 			this.component = component;
 		}
 
-		@Override
 		public void ancestorAdded( AncestorEvent event )
 		{
 			component.requestFocusInWindow();
 		}
 
-		@Override
 		public void ancestorMoved( AncestorEvent event )
 		{
 		}
 
-		@Override
 		public void ancestorRemoved( AncestorEvent event )
 		{
 		}
