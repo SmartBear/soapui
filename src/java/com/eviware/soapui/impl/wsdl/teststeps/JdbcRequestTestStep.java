@@ -42,11 +42,13 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
 import com.eviware.soapui.impl.wsdl.support.JdbcMessageExchange;
+import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -56,11 +58,14 @@ import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -73,7 +78,7 @@ import com.eviware.soapui.support.xml.JXEditTextArea;
  * @author dragica.soldo
  */
 
-public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements Assertable
+public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements Assertable, MutableTestPropertyHolder
 {
 	private final static Logger log = Logger.getLogger(WsdlTestRequestStep.class);
 	protected JdbcRequestTestStepConfig jdbcRequestTestStepConfig;
@@ -101,6 +106,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	protected JXEditTextArea queryArea;
 	private AssertionsSupport assertionsSupport;
 	private PropertyChangeNotifier notifier;
+   private XmlBeansPropertiesTestPropertyHolder propertyHolderSupport;
 
 	public JdbcRequestTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest)
 	{
@@ -123,6 +129,10 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			jdbcRequestTestStepConfig = (JdbcRequestTestStepConfig) getConfig().addNewConfig().changeType(
 					JdbcRequestTestStepConfig.type);
 		}
+		if( jdbcRequestTestStepConfig.getProperties() == null )
+			jdbcRequestTestStepConfig.addNewProperties();
+		
+		propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder( this, jdbcRequestTestStepConfig.getProperties() );
 		initAssertions();
 	}
 
@@ -288,8 +298,8 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	}
 	public void createXmlResult()
 	{
-		ResultSet rs = resultSet;
-		Statement stmt = statement;
+//		ResultSet rs = resultSet;
+//		Statement stmt = statement;
 
 		try
 		{
@@ -299,28 +309,11 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			Element results = xmlDocumentResult.createElement("Results");
 			xmlDocumentResult.appendChild(results);
 
+			resultSet = statement.getResultSet();
+			addResultSetXmlPart(results, statement.getResultSet());
 			while (statement.getMoreResults())
 			{
-				rs = statement.getResultSet();
-				// connection to an ACCESS MDB
-				ResultSetMetaData rsmd = rs.getMetaData();
-				int colCount = rsmd.getColumnCount();
-				while (rs.next())
-				{
-					Element row = xmlDocumentResult.createElement("Row");
-					results.appendChild(row);
-					for (int ii = 1; ii <= colCount; ii++)
-					{
-						String columnName = (rsmd.getTableName(ii) + "." + rsmd.getColumnName(ii)).toUpperCase();
-						String value = rs.getString(ii);
-						Element node = xmlDocumentResult.createElement(columnName);
-						if (!StringUtils.isNullOrEmpty(value))
-						{
-							node.appendChild(xmlDocumentResult.createTextNode(value.toString()));
-						}
-						row.appendChild(node);
-					}
-				}
+				addResultSetXmlPart(results, statement.getResultSet());
 			}
 			String oldRes = getXmlStringResult();
 			xmlStringResult = getDocumentAsString(xmlDocumentResult);
@@ -338,13 +331,37 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			{
 				if (connection != null)
 					connection.close();
-				if (stmt != null)
-					stmt.close();
-				if (rs != null)
-					rs.close();
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
 			}
 			catch (Exception e)
 			{
+			}
+		}
+	}
+
+	private void addResultSetXmlPart(Element results, ResultSet rs) throws SQLException
+	{
+//		resultSet = statement.getResultSet();
+		// connection to an ACCESS MDB
+		ResultSetMetaData rsmd = rs.getMetaData();
+		int colCount = rsmd.getColumnCount();
+		while (rs.next())
+		{
+			Element row = xmlDocumentResult.createElement("Row");
+			results.appendChild(row);
+			for (int ii = 1; ii <= colCount; ii++)
+			{
+				String columnName = (rsmd.getTableName(ii) + "." + rsmd.getColumnName(ii)).toUpperCase();
+				String value = rs.getString(ii);
+				Element node = xmlDocumentResult.createElement(columnName);
+				if (!StringUtils.isNullOrEmpty(value))
+				{
+					node.appendChild(xmlDocumentResult.createTextNode(value.toString()));
+				}
+				row.appendChild(node);
 			}
 		}
 	}
@@ -550,4 +567,83 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			e.printStackTrace();
 		}
 	}
+
+   public TestProperty addProperty( String name )
+   {
+      return propertyHolderSupport.addProperty( name );
+   }
+
+	public TestProperty removeProperty(String propertyName)
+	{
+		return propertyHolderSupport.removeProperty( propertyName );
+	}
+
+	public boolean renameProperty(String name, String newName)
+	{
+		return PropertyExpansionUtils.renameProperty( propertyHolderSupport.getProperty( name ), newName, getTestCase() ) != null;
+	}
+   public void addTestPropertyListener( TestPropertyListener listener )
+   {
+      propertyHolderSupport.addTestPropertyListener( listener );
+   }
+
+   public Map<String, TestProperty> getProperties()
+   {
+      return propertyHolderSupport.getProperties();
+   }
+
+   public TestProperty getProperty( String name )
+   {
+      return propertyHolderSupport.getProperty( name );
+   }
+
+   public TestProperty getPropertyAt( int index )
+   {
+      return propertyHolderSupport.getPropertyAt( index );
+   }
+
+   public int getPropertyCount()
+   {
+      return propertyHolderSupport.getPropertyCount();
+   }
+
+   public List<TestProperty> getPropertyList()
+   {
+   	return propertyHolderSupport.getPropertyList();
+   }
+
+   public String[] getPropertyNames()
+   {
+      return propertyHolderSupport.getPropertyNames();
+   }
+
+   public String getPropertyValue( String name )
+   {
+      return propertyHolderSupport.getPropertyValue( name );
+   }
+   public void removeTestPropertyListener( TestPropertyListener listener )
+   {
+      propertyHolderSupport.removeTestPropertyListener( listener );
+   }
+
+   public boolean hasProperty( String name )
+   {
+      return propertyHolderSupport.hasProperty( name );
+   }
+
+   public void setPropertyValue( String name, String value )
+   {
+      propertyHolderSupport.setPropertyValue( name, value );
+   }
+   
+   public void setPropertyValue( String name, Object value )
+   {
+   	setPropertyValue( name, String.valueOf( value ));
+   }
+
+   public void moveProperty( String propertyName, int targetIndex )
+   {
+      propertyHolderSupport.moveProperty( propertyName, targetIndex );
+   }
+
 }

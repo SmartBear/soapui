@@ -1846,8 +1846,8 @@
 
     <xsd:complexType name="JdbcRequestTestStep">
     	<xsd:sequence>
-            <xsd:element name="dbConnectionName" type="xsd:string"></xsd:element>
-            <xsd:element name="driver" type="xsd:string"></xsd:element>
+    		<xsd:element name="dbConnectionName" type="xsd:string"></xsd:element>
+    		<xsd:element name="driver" type="xsd:string"></xsd:element>
     		<xsd:element name="connectionString" type="xsd:string"></xsd:element>
     		<xsd:element name="password" type="xsd:string"></xsd:element>
     		<xsd:element name="query" type="xsd:string"></xsd:element>
@@ -1855,6 +1855,7 @@
     		<xsd:element name="assertion" type="tns:TestAssertion"
     			maxOccurs="unbounded" minOccurs="0">
     		</xsd:element>
+    		<xsd:element name="properties" type="tns:PropertiesType"></xsd:element>
     	</xsd:sequence>
     </xsd:complexType>
 

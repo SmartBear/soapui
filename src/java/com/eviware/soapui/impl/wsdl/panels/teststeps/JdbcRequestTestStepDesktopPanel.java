@@ -5,7 +5,6 @@
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
@@ -15,6 +14,7 @@ import java.sql.Connection;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -35,6 +35,7 @@ import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
@@ -47,6 +48,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
+import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
@@ -118,7 +120,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	protected void buildUI()
 	{
 		init();
-		JSplitPane split = UISupport.createHorizontalSplit(buildConfigPanel(), buildResponseEditor());
+		JSplitPane split = UISupport.createHorizontalSplit(buildProperties(), buildContent());
 		split.setDividerLocation(180);
 
 		inspectorPanel = JInspectorPanelFactory.build(split);
@@ -134,6 +136,42 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		setPreferredSize(new Dimension(600, 450));
 	}
 
+	private JComponent buildContent()
+	{
+		JSplitPane split = UISupport.createHorizontalSplit( buildConfigPanel(), buildResponseEditor() );
+		split.setDividerLocation( 180 );
+		return split;
+	}
+
+	protected JComponent buildConfigPanel()
+	{
+		configPanel = UISupport.addTitledBorder(new JPanel(new BorderLayout()), "Configuration");
+		if (panel == null)
+		{
+			panel = new JPanel(new BorderLayout());
+			configForm = new SimpleForm();
+			createSimpleJdbcConfigForm();
+			addStoreProcedureChangeListener();
+
+			panel.add(configForm.getPanel());
+		}
+		configPanel.add(panel, BorderLayout.CENTER);
+		return configPanel;
+
+	}
+
+	private JComponent buildProperties()
+	{
+		PropertyHolderTable holderTable = new PropertyHolderTable( getModelItem() );
+
+		JUndoableTextField textField = new JUndoableTextField( true );
+
+		PropertyExpansionPopupListener.enable( textField, getModelItem() );
+		holderTable.getPropertiesTable().setDefaultEditor( String.class, new DefaultCellEditor( textField ) );
+
+		return holderTable;
+	}
+	
 	protected JComponent buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
@@ -200,32 +238,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			addAssertionAction = new AddAssertionAction(assertable);
 			assertionListPopup.add(addAssertionAction);
 		}
-
-	}
-
-	protected Component buildStatusBar()
-	{
-		JPanel statusBar = new JPanel(new BorderLayout());
-		statusBar.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-		statusLabel = new JLabel(" ");
-		statusBar.add(statusLabel, BorderLayout.WEST);
-		return statusBar;
-	}
-
-	protected JComponent buildConfigPanel()
-	{
-		configPanel = UISupport.addTitledBorder(new JPanel(new BorderLayout()), "Configuration");
-		if (panel == null)
-		{
-			panel = new JPanel(new BorderLayout());
-			configForm = new SimpleForm();
-			createSimpleJdbcConfigForm();
-			addStoreProcedureChangeListener();
-
-			panel.add(configForm.getPanel());
-		}
-		configPanel.add(panel, BorderLayout.CENTER);
-		return configPanel;
 
 	}
 
