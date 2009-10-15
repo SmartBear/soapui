@@ -45,10 +45,11 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 	{
 		if (modelItem instanceof MessageExchangeModelItem)
 		{
-			if (JMSUtil.checkIfJMS( modelItem))
-				return new JMSHeaderAndPropertyInspector(
-						(JMSHeaderAndPropertyInspectorModel) new MessageExchangeRequestJMSHeaderAndPropertiesModel(
-								(MessageExchangeModelItem) modelItem));
+			JMSHeaderAndPropertyInspector inspector = new JMSHeaderAndPropertyInspector(
+					(JMSHeaderAndPropertyInspectorModel) new MessageExchangeRequestJMSHeaderAndPropertiesModel(
+							(MessageExchangeModelItem) modelItem));
+			inspector.setEnabled(JMSUtil.checkIfJMS(modelItem));
+			return inspector;
 		}
 		return null;
 	}
@@ -58,17 +59,20 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 
 		if (modelItem instanceof WsdlRequest)
 		{
-			if (JMSUtil.checkIfJMS(modelItem))
-				return new JMSHeaderAndPropertyInspector(
-						(JMSHeaderAndPropertyInspectorModel) new ResponseJMSHeaderAndPropertiesModel((WsdlRequest) modelItem));
+			JMSHeaderAndPropertyInspector inspector = new JMSHeaderAndPropertyInspector(
+					(JMSHeaderAndPropertyInspectorModel) new ResponseJMSHeaderAndPropertiesModel((WsdlRequest) modelItem));
+			inspector.setEnabled(JMSUtil.checkIfJMS(modelItem));
+			return inspector;
 		}
 		else if (modelItem instanceof MessageExchangeModelItem)
 		{
-			if (JMSUtil.checkIfJMS( modelItem))
 
-				return new JMSHeaderAndPropertyInspector(
-						(JMSHeaderAndPropertyInspectorModel) new MessageExchangeResponseJMSHeaderAndPropertiesModel(
-								(MessageExchangeModelItem) modelItem));
+			JMSHeaderAndPropertyInspector inspector = new JMSHeaderAndPropertyInspector(
+					(JMSHeaderAndPropertyInspectorModel) new MessageExchangeResponseJMSHeaderAndPropertiesModel(
+							(MessageExchangeModelItem) modelItem));
+			inspector.setEnabled(JMSUtil.checkIfJMS(modelItem));
+			return inspector;
+
 		}
 		return null;
 	}
@@ -108,7 +112,6 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 					headersAndProperties.putAll(JMSHeader.getReceivedMessageHeaders(message));
 			}
 			inspector.getHeadersTableModel().setData(headersAndProperties);
-
 		}
 
 		public boolean beforeSubmit(Submit submit, SubmitContext context)

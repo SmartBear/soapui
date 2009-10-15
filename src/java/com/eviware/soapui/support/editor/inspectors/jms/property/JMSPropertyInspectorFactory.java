@@ -39,9 +39,10 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 	{
 		if (modelItem instanceof WsdlRequest)
 		{
-			if (JMSUtil.checkIfJMS( modelItem))
-				return new JMSPropertyInspector((JMSPropertyInspectorModel) new WsdlRequestJMSPropertiesModel(
+				JMSPropertyInspector inspector =  new JMSPropertyInspector((JMSPropertyInspectorModel) new WsdlRequestJMSPropertiesModel(
 						(WsdlRequest) modelItem));
+				inspector.setEnabled(JMSUtil.checkIfJMS(modelItem));
+				return inspector;
 		}
 		return null;
 	}

@@ -39,30 +39,54 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 
 	public EditorInspector<?> createRequestInspector(Editor<?> editor, ModelItem modelItem)
 	{
-		if (JMSUtil.checkIfJMS(modelItem))
-			return null;
-		if (modelItem instanceof AbstractHttpRequestInterface<?>)
-			return new HttpHeadersInspector(new WsdlRequestHeadersModel((AbstractHttpRequest<?>) modelItem));
-		else if (modelItem instanceof WsdlMockResponse)
-			return new HttpHeadersInspector(new WsdlMockResponseRequestHeadersModel((WsdlMockResponse) modelItem));
-		else if (modelItem instanceof MessageExchangeModelItem)
-			return new HttpHeadersInspector(new WsdlMessageExchangeRequestHeadersModel(
-					(MessageExchangeModelItem) modelItem));
 
+		if (modelItem instanceof AbstractHttpRequestInterface<?>)
+		{
+			HttpHeadersInspector inspector = new HttpHeadersInspector(new WsdlRequestHeadersModel(
+					(AbstractHttpRequest<?>) modelItem));
+			inspector.setEnabled(!JMSUtil.checkIfJMS(modelItem));
+			return inspector;
+		}
+		else if (modelItem instanceof WsdlMockResponse)
+		{
+			HttpHeadersInspector inspector = new HttpHeadersInspector(new WsdlMockResponseRequestHeadersModel(
+					(WsdlMockResponse) modelItem));
+			inspector.setEnabled(!JMSUtil.checkIfJMS(modelItem));
+			return inspector;
+		}
+
+		else if (modelItem instanceof MessageExchangeModelItem)
+		{
+			HttpHeadersInspector inspector = new HttpHeadersInspector(new WsdlMessageExchangeRequestHeadersModel(
+					(MessageExchangeModelItem) modelItem));
+			inspector.setEnabled(!JMSUtil.checkIfJMS(modelItem));
+			return inspector;
+		}
 		return null;
 	}
 
 	public EditorInspector<?> createResponseInspector(Editor<?> editor, ModelItem modelItem)
 	{
-		if (JMSUtil.checkIfJMS( modelItem))
-			return null;
 		if (modelItem instanceof AbstractHttpRequestInterface<?>)
-			return new HttpHeadersInspector(new WsdlRequestResponseHeadersModel((AbstractHttpRequest<?>) modelItem));
+		{
+			HttpHeadersInspector inspector = new HttpHeadersInspector(new WsdlRequestResponseHeadersModel(
+					(AbstractHttpRequest<?>) modelItem));
+			inspector.setEnabled(!JMSUtil.checkIfJMS(modelItem));
+			return inspector;
+		}
 		else if (modelItem instanceof WsdlMockResponse)
-			return new HttpHeadersInspector(new WsdlMockResponseHeadersModel((WsdlMockResponse) modelItem));
+		{
+			HttpHeadersInspector inspector =new HttpHeadersInspector(new WsdlMockResponseHeadersModel((WsdlMockResponse) modelItem));
+			inspector.setEnabled(!JMSUtil.checkIfJMS(modelItem));
+			return inspector;
+		}
 		else if (modelItem instanceof MessageExchangeModelItem)
-			return new HttpHeadersInspector(new WsdlMessageExchangeResponseHeadersModel(
+		{
+			HttpHeadersInspector inspector = new HttpHeadersInspector(new WsdlMessageExchangeResponseHeadersModel(
 					(MessageExchangeModelItem) modelItem));
+			inspector.setEnabled(!JMSUtil.checkIfJMS(modelItem));
+			return inspector;
+		}
 
 		return null;
 	}

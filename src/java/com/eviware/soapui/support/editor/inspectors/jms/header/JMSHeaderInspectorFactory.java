@@ -34,8 +34,9 @@ public class JMSHeaderInspectorFactory implements RequestInspectorFactory, Respo
 	{
 		if (modelItem instanceof WsdlRequest)
 		{
-			if (JMSUtil.checkIfJMS((Request) modelItem))
-				return new WsdlRequestJMSHeaderInspector(((WsdlRequest) modelItem));
+			WsdlRequestJMSHeaderInspector inspector = new WsdlRequestJMSHeaderInspector(((WsdlRequest) modelItem));
+			inspector.setEnabled(JMSUtil.checkIfJMS(modelItem));
+			return inspector;
 		}
 		return null;
 	}

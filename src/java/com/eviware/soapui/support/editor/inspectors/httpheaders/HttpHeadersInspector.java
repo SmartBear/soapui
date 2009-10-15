@@ -36,6 +36,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
+import com.eviware.soapui.support.editor.inspectors.jms.JMSUtil;
 import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 
@@ -56,6 +57,7 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 		this.model = model;
 
 		model.addPropertyChangeListener( this );
+	
 	}
 
 	public JComponent getComponent()

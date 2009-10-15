@@ -46,6 +46,7 @@ import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.RequestMessageXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -56,8 +57,14 @@ import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
+import com.eviware.soapui.support.components.Inspector;
 import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspectorFactory;
+import com.eviware.soapui.support.editor.inspectors.jms.JMSUtil;
+import com.eviware.soapui.support.editor.inspectors.jms.header.JMSHeaderInspectorFactory;
+import com.eviware.soapui.support.editor.inspectors.jms.property.JMSHeaderAndPropertyInspectorFactory;
+import com.eviware.soapui.support.editor.inspectors.jms.property.JMSPropertyInspectorFactory;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
@@ -73,7 +80,7 @@ import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 extends AbstractHttpRequestInterface<?>>
 		extends ModelItemDesktopPanel<T> implements SubmitListener
 {
-	private final static Logger log = Logger.getLogger( AbstractHttpRequestDesktopPanel.class );
+	private final static Logger log = Logger.getLogger(AbstractHttpRequestDesktopPanel.class);
 
 	private JComponent endpointComponent;
 	private JButton submitButton;
@@ -98,53 +105,53 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	private SubmitAction submitAction;
 	private boolean hasClosed;
 
-	public AbstractHttpRequestDesktopPanel( T modelItem, T2 request )
+	public AbstractHttpRequestDesktopPanel(T modelItem, T2 request)
 	{
-		super( modelItem );
+		super(modelItem);
 
 		this.request = request;
 
-		init( request );
+		init(request);
 
 		try
 		{
 			// required to avoid deadlock in UI when opening attachments inspector
-			if( request.getAttachmentCount() > 0 && request.getOperation() != null)
+			if (request.getAttachmentCount() > 0 && request.getOperation() != null)
 			{
 				request.getOperation().getInterface().getDefinitionContext().loadIfNecessary();
 			}
 		}
-		catch( Exception e )
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
 
-	protected void init( T2 request )
+	protected void init(T2 request)
 	{
-		this.endpointsModel = new EndpointsComboBoxModel( request );
+		this.endpointsModel = new EndpointsComboBoxModel(request);
 
-		request.addSubmitListener( this );
-		request.addPropertyChangeListener( this );
+		request.addSubmitListener(this);
+		request.addPropertyChangeListener(this);
 
-		add( buildContent(), BorderLayout.CENTER );
-		add( buildToolbar(), BorderLayout.NORTH );
-		add( buildStatusLabel(), BorderLayout.SOUTH );
+		add(buildContent(), BorderLayout.CENTER);
+		add(buildToolbar(), BorderLayout.NORTH);
+		add(buildStatusLabel(), BorderLayout.SOUTH);
 
-		setPreferredSize( new Dimension( 600, 500 ) );
+		setPreferredSize(new Dimension(600, 500));
 
-		addFocusListener( new FocusAdapter()
+		addFocusListener(new FocusAdapter()
 		{
 
 			@Override
-			public void focusGained( FocusEvent e )
+			public void focusGained(FocusEvent e)
 			{
-				if( requestTabs.getSelectedIndex() == 1 || responseHasFocus )
+				if (requestTabs.getSelectedIndex() == 1 || responseHasFocus)
 					responseEditor.requestFocusInWindow();
 				else
 					requestEditor.requestFocusInWindow();
 			}
-		} );
+		});
 	}
 
 	public final T2 getRequest()
@@ -170,7 +177,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	protected JComponent buildStatusLabel()
 	{
 		statusBar = new JEditorStatusBarWithProgress();
-		statusBar.setBorder( BorderFactory.createEmptyBorder( 1, 0, 0, 0 ) );
+		statusBar.setBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0));
 
 		return statusBar;
 	}
@@ -183,18 +190,18 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	protected JComponent buildContent()
 	{
 		requestSplitPane = UISupport.createHorizontalSplit();
-		requestSplitPane.setResizeWeight( 0.5 );
-		requestSplitPane.setBorder( null );
+		requestSplitPane.setResizeWeight(0.5);
+		requestSplitPane.setBorder(null);
 
 		submitAction = new SubmitAction();
-		submitButton = createActionButton( submitAction, true );
-		submitButton.setEnabled( request.getEndpoint() != null && request.getEndpoint().trim().length() > 0 );
+		submitButton = createActionButton(submitAction, true);
+		submitButton.setEnabled(request.getEndpoint() != null && request.getEndpoint().trim().length() > 0);
 
-		cancelButton = createActionButton( new CancelAction(), false );
-		splitButton = createActionButton( new ChangeSplitPaneOrientationAction( requestSplitPane ), true );
+		cancelButton = createActionButton(new CancelAction(), false);
+		splitButton = createActionButton(new ChangeSplitPaneOrientationAction(requestSplitPane), true);
 
-		tabsButton = new JToggleButton( new ChangeToTabsAction() );
-		tabsButton.setPreferredSize( UISupport.TOOLBAR_BUTTON_DIMENSION );
+		tabsButton = new JToggleButton(new ChangeToTabsAction());
+		tabsButton.setPreferredSize(UISupport.TOOLBAR_BUTTON_DIMENSION);
 
 		moveFocusAction = new MoveFocusAction();
 
@@ -202,43 +209,43 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		responseEditor = buildResponseEditor();
 
 		requestTabs = new JTabbedPane();
-		requestTabs.addChangeListener( new ChangeListener()
+		requestTabs.addChangeListener(new ChangeListener()
 		{
 
-			public void stateChanged( ChangeEvent e )
+			public void stateChanged(ChangeEvent e)
 			{
-				SwingUtilities.invokeLater( new Runnable()
+				SwingUtilities.invokeLater(new Runnable()
 				{
 
 					public void run()
 					{
 						int ix = requestTabs.getSelectedIndex();
-						if( ix == 0 )
+						if (ix == 0)
 							requestEditor.requestFocus();
-						else if( ix == 1 && responseEditor != null )
+						else if (ix == 1 && responseEditor != null)
 							responseEditor.requestFocus();
 					}
-				} );
+				});
 			}
-		} );
+		});
 
-		requestTabPanel = UISupport.createTabPanel( requestTabs, true );
+		requestTabPanel = UISupport.createTabPanel(requestTabs, true);
 
-		if( request.getSettings().getBoolean( UISettings.START_WITH_REQUEST_TABS ) )
+		if (request.getSettings().getBoolean(UISettings.START_WITH_REQUEST_TABS))
 		{
-			requestTabs.addTab( "Request", requestEditor );
-			if( responseEditor != null )
-				requestTabs.addTab( "Response", responseEditor );
-			splitButton.setEnabled( false );
-			tabsButton.setSelected( true );
+			requestTabs.addTab("Request", requestEditor);
+			if (responseEditor != null)
+				requestTabs.addTab("Response", responseEditor);
+			splitButton.setEnabled(false);
+			tabsButton.setSelected(true);
 
 			return requestTabPanel;
 		}
 		else
 		{
-			requestSplitPane.setTopComponent( requestEditor );
-			requestSplitPane.setBottomComponent( responseEditor );
-			requestSplitPane.setDividerLocation( 0.5 );
+			requestSplitPane.setTopComponent(requestEditor);
+			requestSplitPane.setBottomComponent(responseEditor);
+			requestSplitPane.setDividerLocation(0.5);
 			return requestSplitPane;
 		}
 	}
@@ -257,42 +264,70 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		endpointComponent = buildEndpointComponent();
 
 		JXToolBar toolbar = UISupport.createToolbar();
-		toolbar.add( submitButton );
+		toolbar.add(submitButton);
 
-		insertButtons( toolbar );
+		insertButtons(toolbar);
 
-		toolbar.add( cancelButton );
+		toolbar.add(cancelButton);
 
-		if( endpointComponent != null )
+		if (endpointComponent != null)
 		{
 			toolbar.addSeparator();
-			toolbar.add( endpointComponent );
+			toolbar.add(endpointComponent);
 		}
 
-		toolbar.add( Box.createHorizontalGlue() );
-		toolbar.add( tabsButton );
-		toolbar.add( splitButton );
-		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( getHelpUrl() ) ) );
+		toolbar.add(Box.createHorizontalGlue());
+		toolbar.add(tabsButton);
+		toolbar.add(splitButton);
+		toolbar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction(getHelpUrl())));
 
 		return toolbar;
 	}
 
 	protected JComponent buildEndpointComponent()
 	{
-		final JComboBox endpointCombo = new JComboBox( endpointsModel );
-		endpointCombo.setToolTipText( endpointsModel.getSelectedItem().toString() );
+		final JComboBox endpointCombo = new JComboBox(endpointsModel);
+		endpointCombo.addPropertyChangeListener(this);
+		endpointCombo.setToolTipText(endpointsModel.getSelectedItem().toString());
 
-		return UISupport.addTooltipListener( endpointCombo, "- no endpoint set for request -" );
+		return UISupport.addTooltipListener(endpointCombo, "- no endpoint set for request -");
 	}
 
-	public void propertyChange( PropertyChangeEvent evt )
+	public void propertyChange(PropertyChangeEvent evt)
 	{
-		if( evt.getPropertyName().equals( AbstractHttpRequest.ENDPOINT_PROPERTY ) )
+		if (evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
 		{
-			submitButton.setEnabled( submit == null && StringUtils.hasContent( request.getEndpoint() ) );
+			submitButton.setEnabled(submit == null && StringUtils.hasContent(request.getEndpoint()));
 		}
 
-		super.propertyChange( evt );
+		// when selecting endpoint
+		if ((evt.getSource() instanceof WsdlTestRequest) && evt.getPropertyName().equals("endpoint"))
+		{
+			boolean jmsEndpoint = request.getEndpoint().startsWith("jms://");
+
+			// for request
+			updateInspector(requestEditor, JMSHeaderInspectorFactory.INSPECTOR_ID, jmsEndpoint);
+			updateInspector(requestEditor, JMSPropertyInspectorFactory.INSPECTOR_ID, jmsEndpoint);
+			updateInspector(requestEditor, HttpHeadersInspectorFactory.INSPECTOR_ID, !jmsEndpoint);
+
+			// for response
+			updateInspector(responseEditor, JMSHeaderAndPropertyInspectorFactory.INSPECTOR_ID, jmsEndpoint);
+			updateInspector(responseEditor, HttpHeadersInspectorFactory.INSPECTOR_ID, !jmsEndpoint);
+
+			// IMPORTANT : this repaint does not give effect 
+			repaint();
+
+		}
+
+		super.propertyChange(evt);
+	}
+
+	private void updateInspector(ModelItemXmlEditor<?, ?> editor, String inspectorId, boolean enable)
+	{
+		System.out.println(inspectorId + " " +enable);
+		Inspector inspector = editor.getInspector(inspectorId);
+		if (inspector != null)
+			inspector.getComponent().setEnabled(enable);
 	}
 
 	public JButton getSubmitButton()
@@ -302,20 +337,20 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	protected abstract String getHelpUrl();
 
-	protected abstract void insertButtons( JXToolBar toolbar );
+	protected abstract void insertButtons(JXToolBar toolbar);
 
-	public void setEnabled( boolean enabled )
+	public void setEnabled(boolean enabled)
 	{
-		if( endpointComponent != null )
-			endpointComponent.setEnabled( enabled );
+		if (endpointComponent != null)
+			endpointComponent.setEnabled(enabled);
 
-		requestEditor.setEditable( enabled );
-		if( responseEditor != null )
-			responseEditor.setEditable( enabled );
+		requestEditor.setEditable(enabled);
+		if (responseEditor != null)
+			responseEditor.setEditable(enabled);
 
-		submitButton.setEnabled( enabled && request.hasEndpoint() );
+		submitButton.setEnabled(enabled && request.hasEndpoint());
 
-		statusBar.setIndeterminate( !enabled );
+		statusBar.setIndeterminate(!enabled);
 	}
 
 	public abstract class AbstractHttpRequestMessageEditor<T3 extends XmlDocument> extends
@@ -324,21 +359,21 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		private InputAreaFocusListener inputAreaFocusListener;
 		private JXEditTextArea inputArea;
 
-		public AbstractHttpRequestMessageEditor( T3 document )
+		public AbstractHttpRequestMessageEditor(T3 document)
 		{
-			super( document, request );
+			super(document, request);
 
 			XmlSourceEditorView<?> editor = getSourceEditor();
-			if( editor != null )
+			if (editor != null)
 			{
 				inputArea = editor.getInputArea();
-				inputArea.getInputHandler().addKeyBinding( "A+ENTER", submitButton.getAction() );
-				inputArea.getInputHandler().addKeyBinding( "A+X", cancelButton.getAction() );
-				inputArea.getInputHandler().addKeyBinding( "AC+TAB", moveFocusAction );
-				inputArea.getInputHandler().addKeyBinding( "C+F4", closePanelAction );
+				inputArea.getInputHandler().addKeyBinding("A+ENTER", submitButton.getAction());
+				inputArea.getInputHandler().addKeyBinding("A+X", cancelButton.getAction());
+				inputArea.getInputHandler().addKeyBinding("AC+TAB", moveFocusAction);
+				inputArea.getInputHandler().addKeyBinding("C+F4", closePanelAction);
 
-				inputAreaFocusListener = new InputAreaFocusListener( editor );
-				inputArea.addFocusListener( inputAreaFocusListener );
+				inputAreaFocusListener = new InputAreaFocusListener(editor);
+				inputArea.addFocusListener(inputAreaFocusListener);
 			}
 		}
 
@@ -346,8 +381,8 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		public void release()
 		{
 			super.release();
-			if( inputArea != null )
-				inputArea.removeFocusListener( inputAreaFocusListener );
+			if (inputArea != null)
+				inputArea.removeFocusListener(inputAreaFocusListener);
 		}
 	}
 
@@ -357,22 +392,22 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		private JXEditTextArea inputArea;
 		private ResultAreaFocusListener resultAreaFocusListener;
 
-		public AbstractHttpResponseMessageEditor( T3 document )
+		public AbstractHttpResponseMessageEditor(T3 document)
 		{
-			super( document, request );
+			super(document, request);
 
 			XmlSourceEditorView<?> editor = getSourceEditor();
 
 			inputArea = editor.getInputArea();
-			if( inputArea != null )
+			if (inputArea != null)
 			{
-				resultAreaFocusListener = new ResultAreaFocusListener( editor );
-				inputArea.addFocusListener( resultAreaFocusListener );
+				resultAreaFocusListener = new ResultAreaFocusListener(editor);
+				inputArea.addFocusListener(resultAreaFocusListener);
 
-				inputArea.getInputHandler().addKeyBinding( "A+ENTER", submitButton.getAction() );
-				inputArea.getInputHandler().addKeyBinding( "A+X", cancelButton.getAction() );
-				inputArea.getInputHandler().addKeyBinding( "AC+TAB", moveFocusAction );
-				inputArea.getInputHandler().addKeyBinding( "C+F4", closePanelAction );
+				inputArea.getInputHandler().addKeyBinding("A+ENTER", submitButton.getAction());
+				inputArea.getInputHandler().addKeyBinding("A+X", cancelButton.getAction());
+				inputArea.getInputHandler().addKeyBinding("AC+TAB", moveFocusAction);
+				inputArea.getInputHandler().addKeyBinding("C+F4", closePanelAction);
 			}
 		}
 
@@ -381,8 +416,8 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		{
 			super.release();
 
-			if( inputArea != null )
-				inputArea.removeFocusListener( resultAreaFocusListener );
+			if (inputArea != null)
+				inputArea.removeFocusListener(resultAreaFocusListener);
 		}
 	}
 
@@ -390,39 +425,40 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		private final XmlSourceEditorView<?> sourceEditor;
 
-		public InputAreaFocusListener( XmlSourceEditorView<?> editor )
+		public InputAreaFocusListener(XmlSourceEditorView<?> editor)
 		{
 			this.sourceEditor = editor;
 		}
 
-		public void focusGained( FocusEvent e )
+		public void focusGained(FocusEvent e)
 		{
 			responseHasFocus = false;
 
-			statusBar.setTarget( sourceEditor.getInputArea() );
-			if( !splitButton.isEnabled() )
+			statusBar.setTarget(sourceEditor.getInputArea());
+			if (!splitButton.isEnabled())
 			{
-				requestTabs.setSelectedIndex( 0 );
+				requestTabs.setSelectedIndex(0);
 				return;
 			}
 
-			if( getModelItem().getSettings().getBoolean( UISettings.NO_RESIZE_REQUEST_EDITOR ) )
+			if (getModelItem().getSettings().getBoolean(UISettings.NO_RESIZE_REQUEST_EDITOR))
 				return;
 
 			// dont resize if split has been dragged
-			if( requestSplitPane.getUI() instanceof SoapUISplitPaneUI && ( ( SoapUISplitPaneUI )requestSplitPane.getUI() ).hasBeenDragged() )
+			if (requestSplitPane.getUI() instanceof SoapUISplitPaneUI
+					&& ((SoapUISplitPaneUI) requestSplitPane.getUI()).hasBeenDragged())
 				return;
 
 			int pos = requestSplitPane.getDividerLocation();
-			if( pos >= 600 )
+			if (pos >= 600)
 				return;
-			if( requestSplitPane.getMaximumDividerLocation() > 700 )
-				requestSplitPane.setDividerLocation( 600 );
+			if (requestSplitPane.getMaximumDividerLocation() > 700)
+				requestSplitPane.setDividerLocation(600);
 			else
-				requestSplitPane.setDividerLocation( 0.8 );
+				requestSplitPane.setDividerLocation(0.8);
 		}
 
-		public void focusLost( FocusEvent e )
+		public void focusLost(FocusEvent e)
 		{
 		}
 	}
@@ -431,41 +467,42 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		private final XmlSourceEditorView<?> sourceEditor;
 
-		public ResultAreaFocusListener( XmlSourceEditorView<?> editor )
+		public ResultAreaFocusListener(XmlSourceEditorView<?> editor)
 		{
 			this.sourceEditor = editor;
 		}
 
-		public void focusGained( FocusEvent e )
+		public void focusGained(FocusEvent e)
 		{
 			responseHasFocus = true;
 
-			statusBar.setTarget( sourceEditor.getInputArea() );
-			if( !splitButton.isEnabled() )
+			statusBar.setTarget(sourceEditor.getInputArea());
+			if (!splitButton.isEnabled())
 			{
-				requestTabs.setSelectedIndex( 1 );
+				requestTabs.setSelectedIndex(1);
 				return;
 			}
 
-			if( request.getSettings().getBoolean( UISettings.NO_RESIZE_REQUEST_EDITOR ) )
+			if (request.getSettings().getBoolean(UISettings.NO_RESIZE_REQUEST_EDITOR))
 				return;
 
 			// dont resize if split has been dragged or result is empty
-			if( requestSplitPane.getUI() instanceof SoapUISplitPaneUI && ( ( SoapUISplitPaneUI )requestSplitPane.getUI() ).hasBeenDragged() || request.getResponse() == null )
+			if (requestSplitPane.getUI() instanceof SoapUISplitPaneUI
+					&& ((SoapUISplitPaneUI) requestSplitPane.getUI()).hasBeenDragged() || request.getResponse() == null)
 				return;
 
 			int pos = requestSplitPane.getDividerLocation();
 			int maximumDividerLocation = requestSplitPane.getMaximumDividerLocation();
-			if( pos + 600 < maximumDividerLocation )
+			if (pos + 600 < maximumDividerLocation)
 				return;
 
-			if( maximumDividerLocation > 700 )
-				requestSplitPane.setDividerLocation( maximumDividerLocation - 600 );
+			if (maximumDividerLocation > 700)
+				requestSplitPane.setDividerLocation(maximumDividerLocation - 600);
 			else
-				requestSplitPane.setDividerLocation( 0.2 );
+				requestSplitPane.setDividerLocation(0.2);
 		}
 
-		public void focusLost( FocusEvent e )
+		public void focusLost(FocusEvent e)
 		{
 		}
 	}
@@ -474,12 +511,12 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		public SubmitAction()
 		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/submit_request.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Submit request to specified endpoint URL" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "alt ENTER" ) );
+			putValue(Action.SMALL_ICON, UISupport.createImageIcon("/submit_request.gif"));
+			putValue(Action.SHORT_DESCRIPTION, "Submit request to specified endpoint URL");
+			putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("alt ENTER"));
 		}
 
-		public void actionPerformed( ActionEvent e )
+		public void actionPerformed(ActionEvent e)
 		{
 			onSubmit();
 		}
@@ -492,12 +529,12 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		public CancelAction()
 		{
 			super();
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/cancel_request.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Aborts ongoing request" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "alt X" ) );
+			putValue(Action.SMALL_ICON, UISupport.createImageIcon("/cancel_request.gif"));
+			putValue(Action.SHORT_DESCRIPTION, "Aborts ongoing request");
+			putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("alt X"));
 		}
 
-		public void actionPerformed( ActionEvent e )
+		public void actionPerformed(ActionEvent e)
 		{
 			onCancel();
 		}
@@ -505,17 +542,17 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	private class ClosePanelAction extends AbstractAction
 	{
-		public void actionPerformed( ActionEvent e )
+		public void actionPerformed(ActionEvent e)
 		{
-			SoapUI.getDesktop().closeDesktopPanel( getModelItem() );
+			SoapUI.getDesktop().closeDesktopPanel(getModelItem());
 		}
 	}
 
 	private class MoveFocusAction extends AbstractAction
 	{
-		public void actionPerformed( ActionEvent e )
+		public void actionPerformed(ActionEvent e)
 		{
-			if( requestEditor.hasFocus() )
+			if (requestEditor.hasFocus())
 			{
 				responseEditor.requestFocus();
 			}
@@ -526,51 +563,51 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
-	public boolean beforeSubmit( Submit submit, SubmitContext context )
+	public boolean beforeSubmit(Submit submit, SubmitContext context)
 	{
-		if( submit.getRequest() != request )
+		if (submit.getRequest() != request)
 			return true;
 
-		if( getModelItem().getSettings().getBoolean( UISettings.AUTO_VALIDATE_REQUEST ) )
+		if (getModelItem().getSettings().getBoolean(UISettings.AUTO_VALIDATE_REQUEST))
 		{
-			boolean result = requestEditor.saveDocument( true );
-			if( !result && getModelItem().getSettings().getBoolean( UISettings.ABORT_ON_INVALID_REQUEST ) )
+			boolean result = requestEditor.saveDocument(true);
+			if (!result && getModelItem().getSettings().getBoolean(UISettings.ABORT_ON_INVALID_REQUEST))
 			{
-				statusBar.setInfo( "Cancelled request due to invalid content" );
+				statusBar.setInfo("Cancelled request due to invalid content");
 				return false;
 			}
 		}
 		else
 		{
-			if( requestEditor != null )
-				requestEditor.saveDocument( false );
+			if (requestEditor != null)
+				requestEditor.saveDocument(false);
 		}
 
-		setEnabled( false );
-		cancelButton.setEnabled( AbstractHttpRequestDesktopPanel.this.submit != null );
+		setEnabled(false);
+		cancelButton.setEnabled(AbstractHttpRequestDesktopPanel.this.submit != null);
 		return true;
 	}
 
-	public void afterSubmit( Submit submit, SubmitContext context )
+	public void afterSubmit(Submit submit, SubmitContext context)
 	{
-		if( submit.getRequest() != request )
+		if (submit.getRequest() != request)
 			return;
 
 		Status status = submit.getStatus();
-		HttpResponse response = ( HttpResponse )submit.getResponse();
-		if( status == Status.FINISHED )
+		HttpResponse response = (HttpResponse) submit.getResponse();
+		if (status == Status.FINISHED)
 		{
-			request.setResponse( response, context );
+			request.setResponse(response, context);
 		}
 
-		if( hasClosed )
+		if (hasClosed)
 		{
-			request.removeSubmitListener( this );
+			request.removeSubmitListener(this);
 			return;
 		}
 
-		cancelButton.setEnabled( false );
-		setEnabled( true );
+		cancelButton.setEnabled(false);
+		setEnabled(true);
 
 		String message = null;
 		String infoMessage = null;
@@ -578,14 +615,14 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 				.getName()
 				+ "." + request.getOperation().getName() + ":" + request.getName();
 
-		if( status == Status.CANCELED )
+		if (status == Status.CANCELED)
 		{
 			message = "CANCELED";
 			infoMessage = "[" + requestName + "] - CANCELED";
 		}
 		else
 		{
-			if( status == Status.ERROR || response == null )
+			if (status == Status.ERROR || response == null)
 			{
 				message = "Error getting response; " + submit.getError();
 				infoMessage = "Error getting response for [" + requestName + "]; " + submit.getError();
@@ -596,38 +633,38 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 				infoMessage = "Got response for [" + requestName + "] in " + response.getTimeTaken() + "ms ("
 						+ response.getContentLength() + " bytes)";
 
-				if( !splitButton.isEnabled() )
-					requestTabs.setSelectedIndex( 1 );
+				if (!splitButton.isEnabled())
+					requestTabs.setSelectedIndex(1);
 
 				responseEditor.requestFocus();
 			}
 		}
 
-		logMessages( message, infoMessage );
+		logMessages(message, infoMessage);
 
-		if( getModelItem().getSettings().getBoolean( UISettings.AUTO_VALIDATE_RESPONSE ) )
+		if (getModelItem().getSettings().getBoolean(UISettings.AUTO_VALIDATE_RESPONSE))
 			responseEditor.getSourceEditor().validate();
 
 		AbstractHttpRequestDesktopPanel.this.submit = null;
 	}
 
-	protected void logMessages( String message, String infoMessage )
+	protected void logMessages(String message, String infoMessage)
 	{
-		log.info( infoMessage );
-		statusBar.setInfo( message );
+		log.info(infoMessage);
+		statusBar.setInfo(message);
 	}
 
-	public boolean onClose( boolean canCancel )
+	public boolean onClose(boolean canCancel)
 	{
-		if( canCancel )
+		if (canCancel)
 		{
-			if( submit != null && submit.getStatus() == Submit.Status.RUNNING )
+			if (submit != null && submit.getStatus() == Submit.Status.RUNNING)
 			{
-				Boolean retVal = UISupport.confirmOrCancel( "Cancel request before closing?", "Closing window" );
-				if( retVal == null )
+				Boolean retVal = UISupport.confirmOrCancel("Cancel request before closing?", "Closing window");
+				if (retVal == null)
 					return false;
 
-				if( retVal.booleanValue() && submit.getStatus() == Submit.Status.RUNNING )
+				if (retVal.booleanValue() && submit.getStatus() == Submit.Status.RUNNING)
 				{
 					submit.cancel();
 				}
@@ -636,26 +673,26 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 			}
 			else
 			{
-				request.removeSubmitListener( this );
+				request.removeSubmitListener(this);
 			}
 		}
-		else if( submit != null && submit.getStatus() == Submit.Status.RUNNING )
+		else if (submit != null && submit.getStatus() == Submit.Status.RUNNING)
 		{
 			submit.cancel();
 			hasClosed = true;
 		}
 		else
 		{
-			request.removeSubmitListener( this );
+			request.removeSubmitListener(this);
 		}
 
-		request.removePropertyChangeListener( this );
-		requestEditor.saveDocument( false );
+		request.removePropertyChangeListener(this);
+		requestEditor.saveDocument(false);
 
-		if( responseEditor != null )
-			responseEditor.getParent().remove( responseEditor );
+		if (responseEditor != null)
+			responseEditor.getParent().remove(responseEditor);
 
-		requestEditor.getParent().remove( requestEditor );
+		requestEditor.getParent().remove(requestEditor);
 		requestSplitPane.removeAll();
 
 		return release();
@@ -667,40 +704,40 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		endpointsModel.release();
 		requestEditor.release();
 
-		if( responseEditor != null )
+		if (responseEditor != null)
 			responseEditor.release();
 
 		return super.release();
 	}
 
-	public boolean dependsOn( ModelItem modelItem )
+	public boolean dependsOn(ModelItem modelItem)
 	{
-		return request.dependsOn( modelItem );
+		return request.dependsOn(modelItem);
 	}
 
 	private final class ChangeToTabsAction extends AbstractAction
 	{
 		public ChangeToTabsAction()
 		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/toggle_tabs.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Toggles to tab-based layout" );
+			putValue(Action.SMALL_ICON, UISupport.createImageIcon("/toggle_tabs.gif"));
+			putValue(Action.SHORT_DESCRIPTION, "Toggles to tab-based layout");
 		}
 
-		public void actionPerformed( ActionEvent e )
+		public void actionPerformed(ActionEvent e)
 		{
-			if( splitButton.isEnabled() )
+			if (splitButton.isEnabled())
 			{
-				splitButton.setEnabled( false );
-				removeContent( requestSplitPane );
-				setContent( requestTabPanel );
-				requestTabs.addTab( "Request", requestEditor );
+				splitButton.setEnabled(false);
+				removeContent(requestSplitPane);
+				setContent(requestTabPanel);
+				requestTabs.addTab("Request", requestEditor);
 
-				if( responseEditor != null )
-					requestTabs.addTab( "Response", responseEditor );
+				if (responseEditor != null)
+					requestTabs.addTab("Response", responseEditor);
 
-				if( responseHasFocus )
+				if (responseHasFocus)
 				{
-					requestTabs.setSelectedIndex( 1 );
+					requestTabs.setSelectedIndex(1);
 					requestEditor.requestFocus();
 				}
 			}
@@ -708,15 +745,15 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 			{
 				int selectedIndex = requestTabs.getSelectedIndex();
 
-				splitButton.setEnabled( true );
-				removeContent( requestTabPanel );
-				setContent( requestSplitPane );
-				requestSplitPane.setTopComponent( requestEditor );
-				if( responseEditor != null )
-					requestSplitPane.setBottomComponent( responseEditor );
-				requestSplitPane.setDividerLocation( 0.5 );
+				splitButton.setEnabled(true);
+				removeContent(requestTabPanel);
+				setContent(requestSplitPane);
+				requestSplitPane.setTopComponent(requestEditor);
+				if (responseEditor != null)
+					requestSplitPane.setBottomComponent(responseEditor);
+				requestSplitPane.setDividerLocation(0.5);
 
-				if( selectedIndex == 0 || responseEditor == null )
+				if (selectedIndex == 0 || responseEditor == null)
 					requestEditor.requestFocus();
 				else
 					responseEditor.requestFocus();
@@ -726,21 +763,21 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
-	public void setContent( JComponent content )
+	public void setContent(JComponent content)
 	{
-		add( content, BorderLayout.CENTER );
+		add(content, BorderLayout.CENTER);
 	}
 
-	public void removeContent( JComponent content )
+	public void removeContent(JComponent content)
 	{
-		remove( content );
+		remove(content);
 	}
 
 	protected void onSubmit()
 	{
-		if( submit != null && submit.getStatus() == Submit.Status.RUNNING )
+		if (submit != null && submit.getStatus() == Submit.Status.RUNNING)
 		{
-			if( UISupport.confirm( "Cancel current request?", "Submit Request" ) )
+			if (UISupport.confirm("Cancel current request?", "Submit Request"))
 			{
 				submit.cancel();
 			}
@@ -752,20 +789,20 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		{
 			submit = doSubmit();
 		}
-		catch( SubmitException e1 )
+		catch (SubmitException e1)
 		{
-			SoapUI.logError( e1 );
+			SoapUI.logError(e1);
 		}
 	}
 
 	protected void onCancel()
 	{
-		if( submit == null )
+		if (submit == null)
 			return;
 
-		cancelButton.setEnabled( false );
+		cancelButton.setEnabled(false);
 		submit.cancel();
-		setEnabled( true );
+		setEnabled(true);
 		submit = null;
 	}
 
