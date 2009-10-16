@@ -40,8 +40,12 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -85,11 +89,11 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 	protected static final String QUERY_ELEMENT = "query";
 	protected static final String STOREDPROCEDURE_ELEMENT = "stored-procedure";
-	protected String driver;
-	protected String connectionString;
-	protected String password;
-	protected String query;
-	protected boolean storedProcedure;
+	// protected String driver;
+	// protected String connectionString;
+	// protected String password;
+	// protected String query;
+	// protected boolean storedProcedure;
 	protected Connection connection;
 	protected JXEditTextArea queryArea;
 	protected JCheckBox isStoredProcedureCheckBox;
@@ -97,12 +101,14 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	protected JTextField connStrTextField;
 	protected JButton testConnectionButton;
 	protected JPasswordField passField;
+	private InternalTestRunListener testRunListener = new InternalTestRunListener();
 
 	public JdbcRequestTestStepDesktopPanel(JdbcRequestTestStep modelItem)
 	{
 		super(modelItem);
 		jdbcRequestTestStep = modelItem;
 		buildUI();
+		modelItem.getTestCase().addTestRunListener(testRunListener);
 
 		runButton.setEnabled(true);
 	}
@@ -110,10 +116,11 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	protected void init()
 	{
 		jdbcRequestTestStepConfig = jdbcRequestTestStep.getJdbcRequestTestStepConfig();
-		this.driver = jdbcRequestTestStepConfig.getDriver();
-		this.connectionString = jdbcRequestTestStepConfig.getConnectionString();
-		this.query = jdbcRequestTestStepConfig.getQuery();
-		this.password = jdbcRequestTestStepConfig.getPassword();
+		// this.driver = jdbcRequestTestStepConfig.getDriver();
+		// this.connectionString =
+		// jdbcRequestTestStepConfig.getConnectionString();
+		// this.query = jdbcRequestTestStepConfig.getQuery();
+		// this.password = jdbcRequestTestStepConfig.getPassword();
 
 	}
 
@@ -138,8 +145,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 	private JComponent buildContent()
 	{
-		JSplitPane split = UISupport.createHorizontalSplit( buildConfigPanel(), buildResponseEditor() );
-		split.setDividerLocation( 180 );
+		JSplitPane split = UISupport.createHorizontalSplit(buildConfigPanel(), buildResponseEditor());
+		split.setDividerLocation(180);
 		return split;
 	}
 
@@ -162,16 +169,16 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 	private JComponent buildProperties()
 	{
-		PropertyHolderTable holderTable = new PropertyHolderTable( getModelItem() );
+		PropertyHolderTable holderTable = new PropertyHolderTable(getModelItem());
 
-		JUndoableTextField textField = new JUndoableTextField( true );
+		JUndoableTextField textField = new JUndoableTextField(true);
 
-		PropertyExpansionPopupListener.enable( textField, getModelItem() );
-		holderTable.getPropertiesTable().setDefaultEditor( String.class, new DefaultCellEditor( textField ) );
+		PropertyExpansionPopupListener.enable(textField, getModelItem());
+		holderTable.getPropertiesTable().setDefaultEditor(String.class, new DefaultCellEditor(textField));
 
 		return holderTable;
 	}
-	
+
 	protected JComponent buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
@@ -211,7 +218,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		}
 		else
 		{
-			this.query = query;
+			// this.query = query;
 			jdbcRequestTestStepConfig.setQuery(query);
 		}
 	}
@@ -272,7 +279,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			testConnectionButton.setEnabled(false);
 		}
 
-		if (enableTestConnection() && !StringUtils.isNullOrEmpty(query))
+		if (enableTestConnection() && !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getQuery()))
 		{
 			runnable = true;
 		}
@@ -293,13 +300,12 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			@Override
 			public void update(Document document)
 			{
-				query = queryArea.getText();
-				jdbcRequestTestStepConfig.setQuery(query);
+				jdbcRequestTestStep.setQuery(queryArea.getText());
 			}
 		});
 
 		isStoredProcedureCheckBox = configForm.appendCheckBox(STOREDPROCEDURE_FIELD,
-				"Select if this is a stored procedure", storedProcedure);
+				"Select if this is a stored procedure", jdbcRequestTestStep.isStoredProcedure());
 	}
 
 	protected void addPasswordDocumentListener()
@@ -310,10 +316,9 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			@Override
 			public void update(Document document)
 			{
-				password = configForm.getComponentValue(PASS_FIELD);
-				jdbcRequestTestStepConfig.setPassword(password);
-				if (StringUtils.isNullOrEmpty(driver) || StringUtils.isNullOrEmpty(connectionString)
-						&& StringUtils.isNullOrEmpty(password))
+				jdbcRequestTestStep.setPassword(configForm.getComponentValue(PASS_FIELD));
+				if (StringUtils.isNullOrEmpty(jdbcRequestTestStep.getDriver()) || StringUtils.isNullOrEmpty(jdbcRequestTestStep.getConnectionString())
+						&& StringUtils.isNullOrEmpty(jdbcRequestTestStep.getPassword()))
 				{
 					testConnectionButton.setEnabled(false);
 				}
@@ -332,8 +337,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			@Override
 			public void update(Document document)
 			{
-				connectionString = configForm.getComponentValue(CONNSTR_FIELD);
-				jdbcRequestTestStepConfig.setConnectionString(connectionString);
+				jdbcRequestTestStep.setConnectionString(configForm.getComponentValue(CONNSTR_FIELD));
 				if (enableTestConnection())
 				{
 					testConnectionButton.setEnabled(true);
@@ -342,7 +346,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				{
 					testConnectionButton.setEnabled(false);
 				}
-				if (enableTestConnection() && !StringUtils.isNullOrEmpty(query))
+				if (enableTestConnection() && !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getQuery()))
 				{
 					runnable = true;
 				}
@@ -362,8 +366,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			@Override
 			public void update(Document document)
 			{
-				driver = configForm.getComponentValue(DRIVER_FIELD);
-				jdbcRequestTestStepConfig.setDriver(driver);
+				jdbcRequestTestStep.setDriver(configForm.getComponentValue(DRIVER_FIELD));
 				if (enableTestConnection())
 				{
 					testConnectionButton.setEnabled(true);
@@ -372,7 +375,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				{
 					testConnectionButton.setEnabled(false);
 				}
-				if (enableTestConnection() && !StringUtils.isNullOrEmpty(query))
+				if (enableTestConnection() && !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getQuery()))
 				{
 					runnable = true;
 				}
@@ -390,16 +393,15 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		{
 			public void stateChanged(ChangeEvent e)
 			{
-				storedProcedure = ((JCheckBox) e.getSource()).isSelected();
-				jdbcRequestTestStepConfig.setStoredProcedure(storedProcedure);
+				jdbcRequestTestStep.setStoredProcedure(((JCheckBox) e.getSource()).isSelected());
 			}
 		});
 	}
 
 	protected boolean enableTestConnection()
 	{
-		return !StringUtils.isNullOrEmpty(driver) && !StringUtils.isNullOrEmpty(connectionString)
-				&& !StringUtils.isNullOrEmpty(password);
+		return !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getDriver()) && !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getConnectionString())
+				&& !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getPassword());
 	}
 
 	protected ModelItemXmlEditor<?, ?> buildResponseEditor()
@@ -442,9 +444,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		{
 			try
 			{
-				String unmaskedPassConnStr = connectionString.replaceFirst(JdbcRequestTestStep.PASS_TEMPLATE,
-						password);
-				jdbcRequestTestStep.runQuery(driver, unmaskedPassConnStr);
+				jdbcRequestTestStep.runQuery();
 			}
 			catch (Exception e)
 			{
@@ -526,8 +526,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		public void release()
 		{
 			super.release();
-			jdbcRequestTestStep.removePropertyChangeListener( RestRequestInterface.RESPONSE_PROPERTY, this );
-		}	
+			jdbcRequestTestStep.removePropertyChangeListener(RestRequestInterface.RESPONSE_PROPERTY, this);
+		}
 	}
 
 	public class TestConnectionAction extends AbstractAction
@@ -544,7 +544,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		{
 			try
 			{
-				JdbcUtils.testConnection(getModelItem(), driver, connectionString, password);
+				JdbcUtils.testConnection(getModelItem(), jdbcRequestTestStep.getDriver(), jdbcRequestTestStep.getConnectionString(), jdbcRequestTestStep.getPassword());
 				UISupport.showInfoMessage("The Connection Successfully Tested");
 			}
 			catch (Exception e)
@@ -553,5 +553,15 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			}
 		}
 	}
+	private class InternalTestRunListener extends TestRunListenerAdapter
+	{
+		@Override
+		public void afterStep(TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result)
+		{
+			// TODO Auto-generated method stub
+			super.afterStep(testRunner, runContext, result);
+		}
+	}
+
 
 }

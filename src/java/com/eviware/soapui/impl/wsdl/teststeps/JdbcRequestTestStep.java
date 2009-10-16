@@ -62,6 +62,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleForm;
@@ -183,6 +184,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	public TestStepResult run(TestCaseRunner runner, TestCaseRunContext runContext)
 	{
 		WsdlTestStepResult testStepResult = new WsdlTestStepResult(this);
+		runQuery();
 
 		return testStepResult;
 	}
@@ -207,13 +209,13 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	protected ResultSet resultSet;
 	protected Statement statement;
 
-	public void runQuery(String driver, String connStr)
+	public void runQuery()
 	{
 		MockTestRunner mockRunner = new MockTestRunner(getTestCase());
 		MockTestRunContext mockContext = new MockTestRunContext(mockRunner, this);
 		try
 		{
-			prepare(mockRunner, mockContext, driver, connStr);
+			prepare(mockRunner, mockContext);
 			List<String> properties = new ArrayList<String>();
 			load(mockRunner, mockContext, properties);
 			createXmlResult();
@@ -224,8 +226,18 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		}
 	}
 
-	protected void getDatabaseConnection(PropertyExpansionContext context, String drvr, String connStr) throws Exception, SQLException
+	protected void getDatabaseConnection(PropertyExpansionContext context) throws Exception, SQLException
 	{
+	   String drvr ="";
+	   String connStr="";
+	   if (!StringUtils.isNullOrEmpty(getDriver()) && !StringUtils.isNullOrEmpty(getConnectionString())) {
+			 drvr = PropertyExpander.expandProperties( context, getDriver() ).trim();
+			 connStr = PropertyExpander.expandProperties( context, getConnectionString() ).trim();
+	   } else {
+	   	UISupport.showErrorMessage( "Please supply connection settings for all DataSources" );
+	   	throw new SoapUIException("Please supply connection settings");
+	   }
+		connStr = connStr.replaceFirst(PASS_TEMPLATE, getPassword());
 		try
 		{
 			DriverManager.getDriver(connStr);
@@ -282,14 +294,10 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	}
 
 
-	public void prepare(TestCaseRunner testRunner, TestCaseRunContext context, String drvr, String connStr) throws Exception {
-		getDatabaseConnection(context, drvr, connStr);
-		prepare(testRunner, context);
-	}
-
 	@Override
 	public void prepare(TestCaseRunner testRunner, TestCaseRunContext context) throws Exception
 	{
+		getDatabaseConnection(context);
 		if (jdbcRequestTestStepConfig.getStoredProcedure())
 		{
 			String sql = PropertyExpander.expandProperties(context, jdbcRequestTestStepConfig.getQuery());
@@ -500,7 +508,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 	public List<TestAssertion> getAssertionList()
 	{
-		return null;
+		return new ArrayList<TestAssertion>(assertionsSupport.getAssertionList());
 	}
 
 	public AssertionStatus getAssertionStatus()
@@ -641,5 +649,64 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
    {
       propertyHolderSupport.moveProperty( propertyName, targetIndex );
    }
+	public String getDriver()
+	{
+		return jdbcRequestTestStepConfig.getDriver();
+	}
+
+	public void setDriver(String d)
+	{
+		String old = getDriver();
+		jdbcRequestTestStepConfig.setDriver(d);
+		notifyPropertyChanged( "driver", old, d );
+	}
+
+	public String getConnectionString()
+	{
+		return jdbcRequestTestStepConfig.getConnectionString();
+	}
+
+	public void setConnectionString(String c)
+	{
+		String old = getConnectionString();
+		jdbcRequestTestStepConfig.setConnectionString(c);
+		notifyPropertyChanged( "connectionString", old, c );
+	}
+
+	public String getQuery()
+	{
+		return jdbcRequestTestStepConfig.getQuery();
+	}
+
+	public void setQuery(String q)
+	{
+		String old = getQuery();
+		jdbcRequestTestStepConfig.setQuery(q);
+		notifyPropertyChanged( "query", old, q );
+	}
+	public String getPassword()
+	{
+		return jdbcRequestTestStepConfig.getPassword();
+	}
+
+	public void setPassword(String p)
+	{
+		String old = getPassword();
+		jdbcRequestTestStepConfig.setPassword(p);
+		notifyPropertyChanged( "password", old, p );
+	}
+
+	public boolean isStoredProcedure()
+	{
+		return jdbcRequestTestStepConfig.getStoredProcedure();
+	}
+
+
+	public void setStoredProcedure(boolean sp)
+	{
+		String old = getPassword();
+		jdbcRequestTestStepConfig.setStoredProcedure(sp);
+		notifyPropertyChanged( "password", old, sp );
+	}
 
 }
