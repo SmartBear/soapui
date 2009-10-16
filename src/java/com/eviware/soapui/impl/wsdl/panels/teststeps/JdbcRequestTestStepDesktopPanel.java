@@ -127,10 +127,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	protected void buildUI()
 	{
 		init();
-		JSplitPane split = UISupport.createHorizontalSplit(buildProperties(), buildContent());
-		split.setDividerLocation(180);
-
-		inspectorPanel = JInspectorPanelFactory.build(split);
+		inspectorPanel = JInspectorPanelFactory.build(buildContent());
 		inspectorPanel.setDefaultDividerLocation(0.7F);
 		add(buildToolbar(), BorderLayout.NORTH);
 		add(inspectorPanel.getComponent(), BorderLayout.CENTER);
@@ -163,11 +160,15 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			panel.add(configForm.getPanel());
 		}
 		configPanel.add(panel, BorderLayout.CENTER);
-		return configPanel;
+		
+		JSplitPane split = UISupport.createVerticalSplit( buildProperties(), configPanel);
+		split.setDividerLocation(180);
+		
+		return split;
 
 	}
 
-	private JComponent buildProperties()
+	protected JComponent buildProperties()
 	{
 		PropertyHolderTable holderTable = new PropertyHolderTable(getModelItem());
 
