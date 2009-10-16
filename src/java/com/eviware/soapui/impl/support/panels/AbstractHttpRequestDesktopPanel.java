@@ -57,11 +57,10 @@ import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
-import com.eviware.soapui.support.components.Inspector;
 import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspectorFactory;
-import com.eviware.soapui.support.editor.inspectors.jms.JMSUtil;
 import com.eviware.soapui.support.editor.inspectors.jms.header.JMSHeaderInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.jms.property.JMSHeaderAndPropertyInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.jms.property.JMSPropertyInspectorFactory;
@@ -314,9 +313,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 			updateInspector(responseEditor, JMSHeaderAndPropertyInspectorFactory.INSPECTOR_ID, jmsEndpoint);
 			updateInspector(responseEditor, HttpHeadersInspectorFactory.INSPECTOR_ID, !jmsEndpoint);
 
-			// IMPORTANT : this repaint does not give effect 
-			repaint();
-
+			super.repaint();
 		}
 
 		super.propertyChange(evt);
@@ -324,10 +321,11 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	private void updateInspector(ModelItemXmlEditor<?, ?> editor, String inspectorId, boolean enable)
 	{
-		System.out.println(inspectorId + " " +enable);
-		Inspector inspector = editor.getInspector(inspectorId);
+		AbstractXmlInspector inspector = (AbstractXmlInspector)editor.getInspector(inspectorId);
 		if (inspector != null)
-			inspector.getComponent().setEnabled(enable);
+		{
+				inspector.setEnabled(enable);
+		}
 	}
 
 	public JButton getSubmitButton()
