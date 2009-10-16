@@ -33,6 +33,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+import com.eviware.soapui.support.editor.inspectors.jms.JMSUtil;
 import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
@@ -96,7 +97,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 
 	private String createEndpointString(String session, String send, String receive)
 	{
-		StringBuilder sb = new StringBuilder("jms://");
+		StringBuilder sb = new StringBuilder(JMSUtil.JMS_ENDPIONT_PREFIX);
 		sb.append(session + "/");
 		sb.append(send);
 		if (!"".equals(receive))

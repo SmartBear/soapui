@@ -18,11 +18,14 @@ import com.eviware.soapui.model.iface.Request;
 
 public class JMSUtil
 {
+	
+	public static final String JMS_ENDPIONT_PREFIX="jms://";
+	
 	private static boolean checkIfJMS(Request request)
 	{
 		try
 		{
-			return request.getEndpoint().startsWith("jms://");
+			return request.getEndpoint().startsWith(JMS_ENDPIONT_PREFIX);
 		}
 		catch (NullPointerException e)
 		{
@@ -36,7 +39,7 @@ public class JMSUtil
 		try
 		{
 			String r = ((MessageExchangeModelItem) messageExchange).getMessageExchange().getProperty("Endpoint");
-			return r.startsWith("jms://");
+			return r.startsWith(JMS_ENDPIONT_PREFIX);
 		}
 		catch (NullPointerException e)
 		{

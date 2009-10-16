@@ -61,6 +61,7 @@ import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspectorFactory;
+import com.eviware.soapui.support.editor.inspectors.jms.JMSUtil;
 import com.eviware.soapui.support.editor.inspectors.jms.header.JMSHeaderInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.jms.property.JMSHeaderAndPropertyInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.jms.property.JMSPropertyInspectorFactory;
@@ -300,9 +301,9 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 
 		// when selecting endpoint
-		if ((evt.getSource() instanceof WsdlTestRequest) && evt.getPropertyName().equals("endpoint"))
+		if ((evt.getSource() instanceof WsdlTestRequest) && evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
 		{
-			boolean jmsEndpoint = request.getEndpoint().startsWith("jms://");
+			boolean jmsEndpoint = request.getEndpoint().startsWith(JMSUtil.JMS_ENDPIONT_PREFIX);
 
 			// for request
 			updateInspector(requestEditor, JMSHeaderInspectorFactory.INSPECTOR_ID, jmsEndpoint);
