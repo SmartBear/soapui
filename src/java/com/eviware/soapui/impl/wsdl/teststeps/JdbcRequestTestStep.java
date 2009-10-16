@@ -21,7 +21,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -29,13 +28,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -74,6 +66,7 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.xml.JXEditTextArea;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * WsdlTestStep that executes a WsdlTestRequest
@@ -252,7 +245,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 		resultSet = null;
 		connection = DriverManager.getConnection(connStr);
-		// lastResult = new StringToStringMap();
 	}
 
 	public void load(TestCaseRunner testRunner, TestCaseRunContext context, List<String> properties) throws Exception
@@ -320,9 +312,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	}
 	public void createXmlResult()
 	{
-//		ResultSet rs = resultSet;
-//		Statement stmt = statement;
-
 		try
 		{
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -338,7 +327,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 				addResultSetXmlPart(results, statement.getResultSet());
 			}
 			String oldRes = getXmlStringResult();
-			xmlStringResult = getDocumentAsString(xmlDocumentResult);
+			xmlStringResult = XmlUtils.getDocumentAsString(xmlDocumentResult);
 			setXmlStringResult(xmlStringResult);
 			notifyPropertyChanged(RESPONSE_PROPERTY, oldRes, xmlStringResult);
 
@@ -391,26 +380,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 				row.appendChild(node);
 			}
 		}
-	}
-
-	public static String getDocumentAsString(org.w3c.dom.Document doc) throws TransformerConfigurationException,
-			TransformerException
-	{
-		DOMSource domSource = new DOMSource(doc);
-		TransformerFactory tf = TransformerFactory.newInstance();
-		Transformer transformer = tf.newTransformer();
-		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-		transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
-		// we want to pretty format the XML output
-		// note : this is broken in jdk1.5 beta!
-		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-		//
-		java.io.StringWriter sw = new java.io.StringWriter();
-		StreamResult sr = new StreamResult(sw);
-		transformer.transform(domSource, sr);
-		return sw.toString();
 	}
 
 	private void initAssertions()
