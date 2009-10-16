@@ -12,8 +12,11 @@
 
 package com.eviware.soapui.support.editor.inspectors.jms.property;
 
+import java.beans.PropertyChangeEvent;
+
 import javax.jms.Message;
 
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSHeader;
@@ -88,6 +91,16 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 			super(true, wsdlRequest, "jmsHeaderAndProperties");
 			this.request = wsdlRequest;
 			request.addSubmitListener(this);
+			request.addPropertyChangeListener(this);
+		}
+
+		public void propertyChange(PropertyChangeEvent evt)
+		{
+			if (evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
+			{
+				inspector.setEnabled(request.getEndpoint().startsWith(JMSUtil.JMS_ENDPIONT_PREFIX));
+			}
+			super.propertyChange(evt);
 		}
 
 		public void release()

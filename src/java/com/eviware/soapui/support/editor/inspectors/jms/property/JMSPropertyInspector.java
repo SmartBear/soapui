@@ -54,6 +54,7 @@ public class JMSPropertyInspector extends AbstractXmlInspector implements Proper
 		this.model = model;
 
 		model.addPropertyChangeListener( this );
+		model.setInspector(this);
 	}
 
 	

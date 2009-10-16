@@ -300,34 +300,9 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 			submitButton.setEnabled(submit == null && StringUtils.hasContent(request.getEndpoint()));
 		}
 
-		// when selecting endpoint
-		if ((evt.getSource() instanceof WsdlTestRequest) && evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
-		{
-			boolean jmsEndpoint = request.getEndpoint().startsWith(JMSUtil.JMS_ENDPIONT_PREFIX);
-
-			// for request
-			updateInspector(requestEditor, JMSHeaderInspectorFactory.INSPECTOR_ID, jmsEndpoint);
-			updateInspector(requestEditor, JMSPropertyInspectorFactory.INSPECTOR_ID, jmsEndpoint);
-			updateInspector(requestEditor, HttpHeadersInspectorFactory.INSPECTOR_ID, !jmsEndpoint);
-
-			// for response
-			updateInspector(responseEditor, JMSHeaderAndPropertyInspectorFactory.INSPECTOR_ID, jmsEndpoint);
-			updateInspector(responseEditor, HttpHeadersInspectorFactory.INSPECTOR_ID, !jmsEndpoint);
-
-			super.repaint();
-		}
-
 		super.propertyChange(evt);
 	}
 
-	private void updateInspector(ModelItemXmlEditor<?, ?> editor, String inspectorId, boolean enable)
-	{
-		AbstractXmlInspector inspector = (AbstractXmlInspector)editor.getInspector(inspectorId);
-		if (inspector != null)
-		{
-				inspector.setEnabled(enable);
-		}
-	}
 
 	public JButton getSubmitButton()
 	{

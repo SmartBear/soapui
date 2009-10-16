@@ -34,6 +34,8 @@ public interface JMSPropertyInspectorModel
 	public boolean isReadOnly();
 
 	public void release();
+	
+	public void setInspector(JMSPropertyInspector inspector);
 
 	public static abstract class AbstractJMSPropertyModel<T extends ModelItem> implements JMSPropertyInspectorModel,
 			PropertyChangeListener

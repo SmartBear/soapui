@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.support.editor.inspectors.httpheaders;
 
+import java.beans.PropertyChangeEvent;
+
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -19,9 +21,9 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
-import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
+import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspectorModel.AbstractHeadersModel;
 import com.eviware.soapui.support.editor.inspectors.jms.JMSUtil;
 import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
@@ -76,7 +78,8 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 		}
 		else if (modelItem instanceof WsdlMockResponse)
 		{
-			HttpHeadersInspector inspector =new HttpHeadersInspector(new WsdlMockResponseHeadersModel((WsdlMockResponse) modelItem));
+			HttpHeadersInspector inspector = new HttpHeadersInspector(new WsdlMockResponseHeadersModel(
+					(WsdlMockResponse) modelItem));
 			inspector.setEnabled(!JMSUtil.checkIfJMS(modelItem));
 			return inspector;
 		}
@@ -103,7 +106,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			MessageExchange messageExchange = getModelItem().getMessageExchange();
 			return messageExchange == null ? new StringToStringMap() : messageExchange.getRequestHeaders();
 		}
-	}
+		}
 
 	private class WsdlMessageExchangeResponseHeadersModel extends AbstractHeadersModel<MessageExchangeModelItem>
 	{
@@ -117,13 +120,19 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			MessageExchange messageExchange = getModelItem().getMessageExchange();
 			return messageExchange == null ? new StringToStringMap() : messageExchange.getResponseHeaders();
 		}
+
 	}
 
 	private class WsdlRequestHeadersModel extends AbstractHeadersModel<AbstractHttpRequest<?>>
 	{
+		AbstractHttpRequest<?> request;
+		AbstractXmlInspector inspector;
+
 		public WsdlRequestHeadersModel(AbstractHttpRequest<?> abstractHttpRequest)
 		{
 			super(false, abstractHttpRequest, AbstractHttpRequestInterface.REQUEST_HEADERS_PROPERTY);
+			this.request = abstractHttpRequest;
+			this.request.addPropertyChangeListener(this);
 		}
 
 		public StringToStringMap getHeaders()
@@ -135,6 +144,23 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 		{
 			getModelItem().setRequestHeaders(headers);
 		}
+
+		public void setInspector(AbstractXmlInspector inspector)
+		{
+			this.inspector = inspector;
+
+		}
+
+		public void propertyChange(PropertyChangeEvent evt)
+		{
+			if (evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
+			{
+				 inspector.setEnabled(!request.getEndpoint()
+						.startsWith(JMSUtil.JMS_ENDPIONT_PREFIX));
+			}
+			super.propertyChange(evt);
+		}
+
 	}
 
 	private class WsdlMockResponseHeadersModel extends AbstractHeadersModel<WsdlMockResponse>
@@ -153,19 +179,41 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 		{
 			getModelItem().setResponseHeaders(headers);
 		}
+
 	}
 
 	private class WsdlRequestResponseHeadersModel extends AbstractHeadersModel<AbstractHttpRequest<?>>
 	{
+
+		AbstractHttpRequest<?> request;
+		AbstractXmlInspector inspector;
+
 		public WsdlRequestResponseHeadersModel(AbstractHttpRequest<?> request)
 		{
 			super(true, request, WsdlRequest.RESPONSE_PROPERTY);
+			this.request = request;
+			this.request.addPropertyChangeListener(this);
 		}
 
 		public StringToStringMap getHeaders()
 		{
 			AbstractHttpRequestInterface<?> request = getModelItem();
 			return request.getResponse() == null ? new StringToStringMap() : request.getResponse().getResponseHeaders();
+		}
+
+		public void setInspector(AbstractXmlInspector inspector)
+		{
+			this.inspector = inspector;
+
+		}
+
+		public void propertyChange(PropertyChangeEvent evt)
+		{
+			if (evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
+			{
+				inspector.setEnabled(!request.getEndpoint().startsWith(JMSUtil.JMS_ENDPIONT_PREFIX));
+			}
+			super.propertyChange(evt);
 		}
 	}
 

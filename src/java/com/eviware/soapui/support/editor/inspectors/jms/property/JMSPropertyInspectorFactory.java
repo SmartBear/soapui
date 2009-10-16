@@ -12,10 +12,12 @@
 
 package com.eviware.soapui.support.editor.inspectors.jms.property;
 
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.eviware.soapui.config.JMSPropertyConfig;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.Editor;
@@ -39,10 +41,10 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 	{
 		if (modelItem instanceof WsdlRequest)
 		{
-				JMSPropertyInspector inspector =  new JMSPropertyInspector((JMSPropertyInspectorModel) new WsdlRequestJMSPropertiesModel(
-						(WsdlRequest) modelItem));
-				inspector.setEnabled(JMSUtil.checkIfJMS(modelItem));
-				return inspector;
+			JMSPropertyInspector inspector = new JMSPropertyInspector(
+					(JMSPropertyInspectorModel) new WsdlRequestJMSPropertiesModel((WsdlRequest) modelItem));
+			inspector.setEnabled(JMSUtil.checkIfJMS(modelItem));
+			return inspector;
 		}
 		return null;
 	}
@@ -56,11 +58,22 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 	private class WsdlRequestJMSPropertiesModel extends AbstractJMSPropertyModel<WsdlRequest>
 	{
 		WsdlRequest request;
+		JMSPropertyInspector inspector;
 
 		public WsdlRequestJMSPropertiesModel(WsdlRequest wsdlRequest)
 		{
 			super(false, wsdlRequest, "jmsProperty");
 			this.request = wsdlRequest;
+			request.addPropertyChangeListener(this);
+		}
+
+		public void propertyChange(PropertyChangeEvent evt)
+		{
+			if (evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
+			{
+				inspector.setEnabled(request.getEndpoint().startsWith(JMSUtil.JMS_ENDPIONT_PREFIX));
+			}
+			super.propertyChange(evt);
 		}
 
 		public StringToStringMap getJMSProperties()
@@ -90,8 +103,11 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 			propertyList2.addAll(propertyList);
 
 		}
+
+		public void setInspector(JMSPropertyInspector inspector)
+		{
+			this.inspector = inspector;
+		}
 	}
-
-
 
 }
