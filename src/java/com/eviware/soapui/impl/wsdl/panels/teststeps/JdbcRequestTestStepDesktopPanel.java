@@ -143,7 +143,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	private JComponent buildContent()
 	{
 		JSplitPane split = UISupport.createHorizontalSplit(buildConfigPanel(), buildResponseEditor());
-		split.setDividerLocation(180);
+		split.setDividerLocation(0.8);
 		return split;
 	}
 
@@ -162,7 +162,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		configPanel.add(panel, BorderLayout.CENTER);
 		
 		JSplitPane split = UISupport.createVerticalSplit( buildProperties(), configPanel);
-		split.setDividerLocation(180);
+		split.setDividerLocation(120);
 		
 		return split;
 

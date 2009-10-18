@@ -53,7 +53,7 @@ public abstract class SimpleDialog extends JDialog
 
 		getContentPane().add( buttons, BorderLayout.SOUTH );
 		modifyButtons();
-
+		
 		pack();
 	}
 
