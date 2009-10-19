@@ -12,23 +12,14 @@
 
 package com.eviware.soapui.support.editor.inspectors;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 import javax.swing.ImageIcon;
 
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.EditorView;
-import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspectorFactory;
-import com.eviware.soapui.support.editor.inspectors.jms.JMSUtil;
-import com.eviware.soapui.support.editor.inspectors.jms.header.JMSHeaderInspectorFactory;
-import com.eviware.soapui.support.editor.inspectors.jms.property.JMSHeaderAndPropertyInspectorFactory;
-import com.eviware.soapui.support.editor.inspectors.jms.property.JMSPropertyInspectorFactory;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
