@@ -57,30 +57,6 @@ public abstract class AbstractXmlInspector implements XmlInspector
 		this.inspectorId = inspectorId;
 
 		propertySupport = new PropertyChangeSupport( this );
-//		this.addPropertyChangeListener(new PropertyChangeListener(){
-//
-//			public void propertyChange(PropertyChangeEvent evt)
-//			{
-//			// when selecting endpoint
-//				if ((evt.getSource() instanceof WsdlTestRequest) && evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
-//				{
-//					boolean jmsEndpoint = ((WsdlTestRequest)evt.getSource()).getEndpoint().startsWith(JMSUtil.JMS_ENDPIONT_PREFIX);
-//
-//					// for request
-//					updateInspector(editor, getInspectorId(), jmsEndpoint);
-////					super.repaint();
-//				
-//				}
-//			}
-//			private void updateInspector(XmlEditor<XmlDocument> editor, String inspectorId, boolean enable)
-//			{
-//				AbstractXmlInspector inspector = (AbstractXmlInspector)editor.getInspector(inspectorId);
-//				if (inspector != null)
-//				{
-//						inspector.setEnabled(enable);
-//				}
-//			}
-//		});
 	}
 
 	public final String getInspectorId()
