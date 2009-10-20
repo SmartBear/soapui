@@ -7,6 +7,9 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
@@ -14,6 +17,7 @@ import java.sql.Connection;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -23,33 +27,43 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 
 import org.jdesktop.swingx.JXTable;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.support.EndpointsComboBoxModel;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Submit;
+import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JComponentInspector;
+import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JUndoableTextField;
@@ -67,7 +81,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	protected JPanel configPanel;
 	private JXTable logTable;
 	// private JList propertyList;
-	protected JButton runButton;
 	private JButton addAssertionButton;
 	// private JButton removeButton;
 	private JLabel statusLabel;
@@ -76,6 +89,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	protected JdbcRequestTestStepConfig jdbcRequestTestStepConfig;
 	protected JComponentInspector<?> assertionInspector;
 	protected AssertionsPanel assertionsPanel;
+	protected JComponent requestEditor;
 	protected ModelItemXmlEditor<?, ?> responseEditor;
 	protected JPanel panel;
 	protected SimpleForm configForm;
@@ -102,26 +116,39 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	protected JButton testConnectionButton;
 	protected JPasswordField passField;
 	private InternalTestRunListener testRunListener = new InternalTestRunListener();
+	private Submit submit;
+	private SubmitAction submitAction;
+	private JButton submitButton;
+	private JToggleButton tabsButton;
+	private JTabbedPane requestTabs;
+	private JPanel requestTabPanel;
+	JdbcRequest jdbcRequest;
+	private boolean responseHasFocus;
+	private InputAreaFocusListener inputAreaFocusListener;
+	private ResultAreaFocusListener resultAreaFocusListener;
+	private JSplitPane requestSplitPane;
+	boolean requestTabsDisplay;
+	private JEditorStatusBarWithProgress statusBar;
 
 	public JdbcRequestTestStepDesktopPanel(JdbcRequestTestStep modelItem)
 	{
 		super(modelItem);
 		jdbcRequestTestStep = modelItem;
-		buildUI();
 		modelItem.getTestCase().addTestRunListener(testRunListener);
+		jdbcRequest = new JdbcRequest(jdbcRequestTestStep);
+		buildUI();
 
-		runButton.setEnabled(true);
+//		inputAreaFocusListener = new InputAreaFocusListener(requestEditor);
+//		requestEditor.addFocusListener(inputAreaFocusListener);	
+//		
+//		resultAreaFocusListener = new ResultAreaFocusListener(responseEditor);
+//		responseEditor.addFocusListener(resultAreaFocusListener);	
 	}
 
 	protected void init()
 	{
 		jdbcRequestTestStepConfig = jdbcRequestTestStep.getJdbcRequestTestStepConfig();
-		// this.driver = jdbcRequestTestStepConfig.getDriver();
-		// this.connectionString =
-		// jdbcRequestTestStepConfig.getConnectionString();
-		// this.query = jdbcRequestTestStepConfig.getQuery();
-		// this.password = jdbcRequestTestStepConfig.getPassword();
-
+		
 	}
 
 	protected void buildUI()
@@ -142,12 +169,79 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 	private JComponent buildContent()
 	{
-		JSplitPane split = UISupport.createHorizontalSplit(buildConfigPanel(), buildResponseEditor());
-		split.setDividerLocation(0.8);
-		return split;
+		submitAction = new SubmitAction();
+		submitButton = createActionButton(submitAction, true);
+//		submitButton.setEnabled(request.getEndpoint() != null && request.getEndpoint().trim().length() > 0);
+
+		tabsButton = new JToggleButton(new ChangeToTabsAction());
+		tabsButton.setPreferredSize(UISupport.TOOLBAR_BUTTON_DIMENSION);
+
+		addAssertionButton = UISupport.createToolbarButton(new AddAssertionAction(jdbcRequestTestStep));
+		addAssertionButton.setEnabled(true);
+
+		requestTabs = new JTabbedPane();
+		requestTabs.addChangeListener(new ChangeListener()
+		{
+
+			public void stateChanged(ChangeEvent e)
+			{
+				SwingUtilities.invokeLater(new Runnable()
+				{
+
+					public void run()
+					{
+						int ix = requestTabs.getSelectedIndex();
+						if (ix == 0)
+							requestEditor.requestFocus();
+						else if (ix == 1 && responseEditor != null)
+							responseEditor.requestFocus();
+					}
+				});
+			}
+		});
+
+		addFocusListener(new FocusAdapter()
+		{
+
+			@Override
+			public void focusGained(FocusEvent e)
+			{
+				if (requestTabs.getSelectedIndex() == 1 || responseHasFocus)
+					responseEditor.requestFocusInWindow();
+				else
+					requestEditor.requestFocusInWindow();
+			}
+		});
+		
+		requestTabPanel = UISupport.createTabPanel(requestTabs, true);
+
+		requestSplitPane = UISupport.createHorizontalSplit();
+		requestSplitPane.setResizeWeight(0.5);
+		requestSplitPane.setBorder(null);
+
+		requestEditor = buildRequestConfigPanel();
+		responseEditor = buildResponseEditor();
+		if (jdbcRequest.getSettings().getBoolean(UISettings.START_WITH_REQUEST_TABS))
+		{
+			requestTabs.addTab("Request", requestEditor);
+			if (responseEditor != null)
+				requestTabs.addTab("Response", responseEditor);
+//			splitButton.setEnabled(false);
+			requestTabsDisplay = true;
+			tabsButton.setSelected(true);
+
+			return requestTabPanel;
+		}
+		else
+		{
+			requestSplitPane.setTopComponent(requestEditor);
+			requestSplitPane.setBottomComponent(responseEditor);
+			requestSplitPane.setDividerLocation(0.5);
+			return requestSplitPane;
+		}
 	}
 
-	protected JComponent buildConfigPanel()
+	protected JComponent buildRequestConfigPanel()
 	{
 		configPanel = UISupport.addTitledBorder(new JPanel(new BorderLayout()), "Configuration");
 		if (panel == null)
@@ -166,6 +260,37 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		
 		return split;
 
+	}
+	
+	protected void init(JdbcRequest request)
+	{
+
+		add(buildContent(), BorderLayout.CENTER);
+		add(buildToolbar(), BorderLayout.NORTH);
+		add(buildStatusLabel(), BorderLayout.SOUTH);
+
+		setPreferredSize(new Dimension(600, 500));
+
+		addFocusListener(new FocusAdapter()
+		{
+
+			@Override
+			public void focusGained(FocusEvent e)
+			{
+				if (requestTabs.getSelectedIndex() == 1 || responseHasFocus)
+					responseEditor.requestFocusInWindow();
+				else
+					requestEditor.requestFocusInWindow();
+			}
+		});
+	}
+
+	protected JComponent buildStatusLabel()
+	{
+		statusBar = new JEditorStatusBarWithProgress();
+		statusBar.setBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0));
+
+		return statusBar;
 	}
 
 	protected JComponent buildProperties()
@@ -186,15 +311,11 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 		toolbar.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
-		runButton = UISupport.createToolbarButton(new RunAction());
-		// runButton.setEnabled( transferList.getSelectedIndex() != -1 );
-		toolbar.addFixed(runButton);
-
-		addAssertionButton = UISupport.createToolbarButton(new AddAssertionAction(jdbcRequestTestStep));
-		addAssertionButton.setEnabled(true);
+		toolbar.addFixed(submitButton);
 		toolbar.addFixed(addAssertionButton);
 
-		toolbar.addGlue();
+		toolbar.add(Box.createHorizontalGlue());
+		toolbar.add(tabsButton);
 		toolbar.addFixed(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.TRANSFERSTEPEDITOR_HELP_URL)));
 		return toolbar;
 
@@ -433,27 +554,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		return release();
 	}
 
-	protected class RunAction extends AbstractAction
-	{
-		public RunAction()
-		{
-			putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.gif"));
-			putValue(Action.SHORT_DESCRIPTION, "Runs selected JdbcRequest");
-		}
-
-		public void actionPerformed(ActionEvent arg0)
-		{
-			try
-			{
-				jdbcRequestTestStep.runQuery();
-			}
-			catch (Exception e)
-			{
-				UISupport.showErrorMessage("There's been an error in executing query " + e.toString());
-			}
-		}
-	}
-
 	public class AddAssertionAction extends AbstractAction
 	{
 		private final Assertable assertable;
@@ -563,6 +663,192 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			super.afterStep(testRunner, runContext, result);
 		}
 	}
+
+	public class SubmitAction extends AbstractAction
+	{
+		public SubmitAction()
+		{
+			putValue(Action.SMALL_ICON, UISupport.createImageIcon("/submit_request.gif"));
+			putValue(Action.SHORT_DESCRIPTION, "Submit request to specified endpoint URL");
+			putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("alt ENTER"));
+		}
+
+		public void actionPerformed(ActionEvent e)
+		{
+			onSubmit();
+		}
+	}
+	protected void onSubmit()
+	{
+		if (submit != null && submit.getStatus() == Submit.Status.RUNNING)
+		{
+			if (UISupport.confirm("Cancel current request?", "Submit Request"))
+			{
+				submit.cancel();
+			}
+			else
+				return;
+		}
+
+		try
+		{
+			submit = doSubmit();
+		}
+		catch (SubmitException e1)
+		{
+			SoapUI.logError(e1);
+		}
+	}
+
+	protected Submit doSubmit() throws SubmitException{
+		return jdbcRequest.submit( new WsdlTestRunContext( getModelItem() ), true );
+	}
+
+	protected final class InputAreaFocusListener implements FocusListener
+	{
+		private final JComponent requestEditor;
+
+		public InputAreaFocusListener(JComponent editor)
+		{
+			this.requestEditor = editor;
+		}
+
+		public void focusGained(FocusEvent e)
+		{
+			responseHasFocus = false;
+
+//			statusBar.setTarget(sourceEditor.getInputArea());
+			if (!requestTabsDisplay)
+			{
+				requestTabs.setSelectedIndex(0);
+				return;
+			}
+
+//			if (getModelItem().getSettings().getBoolean(UISettings.NO_RESIZE_REQUEST_EDITOR))
+//				return;
+
+//			// dont resize if split has been dragged
+//			if (requestSplitPane.getUI() instanceof SoapUISplitPaneUI
+//					&& ((SoapUISplitPaneUI) requestSplitPane.getUI()).hasBeenDragged())
+//				return;
+//
+			int pos = requestSplitPane.getDividerLocation();
+			if (pos >= 600)
+				return;
+			if (requestSplitPane.getMaximumDividerLocation() > 700)
+				requestSplitPane.setDividerLocation(600);
+			else
+				requestSplitPane.setDividerLocation(0.8);
+		}
+
+		public void focusLost(FocusEvent e)
+		{
+		}
+	}
+
+	protected final class ResultAreaFocusListener implements FocusListener
+	{
+		private final ModelItemXmlEditor<?, ?> responseEditor;
+
+		public ResultAreaFocusListener(ModelItemXmlEditor<?, ?> editor)
+		{
+			this.responseEditor = editor;
+		}
+
+		public void focusGained(FocusEvent e)
+		{
+			responseHasFocus = true;
+
+//			statusBar.setTarget(sourceEditor.getInputArea());
+			if (!requestTabsDisplay)
+			{
+				requestTabs.setSelectedIndex(1);
+				return;
+			}
+//
+//			if (getModelItem().getSettings().getBoolean(UISettings.NO_RESIZE_REQUEST_EDITOR))
+//				return;
+//
+//			// dont resize if split has been dragged or result is empty
+//			if (requestSplitPane.getUI() instanceof SoapUISplitPaneUI
+//					&& ((SoapUISplitPaneUI) requestSplitPane.getUI()).hasBeenDragged() || request.getResponse() == null)
+//				return;
+//
+			int pos = requestSplitPane.getDividerLocation();
+			int maximumDividerLocation = requestSplitPane.getMaximumDividerLocation();
+			if (pos + 600 < maximumDividerLocation)
+				return;
+
+			if (maximumDividerLocation > 700)
+				requestSplitPane.setDividerLocation(maximumDividerLocation - 600);
+			else
+				requestSplitPane.setDividerLocation(0.2);
+		}
+
+		public void focusLost(FocusEvent e)
+		{
+		}
+	}
+
+	private final class ChangeToTabsAction extends AbstractAction
+	{
+		public ChangeToTabsAction()
+		{
+			putValue(Action.SMALL_ICON, UISupport.createImageIcon("/toggle_tabs.gif"));
+			putValue(Action.SHORT_DESCRIPTION, "Toggles to tab-based layout");
+		}
+
+		public void actionPerformed(ActionEvent e)
+		{
+			if (!requestTabsDisplay)
+			{
+				requestTabsDisplay = true;
+				removeContent(requestSplitPane);
+				setContent(requestTabPanel);
+				requestTabs.addTab("Request", requestEditor);
+
+				if (responseEditor != null)
+					requestTabs.addTab("Response", responseEditor);
+
+				if (responseHasFocus)
+				{
+					requestTabs.setSelectedIndex(1);
+					requestEditor.requestFocus();
+				}
+				requestTabs.repaint();
+			}
+			else
+			{
+				int selectedIndex = requestTabs.getSelectedIndex();
+
+				requestTabsDisplay = false;
+				removeContent(requestTabPanel);
+				setContent(requestSplitPane);
+				requestSplitPane.setTopComponent(requestEditor);
+				if (responseEditor != null)
+					requestSplitPane.setBottomComponent(responseEditor);
+				requestSplitPane.setDividerLocation(0.5);
+
+				if (selectedIndex == 0 || responseEditor == null)
+					requestEditor.requestFocus();
+				else
+					responseEditor.requestFocus();
+				requestSplitPane.repaint();
+			}
+
+			revalidate();
+		}
+	}
+	public void setContent(JComponent content)
+	{
+		add(content, BorderLayout.CENTER);
+	}
+
+	public void removeContent(JComponent content)
+	{
+		remove(content);
+	}
+
 
 
 }

@@ -3,9 +3,11 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Future;
 
 import javax.swing.ImageIcon;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.model.ModelItem;
@@ -20,6 +22,7 @@ import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.support.UISupport;
 
 public class JdbcRequest extends AbstractModelItem implements Request
 {
@@ -135,10 +138,21 @@ public class JdbcRequest extends AbstractModelItem implements Request
 		return testStep.getSettings();
 	}
 
-	public class JdbcSubmit implements Submit
+	public class JdbcSubmit implements Submit, Runnable
 	{
+		private volatile Future<?> future;
+		private SubmitContext submitContext;
 		public JdbcSubmit( SubmitContext submitContext, boolean async )
 		{
+			this.submitContext = submitContext;
+
+			if( async && future != null )
+				throw new RuntimeException( "Submit already running" );
+
+			if( async )
+				future = SoapUI.getThreadPool().submit( this );
+			else
+				run();
 		}
 
 		public void cancel()
@@ -168,6 +182,18 @@ public class JdbcRequest extends AbstractModelItem implements Request
 		public Status waitUntilFinished()
 		{
 			return null;
+		}
+
+		public void run()
+		{
+			try
+			{
+				testStep.runQuery();
+			}
+			catch (Exception e)
+			{
+				UISupport.showErrorMessage("There's been an error in executing query " + e.toString());
+			}
 		}
 	}
 }
