@@ -40,7 +40,6 @@ import org.jdesktop.swingx.JXTable;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.support.EndpointsComboBoxModel;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
@@ -129,6 +128,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	private JSplitPane requestSplitPane;
 	boolean requestTabsDisplay;
 	private JEditorStatusBarWithProgress statusBar;
+	private JButton cancelButton;
 
 	public JdbcRequestTestStepDesktopPanel(JdbcRequestTestStep modelItem)
 	{
@@ -143,6 +143,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 //		
 //		resultAreaFocusListener = new ResultAreaFocusListener(responseEditor);
 //		responseEditor.addFocusListener(resultAreaFocusListener);	
+		initContent();
 	}
 
 	protected void init()
@@ -173,6 +174,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		submitButton = createActionButton(submitAction, true);
 //		submitButton.setEnabled(request.getEndpoint() != null && request.getEndpoint().trim().length() > 0);
 
+		cancelButton = createActionButton(new CancelAction(), false);
 		tabsButton = new JToggleButton(new ChangeToTabsAction());
 		tabsButton.setPreferredSize(UISupport.TOOLBAR_BUTTON_DIMENSION);
 
@@ -262,7 +264,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 	}
 	
-	protected void init(JdbcRequest request)
+	protected void initContent()
 	{
 
 		add(buildContent(), BorderLayout.CENTER);
@@ -312,6 +314,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		toolbar.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
 		toolbar.addFixed(submitButton);
+		toolbar.add(cancelButton);
 		toolbar.addFixed(addAssertionButton);
 
 		toolbar.add(Box.createHorizontalGlue());
@@ -848,6 +851,43 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	{
 		remove(content);
 	}
+	private class CancelAction extends AbstractAction
+	{
+		public CancelAction()
+		{
+			super();
+			putValue(Action.SMALL_ICON, UISupport.createImageIcon("/cancel_request.gif"));
+			putValue(Action.SHORT_DESCRIPTION, "Aborts ongoing request");
+			putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("alt X"));
+		}
+
+		public void actionPerformed(ActionEvent e)
+		{
+			onCancel();
+		}
+	}
+	protected void onCancel()
+	{
+		if (submit == null)
+			return;
+
+		cancelButton.setEnabled(false);
+		submit.cancel();
+		setEnabled(true);
+		submit = null;
+	}
+	public void setEnabled(boolean enabled)
+	{
+//		requestEditor.setEditable(enabled);
+		if (responseEditor != null)
+			responseEditor.setEditable(enabled);
+
+		submitButton.setEnabled(enabled);
+
+		statusBar.setIndeterminate(!enabled);
+	}
+
+
 
 
 

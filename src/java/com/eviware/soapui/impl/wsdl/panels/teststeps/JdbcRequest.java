@@ -7,8 +7,11 @@ import java.util.concurrent.Future;
 
 import javax.swing.ImageIcon;
 
+import org.apache.log4j.Logger;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
+import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
@@ -19,6 +22,7 @@ import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
+import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.support.ModelSupport;
@@ -29,6 +33,7 @@ public class JdbcRequest extends AbstractModelItem implements Request
 
 	private final JdbcRequestTestStep testStep;
 	private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
+	private final static Logger logger = Logger.getLogger( JdbcRequest.class );
 
 	public JdbcRequest( JdbcRequestTestStep testStep )
 	{
@@ -142,10 +147,24 @@ public class JdbcRequest extends AbstractModelItem implements Request
 	{
 		private volatile Future<?> future;
 		private SubmitContext submitContext;
+		private Status status;
+		private SubmitListener[] listeners;
+		private Exception error;
 		public JdbcSubmit( SubmitContext submitContext, boolean async )
 		{
 			this.submitContext = submitContext;
 
+//			List<SubmitListener> regListeners = SoapUI.getListenerRegistry().getListeners( SubmitListener.class );
+//
+//			this.listeners = new SubmitListener[listeners.length + regListeners.size()];
+//			for( int c = 0; c < listeners.length; c++ )
+//				this.listeners[c] = listeners[c];
+//
+//			for( int c = 0; c < regListeners.size(); c++ )
+//				this.listeners[listeners.length + c] = regListeners.get( c );
+
+			error = null;
+			status = Status.INITIALIZED;
 			if( async && future != null )
 				throw new RuntimeException( "Submit already running" );
 
@@ -157,11 +176,33 @@ public class JdbcRequest extends AbstractModelItem implements Request
 
 		public void cancel()
 		{
+			if( status == Status.CANCELED )
+				return;
+
+			logger.info( "Canceling request.." );
+			if( status == Status.RUNNING )
+			{
+				testStep.cancelQuery();
+			}
+
+			status = Status.CANCELED;
+
+			for( int i = 0; i < listeners.length; i++ )
+			{
+				try
+				{
+					listeners[i].afterSubmit( this, submitContext );
+				}
+				catch( Throwable e )
+				{
+					SoapUI.logError( e );
+				}
+			}
 		}
 
 		public Exception getError()
 		{
-			return null;
+			return error;
 		}
 
 		public Request getRequest()
@@ -176,12 +217,29 @@ public class JdbcRequest extends AbstractModelItem implements Request
 
 		public Status getStatus()
 		{
-			return null;
+			return status;
 		}
 
 		public Status waitUntilFinished()
 		{
-			return null;
+			if( future != null )
+			{
+				if( !future.isDone() )
+				{
+					try
+					{
+						future.get();
+					}
+					catch( Exception e )
+					{
+						SoapUI.logError( e );
+					}
+				}
+			}
+			else
+				throw new RuntimeException( "cannot wait on null future" );
+
+			return getStatus();
 		}
 
 		public void run()
@@ -193,6 +251,24 @@ public class JdbcRequest extends AbstractModelItem implements Request
 			catch (Exception e)
 			{
 				UISupport.showErrorMessage("There's been an error in executing query " + e.toString());
+				error = e;
+			}
+			finally
+			{
+				if( status != Status.CANCELED )
+				{
+					for( int i = 0; i < listeners.length; i++ )
+					{
+						try
+						{
+							listeners[i].afterSubmit( this, submitContext );
+						}
+						catch( Throwable e )
+						{
+							SoapUI.logError( e );
+						}
+					}
+				}
 			}
 		}
 	}

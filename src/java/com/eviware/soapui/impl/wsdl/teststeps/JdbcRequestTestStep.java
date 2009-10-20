@@ -19,6 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,7 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcRequest.JdbcSubmit;
 import com.eviware.soapui.impl.wsdl.support.JdbcMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
@@ -82,7 +84,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	public final static String JDBCREQUEST = JdbcRequestTestStep.class.getName() + "@jdbcrequest";
 	public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";
 	public static final String RESPONSE_PROPERTY = WsdlTestRequest.class.getName() + "@response";
-	private WsdlSubmit<WsdlRequest> submit;
+	private JdbcSubmit submit;
 	private ImageIcon failedIcon;
 	private ImageIcon okIcon;
 	private String xmlStringResult;
@@ -223,6 +225,20 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		catch (Exception e)
 		{
 			UISupport.showErrorMessage(e);
+		}
+	}
+	public void cancelQuery() {
+		try
+		{
+			statement.cancel();
+		}
+		catch (SQLFeatureNotSupportedException e)
+		{
+			UISupport.showErrorMessage(e);
+		}
+		catch (SQLException ex)
+		{
+			UISupport.showErrorMessage(ex);
 		}
 	}
 
