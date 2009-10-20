@@ -17,11 +17,9 @@ import hermes.Hermes;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
-import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Queue;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
@@ -38,7 +36,6 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 		ConnectionFactory connectionFactory = null;
 		Connection connection = null;
 		Session session = null;
-		JMSResponse response=null;
 		try
 		{
 			String queueName = null;

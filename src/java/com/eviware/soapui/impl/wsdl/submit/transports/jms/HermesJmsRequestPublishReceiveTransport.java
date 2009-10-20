@@ -18,7 +18,6 @@ import hermes.Hermes;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
-import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Queue;
 import javax.jms.Session;
@@ -47,7 +46,6 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 		Connection connection = null;
 		Session session = null;
 
-		JMSResponse response = null;
 		try
 		{
 			String topicNamePublish = null;
