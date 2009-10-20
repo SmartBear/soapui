@@ -35,7 +35,6 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 		ConnectionFactory connectionFactory = null;
 		Connection connection = null;
 		Session session = null;
-		JMSResponse response = null;
 		try
 		{
 			String queueName = null;
@@ -66,11 +65,8 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 			Queue queueSend = (Queue) hermes.getDestination(queueName, Domain.QUEUE);
 
 			TextMessage textMessageSend = messageSend(submitContext, request, session, hermes, queueSend);
-			// make response
-			response = new JMSResponse("", textMessageSend, null, request, timeStarted);
-			submitContext.setProperty(JMS_RESPONSE, response);
-
-			return response;
+			
+			return makeResponseOnly(submitContext, request, timeStarted, textMessageSend);
 		}
 		catch (JMSException jmse)
 		{
@@ -86,5 +82,4 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 		}
 		return null;
 	}
-
 }

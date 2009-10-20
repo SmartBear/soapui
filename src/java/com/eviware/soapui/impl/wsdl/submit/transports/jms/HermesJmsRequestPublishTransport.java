@@ -68,11 +68,7 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 
 			TextMessage textMessagePublish = messagePublish(submitContext, request, session, hermes, topicPublish);
 
-			// make response
-			response = new JMSResponse("", textMessagePublish, null, request, timeStarted);
-			submitContext.setProperty(JMS_RESPONSE, response);
-
-			return response;
+			return makeResponseOnly(submitContext, request, timeStarted, textMessagePublish);
 		}
 		catch (JMSException jmse)
 		{

@@ -318,6 +318,15 @@ public class HermesJmsRequestTransport implements RequestTransport
 	}
 
 
+	protected Response makeResponseOnly(SubmitContext submitContext, Request request, long timeStarted, TextMessage textMessage)
+	{
+		JMSResponse response = new JMSResponse("", textMessage, null, request, timeStarted);
+		submitContext.setProperty(JMS_RESPONSE, response);
+	
+		return response;
+	}
+
+
 	public static class UnresolvedJMSEndpointException extends Exception
 	{
 		public UnresolvedJMSEndpointException(String msg)
