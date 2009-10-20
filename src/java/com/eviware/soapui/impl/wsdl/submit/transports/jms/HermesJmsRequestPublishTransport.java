@@ -65,39 +65,19 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 			session = connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
 
 			// destination
-			Topic topic = (Topic) hermes.getDestination(topicName, Domain.TOPIC);
+			Topic topicPublish = (Topic) hermes.getDestination(topicName, Domain.TOPIC);
 
-			// publisher
-			TopicPublisher messageProducer = session.createPublisher(topic);
-
-			// message
-			TextMessage textMessagePublish = session.createTextMessage();
-			String messageBody = PropertyExpander.expandProperties(submitContext, request.getRequestContent());
-			textMessagePublish.setText(messageBody);
-
-			JMSHeader jmsHeader = new JMSHeader();
-			jmsHeader.setMessageHeaders(textMessagePublish, request, hermes, submitContext);
-			JMSHeader.setMessageProperties(textMessagePublish, request, hermes, submitContext);
-
-			// publish message to producer
-			messageProducer.send(textMessagePublish, textMessagePublish.getJMSDeliveryMode(), textMessagePublish.getJMSPriority(), jmsHeader
-					.getTimeTolive());
+			TextMessage textMessagePublish = messagePublish(submitContext, request, session, hermes, topicPublish);
 
 			// make response
 			response = new JMSResponse("", textMessagePublish, null, request, timeStarted);
-			submitContext.setProperty(JMS_MESSAGE_SEND, textMessagePublish);
 			submitContext.setProperty(JMS_RESPONSE, response);
 
 			return response;
 		}
 		catch (JMSException jmse)
 		{
-			SoapUI.logError(jmse);
-			submitContext.setProperty(JMS_ERROR, jmse);
-			response = new JMSResponse("", null, null, request, timeStarted);
-			submitContext.setProperty(JMS_RESPONSE, response);
-
-			return response;
+			return errorResponse(submitContext, request, timeStarted, jmse);
 		}
 		catch (Throwable t)
 		{
@@ -105,11 +85,7 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 		}
 		finally
 		{
-			// close session and connection
-			if (session != null)
-				session.close();
-			if (connection != null)
-				connection.close();
+			closeSessionAndConnection(connection, session);
 		}
 		return null;
 	}

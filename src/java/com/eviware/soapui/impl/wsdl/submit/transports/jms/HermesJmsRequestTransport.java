@@ -9,6 +9,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.jms.Connection;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageProducer;
+import javax.jms.Queue;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+import javax.jms.Topic;
+import javax.jms.TopicPublisher;
+import javax.jms.TopicSession;
+import javax.jms.TopicSubscriber;
 import javax.naming.Context;
 import javax.naming.NamingException;
 
@@ -205,6 +217,108 @@ public class HermesJmsRequestTransport implements RequestTransport
 	}
 
 	
+	protected JMSHeader createJMSHeader(SubmitContext submitContext, Request request, Hermes hermes, TextMessage textMessage)
+	{
+		JMSHeader jmsHeader = new JMSHeader();
+		jmsHeader.setMessageHeaders(textMessage, request, hermes, submitContext);
+		JMSHeader.setMessageProperties(textMessage, request, hermes, submitContext);
+		return jmsHeader;
+	}
+
+
+	protected void closeSessionAndConnection(Connection connection, Session session) throws JMSException
+	{
+		if (session != null)
+			session.close();
+		if (connection != null)
+			connection.close();
+	}
+
+	protected Response errorResponse(SubmitContext submitContext, Request request, long timeStarted, JMSException jmse)
+	{
+		JMSResponse response;
+		SoapUI.logError(jmse);
+		submitContext.setProperty(JMS_ERROR, jmse);
+		response = new JMSResponse("", null, null, request, timeStarted);
+		submitContext.setProperty(JMS_RESPONSE, response);
+	
+		return response;
+	}
+
+
+	protected TextMessage messageSend(SubmitContext submitContext, Request request, Session session, Hermes hermes, Queue queueSend) throws JMSException
+	{
+		TextMessage textMessageSend = session.createTextMessage();
+		String messageBody = PropertyExpander.expandProperties(submitContext, request.getRequestContent());
+		textMessageSend.setText(messageBody);
+		
+	
+		MessageProducer messageProducer = session.createProducer(queueSend);
+	
+		JMSHeader jmsHeader = createJMSHeader(submitContext, request, hermes, textMessageSend);
+	
+		// send message to producer
+		messageProducer.send(textMessageSend, textMessageSend.getJMSDeliveryMode(), textMessageSend.getJMSPriority(),
+				jmsHeader.getTimeTolive());
+	
+		submitContext.setProperty(JMS_MESSAGE_SEND, textMessageSend);
+		return textMessageSend;
+	}
+
+
+	protected Response makeResponse(SubmitContext submitContext, Request request, long timeStarted, TextMessage textMessageSend, MessageConsumer messageConsumer)
+			throws JMSException
+	{
+		JMSResponse response;
+		long timeout = getTimeout(submitContext, request);
+	
+		Message messageReceive = messageConsumer.receive(timeout);
+		
+		if (messageReceive != null)
+		{
+			TextMessage textMessageReceive = null;
+			if (messageReceive instanceof TextMessage)
+			{
+				textMessageReceive = (TextMessage) messageReceive;
+			}
+			// make response
+			response = new JMSResponse(textMessageReceive.getText(), textMessageSend,textMessageReceive, request, timeStarted);
+			
+			
+			submitContext.setProperty(JMS_MESSAGE_RECEIVE, messageReceive);
+			submitContext.setProperty(JMS_RESPONSE, response);
+			
+			
+			return response;
+		}
+		else
+		{
+			return  new JMSResponse("", null,null, request, timeStarted);
+		}
+	}
+
+
+	protected TextMessage messagePublish(SubmitContext submitContext, Request request, TopicSession topicSession, Hermes hermes, Topic topicPublish)
+			throws JMSException
+	{
+		TopicPublisher messageProducer = topicSession.createPublisher(topicPublish);
+	
+		TextMessage textMessagePublish = topicSession.createTextMessage();
+		String messageBody = PropertyExpander.expandProperties(submitContext, request.getRequestContent());
+		textMessagePublish.setText(messageBody);
+	
+		JMSHeader jmsHeader = new JMSHeader();
+		jmsHeader.setMessageHeaders(textMessagePublish, request, hermes, submitContext);
+		JMSHeader.setMessageProperties(textMessagePublish, request, hermes, submitContext);
+	
+		messageProducer.send(textMessagePublish, textMessagePublish.getJMSDeliveryMode(), textMessagePublish
+				.getJMSPriority(), jmsHeader.getTimeTolive());
+	
+		submitContext.setProperty(JMS_MESSAGE_SEND, textMessagePublish);
+		return textMessagePublish;
+	}
+
+
 	public static class UnresolvedJMSEndpointException extends Exception
 	{
 		public UnresolvedJMSEndpointException(String msg)

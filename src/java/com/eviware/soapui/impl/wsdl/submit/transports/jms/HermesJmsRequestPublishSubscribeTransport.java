@@ -78,62 +78,15 @@ public class HermesJmsRequestPublishSubscribeTransport extends HermesJmsRequestT
 			Topic topicPublish = (Topic) hermes.getDestination(topicNamePublish, Domain.TOPIC);
 			Topic topicSubscribe = (Topic) hermes.getDestination(topicNameSubscribe, Domain.TOPIC);
 			
-			// publisher
-			TopicPublisher messageProducer = session.createPublisher(topicPublish);
-
-			// message
-			TextMessage textMessagePublish = session.createTextMessage();
-			String messageBody = PropertyExpander.expandProperties(submitContext, request.getRequestContent());
-			textMessagePublish.setText(messageBody);
-
-			JMSHeader jmsHeader = new JMSHeader();
-			jmsHeader.setMessageHeaders(textMessagePublish, request, hermes, submitContext);
-			JMSHeader.setMessageProperties(textMessagePublish, request, hermes, submitContext);
-
-			
-		// create durable subscriber
 			topicDurableSubsriber = session.createDurableSubscriber(topicSubscribe, "durableSubscription" + topicNameSubscribe);
 			
-			
-			
-			// publish message to producer
-			messageProducer.send(textMessagePublish, textMessagePublish.getJMSDeliveryMode(), textMessagePublish.getJMSPriority(), jmsHeader
-					.getTimeTolive());
-			
-			submitContext.setProperty(JMS_MESSAGE_SEND, textMessagePublish);
+			TextMessage textMessagePublish = messagePublish(submitContext, request, session, hermes, topicPublish);
 
-			long timeout = getTimeout(submitContext, request);
-			Message messageReceive = topicDurableSubsriber.receive(timeout);
-			
-			if (messageReceive != null)
-			{
-				TextMessage textMessageReceive = null;
-				if (messageReceive instanceof TextMessage)
-				{
-					textMessageReceive = (TextMessage) messageReceive;
-				}
-				// make response
-				response = new JMSResponse(textMessageReceive.getText(), textMessagePublish, textMessageReceive, request,
-						timeStarted);
-
-				submitContext.setProperty(JMS_MESSAGE_RECEIVE, messageReceive);
-				submitContext.setProperty(JMS_RESPONSE, response);
-
-				return response;
-			}
-			else
-			{
-				return new JMSResponse("", null, null, request, timeStarted);
-			}
+			return makeResponse(submitContext, request, timeStarted, textMessagePublish, topicDurableSubsriber);
 		}
 		catch (JMSException jmse)
 		{
-			SoapUI.logError(jmse);
-			submitContext.setProperty(JMS_ERROR, jmse);
-			response = new JMSResponse("", null, null, request, timeStarted);
-			submitContext.setProperty(JMS_RESPONSE, response);
-
-			return response;
+			return errorResponse(submitContext, request, timeStarted, jmse);
 		}
 		catch (Throwable t)
 		{
@@ -141,11 +94,7 @@ public class HermesJmsRequestPublishSubscribeTransport extends HermesJmsRequestT
 		}
 		finally
 		{
-			
-			if (session != null)
-				session.close();
-			if (connection != null)
-				connection.close();
+			closeSessionAndConnection(connection, session);
 		}
 		return null;
 	}

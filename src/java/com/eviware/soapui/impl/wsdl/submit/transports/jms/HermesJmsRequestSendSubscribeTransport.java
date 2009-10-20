@@ -18,8 +18,6 @@ import hermes.Hermes;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
@@ -41,7 +39,6 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 		Connection connection = null;
 		Session session = null;
 		TopicSubscriber topicSubsriber = null;
-		JMSResponse response = null;
 		try
 		{
 			String queueNameSend = null;
@@ -61,75 +58,27 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 			submitContext.setProperty(HERMES_SESSION_NAME, sessionName);
 
 			Hermes hermes = getHermes(sessionName, request);
-			// connection factory
+
 			connectionFactory = (javax.jms.ConnectionFactory) hermes.getConnectionFactory();
 
-			// connection
 			connection = connectionFactory.createConnection();
 			connection.setClientID("" + (Math.random() * 1000));
 			connection.start();
 
-			// session
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-			// queue
 			Queue queueSend = (Queue) hermes.getDestination(queueNameSend, Domain.QUEUE);
 			Topic topicReceive = (Topic) hermes.getDestination(topicNameReceive, Domain.TOPIC);
 
-			// producer from session with queue
-			MessageProducer messageProducer = session.createProducer(queueSend);
-
-			// message
-			TextMessage textMessageSend = session.createTextMessage();
-			String messageBody = PropertyExpander.expandProperties(submitContext, request.getRequestContent());
-			textMessageSend.setText(messageBody);
-
-			JMSHeader jmsHeader = new JMSHeader();
-			jmsHeader.setMessageHeaders(textMessageSend, request, hermes, submitContext);
-			JMSHeader.setMessageProperties(textMessageSend, request, hermes, submitContext);
-
-			// send message to producer
-			messageProducer.send(textMessageSend, textMessageSend.getJMSDeliveryMode(), textMessageSend.getJMSPriority(),
-					jmsHeader.getTimeTolive());
-
-			submitContext.setProperty(JMS_MESSAGE_SEND, textMessageSend);
-
-			// consumer from session with queue
 			topicSubsriber = session.createDurableSubscriber(topicReceive, "durableSubscription" + topicNameReceive);
+			
+			TextMessage textMessageSend = messageSend(submitContext, request, session, hermes, queueSend);
 
-			long timeout = getTimeout(submitContext, request);
-
-			Message messageReceive = topicSubsriber.receive(timeout);
-
-			if (messageReceive != null)
-			{
-				TextMessage textMessageReceive = null;
-				if (messageReceive instanceof TextMessage)
-				{
-					textMessageReceive = (TextMessage) messageReceive;
-				}
-				// make response
-				response = new JMSResponse(textMessageReceive.getText(), textMessageSend, textMessageReceive, request,
-						timeStarted);
-
-				submitContext.setProperty(JMS_MESSAGE_RECEIVE, messageReceive);
-				submitContext.setProperty(JMS_RESPONSE, response);
-
-				return response;
-			}
-			else
-			{
-				return new JMSResponse("", null, null, request, timeStarted);
-			}
+			return makeResponse(submitContext, request, timeStarted, textMessageSend, topicSubsriber);
 		}
 		catch (JMSException jmse)
 		{
-			SoapUI.logError(jmse);
-			submitContext.setProperty(JMS_ERROR, jmse);
-			response = new JMSResponse("", null, null, request, timeStarted);
-			submitContext.setProperty(JMS_RESPONSE, response);
-
-			return response;
+			return errorResponse(submitContext, request, timeStarted, jmse);
 		}
 		catch (Throwable t)
 		{
@@ -139,10 +88,7 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 		{
 			if (topicSubsriber != null)
 				topicSubsriber.close();
-			if (session != null)
-				session.close();
-			if (connection != null)
-				connection.close();
+			closeSessionAndConnection(connection, session);
 		}
 		return null;
 	}

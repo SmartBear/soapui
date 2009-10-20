@@ -26,7 +26,6 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
-import javax.jms.TopicPublisher;
 import javax.jms.TopicSession;
 
 import com.eviware.soapui.SoapUI;
@@ -87,57 +86,15 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 			Topic topicPublish = (Topic) hermes.getDestination(topicNamePublish, Domain.TOPIC);
 			Queue queueReceive = (Queue) hermes.getDestination(queueNameReceive, Domain.QUEUE);
 
-			// publisher
-			TopicPublisher messageProducer = topicSession.createPublisher(topicPublish);
-
-			// message
-			TextMessage textMessagePublish = topicSession.createTextMessage();
-			String messageBody = PropertyExpander.expandProperties(submitContext, request.getRequestContent());
-			textMessagePublish.setText(messageBody);
-
-			JMSHeader jmsHeader = new JMSHeader();
-			jmsHeader.setMessageHeaders(textMessagePublish, request, hermes, submitContext);
-			JMSHeader.setMessageProperties(textMessagePublish, request, hermes, submitContext);
-
-			// publish message to producer
-			messageProducer.send(textMessagePublish, textMessagePublish.getJMSDeliveryMode(), textMessagePublish
-					.getJMSPriority(), jmsHeader.getTimeTolive());
-
-			submitContext.setProperty(JMS_MESSAGE_SEND, textMessagePublish);
+			TextMessage textMessagePublish = messagePublish(submitContext, request, topicSession, hermes, topicPublish);
 
 			MessageConsumer messageConsumer = session.createConsumer(queueReceive);
-			long timeout = getTimeout(submitContext, request);
-			Message messageReceive = messageConsumer.receive(timeout);
-
-			if (messageReceive != null)
-			{
-				TextMessage textMessageReceive = null;
-				if (messageReceive instanceof TextMessage)
-				{
-					textMessageReceive = (TextMessage) messageReceive;
-				}
-				// make response
-				response = new JMSResponse(textMessageReceive.getText(), textMessagePublish, textMessageReceive, request,
-						timeStarted);
-
-				submitContext.setProperty(JMS_MESSAGE_RECEIVE, messageReceive);
-				submitContext.setProperty(JMS_RESPONSE, response);
-
-				return response;
-			}
-			else
-			{
-				return new JMSResponse("", null, null, request, timeStarted);
-			}
+			
+			return makeResponse(submitContext, request, timeStarted, textMessagePublish, messageConsumer);
 		}
 		catch (JMSException jmse)
 		{
-			SoapUI.logError(jmse);
-			submitContext.setProperty(JMS_ERROR, jmse);
-			response = new JMSResponse("", null, null, request, timeStarted);
-			submitContext.setProperty(JMS_RESPONSE, response);
-
-			return response;
+			return errorResponse(submitContext, request, timeStarted, jmse);
 		}
 		catch (Throwable t)
 		{
@@ -145,16 +102,10 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 		}
 		finally
 		{
-
-			if (topicSession != null)
-				topicSession.close();
-			if (topicConnection != null)
-				topicConnection.close();
-			if (session != null)
-				session.close();
-			if (connection != null)
-				connection.close();
+			closeSessionAndConnection(topicConnection, topicSession);
+			closeSessionAndConnection(connection, session);
 		}
 		return null;
+
 	}
 }

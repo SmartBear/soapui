@@ -69,40 +69,12 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 			// consumer
 			MessageConsumer messageConsumer = session.createConsumer(queue);
 
-			long timeout = getTimeout(submitContext, request);
-
-			Message messageReceive = messageConsumer.receive(timeout);
-
-			if (messageReceive != null)
-			{
-				TextMessage textMessageReceive = null;
-				if (messageReceive instanceof TextMessage)
-				{
-					textMessageReceive = (TextMessage) messageReceive;
-				}
-				// make response
-				response = new JMSResponse(textMessageReceive.getText(),null, textMessageReceive, request, timeStarted);
-				
-				submitContext.setProperty(JMS_MESSAGE_RECEIVE, messageReceive);
-				submitContext.setProperty(JMS_RESPONSE, response);
-				
-				return response;
-			}
-			else
-			{
-				return new JMSResponse("",null,null,request,  timeStarted);
-			}
+			return makeResponse(submitContext, request, timeStarted, null, messageConsumer);
 
 		}
 		catch (JMSException jmse)
 		{
-			SoapUI.logError(jmse);
-			submitContext.setProperty(JMS_ERROR, jmse);
-			response = new JMSResponse("", null,null, request, timeStarted);
-			submitContext.setProperty(JMS_RESPONSE, response);
-			
-			return response;
-
+			return errorResponse(submitContext, request, timeStarted, jmse);
 		}
 		catch (Throwable t)
 		{
@@ -110,11 +82,7 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 		}
 		finally
 		{
-			// close session and connection
-			if (session != null)
-				session.close();
-			if (connection != null)
-				connection.close();
+			closeSessionAndConnection(connection, session);
 		}
 		return null;
 	}

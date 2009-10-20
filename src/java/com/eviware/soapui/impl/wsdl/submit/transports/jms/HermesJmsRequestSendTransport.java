@@ -64,39 +64,18 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
 			// queue
-			Queue queue = (Queue) hermes.getDestination(queueName, Domain.QUEUE);
+			Queue queueSend = (Queue) hermes.getDestination(queueName, Domain.QUEUE);
 
-			// producer
-			MessageProducer messageProducer = session.createProducer(queue);
-
-			// message
-			TextMessage textMessageSend = session.createTextMessage();
-			String messageBody = PropertyExpander.expandProperties(submitContext, request.getRequestContent());
-			textMessageSend.setText(messageBody);
-
-			JMSHeader jmsHeader = new JMSHeader();
-			jmsHeader.setMessageHeaders(textMessageSend, request, hermes, submitContext);
-			JMSHeader.setMessageProperties(textMessageSend, request, hermes, submitContext);
-
-			// send message to producer
-			messageProducer.send(textMessageSend, textMessageSend.getJMSDeliveryMode(), textMessageSend.getJMSPriority(),
-					jmsHeader.getTimeTolive());
-
+			TextMessage textMessageSend = messageSend(submitContext, request, session, hermes, queueSend);
 			// make response
 			response = new JMSResponse("", textMessageSend, null, request, timeStarted);
-			submitContext.setProperty(JMS_MESSAGE_SEND, textMessageSend);
 			submitContext.setProperty(JMS_RESPONSE, response);
 
 			return response;
 		}
 		catch (JMSException jmse)
 		{
-			SoapUI.logError(jmse);
-			submitContext.setProperty(JMS_ERROR, jmse);
-			response = new JMSResponse("", null, null, request, timeStarted);
-			submitContext.setProperty(JMS_RESPONSE, response);
-
-			return response;
+			return errorResponse(submitContext, request, timeStarted, jmse);
 		}
 		catch (Throwable t)
 		{
@@ -104,11 +83,7 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 		}
 		finally
 		{
-			// close session and connection
-			if (session != null)
-				session.close();
-			if (connection != null)
-				connection.close();
+			closeSessionAndConnection(connection, session);
 		}
 		return null;
 	}
