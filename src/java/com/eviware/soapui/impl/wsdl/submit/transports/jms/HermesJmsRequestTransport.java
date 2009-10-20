@@ -105,7 +105,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 			}
 			else if (destinationName.startsWith("topic_"))
 			{
-				throw new NotImplementedException();
+				return new HermesJmsRequestSubscribeTransport();
 			}
 			else
 			{
@@ -122,9 +122,17 @@ public class HermesJmsRequestTransport implements RequestTransport
 			{
 				return new HermesJmsRequestSendReceiveTransport();
 			}
-			else if (destinationSendName.startsWith("topic_") || destinationReceiveName.startsWith("topic_"))
+			else if (destinationSendName.startsWith("queue_") && destinationReceiveName.startsWith("topic_"))
 			{
-				throw new NotImplementedException();
+				return new HermesJmsRequestSendSubscribeTransport();
+			}
+			else if (destinationSendName.startsWith("topic_") && destinationReceiveName.startsWith("topic_"))
+			{
+				return new HermesJmsRequestPublishSubscribeTransport();
+			}
+			else if (destinationSendName.startsWith("topic_") && destinationReceiveName.startsWith("queue_"))
+			{
+				return new HermesJmsRequestPublishReceiveTransport();
 			}
 			else
 			{

@@ -50,7 +50,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 	private static final String RECEIVE = "Receive Queue";
 	private XForm mainForm;
 	List<Destination> destinationNameList;
-	List<Destination> queueNameList;
+	
 
 	public AddJMSEndpointAction()
 	{
@@ -68,28 +68,25 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 		{
 			String session = dialog.getValue(SESSION);
 			int i = dialog.getValueIndex(SEND);
-			if(i==-1){
+			if (i == -1)
+			{
 				UISupport.showErrorMessage("Not supported endpoint");
 				return;
 			}
 			String send = destinationNameList.get(i).getDestinationName();
 			int j = dialog.getValueIndex(RECEIVE);
-			if(j==-1){
+			if (j == -1)
+			{
 				UISupport.showErrorMessage("Not supported endpoint");
 				return;
 			}
-			String receive = queueNameList.get(j).getDestinationName();
+			String receive = destinationNameList.get(j).getDestinationName();
 			if ("-".equals(send) && "".equals(receive))
 			{
 				UISupport.showErrorMessage("Endpoint with blank send and receive field is discarded");
 				return;
 			}
-			if (destinationNameList.get(i).getDomain().equals(Domain.TOPIC)
-					&& queueNameList.get(j).getDomain().equals(Domain.QUEUE))
-			{
-				UISupport.showErrorMessage("Not supported endpoint");
-				return;
-			}
+			
 
 			iface.addEndpoint(createEndpointString(session, send, receive));
 		}
@@ -127,8 +124,6 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 		}
 		return hermesSessionList.toArray(new String[hermesSessionList.size()]);
 	}
-
-	
 
 	private void initValues(WsdlInterface iface)
 	{
@@ -170,12 +165,10 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 	private void updateDestinations(Hermes hermes)
 	{
 		destinationNameList = new ArrayList<Destination>();
-		queueNameList = new ArrayList<Destination>();
 		destinationNameList.add(new Destination("-", Domain.UNKNOWN));
-		queueNameList.add(new Destination("", Domain.UNKNOWN));
-		extractDestinations(hermes, destinationNameList, queueNameList);
+		extractDestinations(hermes, destinationNameList);
 		mainForm.setOptions(SEND, destinationNameList.toArray());
-		mainForm.setOptions(RECEIVE, queueNameList.toArray());
+		mainForm.setOptions(RECEIVE, destinationNameList.toArray());
 	}
 
 	private Context getHermesContext(WsdlInterface iface, String hermesConfigPath) throws MalformedURLException,
@@ -269,7 +262,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 				.buildDialog(builder.buildOkCancelActions(), "create JMS endpoint by selecting proper values", null);
 	}
 
-	private void extractDestinations(Hermes hermes, List<Destination> destinationList, List<Destination> queueList)
+	private void extractDestinations(Hermes hermes, List<Destination> destinationList)
 	{
 		Iterator<?> hermesDestionations = hermes.getDestinations();
 		while (hermesDestionations.hasNext())
@@ -277,11 +270,6 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 			DestinationConfigImpl dest = (DestinationConfigImpl) hermesDestionations.next();
 			Destination temp = new Destination(dest.getName(), Domain.getDomain(dest.getDomain()));
 			destinationList.add(temp);
-
-			if (Domain.QUEUE.getId() == dest.getDomain())
-			{
-				queueList.add(temp);
-			}
 		}
 	}
 
