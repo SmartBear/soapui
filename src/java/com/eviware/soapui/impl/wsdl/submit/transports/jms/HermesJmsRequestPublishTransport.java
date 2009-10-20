@@ -37,7 +37,6 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 		TopicConnectionFactory connectionFactory = null;
 		TopicConnection connection = null;
 		TopicSession session = null;
-		JMSResponse response = null;
 		try
 		{
 			String topicName = null;
