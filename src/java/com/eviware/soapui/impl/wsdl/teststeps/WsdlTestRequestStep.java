@@ -593,6 +593,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		}
 
 		testRequest.addWsaPropertyExpansions( result, testRequest.getWsaConfig(), this );
+		testRequest.addJMSHeaderExpansions(result, testRequest.getJMSHeaderConfig(), this);
 		return result.toArray( new PropertyExpansion[result.size()] );
 	}
 
