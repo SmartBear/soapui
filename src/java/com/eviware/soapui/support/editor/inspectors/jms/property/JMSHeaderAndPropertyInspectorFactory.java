@@ -121,7 +121,7 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 			{
 				Message message = jmsResponse.getMessageReceive();
 				if (message != null)
-					headersAndProperties.putAll(JMSHeader.getReceivedMessageHeaders(message));
+					headersAndProperties.putAll(JMSHeader.getMessageHeadersAndProperties(message));
 			}
 			inspector.getHeadersTableModel().setData(headersAndProperties);
 		}

@@ -52,107 +52,113 @@ public class JMSHeader
 
 	private long timeTolive = Message.DEFAULT_TIME_TO_LIVE;
 
-	public void setMessageHeaders(Message message, Request request, Hermes hermes, SubmitContext submitContext )
+	public void setMessageHeaders(Message message, Request request, Hermes hermes, SubmitContext submitContext)
 	{
-		JMSHeaderConfig jmsConfig = ((WsdlRequest) request).getJMSHeaderConfig();
-		try
+		if (request instanceof WsdlRequest)
 		{
-			// JMSCORRELATIONID
-			if (jmsConfig.getJMSCorrelationID() != null && !jmsConfig.getJMSCorrelationID().equals(""))
+			JMSHeaderConfig jmsConfig = ((WsdlRequest) request).getJMSHeaderConfig();
+			try
 			{
-				message.setJMSCorrelationID(PropertyExpander.expandProperties(submitContext,jmsConfig.getJMSCorrelationID()));
-			}
+				// JMSCORRELATIONID
+				if (jmsConfig.getJMSCorrelationID() != null && !jmsConfig.getJMSCorrelationID().equals(""))
+				{
+					message.setJMSCorrelationID(PropertyExpander.expandProperties(submitContext, jmsConfig
+							.getJMSCorrelationID()));
+				}
 
-			// JMSREPLYTO
-			if (jmsConfig.getJMSReplyTo() != null && !jmsConfig.getJMSReplyTo().equals(""))
-			{
-				message.setJMSReplyTo(hermes.getDestination(PropertyExpander.expandProperties(submitContext,jmsConfig.getJMSReplyTo()),
-						Domain.QUEUE));
-			}
+				// JMSREPLYTO
+				if (jmsConfig.getJMSReplyTo() != null && !jmsConfig.getJMSReplyTo().equals(""))
+				{
+					message.setJMSReplyTo(hermes.getDestination(PropertyExpander.expandProperties(submitContext, jmsConfig
+							.getJMSReplyTo()), Domain.QUEUE));
+				}
 
-			// TIMETOLIVE
-			if (jmsConfig.getTimeToLive() != null && !jmsConfig.getTimeToLive().equals(""))
-			{
-				setTimeTolive(Long.parseLong(PropertyExpander.expandProperties(submitContext,jmsConfig.getTimeToLive())));
-			}
-			else
-			{
-				setTimeTolive(Message.DEFAULT_TIME_TO_LIVE);
-			}
+				// TIMETOLIVE
+				if (jmsConfig.getTimeToLive() != null && !jmsConfig.getTimeToLive().equals(""))
+				{
+					setTimeTolive(Long
+							.parseLong(PropertyExpander.expandProperties(submitContext, jmsConfig.getTimeToLive())));
+				}
+				else
+				{
+					setTimeTolive(Message.DEFAULT_TIME_TO_LIVE);
+				}
 
-			// JMSTYPE
-			if (jmsConfig.getJMSType() != null && !jmsConfig.getJMSType().equals(""))
-			{
-				message.setJMSType(PropertyExpander.expandProperties(submitContext,jmsConfig.getJMSType()));
-			}
+				// JMSTYPE
+				if (jmsConfig.getJMSType() != null && !jmsConfig.getJMSType().equals(""))
+				{
+					message.setJMSType(PropertyExpander.expandProperties(submitContext, jmsConfig.getJMSType()));
+				}
 
-			// JMSPRIORITY
-			if (jmsConfig.getJMSPriority() != null && !jmsConfig.getJMSPriority().equals(""))
-			{
-				message.setJMSPriority(Integer.parseInt(PropertyExpander.expandProperties(submitContext,jmsConfig.getJMSPriority())));
-			}
-			else
-			{
-				message.setJMSPriority(Message.DEFAULT_PRIORITY);
-			}
+				// JMSPRIORITY
+				if (jmsConfig.getJMSPriority() != null && !jmsConfig.getJMSPriority().equals(""))
+				{
+					message.setJMSPriority(Integer.parseInt(PropertyExpander.expandProperties(submitContext, jmsConfig
+							.getJMSPriority())));
+				}
+				else
+				{
+					message.setJMSPriority(Message.DEFAULT_PRIORITY);
+				}
 
-			// JMSDELIVERYMODE
-			if (jmsConfig.getJMSDeliveryMode() != null && !jmsConfig.getJMSDeliveryMode().equals(""))
-			{
-				int deliveryMode = jmsConfig.getJMSDeliveryMode().equals("PERSISTENT") ? javax.jms.DeliveryMode.PERSISTENT
-						: javax.jms.DeliveryMode.NON_PERSISTENT;
-				message.setJMSDeliveryMode(deliveryMode);
-			}
-			else
-			{
-				message.setJMSDeliveryMode(Message.DEFAULT_DELIVERY_MODE);
-			}
+				// JMSDELIVERYMODE
+				if (jmsConfig.getJMSDeliveryMode() != null && !jmsConfig.getJMSDeliveryMode().equals(""))
+				{
+					int deliveryMode = jmsConfig.getJMSDeliveryMode().equals("PERSISTENT") ? javax.jms.DeliveryMode.PERSISTENT
+							: javax.jms.DeliveryMode.NON_PERSISTENT;
+					message.setJMSDeliveryMode(deliveryMode);
+				}
+				else
+				{
+					message.setJMSDeliveryMode(Message.DEFAULT_DELIVERY_MODE);
+				}
 
+			}
+			catch (NamingException e)
+			{
+				SoapUI.logError(e, "Message header JMSReplyTo = "
+						+ PropertyExpander.expandProperties(submitContext, jmsConfig.getJMSReplyTo())
+						+ "destination not exists!");
+			}
+			catch (Exception e)
+			{
+				SoapUI.logError(e, "error while seting message header properties!");
+			}
 		}
-		catch (NamingException e)
-		{
-			SoapUI.logError(e, "Message header JMSReplyTo = "
-					+ PropertyExpander.expandProperties(submitContext,jmsConfig.getJMSReplyTo()) + "destination not exists!");
-		}
-		catch (Exception e)
-		{
-			SoapUI.logError(e, "error while seting message header properties!");
-		}
-
 	}
 
 	public static void setMessageProperties(Message message, Request request, Hermes hermes, SubmitContext submitContext)
 	{
-
-		JMSPropertiesConfig jmsPropertyConfig = ((WsdlRequest) request).getJMSPropertiesConfig();
-//		AbstractHttpRequest<?> temp = (AbstractHttpRequest<?>) request;
-//		StringToStringMap headersMap = temp.getRequestHeaders();
-		try
+		if (request instanceof WsdlRequest)
 		{
-			List<JMSPropertyConfig> propertyList = jmsPropertyConfig.getJMSProperties();
-			StringToStringMap stringToStringMap = new StringToStringMap(propertyList.size());
-			for (JMSPropertyConfig jmsProperty : propertyList)
+			JMSPropertiesConfig jmsPropertyConfig = ((WsdlRequest) request).getJMSPropertiesConfig();
+			try
 			{
-				stringToStringMap.put(jmsProperty.getName(), jmsProperty.getValue());
-			}
-
-			// CUSTOM PROPERTIES
-			String keys[] = stringToStringMap.getKeys();
-			for (String key : keys)
-			{
-				if (!key.equals(JMSCORRELATIONID) && !key.equals(JMSREPLYTO) && !key.equals(TIMETOLIVE)
-						&& !key.equals(JMSTYPE) && !key.equals(JMSPRIORITY) && !key.equals(JMSDELIVERYMODE))
+				List<JMSPropertyConfig> propertyList = jmsPropertyConfig.getJMSProperties();
+				StringToStringMap stringToStringMap = new StringToStringMap(propertyList.size());
+				for (JMSPropertyConfig jmsProperty : propertyList)
 				{
-					message.setStringProperty(key, PropertyExpander.expandProperties(submitContext,stringToStringMap.get(key)));
+					stringToStringMap.put(jmsProperty.getName(), jmsProperty.getValue());
+				}
+
+				// CUSTOM PROPERTIES
+				String keys[] = stringToStringMap.getKeys();
+				for (String key : keys)
+				{
+					if (!key.equals(JMSCORRELATIONID) && !key.equals(JMSREPLYTO) && !key.equals(TIMETOLIVE)
+							&& !key.equals(JMSTYPE) && !key.equals(JMSPRIORITY) && !key.equals(JMSDELIVERYMODE))
+					{
+						message.setStringProperty(key, PropertyExpander.expandProperties(submitContext, stringToStringMap
+								.get(key)));
+					}
 				}
 			}
-		}
 
-		catch (Exception e)
-		{
-			SoapUI.logError(e, "error while seting jms message properties!");
+			catch (Exception e)
+			{
+				SoapUI.logError(e, "error while seting jms message properties!");
+			}
 		}
-
 	}
 
 	public long getTimeTolive()
@@ -165,7 +171,7 @@ public class JMSHeader
 		this.timeTolive = timeTolive;
 	}
 
-	public static StringToStringMap getReceivedMessageHeaders(Message message)
+	public static StringToStringMap getMessageHeadersAndProperties(Message message)
 	{
 		StringToStringMap headermap = new StringToStringMap();
 		try
@@ -189,9 +195,9 @@ public class JMSHeader
 				headermap.put(JMSREPLYTO, String.valueOf(message.getJMSReplyTo()));
 
 			if (message.getJMSType() != null)
-				headermap.put(JMSTYPE, message.getJMSType());
+				headermap.put(JMSTYPE, message.getJMSType()); 
 
-			Enumeration properties = message.getPropertyNames();
+			Enumeration<?> properties = message.getPropertyNames();
 			while (properties.hasMoreElements())
 			{
 				String key = (String) properties.nextElement();
@@ -205,48 +211,4 @@ public class JMSHeader
 		}
 		return headermap;
 	}
-	
-	
-	public static StringToStringMap getSendMessageHeaders(Message message)
-	{
-		StringToStringMap headermap = new StringToStringMap();
-		try
-		{
-			headermap.put(JMSDELIVERYMODE, String.valueOf(message.getJMSDeliveryMode()));
-			headermap.put(JMSEXPIRATION, String.valueOf(message.getJMSExpiration()));
-			headermap.put(JMSPRIORITY, String.valueOf(message.getJMSPriority()));
-			headermap.put(JMSTIMESTAMP, String.valueOf(message.getJMSTimestamp()));
-			headermap.put(JMSREDELIVERED, String.valueOf(message.getJMSRedelivered()));
-
-			if (message.getJMSDestination() != null)
-				headermap.put(JMSDESTINATION, String.valueOf(message.getJMSDestination()));
-
-			if (message.getJMSMessageID() != null)
-				headermap.put(JMSMESSAGEID, message.getJMSMessageID());
-
-			if (message.getJMSCorrelationID() != null)
-				headermap.put(JMSCORRELATIONID, message.getJMSCorrelationID());
-
-			if (message.getJMSReplyTo() != null)
-				headermap.put(JMSREPLYTO, String.valueOf(message.getJMSReplyTo()));
-
-			if (message.getJMSType() != null)
-				headermap.put(JMSTYPE, message.getJMSType());
-
-			Enumeration properties = message.getPropertyNames();
-			while (properties.hasMoreElements())
-			{
-				String key = (String) properties.nextElement();
-				headermap.put(key, message.getStringProperty(key));
-			}
-
-		}
-		catch (JMSException e)
-		{
-			SoapUI.logError(e);
-		}
-		return headermap;
-	}
-
-
 }

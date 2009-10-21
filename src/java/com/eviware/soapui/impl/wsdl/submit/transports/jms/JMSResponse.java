@@ -168,7 +168,7 @@ public class JMSResponse implements WsdlResponse
 	{
 		if (messageSend != null)
 		{
-			return JMSHeader.getSendMessageHeaders(messageSend);
+			return JMSHeader.getMessageHeadersAndProperties(messageSend);
 		}
 		else
 			return new StringToStringMap();
@@ -179,7 +179,7 @@ public class JMSResponse implements WsdlResponse
 	{
 		if (messageReceive != null)
 		{
-			return JMSHeader.getReceivedMessageHeaders(messageReceive);
+			return JMSHeader.getMessageHeadersAndProperties(messageReceive);
 		}
 		else
 			return new StringToStringMap();
