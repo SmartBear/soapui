@@ -22,7 +22,6 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
@@ -79,10 +78,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 {
 	protected JPanel configPanel;
 	private JXTable logTable;
-	// private JList propertyList;
 	private JButton addAssertionButton;
-	// private JButton removeButton;
-	private JLabel statusLabel;
 	protected JInspectorPanel inspectorPanel;
 	protected JdbcRequestTestStep jdbcRequestTestStep;
 	protected JdbcRequestTestStepConfig jdbcRequestTestStepConfig;
@@ -92,7 +88,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	protected ModelItemXmlEditor<?, ?> responseEditor;
 	protected JPanel panel;
 	protected SimpleForm configForm;
-	protected boolean runnable;
 	protected static final String DRIVER_FIELD = "Driver";
 	protected static final String CONNSTR_FIELD = "Connection String";
 	protected static final String PASS_FIELD = "Password";
@@ -102,11 +97,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 	protected static final String QUERY_ELEMENT = "query";
 	protected static final String STOREDPROCEDURE_ELEMENT = "stored-procedure";
-	// protected String driver;
-	// protected String connectionString;
-	// protected String password;
-	// protected String query;
-	// protected boolean storedProcedure;
 	protected Connection connection;
 	protected JXEditTextArea queryArea;
 	protected JCheckBox isStoredProcedureCheckBox;
@@ -123,8 +113,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	private JPanel requestTabPanel;
 	JdbcRequest jdbcRequest;
 	private boolean responseHasFocus;
-	private InputAreaFocusListener inputAreaFocusListener;
-	private ResultAreaFocusListener resultAreaFocusListener;
 	private JSplitPane requestSplitPane;
 	boolean requestTabsDisplay;
 	private JEditorStatusBarWithProgress statusBar;
@@ -136,43 +124,21 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		jdbcRequestTestStep = modelItem;
 		modelItem.getTestCase().addTestRunListener(testRunListener);
 		jdbcRequest = new JdbcRequest(jdbcRequestTestStep);
-		buildUI();
-
-//		inputAreaFocusListener = new InputAreaFocusListener(requestEditor);
-//		requestEditor.addFocusListener(inputAreaFocusListener);	
-//		
-//		resultAreaFocusListener = new ResultAreaFocusListener(responseEditor);
-//		responseEditor.addFocusListener(resultAreaFocusListener);	
+		initConfig();
 		initContent();
 	}
 
-	protected void init()
+	protected void initConfig()
 	{
 		jdbcRequestTestStepConfig = jdbcRequestTestStep.getJdbcRequestTestStepConfig();
 		
 	}
-
-	protected void buildUI()
-	{
-		init();
-		inspectorPanel = JInspectorPanelFactory.build(buildContent());
-		inspectorPanel.setDefaultDividerLocation(0.7F);
-		add(buildToolbar(), BorderLayout.NORTH);
-		add(inspectorPanel.getComponent(), BorderLayout.CENTER);
-		assertionsPanel = buildAssertionsPanel();
-
-		assertionInspector = new JComponentInspector<JComponent>(assertionsPanel, "Assertions ("
-				+ getModelItem().getAssertionCount() + ")", "Assertions for this Test Request", true);
-
-		inspectorPanel.addInspector(assertionInspector);
-		setPreferredSize(new Dimension(600, 450));
-	}
-
 	private JComponent buildContent()
 	{
+		JComponent content;
 		submitAction = new SubmitAction();
 		submitButton = createActionButton(submitAction, true);
-//		submitButton.setEnabled(request.getEndpoint() != null && request.getEndpoint().trim().length() > 0);
+		submitButton.setEnabled(enableSubmit());
 
 		cancelButton = createActionButton(new CancelAction(), false);
 		tabsButton = new JToggleButton(new ChangeToTabsAction());
@@ -228,19 +194,31 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			requestTabs.addTab("Request", requestEditor);
 			if (responseEditor != null)
 				requestTabs.addTab("Response", responseEditor);
-//			splitButton.setEnabled(false);
 			requestTabsDisplay = true;
 			tabsButton.setSelected(true);
 
-			return requestTabPanel;
+			content =  requestTabPanel;
 		}
 		else
 		{
 			requestSplitPane.setTopComponent(requestEditor);
 			requestSplitPane.setBottomComponent(responseEditor);
 			requestSplitPane.setDividerLocation(0.5);
-			return requestSplitPane;
+			content = requestSplitPane;
 		}
+		
+		inspectorPanel = JInspectorPanelFactory.build(content);
+		inspectorPanel.setDefaultDividerLocation(0.7F);
+		add(buildToolbar(), BorderLayout.NORTH);
+		add(inspectorPanel.getComponent(), BorderLayout.CENTER);
+		assertionsPanel = buildAssertionsPanel();
+
+		assertionInspector = new JComponentInspector<JComponent>(assertionsPanel, "Assertions ("
+				+ getModelItem().getAssertionCount() + ")", "Assertions for this Test Request", true);
+
+		inspectorPanel.addInspector(assertionInspector);
+//		setPreferredSize(new Dimension(600, 450));
+		return inspectorPanel.getComponent();
 	}
 
 	protected JComponent buildRequestConfigPanel()
@@ -329,10 +307,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		return jdbcRequestTestStep;
 	}
 
-	public boolean isRunnable()
-	{
-		return runnable;
-	}
 
 	public void setQuery(String query)
 	{
@@ -395,23 +369,9 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 		testConnectionButton = configForm.appendButton("TestConnection", "Test selected database connection");
 		testConnectionButton.setAction(new TestConnectionAction());
-		if (enableTestConnection())
-		{
-			testConnectionButton.setEnabled(true);
-		}
-		else
-		{
-			testConnectionButton.setEnabled(false);
-		}
-
-		if (enableTestConnection() && !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getQuery()))
-		{
-			runnable = true;
-		}
-		else
-		{
-			runnable = false;
-		}
+		testConnectionButton.setEnabled(enableTestConnection());
+		submitButton.setEnabled(enableSubmit());
+		
 		queryArea = JXEditTextArea.createSqlEditor();
 		JXEditAreaPopupMenu.add(queryArea);
 		PropertyExpansionPopupListener.enable(queryArea, jdbcRequestTestStep);
@@ -426,6 +386,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			public void update(Document document)
 			{
 				jdbcRequestTestStep.setQuery(queryArea.getText());
+				submitButton.setEnabled(enableSubmit());
 			}
 		});
 
@@ -442,15 +403,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			public void update(Document document)
 			{
 				jdbcRequestTestStep.setPassword(configForm.getComponentValue(PASS_FIELD));
-				if (StringUtils.isNullOrEmpty(jdbcRequestTestStep.getDriver()) || StringUtils.isNullOrEmpty(jdbcRequestTestStep.getConnectionString())
-						&& StringUtils.isNullOrEmpty(jdbcRequestTestStep.getPassword()))
-				{
-					testConnectionButton.setEnabled(false);
-				}
-				else
-				{
-					testConnectionButton.setEnabled(true);
-				}
+				testConnectionButton.setEnabled(enableTestConnection());
+				submitButton.setEnabled(enableSubmit());
 			}
 		});
 	}
@@ -463,22 +417,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			public void update(Document document)
 			{
 				jdbcRequestTestStep.setConnectionString(configForm.getComponentValue(CONNSTR_FIELD));
-				if (enableTestConnection())
-				{
-					testConnectionButton.setEnabled(true);
-				}
-				else
-				{
-					testConnectionButton.setEnabled(false);
-				}
-				if (enableTestConnection() && !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getQuery()))
-				{
-					runnable = true;
-				}
-				else
-				{
-					runnable = false;
-				}
+				testConnectionButton.setEnabled(enableTestConnection());
+				submitButton.setEnabled(enableSubmit());
 			}
 		});
 	}
@@ -492,22 +432,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			public void update(Document document)
 			{
 				jdbcRequestTestStep.setDriver(configForm.getComponentValue(DRIVER_FIELD));
-				if (enableTestConnection())
-				{
-					testConnectionButton.setEnabled(true);
-				}
-				else
-				{
-					testConnectionButton.setEnabled(false);
-				}
-				if (enableTestConnection() && !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getQuery()))
-				{
-					runnable = true;
-				}
-				else
-				{
-					runnable = false;
-				}
+				testConnectionButton.setEnabled(enableTestConnection());
+				submitButton.setEnabled(enableSubmit());
 			}
 		});
 	}
@@ -525,10 +451,24 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 	protected boolean enableTestConnection()
 	{
-		return !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getDriver()) && !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getConnectionString())
-				&& !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getPassword());
+		if (!StringUtils.isNullOrEmpty(jdbcRequestTestStep.getDriver()) && !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getConnectionString()))
+		{
+			if (jdbcRequestTestStep.getConnectionString().contains(JdbcRequestTestStep.PASS_TEMPLATE))
+			{
+				return !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getPassword());
+			} else {
+				return true;
+			}
+		} else {
+			return false;
+		}
 	}
 
+	protected boolean enableSubmit()
+	{
+		return enableTestConnection() && !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getQuery());
+	}
+	
 	protected ModelItemXmlEditor<?, ?> buildResponseEditor()
 	{
 		return new JdbcResponseMessageEditor();
@@ -844,12 +784,12 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	}
 	public void setContent(JComponent content)
 	{
-		add(content, BorderLayout.CENTER);
+		inspectorPanel.setContentComponent( content );
 	}
 
 	public void removeContent(JComponent content)
 	{
-		remove(content);
+		inspectorPanel.setContentComponent( null );
 	}
 	private class CancelAction extends AbstractAction
 	{
@@ -878,7 +818,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	}
 	public void setEnabled(boolean enabled)
 	{
-//		requestEditor.setEditable(enabled);
 		if (responseEditor != null)
 			responseEditor.setEditable(enabled);
 
