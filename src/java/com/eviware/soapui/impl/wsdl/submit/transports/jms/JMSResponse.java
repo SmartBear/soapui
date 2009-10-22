@@ -77,27 +77,29 @@ public class JMSResponse implements WsdlResponse
 
 	public String getContentType()
 	{
-		try
-		{
-			return messageReceive.getJMSType();
-		}
-		catch (JMSException e)
-		{
-			SoapUI.logError(e);
-		}
+		if (messageReceive != null)
+			try
+			{
+				return messageReceive.getJMSType();
+			}
+			catch (JMSException e)
+			{
+				SoapUI.logError(e);
+			}
 		return null;
 	}
 
 	public String getProperty(String name)
 	{
-		try
-		{
-			return messageReceive.getStringProperty(name);
-		}
-		catch (JMSException e)
-		{
-			SoapUI.logError(e);
-		}
+		if (messageReceive != null)
+			try
+			{
+				return messageReceive.getStringProperty(name);
+			}
+			catch (JMSException e)
+			{
+				SoapUI.logError(e);
+			}
 		return null;
 	}
 
@@ -184,8 +186,6 @@ public class JMSResponse implements WsdlResponse
 		else
 			return new StringToStringMap();
 	}
-	
-	
 
 	public long getTimeTaken()
 	{

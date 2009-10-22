@@ -18,10 +18,10 @@ import hermes.Hermes;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Queue;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
@@ -84,11 +84,11 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 			Topic topicPublish = (Topic) hermes.getDestination(topicNamePublish, Domain.TOPIC);
 			Queue queueReceive = (Queue) hermes.getDestination(queueNameReceive, Domain.QUEUE);
 
-			TextMessage textMessagePublish = messagePublish(submitContext, request, topicSession, hermes, topicPublish);
+			Message messagePublish = messagePublish(submitContext, request, topicSession, hermes, topicPublish);
 
 			MessageConsumer messageConsumer = session.createConsumer(queueReceive);
 			
-			return makeResponse(submitContext, request, timeStarted, textMessagePublish, messageConsumer);
+			return makeResponse(submitContext, request, timeStarted, messagePublish, messageConsumer);
 		}
 		catch (JMSException jmse)
 		{

@@ -16,8 +16,8 @@ import hermes.Domain;
 import hermes.Hermes;
 
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
@@ -65,9 +65,9 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 			// destination
 			Topic topicPublish = (Topic) hermes.getDestination(topicName, Domain.TOPIC);
 
-			TextMessage textMessagePublish = messagePublish(submitContext, request, session, hermes, topicPublish);
+			Message messagePublish = messagePublish(submitContext, request, session, hermes, topicPublish);
 
-			return makeResponseOnly(submitContext, request, timeStarted, textMessagePublish);
+			return makeResponseOnly(submitContext, request, timeStarted, messagePublish);
 		}
 		catch (JMSException jmse)
 		{

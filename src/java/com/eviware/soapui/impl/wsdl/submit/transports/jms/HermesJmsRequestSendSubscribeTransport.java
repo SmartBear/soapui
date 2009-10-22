@@ -18,9 +18,9 @@ import hermes.Hermes;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.Queue;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.jms.TopicSubscriber;
 
@@ -72,7 +72,7 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 
 			topicSubsriber = session.createDurableSubscriber(topicReceive, "durableSubscription" + topicNameReceive);
 			
-			TextMessage textMessageSend = messageSend(submitContext, request, session, hermes, queueSend);
+			Message textMessageSend = messageSend(submitContext, request, session, hermes, queueSend);
 
 			return makeResponse(submitContext, request, timeStarted, textMessageSend, topicSubsriber);
 		}

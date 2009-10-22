@@ -21,6 +21,7 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSHeader;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Submit;
@@ -28,7 +29,6 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
-import com.eviware.soapui.support.editor.inspectors.jms.JMSUtil;
 import com.eviware.soapui.support.editor.inspectors.jms.property.JMSHeaderAndPropertyInspectorModel.AbstractJMSHeaderAndPropertyModel;
 import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
@@ -50,7 +50,7 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 			JMSHeaderAndPropertyInspector inspector = new JMSHeaderAndPropertyInspector(
 					(JMSHeaderAndPropertyInspectorModel) new MessageExchangeRequestJMSHeaderAndPropertiesModel(
 							(MessageExchangeModelItem) modelItem));
-			inspector.setEnabled(JMSUtil.checkIfJMS(modelItem));
+			inspector.setEnabled(JMSUtils.checkIfJMS(modelItem));
 			return inspector;
 		}
 		return null;
@@ -63,7 +63,7 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 		{
 			JMSHeaderAndPropertyInspector inspector = new JMSHeaderAndPropertyInspector(
 					(JMSHeaderAndPropertyInspectorModel) new ResponseJMSHeaderAndPropertiesModel((WsdlRequest) modelItem));
-			inspector.setEnabled(JMSUtil.checkIfJMS(modelItem));
+			inspector.setEnabled(JMSUtils.checkIfJMS(modelItem));
 			return inspector;
 		}
 		else if (modelItem instanceof MessageExchangeModelItem)
@@ -72,7 +72,7 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 			JMSHeaderAndPropertyInspector inspector = new JMSHeaderAndPropertyInspector(
 					(JMSHeaderAndPropertyInspectorModel) new MessageExchangeResponseJMSHeaderAndPropertiesModel(
 							(MessageExchangeModelItem) modelItem));
-			inspector.setEnabled(JMSUtil.checkIfJMS(modelItem));
+			inspector.setEnabled(JMSUtils.checkIfJMS(modelItem));
 			return inspector;
 
 		}
@@ -98,7 +98,7 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 		{
 			if (evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
 			{
-				inspector.setEnabled(request.getEndpoint().startsWith(JMSUtil.JMS_ENDPIONT_PREFIX));
+				inspector.setEnabled(request.getEndpoint().startsWith(JMSUtils.JMS_ENDPIONT_PREFIX));
 			}
 			super.propertyChange(evt);
 		}

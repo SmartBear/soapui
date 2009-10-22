@@ -19,10 +19,10 @@ import java.util.List;
 import com.eviware.soapui.config.JMSPropertyConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
-import com.eviware.soapui.support.editor.inspectors.jms.JMSUtil;
 import com.eviware.soapui.support.editor.inspectors.jms.property.JMSPropertyInspectorModel.AbstractJMSPropertyModel;
 import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
@@ -43,7 +43,7 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 		{
 			JMSPropertyInspector inspector = new JMSPropertyInspector(
 					(JMSPropertyInspectorModel) new WsdlRequestJMSPropertiesModel((WsdlRequest) modelItem));
-			inspector.setEnabled(JMSUtil.checkIfJMS(modelItem));
+			inspector.setEnabled(JMSUtils.checkIfJMS(modelItem));
 			return inspector;
 		}
 		return null;
@@ -71,7 +71,7 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 		{
 			if (evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
 			{
-				inspector.setEnabled(request.getEndpoint().startsWith(JMSUtil.JMS_ENDPIONT_PREFIX));
+				inspector.setEnabled(request.getEndpoint().startsWith(JMSUtils.JMS_ENDPIONT_PREFIX));
 			}
 			super.propertyChange(evt);
 		}

@@ -9,18 +9,23 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
-package com.eviware.soapui.support.editor.inspectors.jms;
+package com.eviware.soapui.impl.wsdl.submit.transports.jms.util;
+
+import java.util.Enumeration;
+
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Request;
 
-public class JMSUtil
+public class JMSUtils
 {
-	
-	public static final String JMS_ENDPIONT_PREFIX="jms://";
-	
+
+	public static final String JMS_ENDPIONT_PREFIX = "jms://";
+
 	private static boolean checkIfJMS(Request request)
 	{
 		try
@@ -62,5 +67,21 @@ public class JMSUtil
 			}
 		}
 		return false;
+	}
+
+	public static String extractMapMessagePayloadToString(MapMessage mapMessage) throws JMSException
+	{
+		StringBuffer sb = new StringBuffer();
+
+		Enumeration<?> mapNames = mapMessage.getMapNames();
+
+		while (mapNames.hasMoreElements())
+		{
+			String key = (String) mapNames.nextElement();
+			String value = mapMessage.getString(key);
+			sb.append(key + ": " + value);
+		}
+
+		return sb.toString();
 	}
 }

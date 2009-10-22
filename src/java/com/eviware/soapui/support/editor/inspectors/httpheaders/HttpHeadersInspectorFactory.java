@@ -18,6 +18,7 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
@@ -25,7 +26,6 @@ import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspectorModel.AbstractHeadersModel;
-import com.eviware.soapui.support.editor.inspectors.jms.JMSUtil;
 import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -46,14 +46,14 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 		{
 			HttpHeadersInspector inspector = new HttpHeadersInspector(new WsdlRequestHeadersModel(
 					(AbstractHttpRequest<?>) modelItem));
-			inspector.setEnabled(!JMSUtil.checkIfJMS(modelItem));
+			inspector.setEnabled(!JMSUtils.checkIfJMS(modelItem));
 			return inspector;
 		}
 		else if (modelItem instanceof WsdlMockResponse)
 		{
 			HttpHeadersInspector inspector = new HttpHeadersInspector(new WsdlMockResponseRequestHeadersModel(
 					(WsdlMockResponse) modelItem));
-			inspector.setEnabled(!JMSUtil.checkIfJMS(modelItem));
+			inspector.setEnabled(!JMSUtils.checkIfJMS(modelItem));
 			return inspector;
 		}
 
@@ -61,7 +61,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 		{
 			HttpHeadersInspector inspector = new HttpHeadersInspector(new WsdlMessageExchangeRequestHeadersModel(
 					(MessageExchangeModelItem) modelItem));
-			inspector.setEnabled(!JMSUtil.checkIfJMS(modelItem));
+			inspector.setEnabled(!JMSUtils.checkIfJMS(modelItem));
 			return inspector;
 		}
 		return null;
@@ -73,21 +73,21 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 		{
 			HttpHeadersInspector inspector = new HttpHeadersInspector(new WsdlRequestResponseHeadersModel(
 					(AbstractHttpRequest<?>) modelItem));
-			inspector.setEnabled(!JMSUtil.checkIfJMS(modelItem));
+			inspector.setEnabled(!JMSUtils.checkIfJMS(modelItem));
 			return inspector;
 		}
 		else if (modelItem instanceof WsdlMockResponse)
 		{
 			HttpHeadersInspector inspector = new HttpHeadersInspector(new WsdlMockResponseHeadersModel(
 					(WsdlMockResponse) modelItem));
-			inspector.setEnabled(!JMSUtil.checkIfJMS(modelItem));
+			inspector.setEnabled(!JMSUtils.checkIfJMS(modelItem));
 			return inspector;
 		}
 		else if (modelItem instanceof MessageExchangeModelItem)
 		{
 			HttpHeadersInspector inspector = new HttpHeadersInspector(new WsdlMessageExchangeResponseHeadersModel(
 					(MessageExchangeModelItem) modelItem));
-			inspector.setEnabled(!JMSUtil.checkIfJMS(modelItem));
+			inspector.setEnabled(!JMSUtils.checkIfJMS(modelItem));
 			return inspector;
 		}
 
@@ -156,7 +156,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			if (evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
 			{
 				 inspector.setEnabled(!request.getEndpoint()
-						.startsWith(JMSUtil.JMS_ENDPIONT_PREFIX));
+						.startsWith(JMSUtils.JMS_ENDPIONT_PREFIX));
 			}
 			super.propertyChange(evt);
 		}
@@ -211,7 +211,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 		{
 			if (evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
 			{
-				inspector.setEnabled(!request.getEndpoint().startsWith(JMSUtil.JMS_ENDPIONT_PREFIX));
+				inspector.setEnabled(!request.getEndpoint().startsWith(JMSUtils.JMS_ENDPIONT_PREFIX));
 			}
 			super.propertyChange(evt);
 		}

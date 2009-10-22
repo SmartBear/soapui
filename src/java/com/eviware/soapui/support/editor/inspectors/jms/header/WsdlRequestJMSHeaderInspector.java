@@ -18,8 +18,8 @@ import java.beans.PropertyChangeListener;
 import com.eviware.soapui.config.JMSDeliveryModeTypeConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.support.components.SimpleBindingForm;
-import com.eviware.soapui.support.editor.inspectors.jms.JMSUtil;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
 
 public class WsdlRequestJMSHeaderInspector extends AbstractJMSHeaderInspector implements XmlInspector, PropertyChangeListener
@@ -39,7 +39,7 @@ public class WsdlRequestJMSHeaderInspector extends AbstractJMSHeaderInspector im
 	{
 		if (evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
 		{
-			this.setEnabled(request.getEndpoint().startsWith(JMSUtil.JMS_ENDPIONT_PREFIX));
+			this.setEnabled(request.getEndpoint().startsWith(JMSUtils.JMS_ENDPIONT_PREFIX));
 		}
 		
 	}

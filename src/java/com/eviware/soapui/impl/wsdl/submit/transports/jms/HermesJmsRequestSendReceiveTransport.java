@@ -18,10 +18,10 @@ import hermes.Hermes;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Queue;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
@@ -69,11 +69,11 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 			Queue queueSend = (Queue) hermes.getDestination(queueNameSend, Domain.QUEUE);
 			Queue queueReceive = (Queue) hermes.getDestination(queueNameReceive, Domain.QUEUE);
 
-			TextMessage textMessageSend = messageSend(submitContext, request, session, hermes, queueSend);
+			Message messageSend = messageSend(submitContext, request, session, hermes, queueSend);
 			
 			MessageConsumer messageConsumer = session.createConsumer(queueReceive);
 
-			return makeResponse(submitContext, request, timeStarted, textMessageSend, messageConsumer);
+			return makeResponse(submitContext, request, timeStarted, messageSend, messageConsumer);
 		}
 		catch (JMSException jmse)
 		{
