@@ -31,7 +31,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 
 public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTransport
 {
@@ -48,20 +47,10 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 
 		try
 		{
-			String topicNamePublish = null;
-			String queueNameReceive = null;
-			String sessionName = null;
-			String[] parameters = request.getEndpoint().substring(request.getEndpoint().indexOf("://") + 3).split("/");
-			if (parameters.length == 3)
-			{
-				sessionName = PropertyExpander.expandProperties(submitContext, parameters[0]);
-				topicNamePublish = PropertyExpander.expandProperties(submitContext, parameters[1]).replaceFirst("topic_",
-						"");
-				queueNameReceive = PropertyExpander.expandProperties(submitContext, parameters[2]).replaceFirst("queue_",
-						"");
-			}
-			else
-				throw new Exception("bad jms alias!!!!!");
+			String[] parameters = extractEndpointParameters(request);
+			String sessionName = getEndpointParameter(parameters, 0, null, submitContext);
+			String topicNamePublish = getEndpointParameter(parameters, 1, Domain.TOPIC, submitContext);
+			String queueNameReceive = getEndpointParameter(parameters, 2, Domain.QUEUE, submitContext);
 
 			submitContext.setProperty(HERMES_SESSION_NAME, sessionName);
 
@@ -87,7 +76,7 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 			Message messagePublish = messagePublish(submitContext, request, topicSession, hermes, topicPublish);
 
 			MessageConsumer messageConsumer = session.createConsumer(queueReceive);
-			
+
 			return makeResponse(submitContext, request, timeStarted, messagePublish, messageConsumer);
 		}
 		catch (JMSException jmse)

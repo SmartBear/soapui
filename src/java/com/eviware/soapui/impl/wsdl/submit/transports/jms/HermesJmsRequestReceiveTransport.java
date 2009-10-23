@@ -29,8 +29,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 
 public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 {
-	
-	
+
 	public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception
 	{
 		ConnectionFactory connectionFactory = null;
@@ -38,16 +37,9 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 		Session session = null;
 		try
 		{
-			String queueName = null;
-			String sessionName = null;
-			String[] parameters = request.getEndpoint().substring(request.getEndpoint().indexOf("://") + 3).split("/");
-			if (parameters.length == 3)
-			{
-				sessionName = PropertyExpander.expandProperties(submitContext,parameters[0]);
-				queueName =PropertyExpander.expandProperties(submitContext, parameters[2]).replaceFirst("queue_", "");
-			}
-			else
-				throw new UnresolvedJMSEndpointException("bad jms alias!!!!!");
+			String[] parameters = extractEndpointParameters(request);
+			String sessionName = getEndpointParameter(parameters, 0, null, submitContext);
+			String queueName = getEndpointParameter(parameters, 2, Domain.QUEUE, submitContext);
 
 			Hermes hermes = getHermes(sessionName, request);
 			// connection factory

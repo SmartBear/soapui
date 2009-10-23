@@ -51,17 +51,9 @@ public class HermesJmsRequestSubscribeTransport extends HermesJmsRequestTranspor
 		TopicSubscriber topicDurableSubsriber = null;
 		try
 		{
-			String topicNameSubscribe = null;
-			String sessionName = null;
-			String[] parameters = request.getEndpoint().substring(request.getEndpoint().indexOf("://") + 3).split("/");
-			if (parameters.length == 3)
-			{
-				sessionName = PropertyExpander.expandProperties(submitContext, parameters[0]);
-				topicNameSubscribe = PropertyExpander.expandProperties(submitContext, parameters[2]).replaceFirst("topic_",
-						"");
-			}
-			else
-				throw new Exception("bad jms alias!!!!!");
+			String[] parameters = extractEndpointParameters(request);
+			String sessionName = getEndpointParameter(parameters, 0, null, submitContext);
+			String topicNameSubscribe = getEndpointParameter(parameters, 2, Domain.TOPIC, submitContext);
 
 			submitContext.setProperty(HERMES_SESSION_NAME, sessionName);
 

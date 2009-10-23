@@ -39,16 +39,10 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 		TopicSession session = null;
 		try
 		{
-			String topicName = null;
-			String sessionName = null;
-			String[] parameters = request.getEndpoint().substring(request.getEndpoint().indexOf("://") + 3).split("/");
-			if (parameters.length == 2)
-			{
-				sessionName = PropertyExpander.expandProperties(submitContext, parameters[0]);
-				topicName = PropertyExpander.expandProperties(submitContext, parameters[1]).replaceFirst("topic_", "");
-			}
-			else
-				throw new UnresolvedJMSEndpointException("bad jms alias!!!!!");
+			String[] parameters = extractEndpointParameters(request);
+			String sessionName = getEndpointParameter(parameters, 0, null, submitContext);
+			String topicName = getEndpointParameter(parameters, 1, Domain.TOPIC, submitContext);
+			
 
 			submitContext.setProperty(HERMES_SESSION_NAME, sessionName);
 			Hermes hermes = getHermes(sessionName, request);

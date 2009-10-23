@@ -41,19 +41,10 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 		TopicSubscriber topicSubsriber = null;
 		try
 		{
-			String queueNameSend = null;
-			String topicNameReceive = null;
-			String sessionName = null;
-			String[] parameters = request.getEndpoint().substring(request.getEndpoint().indexOf("://") + 3).split("/");
-			if (parameters.length == 3)
-			{
-				sessionName = PropertyExpander.expandProperties(submitContext, parameters[0]);
-				queueNameSend = PropertyExpander.expandProperties(submitContext, parameters[1]).replaceFirst("queue_", "");
-				topicNameReceive = PropertyExpander.expandProperties(submitContext, parameters[2]).replaceFirst("topic_",
-						"");
-			}
-			else
-				throw new Exception("bad jms alias!!!!!");
+			String[] parameters = extractEndpointParameters(request);
+			String sessionName = getEndpointParameter(parameters, 0, null, submitContext);
+			String queueNameSend = getEndpointParameter(parameters, 1, Domain.QUEUE, submitContext);
+			String topicNameReceive = getEndpointParameter(parameters, 2, Domain.TOPIC, submitContext);
 
 			submitContext.setProperty(HERMES_SESSION_NAME, sessionName);
 

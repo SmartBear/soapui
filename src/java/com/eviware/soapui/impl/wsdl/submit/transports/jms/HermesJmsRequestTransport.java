@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
+import hermes.Domain;
 import hermes.Hermes;
 
 import java.io.IOException;
@@ -26,7 +27,6 @@ import javax.naming.NamingException;
 import org.apache.commons.lang.NotImplementedException;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.support.http.HttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.RequestFilter;
@@ -35,6 +35,8 @@ import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry.CannotResolv
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry.MissingTransportException;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -50,6 +52,8 @@ public class HermesJmsRequestTransport implements RequestTransport
 	public static final String JMS_ERROR = "JMS_ERROR";
 	public static final String HERMES_SESSION_NAME = "HERMES_SESSION_NAME";
 	public static final String JMS_RECEIVE_TIMEOUT = "JMS_RECEIVE_TIMEOUT";
+	public static final String QUEUE_ENDPOINT_PREFIX = "queue_";
+	public static final String TOPIC_ENDPOINT_PREFIX = "topic_";
 
 	protected List<RequestFilter> filters = new ArrayList<RequestFilter>();
 
@@ -79,7 +83,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 		throw new NotImplementedException();
 	}
 
-	private static HermesJmsRequestTransport resolveType(SubmitContext submitContext, Request request)
+	private  HermesJmsRequestTransport resolveType(SubmitContext submitContext, Request request)
 			throws CannotResolveJmsTypeException, MissingTransportException
 	{
 
@@ -87,18 +91,18 @@ public class HermesJmsRequestTransport implements RequestTransport
 		if (ix == -1)
 			throw new MissingTransportException("Missing protocol in endpoint [" + request.getEndpoint() + "]");
 
-		String[] params = request.getEndpoint().substring(ix + 3).split("/");
+		String[] params = extractEndpointParameters( request);
 
 		// resolve sending class
 		if (params.length == 2)
 		{
 
 			String destinationName = PropertyExpander.expandProperties(submitContext, params[1]);
-			if (destinationName.startsWith("queue_"))
+			if (destinationName.startsWith(QUEUE_ENDPOINT_PREFIX))
 			{
 				return new HermesJmsRequestSendTransport();
 			}
-			else if (destinationName.startsWith("topic_"))
+			else if (destinationName.startsWith(TOPIC_ENDPOINT_PREFIX))
 			{
 				return new HermesJmsRequestPublishTransport();
 			}
@@ -112,11 +116,11 @@ public class HermesJmsRequestTransport implements RequestTransport
 		else if (params.length == 3 && PropertyExpander.expandProperties(submitContext, params[1]).equals("-"))
 		{
 			String destinationName = PropertyExpander.expandProperties(submitContext, params[2]);
-			if (destinationName.startsWith("queue_"))
+			if (destinationName.startsWith(QUEUE_ENDPOINT_PREFIX))
 			{
 				return new HermesJmsRequestReceiveTransport();
 			}
-			else if (destinationName.startsWith("topic_"))
+			else if (destinationName.startsWith(TOPIC_ENDPOINT_PREFIX))
 			{
 				return new HermesJmsRequestSubscribeTransport();
 			}
@@ -131,19 +135,19 @@ public class HermesJmsRequestTransport implements RequestTransport
 		{
 			String destinationSendName = PropertyExpander.expandProperties(submitContext, params[1]);
 			String destinationReceiveName = PropertyExpander.expandProperties(submitContext, params[2]);
-			if (destinationSendName.startsWith("queue_") && destinationReceiveName.startsWith("queue_"))
+			if (destinationSendName.startsWith(QUEUE_ENDPOINT_PREFIX) && destinationReceiveName.startsWith(QUEUE_ENDPOINT_PREFIX))
 			{
 				return new HermesJmsRequestSendReceiveTransport();
 			}
-			else if (destinationSendName.startsWith("queue_") && destinationReceiveName.startsWith("topic_"))
+			else if (destinationSendName.startsWith(QUEUE_ENDPOINT_PREFIX) && destinationReceiveName.startsWith(TOPIC_ENDPOINT_PREFIX))
 			{
 				return new HermesJmsRequestSendSubscribeTransport();
 			}
-			else if (destinationSendName.startsWith("topic_") && destinationReceiveName.startsWith("topic_"))
+			else if (destinationSendName.startsWith(TOPIC_ENDPOINT_PREFIX) && destinationReceiveName.startsWith(TOPIC_ENDPOINT_PREFIX))
 			{
 				return new HermesJmsRequestPublishSubscribeTransport();
 			}
-			else if (destinationSendName.startsWith("topic_") && destinationReceiveName.startsWith("queue_"))
+			else if (destinationSendName.startsWith(TOPIC_ENDPOINT_PREFIX) && destinationReceiveName.startsWith(QUEUE_ENDPOINT_PREFIX))
 			{
 				return new HermesJmsRequestPublishReceiveTransport();
 			}
@@ -213,6 +217,9 @@ public class HermesJmsRequestTransport implements RequestTransport
 		return to;
 	}
 
+	
+	
+	
 	protected JMSHeader createJMSHeader(SubmitContext submitContext, Request request, Hermes hermes, Message message)
 	{
 		JMSHeader jmsHeader = new JMSHeader();
@@ -221,6 +228,10 @@ public class HermesJmsRequestTransport implements RequestTransport
 		return jmsHeader;
 	}
 
+	
+	
+	
+	
 	protected void closeSessionAndConnection(Connection connection, Session session) throws JMSException
 	{
 		if (session != null)
@@ -229,6 +240,9 @@ public class HermesJmsRequestTransport implements RequestTransport
 			connection.close();
 	}
 
+	
+	
+	
 	protected Response errorResponse(SubmitContext submitContext, Request request, long timeStarted, JMSException jmse)
 	{
 		JMSResponse response;
@@ -236,56 +250,60 @@ public class HermesJmsRequestTransport implements RequestTransport
 		submitContext.setProperty(JMS_ERROR, jmse);
 		response = new JMSResponse("", null, null, request, timeStarted);
 		submitContext.setProperty(JMS_RESPONSE, response);
-
 		return response;
 	}
 
+	
+	
+	
+	
+	
 	protected Message messageSend(SubmitContext submitContext, Request request, Session session, Hermes hermes,
 			Queue queueSend) throws JMSException
 	{
-
 		MessageProducer messageProducer = session.createProducer(queueSend);
-
 		Message messageSend = createMessage(submitContext, request, session);
-
 		return send(submitContext, request, hermes, messageProducer, messageSend);
 	}
 
+	
+	
+	
+	
 	protected Message messagePublish(SubmitContext submitContext, Request request, TopicSession topicSession,
 			Hermes hermes, Topic topicPublish) throws JMSException
 	{
 		TopicPublisher topicPublisher = topicSession.createPublisher(topicPublish);
-
 		Message messagePublish = createMessage(submitContext, request, topicSession);
-
 		return send(submitContext, request, hermes, topicPublisher, messagePublish);
 	}
 
+	
+	
+	
+	
 	private Message send(SubmitContext submitContext, Request request, Hermes hermes, MessageProducer messageProducer,
 			Message message) throws JMSException
 	{
 		JMSHeader jmsHeader = createJMSHeader(submitContext, request, hermes, message);
-
 		messageProducer.send(message, message.getJMSDeliveryMode(), message.getJMSPriority(), jmsHeader.getTimeTolive());
-
 		submitContext.setProperty(JMS_MESSAGE_SEND, message);
 		return message;
 	}
 
+	
+	
+	
 	protected Response makeResponse(SubmitContext submitContext, Request request, long timeStarted, Message messageSend,
 			MessageConsumer messageConsumer) throws JMSException
 	{
 		long timeout = getTimeout(submitContext, request);
-
 		Message messageReceive = messageConsumer.receive(timeout);
-
 		if (messageReceive != null)
 		{
-			JMSResponse response = resolveMessage(request, timeStarted, messageSend,  messageReceive);
-
+			JMSResponse response = resolveMessage(request, timeStarted, messageSend, messageReceive);
 			submitContext.setProperty(JMS_MESSAGE_RECEIVE, messageReceive);
 			submitContext.setProperty(JMS_RESPONSE, response);
-
 			return response;
 		}
 		else
@@ -294,54 +312,97 @@ public class HermesJmsRequestTransport implements RequestTransport
 		}
 	}
 
-	private JMSResponse resolveMessage(Request request, long timeStarted, Message messageSend,
-			Message messageReceive) throws JMSException
+	
+	
+	
+	
+	
+	private JMSResponse resolveMessage(Request request, long timeStarted, Message messageSend, Message messageReceive)
+			throws JMSException
 	{
-		
 		if (messageReceive instanceof TextMessage)
 		{
 			TextMessage textMessageReceive = (TextMessage) messageReceive;
-		return  new JMSResponse(textMessageReceive.getText(), messageSend, textMessageReceive, request, timeStarted);
+			return new JMSResponse(textMessageReceive.getText(), messageSend, textMessageReceive, request, timeStarted);
 		}
-		else if(messageReceive instanceof MapMessage){
+		else if (messageReceive instanceof MapMessage)
+		{
 			MapMessage mapMessageReceive = (MapMessage) messageReceive;
-			return  new JMSResponse(JMSUtils.extractMapMessagePayloadToString(mapMessageReceive), messageSend, mapMessageReceive, request, timeStarted);
+			return new JMSResponse(JMSUtils.extractMapMessagePayloadToString(mapMessageReceive), messageSend,
+					mapMessageReceive, request, timeStarted);
 		}
 		return null;
 	}
 
+	
+	
+	
+	
 	protected Response makeResponseOnly(SubmitContext submitContext, Request request, long timeStarted,
 			Message messageSend)
 	{
 		JMSResponse response = new JMSResponse("", messageSend, null, request, timeStarted);
 		submitContext.setProperty(JMS_RESPONSE, response);
-
 		return response;
 	}
 
+	
+	
+	
 	private Message createMessage(SubmitContext submitContext, Request request, Session session) throws JMSException
 	{
 		if (request instanceof WsdlRequest)
 		{
-
 			TextMessage textMessageSend = session.createTextMessage();
 			String messageBody = PropertyExpander.expandProperties(submitContext, request.getRequestContent());
 			textMessageSend.setText(messageBody);
 			return textMessageSend;
 		}
-		else if (request instanceof HttpRequest)
+		else if (request instanceof HttpTestRequest)
 		{
-			MapMessage mapMessageSend = session.createMapMessage();
-			String[] propertyNames = ((HttpRequest) request).getPropertyNames();
-			for (String name : propertyNames)
-			{
-				String key = ((HttpRequest) request).getPropertyValue(name);
-				mapMessageSend.setString(name, PropertyExpander.expandProperties(submitContext, key));
-			}
-			return mapMessageSend;
+			TextMessage textMessageSend = session.createTextMessage();
+			String messageBody = PropertyExpander.expandProperties(submitContext, request.getRequestContent());
+			textMessageSend.setText(messageBody);
+			return textMessageSend;
+//			MapMessage mapMessageSend = session.createMapMessage();
+//			String[] propertyNames = ((HttpTestRequest) request).getPropertyNames();
+//			for (String name : propertyNames)
+//			{
+//				String key = ((HttpRequest) request).getPropertyValue(name);
+//				mapMessageSend.setString(name, PropertyExpander.expandProperties(submitContext, key));
+//			}
+//			return mapMessageSend;
+		}else if (request instanceof RestTestRequest)
+		{
+			TextMessage textMessageSend = session.createTextMessage();
+			String messageBody = PropertyExpander.expandProperties(submitContext, request.getRequestContent());
+			textMessageSend.setText(messageBody);
+			return textMessageSend;
 		}
 		return null;
 	}
+
+	
+	
+	
+	protected String getEndpointParameter(String[] parameters, int i, Domain domain, SubmitContext submitContext)
+	{
+		if(domain ==null)
+			return PropertyExpander.expandProperties(submitContext, parameters[i]);
+		else if (domain.equals(Domain.QUEUE))
+			return PropertyExpander.expandProperties(submitContext, parameters[i]).replaceFirst(HermesJmsRequestTransport.QUEUE_ENDPOINT_PREFIX,""); 
+		else
+			return PropertyExpander.expandProperties(submitContext, parameters[i]).replaceFirst(HermesJmsRequestTransport.TOPIC_ENDPOINT_PREFIX,"");
+	}
+
+	protected String[] extractEndpointParameters(Request request)
+	{
+		String[] parameters = request.getEndpoint().substring(request.getEndpoint().indexOf("://") + 3).split("/");
+		return parameters;
+	}
+
+
+
 
 	public static class UnresolvedJMSEndpointException extends Exception
 	{

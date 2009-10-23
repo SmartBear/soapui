@@ -29,6 +29,7 @@ import javax.naming.NamingException;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -286,11 +287,11 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 			{
 				if (domain.equals(Domain.QUEUE))
 				{
-					this.destinationName = "queue_" + destinationName;
+					this.destinationName = HermesJmsRequestTransport.QUEUE_ENDPOINT_PREFIX + destinationName;
 				}
 				else
 				{
-					this.destinationName = "topic_" + destinationName;
+					this.destinationName = HermesJmsRequestTransport.TOPIC_ENDPOINT_PREFIX + destinationName;
 				}
 			}
 
@@ -312,7 +313,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 
 		public String toString()
 		{
-			return this.getDestinationName().replace("queue_", "").replace("topic_", "");
+			return this.getDestinationName().replace(HermesJmsRequestTransport.QUEUE_ENDPOINT_PREFIX, "").replace(HermesJmsRequestTransport.TOPIC_ENDPOINT_PREFIX, "");
 		}
 	}
 }
