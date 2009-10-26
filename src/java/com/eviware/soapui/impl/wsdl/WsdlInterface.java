@@ -966,7 +966,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 		}
 		setAnonymous( interfaceAnonymous );
 		//set wsaVersion to one from policy only if it was null from wsdl binding
-		if (getConfig().getWsaVersion().equals(equals(WsaVersionTypeConfig.NONE)))
+		if (getConfig().getWsaVersion().equals(WsaVersionTypeConfig.NONE))
 		{
 			setWsaVersion( interfaceWsaVersion );
 		}
