@@ -18,6 +18,10 @@ import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -1441,5 +1445,51 @@ public final class XmlUtils
 		transformer.transform(domSource, sr);
 		return sw.toString();
 	}
+	
+	public static Document createJdbcXmlResult(Statement statement) throws SQLException, ParserConfigurationException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		org.w3c.dom.Document xmlDocumentResult = builder.newDocument();
+		Element results = xmlDocumentResult.createElement("Results");
+		xmlDocumentResult.appendChild(results);
+
+		xmlDocumentResult = addResultSetXmlPart(results, statement.getResultSet(),xmlDocumentResult);
+		while (statement.getMoreResults())
+		{
+			xmlDocumentResult = addResultSetXmlPart(results, statement.getResultSet(),xmlDocumentResult);
+		}
+		return xmlDocumentResult;
+		
+	}
+	public static Document addResultSetXmlPart(Element results, ResultSet rs,Document xmlDocumentResult) throws SQLException
+	{
+//		resultSet = statement.getResultSet();
+		// connection to an ACCESS MDB
+		ResultSetMetaData rsmd = rs.getMetaData();
+		int colCount = rsmd.getColumnCount();
+		while (rs.next())
+		{
+			Element row = xmlDocumentResult.createElement("Row");
+			results.appendChild(row);
+			for (int ii = 1; ii <= colCount; ii++)
+			{
+				String columnName = "";
+				if (!StringUtils.isNullOrEmpty(rsmd.getTableName(ii)))
+				{
+					columnName += (rsmd.getTableName(ii)).toUpperCase() + ".";
+				}
+				columnName += (rsmd.getColumnName(ii)).toUpperCase();
+				String value = rs.getString(ii);
+				Element node = xmlDocumentResult.createElement(columnName);
+				if (!StringUtils.isNullOrEmpty(value))
+				{
+					node.appendChild(xmlDocumentResult.createTextNode(value.toString()));
+				}
+				row.appendChild(node);
+			}
+		}
+		return xmlDocumentResult;
+	}
+
 
 }

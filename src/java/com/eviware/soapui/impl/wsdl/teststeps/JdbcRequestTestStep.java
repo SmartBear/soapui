@@ -329,25 +329,11 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		super.prepare(testRunner, context);
 	}
 
-	public void addResultSetResults() {
-		
-	}
 	public void createXmlResult()
 	{
 		try
 		{
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			xmlDocumentResult = builder.newDocument();
-			Element results = xmlDocumentResult.createElement("Results");
-			xmlDocumentResult.appendChild(results);
-
-			resultSet = statement.getResultSet();
-			addResultSetXmlPart(results, statement.getResultSet());
-			while (statement.getMoreResults())
-			{
-				addResultSetXmlPart(results, statement.getResultSet());
-			}
+			org.w3c.dom.Document xmlDocumentResult = XmlUtils.createJdbcXmlResult(statement);
 			String oldRes = getXmlStringResult();
 			xmlStringResult = XmlUtils.getDocumentAsString(xmlDocumentResult);
 			setXmlStringResult(xmlStringResult);
@@ -371,35 +357,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			}
 			catch (Exception e)
 			{
-			}
-		}
-	}
-
-	private void addResultSetXmlPart(Element results, ResultSet rs) throws SQLException
-	{
-//		resultSet = statement.getResultSet();
-		// connection to an ACCESS MDB
-		ResultSetMetaData rsmd = rs.getMetaData();
-		int colCount = rsmd.getColumnCount();
-		while (rs.next())
-		{
-			Element row = xmlDocumentResult.createElement("Row");
-			results.appendChild(row);
-			for (int ii = 1; ii <= colCount; ii++)
-			{
-				String columnName = "";
-				if (!StringUtils.isNullOrEmpty(rsmd.getTableName(ii)))
-				{
-					columnName += (rsmd.getTableName(ii)).toUpperCase() + ".";
-				}
-				columnName += (rsmd.getColumnName(ii)).toUpperCase();
-				String value = rs.getString(ii);
-				Element node = xmlDocumentResult.createElement(columnName);
-				if (!StringUtils.isNullOrEmpty(value))
-				{
-					node.appendChild(xmlDocumentResult.createTextNode(value.toString()));
-				}
-				row.appendChild(node);
 			}
 		}
 	}
