@@ -107,7 +107,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	private InternalTestRunListener testRunListener = new InternalTestRunListener();
 	private Submit submit;
 	private SubmitAction submitAction;
-	private JButton submitButton;
+	protected JButton submitButton;
 	private JToggleButton tabsButton;
 	private JTabbedPane requestTabs;
 	private JPanel requestTabPanel;
@@ -238,6 +238,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		JSplitPane split = UISupport.createVerticalSplit( buildProperties(), configPanel);
 		split.setDividerLocation(120);
 		
+		//TODO add scrolling but without messing with the dimension - ask Ole
 		return split;
 
 	}
@@ -313,12 +314,12 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		if (configForm != null)
 		{
 			configForm.setComponentValue(QUERY_FIELD, query);
-			jdbcRequestTestStepConfig.setQuery(query);
+			jdbcRequestTestStep.setQuery(query);
 		}
 		else
 		{
 			// this.query = query;
-			jdbcRequestTestStepConfig.setQuery(query);
+			jdbcRequestTestStep.setQuery(query);
 		}
 	}
 
@@ -354,17 +355,18 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		configForm.setDefaultTextFieldColumns(50);
 
 		driverTextField = configForm.appendTextField(DRIVER_FIELD, "JDBC Driver to use");
-		driverTextField.setText(jdbcRequestTestStepConfig.getDriver());
+		driverTextField.setText(jdbcRequestTestStep.getDriver());
 		PropertyExpansionPopupListener.enable(driverTextField, jdbcRequestTestStep);
 		addDriverDocumentListener();
 
 		connStrTextField = configForm.appendTextField(CONNSTR_FIELD, "JDBC Driver Connection String");
-		connStrTextField.setText(jdbcRequestTestStepConfig.getConnectionString());
+		connStrTextField.setText(jdbcRequestTestStep.getConnectionString());
 		PropertyExpansionPopupListener.enable(connStrTextField, jdbcRequestTestStep);
 		addConnStrDocumentListener();
 
 		passField = configForm.appendPasswordField(PASS_FIELD, "Connection string Password");
-		passField.setText(jdbcRequestTestStepConfig.getPassword());
+		passField.setVisible(false);
+		passField.setText(jdbcRequestTestStep.getPassword());
 		addPasswordDocumentListener();
 
 		testConnectionButton = configForm.appendButton("TestConnection", "Test selected database connection");
@@ -375,7 +377,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		queryArea = JXEditTextArea.createSqlEditor();
 		JXEditAreaPopupMenu.add(queryArea);
 		PropertyExpansionPopupListener.enable(queryArea, jdbcRequestTestStep);
-		queryArea.setText(jdbcRequestTestStepConfig.getQuery());
+		queryArea.setText(jdbcRequestTestStep.getQuery());
 		JScrollPane scrollPane = new JScrollPane(queryArea);
 		scrollPane.setPreferredSize(new Dimension(400, 150));
 		configForm.append(QUERY_FIELD, scrollPane);
@@ -451,16 +453,19 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 	protected boolean enableTestConnection()
 	{
-		if (!StringUtils.isNullOrEmpty(jdbcRequestTestStep.getDriver()) && !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getConnectionString()))
+		if (StringUtils.isNullOrEmpty(jdbcRequestTestStep.getDriver())
+				|| StringUtils.isNullOrEmpty(jdbcRequestTestStep.getConnectionString())
+				|| (JdbcRequestTestStep.isNeededPassword(jdbcRequestTestStep.getConnectionString()) 
+						&& StringUtils.isNullOrEmpty(jdbcRequestTestStep.getPassword())))
 		{
+			return false;
+		} else {
 			if (jdbcRequestTestStep.getConnectionString().contains(JdbcRequestTestStep.PASS_TEMPLATE))
 			{
 				return !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getPassword());
 			} else {
 				return true;
 			}
-		} else {
-			return false;
 		}
 	}
 

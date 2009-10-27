@@ -39,8 +39,6 @@ import com.eviware.soapui.config.PropertyConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcRequest.JdbcSubmit;
@@ -712,6 +710,10 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		notifyPropertyChanged( "password", old, p );
 	}
 
+	public static boolean isNeededPassword( String connStr )
+	{
+		return !StringUtils.isNullOrEmpty(connStr)? connStr.contains( PASS_TEMPLATE ) : false;
+	}
 	public boolean isStoredProcedure()
 	{
 		return jdbcRequestTestStepConfig.getStoredProcedure();
