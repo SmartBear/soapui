@@ -60,6 +60,7 @@ import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
 import com.eviware.soapui.support.components.JInspectorPanel;
@@ -114,9 +115,9 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	JdbcRequest jdbcRequest;
 	private boolean responseHasFocus;
 	private JSplitPane requestSplitPane;
-	boolean requestTabsDisplay;
 	private JEditorStatusBarWithProgress statusBar;
 	private JButton cancelButton;
+	private JButton splitButton;
 
 	public JdbcRequestTestStepDesktopPanel(JdbcRequestTestStep modelItem)
 	{
@@ -135,6 +136,10 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	}
 	private JComponent buildContent()
 	{
+		requestSplitPane = UISupport.createHorizontalSplit();
+		requestSplitPane.setResizeWeight(0.5);
+		requestSplitPane.setBorder(null);
+
 		JComponent content;
 		submitAction = new SubmitAction();
 		submitButton = createActionButton(submitAction, true);
@@ -143,6 +148,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		cancelButton = createActionButton(new CancelAction(), false);
 		tabsButton = new JToggleButton(new ChangeToTabsAction());
 		tabsButton.setPreferredSize(UISupport.TOOLBAR_BUTTON_DIMENSION);
+		splitButton = createActionButton(new ChangeSplitPaneOrientationAction(requestSplitPane), true);
 
 		addAssertionButton = UISupport.createToolbarButton(new AddAssertionAction(jdbcRequestTestStep));
 		addAssertionButton.setEnabled(true);
@@ -183,10 +189,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		
 		requestTabPanel = UISupport.createTabPanel(requestTabs, true);
 
-		requestSplitPane = UISupport.createHorizontalSplit();
-		requestSplitPane.setResizeWeight(0.5);
-		requestSplitPane.setBorder(null);
-
 		requestEditor = buildRequestConfigPanel();
 		responseEditor = buildResponseEditor();
 		if (jdbcRequest.getSettings().getBoolean(UISettings.START_WITH_REQUEST_TABS))
@@ -194,8 +196,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			requestTabs.addTab("Request", requestEditor);
 			if (responseEditor != null)
 				requestTabs.addTab("Response", responseEditor);
-			requestTabsDisplay = true;
 			tabsButton.setSelected(true);
+			splitButton.setEnabled(false);
 
 			content =  requestTabPanel;
 		}
@@ -298,6 +300,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 		toolbar.add(Box.createHorizontalGlue());
 		toolbar.add(tabsButton);
+		toolbar.add(splitButton);
 		toolbar.addFixed(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.TRANSFERSTEPEDITOR_HELP_URL)));
 		return toolbar;
 
@@ -666,7 +669,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			responseHasFocus = false;
 
 //			statusBar.setTarget(sourceEditor.getInputArea());
-			if (!requestTabsDisplay)
+			if (!splitButton.isEnabled())
 			{
 				requestTabs.setSelectedIndex(0);
 				return;
@@ -708,7 +711,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			responseHasFocus = true;
 
 //			statusBar.setTarget(sourceEditor.getInputArea());
-			if (!requestTabsDisplay)
+			if (!splitButton.isEnabled())
 			{
 				requestTabs.setSelectedIndex(1);
 				return;
@@ -748,9 +751,9 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 		public void actionPerformed(ActionEvent e)
 		{
-			if (!requestTabsDisplay)
+			if (splitButton.isEnabled())
 			{
-				requestTabsDisplay = true;
+				splitButton.setEnabled(false);
 				removeContent(requestSplitPane);
 				setContent(requestTabPanel);
 				requestTabs.addTab("Request", requestEditor);
@@ -769,7 +772,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			{
 				int selectedIndex = requestTabs.getSelectedIndex();
 
-				requestTabsDisplay = false;
+				splitButton.setEnabled(true);
 				removeContent(requestTabPanel);
 				setContent(requestSplitPane);
 				requestSplitPane.setTopComponent(requestEditor);
