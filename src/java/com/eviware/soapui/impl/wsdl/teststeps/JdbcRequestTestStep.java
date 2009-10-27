@@ -216,6 +216,15 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		try
 		{
 			prepare(mockRunner, mockContext);
+			try
+			{
+				Thread.sleep(5000);
+			}
+			catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			List<String> properties = new ArrayList<String>();
 			load(mockRunner, mockContext, properties);
 			createXmlResult();

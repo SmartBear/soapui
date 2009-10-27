@@ -34,6 +34,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.SoapUI;
@@ -42,14 +43,19 @@ import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
+import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Submit;
+import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.iface.Request.SubmitException;
+import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
@@ -75,9 +81,10 @@ import com.eviware.soapui.support.swing.JXEditAreaPopupMenu;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
-public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcRequestTestStep>
+public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcRequestTestStep> implements SubmitListener
 {
-	protected JPanel configPanel;
+	private final static Logger log = Logger.getLogger(AbstractHttpRequestDesktopPanel.class);
+ 	protected JPanel configPanel;
 	private JXTable logTable;
 	private JButton addAssertionButton;
 	protected JInspectorPanel inspectorPanel;
@@ -118,6 +125,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	private JEditorStatusBarWithProgress statusBar;
 	private JButton cancelButton;
 	private JButton splitButton;
+	protected JComponent propertiesTableComponent;
 
 	public JdbcRequestTestStepDesktopPanel(JdbcRequestTestStep modelItem)
 	{
@@ -237,7 +245,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		}
 		configPanel.add(panel, BorderLayout.CENTER);
 		
-		JSplitPane split = UISupport.createVerticalSplit( buildProperties(), configPanel);
+		propertiesTableComponent = buildProperties();
+		JSplitPane split = UISupport.createVerticalSplit( propertiesTableComponent, configPanel);
 		split.setDividerLocation(120);
 		
 		//TODO add scrolling but without messing with the dimension - ask Ole
@@ -247,7 +256,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	
 	protected void initContent()
 	{
-
+		jdbcRequest.addSubmitListener(this);
+		
 		add(buildContent(), BorderLayout.CENTER);
 		add(buildToolbar(), BorderLayout.NORTH);
 		add(buildStatusLabel(), BorderLayout.SOUTH);
@@ -471,7 +481,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			}
 		}
 	}
-
 	protected boolean enableSubmit()
 	{
 		return enableTestConnection() && !StringUtils.isNullOrEmpty(jdbcRequestTestStep.getQuery());
@@ -651,7 +660,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		}
 	}
 
-	protected Submit doSubmit() throws SubmitException{
+	protected Submit doSubmit() throws SubmitException {
 		return jdbcRequest.submit( new WsdlTestRunContext( getModelItem() ), true );
 	}
 
@@ -830,8 +839,88 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			responseEditor.setEditable(enabled);
 
 		submitButton.setEnabled(enabled);
+		driverTextField.setEnabled(enabled);
+		connStrTextField.setEnabled(enabled);
+		passField.setEnabled(enabled);
+		queryArea.setEnabledAndEditable(enabled);
+		isStoredProcedureCheckBox.setEnabled(enabled);
+		propertiesTableComponent.setEnabled(enabled);
 
 		statusBar.setIndeterminate(!enabled);
+	}
+
+	public void afterSubmit(Submit submit, SubmitContext context)
+	{
+		if (submit.getRequest() != jdbcRequest)
+			return;
+
+		Status status = submit.getStatus();
+		HttpResponse response = (HttpResponse) submit.getResponse();
+//		if (status == Status.FINISHED)
+//		{
+//			jdbcRequest.setResponse(response, context);
+//		}
+//
+//		if (hasClosed)
+//		{
+//			jdbcRequest.removeSubmitListener(this);
+//			return;
+//		}
+
+		cancelButton.setEnabled(false);
+		setEnabled(true);
+
+		String message = null;
+		String infoMessage = null;
+		String requestName = jdbcRequest.getName();
+
+		if (status == Status.CANCELED)
+		{
+			message = "CANCELED";
+			infoMessage = "[" + requestName + "] - CANCELED";
+		}
+		else
+		{
+			if (status == Status.ERROR || response == null)
+			{
+				message = "Error getting response; " + submit.getError();
+				infoMessage = "Error getting response for [" + requestName + "]; " + submit.getError();
+			}
+			else
+			{
+				message = "response time: " + response.getTimeTaken() + "ms (" + response.getContentLength() + " bytes)";
+				infoMessage = "Got response for [" + requestName + "] in " + response.getTimeTaken() + "ms ("
+						+ response.getContentLength() + " bytes)";
+
+				if (!splitButton.isEnabled())
+					requestTabs.setSelectedIndex(1);
+
+				responseEditor.requestFocus();
+			}
+		}
+
+		logMessages(message, infoMessage);
+
+		if (getModelItem().getSettings().getBoolean(UISettings.AUTO_VALIDATE_RESPONSE))
+			responseEditor.getSourceEditor().validate();
+
+		JdbcRequestTestStepDesktopPanel.this.submit = null;
+	}
+
+	protected void logMessages(String message, String infoMessage)
+	{
+		log.info(infoMessage);
+		statusBar.setInfo(message);
+	}
+	public boolean beforeSubmit(Submit submit, SubmitContext context)
+	{
+		if (submit.getRequest() != jdbcRequest)
+			return true;
+
+		
+		setEnabled(false);
+		cancelButton.setEnabled(JdbcRequestTestStepDesktopPanel.this.submit != null);
+		return true;
 	}
 
 

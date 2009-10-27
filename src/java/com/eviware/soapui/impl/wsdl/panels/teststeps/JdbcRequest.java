@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
-import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
@@ -105,7 +104,7 @@ public class JdbcRequest extends AbstractModelItem implements Request
 
 	public Submit submit( SubmitContext submitContext, boolean async ) throws SubmitException
 	{
-		return new JdbcSubmit( submitContext, async );
+		return new JdbcSubmit( submitContext, getSubmitListeners(), async );
 	}
 
 	public List<? extends ModelItem> getChildren()
@@ -143,6 +142,11 @@ public class JdbcRequest extends AbstractModelItem implements Request
 		return testStep.getSettings();
 	}
 
+	public SubmitListener[] getSubmitListeners()
+	{
+		return submitListeners.toArray( new SubmitListener[submitListeners.size()] );
+	}
+
 	public class JdbcSubmit implements Submit, Runnable
 	{
 		private volatile Future<?> future;
@@ -150,18 +154,18 @@ public class JdbcRequest extends AbstractModelItem implements Request
 		private Status status;
 		private SubmitListener[] listeners;
 		private Exception error;
-		public JdbcSubmit( SubmitContext submitContext, boolean async )
+		public JdbcSubmit( SubmitContext submitContext, SubmitListener[] listeners, boolean async )
 		{
 			this.submitContext = submitContext;
 
-//			List<SubmitListener> regListeners = SoapUI.getListenerRegistry().getListeners( SubmitListener.class );
-//
-//			this.listeners = new SubmitListener[listeners.length + regListeners.size()];
-//			for( int c = 0; c < listeners.length; c++ )
-//				this.listeners[c] = listeners[c];
-//
-//			for( int c = 0; c < regListeners.size(); c++ )
-//				this.listeners[listeners.length + c] = regListeners.get( c );
+			List<SubmitListener> regListeners = SoapUI.getListenerRegistry().getListeners( SubmitListener.class );
+
+			this.listeners = new SubmitListener[listeners.length + regListeners.size()];
+			for( int c = 0; c < listeners.length; c++ )
+				this.listeners[c] = listeners[c];
+
+			for( int c = 0; c < regListeners.size(); c++ )
+				this.listeners[listeners.length + c] = regListeners.get( c );
 
 			error = null;
 			status = Status.INITIALIZED;
@@ -246,7 +250,30 @@ public class JdbcRequest extends AbstractModelItem implements Request
 		{
 			try
 			{
+				for( int i = 0; i < listeners.length; i++ )
+				{
+					if( !listeners[i].beforeSubmit( this, submitContext ) )
+					{
+						status = Status.CANCELED;
+						System.err.println( "listener cancelled submit.." );
+						return;
+					}
+				}
+
+				status = Status.RUNNING;
 				testStep.runQuery();
+
+				if( status != Status.CANCELED )
+				{
+					status = Status.FINISHED;
+				}
+
+				//TODO see if we need to measure time and how to do it?
+//				if( response.getTimeTaken() == 0 )
+//				{
+//					logger.warn( "Request took 0 in thread " + Thread.currentThread().getId() + ", response length = "
+//							+ response.getContentLength() );
+//				}
 			}
 			catch (Exception e)
 			{
