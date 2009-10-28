@@ -60,7 +60,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
  */
 
 public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implements WsdlAttachmentContainer,
-		PropertyExpansionContainer, WsaContainer, WsrmContainer, JMSHeaderContainer, JMSPropertyContainer
+		PropertyExpansionContainer, WsaContainer, WsrmContainer
 {
 	public final static Logger log = Logger.getLogger(WsdlRequest.class);
 
@@ -88,8 +88,6 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 
 	private WsaConfig wsaConfig;
 	private WsrmConfig wsrmConfig;
-	private JMSHeaderConfig jmsHeaderConfig;
-	private JMSPropertiesConfig jmsPropertyConfig;
 
 	public WsdlRequest(WsdlOperation operation, WsdlRequestConfig callConfig)
 	{
@@ -537,10 +535,12 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 	public void addJMSHeaderExpansions(PropertyExpansionsResult result, JMSHeaderConfig jmsHeaderConfig,
 			ModelItem modelItem)
 	{
-		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig, JMSHeader.JMSCORRELATIONID));
+		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig,
+				JMSHeader.JMSCORRELATIONID));
 		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig, JMSHeader.JMSREPLYTO));
 		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig, JMSHeader.JMSTYPE));
-		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig, JMSHeader.JMSPRIORITY));		
+		result
+				.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig, JMSHeader.JMSPRIORITY));
 		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig, JMSHeader.TIMETOLIVE));
 	}
 
@@ -644,6 +644,9 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		return getResponse() == null ? null : getResponse().getContentAsString();
 	}
 
+	private JMSHeaderConfig jmsHeaderConfig;
+	private JMSPropertiesConfig jmsPropertyConfig;
+
 	public JMSHeaderConfig getJMSHeaderConfig()
 	{
 		if (jmsHeaderConfig == null)
@@ -669,4 +672,5 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		}
 		return jmsPropertyConfig;
 	}
+
 }

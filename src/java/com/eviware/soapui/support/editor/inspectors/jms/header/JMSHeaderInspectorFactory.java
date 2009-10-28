@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.support.editor.inspectors.jms.header;
 
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.Editor;
@@ -31,9 +31,9 @@ public class JMSHeaderInspectorFactory implements RequestInspectorFactory, Respo
 
 	public EditorInspector<?> createRequestInspector(Editor<?> editor, ModelItem modelItem)
 	{
-		if (modelItem instanceof WsdlRequest)
+		if (modelItem instanceof AbstractHttpRequest)
 		{
-			WsdlRequestJMSHeaderInspector inspector = new WsdlRequestJMSHeaderInspector(((WsdlRequest) modelItem));
+			RequestJMSHeaderInspector inspector = new RequestJMSHeaderInspector(((AbstractHttpRequest<?>) modelItem));
 			inspector.setEnabled(JMSUtils.checkIfJMS(modelItem));
 			return inspector;
 		}

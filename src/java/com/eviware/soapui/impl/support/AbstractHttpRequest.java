@@ -36,6 +36,10 @@ import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
 import com.eviware.soapui.impl.wsdl.support.FileAttachment;
 import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
 import com.eviware.soapui.impl.wsdl.support.RequestFileAttachment;
+import com.eviware.soapui.impl.wsdl.support.jms.header.JMSHeaderConfig;
+import com.eviware.soapui.impl.wsdl.support.jms.header.JMSHeaderContainer;
+import com.eviware.soapui.impl.wsdl.support.jms.property.JMSPropertiesConfig;
+import com.eviware.soapui.impl.wsdl.support.jms.property.JMSPropertyContainer;
 import com.eviware.soapui.impl.wsdl.teststeps.SettingPathPropertySupport;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Request;
@@ -53,7 +57,7 @@ import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> extends AbstractWsdlModelItem<T> implements
-		Request, AbstractHttpRequestInterface<T>
+		Request, AbstractHttpRequestInterface<T>, JMSHeaderContainer, JMSPropertyContainer
 {
 
 	private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
@@ -64,27 +68,28 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	private List<FileAttachment<?>> attachments = new ArrayList<FileAttachment<?>>();
 	private IAfterRequestInjection afterRequestInjection;
 
-	protected AbstractHttpRequest( T config, AbstractHttpOperation parent, String icon, boolean forLoadTest )
-	{
-		super( config, parent, icon );
 
-		if( !forLoadTest && !UISupport.isHeadless() )
+	protected AbstractHttpRequest(T config, AbstractHttpOperation parent, String icon, boolean forLoadTest)
+	{
+		super(config, parent, icon);
+
+		if (!forLoadTest && !UISupport.isHeadless())
 		{
 			iconAnimator = initIconAnimator();
-			addSubmitListener( iconAnimator );
+			addSubmitListener(iconAnimator);
 		}
 
 		initAttachments();
 
-		dumpFile = new SettingPathPropertySupport( this, DUMP_FILE );
+		dumpFile = new SettingPathPropertySupport(this, DUMP_FILE);
 	}
 
 	private void initAttachments()
 	{
-		for( AttachmentConfig ac : getConfig().getAttachmentList() )
+		for (AttachmentConfig ac : getConfig().getAttachmentList())
 		{
-			RequestFileAttachment attachment = new RequestFileAttachment( ac, this );
-			attachments.add( attachment );
+			RequestFileAttachment attachment = new RequestFileAttachment(ac, this);
+			attachments.add(attachment);
 		}
 	}
 
@@ -101,11 +106,11 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	 * boolean)
 	 */
 
-	public Attachment attachFile( File file, boolean cache ) throws IOException
+	public Attachment attachFile(File file, boolean cache) throws IOException
 	{
-		RequestFileAttachment fileAttachment = new RequestFileAttachment( file, cache, this );
-		attachments.add( fileAttachment );
-		notifyPropertyChanged( ATTACHMENTS_PROPERTY, null, fileAttachment );
+		RequestFileAttachment fileAttachment = new RequestFileAttachment(file, cache, this);
+		attachments.add(fileAttachment);
+		notifyPropertyChanged(ATTACHMENTS_PROPERTY, null, fileAttachment);
 		return fileAttachment;
 	}
 
@@ -117,7 +122,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	 * @see com.eviware.soapui.impl.wsdl.AttachmentContainer#getAttachmentPart(java.lang.String)
 	 */
 
-	public abstract HttpAttachmentPart getAttachmentPart( String partName );
+	public abstract HttpAttachmentPart getAttachmentPart(String partName);
 
 	/*
 	 * (non-Javadoc)
@@ -134,9 +139,9 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	 * 
 	 * @see com.eviware.soapui.impl.wsdl.AttachmentContainer#getAttachmentAt(int)
 	 */
-	public Attachment getAttachmentAt( int index )
+	public Attachment getAttachmentAt(int index)
 	{
-		return attachments.get( index );
+		return attachments.get(index);
 	}
 
 	/*
@@ -146,17 +151,17 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	 * com.eviware.soapui.impl.wsdl.AttachmentContainer#getAttachmentsForPart
 	 * (java.lang.String)
 	 */
-	public Attachment[] getAttachmentsForPart( String partName )
+	public Attachment[] getAttachmentsForPart(String partName)
 	{
 		List<Attachment> result = new ArrayList<Attachment>();
 
-		for( Attachment attachment : attachments )
+		for (Attachment attachment : attachments)
 		{
-			if( partName.equals( attachment.getPart() ) )
-				result.add( attachment );
+			if (partName.equals(attachment.getPart()))
+				result.add(attachment);
 		}
 
-		return result.toArray( new Attachment[result.size()] );
+		return result.toArray(new Attachment[result.size()]);
 	}
 
 	/*
@@ -166,18 +171,18 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	 * com.eviware.soapui.impl.wsdl.AttachmentContainer#removeAttachment(com.
 	 * eviware.soapui.model.iface.Attachment)
 	 */
-	public void removeAttachment( Attachment attachment )
+	public void removeAttachment(Attachment attachment)
 	{
-		int ix = attachments.indexOf( attachment );
-		attachments.remove( ix );
+		int ix = attachments.indexOf(attachment);
+		attachments.remove(ix);
 
 		try
 		{
-			notifyPropertyChanged( ATTACHMENTS_PROPERTY, attachment, null );
+			notifyPropertyChanged(ATTACHMENTS_PROPERTY, attachment, null);
 		}
 		finally
 		{
-			getConfig().removeAttachment( ix );
+			getConfig().removeAttachment(ix);
 		}
 	}
 
@@ -188,42 +193,42 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	 */
 	public Attachment[] getAttachments()
 	{
-		return attachments.toArray( new Attachment[attachments.size()] );
+		return attachments.toArray(new Attachment[attachments.size()]);
 	}
 
 	protected RequestIconAnimator<?> initIconAnimator()
 	{
-		return new RequestIconAnimator<AbstractHttpRequest<?>>( this, "/request.gif", "/exec_request", 4, "gif" );
+		return new RequestIconAnimator<AbstractHttpRequest<?>>(this, "/request.gif", "/exec_request", 4, "gif");
 	}
 
-	public void addSubmitListener( SubmitListener listener )
+	public void addSubmitListener(SubmitListener listener)
 	{
-		submitListeners.add( listener );
+		submitListeners.add(listener);
 	}
 
-	public void removeSubmitListener( SubmitListener listener )
+	public void removeSubmitListener(SubmitListener listener)
 	{
-		submitListeners.remove( listener );
+		submitListeners.remove(listener);
 	}
 
 	public boolean isMultipartEnabled()
 	{
-		return !getSettings().getBoolean( DISABLE_MULTIPART_ATTACHMENTS );
+		return !getSettings().getBoolean(DISABLE_MULTIPART_ATTACHMENTS);
 	}
 
-	public void setMultipartEnabled( boolean multipartEnabled )
+	public void setMultipartEnabled(boolean multipartEnabled)
 	{
-		getSettings().setBoolean( DISABLE_MULTIPART_ATTACHMENTS, !multipartEnabled );
+		getSettings().setBoolean(DISABLE_MULTIPART_ATTACHMENTS, !multipartEnabled);
 	}
 
 	public boolean isEntitizeProperties()
 	{
-		return getSettings().getBoolean( CommonSettings.ENTITIZE_PROPERTIES );
+		return getSettings().getBoolean(CommonSettings.ENTITIZE_PROPERTIES);
 	}
 
-	public void setEntitizeProperties( boolean entitizeProperties )
+	public void setEntitizeProperties(boolean entitizeProperties)
 	{
-		getSettings().setBoolean( CommonSettings.ENTITIZE_PROPERTIES, entitizeProperties );
+		getSettings().setBoolean(CommonSettings.ENTITIZE_PROPERTIES, entitizeProperties);
 	}
 
 	@Override
@@ -236,31 +241,31 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
 	public SubmitListener[] getSubmitListeners()
 	{
-		return submitListeners.toArray( new SubmitListener[submitListeners.size()] );
+		return submitListeners.toArray(new SubmitListener[submitListeners.size()]);
 	}
 
 	public AbstractHttpOperation getOperation()
 	{
-		return ( AbstractHttpOperation )getParent();
+		return (AbstractHttpOperation) getParent();
 	}
 
-	public void copyAttachmentsTo( WsdlRequest newRequest )
+	public void copyAttachmentsTo(WsdlRequest newRequest)
 	{
-		if( getAttachmentCount() > 0 )
+		if (getAttachmentCount() > 0)
 		{
 			try
 			{
 				UISupport.setHourglassCursor();
-				for( int c = 0; c < getAttachmentCount(); c++ )
+				for (int c = 0; c < getAttachmentCount(); c++)
 				{
 					try
 					{
-						Attachment attachment = getAttachmentAt( c );
-						newRequest.importAttachment( attachment );
+						Attachment attachment = getAttachmentAt(c);
+						newRequest.importAttachment(attachment);
 					}
-					catch( Exception e )
+					catch (Exception e)
 					{
-						SoapUI.logError( e );
+						SoapUI.logError(e);
 					}
 				}
 			}
@@ -271,25 +276,25 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		}
 	}
 
-	public Attachment importAttachment( Attachment attachment )
+	public Attachment importAttachment(Attachment attachment)
 	{
-		if( attachment instanceof FileAttachment<?> )
+		if (attachment instanceof FileAttachment<?>)
 		{
-			AttachmentConfig oldConfig = ( ( FileAttachment<?> )attachment ).getConfig();
-			AttachmentConfig newConfig = ( AttachmentConfig )getConfig().addNewAttachment().set( oldConfig );
-			RequestFileAttachment newAttachment = new RequestFileAttachment( newConfig, this );
-			attachments.add( newAttachment );
+			AttachmentConfig oldConfig = ((FileAttachment<?>) attachment).getConfig();
+			AttachmentConfig newConfig = (AttachmentConfig) getConfig().addNewAttachment().set(oldConfig);
+			RequestFileAttachment newAttachment = new RequestFileAttachment(newConfig, this);
+			attachments.add(newAttachment);
 			return newAttachment;
 		}
 		else
-			log.error( "Unkown attachment type: " + attachment );
+			log.error("Unkown attachment type: " + attachment);
 
 		return null;
 	}
 
-	public void addAttachmentsChangeListener( PropertyChangeListener listener )
+	public void addAttachmentsChangeListener(PropertyChangeListener listener)
 	{
-		addPropertyChangeListener( ATTACHMENTS_PROPERTY, listener );
+		addPropertyChangeListener(ATTACHMENTS_PROPERTY, listener);
 	}
 
 	public boolean isReadOnly()
@@ -297,54 +302,54 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		return false;
 	}
 
-	public void removeAttachmentsChangeListener( PropertyChangeListener listener )
+	public void removeAttachmentsChangeListener(PropertyChangeListener listener)
 	{
-		removePropertyChangeListener( ATTACHMENTS_PROPERTY, listener );
+		removePropertyChangeListener(ATTACHMENTS_PROPERTY, listener);
 	}
 
 	public String getRequestContent()
 	{
-		if( getConfig().getRequest() == null )
+		if (getConfig().getRequest() == null)
 			getConfig().addNewRequest();
 
-		if( requestContent == null )
-			requestContent = CompressedStringSupport.getString( getConfig().getRequest() );
+		if (requestContent == null)
+			requestContent = CompressedStringSupport.getString(getConfig().getRequest());
 
 		return requestContent;
 	}
 
-	public void setRequestContent( String request )
+	public void setRequestContent(String request)
 	{
 		String old = getRequestContent();
 
-		if( StringUtils.isNullOrEmpty( request ) && StringUtils.isNullOrEmpty( old )
-				|| ( request != null && request.equals( old ) ) )
+		if (StringUtils.isNullOrEmpty(request) && StringUtils.isNullOrEmpty(old)
+				|| (request != null && request.equals(old)))
 			return;
 
 		requestContent = request;
-		notifyPropertyChanged( REQUEST_PROPERTY, old, request );
+		notifyPropertyChanged(REQUEST_PROPERTY, old, request);
 	}
 
 	public boolean isPrettyPrint()
 	{
-		return getSettings().getBoolean( WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES );
+		return getSettings().getBoolean(WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES);
 	}
 
-	public void setPrettyPrint( boolean prettyPrint )
+	public void setPrettyPrint(boolean prettyPrint)
 	{
-		boolean old = getSettings().getBoolean( WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES );
-		getSettings().setBoolean( WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES, prettyPrint );
-		notifyPropertyChanged( WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES, old, prettyPrint );
+		boolean old = getSettings().getBoolean(WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES);
+		getSettings().setBoolean(WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES, prettyPrint);
+		notifyPropertyChanged(WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES, old, prettyPrint);
 	}
 
-	public void setEndpoint( String endpoint )
+	public void setEndpoint(String endpoint)
 	{
 		String old = getEndpoint();
-		if( old != null && old.equals( endpoint ) )
+		if (old != null && old.equals(endpoint))
 			return;
 
-		getConfig().setEndpoint( endpoint );
-		notifyPropertyChanged( ENDPOINT_PROPERTY, old, endpoint );
+		getConfig().setEndpoint(endpoint);
+		notifyPropertyChanged(ENDPOINT_PROPERTY, old, endpoint);
 	}
 
 	public String getEndpoint()
@@ -357,28 +362,28 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		return getConfig().getEncoding();
 	}
 
-	public void setEncoding( String encoding )
+	public void setEncoding(String encoding)
 	{
 		String old = getEncoding();
-		getConfig().setEncoding( encoding );
-		notifyPropertyChanged( ENCODING_PROPERTY, old, encoding );
+		getConfig().setEncoding(encoding);
+		notifyPropertyChanged(ENCODING_PROPERTY, old, encoding);
 	}
-	
+
 	public String getTimeout()
 	{
 		return getConfig().getTimeout();
 	}
 
-	public void setTimeout( String timeout )
+	public void setTimeout(String timeout)
 	{
 		String old = getTimeout();
-		getConfig().setTimeout( timeout );
-		notifyPropertyChanged( "timeout", old, timeout );
+		getConfig().setTimeout(timeout);
+		notifyPropertyChanged("timeout", old, timeout);
 	}
 
 	public StringToStringMap getRequestHeaders()
 	{
-		return StringToStringMap.fromXml( getSettings().getString( REQUEST_HEADERS_PROPERTY, null ) );
+		return StringToStringMap.fromXml(getSettings().getString(REQUEST_HEADERS_PROPERTY, null));
 	}
 
 	public RequestIconAnimator<?> getIconAnimator()
@@ -386,11 +391,11 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		return iconAnimator;
 	}
 
-	public void setRequestHeaders( StringToStringMap map )
+	public void setRequestHeaders(StringToStringMap map)
 	{
 		StringToStringMap old = getRequestHeaders();
-		getSettings().setString( REQUEST_HEADERS_PROPERTY, map.toXml() );
-		notifyPropertyChanged( REQUEST_HEADERS_PROPERTY, old, map );
+		getSettings().setString(REQUEST_HEADERS_PROPERTY, map.toXml());
+		notifyPropertyChanged(REQUEST_HEADERS_PROPERTY, old, map);
 	}
 
 	@Override
@@ -401,13 +406,13 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
 	public PropertyExpansion[] getPropertyExpansions()
 	{
-		PropertyExpansionsResult result = new PropertyExpansionsResult( this, this );
+		PropertyExpansionsResult result = new PropertyExpansionsResult(this, this);
 
-		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "requestContent" ) );
-		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "endpoint" ) );
-		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "username" ) );
-		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "password" ) );
-		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "domain" ) );
+		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(this, this, "requestContent"));
+		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(this, this, "endpoint"));
+		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(this, this, "username"));
+		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(this, this, "password"));
+		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(this, this, "domain"));
 
 		return result.toArray();
 	}
@@ -415,7 +420,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	public String getUsername()
 	{
 		CredentialsConfig credentialsConfig = getConfig().getCredentials();
-		if( credentialsConfig == null )
+		if (credentialsConfig == null)
 			return null;
 
 		return credentialsConfig.getUsername();
@@ -424,7 +429,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	public String getPassword()
 	{
 		CredentialsConfig credentialsConfig = getConfig().getCredentials();
-		if( credentialsConfig == null )
+		if (credentialsConfig == null)
 			return null;
 
 		return credentialsConfig.getPassword();
@@ -433,43 +438,43 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	public String getDomain()
 	{
 		CredentialsConfig credentialsConfig = getConfig().getCredentials();
-		if( credentialsConfig == null )
+		if (credentialsConfig == null)
 			return null;
 
 		return credentialsConfig.getDomain();
 	}
 
-	public void setUsername( String username )
+	public void setUsername(String username)
 	{
 		String old = getUsername();
 		CredentialsConfig credentialsConfig = getConfig().getCredentials();
-		if( credentialsConfig == null )
+		if (credentialsConfig == null)
 			credentialsConfig = getConfig().addNewCredentials();
 
-		credentialsConfig.setUsername( username );
-		notifyPropertyChanged( "username", old, username );
+		credentialsConfig.setUsername(username);
+		notifyPropertyChanged("username", old, username);
 	}
 
-	public void setPassword( String password )
+	public void setPassword(String password)
 	{
 		String old = getPassword();
 		CredentialsConfig credentialsConfig = getConfig().getCredentials();
-		if( credentialsConfig == null )
+		if (credentialsConfig == null)
 			credentialsConfig = getConfig().addNewCredentials();
 
-		credentialsConfig.setPassword( password );
-		notifyPropertyChanged( "password", old, password );
+		credentialsConfig.setPassword(password);
+		notifyPropertyChanged("password", old, password);
 	}
 
-	public void setDomain( String domain )
+	public void setDomain(String domain)
 	{
 		String old = getDomain();
 		CredentialsConfig credentialsConfig = getConfig().getCredentials();
-		if( credentialsConfig == null )
+		if (credentialsConfig == null)
 			credentialsConfig = getConfig().addNewCredentials();
 
-		credentialsConfig.setDomain( domain );
-		notifyPropertyChanged( "domain", old, domain );
+		credentialsConfig.setDomain(domain);
+		notifyPropertyChanged("domain", old, domain);
 	}
 
 	public String getSslKeystore()
@@ -477,35 +482,35 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		return getConfig().getSslKeystore();
 	}
 
-	public void setSslKeystore( String sslKeystore )
+	public void setSslKeystore(String sslKeystore)
 	{
 		String old = getSslKeystore();
-		getConfig().setSslKeystore( sslKeystore );
-		notifyPropertyChanged( "sslKeystore", old, sslKeystore );
+		getConfig().setSslKeystore(sslKeystore);
+		notifyPropertyChanged("sslKeystore", old, sslKeystore);
 	}
 
 	public String getBindAddress()
 	{
-		return getSettings().getString( BIND_ADDRESS, "" );
+		return getSettings().getString(BIND_ADDRESS, "");
 	}
 
-	public void setBindAddress( String bindAddress )
+	public void setBindAddress(String bindAddress)
 	{
-		String old = getSettings().getString( BIND_ADDRESS, "" );
-		getSettings().setString( BIND_ADDRESS, bindAddress );
-		notifyPropertyChanged( BIND_ADDRESS, old, bindAddress );
+		String old = getSettings().getString(BIND_ADDRESS, "");
+		getSettings().setString(BIND_ADDRESS, bindAddress);
+		notifyPropertyChanged(BIND_ADDRESS, old, bindAddress);
 	}
 
 	public long getMaxSize()
 	{
-		return getSettings().getLong( MAX_SIZE, 0 );
+		return getSettings().getLong(MAX_SIZE, 0);
 	}
 
-	public void setMaxSize( long maxSize )
+	public void setMaxSize(long maxSize)
 	{
-		long old = getSettings().getLong( MAX_SIZE, 0 );
-		getSettings().setLong( MAX_SIZE, maxSize );
-		notifyPropertyChanged( MAX_SIZE, old, maxSize );
+		long old = getSettings().getLong(MAX_SIZE, 0);
+		getSettings().setLong(MAX_SIZE, maxSize);
+		notifyPropertyChanged(MAX_SIZE, old, maxSize);
 	}
 
 	public String getDumpFile()
@@ -513,47 +518,47 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		return dumpFile.get();
 	}
 
-	public void setDumpFile( String df )
+	public void setDumpFile(String df)
 	{
 		String old = getDumpFile();
-		dumpFile.set( df, false );
-		notifyPropertyChanged( DUMP_FILE, old, getDumpFile() );
+		dumpFile.set(df, false);
+		notifyPropertyChanged(DUMP_FILE, old, getDumpFile());
 	}
 
 	public boolean isRemoveEmptyContent()
 	{
-		return getSettings().getBoolean( REMOVE_EMPTY_CONTENT );
+		return getSettings().getBoolean(REMOVE_EMPTY_CONTENT);
 	}
 
-	public void setRemoveEmptyContent( boolean removeEmptyContent )
+	public void setRemoveEmptyContent(boolean removeEmptyContent)
 	{
-		boolean old = getSettings().getBoolean( REMOVE_EMPTY_CONTENT );
-		getSettings().setBoolean( REMOVE_EMPTY_CONTENT, removeEmptyContent );
-		notifyPropertyChanged( REMOVE_EMPTY_CONTENT, old, removeEmptyContent );
+		boolean old = getSettings().getBoolean(REMOVE_EMPTY_CONTENT);
+		getSettings().setBoolean(REMOVE_EMPTY_CONTENT, removeEmptyContent);
+		notifyPropertyChanged(REMOVE_EMPTY_CONTENT, old, removeEmptyContent);
 	}
 
 	public boolean isStripWhitespaces()
 	{
-		return getSettings().getBoolean( STRIP_WHITESPACES );
+		return getSettings().getBoolean(STRIP_WHITESPACES);
 	}
 
-	public void setStripWhitespaces( boolean stripWhitespaces )
+	public void setStripWhitespaces(boolean stripWhitespaces)
 	{
-		boolean old = getSettings().getBoolean( STRIP_WHITESPACES );
-		getSettings().setBoolean( STRIP_WHITESPACES, stripWhitespaces );
-		notifyPropertyChanged( STRIP_WHITESPACES, old, stripWhitespaces );
+		boolean old = getSettings().getBoolean(STRIP_WHITESPACES);
+		getSettings().setBoolean(STRIP_WHITESPACES, stripWhitespaces);
+		notifyPropertyChanged(STRIP_WHITESPACES, old, stripWhitespaces);
 	}
 
 	public boolean isFollowRedirects()
 	{
-		return getSettings().getBoolean( FOLLOW_REDIRECTS );
+		return getSettings().getBoolean(FOLLOW_REDIRECTS);
 	}
 
-	public void setFollowRedirects( boolean followRedirects )
+	public void setFollowRedirects(boolean followRedirects)
 	{
-		boolean old = getSettings().getBoolean( FOLLOW_REDIRECTS );
-		getSettings().setBoolean( FOLLOW_REDIRECTS, followRedirects );
-		notifyPropertyChanged( FOLLOW_REDIRECTS, old, followRedirects );
+		boolean old = getSettings().getBoolean(FOLLOW_REDIRECTS);
+		getSettings().setBoolean(FOLLOW_REDIRECTS, followRedirects);
+		notifyPropertyChanged(FOLLOW_REDIRECTS, old, followRedirects);
 	}
 
 	@Override
@@ -561,12 +566,12 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	{
 		super.beforeSave();
 
-		if( requestContent != null )
+		if (requestContent != null)
 		{
-			if( getConfig().getRequest() == null )
+			if (getConfig().getRequest() == null)
 				getConfig().addNewRequest();
 
-			CompressedStringSupport.setString( getConfig().getRequest(), requestContent );
+			CompressedStringSupport.setString(getConfig().getRequest(), requestContent);
 			// requestContent = null;
 		}
 	}
@@ -574,32 +579,32 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	public static class RequestIconAnimator<T extends AbstractHttpRequest<?>> extends ModelItemIconAnimator<T> implements
 			SubmitListener
 	{
-		public RequestIconAnimator( T modelItem, String baseIcon, String animIconRoot, int iconCount, String iconExtension )
+		public RequestIconAnimator(T modelItem, String baseIcon, String animIconRoot, int iconCount, String iconExtension)
 		{
-			super( modelItem, baseIcon, animIconRoot, iconCount, iconExtension );
+			super(modelItem, baseIcon, animIconRoot, iconCount, iconExtension);
 		}
 
-		public boolean beforeSubmit( Submit submit, SubmitContext context )
+		public boolean beforeSubmit(Submit submit, SubmitContext context)
 		{
-			if( isEnabled() && submit.getRequest() == getTarget() )
+			if (isEnabled() && submit.getRequest() == getTarget())
 				start();
 			return true;
 		}
 
-		public void afterSubmit( Submit submit, SubmitContext context )
+		public void afterSubmit(Submit submit, SubmitContext context)
 		{
-			if( submit.getRequest() == getTarget() )
+			if (submit.getRequest() == getTarget())
 				stop();
 		}
 	}
 
-	public void setIconAnimator( RequestIconAnimator<?> iconAnimator )
+	public void setIconAnimator(RequestIconAnimator<?> iconAnimator)
 	{
-		if( this.iconAnimator != null )
-			removeSubmitListener( this.iconAnimator );
+		if (this.iconAnimator != null)
+			removeSubmitListener(this.iconAnimator);
 
 		this.iconAnimator = iconAnimator;
-		addSubmitListener( this.iconAnimator );
+		addSubmitListener(this.iconAnimator);
 	}
 
 	public HttpResponse getResponse()
@@ -607,28 +612,28 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		return response;
 	}
 
-	public void setResponse( HttpResponse response, SubmitContext context )
+	public void setResponse(HttpResponse response, SubmitContext context)
 	{
 		HttpResponse oldResponse = getResponse();
 		this.response = response;
 
-		notifyPropertyChanged( RESPONSE_PROPERTY, oldResponse, response );
+		notifyPropertyChanged(RESPONSE_PROPERTY, oldResponse, response);
 	}
 
-	public void resolve( ResolveContext<?> context )
+	public void resolve(ResolveContext<?> context)
 	{
-		super.resolve( context );
+		super.resolve(context);
 
-		for( FileAttachment<?> attachment : attachments )
-			attachment.resolve( context );
+		for (FileAttachment<?> attachment : attachments)
+			attachment.resolve(context);
 	}
 
 	public boolean hasEndpoint()
 	{
-		return StringUtils.hasContent( getEndpoint() );
+		return StringUtils.hasContent(getEndpoint());
 	}
 
-	public void setAfterRequestInjection( IAfterRequestInjection afterRequestInjection )
+	public void setAfterRequestInjection(IAfterRequestInjection afterRequestInjection)
 	{
 		this.afterRequestInjection = afterRequestInjection;
 	}
@@ -637,4 +642,5 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	{
 		return afterRequestInjection;
 	}
+	
 }

@@ -241,7 +241,10 @@
     				<xsd:element name="attachment" type="tns:Attachment"
     					maxOccurs="unbounded" minOccurs="0">
     				</xsd:element>
-    			</xsd:sequence>
+                    <xsd:element name="jmsConfig" type="tns:JMSHeaderConf" maxOccurs="1" minOccurs="0">
+                	</xsd:element>
+                    <xsd:element name="jmsPropertyConfig" type="tns:JMSPropertiesConf" maxOccurs="1" minOccurs="0"></xsd:element>
+                </xsd:sequence>
     			<xsd:attribute name="sslKeystore" type="xsd:string"></xsd:attribute>
     			<xsd:attribute name="timeout" type="xsd:string"></xsd:attribute>
     		</xsd:extension>
@@ -258,10 +261,6 @@
                 	<xsd:element name="wsrmConfig" type="tns:WsrmConfig"
                 		maxOccurs="1" minOccurs="0">
                 	</xsd:element>
-                	<xsd:element name="jmsConfig" type="tns:JMSHeaderConf"
-                		maxOccurs="1" minOccurs="0">
-                	</xsd:element>
-                	<xsd:element name="jmsPropertyConfig" type="tns:JMSPropertiesConf" maxOccurs="1" minOccurs="0"></xsd:element>
                 </xsd:sequence>
                 <xsd:attribute name="wssPasswordType"
                                type="xsd:string">

@@ -39,6 +39,8 @@ import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.impl.wsdl.support.jms.header.JMSHeaderConfig;
+import com.eviware.soapui.impl.wsdl.support.jms.property.JMSPropertiesConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -589,5 +591,34 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 			method.addPropertyChangeListener( this );
 		
 		updateParams();
+	}
+	
+	private JMSHeaderConfig jmsHeaderConfig;
+	private JMSPropertiesConfig jmsPropertyConfig;
+
+	public JMSHeaderConfig getJMSHeaderConfig()
+	{
+		if (jmsHeaderConfig == null)
+		{
+			if (!getConfig().isSetJmsConfig())
+			{
+				getConfig().addNewJmsConfig();
+			}
+			jmsHeaderConfig = new JMSHeaderConfig(getConfig().getJmsConfig(), this);
+		}
+		return jmsHeaderConfig;
+	}
+
+	public JMSPropertiesConfig getJMSPropertiesConfig()
+	{
+		if (jmsPropertyConfig == null)
+		{
+			if (!getConfig().isSetJmsPropertyConfig())
+			{
+				getConfig().addNewJmsPropertyConfig();
+			}
+			jmsPropertyConfig = new JMSPropertiesConfig(getConfig().getJmsPropertyConfig(), this);
+		}
+		return jmsPropertyConfig;
 	}
 }

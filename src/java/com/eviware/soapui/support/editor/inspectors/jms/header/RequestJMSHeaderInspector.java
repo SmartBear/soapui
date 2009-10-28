@@ -17,18 +17,17 @@ import java.beans.PropertyChangeListener;
 
 import com.eviware.soapui.config.JMSDeliveryModeTypeConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
 
-public class WsdlRequestJMSHeaderInspector extends AbstractJMSHeaderInspector implements XmlInspector, PropertyChangeListener
+public class RequestJMSHeaderInspector extends AbstractJMSHeaderInspector implements XmlInspector, PropertyChangeListener
 {
 
 	private SimpleBindingForm simpleform;
-	WsdlRequest request;
+	AbstractHttpRequest<?> request;
 	
-	public WsdlRequestJMSHeaderInspector(WsdlRequest request)
+	public RequestJMSHeaderInspector(AbstractHttpRequest<?> request)
 	{
 		super(request);
 		this.request=request;

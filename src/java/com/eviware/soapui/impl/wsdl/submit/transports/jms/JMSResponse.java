@@ -11,6 +11,7 @@
  */
 package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -64,7 +65,7 @@ public class JMSResponse implements WsdlResponse
 	{
 		this.attachments = attachments;
 	}
-	
+
 	public Attachment[] getAttachmentsForPart(String partName)
 	{
 		return attachments;
@@ -253,7 +254,7 @@ public class JMSResponse implements WsdlResponse
 
 	public URL getURL()
 	{
-		return null;
+				return null;
 	}
 
 	public void setResponseContent(String responseContent)

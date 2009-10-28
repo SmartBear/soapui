@@ -34,6 +34,8 @@ import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import com.eviware.soapui.impl.wsdl.support.jms.header.JMSHeaderConfig;
+import com.eviware.soapui.impl.wsdl.support.jms.property.JMSPropertiesConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -49,39 +51,39 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 {
 	private XmlBeansRestParamsTestPropertyHolder params;
 
-	protected HttpRequest( HttpRequestConfig config, boolean forLoadTest )
+	protected HttpRequest(HttpRequestConfig config, boolean forLoadTest)
 	{
-		super( config, null, "/http_request.gif", forLoadTest );
+		super(config, null, "/http_request.gif", forLoadTest);
 
-		if( config.getParameters() == null )
+		if (config.getParameters() == null)
 			config.addNewParameters();
 
-		params = new XmlBeansRestParamsTestPropertyHolder( this, config.getParameters() );
+		params = new XmlBeansRestParamsTestPropertyHolder(this, config.getParameters());
 	}
 
-	public TestProperty addProperty( String name )
+	public TestProperty addProperty(String name)
 	{
-		return params.addProperty( name );
+		return params.addProperty(name);
 	}
 
-	public void moveProperty( String propertyName, int targetIndex )
+	public void moveProperty(String propertyName, int targetIndex)
 	{
-		params.moveProperty( propertyName, targetIndex );
+		params.moveProperty(propertyName, targetIndex);
 	}
 
-	public TestProperty removeProperty( String propertyName )
+	public TestProperty removeProperty(String propertyName)
 	{
-		return params.removeProperty( propertyName );
+		return params.removeProperty(propertyName);
 	}
 
-	public boolean renameProperty( String name, String newName )
+	public boolean renameProperty(String name, String newName)
 	{
-		return params.renameProperty( name, newName );
+		return params.renameProperty(name, newName);
 	}
 
-	public void addTestPropertyListener( TestPropertyListener listener )
+	public void addTestPropertyListener(TestPropertyListener listener)
 	{
-		params.addTestPropertyListener( listener );
+		params.addTestPropertyListener(listener);
 	}
 
 	public ModelItem getModelItem()
@@ -115,14 +117,14 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 		return params.getProperties();
 	}
 
-	public RestParamProperty getProperty( String name )
+	public RestParamProperty getProperty(String name)
 	{
-		return params.getProperty( name );
+		return params.getProperty(name);
 	}
 
-	public RestParamProperty getPropertyAt( int index )
+	public RestParamProperty getPropertyAt(int index)
 	{
-		return params.getPropertyAt( index );
+		return params.getPropertyAt(index);
 	}
 
 	public int getPropertyCount()
@@ -135,9 +137,9 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 		return params.getPropertyNames();
 	}
 
-	public String getPropertyValue( String name )
+	public String getPropertyValue(String name)
 	{
-		return params.getPropertyValue( name );
+		return params.getPropertyValue(name);
 	}
 
 	public boolean isPostQueryString()
@@ -145,41 +147,41 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 		return hasRequestBody() && getConfig().getPostQueryString();
 	}
 
-	public boolean hasProperty( String name )
+	public boolean hasProperty(String name)
 	{
-		return params.hasProperty( name );
+		return params.hasProperty(name);
 	}
 
-	public void setPropertyValue( String name, String value )
+	public void setPropertyValue(String name, String value)
 	{
-		params.setPropertyValue( name, value );
+		params.setPropertyValue(name, value);
 	}
 
-	public void setMediaType( String mediaType )
+	public void setMediaType(String mediaType)
 	{
 		String old = getMediaType();
-		getConfig().setMediaType( mediaType );
-		notifyPropertyChanged( "mediaType", old, mediaType );
+		getConfig().setMediaType(mediaType);
+		notifyPropertyChanged("mediaType", old, mediaType);
 	}
 
-	public void setPostQueryString( boolean b )
+	public void setPostQueryString(boolean b)
 	{
 		boolean old = isPostQueryString();
-		getConfig().setPostQueryString( b );
-		notifyPropertyChanged( "postQueryString", old, b );
+		getConfig().setPostQueryString(b);
+		notifyPropertyChanged("postQueryString", old, b);
 
-		if( !"multipart/form-data".equals( getMediaType() ) )
+		if (!"multipart/form-data".equals(getMediaType()))
 		{
-			setMediaType( b ? "application/x-www-form-urlencoded" : "" );
+			setMediaType(b ? "application/x-www-form-urlencoded" : "");
 		}
 	}
 
-	public void setMethod( RequestMethod method )
+	public void setMethod(RequestMethod method)
 	{
 		RestRequestInterface.RequestMethod old = getMethod();
-		getConfig().setMethod( method.toString() );
-		setIcon( UISupport.createImageIcon( "/" + method.toString().toLowerCase() + "_method.gif" ) );
-		notifyPropertyChanged( "method", old, method );
+		getConfig().setMethod(method.toString());
+		setIcon(UISupport.createImageIcon("/" + method.toString().toLowerCase() + "_method.gif"));
+		notifyPropertyChanged("method", old, method);
 	}
 
 	public String getPropertiesLabel()
@@ -187,12 +189,12 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 		return "HTTP Params";
 	}
 
-	public void removeTestPropertyListener( TestPropertyListener listener )
+	public void removeTestPropertyListener(TestPropertyListener listener)
 	{
-		params.removeTestPropertyListener( listener );
+		params.removeTestPropertyListener(listener);
 	}
 
-	public HttpAttachmentPart getAttachmentPart( String partName )
+	public HttpAttachmentPart getAttachmentPart(String partName)
 	{
 		return null;
 	}
@@ -206,25 +208,25 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 	public RestRequestInterface.RequestMethod getMethod()
 	{
 		String method = getConfig().getMethod();
-		return method == null ? null : RestRequestInterface.RequestMethod.valueOf( method );
+		return method == null ? null : RestRequestInterface.RequestMethod.valueOf(method);
 	}
 
 	public MessagePart[] getRequestParts()
 	{
 		List<MessagePart> result = new ArrayList<MessagePart>();
 
-		for( int c = 0; c < getPropertyCount(); c++ )
+		for (int c = 0; c < getPropertyCount(); c++)
 		{
-			result.add( new ParameterMessagePart( getPropertyAt( c ) ) );
+			result.add(new ParameterMessagePart(getPropertyAt(c)));
 		}
 
-		if( getMethod() == RestRequestInterface.RequestMethod.POST
-				|| getMethod() == RestRequestInterface.RequestMethod.PUT )
+		if (getMethod() == RestRequestInterface.RequestMethod.POST
+				|| getMethod() == RestRequestInterface.RequestMethod.PUT)
 		{
-			result.add( new HttpContentPart() );
+			result.add(new HttpContentPart());
 		}
 
-		return result.toArray( new MessagePart[result.size()] );
+		return result.toArray(new MessagePart[result.size()]);
 	}
 
 	public MessagePart[] getResponseParts()
@@ -235,48 +237,48 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 	public String getResponseContentAsXml()
 	{
 		HttpResponse response = getResponse();
-		if( response == null )
+		if (response == null)
 			return null;
 
 		return response.getContentAsXml();
 	}
 
-	public WsdlSubmit<HttpRequest> submit( SubmitContext submitContext, boolean async ) throws SubmitException
+	public WsdlSubmit<HttpRequest> submit(SubmitContext submitContext, boolean async) throws SubmitException
 	{
-		String endpoint = PropertyExpander.expandProperties( submitContext, getEndpoint() );
+		String endpoint = PropertyExpander.expandProperties(submitContext, getEndpoint());
 
-		if( StringUtils.isNullOrEmpty( endpoint ) )
+		if (StringUtils.isNullOrEmpty(endpoint))
 		{
-			UISupport.showErrorMessage( "Missing endpoint for request [" + getName() + "]" );
+			UISupport.showErrorMessage("Missing endpoint for request [" + getName() + "]");
 			return null;
 		}
 
 		try
 		{
-			WsdlSubmit<HttpRequest> submitter = new WsdlSubmit<HttpRequest>( this, getSubmitListeners(),
-					RequestTransportRegistry.getTransport( endpoint, submitContext ) );
-			submitter.submitRequest( submitContext, async );
+			WsdlSubmit<HttpRequest> submitter = new WsdlSubmit<HttpRequest>(this, getSubmitListeners(),
+					RequestTransportRegistry.getTransport(endpoint, submitContext));
+			submitter.submitRequest(submitContext, async);
 			return submitter;
 		}
-		catch( Exception e )
+		catch (Exception e)
 		{
-			throw new SubmitException( e.toString() );
+			throw new SubmitException(e.toString());
 		}
 	}
 
-	public void updateConfig( HttpRequestConfig request )
+	public void updateConfig(HttpRequestConfig request)
 	{
-		setConfig( request );
-		if( params == null )
-			params = new XmlBeansRestParamsTestPropertyHolder( this, request.getParameters() );
+		setConfig(request);
+		if (params == null)
+			params = new XmlBeansRestParamsTestPropertyHolder(this, request.getParameters());
 		else
-			params.resetPropertiesConfig( request.getParameters() );
+			params.resetPropertiesConfig(request.getParameters());
 
 		List<AttachmentConfig> attachmentConfigs = getConfig().getAttachmentList();
-		for( int i = 0; i < attachmentConfigs.size(); i++ )
+		for (int i = 0; i < attachmentConfigs.size(); i++)
 		{
-			AttachmentConfig config = attachmentConfigs.get( i );
-			getAttachmentsList().get( i ).updateConfig( config );
+			AttachmentConfig config = attachmentConfigs.get(i);
+			getAttachmentsList().get(i).updateConfig(config);
 		}
 	}
 
@@ -324,5 +326,34 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 	public List<TestProperty> getPropertyList()
 	{
 		return params.getPropertyList();
+	}
+
+	private JMSHeaderConfig jmsHeaderConfig;
+	private JMSPropertiesConfig jmsPropertyConfig;
+
+	public JMSHeaderConfig getJMSHeaderConfig()
+	{
+		if (jmsHeaderConfig == null)
+		{
+			if (!getConfig().isSetJmsConfig())
+			{
+				getConfig().addNewJmsConfig();
+			}
+			jmsHeaderConfig = new JMSHeaderConfig(getConfig().getJmsConfig(), this);
+		}
+		return jmsHeaderConfig;
+	}
+
+	public JMSPropertiesConfig getJMSPropertiesConfig()
+	{
+		if (jmsPropertyConfig == null)
+		{
+			if (!getConfig().isSetJmsPropertyConfig())
+			{
+				getConfig().addNewJmsPropertyConfig();
+			}
+			jmsPropertyConfig = new JMSPropertiesConfig(getConfig().getJmsPropertyConfig(), this);
+		}
+		return jmsPropertyConfig;
 	}
 }

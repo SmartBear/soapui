@@ -17,7 +17,6 @@ import java.beans.PropertyChangeEvent;
 import javax.jms.Message;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSHeader;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSResponse;
@@ -59,10 +58,10 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 	public EditorInspector<?> createResponseInspector(Editor<?> editor, ModelItem modelItem)
 	{
 
-		if (modelItem instanceof WsdlRequest)
+		if (modelItem instanceof AbstractHttpRequest)
 		{
 			JMSHeaderAndPropertyInspector inspector = new JMSHeaderAndPropertyInspector(
-					(JMSHeaderAndPropertyInspectorModel) new ResponseJMSHeaderAndPropertiesModel((WsdlRequest) modelItem));
+					(JMSHeaderAndPropertyInspectorModel) new ResponseJMSHeaderAndPropertiesModel((AbstractHttpRequest<?>) modelItem));
 			inspector.setEnabled(JMSUtils.checkIfJMS(modelItem));
 			return inspector;
 		}
@@ -79,14 +78,14 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 		return null;
 	}
 
-	private class ResponseJMSHeaderAndPropertiesModel extends AbstractJMSHeaderAndPropertyModel<WsdlRequest> implements
+	private class ResponseJMSHeaderAndPropertiesModel extends AbstractJMSHeaderAndPropertyModel<AbstractHttpRequest<?>> implements
 			SubmitListener
 	{
-		WsdlRequest request;
+		AbstractHttpRequest<?> request;
 		JMSHeaderAndPropertyInspector inspector;
 		StringToStringMap headersAndProperties;
 
-		public ResponseJMSHeaderAndPropertiesModel(WsdlRequest wsdlRequest)
+		public ResponseJMSHeaderAndPropertiesModel(AbstractHttpRequest<?> wsdlRequest)
 		{
 			super(true, wsdlRequest, "jmsHeaderAndProperties");
 			this.request = wsdlRequest;

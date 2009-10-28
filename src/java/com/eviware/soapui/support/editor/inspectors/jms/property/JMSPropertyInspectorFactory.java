@@ -18,7 +18,6 @@ import java.util.List;
 
 import com.eviware.soapui.config.JMSPropertyConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.Editor;
@@ -39,10 +38,10 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 
 	public EditorInspector<?> createRequestInspector(Editor<?> editor, ModelItem modelItem)
 	{
-		if (modelItem instanceof WsdlRequest)
+		if (modelItem instanceof AbstractHttpRequest<?>)
 		{
 			JMSPropertyInspector inspector = new JMSPropertyInspector(
-					(JMSPropertyInspectorModel) new WsdlRequestJMSPropertiesModel((WsdlRequest) modelItem));
+					(JMSPropertyInspectorModel) new WsdlRequestJMSPropertiesModel((AbstractHttpRequest<?>) modelItem));
 			inspector.setEnabled(JMSUtils.checkIfJMS(modelItem));
 			return inspector;
 		}
@@ -55,12 +54,12 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 		return null;
 	}
 
-	private class WsdlRequestJMSPropertiesModel extends AbstractJMSPropertyModel<WsdlRequest>
+	private class WsdlRequestJMSPropertiesModel extends AbstractJMSPropertyModel<AbstractHttpRequest<?>>
 	{
-		WsdlRequest request;
+		AbstractHttpRequest<?> request;
 		JMSPropertyInspector inspector;
 
-		public WsdlRequestJMSPropertiesModel(WsdlRequest wsdlRequest)
+		public WsdlRequestJMSPropertiesModel(AbstractHttpRequest<?> wsdlRequest)
 		{
 			super(false, wsdlRequest, "jmsProperty");
 			this.request = wsdlRequest;
