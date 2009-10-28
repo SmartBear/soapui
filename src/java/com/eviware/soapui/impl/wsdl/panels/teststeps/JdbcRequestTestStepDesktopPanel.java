@@ -839,6 +839,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			responseEditor.setEditable(enabled);
 
 		submitButton.setEnabled(enabled);
+		addAssertionButton.setEnabled(enabled);
 		driverTextField.setEnabled(enabled);
 		connStrTextField.setEnabled(enabled);
 		passField.setEnabled(enabled);
