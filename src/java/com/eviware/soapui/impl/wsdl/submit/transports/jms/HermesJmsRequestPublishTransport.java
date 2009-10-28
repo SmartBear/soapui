@@ -61,7 +61,7 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 
 			Message messagePublish = messagePublish(submitContext, request, session, hermes, topicPublish);
 
-			return makeResponseOnly(submitContext, request, timeStarted, messagePublish);
+			return makeEmptyResponse(submitContext, request, timeStarted, messagePublish);
 		}
 		catch (JMSException jmse)
 		{

@@ -38,12 +38,12 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public class JMSResponse implements WsdlResponse
 {
 
-	String payload;
-	Message messageReceive;
-	Message messageSend;
-
-	Request request;
-	long requestStartedTime;
+	private String payload;
+	private Message messageReceive;
+	private Message messageSend;
+	private Attachment[] attachments = new Attachment[0];
+	private Request request;
+	private long requestStartedTime;
 
 	public JMSResponse(String payload, Message messageSend, Message messageReceive, Request request,
 			long requestStartedTime)
@@ -57,12 +57,17 @@ public class JMSResponse implements WsdlResponse
 
 	public Attachment[] getAttachments()
 	{
-		return new Attachment[0];
+		return attachments;
 	}
 
+	public void setAttachments(Attachment[] attachments)
+	{
+		this.attachments = attachments;
+	}
+	
 	public Attachment[] getAttachmentsForPart(String partName)
 	{
-		return new Attachment[0];
+		return attachments;
 	}
 
 	public String getContentAsString()

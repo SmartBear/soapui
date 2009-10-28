@@ -59,7 +59,7 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 
 			Message messageSend = messageSend(submitContext, request, session, hermes, queueSend);
 			
-			return makeResponseOnly(submitContext, request, timeStarted, messageSend);
+			return makeEmptyResponse(submitContext, request, timeStarted, messageSend);
 		}
 		catch (JMSException jmse)
 		{
