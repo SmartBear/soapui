@@ -20,7 +20,8 @@ public class JdbcUtils
 	
 		String drvr = PropertyExpander.expandProperties(context, driver).trim();
 		String connStr = PropertyExpander.expandProperties(context, connectionString).trim();
-		connStr = connStr.replaceFirst(PASS_TEMPLATE, password);
+		String pass = PropertyExpander.expandProperties(context, password).trim();
+		connStr = connStr.replaceFirst(PASS_TEMPLATE, pass);
 		try
 		{
 			DriverManager.getDriver( connStr );
