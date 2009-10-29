@@ -44,7 +44,7 @@ public class JMSUtils
 		try
 		{
 			String r = ((MessageExchangeModelItem) messageExchange).getMessageExchange().getProperty("Endpoint");
-			return r.startsWith(JMS_ENDPIONT_PREFIX);
+			return r != null && r.startsWith(JMS_ENDPIONT_PREFIX);
 		}
 		catch (NullPointerException e)
 		{

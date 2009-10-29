@@ -19,6 +19,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
  * 
  * @author ole.matzura
  */
+
 public class JdbcMessageExchange extends AbstractNonHttpMessageExchange<JdbcRequestTestStep>
 {
 	private final JdbcResponse response;
