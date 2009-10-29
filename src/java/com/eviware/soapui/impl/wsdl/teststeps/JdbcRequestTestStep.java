@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ import com.eviware.soapui.support.UISupport;
  * @author dragica.soldo
  */
 
-public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements Assertable, MutableTestPropertyHolder
+public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements Assertable, MutableTestPropertyHolder, PropertyChangeListener
 {
 	@SuppressWarnings( "unused" )
 	private final static Logger log = Logger.getLogger( WsdlTestRequestStep.class );
@@ -434,6 +435,18 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		return currentStatus;
 	}
 
+	public void propertyChange( PropertyChangeEvent arg0 )
+	{
+		if( arg0.getPropertyName().equals( TestAssertion.CONFIGURATION_PROPERTY )
+				|| arg0.getPropertyName().equals( TestAssertion.DISABLED_PROPERTY ) )
+		{
+			if( getJdbcRequest().getResponse() != null )
+			{
+				assertResponse( new WsdlTestRunContext( this ) );
+			}
+		}
+	}
+	
 	public Map<String, TestAssertion> getAssertions()
 	{
 		return assertionsSupport.getAssertions();
