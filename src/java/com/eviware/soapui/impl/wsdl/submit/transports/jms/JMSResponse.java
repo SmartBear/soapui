@@ -25,7 +25,9 @@ import javax.jms.TextMessage;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.model.iface.Attachment;
@@ -36,7 +38,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
  * IMPORTANT TODO:this class is NOT finished yet 
  * 
  */
-public class JMSResponse implements WsdlResponse
+public class JMSResponse implements HttpResponse
 {
 
 	private String payload;
@@ -229,7 +231,10 @@ public class JMSResponse implements WsdlResponse
 
 	public String getContentAsXml()
 	{
-		return payload;
+		if (payload != null && !"".equals(payload))
+			return payload;
+		else
+			return "<xml/>";
 	}
 
 	public String getHttpVersion()
@@ -254,7 +259,7 @@ public class JMSResponse implements WsdlResponse
 
 	public URL getURL()
 	{
-				return null;
+		return null;
 	}
 
 	public void setResponseContent(String responseContent)
@@ -267,9 +272,9 @@ public class JMSResponse implements WsdlResponse
 		return null;
 	}
 
-	public WsdlRequest getRequest()
+	public AbstractHttpRequestInterface<?> getRequest()
 	{
-		return (WsdlRequest) request;
+		return (AbstractHttpRequestInterface<?>) request;
 	}
 
 	public Message getMessageReceive()

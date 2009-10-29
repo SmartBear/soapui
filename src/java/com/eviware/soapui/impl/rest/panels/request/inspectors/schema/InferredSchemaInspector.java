@@ -110,7 +110,13 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
 		try
 		{
 			URL url = httpResponse.getURL();
-			String defaultNamespace = url.getProtocol() + "://" + url.getHost();
+			String defaultNamespace = null;
+			if(url !=null){
+				 defaultNamespace = url.getProtocol() + "://" + url.getHost();
+			}
+			else{
+				defaultNamespace = httpResponse.getRequest().getEndpoint();
+			}
 			XmlOptions options = new XmlOptions().setLoadSubstituteNamespaces(Collections.singletonMap("",defaultNamespace));
 			xml = XmlObject.Factory.parse( content, options ); 
 		}
