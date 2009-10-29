@@ -33,7 +33,7 @@ public class JdbcResponse extends AbstractResponse<JdbcRequest>
 		super( request );
 		
 		org.w3c.dom.Document xmlDocumentResult = XmlUtils.createJdbcXmlResult( statement );
-		responseContent = XmlUtils.serialize( xmlDocumentResult );
+		responseContent = XmlUtils.serializePretty( xmlDocumentResult );
 	}
 
 	public String getContentAsString()

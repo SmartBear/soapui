@@ -38,7 +38,6 @@ import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 
 public class JdbcRequest extends AbstractModelItem implements TestRequest
 {
@@ -255,7 +254,7 @@ public class JdbcRequest extends AbstractModelItem implements TestRequest
 		testStep.removeAssertionsListener( listener );
 	}
 
-	public void setResponse( JdbcResponse response, TestCaseRunContext runContext )
+	public void setResponse( JdbcResponse response )
 	{
 		this.response = response;
 	}

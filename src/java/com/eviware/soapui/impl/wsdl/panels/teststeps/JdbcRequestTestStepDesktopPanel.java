@@ -44,7 +44,6 @@ import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
@@ -573,7 +572,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			fireXmlChanged( evt.getOldValue() == null ? null : ( ( String )evt.getOldValue() ), getXml() );
+			fireXmlChanged( evt.getOldValue() == null ? null : ( ( JdbcResponse )evt.getOldValue() ).getContentAsString(), getXml() );
 		}
 
 		public String getXml()
@@ -861,6 +860,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		queryArea.setEnabledAndEditable( enabled );
 		isStoredProcedureCheckBox.setEnabled( enabled );
 		propertiesTableComponent.setEnabled( enabled );
+		testConnectionButton.setEnabled( enabled );
 
 		statusBar.setIndeterminate( !enabled );
 	}
@@ -871,17 +871,11 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			return;
 
 		Status status = submit.getStatus();
-		HttpResponse response = ( HttpResponse )submit.getResponse();
-		// if (status == Status.FINISHED)
-		// {
-		// jdbcRequest.setResponse(response, context);
-		// }
-		//
-		// if (hasClosed)
-		// {
-		// jdbcRequest.removeSubmitListener(this);
-		// return;
-		// }
+		JdbcResponse response = ( JdbcResponse )submit.getResponse();
+		if( status == Status.FINISHED )
+		{
+			jdbcRequestTestStep.setResponse( response, context);
+		}
 
 		cancelButton.setEnabled( false );
 		setEnabled( true );

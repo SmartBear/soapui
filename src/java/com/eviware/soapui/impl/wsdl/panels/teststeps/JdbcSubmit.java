@@ -54,7 +54,7 @@ public class JdbcSubmit implements Submit, Runnable
 			this.listeners[c] = submitListeners[c];
 
 		for( int c = 0; c < regListeners.size(); c++ )
-			this.listeners[listeners.length + c] = regListeners.get( c );
+			this.listeners[submitListeners.length + c] = regListeners.get( c );
 
 		error = null;
 		status = Status.INITIALIZED;
@@ -154,14 +154,6 @@ public class JdbcSubmit implements Submit, Runnable
 			{
 				status = Status.FINISHED;
 			}
-
-			// TODO see if we need to measure time and how to do it?
-			// if( response.getTimeTaken() == 0 )
-			// {
-			// logger.warn( "Request took 0 in thread " +
-			// Thread.currentThread().getId() + ", response length = "
-			// + response.getContentLength() );
-			// }
 		}
 		catch( Exception e )
 		{
@@ -187,18 +179,11 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 	}
 
-	public void runQuery()
+	protected void runQuery() throws Exception
 	{
-		try
-		{
-			prepare();
-			load();
-			createResponse();
-		}
-		catch( Exception e )
-		{
-			UISupport.showErrorMessage( e );
-		}
+		prepare();
+		load();
+		createResponse();
 	}
 
 	public void cancelQuery()
@@ -222,9 +207,9 @@ public class JdbcSubmit implements Submit, Runnable
 	{
 		String drvr = "";
 		String connStr = "";
-		
+
 		JdbcRequestTestStep testStep = request.getTestStep();
-		
+
 		if( !StringUtils.isNullOrEmpty( testStep.getDriver() )
 				&& !StringUtils.isNullOrEmpty( testStep.getConnectionString() ) )
 		{
@@ -263,10 +248,10 @@ public class JdbcSubmit implements Submit, Runnable
 		try
 		{
 			JdbcRequestTestStep testStep = request.getTestStep();
-			
+
 			if( testStep.isStoredProcedure() )
 			{
-				timestamp = System.nanoTime();
+				timestamp = System.currentTimeMillis();
 				( ( CallableStatement )statement ).execute();
 			}
 			else
@@ -277,13 +262,13 @@ public class JdbcSubmit implements Submit, Runnable
 					TestProperty property = props.get( j );
 					( ( PreparedStatement )statement ).setString( j + 1, property.getValue() );
 				}
-				timestamp = System.nanoTime();
+				timestamp = System.currentTimeMillis();
 				( ( PreparedStatement )statement ).execute();
 			}
 		}
 		finally
 		{
-			timeTaken = System.nanoTime() - timestamp;
+			timeTaken = System.currentTimeMillis() - timestamp;
 		}
 	}
 
@@ -305,22 +290,24 @@ public class JdbcSubmit implements Submit, Runnable
 			String sql = PropertyExpander.expandProperties( context, testStep.getQuery() );
 			statement = connection.prepareStatement( sql );
 		}
-		
-		try
-		{
-			String queryTimeout = PropertyExpander.expandProperties( testStep, testStep.getQueryTimeout());
-			statement.setQueryTimeout( Integer.parseInt( queryTimeout ));
-		}
-		catch( NumberFormatException e )
-		{}
 
 		try
 		{
-			String maxRows = PropertyExpander.expandProperties( testStep, testStep.getMaxRows());
-			statement.setMaxRows( Integer.parseInt( maxRows ));
+			String queryTimeout = PropertyExpander.expandProperties( testStep, testStep.getQueryTimeout() );
+			statement.setQueryTimeout( Integer.parseInt( queryTimeout ) );
 		}
 		catch( NumberFormatException e )
-		{}
+		{
+		}
+
+		try
+		{
+			String maxRows = PropertyExpander.expandProperties( testStep, testStep.getMaxRows() );
+			statement.setMaxRows( Integer.parseInt( maxRows ) );
+		}
+		catch( NumberFormatException e )
+		{
+		}
 	}
 
 	protected String createResponse()

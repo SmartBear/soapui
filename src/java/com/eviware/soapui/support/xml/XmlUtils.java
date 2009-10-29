@@ -14,7 +14,6 @@ package com.eviware.soapui.support.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -147,16 +146,19 @@ public final class XmlUtils
 		return documentBuilder;
 	}
 
-	public static void serializePretty( Document document )
+	public static String serializePretty( Document document )
 	{
 		try
 		{
-			serializePretty( document, new OutputStreamWriter( System.out ) );
+			Writer out = new StringWriter();
+			serializePretty( document, out );
+			return out.toString();
 		}
 		catch( IOException e )
 		{
 			log.error( "Failed to seraialize: " + e );
 		}
+		return null;
 	}
 
 	public static void serializePretty( Document dom, Writer writer ) throws IOException
