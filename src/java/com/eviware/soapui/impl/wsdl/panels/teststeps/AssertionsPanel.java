@@ -354,7 +354,6 @@ public class AssertionsPanel extends JPanel
 			else
 				SwingUtilities.invokeLater( new Runnable()
 				{
-
 					public void run()
 					{
 						refresh();

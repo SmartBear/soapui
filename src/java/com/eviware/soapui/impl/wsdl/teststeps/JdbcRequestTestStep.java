@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.beans.PropertyChangeListener;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +90,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	private PropertyChangeNotifier notifier;
 	private XmlBeansPropertiesTestPropertyHolder propertyHolderSupport;
 	private JdbcRequest jdbcRequest;
+	private AssertionStatus currentStatus;
 
 	public JdbcRequestTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
@@ -403,7 +405,33 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 	public AssertionStatus getAssertionStatus()
 	{
-		return AssertionStatus.UNKNOWN;
+		currentStatus = AssertionStatus.UNKNOWN;
+
+		if (jdbcRequest.getResponse() == null)
+			return currentStatus;
+
+		int cnt = getAssertionCount();
+		if (cnt == 0)
+			return currentStatus;
+
+		boolean hasEnabled = false;
+
+		for (int c = 0; c < cnt; c++)
+		{
+			if (!getAssertionAt(c).isDisabled())
+				hasEnabled = true;
+
+			if (getAssertionAt(c).getStatus() == AssertionStatus.FAILED)
+			{
+				currentStatus = AssertionStatus.FAILED;
+				break;
+			}
+		}
+
+		if (currentStatus == AssertionStatus.UNKNOWN && hasEnabled)
+			currentStatus = AssertionStatus.VALID;
+
+		return currentStatus;
 	}
 
 	public Map<String, TestAssertion> getAssertions()
@@ -462,6 +490,8 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		}
 	}
 
+	
+	
 	public TestProperty addProperty( String name )
 	{
 		return propertyHolderSupport.addProperty( name );

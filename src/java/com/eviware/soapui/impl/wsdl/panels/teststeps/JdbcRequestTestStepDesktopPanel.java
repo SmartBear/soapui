@@ -47,19 +47,20 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
+import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Submit.Status;
-import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.AssertionsListener;
+import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
+import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
@@ -90,6 +91,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	protected JdbcRequestTestStepConfig jdbcRequestTestStepConfig;
 	protected JComponentInspector<?> assertionInspector;
 	protected AssertionsPanel assertionsPanel;
+	private InternalAssertionsListener assertionsListener = new InternalAssertionsListener();
+	private InternalTestMonitorListener testMonitorListener = new InternalTestMonitorListener();
 	protected JComponent requestEditor;
 	protected ModelItemXmlEditor<?, ?> responseEditor;
 	protected JPanel panel;
@@ -110,7 +113,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	protected JTextField connStrTextField;
 	protected JButton testConnectionButton;
 	protected JPasswordField passField;
-	private InternalTestRunListener testRunListener = new InternalTestRunListener();
 	private Submit submit;
 	private SubmitAction submitAction;
 	protected JButton submitButton;
@@ -128,15 +130,18 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	{
 		super( modelItem );
 		jdbcRequestTestStep = modelItem;
-		modelItem.getTestCase().addTestRunListener( testRunListener );
 		initConfig();
 		initContent();
+		
+		SoapUI.getTestMonitor().addTestMonitorListener( testMonitorListener );
+		setEnabled( !SoapUI.getTestMonitor().hasRunningTest( jdbcRequestTestStep.getTestCase() ) );
+		
+		jdbcRequestTestStep.addAssertionsListener( assertionsListener );
 	}
 
 	protected void initConfig()
 	{
 		jdbcRequestTestStepConfig = jdbcRequestTestStep.getJdbcRequestTestStepConfig();
-
 	}
 
 	private JComponent buildContent()
@@ -225,6 +230,9 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 		inspectorPanel.addInspector( assertionInspector );
 		// setPreferredSize(new Dimension(600, 450));
+		
+		updateStatusIcon();
+		
 		return inspectorPanel.getComponent();
 	}
 
@@ -348,20 +356,17 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 	protected class JdbcAssertionsPanel extends AssertionsPanel
 	{
-
 		public JdbcAssertionsPanel( Assertable assertable )
 		{
 			super( assertable );
 			addAssertionAction = new AddAssertionAction( assertable );
 			assertionListPopup.add( addAssertionAction );
 		}
-
 	}
 
 	protected void createSimpleJdbcConfigForm()
 	{
 		configForm.addSpace( 5 );
-
 		configForm.setDefaultTextFieldColumns( 50 );
 
 		driverTextField = configForm.appendTextField( DRIVER_FIELD, "JDBC Driver to use" );
@@ -512,55 +517,11 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	{
 		configPanel.removeAll();
 		inspectorPanel.release();
+		
+		SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener );
+		jdbcRequestTestStep.removeAssertionsListener( assertionsListener );
 
 		return release();
-	}
-
-	public class AddAssertionAction extends AbstractAction
-	{
-		private final Assertable assertable;
-
-		public AddAssertionAction( Assertable assertable )
-		{
-			super( "Add Assertion" );
-			this.assertable = assertable;
-
-			putValue( Action.SHORT_DESCRIPTION, "Adds an assertion to this item" );
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/addAssertion.gif" ) );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			String[] assertions = TestAssertionRegistry.getInstance().getAvailableAssertionNames( assertable );
-
-			if( assertions == null || assertions.length == 0 )
-			{
-				UISupport.showErrorMessage( "No assertions available for this message" );
-				return;
-			}
-
-			String selection = ( String )UISupport.prompt( "Select assertion to add", "Select Assertion", assertions );
-			if( selection == null )
-				return;
-
-			if( !TestAssertionRegistry.getInstance().canAddMultipleAssertions( selection, assertable ) )
-			{
-				UISupport.showErrorMessage( "This assertion can only be added once" );
-				return;
-			}
-
-			TestAssertion assertion = assertable.addAssertion( selection );
-			if( assertion == null )
-			{
-				UISupport.showErrorMessage( "Failed to add assertion" );
-				return;
-			}
-
-			if( assertion.isConfigurable() )
-			{
-				assertion.configure();
-			}
-		}
 	}
 
 	public class JdbcResponseDocument extends AbstractXmlDocument implements PropertyChangeListener
@@ -619,16 +580,31 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		}
 	}
 
-	private class InternalTestRunListener extends TestRunListenerAdapter
+	private class InternalTestMonitorListener extends TestMonitorListenerAdapter
 	{
-		@Override
-		public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
+		public void loadTestFinished( LoadTestRunner runner )
 		{
-			// TODO Auto-generated method stub
-			super.afterStep( testRunner, runContext, result );
+			setEnabled( !SoapUI.getTestMonitor().hasRunningTest( getModelItem().getTestCase() ) );
+		}
+
+		public void loadTestStarted( LoadTestRunner runner )
+		{
+			if( runner.getLoadTest().getTestCase() == getModelItem().getTestCase() )
+				setEnabled( false );
+		}
+
+		public void testCaseFinished( TestCaseRunner runner )
+		{
+			setEnabled( !SoapUI.getTestMonitor().hasRunningTest( getModelItem().getTestCase() ) );
+		}
+
+		public void testCaseStarted( TestCaseRunner runner )
+		{
+			if( runner.getTestCase() == getModelItem().getTestCase() )
+				setEnabled( false );
 		}
 	}
-
+	
 	public class SubmitAction extends AbstractAction
 	{
 		public SubmitAction()
@@ -673,11 +649,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 	protected final class InputAreaFocusListener implements FocusListener
 	{
-		private final JComponent requestEditor;
-
 		public InputAreaFocusListener( JComponent editor )
 		{
-			this.requestEditor = editor;
 		}
 
 		public void focusGained( FocusEvent e )
@@ -915,6 +888,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			responseEditor.getSourceEditor().validate();
 
 		JdbcRequestTestStepDesktopPanel.this.submit = null;
+		
+		updateStatusIcon();
 	}
 
 	protected void logMessages( String message, String infoMessage )
@@ -931,5 +906,56 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		setEnabled( false );
 		cancelButton.setEnabled( JdbcRequestTestStepDesktopPanel.this.submit != null );
 		return true;
+	}
+	
+	public void propertyChange( PropertyChangeEvent evt )
+	{
+		super.propertyChange( evt );
+
+		if( evt.getPropertyName().equals( JdbcRequestTestStep.STATUS_PROPERTY ) )
+			updateStatusIcon();
+	}
+	
+	private final class InternalAssertionsListener implements AssertionsListener
+	{
+		public void assertionAdded( TestAssertion assertion )
+		{
+			assertionInspector.setTitle( "Assertions (" + getModelItem().getAssertionCount() + ")" );
+		}
+
+		public void assertionRemoved( TestAssertion assertion )
+		{
+			assertionInspector.setTitle( "Assertions (" + getModelItem().getAssertionCount() + ")" );
+		}
+
+		public void assertionMoved( TestAssertion assertion, int ix, int offset )
+		{
+			assertionInspector.setTitle( "Assertions (" + getModelItem().getAssertionCount() + ")" );
+		}
+	}
+	
+	private void updateStatusIcon()
+	{
+		AssertionStatus status = jdbcRequestTestStep.getAssertionStatus();
+		switch( status )
+		{
+		case FAILED :
+		{
+			assertionInspector.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
+			inspectorPanel.activate( assertionInspector );
+			break;
+		}
+		case UNKNOWN :
+		{
+			assertionInspector.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
+			break;
+		}
+		case VALID :
+		{
+			assertionInspector.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
+			inspectorPanel.deactivate();
+			break;
+		}
+		}
 	}
 }
