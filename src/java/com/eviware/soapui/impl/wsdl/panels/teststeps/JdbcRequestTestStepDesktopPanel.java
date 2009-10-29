@@ -578,12 +578,13 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 		public String getXml()
 		{
-			return jdbcRequestTestStep.getJdbcRequest().getResponse().getContentAsString();
+			JdbcResponse response = jdbcRequestTestStep.getJdbcRequest().getResponse();
+			return response == null ? null : response.getContentAsString();
 		}
 
 		public void setXml( String xml )
 		{
-			if( jdbcRequestTestStep != null )
+			if( jdbcRequestTestStep.getJdbcRequest().getResponse() != null )
 				jdbcRequestTestStep.getJdbcRequest().getResponse().setContentAsString( xml );
 		}
 
