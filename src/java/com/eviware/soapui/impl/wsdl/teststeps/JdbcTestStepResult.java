@@ -15,8 +15,10 @@ package com.eviware.soapui.impl.wsdl.teststeps;
 import java.lang.ref.SoftReference;
 
 import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcResponse;
+import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
+import com.eviware.soapui.model.testsuite.AssertedXPath;
 
-public class JdbcTestStepResult extends WsdlTestStepResult
+public class JdbcTestStepResult extends WsdlTestStepResult implements AssertedXPathsContainer
 {
 	private JdbcResponse response;
 	private SoftReference<JdbcResponse> softResponse;
@@ -38,5 +40,11 @@ public class JdbcTestStepResult extends WsdlTestStepResult
 	public void setRequestContent( String requestContent )
 	{
 		this.requestContent = requestContent;
+	}
+
+	public void addAssertedXPath( AssertedXPath assertedXPath )
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }
