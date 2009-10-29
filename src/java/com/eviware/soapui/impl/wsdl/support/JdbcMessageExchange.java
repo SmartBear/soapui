@@ -9,8 +9,10 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
+
 package com.eviware.soapui.impl.wsdl.support;
 
+import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcResponse;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 
 /**
@@ -19,37 +21,37 @@ import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
  */
 public class JdbcMessageExchange extends AbstractNonHttpMessageExchange<JdbcRequestTestStep>
 {
-
-	private JdbcRequestTestStep modelItem;
-	public JdbcMessageExchange( JdbcRequestTestStep modelItem )
+	private final JdbcResponse response;
+	
+	public JdbcMessageExchange( JdbcRequestTestStep modelItem, JdbcResponse response )
 	{
 		super( modelItem );
-		this.modelItem = modelItem;
+		this.response = response;
 	}
 
 	public String getRequestContent()
 	{
-		return null;
+		return response.getRequestContent();
 	}
 
 	public String getResponseContent()
 	{
-		return modelItem.getXmlStringResult();
+		return response.getContentAsString();
 	}
 
 	public long getTimeTaken()
 	{
-		return 0;
+		return response.getTimeTaken();
 	}
 
 	public long getTimestamp()
 	{
-		return 0;
+		return response.getTimestamp();
 	}
 
 	public boolean hasRequest( boolean ignoreEmpty )
 	{
-		return false;
+		return true;
 	}
 
 	public boolean hasResponse()

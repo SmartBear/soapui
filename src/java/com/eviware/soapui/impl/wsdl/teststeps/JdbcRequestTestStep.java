@@ -12,62 +12,49 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
-import com.eviware.soapui.config.PropertyConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
-import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
-import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcRequest.JdbcSubmit;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcRequest;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcResponse;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcSubmit;
 import com.eviware.soapui.impl.wsdl.support.JdbcMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
+import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
+import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.support.SoapUIException;
+import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.SimpleForm;
-import com.eviware.soapui.support.xml.JXEditTextArea;
-import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * WsdlTestStep that executes a WsdlTestRequest
@@ -77,16 +64,16 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements Assertable, MutableTestPropertyHolder
 {
+	@SuppressWarnings( "unused" )
 	private final static Logger log = Logger.getLogger(WsdlTestRequestStep.class);
 	protected JdbcRequestTestStepConfig jdbcRequestTestStepConfig;
 	public final static String JDBCREQUEST = JdbcRequestTestStep.class.getName() + "@jdbcrequest";
 	public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";
 	public static final String RESPONSE_PROPERTY = WsdlTestRequest.class.getName() + "@response";
 	private JdbcSubmit submit;
+	@SuppressWarnings( "unused" )
 	private ImageIcon failedIcon;
 	private ImageIcon okIcon;
-	private String xmlStringResult;
-	private org.w3c.dom.Document xmlDocumentResult;
 	protected static final String DRIVER_FIELD = "Driver";
 	protected static final String CONNSTR_FIELD = "Connection String";
 	protected static final String PASS_FIELD = "Password";
@@ -97,13 +84,11 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 	protected static final String QUERY_ELEMENT = "query";
 	protected static final String STOREDPROCEDURE_ELEMENT = "stored-procedure";
-	protected JPanel panel;
-	protected SimpleForm form;
 	protected Connection connection;
-	protected JXEditTextArea queryArea;
 	private AssertionsSupport assertionsSupport;
 	private PropertyChangeNotifier notifier;
    private XmlBeansPropertiesTestPropertyHolder propertyHolderSupport;
+	private JdbcRequest jdbcRequest;
 
 	public JdbcRequestTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest)
 	{
@@ -126,35 +111,15 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			jdbcRequestTestStepConfig = (JdbcRequestTestStepConfig) getConfig().addNewConfig().changeType(
 					JdbcRequestTestStepConfig.type);
 		}
+		
 		if( jdbcRequestTestStepConfig.getProperties() == null )
 			jdbcRequestTestStepConfig.addNewProperties();
+		
+		jdbcRequest = new JdbcRequest( this );
 		
 		propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder( this, jdbcRequestTestStepConfig.getProperties() );
 		initAssertions();
 	}
-
-	public org.w3c.dom.Document getXmlDocumentResult()
-	{
-		return xmlDocumentResult;
-	}
-
-	public String getXmlStringResult()
-	{
-		return xmlStringResult;
-	}
-
-	public void setXmlStringResult(String xmlResult)
-	{
-		this.xmlStringResult = xmlResult;
-	}
-
-	private boolean runnable;
-
-	public boolean isRunnable()
-	{
-		return runnable;
-	}
-
 
 	public JdbcRequestTestStepConfig getJdbcRequestTestStepConfig()
 	{
@@ -167,9 +132,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		beforeSave();
 
 		TestStepConfig config = (TestStepConfig) getConfig().copy();
-		JdbcRequestTestStepConfig stepConfig = (JdbcRequestTestStepConfig) config.getConfig().changeType(
-				JdbcRequestTestStepConfig.type);
-
 		JdbcRequestTestStep result = (JdbcRequestTestStep) targetTestCase.addTestStep(config);
 
 		return result;
@@ -183,8 +145,114 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 	public TestStepResult run(TestCaseRunner runner, TestCaseRunContext runContext)
 	{
-		WsdlTestStepResult testStepResult = new WsdlTestStepResult(this);
-		runQuery();
+		JdbcTestStepResult testStepResult = new JdbcTestStepResult( this );
+		testStepResult.startTimer();
+		runContext.setProperty( AssertedXPathsContainer.ASSERTEDXPATHSCONTAINER_PROPERTY, testStepResult );
+
+		try
+		{
+			submit = jdbcRequest.submit( runContext, false );
+			JdbcResponse response = submit.getResponse();
+
+			if( submit.getStatus() != Submit.Status.CANCELED )
+			{
+				if( submit.getStatus() == Submit.Status.ERROR )
+				{
+					testStepResult.setStatus( TestStepStatus.FAILED );
+					testStepResult.addMessage( submit.getError().toString() );
+					
+
+					jdbcRequest.setResponse( null, runContext );
+				}
+				else if( response == null )
+				{
+					testStepResult.setStatus( TestStepStatus.FAILED );
+					testStepResult.addMessage( "Request is missing response" );
+
+					jdbcRequest.setResponse( null, runContext );
+				}
+				else
+				{
+					runContext.setProperty( AssertedXPathsContainer.ASSERTEDXPATHSCONTAINER_PROPERTY, testStepResult );
+					jdbcRequest.setResponse( response, runContext );
+
+					testStepResult.setTimeTaken( response.getTimeTaken() );
+					testStepResult.setSize( response.getContentLength() );
+
+					switch( jdbcRequest.getAssertionStatus() )
+					{
+					case FAILED :
+						testStepResult.setStatus( TestStepStatus.FAILED );
+						break;
+					case VALID :
+						testStepResult.setStatus( TestStepStatus.OK );
+						break;
+					case UNKNOWN :
+						testStepResult.setStatus( TestStepStatus.UNKNOWN );
+						break;
+					}
+
+					testStepResult.setResponse( response, testStepResult.getStatus() != TestStepStatus.FAILED );
+				}
+			}
+			else
+			{
+				testStepResult.setStatus( TestStepStatus.CANCELED );
+				testStepResult.addMessage( "Request was canceled" );
+			}
+
+			if( response != null )
+				testStepResult.setRequestContent( response.getRequestContent() );
+			else
+				testStepResult.setRequestContent( jdbcRequest.getRequestContent() );
+			
+			testStepResult.stopTimer();
+		}
+		catch( SubmitException e )
+		{
+			testStepResult.setStatus( TestStepStatus.FAILED );
+			testStepResult.addMessage( "SubmitException: " + e );
+			testStepResult.stopTimer();
+		}
+		finally
+		{
+			submit = null;
+		}
+
+		if( testStepResult.getStatus() != TestStepStatus.CANCELED )
+		{
+			AssertionStatus assertionStatus = jdbcRequest.getAssertionStatus();
+			switch( assertionStatus )
+			{
+			case FAILED :
+			{
+				testStepResult.setStatus( TestStepStatus.FAILED );
+				if( getAssertionCount() == 0 )
+				{
+					testStepResult.addMessage( "Invalid/empty response" );
+				}
+				else
+					for( int c = 0; c < getAssertionCount(); c++ )
+					{
+						TestAssertion assertion = getAssertionAt( c );
+						AssertionError[] errors = assertion.getErrors();
+						if( errors != null )
+						{
+							for( AssertionError error : errors )
+							{
+								testStepResult.addMessage( "[" + assertion.getName() + "] " + error.getMessage() );
+							}
+						}
+					}
+
+				break;
+			}
+				// default : testStepResult.setStatus( TestStepStatus.OK ); break;
+			}
+		}
+
+		if( !runContext.hasProperty( TestRunContext.INTERACTIVE ) )
+			jdbcRequest.setResponse( null, runContext );
 
 		return testStepResult;
 	}
@@ -203,171 +271,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	public String getDefaultSourcePropertyName()
 	{
 		return "Response";
-	}
-
-	// running
-	protected ResultSet resultSet;
-	protected Statement statement;
-
-	public void runQuery()
-	{
-		MockTestRunner mockRunner = new MockTestRunner(getTestCase());
-		MockTestRunContext mockContext = new MockTestRunContext(mockRunner, this);
-		try
-		{
-			prepare(mockRunner, mockContext);
-			try
-			{
-				Thread.sleep(5000);
-			}
-			catch (InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			List<String> properties = new ArrayList<String>();
-			load(mockRunner, mockContext, properties);
-			createXmlResult();
-		}
-		catch (Exception e)
-		{
-			UISupport.showErrorMessage(e);
-		}
-	}
-	public void cancelQuery() {
-		try
-		{
-			statement.cancel();
-		}
-		catch (SQLFeatureNotSupportedException e)
-		{
-			UISupport.showErrorMessage(e);
-		}
-		catch (SQLException ex)
-		{
-			UISupport.showErrorMessage(ex);
-		}
-	}
-
-	protected void getDatabaseConnection(PropertyExpansionContext context) throws Exception, SQLException
-	{
-	   String drvr ="";
-	   String connStr="";
-	   if (!StringUtils.isNullOrEmpty(getDriver()) && !StringUtils.isNullOrEmpty(getConnectionString())) {
-			 drvr = PropertyExpander.expandProperties( context, getDriver() ).trim();
-			 connStr = PropertyExpander.expandProperties( context, getConnectionString() ).trim();
-	   } else {
-	   	UISupport.showErrorMessage( "Please supply connection settings for all DataSources" );
-	   	throw new SoapUIException("Please supply connection settings");
-	   }
-		connStr = connStr.replaceFirst(PASS_TEMPLATE, getPassword());
-		try
-		{
-			DriverManager.getDriver(connStr);
-		}
-		catch (SQLException e)
-		{
-			try
-			{
-				Class.forName(drvr).newInstance();
-			}
-			catch (Exception e1)
-			{
-				throw new Exception("Failed to init connection for drvr [" + drvr + "], connectionString ["
-						+ jdbcRequestTestStepConfig.getConnectionString() + "]");
-			}
-		}
-
-		resultSet = null;
-		connection = DriverManager.getConnection(connStr);
-	}
-
-	public void load(TestCaseRunner testRunner, TestCaseRunContext context, List<String> properties) throws Exception
-	{
-		if (jdbcRequestTestStepConfig.getStoredProcedure())
-		{
-			((CallableStatement) statement).execute();
-		}
-		else
-		{
-			List<PropertyConfig> props = jdbcRequestTestStepConfig.getProperties().getPropertyList();
-			//TODO 
-			/*
-			 * Since ((PreparedStatement)statement).getParameterMetaData() is not implemented in specific drivers
-			 * (except for mysql for now)
-			 * number of parameters should match number of properties in exact order
-			*/
-			
-//			int parameterCount = ((PreparedStatement)statement).getParameterMetaData().getParameterCount();
-//			for (int i = 0; i < parameterCount; i++)
-//			{
-//				String paramName = ((PreparedStatement)statement).getParameterMetaData().getParameterTypeName(i);
-				for (int j = 0; j < props.size(); j++)
-				{
-					PropertyConfig property = props.get(j);
-					((PreparedStatement) statement).setString(j+1, property.getValue());
-				}
-//			}
-			((PreparedStatement)statement).execute();
-
-		}
-
-		// getColumnNamesForCurrentResultSet();
-		// resultSetCount = resultSet == null ? 0 : 1;
-	}
-
-
-	@Override
-	public void prepare(TestCaseRunner testRunner, TestCaseRunContext context) throws Exception
-	{
-		getDatabaseConnection(context);
-		if (jdbcRequestTestStepConfig.getStoredProcedure())
-		{
-			String sql = PropertyExpander.expandProperties(context, jdbcRequestTestStepConfig.getQuery());
-
-			if (!sql.startsWith("{call ") && !sql.endsWith("}"))
-				sql = "{call " + sql + "}";
-
-			statement = connection.prepareCall(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-		}
-		else
-		{
-			String sql = PropertyExpander.expandProperties(context, jdbcRequestTestStepConfig.getQuery());
-			statement = connection.prepareStatement(sql);
-		}
-		super.prepare(testRunner, context);
-	}
-
-	public void createXmlResult()
-	{
-		try
-		{
-			org.w3c.dom.Document xmlDocumentResult = XmlUtils.createJdbcXmlResult(statement);
-			String oldRes = getXmlStringResult();
-			xmlStringResult = XmlUtils.getDocumentAsString(xmlDocumentResult);
-			setXmlStringResult(xmlStringResult);
-			notifyPropertyChanged(RESPONSE_PROPERTY, oldRes, xmlStringResult);
-
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			try
-			{
-				if (connection != null)
-					connection.close();
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-			}
-			catch (Exception e)
-			{
-			}
-		}
 	}
 
 	private void initAssertions()
@@ -436,9 +339,9 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			if (assertion == null)
 				return null;
 
-			if (getXmlStringResult() != null)
+			if (getJdbcRequest().getResponse() != null)
 			{
-				assertion.assertResponse(new JdbcMessageExchange( this ), new WsdlTestRunContext( this ) );
+				assertion.assertResponse(new JdbcMessageExchange( this, getJdbcRequest().getResponse() ), new WsdlTestRunContext( this ) );
 				notifier.notifyChange();
 			}
 
@@ -463,9 +366,14 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 	public String getAssertableContent()
 	{
-		return getXmlStringResult();
+		return getJdbcRequest().getResponse() == null ? null : getJdbcRequest().getResponse().getContentAsString();
 	}
 
+	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy )
+	{
+		return assertionsSupport.importAssertion( source, overwrite, createCopy );
+	}
+	
 	public AssertableType getAssertableType()
 	{
 		return AssertableType.RESPONSE;
@@ -533,7 +441,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			if (notifier == null)
 				notifier = new PropertyChangeNotifier();
 
-			JdbcMessageExchange messageExchange = new JdbcMessageExchange( this );
+			JdbcMessageExchange messageExchange = new JdbcMessageExchange( this, getJdbcRequest().getResponse() );
 
 			if (this != null)
 			{
@@ -680,11 +588,11 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	{
 		return !StringUtils.isNullOrEmpty(connStr)? connStr.contains( PASS_TEMPLATE ) : false;
 	}
+	
 	public boolean isStoredProcedure()
 	{
 		return jdbcRequestTestStepConfig.getStoredProcedure();
 	}
-
 
 	public void setStoredProcedure(boolean sp)
 	{
@@ -693,4 +601,32 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		notifyPropertyChanged( "password", old, sp );
 	}
 
+	public JdbcRequest getJdbcRequest()
+	{
+		return jdbcRequest;
+	}
+
+	public String getQueryTimeout()
+	{
+		return jdbcRequestTestStepConfig.getQueryTimeout();
+	}
+	
+	public String getMaxRows()
+	{
+		return jdbcRequestTestStepConfig.getMaxRows();
+	}
+	
+	public void setQueryTimeout( String queryTimeout )
+	{
+		String old = getQueryTimeout();
+		jdbcRequestTestStepConfig.setQueryTimeout( queryTimeout );
+		notifyPropertyChanged( "queryTimeout", old, queryTimeout );
+	}
+	
+	public void setMaxRows( String maxRows )
+	{
+		String old = getMaxRows();
+		jdbcRequestTestStepConfig.setMaxRows( maxRows );
+		notifyPropertyChanged( "maxRows", old, maxRows );
+	}
 }
