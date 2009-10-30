@@ -216,7 +216,7 @@ public class JdbcSubmit implements Submit, Runnable
 	{
 		String drvr = "";
 		String connStr = "";
-		String pass = "";
+
 		JdbcRequestTestStep testStep = request.getTestStep();
 
 		if( !StringUtils.isNullOrEmpty( testStep.getDriver() )
@@ -224,14 +224,13 @@ public class JdbcSubmit implements Submit, Runnable
 		{
 			drvr = PropertyExpander.expandProperties( context, testStep.getDriver() ).trim();
 			connStr = PropertyExpander.expandProperties( context, testStep.getConnectionString() ).trim();
-			pass = PropertyExpander.expandProperties( context, testStep.getPassword() ).trim();
 		}
 		else
 		{
 			UISupport.showErrorMessage( "Please supply connection settings for all DataSources" );
 			throw new SoapUIException( "Please supply connection settings" );
 		}
-		connStr = connStr.replaceFirst( JdbcRequestTestStep.PASS_TEMPLATE, pass );
+		connStr = connStr.replaceFirst( JdbcRequestTestStep.PASS_TEMPLATE, testStep.getPassword() );
 		try
 		{
 			DriverManager.getDriver( connStr );
@@ -272,6 +271,14 @@ public class JdbcSubmit implements Submit, Runnable
 					TestProperty property = props.get( j );
 					( ( PreparedStatement )statement ).setString( j + 1, property.getValue() );
 				}
+//				try
+//				{
+//					Thread.sleep(15000);
+//				}
+//				catch (Exception e)
+//				{
+//					// TODO: handle exception
+//				}
 				timestamp = System.currentTimeMillis();
 				( ( PreparedStatement )statement ).execute();
 			}
