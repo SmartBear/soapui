@@ -1427,29 +1427,31 @@ public final class XmlUtils
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		org.w3c.dom.Document xmlDocumentResult = builder.newDocument();
-		Element results = xmlDocumentResult.createElement( "Results" );
-		xmlDocumentResult.appendChild( results );
+		Element resultsElement = xmlDocumentResult.createElement( "Results" );
+		xmlDocumentResult.appendChild( resultsElement );
 
-		xmlDocumentResult = addResultSetXmlPart( results, statement.getResultSet(), xmlDocumentResult );
+		xmlDocumentResult = addResultSetXmlPart( resultsElement, statement.getResultSet(), xmlDocumentResult );
 		while( statement.getMoreResults() )
 		{
-			xmlDocumentResult = addResultSetXmlPart( results, statement.getResultSet(), xmlDocumentResult );
+			xmlDocumentResult = addResultSetXmlPart( resultsElement, statement.getResultSet(), xmlDocumentResult );
 		}
 		return xmlDocumentResult;
 
 	}
 
-	public static Document addResultSetXmlPart( Element results, ResultSet rs, Document xmlDocumentResult )
+	public static Document addResultSetXmlPart( Element resultsElement, ResultSet rs, Document xmlDocumentResult )
 			throws SQLException
 	{
 		// resultSet = statement.getResultSet();
 		// connection to an ACCESS MDB
 		ResultSetMetaData rsmd = rs.getMetaData();
+		Element resultSetElement = xmlDocumentResult.createElement( "ResultSet" );
+		resultsElement.appendChild( resultSetElement );		
 		int colCount = rsmd.getColumnCount();
 		while( rs.next() )
 		{
-			Element row = xmlDocumentResult.createElement( "Row" );
-			results.appendChild( row );
+			Element rowElement = xmlDocumentResult.createElement( "Row" );
+			resultsElement.appendChild( rowElement );
 			for( int ii = 1; ii <= colCount; ii++ )
 			{
 				String columnName = "";
@@ -1464,8 +1466,9 @@ public final class XmlUtils
 				{
 					node.appendChild( xmlDocumentResult.createTextNode( value.toString() ) );
 				}
-				row.appendChild( node );
+				rowElement.appendChild( node );
 			}
+			resultSetElement.appendChild( rowElement );		
 		}
 		return xmlDocumentResult;
 	}
