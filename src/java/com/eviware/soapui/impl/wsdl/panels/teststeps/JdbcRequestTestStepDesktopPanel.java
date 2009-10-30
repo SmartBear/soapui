@@ -215,7 +215,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		{
 			requestSplitPane.setTopComponent(requestEditor);
 			requestSplitPane.setBottomComponent(responseEditor);
-			requestSplitPane.setDividerLocation(0.5);
+			requestSplitPane.setDividerLocation(300);
 			content = requestSplitPane;
 		}
 
@@ -253,6 +253,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		propertiesTableComponent = buildProperties();
 		JSplitPane split = UISupport.createVerticalSplit(propertiesTableComponent, configPanel);
 		split.setDividerLocation(120);
+		split.setPreferredSize( new Dimension( 400, 500  ));
 
 		// TODO add scrolling but without messing with the dimension - ask Ole
 		return new JScrollPane(split);
