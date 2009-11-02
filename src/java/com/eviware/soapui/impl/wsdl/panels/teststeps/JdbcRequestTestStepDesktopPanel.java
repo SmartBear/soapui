@@ -422,6 +422,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				jdbcRequestTestStep.setPassword(configForm.getComponentValue(PASS_FIELD));
 				testConnectionButton.setEnabled(enableTestConnection());
 				submitButton.setEnabled(enableSubmit());
+				queryArea.setText("");
 			}
 		});
 	}
@@ -451,6 +452,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				jdbcRequestTestStep.setDriver(configForm.getComponentValue(DRIVER_FIELD));
 				testConnectionButton.setEnabled(enableTestConnection());
 				submitButton.setEnabled(enableSubmit());
+				queryArea.setText("");
 			}
 		});
 	}
