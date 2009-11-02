@@ -17,7 +17,7 @@ import java.util.concurrent.Future;
 import javax.swing.ImageIcon;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.model.support.AbstractAnimatableModelItem;
 import com.eviware.soapui.support.UISupport;
 
 /**
@@ -26,7 +26,7 @@ import com.eviware.soapui.support.UISupport;
  * @author ole.matzura
  */
 
-public class ModelItemIconAnimator<T extends AbstractWsdlModelItem<?>> implements Runnable
+public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> implements Runnable
 {
 	private final T target;
 	private int index = 0;

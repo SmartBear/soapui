@@ -271,14 +271,14 @@ public class JdbcSubmit implements Submit, Runnable
 					TestProperty property = props.get( j );
 					( ( PreparedStatement )statement ).setString( j + 1, property.getValue() );
 				}
-//				try
-//				{
-//					Thread.sleep(15000);
-//				}
-//				catch (Exception e)
-//				{
-//					// TODO: handle exception
-//				}
+				try
+				{
+					Thread.sleep(15000);
+				}
+				catch (Exception e)
+				{
+					// TODO: handle exception
+				}
 				timestamp = System.currentTimeMillis();
 				( ( PreparedStatement )statement ).execute();
 			}

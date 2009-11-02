@@ -32,7 +32,6 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcResponse;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcSubmit;
 import com.eviware.soapui.impl.wsdl.support.JdbcMessageExchange;
-import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
 import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
@@ -43,7 +42,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.A
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.Assertable;
@@ -56,10 +54,9 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
-import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.UISupport;
 
 /**
  * WsdlTestStep that executes a WsdlTestRequest
@@ -91,18 +88,10 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	private PropertyChangeNotifier notifier;
 	private XmlBeansPropertiesTestPropertyHolder propertyHolderSupport;
 	private JdbcRequest jdbcRequest;
-	private ImageIcon validRequestIcon;
-	private ImageIcon failedRequestIcon;
-	private ImageIcon disabledRequestIcon;
-	private ImageIcon unknownRequestIcon;
-	private RequestIconAnimator<?> iconAnimator;
-	private boolean forLoadTest;
-	private AssertionStatus currentStatus;
 
 	public JdbcRequestTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest)
 	{
 		super(testCase, config, true, forLoadTest);
-		this.forLoadTest = forLoadTest;
 
 		if (getConfig().getConfig() != null)
 		{
@@ -129,7 +118,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		// }
 		propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder(this, jdbcRequestTestStepConfig.getProperties());
 		initAssertions();
-		initIcons();
+		jdbcRequest.initIcons();
 //		if (!forLoadTest && !UISupport.isHeadless())
 //		{
 //			setIconAnimator(initIconAnimator());
@@ -318,22 +307,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		});
 	}
 
-	protected void initIcons()
-	{
-		if (validRequestIcon == null)
-			validRequestIcon = UISupport.createImageIcon("/valid_jdbc_request.gif");
-
-		if (failedRequestIcon == null)
-			failedRequestIcon = UISupport.createImageIcon("/invalid_jdbc_request.gif");
-
-		if (unknownRequestIcon == null)
-			unknownRequestIcon = UISupport.createImageIcon("/unknown_jdbc_request.gif");
-
-		if (disabledRequestIcon == null)
-			disabledRequestIcon = UISupport.createImageIcon("/disabled_jdbc_request.gif");
-		setIconAnimator(new RequestIconAnimator<JdbcRequestTestStep>(this, "/jdbc_request.gif", "/exec_jdbc_request", 4, "gif") );
-	}
-
 	private class PropertyChangeNotifier
 	{
 		private AssertionStatus oldStatus;
@@ -432,36 +405,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		return new ArrayList<TestAssertion>(assertionsSupport.getAssertionList());
 	}
 
-	public AssertionStatus getAssertionStatus()
-	{
-		currentStatus = AssertionStatus.UNKNOWN;
-
-		if (jdbcRequest.getResponse() == null)
-			return currentStatus;
-
-		int cnt = getAssertionCount();
-		if (cnt == 0)
-			return currentStatus;
-
-		boolean hasEnabled = false;
-
-		for (int c = 0; c < cnt; c++)
-		{
-			if (!getAssertionAt(c).isDisabled())
-				hasEnabled = true;
-
-			if (getAssertionAt(c).getStatus() == AssertionStatus.FAILED)
-			{
-				currentStatus = AssertionStatus.FAILED;
-				break;
-			}
-		}
-
-		if (currentStatus == AssertionStatus.UNKNOWN && hasEnabled)
-			currentStatus = AssertionStatus.VALID;
-
-		return currentStatus;
-	}
 
 	public void propertyChange( PropertyChangeEvent arg0 )
 	{
@@ -485,6 +428,15 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		return null;
 	}
 
+	public AssertionStatus getAssertionStatus()
+	{
+		return jdbcRequest.getAssertionStatus();
+	}
+
+	public ImageIcon getIcon()
+	{
+		return jdbcRequest.getIcon();
+	}
 	public Interface getInterface()
 	{
 		return null;
@@ -735,67 +687,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		assertResponse(context);
 	}
 
-	protected RequestIconAnimator<?> initIconAnimator()
-	{
-		return new RequestIconAnimator<JdbcRequestTestStep>(this, "/jdbc_request.gif", "/exec_jdbc_request", 4, "gif");
-	}
-
-	public static class RequestIconAnimator<T extends JdbcRequestTestStep> extends ModelItemIconAnimator<T> implements
-			SubmitListener
-	{
-		public RequestIconAnimator(T modelItem, String baseIcon, String animIconRoot, int iconCount, String iconExtension)
-		{
-			super(modelItem, baseIcon, animIconRoot, iconCount, iconExtension);
-		}
-
-		public boolean beforeSubmit(Submit submit, SubmitContext context)
-		{
-			if (isEnabled() && submit.getRequest() == getTarget())
-				start();
-			return true;
-		}
-
-		public void afterSubmit(Submit submit, SubmitContext context)
-		{
-			if (submit.getRequest() == getTarget())
-				stop();
-		}
-	}
-	public RequestIconAnimator<?> getIconAnimator()
-	{
-		return iconAnimator;
-	}
-	public void setIconAnimator(RequestIconAnimator<?> iconAnimator)
-	{
-		if (this.iconAnimator != null)
-			jdbcRequest.removeSubmitListener(this.iconAnimator);
-
-		this.iconAnimator = iconAnimator;
-		jdbcRequest.addSubmitListener(this.iconAnimator);
-	}
-	public ImageIcon getIcon()
-	{
-		if( forLoadTest || UISupport.isHeadless() )
-			return null;
-
-		TestMonitor testMonitor = SoapUI.getTestMonitor();
-		if( testMonitor != null && testMonitor.hasRunningLoadTest( getTestCase() ) )
-			return disabledRequestIcon;
-
-		ImageIcon icon = getIconAnimator().getIcon();
-		if( icon == getIconAnimator().getBaseIcon() )
-		{
-			AssertionStatus status = getAssertionStatus();
-			if( status == AssertionStatus.VALID )
-				return validRequestIcon;
-			else if( status == AssertionStatus.FAILED )
-				return failedRequestIcon;
-			else if( status == AssertionStatus.UNKNOWN )
-				return unknownRequestIcon;
-		}
-
-		return icon;
-	}
 
 
 

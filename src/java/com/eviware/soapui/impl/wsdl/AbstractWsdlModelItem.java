@@ -21,7 +21,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.support.AbstractModelItem;
+import com.eviware.soapui.model.support.AbstractAnimatableModelItem;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -33,7 +33,7 @@ import com.eviware.soapui.support.resolver.ResolveContext;
  * @author Ole.Matzura
  */
 
-public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends AbstractModelItem
+public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends AbstractAnimatableModelItem<ModelItemConfig>
 {
 	private XmlBeansSettingsImpl settings;
 	private T config;
@@ -65,6 +65,7 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends A
 		return icon;
 	}
 
+	@Override
 	public void setIcon( ImageIcon icon )
 	{
 		if( icon == this.icon )
