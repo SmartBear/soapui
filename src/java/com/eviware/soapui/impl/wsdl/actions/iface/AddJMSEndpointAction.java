@@ -176,7 +176,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
 			NamingException, IOException
 	{
 		WsdlProject project = iface.getProject();
-
+		HermesUtils.flushHermesCache();
 		Context ctx = HermesUtils.hermesContext(project, hermesConfigPath);
 		return ctx;
 
@@ -200,7 +200,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
 							Hermes hermes = null;
 							try
 							{
-								Context ctx = HermesUtils.hermesContext(iface.getProject(), newValue);
+								Context ctx = getHermesContext(iface, newValue);
 								iface.getProject().setHermesConfig(newValue);
 								String[] sessions = getSessionOptions(iface, newValue);
 								mainForm.setOptions(SESSION, sessions);

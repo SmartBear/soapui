@@ -100,4 +100,8 @@ public class HermesUtils
 		}
 
 	}
+	
+	public static void flushHermesCache(){
+		contextMap.clear();
+	}
 }
