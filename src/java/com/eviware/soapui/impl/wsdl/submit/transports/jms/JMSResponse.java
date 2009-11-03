@@ -11,7 +11,6 @@
  */
 package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,9 +24,7 @@ import javax.jms.TextMessage;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
-import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.model.iface.Attachment;
@@ -38,7 +35,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
  * IMPORTANT TODO:this class is NOT finished yet 
  * 
  */
-public class JMSResponse implements HttpResponse
+public class JMSResponse implements WsdlResponse
 {
 
 	private String payload;
@@ -47,6 +44,7 @@ public class JMSResponse implements HttpResponse
 	private Attachment[] attachments = new Attachment[0];
 	private Request request;
 	private long requestStartedTime;
+	private String endpoint;
 
 	public JMSResponse(String payload, Message messageSend, Message messageReceive, Request request,
 			long requestStartedTime)
@@ -56,6 +54,7 @@ public class JMSResponse implements HttpResponse
 		this.messageSend = messageSend;
 		this.request = request;
 		this.requestStartedTime = requestStartedTime;
+		this.endpoint=request.getEndpoint();
 	}
 
 	public Attachment[] getAttachments()
@@ -272,9 +271,9 @@ public class JMSResponse implements HttpResponse
 		return null;
 	}
 
-	public AbstractHttpRequestInterface<?> getRequest()
+	public WsdlRequest getRequest()
 	{
-		return (AbstractHttpRequestInterface<?>) request;
+		return (WsdlRequest) request;
 	}
 
 	public Message getMessageReceive()
@@ -287,4 +286,8 @@ public class JMSResponse implements HttpResponse
 		return messageSend;
 	}
 
+	public String getEndpoint(){
+		return endpoint;
+	}
+	
 }

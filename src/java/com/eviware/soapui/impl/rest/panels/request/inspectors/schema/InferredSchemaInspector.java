@@ -47,6 +47,9 @@ import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wadl.inference.ConflictHandler;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSResponse;
+import com.eviware.soapui.model.iface.Request;
+import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
@@ -72,92 +75,98 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
 	private Handler handler;
 	private Thread thread;
 
-	protected InferredSchemaInspector( RestRequest request )
+	protected InferredSchemaInspector(RestRequest request)
 	{
-		super( "Schema", "Inferred Schema", true, InferredSchemaInspectorFactory.INSPECTOR_ID );
+		super("Schema", "Inferred Schema", true, InferredSchemaInspectorFactory.INSPECTOR_ID);
 		service = request.getResource().getService();
 		this.request = request;
 
-		request.addSubmitListener( this );
+		request.addSubmitListener(this);
 	}
 
 	public JComponent getComponent()
 	{
-		if( tabs == null )
+		if (tabs == null)
 		{
 			tabs = new SchemaTabs();
-			InferredSchemaManager.addPropertyChangeListener( service, tabs );
+			InferredSchemaManager.addPropertyChangeListener(service, tabs);
 		}
 
 		return tabs;
 	}
 
 	@Override
-	public boolean isEnabledFor( EditorView<XmlDocument> view )
+	public boolean isEnabledFor(EditorView<XmlDocument> view)
 	{
-		return !view.getViewId().equals( RawXmlEditorFactory.VIEW_ID );
+		return !view.getViewId().equals(RawXmlEditorFactory.VIEW_ID);
 	}
 
-	public void afterSubmit( Submit submit, SubmitContext context )
+	public void afterSubmit(Submit submit, SubmitContext context)
 	{
-		if(submit.getResponse() == null)
+		if (submit.getResponse() == null)
 			return;
-		HttpResponse httpResponse = ( HttpResponse )submit.getResponse();
+		HttpResponse httpResponse = (HttpResponse) submit.getResponse();
 		String content = httpResponse.getContentAsXml();
-		if( content == null || content.equals( "<xml/>" ) )
+		if (content == null || content.equals("<xml/>"))
 			return;
 		XmlObject xml;
 		try
 		{
 			URL url = httpResponse.getURL();
 			String defaultNamespace = null;
-			if(url !=null){
-				 defaultNamespace = url.getProtocol() + "://" + url.getHost();
+			if (url != null)
+			{
+				defaultNamespace = url.getProtocol() + "://" + url.getHost();
 			}
-			else{
-				defaultNamespace = httpResponse.getRequest().getEndpoint();
+			else
+			{
+				if (httpResponse instanceof JMSResponse)
+				{
+					defaultNamespace = ((JMSResponse) httpResponse).getEndpoint();
+				}
 			}
-			XmlOptions options = new XmlOptions().setLoadSubstituteNamespaces(Collections.singletonMap("",defaultNamespace));
-			xml = XmlObject.Factory.parse( content, options ); 
+			XmlOptions options = new XmlOptions().setLoadSubstituteNamespaces(Collections.singletonMap("",
+					defaultNamespace));
+			xml = XmlObject.Factory.parse(content, options);
 		}
-		catch( XmlException e )
+		catch (XmlException e)
 		{
 			e.printStackTrace();
 			return;
 		}
-		if( !submit.getStatus().equals( Status.CANCELED )
-				&& !InferredSchemaManager.getInferredSchema( service ).validate( xml ) )
+		if (!submit.getStatus().equals(Status.CANCELED)
+				&& !InferredSchemaManager.getInferredSchema(service).validate(xml))
 		{
-			setTitle( "Schema (conflicts)" );
-			if( thread != null && thread.isAlive() )
+			setTitle("Schema (conflicts)");
+			if (thread != null && thread.isAlive())
 			{
 				handler.kill();
 				try
 				{
 					thread.join();
 				}
-				catch( InterruptedException e )
+				catch (InterruptedException e)
 				{
 					e.printStackTrace();
 				}
 			}
-			handler = new Handler( tabs, xml );
-			thread = new Thread( handler );
+			handler = new Handler(tabs, xml);
+			thread = new Thread(handler);
 			thread.start();
 		}
 	}
 
-	public boolean beforeSubmit( Submit submit, SubmitContext context )
+	public boolean beforeSubmit(Submit submit, SubmitContext context)
 	{
 		return true;
 	}
 
 	public void release()
 	{
-		InferredSchemaManager.removePropertyChangeListener( service, tabs );
+		InferredSchemaManager.removePropertyChangeListener(service, tabs);
 	}
 
-	@SuppressWarnings( "serial" )
+	@SuppressWarnings("serial")
 	private class SchemaTabs extends JTabbedPane implements ActionListener, PropertyChangeListener,
 			ListSelectionListener
 	{
@@ -175,117 +184,117 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
 		{
 			super();
 			conflicts = new JPanel();
-			conflicts.setLayout( new BorderLayout() );
-			auto = new JCheckBox( "Auto-Resolve" );
-			auto.setToolTipText( "Automatically modify inferred schema from received Responses" );
-			auto.setOpaque( false );
-			UISupport.setFixedSize( auto, 120, 20 );
+			conflicts.setLayout(new BorderLayout());
+			auto = new JCheckBox("Auto-Resolve");
+			auto.setToolTipText("Automatically modify inferred schema from received Responses");
+			auto.setOpaque(false);
+			UISupport.setFixedSize(auto, 120, 20);
 			XmlBeansSettingsImpl settings = getRequest().getSettings();
-			if( settings.isSet( AUTO_INFER_SCHEMAS ) )
+			if (settings.isSet(AUTO_INFER_SCHEMAS))
 			{
-				auto.setSelected( settings.getBoolean( AUTO_INFER_SCHEMAS ) );
+				auto.setSelected(settings.getBoolean(AUTO_INFER_SCHEMAS));
 			}
-			auto.addItemListener( new ItemListener()
+			auto.addItemListener(new ItemListener()
 			{
-				public void itemStateChanged( ItemEvent e )
+				public void itemStateChanged(ItemEvent e)
 				{
-					getRequest().getSettings().setBoolean( AUTO_INFER_SCHEMAS, auto.isSelected() );
+					getRequest().getSettings().setBoolean(AUTO_INFER_SCHEMAS, auto.isSelected());
 				}
-			} );
-			resolveButton = new JButton( "Resolve conflicts" );
-			resolveButton.setEnabled( false );
-			resolveButton.setActionCommand( "resolve" );
-			resolveButton.addActionListener( this );
+			});
+			resolveButton = new JButton("Resolve conflicts");
+			resolveButton.setEnabled(false);
+			resolveButton.setActionCommand("resolve");
+			resolveButton.addActionListener(this);
 
 			JXToolBar toolbar = UISupport.createToolbar();
-			toolbar.addFixed( auto );
-			toolbar.addFixed( resolveButton );
+			toolbar.addFixed(auto);
+			toolbar.addFixed(resolveButton);
 
-			log = new JLogList( "Schema log" );
-			conflicts.add( toolbar, BorderLayout.NORTH );
-			conflicts.add( log, BorderLayout.CENTER );
-			addTab( "Conflicts", conflicts );
+			log = new JLogList("Schema log");
+			conflicts.add(toolbar, BorderLayout.NORTH);
+			conflicts.add(log, BorderLayout.CENTER);
+			addTab("Conflicts", conflicts);
 
-			schemaList = new JList( InferredSchemaManager.getInferredSchema( service ).getNamespaces() );
-			schemaList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-			schemaList.addListSelectionListener( this );
+			schemaList = new JList(InferredSchemaManager.getInferredSchema(service).getNamespaces());
+			schemaList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			schemaList.addListSelectionListener(this);
 
 			toolbar = UISupport.createToolbar();
-			toolbar.addFixed( UISupport.createToolbarButton( new RemoveNamespaceAction() ) );
+			toolbar.addFixed(UISupport.createToolbarButton(new RemoveNamespaceAction()));
 
 			JPanel listPanel = new JPanel();
-			listPanel.setLayout( new BorderLayout() );
-			listPanel.add( toolbar, BorderLayout.NORTH );
-			listPanel.add( new JScrollPane( schemaList ), BorderLayout.CENTER );
-			xsd = JXEditTextArea.createXmlEditor( false );
-			xsd.setEditable( false );
+			listPanel.setLayout(new BorderLayout());
+			listPanel.add(toolbar, BorderLayout.NORTH);
+			listPanel.add(new JScrollPane(schemaList), BorderLayout.CENTER);
+			xsd = JXEditTextArea.createXmlEditor(false);
+			xsd.setEditable(false);
 			update();
-			addTab( "Schemas", new JSplitPane( JSplitPane.HORIZONTAL_SPLIT, listPanel, new JScrollPane( xsd ) ) );
+			addTab("Schemas", new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, listPanel, new JScrollPane(xsd)));
 		}
 
-		public synchronized boolean awaitButton( Handler handler )
+		public synchronized boolean awaitButton(Handler handler)
 		{
-			if( auto.isSelected() )
+			if (auto.isSelected())
 				return false;
-			resolveButton.setEnabled( true );
+			resolveButton.setEnabled(true);
 			this.handler = handler;
 			return true;
 		}
 
-		public synchronized void actionPerformed( ActionEvent e )
+		public synchronized void actionPerformed(ActionEvent e)
 		{
-			if( e.getActionCommand().equals( "resolve" ) )
+			if (e.getActionCommand().equals("resolve"))
 			{
-				resolveButton.setEnabled( false );
+				resolveButton.setEnabled(false);
 				handler.go();
 			}
-			else if( e.getActionCommand().equals( "save" ) )
+			else if (e.getActionCommand().equals("save"))
 			{
-				InferredSchemaManager.save( service );
+				InferredSchemaManager.save(service);
 			}
 		}
 
-		public void propertyChange( PropertyChangeEvent evt )
+		public void propertyChange(PropertyChangeEvent evt)
 		{
 			update();
 		}
 
 		public void update()
 		{
-			String[] namespaces = InferredSchemaManager.getInferredSchema( service ).getNamespaces();
-			for( int i = 0; i < namespaces.length; i++ )
-				if( namespaces[i].equals( "" ) )
+			String[] namespaces = InferredSchemaManager.getInferredSchema(service).getNamespaces();
+			for (int i = 0; i < namespaces.length; i++)
+				if (namespaces[i].equals(""))
 					namespaces[i] = NO_NAMESPACE;
-			schemaList.setListData( namespaces );
-			if( schemaList.isSelectionEmpty() )
+			schemaList.setListData(namespaces);
+			if (schemaList.isSelectionEmpty())
 			{
-				xsd.setText( "" );
+				xsd.setText("");
 			}
 			else
 			{
-				xsd.setText( XmlUtils.prettyPrintXml( InferredSchemaManager.getInferredSchema( service )
-						.getXsdForNamespace( ( String )schemaList.getSelectedValue() ) ) );
-				xsd.scrollTo( 0, 0 );
+				xsd.setText(XmlUtils.prettyPrintXml(InferredSchemaManager.getInferredSchema(service).getXsdForNamespace(
+						(String) schemaList.getSelectedValue())));
+				xsd.scrollTo(0, 0);
 			}
 		}
 
-		public void logln( String line )
+		public void logln(String line)
 		{
-			log.addLine( line );
+			log.addLine(line);
 		}
 
-		public void valueChanged( ListSelectionEvent e )
+		public void valueChanged(ListSelectionEvent e)
 		{
-			if( e.getValueIsAdjusting() == false )
+			if (e.getValueIsAdjusting() == false)
 			{
-				if( !schemaList.isSelectionEmpty() )
+				if (!schemaList.isSelectionEmpty())
 				{
-					String namespace = ( String )schemaList.getSelectedValue();
-					if( namespace.equals( NO_NAMESPACE ) )
+					String namespace = (String) schemaList.getSelectedValue();
+					if (namespace.equals(NO_NAMESPACE))
 						namespace = "";
-					xsd.setText( XmlUtils.prettyPrintXml( InferredSchemaManager.getInferredSchema( service )
-							.getXsdForNamespace( namespace ) ) );
-					xsd.scrollTo( 0, 0 );
+					xsd.setText(XmlUtils.prettyPrintXml(InferredSchemaManager.getInferredSchema(service).getXsdForNamespace(
+							namespace)));
+					xsd.scrollTo(0, 0);
 				}
 			}
 		}
@@ -294,20 +303,20 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
 		{
 			private RemoveNamespaceAction()
 			{
-				putValue( SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-				putValue( SHORT_DESCRIPTION, "Removes selected inferred namespace definition" );
+				putValue(SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+				putValue(SHORT_DESCRIPTION, "Removes selected inferred namespace definition");
 			}
 
-			public void actionPerformed( ActionEvent e )
+			public void actionPerformed(ActionEvent e)
 			{
-				if( !schemaList.isSelectionEmpty() )
+				if (!schemaList.isSelectionEmpty())
 				{
-					String ns = ( String )schemaList.getSelectedValue();
-					if( UISupport.confirm( "Remove inferred namespace '" + ns + "'?", "Remove namespace" ) )
+					String ns = (String) schemaList.getSelectedValue();
+					if (UISupport.confirm("Remove inferred namespace '" + ns + "'?", "Remove namespace"))
 					{
-						if( ns.equals( NO_NAMESPACE ) )
+						if (ns.equals(NO_NAMESPACE))
 							ns = "";
-						InferredSchemaManager.deleteNamespace( service, ns );
+						InferredSchemaManager.deleteNamespace(service, ns);
 					}
 				}
 			}
@@ -322,7 +331,7 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
 		private boolean yesToAll = false;
 		private boolean kill = false;
 
-		public Handler( SchemaTabs panel, XmlObject xml )
+		public Handler(SchemaTabs panel, XmlObject xml)
 		{
 			this.panel = panel;
 			this.xml = xml;
@@ -333,29 +342,29 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
 		{
 			try
 			{
-				if( panel.awaitButton( this ) )
+				if (panel.awaitButton(this))
 				{
 					try
 					{
 						wait();
 					}
-					catch( InterruptedException e )
+					catch (InterruptedException e)
 					{
 						e.printStackTrace();
 					}
 				}
 				else
 					yesToAll = true;
-				if( kill )
+				if (kill)
 					return;
-				InferredSchemaManager.getInferredSchema( service ).learningValidate( xml, this );
+				InferredSchemaManager.getInferredSchema(service).learningValidate(xml, this);
 				panel.update();
-				setTitle( "Schema" );
-				InferredSchemaManager.save( service );
+				setTitle("Schema");
+				InferredSchemaManager.save(service);
 			}
-			catch( XmlException e )
+			catch (XmlException e)
 			{
-				setTitle( "Schema (invalid)" );
+				setTitle("Schema (invalid)");
 			}
 		}
 
@@ -370,41 +379,41 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
 			notifyAll();
 		}
 
-		public boolean callback( Event event, Type type, QName name, String path, String message )
+		public boolean callback(Event event, Type type, QName name, String path, String message)
 		{
 
 			// if(paths.contains(path)) return true;
-			StringBuilder s = new StringBuilder( message ).append( " " );
-			if( event == Event.CREATION )
+			StringBuilder s = new StringBuilder(message).append(" ");
+			if (event == Event.CREATION)
 			{
-				paths.add( path );
-				s.append( "Create " );
+				paths.add(path);
+				s.append("Create ");
 			}
-			else if( event == Event.MODIFICATION )
+			else if (event == Event.MODIFICATION)
 			{
-				paths.add( path );
-				s.append( "Modify " );
+				paths.add(path);
+				s.append("Modify ");
 			}
-			if( type == Type.ELEMENT )
-				s.append( "element '" );
-			else if( type == Type.ATTRIBUTE )
-				s.append( "attribute '" );
-			else if( type == Type.TYPE )
-				s.append( "type '" );
-			s.append( name.getLocalPart() ).append( "' in namespace '" ).append( name.getNamespaceURI() ).append(
-					"' at path " ).append( path ).append( "?" );
-			if( !yesToAll )
+			if (type == Type.ELEMENT)
+				s.append("element '");
+			else if (type == Type.ATTRIBUTE)
+				s.append("attribute '");
+			else if (type == Type.TYPE)
+				s.append("type '");
+			s.append(name.getLocalPart()).append("' in namespace '").append(name.getNamespaceURI()).append("' at path ")
+					.append(path).append("?");
+			if (!yesToAll)
 			{
-				int choice = UISupport.yesYesToAllOrNo( s.toString(), "Conflict" );
-				if( choice == 2 )
+				int choice = UISupport.yesYesToAllOrNo(s.toString(), "Conflict");
+				if (choice == 2)
 				{
-					panel.logln( s.append( " FAIL" ).toString() );
+					panel.logln(s.append(" FAIL").toString());
 					return false;
 				}
-				else if( choice == 1 )
+				else if (choice == 1)
 					yesToAll = true;
 			}
-			panel.logln( s.append( " OK" ).toString() );
+			panel.logln(s.append(" OK").toString());
 			return true;
 		}
 
