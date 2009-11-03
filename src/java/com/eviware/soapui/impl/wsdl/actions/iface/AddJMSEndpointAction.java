@@ -116,7 +116,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
 		catch (Exception e)
 		{
 			SoapUI.logError(e);
-			SoapUI.log.info("no hermes context");
+			SoapUI.log.warn("no HermesJMS context!");
 		}
 		List<String> hermesSessionList = new ArrayList<String>();
 		for (Hermes h : hermesList)
