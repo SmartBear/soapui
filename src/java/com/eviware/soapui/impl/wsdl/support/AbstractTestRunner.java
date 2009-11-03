@@ -54,6 +54,7 @@ public abstract class AbstractTestRunner<T extends TestRunnable, T2 extends Test
 	private Timer timeoutTimer;
 	private TimeoutTimerTask timeoutTimerTask;
 	private Thread thread;
+	private long timeTaken;
 
 	public AbstractTestRunner( T modelItem, StringToObjectMap properties )
 	{
@@ -132,7 +133,7 @@ public abstract class AbstractTestRunner<T extends TestRunnable, T2 extends Test
 		try
 		{
 			status = Status.RUNNING;
-			startTime = System.currentTimeMillis();
+			setStartTime();
 
 			internalRun( runContext );
 		}
@@ -151,6 +152,7 @@ public abstract class AbstractTestRunner<T extends TestRunnable, T2 extends Test
 		}
 		finally
 		{
+			setTimeTaken();
 			if( timeoutTimer != null )
 			{
 				timeoutTimer.cancel();
@@ -163,6 +165,11 @@ public abstract class AbstractTestRunner<T extends TestRunnable, T2 extends Test
 
 			internalFinally( runContext );
 		}
+	}
+
+	protected void setStartTime()
+	{
+		startTime = System.currentTimeMillis();
 	}
 
 	public boolean isRunning()
@@ -228,9 +235,14 @@ public abstract class AbstractTestRunner<T extends TestRunnable, T2 extends Test
 		return getStatus();
 	}
 
+	protected void setTimeTaken()
+	{
+		timeTaken = System.currentTimeMillis() - startTime;
+	}
+	
 	public long getTimeTaken()
 	{
-		return System.currentTimeMillis() - startTime;
+		return timeTaken;
 	}
 
 	public long getStartTime()

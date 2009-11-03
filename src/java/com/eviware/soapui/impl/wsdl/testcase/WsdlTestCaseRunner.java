@@ -100,6 +100,7 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 
 		initCount = 0;
 
+		setStartTime();
 		for( ; initCount < testCase.getTestStepCount() && isRunning(); initCount++ )
 		{
 			WsdlTestStep testStep = testCase.getTestStepAt( initCount );
