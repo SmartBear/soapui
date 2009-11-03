@@ -39,6 +39,7 @@ import org.apache.xmlbeans.XmlBeans;
 
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -61,6 +62,7 @@ public class RestParamsTable extends JPanel
 	protected UseDefaultParamsAction defaultParamsAction = new UseDefaultParamsAction();
 	protected MovePropertyDownAction movePropertyDownAction = new MovePropertyDownAction();
 	protected MovePropertyUpAction movePropertyUpAction = new MovePropertyUpAction();
+	protected UpdateParamsAction updateParamsAction = new UpdateParamsAction();
 	private PresentationModel<RestParamProperty> paramDetailsModel;
 	private StringListFormComponent optionsFormComponent;
 	private SimpleBindingForm detailsForm;
@@ -208,6 +210,8 @@ public class RestParamsTable extends JPanel
 		toolbar.add( UISupport.createToolbarButton( movePropertyDownAction, false ) );
 		toolbar.add( UISupport.createToolbarButton( movePropertyUpAction, false ) );
 		toolbar.addSeparator();
+		toolbar.add( UISupport.createToolbarButton( updateParamsAction ) );
+		toolbar.addSeparator();
 
 		insertAdditionalButtons( toolbar );
 
@@ -255,6 +259,32 @@ public class RestParamsTable extends JPanel
 				} );
 
 				clearParamsAction.setEnabled( true );
+			}
+		}
+	}
+
+	private class UpdateParamsAction extends AbstractAction
+	{
+		private UpdateParamsAction()
+		{
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Updates params from a specified URL" );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			String str = UISupport.prompt( "Enter new url below", "Extract Params", "" );
+			if( str == null )
+				return;
+
+			try
+			{
+				params.resetValues();
+				RestUtils.extractParams( str, params, false );
+			}
+			catch( Exception e1 )
+			{
+				UISupport.showErrorMessage( e1 );
 			}
 		}
 	}
@@ -368,7 +398,7 @@ public class RestParamsTable extends JPanel
 		this.params = params;
 		paramsTableModel.setParams( params );
 	}
-	
+
 	public void refresh()
 	{
 		paramsTableModel.fireTableDataChanged();
