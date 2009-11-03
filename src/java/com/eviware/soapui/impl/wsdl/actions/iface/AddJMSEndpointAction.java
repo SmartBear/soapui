@@ -28,7 +28,6 @@ import javax.naming.NamingException;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractInterface;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
@@ -306,7 +305,6 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
 			return destinationName;
 		}
 
-		@SuppressWarnings("unused")
 		public Domain getDomain()
 		{
 			return domain;
