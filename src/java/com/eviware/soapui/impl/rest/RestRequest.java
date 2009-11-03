@@ -38,6 +38,7 @@ import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSHeader;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.jms.header.JMSHeaderConfig;
 import com.eviware.soapui.impl.wsdl.support.jms.property.JMSPropertiesConfig;
@@ -47,6 +48,7 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.MessagePart.ContentPart;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
@@ -217,8 +219,21 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		PropertyExpansionsResult result = new PropertyExpansionsResult( this, this );
 		result.addAll( super.getPropertyExpansions() );
 		result.addAll( getRestMethod().getPropertyExpansions() );
-
+		addJMSHeaderExpansions(result, getJMSHeaderConfig(), this);
+		
 		return result.toArray();
+	}
+	
+	public void addJMSHeaderExpansions(PropertyExpansionsResult result, JMSHeaderConfig jmsHeaderConfig,
+			ModelItem modelItem)
+	{
+		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig,
+				JMSHeader.JMSCORRELATIONID));
+		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig, JMSHeader.JMSREPLYTO));
+		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig, JMSHeader.JMSTYPE));
+		result
+				.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig, JMSHeader.JMSPRIORITY));
+		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig, JMSHeader.TIMETOLIVE));
 	}
 
 	public TestProperty addProperty( String name )

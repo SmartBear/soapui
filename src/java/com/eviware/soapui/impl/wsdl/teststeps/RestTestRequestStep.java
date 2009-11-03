@@ -602,7 +602,7 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 
 		// result.addAll( testRequest.getWssContainer().getPropertyExpansions()
 		// );
-
+		testRequest.addJMSHeaderExpansions(result, testRequest.getJMSHeaderConfig(), this);
 		return result.toArray( new PropertyExpansion[result.size()] );
 	}
 
