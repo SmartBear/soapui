@@ -336,7 +336,8 @@
  		<tns:actionMapping actionId="NewRestResourceAction"/>
 	 	<tns:actionMapping actionId="DeleteRestServiceAction" keyStroke="DELETE"/>
 	 	<tns:actionMapping actionId="SeperatorAction"/>
-
+	 	<tns:actionMapping actionId="AddJMSEndpointAction"/>
+<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="rest/index.html"/>
  	</tns:actionGroup>
 

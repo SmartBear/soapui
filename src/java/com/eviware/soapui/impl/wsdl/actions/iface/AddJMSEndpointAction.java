@@ -27,6 +27,7 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestTransport;
@@ -42,7 +43,7 @@ import com.eviware.x.form.XFormFactory;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 
-public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
+public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface<?>>
 {
 	public static final String SOAPUI_ACTION_ID = "AddJMSEndpointAction";
 	private static final String SESSION = "Session";
@@ -58,7 +59,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 		super("Add JMS endpoint", "Wizard for creating JMS endpoint");
 	}
 
-	public void perform(WsdlInterface iface, Object param)
+	public void perform(AbstractInterface<?> iface, Object param)
 	{
 
 		XFormDialog dialog = buildDialog(iface);
@@ -103,7 +104,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 		return sb.toString();
 	}
 
-	private String[] getSessionOptions(WsdlInterface iface, String hermesConfigPath)
+	private String[] getSessionOptions(AbstractInterface<?> iface, String hermesConfigPath)
 	{
 
 		List<Hermes> hermesList = new ArrayList<Hermes>();
@@ -126,7 +127,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 		return hermesSessionList.toArray(new String[hermesSessionList.size()]);
 	}
 
-	private void initValues(WsdlInterface iface)
+	private void initValues(AbstractInterface<?> iface)
 	{
 		String hermesConfigPath = PropertyExpander.expandProperties(iface, iface.getProject().getHermesConfig());
 		mainForm.getComponent(HERMES_CONFIG).setValue(hermesConfigPath);
@@ -172,7 +173,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 		mainForm.setOptions(RECEIVE, destinationNameList.toArray());
 	}
 
-	private Context getHermesContext(WsdlInterface iface, String hermesConfigPath) throws MalformedURLException,
+	private Context getHermesContext(AbstractInterface<?> iface, String hermesConfigPath) throws MalformedURLException,
 			NamingException, IOException
 	{
 		WsdlProject project = iface.getProject();
@@ -182,7 +183,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 
 	}
 
-	protected XFormDialog buildDialog(final WsdlInterface iface)
+	protected XFormDialog buildDialog(final AbstractInterface<?> iface)
 	{
 		if (iface == null)
 			return null;
@@ -316,4 +317,6 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<WsdlInterface>
 			return this.getDestinationName().replace(HermesJmsRequestTransport.QUEUE_ENDPOINT_PREFIX, "").replace(HermesJmsRequestTransport.TOPIC_ENDPOINT_PREFIX, "");
 		}
 	}
+
+	
 }
