@@ -50,6 +50,7 @@ public class RestResponseRepresentationsInspector extends AbstractRestRepresenta
 		this.request = request;
 	}
 
+	@Override
 	protected void addToToolbar( JXToolBar toolbar )
 	{
 		enableRecordingCheckBox = new JCheckBox( "Auto-Create" );
@@ -78,6 +79,7 @@ public class RestResponseRepresentationsInspector extends AbstractRestRepresenta
 		} );
 	}
 
+	@Override
 	public boolean beforeSubmit( Submit submit, SubmitContext context )
 	{
 		return true;
@@ -85,7 +87,7 @@ public class RestResponseRepresentationsInspector extends AbstractRestRepresenta
 
 	public void afterSubmit( Submit submit, SubmitContext context )
 	{
-		HttpResponse response = request.getResponse();
+		HttpResponse response = ( HttpResponse )submit.getResponse();
 		if( response != null && enableRecordingCheckBox.isSelected() )
 		{
 			if( HttpUtils.isErrorStatus( response.getStatusCode() ) )
@@ -146,6 +148,7 @@ public class RestResponseRepresentationsInspector extends AbstractRestRepresenta
 		}
 	}
 
+	@Override
 	public void release()
 	{
 		super.release();
