@@ -113,7 +113,7 @@ public class HermesUtils
 	{
 		if (Tools.isEmpty(SoapUI.getSettings().getString(ToolsSettings.HERMES_1_13, null)))
 		{
-			UISupport.showErrorMessage("Hermes Home must be set in global preferences");
+			UISupport.showErrorMessage("HermesJMS Home must be set in global preferences");
 
 			if (UISupport.getMainFrame() != null)
 			{
