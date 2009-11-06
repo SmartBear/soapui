@@ -41,85 +41,84 @@ import com.eviware.soapui.support.StringUtils;
 
 public class ProxyUtils
 {
-	public static HostConfiguration initProxySettings( Settings settings, HttpState httpState,
-			HostConfiguration hostConfiguration, String urlString, PropertyExpansionContext context )
+	public static HostConfiguration initProxySettings(Settings settings, HttpState httpState,
+			HostConfiguration hostConfiguration, String urlString, PropertyExpansionContext context)
 	{
-		// check system properties first
-		String proxyHost = System.getProperty( "http.proxyHost" );
-		String proxyPort = System.getProperty( "http.proxyPort" );
-
-		if( proxyHost == null )
-			proxyHost = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.HOST, "" ) );
-
-		if( proxyPort == null )
-			proxyPort = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
-
-		if( !StringUtils.isNullOrEmpty( proxyHost ) && !StringUtils.isNullOrEmpty( proxyPort ) )
+		if (SoapUI.getSettings().getBoolean(ProxySettings.ENABLE_PROXY))
 		{
-			// check excludes
-			String[] excludes = PropertyExpander.expandProperties( context,
-					settings.getString( ProxySettings.EXCLUDES, "" ) ).split( "," );
-
-			try
+			// check system properties first
+			String proxyHost = System.getProperty("http.proxyHost");
+			String proxyPort = System.getProperty("http.proxyPort");
+			if (proxyHost == null)
+				proxyHost = PropertyExpander.expandProperties(context, settings.getString(ProxySettings.HOST, ""));
+			if (proxyPort == null)
+				proxyPort = PropertyExpander.expandProperties(context, settings.getString(ProxySettings.PORT, ""));
+			if (!StringUtils.isNullOrEmpty(proxyHost) && !StringUtils.isNullOrEmpty(proxyPort))
 			{
-				URL url = new URL( urlString );
+				// check excludes
+				String[] excludes = PropertyExpander.expandProperties(context,
+						settings.getString(ProxySettings.EXCLUDES, "")).split(",");
 
-				if( !excludes( excludes, url.getHost(), url.getPort() ) )
+				try
 				{
-					hostConfiguration.setProxy( proxyHost, Integer.parseInt( proxyPort ) );
+					URL url = new URL(urlString);
 
-					String proxyUsername = PropertyExpander.expandProperties( context, settings.getString(
-							ProxySettings.USERNAME, null ) );
-					String proxyPassword = PropertyExpander.expandProperties( context, settings.getString(
-							ProxySettings.PASSWORD, null ) );
-
-					if( proxyUsername != null && proxyPassword != null )
+					if (!excludes(excludes, url.getHost(), url.getPort()))
 					{
-						Credentials proxyCreds = new UsernamePasswordCredentials( proxyUsername, proxyPassword == null ? ""
-								: proxyPassword );
+						hostConfiguration.setProxy(proxyHost, Integer.parseInt(proxyPort));
 
-						// check for nt-username
-						int ix = proxyUsername.indexOf( '\\' );
-						if( ix > 0 )
+						String proxyUsername = PropertyExpander.expandProperties(context, settings.getString(
+								ProxySettings.USERNAME, null));
+						String proxyPassword = PropertyExpander.expandProperties(context, settings.getString(
+								ProxySettings.PASSWORD, null));
+
+						if (proxyUsername != null && proxyPassword != null)
 						{
-							String domain = proxyUsername.substring( 0, ix );
-							if( proxyUsername.length() > ix + 1 )
-							{
-								String user = proxyUsername.substring( ix + 1 );
-								proxyCreds = new NTCredentials( user, proxyPassword, proxyHost, domain );
-							}
-						}
+							Credentials proxyCreds = new UsernamePasswordCredentials(proxyUsername, proxyPassword == null ? ""
+									: proxyPassword);
 
-						httpState.setProxyCredentials( AuthScope.ANY, proxyCreds );
+							// check for nt-username
+							int ix = proxyUsername.indexOf('\\');
+							if (ix > 0)
+							{
+								String domain = proxyUsername.substring(0, ix);
+								if (proxyUsername.length() > ix + 1)
+								{
+									String user = proxyUsername.substring(ix + 1);
+									proxyCreds = new NTCredentials(user, proxyPassword, proxyHost, domain);
+								}
+							}
+
+							httpState.setProxyCredentials(AuthScope.ANY, proxyCreds);
+						}
 					}
 				}
-			}
-			catch( MalformedURLException e )
-			{
-				SoapUI.logError( e );
+				catch (MalformedURLException e)
+				{
+					SoapUI.logError(e);
+				}
 			}
 		}
-
 		return hostConfiguration;
 	}
 
-	public static boolean excludes( String[] excludes, String proxyHost, int proxyPort )
+	public static boolean excludes(String[] excludes, String proxyHost, int proxyPort)
 	{
-		for( int c = 0; c < excludes.length; c++ )
+		for (int c = 0; c < excludes.length; c++)
 		{
 			String exclude = excludes[c].trim();
-			if( exclude.length() == 0 )
+			if (exclude.length() == 0)
 				continue;
 
 			// check for port
-			int ix = exclude.indexOf( ':' );
+			int ix = exclude.indexOf(':');
 
-			if( ix >= 0 && exclude.length() > ix + 1 )
+			if (ix >= 0 && exclude.length() > ix + 1)
 			{
-				String excludePort = exclude.substring( ix + 1 );
-				if( proxyPort != -1 && excludePort.equals( String.valueOf( proxyPort ) ) )
+				String excludePort = exclude.substring(ix + 1);
+				if (proxyPort != -1 && excludePort.equals(String.valueOf(proxyPort)))
 				{
-					exclude = exclude.substring( 0, ix );
+					exclude = exclude.substring(0, ix);
 				}
 				else
 				{
@@ -132,19 +131,19 @@ public class ProxyUtils
 			 */
 			// if( proxyHost.endsWith( exclude ) )
 			// return true;
-			String excludeIp = exclude.indexOf( '*' ) >= 0 ? exclude : nslookup( exclude, true );
-			String ip = nslookup( proxyHost, true );
-			Pattern pattern = Pattern.compile( excludeIp );
-			Matcher matcher = pattern.matcher( ip );
-			Matcher matcher2 = pattern.matcher( proxyHost );
-			if( matcher.find() || matcher2.find())
+			String excludeIp = exclude.indexOf('*') >= 0 ? exclude : nslookup(exclude, true);
+			String ip = nslookup(proxyHost, true);
+			Pattern pattern = Pattern.compile(excludeIp);
+			Matcher matcher = pattern.matcher(ip);
+			Matcher matcher2 = pattern.matcher(proxyHost);
+			if (matcher.find() || matcher2.find())
 				return true;
 		}
 
 		return false;
 	}
 
-	private static String nslookup( String s, boolean ip )
+	private static String nslookup(String s, boolean ip)
 	{
 
 		InetAddress host;
@@ -153,13 +152,13 @@ public class ProxyUtils
 		// get the bytes of the IP address
 		try
 		{
-			host = InetAddress.getByName( s );
-			if( ip )
+			host = InetAddress.getByName(s);
+			if (ip)
 				address = host.getHostAddress();
 			else
 				address = host.getHostName();
 		}
-		catch( UnknownHostException ue )
+		catch (UnknownHostException ue)
 		{
 			return s; // no host
 		}

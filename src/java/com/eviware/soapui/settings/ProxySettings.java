@@ -37,4 +37,7 @@ public interface ProxySettings
 	@Setting( name = "Excludes", description = "Comma-seperated list of hosts to exclude" )
 	public final static String EXCLUDES = ProxySettings.class.getSimpleName() + "@" + "excludes";
 
+	@Setting( name = "Enable Proxy", description = "enable using proxy", type = SettingType.BOOLEAN, defaultValue="true")
+	public final static String ENABLE_PROXY = ProxySettings.class.getSimpleName() + "@" + "enableProxy";
+
 }
