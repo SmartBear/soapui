@@ -61,7 +61,8 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 		if (modelItem instanceof AbstractHttpRequest)
 		{
 			JMSHeaderAndPropertyInspector inspector = new JMSHeaderAndPropertyInspector(
-					(JMSHeaderAndPropertyInspectorModel) new ResponseJMSHeaderAndPropertiesModel((AbstractHttpRequest<?>) modelItem));
+					(JMSHeaderAndPropertyInspectorModel) new ResponseJMSHeaderAndPropertiesModel(
+							(AbstractHttpRequest<?>) modelItem));
 			inspector.setEnabled(JMSUtils.checkIfJMS(modelItem));
 			return inspector;
 		}
@@ -78,8 +79,8 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 		return null;
 	}
 
-	private class ResponseJMSHeaderAndPropertiesModel extends AbstractJMSHeaderAndPropertyModel<AbstractHttpRequest<?>> implements
-			SubmitListener
+	private class ResponseJMSHeaderAndPropertiesModel extends AbstractJMSHeaderAndPropertyModel<AbstractHttpRequest<?>>
+			implements SubmitListener
 	{
 		AbstractHttpRequest<?> request;
 		JMSHeaderAndPropertyInspector inspector;
@@ -151,7 +152,8 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 
 		public StringToStringMap getJMSHeadersAndProperties()
 		{
-			return getModelItem().getMessageExchange().getResponseHeaders();
+			return getModelItem().getMessageExchange() != null ? getModelItem().getMessageExchange().getResponseHeaders()
+					: null;
 		}
 
 		public void setInspector(JMSHeaderAndPropertyInspector inspector)
@@ -176,7 +178,8 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 
 		public StringToStringMap getJMSHeadersAndProperties()
 		{
-			return getModelItem().getMessageExchange().getRequestHeaders();
+			return getModelItem().getMessageExchange() != null ? getModelItem().getMessageExchange().getRequestHeaders()
+					: null;
 		}
 
 		public void setInspector(JMSHeaderAndPropertyInspector inspector)
