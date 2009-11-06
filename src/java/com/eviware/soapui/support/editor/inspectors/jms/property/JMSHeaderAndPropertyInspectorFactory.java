@@ -23,6 +23,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
@@ -152,9 +153,11 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 
 		public StringToStringMap getJMSHeadersAndProperties()
 		{
-			return getModelItem().getMessageExchange() != null ? getModelItem().getMessageExchange().getResponseHeaders()
-					: null;
-		}
+			MessageExchange messageExchange = getModelItem().getMessageExchange();
+			if (messageExchange != null)
+				return messageExchange.getResponseHeaders();
+			else
+				return new StringToStringMap();		}
 
 		public void setInspector(JMSHeaderAndPropertyInspector inspector)
 		{
@@ -178,8 +181,11 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 
 		public StringToStringMap getJMSHeadersAndProperties()
 		{
-			return getModelItem().getMessageExchange() != null ? getModelItem().getMessageExchange().getRequestHeaders()
-					: null;
+			MessageExchange messageExchange = getModelItem().getMessageExchange();
+			if (messageExchange != null)
+				return messageExchange.getRequestHeaders();
+			else
+				return new StringToStringMap();
 		}
 
 		public void setInspector(JMSHeaderAndPropertyInspector inspector)

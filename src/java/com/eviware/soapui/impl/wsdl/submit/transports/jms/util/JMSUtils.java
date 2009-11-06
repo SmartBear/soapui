@@ -19,6 +19,7 @@ import javax.jms.MapMessage;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.Request;
 
 public class JMSUtils
@@ -43,10 +44,16 @@ public class JMSUtils
 	{
 		try
 		{
-			String r = ((MessageExchangeModelItem) messageExchange).getMessageExchange() != null ? ((MessageExchangeModelItem) messageExchange)
-					.getMessageExchange().getProperty("Endpoint")
-					: null;
-			return r != null && r.startsWith(JMS_ENDPIONT_PREFIX);
+			MessageExchange me = ((MessageExchangeModelItem) messageExchange).getMessageExchange();
+			if (me != null)
+			{
+				String r = me.getProperty("Endpoint");
+				return r != null && r.startsWith(JMS_ENDPIONT_PREFIX);
+			}
+			else
+			{
+				return false;
+			}
 		}
 		catch (NullPointerException e)
 		{
