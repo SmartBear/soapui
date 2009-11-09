@@ -27,6 +27,7 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.actions.ProxyPrefs;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.settings.Settings;
@@ -50,14 +51,14 @@ public class ProxyUtils
 			String proxyHost = System.getProperty("http.proxyHost");
 			String proxyPort = System.getProperty("http.proxyPort");
 			if (proxyHost == null)
-				proxyHost = PropertyExpander.expandProperties(context, settings.getString(ProxySettings.HOST, ""));
+				proxyHost = PropertyExpander.expandProperties(context, settings.getString(ProxyPrefs.HOST, ""));
 			if (proxyPort == null)
-				proxyPort = PropertyExpander.expandProperties(context, settings.getString(ProxySettings.PORT, ""));
+				proxyPort = PropertyExpander.expandProperties(context, settings.getString(ProxyPrefs.PORT, ""));
 			if (!StringUtils.isNullOrEmpty(proxyHost) && !StringUtils.isNullOrEmpty(proxyPort))
 			{
 				// check excludes
 				String[] excludes = PropertyExpander.expandProperties(context,
-						settings.getString(ProxySettings.EXCLUDES, "")).split(",");
+						settings.getString(ProxyPrefs.EXCLUDES, "")).split(",");
 
 				try
 				{
@@ -68,9 +69,9 @@ public class ProxyUtils
 						hostConfiguration.setProxy(proxyHost, Integer.parseInt(proxyPort));
 
 						String proxyUsername = PropertyExpander.expandProperties(context, settings.getString(
-								ProxySettings.USERNAME, null));
+								ProxyPrefs.USERNAME, null));
 						String proxyPassword = PropertyExpander.expandProperties(context, settings.getString(
-								ProxySettings.PASSWORD, null));
+								ProxyPrefs.PASSWORD, null));
 
 						if (proxyUsername != null && proxyPassword != null)
 						{

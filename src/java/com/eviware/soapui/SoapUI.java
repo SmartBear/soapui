@@ -39,6 +39,7 @@ import java.util.concurrent.Executors;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -98,6 +99,7 @@ import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.model.workspace.WorkspaceFactory;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.monitor.TestMonitor;
+import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
@@ -155,6 +157,8 @@ public class SoapUI
 	public static final String SOAPUI_SPLASH = "soapui-splash.jpg";
 	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
 	public static final String BUILDINFO_RESOURCE = "/com/eviware/soapui/resources/conf/buildinfo.txt";
+	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
+	public static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
 
 	@SuppressWarnings("deprecation")
 	public static String PUSH_PAGE_URL = "http://www.soapui.org/appindex/soapui_starterpage.php?version="
@@ -203,8 +207,19 @@ public class SoapUI
 
 	private final static ExecutorService threadPool = Executors.newCachedThreadPool();
 	private JTextField searchField;
+	private static JButton applyProxyButton;
 
 	// --------------------------- CONSTRUCTORS ---------------------------
+
+	public static boolean isApplyProxy()
+	{
+		return SoapUI.getSettings().getBoolean(ProxySettings.ENABLE_PROXY);
+	}
+
+	public static void applyProxy(boolean aply)
+	{
+		SoapUI.getSettings().setBoolean(ProxySettings.ENABLE_PROXY, aply);
+	}
 
 	private SoapUI()
 	{
@@ -249,7 +264,9 @@ public class SoapUI
 
 		desktop.init();
 	}
-
+	public static JButton getApplyProxyButton() {
+		return applyProxyButton;
+	}
 	private JComponent buildToolbar()
 	{
 		mainToolbar = new JXToolBar();
@@ -268,8 +285,15 @@ public class SoapUI
 				"/favicon.png"));
 		mainToolbar.addSeparator();
 		mainToolbar.add(new PreferencesActionDelegate());
+		applyProxyButton = mainToolbar.add(new ApplyProxyButtonAction());
+		if (isApplyProxy())
+		{
+			applyProxyButton.setIcon(UISupport.createImageIcon(PROXY_ENABLED_ICON));
+		} else {
+			applyProxyButton.setIcon(UISupport.createImageIcon(PROXY_DISABLED_ICON));
+		}
 		mainToolbar.add(new ExitButtonAction());
-	
+
 		mainToolbar.addGlue();
 
 		searchField = new JTextField(20);
@@ -400,8 +424,7 @@ public class SoapUI
 		// toolsMenu.add( new XQueryXPathTesterAction());
 		toolsMenu.addSeparator();
 		toolsMenu.add(new StartHermesJMSButtonAction());
-	
-		
+
 		return toolsMenu;
 	}
 
@@ -1017,6 +1040,43 @@ public class SoapUI
 			saveOnExit = true;
 			WindowEvent windowEvent = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
 			frame.dispatchEvent(windowEvent);
+		}
+	}
+
+	private class ApplyProxyButtonAction extends AbstractAction
+	{
+		public ApplyProxyButtonAction()
+		{
+//			putValue(Action.SMALL_ICON, UISupport.createImageIcon("/proxyEnabled.png"));
+			putValue(Action.SHORT_DESCRIPTION, "Apply proxy defined in global preferences");
+		}
+
+		public void actionPerformed(ActionEvent e)
+		{
+			if (isApplyProxy())
+			{
+				applyProxy(false);
+				applyProxyButton.setIcon(UISupport.createImageIcon(PROXY_DISABLED_ICON));
+			}
+			else
+			{
+				if (StringUtils.isNullOrEmpty(SoapUI.getSettings().getString(ProxySettings.HOST, ""))
+						|| StringUtils.isNullOrEmpty(SoapUI.getSettings().getString(ProxySettings.PORT, "")))
+				{
+					SoapUIPreferencesAction.getInstance().show(SoapUIPreferencesAction.PROXY_SETTINGS);
+					if (!StringUtils.isNullOrEmpty(SoapUI.getSettings().getString(ProxySettings.HOST, ""))
+							&& !StringUtils.isNullOrEmpty(SoapUI.getSettings().getString(ProxySettings.PORT, "")))
+					{
+						applyProxy(true);
+						applyProxyButton.setIcon(UISupport.createImageIcon(PROXY_ENABLED_ICON));
+					}
+				}
+				else
+				{
+					applyProxy(true);
+					applyProxyButton.setIcon(UISupport.createImageIcon("PROXY_ENABLED_ICON"));
+				}
+			}
 		}
 	}
 

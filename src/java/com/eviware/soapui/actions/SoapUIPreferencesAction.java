@@ -67,7 +67,7 @@ public class SoapUIPreferencesAction extends AbstractAction
 
 		// addPrefs( new HttpPrefs( HTTP_SETTINGS));
 		addPrefs( new AnnotatedSettingsPrefs( HttpSettings.class, HTTP_SETTINGS ) );
-		addPrefs( new AnnotatedSettingsPrefs( ProxySettings.class, PROXY_SETTINGS ) );
+		addPrefs( new ProxyPrefs(PROXY_SETTINGS ) );
 		addPrefs( new AnnotatedSettingsPrefs( SSLSettings.class, SSL_SETTINGS ) );
 		addPrefs( new AnnotatedSettingsPrefs( WsdlSettings.class, WSDL_SETTINGS ) );
 		addPrefs( new UIPrefs( UI_SETTINGS ) );
