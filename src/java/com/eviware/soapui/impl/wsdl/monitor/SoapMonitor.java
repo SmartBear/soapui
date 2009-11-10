@@ -68,6 +68,7 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeRequestMessageEditor;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeResponseMessageEditor;
+import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
@@ -149,6 +150,7 @@ public class SoapMonitor extends JPanel
 	private SoapMonitorEngine monitorEngine;
 	private String oldProxyHost;
 	private String oldProxyPort;
+	private boolean oldProxyEnabled;
 	private String sslEndpoint;
 	private JInspectorPanel inspectorPanel;
 
@@ -494,9 +496,14 @@ public class SoapMonitor extends JPanel
 			{
 				oldProxyHost = SoapUI.getSettings().getString( ProxySettings.HOST, "" );
 				oldProxyPort = SoapUI.getSettings().getString( ProxySettings.PORT, "" );
+				oldProxyEnabled = SoapUI.getSettings().getBoolean( ProxySettings.ENABLE_PROXY);
 
 				SoapUI.getSettings().setString( ProxySettings.HOST, "127.0.0.1" );
 				SoapUI.getSettings().setString( ProxySettings.PORT, String.valueOf( localPort ) );
+				SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, true);
+				ProxyUtils.setProxyEnabled(true);
+				JButton applyProxyButton = (JButton) SoapUI.getApplyProxyButton();
+				applyProxyButton.setIcon(UISupport.createImageIcon(SoapUI.PROXY_ENABLED_ICON));
 			}
 
 			SoapUI.log.info( "Started SOAP Monitor on local port " + localPort );
@@ -545,6 +552,17 @@ public class SoapMonitor extends JPanel
 		{
 			SoapUI.getSettings().setString( ProxySettings.HOST, oldProxyHost );
 			SoapUI.getSettings().setString( ProxySettings.PORT, oldProxyPort );
+			SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, oldProxyEnabled );
+			ProxyUtils.setProxyEnabled(oldProxyEnabled);
+			JButton applyProxyButton = (JButton) SoapUI.getApplyProxyButton();
+			if (oldProxyEnabled)
+			{
+				applyProxyButton.setIcon(UISupport.createImageIcon(SoapUI.PROXY_ENABLED_ICON));
+			}
+			else
+			{
+				applyProxyButton.setIcon(UISupport.createImageIcon(SoapUI.PROXY_DISABLED_ICON));
+			}
 		}
 	}
 

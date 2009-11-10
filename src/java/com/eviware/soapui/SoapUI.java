@@ -87,6 +87,7 @@ import com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans.XmlBeans2Action
 import com.eviware.soapui.impl.wsdl.actions.support.OpenUrlAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.PanelBuilder;
 import com.eviware.soapui.model.TestPropertyHolder;
@@ -211,16 +212,6 @@ public class SoapUI
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
-	public static boolean isApplyProxy()
-	{
-		return SoapUI.getSettings().getBoolean(ProxySettings.ENABLE_PROXY);
-	}
-
-	public static void applyProxy(boolean aply)
-	{
-		SoapUI.getSettings().setBoolean(ProxySettings.ENABLE_PROXY, aply);
-	}
-
 	private SoapUI()
 	{
 	}
@@ -264,9 +255,12 @@ public class SoapUI
 
 		desktop.init();
 	}
-	public static JButton getApplyProxyButton() {
+
+	public static JButton getApplyProxyButton()
+	{
 		return applyProxyButton;
 	}
+
 	private JComponent buildToolbar()
 	{
 		mainToolbar = new JXToolBar();
@@ -286,11 +280,16 @@ public class SoapUI
 		mainToolbar.addSeparator();
 		mainToolbar.add(new PreferencesActionDelegate());
 		applyProxyButton = mainToolbar.add(new ApplyProxyButtonAction());
-		if (isApplyProxy())
+		ProxyUtils.setProxyEnabled(getSettings().getBoolean(ProxySettings.ENABLE_PROXY));
+		if (ProxyUtils.isProxyEnabled())
 		{
 			applyProxyButton.setIcon(UISupport.createImageIcon(PROXY_ENABLED_ICON));
-		} else {
+			ProxyUtils.setProxyEnabled(true);
+		}
+		else
+		{
 			applyProxyButton.setIcon(UISupport.createImageIcon(PROXY_DISABLED_ICON));
+			ProxyUtils.setProxyEnabled(false);
 		}
 		mainToolbar.add(new ExitButtonAction());
 
@@ -1047,15 +1046,17 @@ public class SoapUI
 	{
 		public ApplyProxyButtonAction()
 		{
-//			putValue(Action.SMALL_ICON, UISupport.createImageIcon("/proxyEnabled.png"));
+			// putValue(Action.SMALL_ICON,
+			// UISupport.createImageIcon("/proxyEnabled.png"));
 			putValue(Action.SHORT_DESCRIPTION, "Apply proxy defined in global preferences");
 		}
 
 		public void actionPerformed(ActionEvent e)
 		{
-			if (isApplyProxy())
+			if (ProxyUtils.isProxyEnabled())
 			{
-				applyProxy(false);
+				ProxyUtils.setProxyEnabled(false);
+				SoapUI.getSettings().setBoolean(ProxySettings.ENABLE_PROXY, false);
 				applyProxyButton.setIcon(UISupport.createImageIcon(PROXY_DISABLED_ICON));
 			}
 			else
@@ -1067,14 +1068,16 @@ public class SoapUI
 					if (!StringUtils.isNullOrEmpty(SoapUI.getSettings().getString(ProxySettings.HOST, ""))
 							&& !StringUtils.isNullOrEmpty(SoapUI.getSettings().getString(ProxySettings.PORT, "")))
 					{
-						applyProxy(true);
+						ProxyUtils.setProxyEnabled(true);
+						SoapUI.getSettings().setBoolean(ProxySettings.ENABLE_PROXY, true);
 						applyProxyButton.setIcon(UISupport.createImageIcon(PROXY_ENABLED_ICON));
 					}
 				}
 				else
 				{
-					applyProxy(true);
-					applyProxyButton.setIcon(UISupport.createImageIcon("PROXY_ENABLED_ICON"));
+					ProxyUtils.setProxyEnabled(true);
+					SoapUI.getSettings().setBoolean(ProxySettings.ENABLE_PROXY, true);
+					applyProxyButton.setIcon(UISupport.createImageIcon(PROXY_ENABLED_ICON));
 				}
 			}
 		}

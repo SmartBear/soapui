@@ -27,7 +27,6 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.actions.ProxyPrefs;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.settings.Settings;
@@ -42,23 +41,25 @@ import com.eviware.soapui.support.StringUtils;
 
 public class ProxyUtils
 {
+	private static boolean proxyEnabled;
+
 	public static HostConfiguration initProxySettings(Settings settings, HttpState httpState,
 			HostConfiguration hostConfiguration, String urlString, PropertyExpansionContext context)
 	{
-		if (SoapUI.getSettings().getBoolean(ProxySettings.ENABLE_PROXY))
+		if (ProxyUtils.isProxyEnabled())
 		{
 			// check system properties first
 			String proxyHost = System.getProperty("http.proxyHost");
 			String proxyPort = System.getProperty("http.proxyPort");
 			if (proxyHost == null)
-				proxyHost = PropertyExpander.expandProperties(context, settings.getString(ProxyPrefs.HOST, ""));
+				proxyHost = PropertyExpander.expandProperties(context, settings.getString(ProxySettings.HOST, ""));
 			if (proxyPort == null)
-				proxyPort = PropertyExpander.expandProperties(context, settings.getString(ProxyPrefs.PORT, ""));
+				proxyPort = PropertyExpander.expandProperties(context, settings.getString(ProxySettings.PORT, ""));
 			if (!StringUtils.isNullOrEmpty(proxyHost) && !StringUtils.isNullOrEmpty(proxyPort))
 			{
 				// check excludes
 				String[] excludes = PropertyExpander.expandProperties(context,
-						settings.getString(ProxyPrefs.EXCLUDES, "")).split(",");
+						settings.getString(ProxySettings.EXCLUDES, "")).split(",");
 
 				try
 				{
@@ -69,9 +70,9 @@ public class ProxyUtils
 						hostConfiguration.setProxy(proxyHost, Integer.parseInt(proxyPort));
 
 						String proxyUsername = PropertyExpander.expandProperties(context, settings.getString(
-								ProxyPrefs.USERNAME, null));
+								ProxySettings.USERNAME, null));
 						String proxyPassword = PropertyExpander.expandProperties(context, settings.getString(
-								ProxyPrefs.PASSWORD, null));
+								ProxySettings.PASSWORD, null));
 
 						if (proxyUsername != null && proxyPassword != null)
 						{
@@ -167,5 +168,15 @@ public class ProxyUtils
 		return address;
 
 	} // end lookup
+
+	public static boolean isProxyEnabled()
+	{
+		return proxyEnabled;
+	}
+
+	public static void setProxyEnabled(boolean proxyEnabled)
+	{
+		ProxyUtils.proxyEnabled = proxyEnabled;
+	}
 
 }

@@ -1,3 +1,15 @@
+/*
+ *  soapUI, copyright (C) 2004-2009 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
 package com.eviware.soapui.actions;
 
 import javax.swing.JButton;
@@ -6,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
@@ -88,6 +101,7 @@ public class ProxyPrefs implements Prefs
 		values.put(PASSWORD, settings.getString(ProxySettings.PASSWORD, ""));
 		values.put(EXCLUDES, settings.getString(ProxySettings.EXCLUDES, ""));
 		values.put(ENABLE_PROXY, settings.getBoolean(ProxySettings.ENABLE_PROXY));
+		ProxyUtils.setProxyEnabled(settings.getBoolean(ProxySettings.ENABLE_PROXY));
 
 		return values;
 	}
@@ -109,10 +123,12 @@ public class ProxyPrefs implements Prefs
 		if (values.getBoolean(ENABLE_PROXY))
 		{
 			applyProxyButton.setIcon(UISupport.createImageIcon(SoapUI.PROXY_ENABLED_ICON));
+			ProxyUtils.setProxyEnabled(true);
 		}
 		else
 		{
 			applyProxyButton.setIcon(UISupport.createImageIcon(SoapUI.PROXY_DISABLED_ICON));
+			ProxyUtils.setProxyEnabled(false);
 		}
 	}
 
