@@ -53,107 +53,107 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 	private Properties overrideProperties;
 	private String propertiesLabel = "Test Properties";
 
-	public XmlBeansPropertiesTestPropertyHolder( ModelItem modelItem, PropertiesTypeConfig config )
+	public XmlBeansPropertiesTestPropertyHolder(ModelItem modelItem, PropertiesTypeConfig config)
 	{
 		this.modelItem = modelItem;
 		this.config = config;
 
-		for( int c = 0; c < config.sizeOfPropertyArray(); c++ )
+		for (int c = 0; c < config.sizeOfPropertyArray(); c++)
 		{
-			PropertyConfig propertyConfig = config.getPropertyArray( c );
-			if( StringUtils.hasContent( propertyConfig.getName()))
+			PropertyConfig propertyConfig = config.getPropertyArray(c);
+			if (StringUtils.hasContent(propertyConfig.getName()))
 			{
-				addProperty( propertyConfig, false );		
+				addProperty(propertyConfig, false);
 			}
 			else
 			{
-				config.removeProperty( c );
+				config.removeProperty(c);
 				c--;
 			}
 		}
 	}
 
-	protected PropertiesStepProperty addProperty( PropertyConfig propertyConfig, boolean notify )
+	protected PropertiesStepProperty addProperty(PropertyConfig propertyConfig, boolean notify)
 	{
-		PropertiesStepProperty propertiesStepProperty = new PropertiesStepProperty( propertyConfig );
-		properties.add( propertiesStepProperty );
-		propertyMap.put( propertiesStepProperty.getName().toUpperCase(), propertiesStepProperty );
+		PropertiesStepProperty propertiesStepProperty = new PropertiesStepProperty(propertyConfig);
+		properties.add(propertiesStepProperty);
+		propertyMap.put(propertiesStepProperty.getName().toUpperCase(), propertiesStepProperty);
 
-		if( notify )
+		if (notify)
 		{
-			firePropertyAdded( propertiesStepProperty.getName() );
+			firePropertyAdded(propertiesStepProperty.getName());
 		}
 
 		return propertiesStepProperty;
 	}
 
-	private void firePropertyAdded( String name )
+	private void firePropertyAdded(String name)
 	{
-		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
-		for( TestPropertyListener listener : listenersArray )
+		TestPropertyListener[] listenersArray = listeners.toArray(new TestPropertyListener[listeners.size()]);
+		for (TestPropertyListener listener : listenersArray)
 		{
-			listener.propertyAdded( name );
+			listener.propertyAdded(name);
 		}
 	}
 
-	private void firePropertyRemoved( String name )
+	private void firePropertyRemoved(String name)
 	{
-		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
-		for( TestPropertyListener listener : listenersArray )
+		TestPropertyListener[] listenersArray = listeners.toArray(new TestPropertyListener[listeners.size()]);
+		for (TestPropertyListener listener : listenersArray)
 		{
-			listener.propertyRemoved( name );
+			listener.propertyRemoved(name);
 		}
 	}
 
-	private void firePropertyMoved( String name, int oldIndex, int newIndex )
+	private void firePropertyMoved(String name, int oldIndex, int newIndex)
 	{
-		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
-		for( TestPropertyListener listener : listenersArray )
+		TestPropertyListener[] listenersArray = listeners.toArray(new TestPropertyListener[listeners.size()]);
+		for (TestPropertyListener listener : listenersArray)
 		{
-			listener.propertyMoved( name, oldIndex, newIndex );
+			listener.propertyMoved(name, oldIndex, newIndex);
 		}
 	}
 
-	private void firePropertyRenamed( String oldName, String newName )
+	private void firePropertyRenamed(String oldName, String newName)
 	{
-		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
-		for( TestPropertyListener listener : listenersArray )
+		TestPropertyListener[] listenersArray = listeners.toArray(new TestPropertyListener[listeners.size()]);
+		for (TestPropertyListener listener : listenersArray)
 		{
-			listener.propertyRenamed( oldName, newName );
+			listener.propertyRenamed(oldName, newName);
 		}
 	}
 
-	private void firePropertyValueChanged( String name, String oldValue, String newValue )
+	private void firePropertyValueChanged(String name, String oldValue, String newValue)
 	{
-		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
-		for( TestPropertyListener listener : listenersArray )
+		TestPropertyListener[] listenersArray = listeners.toArray(new TestPropertyListener[listeners.size()]);
+		for (TestPropertyListener listener : listenersArray)
 		{
-			listener.propertyValueChanged( name, oldValue, newValue );
+			listener.propertyValueChanged(name, oldValue, newValue);
 		}
 	}
 
-	public TestProperty addProperty( String name )
+	public TestProperty addProperty(String name)
 	{
 		PropertyConfig propertyConfig = config.addNewProperty();
-		propertyConfig.setName( name );
-		return addProperty( propertyConfig, true );
+		propertyConfig.setName(name);
+		return addProperty(propertyConfig, true);
 	}
 
-	public void addTestPropertyListener( TestPropertyListener listener )
+	public void addTestPropertyListener(TestPropertyListener listener)
 	{
-		listeners.add( listener );
+		listeners.add(listener);
 	}
 
-	public PropertiesStepProperty getProperty( String name )
+	public PropertiesStepProperty getProperty(String name)
 	{
-		return propertyMap.get( name.toUpperCase() );
+		return propertyMap.get(name.toUpperCase());
 	}
 
 	public String[] getPropertyNames()
 	{
 		String[] result = new String[properties.size()];
-		for( int c = 0; c < properties.size(); c++ )
-			result[c] = properties.get( c ).getName();
+		for (int c = 0; c < properties.size(); c++)
+			result[c] = properties.get(c).getName();
 
 		return result;
 	}
@@ -162,68 +162,68 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 	{
 		List<TestProperty> result = new ArrayList<TestProperty>();
 
-		for( TestProperty property : properties )
-			result.add( property );
+		for (TestProperty property : properties)
+			result.add(property);
 
 		return result;
 	}
 
-	public String getPropertyValue( String name )
+	public String getPropertyValue(String name)
 	{
-		TestProperty property = getProperty( name );
+		TestProperty property = getProperty(name);
 		return property == null ? null : property.getValue();
 	}
 
-	public TestProperty removeProperty( String propertyName )
+	public TestProperty removeProperty(String propertyName)
 	{
-		TestProperty property = getProperty( propertyName );
-		if( property != null )
+		TestProperty property = getProperty(propertyName);
+		if (property != null)
 		{
-			int ix = properties.indexOf( property );
-			propertyMap.remove( propertyName.toUpperCase() );
-			properties.remove( ix );
-			firePropertyRemoved( propertyName );
-			config.removeProperty( ix );
+			int ix = properties.indexOf(property);
+			propertyMap.remove(propertyName.toUpperCase());
+			properties.remove(ix);
+			firePropertyRemoved(propertyName);
+			config.removeProperty(ix);
 			return property;
 		}
 
 		return null;
 	}
 
-	public void removeTestPropertyListener( TestPropertyListener listener )
+	public void removeTestPropertyListener(TestPropertyListener listener)
 	{
-		listeners.remove( listener );
+		listeners.remove(listener);
 	}
 
-	public void setPropertyValue( String name, String value )
+	public void setPropertyValue(String name, String value)
 	{
-		PropertiesStepProperty property = getProperty( name );
-		if( property != null )
-			property.setValue( value );
+		PropertiesStepProperty property = getProperty(name);
+		if (property != null)
+			property.setValue(value);
 		else
-			addProperty( name ).setValue( value );
+			addProperty(name).setValue(value);
 	}
 
-	public void resetPropertiesConfig( PropertiesTypeConfig config )
+	public void resetPropertiesConfig(PropertiesTypeConfig config)
 	{
 		this.config = config;
 
-		for( int c = 0; c < config.sizeOfPropertyArray(); c++ )
+		for (int c = 0; c < config.sizeOfPropertyArray(); c++)
 		{
-			properties.get( c ).setConfig( config.getPropertyArray( c ) );
+			properties.get(c).setConfig(config.getPropertyArray(c));
 		}
 	}
 
-	public boolean renameProperty( String name, String newName )
+	public boolean renameProperty(String name, String newName)
 	{
-		if( getProperty( newName ) != null )
+		if (getProperty(newName) != null)
 			return false;
 
-		PropertiesStepProperty property = getProperty( name );
-		if( property == null )
+		PropertiesStepProperty property = getProperty(name);
+		if (property == null)
 			return false;
 
-		property.setName( newName );
+		property.setName(newName);
 		return true;
 	}
 
@@ -237,12 +237,12 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 	{
 		private PropertyConfig propertyConfig;
 
-		public PropertiesStepProperty( PropertyConfig propertyConfig )
+		public PropertiesStepProperty(PropertyConfig propertyConfig)
 		{
 			this.propertyConfig = propertyConfig;
 		}
 
-		public void setConfig( PropertyConfig propertyConfig )
+		public void setConfig(PropertyConfig propertyConfig)
 		{
 			this.propertyConfig = propertyConfig;
 		}
@@ -252,15 +252,15 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 			return propertyConfig.getName();
 		}
 
-		public void setName( String name )
+		public void setName(String name)
 		{
 			String oldName = getName();
-			propertyConfig.setName( name );
+			propertyConfig.setName(name);
 
-			propertyMap.remove( oldName.toUpperCase() );
-			propertyMap.put( name.toUpperCase(), this );
+			propertyMap.remove(oldName.toUpperCase());
+			propertyMap.put(name.toUpperCase(), this);
 
-			firePropertyRenamed( oldName, name );
+			firePropertyRenamed(oldName, name);
 		}
 
 		public String getDescription()
@@ -270,25 +270,25 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 
 		public String getValue()
 		{
-			if( overrideProperties != null && overrideProperties.containsKey( getName() ) )
-				return overrideProperties.getProperty( getName() );
+			if (overrideProperties != null && overrideProperties.containsKey(getName()))
+				return overrideProperties.getProperty(getName());
 
 			return propertyConfig.getValue();
 		}
 
-		public void setValue( String value )
+		public void setValue(String value)
 		{
 			String oldValue = getValue();
-			propertyConfig.setValue( value );
+			propertyConfig.setValue(value);
 
-			if( overrideProperties != null && overrideProperties.containsKey( getName() ) )
+			if (overrideProperties != null && overrideProperties.containsKey(getName()))
 			{
-				overrideProperties.remove( getName() );
-				if( overrideProperties.isEmpty() )
+				overrideProperties.remove(getName());
+				if (overrideProperties.isEmpty())
 					overrideProperties = null;
 			}
 
-			firePropertyValueChanged( getName(), oldValue, value );
+			firePropertyValueChanged(getName(), oldValue, value);
 		}
 
 		public boolean isReadOnly()
@@ -312,9 +312,9 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 		}
 	}
 
-	public int saveTo( String fileName ) throws IOException
+	public int saveTo(String fileName) throws IOException
 	{
-		return TestPropertyUtils.saveTo( this, fileName );
+		return TestPropertyUtils.saveTo(this, fileName);
 	}
 
 	public int getPropertyCount()
@@ -322,69 +322,69 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 		return properties.size();
 	}
 
-	public TestProperty getPropertyAt( int index )
+	public TestProperty getPropertyAt(int index)
 	{
-		return properties.get( index );
+		return properties.get(index);
 	}
 
 	public Map<String, TestProperty> getProperties()
 	{
 		Map<String, TestProperty> result = new HashMap<String, TestProperty>();
-		for( TestProperty property : propertyMap.values() )
+		for (TestProperty property : propertyMap.values())
 		{
-			result.put( property.getName(), property );
+			result.put(property.getName(), property);
 		}
 
 		return result;
 	}
 
-	public boolean hasProperty( String name )
+	public boolean hasProperty(String name)
 	{
-		return propertyMap.containsKey( name.toUpperCase() );
+		return propertyMap.containsKey(name.toUpperCase());
 	}
 
-	public int addPropertiesFromFile( String propFile )
+	public int addPropertiesFromFile(String propFile)
 	{
-		if( !StringUtils.hasContent( propFile ) )
+		if (!StringUtils.hasContent(propFile))
 			return 0;
 
 		try
 		{
 			InputStream input = null;
 
-			File file = new File( propFile );
-			if( file.exists() )
+			File file = new File(propFile);
+			if (file.exists())
 			{
-				input = new FileInputStream( file );
+				input = new FileInputStream(file);
 			}
-			else if( propFile.toLowerCase().startsWith( "http://" ) || propFile.toLowerCase().startsWith( "https://" ) )
+			else if (propFile.toLowerCase().startsWith("http://") || propFile.toLowerCase().startsWith("https://"))
 			{
-				UrlWsdlLoader loader = new UrlWsdlLoader( propFile, getModelItem() );
-				loader.setUseWorker( false );
+				UrlWsdlLoader loader = new UrlWsdlLoader(propFile, getModelItem());
+				loader.setUseWorker(false);
 				input = loader.load();
 			}
 
-			if( input != null )
+			if (input != null)
 			{
-				if( overrideProperties == null )
+				if (overrideProperties == null)
 					overrideProperties = new Properties();
 
 				int sz = overrideProperties.size();
-				overrideProperties.load( input );
+				overrideProperties.load(input);
 
-				for( Object key : overrideProperties.keySet() )
+				for (Object key : overrideProperties.keySet())
 				{
 					String name = key.toString();
-					if( !hasProperty( name ) )
-						addProperty( name );
+					if (!hasProperty(name))
+						addProperty(name);
 				}
 
 				return overrideProperties.size() - sz;
 			}
 		}
-		catch( Exception e )
+		catch (Exception e)
 		{
-			SoapUI.logError( e );
+			SoapUI.logError(e);
 		}
 
 		return 0;
@@ -399,73 +399,73 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 	{
 		List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
 
-		return result.toArray( new PropertyExpansion[result.size()] );
+		return result.toArray(new PropertyExpansion[result.size()]);
 	}
 
-	public void moveProperty( String propertyName, int targetIndex )
+	public void moveProperty(String propertyName, int targetIndex)
 	{
-		PropertiesStepProperty property = getProperty( propertyName );
-		int ix = properties.indexOf( property );
+		PropertiesStepProperty property = getProperty(propertyName);
+		int ix = properties.indexOf(property);
 
-		if( ix == targetIndex )
+		if (ix == targetIndex)
 			return;
 
-		if( targetIndex < 0 )
+		if (targetIndex < 0)
 			targetIndex = 0;
 
 		String value = property.getValue();
-		config.removeProperty( ix );
+		config.removeProperty(ix);
 
 		PropertyConfig propertyConfig = null;
 
-		if( targetIndex < properties.size() )
+		if (targetIndex < properties.size())
 		{
-			properties.add( targetIndex, properties.remove( ix ) );
-			propertyConfig = config.insertNewProperty( targetIndex );
+			properties.add(targetIndex, properties.remove(ix));
+			propertyConfig = config.insertNewProperty(targetIndex);
 		}
 		else
 		{
-			properties.add( properties.remove( ix ) );
+			properties.add(properties.remove(ix));
 			propertyConfig = config.addNewProperty();
 		}
 
-		propertyConfig.setName( propertyName );
-		propertyConfig.setValue( value );
+		propertyConfig.setName(propertyName);
+		propertyConfig.setValue(value);
 
-		resetPropertiesConfig( config );
+		resetPropertiesConfig(config);
 
-		if( targetIndex > properties.size() )
+		if (targetIndex > properties.size())
 			targetIndex = properties.size();
 
-		firePropertyMoved( propertyName, ix, targetIndex );
+		firePropertyMoved(propertyName, ix, targetIndex);
 	}
 
 	public void clear()
 	{
-		while( size() > 0 )
-			removeProperty( getPropertyAt( 0 ).getName() );
+		while (size() > 0)
+			removeProperty(getPropertyAt(0).getName());
 	}
 
-	public boolean containsKey( Object key )
+	public boolean containsKey(Object key)
 	{
-		return hasProperty( ( String )key );
+		return hasProperty((String) key);
 	}
 
-	public boolean containsValue( Object value )
+	public boolean containsValue(Object value)
 	{
-		return propertyMap.containsValue( value );
+		return propertyMap.containsValue(value);
 	}
 
 	public Set<java.util.Map.Entry<String, TestProperty>> entrySet()
 	{
 		HashSet<java.util.Map.Entry<String, TestProperty>> result = new HashSet<Entry<String, TestProperty>>();
 
-		for( TestProperty p : propertyMap.values() )
+		for (TestProperty p : propertyMap.values())
 		{
 			// This does not compile on JDK 1.5:
 			// result.add( new java.util.HashMap.SimpleEntry<String,
 			// TestProperty>(p.getName(), p));
-			result.add( new HashMapEntry<String, TestProperty>( p.getName(), p ) );
+			result.add(new HashMapEntry<String, TestProperty>(p.getName(), p));
 		}
 
 		return result;
@@ -476,7 +476,7 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 		private K key;
 		private V value;
 
-		public HashMapEntry( K key, V value )
+		public HashMapEntry(K key, V value)
 		{
 			this.key = key;
 			this.value = value;
@@ -492,15 +492,15 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 			return value;
 		}
 
-		public V setValue( V value )
+		public V setValue(V value)
 		{
 			throw new UnsupportedOperationException();
 		}
 	}
 
-	public TestProperty get( Object key )
+	public TestProperty get(Object key)
 	{
-		return getProperty( ( String )key );
+		return getProperty((String) key);
 	}
 
 	public boolean isEmpty()
@@ -510,27 +510,27 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 
 	public Set<String> keySet()
 	{
-		return new HashSet<String>( Arrays.asList( getPropertyNames() ) );
+		return new HashSet<String>(Arrays.asList(getPropertyNames()));
 	}
 
-	public TestProperty put( String key, TestProperty value )
+	public TestProperty put(String key, TestProperty value)
 	{
-		TestProperty result = addProperty( key );
-		result.setValue( value.getValue() );
+		TestProperty result = addProperty(key);
+		result.setValue(value.getValue());
 		return result;
 	}
 
-	public void putAll( Map<? extends String, ? extends TestProperty> m )
+	public void putAll(Map<? extends String, ? extends TestProperty> m)
 	{
-		for( TestProperty p : m.values() )
+		for (TestProperty p : m.values())
 		{
-			addProperty( p.getName() ).setValue( p.getValue() );
+			addProperty(p.getName()).setValue(p.getValue());
 		}
 	}
 
-	public TestProperty remove( Object key )
+	public TestProperty remove(Object key)
 	{
-		return removeProperty( ( String )key );
+		return removeProperty((String) key);
 	}
 
 	public int size()
@@ -541,7 +541,7 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 	public Collection<TestProperty> values()
 	{
 		ArrayList<TestProperty> result = new ArrayList<TestProperty>();
-		result.addAll( propertyMap.values() );
+		result.addAll(propertyMap.values());
 		return result;
 	}
 
