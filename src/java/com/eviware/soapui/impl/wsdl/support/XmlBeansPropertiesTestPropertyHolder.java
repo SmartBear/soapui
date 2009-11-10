@@ -550,7 +550,7 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 		return propertiesLabel;
 	}
 
-	public void setPropertiesLabel( String propertiesLabel )
+	public void setPropertiesLabel(String propertiesLabel)
 	{
 		this.propertiesLabel = propertiesLabel;
 	}
