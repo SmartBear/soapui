@@ -35,7 +35,7 @@ import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.support.StringUtils;
 
 /**
- * Utilities for setting proxy-servers corectly
+ * Utilities for setting proxy-servers correctly
  * 
  * @author ole.matzura
  */
