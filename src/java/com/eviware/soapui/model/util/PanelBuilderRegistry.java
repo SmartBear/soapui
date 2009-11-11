@@ -54,8 +54,10 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.PropertyTransfersTestStepPa
 import com.eviware.soapui.impl.wsdl.panels.teststeps.RestTestRequestPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.WsdlRunTestCaseTestStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.WsdlTestRequestPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequestTestStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.testsuite.WsdlTestSuitePanelBuilder;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfersTestStep;
@@ -119,5 +121,6 @@ public class PanelBuilderRegistry
 		register( WsdlRunTestCaseTestStep.class, new WsdlRunTestCaseTestStepPanelBuilder() );
 		register( WsdlMockResponseTestStep.class, new MockResponseStepPanelBuilder() );
 		register( JdbcRequestTestStep.class, new JdbcRequestTestStepPanelBuilder() );
+		register( AMFRequestTestStep.class,new AMFRequestTestStepPanelBuilder());
 	}
 }

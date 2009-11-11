@@ -41,6 +41,7 @@ public class WsdlTestStepRegistry
 		addFactory( new HttpRequestStepFactory() );
 		addFactory( new WsdlMockResponseStepFactory() );
 		addFactory( new JdbcRequestTestStepFactory() );
+		addFactory( new AMFRequestStepFactory() );
 
 		// soapUI Pro TestStep placeholders
 		addFactory( new ProPlaceholderStepFactory( "datasource", "soapUI Pro DataSource", "/datasource.gif" ) );
