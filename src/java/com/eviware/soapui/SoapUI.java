@@ -166,6 +166,7 @@ public class SoapUI
 			+ URLEncoder.encode(SOAPUI_VERSION);
 	public static String FRAME_ICON = "/16-perc.gif";
 	public static String PUSH_PAGE_ERROR_URL = "file://" + System.getProperty("soapui.home", ".") + "/starter-page.html";
+	public static String APP_TITLE = System.getProperty( "maven.branded.title", "soap application" );
 
 	// ------------------------------ FIELDS ------------------------------
 
@@ -582,7 +583,7 @@ public class SoapUI
 		{
 			try
 			{
-				startSoapUI(mainArgs, "soapUI " + SOAPUI_VERSION, SOAPUI_SPLASH, new StandaloneSoapUICore(true));
+				startSoapUI(mainArgs, APP_TITLE, SOAPUI_SPLASH, new StandaloneSoapUICore(true));
 			}
 			catch (Exception e)
 			{
