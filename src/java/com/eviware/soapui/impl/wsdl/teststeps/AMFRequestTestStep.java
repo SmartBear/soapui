@@ -26,6 +26,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AMFRequestTestStepConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.config.impl.AMFRequestTestStepConfigImpl;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFResponse;
@@ -74,7 +75,10 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";
 	public static final String RESPONSE_PROPERTY = "response";
 	private AMFSubmit submit;
-	private String scriptText = "";
+	private String script = "";
+	private String amfCall;
+
+
 	private SoapUIScriptEngine scriptEngine;
 	private AssertionsSupport assertionsSupport;
 	private PropertyChangeNotifier notifier;
@@ -116,6 +120,8 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		// setIconAnimator(initIconAnimator());
 		// }
 
+		this.script = amfRequestTestStepConfig.getGroovyScript();
+		this.amfCall = amfRequestTestStepConfig.getAmfCall();
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 		scriptEngine.setScript( getScript() );
 		if( forLoadTest && !isDisabled() )
@@ -604,26 +610,41 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 
 	public String getScript()
 	{
-		return scriptText;
+		return script;
 	}
 
 	public void setScript( String scriptText )
 	{
-		if( scriptText.equals( this.scriptText ) )
+		if( scriptText.equals( this.script ) )
 			return;
 
-		String oldScript = this.scriptText;
-		this.scriptText = scriptText;
+		String oldScript = this.script;
+		this.script = scriptText;
 		scriptEngine.setScript( scriptText );
-		saveScript( getConfig() );
+		notifyPropertyChanged( "groovyScript", oldScript, scriptText );
 
-		notifyPropertyChanged( "script", oldScript, scriptText );
+		saveScript();
 	}
 
-	private void saveScript( TestStepConfig config )
+	private void saveScript()
 	{
-		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
-		builder.add( "script", scriptText );
-		config.setConfig( builder.finish() );
+		amfRequestTestStepConfig.setGroovyScript( getScript() );
+	}
+
+	
+	public String getAmfCall()
+	{
+		return amfCall;
+	}
+
+	public void setAmfCall( String amfCall )
+	{
+		this.amfCall = amfCall;
+		saveAmfCall();
+	}
+
+	private void saveAmfCall()
+	{
+		amfRequestTestStepConfig.setAmfCall( getAmfCall() );
 	}
 }

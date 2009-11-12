@@ -98,7 +98,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 
 	public String getRequestContent()
 	{
-		return ((AMFRequestTestStepConfig) testStep.getConfig()).getContent();
+		return ((AMFRequestTestStepConfig) testStep.getConfig()).getProperties().toString();
 	}
 
 	public MessagePart[] getRequestParts()

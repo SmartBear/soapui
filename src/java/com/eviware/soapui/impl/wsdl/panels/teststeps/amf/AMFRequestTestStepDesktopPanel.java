@@ -23,10 +23,12 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.Document;
 
 import org.apache.log4j.Logger;
 
@@ -63,6 +65,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
+import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
@@ -81,6 +84,7 @@ import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
 public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFRequestTestStep> implements SubmitListener
 {
+	private static final String AMF_CALL = "AMF Call";
 	private final static Logger log = Logger.getLogger( AbstractHttpRequestDesktopPanel.class );
 	private JPanel configPanel;
 	private JButton addAssertionButton;
@@ -108,7 +112,9 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	private SoapUIScriptEngine scriptEngine;
 	private RunAction runAction = new RunAction();
 	private GroovyEditor groovyEditor;
+	private JTextField amfCall;
 	public boolean updating;
+	SimpleForm configForm;
 
 	public AMFRequestTestStepDesktopPanel( AMFRequestTestStep modelItem )
 	{
@@ -222,14 +228,18 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
 	protected JComponent buildRequestConfigPanel()
 	{
-		configPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ), "Groovy Script Editor" );
+		configPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ), "AMF call and intialisation groovy script" );
 		if( panel == null )
 		{
 			panel = new JPanel( new BorderLayout() );
-			panel.add( createGroovyEditorSimpleForm().getPanel() );
+			configForm = new SimpleForm();
+			
+			addAmfCAlltoSimpleForm();
+			addGroovyEditorToSimpleForm();
+			
+			panel.add( configForm.getPanel() );
 		}
 		configPanel.add( panel, BorderLayout.CENTER );
-
 		propertiesTableComponent = buildProperties();
 		JSplitPane split = UISupport.createVerticalSplit( propertiesTableComponent, configPanel );
 		split.setDividerLocation( 120 );
@@ -330,14 +340,35 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		}
 	}
 
-	protected SimpleForm createGroovyEditorSimpleForm()
+	protected SimpleForm addGroovyEditorToSimpleForm()
 	{
-		SimpleForm configForm = new SimpleForm();
 		configForm.addSpace( 5 );
-		configForm.setDefaultTextFieldColumns( 50 );
-		configForm.addComponent( groovyEditor = new GroovyEditor( new ScriptStepGroovyEditorModel() ) );
-
+		configForm.append( "Groovy Script", groovyEditor = new GroovyEditor( new ScriptStepGroovyEditorModel() ) );
 		return configForm;
+	}
+
+	private void addAmfCAlltoSimpleForm()
+	{
+		configForm.addSpace( 5 );
+		amfCall = configForm.appendTextField( AMF_CALL, "object.methodName for amf method call" );
+		amfCall.setText( amfRequestTestStep.getAmfCall() );
+		PropertyExpansionPopupListener.enable( amfCall, amfRequestTestStep );
+		addAmfCallDocumentListener();
+	}
+
+	protected void addAmfCallDocumentListener()
+	{
+		amfCall.getDocument().addDocumentListener( new DocumentListenerAdapter()
+		{
+			@Override
+			public void update( Document document )
+			{
+				if( !updating )
+				{
+					amfRequestTestStep.setAmfCall( configForm.getComponentValue( AMF_CALL ) );
+				}
+			}
+		} );
 	}
 
 	private class ScriptStepGroovyEditorModel implements GroovyEditorModel

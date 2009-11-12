@@ -1891,9 +1891,12 @@
     <xsd:complexType name="AMFRequestTestStep">
     	<xsd:sequence>
     		<xsd:element name="properties" type="tns:PropertiesType"></xsd:element>
-    		<xsd:element name="assertion" type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    		<xsd:element name="assertion" type="tns:TestAssertion"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</xsd:element>
     		<xsd:element name="enpoint" type="xsd:string"></xsd:element>
-    		<xsd:element name="content" type="xsd:string"></xsd:element>
+    		<xsd:element name="groovyScript" type="xsd:string"></xsd:element>
+    		<xsd:element name="amfCall" type="xsd:string"></xsd:element>
     	</xsd:sequence>
     </xsd:complexType>
 </xsd:schema>
