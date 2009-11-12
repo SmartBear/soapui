@@ -14,12 +14,15 @@ package com.eviware.soapui.support;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -496,5 +499,29 @@ public class Tools
 	public static String getExtensionForContentType( String contentType )
 	{
 		return ContentTypeHandler.getExtensionForContentType( contentType );
+	}
+
+	public static String getFileContent( String path )
+	{
+		String content = "";;
+		try
+		{
+			// Open the file that is the first
+			// command line parameter
+			FileInputStream fstream = new FileInputStream( path );
+			// Get the object of DataInputStream
+			DataInputStream in = new DataInputStream( fstream );
+			BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
+			// Read File Line By Line
+			content = br.readLine();
+			// Close the input stream
+			br.close();
+			in.close();
+		}
+		catch( Exception e )
+		{// Catch exception if any
+			System.err.println( "Error: " + e.getMessage() );
+		}
+		return content;
 	}
 }

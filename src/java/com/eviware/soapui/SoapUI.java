@@ -156,6 +156,7 @@ public class SoapUI
 	public final static String SOAPUI_VERSION = "3.5-alpha";
 	public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
 	public static final String SOAPUI_SPLASH = "soapui-splash.jpg";
+	public static final String SOAPUI_TITLE = "soapui-title.txt";
 	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
 	public static final String BUILDINFO_RESOURCE = "/com/eviware/soapui/resources/conf/buildinfo.txt";
 	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
@@ -166,7 +167,6 @@ public class SoapUI
 			+ URLEncoder.encode(SOAPUI_VERSION);
 	public static String FRAME_ICON = "/16-perc.gif";
 	public static String PUSH_PAGE_ERROR_URL = "file://" + System.getProperty("soapui.home", ".") + "/starter-page.html";
-	public static String APP_TITLE = System.getProperty( "maven.branded.title", "soap application" );
 
 	// ------------------------------ FIELDS ------------------------------
 
@@ -583,7 +583,12 @@ public class SoapUI
 		{
 			try
 			{
-				startSoapUI(mainArgs, APP_TITLE, SOAPUI_SPLASH, new StandaloneSoapUICore(true));
+				String brandedTitleExt = Tools.getFileContent( SOAPUI_TITLE );
+				if( !StringUtils.isNullOrEmpty( brandedTitleExt ) )
+				{
+					brandedTitleExt = " - " + brandedTitleExt;
+				}
+				startSoapUI(mainArgs, "soapUI " + brandedTitleExt, SOAPUI_SPLASH, new StandaloneSoapUICore(true));
 			}
 			catch (Exception e)
 			{
