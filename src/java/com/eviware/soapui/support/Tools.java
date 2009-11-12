@@ -503,7 +503,7 @@ public class Tools
 
 	public static String getFileContent( String path )
 	{
-		String content = "";;
+		String content = "";
 		try
 		{
 			FileInputStream fstream = new FileInputStream( path );
