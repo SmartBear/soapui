@@ -506,15 +506,10 @@ public class Tools
 		String content = "";;
 		try
 		{
-			// Open the file that is the first
-			// command line parameter
 			FileInputStream fstream = new FileInputStream( path );
-			// Get the object of DataInputStream
 			DataInputStream in = new DataInputStream( fstream );
 			BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
-			// Read File Line By Line
 			content = br.readLine();
-			// Close the input stream
 			br.close();
 			in.close();
 		}
