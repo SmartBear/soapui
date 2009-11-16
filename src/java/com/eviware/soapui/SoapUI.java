@@ -583,9 +583,12 @@ public class SoapUI
 	{
 		public void run()
 		{
+			Properties props = new Properties();
 			try
 			{
-				String brandedTitleExt = Tools.getTitleProperty( SOAPUI_TITLE );
+				props.load( SoapUI.class.getResourceAsStream( BUILDINFO_RESOURCE ) );
+				String brandedTitleExt = props.getProperty( "soapui.app.title" );
+				System.out.println( "soapui.app.title=" + brandedTitleExt );
 				if( !StringUtils.isNullOrEmpty( brandedTitleExt ) )
 				{
 					brandedTitleExt = " - " + brandedTitleExt;
