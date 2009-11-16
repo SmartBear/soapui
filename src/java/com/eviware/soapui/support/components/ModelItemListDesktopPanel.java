@@ -160,7 +160,7 @@ public class ModelItemListDesktopPanel extends DefaultDesktopPanel
 
 		public void refresh()
 		{
-			fireIntervalAdded( this, 0, getSize() - 1 );
+			fireContentsChanged( this, 0, getSize() - 1 );
 		}
 
 		public int getSize()

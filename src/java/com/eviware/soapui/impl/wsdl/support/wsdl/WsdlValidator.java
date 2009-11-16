@@ -324,7 +324,7 @@ public class WsdlValidator
 			if( paths.length != 1 )
 			{
 				throw new Exception( "Missing message wrapper element [" + WsdlUtils.getTargetNamespace( wsdlContext.getDefinition())
-						+ "@" + bindingOperation.getName() + ( isResponse ? "Response" : "" ) );
+						+ "@" + bindingOperation.getName() + ( isResponse ? "Response]" : "]" ) );
 			}
 			else
 			{

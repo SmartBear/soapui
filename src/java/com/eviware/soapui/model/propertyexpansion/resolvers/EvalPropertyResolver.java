@@ -12,6 +12,9 @@
 
 package com.eviware.soapui.model.propertyexpansion.resolvers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
@@ -31,6 +34,7 @@ import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
@@ -38,6 +42,7 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 public class EvalPropertyResolver implements PropertyResolver
 {
 	private Logger log = Logger.getLogger( EvalPropertyResolver.class );
+	private Map<String,ScriptEnginePool> scriptEnginePools = new HashMap<String, ScriptEnginePool>();
 
 	public String resolveProperty( PropertyExpansionContext context, String name, boolean globalOverride )
 	{
@@ -121,7 +126,16 @@ public class EvalPropertyResolver implements PropertyResolver
 
 	private String doEval( String name, ModelItem modelItem, StringToObjectMap objects )
 	{
-		SoapUIScriptEngine scriptEngine = SoapUIScriptEngineRegistry.create( modelItem );
+		String engineId = SoapUIScriptEngineRegistry.getScriptEngineId( modelItem );
+		
+		synchronized( this )
+		{
+			if( !scriptEnginePools.containsKey( engineId ))
+				scriptEnginePools.put( engineId, new ScriptEnginePool( engineId ) );
+		}
+		
+		ScriptEnginePool scriptEnginePool = scriptEnginePools.get( engineId );
+		SoapUIScriptEngine scriptEngine = scriptEnginePool.getScriptEngine();
 		try
 		{
 			scriptEngine.setScript( name );
@@ -139,7 +153,7 @@ public class EvalPropertyResolver implements PropertyResolver
 		finally
 		{
 			scriptEngine.clearVariables();
-			scriptEngine.release();
+			scriptEnginePool.returnScriptEngine( scriptEngine );
 		}
 	}
 }

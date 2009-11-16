@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.xmlbeans.XmlException;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.LoadTestConfig;
 import com.eviware.soapui.config.LoadTestLimitTypesConfig;
@@ -70,6 +72,8 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 	private int startedCount;
 	private boolean hasTearedDown;
 	private TestCaseStarter testCaseStarter;
+	private boolean stopped;
+	private TestCaseConfig blueprintConfig;
 
 	public WsdlLoadTestRunner( WsdlLoadTest test )
 	{
@@ -85,7 +89,6 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 	void start()
 	{
 		loadTest.getTestCase().beforeSave();
-		startTime = System.currentTimeMillis();
 
 		runners.clear();
 		runCount = 0;
@@ -103,8 +106,6 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 			SoapUI.logError( e1 );
 		}
 
-		status = Status.RUNNING;
-
 		for( LoadTestRunListener listener : loadTest.getLoadTestRunListeners() )
 		{
 			try
@@ -117,14 +118,10 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 			}
 		}
 
+		status = Status.RUNNING;
+
 		loadTest.addPropertyChangeListener( WsdlLoadTest.THREADCOUNT_PROPERTY, internalPropertyChangeListener );
 
-		loadTest.getLoadTestLog()
-				.addEntry( new LoadTestLogMessageEntry( "LoadTest started at " + new Date( startTime ) ) );
-
-		int startDelay = loadTest.getStartDelay();
-		if( startDelay >= 0 )
-		{
 			XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog( "Starting threads",
 					( int )loadTest.getThreadCount(), "", true );
 			try
@@ -136,21 +133,6 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 			{
 				SoapUI.logError( e );
 			}
-		}
-		else
-		{
-			List<WsdlTestCase> testCases = new ArrayList<WsdlTestCase>();
-			for( int c = 0; c < loadTest.getThreadCount(); c++ )
-				testCases.add( createTestCase() );
-
-			for( int c = 0; c < loadTest.getThreadCount(); c++ )
-			{
-				if( loadTest.getLimitType() == LoadTestLimitTypesConfig.COUNT && runners.size() >= loadTest.getTestLimit() )
-					break;
-
-				startTestCase( testCases.get( c ) );
-			}
-		}
 
 		if( status == Status.RUNNING )
 		{
@@ -241,16 +223,19 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 			listener.loadTestStopped( this, context );
 		}
 
-		tearDown();
+		if( r.length == 0 )
+			stop();
 	}
 
 	public synchronized void fail( String reason )
 	{
-		if( status != Status.RUNNING )
-			return;
+		boolean wasRunning = ( status == Status.RUNNING );
 
 		this.reason = reason;
 		status = Status.FAILED;
+
+		if( !wasRunning )
+			return;
 
 		if( testCaseStarter != null )
 			testCaseStarter.stop();
@@ -263,7 +248,14 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 
 		for( LoadTestRunListener listener : loadTest.getLoadTestRunListeners() )
 		{
+			try
+			{
 			listener.loadTestStopped( this, context );
+		}
+			catch( Throwable e )
+			{
+				SoapUI.logError( e );
+			}
 		}
 
 		InternalTestCaseRunner[] r = runners.toArray( new InternalTestCaseRunner[runners.size()] );
@@ -273,7 +265,8 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 			runner.cancel( reason, true );
 		}
 
-		tearDown();
+		if( r.length == 0 )
+			stop();
 	}
 
 	private synchronized void tearDown()
@@ -284,13 +277,11 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		try
 		{
 			loadTest.runTearDownScript( context, this );
-
 		}
 		catch( Exception e1 )
 		{
 			SoapUI.logError( e1 );
 		}
-		;
 
 		hasTearedDown = true;
 	}
@@ -332,8 +323,18 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		}
 
 		runners.remove( runner );
-		if( runners.size() == 0 && ( getProgress() >= 1 || status != Status.RUNNING ) )
+
+		if( getProgress() >= 1 || status != Status.RUNNING )
 		{
+			stop();
+		}
+	}
+
+	private synchronized void stop()
+	{
+		if( stopped )
+			return;
+
 			loadTest.removePropertyChangeListener( WsdlLoadTest.THREADCOUNT_PROPERTY, internalPropertyChangeListener );
 
 			if( testCaseStarter != null )
@@ -345,15 +346,35 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 			loadTest.getLoadTestLog().addEntry(
 					new LoadTestLogMessageEntry( "LoadTest ended at " + new Date( System.currentTimeMillis() ) ) );
 
+		try
+		{
+			tearDown();
+		}
+		catch( Throwable e )
+		{
+			SoapUI.logError( e );
+		}
+
 			for( LoadTestRunListener listener : loadTest.getLoadTestRunListeners() )
+			{
+			try
 			{
 				listener.afterLoadTest( this, context );
 			}
-
-			tearDown();
+			catch( Throwable e )
+			{
+				SoapUI.logError( e );
+			}
+		}
 
 			context.clear();
+		stopped = true;
+		blueprintConfig = null;
 		}
+
+	public boolean hasStopped()
+	{
+		return stopped;
 	}
 
 	public int getRunningThreadCount()
@@ -371,10 +392,10 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 			return ( float )runCount / ( float )testLimit;
 
 		if( loadTest.getLimitType() == LoadTestLimitTypesConfig.COUNT_PER_THREAD )
-			return ( float )runCount / ( float )testLimit;
+			return ( float )runCount / ( float )( testLimit * loadTest.getThreadCount() );
 
 		if( loadTest.getLimitType() == LoadTestLimitTypesConfig.TIME )
-			return ( float )getTimeTaken() / ( float )( testLimit * 1000 );
+			return startTime == 0 ? 0 : ( float )getTimeTaken() / ( float )( testLimit * 1000 );
 
 		return -1;
 	}
@@ -416,6 +437,18 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 				testCases.add( createTestCase() );
 			}
 
+			startTime = System.currentTimeMillis();
+
+			if( canceled )
+			{
+				loadTest.getLoadTestLog().addEntry(
+						new LoadTestLogMessageEntry( "LoadTest canceled during startup at " + new Date( startTime ) ) );
+				return null;
+			}
+
+			loadTest.getLoadTestLog().addEntry(
+					new LoadTestLogMessageEntry( "LoadTest started at " + new Date( startTime ) ) );
+
 			threadsWaitingToStart = testCases.size();
 			int cnt = 0;
 			while( !testCases.isEmpty() && !canceled )
@@ -432,10 +465,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 					}
 				}
 
-				if( status != Status.RUNNING
-						|| getProgress() >= 1 )
-						//|| ( loadTest.getLimitType() == LoadTestLimitTypesConfig.COUNT && runners.size() >= loadTest
-						//		.getTestLimit() ) )
+				if( status != Status.RUNNING || getProgress() >= 1 )
 				{
 					while( !testCases.isEmpty() )
 						testCases.remove( 0 ).release();
@@ -632,13 +662,25 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 	 * and configured for LoadTesting
 	 */
 
-	private WsdlTestCase createTestCase()
+	private synchronized WsdlTestCase createTestCase()
 	{
 		WsdlTestCase testCase = loadTest.getTestCase();
+		TestCaseConfig config = null;
 
-		// clone config and remove and loadtests
-		TestCaseConfig config = ( TestCaseConfig )testCase.getConfig().copy();
-		config.setLoadTestArray( new LoadTestConfig[0] );
+		if( blueprintConfig == null )
+		{
+			try
+			{
+				blueprintConfig = TestCaseConfig.Factory.parse( testCase.getConfig().xmlText());
+				blueprintConfig.setLoadTestArray( new LoadTestConfig[0] );
+			}
+			catch( XmlException e )
+			{
+				e.printStackTrace();
+			}
+		}
+
+		config = ( TestCaseConfig )blueprintConfig.copy();
 
 		// clone entire testCase
 		WsdlTestCase tc = testCase.getTestSuite().buildTestCase( config, true );
@@ -655,7 +697,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		// disable default pretty-printing since it takes time
 		settings.setBoolean( WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES, false );
 
-		// dont discard.. the WsdlLoadTests internal listener will discard after
+		// don't discard.. the WsdlLoadTests internal listener will discard after
 		// asserting..
 		tc.setDiscardOkResults( false );
 		tc.setMaxResults( 0 );
@@ -737,5 +779,10 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 	public TestRunnable getTestRunnable()
 	{
 		return loadTest;
+	}
+
+	public void release()
+	{
+		loadTest.removePropertyChangeListener( WsdlLoadTest.THREADCOUNT_PROPERTY, internalPropertyChangeListener );
 	}
 }

@@ -37,6 +37,9 @@ public class PropertyExpansionTestCase extends TestCase
    	
    	context.setProperty( "test", "value" );
    	
+   	assertEquals( "${test}", PropertyExpander.expandProperties( context, "$${test}" ));
+   	assertEquals( "value${test}", PropertyExpander.expandProperties( context, "${test}$${test}" ));
+   	assertEquals( "${value", PropertyExpander.expandProperties( context, "$${${test}" ));
    	assertEquals( "value", PropertyExpander.expandProperties( context, "${test}" ));
    	assertEquals( "value", PropertyExpander.expandProperties( context, "${#test}" ));
    	assertEquals( " value ", PropertyExpander.expandProperties( context, " ${test} " ));

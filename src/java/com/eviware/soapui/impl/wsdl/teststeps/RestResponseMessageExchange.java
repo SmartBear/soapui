@@ -40,6 +40,11 @@ public class RestResponseMessageExchange extends AbstractRestMessageExchange<Res
 		}
 	}
 
+	public String getEndpoint()
+	{
+		return response == null ? null : response.getURL().toString();
+	}
+	
 	public String getRequestContent()
 	{
 		if( requestContent != null )

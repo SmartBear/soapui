@@ -80,7 +80,7 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 	}
 
 	@Override
-	public JComponent buildEditorComponent()
+	public JComponent getEditorComponent()
 	{
 		JPanel xpathEditorPanel = new JPanel( new BorderLayout() );
 		DispatchXPathGroovyEditorModel editorModel = new DispatchXPathGroovyEditorModel();
@@ -99,10 +99,17 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 	@Override
 	public void release()
 	{
+		releaseEditorComponent();
+		super.release();
+	}
+
+	@Override
+	public void releaseEditorComponent()
+	{
 		if( xpathEditor != null )
 			xpathEditor.release();
 
-		super.release();
+		super.releaseEditorComponent();
 	}
 
 	protected JXToolBar buildXPathEditorToolbar( DispatchXPathGroovyEditorModel editorModel )

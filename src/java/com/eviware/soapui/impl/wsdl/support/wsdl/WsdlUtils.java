@@ -137,7 +137,7 @@ public class WsdlUtils
 	{
 		List<Element> result = new ArrayList<Element>();
 
-		List list = item.getExtensibilityElements();
+		List<?> list = item.getExtensibilityElements();
 		for( Iterator<?> i = list.iterator(); i.hasNext(); )
 		{
 			ExtensibilityElement elm = ( ExtensibilityElement )i.next();
@@ -393,7 +393,7 @@ public class WsdlUtils
 	{
 		List<Part> result = new ArrayList<Part>();
 		Input input = operation.getOperation().getInput();
-		if( input == null )
+		if( input == null || operation.getBindingInput() == null )
 			return new Part[0];
 
 		Message msg = input.getMessage();
@@ -1210,7 +1210,8 @@ public class WsdlUtils
 				operationInOutName = operation.getName() + ( output ? "Response" : "Request" );
 
 			StringBuffer result = new StringBuffer( targetNamespace );
-			if( targetNamespace.length() > 0 && targetNamespace.charAt( targetNamespace.length() - 1 ) != '/' && portTypeName.charAt( 0 ) != '/' )
+			if( targetNamespace.length() > 0 && targetNamespace.charAt( targetNamespace.length() - 1 ) != '/'
+					&& portTypeName.charAt( 0 ) != '/' )
 				result.append( '/' );
 			result.append( portTypeName );
 			if( portTypeName.charAt( portTypeName.length() - 1 ) != '/' && operationInOutName.charAt( 0 ) != '/' )

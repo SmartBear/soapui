@@ -299,7 +299,7 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 			builder.addString( LOADTEST, "-l", "" );
 
 		builder.addString( LIMIT, "-m", "" );
-		builder.addString( THREADCOUNT, "-h", "" );
+		builder.addString( THREADCOUNT, "-n", "" );
 		builder.addString( USERNAME, "-u", "" );
 		builder.addStringShadow( PASSWORD, "-p", "" );
 		builder.addString( DOMAIN, "-d", "" );
@@ -315,7 +315,7 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 		if( proVersion )
 		{
 			builder.addString( GENERATEREPORTSEACHTESTCASE, "-R", "" );
-			builder.addString( REPORTFORMAT, "-F", "" );
+			builder.addStrings( REPORTFORMAT, "-F", "," );
 		}
 
 		addPropertyArguments( builder );
@@ -413,9 +413,9 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 		builder.addArgs( propertyArguments.toArray( new String[propertyArguments.size()] ) );
 	}
 
-	private void addProperties( List<String> propertyArguments, String propertiyDomain, String arg )
+	private void addProperties( List<String> propertyArguments, String propertyDomain, String arg )
 	{
-		StringTokenizer tokenizer = new StringTokenizer( dialog.getValue( propertiyDomain ) );
+		StringTokenizer tokenizer = new StringTokenizer( dialog.getValue( propertyDomain ) );
 
 		while( tokenizer.hasMoreTokens() )
 		{

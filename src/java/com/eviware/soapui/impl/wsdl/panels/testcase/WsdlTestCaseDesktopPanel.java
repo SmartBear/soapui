@@ -617,7 +617,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		}
 	}
 
-	private class AddWsdlTestStepAction extends AbstractAction
+	private class AddWsdlTestStepAction extends AbstractAction implements Runnable
 	{
 		private final WsdlTestStepFactory factory;
 
@@ -629,6 +629,11 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		}
 
 		public void actionPerformed( ActionEvent e )
+		{
+			SwingActionDelegate.invoke( this );
+		}
+
+		public void run()
 		{
 			int ix = testStepList.getTestStepList().getSelectedIndex();
 
@@ -644,7 +649,6 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 						UISupport.selectAndShow( testStep );
 				}
 			}
-
 		}
 	}
 

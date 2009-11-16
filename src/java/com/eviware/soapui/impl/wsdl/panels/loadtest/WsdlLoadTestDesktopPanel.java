@@ -43,8 +43,6 @@ import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.actions.loadtest.LoadTestOptionsAction;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTestRunner;
-import com.eviware.soapui.impl.wsdl.loadtest.data.LoadTestStatistics;
-import com.eviware.soapui.impl.wsdl.loadtest.data.LoadTestStatistics.Statistic;
 import com.eviware.soapui.impl.wsdl.loadtest.data.actions.ExportStatisticsAction;
 import com.eviware.soapui.impl.wsdl.loadtest.log.LoadTestLog;
 import com.eviware.soapui.impl.wsdl.loadtest.strategy.LoadStrategy;
@@ -109,7 +107,6 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 	private JComboBox limitTypeCombo;
 	private SpinnerNumberModel limitSpinnerModel;
 	protected JProgressBar progressBar;
-	private long loadTestStartTime;
 	private StatisticsDesktopPanel statisticsDesktopPanel;
 	private StatisticsHistoryDesktopPanel statisticsHistoryDesktopPanel;
 
@@ -319,6 +316,8 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 
 		if( getModelItem().getLimitType() == LoadTestLimitTypesConfig.TIME )
 			limitTypeCombo.setSelectedIndex( 1 );
+		else if( getModelItem().getLimitType() == LoadTestLimitTypesConfig.COUNT_PER_THREAD )
+			limitTypeCombo.setSelectedIndex( 2 );
 
 		toolbar.addFixed( limitTypeCombo );
 		toolbar.addSeparator();
@@ -372,6 +371,9 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 		statisticsTable.release();
 		inspectorPanel.release();
 
+		setupGroovyEditor.release();
+		tearDownGroovyEditor.release();
+		
 		return release();
 	}
 
@@ -408,7 +410,7 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 				return;
 			}
 
-			if( loadtest.getLimitType() != LoadTestLimitTypesConfig.TIME
+			if( loadtest.getLimitType() == LoadTestLimitTypesConfig.COUNT
 					&& loadtest.getTestLimit() < loadtest.getThreadCount() )
 			{
 				if( !UISupport.confirm( "The run limit is set to a lower count than number of threads\nRun Anyway?",
@@ -515,7 +517,6 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 		{
 			loadTestLog.clear();
 
-			loadTestStartTime = System.currentTimeMillis();
 			loadTestIsRunning = true;
 			if( getModelItem().getTestLimit() > 0 )
 			{
@@ -587,7 +588,7 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 						progressBar.setString( "..." );
 					}
 				}
-				else if( getModelItem().getLimitType() == LoadTestLimitTypesConfig.TIME )
+				else 
 				{
 					if( loadTestIsRunning && progressBar.isIndeterminate() )
 					{
@@ -595,23 +596,7 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 						progressBar.setString( null );
 					}
 
-					long timePassed = System.currentTimeMillis() - loadTestStartTime;
-					int value = ( int )( ( timePassed * 100 ) / ( getModelItem().getTestLimit() * 1000 ) );
-					progressBar.setValue( value );
-				}
-				else if( getModelItem().getLimitType() == LoadTestLimitTypesConfig.COUNT || 
-						getModelItem().getLimitType() == LoadTestLimitTypesConfig.COUNT_PER_THREAD )
-				{
-					if( loadTestIsRunning && progressBar.isIndeterminate() )
-					{
-						progressBar.setIndeterminate( false );
-						progressBar.setString( null );
-					}
-
-					long counts = getModelItem().getStatisticsModel().getStatistic( LoadTestStatistics.TOTAL,
-							Statistic.COUNT );
-					if( counts > 0 )
-						progressBar.setValue( ( int )( ( counts * 100 ) / getModelItem().getTestLimit() ) );
+					progressBar.setValue( runner == null ? 0 : ( int )( runner.getProgress()*100 ) );
 				}
 
 				try

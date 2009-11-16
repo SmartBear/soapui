@@ -14,7 +14,6 @@ package com.eviware.soapui.impl.actions;
 
 import com.eviware.soapui.actions.CloseOpenProjectsAction;
 import com.eviware.soapui.actions.OpenClosedProjectsAction;
-import com.eviware.soapui.actions.SaveAllProjectsAction;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.action.SoapUIActionMapping;
@@ -39,7 +38,6 @@ public class WorkspaceImplSoapUIActionGroup extends DefaultSoapUIActionGroup<Wor
 	{
 		SoapUIActionMappingList<WorkspaceImpl> mappings = super.getActionMappings( workspace );
 
-		mappings.getMapping( SaveAllProjectsAction.SOAPUI_ACTION_ID ).setEnabled( workspace.getProjectCount() > 0 );
 		SoapUIActionMapping<WorkspaceImpl> openMapping = mappings.getMapping( OpenClosedProjectsAction.SOAPUI_ACTION_ID );
 		openMapping.setEnabled( false );
 		SoapUIActionMapping<WorkspaceImpl> closeMapping = mappings.getMapping( CloseOpenProjectsAction.SOAPUI_ACTION_ID );

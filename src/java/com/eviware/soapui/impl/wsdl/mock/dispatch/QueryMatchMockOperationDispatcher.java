@@ -107,7 +107,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 	}
 
 	@Override
-	public JComponent buildEditorComponent()
+	public JComponent getEditorComponent()
 	{
 		JSplitPane splitPane = UISupport.createHorizontalSplit( buildQueryListComponent(), buildQueryDetailComponent() );
 		splitPane.setDividerLocation( 300 );

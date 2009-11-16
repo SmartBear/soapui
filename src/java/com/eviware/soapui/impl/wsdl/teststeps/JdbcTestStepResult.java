@@ -171,4 +171,10 @@ public class JdbcTestStepResult extends WsdlTestStepResult implements AssertedXP
 		return getResponse() != null;
 	}
 
+	public String getEndpoint()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

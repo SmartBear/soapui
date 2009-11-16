@@ -48,6 +48,8 @@ public class UIPrefs implements Prefs
 	public static final String SHOW_STARTUP_PAGE = "Show Startup Page";
 	public static final String LINEBRAK = "Normalize line-break";
 	public static final String GC_INTERVAL = "Garbage Collection Interval";
+	public static final String RAW_RESPONSE_MESSAGE_SIZE = "Size of Raw Response Message to Show";
+	public static final String RAW_REQUEST_MESSAGE_SIZE = "Size of Raw Request Message to Show";
 
 	private SimpleForm editorForm;
 	private final String title;
@@ -115,6 +117,9 @@ public class UIPrefs implements Prefs
 			editorForm.appendSeparator();
 			editorForm.appendTextField( GC_INTERVAL,
 				"Sets the Garbage Collector interval in seconds (0 means garbage collection is only performed by JRE)" );
+			editorForm.appendSeparator();
+			editorForm.appendTextField( RAW_RESPONSE_MESSAGE_SIZE, "Sets the size of raw response mesage to show." );
+			editorForm.appendTextField( RAW_REQUEST_MESSAGE_SIZE, "Sets the size of raw request mesage to show." );
 		}
 
 		return editorForm;
@@ -154,6 +159,9 @@ public class UIPrefs implements Prefs
 		
 		settings.setString( UISettings.GC_INTERVAL, values.get( GC_INTERVAL ) );
 		
+		settings.setString( UISettings.RAW_RESPONSE_MESSAGE_SIZE, values.get( RAW_RESPONSE_MESSAGE_SIZE ));
+		settings.setString( UISettings.RAW_REQUEST_MESSAGE_SIZE, values.get( RAW_REQUEST_MESSAGE_SIZE ));
+		
 		SoapUI.initAutoSaveTimer();
 		SoapUI.initGCTimer();
 	}
@@ -191,6 +199,8 @@ public class UIPrefs implements Prefs
 		}
 		
 		values.put( GC_INTERVAL, settings.getString( UISettings.GC_INTERVAL, "0" ) );
+		values.put( RAW_RESPONSE_MESSAGE_SIZE, settings.getString( UISettings.RAW_RESPONSE_MESSAGE_SIZE, "10000" ) );
+		values.put( RAW_REQUEST_MESSAGE_SIZE, settings.getString( UISettings.RAW_REQUEST_MESSAGE_SIZE, "10000" ) );
 
 		return values;
 	}

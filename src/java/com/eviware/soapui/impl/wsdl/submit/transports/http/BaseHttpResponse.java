@@ -261,7 +261,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 	public String getRequestContent()
 	{
-		return requestContentPos == -1 ? null : new String( rawRequestData, requestContentPos, rawRequestData.length
+		return requestContentPos == -1 || rawRequestData == null ? null : new String( rawRequestData, requestContentPos, rawRequestData.length
 				- requestContentPos );
 	}
 

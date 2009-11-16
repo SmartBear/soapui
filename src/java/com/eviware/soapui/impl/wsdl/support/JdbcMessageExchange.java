@@ -64,4 +64,10 @@ public class JdbcMessageExchange extends AbstractNonHttpMessageExchange<JdbcRequ
 	{
 		return false;
 	}
+
+	public String getEndpoint()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

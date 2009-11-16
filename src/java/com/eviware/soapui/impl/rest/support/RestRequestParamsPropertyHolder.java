@@ -63,12 +63,12 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public RestParamProperty addProperty( String name )
 	{
-		return null;
-		// return methodParams.addProperty(name);
+		return methodParams.addProperty(name);
 	}
 
 	public void addParameter( RestParamProperty prop )
 	{
+		methodParams.addParameter( prop );
 	}
 
 	public void addTestPropertyListener( TestPropertyListener listener )

@@ -14,9 +14,14 @@
 			<param-value>WEB-INF/soapui/[ProjectFileName]</param-value>
 		</init-param>
 		<init-param>
+			<description>enable Web UI</description>
+			<param-name>enableWebUI</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
 			<description>global settings file</description>
 			<param-name>soapUISettings</param-name>
-			<param-value>WEB-INF/soapui/[soapUISettings]</param-value>
+			<param-value>[soapUISettings]</param-value>
 		</init-param>
 		<init-param>
 			<description>set listeners directory</description>
@@ -29,9 +34,14 @@
 			<param-value>WEB-INF/actions</param-value>
 		</init-param>
 		<init-param>
-			<description>mock service name to start</description>
-			<param-name>mockServiceName</param-name>
-			<param-value>[MockServiceName]</param-value>
+			<description>set scripts directory</description>
+			<param-name>scripts</param-name>
+			<param-value>WEB-INF/scripts</param-value>
+		</init-param>
+		<init-param>
+			<description>set MockService endpoint used in generated WSDLs and schemas</description>
+			<param-name>mockServiceEndpoint</param-name>
+			<param-value>[mockServiceEndpoint]</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

@@ -41,6 +41,7 @@ import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.PropertyChangeNotifier;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.resolver.ChooseAnotherPropertySourceResolver;
 import com.eviware.soapui.support.resolver.ChooseAnotherPropertyTargetResolver;
 import com.eviware.soapui.support.resolver.CreateMissingPropertyResolver;
@@ -973,7 +974,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 
 	private TestPropertyHolder getPropertyHolder( String name )
 	{
-		if( name == null || testCase == null )
+		if( !StringUtils.hasContent( name ) || testCase == null )
 			return null;
 
 		if( name.charAt( 0 ) == PropertyExpansion.SCOPE_PREFIX )

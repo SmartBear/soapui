@@ -65,9 +65,9 @@ public class AssertionsPanel extends JPanel
 {
 	private AssertionListModel assertionListModel;
 	private JList assertionList;
-	protected JPopupMenu assertionListPopup;
+	private JPopupMenu assertionListPopup;
 	private final Assertable assertable;
-	protected AbstractAction addAssertionAction;
+	private AddAssertionAction addAssertionAction;
 	private ConfigureAssertionAction configureAssertionAction;
 	private RemoveAssertionAction removeAssertionAction;
 	private MoveAssertionUpAction moveAssertionUpAction;
@@ -354,6 +354,7 @@ public class AssertionsPanel extends JPanel
 			else
 				SwingUtilities.invokeLater( new Runnable()
 				{
+
 					public void run()
 					{
 						refresh();

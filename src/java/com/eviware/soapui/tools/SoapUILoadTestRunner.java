@@ -36,6 +36,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
@@ -355,8 +356,7 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 
 			if( threadCount >= 0 )
 			{
-				log
-						.info( "Overriding threadCount [" + loadTest.getThreadCount() + "] with specified [" + threadCount
+				log.info( "Overriding threadCount [" + loadTest.getThreadCount() + "] with specified [" + threadCount
 								+ "]" );
 				loadTest.setThreadCount( threadCount );
 			}
@@ -365,10 +365,13 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 			LoadTestRunner runner = loadTest.run();
 
 			// wait for test to finish
-			while( runner.getStatus() == LoadTestRunner.Status.RUNNING )
+			while( !runner.hasStopped() )
+			{
+				if( runner.getStatus() == Status.RUNNING )
 			{
 				log.info( "LoadTest [" + loadTest.getName() + "] progress: " + runner.getProgress() + ", "
 						+ runner.getRunningThreadCount() );
+				}
 				Thread.sleep( 1000 );
 			}
 

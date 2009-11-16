@@ -197,7 +197,7 @@ public final class HttpMethodSupport
 	public String getResponseContentType()
 	{
 		Header[] headers = httpMethod.getResponseHeaders( "Content-Type" );
-		if( headers != null && headers.length > 0 )
+		if( headers != null && headers.length > 0 && headers[0].getElements().length > 0 )
 		{
 			return headers[0].getElements()[0].getName();
 		}

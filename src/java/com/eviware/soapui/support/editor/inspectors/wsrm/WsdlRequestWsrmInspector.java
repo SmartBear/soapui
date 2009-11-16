@@ -83,7 +83,7 @@ public class WsdlRequestWsrmInspector extends AbstractWsrmInspector implements X
 	public void afterSubmit( Submit submit, SubmitContext context )
 	{
 		WsrmContainer container = ( WsrmContainer )submit.getRequest();
-		if( request.getWsrmConfig().isWsrmEnabled() )
+		if( request.getWsrmConfig().isWsrmEnabled() && submit.getResponse() != null )
 		{
 			String content = submit.getResponse().getContentAsString();
 			XmlOptions options = new XmlOptions();
@@ -123,6 +123,7 @@ public class WsdlRequestWsrmInspector extends AbstractWsrmInspector implements X
 				e.printStackTrace();
 			}
 		}
+		
 		if( container.getWsrmConfig().isWsrmEnabled() )
 		{
 			WsdlInterface iface = request.getOperation().getInterface();

@@ -44,8 +44,8 @@ public class WsdlInterfaceDefinition extends XmlSchemaBasedInterfaceDefinition<W
 			wsdlReader.setFeature( "javax.wsdl.importDocuments", true );
 		}
 
+		log.debug( "Loading WSDL: " + loader.getBaseURI());
 		definition = wsdlReader.readWSDL( loader );
-		log.debug( "Loaded WSDL: " + ( definition != null ? "ok" : "null" ) );
 
 		if( !loader.isAborted() )
 		{

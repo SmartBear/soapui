@@ -85,6 +85,8 @@ import com.eviware.x.impl.swing.SwingFileDialogs;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
 
+import org.syntax.jedit.InputHandler;
+
 /**
  * Facade for common UI-related tasks
  * 
@@ -369,7 +371,7 @@ public class UISupport
 		Dimension sz = dialog.getSize();
 		Rectangle b = frame == null ? null : frame.getBounds();
 
-		if( owner.isVisible() )
+		if( owner != null && owner.isVisible() )
 		{
 			b = owner.getBounds();
 		}
@@ -715,7 +717,7 @@ public class UISupport
 	{
 		try
 		{
-			if( Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() == Event.META_MASK )
+			if( InputHandler.getMenuShortcutKeyMask() == Event.META_MASK )
 			{
 				keyStroke = keyStroke.replaceAll( "menu", "meta" );
 			}

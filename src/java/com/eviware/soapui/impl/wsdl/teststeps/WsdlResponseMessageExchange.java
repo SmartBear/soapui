@@ -46,6 +46,11 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 		}
 	}
 
+	public String getEndpoint()
+	{
+		return String.valueOf( response.getURL());
+	}
+
 	public WsdlRequest getRequest()
 	{
 		return getModelItem();

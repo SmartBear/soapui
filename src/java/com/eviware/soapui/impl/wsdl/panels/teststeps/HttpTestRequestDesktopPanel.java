@@ -16,6 +16,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -229,6 +231,24 @@ public class HttpTestRequestDesktopPanel extends
 				updating = false;
 			}
 		} );
+
+		pathTextField.addKeyListener( new KeyAdapter()
+		{
+			public void keyPressed( KeyEvent e )
+			{
+				if( e.getKeyCode() == KeyEvent.VK_ENTER )
+				{
+					try
+					{
+						doSubmit();
+					}
+					catch( SubmitException e1 )
+					{
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
 
 		toolbar.addLabeledFixed( "Request URL:", pathTextField );
 

@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.mock;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -128,8 +129,8 @@ public class WsdlMockRunner extends AbstractMockRunner
 					if( key.toLowerCase().endsWith( ".wsdl" ) )
 					{
 						InputSource inputSource = new InputSource( new StringReader( parts.get( key ) ) );
-						String content = WsdlUtils.replacePortEndpoint( ( WsdlInterface )iface, inputSource,
-								getLocalMockServiceEndpoint() );
+						String content = WsdlUtils.replacePortEndpoint( ( WsdlInterface )iface, inputSource, mockService
+								.getLocalMockServiceEndpoint() );
 
 						if( content != null )
 							parts.put( key, content );
@@ -145,15 +146,6 @@ public class WsdlMockRunner extends AbstractMockRunner
 				SoapUI.logError( e );
 			}
 		}
-	}
-
-	public String getLocalMockServiceEndpoint()
-	{
-		String host = mockService.getHost();
-		if( StringUtils.isNullOrEmpty( host ) )
-			host = "127.0.0.1";
-
-		return "http://" + host + ":" + mockService.getPort() + mockService.getPath();
 	}
 
 	public String getInterfacePrefix( Interface iface )
@@ -442,13 +434,12 @@ public class WsdlMockRunner extends AbstractMockRunner
 							if( mockService.getPath().length() > 1 && pathInfo.startsWith( mockService.getPath() ) )
 								pathInfo = pathInfo.substring( mockService.getPath().length() );
 
-							File file = new File( docroot + pathInfo.replace( '/', File.separatorChar ) );
-							FileInputStream in = new FileInputStream( file );
-							response.setStatus( HttpServletResponse.SC_OK );
-							long length = file.length();
-							response.setContentLength( ( int )length );
-							response.setContentType( ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
-							Tools.readAndWrite( in, length, response.getOutputStream() );
+							String filename = docroot + pathInfo.replace( '/', File.separatorChar );
+							File file = new File( filename );
+							if( file.exists() )
+							{
+								returnFile( response, file );
+							}
 						}
 						catch( Throwable e )
 						{
@@ -466,14 +457,26 @@ public class WsdlMockRunner extends AbstractMockRunner
 		}
 	}
 
-	private void dispatchCommand( String cmd, HttpServletRequest request, HttpServletResponse response ) throws IOException
+	public void returnFile( HttpServletResponse response, File file ) throws FileNotFoundException, IOException
+	{
+		FileInputStream in = new FileInputStream( file );
+		response.setStatus( HttpServletResponse.SC_OK );
+		long length = file.length();
+		response.setContentLength( ( int )length );
+		response.setContentType( ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
+		Tools.readAndWrite( in, length, response.getOutputStream() );
+	}
+
+	private void dispatchCommand( String cmd, HttpServletRequest request, HttpServletResponse response )
+			throws IOException
 	{
 		if( "stop".equals( cmd ))
 		{
 			response.setStatus( HttpServletResponse.SC_OK );
 			response.flushBuffer();
 			
-			SoapUI.getThreadPool().execute( new Runnable() {
+			SoapUI.getThreadPool().execute( new Runnable()
+			{
 
 				public void run()
 				{
@@ -486,14 +489,16 @@ public class WsdlMockRunner extends AbstractMockRunner
 						e.printStackTrace();
 					}
 					stop();
-				}} );
+				}
+			} );
 		}
 		else if( "restart".equals( cmd ))
 		{
 			response.setStatus( HttpServletResponse.SC_OK );
 			response.flushBuffer();
 			
-			SoapUI.getThreadPool().execute( new Runnable() {
+			SoapUI.getThreadPool().execute( new Runnable()
+			{
 
 				public void run()
 				{
@@ -526,7 +531,8 @@ public class WsdlMockRunner extends AbstractMockRunner
 						e.printStackTrace();
 					}
 					
-				}} );
+				}
+			} );
 		}
 	}
 
@@ -562,7 +568,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 		}
 	}
 
-	private void printOkXmlResult( HttpServletResponse response, String content ) throws IOException
+	public void printOkXmlResult( HttpServletResponse response, String content ) throws IOException
 	{
 		response.setStatus( HttpServletResponse.SC_OK );
 		response.setContentType( "text/xml" );
@@ -570,7 +576,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 		response.getWriter().print( content );
 	}
 
-	private void printWsdl( HttpServletResponse response ) throws IOException
+	public void printWsdl( HttpServletResponse response ) throws IOException
 	{
 		WsdlInterface[] mockedInterfaces = mockService.getMockedInterfaces();
 		if( mockedInterfaces.length == 1 )
@@ -609,7 +615,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 		}
 	}
 
-	private void printPartList( WsdlInterface iface, StringToStringMap parts, HttpServletResponse response )
+	public void printPartList( WsdlInterface iface, StringToStringMap parts, HttpServletResponse response )
 			throws IOException
 	{
 		response.setStatus( HttpServletResponse.SC_OK );
@@ -631,7 +637,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 		out.print( "</ul></p></body></html>" );
 	}
 
-	private void printInterfaceList( HttpServletResponse response ) throws IOException
+	public void printInterfaceList( HttpServletResponse response ) throws IOException
 	{
 		response.setStatus( HttpServletResponse.SC_OK );
 		response.setContentType( "text/html" );

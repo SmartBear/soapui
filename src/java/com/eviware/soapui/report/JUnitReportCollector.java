@@ -145,7 +145,7 @@ public class JUnitReportCollector implements TestRunListener, TestSuiteRunListen
 			buf.append( "<pre>" + XmlUtils.entitize( Arrays.toString( result.getMessages() ) ) + "\n" );
 
 			// use string value since constant is defined in pro.. duh.. 
-			if( testRunner.getTestCase().getSettings().getBoolean( "Complete Message Logs" ) )
+			if( testRunner.getTestCase().getSettings().getBoolean( "Complete Error Logs" ) )
 			{
 				 StringWriter stringWriter = new StringWriter();
 				 PrintWriter writer = new PrintWriter( stringWriter );

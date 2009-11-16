@@ -58,6 +58,7 @@ public class HtmlMediaTypeHandler implements MediaTypeHandler
 			// tidy.setQuiet(true);
 			tidy.setNumEntities( true );
 			tidy.setQuoteNbsp( true );
+			tidy.setFixUri( false );
 
 			Document document = tidy.parseDOM( new ByteArrayInputStream( content.getBytes() ), null );
 			StringWriter writer = new StringWriter();

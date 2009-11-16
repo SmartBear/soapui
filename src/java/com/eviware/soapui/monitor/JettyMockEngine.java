@@ -182,8 +182,13 @@ public class JettyMockEngine implements MockEngine
 			sslConnector.setKeystore( SoapUI.getSettings().getString( SSLSettings.MOCK_KEYSTORE, null ) );
 			sslConnector.setPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_PASSWORD, null ) );
 			sslConnector.setKeyPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_KEYSTORE_PASSWORD, null ) );
-			sslConnector.setTruststore( SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE, null ) );
+			String truststore = SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE, null );
+			if( StringUtils.hasContent( truststore ) )
+			{
+				sslConnector.setTruststore( truststore );
 			sslConnector.setTrustPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE_PASSWORD, null ) );
+			}
+			
 			sslConnector.setMaxIdleTime( 30000 );
 			sslConnector.setPort( ( int )SoapUI.getSettings().getLong( SSLSettings.MOCK_PORT, 443 ) );
 			sslConnector.setNeedClientAuth( SoapUI.getSettings().getBoolean( SSLSettings.CLIENT_AUTHENTICATION ) );

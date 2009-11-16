@@ -155,7 +155,7 @@ public class TestStepStatusAssertion extends AbstractLoadTestAssertion implement
 
 	private void buildDialog()
 	{
-		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "TestStep Status Assertion" );
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Step Status Assertion" );
 		XForm form = builder.createForm( "Basic" );
 
 		form.addTextField( NAME_FIELD, "Name of this assertion", FieldType.TEXT );
@@ -165,7 +165,7 @@ public class TestStepStatusAssertion extends AbstractLoadTestAssertion implement
 
 		dialog = builder.buildDialog( builder
 				.buildOkCancelHelpActions( HelpUrls.STEP_STATUS_LOAD_TEST_ASSERTION_HELP_URL ),
-				"Specify options for this TestStep Status Assertion", UISupport.OPTIONS_ICON );
+				"Specify options for this Step Status Assertion", UISupport.OPTIONS_ICON );
 	}
 
 	protected void updateConfiguration()

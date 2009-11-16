@@ -14,6 +14,8 @@ package com.eviware.soapui.impl.rest.panels.resource;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 
 import javax.swing.JTabbedPane;
@@ -21,6 +23,9 @@ import javax.swing.text.Document;
 
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.actions.resource.NewRestMethodAction;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestUtils;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
@@ -101,6 +106,31 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 				}
 			}
 		} );
+		pathTextField.addFocusListener( new FocusListener()
+		{
+			public void focusLost( FocusEvent e )
+			{
+				for( String p : RestUtils.extractTemplateParams( getModelItem().getPath() ))
+				{
+					if( !getModelItem().hasProperty( p ))
+					{
+						if( UISupport.confirm( "Add template parameter [" + p + "] to resource?", "Add Parameter" ))
+						{
+							RestParamProperty property = getModelItem().addProperty( p );
+							property.setStyle( ParameterStyle.TEMPLATE );
+							String value = UISupport.prompt( "Specify default value for parameter [" + p + "]", "Add Parameter", "" );
+							if( value != null )
+								property.setDefaultValue( value );
+						}
+					}
+				}
+			}
+			
+			public void focusGained( FocusEvent e )
+			{
+			}
+		});
+		
 		toolbar.addLabeledFixed( "Resource Path", pathTextField );
 
 		toolbar.addGlue();

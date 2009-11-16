@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
+import java.io.UnsupportedEncodingException;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -68,22 +70,19 @@ public class SinglePartHttpResponse extends BaseHttpResponse
 
 			charset = StringUtils.unquote( charset );
 
-			responseContent = responseBody.length == 0 ? null : charset == null ? new String( responseBody ) : new String(
-					responseBody, contentOffset, ( int )( responseSize - contentOffset ), charset );
+			try
+			{
+				responseContent = responseBody.length == 0 ? null : charset == null ? new String( responseBody,
+						contentOffset, ( int )( responseSize - contentOffset ) ) : new String( responseBody, contentOffset,
+						( int )( responseSize - contentOffset ), charset );
+			}
+			catch( UnsupportedEncodingException e )
+			{
+				SoapUI.getErrorLog().warn( e.toString() );
+				responseContent = new String( responseBody, contentOffset, ( int )( responseSize - contentOffset ) );
+			}
 
 			prettyPrint = httpRequest.getSettings().getBoolean( WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES );
-
-			// RequestEntity requestEntity = httpMethod.getRequestEntity();
-			// if( requestEntity != null )
-			// {
-			// ByteArrayOutputStream out = new ByteArrayOutputStream();
-			// requestEntity.writeRequest( out );
-			// requestData = out.toByteArray();
-			// }
-			// else if( StringUtils.hasContent( requestContent ))
-			// {
-			// requestData = requestContent.getBytes();
-			// }
 		}
 		catch( Exception e )
 		{

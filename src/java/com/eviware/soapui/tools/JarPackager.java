@@ -1,6 +1,7 @@
 package com.eviware.soapui.tools;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,13 +30,12 @@ public class JarPackager
 
 	}
 
-	public static void copyAllFromTo( File fromDir, File toDir )
+	public static void copyAllFromTo( File fromDir, File toDir, FileFilter filter )
 	{
-
 		if( fromDir.isDirectory() & toDir.isDirectory() )
 		{
 			log.info( "Coping files from " + fromDir.getAbsolutePath() + " to " + toDir.getAbsolutePath() );
-			File[] fromFiles = fromDir.listFiles();
+			File[] fromFiles = filter == null ? fromDir.listFiles() : fromDir.listFiles( filter );
 			for( File file : fromFiles )
 			{
 				File toFile = new File( toDir, file.getName() );

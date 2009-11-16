@@ -267,8 +267,8 @@ public class PathUtils
 			}
 
 			// different drives on windows? (can't relativize)
-			if( rootPath.toUpperCase().charAt( 0 ) != path.toUpperCase().charAt( 0 ) && rootPath.indexOf( ":\\" ) == 1
-					&& path.indexOf( ":\\" ) == 1 )
+			if( rootPath.toUpperCase().charAt( 0 ) != path.toUpperCase().charAt( 0 ) && ((rootPath.indexOf( ":\\" ) == 1 || rootPath.indexOf( ":/" ) == 1 )
+					&& ( path.indexOf( ":\\" ) == 1 || path.indexOf( ":/") == 1 )))
 			{
 				return path;
 			}

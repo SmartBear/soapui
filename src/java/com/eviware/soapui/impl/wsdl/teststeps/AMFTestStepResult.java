@@ -171,4 +171,10 @@ public class AMFTestStepResult extends WsdlTestStepResult implements AssertedXPa
 		return getResponse() != null;
 	}
 
+	public String getEndpoint()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

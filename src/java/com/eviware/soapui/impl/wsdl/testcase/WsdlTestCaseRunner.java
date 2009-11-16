@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.testcase;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,7 +22,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.AbstractTestRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunListener;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -39,13 +39,9 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTestRunContext> implements TestCaseRunner
 {
 	private TestRunListener[] listeners =new TestRunListener[0]; 
-	private List<TestStepResult> testStepResults = new LinkedList<TestStepResult>();
+	private List<TestStepResult> testStepResults = Collections.synchronizedList( new LinkedList<TestStepResult>() );
 	private int gotoStepIndex;
 	private int resultCount;
-	// private HashMap<String, WsrmSequence> wsrmMap;
-
-	// private final static Logger log =
-	// Logger.getLogger(WsdlTestCaseRunner.class);
 	private int initCount;
 
 	public WsdlTestCaseRunner( WsdlTestCase testCase, StringToObjectMap properties )
@@ -264,7 +260,7 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 		}
 	}
 
-	public TestCase getTestCase()
+	public WsdlTestCase getTestCase()
 	{
 		return getTestRunnable();
 	}
@@ -302,14 +298,11 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 		if( maxResults < 1 )
 			return;
 
-		synchronized( this )
-		{
 			while( testStepResults.size() > maxResults )
 			{
 				testStepResults.remove( 0 );
 			}
 		}
-	}
 
 	public void gotoStepByName( String stepName )
 	{

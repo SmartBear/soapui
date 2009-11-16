@@ -520,4 +520,10 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		}
 	}
 
+	public String getEndpoint()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

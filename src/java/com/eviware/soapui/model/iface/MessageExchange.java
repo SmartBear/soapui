@@ -32,6 +32,8 @@ public interface MessageExchange extends ResultContainer
 
 	public long getTimeTaken();
 
+	public String getEndpoint();
+
 	public StringToStringMap getProperties();
 
 	public String getRequestContent();

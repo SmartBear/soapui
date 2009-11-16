@@ -91,12 +91,10 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
 
 		addFocusListener( new FocusAdapter()
 		{
-
 			public void focusGained( FocusEvent e )
 			{
 				editor.requestFocusInWindow();
 			}
-
 		} );
 
 		groovyStep.addPropertyChangeListener( this );
@@ -187,6 +185,9 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
 		logger = null;
 		logArea.release();
 		inspectorPanel.release();
+		
+		getModelItem().removePropertyChangeListener( this );
+		
 		return super.release();
 	}
 

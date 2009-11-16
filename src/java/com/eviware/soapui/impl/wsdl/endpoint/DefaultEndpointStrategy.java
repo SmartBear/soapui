@@ -113,6 +113,8 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 
 		StringList keys = new StringList();
 
+		synchronized( defaults )
+		{
 		for( String key : defaults.keySet() )
 		{
 			if( !endpoints.contains( key ) )
@@ -126,6 +128,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 			EndpointDefaults def = defaults.remove( key );
 			config.getEndpointList().remove( def );
 		}
+	}
 	}
 
 	public void filterRequest( SubmitContext context, Request wsdlRequest )
@@ -147,6 +150,8 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 
 		if( def == null )
 		{
+			synchronized( defaults )
+			{
 			for( String ep : defaults.keySet() )
 			{
 				if( PropertyExpander.expandProperties( context, ep ).equals( uri.toString() ) )
@@ -154,6 +159,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 					def = defaults.get( ep );
 					break;
 				}
+			}
 			}
 
 			if( def == null )
@@ -191,9 +197,9 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 		}
 	}
 
-	private void overrideRequest( SubmitContext context, AbstractHttpRequestInterface<?> wsdlRequest, EndpointDefaults def,
-			String requestUsername, String requestPassword, String requestDomain, String defUsername, String defPassword,
-			String defDomain )
+	private void overrideRequest( SubmitContext context, AbstractHttpRequestInterface<?> wsdlRequest,
+			EndpointDefaults def, String requestUsername, String requestPassword, String requestDomain,
+			String defUsername, String defPassword, String defDomain )
 	{
 		String username = StringUtils.hasContent( defUsername ) ? defUsername : requestUsername;
 		String password = StringUtils.hasContent( defPassword ) ? defPassword : requestPassword;
@@ -229,9 +235,9 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 		}
 	}
 
-	private void copyToRequest( SubmitContext context, AbstractHttpRequestInterface<?> wsdlRequest, EndpointDefaults def,
-			String requestUsername, String requestPassword, String requestDomain, String defUsername, String defPassword,
-			String defDomain )
+	private void copyToRequest( SubmitContext context, AbstractHttpRequestInterface<?> wsdlRequest,
+			EndpointDefaults def, String requestUsername, String requestPassword, String requestDomain,
+			String defUsername, String defPassword, String defDomain )
 	{
 		// only set if not set in request
 		String wssType = def.getWssType();
@@ -361,8 +367,12 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 				EndpointDefaults def = defaults.containsKey( newValue ) ? defaults.get( newValue )
 						: getEndpointDefaults( oldValue );
 				def.endpointConfig.setStringValue( newValue );
+
+				synchronized( defaults )
+				{
 				defaults.remove( oldValue );
 				defaults.put( newValue, def );
+			}
 			}
 			else
 			{
@@ -497,9 +507,12 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 
 		if( !defaults.containsKey( endpoint ) )
 		{
+			synchronized( defaults )
+			{
 			EndpointConfig newEndpoint = config.addNewEndpoint();
 			newEndpoint.setStringValue( endpoint );
 			defaults.put( endpoint, new EndpointDefaults( newEndpoint ) );
+		}
 		}
 
 		return defaults.get( endpoint );
@@ -519,12 +532,15 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 			if( StringUtils.isNullOrEmpty( ec.getDomain() ) && StringUtils.isNullOrEmpty( ec.getUsername() )
 					&& StringUtils.isNullOrEmpty( ec.getPassword() ) && StringUtils.isNullOrEmpty( ec.getWssType() )
 					&& StringUtils.isNullOrEmpty( ec.getWssTimeToLive() ) && StringUtils.isNullOrEmpty( ec.getIncomingWss() )
-					&& StringUtils.isNullOrEmpty( ec.getOutgoingWss() ) )
+					&& StringUtils.isNullOrEmpty( ec.getOutgoingWss() ) && ec.getMode() == EndpointConfig.Mode.COMPLEMENT )
+			{
+				synchronized( defaults )
 			{
 				defaults.remove( ec.getStringValue() );
 				config.removeEndpoint( c );
 				c-- ;
 			}
+		}
 		}
 
 		if( config.sizeOfEndpointArray() == 0 )
@@ -572,12 +588,15 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 
 	public void changeEndpoint( String oldEndpoint, String newEndpoint )
 	{
+		synchronized( defaults )
+		{
 		EndpointDefaults endpointDefaults = defaults.remove( oldEndpoint );
 		if( endpointDefaults != null )
 		{
 			endpointDefaults.getConfig().setStringValue( newEndpoint );
 			defaults.put( newEndpoint, endpointDefaults );
 		}
+	}
 	}
 
 	public void afterRequest( SubmitContext context, Request request )

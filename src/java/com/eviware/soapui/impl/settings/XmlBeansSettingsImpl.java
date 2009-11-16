@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.settings;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +36,8 @@ public class XmlBeansSettingsImpl implements Settings
 {
 	private final Settings parent;
 	private final SettingsConfig config;
-	private final Map<String, SettingConfig> values = new HashMap<String, SettingConfig>();
+	private final Map<String, SettingConfig> values = Collections.synchronizedMap( new HashMap<String, SettingConfig>());
+	private final Map<String, String> valueCache = Collections.synchronizedMap( new StringToStringMap());
 	private final Set<SettingsListener> listeners = new HashSet<SettingsListener>();
 	private final ModelItem item;
 	private final SettingsListener settingsListener = new WeakSettingsListener( new InternalSettingsListener() );
@@ -65,8 +67,16 @@ public class XmlBeansSettingsImpl implements Settings
 
 	public String getString( String id, String defaultValue )
 	{
-		if( values.containsKey( id ) )
-			return values.get( id ).getStringValue();
+		if( valueCache.containsKey( id ) )
+		{
+			return valueCache.get( id );
+		}
+		else if( values.containsKey( id ) )
+		{
+			valueCache.put( id, values.get( id ).getStringValue() );
+			return valueCache.get( id );
+		}
+
 		return parent == null ? defaultValue : parent.getString( id, defaultValue );
 	}
 
@@ -94,6 +104,7 @@ public class XmlBeansSettingsImpl implements Settings
 			}
 
 			values.get( id ).setStringValue( value );
+			valueCache.put( id, value );
 		}
 
 		notifySettingChanged( id, value, oldValue );
@@ -110,19 +121,23 @@ public class XmlBeansSettingsImpl implements Settings
 
 	public boolean getBoolean( String id )
 	{
-		if( values.containsKey( id ) )
-			return Boolean.parseBoolean( values.get( id ).getStringValue() );
+		String value = getString( id, null );
+
+		if( value != null )
+			return Boolean.parseBoolean( value );
 
 		return parent == null ? false : parent.getBoolean( id );
 	}
 
 	public long getLong( String id, long defaultValue )
 	{
-		if( values.containsKey( id ) )
+		String value = getString( id, null );
+
+		if( value != null )
 		{
 			try
 			{
-				return Long.parseLong( values.get( id ).getStringValue() );
+				return Long.parseLong( value );
 			}
 			catch( NumberFormatException e )
 			{
@@ -157,6 +172,7 @@ public class XmlBeansSettingsImpl implements Settings
 			int ix = config.getSettingList().indexOf( values.get( id ) );
 			config.removeSetting( ix );
 			values.remove( id );
+			valueCache.remove( id );
 		}
 	}
 

@@ -31,6 +31,11 @@ public class WsdlMockRequestMessageExchange extends AbstractWsdlMessageExchange<
 		this.request = request;
 	}
 
+	public String getEndpoint()
+	{
+		return request.getHttpRequest().getRequestURI();
+	}
+
 	@Override
 	public WsdlOperation getOperation()
 	{

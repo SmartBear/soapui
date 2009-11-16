@@ -113,6 +113,10 @@ public class BurstLoadStrategy extends AbstractLoadStrategy
 	{
 		if( infoLabel != null )
 			infoLabel.setText( "" );
+		
+		// restore threadcount to original
+		WsdlLoadTest wsdlLoadTest = ( WsdlLoadTest )loadTestRunner.getLoadTest();
+		wsdlLoadTest.setThreadCount( threadCount );
 	}
 
 	public JComponent getConfigurationPanel()

@@ -38,6 +38,10 @@ import org.mozilla.xpcom.Mozilla;
 import org.mozilla.xpcom.XPCOMException;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
@@ -52,36 +56,15 @@ import com.teamdev.jxbrowser.event.RequestAdapter;
 import com.teamdev.jxbrowser.event.StatusChangeEvent;
 import com.teamdev.jxbrowser.event.StatusChangeListener;
 import com.teamdev.jxbrowser.mozilla.MozillaWebBrowser;
+import com.teamdev.xpcom.PoxyAuthenticationHandler;
+import com.teamdev.xpcom.ProxyConfiguration;
+import com.teamdev.xpcom.ProxyServerAuthInfo;
+import com.teamdev.xpcom.ProxyServerType;
+import com.teamdev.xpcom.Services;
 import com.teamdev.xpcom.Xpcom;
 
 public class BrowserComponent implements nsIWebProgressListener, nsIWeakReference, StatusChangeListener
 {
-	public class ContentSetter implements Runnable
-	{
-		private final String contentAsString;
-		private final String contentType;
-		private final String contextUri;
-
-		public ContentSetter( String contentAsString, String contentType, String contextUri )
-		{
-			this.contentAsString = contentAsString;
-			this.contentType = contentType;
-			this.contextUri = contextUri;
-		}
-
-		public void run()
-		{
-			if( StringUtils.hasContent( contextUri ) )
-			{
-				browser.setContentWithContext( contentAsString, contentType, contextUri );
-			}
-			else
-			{
-				browser.setContent( contentAsString, contentType );
-			}
-		}
-	}
-
 	private WebBrowser browser;
 	private static WebBrowserFactory webBrowserFactory;
 	private JPanel panel = new JPanel( new BorderLayout() );
@@ -96,11 +79,17 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private Boolean possibleError = false;
 	@SuppressWarnings( "unused" )
 	private boolean disposed;
+	private static boolean disabled;
 
 	public BrowserComponent( boolean addToolbar )
 	{
 		this.addToolbar = addToolbar;
 		initialize();
+	}
+
+	public static void setDisabled( boolean disabled )
+	{
+		BrowserComponent.disabled = disabled;
 	}
 
 	public synchronized static void initialize()
@@ -133,6 +122,9 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	public static boolean isJXBrowserDisabled()
 	{
+		if( disabled )
+			return true;
+
 		String disable = System.getProperty( "soapui.jxbrowser.disable", "nope" );
 		if( disable.equals( "true" ) )
 			return true;
@@ -166,15 +158,9 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 				panel.add( statusBar, BorderLayout.SOUTH );
 
-				SwingUtilities.invokeLater( new Runnable()
-				{
-					public void run()
-					{
 						initBrowser();
-						panel.add( browser.getComponent(), BorderLayout.CENTER );
-						panel.repaint();
-					}
-				} );
+
+				browser.navigate( "about:blank" );
 			}
 		}
 		return panel;
@@ -220,11 +206,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		public void actionPerformed( ActionEvent e )
 		{
-			// WebBrowserHistory history = browser.getHistory();
-			// List entries = history.getEntries();
-			// if( history.getCurrentPosition() == entries.size()-1 )
-			// Toolkit.getDefaultToolkit().beep();
-			// else
 			browser.goForward();
 		}
 	}
@@ -235,6 +216,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			return false;
 
 		browser = webBrowserFactory.createBrowser();
+		panel.add( browser.getComponent(), BorderLayout.CENTER );
 		browser.addContentHandler( new ContentHandler()
 		{
 
@@ -265,6 +247,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				return browserWindowAdapter;
 			}
 		} );
+
+		setUpProxy();
 
 		return true;
 	}
@@ -344,7 +328,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			setErrorPage( errorPage );
 
 		this.url = url;
-		SwingUtilities.invokeLater( new Navigator() );
+		Xpcom.invokeLater( new Navigator() );
 		return true;
 	}
 
@@ -399,7 +383,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	public void onLocationChange( nsIWebProgress arg0, nsIRequest arg1, nsIURI arg2 )
 	{
-		if( !getUrl().equals( "about:blank" ) )
+		if( getUrl() != null && !getUrl().equals( "about:blank" ) )
 		{
 			if( !possibleError )
 				possibleError = true;
@@ -424,10 +408,9 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	public void onStateChange( nsIWebProgress arg0, nsIRequest request, long arg2, long arg3 )
 	{
-
 		try
 		{
-			if( !getUrl().equals( "about:blank" ) )
+			if( getUrl() != null && !getUrl().equals( "about:blank" ) )
 			{
 				nsIHttpChannel ch = null;
 
@@ -435,19 +418,9 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 				if( ch != null )
 				{
-
-					// if( ch.getResponseStatus() == 200 )
-					{
 						possibleError = false;
 						showingErrorPage = false;
 					}
-					// else
-					// {
-					// possibleError = false;
-					// showingErrorPage = false;
-					// }
-
-				}
 			}
 		}
 		catch( XPCOMException e )
@@ -465,7 +438,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			try
 			{
 				showingErrorPage = true;
-//				browser.navigate( errorPage );
 				 setUrl( errorPage );
 			}
 			catch( Throwable e )
@@ -489,7 +461,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	{
 		try
 		{
-			if( !getUrl().equals( "about:blank" ) )
+			if( getUrl() != null && !getUrl().equals( "about:blank" ) )
 			{
 				nsIHttpChannel ch = null;
 
@@ -497,19 +469,9 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 				if( ch != null )
 				{
-
-					// if( ch.getResponseStatus() == 200 )
-					// {
-					// possibleError = false;
-					// showingErrorPage = false;
-					// }
-					// else
-					{
 						possibleError = false;
 						showingErrorPage = false;
 					}
-
-				}
 			}
 		}
 		catch( XPCOMException e )
@@ -618,6 +580,88 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 						event.getWebBrowser().removeRequestListener( PopupRequestAdapter.this );
 						if( !opened )
 							event = null;
+					}
+				} );
+			}
+		}
+	}
+
+	public class ContentSetter implements Runnable
+	{
+		private final String contentAsString;
+		private final String contentType;
+		private final String contextUri;
+
+		public ContentSetter( String contentAsString, String contentType, String contextUri )
+		{
+			this.contentAsString = contentAsString;
+			this.contentType = contentType;
+			this.contextUri = contextUri;
+		}
+
+		public void run()
+		{
+			if( StringUtils.hasContent( contextUri ) )
+			{
+				browser.setContentWithContext( contentAsString, contentType, contextUri );
+			}
+			else
+			{
+				browser.setContent( contentAsString, contentType );
+			}
+		}
+	}
+
+	/**
+	 * Setups proxy configuration
+	 */
+
+	void setUpProxy()
+	{
+		ProxyConfiguration proxyConf = Services.getProxyConfiguration();
+		if( proxyConf == null )
+			return;
+
+		Settings settings = SoapUI.getSettings();
+		PropertyExpansionContext context = null;
+
+		// check system properties first
+		String proxyHost = System.getProperty( "http.proxyHost" );
+		String proxyPort = System.getProperty( "http.proxyPort" );
+
+		if( proxyHost == null )
+			proxyHost = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.HOST, "" ) );
+
+		if( proxyPort == null )
+			proxyPort = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
+
+		if( !StringUtils.isNullOrEmpty( proxyHost ) && !StringUtils.isNullOrEmpty( proxyPort ) )
+		{
+			proxyConf.setHttpHost( proxyHost );
+			proxyConf.setHttpPort( Integer.parseInt( proxyPort ) );
+			// check excludes
+			String[] excludes = PropertyExpander.expandProperties( context,
+					settings.getString( ProxySettings.EXCLUDES, "" ) ).split( "," );
+			for( String url : excludes )
+			{
+				proxyConf.setSkipProxyFor( url );
+			}
+			
+			final String proxyUsername = PropertyExpander.expandProperties( context, settings.getString(
+					ProxySettings.USERNAME, null ) );
+			final String proxyPassword = PropertyExpander.expandProperties( context, settings.getString(
+					ProxySettings.PASSWORD, null ) );
+
+			if( proxyUsername != null )
+			{
+				proxyConf.setPoxyAuthenticationHandler( ProxyServerType.HTTP, new PoxyAuthenticationHandler()
+				{
+					/**
+					 * manually sets user name and password for proxy server
+					 */
+					public ProxyServerAuthInfo authenticationRequired()
+					{
+						return new ProxyServerAuthInfo( proxyUsername, proxyPassword );
 					}
 				} );
 			}

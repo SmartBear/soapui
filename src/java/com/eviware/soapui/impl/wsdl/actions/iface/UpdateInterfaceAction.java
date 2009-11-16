@@ -29,8 +29,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Request;
-import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.support.UISupport;
@@ -123,6 +121,7 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
 
 		try
 		{
+			UISupport.setHourglassCursor();
 			if( iface.updateDefinition( expUrl, createRequests ) )
 			{
 				afterUpdate( iface );
@@ -130,12 +129,18 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
 					iface.setDefinition( url, false );
 			}
 			else
+			{
 				UISupport.showInfoMessage( "Update of interface failed", "Update Definition" );
+		}
 		}
 		catch( Exception e1 )
 		{
 			UISupport.showInfoMessage( "Failed to update interface: [" + e1 + "]", "Update Definition" );
 			SoapUI.logError( e1 );
+		}
+		finally
+		{
+			UISupport.resetCursor();
 		}
 	}
 
@@ -239,7 +244,7 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
 					if( testStep instanceof WsdlTestRequestStep )
 					{
 						WsdlTestRequest testRequest = ( ( WsdlTestRequestStep )testStep ).getTestRequest();
-						if( testRequest.getOperation().getInterface() == iface )
+						if( testRequest != null && testRequest.getOperation() != null && testRequest.getOperation().getInterface() == iface )
 						{
 							String newRequest = testRequest.getOperation().createRequest( buildOptional );
 

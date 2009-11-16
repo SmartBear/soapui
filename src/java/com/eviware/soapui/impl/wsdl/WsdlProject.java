@@ -620,7 +620,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 		if (path == null || isRemote())
 		{
-			path = getName() + "-soapui-project.xml";
+			path = StringUtils.createFileName2( getName(), '-' ) + "-soapui-project.xml";
 			if (folder != null)
 			{
 				path = folder + File.separatorChar + path;
@@ -680,7 +680,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		File projectFile;
 		if (path == null || isRemote())
 		{
-			projectFile = new File(getName() + "-soapui-project.xml");
+			projectFile = new File( StringUtils.createFileName2( getName(), '-' ) + "-soapui-project.xml" );
 		}
 		else
 		{

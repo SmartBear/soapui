@@ -15,7 +15,8 @@ package com.eviware.soapui.support.scripting;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.eviware.soapui.SoapUI;
+import org.apache.log4j.Logger;
+
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.ModelSupport;
@@ -35,6 +36,7 @@ public class SoapUIScriptEngineRegistry
 	public static final String DEFAULT_SCRIPT_ENGINE_ID = GroovyScriptEngineFactory.ID;
 
 	private static Map<String, SoapUIScriptEngineFactory> factories = new HashMap<String, SoapUIScriptEngineFactory>();
+	private static final Logger log = Logger.getLogger( SoapUIScriptEngineRegistry.class );
 
 	public static void registerScriptEngine( String id, SoapUIScriptEngineFactory factory )
 	{
@@ -48,18 +50,24 @@ public class SoapUIScriptEngineRegistry
 
 	public static SoapUIScriptEngine create( ModelItem modelItem )
 	{
+		return factories.get( getScriptEngineId( modelItem ) ).createScriptEngine( modelItem );
+	}
+
+	public static String getScriptEngineId( ModelItem modelItem )
+	{
 		WsdlProject project = ( WsdlProject )ModelSupport.getModelItemProject( modelItem );
 
 		String scriptEngineId = null;
 		if( project == null )
-			SoapUI.log.warn( "Project is null" );
+			log.warn( "Project is null for modelItem [" + String.valueOf( modelItem ) + "], using default script language [" +
+					DEFAULT_SCRIPT_ENGINE_ID + "]" );
 		else
 			scriptEngineId = project.getDefaultScriptLanguage();
 
 		if( StringUtils.isNullOrEmpty( scriptEngineId ) )
 			scriptEngineId = DEFAULT_SCRIPT_ENGINE_ID;
 
-		return factories.get( scriptEngineId ).createScriptEngine( modelItem );
+		return scriptEngineId;
 	}
 
 	public static SoapUIScriptGenerator createScriptGenerator( ModelItem modelItem )

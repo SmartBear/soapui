@@ -50,13 +50,6 @@ public class WsdlTestStepRegistry
 		addFactory( new ProPlaceholderStepFactory( "datagen", "soapUI Pro DataGen", "/datagen.gif" ) );
 	}
 
-	public static synchronized WsdlTestStepRegistry get()
-	{
-		if( instance == null )
-			instance = new WsdlTestStepRegistry();
-		
-		return instance;
-	}	
 	public WsdlTestStepFactory getFactory( String type )
 	{
 		for( WsdlTestStepFactory factory : factories )

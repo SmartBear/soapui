@@ -410,6 +410,9 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 		if( runner != null && runner.getStatus() == Status.RUNNING )
 			return null;
 
+		if( runner != null )
+			runner.release();
+		
 		assertionErrors.clear();
 		runner = new WsdlLoadTestRunner( this );
 		runner.start();

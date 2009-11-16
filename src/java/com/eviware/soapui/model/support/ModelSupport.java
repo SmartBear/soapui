@@ -164,7 +164,6 @@ public class ModelSupport
 		return PropertyExpander.expandProperties( project, project.getResourceRoot() );
 	}
 
-	@SuppressWarnings( "unchecked" )
 	public static void unsetIds( AbstractWsdlModelItem<?> modelItem )
 	{
 		if( modelItem.getConfig().isSetId() )
@@ -172,7 +171,7 @@ public class ModelSupport
 
 		for( ModelItem child : modelItem.getChildren() )
 		{
-			if( child instanceof AbstractWsdlModelItem )
+			if( child instanceof AbstractWsdlModelItem<?> )
 			{
 				unsetIds( ( AbstractWsdlModelItem<?> )child );
 			}

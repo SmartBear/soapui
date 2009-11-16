@@ -183,7 +183,7 @@ public class TestStepTpsAssertion extends AbstractLoadTestAssertion implements C
 
 	private void buildDialog()
 	{
-		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "TestStep TPS Assertion" );
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Step TPS Assertion" );
 		XForm form = builder.createForm( "Basic" );
 
 		form.addTextField( TestStepTpsAssertion.NAME_FIELD, "Name of this assertion", FieldType.TEXT );
@@ -194,6 +194,6 @@ public class TestStepTpsAssertion extends AbstractLoadTestAssertion implements C
 		form.addComboBox( TestStepTpsAssertion.TEST_STEP_FIELD, new String[0], "TestStep to assert" );
 
 		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.STEP_TPS_LOAD_TEST_ASSERTION_HELP_URL ),
-				"Specify options for this TestStep TPS Assertion", UISupport.OPTIONS_ICON );
+				"Specify options for this Step TPS Assertion", UISupport.OPTIONS_ICON );
 	}
 }

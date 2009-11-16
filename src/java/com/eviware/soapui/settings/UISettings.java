@@ -88,4 +88,10 @@ public interface UISettings
 	@Setting( name = "GC Interval", description = "Sets the Garbage Collection interval in seconds, 0 = off", type = SettingType.INT )
 	public static final String GC_INTERVAL = UISettings.class.getSimpleName() + "@gc_interval";
 
+	@Setting( name = "Raw Request Message Size", description = "Sets size of raw request that will be shown", type = SettingType.INT )
+	public static final String RAW_REQUEST_MESSAGE_SIZE = UISettings.class.getSimpleName() + "@raw_request_message_size_show";
+
+	@Setting( name = "Raw Response Message Size", description = "Sets size of raw response that will be shown", type = SettingType.INT )
+	public static final String RAW_RESPONSE_MESSAGE_SIZE = UISettings.class.getSimpleName() + "@raw_response_message_size_show";
+
 }

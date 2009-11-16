@@ -774,6 +774,9 @@ public final class XmlUtils
 
 	public static boolean setNodeValue( Node domNode, String string )
 	{
+		if( domNode == null )
+			return false;
+		
 		short nodeType = domNode.getNodeType();
 
 		switch( nodeType )

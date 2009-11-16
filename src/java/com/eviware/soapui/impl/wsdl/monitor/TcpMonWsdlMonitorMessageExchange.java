@@ -434,4 +434,10 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 		return null; // To change body of implemented methods use File | Settings
 							// | File Templates.
 	}
+
+	public String getEndpoint()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -13,7 +13,9 @@
 package com.eviware.soapui.support.editor.views.xml.raw;
 
 import java.beans.PropertyChangeEvent;
+import java.util.Arrays;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -21,6 +23,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
+import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.registry.RequestEditorViewFactory;
@@ -102,8 +105,14 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		{
 			if( request.getResponse() == null || request.getResponse().getRawRequestData() == null )
 				return "";
+
+			byte[] rawRequestData = request.getResponse().getRawRequestData();
+			int maxSize = ( int )SoapUI.getSettings().getLong( UISettings.RAW_REQUEST_MESSAGE_SIZE, 10000 );
+			
+			if( maxSize < rawRequestData.length )
+				return new String( Arrays.copyOf( rawRequestData, maxSize ) );
 			else
-				return new String( request.getResponse().getRawRequestData() );
+				return new String( rawRequestData );
 		}
 
 		@Override
@@ -141,7 +150,13 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 			if( request.getResponse() == null )
 				return "<missing response>";
 
-			return new String( request.getResponse().getRawResponseData() );
+			byte[] rawResponseData = request.getResponse().getRawResponseData();
+			int maxSize = ( int )SoapUI.getSettings().getLong( UISettings.RAW_RESPONSE_MESSAGE_SIZE, 10000 );
+			
+			if( maxSize < rawResponseData.length )
+				return new String( Arrays.copyOf( rawResponseData, maxSize ) );
+			else 
+				return new String( rawResponseData );
 		}
 
 		@Override

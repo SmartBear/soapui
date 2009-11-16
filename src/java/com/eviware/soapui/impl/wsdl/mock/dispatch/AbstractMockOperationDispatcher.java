@@ -34,9 +34,13 @@ public abstract class AbstractMockOperationDispatcher implements PropertyChangeN
 		propertyChangeSupport = new PropertyChangeSupport( this );
 	}
 
-	public JComponent buildEditorComponent()
+	public JComponent getEditorComponent()
 	{
 		return new JPanel();
+	}
+
+	public void releaseEditorComponent( )
+	{
 	}
 
 	public void release()

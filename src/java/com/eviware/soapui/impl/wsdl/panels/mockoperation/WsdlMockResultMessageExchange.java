@@ -46,6 +46,11 @@ public class WsdlMockResultMessageExchange extends AbstractWsdlMessageExchange<M
 		return mockResponse == null ? mockResult.getMockOperation() : mockResponse;
 	}
 
+	public String getEndpoint()
+	{
+		return mockResult.getMockRequest().getHttpRequest().getRequestURI();
+	}
+
 	public Attachment[] getRequestAttachments()
 	{
 		return mockResult.getMockRequest().getRequestAttachments();

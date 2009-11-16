@@ -19,7 +19,7 @@ public interface XForm
 {
 	public enum FieldType
 	{
-		TEXT, FOLDER, FILE, URL, JAVA_PACKAGE, JAVA_CLASS, PASSWORD, PROJECT_FILE, PROJECT_FOLDER, TEXTAREA
+		TEXT, FOLDER, FILE, FILE_OR_FOLDER, URL, JAVA_PACKAGE, JAVA_CLASS, PASSWORD, PROJECT_FILE, PROJECT_FOLDER, TEXTAREA
 	}
 
 	public XFormTextField addTextField( String name, String description, FieldType type );

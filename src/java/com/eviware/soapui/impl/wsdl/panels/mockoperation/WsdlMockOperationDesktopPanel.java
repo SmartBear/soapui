@@ -89,6 +89,7 @@ public class WsdlMockOperationDesktopPanel extends ModelItemDesktopPanel<WsdlMoc
 	private ResponseListModel responseListModel;
 	private JComponentInspector<JComponent> dispatchInspector;
 	private JInspectorPanel inspectorPanel;
+	private MockOperationDispatcher dispatcher;
 
 	public WsdlMockOperationDesktopPanel( WsdlMockOperation mockOperation )
 	{
@@ -206,9 +207,9 @@ public class WsdlMockOperationDesktopPanel extends ModelItemDesktopPanel<WsdlMoc
 					dispatchPanel.remove( 1 );
 
 				String item = ( String )dispatchCombo.getSelectedItem();
-				MockOperationDispatcher dispatcher = getModelItem().setDispatchStyle( item );
+				dispatcher = getModelItem().setDispatchStyle( item );
 
-				dispatchPanel.add( dispatcher.buildEditorComponent(), BorderLayout.CENTER );
+				dispatchPanel.add( dispatcher.getEditorComponent(), BorderLayout.CENTER );
 				dispatchPanel.revalidate();
 				dispatchPanel.repaint();
 
@@ -294,6 +295,10 @@ public class WsdlMockOperationDesktopPanel extends ModelItemDesktopPanel<WsdlMoc
 		responseListModel.release();
 
 		inspectorPanel.release();
+		
+		if( dispatcher != null )
+			dispatcher.releaseEditorComponent();
+		
 		return release();
 	}
 

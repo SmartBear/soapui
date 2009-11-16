@@ -41,7 +41,6 @@ import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.testsuite.ProjectRunContext;
 import com.eviware.soapui.model.testsuite.ProjectRunListener;
 import com.eviware.soapui.model.testsuite.ProjectRunner;
-import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
 import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
@@ -119,20 +118,6 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel
 	protected JProjectTestSuiteList getTestSuiteList()
 	{
 		return testSuiteList;
-	}
-
-	@Override
-	public void addNotify()
-	{
-		super.addNotify();
-		project.addProjectListener( testSuiteListener );
-	}
-
-	@Override
-	public void removeNotify()
-	{
-		super.removeNotify();
-		project.removeProjectListener( testSuiteListener );
 	}
 
 	private JComponent buildToolbar()
@@ -261,18 +246,17 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel
 		inspectorPanel.release();
 		testSuiteListInspectorPanel.release();
 
-		setupGroovyEditor.getEditor().release();
-		tearDownGroovyEditor.getEditor().release();
+		setupGroovyEditor.release();
+		tearDownGroovyEditor.release();
 
 		testRunLog.release();
+		project.removeProjectRunListener( testSuiteRunListener );
+		project.removeProjectListener( testSuiteListener );
 	}
 
 	protected void runProject()
 	{
 		projectRunner = project.run( new StringToObjectMap(), true );
-
-		// new Thread( testSuiteRunner, getModelItem().getName() +
-		// " TestSuiteRunner" ).start();
 	}
 
 	protected void beforeRun()
@@ -295,12 +279,12 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel
 
 	private final class InternalProjectListener extends ProjectListenerAdapter
 	{
-		public void testSuiteAdded( TestSuite testCase )
+		public void testSuiteAdded( TestSuite testSuite )
 		{
 			runAction.setEnabled( project.getTestSuiteCount() > 0 );
 		}
 
-		public void testSuiteRemoved( TestCase testCase )
+		public void testSuiteRemoved( TestSuite testSuite )
 		{
 			runAction.setEnabled( project.getTestSuiteCount() > 0 );
 		}

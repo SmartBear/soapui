@@ -305,7 +305,7 @@
 		<dependency>
 			<groupId>commons-ssl</groupId>
 			<artifactId>not-yet-commons-ssl</artifactId>
-			<version>0.3.10</version>
+			<version>0.3.11</version>
 			<type>jar</type>
 			<url>http://juliusdavies.ca/commons-ssl/
 			</url>

@@ -38,4 +38,9 @@ public class MockLoadTestRunner extends AbstractMockTestRunner<WsdlLoadTest> imp
 	{
 		return ( int )getLoadTest().getThreadCount();
 	}
+
+	public boolean hasStopped()
+	{
+		return false;
+	}
 }

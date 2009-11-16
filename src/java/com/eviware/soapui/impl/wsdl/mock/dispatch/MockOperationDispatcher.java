@@ -24,7 +24,9 @@ public interface MockOperationDispatcher
 	public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result )
 			throws DispatchException;
 
-	public JComponent buildEditorComponent();
+	public JComponent getEditorComponent();
+	
+	public void releaseEditorComponent( );
 
 	public void release();
 }

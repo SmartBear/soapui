@@ -200,7 +200,7 @@ public class TestStepMaxAssertion extends AbstractLoadTestAssertion implements C
 
 	private void buildDialog()
 	{
-		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "TestStep Max Assertion" );
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Step Maximum Assertion" );
 		XForm form = builder.createForm( "Basic" );
 
 		form.addTextField( TestStepMaxAssertion.NAME_FIELD, "Name of this assertion", FieldType.TEXT );
@@ -212,6 +212,6 @@ public class TestStepMaxAssertion extends AbstractLoadTestAssertion implements C
 
 		dialog = builder.buildDialog( builder
 				.buildOkCancelHelpActions( HelpUrls.STEP_MAXIMUM_LOAD_TEST_ASSERTION_HELP_URL ),
-				"Specify options for this TestStep Max Assertion", UISupport.OPTIONS_ICON );
+				"Specify options for this Step Maximum Assertion", UISupport.OPTIONS_ICON );
 	}
 }

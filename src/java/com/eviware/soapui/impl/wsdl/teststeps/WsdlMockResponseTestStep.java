@@ -390,7 +390,9 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 	private TestStepResult internalRun( WsdlTestRunContext context )
 	{
+		if( iconAnimator != null )
 		iconAnimator.start();
+		
 		WsdlSingleMessageExchangeTestStepResult result = new WsdlSingleMessageExchangeTestStepResult( this );
 
 		try
@@ -483,6 +485,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		}
 		finally
 		{
+			if( iconAnimator != null )
 			iconAnimator.stop();
 		}
 

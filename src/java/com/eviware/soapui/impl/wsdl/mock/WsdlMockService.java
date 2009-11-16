@@ -84,6 +84,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	private ScriptEnginePool onRequestScriptEnginePool;
 	private ScriptEnginePool afterRequestScriptEnginePool;
 	private WsdlMockOperation faultMockOperation;
+	private String mockServiceEndpoint;
 
 	public WsdlMockService( Project project, MockServiceConfig config )
 	{
@@ -273,6 +274,14 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	public void release()
 	{
 		super.release();
+
+		if( mockRunner != null  )
+		{
+			if(  mockRunner.isRunning())
+				mockRunner.stop();
+			
+			 mockRunner.release();
+		}
 
 		for( WsdlMockOperation operation : mockOperations )
 			operation.release();
@@ -735,7 +744,6 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		fireMockOperationAdded( newOperation );
 	}
 
-	
 	public void export(File file)
 	{
 		try
@@ -748,7 +756,6 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		}
 	}
 
-	
 	public void importMockOperation(File file)
 	{
 		MockOperationConfig mockOperationNewConfig = null;
@@ -770,8 +777,8 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 
 		if( mockOperationNewConfig != null )
 		{
-			MockOperationConfig newConfig = ( MockOperationConfig )getConfig().addNewMockOperation().set( mockOperationNewConfig ).changeType(
-					TestCaseConfig.type );
+			MockOperationConfig newConfig = ( MockOperationConfig )getConfig().addNewMockOperation().set(
+					mockOperationNewConfig ).changeType( TestCaseConfig.type );
 			WsdlMockOperation newMockOperation = new WsdlMockOperation(this, newConfig);
 			ModelSupport.unsetIds( newMockOperation );
 			newMockOperation.afterLoad();
@@ -789,7 +796,8 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	
 	private void resolveImportedMockOperation( WsdlMockOperation mockOperation )
 	{
-		ResolveDialog resolver = new ResolveDialog( "Validate MockOperation", "Checks MockOperation for inconsistencies", null );
+		ResolveDialog resolver = new ResolveDialog( "Validate MockOperation", "Checks MockOperation for inconsistencies",
+				null );
 		resolver.setShowOkMessage( false );
 		resolver.resolve( mockOperation );
 	}
@@ -797,6 +805,28 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	public String toString()
 	{
 		return getName();
+	}
+
+	public String getMockServiceEndpoint()
+	{
+		return mockServiceEndpoint;
+	}
+
+	public void setMockServiceEndpoint( String mockServiceEndpoint )
+	{
+		this.mockServiceEndpoint = mockServiceEndpoint;
+	}
+
+	public String getLocalMockServiceEndpoint()
+	{
+		if( mockServiceEndpoint != null )
+			return mockServiceEndpoint + getPath();
+
+		String host = getHost();
+		if( StringUtils.isNullOrEmpty( host ) )
+			host = "127.0.0.1";
+
+		return "http://" + host + ":" + getPort() + getPath();
 	}
 
 }

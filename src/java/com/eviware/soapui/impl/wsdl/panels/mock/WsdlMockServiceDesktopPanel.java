@@ -20,7 +20,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -148,8 +147,10 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 		logListModel.clear();
 		propertiesTable.release();
 
-		startGroovyEditor.getEditor().release();
-		stopGroovyEditor.getEditor().release();
+		startGroovyEditor.release();
+		stopGroovyEditor.release();
+		onRequestGroovyEditor.release();
+		afterRequestGroovyEditor.release();
 
 		inspectorPanel.release();
 		contentInspector.release();
@@ -614,8 +615,6 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 
 	private static final class LogCellRenderer extends JLabel implements ListCellRenderer
 	{
-		private SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
-
 		public LogCellRenderer()
 		{
 			setOpaque( true );

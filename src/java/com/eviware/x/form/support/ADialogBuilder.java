@@ -215,6 +215,9 @@ public class ADialogBuilder
 		case FOLDER :
 			field = form.addTextField( name, description, FieldType.FOLDER );
 			break;
+		case FILE_OR_FOLDER :
+			field = form.addTextField( name, description, FieldType.FILE_OR_FOLDER );
+			break;
 		case ENUMERATION :
 			field = form.addComboBox( name, values, description );
 			break;

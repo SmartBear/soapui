@@ -41,6 +41,11 @@ public class HttpResponseMessageExchange extends AbstractMessageExchange<HttpReq
 		}
 	}
 
+	public String getEndpoint()
+	{
+		return response == null ? null : response.getURL().toString();
+	}
+
 	public String getRequestContent()
 	{
 		if( requestContent != null )
@@ -160,11 +165,13 @@ public class HttpResponseMessageExchange extends AbstractMessageExchange<HttpReq
 	{
 		List<Attachment> result = new ArrayList<Attachment>();
 
+		if( getResponseAttachments() != null )
+		{
 		for( Attachment attachment : getResponseAttachments() )
 		{
 			if( attachment.getPart().equals( name ) )
 				result.add( attachment );
-		}
+		}}
 
 		return result.toArray( new Attachment[result.size()] );
 	}

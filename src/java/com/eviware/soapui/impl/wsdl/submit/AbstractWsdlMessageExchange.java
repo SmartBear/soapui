@@ -46,10 +46,13 @@ public abstract class AbstractWsdlMessageExchange<T extends ModelItem> extends A
 	{
 		List<Attachment> result = new ArrayList<Attachment>();
 
+		if( getResponseAttachments() != null )
+		{
 		for( Attachment attachment : getResponseAttachments() )
 		{
 			if( attachment.getPart().equals( name ) )
 				result.add( attachment );
+		}
 		}
 
 		return result.toArray( new Attachment[result.size()] );

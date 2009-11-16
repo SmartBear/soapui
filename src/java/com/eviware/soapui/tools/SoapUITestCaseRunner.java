@@ -31,14 +31,18 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlProjectRunner;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestSuiteRunner;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStepResult;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlRunTestCaseTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepResult;
 import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.model.support.ProjectRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
+import com.eviware.soapui.model.testsuite.ProjectRunContext;
+import com.eviware.soapui.model.testsuite.ProjectRunner;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
@@ -46,6 +50,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.model.testsuite.TestSuiteRunner;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
@@ -67,13 +72,16 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 
 public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 {
+	public static final String SOAPUI_EXPORT_SEPARATOR = "soapui.export.separator";
+
 	public static final String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " TestCase Runner";
 
 	private String testSuite;
 	private String testCase;
 	private List<TestAssertion> assertions = new ArrayList<TestAssertion>();
 	private Map<TestAssertion, WsdlTestStepResult> assertionResults = new HashMap<TestAssertion, WsdlTestStepResult>();
-//	private List<TestCaseRunner> runningTests = new ArrayList<TestCaseRunner>();
+	// private List<TestCaseRunner> runningTests = new
+	// ArrayList<TestCaseRunner>();
 	private List<TestCase> failedTests = new ArrayList<TestCase>();
 
 	private int testSuiteCount;
@@ -165,6 +173,12 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		setEnableUI( cmd.hasOption( "i" ) );
 		setPrintReport( cmd.hasOption( "r" ) );
 		setExportAll( cmd.hasOption( "a" ) );
+		if( cmd.hasOption( "A" ))
+		{
+			setExportAll( true );
+			System.setProperty( SOAPUI_EXPORT_SEPARATOR, File.separator );
+		}
+		
 		setJUnitReport( cmd.hasOption( "j" ) );
 		setSaveAfterRun( cmd.hasOption( "S" ) );
 
@@ -202,6 +216,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		options.addOption( "f", true, "Sets the output folder to export results to" );
 		options.addOption( "j", false, "Sets the output to include JUnit XML reports" );
 		options.addOption( "a", false, "Turns on exporting of all results" );
+		options.addOption( "A", false, "Turns on exporting of all results using folders instead of long filenames" );
 		options.addOption( "t", true, "Sets the soapui-settings.xml file to use" );
 		options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
 		options.addOption( "v", true, "Sets password for soapui-settings.xml file" );
@@ -288,7 +303,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 			for( int i = 0; i < suite.getTestCaseCount(); i++ )
 			{
 				TestCase tc = suite.getTestCaseAt( i );
-				if( (testSuite == null || suite.getName().equals( suite.getName() )) && testCase != null && tc.getName().equals( testCase ))
+				if( ( testSuite == null || suite.getName().equals( suite.getName() ) ) && testCase != null
+						&& tc.getName().equals( testCase ) )
 					testCasesToRun.add( tc );
 					
 				addListeners( tc );
@@ -341,16 +357,24 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
 	protected void runProject( WsdlProject project )
 	{
+		// add listener for counting..
+		InternalProjectRunListener projectRunListener = new InternalProjectRunListener();
+		project.addProjectRunListener( projectRunListener );
+		
 		try
 		{
 			log.info( ( "Running Project [" + project.getName() + "], runType = " + project.getRunType() ) );
 			WsdlProjectRunner runner = project.run( new StringToObjectMap(), false );
-			log.info( "Project [" + project.getName() + "] finished with status [" + runner.getStatus()
-					+"] in " + runner.getTimeTaken() + "ms" );
+			log.info( "Project [" + project.getName() + "] finished with status [" + runner.getStatus() + "] in "
+					+ runner.getTimeTaken() + "ms" );
 		}
 		catch( Exception e )
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			project.removeProjectRunListener( projectRunListener );
 		}
 	}
 
@@ -403,7 +427,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		throw new Exception( buf.toString() );
 	}
 
-	public void exportJUnitReports( JUnitReportCollector collector, String folder, WsdlProject project ) throws Exception
+	public void exportJUnitReports( JUnitReportCollector collector, String folder, WsdlProject project )
+			throws Exception
 	{
 		collector.saveReports( folder == null ? "" : folder );
 	}
@@ -435,11 +460,16 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		{
 			log.info( ( "Running TestSuite [" + suite.getName() + "], runType = " + suite.getRunType() ) );
 		   WsdlTestSuiteRunner runner = suite.run( new StringToObjectMap(), false );
-		   log.info( "TestSuite [" + suite.getName() + "] finished with status [" + runner.getStatus() + "] in " + ( runner.getTimeTaken() ) + "ms" );
+			log.info( "TestSuite [" + suite.getName() + "] finished with status [" + runner.getStatus() + "] in "
+					+ ( runner.getTimeTaken() ) + "ms" );
 		}
 		catch( Exception e )
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			testSuiteCount++;
 		}
 	}
 
@@ -457,7 +487,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		{
 			log.info( "Running TestCase [" + testCase.getName() + "]" );
 			WsdlTestCaseRunner runner = testCase.run( new StringToObjectMap(), false );
-			log.info( "TestCase [" + testCase.getName() + "] finished with status [" + runner.getStatus() + "] in " + ( runner.getTimeTaken() ) + "ms" );
+			log.info( "TestCase [" + testCase.getName() + "] finished with status [" + runner.getStatus() + "] in "
+					+ ( runner.getTimeTaken() ) + "ms" );
 		}
 		catch( Exception e )
 		{
@@ -541,11 +572,31 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		{
 			try
 			{
+				String exportSeparator = System.getProperty( SOAPUI_EXPORT_SEPARATOR, "-" );
+
 				TestCase tc = currentStep.getTestCase();
-				String nameBase = StringUtils.createFileName( tc.getTestSuite().getName(), '_' ) + "-"
-						+ StringUtils.createFileName( tc.getName(), '_' ) + "-"
+				String nameBase = StringUtils.createFileName( tc.getTestSuite().getName(), '_' ) + exportSeparator
+						+ StringUtils.createFileName( tc.getName(), '_' ) + exportSeparator
 						+ StringUtils.createFileName( currentStep.getName(), '_' ) + "-" + count.longValue() + "-"
 						+ result.getStatus();
+
+				WsdlTestCaseRunner callingTestCaseRunner = ( WsdlTestCaseRunner )runContext
+						.getProperty( "#CallingTestCaseRunner#" );
+
+				if( callingTestCaseRunner != null )
+				{
+					WsdlTestCase ctc = callingTestCaseRunner.getTestCase();
+					WsdlRunTestCaseTestStep runTestCaseTestStep = ( WsdlRunTestCaseTestStep )runContext
+							.getProperty( "#CallingRunTestCaseStep#" );
+
+					nameBase = StringUtils.createFileName( ctc.getTestSuite().getName(), '_' ) + exportSeparator
+							+ StringUtils.createFileName( ctc.getName(), '_' ) + exportSeparator
+							+ StringUtils.createFileName( runTestCaseTestStep.getName(), '_' ) + exportSeparator
+							+ StringUtils.createFileName( tc.getTestSuite().getName(), '_' ) + exportSeparator
+							+ StringUtils.createFileName( tc.getName(), '_' ) + exportSeparator
+						+ StringUtils.createFileName( currentStep.getName(), '_' ) + "-" + count.longValue() + "-"
+						+ result.getStatus();
+				}
 
 				String absoluteOutputFolder = getAbsoluteOutputFolder( ModelSupport.getModelItemProject( tc ));
 				String fileName = absoluteOutputFolder + File.separator + nameBase + ".txt";
@@ -553,14 +604,16 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 				if( result.getStatus() == TestStepStatus.FAILED )
 					log.error( currentStep.getName() + " failed, exporting to [" + fileName + "]" );
 
+				new File( fileName ).getParentFile().mkdirs();
+
 				PrintWriter writer = new PrintWriter( fileName );
 				result.writeTo( writer );
 				writer.close();
 
 				// write attachments
-				if( result instanceof WsdlTestRequestStepResult )
+				if( result instanceof MessageExchange )
 				{
-					Attachment[] attachments = ( ( WsdlTestRequestStepResult )result ).getResponseAttachments();
+					Attachment[] attachments = ( ( MessageExchange )result ).getResponseAttachments();
 					if( attachments != null && attachments.length > 0 )
 					{
 						for( int c = 0; c < attachments.length; c++ )
@@ -610,5 +663,13 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		}
 
 		testCaseCount++ ;
+	}
+	
+	private class InternalProjectRunListener extends ProjectRunListenerAdapter
+	{
+		public void afterTestSuite( ProjectRunner projectRunner, ProjectRunContext runContext, TestSuiteRunner testRunner )
+		{
+			testSuiteCount++;
+		}
 	}
 }

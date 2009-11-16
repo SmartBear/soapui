@@ -75,6 +75,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 	private CancelRunTestCaseAction cancelAction;
 	private XFormDialog optionsDialog;
 	private JInspectorPanel inspectorPanel;
+	private PropertyHolderTable propertiesTable;
 
 	public WsdlRunTestCaseStepDesktopPanel( WsdlRunTestCaseTestStep modelItem )
 	{
@@ -138,12 +139,12 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 
 	protected JComponent createPropertiesTable()
 	{
-		PropertyHolderTable propertyHolderTable = new PropertyHolderTable( getModelItem() );
+		propertiesTable = new PropertyHolderTable( getModelItem() );
 
 		titledBorder = BorderFactory.createTitledBorder( createTitleForBorder() );
-		propertyHolderTable.setBorder( titledBorder );
+		propertiesTable.setBorder( titledBorder );
 
-		return propertyHolderTable;
+		return propertiesTable;
 	}
 
 	private String createTitleForBorder()
@@ -197,6 +198,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 			optionsDialog = null;
 		}
 
+		propertiesTable.release();
 		inspectorPanel.release();
 
 		return release();
@@ -353,11 +355,22 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 				}
 			}
 
-			optionsDialog
-					.setValue(
-							OptionsForm.RUN_MODE,
-							getModelItem().getRunMode() == RunTestCaseRunModeTypeConfig.PARALLELL ? OptionsForm.CREATE_ISOLATED_COPY_FOR_EACH_RUN
-									: OptionsForm.RUN_PRIMARY_TEST_CASE );
+			switch( getModelItem().getRunMode().intValue() )
+			{
+			case RunTestCaseRunModeTypeConfig.INT_PARALLELL :
+				optionsDialog.setValue( OptionsForm.RUN_MODE, OptionsForm.CREATE_ISOLATED_COPY_FOR_EACH_RUN );
+				break;
+			case RunTestCaseRunModeTypeConfig.INT_SINGLETON_AND_FAIL :
+				optionsDialog.setValue( OptionsForm.RUN_MODE, OptionsForm.RUN_PRIMARY_TEST_CASE );
+				break;
+			case RunTestCaseRunModeTypeConfig.INT_SINGLETON_AND_WAIT :
+				optionsDialog.setValue( OptionsForm.RUN_MODE, OptionsForm.RUN_SYNCHRONIZED_TESTCASE );
+				break;
+			}
+			
+			optionsDialog.setBooleanValue( OptionsForm.COPY_HTTP_SESSION, getModelItem().isCopyHttpSession() );
+			optionsDialog.setBooleanValue( OptionsForm.COPY_LOADTEST_PROPERTIES, getModelItem().isCopyLoadTestProperties() );
+			optionsDialog.setBooleanValue( OptionsForm.IGNORE_EMPTY_PROPERTIES, getModelItem().isIgnoreEmptyProperties() );
 
 			if( optionsDialog.show() )
 			{
@@ -369,9 +382,23 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 						new StringList(
 								( ( XFormMultiSelectList )optionsDialog.getFormField( OptionsForm.RETURN_PROPERTIES ) )
 										.getSelectedOptions() ) );
-				getModelItem().setRunMode(
-						optionsDialog.getValueIndex( OptionsForm.RUN_MODE ) == 0 ? RunTestCaseRunModeTypeConfig.PARALLELL
-								: RunTestCaseRunModeTypeConfig.SINGLETON_AND_FAIL );
+
+				switch( optionsDialog.getValueIndex( OptionsForm.RUN_MODE ) )
+				{
+				case 0 :
+					getModelItem().setRunMode( RunTestCaseRunModeTypeConfig.PARALLELL );
+					break;
+				case 1 :
+					getModelItem().setRunMode( RunTestCaseRunModeTypeConfig.SINGLETON_AND_FAIL );
+					break;
+				case 2 :
+					getModelItem().setRunMode( RunTestCaseRunModeTypeConfig.SINGLETON_AND_WAIT );
+					break;
+				}
+
+				getModelItem().setCopyHttpSession( optionsDialog.getBooleanValue( OptionsForm.COPY_HTTP_SESSION ) );
+				getModelItem().setCopyLoadTestProperties( optionsDialog.getBooleanValue( OptionsForm.COPY_LOADTEST_PROPERTIES ) );
+				getModelItem().setIgnoreEmptyProperties( optionsDialog.getBooleanValue( OptionsForm.IGNORE_EMPTY_PROPERTIES ) );
 
 				titledBorder.setTitle( createTitleForBorder() );
 			}
@@ -397,6 +424,15 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 		@AField( name = "Run Mode", description = "Sets how to run the target TestCase", type = AFieldType.RADIOGROUP, values = {
 				CREATE_ISOLATED_COPY_FOR_EACH_RUN, RUN_PRIMARY_TEST_CASE, RUN_SYNCHRONIZED_TESTCASE } )
 		public static final String RUN_MODE = "Run Mode";
+		
+		@AField( name = "Copy LoadTest Properties", description = "Copies LoadTest related properties to target context", type = AFieldType.BOOLEAN )
+		public static final String COPY_LOADTEST_PROPERTIES = "Copy LoadTest Properties";
+		
+		@AField( name = "Copy HTTP Session", description = "Copies LoadTest related properties to target context", type = AFieldType.BOOLEAN )
+		public static final String COPY_HTTP_SESSION = "Copy HTTP Session";
+		
+		@AField( name = "Ignore Empty Properties", description = "Does not set empty TestCase property values", type = AFieldType.BOOLEAN )
+		public static final String IGNORE_EMPTY_PROPERTIES = "Ignore Empty Properties";
 	}
 
 	public void propertyChange( PropertyChangeEvent evt )

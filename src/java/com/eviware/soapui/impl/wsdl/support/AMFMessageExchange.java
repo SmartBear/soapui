@@ -64,4 +64,10 @@ public class AMFMessageExchange extends AbstractNonHttpMessageExchange<AMFReques
 	{
 		return false;
 	}
+
+	public String getEndpoint()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -71,7 +71,6 @@ public class ActionListBuilder
 		return actions;
 	}
 
-	@SuppressWarnings( "hiding" )
 	public static <T extends ModelItem> ActionList buildActions( String actionGroup, T modelItem )
 	{
 		DefaultActionList actions = new DefaultActionList();
@@ -90,7 +89,7 @@ public class ActionListBuilder
 	 * specified modelItem
 	 */
 
-	@SuppressWarnings( { "hiding", "unchecked" } )
+	@SuppressWarnings( { "unchecked" } )
 	protected static <T extends ModelItem> void addActions( T modelItem, ActionList actions,
 			SoapUIActionGroup<T> actionGroup )
 	{

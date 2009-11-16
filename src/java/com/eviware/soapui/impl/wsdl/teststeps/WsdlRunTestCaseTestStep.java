@@ -40,11 +40,13 @@ import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
+import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.model.testsuite.TestRunListener;
 import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ChooseAnotherTestCase;
 import com.eviware.soapui.support.resolver.CreateNewEmptyTestCase;
@@ -194,8 +196,9 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 					{
 						if( runningTestCase.hasProperty( key ) && !returnProperties.contains( key ) )
 						{
-							String value = props.get( key ).getValue();
-							runningTestCase.setPropertyValue( key, PropertyExpander.expandProperties( testRunContext, value ) );
+							String value = PropertyExpander.expandProperties( testRunContext, props.get( key ).getValue());
+							if( StringUtils.hasContent( value ) || !isIgnoreEmptyProperties())
+								runningTestCase.setPropertyValue( key, value );
 						}
 					}
 
@@ -207,7 +210,29 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 					// properties.put( name, testRunContext.getProperty( name ));
 
 					result.startTimer();
-					testCaseRunner = runningTestCase.run( new StringToObjectMap(), true );
+					StringToObjectMap properties = new StringToObjectMap();
+
+					if( isCopyLoadTestProperties())
+					{
+						properties.put( TestRunContext.THREAD_INDEX, testRunContext.getProperty( TestRunContext.THREAD_INDEX ) );
+						properties.put( TestRunContext.TOTAL_RUN_COUNT, testRunContext.getProperty( TestRunContext.TOTAL_RUN_COUNT ) );
+						properties.put( TestRunContext.LOAD_TEST_CONTEXT, testRunContext.getProperty( TestRunContext.LOAD_TEST_CONTEXT ) );
+						properties.put( TestRunContext.LOAD_TEST_RUNNER, testRunContext.getProperty( TestRunContext.LOAD_TEST_RUNNER ) );
+						properties.put( TestRunContext.RUN_COUNT, testRunContext.getProperty( TestRunContext.RUN_COUNT ) );
+					}
+					
+					if( isCopyHttpSession())
+					{
+						properties.put( TestRunContext.HTTP_STATE_PROPERTY, testRunContext.getProperty( TestRunContext.HTTP_STATE_PROPERTY ) );
+					}
+
+					properties.put( TestRunContext.INTERACTIVE, testRunContext.getProperty( TestRunContext.INTERACTIVE ) );
+
+					properties.put( "#CallingRunTestCaseStep#", this );
+					properties.put( "#CallingTestCaseRunner#", testRunner );
+					properties.put( "#CallingTestRunContext#", testRunContext );
+					
+					testCaseRunner = runningTestCase.run( properties, true );
 					testCaseRunner.waitUntilFinished();
 					result.stopTimer();
 
@@ -323,6 +348,49 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 		}
 
 		notifyPropertyChanged( TARGET_TESTCASE, oldTestCase, testCase );
+	}
+
+	
+	public boolean isCopyHttpSession()
+	{
+		return stepConfig.getCopyHttpSession();
+	}
+
+	public boolean isCopyLoadTestProperties()
+	{
+		return stepConfig.getCopyLoadTestProperties();
+	}
+
+	public boolean isIgnoreEmptyProperties()
+	{
+		return stepConfig.getIgnoreEmptyProperties();
+	}
+
+	public void setCopyHttpSession( boolean arg0 )
+	{
+		if( arg0 == isCopyHttpSession())
+			return;
+		
+		stepConfig.setCopyHttpSession( arg0 );
+		notifyPropertyChanged( "copyHttpSession", !arg0, arg0 );
+	}
+
+	public void setCopyLoadTestProperties( boolean arg0 )
+	{
+		if( arg0 == isCopyLoadTestProperties())
+			return;
+		
+		stepConfig.setCopyLoadTestProperties( arg0 );
+		notifyPropertyChanged( "copyLoadTestProperties", !arg0, arg0 );
+	}
+
+	public void setIgnoreEmptyProperties( boolean arg0 )
+	{
+		if( arg0 == isIgnoreEmptyProperties())
+			return;
+		
+		stepConfig.setIgnoreEmptyProperties( arg0 );
+		notifyPropertyChanged( "ignoreEmptyProperties", !arg0, arg0 );
 	}
 
 	/**

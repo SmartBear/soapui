@@ -55,7 +55,7 @@ public class WsmcInjection implements IAfterRequestInjection
 	public String executeAfterRequest()
 	{
 
-		HttpRequestConfig httpRequestConfig = ( HttpRequestConfig )( XmlObject.Factory.newInstance()
+		/*HttpRequestConfig httpRequestConfig = ( HttpRequestConfig )( XmlObject.Factory.newInstance()
 				.changeType( HttpRequestConfig.type ) );
 		httpRequestConfig.setEndpoint( endpoint );
 
@@ -122,7 +122,7 @@ public class WsmcInjection implements IAfterRequestInjection
 		{
 			SoapUI.logError( e1 );
 		}
-
+*/
 		return null;
 	}
 

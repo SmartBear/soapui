@@ -155,13 +155,13 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 
 		public Attachment getAttachmentAt( int index )
 		{
-			return response.getMessageExchange() == null ? null
+			return response.getMessageExchange() == null || response.getMessageExchange().getResponseAttachments() == null ? null
 					: response.getMessageExchange().getResponseAttachments()[index];
 		}
 
 		public int getAttachmentCount()
 		{
-			return response.getMessageExchange() == null ? 0
+			return response.getMessageExchange() == null || response.getMessageExchange().getResponseAttachments() == null ? 0
 					: response.getMessageExchange().getResponseAttachments().length;
 		}
 

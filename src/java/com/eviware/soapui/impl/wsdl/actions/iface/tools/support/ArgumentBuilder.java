@@ -107,6 +107,26 @@ public class ArgumentBuilder
 		return true;
 	}
 
+	public boolean addStrings( String name, String arg, String sep )
+	{
+		if( !values.containsKey( name ) )
+			return false;
+
+		String value = values.get( name ).toString();
+		if( value == null || value.length() == 0 )
+			return false;
+
+		for( String v : value.split( sep ))
+		{
+			if( arg != null )
+				args.add( arg );
+
+			args.add( v.trim() );
+		}
+
+		return true;
+	}
+
 	public boolean addStringShadow( String name, String arg )
 	{
 		if( !values.containsKey( name ) )

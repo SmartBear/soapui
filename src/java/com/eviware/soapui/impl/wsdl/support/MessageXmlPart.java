@@ -34,11 +34,13 @@ public class MessageXmlPart
 	private final Part part;
 	private final BindingOperation bindingOperation;
 	private final boolean isRequest;
+	private final SchemaType type;
 
 	public MessageXmlPart( XmlObject sourceXmlObject, SchemaType type, Part part, BindingOperation bindingOperation,
 			boolean isRequest )
 	{
 		this.sourceXmlObject = sourceXmlObject;
+		this.type = type;
 		this.part = part;
 		this.bindingOperation = bindingOperation;
 		this.isRequest = isRequest;
@@ -64,5 +66,10 @@ public class MessageXmlPart
 	public Part getPart()
 	{
 		return part;
+	}
+
+	public SchemaType getSchemaType()
+	{
+		return type;
 	}
 }

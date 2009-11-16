@@ -306,14 +306,17 @@ public class RestRequestConverter
 
 	public static HttpRequestConfig updateIfNeeded( XmlObject config )
 	{
-		if( config.schemaType().equals( HttpRequestConfig.type ) )
-		{
-			return ( HttpRequestConfig )config;
-		}
 		try
+		{
+			if( config instanceof RestRequestStepConfig )
 		{
 			return convert( OldRestRequestConfig.Factory.parse( config.selectChildren( "http://eviware.com/soapui/config",
 					"restRequest" )[0].toString() ) );
+		}
+			else
+			{
+				return ( HttpRequestConfig )config.changeType( HttpRequestConfig.type );
+			}
 		}
 		catch( XmlException e )
 		{

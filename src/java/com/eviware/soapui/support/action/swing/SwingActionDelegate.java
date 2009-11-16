@@ -22,6 +22,7 @@ import javax.swing.Action;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.WeakPropertyChangeListener;
 import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.SoapUIActionMapping;
 import com.eviware.soapui.support.action.support.StandaloneActionMapping;
@@ -56,6 +57,8 @@ public class SwingActionDelegate<T extends ModelItem> extends AbstractAction imp
 			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( mapping.getKeyStroke() ) );
 
 		setEnabled( mapping.getAction().isEnabled() );
+
+		mapping.getAction().addPropertyChangeListener( new WeakPropertyChangeListener( this, mapping.getAction() ));
 
 		String name = mapping.getName();
 		int ix = name.indexOf( '&' );
@@ -180,5 +183,40 @@ public class SwingActionDelegate<T extends ModelItem> extends AbstractAction imp
 	public SoapUIAction<?> getSoapUIAction()
 	{
 		return getAction();
+	}
+
+	public static void invoke( Runnable action )
+	{
+		// required by IDE plugins
+		if( switchClassloader )
+		{
+			ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+			Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
+
+			try
+			{
+				action.run();
+			}
+			catch( Throwable t )
+			{
+				SoapUI.logError( t );
+			}
+			finally
+			{
+				Thread.currentThread().setContextClassLoader( contextClassLoader );
+			}
+		}
+		else
+		{
+			try
+			{
+				action.run();
+			}
+			catch( Throwable t )
+			{
+				SoapUI.logError( t );
+			}
+		}
+		
 	}
 }

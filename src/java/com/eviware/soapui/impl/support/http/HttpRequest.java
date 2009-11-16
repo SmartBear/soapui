@@ -172,7 +172,7 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 
 		if (!"multipart/form-data".equals(getMediaType()))
 		{
-			setMediaType(b ? "application/x-www-form-urlencoded" : "");
+			setMediaType( b ? "application/x-www-form-urlencoded" : getMediaType() );
 		}
 	}
 

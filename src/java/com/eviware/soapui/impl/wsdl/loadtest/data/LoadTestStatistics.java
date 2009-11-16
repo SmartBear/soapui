@@ -357,7 +357,7 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 					{
 						if( loadTest.getCalculateTPSOnTimePassed() )
 						{
-							data[c][TPS_COLUMN] = (long)( (float)( data[c][CURRENT_CNT_COLUMN] * 100000 ) / (float)timePassed);
+							data[c][TPS_COLUMN] = ( data[c][CURRENT_CNT_COLUMN] * 100000 ) / timePassed;
 							data[c][BPS_COLUMN] = ( data[c][BYTES_COLUMN] * 1000 ) / timePassed;
 						}
 						else
@@ -479,18 +479,8 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 			SoapUI.getThreadPool().submit( updater );
 			SoapUI.getThreadPool().submit( LoadTestStatistics.this );
 
+			currentThreadCountStartTime = System.currentTimeMillis();
 			totalAverageSum = 0;
-			currentThreadCountStartTime = 0;
-		}
-
-		@Override
-		public void beforeTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
-				TestCaseRunContext runContext )
-		{
-			if( currentThreadCountStartTime == 0 )
-				currentThreadCountStartTime = System.currentTimeMillis();
-			
-			super.beforeTestCase( loadTestRunner, context, testRunner, runContext );
 		}
 
 		@Override

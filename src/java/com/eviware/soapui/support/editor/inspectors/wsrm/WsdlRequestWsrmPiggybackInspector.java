@@ -48,7 +48,7 @@ public class WsdlRequestWsrmPiggybackInspector extends AbstractWsrmInspector imp
 	public void afterSubmit( Submit submit, SubmitContext context )
 	{
 
-		if( request.getWsrmConfig().isWsrmEnabled() )
+		if( request.getWsrmConfig().isWsrmEnabled() && submit.getResponse() != null )
 		{
 			String content = submit.getResponse().getContentAsString();
 			XmlOptions options = new XmlOptions();

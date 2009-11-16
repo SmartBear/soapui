@@ -27,7 +27,6 @@ import com.eviware.soapui.config.RestResourceConfig;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestRequestConverter;
-import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpOperation;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
@@ -249,12 +248,6 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		String old = getPath();
 		getConfig().setPath( path );
 		notifyPropertyChanged( "path", old, path );
-
-		for( String param : RestUtils.extractTemplateParams( path ) )
-		{
-			if( !hasProperty( param ) )
-				addProperty( param );
-		}
 	}
 
 	public boolean isBidirectional()

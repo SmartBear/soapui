@@ -75,8 +75,10 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 			// httpRequestConfig = (HttpRequestConfig)
 			// getConfig().getConfig().changeType( HttpRequestConfig.type );
 			httpRequestConfig = RestRequestConverter.updateIfNeeded( getConfig().getConfig() );
-			if( httpRequestConfig != getConfig().getConfig() )
+			// if( httpRequestConfig != getConfig().getConfig() )
+
 				getConfig().setConfig( httpRequestConfig );
+			httpRequestConfig = ( HttpRequestConfig )getConfig().getConfig();
 			testRequest = buildTestRequest( forLoadTest );
 			// testRequest = new RestTestRequest( null,
 			// requestStepConfig.getRestRequest(), this, forLoadTest );

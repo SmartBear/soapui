@@ -16,6 +16,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 import org.apache.xmlbeans.SchemaTypeSystem;
+import org.apache.xmlbeans.XmlBeans;
 
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 
@@ -60,6 +61,6 @@ public abstract class AbstractXmlDocument implements XmlDocument
 
 	public SchemaTypeSystem getTypeSystem()
 	{
-		return null;
+		return XmlBeans.getBuiltinTypeSystem();
 	}
 }

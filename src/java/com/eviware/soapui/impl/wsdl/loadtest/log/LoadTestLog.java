@@ -17,7 +17,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.AbstractListModel;
 
@@ -38,7 +39,7 @@ public class LoadTestLog extends AbstractListModel implements Runnable
 	private final WsdlLoadTest loadTest;
 	private int totalErrorCount;
 	private Map<String, Integer> errorCounts = new HashMap<String, Integer>();
-	private Stack<LoadTestLogEntry> entriesStack = new Stack<LoadTestLogEntry>();
+	private Queue<LoadTestLogEntry> entriesStack = new ConcurrentLinkedQueue<LoadTestLogEntry>();
 	private Thread modelThread;
 	private InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
 
@@ -65,7 +66,7 @@ public class LoadTestLog extends AbstractListModel implements Runnable
 
 	public synchronized void addEntry( LoadTestLogEntry entry )
 	{
-		entriesStack.push( entry );
+		entriesStack.add( entry );
 
 		if( modelThread == null )
 		{
@@ -86,7 +87,7 @@ public class LoadTestLog extends AbstractListModel implements Runnable
 					int cnt = 0;
 					while( cnt < 10 && !entriesStack.isEmpty() )
 					{
-						LoadTestLogEntry entry = entriesStack.pop();
+						LoadTestLogEntry entry = entriesStack.poll();
 						if( entry != null )
 						{
 							entries.add( entry );

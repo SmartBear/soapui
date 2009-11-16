@@ -335,8 +335,8 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		public AMFAssertionsPanel( Assertable assertable )
 		{
 			super( assertable );
-			addAssertionAction = new AddAssertionAction( assertable );
-			assertionListPopup.add( addAssertionAction );
+//			addAssertionAction = new AddAssertionAction( assertable );
+//			assertionListPopup.add( addAssertionAction );
 		}
 	}
 

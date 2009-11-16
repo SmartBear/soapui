@@ -74,6 +74,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 {
 	private ScriptEnginePool scriptEnginePool;
 	private GroovyEditor groovyEditor;
+	private JPanel groovyEditorPanel;
 
 	public ScriptMockOperationDispatcher( WsdlMockOperation mockOperation )
 	{
@@ -129,8 +130,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 	{
 		scriptEnginePool.release();
 
-		if( groovyEditor != null )
-			groovyEditor.release();
+		releaseEditorComponent();
 
 		getMockOperation().removePropertyChangeListener( WsdlMockOperation.DISPATCH_PATH_PROPERTY, this );
 
@@ -138,15 +138,30 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 	}
 
 	@Override
-	public JComponent buildEditorComponent()
+	public JComponent getEditorComponent()
 	{
-		JPanel groovyEditorPanel = new JPanel( new BorderLayout() );
+		if( groovyEditorPanel == null )
+		{
+			groovyEditorPanel = new JPanel( new BorderLayout() );
 		DispatchScriptGroovyEditorModel editorModel = new DispatchScriptGroovyEditorModel();
 		groovyEditor = ( GroovyEditor )UISupport.getEditorFactory().buildGroovyEditor( editorModel );
 		groovyEditorPanel.add( groovyEditor, BorderLayout.CENTER );
 		groovyEditorPanel.add( buildGroovyEditorToolbar( editorModel ), BorderLayout.PAGE_START );
+		}
 
 		return groovyEditorPanel;
+	}
+
+	@Override
+	public void releaseEditorComponent( )
+	{
+		if( groovyEditor != null )
+			groovyEditor.release();
+		
+		groovyEditor = null;
+		groovyEditorPanel = null;
+		
+		super.releaseEditorComponent( );
 	}
 
 	protected JXToolBar buildGroovyEditorToolbar( DispatchScriptGroovyEditorModel editorModel )

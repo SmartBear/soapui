@@ -120,7 +120,7 @@ public abstract class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 ex
 		{
 			super( document );
 
-			XmlSourceEditorView editor = getSourceEditor();
+			XmlSourceEditorView<?> editor = getSourceEditor();
 			JXEditTextArea inputArea = editor.getInputArea();
 			inputArea.getInputHandler().addKeyBinding( "F5", recreateButton.getAction() );
 		}
@@ -133,7 +133,7 @@ public abstract class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 ex
 		{
 			super( document );
 
-			XmlSourceEditorView editor = getSourceEditor();
+			XmlSourceEditorView<?> editor = getSourceEditor();
 
 			JPopupMenu inputPopup = editor.getEditorPopup();
 			inputPopup.insert( new JSeparator(), 2 );

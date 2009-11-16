@@ -45,6 +45,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.A
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.RestRequestDataSource;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.RestRequestMimeMessageRequestEntity;
+import com.eviware.soapui.impl.wsdl.support.FileAttachment;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -222,7 +223,13 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				for( Attachment attachment : request.getAttachments() )
 				{
 					MimeBodyPart part = new PreencodedMimeBodyPart( "binary" );
+
+					if( attachment instanceof FileAttachment<?> )
+						part.setDisposition( "form-data; name=\"" + attachment.getName() + "\" filename=\""
+								+ ( ( FileAttachment<?> )attachment ).getName() + "\"" );
+					else
 					part.setDisposition( "form-data; name=\"" + attachment.getName() + "\"" );
+					
 					part.setDataHandler( new DataHandler( new AttachmentDataSource( attachment ) ) );
 
 					formMp.addBodyPart( part );

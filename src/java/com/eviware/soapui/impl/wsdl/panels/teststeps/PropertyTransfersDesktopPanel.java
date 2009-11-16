@@ -285,8 +285,8 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 		toolbar.add(new ClearLogAction());
 
 		JScrollPane scrollPane = new JScrollPane(logTable);
-		scrollPane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3), scrollPane
-				.getBorder()));
+		scrollPane.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ),
+				scrollPane.getBorder() ) );
 
 		logPanel.add(toolbar, BorderLayout.NORTH);
 		logPanel.add(scrollPane, BorderLayout.CENTER);
@@ -335,7 +335,8 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 		declareButton.setEnabled(false);
 		toolbar.addFixed(declareButton);
 		toolbar.addGlue();
-		toolbar.addFixed(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.TRANSFERSTEPEDITOR_HELP_URL)));
+		toolbar.addFixed( UISupport
+				.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.TRANSFERSTEPEDITOR_HELP_URL ) ) );
 		return toolbar;
 	}
 

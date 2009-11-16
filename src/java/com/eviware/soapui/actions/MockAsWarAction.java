@@ -20,6 +20,7 @@ import com.eviware.soapui.DefaultSoapUICore;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.settings.ProjectSettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.tools.MockAsWar;
@@ -78,6 +79,9 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject>
 		XFormField warDirectory = dialog.getFormField( MockAsWarDialog.WAR_DIRECTORY );
 		XFormField warFile = dialog.getFormField( MockAsWarDialog.WAR_FILE );
 
+		String passwordForEncryption = project.getSettings().getString( ProjectSettings.SHADOW_PASSWORD, null );
+		project.getSettings().setString( ProjectSettings.SHADOW_PASSWORD, null );
+
 		if( dialog.show() )
 		{
 			project.beforeSave();
@@ -89,16 +93,22 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject>
 			{
 				log.error( e.getMessage(), e );
 			}
+			finally
+			{
+				project.getSettings().setString( ProjectSettings.SHADOW_PASSWORD, passwordForEncryption );
+			}
 
-			MockAsWar mockAsWar = new MockAsWar( project.getPath(), settingFile.getValue(),
-					warDirectory.getValue(), warFile.getValue(), dialog.getBooleanValue( MockAsWarDialog.EXT_LIBS ), dialog
-							.getBooleanValue( MockAsWarDialog.ACTIONS ), dialog.getBooleanValue( MockAsWarDialog.LISTENERS ) );
+			MockAsWar mockAsWar = new MockAsWar( project.getPath(), dialog
+					.getBooleanValue( MockAsWarDialog.GLOBAL_SETTINGS ) ? settingFile.getValue() : "", warDirectory
+					.getValue(), warFile.getValue(), dialog.getBooleanValue( MockAsWarDialog.EXT_LIBS ), dialog
+					.getBooleanValue( MockAsWarDialog.ACTIONS ), dialog.getBooleanValue( MockAsWarDialog.LISTENERS ), dialog
+					.getValue( MockAsWarDialog.MOCKSERVICE_ENDPOINT ), dialog.getBooleanValue( MockAsWarDialog.ENABLE_WEBUI ) );
 			mockAsWar.createMockAsWarArchive();
 		}
 	}
 
 	@AForm( description = "Configure what to include in generated WAR", name = "Deploy Project as WAR", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
-	private interface MockAsWarDialog
+	protected interface MockAsWarDialog
 	{
 		@AField( description = "Specify if global settings should be included", name = "Include Global Settings", type = AFieldType.BOOLEAN )
 		public final static String GLOBAL_SETTINGS = "Include Global Settings";
@@ -115,10 +125,17 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject>
 		@AField( description = "Include jar files from ext folder", name = "Include External Jar Files", type = AFieldType.BOOLEAN )
 		public final static String EXT_LIBS = "Include External Jar Files";
 
+		@AField( description = "Check to enable WebUI", name = "WebUI", type = AFieldType.BOOLEAN )
+		public final static String ENABLE_WEBUI = "WebUI";
+
+		@AField( description = "Local endpoint that will be used for WSDL endpoints/includes/imports", name = "MockService Endpoint", type = AFieldType.STRING )
+		public final static String MOCKSERVICE_ENDPOINT = "MockService Endpoint";
+
 		@AField( description = "Specify name of target War File", name = "War File", type = AFieldType.FILE )
 		public final static String WAR_FILE = "War File";
 
 		@AField( description = "Specify a directory where War file structure will be created", name = "War Directory", type = AFieldType.FOLDER )
 		public final static String WAR_DIRECTORY = "War Directory";
+
 	}
 }

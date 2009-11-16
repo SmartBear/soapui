@@ -26,8 +26,7 @@ public class RestResourceTestCase extends TestCase
 		assertEquals( resource.getDefaultParams().length, 0 );
 		
 		resource.setPath( "/{id}/test" );
-		assertEquals( resource.getDefaultParams().length, 1 );
-		assertEquals( "id", resource.getDefaultParams()[0].getName() );
+		assertEquals( resource.getDefaultParams().length, 0 );
 		assertEquals( "/{id}/test", resource.getFullPath() );
 		
 		RestResource subResource = resource.addNewChildResource("Child", "{test}/test" );

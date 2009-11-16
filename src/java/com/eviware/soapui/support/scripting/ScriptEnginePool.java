@@ -29,10 +29,16 @@ public class ScriptEnginePool
 	private String script;
 	private ModelItem modelItem;
 	private int borrowed;
+	private String id;
 
 	public ScriptEnginePool( ModelItem modelItem )
 	{
 		this.modelItem = modelItem;
+	}
+
+	public ScriptEnginePool( String id )
+	{
+		this.id = id;
 	}
 
 	public void setScript( String script )
@@ -54,7 +60,12 @@ public class ScriptEnginePool
 		synchronized( this )
 		{
 			if( scriptEngines.isEmpty() )
+			{
+				if( modelItem != null )
 				scriptEngines.push( SoapUIScriptEngineRegistry.create( modelItem ) );
+				else
+					scriptEngines.push( SoapUIScriptEngineRegistry.getFactory( id ).createScriptEngine( null ));
+			}
 
 			SoapUIScriptEngine result = scriptEngines.pop();
 			if( script != null )

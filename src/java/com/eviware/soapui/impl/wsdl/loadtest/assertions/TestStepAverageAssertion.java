@@ -187,7 +187,7 @@ public class TestStepAverageAssertion extends AbstractLoadTestAssertion implemen
 
 	private void buildDialog()
 	{
-		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "TestStep Average Assertion" );
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Step Average Assertion" );
 		XForm form = builder.createForm( "Basic" );
 
 		form.addTextField( NAME_FIELD, "Name of this assertion", FieldType.TEXT );
@@ -200,6 +200,6 @@ public class TestStepAverageAssertion extends AbstractLoadTestAssertion implemen
 
 		dialog = builder.buildDialog( builder
 				.buildOkCancelHelpActions( HelpUrls.STEP_AVERAGE_LOAD_TEST_ASSERTION_HELP_URL ),
-				"Specify options for this TestStep Average Assertion", UISupport.OPTIONS_ICON );
+				"Specify options for this Step Average Assertion", UISupport.OPTIONS_ICON );
 	}
 }

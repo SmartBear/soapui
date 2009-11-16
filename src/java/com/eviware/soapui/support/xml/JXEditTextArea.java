@@ -291,6 +291,8 @@ public class JXEditTextArea extends JEditTextArea implements UndoableEditListene
 
 					try
 					{
+						if( testQueue != null )
+						{
 						Reference<? extends JXEditTextArea> ref = testQueue.remove();
 						// System.out.println( "Got ref to clear" );
 						InternalSettingsListener listener = testMap.remove( ref );
@@ -303,6 +305,7 @@ public class JXEditTextArea extends JEditTextArea implements UndoableEditListene
 						{
 							// System.out.println( "Listener not found" );
 						}
+					}
 					}
 					catch( InterruptedException e )
 					{

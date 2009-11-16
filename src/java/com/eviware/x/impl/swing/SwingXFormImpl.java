@@ -169,7 +169,7 @@ public class SwingXFormImpl implements XForm
 	public XFormTextField addTextField( String name, String description, FieldType type )
 	{
 		if( type == FieldType.FOLDER || type == FieldType.FILE || type == FieldType.PROJECT_FOLDER
-				|| type == FieldType.PROJECT_FILE )
+				|| type == FieldType.PROJECT_FILE || type == FieldType.FILE_OR_FOLDER )
 		{
 			return ( XFormTextField )addComponent( name, new FileFormField( description, type ) );
 		}

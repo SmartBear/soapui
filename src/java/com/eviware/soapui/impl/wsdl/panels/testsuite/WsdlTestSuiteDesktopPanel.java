@@ -135,20 +135,6 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 		return testCaseList;
 	}
 
-	@Override
-	public void addNotify()
-	{
-		super.addNotify();
-		getModelItem().addTestSuiteListener( testSuiteListener );
-	}
-
-	@Override
-	public void removeNotify()
-	{
-		super.removeNotify();
-		getModelItem().removeTestSuiteListener( testSuiteListener );
-	}
-
 	private JComponent buildToolbar()
 	{
 		cancelAction.setEnabled( false );
@@ -317,6 +303,9 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 		tearDownGroovyEditor.getEditor().release();
 
 		testRunLog.release();
+
+		getModelItem().removeTestSuiteRunListener( testSuiteRunListener );
+		getModelItem().removeTestSuiteListener( testSuiteListener );
 
 		return super.release();
 	}

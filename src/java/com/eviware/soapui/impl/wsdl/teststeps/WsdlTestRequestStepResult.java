@@ -289,7 +289,8 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 
 	public long getTimestamp()
 	{
-		return getResponse() == null ? null : getResponse().getTimestamp();
+		WsdlResponse resp = getResponse();
+		return resp == null ? 0 : resp.getTimestamp();
 	}
 
 	public AssertedXPath[] getAssertedXPathsForResponse()

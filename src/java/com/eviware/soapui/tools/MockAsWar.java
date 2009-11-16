@@ -15,23 +15,21 @@ package com.eviware.soapui.tools;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.x.dialogs.XProgressDialog;
 import com.eviware.x.dialogs.XProgressMonitor;
@@ -39,28 +37,33 @@ import com.eviware.x.dialogs.Worker.WorkerAdapter;
 
 public class MockAsWar
 {
-	private static final String SOAPUI_SETTINGS = "[soapUISettings]";
-	private static final String PROJECT_FILE_NAME = "[ProjectFileName]";
-	private File projectFile;
-	private File settingsFile;
-	private File warDir;
+	protected static final String SOAPUI_SETTINGS = "[soapUISettings]";
+	protected static final String PROJECT_FILE_NAME = "[ProjectFileName]";
+	protected static final String MOCKSERVICE_ENDPOINT = "[mockServiceEndpoint]";
+
+	protected File projectFile;
+	protected File settingsFile;
+	protected File warDir;
 	private File warFile;
-	private File webInf;
+	protected File webInf;
 	private File lib;
 	private File soapuiDir;
 
-	private Logger log = Logger.getLogger( MockAsWar.class );
+	protected Logger log = Logger.getLogger( MockAsWar.class );
 	private boolean includeExt;
-	private boolean includeActions;
-	private boolean includeListeners;
+	protected boolean includeActions;
+	protected boolean includeListeners;
 	private File actionsDir;
 	private File listenersDir;
+	protected final String localEndpoint;
+	protected boolean enableWebUI;
 
-	public MockAsWar(String projectPath, String settingsPath,  String warDir, String warFile,
-			boolean includeExt, boolean actions, boolean listeners )
+	public MockAsWar( String projectPath, String settingsPath, String warDir, String warFile, boolean includeExt,
+			boolean actions, boolean listeners, String localEndpoint, boolean enableWebUI )
 	{
+		this.localEndpoint = localEndpoint;
 		this.projectFile = new File( projectPath );
-		this.settingsFile = new File( settingsPath );
+		this.settingsFile = StringUtils.hasContent( settingsPath ) ? new File( settingsPath ) : null;
 		this.warDir = warDir.length() > 0 ? new File( warDir ) : new File( System.getProperty( "java.io.tmpdir" ),
 				"warasmock" );
 		if( !this.warDir.exists() )
@@ -71,12 +74,13 @@ public class MockAsWar
 		this.includeExt = includeExt;
 		this.includeActions = actions;
 		this.includeListeners = listeners;
+		this.enableWebUI = enableWebUI;
 	}
 
 	public void createMockAsWarArchive()
 	{
 		XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog( "Creating War File", 3,
-				"Filling war file..", false );
+				"Building war file..", false );
 		WorkerAdapter warWorker = new WorkerAdapter()
 		{
 
@@ -123,7 +127,7 @@ public class MockAsWar
 		return result;
 	}
 
-	private void createWebXml()
+	protected void createWebXml()
 	{
 		URL url = SoapUI.class.getResource( "/com/eviware/soapui/resources/mockaswar/web.xml" );
 		try
@@ -135,17 +139,7 @@ public class MockAsWar
 			while( ( inputLine = in.readLine() ) != null )
 				content.append( inputLine + "\n" );
 
-			content.replace( content.indexOf( PROJECT_FILE_NAME ), content.indexOf( PROJECT_FILE_NAME )
-					+ PROJECT_FILE_NAME.length(), projectFile.getName() );
-			content.replace( content.indexOf( SOAPUI_SETTINGS ), content.indexOf( SOAPUI_SETTINGS )
-					+ SOAPUI_SETTINGS.length(), settingsFile.getAbsolutePath() );
-			
-			if ( !includeActions )
-				content.replace( content.indexOf( "WEB-INF/actions" ), content.indexOf( "WEB-INF/actions" )
-						+ "WEB-INF/actions".length(), "" );
-			if ( !includeListeners )
-				content.replace( content.indexOf( "WEB-INF/listeners" ), content.indexOf( "WEB-INF/listeners" )
-						+ "WEB-INF/listeners".length(), "" );
+			createContent( content );
 
 			BufferedWriter out = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( new File( webInf,
 					"web.xml" ) ) ) );
@@ -157,23 +151,54 @@ public class MockAsWar
 		{
 			log.error( e.getMessage(), e );
 		}
-
 	}
 
-	private boolean prepareWarFile()
+	protected void createContent( StringBuilder content )
+	{
+		content.replace( content.indexOf( PROJECT_FILE_NAME ), content.indexOf( PROJECT_FILE_NAME )
+				+ PROJECT_FILE_NAME.length(), projectFile.getName() );
+		content.replace( content.indexOf( SOAPUI_SETTINGS ), content.indexOf( SOAPUI_SETTINGS )
+				+ SOAPUI_SETTINGS.length(),
+				settingsFile != null && settingsFile.exists() && settingsFile.isFile() ? settingsFile.getAbsolutePath()
+						: "" );
+		content.replace( content.indexOf( MOCKSERVICE_ENDPOINT ), content.indexOf( MOCKSERVICE_ENDPOINT )
+				+ MOCKSERVICE_ENDPOINT.length(), localEndpoint );
+
+		if( !includeActions )
+			content.replace( content.indexOf( "WEB-INF/actions" ), content.indexOf( "WEB-INF/actions" )
+					+ "WEB-INF/actions".length(), "" );
+		if( !includeListeners )
+			content.replace( content.indexOf( "WEB-INF/listeners" ), content.indexOf( "WEB-INF/listeners" )
+					+ "WEB-INF/listeners".length(), "" );
+		if( !enableWebUI )
+			content.replace( content.indexOf( "<param-value>true</param-value>" ), content
+					.indexOf( "<param-value>true</param-value>" )
+					+ "<param-value>true</param-value>".length(), "<param-value>false</param-value>" );
+	}
+
+	protected boolean prepareWarFile()
 	{
 		// create file system first
 		if( createWarFileSystem() )
 		{
 			// copy all from bin/../lib to soapui.home/war/WEB-INF/lib/
 			File fromDir = new File( System.getProperty( "soapui.home" ), ".." + File.separator + "lib" );
-			JarPackager.copyAllFromTo( fromDir, lib );
+			JarPackager.copyAllFromTo( fromDir, lib, new FileFilter()
+			{
+
+				public boolean accept( File pathname )
+				{
+					return pathname.getName().indexOf( "servlet" ) == -1;
+				}
+			} );
+
 			if( includeExt )
 			{
 				// copy all from bin/ext to soapui.home/war/WEB-INF/lib/
 				fromDir = new File( System.getProperty( "soapui.home" ), "ext" );
-				JarPackager.copyAllFromTo( fromDir, lib );
+				JarPackager.copyAllFromTo( fromDir, lib, null );
 			}
+
 			// copy soapui jar to soapui.home/war/WEB-INF/lib/
 			File soapUIHome = new File( System.getProperty( "soapui.home" ) );
 			String[] mainJar = soapUIHome.list( new FilenameFilter()
@@ -190,25 +215,44 @@ public class MockAsWar
 			JarPackager.copyFileToDir( fromDir, lib );
 			// copy project and settings file to bin/war/WEB-INF/soapui/
 			JarPackager.copyFileToDir( projectFile, soapuiDir );
+			if( settingsFile != null && settingsFile.exists() && settingsFile.isFile() )
 			JarPackager.copyFileToDir( settingsFile, soapuiDir );
+
 			// actions
 			if( includeActions )
 			{
 				fromDir = new File( System.getProperty( "soapui.ext.actions" ) );
-				JarPackager.copyAllFromTo( fromDir, actionsDir );
+				JarPackager.copyAllFromTo( fromDir, actionsDir, null );
 			}
 			// listeners
 			if( includeListeners )
 			{
 				fromDir = new File( System.getProperty( "soapui.ext.listeners" ) );
-				JarPackager.copyAllFromTo( fromDir, listenersDir );
+				JarPackager.copyAllFromTo( fromDir, listenersDir, null );
 			}
+
+			copyWarResource( "header_logo.jpg" );
+			copyWarResource( "stylesheet.css" );
+
 			return true;
 		}
 		return false;
 	}
 
-	private boolean createWarFileSystem()
+	private void copyWarResource( String resource )
+	{
+		try
+		{
+			Tools.writeAll( new FileOutputStream( new File( warDir, resource ) ), SoapUI.class
+					.getResourceAsStream( "/com/eviware/soapui/resources/mockaswar/" + resource ) );
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+		}
+	}
+
+	protected boolean createWarFileSystem()
 	{
 		if( warDir.isDirectory() )
 		{
@@ -234,19 +278,6 @@ public class MockAsWar
 					return false;
 				}
 				clearDir( soapuiDir );
-				
-			// this shouldn't be required, class is in main jar anyway!?
-//				File classesDir = new File( webInf, "classes" );
-//				
-//				File packageDir = new File( classesDir, "com" + File.separator + "eviware" + File.separator + "soapui"
-//						+ File.separator + "mockaswar" );
-//				if( !( packageDir.mkdirs() || packageDir.exists() ) )
-//				{
-//					UISupport.showErrorMessage( "Could not create directory " + packageDir.getAbsolutePath() );
-//					return false;
-//				}
-//				clearDir( packageDir );
-//				extractServletClass( packageDir );
 				
 				if( includeActions )
 				{
@@ -280,44 +311,14 @@ public class MockAsWar
 
 	/**
 	 * Deletes all files, just files, in directory
+	 * 
 	 * @param dir
 	 */
-	private void clearDir( File dir)
+	protected void clearDir( File dir )
 	{
 		for( File file : dir.listFiles())
 			if( file.isFile())
 				file.delete();
 	}
 
-	@SuppressWarnings( "unused" )
-	private void extractServletClass( File packageDir )
-	{
-		try
-		{
-			JarFile soapJar = new JarFile( new File( System.getProperty( "soapui.home" ), "soapui-3.0.jar" ) );
-			Enumeration<JarEntry> classList = soapJar.entries();
-			while( classList.hasMoreElements() )
-			{
-				JarEntry soapClass = classList.nextElement();
-				if( soapClass.getName().contains( "MockAsWarServlet.class" ) )
-				{
-					InputStream in = soapJar.getInputStream( soapClass );
-					OutputStream out = new FileOutputStream( new File( packageDir, "MockAsWarServlet.class" ) );
-					byte[] buffer = new byte[4096];
-					int len =0;
-					while( (len = in.read( buffer )) > 0 )
-					{
-						out.write( buffer, 0, len);
-						out.flush();
-					}
-					in.close();
-					out.close();
-				}
-			}
-		}
-		catch( IOException e )
-		{
-			log.error( e.getMessage(), e );
-		}
-	}
 }

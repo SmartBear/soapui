@@ -359,8 +359,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		public JdbcAssertionsPanel( Assertable assertable )
 		{
 			super( assertable );
-			addAssertionAction = new AddAssertionAction( assertable );
-			assertionListPopup.add( addAssertionAction );
+//			addAssertionAction = new AddAssertionAction( assertable );
+//			assertionListPopup.add( addAssertionAction );
 		}
 	}
 

@@ -35,6 +35,7 @@ public class SoapUIGroovyScriptEngine implements SoapUIScriptEngine
 	private Binding binding;
 	private Script script;
 	private String scriptText;
+	protected ScriptSaver saver = new ScriptSaver();
 
 	public SoapUIGroovyScriptEngine( ClassLoader parentClassLoader )
 	{
@@ -46,8 +47,41 @@ public class SoapUIGroovyScriptEngine implements SoapUIScriptEngine
 		shell = new GroovyShell( classLoader, binding, config );
 	}
 
+	protected class ScriptSaver
+	{
+		private String text = null;
+		private boolean locked = false;
+		
+		public synchronized void save( String scriptText)
+		{
+			if (locked)
+				text = scriptText;
+			else
+				synchronizedSetScript(scriptText);
+		}
+
+		public synchronized void lockSave()
+		{
+			locked = true;
+		}
+
+		public synchronized void unlockSave()
+		{
+			if (text != null)
+			{
+				synchronizedSetScript(text);
+				text = null;
+			}
+			locked = false;
+		}
+	}
+
 	public synchronized Object run() throws Exception
 	{
+		saver.lockSave();
+		try
+		{
+
 		if( StringUtils.isNullOrEmpty( scriptText ) )
 			return null;
 
@@ -56,10 +90,17 @@ public class SoapUIGroovyScriptEngine implements SoapUIScriptEngine
 			compile();
 		}
 
-		return script.run();
+			Object result = script.run();
+
+			return result;
+		}
+		finally
+		{
+			saver.unlockSave();
+		}
 	}
 
-	public synchronized void setScript( String scriptText )
+	protected synchronized void synchronizedSetScript( String scriptText )
 	{
 		if( scriptText != null && scriptText.equals( this.scriptText ) )
 			return;
@@ -78,7 +119,21 @@ public class SoapUIGroovyScriptEngine implements SoapUIScriptEngine
 		this.scriptText = scriptText;
 	}
 
-	public void compile() throws Exception
+	public synchronized void setScript( String scriptText )
+	{
+		saver.save(scriptText);
+	}
+
+	protected synchronized void reset()
+	{
+		saver.lockSave();
+
+		script = null;
+		
+		saver.unlockSave();
+	}
+
+	public synchronized void compile() throws Exception
 	{
 		if( script == null )
 		{
@@ -87,18 +142,18 @@ public class SoapUIGroovyScriptEngine implements SoapUIScriptEngine
 		}
 	}
 
-	public void setVariable( String name, Object value )
+	public synchronized void setVariable( String name, Object value )
 	{
 		binding.setVariable( name, value );
 	}
 
-	public void clearVariables()
+	public synchronized void clearVariables()
 	{
 		if( binding != null )
 			binding.getVariables().clear();
 	}
 
-	public void release()
+	public synchronized void release()
 	{
 		script = null;
 
@@ -123,11 +178,6 @@ public class SoapUIGroovyScriptEngine implements SoapUIScriptEngine
 	protected GroovyClassLoader getClassLoader()
 	{
 		return classLoader;
-	}
-
-	protected synchronized void reset()
-	{
-		script = null;
 	}
 
 	protected Script getScript()

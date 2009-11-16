@@ -43,7 +43,7 @@ public class RestServicePanelBuilder extends EmptyPanelBuilder<RestService>
 	public Component buildOverviewPanel( RestService service )
 	{
 		JPropertiesTable<RestService> table = new JPropertiesTable<RestService>( "Service Properties" );
-		table.addProperty( "Name", "name" );
+		table.addProperty( "Name", "name", true );
 		table.addProperty( "Description", "description", true );
 		table.addProperty( "Base Path", "basePath", true );
 		table.addProperty( "WADL", "wadlUrl", !service.isGenerated() );

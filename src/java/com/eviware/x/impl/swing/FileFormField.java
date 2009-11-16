@@ -142,10 +142,16 @@ public class FileFormField extends AbstractSwingXFormField<JPanel> implements XF
 		{
 			if( fileChooser == null )
 			{
-				if( type == FieldType.FOLDER || type == FieldType.PROJECT_FOLDER )
+				if(type == FieldType.FILE_OR_FOLDER)
+				{
+					fileChooser = new JFileChooser();
+					fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				}
+				else if( type == FieldType.FOLDER || type == FieldType.PROJECT_FOLDER )
 					fileChooser = new JDirectoryChooser();
 				else
 					fileChooser = new JFileChooser();
+
 			}
 
 			String value = FileFormField.this.getValue();

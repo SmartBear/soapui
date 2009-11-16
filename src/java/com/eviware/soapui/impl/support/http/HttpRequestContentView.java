@@ -43,7 +43,6 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.xml.JXEditTextArea;
-import com.eviware.soapui.support.xml.XmlUtils;
 
 @SuppressWarnings("unchecked")
 public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDocument> implements
@@ -152,7 +151,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 		contentPanel = new JPanel( new BorderLayout() );
 
 		contentEditor = JXEditTextArea.createXmlEditor( true );
-		contentEditor.setText( XmlUtils.prettyPrintXml( httpRequest.getRequestContent() ) );
+		contentEditor.setText( httpRequest.getRequestContent() );
 
 		contentEditor.getDocument().addDocumentListener( new DocumentListenerAdapter()
 		{

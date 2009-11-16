@@ -300,6 +300,7 @@ public class ContentTypeHandler
 		suffixToContentType.put( "slides", "application/x-showcase" );
 		suffixToContentType.put( "sc", "application/x-showcase" );
 		suffixToContentType.put( "show", "application/x-showcase" );
+		suffixToContentType.put( "swf", "application/x-shockwave-flash" );
 		suffixToContentType.put( "ins", "application/x-insight" );
 		suffixToContentType.put( "insight", "application/x-insight" );
 		suffixToContentType.put( "ano", "application/x-annotator" );

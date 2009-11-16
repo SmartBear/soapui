@@ -229,6 +229,9 @@ public class StringUtils
 		return result;
 	}
 
+	/**
+	 * replaces only white spaces from file name
+	 */
 	public static String createFileName( String str, char whitespaceChar )
 	{
 		StringBuffer result = new StringBuffer();
@@ -241,6 +244,29 @@ public class StringUtils
 				result.append( whitespaceChar );
 			else if( Character.isLetterOrDigit( ch ) )
 				result.append( ch );
+		}
+
+		return result.toString();
+	}
+	
+	/**
+	 * replaces all non letter and non digit characte from file name
+	 * @param str
+	 * @param replace
+	 * @return
+	 */
+	public static String createFileName2( String str, char replace )
+	{
+		StringBuffer result = new StringBuffer();
+
+		for( int c = 0; c < str.length(); c++ )
+		{
+			char ch = str.charAt( c );
+
+			if( Character.isLetterOrDigit( ch ) )
+				result.append( ch );
+			else 
+				result.append( replace );
 		}
 
 		return result.toString();
