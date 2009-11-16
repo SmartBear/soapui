@@ -30,6 +30,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -512,6 +513,23 @@ public class Tools
 			content = br.readLine();
 			br.close();
 			in.close();
+		}
+		catch( Exception e )
+		{// Catch exception if any
+			System.err.println( "Error: " + e.getMessage() );
+		}
+		return content;
+	}
+	public static String getTitleProperty( String path )
+	{
+		String content = "";
+		try
+		{
+			FileInputStream fstream = new FileInputStream( path );
+			Properties props = new Properties();
+			props.load( fstream );
+			fstream.close();
+			content = props.getProperty( "soapui.app.title" );
 		}
 		catch( Exception e )
 		{// Catch exception if any
