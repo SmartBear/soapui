@@ -156,7 +156,7 @@ public class SoapUI
 	public final static String SOAPUI_VERSION = "3.5-alpha";
 	public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
 	public static final String SOAPUI_SPLASH = "soapui-splash.jpg";
-	public static final String SOAPUI_TITLE = "/com/eviware/soapui/resources/branded/branded.properties";
+	public static final String SOAPUI_TITLE = "/com/eviware/soapui/resources/branded/branded.txt";
 	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
 	public static final String BUILDINFO_RESOURCE = "/com/eviware/soapui/resources/conf/buildinfo.txt";
 	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
@@ -586,14 +586,17 @@ public class SoapUI
 			Properties props = new Properties();
 			try
 			{
-				props.load( SoapUI.class.getResourceAsStream( BUILDINFO_RESOURCE ) );
+				props.load( SoapUI.class.getResourceAsStream( SOAPUI_TITLE ) );
 				String brandedTitleExt = props.getProperty( "soapui.app.title" );
-				System.out.println( "soapui.app.title=" + brandedTitleExt );
 				if( !StringUtils.isNullOrEmpty( brandedTitleExt ) )
 				{
 					brandedTitleExt = " - " + brandedTitleExt;
 				}
-				startSoapUI( mainArgs, "soapUI " + SOAPUI_VERSION + brandedTitleExt, SOAPUI_SPLASH,
+				else
+				{
+					brandedTitleExt ="";
+				}
+				startSoapUI( mainArgs, "soapUI " + SOAPUI_VERSION + " " + brandedTitleExt, SOAPUI_SPLASH,
 						new StandaloneSoapUICore( true ) );
 			}
 			catch( Exception e )
