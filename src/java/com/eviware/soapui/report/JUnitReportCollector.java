@@ -167,7 +167,7 @@ public class JUnitReportCollector implements TestRunListener, TestSuiteRunListen
 		if( !reports.containsKey( testSuite.getName() ) )
 		{
 			JUnitReport report = new JUnitReport();
-			report.setTestSuiteName( testSuite.getName() );
+			report.setTestSuiteName( testSuite.getProject().getName() + "." + testSuite.getName() );
 			reports.put( testSuite.getName(), report );
 		}
 	}
