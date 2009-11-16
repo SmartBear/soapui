@@ -403,9 +403,9 @@
     <postGoal name="jar:install">
         <ant:mkdir dir="${user.home}/.m2/repository/eviware/soapui/${pom.currentVersion}"/>
         <ant:copy todir="${maven.build.dir}\java\com\eviware\soapui\resources\branded"
-                  file="${soapui.app.branded}\branded.properties" overwrite="true"/>
+                  file="${maven.soapui.app.branded}\branded.properties" overwrite="true"/>
 		<ant:copy todir="${maven.build.dir}\java\com\eviware\soapui\resources\images"
-                  file="${soapui.app.branded}\soapui-splash.jpg" overwrite="true"/>        
+                  file="${maven.soapui.app.branded}\soapui-splash.jpg" overwrite="true"/>        
         <ant:copy todir="${user.home}/.m2/repository/eviware/soapui/${pom.currentVersion}">
             <ant:fileset dir="${maven.build.dir}" includes="*.jar"/>
         </ant:copy>
