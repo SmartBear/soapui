@@ -62,16 +62,13 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 	private String endpoint;
 	private String amfCall;
 	private String groovyScript;
-	private HashMap<String, TestProperty> propertyMap;// check this
+	private HashMap<String, TestProperty> propertyMap;
 	private String[] propertyNames;
 	private List<Object> arguments = new ArrayList<Object>();
 
 	private boolean forLoadTest;
 	private AssertionStatus currentStatus;
 
-	public static final String ENDPOINT = "ENDPOINT";
-	public static final String AMFCALL = "AMFCALL";
-	public static final String GROOVY_SCRIPT = "GROOVY_SCRIPT";
 	public static final String AMF_RESPONSE_CONTENT = "AMF_RESPONSE_CONTENT";
 
 	private RequestIconAnimator<?> iconAnimator;

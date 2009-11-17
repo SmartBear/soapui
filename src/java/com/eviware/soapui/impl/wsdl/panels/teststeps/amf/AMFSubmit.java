@@ -141,9 +141,9 @@ public class AMFSubmit implements Submit, Runnable
 			}
 
 			status = Status.RUNNING;
-			Object responseContent = executeAmfCall( getRequest());
+			Object responseContent = executeAmfCall( getRequest() );
 			context.setProperty( AMFRequest.AMF_RESPONSE_CONTENT, responseContent );
-			
+
 			timeTaken = System.currentTimeMillis() - timestamp;
 			createResponse();
 			if( status != Status.CANCELED )
@@ -158,7 +158,7 @@ public class AMFSubmit implements Submit, Runnable
 		}
 		finally
 		{
-			
+
 			if( status != Status.CANCELED )
 			{
 				for( int i = 0; i < listeners.length; i++ )
@@ -176,143 +176,6 @@ public class AMFSubmit implements Submit, Runnable
 		}
 	}
 
-
-
-	// public void cancelQuery()
-	// {
-	// try
-	// {
-	// if( statement != null )
-	// statement.cancel();
-	// }
-	// catch( SQLFeatureNotSupportedException e )
-	// {
-	// UISupport.showErrorMessage( e );
-	// }
-	// catch( SQLException ex )
-	// {
-	// UISupport.showErrorMessage( ex );
-	// }
-	// }
-
-	// protected void getDatabaseConnection() throws Exception, SQLException
-	// {
-	// String drvr = "";
-	// String connStr = "";
-	//
-	// AMFRequestTestStep testStep = request.getTestStep();
-	//
-	// if( !StringUtils.isNullOrEmpty( testStep.getDriver() )
-	// && !StringUtils.isNullOrEmpty( testStep.getConnectionString() ) )
-	// {
-	// drvr = PropertyExpander.expandProperties( context, testStep.getDriver()
-	// ).trim();
-	// connStr = PropertyExpander.expandProperties( context,
-	// testStep.getConnectionString() ).trim();
-	// }
-	// else
-	// {
-	// UISupport.showErrorMessage(
-	// "Please supply connection settings for all DataSources" );
-	// throw new SoapUIException( "Please supply connection settings" );
-	// }
-	// connStr = connStr.replaceFirst( AMFRequestTestStep.PASS_TEMPLATE,
-	// testStep.getPassword() );
-	// try
-	// {
-	// DriverManager.getDriver( connStr );
-	// }
-	// catch( SQLException e )
-	// {
-	// try
-	// {
-	// Class.forName( drvr ).newInstance();
-	// }
-	// catch( Exception e1 )
-	// {
-	// throw new Exception( "Failed to init connection for drvr [" + drvr +
-	// "], connectionString ["
-	// + testStep.getConnectionString() + "]" );
-	// }
-	// }
-	//
-	// resultSet = null;
-	// connection = DriverManager.getConnection( connStr );
-	// }
-
-	// protected void load() throws Exception
-	// {
-	// try
-	// {
-	// AMFRequestTestStep testStep = request.getTestStep();
-	//
-	// if( testStep.isStoredProcedure() )
-	// {
-	// timestamp = System.currentTimeMillis();
-	// ( ( CallableStatement )statement ).execute();
-	// }
-	// else
-	// {
-	// List<TestProperty> props = testStep.getPropertyList();
-	// for( int j = 0; j < props.size(); j++ )
-	// {
-	// TestProperty property = props.get( j );
-	// ( ( PreparedStatement )statement ).setString( j + 1, property.getValue()
-	// );
-	// }
-	// timestamp = System.currentTimeMillis();
-	// ( ( PreparedStatement )statement ).execute();
-	// }
-	// }
-	// finally
-	// {
-	// timeTaken = System.currentTimeMillis() - timestamp;
-	// }
-	// }
-	//
-	// protected void prepare() throws Exception
-	// {
-	// AMFRequestTestStep testStep = request.getTestStep();
-	// getDatabaseConnection();
-	// if( testStep.isStoredProcedure() )
-	// {
-	// String sql = PropertyExpander.expandProperties( context,
-	// testStep.getQuery() );
-	//
-	// if( !sql.startsWith( "{call " ) && !sql.endsWith( "}" ) )
-	// sql = "{call " + sql + "}";
-	//
-	// statement = connection.prepareCall( sql, ResultSet.TYPE_FORWARD_ONLY,
-	// ResultSet.CONCUR_READ_ONLY );
-	// }
-	// else
-	// {
-	// String sql = PropertyExpander.expandProperties( context,
-	// testStep.getQuery() );
-	// statement = connection.prepareStatement( sql );
-	// }
-	//
-	// try
-	// {
-	// String queryTimeout = PropertyExpander.expandProperties( testStep,
-	// testStep.getQueryTimeout() );
-	// statement.setQueryTimeout( Integer.parseInt( queryTimeout ) );
-	// }
-	// catch( NumberFormatException e )
-	// {
-	// }
-	//
-	// try
-	// {
-	// String maxRows = PropertyExpander.expandProperties( testStep,
-	// testStep.getMaxRows() );
-	// statement.setMaxRows( Integer.parseInt( maxRows ) );
-	// }
-	// catch( NumberFormatException e )
-	// {
-	// }
-	// }
-
 	protected String createResponse()
 	{
 		try
@@ -320,7 +183,7 @@ public class AMFSubmit implements Submit, Runnable
 			response = new AMFResponse( request, context );
 			response.setTimestamp( timestamp );
 			response.setTimeTaken( timeTaken );
-			
+
 		}
 		catch( Exception e )
 		{
@@ -348,6 +211,6 @@ public class AMFSubmit implements Submit, Runnable
 			amfRequest.clearArguments();
 			amfConnection.close();
 		}
-		
+
 	}
 }
