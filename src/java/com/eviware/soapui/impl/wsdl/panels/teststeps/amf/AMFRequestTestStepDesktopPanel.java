@@ -550,13 +550,13 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		public String getXml()
 		{
 			AMFResponse response = amfRequestTestStep.getAMFRequest().getResponse();
-			return response == null ? null : response.getContentAsString();
+			return response == null ? null : response.getResponseContentXML();
 		}
 
 		public void setXml( String xml )
 		{
 			if( amfRequestTestStep.getAMFRequest().getResponse() != null )
-				amfRequestTestStep.getAMFRequest().getResponse().setContentAsString( xml );
+				amfRequestTestStep.getAMFRequest().getResponse().setResponseContentXML(  xml );
 		}
 
 		public void release()

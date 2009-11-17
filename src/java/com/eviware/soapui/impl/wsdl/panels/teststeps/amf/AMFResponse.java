@@ -23,7 +23,8 @@ import com.eviware.soapui.model.support.AbstractResponse;
 
 public class AMFResponse extends AbstractResponse<AMFRequest>
 {
-	private Object responseContent;
+	private Object responseContent="";
+	private String responseContentXML="";
 	private long timeTaken;
 	private long timestamp;
 	private SubmitContext submitContext;
@@ -37,13 +38,15 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 		this.request = request;
 		this.responseContent = submitContext.getProperty( AMFRequest.AMF_RESPONSE_CONTENT );
 		this.submitContext = submitContext;
+		if(responseContent != null)
+			 setResponseContentXML(new com.thoughtworks.xstream.XStream().toXML( responseContent ) ) ;
 	}
 
 	public String getContentAsString()
 	{
 		return responseContent != null ? responseContent.toString() : "";
 	}
-
+	
 	public String getContentType()
 	{
 		return "text/xml";
@@ -88,6 +91,16 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 	public byte[] getRawResponseData()
 	{
 		return responseContent != null ? responseContent.toString().getBytes() : null;
+	}
+
+	public void setResponseContentXML( String responseContentXML )
+	{
+		this.responseContentXML = responseContentXML;
+	}
+
+	public String getResponseContentXML()
+	{
+		return responseContentXML;
 	}
 	
 	
