@@ -31,7 +31,7 @@ import com.eviware.soapui.impl.wsdl.submit.filters.SoapHeadersRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.StripWhitespacesRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WsaRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WsdlPackagingRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.WsdlPackagingResponseFilter;
+import com.eviware.soapui.impl.wsdl.submit.filters.HttpPackagingResponseFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WsrmRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WssAuthenticationRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WssRequestFilter;
@@ -83,7 +83,7 @@ public class RequestTransportRegistry
 
 		httpTransport.addRequestFilter( new WsdlPackagingRequestFilter() );
 		httpTransport.addRequestFilter( new HttpCompressionRequestFilter() );
-		httpTransport.addRequestFilter( new WsdlPackagingResponseFilter() );
+		httpTransport.addRequestFilter( new HttpPackagingResponseFilter() );
 		httpTransport.addRequestFilter( new PostPackagingRequestFilter() );
 
 		transports.put( HTTP, httpTransport );

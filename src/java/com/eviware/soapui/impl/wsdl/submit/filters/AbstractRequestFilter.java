@@ -70,6 +70,8 @@ public abstract class AbstractRequestFilter implements RequestFilter
 			afterWsdlRequest( context, ( WsdlRequest )request );
 		else if( request instanceof RestRequestInterface )
 			afterRestRequest( context, ( RestRequestInterface )request );
+		else if( request instanceof HttpRequestInterface<?> )
+			afterHttpRequest( context, ( HttpRequestInterface<?> )request );
 	}
 
 	public void afterWsdlRequest( SubmitContext context, WsdlRequest request )
@@ -77,6 +79,10 @@ public abstract class AbstractRequestFilter implements RequestFilter
 	}
 
 	public void afterRestRequest( SubmitContext context, RestRequestInterface request )
+	{
+	}
+
+	public void afterHttpRequest( SubmitContext context, HttpRequestInterface<?> request )
 	{
 	}
 
