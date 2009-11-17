@@ -974,29 +974,28 @@ public class SoapUI
 
 	public static Logger ensureGroovyLog()
 	{
-//		if( !checkedGroovyLogMonitor )
-//		{
-			synchronized( checkedGroovyLogMonitor )
+		// if( !checkedGroovyLogMonitor )
+		// {
+		synchronized( checkedGroovyLogMonitor )
+		{
+			if( !checkedGroovyLogMonitor || launchedTestRunner )
 			{
-				if( !checkedGroovyLogMonitor || launchedTestRunner)
-				{
-					groovyLogger = Logger.getLogger( "groovy.log" );
+				groovyLogger = Logger.getLogger( "groovy.log" );
 
-					Log4JMonitor logMonitor = getLogMonitor();
-					if( logMonitor != null && !logMonitor.hasLogArea( "groovy.log" ) )
-					{
-						logMonitor.addLogArea( "script log", "groovy.log", false );
-//						launchedTestRunner = false;
-						checkedGroovyLogMonitor = true;
-					}
-					else if( logMonitor == null && launchedTestRunner)
-					{
-						checkedGroovyLogMonitor = true;
-						launchedTestRunner = false;
-					}
+				Log4JMonitor logMonitor = getLogMonitor();
+				if( logMonitor != null && !logMonitor.hasLogArea( "groovy.log" ) )
+				{
+					logMonitor.addLogArea( "script log", "groovy.log", false );
+					checkedGroovyLogMonitor = true;
+				}
+				else if( logMonitor == null && launchedTestRunner )
+				{
+					checkedGroovyLogMonitor = true;
+					launchedTestRunner = false;
 				}
 			}
-//		}
+		}
+		// }
 
 		return groovyLogger;
 	}
