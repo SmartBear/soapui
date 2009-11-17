@@ -987,10 +987,10 @@ public class SoapUI
 						logMonitor.addLogArea( "script log", "groovy.log", false );
 						checkedGroovyLogMonitor = true;
 					}
-					else if( logMonitor == null )
-					{
-						checkedGroovyLogMonitor = true;
-					}
+//					else if( logMonitor == null )
+//					{
+//						checkedGroovyLogMonitor = true;
+//					}
 				}
 			}
 		}
