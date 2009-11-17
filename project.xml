@@ -851,7 +851,7 @@
 				<jnlp.jar>true</jnlp.jar>
 			</properties>
 		</dependency>
-		
+
 		<!-- jms support -->
 		<dependency>
 			<groupId>javax.jms</groupId>
@@ -913,6 +913,14 @@
 			<groupId>amf</groupId>
 			<artifactId>flex-messaging-remoting</artifactId>
 			<version>1.0</version>
+			<properties>
+				<jnlp.jar>true</jnlp.jar>
+			</properties>
+		</dependency>
+		<dependency>
+			<groupId>thoughtworks</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.3.1</version>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
 			</properties>
