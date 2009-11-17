@@ -26,7 +26,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AMFRequestTestStepConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.config.impl.AMFRequestTestStepConfigImpl;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFResponse;
@@ -57,10 +56,8 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
-import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 
 /**
- * WsdlTestStep that executes a WsdlTestRequest
  * 
  * @author nebojsa.tasic
  */
@@ -77,6 +74,8 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	private AMFSubmit submit;
 	private String script = "";
 	private String amfCall;
+	private String endpoint;
+
 
 
 	private SoapUIScriptEngine scriptEngine;
@@ -122,6 +121,8 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 
 		this.script = amfRequestTestStepConfig.getGroovyScript();
 		this.amfCall = amfRequestTestStepConfig.getAmfCall();
+		this.endpoint = amfRequestTestStepConfig.getEnpoint();
+		
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 		scriptEngine.setScript( getScript() );
 		if( forLoadTest && !isDisabled() )
@@ -647,4 +648,21 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	{
 		amfRequestTestStepConfig.setAmfCall( getAmfCall() );
 	}
+	
+	public String getEndpoint()
+	{
+		return endpoint;
+	}
+
+	public void setEndpoint( String endpoint )
+	{
+		this.endpoint = endpoint;
+		saveEndpooint();
+	}
+
+	private void saveEndpooint()
+	{
+		amfRequestTestStepConfig.setEnpoint(  getEndpoint() );
+	}
+
 }

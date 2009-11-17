@@ -877,6 +877,46 @@
 				<jnlp.jar>true</jnlp.jar>
 			</properties>
 		</dependency>
+		<dependency>
+			<groupId>amf</groupId>
+			<artifactId>flex-messaging-common</artifactId>
+			<version>1.0</version>
+			<properties>
+				<jnlp.jar>true</jnlp.jar>
+			</properties>
+		</dependency>
+		<dependency>
+			<groupId>amf</groupId>
+			<artifactId>flex-messaging-core</artifactId>
+			<version>1.0</version>
+			<properties>
+				<jnlp.jar>true</jnlp.jar>
+			</properties>
+		</dependency>
+		<dependency>
+			<groupId>amf</groupId>
+			<artifactId>flex-messaging-opt</artifactId>
+			<version>1.0</version>
+			<properties>
+				<jnlp.jar>true</jnlp.jar>
+			</properties>
+		</dependency>
+		<dependency>
+			<groupId>amf</groupId>
+			<artifactId>flex-messaging-proxy</artifactId>
+			<version>1.0</version>
+			<properties>
+				<jnlp.jar>true</jnlp.jar>
+			</properties>
+		</dependency>
+		<dependency>
+			<groupId>amf</groupId>
+			<artifactId>flex-messaging-remoting</artifactId>
+			<version>1.0</version>
+			<properties>
+				<jnlp.jar>true</jnlp.jar>
+			</properties>
+		</dependency>
 	</dependencies>
 	<build>
 		<sourceDirectory>src/java</sourceDirectory>

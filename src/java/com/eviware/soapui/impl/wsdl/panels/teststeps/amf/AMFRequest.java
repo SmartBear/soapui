@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps.amf;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -43,37 +45,55 @@ import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 
 public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> implements Assertable, TestRequest
 {
 	private final AMFRequestTestStep testStep;
 	private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
+
+	final static Logger logger = Logger.getLogger( AMFRequest.class );
+
 	private AMFResponse response;
-	final static Logger logger = Logger.getLogger(AMFRequest.class);
+	private SoapUIScriptEngine scriptEngine;
+	private String endpoint;
+	private String amfCall;
+	private String groovyScript;
+	private HashMap<String, TestProperty> propertyMap;// check this
+	private String[] propertyNames;
+	private List<Object> arguments = new ArrayList<Object>();
+
+	private boolean forLoadTest;
+	private AssertionStatus currentStatus;
+
+	public static final String ENDPOINT = "ENDPOINT";
+	public static final String AMFCALL = "AMFCALL";
+	public static final String GROOVY_SCRIPT = "GROOVY_SCRIPT";
+	public static final String AMF_RESPONSE_CONTENT = "AMF_RESPONSE_CONTENT";
+
+	private RequestIconAnimator<?> iconAnimator;
 	private ImageIcon validRequestIcon;
 	private ImageIcon failedRequestIcon;
 	private ImageIcon disabledRequestIcon;
 	private ImageIcon unknownRequestIcon;
-	private RequestIconAnimator<?> iconAnimator;
-	private boolean forLoadTest;
-	private AssertionStatus currentStatus;
 
-	public AMFRequest(AMFRequestTestStep testStep)
+	public AMFRequest( AMFRequestTestStep testStep )
 	{
 		this.testStep = testStep;
 		initIcons();
 	}
 
-	public void addSubmitListener(SubmitListener listener)
+	public void addSubmitListener( SubmitListener listener )
 	{
-		submitListeners.add(listener);
+		submitListeners.add( listener );
 	}
 
-	public boolean dependsOn(ModelItem modelItem)
+	public boolean dependsOn( ModelItem modelItem )
 	{
-		return ModelSupport.dependsOn(testStep, modelItem);
+		return ModelSupport.dependsOn( testStep, modelItem );
 	}
 
 	public Attachment[] getAttachments()
@@ -86,11 +106,6 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		return null;
 	}
 
-	public String getEndpoint()
-	{
-		return null;
-	}
-
 	public Operation getOperation()
 	{
 		return null;
@@ -98,7 +113,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 
 	public String getRequestContent()
 	{
-		return ((AMFRequestTestStepConfig) testStep.getConfig()).getProperties().toString();
+		return ( ( AMFRequestTestStepConfig )testStep.getConfig() ).getProperties().toString();
 	}
 
 	public MessagePart[] getRequestParts()
@@ -113,25 +128,22 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 
 	public String getTimeout()
 	{
-		return null;//testStep.getQueryTimeout();
+		return null;// testStep.getQueryTimeout();
 	}
 
-	public void removeSubmitListener(SubmitListener listener)
+	public void removeSubmitListener( SubmitListener listener )
 	{
-		submitListeners.remove(listener);
+		submitListeners.remove( listener );
 	}
 
-	public void setEncoding(String string)
-	{
-	}
-
-	public void setEndpoint(String string)
+	public void setEncoding( String string )
 	{
 	}
 
-	public AMFSubmit submit(SubmitContext submitContext, boolean async) throws SubmitException
+	public AMFSubmit submit( SubmitContext submitContext, boolean async ) throws SubmitException
 	{
-		return new AMFSubmit(this, submitContext, async);
+
+		return new AMFSubmit( this, submitContext, async );
 	}
 
 	public List<? extends ModelItem> getChildren()
@@ -144,11 +156,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		return testStep.getDescription();
 	}
 
-	// public ImageIcon getIcon()
-	// {
-	// return testStep.getIcon();
-	// }
-	//
+
 	public String getId()
 	{
 		return testStep.getId();
@@ -171,7 +179,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 
 	public SubmitListener[] getSubmitListeners()
 	{
-		return submitListeners.toArray(new SubmitListener[submitListeners.size()]);
+		return submitListeners.toArray( new SubmitListener[submitListeners.size()] );
 	}
 
 	public AMFRequestTestStep getTestStep()
@@ -179,24 +187,24 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		return testStep;
 	}
 
-	public WsdlMessageAssertion importAssertion(WsdlMessageAssertion source, boolean overwrite, boolean createCopy)
+	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy )
 	{
-		return testStep.importAssertion(source, overwrite, createCopy);
+		return testStep.importAssertion( source, overwrite, createCopy );
 	}
 
-	public TestAssertion addAssertion(String selection)
+	public TestAssertion addAssertion( String selection )
 	{
-		return testStep.addAssertion(selection);
+		return testStep.addAssertion( selection );
 	}
 
-	public void addAssertionsListener(AssertionsListener listener)
+	public void addAssertionsListener( AssertionsListener listener )
 	{
-		testStep.addAssertionsListener(listener);
+		testStep.addAssertionsListener( listener );
 	}
 
-	public TestAssertion cloneAssertion(TestAssertion source, String name)
+	public TestAssertion cloneAssertion( TestAssertion source, String name )
 	{
-		return testStep.cloneAssertion(source, name);
+		return testStep.cloneAssertion( source, name );
 	}
 
 	public String getAssertableContent()
@@ -209,14 +217,14 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		return testStep.getAssertableType();
 	}
 
-	public TestAssertion getAssertionAt(int c)
+	public TestAssertion getAssertionAt( int c )
 	{
-		return testStep.getAssertionAt(c);
+		return testStep.getAssertionAt( c );
 	}
 
-	public TestAssertion getAssertionByName(String name)
+	public TestAssertion getAssertionByName( String name )
 	{
-		return testStep.getAssertionByName(name);
+		return testStep.getAssertionByName( name );
 	}
 
 	public int getAssertionCount()
@@ -233,28 +241,28 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 	{
 		currentStatus = AssertionStatus.UNKNOWN;
 
-		if (getResponse() == null)
+		if( getResponse() == null )
 			return currentStatus;
 
 		int cnt = getAssertionCount();
-		if (cnt == 0)
+		if( cnt == 0 )
 			return currentStatus;
 
 		boolean hasEnabled = false;
 
-		for (int c = 0; c < cnt; c++)
+		for( int c = 0; c < cnt; c++ )
 		{
-			if (!getAssertionAt(c).isDisabled())
+			if( !getAssertionAt( c ).isDisabled() )
 				hasEnabled = true;
 
-			if (getAssertionAt(c).getStatus() == AssertionStatus.FAILED)
+			if( getAssertionAt( c ).getStatus() == AssertionStatus.FAILED )
 			{
 				currentStatus = AssertionStatus.FAILED;
 				break;
 			}
 		}
 
-		if (currentStatus == AssertionStatus.UNKNOWN && hasEnabled)
+		if( currentStatus == AssertionStatus.UNKNOWN && hasEnabled )
 			currentStatus = AssertionStatus.VALID;
 
 		return currentStatus;
@@ -280,22 +288,22 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		return testStep.getModelItem();
 	}
 
-	public TestAssertion moveAssertion(int ix, int offset)
+	public TestAssertion moveAssertion( int ix, int offset )
 	{
-		return testStep.moveAssertion(ix, offset);
+		return testStep.moveAssertion( ix, offset );
 	}
 
-	public void removeAssertion(TestAssertion assertion)
+	public void removeAssertion( TestAssertion assertion )
 	{
-		testStep.removeAssertion(assertion);
+		testStep.removeAssertion( assertion );
 	}
 
-	public void removeAssertionsListener(AssertionsListener listener)
+	public void removeAssertionsListener( AssertionsListener listener )
 	{
-		testStep.removeAssertionsListener(listener);
+		testStep.removeAssertionsListener( listener );
 	}
 
-	public void setResponse(AMFResponse response)
+	public void setResponse( AMFResponse response )
 	{
 		this.response = response;
 	}
@@ -307,44 +315,44 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 
 	public void initIcons()
 	{
-		if (validRequestIcon == null)
-			validRequestIcon = UISupport.createImageIcon("/valid_amf_request.gif");
+		if( validRequestIcon == null )
+			validRequestIcon = UISupport.createImageIcon( "/valid_amf_request.gif" );
 
-		if (failedRequestIcon == null)
-			failedRequestIcon = UISupport.createImageIcon("/invalid_amf_request.gif");
+		if( failedRequestIcon == null )
+			failedRequestIcon = UISupport.createImageIcon( "/invalid_amf_request.gif" );
 
-		if (unknownRequestIcon == null)
-			unknownRequestIcon = UISupport.createImageIcon("/unknown_amf_request.gif");
+		if( unknownRequestIcon == null )
+			unknownRequestIcon = UISupport.createImageIcon( "/unknown_amf_request.gif" );
 
-		if (disabledRequestIcon == null)
-			disabledRequestIcon = UISupport.createImageIcon("/disabled_amf_request.gif");
+		if( disabledRequestIcon == null )
+			disabledRequestIcon = UISupport.createImageIcon( "/disabled_amf_request.gif" );
 
-		setIconAnimator(new RequestIconAnimator<AMFRequest>(this, "/amf_request.gif", "/exec_amf_request", 4, "gif"));
+		setIconAnimator( new RequestIconAnimator<AMFRequest>( this, "/amf_request.gif", "/exec_amf_request", 4, "gif" ) );
 	}
 
 	protected RequestIconAnimator<?> initIconAnimator()
 	{
-		return new RequestIconAnimator<AMFRequest>(this, "/amf_request.gif", "/exec_amf_request", 4, "gif");
+		return new RequestIconAnimator<AMFRequest>( this, "/amf_request.gif", "/exec_amf_request", 4, "gif" );
 	}
 
 	public static class RequestIconAnimator<T extends AMFRequest> extends ModelItemIconAnimator<T> implements
 			SubmitListener
 	{
-		public RequestIconAnimator(T modelItem, String baseIcon, String animIconRoot, int iconCount, String iconExtension)
+		public RequestIconAnimator( T modelItem, String baseIcon, String animIconRoot, int iconCount, String iconExtension )
 		{
-			super(modelItem, baseIcon, animIconRoot, iconCount, iconExtension);
+			super( modelItem, baseIcon, animIconRoot, iconCount, iconExtension );
 		}
 
-		public boolean beforeSubmit(Submit submit, SubmitContext context)
+		public boolean beforeSubmit( Submit submit, SubmitContext context )
 		{
-			if (isEnabled() && submit.getRequest() == getTarget())
+			if( isEnabled() && submit.getRequest() == getTarget() )
 				start();
 			return true;
 		}
 
-		public void afterSubmit(Submit submit, SubmitContext context)
+		public void afterSubmit( Submit submit, SubmitContext context )
 		{
-			if (submit.getRequest() == getTarget())
+			if( submit.getRequest() == getTarget() )
 				stop();
 		}
 	}
@@ -354,33 +362,33 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		return iconAnimator;
 	}
 
-	public void setIconAnimator(RequestIconAnimator<?> iconAnimator)
+	public void setIconAnimator( RequestIconAnimator<?> iconAnimator )
 	{
-		if (this.iconAnimator != null)
-			removeSubmitListener(this.iconAnimator);
+		if( this.iconAnimator != null )
+			removeSubmitListener( this.iconAnimator );
 
 		this.iconAnimator = iconAnimator;
-		addSubmitListener(this.iconAnimator);
+		addSubmitListener( this.iconAnimator );
 	}
 
 	public ImageIcon getIcon()
 	{
-		if (forLoadTest || UISupport.isHeadless())
+		if( forLoadTest || UISupport.isHeadless() )
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();
-		if (testMonitor != null && testMonitor.hasRunningLoadTest(getTestStep().getTestCase()))
+		if( testMonitor != null && testMonitor.hasRunningLoadTest( getTestStep().getTestCase() ) )
 			return disabledRequestIcon;
 
 		ImageIcon icon = getIconAnimator().getIcon();
-		if (icon == getIconAnimator().getBaseIcon())
+		if( icon == getIconAnimator().getBaseIcon() )
 		{
 			AssertionStatus status = getAssertionStatus();
-			if (status == AssertionStatus.VALID)
+			if( status == AssertionStatus.VALID )
 				return validRequestIcon;
-			else if (status == AssertionStatus.FAILED)
+			else if( status == AssertionStatus.FAILED )
 				return failedRequestIcon;
-			else if (status == AssertionStatus.UNKNOWN)
+			else if( status == AssertionStatus.UNKNOWN )
 				return unknownRequestIcon;
 		}
 
@@ -388,9 +396,127 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 	}
 
 	@Override
-	public void setIcon(ImageIcon icon)
+	public void setIcon( ImageIcon icon )
 	{
-		getTestStep().setIcon(icon);
+		getTestStep().setIcon( icon );
 	}
 
+	public String getEndpoint()
+	{
+		return endpoint;
+	}
+
+	public void setEndpoint( String endpoint )
+	{
+		this.endpoint = endpoint;
+	}
+
+	public String getAmfCall()
+	{
+		return amfCall;
+	}
+
+	public void setAmfCall( String amfCall )
+	{
+		this.amfCall = amfCall;
+	}
+
+	public String getGroovyScript()
+	{
+		return groovyScript;
+	}
+
+	public void setGroovyScript( String groovyScript )
+	{
+		this.groovyScript = groovyScript;
+	}
+
+	public HashMap<String, TestProperty> getPropertyMap()
+	{
+		return propertyMap;
+	}
+
+	public void setPropertyMap( HashMap<String, TestProperty> map )
+	{
+		this.propertyMap = map;
+	}
+
+	public void setArguments( List<Object> arguments )
+	{
+		this.arguments = arguments;
+	}
+	
+	public void clearArguments( )
+	{
+		this.arguments.clear();
+	}
+
+	public List<Object> getArguments()
+	{
+		return arguments;
+	}
+
+	public List<Object> addArgument( Object obj )
+	{
+		arguments.add( obj );
+		return arguments;
+	}
+
+	public Object[] argumentsToArray()
+	{
+		return arguments.toArray();
+	}
+
+	public void extractProperties( SubmitContext context )
+	{
+		HashMap<String, Object> property = new HashMap<String, Object>();
+		try
+		{
+			scriptEngine.setScript( groovyScript );
+			scriptEngine.setVariable( "property", property );
+			scriptEngine.setVariable( "log", SoapUI.log );
+			scriptEngine.setVariable( "context", context );
+
+			scriptEngine.run();
+			
+			for( String name : propertyNames )
+			{
+				TestProperty propertyValue = propertyMap.get( name );
+				if( "script".equalsIgnoreCase( propertyValue.getValue() ) )
+				{
+					addArgument( property.get( name ) );
+				}else{
+					addArgument(propertyValue.getValue());
+				}
+			}
+		}
+		catch( Throwable e )
+		{
+			SoapUI.logError( e );
+		}
+		finally
+		{
+			scriptEngine.clearVariables();
+		}
+	}
+
+	public void setPropertyNames( String[] propertyNames )
+	{
+		this.propertyNames = propertyNames;
+	}
+
+	public String[] getPropertyNames()
+	{
+		return propertyNames;
+	}
+
+	public void setScriptEngine( SoapUIScriptEngine scriptEngine )
+	{
+		this.scriptEngine = scriptEngine;
+	}
+
+	public SoapUIScriptEngine getScriptEngine()
+	{
+		return scriptEngine;
+	}
 }

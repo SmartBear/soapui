@@ -12,6 +12,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -34,7 +35,6 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AMFRequestTestStepConfig;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
@@ -62,6 +62,7 @@ import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
@@ -80,10 +81,12 @@ import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
+import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
 public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFRequestTestStep> implements SubmitListener
 {
+	private static final String ENDPOINT = "Endpoint";
 	private static final String AMF_CALL = "AMF Call";
 	private final static Logger log = Logger.getLogger( AbstractHttpRequestDesktopPanel.class );
 	private JPanel configPanel;
@@ -115,11 +118,13 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	private JTextField amfCall;
 	public boolean updating;
 	SimpleForm configForm;
+	private JTextField endpoint;
 
 	public AMFRequestTestStepDesktopPanel( AMFRequestTestStep modelItem )
 	{
 		super( modelItem );
 		amfRequestTestStep = modelItem;
+
 		initConfig();
 		initContent();
 
@@ -130,6 +135,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
 		scriptEngine = SoapUIScriptEngineRegistry.create( modelItem );
 		scriptEngine.setScript( amfRequestTestStep.getScript() );
+
 	}
 
 	protected void initConfig()
@@ -145,6 +151,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
 		JComponent content;
 		submitButton = createActionButton( new SubmitAction(), true );
+		submitButton.setEnabled( enableSubmit() );
 		cancelButton = createActionButton( new CancelAction(), false );
 		tabsButton = new JToggleButton( new ChangeToTabsAction() );
 		tabsButton.setPreferredSize( UISupport.TOOLBAR_BUTTON_DIMENSION );
@@ -228,15 +235,17 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
 	protected JComponent buildRequestConfigPanel()
 	{
-		configPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ), "AMF call and intialisation groovy script" );
+		configPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ),
+				"AMF call and intialisation groovy script" );
 		if( panel == null )
 		{
 			panel = new JPanel( new BorderLayout() );
 			configForm = new SimpleForm();
-			
+
+			addEndpointToSimpleForm();
 			addAmfCAlltoSimpleForm();
 			addGroovyEditorToSimpleForm();
-			
+
 			panel.add( configForm.getPanel() );
 		}
 		configPanel.add( panel, BorderLayout.CENTER );
@@ -356,6 +365,15 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		addAmfCallDocumentListener();
 	}
 
+	private void addEndpointToSimpleForm()
+	{
+		configForm.addSpace( 5 );
+		endpoint = configForm.appendTextField( ENDPOINT, "http to connect" );
+		endpoint.setText( amfRequestTestStep.getEndpoint() );
+		PropertyExpansionPopupListener.enable( endpoint, amfRequestTestStep );
+		addEndpointCallDocumentListener();
+	}
+
 	protected void addAmfCallDocumentListener()
 	{
 		amfCall.getDocument().addDocumentListener( new DocumentListenerAdapter()
@@ -369,6 +387,27 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 				}
 			}
 		} );
+	}
+
+	protected void addEndpointCallDocumentListener()
+	{
+		endpoint.getDocument().addDocumentListener( new DocumentListenerAdapter()
+		{
+			@Override
+			public void update( Document document )
+			{
+				if( !updating )
+				{
+					amfRequestTestStep.setEndpoint( configForm.getComponentValue( ENDPOINT ) );
+				}
+			}
+		} );
+	}
+
+	protected boolean enableSubmit()
+	{
+		return !StringUtils.isNullOrEmpty( amfRequestTestStep.getEndpoint() )
+				&& !StringUtils.isNullOrEmpty( amfRequestTestStep.getAmfCall() );
 	}
 
 	private class ScriptStepGroovyEditorModel implements GroovyEditorModel
@@ -487,7 +526,8 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	{
 		configPanel.removeAll();
 		inspectorPanel.release();
-
+		responseEditor.release();
+		requestEditor.removeAll();
 		SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener );
 		amfRequestTestStep.removeAssertionsListener( assertionsListener );
 
@@ -522,56 +562,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		public void release()
 		{
 			super.release();
-			amfRequestTestStep.removePropertyChangeListener( RestRequestInterface.RESPONSE_PROPERTY, this );
-		}
-	}
-
-	private String executeScript()
-	{
-		try
-		{
-			scriptEngine.setScript( groovyEditor.getEditArea().getText() );
-			// scriptEngine.setVariable("context", context);
-			// scriptEngine.setVariable("messageExchange", messageExchange);
-			scriptEngine.setVariable( "log", log );
-
-			Object result = scriptEngine.run();
-			return result == null ? null : result.toString();
-		}
-		catch( Throwable e )
-		{
-			SoapUI.logError( e );
-		}
-		finally
-		{
-			scriptEngine.clearVariables();
-		}
-		return null;
-	}
-
-	public class TestConnectionAction extends AbstractAction
-	{
-		public TestConnectionAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/run_testcase.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Test the current Connection" );
-
-			setEnabled( false );
-		}
-
-		public void actionPerformed( ActionEvent arg0 )
-		{
-			try
-			{
-				// AMFUtils.testConnection(getModelItem(),
-				// amfRequestTestStep.getDriver(), amfRequestTestStep
-				// .getConnectionString(), amfRequestTestStep.getPassword());
-				UISupport.showInfoMessage( "The Connection Successfully Tested" );
-			}
-			catch( Exception e )
-			{
-				UISupport.showErrorMessage( "Can't get the Connection for specified properties; " + e.toString() );
-			}
+			amfRequestTestStep.removePropertyChangeListener( AMFRequestTestStep.RESPONSE_PROPERTY, this );
 		}
 	}
 
@@ -639,8 +630,18 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
 	protected Submit doSubmit() throws SubmitException
 	{
-		String temp = executeScript();
-		return amfRequestTestStep.getAMFRequest().submit( new WsdlTestRunContext( getModelItem() ), true );
+
+		SubmitContext submitContext = new WsdlTestRunContext( getModelItem() );
+		AMFRequest amfRequest = amfRequestTestStep.getAMFRequest();
+		amfRequest.setScriptEngine( scriptEngine );
+		amfRequest.setAmfCall( amfCall.getText() );
+		amfRequest.setEndpoint( endpoint.getText() );
+		amfRequest.setGroovyScript( groovyEditor.getEditArea().getText() );
+		amfRequest.setPropertyNames( amfRequestTestStep.getPropertyNames() );
+		amfRequest.setPropertyMap( ( HashMap<String, TestProperty> )amfRequestTestStep.getProperties() );
+		amfRequest.extractProperties( submitContext );
+
+		return amfRequestTestStep.getAMFRequest().submit( submitContext, false );
 	}
 
 	protected final class InputAreaFocusListener implements FocusListener
@@ -702,17 +703,16 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 				requestTabs.setSelectedIndex( 1 );
 				return;
 			}
-			//
-			// if
-			// (getModelItem().getSettings().getBoolean(UISettings.NO_RESIZE_REQUEST_EDITOR))
-			// return;
-			//
-			// // dont resize if split has been dragged or result is empty
-			// if (requestSplitPane.getUI() instanceof SoapUISplitPaneUI
-			// && ((SoapUISplitPaneUI) requestSplitPane.getUI()).hasBeenDragged()
-			// || request.getResponse() == null)
-			// return;
-			//
+
+			if( getModelItem().getSettings().getBoolean( UISettings.NO_RESIZE_REQUEST_EDITOR ) )
+				return;
+
+			// dont resize if split has been dragged or result is empty
+			if( requestSplitPane.getUI() instanceof SoapUISplitPaneUI
+					&& ( ( SoapUISplitPaneUI )requestSplitPane.getUI() ).hasBeenDragged()
+					|| amfRequestTestStep.getAMFRequest().getResponse() == null )
+				return;
+
 			int pos = requestSplitPane.getDividerLocation();
 			int maximumDividerLocation = requestSplitPane.getMaximumDividerLocation();
 			if( pos + 600 < maximumDividerLocation )
@@ -819,7 +819,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	public void setEnabled( boolean enabled )
 	{
 		if( responseEditor != null )
-			responseEditor.setEditable( enabled );
+			responseEditor.setEnabled( enabled );
 
 		submitButton.setEnabled( enabled );
 		addAssertionButton.setEnabled( enabled );
@@ -953,4 +953,5 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		}
 		}
 	}
+
 }

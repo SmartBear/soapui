@@ -13,32 +13,35 @@
 package com.eviware.soapui.impl.wsdl.panels.teststeps.amf;
 
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.support.AbstractResponse;
-import com.eviware.soapui.support.xml.XmlUtils;
 
 public class AMFResponse extends AbstractResponse<AMFRequest>
 {
-	private String responseContent;
+	private Object responseContent;
 	private long timeTaken;
 	private long timestamp;
+	private SubmitContext submitContext;
+	private AMFRequest request;
 
-	public AMFResponse( AMFRequest request, Statement statement ) throws SQLException, ParserConfigurationException, TransformerConfigurationException, TransformerException
+	public AMFResponse( AMFRequest request, SubmitContext submitContext ) throws SQLException,
+			ParserConfigurationException, TransformerConfigurationException, TransformerException
 	{
 		super( request );
-		
-//		org.w3c.dom.Document xmlDocumentResult = XmlUtils.createAMFXmlResult( statement );
-//		responseContent = XmlUtils.serializePretty( xmlDocumentResult );
+
+		this.request = request;
+		this.responseContent = submitContext.getProperty( AMFRequest.AMF_RESPONSE_CONTENT );
+		this.submitContext = submitContext;
 	}
 
 	public String getContentAsString()
 	{
-		return responseContent;
+		return responseContent != null ? responseContent.toString() : "";
 	}
 
 	public String getContentType()
@@ -48,12 +51,12 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 
 	public long getContentLength()
 	{
-		return 0;
+		return responseContent != null ? responseContent.toString().length() : 0;
 	}
-	
+
 	public String getRequestContent()
 	{
-		return null;//getRequest().getTestStep().getQuery();
+		return request.toString();
 	}
 
 	public long getTimeTaken()
@@ -80,4 +83,12 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 	{
 		this.timestamp = timestamp;
 	}
+
+	@Override
+	public byte[] getRawResponseData()
+	{
+		return responseContent != null ? responseContent.toString().getBytes() : null;
+	}
+	
+	
 }
