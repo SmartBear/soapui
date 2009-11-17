@@ -324,12 +324,12 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		if( disabledRequestIcon == null )
 			disabledRequestIcon = UISupport.createImageIcon( "/disabled_amf_request.gif" );
 
-		setIconAnimator( new RequestIconAnimator<AMFRequest>( this, "/amf_request.gif", "/exec_amf_request", 4, "gif" ) );
+		setIconAnimator( new RequestIconAnimator<AMFRequest>( this, "/amf_request.gif", "/exec_amf_request", 3, "gif" ) );
 	}
 
 	protected RequestIconAnimator<?> initIconAnimator()
 	{
-		return new RequestIconAnimator<AMFRequest>( this, "/amf_request.gif", "/exec_amf_request", 4, "gif" );
+		return new RequestIconAnimator<AMFRequest>( this, "/amf_request.gif", "/exec_amf_request", 3, "gif" );
 	}
 
 	public static class RequestIconAnimator<T extends AMFRequest> extends ModelItemIconAnimator<T> implements
