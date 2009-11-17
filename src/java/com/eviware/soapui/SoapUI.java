@@ -192,6 +192,7 @@ public class SoapUI
 	private JDesktopPanelsList desktopPanelsList;
 
 	private static Boolean checkedGroovyLogMonitor = false;
+	private static Boolean launchedTestRunner = false;
 
 	private JPanel overviewPanel;
 	private JMenu toolsMenu;
@@ -594,7 +595,7 @@ public class SoapUI
 				}
 				else
 				{
-					brandedTitleExt ="";
+					brandedTitleExt = "";
 				}
 				startSoapUI( mainArgs, "soapUI " + SOAPUI_VERSION + " " + brandedTitleExt, SOAPUI_SPLASH,
 						new StandaloneSoapUICore( true ) );
@@ -973,11 +974,11 @@ public class SoapUI
 
 	public static Logger ensureGroovyLog()
 	{
-		if( !checkedGroovyLogMonitor )
-		{
+//		if( !checkedGroovyLogMonitor )
+//		{
 			synchronized( checkedGroovyLogMonitor )
 			{
-				if( !checkedGroovyLogMonitor )
+				if( !checkedGroovyLogMonitor || launchedTestRunner)
 				{
 					groovyLogger = Logger.getLogger( "groovy.log" );
 
@@ -985,15 +986,17 @@ public class SoapUI
 					if( logMonitor != null && !logMonitor.hasLogArea( "groovy.log" ) )
 					{
 						logMonitor.addLogArea( "script log", "groovy.log", false );
+//						launchedTestRunner = false;
 						checkedGroovyLogMonitor = true;
 					}
-//					else if( logMonitor == null )
-//					{
-//						checkedGroovyLogMonitor = true;
-//					}
+					else if( logMonitor == null && launchedTestRunner)
+					{
+						checkedGroovyLogMonitor = true;
+						launchedTestRunner = false;
+					}
 				}
 			}
-		}
+//		}
 
 		return groovyLogger;
 	}
@@ -1624,4 +1627,10 @@ public class SoapUI
 	{
 		return mainToolbar;
 	}
+
+	public static void setLaunchedTestRunner( Boolean launchedTestRunner )
+	{
+		SoapUI.launchedTestRunner = launchedTestRunner;
+	}
+
 }

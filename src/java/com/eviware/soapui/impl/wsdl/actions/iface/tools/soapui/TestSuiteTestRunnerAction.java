@@ -28,6 +28,7 @@ public class TestSuiteTestRunnerAction extends AbstractSoapUIAction<WsdlTestSuit
 	public void perform( WsdlTestSuite target, Object param )
 	{
 		SoapUIAction<ModelItem> action = SoapUI.getActionRegistry().getAction( TestRunnerAction.SOAPUI_ACTION_ID );
+		SoapUI.setLaunchedTestRunner( true );
 		action.perform( target.getProject(), target );
 	}
 }

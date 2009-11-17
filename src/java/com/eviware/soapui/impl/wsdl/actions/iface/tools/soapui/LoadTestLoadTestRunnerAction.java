@@ -28,6 +28,7 @@ public class LoadTestLoadTestRunnerAction extends AbstractSoapUIAction<WsdlLoadT
 	public void perform( WsdlLoadTest target, Object param )
 	{
 		SoapUIAction<ModelItem> action = SoapUI.getActionRegistry().getAction( LoadTestRunnerAction.SOAPUI_ACTION_ID );
+		SoapUI.setLaunchedTestRunner( true );
 		action.perform( target.getTestCase().getTestSuite().getProject(), target );
 	}
 }
