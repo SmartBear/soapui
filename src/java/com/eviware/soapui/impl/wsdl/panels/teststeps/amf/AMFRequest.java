@@ -153,7 +153,6 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		return testStep.getDescription();
 	}
 
-
 	public String getId()
 	{
 		return testStep.getId();
@@ -442,8 +441,8 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 	{
 		this.arguments = arguments;
 	}
-	
-	public void clearArguments( )
+
+	public void clearArguments()
 	{
 		this.arguments.clear();
 	}
@@ -475,15 +474,17 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 			scriptEngine.setVariable( "context", context );
 
 			scriptEngine.run();
-			
+
 			for( String name : propertyNames )
 			{
 				TestProperty propertyValue = propertyMap.get( name );
-				if( "script".equalsIgnoreCase( propertyValue.getValue() ) )
+				if( property.containsKey( name ) )
 				{
 					addArgument( property.get( name ) );
-				}else{
-					addArgument(propertyValue.getValue());
+				}
+				else
+				{
+					addArgument( propertyValue.getValue() );
 				}
 			}
 		}

@@ -5,6 +5,7 @@
 package com.eviware.soapui.impl.wsdl.panels.teststeps.amf;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
@@ -235,26 +236,25 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
 	protected JComponent buildRequestConfigPanel()
 	{
-		configPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ),
-				"AMF call and intialisation groovy script" );
-		if( panel == null )
-		{
-			panel = new JPanel( new BorderLayout() );
-			configForm = new SimpleForm();
+		configPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ), "Groovy script" );
 
-			addEndpointToSimpleForm();
-			addAmfCAlltoSimpleForm();
-			addGroovyEditorToSimpleForm();
-
-			panel.add( configForm.getPanel() );
-		}
-		configPanel.add( panel, BorderLayout.CENTER );
+		configPanel.add( groovyEditor = new GroovyEditor( new ScriptStepGroovyEditorModel() ), BorderLayout.CENTER );
 		propertiesTableComponent = buildProperties();
 		JSplitPane split = UISupport.createVerticalSplit( propertiesTableComponent, configPanel );
 		split.setDividerLocation( 120 );
 
 		// TODO add scrolling but without messing with the dimension - ask Ole
 		return split;
+
+	}
+
+	protected JComponent buildToolbar()
+	{
+
+		JPanel panel = new JPanel( new BorderLayout() );
+		panel.add( buildToolbar1(), BorderLayout.NORTH );
+		panel.add( buildToolbar2(), BorderLayout.SOUTH );
+		return panel;
 
 	}
 
@@ -302,7 +302,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		return holderTable;
 	}
 
-	protected JComponent buildToolbar()
+	protected JComponent buildToolbar1()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 
@@ -312,11 +312,31 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		toolbar.add( cancelButton );
 		toolbar.addFixed( addAssertionButton );
 
+		// toolbar.add( Box.createHorizontalGlue() );
+		// toolbar.addLabeledFixed( ENDPOINT, addEndpointField() );
+		// toolbar.addLabeledFixed( AMF_CALL, addAmfCallField() );
+
 		toolbar.add( Box.createHorizontalGlue() );
 		toolbar.add( tabsButton );
 		toolbar.add( splitButton );
+
 		toolbar.addFixed( UISupport
 				.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.TRANSFERSTEPEDITOR_HELP_URL ) ) );
+
+		return toolbar;
+
+	}
+
+	protected JComponent buildToolbar2()
+	{
+		JXToolBar toolbar = UISupport.createToolbar();
+
+		toolbar.setBorder( BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) );
+
+		toolbar.addLabeledFixed( ENDPOINT, addEndpointField() );
+		toolbar.addSeparator();
+		toolbar.addLabeledFixed( AMF_CALL, addAmfCallField() );
+
 		return toolbar;
 
 	}
@@ -344,34 +364,31 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		public AMFAssertionsPanel( Assertable assertable )
 		{
 			super( assertable );
-//			addAssertionAction = new AddAssertionAction( assertable );
-//			assertionListPopup.add( addAssertionAction );
+			// addAssertionAction = new AddAssertionAction( assertable );
+			// assertionListPopup.add( addAssertionAction );
 		}
 	}
 
-	protected SimpleForm addGroovyEditorToSimpleForm()
+	private JTextField addAmfCallField()
 	{
-		configForm.addSpace( 5 );
-		configForm.append( "Groovy Script", groovyEditor = new GroovyEditor( new ScriptStepGroovyEditorModel() ) );
-		return configForm;
-	}
-
-	private void addAmfCAlltoSimpleForm()
-	{
-		configForm.addSpace( 5 );
-		amfCall = configForm.appendTextField( AMF_CALL, "object.methodName for amf method call" );
+		amfCall = new JTextField();
 		amfCall.setText( amfRequestTestStep.getAmfCall() );
+		amfCall.setColumns( 20 );
+		amfCall.setToolTipText( "object.methodName for amf method call" );
 		PropertyExpansionPopupListener.enable( amfCall, amfRequestTestStep );
 		addAmfCallDocumentListener();
+		return amfCall;
 	}
 
-	private void addEndpointToSimpleForm()
+	private JTextField addEndpointField()
 	{
-		configForm.addSpace( 5 );
-		endpoint = configForm.appendTextField( ENDPOINT, "http to connect" );
+		endpoint = new JTextField();
 		endpoint.setText( amfRequestTestStep.getEndpoint() );
+		endpoint.setColumns( 35 );
+		endpoint.setToolTipText( "http to connect" );
 		PropertyExpansionPopupListener.enable( endpoint, amfRequestTestStep );
 		addEndpointCallDocumentListener();
+		return endpoint;
 	}
 
 	protected void addAmfCallDocumentListener()
@@ -383,7 +400,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 			{
 				if( !updating )
 				{
-					amfRequestTestStep.setAmfCall( configForm.getComponentValue( AMF_CALL ) );
+					amfRequestTestStep.setAmfCall( amfCall.getText() );
 				}
 			}
 		} );
@@ -398,7 +415,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 			{
 				if( !updating )
 				{
-					amfRequestTestStep.setEndpoint( configForm.getComponentValue( ENDPOINT ) );
+					amfRequestTestStep.setEndpoint( endpoint.getText() );
 				}
 			}
 		} );
@@ -414,7 +431,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	{
 		public String[] getKeywords()
 		{
-			return new String[] { "log", "context", "testRunner" };
+			return new String[] { "log", "context", "property" };
 		}
 
 		public Action getRunAction()
@@ -530,7 +547,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		requestEditor.removeAll();
 		SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener );
 		amfRequestTestStep.removeAssertionsListener( assertionsListener );
-
+		amfRequestTestStep.getAMFRequest().removeSubmitListener( this );
 		return release();
 	}
 
@@ -556,7 +573,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		public void setXml( String xml )
 		{
 			if( amfRequestTestStep.getAMFRequest().getResponse() != null )
-				amfRequestTestStep.getAMFRequest().getResponse().setResponseContentXML(  xml );
+				amfRequestTestStep.getAMFRequest().getResponse().setResponseContentXML( xml );
 		}
 
 		public void release()
