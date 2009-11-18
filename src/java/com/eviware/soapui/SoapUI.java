@@ -974,8 +974,6 @@ public class SoapUI
 
 	public static Logger ensureGroovyLog()
 	{
-		// if( !checkedGroovyLogMonitor )
-		// {
 		synchronized( checkedGroovyLogMonitor )
 		{
 			if( !checkedGroovyLogMonitor || launchedTestRunner )
@@ -995,7 +993,6 @@ public class SoapUI
 				}
 			}
 		}
-		// }
 
 		return groovyLogger;
 	}
