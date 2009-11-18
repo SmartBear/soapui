@@ -201,7 +201,6 @@ public class AMFSubmit implements Submit, Runnable
 		try
 		{
 			amfConnection.connect( amfRequest.getEndpoint() );
-			AMFConnection.registerAlias( "", "flex.samples.product.Product" );
 			Object result = amfConnection.call( amfRequest.getAmfCall(), amfRequest.argumentsToArray() );
 
 			return result;
