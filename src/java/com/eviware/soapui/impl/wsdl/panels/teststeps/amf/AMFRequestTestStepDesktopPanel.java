@@ -57,6 +57,8 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Submit.Status;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
@@ -311,10 +313,6 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		toolbar.addFixed( submitButton );
 		toolbar.add( cancelButton );
 		toolbar.addFixed( addAssertionButton );
-
-		// toolbar.add( Box.createHorizontalGlue() );
-		// toolbar.addLabeledFixed( ENDPOINT, addEndpointField() );
-		// toolbar.addLabeledFixed( AMF_CALL, addAmfCallField() );
 
 		toolbar.add( Box.createHorizontalGlue() );
 		toolbar.add( tabsButton );
@@ -650,15 +648,21 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
 		SubmitContext submitContext = new WsdlTestRunContext( getModelItem() );
 		AMFRequest amfRequest = amfRequestTestStep.getAMFRequest();
+		amfRequest = initAmfRequest( submitContext, amfRequest );
+
+		return amfRequestTestStep.getAMFRequest().submit( submitContext, false );
+	}
+
+	private AMFRequest initAmfRequest( SubmitContext submitContext, AMFRequest amfRequest )
+	{
 		amfRequest.setScriptEngine( scriptEngine );
-		amfRequest.setAmfCall( amfCall.getText() );
-		amfRequest.setEndpoint( endpoint.getText() );
+		amfRequest.setAmfCall( PropertyExpander.expandProperties( submitContext, amfCall.getText() ) );
+		amfRequest.setEndpoint( PropertyExpander.expandProperties( submitContext, endpoint.getText() ) );
 		amfRequest.setGroovyScript( groovyEditor.getEditArea().getText() );
 		amfRequest.setPropertyNames( amfRequestTestStep.getPropertyNames() );
 		amfRequest.setPropertyMap( ( HashMap<String, TestProperty> )amfRequestTestStep.getProperties() );
 		amfRequest.extractProperties( submitContext );
-
-		return amfRequestTestStep.getAMFRequest().submit( submitContext, false );
+		return amfRequest;
 	}
 
 	protected final class InputAreaFocusListener implements FocusListener

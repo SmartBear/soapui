@@ -39,6 +39,7 @@ import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.AbstractAnimatableModelItem;
 import com.eviware.soapui.model.support.ModelSupport;
@@ -484,7 +485,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 				}
 				else
 				{
-					addArgument( propertyValue.getValue() );
+					addArgument( PropertyExpander.expandProperties( context,propertyValue.getValue() ) );
 				}
 			}
 		}
