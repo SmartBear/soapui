@@ -80,6 +80,10 @@ public final class XOPPartDataSource implements DataSource
 			{
 				return new ByteArrayInputStream( Base64.decodeBase64( content.getBytes() ) );
 			}
+			else if( SchemaUtils.isAnyType( schemaType ))
+			{
+				return new ByteArrayInputStream( content.getBytes() );
+			}
 			else
 				throw new IOException( "Invalid type for XOPPartDataSource; " + schemaType.getName() );
 		}
@@ -92,7 +96,7 @@ public final class XOPPartDataSource implements DataSource
 
 	public String getName()
 	{
-		return schemaType.getName().toString();
+		return String.valueOf( schemaType.getName());
 	}
 
 	public OutputStream getOutputStream() throws IOException

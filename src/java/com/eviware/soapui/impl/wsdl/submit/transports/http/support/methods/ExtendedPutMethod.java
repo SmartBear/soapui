@@ -34,6 +34,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMethod
 {
 	private HttpMethodSupport httpMethodSupport;
+	private boolean followRedirects;
 
 	public ExtendedPutMethod()
 	{
@@ -61,6 +62,19 @@ public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMe
 		httpMethodSupport.afterReadResponse( arg0, arg1 );
 	}
 
+	@Override
+	public boolean getFollowRedirects()
+	{
+		return followRedirects;
+	}
+	
+	@Override
+	public void setFollowRedirects( boolean followRedirects )
+	{
+		this.followRedirects = followRedirects;
+	}
+
+	
 	@Override
 	public String getResponseCharSet()
 	{

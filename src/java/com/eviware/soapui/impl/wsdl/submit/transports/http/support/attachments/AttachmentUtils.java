@@ -61,7 +61,9 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
 /**
  * Attachment-related utility classes
@@ -86,7 +88,9 @@ public class AttachmentUtils
 	{
 		boolean isXop = false;
 
+		XmlObjectTreeModel treeModel = null;
 		XmlCursor cursor = messagePart.newCursor();
+		XmlObject rootXmlObject = cursor.getObject();
 
 		try
 		{
@@ -108,7 +112,19 @@ public class AttachmentUtils
 						break;
 					}
 
-					SchemaType schemaType = cursor.getObject().schemaType();
+					XmlObject xmlObj = cursor.getObject();
+					SchemaType schemaType = xmlObj.schemaType();
+					if( schemaType.isNoType() )
+					{
+						if( treeModel == null )
+						{
+							treeModel = new XmlObjectTreeModel( messagePart.getSchemaType().getTypeSystem(), rootXmlObject );
+						}
+
+						XmlTreeNode tn = treeModel.getXmlTreeNode( xmlObj );
+						if( tn != null )
+							schemaType = tn.getSchemaType();
+					}
 
 					if( AttachmentUtils.isSwaRefType( schemaType ) )
 					{
@@ -208,8 +224,8 @@ public class AttachmentUtils
 							}
 							// content should be binary data; is this an XOP element
 							// which should be serialized with MTOM?
-							else if( container.isMtomEnabled() && SchemaUtils.isBinaryType( schemaType )
-									|| SchemaUtils.isAnyType( schemaType ) )
+							else if( container.isMtomEnabled()
+									&& ( SchemaUtils.isBinaryType( schemaType ) || SchemaUtils.isAnyType( schemaType ) ) )
 							{
 								MimeBodyPart part = new PreencodedMimeBodyPart( "binary" );
 								String xmimeContentType = getXmlMimeContentType( cursor );
@@ -328,7 +344,7 @@ public class AttachmentUtils
 			attributeText = cursor.getAttributeText( XMLMIME_CONTENTTYPE_200505 );
 		return attributeText;
 	}
-	
+
 	public static AttachmentEncoding getAttachmentEncoding( WsdlOperation operation,
 			HttpAttachmentPart httpAttachmentPart, boolean isResponse )
 	{

@@ -26,6 +26,7 @@ import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Document;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MockRequestDataSource;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MultipartMessageSupport;
@@ -64,6 +65,7 @@ public class WsdlMockRequest implements MockRequest
 	private MockRequestDataSource mockRequestDataSource;
 	private String actualRequestContent;
 	private boolean responseMessage;
+	private String method;
 
 	public WsdlMockRequest( HttpServletRequest request, HttpServletResponse response, WsdlMockRunContext context )
 			throws Exception
@@ -79,13 +81,13 @@ public class WsdlMockRequest implements MockRequest
 		{
 			String header = ( String )e.nextElement();
 			String lcHeader = header.toLowerCase();
-			if( lcHeader.equals( "soapaction" ))
+			if( lcHeader.equals( "soapaction" ) )
 				requestHeaders.put( "SOAPAction", request.getHeader( header ) );
-			else if( lcHeader.equals( "content-type" ))
+			else if( lcHeader.equals( "content-type" ) )
 				requestHeaders.put( "Content-Type", request.getHeader( header ) );
-			else if( lcHeader.equals( "content-length" ))
+			else if( lcHeader.equals( "content-length" ) )
 				requestHeaders.put( "Content-Length", request.getHeader( header ) );
-			else if( lcHeader.equals( "content-encoding" ))
+			else if( lcHeader.equals( "content-encoding" ) )
 				requestHeaders.put( "Content-Encoding", request.getHeader( header ) );
 			else
 				requestHeaders.put( header, request.getHeader( header ) );
@@ -181,13 +183,13 @@ public class WsdlMockRequest implements MockRequest
 		ServletInputStream is = request.getInputStream();
 		if( is.markSupported() )
 			is.mark( Integer.MAX_VALUE );
-		
+
 		ByteArrayOutputStream out = Tools.readAll( is, Tools.READ_ALL );
 		byte[] data = out.toByteArray();
-		
-		if( is.markSupported())
+
+		if( is.markSupported() )
 			is.reset();
-		
+
 		int contentOffset = 0;
 
 		String contentType = request.getContentType();
@@ -237,6 +239,19 @@ public class WsdlMockRequest implements MockRequest
 	public void setRequestContent( String requestContent )
 	{
 		this.requestContent = requestContent;
+		requestXmlObject = null;
+
+		try
+		{
+			soapVersion = SoapUtils.deduceSoapVersion( request.getContentType(), getRequestXmlObject() );
+		}
+		catch( XmlException e )
+		{
+			SoapUI.logError( e );
+		}
+
+		if( soapVersion == null )
+			soapVersion = SoapVersion.Soap11;
 	}
 
 	public XmlObject getRequestXmlObject() throws XmlException
@@ -255,6 +270,16 @@ public class WsdlMockRequest implements MockRequest
 	public HttpServletRequest getHttpRequest()
 	{
 		return request;
+	}
+
+	public String getMethod()
+	{
+		return method == null ? request.getMethod() : method;
+	}
+
+	public void setMethod( String method )
+	{
+		this.method = method;
 	}
 
 	public XmlObject getContentElement() throws XmlException
@@ -286,6 +311,11 @@ public class WsdlMockRequest implements MockRequest
 	public String getSoapAction()
 	{
 		return soapAction;
+	}
+
+	public void setSoapAction( String soapAction )
+	{
+		this.soapAction = soapAction;
 	}
 
 	public byte[] getRawRequestData()

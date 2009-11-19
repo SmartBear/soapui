@@ -35,6 +35,7 @@ public final class ExtendedPostMethod extends PostMethod implements ExtendedHttp
 {
 	private HttpMethodSupport httpMethodSupport;
 	private IAfterRequestInjection afterRequestInjection;
+	private boolean followRedirects;
 
 	public ExtendedPostMethod()
 	{
@@ -49,6 +50,18 @@ public final class ExtendedPostMethod extends PostMethod implements ExtendedHttp
 	public void setDumpFile( String dumpFile )
 	{
 		httpMethodSupport.setDumpFile( dumpFile );
+	}
+
+	@Override
+	public boolean getFollowRedirects()
+	{
+		return followRedirects;
+	}
+	
+	@Override
+	public void setFollowRedirects( boolean followRedirects )
+	{
+		this.followRedirects = followRedirects;
 	}
 
 	public boolean hasResponse()

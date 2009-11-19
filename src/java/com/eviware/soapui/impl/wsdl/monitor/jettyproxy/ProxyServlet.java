@@ -52,7 +52,7 @@ public class ProxyServlet implements Servlet
 	protected HttpClient client;
 	protected SoapMonitor monitor;
 	protected WsdlProject project;
-	protected HttpState httpState = null;
+	protected HttpState httpState = new HttpState();
 	protected Settings settings;
 
 	static HashSet<String> dontProxyHeaders = new HashSet<String>();

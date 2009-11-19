@@ -37,7 +37,9 @@ import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
+import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
+import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
@@ -135,8 +137,8 @@ public class TunnelServlet extends ProxyServlet
 		}
 
 		if( postMethod instanceof ExtendedPostMethod )
-			( ( ExtendedPostMethod )postMethod ).setRequestEntity( new InputStreamRequestEntity( capture,
-					 request.getContentType() ) );
+			( ( ExtendedPostMethod )postMethod ).setRequestEntity( new InputStreamRequestEntity( capture, request
+					.getContentType() ) );
 
 		HostConfiguration hostConfiguration = new HostConfiguration();
 
@@ -146,6 +148,9 @@ public class TunnelServlet extends ProxyServlet
 				settings.getString( LaunchForm.SSLTUNNEL_KEYSTOREPATH, "" ) + " "
 						+ settings.getString( LaunchForm.SSLTUNNEL_KEYSTOREPASSWORD, "" ) );
 		hostConfiguration.setHost( new URI( this.prot + sslEndPoint, true ) );
+
+		hostConfiguration = ProxyUtils.initProxySettings( settings, httpState, hostConfiguration, prot + sslEndPoint,
+				new DefaultPropertyExpansionContext( project ) );
 
 		postMethod.setPath( sslEndPoint.substring( sslEndPoint.indexOf( "/" ), sslEndPoint.length() ) );
 

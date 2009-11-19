@@ -97,14 +97,13 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		else
 		{
 			browser = new BrowserComponent( false );
+			Component component = browser.getComponent();
+			component.setMinimumSize( new Dimension( 100, 100 ) );
+			contentPanel.add( component );
 
 			HttpResponse response = restRequest.getResponse();
 			if( response != null )
 				setEditorContent( response );
-
-			Component component = browser.getComponent();
-			component.setMinimumSize( new Dimension( 100, 100 ) );
-			contentPanel.add( component );
 		}
 		return contentPanel;
 	}
@@ -118,8 +117,10 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 			{
 				try
 				{
-					contentType = httpResponse.getResponseHeaders().get( "Content-Type", contentType );
-					browser.setContent( httpResponse.getContentAsString(), contentType, httpResponse.getURL().toString() );
+					
+					String content = httpResponse.getContentAsString();
+					content = new String( content.getBytes( "UTF-8"), "iso-8859-1" );
+					browser.setContent( content, contentType, httpResponse.getURL().toURI().toString() );
 				}
 				catch( Exception e )
 				{

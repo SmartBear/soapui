@@ -377,7 +377,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 			result = mockService.runOnRequestScript( mockContext, this, mockRequest );
 			if( !( result instanceof MockResult ) )
 			{
-				String method = request.getMethod();
+				String method = mockRequest.getMethod();
 
 				if( method.equals( "POST" ) )
 					result = dispatchPostRequest( mockRequest );
@@ -470,11 +470,11 @@ public class WsdlMockRunner extends AbstractMockRunner
 	private void dispatchCommand( String cmd, HttpServletRequest request, HttpServletResponse response )
 			throws IOException
 	{
-		if( "stop".equals( cmd ))
+		if( "stop".equals( cmd ) )
 		{
 			response.setStatus( HttpServletResponse.SC_OK );
 			response.flushBuffer();
-			
+
 			SoapUI.getThreadPool().execute( new Runnable()
 			{
 
@@ -492,11 +492,11 @@ public class WsdlMockRunner extends AbstractMockRunner
 				}
 			} );
 		}
-		else if( "restart".equals( cmd ))
+		else if( "restart".equals( cmd ) )
 		{
 			response.setStatus( HttpServletResponse.SC_OK );
 			response.flushBuffer();
-			
+
 			SoapUI.getThreadPool().execute( new Runnable()
 			{
 
@@ -510,17 +510,17 @@ public class WsdlMockRunner extends AbstractMockRunner
 					{
 						e.printStackTrace();
 					}
-					
+
 					stop();
-//					
-//					try
-//					{
-//						Thread.sleep( 500 );
-//					}
-//					catch( InterruptedException e )
-//					{
-//						e.printStackTrace();
-//					}
+					//					
+					// try
+					// {
+					// Thread.sleep( 500 );
+					// }
+					// catch( InterruptedException e )
+					// {
+					// e.printStackTrace();
+					// }
 
 					try
 					{
@@ -530,7 +530,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 					{
 						e.printStackTrace();
 					}
-					
+
 				}
 			} );
 		}
@@ -595,7 +595,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 					StringToStringMap parts = wsdlCache.get( iface.getName() );
 					Import wsdlImport = def.createImport();
 					wsdlImport.setLocationURI( getInterfacePrefix( iface ) + "&part=" + parts.get( "#root#" ) );
-					wsdlImport.setNamespaceURI( WsdlUtils.getTargetNamespace( iface.getWsdlContext().getDefinition()) );
+					wsdlImport.setNamespaceURI( WsdlUtils.getTargetNamespace( iface.getWsdlContext().getDefinition() ) );
 
 					def.addImport( wsdlImport );
 				}
