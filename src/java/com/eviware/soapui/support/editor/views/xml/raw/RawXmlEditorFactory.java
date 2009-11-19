@@ -20,7 +20,9 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequest;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
+import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.settings.UISettings;
@@ -44,6 +46,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 	@SuppressWarnings( "unchecked" )
 	public EditorView<?> createResponseEditorView( Editor<?> editor, ModelItem modelItem )
 	{
+
 		if( modelItem instanceof MessageExchangeModelItem )
 		{
 			return new WsdlMessageExchangeResponseRawXmlEditor( ( MessageExchangeModelItem )modelItem, ( XmlEditor )editor );
@@ -55,6 +58,10 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		else if( modelItem instanceof WsdlMockResponse )
 		{
 			return new WsdlMockResponseRawXmlEditor( ( WsdlMockResponse )modelItem, ( XmlEditor )editor );
+		}
+		else if( modelItem instanceof AMFRequestTestStep )
+		{
+			return new AmfResponseRawXmlEditor( ( AMFRequestTestStep )modelItem, ( XmlEditor )editor );
 		}
 
 		return null;
@@ -108,7 +115,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 
 			byte[] rawRequestData = request.getResponse().getRawRequestData();
 			int maxSize = ( int )SoapUI.getSettings().getLong( UISettings.RAW_REQUEST_MESSAGE_SIZE, 10000 );
-			
+
 			if( maxSize < rawRequestData.length )
 				return new String( Arrays.copyOf( rawRequestData, maxSize ) );
 			else
@@ -152,10 +159,10 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 
 			byte[] rawResponseData = request.getResponse().getRawResponseData();
 			int maxSize = ( int )SoapUI.getSettings().getLong( UISettings.RAW_RESPONSE_MESSAGE_SIZE, 10000 );
-			
+
 			if( maxSize < rawResponseData.length )
 				return new String( Arrays.copyOf( rawResponseData, maxSize ) );
-			else 
+			else
 				return new String( rawResponseData );
 		}
 
@@ -302,6 +309,44 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		{
 			MessageExchange me = request.getMessageExchange();
 			return me == null || me.getRawRequestData() == null ? "" : new String( me.getRawRequestData() );
+		}
+	}
+
+	private static class AmfResponseRawXmlEditor extends RawXmlEditor<XmlDocument>
+	{
+		private final AMFRequest request;
+
+		public AmfResponseRawXmlEditor( AMFRequestTestStep requestTestStep, XmlEditor<XmlDocument> editor )
+		{
+			super( "Raw", editor, "The actual content of the last received response" );
+			this.request = requestTestStep.getAMFRequest();
+
+			request.addPropertyChangeListener( AMFRequest.REQUEST_PROPERTY, this );
+		}
+
+		@Override
+		public void propertyChange( PropertyChangeEvent evt )
+		{
+			if( evt.getPropertyName().equals( AMFRequest.REQUEST_PROPERTY ) )
+			{
+				setXml( "" );
+			}
+		}
+
+		@Override
+		public String getContent()
+		{
+			if( request != null && request.getResponse() != null )
+				return request.getResponse().getContentAsString();
+			else
+				return "";
+		}
+
+		@Override
+		public void release()
+		{
+			request.removePropertyChangeListener( AMFRequest.REQUEST_PROPERTY, this );
+			super.release();
 		}
 	}
 }
