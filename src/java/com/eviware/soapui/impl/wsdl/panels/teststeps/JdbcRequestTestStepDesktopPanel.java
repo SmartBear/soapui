@@ -132,10 +132,10 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		jdbcRequestTestStep = modelItem;
 		initConfig();
 		initContent();
-		
+
 		SoapUI.getTestMonitor().addTestMonitorListener( testMonitorListener );
 		setEnabled( !SoapUI.getTestMonitor().hasRunningTest( jdbcRequestTestStep.getTestCase() ) );
-		
+
 		jdbcRequestTestStep.addAssertionsListener( assertionsListener );
 	}
 
@@ -230,9 +230,9 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 		inspectorPanel.addInspector( assertionInspector );
 		// setPreferredSize(new Dimension(600, 450));
-		
+
 		updateStatusIcon();
-		
+
 		return inspectorPanel.getComponent();
 	}
 
@@ -254,7 +254,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		JSplitPane split = UISupport.createVerticalSplit( propertiesTableComponent, configPanel );
 		split.setDividerLocation( 120 );
 
-		// TODO add scrolling but without messing with the dimension - ask Ole
 		return split;
 
 	}
@@ -345,12 +344,12 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	{
 		return new JdbcAssertionsPanel( jdbcRequestTestStep )
 		{
-//			protected void selectError( AssertionError error )
-//			{
-//				 ModelItemXmlEditor<?, ?> editor = ( ModelItemXmlEditor<?, ?>
-//				 ).getResultEditorModel();
-//				 editor.requestFocus();
-//			}
+			// protected void selectError( AssertionError error )
+			// {
+			// ModelItemXmlEditor<?, ?> editor = ( ModelItemXmlEditor<?, ?>
+			// ).getResultEditorModel();
+			// editor.requestFocus();
+			// }
 		};
 	}
 
@@ -359,8 +358,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		public JdbcAssertionsPanel( Assertable assertable )
 		{
 			super( assertable );
-//			addAssertionAction = new AddAssertionAction( assertable );
-//			assertionListPopup.add( addAssertionAction );
+			// addAssertionAction = new AddAssertionAction( assertable );
+			// assertionListPopup.add( addAssertionAction );
 		}
 	}
 
@@ -517,7 +516,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	{
 		configPanel.removeAll();
 		inspectorPanel.release();
-		
+
 		SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener );
 		jdbcRequestTestStep.removeAssertionsListener( assertionsListener );
 
@@ -533,7 +532,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			fireXmlChanged( evt.getOldValue() == null ? null : ( ( JdbcResponse )evt.getOldValue() ).getContentAsString(), getXml() );
+			fireXmlChanged( evt.getOldValue() == null ? null : ( ( JdbcResponse )evt.getOldValue() ).getContentAsString(),
+					getXml() );
 		}
 
 		public String getXml()
@@ -604,7 +604,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				setEnabled( false );
 		}
 	}
-	
+
 	public class SubmitAction extends AbstractAction
 	{
 		public SubmitAction()
@@ -847,7 +847,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		JdbcResponse response = ( JdbcResponse )submit.getResponse();
 		if( status == Status.FINISHED )
 		{
-			jdbcRequestTestStep.setResponse( response, context);
+			jdbcRequestTestStep.setResponse( response, context );
 		}
 
 		cancelButton.setEnabled( false );
@@ -888,7 +888,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			responseEditor.getSourceEditor().validate();
 
 		JdbcRequestTestStepDesktopPanel.this.submit = null;
-		
+
 		updateStatusIcon();
 	}
 
@@ -907,7 +907,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		cancelButton.setEnabled( JdbcRequestTestStepDesktopPanel.this.submit != null );
 		return true;
 	}
-	
+
 	public void propertyChange( PropertyChangeEvent evt )
 	{
 		super.propertyChange( evt );
@@ -915,7 +915,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		if( evt.getPropertyName().equals( JdbcRequestTestStep.STATUS_PROPERTY ) )
 			updateStatusIcon();
 	}
-	
+
 	private final class InternalAssertionsListener implements AssertionsListener
 	{
 		public void assertionAdded( TestAssertion assertion )
@@ -933,7 +933,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			assertionInspector.setTitle( "Assertions (" + getModelItem().getAssertionCount() + ")" );
 		}
 	}
-	
+
 	private void updateStatusIcon()
 	{
 		AssertionStatus status = jdbcRequestTestStep.getAssertionStatus();
