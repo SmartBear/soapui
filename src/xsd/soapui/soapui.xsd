@@ -1901,8 +1901,8 @@
     		<xsd:element name="assertion" type="tns:TestAssertion"
     			maxOccurs="unbounded" minOccurs="0">
     		</xsd:element>
-    		<xsd:element name="enpoint" type="xsd:string"></xsd:element>
-    		<xsd:element name="groovyScript" type="xsd:string"></xsd:element>
+    		<xsd:element name="endpoint" type="xsd:string"></xsd:element>
+    		<xsd:element name="script" type="tns:Script"></xsd:element>
     		<xsd:element name="amfCall" type="xsd:string"></xsd:element>
     	</xsd:sequence>
     </xsd:complexType>

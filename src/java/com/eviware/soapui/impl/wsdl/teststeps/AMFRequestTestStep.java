@@ -604,14 +604,14 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 
 	public String getScript()
 	{
-		return amfRequestTestStepConfig.getGroovyScript();
+		return amfRequestTestStepConfig.getScript() != null ? amfRequestTestStepConfig.getScript().getStringValue() : "";
 	}
 
 	public void setScript( String script )
 	{
 		String old = getScript();
 		scriptEngine.setScript( script );
-		amfRequestTestStepConfig.setGroovyScript( script );
+		amfRequestTestStepConfig.getScript().setStringValue( script );
 		notifyPropertyChanged( "groovyScript", old, script );
 
 	}
@@ -630,13 +630,13 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 
 	public String getEndpoint()
 	{
-		return amfRequestTestStepConfig.getEnpoint();
+		return amfRequestTestStepConfig.getEndpoint();
 	}
 
 	public void setEndpoint( String endpoint )
 	{
 		String old = getEndpoint();
-		amfRequestTestStepConfig.setEnpoint( endpoint );
+		amfRequestTestStepConfig.setEndpoint( endpoint );
 		notifyPropertyChanged( "endpoint", old, endpoint );
 	}
 
