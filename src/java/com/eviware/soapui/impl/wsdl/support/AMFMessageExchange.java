@@ -67,7 +67,6 @@ public class AMFMessageExchange extends AbstractNonHttpMessageExchange<AMFReques
 
 	public String getEndpoint()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return response.getRequest().getEndpoint();
 	}
 }

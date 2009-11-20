@@ -33,7 +33,6 @@ public class AMFSubmit implements Submit, Runnable
 	private SubmitListener[] listeners;
 	private Exception error;
 	private long timestamp;
-	private long timeTaken;
 	private final AMFRequest request;
 	private AMFResponse response;
 
@@ -67,7 +66,7 @@ public class AMFSubmit implements Submit, Runnable
 		if( status == Status.CANCELED )
 			return;
 
-		AMFRequest.logger.info( "Canceling request.." );
+		SoapUI.log.info( "Canceling request.." );
 
 		status = Status.CANCELED;
 
@@ -82,26 +81,6 @@ public class AMFSubmit implements Submit, Runnable
 				SoapUI.logError( e );
 			}
 		}
-	}
-
-	public Exception getError()
-	{
-		return error;
-	}
-
-	public AMFRequest getRequest()
-	{
-		return request;
-	}
-
-	public AMFResponse getResponse()
-	{
-		return response;
-	}
-
-	public Status getStatus()
-	{
-		return status;
 	}
 
 	public Status waitUntilFinished()
@@ -135,17 +114,15 @@ public class AMFSubmit implements Submit, Runnable
 				if( !listeners[i].beforeSubmit( this, context ) )
 				{
 					status = Status.CANCELED;
-					System.err.println( "listener cancelled submit.." );
+					SoapUI.log.error( "listener cancelled submit.." );
 					return;
 				}
 			}
 
 			status = Status.RUNNING;
 			Object responseContent = executeAmfCall( getRequest() );
-			context.setProperty( AMFRequest.AMF_RESPONSE_CONTENT, responseContent );
+			createResponse( responseContent );
 
-			timeTaken = System.currentTimeMillis() - timestamp;
-			createResponse();
 			if( status != Status.CANCELED )
 			{
 				status = Status.FINISHED;
@@ -176,24 +153,22 @@ public class AMFSubmit implements Submit, Runnable
 		}
 	}
 
-	protected String createResponse()
+	protected void createResponse( Object responseContent )
 	{
 		try
 		{
-			response = new AMFResponse( request, context );
+			response = new AMFResponse( request, context, responseContent );
 			response.setTimestamp( timestamp );
-			response.setTimeTaken( timeTaken );
-
+			response.setTimeTaken( System.currentTimeMillis() - timestamp );
 		}
 		catch( Exception e )
 		{
-			e.printStackTrace();
+			SoapUI.logError( e );
 		}
 
-		return null;
 	}
 
-	public Object executeAmfCall( AMFRequest amfRequest ) throws ClientStatusException, ServerStatusException
+	private Object executeAmfCall( AMFRequest amfRequest ) throws ClientStatusException, ServerStatusException
 	{
 		AMFConnection amfConnection = new AMFConnection();
 		amfConnection.setInstantiateTypes( false );
@@ -205,11 +180,38 @@ public class AMFSubmit implements Submit, Runnable
 
 			return result;
 		}
+		catch( Throwable e )
+		{
+			SoapUI.logError( e );
+			status = Status.ERROR;
+		}
 		finally
 		{
 			amfRequest.clearArguments();
 			amfConnection.close();
 		}
+		return null;
 
 	}
+
+	public Exception getError()
+	{
+		return error;
+	}
+
+	public AMFRequest getRequest()
+	{
+		return request;
+	}
+
+	public AMFResponse getResponse()
+	{
+		return response;
+	}
+
+	public Status getStatus()
+	{
+		return status;
+	}
+
 }

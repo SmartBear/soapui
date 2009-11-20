@@ -21,8 +21,6 @@ import java.util.Set;
 
 import javax.swing.ImageIcon;
 
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AMFRequestTestStepConfig;
 import com.eviware.soapui.config.ModelItemConfig;
@@ -53,11 +51,11 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 
 public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> implements Assertable, TestRequest
 {
+
+	public static final String AMF_RESPONSE_CONTENT = "AMF_RESPONSE_CONTENT";
+
 	private final AMFRequestTestStep testStep;
 	private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
-
-	final static Logger logger = Logger.getLogger( AMFRequest.class );
-
 	private AMFResponse response;
 	private SoapUIScriptEngine scriptEngine;
 	private String endpoint;
@@ -70,8 +68,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 	private boolean forLoadTest;
 	private AssertionStatus currentStatus;
 
-	public static final String AMF_RESPONSE_CONTENT = "AMF_RESPONSE_CONTENT";
-
+	// icon related
 	private RequestIconAnimator<?> iconAnimator;
 	private ImageIcon validRequestIcon;
 	private ImageIcon failedRequestIcon;
@@ -84,154 +81,45 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		initIcons();
 	}
 
-	public void addSubmitListener( SubmitListener listener )
-	{
-		submitListeners.add( listener );
-	}
-
-	public boolean dependsOn( ModelItem modelItem )
-	{
-		return ModelSupport.dependsOn( testStep, modelItem );
-	}
-
-	public Attachment[] getAttachments()
-	{
-		return null;
-	}
-
-	public String getEncoding()
-	{
-		return null;
-	}
-
-	public Operation getOperation()
-	{
-		return null;
-	}
-
-	public String getRequestContent()
-	{
-		return ( ( AMFRequestTestStepConfig )testStep.getConfig() ).getProperties().toString();
-	}
-
-	public MessagePart[] getRequestParts()
-	{
-		return null;
-	}
-
-	public MessagePart[] getResponseParts()
-	{
-		return null;
-	}
-
-	public String getTimeout()
-	{
-		return null;// testStep.getQueryTimeout();
-	}
-
-	public void removeSubmitListener( SubmitListener listener )
-	{
-		submitListeners.remove( listener );
-	}
-
-	public void setEncoding( String string )
-	{
-	}
-
 	public AMFSubmit submit( SubmitContext submitContext, boolean async ) throws SubmitException
 	{
 
 		return new AMFSubmit( this, submitContext, async );
 	}
 
-	public List<? extends ModelItem> getChildren()
+	public void extractProperties( SubmitContext context )
 	{
-		return null;
-	}
+		HashMap<String, Object> property = new HashMap<String, Object>();
+		try
+		{
+			scriptEngine.setScript( groovyScript );
+			scriptEngine.setVariable( "property", property );
+			scriptEngine.setVariable( "log", SoapUI.log );
+			scriptEngine.setVariable( "context", context );
 
-	public String getDescription()
-	{
-		return testStep.getDescription();
-	}
+			scriptEngine.run();
 
-	public String getId()
-	{
-		return testStep.getId();
-	}
-
-	public String getName()
-	{
-		return testStep.getName();
-	}
-
-	public ModelItem getParent()
-	{
-		return testStep.getParent();
-	}
-
-	public Settings getSettings()
-	{
-		return testStep.getSettings();
-	}
-
-	public SubmitListener[] getSubmitListeners()
-	{
-		return submitListeners.toArray( new SubmitListener[submitListeners.size()] );
-	}
-
-	public AMFRequestTestStep getTestStep()
-	{
-		return testStep;
-	}
-
-	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy )
-	{
-		return testStep.importAssertion( source, overwrite, createCopy );
-	}
-
-	public TestAssertion addAssertion( String selection )
-	{
-		return testStep.addAssertion( selection );
-	}
-
-	public void addAssertionsListener( AssertionsListener listener )
-	{
-		testStep.addAssertionsListener( listener );
-	}
-
-	public TestAssertion cloneAssertion( TestAssertion source, String name )
-	{
-		return testStep.cloneAssertion( source, name );
-	}
-
-	public String getAssertableContent()
-	{
-		return testStep.getAssertableContent();
-	}
-
-	public AssertableType getAssertableType()
-	{
-		return testStep.getAssertableType();
-	}
-
-	public TestAssertion getAssertionAt( int c )
-	{
-		return testStep.getAssertionAt( c );
-	}
-
-	public TestAssertion getAssertionByName( String name )
-	{
-		return testStep.getAssertionByName( name );
-	}
-
-	public int getAssertionCount()
-	{
-		return testStep.getAssertionCount();
-	}
-
-	public List<TestAssertion> getAssertionList()
-	{
-		return testStep.getAssertionList();
+			for( String name : propertyNames )
+			{
+				TestProperty propertyValue = propertyMap.get( name );
+				if( property.containsKey( name ) )
+				{
+					addArgument( property.get( name ) );
+				}
+				else
+				{
+					addArgument( PropertyExpander.expandProperties( context, propertyValue.getValue() ) );
+				}
+			}
+		}
+		catch( Throwable e )
+		{
+			SoapUI.logError( e );
+		}
+		finally
+		{
+			scriptEngine.clearVariables();
+		}
 	}
 
 	public AssertionStatus getAssertionStatus()
@@ -398,6 +286,26 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		getTestStep().setIcon( icon );
 	}
 
+	public void setPropertyNames( String[] propertyNames )
+	{
+		this.propertyNames = propertyNames;
+	}
+
+	public String[] getPropertyNames()
+	{
+		return propertyNames;
+	}
+
+	public void setScriptEngine( SoapUIScriptEngine scriptEngine )
+	{
+		this.scriptEngine = scriptEngine;
+	}
+
+	public SoapUIScriptEngine getScriptEngine()
+	{
+		return scriptEngine;
+	}
+
 	public String getEndpoint()
 	{
 		return endpoint;
@@ -464,58 +372,148 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		return arguments.toArray();
 	}
 
-	public void extractProperties( SubmitContext context )
+	public void addSubmitListener( SubmitListener listener )
 	{
-		HashMap<String, Object> property = new HashMap<String, Object>();
-		try
-		{
-			scriptEngine.setScript( groovyScript );
-			scriptEngine.setVariable( "property", property );
-			scriptEngine.setVariable( "log", SoapUI.log );
-			scriptEngine.setVariable( "context", context );
-
-			scriptEngine.run();
-
-			for( String name : propertyNames )
-			{
-				TestProperty propertyValue = propertyMap.get( name );
-				if( property.containsKey( name ) )
-				{
-					addArgument( property.get( name ) );
-				}
-				else
-				{
-					addArgument( PropertyExpander.expandProperties( context,propertyValue.getValue() ) );
-				}
-			}
-		}
-		catch( Throwable e )
-		{
-			SoapUI.logError( e );
-		}
-		finally
-		{
-			scriptEngine.clearVariables();
-		}
+		submitListeners.add( listener );
 	}
 
-	public void setPropertyNames( String[] propertyNames )
+	public boolean dependsOn( ModelItem modelItem )
 	{
-		this.propertyNames = propertyNames;
+		return ModelSupport.dependsOn( testStep, modelItem );
 	}
 
-	public String[] getPropertyNames()
+	public Attachment[] getAttachments()
 	{
-		return propertyNames;
+		return null;
 	}
 
-	public void setScriptEngine( SoapUIScriptEngine scriptEngine )
+	public String getEncoding()
 	{
-		this.scriptEngine = scriptEngine;
+		return null;
 	}
 
-	public SoapUIScriptEngine getScriptEngine()
+	public Operation getOperation()
 	{
-		return scriptEngine;
+		return null;
 	}
+
+	public String getRequestContent()
+	{
+		return ( ( AMFRequestTestStepConfig )testStep.getConfig() ).getProperties().toString();
+	}
+
+	public MessagePart[] getRequestParts()
+	{
+		return null;
+	}
+
+	public MessagePart[] getResponseParts()
+	{
+		return null;
+	}
+
+	public String getTimeout()
+	{
+		return null;// testStep.getQueryTimeout();
+	}
+
+	public void removeSubmitListener( SubmitListener listener )
+	{
+		submitListeners.remove( listener );
+	}
+
+	public void setEncoding( String string )
+	{
+	}
+
+	public List<? extends ModelItem> getChildren()
+	{
+		return null;
+	}
+
+	public String getDescription()
+	{
+		return testStep.getDescription();
+	}
+
+	public String getId()
+	{
+		return testStep.getId();
+	}
+
+	public String getName()
+	{
+		return testStep.getName();
+	}
+
+	public ModelItem getParent()
+	{
+		return testStep.getParent();
+	}
+
+	public Settings getSettings()
+	{
+		return testStep.getSettings();
+	}
+
+	public SubmitListener[] getSubmitListeners()
+	{
+		return submitListeners.toArray( new SubmitListener[submitListeners.size()] );
+	}
+
+	public AMFRequestTestStep getTestStep()
+	{
+		return testStep;
+	}
+
+	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy )
+	{
+		return testStep.importAssertion( source, overwrite, createCopy );
+	}
+
+	public TestAssertion addAssertion( String selection )
+	{
+		return testStep.addAssertion( selection );
+	}
+
+	public void addAssertionsListener( AssertionsListener listener )
+	{
+		testStep.addAssertionsListener( listener );
+	}
+
+	public TestAssertion cloneAssertion( TestAssertion source, String name )
+	{
+		return testStep.cloneAssertion( source, name );
+	}
+
+	public String getAssertableContent()
+	{
+		return testStep.getAssertableContent();
+	}
+
+	public AssertableType getAssertableType()
+	{
+		return testStep.getAssertableType();
+	}
+
+	public TestAssertion getAssertionAt( int c )
+	{
+		return testStep.getAssertionAt( c );
+	}
+
+	public TestAssertion getAssertionByName( String name )
+	{
+		return testStep.getAssertionByName( name );
+	}
+
+	public int getAssertionCount()
+	{
+		return testStep.getAssertionCount();
+	}
+
+	public List<TestAssertion> getAssertionList()
+	{
+		return testStep.getAssertionList();
+	}
+
 }

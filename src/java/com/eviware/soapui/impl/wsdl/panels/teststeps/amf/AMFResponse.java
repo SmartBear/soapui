@@ -23,30 +23,28 @@ import com.eviware.soapui.model.support.AbstractResponse;
 
 public class AMFResponse extends AbstractResponse<AMFRequest>
 {
-	private Object responseContent="";
-	private String responseContentXML="";
+	private Object responseContent = "";
+	private String responseContentXML = "";
 	private long timeTaken;
 	private long timestamp;
-	private SubmitContext submitContext;
 	private AMFRequest request;
 
-	public AMFResponse( AMFRequest request, SubmitContext submitContext ) throws SQLException,
+	public AMFResponse( AMFRequest request, SubmitContext submitContext, Object responseContent ) throws SQLException,
 			ParserConfigurationException, TransformerConfigurationException, TransformerException
 	{
 		super( request );
 
 		this.request = request;
-		this.responseContent = submitContext.getProperty( AMFRequest.AMF_RESPONSE_CONTENT );
-		this.submitContext = submitContext;
-		if(responseContent != null)
-			 setResponseContentXML(new com.thoughtworks.xstream.XStream().toXML( responseContent ) ) ;
+		this.responseContent = responseContent;
+		if( responseContent != null )
+			setResponseContentXML( new com.thoughtworks.xstream.XStream().toXML( responseContent ) );
 	}
 
 	public String getContentAsString()
 	{
-		return responseContent != null ? responseContent.toString() : "";
+		return getResponseContentXML();
 	}
-	
+
 	public String getContentType()
 	{
 		return "text/xml";
@@ -72,9 +70,9 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 		return timestamp;
 	}
 
-	public void setContentAsString( String xml )
+	public void setContentAsString( String content )
 	{
-		responseContent = xml;
+		responseContent = content;
 	}
 
 	public void setTimeTaken( long timeTaken )
@@ -102,6 +100,4 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 	{
 		return responseContentXML;
 	}
-	
-	
 }

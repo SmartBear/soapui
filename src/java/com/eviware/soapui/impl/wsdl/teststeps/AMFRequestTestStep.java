@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.teststeps;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,7 @@ import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.Request.SubmitException;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
@@ -72,11 +74,6 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";
 	public static final String RESPONSE_PROPERTY = "response";
 	private AMFSubmit submit;
-	private String script = "";
-	private String amfCall;
-	private String endpoint;
-
-
 
 	private SoapUIScriptEngine scriptEngine;
 	private AssertionsSupport assertionsSupport;
@@ -119,10 +116,6 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		// setIconAnimator(initIconAnimator());
 		// }
 
-		this.script = amfRequestTestStepConfig.getGroovyScript();
-		this.amfCall = amfRequestTestStepConfig.getAmfCall();
-		this.endpoint = amfRequestTestStepConfig.getEnpoint();
-		
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 		scriptEngine.setScript( getScript() );
 		if( forLoadTest && !isDisabled() )
@@ -163,7 +156,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		AMFTestStepResult testStepResult = new AMFTestStepResult( this );
 		testStepResult.startTimer();
 		runContext.setProperty( AssertedXPathsContainer.ASSERTEDXPATHSCONTAINER_PROPERTY, testStepResult );
-
+		initAmfRequest( runContext );
 		try
 		{
 			submit = amfRequest.submit( runContext, false );
@@ -611,58 +604,51 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 
 	public String getScript()
 	{
-		return script;
+		return amfRequestTestStepConfig.getGroovyScript();
 	}
 
-	public void setScript( String scriptText )
+	public void setScript( String script )
 	{
-		if( scriptText.equals( this.script ) )
-			return;
+		String old = getScript();
+		scriptEngine.setScript( script );
+		amfRequestTestStepConfig.setGroovyScript( script );
+		notifyPropertyChanged( "groovyScript", old, script );
 
-		String oldScript = this.script;
-		this.script = scriptText;
-		scriptEngine.setScript( scriptText );
-		notifyPropertyChanged( "groovyScript", oldScript, scriptText );
-
-		saveScript();
 	}
 
-	private void saveScript()
-	{
-		amfRequestTestStepConfig.setGroovyScript( getScript() );
-	}
-
-	
 	public String getAmfCall()
 	{
-		return amfCall;
+		return amfRequestTestStepConfig.getAmfCall();
 	}
 
 	public void setAmfCall( String amfCall )
 	{
-		this.amfCall = amfCall;
-		saveAmfCall();
+		String old = getAmfCall();
+		amfRequestTestStepConfig.setAmfCall( amfCall );
+		notifyPropertyChanged( "amfCall", old, amfCall );
 	}
 
-	private void saveAmfCall()
-	{
-		amfRequestTestStepConfig.setAmfCall( getAmfCall() );
-	}
-	
 	public String getEndpoint()
 	{
-		return endpoint;
+		return amfRequestTestStepConfig.getEnpoint();
 	}
 
 	public void setEndpoint( String endpoint )
 	{
-		this.endpoint = endpoint;
-		saveEndpooint();
+		String old = getEndpoint();
+		amfRequestTestStepConfig.setEnpoint( endpoint );
+		notifyPropertyChanged( "endpoint", old, endpoint );
 	}
 
-	private void saveEndpooint()
+	public void initAmfRequest( SubmitContext submitContext )
 	{
-		amfRequestTestStepConfig.setEnpoint(  getEndpoint() );
+		amfRequest.setScriptEngine( scriptEngine );
+		amfRequest.setAmfCall( PropertyExpander.expandProperties( submitContext, getAmfCall() ) );
+		amfRequest.setEndpoint( PropertyExpander.expandProperties( submitContext, getEndpoint() ) );
+		amfRequest.setGroovyScript( getScript() );
+		amfRequest.setPropertyNames( getPropertyNames() );
+		amfRequest.setPropertyMap( ( HashMap<String, TestProperty> )getProperties() );
+		amfRequest.extractProperties( submitContext );
 	}
 
 }

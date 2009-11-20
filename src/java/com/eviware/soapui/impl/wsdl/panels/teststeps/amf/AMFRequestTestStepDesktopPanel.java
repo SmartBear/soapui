@@ -5,7 +5,6 @@
 package com.eviware.soapui.impl.wsdl.panels.teststeps.amf;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
@@ -13,7 +12,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -57,15 +55,12 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Submit.Status;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
@@ -239,13 +234,12 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	protected JComponent buildRequestConfigPanel()
 	{
 		configPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ), "Groovy script" );
-
-		configPanel.add( groovyEditor = new GroovyEditor( new ScriptStepGroovyEditorModel() ), BorderLayout.CENTER );
+		groovyEditor = ( GroovyEditor )UISupport.getEditorFactory().buildGroovyEditor( new ScriptStepGroovyEditorModel() );
+		configPanel.add( groovyEditor, BorderLayout.CENTER );
 		propertiesTableComponent = buildProperties();
 		JSplitPane split = UISupport.createVerticalSplit( propertiesTableComponent, configPanel );
 		split.setDividerLocation( 120 );
 
-		// TODO add scrolling but without messing with the dimension - ask Ole
 		return split;
 
 	}
@@ -647,22 +641,9 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	{
 
 		SubmitContext submitContext = new WsdlTestRunContext( getModelItem() );
-		AMFRequest amfRequest = amfRequestTestStep.getAMFRequest();
-		amfRequest = initAmfRequest( submitContext, amfRequest );
+		amfRequestTestStep.initAmfRequest( submitContext );
 
 		return amfRequestTestStep.getAMFRequest().submit( submitContext, false );
-	}
-
-	private AMFRequest initAmfRequest( SubmitContext submitContext, AMFRequest amfRequest )
-	{
-		amfRequest.setScriptEngine( scriptEngine );
-		amfRequest.setAmfCall( PropertyExpander.expandProperties( submitContext, amfCall.getText() ) );
-		amfRequest.setEndpoint( PropertyExpander.expandProperties( submitContext, endpoint.getText() ) );
-		amfRequest.setGroovyScript( groovyEditor.getEditArea().getText() );
-		amfRequest.setPropertyNames( amfRequestTestStep.getPropertyNames() );
-		amfRequest.setPropertyMap( ( HashMap<String, TestProperty> )amfRequestTestStep.getProperties() );
-		amfRequest.extractProperties( submitContext );
-		return amfRequest;
 	}
 
 	protected final class InputAreaFocusListener implements FocusListener
