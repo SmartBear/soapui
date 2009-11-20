@@ -251,7 +251,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		}
 		else if( request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod )
 		{
-			httpMethod.setRequestHeader( "Content-Type", request.getMediaType() );
+			httpMethod.setRequestHeader( "Content-Type", getContentTypeHeader( request.getMediaType(), encoding ) );
 
 			if( request.isPostQueryString() )
 			{
@@ -300,7 +300,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 							( ( EntityEnclosingMethod )httpMethod ).setRequestEntity( new InputStreamRequestEntity(
 									attachments.get( 0 ).getInputStream() ) );
 
-							httpMethod.setRequestHeader( "Content-Type", request.getMediaType() );
+							httpMethod.setRequestHeader( "Content-Type", getContentTypeHeader( request.getMediaType(),
+									encoding ) );
 						}
 
 						if( ( ( EntityEnclosingMethod )httpMethod ).getRequestEntity() == null )
@@ -318,7 +319,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 							RestRequestMimeMessageRequestEntity mimeMessageRequestEntity = new RestRequestMimeMessageRequestEntity(
 									message, request );
 							( ( EntityEnclosingMethod )httpMethod ).setRequestEntity( mimeMessageRequestEntity );
-							httpMethod.setRequestHeader( "Content-Type", mimeMessageRequestEntity.getContentType() );
+							httpMethod.setRequestHeader( "Content-Type", getContentTypeHeader( mimeMessageRequestEntity
+									.getContentType(), encoding ) );
 							httpMethod.setRequestHeader( "MIME-Version", "1.0" );
 						}
 					}
@@ -329,6 +331,11 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				}
 			}
 		}
+	}
+
+	private String getContentTypeHeader( String contentType, String encoding )
+	{
+		return ( encoding == null || encoding.trim().length() == 0 ) ? contentType : contentType + ";charset=" + encoding;
 	}
 
 	private void addFormMultipart( HttpRequestInterface<?> request, MimeMultipart formMp, String name, String value )
