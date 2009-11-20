@@ -61,7 +61,7 @@ public class InferredSchemaImpl implements InferredSchema
 			{
 				schemas.add( XmlObject.Factory.parse( getXsdForNamespace( namespace ).toString() ) );
 			}
-			return XmlBeans.compileXsd( schemas.toArray( new XmlObject[0] ), sts, null );
+			return XmlBeans.compileXsd( sts, schemas.toArray( new XmlObject[0] ), XmlBeans.getBuiltinTypeSystem(), null );
 		}
 		catch( XmlException e )
 		{
