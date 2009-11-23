@@ -89,11 +89,11 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 
 	public void extractProperties( SubmitContext context )
 	{
-		HashMap<String, Object> property = new HashMap<String, Object>();
+		HashMap<String, Object> parameters = new HashMap<String, Object>();
 		try
 		{
 			scriptEngine.setScript( groovyScript );
-			scriptEngine.setVariable( "property", property );
+			scriptEngine.setVariable( "parameters", parameters );
 			scriptEngine.setVariable( "log", SoapUI.log );
 			scriptEngine.setVariable( "context", context );
 
@@ -102,9 +102,9 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 			for( String name : propertyNames )
 			{
 				TestProperty propertyValue = propertyMap.get( name );
-				if( property.containsKey( name ) )
+				if( parameters.containsKey( name ) )
 				{
-					addArgument( property.get( name ) );
+					addArgument( parameters.get( name ) );
 				}
 				else
 				{
