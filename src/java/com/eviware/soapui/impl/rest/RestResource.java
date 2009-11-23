@@ -57,7 +57,21 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 
 	public RestResource( RestService service, RestResourceConfig resourceConfig )
 	{
+		this( service, null, resourceConfig );
+	}
+
+	public RestResource( RestResource restResource, RestResourceConfig resourceConfig )
+	{
+		this( restResource.getInterface(), restResource, resourceConfig );
+
+		parentResource.addPropertyChangeListener( this );
+	}
+
+	private RestResource( RestService service, RestResource parent, RestResourceConfig resourceConfig )
+	{
 		super( resourceConfig, service, "/rest_resource.gif" );
+
+		parentResource = parent;
 
 		if( resourceConfig.getParameters() == null )
 			resourceConfig.addNewParameters();
@@ -83,14 +97,6 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		service.addPropertyChangeListener( this );
 	}
 
-	public RestResource( RestResource restResource, RestResourceConfig config )
-	{
-		this( restResource.getInterface(), config );
-		this.parentResource = restResource;
-
-		parentResource.addPropertyChangeListener( this );
-	}
-
 	public RestResource getParentResource()
 	{
 		return parentResource;
@@ -101,6 +107,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		return parentResource == null ? getInterface() : parentResource;
 	}
 
+	@Override
 	public List<? extends ModelItem> getChildren()
 	{
 		List<ModelItem> result = new ArrayList<ModelItem>();
