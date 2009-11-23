@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.teststeps;
 
 import java.lang.ref.SoftReference;
 
+import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFResponse;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
@@ -28,13 +29,16 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public class AMFTestStepResult extends WsdlTestStepResult implements AssertedXPathsContainer, MessageExchange
 {
 	private AMFResponse response;
+	private AMFRequest request;
 	private SoftReference<AMFResponse> softResponse;
 	private String requestContent;
 	private boolean addedAction;
 
-	public AMFTestStepResult( WsdlTestStep testStep )
+	public AMFTestStepResult( AMFRequestTestStep testStep )
 	{
 		super( testStep );
+		this.request=testStep.getAMFRequest();
+		
 	}
 
 	public void setResponse( AMFResponse response, boolean useSoftReference )
@@ -118,7 +122,7 @@ public class AMFTestStepResult extends WsdlTestStepResult implements AssertedXPa
 
 	public String getRequestContentAsXml()
 	{
-		return null;
+		return getRequest().requestAsXML();
 	}
 
 	public StringToStringMap getRequestHeaders()
@@ -173,8 +177,19 @@ public class AMFTestStepResult extends WsdlTestStepResult implements AssertedXPa
 
 	public String getEndpoint()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		
+		return request.getEndpoint();
+	}
+
+	
+	public AMFRequest getRequest()
+	{
+		return request;
+	}
+
+	public void setRequest( AMFRequest request )
+	{
+		this.request = request;
 	}
 
 }

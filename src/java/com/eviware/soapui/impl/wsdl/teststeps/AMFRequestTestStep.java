@@ -608,8 +608,8 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	}
 
 	public void setScript( String script )
-	{
- 		String old = getScript(); 
+	{ 		
+		String old = getScript(); 
 		scriptEngine.setScript( script );
 		if( amfRequestTestStepConfig.getScript() == null )
 		{
