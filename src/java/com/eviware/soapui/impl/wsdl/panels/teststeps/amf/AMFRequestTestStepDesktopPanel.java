@@ -643,7 +643,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		SubmitContext submitContext = new WsdlTestRunContext( getModelItem() );
 		amfRequestTestStep.initAmfRequest( submitContext );
 
-		return amfRequestTestStep.getAMFRequest().submit( submitContext, false );
+		return amfRequestTestStep.getAMFRequest().submit( submitContext, true );
 	}
 
 	protected final class InputAreaFocusListener implements FocusListener
