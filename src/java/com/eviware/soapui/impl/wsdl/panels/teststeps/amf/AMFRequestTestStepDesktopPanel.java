@@ -98,7 +98,6 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	private InternalTestMonitorListener testMonitorListener = new InternalTestMonitorListener();
 	private JComponent requestEditor;
 	private ModelItemXmlEditor<?, ?> responseEditor;
-	private JPanel panel;
 	private Submit submit;
 	private JButton submitButton;
 	private JToggleButton tabsButton;
@@ -113,10 +112,10 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	private SoapUIScriptEngine scriptEngine;
 	private RunAction runAction = new RunAction();
 	private GroovyEditor groovyEditor;
-	private JTextField amfCall;
+	private JTextField amfCallField;
 	public boolean updating;
 	SimpleForm configForm;
-	private JTextField endpoint;
+	private JTextField endpointField;
 
 	public AMFRequestTestStepDesktopPanel( AMFRequestTestStep modelItem )
 	{
@@ -363,36 +362,36 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
 	private JTextField addAmfCallField()
 	{
-		amfCall = new JTextField();
-		amfCall.setText( amfRequestTestStep.getAmfCall() );
-		amfCall.setColumns( 20 );
-		amfCall.setToolTipText( "object.methodName for amf method call" );
-		PropertyExpansionPopupListener.enable( amfCall, amfRequestTestStep );
+		amfCallField = new JTextField();
+		amfCallField.setText( amfRequestTestStep.getAmfCall() );
+		amfCallField.setColumns( 20 );
+		amfCallField.setToolTipText( "object.methodName for amf method call" );
+		PropertyExpansionPopupListener.enable( amfCallField, amfRequestTestStep );
 		addAmfCallDocumentListener();
-		return amfCall;
+		return amfCallField;
 	}
 
 	private JTextField addEndpointField()
 	{
-		endpoint = new JTextField();
-		endpoint.setText( amfRequestTestStep.getEndpoint() );
-		endpoint.setColumns( 35 );
-		endpoint.setToolTipText( "http to connect" );
-		PropertyExpansionPopupListener.enable( endpoint, amfRequestTestStep );
+		endpointField = new JTextField();
+		endpointField.setText( amfRequestTestStep.getEndpoint() );
+		endpointField.setColumns( 35 );
+		endpointField.setToolTipText( "http to connect" );
+		PropertyExpansionPopupListener.enable( endpointField, amfRequestTestStep );
 		addEndpointCallDocumentListener();
-		return endpoint;
+		return endpointField;
 	}
 
 	protected void addAmfCallDocumentListener()
 	{
-		amfCall.getDocument().addDocumentListener( new DocumentListenerAdapter()
+		amfCallField.getDocument().addDocumentListener( new DocumentListenerAdapter()
 		{
 			@Override
 			public void update( Document document )
 			{
 				if( !updating )
 				{
-					amfRequestTestStep.setAmfCall( amfCall.getText() );
+					amfRequestTestStep.setAmfCall( amfCallField.getText() );
 				}
 			}
 		} );
@@ -400,14 +399,14 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
 	protected void addEndpointCallDocumentListener()
 	{
-		endpoint.getDocument().addDocumentListener( new DocumentListenerAdapter()
+		endpointField.getDocument().addDocumentListener( new DocumentListenerAdapter()
 		{
 			@Override
 			public void update( Document document )
 			{
 				if( !updating )
 				{
-					amfRequestTestStep.setEndpoint( endpoint.getText() );
+					amfRequestTestStep.setEndpoint( endpointField.getText() );
 				}
 			}
 		} );
@@ -826,6 +825,9 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		submitButton.setEnabled( enabled );
 		addAssertionButton.setEnabled( enabled );
 		propertiesTableComponent.setEnabled( enabled );
+		groovyEditor.setEnabled( enabled );
+		endpointField.setEnabled( enabled );
+		amfCallField.setEnabled( enabled );
 
 		statusBar.setIndeterminate( !enabled );
 	}
