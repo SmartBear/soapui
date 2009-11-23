@@ -60,7 +60,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 	private SoapUIScriptEngine scriptEngine;
 	private String endpoint;
 	private String amfCall;
-	private String groovyScript;
+	private String script;
 	private HashMap<String, TestProperty> propertyMap;
 	private String[] propertyNames;
 	private List<Object> arguments = new ArrayList<Object>();
@@ -92,7 +92,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		HashMap<String, Object> parameters = new HashMap<String, Object>();
 		try
 		{
-			scriptEngine.setScript( groovyScript );
+			scriptEngine.setScript( script );
 			scriptEngine.setVariable( "parameters", parameters );
 			scriptEngine.setVariable( "log", SoapUI.log );
 			scriptEngine.setVariable( "context", context );
@@ -321,19 +321,19 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		return amfCall;
 	}
 
+	public void setScript( String script )
+	{
+		this.script = script;
+	}
+
+	public String getScript()
+	{
+		return script;
+	}
+
 	public void setAmfCall( String amfCall )
 	{
 		this.amfCall = amfCall;
-	}
-
-	public String getGroovyScript()
-	{
-		return groovyScript;
-	}
-
-	public void setGroovyScript( String groovyScript )
-	{
-		this.groovyScript = groovyScript;
 	}
 
 	public HashMap<String, TestProperty> getPropertyMap()

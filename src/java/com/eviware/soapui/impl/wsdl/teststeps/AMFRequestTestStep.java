@@ -609,11 +609,15 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 
 	public void setScript( String script )
 	{
-		String old = getScript();
+ 		String old = getScript(); 
 		scriptEngine.setScript( script );
-		amfRequestTestStepConfig.getScript().setStringValue( script );
-		notifyPropertyChanged( "groovyScript", old, script );
+		if( amfRequestTestStepConfig.getScript() == null )
+		{
+			amfRequestTestStepConfig.addNewScript();
+		}
 
+		amfRequestTestStepConfig.getScript().setStringValue( script );
+		notifyPropertyChanged( "script", old, script );
 	}
 
 	public String getAmfCall()
@@ -645,7 +649,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		amfRequest.setScriptEngine( scriptEngine );
 		amfRequest.setAmfCall( PropertyExpander.expandProperties( submitContext, getAmfCall() ) );
 		amfRequest.setEndpoint( PropertyExpander.expandProperties( submitContext, getEndpoint() ) );
-		amfRequest.setGroovyScript( getScript() );
+		amfRequest.setScript( getScript() );
 		amfRequest.setPropertyNames( getPropertyNames() );
 		amfRequest.setPropertyMap( ( HashMap<String, TestProperty> )getProperties() );
 		amfRequest.extractProperties( submitContext );
