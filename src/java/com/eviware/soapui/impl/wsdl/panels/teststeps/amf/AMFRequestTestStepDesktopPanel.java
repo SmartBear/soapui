@@ -36,6 +36,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AMFRequestTestStepConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
+import com.eviware.soapui.impl.support.components.RequestMessageXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
@@ -227,19 +228,24 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
 		updateStatusIcon();
 
+
 		return inspectorPanel.getComponent();
 	}
 
 	protected JComponent buildRequestConfigPanel()
 	{
-		configPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ), "Groovy script" );
+		ModelItemXmlEditor<?, ?> reqEditor = buildRequestEditor();
+		
+		configPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ), "Script" );
 		groovyEditor = ( GroovyEditor )UISupport.getEditorFactory().buildGroovyEditor( new ScriptStepGroovyEditorModel() );
 		configPanel.add( groovyEditor, BorderLayout.CENTER );
 		propertiesTableComponent = buildProperties();
 		JSplitPane split = UISupport.createVerticalSplit( propertiesTableComponent, configPanel );
-		split.setDividerLocation( 120 );
-
-		return split;
+		split.setDividerLocation( 60 );
+//		JSplitPane split2 = UISupport.createVerticalSplit( split, reqEditor. );
+//		split2.setDividerLocation( 100 );
+		reqEditor.add(split, BorderLayout.NORTH); 
+		return reqEditor;
 
 	}
 
@@ -515,11 +521,24 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		return new AMFResponseMessageEditor();
 	}
 
+	protected ModelItemXmlEditor<?, ?> buildRequestEditor()
+	{
+		return new AMFRequestMessageEditor();
+	}
+
 	public class AMFResponseMessageEditor extends ResponseMessageXmlEditor<AMFRequestTestStep, AMFResponseDocument>
 	{
 		public AMFResponseMessageEditor()
 		{
 			super( new AMFResponseDocument(), amfRequestTestStep );
+		}
+	}
+
+	public class AMFRequestMessageEditor extends RequestMessageXmlEditor<AMFRequestTestStep, AMFRequestDocument>
+	{
+		public AMFRequestMessageEditor()
+		{
+			super( new AMFRequestDocument(), amfRequestTestStep );
 		}
 	}
 
@@ -571,6 +590,36 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		{
 			super.release();
 			amfRequestTestStep.removePropertyChangeListener( AMFRequestTestStep.RESPONSE_PROPERTY, this );
+		}
+	}
+
+	public class AMFRequestDocument extends AbstractXmlDocument implements PropertyChangeListener
+	{
+		public AMFRequestDocument()
+		{
+			amfRequestTestStep.addPropertyChangeListener( AMFRequestTestStep.REQUEST_PROPERTY, this );
+		}
+
+		public void propertyChange( PropertyChangeEvent evt )
+		{
+			fireXmlChanged( evt.getOldValue() == null ? null : ( ( AMFRequest )evt.getOldValue() ).requestAsXML(),
+					getXml() );
+		}
+
+		public String getXml()
+		{
+			AMFRequest request = amfRequestTestStep.getAMFRequest();
+			return request == null ? null : request.requestAsXML();
+		}
+
+		public void setXml( String xml )
+		{
+		}
+
+		public void release()
+		{
+			super.release();
+			amfRequestTestStep.removePropertyChangeListener( AMFRequestTestStep.REQUEST_PROPERTY, this );
 		}
 	}
 

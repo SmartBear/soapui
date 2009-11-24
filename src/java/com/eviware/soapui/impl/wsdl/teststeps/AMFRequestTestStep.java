@@ -73,6 +73,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	public final static String amfREQUEST = AMFRequestTestStep.class.getName() + "@amfrequest";
 	public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";
 	public static final String RESPONSE_PROPERTY = "response";
+	public static final String REQUEST_PROPERTY = "request";
 	private AMFSubmit submit;
 
 	private SoapUIScriptEngine scriptEngine;

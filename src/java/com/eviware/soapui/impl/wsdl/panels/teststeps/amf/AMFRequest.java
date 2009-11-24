@@ -53,6 +53,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 {
 
 	public static final String AMF_RESPONSE_CONTENT = "AMF_RESPONSE_CONTENT";
+	public static final String AMFREQUEST = "amfRequest";
 
 	private final AMFRequestTestStep testStep;
 	private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();

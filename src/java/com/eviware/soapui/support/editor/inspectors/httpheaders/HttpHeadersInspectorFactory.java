@@ -14,12 +14,16 @@ package com.eviware.soapui.support.editor.inspectors.httpheaders;
 
 import java.beans.PropertyChangeEvent;
 
+import org.bouncycastle.ocsp.Req;
+
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
+import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.support.editor.Editor;
@@ -64,6 +68,14 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			inspector.setEnabled( !JMSUtils.checkIfJMS( modelItem ) );
 			return inspector;
 		}
+		else if( modelItem instanceof AMFRequestTestStep )
+		{
+			HttpHeadersInspector inspector = new HttpHeadersInspector( new AMFRequestHeadersModel(
+					( AMFRequestTestStep )modelItem ) );
+			inspector.setEnabled( !JMSUtils.checkIfJMS( modelItem ) );
+			return inspector;
+		}
+		
 		return null;
 	}
 
@@ -105,6 +117,20 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 		{
 			MessageExchange messageExchange = getModelItem().getMessageExchange();
 			return messageExchange == null ? new StringToStringMap() : messageExchange.getRequestHeaders();
+		}
+	}
+	
+	
+	private class AMFRequestHeadersModel extends AbstractHeadersModel<AMFRequestTestStep>
+	{
+		public AMFRequestHeadersModel( AMFRequestTestStep request )
+		{
+			super( true, request, AMFRequest.AMFREQUEST );
+		}
+
+		public StringToStringMap getHeaders()
+		{
+			return new StringToStringMap();
 		}
 	}
 
