@@ -28,6 +28,7 @@ import com.eviware.soapui.config.AMFRequestTestStepConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFResponse;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFSubmit;
@@ -76,6 +77,8 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";
 	public static final String RESPONSE_PROPERTY = "response";
 	public static final String REQUEST_PROPERTY = "request";
+	public static final String HTTP_HEADERS_PROPERTY = AMFRequest.class.getName() + "@request-headers";
+	public static final String AMF_HEADERS_PROPERTY = AMFRequest.class.getName() + "@amfrequest-amfheaders";
 	private AMFSubmit submit;
 
 	private SoapUIScriptEngine scriptEngine;
@@ -83,8 +86,6 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	private PropertyChangeNotifier notifier;
 	private XmlBeansPropertiesTestPropertyHolder propertyHolderSupport;
 	private AMFRequest amfRequest;
-	private StringToStringMap httpHeaders = new StringToStringMap();
-	private StringToObjectMap amfHeaders = new StringToObjectMap();
 
 	public AMFRequestTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
@@ -662,22 +663,26 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 
 	public void setHttpHeaders( StringToStringMap httpHeaders )
 	{
-		this.httpHeaders = httpHeaders;
+		StringToStringMap old = getHttpHeaders();
+		getSettings().setString(HTTP_HEADERS_PROPERTY, httpHeaders.toXml());
+		notifyPropertyChanged(HTTP_HEADERS_PROPERTY, old, httpHeaders);
 	}
 
 	public StringToStringMap getHttpHeaders()
 	{
-		return httpHeaders;
+		return StringToStringMap.fromXml(getSettings().getString(HTTP_HEADERS_PROPERTY, null));
 	}
 
-	public void setAmfHeaders( StringToObjectMap amfHeaders )
+	public void setAmfHeaders( StringToStringMap amfHeaders )
 	{
-		this.amfHeaders = amfHeaders;
+		StringToStringMap old = getAmfHeaders();
+		getSettings().setString(AMF_HEADERS_PROPERTY, amfHeaders.toXml());
+		notifyPropertyChanged(AMF_HEADERS_PROPERTY, old, amfHeaders);
 	}
 
-	public StringToObjectMap getAmfHeaders()
+	public StringToStringMap getAmfHeaders()
 	{
-		return amfHeaders;
+		return StringToStringMap.fromXml(getSettings().getString(AMF_HEADERS_PROPERTY, null));
 	}
 
 }
