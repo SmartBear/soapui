@@ -153,10 +153,10 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		jdbcRequestTestStepConfig = jdbcRequestTestStep.getJdbcRequestTestStepConfig();
 	}
 
-	private JComponent buildContent()
+	protected JComponent buildContent()
 	{
 		requestSplitPane = UISupport.createHorizontalSplit();
-		// requestSplitPane.setResizeWeight(0.5);
+		requestSplitPane.setResizeWeight(0.5);
 		requestSplitPane.setBorder( null );
 
 		JComponent content;
@@ -257,7 +257,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			createSimpleJdbcConfigForm();
 			addStoreProcedureChangeListener();
 
-			panel.add( new JScrollPane( configForm.getPanel() ) );
+			panel.add( new JScrollPane(configForm.getPanel()));
 		}
 		configPanel.add( panel, BorderLayout.CENTER );
 
