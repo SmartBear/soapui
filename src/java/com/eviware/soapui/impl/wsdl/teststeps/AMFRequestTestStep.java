@@ -58,6 +58,8 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
+import com.eviware.soapui.support.types.StringToObjectMap;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * 
@@ -81,6 +83,8 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	private PropertyChangeNotifier notifier;
 	private XmlBeansPropertiesTestPropertyHolder propertyHolderSupport;
 	private AMFRequest amfRequest;
+	private StringToStringMap httpHeaders = new StringToStringMap();
+	private StringToObjectMap amfHeaders = new StringToObjectMap();
 
 	public AMFRequestTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
@@ -654,6 +658,26 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		amfRequest.setPropertyNames( getPropertyNames() );
 		amfRequest.setPropertyMap( ( HashMap<String, TestProperty> )getProperties() );
 		amfRequest.extractProperties( submitContext );
+	}
+
+	public void setHttpHeaders( StringToStringMap httpHeaders )
+	{
+		this.httpHeaders = httpHeaders;
+	}
+
+	public StringToStringMap getHttpHeaders()
+	{
+		return httpHeaders;
+	}
+
+	public void setAmfHeaders( StringToObjectMap amfHeaders )
+	{
+		this.amfHeaders = amfHeaders;
+	}
+
+	public StringToObjectMap getAmfHeaders()
+	{
+		return amfHeaders;
 	}
 
 }

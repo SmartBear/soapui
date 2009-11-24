@@ -69,6 +69,7 @@ import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
+import com.eviware.soapui.support.components.Inspector;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
 import com.eviware.soapui.support.components.JInspectorPanel;
@@ -197,7 +198,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
 		requestTabPanel = UISupport.createTabPanel( requestTabs, true );
 
-		requestEditor = buildRequestConfigPanel();
+		requestEditor = ( JComponent )buildRequestConfigPanel();
 		responseEditor = buildResponseEditor();
 		if( amfRequestTestStep.getSettings().getBoolean( UISettings.START_WITH_REQUEST_TABS ) )
 		{
@@ -234,25 +235,28 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		return inspectorPanel.getComponent();
 	}
 
-	protected JComponent buildRequestConfigPanel()
+	protected JInspectorPanel buildRequestConfigPanel()
 	{
-		ModelItemXmlEditor<?, ?> reqEditor = buildRequestEditor();
-
 		configPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ), "Script" );
 		groovyEditor = ( GroovyEditor )UISupport.getEditorFactory().buildGroovyEditor( new ScriptStepGroovyEditorModel() );
 		configPanel.add( groovyEditor, BorderLayout.CENTER );
 		propertiesTableComponent = buildProperties();
 		final JSplitPane split = UISupport.createVerticalSplit( propertiesTableComponent, configPanel );
 		split.setDividerLocation( 60 );
-		reqEditor.addEditorView( ( EditorView )new AbstractEditorView<AMFRequestDocument>( "AMF",
-				( Editor<AMFRequestDocument> )reqEditor, "" )
-		{
-			public JComponent buildUI()
-			{
-				return split;
-			}
-		} );
-		return reqEditor;
+//		return split;
+	JInspectorPanel jp = JInspectorPanelFactory.build( split );
+		ModelItemXmlEditor<?, ?> reqEditor = buildRequestEditor();
+		Inspector insp = reqEditor.getInspector( "HTTP Headers" );
+		jp.addInspector( insp );
+//		reqEditor.addEditorView( ( EditorView )new AbstractEditorView<AMFRequestDocument>( "AMF", ( Editor<AMFRequestDocument> )reqEditor, "" )
+//		{
+//			public JComponent buildUI()
+//			{
+//				return split;
+//			}
+//		} );
+//		return reqEditor;
+		return jp;
 	}
 
 	protected JComponent buildToolbar()
