@@ -147,7 +147,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	private JComponent buildContent()
 	{
 		requestSplitPane = UISupport.createHorizontalSplit();
-		requestSplitPane.setResizeWeight( 0.5 );
+		// requestSplitPane.setResizeWeight(0.5);
 		requestSplitPane.setBorder( null );
 
 		JComponent content;
@@ -229,8 +229,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				+ getModelItem().getAssertionCount() + ")", "Assertions for this Test Request", true );
 
 		inspectorPanel.addInspector( assertionInspector );
-		// setPreferredSize(new Dimension(600, 450));
-
 		updateStatusIcon();
 
 		return inspectorPanel.getComponent();
@@ -246,7 +244,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			createSimpleJdbcConfigForm();
 			addStoreProcedureChangeListener();
 
-			panel.add( configForm.getPanel() );
+			panel.add( new JScrollPane( configForm.getPanel() ) );
 		}
 		configPanel.add( panel, BorderLayout.CENTER );
 
