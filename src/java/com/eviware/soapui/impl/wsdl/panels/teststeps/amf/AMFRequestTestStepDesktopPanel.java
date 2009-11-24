@@ -76,6 +76,9 @@ import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.SimpleForm;
+import com.eviware.soapui.support.editor.Editor;
+import com.eviware.soapui.support.editor.EditorView;
+import com.eviware.soapui.support.editor.support.AbstractEditorView;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -228,25 +231,28 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
 		updateStatusIcon();
 
-
 		return inspectorPanel.getComponent();
 	}
 
 	protected JComponent buildRequestConfigPanel()
 	{
 		ModelItemXmlEditor<?, ?> reqEditor = buildRequestEditor();
-		
+
 		configPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ), "Script" );
 		groovyEditor = ( GroovyEditor )UISupport.getEditorFactory().buildGroovyEditor( new ScriptStepGroovyEditorModel() );
 		configPanel.add( groovyEditor, BorderLayout.CENTER );
 		propertiesTableComponent = buildProperties();
-		JSplitPane split = UISupport.createVerticalSplit( propertiesTableComponent, configPanel );
+		final JSplitPane split = UISupport.createVerticalSplit( propertiesTableComponent, configPanel );
 		split.setDividerLocation( 60 );
-//		JSplitPane split2 = UISupport.createVerticalSplit( split, reqEditor. );
-//		split2.setDividerLocation( 100 );
-		reqEditor.add(split, BorderLayout.NORTH); 
+		reqEditor.addEditorView( ( EditorView )new AbstractEditorView<AMFRequestDocument>( "AMF",
+				( Editor<AMFRequestDocument> )reqEditor, "" )
+		{
+			public JComponent buildUI()
+			{
+				return split;
+			}
+		} );
 		return reqEditor;
-
 	}
 
 	protected JComponent buildToolbar()
