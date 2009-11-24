@@ -13,6 +13,8 @@ import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -29,6 +31,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -63,6 +66,7 @@ import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.ListDataChangeListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
@@ -75,6 +79,7 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 import com.eviware.soapui.support.jdbc.JdbcUtils;
+import com.eviware.soapui.support.log.JLogList;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.swing.JXEditAreaPopupMenu;
 import com.eviware.soapui.support.xml.JXEditTextArea;
@@ -125,6 +130,10 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	private JButton cancelButton;
 	private JButton splitButton;
 	protected JComponent propertiesTableComponent;
+	private JComponentInspector<?> logInspector;
+	protected JLogList logArea;
+	private long startTime;
+	private SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 
 	public JdbcRequestTestStepDesktopPanel( JdbcRequestTestStep modelItem )
 	{
@@ -229,6 +238,10 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				+ getModelItem().getAssertionCount() + ")", "Assertions for this Test Request", true );
 
 		inspectorPanel.addInspector( assertionInspector );
+		logInspector = new JComponentInspector<JComponent>( buildLogPanel(), "Request Log (0)", "Log of requests", true );
+		inspectorPanel.addInspector( logInspector );		
+		inspectorPanel.setCurrentInspector( "Assertions" );		
+		
 		updateStatusIcon();
 
 		return inspectorPanel.getComponent();
@@ -338,16 +351,25 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		}
 	}
 
+	protected JComponent buildLogPanel()
+	{
+		logArea = new JLogList( "Request Log" );
+
+		logArea.getLogList().getModel().addListDataListener( new ListDataChangeListener()
+		{
+			public void dataChanged( ListModel model )
+			{
+				logInspector.setTitle( "Request Log (" + model.getSize() + ")" );
+			}
+		} );
+
+		return logArea;
+	}
+
 	protected AssertionsPanel buildAssertionsPanel()
 	{
 		return new JdbcAssertionsPanel( jdbcRequestTestStep )
 		{
-			// protected void selectError( AssertionError error )
-			// {
-			// ModelItemXmlEditor<?, ?> editor = ( ModelItemXmlEditor<?, ?>
-			// ).getResultEditorModel();
-			// editor.requestFocus();
-			// }
 		};
 	}
 
@@ -356,8 +378,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		public JdbcAssertionsPanel( Assertable assertable )
 		{
 			super( assertable );
-			// addAssertionAction = new AddAssertionAction( assertable );
-			// assertionListPopup.add( addAssertionAction );
 		}
 	}
 
@@ -894,6 +914,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	{
 		log.info( infoMessage );
 		statusBar.setInfo( message );
+		logArea.addLine( sdf.format( new Date( startTime ) ) + " - " + message );
 	}
 
 	public boolean beforeSubmit( Submit submit, SubmitContext context )
