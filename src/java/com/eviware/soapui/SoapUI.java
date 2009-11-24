@@ -652,6 +652,7 @@ public class SoapUI
 
 	private final class InternalDesktopListener extends DesktopListenerAdapter
 	{
+		@Override
 		public void desktopPanelSelected( DesktopPanel desktopPanel )
 		{
 			ModelItem modelItem = desktopPanel.getModelItem();
@@ -662,12 +663,14 @@ public class SoapUI
 
 	private final class MainFrameWindowListener extends WindowAdapter
 	{
+		@Override
 		public void windowClosing( WindowEvent e )
 		{
 			if( onExit() )
 				frame.dispose();
 		}
 
+		@Override
 		public void windowClosed( WindowEvent e )
 		{
 			System.out.println( "exiting.." );
@@ -1283,7 +1286,7 @@ public class SoapUI
 		{
 			super( "Exit without saving" );
 			putValue( Action.SHORT_DESCRIPTION, "Saves all projects and exits SoapUI" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl alt Q" ) );
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl shift Q" ) );
 		}
 
 		public void actionPerformed( ActionEvent e )
