@@ -614,8 +614,8 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	}
 
 	public void setScript( String script )
-	{ 		
-		String old = getScript(); 
+	{
+		String old = getScript();
 		scriptEngine.setScript( script );
 		if( amfRequestTestStepConfig.getScript() == null )
 		{
@@ -664,25 +664,25 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	public void setHttpHeaders( StringToStringMap httpHeaders )
 	{
 		StringToStringMap old = getHttpHeaders();
-		getSettings().setString(HTTP_HEADERS_PROPERTY, httpHeaders.toXml());
-		notifyPropertyChanged(HTTP_HEADERS_PROPERTY, old, httpHeaders);
+		getSettings().setString( HTTP_HEADERS_PROPERTY, httpHeaders.toXml() );
+		notifyPropertyChanged( HTTP_HEADERS_PROPERTY, old, httpHeaders );
 	}
 
 	public StringToStringMap getHttpHeaders()
 	{
-		return StringToStringMap.fromXml(getSettings().getString(HTTP_HEADERS_PROPERTY, null));
+		return StringToStringMap.fromXml( getSettings().getString( HTTP_HEADERS_PROPERTY, null ) );
 	}
 
 	public void setAmfHeaders( StringToStringMap amfHeaders )
 	{
 		StringToStringMap old = getAmfHeaders();
-		getSettings().setString(AMF_HEADERS_PROPERTY, amfHeaders.toXml());
-		notifyPropertyChanged(AMF_HEADERS_PROPERTY, old, amfHeaders);
+		getSettings().setString( AMF_HEADERS_PROPERTY, amfHeaders.toXml() );
+		notifyPropertyChanged( AMF_HEADERS_PROPERTY, old, amfHeaders );
 	}
 
 	public StringToStringMap getAmfHeaders()
 	{
-		return StringToStringMap.fromXml(getSettings().getString(AMF_HEADERS_PROPERTY, null));
+		return StringToStringMap.fromXml( getSettings().getString( AMF_HEADERS_PROPERTY, null ) );
 	}
 
 }

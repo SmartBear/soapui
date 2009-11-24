@@ -523,17 +523,20 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		sb.append( "<AMFRequest>\n" );
 		sb.append( " <endpoint>" + getEndpoint() + "</endpoint>\n" );
 		sb.append( " <amfcall>" + getAmfCall() + "</amfcall>\n" );
-		sb.append( " <parameters>\n"  );
-		
-		for( String name : getPropertyNames() )
+
+		if( getPropertyNames() != null )
 		{
-			sb.append("  <parameter>\n" );
-			sb.append("   <name>"+ name + "</name>\n" );
-			sb.append("   <value>" + getPropertyMap().get( name ).getValue() + "</value>\n" );
-			sb.append("  </parameter>\n" );
+			sb.append( " <parameters>\n" );
+			for( String name : getPropertyNames() )
+			{
+				sb.append( "  <parameter>\n" );
+				sb.append( "   <name>" + name + "</name>\n" );
+				sb.append( "   <value>" + getPropertyMap().get( name ).getValue() + "</value>\n" );
+				sb.append( "  </parameter>\n" );
+			}
+			sb.append( " </parameters>\n" );
 		}
-		sb.append( " </parameters>\n"  );
-		
+
 		sb.append( " <script>" + getScript() + "</script>\n" );
 		sb.append( "</AMFRequest>" );
 		return sb.toString();
