@@ -22,6 +22,7 @@ import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.SwingToolHost;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.editor.inspectors.amfheader.AMFHeadersInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.attachments.AttachmentsInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.aut.AutInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspectorFactory;
@@ -77,6 +78,7 @@ public class SwingSoapUICore extends DefaultSoapUICore
 		inspectorRegistry.addFactory( new JMSHeaderInspectorFactory() );
 		inspectorRegistry.addFactory( new JMSPropertyInspectorFactory() );
 		inspectorRegistry.addFactory( new JMSHeaderAndPropertyInspectorFactory());
+		inspectorRegistry.addFactory( new AMFHeadersInspectorFactory() );
 
 		String actionsDir = System.getProperty( "soapui.ext.actions" );
 		addExternalActions( actionsDir == null ? getRoot() == null ? "actions" : getRoot() + File.separatorChar

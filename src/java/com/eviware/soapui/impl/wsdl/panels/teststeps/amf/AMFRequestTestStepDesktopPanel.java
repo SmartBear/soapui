@@ -243,19 +243,23 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		propertiesTableComponent = buildProperties();
 		final JSplitPane split = UISupport.createVerticalSplit( propertiesTableComponent, configPanel );
 		split.setDividerLocation( 60 );
-//		return split;
-	JInspectorPanel jp = JInspectorPanelFactory.build( split );
+		// return split;
+		JInspectorPanel jp = JInspectorPanelFactory.build( split );
 		ModelItemXmlEditor<?, ?> reqEditor = buildRequestEditor();
-		Inspector insp = reqEditor.getInspector( "HTTP Headers" );
-		jp.addInspector( insp );
-//		reqEditor.addEditorView( ( EditorView )new AbstractEditorView<AMFRequestDocument>( "AMF", ( Editor<AMFRequestDocument> )reqEditor, "" )
-//		{
-//			public JComponent buildUI()
-//			{
-//				return split;
-//			}
-//		} );
-//		return reqEditor;
+		Inspector httpHeaderInspector = reqEditor.getInspector( "HTTP Headers" );
+		Inspector amfHeaderInspector = reqEditor.getInspector( "AMF Headers" );
+		jp.addInspector( httpHeaderInspector );
+		jp.addInspector( amfHeaderInspector );
+		// reqEditor.addEditorView( ( EditorView )new
+		// AbstractEditorView<AMFRequestDocument>( "AMF", (
+		// Editor<AMFRequestDocument> )reqEditor, "" )
+		// {
+		// public JComponent buildUI()
+		// {
+		// return split;
+		// }
+		// } );
+		// return reqEditor;
 		return jp;
 	}
 
