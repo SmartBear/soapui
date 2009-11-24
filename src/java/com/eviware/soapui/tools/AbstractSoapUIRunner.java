@@ -19,6 +19,7 @@ import com.eviware.soapui.StandaloneSoapUICore;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -29,6 +30,8 @@ import org.apache.log4j.PatternLayout;
 
 import java.io.File;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractSoapUIRunner
 {
@@ -189,6 +192,29 @@ public abstract class AbstractSoapUIRunner
 		}
 
 		return folder;
+	}
+
+	public String getModelItemOutputFolder( ModelItem modelItem )
+	{
+		List<ModelItem> chain = new ArrayList<ModelItem>();
+		ModelItem p = modelItem;
+
+		while( !( p instanceof Project ) )
+		{
+			chain.add( 0, p );
+			p = p.getParent();
+		}
+
+		File dir = new File( getAbsoluteOutputFolder( modelItem ) );
+		dir.mkdir();
+
+		for( ModelItem item : chain )
+		{
+			dir = new File( dir, StringUtils.createFileName( item.getName(), '-' ) );
+			dir.mkdir();
+		}
+
+		return dir.getAbsolutePath();
 	}
 
 	protected void ensureOutputFolder( ModelItem modelItem )
