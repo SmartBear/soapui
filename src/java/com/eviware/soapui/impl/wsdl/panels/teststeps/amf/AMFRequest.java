@@ -48,6 +48,8 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
+import com.eviware.soapui.support.types.StringToObjectMap;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> implements Assertable, TestRequest
 {
@@ -65,6 +67,9 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 	private HashMap<String, TestProperty> propertyMap;
 	private String[] propertyNames;
 	private List<Object> arguments = new ArrayList<Object>();
+	private StringToStringMap httpHeaders;
+	private StringToObjectMap amfHeaders;
+	private StringToStringMap amfHeadersString;
 
 	private boolean forLoadTest;
 	private AssertionStatus currentStatus;
@@ -88,13 +93,16 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		return new AMFSubmit( this, submitContext, async );
 	}
 
-	public void extractProperties( SubmitContext context )
+	public boolean executeAmfScript( SubmitContext context )
 	{
+		boolean scriptOK = true;
 		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		HashMap<String, Object> amfHeadersTemp = new HashMap<String, Object>();
 		try
 		{
 			scriptEngine.setScript( script );
 			scriptEngine.setVariable( "parameters", parameters );
+			scriptEngine.setVariable( "amfHeaders", amfHeadersTemp );
 			scriptEngine.setVariable( "log", SoapUI.log );
 			scriptEngine.setVariable( "context", context );
 
@@ -112,15 +120,32 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 					addArgument( PropertyExpander.expandProperties( context, propertyValue.getValue() ) );
 				}
 			}
+
+			StringToObjectMap stringToObjectMap = new StringToObjectMap();
+			for( String key : getAmfHeadersString().getKeys() )
+			{
+				if( amfHeadersTemp.containsKey( key ) )
+				{
+					stringToObjectMap.put( key, amfHeadersTemp.get( key ) );
+				}
+				else
+				{
+					stringToObjectMap.put( key, PropertyExpander.expandProperties( context, getAmfHeadersString().get( key ) ) );
+				}
+			}
+			setAmfHeaders( stringToObjectMap );
+
 		}
 		catch( Throwable e )
 		{
 			SoapUI.logError( e );
+			scriptOK = false;
 		}
 		finally
 		{
 			scriptEngine.clearVariables();
 		}
+		return scriptOK;
 	}
 
 	public AssertionStatus getAssertionStatus()
@@ -540,5 +565,35 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		sb.append( " <script>" + getScript() + "</script>\n" );
 		sb.append( "</AMFRequest>" );
 		return sb.toString();
+	}
+
+	public void setHttpHeaders( StringToStringMap httpHeaders )
+	{
+		this.httpHeaders = httpHeaders;
+	}
+
+	public StringToStringMap getHttpHeaders()
+	{
+		return httpHeaders;
+	}
+
+	public void setAmfHeaders( StringToObjectMap amfHeaders )
+	{
+		this.amfHeaders = amfHeaders;
+	}
+
+	public StringToObjectMap getAmfHeaders()
+	{
+		return amfHeaders;
+	}
+
+	public void setAmfHeadersString( StringToStringMap amfHeadersString )
+	{
+		this.amfHeadersString = amfHeadersString;
+	}
+
+	public StringToStringMap getAmfHeadersString()
+	{
+		return amfHeadersString;
 	}
 }

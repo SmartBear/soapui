@@ -79,6 +79,8 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorView;
+import com.eviware.soapui.support.editor.inspectors.amfheader.AMFHeadersInspectorFactory;
+import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspectorFactory;
 import com.eviware.soapui.support.editor.support.AbstractEditorView;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
@@ -243,24 +245,19 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		propertiesTableComponent = buildProperties();
 		final JSplitPane split = UISupport.createVerticalSplit( propertiesTableComponent, configPanel );
 		split.setDividerLocation( 60 );
-		// return split;
-		JInspectorPanel jp = JInspectorPanelFactory.build( split );
+
+		return addInspectors( split );
+	}
+
+	private JInspectorPanel addInspectors( final JSplitPane split )
+	{
+		JInspectorPanel jInspectorPanel = JInspectorPanelFactory.build( split );
 		ModelItemXmlEditor<?, ?> reqEditor = buildRequestEditor();
-		Inspector httpHeaderInspector = reqEditor.getInspector( "HTTP Headers" );
-		Inspector amfHeaderInspector = reqEditor.getInspector( "AMF Headers" );
-		jp.addInspector( httpHeaderInspector );
-		jp.addInspector( amfHeaderInspector );
-		// reqEditor.addEditorView( ( EditorView )new
-		// AbstractEditorView<AMFRequestDocument>( "AMF", (
-		// Editor<AMFRequestDocument> )reqEditor, "" )
-		// {
-		// public JComponent buildUI()
-		// {
-		// return split;
-		// }
-		// } );
-		// return reqEditor;
-		return jp;
+		Inspector httpHeaderInspector = reqEditor.getInspector( HttpHeadersInspectorFactory.INSPECTOR_ID );
+		Inspector amfHeaderInspector = reqEditor.getInspector( AMFHeadersInspectorFactory.INSPECTOR_ID );
+		jInspectorPanel.addInspector( httpHeaderInspector );
+		jInspectorPanel.addInspector( amfHeaderInspector );
+		return jInspectorPanel;
 	}
 
 	protected JComponent buildToolbar()
@@ -703,7 +700,10 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	{
 
 		SubmitContext submitContext = new WsdlTestRunContext( getModelItem() );
-		amfRequestTestStep.initAmfRequest( submitContext );
+		if( !amfRequestTestStep.initAmfRequest( submitContext ) )
+		{
+			throw new SubmitException( "AMF request is not initialised properly !" );
+		}
 
 		return amfRequestTestStep.getAMFRequest().submit( submitContext, true );
 	}

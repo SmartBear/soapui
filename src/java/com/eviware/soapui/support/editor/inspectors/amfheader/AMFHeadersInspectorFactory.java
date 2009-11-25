@@ -14,6 +14,7 @@ package com.eviware.soapui.support.editor.inspectors.amfheader;
 
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.AMFTestStepResult;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.support.editor.Editor;
@@ -34,31 +35,31 @@ public class AMFHeadersInspectorFactory implements RequestInspectorFactory, Resp
 
 	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
-
-	 if( modelItem instanceof AMFRequestTestStep )
+		if( modelItem instanceof AMFRequestTestStep )
 		{
 			AMFHeadersInspector inspector = new AMFHeadersInspector( new AMFRequestHeadersModel(
 					( AMFRequestTestStep )modelItem ) );
-			inspector.setEnabled( true);
-			return inspector;
-		}else if( modelItem instanceof MessageExchangeModelItem )
-		{
-			AMFHeadersInspector inspector = new AMFHeadersInspector( new MessageExchangeRequestAMFHeadersModel(
-					( MessageExchangeModelItem )modelItem ) );
 			inspector.setEnabled( true );
 			return inspector;
+		}
+		else if( modelItem instanceof MessageExchangeModelItem )
+		{
+			if( ( ( MessageExchangeModelItem )modelItem ).getMessageExchange() instanceof AMFTestStepResult )
+			{
+				AMFHeadersInspector inspector = new AMFHeadersInspector( new MessageExchangeRequestAMFHeadersModel(
+						( MessageExchangeModelItem )modelItem ) );
+				inspector.setEnabled( true );
+				return inspector;
+			}
 		}
 		return null;
 	}
 
 	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
 	{
-		
-
 		return null;
 	}
-	
-//TODO : this is just a skeleton
+
 	private class MessageExchangeRequestAMFHeadersModel extends AbstractHeadersModel<MessageExchangeModelItem>
 	{
 		public MessageExchangeRequestAMFHeadersModel( MessageExchangeModelItem request )
@@ -68,25 +69,13 @@ public class AMFHeadersInspectorFactory implements RequestInspectorFactory, Resp
 
 		public StringToStringMap getHeaders()
 		{
-			MessageExchange messageExchange = getModelItem().getMessageExchange();
-			return messageExchange == null ? new StringToStringMap() : messageExchange.getRequestHeaders();
+			if( getModelItem().getMessageExchange() instanceof AMFTestStepResult )
+			{
+				AMFTestStepResult messageExchange = ( AMFTestStepResult )getModelItem().getMessageExchange();
+				return ( ( AMFRequestTestStep )messageExchange.getTestStep() ).getAmfHeaders();
+			}
+			return new StringToStringMap();
 		}
-	}
-
-	//TODO : this is just a skeleton
-	private class MessageExchangeResponseAMFHeadersModel extends AbstractHeadersModel<MessageExchangeModelItem>
-	{
-		public MessageExchangeResponseAMFHeadersModel( MessageExchangeModelItem response )
-		{
-			super( true, response, MessageExchangeModelItem.MESSAGE_EXCHANGE );
-		}
-
-		public StringToStringMap getHeaders()
-		{
-			MessageExchange messageExchange = getModelItem().getMessageExchange();
-			return messageExchange == null ? new StringToStringMap() : messageExchange.getResponseHeaders();
-		}
-
 	}
 
 	private class AMFRequestHeadersModel extends AbstractHeadersModel<AMFRequestTestStep>
@@ -105,8 +94,5 @@ public class AMFHeadersInspectorFactory implements RequestInspectorFactory, Resp
 		{
 			getModelItem().setAmfHeaders( headers );
 		}
-
 	}
-
-	
 }

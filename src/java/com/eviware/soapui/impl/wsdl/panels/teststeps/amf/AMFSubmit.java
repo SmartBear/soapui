@@ -176,6 +176,8 @@ public class AMFSubmit implements Submit, Runnable
 		try
 		{
 			amfConnection.connect( amfRequest.getEndpoint() );
+			addAmfHeaders( amfRequest, amfConnection );
+			addHttpHeaders( amfRequest, amfConnection );
 			Object result = amfConnection.call( amfRequest.getAmfCall(), amfRequest.argumentsToArray() );
 
 			return result;
@@ -192,6 +194,28 @@ public class AMFSubmit implements Submit, Runnable
 		}
 		return null;
 
+	}
+
+	private void addHttpHeaders( AMFRequest amfRequest, AMFConnection amfConnection )
+	{
+		if( amfRequest.getHttpHeaders() != null )
+		{
+			for( String key : amfRequest.getHttpHeaders().getKeys() )
+			{
+				amfConnection.addHttpRequestHeader( key, amfRequest.getHttpHeaders().get( key ) );
+			}
+		}
+	}
+
+	private void addAmfHeaders( AMFRequest amfRequest, AMFConnection amfConnection )
+	{
+		if( amfRequest.getAmfHeaders() != null )
+		{
+			for( String key : amfRequest.getAmfHeaders().keySet() )
+			{
+				amfConnection.addAmfHeader( key, amfRequest.getAmfHeaders().get( key ) );
+			}
+		}
 	}
 
 	public Exception getError()

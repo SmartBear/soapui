@@ -162,9 +162,13 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		AMFTestStepResult testStepResult = new AMFTestStepResult( this );
 		testStepResult.startTimer();
 		runContext.setProperty( AssertedXPathsContainer.ASSERTEDXPATHSCONTAINER_PROPERTY, testStepResult );
-		initAmfRequest( runContext );
+		
 		try
 		{
+			if( ! initAmfRequest( runContext ))
+			{
+				throw new SubmitException("AMF request is not initialised properly !");
+			}
 			submit = amfRequest.submit( runContext, false );
 			AMFResponse response = submit.getResponse();
 
@@ -650,7 +654,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		notifyPropertyChanged( "endpoint", old, endpoint );
 	}
 
-	public void initAmfRequest( SubmitContext submitContext )
+	public boolean initAmfRequest( SubmitContext submitContext ) 
 	{
 		amfRequest.setScriptEngine( scriptEngine );
 		amfRequest.setAmfCall( PropertyExpander.expandProperties( submitContext, getAmfCall() ) );
@@ -658,7 +662,10 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		amfRequest.setScript( getScript() );
 		amfRequest.setPropertyNames( getPropertyNames() );
 		amfRequest.setPropertyMap( ( HashMap<String, TestProperty> )getProperties() );
-		amfRequest.extractProperties( submitContext );
+		amfRequest.setHttpHeaders( getHttpHeaders() );
+		amfRequest.setAmfHeadersString( getAmfHeaders() );
+		
+		return amfRequest.executeAmfScript( submitContext );
 	}
 
 	public void setHttpHeaders( StringToStringMap httpHeaders )

@@ -22,6 +22,7 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.AMFTestStepResult;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.support.editor.Editor;
@@ -58,9 +59,15 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			inspector.setEnabled( !JMSUtils.checkIfJMS( modelItem ) );
 			return inspector;
 		}
-
 		else if( modelItem instanceof MessageExchangeModelItem )
 		{
+			if( ( ( MessageExchangeModelItem )modelItem ).getMessageExchange() instanceof AMFTestStepResult )
+			{
+				HttpHeadersInspector inspector = new HttpHeadersInspector( new AMFMessageExchangeRequestHTTPHeadersModel(
+						( MessageExchangeModelItem )modelItem ) );
+				inspector.setEnabled( true );
+				return inspector;
+			}
 			HttpHeadersInspector inspector = new HttpHeadersInspector( new WsdlMessageExchangeRequestHeadersModel(
 					( MessageExchangeModelItem )modelItem ) );
 			inspector.setEnabled( !JMSUtils.checkIfJMS( modelItem ) );
@@ -72,7 +79,6 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 					( AMFRequestTestStep )modelItem ) );
 			inspector.setEnabled( !JMSUtils.checkIfJMS( modelItem ) );
 			return inspector;
-
 		}
 
 		return null;
@@ -116,6 +122,24 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 		{
 			MessageExchange messageExchange = getModelItem().getMessageExchange();
 			return messageExchange == null ? new StringToStringMap() : messageExchange.getRequestHeaders();
+		}
+	}
+
+	private class AMFMessageExchangeRequestHTTPHeadersModel extends AbstractHeadersModel<MessageExchangeModelItem>
+	{
+		public AMFMessageExchangeRequestHTTPHeadersModel( MessageExchangeModelItem request )
+		{
+			super( true, request, MessageExchangeModelItem.MESSAGE_EXCHANGE );
+		}
+
+		public StringToStringMap getHeaders()
+		{
+			if( getModelItem().getMessageExchange() instanceof AMFTestStepResult )
+			{
+				AMFTestStepResult messageExchange = ( AMFTestStepResult )getModelItem().getMessageExchange();
+				return ( ( AMFRequestTestStep )messageExchange.getTestStep() ).getHttpHeaders();
+			}
+			return new StringToStringMap();
 		}
 	}
 

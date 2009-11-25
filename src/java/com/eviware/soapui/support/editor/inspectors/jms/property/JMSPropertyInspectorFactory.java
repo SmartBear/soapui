@@ -100,7 +100,6 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 			List<JMSPropertyConfig> propertyList2 = request.getJMSPropertiesConfig().getJMSProperties();
 			propertyList2.clear();
 			propertyList2.addAll(propertyList);
-
 		}
 
 		public void setInspector(JMSPropertyInspector inspector)
