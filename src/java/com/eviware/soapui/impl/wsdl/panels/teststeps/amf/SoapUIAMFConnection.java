@@ -32,7 +32,6 @@ import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 
-import flex.messaging.io.ClassAliasRegistry;
 import flex.messaging.io.MessageDeserializer;
 import flex.messaging.io.MessageIOConstants;
 import flex.messaging.io.SerializationContext;
@@ -48,62 +47,14 @@ import flex.messaging.io.amf.client.exceptions.ServerStatusException;
 import flex.messaging.io.amf.client.exceptions.ServerStatusException.HttpResponseInfo;
 
 /**
- * A Java alternative to the native flash.net.NetConnection class for sending
- * AMF formatted requests over HTTP or HTTPS based on Peter Farland's.
- * AMFConnection in Actionscript. AMF connection automatically handles cookies
- * by looking for cookie headers and setting the cookies in subsequent request.
+ * AMFConnection derivate using HttpClient instead of UrlConnection
  * 
- * AMF connection class is not thread safe.
+ * @author Ole
  */
+
 public class SoapUIAMFConnection
 {
-	// --------------------------------------------------------------------------
-	//
-	// Public Static Variables
-	//
-	// --------------------------------------------------------------------------
-
-	public static final String COOKIE = "Cookie";
-	public static final String COOKIE2 = "Cookie2";
-	public static final String COOKIE_SEPERATOR = ";";
-	public static final String COOKIE_NAMEVALUE_SEPERATOR = "=";
-	public static final String SET_COOKIE = "Set-Cookie";
-	public static final String SET_COOKIE2 = "Set-Cookie2";
-
-	// --------------------------------------------------------------------------
-	//
-	// Private Static Variables
-	//
-	// --------------------------------------------------------------------------
-
 	private static int DEFAULT_OBJECT_ENCODING = MessageIOConstants.AMF3;
-
-	// --------------------------------------------------------------------------
-	//
-	// Public Static Methods
-	//
-	// --------------------------------------------------------------------------
-
-	/**
-	 * Registers a custom alias for a class name bidirectionally.
-	 * 
-	 * @param alias
-	 *           The alias for the class name.
-	 * @param className
-	 *           The concrete class name.
-	 */
-	public static void registerAlias( String alias, String className )
-	{
-		ClassAliasRegistry registry = ClassAliasRegistry.getRegistry();
-		registry.registerAlias( alias, className );
-		registry.registerAlias( className, alias );
-	}
-
-	// --------------------------------------------------------------------------
-	//
-	// Constructor
-	//
-	// --------------------------------------------------------------------------
 
 	/**
 	 * Creates a default AMF connection instance.
@@ -112,200 +63,40 @@ public class SoapUIAMFConnection
 	{
 	}
 
-	// --------------------------------------------------------------------------
-	//
-	// Private Variables
-	//
-	// --------------------------------------------------------------------------
-
 	private ActionContext actionContext;
 	private boolean connected;
-	private boolean instantiateTypes = true;
 	private int objectEncoding;
 	private boolean objectEncodingSet = false;
 	private SerializationContext serializationContext;
 	private String url;
 
-	// --------------------------------------------------------------------------
-	//
-	// Protected Variables
-	//
-	// --------------------------------------------------------------------------
+	private List<MessageHeader> amfHeaders;
+	private AMFHeaderProcessor amfHeaderProcessor;
+	private Map<String, String> httpRequestHeaders;
+	private int responseCounter;
 
-	/**
-	 * List of AMF message headers.
-	 */
-	protected List<MessageHeader> amfHeaders;
-
-	/**
-	 * An AMF connection may have an AMF header processor where AMF headers can
-	 * be passed to as they are encountered in AMF response messages.
-	 */
-	protected AMFHeaderProcessor amfHeaderProcessor;
-
-	/**
-	 * A map of cookie names and values that are used to keep track of cookies.
-	 */
-	// protected Map<String, String> cookies;
-
-	/**
-	 * Map of Http request header names and values.
-	 */
-	protected Map<String, String> httpRequestHeaders;
-
-	/**
-	 * Sequentially incremented counter used to generate a unique responseURI to
-	 * match response messages to responders.
-	 */
-	protected int responseCounter;
-
-	/**
-	 * The URL connection used to make AMF formatted HTTP and HTTPS requests for
-	 * this connection.
-	 */
-	protected ExtendedPostMethod postMethod;
+	private ExtendedPostMethod postMethod;
 	private HttpState httpState = new HttpState();
 	private PropertyExpansionContext context;
 
-	// --------------------------------------------------------------------------
-	//
-	// Properties
-	//
-	// --------------------------------------------------------------------------
-
-	// ----------------------------------
-	// amfHeaderProcessor
-	// ----------------------------------
-
-	/**
-	 * Returns the AMF header processor associated with the AMF connection. AMF
-	 * header processor is same as NetConnection's client property. See
-	 * flash.net.NetConnection#client.
-	 * 
-	 * @return The AMF header processor associated with the AMF connection.
-	 */
-	public AMFHeaderProcessor getAMFHeaderProcessor()
-	{
-		return amfHeaderProcessor;
-	}
-
-	/**
-	 * Sets the AMF header processor associated with the AMF connection.
-	 * 
-	 * @param amfHeaderProcessor
-	 *           The AMF header processor to set.
-	 */
-	public void setAMFHeaderProcessor( AMFHeaderProcessor amfHeaderProcessor )
-	{
-		this.amfHeaderProcessor = amfHeaderProcessor;
-	}
-
-	// ----------------------------------
-	// defaultObjectEncoding
-	// ----------------------------------
-
-	/**
-	 * The default object encoding for all AMFConnection instances. This controls
-	 * which version of AMF is used during serialization. The default is AMF 3.
-	 * See flash.net.ObjectEncoding#DEFAULT
-	 * 
-	 * @return The default object encoding of the AMF connection.
-	 */
-	public static int getDefaultObjectEncoding()
-	{
-		return DEFAULT_OBJECT_ENCODING;
-	}
-
-	/**
-	 * Sets the default object encoding of the AMF connection.
-	 * 
-	 * @param value
-	 *           The value to set the default object encoding to.
-	 */
-	public static void setDefaultObjectEncoding( int value )
-	{
-		DEFAULT_OBJECT_ENCODING = value;
-	}
-
-	// ----------------------------------
-	// instantiateTypes
-	// ----------------------------------
-
-	/**
-	 * Returns instantiateTypes property. InstantiateTypes property determines
-	 * whether type information will be used to instantiate a new instance. If
-	 * set to false, types will be deserialized as flex.messaging.io.ASObject
-	 * instances with type information retained but not used to create an
-	 * instance. Note that types in the flex.* package (and any subpackage) will
-	 * always be instantiated. The default is true.
-	 * 
-	 * @return The instantitateTypes property.
-	 */
-	public boolean isInstantiateTypes()
-	{
-		return instantiateTypes;
-	}
-
-	/**
-	 * Sets the instantiateTypes property.
-	 * 
-	 * @param instantiateTypes
-	 *           The value to set the instantiateTypes property to.
-	 */
-	public void setInstantiateTypes( boolean instantiateTypes )
-	{
-		this.instantiateTypes = instantiateTypes;
-	}
-
-	// ----------------------------------
-	// objectEncoding
-	// ----------------------------------
-
-	/**
-	 * The object encoding for this AMFConnection sets which AMF version to use
-	 * during serialization. If set, this version overrides the
-	 * defaultObjectEncoding.
-	 * 
-	 * @return The object encoding for the AMF connection.
-	 */
 	public int getObjectEncoding()
 	{
 		if( !objectEncodingSet )
-			return getDefaultObjectEncoding();
+			return DEFAULT_OBJECT_ENCODING;
+
 		return objectEncoding;
 	}
 
-	/**
-	 * Sets the object encoding for the AMF connection.
-	 * 
-	 * @param objectEncoding
-	 *           The value to set the object encoding to.
-	 */
 	public void setObjectEncoding( int objectEncoding )
 	{
 		this.objectEncoding = objectEncoding;
 		objectEncodingSet = true;
 	}
 
-	// ----------------------------------
-	// url
-	// ----------------------------------
-
-	/**
-	 * Returns the HTTP or HTTPS url for the AMF connection.
-	 * 
-	 * @return The HTTP or HTTPs url for the AMF connection.
-	 */
 	public String getUrl()
 	{
 		return url;
 	}
-
-	// --------------------------------------------------------------------------
-	//
-	// Public Methods
-	//
-	// --------------------------------------------------------------------------
 
 	/**
 	 * Adds an AMF packet-level header which is sent with every request for the
@@ -588,7 +379,7 @@ public class SoapUIAMFConnection
 	 */
 	protected void internalConnect() throws IOException
 	{
-		serializationContext.instantiateTypes = instantiateTypes;
+		serializationContext.instantiateTypes = false;
 		postMethod = new ExtendedPostMethod( url );
 		setHttpRequestHeaders();
 		actionContext = new ActionContext();

@@ -173,11 +173,10 @@ public class AMFSubmit implements Submit, Runnable
 		{
 
 		};
-		amfConnection.setInstantiateTypes( false );
 
 		try
 		{
-			amfConnection.connect( amfRequest.getEndpoint() );
+			amfConnection.connect( context.expand( amfRequest.getEndpoint() ) );
 			addAmfHeaders( amfRequest, amfConnection );
 			addHttpHeaders( amfRequest, amfConnection );
 			Object result = amfConnection.call( context, amfRequest.getAmfCall(), amfRequest.argumentsToArray() );
@@ -204,7 +203,7 @@ public class AMFSubmit implements Submit, Runnable
 		{
 			for( String key : amfRequest.getHttpHeaders().getKeys() )
 			{
-				amfConnection.addHttpRequestHeader( key, amfRequest.getHttpHeaders().get( key ) );
+				amfConnection.addHttpRequestHeader( key, context.expand( amfRequest.getHttpHeaders().get( key ) ) );
 			}
 		}
 	}
@@ -215,7 +214,11 @@ public class AMFSubmit implements Submit, Runnable
 		{
 			for( String key : amfRequest.getAmfHeaders().keySet() )
 			{
-				amfConnection.addAmfHeader( key, amfRequest.getAmfHeaders().get( key ) );
+				Object data = amfRequest.getAmfHeaders().get( key );
+				if( data instanceof String )
+					data = context.expand( ( String )data );
+
+				amfConnection.addAmfHeader( key, data );
 			}
 		}
 	}
