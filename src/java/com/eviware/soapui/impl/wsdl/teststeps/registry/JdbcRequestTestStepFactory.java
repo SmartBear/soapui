@@ -29,7 +29,7 @@ public class JdbcRequestTestStepFactory extends WsdlTestStepFactory
 
 	public JdbcRequestTestStepFactory()
 	{
-		super( JDBC_TYPE, "Jdbc Request", "Jdbc Request returns xml result", "/jdbc_request.gif" );
+		super( JDBC_TYPE, "JDBC Request", "Jdbc Request returns xml result", "/jdbc_request.gif" );
 	}
 
 	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
