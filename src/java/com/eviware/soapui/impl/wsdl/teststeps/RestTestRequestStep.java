@@ -64,6 +64,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepProperty;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ChangeRestMethodResolver;
 import com.eviware.soapui.support.resolver.ImportInterfaceResolver;
 import com.eviware.soapui.support.resolver.RemoveTestStepResolver;
@@ -155,12 +156,9 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 
 		if( !forLoadTest && restResource != null )
 		{
-			getResource().getInterface().getProject().addProjectListener( projectListener );
-			getResource().getInterface().addInterfaceListener( interfaceListener );
-
-			// we need to listen for name changes which happen when interfaces
-			// are
-			getResource().getInterface().addPropertyChangeListener( this );
+			getResource().getService().getProject().addProjectListener( projectListener );
+			getResource().getService().addInterfaceListener( interfaceListener );
+			getResource().getService().addPropertyChangeListener( this );
 			getResource().addPropertyChangeListener( this );
 		}
 
@@ -285,6 +283,29 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 			restRequestStepConfig.setMethodName( method.getName() );
 			return method;
 		}
+		else if( getResource() == null )
+		{
+			restResource = RestRequestConverter.resolveResource( this );
+			if( restResource == null )
+				return null;
+			getRequestStepConfig().setService( restResource.getInterface().getName() );
+			getRequestStepConfig().setResourcePath( restResource.getFullPath() );
+
+			RestMethod m = ( RestMethod )getWsdlModelItemByName( getResource().getRestMethodList(), getRequestStepConfig()
+					.getMethodName() );
+			if( m == null )
+			{
+				String mn = null;
+				while( mn == null )
+				{
+					mn = UISupport.prompt( "Select method in REST Resource [" + restResource.getName() + "]",
+							"Missing REST Method", ModelSupport.getNames( restResource.getRestMethodList() ) );
+				}
+
+				return restResource.getRestMethodByName( mn );
+			}
+		}
+
 		return ( RestMethod )getWsdlModelItemByName( getResource().getRestMethodList(), getRequestStepConfig()
 				.getMethodName() );
 	}
@@ -316,9 +337,9 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 		if( restResource != null )
 		{
 			restResource.removePropertyChangeListener( this );
-			restResource.getInterface().getProject().removeProjectListener( projectListener );
-			restResource.getInterface().removeInterfaceListener( interfaceListener );
-			restResource.getInterface().removePropertyChangeListener( this );
+			restResource.getService().getProject().removeProjectListener( projectListener );
+			restResource.getService().removeInterfaceListener( interfaceListener );
+			restResource.getService().removePropertyChangeListener( this );
 		}
 	}
 
@@ -444,9 +465,25 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 
 		RestMethod oldMethod = restMethod;
 		restMethod = method;
+
 		getRequestStepConfig().setService( method.getInterface().getName() );
 		getRequestStepConfig().setResourcePath( method.getResource().getFullPath() );
 		getRequestStepConfig().setMethodName( method.getName() );
+
+		// new resource?
+		RestResource res = findRestResource();
+		if( res != getResource() )
+		{
+			restResource.removePropertyChangeListener( this );
+			restResource.getService().removeInterfaceListener( interfaceListener );
+			restResource.getService().removePropertyChangeListener( this );
+
+			restResource = res;
+
+			restResource.getService().addInterfaceListener( interfaceListener );
+			restResource.getService().addPropertyChangeListener( this );
+			restResource.addPropertyChangeListener( this );
+		}
 
 		if( oldMethod != null )
 			oldMethod.removePropertyChangeListener( this );
@@ -611,7 +648,7 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 
 		// result.addAll( testRequest.getWssContainer().getPropertyExpansions()
 		// );
-		testRequest.addJMSHeaderExpansions( result, testRequest.getJMSHeaderConfig(), this );
+
 		return result.toArray( new PropertyExpansion[result.size()] );
 	}
 
