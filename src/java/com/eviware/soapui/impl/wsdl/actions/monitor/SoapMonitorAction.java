@@ -242,7 +242,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		@AField( description = "Set endpoint", name = "Set endpoint for HTTP Tunnel:", type = AFieldType.STRING )
 		public final static String SETSSLMON = "Set endpoint for HTTP Tunnel:";
 
-		@AField( description = "Set SSL Tunnel KeyStore", name = "HTTP tunnel - KeyStore", type = AFieldType.STRING )
+		@AField( description = "Set SSL Tunnel KeyStore", name = "HTTP tunnel - KeyStore", type = AFieldType.FILE )
 		public final static String SSLTUNNEL_KEYSTORE = "HTTP tunnel - KeyStore";
 
 		@AField( description = "Set SSL Tunnel Password", name = "HTTP tunnel - Password", type = AFieldType.PASSWORD )
@@ -251,7 +251,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		@AField( description = "Set SSL Tunnel KeyPassword", name = "HTTP tunnel - KeyPassword", type = AFieldType.PASSWORD )
 		public final static String SSLTUNNEL_KEYPASSWORD = "HTTP tunnel - KeyPassword";
 
-		@AField( description = "Set SSL Tunnel TrustStore", name = "HTTP tunnel - TrustStore", type = AFieldType.STRING )
+		@AField( description = "Set SSL Tunnel TrustStore", name = "HTTP tunnel - TrustStore", type = AFieldType.FILE )
 		public final static String SSLTUNNEL_TRUSTSTORE = "HTTP tunnel - TrustStore";
 
 		@AField( description = "Set SSL Tunnel TrustStore Password", name = "HTTP tunnel - TrustStore Password", type = AFieldType.PASSWORD )
@@ -260,7 +260,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		@AField( description = "Keep request state", name = "Reuse request state", type = AFieldType.BOOLEAN )
 		public final static String SSLTUNNEL_REUSESTATE = "Reuse request state";
 
-		@AField( description = "Set SSL Client Key Store", name = "HTTP tunnel - Set SSL Client Key Store path", type = AFieldType.STRING )
+		@AField( description = "Set SSL Client Key Store", name = "HTTP tunnel - Set SSL Client Key Store path", type = AFieldType.FILE )
 		public final static String SSLTUNNEL_KEYSTOREPATH = "HTTP tunnel - Set SSL Client Key Store path";
 
 		@AField( description = "Set SSL Client Key Store Password", name = "HTTP tunnel - Set SSL Client Key Store Password", type = AFieldType.PASSWORD )
