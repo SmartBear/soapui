@@ -26,8 +26,11 @@ import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
+import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 
 import flex.messaging.io.ClassAliasRegistry;
 import flex.messaging.io.MessageDeserializer;
@@ -162,6 +165,7 @@ public class SoapUIAMFConnection
 	 */
 	protected ExtendedPostMethod postMethod;
 	private HttpState httpState = new HttpState();
+	private PropertyExpansionContext context;
 
 	// --------------------------------------------------------------------------
 	//
@@ -432,8 +436,12 @@ public class SoapUIAMFConnection
 	 * @throws ServerStatusException
 	 *            If there is a server side exception.
 	 */
-	public Object call( String command, Object... arguments ) throws ClientStatusException, ServerStatusException
+
+	public Object call( PropertyExpansionContext context, String command, Object... arguments )
+			throws ClientStatusException, ServerStatusException
 	{
+		this.context = context;
+
 		if( !connected )
 		{
 			String message = "AMF connection is not connected";
@@ -672,7 +680,12 @@ public class SoapUIAMFConnection
 		internalConnect();
 
 		postMethod.setRequestEntity( new ByteArrayRequestEntity( outBuffer.toByteArray() ) );
-		HttpClientSupport.getHttpClient().executeMethod( new HostConfiguration(), postMethod, httpState );
+		HostConfiguration hostConfiguration = new HostConfiguration();
+
+		ProxyUtils.initProxySettings( context.getModelItem() == null ? SoapUI.getSettings() : context.getModelItem()
+				.getSettings(), httpState, hostConfiguration, url, context );
+
+		HttpClientSupport.getHttpClient().executeMethod( hostConfiguration, postMethod, httpState );
 
 		// Process the response
 		return processHttpResponse( postMethod.getResponseBodyAsStream() );

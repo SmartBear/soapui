@@ -169,8 +169,9 @@ public class AMFSubmit implements Submit, Runnable
 
 	private Object executeAmfCall( AMFRequest amfRequest ) throws ClientStatusException, ServerStatusException
 	{
-		SoapUIAMFConnection amfConnection = new SoapUIAMFConnection(){
-			
+		SoapUIAMFConnection amfConnection = new SoapUIAMFConnection()
+		{
+
 		};
 		amfConnection.setInstantiateTypes( false );
 
@@ -179,7 +180,7 @@ public class AMFSubmit implements Submit, Runnable
 			amfConnection.connect( amfRequest.getEndpoint() );
 			addAmfHeaders( amfRequest, amfConnection );
 			addHttpHeaders( amfRequest, amfConnection );
-			Object result = amfConnection.call( amfRequest.getAmfCall(), amfRequest.argumentsToArray() );
+			Object result = amfConnection.call( context, amfRequest.getAmfCall(), amfRequest.argumentsToArray() );
 
 			return result;
 		}

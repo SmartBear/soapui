@@ -77,11 +77,8 @@ import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.SimpleForm;
-import com.eviware.soapui.support.editor.Editor;
-import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.amfheader.AMFHeadersInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspectorFactory;
-import com.eviware.soapui.support.editor.support.AbstractEditorView;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -750,6 +747,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
 	protected final class ResultAreaFocusListener implements FocusListener
 	{
+		@SuppressWarnings( "unused" )
 		private final ModelItemXmlEditor<?, ?> responseEditor;
 
 		public ResultAreaFocusListener( ModelItemXmlEditor<?, ?> editor )
