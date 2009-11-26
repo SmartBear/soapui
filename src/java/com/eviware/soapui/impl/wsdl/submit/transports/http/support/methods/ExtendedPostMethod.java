@@ -42,6 +42,12 @@ public final class ExtendedPostMethod extends PostMethod implements ExtendedHttp
 		httpMethodSupport = new HttpMethodSupport( this );
 	}
 
+	public ExtendedPostMethod( String url )
+	{
+		super( url );
+		httpMethodSupport = new HttpMethodSupport( this );
+	}
+
 	public String getDumpFile()
 	{
 		return httpMethodSupport.getDumpFile();
@@ -57,7 +63,7 @@ public final class ExtendedPostMethod extends PostMethod implements ExtendedHttp
 	{
 		return followRedirects;
 	}
-	
+
 	@Override
 	public void setFollowRedirects( boolean followRedirects )
 	{
@@ -143,7 +149,7 @@ public final class ExtendedPostMethod extends PostMethod implements ExtendedHttp
 	{
 		afterRequestInjection = injection;
 	}
-	
+
 	public Throwable getFailureCause()
 	{
 		return httpMethodSupport.getFailureCause();
