@@ -48,13 +48,13 @@ public class AMFHeadersInspector extends AbstractXmlInspector implements Propert
 	private JButton removeButton;
 	public boolean changing;
 
-	protected AMFHeadersInspector( AMFHeadersInspectorModel response )
+	protected AMFHeadersInspector( AMFHeadersInspectorModel model )
 	{
-		super( "AMF Headers (" + ( response.getHeaders() == null ? "0" : response.getHeaders().size() ) + ")",
+		super( "AMF Headers (" + ( model.getHeaders() == null ? "0" : model.getHeaders().size() ) + ")",
 				"AMF Headers for this amf message", true, AMFHeadersInspectorFactory.INSPECTOR_ID);
-		this.model = response;
+		this.model = model;
 
-		response.addPropertyChangeListener( this );
+		model.addPropertyChangeListener( this );
 	}
 
 	public JComponent getComponent()
