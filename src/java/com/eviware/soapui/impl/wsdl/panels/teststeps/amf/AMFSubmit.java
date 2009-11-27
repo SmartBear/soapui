@@ -122,7 +122,7 @@ public class AMFSubmit implements Submit, Runnable
 			Object responseContent = executeAmfCall( getRequest() );
 			createResponse( responseContent );
 
-			if( status != Status.CANCELED )
+			if( status != Status.CANCELED && status != Status.ERROR )
 			{
 				status = Status.FINISHED;
 			}
@@ -179,9 +179,10 @@ public class AMFSubmit implements Submit, Runnable
 
 			return result;
 		}
-		catch( Throwable e )
+		catch( Exception e )
 		{
 			SoapUI.logError( e );
+			error = e;
 			status = Status.ERROR;
 		}
 		finally

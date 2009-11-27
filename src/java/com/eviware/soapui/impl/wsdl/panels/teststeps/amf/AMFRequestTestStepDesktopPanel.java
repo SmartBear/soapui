@@ -69,7 +69,6 @@ import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
-import com.eviware.soapui.support.components.Inspector;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
 import com.eviware.soapui.support.components.JInspectorPanel;
@@ -77,8 +76,9 @@ import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.SimpleForm;
-import com.eviware.soapui.support.editor.inspectors.amfheader.AMFHeadersInspectorFactory;
-import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspectorFactory;
+import com.eviware.soapui.support.editor.Editor;
+import com.eviware.soapui.support.editor.EditorView;
+import com.eviware.soapui.support.editor.support.AbstractEditorView;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -86,7 +86,7 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
-@SuppressWarnings("serial")
+@SuppressWarnings( "serial" )
 public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFRequestTestStep> implements SubmitListener
 {
 	private static final String ENDPOINT = "Endpoint";
@@ -235,28 +235,29 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		return inspectorPanel.getComponent();
 	}
 
-	protected JInspectorPanel buildRequestConfigPanel()
+	@SuppressWarnings("unchecked")
+	protected JComponent buildRequestConfigPanel()
 	{
+		ModelItemXmlEditor<?, ?> reqEditor = buildRequestEditor();
+
 		configPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ), "Script" );
 		groovyEditor = ( GroovyEditor )UISupport.getEditorFactory().buildGroovyEditor( new ScriptStepGroovyEditorModel() );
 		configPanel.add( groovyEditor, BorderLayout.CENTER );
 		propertiesTableComponent = buildProperties();
 		final JSplitPane split = UISupport.createVerticalSplit( propertiesTableComponent, configPanel );
-		split.setDividerLocation( 60 );
-
-		return addInspectors( split );
+		split.setDividerLocation( 120 );
+		reqEditor.addEditorView( ( EditorView )new AbstractEditorView<AMFRequestDocument>( "AMF", ( Editor<AMFRequestDocument> )reqEditor, "amf" )
+		{
+			@Override
+			public JComponent buildUI()
+			{
+				return split;
+			}
+		} );
+		reqEditor.selectView( 1 );
+		return reqEditor;
 	}
 
-	private JInspectorPanel addInspectors( final JSplitPane split )
-	{
-		JInspectorPanel jInspectorPanel = JInspectorPanelFactory.build( split );
-		ModelItemXmlEditor<?, ?> reqEditor = buildRequestEditor();
-		Inspector httpHeaderInspector = reqEditor.getInspector( HttpHeadersInspectorFactory.INSPECTOR_ID );
-		Inspector amfHeaderInspector = reqEditor.getInspector( AMFHeadersInspectorFactory.INSPECTOR_ID );
-		jInspectorPanel.addInspector( httpHeaderInspector );
-		jInspectorPanel.addInspector( amfHeaderInspector );
-		return jInspectorPanel;
-	}
 
 	protected JComponent buildToolbar()
 	{
