@@ -297,7 +297,7 @@ public class JdbcSubmit implements Submit, Runnable
 		else
 		{
 			String sql = PropertyExpander.expandProperties( context, testStep.getQuery() );
-			statement = connection.prepareStatement( sql );
+			statement = connection.prepareStatement( sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY );
 		}
 
 		try
