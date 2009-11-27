@@ -55,7 +55,9 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 {
 
 	public static final String AMF_RESPONSE_CONTENT = "AMF_RESPONSE_CONTENT";
-	public static final String AMFREQUEST = "amfRequest";
+	public static final String AMF_REQUEST = "AMF_REQUEST";
+	public static final String RAW_AMF_REQUEST = "RAW_AMF_REQUEST";
+	public static final String AMF_RESPONSE_PROPERTY = "response";
 
 	private final AMFRequestTestStep testStep;
 	private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
@@ -216,7 +218,9 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 
 	public void setResponse( AMFResponse response )
 	{
+		AMFResponse old = this.response;
 		this.response = response;
+		notifyPropertyChanged( AMF_RESPONSE_PROPERTY, old, response );
 	}
 
 	public AMFResponse getResponse()

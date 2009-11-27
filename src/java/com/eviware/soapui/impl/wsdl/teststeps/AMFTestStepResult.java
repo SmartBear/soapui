@@ -92,12 +92,12 @@ public class AMFTestStepResult extends WsdlTestStepResult implements AssertedXPa
 
 	public byte[] getRawRequestData()
 	{
-		return hasResponse() ? getResponse().getRequestContent().getBytes() : null;
+		return hasResponse() ? getResponse().getRawRequestData() : null;
 	}
 
 	public byte[] getRawResponseData()
 	{
-		return getResponseContent().getBytes();
+		return getResponse().getRawResponseData();
 	}
 
 	public Attachment[] getRequestAttachments()

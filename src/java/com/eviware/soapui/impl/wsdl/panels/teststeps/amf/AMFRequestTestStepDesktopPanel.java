@@ -86,6 +86,7 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
+@SuppressWarnings("serial")
 public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFRequestTestStep> implements SubmitListener
 {
 	private static final String ENDPOINT = "Endpoint";
@@ -355,12 +356,6 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	{
 		return new AMFAssertionsPanel( amfRequestTestStep )
 		{
-			// protected void selectError( AssertionError error )
-			// {
-			// ModelItemXmlEditor<?, ?> editor = ( ModelItemXmlEditor<?, ?>
-			// ).getResultEditorModel();
-			// editor.requestFocus();
-			// }
 		};
 	}
 
@@ -369,8 +364,6 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		public AMFAssertionsPanel( Assertable assertable )
 		{
 			super( assertable );
-			// addAssertionAction = new AddAssertionAction( assertable );
-			// assertionListPopup.add( addAssertionAction );
 		}
 	}
 

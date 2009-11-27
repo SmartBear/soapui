@@ -107,6 +107,7 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 		public void release()
 		{
 			request.removeSubmitListener(this);
+			request.removePropertyChangeListener(this);
 		}
 
 		public StringToStringMap getJMSHeadersAndProperties()

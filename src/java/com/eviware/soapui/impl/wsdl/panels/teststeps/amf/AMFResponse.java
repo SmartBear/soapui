@@ -12,32 +12,48 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps.amf;
 
+import java.io.ByteArrayOutputStream;
 import java.sql.SQLException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.httpclient.Header;
+
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.support.AbstractResponse;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 public class AMFResponse extends AbstractResponse<AMFRequest>
 {
+
+	public static final String AMF_POST_METHOD = "AMF_POST_METHOD";
+	public static final String AMF_RESPONSE_HEADERS = "responseHeaders";
+	SubmitContext submitContext;
 	private Object responseContent = "";
 	private String responseContentXML = "";
 	private long timeTaken;
 	private long timestamp;
 	private AMFRequest request;
+	private StringToStringMap requestHeaders;
+	private StringToStringMap responseHeaders;
+	private byte[] rawRequestData;
+	private byte[] rawResponseData;
 
 	public AMFResponse( AMFRequest request, SubmitContext submitContext, Object responseContent ) throws SQLException,
 			ParserConfigurationException, TransformerConfigurationException, TransformerException
 	{
 		super( request );
-
+		this.submitContext = submitContext;
 		this.request = request;
 		this.responseContent = responseContent;
 		if( responseContent != null )
 			setResponseContentXML( new com.thoughtworks.xstream.XStream().toXML( responseContent ) );
+
+		initHeaders( ( ExtendedPostMethod )submitContext.getProperty( AMF_POST_METHOD ) );
 	}
 
 	public String getContentAsString()
@@ -52,7 +68,7 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 
 	public long getContentLength()
 	{
-		return responseContent != null ? responseContent.toString().length() : 0;
+		return rawResponseData != null ? rawResponseData.length : 0;
 	}
 
 	public String getRequestContent()
@@ -85,12 +101,6 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 		this.timestamp = timestamp;
 	}
 
-	@Override
-	public byte[] getRawResponseData()
-	{
-		return responseContent != null ? responseContent.toString().getBytes() : null;
-	}
-
 	public void setResponseContentXML( String responseContentXML )
 	{
 		this.responseContentXML = responseContentXML;
@@ -99,5 +109,88 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 	public String getResponseContentXML()
 	{
 		return responseContentXML;
+	}
+
+	protected void initHeaders( ExtendedPostMethod postMethod )
+	{
+		try
+		{
+			ByteArrayOutputStream rawResponse = new ByteArrayOutputStream();
+			ByteArrayOutputStream rawRequest = new ByteArrayOutputStream();
+
+			if( !postMethod.isFailed() )
+			{
+				rawResponse.write( String.valueOf( postMethod.getStatusLine() ).getBytes() );
+				rawResponse.write( "\r\n".getBytes() );
+			}
+
+			rawRequest.write( ( postMethod.getMethod() + " " + postMethod.getURI().toString() + " "
+					+ postMethod.getParams().getVersion().toString() + "\r\n" ).getBytes() );
+
+			requestHeaders = new StringToStringMap();
+			Header[] headers = postMethod.getRequestHeaders();
+			for( Header header : headers )
+			{
+				requestHeaders.put( header.getName(), header.getValue() );
+				rawRequest.write( header.toExternalForm().getBytes() );
+			}
+
+			if( !postMethod.isFailed() )
+			{
+				responseHeaders = new StringToStringMap();
+				headers = postMethod.getResponseHeaders();
+				for( Header header : headers )
+				{
+					responseHeaders.put( header.getName(), header.getValue() );
+					rawResponse.write( header.toExternalForm().getBytes() );
+				}
+
+				responseHeaders.put( "#status#", String.valueOf( postMethod.getStatusLine() ) );
+			}
+
+			if( postMethod.getRequestEntity() != null )
+			{
+				rawRequest.write( "\r\n".getBytes() );
+				if( postMethod.getRequestEntity().isRepeatable() )
+				{
+					postMethod.getRequestEntity().writeRequest( rawRequest );
+				}
+				else
+					rawResponse.write( "<request data not available>".getBytes() );
+			}
+
+			if( !postMethod.isFailed() )
+			{
+				rawResponse.write( "\r\n".getBytes() );
+				rawResponse.write( postMethod.getResponseBody() );
+			}
+
+			rawResponseData = rawResponse.toByteArray();
+			rawRequestData = rawRequest.toByteArray();
+		}
+		catch( Throwable e )
+		{
+			SoapUI.logError( e);
+		}
+	}
+
+	public byte[] getRawRequestData()
+	{
+		return rawRequestData;
+	}
+
+	public byte[] getRawResponseData()
+	{
+		return rawResponseData;
+	}
+
+	public StringToStringMap getRequestHeaders()
+	{
+		return requestHeaders;
+	}
+
+	public StringToStringMap getResponseHeaders()
+	{
+		return responseHeaders;
 	}
 }
