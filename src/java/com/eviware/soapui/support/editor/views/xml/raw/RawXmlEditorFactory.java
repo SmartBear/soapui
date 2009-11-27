@@ -327,19 +327,22 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		@Override
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			if( evt.getPropertyName().equals( AMFRequest.REQUEST_PROPERTY ) )
-			{
 				setXml( "" );
-			}
 		}
 
 		@Override
 		public String getContent()
 		{
-			if( request != null && request.getResponse() != null )
-				return request.getResponse().getContentAsString();
+			if( request.getResponse() == null )
+				return "<missing response>";
+
+			byte[] rawResponseData = request.getResponse().getRawResponseData();
+			int maxSize = ( int )SoapUI.getSettings().getLong( UISettings.RAW_RESPONSE_MESSAGE_SIZE, 10000 );
+
+			if( maxSize < rawResponseData.length )
+				return new String( Arrays.copyOf( rawResponseData, maxSize ) );
 			else
-				return "";
+				return new String( rawResponseData );
 		}
 
 		@Override
