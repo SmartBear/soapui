@@ -9,7 +9,9 @@
             <ol>
                 <li>SOAP Test Requests - calls a WSDL Operation defined in the project</li>
                 <li>REST Test Requests - calls a REST REsource defined in the project</li>
-               <li>HTTP Test Request - calls an arbitrary HTTP service</li>
+                <li>HTTP Test Request - calls an arbitrary HTTP service</li>
+                <li>JDBC Test Request - calls an arbitrary HTTP service</li>
+                <li>AMF Test Request - calls an arbitrary HTTP service</li>
             </ol>
 
             <p>The first two of these are internally linked to and dependant on their corresponding operations/resource

@@ -143,7 +143,10 @@
 		Configuration wizard has several steps for setting driver/connection string, checking if stored procedure and creating query 
 		<p align="center"><img src="images/jdbc_connection_config_wizard.gif" alt="JDBC Connection configuration wizard"/></p>
 		<p align="center"><img src="images/jdbc_connection_storedproc_wizard.gif" alt="DB Connection stored procedure check"/></p>
+		<p>In case of stored procedures simple creating query is used:</p>
 		<p align="center"><img src="images/jdbc_connection_query_wizard.gif" alt="JDBC Connection query wizard"/></p>
+		<p>Otherwise more complex query can be built:</p>
+		<p align="center"><img src="images/jdbc_build_query_wizard.gif" alt="JDBC Connection query wizard"/></p>
 		Notice that when using a wizard in case of stored procedures only procedures with no parameters will be listed because current 
 		configuration has no way of setting parameters
 		</ul>
