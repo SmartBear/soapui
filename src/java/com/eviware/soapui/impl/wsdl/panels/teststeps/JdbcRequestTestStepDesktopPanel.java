@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
@@ -439,6 +441,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				jdbcRequestTestStep.setPassword( configForm.getComponentValue( PASS_FIELD ) );
 				testConnectionButton.setEnabled( enableTestConnection() );
 				submitButton.setEnabled( enableSubmit() );
+				queryArea.setText( "" );
 			}
 		} );
 	}
@@ -453,6 +456,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				jdbcRequestTestStep.setConnectionString( configForm.getComponentValue( CONNSTR_FIELD ) );
 				testConnectionButton.setEnabled( enableTestConnection() );
 				submitButton.setEnabled( enableSubmit() );
+				queryArea.setText( "" );
 			}
 		} );
 	}
@@ -468,17 +472,19 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				jdbcRequestTestStep.setDriver( configForm.getComponentValue( DRIVER_FIELD ) );
 				testConnectionButton.setEnabled( enableTestConnection() );
 				submitButton.setEnabled( enableSubmit() );
+				queryArea.setText( "" );
 			}
 		} );
 	}
 
 	protected void addStoreProcedureChangeListener()
 	{
-		isStoredProcedureCheckBox.addChangeListener( new ChangeListener()
+		isStoredProcedureCheckBox.addItemListener( new ItemListener()
 		{
-			public void stateChanged( ChangeEvent e )
+			public void itemStateChanged( ItemEvent arg0 )
 			{
-				jdbcRequestTestStep.setStoredProcedure( ( ( JCheckBox )e.getSource() ).isSelected() );
+				jdbcRequestTestStep.setStoredProcedure( ( ( JCheckBox )arg0.getSource() ).isSelected() );
+				queryArea.setText( "" );
 			}
 		} );
 	}
