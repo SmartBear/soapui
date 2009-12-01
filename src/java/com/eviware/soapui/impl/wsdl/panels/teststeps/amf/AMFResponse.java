@@ -32,7 +32,7 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 
 	public static final String AMF_POST_METHOD = "AMF_POST_METHOD";
 	public static final String AMF_RESPONSE_HEADERS = "responseHeaders";
-	SubmitContext submitContext;
+
 	private Object responseContent = "";
 	private String responseContentXML = "";
 	private long timeTaken;
@@ -47,7 +47,7 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 			ParserConfigurationException, TransformerConfigurationException, TransformerException
 	{
 		super( request );
-		this.submitContext = submitContext;
+
 		this.request = request;
 		this.responseContent = responseContent;
 		if( responseContent != null )
@@ -156,7 +156,7 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 					postMethod.getRequestEntity().writeRequest( rawRequest );
 				}
 				else
-					rawResponse.write( "<request data not available>".getBytes() );
+					rawRequest.write( "<request data not available>".getBytes() );
 			}
 
 			if( !postMethod.isFailed() )
@@ -170,7 +170,7 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 		}
 		catch( Throwable e )
 		{
-			SoapUI.logError( e);
+			SoapUI.logError( e );
 		}
 	}
 

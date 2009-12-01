@@ -30,8 +30,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
-import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.AMFTestStepResult;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 
 import flex.messaging.io.MessageDeserializer;

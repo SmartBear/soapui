@@ -235,7 +235,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		return inspectorPanel.getComponent();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	protected JComponent buildRequestConfigPanel()
 	{
 		ModelItemXmlEditor<?, ?> reqEditor = buildRequestEditor();
@@ -246,7 +246,8 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		propertiesTableComponent = buildProperties();
 		final JSplitPane split = UISupport.createVerticalSplit( propertiesTableComponent, configPanel );
 		split.setDividerLocation( 120 );
-		reqEditor.addEditorView( ( EditorView )new AbstractEditorView<AMFRequestDocument>( "AMF", ( Editor<AMFRequestDocument> )reqEditor, "amf" )
+		reqEditor.addEditorView( ( EditorView )new AbstractEditorView<AMFRequestDocument>( "AMF",
+				( Editor<AMFRequestDocument> )reqEditor, "amf" )
 		{
 			@Override
 			public JComponent buildUI()
@@ -257,7 +258,6 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		reqEditor.selectView( 1 );
 		return reqEditor;
 	}
-
 
 	protected JComponent buildToolbar()
 	{
