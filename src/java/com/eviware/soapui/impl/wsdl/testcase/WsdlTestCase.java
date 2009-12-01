@@ -33,6 +33,7 @@ import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.loadtest.LoadTestAssertion;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.loadtest.assertions.TestStepStatusAssertion;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFTestRunListener;
 import com.eviware.soapui.impl.wsdl.support.wsrm.WsrmTestRunListener;
 import com.eviware.soapui.impl.wsdl.support.wsrm.WsrmUtils;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
@@ -145,6 +146,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		WsrmTestRunListener wsrmListener = new WsrmTestRunListener();
 
 		addTestRunListener( wsrmListener );
+		addTestRunListener( new AMFTestRunListener() );
 	}
 
 	public WsdlLoadTest buildLoadTest( LoadTestConfig tsc )
@@ -994,4 +996,45 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		return WsrmUtils.getWsrmVersionNamespace( getConfig().getWsrmVersion() );
 	}
 
+	public void setAmfAuthorisation( boolean enabled )
+	{
+		getConfig().setAmfAuthorisation(  enabled );
+	}
+	
+	public boolean getAmfAuthorisation()
+	{
+		return getConfig().getAmfAuthorisation();
+	}
+	
+	public void setAmfLogin( String  login )
+	{
+		getConfig().setAmfLogin(  login );
+	}
+	
+	public String getAmfLogin()
+	{
+		return getConfig().getAmfLogin();
+	}
+	
+	public void setAmfPassword( String  password )
+	{
+		getConfig().setAmfPassword(   password );
+	}
+	
+	public String getAmfPassword()
+	{
+		return getConfig().getAmfPassword();
+	}
+	
+	public void setAmfEndpoint( String  endpoint )
+	{
+		getConfig().setAmfEndpoint(   endpoint );
+	}
+	
+	public String getAmfEndpoint()
+	{
+		return getConfig().getAmfEndpoint();
+	}
+	
+	
 }

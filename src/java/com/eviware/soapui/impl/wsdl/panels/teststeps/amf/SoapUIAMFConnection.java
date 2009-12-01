@@ -479,7 +479,6 @@ public class SoapUIAMFConnection
 		HttpClientSupport.getHttpClient().executeMethod( hostConfiguration, postMethod, httpState );
 
 		context.setProperty( AMFResponse.AMF_POST_METHOD, postMethod );
-
 		// Process the response
 		return processHttpResponse( postMethod.getResponseBodyAsStream() );
 	}

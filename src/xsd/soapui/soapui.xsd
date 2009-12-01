@@ -429,63 +429,70 @@
     </xsd:complexType>
 
     <xsd:complexType name="TestCase">
-        <xsd:complexContent>
-            <xsd:extension base="tns:ModelItem">
-                <xsd:sequence>
-                	<xsd:element name="testStep" type="tns:TestStep"
-                		maxOccurs="unbounded" minOccurs="0">
-                	</xsd:element>
+    	<xsd:complexContent>
+    		<xsd:extension base="tns:ModelItem">
+    			<xsd:sequence>
+    				<xsd:element name="testStep" type="tns:TestStep"
+    					maxOccurs="unbounded" minOccurs="0">
+    				</xsd:element>
 
-                	<xsd:element name="loadTest" type="tns:LoadTest"
-                		maxOccurs="unbounded" minOccurs="0">
-                	</xsd:element>
-                	<xsd:element name="setupScript" type="tns:Script"
-                		maxOccurs="1" minOccurs="0">
-                	</xsd:element>
-                	<xsd:element name="tearDownScript" type="tns:Script"
-                		maxOccurs="1" minOccurs="0">
-                	</xsd:element>
-                	<xsd:element name="properties"
-                		type="tns:PropertiesType" maxOccurs="1"
-                		minOccurs="0">
-                	</xsd:element>
-                	<xsd:element name="requirements"
-                		type="tns:RequirementsType" maxOccurs="1"
-                		minOccurs="0">
-                	</xsd:element>
-                	<xsd:element name="reportTemplates"
-                		type="tns:ReportTemplate" maxOccurs="unbounded"
-                		minOccurs="0">
-                	</xsd:element>
-                	<xsd:element name="reportScript" type="tns:Script"
-                		maxOccurs="1" minOccurs="0">
-                	</xsd:element>
-                	<xsd:element name="reportParameters" type="tns:PropertiesType" minOccurs="0" maxOccurs="1"></xsd:element>
-                </xsd:sequence>
-                <xsd:attribute name="keepSession" type="xsd:boolean"
-                               use="optional">
-                </xsd:attribute>
-                <xsd:attribute name="failOnError" type="xsd:boolean"
-                               use="optional">
-                </xsd:attribute>
-                <xsd:attribute name="failTestCaseOnErrors"
-                               type="xsd:boolean" use="optional">
-                </xsd:attribute>
-                <xsd:attribute name="discardOkResults"
-                               type="xsd:boolean">
-                </xsd:attribute>
-                <xsd:attribute name="searchProperties"
-                               type="xsd:boolean">
-                </xsd:attribute>
-                <xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
-                <xsd:attribute name="timeout" type="xsd:long"></xsd:attribute>
-                <xsd:attribute name="maxResults" type="xsd:int"></xsd:attribute>
-                <xsd:attribute name="wsrmEnabled" type="xsd:boolean"></xsd:attribute>
-                <xsd:attribute name="wsrmVersion" type="tns:WsrmVersionType"></xsd:attribute>
-                <xsd:attribute name="wsrmAckTo" type="xsd:string"></xsd:attribute>
-                <xsd:attribute name="wsrmExpires" type="xsd:long"></xsd:attribute>
-            </xsd:extension>
-        </xsd:complexContent>
+    				<xsd:element name="loadTest" type="tns:LoadTest"
+    					maxOccurs="unbounded" minOccurs="0">
+    				</xsd:element>
+    				<xsd:element name="setupScript" type="tns:Script"
+    					maxOccurs="1" minOccurs="0">
+    				</xsd:element>
+    				<xsd:element name="tearDownScript" type="tns:Script"
+    					maxOccurs="1" minOccurs="0">
+    				</xsd:element>
+    				<xsd:element name="properties"
+    					type="tns:PropertiesType" maxOccurs="1" minOccurs="0">
+    				</xsd:element>
+    				<xsd:element name="requirements"
+    					type="tns:RequirementsType" maxOccurs="1" minOccurs="0">
+    				</xsd:element>
+    				<xsd:element name="reportTemplates"
+    					type="tns:ReportTemplate" maxOccurs="unbounded"
+    					minOccurs="0">
+    				</xsd:element>
+    				<xsd:element name="reportScript" type="tns:Script"
+    					maxOccurs="1" minOccurs="0">
+    				</xsd:element>
+    				<xsd:element name="reportParameters"
+    					type="tns:PropertiesType" minOccurs="0" maxOccurs="1">
+    				</xsd:element>
+    			</xsd:sequence>
+    			<xsd:attribute name="keepSession" type="xsd:boolean"
+    				use="optional">
+    			</xsd:attribute>
+    			<xsd:attribute name="failOnError" type="xsd:boolean"
+    				use="optional">
+    			</xsd:attribute>
+    			<xsd:attribute name="failTestCaseOnErrors"
+    				type="xsd:boolean" use="optional">
+    			</xsd:attribute>
+    			<xsd:attribute name="discardOkResults"
+    				type="xsd:boolean">
+    			</xsd:attribute>
+    			<xsd:attribute name="searchProperties"
+    				type="xsd:boolean">
+    			</xsd:attribute>
+    			<xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
+    			<xsd:attribute name="timeout" type="xsd:long"></xsd:attribute>
+    			<xsd:attribute name="maxResults" type="xsd:int"></xsd:attribute>
+    			<xsd:attribute name="wsrmEnabled" type="xsd:boolean"></xsd:attribute>
+    			<xsd:attribute name="wsrmVersion"
+    				type="tns:WsrmVersionType">
+    			</xsd:attribute>
+    			<xsd:attribute name="wsrmAckTo" type="xsd:string"></xsd:attribute>
+    			<xsd:attribute name="wsrmExpires" type="xsd:long"></xsd:attribute>
+    			<xsd:attribute name="amfAuthorisation" type="xsd:boolean">
+    			</xsd:attribute>
+    			<xsd:attribute name="amfLogin" type="xsd:string"></xsd:attribute>
+    			<xsd:attribute name="amfPassword" type="xsd:string"></xsd:attribute>
+    			<xsd:attribute name="amfEndpoint" type="xsd:string"></xsd:attribute>
+    		</xsd:extension>
+    	</xsd:complexContent>
     </xsd:complexType>
 
 

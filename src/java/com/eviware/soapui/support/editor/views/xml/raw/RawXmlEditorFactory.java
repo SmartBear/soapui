@@ -381,7 +381,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 			if( request.getResponse() == null )
 				return "";
 
-			byte[] rawRequestData = request.getResponse().getRawRequestData();
+			byte[] rawRequestData = request.getResponse().getRawRequestData(); 
 			int maxSize = ( int )SoapUI.getSettings().getLong( UISettings.RAW_RESPONSE_MESSAGE_SIZE, 10000 );
 
 			if( maxSize < rawRequestData.length )

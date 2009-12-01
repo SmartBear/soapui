@@ -48,9 +48,15 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase>
 	private static final String WS_RM_VERSION = "WS-RM Version";
 	private static final String WS_RM_ACK_TO = "WS-RM Ack To";
 	private static final String WS_RM_EXPIRES = "WS-RM Expires";
+	private static final String AMF_LOGIN = "AMF login";
+	private static final String AMF_PASSWORD = "AMF password";
+	private static final String AMF_AUTHORISATION_ENABLE = "AMF Authorisation";
+	private static final String AMF_ENDPOINT = "AMF Endpoint";
 
 	private XFormDialog dialog;
 	private XForm form;
+	private XForm amfForm;
+	private XForm wsrmForm;
 
 	public TestCaseOptionsAction()
 	{
@@ -81,12 +87,19 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase>
 			form.addTextField( MAXRESULTS, "Maximum number of TestStep results to keep in memory during a run",
 					FieldType.TEXT );
 
-			form.addCheckBox( WS_RM_ENABLED, "Use WS-Reliable Messaging" );
-			form.addComboBox( WS_RM_VERSION, new String[] { WsrmVersionTypeConfig.X_1_0.toString(),
+			wsrmForm = builder.createForm( "WS-RM" );
+			wsrmForm.addCheckBox( WS_RM_ENABLED, "Use WS-Reliable Messaging" );
+			wsrmForm.addComboBox( WS_RM_VERSION, new String[] { WsrmVersionTypeConfig.X_1_0.toString(),
 					WsrmVersionTypeConfig.X_1_1.toString(), WsrmVersionTypeConfig.X_1_2.toString() },
 					"The  property for managing WS-RM version" );
-			form.addTextField( WS_RM_ACK_TO, "Acknowledgments To", FieldType.TEXT );
-			form.addTextField( WS_RM_EXPIRES, "Expires after", FieldType.TEXT );
+			wsrmForm.addTextField( WS_RM_ACK_TO, "Acknowledgments To", FieldType.TEXT );
+			wsrmForm.addTextField( WS_RM_EXPIRES, "Expires after", FieldType.TEXT );
+
+			amfForm = builder.createForm( "AMF" );
+			amfForm.addCheckBox( AMF_AUTHORISATION_ENABLE, "AMF Authorisation" ).addFormFieldListener(new AMFXFormFieldListener());
+			amfForm.addTextField( AMF_ENDPOINT, "AMF endpoint", FieldType.TEXT );
+			amfForm.addTextField( AMF_LOGIN, "AMF login", FieldType.TEXT );
+			amfForm.addTextField( AMF_PASSWORD, "AMF password", FieldType.TEXT );
 
 			dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.TESTCASEOPTIONS_HELP_URL ),
 					"Specify general options for this TestCase", UISupport.OPTIONS_ICON );
@@ -110,6 +123,11 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase>
 			values.put( WS_RM_ACK_TO, String.valueOf( testCase.getWsrmAckTo() ) );
 		if( testCase.getWsrmExpires() != 0 )
 			values.put( WS_RM_EXPIRES, String.valueOf( testCase.getWsrmExpires() ) );
+
+		values.put( AMF_AUTHORISATION_ENABLE, String.valueOf( testCase.getAmfAuthorisation() ) );
+		values.put( AMF_ENDPOINT, String.valueOf( testCase.getAmfEndpoint() ) );
+		values.put( AMF_LOGIN, String.valueOf( testCase.getAmfLogin() ) );
+		values.put( AMF_PASSWORD, String.valueOf( testCase.getAmfPassword() ) );
 
 		dialog.getFormField( FAIL_TESTCASE_ON_ERROR ).setEnabled(
 				!Boolean.parseBoolean( String.valueOf( testCase.getFailOnError() ) ) );
@@ -138,11 +156,27 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase>
 					testCase.getSettings().clearSetting( HttpSettings.SOCKET_TIMEOUT );
 				else
 					testCase.getSettings().setString( HttpSettings.SOCKET_TIMEOUT, timeout );
+
+				testCase.setAmfAuthorisation( Boolean.parseBoolean( values.get( AMF_AUTHORISATION_ENABLE ) ) );
+				testCase.setAmfEndpoint( values.get( AMF_ENDPOINT ) );
+				testCase.setAmfLogin( values.get( AMF_LOGIN ) );
+				testCase.setAmfPassword( values.get( AMF_PASSWORD ) );
 			}
 			catch( Exception e1 )
 			{
 				UISupport.showErrorMessage( e1.getMessage() );
 			}
 		}
+	}
+	
+	private  class AMFXFormFieldListener implements XFormFieldListener{
+
+		public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+		{
+			amfForm.getFormField( AMF_ENDPOINT ).setEnabled( Boolean.parseBoolean( newValue ) );
+			amfForm.getFormField( AMF_LOGIN ).setEnabled( Boolean.parseBoolean( newValue ) );
+			amfForm.getFormField( AMF_PASSWORD ).setEnabled( Boolean.parseBoolean( newValue ) );
+		}
+		
 	}
 }

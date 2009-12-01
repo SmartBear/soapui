@@ -28,10 +28,10 @@ import com.eviware.soapui.config.AMFRequestTestStepConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFResponse;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFSubmit;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.SoapUIAMFConnection;
 import com.eviware.soapui.impl.wsdl.support.AMFMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
@@ -55,19 +55,24 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.model.testsuite.TestRunContext;
+import com.eviware.soapui.model.testsuite.TestRunListener;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
-import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.types.StringToStringMap;
+
+import flex.messaging.io.amf.client.exceptions.ClientStatusException;
+import flex.messaging.io.amf.client.exceptions.ServerStatusException;
+import flex.messaging.messages.CommandMessage;
 
 /**
  * 
  * @author nebojsa.tasic
  */
 
-public class AMFRequestTestStep extends WsdlTestStepWithProperties implements Assertable, MutableTestPropertyHolder,
+public class AMFRequestTestStep extends WsdlTestStepWithProperties implements Assertable, MutableTestPropertyHolder,TestRunListener,
 		PropertyChangeListener
 {
 	@SuppressWarnings( "unused" )
@@ -692,4 +697,68 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		return StringToStringMap.fromXml( getSettings().getString( AMF_HEADERS_PROPERTY, null ) );
 	}
 
+	
+	
+	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
+	{
+	}
+
+	public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
+	{
+	}
+
+	public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
+	{
+		String endpoint = "https://lpt-neta:9400/samples/messagebroker/amfsecure";
+		endpoint.endsWith( "" );
+//		SoapUIAMFConnection amfConnection = new SoapUIAMFConnection();
+//		try
+//		{
+//			amfConnection.connect( context.expand(endpoint) );
+//		}
+//		catch( ClientStatusException e )
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		CommandMessage commandMessage = new CommandMessage();
+//		commandMessage.setOperation( CommandMessage.LOGIN_OPERATION );
+//
+//////		String username = runContext.getTestCase().getTestStep().getTestCase().getConfig().getAmfLogin();
+//////		String password = amfRequest.getTestStep().getTestCase().getConfig().getAmfPassword();
+//////		String credString = username + ":" + password;
+////		Encoder encoder = new Encoder( credString.length() );
+////		encoder.encode( credString.getBytes() );
+//
+////		commandMessage.setBody( encoder.drain() );
+//		commandMessage.setDestination( "auth" );
+//
+//		try
+//		{
+//			amfConnection.call( context, null, commandMessage );
+//		}
+//		catch( ClientStatusException e )
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		catch( ServerStatusException e )
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+
+//		context.setProperty( AMF_CONNECTION, amfConnection );
+	}
+
+	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext )
+	{
+		
+		System.out.println("asdasdasdas");
+	}
+
+	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
+	{
+	}
+	
 }

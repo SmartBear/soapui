@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
@@ -26,6 +28,7 @@ import flex.messaging.io.amf.client.exceptions.ServerStatusException;
 
 public class AMFSubmit implements Submit, Runnable
 {
+	public static final String AMF_CONNECTION = "AMF_CONNECTION";
 	private volatile Future<?> future;
 	private SubmitContext context;
 	private Status status;
@@ -169,10 +172,10 @@ public class AMFSubmit implements Submit, Runnable
 
 	private Object executeAmfCall( AMFRequest amfRequest ) throws ClientStatusException, ServerStatusException
 	{
-		SoapUIAMFConnection amfConnection = new SoapUIAMFConnection();
+		SoapUIAMFConnection amfConnection = null;
 		try
 		{
-			amfConnection.connect( context.expand( amfRequest.getEndpoint() ) );
+			amfConnection = getConnection( amfRequest );
 			addAmfHeaders( amfRequest, amfConnection );
 			addHttpHeaders( amfRequest, amfConnection );
 			Object result = amfConnection.call( context, amfRequest.getAmfCall(), amfRequest.argumentsToArray() );
@@ -188,10 +191,40 @@ public class AMFSubmit implements Submit, Runnable
 		finally
 		{
 			amfRequest.clearArguments();
-			amfConnection.close();
+			if( context.getModelItem() instanceof AMFRequestTestStep )
+			{
+				amfConnection.close();
+			}
 		}
 		return null;
 
+	}
+
+	private SoapUIAMFConnection getConnection( AMFRequest amfRequest ) throws Exception
+	{
+		SoapUIAMFConnection amfConnection = null;
+		if( isAuthorisationEnabled( amfRequest ) && (context.getModelItem() instanceof  WsdlTestCase ))
+		{
+			if( (  amfConnection = ( SoapUIAMFConnection )context.getProperty( AMF_CONNECTION ) ) != null ) 
+			{
+				return amfConnection;
+			}
+			else
+			{
+				throw new Exception("amf session connection error! ");
+			}
+		}
+		else
+		{
+			amfConnection = new SoapUIAMFConnection();
+			amfConnection.connect( context.expand( amfRequest.getEndpoint() ) );
+			return amfConnection;
+		}
+	}
+
+	private boolean isAuthorisationEnabled( AMFRequest amfRequest )
+	{
+		return amfRequest.getTestStep().getTestCase().getConfig().getAmfAuthorisation();
 	}
 
 	private void addHttpHeaders( AMFRequest amfRequest, SoapUIAMFConnection amfConnection )
