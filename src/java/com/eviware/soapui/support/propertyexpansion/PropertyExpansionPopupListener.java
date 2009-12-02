@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -55,6 +56,7 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
 import com.eviware.soapui.support.components.ShowPopupAction;
+import com.eviware.soapui.support.propertyexpansion.scrollmenu.ScrollableMenu;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.support.xml.XmlUtils;
 
@@ -66,9 +68,96 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 
 	public PropertyExpansionPopupListener( Container transferMenu, ModelItem modelItem, PropertyExpansionTarget target )
 	{
-		this.targetMenu = transferMenu;
 		this.modelItem = modelItem;
 		this.target = target;
+		if ( transferMenu instanceof ScrollableMenu )
+			fillScrollableMenu((ScrollableMenu)transferMenu);
+		this.targetMenu = transferMenu;
+	}
+
+	private void fillScrollableMenu( ScrollableMenu targetMenu )
+	{
+		WsdlTestStep testStep = null;
+		WsdlTestCase testCase = null;
+		WsdlTestSuite testSuite = null;
+		WsdlProject project = null;
+		WsdlMockService mockService = null;
+		WsdlMockResponse mockResponse = null;
+
+		if( modelItem instanceof WsdlTestStep )
+		{
+			testStep = ( WsdlTestStep )modelItem;
+			testCase = testStep.getTestCase();
+			testSuite = testCase.getTestSuite();
+			project = testSuite.getProject();
+		}
+		else if( modelItem instanceof WsdlTestCase )
+		{
+			testCase = ( WsdlTestCase )modelItem;
+			testSuite = testCase.getTestSuite();
+			project = testSuite.getProject();
+		}
+		else if( modelItem instanceof WsdlTestSuite )
+		{
+			testSuite = ( WsdlTestSuite )modelItem;
+			project = testSuite.getProject();
+		}
+		else if( modelItem instanceof WsdlMockService )
+		{
+			project = ( ( WsdlMockService )modelItem ).getProject();
+		}
+		else if( modelItem instanceof WsdlMockResponse )
+		{
+			mockResponse = ( WsdlMockResponse )modelItem;
+			mockService = ( mockResponse ).getMockOperation().getMockService();
+			project = mockService.getProject();
+		}
+		else if( modelItem instanceof WsdlProject )
+		{
+			project = ( WsdlProject )modelItem;
+		}
+		else if( modelItem instanceof AbstractHttpRequestInterface<?> )
+		{
+			project = ( ( AbstractHttpRequest<?> )modelItem ).getOperation().getInterface().getProject();
+		}
+		else if( modelItem instanceof Operation )
+		{
+			project = ( WsdlProject )( ( Operation )modelItem ).getInterface().getProject();
+		}
+
+		TestPropertyHolder globalProperties = PropertyExpansionUtils.getGlobalProperties();
+		if( globalProperties.getProperties().size() > 0 )
+			targetMenu.add( createPropertyMenu( "Global", globalProperties ) );
+
+		if( project != null )
+			targetMenu.add( createPropertyMenu( "Project: [" + project.getName() + "]", project ) );
+
+		if( testSuite != null )
+			targetMenu.add( createPropertyMenu( "TestSuite: [" + testSuite.getName() + "]", testSuite ) );
+
+		if( mockService != null )
+			targetMenu.add( createPropertyMenu( "MockService: [" + mockService.getName() + "]", mockService ) );
+
+		if( mockResponse != null )
+			targetMenu.add( createPropertyMenu( "MockResponse: [" + mockResponse.getName() + "]", mockResponse ) );
+
+		if( testCase != null )
+		{
+			targetMenu.add( createPropertyMenu( "TestCase: [" + testCase.getName() + "]", testCase ) );
+
+			for( int c = 0; c < testCase.getTestStepCount(); c++ )
+			{
+				testStep = testCase.getTestStepAt( c );
+				if( testStep.getPropertyNames().length == 0 )
+					continue;
+
+				if( targetMenu.getComponentCount() == 3 )
+					targetMenu.add( new JSeparator() );
+
+				targetMenu.add( createPropertyMenu( "Step " + ( c + 1 ) + ": [" + testStep.getName() + "]", testStep ) );
+			}
+		}
+		
 	}
 
 	public void popupMenuCanceled( PopupMenuEvent arg0 )
@@ -81,6 +170,8 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 
 	public void popupMenuWillBecomeVisible( PopupMenuEvent arg0 )
 	{
+		if ( targetMenu instanceof ScrollableMenu) 
+			return;
 		// create transfer menus
 		targetMenu.removeAll();
 
@@ -165,16 +256,12 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 			}
 		}
 
-		// if( targetMenu.getComponentCount() > 0 )
-		// targetMenu.add( new JSeparator() );
-		//		
-		// targetMenu.add( new JMenuItem( new
-		// TransferFromPropertyActionInvoker()));
 	}
 
 	private JMenu createPropertyMenu( String string, TestPropertyHolder holder )
 	{
-		JMenu menu = new JMenu( string );
+		ScrollableMenu menu = new ScrollableMenu( string );
+
 		if( holder instanceof TestModelItem )
 			menu.setIcon( ( ( TestModelItem )holder ).getIcon() );
 
@@ -187,10 +274,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 
 		if( holder instanceof MutableTestPropertyHolder )
 		{
-			if( menu.getMenuComponentCount() > 0 )
-				menu.addSeparator();
-
-			menu.add( new TransferFromPropertyActionInvoker( ( MutableTestPropertyHolder )holder ) );
+			menu.addFooter( new TransferFromPropertyActionInvoker( ( MutableTestPropertyHolder )holder ) );
 		}
 
 		return menu;
@@ -293,7 +377,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 
 	public static void addMenu( JPopupMenu popup, String menuName, ModelItem item, PropertyExpansionTarget component )
 	{
-		JMenu menu = new JMenu( menuName );
+		ScrollableMenu menu = new ScrollableMenu( menuName );
 		popup.add( menu );
 		popup.addPopupMenuListener( new PropertyExpansionPopupListener( menu, item, component ) );
 	}
@@ -352,10 +436,10 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 		dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
 
 		JPopupMenu popup = groovyEditor.getEditArea().getComponentPopupMenu();
-
+		
 		if( popup != null )
 		{
-			JMenu menu = new JMenu( "Get Data.." );
+			ScrollableMenu menu = new ScrollableMenu( "Get Data.." );
 			popup.insert( menu, 0 );
 			popup.addPopupMenuListener( new PropertyExpansionPopupListener( menu, target.getContextModelItem(), target ) );
 			popup.insert( new JSeparator(), 1 );
@@ -378,7 +462,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 	{
 	}
 
-	public static void enable( GroovyEditorComponent gec, ModelItem modelItem  )
+	public static void enable( GroovyEditorComponent gec, ModelItem modelItem )
 	{
 		enable( gec.getEditor(), modelItem );
 	}
