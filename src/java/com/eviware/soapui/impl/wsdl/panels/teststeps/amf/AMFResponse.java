@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps.amf;
 
 import java.io.ByteArrayOutputStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
@@ -27,11 +28,16 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.support.AbstractResponse;
 import com.eviware.soapui.support.types.StringToStringMap;
 
+import flex.messaging.io.amf.ActionMessage;
+import flex.messaging.io.amf.MessageBody;
+import flex.messaging.io.amf.MessageHeader;
+
 public class AMFResponse extends AbstractResponse<AMFRequest>
 {
 
 	public static final String AMF_POST_METHOD = "AMF_POST_METHOD";
 	public static final String AMF_RESPONSE_HEADERS = "responseHeaders";
+	public static final String AMF_RESPONSE_ACTION_MESSAGE = "AMF_RESPONSE_ACTION_MESSAGE";
 
 	private Object responseContent = "";
 	private String responseContentXML = "";
@@ -40,8 +46,10 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 	private AMFRequest request;
 	private StringToStringMap requestHeaders;
 	private StringToStringMap responseHeaders;
+	private StringToStringMap responseAMFHeaders = new StringToStringMap();
 	private byte[] rawRequestData;
 	private byte[] rawResponseData;
+	private ActionMessage actionMessage;
 
 	public AMFResponse( AMFRequest request, SubmitContext submitContext, Object responseContent ) throws SQLException,
 			ParserConfigurationException, TransformerConfigurationException, TransformerException
@@ -52,8 +60,9 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 		this.responseContent = responseContent;
 		if( responseContent != null )
 			setResponseContentXML( new com.thoughtworks.xstream.XStream().toXML( responseContent ) );
-
+		this.actionMessage = ( ActionMessage )submitContext.getProperty( AMF_RESPONSE_ACTION_MESSAGE );
 		initHeaders( ( ExtendedPostMethod )submitContext.getProperty( AMF_POST_METHOD ) );
+
 	}
 
 	public String getContentAsString()
@@ -162,15 +171,38 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 			if( !postMethod.isFailed() )
 			{
 				rawResponse.write( "\r\n".getBytes() );
-				rawResponse.write( postMethod.getResponseBody() );
+
+				for( Object body : actionMessage.getBodies() )
+				{
+					MessageBody mb = (MessageBody)body;
+					rawResponse.write( mb.getData().toString().getBytes() );
+				}
 			}
 
 			rawResponseData = rawResponse.toByteArray();
 			rawRequestData = rawRequest.toByteArray();
+			
+
+			initAMFHeaders( postMethod );
+			
 		}
 		catch( Throwable e )
 		{
 			SoapUI.logError( e );
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void initAMFHeaders( ExtendedPostMethod postMethod )
+	{
+		if( !postMethod.isFailed() )
+		{
+		ArrayList<MessageHeader> amfHeaders = 	actionMessage.getHeaders();
+ 
+			for( MessageHeader header :amfHeaders)
+			{
+				responseAMFHeaders.put( header.getName(), header.getData().toString() );
+			}
 		}
 	}
 
@@ -193,4 +225,10 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 	{
 		return responseHeaders;
 	}
+
+	public StringToStringMap getResponseAMFHeaders()
+	{
+		return responseAMFHeaders;
+	}
+
 }

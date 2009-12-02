@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.support.editor.inspectors.amfheader;
 
+import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequest;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFTestStepResult;
@@ -56,6 +57,24 @@ public class AMFHeadersInspectorFactory implements RequestInspectorFactory, Resp
 
 	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
 	{
+
+		if( modelItem instanceof AMFRequestTestStep )
+		{
+			AMFHeadersInspector inspector = new AMFHeadersInspector( new AMFResponseHeadersModel(
+					( AMFRequestTestStep )modelItem ) );
+			inspector.setEnabled( true );
+			return inspector;
+		}
+		else if( modelItem instanceof MessageExchangeModelItem )
+		{
+			if( ( ( MessageExchangeModelItem )modelItem ).getMessageExchange() instanceof AMFTestStepResult )
+			{
+				AMFHeadersInspector inspector = new AMFHeadersInspector( new MessageExchangeResponseAMFHeadersModel(
+						( MessageExchangeModelItem )modelItem ) );
+				inspector.setEnabled( true );
+				return inspector;
+			}
+		}
 		return null;
 	}
 
@@ -77,11 +96,36 @@ public class AMFHeadersInspectorFactory implements RequestInspectorFactory, Resp
 		}
 	}
 
+	private class MessageExchangeResponseAMFHeadersModel extends AbstractHeadersModel<MessageExchangeModelItem>
+	{
+		public MessageExchangeResponseAMFHeadersModel( MessageExchangeModelItem messageExchange )
+		{
+			super( true, messageExchange, MessageExchangeModelItem.MESSAGE_EXCHANGE );
+		}
+
+		public StringToStringMap getHeaders()
+		{
+			if( getModelItem().getMessageExchange() instanceof AMFTestStepResult )
+			{
+				AMFTestStepResult messageExchange = ( AMFTestStepResult )getModelItem().getMessageExchange();
+				if( ( ( AMFRequestTestStep )messageExchange.getTestStep() ).getAMFRequest().getResponse() != null )
+				{
+					return ( ( AMFRequestTestStep )messageExchange.getTestStep() ).getAMFRequest().getResponse()
+							.getResponseAMFHeaders();
+				}
+				else
+					return new StringToStringMap();
+
+			}
+			return new StringToStringMap();
+		}
+	}
+
 	private class AMFRequestHeadersModel extends AbstractHeadersModel<AMFRequestTestStep>
 	{
-		public AMFRequestHeadersModel( AMFRequestTestStep request )
+		public AMFRequestHeadersModel( AMFRequestTestStep testStep )
 		{
-			super( false, request, AMFRequestTestStep.AMF_HEADERS_PROPERTY );
+			super( false, testStep, AMFRequestTestStep.AMF_HEADERS_PROPERTY );
 		}
 
 		public StringToStringMap getHeaders()
@@ -92,6 +136,29 @@ public class AMFHeadersInspectorFactory implements RequestInspectorFactory, Resp
 		public void setHeaders( StringToStringMap headers )
 		{
 			getModelItem().setAmfHeaders( headers );
+		}
+	}
+
+	private class AMFResponseHeadersModel extends AbstractHeadersModel<AMFRequestTestStep>
+	{
+		AMFRequest request;
+		public AMFResponseHeadersModel( AMFRequestTestStep testStep )
+		{
+			super( true, testStep, AMFRequestTestStep.AMF_HEADERS_PROPERTY );
+			this.request = testStep.getAMFRequest();
+			this.request.addPropertyChangeListener(AMFRequest.AMF_RESPONSE_PROPERTY, this );
+		}
+
+		public StringToStringMap getHeaders()
+		{
+			if( getModelItem().getAMFRequest().getResponse() != null )
+			{
+				return getModelItem().getAMFRequest().getResponse().getResponseAMFHeaders();
+			}
+			else
+			{
+				return new StringToStringMap();
+			}
 		}
 	}
 }

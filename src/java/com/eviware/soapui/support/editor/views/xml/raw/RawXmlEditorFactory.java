@@ -325,7 +325,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 			super( "Raw", editor, "The actual content of the last received response" );
 			this.request = requestTestStep.getAMFRequest();
 
-			request.addPropertyChangeListener( AMFRequest.REQUEST_PROPERTY, this );
+			request.addPropertyChangeListener( AMFRequest.AMF_RESPONSE_PROPERTY, this );
 		}
 
 		@Override

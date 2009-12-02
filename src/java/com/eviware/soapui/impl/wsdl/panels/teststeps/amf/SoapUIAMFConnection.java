@@ -407,6 +407,7 @@ public class SoapUIAMFConnection
 		MessageDeserializer deserializer = new AmfMessageDeserializer();
 		deserializer.initialize( serializationContext, din, null/* trace */);
 		deserializer.readMessage( message, actionContext );
+		context.setProperty( AMFResponse.AMF_RESPONSE_ACTION_MESSAGE, message );
 		din.close();
 		return processAmfPacket( message );
 	}
