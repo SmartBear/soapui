@@ -103,12 +103,13 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 			else
 				removed.add( tsc );
 		}
-		
-//		if( removed.size() > 0 )
-//		{
-//			testStepConfigs.removeAll( removed );
-//			config.setTestStepArray( testStepConfigs.toArray( new TestStepConfig[] {} ) );
-//		}
+
+		// if( removed.size() > 0 )
+		// {
+		// testStepConfigs.removeAll( removed );
+		// config.setTestStepArray( testStepConfigs.toArray( new TestStepConfig[]
+		// {} ) );
+		// }
 
 		if( !forLoadTest )
 		{
@@ -434,9 +435,9 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		newStepConfig.setName( name );
 
 		WsdlTestStep result = insertTestStep( newStepConfig, index, createCopy );
-      if( result == null )
-      	return null;
-      
+		if( result == null )
+			return null;
+
 		if( createCopy )
 			ModelSupport.unsetIds( result );
 
@@ -497,7 +498,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 		if( getTestSuite() != null )
 			( getTestSuite() ).fireTestStepAdded( testStep, ix == -1 ? testSteps.size() - 1 : ix );
-		
+
 		notifyPropertyChanged( "testSteps", null, testStep );
 
 		return testStep;
@@ -534,7 +535,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 			if( getTestSuite() != null )
 				( getTestSuite() ).fireTestStepAdded( result[c], getIndexOfTestStep( result[c] ) );
-			
+
 			notifyPropertyChanged( "testSteps", null, result[c] );
 		}
 
@@ -560,7 +561,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		finally
 		{
 			notifyPropertyChanged( "testSteps", testStep, null );
-			
+
 			testStep.release();
 
 			for( int c = 0; c < getConfig().sizeOfTestStepArray(); c++ )
@@ -702,7 +703,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	{
 		int currentStepIndex = getIndexOfTestStep( referenceStep );
 		int ix = currentStepIndex - 1;
-		while( ix >= 0 && !stepClass.isAssignableFrom( getTestStepAt( ix ).getClass()) )
+		while( ix >= 0 && !stepClass.isAssignableFrom( getTestStepAt( ix ).getClass() ) )
 		{
 			ix-- ;
 		}
@@ -715,7 +716,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	{
 		int currentStepIndex = getIndexOfTestStep( referenceStep );
 		int ix = currentStepIndex + 1;
-		while( ix < getTestStepCount() && !stepClass.isAssignableFrom( getTestStepAt( ix ).getClass()) )
+		while( ix < getTestStepCount() && !stepClass.isAssignableFrom( getTestStepAt( ix ).getClass() ) )
 		{
 			ix++ ;
 		}
@@ -828,7 +829,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	public Object runSetupScript( TestCaseRunContext runContext, TestCaseRunner runner ) throws Exception
 	{
 		String script = getSetupScript();
-		if( StringUtils.isNullOrEmpty( script ))
+		if( StringUtils.isNullOrEmpty( script ) )
 			return null;
 
 		if( setupScriptEngine == null )
@@ -998,43 +999,51 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public void setAmfAuthorisation( boolean enabled )
 	{
-		getConfig().setAmfAuthorisation(  enabled );
+		getConfig().setAmfAuthorisation( enabled );
 	}
-	
+
 	public boolean getAmfAuthorisation()
 	{
 		return getConfig().getAmfAuthorisation();
 	}
-	
-	public void setAmfLogin( String  login )
+
+	public void setAmfLogin( String login )
 	{
-		getConfig().setAmfLogin(  login );
+		getConfig().setAmfLogin( login );
 	}
-	
+
 	public String getAmfLogin()
 	{
-		return getConfig().getAmfLogin();
+		if( getConfig().getAmfLogin() == null )
+			return "";
+		else
+			return getConfig().getAmfLogin();
 	}
-	
-	public void setAmfPassword( String  password )
+
+	public void setAmfPassword( String password )
 	{
-		getConfig().setAmfPassword(   password );
+		getConfig().setAmfPassword( password );
 	}
-	
+
 	public String getAmfPassword()
 	{
-		return getConfig().getAmfPassword();
+		if( getConfig().getAmfPassword() == null )
+			return "";
+		else
+			return getConfig().getAmfPassword();
 	}
-	
-	public void setAmfEndpoint( String  endpoint )
+
+	public void setAmfEndpoint( String endpoint )
 	{
-		getConfig().setAmfEndpoint(   endpoint );
+		getConfig().setAmfEndpoint( endpoint );
 	}
-	
+
 	public String getAmfEndpoint()
 	{
-		return getConfig().getAmfEndpoint();
+		if( getConfig().getAmfEndpoint() == null )
+			return "";
+		else
+			return getConfig().getAmfEndpoint();
 	}
-	
-	
+
 }

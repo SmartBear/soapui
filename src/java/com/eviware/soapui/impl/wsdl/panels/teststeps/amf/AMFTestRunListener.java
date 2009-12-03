@@ -65,9 +65,9 @@ public class AMFTestRunListener implements TestRunListener
 				WsdlTestCase wsdlTestCase = ( WsdlTestCase )testRunner.getTestCase();
 				if( wsdlTestCase.getConfig().getAmfAuthorisation() )
 				{
-					String endpoint = wsdlTestCase.getConfig().getAmfEndpoint();
-					String username = wsdlTestCase.getConfig().getAmfLogin();
-					String password = wsdlTestCase.getConfig().getAmfPassword();
+					String endpoint = runContext.expand( wsdlTestCase.getConfig().getAmfEndpoint() );
+					String username = runContext.expand( wsdlTestCase.getConfig().getAmfLogin() );
+					String password = runContext.expand( wsdlTestCase.getConfig().getAmfPassword() );
 
 					SoapUIAMFConnection amfConnection = new SoapUIAMFConnection();
 					amfConnection.connect( endpoint );
