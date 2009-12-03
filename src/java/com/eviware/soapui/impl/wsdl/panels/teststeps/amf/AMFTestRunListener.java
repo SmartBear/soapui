@@ -28,15 +28,15 @@ import flex.messaging.util.Base64.Encoder;
 public class AMFTestRunListener implements TestRunListener
 {
 
+	private static final String DESTINATION = "auth";
+
 	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
 		if( runContext.getProperty( AMFSubmit.AMF_CONNECTION ) != null
 				&& runContext.getProperty( AMFSubmit.AMF_CONNECTION ) instanceof SoapUIAMFConnection )
 		{
 			SoapUIAMFConnection connection = ( SoapUIAMFConnection )runContext.getProperty( AMFSubmit.AMF_CONNECTION );
-			CommandMessage commandMessage = new CommandMessage();
-			commandMessage.setOperation( CommandMessage.LOGOUT_OPERATION );
-			commandMessage.setDestination( "auth" );
+			CommandMessage commandMessage = createLogoutCommandMessage();
 			try
 			{
 				connection.call( ( SubmitContext )runContext, null, commandMessage );
@@ -69,19 +69,10 @@ public class AMFTestRunListener implements TestRunListener
 					String username = runContext.expand( wsdlTestCase.getConfig().getAmfLogin() );
 					String password = runContext.expand( wsdlTestCase.getConfig().getAmfPassword() );
 
+					CommandMessage commandMessage = createLoginCommandMessage( username, password );
+
 					SoapUIAMFConnection amfConnection = new SoapUIAMFConnection();
 					amfConnection.connect( endpoint );
-
-					CommandMessage commandMessage = new CommandMessage();
-					commandMessage.setOperation( CommandMessage.LOGIN_OPERATION );
-
-					String credString = username + ":" + password;
-					Encoder encoder = new Encoder( credString.length() );
-					encoder.encode( credString.getBytes() );
-
-					commandMessage.setBody( encoder.drain() );
-					commandMessage.setDestination( "auth" );
-
 					amfConnection.call( ( SubmitContext )runContext, null, commandMessage );
 
 					runContext.setProperty( AMFSubmit.AMF_CONNECTION, amfConnection );
@@ -96,6 +87,28 @@ public class AMFTestRunListener implements TestRunListener
 				SoapUI.logError( e );
 			}
 		}
+	}
+
+	private CommandMessage createLoginCommandMessage( String username, String password )
+	{
+		CommandMessage commandMessage = new CommandMessage();
+		commandMessage.setOperation( CommandMessage.LOGIN_OPERATION );
+
+		String credString = username + ":" + password;
+		Encoder encoder = new Encoder( credString.length() );
+		encoder.encode( credString.getBytes() );
+
+		commandMessage.setBody( encoder.drain() );
+		commandMessage.setDestination( DESTINATION );
+		return commandMessage;
+	}
+
+	private CommandMessage createLogoutCommandMessage()
+	{
+		CommandMessage commandMessage = new CommandMessage();
+		commandMessage.setOperation( CommandMessage.LOGOUT_OPERATION );
+		commandMessage.setDestination( DESTINATION );
+		return commandMessage;
 	}
 
 	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext )
