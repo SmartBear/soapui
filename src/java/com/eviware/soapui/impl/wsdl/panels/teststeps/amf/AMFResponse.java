@@ -38,6 +38,7 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 	public static final String AMF_POST_METHOD = "AMF_POST_METHOD";
 	public static final String AMF_RESPONSE_HEADERS = "responseHeaders";
 	public static final String AMF_RESPONSE_ACTION_MESSAGE = "AMF_RESPONSE_ACTION_MESSAGE";
+	public static final String AMF_RAW_RESPONSE_BODY= "AMF_RAW_RESPONSE_BODY";
 
 	private Object responseContent = "";
 	private String responseContentXML = "";
@@ -50,7 +51,9 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 	private byte[] rawRequestData;
 	private byte[] rawResponseData;
 	private ActionMessage actionMessage;
+	private byte[] rawResponseBody;
 
+	@SuppressWarnings( "unchecked" )
 	public AMFResponse( AMFRequest request, SubmitContext submitContext, Object responseContent ) throws SQLException,
 			ParserConfigurationException, TransformerConfigurationException, TransformerException
 	{
@@ -61,6 +64,7 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 		if( responseContent != null )
 			setResponseContentXML( new com.thoughtworks.xstream.XStream().toXML( responseContent ) );
 		this.actionMessage = ( ActionMessage )submitContext.getProperty( AMF_RESPONSE_ACTION_MESSAGE );
+		this.rawResponseBody = ( byte[] )submitContext.getProperty( AMF_RAW_RESPONSE_BODY );
 		initHeaders( ( ExtendedPostMethod )submitContext.getProperty( AMF_POST_METHOD ) );
 
 	}
@@ -171,12 +175,7 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 			if( !postMethod.isFailed() )
 			{
 				rawResponse.write( "\r\n".getBytes() );
-
-				for( Object body : actionMessage.getBodies() )
-				{
-					MessageBody mb = (MessageBody)body;
-					rawResponse.write( mb.getData().toString().getBytes() );
-				}
+				rawResponse.write( rawResponseBody ) ;
 			}
 
 			rawResponseData = rawResponse.toByteArray();
@@ -192,14 +191,14 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	private void initAMFHeaders( ExtendedPostMethod postMethod )
 	{
 		if( !postMethod.isFailed() )
 		{
-		ArrayList<MessageHeader> amfHeaders = 	actionMessage.getHeaders();
- 
-			for( MessageHeader header :amfHeaders)
+			ArrayList<MessageHeader> amfHeaders = actionMessage.getHeaders();
+
+			for( MessageHeader header : amfHeaders )
 			{
 				responseAMFHeaders.put( header.getName(), header.getData().toString() );
 			}

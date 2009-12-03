@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps.amf;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -407,8 +408,8 @@ public class SoapUIAMFConnection
 		MessageDeserializer deserializer = new AmfMessageDeserializer();
 		deserializer.initialize( serializationContext, din, null/* trace */);
 		deserializer.readMessage( message, actionContext );
-		context.setProperty( AMFResponse.AMF_RESPONSE_ACTION_MESSAGE, message );
 		din.close();
+		context.setProperty( AMFResponse.AMF_RESPONSE_ACTION_MESSAGE, message );
 		return processAmfPacket( message );
 	}
 
@@ -480,8 +481,16 @@ public class SoapUIAMFConnection
 		HttpClientSupport.getHttpClient().executeMethod( hostConfiguration, postMethod, httpState );
 
 		context.setProperty( AMFResponse.AMF_POST_METHOD, postMethod );
-		// Process the response
-		return processHttpResponse( postMethod.getResponseBodyAsStream() );
+		
+		return processHttpResponse( responseBodyInputStream() );
+	}
+
+	private ByteArrayInputStream responseBodyInputStream() throws IOException
+	{
+		byte[] responseBody = postMethod.getResponseBody();
+		ByteArrayInputStream bais = new ByteArrayInputStream(responseBody);
+		context.setProperty( AMFResponse.AMF_RAW_RESPONSE_BODY, responseBody );
+		return bais;
 	}
 
 	/**
