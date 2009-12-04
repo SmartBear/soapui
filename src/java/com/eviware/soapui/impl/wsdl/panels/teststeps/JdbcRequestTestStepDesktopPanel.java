@@ -9,7 +9,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
@@ -158,7 +157,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	protected JComponent buildContent()
 	{
 		requestSplitPane = UISupport.createHorizontalSplit();
-		requestSplitPane.setResizeWeight(0.5);
+		requestSplitPane.setResizeWeight( 0.5 );
 		requestSplitPane.setBorder( null );
 
 		JComponent content;
@@ -241,9 +240,9 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 		inspectorPanel.addInspector( assertionInspector );
 		logInspector = new JComponentInspector<JComponent>( buildLogPanel(), "Request Log (0)", "Log of requests", true );
-		inspectorPanel.addInspector( logInspector );		
-		inspectorPanel.setCurrentInspector( "Assertions" );		
-		
+		inspectorPanel.addInspector( logInspector );
+		inspectorPanel.setCurrentInspector( "Assertions" );
+
 		updateStatusIcon();
 
 		return inspectorPanel.getComponent();
@@ -259,7 +258,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			createSimpleJdbcConfigForm();
 			addStoreProcedureChangeListener();
 
-			panel.add( new JScrollPane(configForm.getPanel()));
+			panel.add( new JScrollPane( configForm.getPanel() ) );
 		}
 		configPanel.add( panel, BorderLayout.CENTER );
 
@@ -441,7 +440,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				jdbcRequestTestStep.setPassword( configForm.getComponentValue( PASS_FIELD ) );
 				testConnectionButton.setEnabled( enableTestConnection() );
 				submitButton.setEnabled( enableSubmit() );
-				emptyQueryArea();
 			}
 		} );
 	}
@@ -456,7 +454,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				jdbcRequestTestStep.setConnectionString( configForm.getComponentValue( CONNSTR_FIELD ) );
 				testConnectionButton.setEnabled( enableTestConnection() );
 				submitButton.setEnabled( enableSubmit() );
-				emptyQueryArea();
 			}
 		} );
 	}
@@ -465,14 +462,12 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	{
 		driverTextField.getDocument().addDocumentListener( new DocumentListenerAdapter()
 		{
-
 			@Override
 			public void update( Document document )
 			{
 				jdbcRequestTestStep.setDriver( configForm.getComponentValue( DRIVER_FIELD ) );
 				testConnectionButton.setEnabled( enableTestConnection() );
 				submitButton.setEnabled( enableSubmit() );
-				emptyQueryArea();
 			}
 		} );
 	}
@@ -484,7 +479,17 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			public void itemStateChanged( ItemEvent arg0 )
 			{
 				jdbcRequestTestStep.setStoredProcedure( ( ( JCheckBox )arg0.getSource() ).isSelected() );
-				emptyQueryArea();
+				SwingUtilities.invokeLater( new Runnable()
+				{
+
+					public void run()
+					{
+						if( UISupport.confirm( "Would you like to delete current sql?", "Reset query" ) )
+						{
+							queryArea.setText( "" );
+						}
+					}
+				} );
 			}
 		} );
 	}
@@ -511,18 +516,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		}
 	}
 
-	protected boolean addedEmptyQueryAreaConfirmation;
-	protected void emptyQueryArea() {
-//		if( !addedEmptyQueryAreaConfirmation )
-//		{
-//			addedEmptyQueryAreaConfirmation = true;
-			boolean doEmpty = UISupport.confirm( "Would you like to delete current sql?", "Reset query" );
-			if( doEmpty )
-			{
-				queryArea.setText( "" );
-			}
-//		}
-	}
 	protected boolean enableSubmit()
 	{
 		return enableTestConnection() && !StringUtils.isNullOrEmpty( jdbcRequestTestStep.getQuery() );
@@ -683,91 +676,93 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		return jdbcRequestTestStep.getJdbcRequest().submit( new WsdlTestRunContext( getModelItem() ), true );
 	}
 
-//	protected final class InputAreaFocusListener implements FocusListener
-//	{
-//		public InputAreaFocusListener( JComponent editor )
-//		{
-//		}
-//
-//		public void focusGained( FocusEvent e )
-//		{
-//			responseHasFocus = false;
-//
-//			// statusBar.setTarget(sourceEditor.getInputArea());
-//			if( !splitButton.isEnabled() )
-//			{
-//				requestTabs.setSelectedIndex( 0 );
-//				return;
-//			}
-//
-//			// if
-//			// (getModelItem().getSettings().getBoolean(UISettings.NO_RESIZE_REQUEST_EDITOR))
-//			// return;
-//
-//			// // dont resize if split has been dragged
-//			// if (requestSplitPane.getUI() instanceof SoapUISplitPaneUI
-//			// && ((SoapUISplitPaneUI) requestSplitPane.getUI()).hasBeenDragged())
-//			// return;
-//			//
-//			int pos = requestSplitPane.getDividerLocation();
-//			if( pos >= 600 )
-//				return;
-//			if( requestSplitPane.getMaximumDividerLocation() > 700 )
-//				requestSplitPane.setDividerLocation( 600 );
-//			else
-//				requestSplitPane.setDividerLocation( 0.8 );
-//		}
-//
-//		public void focusLost( FocusEvent e )
-//		{
-//		}
-//	}
-//
-//	protected final class ResultAreaFocusListener implements FocusListener
-//	{
-//		private final ModelItemXmlEditor<?, ?> responseEditor;
-//
-//		public ResultAreaFocusListener( ModelItemXmlEditor<?, ?> editor )
-//		{
-//			this.responseEditor = editor;
-//		}
-//
-//		public void focusGained( FocusEvent e )
-//		{
-//			responseHasFocus = true;
-//
-//			// statusBar.setTarget(sourceEditor.getInputArea());
-//			if( !splitButton.isEnabled() )
-//			{
-//				requestTabs.setSelectedIndex( 1 );
-//				return;
-//			}
-//			//
-//			// if
-//			// (getModelItem().getSettings().getBoolean(UISettings.NO_RESIZE_REQUEST_EDITOR))
-//			// return;
-//			//
-//			// // dont resize if split has been dragged or result is empty
-//			// if (requestSplitPane.getUI() instanceof SoapUISplitPaneUI
-//			// && ((SoapUISplitPaneUI) requestSplitPane.getUI()).hasBeenDragged()
-//			// || request.getResponse() == null)
-//			// return;
-//			//
-//			int pos = requestSplitPane.getDividerLocation();
-//			int maximumDividerLocation = requestSplitPane.getMaximumDividerLocation();
-//			if( pos + 600 < maximumDividerLocation )
-//				return;
-//
-//			if( maximumDividerLocation > 700 )
-//				requestSplitPane.setDividerLocation( maximumDividerLocation - 600 );
-//			else
-//				requestSplitPane.setDividerLocation( 0.2 );
-//		}
-//
-//		public void focusLost( FocusEvent e )
-//		{
-//		}
-//	}
+	// protected final class InputAreaFocusListener implements FocusListener
+	// {
+	// public InputAreaFocusListener( JComponent editor )
+	// {
+	// }
+	//
+	// public void focusGained( FocusEvent e )
+	// {
+	// responseHasFocus = false;
+	//
+	// // statusBar.setTarget(sourceEditor.getInputArea());
+	// if( !splitButton.isEnabled() )
+	// {
+	// requestTabs.setSelectedIndex( 0 );
+	// return;
+	// }
+	//
+	// // if
+	// //
+	// (getModelItem().getSettings().getBoolean(UISettings.NO_RESIZE_REQUEST_EDITOR))
+	// // return;
+	//
+	// // // dont resize if split has been dragged
+	// // if (requestSplitPane.getUI() instanceof SoapUISplitPaneUI
+	// // && ((SoapUISplitPaneUI) requestSplitPane.getUI()).hasBeenDragged())
+	// // return;
+	// //
+	// int pos = requestSplitPane.getDividerLocation();
+	// if( pos >= 600 )
+	// return;
+	// if( requestSplitPane.getMaximumDividerLocation() > 700 )
+	// requestSplitPane.setDividerLocation( 600 );
+	// else
+	// requestSplitPane.setDividerLocation( 0.8 );
+	// }
+	//
+	// public void focusLost( FocusEvent e )
+	// {
+	// }
+	// }
+	//
+	// protected final class ResultAreaFocusListener implements FocusListener
+	// {
+	// private final ModelItemXmlEditor<?, ?> responseEditor;
+	//
+	// public ResultAreaFocusListener( ModelItemXmlEditor<?, ?> editor )
+	// {
+	// this.responseEditor = editor;
+	// }
+	//
+	// public void focusGained( FocusEvent e )
+	// {
+	// responseHasFocus = true;
+	//
+	// // statusBar.setTarget(sourceEditor.getInputArea());
+	// if( !splitButton.isEnabled() )
+	// {
+	// requestTabs.setSelectedIndex( 1 );
+	// return;
+	// }
+	// //
+	// // if
+	// //
+	// (getModelItem().getSettings().getBoolean(UISettings.NO_RESIZE_REQUEST_EDITOR))
+	// // return;
+	// //
+	// // // dont resize if split has been dragged or result is empty
+	// // if (requestSplitPane.getUI() instanceof SoapUISplitPaneUI
+	// // && ((SoapUISplitPaneUI) requestSplitPane.getUI()).hasBeenDragged()
+	// // || request.getResponse() == null)
+	// // return;
+	// //
+	// int pos = requestSplitPane.getDividerLocation();
+	// int maximumDividerLocation = requestSplitPane.getMaximumDividerLocation();
+	// if( pos + 600 < maximumDividerLocation )
+	// return;
+	//
+	// if( maximumDividerLocation > 700 )
+	// requestSplitPane.setDividerLocation( maximumDividerLocation - 600 );
+	// else
+	// requestSplitPane.setDividerLocation( 0.2 );
+	// }
+	//
+	// public void focusLost( FocusEvent e )
+	// {
+	// }
+	// }
 
 	private final class ChangeToTabsAction extends AbstractAction
 	{
