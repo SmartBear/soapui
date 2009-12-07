@@ -359,8 +359,6 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 
 	public void notifyPropertyChanged( String responseContentProperty, String oldContent, String responseContent )
 	{
-		super.notifyPropertyChanged( name, oldValue, newValue )
-		// TODO Auto-generated method stub
-
+		notifyPropertyChanged( responseContentProperty, ( Object )oldContent, ( Object )responseContent );
 	}
 }
