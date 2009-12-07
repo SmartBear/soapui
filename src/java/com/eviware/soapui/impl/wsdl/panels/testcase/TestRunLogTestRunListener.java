@@ -14,6 +14,8 @@ package com.eviware.soapui.impl.wsdl.panels.testcase;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.SwingUtilities;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
@@ -77,11 +79,19 @@ public class TestRunLogTestRunListener extends TestRunListenerAdapter
 					+ "], time taken = " + wsdlRunner.getTimeTaken() );
 	}
 
-	public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult stepResult )
+	public synchronized void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext,
+			final TestStepResult stepResult )
 	{
 		if( SoapUI.getTestMonitor().hasRunningLoadTest( testRunner.getTestCase() ) )
 			return;
 
+		SwingUtilities.invokeLater( new Runnable()
+		{
+
+			public void run()
+			{
 		runLog.addTestStepResult( stepResult );
+	}
+		} );
 	}
 }

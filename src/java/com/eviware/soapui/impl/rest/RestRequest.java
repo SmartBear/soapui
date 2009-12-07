@@ -219,21 +219,23 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		PropertyExpansionsResult result = new PropertyExpansionsResult( this, this );
 		result.addAll( super.getPropertyExpansions() );
 		result.addAll( getRestMethod().getPropertyExpansions() );
-		addJMSHeaderExpansions(result, getJMSHeaderConfig(), this);
-		
+		addJMSHeaderExpansions( result, getJMSHeaderConfig(), this );
+
 		return result.toArray();
 	}
-	
-	public void addJMSHeaderExpansions(PropertyExpansionsResult result, JMSHeaderConfig jmsHeaderConfig,
-			ModelItem modelItem)
+
+	public void addJMSHeaderExpansions( PropertyExpansionsResult result, JMSHeaderConfig jmsHeaderConfig,
+			ModelItem modelItem )
 	{
-		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig,
-				JMSHeader.JMSCORRELATIONID));
-		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig, JMSHeader.JMSREPLYTO));
-		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig, JMSHeader.JMSTYPE));
-		result
-				.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig, JMSHeader.JMSPRIORITY));
-		result.addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, jmsHeaderConfig, JMSHeader.TIMETOLIVE));
+		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
+				JMSHeader.JMSCORRELATIONID ) );
+		result.addAll( PropertyExpansionUtils
+				.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.JMSREPLYTO ) );
+		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.JMSTYPE ) );
+		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
+				JMSHeader.JMSPRIORITY ) );
+		result.addAll( PropertyExpansionUtils
+				.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.TIMETOLIVE ) );
 	}
 
 	public TestProperty addProperty( String name )
@@ -508,14 +510,13 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 
 		if( getResource() != null )
 			getResource().removePropertyChangeListener( this );
-		
-		
+
 	}
 
 	public void updateConfig( RestRequestConfig request )
 	{
 		setConfig( request );
-		
+
 		updateParams();
 
 		List<AttachmentConfig> attachmentConfigs = getConfig().getAttachmentList();
@@ -529,7 +530,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	protected void updateParams()
 	{
 		StringToStringMap paramValues = StringToStringMap.fromXml( getConfig().getParameters() );
-		( ( RestRequestParamsPropertyHolder )params ).reset(getRestMethod().getOverlayParams(), paramValues);
+		( ( RestRequestParamsPropertyHolder )params ).reset( getRestMethod().getOverlayParams(), paramValues );
 		paramUpdater.setValues( paramValues );
 	}
 
@@ -594,46 +595,52 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	{
 		return params.getPropertyList();
 	}
-	
+
 	protected void setRestMethod( RestMethod restMethod )
 	{
 		if( this.method != null )
 			this.method.removePropertyChangeListener( this );
-	
+
 		this.method = restMethod;
-		
+
 		if( method != null )
 			method.addPropertyChangeListener( this );
-		
+
 		updateParams();
 	}
-	
+
 	private JMSHeaderConfig jmsHeaderConfig;
 	private JMSPropertiesConfig jmsPropertyConfig;
 
 	public JMSHeaderConfig getJMSHeaderConfig()
 	{
-		if (jmsHeaderConfig == null)
+		if( jmsHeaderConfig == null )
 		{
-			if (!getConfig().isSetJmsConfig())
+			if( !getConfig().isSetJmsConfig() )
 			{
 				getConfig().addNewJmsConfig();
 			}
-			jmsHeaderConfig = new JMSHeaderConfig(getConfig().getJmsConfig(), this);
+			jmsHeaderConfig = new JMSHeaderConfig( getConfig().getJmsConfig(), this );
 		}
 		return jmsHeaderConfig;
 	}
 
 	public JMSPropertiesConfig getJMSPropertiesConfig()
 	{
-		if (jmsPropertyConfig == null)
+		if( jmsPropertyConfig == null )
 		{
-			if (!getConfig().isSetJmsPropertyConfig())
+			if( !getConfig().isSetJmsPropertyConfig() )
 			{
 				getConfig().addNewJmsPropertyConfig();
 			}
-			jmsPropertyConfig = new JMSPropertiesConfig(getConfig().getJmsPropertyConfig(), this);
+			jmsPropertyConfig = new JMSPropertiesConfig( getConfig().getJmsPropertyConfig(), this );
 		}
 		return jmsPropertyConfig;
+	}
+
+	public void notifyPropertyChanged( String responseContentProperty, String oldContent, String responseContent )
+	{
+		// TODO Auto-generated method stub
+
 	}
 }

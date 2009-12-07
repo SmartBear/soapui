@@ -697,10 +697,10 @@ public class JettyMockEngine implements MockEngine
 							{
 								result = wsdlMockRunner.dispatchRequest( request, response );
 								if( result != null )
+								{
 									result.finish();
-
-								// if we get here, we got dispatched..
 								break;
+							}
 							}
 							catch( DispatchException e )
 							{

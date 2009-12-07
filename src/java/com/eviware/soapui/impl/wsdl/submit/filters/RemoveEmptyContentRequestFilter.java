@@ -59,7 +59,7 @@ public class RemoveEmptyContentRequestFilter extends AbstractRequestFilter
 			if( newContent != null )
 				content = newContent;
 
-			newContent = removeEmptyContent( content, soapNamespace );
+			newContent = removeEmptyContent( content, soapNamespace, context.hasProperty( "RemoveEmptyXsiNil" ) );
 			if( !context.hasProperty( "RemoveEmptyRecursive" ) )
 				break;
 		}
@@ -68,7 +68,7 @@ public class RemoveEmptyContentRequestFilter extends AbstractRequestFilter
 			context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, newContent );
 	}
 
-	public static String removeEmptyContent( String content, String soapNamespace )
+	public static String removeEmptyContent( String content, String soapNamespace, boolean removeXsiNil )
 	{
 		XmlCursor cursor = null;
 
@@ -104,8 +104,19 @@ public class RemoveEmptyContentRequestFilter extends AbstractRequestFilter
 						}
 					}
 
-					if( cursor.getTextValue() == null || cursor.getTextValue().trim().length() == 0
-							&& XmlUtils.getFirstChildElement( elm ) == null )
+					if( removeXsiNil && attributes.getNamedItem( "xsi:nil" ) != null )
+					{
+						if( attributes.getLength() == 1
+								|| ( attributes.getLength() == 2 && attributes.getNamedItem( "xmlns:xsi" ) != null ) )
+						{
+							attributes.removeNamedItem( "xsi:nil" );
+							attributes.removeNamedItem( "xmlns:xsi" );
+							removed = true;
+						}
+					}
+
+					if( attributes.getLength() == 0 && cursor.getTextValue() == null
+							|| cursor.getTextValue().trim().length() == 0 && XmlUtils.getFirstChildElement( elm ) == null )
 					{
 						if( cursor.removeXml() )
 						{

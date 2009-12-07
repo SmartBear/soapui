@@ -22,7 +22,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -70,8 +69,9 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 	{
 		this.modelItem = modelItem;
 		this.target = target;
-		if ( transferMenu instanceof ScrollableMenu )
-			fillScrollableMenu((ScrollableMenu)transferMenu);
+		if( transferMenu instanceof ScrollableMenu )
+			fillScrollableMenu( ( ScrollableMenu )transferMenu );
+
 		this.targetMenu = transferMenu;
 	}
 
@@ -127,23 +127,23 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 
 		TestPropertyHolder globalProperties = PropertyExpansionUtils.getGlobalProperties();
 		if( globalProperties.getProperties().size() > 0 )
-			targetMenu.add( createPropertyMenu( "Global", globalProperties ) );
+			targetMenu.addHeader( createPropertyMenu( "Global", globalProperties ) );
 
 		if( project != null )
-			targetMenu.add( createPropertyMenu( "Project: [" + project.getName() + "]", project ) );
+			targetMenu.addHeader( createPropertyMenu( "Project: [" + project.getName() + "]", project ) );
 
 		if( testSuite != null )
-			targetMenu.add( createPropertyMenu( "TestSuite: [" + testSuite.getName() + "]", testSuite ) );
+			targetMenu.addHeader( createPropertyMenu( "TestSuite: [" + testSuite.getName() + "]", testSuite ) );
 
 		if( mockService != null )
-			targetMenu.add( createPropertyMenu( "MockService: [" + mockService.getName() + "]", mockService ) );
+			targetMenu.addHeader( createPropertyMenu( "MockService: [" + mockService.getName() + "]", mockService ) );
 
 		if( mockResponse != null )
-			targetMenu.add( createPropertyMenu( "MockResponse: [" + mockResponse.getName() + "]", mockResponse ) );
+			targetMenu.addHeader( createPropertyMenu( "MockResponse: [" + mockResponse.getName() + "]", mockResponse ) );
 
 		if( testCase != null )
 		{
-			targetMenu.add( createPropertyMenu( "TestCase: [" + testCase.getName() + "]", testCase ) );
+			targetMenu.addHeader( createPropertyMenu( "TestCase: [" + testCase.getName() + "]", testCase ) );
 
 			for( int c = 0; c < testCase.getTestStepCount(); c++ )
 			{
@@ -151,13 +151,9 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 				if( testStep.getPropertyNames().length == 0 )
 					continue;
 
-				if( targetMenu.getComponentCount() == 3 )
-					targetMenu.add( new JSeparator() );
-
 				targetMenu.add( createPropertyMenu( "Step " + ( c + 1 ) + ": [" + testStep.getName() + "]", testStep ) );
 			}
 		}
-		
 	}
 
 	public void popupMenuCanceled( PopupMenuEvent arg0 )
@@ -170,7 +166,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 
 	public void popupMenuWillBecomeVisible( PopupMenuEvent arg0 )
 	{
-		if ( targetMenu instanceof ScrollableMenu) 
+		if( targetMenu instanceof ScrollableMenu )
 			return;
 		// create transfer menus
 		targetMenu.removeAll();
@@ -274,7 +270,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 
 		if( holder instanceof MutableTestPropertyHolder )
 		{
-			menu.addFooter( new TransferFromPropertyActionInvoker( ( MutableTestPropertyHolder )holder ) );
+			menu.addHeader( new TransferFromPropertyActionInvoker( ( MutableTestPropertyHolder )holder ) );
 		}
 
 		return menu;
@@ -436,7 +432,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 		dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
 
 		JPopupMenu popup = groovyEditor.getEditArea().getComponentPopupMenu();
-		
+
 		if( popup != null )
 		{
 			ScrollableMenu menu = new ScrollableMenu( "Get Data.." );

@@ -1,7 +1,7 @@
 package com.eviware.soapui.support.propertyexpansion.scrollmenu;
 
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -12,13 +12,9 @@ import java.util.Vector;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
-import javax.swing.MenuElement;
-import javax.swing.MenuSelectionManager;
-import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
 import com.eviware.soapui.support.UISupport;
@@ -26,10 +22,10 @@ import com.eviware.soapui.support.UISupport;
 /**
  * JMenu with the scrolling feature.
  */
-public class ScrollablePopup extends JPopupMenu
+public class ScrollablePopup extends JPopupMenu implements ScrollableMenuContainer
 {
 	/** How fast the scrolling will happen. */
-	private int scrollSpeed = 150;
+	private int scrollSpeed = 20;
 	/** Handles the scrolling upwards. */
 	private Timer timerUp;
 	/** Handles the scrolling downwards. */
@@ -46,15 +42,13 @@ public class ScrollablePopup extends JPopupMenu
 	/** Button to scroll menu downwards. */
 	private JButton downButton;
 	/** Container to hold submenus. */
-	private Vector subMenus = new Vector();
+	private Vector<JMenuItem> subMenus = new Vector<JMenuItem>();
 	/** Height of the screen. */
 	private double screenHeight;
 	/** Height of the menu. */
 	private double menuHeight;
-	private JMenuItem header;
-	private JMenuItem footer;
-	private JSeparator footerSeparator;
-	private JSeparator headerSeparator;
+	private int headerCount;
+	private int footerCount;
 
 	/**
 	 * Creates a new ScrollableMenu object with a given name.
@@ -68,14 +62,6 @@ public class ScrollablePopup extends JPopupMenu
 	public ScrollablePopup( String name )
 	{
 		super( name );
-
-		header = new JMenuItem();
-		header.setVisible( false );
-		headerSeparator = new JSeparator();
-		headerSeparator.setVisible( false );
-		add( header, 0 );
-		add( headerSeparator, 1 );
-
 
 		timerUp = new Timer( scrollSpeed, new ActionListener()
 		{
@@ -92,8 +78,7 @@ public class ScrollablePopup extends JPopupMenu
 			}
 		} );
 
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		screenHeight = screenSize.getHeight() - 30 ; 
+		screenHeight = 400;
 		createButtons();
 		hideButtons();
 	}
@@ -110,8 +95,7 @@ public class ScrollablePopup extends JPopupMenu
 	 */
 	public JMenuItem add( JMenuItem menuItem )
 	{
-
-		add( menuItem, subMenus.size() + 3 );
+		add( menuItem, subMenus.size() + headerCount + 1 + ( headerCount == 0 ? 0 : 1 ) );
 		subMenus.add( menuItem );
 
 		menuHeight += menuItem.getPreferredSize().getHeight();
@@ -129,35 +113,29 @@ public class ScrollablePopup extends JPopupMenu
 		return menuItem;
 	}
 
-//	/**
-//	 * Closes the opened submenus when scrolling starts
-//	 */
-//	private void closeOpenedSubMenus()
-//	{
-//		MenuSelectionManager manager = MenuSelectionManager.defaultManager();
-//		MenuElement[] path = manager.getSelectedPath();
-//		int i = 0;
-//		JPopupMenu popup = getPopupMenu();
-//
-//		for( ; i < path.length; i++ )
-//		{
-//			if( path[i] == popup )
-//			{
-//				break;
-//			}
-//		}
-//
-//		MenuElement[] subPath = new MenuElement[i + 1];
-//
-//		try
-//		{
-//			System.arraycopy( path, 0, subPath, 0, i + 1 );
-//			manager.setSelectedPath( subPath );
-//		}
-//		catch( Exception ekasd )
-//		{
-//		}
-//	}
+	public Component add( Component comp )
+	{
+		if( comp instanceof JMenuItem )
+			return add( ( JMenuItem )comp );
+		else
+			return super.add( comp );
+	}
+
+	public void removeAll()
+	{
+		super.removeAll();
+
+		headerCount = 0;
+		footerCount = 0;
+		menuHeight = 0;
+		indexVisible = 0;
+		visibleItems = 0;
+
+		subMenus.clear();
+
+		add( upButton );
+		add( downButton );
+	}
 
 	/**
 	 * When timerUp is started it calls constantly this method to make the JMenu
@@ -166,7 +144,7 @@ public class ScrollablePopup extends JPopupMenu
 	 */
 	private void scrollUp()
 	{
-//		closeOpenedSubMenus();
+		// closeOpenedSubMenus();
 
 		if( indexVisible == 0 )
 		{
@@ -194,7 +172,7 @@ public class ScrollablePopup extends JPopupMenu
 	 */
 	private void scrollDown()
 	{
-//		closeOpenedSubMenus();
+		// closeOpenedSubMenus();
 
 		if( ( indexVisible + visibleItems ) == subMenus.size() )
 		{
@@ -280,7 +258,7 @@ public class ScrollablePopup extends JPopupMenu
 		MouseListener scrollUpListener = new Up();
 		upButton.addMouseListener( scrollUpListener );
 
-		add( upButton, 2 );
+		add( upButton );
 		downButton = new JButton( UISupport.createImageIcon( "/down_arrow.gif" ) );
 		downButton.setPreferredSize( d );
 		downButton.setBorderPainted( false );
@@ -326,7 +304,7 @@ public class ScrollablePopup extends JPopupMenu
 
 		MouseListener scrollDownListener = new Down();
 		downButton.addMouseListener( scrollDownListener );
-		add( downButton, 3 + subMenus.size() );
+		add( downButton, 1 + subMenus.size() );
 	}
 
 	/**
@@ -338,22 +316,29 @@ public class ScrollablePopup extends JPopupMenu
 		downButton.setVisible( false );
 	}
 
-	public JMenuItem addHeader( JMenuItem menuItem )
+	public JMenuItem addHeader( JMenuItem header )
 	{
-		header = menuItem;
-		add( header, 0 );
-		header.setVisible( true );
-		add( new JSeparator(), 1);
-		return menuItem;
+		add( header, headerCount );
+
+		if( ++headerCount == 1 )
+		add( new JSeparator(), 1 );
+
+		return header;
 	}
 
-	public JMenuItem addFooter( JMenuItem menuItem )
+	public JMenuItem addHeader( Action action )
 	{
+		return addHeader( new JMenuItem( action ) );
+	}
 
-		footer = menuItem;
-		add( new JSeparator(), subMenus.size() + 4 );
-		add( menuItem, subMenus.size() + 5 );
-		footer.setVisible( true );
+	public JMenuItem addFooter( JMenuItem footer )
+	{
+		if( footerCount == 0 )
+			add( new JSeparator(), subMenus.size() + headerCount + 2 + ( headerCount == 0 ? 0 : 1 ) );
+
+		add( footer, subMenus.size() + headerCount + footerCount + 3 + ( headerCount == 0 ? 0 : 1 ) );
+		footerCount++ ;
+
 		return footer;
 	}
 

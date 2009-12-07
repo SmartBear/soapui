@@ -31,10 +31,14 @@ public class RemoveEmptyContentRequestFilterTestCase extends TestCase
 		doRemoval( "<test></test>", "<test></test>" );
 		
 		doRemoval( "<test><testing/><testing/></test>", "<test/>" );
+		doRemoval(
+				"<dat1:documentType xmlns:dat1=\"test\"><dat1:listName test=\"\" xsi:nil=\"true\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"/></dat1:documentType>",
+				"<dat1:documentType xmlns:dat1=\"test\"/>" );
+
 	}
 	
 	public void doRemoval( String request, String expected ) throws Exception
 	{
-		assertEquals( expected, RemoveEmptyContentRequestFilter.removeEmptyContent(request,null) );
+		assertEquals( expected, RemoveEmptyContentRequestFilter.removeEmptyContent( request, null, true ) );
 	}
 }

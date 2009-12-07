@@ -150,6 +150,13 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 	{
 		WsdlTestCase testCase = getTestRunnable();
 		
+		for( int c = 0; c < initCount && c < testCase.getTestStepCount(); c++ )
+		{
+			WsdlTestStep testStep = testCase.getTestStepAt( c );
+			if( !testStep.isDisabled() )
+				testStep.finish( this, runContext );
+		}
+
 		try
 		{
 			testCase.runTearDownScript( runContext, this );
@@ -159,13 +166,6 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 			SoapUI.logError( e );
 		}
 		
-		for( int c = 0; c < initCount && c < testCase.getTestStepCount(); c++ )
-		{
-			WsdlTestStep testStep = testCase.getTestStepAt( c );
-			if( !testStep.isDisabled() )
-				testStep.finish( this, runContext );
-		}
-
 		notifyAfterRun();
 
 		runContext.clear();

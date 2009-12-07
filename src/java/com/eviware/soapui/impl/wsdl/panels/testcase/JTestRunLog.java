@@ -172,7 +172,7 @@ public class JTestRunLog extends JPanel implements TestRunLog
 			}
 
 			TestStepResult result = logListModel.getResultAt( index );
-			if( result != null && !result.isDiscarded() && result.getActions() != null && !getText().startsWith( " ->" ) )
+			if( result != null && !getText().startsWith( " ->" ) )
 			{
 				hyperlinkLabel.setText( getText() );
 				hyperlinkLabel.setBackground( getBackground() );

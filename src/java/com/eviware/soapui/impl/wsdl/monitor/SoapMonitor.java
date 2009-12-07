@@ -200,7 +200,7 @@ public class SoapMonitor extends JPanel
 		logTable.setColumnControlVisible( true );
 		logTable.setModel( tableModel );
 		logTable.setHorizontalScrollEnabled( true );
-		logTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+		logTable.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION );
 
 		operationFilter = new PatternFilter( ".*", 0, 4 );
 		operationFilter.setAcceptNull( true );
@@ -489,7 +489,7 @@ public class SoapMonitor extends JPanel
 			stopButton.setEnabled( true );
 			startButton.setEnabled( false );
 			optionsButton.setEnabled( false );
-			infoLabel.setText( ( monitorEngine.isProxy() ? "Http Proxy " : "SSL Tunnel " ) + "on port " + localPort );
+			infoLabel.setText( ( monitorEngine.isProxy() ? "HTTP Proxy " : "SSL Tunnel " ) + "on port " + localPort );
 			progressBar.setIndeterminate( true );
 
 			if( setAsProxy )
@@ -1203,7 +1203,14 @@ public class SoapMonitor extends JPanel
 	{
 		for( MonitorListener listener : listeners.get() )
 		{
+			try
+			{
 			listener.onMessageExchange( messageExchange );
+		}
+			catch( Throwable t )
+			{
+				SoapUI.logError( t );
+			}
 		}
 	}
 
@@ -1211,7 +1218,14 @@ public class SoapMonitor extends JPanel
 	{
 		for( MonitorListener listener : listeners.get() )
 		{
+			try
+			{
 			listener.onRequest( this, request, response );
+		}
+			catch( Throwable t )
+			{
+				SoapUI.logError( t );
+			}
 		}
 	}
 
@@ -1220,7 +1234,14 @@ public class SoapMonitor extends JPanel
 	{
 		for( MonitorListener listener :listeners.get() )
 		{
+			try
+			{
 			listener.beforeProxy( this, request, response, method, hostConfiguration );
+		}
+			catch( Throwable t )
+			{
+				SoapUI.logError( t );
+			}
 		}
 	}
 
@@ -1229,7 +1250,14 @@ public class SoapMonitor extends JPanel
 	{
 		for( MonitorListener listener : listeners.get() )
 		{
+			try
+			{
 			listener.afterProxy( this, request, response, method, capturedData );
+		}
+			catch( Throwable t )
+			{
+				SoapUI.logError( t );
+			}
 		}
 	}
 

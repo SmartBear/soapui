@@ -370,13 +370,29 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 				runner = testRunner;
 		}
 
-		public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
+		public synchronized void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext,
+				final TestStep testStep )
 		{
 			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() ) )
 				return;
 
 			if( testStep != null )
+			{
+				if( SwingUtilities.isEventDispatchThread() )
+				{
+					testStepList.setSelectedValue( testStep, true );
+				}
+				else
+				{
+					SwingUtilities.invokeLater( new Runnable()
+					{
+						public void run()
+						{
 				testStepList.setSelectedValue( testStep, true );
+		}
+					} );
+				}
+			}
 		}
 
 		public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )

@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.mock;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -181,14 +182,23 @@ public class WsdlMockRequest implements MockRequest
 			encoding = StringUtils.unquote( encoding );
 
 		ServletInputStream is = request.getInputStream();
-		if( is.markSupported() )
-			is.mark( Integer.MAX_VALUE );
+		if( is.markSupported() && request.getContentLength() > 0 )
+			is.mark( request.getContentLength() );
 
 		ByteArrayOutputStream out = Tools.readAll( is, Tools.READ_ALL );
 		byte[] data = out.toByteArray();
 
-		if( is.markSupported() )
+		if( is.markSupported() && request.getContentLength() > 0 )
+		{
+			try
+			{
 			is.reset();
+			}
+			catch( IOException e )
+			{
+				SoapUI.logError( e );
+			}
+		}
 
 		int contentOffset = 0;
 

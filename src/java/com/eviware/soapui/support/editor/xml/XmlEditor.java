@@ -21,6 +21,7 @@ import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
  * @author ole.matzura
  */
 
+@SuppressWarnings( "serial" )
 public abstract class XmlEditor<T extends XmlDocument> extends Editor<T>
 {
 	public XmlEditor( T xmlDocument )

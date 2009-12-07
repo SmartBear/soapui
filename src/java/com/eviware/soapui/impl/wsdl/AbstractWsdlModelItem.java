@@ -175,7 +175,7 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends A
 
 		for( ModelItem modelItem : children )
 		{
-			if( modelItem instanceof AbstractWsdlModelItem )
+			if( modelItem instanceof AbstractWsdlModelItem<?> )
 			{
 				( ( AbstractWsdlModelItem<?> )modelItem ).resolve( context );
 			}
@@ -190,7 +190,7 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends A
 
 		for( ModelItem modelItem : children )
 		{
-			if( modelItem instanceof AbstractWsdlModelItem )
+			if( modelItem instanceof AbstractWsdlModelItem<?> )
 			{
 				( ( AbstractWsdlModelItem<?> )modelItem ).beforeSave();
 			}
@@ -205,7 +205,7 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends A
 
 		for( ModelItem modelItem : children )
 		{
-			if( modelItem instanceof AbstractWsdlModelItem )
+			if( modelItem instanceof AbstractWsdlModelItem<?> )
 			{
 				( ( AbstractWsdlModelItem<?> )modelItem ).afterLoad();
 			}

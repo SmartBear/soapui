@@ -178,6 +178,7 @@ public class RestRequestConverter
 		}
 	}
 
+	@SuppressWarnings( "deprecation" )
 	private static void convert( RestResource resource, OldRestRequestConfig oldConfig, RestMethod method )
 	{
 

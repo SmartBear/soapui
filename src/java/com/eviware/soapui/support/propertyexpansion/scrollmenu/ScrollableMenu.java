@@ -1,7 +1,7 @@
 package com.eviware.soapui.support.propertyexpansion.scrollmenu;
 
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -26,10 +26,10 @@ import com.eviware.soapui.support.UISupport;
 /**
  * JMenu with the scrolling feature.
  */
-public class ScrollableMenu extends JMenu
+public class ScrollableMenu extends JMenu implements ScrollableMenuContainer
 {
 	/** How fast the scrolling will happen. */
-	private int scrollSpeed = 150;
+	private int scrollSpeed = 10;
 	/** Handles the scrolling upwards. */
 	private Timer timerUp;
 	/** Handles the scrolling downwards. */
@@ -51,9 +51,12 @@ public class ScrollableMenu extends JMenu
 	private double screenHeight;
 	/** Height of the menu. */
 	private double menuHeight;
-	private JMenuItem header;
-	private JMenuItem footer;
-	private JSeparator headerSeparator;
+	// private JMenuItem header;
+
+	private int headerCount;
+	private int footerCount;
+
+	// private JSeparator headerSeparator;
 
 	/**
 	 * Creates a new ScrollableMenu object with a given name.
@@ -67,14 +70,6 @@ public class ScrollableMenu extends JMenu
 	public ScrollableMenu( String name )
 	{
 		super( name );
-
-		header = new JMenuItem();
-		header.setVisible( false );
-		headerSeparator = new JSeparator();
-		headerSeparator.setVisible( false );
-		add( header, 0 );
-		add( headerSeparator, 1 );
-
 
 		timerUp = new Timer( scrollSpeed, new ActionListener()
 		{
@@ -91,27 +86,20 @@ public class ScrollableMenu extends JMenu
 			}
 		} );
 
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		screenHeight = screenSize.getHeight() - 30 ; 
+		screenHeight = 400;
 		createButtons();
 		hideButtons();
 	}
 
-	/**
-	 * JMenu's add-method is override to keep track of the added items. If there
-	 * are more items that JMenu can display, then the added menuitems will be
-	 * invisible. After that downscrolling button will be visible.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param menuItem
-	 *           to be added
-	 * 
-	 * @return added menuitem
+	 * @seecom.eviware.soapui.support.propertyexpansion.scrollmenu.
+	 * ScrollableMenuContainer#add(javax.swing.JMenuItem)
 	 */
 	public JMenuItem add( JMenuItem menuItem )
 	{
-
-		System.err.println( "Adding " + menuItem.getText() );
-		add( menuItem, subMenus.size() + 3 );
+		add( menuItem, subMenus.size() + headerCount + 1 + ( headerCount == 0 ? 0 : 1 ) );
 		subMenus.add( menuItem );
 
 		menuHeight += menuItem.getPreferredSize().getHeight();
@@ -127,6 +115,14 @@ public class ScrollableMenu extends JMenu
 		}
 
 		return menuItem;
+	}
+
+	public Component add( Component comp )
+	{
+		if( comp instanceof JMenuItem )
+			return add( ( JMenuItem )comp );
+		else
+			return super.add( comp );
 	}
 
 	/**
@@ -281,7 +277,7 @@ public class ScrollableMenu extends JMenu
 		MouseListener scrollUpListener = new Up();
 		upButton.addMouseListener( scrollUpListener );
 
-		add( upButton, 2 );
+		add( upButton );
 		downButton = new JButton( UISupport.createImageIcon( "/down_arrow.gif" ) );
 		downButton.setPreferredSize( d );
 		downButton.setBorderPainted( false );
@@ -327,7 +323,7 @@ public class ScrollableMenu extends JMenu
 
 		MouseListener scrollDownListener = new Down();
 		downButton.addMouseListener( scrollDownListener );
-		add( downButton, 3 + subMenus.size() );
+		add( downButton, subMenus.size() + 1 );
 		setHorizontalAlignment( SwingConstants.LEFT );
 	}
 
@@ -340,22 +336,29 @@ public class ScrollableMenu extends JMenu
 		downButton.setVisible( false );
 	}
 
-	public JMenuItem addHeader( JMenuItem menuItem )
+	public JMenuItem addHeader( JMenuItem header )
 	{
-		header = menuItem;
-		add( header, 0 );
-		header.setVisible( true );
-		add( new JSeparator(), 1);
-		return menuItem;
+		add( header, headerCount );
+
+		if( ++headerCount == 1 )
+		add( new JSeparator(), 1 );
+
+		return header;
 	}
 
-	public JMenuItem addFooter( JMenuItem menuItem )
+	public JMenuItem addHeader( Action action )
 	{
+		return addHeader( new JMenuItem( action ) );
+	}
 
-		footer = menuItem;
-		add( new JSeparator(), subMenus.size() + 4 );
-		add( menuItem, subMenus.size() + 5 );
-		footer.setVisible( true );
+	public JMenuItem addFooter( JMenuItem footer )
+	{
+		if( footerCount == 0 )
+			add( new JSeparator(), subMenus.size() + headerCount + 2 + ( headerCount == 0 ? 0 : 1 ) );
+
+		add( footer, subMenus.size() + headerCount + footerCount + 3 + ( headerCount == 0 ? 0 : 1 ) );
+		footerCount++ ;
+
 		return footer;
 	}
 
@@ -363,12 +366,20 @@ public class ScrollableMenu extends JMenu
 	{
 		return addFooter( new JMenuItem( action ) );
 	}
-	
-	@Override
+
 	public void removeAll()
 	{
-		for ( JMenuItem cc : subMenus ) {
-			remove( cc );
-		}
+		super.removeAll();
+
+		headerCount = 0;
+		footerCount = 0;
+		menuHeight = 0;
+		indexVisible = 0;
+		visibleItems = 0;
+
+		subMenus.clear();
+
+		add( upButton );
+		add( downButton );
 	}
 }

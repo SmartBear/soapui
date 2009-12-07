@@ -268,7 +268,12 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			// create merged context
 			WsdlMockRunContext context = new WsdlMockRunContext( request.getContext().getMockService(), null );
 			context.setMockResponse( this );
+
+			synchronized( request.getContext() )
+			{
 			context.putAll( request.getContext() );
+			}
+
 			context.putAll( request.getRequestContext() );
 
 			StringToStringMap responseHeaders = getResponseHeaders();
@@ -643,7 +648,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 		if( isRemoveEmptyContent() )
 		{
 			responseContent = RemoveEmptyContentRequestFilter.removeEmptyContent( responseContent, getSoapVersion()
-					.getEnvelopeNamespace() );
+					.getEnvelopeNamespace(), true );
 		}
 
 		if( isStripWhitespaces() )

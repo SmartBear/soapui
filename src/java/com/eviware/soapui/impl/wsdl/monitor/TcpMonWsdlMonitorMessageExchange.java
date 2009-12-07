@@ -78,6 +78,11 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 		timestamp = System.currentTimeMillis();
 	}
 
+	public String getEndpoint()
+	{
+		return targetUrl == null ? null : targetUrl.toString();
+	}
+
 	@Override
 	public WsdlOperation getOperation()
 	{
@@ -433,11 +438,5 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 	{
 		return null; // To change body of implemented methods use File | Settings
 							// | File Templates.
-	}
-
-	public String getEndpoint()
-	{
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

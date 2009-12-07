@@ -33,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
@@ -300,13 +301,27 @@ public class JTestStepList extends JPanel
 			return testCase.getTestStepAt( index );
 		}
 
-		public void propertyChange( PropertyChangeEvent arg0 )
+		public synchronized void propertyChange( PropertyChangeEvent arg0 )
 		{
-			int ix = testCase.getIndexOfTestStep( ( TestStep )arg0.getSource() );
+			final int ix = testCase.getIndexOfTestStep( ( TestStep )arg0.getSource() );
 			if( ix == -1 )
 				return;
 
+			if( !SwingUtilities.isEventDispatchThread() )
+			{
+				SwingUtilities.invokeLater( new Runnable()
+				{
+
+					public void run()
+					{
 			fireContentsChanged( this, ix, ix );
+		}
+				} );
+			}
+			else
+			{
+				fireContentsChanged( this, ix, ix );
+			}
 		}
 
 		public void release()

@@ -83,6 +83,11 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		capture = true;
 	}
 
+	public String getEndpoint()
+	{
+		return targetURL == null ? null : targetURL.toString();
+	}
+
 	@Override
 	public void discard()
 	{
@@ -432,24 +437,8 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 	
 	public void setRawResponseBody( byte[] response )
 	{
-		if( this.response == null )
-		{
 			this.response = response;
 		}
-		else
-		{
-			byte[] newResponse = new byte[this.response.length + response.length];
-			for( int i = 0; i < this.response.length; i++ )
-			{
-				newResponse[i] = this.response[i];
-			}
-			for( int i = this.response.length; i < newResponse.length; i++ )
-			{
-				newResponse[i] = response[i - this.response.length];
-			}
-			this.response = newResponse;
-		}
-	}
 
 	public void setResponseHeader( String name, String value )
 	{
@@ -518,12 +507,6 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 				responseHeaders.put( name, value );
 			}
 		}
-	}
-
-	public String getEndpoint()
-	{
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
