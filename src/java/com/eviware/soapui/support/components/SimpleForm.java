@@ -160,8 +160,8 @@ public class SimpleForm
 			addSpace( rowSpacing );
 
 		layout.appendRow( rowSpec );
-		int row = layout.getRowCount();
 
+		int row = layout.getRowCount();
 		panel.add( component, cc.xy( 4, row, "right,bottom" ) );
 	}
 
@@ -426,17 +426,17 @@ public class SimpleForm
 					Object[] keys = ( Object[] )comboBoxMaps.get( comboBox );
 					Object value = keys[selectedIndex];
 					return ( String )value == null ? null : value.toString(); // Added
-																									// support
-																									// for
-																									// enums
+					// support
+					// for
+					// enums
 				}
 				else
 				{
 					Object value = comboBox.getSelectedItem();
 					return ( String )value == null ? null : value.toString(); // Added
-																									// support
-																									// for
-																									// enums
+					// support
+					// for
+					// enums
 				}
 			}
 		}
@@ -569,5 +569,18 @@ public class SimpleForm
 
 			component.setEnabled( b );
 		}
+	}
+
+	public <T extends JComponent> T addLeftComponent( T component )
+	{
+		if( rowSpacing > 0 && !components.isEmpty() )
+			addSpace( rowSpacing );
+
+		layout.appendRow( rowSpec );
+
+		int row = layout.getRowCount();
+		panel.add( component, cc.xy( 4, row ) );
+
+		return component;
 	}
 }
