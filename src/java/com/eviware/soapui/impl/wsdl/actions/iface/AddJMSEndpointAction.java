@@ -98,7 +98,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
 		StringBuilder sb = new StringBuilder(JMSUtils.JMS_ENDPIONT_PREFIX);
 		sb.append(session + "/");
 		sb.append(send);
-		if (!"".equals(receive))
+		if (!"-".equals(receive))
 			sb.append("/" + receive);
 		return sb.toString();
 	}
