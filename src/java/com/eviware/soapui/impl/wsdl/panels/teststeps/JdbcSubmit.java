@@ -250,6 +250,7 @@ public class JdbcSubmit implements Submit, Runnable
 
 		resultSet = null;
 		connection = DriverManager.getConnection( connStr );
+		connection.setReadOnly( true );
 	}
 
 	protected void load() throws Exception

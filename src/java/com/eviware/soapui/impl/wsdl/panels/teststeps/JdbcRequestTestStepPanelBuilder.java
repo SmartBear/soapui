@@ -39,6 +39,7 @@ public class JdbcRequestTestStepPanelBuilder extends EmptyPanelBuilder<JdbcReque
 	{
 		return true;
 	}
+
 	@Override
 	public Component buildOverviewPanel( JdbcRequestTestStep modelItem )
 	{
