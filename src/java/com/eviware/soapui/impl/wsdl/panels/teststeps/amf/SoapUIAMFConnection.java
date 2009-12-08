@@ -454,10 +454,13 @@ public class SoapUIAMFConnection
 			}
 			else if( targetURI.endsWith( MessageIOConstants.STATUS_METHOD ) )
 			{
-				String exMessage = "Server error";
-				HttpResponseInfo responseInfo = generateHttpResponseInfo();
-				ServerStatusException exception = new ServerStatusException( exMessage, message.getData(), responseInfo );
-				throw exception;
+				// String exMessage = "Server error";
+				// HttpResponseInfo responseInfo = generateHttpResponseInfo();
+				// ServerStatusException exception = new ServerStatusException(
+				// exMessage, message.getData(), responseInfo );
+
+				return message.getData();
+				// throw exception;
 			}
 		}
 		return null; // Should not happen.
@@ -481,14 +484,14 @@ public class SoapUIAMFConnection
 		HttpClientSupport.getHttpClient().executeMethod( hostConfiguration, postMethod, httpState );
 
 		context.setProperty( AMFResponse.AMF_POST_METHOD, postMethod );
-		
+
 		return processHttpResponse( responseBodyInputStream() );
 	}
 
 	private ByteArrayInputStream responseBodyInputStream() throws IOException
 	{
 		byte[] responseBody = postMethod.getResponseBody();
-		ByteArrayInputStream bais = new ByteArrayInputStream(responseBody);
+		ByteArrayInputStream bais = new ByteArrayInputStream( responseBody );
 		context.setProperty( AMFResponse.AMF_RAW_RESPONSE_BODY, responseBody );
 		return bais;
 	}

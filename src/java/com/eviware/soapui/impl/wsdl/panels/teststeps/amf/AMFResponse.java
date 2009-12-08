@@ -29,7 +29,6 @@ import com.eviware.soapui.model.support.AbstractResponse;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 import flex.messaging.io.amf.ActionMessage;
-import flex.messaging.io.amf.MessageBody;
 import flex.messaging.io.amf.MessageHeader;
 
 public class AMFResponse extends AbstractResponse<AMFRequest>
@@ -38,10 +37,10 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 	public static final String AMF_POST_METHOD = "AMF_POST_METHOD";
 	public static final String AMF_RESPONSE_HEADERS = "responseHeaders";
 	public static final String AMF_RESPONSE_ACTION_MESSAGE = "AMF_RESPONSE_ACTION_MESSAGE";
-	public static final String AMF_RAW_RESPONSE_BODY= "AMF_RAW_RESPONSE_BODY";
+	public static final String AMF_RAW_RESPONSE_BODY = "AMF_RAW_RESPONSE_BODY";
 
-	private Object responseContent = "";
-	private String responseContentXML = "";
+	private Object responseContent;
+	private String responseContentXML;
 	private long timeTaken;
 	private long timestamp;
 	private AMFRequest request;
@@ -175,15 +174,14 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 			if( !postMethod.isFailed() )
 			{
 				rawResponse.write( "\r\n".getBytes() );
-				rawResponse.write( rawResponseBody ) ;
+				rawResponse.write( rawResponseBody );
 			}
 
 			rawResponseData = rawResponse.toByteArray();
 			rawRequestData = rawRequest.toByteArray();
-			
 
 			initAMFHeaders( postMethod );
-			
+
 		}
 		catch( Throwable e )
 		{
