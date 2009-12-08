@@ -269,11 +269,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			WsdlMockRunContext context = new WsdlMockRunContext( request.getContext().getMockService(), null );
 			context.setMockResponse( this );
 
-			synchronized( request.getContext() )
-			{
 			context.putAll( request.getContext() );
-			}
-
 			context.putAll( request.getRequestContext() );
 
 			StringToStringMap responseHeaders = getResponseHeaders();
