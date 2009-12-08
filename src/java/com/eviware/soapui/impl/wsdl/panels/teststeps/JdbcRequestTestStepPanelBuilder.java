@@ -16,6 +16,7 @@ import java.awt.Component;
 
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
+import com.eviware.soapui.support.components.JPropertiesTable;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 /**
@@ -43,6 +44,9 @@ public class JdbcRequestTestStepPanelBuilder extends EmptyPanelBuilder<JdbcReque
 	@Override
 	public Component buildOverviewPanel( JdbcRequestTestStep modelItem )
 	{
-		return buildDefaultProperties( modelItem, "JdbcRequestTestStep Properties" );
+		JPropertiesTable<JdbcRequestTestStep> table = buildDefaultProperties( modelItem, "JdbcRequestTestStep Properties" );
+		table.addProperty( "Max Rows", "maxRows", true );
+		table.addProperty( "Query Timeout", "queryTimeout", true );
+		return table;
 	}
 }
