@@ -52,7 +52,7 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 			connectionFactory = (javax.jms.ConnectionFactory) hermes.getConnectionFactory();
 
 			connection = connectionFactory.createConnection();
-			connection.setClientID("" + (Math.random() * 1000));
+			connection.setClientID(sessionName+"-"+topicNameReceive);
 			connection.start();
 
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);

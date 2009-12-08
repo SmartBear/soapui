@@ -63,7 +63,7 @@ public class HermesJmsRequestSubscribeTransport extends HermesJmsRequestTranspor
 
 			// connection
 			connection = connectionFactory.createTopicConnection();
-			connection.setClientID("" + (Math.random() * 1000));
+			connection.setClientID(sessionName+"-"+topicNameSubscribe);
 			connection.start();
 
 			// session
