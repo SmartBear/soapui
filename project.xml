@@ -624,7 +624,7 @@
 		<dependency>
 			<groupId>saxon</groupId>
 			<artifactId>saxon</artifactId>
-			<version>9.1.0.6j</version>
+			<version>9.1.0.7j</version>
 			<type>jar</type>
 			<url>http://www.saxonica.com/</url>
 			<properties>
@@ -634,7 +634,7 @@
 		<dependency>
 			<groupId>saxon</groupId>
 			<artifactId>saxon-dom</artifactId>
-			<version>9.1.0.6j</version>
+			<version>9.1.0.7j</version>
 			<type>jar</type>
 			<url>http://www.saxonica.com/</url>
 			<properties>
