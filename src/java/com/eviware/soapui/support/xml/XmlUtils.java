@@ -776,7 +776,7 @@ public final class XmlUtils
 	{
 		if( domNode == null )
 			return false;
-		
+
 		short nodeType = domNode.getNodeType();
 
 		switch( nodeType )
@@ -1449,11 +1449,16 @@ public final class XmlUtils
 		// connection to an ACCESS MDB
 		ResultSetMetaData rsmd = rs.getMetaData();
 		Element resultSetElement = xmlDocumentResult.createElement( "ResultSet" );
-		resultsElement.appendChild( resultSetElement );		
+
+		resultSetElement.setAttribute( "fetchSize", String.valueOf( rs.getFetchSize() ) );
+		resultsElement.appendChild( resultSetElement );
+
 		int colCount = rsmd.getColumnCount();
 		while( rs.next() )
 		{
 			Element rowElement = xmlDocumentResult.createElement( "Row" );
+			rowElement.setAttribute( "rowNumber", String.valueOf( rs.getRow() ) );
+
 			resultsElement.appendChild( rowElement );
 			for( int ii = 1; ii <= colCount; ii++ )
 			{
@@ -1471,7 +1476,7 @@ public final class XmlUtils
 				}
 				rowElement.appendChild( node );
 			}
-			resultSetElement.appendChild( rowElement );		
+			resultSetElement.appendChild( rowElement );
 		}
 		return xmlDocumentResult;
 	}
