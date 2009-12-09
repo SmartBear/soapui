@@ -40,8 +40,8 @@ public class HtmlMediaTypeHandler implements MediaTypeHandler
 
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( new ByteArrayInputStream( content.getBytes() ) );
-			return xmlObject.xmlText();
+			XmlObject.Factory.parse( new ByteArrayInputStream( content.getBytes() ) );
+			return content;
 		}
 		catch( Exception e )
 		{
