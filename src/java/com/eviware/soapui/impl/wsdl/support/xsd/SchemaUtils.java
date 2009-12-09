@@ -142,7 +142,7 @@ public class SchemaUtils
 							cnt++ ;
 						}
 					}
-					catch( Exception e )
+					catch( Throwable e )
 					{
 						SoapUI.logError( e );
 					}
@@ -156,9 +156,12 @@ public class SchemaUtils
 			log.warn( "Failed to open schemaDirectory [" + schemaDirectory + "]" );
 	}
 
-	private static void loadDefaultSchema( URL url ) throws XmlException, IOException
+	private static void loadDefaultSchema( URL url ) throws Exception
 	{
 		XmlObject xmlObject = XmlObject.Factory.parse( url );
+		if( !( ( Document )xmlObject.getDomNode() ).getDocumentElement().getNamespaceURI().equals( Constants.XSD_NS ) )
+			return;
+
 		String targetNamespace = getTargetNamespace( xmlObject );
 
 		if( defaultSchemas.containsKey( targetNamespace ) )
@@ -268,7 +271,7 @@ public class SchemaUtils
 			// schemas.add( soapVersion.getSoapEncodingSchema());
 			// schemas.add( soapVersion.getSoapEnvelopeSchema());
 			schemas.addAll( defaultSchemas.values() );
-			
+
 			SchemaTypeSystem sts = XmlBeans.compileXsd( schemas.toArray( new XmlObject[schemas.size()] ), XmlBeans
 					.getBuiltinTypeSystem(), options );
 
@@ -415,7 +418,7 @@ public class SchemaUtils
 						getSchemas( location, existing, loader, null );
 					}
 				}
-				
+
 				XmlObject[] wadl10Imports = xmlObject.selectPath( "declare namespace s='" + Constants.WADL10_NS
 						+ "' .//s:grammars/s:include/@href" );
 				for( int i = 0; i < wadl10Imports.length; i++ )
@@ -443,7 +446,7 @@ public class SchemaUtils
 						getSchemas( location, existing, loader, null );
 					}
 				}
-				
+
 			}
 
 			existing.putAll( result );
@@ -515,7 +518,7 @@ public class SchemaUtils
 
 		XmlObject xmlObject = loader.loadXmlObject( wsdlUrl, null );
 		existing.put( wsdlUrl, xmlObject );
-		//wsdlUrl = loader.getBaseURI();
+		// wsdlUrl = loader.getBaseURI();
 
 		selectDefinitionParts( wsdlUrl, existing, loader, xmlObject, "declare namespace s='" + Constants.WSDL11_NS
 				+ "' .//s:import/@location" );
@@ -636,8 +639,8 @@ public class SchemaUtils
 					cursor.dispose();
 
 					result = xmlObject.xmlText(); // XmlUtils.getElementText( (
-															// Element )
-															// userInformation[0].getDomNode());
+					// Element )
+					// userInformation[0].getDomNode());
 				}
 			}
 		}
@@ -652,8 +655,8 @@ public class SchemaUtils
 				xsPrefix = cursor.prefixForNamespace( "http://www.w3.org/2001/XMLSchema" );
 				cursor.dispose();
 				result = xmlObject.xmlText(); // = XmlUtils.getElementText( (
-														// Element )
-														// userInformation[0].getDomNode());
+				// Element )
+				// userInformation[0].getDomNode());
 			}
 		}
 
