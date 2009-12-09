@@ -61,6 +61,8 @@ import javax.swing.border.Border;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 
+import org.syntax.jedit.InputHandler;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolHost;
 import com.eviware.soapui.model.ModelItem;
@@ -84,8 +86,6 @@ import com.eviware.x.impl.swing.SwingDialogs;
 import com.eviware.x.impl.swing.SwingFileDialogs;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
-
-import org.syntax.jedit.InputHandler;
 
 /**
  * Facade for common UI-related tasks
@@ -192,7 +192,7 @@ public class UISupport
 
 		return combo;
 	}
-	
+
 	public static Frame getParentFrame( Component component )
 	{
 		for( Container c = component.getParent(); c != null; c = c.getParent() )
@@ -425,7 +425,7 @@ public class UISupport
 		catch( Throwable t )
 		{
 			System.err.println( "Failed to find icon: " + t ); // FIXME
-																				// "Failed to find icon: java.lang.StackOverflowError"
+			// "Failed to find icon: java.lang.StackOverflowError"
 			return null;
 		}
 
@@ -695,6 +695,7 @@ public class UISupport
 		toolbar.setRollover( true );
 		toolbar.putClientProperty( Options.HEADER_STYLE_KEY, HeaderStyle.SINGLE );
 		toolbar.setBorder( BorderFactory.createEmptyBorder( 3, 0, 3, 0 ) );
+		toolbar.setMinimumSize( new Dimension( 20, 20 ) );
 		return toolbar;
 	}
 
@@ -705,6 +706,7 @@ public class UISupport
 		toolbar.setRollover( true );
 		toolbar.putClientProperty( Options.HEADER_STYLE_KEY, HeaderStyle.SINGLE );
 		toolbar.setBorder( BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) );
+		toolbar.setMinimumSize( new Dimension( 20, 20 ) );
 		return toolbar;
 	}
 
@@ -970,7 +972,7 @@ public class UISupport
 	{
 		return dialogs.promptPassword( question, title );
 	}
-	
+
 	private static final class ItemListenerImplementation implements ItemListener
 	{
 		private final JComboBox combo;
