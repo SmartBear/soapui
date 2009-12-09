@@ -443,7 +443,7 @@
 		<dependency>
 			<groupId>jetty</groupId>
 			<artifactId>jetty</artifactId>
-			<version>6.1.15</version>
+			<version>6.1.22</version>
 			<type>jar</type>
 			<url>http://www.mortbay.org/jetty/index.html
 			</url>
@@ -455,7 +455,7 @@
 		<dependency>
 			<groupId>jetty</groupId>
 			<artifactId>jetty-util</artifactId>
-			<version>6.1.15</version>
+			<version>6.1.22</version>
 			<type>jar</type>
 			<url>http://www.mortbay.org/jetty/index.html
 			</url>
