@@ -18,6 +18,7 @@ import org.apache.commons.httpclient.NameValuePair;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpOperation;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpResponse;
@@ -47,7 +48,6 @@ public class MimeMessageResponse extends BaseHttpResponse
 
 		if( getRequestContent() == null || !getRequestContent().equals( requestContent ))
 			this.requestContent = requestContent;
-
 
 		try
 		{
@@ -102,7 +102,8 @@ public class MimeMessageResponse extends BaseHttpResponse
 		String oldContent = getContentAsString();
 		mmSupport.setResponseContent( responseContent );
 
-		getRequest().notifyPropertyChanged( WsdlRequest.RESPONSE_CONTENT_PROPERTY, oldContent, responseContent );
+		( ( AbstractHttpRequest<?> )getRequest() ).notifyPropertyChanged( WsdlRequest.RESPONSE_CONTENT_PROPERTY,
+				oldContent, responseContent );
 	}
 
 	public Attachment[] getAttachments()

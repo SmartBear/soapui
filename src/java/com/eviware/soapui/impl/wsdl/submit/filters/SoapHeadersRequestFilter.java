@@ -38,7 +38,7 @@ public class SoapHeadersRequestFilter extends AbstractRequestFilter
 		String encoding = System.getProperty( "soapui.request.encoding", wsdlRequest.getEncoding() );
 
 		SoapVersion soapVersion = wsdlInterface.getSoapVersion();
-		String soapAction = wsdlRequest.isSkipSoapAction() ? null : wsdlRequest.getOperation().getAction();
+		String soapAction = wsdlRequest.isSkipSoapAction() ? null : wsdlRequest.getAction();
 
 		postMethod.setRequestHeader( "Content-Type", soapVersion.getContentTypeHttpHeader( encoding, soapAction ) );
 

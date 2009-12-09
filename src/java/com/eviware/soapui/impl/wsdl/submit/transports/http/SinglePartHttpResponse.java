@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.submit.transports.http;
 import java.io.UnsupportedEncodingException;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
@@ -121,7 +122,8 @@ public class SinglePartHttpResponse extends BaseHttpResponse
 		String oldContent = this.responseContent;
 		this.responseContent = responseContent;
 
-		getRequest().notifyPropertyChanged( WsdlRequest.RESPONSE_CONTENT_PROPERTY, oldContent, responseContent );
+		( ( AbstractHttpRequest<?> )getRequest() ).notifyPropertyChanged( WsdlRequest.RESPONSE_CONTENT_PROPERTY,
+				oldContent, responseContent );
 	}
 
 	// public byte[] getRawRequestData()

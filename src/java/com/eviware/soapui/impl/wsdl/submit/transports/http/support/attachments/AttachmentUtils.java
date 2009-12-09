@@ -327,7 +327,11 @@ public class AttachmentUtils
 				+ "start-info=\"" + soapVersion.getContentType();
 
 		if( soapVersion == SoapVersion.Soap12 && action != null )
-			contentType += "; action=\\\"" + action + "\\\"";
+			contentType += "\"; action=\"" + action;
+
+		// nested or not? see
+		// http://www.eviware.com/forums/index.php?topic=2866.new#new
+		// contentType += "; action=\\\"" + action + "\\\"\"; action=\"" + action;
 
 		return contentType + "\"; " + header.substring( ix );
 	}

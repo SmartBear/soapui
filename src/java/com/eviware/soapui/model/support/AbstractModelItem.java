@@ -54,6 +54,11 @@ public abstract class AbstractModelItem implements ModelItem
 		propertyChangeSupport.firePropertyChange( name, oldValue, newValue );
 	}
 
+	public void notifyPropertyChanged( String name, String oldValue, String newValue )
+	{
+		propertyChangeSupport.firePropertyChange( name, oldValue, newValue );
+	}
+
 	public void notifyPropertyChanged( String name, int oldValue, int newValue )
 	{
 		propertyChangeSupport.firePropertyChange( name, oldValue, newValue );

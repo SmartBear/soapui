@@ -72,7 +72,7 @@ public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
 			{
 				String header = message.getHeader( "Content-Type" )[0];
 
-				return AttachmentUtils.buildMTOMContentType( header, wsdlRequest.getOperation().getAction(), soapVersion );
+				return AttachmentUtils.buildMTOMContentType( header, wsdlRequest.getAction(), soapVersion );
 			}
 			else
 			{

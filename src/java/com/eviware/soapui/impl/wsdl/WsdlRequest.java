@@ -673,10 +673,13 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		return jmsPropertyConfig;
 	}
 
-	public void notifyPropertyChanged( String responseContentProperty, String oldContent, String responseContent )
+	public String getAction()
 	{
-		// TODO Auto-generated method stub
+		if( StringUtils.hasContent( getWsaConfig().getAction() ) )
+		{
+			return getWsaConfig().getAction();
+		}
 
+		return getOperation().getAction();
 	}
-
 }
