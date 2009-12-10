@@ -31,10 +31,6 @@ import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.types.StringToStringMap;
 
-/*
- * IMPORTANT TODO:this class is NOT finished yet 
- * 
- */
 public class JMSResponse implements WsdlResponse
 {
 
