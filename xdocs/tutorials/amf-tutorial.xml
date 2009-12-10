@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		~ soapUI, copyright (C) 2004-2008 eviware.com ~ ~ soapUI is free
+		software; you can redistribute it and/or modify it under the ~ terms
+		of version 2.1 of the GNU Lesser General Public License as published
+		by ~ the Free Software Foundation. ~ ~ soapUI is distributed in the
+		hope that it will be useful, but WITHOUT ANY WARRANTY; without ~ even
+		the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. ~ See the GNU Lesser General Public License for more details
+		at gnu.org.
+	-->
+
+
+<document>
+	<properties>
+		<title>Tutorial for AMF Test Step</title>
+	</properties>
+	<body>
+		<section name="AMF Test Step">
+
+			<subsection name="Step by step tutorial">
+				<p>SoapUI 3.5 is introducing new test step for handling AMF
+					remote call. AMF is Macromedia's proprietary (ActionScript
+					Messaging
+					Format) gateway.
+					Remote objects that are sent through the
+					AMF gateway
+					use the HTTP
+					protocol.</p>
+
+				<p>
+					In Ole's blog <a href="http://www.eviware.com/blogs/oleblog/?p=861">Testing AMF services with SoapUI</a> you can see
+					how
+					to use Groovy test step to simulate AMF call. In this
+					introduction
+					of new AMF Test Step we will use same BlazeDS platform
+					<a href="http://opensource.adobe.com/wiki/display/blazeds/BlazeDS/">BlazeDS</a>
+					and same
+					sample application. All AMFConnection related APIs are
+					built in
+					SoapUI 3.5.
+				</p>
+			</subsection>
+
+
+			<subsection name="Getting Started">
+				<p>
+					You need to download <a href="images/flexsample.jar/">flexsample.jar</a> provided here for the purpose of this tutorial. 
+					Place this jar into the %soapui%\bin\ext
+					folder and when start SoapUI 3.5 you will see info in the soapUI log that it is added :
+		
+					</p>
+					<p align="center">
+				<img src="images/ext_jar_loading.gif" alt="The soapUI External Jar Loading" />
+			</p>
+			<p>Now create new project </p>
+			<p align="center">
+				<img src="images/new_soapui_project.gif" alt="Creating New SoapUI Project" />
+			</p>
+			<p>
+				and then manually add a TestSuite and TestCase, and finally add AMF
+				Request.
+			</p>
+			<p align="center">
+				<img src="images/amf_test_step_dialog.gif" alt="AMF Test Step Dialog" />
+			</p>
+			<p>New AMF Request dialog consist of the following </p>
+			<p>On Request part:</p>
+			<ul>
+				<li>1.	Endpoint</li>
+				<li>2.	AMF Call</li>
+				<li>3.	parameters table</li>
+				<li>4.	script editor</li>
+				<li>5.	HTTP Header inspector</li>
+				<li>6.	AMF Header inspector </li>
+			</ul>
+			
+			<p>On response part:</p>
+			<ul>
+				<li>7.	XML view</li>
+				<li>8.	RAW view</li>
+				<li>9.	Outline view</li>
+				<li>10.	Overview view</li>
+				<li>11.	HTTP Headers inspector</li>
+				<li>12.	AMF Header inspector</li>
+			</ul>
+			<p>Using this dialog you can create call to AMF service.
+				First type your endpoint which is<br/>
+				http://127.0.0.1:8400/samples/messagebroker/amf
+				for our tutorial , than add AMF call product.getProducts.
+				This getPoducts method in ProductService.java doesn't require parameters so
+				we can submit this call. 
+			</p>
+
+	<p>If your blazeDS database and server are started you can submit
+		this AMF call. Your response should look like this:</p>
+
+	<p align="center">
+		<img src="images/getproducts_response.gif" alt="AMF Response" />
+	</p>
+			
+			<p>Now change you AMF Call to getProduct which has one method
+	parameter id number of product in database, so we need to provide this
+	parameter. It is handled in parameters table like this</p>
+
+	<p align="center">
+		<img src="images/getproduct_request.gif" alt="AMF Request" />
+	</p>
+			<p>
+	Note that order of parameters in our table should corresponds to order of
+	method parameters of AMF Call if there is more that one parameter
+	(names of your parameters in table are not important thou). When submit
+	this call you should see something like this :
+</p>
+	<p align="center">
+		<img src="images/getproduct_response.gif" alt="AMF Response" />
+	</p>
+		
+					<p>
+	Now if you want to call product.create method you need to provide Product
+	object as method parameter. So, how you could add parameter of any
+	complex type into the table? It is really simple with script editor as
+	a help. First you need one parameter in our parameters table named
+	product (or whatever you want) and leave value blank.	
+					
+</p>
+	<p align="center">
+		<img src="images/create_request.gif" alt="AMF Request" />
+	</p>
+			
+			<p>
+	Next you use script editor to initialize new Product object
+</p>
+	<p align="center">
+		<img src="images/initialization_of_parameters.gif" alt="Script editor" />
+	</p>
+
+
+		<p>
+		As you see script editor has built in variable parameters which you use for initialization of your parameters in the table. There is also amfHeader built in variable with same functionality for initializing complex objects in AMF Header inspector.
+		</p>
+		<p>
+		Now you can submit this call, and your response should look something like this
+		</p>
+
+	<p align="center">
+		<img src="images/response_with_headers.gif" alt="Response with HTTP Headers" />
+	</p>
+
+	
+		
+			</subsection>
+<subsection name="Authorization ">
+			
+			<p>
+		In SoapUI 3.5 you can also login to secured AMF endpoint. For this purpose you need to do following: Open your Test Case and click on the Options button.
+		</p>
+		
+		<p align="center">
+				<img src="images/authorisation.gif" alt="AMF Authorization" />
+			</p>
+			
+				<p>
+		On AMF tab you can chose whether you need to authorize or not to AMF service.
+By choosing this you need to provide endpoint, login and password.
+This is used only when running Test Case and it will login to AMF service before first Test Step and logout after last Test Step in this Test Case. 
+Connection session is shared among all AMF Test Steps in this Test Case.
+			</p>
+			
+			<p>
+			This tutorial should get you started using SoapUI 3.5 for testing AMF services.
+Happy testing!</p>
+			
+</subsection>
+		
+
+			
+		</section>
+	</body>
+</document>
