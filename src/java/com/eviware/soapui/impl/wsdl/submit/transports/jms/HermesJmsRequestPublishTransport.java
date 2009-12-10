@@ -27,7 +27,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 
 public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 {

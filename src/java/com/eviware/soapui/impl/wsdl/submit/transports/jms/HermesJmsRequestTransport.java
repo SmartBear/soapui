@@ -496,6 +496,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 		return parameters;
 	}
 
+	@SuppressWarnings("serial")
 	public static class UnresolvedJMSEndpointException extends Exception
 	{
 		public UnresolvedJMSEndpointException( String msg )
