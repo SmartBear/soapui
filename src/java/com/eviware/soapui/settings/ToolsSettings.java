@@ -36,7 +36,7 @@ public interface ToolsSettings
 	public final static String TCPMON_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "tcpmon";
 	public static final String ORACLE_WSA_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "wsa";
 	public static final String WADL2JAVA_LOCATION = ToolsSettings.class.getSimpleName() + "@" + "wadl2java";
-	public static final String HERMES_1_13 = ToolsSettings.class.getSimpleName() + "@" + "hermes113";
+	public static final String HERMES_JMS = ToolsSettings.class.getSimpleName() + "@" + "hermesjms";
 	// public static final String SCRIPT_LIBRARIES =
 	// ToolsSettings.class.getSimpleName() + "@" + "libraries";
 }

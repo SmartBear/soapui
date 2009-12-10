@@ -44,10 +44,10 @@ public class StartHermesJMS extends AbstractSoapUIAction<WsdlProject>
 
 		project.setHermesConfig(hermesConfigPath);
 		
-		String hermesHome = SoapUI.getSettings().getString(ToolsSettings.HERMES_1_13, "");
+		String hermesHome = SoapUI.getSettings().getString(ToolsSettings.HERMES_JMS, "");
 		if ("".equals(hermesHome))
 		{
-			UISupport.showErrorMessage("Please set Hermes 1.13 path in Preferences->Tools ! ");
+			UISupport.showErrorMessage("Please set Hermes JMS path in Preferences->Tools ! ");
 			return;
 		}
 		

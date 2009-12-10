@@ -84,7 +84,7 @@ public class HermesUtils
 	// TODO: this could be called on souapui startup if hermes config path is set
 	private static void addHermesJarsToClasspath() throws IOException, MalformedURLException
 	{
-		String hermesHome = SoapUI.getSettings().getString(ToolsSettings.HERMES_1_13, null);
+		String hermesHome = SoapUI.getSettings().getString(ToolsSettings.HERMES_JMS, null);
 
 		if (hermesHome == null || "".equals(hermesHome))
 		{
@@ -111,7 +111,7 @@ public class HermesUtils
 
 	private static String createHermesHomeSetting()
 	{
-		if (Tools.isEmpty(SoapUI.getSettings().getString(ToolsSettings.HERMES_1_13, null)))
+		if (Tools.isEmpty(SoapUI.getSettings().getString(ToolsSettings.HERMES_JMS, null)))
 		{
 			UISupport.showErrorMessage("HermesJMS Home must be set in global preferences");
 
@@ -119,7 +119,7 @@ public class HermesUtils
 			{
 				if (SoapUIPreferencesAction.getInstance().show(SoapUIPreferencesAction.INTEGRATED_TOOLS))
 				{
-					return SoapUI.getSettings().getString(ToolsSettings.HERMES_1_13, null);
+					return SoapUI.getSettings().getString(ToolsSettings.HERMES_JMS, null);
 				}
 			}
 		}

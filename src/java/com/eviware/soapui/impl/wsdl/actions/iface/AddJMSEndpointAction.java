@@ -15,7 +15,7 @@ import hermes.Domain;
 import hermes.Hermes;
 import hermes.HermesContext;
 import hermes.JAXBHermesLoader;
-import hermes.config.impl.DestinationConfigImpl;
+import hermes.config.DestinationConfig;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -257,8 +257,8 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
 					}
 
 				});
-		mainForm.addComboBox(SEND, new String[] {}, "Queue/Topic for sending/publishing");
-		mainForm.addComboBox(RECEIVE, new String[] {}, "Queue for receiving");
+		mainForm.addComboBox(SEND, new String[] {}, "Queue/Topic  sending/publishing");
+		mainForm.addComboBox(RECEIVE, new String[] {}, "Queue/Topic  receive/subscribe");
 
 		return builder
 				.buildDialog(builder.buildOkCancelActions(), "create JMS endpoint by selecting proper values", null);
@@ -269,7 +269,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
 		Iterator<?> hermesDestionations = hermes.getDestinations();
 		while (hermesDestionations.hasNext())
 		{
-			DestinationConfigImpl dest = (DestinationConfigImpl) hermesDestionations.next();
+			DestinationConfig dest = (DestinationConfig) hermesDestionations.next();
 			Destination temp = new Destination(dest.getName(), Domain.getDomain(dest.getDomain()));
 			destinationList.add(temp);
 		}
