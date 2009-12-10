@@ -47,8 +47,8 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
 	public static final String SOAPUI_ACTION_ID = "AddJMSEndpointAction";
 	private static final String SESSION = "Session";
 	private static final String HERMES_CONFIG = "Hermes Config";
-	private static final String SEND = "Send Queue/Topic";
-	private static final String RECEIVE = "Receive Queue";
+	private static final String SEND = "Send/Publish destination";
+	private static final String RECEIVE = "Receive/Subscribe destination";
 	private XForm mainForm;
 	List<Destination> destinationNameList;
 	
