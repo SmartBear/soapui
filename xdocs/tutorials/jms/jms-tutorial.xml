@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		~ soapUI, copyright (C) 2004-2008 eviware.com ~ ~ soapUI is free
+		software; you can redistribute it and/or modify it under the ~ terms
+		of version 2.1 of the GNU Lesser General Public License as published
+		by ~ the Free Software Foundation. ~ ~ soapUI is distributed in the
+		hope that it will be useful, but WITHOUT ANY WARRANTY; without ~ even
+		the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. ~ See the GNU Lesser General Public License for more details
+		at gnu.org.
+	-->
+
+
+<document>
+	<properties>
+		<title>Tutorial for AMF Test Step</title>
+	</properties>
+	<body>
+		<section name="SOAP over JMS testing with SoapUI 3.5">
+
+			<subsection name="Introduction">
+				<p>
+					In SoapUI 3.5 we introduce support for JMS messaging. For this
+					purpose SoapUI integrated HermesJMS open source application, which
+					supports many different JMS providers.
+				</p>
+
+				<p>
+					For purpose of this tutorial we will need to download new SoapUI
+					3.5 installer with integrated installer of HermeJMS. 
+				</p>
+			</subsection>
+
+
+			<subsection name="Installing the SoapUI 3.5">
+				<p>
+					When starting new SoapUI installer there is option that you can
+					select to install HermesJMS also. This is mandatory if you want to
+					try this tutorial.
+				</p>
+
+			</subsection>
+
+			<subsection name="Setting configurations ">
+				<p>
+					After successful installation we need to configure path to Hermes
+					installation.
+				</p>
+				<p>
+					This is done by clicking 'Sets Global SoapUI preferences'button
+					and choosing Tools tab.
+					There we need to set path to HermesJMS. 
+				</p>
+
+				<p align="center">
+					<img src="images/set_hermes_path.gif" alt="HermesJMS path" />
+				</p>
+				<p>Now we can start HermesJMS from SoapUI and use sessions
+					configured in HermesJMS.</p>
+			</subsection>
+
+			<subsection name="Downloading ActiveMQ and starting the server">
+				<p>
+					Also for purpose of this tutorial we will need ActiveMQ. Download
+					it form server
+					<a href="http://activemq.apache.org/activemq-520-release.html">here</a>
+					. Unpack it and start activemq.bat file under bin folder. This will
+					start activemq server.
+				</p>
+
+			</subsection>
+
+
+			<subsection name="Setting HermesJMS sessions">
+				<p>
+					For purpose of this tutorial let us create one session in
+					HermesJMS.
+				</p>
+				<p align="center">
+					<img src="images/create_hermes_session_button.gif" alt="Create session in Hermes button" />
+				</p>
+
+				<p>
+					Preferences editor opens and first we choose Providers tab first
+					at the bottom
+					of this edtitor.
+					By right click Classpath Groups choose
+					'Add Group' and type the name
+					ActiveMQ-5.2
+				</p>
+				<p>
+					Than add two jar files also with right click 'Add JAR(s)',
+					activemq-core-5.2.0.jar and
+					geronimo-j2ee-management_1.0_spec-1.0.jar.
+					These jar files can be
+					found in
+					%actvemq_home%/lib folder.
+				</p>
+				<p>
+					Now choose the session tab and make sure that your editor looks like this.
+				</p>
+				<p align="center">
+					<img src="images/hermes_preferences.gif" alt="Hermes Preferences" />
+				</p>
+				<p>
+					This way we created session in HermesJMS named activeMQSession with two queues and two topics and we can use them in SoapUI.
+				</p>
+			</subsection>
+			
+			<subsection name="JMS in SoapUI">
+				<p>
+				Now that we have configured session in Hermes lets go back to SoapUI. Lets use sample project that goes with SoapUI installation %soapui_home%/Tutorials/sample-soapui-pro-project.xml
+				</p>
+				<p>
+					Open the project and left click on interface SampleServiceSoapBinding and choose 'Add JMS Endpoint'
+				</p>
+				<p>
+					Popup dialog opens
+				</p>
+				<p align="center">
+					<img src="images/add_jms_endpoint.gif" alt="Add JMS Endpoints" />
+				</p>
+				<p>
+					Choose Hermes Config path first ( ie. folder where hermes-config.xml is )
+					than session and queue/topic for sending/publishing and queue/topic
+					for receiving/subscribing. You can choose send/publish only by leaving
+					Receive Queue field blank and also receive/subscribe only by leaving
+					Send Queue/Topic blank. All combinations are allowed. Available queues
+					and topics depend on what we have configured in HermesJMS. So if we
+					add another queue for example it will be available in these combo
+					boxes also.
+					You can add many endpoints this way.
+				</p>
+				<p>
+					Next we need to create new Test Suite->Test Case and add Soap Test Request.
+					Select operation to invoke for Request login for example, so we get soap message generated. Now let’s choose endpoint where send queue and receive queue is the same and submit the request.
+
+				</p>
+				<p align="center">
+					<img src="images/jms_request_and_response.gif" alt="JMS Request and Response" />
+				</p>
+				<p>
+					So, we send message to a queue and receive it from the same queue (for the purpose of this example) and we can see that response has inspector JMS where all JmsHeaders are. 
+				</p>
+				<p>
+					We can also set these JMS Headers and JMS Properties on request side so they can be set in a message to send.
+				</p>
+				<p align="center">
+					<img src="images/jms_request_and_hedears.gif" alt="JMS Request with Headers" />
+				</p>
+				<p align="center">
+					<img src="images/jms_request_and_properties.gif" alt="JMS Request with Properties" />
+				</p>
+				<p>
+					Another important thing to set is Timeout property
+				</p>
+				<p align="center">
+					<img src="images/timeout.gif" alt="Timeout" />
+				</p>
+				<p>
+					where we choosing time to wait ( in milliseconds ) for the receiving/subscribing queue/topic.
+					If not set or zero it will wait to infinity. 
+				</p>
+				<p>
+					Two new assertions are available for JMS, JMS Status and JMS Timeout.
+					JMS Status will check if some JMS specific error occurs, like connection error,
+					and JMS Timeout will check if message is not received within a period that we previously set.
+				</p>
+				<p>
+					This is the way we can send/publish and receive/subscribe jms text messages.
+					We can also use first attachment to specify payload for message, and there is a convention how they will be treated. If content type of a message is text or plain or xml then this attachment will be sending as text message, otherwise it will be sent as bytes message. And also, when receiving if message type is bytes message than its payload will be in attachment part of message.
+				</p>
+				<p>
+					Note that only first attachment if added is treated as payload for message.  
+				</p>
+				<p>
+					Hope that you will find this tutorial helpful to jump start testing Soap over JMS.
+				</p>
+				<p>
+					Happy testing!
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>
