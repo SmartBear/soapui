@@ -675,7 +675,7 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 
 	public String getAction()
 	{
-		if( StringUtils.hasContent( getWsaConfig().getAction() ) )
+		if( isWsaEnabled() && StringUtils.hasContent( getWsaConfig().getAction() ) )
 		{
 			return getWsaConfig().getAction();
 		}
