@@ -501,6 +501,7 @@ public class SampleXmlUtil
 		return sb.toString();
 	}
 
+	@SuppressWarnings( "unused" )
 	private String pickDigits( int digits )
 	{
 		StringBuffer sb = new StringBuffer();
@@ -716,6 +717,7 @@ public class SampleXmlUtil
 			maxExclusive = d.getGDurationValue();
 
 		GDurationBuilder gdurb = new GDurationBuilder();
+		@SuppressWarnings( "unused" )
 		BigInteger min, max;
 
 		gdurb.setSecond( pick( 800000 ) );
@@ -809,7 +811,6 @@ public class SampleXmlUtil
 		GDateBuilder gdateb = new GDateBuilder( new Date( 1000L * pick( 365 * 24 * 60 * 60 ) + ( 30L + pick( 20 ) ) * 365
 				* 24 * 60 * 60 * 1000 ) );
 		GDate min = null, max = null;
-		GDate temp;
 
 		// Find the min and the max according to the type
 		switch( sType.getPrimitiveType().getBuiltinTypeCode() )
@@ -1137,6 +1138,7 @@ public class SampleXmlUtil
 	 * Return a name for the element or the particle type to use in the comment
 	 * for minoccurs, max occurs
 	 */
+	@SuppressWarnings( "unused" )
 	private String getItemNameOrType( SchemaParticle sp, XmlCursor xmlc )
 	{
 		String elementOrTypeName = null;
@@ -1186,6 +1188,7 @@ public class SampleXmlUtil
 		xmlc.toNextToken();
 	}
 
+	@SuppressWarnings( "unused" )
 	private void moveToken( int numToMove, XmlCursor xmlc )
 	{
 		for( int i = 0; i < Math.abs( numToMove ); i++ )
@@ -1239,6 +1242,8 @@ public class SampleXmlUtil
 		for( int i = 0; i < attrProps.length; i++ )
 		{
 			SchemaProperty attr = attrProps[i];
+			if( attr.getMinOccurs().intValue() == 0 && ignoreOptional )
+				continue;
 
 			if( attr.getName().equals( new QName( "http://www.w3.org/2005/05/xmlmime", "contentType" ) ) )
 			{
@@ -1327,6 +1332,7 @@ public class SampleXmlUtil
 	 * This method will get the base type for the schema type
 	 */
 
+	@SuppressWarnings( "unused" )
 	private static QName getClosestName( SchemaType sType )
 	{
 		while( sType.getName() == null )
