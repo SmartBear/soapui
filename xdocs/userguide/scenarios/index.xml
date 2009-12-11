@@ -20,6 +20,7 @@
 		<tr><td><a href="surveillance.html">Surveillance Testing</a></td><td>Describes how to use a scheduling tool in conjunction
 		with soapUI to set up ongoing test processes that continuously validate functionality and
 		performance.</td></tr>
+		<tr><td><a href="ws-reliablemessaging.html">WS-ReliableMessaging</a></td><td>Describes how to use SoapUI with a WS-ReliableMessaging service.</td></tr>
 		</table>
 		<p>If you have any suggestions or requests for more scenarios please let us know!</p>
 		

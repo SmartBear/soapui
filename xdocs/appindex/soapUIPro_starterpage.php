@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>soupUI Pro- The Leading Web Service Testing Tool</title>
+<title>soapUI Pro- The Leading Web Service Testing Tool</title>
 <link href="css/software.css" rel="stylesheet" type="text/css" />
 
 </style>
@@ -68,8 +68,8 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <span class="right">&copy; 2009 <a href="http://www.eviware.com" target="_blank">Eviware AB</a></span></div>
 
 <div id="doc-help">
-<a onclick="javascript:urchinTracker('/appindexsoapUIProTopDocs')" href="http://www.soapUI.org" title="Documentation"><img src="images/documentation-header.png" alt="Documentation" /></a>
-<a onclick="javascript:urchinTracker('/appindexsoapUIProTopHelp')" href="http://www.eviware.com/forums" title="Help"><img src="images/help-header.png" alt="Help" /></a>
+<a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProTopDocs')" href="http://www.soapUI.org" title="Documentation"><img src="images/documentation-header.png" alt="Documentation" /></a>
+<a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProTopHelp')" href="http://www.eviware.com/forums" title="Help"><img src="images/help-header.png" alt="Help" /></a>
 </div>
 
 </div>
@@ -83,9 +83,9 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 
 <div id="header-rightbox">
 <div class="title"><img src="images/news-title.png" alt="News" /></div>
-<h2>  soapUI 3 - The Reporting Release: The Features</h2>
-<p>Read more about what's in soapUI 3...</p>
-<div class="links"><a onclick="javascript:urchinTracker('/appindexsoapUIProMinorNews')" href="http://www.eviware.com/index.php?option=com_content&task=view&id=150&Itemid=1">Read more</a></div>
+<h2>Update: soapUI 3.0.1</h2>
+<p>soapUI 3.0.1, maintenance release is out.</p>
+<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProMinorNews')" href="http://www.eviware.com/index.php?option=com_content&task=view&id=150&Itemid=1">Read more</a></div>
 <div class="clearfix"></div>
 </div>
 
@@ -93,7 +93,7 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <div class="title"><img src="images/feature-focus-title.png" alt="News" /></div>
 <h2>Data Driven Testing</h2>
 <p>soapUI Pro gives you the ability to do Data Driven Testing. Read a tutorial on how to use it efficiently.</p>
-<div class="links"><a onclick="javascript:urchinTracker('/appindexsoapUIProDataDrivenReadMore')" href="http://www.eviware.com/blogs/oleblog/?p=619">Read more</a></div>
+<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProDataDrivenReadMore')" href="http://www.eviware.com/blogs/oleblog/?p=619">Read more</a></div>
 <div class="clearfix"></div>
 </div>
 <div class="ad-type-3">
@@ -102,14 +102,14 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <p>Mission-Critical Services Testing with soapUI Pro<strong></strong> </p>
 <p>Based on highly regarded 7 Fundamentals of Mission-Critical Service Testing methodology, Think88 introduce a class that will make you a soapUI Pro.</p>
 <p>.</p>
-<div class="links"><a onclick="javascript:urchinTracker('/appindexsoapUIProTrainingReadMore')" href="http://www.think88.com/mission_critical_service_testing.html">Read more</a></div>
+<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProTrainingReadMore')" href="http://www.think88.com/mission_critical_service_testing.html">Read more</a></div>
 <div class="clearfix"></div>
 </div>
 <div class="ad-type-3">
 <div class="title"><img src="images/feature-focus-title.png" alt="News" /></div>
 <h2>WADL and Schema Inference</h2>
 <p>In soapUI 3 you can now infer schema from XML. Why? Create specs from that undocumented REST Service.</p>
-<div class="links"><a onclick="javascript:urchinTracker('/appindexsoapUIProSchemaInferenceReadMore')" href="http://www.eviware.com/blogs/oleblog/?p=530#more-530">Read more</a></div>
+<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProSchemaInferenceReadMore')" href="http://www.eviware.com/blogs/oleblog/?p=530#more-530">Read more</a></div>
 <div class="clearfix"></div>
 </div>
 </div><!--end of column-3-->
@@ -122,14 +122,14 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <!--<img class="picture" title="New release" src="images/release.jpg" />-->
 <p>With soapUI 3.0 we introduce an extensive framework for creating and producing test reports in soapUI. <br />
   We also introduce Improved REST, JavaScript Support, WS-ReliableMessaging and Much More</p>
-<div class="links"><span class="right"><a onclick="javascript:urchinTracker('/appindexsoapUIProMainNews')" title="Read More about soapUI 3 - The Reporting Release" href="http://www.eviware.com/index.php?option=com_content&task=view&id=150&Itemid=1">Read more</a></span></div><div class="clearleft"></div>
+<div class="links"><span class="right"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProMainNews')" title="Read More about soapUI 3 - The Reporting Release" href="http://www.eviware.com/index.php?option=com_content&task=view&id=150&Itemid=1">Read more</a></span></div><div class="clearleft"></div>
 </div><!--end of news box-->
 
 <div class="news no-bottom-border">
 <h2>Rich Data Testing</h2>
 <!--<img class="picture" title="New release" src="images/release.jpg" />-->
 <p>Start saving time and costs on your Web Service projects by using soapUI Data Pro! Accelerate your testing using richer data.</p>
-<div class="links"><span class="right"><a onclick="javascript:urchinTracker('/appindexsoapUIProSecondNews')" href="http://www.eviware.com/index.php?option=com_content&task=view&id=142&Itemid=14">Read more</a></span></div><div class="clearleft"></div>
+<div class="links"><span class="right"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProSecondNews')" href="http://www.eviware.com/index.php?option=com_content&task=view&id=142&Itemid=14">Read more</a></span></div><div class="clearleft"></div>
 
 </div><!--end of news box-->
 
@@ -177,7 +177,7 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <div class="title"><img src="images/tips-and-trix-title.png" alt="News" /></div>
 <img class="type-2-picture" src="images/10HackingTips.png" alt="10tips" />
 <p>Starting July 7, we will be introducing one tip on Web Service Login Security Testing per day. Read our Tips and Tricks for Web Service hacking!</p>
-<a class="learnmore" onclick="javascript:urchinTracker('/appindexsoapUIProTaT') title="Learn more" href="http://www.soapui.org/userguide/scenarios/loginhacking.html"><img src="images/blank.gif" alt="blank" /></a></div>
+<a class="learnmore" onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProTaT') title="Learn more" href="http://www.soapui.org/userguide/scenarios/loginhacking.html"><img src="images/blank.gif" alt="blank" /></a></div>
 </div>
 </div><!--end of column-2-->
 
@@ -188,6 +188,14 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 
 
 </div>
-
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-92447-6");
+pageTracker._trackPageview();
+} catch(err) {}</script>
 </body>
 </html>

@@ -2,15 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>soupUI - Open Source</title>
+<title>soapUI - Testing the Web Services</title>
 <link href="css/software.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 <!--
 -->
 </style>
-<script type="text/javascript" src="http://www.google-analytics.com/urchin.js"></script>
-<script type="text/javascript">_uacct = "UA-92447-1";
-urchinTracker();</script>
+
 </head>
 
 <body>
@@ -69,7 +67,7 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <span class="right">&copy; 2009 <a href="http://www.eviware.com" target="_blank">Eviware AB</a></span></div>
 
 <div id="try-buy">
-<a onclick="javascript:urchinTracker('/appindexsoapUITopTry')" href="http://www.eviware.com/trial" title="Try SoapUI"><img src="images/try.png" alt="Try SoapUI" /></a><a onclick="javascript:urchinTracker('/appindexsoapUITopBuy')" href="http://www.eviware.com/store" title="Buy SoapUI"><img src="images/buy.png" alt="Buy SoapUI" /></a></div>
+<a onclick="javascript:urchinTracker('/appindexsoapUITopTry')" href="http://www.eviware.com/trial" title="Try SoapUI"><img src="images/try.png" alt="Try SoapUI" /></a><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUITopBuy')" href="http://www.eviware.com/store" title="Buy SoapUI"><img src="images/buy.png" alt="Buy SoapUI" /></a></div>
 
 
 
@@ -84,9 +82,9 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 
 <div id="header-rightbox">
 <div class="title"><img src="images/news-title.png" alt="News" /></div>
-<h2>soapUI 3 - The Reporting Release: The Features</h2>
-<p>Read more about what's in soapUI 3...</p>
-<div class="links"><a onclick="javascript:urchinTracker('/appindexsoapUIMinorNewsReadMore')" "href="http://www.soapui.org/new_and_noteworthy_3_0.html">Read more</a></div>
+<h2>Update: soapUI 3.0.1</h2>
+<p>soapUI 3.0.1, maintenance release is out.</p>
+<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIMinorNewsReadMore')" "href="http://www.soapui.org/new_and_noteworthy_3_0.html">Read more</a></div>
 <div class="clearfix"></div>
 </div>
 
@@ -94,7 +92,7 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <div class="title"><img src="images/feature-focus-title.png" alt="News" /></div>
 <h2>Data Driven Testing</h2>
 <p>soapUI Pro gives you the ability to do Data Driven Testing.</p>
-<div class="links"><a onclick="javascript:urchinTracker('/appindexsoapUIDataDrivenReadMore')" href="http://www.eviware.com/blogs/oleblog/?p=619">Read more</a></div>
+<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIDataDrivenReadMore')" href="http://www.eviware.com/blogs/oleblog/?p=619">Read more</a></div>
 <div class="clearfix"></div>
 </div>
 <div class="ad-type-3">
@@ -103,14 +101,14 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 </h2>
 <p>Go get the course &quot;soapUI 3&quot; from our partner <strong>Think88.</strong> </p>
 <p>Learn how to construct robust functional, scalability, and reliability tests for your Service Oriented Architecture (SOA), Web  services, and REST-based services.</p>
-<div class="links"><a onclick="javascript:urchinTracker('/appindexsoapUITrainingReadMore')" href="http://www.think88.com/soap.html">Read more</a></div>
+<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUITrainingReadMore')" href="http://www.think88.com/soap.html">Read more</a></div>
 <div class="clearfix"></div>
 </div>
 <div class="ad-type-3">
 <div class="title"><img src="images/feature-focus-title.png" alt="News" /></div>
 <h2>WADL and Schema Inference</h2>
 <p>In soapUI 3 you can now infer schema from XML. Why? Create specs from that undocumented REST Service.</p>
-<div class="links"><a onclick="javascript:urchinTracker('/appindexsoapUISchemaInferenceReadMore')" href="http://www.eviware.com/blogs/oleblog/?p=530">Read more</a></div>
+<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUISchemaInferenceReadMore')" href="http://www.eviware.com/blogs/oleblog/?p=530">Read more</a></div>
 <div class="clearfix"></div>
 </div>
 </div><!--end of column-3-->
@@ -121,7 +119,7 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <img class="picture" title="New release" src="images/release.jpg" />
 <p> With soapUI 3.0 we introduce an extensive framework for creating and producing test reports in soapUI. <br />
   We also introduce Improved REST, JavaScript Support, WS-ReliableMessaging and Much More<br /> </p>
-<div class="links"><a onclick="javascript:urchinTracker('/appindexsoapUIMainNewsReadMore')" href="http://www.soapui.org/new_and_noteworthy_3_0.html">Read more</a><a onclick="javascript:urchinTracker('/appindexsoapUIMainNewsDownload')" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=695609">Download here</a></div>
+<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIMainNewsReadMore')" href="http://www.soapui.org/new_and_noteworthy_3_0.html">Read more</a><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIMainNewsDownload')" href="http://sourceforge.net/projects/soapui/files/soapui/3.0.1/">Download here</a></div>
 <div class="clearleft"></div>
 </div>
 
@@ -144,11 +142,11 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 </ol>
 </div>
 <div class="bottom">
-<a onclick="javascript:urchinTracker('/appindexsoapUIDYKTry')" href="http://www.eviware.com/trial">Download Free Trial</a>
+<a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIDYKTry')" href="http://www.eviware.com/trial">Download Free Trial</a>
 </div>
 </div>
-<div class="ad-type-1"><a onclick="javascript:urchinTracker('/appindexsoapUIDownDocs')" href="http://www.soapui.org"><img src="images/documentation.png" alt="Documentation" /></a></div>
-<div class="ad-type-1"><a onclick="javascript:urchinTracker('/appindexsoapUIDownHelp')" href="http://www.eviware.com/forums"><img src="images/help.png" alt="Help" /></a></div>
+<div class="ad-type-1"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIDownDocs')" href="http://www.soapui.org"><img src="images/documentation.png" alt="Documentation" /></a></div>
+<div class="ad-type-1"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIDownHelp')" href="http://www.eviware.com/forums"><img src="images/help.png" alt="Help" /></a></div>
 </div><!--end of column-1-->
 
 <!--column-2-->
@@ -158,7 +156,7 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <div class="title"><img src="images/tellus.png" alt="News" /></div>
 <img class="type-2-picture" src="images/tee.png" alt="T-Shirt" />
 <p>This T-Shirt can be yours! Take our Survey and win a T-Shirt or a MoosePad!</p>
-<div class="links"><a onclick="javascript:urchinTracker('/appindexsoapUISurvey')" href="http://www.surveymonkey.com/s.aspx?sm=W3Nw2wWWAI8dw3_2f8vETsIw_3d_3d">Take the Survey!</a></div>
+<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUISurvey')" href="http://www.surveymonkey.com/s.aspx?sm=W3Nw2wWWAI8dw3_2f8vETsIw_3d_3d">Take the Survey!</a></div>
 </div>
 </div>
 <div class="ad-type-2">
@@ -166,7 +164,7 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <div class="title"><img src="images/tips-and-trix-title.png" alt="News" /></div>
 <img class="type-2-picture" src="images/10HackingTips.png" alt="10tips" />
 <p>Starting July 7, we will be introducing one tip on Web Service Login Security Testing per day. Read our Tips and Tricks for Web Service hacking!</p>
-<a class="learnmore" title="Learn more" onclick="javascript:urchinTracker('/appindexsoapUITaT') href="http://www.soapui.org/userguide/scenarios/loginhacking.html"><img src="images/blank.gif" alt="blank" /></a></div>
+<a class="learnmore" title="Learn more" onclick="javascript: pageTracker._trackPageview('/appindexsoapUITaT')" href="http://www.soapui.org/userguide/scenarios/loginhacking.html"><img src="images/blank.gif" alt="blank" /></a></div>
 </div>
 </div><!--end of column-2-->
 
@@ -177,6 +175,14 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 
 
 </div>
-
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-92447-6");
+pageTracker._trackPageview();
+} catch(err) {}</script>
 </body>
 </html>

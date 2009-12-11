@@ -99,15 +99,16 @@
  
             <columns>
                 <column width="250">
-                    <subsection name="Tell us what you think!">
+                    <subsection name="Come see us at the EuroSTAR">
                     <p>
-                    <img src="images/tee.png" alt="T-Shirt" />
+                    <img src="images/eurostarsoapui.png" alt="EuorStar" />
                     </p>
 					<p>
-                    This T-Shirt can be yours! Take our Survey and win a T-Shirt or a MoosePad!
+                    Visit us on the 1st, 2nd &amp; 3rd December 2009 at the EuroSTAR conference.  <br />
+                  
                   </p>
                         <p>
-                           <strong> <a href="http://www.surveymonkey.com/s.aspx?sm=W3Nw2wWWAI8dw3_2f8vETsIw_3d_3d">Take The Survey!!!</a></strong>
+                           <strong> <a href="http://www.eurostarconferences.com/">Read More!!!</a></strong>
                         </p>
                    </subsection>
                 </column>
@@ -118,8 +119,7 @@
                    <img class="type-2-picture" src="images/10HackingTips.png" alt="10tips" />
                    </p>
                         <p>
-                    Starting July 7, we will be introducing one tip on Web Service Login Security Testing per day. Read our Tips and Tricks for Web 
-                    Service hacking!
+                    10 tips for breaking Web Service Logins. Read our Tips and Tricks for Web Service hacking!
                   </p>
                         <p>
                            <strong> <a href="userguide/scenarios/loginhacking.html">[Read More]</a></strong>
@@ -135,7 +135,9 @@
 
  
  
-   <table class="gstable" cellspacing="0" cellpadding="0">
+    
+ 
+      <table class="gstable" cellspacing="0" cellpadding="0">
                 <tr class="a">
                     <td width="75" style="padding-top:5px">
                         <img src="images/where_do_i_start.jpg" alt="Start soapUI Testing"
@@ -197,33 +199,32 @@
                 <column align="left" width="350">
                     <subsection name="soapUI on the web">
                     
-                         <p>
-                            <i>2009-08-04:</i>
+                                                                       <p>
+                            <i>2009-09-30:</i>
                                 <a target="_new"
-                                  href="http://tedwise.com/2009/08/04/super-simple-soapui-tests/">soapUI: Open Source way to...
+                                  href="http://qatinsights.com/?p=345">A simple unit test...
                                 </a>
-                                from Ted´s Blog
+                                from qat´s Blog
                          </p>
                           
                          <p>
-                            <i>2009-06-29:</i>
+                            <i>2009-08-30:</i>
                                 <a target="_new" 
-                                   href="http://memonika.blogspot.com/2009/05/testing-webservice-simplified-with.html">Testing Web services...
+                                   href="http://blog.karit.geek.nz/2009/08/using-soapui-to-do-testing-as-part-of.html">Using soapUI to do testing as Maven2 build...
                                    </a>
-                                from Monika´s Blogs
+                                from Dave´s Blog
                          </p> 
                    
                          <p>
-                            <i>2009-05-06:</i>
+                            <i>2009-08-07:</i>
                                 <a target="_new"
-                                   href="http://drquyong.com/myblog/?p=58">Testing Alfresco CMIS Web...
+                                   href="http://one-size-doesnt-fit-all.blogspot.com/2009/08/soapui-for-web-service-testing.html">SoapUI for web service testing...
                                    </a>
-                                from Dr Q´s Blog
+                                from One Size Doesnt Fit All
                           </p>
 
                         
-                            
-                           <p>
+<p>
                             <b>
                                 <a href="soapui_in_the_news.html">[More...]</a>
                             </b>

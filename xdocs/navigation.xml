@@ -52,6 +52,11 @@
             <item href="/gettingstarted/mocking.html" name="Web Service Mocking"/>
             <item href="/gettingstarted/sample-project.html" name="soapUI Sample Project"/>
             <item href="/gettingstarted/sample-REST.html" name="soapUI Sample REST Project"/>
+            <item href="/userguide/rest/tutorial.html" name="Schema Inference"/>
+            <item href="/userguide/scenarios/ws-reliablemessaging.html" name="WS-ReliableMessaging"/>
+  			<item href="/tutorials/amf/amf-tutorial.html" name="AMF Testing"/>            
+  			<item href="/tutorials/jms/jms-tutorial.html" name="JMS Testing"/>            
+  			<item href="/tutorials/jdbc/jdbc-tutorial.html" name="JDBC Testing"/>            
         </menu>
 
         <menu name="User Guide" collapse="true" href="/userguide/index.html">
@@ -191,6 +196,7 @@
                 <item href="/userguide/scenarios/templatedriven.html" name="Template Driven Testing"/>
                 <item href="/userguide/scenarios/interactive.html" name="Interactive Testing"/>
                 <item href="/userguide/scenarios/surveillance.html" name="Surveillance Testing"/>
+            <item href="/userguide/scenarios/ws-reliablemessaging.html" name="WS-ReliableMessaging"/>
             </item>
 
             <item href="/userguide/tools/index.html" name="Tool Integrations">

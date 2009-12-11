@@ -4,9 +4,76 @@
         <title>news</title>
     </properties>
     <body>
-    <section name="soapUI Releases">
+    <section name="soapUI in the News">
     
       
+<subsection name="A simple unit test">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/qat.gif" alt="Web service testing tool"/>	    	    
+	    		</column>
+	    		<column align="left">
+	    		    <i>2009-09-30</i>
+	    	        <p>The post starts: "In my previous post I´ve shown how..."<br/>
+	    			<a href="http://qatinsights.com/?p=345">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	 </subsection>
+    
+    <subsection name="Using saopUI to do testing as  part of Mavin2 build">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/dave.gif" alt="Web service testing tool"/>	    	    
+	    		</column>
+	    		<column align="left">
+	    		    <i>2009-08-18</i>
+	    	        <p>The post starts: "soapUI has Maven getting started guide..."<br/>
+	    			<a href="http://blog.karit.geek.nz/2009/08/using-soapui-to-do-testing-as-part-of.html">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	 </subsection>
+    
+    <subsection name="Easily test Web services with soapUI">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/go4.gif" alt="Web service testing tool"/>	    	    
+	    		</column>
+	    		<column align="left">
+	    		    <i>2009-08-18</i>
+	    	        <p>The post starts: "The soapUI tool is also useful for interacting with third party..."<br/>
+	    			<a href="http://go4idm.blogspot.com/2009/08/easily-test-web-services-with-soapui.html">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	 </subsection>
+    
+     <subsection name="Test Your ASP.NET WebService using SoapUI">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/thecodeproject.gif" alt="Web service testing tool"/>	    	    
+	    		</column>
+	    		<column align="left">
+	    		    <i>2009-08-08</i>
+	    	        <p>The post starts: "We have developed web service for different purpose. Authorized used can consume the
+	    	         web service and can use it. soapUI is one of most powerful tool to test our web service..."<br/>
+	    			<a href="http://www.codeproject.com/KB/aspnet/WSTestUsingSoapUI.aspx">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	    </subsection>
+    
+       <subsection name="SoapUI for web service testing">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/osdfa.gif" alt="Web service testing tool"/>	    	    
+	    		</column>
+	    		<column align="left">
+	    		    <i>2009-08-07</i>
+	    	        <p>The post starts: "A popular tool for web service testing is SoapUI. 
+	    	        The following blog post describes how to use it for testing a simple web service..."<br/>
+	    			<a href="http://one-size-doesnt-fit-all.blogspot.com/2009/08/soapui-for-web-service-testing.html">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	    </subsection>
+	    
         <subsection name="Super Simple SoapUI Tests">
 	    	<columns>
 	    		<column width="200">

@@ -87,7 +87,7 @@ Certificate Token Profile 1.1</a>
 			<li><a href="http://docs.oasis-open.org/ws-rx/wsmc/200702" target="_new">Web Services Make Connections (WS-MakeConnection) Version 1.1</a></li>
 		</ul>
 		
-		<p>In soapUI, WS-ReliableMessaging is set up through the <a href="requests.html#WS-RM_Properties">WS_RM inspector</a>, or, on the TestCase level, through the <a href="testcases.html#TestCase_Options">TestCase options dialog.</a></p>
+		<p>In soapUI, WS-ReliableMessaging is set up through the <a href="requests.html#WS-RM_Properties">WS_RM inspector</a>, or, on the TestCase level, through the <a href="functional/testcases.html#TestCase_Options">TestCase options dialog.</a></p>
 		</subsection>
 		
 		<subsection name="WS-Policy">

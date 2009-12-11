@@ -58,7 +58,7 @@
         <tr>
           <td>printReport</td>
           <td>Yes</td>
-          <td>Controls if a small test report should be printed to the console (yes/no)</td>
+          <td>Controls if a small test report should be printed to the console (true/false)</td>
         </tr>
         <tr>
           <td>outputFolder</td>

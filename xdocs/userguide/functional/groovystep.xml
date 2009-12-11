@@ -209,8 +209,9 @@ for( c in 0..cookies.length-1 )
 <source>def state = context.getProperty( com.eviware.soapui.model.testsuite.TestRunContext.HTTP_STATE_PROPERTY )
 assert state != null : "Missing HttpState.."
 
-state.addCookie( new org.apache.commons.httpclient.Cookie( "http://www.mydomain.com", "SessionID", "1234" ))</source>
+state.addCookie( new org.apache.commons.httpclient.Cookie( "127.0.0.1", "SessionID", "1234", "/", null, false ) )</source>
 
+<p>(remember to set the domain and path correctly)</p>
 		</subsection>
 		
 		
