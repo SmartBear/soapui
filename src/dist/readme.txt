@@ -1,5 +1,102 @@
 Welcome to soapUI!
 
+2009-12-11 : 3.5 beta1 - the Protocol Release
+--------------------------------------------------------------------------------
+soapUI 3.5 adds support for JMS, JDBC and AMF for both functional and load-testing
+
+Major New Features
+
+JDBC Testing (Protocol)
+- A JDBC TestStep has been added for functional database testing, all standard xml 
+and xpath related functionality applies to query results (assertions, transfers, etc).
+
+JMS Testing (Protocol)
+- A JMS protocol has been added for sending and receiving both text (SOAP,etc) and 
+binary messages via JMS. Provider configuration and extended JMS monitoring and 
+debugging functionality is provided via the HermesJMS integration.
+
+AMF Testing (Protocol)
+- An AMF TestStep has been added for functional and load testing of Flex server 
+applications, all standard xml and xpath related functionality applies to response 
+messages (assertions, transfers, etc).
+
+- Query Builder (Data Driven testing)
+Component for visually building Database queries used in the JDBC Teststep and 
+JDBC related DataSources and DataSinks. 
+
+- Deploy as War (Mocking)
+soapUI Projects can now be packaged as WAR files to be deployed on any standard 
+servlet container, which will host the contained MockServices and display a simple
+Web interface for statistics, log output, etc.
+
+Minor new features 
+-	Greatly improved performance of Excel DataSource/DataSinks (Functional Testing)
+-	Greatly improved performance of script library (General)
+-	added global option to disable proxy (General)
+-	improved automatic adding of template parameters to rest resources (REST)
+-	added raw-message-size settings (General)
+-	improved update-interface stability (General)
+-	improved thread-stability related to endpoints during loadtests (LoadTesting)
+-	improved statistics calculation during loadtests (LoadTesting)
+-	Pressing return in httprequest endpoint field submits request (User Interface) 
+-	Added timeout property at request level (General)
+-	RunTestCase TestStep improvements: (Functional Testing)
+o	Copy LoadTest Properties
+o	Copy HTTPSession
+o	Ignore Empty
+-	Added caching of WSDL Credentials (SOAP)
+-	Improved performance of script-property-expansions (General)
+-	Added –A option to TestCase runner;  for exporting of all results using folders 
+    instead of long filenames (Test Automation)
+-	memory improvements (General)
+-	improved XML generation from HTML (REST)
+-	allowed rename of rest services from properties panel (REST)
+-	Renamed porttype property to “Name” in interface properties (WSDL)
+-	Improved Mock-related API’s to allow rewriting of incoming requests (Mocking)
+-	Forced redirect functionality for PUT and POST requests (REST)
+-	Improved TestRun Log output at TestSuite and Project levels (Functional Testing)
+-	Added “RemoveEmptyXsiNil” and “RemoveEmptyRecursive” config properties for removal of empty content (WSDL)
+-	Fixed handling of long property/testcase popup/drop-down menus (User Interface)
+-	Added getter and setter for ExcelDataSource.ignoreEmpty property (API)
+-	changed forum-search to use forums and not google (User Interface)
+-	set minimum toolbar size for better resizing of splitpanels (User Interface)
+-   added check that files in schema directory are actually schemas (General)
+
+Major bugs fixed: 
+
+-	fixed save-all to keep track of project count (User Interface)
+-	fixed adding of method parameters from rest request, method and resource views (REST)
+-	fixed setting of media-type for Form-submits  (REST)
+-	removed automatic XML-formatting of rest request bodies (REST)
+-	fixed thread-override and multiple formats in launch-loadtest-runner dialog (LoadTesting)
+-	fixed resetting of threadcount  from canceled burst strategy (LoadTesting)
+-	Fixed endpoint updating in service endpoints table (REST,WSDL)
+-	Fixed saving of loadtest limit type (LoadTesting)
+-	Fixed escaping of property-expansions with double $ (Properties/Scripting) (General)
+-	Fixed TestSuite count in simple TestCaseRunner output (Test Automation)
+-	Fixed filename creation for Composite projects (General)
+-	Fixed script-strategy to use project scripting language (Load Testing)
+-	Moved demo script files to correct folders (General)
+-	Ordered output of LoadTestStatistics export (LoadTesting)
+-	Fixed CSV Data Export with subreports (Reporting)
+-	MockService synchronization issues during high load (Mocking)
+-	Fixed SOAP-Action in Content-Type for WS-A and MTOM requests (SOAP)
+-	FixedRateLoadStrategy now ignores the Thread Startup Delay option (Load Testing)
+-	fixed setting of nilable on missing elements in form editor (SOAP)
+-	removed unneccessary formatting of REST xml responses (REST)
+
+Updated libraries: 
+
+-	Groovy 1.6.7
+-	Not-yet-commons-ssl-0.11
+-	Jexcel-api-2.6.12
+-	Jasper 3.6.2
+-	Saxon 9.2.0.3
+-	Jetty 6.1.22
+
+As always we owe our users and the community so much for all their help and support! Thank you all!
+
+
 2009-08-09 : 3.0.1 release
 ---------------------------------------------------------------------------------
 bug-fixes galore! and a bunch of improvements :-)
