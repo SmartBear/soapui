@@ -27,6 +27,7 @@
             <item href="/news.html" name="News and History">
                 pagingInit
                 <item href="/soapUI_in_the_news.html" name="soapUI in the news"/>
+                 <item href="/new_and_noteworthy_3_5.html" name="New and Noteworthy in 3.5"/>
                 <item href="/new_and_noteworthy_3_0.html" name="New and Noteworthy in 3.0"/>
                 <item href="/new_and_noteworthy_2_5.html" name="New and Noteworthy in 2.5"/>
                 <item href="/new_and_noteworthy_2.html" name="New and Noteworthy in 2.0"/>

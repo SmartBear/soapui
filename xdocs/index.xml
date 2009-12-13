@@ -99,17 +99,17 @@
  
             <columns>
                 <column width="250">
-                    <subsection name="Come see us at the EuroSTAR">
+                    <subsection name="soapUI 3.5 beta1">
                     <p>
-                    <img src="images/eurostarsoapui.png" alt="EuorStar" />
-                    </p>
-					<p>
-                    Visit us on the 1st, 2nd &amp; 3rd December 2009 at the EuroSTAR conference.  <br />
-                  
-                  </p>
-                        <p>
-                           <strong> <a href="http://www.eurostarconferences.com/">Read More!!!</a></strong>
-                        </p>
+                    soapUI 3.5 beta1 is out, introducing functionality drastically expanding the 
+                    reach of the functional and load-testing features in soapUI;
+                    <ul>
+                    <li>JMS Support - send and receive text and binary messages over JMS</li>
+            		<li>AMF Testing - a AMF TestStep for testing AMF servers</li>        
+            		<li>JDBC Testing - a JDBC TestStep for testing/validating database content</li>
+                    </ul>
+
+		</p>
                    </subsection>
                 </column>
                 <column align="left" width="350">
