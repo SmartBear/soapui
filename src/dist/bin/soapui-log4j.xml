@@ -66,6 +66,16 @@
 	 <appender-ref ref="ERRORFILE"/>
    </logger>
    
+   <logger name="com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager">
+     <level value="ERROR" />
+	 <appender-ref ref="ERRORFILE"/>  
+   </logger>
+   
+   <logger name="com.eviware.soapui.impl.wsdl.WsdlSubmit">
+     <level value="ERROR" />
+	 <appender-ref ref="ERRORFILE"/>  
+   </logger>
+   
    <logger name="org.apache.commons.httpclient">
    	  <level value="ERROR"/>
    	  <appender-ref ref="CONSOLE"/>
