@@ -136,8 +136,10 @@
 		in the Properties List where there must be a column with the same name as its corresponding property.</li> 
 		<li><b>Stored Procedure</b> - select if the SQL statement calls a stored procedure</li>
 		</ul>
+		<subsection name="JDBC DataSource PreparedProperties">
 		<p>Starting with SoapUI 3.5 there is a new option of adding properties whose values will be replaced in the query through PreparedStatement. What is important 
 		here is that properties are replaced by the order in which they are listed not by their names.</p>
+		</subsection>
 		</subsection>
 		
 		<subsection name="JDBC DataSource Configuration wizard">

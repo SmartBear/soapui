@@ -328,7 +328,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		toolbar.add( tabsButton );
 		toolbar.add( splitButton );
 		toolbar.addFixed( UISupport
-				.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.TRANSFERSTEPEDITOR_HELP_URL ) ) );
+				.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.JDBCSTEPEDITOR_HELP_URL ) ) );
 		return toolbar;
 
 	}

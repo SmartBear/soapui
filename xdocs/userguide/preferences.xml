@@ -229,6 +229,7 @@
 		<tr><td>Proxy Password</td><td>The password sent for proxy authentications</td></tr>
 		<tr><td>Excludes</td><td>A comma-separated list of hosts to exclude, for example "127.0.0.1:8080,myserver.com" 
 		will not use a proxy for 127.0.0.1 on port 8080 and myserver.com on any port.</td></tr>
+		<tr><td>Enable proxy</td><td>Flag indicating if supplied proxy properties should be enabled, i.e. if proxy should be used </td></tr>
 		</table>
 		<p>If a \ is part of the username, the credentials are interpreted as NTLM credentials; the string up to
         the \ will be used as the domain and the string after will be used as username.</p>

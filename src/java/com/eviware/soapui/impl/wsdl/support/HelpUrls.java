@@ -34,6 +34,7 @@ public interface HelpUrls
 	public static final String INTERFACE_HELP_URL = HELP_URL_ROOT + "interfaces/index.html";
 
 	public static final String HEADERS_HELP_URL = HELP_URL_ROOT + "requests.html#HTTP_Headers";
+	public static final String PREPAREDPROPERTIES_HELP_URL = HELP_URL_ROOT + "functional/datasourcestep.html#JDBC_DataSource_PreparedProperties";
 	// commented ones are not currently used
 	public static final String PROJECT_HELP_URL = HELP_URL_ROOT + "projects/index.html#soapui_WSDL_Projects";
 	public static final String REQUEST_HELP_URL = HELP_URL_ROOT + "requests.html";
@@ -77,6 +78,8 @@ public interface HelpUrls
 			+ "functional/propertiesstep.html#Properties_Editor";
 	public static final String TRANSFERSTEPEDITOR_HELP_URL = HELP_URL_ROOT
 			+ "functional/propertytransfers.html#The_PropertyTransfer_Editor";
+	public static final String JDBCSTEPEDITOR_HELP_URL = HELP_URL_ROOT
+	+ "functional/jdbc-requests.html";
 	public static final String TESTCASEEDITOR_HELP_URL = HELP_URL_ROOT + "functional/testcases.html#The_TestCase_Editor";
 	public static final String TESTSUITEEDITOR_HELP_URL = HELP_URL_ROOT + "functional/testsuites.html#TestSuite_Runner";
 	public static final String LOADTESTEDITOR_HELP_URL = HELP_URL_ROOT + "loadtest/index.html#The_LoadTest_Editor";
