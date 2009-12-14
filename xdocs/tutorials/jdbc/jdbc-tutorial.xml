@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		~ soapUI, copyright (C) 2004-2008 eviware.com ~ ~ soapUI is free
+		software; you can redistribute it and/or modify it under the ~ terms
+		of version 2.1 of the GNU Lesser General Public License as published
+		by ~ the Free Software Foundation. ~ ~ soapUI is distributed in the
+		hope that it will be useful, but WITHOUT ANY WARRANTY; without ~ even
+		the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. ~ See the GNU Lesser General Public License for more details
+		at gnu.org.
+	-->
+
+
+<document>
+	<properties>
+		<title>Tutorial for JDBC Test Step</title>
+	</properties>
+	<body>
+		<section name="JDBC REquestTestStep, new in SoapUI 3.5">
+
+			<subsection name="Introduction">
+				<p>
+					SoapUI 3.5 is introducing new test step for retrieving data from a
+					database using JDBC.Result is formated as XML and can be asserted
+					in a standard
+					way (see
+					<a href="../../userguide/functional/response-assertions.html">Test Request Assertions</a>
+					)
+				</p>
+
+			</subsection>
+			<subsection name="Test Step Properties Configuration">
+				<p>
+					For using this test step you have to add JDBC driver to
+					soapui_home/bin/ext folder and restart the application
+				</p>
+				<p>
+					Open source version of JdbcTestStep has fields for manual adding
+					connection settings as well as SQL query
+					and option for checking if
+					query is a stored procedure call. Result
+					can be viewed only as plain
+					XML.
+				</p>
+				<p align="center">
+					<img src="images/jdbc_teststep_core.jpg" alt="JdbcRequest Test Step panel - open source version" />
+				</p>
+				<p>
+				Pro version has advanced option of setting connection properties and
+				creating query.
+				</p>
+				<p align="center">
+					<img src="images/jdbc_teststep_pro.jpg" alt="JdbcRequest Test Step panel - pro version" />
+				</p>
+				<p>
+					There are two ways of supplying connection settings.
+					<ul>
+						<li>
+							Use the <a href="../../userguide/projects/jdbcConnections.html">JdbcConnection defined at project level
+							</a> - in which case driver/connection string/password properties will be just populated with appropriate values for 
+							particular DatabaseConnection, but the fields will be disabled and won't be used.
+						</li>
+						<li>
+							Use text field values for driver/connection string/password - in which case DatabaseConnection is set to "None".
+						</li>
+					</ul>
+					Enabled settings (i.e. DatabaseConnection or driver/connection string/password) will be used when building query and running the TestStep.
+				</p>
+				<p>
+					<ol>
+					In details, the panel consists of
+						<li>Query property - number of properties can be added for replacement in query through PreparedStatement.
+							They will be replaced in the query in the order they have been added
+							to the list, not by their names.</li>
+						<li>DatabaseConnection selection with options
+							<ul>
+							<li>Create-new - adds new DatabaseConnection to project and preselects it here</li>
+							<li>None - do not use DatabaseConnection, but use driver/connection string/password values instead</li>
+							<li>Existing project DatabaseConnection</li>
+							</ul>
+						</li>
+						<li>Button for <a href="">configuring DatabaseConnection</a></li>
+						<li>Driver</li>
+						<li>Connection string</li>
+						<li>Password</li>
+						<li>Button for testing connection</li>
+						<li>SQL Query</li>
+						<li>Indicator if query is a stored procedure call</li>
+						<li>Button for <a href="">configuring SQL query</a> </li>
+						Result can be displayed as 
+						<li>XML view</li>
+						<li>Outline view</li>
+					</ol>
+				</p>
+			</subsection>
+			<subsection name="Configuring DatabaseConnection">
+				<p>Based on the driver selected from the list of configured <a>JDBC Drivers Properties</a> you get the list of properties to fill/change
+				in order to configure the connection. Configuration changes will take immediate affect on project level as well.
+				</p>
+				<p align="center">
+					<img src="images/database_connection_configuration.jpg" alt="DatabaseConnection configuration" />
+				</p>
+			</subsection>
+			<subsection name="Configuring SQL Query">
+				<p>There are two options for configuring query
+				<ul>
+				<li>Plain listing of stored procedures along with available columns - launched when stored procedure check box is selected</li>
+				<p align="center">
+					<img src="images/sp_call_query_panel.jpg" alt="Stored Procedure call configuration" />
+				</p>
+				<li>Easy visual building of complex SQL queries with unions and sub-queries - launched when stored procedure check box is not selected</li>
+				<p align="center">
+					<img src="images/build_query_panel.jpg" alt="Complex SQL query configuration" />
+				</p>
+				</ul>
+				</p>
+				<p>When using second option number of possibilities is available, like </p>
+				<ul>
+				<li>Joining tables</li>
+				<li>Setting object aliases</li>
+				<li>Selecting output fields</li>
+				<li>Sorting</li>
+				<li>Defining criteria</li>
+				<li>Grouping output fields</li>
+				</ul>
+			</subsection>
+		</section>
+	</body>
+</document>
+
