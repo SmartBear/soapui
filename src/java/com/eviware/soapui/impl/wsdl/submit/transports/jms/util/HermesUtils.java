@@ -135,9 +135,15 @@ public class HermesUtils
 			String temp = System.getProperty( "soapui.home" ).substring( 0,
 					System.getProperty( "soapui.home" ).lastIndexOf( "bin" ) - 1 );
 			path = new File( temp + File.separator + "hermesJMS" ).getAbsolutePath().toString();
-			SoapUI.getSettings().setString( ToolsSettings.HERMES_JMS, path );
-			SoapUI.log( path );
+			SoapUI.log( "HermesJMS path: " + path );
 		}
+		setHermesJMSPath( path );
 		return path;
+	}
+
+	public static void setHermesJMSPath( String path )
+	{
+		if( path != null )
+			SoapUI.getSettings().setString( ToolsSettings.HERMES_JMS, path );
 	}
 }
