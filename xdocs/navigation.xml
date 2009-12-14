@@ -149,6 +149,7 @@
                         <item href="/userguide/functional/http-requests.html" name="HTTP Requests"/>
                         <item href="/userguide/functional/jdbc-requests.html" name="JDBC Requests"/>
                         <item href="/userguide/functional/amf-requests.html" name="AMF Requests"/>
+                        <item href="/userguide/functional/jdbc-requests.html" name="JDBC Requests"/>
                         <item href="/userguide/functional/response-assertions.html" name="Assertions"/>
                         <item href="/userguide/functional/response-wizards.html" name="Editor Wizards" pro="true"/>
                     </item>

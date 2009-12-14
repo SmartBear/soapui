@@ -24,8 +24,9 @@
 
                      <subsection name="JDBC Test Request Details Tab">
                       <p>
-                    The "Details" tab shown in the bottom-left shows only Name and Description of particular TestStep
-
+                    The "Details" tab shown in the bottom-left shows standard Name and Description of particular TestStep, and introduces two more properties
+                    <li>Max Rows</li>
+                    <li>Query Timeout</li>
                     </p>
                     </subsection>
 
@@ -52,10 +53,11 @@
                     <p>
                     Response view has standard XML and Outline tabs, and it's content can be asserted in a standard way(
                     see <a href="response-assertions.html">Test Request Assertions</a> for more detailed information about assertions)
-                    
-
                     </p>
                     </subsection>
+                    
+                    <p>For more detailed description on how to use this TestStep please have a look at 
+                    <a href="../../tutorials/jdbc/jdbc-tutorial.html"> JDBC Request TestStep tutorial</a> </p>
 
 		 <p><hr size="1"/>Next: <a href="amf-requests.html">AMF Requests</a></p>
 		</section>

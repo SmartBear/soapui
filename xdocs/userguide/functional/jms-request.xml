@@ -17,12 +17,12 @@
         <title>Web Service Functional Testing - TestRequests</title>
     </properties>
     <body>
-		<section name="AMF Request Steps">
-		<p>SoapUI 3.5 introduces new TestStep for handling AMF remote call. For 
+		<section name="JMS Request Steps">
+		<p>SoapUI 3.5 introduces new TestStep for supporting JMS messaging. For 
 		detailed description on how to use this TestStep please have a look at 
-        <a href="../../tutorials/jdbc/amf-tutorial.html"> AMF TestStep tutorial</a> </p>		 
+        <a href="../../tutorials/jdbc/jms-tutorial.html"> JMS TestStep tutorial</a> </p>		 
         
-        <p><hr size="1"/>Next: <a href="jms-tutorial.html">Assertions</a></p>
+        <p><hr size="1"/>Next: <a href="response-assertions.html">Assertions</a></p>
 		</section>
     </body>
 </document>

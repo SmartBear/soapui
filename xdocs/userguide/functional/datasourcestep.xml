@@ -136,6 +136,8 @@
 		in the Properties List where there must be a column with the same name as its corresponding property.</li> 
 		<li><b>Stored Procedure</b> - select if the SQL statement calls a stored procedure</li>
 		</ul>
+		<p>Starting with SoapUI 3.5 there is a new option of adding properties whose values will be replaced in the query through PreparedStatement. What is important 
+		here is that properties are replaced by the order in which they are listed not by their names.</p>
 		</subsection>
 		
 		<subsection name="JDBC DataSource Configuration wizard">
@@ -147,8 +149,11 @@
 		<p align="center"><img src="images/jdbc_connection_query_wizard.gif" alt="JDBC Connection query wizard"/></p>
 		<p>Otherwise more complex query can be built:</p>
 		<p align="center"><img src="images/jdbc_build_query_wizard.gif" alt="JDBC Connection query wizard"/></p>
+		<p>On more detailed explanation of building query please check <a href="../../tutorials/jdbc/jdbc-tutorial.html#Configuring_SQL_Query">Configuring SQL Query</a> </p>
+		<p>
 		Notice that when using a wizard in case of stored procedures only procedures with no parameters will be listed because current 
 		configuration has no way of setting parameters
+		</p>
 		</ul>
 		</subsection>
 		
