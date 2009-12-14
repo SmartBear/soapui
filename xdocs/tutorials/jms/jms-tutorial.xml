@@ -16,56 +16,53 @@
 		<title>Tutorial for AMF Test Step</title>
 	</properties>
 	<body>
-		<section name="SOAP over JMS testing with SoapUI 3.5">
+		<section name="SOAP over JMS testing with soapUI 3.5">
 
 			<subsection name="Introduction">
 				<p>
-					In SoapUI 3.5 we introduce support for JMS messaging. For this
-					purpose SoapUI integrated HermesJMS open source application, which
-					supports many different JMS providers.
+					In soapUI 3.5 we introduce support for JMS messaging allowing you to send and receive both text and binary messages. 
+					For this purpose SoapUI integrates with the HermesJMS open source application 
+					(<a href="http://www.hermesjms.org">http://www.hermesjms.org</a>) which	supports many different	JMS providers. 
 				</p>
 
 				<p>
-					For purpose of this tutorial we will need to download new SoapUI
-					3.5 installer with integrated installer of HermeJMS. 
+					For the purpose of this tutorial we will need to download the new SoapUI
+					3.5 installer which integrates the installer of HermesJMS. 
 				</p>
 			</subsection>
 
 
-			<subsection name="Installing the SoapUI 3.5">
+			<subsection name="Installing soapUI 3.5">
 				<p>
-					When starting new SoapUI installer there is option that you can
+					When starting the new soapUI installer you will get an option that you can
 					select to install HermesJMS also. This is mandatory if you want to
-					try this tutorial.
+					try this tutorial (unless you already have HermesJMS 1.13 or later installed).
 				</p>
 
 			</subsection>
 
 			<subsection name="Setting configurations ">
 				<p>
-					After successful installation we need to configure path to Hermes
+					After successful installation we need to configure the path to the HermesJMS
 					installation.
 				</p>
 				<p>
-					This is done by clicking 'Sets Global SoapUI preferences'button
-					and choosing Tools tab.
-					There we need to set path to HermesJMS. 
+					This is done by clicking 'Sets Global SoapUI preferences' button
+					and choosing Tools tab, where we can set the path to HermesJMS. 
 				</p>
 
 				<p align="center">
 					<img src="images/set_hermes_path.gif" alt="HermesJMS path" />
 				</p>
-				<p>Now we can start HermesJMS from SoapUI and use sessions
-					configured in HermesJMS.</p>
+				<p>Now we can start HermesJMS from within SoapUI and use sessions
+					configured in HermesJMS for sending and receiving messages over JMS.</p>
 			</subsection>
 
 			<subsection name="Downloading ActiveMQ and starting the server">
 				<p>
-					Also for purpose of this tutorial we will need ActiveMQ. Download
-					it form server
-					<a href="http://activemq.apache.org/activemq-520-release.html">here</a>
-					. Unpack it and start activemq.bat file under bin folder. This will
-					start activemq server.
+					Also for the purpose of this tutorial we will need ActiveMQ (a free JMS implementation). 
+					Download it from the server	<a href="http://activemq.apache.org/activemq-520-release.html">here</a>
+					. Unpack it and start activemq.bat file under bin folder. This will	start activemq server on your local machine.
 				</p>
 
 			</subsection>
@@ -73,77 +70,72 @@
 
 			<subsection name="Setting HermesJMS sessions">
 				<p>
-					For purpose of this tutorial let us create one session in
-					HermesJMS.
+					For purpose of this tutorial we will create one session in HermesJMS.
 				</p>
 				<p align="center">
 					<img src="images/create_hermes_session_button.gif" alt="Create session in Hermes button" />
 				</p>
 
 				<p>
-					Preferences editor opens and first we choose Providers tab first
-					at the bottom
-					of this edtitor.
-					By right click Classpath Groups choose
-					'Add Group' and type the name
-					ActiveMQ-5.2
+					Open the Preferences editor and choose the Providers tab first at the bottom.
+					Select Classpath Groups on the right and choose	'Add Group', type the name 'ActiveMQ-5.2'
 				</p>
 				<p>
-					Than add two jar files also with right click 'Add JAR(s)',
-					activemq-core-5.2.0.jar and
-					geronimo-j2ee-management_1.0_spec-1.0.jar.
-					These jar files can be
-					found in
-					%actvemq_home%/lib folder.
+					Than add these two jar files also by clicking on 'Add JAR(s)',
+					activemq-core-5.2.0.jar and geronimo-j2ee-management_1.0_spec-1.0.jar.
+					(These jar files can be	found in %actvemq_home%/lib folder).
 				</p>
 				<p>
-					Now choose the session tab and make sure that your editor looks like this.
+					Now choose the session tab in HermesJMS and make sure that your editor looks like this.
 				</p>
 				<p align="center">
 					<img src="images/hermes_preferences.gif" alt="Hermes Preferences" />
 				</p>
 				<p>
-					This way we created session in HermesJMS named activeMQSession with two queues and two topics and we can use them in SoapUI.
+					We have now created a session in HermesJMS named activeMQSession with two queues and two topics which 
+					we can use from within soapUI.
 				</p>
 			</subsection>
 			
-			<subsection name="JMS in SoapUI">
+			<subsection name="JMS in soapUI">
 				<p>
-				Now that we have configured session in Hermes lets go back to SoapUI. Lets use sample project that goes with SoapUI installation %soapui_home%/Tutorials/sample-soapui-pro-project.xml
+				Now that we have configured our session in HermesJMS, lets go back to soapUI and use the sample project that goes with 
+				the soapUI installation %soapui_home%/Tutorials/sample-soapui-project.xml
 				</p>
 				<p>
 					Open the project and left click on interface SampleServiceSoapBinding and choose 'Add JMS Endpoint'
 				</p>
 				<p>
-					Popup dialog opens
+					The following popup dialog will open
 				</p>
 				<p align="center">
 					<img src="images/add_jms_endpoint.gif" alt="Add JMS Endpoints" />
 				</p>
 				<p>
-					Choose Hermes Config path first ( ie. folder where hermes-config.xml is )
-					than session and queue/topic for sending/publishing and queue/topic
+					First set the Hermes Config path to the folder where hermes-config.xml is (usually .Hermes),
+					than select the above configured session and last the queue/topic for sending/publishing and queue/topic
 					for receiving/subscribing. You can choose send/publish only by leaving
 					Receive Queue field blank and also receive/subscribe only by leaving
 					Send Queue/Topic blank. All combinations are allowed. Available queues
-					and topics depend on what we have configured in HermesJMS. So if we
-					add another queue for example it will be available in these combo
-					boxes also.
-					You can add many endpoints this way.
+					and topics depend on what we have configured in HermesJMS, so if we
+					add another queue for example it will be available in this combo box also.
+					You can add as many JMS endpoints this way as you need.
 				</p>
 				<p>
-					Next we need to create new Test Suite->Test Case and add Soap Test Request.
-					Select operation to invoke for Request login for example, so we get soap message generated. Now let’s choose endpoint where send queue and receive queue is the same and submit the request.
+					Next we need to create a new TestSuite and TestCase and add a Soap TestRequest.
+					Select the operation to invoke (for example the Request login), which opens the editor with a corresponding default
+					message. Select an endpoint where the send queue and receive queues are the same and submit the request.
 
 				</p>
 				<p align="center">
 					<img src="images/jms_request_and_response.gif" alt="JMS Request and Response" />
 				</p>
 				<p>
-					So, we send message to a queue and receive it from the same queue (for the purpose of this example) and we can see that response has inspector JMS where all JmsHeaders are. 
+				As you can see, the message we sent is shown in the response window since we sent and received from the same JMS
+				queue (for the purpose of this example). We can also see that the response has a JMS inspector showing all JMS Headers. 
 				</p>
 				<p>
-					We can also set these JMS Headers and JMS Properties on request side so they can be set in a message to send.
+					You can of course also set custom JMS Headers and JMS Properties for your request;
 				</p>
 				<p align="center">
 					<img src="images/jms_request_and_hedears.gif" alt="JMS Request with Headers" />
@@ -152,32 +144,36 @@
 					<img src="images/jms_request_and_properties.gif" alt="JMS Request with Properties" />
 				</p>
 				<p>
-					Another important thing to set is Timeout property
+					Another important thing to set is the Timeout property
 				</p>
 				<p align="center">
 					<img src="images/timeout.gif" alt="Timeout" />
 				</p>
 				<p>
-					where we choosing time to wait ( in milliseconds ) for the receiving/subscribing queue/topic.
-					If not set or zero it will wait to infinity. 
+					where you set the time to wait ( in milliseconds ) for the receiving/subscribing queue/topic.
+					If this is not set or set to zero it will wait to infinity. 
 				</p>
 				<p>
-					Two new assertions are available for JMS, JMS Status and JMS Timeout.
-					JMS Status will check if some JMS specific error occurs, like connection error,
-					and JMS Timeout will check if message is not received within a period that we previously set.
+					Since the response is a standard XML message, all XML-related assertions apply (XPath, XQuery, etc), but 
+					also two new assertions are available for JMS testing; JMS Status and JMS Timeout.
+					The JMS Status assertion will check for JMS specific errors (for example connection errors)
+					and the JMS Timeout assertion will check that the message is received within the configured timeout.
 				</p>
 				<p>
-					This is the way we can send/publish and receive/subscribe jms text messages.
-					We can also use first attachment to specify payload for message, and there is a convention how they will be treated. If content type of a message is text or plain or xml then this attachment will be sending as text message, otherwise it will be sent as bytes message. And also, when receiving if message type is bytes message than its payload will be in attachment part of message.
+					The method described above allows us to  send/publish and receive/subscribe jms text messages, but 
+					we can also use the first request attachment to specify the payload of the message; if the content type of 
+					the attachment is text, plain or xml then this attachment will be sent as a text message, otherwise it 
+					will be sent as bytes message. Correspondingly, when receiving a bytes message its payload will be shown as 
+					a response attachment..
 				</p>
 				<p>
-					Note that only first attachment if added is treated as payload for message.  
+					Note that only the first attachment is treated as the payload for the message.  
 				</p>
 				<p>
-					Hope that you will find this tutorial helpful to jump start testing Soap over JMS.
+					That's it for now, we hope that you will find this tutorial helpful to jump start your JMS testing with soapUI.
 				</p>
 				<p>
-					Happy testing!
+					Happy testing, and please don't hesitate to give us your feedback!
 				</p>
 			</subsection>
 		</section>
