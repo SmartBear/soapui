@@ -3,7 +3,7 @@
     <com.izforge.izpack.panels.InfoPanel/>
     <com.izforge.izpack.panels.LicencePanel/>
     <com.izforge.izpack.panels.TargetPanel>
-        <installpath>HERMES_PATH</installpath>
+        <installpath>wheretoinstall</installpath>
     </com.izforge.izpack.panels.TargetPanel>
     <com.izforge.izpack.panels.PacksPanel>
         <pack name="HermesJMS" index="0" selected="true"/>
