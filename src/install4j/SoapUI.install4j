@@ -426,31 +426,6 @@ return xx;</string>
                 </serializedBean>
                 <condition />
               </action>
-              <action name="" id="566" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="3" errorMessage="Could not install icon">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction">
-                      <void property="description">
-                        <string>Install Desktop ShortCut</string>
-                      </void>
-                      <void property="file">
-                        <object class="java.io.File">
-                          <string>bin/${compiler:EXECUTABLE_NAME}</string>
-                        </object>
-                      </void>
-                      <void property="name">
-                        <string>${compiler:sys.fullName}</string>
-                      </void>
-                      <void property="winIconFile">
-                        <object class="com.install4j.api.beans.ExternalFile">
-                          <string>${compiler:RESOURCES_HOME}/images/soapui.ico</string>
-                        </object>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition>context.getBooleanVariable("createDesktopLinkAction")</condition>
-              </action>
               <action name="" id="606" beanClass="com.install4j.runtime.beans.actions.text.ReplaceInstallerVariablesAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
@@ -555,6 +530,52 @@ return xx;</string>
                 </serializedBean>
                 <condition />
               </action>
+              <action name="" id="1477" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>import java.io.File;
+
+    return File.separator;
+
+</string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>FILE_SEPARATOR</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="1436" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="replacement error">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
+                      <void property="encoding">
+                        <string />
+                      </void>
+                      <void property="file">
+                        <object class="java.io.File">
+                          <string>tempHermes${installer:FILE_SEPARATOR}script.xml</string>
+                        </object>
+                      </void>
+                      <void property="replaceValue">
+                        <string>${installer:sys.installationDir}${installer:FILE_SEPARATOR}hermesJMS</string>
+                      </void>
+                      <void property="searchValue">
+                        <string>wheretoinstall</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
               <action name="" id="1337" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
@@ -598,29 +619,6 @@ return xx;</string>
 
 return component!=null;</condition>
               </action>
-              <action name="" id="1398" beanClass="com.install4j.runtime.beans.actions.xml.XPathReplaceAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.xml.XPathReplaceAction">
-                      <void property="file">
-                        <object class="java.io.File">
-                          <string>${compiler:SRC_ROOT}/install4j/hermes/script.xml</string>
-                        </object>
-                      </void>
-                      <void property="regex">
-                        <string>HERMES_PATH</string>
-                      </void>
-                      <void property="replaceAll">
-                        <boolean>true</boolean>
-                      </void>
-                      <void property="replacement">
-                        <string>${installer:sys.installationDir}\hermes</string>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition />
-              </action>
               <action name="install hermesJMS" id="1264" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
@@ -647,6 +645,31 @@ return component!=null;</condition>
                 <condition>InstallationComponentSetup component =context.getInstallationComponentById("1263");
 
 return component!=null;</condition>
+              </action>
+              <action name="" id="566" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="3" errorMessage="Could not install icon">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction">
+                      <void property="description">
+                        <string>Install Desktop ShortCut</string>
+                      </void>
+                      <void property="file">
+                        <object class="java.io.File">
+                          <string>bin/${compiler:EXECUTABLE_NAME}</string>
+                        </object>
+                      </void>
+                      <void property="name">
+                        <string>${compiler:sys.fullName}</string>
+                      </void>
+                      <void property="winIconFile">
+                        <object class="com.install4j.api.beans.ExternalFile">
+                          <string>${compiler:RESOURCES_HOME}/images/soapui.ico</string>
+                        </object>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>context.getBooleanVariable("createDesktopLinkAction")</condition>
               </action>
             </actions>
             <formComponents />
