@@ -516,7 +516,14 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 	public void minimize( DesktopPanel desktopPanel )
 	{
-		desktopPane.getDesktopManager().iconifyFrame( getFrameForDesktopPanel( desktopPanel ) );
+		try
+		{
+			getFrameForDesktopPanel( desktopPanel ).setIcon( true );
+		}
+		catch( PropertyVetoException e )
+		{
+			SoapUI.logError( e );
+		}
 	}
 
 	public void maximize( DesktopPanel desktopPanel )
