@@ -13,69 +13,63 @@
 
 <document>
 	<properties>
-		<title>Tutorial for AMF Test Step</title>
+		<title>Tutorial for the AMF Test Step</title>
 	</properties>
 	<body>
-		<section name="AMF Test Step">
+		<section name="Getting started with the AMF TestStep">
 
 			<subsection name="Step by step tutorial">
-				<p>SoapUI 3.5 is introducing new test step for handling AMF
-					remote call. AMF is Macromedia's proprietary (ActionScript
+				<p>soapUI 3.5 introduces a new TestStep for sending AMF
+					remote calls over HTTP (AMF being Adobes ActionScript
 					Messaging
-					Format) gateway.
-					Remote objects that are sent through the
-					AMF gateway
-					use the HTTP
-					protocol.</p>
+					Format used by Flash/Flex applications to interact with a server backend).</p>
 
 				<p>
-					In Ole's blog <a href="http://www.eviware.com/blogs/oleblog/?p=861">Testing AMF services with SoapUI</a> you can see
-					how
-					to use Groovy test step to simulate AMF call. In this
-					introduction
-					of new AMF Test Step we will use same BlazeDS platform
+					In out blog entry <a href="http://www.eviware.com/blogs/oleblog/?p=861">Testing AMF services with SoapUI</a> you 
+					could see how to use a Groovy Script to simulate an AMF call. The new AMF TestStep basically lets you 
+					perform the same call without scripting and with access to all the XML-related bells-and-whistles (assertions, 
+					property-transfers, etc) 
+					
+					In this introduction we will use the same BlazeDS platform
 					<a href="http://opensource.adobe.com/wiki/display/blazeds/BlazeDS/">BlazeDS</a>
-					and same
-					sample application. All AMFConnection related APIs are
-					built in
-					SoapUI 3.5.
+					and the same sample application. 
 				</p>
 			</subsection>
 
 
 			<subsection name="Getting Started">
 				<p>
-					You need to download <a href="images/flexsample.jar/">flexsample.jar</a> provided here for the purpose of this tutorial. 
-					Place this jar into the %soapui%\bin\ext
-					folder and when start SoapUI 3.5 you will see info in the soapUI log that it is added :
+					You will need to download <a href="images/flexsample.jar/">flexsample.jar</a> provided here for the purpose of 
+					this tutorial (it is also included in the blaze-ds distribution). Place this jar in the %soapui%\bin\ext
+					folder and when starting soapUI 3.5 you should see in the soapUI log that the jar has been added to the internal 
+					classpath :
 		
 					</p>
 					<p align="center">
 				<img src="images/ext_jar_loading.gif" alt="The soapUI External Jar Loading" />
 			</p>
-			<p>Now create new project </p>
+			<p>Now create a new soapUI project </p>
 			<p align="center">
 				<img src="images/new_soapui_project.gif" alt="Creating New SoapUI Project" />
 			</p>
 			<p>
-				and then manually add a TestSuite and TestCase, and finally add AMF
-				Request.
+				and then manually add a TestSuite, a TestCase and finally add an AMF Request TestStep.
 			</p>
 			<p align="center">
 				<img src="images/amf_test_step_dialog.gif" alt="AMF Test Step Dialog" />
 			</p>
-			<p>New AMF Request dialog consist of the following </p>
-			<p>On Request part:</p>
+			<p>The new AMF Request window contains the following components:</p>
+			<p>For the Request:</p>
 			<ul>
 				<li>1.	Endpoint</li>
 				<li>2.	AMF Call</li>
-				<li>3.	parameters table</li>
-				<li>4.	script editor</li>
+				<li>3.	Parameters table</li>
+				<li>4.	Script editor</li>
 				<li>5.	HTTP Header inspector</li>
 				<li>6.	AMF Header inspector </li>
 			</ul>
 			
-			<p>On response part:</p>
+			<p>For the Response:</p>
 			<ul>
 				<li>7.	XML view</li>
 				<li>8.	RAW view</li>
@@ -84,33 +78,28 @@
 				<li>11.	HTTP Headers inspector</li>
 				<li>12.	AMF Header inspector</li>
 			</ul>
-			<p>Using this dialog you can create call to AMF service.
-				First type your endpoint which is<br/>
+			<p>Using this window you can create calls to AMF services,
+				first set your endpoint which for the sample application is<br/>
 				http://127.0.0.1:8400/samples/messagebroker/amf
-				for our tutorial , than add AMF call product.getProducts.
+				, then add the AMF call product.getProducts.
 				This getPoducts method in ProductService.java doesn't require parameters so
-				we can submit this call. 
-			</p>
-
-	<p>If your blazeDS database and server are started you can submit
-		this AMF call. Your response should look like this:</p>
+				we can just submit the call, make sure both your blazeDS sample database and server 
+				are started you can submit this AMF call. Your response should look like this:</p>
 
 	<p align="center">
 		<img src="images/getproducts_response.gif" alt="AMF Response" />
 	</p>
 			
-			<p>Now change you AMF Call to getProduct which has one method
-	parameter id number of product in database, so we need to provide this
-	parameter. It is handled in parameters table like this</p>
+			<p>Now change the AMF Call to getProduct instead, which has one method
+	parameter: the id number of product in database. Add the parameter to the parameters-table as follows:</p>
 
 	<p align="center">
 		<img src="images/getproduct_request.gif" alt="AMF Request" />
 	</p>
 			<p>
-	Note that order of parameters in our table should corresponds to order of
-	method parameters of AMF Call if there is more that one parameter
-	(names of your parameters in table are not important thou). When submit
-	this call you should see something like this :
+	Note that the order of parameters in our table should corresponds to the order of
+	the method parameters of the AMF Call (names of your parameters in the table are not important). 
+	When submitting this call you should see something like this :
 </p>
 	<p align="center">
 		<img src="images/getproduct_response.gif" alt="AMF Response" />
@@ -118,10 +107,9 @@
 		
 					<p>
 	Now if you want to call product.create method you need to provide Product
-	object as method parameter. So, how you could add parameter of any
-	complex type into the table? It is really simple with script editor as
-	a help. First you need one parameter in our parameters table named
-	product (or whatever you want) and leave value blank.	
+	object as the method argument. So, how can you add a complex parameter of any
+	type to the table? It is really simple with script editor; add one parameter in 
+	our parameters table named product (or whatever you want) and leave the value blank.	
 					
 </p>
 	<p align="center">
@@ -129,7 +117,7 @@
 	</p>
 			
 			<p>
-	Next you use script editor to initialize new Product object
+	Next you use script editor to initialize new Product object and assign it to the "product" parameter.
 </p>
 	<p align="center">
 		<img src="images/initialization_of_parameters.gif" alt="Script editor" />
@@ -137,7 +125,9 @@
 
 
 		<p>
-		As you see script editor has built in variable parameters which you use for initialization of your parameters in the table. There is also amfHeader built in variable with same functionality for initializing complex objects in AMF Header inspector.
+		As you can see the script editor exposes a built in "parameters" variable which you can use for initialization of 
+		your parameter values (not only complex ones). There is also an amfHeader variable with same functionality for initializing 
+		complex objects in AMF Header inspector.
 		</p>
 		<p>
 		Now you can submit this call, and your response should look something like this
@@ -153,7 +143,8 @@
 <subsection name="Authorization ">
 			
 			<p>
-		In SoapUI 3.5 you can also login to secured AMF endpoint. For this purpose you need to do following: Open your Test Case and click on the Options button.
+		In soapUI 3.5 you can also login to secured AMF endpoints. For this purpose you need to do following: 
+		Open your TestCase and click on the Options button.
 		</p>
 		
 		<p align="center">
@@ -161,15 +152,16 @@
 			</p>
 			
 				<p>
-		On AMF tab you can chose whether you need to authorize or not to AMF service.
-By choosing this you need to provide endpoint, login and password.
-This is used only when running Test Case and it will login to AMF service before first Test Step and logout after last Test Step in this Test Case. 
-Connection session is shared among all AMF Test Steps in this Test Case.
+		In the AMF tab you can set whether you need to authorize or not to an AMF service for all AMF requests in your TestCase.
+When choosing this you need to provide the AMD endpoint, login and password, which will be used when running the TestCase; 
+it will login to the specified AMF service before the first TestStep and logout after last TestStep in the TestCase. The authorized 
+AMF connection is shared among all AMF TestSteps in the Test Case.
 			</p>
 			
 			<p>
-			This tutorial should get you started using SoapUI 3.5 for testing AMF services.
-Happy testing!</p>
+			This tutorial should get you started with the new AMF TestStep in soapUI 3.5, please don't hesitate to give us your feedback so
+			we can make this even better!</p>
+			<p>Happy testing!</p>
 			
 </subsection>
 		
