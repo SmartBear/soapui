@@ -16,7 +16,7 @@
 		<title>Tutorial for AMF Test Step</title>
 	</properties>
 	<body>
-		<section name="SOAP over JMS testing with soapUI 3.5">
+		<section name="Getting started with JMS testing in soapUI 3.5">
 
 			<subsection name="Introduction">
 				<p>
