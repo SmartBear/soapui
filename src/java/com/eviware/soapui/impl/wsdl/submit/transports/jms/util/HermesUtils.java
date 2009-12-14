@@ -42,64 +42,65 @@ public class HermesUtils
 	private static Map<String, Context> contextMap = new HashMap<String, Context>();
 	public static String HERMES_CONFIG_XML = "hermes-config.xml";
 
-	public static Context hermesContext(WsdlProject project) throws NamingException, MalformedURLException, IOException
+	public static Context hermesContext( WsdlProject project ) throws NamingException, MalformedURLException,
+			IOException
 	{
-		String expandedHermesConfigPath = PropertyExpander.expandProperties(project, project.getHermesConfig());
+		String expandedHermesConfigPath = PropertyExpander.expandProperties( project, project.getHermesConfig() );
 		String key = project.getName() + expandedHermesConfigPath;
-		return getHermes(key, expandedHermesConfigPath);
+		return getHermes( key, expandedHermesConfigPath );
 	}
 
-	public static Context hermesContext(WsdlProject project, String hermesConfigPath) throws NamingException,
+	public static Context hermesContext( WsdlProject project, String hermesConfigPath ) throws NamingException,
 			MalformedURLException, IOException
 	{
-		String expandedHermesConfigPath = PropertyExpander.expandProperties(project, hermesConfigPath);
+		String expandedHermesConfigPath = PropertyExpander.expandProperties( project, hermesConfigPath );
 		String key = project.getName() + expandedHermesConfigPath;
-		return getHermes(key, expandedHermesConfigPath);
+		return getHermes( key, expandedHermesConfigPath );
 	}
 
-	private static Context getHermes(String key, String hermesConfigPath) throws IOException, MalformedURLException,
+	private static Context getHermes( String key, String hermesConfigPath ) throws IOException, MalformedURLException,
 			NamingException
 	{
-		if (!hermesJarsLoaded)
+		if( !hermesJarsLoaded )
 		{
 			addHermesJarsToClasspath();
 			hermesJarsLoaded = true;
 		}
 
-		if (contextMap.containsKey(key))
+		if( contextMap.containsKey( key ) )
 		{
-			return contextMap.get(key);
+			return contextMap.get( key );
 		}
 
 		Properties props = new Properties();
-		props.put(Context.INITIAL_CONTEXT_FACTORY, HermesInitialContextFactory.class.getName());
-		props.put(Context.PROVIDER_URL, hermesConfigPath + File.separator + HERMES_CONFIG_XML);
-		props.put("hermes.loader", JAXBHermesLoader.class.getName());
+		props.put( Context.INITIAL_CONTEXT_FACTORY, HermesInitialContextFactory.class.getName() );
+		props.put( Context.PROVIDER_URL, hermesConfigPath + File.separator + HERMES_CONFIG_XML );
+		props.put( "hermes.loader", JAXBHermesLoader.class.getName() );
 
-		Context ctx = new InitialContext(props);
-		contextMap.put(key, ctx);
+		Context ctx = new InitialContext( props );
+		contextMap.put( key, ctx );
 		return ctx;
 	}
 
 	// TODO: this could be called on souapui startup if hermes config path is set
 	private static void addHermesJarsToClasspath() throws IOException, MalformedURLException
 	{
-		String hermesHome = SoapUI.getSettings().getString(ToolsSettings.HERMES_JMS, null);
+		String hermesHome = SoapUI.getSettings().getString( ToolsSettings.HERMES_JMS, defaultHermesJMSPath() );
 
-		if (hermesHome == null || "".equals(hermesHome))
+		if( hermesHome == null || "".equals( hermesHome ) )
 		{
 			hermesHome = createHermesHomeSetting();
-			if (hermesHome == null)
-				throw new FileNotFoundException("HermesJMS home not specified !!!");
+			if( hermesHome == null )
+				throw new FileNotFoundException( "HermesJMS home not specified !!!" );
 		}
-		
+
 		String hermesLib = hermesHome + File.separator + "lib";
-		File dir = new File(hermesLib);
+		File dir = new File( hermesLib );
 
 		String[] children = dir.list();
-		for (String filename : children)
+		for( String filename : children )
 		{
-			HermesJMSClasspathHacker.addURL(new URL("file:" + File.separator + hermesLib + File.separator + filename));
+			HermesJMSClasspathHacker.addURL( new URL( "file:" + File.separator + hermesLib + File.separator + filename ) );
 		}
 
 	}
@@ -111,18 +112,32 @@ public class HermesUtils
 
 	private static String createHermesHomeSetting()
 	{
-		if (Tools.isEmpty(SoapUI.getSettings().getString(ToolsSettings.HERMES_JMS, null)))
+		if( Tools.isEmpty( SoapUI.getSettings().getString( ToolsSettings.HERMES_JMS, defaultHermesJMSPath() ) ) )
 		{
-			UISupport.showErrorMessage("HermesJMS Home must be set in global preferences");
+			UISupport.showErrorMessage( "HermesJMS Home must be set in global preferences" );
 
-			if (UISupport.getMainFrame() != null)
+			if( UISupport.getMainFrame() != null )
 			{
-				if (SoapUIPreferencesAction.getInstance().show(SoapUIPreferencesAction.INTEGRATED_TOOLS))
+				if( SoapUIPreferencesAction.getInstance().show( SoapUIPreferencesAction.INTEGRATED_TOOLS ) )
 				{
-					return SoapUI.getSettings().getString(ToolsSettings.HERMES_JMS, null);
+					return SoapUI.getSettings().getString( ToolsSettings.HERMES_JMS, defaultHermesJMSPath() );
 				}
 			}
 		}
 		return null;
+	}
+
+	public static String defaultHermesJMSPath()
+	{
+		String path = SoapUI.getSettings().getString( ToolsSettings.HERMES_JMS, null );
+		if( path == null || "".equals( path ) )
+		{
+			String temp = System.getProperty( "soapui.home" ).substring( 0,
+					System.getProperty( "soapui.home" ).lastIndexOf( "bin" ) - 1 );
+			path = new File( temp + File.separator + "hermesJMS" ).getAbsolutePath().toString();
+			SoapUI.getSettings().setString( ToolsSettings.HERMES_JMS, path );
+			SoapUI.log( path );
+		}
+		return path;
 	}
 }

@@ -18,6 +18,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.settings.ToolsSettings;
 import com.eviware.soapui.support.UISupport;
 /**
@@ -38,7 +39,7 @@ public class StartHermesJMSButtonAction extends AbstractAction
 	{
 		try
 		{
-			String hermesHome =SoapUI.getSettings().getString(ToolsSettings.HERMES_JMS, "");
+			String hermesHome =SoapUI.getSettings().getString(ToolsSettings.HERMES_JMS, HermesUtils.defaultHermesJMSPath());
 			if("".equals(hermesHome)){
 				UISupport.showErrorMessage("Please set Hermes JMS path in Preferences->Tools ! ");
 				return;
