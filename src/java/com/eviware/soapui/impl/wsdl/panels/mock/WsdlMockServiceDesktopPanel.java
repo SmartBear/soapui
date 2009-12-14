@@ -344,8 +344,8 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 		logListModel = new LogListModel();
 		testLogList = new JList( logListModel );
 		testLogList.setCellRenderer( new LogCellRenderer() );
-		testLogList.setPrototypeCellValue( "Testing 123" );
-		testLogList.setFixedCellWidth( -1 );
+		// testLogList.setPrototypeCellValue( "Testing 123" );
+		// testLogList.setFixedCellWidth( -1 );
 		testLogList.addMouseListener( new LogListMouseListener() );
 		testLogList.setBorder( BorderFactory.createLineBorder( Color.GRAY ) );
 
