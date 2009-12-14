@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.actions.mockservice;
 
-import javax.swing.SwingUtilities;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.support.UISupport;
@@ -40,18 +38,10 @@ public class StartMinimizedMockServiceAction extends AbstractSoapUIAction<WsdlMo
 		try
 		{
 			UISupport.setHourglassCursor();
-			final DesktopPanel desktopPanel = UISupport.showDesktopPanel( mockService );
+			DesktopPanel desktopPanel = UISupport.showDesktopPanel( mockService );
 			if( mockService.getMockRunner() == null )
 				mockService.start();
-
-			SwingUtilities.invokeLater( new Runnable()
-			{
-
-				public void run()
-				{
-					SoapUI.getDesktop().minimize( desktopPanel );
-				}
-			} );
+			SoapUI.getDesktop().minimize( desktopPanel );
 		}
 		catch( Exception e )
 		{
