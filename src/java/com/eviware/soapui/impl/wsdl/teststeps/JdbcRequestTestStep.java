@@ -130,6 +130,14 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		return jdbcRequestTestStepConfig;
 	}
 
+	public void resetConfigOnMove( TestStepConfig config )
+	{
+		super.resetConfigOnMove( config );
+
+		jdbcRequestTestStepConfig = ( JdbcRequestTestStepConfig )config.getConfig().changeType( JdbcRequestTestStepConfig.type );
+		propertyHolderSupport.resetPropertiesConfig( jdbcRequestTestStepConfig.getProperties() );
+	}
+
 	@Override
 	public WsdlTestStep clone( WsdlTestCase targetTestCase, String name )
 	{
