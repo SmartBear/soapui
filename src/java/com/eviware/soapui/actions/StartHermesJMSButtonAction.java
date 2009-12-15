@@ -46,12 +46,11 @@ public class StartHermesJMSButtonAction extends AbstractAction
 				{
 					if( SoapUIPreferencesAction.getInstance().show( SoapUIPreferencesAction.INTEGRATED_TOOLS ) )
 					{
-						 SoapUI.getSettings().getString( ToolsSettings.HERMES_JMS,HermesUtils.defaultHermesJMSPath() );
+						hermesHome = SoapUI.getSettings().getString( ToolsSettings.HERMES_JMS,HermesUtils.defaultHermesJMSPath() );
 					}
 				}
 				
 			}
-			hermesHome =SoapUI.getSettings().getString(ToolsSettings.HERMES_JMS, HermesUtils.defaultHermesJMSPath());
 			if("".equals( hermesHome)){
 				return;
 			}
