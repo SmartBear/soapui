@@ -68,6 +68,7 @@ public class StartHermesJMS extends AbstractSoapUIAction<WsdlProject>
 			ProcessBuilder pb = new ProcessBuilder(hermesBatPath);
 			Map<String, String> env = pb.environment();
 			env.put("HERMES_CONFIG", hermesConfigPath);
+			env.put("JAVA_HOME", System.getProperty( "java.home" ));
 			pb.start();
 		}
 		catch (IOException e)
