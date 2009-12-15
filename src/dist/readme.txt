@@ -1,6 +1,6 @@
 Welcome to soapUI!
 
-2009-12-11 : 3.5 beta1 - the Protocol Release
+2009-12-15 : 3.5 beta1 - the Protocol Release
 --------------------------------------------------------------------------------
 soapUI 3.5 adds support for JMS, JDBC and AMF for both functional and load-testing
 
@@ -91,7 +91,7 @@ Updated libraries:
 -	Not-yet-commons-ssl-0.11
 -	Jexcel-api-2.6.12
 -	Jasper 3.6.2
--	Saxon 9.2.0.3
+-	Saxon 9.1.0.8
 -	Jetty 6.1.22
 
 As always we owe our users and the community so much for all their help and support! Thank you all!
