@@ -126,6 +126,16 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		{
 			wsrmConfig.setWsrmConfig( request.getWsrmConfig() );
 		}
+		
+		if( jmsHeaderConfig != null )
+		{
+			jmsHeaderConfig.setJMSHeaderConfConfig(  request.getJmsConfig() );
+		}
+		
+		if( jmsPropertyConfig != null )
+		{
+			jmsPropertyConfig.setJmsPropertyConfConfig( request.getJmsPropertyConfig() );
+		}
 	}
 
 	protected void initEndpoints()
