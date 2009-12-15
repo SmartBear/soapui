@@ -92,9 +92,6 @@ public class ScrollableMenu extends JMenu implements ScrollableMenuContainer
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seecom.eviware.soapui.support.propertyexpansion.scrollmenu.
 	 * ScrollableMenuContainer#add(javax.swing.JMenuItem)
 	 */
 	public JMenuItem add( JMenuItem menuItem )
@@ -115,6 +112,19 @@ public class ScrollableMenu extends JMenu implements ScrollableMenuContainer
 		}
 
 		return menuItem;
+	}
+
+	@Override
+	public int getMenuComponentCount()
+	{
+		int result = super.getMenuComponentCount() - 2;
+		if( headerCount > 0 )
+			result-- ;
+
+		if( footerCount > 0 )
+			result-- ;
+
+		return result;
 	}
 
 	public Component add( Component comp )
@@ -341,7 +351,7 @@ public class ScrollableMenu extends JMenu implements ScrollableMenuContainer
 		add( header, headerCount );
 
 		if( ++headerCount == 1 )
-		add( new JSeparator(), 1 );
+			add( new JSeparator(), 1 );
 
 		return header;
 	}

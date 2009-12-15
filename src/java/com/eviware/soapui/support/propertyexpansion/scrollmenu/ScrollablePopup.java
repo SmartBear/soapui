@@ -321,7 +321,7 @@ public class ScrollablePopup extends JPopupMenu implements ScrollableMenuContain
 		add( header, headerCount );
 
 		if( ++headerCount == 1 )
-		add( new JSeparator(), 1 );
+			add( new JSeparator(), 1 );
 
 		return header;
 	}
