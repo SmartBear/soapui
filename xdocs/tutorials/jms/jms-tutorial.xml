@@ -41,22 +41,6 @@
 
 			</subsection>
 
-			<subsection name="Setting configurations ">
-				<p>
-					After successful installation we need to configure the path to the HermesJMS
-					installation.
-				</p>
-				<p>
-					This is done by clicking 'Sets Global SoapUI preferences' button
-					and choosing Tools tab, where we can set the path to HermesJMS. 
-				</p>
-
-				<p align="center">
-					<img src="images/set_hermes_path.gif" alt="HermesJMS path" />
-				</p>
-				<p>Now we can start HermesJMS from within SoapUI and use sessions
-					configured in HermesJMS for sending and receiving messages over JMS.</p>
-			</subsection>
 
 			<subsection name="Downloading ActiveMQ and starting the server">
 				<p>
