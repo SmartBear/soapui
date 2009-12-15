@@ -129,16 +129,25 @@ public class HermesUtils
 
 	public static String defaultHermesJMSPath()
 	{
-		String path = SoapUI.getSettings().getString( ToolsSettings.HERMES_JMS, null );
-		if( path == null || "".equals( path ) )
+		try
 		{
-			String temp = System.getProperty( "soapui.home" ).substring( 0,
-					System.getProperty( "soapui.home" ).lastIndexOf( "bin" ) - 1 );
-			path = new File( temp + File.separator + "hermesJMS" ).getAbsolutePath().toString();
-			SoapUI.log( "HermesJMS path: " + path );
+			String path = SoapUI.getSettings().getString( ToolsSettings.HERMES_JMS, null );
+			if( path == null || "".equals( path ) )
+			{
+				String temp = System.getProperty( "soapui.home" ).substring( 0,
+						System.getProperty( "soapui.home" ).lastIndexOf( "bin" ) - 1 );
+				path = new File( temp + File.separator + "hermesJMS" ).getAbsolutePath().toString();
+				SoapUI.log( "HermesJMS path: " + path );
+			}
+			setHermesJMSPath( path );
+			return path;
 		}
-		setHermesJMSPath( path );
-		return path;
+		catch( Exception e )
+		{
+			SoapUI.log( "No HermesJMS on default path %SOAPUI_HOME%/hermesJMS" );
+			return null;
+		}
+		
 	}
 
 	public static void setHermesJMSPath( String path )
