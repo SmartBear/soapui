@@ -13,47 +13,39 @@
 <img src="img/head.jpg" alt="soapUI Pro 3.5 Beta" />
 
 <div id="lead-text">
-Improved! bbla bbla bbla bbla bla bla blbla bb la bbla ba, the most flexible build ever.<br />
-improved! bla bla bla, the...
+soapUI 3.5 - The Protocol Release,
+With complete functionality for testing
+your Enterprise Messages, RIA's and Databases.
 </div>
 <div id="download-buttons">
 <a href="https://sourceforge.net/projects/soapui/files/soapui/3.5-beta1"><img src="img/download-opensource.png" alt="Download Open Source" /></a>
 <a href="http://www.eviware.com/beta"><img src="img/download-pro.png" alt="Download SoapUI Pro" /></a></div>
 
 </div>
-<div id="icons">
-<a href="#"><img src="img/icon-1.png" alt="Facebook" /></a>
-<a href="#"><img src="img/icon-2.png" alt="Twitter" /></a>
-<a href="#"><img src="img/icon-3.png" alt="Delicious" /></a>
-<a href="#"><img src="img/icon-4.png" alt="Facebook" /></a>
-<a href="#"><img src="img/icon-5.png" alt="Facebook" /></a>
-<a href="#"><img src="img/icon-6.png" alt="Facebook" /></a>
-<a href="#"><img src="img/icon-7.png" alt="Facebook" /></a>
-<a href="#"><img src="img/icon-8.png" alt="RSS" /></a>
-</div>
+
 <div class="clearfixx"></div>
 
 <div class="highlight">Major New Features:</div>
 
 <!--First row--><div id="first-r" class="clearfix">
 <div class="first-c">
-<img src="img/testing-ilu.gif" alt="JMS Testing" />
+<img src="http://www.eviware.com/images/stories/news/35/jms_220x136.png" alt="JMS Testing" />
 <h1>JMS Testing</h1>
-<p><img class="inline-icon" src="img/jms-icon.png" alt="JMS" /> Via Hermes JMS for both SOAP and REST requests</p>
+<p><img class="inline-icon" src="img/jms-icon.png" alt="JMS" />Test your Enterprise Messaging such as MQ's with our new JMS TestStep.</p>
 <p class="links"><a class="more" href="#">Read more...</a></p>
 </div>
 
 <div class="second-c">
-<img src="img/testing-ilu.gif" alt="JDBC Testing" />
+<img src="http://www.eviware.com/images/stories/news/35/jdbc_220x136.png" alt="JDBC Testing" />
 <h1>JDBC Testing</h1>
-<p><img class="inline-icon" src="img/jdbc-icon.png" alt="JDBC" /> For functional database testing, all standard xml/xpath functionality applies (assertions, transfers, etc)</p>
+<p><img class="inline-icon" src="img/jdbc-icon.png" alt="JDBC" />Our new JDBC DataStep enables complete end-to-end testing of your SOA's.</p>
 <p class="links"><a class="more" href="#">Read more...</a></p>
 </div>
 
 <div class="third-c">
-<img src="img/testing-ilu.gif" alt="AMF Testing" />
+<img src="http://www.eviware.com/images/stories/news/35/amf_220x136.png" alt="AMF Testing" />
 <h1>AMF Testing</h1>
-<p><img class="inline-icon" src="img/amf-icon.png" alt="AMF" /> For Flash and Flex tester.  Test AMF requests, all standard xml/xpath functionality applies (assertions, transfers, etc)</p>
+<p><img class="inline-icon" src="img/amf-icon.png" alt="AMF" />For the Flash or Flex developer we now release AMF Testing for RIA Quality Assurance.</p>
 <p class="links"><a class="more" href="#">Read more...</a></p>
 </div>
 </div><!--End of first row-->
@@ -61,19 +53,19 @@ improved! bla bla bla, the...
 <!--Second row--><div id="second-r" class="clearfix">
 <div class="first-second-c">
 <div class="qb-ilustration">
-<img class="ilu-1" src="img/qb-ilu-1.png" alt="Ilustration One" />
-<img class="ilu-2" src="img/qb-ilu-2.png" alt="Ilustration Two" />
+<img class="ilu-1" src="http://www.eviware.com/images/stories/news/35/qb-ilu-1.png" alt="Ilustration One" />
+<img class="ilu-2" src="http://www.eviware.com/images/stories/news/35/qb-ilu-2.png" alt="Ilustration Two" />
 </div>
 <div class="qb-text">
 <h2>Query Builder</h2>
-<p><img class="inline-icon" src="img/functional-testing-icon.png" alt="Functional Testing" /> component for all Database queries  Lorem ipsum dolor sit amet, Lorem ipsum dolor sit ame</p>
+<p><img class="inline-icon" src="img/functional-testing-icon.png" alt="Functional Testing" />Create complex Database Queries without the need for SQL skills with our Query Builder (soapUI Pro).</p>
 <p class="links"><a class="more" href="#">Read more...</a></p>
 </div>
 <!--End of qb-text-->
 </div>
 <div class="third-c">
 <h2>Deploy as War </h2>
-<p><img class="inline-icon" src="img/mocking-icon.png" alt="Mocking" /> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, </p>
+<p><img class="inline-icon" src="img/mocking-icon.png" alt="Mocking" />Run a Web Service Simulation in you live environment for Infrastructure Testing,</p>
 <p class="links"><a class="more" href="#">Read more...</a></p>
 </div>
 </div><!--End of second row-->
@@ -91,13 +83,12 @@ improved! bla bla bla, the...
 <li>Pressing return in httprequest endpoint field submits request (UI)</li>
 <li>Added timeout property at request level (REST/WSDL)</li>
 <li>RunTestCase TestStep improvements: (Functional Testing)</li>
-</ul>
+
 <ul class="gray-dots">
 <li>Copy LoadTest Properties</li>
 <li>Copy HTTPSession</li>
 <li>Ignore Empty</li>
 </ul>
-<ul class="red-dots">
 <li>Added caching of WSDL Credentials (WSDL)</li>
 <li>Improved performance of script-property-expansions (Scripting)</li>
 <li>Added –A option to TestCase runner;  for exporting of all results using folders instead of long</li>
@@ -116,10 +107,55 @@ improved! bla bla bla, the...
 <li> fixed setting of media-type for Form-submits  (REST)</li>
 <li> removed automatic XML-formatting of rest request bodies (REST)</li>
 <li> fixed thread-override and multiple formats in launch-loadtest-runner dialog (LoadTesting)</li>
+<li>fixed resetting of threadcount  from canceled burst strategy (LoadTesting)</li>
+<li>	Fixed endpoint updating in service endpoints table (REST,WSDL)</li>
+<li>	Fixed saving of loadtest limit type (LoadTesting)</li>
+<li>	Fixed escaping of property-expansions with double $ (Properties/Scripting) (General)</li>
+<li>	Fixed TestSuite count in simple TestCaseRunner output (Test Automation)</li>
+<li>	Fixed filename creation for Composite projects (General)</li>
+<li>	Fixed script-strategy to use project scripting language (Load Testing)</li>
+<li>	Moved demo script files to correct folders (General)</li>
+<li>	Ordered output of LoadTestStatistics export (LoadTesting)</li>
+<li>	Fixed CSV Data Export with subreports (Reporting)</li>
+<li>	MockService synchronization issues during high load (Mocking)</li>
+<li>	Fixed SOAP-Action in Content-Type for WS-A and MTOM requests (SOAP)</li>
+<li>	FixedRateLoadStrategy now ignores the Thread Startup Delay option (Load Testing)</li>
+<li>	fixed setting of nilable on missing elements in form editor (SOAP)</li>
+<li>	removed unneccessary formatting of REST xml responses (REST)</li>
+</ul>
+<div class="highlight">
+Updated libraries: </div>
+<ul class="red-dots">
+
+<li>	Groovy 1.6.7</li>
+<li>	Not-yet-commons-ssl-0.11</li>
+<li>	Jexcel-api-2.6.12</li>
+<li>	Jasper 3.6.2</li>
+<li>	Saxon 9.1.0.8</li>
+<li>	Jetty 6.1.22</li>
 </ul>
 <div class="gray-line"></div>
 <div class="highlight">Features In Depth: &lt;- ???</div>
 <h1>JMS Support</h1>
+<img class="right-image" src="http://www.eviware.com/images/stories/news/35/JMS_354x260.png" alt="News Image (Right)" />
+<p><span>JDBC</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in</p>
+<p>  Voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<p>  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </p>
+<p class="links"><a class="more" href="#">Read Tutorial</a><a class="top" href="#"> Back to Top</a></p>
+<div class="clearfix"></div>
+<div class="gray-line"></div>
+<div class="highlight">Features In Depth: &lt;- ???</div>
+
+<h1>JDBC Support</h1>
+<img class="right-image" src="http://www.eviware.com/images/stories/news/35/JDBC_354x260.png" alt="News Image (Right)" />
+<p><span>JDBC</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in</p>
+<p>  Voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<p>  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </p>
+<p class="links"><a class="more" href="#">Read Tutorial</a><a class="top" href="#"> Back to Top</a></p>
+<div class="clearfix"></div>
+<div class="gray-line"></div>
+<div class="highlight">Features In Depth: &lt;- ???</div>
+<h1>AMF Support</h1>
 <img class="right-image" src="img/prototype-news-right-image.gif" alt="News Image (Right)" />
 <p><span>JDBC</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in</p>
 <p>  Voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
@@ -127,47 +163,14 @@ improved! bla bla bla, the...
 <p class="links"><a class="more" href="#">Read Tutorial</a><a class="top" href="#"> Back to Top</a></p>
 <div class="clearfix"></div>
 <div class="gray-line"></div>
-
 <div class="highlight">Features In Depth: &lt;- ???</div>
-<h1>JMS Support</h1>
+<h1>Advanced Query Builder</h1>
 <img class="right-image" src="img/prototype-news-right-image.gif" alt="News Image (Right)" />
 <p><span>JDBC</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in</p>
 <p>  Voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 <p>  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </p>
 <p class="links"><a class="more" href="#">Read Tutorial</a><a class="top" href="#"> Back to Top</a></p>
-<div class="clearfix"></div>
-<div class="gray-line"></div>
 
-<div class="highlight">Features In Depth: &lt;- ???</div>
-<h1>JMS Support</h1>
-<img class="right-image" src="img/prototype-news-right-image.gif" alt="News Image (Right)" />
-<p><span>JDBC</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in</p>
-<p>  Voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-<p>  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </p>
-<p class="links"><a class="more" href="#">Read Tutorial</a><a class="top" href="#"> Back to Top</a></p>
-<div class="clearfix"></div>
-<div class="gray-line"></div>
-
-<div class="highlight">Features In Depth: &lt;- ???</div>
-<h1>JMS Support</h1>
-<img class="right-image" src="img/prototype-news-right-image.gif" alt="News Image (Right)" />
-<p><span>JDBC</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in</p>
-<p>  Voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-<p>  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </p>
-<p class="links"><a class="more" href="#">Read Tutorial</a><a class="top" href="#"> Back to Top</a></p>
-<div class="clearfix"></div>
-<div class="gray-line"></div>
-
-<div class="highlight">Features In Depth: &lt;- ???</div>
-<h1>JMS Support</h1>
-<img class="right-image" src="img/prototype-news-right-image.gif" alt="News Image (Right)" />
-<p><span>JDBC</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in</p>
-<p>  Voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-<p>  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </p>
-<p class="links"><a class="more" href="#">Read Tutorial</a><a class="top" href="#"> Back to Top</a></p>
-<div class="clearfix"></div>
-
-<div class="clearfixx"></div>
 </div><!--End of section DIV-->
 
 <div class="clearfixx"></div>
