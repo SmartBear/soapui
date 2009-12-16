@@ -39,7 +39,7 @@
 
 			<subsection name="Getting Started">
 				<p>
-					You will need to download <a href="images/flexsample.jar/">flexsample.jar</a> provided here for the purpose of 
+					You will need to download <a href="images/flexsample.jar">flexsample.jar</a> provided here for the purpose of 
 					this tutorial (it is also included in the blaze-ds distribution). Place this jar in the %soapui%\bin\ext
 					folder and when starting soapUI 3.5 you should see in the soapUI log that the jar has been added to the internal 
 					classpath :
