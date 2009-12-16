@@ -21,8 +21,9 @@
 			<subsection name="Introduction">
 				<p>
 					In soapUI 3.5 we introduce support for JMS messaging allowing you to send and receive both text and binary messages. 
-					For this purpose SoapUI integrates with the HermesJMS open source application 
-					(<a href="http://www.hermesjms.org">http://www.hermesjms.org</a>) which	supports many different	JMS providers. 
+					For this purpose SoapUI integrates with the HermesJMS open source application which	supports many different	JMS providers. 
+					
+					<a href="http://www.hermesjms.org"><img src="http://hermesjms.com/confluence/download/userResources/HJMS/logo" align="right"></img></a>
 				</p>
 
 				<p>
