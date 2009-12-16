@@ -108,7 +108,7 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <div class="title"><img src="images/feature-focus-title.png" alt="News" /></div>
 <h2>AMF Testing</h2>
 <p>For the Flash or Flex developer we now release AMF Testing for RIA Quality Assurance.</p>
-<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProamftesting')" href="http://www.eviware.com/blogs/oleblog/?p=530#more-530">Read more</a></div>
+<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProamftesting')" href="http://www.soapui.org/tutorials/jdbc/jdbc-tutorial.html">Read more</a></div>
 <div class="clearfix"></div>
 </div>
 </div><!--end of column-3-->
