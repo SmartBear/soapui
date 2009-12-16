@@ -59,16 +59,18 @@ your Enterprise Messages, RIA's and Databases.
 <div class="qb-text">
 <h2>Query Builder</h2>
 <p><img class="inline-icon" src="img/functional-testing-icon.png" alt="Functional Testing" />Create complex Database Queries without the need for SQL skills with our Query Builder (soapUI Pro).</p>
-<p class="links"><a class="more" href="#">Read more...</a></p>
+
 </div>
 <!--End of qb-text-->
 </div>
 <div class="third-c">
 <h2>Deploy as War </h2>
 <p><img class="inline-icon" src="img/mocking-icon.png" alt="Mocking" />Run a Web Service Simulation in you live environment for Infrastructure Testing,</p>
-<p class="links"><a class="more" href="#">Read more...</a></p>
+
 </div>
 </div><!--End of second row-->
+
+<p>As always; great love to our wonderful community and fantastic customers who helps us focusing on what's right, thank you all!</p>
 
 <div class="highlight">Minor New Features:</div>
 <ul class="red-dots">
@@ -140,7 +142,7 @@ Updated libraries: </div>
 <img class="right-image" src="http://www.eviware.com/images/stories/news/35/JMS_354x260.png" alt="News Image (Right)" />
 <p>soapUI adds world-class JMS support allowing you to:</p>
 <ul class="red-dots">
-<li>Send and receive both text/xml and binary messages to and from both JMS Queues and Topics (Receive from Queues only)</li>
+<li>Send and receive both text/xml and binary messages to and from both JMS Queues and Topics</li>
 <li>Specify custom JMS Headers and properties</li>
 <li>Assert received JMS messages with the standard XML assertion mechanisms</li>
 <li>Integrate JMS messaging in your functional tests using the standard property-transfer and scripting possibilities.</li>
