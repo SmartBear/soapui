@@ -32,21 +32,21 @@ your Enterprise Messages, RIA's and Databases.
 <img src="http://www.eviware.com/images/stories/news/35/jms_220x136.png" alt="JMS Testing" />
 <h1>JMS Testing</h1>
 <p><img class="inline-icon" src="img/jms-icon.png" alt="JMS" />Test your Enterprise Messaging such as MQ's with our new JMS TestStep.</p>
-<p class="links"><a class="more" href="#">Read more...</a></p>
+<p class="links"><a class="more" href="#JMS">Read more...</a></p>
 </div>
 
 <div class="second-c">
 <img src="http://www.eviware.com/images/stories/news/35/jdbc_220x136.png" alt="JDBC Testing" />
 <h1>JDBC Testing</h1>
 <p><img class="inline-icon" src="img/jdbc-icon.png" alt="JDBC" />Our new JDBC DataStep enables complete end-to-end testing of your SOA's.</p>
-<p class="links"><a class="more" href="#">Read more...</a></p>
+<p class="links"><a class="more" href="#JDBC">Read more...</a></p>
 </div>
 
 <div class="third-c">
 <img src="http://www.eviware.com/images/stories/news/35/amf_220x136.png" alt="AMF Testing" />
 <h1>AMF Testing</h1>
 <p><img class="inline-icon" src="img/amf-icon.png" alt="AMF" />For the Flash or Flex developer we now release AMF Testing for RIA Quality Assurance.</p>
-<p class="links"><a class="more" href="#">Read more...</a></p>
+<p class="links"><a class="more" href="#AMF">Read more...</a></p>
 </div>
 </div><!--End of first row-->
 
@@ -135,49 +135,56 @@ Updated libraries: </div>
 <li>	Jetty 6.1.22</li>
 </ul>
 <div class="gray-line"></div>
-<div class="highlight">Features In Depth: &lt;- ???</div>
-<h1>JMS Support</h1>
+<div class="highlight">Features In Depth:</div>
+<h1 id="JMS">JMS Support</h1>
 <img class="right-image" src="http://www.eviware.com/images/stories/news/35/JMS_354x260.png" alt="News Image (Right)" />
-<p><span>JDBC</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in</p>
-<p>  Voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-<p>  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </p>
-<p class="links"><a class="more" href="#">Read Tutorial</a><a class="top" href="#"> Back to Top</a></p>
+<p>soapUI adds world-class JMS support allowing you to:</p>
+<ul class="red-dots">
+<li>Send and receive both text/xml and binary messages to and from both JMS Queues and Topics (Receive from Queues only)</li>
+<li>Specify custom JMS Headers and properties</li>
+<li>Assert received JMS messages with the standard XML assertion mechanisms</li>
+<li>Integrate JMS messaging in your functional tests using the standard property-transfer and scripting possibilities.</li>
+</ul>
+<p>soapUI integrates with the popular and open-source <a href="http://www.hermesjms.org">HermesJMS</a> tool (bundled with the installer) 
+for extensive JMS Provider support and JMS debugging functionality.</p>
+<p class="links"><a class="more" href="tutorials/jms/jms-tutorial.html">Read Tutorial</a><a class="top" href="#"> Back to Top</a></p>
 <div class="clearfix"></div>
 <div class="gray-line"></div>
-<div class="highlight">Features In Depth: &lt;- ???</div>
+<div class="highlight">Features In Depth:</div>
 
-<h1>JDBC Support</h1>
+<h1 id="JDBC">JDBC Support</h1>
 <img class="right-image" src="http://www.eviware.com/images/stories/news/35/JDBC_354x260.png" alt="News Image (Right)" />
-<p><span>JDBC</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in</p>
-<p>  Voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-<p>  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </p>
-<p class="links"><a class="more" href="#">Read Tutorial</a><a class="top" href="#"> Back to Top</a></p>
+<p>The new JDBC TestStep allows you to execute arbitrary SQL statements or procedure calls against any JDBC compliant database. The
+result(s) will automatically be converted to XML allowing you to assert and integrate them with the standard soapUI XML-related features;</p>
+<ul class="red-dots">
+<li>XPath/XQuery assertion</li>
+<li>Property transfers</li>
+<li>Custom scripts</li>
+</ul>
+<p>In soapUI Pro all bells and whistles apply to message processing (wizards, editors, etc), and also a powerful visual query builder 
+for building complex queries with a drag-and-drop interface is available.</p>
+<p class="links"><a class="more" href="tutorials/jdbc/jdbc-tutorial.html">Read Tutorial</a><a class="top" href="#"> Back to Top</a></p>
 <div class="clearfix"></div>
 <div class="gray-line"></div>
-<div class="highlight">Features In Depth: &lt;- ???</div>
-<h1>AMF Support</h1>
-<img class="right-image" src="img/prototype-news-right-image.gif" alt="News Image (Right)" />
-<p><span>JDBC</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in</p>
-<p>  Voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-<p>  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </p>
-<p class="links"><a class="more" href="#">Read Tutorial</a><a class="top" href="#"> Back to Top</a></p>
+<div class="highlight">Features In Depth:</div>
+<h1 id="AMF">AMF Support</h1>
+<img class="right-image" src="http://www.eviware.com/images/stories/news/35/AMF_354x260.png" alt="News Image (Right)" />
+<p>The new AMF TestStep allows you do both functional and load testing of your backend Flex services using the AMF 
+messaging protocol;</p>
+<ul class="red-dots">
+<li>Both simple values and complex objects can be specified as input arguments and customized as desired.</li>
+<li>The resulting binary objects are converted to XML allowing you to assert and integrate them with the standard 
+soapUI XML-related features (assertions, property-transfers, scripts, etc).</li>
+<li>All soapUI Pro bells-and-whistles apply to message processing (wizards, editors, etc)</li>
+</ul>
+<p>Custom AMF Headers and user-authenticated sessions are also supported.</p>
+
+<p class="links"><a class="more" href="tutorials/amf/amf-tutorial.html">Read Tutorial</a><a class="top" href="#"> Back to Top</a></p>
 <div class="clearfix"></div>
-<div class="gray-line"></div>
-<div class="highlight">Features In Depth: &lt;- ???</div>
-<h1>Advanced Query Builder</h1>
-<img class="right-image" src="img/prototype-news-right-image.gif" alt="News Image (Right)" />
-<p><span>JDBC</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in</p>
-<p>  Voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-<p>  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </p>
-<p class="links"><a class="more" href="#">Read Tutorial</a><a class="top" href="#"> Back to Top</a></p>
-
-</div><!--End of section DIV-->
-
-<div class="clearfixx"></div>
 
 <div id="footer"><div class="xright">© 2005-2009, eviware.com</div></div>
 <div class="clearfixx"></div>
-        
+  </div>      
         </p>
         </section>
     </body>
