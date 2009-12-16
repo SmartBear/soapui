@@ -92,7 +92,7 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <div class="title"><img src="images/feature-focus-title.png" alt="News" /></div>
 <h2>JMS Testing</h2>
 <p>Test your Enterprise Messaging such as MQ's with our new JMS TestStep.</p>
-<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIJMSTutorial')" href="http://www.soapui.org/jms/jms-tutorial.html">Read more</a></div>
+<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIJMSTutorial')" href="http://www.soapui.org/tutorials/jms/jms-tutorial.html">Read more</a></div>
 <div class="clearfix"></div>
 </div>
 <div class="ad-type-3">
