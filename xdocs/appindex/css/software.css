@@ -39,13 +39,13 @@ a:hover{
 }
 
 #header{
-	background:url(../images/header-back.jpg) no-repeat 0 0;
+	background:url(../images/head.jpg) no-repeat 0 0;
 	height:300px;
 	position:relative;
 	overflow:hidden;
 }
 body#pro #header{
-	background:url(../images/header-back-pro.jpg) no-repeat 0 0 !important;
+	background:url(../images/head.jpg) no-repeat 0 0 !important;
 	/*height:490px;*/
 	width:650px;
 }

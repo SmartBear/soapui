@@ -82,17 +82,17 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 
 <div id="header-rightbox">
 <div class="title"><img src="images/news-title.png" alt="News" /></div>
-<h2>Update: soapUI 3.0.1</h2>
-<p>soapUI 3.0.1, maintenance release is out.</p>
+<h2>soapUI Award Winners</h2>
+<p>soapUI has won the award as the second best Performance test tool.</p>
 <div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIMinorNewsReadMore')" "href="http://www.soapui.org/new_and_noteworthy_3_0.html">Read more</a></div>
 <div class="clearfix"></div>
 </div>
 
 <div class="ad-type-3">
 <div class="title"><img src="images/feature-focus-title.png" alt="News" /></div>
-<h2>Data Driven Testing</h2>
-<p>soapUI Pro gives you the ability to do Data Driven Testing.</p>
-<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIDataDrivenReadMore')" href="http://www.eviware.com/blogs/oleblog/?p=619">Read more</a></div>
+<h2>JMS Testing</h2>
+<p>Test your Enterprise Messaging such as MQ's with our new JMS TestStep.</p>
+<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIJMSTutorial')" href="http://www.soapui.org/jms/jms-tutorial.html">Read more</a></div>
 <div class="clearfix"></div>
 </div>
 <div class="ad-type-3">
@@ -106,20 +106,22 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 </div>
 <div class="ad-type-3">
 <div class="title"><img src="images/feature-focus-title.png" alt="News" /></div>
-<h2>WADL and Schema Inference</h2>
-<p>In soapUI 3 you can now infer schema from XML. Why? Create specs from that undocumented REST Service.</p>
-<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUISchemaInferenceReadMore')" href="http://www.eviware.com/blogs/oleblog/?p=530">Read more</a></div>
+<h2>AMF Support</h2>
+<p>For the Flash or Flex developer we now release AMF Testing for RIA Quality Assurance.</p>
+<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexamftutorial')" href="http://www.soapui.org/tutorials/amf/amf-tutorial.html">Read more</a></div>
 <div class="clearfix"></div>
 </div>
 </div><!--end of column-3-->
 
 <div id="header-leftbox">
 <div class="title"><img src="images/news-title.png" alt="News" /></div>
-<h2>soapUI 3.0  - The Reporting Release is out</h2>
+<h2>soapUI 3.5  beta 1- The Protocol Release is out</h2>
 <img class="picture" title="New release" src="images/release.jpg" />
-<p> With soapUI 3.0 we introduce an extensive framework for creating and producing test reports in soapUI. <br />
-  We also introduce Improved REST, JavaScript Support, WS-ReliableMessaging and Much More<br /> </p>
-<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIMainNewsReadMore')" href="http://www.soapui.org/new_and_noteworthy_3_0.html">Read more</a><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIMainNewsDownload')" href="http://sourceforge.net/projects/soapui/files/soapui/3.0.1/">Download here</a></div>
+<p> Try The Protocol Release,<br />
+With complete functionality for testing<br />
+your Enterprise Messages, RIA's and Databases.<br /> 
+</p>
+<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIMainNewsReadMore')" href="http://www.soapui.org/new_and_noteworthy_3_5.html">Read more</a><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIMainNewsDownload')" href="http://sourceforge.net/projects/soapui/files/">Download here</a></div>
 <div class="clearleft"></div>
 </div>
 
@@ -139,6 +141,7 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <li>Distribute Test Results with soapUI's powerful <span class="YellowText">Reporting</span>.</li>
 <li>Do point and click testing with <span class="YellowText">XPath Selection</span>.</li>
 <li>Get<span class="YellowText"> World Class Support</span>!</li>
+<li>Try the new <span class="YellowText"> SQL Query Builder</span></li>
 </ol>
 </div>
 <div class="bottom">
@@ -153,18 +156,18 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <div id="column-2">
 <div class="ad-type-2">
 <div class="ad-type-2-inner">
-<div class="title"><img src="images/tellus.png" alt="News" /></div>
-<img class="type-2-picture" src="images/tee.png" alt="T-Shirt" />
-<p>This T-Shirt can be yours! Take our Survey and win a T-Shirt or a MoosePad!</p>
-<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUISurvey')" href="http://www.surveymonkey.com/s.aspx?sm=W3Nw2wWWAI8dw3_2f8vETsIw_3d_3d">Take the Survey!</a></div>
+<div class="title"><img src="images/feature-focus-title.png" alt="News" /></div>
+<img class="type-2-picture" src="Images/qb-ilu-1.png" alt="T-Shirt" />
+<p>Create complex Database Queries without the need for SQL skills with our Query Builder <em>(soapUI Pro)</em>.</p>
+<div class="links"></div>
 </div>
 </div>
 <div class="ad-type-2">
 <div class="ad-type-2-inner button">
-<div class="title"><img src="images/tips-and-trix-title.png" alt="News" /></div>
-<img class="type-2-picture" src="images/10HackingTips.png" alt="10tips" />
-<p>Starting July 7, we will be introducing one tip on Web Service Login Security Testing per day. Read our Tips and Tricks for Web Service hacking!</p>
-<a class="learnmore" title="Learn more" onclick="javascript: pageTracker._trackPageview('/appindexsoapUITaT')" href="http://www.soapui.org/userguide/scenarios/loginhacking.html"><img src="images/blank.gif" alt="blank" /></a></div>
+<div class="title"><img src="images/feature-focus-title.png" alt="News" /></div>
+<img class="type-2-picture" src="Images/JDBC.png" alt="10tips" />
+<p>Our new JDBC DataStep enables complete end-to-end testing of your SOA's. </p>
+<a class="learnmore" title="Learn more" onclick="javascript: pageTracker._trackPageview('/appindexsoapUIJDBCTutorial')" href="http://www.soapui.org/tutorials/jdbc/jdbc-tutorial.html"><img src="images/blank.gif" alt="blank" /></a></div>
 </div>
 </div><!--end of column-2-->
 
