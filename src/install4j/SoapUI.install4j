@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="4.2.6" transformSequenceNumber="2">
+<install4j version="4.2.5" transformSequenceNumber="2">
   <directoryPresets config="${compiler:SRC_ROOT}/install4j/hermes/script.xml" />
   <application name="soapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" keepModificationTimes="false" missingFilesStrategy="warn" shortName="soapUI" publisher="eviware software ab" publisherWeb="http://www.eviware.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="true" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="true" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
@@ -15,7 +15,6 @@
       <variable name="SOAPUI_HOME" value="${installer:sys.installationDir}" />
       <variable name="DIST_ROOT" value="D:\soapUI-workspace\SoapUI 3.0-alpha\target\dist" />
       <variable name="RESOURCES_HOME" value="" />
-      <variable name="JXBROWSER_DIR" value="E:\dev\jxbrowser-1.3\" />
       <variable name="VERSION_NUMBER" value="" />
       <variable name="XULRUNNER" value="" />
       <variable name="SRC_ROOT" value="" />
