@@ -44,6 +44,7 @@ import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
+import com.eviware.x.form.XFormTextField;
 import com.eviware.x.impl.swing.JTextAreaFormField;
 
 /**
@@ -65,7 +66,7 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 	private static final String USERNAME = "Username";
 	private static final String PASSWORD = "Password";
 	private static final String DOMAIN = "Domain";
-	private static final String PRINTREPORT = "Print Report";
+	private static final String PRINTREPORTSTATISTICS = "Print Report Statistics";
 	private static final String ROOTFOLDER = "Root Folder";
 	private static final String TESTRUNNERPATH = "TestRunner Path";
 	private static final String SAVEPROJECT = "Save Project";
@@ -127,7 +128,8 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 		mainForm.addComboBox( LOADTEST, new String[] {}, "The LoadTest to run" );
 		mainForm.addSeparator();
 
-		mainForm.addTextField( TESTRUNNERPATH, "Folder containing TestRunner.bat to use", XForm.FieldType.FOLDER );
+		XFormTextField path = mainForm.addTextField( TESTRUNNERPATH, "Folder containing TestRunner.bat to use", XForm.FieldType.FOLDER );
+		path.setValue( System.getProperty( "soapui.home", "" ) );
 		mainForm.addCheckBox( SAVEPROJECT, "Saves project before running" ).setEnabled( !modelItem.isRemote() );
 		mainForm.addCheckBox( SAVEAFTER, "Sets to save the project file after tests have been run" );
 		mainForm.addCheckBox( ADDSETTINGS, "Adds global settings to command-line" );
@@ -147,12 +149,7 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 		advForm.addComboBox( WSSTYPE, new String[] { "", "Text", "Digest" }, "The username to set for all requests" );
 
 		reportForm = builder.createForm( "Reports" );
-		reportForm.addCheckBox( PRINTREPORT, "Creates a report in the specified folder" );
-		reportForm.addTextField( ROOTFOLDER, "Folder for reporting", XForm.FieldType.FOLDER );
-		reportForm.addTextField( GENERATEREPORTSEACHTESTCASE, "Report to Generate (soapUI Pro only)",
-				XForm.FieldType.TEXT ).setEnabled( proVersion );
-		reportForm.addTextField( REPORTFORMAT, "Choose report format(s), comma-separated (soapUI Pro only)",
-				XForm.FieldType.TEXT ).setEnabled( proVersion );
+		createReportTab();
 
 		propertyForm = builder.createForm( "Properties" );
 		propertyForm.addComponent( GLOBALPROPERTIES, createTextArea() );
@@ -164,6 +161,19 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 
 		return builder.buildDialog( buildDefaultActions( HelpUrls.TESTRUNNER_HELP_URL, modelItem ),
 				"Specify arguments for launching soapUI LoadTestRunner", UISupport.TOOL_ICON );
+	}
+
+	/**
+	 * 
+	 */
+	private void createReportTab()
+	{
+		reportForm.addCheckBox( PRINTREPORTSTATISTICS, "Creates a report statistics in the specified folder" );
+		reportForm.addTextField( ROOTFOLDER, "Folder for reporting", XForm.FieldType.FOLDER );
+		reportForm.addTextField( GENERATEREPORTSEACHTESTCASE, "Report to Generate (soapUI Pro only)",
+				XForm.FieldType.TEXT ).setEnabled( proVersion );
+		reportForm.addTextField( REPORTFORMAT, "Choose report format(s), comma-separated (soapUI Pro only)",
+				XForm.FieldType.TEXT ).setEnabled( proVersion );
 	}
 
 	private JTextAreaFormField createTextArea()
@@ -304,7 +314,7 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 		builder.addStringShadow( PASSWORD, "-p", "" );
 		builder.addString( DOMAIN, "-d", "" );
 
-		builder.addBoolean( PRINTREPORT, "-r" );
+		builder.addBoolean( PRINTREPORTSTATISTICS, "-r" );
 		builder.addString( ROOTFOLDER, "-f", "" );
 
 		builder.addStringShadow( PROJECTPASSWORD, "-x", "" );
