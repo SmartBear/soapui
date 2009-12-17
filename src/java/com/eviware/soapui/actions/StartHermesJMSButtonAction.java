@@ -13,6 +13,7 @@ package com.eviware.soapui.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -32,7 +33,7 @@ public class StartHermesJMSButtonAction extends AbstractAction
 	{
 		putValue(Action.SMALL_ICON, UISupport.createImageIcon("/hermes-16x16.gif"));
 		putValue(Action.SHORT_DESCRIPTION, "Start HermesJMS application");
-		putValue(Action.NAME, "HermesJMS 1.13");
+		putValue(Action.NAME, "HermesJMS");
 	}
 
 	public void actionPerformed(ActionEvent e)
@@ -56,7 +57,10 @@ public class StartHermesJMSButtonAction extends AbstractAction
 			}
 			String extension = UISupport.isWindows() ? ".bat" : ".sh";
 			String hermesBatPath =hermesHome  + File.separator + "bin"+ File.separator + "hermes" +extension;
-			Runtime.getRuntime().exec(hermesBatPath);
+			ProcessBuilder pb = new ProcessBuilder(hermesBatPath);
+			Map<String, String> env = pb.environment();
+			env.put("JAVA_HOME", System.getProperty( "java.home" ));
+			pb.start();
 		}
 		catch (Throwable t)
 		{
