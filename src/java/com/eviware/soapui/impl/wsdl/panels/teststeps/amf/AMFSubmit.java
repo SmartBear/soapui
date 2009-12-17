@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.TestCaseConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.model.iface.Submit;
@@ -37,6 +38,7 @@ public class AMFSubmit implements Submit, Runnable
 	private long timestamp;
 	private final AMFRequest request;
 	private AMFResponse response;
+	private AMFCredentials credentials;
 
 	public AMFSubmit( AMFRequest request, SubmitContext submitContext, boolean async )
 	{
@@ -193,7 +195,15 @@ public class AMFSubmit implements Submit, Runnable
 			amfRequest.clearArguments();
 			if( context.getModelItem() instanceof AMFRequestTestStep )
 			{
-				amfConnection.close();
+				if( credentials != null && credentials.isLogedIn() )
+				{
+					credentials.logout();
+					credentials=null;
+				}
+				else
+				{
+					amfConnection.close();
+				}
 			}
 		}
 		return null;
@@ -203,16 +213,29 @@ public class AMFSubmit implements Submit, Runnable
 	private SoapUIAMFConnection getConnection( AMFRequest amfRequest ) throws Exception
 	{
 		SoapUIAMFConnection amfConnection = null;
-		if( isAuthorisationEnabled( amfRequest ) && (context.getModelItem() instanceof  WsdlTestCase ))
+		if( isAuthorisationEnabled( amfRequest ) && ( context.getModelItem() instanceof WsdlTestCase ) )
 		{
-			if( (  amfConnection = ( SoapUIAMFConnection )context.getProperty( AMF_CONNECTION ) ) != null ) 
+			if( ( amfConnection = ( SoapUIAMFConnection )context.getProperty( AMF_CONNECTION ) ) != null )
 			{
 				return amfConnection;
 			}
 			else
 			{
-				throw new Exception("amf session connection error! ");
+				throw new Exception( "amf session connection error! " );
 			}
+		}
+		else if( isAuthorisationEnabled( amfRequest ) && ( context.getModelItem() instanceof AMFRequestTestStep ) )
+		{
+			String endpoint = context.expand( getTestCaseConfig( amfRequest ).getAmfEndpoint() );
+			String username = context.expand( getTestCaseConfig( amfRequest ).getAmfLogin() );
+			String password = context.expand( getTestCaseConfig( amfRequest ).getAmfPassword() );
+
+			credentials = new AMFCredentials( endpoint, username, password, context );
+
+			amfConnection = credentials.login();
+
+			context.setProperty( AMF_CONNECTION, amfConnection );
+			return amfConnection;
 		}
 		else
 		{
@@ -224,7 +247,12 @@ public class AMFSubmit implements Submit, Runnable
 
 	private boolean isAuthorisationEnabled( AMFRequest amfRequest )
 	{
-		return amfRequest.getTestStep().getTestCase().getConfig().getAmfAuthorisation();
+		return getTestCaseConfig( amfRequest ).getAmfAuthorisation();
+	}
+
+	private TestCaseConfig getTestCaseConfig( AMFRequest amfRequest )
+	{
+		return amfRequest.getTestStep().getTestCase().getConfig();
 	}
 
 	private void addHttpHeaders( AMFRequest amfRequest, SoapUIAMFConnection amfConnection )

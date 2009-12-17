@@ -14,7 +14,6 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps.amf;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
-import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunListener;
@@ -23,37 +22,18 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
 
 import flex.messaging.io.amf.client.exceptions.ClientStatusException;
 import flex.messaging.io.amf.client.exceptions.ServerStatusException;
-import flex.messaging.messages.CommandMessage;
-import flex.messaging.util.Base64.Encoder;
 
 public class AMFTestRunListener implements TestRunListener
 {
-
-	private static final String DESTINATION = "auth";
+	private AMFCredentials amfCredentials;
 
 	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
 		if( runContext.getProperty( AMFSubmit.AMF_CONNECTION ) != null
 				&& runContext.getProperty( AMFSubmit.AMF_CONNECTION ) instanceof SoapUIAMFConnection )
 		{
-			SoapUIAMFConnection connection = ( SoapUIAMFConnection )runContext.getProperty( AMFSubmit.AMF_CONNECTION );
-			CommandMessage commandMessage = createLogoutCommandMessage();
-			try
-			{
-				connection.call( ( SubmitContext )runContext, null, commandMessage );
-			}
-			catch( ClientStatusException e )
-			{
-				SoapUI.logError( e );
-			}
-			catch( ServerStatusException e )
-			{
-				SoapUI.logError( e );
-			}
-			finally
-			{
-				connection.close();
-			}
+			if( amfCredentials.isLogedIn() )
+				amfCredentials.logout();
 		}
 	}
 
@@ -68,18 +48,16 @@ public class AMFTestRunListener implements TestRunListener
 				if( wsdlTestCase.getConfig().getAmfAuthorisation() )
 				{
 
-					if(noAMFTestSteps( wsdlTestCase ))
+					if( noAMFTestSteps( wsdlTestCase ) )
 						return;
 
 					String endpoint = runContext.expand( wsdlTestCase.getConfig().getAmfEndpoint() );
 					String username = runContext.expand( wsdlTestCase.getConfig().getAmfLogin() );
 					String password = runContext.expand( wsdlTestCase.getConfig().getAmfPassword() );
 
-					CommandMessage commandMessage = createLoginCommandMessage( username, password );
+					amfCredentials = new AMFCredentials( endpoint, username, password, runContext );
 
-					SoapUIAMFConnection amfConnection = new SoapUIAMFConnection();
-					amfConnection.connect( endpoint );
-					amfConnection.call( ( SubmitContext )runContext, null, commandMessage );
+					SoapUIAMFConnection amfConnection = amfCredentials.login();
 
 					runContext.setProperty( AMFSubmit.AMF_CONNECTION, amfConnection );
 				}
@@ -96,14 +74,13 @@ public class AMFTestRunListener implements TestRunListener
 	}
 
 	/**
-	 * check if there is no amf test steps in test case 
-	 * then disable amf authorisation and return true 
-	 * otherwise return false
+	 * check if there is no amf test steps in test case then disable amf
+	 * authorisation and return true otherwise return false
 	 * 
 	 * @param wsdlTestCase
 	 * @return boolean
 	 */
-	private boolean noAMFTestSteps( WsdlTestCase wsdlTestCase )
+	private static boolean noAMFTestSteps( WsdlTestCase wsdlTestCase )
 	{
 
 		if( wsdlTestCase.getTestStepsOfType( AMFRequestTestStep.class ).isEmpty() )
@@ -114,28 +91,6 @@ public class AMFTestRunListener implements TestRunListener
 			return true;
 		}
 		return false;
-	}
-
-	private CommandMessage createLoginCommandMessage( String username, String password )
-	{
-		CommandMessage commandMessage = new CommandMessage();
-		commandMessage.setOperation( CommandMessage.LOGIN_OPERATION );
-
-		String credString = username + ":" + password;
-		Encoder encoder = new Encoder( credString.length() );
-		encoder.encode( credString.getBytes() );
-
-		commandMessage.setBody( encoder.drain() );
-		commandMessage.setDestination( DESTINATION );
-		return commandMessage;
-	}
-
-	private CommandMessage createLogoutCommandMessage()
-	{
-		CommandMessage commandMessage = new CommandMessage();
-		commandMessage.setOperation( CommandMessage.LOGOUT_OPERATION );
-		commandMessage.setDestination( DESTINATION );
-		return commandMessage;
 	}
 
 	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext )
