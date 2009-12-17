@@ -32,6 +32,9 @@ public class WssRequestFilter extends AbstractWssRequestFilter implements Reques
 	public void filterWsdlRequest( SubmitContext context, WsdlRequest wsdlRequest )
 	{
 		WssContainer wssContainer = wsdlRequest.getOperation().getInterface().getProject().getWssContainer();
+		if( wssContainer == null )
+			return;
+
 		OutgoingWss outgoingWss = wssContainer.getOutgoingWssByName( wsdlRequest.getOutgoingWss() );
 
 		DefaultEndpointStrategy des = ( DefaultEndpointStrategy )wsdlRequest.getOperation().getInterface().getProject()
