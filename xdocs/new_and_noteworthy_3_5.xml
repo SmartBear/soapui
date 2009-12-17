@@ -18,8 +18,8 @@ With complete functionality for testing
 your Enterprise Messages, RIA's and Databases.
 </div>
 <div id="download-buttons">
-<a href="https://sourceforge.net/projects/soapui/files/soapui/3.5-beta1"><img src="img/download-opensource.png" alt="Download Open Source" /></a>
-<a href="http://www.eviware.com/beta"><img src="img/download-pro.png" alt="Download SoapUI Pro" /></a></div>
+<a onclick="javascript:urchinTracker('/downloadOpenSource351')" href="https://sourceforge.net/projects/soapui/files/soapui/3.5-beta1"><img src="img/download-opensource.png" alt="Download Open Source" /></a>
+<a onclick="javascript:urchinTracker('/downloadPro351')" href="http://www.eviware.com/beta"><img src="img/download-pro.png" alt="Download SoapUI Pro" /></a></div>
 
 </div>
 
@@ -32,21 +32,21 @@ your Enterprise Messages, RIA's and Databases.
 <img src="http://www.eviware.com/images/stories/news/35/jms_220x136.png" alt="JMS Testing" />
 <h1>JMS Testing</h1>
 <p><img class="inline-icon" src="img/jms-icon.png" alt="JMS" />Test your Enterprise Messaging such as MQ's with our new JMS TestStep.</p>
-<p class="links"><a class="more" href="#JMS">Read more...</a></p>
+<p class="links"><a onclick="javascript:urchinTracker('/NNMoreJMS'" class="more" href="#JMS">Read more...</a></p>
 </div>
 
 <div class="second-c">
 <img src="http://www.eviware.com/images/stories/news/35/jdbc_220x136.png" alt="JDBC Testing" />
 <h1>JDBC Testing</h1>
 <p><img class="inline-icon" src="img/jdbc-icon.png" alt="JDBC" />Our new JDBC DataStep enables complete end-to-end testing of your SOA's.</p>
-<p class="links"><a class="more" href="#JDBC">Read more...</a></p>
+<p class="links"><a onclick="javascript:urchinTracker('/NNMoreJDBC'" class="more" href="#JDBC">Read more...</a></p>
 </div>
 
 <div class="third-c">
 <img src="http://www.eviware.com/images/stories/news/35/amf_220x136.png" alt="AMF Testing" />
 <h1>AMF Testing</h1>
 <p><img class="inline-icon" src="img/amf-icon.png" alt="AMF" />For the Flash or Flex developer we now release AMF Testing for RIA Quality Assurance.</p>
-<p class="links"><a class="more" href="#AMF">Read more...</a></p>
+<p class="links"><a onclick="javascript:urchinTracker('/NNMoreAMF'" class="more" href="#AMF">Read more...</a></p>
 </div>
 </div><!--End of first row-->
 
