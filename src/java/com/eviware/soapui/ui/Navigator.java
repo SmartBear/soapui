@@ -37,6 +37,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -225,7 +226,7 @@ public class Navigator extends JPanel
 			TreePath selectionPath = mainTree.getSelectionPath();
 			if( selectionPath == null || mainTree.getSelectionCount() == 0 )
 				return;
-			
+
 			if( mainTree.getSelectionCount() == 1 )
 			{
 				SoapUITreeNode lastPathComponent = ( SoapUITreeNode )selectionPath.getLastPathComponent();
@@ -260,7 +261,7 @@ public class Navigator extends JPanel
 					}
 				}
 			}
-			else 
+			else
 			{
 				TreePath[] selectionPaths = mainTree.getSelectionPaths();
 				List<ModelItem> targets = new ArrayList<ModelItem>();
@@ -321,12 +322,12 @@ public class Navigator extends JPanel
 				collapseAll( mainTree.getPathForRow( row ) );
 				mainTree.collapseRow( row );
 			}
-			
+
 			private void collapseAll( TreePath tp )
 			{
 				if( tp == null )
 					return;
-				
+
 				Object node = tp.getLastPathComponent();
 				TreeModel model = mainTree.getModel();
 				if( !model.isLeaf( node ) )
@@ -374,8 +375,9 @@ public class Navigator extends JPanel
 				}
 			}
 
-			
 		}
+
+		private ActionList actions;
 
 		public void mouseClicked( MouseEvent e )
 		{
@@ -394,9 +396,18 @@ public class Navigator extends JPanel
 					mainTree.setSelectionRow( row );
 
 				SoapUITreeNode node = ( SoapUITreeNode )path.getLastPathComponent();
-				ActionList actions = node.getActions();
+				actions = node.getActions();
 				if( actions != null )
-					actions.performDefaultAction( new ActionEvent( mainTree, 0, null ) );
+				{
+					SwingUtilities.invokeLater( new Runnable()
+					{
+						public void run()
+						{
+							if( actions != null )
+								actions.performDefaultAction( new ActionEvent( mainTree, 0, null ) );
+						}
+					} );
+				}
 			}
 		}
 
