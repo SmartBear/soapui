@@ -13,6 +13,7 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps.amf;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
@@ -63,8 +64,13 @@ public class AMFTestRunListener implements TestRunListener
 			try
 			{
 				WsdlTestCase wsdlTestCase = ( WsdlTestCase )testRunner.getTestCase();
+
 				if( wsdlTestCase.getConfig().getAmfAuthorisation() )
 				{
+
+					if(noAMFTestSteps( wsdlTestCase ))
+						return;
+
 					String endpoint = runContext.expand( wsdlTestCase.getConfig().getAmfEndpoint() );
 					String username = runContext.expand( wsdlTestCase.getConfig().getAmfLogin() );
 					String password = runContext.expand( wsdlTestCase.getConfig().getAmfPassword() );
@@ -87,6 +93,27 @@ public class AMFTestRunListener implements TestRunListener
 				SoapUI.logError( e );
 			}
 		}
+	}
+
+	/**
+	 * check if there is no amf test steps in test case 
+	 * then disable amf authorisation and return true 
+	 * otherwise return false
+	 * 
+	 * @param wsdlTestCase
+	 * @return boolean
+	 */
+	private boolean noAMFTestSteps( WsdlTestCase wsdlTestCase )
+	{
+
+		if( wsdlTestCase.getTestStepsOfType( AMFRequestTestStep.class ).isEmpty() )
+		{
+			wsdlTestCase.getConfig().setAmfAuthorisation( false );
+			SoapUI.log( wsdlTestCase.getName()
+					+ " does not contain any AMF Test Step therefore AMF Authorisation is disabled!" );
+			return true;
+		}
+		return false;
 	}
 
 	private CommandMessage createLoginCommandMessage( String username, String password )
