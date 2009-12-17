@@ -713,7 +713,7 @@ URL=http://www.soapui.org]]>
           <variable name="WIN_DLLS_PATH" value="${maven.install4j.cert}"/>
           <variable name="HERMES_INSTALLER" value="${maven.hermes.installer}"/>
           <j:if test="${!empty(branded)}">
-          	<variable name="BRANDED_TITLE" value="-branded"/>
+          	<variable name="BRANDED_TITLE" value=" ${soapui.app.title}"/>
           </j:if>
           </install4j>
         </ant:target>
