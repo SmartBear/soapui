@@ -14,6 +14,8 @@ package com.eviware.soapui.support.components;
 
 import javax.swing.JComponent;
 
+import com.eviware.soapui.SoapUI;
+
 public class JInspectorPanelFactory
 {
 	public static Class<? extends JInspectorPanel> inspectorPanelClass = JInspectorPanelImpl.class;
@@ -24,9 +26,9 @@ public class JInspectorPanelFactory
 		{
 			return inspectorPanelClass.getConstructor( JComponent.class ).newInstance( contentComponent );
 		}
-		catch( Exception e )
+		catch( Throwable e )
 		{
-			e.printStackTrace();
+			SoapUI.logError( e );
 			return null;
 		}
 	}
@@ -38,9 +40,9 @@ public class JInspectorPanelFactory
 			return inspectorPanelClass.getConstructor( JComponent.class, int.class ).newInstance( contentComponent,
 					orientation );
 		}
-		catch( Exception e )
+		catch( Throwable e )
 		{
-			e.printStackTrace();
+			SoapUI.logError( e );
 			return null;
 		}
 	}
