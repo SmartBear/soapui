@@ -699,6 +699,7 @@ URL=http://www.soapui.org/userguide/index.html]]>
 URL=http://www.soapui.org]]>
         </j:file>
         <ant:property file="src\java\com\eviware\soapui\resources\branded\branded.properties"/>
+        <j:set var="branded" value="${soapui.app.title}"/>
         <ant:target name="media">
           <install4j projectfile="src/install4j/SoapUI.install4j" 
           destination="${maven.build.dir}/media">
@@ -711,7 +712,9 @@ URL=http://www.soapui.org]]>
           <variable name="CERT_PATH" value="${maven.install4j.cert}"/>
           <variable name="WIN_DLLS_PATH" value="${maven.install4j.cert}"/>
           <variable name="HERMES_INSTALLER" value="${maven.hermes.installer}"/>
-          <variable name="BRANDED_TITLE" value=" ${soapui.app.title}"/>
+          <j:if test="${!empty(branded)}">
+          	<variable name="BRANDED_TITLE" value="-branded"/>
+          </j:if>
           </install4j>
         </ant:target>
       </goal>
