@@ -33,8 +33,16 @@ public class SaveAllProjectsAction extends AbstractSoapUIAction<WorkspaceImpl> i
 	{
 		super( "Save All Projects", "Saves all projects in the current Workspace" );
 
-		setEnabled( SoapUI.getWorkspace() == null || SoapUI.getWorkspace().getProjectCount() > 0 );
-		SoapUI.getWorkspace().addWorkspaceListener( this );
+		Workspace workspace = SoapUI.getWorkspace();
+		if( workspace == null )
+		{
+			setEnabled( true );
+		}
+		else
+		{
+			setEnabled( workspace.getProjectCount() > 0 );
+			workspace.addWorkspaceListener( this );
+		}
 	}
 
 	public void perform( WorkspaceImpl workspace, Object param )
