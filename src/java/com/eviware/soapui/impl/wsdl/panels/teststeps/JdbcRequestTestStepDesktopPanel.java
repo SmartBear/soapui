@@ -135,6 +135,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	protected JLogList logArea;
 	private long startTime;
 	private SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+	protected JButton reconfigureConnPropertiesButton;
 
 	public JdbcRequestTestStepDesktopPanel( JdbcRequestTestStep modelItem )
 	{
@@ -327,8 +328,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		toolbar.add( Box.createHorizontalGlue() );
 		toolbar.add( tabsButton );
 		toolbar.add( splitButton );
-		toolbar.addFixed( UISupport
-				.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.JDBCSTEPEDITOR_HELP_URL ) ) );
+		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.JDBCSTEPEDITOR_HELP_URL ) ) );
 		return toolbar;
 
 	}
@@ -401,6 +401,11 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		passField.setVisible( false );
 		passField.setText( jdbcRequestTestStep.getPassword() );
 		addPasswordDocumentListener();
+
+		reconfigureConnPropertiesButton = new JButton();
+		configForm.addLeftComponent( reconfigureConnPropertiesButton );
+		reconfigureConnPropertiesButton.setVisible( false );
+		configForm.appendSeparator();
 
 		testConnectionButton = configForm.appendButton( "TestConnection", "Test selected database connection" );
 		testConnectionButton.setAction( new TestConnectionAction() );
