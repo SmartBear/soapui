@@ -41,7 +41,7 @@ public class StartHermesJMSButtonAction extends AbstractAction
 		try
 		{
 			String hermesHome =SoapUI.getSettings().getString(ToolsSettings.HERMES_JMS, HermesUtils.defaultHermesJMSPath());
-			if("".equals(hermesHome)){
+			if(!isHermesHomeValid( hermesHome )){
 				UISupport.showErrorMessage("Please set Hermes JMS path in Preferences->Tools ! ");
 				if( UISupport.getMainFrame() != null )
 				{
@@ -52,7 +52,7 @@ public class StartHermesJMSButtonAction extends AbstractAction
 				}
 				
 			}
-			if("".equals( hermesHome)){
+			if( !isHermesHomeValid( hermesHome )){
 				return;
 			}
 			String extension = UISupport.isWindows() ? ".bat" : ".sh";
@@ -66,5 +66,16 @@ public class StartHermesJMSButtonAction extends AbstractAction
 		{
 			SoapUI.logError(t);
 		}
+	}
+	
+	
+	private boolean isHermesHomeValid( String hermesHome )
+	{
+		File file = new File( hermesHome + File.separator + "bin"+ File.separator + "hermes.bat" );
+		if( file.exists() )
+		{
+			return true;
+		}
+		return false;
 	}
 }

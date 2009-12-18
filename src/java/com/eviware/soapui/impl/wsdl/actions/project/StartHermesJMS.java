@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.actions.SoapUIPreferencesAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -32,55 +33,75 @@ public class StartHermesJMS extends AbstractSoapUIAction<WsdlProject>
 
 	public StartHermesJMS()
 	{
-		super("Start HermesJMS", "Start HermesJMS application");
+		super( "Start HermesJMS", "Start HermesJMS application" );
 	}
 
-	public void perform(WsdlProject project, Object param)
+	public void perform( WsdlProject project, Object param )
 	{
-		String hermesConfigPath = chooseFolderDialog(project);
-		
-		if (hermesConfigPath == null)
+		String hermesConfigPath = chooseFolderDialog( project );
+
+		if( hermesConfigPath == null )
 			return;
 
-		project.setHermesConfig(hermesConfigPath);
-		
-		String hermesHome = SoapUI.getSettings().getString(ToolsSettings.HERMES_JMS, HermesUtils.defaultHermesJMSPath());
-		if ("".equals(hermesHome))
-		{
+		project.setHermesConfig( hermesConfigPath );
+
+		String hermesHome = SoapUI.getSettings().getString( ToolsSettings.HERMES_JMS, HermesUtils.defaultHermesJMSPath() );
+		if(!isHermesHomeValid( hermesHome )){
 			UISupport.showErrorMessage("Please set Hermes JMS path in Preferences->Tools ! ");
+			if( UISupport.getMainFrame() != null )
+			{
+				if( SoapUIPreferencesAction.getInstance().show( SoapUIPreferencesAction.INTEGRATED_TOOLS ) )
+				{
+					hermesHome = SoapUI.getSettings().getString( ToolsSettings.HERMES_JMS,HermesUtils.defaultHermesJMSPath() );
+				}
+			}
+			
+		}
+		if( !isHermesHomeValid( hermesHome )){
 			return;
 		}
-		
-		startHermesJMS(hermesConfigPath, hermesHome);
+		startHermesJMS( hermesConfigPath, hermesHome );
 	}
 
-	private void startHermesJMS(String hermesConfigPath, String hermesHome)
+	private boolean isHermesHomeValid( String hermesHome )
+	{
+		File file = new File( hermesHome + File.separator + "bin"+ File.separator + "hermes.bat" );
+		if( file.exists() )
+		{
+			return true;
+		}
+		return false;
+	}
+
+	private void startHermesJMS( String hermesConfigPath, String hermesHome )
 	{
 		String extension = UISupport.isWindows() ? ".bat" : ".sh";
 		String hermesBatPath = hermesHome + File.separator + "bin" + File.separator + "hermes" + extension;
 		try
 		{
-			File file = new File(hermesConfigPath+ File.separator + HermesUtils.HERMES_CONFIG_XML);
-			if(! file.exists()){
-				UISupport.showErrorMessage("No hermes-config.xml on this path!");
+			File file = new File( hermesConfigPath + File.separator + HermesUtils.HERMES_CONFIG_XML );
+			if( !file.exists() )
+			{
+				UISupport.showErrorMessage( "No hermes-config.xml on this path!" );
 				return;
 			}
-			ProcessBuilder pb = new ProcessBuilder(hermesBatPath);
+			ProcessBuilder pb = new ProcessBuilder( hermesBatPath );
 			Map<String, String> env = pb.environment();
-			env.put("HERMES_CONFIG", hermesConfigPath);
-			env.put("JAVA_HOME", System.getProperty( "java.home" ));
+			env.put( "HERMES_CONFIG", hermesConfigPath );
+			env.put( "JAVA_HOME", System.getProperty( "java.home" ) );
 			pb.start();
 		}
-		catch (IOException e)
+		catch( IOException e )
 		{
-			SoapUI.logError(e);
+			SoapUI.logError( e );
 		}
 	}
 
-	private String chooseFolderDialog(WsdlProject project)
+	private String chooseFolderDialog( WsdlProject project )
 	{
-		HermesConfigDialog chooseHermesConfigPath = new HermesConfigDialog(PropertyExpander.expandProperties(project, project.getHermesConfig()));
-				chooseHermesConfigPath.setVisible(true);
+		HermesConfigDialog chooseHermesConfigPath = new HermesConfigDialog( PropertyExpander.expandProperties( project,
+				project.getHermesConfig() ) );
+		chooseHermesConfigPath.setVisible( true );
 		String hermesConfigPath = chooseHermesConfigPath.getPath();
 		return hermesConfigPath;
 	}
@@ -91,11 +112,11 @@ public class StartHermesJMS extends AbstractSoapUIAction<WsdlProject>
 		String path;
 		DirectoryFormComponent folderComponent;
 
-		public HermesConfigDialog(String initialPath)
+		public HermesConfigDialog( String initialPath )
 		{
-			super("Start  HermesJMS", "Hermes configuration", null, true);
-			folderComponent.setValue(initialPath);
-			folderComponent.setInitialFolder(initialPath);
+			super( "Start  HermesJMS", "Hermes configuration", null, true );
+			folderComponent.setValue( initialPath );
+			folderComponent.setInitialFolder( initialPath );
 
 		}
 
@@ -103,17 +124,18 @@ public class StartHermesJMS extends AbstractSoapUIAction<WsdlProject>
 		{
 
 			SimpleForm form = new SimpleForm();
-			folderComponent = new DirectoryFormComponent("Location of desired HermesJMS configuration (hermes-config.xml)");
-			form.addSpace(5);
-			form.append("Path", folderComponent);
-			form.addSpace(5);
+			folderComponent = new DirectoryFormComponent(
+					"Location of desired HermesJMS configuration (hermes-config.xml)" );
+			form.addSpace( 5 );
+			form.append( "Path", folderComponent );
+			form.addSpace( 5 );
 
 			return form.getPanel();
 		}
 
 		protected boolean handleOk()
 		{
-			setPath(folderComponent.getValue());
+			setPath( folderComponent.getValue() );
 			return true;
 		}
 
@@ -122,7 +144,7 @@ public class StartHermesJMS extends AbstractSoapUIAction<WsdlProject>
 			return path;
 		}
 
-		public void setPath(String path)
+		public void setPath( String path )
 		{
 			this.path = path;
 		}
