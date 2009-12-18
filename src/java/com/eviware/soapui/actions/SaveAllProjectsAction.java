@@ -32,8 +32,8 @@ public class SaveAllProjectsAction extends AbstractSoapUIAction<WorkspaceImpl> i
 	public SaveAllProjectsAction()
 	{
 		super( "Save All Projects", "Saves all projects in the current Workspace" );
-		
-		setEnabled( SoapUI.getWorkspace().getProjectCount() > 0 );
+
+		setEnabled( SoapUI.getWorkspace() == null || SoapUI.getWorkspace().getProjectCount() > 0 );
 		SoapUI.getWorkspace().addWorkspaceListener( this );
 	}
 
