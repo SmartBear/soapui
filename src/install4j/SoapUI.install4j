@@ -15,6 +15,7 @@
       <variable name="SOAPUI_HOME" value="${installer:sys.installationDir}" />
       <variable name="DIST_ROOT" value="D:\soapUI-workspace\SoapUI 3.0-alpha\target\dist" />
       <variable name="RESOURCES_HOME" value="" />
+      <variable name="JXBROWSER_DIR" value="E:\dev\jxbrowser-1.3\" />
       <variable name="VERSION_NUMBER" value="" />
       <variable name="XULRUNNER" value="" />
       <variable name="SRC_ROOT" value="" />
