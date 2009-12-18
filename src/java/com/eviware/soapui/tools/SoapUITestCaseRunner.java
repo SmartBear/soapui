@@ -303,6 +303,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 			for( int i = 0; i < suite.getTestCaseCount(); i++ )
 			{
 				TestCase tc = suite.getTestCaseAt( i );
+				( ( WsdlTestCase )tc ).setFailOnError( !ignoreErrors );
 				if( ( testSuite == null || suite.getName().equals( suite.getName() ) ) && testCase != null
 						&& tc.getName().equals( testCase ) )
 					testCasesToRun.add( tc );
