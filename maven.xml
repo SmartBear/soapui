@@ -705,7 +705,7 @@ URL=http://www.soapui.org]]>
           destination="${maven.build.dir}/media">
           <variable name="DIST_ROOT" value="${maven.build.dir}/dist"/>
           <variable name="RESOURCES_HOME" value="${maven.soapui.install4j.resources}"/>
-          <!-- variable name="JXBROWSER_DIR" value="${jxbrowser.dir}"/-->
+          <variable name="JXBROWSER_DIR" value="${jxbrowser.dir}"/>
           <variable name="VERSION_NUMBER" value="${pom.currentVersion}"/>
           <variable name="SRC_ROOT" value="../"/>
           <variable name="SIGNTOOL_PATH" value="${maven.install4j.signtool}"/>
