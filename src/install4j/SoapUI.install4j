@@ -22,7 +22,7 @@
       <variable name="CERT_PATH" value="" />
       <variable name="HERMES_INSTALLER" value="D:\backups\instalacije\hermes-installer-1.13.jar" />
       <variable name="BRANDED_TITLE" value="" />
-      <variable name="EXECUTABLE_NAME" value="&quot;soapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}&quot;" />
+      <variable name="EXECUTABLE_NAME" value="soapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" />
     </variables>
   </application>
   <files>
