@@ -718,7 +718,7 @@
 		<dependency>
 			<groupId>bouncycastle</groupId>
 			<artifactId>bcprov</artifactId>
-			<version>jdk15-143</version>
+			<version>jdk15-144</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.extension.dir>.</jnlp.extension.dir>
