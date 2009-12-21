@@ -13,7 +13,7 @@
 
 <document>
 	<properties>
-		<title>Tutorial for AMF Test Step</title>
+		<title>Tutorial for soapUI JMS Support</title>
 	</properties>
 	<body>
 		<section name="Getting started with JMS testing in soapUI 3.5">
