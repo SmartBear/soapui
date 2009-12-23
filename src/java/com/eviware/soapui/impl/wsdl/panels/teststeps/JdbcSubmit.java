@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.NamedParameterStatement;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Submit;
@@ -250,7 +251,9 @@ public class JdbcSubmit implements Submit, Runnable
 
 		resultSet = null;
 		connection = DriverManager.getConnection( connStr );
-		connection.setReadOnly( true );
+		// IMPORTANT: setting as readOnly raises an exception in calling stored
+		// procedures!
+		// connection.setReadOnly( true );
 	}
 
 	protected void load() throws Exception
@@ -266,12 +269,6 @@ public class JdbcSubmit implements Submit, Runnable
 			}
 			else
 			{
-				List<TestProperty> props = testStep.getPropertyList();
-				for( int j = 0; j < props.size(); j++ )
-				{
-					TestProperty property = props.get( j );
-					( ( PreparedStatement )statement ).setString( j + 1, property.getValue() );
-				}
 				timestamp = System.currentTimeMillis();
 				( ( PreparedStatement )statement ).execute();
 			}
@@ -297,8 +294,15 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 		else
 		{
+			List<TestProperty> props = testStep.getPropertyList();
 			String sql = PropertyExpander.expandProperties( context, testStep.getQuery() );
-			statement = connection.prepareStatement( sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY );
+			NamedParameterStatement p = new NamedParameterStatement( connection, sql );
+			for( TestProperty testProperty : props )
+			{
+				String value = PropertyExpander.expandProperties( context, testProperty.getValue() );
+				p.setString( testProperty.getName(), value );
+			}
+			statement = p.getStatement();
 		}
 
 		try
