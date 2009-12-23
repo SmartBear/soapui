@@ -792,7 +792,7 @@
 		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>xulrunner</artifactId>
-			<version>win32-1.4</version>
+			<version>win32</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
@@ -804,7 +804,7 @@
 		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>xulrunner-linux</artifactId>
-			<version>i686-1.4</version>
+			<version>i686</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
@@ -816,7 +816,7 @@
 		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>xulrunner-mac-un</artifactId>
-			<version>i386-ppc-1.4</version>
+			<version>i386-ppc</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
