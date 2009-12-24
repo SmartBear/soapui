@@ -38,6 +38,8 @@ import com.eviware.soapui.support.UISupport;
 
 public class JdbcSubmit implements Submit, Runnable
 {
+	public static final String JDBC_ERROR = "JDBC_ERROR";
+	public static final String JDBC_TIMEOUT = "JDBC_TIMEOUT";
 	private volatile Future<?> future;
 	private SubmitContext context;
 	private Status status;
@@ -167,7 +169,7 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 		catch( Exception e )
 		{
-			UISupport.showErrorMessage( "There's been an error in executing query " + e.toString() );
+			SoapUI.logError( e );
 			error = e;
 		}
 		finally
@@ -191,8 +193,15 @@ public class JdbcSubmit implements Submit, Runnable
 
 	protected void runQuery() throws Exception
 	{
-		prepare();
-		load();
+		try
+		{
+			prepare();
+			load();
+		}
+		catch( SQLException e )
+		{
+			throw e;
+		}
 		createResponse();
 	}
 
@@ -256,7 +265,7 @@ public class JdbcSubmit implements Submit, Runnable
 		// connection.setReadOnly( true );
 	}
 
-	protected void load() throws Exception
+	protected void load() throws SQLException
 	{
 		try
 		{
@@ -272,6 +281,18 @@ public class JdbcSubmit implements Submit, Runnable
 				timestamp = System.currentTimeMillis();
 				( ( PreparedStatement )statement ).execute();
 			}
+			timeTaken = System.currentTimeMillis() - timestamp;
+			if( !StringUtils.isNullOrEmpty( request.getTimeout() ) && timeTaken > Long.parseLong( request.getTimeout() ) )
+			{
+				context.setProperty( JDBC_TIMEOUT, PropertyExpander.expandProperties( context, request.getTimeout() ) );
+			}
+		}
+		catch( SQLException e )
+		{
+			context.setProperty( JDBC_ERROR, e );
+		}
+		catch( Exception e )
+		{
 		}
 		finally
 		{
@@ -307,20 +328,28 @@ public class JdbcSubmit implements Submit, Runnable
 
 		try
 		{
-			String queryTimeout = PropertyExpander.expandProperties( testStep, testStep.getQueryTimeout() );
-			statement.setQueryTimeout( Integer.parseInt( queryTimeout ) );
+			if( !StringUtils.isNullOrEmpty( testStep.getQueryTimeout() ) )
+			{
+				String queryTimeout = PropertyExpander.expandProperties( testStep, testStep.getQueryTimeout() );
+				statement.setQueryTimeout( Integer.parseInt( queryTimeout ) );
+			}
 		}
 		catch( NumberFormatException e )
 		{
+			UISupport.showErrorMessage( "Problem setting timeout: " + e.getMessage() );
 		}
 
 		try
 		{
-			String maxRows = PropertyExpander.expandProperties( testStep, testStep.getMaxRows() );
-			statement.setMaxRows( Integer.parseInt( maxRows ) );
+			if( !StringUtils.isNullOrEmpty( testStep.getMaxRows() ) )
+			{
+				String maxRows = PropertyExpander.expandProperties( testStep, testStep.getMaxRows() );
+				statement.setMaxRows( Integer.parseInt( maxRows ) );
+			}
 		}
 		catch( NumberFormatException e )
 		{
+			UISupport.showErrorMessage( "Problem setting maxRows: " + e.getMessage() );
 		}
 	}
 

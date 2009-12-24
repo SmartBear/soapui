@@ -1433,10 +1433,17 @@ public final class XmlUtils
 		Element resultsElement = xmlDocumentResult.createElement( "Results" );
 		xmlDocumentResult.appendChild( resultsElement );
 
-		xmlDocumentResult = addResultSetXmlPart( resultsElement, statement.getResultSet(), xmlDocumentResult );
-		while( statement.getMoreResults() )
+		if( statement.getResultSet() != null )
 		{
 			xmlDocumentResult = addResultSetXmlPart( resultsElement, statement.getResultSet(), xmlDocumentResult );
+			while( statement.getMoreResults() )
+			{
+				xmlDocumentResult = addResultSetXmlPart( resultsElement, statement.getResultSet(), xmlDocumentResult );
+			}
+		} else {
+			Element errorElement = xmlDocumentResult.createElement( "Error" );
+			errorElement.appendChild( xmlDocumentResult.createTextNode( "There's been an error in executing query!" ) );
+			resultsElement.appendChild( errorElement );
 		}
 		return xmlDocumentResult;
 
