@@ -12,6 +12,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -20,6 +21,7 @@ import javax.swing.Box;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -39,8 +41,7 @@ import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.RequestMessageXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
-import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
-import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
+import com.eviware.soapui.impl.wsdl.panels.support.TestRunComponentEnabler;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.AssertionsPanel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
@@ -48,7 +49,6 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepResult;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Submit;
@@ -121,12 +121,13 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	public boolean updating;
 	SimpleForm configForm;
 	private JTextField endpointField;
+	private TestRunComponentEnabler componentEnabler;
 
 	public AMFRequestTestStepDesktopPanel( AMFRequestTestStep modelItem )
 	{
 		super( modelItem );
 		amfRequestTestStep = modelItem;
-
+		componentEnabler = new TestRunComponentEnabler( amfRequestTestStep.getTestCase() );
 		initConfig();
 		initContent();
 
@@ -241,6 +242,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		ModelItemXmlEditor<?, ?> reqEditor = buildRequestEditor();
 
 		configPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ), "Script" );
+		configPanel.add( buildToolbarButtonAndText(), BorderLayout.NORTH );
 		groovyEditor = ( GroovyEditor )UISupport.getEditorFactory().buildGroovyEditor( new ScriptStepGroovyEditorModel() );
 		configPanel.add( groovyEditor, BorderLayout.CENTER );
 		propertiesTableComponent = buildProperties();
@@ -257,6 +259,27 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		} );
 		reqEditor.selectView( 1 );
 		return reqEditor;
+	}
+
+	private JComponent buildToolbarButtonAndText()
+	{
+		JXToolBar toolBar = UISupport.createToolbar();
+		JButton runButton = UISupport.createToolbarButton( runAction );
+		toolBar.add( runButton );
+		toolBar.add( Box.createHorizontalGlue() );
+		JLabel label = new JLabel( "<html>Script is invoked with <code>log</code>, <code>context</code> "
+				+ ", <code>parameters</code> and <code>amfHeaders</code> variables</html>" );
+		label.setToolTipText( label.getText() );
+		label.setMinimumSize( label.getPreferredSize() );
+		label.setMaximumSize( label.getPreferredSize() );
+
+		toolBar.add( label );
+		toolBar.addRelatedGap();
+		toolBar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.GROOVYSTEPEDITOR_HELP_URL ) ) );
+
+		componentEnabler.add( runButton );
+
+		return toolBar;
 	}
 
 	protected JComponent buildToolbar()
@@ -492,27 +515,36 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 			{
 				public void run()
 				{
-					MockTestRunner mockTestRunner = new MockTestRunner( amfRequestTestStep.getTestCase(), log );
+					SubmitContext context = new WsdlTestRunContext( getModelItem() );
 					statusBar.setIndeterminate( true );
-					WsdlTestStepResult result = ( WsdlTestStepResult )amfRequestTestStep.run( mockTestRunner,
-							new MockTestRunContext( mockTestRunner, amfRequestTestStep ) );
+					amfRequestTestStep.initAmfRequest( context );
+				
+					if( context.getProperty( AMFRequest.AMF_SCRIPT_ERROR ) != null )
+					{
+						UISupport.showInfoMessage( ( ( Throwable )context.getProperty( AMFRequest.AMF_SCRIPT_ERROR ) )
+								.getMessage() );
+					}
+					else
+					{
+						UISupport.showInfoMessage( scriptInfo( context ));
+						
+					}
 					statusBar.setIndeterminate( false );
+					amfRequestTestStep.getAMFRequest().clearArguments();
+				}
 
-					Throwable er = result.getError();
-					if( er != null )
-					{
-						String message = er.getMessage();
-
-						// ugly...
-						groovyEditor.selectError( message );
-
-						UISupport.showErrorMessage( er.toString() );
-						groovyEditor.requestFocus();
-					}
-					else if( result.getMessages().length > 0 )
-					{
-						UISupport.showInfoMessage( StringUtils.join( result.getMessages(), "\n" ) );
-					}
+				@SuppressWarnings("unchecked")
+				private String scriptInfo( SubmitContext context )
+				{
+					HashMap<String, Object> parameters = ( HashMap<String, Object> )context
+							.getProperty( AMFRequest.AMF_SCRIPT_PARAMETERS );
+					HashMap<String, Object> amfHeaders = ( HashMap<String, Object> )context
+							.getProperty( AMFRequest.AMF_SCRIPT_HEADERS );
+					StringBuilder sb = new StringBuilder();
+					sb.append( "parameters " + ( parameters != null ? parameters.toString() : "" ) );
+					sb.append( "\n" );
+					sb.append( "amfHeaders " + ( amfHeaders != null ? amfHeaders.toString() : "" ) );
+					return sb.toString() ;
 				}
 			} );
 		}
@@ -560,6 +592,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener );
 		amfRequestTestStep.removeAssertionsListener( assertionsListener );
 		amfRequestTestStep.getAMFRequest().removeSubmitListener( this );
+		componentEnabler.release();
 		return release();
 	}
 

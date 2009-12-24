@@ -54,6 +54,9 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> implements Assertable, TestRequest
 {
 
+	public static final String AMF_SCRIPT_HEADERS = "AMF_SCRIPT_HEADERS";
+	public static final String AMF_SCRIPT_PARAMETERS = "AMF_SCRIPT_PARAMETERS";
+	public static final String AMF_SCRIPT_ERROR = "AMF_SCRIPT_ERROR";
 	public static final String AMF_RESPONSE_CONTENT = "AMF_RESPONSE_CONTENT";
 	public static final String AMF_REQUEST = "AMF_REQUEST";
 	public static final String RAW_AMF_REQUEST = "RAW_AMF_REQUEST";
@@ -105,10 +108,13 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 			scriptEngine.setScript( script );
 			scriptEngine.setVariable( "parameters", parameters );
 			scriptEngine.setVariable( "amfHeaders", amfHeadersTemp );
-			scriptEngine.setVariable( "log", SoapUI.log );
+			scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 			scriptEngine.setVariable( "context", context );
 
 			scriptEngine.run();
+		
+			context.setProperty( AMF_SCRIPT_PARAMETERS, parameters );
+			context.setProperty( AMF_SCRIPT_HEADERS, amfHeadersTemp );
 
 			for( String name : propertyNames )
 			{
@@ -132,7 +138,8 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 				}
 				else
 				{
-					stringToObjectMap.put( key, PropertyExpander.expandProperties( context, getAmfHeadersString().get( key ) ) );
+					stringToObjectMap.put( key, PropertyExpander
+							.expandProperties( context, getAmfHeadersString().get( key ) ) );
 				}
 			}
 			setAmfHeaders( stringToObjectMap );
@@ -142,6 +149,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		{
 			SoapUI.logError( e );
 			scriptOK = false;
+			context.setProperty( AMF_SCRIPT_ERROR, e );
 		}
 		finally
 		{
