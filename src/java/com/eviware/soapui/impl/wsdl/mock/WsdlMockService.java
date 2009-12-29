@@ -49,6 +49,7 @@ import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.mock.MockServiceListener;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.settings.SSLSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
@@ -275,12 +276,12 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	{
 		super.release();
 
-		if( mockRunner != null  )
+		if( mockRunner != null )
 		{
-			if(  mockRunner.isRunning())
+			if( mockRunner.isRunning() )
 				mockRunner.stop();
-			
-			 mockRunner.release();
+
+			mockRunner.release();
 		}
 
 		for( WsdlMockOperation operation : mockOperations )
@@ -445,9 +446,25 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	{
 		String host = getHost();
 		if( StringUtils.isNullOrEmpty( host ) )
+		{
 			host = "127.0.0.1";
+		}
 
-		return "http://" + host + ":" + getPort() + getPath();
+		return getProtocol() + host + ":" + getPort() + getPath();
+	}
+
+	private String getProtocol()
+	{
+		try
+		{
+			boolean sslEnabled = SoapUI.getSettings().getBoolean( SSLSettings.ENABLE_MOCK_SSL );
+			String protocol = sslEnabled ? "https://" : "http://";
+			return protocol;
+		}
+		catch( Exception e )
+		{
+			return "http://";
+		}
 	}
 
 	public boolean isRequireSoapVersion()
@@ -744,7 +761,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		fireMockOperationAdded( newOperation );
 	}
 
-	public void export(File file)
+	public void export( File file )
 	{
 		try
 		{
@@ -756,7 +773,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		}
 	}
 
-	public void importMockOperation(File file)
+	public void importMockOperation( File file )
 	{
 		MockOperationConfig mockOperationNewConfig = null;
 
@@ -779,21 +796,21 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		{
 			MockOperationConfig newConfig = ( MockOperationConfig )getConfig().addNewMockOperation().set(
 					mockOperationNewConfig ).changeType( TestCaseConfig.type );
-			WsdlMockOperation newMockOperation = new WsdlMockOperation(this, newConfig);
+			WsdlMockOperation newMockOperation = new WsdlMockOperation( this, newConfig );
 			ModelSupport.unsetIds( newMockOperation );
 			newMockOperation.afterLoad();
 			mockOperations.add( newMockOperation );
 			fireMockOperationAdded( newMockOperation );
 
 			resolveImportedMockOperation( newMockOperation );
-			
+
 		}
 		else
 		{
 			UISupport.showErrorMessage( "Not valild mock operation xml" );
-		}		
+		}
 	}
-	
+
 	private void resolveImportedMockOperation( WsdlMockOperation mockOperation )
 	{
 		ResolveDialog resolver = new ResolveDialog( "Validate MockOperation", "Checks MockOperation for inconsistencies",
@@ -801,7 +818,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		resolver.setShowOkMessage( false );
 		resolver.resolve( mockOperation );
 	}
-	
+
 	public String toString()
 	{
 		return getName();
@@ -826,7 +843,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		if( StringUtils.isNullOrEmpty( host ) )
 			host = "127.0.0.1";
 
-		return "http://" + host + ":" + getPort() + getPath();
+		return getProtocol() + host + ":" + getPort() + getPath();
 	}
 
 }
