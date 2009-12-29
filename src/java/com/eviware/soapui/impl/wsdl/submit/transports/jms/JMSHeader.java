@@ -40,7 +40,7 @@ public class JMSHeader
 {
 	public static final String JMSCORRELATIONID = "JMSCorrelationID";
 	public static final String JMSREPLYTO = "JMSReplyTo";
-	public static final String TIMETOLIVE = "TimeToLive";
+	public static final String TIMETOLIVE = "timeToLive";
 	public static final String JMSTYPE = "JMSType";
 	public static final String JMSPRIORITY = "JMSPriority";
 	public static final String JMSDELIVERYMODE = "JMSDeliveryMode";
