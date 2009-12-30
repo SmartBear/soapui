@@ -109,6 +109,7 @@ public class JettyMockEngine implements MockEngine
 			if( !runners.containsKey( port ) )
 			{
 				SoapUIConnector connector = new SoapUIConnector();
+				PropertySupport.applySystemProperties( connector, "soapui.mock.connector", runner.getMockService() );
 
 				connector.setPort( port );
 				if( sslConnector != null )
@@ -186,9 +187,10 @@ public class JettyMockEngine implements MockEngine
 			if( StringUtils.hasContent( truststore ) )
 			{
 				sslConnector.setTruststore( truststore );
-			sslConnector.setTrustPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE_PASSWORD, null ) );
+				sslConnector
+						.setTrustPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE_PASSWORD, null ) );
 			}
-			
+
 			sslConnector.setMaxIdleTime( 30000 );
 			sslConnector.setPort( ( int )SoapUI.getSettings().getLong( SSLSettings.MOCK_PORT, 443 ) );
 			sslConnector.setNeedClientAuth( SoapUI.getSettings().getBoolean( SSLSettings.CLIENT_AUTHENTICATION ) );
@@ -353,7 +355,8 @@ public class JettyMockEngine implements MockEngine
 				}
 				return capturingServletOutputStream;
 			}
-			else return super.getOutputStream();
+			else
+				return super.getOutputStream();
 		}
 	}
 
@@ -699,8 +702,8 @@ public class JettyMockEngine implements MockEngine
 								if( result != null )
 								{
 									result.finish();
-								break;
-							}
+									break;
+								}
 							}
 							catch( DispatchException e )
 							{
