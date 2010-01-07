@@ -106,7 +106,7 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 	private StatisticsLogger statisticsLogger = new StatisticsLogger();
 	private SoapUIScriptEngine setupScriptEngine;
 	private SoapUIScriptEngine tearDownScriptEngine;
-	@SuppressWarnings("unused")
+	@SuppressWarnings( "unused" )
 	private SimplePathPropertySupport logFolder;
 	private LoadTestRunListener[] loadTestRunListenersArray;
 
@@ -412,7 +412,7 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 
 		if( runner != null )
 			runner.release();
-		
+
 		assertionErrors.clear();
 		runner = new WsdlLoadTestRunner( this );
 		runner.start();
@@ -832,7 +832,7 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 				return;
 
 			long timestamp = System.nanoTime();
-			String elapsedString = String.valueOf( ( timestamp - startTime ) / 100000 );
+			String elapsedString = String.valueOf( ( timestamp - startTime ) / 1000000 );
 			String dateString = new Date().toString();
 			String threadCountString = String.valueOf( getThreadCount() );
 
