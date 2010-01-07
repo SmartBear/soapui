@@ -201,31 +201,32 @@
                     <subsection name="soapUI on the web">
                     
                                                                        <p>
-                            <i>2009-09-30:</i>
+                            <i>2009-12-14:</i>
                                 <a target="_new"
-                                  href="http://qatinsights.com/?p=345">A simple unit test...
+                                  href="http://oriontech.wordpress.com/2009/12/14/web-service-load-testing-for-datapower-using-soapui/">Web Service Load Testing...
                                 </a>
-                                from qat´s Blog
+                                from Thys Michels
                          </p>
                           
                          <p>
-                            <i>2009-08-30:</i>
+                            <i>2009-09-30:</i>
                                 <a target="_new" 
-                                   href="http://blog.karit.geek.nz/2009/08/using-soapui-to-do-testing-as-part-of.html">Using soapUI to do testing as Maven2 build...
+                                   href="http://qatinsights.com/?p=345">A simple unit test...
                                    </a>
-                                from Dave´s Blog
+                                from qat´s Blog
                          </p> 
                    
                          <p>
-                            <i>2009-08-07:</i>
+                            <i>2009-08-30:</i>
                                 <a target="_new"
-                                   href="http://one-size-doesnt-fit-all.blogspot.com/2009/08/soapui-for-web-service-testing.html">SoapUI for web service testing...
+                                   href="http://blog.karit.geek.nz/2009/08/using-soapui-to-do-testing-as-part-of.html">Using soapUI to do testing as Maven2 build...
                                    </a>
-                                from One Size Doesnt Fit All
+                                from Dave´s Blog
                           </p>
 
                         
-<p>
+                    
+                           <p>
                             <b>
                                 <a href="soapui_in_the_news.html">[More...]</a>
                             </b>

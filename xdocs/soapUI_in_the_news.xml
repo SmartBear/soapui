@@ -4,10 +4,25 @@
         <title>news</title>
     </properties>
     <body>
-    <section name="soapUI in the News">
+        <section name="soapUI in the News">
     
       
-<subsection name="A simple unit test">
+<subsection name="Web Service Load Testing">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/thys.gif" alt="Web Service Load Testing"/>	    	    
+	    		</column>
+	    		<column align="left">
+	    		    <i>2009-12-14</i>
+	    	        <p>The post starts: "soapUI introduces simple and powerful..."<br/>
+	    			<a href="http://oriontech.wordpress.com/2009/12/14/web-service-load-testing-for-datapower-using-soapui/">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	 </subsection>
+    
+
+    
+        <subsection name="A simple unit test">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/qat.gif" alt="Web service testing tool"/>	    	    
