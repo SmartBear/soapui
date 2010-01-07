@@ -51,6 +51,7 @@ import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.PreviewCorner;
+import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
@@ -462,7 +463,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		return validate ? validate() : true;
 	}
 
-	public void locationChanged( XmlLocation location )
+	public void locationChanged( EditorLocation<XmlDocument> location )
 	{
 		isLocating = true;
 		setLocation( location );
