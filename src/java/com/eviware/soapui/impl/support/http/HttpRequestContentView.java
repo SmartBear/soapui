@@ -44,7 +44,7 @@ import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings( "unchecked" )
 public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDocument> implements
 		PropertyChangeListener
 {
@@ -243,7 +243,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if( evt.getPropertyName().equals( "request" ) && !updatingRequest )
+		if( evt.getPropertyName().equals( AbstractHttpRequest.REQUEST_PROPERTY ) && !updatingRequest )
 		{
 			updatingRequest = true;
 			contentEditor.setText( ( String )evt.getNewValue() );
@@ -262,6 +262,8 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 			mediaTypeCombo.setModel( new DefaultComboBoxModel( getRequestMediaTypes() ) );
 			mediaTypeCombo.setSelectedItem( httpRequest.getMediaType() );
 		}
+
+		super.propertyChange( evt );
 	}
 
 	private void fixRequestPanel()

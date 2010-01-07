@@ -637,10 +637,4 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		}
 		return jmsPropertyConfig;
 	}
-
-	public void notifyPropertyChanged( String responseContentProperty, String oldContent, String responseContent )
-	{
-		// TODO Auto-generated method stub
-
-	}
 }
