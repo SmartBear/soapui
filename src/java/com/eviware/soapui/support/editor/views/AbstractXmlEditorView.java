@@ -12,17 +12,17 @@
 
 package com.eviware.soapui.support.editor.views;
 
-import com.eviware.soapui.support.editor.EditorLocation;
-import com.eviware.soapui.support.editor.EditorLocationListener;
-import com.eviware.soapui.support.editor.xml.XmlDocument;
-import com.eviware.soapui.support.editor.xml.XmlEditor;
-import com.eviware.soapui.support.editor.xml.XmlEditorView;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.eviware.soapui.support.editor.EditorLocation;
+import com.eviware.soapui.support.editor.EditorLocationListener;
+import com.eviware.soapui.support.editor.xml.XmlDocument;
+import com.eviware.soapui.support.editor.xml.XmlEditor;
+import com.eviware.soapui.support.editor.xml.XmlEditorView;
 
 /**
  * Abstract base-class to be extended by XmlViews
@@ -162,10 +162,13 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if( isActive() )
-			setXml( ( String )evt.getNewValue() );
-		else
-			xmlChanged = true;
+		if( evt.getSource() == this.xmlDocument && evt.getPropertyName().equals( XmlDocument.XML_PROPERTY ) )
+		{
+			if( isActive() )
+				setXml( ( String )evt.getNewValue() );
+			else
+				xmlChanged = true;
+		}
 	}
 
 	public abstract void setXml( String xml );
