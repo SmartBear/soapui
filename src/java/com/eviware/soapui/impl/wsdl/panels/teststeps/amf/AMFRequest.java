@@ -53,7 +53,6 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> implements Assertable, TestRequest
 {
-
 	public static final String AMF_SCRIPT_HEADERS = "AMF_SCRIPT_HEADERS";
 	public static final String AMF_SCRIPT_PARAMETERS = "AMF_SCRIPT_PARAMETERS";
 	public static final String AMF_SCRIPT_ERROR = "AMF_SCRIPT_ERROR";
@@ -112,7 +111,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 			scriptEngine.setVariable( "context", context );
 
 			scriptEngine.run();
-		
+
 			context.setProperty( AMF_SCRIPT_PARAMETERS, parameters );
 			context.setProperty( AMF_SCRIPT_HEADERS, amfHeadersTemp );
 
@@ -607,5 +606,17 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 	public StringToStringMap getAmfHeadersString()
 	{
 		return amfHeadersString;
+	}
+
+	public String getPassword()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getUsername()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

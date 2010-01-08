@@ -33,7 +33,7 @@ public interface Request extends ModelItem
 	public String getEndpoint();
 
 	public String getEncoding();
-	
+
 	public String getTimeout();
 
 	public void setEncoding( String string );
@@ -51,6 +51,10 @@ public interface Request extends ModelItem
 	public MessagePart[] getRequestParts();
 
 	public MessagePart[] getResponseParts();
+
+	public String getUsername();
+
+	public String getPassword();
 
 	public boolean dependsOn( ModelItem modelItem );
 

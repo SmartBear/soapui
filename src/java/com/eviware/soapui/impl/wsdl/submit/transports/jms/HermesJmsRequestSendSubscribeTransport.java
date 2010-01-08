@@ -28,11 +28,12 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.support.StringUtils;
 
 public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTransport
 {
 
-	public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception
+	public Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
 	{
 		ConnectionFactory connectionFactory = null;
 		Connection connection = null;
@@ -40,45 +41,51 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 		TopicSubscriber topicSubsriber = null;
 		try
 		{
-			String[] parameters = extractEndpointParameters(request);
-			String sessionName = getEndpointParameter(parameters, 0, null, submitContext);
-			String queueNameSend = getEndpointParameter(parameters, 1, Domain.QUEUE, submitContext);
-			String topicNameReceive = getEndpointParameter(parameters, 2, Domain.TOPIC, submitContext);
+			String[] parameters = extractEndpointParameters( request );
+			String sessionName = getEndpointParameter( parameters, 0, null, submitContext );
+			String queueNameSend = getEndpointParameter( parameters, 1, Domain.QUEUE, submitContext );
+			String topicNameReceive = getEndpointParameter( parameters, 2, Domain.TOPIC, submitContext );
 
-			submitContext.setProperty(HERMES_SESSION_NAME, sessionName);
+			submitContext.setProperty( HERMES_SESSION_NAME, sessionName );
 
-			Hermes hermes = getHermes(sessionName, request);
+			Hermes hermes = getHermes( sessionName, request );
 
-			connectionFactory = (javax.jms.ConnectionFactory) hermes.getConnectionFactory();
+			connectionFactory = ( javax.jms.ConnectionFactory )hermes.getConnectionFactory();
 
-			connection = connectionFactory.createConnection();
-			connection.setClientID(sessionName+"-"+topicNameReceive);
+			// connection
+			String username = submitContext.expand( request.getUsername() );
+			String password = submitContext.expand( request.getPassword() );
+
+			connection = StringUtils.hasContent( username ) ? connectionFactory.createConnection( username, password )
+					: connectionFactory.createConnection();
+
+			connection.setClientID( sessionName + "-" + topicNameReceive );
 			connection.start();
 
-			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			session = connection.createSession( false, Session.AUTO_ACKNOWLEDGE );
 
-			Queue queueSend = (Queue) hermes.getDestination(queueNameSend, Domain.QUEUE);
-			Topic topicReceive = (Topic) hermes.getDestination(topicNameReceive, Domain.TOPIC);
+			Queue queueSend = ( Queue )hermes.getDestination( queueNameSend, Domain.QUEUE );
+			Topic topicReceive = ( Topic )hermes.getDestination( topicNameReceive, Domain.TOPIC );
 
-			topicSubsriber = session.createDurableSubscriber(topicReceive, "durableSubscription" + topicNameReceive);
-			
-			Message textMessageSend = messageSend(submitContext, request, session, hermes, queueSend);
+			topicSubsriber = session.createDurableSubscriber( topicReceive, "durableSubscription" + topicNameReceive );
 
-			return makeResponse(submitContext, request, timeStarted, textMessageSend, topicSubsriber);
+			Message textMessageSend = messageSend( submitContext, request, session, hermes, queueSend );
+
+			return makeResponse( submitContext, request, timeStarted, textMessageSend, topicSubsriber );
 		}
-		catch (JMSException jmse)
+		catch( JMSException jmse )
 		{
-			return errorResponse(submitContext, request, timeStarted, jmse);
+			return errorResponse( submitContext, request, timeStarted, jmse );
 		}
-		catch (Throwable t)
+		catch( Throwable t )
 		{
-			SoapUI.logError(t);
+			SoapUI.logError( t );
 		}
 		finally
 		{
-			if (topicSubsriber != null)
+			if( topicSubsriber != null )
 				topicSubsriber.close();
-			closeSessionAndConnection(connection, session);
+			closeSessionAndConnection( connection, session );
 		}
 		return null;
 	}

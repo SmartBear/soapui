@@ -25,52 +25,58 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.support.StringUtils;
 
 public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 {
 
-	public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception
+	public Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
 	{
 		ConnectionFactory connectionFactory = null;
 		Connection connection = null;
 		Session session = null;
 		try
 		{
-			String[] parameters = extractEndpointParameters(request);
-			String sessionName = getEndpointParameter(parameters, 0, null, submitContext);
-			String queueName = getEndpointParameter(parameters, 1, Domain.QUEUE, submitContext);
+			String[] parameters = extractEndpointParameters( request );
+			String sessionName = getEndpointParameter( parameters, 0, null, submitContext );
+			String queueName = getEndpointParameter( parameters, 1, Domain.QUEUE, submitContext );
 
-			submitContext.setProperty(HERMES_SESSION_NAME, sessionName);
+			submitContext.setProperty( HERMES_SESSION_NAME, sessionName );
 
-			Hermes hermes = getHermes(sessionName, request);
+			Hermes hermes = getHermes( sessionName, request );
+
 			// connection factory
-			connectionFactory = (javax.jms.ConnectionFactory) hermes.getConnectionFactory();
+			connectionFactory = ( javax.jms.ConnectionFactory )hermes.getConnectionFactory();
 
 			// connection
-			connection = connectionFactory.createConnection();
+			String username = submitContext.expand( request.getUsername() );
+			String password = submitContext.expand( request.getPassword() );
+
+			connection = StringUtils.hasContent( username ) ? connectionFactory.createConnection( username, password )
+					: connectionFactory.createConnection();
 			connection.start();
 
 			// session
-			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			session = connection.createSession( false, Session.AUTO_ACKNOWLEDGE );
 
 			// queue
-			Queue queueSend = (Queue) hermes.getDestination(queueName, Domain.QUEUE);
+			Queue queueSend = ( Queue )hermes.getDestination( queueName, Domain.QUEUE );
 
-			Message messageSend = messageSend(submitContext, request, session, hermes, queueSend);
-			
-			return makeEmptyResponse(submitContext, request, timeStarted, messageSend);
+			Message messageSend = messageSend( submitContext, request, session, hermes, queueSend );
+
+			return makeEmptyResponse( submitContext, request, timeStarted, messageSend );
 		}
-		catch (JMSException jmse)
+		catch( JMSException jmse )
 		{
-			return errorResponse(submitContext, request, timeStarted, jmse);
+			return errorResponse( submitContext, request, timeStarted, jmse );
 		}
-		catch (Throwable t)
+		catch( Throwable t )
 		{
-			SoapUI.logError(t);
+			SoapUI.logError( t );
 		}
 		finally
 		{
-			closeSessionAndConnection(connection, session);
+			closeSessionAndConnection( connection, session );
 		}
 		return null;
 	}

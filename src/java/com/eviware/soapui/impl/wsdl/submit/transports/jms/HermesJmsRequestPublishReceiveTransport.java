@@ -31,11 +31,12 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.support.StringUtils;
 
 public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTransport
 {
 
-	public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception
+	public Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
 	{
 		TopicConnectionFactory topcConnectionFactory = null;
 		TopicConnection topicConnection = null;
@@ -47,50 +48,57 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 
 		try
 		{
-			String[] parameters = extractEndpointParameters(request);
-			String sessionName = getEndpointParameter(parameters, 0, null, submitContext);
-			String topicNamePublish = getEndpointParameter(parameters, 1, Domain.TOPIC, submitContext);
-			String queueNameReceive = getEndpointParameter(parameters, 2, Domain.QUEUE, submitContext);
+			String[] parameters = extractEndpointParameters( request );
+			String sessionName = getEndpointParameter( parameters, 0, null, submitContext );
+			String topicNamePublish = getEndpointParameter( parameters, 1, Domain.TOPIC, submitContext );
+			String queueNameReceive = getEndpointParameter( parameters, 2, Domain.QUEUE, submitContext );
 
-			submitContext.setProperty(HERMES_SESSION_NAME, sessionName);
+			submitContext.setProperty( HERMES_SESSION_NAME, sessionName );
 
-			Hermes hermes = getHermes(sessionName, request);
+			Hermes hermes = getHermes( sessionName, request );
 			// connection factory
-			topcConnectionFactory = (TopicConnectionFactory) hermes.getConnectionFactory();
-			connectionFactory = (ConnectionFactory) hermes.getConnectionFactory();
+			topcConnectionFactory = ( TopicConnectionFactory )hermes.getConnectionFactory();
+			connectionFactory = ( ConnectionFactory )hermes.getConnectionFactory();
 
 			// connection
 			topicConnection = topcConnectionFactory.createTopicConnection();
 			topicConnection.start();
-			connection = connectionFactory.createConnection();
+
+			// connection
+			String username = submitContext.expand( request.getUsername() );
+			String password = submitContext.expand( request.getPassword() );
+
+			connection = StringUtils.hasContent( username ) ? connectionFactory.createConnection( username, password )
+					: connectionFactory.createConnection();
+
 			connection.start();
 
 			// session
-			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			topicSession = topicConnection.createTopicSession( false, Session.AUTO_ACKNOWLEDGE );
+			session = connection.createSession( false, Session.AUTO_ACKNOWLEDGE );
 
 			// destination
-			Topic topicPublish = (Topic) hermes.getDestination(topicNamePublish, Domain.TOPIC);
-			Queue queueReceive = (Queue) hermes.getDestination(queueNameReceive, Domain.QUEUE);
+			Topic topicPublish = ( Topic )hermes.getDestination( topicNamePublish, Domain.TOPIC );
+			Queue queueReceive = ( Queue )hermes.getDestination( queueNameReceive, Domain.QUEUE );
 
-			Message messagePublish = messagePublish(submitContext, request, topicSession, hermes, topicPublish);
+			Message messagePublish = messagePublish( submitContext, request, topicSession, hermes, topicPublish );
 
-			MessageConsumer messageConsumer = session.createConsumer(queueReceive);
+			MessageConsumer messageConsumer = session.createConsumer( queueReceive );
 
-			return makeResponse(submitContext, request, timeStarted, messagePublish, messageConsumer);
+			return makeResponse( submitContext, request, timeStarted, messagePublish, messageConsumer );
 		}
-		catch (JMSException jmse)
+		catch( JMSException jmse )
 		{
-			return errorResponse(submitContext, request, timeStarted, jmse);
+			return errorResponse( submitContext, request, timeStarted, jmse );
 		}
-		catch (Throwable t)
+		catch( Throwable t )
 		{
-			SoapUI.logError(t);
+			SoapUI.logError( t );
 		}
 		finally
 		{
-			closeSessionAndConnection(topicConnection, topicSession);
-			closeSessionAndConnection(connection, session);
+			closeSessionAndConnection( topicConnection, topicSession );
+			closeSessionAndConnection( connection, session );
 		}
 		return null;
 

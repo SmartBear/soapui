@@ -144,11 +144,11 @@ public class JdbcRequest extends AbstractAnimatableModelItem<ModelItemConfig> im
 		return testStep.getDescription();
 	}
 
-//	public ImageIcon getIcon()
-//	{
-//		return testStep.getIcon();
-//	}
-//
+	// public ImageIcon getIcon()
+	// {
+	// return testStep.getIcon();
+	// }
+	//
 	public String getId()
 	{
 		return testStep.getId();
@@ -233,28 +233,28 @@ public class JdbcRequest extends AbstractAnimatableModelItem<ModelItemConfig> im
 	{
 		currentStatus = AssertionStatus.UNKNOWN;
 
-		if (getResponse() == null)
+		if( getResponse() == null )
 			return currentStatus;
 
 		int cnt = getAssertionCount();
-		if (cnt == 0)
+		if( cnt == 0 )
 			return currentStatus;
 
 		boolean hasEnabled = false;
 
-		for (int c = 0; c < cnt; c++)
+		for( int c = 0; c < cnt; c++ )
 		{
-			if (!getAssertionAt(c).isDisabled())
+			if( !getAssertionAt( c ).isDisabled() )
 				hasEnabled = true;
 
-			if (getAssertionAt(c).getStatus() == AssertionStatus.FAILED)
+			if( getAssertionAt( c ).getStatus() == AssertionStatus.FAILED )
 			{
 				currentStatus = AssertionStatus.FAILED;
 				break;
 			}
 		}
 
-		if (currentStatus == AssertionStatus.UNKNOWN && hasEnabled)
+		if( currentStatus == AssertionStatus.UNKNOWN && hasEnabled )
 			currentStatus = AssertionStatus.VALID;
 
 		return currentStatus;
@@ -304,61 +304,65 @@ public class JdbcRequest extends AbstractAnimatableModelItem<ModelItemConfig> im
 	{
 		return response;
 	}
+
 	public void initIcons()
 	{
-		if (validRequestIcon == null)
-			validRequestIcon = UISupport.createImageIcon("/valid_jdbc_request.gif");
+		if( validRequestIcon == null )
+			validRequestIcon = UISupport.createImageIcon( "/valid_jdbc_request.gif" );
 
-		if (failedRequestIcon == null)
-			failedRequestIcon = UISupport.createImageIcon("/invalid_jdbc_request.gif");
+		if( failedRequestIcon == null )
+			failedRequestIcon = UISupport.createImageIcon( "/invalid_jdbc_request.gif" );
 
-		if (unknownRequestIcon == null)
-			unknownRequestIcon = UISupport.createImageIcon("/unknown_jdbc_request.gif");
+		if( unknownRequestIcon == null )
+			unknownRequestIcon = UISupport.createImageIcon( "/unknown_jdbc_request.gif" );
 
-		if (disabledRequestIcon == null)
-			disabledRequestIcon = UISupport.createImageIcon("/disabled_jdbc_request.gif");
-		
-		setIconAnimator(new RequestIconAnimator<JdbcRequest>(this, "/jdbc_request.gif", "/exec_jdbc_request", 4, "gif") );
+		if( disabledRequestIcon == null )
+			disabledRequestIcon = UISupport.createImageIcon( "/disabled_jdbc_request.gif" );
+
+		setIconAnimator( new RequestIconAnimator<JdbcRequest>( this, "/jdbc_request.gif", "/exec_jdbc_request", 4, "gif" ) );
 	}
 
 	protected RequestIconAnimator<?> initIconAnimator()
 	{
-		return new RequestIconAnimator<JdbcRequest>(this, "/jdbc_request.gif", "/exec_jdbc_request", 4, "gif");
+		return new RequestIconAnimator<JdbcRequest>( this, "/jdbc_request.gif", "/exec_jdbc_request", 4, "gif" );
 	}
 
 	public static class RequestIconAnimator<T extends JdbcRequest> extends ModelItemIconAnimator<T> implements
 			SubmitListener
 	{
-		public RequestIconAnimator(T modelItem, String baseIcon, String animIconRoot, int iconCount, String iconExtension)
+		public RequestIconAnimator( T modelItem, String baseIcon, String animIconRoot, int iconCount, String iconExtension )
 		{
-			super(modelItem, baseIcon, animIconRoot, iconCount, iconExtension);
+			super( modelItem, baseIcon, animIconRoot, iconCount, iconExtension );
 		}
 
-		public boolean beforeSubmit(Submit submit, SubmitContext context)
+		public boolean beforeSubmit( Submit submit, SubmitContext context )
 		{
-			if (isEnabled() && submit.getRequest() == getTarget())
+			if( isEnabled() && submit.getRequest() == getTarget() )
 				start();
 			return true;
 		}
 
-		public void afterSubmit(Submit submit, SubmitContext context)
+		public void afterSubmit( Submit submit, SubmitContext context )
 		{
-			if (submit.getRequest() == getTarget())
+			if( submit.getRequest() == getTarget() )
 				stop();
 		}
 	}
+
 	public RequestIconAnimator<?> getIconAnimator()
 	{
 		return iconAnimator;
 	}
-	public void setIconAnimator(RequestIconAnimator<?> iconAnimator)
+
+	public void setIconAnimator( RequestIconAnimator<?> iconAnimator )
 	{
-		if (this.iconAnimator != null)
-			removeSubmitListener(this.iconAnimator);
+		if( this.iconAnimator != null )
+			removeSubmitListener( this.iconAnimator );
 
 		this.iconAnimator = iconAnimator;
-		addSubmitListener(this.iconAnimator);
+		addSubmitListener( this.iconAnimator );
 	}
+
 	public ImageIcon getIcon()
 	{
 		if( forLoadTest || UISupport.isHeadless() )
@@ -382,10 +386,23 @@ public class JdbcRequest extends AbstractAnimatableModelItem<ModelItemConfig> im
 
 		return icon;
 	}
+
 	@Override
 	public void setIcon( ImageIcon icon )
 	{
-		getTestStep().setIcon(icon);
+		getTestStep().setIcon( icon );
+	}
+
+	public String getPassword()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getUsername()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
