@@ -52,6 +52,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
 import com.teamdev.jxbrowser.BrowserAttributes;
 import com.teamdev.jxbrowser.ClipboardSupport;
 import com.teamdev.jxbrowser.ContentHandler;
+import com.teamdev.jxbrowser.SearchParams;
 import com.teamdev.jxbrowser.WebBrowser;
 import com.teamdev.jxbrowser.WebBrowserFactory;
 import com.teamdev.jxbrowser.WebBrowserHistory;
@@ -358,6 +359,18 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		{
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		public boolean findNext( String arg0, SearchParams arg1 )
+		{
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		public void setContent( String arg0 )
+		{
+			// TODO Auto-generated method stub
+			
 		}
 
 	}
