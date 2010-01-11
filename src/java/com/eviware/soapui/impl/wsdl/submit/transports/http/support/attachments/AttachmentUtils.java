@@ -240,6 +240,11 @@ public class AttachmentUtils
 
 								isXopAttachment = true;
 							}
+							else if( container.isInlineFilesEnabled()
+									&& container.getAttachmentsForPart( textContent ) != null )
+							{
+								attachment = container.getAttachmentsForPart( textContent )[0];
+							}
 
 							// add XOP include?
 							if( isXopAttachment && container.isMtomEnabled() )

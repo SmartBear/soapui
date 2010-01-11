@@ -34,6 +34,7 @@ import com.eviware.soapui.impl.wsdl.support.MessageXmlObject;
 import com.eviware.soapui.impl.wsdl.support.MessageXmlPart;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.iface.Attachment.AttachmentType;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToStringMap;
 
@@ -127,7 +128,8 @@ public class WsdlPackagingRequestFilter extends AbstractRequestFilter
 	{
 		for( Attachment attachment : wsdlRequest.getAttachments() )
 		{
-			if( attachment.getAttachmentType() != Attachment.AttachmentType.CONTENT )
+			if( attachment.getAttachmentType() != Attachment.AttachmentType.CONTENT
+					&& !( attachment.getAttachmentType() == AttachmentType.UNKNOWN && wsdlRequest.isInlineFilesEnabled() ) )
 				return false;
 		}
 
