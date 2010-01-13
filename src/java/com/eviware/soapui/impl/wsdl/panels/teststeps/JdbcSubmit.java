@@ -240,7 +240,10 @@ public class JdbcSubmit implements Submit, Runnable
 			UISupport.showErrorMessage( "Please supply connection settings for all DataSources" );
 			throw new SoapUIException( "Please supply connection settings" );
 		}
-		connStr = connStr.replaceFirst( JdbcRequestTestStep.PASS_TEMPLATE, testStep.getPassword() );
+		if( connStr.contains( JdbcRequestTestStep.PASS_TEMPLATE ) )
+		{
+			connStr = connStr.replaceFirst( JdbcRequestTestStep.PASS_TEMPLATE, testStep.getPassword() );
+		}
 		try
 		{
 			DriverManager.getDriver( connStr );
