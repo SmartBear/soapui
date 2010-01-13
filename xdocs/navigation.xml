@@ -148,8 +148,8 @@
                         <item href="/userguide/functional/rest-requests.html" name="REST Requests"/>
                         <item href="/userguide/functional/http-requests.html" name="HTTP Requests"/>
                         <item href="/userguide/functional/jdbc-requests.html" name="JDBC Requests"/>
-                        <item href="/userguide/functional/amf-requests.html" name="AMF Requests"/>
-                        <item href="/userguide/functional/jms-requests.html" name="JMS Requests"/>
+                        <item href="/tutorials/amf/amf-tutorial.html" name="AMF Requests"/>
+                        <item href="/tutorials/jms/jms-tutorial.html" name="JMS Requests"/>
                         <item href="/userguide/functional/response-assertions.html" name="Assertions"/>
                         <item href="/userguide/functional/response-wizards.html" name="Editor Wizards" pro="true"/>
                     </item>
