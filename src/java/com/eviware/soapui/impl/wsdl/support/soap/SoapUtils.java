@@ -301,7 +301,7 @@ public class SoapUtils
 							}
 
 							// ignore header parts for now..
-							if( WsdlUtils.isHeaderInputPart( parts.get( x ), message, bindingOperation ) )
+							if( x >= 0 && WsdlUtils.isHeaderInputPart( parts.get( x ), message, bindingOperation ) )
 							{
 								parts.remove( x );
 								x-- ;
@@ -492,7 +492,7 @@ public class SoapUtils
 			return deduceSoapVersion( requestContentType, ( XmlObject )null );
 		}
 	}
-	
+
 	public static String transferSoapHeaders( String requestContent, String newRequest, SoapVersion soapVersion )
 	{
 		try
