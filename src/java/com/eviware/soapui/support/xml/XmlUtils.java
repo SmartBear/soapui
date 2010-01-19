@@ -1440,9 +1440,11 @@ public final class XmlUtils
 			{
 				xmlDocumentResult = addResultSetXmlPart( resultsElement, statement.getResultSet(), xmlDocumentResult );
 			}
-		} else {
-			Element errorElement = xmlDocumentResult.createElement( "Error" );
-			errorElement.appendChild( xmlDocumentResult.createTextNode( "There's been an error in executing query!" ) );
+		}
+		else
+		{
+			Element errorElement = xmlDocumentResult.createElement( "UpdateCount" );
+			errorElement.appendChild( xmlDocumentResult.createTextNode( String.valueOf( statement.getUpdateCount() ) ) );
 			resultsElement.appendChild( errorElement );
 		}
 		return xmlDocumentResult;
