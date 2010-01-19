@@ -11,13 +11,16 @@
  */
 package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 
 public class JMSEndpoint
 {
-	public static final String JMS_ENDPOINT_SEPARATOR = "/";
+	public static final String JMS_OLD_ENDPOINT_SEPARATOR = "/";
+	public static final String JMS_ENDPOINT_SEPARATOR = "::";
 	public static final String QUEUE_ENDPOINT_PREFIX = "queue_";
 	public static final String TOPIC_ENDPOINT_PREFIX = "topic_";
 	public static final String JMS_EMPTY_DESTIONATION = "-";
@@ -39,12 +42,42 @@ public class JMSEndpoint
 		receive = getEndpointParameter( 2 );
 	}
 
-	
 	public static String[] extractEndpointParameters( Request request )
 	{
+		resolveOldEndpointPattern( request );
+		
 		String[] parameters = request.getEndpoint().replaceFirst( JMS_ENDPIONT_PREFIX, "" )
 				.split( JMS_ENDPOINT_SEPARATOR );
 		return parameters;
+	}
+
+	private static void resolveOldEndpointPattern( Request request )
+	{
+		String oldEndpoint = request.getEndpoint();
+		if( oldEndpoint.contains( "/queue_" ) || oldEndpoint.contains( "/topic_" ) )
+		{
+			String newEndpoint = request.getEndpoint().replaceAll( JMS_OLD_ENDPOINT_SEPARATOR + "queue_",
+					JMS_ENDPOINT_SEPARATOR + "queue_" ).replaceAll( JMS_OLD_ENDPOINT_SEPARATOR + "topic_",
+					JMS_ENDPOINT_SEPARATOR + "topic_" );
+			
+			request.setEndpoint( newEndpoint );
+
+			refreshEndpointList( request, oldEndpoint, newEndpoint );
+
+			SoapUI.log( "JMS endpoint resolver changed endpoint pattern from " + oldEndpoint + "to " + newEndpoint );
+		}
+	}
+
+	private static void refreshEndpointList( Request request, String oldEndpoint, String newEndpoint )
+	{
+		Interface iface = request.getOperation().getInterface();
+		for( String endpoint : iface.getEndpoints() )
+		{
+			if( endpoint.equals( oldEndpoint ) )
+			{
+				iface.changeEndpoint( endpoint, newEndpoint );
+			}
+		}
 	}
 
 	private String getEndpointParameter( int i )
@@ -55,7 +88,7 @@ public class JMSEndpoint
 				QUEUE_ENDPOINT_PREFIX, "" ).replaceFirst( TOPIC_ENDPOINT_PREFIX, "" );
 		return stripParameter;
 	}
-	
+
 	public String getSessionName()
 	{
 		return sessionName;

@@ -81,9 +81,9 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
 				return;
 			}
 			String receive = destinationNameList.get(j).getDestinationName();
-			if (JMSEndpoint.JMS_EMPTY_DESTIONATION.equals(send) && "".equals(receive))
+			if (JMSEndpoint.JMS_EMPTY_DESTIONATION.equals(send) && JMSEndpoint.JMS_EMPTY_DESTIONATION.equals(receive))
 			{
-				UISupport.showErrorMessage("Endpoint with blank send and receive field is discarded");
+				UISupport.showErrorMessage("Not supported endpoint");
 				return;
 			}
 			

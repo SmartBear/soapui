@@ -75,6 +75,8 @@ public class HermesJmsRequestPublishSubscribeTransport extends HermesJmsRequestT
 		}
 		finally
 		{
+			if( topicDurableSubsriber != null )
+				topicDurableSubsriber.close();
 			closeSessionAndConnection(topicConnection, topicSession);
 		}
 		return null;

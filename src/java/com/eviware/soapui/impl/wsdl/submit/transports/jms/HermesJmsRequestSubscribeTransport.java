@@ -60,7 +60,7 @@ public class HermesJmsRequestSubscribeTransport extends HermesJmsRequestTranspor
 			topicConnectionFactory = (TopicConnectionFactory) hermes.getConnectionFactory();
 
 			// connection
-			topicConnection = (TopicConnection)createConnection( submitContext, request, topicConnectionFactory ,Domain.TOPIC,  null);
+			topicConnection = (TopicConnection)createConnection( submitContext, request, topicConnectionFactory ,Domain.TOPIC,  jmsEndpoint.getSessionName()+"-"+jmsEndpoint.getReceive());
 			topicConnection.start();
 			
 			// session
