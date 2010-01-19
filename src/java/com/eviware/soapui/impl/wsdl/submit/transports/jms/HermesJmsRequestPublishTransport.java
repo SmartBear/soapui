@@ -38,13 +38,15 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 		TopicSession session = null;
 		try
 		{
-			String[] parameters = extractEndpointParameters(request);
-			String sessionName = getEndpointParameter(parameters, 0, null, submitContext);
-			String topicName = getEndpointParameter(parameters, 1, Domain.TOPIC, submitContext);
+			JMSEndpoint jmsEndpoint = new JMSEndpoint( request, submitContext );
+
+//			String[] parameters = extractEndpointParameters(request);
+//			String sessionName = getEndpointParameter(parameters, 0, null, submitContext);
+//			String topicName = getEndpointParameter(parameters, 1, Domain.TOPIC, submitContext);
 			
 
-			submitContext.setProperty(HERMES_SESSION_NAME, sessionName);
-			Hermes hermes = getHermes(sessionName, request);
+			submitContext.setProperty(HERMES_SESSION_NAME, jmsEndpoint.getSessionName());
+			Hermes hermes = getHermes(jmsEndpoint.getSessionName(), request);
 			// connection factory
 			connectionFactory = (TopicConnectionFactory) hermes.getConnectionFactory();
 
@@ -56,7 +58,7 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 			session = connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
 
 			// destination
-			Topic topicPublish = (Topic) hermes.getDestination(topicName, Domain.TOPIC);
+			Topic topicPublish = (Topic) hermes.getDestination(jmsEndpoint.getSend(), Domain.TOPIC);
 
 			Message messagePublish = messagePublish(submitContext, request, session, hermes, topicPublish);
 

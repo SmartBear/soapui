@@ -29,9 +29,8 @@ import javax.naming.NamingException;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestTransport;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSEndpoint;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
-import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -82,7 +81,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
 				return;
 			}
 			String receive = destinationNameList.get(j).getDestinationName();
-			if ("-".equals(send) && "".equals(receive))
+			if (JMSEndpoint.JMS_EMPTY_DESTIONATION.equals(send) && "".equals(receive))
 			{
 				UISupport.showErrorMessage("Endpoint with blank send and receive field is discarded");
 				return;
@@ -95,11 +94,11 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
 
 	private String createEndpointString(String session, String send, String receive)
 	{
-		StringBuilder sb = new StringBuilder(JMSUtils.JMS_ENDPIONT_PREFIX);
-		sb.append(session + "/");
+		StringBuilder sb = new StringBuilder(JMSEndpoint.JMS_ENDPIONT_PREFIX);
+		sb.append(session + JMSEndpoint.JMS_ENDPOINT_SEPARATOR);
 		sb.append(send);
-		if (!"-".equals(receive))
-			sb.append("/" + receive);
+		if (!JMSEndpoint.JMS_EMPTY_DESTIONATION.equals(receive))
+			sb.append(JMSEndpoint.JMS_ENDPOINT_SEPARATOR + receive);
 		return sb.toString();
 	}
 
@@ -167,7 +166,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
 	private void updateDestinations(Hermes hermes)
 	{
 		destinationNameList = new ArrayList<Destination>();
-		destinationNameList.add(new Destination("-", Domain.UNKNOWN));
+		destinationNameList.add(new Destination(JMSEndpoint.JMS_EMPTY_DESTIONATION, Domain.UNKNOWN));
 		extractDestinations(hermes, destinationNameList);
 		mainForm.setOptions(SEND, destinationNameList.toArray());
 		mainForm.setOptions(RECEIVE, destinationNameList.toArray());
@@ -280,7 +279,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
 		public Destination(String destinationName, Domain domain)
 		{
 			this.domain = domain;
-			if (destinationName.equals("-") || destinationName.equals(""))
+			if (destinationName.equals(JMSEndpoint.JMS_EMPTY_DESTIONATION) || destinationName.equals(""))
 			{
 				this.destinationName = destinationName;
 			}
@@ -288,11 +287,11 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
 			{
 				if (domain.equals(Domain.QUEUE))
 				{
-					this.destinationName = HermesJmsRequestTransport.QUEUE_ENDPOINT_PREFIX + destinationName;
+					this.destinationName = JMSEndpoint.QUEUE_ENDPOINT_PREFIX + destinationName;
 				}
 				else
 				{
-					this.destinationName = HermesJmsRequestTransport.TOPIC_ENDPOINT_PREFIX + destinationName;
+					this.destinationName = JMSEndpoint.TOPIC_ENDPOINT_PREFIX + destinationName;
 				}
 			}
 
@@ -313,7 +312,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
 
 		public String toString()
 		{
-			return this.getDestinationName().replace(HermesJmsRequestTransport.QUEUE_ENDPOINT_PREFIX, "").replace(HermesJmsRequestTransport.TOPIC_ENDPOINT_PREFIX, "");
+			return this.getDestinationName().replace(JMSEndpoint.QUEUE_ENDPOINT_PREFIX, "").replace(JMSEndpoint.TOPIC_ENDPOINT_PREFIX, "");
 		}
 	}
 

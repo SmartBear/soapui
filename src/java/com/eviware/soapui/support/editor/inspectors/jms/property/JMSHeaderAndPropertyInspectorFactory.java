@@ -18,6 +18,7 @@ import javax.jms.Message;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestTransport;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSEndpoint;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSHeader;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
@@ -99,7 +100,7 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 		{
 			if (request.getEndpoint() != null && evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
 			{
-				inspector.setEnabled(request.getEndpoint().startsWith(JMSUtils.JMS_ENDPIONT_PREFIX));
+				inspector.setEnabled(request.getEndpoint().startsWith(JMSEndpoint.JMS_ENDPIONT_PREFIX));
 			}
 			super.propertyChange(evt);
 		}

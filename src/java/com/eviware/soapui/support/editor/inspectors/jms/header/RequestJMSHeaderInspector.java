@@ -17,7 +17,7 @@ import java.beans.PropertyChangeListener;
 
 import com.eviware.soapui.config.JMSDeliveryModeTypeConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSEndpoint;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
 
@@ -38,7 +38,7 @@ public class RequestJMSHeaderInspector extends AbstractJMSHeaderInspector implem
 	{
 		if (request.getEndpoint() != null && evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
 		{
-			this.setEnabled(request.getEndpoint().startsWith(JMSUtils.JMS_ENDPIONT_PREFIX));
+			this.setEnabled(request.getEndpoint().startsWith(JMSEndpoint.JMS_ENDPIONT_PREFIX));
 		}
 		
 	}

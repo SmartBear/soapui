@@ -18,6 +18,7 @@ import java.util.List;
 
 import com.eviware.soapui.config.JMSPropertyConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSEndpoint;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.Editor;
@@ -70,7 +71,7 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 		{
 			if (request.getEndpoint() !=null && evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
 			{
-				inspector.setEnabled(request.getEndpoint().startsWith(JMSUtils.JMS_ENDPIONT_PREFIX));
+				inspector.setEnabled(request.getEndpoint().startsWith(JMSEndpoint.JMS_ENDPIONT_PREFIX));
 			}
 			super.propertyChange(evt);
 		}

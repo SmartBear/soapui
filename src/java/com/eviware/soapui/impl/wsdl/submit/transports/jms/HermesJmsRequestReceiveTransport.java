@@ -37,11 +37,11 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 		Session session = null;
 		try
 		{
-			String[] parameters = extractEndpointParameters( request );
-			String sessionName = getEndpointParameter( parameters, 0, null, submitContext );
-			String queueName = getEndpointParameter( parameters, 2, Domain.QUEUE, submitContext );
+			JMSEndpoint jmsEndpoint = new JMSEndpoint( request, submitContext );
 
-			Hermes hermes = getHermes( sessionName, request );
+			submitContext.setProperty( HERMES_SESSION_NAME, jmsEndpoint.getSessionName() );
+			
+			Hermes hermes = getHermes( jmsEndpoint.getSessionName(), request );
 			// connection factory
 			connectionFactory = ( javax.jms.ConnectionFactory )hermes.getConnectionFactory();
 
@@ -58,7 +58,7 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 			session = connection.createSession( false, Session.AUTO_ACKNOWLEDGE );
 
 			// destination
-			Queue queue = ( Queue )hermes.getDestination( queueName, Domain.QUEUE );
+			Queue queue = ( Queue )hermes.getDestination( jmsEndpoint.getReceive(), Domain.QUEUE );
 
 			// consumer
 			MessageConsumer messageConsumer = session.createConsumer( queue );

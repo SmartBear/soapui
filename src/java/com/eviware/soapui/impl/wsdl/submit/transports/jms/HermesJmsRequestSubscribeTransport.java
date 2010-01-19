@@ -50,29 +50,28 @@ public class HermesJmsRequestSubscribeTransport extends HermesJmsRequestTranspor
 		TopicSubscriber topicDurableSubsriber = null;
 		try
 		{
-			String[] parameters = extractEndpointParameters(request);
-			String sessionName = getEndpointParameter(parameters, 0, null, submitContext);
-			String topicNameSubscribe = getEndpointParameter(parameters, 2, Domain.TOPIC, submitContext);
+			
+			JMSEndpoint jmsEndpoint = new JMSEndpoint( request, submitContext );
 
-			submitContext.setProperty(HERMES_SESSION_NAME, sessionName);
+			submitContext.setProperty(HERMES_SESSION_NAME, jmsEndpoint.getSessionName());
 
-			Hermes hermes = getHermes(sessionName, request);
+			Hermes hermes = getHermes(jmsEndpoint.getSessionName(), request);
 			// connection factory
 			connectionFactory = (TopicConnectionFactory) hermes.getConnectionFactory();
 
 			// connection
 			connection = connectionFactory.createTopicConnection();
-			connection.setClientID(sessionName+"-"+topicNameSubscribe);
+			connection.setClientID(jmsEndpoint.getSessionName()+"-"+jmsEndpoint.getReceive());
 			connection.start();
 
 			// session
 			session = connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
 
 			// destination
-			Topic topicSubscribe = (Topic) hermes.getDestination(topicNameSubscribe, Domain.TOPIC);
+			Topic topicSubscribe = (Topic) hermes.getDestination(jmsEndpoint.getReceive(), Domain.TOPIC);
 			
     		// create durable subscriber
-			topicDurableSubsriber = session.createDurableSubscriber(topicSubscribe, "durableSubscription" + topicNameSubscribe);
+			topicDurableSubsriber = session.createDurableSubscriber(topicSubscribe, "durableSubscription" + jmsEndpoint.getReceive());
 
 			return makeResponse(submitContext, request, timeStarted, null ,topicDurableSubsriber);
 		}

@@ -17,6 +17,7 @@ import javax.jms.JMSException;
 import javax.jms.MapMessage;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSEndpoint;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
@@ -25,13 +26,13 @@ import com.eviware.soapui.model.iface.Request;
 public class JMSUtils
 {
 
-	public static final String JMS_ENDPIONT_PREFIX = "jms://";
+	
 
 	private static boolean checkIfJMS(Request request)
 	{
 		try
 		{
-			return request.getEndpoint().startsWith(JMS_ENDPIONT_PREFIX);
+			return request.getEndpoint().startsWith(JMSEndpoint.JMS_ENDPIONT_PREFIX);
 		}
 		catch (NullPointerException e)
 		{
@@ -48,7 +49,7 @@ public class JMSUtils
 			if (me != null)
 			{
 				String r = me.getProperty("Endpoint");
-				return r != null && r.startsWith(JMS_ENDPIONT_PREFIX);
+				return r != null && r.startsWith(JMSEndpoint.JMS_ENDPIONT_PREFIX);
 			}
 			else
 			{

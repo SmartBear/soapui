@@ -20,6 +20,7 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSEndpoint;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
@@ -224,7 +225,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			{
 				if( inspector != null && request.getEndpoint() != null )
 				{
-					inspector.setEnabled( !request.getEndpoint().startsWith( JMSUtils.JMS_ENDPIONT_PREFIX ) );
+					inspector.setEnabled( !request.getEndpoint().startsWith( JMSEndpoint.JMS_ENDPIONT_PREFIX ) );
 				}
 			}
 			super.propertyChange( evt );
@@ -322,7 +323,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 		{
 			if(  request.getEndpoint() != null && evt.getPropertyName().equals( AbstractHttpRequest.ENDPOINT_PROPERTY ) )
 			{
-				inspector.setEnabled( !request.getEndpoint().startsWith( JMSUtils.JMS_ENDPIONT_PREFIX ) );
+				inspector.setEnabled( !request.getEndpoint().startsWith( JMSEndpoint.JMS_ENDPIONT_PREFIX ) );
 			}
 			super.propertyChange( evt );
 		}

@@ -1,6 +1,5 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
-import hermes.Domain;
 import hermes.Hermes;
 
 import java.io.BufferedReader;
@@ -17,6 +16,7 @@ import java.util.List;
 
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
@@ -53,6 +53,7 @@ import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 
 public class HermesJmsRequestTransport implements RequestTransport
@@ -64,8 +65,6 @@ public class HermesJmsRequestTransport implements RequestTransport
 	public static final String JMS_ERROR = "JMS_ERROR";
 	public static final String HERMES_SESSION_NAME = "HERMES_SESSION_NAME";
 	public static final String JMS_RECEIVE_TIMEOUT = "JMS_RECEIVE_TIMEOUT";
-	public static final String QUEUE_ENDPOINT_PREFIX = "queue_";
-	public static final String TOPIC_ENDPOINT_PREFIX = "topic_";
 
 	protected List<RequestFilter> filters = new ArrayList<RequestFilter>();
 
@@ -102,17 +101,18 @@ public class HermesJmsRequestTransport implements RequestTransport
 		if( ix == -1 )
 			throw new MissingTransportException( "Missing protocol in endpoint [" + request.getEndpoint() + "]" );
 
-		String[] params = extractEndpointParameters( request );
+		
+		String[] params = JMSEndpoint.extractEndpointParameters( request );
 
 		// resolve sending class
 		if( params.length == 2 )
 		{
 			String destinationName = PropertyExpander.expandProperties( submitContext, params[1] );
-			if( destinationName.startsWith( QUEUE_ENDPOINT_PREFIX ) )
+			if( destinationName.startsWith(JMSEndpoint. QUEUE_ENDPOINT_PREFIX ) )
 			{
 				return new HermesJmsRequestSendTransport();
 			}
-			else if( destinationName.startsWith( TOPIC_ENDPOINT_PREFIX ) )
+			else if( destinationName.startsWith( JMSEndpoint.TOPIC_ENDPOINT_PREFIX ) )
 			{
 				return new HermesJmsRequestPublishTransport();
 			}
@@ -126,11 +126,11 @@ public class HermesJmsRequestTransport implements RequestTransport
 		else if( params.length == 3 && PropertyExpander.expandProperties( submitContext, params[1] ).equals( "-" ) )
 		{
 			String destinationName = PropertyExpander.expandProperties( submitContext, params[2] );
-			if( destinationName.startsWith( QUEUE_ENDPOINT_PREFIX ) )
+			if( destinationName.startsWith( JMSEndpoint.QUEUE_ENDPOINT_PREFIX ) )
 			{
 				return new HermesJmsRequestReceiveTransport();
 			}
-			else if( destinationName.startsWith( TOPIC_ENDPOINT_PREFIX ) )
+			else if( destinationName.startsWith( JMSEndpoint.TOPIC_ENDPOINT_PREFIX ) )
 			{
 				return new HermesJmsRequestSubscribeTransport();
 			}
@@ -144,23 +144,23 @@ public class HermesJmsRequestTransport implements RequestTransport
 		{
 			String destinationSendName = PropertyExpander.expandProperties( submitContext, params[1] );
 			String destinationReceiveName = PropertyExpander.expandProperties( submitContext, params[2] );
-			if( destinationSendName.startsWith( QUEUE_ENDPOINT_PREFIX )
-					&& destinationReceiveName.startsWith( QUEUE_ENDPOINT_PREFIX ) )
+			if( destinationSendName.startsWith( JMSEndpoint.QUEUE_ENDPOINT_PREFIX )
+					&& destinationReceiveName.startsWith( JMSEndpoint.QUEUE_ENDPOINT_PREFIX ) )
 			{
 				return new HermesJmsRequestSendReceiveTransport();
 			}
-			else if( destinationSendName.startsWith( QUEUE_ENDPOINT_PREFIX )
-					&& destinationReceiveName.startsWith( TOPIC_ENDPOINT_PREFIX ) )
+			else if( destinationSendName.startsWith(JMSEndpoint. QUEUE_ENDPOINT_PREFIX )
+					&& destinationReceiveName.startsWith( JMSEndpoint.TOPIC_ENDPOINT_PREFIX ) )
 			{
 				return new HermesJmsRequestSendSubscribeTransport();
 			}
-			else if( destinationSendName.startsWith( TOPIC_ENDPOINT_PREFIX )
-					&& destinationReceiveName.startsWith( TOPIC_ENDPOINT_PREFIX ) )
+			else if( destinationSendName.startsWith( JMSEndpoint.TOPIC_ENDPOINT_PREFIX )
+					&& destinationReceiveName.startsWith( JMSEndpoint.TOPIC_ENDPOINT_PREFIX ) )
 			{
 				return new HermesJmsRequestPublishSubscribeTransport();
 			}
-			else if( destinationSendName.startsWith( TOPIC_ENDPOINT_PREFIX )
-					&& destinationReceiveName.startsWith( QUEUE_ENDPOINT_PREFIX ) )
+			else if( destinationSendName.startsWith( JMSEndpoint.TOPIC_ENDPOINT_PREFIX )
+					&& destinationReceiveName.startsWith( JMSEndpoint.QUEUE_ENDPOINT_PREFIX ) )
 			{
 				return new HermesJmsRequestPublishReceiveTransport();
 			}
@@ -478,22 +478,17 @@ public class HermesJmsRequestTransport implements RequestTransport
 		}
 	}
 
-	protected String getEndpointParameter( String[] parameters, int i, Domain domain, SubmitContext submitContext )
+	protected Connection createConnection( SubmitContext submitContext, Request request, ConnectionFactory connectionFactory ) throws JMSException
 	{
-		if( domain == null )
-			return PropertyExpander.expandProperties( submitContext, parameters[i] );
-		else if( domain.equals( Domain.QUEUE ) )
-			return PropertyExpander.expandProperties( submitContext, parameters[i] ).replaceFirst(
-					HermesJmsRequestTransport.QUEUE_ENDPOINT_PREFIX, "" );
-		else
-			return PropertyExpander.expandProperties( submitContext, parameters[i] ).replaceFirst(
-					HermesJmsRequestTransport.TOPIC_ENDPOINT_PREFIX, "" );
-	}
-
-	protected String[] extractEndpointParameters( Request request )
-	{
-		String[] parameters = request.getEndpoint().substring( request.getEndpoint().indexOf( "://" ) + 3 ).split( "/" );
-		return parameters;
+		Connection connection;
+	
+		String username = submitContext.expand( request.getUsername() );
+		String password = submitContext.expand( request.getPassword() );
+	
+		connection = StringUtils.hasContent( username ) ? connectionFactory.createConnection( username, password )
+				: connectionFactory.createConnection();
+	
+		return connection;
 	}
 
 	@SuppressWarnings("serial")

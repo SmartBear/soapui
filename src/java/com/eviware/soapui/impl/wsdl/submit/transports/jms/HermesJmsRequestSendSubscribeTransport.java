@@ -41,14 +41,17 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 		TopicSubscriber topicSubsriber = null;
 		try
 		{
-			String[] parameters = extractEndpointParameters( request );
-			String sessionName = getEndpointParameter( parameters, 0, null, submitContext );
-			String queueNameSend = getEndpointParameter( parameters, 1, Domain.QUEUE, submitContext );
-			String topicNameReceive = getEndpointParameter( parameters, 2, Domain.TOPIC, submitContext );
+			
+			JMSEndpoint jmsEndpoint = new JMSEndpoint( request, submitContext );
+			
+//			String[] parameters = extractEndpointParameters( request );
+//			String sessionName = getEndpointParameter( parameters, 0, null, submitContext );
+//			String queueNameSend = getEndpointParameter( parameters, 1, Domain.QUEUE, submitContext );
+//			String topicNameReceive = getEndpointParameter( parameters, 2, Domain.TOPIC, submitContext );
 
-			submitContext.setProperty( HERMES_SESSION_NAME, sessionName );
+			submitContext.setProperty( HERMES_SESSION_NAME, jmsEndpoint.getSessionName() );
 
-			Hermes hermes = getHermes( sessionName, request );
+			Hermes hermes = getHermes( jmsEndpoint.getSessionName(), request );
 
 			connectionFactory = ( javax.jms.ConnectionFactory )hermes.getConnectionFactory();
 
@@ -59,15 +62,15 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 			connection = StringUtils.hasContent( username ) ? connectionFactory.createConnection( username, password )
 					: connectionFactory.createConnection();
 
-			connection.setClientID( sessionName + "-" + topicNameReceive );
+			connection.setClientID( jmsEndpoint.getSessionName() + "-" + jmsEndpoint.getReceive() );
 			connection.start();
 
 			session = connection.createSession( false, Session.AUTO_ACKNOWLEDGE );
 
-			Queue queueSend = ( Queue )hermes.getDestination( queueNameSend, Domain.QUEUE );
-			Topic topicReceive = ( Topic )hermes.getDestination( topicNameReceive, Domain.TOPIC );
+			Queue queueSend = ( Queue )hermes.getDestination( jmsEndpoint.getSend(), Domain.QUEUE );
+			Topic topicReceive = ( Topic )hermes.getDestination( jmsEndpoint.getReceive(), Domain.TOPIC );
 
-			topicSubsriber = session.createDurableSubscriber( topicReceive, "durableSubscription" + topicNameReceive );
+			topicSubsriber = session.createDurableSubscriber( topicReceive, "durableSubscription" + jmsEndpoint.getReceive());
 
 			Message textMessageSend = messageSend( submitContext, request, session, hermes, queueSend );
 
