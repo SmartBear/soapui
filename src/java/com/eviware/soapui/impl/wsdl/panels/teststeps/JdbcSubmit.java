@@ -293,9 +293,7 @@ public class JdbcSubmit implements Submit, Runnable
 		catch( SQLException e )
 		{
 			context.setProperty( JDBC_ERROR, e );
-		}
-		catch( Exception e )
-		{
+			throw e;
 		}
 		finally
 		{
@@ -366,7 +364,7 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 		catch( Exception e )
 		{
-			e.printStackTrace();
+			SoapUI.logError( e );
 		}
 		finally
 		{
