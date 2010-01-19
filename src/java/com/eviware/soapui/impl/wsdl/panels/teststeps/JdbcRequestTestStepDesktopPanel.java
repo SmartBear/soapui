@@ -47,6 +47,7 @@ import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
+import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
@@ -83,6 +84,7 @@ import com.eviware.soapui.support.jdbc.JdbcUtils;
 import com.eviware.soapui.support.log.JLogList;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.swing.JXEditAreaPopupMenu;
+import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
@@ -136,6 +138,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	private long startTime;
 	private SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 	protected JButton reconfigureConnPropertiesButton;
+	protected PropertyHolderTable propertyHolderTable;
 
 	public JdbcRequestTestStepDesktopPanel( JdbcRequestTestStep modelItem )
 	{
@@ -305,14 +308,44 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 	protected JComponent buildProperties()
 	{
-		PropertyHolderTable holderTable = new PropertyHolderTable( getModelItem() );
+		propertyHolderTable = new PropertyHolderTable( getModelItem() );
 
 		JUndoableTextField textField = new JUndoableTextField( true );
 
 		PropertyExpansionPopupListener.enable( textField, getModelItem() );
-		holderTable.getPropertiesTable().setDefaultEditor( String.class, new DefaultCellEditor( textField ) );
+		propertyHolderTable.getPropertiesTable().setDefaultEditor( String.class, new DefaultCellEditor( textField ) );
 
-		return holderTable;
+		return propertyHolderTable;
+	}
+
+	public PropertyHolderTable getPropertyHolderTable()
+	{
+		return propertyHolderTable;
+	}
+
+	public void setPropertyHolderTable( StringToStringMap preparedProperties )
+	{
+		// first remove the old content
+		String[] names = propertyHolderTable.getHolder().getPropertyNames();
+		if( names.length > 0 )
+		{
+			for( String propertyName : names )
+			{
+				( ( MutableTestPropertyHolder )propertyHolderTable.getHolder() ).removeProperty( propertyName );
+			}
+		}
+		propertyHolderTable.getPropertiesTable().removeAll();
+		if( preparedProperties != null )
+		{
+			int i = 0;
+			for( String key : preparedProperties.keySet() )
+			{
+				String value = preparedProperties.get( key );
+				( ( MutableTestPropertyHolder )propertyHolderTable.getHolder() ).addProperty( key );
+				( ( MutableTestPropertyHolder )propertyHolderTable.getHolder() ).setPropertyValue( key, value );
+				i++ ;
+			}
+		}
 	}
 
 	protected JComponent buildToolbar()
