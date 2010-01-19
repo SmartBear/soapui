@@ -34,9 +34,9 @@ public class HermesJmsRequestPublishSubscribeTransport extends HermesJmsRequestT
 
 	public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception
 	{
-		TopicConnectionFactory connectionFactory = null;
-		TopicConnection connection = null;
-		TopicSession session = null;
+		TopicConnectionFactory topicConnectionFactory = null;
+		TopicConnection topicConnection = null;
+		TopicSession topicSession = null;
 		TopicSubscriber topicDurableSubsriber = null;
 		try
 		{
@@ -46,23 +46,22 @@ public class HermesJmsRequestPublishSubscribeTransport extends HermesJmsRequestT
 
 			Hermes hermes = getHermes(jmsEndpoint.getSessionName(), request);
 			// connection factory
-			connectionFactory = (TopicConnectionFactory) hermes.getConnectionFactory();
+			topicConnectionFactory = (TopicConnectionFactory) hermes.getConnectionFactory();
 
-			// connection
-			connection = connectionFactory.createTopicConnection();
-			connection.setClientID(jmsEndpoint.getSessionName()+"-"+jmsEndpoint.getReceive());
-			connection.start();
+		// connection
+			topicConnection = (TopicConnection)createConnection( submitContext, request, topicConnectionFactory ,Domain.TOPIC,  jmsEndpoint.getSessionName()+"-"+jmsEndpoint.getReceive());
+			topicConnection.start();
 
 			// session
-			session = connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
 
 			// destination
 			Topic topicPublish = (Topic) hermes.getDestination(jmsEndpoint.getSend(), Domain.TOPIC);
 			Topic topicSubscribe = (Topic) hermes.getDestination(jmsEndpoint.getReceive(), Domain.TOPIC);
 			
-			topicDurableSubsriber = session.createDurableSubscriber(topicSubscribe, "durableSubscription" + jmsEndpoint.getReceive());
+			topicDurableSubsriber = topicSession.createDurableSubscriber(topicSubscribe, "durableSubscription" + jmsEndpoint.getReceive());
 			
-		  Message messagePublish = messagePublish(submitContext, request, session, hermes, topicPublish);
+		  Message messagePublish = messagePublish(submitContext, request, topicSession, hermes, topicPublish);
 
 			return makeResponse(submitContext, request, timeStarted, messagePublish, topicDurableSubsriber);
 		}
@@ -76,7 +75,7 @@ public class HermesJmsRequestPublishSubscribeTransport extends HermesJmsRequestT
 		}
 		finally
 		{
-			closeSessionAndConnection(connection, session);
+			closeSessionAndConnection(topicConnection, topicSession);
 		}
 		return null;
 	}

@@ -33,34 +33,31 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 
 	public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception
 	{
-		TopicConnectionFactory connectionFactory = null;
-		TopicConnection connection = null;
-		TopicSession session = null;
+		TopicConnectionFactory topicConnectionFactory = null;
+		TopicConnection topicConnection = null;
+		TopicSession topicSession = null;
 		try
 		{
 			JMSEndpoint jmsEndpoint = new JMSEndpoint( request, submitContext );
 
-//			String[] parameters = extractEndpointParameters(request);
-//			String sessionName = getEndpointParameter(parameters, 0, null, submitContext);
-//			String topicName = getEndpointParameter(parameters, 1, Domain.TOPIC, submitContext);
-			
 
 			submitContext.setProperty(HERMES_SESSION_NAME, jmsEndpoint.getSessionName());
 			Hermes hermes = getHermes(jmsEndpoint.getSessionName(), request);
 			// connection factory
-			connectionFactory = (TopicConnectionFactory) hermes.getConnectionFactory();
+			topicConnectionFactory = (TopicConnectionFactory) hermes.getConnectionFactory();
 
-			// connection
-			connection = connectionFactory.createTopicConnection();
-			connection.start();
+			
+	   	// connection
+			topicConnection = (TopicConnection)createConnection( submitContext, request, topicConnectionFactory ,Domain.TOPIC,  null);
+			topicConnection.start();
 
 			// session
-			session = connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
 
 			// destination
 			Topic topicPublish = (Topic) hermes.getDestination(jmsEndpoint.getSend(), Domain.TOPIC);
 
-			Message messagePublish = messagePublish(submitContext, request, session, hermes, topicPublish);
+			Message messagePublish = messagePublish(submitContext, request, topicSession, hermes, topicPublish);
 
 			return makeEmptyResponse(submitContext, request, timeStarted, messagePublish);
 		}
@@ -74,7 +71,7 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 		}
 		finally
 		{
-			closeSessionAndConnection(connection, session);
+			closeSessionAndConnection(topicConnection, topicSession);
 		}
 		return null;
 	}

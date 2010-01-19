@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
+import hermes.Domain;
 import hermes.Hermes;
 
 import java.io.BufferedReader;
@@ -23,9 +24,13 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
+import javax.jms.QueueConnection;
+import javax.jms.QueueConnectionFactory;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
+import javax.jms.TopicConnection;
+import javax.jms.TopicConnectionFactory;
 import javax.jms.TopicPublisher;
 import javax.jms.TopicSession;
 import javax.naming.Context;
@@ -101,14 +106,13 @@ public class HermesJmsRequestTransport implements RequestTransport
 		if( ix == -1 )
 			throw new MissingTransportException( "Missing protocol in endpoint [" + request.getEndpoint() + "]" );
 
-		
 		String[] params = JMSEndpoint.extractEndpointParameters( request );
 
 		// resolve sending class
 		if( params.length == 2 )
 		{
 			String destinationName = PropertyExpander.expandProperties( submitContext, params[1] );
-			if( destinationName.startsWith(JMSEndpoint. QUEUE_ENDPOINT_PREFIX ) )
+			if( destinationName.startsWith( JMSEndpoint.QUEUE_ENDPOINT_PREFIX ) )
 			{
 				return new HermesJmsRequestSendTransport();
 			}
@@ -149,7 +153,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 			{
 				return new HermesJmsRequestSendReceiveTransport();
 			}
-			else if( destinationSendName.startsWith(JMSEndpoint. QUEUE_ENDPOINT_PREFIX )
+			else if( destinationSendName.startsWith( JMSEndpoint.QUEUE_ENDPOINT_PREFIX )
 					&& destinationReceiveName.startsWith( JMSEndpoint.TOPIC_ENDPOINT_PREFIX ) )
 			{
 				return new HermesJmsRequestSendSubscribeTransport();
@@ -423,10 +427,9 @@ public class HermesJmsRequestTransport implements RequestTransport
 	private boolean isTextAttachment( Request request )
 	{
 		if( request.getAttachments().length > 0
-				&& ( 
-						request.getAttachments()[0].getContentType().contains( "/text" )
-						|| request.getAttachments()[0].getContentType().contains( "/xml" ) 
-						|| request.getAttachments()[0].getContentType().contains( "text/plain" ) ) )
+				&& ( request.getAttachments()[0].getContentType().contains( "/text" )
+						|| request.getAttachments()[0].getContentType().contains( "/xml" ) || request.getAttachments()[0]
+						.getContentType().contains( "text/plain" ) ) )
 		{
 			return true;
 		}
@@ -478,20 +481,44 @@ public class HermesJmsRequestTransport implements RequestTransport
 		}
 	}
 
-	protected Connection createConnection( SubmitContext submitContext, Request request, ConnectionFactory connectionFactory ) throws JMSException
+	protected Connection createConnection( SubmitContext submitContext, Request request,
+			ConnectionFactory connectionFactory, Domain domain, String clientId ) throws JMSException
 	{
-		Connection connection;
-	
+		QueueConnection queueConnection;
+		TopicConnection topicConnection;
+
 		String username = submitContext.expand( request.getUsername() );
 		String password = submitContext.expand( request.getPassword() );
-	
-		connection = StringUtils.hasContent( username ) ? connectionFactory.createConnection( username, password )
-				: connectionFactory.createConnection();
-	
-		return connection;
+
+		if( domain.equals( Domain.TOPIC ) )
+		{
+			topicConnection = StringUtils.hasContent( username ) ? ( ( TopicConnectionFactory )connectionFactory )
+					.createTopicConnection( username, password ) : ( ( TopicConnectionFactory )connectionFactory )
+					.createTopicConnection();
+
+			if( !StringUtils.isNullOrEmpty( clientId ) )
+				topicConnection.setClientID( clientId );
+
+			return topicConnection;
+		}
+		else if( domain.equals( Domain.QUEUE ) )
+		{
+			queueConnection = StringUtils.hasContent( username ) ? ( ( QueueConnectionFactory )connectionFactory )
+					.createQueueConnection( username, password ) : ( ( QueueConnectionFactory )connectionFactory )
+					.createQueueConnection();
+
+			if( !StringUtils.isNullOrEmpty( clientId ) )
+				queueConnection.setClientID( clientId );
+
+			return queueConnection;
+		}
+		else
+		{
+			return null;
+		}
 	}
 
-	@SuppressWarnings("serial")
+	@SuppressWarnings( "serial" )
 	public static class UnresolvedJMSEndpointException extends Exception
 	{
 		public UnresolvedJMSEndpointException( String msg )

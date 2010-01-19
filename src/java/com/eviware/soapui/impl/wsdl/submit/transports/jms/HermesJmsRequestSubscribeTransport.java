@@ -44,9 +44,9 @@ public class HermesJmsRequestSubscribeTransport extends HermesJmsRequestTranspor
 
 	public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception
 	{
-		TopicConnectionFactory connectionFactory = null;
-		TopicConnection connection = null;
-		TopicSession session = null;
+		TopicConnectionFactory topicConnectionFactory = null;
+		TopicConnection topicConnection = null;
+		TopicSession topicSession = null;
 		TopicSubscriber topicDurableSubsriber = null;
 		try
 		{
@@ -57,21 +57,20 @@ public class HermesJmsRequestSubscribeTransport extends HermesJmsRequestTranspor
 
 			Hermes hermes = getHermes(jmsEndpoint.getSessionName(), request);
 			// connection factory
-			connectionFactory = (TopicConnectionFactory) hermes.getConnectionFactory();
+			topicConnectionFactory = (TopicConnectionFactory) hermes.getConnectionFactory();
 
 			// connection
-			connection = connectionFactory.createTopicConnection();
-			connection.setClientID(jmsEndpoint.getSessionName()+"-"+jmsEndpoint.getReceive());
-			connection.start();
-
+			topicConnection = (TopicConnection)createConnection( submitContext, request, topicConnectionFactory ,Domain.TOPIC,  null);
+			topicConnection.start();
+			
 			// session
-			session = connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
 
 			// destination
 			Topic topicSubscribe = (Topic) hermes.getDestination(jmsEndpoint.getReceive(), Domain.TOPIC);
 			
     		// create durable subscriber
-			topicDurableSubsriber = session.createDurableSubscriber(topicSubscribe, "durableSubscription" + jmsEndpoint.getReceive());
+			topicDurableSubsriber = topicSession.createDurableSubscriber(topicSubscribe, "durableSubscription" + jmsEndpoint.getReceive());
 
 			return makeResponse(submitContext, request, timeStarted, null ,topicDurableSubsriber);
 		}
@@ -87,7 +86,7 @@ public class HermesJmsRequestSubscribeTransport extends HermesJmsRequestTranspor
 		{
 			if (topicDurableSubsriber != null)
 				topicDurableSubsriber.close();
-			closeSessionAndConnection(connection, session);
+			closeSessionAndConnection(topicConnection,topicSession);
 		}
 		return null;
 	}

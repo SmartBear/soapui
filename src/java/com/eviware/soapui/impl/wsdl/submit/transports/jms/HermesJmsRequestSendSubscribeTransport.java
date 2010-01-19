@@ -15,64 +15,67 @@ package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 import hermes.Domain;
 import hermes.Hermes;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Queue;
+import javax.jms.QueueConnection;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.QueueSession;
 import javax.jms.Session;
 import javax.jms.Topic;
+import javax.jms.TopicConnection;
+import javax.jms.TopicConnectionFactory;
+import javax.jms.TopicSession;
 import javax.jms.TopicSubscriber;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.support.StringUtils;
 
 public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTransport
 {
 
 	public Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
 	{
-		ConnectionFactory connectionFactory = null;
-		Connection connection = null;
-		Session session = null;
+		TopicConnectionFactory topicConnectionFactory = null;
+		TopicConnection topicConnection = null;
+		TopicSession topicSession = null;
+
+		QueueConnectionFactory queueConnectionFactory = null;
+		QueueConnection queueConnection = null;
+		QueueSession queueSession = null;
+		
+		
 		TopicSubscriber topicSubsriber = null;
 		try
 		{
 			
 			JMSEndpoint jmsEndpoint = new JMSEndpoint( request, submitContext );
 			
-//			String[] parameters = extractEndpointParameters( request );
-//			String sessionName = getEndpointParameter( parameters, 0, null, submitContext );
-//			String queueNameSend = getEndpointParameter( parameters, 1, Domain.QUEUE, submitContext );
-//			String topicNameReceive = getEndpointParameter( parameters, 2, Domain.TOPIC, submitContext );
 
 			submitContext.setProperty( HERMES_SESSION_NAME, jmsEndpoint.getSessionName() );
 
 			Hermes hermes = getHermes( jmsEndpoint.getSessionName(), request );
 
-			connectionFactory = ( javax.jms.ConnectionFactory )hermes.getConnectionFactory();
+			queueConnectionFactory = ( javax.jms.QueueConnectionFactory )hermes.getConnectionFactory();
 
-			// connection
-			String username = submitContext.expand( request.getUsername() );
-			String password = submitContext.expand( request.getPassword() );
+		// connection
+			topicConnection = (TopicConnection)createConnection( submitContext, request, topicConnectionFactory ,Domain.TOPIC,  null);
+			topicConnection.start();
 
-			connection = StringUtils.hasContent( username ) ? connectionFactory.createConnection( username, password )
-					: connectionFactory.createConnection();
+			queueConnection = (QueueConnection)createConnection( submitContext, request, queueConnectionFactory ,Domain.QUEUE,  null);
+			queueConnection.start();
 
-			connection.setClientID( jmsEndpoint.getSessionName() + "-" + jmsEndpoint.getReceive() );
-			connection.start();
-
-			session = connection.createSession( false, Session.AUTO_ACKNOWLEDGE );
+			queueSession = queueConnection.createQueueSession( false, Session.AUTO_ACKNOWLEDGE );
+			topicSession = topicConnection.createTopicSession( false, Session.AUTO_ACKNOWLEDGE );
 
 			Queue queueSend = ( Queue )hermes.getDestination( jmsEndpoint.getSend(), Domain.QUEUE );
 			Topic topicReceive = ( Topic )hermes.getDestination( jmsEndpoint.getReceive(), Domain.TOPIC );
 
-			topicSubsriber = session.createDurableSubscriber( topicReceive, "durableSubscription" + jmsEndpoint.getReceive());
+			topicSubsriber = topicSession.createDurableSubscriber( topicReceive, "durableSubscription" + jmsEndpoint.getReceive());
 
-			Message textMessageSend = messageSend( submitContext, request, session, hermes, queueSend );
+			Message textMessageSend = messageSend( submitContext, request, queueSession, hermes, queueSend );
 
 			return makeResponse( submitContext, request, timeStarted, textMessageSend, topicSubsriber );
 		}
@@ -88,7 +91,8 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 		{
 			if( topicSubsriber != null )
 				topicSubsriber.close();
-			closeSessionAndConnection( connection, session );
+			closeSessionAndConnection( topicConnection, topicSession );
+			closeSessionAndConnection( queueConnection, queueSession );
 		}
 		return null;
 	}
