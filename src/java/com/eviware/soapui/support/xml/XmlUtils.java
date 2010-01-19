@@ -1433,9 +1433,10 @@ public final class XmlUtils
 		Element resultsElement = xmlDocumentResult.createElement( "Results" );
 		xmlDocumentResult.appendChild( resultsElement );
 
-		if( statement.getResultSet() != null )
+		ResultSet resultSet = statement.getResultSet();
+		if( resultSet != null )
 		{
-			xmlDocumentResult = addResultSetXmlPart( resultsElement, statement.getResultSet(), xmlDocumentResult );
+			xmlDocumentResult = addResultSetXmlPart( resultsElement, resultSet, xmlDocumentResult );
 			while( statement.getMoreResults() )
 			{
 				xmlDocumentResult = addResultSetXmlPart( resultsElement, statement.getResultSet(), xmlDocumentResult );
