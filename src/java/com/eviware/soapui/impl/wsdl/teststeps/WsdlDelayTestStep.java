@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import javax.swing.SwingUtilities;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -63,6 +65,7 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties
 		addProperty( new DefaultTestStepProperty( "delay", true, new DefaultTestStepProperty.PropertyHandlerAdapter()
 		{
 
+			@Override
 			public String getValue( DefaultTestStepProperty property )
 			{
 				return getDelayString();
@@ -82,6 +85,7 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties
 		delayString = reader.readString( "delay", DEFAULT_DELAY );
 	}
 
+	@Override
 	public String getLabel()
 	{
 		String str = running ? super.getName() + " [" + ( delay - timeWaited ) + "ms]" : super.getName() + " ["
@@ -93,11 +97,13 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties
 		return str;
 	}
 
+	@Override
 	public String getDefaultSourcePropertyName()
 	{
 		return "delay";
 	}
 
+	@Override
 	public String getDefaultTargetPropertyName()
 	{
 		return "delay";
@@ -110,6 +116,7 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties
 		config.setConfig( builder.finish() );
 	}
 
+	@Override
 	public void resetConfigOnMove( TestStepConfig config )
 	{
 		super.resetConfigOnMove( config );
@@ -137,7 +144,7 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties
 	{
 		try
 		{
-			return Integer.parseInt( PropertyExpander.expandProperties( this, delayString ));
+			return Integer.parseInt( PropertyExpander.expandProperties( this, delayString ) );
 		}
 		catch( NumberFormatException e )
 		{
@@ -175,19 +182,30 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties
 			}
 
 			// sleep in chunks for canceling
-			for( timeWaited = 0; !canceled && timeWaited < delay; timeWaited += DELAY_CHUNK )
+			final long stopTime = System.nanoTime() + ( long )delay * 1000000;
+			int lastUpdate = 0;
+			while( !canceled && timeWaited < delay )
 			{
-				if( timeWaited % 1000 == 0 && context.getProperty( TestCaseRunContext.LOAD_TEST_RUNNER ) == null )
+				if( timeWaited - lastUpdate > 1000 && context.getProperty( TestCaseRunContext.LOAD_TEST_RUNNER ) == null )
 				{
 					String newLabel = getLabel();
-					notifyPropertyChanged( WsdlTestStep.LABEL_PROPERTY, oldLabel, newLabel );
+					if( !UISupport.isHeadless() )
+					{
+						final String finalOldLabel = oldLabel, finalNewLabel = newLabel;
+						SwingUtilities.invokeLater( new Runnable()
+						{
+							public void run()
+							{
+								notifyPropertyChanged( WsdlTestStep.LABEL_PROPERTY, finalOldLabel, finalNewLabel );
+							}
+						} );
+					}
 					oldLabel = newLabel;
+					lastUpdate = timeWaited;
 				}
 
-				if( timeWaited <= delay - DELAY_CHUNK )
-					Thread.sleep( DELAY_CHUNK );
-				else
-					Thread.sleep( delay % DELAY_CHUNK );
+				Thread.sleep( Math.min( DELAY_CHUNK, delay - timeWaited ) );
+				timeWaited = delay - ( int )( ( stopTime - System.nanoTime() ) / 1000000 );
 			}
 		}
 		catch( InterruptedException e )
@@ -207,6 +225,7 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties
 		return result;
 	}
 
+	@Override
 	public boolean cancel()
 	{
 		canceled = true;
