@@ -1434,6 +1434,7 @@ public final class XmlUtils
 		xmlDocumentResult.appendChild( resultsElement );
 
 		ResultSet resultSet = statement.getResultSet();
+		resultSet.setFetchSize( statement.getFetchSize() );
 		if( resultSet != null )
 		{
 			xmlDocumentResult = addResultSetXmlPart( resultsElement, resultSet, xmlDocumentResult );

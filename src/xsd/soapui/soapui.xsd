@@ -1872,6 +1872,7 @@
     	</xsd:sequence>
     	<xsd:attribute name="queryTimeout" type="xsd:string"></xsd:attribute>
     	<xsd:attribute name="maxRows" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="fetchSize" type="xsd:string"></xsd:attribute>
     </xsd:complexType>
 
     <xsd:complexType name="JMSHeaderConf">

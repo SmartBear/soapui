@@ -672,6 +672,11 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		return jdbcRequestTestStepConfig.getMaxRows();
 	}
 
+	public String getFetchSize()
+	{
+		return jdbcRequestTestStepConfig.getFetchSize();
+	}
+
 	public void setQueryTimeout( String queryTimeout )
 	{
 		String old = getQueryTimeout();
@@ -684,6 +689,13 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		String old = getMaxRows();
 		jdbcRequestTestStepConfig.setMaxRows( maxRows );
 		notifyPropertyChanged( "maxRows", old, maxRows );
+	}
+
+	public void setFetchSize( String fetchSize )
+	{
+		String old = getFetchSize();
+		jdbcRequestTestStepConfig.setFetchSize( fetchSize );
+		notifyPropertyChanged( "fetchSize", old, fetchSize );
 	}
 
 	public void setResponse( JdbcResponse response, SubmitContext context )

@@ -352,6 +352,18 @@ public class JdbcSubmit implements Submit, Runnable
 		{
 			UISupport.showErrorMessage( "Problem setting maxRows: " + e.getMessage() );
 		}
+		try
+		{
+			if( !StringUtils.isNullOrEmpty( testStep.getFetchSize()) ) 
+			{
+				String fetchSize = PropertyExpander.expandProperties( testStep, testStep.getFetchSize() );
+				statement.setFetchSize( Integer.parseInt( fetchSize ) );
+			}
+		}
+		catch( NumberFormatException e )
+		{
+			UISupport.showErrorMessage( "Problem setting fetchSize: " + e.getMessage() );
+		}
 	}
 
 	protected String createResponse()

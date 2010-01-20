@@ -47,6 +47,7 @@ public class JdbcRequestTestStepPanelBuilder extends EmptyPanelBuilder<JdbcReque
 		JPropertiesTable<JdbcRequestTestStep> table = buildDefaultProperties( modelItem, "JdbcRequestTestStep Properties" );
 		table.addProperty( "Max Rows", "maxRows", true );
 		table.addProperty( "Query Timeout", "queryTimeout", true );
+		table.addProperty( "Fetch Size", "fetchSize", true );
 		return table;
 	}
 }
