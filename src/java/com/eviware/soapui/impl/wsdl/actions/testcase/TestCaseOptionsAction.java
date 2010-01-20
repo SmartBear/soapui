@@ -50,7 +50,7 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase>
 	private static final String WS_RM_EXPIRES = "WS-RM Expires";
 	private static final String AMF_LOGIN = "login";
 	private static final String AMF_PASSWORD = "password";
-	private static final String AMF_AUTHORISATION_ENABLE = "AMF Authorisation";
+	private static final String AMF_AUTHORISATION_ENABLE = "AMF Session";
 	private static final String AMF_ENDPOINT = "endpoint";
 
 	private XFormDialog dialog;
@@ -96,10 +96,11 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase>
 			wsrmForm.addTextField( WS_RM_EXPIRES, "Expires after", FieldType.TEXT );
 
 			amfForm = builder.createForm( "AMF" );
-			amfForm.addCheckBox( AMF_AUTHORISATION_ENABLE, "enable AMF Authorisation" ).addFormFieldListener(new AMFXFormFieldListener());
-			amfForm.addTextField( AMF_ENDPOINT, "AMF endpoint", FieldType.TEXT );
-			amfForm.addTextField( AMF_LOGIN, "AMF login", FieldType.TEXT );
-			amfForm.addTextField( AMF_PASSWORD, "AMF password", FieldType.TEXT );
+			amfForm.addCheckBox( AMF_AUTHORISATION_ENABLE, "Enable AMF Session" ).addFormFieldListener(
+					new AMFXFormFieldListener() );
+			amfForm.addTextField( AMF_ENDPOINT, "AMF Authorization endpoint", FieldType.TEXT );
+			amfForm.addTextField( AMF_LOGIN, "AMF Authorization usernmae", FieldType.TEXT );
+			amfForm.addTextField( AMF_PASSWORD, "AMF Authorization password", FieldType.TEXT );
 
 			dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.TESTCASEOPTIONS_HELP_URL ),
 					"Specify general options for this TestCase", UISupport.OPTIONS_ICON );
@@ -168,8 +169,9 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase>
 			}
 		}
 	}
-	
-	private  class AMFXFormFieldListener implements XFormFieldListener{
+
+	private class AMFXFormFieldListener implements XFormFieldListener
+	{
 
 		public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 		{
@@ -177,6 +179,6 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase>
 			amfForm.getFormField( AMF_LOGIN ).setEnabled( Boolean.parseBoolean( newValue ) );
 			amfForm.getFormField( AMF_PASSWORD ).setEnabled( Boolean.parseBoolean( newValue ) );
 		}
-		
+
 	}
 }

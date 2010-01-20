@@ -195,7 +195,7 @@ public class AMFSubmit implements Submit, Runnable
 			amfRequest.clearArguments();
 			if( context.getModelItem() instanceof AMFRequestTestStep )
 			{
-				if( credentials != null && credentials.isLogedIn() )
+				if( credentials != null && credentials.isLoggedIn() )
 				{
 					credentials.logout();
 					credentials=null;

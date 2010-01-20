@@ -139,7 +139,7 @@ public class AMFCredentials
 		this.logedIn = logedIn;
 	}
 
-	public boolean isLogedIn()
+	public boolean isLoggedIn()
 	{
 		return logedIn;
 	}

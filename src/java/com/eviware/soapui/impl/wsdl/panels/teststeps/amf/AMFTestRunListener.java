@@ -19,6 +19,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunListener;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.support.StringUtils;
 
 import flex.messaging.io.amf.client.exceptions.ClientStatusException;
 import flex.messaging.io.amf.client.exceptions.ServerStatusException;
@@ -29,10 +30,10 @@ public class AMFTestRunListener implements TestRunListener
 
 	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
-		if( runContext.getProperty( AMFSubmit.AMF_CONNECTION ) != null
+		if( amfCredentials != null && runContext.getProperty( AMFSubmit.AMF_CONNECTION ) != null
 				&& runContext.getProperty( AMFSubmit.AMF_CONNECTION ) instanceof SoapUIAMFConnection )
 		{
-			if( amfCredentials.isLogedIn() )
+			if( amfCredentials.isLoggedIn() )
 				amfCredentials.logout();
 		}
 	}
@@ -55,9 +56,17 @@ public class AMFTestRunListener implements TestRunListener
 					String username = runContext.expand( wsdlTestCase.getConfig().getAmfLogin() );
 					String password = runContext.expand( wsdlTestCase.getConfig().getAmfPassword() );
 
-					amfCredentials = new AMFCredentials( endpoint, username, password, runContext );
+					SoapUIAMFConnection amfConnection = null;
 
-					SoapUIAMFConnection amfConnection = amfCredentials.login();
+					if( StringUtils.hasContent( endpoint ) && StringUtils.hasContent( username ) )
+					{
+						amfCredentials = new AMFCredentials( endpoint, username, password, runContext );
+						amfConnection = amfCredentials.login();
+					}
+					else
+					{
+						amfConnection = new SoapUIAMFConnection();
+					}
 
 					runContext.setProperty( AMFSubmit.AMF_CONNECTION, amfConnection );
 				}
