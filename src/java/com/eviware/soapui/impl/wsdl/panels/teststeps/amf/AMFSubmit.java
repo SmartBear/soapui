@@ -239,6 +239,7 @@ public class AMFSubmit implements Submit, Runnable
 			else
 			{
 				amfConnection = new SoapUIAMFConnection();
+				amfConnection.connect( context.expand( amfRequest.getEndpoint() ) );
 			}
 
 			context.setProperty( AMF_CONNECTION, amfConnection );

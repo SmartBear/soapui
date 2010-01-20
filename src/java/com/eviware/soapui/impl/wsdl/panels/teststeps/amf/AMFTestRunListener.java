@@ -57,17 +57,21 @@ public class AMFTestRunListener implements TestRunListener
 
 					SoapUIAMFConnection amfConnection = null;
 
-					if( StringUtils.hasContent( endpoint ) && StringUtils.hasContent( username ) )
+					if( StringUtils.hasContent( endpoint ) )
 					{
-						amfCredentials = new AMFCredentials( endpoint, username, password, runContext );
-						amfConnection = amfCredentials.login();
-					}
-					else
-					{
-						amfConnection = new SoapUIAMFConnection();
-					}
+						if( StringUtils.hasContent( username ) )
+						{
+							amfCredentials = new AMFCredentials( endpoint, username, password, runContext );
+							amfConnection = amfCredentials.login();
+						}
+						else
+						{
+							amfConnection = new SoapUIAMFConnection();
+							amfConnection.connect( runContext.expand( endpoint ) );
+						}
 
-					runContext.setProperty( AMFSubmit.AMF_CONNECTION, amfConnection );
+						runContext.setProperty( AMFSubmit.AMF_CONNECTION, amfConnection );
+					}
 				}
 			}
 			catch( ClientStatusException e )
