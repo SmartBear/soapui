@@ -48,7 +48,6 @@ public class AMFTestRunListener implements TestRunListener
 
 				if( wsdlTestCase.getConfig().getAmfAuthorisation() )
 				{
-
 					if( noAMFTestSteps( wsdlTestCase ) )
 						return;
 
@@ -91,12 +90,13 @@ public class AMFTestRunListener implements TestRunListener
 	 */
 	private static boolean noAMFTestSteps( WsdlTestCase wsdlTestCase )
 	{
-
 		if( wsdlTestCase.getTestStepsOfType( AMFRequestTestStep.class ).isEmpty() )
 		{
-			wsdlTestCase.getConfig().setAmfAuthorisation( false );
-			SoapUI.log( wsdlTestCase.getName()
-					+ " does not contain any AMF Test Step therefore AMF Authorisation is disabled!" );
+			// wsdlTestCase.getConfig().setAmfAuthorisation( false );
+			// SoapUI.log( wsdlTestCase.getName()
+			// +
+			// " does not contain any AMF Test Step therefore AMF Authorisation is disabled!"
+			// );
 			return true;
 		}
 		return false;

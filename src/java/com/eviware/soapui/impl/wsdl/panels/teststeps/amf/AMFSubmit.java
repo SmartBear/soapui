@@ -22,6 +22,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 
 import flex.messaging.io.amf.client.exceptions.ClientStatusException;
@@ -198,7 +199,7 @@ public class AMFSubmit implements Submit, Runnable
 				if( credentials != null && credentials.isLoggedIn() )
 				{
 					credentials.logout();
-					credentials=null;
+					credentials = null;
 				}
 				else
 				{
@@ -230,9 +231,15 @@ public class AMFSubmit implements Submit, Runnable
 			String username = context.expand( getTestCaseConfig( amfRequest ).getAmfLogin() );
 			String password = context.expand( getTestCaseConfig( amfRequest ).getAmfPassword() );
 
-			credentials = new AMFCredentials( endpoint, username, password, context );
-
-			amfConnection = credentials.login();
+			if( StringUtils.hasContent( endpoint ) && StringUtils.hasContent( username ) )
+			{
+				credentials = new AMFCredentials( endpoint, username, password, context );
+				amfConnection = credentials.login();
+			}
+			else
+			{
+				amfConnection = new SoapUIAMFConnection();
+			}
 
 			context.setProperty( AMF_CONNECTION, amfConnection );
 			return amfConnection;
