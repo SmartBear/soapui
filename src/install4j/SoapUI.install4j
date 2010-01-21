@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="4.2.6" transformSequenceNumber="2">
-  <directoryPresets config="${compiler:SRC_ROOT}/install4j/hermes/script.xml" />
+  <directoryPresets config="${compiler:SRC_ROOT}/install4j/hermes/hermesInstall64bit.bat" />
   <application name="soapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" keepModificationTimes="false" missingFilesStrategy="warn" shortName="soapUI" publisher="eviware software ab" publisherWeb="http://www.eviware.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="true" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="true" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
@@ -100,6 +100,7 @@
       <fileEntry mountPoint="1144" file="${compiler:DIST_ROOT}/wsi-scripts-usingbundled/setenv.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1334" file="${compiler:HERMES_INSTALLER}" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/hermesInstall.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/hermesInstall64bit.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/hermesInstall.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/script.xml" overwrite="4" shared="false" mode="644" uninstallMode="0" />
     </entries>
