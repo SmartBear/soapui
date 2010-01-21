@@ -11,6 +11,7 @@
  */
 package com.eviware.soapui.impl.wsdl.submit.transports.jms.util;
 
+import hermes.Hermes;
 import hermes.HermesInitialContextFactory;
 import hermes.JAXBHermesLoader;
 
@@ -147,12 +148,62 @@ public class HermesUtils
 			SoapUI.log( "No HermesJMS on default path %SOAPUI_HOME%/hermesJMS" );
 			return null;
 		}
-		
+
 	}
 
 	public static void setHermesJMSPath( String path )
 	{
 		if( path != null )
 			SoapUI.getSettings().setString( ToolsSettings.HERMES_JMS, path );
+	}
+
+	/**
+	 * 
+	 * 
+	 * @param projectName
+	 *           - full name of the project
+	 * @param absoluteHermesConfigPath
+	 *           is the path where wanted hermes-config.xml file is placed
+	 * 
+	 * @return hermes.Hermes
+	 * 
+	 * @throws NamingException
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 */
+	public static Hermes hermesContext( String projectName, String absoluteHermesConfigPath, String sessionName )
+			throws NamingException, MalformedURLException, IOException
+	{
+
+		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+		try
+		{
+			String key = projectName + absoluteHermesConfigPath;
+			Context context = getHermes( key, absoluteHermesConfigPath );
+
+			Hermes hermes = ( Hermes )context.lookup( sessionName );
+			return hermes;
+		}
+		catch( NamingException ne )
+		{
+			UISupport
+					.showErrorMessage( "Hermes configuration is not valid. Please check that 'Hermes Config' project property is set to path of proper hermes-config.xml file" );
+			throw new NamingException( "Session name '" + sessionName
+					+ "' does not exist in Hermes configuration or path to Hermes config ( " + absoluteHermesConfigPath
+					+ " )is not valid !!!!" );
+		}
+		catch( MalformedURLException mue )
+		{
+			SoapUI.logError( mue );
+		}
+		catch( IOException ioe )
+		{
+			SoapUI.logError( ioe );
+		}
+		finally
+		{
+			Thread.currentThread().setContextClassLoader( contextClassLoader );
+		}
+		return null;
 	}
 }

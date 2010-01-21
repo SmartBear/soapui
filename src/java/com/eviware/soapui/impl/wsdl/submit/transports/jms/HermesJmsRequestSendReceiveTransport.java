@@ -12,17 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
-import hermes.Domain;
-import hermes.Hermes;
-
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Queue;
-import javax.jms.QueueConnection;
-import javax.jms.QueueConnectionFactory;
 import javax.jms.QueueSession;
-import javax.jms.Session;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
@@ -34,32 +28,21 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 
 	public Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
 	{
-		QueueConnectionFactory queueConnectionFactory = null;
-		QueueConnection queueConnection = null;
 		QueueSession queueSession = null;
+		JMSConnectionHolder jmsConnectionHolder = null;
 		try
 		{
-			JMSEndpoint jmsEndpoint = new JMSEndpoint( request, submitContext );
-
-			submitContext.setProperty( HERMES_SESSION_NAME, jmsEndpoint.getSessionName() );
-
-			Hermes hermes = getHermes( jmsEndpoint.getSessionName(), request );
-
-			// connection factory
-			queueConnectionFactory = ( javax.jms.QueueConnectionFactory )hermes.getConnectionFactory();
-
-			queueConnection = (QueueConnection)createConnection( submitContext, request, queueConnectionFactory ,Domain.QUEUE,  null);
-			queueConnection.start();
-			
+			init( submitContext, request );
+			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, false, null , username, password);
 
 			// session
-			queueSession = queueConnection.createQueueSession( false, Session.AUTO_ACKNOWLEDGE );
+			queueSession = jmsConnectionHolder.getQueueSession();
 
 			// queue
-			Queue queueSend = ( Queue )hermes.getDestination( jmsEndpoint.getSend(), Domain.QUEUE );
-			Queue queueReceive = ( Queue )hermes.getDestination( jmsEndpoint.getReceive(), Domain.QUEUE );
+			Queue queueSend = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getSend() );
+			Queue queueReceive =  jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getReceive() );
 
-			Message messageSend = messageSend( submitContext, request, queueSession, hermes, queueSend );
+			Message messageSend = messageSend( submitContext, request, queueSession, jmsConnectionHolder.getHermes(), queueSend );
 
 			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive );
 
@@ -75,7 +58,7 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 		}
 		finally
 		{
-			closeSessionAndConnection( queueConnection, queueSession );
+			closeSessionAndConnection( jmsConnectionHolder.getQueueConnection(), queueSession );
 		}
 		return null;
 	}

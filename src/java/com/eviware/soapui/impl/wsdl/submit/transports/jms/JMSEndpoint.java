@@ -42,6 +42,13 @@ public class JMSEndpoint
 		receive = getEndpointParameter( 2 );
 	}
 
+	public JMSEndpoint( String sessionName, String send, String receive )
+	{
+		this.sessionName = sessionName;
+		this.send = send;
+		this.receive = receive;
+	}
+
 	public static String[] extractEndpointParameters( Request request )
 	{
 		resolveOldEndpointPattern( request );

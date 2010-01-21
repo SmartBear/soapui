@@ -68,9 +68,12 @@ public class HermesJmsRequestTransport implements RequestTransport
 	public static final String JMS_MESSAGE_SEND = "JMS_MESSAGE_SEND";
 	public static final String JMS_RESPONSE = "JMS_RESPONSE";
 	public static final String JMS_ERROR = "JMS_ERROR";
-	public static final String HERMES_SESSION_NAME = "HERMES_SESSION_NAME";
 	public static final String JMS_RECEIVE_TIMEOUT = "JMS_RECEIVE_TIMEOUT";
 
+	protected String username ;
+	protected String password ;
+	protected JMSEndpoint jmsEndpoint;
+	protected Hermes hermes;
 	protected List<RequestFilter> filters = new ArrayList<RequestFilter>();
 
 	public void abortRequest( SubmitContext submitContext )
@@ -91,7 +94,16 @@ public class HermesJmsRequestTransport implements RequestTransport
 	{
 		long timeStarted = Calendar.getInstance().getTimeInMillis();
 		submitContext.setProperty( JMS_RECEIVE_TIMEOUT, getTimeout( submitContext, request ) );
+	
 		return resolveType( submitContext, request ).execute( submitContext, request, timeStarted );
+	}
+
+	protected void init( SubmitContext submitContext, Request request ) throws NamingException
+	{
+		this.jmsEndpoint = new JMSEndpoint( request, submitContext );
+		this.hermes = getHermes( jmsEndpoint.getSessionName(), request );
+		this.username = submitContext.expand( request.getUsername() );
+		this.password = submitContext.expand( request.getPassword() );
 	}
 
 	protected Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception

@@ -12,20 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
-import hermes.Domain;
-import hermes.Hermes;
-
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Queue;
-import javax.jms.QueueConnection;
-import javax.jms.QueueConnectionFactory;
 import javax.jms.QueueSession;
-import javax.jms.Session;
 import javax.jms.Topic;
-import javax.jms.TopicConnection;
-import javax.jms.TopicConnectionFactory;
 import javax.jms.TopicSession;
 
 import com.eviware.soapui.SoapUI;
@@ -38,43 +30,24 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 
 	public Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
 	{
-		TopicConnectionFactory topicConnectionFactory = null;
-		TopicConnection topicConnection = null;
 		TopicSession topicSession = null;
-
-		QueueConnectionFactory queueConnectionFactory = null;
-		QueueConnection queueConnection = null;
 		QueueSession queueSession = null;
-
+		JMSConnectionHolder jmsConnectionHolder = null;
 		try
 		{
-			JMSEndpoint jmsEndpoint = new JMSEndpoint( request, submitContext );
+			init( submitContext, request );
+			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, true, null , username, password);
 
-			submitContext.setProperty( HERMES_SESSION_NAME, jmsEndpoint.getSessionName());
-
-			Hermes hermes = getHermes(jmsEndpoint.getSessionName(), request );
-			// connection factory
-			topicConnectionFactory = ( TopicConnectionFactory )hermes.getConnectionFactory();
-			queueConnectionFactory = ( QueueConnectionFactory )hermes.getConnectionFactory();
-
-			// connection
-			topicConnection = (TopicConnection)createConnection( submitContext, request, topicConnectionFactory ,Domain.TOPIC,  null);
-			topicConnection.start();
-
-			queueConnection = (QueueConnection)createConnection( submitContext, request, queueConnectionFactory ,Domain.QUEUE,  null);
-			queueConnection.start();
-			
-			
-			
 			// session
-			topicSession = topicConnection.createTopicSession( false, Session.AUTO_ACKNOWLEDGE );
-			queueSession = queueConnection.createQueueSession( false, Session.AUTO_ACKNOWLEDGE );
+			topicSession = jmsConnectionHolder.getTopicSession();
+			queueSession = jmsConnectionHolder.getQueueSession();
 
 			// destination
-			Topic topicPublish = ( Topic )hermes.getDestination( jmsEndpoint.getSend(), Domain.TOPIC );
-			Queue queueReceive = ( Queue )hermes.getDestination( jmsEndpoint.getReceive(), Domain.QUEUE );
+			Topic topicPublish = jmsConnectionHolder.getTopic( jmsConnectionHolder.getJmsEndpoint().getSend() );
+			Queue queueReceive = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getReceive() );
 
-			Message messagePublish = messagePublish( submitContext, request, topicSession, hermes, topicPublish );
+			Message messagePublish = messagePublish( submitContext, request, topicSession,
+					jmsConnectionHolder.getHermes(), topicPublish );
 
 			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive );
 
@@ -90,8 +63,8 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 		}
 		finally
 		{
-			closeSessionAndConnection( topicConnection, topicSession );
-			closeSessionAndConnection( queueConnection, queueSession );
+			closeSessionAndConnection( jmsConnectionHolder.getTopicConnection(), topicSession );
+			closeSessionAndConnection( jmsConnectionHolder.getQueueConnection(), queueSession );
 		}
 		return null;
 

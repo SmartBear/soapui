@@ -12,15 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
-import hermes.Domain;
-import hermes.Hermes;
-
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.Session;
 import javax.jms.Topic;
-import javax.jms.TopicConnection;
-import javax.jms.TopicConnectionFactory;
 import javax.jms.TopicSession;
 
 import com.eviware.soapui.SoapUI;
@@ -33,31 +27,20 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 
 	public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception
 	{
-		TopicConnectionFactory topicConnectionFactory = null;
-		TopicConnection topicConnection = null;
 		TopicSession topicSession = null;
+		JMSConnectionHolder jmsConnectionHolder = null;
 		try
 		{
-			JMSEndpoint jmsEndpoint = new JMSEndpoint( request, submitContext );
-
-
-			submitContext.setProperty(HERMES_SESSION_NAME, jmsEndpoint.getSessionName());
-			Hermes hermes = getHermes(jmsEndpoint.getSessionName(), request);
-			// connection factory
-			topicConnectionFactory = (TopicConnectionFactory) hermes.getConnectionFactory();
-
-			
-	   	// connection
-			topicConnection = (TopicConnection)createConnection( submitContext, request, topicConnectionFactory ,Domain.TOPIC,  null);
-			topicConnection.start();
+			init( submitContext, request );
+			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, false, true, null , username, password);
 
 			// session
-			topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+			topicSession = jmsConnectionHolder.getTopicSession();
 
 			// destination
-			Topic topicPublish = (Topic) hermes.getDestination(jmsEndpoint.getSend(), Domain.TOPIC);
+			Topic topicPublish = jmsConnectionHolder.getTopic( jmsConnectionHolder.getJmsEndpoint().getSend() );
 
-			Message messagePublish = messagePublish(submitContext, request, topicSession, hermes, topicPublish);
+			Message messagePublish = messagePublish(submitContext, request, topicSession, jmsConnectionHolder.getHermes(), topicPublish);
 
 			return makeEmptyResponse(submitContext, request, timeStarted, messagePublish);
 		}
@@ -71,7 +54,7 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 		}
 		finally
 		{
-			closeSessionAndConnection(topicConnection, topicSession);
+			closeSessionAndConnection( jmsConnectionHolder.getTopicConnection(), topicSession );
 		}
 		return null;
 	}
