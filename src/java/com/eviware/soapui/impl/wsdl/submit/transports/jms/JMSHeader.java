@@ -49,6 +49,8 @@ public class JMSHeader
 	public static final String JMSTIMESTAMP = "JMSTimestamp";
 	public static final String JMSREDELIVERED = "JMSRedelivered";
 	public static final String JMSDESTINATION = "JMSDestination";
+	public static final String DURABLE_SUBSCRIPTION_NAME = "durableSubscriptionName";
+	public static final String CLIENT_ID = "clientID";
 
 	private long timeTolive = Message.DEFAULT_TIME_TO_LIVE;
 

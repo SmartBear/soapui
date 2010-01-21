@@ -21,43 +21,50 @@ import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSEndpoint;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
 
-public class RequestJMSHeaderInspector extends AbstractJMSHeaderInspector implements XmlInspector, PropertyChangeListener
+public class RequestJMSHeaderInspector extends AbstractJMSHeaderInspector implements XmlInspector,
+		PropertyChangeListener
 {
 
 	private SimpleBindingForm simpleform;
 	AbstractHttpRequest<?> request;
-	
-	public RequestJMSHeaderInspector(AbstractHttpRequest<?> request)
+
+	public RequestJMSHeaderInspector( AbstractHttpRequest<?> request )
 	{
-		super(request);
-		this.request=request;
-		request.addPropertyChangeListener(this);
+		super( request );
+		this.request = request;
+		request.addPropertyChangeListener( this );
 	}
 
-	public void propertyChange(PropertyChangeEvent evt)
+	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if (request.getEndpoint() != null && evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
+		if( request.getEndpoint() != null && evt.getPropertyName().equals( AbstractHttpRequest.ENDPOINT_PROPERTY ) )
 		{
-			this.setEnabled(request.getEndpoint().startsWith(JMSEndpoint.JMS_ENDPIONT_PREFIX));
+			this.setEnabled( request.getEndpoint().startsWith( JMSEndpoint.JMS_ENDPIONT_PREFIX ) );
 		}
-		
+
 	}
 
-	public void buildContent(SimpleBindingForm form)
+	public void buildContent( SimpleBindingForm form )
 	{
-		this.simpleform=form;
-		simpleform.addSpace(5);
-		simpleform.appendTextField("JMSCorrelationID", "JMSCorrelationID", "JMSCorrelationID header property of JMS message");
-		simpleform.appendTextField("JMSReplyTo", "JMSReplyTo", "JMSReplyTo header property of JMS message");
-		simpleform.appendTextField("JMSType", "JMSType", "JMSType header property of JMS message");
-		simpleform.appendTextField("JMSPriority", "JMSPriority", "JMSPriority header property of JMS message");
-		simpleform.appendComboBox("JMSDeliveryMode", "JMSDeliveryMode", new String[] {
-				JMSDeliveryModeTypeConfig.PERSISTENT.toString(),JMSDeliveryModeTypeConfig.NON_PERSISTENT.toString()},
-				"Choose between NON PERSISTENT and PERSISTENT (default) message");
-		simpleform.appendTextField("timeToLive", "TimeToLive",
-				"specify 'time to live' of JMS message , zero means never expire which is default");
-		simpleform.addSpace(5);
+		this.simpleform = form;
+		simpleform.addSpace( 5 );
+		simpleform.appendTextField( "JMSCorrelationID", "JMSCorrelationID",
+				"JMSCorrelationID header property of JMS message" );
+		simpleform.appendTextField( "JMSReplyTo", "JMSReplyTo", "JMSReplyTo header property of JMS message" );
+		simpleform.appendTextField( "JMSType", "JMSType", "JMSType header property of JMS message" );
+		simpleform.appendTextField( "JMSPriority", "JMSPriority", "JMSPriority header property of JMS message" );
+		simpleform.appendComboBox( "JMSDeliveryMode", "JMSDeliveryMode", new String[] {
+				JMSDeliveryModeTypeConfig.PERSISTENT.toString(), JMSDeliveryModeTypeConfig.NON_PERSISTENT.toString() },
+				"Choose between NON PERSISTENT and PERSISTENT (default) message" );
+		simpleform.appendTextField( "timeToLive", "TimeToLive",
+				"specify 'time to live' of JMS message , zero means never expire which is default" );
+		simpleform
+				.appendTextField(
+						"durableSubscriptionName",
+						"Durable Subscription Name",
+						"specify 'Durable Subscription Name' for subscribing to topic , if not specified automatic name is 'durableSubscription' + 'topic name'" );
+		simpleform.appendTextField( "clientID", "ClientID", "specify optional 'ClientID' for of JMS connection" );
+		simpleform.addSpace( 5 );
 	}
-
 
 }

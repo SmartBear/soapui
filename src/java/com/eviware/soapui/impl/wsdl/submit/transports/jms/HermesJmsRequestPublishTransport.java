@@ -32,7 +32,7 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 		try
 		{
 			init( submitContext, request );
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, false, true, null , username, password);
+			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, false, true, clientID , username, password);
 
 			// session
 			topicSession = jmsConnectionHolder.getTopicSession();

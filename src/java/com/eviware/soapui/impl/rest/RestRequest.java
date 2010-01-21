@@ -236,6 +236,10 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 				JMSHeader.JMSPRIORITY ) );
 		result.addAll( PropertyExpansionUtils
 				.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.TIMETOLIVE ) );
+		result.addAll( PropertyExpansionUtils
+				.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.DURABLE_SUBSCRIPTION_NAME ) );
+		result.addAll( PropertyExpansionUtils
+				.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.CLIENT_ID ) );
 	}
 
 	public TestProperty addProperty( String name )

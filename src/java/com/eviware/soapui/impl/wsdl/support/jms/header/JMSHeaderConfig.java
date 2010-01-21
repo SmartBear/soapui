@@ -78,6 +78,16 @@ public class JMSHeaderConfig implements PropertyChangeNotifier
 	{
 		return jmsHeaderConfConfig.getTimeToLive();
 	}
+	
+	public String getDurableSubscriptionName()
+	{
+		return jmsHeaderConfConfig.getDurableSubscriptionName();
+	}
+	
+	public String getClientID()
+	{
+		return jmsHeaderConfConfig.getClientID();
+	}
 
 	public void setJMSCorrelationID(String newValue)
 	{
@@ -119,6 +129,20 @@ public class JMSHeaderConfig implements PropertyChangeNotifier
 		String oldValue = getTimeToLive();
 		jmsHeaderConfConfig.setTimeToLive(newValue);
 		propertyChangeSupport.firePropertyChange(JMSHeader.TIMETOLIVE, oldValue, newValue);
+	}
+	
+	public void setDurableSubscriptionName(String newValue)
+	{
+		String oldValue = getTimeToLive();
+		jmsHeaderConfConfig.setDurableSubscriptionName(newValue);
+		propertyChangeSupport.firePropertyChange(JMSHeader.DURABLE_SUBSCRIPTION_NAME, oldValue, newValue);
+	}
+	
+	public void setClientID(String newValue)
+	{
+		String oldValue = getTimeToLive();
+		jmsHeaderConfConfig.setClientID(newValue);
+		propertyChangeSupport.firePropertyChange(JMSHeader.CLIENT_ID, oldValue, newValue);
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener)

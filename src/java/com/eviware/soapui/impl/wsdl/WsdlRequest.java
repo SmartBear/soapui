@@ -551,7 +551,9 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
 				JMSHeader.JMSPRIORITY ) );
 		result.addAll( PropertyExpansionUtils
-				.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.TIMETOLIVE ) );
+				.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.DURABLE_SUBSCRIPTION_NAME ) );
+		result.addAll( PropertyExpansionUtils
+				.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.CLIENT_ID ) );
 	}
 
 	public class RequestHeaderHolder

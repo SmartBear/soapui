@@ -24,6 +24,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.support.StringUtils;
 
 public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTransport
 {
@@ -37,7 +38,8 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 		try
 		{
 			init( submitContext, request );
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, true, jmsEndpoint.getSessionName()+"-"+jmsEndpoint.getReceive() , username, password);
+			String clientIDString = StringUtils.hasContent( clientID ) ? clientID : jmsEndpoint.getSessionName()+"-"+jmsEndpoint.getReceive() ;
+			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, true,clientIDString , username, password);
 
 			// session
 			topicSession = jmsConnectionHolder.getTopicSession();
@@ -46,7 +48,8 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 			Queue queueSend = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getSend() );
 			Topic topicReceive = jmsConnectionHolder.getTopic( jmsConnectionHolder.getJmsEndpoint().getReceive() );
 
-			topicSubsriber = topicSession.createDurableSubscriber( topicReceive, "durableSubscription" +  jmsConnectionHolder.getJmsEndpoint().getReceive() );
+			topicSubsriber = topicSession.createDurableSubscriber( topicReceive, StringUtils.hasContent( durableSubscriptionName ) ? durableSubscriptionName : "durableSubscription"
+				+ jmsConnectionHolder.getJmsEndpoint().getReceive() );
 
 			Message textMessageSend = messageSend( submitContext, request, queueSession, jmsConnectionHolder.getHermes(), queueSend );
 

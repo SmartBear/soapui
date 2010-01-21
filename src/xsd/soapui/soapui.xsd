@@ -1880,8 +1880,14 @@
     	<xsd:attribute name="JMSReplyTo" type="xsd:string"></xsd:attribute>
     	<xsd:attribute name="JMSType" type="xsd:string"></xsd:attribute>
     	<xsd:attribute name="JMSPriority" type="xsd:string"></xsd:attribute>
-    	<xsd:attribute name="JMSDeliveryMode" type="tns:JMSDeliveryModeType"></xsd:attribute>
-        <xsd:attribute name="TimeToLive" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="JMSDeliveryMode"
+    		type="tns:JMSDeliveryModeType">
+    	</xsd:attribute>
+    	<xsd:attribute name="TimeToLive" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="DurableSubscriptionName"
+    		type="xsd:string">
+    	</xsd:attribute>
+    	<xsd:attribute name="ClientID" type="xsd:string"></xsd:attribute>
     </xsd:complexType>
 
 

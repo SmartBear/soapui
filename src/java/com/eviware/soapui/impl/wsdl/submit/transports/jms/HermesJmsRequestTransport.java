@@ -49,6 +49,7 @@ import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry.MissingTrans
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.impl.wsdl.support.RequestFileAttachment;
+import com.eviware.soapui.impl.wsdl.support.jms.header.JMSHeaderConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Request;
@@ -67,9 +68,11 @@ public class HermesJmsRequestTransport implements RequestTransport
 	public static final String JMS_ERROR = "JMS_ERROR";
 	public static final String JMS_RECEIVE_TIMEOUT = "JMS_RECEIVE_TIMEOUT";
 
-	protected String username ;
-	protected String password ;
+	protected String username;
+	protected String password;
 	protected JMSEndpoint jmsEndpoint;
+	protected String durableSubscriptionName;
+	protected String clientID;
 	protected Hermes hermes;
 	protected List<RequestFilter> filters = new ArrayList<RequestFilter>();
 
@@ -91,7 +94,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 	{
 		long timeStarted = Calendar.getInstance().getTimeInMillis();
 		submitContext.setProperty( JMS_RECEIVE_TIMEOUT, getTimeout( submitContext, request ) );
-	
+
 		return resolveType( submitContext, request ).execute( submitContext, request, timeStarted );
 	}
 
@@ -101,6 +104,11 @@ public class HermesJmsRequestTransport implements RequestTransport
 		this.hermes = getHermes( jmsEndpoint.getSessionName(), request );
 		this.username = submitContext.expand( request.getUsername() );
 		this.password = submitContext.expand( request.getPassword() );
+		JMSHeaderConfig jmsConfig = ( ( AbstractHttpRequest<?> )request ).getJMSHeaderConfig();
+   	this.durableSubscriptionName = submitContext.expand(jmsConfig.getDurableSubscriptionName());
+   	this.clientID = submitContext.expand(jmsConfig.getClientID());
+			
+
 	}
 
 	protected Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
