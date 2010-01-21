@@ -158,30 +158,22 @@ public class HermesUtils
 	}
 
 	/**
-	 * 
-	 * 
-	 * @param projectName
-	 *           - full name of the project
-	 * @param absoluteHermesConfigPath
-	 *           is the path where wanted hermes-config.xml file is placed
+	 * @param project
+	 * @param sessionName
 	 * 
 	 * @return hermes.Hermes
 	 * 
 	 * @throws NamingException
-	 * @throws MalformedURLException
-	 * @throws IOException
 	 */
-	public static Hermes hermesContext( String projectName, String absoluteHermesConfigPath, String sessionName )
-			throws NamingException, MalformedURLException, IOException
+	public static Hermes getHermes(  WsdlProject project, String sessionName )
+			throws NamingException
 	{
-
 		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
 		try
 		{
-			String key = projectName + absoluteHermesConfigPath;
-			Context context = getHermes( key, absoluteHermesConfigPath );
+			Context ctx = hermesContext( project );
 
-			Hermes hermes = ( Hermes )context.lookup( sessionName );
+			Hermes hermes = ( Hermes )ctx.lookup( sessionName );
 			return hermes;
 		}
 		catch( NamingException ne )
@@ -189,7 +181,7 @@ public class HermesUtils
 			UISupport
 					.showErrorMessage( "Hermes configuration is not valid. Please check that 'Hermes Config' project property is set to path of proper hermes-config.xml file" );
 			throw new NamingException( "Session name '" + sessionName
-					+ "' does not exist in Hermes configuration or path to Hermes config ( " + absoluteHermesConfigPath
+					+ "' does not exist in Hermes configuration or path to Hermes config ( " + project.getHermesConfig()
 					+ " )is not valid !!!!" );
 		}
 		catch( MalformedURLException mue )

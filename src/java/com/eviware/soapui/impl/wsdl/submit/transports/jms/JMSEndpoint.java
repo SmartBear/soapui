@@ -48,11 +48,20 @@ public class JMSEndpoint
 		this.send = send;
 		this.receive = receive;
 	}
+	
+	public JMSEndpoint( String jmsEndpointString )
+	{
+		parameters = jmsEndpointString.replaceFirst( JMS_ENDPIONT_PREFIX, "" )
+		.split( JMS_ENDPOINT_SEPARATOR );
+		sessionName = getEndpointParameter( 0 );
+		send = getEndpointParameter( 1 );
+		receive = getEndpointParameter( 2 );
+	}
 
 	public static String[] extractEndpointParameters( Request request )
 	{
 		resolveOldEndpointPattern( request );
-		
+
 		String[] parameters = request.getEndpoint().replaceFirst( JMS_ENDPIONT_PREFIX, "" )
 				.split( JMS_ENDPOINT_SEPARATOR );
 		return parameters;
@@ -66,7 +75,7 @@ public class JMSEndpoint
 			String newEndpoint = request.getEndpoint().replaceAll( JMS_OLD_ENDPOINT_SEPARATOR + "queue_",
 					JMS_ENDPOINT_SEPARATOR + "queue_" ).replaceAll( JMS_OLD_ENDPOINT_SEPARATOR + "topic_",
 					JMS_ENDPOINT_SEPARATOR + "topic_" );
-			
+
 			request.setEndpoint( newEndpoint );
 
 			refreshEndpointList( request, oldEndpoint, newEndpoint );

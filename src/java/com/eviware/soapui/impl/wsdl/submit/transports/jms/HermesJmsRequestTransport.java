@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -33,7 +32,6 @@ import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
 import javax.jms.TopicPublisher;
 import javax.jms.TopicSession;
-import javax.naming.Context;
 import javax.naming.NamingException;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -59,7 +57,6 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.UISupport;
 
 public class HermesJmsRequestTransport implements RequestTransport
 {
@@ -201,35 +198,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 	protected Hermes getHermes( String sessionName, Request request ) throws NamingException
 	{
 		WsdlProject project = ( WsdlProject )ModelSupport.getModelItemProject( request );
-		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-		try
-		{
-			Context ctx = HermesUtils.hermesContext( project );
-
-			Hermes hermes = ( Hermes )ctx.lookup( sessionName );
-			return hermes;
-		}
-		catch( NamingException ne )
-		{
-			UISupport
-					.showErrorMessage( "Hermes configuration is not valid. Please check that 'Hermes Config' project property is set to path of proper hermes-config.xml file" );
-			throw new NamingException( "Session name '" + sessionName
-					+ "' does not exist in Hermes configuration or path to Hermes config ( " + project.getHermesConfig()
-					+ " )is not valid !!!!" );
-		}
-		catch( MalformedURLException mue )
-		{
-			SoapUI.logError( mue );
-		}
-		catch( IOException ioe )
-		{
-			SoapUI.logError( ioe );
-		}
-		finally
-		{
-			Thread.currentThread().setContextClassLoader( contextClassLoader );
-		}
-		return null;
+		return HermesUtils.getHermes( project, sessionName );
 	}
 
 	protected long getTimeout( SubmitContext submitContext, Request request )
