@@ -716,7 +716,7 @@ return component!=null;</condition>
                 </serializedBean>
                 <condition>InstallationComponentSetup component =context.getInstallationComponentById("1263");
 
-return component.isSelected();</condition>
+return component!=null;</condition>
               </action>
               <action name="" id="566" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="3" errorMessage="Could not install icon">
                 <serializedBean>
@@ -948,6 +948,11 @@ return component.isSelected();</condition>
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
         <entry location="bin/soapui32.png" fileType="regular" />
+        <entry location=".i4j_external_1659/bin/soapui.sh" fileType="regular" />
+        <entry location=".i4j_external_1659/bin/mockservicerunner.sh" fileType="regular" />
+        <entry location=".i4j_external_1659/bin/loadtestrunner.sh" fileType="regular" />
+        <entry location=".i4j_external_1659/bin/toolrunner.sh" fileType="regular" />
+        <entry location=".i4j_external_1659/bin/testrunner.sh" fileType="regular" />
         <entry location=".i4j_fileset_1573" fileType="regular" />
       </exclude>
       <variables>
@@ -964,11 +969,11 @@ return component.isSelected();</condition>
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
         <entry location="bin/soapui32.png" fileType="regular" />
-        <entry location="bin/loadtestrunner.bat" fileType="regular" />
-        <entry location="bin/toolrunner.bat" fileType="regular" />
-        <entry location="bin/testrunner.bat" fileType="regular" />
-        <entry location="bin/soapui.bat" fileType="regular" />
-        <entry location="bin/mockservicerunner.bat" fileType="regular" />
+        <entry location=".i4j_external_1659/bin/soapui.bat" fileType="regular" />
+        <entry location=".i4j_external_1659/bin/mockservicerunner.bat" fileType="regular" />
+        <entry location=".i4j_external_1659/bin/loadtestrunner.bat" fileType="regular" />
+        <entry location=".i4j_external_1659/bin/toolrunner.bat" fileType="regular" />
+        <entry location=".i4j_external_1659/bin/testrunner.bat" fileType="regular" />
         <entry location=".i4j_fileset_1573" fileType="regular" />
       </exclude>
       <variables>
