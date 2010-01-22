@@ -704,6 +704,7 @@ URL=http://www.soapui.org]]>
           <install4j projectfile="src/install4j/SoapUI.install4j" 
           destination="${maven.build.dir}/media">
           <variable name="DIST_ROOT" value="${maven.build.dir}/dist"/>
+          <variable name="DIST_STANDALONE" value="${maven.build.dir}/standalone"/>
           <variable name="RESOURCES_HOME" value="${maven.soapui.install4j.resources}"/>
           <variable name="VERSION_NUMBER" value="${pom.currentVersion}"/>
           <variable name="SRC_ROOT" value="../"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="4.2.6" transformSequenceNumber="2">
-  <directoryPresets config="${compiler:SRC_ROOT}/install4j/hermes/hermesInstall64bit.bat" />
+  <directoryPresets config="${compiler:DIST_STANDALONE}/bin/toolrunner.sh" />
   <application name="soapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" keepModificationTimes="false" missingFilesStrategy="warn" shortName="soapUI" publisher="eviware software ab" publisherWeb="http://www.eviware.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="true" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="true" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
@@ -13,7 +13,7 @@
     </searchSequence>
     <variables>
       <variable name="SOAPUI_HOME" value="${installer:sys.installationDir}" />
-      <variable name="DIST_ROOT" value="D:\soapUI-workspace\SoapUI 3.0-alpha\target\dist" />
+      <variable name="DIST_ROOT" value="D:\soapUI-workspace\SoapUI 3.5-dev\target\dist" />
       <variable name="RESOURCES_HOME" value="" />
       <variable name="VERSION_NUMBER" value="" />
       <variable name="XULRUNNER" value="" />
@@ -23,15 +23,18 @@
       <variable name="HERMES_INSTALLER" value="D:\backups\instalacije\hermes-installer-1.13.jar" />
       <variable name="BRANDED_TITLE" value="" />
       <variable name="EXECUTABLE_NAME" value="soapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" />
+      <variable name="DIST_STANDALONE" value="" />
     </variables>
   </application>
   <files>
     <filesets>
+      <fileset name="Command runners - non bundled" id="1573" />
       <fileset name="Source" id="711" />
       <fileset name="Wsi-scripts-usingbundled" id="1140" />
       <fileset name="HermesJMS" id="1260" />
     </filesets>
     <roots>
+      <root id="1574" fileset="1573" location="" />
       <root id="712" fileset="711" location="" />
       <root id="1141" fileset="1140" location="" />
       <root id="1261" fileset="1260" location="" />
@@ -41,6 +44,7 @@
       <mountPoint id="318" root="" location="lib" mode="755" />
       <mountPoint id="399" root="" location="licences" mode="755" />
       <mountPoint id="63" root="" location="" mode="755" />
+      <mountPoint id="1575" root="1574" location="bin" mode="755" />
       <mountPoint id="776" root="712" location="source" mode="755" />
       <mountPoint id="1142" root="1141" location="wsi-test-tools" mode="755" />
       <mountPoint id="1143" root="1141" location="wsi-test-tools/java" mode="755" />
@@ -48,9 +52,19 @@
       <mountPoint id="1334" root="1261" location="tempHermes" mode="755" />
     </mountPoints>
     <entries>
-      <dirEntry mountPoint="321" file="${compiler:DIST_ROOT}/bin" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
+      <dirEntry mountPoint="321" file="${compiler:DIST_ROOT}/bin" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="*.bat,*.sh" dirMode="755">
         <exclude />
       </dirEntry>
+      <fileEntry mountPoint="321" file="${compiler:DIST_STANDALONE}/bin/loadtestrunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="321" file="${compiler:DIST_STANDALONE}/bin/loadtestrunner.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="321" file="${compiler:DIST_STANDALONE}/bin/toolrunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="321" file="${compiler:DIST_STANDALONE}/bin/toolrunner.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="321" file="${compiler:DIST_STANDALONE}/bin/testrunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="321" file="${compiler:DIST_STANDALONE}/bin/testrunner.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="321" file="${compiler:DIST_STANDALONE}/bin/soapui.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="321" file="${compiler:DIST_STANDALONE}/bin/soapui.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="321" file="${compiler:DIST_STANDALONE}/bin/mockservicerunner.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="321" file="${compiler:DIST_STANDALONE}/bin/mockservicerunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <dirEntry mountPoint="318" file="${compiler:DIST_ROOT}/lib" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
         <exclude>
           <entry location="activation.jnlp" fileType="regular" />
@@ -74,6 +88,9 @@
           <entry location="wsi-scripts-mac" fileType="regular" />
           <entry location="wsi-scripts-usingbundled" fileType="regular" />
         </exclude>
+      </dirEntry>
+      <dirEntry mountPoint="1575" file="${compiler:DIST_ROOT}/bin" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
+        <exclude />
       </dirEntry>
       <dirEntry mountPoint="776" file="${compiler:SRC_ROOT}" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes=".svn" dirMode="755">
         <exclude>
@@ -918,18 +935,13 @@ return component!=null;</condition>
       <excludedBeans />
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
-        <entry location="bin/libjniwrap.so" fileType="regular" />
-        <entry location="bin/loadtestrunner.sh" fileType="regular" />
-        <entry location="bin/mockservicerunner.sh" fileType="regular" />
-        <entry location="bin/soapui.sh" fileType="regular" />
         <entry location="bin/soapui32.png" fileType="regular" />
-        <entry location="bin/testrunner.sh" fileType="regular" />
+        <entry location="bin/loadtestrunner.sh" fileType="regular" />
         <entry location="bin/toolrunner.sh" fileType="regular" />
-        <entry location="wsi-test-tools/java/bin" fileType="regular" />
-        <entry location="xulrunner-linux" fileType="regular" />
-        <entry location="xulrunner-mac" fileType="regular" />
-        <entry location=".i4j_fileset_967" fileType="regular" />
-        <entry location=".i4j_fileset_969" fileType="regular" />
+        <entry location="bin/testrunner.sh" fileType="regular" />
+        <entry location="bin/soapui.sh" fileType="regular" />
+        <entry location="bin/mockservicerunner.sh" fileType="regular" />
+        <entry location=".i4j_fileset_1573" fileType="regular" />
       </exclude>
       <variables>
         <variable name="XULRUNNER" value="xulrunner-windows" />
@@ -944,18 +956,13 @@ return component!=null;</condition>
       </excludedBeans>
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
-        <entry location="bin/jniwrap.dll" fileType="regular" />
-        <entry location="bin/loadtestrunner.bat" fileType="regular" />
-        <entry location="bin/mockservicerunner.bat" fileType="regular" />
-        <entry location="bin/soapui.bat" fileType="regular" />
         <entry location="bin/soapui32.png" fileType="regular" />
-        <entry location="bin/testrunner.bat" fileType="regular" />
+        <entry location="bin/loadtestrunner.bat" fileType="regular" />
         <entry location="bin/toolrunner.bat" fileType="regular" />
-        <entry location="wsi-test-tools/java/bin" fileType="regular" />
-        <entry location="xulrunner-mac" fileType="regular" />
-        <entry location="xulrunner-windows" fileType="regular" />
-        <entry location=".i4j_fileset_601" fileType="regular" />
-        <entry location=".i4j_fileset_969" fileType="regular" />
+        <entry location="bin/testrunner.bat" fileType="regular" />
+        <entry location="bin/soapui.bat" fileType="regular" />
+        <entry location="bin/mockservicerunner.bat" fileType="regular" />
+        <entry location=".i4j_fileset_1573" fileType="regular" />
       </exclude>
       <variables>
         <variable name="XULRUNNER" value="xulrunner-linux" />
@@ -972,17 +979,12 @@ return component!=null;</condition>
       </excludedBeans>
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
-        <entry location="bin/jniwrap.dll" fileType="regular" />
-        <entry location="bin/loadtestrunner.bat" fileType="regular" />
-        <entry location="bin/mockservicerunner.bat" fileType="regular" />
-        <entry location="bin/soapui.bat" fileType="regular" />
-        <entry location="bin/soapui32.png" fileType="regular" />
-        <entry location="bin/testrunner.bat" fileType="regular" />
-        <entry location="bin/toolrunner.bat" fileType="regular" />
-        <entry location="xulrunner-linux" fileType="regular" />
-        <entry location="xulrunner-windows" fileType="regular" />
-        <entry location=".i4j_fileset_601" fileType="regular" />
-        <entry location=".i4j_fileset_967" fileType="regular" />
+        <entry location="bin" fileType="regular" />
+        <entry location=".i4j_external_1574/bin/loadtestrunner.bat" fileType="regular" />
+        <entry location=".i4j_external_1574/bin/mockservicerunner.bat" fileType="regular" />
+        <entry location=".i4j_external_1574/bin/soapui.bat" fileType="regular" />
+        <entry location=".i4j_external_1574/bin/testrunner.bat" fileType="regular" />
+        <entry location=".i4j_external_1574/bin/toolrunner.bat" fileType="regular" />
         <entry location=".i4j_fileset_1140" fileType="regular" />
       </exclude>
       <variables>
@@ -995,17 +997,12 @@ return component!=null;</condition>
       <excludedBeans />
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
-        <entry location="bin/libjniwrap.so" fileType="regular" />
-        <entry location="bin/loadtestrunner.sh" fileType="regular" />
-        <entry location="bin/mockservicerunner.sh" fileType="regular" />
-        <entry location="bin/soapui.sh" fileType="regular" />
-        <entry location="bin/soapui32.png" fileType="regular" />
-        <entry location="bin/testrunner.sh" fileType="regular" />
-        <entry location="bin/toolrunner.sh" fileType="regular" />
-        <entry location="xulrunner-linux" fileType="regular" />
-        <entry location="xulrunner-mac" fileType="regular" />
-        <entry location=".i4j_fileset_967" fileType="regular" />
-        <entry location=".i4j_fileset_969" fileType="regular" />
+        <entry location="bin" fileType="regular" />
+        <entry location=".i4j_external_1574/bin/loadtestrunner.sh" fileType="regular" />
+        <entry location=".i4j_external_1574/bin/mockservicerunner.sh" fileType="regular" />
+        <entry location=".i4j_external_1574/bin/soapui.sh" fileType="regular" />
+        <entry location=".i4j_external_1574/bin/testrunner.sh" fileType="regular" />
+        <entry location=".i4j_external_1574/bin/toolrunner.sh" fileType="regular" />
         <entry location=".i4j_fileset_1140" fileType="regular" />
       </exclude>
       <variables>
