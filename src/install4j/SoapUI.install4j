@@ -705,7 +705,7 @@ return component!=null;</condition>
                 </serializedBean>
                 <condition>InstallationComponentSetup component =context.getInstallationComponentById("1263");
 
-return component!=null;</condition>
+return component.isSelected();</condition>
               </action>
               <action name="" id="566" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="3" errorMessage="Could not install icon">
                 <serializedBean>
