@@ -126,6 +126,7 @@
         <description>Mandatory distribution structure</description>
         <include all="false">
           <entry location=".i4j_fileset_" fileType="regular" />
+          <entry location=".i4j_fileset_1573" fileType="regular" />
           <entry location=".i4j_fileset_1140" fileType="regular" />
         </include>
         <dependencies />
