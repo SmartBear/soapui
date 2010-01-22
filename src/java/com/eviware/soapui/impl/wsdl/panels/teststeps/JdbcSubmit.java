@@ -19,7 +19,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Statement;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -47,7 +46,7 @@ public class JdbcSubmit implements Submit, Runnable
 	private Exception error;
 	private long timestamp;
 	protected ResultSet resultSet;
-	protected Statement statement;
+	protected PreparedStatement statement;
 	private Connection connection;
 	private long timeTaken;
 	private final JdbcRequest request;
@@ -277,12 +276,12 @@ public class JdbcSubmit implements Submit, Runnable
 			if( testStep.isStoredProcedure() )
 			{
 				timestamp = System.currentTimeMillis();
-				( ( CallableStatement )statement ).execute();
+				statement.execute();
 			}
 			else
 			{
 				timestamp = System.currentTimeMillis();
-				( ( PreparedStatement )statement ).execute();
+				statement.execute();
 			}
 			timeTaken = System.currentTimeMillis() - timestamp;
 			if( !StringUtils.isNullOrEmpty( request.getTimeout() ) && timeTaken > Long.parseLong( request.getTimeout() ) )
@@ -305,27 +304,27 @@ public class JdbcSubmit implements Submit, Runnable
 	{
 		JdbcRequestTestStep testStep = request.getTestStep();
 		getDatabaseConnection();
+		String sql;
+		List<TestProperty> props = testStep.getPropertyList();
 		if( testStep.isStoredProcedure() )
 		{
-			String sql = PropertyExpander.expandProperties( context, testStep.getQuery() );
+			sql = PropertyExpander.expandProperties( context, testStep.getQuery() );
 
 			if( !sql.startsWith( "{call " ) && !sql.endsWith( "}" ) )
 				sql = "{call " + sql + "}";
 
-			statement = connection.prepareCall( sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY );
 		}
 		else
 		{
-			List<TestProperty> props = testStep.getPropertyList();
-			String sql = PropertyExpander.expandProperties( context, testStep.getQuery() );
-			NamedParameterStatement p = new NamedParameterStatement( connection, sql );
-			for( TestProperty testProperty : props )
-			{
-				String value = PropertyExpander.expandProperties( context, testProperty.getValue() );
-				p.setString( testProperty.getName(), value );
-			}
-			statement = p.getStatement();
+			sql = PropertyExpander.expandProperties( context, testStep.getQuery() );
 		}
+		NamedParameterStatement p = new NamedParameterStatement( connection, sql );
+		for( TestProperty testProperty : props )
+		{
+			String value = PropertyExpander.expandProperties( context, testProperty.getValue() );
+			p.setString( testProperty.getName(), value );
+		}
+		statement = p.getStatement();
 
 		try
 		{
@@ -354,7 +353,7 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 		try
 		{
-			if( !StringUtils.isNullOrEmpty( testStep.getFetchSize()) ) 
+			if( !StringUtils.isNullOrEmpty( testStep.getFetchSize() ) )
 			{
 				String fetchSize = PropertyExpander.expandProperties( testStep, testStep.getFetchSize() );
 				statement.setFetchSize( Integer.parseInt( fetchSize ) );

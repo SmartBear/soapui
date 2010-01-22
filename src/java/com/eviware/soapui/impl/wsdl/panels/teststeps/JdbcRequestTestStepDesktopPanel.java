@@ -522,9 +522,11 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 					public void run()
 					{
-						if( UISupport.confirm( "Would you like to delete current sql?", "Reset query" ) )
+						if( UISupport.confirm( "Would you like to empty current sql and properties?",
+								"Reset query and properties" ) )
 						{
 							queryArea.setText( "" );
+							( ( JdbcRequestTestStep )getPropertyHolderTable().getHolder() ).removeAllProperties();
 						}
 					}
 				} );

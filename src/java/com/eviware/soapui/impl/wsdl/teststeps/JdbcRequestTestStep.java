@@ -522,6 +522,14 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		return propertyHolderSupport.removeProperty( propertyName );
 	}
 
+	public void removeAllProperties()
+	{
+		for( String propertyName : propertyHolderSupport.getPropertyNames() )
+		{
+			propertyHolderSupport.removeProperty( propertyName );
+		}
+	}
+
 	public boolean renameProperty( String name, String newName )
 	{
 		return PropertyExpansionUtils.renameProperty( propertyHolderSupport.getProperty( name ), newName, getTestCase() ) != null;
