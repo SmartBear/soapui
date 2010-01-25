@@ -74,7 +74,8 @@ public class JMSEndpoint
 		{
 			String newEndpoint = request.getEndpoint().replaceAll( JMS_OLD_ENDPOINT_SEPARATOR + "queue_",
 					JMS_ENDPOINT_SEPARATOR + "queue_" ).replaceAll( JMS_OLD_ENDPOINT_SEPARATOR + "topic_",
-					JMS_ENDPOINT_SEPARATOR + "topic_" );
+					JMS_ENDPOINT_SEPARATOR + "topic_" ).replaceAll( JMS_OLD_ENDPOINT_SEPARATOR + "-",
+							JMS_ENDPOINT_SEPARATOR + "-" );
 
 			request.setEndpoint( newEndpoint );
 

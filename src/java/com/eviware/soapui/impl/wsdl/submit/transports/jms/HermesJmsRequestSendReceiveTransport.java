@@ -33,18 +33,19 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 		try
 		{
 			init( submitContext, request );
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, false, clientID , username, password);
+			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, false, clientID, username, password );
 
 			// session
 			queueSession = jmsConnectionHolder.getQueueSession();
 
 			// queue
 			Queue queueSend = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getSend() );
-			Queue queueReceive =  jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getReceive() );
+			Queue queueReceive = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getReceive() );
 
-			Message messageSend = messageSend( submitContext, request, queueSession, jmsConnectionHolder.getHermes(), queueSend );
+			Message messageSend = messageSend( submitContext, request, queueSession, jmsConnectionHolder.getHermes(),
+					queueSend );
 
-			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive );
+			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive, messageSelector );
 
 			return makeResponse( submitContext, request, timeStarted, messageSend, messageConsumer );
 		}

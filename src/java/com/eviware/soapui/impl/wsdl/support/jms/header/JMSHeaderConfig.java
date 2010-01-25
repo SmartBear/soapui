@@ -88,6 +88,11 @@ public class JMSHeaderConfig implements PropertyChangeNotifier
 	{
 		return jmsHeaderConfConfig.getClientID();
 	}
+	
+	public String getMessageSelector()
+	{
+		return jmsHeaderConfConfig.getMessageSelector();
+	}
 
 	public void setJMSCorrelationID(String newValue)
 	{
@@ -143,6 +148,13 @@ public class JMSHeaderConfig implements PropertyChangeNotifier
 		String oldValue = getTimeToLive();
 		jmsHeaderConfConfig.setClientID(newValue);
 		propertyChangeSupport.firePropertyChange(JMSHeader.CLIENT_ID, oldValue, newValue);
+	}
+	
+	public void setMessageSelector(String newValue)
+	{
+		String oldValue = getMessageSelector();
+		jmsHeaderConfConfig.setMessageSelector(newValue);
+		propertyChangeSupport.firePropertyChange(JMSHeader.MESSAGE_SELECTOR, oldValue, newValue);
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener)

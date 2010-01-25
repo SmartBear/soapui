@@ -38,20 +38,24 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 		try
 		{
 			init( submitContext, request );
-			String clientIDString = StringUtils.hasContent( clientID ) ? clientID : jmsEndpoint.getSessionName()+"-"+jmsEndpoint.getReceive() ;
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, true,clientIDString , username, password);
+			String clientIDString = StringUtils.hasContent( clientID ) ? clientID : jmsEndpoint.getSessionName() + "-"
+					+ jmsEndpoint.getReceive();
+			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, true, clientIDString, username,
+					password );
 
 			// session
 			topicSession = jmsConnectionHolder.getTopicSession();
 			queueSession = jmsConnectionHolder.getQueueSession();
-			
+
 			Queue queueSend = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getSend() );
 			Topic topicReceive = jmsConnectionHolder.getTopic( jmsConnectionHolder.getJmsEndpoint().getReceive() );
 
-			topicSubsriber = topicSession.createDurableSubscriber( topicReceive, StringUtils.hasContent( durableSubscriptionName ) ? durableSubscriptionName : "durableSubscription"
-				+ jmsConnectionHolder.getJmsEndpoint().getReceive() );
+			topicSubsriber = topicSession.createDurableSubscriber( topicReceive, StringUtils
+					.hasContent( durableSubscriptionName ) ? durableSubscriptionName : "durableSubscription"
+					+ jmsConnectionHolder.getJmsEndpoint().getReceive(), messageSelector, false );
 
-			Message textMessageSend = messageSend( submitContext, request, queueSession, jmsConnectionHolder.getHermes(), queueSend );
+			Message textMessageSend = messageSend( submitContext, request, queueSession, jmsConnectionHolder.getHermes(),
+					queueSend );
 
 			return makeResponse( submitContext, request, timeStarted, textMessageSend, topicSubsriber );
 		}

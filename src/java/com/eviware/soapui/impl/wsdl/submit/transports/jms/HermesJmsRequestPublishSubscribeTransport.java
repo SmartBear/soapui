@@ -35,8 +35,10 @@ public class HermesJmsRequestPublishSubscribeTransport extends HermesJmsRequestT
 		try
 		{
 			init( submitContext, request );
-			String clientIDString = StringUtils.hasContent( clientID ) ? clientID : jmsEndpoint.getSessionName()+"-"+jmsEndpoint.getReceive() ;
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, false, true, clientIDString , username, password);
+			String clientIDString = StringUtils.hasContent( clientID ) ? clientID : jmsEndpoint.getSessionName() + "-"
+					+ jmsEndpoint.getReceive();
+			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, false, true, clientIDString, username,
+					password );
 
 			// session
 			topicSession = jmsConnectionHolder.getTopicSession();
@@ -45,8 +47,9 @@ public class HermesJmsRequestPublishSubscribeTransport extends HermesJmsRequestT
 			Topic topicPublish = jmsConnectionHolder.getTopic( jmsConnectionHolder.getJmsEndpoint().getSend() );
 			Topic topicSubscribe = jmsConnectionHolder.getTopic( jmsConnectionHolder.getJmsEndpoint().getReceive() );
 
-			topicDurableSubsriber = topicSession.createDurableSubscriber( topicSubscribe, StringUtils.hasContent( durableSubscriptionName ) ? durableSubscriptionName : "durableSubscription"
-					+ jmsConnectionHolder.getJmsEndpoint().getReceive() );
+			topicDurableSubsriber = topicSession.createDurableSubscriber( topicSubscribe, StringUtils
+					.hasContent( durableSubscriptionName ) ? durableSubscriptionName : "durableSubscription"
+					+ jmsConnectionHolder.getJmsEndpoint().getReceive(), messageSelector, false );
 
 			Message messagePublish = messagePublish( submitContext, request, topicSession,
 					jmsConnectionHolder.getHermes(), topicPublish );

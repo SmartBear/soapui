@@ -31,7 +31,7 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 		try
 		{
 			init( submitContext, request );
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, false, clientID , username, password);
+			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, false, clientID, username, password );
 
 			// session
 			queueSession = jmsConnectionHolder.getQueueSession();
@@ -40,7 +40,7 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 			Queue queue = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getReceive() );
 
 			// consumer
-			MessageConsumer messageConsumer = queueSession.createConsumer( queue );
+			MessageConsumer messageConsumer = queueSession.createConsumer( queue, messageSelector );
 
 			return makeResponse( submitContext, request, timeStarted, null, messageConsumer );
 

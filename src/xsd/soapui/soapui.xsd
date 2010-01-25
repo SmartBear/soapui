@@ -1884,10 +1884,11 @@
     		type="tns:JMSDeliveryModeType">
     	</xsd:attribute>
     	<xsd:attribute name="TimeToLive" type="xsd:string"></xsd:attribute>
-    	<xsd:attribute name="DurableSubscriptionName"
+    	<xsd:attribute name="durableSubscriptionName"
     		type="xsd:string">
     	</xsd:attribute>
-    	<xsd:attribute name="ClientID" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="clientID" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="messageSelector" type="xsd:string"></xsd:attribute>
     </xsd:complexType>
 
 

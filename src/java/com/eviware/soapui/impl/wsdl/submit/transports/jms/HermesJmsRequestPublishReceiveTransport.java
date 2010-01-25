@@ -36,7 +36,7 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 		try
 		{
 			init( submitContext, request );
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, true, clientID , username, password);
+			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, true, clientID, username, password );
 
 			// session
 			topicSession = jmsConnectionHolder.getTopicSession();
@@ -49,7 +49,7 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 			Message messagePublish = messagePublish( submitContext, request, topicSession,
 					jmsConnectionHolder.getHermes(), topicPublish );
 
-			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive );
+			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive, messageSelector );
 
 			return makeResponse( submitContext, request, timeStarted, messagePublish, messageConsumer );
 		}

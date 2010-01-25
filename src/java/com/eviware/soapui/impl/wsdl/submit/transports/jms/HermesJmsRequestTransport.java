@@ -73,6 +73,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 	protected JMSEndpoint jmsEndpoint;
 	protected String durableSubscriptionName;
 	protected String clientID;
+	protected String messageSelector;
 	protected Hermes hermes;
 	protected List<RequestFilter> filters = new ArrayList<RequestFilter>();
 
@@ -107,6 +108,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 		JMSHeaderConfig jmsConfig = ( ( AbstractHttpRequest<?> )request ).getJMSHeaderConfig();
    	this.durableSubscriptionName = submitContext.expand(jmsConfig.getDurableSubscriptionName());
    	this.clientID = submitContext.expand(jmsConfig.getClientID());
+   	this.messageSelector = submitContext.expand(jmsConfig.getMessageSelector());
 			
 
 	}
