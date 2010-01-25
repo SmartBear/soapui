@@ -636,12 +636,15 @@ return component.isSelected();</condition>
                             <string>if(Util.isWindowsVista() || Util.isWindows7()){
     return "64bit";
 }
+else if (Util.isMacOS()) {
+return "MAC";
+}
 else return "";</string>
                           </void>
                         </object>
                       </void>
                       <void property="variableName">
-                        <string>WIN64</string>
+                        <string>WhatOS</string>
                       </void>
                     </object>
                   </java>
@@ -697,7 +700,7 @@ return component!=null;</condition>
                     <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
                       <void property="executable">
                         <object class="java.io.File">
-                          <string>tempHermes/hermesInstall${installer:WIN64}.${installer:EXTENSION}</string>
+                          <string>tempHermes/hermesInstall${installer:WhatOS}.${installer:EXTENSION}</string>
                         </object>
                       </void>
                       <void property="keepConsoleWindow">
