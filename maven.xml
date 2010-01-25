@@ -553,6 +553,20 @@
             </ant:filterset>
         </ant:copy>
 
+ 		<!-- create a scanner for sh files so we can replace linebreaks.. -->
+        <ant:fileScanner var="shscannerstandalone">
+            <ant:fileset dir="${maven.build.dir}/standalone/bin">
+                <ant:include name="*.sh"/>
+            </ant:fileset>
+        </ant:fileScanner>
+
+        <!-- Fix linebreaks -->
+        <j:forEach var="sh" items="${shscannerstandalone.iterator()}" trim="yes">
+            <util:loadText file="${sh}" var="shfile"/>
+            <j:set var="shfile" value="${shfile.replace( '\r', ' ' )}"/>
+            <j:file name="${maven.build.dir}/standalone/bin/${sh.name}" omitXmlDeclaration="true">${shfile}</j:file>
+        </j:forEach>
+        
         <util:available file="${maven.build.dir}/distributions/${maven.final.name}-src.zip">
             <ant:unzip src="${maven.build.dir}/distributions/${maven.final.name}-src.zip" dest="${maven.build.dir}/standalone/source"/>
         </util:available>
