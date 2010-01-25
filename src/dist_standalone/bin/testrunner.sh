@@ -21,11 +21,11 @@ esac
 if [ "x$SOAPUI_HOME" = "x" ]
 then
     # get the full path (without any relative bits)
-    SOAPUI_HOME=`cd $DIRNAME/..; pwd`
+    SOAPUI_HOME=`cd $DIRNAME\..; pwd`
 fi
 export SOAPUI_HOME
 
-JAVA=$SOAPUI_HOME..\jre\bin\java
+JAVA=$SOAPUI_HOME\jre\bin\java
 
 @SOAPUISHCLASSPATH@
 
