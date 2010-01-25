@@ -71,8 +71,7 @@
 					<ol>
 					The JDBC panel consists of the following components:
 						<li>Query properties - number of properties can be added for replacement in query through PreparedStatement.
-							They will be replaced in the order they have been added
-							to the list, not by their names.</li>
+							Properties need to be specified in the query as ":propertyName" and will by replaced by exact names.</li>
 						<li>JDBC Connection selection with options
 							<ul>
 							<li>Create-new - adds a new JDBC Connection to project and preselects it here</li>
@@ -80,10 +79,13 @@
 							<li>Existing project-level JDBC Connection</li>
 							</ul>
 						</li>
-						<li>Button for <a href="#Configuring_DatabaseConnection">configuring the selected JDBC Connection</a></li>
+						<li>Button for <a href="#Configuring_DatabaseConnection">configuring the selected JDBC Connection</a> - enabled only 
+						if a connection is selected (this will apply to the connection settings at project level)</li>
 						<li>Driver</li>
 						<li>Connection string</li>
 						<li>Password</li>
+						<li>Button for <a href="#Configuring_DatabaseConnection">configuring connection properties</a> - enabled only 
+						if a connection is not selected, but plain connection properties are used</li>
 						<li>Button for testing connection</li>
 						<li>SQL Query</li>
 						<li>Indicator if query is a stored procedure call</li>
@@ -105,7 +107,7 @@
 			<subsection name="Configuring the SQL Query">
 				<p>There are two options for configuring the SQL query to be used:
 				<ul>
-				<li>A plain listing of stored procedures along with available columns - launched when the stored procedure check box is selected</li>
+				<li>A plain listing of stored procedures along with available output parameters - launched when the stored procedure check box is selected</li>
 				<p align="center">
 					<img src="images/sp_call_query_panel.gif" alt="Stored Procedure call configuration" />
 				</p>
@@ -118,7 +120,7 @@
 				</p>
 				<p>For the visual query builder there are two preview tabs at the bottom part of the window: 
 				<ul>
-				<li>SQL preview - where you can view the SQL query you've visually created (you can also</li>
+				<li>SQL preview - where you can view the SQL query you've visually created and add properties to be used in the query</li>
 				<li>Result preview - Displays current query results in form of a plain table with no additional options. 
 				This preview should be used just to verify the SQL result before including the query in a TestStep.</li>
 				</ul>
