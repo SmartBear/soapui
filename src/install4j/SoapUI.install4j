@@ -676,7 +676,7 @@ else return "";</string>
                 </serializedBean>
                 <condition />
               </action>
-              <action name="" id="1339" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+              <action name="Set mode for linux" id="1339" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
@@ -686,7 +686,26 @@ else return "";</string>
                         </object>
                       </void>
                       <void property="mode">
-                        <string>700</string>
+                        <string>755</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>InstallationComponentSetup component =context.getInstallationComponentById("1263");
+
+return component!=null;</condition>
+              </action>
+              <action name="Set mode for MAC" id="1747" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
+                      <void property="file">
+                        <object class="java.io.File">
+                          <string>tempHermes/hermesInstallMAC.${installer:EXTENSION}</string>
+                        </object>
+                      </void>
+                      <void property="mode">
+                        <string>755</string>
                       </void>
                     </object>
                   </java>
@@ -761,7 +780,7 @@ return component!=null;</condition>
             <preActivation />
             <postActivation />
             <actions>
-              <action name="tempHermes folder delete" id="1333" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="false" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+              <action name="tempHermes folder delete" id="1333" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.files.DeleteFileAction">
