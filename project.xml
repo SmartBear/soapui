@@ -50,7 +50,7 @@
 			<report>jutils-lint4j-plugin</report>
 		-->
 	</reports>
-	<currentVersion>3.5-beta1</currentVersion>
+	<currentVersion>3.5-beta2</currentVersion>
 	<package>com.eviware.soapui</package>
 	<url>http://www.soapui.org</url>
 	<versions>
@@ -568,7 +568,7 @@
 		<dependency>
 			<groupId>eviware</groupId>
 			<artifactId>soapui-xmlbeans</artifactId>
-			<version>3.5-beta1</version>
+			<version>3.5-beta2</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
