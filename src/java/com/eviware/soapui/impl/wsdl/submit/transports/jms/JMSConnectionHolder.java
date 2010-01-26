@@ -31,6 +31,12 @@ import javax.naming.NamingException;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.StringUtils;
 
+/**
+ * class that holds jms connections and sessions
+ * 
+ * @author nebojsa.tasic
+ * 
+ */
 public class JMSConnectionHolder
 {
 	private TopicConnectionFactory topicConnectionFactory = null;
@@ -45,6 +51,17 @@ public class JMSConnectionHolder
 	private Hermes hermes;
 	private String clientID;
 
+	/**
+	 * 
+	 * @param jmsEndpoint
+	 * @param hermes
+	 * @param createQueueConnection
+	 * @param createTopicConnection
+	 * @param clientID
+	 * @param username
+	 * @param password
+	 * @throws JMSException
+	 */
 	public JMSConnectionHolder( JMSEndpoint jmsEndpoint, Hermes hermes, boolean createQueueConnection,
 			boolean createTopicConnection, String clientID, String username, String password ) throws JMSException
 	{
@@ -74,10 +91,10 @@ public class JMSConnectionHolder
 		catch( Throwable t )
 		{
 			SoapUI.logError( t );
-			
+
 			if( topicConnection != null )
 				topicConnection.close();
-			
+
 			if( queueConnection != null )
 				queueConnection.close();
 
@@ -106,7 +123,6 @@ public class JMSConnectionHolder
 			queueConnection = StringUtils.hasContent( username ) ? ( ( QueueConnectionFactory )connectionFactory )
 					.createQueueConnection( username, password ) : ( ( QueueConnectionFactory )connectionFactory )
 					.createQueueConnection();
-
 
 			return queueConnection;
 		}
@@ -152,16 +168,35 @@ public class JMSConnectionHolder
 		return jmsEndpoint;
 	}
 
+	/**
+	 * return topic by name
+	 * 
+	 * @return Queue
+	 * @throws JMSException
+	 *            , NamingException
+	 */
 	public Topic getTopic( String name ) throws JMSException, NamingException
 	{
 		return ( Topic )getHermes().getDestination( name, Domain.TOPIC );
 	}
 
+	/**
+	 * return queue by name
+	 * 
+	 * @return Queue
+	 * @throws JMSException
+	 *            , NamingException
+	 */
 	public Queue getQueue( String name ) throws JMSException, NamingException
 	{
 		return ( Queue )getHermes().getDestination( name, Domain.QUEUE );
 	}
 
+	/**
+	 * 
+	 * @return QueueSession
+	 * @throws JMSException
+	 */
 	public QueueSession getQueueSession() throws JMSException
 	{
 		if( queueSession == null )
@@ -171,6 +206,11 @@ public class JMSConnectionHolder
 		return queueSession;
 	}
 
+	/**
+	 * 
+	 * @return TopicSession
+	 * @throws JMSException
+	 */
 	public TopicSession getTopicSession() throws JMSException
 	{
 		if( topicSession == null )
@@ -178,6 +218,28 @@ public class JMSConnectionHolder
 			return topicSession = getTopicConnection().createTopicSession( false, Session.AUTO_ACKNOWLEDGE );
 		}
 		return topicSession;
+	}
+
+	/**
+	 * closes all sessions and connections
+	 */
+	public void closeAll()
+	{
+		try
+		{
+			if( topicSession != null )
+				topicSession.close();
+			if( queueSession != null )
+				queueSession.close();
+			if( topicConnection != null )
+				topicConnection.close();
+			if( queueConnection != null )
+				queueConnection.close();
+		}
+		catch( JMSException e )
+		{
+			SoapUI.logError( e );
+		}
 	}
 
 }
