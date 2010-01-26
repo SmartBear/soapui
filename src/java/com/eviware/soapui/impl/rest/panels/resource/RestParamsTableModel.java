@@ -83,7 +83,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 		case 0 :
 			return prop.getName();
 		case 1 :
-			return prop.getValue();
+			return prop.getDefaultValue();
 			// case 1 : return StringUtils.hasContent(prop.getValue()) ?
 			// prop.getValue() : prop.getDefaultValue();
 		case 2 :
@@ -104,6 +104,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 			params.renameProperty( prop.getName(), value.toString() );
 			return;
 		case 1 :
+			prop.setDefaultValue( value.toString() );
 			prop.setValue( value.toString() );
 			return;
 		case 2 :
@@ -147,7 +148,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 		this.params.removeTestPropertyListener( this );
 		this.params = params;
 		this.params.addTestPropertyListener( this );
-		
+
 		fireTableDataChanged();
 	}
 }

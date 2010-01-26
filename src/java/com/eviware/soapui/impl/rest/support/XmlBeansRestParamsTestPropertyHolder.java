@@ -171,7 +171,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 			properties.remove( ix );
 
 			firePropertyRemoved( propertyName );
-			
+
 			config.removeParameter( ix );
 			return property;
 		}
@@ -228,7 +228,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 			return false;
 
 		property.setName( newName );
-		
+
 		firePropertyRenamed( name, newName );
 		return true;
 	}
@@ -633,6 +633,14 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 			targetIndex = 0;
 
 		String value = property.getValue();
+		String defaultValue = property.getDefaultValue();
+		String style = property.getStyle().name();
+		String[] options = property.getOptions();
+		boolean required = property.getRequired();
+		QName type = property.getType();
+		String description = property.getDescription();
+		boolean disableUrlEncoding = property.isDisableUrlEncoding();
+
 		config.removeParameter( ix );
 
 		RestParameterConfig propertyConfig = null;
@@ -650,6 +658,13 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 
 		propertyConfig.setName( propertyName );
 		propertyConfig.setValue( value );
+		propertyConfig.setDefault( defaultValue );
+		propertyConfig.setStyle( RestParameterConfig.Style.Enum.forString( style ) );
+		propertyConfig.setOptionArray( options );
+		propertyConfig.setRequired( required );
+		propertyConfig.setType( type );
+		propertyConfig.setDescription( description );
+		propertyConfig.setDisableUrlEncoding( disableUrlEncoding );
 
 		resetPropertiesConfig( config );
 
