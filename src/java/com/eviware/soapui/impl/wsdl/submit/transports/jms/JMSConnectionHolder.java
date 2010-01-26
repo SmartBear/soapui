@@ -51,20 +51,22 @@ public class JMSConnectionHolder
 		try
 		{
 			this.jmsEndpoint = jmsEndpoint;
-			this.hermes= hermes;
-			this.clientID = clientID ;
+			this.hermes = hermes;
+			this.clientID = clientID;
 
 			if( createTopicConnection )
 			{
 				topicConnectionFactory = ( TopicConnectionFactory )hermes.getConnectionFactory();
-				topicConnection = ( TopicConnection )createConnection( topicConnectionFactory, Domain.TOPIC, clientID ,username, password);
+				topicConnection = ( TopicConnection )createConnection( topicConnectionFactory, Domain.TOPIC, clientID,
+						username, password );
 				topicConnection.start();
 			}
 
 			if( createQueueConnection )
 			{
 				queueConnectionFactory = ( QueueConnectionFactory )hermes.getConnectionFactory();
-				queueConnection = ( QueueConnection )createConnection( queueConnectionFactory, Domain.QUEUE, clientID , username, password);
+				queueConnection = ( QueueConnection )createConnection( queueConnectionFactory, Domain.QUEUE, clientID,
+						username, password );
 				queueConnection.start();
 			}
 
@@ -72,6 +74,13 @@ public class JMSConnectionHolder
 		catch( Throwable t )
 		{
 			SoapUI.logError( t );
+			
+			if( topicConnection != null )
+				topicConnection.close();
+			
+			if( queueConnection != null )
+				queueConnection.close();
+
 		}
 	}
 
@@ -80,8 +89,6 @@ public class JMSConnectionHolder
 	{
 		QueueConnection queueConnection;
 		TopicConnection topicConnection;
-
-		
 
 		if( domain.equals( Domain.TOPIC ) )
 		{
@@ -100,8 +107,6 @@ public class JMSConnectionHolder
 					.createQueueConnection( username, password ) : ( ( QueueConnectionFactory )connectionFactory )
 					.createQueueConnection();
 
-			if( !StringUtils.isNullOrEmpty( clientId ) )
-				queueConnection.setClientID( clientId );
 
 			return queueConnection;
 		}
@@ -110,7 +115,6 @@ public class JMSConnectionHolder
 			return null;
 		}
 	}
-
 
 	public TopicConnectionFactory getTopicConnectionFactory()
 	{
@@ -148,8 +152,6 @@ public class JMSConnectionHolder
 		return jmsEndpoint;
 	}
 
-	
-
 	public Topic getTopic( String name ) throws JMSException, NamingException
 	{
 		return ( Topic )getHermes().getDestination( name, Domain.TOPIC );
@@ -168,7 +170,7 @@ public class JMSConnectionHolder
 		}
 		return queueSession;
 	}
-	
+
 	public TopicSession getTopicSession() throws JMSException
 	{
 		if( topicSession == null )
