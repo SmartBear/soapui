@@ -20,16 +20,30 @@
 
 			<subsection name="Introduction">
 				<p>
-					In soapUI 3.5 we introduce support for JMS messaging allowing you to send and receive both text and binary messages. 
-					For this purpose SoapUI integrates with the HermesJMS open source application which	supports many different	JMS providers. 
-					
-					<a href="http://www.hermesjms.org"><img src="http://hermesjms.com/confluence/download/userResources/HJMS/logo" align="right"></img></a>
+					In soapUI 3.5 we introduce support for JMS messaging allowing you
+					to send and receive both text and binary messages.
+					For this purpose
+					SoapUI integrates with the HermesJMS open source
+					application which
+					supports many different JMS providers.
+
+					<a href="http://www.hermesjms.org">
+						<img
+							src="http://hermesjms.com/confluence/download/userResources/HJMS/logo"
+							align="right"></img>
+					</a>
 				</p>
 
 				<p>
-					For the purpose of this tutorial we will need to download the new SoapUI
-					3.5 installer which integrates the installer of HermesJMS. 
+					For the purpose of this tutorial we will need to download the new
+					SoapUI
+					3.5 installer which integrates the installer of HermesJMS.
 				</p>
+				<p>
+					If you want to use binary distributions you need to install
+					HermesJMS 1.14
+					manually and set its path to Preferences->Tools.
+					</p>
 			</subsection>
 
 
@@ -37,7 +51,7 @@
 				<p>
 					When starting the new soapUI installer you will get an option that you can
 					select to install HermesJMS also. This is mandatory if you want to
-					try this tutorial (unless you already have HermesJMS 1.13 or later installed).
+					try this tutorial (unless you already have HermesJMS 1.14 or later installed).
 				</p>
 
 			</subsection>
@@ -77,6 +91,9 @@
 					<img src="images/hermes_preferences.gif" alt="Hermes Preferences" />
 				</p>
 				<p>
+					Here you can COPY-PASTE serviceURL: service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi
+				</p>
+				<p>
 					We have now created a session in HermesJMS named activeMQSession with two queues and two topics which 
 					we can use from within soapUI.
 				</p>
@@ -97,11 +114,34 @@
 					<img src="images/add_jms_endpoint.gif" alt="Add JMS Endpoints" />
 				</p>
 				<p>
-					First set the Hermes Config path to the folder where hermes-config.xml is (usually .Hermes),
+					First set the Hermes Config path to the folder where hermes-config.xml is (usually .hermes),
 					than select the above configured session and last the queue/topic for sending/publishing and queue/topic
 					for receiving/subscribing. You can choose send/publish only by leaving
 					Receive Queue field blank and also receive/subscribe only by leaving
-					Send Queue/Topic blank. All combinations are allowed. Available queues
+					Send Queue/Topic blank.
+					</p> 
+					<p>
+					Example:
+					<ul>
+						<li>
+							send only      jms://activeMQsession::queue_testQ1 
+						</li>
+						<li>
+							receive only  jms://activeMQsession::-::queue_testQ1 
+						</li>
+						<li>
+							send and receive jms://activeMQsession::queue_testQ1::topic_testT1 
+						</li>
+						
+					</ul>
+Last one is usefull in cases when you send something to a queue and checks topic as response imediatelly as it first subscribe to this topic ( durable subscription )  and then send to a queue.					
+					</p>
+	
+
+		
+					<p>
+					
+					All combinations are allowed. Available queues
 					and topics depend on what we have configured in HermesJMS, so if we
 					add another queue for example it will be available in this combo box also.
 					You can add as many JMS endpoints this way as you need.
@@ -113,17 +153,18 @@
 
 				</p>
 				<p align="center">
-					<img src="images/jms_request_and_response.gif" alt="JMS Request and Response" />
+					<img src="images/request_response_view.gif" alt="JMS Request and Response" />
 				</p>
 				<p>
-				As you can see, the message we sent is shown in the response window since we sent and received from the same JMS
-				queue (for the purpose of this example). We can also see that the response has a JMS inspector showing all JMS Headers. 
+				As you can see, the message we sent is shown in the response window since 
+				we sent and received from the same JMS queue (for the purpose of this example). 
+				You can specify JMS Headers as well as Durable Subscription Name, Time to Live (miliseconds),
+				 CliendID and you can filter messages with Message Selector. 
+				Response has a JMS inspector showing all JMS Headers. 
+				  
 				</p>
 				<p>
-					You can of course also set custom JMS Headers and JMS Properties for your request;
-				</p>
-				<p align="center">
-					<img src="images/jms_request_and_hedears.gif" alt="JMS Request with Headers" />
+					You can also set custom JMS Properties for your request;
 				</p>
 				<p align="center">
 					<img src="images/jms_request_and_properties.gif" alt="JMS Request with Properties" />
@@ -137,6 +178,9 @@
 				<p>
 					where you set the time to wait ( in milliseconds ) for the receiving/subscribing queue/topic.
 					If this is not set or set to zero it will wait to infinity. 
+				</p>
+				<p>
+				Also here you can specify username and password if needed.
 				</p>
 				<p>
 					Since the response is a standard XML message, all XML-related assertions apply (XPath, XQuery, etc), but 
@@ -154,6 +198,42 @@
 				<p>
 					Note that only the first attachment is treated as the payload for the message.  
 				</p>
+				<p>
+				Another important thing we have to mention is that youv can also use Groovy Script Test Step if you want something else to do with your queues and topics.
+				Here is one example of how to use our API to browse messages form one queue without receiving it.
+				</p>
+				<source>
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSConnectionHolder
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSEndpoint
+import hermes.Hermes
+import javax.jms.*
+
+def jmsEndpoint = new  JMSEndpoint("jms://activeMQSession::queue_testQ1::queue_testQ1");
+def hermes = HermesUtils.getHermes( context.testCase.testSuite.project, jmsEndpoint.sessionName)
+def jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, false, null ,null ,null);
+
+QueueSession queueSession = jmsConnectionHolder.getQueueSession();
+Queue queueSend = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getSend() );
+Queue queueBrowse = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getReceive() );
+
+MessageProducer messageProducer =queueSession.createProducer( queueSend );
+TextMessage textMessageSend = queueSession.createTextMessage();
+textMessageSend.setText( "jms message from groovy");
+messageProducer.send( textMessageSend );
+textMessageSend.setText( "another jms message from groovy");
+messageProducer.send( textMessageSend );
+
+QueueBrowser qb  = queueSession.createBrowser(queueBrowse);
+Enumeration en= qb.getEnumeration();
+while(en.hasMoreElements()){
+	TextMessage tm = (TextMessage)en.nextElement();
+	log.info tm.getText()
+}
+jmsConnectionHolder.closeAll()// don't forget to close sessions and connections
+				
+				</source>
+				
 				<p>
 					That's it for now, we hope that you will find this tutorial helpful to jump start your JMS testing with soapUI.
 				</p>
