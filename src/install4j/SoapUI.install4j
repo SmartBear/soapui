@@ -714,7 +714,7 @@ return component!=null;</condition>
 
 return component!=null;</condition>
               </action>
-              <action name="install hermesJMS" id="1264" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Failed to install ${installer:WhatOS}.${installer:EXTENSION}">
+              <action name="install hermesJMS" id="1264" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
