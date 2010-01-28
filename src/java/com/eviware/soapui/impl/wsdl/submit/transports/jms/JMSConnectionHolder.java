@@ -97,6 +97,8 @@ public class JMSConnectionHolder
 
 			if( queueConnection != null )
 				queueConnection.close();
+			
+			throw new JMSException(t.getMessage());
 
 		}
 	}
