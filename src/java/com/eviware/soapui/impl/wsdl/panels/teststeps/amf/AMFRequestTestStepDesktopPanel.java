@@ -1,5 +1,5 @@
 /*
- *  soapUI Pro, copyright (C) 2007-2009 eviware software ab 
+ *  soapUI, copyright (C) 2004-2010 eviware.com
  */
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps.amf;

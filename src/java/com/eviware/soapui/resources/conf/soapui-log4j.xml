@@ -51,6 +51,22 @@
       <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
    </appender>
    
+	<appender name="GLOBAL_GROOVY_LOG" class="org.apache.log4j.FileAppender">
+      <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
+     <param name="File" value="global-groovy.log"/>
+     <param name="Threshold" value="DEBUG"/>
+     <param name="Append" value="true"/>
+     <param name="MaxFileSize" value="5000KB"/>
+     <param name="MaxBackupIndex" value="50"/>
+     <layout class="org.apache.log4j.PatternLayout">
+       <param name="ConversionPattern" value="%d %-5p [%c{1}] %m%n"/>
+     </layout>      
+   </appender>
+
+   <logger name="groovy.log">
+     <level value="INFO" />
+    <appender-ref ref="GLOBAL_GROOVY_LOG" />
+   </logger>   
    <!-- =============== -->
    <!-- Loggers         -->
    <!-- =============== -->
