@@ -152,7 +152,10 @@ public class TunnelServlet extends ProxyServlet
 		hostConfiguration = ProxyUtils.initProxySettings( settings, httpState, hostConfiguration, prot + sslEndPoint,
 				new DefaultPropertyExpansionContext( project ) );
 
-		postMethod.setPath( sslEndPoint.substring( sslEndPoint.indexOf( "/" ), sslEndPoint.length() ) );
+		if (sslEndPoint.indexOf( "/" ) < 0)
+			postMethod.setPath( sslEndPoint );
+		else
+			postMethod.setPath( sslEndPoint.substring( sslEndPoint.indexOf( "/" ), sslEndPoint.length() ) );
 
 		monitor.fireBeforeProxy( request, response, postMethod, hostConfiguration );
 
