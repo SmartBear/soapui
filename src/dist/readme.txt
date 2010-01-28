@@ -1,6 +1,6 @@
 Welcome to soapUI!
 
-2009-12-15 : 3.5 beta1 - the Protocol Release
+2009-12-15 : 3.5 beta2 - the Protocol Release
 --------------------------------------------------------------------------------
 soapUI 3.5 adds support for JMS, JDBC and AMF for both functional and load-testing
 
@@ -87,7 +87,7 @@ Major bugs fixed:
 
 Updated libraries: 
 
--	Groovy 1.6.7
+-	Groovy 1.7
 -	Not-yet-commons-ssl-0.11
 -	Jexcel-api-2.6.12
 -	Jasper 3.6.2
@@ -95,6 +95,28 @@ Updated libraries:
 -	Jetty 6.1.22
 
 As always we owe our users and the community so much for all their help and support! Thank you all!
+
+Beta2 fixes:
+-	JXBrowser 1.4 update
+-	Groovy 1.7.0 update
+-	JDK 1.6_18 update
+-	Hermes 1.14 update (http://hermesjms.com/confluence/display/HJMS/Release+Notes)
+-	Support for named parameters in SQL queries and Stored Procedure calls
+-	Support for JMS Session authentication
+-	Improved JMS endpoint naming scheme 
+-	Added durableSubscriber and ClientID to JMS Request Inspector
+-	Added fetchSize property to JDBC TestStep
+-	Fixed inlining of attachments if inline files is enabled
+-	Improved Delay TestStep execution timing
+-	Fixed automatic GC to run for command-line tools also
+-	Fixed elapsed time to show correct value in LoadTest output
+-	Fixed synchronization of Table Inspector and XML Editor Views
+-	Added JDBC Assertions
+-	Added build-checksum to nightly builds
+-	Improved session-handling for AMF Requests
+-	Added soapui.scripting.library system property to override script library path from commandline
+-	Added possibility to override Jetty Connector properties via soapui.mock.connector.XX system properties
+-	Fixed bugs related to REST parameter reordering and inheritance
 
 
 2009-08-09 : 3.0.1 release
