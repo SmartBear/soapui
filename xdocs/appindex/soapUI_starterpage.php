@@ -64,7 +64,7 @@ else monthName=("December");
 document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + year);
 </script>
 </span>
-<span class="right">&copy; 2009 <a href="http://www.eviware.com" target="_blank">Eviware AB</a></span></div>
+<span class="right">&copy; 2010 <a href="http://www.eviware.com" target="_blank">Eviware AB</a></span></div>
 
 <div id="try-buy">
 <a onclick="javascript:urchinTracker('/appindexsoapUITopTry')" href="http://www.eviware.com/trial" title="Try SoapUI"><img src="images/try.png" alt="Try SoapUI" /></a><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUITopBuy')" href="http://www.eviware.com/store" title="Buy SoapUI"><img src="images/buy.png" alt="Buy SoapUI" /></a></div>
