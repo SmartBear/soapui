@@ -99,9 +99,9 @@
  
             <columns>
                 <column width="250">
-                    <subsection name="soapUI 3.5 beta1">
+                    <subsection name="soapUI 3.5 beta2">
                     <p>
-                    soapUI 3.5 beta1 is out, introducing functionality that drastically expands the 
+                    soapUI 3.5 beta2 is out, introducing functionality that drastically expands the 
                     scope of functional and load-testing features in soapUI;
                     <ul>
                     <li><b>JMS Support</b> - send and receive text and binary messages over JMS</li>

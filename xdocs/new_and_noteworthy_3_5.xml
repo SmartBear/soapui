@@ -18,8 +18,8 @@ With complete functionality for testing
 your Enterprise Messages, RIA's and Databases.
 </div>
 <div id="download-buttons">
-<a onclick="javascript:urchinTracker('/downloadOpenSource351')" href="https://sourceforge.net/projects/soapui/files/soapui/3.5-beta1"><img src="img/download-opensource.png" alt="Download Open Source" /></a>
-<a onclick="javascript:urchinTracker('/downloadPro351')" href="http://www.eviware.com/beta"><img src="img/download-pro.png" alt="Download SoapUI Pro" /></a></div>
+<a onclick="javascript:urchinTracker('/downloadOpenSource352')" href="https://sourceforge.net/projects/soapui/files/soapui/3.5-beta2"><img src="img/download-opensource.png" alt="Download Open Source" /></a>
+<a onclick="javascript:urchinTracker('/downloadPro352')" href="http://www.eviware.com/beta"><img src="img/download-pro.png" alt="Download SoapUI Pro" /></a></div>
 
 </div>
 
@@ -69,6 +69,9 @@ your Enterprise Messages, RIA's and Databases.
 
 </div>
 </div><!--End of second row-->
+
+<div class="highlight">Beta2 is out!</div>
+<p>As always a bunch of fixes and improvements, <a href="#Beta2_Features">Read More</a>.</p>
 
 <div class="highlight">Thank You!</div>
 <p>As always; great love to our wonderful community and fantastic customers who helps us focusing on what's right, thank you all!</p>
@@ -184,9 +187,31 @@ soapUI XML-related features (assertions, property-transfers, scripts, etc).</li>
 
 <p class="links"><a class="more" href="tutorials/amf/amf-tutorial.html">Read Tutorial</a><a class="top" href="#"> Back to Top</a></p>
 <div class="clearfix"></div>
-
-<div id="footer"><div class="xright">© 2005-2009, eviware.com</div></div>
-<div class="clearfixx"></div>
+<div class="gray-line"></div>
+<div class="highlight" id="Beta2_Features">Beta2 Improvements</div>
+<p>The following has been updated:</p>
+<ul class="red-dots">
+<li>JXBrowser 1.4 update
+</li><li>	Updated groovy to version 1.7.0
+</li><li>	Updated bundled JRE to 1.6_18
+</li><li>	Updated Hermes to 1.14 update - <a href="http://hermesjms.com/confluence/display/HJMS/Release+Notes">Release Notes</a>
+</li><li>	Added Support for named parameters in SQL queries and Stored Procedure calls
+</li><li>	Added Support for JMS Session authentication
+</li><li>	Improved JMS endpoint naming scheme 
+</li><li>	Added durableSubscriber and ClientID to JMS Request Inspector
+</li><li>	Added fetchSize property to JDBC TestStep
+</li><li>	Fixed inlining of attachments if inline files is enabled
+</li><li>	Improved Delay TestStep execution timing
+</li><li>	Fixed automatic GC to run for command-line tools also
+</li><li>	Fixed elapsed time to show correct value in LoadTest output
+</li><li>	Fixed synchronization of Table Inspector and XML Editor Views
+</li><li>	Added JDBC Assertions
+</li><li>	Added build checksum to nightly builds
+</li><li>	Improved session handling for AMF Requests
+</li><li>	Added soapui.scripting.library system property to override script library path from commandline
+</li><li>	Added possibility to override Jetty Connector properties via soapui.mock.connector.XX system properties
+</li><li>	Fixed bugs related to REST parameter reordering and inheritance
+</li></ul>
   </div>      
         </p>
         </section>
