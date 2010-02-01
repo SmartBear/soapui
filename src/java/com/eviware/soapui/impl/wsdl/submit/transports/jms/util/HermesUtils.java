@@ -101,7 +101,7 @@ public class HermesUtils
 		String[] children = dir.list();
 		for( String filename : children )
 		{
-			HermesJMSClasspathHacker.addURL( new URL( "file:" + File.separator + hermesLib + File.separator + filename ) );
+			HermesJMSClasspathHacker.addFile( new File(dir,filename));
 		}
 
 	}
