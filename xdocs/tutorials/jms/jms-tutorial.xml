@@ -39,10 +39,14 @@
 					SoapUI
 					3.5 installer which integrates the installer of HermesJMS.
 				</p>
+				</subsection>
+
+
+			<subsection name="HermesJMS with binary distributions">
 				<p>
 					If you want to use binary distributions you need to install
 					HermesJMS 1.14
-					manually and set its path to Preferences->Tools.
+					manually <a href="http://hermesjms.com/patches/hermes-installer-1.14.jar">(download here)</a> and set its path to Preferences->Tools.
 					</p>
 			</subsection>
 
