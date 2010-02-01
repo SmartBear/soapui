@@ -43,7 +43,15 @@ public class HermesJMSClasspathHacker
 
 		try
 		{
-			ClassLoader classLoader = JAXBHermesLoader.class.getClassLoader();
+			ClassLoader classLoader = null;
+			if( UISupport.isWindows() )
+			{
+				classLoader = JAXBHermesLoader.class.getClassLoader();
+			}
+			else
+			{
+				classLoader = SoapUI.class.getClassLoader();
+			}
 			if( !( classLoader instanceof URLClassLoader ) )
 			{
 				SoapUI.log.error( "SoapUI classloader is not an URLClassLoader, failed to add external library" );
