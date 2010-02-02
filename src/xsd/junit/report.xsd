@@ -22,7 +22,7 @@
   	<xs:attribute name="failures" type="xs:int" />
   	<xs:attribute name="name" type="xs:string" />
   	<xs:attribute name="tests" type="xs:int" />
-  	<xs:attribute name="time" type="xs:decimal" />
+  	<xs:attribute name="time" type="xs:string" />
   	<xs:attribute name="package" type="xs:string"></xs:attribute>
   	<xs:attribute name="id" type="xs:string"></xs:attribute>
   </xs:complexType>
@@ -47,7 +47,7 @@
   		<xs:element ref="tns:error" minOccurs="0" maxOccurs="1"/>
   	</xs:sequence>
   	<xs:attribute name="name" type="xs:string"></xs:attribute>
-  	<xs:attribute name="time" type="xs:double"></xs:attribute>
+  	<xs:attribute name="time" type="xs:string"></xs:attribute>
   	<xs:attribute name="package" type="xs:string"></xs:attribute>
   </xs:complexType>
  
