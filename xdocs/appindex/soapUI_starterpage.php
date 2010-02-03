@@ -115,7 +115,7 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 
 <div id="header-leftbox">
 <div class="title"><img src="images/news-title.png" alt="News" /></div>
-<h2>soapUI 3.5  beta 1- The Protocol Release is out</h2>
+<h2>soapUI 3.5  beta 2- The Protocol Release is out</h2>
 <img class="picture" title="New release" src="images/release.jpg" />
 <p> Try The Protocol Release,<br />
 With complete functionality for testing<br />
