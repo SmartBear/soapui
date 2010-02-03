@@ -50,6 +50,9 @@ public class HttpPackagingResponseFilter extends AbstractRequestFilter
 	private Response wsdlRequest( SubmitContext context, WsdlRequest request, ExtendedHttpMethod httpMethod,
 			Header responseContentTypeHeader, String requestContent )
 	{
+		if( context.hasProperty( "PreWssProcessedDocument" ) )
+			requestContent = String.valueOf( context.getProperty( "PreWssProcessedDocument" ) );
+
 		XmlBeansSettingsImpl settings = request.getSettings();
 		if( !settings.getBoolean( WsdlRequest.INLINE_RESPONSE_ATTACHMENTS ) && responseContentTypeHeader != null
 				&& responseContentTypeHeader.getValue().toUpperCase().startsWith( "MULTIPART" ) )

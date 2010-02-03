@@ -24,6 +24,7 @@ import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.impl.wsdl.support.wss.WssContainer;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class WssRequestFilter extends AbstractWssRequestFilter implements RequestFilter
 {
@@ -51,6 +52,9 @@ public class WssRequestFilter extends AbstractWssRequestFilter implements Reques
 			try
 			{
 				Document wssDocument = getWssDocument( context );
+				if( !"true".equals( System.getProperty( "soapui.savewss" ) ) )
+					context.setProperty( "PreWssProcessedDocument", XmlUtils.serialize( wssDocument ) );
+
 				outgoingWss.processOutgoing( wssDocument, context );
 				updateWssDocument( context, wssDocument );
 			}
