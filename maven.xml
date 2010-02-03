@@ -470,7 +470,7 @@
 </project>]]>
         </j:file>
 
-        <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/ext-xmlbeans-1.1.jar"
+        <ant:xmlbean destfile="${maven.repo.local}/eviware/jars/ext-xmlbeans-1.2.jar"
                      classpathref="xmlbeans-classpath" javasource="1.5">
             <fileset dir="src/xsd/wsi"/>
             <fileset dir="src/xsd/jboss"/>
