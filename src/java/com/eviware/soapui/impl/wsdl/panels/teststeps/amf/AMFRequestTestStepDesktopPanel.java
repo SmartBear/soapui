@@ -6,13 +6,17 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps.amf;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -25,13 +29,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.text.Document;
 
+import org.apache.commons.io.output.ProxyWriter;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
@@ -43,6 +52,7 @@ import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.panels.support.TestRunComponentEnabler;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.AssertionsPanel;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyTableHolderModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
@@ -62,6 +72,7 @@ import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
@@ -326,7 +337,61 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
 	protected JComponent buildProperties()
 	{
-		PropertyHolderTable holderTable = new PropertyHolderTable( getModelItem() );
+		PropertyHolderTable holderTable = new PropertyHolderTable( getModelItem() )
+		{
+			protected JTable buildPropertiesTable()
+			{
+				propertiesModel = new DefaultPropertyTableHolderModel( holder )
+				{
+					@Override
+					public String[] getPropertyNames()
+					{
+						List<String> propertyNamesList = new ArrayList<String>();
+						for( String name : holder.getPropertyNames() )
+						{
+							if( name.equals( "ResponseAsXML" ) )
+							{
+								continue;
+							}
+							propertyNamesList.add( name );
+						}
+						return propertyNamesList.toArray( new String[propertyNamesList.size()] );
+					}
+				};
+				propertiesTable = new PropertiesHolderJTable();
+				propertiesTable.setSurrendersFocusOnKeystroke( true );
+
+				propertiesTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
+				propertiesTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
+				{
+					public void valueChanged( ListSelectionEvent e )
+					{
+						int selectedRow = propertiesTable.getSelectedRow();
+						if( removePropertyAction != null )
+							removePropertyAction.setEnabled( selectedRow != -1 );
+
+						if( movePropertyUpAction != null )
+							movePropertyUpAction.setEnabled( selectedRow > 0 );
+
+						if( movePropertyDownAction != null )
+							movePropertyDownAction.setEnabled( selectedRow >= 0
+									&& selectedRow < propertiesTable.getRowCount() - 1 );
+					}
+				} );
+
+				propertiesTable.setDragEnabled( true );
+				propertiesTable.setTransferHandler( new TransferHandler( "testProperty" ) );
+
+				if( getHolder().getModelItem() != null )
+				{
+					DropTarget dropTarget = new DropTarget( propertiesTable,
+							new PropertyHolderTablePropertyExpansionDropTarget() );
+					dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
+				}
+
+				return propertiesTable;
+			}
+		};
 
 		JUndoableTextField textField = new JUndoableTextField( true );
 
@@ -518,7 +583,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 					SubmitContext context = new WsdlTestRunContext( getModelItem() );
 					statusBar.setIndeterminate( true );
 					amfRequestTestStep.initAmfRequest( context );
-				
+
 					if( context.getProperty( AMFRequest.AMF_SCRIPT_ERROR ) != null )
 					{
 						UISupport.showInfoMessage( ( ( Throwable )context.getProperty( AMFRequest.AMF_SCRIPT_ERROR ) )
@@ -526,14 +591,14 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 					}
 					else
 					{
-						UISupport.showInfoMessage( scriptInfo( context ));
-						
+						UISupport.showInfoMessage( scriptInfo( context ) );
+
 					}
 					statusBar.setIndeterminate( false );
 					amfRequestTestStep.getAMFRequest().clearArguments();
 				}
 
-				@SuppressWarnings("unchecked")
+				@SuppressWarnings( "unchecked" )
 				private String scriptInfo( SubmitContext context )
 				{
 					HashMap<String, Object> parameters = ( HashMap<String, Object> )context
@@ -544,7 +609,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 					sb.append( "parameters " + ( parameters != null ? parameters.toString() : "" ) );
 					sb.append( "\n" );
 					sb.append( "amfHeaders " + ( amfHeaders != null ? amfHeaders.toString() : "" ) );
-					return sb.toString() ;
+					return sb.toString();
 				}
 			} );
 		}

@@ -117,6 +117,8 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 
 			for( String name : propertyNames )
 			{
+				if(name.equals( "ResponseAsXML" )) continue; // skip ResponseAsXML
+				
 				TestProperty propertyValue = propertyMap.get( name );
 				if( parameters.containsKey( name ) )
 				{
@@ -233,6 +235,18 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 	public AMFResponse getResponse()
 	{
 		return response;
+	}
+
+	public String getResponseContent()
+	{
+		if( response != null )
+		{
+			return response.getResponseContentXML();
+		}
+		else
+		{
+			return "";
+		}
 	}
 
 	public void initIcons()
@@ -436,7 +450,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 
 	public String getRequestContent()
 	{
-		return ( ( AMFRequestTestStepConfig )testStep.getConfig() ).getProperties().toString();
+		return requestAsXML();
 	}
 
 	public MessagePart[] getRequestParts()

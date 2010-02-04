@@ -43,7 +43,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
@@ -58,7 +57,6 @@ import com.eviware.soapui.model.tree.nodes.PropertyTreeNode.PropertyModelItem;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
@@ -68,16 +66,16 @@ import com.eviware.x.form.support.AField.AFieldType;
 
 public class PropertyHolderTable extends JPanel
 {
-	private final TestPropertyHolder holder;
-	private PropertiesModel propertiesModel;
-	private RemovePropertyAction removePropertyAction;
-	private AddPropertyAction addPropertyAction;
-	private InternalTestPropertyListener testPropertyListener;
-	private JTable propertiesTable;
-	private JXToolBar toolbar;
-	private LoadPropertiesAction loadPropertiesAction;
-	private MovePropertyUpAction movePropertyUpAction;
-	private MovePropertyDownAction movePropertyDownAction;
+	protected final TestPropertyHolder holder;
+	protected PropertyHolderTableModel propertiesModel;
+	protected RemovePropertyAction removePropertyAction;
+	protected AddPropertyAction addPropertyAction;
+	protected InternalTestPropertyListener testPropertyListener;
+	protected JTable propertiesTable;
+	protected JXToolBar toolbar;
+	protected LoadPropertiesAction loadPropertiesAction;
+	protected MovePropertyUpAction movePropertyUpAction;
+	protected MovePropertyDownAction movePropertyDownAction;
 
 	public PropertyHolderTable( TestPropertyHolder holder )
 	{
@@ -102,7 +100,7 @@ public class PropertyHolderTable extends JPanel
 
 	protected JTable buildPropertiesTable()
 	{
-		propertiesModel = new PropertiesModel();
+		propertiesModel = new DefaultPropertyTableHolderModel( holder );
 		propertiesTable = new PropertiesHolderJTable();
 		propertiesTable.setSurrendersFocusOnKeystroke( true );
 
@@ -268,111 +266,6 @@ public class PropertyHolderTable extends JPanel
 		}
 	}
 
-	private class PropertiesModel extends AbstractTableModel
-	{
-		private StringList names = new StringList();
-
-		public PropertiesModel()
-		{
-			names = new StringList( holder.getPropertyNames() );
-		}
-
-		public int getRowCount()
-		{
-			return names.size();
-		}
-
-		public int getColumnCount()
-		{
-			return 2;
-		}
-
-		@Override
-		public void fireTableDataChanged()
-		{
-			names = new StringList( holder.getPropertyNames() );
-			super.fireTableDataChanged();
-		}
-
-		public String getColumnName( int columnIndex )
-		{
-			switch( columnIndex )
-			{
-			case 0 :
-				return "Name";
-			case 1 :
-				return "Value";
-			}
-
-			return null;
-		}
-
-		public boolean isCellEditable( int rowIndex, int columnIndex )
-		{
-			if( columnIndex == 0 )
-			{
-				return holder instanceof MutableTestPropertyHolder;
-			}
-
-			return !holder.getProperty( names.get( rowIndex ) ).isReadOnly();
-		}
-
-		public void setValueAt( Object aValue, int rowIndex, int columnIndex )
-		{
-			TestProperty property = holder.getProperty( names.get( rowIndex ) );
-			switch( columnIndex )
-			{
-			case 0 :
-			{
-				if( holder instanceof MutableTestPropertyHolder )
-				{
-					TestProperty prop = holder.getProperty( aValue.toString() );
-					if( prop != null && prop != property )
-					{
-						UISupport.showErrorMessage( "Property name exists!" );
-						return;
-					}
-					( ( MutableTestPropertyHolder )holder ).renameProperty( property.getName(), aValue.toString() );
-				}
-				break;
-			}
-			case 1 :
-			{
-				property.setValue( aValue.toString() );
-				break;
-			}
-			}
-		}
-
-		@Override
-		public Class<?> getColumnClass( int columnIndex )
-		{
-			return String.class;
-		}
-
-		public TestProperty getPropertyAtRow( int rowIndex )
-		{
-			return holder.getProperty( names.get( rowIndex ) );
-		}
-
-		public Object getValueAt( int rowIndex, int columnIndex )
-		{
-			TestProperty property = holder.getProperty( names.get( rowIndex ) );
-			if( property == null )
-				return null;
-
-			switch( columnIndex )
-			{
-			case 0 :
-				return property.getName();
-			case 1 :
-				return property.getValue();
-			}
-
-			return null;
-		}
-	}
-
 	private class AddPropertyAction extends AbstractAction
 	{
 		public AddPropertyAction()
@@ -418,7 +311,7 @@ public class PropertyHolderTable extends JPanel
 		}
 	}
 
-	private class RemovePropertyAction extends AbstractAction
+	protected class RemovePropertyAction extends AbstractAction
 	{
 		public RemovePropertyAction()
 		{
@@ -444,7 +337,7 @@ public class PropertyHolderTable extends JPanel
 		}
 	}
 
-	private class ClearPropertiesAction extends AbstractAction
+	protected class ClearPropertiesAction extends AbstractAction
 	{
 		public ClearPropertiesAction()
 		{
@@ -464,7 +357,7 @@ public class PropertyHolderTable extends JPanel
 		}
 	}
 
-	private class MovePropertyUpAction extends AbstractAction
+	protected class MovePropertyUpAction extends AbstractAction
 	{
 		public MovePropertyUpAction()
 		{
@@ -484,7 +377,7 @@ public class PropertyHolderTable extends JPanel
 		}
 	}
 
-	private class MovePropertyDownAction extends AbstractAction
+	protected class MovePropertyDownAction extends AbstractAction
 	{
 		public MovePropertyDownAction()
 		{
@@ -505,7 +398,7 @@ public class PropertyHolderTable extends JPanel
 		}
 	}
 
-	private class LoadPropertiesAction extends AbstractAction
+	protected class LoadPropertiesAction extends AbstractAction
 	{
 		private XFormDialog dialog;
 
@@ -681,7 +574,7 @@ public class PropertyHolderTable extends JPanel
 		return holder;
 	}
 
-	public PropertiesModel getPropertiesModel()
+	public PropertyHolderTableModel getPropertiesModel()
 	{
 		return propertiesModel;
 	}

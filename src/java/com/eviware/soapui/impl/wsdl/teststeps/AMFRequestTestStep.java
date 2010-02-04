@@ -25,8 +25,11 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AMFRequestTestStepConfig;
+import com.eviware.soapui.config.PropertiesTypeConfig;
+import com.eviware.soapui.config.PropertyConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFResponse;
@@ -45,6 +48,7 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.support.TestStepBeanProperty;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
@@ -83,6 +87,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	private AssertionsSupport assertionsSupport;
 	private PropertyChangeNotifier notifier;
 	private XmlBeansPropertiesTestPropertyHolder propertyHolderSupport;
+
 	private AMFRequest amfRequest;
 
 	public AMFRequestTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
@@ -106,19 +111,21 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 
 		amfRequest = new AMFRequest( this );
 
-		// if( !forLoadTest )
-		// {
-		// okIcon = UISupport.createImageIcon( "/amf_request.gif" );
-		// failedIcon = UISupport.createImageIcon( "/amfrequest_failed.gif" );
-		// setIcon( okIcon );
-		// }
+		TestStepBeanProperty responseProperty = new TestStepBeanProperty( "ResponseAsXML", false, amfRequest,
+				"responseContent", this )
+		{
+			@Override
+			public String getDefaultValue()
+			{
+				return "";
+			}
+
+		};
 		propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder( this, amfRequestTestStepConfig.getProperties() );
+		propertyHolderSupport.addVirtualProperty( "ResponseAsXML", responseProperty );
+
 		initAssertions();
 		amfRequest.initIcons();
-		// if (!forLoadTest && !UISupport.isHeadless())
-		// {
-		// setIconAnimator(initIconAnimator());
-		// }
 
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 		scriptEngine.setScript( getScript() );
@@ -132,7 +139,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 				SoapUI.logError( e );
 			}
 	}
-
+		
 	public AMFRequestTestStepConfig getAMFRequestTestStepConfig()
 	{
 		return amfRequestTestStepConfig;
@@ -160,12 +167,12 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		AMFTestStepResult testStepResult = new AMFTestStepResult( this );
 		testStepResult.startTimer();
 		runContext.setProperty( AssertedXPathsContainer.ASSERTEDXPATHSCONTAINER_PROPERTY, testStepResult );
-		
+
 		try
 		{
-			if( ! initAmfRequest( runContext ))
+			if( !initAmfRequest( runContext ) )
 			{
-				throw new SubmitException("AMF request is not initialised properly !");
+				throw new SubmitException( "AMF request is not initialised properly !" );
 			}
 			submit = amfRequest.submit( runContext, false );
 			AMFResponse response = submit.getResponse();
@@ -652,7 +659,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		notifyPropertyChanged( "endpoint", old, endpoint );
 	}
 
-	public boolean initAmfRequest( SubmitContext submitContext ) 
+	public boolean initAmfRequest( SubmitContext submitContext )
 	{
 		amfRequest.setScriptEngine( scriptEngine );
 		amfRequest.setAmfCall( PropertyExpander.expandProperties( submitContext, getAmfCall() ) );
@@ -662,7 +669,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		amfRequest.setPropertyMap( ( HashMap<String, TestProperty> )getProperties() );
 		amfRequest.setHttpHeaders( getHttpHeaders() );
 		amfRequest.setAmfHeadersString( getAmfHeaders() );
-		
+
 		return amfRequest.executeAmfScript( submitContext );
 	}
 
@@ -693,8 +700,13 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	public void resetConfigOnMove( TestStepConfig config )
 	{
 		super.resetConfigOnMove( config );
-		amfRequestTestStepConfig= ( AMFRequestTestStepConfig )config.getConfig().changeType( AMFRequestTestStepConfig.type );
+		amfRequestTestStepConfig = ( AMFRequestTestStepConfig )config.getConfig().changeType(
+				AMFRequestTestStepConfig.type );
 		propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder( this, amfRequestTestStepConfig.getProperties() );
 	}
-	
+
+	public XmlBeansPropertiesTestPropertyHolder getPropertyHolderSupport()
+	{
+		return propertyHolderSupport;
+	}
 }

@@ -40,7 +40,7 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 	public static final String AMF_RAW_RESPONSE_BODY = "AMF_RAW_RESPONSE_BODY";
 
 	private Object responseContent;
-	private String responseContentXML;
+	private String responseContentXML = "";
 	private long timeTaken;
 	private long timestamp;
 	private AMFRequest request;
