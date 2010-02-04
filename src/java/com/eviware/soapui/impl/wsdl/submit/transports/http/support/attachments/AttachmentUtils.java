@@ -227,18 +227,33 @@ public class AttachmentUtils
 							else if( container.isMtomEnabled()
 									&& ( SchemaUtils.isBinaryType( schemaType ) || SchemaUtils.isAnyType( schemaType ) ) )
 							{
-								MimeBodyPart part = new PreencodedMimeBodyPart( "binary" );
-								String xmimeContentType = getXmlMimeContentType( cursor );
+								if( "true".equals( System.getProperty( "soapui.mtom.strictcanonicalization" ) ) )
+								{
+									for( int c = 0; c < textContent.length(); c++ )
+									{
+										if( Character.isWhitespace( textContent.charAt( c ) ) )
+										{
+											textContent = null;
+											break;
+										}
+									}
+								}
 
-								part.setDataHandler( new DataHandler( new XOPPartDataSource( textContent, xmimeContentType,
-										schemaType ) ) );
+								if( textContent != null )
+								{
+									MimeBodyPart part = new PreencodedMimeBodyPart( "binary" );
+									String xmimeContentType = getXmlMimeContentType( cursor );
 
-								textContent = "http://www.soapui.org/" + System.nanoTime();
+									part.setDataHandler( new DataHandler( new XOPPartDataSource( textContent, xmimeContentType,
+											schemaType ) ) );
 
-								part.setContentID( "<" + textContent + ">" );
-								mp.addBodyPart( part );
+									textContent = "http://www.soapui.org/" + System.nanoTime();
 
-								isXopAttachment = true;
+									part.setContentID( "<" + textContent + ">" );
+									mp.addBodyPart( part );
+
+									isXopAttachment = true;
+								}
 							}
 							else if( container.isInlineFilesEnabled()
 									&& container.getAttachmentsForPart( textContent ) != null )
