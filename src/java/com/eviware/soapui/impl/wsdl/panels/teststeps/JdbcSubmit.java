@@ -322,7 +322,10 @@ public class JdbcSubmit implements Submit, Runnable
 		for( TestProperty testProperty : props )
 		{
 			String value = PropertyExpander.expandProperties( context, testProperty.getValue() );
-			p.setString( testProperty.getName(), value );
+			if( !testProperty.getName().equals( "ResponseAsXML" ) )
+			{
+				p.setString( testProperty.getName(), value );
+			}
 		}
 		statement = p.getStatement();
 

@@ -217,14 +217,14 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 		TestProperty property = getProperty( propertyName );
 		if( property != null )
 		{
-			int ix = properties.indexOf( property );
-			propertyMap.remove( propertyName.toUpperCase() );
-			properties.remove( ix );
-			firePropertyRemoved( propertyName );
 			if( property instanceof PropertiesStepProperty && ( ( PropertiesStepProperty )property ).isVirtualProperty() )
 			{
 				return property;
 			}
+			int ix = properties.indexOf( property );
+			propertyMap.remove( propertyName.toUpperCase() );
+			properties.remove( ix );
+			firePropertyRemoved( propertyName );
 			config.removeProperty( ix );
 			return property;
 		}
