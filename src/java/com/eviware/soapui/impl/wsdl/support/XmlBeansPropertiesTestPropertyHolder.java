@@ -221,6 +221,10 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 			propertyMap.remove( propertyName.toUpperCase() );
 			properties.remove( ix );
 			firePropertyRemoved( propertyName );
+			if( property instanceof PropertiesStepProperty && ( ( PropertiesStepProperty )property ).isVirtualProperty() )
+			{
+				return property;
+			}
 			config.removeProperty( ix );
 			return property;
 		}
