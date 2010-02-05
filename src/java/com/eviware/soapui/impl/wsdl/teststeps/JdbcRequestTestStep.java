@@ -44,6 +44,7 @@ import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.support.TestStepBeanProperty;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
@@ -110,19 +111,22 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 		jdbcRequest = new JdbcRequest( this );
 
-		// if( !forLoadTest )
-		// {
-		// okIcon = UISupport.createImageIcon( "/jdbc_request.gif" );
-		// failedIcon = UISupport.createImageIcon( "/jdbcrequest_failed.gif" );
-		// setIcon( okIcon );
-		// }
+		
+		TestStepBeanProperty responseProperty = new TestStepBeanProperty( "ResponseAsXML", false, this,
+				"responseContent", this )
+		{
+			@Override
+			public String getDefaultValue()
+			{
+				return "";
+			}
+
+		};
 		propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder( this, jdbcRequestTestStepConfig.getProperties() );
+		propertyHolderSupport.addVirtualProperty( "ResponseAsXML", responseProperty );
+
 		initAssertions();
 		jdbcRequest.initIcons();
-		// if (!forLoadTest && !UISupport.isHeadless())
-		// {
-		// setIconAnimator(initIconAnimator());
-		// }
 	}
 
 	public JdbcRequestTestStepConfig getJdbcRequestTestStepConfig()
@@ -382,7 +386,13 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	{
 		return getJdbcRequest().getResponse() == null ? null : getJdbcRequest().getResponse().getContentAsString();
 	}
-
+	
+	
+	public String getResponseContent()
+	{
+		return getJdbcRequest().getResponse() == null ? "" : getJdbcRequest().getResponse().getContentAsString();
+	}
+	
 	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy )
 	{
 		return assertionsSupport.importAssertion( source, overwrite, createCopy );

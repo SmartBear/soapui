@@ -6,6 +6,8 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -15,7 +17,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -30,12 +34,16 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.text.Document;
 
 import org.apache.log4j.Logger;
@@ -48,7 +56,10 @@ import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyTableHolderModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable.PropertiesHolderJTable;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable.PropertyHolderTablePropertyExpansionDropTarget;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
@@ -308,7 +319,60 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 	protected JComponent buildProperties()
 	{
-		propertyHolderTable = new PropertyHolderTable( getModelItem() );
+		propertyHolderTable = new PropertyHolderTable( getModelItem() ){
+			protected JTable buildPropertiesTable()
+			{
+				propertiesModel = new DefaultPropertyTableHolderModel( holder )
+				{
+					@Override
+					public String[] getPropertyNames()
+					{
+						List<String> propertyNamesList = new ArrayList<String>();
+						for( String name : holder.getPropertyNames() )
+						{
+							if( name.equals( "ResponseAsXML" ) )
+							{
+								continue;
+							}
+							propertyNamesList.add( name );
+						}
+						return propertyNamesList.toArray( new String[propertyNamesList.size()] );
+					}
+				};
+				propertiesTable = new PropertiesHolderJTable();
+				propertiesTable.setSurrendersFocusOnKeystroke( true );
+
+				propertiesTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
+				propertiesTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
+				{
+					public void valueChanged( ListSelectionEvent e )
+					{
+						int selectedRow = propertiesTable.getSelectedRow();
+						if( removePropertyAction != null )
+							removePropertyAction.setEnabled( selectedRow != -1 );
+
+						if( movePropertyUpAction != null )
+							movePropertyUpAction.setEnabled( selectedRow > 0 );
+
+						if( movePropertyDownAction != null )
+							movePropertyDownAction.setEnabled( selectedRow >= 0
+									&& selectedRow < propertiesTable.getRowCount() - 1 );
+					}
+				} );
+
+				propertiesTable.setDragEnabled( true );
+				propertiesTable.setTransferHandler( new TransferHandler( "testProperty" ) );
+
+				if( getHolder().getModelItem() != null )
+				{
+					DropTarget dropTarget = new DropTarget( propertiesTable,
+							new PropertyHolderTablePropertyExpansionDropTarget() );
+					dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
+				}
+
+				return propertiesTable;
+			}
+		};
 
 		JUndoableTextField textField = new JUndoableTextField( true );
 
