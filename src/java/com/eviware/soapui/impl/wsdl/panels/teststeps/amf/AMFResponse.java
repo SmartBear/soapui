@@ -192,7 +192,7 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 	@SuppressWarnings( "unchecked" )
 	private void initAMFHeaders( ExtendedPostMethod postMethod )
 	{
-		if( !postMethod.isFailed() )
+		if( !postMethod.isFailed() && actionMessage != null )
 		{
 			ArrayList<MessageHeader> amfHeaders = actionMessage.getHeaders();
 
