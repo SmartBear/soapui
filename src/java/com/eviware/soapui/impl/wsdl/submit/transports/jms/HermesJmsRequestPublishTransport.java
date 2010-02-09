@@ -14,8 +14,8 @@ package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.Session;
 import javax.jms.Topic;
-import javax.jms.TopicSession;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
@@ -27,15 +27,15 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 
 	public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception
 	{
-		TopicSession topicSession = null;
+		Session topicSession = null;
 		JMSConnectionHolder jmsConnectionHolder = null;
 		try
 		{
 			init( submitContext, request );
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, false, true, clientID , username, password);
+			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, clientID , username, password);
 
 			// session
-			topicSession = jmsConnectionHolder.getTopicSession();
+			topicSession = jmsConnectionHolder.getSession();
 
 			// destination
 			Topic topicPublish = jmsConnectionHolder.getTopic( jmsConnectionHolder.getJmsEndpoint().getSend() );
@@ -54,7 +54,7 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 		}
 		finally
 		{
-			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getTopicConnection() : null, topicSession );
+			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null, topicSession );
 		}
 		return null;
 	}

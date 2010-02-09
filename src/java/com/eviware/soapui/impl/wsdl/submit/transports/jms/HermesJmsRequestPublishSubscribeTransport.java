@@ -14,8 +14,8 @@ package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.Session;
 import javax.jms.Topic;
-import javax.jms.TopicSession;
 import javax.jms.TopicSubscriber;
 
 import com.eviware.soapui.SoapUI;
@@ -29,7 +29,7 @@ public class HermesJmsRequestPublishSubscribeTransport extends HermesJmsRequestT
 
 	public Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
 	{
-		TopicSession topicSession = null;
+		Session topicSession = null;
 		TopicSubscriber topicDurableSubsriber = null;
 		JMSConnectionHolder jmsConnectionHolder = null;
 		try
@@ -37,11 +37,11 @@ public class HermesJmsRequestPublishSubscribeTransport extends HermesJmsRequestT
 			init( submitContext, request );
 			String clientIDString = StringUtils.hasContent( clientID ) ? clientID : jmsEndpoint.getSessionName() + "-"
 					+ jmsEndpoint.getReceive();
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, false, true, clientIDString, username,
+			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, clientIDString, username,
 					password );
 
 			// session
-			topicSession = jmsConnectionHolder.getTopicSession();
+			topicSession = jmsConnectionHolder.getSession();
 
 			// destination
 			Topic topicPublish = jmsConnectionHolder.getTopic( jmsConnectionHolder.getJmsEndpoint().getSend() );
@@ -68,7 +68,7 @@ public class HermesJmsRequestPublishSubscribeTransport extends HermesJmsRequestT
 		{
 			if( topicDurableSubsriber != null )
 				topicDurableSubsriber.close();
-			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getTopicConnection() : null,
+			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null,
 					topicSession );
 		}
 		return null;

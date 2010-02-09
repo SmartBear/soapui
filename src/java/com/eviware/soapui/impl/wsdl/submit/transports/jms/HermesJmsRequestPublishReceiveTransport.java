@@ -16,9 +16,8 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Queue;
-import javax.jms.QueueSession;
+import javax.jms.Session;
 import javax.jms.Topic;
-import javax.jms.TopicSession;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
@@ -30,24 +29,27 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 
 	public Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
 	{
-		TopicSession topicSession = null;
-		QueueSession queueSession = null;
-		JMSConnectionHolder jmsConnectionHolder = null;
+		Session topicSession = null;
+		Session queueSession = null;
+		
+		JMSConnectionHolder jmsConnectionHolderTopic = null;
+		JMSConnectionHolder jmsConnectionHolderQueue = null;
 		try
 		{
 			init( submitContext, request );
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, true, clientID, username, password );
+			jmsConnectionHolderTopic = new JMSConnectionHolder( jmsEndpoint, hermes, true, clientID, username, password );
+			jmsConnectionHolderQueue = new JMSConnectionHolder( jmsEndpoint, hermes, false, null, username, password );
 
 			// session
-			topicSession = jmsConnectionHolder.getTopicSession();
-			queueSession = jmsConnectionHolder.getQueueSession();
+			topicSession = jmsConnectionHolderTopic.getSession();
+			queueSession = jmsConnectionHolderQueue.getSession();
 
 			// destination
-			Topic topicPublish = jmsConnectionHolder.getTopic( jmsConnectionHolder.getJmsEndpoint().getSend() );
-			Queue queueReceive = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getReceive() );
+			Topic topicPublish = jmsConnectionHolderTopic.getTopic( jmsConnectionHolderTopic.getJmsEndpoint().getSend() );
+			Queue queueReceive = jmsConnectionHolderQueue.getQueue( jmsConnectionHolderTopic.getJmsEndpoint().getReceive() );
 
 			Message messagePublish = messagePublish( submitContext, request, topicSession,
-					jmsConnectionHolder.getHermes(), topicPublish );
+					jmsConnectionHolderTopic.getHermes(), topicPublish );
 
 			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive, messageSelector );
 
@@ -63,8 +65,9 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 		}
 		finally
 		{
-			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getQueueConnection() : null,queueSession );
-			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getTopicConnection() : null,topicSession );
+			closeSessionAndConnection( jmsConnectionHolderQueue != null ? jmsConnectionHolderQueue.getConnection() : null,queueSession );
+			closeSessionAndConnection( jmsConnectionHolderTopic != null ? jmsConnectionHolderTopic.getConnection() : null,topicSession );
+		
 		}
 		return null;
 

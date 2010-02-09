@@ -15,9 +15,8 @@ package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Queue;
-import javax.jms.QueueSession;
+import javax.jms.Session;
 import javax.jms.Topic;
-import javax.jms.TopicSession;
 import javax.jms.TopicSubscriber;
 
 import com.eviware.soapui.SoapUI;
@@ -31,30 +30,30 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 
 	public Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
 	{
-		TopicSession topicSession = null;
-		QueueSession queueSession = null;
+		Session topicSession = null;
+		Session queueSession = null;
 		TopicSubscriber topicSubsriber = null;
-		JMSConnectionHolder jmsConnectionHolder = null;
+		JMSConnectionHolder jmsConnectionHolderTopic = null;
+		JMSConnectionHolder jmsConnectionHolderQueue = null;
 		try
 		{
 			init( submitContext, request );
 			String clientIDString = StringUtils.hasContent( clientID ) ? clientID : jmsEndpoint.getSessionName() + "-"
 					+ jmsEndpoint.getReceive();
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, true, clientIDString, username,
-					password );
-
+			jmsConnectionHolderTopic = new JMSConnectionHolder( jmsEndpoint, hermes, true, clientIDString, username, password );
+			jmsConnectionHolderQueue = new JMSConnectionHolder( jmsEndpoint, hermes, false, null, username, password );
 			// session
-			topicSession = jmsConnectionHolder.getTopicSession();
-			queueSession = jmsConnectionHolder.getQueueSession();
+			topicSession = jmsConnectionHolderTopic.getSession();
+			queueSession = jmsConnectionHolderQueue.getSession();
 
-			Queue queueSend = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getSend() );
-			Topic topicReceive = jmsConnectionHolder.getTopic( jmsConnectionHolder.getJmsEndpoint().getReceive() );
+			Queue queueSend = jmsConnectionHolderQueue.getQueue( jmsConnectionHolderQueue.getJmsEndpoint().getSend() );
+			Topic topicReceive = jmsConnectionHolderTopic.getTopic( jmsConnectionHolderTopic.getJmsEndpoint().getReceive() );
 
 			topicSubsriber = topicSession.createDurableSubscriber( topicReceive, StringUtils
 					.hasContent( durableSubscriptionName ) ? durableSubscriptionName : "durableSubscription"
-					+ jmsConnectionHolder.getJmsEndpoint().getReceive(), messageSelector, false );
+					+ jmsConnectionHolderTopic.getJmsEndpoint().getReceive(), messageSelector, false );
 
-			Message textMessageSend = messageSend( submitContext, request, queueSession, jmsConnectionHolder.getHermes(),
+			Message textMessageSend = messageSend( submitContext, request, queueSession, jmsConnectionHolderQueue.getHermes(),
 					queueSend );
 
 			return makeResponse( submitContext, request, timeStarted, textMessageSend, topicSubsriber );
@@ -71,8 +70,8 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 		{
 			if( topicSubsriber != null )
 				topicSubsriber.close();
-			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getQueueConnection() : null,queueSession );
-			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getTopicConnection() : null,topicSession );
+			closeSessionAndConnection( jmsConnectionHolderQueue != null ? jmsConnectionHolderQueue.getConnection() : null,queueSession );
+			closeSessionAndConnection( jmsConnectionHolderTopic != null ? jmsConnectionHolderTopic.getConnection() : null,topicSession );
 		}
 		return null;
 	}

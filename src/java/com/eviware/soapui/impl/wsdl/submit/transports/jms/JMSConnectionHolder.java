@@ -18,14 +18,8 @@ import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Queue;
-import javax.jms.QueueConnection;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueSession;
 import javax.jms.Session;
 import javax.jms.Topic;
-import javax.jms.TopicConnection;
-import javax.jms.TopicConnectionFactory;
-import javax.jms.TopicSession;
 import javax.naming.NamingException;
 
 import com.eviware.soapui.SoapUI;
@@ -39,13 +33,9 @@ import com.eviware.soapui.support.StringUtils;
  */
 public class JMSConnectionHolder
 {
-	private TopicConnectionFactory topicConnectionFactory = null;
-	private TopicConnection topicConnection = null;
-	private TopicSession topicSession = null;
-
-	private QueueConnectionFactory queueConnectionFactory = null;
-	private QueueConnection queueConnection = null;
-	QueueSession queueSession = null;
+	private ConnectionFactory connectionFactory = null;
+	private Connection connection = null;
+	private Session session = null;
 
 	private JMSEndpoint jmsEndpoint;
 	private Hermes hermes;
@@ -62,8 +52,8 @@ public class JMSConnectionHolder
 	 * @param password
 	 * @throws JMSException
 	 */
-	public JMSConnectionHolder( JMSEndpoint jmsEndpoint, Hermes hermes, boolean createQueueConnection,
-			boolean createTopicConnection, String clientID, String username, String password ) throws JMSException
+	public JMSConnectionHolder( JMSEndpoint jmsEndpoint, Hermes hermes, boolean isTopicDomain, String clientID,
+			String username, String password ) throws JMSException
 	{
 		try
 		{
@@ -71,34 +61,20 @@ public class JMSConnectionHolder
 			this.hermes = hermes;
 			this.clientID = clientID;
 
-			if( createTopicConnection )
-			{
-				topicConnectionFactory = ( TopicConnectionFactory )hermes.getConnectionFactory();
-				topicConnection = ( TopicConnection )createConnection( topicConnectionFactory, Domain.TOPIC, clientID,
-						username, password );
-				topicConnection.start();
-			}
-
-			if( createQueueConnection )
-			{
-				queueConnectionFactory = ( QueueConnectionFactory )hermes.getConnectionFactory();
-				queueConnection = ( QueueConnection )createConnection( queueConnectionFactory, Domain.QUEUE, clientID,
-						username, password );
-				queueConnection.start();
-			}
+			connectionFactory = ( ConnectionFactory )hermes.getConnectionFactory();
+			connection = createConnection( connectionFactory, isTopicDomain ? Domain.TOPIC : Domain.QUEUE, clientID,
+					username, password );
+			connection.start();
 
 		}
 		catch( Throwable t )
 		{
 			SoapUI.logError( t );
 
-			if( topicConnection != null )
-				topicConnection.close();
+			if( connection != null )
+				connection.close();
 
-			if( queueConnection != null )
-				queueConnection.close();
-			
-			throw new JMSException(t.getMessage());
+			throw new JMSException( t.getMessage() );
 
 		}
 	}
@@ -106,52 +82,24 @@ public class JMSConnectionHolder
 	private Connection createConnection( ConnectionFactory connectionFactory, Domain domain, String clientId,
 			String username, String password ) throws JMSException
 	{
-		QueueConnection queueConnection;
-		TopicConnection topicConnection;
+		Connection connection = StringUtils.hasContent( username ) ? ( ( ConnectionFactory )connectionFactory )
+				.createConnection( username, password ) : ( ( ConnectionFactory )connectionFactory ).createConnection();
 
-		if( domain.equals( Domain.TOPIC ) )
-		{
-			topicConnection = StringUtils.hasContent( username ) ? ( ( TopicConnectionFactory )connectionFactory )
-					.createTopicConnection( username, password ) : ( ( TopicConnectionFactory )connectionFactory )
-					.createTopicConnection();
+		if( !StringUtils.isNullOrEmpty( clientId ) && domain.equals( Domain.TOPIC ) )
+			connection.setClientID( clientId );
 
-			if( !StringUtils.isNullOrEmpty( clientId ) )
-				topicConnection.setClientID( clientId );
+		return connection;
 
-			return topicConnection;
-		}
-		else if( domain.equals( Domain.QUEUE ) )
-		{
-			queueConnection = StringUtils.hasContent( username ) ? ( ( QueueConnectionFactory )connectionFactory )
-					.createQueueConnection( username, password ) : ( ( QueueConnectionFactory )connectionFactory )
-					.createQueueConnection();
-
-			return queueConnection;
-		}
-		else
-		{
-			return null;
-		}
 	}
 
-	public TopicConnectionFactory getTopicConnectionFactory()
+	public ConnectionFactory getConnectionFactory()
 	{
-		return topicConnectionFactory;
+		return connectionFactory;
 	}
 
-	public TopicConnection getTopicConnection()
+	public Connection getConnection()
 	{
-		return topicConnection;
-	}
-
-	public QueueConnectionFactory getQueueConnectionFactory()
-	{
-		return queueConnectionFactory;
-	}
-
-	public QueueConnection getQueueConnection()
-	{
-		return queueConnection;
+		return connection;
 	}
 
 	public String getClientID()
@@ -196,47 +144,29 @@ public class JMSConnectionHolder
 
 	/**
 	 * 
-	 * @return QueueSession
+	 * @return Session
 	 * @throws JMSException
 	 */
-	public QueueSession getQueueSession() throws JMSException
+	public Session getSession() throws JMSException
 	{
-		if( queueSession == null )
+		if( session == null )
 		{
-			return queueSession = getQueueConnection().createQueueSession( false, Session.AUTO_ACKNOWLEDGE );
+			return session = getConnection().createSession( false, Session.AUTO_ACKNOWLEDGE );
 		}
-		return queueSession;
+		return session;
 	}
 
 	/**
-	 * 
-	 * @return TopicSession
-	 * @throws JMSException
-	 */
-	public TopicSession getTopicSession() throws JMSException
-	{
-		if( topicSession == null )
-		{
-			return topicSession = getTopicConnection().createTopicSession( false, Session.AUTO_ACKNOWLEDGE );
-		}
-		return topicSession;
-	}
-
-	/**
-	 * closes all sessions and connections
+	 * closes sessions and connections
 	 */
 	public void closeAll()
 	{
 		try
 		{
-			if( topicSession != null )
-				topicSession.close();
-			if( queueSession != null )
-				queueSession.close();
-			if( topicConnection != null )
-				topicConnection.close();
-			if( queueConnection != null )
-				queueConnection.close();
+			if( session != null )
+				session.close();
+			if( connection != null )
+				connection.close();
 		}
 		catch( JMSException e )
 		{

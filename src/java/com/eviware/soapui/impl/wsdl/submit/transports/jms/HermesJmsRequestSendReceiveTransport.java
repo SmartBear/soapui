@@ -16,7 +16,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Queue;
-import javax.jms.QueueSession;
+import javax.jms.Session;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.Request;
@@ -28,15 +28,15 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 
 	public Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
 	{
-		QueueSession queueSession = null;
+		Session queueSession = null;
 		JMSConnectionHolder jmsConnectionHolder = null;
 		try
 		{
 			init( submitContext, request );
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, false, clientID, username, password );
+			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, false, clientID, username, password );
 
 			// session
-			queueSession = jmsConnectionHolder.getQueueSession();
+			queueSession = jmsConnectionHolder.getSession();
 
 			// queue
 			Queue queueSend = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getSend() );
@@ -59,7 +59,7 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 		}
 		finally
 		{
-			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getQueueConnection() : null,queueSession );
+			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null,queueSession );
 		}
 		return null;
 	}
