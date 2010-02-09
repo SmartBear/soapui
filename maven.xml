@@ -685,12 +685,6 @@
             <attainGoal name="soapui:create-standalone-binary-dist"/>
         </j:if>
 
-		<!-- for win and linux supply modified wsi scripts that will use bundled jre java -->
-		<ant:mkdir dir="${maven.build.dir}\dist\wsi-scripts-usingbundled"/>
-        <ant:copy todir="${maven.build.dir}/dist/wsi-scripts-usingbundled" overwrite="true">
-            <ant:fileset dir="src/wsi"/>
-        </ant:copy>
-        
 	    <taskdef name="install4j"
                classname="com.install4j.Install4JTask"
                classpath="${maven.install4j.dir}\bin\ant.jar"/>
