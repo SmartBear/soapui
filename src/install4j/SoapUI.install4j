@@ -543,7 +543,7 @@ else return false;
                 </serializedBean>
                 <condition />
               </action>
-              <action name="Set access mode for wsi-test-tools" id="1037" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Access mode for wsi-test-tools scripts couldn't be set">
+              <action name="Set access mode for wsi-test-tools" id="1037" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="3" errorMessage="Access mode for wsi-test-tools scripts couldn't be set">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
@@ -563,7 +563,7 @@ else return false;
                 </serializedBean>
                 <condition />
               </action>
-              <action name="Set access mode for bundled sh scripts" id="1847" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Couldn't set access mode for bundled scripts">
+              <action name="Set access mode for bundled sh scripts" id="1847" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="3" errorMessage="Couldn't set access mode for sh bundled scripts">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
@@ -583,7 +583,7 @@ else return false;
                 </serializedBean>
                 <condition />
               </action>
-              <action name="Set access mode for non bundled sh scripts" id="1848" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+              <action name="Set access mode for non bundled sh scripts" id="1848" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="3" errorMessage="Couldn't set access mode for bundled scripts">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
