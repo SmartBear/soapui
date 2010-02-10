@@ -186,6 +186,7 @@
                 </item>
                 <item href="/userguide/mock/operations.html" name="Mock Operations"/>
                 <item href="/userguide/mock/responses.html" name="Mock Responses"/>
+                  <item href="/userguide/mock/mock_as_war.html" name="Deploy Mock AS War"/>
             </item>
 
             <item href="/userguide/monitor/index.html" name="SOAP Monitoring">

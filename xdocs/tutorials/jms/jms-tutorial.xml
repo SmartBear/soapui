@@ -215,9 +215,9 @@ import javax.jms.*
 
 def jmsEndpoint = new  JMSEndpoint("jms://activeMQSession::queue_testQ1::queue_testQ1");
 def hermes = HermesUtils.getHermes( context.testCase.testSuite.project, jmsEndpoint.sessionName)
-def jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, false, null ,null ,null);
+def jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, false, null ,null ,null);
 
-QueueSession queueSession = jmsConnectionHolder.getQueueSession();
+Session queueSession = jmsConnectionHolder.getSession();
 Queue queueSend = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getSend() );
 Queue queueBrowse = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getReceive() );
 
@@ -234,7 +234,7 @@ while(en.hasMoreElements()){
 	TextMessage tm = (TextMessage)en.nextElement();
 	log.info tm.getText()
 }
-jmsConnectionHolder.closeAll()// don't forget to close sessions and connections
+jmsConnectionHolder.closeAll()// don't forget to close session and connection
 				
 				</source>
 				
