@@ -575,6 +575,9 @@ else return false;
                       <void property="mode">
                         <string>755</string>
                       </void>
+                      <void property="recursive">
+                        <boolean>true</boolean>
+                      </void>
                     </object>
                   </java>
                 </serializedBean>
@@ -591,6 +594,9 @@ else return false;
                       </void>
                       <void property="mode">
                         <string>755</string>
+                      </void>
+                      <void property="recursive">
+                        <boolean>true</boolean>
                       </void>
                     </object>
                   </java>
