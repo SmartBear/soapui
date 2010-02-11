@@ -33,6 +33,7 @@ import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 
+import flex.messaging.io.ClassAliasRegistry;
 import flex.messaging.io.MessageDeserializer;
 import flex.messaging.io.MessageIOConstants;
 import flex.messaging.io.SerializationContext;
@@ -510,5 +511,20 @@ public class SoapUIAMFConnection
 				postMethod.setRequestHeader( key, value );
 			}
 		}
+	}
+
+	/**
+	 * Registers a custom alias for a class name bidirectionally.
+	 * 
+	 * @param alias
+	 *           The alias for the class name.
+	 * @param className
+	 *           The concrete class name.
+	 */
+	public static void registerAlias( String alias, String className )
+	{
+		ClassAliasRegistry registry = ClassAliasRegistry.getRegistry();
+		registry.registerAlias( alias, className );
+		registry.registerAlias( className, alias );
 	}
 }
