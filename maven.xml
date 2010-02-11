@@ -754,6 +754,15 @@ URL=http://www.soapui.org]]>
                 <ant:fileset dir="${maven.build.dir}/distributions"/>
                 <ant:fileset dir="${maven.build.dir}/media"/>
             </ant:copy>
+            
+ 			<!-- create checksum for all file in ${dist} -->
+	 		<ant:fileScanner var="files">
+				<ant:fileset dir="${dist}" />
+			</ant:fileScanner>
+			<j:forEach var="file" items="${files.iterator()}">
+				<checksum file="${file}" forceOverwrite="yes" />
+				<checksum file="${file}" algorithm="SHA1" forceOverwrite="yes" />
+			</j:forEach>
         </j:if>
 
         <j:if test="${!empty(site)}">
