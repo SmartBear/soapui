@@ -411,7 +411,7 @@ return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
                   </java>
                 </serializedBean>
                 <initScript />
-                <visibiltyScript>if (Util.isUnixInstaller())return true;
+                <visibiltyScript>if (Util.isMacosInstaller() || Util.isUnixInstaller())return true;
 else return false;
 </visibiltyScript>
               </formComponent>
