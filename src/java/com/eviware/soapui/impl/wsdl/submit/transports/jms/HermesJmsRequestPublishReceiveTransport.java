@@ -46,7 +46,7 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 
 			// destination
 			Topic topicPublish = jmsConnectionHolderTopic.getTopic( jmsConnectionHolderTopic.getJmsEndpoint().getSend() );
-			Queue queueReceive = jmsConnectionHolderQueue.getQueue( jmsConnectionHolderTopic.getJmsEndpoint().getReceive() );
+			Queue queueReceive = jmsConnectionHolderQueue.getQueue( jmsConnectionHolderQueue.getJmsEndpoint().getReceive() );
 
 			Message messagePublish = messagePublish( submitContext, request, topicSession,
 					jmsConnectionHolderTopic.getHermes(), topicPublish );
