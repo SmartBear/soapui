@@ -576,7 +576,7 @@ else return false;
                         <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
                           <void property="file">
                             <object class="java.io.File">
-                              <string>${installer:sys.installationDir}/bin/testrunner.sh</string>
+                              <string>${installer:rootInstallDir}/bin/testrunner.sh</string>
                             </object>
                           </void>
                           <void property="mode">
@@ -593,7 +593,7 @@ else return false;
                         <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
                           <void property="file">
                             <object class="java.io.File">
-                              <string>${installer:sys.installationDir}/bin/toolrunner.sh</string>
+                              <string>${installer:rootInstallDir}/bin/toolrunner.sh</string>
                             </object>
                           </void>
                           <void property="mode">
@@ -610,7 +610,7 @@ else return false;
                         <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
                           <void property="file">
                             <object class="java.io.File">
-                              <string>${installer:sys.installationDir}/bin/loadtestrunner.sh</string>
+                              <string>${installer:rootInstallDir}/bin/loadtestrunner.sh</string>
                             </object>
                           </void>
                           <void property="mode">
@@ -627,7 +627,7 @@ else return false;
                         <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
                           <void property="file">
                             <object class="java.io.File">
-                              <string>${installer:sys.installationDir}/bin/mockservicerunner.sh</string>
+                              <string>${installer:rootInstallDir}/bin/mockservicerunner.sh</string>
                             </object>
                           </void>
                           <void property="mode">
@@ -644,7 +644,7 @@ else return false;
                         <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
                           <void property="file">
                             <object class="java.io.File">
-                              <string>${installer:sys.installationDir}/bin/soapui.sh</string>
+                              <string>${installer:rootInstallDir}/bin/soapui.sh</string>
                             </object>
                           </void>
                           <void property="mode">
