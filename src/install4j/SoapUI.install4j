@@ -401,6 +401,9 @@ return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
                       <void property="checkboxText">
                         <string>Disable jxbrowser</string>
                       </void>
+                      <void property="initiallySelected">
+                        <boolean>true</boolean>
+                      </void>
                       <void property="variableName">
                         <string>disableJxBrowserAction</string>
                       </void>
@@ -703,7 +706,7 @@ else return false;
                 </serializedBean>
                 <condition />
               </action>
-              <action name="Add disable jxbrowser" id="1788" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+              <action name="Add disable jxbrowser" id="1788" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Disabling jxbrowser failed, you can disable it manually after the installation">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction">
@@ -720,7 +723,12 @@ else return false;
                     </object>
                   </java>
                 </serializedBean>
-                <condition>context.getBooleanVariable("disableJxBrowserAction")</condition>
+                <condition>//for linux and unix encounter check box, but for windows never set jx browser disabled during the installation
+if (Util.isMacosInstaller() || Util.isUnixInstaller())
+return context.getBooleanVariable("disableJxBrowserAction");
+else
+return false;
+</condition>
               </action>
               <action name="Set file separator" id="1477" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
