@@ -757,7 +757,7 @@ URL=http://www.soapui.org]]>
             
  			<!-- create checksum for all file in ${dist} -->
 	 		<ant:fileScanner var="files">
-				<ant:fileset dir="${dist}" />
+				<ant:fileset dir="${dist}" excludes="soapui-changelog.txt updates.xml"/>
 			</ant:fileScanner>
 			<j:forEach var="file" items="${files.iterator()}">
 				<checksum file="${file}" forceOverwrite="yes" />
