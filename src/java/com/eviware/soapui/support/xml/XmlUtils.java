@@ -1434,9 +1434,9 @@ public final class XmlUtils
 		xmlDocumentResult.appendChild( resultsElement );
 
 		ResultSet resultSet = statement.getResultSet();
-		resultSet.setFetchSize( statement.getFetchSize() );
 		if( resultSet != null )
 		{
+			resultSet.setFetchSize( statement.getFetchSize() );
 			xmlDocumentResult = addResultSetXmlPart( resultsElement, resultSet, xmlDocumentResult );
 			while( statement.getMoreResults() )
 			{
@@ -1449,8 +1449,8 @@ public final class XmlUtils
 			errorElement.appendChild( xmlDocumentResult.createTextNode( String.valueOf( statement.getUpdateCount() ) ) );
 			resultsElement.appendChild( errorElement );
 		}
-		return xmlDocumentResult;
 
+		return xmlDocumentResult;
 	}
 
 	public static Document addResultSetXmlPart( Element resultsElement, ResultSet rs, Document xmlDocumentResult )
