@@ -22,74 +22,79 @@ import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.Request;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 public class JMSUtils
 {
 
-	
-
-	private static boolean checkIfJMS(Request request)
+	private static boolean checkIfJMS( Request request )
 	{
 		try
 		{
-			return request.getEndpoint().startsWith(JMSEndpoint.JMS_ENDPIONT_PREFIX);
+			return request.getEndpoint().startsWith( JMSEndpoint.JMS_ENDPIONT_PREFIX );
 		}
-		catch (NullPointerException e)
+		catch( NullPointerException e )
 		{
-			SoapUI.logError(e);
+			SoapUI.logError( e );
 		}
 		return false;
 	}
 
-	private static boolean checkIfJMS(MessageExchangeModelItem messageExchange)
+	private static boolean checkIfJMS( MessageExchangeModelItem messageExchange )
 	{
 		try
 		{
-			MessageExchange me = ((MessageExchangeModelItem) messageExchange).getMessageExchange();
-			if (me != null)
+			MessageExchange me = ( ( MessageExchangeModelItem )messageExchange ).getMessageExchange();
+			if( me != null )
 			{
-				String r = me.getProperty("Endpoint");
-				return r != null && r.startsWith(JMSEndpoint.JMS_ENDPIONT_PREFIX);
+				StringToStringMap strmap = me.getProperties();
+				if( strmap != null && strmap.containsKey( "Endpoint" ) )
+				{
+					String r = me.getProperty( "Endpoint" );
+					return r != null && r.startsWith( JMSEndpoint.JMS_ENDPIONT_PREFIX );
+				}else{
+					return false;
+				}
 			}
 			else
 			{
 				return false;
 			}
 		}
-		catch (NullPointerException e)
+		catch( NullPointerException e )
 		{
-			SoapUI.logError(e);
+			SoapUI.logError( e );
 		}
 		return false;
 	}
 
-	public static boolean checkIfJMS(ModelItem modelItem)
+	public static boolean checkIfJMS( ModelItem modelItem )
 	{
-		if (modelItem instanceof Request)
+		if( modelItem instanceof Request )
 		{
-			return checkIfJMS((Request) modelItem);
+			return checkIfJMS( ( Request )modelItem );
 		}
 		else
 		{
-			if (modelItem instanceof MessageExchangeModelItem)
+			if( modelItem instanceof MessageExchangeModelItem )
 			{
-				return checkIfJMS((MessageExchangeModelItem) modelItem);
+				return checkIfJMS( ( MessageExchangeModelItem )modelItem );
 			}
 		}
 		return false;
 	}
 
-	public static String extractMapMessagePayloadToString(MapMessage mapMessage) throws JMSException
+	public static String extractMapMessagePayloadToString( MapMessage mapMessage ) throws JMSException
 	{
 		StringBuffer sb = new StringBuffer();
 
 		Enumeration<?> mapNames = mapMessage.getMapNames();
 
-		while (mapNames.hasMoreElements())
+		while( mapNames.hasMoreElements() )
 		{
-			String key = (String) mapNames.nextElement();
-			String value = mapMessage.getString(key);
-			sb.append(key + ": " + value);
+			String key = ( String )mapNames.nextElement();
+			String value = mapMessage.getString( key );
+			sb.append( key + ": " + value );
 		}
 
 		return sb.toString();
