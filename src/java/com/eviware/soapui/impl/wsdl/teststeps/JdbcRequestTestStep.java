@@ -146,7 +146,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 		jdbcRequestTestStepConfig = ( JdbcRequestTestStepConfig )config.getConfig().changeType( JdbcRequestTestStepConfig.type );
 		propertyHolderSupport.resetPropertiesConfig( jdbcRequestTestStepConfig.getProperties() );
-		addResponseAsXMLVirtualProperty();
+//		addResponseAsXMLVirtualProperty();
 		assertionsSupport.refresh();
 	}
 
