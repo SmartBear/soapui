@@ -176,29 +176,29 @@
                 <column width="250">
                     <subsection name="Latest News">
                   
-                        <p>                      
-                       <i>2009-12-14:</i>
+                       <p>
+                       <i>2010-01-03:</i>
+                                <a target="_new"
+                                  href="http://blog.resilient-it.com/2010/01/soa-testing-eviware-soapui.html">Considering the price of the professional edition...
+                                </a>
+                                from William´s Blog
+                       </p>
+                        
+                        <p>
+                            <i>2009-12-14:</i>
                                 <a target="_new"
                                   href="http://oriontech.wordpress.com/2009/12/14/web-service-load-testing-for-datapower-using-soapui/">Web Service Load Testing...
                                 </a>
                                 from Thys Michels
-                         </p>
-                          
-                         <p>
+                       </p>
+
+                       <p>
                             <i>2009-09-30:</i>
-                                <a target="_new" 
-                                   href="http://qatinsights.com/?p=345">A simple unit test...
-                                   </a>
-                                from qat´s Blog
-                         </p> 
-                   
-                         <p>
-                            <i>2009-08-30:</i>
                                 <a target="_new"
-                                   href="http://blog.karit.geek.nz/2009/08/using-soapui-to-do-testing-as-part-of.html">Using soapUI to do testing as Maven2 build...
-                                   </a>
-                                from Dave´s Blog
-                          </p>
+                                  href="http://qatinsights.com/?p=345">A simple unit test...
+                                </a>
+                                from qat´s Blog
+                       </p>
                        
                        
                             <b>
