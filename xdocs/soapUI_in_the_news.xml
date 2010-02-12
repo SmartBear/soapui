@@ -6,23 +6,22 @@
     <body>
         <section name="soapUI in the News">
     
-      
-<subsection name="Web Service Load Testing">
+    
+    <subsection name="SOA Testing-Eviware soapUI">
 	    	<columns>
 	    		<column width="200">
-	    		<img src="images/inthenews/thys.gif" alt="Web Service Load Testing"/>	    	    
+	    		<img src="images/inthenews/resil.gif" alt="SOA Testing - soapUI"/>	    	    
 	    		</column>
 	    		<column align="left">
-	    		    <i>2009-12-14</i>
-	    	        <p>The post starts: "soapUI introduces simple and powerful..."<br/>
-	    			<a href="http://oriontech.wordpress.com/2009/12/14/web-service-load-testing-for-datapower-using-soapui/">[Read more]</a></p>
+	    		    <i>2010-02-03</i>
+	    	        <p>The post starts: "Considering the price of the professional edition..."<br/>
+	    			<a href="http://blog.resilient-it.com/2010/01/soa-testing-eviware-soapui.html">[Read more]</a></p>
 	    		</column>
 	    	</columns>
 	 </subsection>
     
 
-    
-        <subsection name="A simple unit test">
+     <subsection name="A simple unit test">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/qat.gif" alt="Web service testing tool"/>	    	    
