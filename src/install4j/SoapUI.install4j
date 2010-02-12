@@ -411,7 +411,8 @@ return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
                   </java>
                 </serializedBean>
                 <initScript />
-                <visibiltyScript>if (Util.isMacosInstaller() || Util.isUnixInstaller())return true;
+                <visibiltyScript>if (Util.isMacOS() || Util.isLinux())
+return true;
 else return false;
 </visibiltyScript>
               </formComponent>
@@ -724,10 +725,11 @@ else return false;
                   </java>
                 </serializedBean>
                 <condition>//for linux and unix encounter check box, but for windows never set jx browser disabled during the installation
-if (Util.isMacosInstaller() || Util.isUnixInstaller())
+if (Util.isMacOS() || Util.isLinux())
 return context.getBooleanVariable("disableJxBrowserAction");
 else
 return false;
+
 </condition>
               </action>
               <action name="Set file separator" id="1477" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
