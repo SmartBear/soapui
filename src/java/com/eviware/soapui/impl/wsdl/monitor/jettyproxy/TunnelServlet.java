@@ -29,6 +29,7 @@ import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
+import org.apache.commons.httpclient.params.HostParams;
 import org.mortbay.util.IO;
 
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.LaunchForm;
@@ -152,8 +153,9 @@ public class TunnelServlet extends ProxyServlet
 		hostConfiguration = ProxyUtils.initProxySettings( settings, httpState, hostConfiguration, prot + sslEndPoint,
 				new DefaultPropertyExpansionContext( project ) );
 
+		HostParams param = hostConfiguration.getParams();
 		if (sslEndPoint.indexOf( "/" ) < 0)
-			postMethod.setPath( sslEndPoint );
+			postMethod.setPath( "/" );
 		else
 			postMethod.setPath( sslEndPoint.substring( sslEndPoint.indexOf( "/" ), sslEndPoint.length() ) );
 
