@@ -111,7 +111,16 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 		jdbcRequest = new JdbcRequest( this );
 
+		propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder( this, jdbcRequestTestStepConfig.getProperties() );
 		
+		addResponseAsXMLVirtualProperty();
+
+		initAssertions();
+		jdbcRequest.initIcons();
+	}
+
+	private void addResponseAsXMLVirtualProperty()
+	{
 		TestStepBeanProperty responseProperty = new TestStepBeanProperty( "ResponseAsXML", false, this,
 				"responseContent", this )
 		{
@@ -122,11 +131,8 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			}
 
 		};
-		propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder( this, jdbcRequestTestStepConfig.getProperties() );
+	
 		propertyHolderSupport.addVirtualProperty( "ResponseAsXML", responseProperty );
-
-		initAssertions();
-		jdbcRequest.initIcons();
 	}
 
 	public JdbcRequestTestStepConfig getJdbcRequestTestStepConfig()
@@ -140,6 +146,8 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 		jdbcRequestTestStepConfig = ( JdbcRequestTestStepConfig )config.getConfig().changeType( JdbcRequestTestStepConfig.type );
 		propertyHolderSupport.resetPropertiesConfig( jdbcRequestTestStepConfig.getProperties() );
+		addResponseAsXMLVirtualProperty();
+		assertionsSupport.refresh();
 	}
 
 	@Override
