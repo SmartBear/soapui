@@ -174,7 +174,7 @@
 			soapui-xx.jar
 		-->
 		<echo>Adding license files for jxbrowser</echo>
-		<ant:jar destfile="target/jnlp_temp/soapui-${pom.currentVersion}.jar"
+		<ant:jar destfile="${maven.build.dir}/jnlp_temp/soapui-${pom.currentVersion}.jar"
 			update="true">
 			<ant:metainf dir="${jxbrowser.dir}/license/runtime">
 				<ant:include name="jxbrowser.lic" />
@@ -183,17 +183,17 @@
 		</ant:jar>
 
 		<echo>Signing soapui-${pom.currentVersion}.jar file </echo>
-		<ant:signjar jar="target/jnlp_temp/soapui-${pom.currentVersion}.jar"
+		<ant:signjar jar="${maven.build.dir}/jnlp_temp/soapui-${pom.currentVersion}.jar"
 			alias="${maven.jnlp.signjar.alias}" storepass="${maven.jnlp.signjar.storepass}"
 			keystore="${maven.jnlp.signjar.store}" />
 
 		<echo>Copy soapui-${pom.currentVersion}.jar file to
 			${maven.jnlp.dir}</echo>
-		<ant:copy file="target/jnlp_temp/soapui-${pom.currentVersion}.jar"
+		<ant:copy file="${maven.build.dir}/jnlp_temp/soapui-${pom.currentVersion}.jar"
 			todir="${maven.jnlp.dir}" overwrite="true" />
 
 	   	<echo>Adding dll files to jxbrowser jar</echo>
-      	<ant:jar destfile="target/jnlp_temp/${jxbrowser.jar}" update="true">
+      	<ant:jar destfile="${maven.build.dir}/jnlp_temp/${jxbrowser.jar}" update="true">
 			<ant:fileset dir="${jxbrowser.dir}/bin">
 				<ant:include name="jniwrap.dll" />
 				<ant:include name="libjniwrap.jnilib" />
@@ -202,12 +202,12 @@
 		</ant:jar>
 
 		<echo>Signing ${jxbrowser.jar} file </echo>
-		<ant:signjar jar="target/jnlp_temp/${jxbrowser.jar}"
+		<ant:signjar jar="${maven.build.dir}/jnlp_temp/${jxbrowser.jar}"
 			alias="${maven.jnlp.signjar.alias}" storepass="${maven.jnlp.signjar.storepass}"
 			keystore="${maven.jnlp.signjar.store}" />
 
 		<echo>Copy ${jxbrowser.jar} file to  ${maven.jnlp.dir}</echo>
-		<ant:copy file="target/jnlp_temp/${jxbrowser.jar}"
+		<ant:copy file="${maven.build.dir}/jnlp_temp/${jxbrowser.jar}"
 			todir="${maven.jnlp.dir}" overwrite="true" />
 
 
@@ -387,7 +387,7 @@
         
     </goal>
 
-    <!-- Create soapui maven-plugin, copy to target/docs/repository/eviware/plugins -->
+    <!-- Create soapui maven-plugin, copy to ${maven.build.dir}/docs/repository/eviware/plugins -->
 
     <goal name="soapui:generate-plugin">
 
@@ -395,7 +395,7 @@
 
         <ant:mkdir dir="${maven.build.dir}/docs/repository/eviware/plugins"/>
         <ant:copy todir="${maven.build.dir}/docs/repository/eviware/plugins">
-            <ant:fileset dir="src/maven-soapui-plugin/target" includes="*.jar"/>
+            <ant:fileset dir="src/maven-soapui-plugin/${maven.build.dir}" includes="*.jar"/>
         </ant:copy>
 
     </goal>
@@ -505,7 +505,7 @@
 
     </goal>
 
-    <!-- sets up the target/standalone directory -->
+    <!-- sets up the ${maven.build.dir}/standalone directory -->
 
     <goal name="soapui:create-standalone-binary-dist">
         <ant:delete dir="${maven.build.dir}/standalone"/>
