@@ -1099,7 +1099,10 @@ return component!=null;</condition>
                     </object>
                   </java>
                 </serializedBean>
-                <condition />
+                <condition>InstallationComponentSetup component =context.getInstallationComponentById("1263");
+
+//for mac hermes installation is trigered and license agreement shouldn't be duplicated
+return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
               </action>
             </actions>
             <formComponents />
