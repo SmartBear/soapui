@@ -80,7 +80,9 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ChangeOperationResolver;
 import com.eviware.soapui.support.resolver.ImportInterfaceResolver;
 import com.eviware.soapui.support.resolver.RemoveTestStepResolver;
@@ -115,8 +117,14 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	private AssertionStatus oldStatus;
 
 	private ModelItemIconAnimator<WsdlMockResponseTestStep> iconAnimator;
+	private ImageIcon validRequestIcon;
+	private ImageIcon failedRequestIcon;
+	private ImageIcon disabledRequestIcon;
+	private ImageIcon unknownRequestIcon;
+
 	private WsdlMockResponse testMockResponse;
 	private WsdlTestStep startTestStep;
+	private boolean forLoadTest;
 
 	public WsdlMockResponseTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
@@ -136,6 +144,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 		initAssertions();
 		initMockObjects( testCase );
+		this.forLoadTest = forLoadTest;
 
 		if( !forLoadTest )
 		{
@@ -151,6 +160,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 		// init properties
 		initProperties();
+		initIcons();
 
 		testCase.addTestRunListener( testRunListener );
 		testCase.addPropertyChangeListener( this );
@@ -191,7 +201,42 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	@Override
 	public ImageIcon getIcon()
 	{
-		return iconAnimator == null ? null : iconAnimator.getIcon();
+		if( forLoadTest || UISupport.isHeadless() )
+			return null;
+
+		TestMonitor testMonitor = SoapUI.getTestMonitor();
+		if( testMonitor != null && testMonitor.hasRunningLoadTest( getTestCase() ) )
+			return disabledRequestIcon;
+
+		ImageIcon icon = iconAnimator.getIcon();
+		if( icon == iconAnimator.getBaseIcon() )
+		{
+			AssertionStatus status = getAssertionStatus();
+			if( status == AssertionStatus.VALID )
+				return validRequestIcon;
+			else if( status == AssertionStatus.FAILED )
+				return failedRequestIcon;
+			else if( status == AssertionStatus.UNKNOWN )
+				return unknownRequestIcon;
+		}
+
+		return icon;
+	}
+
+	public void initIcons()
+	{
+		if( validRequestIcon == null )
+			validRequestIcon = UISupport.createImageIcon( "/valid_request.gif" );
+
+		if( failedRequestIcon == null )
+			failedRequestIcon = UISupport.createImageIcon( "/invalid_request.gif" );
+
+		if( unknownRequestIcon == null )
+			unknownRequestIcon = UISupport.createImageIcon( "/unknown_request.gif" );
+
+		if( disabledRequestIcon == null )
+			disabledRequestIcon = UISupport.createImageIcon( "/disabled_request.gif" );
+
 	}
 
 	private void initAssertions()
@@ -391,15 +436,15 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	private TestStepResult internalRun( WsdlTestRunContext context )
 	{
 		if( iconAnimator != null )
-		iconAnimator.start();
-		
+			iconAnimator.start();
+
 		WsdlSingleMessageExchangeTestStepResult result = new WsdlSingleMessageExchangeTestStepResult( this );
 
 		try
 		{
 			this.lastResult = null;
 			mockResponse.setMockResult( null );
-			
+
 			result.startTimer();
 
 			if( !mockRunListener.hasResult() )
@@ -468,6 +513,10 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 							}
 						}
 				}
+				else if( status == AssertionStatus.UNKNOWN )
+				{
+					result.setStatus( TestStepStatus.UNKNOWN );
+				}
 				else
 				{
 					result.setStatus( TestStepStatus.OK );
@@ -486,7 +535,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		finally
 		{
 			if( iconAnimator != null )
-			iconAnimator.stop();
+				iconAnimator.stop();
 		}
 
 		return result;
@@ -564,13 +613,12 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		public synchronized void onMockResult( MockResult result )
 		{
 			// is this for us?
-			if( this.lastResult == null && waiting
-					&& result.getMockResponse() == testMockResponse )
+			if( this.lastResult == null && waiting && result.getMockResponse() == testMockResponse )
 			{
 				waiting = false;
 				System.out.println( "Got mockrequest to [" + getName() + "]" );
 				// save
-				this.lastResult = (WsdlMockResult)result;
+				this.lastResult = ( WsdlMockResult )result;
 				notifyPropertyChanged( "lastResult", null, lastResult );
 
 				// stop runner -> NO, we can't stop, mockengine is still writing
@@ -579,7 +627,6 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 				// testMockResponse.setMockResult( null );
 
-				
 				synchronized( this )
 				{
 					notifyAll();
