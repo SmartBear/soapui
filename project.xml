@@ -730,7 +730,7 @@
 		<dependency>
 			<groupId>jtidy</groupId>
 			<artifactId>jtidy</artifactId>
-			<version>r820</version>
+			<version>r872-jdk15</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
