@@ -162,6 +162,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 	public void setAllowWildcards( boolean allowWildcards )
 	{
 		this.allowWildcards = allowWildcards;
+		setConfiguration( createConfiguration() );
 	}
 
 	public boolean isIgnoreNamspaceDifferences()
@@ -172,6 +173,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 	public void setIgnoreNamspaceDifferences( boolean ignoreNamspaceDifferences )
 	{
 		this.ignoreNamspaceDifferences = ignoreNamspaceDifferences;
+		setConfiguration( createConfiguration() );
 	}
 
 	@Override
