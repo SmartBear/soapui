@@ -43,7 +43,7 @@
 		<li>soapUI will now add the SOAP/Http Binding for the amazon "AWSECommerceServicePortType" PortType to your project
 		and create nodes for each operation.</li>
 		</ul>
-		<p>Read more about interfaces in the <a href="userguide/interfaces/index.html">soapUI User Guide</a></p>
+		<p>Read more about interfaces in the <a href="../userguide/interfaces/index.html">soapUI User Guide</a></p>
 		</column>
 		<column><img src="images/getting_started_2.gif" alt="Add WSDL to create tests from"/></column></columns>
 		 </subsection>
