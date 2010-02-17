@@ -1081,7 +1081,7 @@ return component!=null;</condition>
                 </serializedBean>
                 <condition />
               </action>
-              <action name="" id="2148" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+              <action name="" id="2148" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="false" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.files.DeleteFileAction">
