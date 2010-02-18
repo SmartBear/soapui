@@ -104,12 +104,12 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 	private JTextArea contentArea;
 	private boolean configureResult;
 	private boolean allowWildcards;
-	private boolean ignoreNamspaceDifferences;
+	private boolean ignoreNamespaceDifferences;
 
 	public static final String ID = "XPath Match";
 	public static final String LABEL = "XPath Match";
 	private JCheckBox allowWildcardsCheckBox;
-	private JCheckBox ignoreNamspaceDifferencesCheckBox;
+	private JCheckBox ignoreNamespaceDifferencesCheckBox;
 
 	public XPathContainsAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
@@ -119,7 +119,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 		path = reader.readString( "path", null );
 		expectedContent = reader.readString( "content", null );
 		allowWildcards = reader.readBoolean( "allowWildcards", false );
-		ignoreNamspaceDifferences = reader.readBoolean( "ignoreNamspaceDifferences", false );
+		ignoreNamespaceDifferences = reader.readBoolean( "ignoreNamspaceDifferences", false );
 	}
 
 	public String getExpectedContent()
@@ -165,14 +165,14 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 		setConfiguration( createConfiguration() );
 	}
 
-	public boolean isIgnoreNamspaceDifferences()
+	public boolean isIgnoreNamespaceDifferences()
 	{
-		return ignoreNamspaceDifferences;
+		return ignoreNamespaceDifferences;
 	}
 
-	public void setIgnoreNamspaceDifferences( boolean ignoreNamspaceDifferences )
+	public void setIgnoreNamespaceDifferences( boolean ignoreNamespaceDifferences )
 	{
-		this.ignoreNamspaceDifferences = ignoreNamspaceDifferences;
+		this.ignoreNamespaceDifferences = ignoreNamespaceDifferences;
 		setConfiguration( createConfiguration() );
 	}
 
@@ -364,6 +364,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 		pathArea.setText( path );
 		contentArea.setText( expectedContent );
 		allowWildcardsCheckBox.setSelected( allowWildcards );
+		ignoreNamespaceDifferencesCheckBox.setSelected( ignoreNamespaceDifferences );
 
 		UISupport.showDialog( configurationDialog );
 		return configureResult;
@@ -466,12 +467,12 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 		toolbar.addFixed( allowWildcardsCheckBox );
 
 		Dimension largerDim = new Dimension( 200, 20 );
-		ignoreNamspaceDifferencesCheckBox = new JCheckBox( "Ignore namespace prefixes" );
-		ignoreNamspaceDifferencesCheckBox.setSize( largerDim );
-		ignoreNamspaceDifferencesCheckBox.setPreferredSize( largerDim );
-		ignoreNamspaceDifferencesCheckBox.setOpaque( false );
+		ignoreNamespaceDifferencesCheckBox = new JCheckBox( "Ignore namespace prefixes" );
+		ignoreNamespaceDifferencesCheckBox.setSize( largerDim );
+		ignoreNamespaceDifferencesCheckBox.setPreferredSize( largerDim );
+		ignoreNamespaceDifferencesCheckBox.setOpaque( false );
 		toolbar.addRelatedGap();
-		toolbar.addFixed( ignoreNamspaceDifferencesCheckBox );
+		toolbar.addFixed( ignoreNamespaceDifferencesCheckBox );
 	}
 
 	public XmlObject createConfiguration()
@@ -480,7 +481,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 		builder.add( "path", path );
 		builder.add( "content", expectedContent );
 		builder.add( "allowWildcards", allowWildcards );
-		builder.add( "ignoreNamspaceDifferences", ignoreNamspaceDifferences );
+		builder.add( "ignoreNamspaceDifferences", ignoreNamespaceDifferences );
 		return builder.finish();
 	}
 
@@ -561,7 +562,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 					return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
 				}
 			}
-			else if( ignoreNamspaceDifferences && diff.getId() == DifferenceEngine.NAMESPACE_PREFIX_ID )
+			else if( ignoreNamespaceDifferences && diff.getId() == DifferenceEngine.NAMESPACE_PREFIX_ID )
 			{
 				return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
 			}
@@ -592,7 +593,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			setPath( pathArea.getText().trim() );
 			setExpectedContent( contentArea.getText() );
 			setAllowWildcards( allowWildcardsCheckBox.isSelected() );
-			setIgnoreNamspaceDifferences( ignoreNamspaceDifferencesCheckBox.isSelected() );
+			setIgnoreNamespaceDifferences( ignoreNamespaceDifferencesCheckBox.isSelected() );
 			setConfiguration( createConfiguration() );
 			configureResult = true;
 			configurationDialog.setVisible( false );
@@ -661,7 +662,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			setPath( pathArea.getText().trim() );
 			setExpectedContent( contentArea.getText() );
 			setAllowWildcards( allowWildcardsCheckBox.isSelected() );
-			setIgnoreNamspaceDifferences( ignoreNamspaceDifferencesCheckBox.isSelected() );
+			setIgnoreNamespaceDifferences( ignoreNamespaceDifferencesCheckBox.isSelected() );
 
 			try
 			{
