@@ -731,7 +731,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 						projectDocument.getSoapuiProject().setTestSuiteArray(null);
 						projectDocument.getSoapuiProject().setMockServiceArray(null);
 						projectDocument.getSoapuiProject().unsetWssContainer();
-						projectDocument.getSoapuiProject().unsetDatabaseConnectionContainer();
 						projectDocument.getSoapuiProject().unsetSettings();
 						projectDocument.getSoapuiProject().unsetProperties();
 
