@@ -523,12 +523,18 @@
             </ant:move>
         </util:available>
 
+        <!-- build classpath for batch files -->
         <j:set var="soapuiclasspath" trim="false" value="set CLASSPATH=%SOAPUI_HOME%soapui-${pom.currentVersion}.jar"/>
+        <j:set var="soapuishclasspath" trim="false"
+               value="export SOAPUI_CLASSPATH=$$SOAPUI_HOME/bin/soapui-${pom.currentVersion}.jar"/>
         <j:forEach var="lib" items="${pom.artifacts}">
             <j:set var="dep" value="${lib.dependency}"/>
             <j:if test="${dep.getProperty('jnlp.jar')=='true' || dep.getProperty('eclipse.jar')=='true'}">
                 <j:set var="soapuiclasspath">${soapuiclasspath}
-                    set CLASSPATH=%CLASSPATH%;..\lib\${lib.file.name}
+                    set CLASSPATH=%CLASSPATH%;%SOAPUI_HOME%..\lib\${lib.file.name}
+                </j:set>
+                <j:set var="soapuishclasspath">${soapuishclasspath}
+                    export SOAPUI_CLASSPATH=$$SOAPUI_CLASSPATH:$$SOAPUI_HOME/lib/${lib.file.name}
                 </j:set>
             </j:if>
         </j:forEach>
@@ -548,6 +554,7 @@
             <ant:fileset dir="src/dist_standalone/bin"/>
             <ant:filterset>
                 <ant:filter token="SOAPUICLASSPATH" value="${soapuiclasspath}"/>
+                <ant:filter token="SOAPUISHCLASSPATH" value="${soapuishclasspath}"/>
                 <ant:filter token="SOAPUIVERSION" value="${pom.currentVersion}"/>
                 <ant:filter token="SOAPUICLASSPATHCOMPACT" value="${soapuiclasspathcompact}"/>
             </ant:filterset>
