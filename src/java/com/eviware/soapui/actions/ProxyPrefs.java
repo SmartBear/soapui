@@ -39,15 +39,12 @@ public class ProxyPrefs implements Prefs
 
 	private JTextField hostTextField;
 	private JTextField portTextField;
-	private JTextField usernameTextField;
-	private JTextField passwordTextField;
-	private JTextField excludesTextField;
 	private JCheckBox enableProxyCheckbox;
 	private SimpleForm proxyPrefForm;
 
 	private final String title;
 
-	public ProxyPrefs(String title)
+	public ProxyPrefs( String title )
 	{
 		this.title = title;
 	}
@@ -59,18 +56,18 @@ public class ProxyPrefs implements Prefs
 
 	public SimpleForm getForm()
 	{
-		if (proxyPrefForm == null)
+		if( proxyPrefForm == null )
 		{
 			proxyPrefForm = new SimpleForm();
-			proxyPrefForm.addSpace(5);
-			hostTextField = proxyPrefForm.appendTextField(HOST, "proxy host to use");
-			hostTextField.getDocument().addDocumentListener(new ProxyDocumentListenerAdapter());
-			portTextField = proxyPrefForm.appendTextField(PORT, "proxy port to use");
-			portTextField.getDocument().addDocumentListener(new ProxyDocumentListenerAdapter());
-			usernameTextField = proxyPrefForm.appendTextField(USERNAME, "proxy username to use");
-			passwordTextField = proxyPrefForm.appendTextField(PASSWORD, "proxy password to use");
-			excludesTextField = proxyPrefForm.appendTextField(EXCLUDES, "Comma-seperated list of hosts to exclude");
-			enableProxyCheckbox = proxyPrefForm.appendCheckBox(ENABLE_PROXY, "enable using proxy", true);
+			proxyPrefForm.addSpace( 5 );
+			hostTextField = proxyPrefForm.appendTextField( HOST, "proxy host to use" );
+			hostTextField.getDocument().addDocumentListener( new ProxyDocumentListenerAdapter() );
+			portTextField = proxyPrefForm.appendTextField( PORT, "proxy port to use" );
+			portTextField.getDocument().addDocumentListener( new ProxyDocumentListenerAdapter() );
+			proxyPrefForm.appendTextField( USERNAME, "proxy username to use" );
+			proxyPrefForm.appendTextField( PASSWORD, "proxy password to use" );
+			proxyPrefForm.appendTextField( EXCLUDES, "Comma-seperated list of hosts to exclude" );
+			enableProxyCheckbox = proxyPrefForm.appendCheckBox( ENABLE_PROXY, "enable using proxy", true );
 		}
 		return proxyPrefForm;
 	}
@@ -78,57 +75,61 @@ public class ProxyPrefs implements Prefs
 	private class ProxyDocumentListenerAdapter extends DocumentListenerAdapter
 	{
 		@Override
-		public void update(Document document)
+		public void update( Document document )
 		{
-			enableProxyCheckbox.setSelected(!StringUtils.isNullOrEmpty(hostTextField.getText())
-					&& !StringUtils.isNullOrEmpty(portTextField.getText()));
+			enableProxyCheckbox.setSelected( !StringUtils.isNullOrEmpty( hostTextField.getText() )
+					&& !StringUtils.isNullOrEmpty( portTextField.getText() ) );
 		}
 	}
 
-	public void getFormValues(Settings settings)
+	public void getFormValues( Settings settings )
 	{
 		StringToStringMap values = new StringToStringMap();
-		proxyPrefForm.getValues(values);
-		storeValues(values, settings);
+		proxyPrefForm.getValues( values );
+		storeValues( values, settings );
 	}
 
-	public StringToStringMap getValues(Settings settings)
+	public StringToStringMap getValues( Settings settings )
 	{
 		StringToStringMap values = new StringToStringMap();
-		values.put(HOST, settings.getString(ProxySettings.HOST, ""));
-		values.put(PORT, settings.getString(ProxySettings.PORT, ""));
-		values.put(USERNAME, settings.getString(ProxySettings.USERNAME, ""));
-		values.put(PASSWORD, settings.getString(ProxySettings.PASSWORD, ""));
-		values.put(EXCLUDES, settings.getString(ProxySettings.EXCLUDES, ""));
-		values.put(ENABLE_PROXY, settings.getBoolean(ProxySettings.ENABLE_PROXY));
-		ProxyUtils.setProxyEnabled(settings.getBoolean(ProxySettings.ENABLE_PROXY));
+		values.put( HOST, settings.getString( ProxySettings.HOST, "" ) );
+		values.put( PORT, settings.getString( ProxySettings.PORT, "" ) );
+		values.put( USERNAME, settings.getString( ProxySettings.USERNAME, "" ) );
+		values.put( PASSWORD, settings.getString( ProxySettings.PASSWORD, "" ) );
+		values.put( EXCLUDES, settings.getString( ProxySettings.EXCLUDES, "" ) );
+		values.put( ENABLE_PROXY, settings.getBoolean( ProxySettings.ENABLE_PROXY ) );
+		ProxyUtils.setProxyEnabled( settings.getBoolean( ProxySettings.ENABLE_PROXY ) );
 
 		return values;
 	}
 
-	public void setFormValues(Settings settings)
+	public void setFormValues( Settings settings )
 	{
-		getForm().setValues(getValues(settings));
+		getForm().setValues( getValues( settings ) );
 	}
 
-	public void storeValues(StringToStringMap values, Settings settings)
+	public void storeValues( StringToStringMap values, Settings settings )
 	{
-		settings.setString(ProxySettings.HOST, values.get(HOST));
-		settings.setString(ProxySettings.PORT, values.get(PORT));
-		settings.setString(ProxySettings.USERNAME, values.get(USERNAME));
-		settings.setString(ProxySettings.PASSWORD, values.get(PASSWORD));
-		settings.setString(ProxySettings.EXCLUDES, values.get(EXCLUDES));
-		settings.setBoolean(ProxySettings.ENABLE_PROXY, values.getBoolean(ENABLE_PROXY));
-		JButton applyProxyButton = (JButton) SoapUI.getApplyProxyButton();
-		if (values.getBoolean(ENABLE_PROXY))
+		settings.setString( ProxySettings.HOST, values.get( HOST ) );
+		settings.setString( ProxySettings.PORT, values.get( PORT ) );
+		settings.setString( ProxySettings.USERNAME, values.get( USERNAME ) );
+		settings.setString( ProxySettings.PASSWORD, values.get( PASSWORD ) );
+		settings.setString( ProxySettings.EXCLUDES, values.get( EXCLUDES ) );
+		settings.setBoolean( ProxySettings.ENABLE_PROXY, values.getBoolean( ENABLE_PROXY ) );
+		JButton applyProxyButton = ( JButton )SoapUI.getApplyProxyButton();
+		if( values.getBoolean( ENABLE_PROXY ) )
 		{
-			applyProxyButton.setIcon(UISupport.createImageIcon(SoapUI.PROXY_ENABLED_ICON));
-			ProxyUtils.setProxyEnabled(true);
+			if( applyProxyButton != null )
+				applyProxyButton.setIcon( UISupport.createImageIcon( SoapUI.PROXY_ENABLED_ICON ) );
+
+			ProxyUtils.setProxyEnabled( true );
 		}
 		else
 		{
-			applyProxyButton.setIcon(UISupport.createImageIcon(SoapUI.PROXY_DISABLED_ICON));
-			ProxyUtils.setProxyEnabled(false);
+			if( applyProxyButton != null )
+				applyProxyButton.setIcon( UISupport.createImageIcon( SoapUI.PROXY_DISABLED_ICON ) );
+
+			ProxyUtils.setProxyEnabled( false );
 		}
 	}
 

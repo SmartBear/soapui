@@ -116,7 +116,8 @@ public class SoapMonitor extends JPanel
 	private final WsdlProject project;
 	private MessageExchangeRequestMessageEditor requestViewer;
 	private MessageExchangeResponseMessageEditor responseViewer;
-	private SoapUIListenerSupport<MonitorListener> listeners = new SoapUIListenerSupport<MonitorListener>( MonitorListener.class );
+	private SoapUIListenerSupport<MonitorListener> listeners = new SoapUIListenerSupport<MonitorListener>(
+			MonitorListener.class );
 	private MessageExchangeModelItem requestModelItem;
 	private JButton optionsButton;
 	private int listenPort;
@@ -496,14 +497,15 @@ public class SoapMonitor extends JPanel
 			{
 				oldProxyHost = SoapUI.getSettings().getString( ProxySettings.HOST, "" );
 				oldProxyPort = SoapUI.getSettings().getString( ProxySettings.PORT, "" );
-				oldProxyEnabled = SoapUI.getSettings().getBoolean( ProxySettings.ENABLE_PROXY);
+				oldProxyEnabled = SoapUI.getSettings().getBoolean( ProxySettings.ENABLE_PROXY );
 
 				SoapUI.getSettings().setString( ProxySettings.HOST, "127.0.0.1" );
 				SoapUI.getSettings().setString( ProxySettings.PORT, String.valueOf( localPort ) );
-				SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, true);
-				ProxyUtils.setProxyEnabled(true);
-				JButton applyProxyButton = (JButton) SoapUI.getApplyProxyButton();
-				applyProxyButton.setIcon(UISupport.createImageIcon(SoapUI.PROXY_ENABLED_ICON));
+				SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, true );
+				ProxyUtils.setProxyEnabled( true );
+				JButton applyProxyButton = ( JButton )SoapUI.getApplyProxyButton();
+				if( applyProxyButton != null )
+					applyProxyButton.setIcon( UISupport.createImageIcon( SoapUI.PROXY_ENABLED_ICON ) );
 			}
 
 			SoapUI.log.info( "Started SOAP Monitor on local port " + localPort );
@@ -553,15 +555,18 @@ public class SoapMonitor extends JPanel
 			SoapUI.getSettings().setString( ProxySettings.HOST, oldProxyHost );
 			SoapUI.getSettings().setString( ProxySettings.PORT, oldProxyPort );
 			SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, oldProxyEnabled );
-			ProxyUtils.setProxyEnabled(oldProxyEnabled);
-			JButton applyProxyButton = (JButton) SoapUI.getApplyProxyButton();
-			if (oldProxyEnabled)
+			ProxyUtils.setProxyEnabled( oldProxyEnabled );
+			JButton applyProxyButton = ( JButton )SoapUI.getApplyProxyButton();
+			if( applyProxyButton != null )
 			{
-				applyProxyButton.setIcon(UISupport.createImageIcon(SoapUI.PROXY_ENABLED_ICON));
-			}
-			else
-			{
-				applyProxyButton.setIcon(UISupport.createImageIcon(SoapUI.PROXY_DISABLED_ICON));
+				if( oldProxyEnabled )
+				{
+					applyProxyButton.setIcon( UISupport.createImageIcon( SoapUI.PROXY_ENABLED_ICON ) );
+				}
+				else
+				{
+					applyProxyButton.setIcon( UISupport.createImageIcon( SoapUI.PROXY_DISABLED_ICON ) );
+				}
 			}
 		}
 	}
@@ -1205,8 +1210,8 @@ public class SoapMonitor extends JPanel
 		{
 			try
 			{
-			listener.onMessageExchange( messageExchange );
-		}
+				listener.onMessageExchange( messageExchange );
+			}
 			catch( Throwable t )
 			{
 				SoapUI.logError( t );
@@ -1220,8 +1225,8 @@ public class SoapMonitor extends JPanel
 		{
 			try
 			{
-			listener.onRequest( this, request, response );
-		}
+				listener.onRequest( this, request, response );
+			}
 			catch( Throwable t )
 			{
 				SoapUI.logError( t );
@@ -1232,12 +1237,12 @@ public class SoapMonitor extends JPanel
 	public void fireBeforeProxy( ServletRequest request, ServletResponse response, HttpMethod method,
 			HostConfiguration hostConfiguration )
 	{
-		for( MonitorListener listener :listeners.get() )
+		for( MonitorListener listener : listeners.get() )
 		{
 			try
 			{
-			listener.beforeProxy( this, request, response, method, hostConfiguration );
-		}
+				listener.beforeProxy( this, request, response, method, hostConfiguration );
+			}
 			catch( Throwable t )
 			{
 				SoapUI.logError( t );
@@ -1252,8 +1257,8 @@ public class SoapMonitor extends JPanel
 		{
 			try
 			{
-			listener.afterProxy( this, request, response, method, capturedData );
-		}
+				listener.afterProxy( this, request, response, method, capturedData );
+			}
 			catch( Throwable t )
 			{
 				SoapUI.logError( t );

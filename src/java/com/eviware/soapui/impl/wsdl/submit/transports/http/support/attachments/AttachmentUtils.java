@@ -227,14 +227,21 @@ public class AttachmentUtils
 							else if( container.isMtomEnabled()
 									&& ( SchemaUtils.isBinaryType( schemaType ) || SchemaUtils.isAnyType( schemaType ) ) )
 							{
-								if( "true".equals( System.getProperty( "soapui.mtom.strictcanonicalization" ) ) )
+								if( "true".equals( System.getProperty( "soapui.mtom.strict" ) ) )
 								{
-									for( int c = 0; c < textContent.length(); c++ )
+									if( SchemaUtils.isAnyType( schemaType ) )
 									{
-										if( Character.isWhitespace( textContent.charAt( c ) ) )
+										textContent = null;
+									}
+									else
+									{
+										for( int c = 0; c < textContent.length(); c++ )
 										{
-											textContent = null;
-											break;
+											if( Character.isWhitespace( textContent.charAt( c ) ) )
+											{
+												textContent = null;
+												break;
+											}
 										}
 									}
 								}
