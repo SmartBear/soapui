@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -83,7 +82,6 @@ public class HermesUtils
 		return ctx;
 	}
 
-	// TODO: this could be called on souapui startup if hermes config path is set
 	private static void addHermesJarsToClasspath() throws IOException, MalformedURLException
 	{
 		String hermesHome = SoapUI.getSettings().getString( ToolsSettings.HERMES_JMS, defaultHermesJMSPath() );
@@ -101,7 +99,11 @@ public class HermesUtils
 		String[] children = dir.list();
 		for( String filename : children )
 		{
-			HermesJMSClasspathHacker.addFile( new File(dir,filename));
+		// fix for users using version of hermesJMS which still has cglib-2.1.3.jar in lib directory
+			if( filename.equals( "cglib-2.1.3.jar" ) )
+				continue;
+			
+			HermesJMSClasspathHacker.addFile( new File( dir, filename ) );
 		}
 
 	}
@@ -165,8 +167,7 @@ public class HermesUtils
 	 * 
 	 * @throws NamingException
 	 */
-	public static Hermes getHermes(  WsdlProject project, String sessionName )
-			throws NamingException
+	public static Hermes getHermes( WsdlProject project, String sessionName ) throws NamingException
 	{
 		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
 		try
