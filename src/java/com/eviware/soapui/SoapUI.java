@@ -222,6 +222,8 @@ public class SoapUI
 
 	private void buildUI()
 	{
+		//display used java version 
+		log.info( "Used java version: " + System.getProperty("java.version") );
 		frame.addWindowListener( new MainFrameWindowListener() );
 		UISupport.setMainFrame( frame );
 
