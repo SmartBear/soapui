@@ -653,6 +653,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener );
 		jdbcRequestTestStep.removeAssertionsListener( assertionsListener );
 
+		assertionsPanel.release();
+		
 		return release();
 	}
 
