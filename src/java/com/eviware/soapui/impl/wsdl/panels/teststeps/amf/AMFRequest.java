@@ -117,8 +117,9 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 
 			for( String name : propertyNames )
 			{
-				if(name.equals( "ResponseAsXML" )) continue; // skip ResponseAsXML
-				
+				if( name.equals( "ResponseAsXML" ) )
+					continue; // skip ResponseAsXML
+
 				TestProperty propertyValue = propertyMap.get( name );
 				if( parameters.containsKey( name ) )
 				{
@@ -579,6 +580,8 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 			sb.append( " <parameters>\n" );
 			for( String name : getPropertyNames() )
 			{
+				if( name.equals( "ResponseAsXML" ) )
+					continue;
 				sb.append( "  <parameter>\n" );
 				sb.append( "   <name>" + name + "</name>\n" );
 				sb.append( "   <value>" + getPropertyMap().get( name ).getValue() + "</value>\n" );

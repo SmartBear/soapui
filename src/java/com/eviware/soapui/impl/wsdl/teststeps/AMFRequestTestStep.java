@@ -709,8 +709,8 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		super.resetConfigOnMove( config );
 		amfRequestTestStepConfig = ( AMFRequestTestStepConfig )config.getConfig().changeType(
 				AMFRequestTestStepConfig.type );
-		propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder( this, amfRequestTestStepConfig.getProperties() );
-		addResponseAsXMLVirtualProperty();
+		propertyHolderSupport.resetPropertiesConfig(  amfRequestTestStepConfig.getProperties() );
+//		addResponseAsXMLVirtualProperty();
 		assertionsSupport.refresh();
 	}
 

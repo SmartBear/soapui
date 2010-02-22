@@ -40,7 +40,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.Document;
 
-import org.apache.commons.io.output.ProxyWriter;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
@@ -72,7 +71,6 @@ import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
@@ -133,6 +131,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	SimpleForm configForm;
 	private JTextField endpointField;
 	private TestRunComponentEnabler componentEnabler;
+	protected PropertyHolderTable propertyHolderTable;
 
 	public AMFRequestTestStepDesktopPanel( AMFRequestTestStep modelItem )
 	{
@@ -337,7 +336,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
 	protected JComponent buildProperties()
 	{
-		PropertyHolderTable holderTable = new PropertyHolderTable( getModelItem() )
+		propertyHolderTable = new PropertyHolderTable( getModelItem() )
 		{
 			protected JTable buildPropertiesTable()
 			{
@@ -396,9 +395,9 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		JUndoableTextField textField = new JUndoableTextField( true );
 
 		PropertyExpansionPopupListener.enable( textField, getModelItem() );
-		holderTable.getPropertiesTable().setDefaultEditor( String.class, new DefaultCellEditor( textField ) );
+		propertyHolderTable.getPropertiesTable().setDefaultEditor( String.class, new DefaultCellEditor( textField ) );
 
-		return holderTable;
+		return propertyHolderTable;
 	}
 
 	protected JComponent buildToolbar1()
@@ -1110,5 +1109,6 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		}
 		}
 	}
-
+	
+	
 }
