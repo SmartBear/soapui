@@ -18,18 +18,24 @@ case "`uname`" in
 esac
 
 # Setup SOAPUI_HOME
-if [ "x$SOAPUI_HOME" = "x" ]
+if [ -d $SOAPUI_HOME ]
 then
     # get the full path (without any relative bits)
-    SOAPUI_HOME=`cd $DIRNAME\..; pwd`
+    SOAPUI_HOME=`cd $DIRNAME/..; pwd`
 fi
+
 export SOAPUI_HOME
+
+if [ -f "$SOAPUI_HOME/jre/bin/java" ]
+then
+  JAVA=$SOAPUI_HOME/jre/bin/java
+else
+  JAVA=java
+fi
 
 @SOAPUISHCLASSPATH@
 
 export SOAPUI_CLASSPATH
-
-JAVA=$SOAPUI_HOME\jre\bin\java
 
 JAVA_OPTS="-Xms128m -Xmx384m -Dsoapui.properties=soapui.properties -Dgroovy.source.encoding=iso-8859-1 -Dsoapui.home=$SOAPUI_HOME/bin"
 if [ $SOAPUI_HOME != "" ] 
