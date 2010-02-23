@@ -95,7 +95,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	private boolean junitReport;
 	private int exportCount;
 	private JUnitReportCollector reportCollector;
-//	private WsdlProject project;
+	// private WsdlProject project;
 	private String projectPassword;
 	private boolean saveAfterRun;
 
@@ -109,7 +109,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
 	public static void main( String[] args ) throws Exception
 	{
-		System.exit( new SoapUITestCaseRunner().runFromCommandLine( args ));
+		System.exit( new SoapUITestCaseRunner().runFromCommandLine( args ) );
 	}
 
 	protected boolean processCommandLine( CommandLine cmd )
@@ -173,12 +173,12 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		setEnableUI( cmd.hasOption( "i" ) );
 		setPrintReport( cmd.hasOption( "r" ) );
 		setExportAll( cmd.hasOption( "a" ) );
-		if( cmd.hasOption( "A" ))
+		if( cmd.hasOption( "A" ) )
 		{
 			setExportAll( true );
 			System.setProperty( SOAPUI_EXPORT_SEPARATOR, File.separator );
 		}
-		
+
 		setJUnitReport( cmd.hasOption( "j" ) );
 		setSaveAfterRun( cmd.hasOption( "S" ) );
 
@@ -294,7 +294,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		long startTime = System.nanoTime();
 
 		List<TestCase> testCasesToRun = new ArrayList<TestCase>();
-		
+
 		// start by listening to all testcases.. (since one testcase can call
 		// another)
 		for( int c = 0; c < project.getTestSuiteCount(); c++ )
@@ -303,11 +303,10 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 			for( int i = 0; i < suite.getTestCaseCount(); i++ )
 			{
 				TestCase tc = suite.getTestCaseAt( i );
-				( ( WsdlTestCase )tc ).setFailOnError( !ignoreErrors );
 				if( ( testSuite == null || suite.getName().equals( suite.getName() ) ) && testCase != null
 						&& tc.getName().equals( testCase ) )
 					testCasesToRun.add( tc );
-					
+
 				addListeners( tc );
 			}
 		}
@@ -316,7 +315,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		if( testCasesToRun.size() > 0 )
 		{
 			for( TestCase testCase : testCasesToRun )
-			   runTestCase( ( WsdlTestCase )testCase );
+				runTestCase( ( WsdlTestCase )testCase );
 		}
 		else if( testSuite != null )
 		{
@@ -361,7 +360,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		// add listener for counting..
 		InternalProjectRunListener projectRunListener = new InternalProjectRunListener();
 		project.addProjectRunListener( projectRunListener );
-		
+
 		try
 		{
 			log.info( ( "Running Project [" + project.getName() + "], runType = " + project.getRunType() ) );
@@ -460,7 +459,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		try
 		{
 			log.info( ( "Running TestSuite [" + suite.getName() + "], runType = " + suite.getRunType() ) );
-		   WsdlTestSuiteRunner runner = suite.run( new StringToObjectMap(), false );
+			WsdlTestSuiteRunner runner = suite.run( new StringToObjectMap(), false );
 			log.info( "TestSuite [" + suite.getName() + "] finished with status [" + runner.getStatus() + "] in "
 					+ ( runner.getTimeTaken() ) + "ms" );
 		}
@@ -470,7 +469,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		}
 		finally
 		{
-			testSuiteCount++;
+			testSuiteCount++ ;
 		}
 	}
 
@@ -532,7 +531,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		super.beforeStep( testRunner, runContext, currentStep );
 
 		if( currentStep != null )
-		   log.info( "running step [" + currentStep.getName() + "]" );
+			log.info( "running step [" + currentStep.getName() + "]" );
 	}
 
 	public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
@@ -595,11 +594,11 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 							+ StringUtils.createFileName( runTestCaseTestStep.getName(), '_' ) + exportSeparator
 							+ StringUtils.createFileName( tc.getTestSuite().getName(), '_' ) + exportSeparator
 							+ StringUtils.createFileName( tc.getName(), '_' ) + exportSeparator
-						+ StringUtils.createFileName( currentStep.getName(), '_' ) + "-" + count.longValue() + "-"
-						+ result.getStatus();
+							+ StringUtils.createFileName( currentStep.getName(), '_' ) + "-" + count.longValue() + "-"
+							+ result.getStatus();
 				}
 
-				String absoluteOutputFolder = getAbsoluteOutputFolder( ModelSupport.getModelItemProject( tc ));
+				String absoluteOutputFolder = getAbsoluteOutputFolder( ModelSupport.getModelItemProject( tc ) );
 				String fileName = absoluteOutputFolder + File.separator + nameBase + ".txt";
 
 				if( result.getStatus() == TestStepStatus.FAILED )
@@ -665,12 +664,12 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
 		testCaseCount++ ;
 	}
-	
+
 	private class InternalProjectRunListener extends ProjectRunListenerAdapter
 	{
 		public void afterTestSuite( ProjectRunner projectRunner, ProjectRunContext runContext, TestSuiteRunner testRunner )
 		{
-			testSuiteCount++;
+			testSuiteCount++ ;
 		}
 	}
 }
