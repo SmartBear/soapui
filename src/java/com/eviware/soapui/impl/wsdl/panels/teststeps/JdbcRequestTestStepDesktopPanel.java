@@ -50,7 +50,6 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
@@ -58,8 +57,6 @@ import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyTableHolderModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable.PropertiesHolderJTable;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable.PropertyHolderTablePropertyExpansionDropTarget;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
@@ -648,12 +645,15 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	public boolean onClose( boolean canCancel )
 	{
 		configPanel.removeAll();
-		inspectorPanel.release();
 
 		SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener );
 		jdbcRequestTestStep.removeAssertionsListener( assertionsListener );
+		jdbcRequestTestStep.getJdbcRequest().removeSubmitListener( this );
 
+		responseEditor.release();
 		assertionsPanel.release();
+		inspectorPanel.release();
+		propertyHolderTable.release();
 		
 		return release();
 	}
@@ -686,7 +686,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		public void release()
 		{
 			super.release();
-			jdbcRequestTestStep.removePropertyChangeListener( RestRequestInterface.RESPONSE_PROPERTY, this );
+			jdbcRequestTestStep.removePropertyChangeListener( JdbcRequestTestStep.RESPONSE_PROPERTY, this );
 		}
 	}
 
