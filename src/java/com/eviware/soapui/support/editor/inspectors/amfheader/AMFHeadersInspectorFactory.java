@@ -37,7 +37,7 @@ public class AMFHeadersInspectorFactory implements RequestInspectorFactory, Resp
 	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof AMFRequestTestStep )
-		{
+		{ 
 			AMFHeadersInspector inspector = new AMFHeadersInspector( new AMFRequestHeadersModel(
 					( AMFRequestTestStep )modelItem ) );
 			inspector.setEnabled( true );

@@ -671,13 +671,13 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		requestEditor.removeAll();
 		( ( ModelItemXmlEditor<?, ?> )requestEditor ).release();
 		responseEditor.release();
+		responseEditor=null;
 		assertionsPanel.release();
 		SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener );
 		amfRequestTestStep.removeAssertionsListener( assertionsListener );
 		amfRequestTestStep.getAMFRequest().removeSubmitListener( this );
 		componentEnabler.release();
 		groovyEditor.release();
-		runAction = null;
 		amfRequestTestStep.release();
 		propertyHolderTable.release();
 		this.removeAll();

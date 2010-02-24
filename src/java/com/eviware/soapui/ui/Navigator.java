@@ -127,7 +127,7 @@ public class Navigator extends JPanel
 
 		public void autoscroll( Point pt )
 		{
-			// Figure out which row we’re on.
+			// Figure out which row weï¿½re on.
 			int nRow = getRowForLocation( pt.x, pt.y );
 
 			// If we are not on a row then ignore this autoscroll request
@@ -137,7 +137,7 @@ public class Navigator extends JPanel
 			Rectangle raOuter = getBounds();
 			// Now decide if the row is at the top of the screen or at the
 			// bottom. We do this to make the previous row (or the next
-			// row) visible as appropriate. If we’re at the absolute top or
+			// row) visible as appropriate. If weï¿½re at the absolute top or
 			// bottom, just return the first or last row respectively.
 
 			nRow = ( pt.y + raOuter.y <= AUTOSCROLL_MARGIN ) // Is row at top of
@@ -404,7 +404,10 @@ public class Navigator extends JPanel
 						public void run()
 						{
 							if( actions != null )
+							{
 								actions.performDefaultAction( new ActionEvent( mainTree, 0, null ) );
+								actions = null;
+							}
 						}
 					} );
 				}

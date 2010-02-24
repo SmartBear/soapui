@@ -1004,6 +1004,8 @@ public class SoapUI
 
 	public class InternalNavigatorListener implements NavigatorListener
 	{
+		private PropertyHolderTable selectedPropertyHolderTable = null;
+
 		public void nodeSelected( SoapUITreeNode treeNode )
 		{
 			if( treeNode == null )
@@ -1013,15 +1015,20 @@ public class SoapUI
 			else
 			{
 				ModelItem modelItem = treeNode.getModelItem();
-				PropertyHolderTable propertyHolderTable = null;
-
+				
+				if( selectedPropertyHolderTable != null )
+				{
+					selectedPropertyHolderTable.release();
+					selectedPropertyHolderTable = null;
+				}
+				
 				if( modelItem instanceof TestPropertyHolder )
 				{
 					// check for closed project -> this should be solved with a
 					// separate ClosedWsdlProject modelItem
 					if( !( modelItem instanceof WsdlProject ) || ( ( WsdlProject )modelItem ).isOpen() )
 					{
-						propertyHolderTable = new PropertyHolderTable( ( TestPropertyHolder )modelItem );
+						selectedPropertyHolderTable = new PropertyHolderTable( ( TestPropertyHolder )modelItem );
 					}
 				}
 
@@ -1029,7 +1036,7 @@ public class SoapUI
 				if( panelBuilder != null && panelBuilder.hasOverviewPanel() )
 				{
 					Component overviewPanel = panelBuilder.buildOverviewPanel( modelItem );
-					if( propertyHolderTable != null )
+					if( selectedPropertyHolderTable != null )
 					{
 						JTabbedPane tabs = new JTabbedPane();
 						if( overviewPanel instanceof JPropertiesTable<?> )
@@ -1043,7 +1050,7 @@ public class SoapUI
 							tabs.addTab( "Overview", overviewPanel );
 						}
 
-						tabs.addTab( ( ( TestPropertyHolder )modelItem ).getPropertiesLabel(), propertyHolderTable );
+						tabs.addTab( ( ( TestPropertyHolder )modelItem ).getPropertiesLabel(), selectedPropertyHolderTable );
 						overviewPanel = UISupport.createTabPanel( tabs, false );
 					}
 
