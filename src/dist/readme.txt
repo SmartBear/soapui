@@ -1,6 +1,6 @@
 Welcome to soapUI!
 
-2009-12-15 : 3.5 beta2 - the Protocol Release
+2010-02-24 : 3.5 - the Protocol Release
 --------------------------------------------------------------------------------
 soapUI 3.5 adds support for JMS, JDBC and AMF for both functional and load-testing
 
@@ -117,6 +117,27 @@ Beta2 fixes:
 -	Added soapui.scripting.library system property to override script library path from commandline
 -	Added possibility to override Jetty Connector properties via soapui.mock.connector.XX system properties
 -	Fixed bugs related to REST parameter reordering and inheritance
+
+Final Release fixes:
+-	Fixed times precision in Junit reports to be up to 3 decimals
+-	Updated IDW dependency to 1.6.1
+-	Updated Groovy to 1.7.1
+-	Update JasperReports to 3.7.1
+-	Fixed TestStepResults for WSS processed requests to contain the unprocessed request in the requestContent property
+-	Addes ResponseAsXml properties to JDBC and AMF TestSteps
+-	Fixed TIBCO EMS support
+-	Removed a bunch of memory-leaks
+-	Fixed LoadTest Reports for LoadTests with long names
+-	Introduced soapui.mtom.strict system property for enabling strict MTOM processing
+-	Fixed command-line TestCase runners to not ignore Fail on Abort setting
+-	Fixed restore of ignoreNamespacePrefixes in XPath assertions
+-	Fixed success indicator of MockResponse TestSteps
+-	Added uninstall of Hermes to Uninstaller
+-	Fixed endpoint in SOAP Monitor tunnel mode
+-	Improved command-line scripts on linux / mac
+-	Added page in mac/linux installers to disable JXBrowser component
+-	Fixed Script Assertion editor to update on OK and added Cancel button
+-	Added JMS Message Selector field to JMS properties Inspector
 
 
 2009-08-09 : 3.0.1 release
