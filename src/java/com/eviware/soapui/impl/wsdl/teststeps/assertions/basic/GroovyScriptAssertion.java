@@ -263,6 +263,8 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 			builder.addGlue();
 			okButton = new JButton( new OkAction() );
 			builder.addFixed( okButton );
+			builder.addRelatedGap();
+			builder.addFixed( new JButton( new CancelAction() ) );
 			builder.setBorder( BorderFactory.createEmptyBorder( 0, 3, 3, 3 ) );
 			return builder.getPanel();
 		}
@@ -294,6 +296,21 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 			public void actionPerformed( ActionEvent e )
 			{
 				dialog.setVisible( false );
+				setScriptText( editor.getEditArea().getText() );
+			}
+		}
+
+		private final class CancelAction extends AbstractAction
+		{
+			public CancelAction()
+			{
+				super( "Cancel" );
+			}
+
+			public void actionPerformed( ActionEvent e )
+			{
+				dialog.setVisible( false );
+				editor.getEditArea().setText( scriptText );
 			}
 		}
 
@@ -316,7 +333,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 
 			public void setScript( String text )
 			{
-				setScriptText( text );
+
 			}
 		}
 
