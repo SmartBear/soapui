@@ -82,6 +82,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 	private SoapUIScriptEngine scriptEngine;
 	private JDialog dialog;
 	private GroovyScriptAssertionPanel groovyScriptAssertionPanel;
+	private String oldScriptText;
 
 	public GroovyScriptAssertion( TestAssertionConfig assertionConfig, Assertable modelItem )
 	{
@@ -138,6 +139,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 			buildDialog();
 		}
 
+		oldScriptText = scriptText;
 		UISupport.showDialog( dialog );
 		return true;
 	}
@@ -187,6 +189,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 		private Logger logger;
 		private JButton okButton;
 		private ShowOnlineHelpAction showOnlineHelpAction;
+		public String oldscriptText;
 
 		public GroovyScriptAssertionPanel()
 		{
@@ -310,7 +313,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 			public void actionPerformed( ActionEvent e )
 			{
 				dialog.setVisible( false );
-				editor.getEditArea().setText( scriptText );
+				editor.getEditArea().setText( oldScriptText );
 			}
 		}
 
@@ -377,6 +380,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 
 				try
 				{
+					setScriptText( editor.getEditArea().getText() );
 					String result = assertScript( exchange, new WsdlTestRunContext( testStep ), logger );
 					UISupport
 							.showInfoMessage( "Script Assertion Passed" + ( ( result == null ) ? "" : ": [" + result + "]" ) );
