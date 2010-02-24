@@ -17,6 +17,7 @@ import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFTestStepResult;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
 import com.eviware.soapui.support.editor.inspectors.amfheader.AMFHeadersInspectorModel.AbstractHeadersModel;
@@ -137,6 +138,15 @@ public class AMFHeadersInspectorFactory implements RequestInspectorFactory, Resp
 		{
 			getModelItem().setAmfHeaders( headers );
 		}
+
+		@Override
+		public void release()
+		{
+			getModelItem().removePropertyChangeListener(  AMFRequestTestStep.AMF_HEADERS_PROPERTY, this );
+			super.release();
+		}
+		
+		
 	}
 
 	private class AMFResponseHeadersModel extends AbstractHeadersModel<AMFRequestTestStep>

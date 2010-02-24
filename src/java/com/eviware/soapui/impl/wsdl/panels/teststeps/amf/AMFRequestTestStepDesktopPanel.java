@@ -612,6 +612,8 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 				}
 			} );
 		}
+		
+		
 	}
 
 	protected ModelItemXmlEditor<?, ?> buildResponseEditor()
@@ -630,6 +632,13 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		{
 			super( new AMFResponseDocument(), amfRequestTestStep );
 		}
+
+		@Override
+		public void release()
+		{
+			getDocument().release();
+			super.release();
+		}
 	}
 
 	public class AMFRequestMessageEditor extends RequestMessageXmlEditor<AMFRequestTestStep, AMFRequestDocument>
@@ -638,6 +647,14 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		{
 			super( new AMFRequestDocument(), amfRequestTestStep );
 		}
+
+		@Override
+		public void release()
+		{
+			getDocument().release();
+			super.release();
+		}
+
 	}
 
 	public boolean dependsOn( ModelItem modelItem )
@@ -651,12 +668,18 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	{
 		configPanel.removeAll();
 		inspectorPanel.release();
+		
 		responseEditor.release();
 		requestEditor.removeAll();
+		requestEditor=null;
 		SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener );
 		amfRequestTestStep.removeAssertionsListener( assertionsListener );
 		amfRequestTestStep.getAMFRequest().removeSubmitListener( this );
 		componentEnabler.release();
+		groovyEditor.release();
+		runAction = null;
+		amfRequestTestStep.release();
+		this.removeAll();
 		return release();
 	}
 
@@ -1109,6 +1132,5 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		}
 		}
 	}
-	
-	
+
 }

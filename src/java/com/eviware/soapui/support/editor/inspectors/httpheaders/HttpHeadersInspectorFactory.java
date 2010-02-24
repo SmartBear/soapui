@@ -250,6 +250,12 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			getModelItem().setHttpHeaders( headers );
 		}
 
+		@Override
+		public void release()
+		{
+			super.release();
+		}
+
 	}
 
 	private class AMFResponseHeadersModel extends AbstractHeadersModel<AMFRequestTestStep>

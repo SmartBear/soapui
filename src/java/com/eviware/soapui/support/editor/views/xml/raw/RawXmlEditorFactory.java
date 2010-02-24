@@ -352,7 +352,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		@Override
 		public void release()
 		{
-			request.removePropertyChangeListener( AMFRequest.REQUEST_PROPERTY, this );
+			request.removePropertyChangeListener( AMFRequest.AMF_RESPONSE_PROPERTY, this );
 			super.release();
 		}
 	}
@@ -393,7 +393,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		@Override
 		public void release()
 		{
-			request.removePropertyChangeListener( AMFRequest.REQUEST_PROPERTY, this );
+			request.removePropertyChangeListener( AMFRequest.AMF_RESPONSE_PROPERTY, this );
 			super.release();
 		}
 	}
