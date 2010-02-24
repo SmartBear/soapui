@@ -50,7 +50,7 @@ public class WsdlMockResult implements MockResult
 	private WsdlMockOperation mockOperation;
 	private String responseContentType;
 	private int responseStatus = 200;
-	
+
 	private SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
 
 	public WsdlMockResult( WsdlMockRequest request ) throws Exception
@@ -151,8 +151,8 @@ public class WsdlMockResult implements MockResult
 	{
 		if( mockRequest.getHttpResponse() != null )
 			mockRequest.getHttpResponse().addHeader( name, value );
-		else
-			responseHeaders.put( name, value );
+
+		responseHeaders.put( name, value );
 	}
 
 	public boolean isCommitted()
@@ -235,7 +235,7 @@ public class WsdlMockResult implements MockResult
 	{
 		this.responseContentType = responseContentType;
 	}
-	
+
 	public String toString()
 	{
 		StringBuilder msg = new StringBuilder( dateFormat.format( new Date( getTimestamp() ) ) );

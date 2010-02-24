@@ -694,7 +694,8 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 
 			byte[] content = encoding == null ? responseContent.getBytes() : responseContent.getBytes( encoding );
 
-			response.setContentType( soapVersion.getContentTypeHttpHeader( encoding, null ) );
+			if( !response.getResponseHeaders().containsKeyIgnoreCase( "Content-Type" ) )
+				response.setContentType( soapVersion.getContentTypeHttpHeader( encoding, null ) );
 
 			String acceptEncoding = response.getMockRequest().getRequestHeaders().get( "Accept-Encoding" );
 			if( AUTO_RESPONSE_COMPRESSION.equals( responseCompression ) && acceptEncoding != null

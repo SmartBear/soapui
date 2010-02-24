@@ -194,4 +194,15 @@ public class StringToStringMap extends HashMap<String, String>
 	{
 		return keySet().toArray( new String[size()] );
 	}
+
+	public boolean containsKeyIgnoreCase( String string )
+	{
+		for( String key : keySet() )
+		{
+			if( key.equalsIgnoreCase( string ) )
+				return true;
+		}
+
+		return false;
+	}
 }
