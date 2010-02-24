@@ -254,6 +254,7 @@ public class StatisticsHistory
 			this.statistic = statistic;
 		}
 
+		@SuppressWarnings( "unused" )
 		public Statistic getStatistic()
 		{
 			return statistic;
