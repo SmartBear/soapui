@@ -833,7 +833,7 @@ else return "";</string>
                     <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
                       <void property="file">
                         <object class="java.io.File">
-                          <string>bin</string>
+                          <string>tempHermes/hermesInstall.${installer:EXTENSION}</string>
                         </object>
                       </void>
                       <void property="mode">
