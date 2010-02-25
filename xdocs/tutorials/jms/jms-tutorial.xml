@@ -254,7 +254,9 @@ while(en.hasMoreElements()){
 jmsConnectionHolder.closeAll()// don't forget to close session and connection
 				
 				</source>
-				
+				<p>
+					Also we need to mention that you can use Rest Request Test Step and Http Request Test Step to send its first attachment as TexMessage or BytesMessage over jms endpoint.
+				</p>
 				<p>
 					That's it for now, we hope that you will find this tutorial helpful to jump start your JMS testing with soapUI.
 				</p>
