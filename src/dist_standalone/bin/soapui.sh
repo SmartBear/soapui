@@ -65,4 +65,4 @@ echo = SOAPUI_HOME = $SOAPUI_HOME
 echo =
 echo ================================
 
-$JAVA $JAVA_OPTS -cp $SOAPUI_CLASSPATH com.eviware.soapui.SoapUIPro "$@"
+$JAVA $JAVA_OPTS -cp $SOAPUI_CLASSPATH com.eviware.soapui.SoapUI "$@"
