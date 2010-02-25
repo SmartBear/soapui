@@ -39,23 +39,28 @@
 					SoapUI
 					3.5 installer which integrates the installer of HermesJMS.
 				</p>
-				</subsection>
+			</subsection>
 
 
 			<subsection name="HermesJMS with binary distributions">
 				<p>
 					If you want to use binary distributions you need to install
 					HermesJMS 1.14
-					manually <a href="http://hermesjms.com/patches/hermes-installer-1.14.jar">(download here)</a> and set its path to Preferences->Tools.
-					</p>
+					manually
+					<a href="http://hermesjms.com/patches/hermes-installer-1.14.jar">(download here)</a>
+					and set its path to Preferences->Tools.
+				</p>
 			</subsection>
 
 
 			<subsection name="Installing soapUI 3.5">
 				<p>
-					When starting the new soapUI installer you will get an option that you can
-					select to install HermesJMS also. This is mandatory if you want to
-					try this tutorial (unless you already have HermesJMS 1.14 or later installed).
+					When starting the new soapUI installer you will get an option
+					that you can
+					select to install HermesJMS also. This is mandatory if
+					you want to
+					try this tutorial (unless you already have HermesJMS
+					1.14 or later installed).
 				</p>
 
 			</subsection>
@@ -63,9 +68,12 @@
 
 			<subsection name="Downloading ActiveMQ and starting the server">
 				<p>
-					Also for the purpose of this tutorial we will need ActiveMQ (a free JMS implementation). 
-					Download it from the server	<a href="http://activemq.apache.org/activemq-520-release.html">here</a>
-					. Unpack it and start activemq.bat file under bin folder. This will	start activemq server on your local machine.
+					Also for the purpose of this tutorial we will need ActiveMQ (a free
+					JMS implementation).
+					Download it from the server
+					<a href="http://activemq.apache.org/activemq-520-release.html">here</a>
+					. Unpack it and start activemq.bat file under bin folder. This will
+					start activemq server on your local machine.
 				</p>
 
 			</subsection>
@@ -73,20 +81,25 @@
 
 			<subsection name="Setting HermesJMS sessions">
 				<p>
-					For purpose of this tutorial we will create one session in HermesJMS.
+					For purpose of this tutorial we will create one session in
+					HermesJMS.
 				</p>
 				<p align="center">
 					<img src="images/create_hermes_session_button.gif" alt="Create session in Hermes button" />
 				</p>
 
 				<p>
-					Open the Preferences editor and choose the Providers tab first at the bottom.
-					Select Classpath Groups on the right and choose	'Add Group', type the name 'ActiveMQ-5.2'
+					Open the Preferences editor and choose the Providers tab first at
+					the bottom.
+					Select Classpath Groups on the right and choose 'Add
+					Group', type the name 'ActiveMQ-5.2'
 				</p>
 				<p>
 					Than add these two jar files also by clicking on 'Add JAR(s)',
-					activemq-core-5.2.0.jar and geronimo-j2ee-management_1.0_spec-1.0.jar.
-					(These jar files can be	found in %actvemq_home%/lib folder).
+					activemq-core-5.2.0.jar and
+					geronimo-j2ee-management_1.0_spec-1.0.jar.
+					(These jar files can be
+					found in %actvemq_home%/lib folder).
 				</p>
 				<p>
 					Now choose the session tab in HermesJMS and make sure that your editor looks like this.
@@ -155,6 +168,10 @@ Last one is usefull in cases when you send something to a queue and checks topic
 					Select the operation to invoke (for example the Request login), which opens the editor with a corresponding default
 					message. Select an endpoint where the send queue and receive queues are the same and submit the request.
 
+				</p>
+
+				<p>
+					Speccial note for TIBCO EMS users: Add tibjmsadmin.jar and tibjms.jar to %SoapUI%\bin\ext folder, and restart SoapUI application after that.
 				</p>
 				<p align="center">
 					<img src="images/request_response_view.gif" alt="JMS Request and Response" />
