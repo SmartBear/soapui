@@ -171,7 +171,7 @@ Last one is usefull in cases when you send something to a queue and checks topic
 				</p>
 
 				<p>
-					Speccial note for TIBCO EMS users: Add tibjmsadmin.jar and tibjms.jar to %SoapUI%\bin\ext folder, and restart SoapUI application after that.
+					Special note for TIBCO EMS users: Add tibjmsadmin.jar and tibjms.jar to %SoapUI%\bin\ext folder, and restart SoapUI application after that.
 				</p>
 				<p align="center">
 					<img src="images/request_response_view.gif" alt="JMS Request and Response" />
