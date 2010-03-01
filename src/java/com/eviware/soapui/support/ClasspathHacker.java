@@ -42,9 +42,11 @@ public class ClasspathHacker
 		try
 		{
 			ClassLoader classLoader = SoapUI.class.getClassLoader();
+
 			if( !( classLoader instanceof URLClassLoader ) )
 			{
 				SoapUI.log.error( "SoapUI classloader is not an URLClassLoader, failed to add external library" );
+				SoapUI.log.info( "classloader type is : "+ classLoader.getClass().toString()  );
 				return;
 			}
 
