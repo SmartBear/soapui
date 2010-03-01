@@ -220,8 +220,8 @@ Last one is usefull in cases when you send something to a queue and checks topic
 					Note that only the first attachment is treated as the payload for the message.  
 				</p>
 				<p>
-				Another important thing we have to mention is that youv can also use Groovy Script Test Step if you want something else to do with your queues and topics.
-				Here is one example of how to use our API to browse messages form one queue without receiving it.
+				Another important thing we have to mention is that you can also use Groovy Script Test Step if you want something else to do with your queues and topics.
+				Here is one example of how to use our API to browse messages from one queue without receiving it.
 				</p>
 				<source>
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSConnectionHolder
