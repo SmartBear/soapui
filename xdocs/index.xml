@@ -16,10 +16,10 @@
         <title>the Web Service, SOA and SOAP Testing Tool</title>
     </properties>
     <body>
-    <link rel="stylesheet" type="text/css" href="style/new.css" />
+   
 
         <section>
-
+ <link rel="stylesheet" type="text/css" href="style/new.css" />
 
 <div id="head">
 <img src="img/head.jpg" alt="soapUI Pro 3.5" />
