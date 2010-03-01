@@ -225,6 +225,7 @@ public class JdbcSubmit implements Submit, Runnable
 	{
 		String drvr = "";
 		String connStr = "";
+		String pass = "";
 
 		JdbcRequestTestStep testStep = request.getTestStep();
 
@@ -233,6 +234,7 @@ public class JdbcSubmit implements Submit, Runnable
 		{
 			drvr = PropertyExpander.expandProperties( context, testStep.getDriver() ).trim();
 			connStr = PropertyExpander.expandProperties( context, testStep.getConnectionString() ).trim();
+			pass = PropertyExpander.expandProperties( context, testStep.getPassword() ).trim();
 		}
 		else
 		{
@@ -241,7 +243,7 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 		if( connStr.contains( JdbcRequestTestStep.PASS_TEMPLATE ) )
 		{
-			connStr = connStr.replaceFirst( JdbcRequestTestStep.PASS_TEMPLATE, testStep.getPassword() );
+			connStr = connStr.replaceFirst( JdbcRequestTestStep.PASS_TEMPLATE, pass );
 		}
 		try
 		{
