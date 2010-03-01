@@ -10,7 +10,7 @@
         <div class="section">
 
 <div id="head">
-<img src="img/head.jpg" alt="soapUI Pro 3.5 Beta" />
+<img src="img/head.jpg" alt="soapUI Pro 3.5" />
 
 <div id="lead-text">
 soapUI 3.5 - The Protocol Release,
@@ -18,8 +18,8 @@ With complete functionality for testing
 your Enterprise Messages, RIA's and Databases.
 </div>
 <div id="download-buttons">
-<a onclick="javascript:urchinTracker('/downloadOpenSource352')" href="https://sourceforge.net/projects/soapui/files/soapui/3.5-beta2"><img src="img/download-opensource.png" alt="Download Open Source" /></a>
-<a onclick="javascript:urchinTracker('/downloadPro352')" href="http://www.eviware.com/beta"><img src="img/download-pro.png" alt="Download SoapUI Pro" /></a></div>
+<a onclick="javascript:urchinTracker('/downloadOpenSource35')" href="https://sourceforge.net/projects/soapui/files/soapui/3.5"><img src="img/download-opensource.png" alt="Download Open Source" /></a>
+<a onclick="javascript:urchinTracker('/downloadPro35')" href="http://www.eviware.com/download"><img src="img/download-pro.png" alt="Download SoapUI Pro" /></a></div>
 
 </div>
 
@@ -70,8 +70,9 @@ your Enterprise Messages, RIA's and Databases.
 </div>
 </div><!--End of second row-->
 
-<div class="highlight">Beta2 is out!</div>
-<p>As always a bunch of fixes and improvements, <a href="#Beta2_Features">Read More</a>.</p>
+<div class="highlight">Final release is out!</div>
+<p>As always a bunch of fixes and improvements, <a href="#Final_Release">Read More</a>.</p>
+
 
 <div class="highlight">Thank You!</div>
 <p>As always; great love to our wonderful community and fantastic customers who helps us focusing on what's right, thank you all!</p>
@@ -233,7 +234,35 @@ soapUI XML-related features (assertions, property-transfers, scripts, etc).</li>
 	<li>	Updated Hermes to 1.14 update - <a href="http://hermesjms.com/confluence/display/HJMS/Release+Notes">Release Notes</a>   (Library)</li>
 </ul>
   </div>      
+        
+        <div class="clearfix"></div>
+<div class="gray-line"></div>
+<div class="highlight" id="Final_Release">Final Release</div>
+<p>The following has been updated for the final releas:</p>
+<ul class="red-dots">
+	<li>Fixed times precision in Junit reports to be up to 3 decimals
+</li><li>Updated IDW dependency to 1.6.1
+</li><li>Updated Groovy to 1.7.1
+</li><li>Update JasperReports to 3.7.1
+</li><li>Fixed TestStepResults for WSS processed requests to contain the unprocessed request in the requestContent property
+</li><li>Addes ResponseAsXml properties to JDBC and AMF TestSteps
+</li><li>Fixed TIBCO EMS support
+</li><li>Removed a bunch of memory-leaks
+</li><li>Fixed LoadTest Reports for LoadTests with long names
+</li><li>Introduced soapui.mtom.strict system property for enabling strict MTOM processing
+</li><li>Fixed command-line TestCase runners to not ignore Fail on Abort setting
+</li><li>Fixed restore of ignoreNamespacePrefixes in XPath assertions
+</li><li>Fixed success indicator of MockResponse TestSteps
+</li><li>Added uninstall of Hermes to Uninstaller
+</li><li>Fixed endpoint in SOAP Monitor tunnel mode
+</li><li>Improved command-line scripts on linux / mac
+</li><li>Added page in mac/linux installers to disable JXBrowser component
+</li><li>Fixed Script Assertion editor to update on OK and added Cancel button
+</li><li>Added JMS Message Selector field to JMS properties Inspector</li>	
+</ul>
         </p>
+        
+        
         </section>
     </body>
 </document>

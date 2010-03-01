@@ -25,7 +25,7 @@
                     <td>
                         <div align="center">
                             <a onclick="javascript:urchinTracker('/downloadOpenSource')"
-                                href="https://sourceforge.net/projects/soapui/files/soapui/3.0.1"
+                                href="https://sourceforge.net/projects/soapui/files/soapui/3.5"
                                title="Download soapUI">
                                 <img src="images/download_opensource.png" alt="download Open Source" width="310"
                                      height="165" longdesc="http://www.sourceforge.net"/>
@@ -99,9 +99,9 @@
  
             <columns>
                 <column width="250">
-                    <subsection name="soapUI 3.5 beta2">
+                    <subsection name="soapUI 3.5 Final!">
                     <p>
-                    soapUI 3.5 beta2 is out, introducing functionality that drastically expands the 
+                    soapUI 3.5 is out, introducing functionality that drastically expands the 
                     scope of Functional- and Load Testing features in soapUI;
                     <ul>
                     <li><b>JMS Support</b> - send and receive text and binary messages over JMS</li>
@@ -176,6 +176,11 @@
                 <column width="250">
                     <subsection name="Latest News">
                   
+                    <p>
+                            <i>2009-03-01: soapUI 3.5</i>
+                             <a href="new_and_noteworthy_3_5.html">[Read more]</a>
+                         </p>
+                  
                        <p>
                             <i>2009-08-09: soapUI 3.0.1</i>
                             <a href="new_and_noteworthy_3_0.html#3_0_1_Release">[Read more]</a>
@@ -187,10 +192,7 @@
                         </p>
                         
                
-                         <p>
-                            <i>2009-02-02: soapUI 2.5.1</i>
-                             <a href="new_and_noteworthy_2_5.html#2_5_1_Release">[Read more]</a>
-                         </p>
+                       
                        
                           <b>
                               <a href="news.html">[More News]</a>
