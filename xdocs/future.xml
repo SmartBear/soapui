@@ -1,27 +1,31 @@
 <?xml version="1.0"?>
 <document>
     <properties>
-        <title>soapUI future plans</title>
+        <title>soapUI Future Plans</title>
     </properties>
     <body>
 		<section name="soapUI Future Plans">
-		<subsection name="soapUI Release plan"> 
-		<p>The following features have been considered for the upcoming version:</p>
-	    <ul>
-			<li>Improved WS-Security support</li>
-		    <li>Improved Endpoint management</li>
-		</ul>
-		<p>The following minor improvements are also being considered:</p>
-		 <ul>
-		 <li>simple XQuery/XPath "test bench" for testing expressions</li>
-		 <li>add possibility to label endpoints for readability</li>
-		 <li>reload-project / file-system monitoring</li>
-		 <li>option to reload schemas on run TestCase</li>
-
+		<subsection name="soapUI Next Release"> 
+		<p>March 01 2010 - soapUI 3.5 release date </p>
+        <p>The following theme is planned for the upcoming version:</p>
+         <ul>
+         soapUI 4 - The Security Relase
 		 </ul>
-		 <p>Above improvements will be rolled out in minor releases during the coming months. Let us know if you have 
+		 <p>Above improvement will be rolled out in minor releases during the coming months. Let us know if you have 
 		 any wishes/suggestions that should be included!</p>
 		</subsection>
+		
+		<subsection name="soapUI Upcoming Releases">
+		<p>We have ideas for several upcoming releases, here are just a few themes;</p>
+		<ul>
+		 <li>The WCF Release</li>
+		 <li>The Community Release 3</li>
+		 <li>The Usability Release</li> 
+		 <li>The Cloud Release</li>
+		 <li>The Virtual Release</li>
+		 </ul>
+		</subsection>
+		
 		
 		<subsection name="soapUI Feature Wish list">
 		 
@@ -31,14 +35,14 @@
 		 <p>Some of the features currently being considered (in no special order, let us know what you prefer!):</p>
 		 <ul>
 		 <li>Validations for WS-Security compliance, etc</li>
-		 <li>Request generation/submittal support for WS-Security, WS-RM, etc..</li>
+		 <li>Request generation or submittal support for WS-Security, WS-RM, etc..</li>
 		 <li>UDDI/JAXR support for discovering web-services</li>
-		 <li>Schema-aware XML-editor</li>
-       <li>Code-aware Groovy editor</li>
-		 <li>WSDL authoring support (currently WSDLs/Schemas can not be modified)</li>
-		 <li>Improved reporting</li>
+		 <li>Schema aware XML-editor</li>
+       <li>Code aware Groovy editor</li>
+		 <li>WSDL authoring support (currently WSDLs or Schemas can not be modified)</li>
 		 <li>WSDL2 support</li>
-		 <li>JMS/JBI support</li>
+		 <li>Better support for WCF</li>
+		 
 		 </ul>
 		</subsection>
 		 

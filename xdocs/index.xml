@@ -24,7 +24,7 @@
                 <tr class="b">
                     <td>
                         <div align="center">
-                            <a onclick="javascript:urchinTracker('/downloadOpenSource')"
+                            <a onclick="javascript:urchinTracker('/downloadOpenSource35')"
                                 href="https://sourceforge.net/projects/soapui/files/soapui/3.5"
                                title="Download soapUI">
                                 <img src="images/download_opensource.png" alt="download Open Source" width="310"
@@ -34,7 +34,7 @@
                     </td>
                     <td>
                         <div align="center">
-                            <a onclick="javascript:urchinTracker('/downloadPro')" href="http://www.eviware.com/trial"
+                            <a onclick="javascript:urchinTracker('/downloadPro35')" href="http://www.eviware.com/trial"
                                title="Download soapUI Pro">
                                 <img src="images/download_pro.png" alt="Download soapUI Pro" width="310" height="165"
                                      longdesc="http://www.eviware.com"/>
@@ -102,11 +102,11 @@
                     <subsection name="soapUI 3.5 Final!">
                     <p>
                     soapUI 3.5 is out, introducing functionality that drastically expands the 
-                    scope of Functional- and Load Testing features in soapUI;
+                    scope of Functional- and Load Testing features of soapUI;
                     <ul>
-                    <li><b>JMS Support</b> - send and receive text and binary messages over JMS</li>
-            		<li><b>AMF Testing</b> - a AMF TestStep for testing AMF servers</li>        
-            		<li><b>JDBC Testing</b> - a JDBC TestStep for testing/validating database content</li>
+                    <li><b>JMS Testing</b> - test messages over JMS</li>
+            		<li><b>AMF Testing</b> - an AMF TestStep for testing AMF for Flash and Flex devlopers</li>        
+            		<li><b>JDBC Testing</b> - a JDBC TestStep for testing or validating database content</li>
                     </ul>
                     <a href="new_and_noteworthy_3_5.html">Read More...</a>
 
@@ -279,33 +279,33 @@
             <table class="webstartlinkstable" cellspacing="0" cellpadding="0">
                 <tr class="b">
                     <td align="center" bgcolor="white">
-                        <p class="WebStartHeader">soapUI 3.0.1</p>
+                        <p class="WebStartHeader">soapUI 3.5</p>
                         <div>
-                            <a href="http://www.soapui.org/jnlp/3.0.1/soapui.jnlp" class="externalLink"
-                               title="External Link" onclick="javascript:urchinTracker('/jnlp/soapui/3_0_1');">
+                            <a href="http://www.soapui.org/jnlp/3.5/soapui.jnlp" class="externalLink"
+                               title="External Link" onclick="javascript:urchinTracker('/jnlp/soapui/3_5');">
                                 <img class="webstart" src="images/webstart_green.png" border="0" alt=""></img>
                             </a>
                         </div>
                         [<a href="new_and_noteworthy_3_0.html#3_0_1_Release">Read More</a>]
                         [<a target="_new"
-                            href="https://sourceforge.net/projects/soapui/files/soapui/3.0.1"
+                            href="https://sourceforge.net/projects/soapui/files/soapui/3.5"
                             class="externalLink" title="External Link">Download</a>]
                     </td>
                     <td align="center" bgcolor="white">
-                        <p class="WebStartHeader">soapUI Pro 3.0.1
+                        <p class="WebStartHeader">soapUI Pro 3.5
                             <span class="OrangeHeader">Pro</span>
                         </p>
                         <div>
-                            <a href="http://www.eviware.com/jnlp/3.0.1/soapui-pro.jnlp" class="externalLink"
-                               title="External Link" onclick="javascript:urchinTracker:('/jnlp/soapui/3_0_1_pro');">
+                            <a href="http://www.eviware.com/jnlp/3.5/soapui-pro.jnlp" class="externalLink"
+                               title="External Link" onclick="javascript:urchinTracker:('/jnlp/soapui/3_5_pro');">
                                 <img class="webstart" src="images/webstart_orange.png" border="0" alt=""></img>
                             </a>
                         </div>
                         [<a href="comparison.html">Compare</a>]
-                        [<a target="_new" href="http://www.eviware.com" class="externalLink" title="External Link">
-                        Trial/Buy</a>]
-                        [<a target="_new" href="http://www.eviware.com/content/view/42/36/" class="externalLink"
-                            title="External Link">FAQ</a>]
+                        [<a target="_new" href="http://www.eviware.com/trial" class="externalLink" title="External Link" onclick="javascript:urchinTracker:('soapUITrialFront');">
+                        Trial</a>]
+                        [<a target="_new" href="http://www.eviware.com/store" class="externalLink"
+                            title="External Link" onclick="javascript:urchinTracker:('soapUIBuyFront');">Buy</a>]
                     </td>
                 </tr>
             </table>

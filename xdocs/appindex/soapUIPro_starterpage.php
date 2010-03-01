@@ -117,7 +117,7 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <div class="title"><img src="images/news-title.png" alt="News" /></div>
 
 <div class="news">
-<h2>soapUI 3.5 beta 2- The Protocol Release </h2>
+<h2>soapUI 3.5 - The Protocol Release </h2>
 <p>Try The Protocol Release,<br />
 With complete functionality for testing<br />
 your Enterprise Messages, RIA's and Databases</p>

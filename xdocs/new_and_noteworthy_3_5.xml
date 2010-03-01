@@ -81,10 +81,42 @@ your Enterprise Messages, RIA's and Databases.
 <ul class="red-dots">
 	<li>Greatly improved performance of Excel DataSource/DataSinks <img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" /></li>
 	<li>RunTestCase TestStep improvements: <img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" /></li>
+	<li>Fixed TestStepResults for WSS processed requests to contain the unprocessed request in the requestContent property<img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" /></li>
+		<li>	Improved Delay TestStep execution timing
+	<img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" /></li>
 	<li>Improved thread-stability related to endpoints during loadtests <img style="width: 76px; height: 18px" src="http://www.eviware.com/images/stories/news/35/load-testing-icon.png" alt="load-testing-icon.png" title="load-testing-icon.png" width="76" height="18" align="top" /></li>
 	<li>Improved statistics calculation during loadtests <img style="width: 76px; height: 18px" src="http://www.eviware.com/images/stories/news/35/load-testing-icon.png" alt="load-testing-icon.png" title="load-testing-icon.png" width="76" height="18" align="top" /></li>
+	<li>Added –A option to TestCase runner;  for exporting of all results using folders instead of long filenames 
+	<img style="width: 101px; height: 17px" src="http://www.eviware.com/images/stories/news/35/test-automotation-icon.png" alt="test-automotation-icon.png" title="test-automotation-icon.png" width="101" height="17" align="top" /></li>
+	<li>Improved Mock related API’s to allow rewriting of incoming requests 
+	<img style="width: 55px; height: 18px" src="http://www.eviware.com/images/stories/news/35/mocking-icon.png" alt="mocking-icon.png" title="mocking-icon.png" width="55" height="18" align="top" /></li>
+	<li>	Added possibility to override Jetty Connector properties via soapui.mock.connector.XX system properties
+	<img style="width: 55px; height: 18px" src="http://www.eviware.com/images/stories/news/35/mocking-icon.png" alt="mocking-icon.png" title="mocking-icon.png" width="55" height="18" align="top" /></li>
+	
 	<li>Improved automatic adding of template parameters to rest resource <img style="width: 38px; height: 16px" src="http://www.eviware.com/images/stories/news/35/rest-icon.png" alt="rest-icon.png" title="rest-icon.png" width="38" height="16" align="top" /></li>
 	<li>Added timeout property at request level <img style="width: 38px; height: 16px" src="http://www.eviware.com/images/stories/news/35/rest-icon.png" alt="rest-icon.png" title="rest-icon.png" width="38" height="16" align="top" /></li>
+	<li>Improved XML generation from HTML 
+	<img style="width: 38px; height: 16px" src="http://www.eviware.com/images/stories/news/35/rest-icon.png" alt="rest-icon.png" title="rest-icon.png" width="38" height="16" align="top" /></li>
+	<li>Allowed rename of REST services from properties panel 
+	<img style="width: 38px; height: 16px" src="http://www.eviware.com/images/stories/news/35/rest-icon.png" alt="rest-icon.png" title="rest-icon.png" width="38" height="16" align="top" /></li>
+	<li>Added caching of WSDL Credentials 
+	<img style="width: 38px; height: 18px" src="http://www.eviware.com/images/stories/news/35/soap-icon.png" alt="soap-icon.png" title="soap-icon.png" width="38" height="18" align="top" /></li>
+	<li>Renamed porttype property to “Name” in interface properties 
+	<img style="width: 38px; height: 18px" src="http://www.eviware.com/images/stories/news/35/soap-icon.png" alt="soap-icon.png" title="soap-icon.png" width="38" height="18" align="top" /></li>
+		<li>Improved session handling for AMF Requests
+	<img src="http://www.eviware.com/images/stories/news/35/amf-icon.png" alt="AMF" align="top" /></li>
+	<li>Added Support for named parameters in SQL queries and Stored Procedure calls
+	<img src="http://www.eviware.com/images/stories/news/35/jdbc-icon.png" alt="JDBC" align="top" /></li>
+	<li>Added JDBC Assertions
+	<img src="http://www.eviware.com/images/stories/news/35/jdbc-icon.png" alt="JDBC" align="top" /></li>
+	<li>	Added fetchSize property to JDBC TestStep
+	<img src="http://www.eviware.com/images/stories/news/35/jdbc-icon.png" alt="JDBC" align="top" /></li>
+	<li>	Added Support for JMS Session authentication
+	<img src="http://www.eviware.com/images/stories/news/35/jms-icon.png" alt="JMS" align="top" /></li>
+	<li>	Improved JMS endpoint naming scheme 
+	<img src="http://www.eviware.com/images/stories/news/35/jms-icon.png" alt="JMS" align="top" /></li>
+	<li>	Added durableSubscriber and ClientID to JMS Request Inspector
+	<img src="http://www.eviware.com/images/stories/news/35/jms-icon.png" alt="JMS" align="top" /></li>
 	<li>Greatly improved performance of script library  <img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" /></li>
 	<li>Added global option to disable proxy <img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" /></li>
 	<li>Added raw-message-size settings <img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" /></li>
@@ -99,50 +131,97 @@ your Enterprise Messages, RIA's and Databases.
 	<li>Ignore Empty</li>
 </ul>
 <ul class="red-dots">
-	<li>Added –A option to TestCase runner;  for exporting of all results using folders instead of long filenames <img style="width: 101px; height: 17px" src="http://www.eviware.com/images/stories/news/35/test-automotation-icon.png" alt="test-automotation-icon.png" title="test-automotation-icon.png" width="101" height="17" align="top" /></li>
-	<li>Improved Mock related API’s to allow rewriting of incoming requests <img style="width: 55px; height: 18px" src="http://www.eviware.com/images/stories/news/35/mocking-icon.png" alt="mocking-icon.png" title="mocking-icon.png" width="55" height="18" align="top" /></li>
-	<li>Improved XML generation from HTML <img style="width: 38px; height: 16px" src="http://www.eviware.com/images/stories/news/35/rest-icon.png" alt="rest-icon.png" title="rest-icon.png" width="38" height="16" align="top" /></li>
-	<li>Allowed rename of REST services from properties panel <img style="width: 38px; height: 16px" src="http://www.eviware.com/images/stories/news/35/rest-icon.png" alt="rest-icon.png" title="rest-icon.png" width="38" height="16" align="top" /></li>
-	<li>Added caching of WSDL Credentials <img style="width: 38px; height: 18px" src="http://www.eviware.com/images/stories/news/35/soap-icon.png" alt="soap-icon.png" title="soap-icon.png" width="38" height="18" align="top" /></li>
-	<li>Renamed porttype property to “Name” in interface properties <img style="width: 38px; height: 18px" src="http://www.eviware.com/images/stories/news/35/soap-icon.png" alt="soap-icon.png" title="soap-icon.png" width="38" height="18" align="top" /></li>
 	<li>Improved performance of script-property-expansions <img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" /></li>
 	<li>Memory improvements <img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" /></li>
 	<li>Forced redirect functionality for PUT and POST requests <img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" /></li>
+
+	
+	
+
+	<li>Added build checksum to nightly builds
+	<img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" /></li>
+	<li>Added soapui.scripting.library system property to override script library path from commandline <img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" /></li>
+
+
+
+
+
 </ul>
 <div class="highlight">
 Major bugs fixed:
 </div>
 <ul class="red-dots">
+	<li>Fixed times precision in Junit reports to be up to 3 decimals
+<img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" />
+</li>
+<li>Fixed TestStepResults for WSS processed requests to contain the unprocessed request in the requestContent property 
+<img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" />
+</li>
+<li>Fixed restore of ignoreNamespacePrefixes in XPath assertions
+<img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" />
+</li>
+<li>Fixed success indicator of MockResponse TestSteps
+<img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" />
+</li>
+<li>	Fixed inlining of attachments if inline files is enabled
+	<img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" /></li>
+		<li>	Fixed synchronization of Table Inspector and XML Editor Views
+	<img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" /></li>
+	<li>	Fixed elapsed time to show correct value in LoadTest output
+	<img style="width: 76px; height: 18px" src="http://www.eviware.com/images/stories/news/35/load-testing-icon.png" alt="load-testing-icon.png" title="load-testing-icon.png" width="76" height="18" align="top" /></li>
+	
 	<li>Fixed thread override and multiple formats in launch LoadTest Runner dialog <img style="width: 76px; height: 18px" src="http://www.eviware.com/images/stories/news/35/load-testing-icon.png" alt="load-testing-icon.png" title="load-testing-icon.png" width="76" height="18" align="top" /></li>
 	<li>Fixed saving of loadtest limit type <img style="width: 76px; height: 18px" src="http://www.eviware.com/images/stories/news/35/load-testing-icon.png" alt="load-testing-icon.png" title="load-testing-icon.png" width="76" height="18" align="top" /></li>
 	<li>Fixed script-strategy to use project scripting language <img style="width: 76px; height: 18px" src="http://www.eviware.com/images/stories/news/35/load-testing-icon.png" alt="load-testing-icon.png" title="load-testing-icon.png" width="76" height="18" align="top" /></li>
 	<li>Ordered output of LoadTestStatistics export <img style="width: 76px; height: 18px" src="http://www.eviware.com/images/stories/news/35/load-testing-icon.png" alt="load-testing-icon.png" title="load-testing-icon.png" width="76" height="18" align="top" /></li>
 	<li>FixedRateLoadStrategy now ignores the Thread Startup Delay option <img style="width: 76px; height: 18px" src="http://www.eviware.com/images/stories/news/35/load-testing-icon.png" alt="load-testing-icon.png" title="load-testing-icon.png" width="76" height="18" align="top" /></li>
-	<li>Fixed TestSuite count in simple TestCaseRunner output <img style="width: 101px; height: 17px" src="http://www.eviware.com/images/stories/news/35/test-automotation-icon.png" alt="test-automotation-icon.png" title="test-automotation-icon.png" width="101" height="17" align="top" /></li>
+		<li>Fixed LoadTest Reports for LoadTests with long names 
+<img style="width: 76px; height: 18px" src="http://www.eviware.com/images/stories/news/35/load-testing-icon.png" alt="load-testing-icon.png" title="load-testing-icon.png" width="76" height="18" align="top" />
+</li>
+<li>Fixed TestSuite count in simple TestCaseRunner output <img style="width: 101px; height: 17px" src="http://www.eviware.com/images/stories/news/35/test-automotation-icon.png" alt="test-automotation-icon.png" title="test-automotation-icon.png" width="101" height="17" align="top" /></li>
+	<li>Fixed automatic GC to run for command-line tools also
+	<img style="width: 101px; height: 17px" src="http://www.eviware.com/images/stories/news/35/test-automotation-icon.png" alt="test-automotation-icon.png" title="test-automotation-icon.png" width="101" height="17" align="top" /></li>
+	
+<li>Fixed command-line TestCase runners to not ignore Fail on Abort setting  
+<img style="width: 101px; height: 17px" src="http://www.eviware.com/images/stories/news/35/test-automotation-icon.png" alt="test-automotation-icon.png" title="test-automotation-icon.png" width="101" height="17" align="top" />
+</li>
 	<li>MockService synchronization issues during high load <img style="width: 55px; height: 18px" src="http://www.eviware.com/images/stories/news/35/mocking-icon.png" alt="mocking-icon.png" title="mocking-icon.png" width="55" height="18" align="top" /></li>
 	<li> Fixed adding of method parameters from rest request, method and resource views <img style="width: 38px; height: 16px" src="http://www.eviware.com/images/stories/news/35/rest-icon.png" alt="rest-icon.png" title="rest-icon.png" width="38" height="16" align="top" /></li>
 	<li> Fixed setting of media type for Form submits  <img style="width: 38px; height: 16px" src="http://www.eviware.com/images/stories/news/35/rest-icon.png" alt="rest-icon.png" title="rest-icon.png" width="38" height="16" align="top" /></li>
-	<li> removed automatic XML formatting of rest request bodies <img style="width: 38px; height: 16px" src="http://www.eviware.com/images/stories/news/35/rest-icon.png" alt="rest-icon.png" title="rest-icon.png" width="38" height="16" align="top" /></li>
+	<li> Removed automatic XML formatting of rest request bodies <img style="width: 38px; height: 16px" src="http://www.eviware.com/images/stories/news/35/rest-icon.png" alt="rest-icon.png" title="rest-icon.png" width="38" height="16" align="top" /></li>
 	<li>	Fixed endpoint updating in service endpoints table <img style="width: 38px; height: 16px" src="http://www.eviware.com/images/stories/news/35/rest-icon.png" alt="rest-icon.png" title="rest-icon.png" width="38" height="16" align="top" /></li>
 	<li>	Removed unneccessary formatting of REST XML responses <img style="width: 38px; height: 16px" src="http://www.eviware.com/images/stories/news/35/rest-icon.png" alt="rest-icon.png" title="rest-icon.png" width="38" height="16" align="top" /></li>
 	<li>	Fixed SOAP Action in Content Type for WS-A and MTOM requests <img style="width: 38px; height: 18px" src="http://www.eviware.com/images/stories/news/35/soap-icon.png" alt="soap-icon.png" title="soap-icon.png" width="38" height="18" align="top" /></li>
 	<li>	Fixed setting of nilable on missing elements in form editor <img style="width: 38px; height: 18px" src="http://www.eviware.com/images/stories/news/35/soap-icon.png" alt="soap-icon.png" title="soap-icon.png" width="38" height="18" align="top" /></li>
+	<li>Fixed TIBCO EMS support 
+<img src="http://www.eviware.com/images/stories/news/35/jms-icon.png" alt="JMS" align="top" />
+</li>
+<li>Removed a bunch of memory leaks
+<img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" />
+</li>
 	<li>	Fixed escaping of property expansions with double $  <img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" /></li>
 	<li>	Fixed save-all to keep track of project count <img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" /></li>
 	<li>	Fixed filename creation for Composite projects <img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" /></li>
 	<li>	Moved demo script files to correct folders <img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" /></li>
 	<li>	Fixed CSV Data Export with subreports (Reporting)</li>
+	<li>Fixed bugs related to REST parameter reordering and inheritance
+	<img style="width: 38px; height: 16px" src="http://www.eviware.com/images/stories/news/35/rest-icon.png" alt="rest-icon.png" title="rest-icon.png" width="38" height="16" align="top" /></li>
+	
 </ul>
 <div class="highlight">
 Updated libraries: 
 </div>
 <ul class="red-dots">
-	<li>	Groovy 1.6.7</li>
+	<li>Updated Groovy to 1.7.1</li>
 	<li>	Not-yet-commons-ssl-0.11</li>
 	<li>	Jexcel-api-2.6.12</li>
-	<li>	Jasper 3.6.2</li>
+	<li>	JasperReports to 3.7.1</li>	
 	<li>	Saxon 9.1.0.8</li>
 	<li>	Jetty 6.1.22<br />
+	<li>	JXBrowser 1.4 update</li>
+	<li>	JRE 1.6_18</li>
+	<li>	Hermes to 1.14 update - <a href="http://hermesjms.com/confluence/display/HJMS/Release+Notes">Release Notes</a></li>
+	<li>	IDW dependency to 1.6.1</li>
 	</li>
 </ul>
 <div class="gray-line"></div>
@@ -196,69 +275,75 @@ soapUI XML-related features (assertions, property-transfers, scripts, etc).</li>
 <div class="highlight" id="Beta2_Features">Beta2 Improvements</div>
 <p>The following has been updated:</p>
 <ul class="red-dots">
-	<li>	Fixed inlining of attachments if inline files is enabled
-	<img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" /></li>
-	<li>	Improved Delay TestStep execution timing
-	<img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" /></li>
-	<li>	Fixed synchronization of Table Inspector and XML Editor Views
-	<img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" /></li>
-	<li>	Fixed elapsed time to show correct value in LoadTest output
-	<img style="width: 76px; height: 18px" src="http://www.eviware.com/images/stories/news/35/load-testing-icon.png" alt="load-testing-icon.png" title="load-testing-icon.png" width="76" height="18" align="top" /></li>
-	<li>Fixed automatic GC to run for command-line tools also
-	<img style="width: 101px; height: 17px" src="http://www.eviware.com/images/stories/news/35/test-automotation-icon.png" alt="test-automotation-icon.png" title="test-automotation-icon.png" width="101" height="17" align="top" /></li>
-	<li>	Added possibility to override Jetty Connector properties via soapui.mock.connector.XX system properties
-	<img style="width: 55px; height: 18px" src="http://www.eviware.com/images/stories/news/35/mocking-icon.png" alt="mocking-icon.png" title="mocking-icon.png" width="55" height="18" align="top" /></li>
-	<li>Improved session handling for AMF Requests
-	<img src="http://www.eviware.com/images/stories/news/35/amf-icon.png" alt="AMF" align="top" /></li>
-	<li>Added Support for named parameters in SQL queries and Stored Procedure calls
-	<img src="http://www.eviware.com/images/stories/news/35/jdbc-icon.png" alt="JDBC" align="top" /></li>
-	<li>Added JDBC Assertions
-	<img src="http://www.eviware.com/images/stories/news/35/jdbc-icon.png" alt="JDBC" align="top" /></li>
-	<li>	Added fetchSize property to JDBC TestStep
-	<img src="http://www.eviware.com/images/stories/news/35/jdbc-icon.png" alt="JDBC" align="top" /></li>
-	<li>	Added Support for JMS Session authentication
-	<img src="http://www.eviware.com/images/stories/news/35/jms-icon.png" alt="JMS" align="top" /></li>
-	<li>	Improved JMS endpoint naming scheme 
-	<img src="http://www.eviware.com/images/stories/news/35/jms-icon.png" alt="JMS" align="top" /></li>
-	<li>	Added durableSubscriber and ClientID to JMS Request Inspector
-	<img src="http://www.eviware.com/images/stories/news/35/jms-icon.png" alt="JMS" align="top" /></li>
-	<li>Fixed bugs related to REST parameter reordering and inheritance
-	<img style="width: 38px; height: 16px" src="http://www.eviware.com/images/stories/news/35/rest-icon.png" alt="rest-icon.png" title="rest-icon.png" width="38" height="16" align="top" /></li>
-	<li>Added build checksum to nightly builds
-	<img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" /></li>
-	<li>Added soapui.scripting.library system property to override script library path from commandline <img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" /></li>
-	<li>JXBrowser 1.4 update (Library)</li>
-	<li>	Updated groovy to version 1.7.0 (Library)
-	</li>
-	<li>	Updated bundled JRE to 1.6_18 (Library)</li>
-	<li>	Updated Hermes to 1.14 update - <a href="http://hermesjms.com/confluence/display/HJMS/Release+Notes">Release Notes</a>   (Library)</li>
+
 </ul>
   </div>      
         
         <div class="clearfix"></div>
 <div class="gray-line"></div>
 <div class="highlight" id="Final_Release">Final Release</div>
-<p>The following has been updated for the final releas:</p>
+<p>The following bugs where corrected for the final release:</p>
 <ul class="red-dots">
-	<li>Fixed times precision in Junit reports to be up to 3 decimals
-</li><li>Updated IDW dependency to 1.6.1
-</li><li>Updated Groovy to 1.7.1
-</li><li>Update JasperReports to 3.7.1
-</li><li>Fixed TestStepResults for WSS processed requests to contain the unprocessed request in the requestContent property
-</li><li>Addes ResponseAsXml properties to JDBC and AMF TestSteps
-</li><li>Fixed TIBCO EMS support
-</li><li>Removed a bunch of memory-leaks
-</li><li>Fixed LoadTest Reports for LoadTests with long names
-</li><li>Introduced soapui.mtom.strict system property for enabling strict MTOM processing
-</li><li>Fixed command-line TestCase runners to not ignore Fail on Abort setting
-</li><li>Fixed restore of ignoreNamespacePrefixes in XPath assertions
-</li><li>Fixed success indicator of MockResponse TestSteps
-</li><li>Added uninstall of Hermes to Uninstaller
-</li><li>Fixed endpoint in SOAP Monitor tunnel mode
-</li><li>Improved command-line scripts on linux / mac
-</li><li>Added page in mac/linux installers to disable JXBrowser component
-</li><li>Fixed Script Assertion editor to update on OK and added Cancel button
-</li><li>Added JMS Message Selector field to JMS properties Inspector</li>	
+<li>Fixed times precision in Junit reports to be up to 3 decimals
+<img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" />
+</li>
+<li>Fixed TestStepResults for WSS processed requests to contain the unprocessed request in the requestContent property 
+<img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" />
+</li>
+<li>Fixed restore of ignoreNamespacePrefixes in XPath assertions
+<img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" />
+</li>
+<li>Fixed success indicator of MockResponse TestSteps
+<img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" />
+</li>
+<li>Fixed Script Assertion editor to update on OK and added Cancel button
+<img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" />
+</li>
+<li>Fixed LoadTest Reports for LoadTests with long names 
+<img style="width: 76px; height: 18px" src="http://www.eviware.com/images/stories/news/35/load-testing-icon.png" alt="load-testing-icon.png" title="load-testing-icon.png" width="76" height="18" align="top" />
+</li>
+<li>Fixed command-line TestCase runners to not ignore Fail on Abort setting  
+<img style="width: 101px; height: 17px" src="http://www.eviware.com/images/stories/news/35/test-automotation-icon.png" alt="test-automotation-icon.png" title="test-automotation-icon.png" width="101" height="17" align="top" />
+</li>
+<li>Fixed TIBCO EMS support 
+<img src="http://www.eviware.com/images/stories/news/35/jms-icon.png" alt="JMS" align="top" />
+</li>
+<li>Removed a bunch of memory leaks
+<img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" />
+</li>
+</ul>
+
+<p>The following minor features where added for the final release:</p>
+
+<ul>
+<li>Added ResponseAsXml properties to JDBC and AMF TestSteps
+<img src="http://www.eviware.com/images/stories/news/35/jms-icon.png" alt="JMS" align="top" />
+</li>
+<li>Added JMS Message Selector field to JMS properties Inspector
+<img src="http://www.eviware.com/images/stories/news/35/jms-icon.png" alt="JMS" align="top" />
+</li>
+
+<li>Fixed endpoint in SOAP Monitor tunnel mode
+<img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" />
+</li>
+
+
+<li>Introduced soapui.mtom.strict system property for enabling strict MTOM processing
+<img style="width: 38px; height: 18px" src="http://www.eviware.com/images/stories/news/35/soap-icon.png" alt="soap-icon.png" title="soap-icon.png" width="38" height="18" align="top" />
+</li>
+
+<li>Added uninstall of Hermes to Uninstaller
+<img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" />
+</li>
+<li>Improved command line scripts on linux and mac
+<img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" />
+</li>
+<li>Added page in mac or linux installers to disable JXBrowser component<img style="width: 57px; height: 17px" src="http://www.eviware.com/images/stories/news/35/soapui-icon.png" alt="soapui-icon.png" title="soapui-icon.png" width="57" height="17" align="top" />
+</li>
+
+<li>Updated IDW dependency to 1.6.1 (Library)</li>
+<li>Updated Groovy to 1.7.1 (Library)</li>
+<li>Update JasperReports to 3.7.1 (Library)</li>	
 </ul>
         </p>
         

@@ -8,6 +8,33 @@
     <language>en-us</language>
 	<atom:link href="http://www.soapui.org/news.rss" rel="self" type="application/rss+xml" />
 
+		<item>
+			<title>soapUI 3.5</title>
+			<link>http://www.soapui.org/new_and_noteworthy_3_5.html</link>
+			<guid isPermaLink="false">3.5</guid>
+			<pubDate>Mon, 01 Mar 2010 09:00:00 +0100</pubDate>
+			<description>soapUI 3.5, is out! soapUI 3.5 - The Protocol Release is out, now with hugely extended testing capabilities. This release contains support for testing of AMF -for Flex and Flash developers-, as well as JMS Testing and Database testing.
+			All in one nifty package.</description> 	
+	    </item>
+	
+		<item>
+			<title>soapUI 3.0.1</title>
+			<link>http://www.soapui.org/new_and_noteworthy_3_0.html</link>
+			<guid isPermaLink="false">3.0.1</guid>
+			<pubDate>Mon, 08 Aug 2009 09:00:00 +0100</pubDate>
+			<description>soapUI 3.0.1, is out! soapUI 3.0.1, an update to 3.0, The Reporting Release is out.  This release contains bugfixes and performance improvements.</description> 	
+	    </item>
+			
+		<item>
+			<title>soapUI 3.0</title>
+	    	<link>http://www.soapui.org/new_and_noteworthy_3_0.html<link>
+			<guid isPermaLink="false">3.0</guid>
+			<pubDate>Mon, 09 Jul 2009 09:00:00 +0100</pubDate>
+			<description>soapUI 3.0, is out! soapUI 3.0, The REST Release is out!  This release contains contains powerful support for creation of Reports and much more.</description> 	
+	    			
+	    		</item>
+	
+	
 		<item>	
 			<title>soapUI 2.5.1</title>
 			<link>http://www.soapui.org/new_and_noteworthy_2_5.html</link>

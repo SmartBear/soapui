@@ -7,6 +7,22 @@
     <section name="soapUI Releases">
 
 
+		<subsection name="2010-03-01: soapUI 3.5">
+	    	<columns>
+	    		<column width="75">
+	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		</column>
+	    		<column>
+	    			<p align="left">soapUI 3.5, is out!</p>
+	    			<p align="left">oapUI 3.5, is out! soapUI 3.5 - The Protocol Release is out, now with hugely extended testing capabilities. 
+	    			This release contains support for testing of AMF -for Flex and Flash developers-, as well as JMS Testing and Database testing.
+			All in one nifty package.
+	    			<a href="new_and_noteworthy_3_5.html">[Read more]</a>
+	    			</p>
+	    		</column>
+	    	</columns>
+		</subsection>
+
 		<subsection name="2009-08-09: soapUI 3.0.1">
 	    	<columns>
 	    		<column width="75">
