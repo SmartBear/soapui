@@ -20,36 +20,22 @@
         <section>
 
 
-            <table class="OSProTable">
-                <tr class="b">
-                    <td>
-                        <div align="center">
-                            <a onclick="javascript:urchinTracker('/downloadOpenSource35')"
-                                href="https://sourceforge.net/projects/soapui/files/soapui/3.5"
-                               title="Download soapUI">
-                                <img src="images/download_opensource.png" alt="download Open Source" width="310"
-                                     height="165" longdesc="http://www.sourceforge.net"/>
-                            </a>
-                        </div>
-                    </td>
-                    <td>
-                        <div align="center">
-                            <a onclick="javascript:urchinTracker('/downloadPro35')" href="http://www.eviware.com/trial"
-                               title="Download soapUI Pro">
-                                <img src="images/download_pro.png" alt="Download soapUI Pro" width="310" height="165"
-                                     longdesc="http://www.eviware.com"/>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+<div id="head">
+<img src="img/head.jpg" alt="soapUI Pro 3.5" />
+
+<div id="lead-text">
+soapUI; the SOA Testing tool,
+soapUI is the leading tool for Web Service Testing. With more than <b>1 400 000 downloads</b>, it's the most used tool for SOA testing in the world.
+</div>
+<div id="download-buttons">
+<a onclick="javascript:urchinTracker('/downloadOpenSource35')" href="https://sourceforge.net/projects/soapui/files/soapui/3.5"><img src="img/download-opensource.png" alt="Download Open Source" /></a>
+<a onclick="javascript:urchinTracker('/downloadPro35')" href="http://www.eviware.com/download"><img src="img/download-pro.png" alt="Download SoapUI Pro" /></a></div>
+
+</div>
+
+<div class="clearfixx"></div>
 
 
-            <h1>soapUI; the Web Services Testing tool.</h1>
-            <p>
-                soapUI is the leading tool for Web Service Testing. With more than <b>1 400 000 downloads</b>, it's the
-                most used tool for SOA testing in the world.
-            </p>
 
             <table class="gstable" cellspacing="0" cellpadding="0">
                 <tr class="a">
