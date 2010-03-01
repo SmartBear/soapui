@@ -16,6 +16,7 @@
         <title>the Web Service, SOA and SOAP Testing Tool</title>
     </properties>
     <body>
+    <link rel="stylesheet" type="text/css" href="style/new.css" />
 
         <section>
 
