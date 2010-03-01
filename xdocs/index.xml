@@ -25,8 +25,7 @@
 <img src="img/head.jpg" alt="soapUI Pro 3.5" />
 
 <div id="lead-text">
-soapUI; the SOA Testing tool,
-soapUI is the leading tool for Web Service Testing. With more than <b>1 400 000 downloads</b>, it's the most used tool for SOA testing in the world.
+soapUI, the leading tool for Web Service Testing. With more than <b>1 400 000 downloads</b>, it's the most used tool for SOA Testing in the world.
 </div>
 <div id="download-buttons">
 <a onclick="javascript:urchinTracker('/downloadOpenSource35')" href="https://sourceforge.net/projects/soapui/files/soapui/3.5"><img src="img/download-opensource.png" alt="Download Open Source" /></a>
