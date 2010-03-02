@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.List;
 import java.util.concurrent.Future;
+import java.util.regex.Matcher;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.NamedParameterStatement;
@@ -243,7 +244,7 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 		if( connStr.contains( JdbcRequestTestStep.PASS_TEMPLATE ) )
 		{
-			connStr = connStr.replaceFirst( JdbcRequestTestStep.PASS_TEMPLATE, pass );
+			connStr = connStr.replaceFirst( JdbcRequestTestStep.PASS_TEMPLATE, Matcher.quoteReplacement( pass ) );
 		}
 		try
 		{
