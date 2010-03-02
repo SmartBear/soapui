@@ -69,91 +69,8 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 	{
 		this.modelItem = modelItem;
 		this.target = target;
-		if( transferMenu instanceof ScrollableMenu )
-			fillScrollableMenu( ( ScrollableMenu )transferMenu );
 
 		this.targetMenu = transferMenu;
-	}
-
-	private void fillScrollableMenu( ScrollableMenu targetMenu )
-	{
-		WsdlTestStep testStep = null;
-		WsdlTestCase testCase = null;
-		WsdlTestSuite testSuite = null;
-		WsdlProject project = null;
-		WsdlMockService mockService = null;
-		WsdlMockResponse mockResponse = null;
-
-		if( modelItem instanceof WsdlTestStep )
-		{
-			testStep = ( WsdlTestStep )modelItem;
-			testCase = testStep.getTestCase();
-			testSuite = testCase.getTestSuite();
-			project = testSuite.getProject();
-		}
-		else if( modelItem instanceof WsdlTestCase )
-		{
-			testCase = ( WsdlTestCase )modelItem;
-			testSuite = testCase.getTestSuite();
-			project = testSuite.getProject();
-		}
-		else if( modelItem instanceof WsdlTestSuite )
-		{
-			testSuite = ( WsdlTestSuite )modelItem;
-			project = testSuite.getProject();
-		}
-		else if( modelItem instanceof WsdlMockService )
-		{
-			project = ( ( WsdlMockService )modelItem ).getProject();
-		}
-		else if( modelItem instanceof WsdlMockResponse )
-		{
-			mockResponse = ( WsdlMockResponse )modelItem;
-			mockService = ( mockResponse ).getMockOperation().getMockService();
-			project = mockService.getProject();
-		}
-		else if( modelItem instanceof WsdlProject )
-		{
-			project = ( WsdlProject )modelItem;
-		}
-		else if( modelItem instanceof AbstractHttpRequestInterface<?> )
-		{
-			project = ( ( AbstractHttpRequest<?> )modelItem ).getOperation().getInterface().getProject();
-		}
-		else if( modelItem instanceof Operation )
-		{
-			project = ( WsdlProject )( ( Operation )modelItem ).getInterface().getProject();
-		}
-
-		TestPropertyHolder globalProperties = PropertyExpansionUtils.getGlobalProperties();
-		if( globalProperties.getProperties().size() > 0 )
-			targetMenu.addHeader( createPropertyMenu( "Global", globalProperties ) );
-
-		if( project != null )
-			targetMenu.addHeader( createPropertyMenu( "Project: [" + project.getName() + "]", project ) );
-
-		if( testSuite != null )
-			targetMenu.addHeader( createPropertyMenu( "TestSuite: [" + testSuite.getName() + "]", testSuite ) );
-
-		if( mockService != null )
-			targetMenu.addHeader( createPropertyMenu( "MockService: [" + mockService.getName() + "]", mockService ) );
-
-		if( mockResponse != null )
-			targetMenu.addHeader( createPropertyMenu( "MockResponse: [" + mockResponse.getName() + "]", mockResponse ) );
-
-		if( testCase != null )
-		{
-			targetMenu.addHeader( createPropertyMenu( "TestCase: [" + testCase.getName() + "]", testCase ) );
-
-			for( int c = 0; c < testCase.getTestStepCount(); c++ )
-			{
-				testStep = testCase.getTestStepAt( c );
-				if( testStep.getPropertyNames().length == 0 )
-					continue;
-
-				targetMenu.add( createPropertyMenu( "Step " + ( c + 1 ) + ": [" + testStep.getName() + "]", testStep ) );
-			}
-		}
 	}
 
 	public void popupMenuCanceled( PopupMenuEvent arg0 )
@@ -166,8 +83,6 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 
 	public void popupMenuWillBecomeVisible( PopupMenuEvent arg0 )
 	{
-		if( targetMenu instanceof ScrollableMenu )
-			return;
 		// create transfer menus
 		targetMenu.removeAll();
 
