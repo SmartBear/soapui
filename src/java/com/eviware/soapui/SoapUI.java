@@ -1591,7 +1591,11 @@ public class SoapUI
 		public void run()
 		{
 			SoapUI.log( "Autosaving Workspace" );
-			( ( WorkspaceImpl )SoapUI.getWorkspace() ).save( false, true );
+			WorkspaceImpl wrkspc = ( WorkspaceImpl )SoapUI.getWorkspace();
+			if( wrkspc != null )
+			{
+				wrkspc.save( false, true );
+			}
 		}
 	}
 
