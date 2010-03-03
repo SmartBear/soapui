@@ -49,7 +49,7 @@ public class HermesJmsRequestPublishSubscribeTransport extends HermesJmsRequestT
 
 			topicDurableSubsriber = topicSession.createDurableSubscriber( topicSubscribe, StringUtils
 					.hasContent( durableSubscriptionName ) ? durableSubscriptionName : "durableSubscription"
-					+ jmsConnectionHolder.getJmsEndpoint().getReceive(), messageSelector, false );
+					+ jmsConnectionHolder.getJmsEndpoint().getReceive(), submitContext.expand(messageSelector), false );
 
 			Message messagePublish = messagePublish( submitContext, request, topicSession,
 					jmsConnectionHolder.getHermes(), topicPublish );

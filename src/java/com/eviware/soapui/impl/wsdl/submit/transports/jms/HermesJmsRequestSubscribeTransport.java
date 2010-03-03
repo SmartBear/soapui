@@ -58,7 +58,7 @@ public class HermesJmsRequestSubscribeTransport extends HermesJmsRequestTranspor
 			// create durable subscriber
 			topicDurableSubsriber = topicSession.createDurableSubscriber( topicSubscribe, StringUtils
 					.hasContent( durableSubscriptionName ) ? durableSubscriptionName : "durableSubscription"
-					+ jmsConnectionHolder.getJmsEndpoint().getReceive(), messageSelector, false );
+					+ jmsConnectionHolder.getJmsEndpoint().getReceive(), submitContext.expand(messageSelector), false );
 
 			return makeResponse( submitContext, request, timeStarted, null, topicDurableSubsriber );
 		}

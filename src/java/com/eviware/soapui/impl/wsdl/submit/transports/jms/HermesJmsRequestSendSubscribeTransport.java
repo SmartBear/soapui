@@ -51,7 +51,7 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 
 			topicSubsriber = topicSession.createDurableSubscriber( topicReceive, StringUtils
 					.hasContent( durableSubscriptionName ) ? durableSubscriptionName : "durableSubscription"
-					+ jmsConnectionHolderTopic.getJmsEndpoint().getReceive(), messageSelector, false );
+					+ jmsConnectionHolderTopic.getJmsEndpoint().getReceive(), submitContext.expand(messageSelector), false );
 
 			Message textMessageSend = messageSend( submitContext, request, queueSession, jmsConnectionHolderQueue.getHermes(),
 					queueSend );

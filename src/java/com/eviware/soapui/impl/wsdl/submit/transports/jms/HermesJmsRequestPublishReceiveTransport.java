@@ -51,7 +51,7 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 			Message messagePublish = messagePublish( submitContext, request, topicSession,
 					jmsConnectionHolderTopic.getHermes(), topicPublish );
 
-			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive, messageSelector );
+			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive, submitContext.expand(messageSelector) );
 
 			return makeResponse( submitContext, request, timeStarted, messagePublish, messageConsumer );
 		}

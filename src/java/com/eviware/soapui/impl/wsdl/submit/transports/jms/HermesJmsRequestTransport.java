@@ -99,7 +99,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 		JMSHeaderConfig jmsConfig = ( ( AbstractHttpRequest<?> )request ).getJMSHeaderConfig();
    	this.durableSubscriptionName = submitContext.expand(jmsConfig.getDurableSubscriptionName());
    	this.clientID = submitContext.expand(jmsConfig.getClientID());
-   	this.messageSelector = submitContext.expand(jmsConfig.getMessageSelector());
+   	this.messageSelector =jmsConfig.getMessageSelector();
 			
 
 	}

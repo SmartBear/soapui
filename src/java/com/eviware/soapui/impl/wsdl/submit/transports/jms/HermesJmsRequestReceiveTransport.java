@@ -40,7 +40,7 @@ public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
 			Queue queue = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getReceive() );
 
 			// consumer
-			MessageConsumer messageConsumer = queueSession.createConsumer( queue, messageSelector );
+			MessageConsumer messageConsumer = queueSession.createConsumer( queue, submitContext.expand(messageSelector) );
 
 			return makeResponse( submitContext, request, timeStarted, null, messageConsumer );
 
