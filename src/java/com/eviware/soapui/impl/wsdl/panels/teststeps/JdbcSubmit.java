@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -235,7 +234,9 @@ public class JdbcSubmit implements Submit, Runnable
 		{
 			drvr = PropertyExpander.expandProperties( context, testStep.getDriver() ).trim();
 			connStr = PropertyExpander.expandProperties( context, testStep.getConnectionString() ).trim();
-			pass = PropertyExpander.expandProperties( context, testStep.getPassword() ).trim();
+
+			if( !StringUtils.isNullOrEmpty( testStep.getPassword() ) )
+				pass = PropertyExpander.expandProperties( context, testStep.getPassword() ).trim();
 		}
 		else
 		{
