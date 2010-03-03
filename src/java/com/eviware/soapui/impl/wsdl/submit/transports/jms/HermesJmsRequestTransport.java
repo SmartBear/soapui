@@ -99,9 +99,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 		JMSHeaderConfig jmsConfig = ( ( AbstractHttpRequest<?> )request ).getJMSHeaderConfig();
    	this.durableSubscriptionName = submitContext.expand(jmsConfig.getDurableSubscriptionName());
    	this.clientID = submitContext.expand(jmsConfig.getClientID());
-   	this.messageSelector =jmsConfig.getMessageSelector();
-			
-
+   	this.messageSelector =jmsConfig.getMessageSelector();// expand latter just before use
 	}
 
 	protected Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
