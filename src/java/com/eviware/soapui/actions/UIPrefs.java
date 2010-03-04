@@ -46,7 +46,7 @@ public class UIPrefs implements Prefs
 	public static final String AUTOSAVE_INTERVAL = "AutoSave Interval";
 	public static final String AUTOSAVE_ONEXIT = "Save projects on exit";
 	public static final String SHOW_STARTUP_PAGE = "Show Startup Page";
-	public static final String LINEBRAK = "Normalize line-break";
+	public static final String LINEBREAK = "Normalize line-break";
 	public static final String GC_INTERVAL = "Garbage Collection Interval";
 	public static final String RAW_RESPONSE_MESSAGE_SIZE = "Size of Raw Response Message to Show";
 	public static final String RAW_REQUEST_MESSAGE_SIZE = "Size of Raw Request Message to Show";
@@ -113,7 +113,7 @@ public class UIPrefs implements Prefs
 			}
 
 			editorForm.appendSeparator();
-			editorForm.appendCheckBox( LINEBRAK, "Normalize line-breaks when saving project", false );
+			editorForm.appendCheckBox( LINEBREAK, "Normalize line-breaks when saving project", false );
 			editorForm.appendSeparator();
 			editorForm.appendTextField( GC_INTERVAL,
 				"Sets the Garbage Collector interval in seconds (0 means garbage collection is only performed by JRE)" );
@@ -142,7 +142,7 @@ public class UIPrefs implements Prefs
 		settings.setString( UISettings.BACKUP_FOLDER, values.get( BACKUP_FOLDER ) );
 		settings.setString( UISettings.AUTO_SAVE_INTERVAL, values.get( AUTOSAVE_INTERVAL ) );
 		settings.setBoolean( UISettings.AUTO_SAVE_PROJECTS_ON_EXIT, values.getBoolean( AUTOSAVE_ONEXIT ) );
-		settings.setBoolean( UISettings.LINEBREAK, values.getBoolean( LINEBRAK ) );
+		settings.setBoolean( UISettings.LINEBREAK, values.getBoolean( LINEBREAK ) );
 
 		if( SoapUI.isStandalone() )
 		{
@@ -183,7 +183,7 @@ public class UIPrefs implements Prefs
 		values.put( BACKUP_FOLDER, settings.getString( UISettings.BACKUP_FOLDER, "" ) );
 		values.put( AUTOSAVE_INTERVAL, settings.getString( UISettings.AUTO_SAVE_INTERVAL, "0" ) );
 		values.put( AUTOSAVE_ONEXIT, settings.getBoolean( UISettings.AUTO_SAVE_PROJECTS_ON_EXIT ) );
-		values.put( LINEBRAK, settings.getBoolean( UISettings.LINEBREAK ) );
+		values.put( LINEBREAK, settings.getBoolean( UISettings.LINEBREAK ) );
 
 		if( SoapUI.isStandalone() )
 		{
