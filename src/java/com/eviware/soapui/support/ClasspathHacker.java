@@ -16,15 +16,11 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.net.URLClassLoader;
 
 import com.eviware.soapui.SoapUI;
 
 public class ClasspathHacker
 {
-
-	private static final Class<?>[] parameters = new Class[] { URL.class };
-
 	public static void addFile( String s ) throws IOException
 	{
 		File f = new File( s );
@@ -38,25 +34,56 @@ public class ClasspathHacker
 
 	public static void addURL( URL u ) throws IOException
 	{
+		ClassLoader classLoader = SoapUI.class.getClassLoader();
 
+		addUrlToClassLoader( u, classLoader );
+
+	}// end method
+
+	public static void addUrlToClassLoader( URL u, ClassLoader classLoader ) throws IOException
+	{
 		try
 		{
-			ClassLoader classLoader = SoapUI.class.getClassLoader();
-
-			if( !( classLoader instanceof URLClassLoader ) )
-			{
-				SoapUI.log.error( "SoapUI classloader is not an URLClassLoader, failed to add external library" );
-				SoapUI.log.info( "classloader type is : "+ classLoader.getClass().toString()  );
-				return;
-			}
-
-			URLClassLoader sysloader = ( URLClassLoader )classLoader;
-			Class<URLClassLoader> sysclass = URLClassLoader.class;
-			Method method = sysclass.getDeclaredMethod( "addURL", parameters );
+			Method method = classLoader.getClass().getDeclaredMethod( "addURL", new Class[] { java.net.URL.class } );
 			method.setAccessible( true );
-			method.invoke( sysloader, new Object[] { u } );
+			method.invoke( classLoader, new Object[] { u } );
 
 			SoapUI.log.info( "Added [" + u.toString() + "] to classpath" );
+		}
+		catch( NoSuchMethodException e )
+		{
+			try
+			{
+				Method method = classLoader.getClass().getSuperclass().getDeclaredMethod( "addURL",
+						new Class[] { java.net.URL.class } );
+				method.setAccessible( true );
+				method.invoke( classLoader, new Object[] { u } );
+
+				SoapUI.log.info( "Added [" + u.toString() + "] to classpath" );
+			}
+			catch( NoSuchMethodException ex )
+			{
+				try
+				{
+					Method method = classLoader.getClass().getSuperclass().getSuperclass().getDeclaredMethod( "addURL",
+							new Class[] { java.net.URL.class } );
+					method.setAccessible( true );
+					method.invoke( classLoader, new Object[] { u } );
+
+					SoapUI.log.info( "Added [" + u.toString() + "] to classpath" );
+				}
+				catch( Throwable t )
+				{
+					SoapUI.logError( t );
+					throw new IOException( "Error, could not add URL to system classloader" );
+				}// end try catch
+
+			}
+			catch( Throwable t )
+			{
+				SoapUI.logError( t );
+				throw new IOException( "Error, could not add URL to system classloader" );
+			}// end try catch
 
 		}
 		catch( Throwable t )
@@ -64,7 +91,6 @@ public class ClasspathHacker
 			SoapUI.logError( t );
 			throw new IOException( "Error, could not add URL to system classloader" );
 		}// end try catch
-
-	}// end method
+	}
 
 }// end class

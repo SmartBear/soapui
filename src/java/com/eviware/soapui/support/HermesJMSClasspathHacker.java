@@ -16,17 +16,10 @@ import hermes.JAXBHermesLoader;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.URL;
-import java.net.URLClassLoader;
-
-import com.eviware.soapui.SoapUI;
 
 public class HermesJMSClasspathHacker
 {
-
-	private static final Class<?>[] parameters = new Class[] { URL.class };
-
 	public static void addFile( String s ) throws IOException
 	{
 		File f = new File( s );
@@ -40,31 +33,8 @@ public class HermesJMSClasspathHacker
 
 	public static void addURL( URL u ) throws IOException
 	{
-
-		try
-		{
-			ClassLoader classLoader = JAXBHermesLoader.class.getClassLoader();
-			if( !( classLoader instanceof URLClassLoader ) )
-			{
-				SoapUI.log.error( "SoapUI classloader is not an URLClassLoader, failed to add external library" );
-				return;
-			}
-
-			URLClassLoader sysloader = ( URLClassLoader )classLoader;
-			Class<URLClassLoader> sysclass = URLClassLoader.class;
-			Method method = sysclass.getDeclaredMethod( "addURL", parameters );
-			method.setAccessible( true );
-			method.invoke( sysloader, new Object[] { u } );
-
-			SoapUI.log.info( "Added [" + u.toString() + "] to classpath" );
-
-		}
-		catch( Throwable t )
-		{
-			SoapUI.logError( t );
-			throw new IOException( "Error, could not add URL to system classloader" );
-		}// end try catch
-
+		ClassLoader classLoader = JAXBHermesLoader.class.getClassLoader();
+		ClasspathHacker.addUrlToClassLoader( u, classLoader );
 	}// end method
 
 }// end class
