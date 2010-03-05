@@ -18,6 +18,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
 
+import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.servlet.ServletException;
@@ -47,37 +48,62 @@ public class Server extends org.mortbay.jetty.Server
 	{
 		final Request request = connection.getRequest();
 
-		if( !request.getMethod().equals( "CONNECT" ) )
+		if( request.getMethod().equals( "CONNECT" ) )
 		{
-			super.handle( connection );
-			return;
+			final String uri = request.getUri().toString();
+
+			final int c = uri.indexOf( ':' );
+			final String port = uri.substring( c + 1 );
+			final String host = uri.substring( 0, c );
+
+			final InetSocketAddress inetAddress = new InetSocketAddress( host, Integer.parseInt( port ) );
+
+			final Socket clientSocket = connection.getEndPoint().getTransport() instanceof Socket ? ( Socket )connection
+					.getEndPoint().getTransport() : ( ( SocketChannel )connection.getEndPoint().getTransport() ).socket();
+			final InputStream in = clientSocket.getInputStream();
+			final OutputStream out = clientSocket.getOutputStream();
+
+			final SSLSocket socket = ( SSLSocket )SSLSocketFactory.getDefault().createSocket( inetAddress.getAddress(),
+					inetAddress.getPort() );
+
+			final Response response = connection.getResponse();
+			response.setStatus( 200 );
+			// response.setHeader("Connection", "close");
+			response.flushBuffer();
+
+			IO.copyThread( socket.getInputStream(), out );
+
+			IO.copyThread( in, socket.getOutputStream() );
+		} else {
+			if ( request.getMethod().equals( "POST" ) || request.getMethod().equals( "GET" ))
+				super.handle( connection );
+			else {
+				final String uri = request.getUri().toString();
+
+				final int c = uri.indexOf( ':' );
+				final String port = uri.substring( c + 1 );
+				final String host = uri.substring( 0, c );
+
+				final InetSocketAddress inetAddress = new InetSocketAddress( host, Integer.parseInt( port ) );
+
+				final Socket clientSocket = connection.getEndPoint().getTransport() instanceof Socket ? ( Socket )connection
+						.getEndPoint().getTransport() : ( ( SocketChannel )connection.getEndPoint().getTransport() ).socket();
+				final InputStream in = clientSocket.getInputStream();
+				final OutputStream out = clientSocket.getOutputStream();
+
+				final Socket socket = SocketFactory.getDefault().createSocket( inetAddress.getAddress(),
+						inetAddress.getPort() );
+
+				final Response response = connection.getResponse();
+				response.setStatus( 200 );
+				// response.setHeader("Connection", "close");
+				response.flushBuffer();
+
+				IO.copyThread( socket.getInputStream(), out );
+
+				IO.copyThread( in, socket.getOutputStream() );
+			}
 		}
-
-		final String uri = request.getUri().toString();
-
-		final int c = uri.indexOf( ':' );
-		final String port = uri.substring( c + 1 );
-		final String host = uri.substring( 0, c );
-
-		final InetSocketAddress inetAddress = new InetSocketAddress( host, Integer.parseInt( port ) );
-
-		final Socket clientSocket = connection.getEndPoint().getTransport() instanceof Socket ? ( Socket )connection
-				.getEndPoint().getTransport() : ( ( SocketChannel )connection.getEndPoint().getTransport() ).socket();
-		final InputStream in = clientSocket.getInputStream();
-		final OutputStream out = clientSocket.getOutputStream();
-
-		final SSLSocket socket = ( SSLSocket )SSLSocketFactory.getDefault().createSocket( inetAddress.getAddress(),
-				inetAddress.getPort() );
-
-		final Response response = connection.getResponse();
-		response.setStatus( 200 );
-		// response.setHeader("Connection", "close");
-		response.flushBuffer();
-
-		IO.copyThread( socket.getInputStream(), out );
-
-		IO.copyThread( in, socket.getOutputStream() );
-
 	}
 
 }
