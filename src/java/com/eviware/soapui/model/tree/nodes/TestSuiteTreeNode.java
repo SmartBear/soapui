@@ -128,31 +128,36 @@ public class TestSuiteTreeNode extends AbstractModelItemTreeNode<TestSuite>
 		public void testStepAdded( TestStep testStep, int index )
 		{
 			TestCaseTreeNode testCaseTreeNode = ( TestCaseTreeNode )getTreeModel().getTreeNode( testStep.getTestCase() );
-			testCaseTreeNode.testStepInserted( testStep, index );
+			if( testCaseTreeNode != null )
+				testCaseTreeNode.testStepInserted( testStep, index );
 		}
 
 		public void testStepRemoved( TestStep testStep, int index )
 		{
 			TestCaseTreeNode testCaseTreeNode = ( TestCaseTreeNode )getTreeModel().getTreeNode( testStep.getTestCase() );
-			testCaseTreeNode.testStepRemoved( testStep, index );
+			if( testCaseTreeNode != null )
+				testCaseTreeNode.testStepRemoved( testStep, index );
 		}
 
 		public void loadTestAdded( LoadTest loadTest )
 		{
 			TestCaseTreeNode testCaseTreeNode = ( TestCaseTreeNode )getTreeModel().getTreeNode( loadTest.getTestCase() );
-			testCaseTreeNode.loadTestInserted( loadTest );
+			if( testCaseTreeNode != null )
+				testCaseTreeNode.loadTestInserted( loadTest );
 		}
 
 		public void loadTestRemoved( LoadTest loadTest )
 		{
 			TestCaseTreeNode testCaseTreeNode = ( TestCaseTreeNode )getTreeModel().getTreeNode( loadTest.getTestCase() );
-			testCaseTreeNode.loadTestRemoved( loadTest );
+			if( testCaseTreeNode != null )
+				testCaseTreeNode.loadTestRemoved( loadTest );
 		}
 
 		public void testStepMoved( TestStep testStep, int fromIndex, int offset )
 		{
 			TestCaseTreeNode testCaseTreeNode = ( TestCaseTreeNode )getTreeModel().getTreeNode( testStep.getTestCase() );
-			testCaseTreeNode.testStepMoved( testStep, fromIndex, offset );
+			if( testCaseTreeNode != null )
+				testCaseTreeNode.testStepMoved( testStep, fromIndex, offset );
 		}
 
 		public void testCaseMoved( TestCase testCase, int index, int offset )
