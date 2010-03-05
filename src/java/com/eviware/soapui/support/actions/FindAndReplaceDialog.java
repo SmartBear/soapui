@@ -16,6 +16,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.util.Locale;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -83,7 +84,7 @@ public class FindAndReplaceDialog extends AbstractAction
 
 	private void buildDialog()
 	{
-		dialog = new JDialog( UISupport.getMainFrame(), "Find / Replace", true );
+		dialog = new JDialog( UISupport.getMainFrame(), "Find / Replace", false );
 
 		JPanel panel = new JPanel( new BorderLayout() );
 		findCombo = new JComboBox();
@@ -235,8 +236,8 @@ public class FindAndReplaceDialog extends AbstractAction
 
 			if( !caseCheck.isSelected() )
 			{
-				value = value.toUpperCase();
-				txt = txt.toUpperCase();
+				value = value.toLowerCase();
+				txt = txt.toLowerCase();
 			}
 
 			if( pos == lastPositionF && value.equals( lastSearchedItem ) )
@@ -299,8 +300,8 @@ public class FindAndReplaceDialog extends AbstractAction
 			{
 				if( newValue.equalsIgnoreCase( value ) )
 					return;
-				value = value.toUpperCase();
-				txt = txt.toUpperCase();
+				value = value.toLowerCase();
+				txt = txt.toLowerCase();
 			}
 			else if( newValue.equals( value ) )
 				return;
@@ -317,7 +318,7 @@ public class FindAndReplaceDialog extends AbstractAction
 			lastPositionF = ix;
 
 			int firstIx = ix;
-			int valueInNewValueIx = !caseCheck.isSelected() ? newValue.toUpperCase().indexOf( value ) : newValue
+			int valueInNewValueIx = !caseCheck.isSelected() ? newValue.toLowerCase().indexOf( value ) : newValue
 					.indexOf( value );
 
 			if( ix != -1 )
@@ -335,7 +336,7 @@ public class FindAndReplaceDialog extends AbstractAction
 				txt = target.getText();
 				if( !caseCheck.isSelected() )
 				{
-					txt = txt.toUpperCase();
+					txt = txt.toLowerCase();
 				}
 
 				if( forwardButton.isSelected() )
@@ -376,15 +377,15 @@ public class FindAndReplaceDialog extends AbstractAction
 			{
 				if( newValue.equalsIgnoreCase( value ) )
 					return;
-				value = value.toUpperCase();
-				txt = txt.toUpperCase();
+				value = value.toLowerCase();
+				txt = txt.toLowerCase();
 			}
 			else if( newValue.equals( value ) )
 				return;
 
 			int ix = findNext( pos, txt, value );
 			int firstIx = ix;
-			int valueInNewValueIx = !caseCheck.isSelected() ? newValue.toUpperCase().indexOf( value ) : newValue
+			int valueInNewValueIx = !caseCheck.isSelected() ? newValue.toLowerCase().indexOf( value ) : newValue
 					.indexOf( value );
 
 			while( ix != -1 )
@@ -402,7 +403,7 @@ public class FindAndReplaceDialog extends AbstractAction
 				txt = target.getText();
 				if( !caseCheck.isSelected() )
 				{
-					txt = txt.toUpperCase();
+					txt = txt.toLowerCase();
 				}
 
 				if( forwardButton.isSelected() )
