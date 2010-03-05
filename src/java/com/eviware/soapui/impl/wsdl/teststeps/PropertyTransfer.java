@@ -143,7 +143,8 @@ public class PropertyTransfer implements PropertyChangeNotifier
 			if( sourceStep != null )
 				config.setSourceStep( sourceStep );
 		}
-		else sourceStep = sourceStep.trim();
+		else
+			sourceStep = sourceStep.trim();
 
 		currentSourceStep = getPropertyHolder( sourceStep );
 
@@ -160,7 +161,8 @@ public class PropertyTransfer implements PropertyChangeNotifier
 			if( targetStep != null )
 				config.setTargetStep( targetStep );
 		}
-		else targetStep = targetStep.trim();
+		else
+			targetStep = targetStep.trim();
 
 		currentTargetStep = getPropertyHolder( targetStep );
 
@@ -435,8 +437,8 @@ public class PropertyTransfer implements PropertyChangeNotifier
 			if( result.size() > 0 )
 			{
 				String value = targetXmlObject.xmlText( new XmlOptions().setSaveAggressiveNamespaces() );
-				if( getEntitize() )
-					value = XmlUtils.entitize( value );
+				// if( getEntitize() )
+				// value = XmlUtils.entitize( value );
 
 				targetProperty.setValue( value );
 			}
