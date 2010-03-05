@@ -37,8 +37,8 @@ public class AMFTestStepResult extends WsdlTestStepResult implements AssertedXPa
 	public AMFTestStepResult( AMFRequestTestStep testStep )
 	{
 		super( testStep );
-		this.request=testStep.getAMFRequest();
-		
+		this.request = testStep.getAMFRequest();
+
 	}
 
 	public void setResponse( AMFResponse response, boolean useSoftReference )
@@ -57,7 +57,7 @@ public class AMFTestStepResult extends WsdlTestStepResult implements AssertedXPa
 	public void addAssertedXPath( AssertedXPath assertedXPath )
 	{
 	}
-	
+
 	@Override
 	public ActionList getActions()
 	{
@@ -147,7 +147,7 @@ public class AMFTestStepResult extends WsdlTestStepResult implements AssertedXPa
 
 	public String getResponseContentAsXml()
 	{
-		return getResponseContent();
+		return softResponse != null && softResponse.get() != null ? softResponse.get().getResponseContentXML() : null;
 	}
 
 	public StringToStringMap getResponseHeaders()
@@ -177,11 +177,10 @@ public class AMFTestStepResult extends WsdlTestStepResult implements AssertedXPa
 
 	public String getEndpoint()
 	{
-		
+
 		return request.getEndpoint();
 	}
 
-	
 	public AMFRequest getRequest()
 	{
 		return request;
