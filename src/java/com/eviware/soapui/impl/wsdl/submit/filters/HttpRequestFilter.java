@@ -160,16 +160,16 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				break;
 			}
 		}
-		
+
 		String prefix = null;
-		if( path.contains("://") )
+		if( path.contains( "://" ) )
 		{
-			prefix = path.substring(0, path.indexOf("://") + 3);
-			path = path.substring(prefix.length());
+			prefix = path.substring( 0, path.indexOf( "://" ) + 3 );
+			path = path.substring( prefix.length() );
 		}
-		path = path.replaceAll("/{2,}", "/");
+		path = path.replaceAll( "/{2,}", "/" );
 		if( prefix != null )
-			path = prefix+path;
+			path = prefix + path;
 
 		if( PathUtils.isHttpPath( path ) )
 		{
@@ -225,11 +225,11 @@ public class HttpRequestFilter extends AbstractRequestFilter
 					MimeBodyPart part = new PreencodedMimeBodyPart( "binary" );
 
 					if( attachment instanceof FileAttachment<?> )
-						part.setDisposition( "form-data; name=\"" + attachment.getName() + "\" filename=\""
+						part.setDisposition( "form-data; name=\"" + attachment.getName() + "\"; filename=\""
 								+ ( ( FileAttachment<?> )attachment ).getName() + "\"" );
 					else
-					part.setDisposition( "form-data; name=\"" + attachment.getName() + "\"" );
-					
+						part.setDisposition( "form-data; name=\"" + attachment.getName() + "\"" );
+
 					part.setDataHandler( new DataHandler( new AttachmentDataSource( attachment ) ) );
 
 					formMp.addBodyPart( part );
