@@ -234,9 +234,10 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 
 			String sourceXPath = "";
 
+			String val = sourceStep.getPropertyValue( sourceProperty );
+
 			try
 			{
-				String val = sourceStep.getPropertyValue( sourceProperty );
 				if( StringUtils.isNullOrEmpty( val ) )
 				{
 					String defaultValue = sourceStep.getProperty( sourceProperty ).getDefaultValue();
@@ -263,9 +264,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 
 			if( StringUtils.hasContent( sourceXPath ) )
 			{
-				sourceXPath = XmlUtils.removeXPathNamespaceDeclarations( sourceXPath );
-				if( sourceXPath.length() > 0 )
-					sourceXPath = sourceXPath.replace( '\n', ' ' );
+				sourceXPath = PropertyExpansionUtils.shortenXPathForPropertyExpansion( sourceXPath, val );
 			}
 
 			TestProperty property = sourceStep.getProperty( sourceProperty );

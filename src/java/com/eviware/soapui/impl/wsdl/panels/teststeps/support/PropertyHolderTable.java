@@ -176,9 +176,9 @@ public class PropertyHolderTable extends JPanel
 			toolbar.add( movePropertyUpButton );
 			JButton movePropertyDownButton = UISupport.createToolbarButton( movePropertyDownAction );
 			toolbar.add( movePropertyDownButton );
-			
+
 			toolbar.addRelatedGap();
-			toolbar.add( UISupport.createToolbarButton( new SortPropertiesAction() ));
+			toolbar.add( UISupport.createToolbarButton( new SortPropertiesAction() ) );
 			toolbar.addRelatedGap();
 		}
 
@@ -517,7 +517,7 @@ public class PropertyHolderTable extends JPanel
 				try
 				{
 					int cnt = TestPropertyUtils.saveTo( holder, file.getAbsolutePath() );
-					UISupport.showInfoMessage( "Saved " + cnt + " propert" + ((cnt == 1)?"y":"ies") + " to file" );
+					UISupport.showInfoMessage( "Saved " + cnt + " propert" + ( ( cnt == 1 ) ? "y" : "ies" ) + " to file" );
 				}
 				catch( IOException e1 )
 				{
@@ -526,7 +526,7 @@ public class PropertyHolderTable extends JPanel
 			}
 		}
 	}
-	
+
 	private class SortPropertiesAction extends AbstractAction
 	{
 		public SortPropertiesAction()
@@ -552,7 +552,7 @@ public class PropertyHolderTable extends JPanel
 			{
 				UISupport.resetCursor();
 			}
-			
+
 		}
 	}
 
@@ -631,7 +631,8 @@ public class PropertyHolderTable extends JPanel
 									.getProperty().getValue(), null );
 
 							if( xpath != null )
-								xpath = XmlUtils.removeXPathNamespaceDeclarations( xpath );
+								xpath = PropertyExpansionUtils.shortenXPathForPropertyExpansion( xpath, modelItem.getProperty()
+										.getValue() );
 						}
 
 						PropertyExpansion propertyExpansion = new PropertyExpansionImpl( modelItem.getProperty(), xpath );

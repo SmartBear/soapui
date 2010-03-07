@@ -22,6 +22,9 @@ import java.util.Set;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.w3c.dom.Node;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -50,6 +53,7 @@ import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToObjectMap;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class PropertyExpansionUtils
 {
@@ -82,6 +86,52 @@ public class PropertyExpansionUtils
 		{
 			globalTestPropertyHolder.saveTo( SoapUI.getSettings() );
 		}
+	}
+
+	public static String shortenXPathForPropertyExpansion( String xpath, String value )
+	{
+		try
+		{
+			XmlObject xmlObject = XmlObject.Factory.parse( value );
+			String ns = XmlUtils.declareXPathNamespaces( xmlObject );
+			Node domNode = XmlUtils.selectFirstDomNode( xmlObject, xpath );
+
+			String shortenedXPath = XmlUtils.removeXPathNamespaceDeclarations( xpath );
+			Node domNode2 = XmlUtils.selectFirstDomNode( xmlObject, ns + shortenedXPath );
+
+			if( domNode == domNode2 )
+			{
+				return shortenedXPath;
+			}
+		}
+		catch( XmlException e )
+		{
+		}
+
+		if( xpath.length() > 0 )
+		{
+			StringBuffer buf = new StringBuffer();
+
+			for( int c = 0; c < xpath.length(); c++ )
+			{
+				char ch = xpath.charAt( c );
+				switch( ch )
+				{
+				case '\n' :
+					buf.append( ' ' );
+					break;
+				case '\'' :
+					buf.append( "\\'" );
+					break;
+				default :
+					buf.append( ch );
+				}
+			}
+
+			xpath = buf.toString();
+		}
+
+		return xpath;
 	}
 
 	/**
@@ -494,7 +544,7 @@ public class PropertyExpansionUtils
 			return result;
 		}
 	}
-	
+
 	public static boolean containsPropertyExpansion( String str )
 	{
 		return str != null && str.indexOf( "${" ) >= 0 && str.indexOf( '}' ) > 2;

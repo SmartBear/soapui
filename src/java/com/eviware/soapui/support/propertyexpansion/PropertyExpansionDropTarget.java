@@ -104,7 +104,8 @@ public final class PropertyExpansionDropTarget implements DropTargetListener
 								.getProperty().getValue(), null );
 
 						if( xpath != null )
-							xpath = XmlUtils.removeXPathNamespaceDeclarations( xpath );
+							xpath = PropertyExpansionUtils.shortenXPathForPropertyExpansion( xpath, modelItem.getProperty()
+									.getValue() );
 					}
 
 					target.insertPropertyExpansion( new PropertyExpansionImpl( modelItem.getProperty(), xpath ), dtde
