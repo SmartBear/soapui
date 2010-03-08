@@ -100,6 +100,7 @@ public class HermesJmsRequestTransport implements RequestTransport
    	this.durableSubscriptionName = submitContext.expand(jmsConfig.getDurableSubscriptionName());
    	this.clientID = submitContext.expand(jmsConfig.getClientID());
    	this.messageSelector =jmsConfig.getMessageSelector();// expand latter just before use
+   	submitContext.setProperty(HermesJmsRequestTransport.JMS_MESSAGE_RECEIVE,null);
 	}
 
 	protected Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception

@@ -49,7 +49,7 @@ public class JMSTimeoutAssertion extends WsdlMessageAssertion implements Respons
 	{
 		
 		Message message =(Message) context.getProperty(HermesJmsRequestTransport.JMS_MESSAGE_RECEIVE);
-		 context.setProperty(HermesJmsRequestTransport.JMS_MESSAGE_RECEIVE,null);
+		
 		Long timeout =(Long) context.getProperty(HermesJmsRequestTransport.JMS_RECEIVE_TIMEOUT);
 		if(message==null){
 			throw new AssertionException(new AssertionError("JMS Message timeout error! Message is not received in "+timeout+" ms." ));
