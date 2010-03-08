@@ -58,6 +58,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.model.testsuite.TestRunContext;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -717,5 +718,10 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	public XmlBeansPropertiesTestPropertyHolder getPropertyHolderSupport()
 	{
 		return propertyHolderSupport;
+	}
+	
+	public TestStep getTestStep()
+	{
+		return this;
 	}
 }
