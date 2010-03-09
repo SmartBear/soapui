@@ -52,7 +52,7 @@
                    
                    <p>When editing a Request, the following table is used, allowing you to change the values of existing parameters, 
                    defined at the Method and Resource levels.</p>
-                   <p align="center"><img src="images/parameters-rest-table.gif"></img></p>
+                   <p align="center"><img src="images/parameters-request-table.gif"></img></p>
                    <p>The toolbar at the top of the table has the following actions: (left to right)</p>
             <ul>
 
