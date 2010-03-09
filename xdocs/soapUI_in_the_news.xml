@@ -5,22 +5,46 @@
     </properties>
     <body>
         <section name="soapUI in the News">
-    
-    
-    <subsection name="SOA Testing-Eviware soapUI">
+ 
+    <subsection name="Developers Blog">
 	    	<columns>
 	    		<column width="200">
-	    		<img src="images/inthenews/resil.gif" alt="SOA Testing - soapUI"/>	    	    
+	    		<img src="images/inthenews/develop.gif" alt="Web Service Testing - soapUI"/>	    	    
 	    		</column>
 	    		<column align="left">
 	    		    <i>2010-02-03</i>
-	    	        <p>The post starts: "Considering the price of the professional edition..."<br/>
-	    			<a href="http://blog.resilient-it.com/2010/01/soa-testing-eviware-soapui.html">[Read more]</a></p>
+	    	        <p>The post starts: "soapUi is a very useful tool for testing..."<br/>
+	    			<a href="http://developers-blog.org/blog/default/2010/03/03/Webservice-testing-with-soapUI">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	 </subsection>
+  
+     <subsection name="Weblog for the AMIS technology">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/amis.gif" alt="SOA Testing - soapUI"/>	    	    
+	    		</column>
+	    		<column align="left">
+	    		    <i>2010-02-03</i>
+	    	        <p>The post starts: "A lot of current projects are implementing some sort..."<br/>
+	    			<a href="http://technology.amis.nl/blog/7408/automatic-testing-oracle-service-bus-using-hudson-maven-and-soapui">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	 </subsection>
+	 
+	 <subsection name="AGILEALI">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/agileali.gif" alt="Web Service Testing - soapUI"/>	    	    
+	    		</column>
+	    		<column align="left">
+	    		    <i>2010-02-01</i>
+	    	        <p>The post starts: "SOA and Web Services have revolutionised they way we..."<br/>
+	    			<a href="http://www.agileali.com/myblog/2010/02/01/i-like-soapui-tool-to-test-web-services/">[Read more]</a></p>
 	    		</column>
 	    	</columns>
 	 </subsection>
     
-
      <subsection name="A simple unit test">
 	    	<columns>
 	    		<column width="200">
