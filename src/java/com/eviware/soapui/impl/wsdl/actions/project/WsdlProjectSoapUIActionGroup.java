@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.actions.project;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.support.action.SoapUIActionGroup;
 import com.eviware.soapui.support.action.support.AbstractSoapUIActionGroup;
 import com.eviware.soapui.support.action.support.SoapUIActionMappingList;
@@ -63,6 +64,7 @@ public class WsdlProjectSoapUIActionGroup extends AbstractSoapUIActionGroup<Wsdl
 
 			mappings.getMapping( SaveProjectAction.SOAPUI_ACTION_ID ).setEnabled(
 					!project.isRemote() && project.getPath() != null );
+			mappings.getMapping( StartHermesJMS.SOAPUI_ACTION_ID ).setEnabled( HermesUtils.isHermesJMSSupported() );
 
 			return mappings;
 		}
