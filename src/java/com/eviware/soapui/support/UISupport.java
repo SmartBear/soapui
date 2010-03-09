@@ -64,6 +64,7 @@ import javax.swing.table.TableColumn;
 import org.syntax.jedit.InputHandler;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SwingPluginSoapUICore;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolHost;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
@@ -1004,5 +1005,9 @@ public class UISupport
 				combo.setToolTipText( selectedItem );
 			}
 		}
+	}
+	
+	public static boolean isIdePlugin(){
+		return SoapUI.getSoapUICore() instanceof SwingPluginSoapUICore;
 	}
 }

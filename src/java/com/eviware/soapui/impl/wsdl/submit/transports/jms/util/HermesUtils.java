@@ -199,4 +199,9 @@ public class HermesUtils
 		}
 		return null;
 	}
+	
+	
+	public static boolean isHermesJMSSupported(){
+		return !UISupport.isIdePlugin();
+	}
 }

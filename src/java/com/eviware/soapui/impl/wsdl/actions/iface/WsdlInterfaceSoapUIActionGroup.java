@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.actions.iface;
 
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.support.action.support.DefaultSoapUIActionGroup;
 import com.eviware.soapui.support.action.support.SoapUIActionMappingList;
 
@@ -34,6 +35,7 @@ public class WsdlInterfaceSoapUIActionGroup extends DefaultSoapUIActionGroup<Wsd
 	{
 		SoapUIActionMappingList<WsdlInterface> actionMappings = super.getActionMappings( modelItem );
 
+		actionMappings.getMapping( AddJMSEndpointAction.SOAPUI_ACTION_ID ).setEnabled(HermesUtils.isHermesJMSSupported() );
 		// SoapUIActionMapping<WsdlInterface> mapping = actionMappings.getMapping(
 		// WSToolsRegenerateJava2WsdlAction.SOAPUI_ACTION_ID );
 		// WSToolsRegenerateJava2WsdlAction action = (
