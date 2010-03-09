@@ -280,6 +280,17 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 			AttachmentConfig config = attachmentConfigs.get( i );
 			getAttachmentsList().get( i ).updateConfig( config );
 		}
+
+		if( jmsHeaderConfig != null )
+		{
+			jmsHeaderConfig.setJMSHeaderConfConfig( request.getJmsConfig() );
+		}
+
+		if( jmsPropertyConfig != null )
+		{
+			jmsPropertyConfig.setJmsPropertyConfConfig( request.getJmsPropertyConfig() );
+		}
+
 	}
 
 	public AbstractHttpOperation getOperation()
