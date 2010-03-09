@@ -86,6 +86,7 @@ import com.eviware.soapui.impl.wsdl.actions.iface.tools.xfire.XFireAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans.XmlBeans2Action;
 import com.eviware.soapui.impl.wsdl.actions.support.OpenUrlAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.model.ModelItem;
@@ -428,7 +429,9 @@ public class SoapUI
 		// toolsMenu.addSeparator();
 		// toolsMenu.add( new XQueryXPathTesterAction());
 		toolsMenu.addSeparator();
-		toolsMenu.add( new StartHermesJMSButtonAction() );
+		StartHermesJMSButtonAction hermesJMSButtonAction= new StartHermesJMSButtonAction();
+		hermesJMSButtonAction.setEnabled( HermesUtils.isHermesJMSSupported() );
+		toolsMenu.add(hermesJMSButtonAction);
 
 		return toolsMenu;
 	}
