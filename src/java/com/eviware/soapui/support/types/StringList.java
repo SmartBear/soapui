@@ -66,8 +66,8 @@ public class StringList extends ArrayList<String>
 
 	public static StringList fromXml( String value ) throws XmlException
 	{
-		return StringUtils.isNullOrEmpty( value ) ? new StringList() : new StringList( StringListConfig.Factory.parse(
-				value ).getEntryList() );
+		return StringUtils.isNullOrEmpty( value ) || value.equals( "<xml-fragment/>" ) ? new StringList()
+				: new StringList( StringListConfig.Factory.parse( value ).getEntryList() );
 	}
 
 	public String toXml()
