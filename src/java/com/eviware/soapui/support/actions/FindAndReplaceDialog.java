@@ -30,6 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.xml.ProxyFindAndReplacable;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 /**
@@ -40,7 +41,8 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 public class FindAndReplaceDialog extends AbstractAction
 {
-	private final FindAndReplaceable target;
+	private final ProxyFindAndReplacable target;
+//	private ProxyFindAndReplacable proxytarget;
 	private JDialog dialog;
 	private JCheckBox caseCheck;
 	private JRadioButton allButton;
@@ -59,7 +61,7 @@ public class FindAndReplaceDialog extends AbstractAction
 	{
 		super( "Find / Replace" );
 		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "F3" ) );
-		this.target = target;
+		this.target = new ProxyFindAndReplacable(target);
 	}
 
 	public void actionPerformed( ActionEvent e )
@@ -360,7 +362,7 @@ public class FindAndReplaceDialog extends AbstractAction
 		public void actionPerformed( ActionEvent e )
 		{
 			int pos = target.getCaretPosition();
-			String txt = target.getText();
+			String txt = target.getDialogText();
 
 			if( findCombo.getSelectedItem() == null )
 			{
@@ -387,11 +389,12 @@ public class FindAndReplaceDialog extends AbstractAction
 			int valueInNewValueIx = !caseCheck.isSelected() ? newValue.toLowerCase().indexOf( value ) : newValue
 					.indexOf( value );
 
+			target.setReplaceAll( true );
+			target.setSBTarget();
+			target.setNewValue( newValue );
 			while( ix != -1 )
 			{
-				System.out.println( "found match at " + ix + ", " + firstIx + ", " + valueInNewValueIx );
 				target.select( ix, ix + value.length() );
-
 				target.setSelectedText( newValue );
 				target.select( ix, ix + newValue.length() );
 
@@ -418,6 +421,8 @@ public class FindAndReplaceDialog extends AbstractAction
 					break;
 				}
 			}
+			target.flushSBText();
+			target.setReplaceAll( false);
 		}
 	}
 
