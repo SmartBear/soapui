@@ -109,14 +109,13 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		if( jdbcRequestTestStepConfig.getProperties() == null )
 			jdbcRequestTestStepConfig.addNewProperties();
 
-		jdbcRequest = new JdbcRequest( this );
+		jdbcRequest = new JdbcRequest( this, forLoadTest );
 
 		propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder( this, jdbcRequestTestStepConfig.getProperties() );
-		
+
 		addResponseAsXMLVirtualProperty();
 
 		initAssertions();
-		jdbcRequest.initIcons();
 	}
 
 	private void addResponseAsXMLVirtualProperty()
@@ -131,7 +130,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			}
 
 		};
-	
+
 		propertyHolderSupport.addVirtualProperty( "ResponseAsXML", responseProperty );
 	}
 
@@ -144,9 +143,10 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	{
 		super.resetConfigOnMove( config );
 
-		jdbcRequestTestStepConfig = ( JdbcRequestTestStepConfig )config.getConfig().changeType( JdbcRequestTestStepConfig.type );
+		jdbcRequestTestStepConfig = ( JdbcRequestTestStepConfig )config.getConfig().changeType(
+				JdbcRequestTestStepConfig.type );
 		propertyHolderSupport.resetPropertiesConfig( jdbcRequestTestStepConfig.getProperties() );
-//		addResponseAsXMLVirtualProperty();
+		// addResponseAsXMLVirtualProperty();
 		assertionsSupport.refresh();
 	}
 
@@ -394,13 +394,12 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	{
 		return getJdbcRequest().getResponse() == null ? null : getJdbcRequest().getResponse().getContentAsString();
 	}
-	
-	
+
 	public String getResponseContent()
 	{
 		return getJdbcRequest().getResponse() == null ? "" : getJdbcRequest().getResponse().getContentAsString();
 	}
-	
+
 	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy )
 	{
 		return assertionsSupport.importAssertion( source, overwrite, createCopy );

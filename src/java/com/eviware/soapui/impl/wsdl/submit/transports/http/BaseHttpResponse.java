@@ -24,8 +24,11 @@ import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
 import com.eviware.soapui.impl.rest.support.MediaTypeHandlerRegistry;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.types.StringToStringMap;
 
@@ -100,6 +103,16 @@ public abstract class BaseHttpResponse implements HttpResponse
 			}
 		}
 
+		if( httpRequest instanceof TestRequest )
+		{
+			TestCase tc = ( ( TestRequest )httpRequest ).getTestStep().getTestCase();
+			if( tc instanceof WsdlTestCase && ( ( WsdlTestCase )tc ).isForLoadTest() )
+			{
+				initHeadersForLoadTest( httpMethod );
+				return;
+			}
+		}
+
 		initHeaders( httpMethod );
 	}
 
@@ -159,6 +172,35 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 			rawResponseData = rawResponse.toByteArray();
 			rawRequestData = rawRequest.toByteArray();
+		}
+		catch( Throwable e )
+		{
+			e.printStackTrace();
+		}
+	}
+
+	protected void initHeadersForLoadTest( ExtendedHttpMethod httpMethod )
+	{
+		try
+		{
+			requestHeaders = new StringToStringMap();
+			Header[] headers = httpMethod.getRequestHeaders();
+			for( Header header : headers )
+			{
+				requestHeaders.put( header.getName(), header.getValue() );
+			}
+
+			if( !httpMethod.isFailed() )
+			{
+				responseHeaders = new StringToStringMap();
+				headers = httpMethod.getResponseHeaders();
+				for( Header header : headers )
+				{
+					responseHeaders.put( header.getName(), header.getValue() );
+				}
+
+				responseHeaders.put( "#status#", String.valueOf( httpMethod.getStatusLine() ) );
+			}
 		}
 		catch( Throwable e )
 		{
@@ -261,8 +303,8 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 	public String getRequestContent()
 	{
-		return requestContentPos == -1 || rawRequestData == null ? null : new String( rawRequestData, requestContentPos, rawRequestData.length
-				- requestContentPos );
+		return requestContentPos == -1 || rawRequestData == null ? null : new String( rawRequestData, requestContentPos,
+				rawRequestData.length - requestContentPos );
 	}
 
 	public String getContentAsXml()

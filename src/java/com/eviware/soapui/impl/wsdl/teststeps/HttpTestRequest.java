@@ -61,7 +61,8 @@ public class HttpTestRequest extends HttpRequest implements HttpTestRequestInter
 		this.testStep = testStep;
 
 		initAssertions();
-		initIcons();
+		if( !forLoadTest )
+			initIcons();
 	}
 
 	protected void initIcons()

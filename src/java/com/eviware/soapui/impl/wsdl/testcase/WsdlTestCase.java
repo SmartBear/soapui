@@ -150,6 +150,11 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		addTestRunListener( new AMFTestRunListener() );
 	}
 
+	public boolean isForLoadTest()
+	{
+		return forLoadTest;
+	}
+
 	public WsdlLoadTest buildLoadTest( LoadTestConfig tsc )
 	{
 		return new WsdlLoadTest( this, tsc );

@@ -22,7 +22,6 @@ import java.util.Set;
 import javax.swing.ImageIcon;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.AMFRequestTestStepConfig;
 import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
@@ -85,10 +84,12 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 	private ImageIcon disabledRequestIcon;
 	private ImageIcon unknownRequestIcon;
 
-	public AMFRequest( AMFRequestTestStep testStep )
+	public AMFRequest( AMFRequestTestStep testStep, boolean forLoadTest )
 	{
 		this.testStep = testStep;
-		initIcons();
+
+		if( !forLoadTest )
+			initIcons();
 	}
 
 	public AMFSubmit submit( SubmitContext submitContext, boolean async ) throws SubmitException

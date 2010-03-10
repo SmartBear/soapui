@@ -61,13 +61,15 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 	{
 		super( method, callConfig, forLoadTest );
 		this.forLoadTest = forLoadTest;
-		
+
 		setSettings( new XmlBeansSettingsImpl( this, testStep.getSettings(), callConfig.getSettings() ) );
 
 		this.testStep = testStep;
 
 		initAssertions();
-		initIcons();
+
+		if( !forLoadTest )
+			initIcons();
 	}
 
 	public ModelItem getParent()
@@ -142,7 +144,7 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 		if( notifier == null )
 			notifier = new PropertyChangeNotifier();
 
-		messageExchange = getResponse() == null ? null :new RestResponseMessageExchange( this );
+		messageExchange = getResponse() == null ? null : new RestResponseMessageExchange( this );
 
 		if( messageExchange != null )
 		{
@@ -429,7 +431,7 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 	public void setRestMethod( RestMethod restMethod )
 	{
 		RestMethod old = this.getRestMethod();
-		
+
 		if( old != null )
 		{
 			old.getResource().removePropertyChangeListener( this );
@@ -437,7 +439,7 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 
 		super.setRestMethod( restMethod );
 
-		restMethod.getResource().addPropertyChangeListener( this );		
+		restMethod.getResource().addPropertyChangeListener( this );
 		notifyPropertyChanged( "restMethod", old, restMethod );
 	}
 

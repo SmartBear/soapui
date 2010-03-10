@@ -25,11 +25,8 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AMFRequestTestStepConfig;
-import com.eviware.soapui.config.PropertiesTypeConfig;
-import com.eviware.soapui.config.PropertyConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFResponse;
@@ -110,14 +107,12 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		if( amfRequestTestStepConfig.getProperties() == null )
 			amfRequestTestStepConfig.addNewProperties();
 
-		amfRequest = new AMFRequest( this );
+		amfRequest = new AMFRequest( this, forLoadTest );
 
-		
 		propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder( this, amfRequestTestStepConfig.getProperties() );
 		addResponseAsXMLVirtualProperty();
 
 		initAssertions();
-		amfRequest.initIcons();
 
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 		scriptEngine.setScript( getScript() );
@@ -144,10 +139,10 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 			}
 
 		};
-		
+
 		propertyHolderSupport.addVirtualProperty( "ResponseAsXML", responseProperty );
 	}
-		
+
 	public AMFRequestTestStepConfig getAMFRequestTestStepConfig()
 	{
 		return amfRequestTestStepConfig;
@@ -710,8 +705,8 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		super.resetConfigOnMove( config );
 		amfRequestTestStepConfig = ( AMFRequestTestStepConfig )config.getConfig().changeType(
 				AMFRequestTestStepConfig.type );
-		propertyHolderSupport.resetPropertiesConfig(  amfRequestTestStepConfig.getProperties() );
-//		addResponseAsXMLVirtualProperty();
+		propertyHolderSupport.resetPropertiesConfig( amfRequestTestStepConfig.getProperties() );
+		// addResponseAsXMLVirtualProperty();
 		assertionsSupport.refresh();
 	}
 
@@ -719,7 +714,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	{
 		return propertyHolderSupport;
 	}
-	
+
 	public TestStep getTestStep()
 	{
 		return this;

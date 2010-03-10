@@ -60,10 +60,12 @@ public class JdbcRequest extends AbstractAnimatableModelItem<ModelItemConfig> im
 	private boolean forLoadTest;
 	private AssertionStatus currentStatus;
 
-	public JdbcRequest( JdbcRequestTestStep testStep )
+	public JdbcRequest( JdbcRequestTestStep testStep, boolean forLoadTest )
 	{
 		this.testStep = testStep;
-		initIcons();
+
+		if( !forLoadTest )
+			initIcons();
 	}
 
 	public void addSubmitListener( SubmitListener listener )
