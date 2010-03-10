@@ -85,7 +85,7 @@ public class StringToStringMap extends HashMap<String, String>
 
 	public static StringToStringMap fromXml( String value )
 	{
-		if( value == null || value.trim().length() == 0 )
+		if( value == null || value.trim().length() == 0 || value.equals( "<xml-fragment/>" ) )
 			return new StringToStringMap();
 
 		try
