@@ -16,7 +16,6 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.util.Locale;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -185,11 +184,11 @@ public class FindAndReplaceDialog extends AbstractAction
 		if( wholeWordCheck.isSelected() )
 		{
 			while( ix != -1
-					&& ( ix > 0 && Character.isLetterOrDigit( txt.charAt( ix - 1 ) ) )
-					|| ( ix < txt.length() - value.length() - 1 && Character.isLetterOrDigit( txt.charAt( ix
-							+ value.length() ) ) ) )
+					&& ( ( ix > 0 && Character.isLetterOrDigit( txt.charAt( ix - 1 ) ) ) || ( ix < txt.length()
+							- value.length() - 1 && Character.isLetterOrDigit( txt.charAt( ix + value.length() ) ) ) ) )
 			{
-				ix = findNext( ix, txt, value );
+				ix++ ;
+				ix = forwardButton.isSelected() ? txt.indexOf( value, ix ) : txt.lastIndexOf( value, ix );
 			}
 		}
 
@@ -231,7 +230,7 @@ public class FindAndReplaceDialog extends AbstractAction
 				return;
 			}
 			String value = findCombo.getSelectedItem().toString();
-			if( value.length() == 0 || (pos == txt.length() && !wrapCheck.isSelected()) )
+			if( value.length() == 0 || ( pos == txt.length() && !wrapCheck.isSelected() ) )
 				return;
 
 			if( !caseCheck.isSelected() )
