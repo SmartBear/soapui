@@ -20,6 +20,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.support.StringUtils;
 
 public class JdbcUtils
 {
@@ -33,7 +34,8 @@ public class JdbcUtils
 
 		String drvr = PropertyExpander.expandProperties( context, driver ).trim();
 		String connStr = PropertyExpander.expandProperties( context, connectionString ).trim();
-		String pass = PropertyExpander.expandProperties( context, password ).trim();
+		String pass = StringUtils.hasContent( password ) ? PropertyExpander.expandProperties( context, password )
+				.trim() : "";
 		if( connStr.contains( PASS_TEMPLATE ) )
 		{
 			connStr = connStr.replaceFirst( PASS_TEMPLATE, pass );
