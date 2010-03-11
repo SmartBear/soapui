@@ -49,6 +49,7 @@ import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class HermesJmsRequestTransport implements RequestTransport
 {
@@ -97,10 +98,11 @@ public class HermesJmsRequestTransport implements RequestTransport
 		this.username = submitContext.expand( request.getUsername() );
 		this.password = submitContext.expand( request.getPassword() );
 		JMSHeaderConfig jmsConfig = ( ( AbstractHttpRequest<?> )request ).getJMSHeaderConfig();
-   	this.durableSubscriptionName = submitContext.expand(jmsConfig.getDurableSubscriptionName());
-   	this.clientID = submitContext.expand(jmsConfig.getClientID());
-   	this.messageSelector =jmsConfig.getMessageSelector();// expand latter just before use
-   	submitContext.setProperty(HermesJmsRequestTransport.JMS_MESSAGE_RECEIVE,null);
+		this.durableSubscriptionName = submitContext.expand( jmsConfig.getDurableSubscriptionName() );
+		this.clientID = submitContext.expand( jmsConfig.getClientID() );
+		this.messageSelector = jmsConfig.getMessageSelector();// expand latter
+		// just before use
+		submitContext.setProperty( HermesJmsRequestTransport.JMS_MESSAGE_RECEIVE, null );
 	}
 
 	protected Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
@@ -250,10 +252,10 @@ public class HermesJmsRequestTransport implements RequestTransport
 		return send( submitContext, request, hermes, messageProducer, messageSend );
 	}
 
-	protected Message messagePublish( SubmitContext submitContext, Request request, Session topicSession,
-			Hermes hermes, Topic topicPublish ) throws JMSException
+	protected Message messagePublish( SubmitContext submitContext, Request request, Session topicSession, Hermes hermes,
+			Topic topicPublish ) throws JMSException
 	{
-		 MessageProducer topicPublisher = topicSession.createProducer(  topicPublish );
+		MessageProducer topicPublisher = topicSession.createProducer( topicPublish );
 		Message messagePublish = createMessage( submitContext, request, topicSession );
 		return send( submitContext, request, hermes, topicPublisher, messagePublish );
 	}
@@ -296,15 +298,26 @@ public class HermesJmsRequestTransport implements RequestTransport
 		else if( messageReceive instanceof MapMessage )
 		{
 			MapMessage mapMessageReceive = ( MapMessage )messageReceive;
-			return new JMSResponse( JMSUtils.extractMapMessagePayloadToString( mapMessageReceive ), messageSend,
+			return new JMSResponse( JMSUtils.extractMapMessagePayloadToXML(  mapMessageReceive ), messageSend,
 					mapMessageReceive, request, timeStarted );
 		}
 		else if( messageReceive instanceof BytesMessage )
 		{
+
 			BytesMessage bytesMessageReceive = ( BytesMessage )messageReceive;
-			JMSResponse jmsResponse = new JMSResponse( "", messageSend, bytesMessageReceive, request, timeStarted );
-			addAttachment( request, bytesMessageReceive, jmsResponse );
-			return jmsResponse;
+
+			String bytesMessageAsString = new String( JMSUtils.extractByteArrayFromMessage( bytesMessageReceive ) );
+			// if message seems to be XML make xml response
+			if( XmlUtils.seemsToBeXml( bytesMessageAsString ) )
+			{
+				return new JMSResponse( bytesMessageAsString, messageSend, bytesMessageReceive, request, timeStarted );
+			}
+			else
+			{
+				JMSResponse jmsResponse = new JMSResponse( "", messageSend, bytesMessageReceive, request, timeStarted );
+				addAttachment( request, bytesMessageReceive, jmsResponse );
+				return jmsResponse;
+			}
 		}
 		return null;
 	}
@@ -462,42 +475,48 @@ public class HermesJmsRequestTransport implements RequestTransport
 		}
 	}
 
-//	protected Connection createConnection( SubmitContext submitContext, Request request,
-//			ConnectionFactory connectionFactory, Domain domain, String clientId ) throws JMSException
-//	{
-//		QueueConnection queueConnection;
-//		TopicConnection topicConnection;
-//
-//		String username = submitContext.expand( request.getUsername() );
-//		String password = submitContext.expand( request.getPassword() );
-//
-//		if( domain.equals( Domain.TOPIC ) )
-//		{
-//			topicConnection = StringUtils.hasContent( username ) ? ( ( TopicConnectionFactory )connectionFactory )
-//					.createTopicConnection( username, password ) : ( ( TopicConnectionFactory )connectionFactory )
-//					.createTopicConnection();
-//
-//			if( !StringUtils.isNullOrEmpty( clientId ) )
-//				topicConnection.setClientID( clientId );
-//
-//			return topicConnection;
-//		}
-//		else if( domain.equals( Domain.QUEUE ) )
-//		{
-//			queueConnection = StringUtils.hasContent( username ) ? ( ( QueueConnectionFactory )connectionFactory )
-//					.createQueueConnection( username, password ) : ( ( QueueConnectionFactory )connectionFactory )
-//					.createQueueConnection();
-//
-//			if( !StringUtils.isNullOrEmpty( clientId ) )
-//				queueConnection.setClientID( clientId );
-//
-//			return queueConnection;
-//		}
-//		else
-//		{
-//			return null;
-//		}
-//	}
+	// protected Connection createConnection( SubmitContext submitContext,
+	// Request request,
+	// ConnectionFactory connectionFactory, Domain domain, String clientId )
+	// throws JMSException
+	// {
+	// QueueConnection queueConnection;
+	// TopicConnection topicConnection;
+	//
+	// String username = submitContext.expand( request.getUsername() );
+	// String password = submitContext.expand( request.getPassword() );
+	//
+	// if( domain.equals( Domain.TOPIC ) )
+	// {
+	// topicConnection = StringUtils.hasContent( username ) ? ( (
+	// TopicConnectionFactory )connectionFactory )
+	// .createTopicConnection( username, password ) : ( ( TopicConnectionFactory
+	// )connectionFactory )
+	// .createTopicConnection();
+	//
+	// if( !StringUtils.isNullOrEmpty( clientId ) )
+	// topicConnection.setClientID( clientId );
+	//
+	// return topicConnection;
+	// }
+	// else if( domain.equals( Domain.QUEUE ) )
+	// {
+	// queueConnection = StringUtils.hasContent( username ) ? ( (
+	// QueueConnectionFactory )connectionFactory )
+	// .createQueueConnection( username, password ) : ( ( QueueConnectionFactory
+	// )connectionFactory )
+	// .createQueueConnection();
+	//
+	// if( !StringUtils.isNullOrEmpty( clientId ) )
+	// queueConnection.setClientID( clientId );
+	//
+	// return queueConnection;
+	// }
+	// else
+	// {
+	// return null;
+	// }
+	// }
 
 	@SuppressWarnings( "serial" )
 	public static class UnresolvedJMSEndpointException extends Exception

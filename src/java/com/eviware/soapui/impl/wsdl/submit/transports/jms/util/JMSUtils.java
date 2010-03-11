@@ -13,6 +13,7 @@ package com.eviware.soapui.impl.wsdl.submit.transports.jms.util;
 
 import java.util.Enumeration;
 
+import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 
@@ -52,7 +53,9 @@ public class JMSUtils
 				{
 					String r = me.getProperty( "Endpoint" );
 					return r != null && r.startsWith( JMSEndpoint.JMS_ENDPIONT_PREFIX );
-				}else{
+				}
+				else
+				{
 					return false;
 				}
 			}
@@ -98,5 +101,30 @@ public class JMSUtils
 		}
 
 		return sb.toString();
+	}
+
+	public static String extractMapMessagePayloadToXML( MapMessage mapMessage ) throws JMSException
+	{
+		
+		
+		StringBuffer sb = new StringBuffer( "<message>\n" );
+
+		Enumeration<?> mapNames = mapMessage.getMapNames();
+
+		while( mapNames.hasMoreElements() )
+		{
+			String key = ( String )mapNames.nextElement();
+			String value = mapMessage.getString( key );
+			sb.append("<" +key + ">" + value+ "</" +key + ">\n" );
+		}
+		sb.append( "</message>" );
+		return sb.toString();
+	}
+
+	public static byte[] extractByteArrayFromMessage( BytesMessage message ) throws JMSException
+	{
+		byte[] bytes = new byte[( int )message.getBodyLength()];
+		message.readBytes( bytes );
+		return bytes;
 	}
 }
