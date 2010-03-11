@@ -24,6 +24,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class JMSUtils
 {
@@ -105,8 +106,7 @@ public class JMSUtils
 
 	public static String extractMapMessagePayloadToXML( MapMessage mapMessage ) throws JMSException
 	{
-		
-		
+
 		StringBuffer sb = new StringBuffer( "<message>\n" );
 
 		Enumeration<?> mapNames = mapMessage.getMapNames();
@@ -115,7 +115,7 @@ public class JMSUtils
 		{
 			String key = ( String )mapNames.nextElement();
 			String value = mapMessage.getString( key );
-			sb.append("<" +key + ">" + value+ "</" +key + ">\n" );
+			sb.append( "<" + key + ">" + XmlUtils.entitize( value ) + "</" + key + ">\n" );
 		}
 		sb.append( "</message>" );
 		return sb.toString();
