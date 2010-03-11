@@ -37,7 +37,7 @@ fi
 
 export SOAPUI_CLASSPATH
 
-JAVA=$SOAPUI_HOME\jre\bin\java
+JAVA=$SOAPUI_HOME/jre/bin/java
 
 JAVA_OPTS="-Xms128m -Xmx384m -Dsoapui.properties=soapui.properties -Dgroovy.source.encoding=iso-8859-1 -Dsoapui.home=$SOAPUI_HOME"
 if [ $SOAPUI_HOME != "" ] 
