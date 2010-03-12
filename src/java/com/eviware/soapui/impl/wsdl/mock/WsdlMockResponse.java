@@ -249,7 +249,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 	{
 		try
 		{
-			iconAnimator.start();
+			// iconAnimator.start();
 
 			getProperty( "Request" ).setValue( request.getRequestContent() );
 
@@ -320,10 +320,10 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			SoapUI.logError( e );
 			throw new DispatchException( e );
 		}
-		finally
-		{
-			iconAnimator.stop();
-		}
+		// finally
+		// {
+		// iconAnimator.stop();
+		// }
 	}
 
 	public void evaluateScript( WsdlMockRequest request ) throws Exception

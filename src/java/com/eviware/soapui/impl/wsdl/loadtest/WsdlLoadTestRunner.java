@@ -122,17 +122,17 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 
 		loadTest.addPropertyChangeListener( WsdlLoadTest.THREADCOUNT_PROPERTY, internalPropertyChangeListener );
 
-			XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog( "Starting threads",
-					( int )loadTest.getThreadCount(), "", true );
-			try
-			{
-				testCaseStarter = new TestCaseStarter();
-				progressDialog.run( testCaseStarter );
-			}
-			catch( Exception e )
-			{
-				SoapUI.logError( e );
-			}
+		XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog( "Starting threads",
+				( int )loadTest.getThreadCount(), "", true );
+		try
+		{
+			testCaseStarter = new TestCaseStarter();
+			progressDialog.run( testCaseStarter );
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+		}
 
 		if( status == Status.RUNNING )
 		{
@@ -250,8 +250,8 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		{
 			try
 			{
-			listener.loadTestStopped( this, context );
-		}
+				listener.loadTestStopped( this, context );
+			}
 			catch( Throwable e )
 			{
 				SoapUI.logError( e );
@@ -335,16 +335,16 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		if( stopped )
 			return;
 
-			loadTest.removePropertyChangeListener( WsdlLoadTest.THREADCOUNT_PROPERTY, internalPropertyChangeListener );
+		loadTest.removePropertyChangeListener( WsdlLoadTest.THREADCOUNT_PROPERTY, internalPropertyChangeListener );
 
-			if( testCaseStarter != null )
-				testCaseStarter.stop();
+		if( testCaseStarter != null )
+			testCaseStarter.stop();
 
-			if( status == Status.RUNNING )
-				status = Status.FINISHED;
+		if( status == Status.RUNNING )
+			status = Status.FINISHED;
 
-			loadTest.getLoadTestLog().addEntry(
-					new LoadTestLogMessageEntry( "LoadTest ended at " + new Date( System.currentTimeMillis() ) ) );
+		loadTest.getLoadTestLog().addEntry(
+				new LoadTestLogMessageEntry( "LoadTest ended at " + new Date( System.currentTimeMillis() ) ) );
 
 		try
 		{
@@ -355,8 +355,8 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 			SoapUI.logError( e );
 		}
 
-			for( LoadTestRunListener listener : loadTest.getLoadTestRunListeners() )
-			{
+		for( LoadTestRunListener listener : loadTest.getLoadTestRunListeners() )
+		{
 			try
 			{
 				listener.afterLoadTest( this, context );
@@ -367,10 +367,10 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 			}
 		}
 
-			context.clear();
+		context.clear();
 		stopped = true;
 		blueprintConfig = null;
-		}
+	}
 
 	public boolean hasStopped()
 	{
@@ -525,8 +525,10 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		{
 			try
 			{
-				Thread.currentThread().setName(
-						testCase.getName() + " " + loadTest.getName() + " ThreadIndex = " + threadIndex );
+				if( System.getProperty( "soapui.enablenamedthreads" ) != null )
+					Thread.currentThread().setName(
+							testCase.getName() + " " + loadTest.getName() + " ThreadIndex = " + threadIndex );
+
 				runner = new WsdlTestCaseRunner( testCase, new StringToObjectMap() );
 
 				while( !canceled )
@@ -671,7 +673,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		{
 			try
 			{
-				blueprintConfig = TestCaseConfig.Factory.parse( testCase.getConfig().xmlText());
+				blueprintConfig = TestCaseConfig.Factory.parse( testCase.getConfig().xmlText() );
 				blueprintConfig.setLoadTestArray( new LoadTestConfig[0] );
 			}
 			catch( XmlException e )

@@ -127,7 +127,8 @@ public abstract class AbstractTestRunner<T extends TestRunnable, T2 extends Test
 		if( future != null )
 		{
 			thread = Thread.currentThread();
-			thread.setName( "TestRunner Thread for " + testRunnable.getName() );
+			if( System.getProperty( "soapui.enablenamedthreads" ) != null )
+				thread.setName( "TestRunner Thread for " + testRunnable.getName() );
 		}
 
 		try
@@ -239,7 +240,7 @@ public abstract class AbstractTestRunner<T extends TestRunnable, T2 extends Test
 	{
 		timeTaken = System.currentTimeMillis() - startTime;
 	}
-	
+
 	public long getTimeTaken()
 	{
 		return timeTaken;
@@ -269,5 +270,4 @@ public abstract class AbstractTestRunner<T extends TestRunnable, T2 extends Test
 		}
 	}
 
-	
 }

@@ -36,8 +36,8 @@ public class XmlBeansSettingsImpl implements Settings
 {
 	private final Settings parent;
 	private final SettingsConfig config;
-	private final Map<String, SettingConfig> values = Collections.synchronizedMap( new HashMap<String, SettingConfig>());
-	private final Map<String, String> valueCache = Collections.synchronizedMap( new StringToStringMap());
+	private final Map<String, SettingConfig> values = Collections.synchronizedMap( new HashMap<String, SettingConfig>() );
+	private final Map<String, String> valueCache = Collections.synchronizedMap( new StringToStringMap() );
 	private final Set<SettingsListener> listeners = new HashSet<SettingsListener>();
 	private final ModelItem item;
 	private final SettingsListener settingsListener = new WeakSettingsListener( new InternalSettingsListener() );
@@ -67,14 +67,20 @@ public class XmlBeansSettingsImpl implements Settings
 
 	public String getString( String id, String defaultValue )
 	{
-		if( valueCache.containsKey( id ) )
+		String cachedValue = valueCache.get( id );
+		if( cachedValue != null )
 		{
-			return valueCache.get( id );
+			return cachedValue;
 		}
-		else if( values.containsKey( id ) )
+		else
 		{
-			valueCache.put( id, values.get( id ).getStringValue() );
-			return valueCache.get( id );
+			SettingConfig setting = values.get( id );
+			if( setting != null )
+			{
+				String value = setting.getStringValue();
+				valueCache.put( id, value );
+				return value;
+			}
 		}
 
 		return parent == null ? defaultValue : parent.getString( id, defaultValue );

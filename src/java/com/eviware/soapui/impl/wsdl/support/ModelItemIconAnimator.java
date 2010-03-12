@@ -90,7 +90,8 @@ public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> imp
 	{
 		if( future != null )
 		{
-			Thread.currentThread().setName( "ModelItemIconAnimator for " + target.getName() );
+			if( System.getProperty( "soapui.enablenamedthreads" ) != null )
+				Thread.currentThread().setName( "ModelItemIconAnimator for " + target.getName() );
 		}
 
 		while( !stopped )
