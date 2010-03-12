@@ -16,10 +16,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
 
 public class JdbcUtils
@@ -27,15 +27,18 @@ public class JdbcUtils
 
 	public static final String PASS_TEMPLATE = "PASS_VALUE";
 
-	public static Connection testConnection( ModelItem modelItem, String driver, String connectionString, String password )
-			throws Exception, SQLException
+	public static Connection initConnection( PropertyExpansionContext context, String driver, String connectionString,
+			String password ) throws SQLException, SoapUIException
 	{
-		PropertyExpansionContext context = new DefaultPropertyExpansionContext( modelItem );
-
+		if( JdbcUtils.missingConnSettings( driver, connectionString, password ) )
+		{
+			throw new SoapUIException( "Some connections settings are missing" );
+		}		
 		String drvr = PropertyExpander.expandProperties( context, driver ).trim();
 		String connStr = PropertyExpander.expandProperties( context, connectionString ).trim();
-		String pass = StringUtils.hasContent( password ) ? PropertyExpander.expandProperties( context, password )
-				.trim() : "";
+		String pass = StringUtils.hasContent( password ) ? PropertyExpander.expandProperties( context, password ).trim()
+				: "";
+		String masskedPass = connStr.replace( PASS_TEMPLATE, "#####" );
 		if( connStr.contains( PASS_TEMPLATE ) )
 		{
 			connStr = connStr.replaceFirst( PASS_TEMPLATE, pass );
@@ -46,18 +49,31 @@ public class JdbcUtils
 		}
 		catch( SQLException e )
 		{
+			SoapUI.logError( e );
 			try
 			{
 				Class.forName( drvr ).newInstance();
 			}
 			catch( Exception e1 )
 			{
-				throw new Exception( "Failed to init connection for drvr [" + drvr + "], connectionString ["
-						+ connectionString + "]" );
+				SoapUI.logError( e );
+				throw new SoapUIException( "Failed to init connection for drvr [" + drvr + "], connectionString ["
+						+ masskedPass + "]" );
 			}
 		}
 		return DriverManager.getConnection( connStr );
 
+	}
+
+	public static boolean hasMasskedPass( String connStr )
+	{
+		return !StringUtils.isNullOrEmpty( connStr ) ? connStr.contains( PASS_TEMPLATE ) : false;
+	}
+
+	public static boolean missingConnSettings( String driver, String connectionString, String password )
+	{
+		return StringUtils.isNullOrEmpty( driver ) || StringUtils.isNullOrEmpty( connectionString )
+				|| ( connectionString.contains( PASS_TEMPLATE ) && StringUtils.isNullOrEmpty( password ) );
 	}
 
 }

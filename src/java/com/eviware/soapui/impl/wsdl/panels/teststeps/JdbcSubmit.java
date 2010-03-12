@@ -13,14 +13,12 @@
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.List;
 import java.util.concurrent.Future;
-import java.util.regex.Matcher;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.NamedParameterStatement;
@@ -31,9 +29,9 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.jdbc.JdbcUtils;
 
 public class JdbcSubmit implements Submit, Runnable
 {
@@ -223,52 +221,21 @@ public class JdbcSubmit implements Submit, Runnable
 
 	protected void getDatabaseConnection() throws Exception, SQLException
 	{
-		String drvr = "";
-		String connStr = "";
-		String pass = "";
-
 		JdbcRequestTestStep testStep = request.getTestStep();
 
-		if( !StringUtils.isNullOrEmpty( testStep.getDriver() )
-				&& !StringUtils.isNullOrEmpty( testStep.getConnectionString() ) )
-		{
-			drvr = PropertyExpander.expandProperties( context, testStep.getDriver() ).trim();
-			connStr = PropertyExpander.expandProperties( context, testStep.getConnectionString() ).trim();
-
-			if( !StringUtils.isNullOrEmpty( testStep.getPassword() ) )
-				pass = PropertyExpander.expandProperties( context, testStep.getPassword() ).trim();
-		}
-		else
-		{
-			UISupport.showErrorMessage( "Please supply connection settings for all DataSources" );
-			throw new SoapUIException( "Please supply connection settings" );
-		}
-		if( connStr.contains( JdbcRequestTestStep.PASS_TEMPLATE ) )
-		{
-			connStr = connStr.replaceFirst( JdbcRequestTestStep.PASS_TEMPLATE, Matcher.quoteReplacement( pass ) );
-		}
 		try
 		{
-			DriverManager.getDriver( connStr );
+			connection = JdbcUtils.initConnection( context, testStep.getDriver(), testStep.getConnectionString(), testStep
+					.getPassword() );
+			// IMPORTANT: setting as readOnly raises an exception in calling stored
+			// procedures!
+			// connection.setReadOnly( true );
 		}
 		catch( SQLException e )
 		{
-			try
-			{
-				Class.forName( drvr ).newInstance();
-			}
-			catch( Exception e1 )
-			{
-				throw new Exception( "Failed to init connection for drvr [" + drvr + "], connectionString ["
-						+ testStep.getConnectionString() + "]" );
-			}
+			UISupport.showErrorMessage( e );
+			throw e;
 		}
-
-		resultSet = null;
-		connection = DriverManager.getConnection( connStr );
-		// IMPORTANT: setting as readOnly raises an exception in calling stored
-		// procedures!
-		// connection.setReadOnly( true );
 	}
 
 	protected void load() throws SQLException

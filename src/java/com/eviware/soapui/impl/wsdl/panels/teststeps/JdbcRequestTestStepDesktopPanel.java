@@ -16,6 +16,7 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,6 +68,8 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Submit.Status;
+import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
@@ -77,6 +80,7 @@ import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.ListDataChangeListener;
+import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
@@ -316,7 +320,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 	protected JComponent buildProperties()
 	{
-		propertyHolderTable = new PropertyHolderTable( getModelItem() ){
+		propertyHolderTable = new PropertyHolderTable( getModelItem() )
+		{
 			protected JTable buildPropertiesTable()
 			{
 				propertiesModel = new DefaultPropertyTableHolderModel( holder )
@@ -654,7 +659,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		assertionsPanel.release();
 		inspectorPanel.release();
 		propertyHolderTable.release();
-		
+
 		return release();
 	}
 
@@ -704,11 +709,17 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		{
 			try
 			{
-				JdbcUtils.testConnection( getModelItem(), jdbcRequestTestStep.getDriver(), jdbcRequestTestStep
+
+				PropertyExpansionContext context = new DefaultPropertyExpansionContext( getModelItem() );
+				JdbcUtils.initConnection( context, jdbcRequestTestStep.getDriver(), jdbcRequestTestStep
 						.getConnectionString(), jdbcRequestTestStep.getPassword() );
 				UISupport.showInfoMessage( "The Connection Successfully Tested" );
 			}
-			catch( Exception e )
+			catch( SoapUIException e )
+			{
+				log.error( e.getMessage() );
+			}
+			catch( SQLException e )
 			{
 				UISupport.showErrorMessage( "Can't get the Connection for specified properties; " + e.toString() );
 			}
