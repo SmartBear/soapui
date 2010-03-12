@@ -100,8 +100,7 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <h2>Get Trained!<br />
 </h2>
 <p>Whether new to soapUI or experienced, Think88´s training classes will increase your productivity making you a more effective tester</p>
-<p>Free upgrade to soapUI Pro for 5 or more students<strong>Think88.</strong> </p>
-<p>Learn how to construct robust functional, scalability, and reliability tests for your Service Oriented Architecture (SOA), Web  services, and REST-based services.</p>
+<p>Free upgrade to soapUI Pro for 5 or more students <strong>Think88.</strong> </p>
 <div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUITrainingReadMore')" href="http://www.think88.com/soap.html">Read more</a></div>
 <div class="clearfix"></div>
 </div>
