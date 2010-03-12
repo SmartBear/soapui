@@ -63,7 +63,13 @@ public class ProxyFindAndReplacable implements FindAndReplaceable
 
 	public String getText()
 	{
+		if( isReplaceAll )
+		{
 			return sbtartget.toString();
+		}
+		else
+			return proxytarget.getText();
+			
 	}
 
 	public String getDialogText()
