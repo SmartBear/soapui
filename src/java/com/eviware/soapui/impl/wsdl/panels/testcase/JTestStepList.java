@@ -31,6 +31,7 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
@@ -39,6 +40,7 @@ import javax.swing.event.PopupMenuListener;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.impl.wsdl.actions.teststep.RunFromTestStepAction;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
@@ -49,6 +51,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
+import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.swing.AutoscrollSupport;
 import com.eviware.soapui.support.swing.ModelItemListKeyListener;
 import com.eviware.soapui.support.swing.ModelItemListMouseListener;
@@ -102,7 +105,7 @@ public class JTestStepList extends JPanel
 					if( item != null )
 						UISupport.select( item );
 				}
-				
+
 				super.mouseClicked( e );
 			}
 		} );
@@ -185,8 +188,11 @@ public class JTestStepList extends JPanel
 				int[] indices = testStepList.getSelectedIndices();
 				if( indices.length == 1 )
 				{
-					TestStep testStep = ( TestStep )testCase.getTestStepAt( ix );
+					WsdlTestStep testStep = testCase.getTestStepAt( ix );
 					ActionSupport.addActions( ActionListBuilder.buildActions( testStep ), testListPopup );
+
+					testListPopup.insert( SwingActionDelegate.createDelegate( new RunFromTestStepAction(), testStep ), 0 );
+					testListPopup.insert( new JSeparator(), 1 );
 				}
 				else
 				{
@@ -314,8 +320,8 @@ public class JTestStepList extends JPanel
 
 					public void run()
 					{
-			fireContentsChanged( this, ix, ix );
-		}
+						fireContentsChanged( this, ix, ix );
+					}
 				} );
 			}
 			else

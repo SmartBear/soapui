@@ -132,6 +132,7 @@
 
 
 	<!-- TestStep Actions -->
+	<tns:action id="RunFromTestStepAction" actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.RunFromTestStepAction"/>
 	<tns:action id="RenameTestStepAction" actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.RenameTestStepAction"/>
 	<tns:action id="DeleteTestStepAction" actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.DeleteTestStepAction"/>
 	<tns:action id="CloneTestStepAction" actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.CloneTestStepAction"/>
@@ -192,6 +193,8 @@
 
     <!-- MultiActions -->
 	<tns:action id="MultiTestStepDeleteAction" actionClass="com.eviware.soapui.impl.actions.multi.MultiTestStepDeleteAction"/>
+	<tns:action id="MultiTestStepEnableAction" actionClass="com.eviware.soapui.impl.actions.multi.MultiTestStepEnableAction"/>
+	<tns:action id="MultiTestStepDisableAction" actionClass="com.eviware.soapui.impl.actions.multi.MultiTestStepDisableAction"/>
 
 	<!-- Workspace Action Group -->
 	<tns:actionGroup name="Workspace Actions" id="WorkspaceImplActions"
@@ -665,6 +668,8 @@
 
     <tns:actionGroup name="SoapUIMultiActions" id="SoapUIMultiActions">
         <tns:actionMapping actionId="MultiTestStepDeleteAction" keyStroke="DELETE"/>
+        <tns:actionMapping actionId="MultiTestStepEnableAction"/>
+        <tns:actionMapping actionId="MultiTestStepDisableAction"/>
     </tns:actionGroup>
     
 </tns:soapui-actions>

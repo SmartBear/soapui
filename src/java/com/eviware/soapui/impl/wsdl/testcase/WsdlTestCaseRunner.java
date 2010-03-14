@@ -38,11 +38,12 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 
 public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTestRunContext> implements TestCaseRunner
 {
-	private TestRunListener[] listeners =new TestRunListener[0]; 
+	private TestRunListener[] listeners = new TestRunListener[0];
 	private List<TestStepResult> testStepResults = Collections.synchronizedList( new LinkedList<TestStepResult>() );
 	private int gotoStepIndex;
 	private int resultCount;
 	private int initCount;
+	private int startStep = 0;
 
 	public WsdlTestCaseRunner( WsdlTestCase testCase, StringToObjectMap properties )
 	{
@@ -52,6 +53,16 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 	public WsdlTestRunContext createContext( StringToObjectMap properties )
 	{
 		return new WsdlTestRunContext( this, properties );
+	}
+
+	public int getStartStep()
+	{
+		return startStep;
+	}
+
+	public void setStartStep( int startStep )
+	{
+		this.startStep = startStep;
 	}
 
 	public void onCancel( String reason )
@@ -115,7 +126,8 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 			}
 		}
 
-		int currentStepIndex = 0;
+		int currentStepIndex = startStep;
+		runContext.setCurrentStep( currentStepIndex );
 
 		for( ; isRunning() && currentStepIndex < testCase.getTestStepCount(); currentStepIndex++ )
 		{
@@ -149,7 +161,7 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 	protected void internalFinally( WsdlTestRunContext runContext )
 	{
 		WsdlTestCase testCase = getTestRunnable();
-		
+
 		for( int c = 0; c < initCount && c < testCase.getTestStepCount(); c++ )
 		{
 			WsdlTestStep testStep = testCase.getTestStepAt( c );
@@ -165,7 +177,7 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 		{
 			SoapUI.logError( e );
 		}
-		
+
 		notifyAfterRun();
 
 		runContext.clear();
@@ -298,11 +310,11 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 		if( maxResults < 1 )
 			return;
 
-			while( testStepResults.size() > maxResults )
-			{
-				testStepResults.remove( 0 );
-			}
+		while( testStepResults.size() > maxResults )
+		{
+			testStepResults.remove( 0 );
 		}
+	}
 
 	public void gotoStepByName( String stepName )
 	{
