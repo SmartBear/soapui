@@ -429,9 +429,9 @@ public class SoapUI
 		// toolsMenu.addSeparator();
 		// toolsMenu.add( new XQueryXPathTesterAction());
 		toolsMenu.addSeparator();
-		StartHermesJMSButtonAction hermesJMSButtonAction= new StartHermesJMSButtonAction();
+		StartHermesJMSButtonAction hermesJMSButtonAction = new StartHermesJMSButtonAction();
 		hermesJMSButtonAction.setEnabled( HermesUtils.isHermesJMSSupported() );
-		toolsMenu.add(hermesJMSButtonAction);
+		toolsMenu.add( hermesJMSButtonAction );
 
 		return toolsMenu;
 	}
@@ -967,10 +967,18 @@ public class SoapUI
 
 		log.error( "An error occured [" + msg + "], see error log for details" );
 
-		if( message != null )
-			errorLog.error( message );
+		try
+		{
+			if( message != null )
+				errorLog.error( message );
 
-		errorLog.error( e.toString(), e );
+			errorLog.error( e.toString(), e );
+		}
+		catch( OutOfMemoryError e1 )
+		{
+			e1.printStackTrace();
+			System.gc();
+		}
 		if( !isStandalone() || "true".equals( System.getProperty( "soapui.stacktrace" ) ) )
 			e.printStackTrace();
 	}
