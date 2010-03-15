@@ -142,4 +142,20 @@ public class ProxyFindAndReplacable implements FindAndReplaceable
 		}
 		
 	}
+	
+	public void setCarretPosition(boolean forward){
+		if(proxytarget instanceof JEditTextArea){
+			((JEditTextArea)proxytarget).setCaretPosition( forward ?getEnd() : getStart());
+		}
+	}
+	
+	public int getStart()
+	{
+		return start;
+	}
+
+	public int getEnd()
+	{
+		return end;
+	}
 }

@@ -42,7 +42,6 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
 public class FindAndReplaceDialog extends AbstractAction
 {
 	private final ProxyFindAndReplacable target;
-//	private ProxyFindAndReplacable proxytarget;
 	private JDialog dialog;
 	private JCheckBox caseCheck;
 	private JRadioButton allButton;
@@ -61,7 +60,7 @@ public class FindAndReplaceDialog extends AbstractAction
 	{
 		super( "Find / Replace" );
 		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "F3" ) );
-		this.target = new ProxyFindAndReplacable(target);
+		this.target = new ProxyFindAndReplacable( target );
 	}
 
 	public void actionPerformed( ActionEvent e )
@@ -183,13 +182,16 @@ public class FindAndReplaceDialog extends AbstractAction
 	{
 		int ix = forwardButton.isSelected() ? txt.indexOf( value, pos ) : txt.lastIndexOf( value, pos );
 
+		if( selectedLinesButton.isSelected() && ( ix < target.getSelectionStart() || ix > target.getSelectionEnd() ) )
+			ix = -1;
+
 		if( wholeWordCheck.isSelected() )
 		{
 			while( ix != -1
 					&& ( ( ix > 0 && Character.isLetterOrDigit( txt.charAt( ix - 1 ) ) ) || ( ix < txt.length()
 							- value.length() - 1 && Character.isLetterOrDigit( txt.charAt( ix + value.length() ) ) ) ) )
 			{
-				ix++ ;
+				ix = forwardButton.isSelected() ? ++ix : --ix;
 				ix = forwardButton.isSelected() ? txt.indexOf( value, ix ) : txt.lastIndexOf( value, ix );
 			}
 		}
@@ -201,9 +203,6 @@ public class FindAndReplaceDialog extends AbstractAction
 			else if( backwardButton.isSelected() && pos < txt.length() - 1 )
 				return findNext( txt.length() - 1, txt, value );
 		}
-
-		if( selectedLinesButton.isSelected() && ( ix < target.getSelectionStart() || ix > target.getSelectionEnd() ) )
-			ix = -1;
 
 		return ix;
 	}
@@ -220,10 +219,8 @@ public class FindAndReplaceDialog extends AbstractAction
 
 		public void actionPerformed( ActionEvent e )
 		{
-			int pos = target.getCaretPosition();
-			int selstart = target.getSelectionStart();
-			if( selstart < pos && selstart != -1 )
-				pos = selstart;
+			int pos = tweakPosition();
+			int lastpos = tweakLastPosition();
 
 			String txt = target.getText();
 
@@ -254,7 +251,14 @@ public class FindAndReplaceDialog extends AbstractAction
 
 			if( ix != -1 )
 			{
-				target.select( ix, ix + value.length() );
+				if( selectedLinesButton.isSelected() )
+				{
+					target.select( ix, lastpos );
+				}
+				else
+				{
+					target.select( ix, ix + value.length() );
+				}
 
 				for( int c = 0; c < findCombo.getItemCount(); c++ )
 				{
@@ -284,7 +288,9 @@ public class FindAndReplaceDialog extends AbstractAction
 
 		public void actionPerformed( ActionEvent e )
 		{
-			int pos = target.getCaretPosition();
+			int pos = tweakPosition();
+			int lastpos = tweakLastPosition();
+
 			String txt = target.getText();
 
 			if( findCombo.getSelectedItem() == null )
@@ -328,7 +334,14 @@ public class FindAndReplaceDialog extends AbstractAction
 				target.select( ix, ix + value.length() );
 
 				target.setSelectedText( newValue );
-				target.select( ix, ix + newValue.length() );
+				if( selectedLinesButton.isSelected() )
+				{
+					target.select( ix, lastpos );
+				}
+				else
+				{
+					target.select( ix, ix + newValue.length() );
+				}
 
 				// adjust firstix
 				if( ix < firstIx )
@@ -361,7 +374,7 @@ public class FindAndReplaceDialog extends AbstractAction
 
 		public void actionPerformed( ActionEvent e )
 		{
-			int pos = target.getCaretPosition();
+			int pos = tweakPosition();
 			String txt = target.getDialogText();
 
 			if( findCombo.getSelectedItem() == null )
@@ -422,8 +435,10 @@ public class FindAndReplaceDialog extends AbstractAction
 				}
 			}
 			target.flushSBText();
-			target.setReplaceAll( false);
+			target.setReplaceAll( false );
+			target.setCarretPosition( forwardButton.isSelected() );
 		}
+
 	}
 
 	private class CloseAction extends AbstractAction
@@ -437,6 +452,29 @@ public class FindAndReplaceDialog extends AbstractAction
 		{
 			dialog.setVisible( false );
 		}
+	}
+
+	private int tweakPosition()
+	{
+		int pos = target.getCaretPosition();
+		if( forwardButton.isSelected() )
+		{
+			int selstart = target.getSelectionStart();
+			if( selstart < pos && selstart != -1 )
+				pos = selstart;
+		}
+		else
+		{
+			int selend = target.getSelectionEnd();
+			if( selend > pos && selend != -1 )
+				pos = selend;
+		}
+		return pos;
+	}
+
+	private int tweakLastPosition()
+	{
+		return forwardButton.isSelected() ? target.getSelectionEnd() : target.getSelectionStart();
 	}
 
 }
