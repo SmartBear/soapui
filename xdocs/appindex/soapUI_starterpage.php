@@ -125,6 +125,14 @@ your Enterprise Messages, RIA's and Databases.<br />
 <div class="clearleft"></div>
 </div>
 
+<div class="news no-bottom-border">
+<h2>Training offer</h2>
+<!--<img class="picture" title="New release" src="images/release.jpg" />-->
+<p>Free upgrade to soapUI Pro for 5 or more students in a Think88 class</p>
+<p>Whether new to soapUI or experienced, Think88's training classes will increase your productivity making you a more effective tester.</p>
+<div class="links"><span class="right"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProSecondNews')" href="http://www.think88.com/mission_critical_service_testing.html">Read more</a></span></div><div class="clearleft"></div>
+
+</div><!--end of news box-->
 
 <!--column-1-->
 <div id="column-1">
