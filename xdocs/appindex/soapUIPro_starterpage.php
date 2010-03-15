@@ -98,7 +98,7 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <div class="ad-type-3">
 <div class="title"><img src="images/training.png" alt="News" /></div>
 <h2>Get Trained!</h2>
-<p>Mission-Critical Services Testing with soapUI Pro<strong></strong> </p>
+<p>Mission-Critical Services Testing with soapUI Pro </p>
 <p>Whether new to soapUI or experienced, Think88´s training classes will increase your productivity making you a more effective tester</p>
 <p>Free upgrade to soapUI Pro for 5 or more students <strong>Think88.</strong> </p>
 <div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProTrainingReadMore')" href="http://www.think88.com/mission_critical_service_testing.html">Read more</a></div>
@@ -125,10 +125,11 @@ your Enterprise Messages, RIA's and Databases</p>
 </div><!--end of news box-->
 
 <div class="news no-bottom-border">
-<h2>Quality Center Integration</h2>
+<h2>Training offer</h2>
 <!--<img class="picture" title="New release" src="images/release.jpg" />-->
-<p>Integrate soapUI ProStart with HP Quality center through soapUI QC Plugin by Agile Testware.</p>
-<div class="links"><span class="right"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProSecondNews')" href="http://www.agiletestware.com">Read more</a></span></div><div class="clearleft"></div>
+<p>Free upgrade to soapUI Pro for 5 or more students in a Think88 class</p>
+<p>Whether new to soapUI or experienced, Think88's training classes will increase your productivity making you a more effective tester.</p>
+<div class="links"><span class="right"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProSecondNews')" href="http://www.think88.com/mission_critical_service_testing.html">Read more</a></span></div><div class="clearleft"></div>
 
 </div><!--end of news box-->
 
