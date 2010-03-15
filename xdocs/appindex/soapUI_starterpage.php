@@ -134,6 +134,8 @@ your Enterprise Messages, RIA's and Databases.<br />
 
 </div><!--end of news box-->
 
+</div>
+
 <!--column-1-->
 <div id="column-1">
 <div id="did-you-know">
