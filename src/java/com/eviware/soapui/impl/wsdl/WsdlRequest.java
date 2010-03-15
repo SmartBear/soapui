@@ -126,12 +126,12 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		{
 			wsrmConfig.setWsrmConfig( request.getWsrmConfig() );
 		}
-		
+
 		if( jmsHeaderConfig != null )
 		{
-			jmsHeaderConfig.setJMSHeaderConfConfig(  request.getJmsConfig() );
+			jmsHeaderConfig.setJMSHeaderConfConfig( request.getJmsConfig() );
 		}
-		
+
 		if( jmsPropertyConfig != null )
 		{
 			jmsPropertyConfig.setJmsPropertyConfConfig( request.getJmsPropertyConfig() );
@@ -550,10 +550,14 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.JMSTYPE ) );
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
 				JMSHeader.JMSPRIORITY ) );
-		result.addAll( PropertyExpansionUtils
-				.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.DURABLE_SUBSCRIPTION_NAME ) );
-		result.addAll( PropertyExpansionUtils
-				.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.CLIENT_ID ) );
+		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
+				JMSHeader.DURABLE_SUBSCRIPTION_NAME ) );
+		result
+				.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.CLIENT_ID ) );
+		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
+				JMSHeader.SEND_AS_BYTESMESSAGE ) );
+		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
+				JMSHeader.SOAP_ACTION_ADD ) );
 	}
 
 	public class RequestHeaderHolder

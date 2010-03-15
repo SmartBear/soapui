@@ -240,6 +240,11 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 				JMSHeader.DURABLE_SUBSCRIPTION_NAME ) );
 		result
 				.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.CLIENT_ID ) );
+		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
+				JMSHeader.SEND_AS_BYTESMESSAGE ) );
+		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
+				JMSHeader.SOAP_ACTION_ADD ) );
+
 	}
 
 	public TestProperty addProperty( String name )

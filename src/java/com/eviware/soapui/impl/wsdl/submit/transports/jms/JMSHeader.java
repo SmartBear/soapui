@@ -52,6 +52,8 @@ public class JMSHeader
 	public static final String DURABLE_SUBSCRIPTION_NAME = "durableSubscriptionName";
 	public static final String MESSAGE_SELECTOR = "messageSelector";
 	public static final String CLIENT_ID = "clientID";
+	public static final String SEND_AS_BYTESMESSAGE = "sendAsBytesMessage";
+	public static final String SOAP_ACTION_ADD = "soapActionAdd";
 
 	private long timeTolive = Message.DEFAULT_TIME_TO_LIVE;
 

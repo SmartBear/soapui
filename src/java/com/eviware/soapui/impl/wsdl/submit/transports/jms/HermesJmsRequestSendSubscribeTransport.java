@@ -32,7 +32,7 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 	{
 		Session topicSession = null;
 		Session queueSession = null;
-		TopicSubscriber topicSubsriber = null;
+		TopicSubscriber topicDurableSubsriber = null;
 		JMSConnectionHolder jmsConnectionHolderTopic = null;
 		JMSConnectionHolder jmsConnectionHolderQueue = null;
 		try
@@ -47,16 +47,14 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 			queueSession = jmsConnectionHolderQueue.getSession();
 
 			Queue queueSend = jmsConnectionHolderQueue.getQueue( jmsConnectionHolderQueue.getJmsEndpoint().getSend() );
-			Topic topicReceive = jmsConnectionHolderTopic.getTopic( jmsConnectionHolderTopic.getJmsEndpoint().getReceive() );
-
-			topicSubsriber = topicSession.createDurableSubscriber( topicReceive, StringUtils
-					.hasContent( durableSubscriptionName ) ? durableSubscriptionName : "durableSubscription"
-					+ jmsConnectionHolderTopic.getJmsEndpoint().getReceive(), submitContext.expand(messageSelector), false );
+		
+			
+			topicDurableSubsriber = createDurableSubscription( submitContext, topicSession, jmsConnectionHolderTopic ); 
 
 			Message textMessageSend = messageSend( submitContext, request, queueSession, jmsConnectionHolderQueue.getHermes(),
 					queueSend );
 
-			return makeResponse( submitContext, request, timeStarted, textMessageSend, topicSubsriber );
+			return makeResponse( submitContext, request, timeStarted, textMessageSend, topicDurableSubsriber );
 		}
 		catch( JMSException jmse )
 		{
@@ -68,8 +66,8 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 		}
 		finally
 		{
-			if( topicSubsriber != null )
-				topicSubsriber.close();
+			if( topicDurableSubsriber != null )
+				topicDurableSubsriber.close();
 			closeSessionAndConnection( jmsConnectionHolderQueue != null ? jmsConnectionHolderQueue.getConnection() : null,queueSession );
 			closeSessionAndConnection( jmsConnectionHolderTopic != null ? jmsConnectionHolderTopic.getConnection() : null,topicSession );
 		}

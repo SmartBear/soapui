@@ -93,6 +93,16 @@ public class JMSHeaderConfig implements PropertyChangeNotifier
 	{
 		return jmsHeaderConfConfig.getMessageSelector();
 	}
+	
+	public boolean getSendAsBytesMessage()
+	{
+		return jmsHeaderConfConfig.getSendAsBytesMessage();
+	}
+	
+	public boolean getSoapActionAdd()
+	{
+		return jmsHeaderConfConfig.getSoapActionAdd();
+	}
 
 	public void setJMSCorrelationID(String newValue)
 	{
@@ -155,6 +165,20 @@ public class JMSHeaderConfig implements PropertyChangeNotifier
 		String oldValue = getMessageSelector();
 		jmsHeaderConfConfig.setMessageSelector(newValue);
 		propertyChangeSupport.firePropertyChange(JMSHeader.MESSAGE_SELECTOR, oldValue, newValue);
+	}
+	
+	public void setSendAsBytesMessage(boolean newValue)
+	{
+		boolean oldValue = getSendAsBytesMessage();
+		jmsHeaderConfConfig.setSendAsBytesMessage(newValue);
+		propertyChangeSupport.firePropertyChange(JMSHeader.SEND_AS_BYTESMESSAGE, oldValue, newValue);
+	}
+	
+	public void setSopaActionAdd(boolean newValue)
+	{
+		boolean oldValue = getSoapActionAdd();
+		jmsHeaderConfConfig.setSoapActionAdd( newValue);
+		propertyChangeSupport.firePropertyChange(JMSHeader.SOAP_ACTION_ADD, oldValue, newValue);
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener)

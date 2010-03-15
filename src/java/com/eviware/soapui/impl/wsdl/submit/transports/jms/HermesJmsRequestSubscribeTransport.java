@@ -25,7 +25,6 @@ package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
 import javax.jms.JMSException;
 import javax.jms.Session;
-import javax.jms.Topic;
 import javax.jms.TopicSubscriber;
 
 import com.eviware.soapui.SoapUI;
@@ -53,12 +52,7 @@ public class HermesJmsRequestSubscribeTransport extends HermesJmsRequestTranspor
 			// session
 			topicSession = jmsConnectionHolder.getSession();
 			// destination
-			Topic topicSubscribe = jmsConnectionHolder.getTopic( jmsConnectionHolder.getJmsEndpoint().getReceive() );
-
-			// create durable subscriber
-			topicDurableSubsriber = topicSession.createDurableSubscriber( topicSubscribe, StringUtils
-					.hasContent( durableSubscriptionName ) ? durableSubscriptionName : "durableSubscription"
-					+ jmsConnectionHolder.getJmsEndpoint().getReceive(), submitContext.expand(messageSelector), false );
+			topicDurableSubsriber = createDurableSubscription( submitContext, topicSession, jmsConnectionHolder );
 
 			return makeResponse( submitContext, request, timeStarted, null, topicDurableSubsriber );
 		}

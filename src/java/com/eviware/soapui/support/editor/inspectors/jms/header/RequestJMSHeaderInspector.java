@@ -58,13 +58,17 @@ public class RequestJMSHeaderInspector extends AbstractJMSHeaderInspector implem
 				"Choose between NON PERSISTENT and PERSISTENT (default) message" );
 		simpleform.appendTextField( "timeToLive", "TimeToLive",
 				"specify 'time to live' of JMS message , zero means never expire which is default" );
+		simpleform.appendCheckBox( "sendAsBytesMessage", "Send As Bytes Message",
+				"if selected message will be sent as BytesMessage" );
+//		simpleform.appendCheckBox( "soapActionAdd", "Add Soap Action to Message", "" );
 		simpleform
 				.appendTextField(
 						"durableSubscriptionName",
 						"Durable Subscription Name",
 						"specify 'Durable Subscription Name' for subscribing to topic , if not specified automatic name is 'durableSubscription' + 'topic name'" );
 		simpleform.appendTextField( "clientID", "ClientID", "specify optional 'ClientID' for of JMS connection" );
-		simpleform.appendTextField( "messageSelector", "Message Selector", "specify message selector string to determine which messages you want to receive" );
+		simpleform.appendTextField( "messageSelector", "Message Selector",
+				"specify message selector string to determine which messages you want to receive" );
 		simpleform.addSpace( 5 );
 	}
 

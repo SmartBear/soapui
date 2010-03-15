@@ -1889,6 +1889,8 @@
     	</xsd:attribute>
     	<xsd:attribute name="clientID" type="xsd:string"></xsd:attribute>
     	<xsd:attribute name="messageSelector" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="sendAsBytesMessage" type="xsd:boolean"></xsd:attribute>
+    	<xsd:attribute name="soapActionAdd" type="xsd:boolean"></xsd:attribute>
     </xsd:complexType>
 
 

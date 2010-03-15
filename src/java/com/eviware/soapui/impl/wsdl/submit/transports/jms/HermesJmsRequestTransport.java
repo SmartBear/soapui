@@ -24,6 +24,7 @@ import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
+import javax.jms.TopicSubscriber;
 import javax.naming.NamingException;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -49,6 +50,7 @@ import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 public class HermesJmsRequestTransport implements RequestTransport
@@ -66,6 +68,8 @@ public class HermesJmsRequestTransport implements RequestTransport
 	protected String durableSubscriptionName;
 	protected String clientID;
 	protected String messageSelector;
+	protected boolean sendAsBytesMessage;
+	protected boolean addSoapAction;
 	protected Hermes hermes;
 	protected List<RequestFilter> filters = new ArrayList<RequestFilter>();
 
@@ -102,6 +106,8 @@ public class HermesJmsRequestTransport implements RequestTransport
 		this.clientID = submitContext.expand( jmsConfig.getClientID() );
 		this.messageSelector = jmsConfig.getMessageSelector();// expand latter
 		// just before use
+		this.sendAsBytesMessage = jmsConfig.getSendAsBytesMessage();
+		this.addSoapAction = jmsConfig.getSoapActionAdd();
 		submitContext.setProperty( HermesJmsRequestTransport.JMS_MESSAGE_RECEIVE, null );
 	}
 
@@ -298,7 +304,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 		else if( messageReceive instanceof MapMessage )
 		{
 			MapMessage mapMessageReceive = ( MapMessage )messageReceive;
-			return new JMSResponse( JMSUtils.extractMapMessagePayloadToXML(  mapMessageReceive ), messageSend,
+			return new JMSResponse( JMSUtils.extractMapMessagePayloadToXML( mapMessageReceive ), messageSend,
 					mapMessageReceive, request, timeStarted );
 		}
 		else if( messageReceive instanceof BytesMessage )
@@ -334,7 +340,11 @@ public class HermesJmsRequestTransport implements RequestTransport
 	{
 		if( request instanceof WsdlRequest || request instanceof HttpTestRequest || request instanceof RestRequest )
 		{
-			if( hasAttachment( request ) )
+			if( sendAsBytesMessage )
+			{
+				return createBytesMessageFromText( submitContext, request, session );
+			}
+			else if( hasAttachment( request ) )
 			{
 				if( isTextAttachment( request ) )
 				{
@@ -352,6 +362,14 @@ public class HermesJmsRequestTransport implements RequestTransport
 		}
 
 		return null;
+	}
+
+	private Message createBytesMessageFromText( SubmitContext submitContext, Request request, Session session )
+			throws JMSException
+	{
+		BytesMessage bytesMessage = session.createBytesMessage();
+		bytesMessage.writeBytes( request.getRequestContent().getBytes() );
+		return bytesMessage;
 	}
 
 	private Message createTextMessageFromAttachment( SubmitContext submitContext, Request request, Session session )
@@ -475,48 +493,18 @@ public class HermesJmsRequestTransport implements RequestTransport
 		}
 	}
 
-	// protected Connection createConnection( SubmitContext submitContext,
-	// Request request,
-	// ConnectionFactory connectionFactory, Domain domain, String clientId )
-	// throws JMSException
-	// {
-	// QueueConnection queueConnection;
-	// TopicConnection topicConnection;
-	//
-	// String username = submitContext.expand( request.getUsername() );
-	// String password = submitContext.expand( request.getPassword() );
-	//
-	// if( domain.equals( Domain.TOPIC ) )
-	// {
-	// topicConnection = StringUtils.hasContent( username ) ? ( (
-	// TopicConnectionFactory )connectionFactory )
-	// .createTopicConnection( username, password ) : ( ( TopicConnectionFactory
-	// )connectionFactory )
-	// .createTopicConnection();
-	//
-	// if( !StringUtils.isNullOrEmpty( clientId ) )
-	// topicConnection.setClientID( clientId );
-	//
-	// return topicConnection;
-	// }
-	// else if( domain.equals( Domain.QUEUE ) )
-	// {
-	// queueConnection = StringUtils.hasContent( username ) ? ( (
-	// QueueConnectionFactory )connectionFactory )
-	// .createQueueConnection( username, password ) : ( ( QueueConnectionFactory
-	// )connectionFactory )
-	// .createQueueConnection();
-	//
-	// if( !StringUtils.isNullOrEmpty( clientId ) )
-	// queueConnection.setClientID( clientId );
-	//
-	// return queueConnection;
-	// }
-	// else
-	// {
-	// return null;
-	// }
-	// }
+	protected TopicSubscriber createDurableSubscription( SubmitContext submitContext, Session topicSession,
+			JMSConnectionHolder jmsConnectionHolder ) throws JMSException, NamingException
+	{
+
+		Topic topicSubscribe = jmsConnectionHolder.getTopic( jmsConnectionHolder.getJmsEndpoint().getReceive() );
+
+		// create durable subscriber
+		TopicSubscriber topicDurableSubsriber = topicSession.createDurableSubscriber( topicSubscribe, StringUtils
+				.hasContent( durableSubscriptionName ) ? durableSubscriptionName : "durableSubscription"
+				+ jmsConnectionHolder.getJmsEndpoint().getReceive(), submitContext.expand( messageSelector ), false );
+		return topicDurableSubsriber;
+	}
 
 	@SuppressWarnings( "serial" )
 	public static class UnresolvedJMSEndpointException extends Exception
