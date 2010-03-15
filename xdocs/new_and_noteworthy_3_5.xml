@@ -270,19 +270,12 @@ soapUI XML-related features (assertions, property-transfers, scripts, etc).</li>
 <p>Custom AMF Headers and user-authenticated sessions are also supported.</p>
 
 <p class="links"><a class="more" href="tutorials/amf/amf-tutorial.html">Read Tutorial</a><a class="top" href="#"> Back to Top</a></p>
+</div>      
+        
 <div class="clearfix"></div>
 <div class="gray-line"></div>
-<div class="highlight" id="Beta2_Features">Beta2 Improvements</div>
-<p>The following has been updated:</p>
-<ul class="red-dots">
-
-</ul>
-  </div>      
-        
-        <div class="clearfix"></div>
-<div class="gray-line"></div>
 <div class="highlight" id="Final_Release">Final Release</div>
-<p>The following bugs where corrected for the final release:</p>
+<p> <strong>The following bugs where corrected for the final release:</strong></p>
 <ul class="red-dots">
 <li>Fixed times precision in Junit reports to be up to 3 decimals
 <img style="width: 102px; height: 18px" src="http://www.eviware.com/images/stories/news/35/functional-testing-icon.png" alt="functional-testing-icon.png" title="functional-testing-icon.png" width="102" height="18" align="top" />
@@ -313,9 +306,9 @@ soapUI XML-related features (assertions, property-transfers, scripts, etc).</li>
 </li>
 </ul>
 
-<p>The following minor features where added for the final release:</p>
+<p><strong>The following minor features where added for the final release:</strong></p>
 
-<ul>
+<ul class="red-dots">
 <li>Added ResponseAsXml properties to JDBC and AMF TestSteps
 <img src="http://www.eviware.com/images/stories/news/35/jms-icon.png" alt="JMS" align="top" />
 </li>
