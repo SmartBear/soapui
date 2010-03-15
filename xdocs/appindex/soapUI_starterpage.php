@@ -132,8 +132,6 @@ your Enterprise Messages, RIA's and Databases.<br />
 <p>Whether new to soapUI or experienced, Think88's training classes will increase your productivity making you a more effective tester.</p>
 <div class="links"><span class="right"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProSecondNews')" href="http://www.think88.com/mission_critical_service_testing.html">Read more</a></span></div><div class="clearleft"></div>
 
-</div><!--end of news box-->
-
 </div>
 
 <!--column-1-->
