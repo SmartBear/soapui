@@ -96,12 +96,11 @@ document.write(dayName[day] + ", " + monthName + " " + date + suffix + ", " + ye
 <div class="clearfix"></div>
 </div>
 <div class="ad-type-3">
-<div class="title"><img src="images/training.png" alt="News" /></div>
-<h2>Get Trained!</h2>
-<p>Mission-Critical Services Testing with soapUI Pro </p>
-<p>Whether new to soapUI or experienced, Think88´s training classes will increase your productivity making you a more effective tester</p>
-<p>Free upgrade to soapUI Pro for 5 or more students <strong>Think88.</strong> </p>
-<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProTrainingReadMore')" href="http://www.think88.com/mission_critical_service_testing.html">Read more</a></div>
+<div class="title"><img src="images/partner-news.png" alt="Partner News" /></div>
+<h2>QC Integration!</h2>
+<p>Try the soapUI Integration with HP Quality Center.</p>
+<p>Run soapUI tests from HP Quality Center with the plugin from Agile testware.</p>
+<div class="links"><a onclick="javascript: pageTracker._trackPageview('/appindexsoapUIProAgilePlugin')" href="http://www.agiletestware.com">Read more</a></div>
 <div class="clearfix"></div>
 </div>
 <div class="ad-type-3">
