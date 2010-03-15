@@ -20,7 +20,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +35,7 @@ import com.eviware.soapui.actions.SoapUIPreferencesAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.settings.ToolsSettings;
+import com.eviware.soapui.support.HermesJMSClasspathHacker;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 
@@ -61,7 +61,7 @@ public class HermesUtils
 		return getHermes( key, expandedHermesConfigPath );
 	}
 
-	private static URLClassLoader hermesClassLoader;
+	// private static URLClassLoader hermesClassLoader;
 
 	private static Context getHermes( String key, String hermesConfigPath ) throws IOException, MalformedURLException,
 			NamingException
@@ -77,11 +77,11 @@ public class HermesUtils
 			return contextMap.get( key );
 		}
 
-		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+		// ClassLoader cl = Thread.currentThread().getContextClassLoader();
 
 		try
 		{
-			Thread.currentThread().setContextClassLoader( hermesClassLoader );
+			// Thread.currentThread().setContextClassLoader( hermesClassLoader );
 			Properties props = new Properties();
 			props.put( Context.INITIAL_CONTEXT_FACTORY, HermesInitialContextFactory.class.getName() );
 			props.put( Context.PROVIDER_URL, hermesConfigPath + File.separator + HERMES_CONFIG_XML );
@@ -92,7 +92,7 @@ public class HermesUtils
 		}
 		finally
 		{
-			Thread.currentThread().setContextClassLoader( cl );
+			// Thread.currentThread().setContextClassLoader( cl );
 		}
 	}
 
@@ -119,45 +119,47 @@ public class HermesUtils
 		{
 			// fix for users using version of hermesJMS which still has
 			// cglib-2.1.3.jar in lib directory
-			if( !file.getName().endsWith( ".jar" ) || file.getName().equals( "cglib-2.1.3.jar" ) )
+			String filename = file.getName();
+			if( !filename.endsWith( ".jar" ) || filename.equals( "cglib-2.1.3.jar" ) )
 				continue;
 
 			urls.add( file.toURI().toURL() );
 
-			// HermesJMSClasspathHacker.addFile( new File( dir, filename ) );
+			HermesJMSClasspathHacker.addFile( new File( dir, filename ) );
 		}
 
-		hermesClassLoader = new URLClassLoader( urls.toArray( new URL[urls.size()] ), SoapUI.class.getClassLoader() )
-		{
-			// protected synchronized Class<?> loadClass( String name, boolean
-			// resolve ) throws ClassNotFoundException
-			// {
-			// // First, check if the class has already been loaded
-			// Class c = findLoadedClass( name );
-			// if( c == null )
-			// {
-			// // if( name.startsWith( "com.sun." ) || name.startsWith( "javax."
-			// // ) || name.startsWith( "org.apache." )
-			// // || name.startsWith( "org.xml." ) )
-			// // return super.loadClass( name, resolve );
-			//
-			// try
-			// {
-			// c = findClass( name );
-			//
-			// if( resolve )
-			// {
-			// resolveClass( c );
-			// }
-			// }
-			// catch( ClassNotFoundException e )
-			// {
-			// c = super.loadClass( name, resolve );
-			// }
-			// }
-			// return c;
-			// }
-		};
+		// hermesClassLoader = new URLClassLoader( urls.toArray( new
+		// URL[urls.size()] ), SoapUI.class.getClassLoader() )
+		// {
+		// protected synchronized Class<?> loadClass( String name, boolean
+		// resolve ) throws ClassNotFoundException
+		// {
+		// // First, check if the class has already been loaded
+		// Class c = findLoadedClass( name );
+		// if( c == null )
+		// {
+		// // if( name.startsWith( "com.sun." ) || name.startsWith( "javax."
+		// // ) || name.startsWith( "org.apache." )
+		// // || name.startsWith( "org.xml." ) )
+		// // return super.loadClass( name, resolve );
+		//
+		// try
+		// {
+		// c = findClass( name );
+		//
+		// if( resolve )
+		// {
+		// resolveClass( c );
+		// }
+		// }
+		// catch( ClassNotFoundException e )
+		// {
+		// c = super.loadClass( name, resolve );
+		// }
+		// }
+		// return c;
+		// }
+		// };
 	}
 
 	public static void flushHermesCache()
@@ -251,9 +253,9 @@ public class HermesUtils
 		}
 		return null;
 	}
-	
-	
-	public static boolean isHermesJMSSupported(){
+
+	public static boolean isHermesJMSSupported()
+	{
 		return !UISupport.isIdePlugin();
 	}
 }
