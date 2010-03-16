@@ -49,11 +49,11 @@ public class HttpSettingsRequestFilter extends AbstractRequestFilter
 		}
 
 		// close connections?
-		if( settings.getBoolean( HttpSettings.EXPECT_CONTINUE )  && httpMethod instanceof EntityEnclosingMethod)
+		if( settings.getBoolean( HttpSettings.EXPECT_CONTINUE ) && httpMethod instanceof EntityEnclosingMethod )
 		{
-			httpMethod.getParams().setParameter( HttpMethodParams.USE_EXPECT_CONTINUE, Boolean.TRUE);
+			httpMethod.getParams().setParameter( HttpMethodParams.USE_EXPECT_CONTINUE, Boolean.TRUE );
 		}
-		
+
 		// compress request?
 		String compressionAlg = settings.getString( HttpSettings.REQUEST_COMPRESSION, "None" );
 		if( !"None".equals( compressionAlg ) )
@@ -91,13 +91,13 @@ public class HttpSettingsRequestFilter extends AbstractRequestFilter
 
 		// apply global settings
 		HttpClientSupport.applyHttpSettings( httpMethod, settings );
-		
+
 		String timeout = context.expand( httpRequest.getTimeout() );
-		if( StringUtils.hasContent( timeout ))
+		if( StringUtils.hasContent( timeout ) )
 		{
 			try
 			{
-				httpMethod.getParams().setSoTimeout( Integer.parseInt( timeout ));
+				httpMethod.getParams().setSoTimeout( Integer.parseInt( timeout ) );
 			}
 			catch( NumberFormatException e )
 			{
