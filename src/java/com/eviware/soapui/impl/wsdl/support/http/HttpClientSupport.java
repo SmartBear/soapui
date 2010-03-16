@@ -207,7 +207,8 @@ public class HttpClientSupport
 		Header contentType = method.getResponseHeader( "Content-Type" );
 		Header contentEncoding = method.getResponseHeader( "Content-Encoding" );
 
-		String compressionAlg = contentType == null ? null : CompressionSupport.getAvailableAlgorithm( contentType.getValue() );
+		String compressionAlg = contentType == null ? null : CompressionSupport.getAvailableAlgorithm( contentType
+				.getValue() );
 		if( compressionAlg != null )
 			return compressionAlg;
 
