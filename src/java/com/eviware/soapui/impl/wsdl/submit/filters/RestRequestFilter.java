@@ -27,7 +27,6 @@ import com.eviware.soapui.support.StringUtils;
 
 public class RestRequestFilter extends HttpRequestFilter
 {
-	@SuppressWarnings( "deprecation" )
 	@Override
 	public void filterRestRequest( SubmitContext context, RestRequestInterface request )
 	{
@@ -39,5 +38,4 @@ public class RestRequestFilter extends HttpRequestFilter
 		}
 		filterHttpRequest( context, request );
 	}
-
 }
