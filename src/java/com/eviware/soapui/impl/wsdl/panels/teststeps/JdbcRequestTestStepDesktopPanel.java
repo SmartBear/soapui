@@ -717,7 +717,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			}
 			catch( SoapUIException e )
 			{
-				log.error( e.getMessage() );
+				SoapUI.logError( e );
 			}
 			catch( SQLException e )
 			{
