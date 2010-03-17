@@ -57,7 +57,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 {
 
 	
-	public static final String JMS_MESSAGE_RECEIVE = "JMS_MESSAGE_RECEIVE";
+	public static final String IS_JMS_MESSAGE_RECEIVED = "JMS_MESSAGE_RECEIVE";
 	public static final String JMS_MESSAGE_SEND = "JMS_MESSAGE_SEND";
 	public static final String JMS_RESPONSE = "JMS_RESPONSE";
 	public static final String JMS_ERROR = "JMS_ERROR";
@@ -109,7 +109,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 		// just before use
 		this.sendAsBytesMessage = jmsConfig.getSendAsBytesMessage();
 		this.addSoapAction = jmsConfig.getSoapActionAdd();
-		submitContext.setProperty( HermesJmsRequestTransport.JMS_MESSAGE_RECEIVE, null );
+		submitContext.setProperty( HermesJmsRequestTransport.IS_JMS_MESSAGE_RECEIVED, false );
 	}
 
 	protected Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
@@ -296,7 +296,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 		if( messageReceive != null )
 		{
 			JMSResponse response = resolveMessage( request, timeStarted, messageSend, messageReceive );
-			submitContext.setProperty( JMS_MESSAGE_RECEIVE, messageReceive );
+			submitContext.setProperty( IS_JMS_MESSAGE_RECEIVED, true );
 			submitContext.setProperty( JMS_RESPONSE, response );
 			return response;
 		}
