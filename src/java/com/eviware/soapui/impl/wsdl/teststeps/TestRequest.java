@@ -20,5 +20,7 @@ public interface TestRequest extends Request, Assertable
 {
 	public TestStep getTestStep();
 
+	public boolean isDiscardResponse();
+
 	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy );
 }

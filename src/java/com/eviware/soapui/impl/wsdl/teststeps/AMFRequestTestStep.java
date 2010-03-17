@@ -54,7 +54,6 @@ import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
-import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
@@ -278,7 +277,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 			}
 		}
 
-		if( !runContext.hasProperty( TestRunContext.INTERACTIVE ) )
+		if( isDiscardResponse() && !SoapUI.getDesktop().hasDesktopPanel( this ) )
 			amfRequest.setResponse( null );
 
 		return testStepResult;
@@ -718,5 +717,15 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	public TestStep getTestStep()
 	{
 		return this;
+	}
+
+	public boolean isDiscardResponse()
+	{
+		return amfRequest.isDiscardResponse();
+	}
+
+	public void setDiscardResponse( boolean discardResponse )
+	{
+		amfRequest.setDiscardResponse( discardResponse );
 	}
 }

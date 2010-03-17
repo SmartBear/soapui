@@ -473,4 +473,14 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 
 		assertionsSupport.resolve( context );
 	}
+
+	public boolean isDiscardResponse()
+	{
+		return getSettings().getBoolean( "discardResponse" );
+	}
+
+	public void setDiscardResponse( boolean discardResponse )
+	{
+		getSettings().setBoolean( "discardResponse", discardResponse );
+	}
 }

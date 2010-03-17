@@ -465,4 +465,13 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 				.getService() : null;
 	}
 
+	public boolean isDiscardResponse()
+	{
+		return getSettings().getBoolean( "discardResponse" );
+	}
+
+	public void setDiscardResponse( boolean discardResponse )
+	{
+		getSettings().setBoolean( "discardResponse", discardResponse );
+	}
 }

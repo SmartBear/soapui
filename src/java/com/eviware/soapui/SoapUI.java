@@ -137,6 +137,7 @@ import com.eviware.soapui.ui.NavigatorListener;
 import com.eviware.soapui.ui.URLDesktopPanel;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
 import com.eviware.soapui.ui.desktop.DesktopRegistry;
+import com.eviware.soapui.ui.desktop.NullDesktop;
 import com.eviware.soapui.ui.desktop.SoapUIDesktop;
 import com.eviware.soapui.ui.desktop.standalone.StandaloneDesktop;
 import com.eviware.soapui.ui.support.DesktopListenerAdapter;
@@ -691,7 +692,7 @@ public class SoapUI
 		BrowserComponent.initialize();
 
 		SoapUIRunner soapuiRunner = new SoapUIRunner();
-		if( !BrowserComponent.isJXBrowserDisabled() && Xpcom.isLinux() )
+		if( !BrowserComponent.isJXBrowserDisabled() && Xpcom.isJVMValid() )
 		{
 			SwingUtilities.invokeLater( soapuiRunner );
 		}
@@ -1324,6 +1325,9 @@ public class SoapUI
 	// eclipse-version(s) should provide SoapUIDesktop implementation
 	public static SoapUIDesktop getDesktop()
 	{
+		if( desktop == null )
+			desktop = new NullDesktop();
+
 		return desktop;
 	}
 

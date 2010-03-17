@@ -116,7 +116,7 @@ public class UIPrefs implements Prefs
 			editorForm.appendCheckBox( LINEBREAK, "Normalize line-breaks when saving project", false );
 			editorForm.appendSeparator();
 			editorForm.appendTextField( GC_INTERVAL,
-				"Sets the Garbage Collector interval in seconds (0 means garbage collection is only performed by JRE)" );
+					"Sets the Garbage Collector interval in seconds (0 means garbage collection is only performed by JRE)" );
 			editorForm.appendSeparator();
 			editorForm.appendTextField( RAW_RESPONSE_MESSAGE_SIZE, "Sets the size of raw response mesage to show." );
 			editorForm.appendTextField( RAW_REQUEST_MESSAGE_SIZE, "Sets the size of raw request mesage to show." );
@@ -156,12 +156,12 @@ public class UIPrefs implements Prefs
 			settings.setBoolean( UISettings.SHOW_LOGS_AT_STARTUP, values.getBoolean( SHOW_LOGS_AT_STARTUP ) );
 			settings.setBoolean( UISettings.SHOW_STARTUP_PAGE, values.getBoolean( SHOW_STARTUP_PAGE ) );
 		}
-		
+
 		settings.setString( UISettings.GC_INTERVAL, values.get( GC_INTERVAL ) );
-		
-		settings.setString( UISettings.RAW_RESPONSE_MESSAGE_SIZE, values.get( RAW_RESPONSE_MESSAGE_SIZE ));
-		settings.setString( UISettings.RAW_REQUEST_MESSAGE_SIZE, values.get( RAW_REQUEST_MESSAGE_SIZE ));
-		
+
+		settings.setString( UISettings.RAW_RESPONSE_MESSAGE_SIZE, values.get( RAW_RESPONSE_MESSAGE_SIZE ) );
+		settings.setString( UISettings.RAW_REQUEST_MESSAGE_SIZE, values.get( RAW_REQUEST_MESSAGE_SIZE ) );
+
 		SoapUI.initAutoSaveTimer();
 		SoapUI.initGCTimer();
 	}
@@ -197,7 +197,7 @@ public class UIPrefs implements Prefs
 			values.put( SHOW_LOGS_AT_STARTUP, settings.getBoolean( UISettings.SHOW_LOGS_AT_STARTUP ) );
 			values.put( SHOW_STARTUP_PAGE, settings.getBoolean( UISettings.SHOW_STARTUP_PAGE ) );
 		}
-		
+
 		values.put( GC_INTERVAL, settings.getString( UISettings.GC_INTERVAL, "0" ) );
 		values.put( RAW_RESPONSE_MESSAGE_SIZE, settings.getString( UISettings.RAW_RESPONSE_MESSAGE_SIZE, "10000" ) );
 		values.put( RAW_REQUEST_MESSAGE_SIZE, settings.getString( UISettings.RAW_REQUEST_MESSAGE_SIZE, "10000" ) );

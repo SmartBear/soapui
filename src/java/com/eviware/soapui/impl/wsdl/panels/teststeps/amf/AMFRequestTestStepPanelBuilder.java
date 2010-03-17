@@ -16,6 +16,7 @@ import java.awt.Component;
 
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
+import com.eviware.soapui.support.components.JPropertiesTable;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 /**
@@ -39,9 +40,12 @@ public class AMFRequestTestStepPanelBuilder extends EmptyPanelBuilder<AMFRequest
 	{
 		return true;
 	}
+
 	@Override
 	public Component buildOverviewPanel( AMFRequestTestStep modelItem )
 	{
-		return buildDefaultProperties( modelItem, "AMFRequestTestStep Properties" );
+		JPropertiesTable<AMFRequestTestStep> table = buildDefaultProperties( modelItem, "AMFRequestTestStep Properties" );
+		table.addProperty( "Discard Response", "discardResponse", JPropertiesTable.BOOLEAN_OPTIONS );
+		return table;
 	}
 }

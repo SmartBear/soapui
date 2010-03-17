@@ -24,6 +24,7 @@ import javax.swing.ImageIcon;
 
 import org.apache.log4j.Logger;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
@@ -329,7 +330,6 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 				{
 					testStepResult.setStatus( TestStepStatus.FAILED );
 					testStepResult.addMessage( submit.getError().toString() );
-					
 
 					testRequest.setResponse( null, runContext );
 				}
@@ -371,9 +371,11 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 			}
 
 			if( response != null )
-				testStepResult.setRequestContent( response.getRequestContent(), testStepResult.getStatus() != TestStepStatus.FAILED );
+				testStepResult.setRequestContent( response.getRequestContent(),
+						testStepResult.getStatus() != TestStepStatus.FAILED );
 			else
-				testStepResult.setRequestContent( testRequest.getRequestContent(), testStepResult.getStatus() != TestStepStatus.FAILED );
+				testStepResult.setRequestContent( testRequest.getRequestContent(),
+						testStepResult.getStatus() != TestStepStatus.FAILED );
 			testStepResult.stopTimer();
 		}
 		catch( SubmitException e )
@@ -425,8 +427,8 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 			}
 		}
 
-//		if( !runContext.hasProperty( TestRunContext.INTERACTIVE ) )
-//			testRequest.setResponse( null, runContext );
+		if( testRequest.isDiscardResponse() && !SoapUI.getDesktop().hasDesktopPanel( this ) )
+			testRequest.setResponse( null, runContext );
 
 		return testStepResult;
 	}
@@ -593,7 +595,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		}
 
 		testRequest.addWsaPropertyExpansions( result, testRequest.getWsaConfig(), this );
-		testRequest.addJMSHeaderExpansions(result, testRequest.getJMSHeaderConfig(), this);
+		testRequest.addJMSHeaderExpansions( result, testRequest.getJMSHeaderConfig(), this );
 		return result.toArray( new PropertyExpansion[result.size()] );
 	}
 

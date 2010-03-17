@@ -397,14 +397,21 @@ public class JdbcRequest extends AbstractAnimatableModelItem<ModelItemConfig> im
 
 	public String getPassword()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getUsername()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	public boolean isDiscardResponse()
+	{
+		return getSettings().getBoolean( "discardResponse" );
+	}
+
+	public void setDiscardResponse( boolean discardResponse )
+	{
+		getSettings().setBoolean( "discardResponse", discardResponse );
+	}
 }

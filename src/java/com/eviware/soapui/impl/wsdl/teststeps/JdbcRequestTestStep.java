@@ -53,7 +53,6 @@ import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
-import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.StringUtils;
@@ -276,7 +275,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			}
 		}
 
-		if( !runContext.hasProperty( TestRunContext.INTERACTIVE ) )
+		if( isDiscardResponse() && !SoapUI.getDesktop().hasDesktopPanel( this ) )
 			jdbcRequest.setResponse( null );
 
 		return testStepResult;
@@ -732,4 +731,13 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		assertResponse( context );
 	}
 
+	public boolean isDiscardResponse()
+	{
+		return jdbcRequest.isDiscardResponse();
+	}
+
+	public void setDiscardResponse( boolean discardResponse )
+	{
+		jdbcRequest.setDiscardResponse( discardResponse );
+	}
 }

@@ -22,6 +22,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.HttpRequestConfig;
 import com.eviware.soapui.config.RequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
@@ -77,7 +78,7 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 			httpRequestConfig = RestRequestConverter.updateIfNeeded( getConfig().getConfig() );
 			// if( httpRequestConfig != getConfig().getConfig() )
 
-				getConfig().setConfig( httpRequestConfig );
+			getConfig().setConfig( httpRequestConfig );
 			httpRequestConfig = ( HttpRequestConfig )getConfig().getConfig();
 			testRequest = buildTestRequest( forLoadTest );
 			// testRequest = new RestTestRequest( null,
@@ -358,6 +359,9 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 			}
 			}
 		}
+
+		if( testRequest.isDiscardResponse() && !SoapUI.getDesktop().hasDesktopPanel( this ) )
+			testRequest.setResponse( null, runContext );
 
 		return testStepResult;
 	}

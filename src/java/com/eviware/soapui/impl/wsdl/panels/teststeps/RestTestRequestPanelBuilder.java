@@ -65,7 +65,7 @@ public class RestTestRequestPanelBuilder extends EmptyPanelBuilder<RestTestReque
 			table.addProperty( "Resource", "path" );
 			table.addProperty( "Method", "restMethodName" );
 		}
-		
+
 		table.addProperty( "Timeout", "timeout", true );
 
 		table.addProperty( "Bind Address", "bindAddress", true );
@@ -84,6 +84,8 @@ public class RestTestRequestPanelBuilder extends EmptyPanelBuilder<RestTestReque
 		table.addProperty( "Pretty Print", "prettyPrint", JPropertiesTable.BOOLEAN_OPTIONS );
 		table.addProperty( "Dump File", "dumpFile", true ).setDescription( "Dumps response message to specified file" );
 		table.addProperty( "Max Size", "maxSize", true ).setDescription( "The maximum number of bytes to receive" );
+		table.addProperty( "Discard Response", "discardResponse", JPropertiesTable.BOOLEAN_OPTIONS );
+
 		table.setPropertyObject( request );
 
 		return table;

@@ -24,6 +24,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.rest.RestMethod;
@@ -867,6 +868,9 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 			}
 			}
 		}
+
+		if( testRequest.isDiscardResponse() && !SoapUI.getDesktop().hasDesktopPanel( this ) )
+			testRequest.setResponse( null, runContext );
 
 		return testStepResult;
 	}

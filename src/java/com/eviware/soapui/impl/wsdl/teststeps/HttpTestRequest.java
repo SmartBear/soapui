@@ -362,4 +362,13 @@ public class HttpTestRequest extends HttpRequest implements HttpTestRequestInter
 		return assertionsSupport.importAssertion( source, overwrite, createCopy );
 	}
 
+	public boolean isDiscardResponse()
+	{
+		return getSettings().getBoolean( "discardResponse" );
+	}
+
+	public void setDiscardResponse( boolean discardResponse )
+	{
+		getSettings().setBoolean( "discardResponse", discardResponse );
+	}
 }
