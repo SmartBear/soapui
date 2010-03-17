@@ -174,7 +174,7 @@ public class JMSHeaderConfig implements PropertyChangeNotifier
 		propertyChangeSupport.firePropertyChange(JMSHeader.SEND_AS_BYTESMESSAGE, oldValue, newValue);
 	}
 	
-	public void setSopaActionAdd(boolean newValue)
+	public void setSoapActionAdd(boolean newValue)
 	{
 		boolean oldValue = getSoapActionAdd();
 		jmsHeaderConfConfig.setSoapActionAdd( newValue);

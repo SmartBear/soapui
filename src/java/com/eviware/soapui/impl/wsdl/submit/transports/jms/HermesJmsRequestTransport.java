@@ -56,6 +56,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
 public class HermesJmsRequestTransport implements RequestTransport
 {
 
+	
 	public static final String JMS_MESSAGE_RECEIVE = "JMS_MESSAGE_RECEIVE";
 	public static final String JMS_MESSAGE_SEND = "JMS_MESSAGE_SEND";
 	public static final String JMS_RESPONSE = "JMS_RESPONSE";
@@ -229,6 +230,18 @@ public class HermesJmsRequestTransport implements RequestTransport
 		JMSHeader jmsHeader = new JMSHeader();
 		jmsHeader.setMessageHeaders( message, request, hermes, submitContext );
 		JMSHeader.setMessageProperties( message, request, hermes, submitContext );
+		try
+		{
+			if( addSoapAction )
+			{
+				message.setStringProperty( JMSHeader.SOAPJMS_SOAP_ACTION, request.getOperation().getName() );
+				message.setStringProperty( JMSHeader.SOAP_ACTION, request.getOperation().getName() );
+			}
+		}
+		catch( JMSException e )
+		{
+			SoapUI.logError( e );
+		}
 		return jmsHeader;
 	}
 

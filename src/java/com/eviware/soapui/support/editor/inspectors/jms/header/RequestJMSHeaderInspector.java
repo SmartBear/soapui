@@ -18,6 +18,9 @@ import java.beans.PropertyChangeListener;
 import com.eviware.soapui.config.JMSDeliveryModeTypeConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSEndpoint;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSHeader;
+import com.eviware.soapui.impl.wsdl.support.jms.header.JMSHeaderConfig;
+import com.eviware.soapui.impl.wsdl.support.jms.property.JMSPropertiesConfig;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
 
@@ -60,7 +63,7 @@ public class RequestJMSHeaderInspector extends AbstractJMSHeaderInspector implem
 				"specify 'time to live' of JMS message , zero means never expire which is default" );
 		simpleform.appendCheckBox( "sendAsBytesMessage", "Send As Bytes Message",
 				"if selected message will be sent as BytesMessage" );
-//		simpleform.appendCheckBox( "soapActionAdd", "Add Soap Action to Message", "" );
+		simpleform.appendCheckBox( "soapActionAdd", "Add SoapAction as property", "" );
 		simpleform
 				.appendTextField(
 						"durableSubscriptionName",
