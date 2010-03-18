@@ -35,6 +35,7 @@ import com.eviware.soapui.impl.wsdl.support.BindingImporter;
 import com.eviware.soapui.impl.wsdl.support.policy.PolicyUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.Soap11HttpBindingImporter;
 import com.eviware.soapui.impl.wsdl.support.soap.Soap12HttpBindingImporter;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapJMSBindingImporter;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
 
@@ -58,6 +59,7 @@ public class WsdlImporter
 		{
 			bindingImporters.add( new Soap11HttpBindingImporter() );
 			bindingImporters.add( new Soap12HttpBindingImporter() );
+			bindingImporters.add( new SoapJMSBindingImporter() );
 		}
 		catch( Exception e )
 		{
@@ -156,14 +158,14 @@ public class WsdlImporter
 						// there is conflict
 						// currently the first one that's set is final
 						// first is checked wsdl binding and policy attachment
-						//and then for port in the same order
+						// and then for port in the same order
 
-						 if( iface.getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString() ) )
-							 iface.setWsaVersion( WsdlUtils.getUsingAddressing( port ) );
-						 if( iface.getWsaVersion().equals(WsaVersionTypeConfig.NONE.toString() ) )
-						 {
-							 iface.processPolicy( PolicyUtils.getAttachedPolicy( port, wsdlContext.getDefinition() ) );
-						 }
+						if( iface.getWsaVersion().equals( WsaVersionTypeConfig.NONE.toString() ) )
+							iface.setWsaVersion( WsdlUtils.getUsingAddressing( port ) );
+						if( iface.getWsaVersion().equals( WsaVersionTypeConfig.NONE.toString() ) )
+						{
+							iface.processPolicy( PolicyUtils.getAttachedPolicy( port, wsdlContext.getDefinition() ) );
+						}
 
 						result.add( iface );
 						importedBindings.put( binding, iface );
