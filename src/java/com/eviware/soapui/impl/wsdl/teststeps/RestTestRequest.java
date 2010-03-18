@@ -325,6 +325,13 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 	{
 		super.release();
 		assertionsSupport.release();
+
+		if( getRestMethod() != null )
+		{
+			getRestMethod().getResource().removePropertyChangeListener( this );
+		}
+
+		messageExchange = null;
 	}
 
 	public String getAssertableContent()

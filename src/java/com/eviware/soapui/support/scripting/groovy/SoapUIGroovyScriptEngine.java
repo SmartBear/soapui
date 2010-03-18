@@ -51,13 +51,13 @@ public class SoapUIGroovyScriptEngine implements SoapUIScriptEngine
 	{
 		private String text = null;
 		private boolean locked = false;
-		
-		public synchronized void save( String scriptText)
+
+		public synchronized void save( String scriptText )
 		{
-			if (locked)
+			if( locked )
 				text = scriptText;
 			else
-				synchronizedSetScript(scriptText);
+				synchronizedSetScript( scriptText );
 		}
 
 		public synchronized void lockSave()
@@ -67,9 +67,9 @@ public class SoapUIGroovyScriptEngine implements SoapUIScriptEngine
 
 		public synchronized void unlockSave()
 		{
-			if (text != null)
+			if( text != null )
 			{
-				synchronizedSetScript(text);
+				synchronizedSetScript( text );
 				text = null;
 			}
 			locked = false;
@@ -82,13 +82,13 @@ public class SoapUIGroovyScriptEngine implements SoapUIScriptEngine
 		try
 		{
 
-		if( StringUtils.isNullOrEmpty( scriptText ) )
-			return null;
+			if( StringUtils.isNullOrEmpty( scriptText ) )
+				return null;
 
-		if( script == null )
-		{
-			compile();
-		}
+			if( script == null )
+			{
+				compile();
+			}
 
 			Object result = script.run();
 
@@ -121,7 +121,8 @@ public class SoapUIGroovyScriptEngine implements SoapUIScriptEngine
 
 	public synchronized void setScript( String scriptText )
 	{
-		saver.save(scriptText);
+		if( scriptText != null && !scriptText.equals( this.scriptText ) )
+			saver.save( scriptText );
 	}
 
 	protected synchronized void reset()
@@ -129,7 +130,7 @@ public class SoapUIGroovyScriptEngine implements SoapUIScriptEngine
 		saver.lockSave();
 
 		script = null;
-		
+
 		saver.unlockSave();
 	}
 

@@ -53,17 +53,28 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 		 */
 		methodParams.addTestPropertyListener( this );
 	}
-	
+
 	public void reset( RestParamsPropertyHolder methodParams, StringToStringMap values )
 	{
 		this.methodParams = methodParams;
 		this.values = values;
+
+		clearWrappers();
+	}
+
+	private void clearWrappers()
+	{
+		for( InternalRestParamProperty property : wrappers.values() )
+		{
+			property.release();
+		}
+
 		wrappers.clear();
 	}
 
 	public RestParamProperty addProperty( String name )
 	{
-		return methodParams.addProperty(name);
+		return methodParams.addProperty( name );
 	}
 
 	public void addParameter( RestParamProperty prop )
@@ -235,6 +246,12 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 	public void resetValues()
 	{
 		values.clear();
+	}
+
+	public void release()
+	{
+		methodParams.removeTestPropertyListener( this );
+		clearWrappers();
 	}
 
 	public void saveTo( Properties props )
@@ -511,8 +528,15 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 		{
 			propertySupport.firePropertyChange( evt );
 		}
+
+		public void release()
+		{
+			overriddenProp.removePropertyChangeListener( this );
+			overriddenProp = null;
+			propertySupport = null;
+		}
 	}
-	
+
 	public List<TestProperty> getPropertyList()
 	{
 		return methodParams.getPropertyList();

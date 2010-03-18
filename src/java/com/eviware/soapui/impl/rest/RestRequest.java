@@ -66,7 +66,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implements RestRequestInterface
 {
 	private RestMethod method;
-	private RestParamsPropertyHolder params;
+	private RestRequestParamsPropertyHolder params;
 	private ParamUpdater paramUpdater;
 
 	public RestRequest( RestMethod method, RestRequestConfig requestConfig, boolean forLoadTest )
@@ -517,9 +517,11 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	{
 		super.release();
 
-		if( getResource() != null )
-			getResource().removePropertyChangeListener( this );
+		if( method != null )
+			method.removePropertyChangeListener( this );
 
+		params.removeTestPropertyListener( paramUpdater );
+		params.release();
 	}
 
 	public void updateConfig( RestRequestConfig request )
@@ -549,7 +551,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	protected void updateParams()
 	{
 		StringToStringMap paramValues = StringToStringMap.fromXml( getConfig().getParameters() );
-		( ( RestRequestParamsPropertyHolder )params ).reset( getRestMethod().getOverlayParams(), paramValues );
+		params.reset( getRestMethod().getOverlayParams(), paramValues );
 		paramUpdater.setValues( paramValues );
 	}
 

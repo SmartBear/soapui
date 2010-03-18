@@ -342,6 +342,17 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 			restResource.getService().removeInterfaceListener( interfaceListener );
 			restResource.getService().removePropertyChangeListener( this );
 		}
+
+		if( restMethod != null )
+		{
+			restMethod.removePropertyChangeListener( this );
+		}
+
+		if( testRequest != null )
+		{
+			testRequest.removePropertyChangeListener( this );
+			testRequest.release();
+		}
 	}
 
 	@Override
