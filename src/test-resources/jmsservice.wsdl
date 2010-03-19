@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="jmsservice"
+	targetNamespace="http://www.soapui.org/jmsservice/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:tns="http://www.soapui.org/jmsservice/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+	<wsdl:types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.soapui.org/jmsservice/">
+			<xsd:element name="jmsRequest" type="xsd:anyType" />
+			<xsd:element name="jmsResponse" type="xsd:anyType" />
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="jmsRequest">
+		<wsdl:part name="parameters" element="tns:jmsRequest"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="jmsResponse">
+		<wsdl:part name="parameters" element="tns:jmsResponse"></wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="JmsServicePortType">
+		<wsdl:operation name="message">
+			<wsdl:input message="tns:jmsRequest"></wsdl:input>
+			<wsdl:output message="tns:jmsResponse"></wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="JmsBinding" type="tns:JmsServicePortType">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http">
+		</soap:binding>
+		<wsdl:operation name="message">
+			<wsdl:input>
+				<soap:body use="literal"></soap:body>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"></soap:body>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="JmsService">
+		<wsdl:port name="JmsPort" binding="JmsBinding">
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

@@ -36,6 +36,7 @@ import com.eviware.soapui.impl.wsdl.support.policy.PolicyUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.Soap11HttpBindingImporter;
 import com.eviware.soapui.impl.wsdl.support.soap.Soap12HttpBindingImporter;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapJMSBindingImporter;
+import com.eviware.soapui.impl.wsdl.support.soap.TibcoSoapJMSBindingImporter;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
 
@@ -60,6 +61,7 @@ public class WsdlImporter
 			bindingImporters.add( new Soap11HttpBindingImporter() );
 			bindingImporters.add( new Soap12HttpBindingImporter() );
 			bindingImporters.add( new SoapJMSBindingImporter() );
+			bindingImporters.add( new TibcoSoapJMSBindingImporter() );
 		}
 		catch( Exception e )
 		{
