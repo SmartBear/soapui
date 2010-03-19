@@ -36,6 +36,7 @@ public abstract class AbstractSoapVersion implements SoapVersion
 {
 	private final static Logger log = Logger.getLogger( AbstractSoapVersion.class );
 
+	@SuppressWarnings( "unchecked" )
 	public void validateSoapEnvelope( String soapMessage, List<XmlError> errors )
 	{
 		List<XmlError> errorList = new ArrayList<XmlError>();
