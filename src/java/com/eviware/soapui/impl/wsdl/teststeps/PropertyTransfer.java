@@ -458,6 +458,9 @@ public class PropertyTransfer implements PropertyChangeNotifier
 	protected String[] transferStringToXml( TestProperty sourceProperty, TestProperty targetProperty,
 			SubmitContext context ) throws XmlException, Exception
 	{
+		if( !StringUtils.hasContent( targetProperty.getValue() ) )
+			throw new Exception( "Missing target property value" );
+
 		XmlObject targetXml = XmlObject.Factory.parse( targetProperty.getValue() );
 		XmlCursor targetCursor = targetXml.newCursor();
 
@@ -535,13 +538,15 @@ public class PropertyTransfer implements PropertyChangeNotifier
 	{
 		String sourceValue = sourceProperty.getValue();
 
-		if( sourceValue == null )
+		if( !StringUtils.hasContent( sourceValue ) )
 		{
 			if( !getIgnoreEmpty() )
 				throw new Exception( "Missing source value" );
 
 			if( getSetNullOnMissingSource() )
 				targetProperty.setValue( null );
+
+			return null;
 		}
 
 		XmlObject sourceXml = sourceValue == null ? null : XmlObject.Factory.parse( sourceValue );
