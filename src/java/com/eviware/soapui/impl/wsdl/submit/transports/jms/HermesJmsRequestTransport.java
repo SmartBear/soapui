@@ -201,7 +201,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 	private static void cannotResolve() throws CannotResolveJmsTypeException
 	{
 		throw new CannotResolveJmsTypeException(
-				"\nBad jms alias! \nFor JMS please use this endpont pattern:\nfor sending 'jms://sessionName/queue_myqueuename' \nfor receive  'jms://sessionName/-/queue_myqueuename'\nfor send-receive 'jms://sessionName/queue_myqueuename1/queue_myqueuename2'" );
+				"\nBad jms alias! \nFor JMS please use this endpont pattern:\nfor sending 'jms://sessionName::queue_myqueuename' \nfor receive  'jms://sessionName::-::queue_myqueuename'\nfor send-receive 'jms://sessionName::queue_myqueuename1::queue_myqueuename2'" );
 	}
 
 	protected Hermes getHermes( String sessionName, Request request ) throws NamingException
@@ -353,13 +353,9 @@ public class HermesJmsRequestTransport implements RequestTransport
 	{
 		if( request instanceof WsdlRequest || request instanceof HttpTestRequest || request instanceof RestRequest )
 		{
-			if( sendAsBytesMessage )
+			if( hasAttachment( request ) )
 			{
-				return createBytesMessageFromText( submitContext, request, session );
-			}
-			else if( hasAttachment( request ) )
-			{
-				if( isTextAttachment( request ) )
+				if( isTextAttachment( request ) && !sendAsBytesMessage)
 				{
 					return createTextMessageFromAttachment( submitContext, request, session );
 				}
@@ -368,6 +364,11 @@ public class HermesJmsRequestTransport implements RequestTransport
 					return createBytesMessage( request, session );
 				}
 			}
+			else if( sendAsBytesMessage )
+			{
+				return createBytesMessageFromText( submitContext, request, session );
+			}
+			
 			else
 			{
 				return createTextMessage( submitContext, request, session );
@@ -491,6 +492,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 			byte[] buff = new byte[1];
 			File temp = File.createTempFile( "bytesmessage", ".tmp" );
 			OutputStream out = new FileOutputStream( temp );
+			bytesMessageReceive.reset();
 			while( bytesMessageReceive.readBytes( buff ) != -1 )
 			{
 				out.write( buff );
