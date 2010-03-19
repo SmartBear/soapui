@@ -23,6 +23,7 @@ import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.Request;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
@@ -33,7 +34,8 @@ public class JMSUtils
 	{
 		try
 		{
-			return request.getEndpoint().startsWith( JMSEndpoint.JMS_ENDPIONT_PREFIX );
+			String endpoint = request.getEndpoint();
+			return StringUtils.hasContent( endpoint ) && endpoint.startsWith( JMSEndpoint.JMS_ENDPIONT_PREFIX );
 		}
 		catch( NullPointerException e )
 		{
@@ -106,7 +108,6 @@ public class JMSUtils
 
 	public static String extractMapMessagePayloadToXML( MapMessage mapMessage ) throws JMSException
 	{
-
 		StringBuffer sb = new StringBuffer( "<message>\n" );
 
 		Enumeration<?> mapNames = mapMessage.getMapNames();
