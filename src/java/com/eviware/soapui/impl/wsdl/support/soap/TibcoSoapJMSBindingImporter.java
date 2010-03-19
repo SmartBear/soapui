@@ -30,7 +30,8 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.settings.WsdlSettings;
 
 /**
- * BindingImporter that can import a WsdlInterface from an SOAP 1.2/HTTP binding
+ * BindingImporter that can import a WsdlInterface from an Tibco SOAP 1.2/HTTP
+ * binding
  * 
  * @author Ole.Matzura
  */
