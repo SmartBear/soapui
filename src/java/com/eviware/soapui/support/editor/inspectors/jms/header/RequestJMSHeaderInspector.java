@@ -18,9 +18,6 @@ import java.beans.PropertyChangeListener;
 import com.eviware.soapui.config.JMSDeliveryModeTypeConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSEndpoint;
-import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSHeader;
-import com.eviware.soapui.impl.wsdl.support.jms.header.JMSHeaderConfig;
-import com.eviware.soapui.impl.wsdl.support.jms.property.JMSPropertiesConfig;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
 
@@ -61,14 +58,17 @@ public class RequestJMSHeaderInspector extends AbstractJMSHeaderInspector implem
 				"Choose between NON PERSISTENT and PERSISTENT (default) message" );
 		simpleform.appendTextField( "timeToLive", "TimeToLive",
 				"specify 'time to live' of JMS message , zero means never expire which is default" );
-		
+
 		simpleform.appendCheckBox( "sendAsBytesMessage", "Send As Bytes Message", "" ).setToolTipText(
 				"if selected message will be sent as BytesMessage" );
-		
-		simpleform.appendCheckBox( "soapActionAdd", "Add SoapAction as property", "" ).setToolTipText(
-				"Add properties SOAPJMS_soapAction=" + request.getOperation().getName() + "\n and " + "SoapAction="
-						+ request.getOperation().getName() + " to outgoing message" );
-		
+
+		if( request.getOperation() != null )
+		{
+			simpleform.appendCheckBox( "soapActionAdd", "Add SoapAction as property", "" ).setToolTipText(
+					"Add properties SOAPJMS_soapAction=" + request.getOperation().getName() + "\n and " + "SoapAction="
+							+ request.getOperation().getName() + " to outgoing message" );
+		}
+
 		simpleform
 				.appendTextField(
 						"durableSubscriptionName",
