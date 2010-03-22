@@ -330,6 +330,16 @@ public abstract class AbstractSoapUIRunner
 		this.projectProperties = projectProperties;
 	}
 
+	public Logger getLog()
+	{
+		return log;
+	}
+
+	public String[] getProjectProperties()
+	{
+		return projectProperties;
+	}
+
 	protected void initProjectProperties( WsdlProject project )
 	{
 		if( projectProperties != null )
