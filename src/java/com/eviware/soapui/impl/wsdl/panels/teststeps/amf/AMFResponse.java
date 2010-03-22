@@ -39,7 +39,6 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 	public static final String AMF_RESPONSE_ACTION_MESSAGE = "AMF_RESPONSE_ACTION_MESSAGE";
 	public static final String AMF_RAW_RESPONSE_BODY = "AMF_RAW_RESPONSE_BODY";
 
-	private Object responseContent;
 	private String responseContentXML = "";
 	private long timeTaken;
 	private long timestamp;
@@ -52,14 +51,12 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 	private ActionMessage actionMessage;
 	private byte[] rawResponseBody;
 
-	@SuppressWarnings( "unchecked" )
 	public AMFResponse( AMFRequest request, SubmitContext submitContext, Object responseContent ) throws SQLException,
 			ParserConfigurationException, TransformerConfigurationException, TransformerException
 	{
 		super( request );
 
 		this.request = request;
-		this.responseContent = responseContent;
 		if( responseContent != null )
 			setResponseContentXML( new com.thoughtworks.xstream.XStream().toXML( responseContent ) );
 		this.actionMessage = ( ActionMessage )submitContext.getProperty( AMF_RESPONSE_ACTION_MESSAGE );
@@ -96,11 +93,6 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 	public long getTimestamp()
 	{
 		return timestamp;
-	}
-
-	public void setContentAsString( String content )
-	{
-		responseContent = content;
 	}
 
 	public void setTimeTaken( long timeTaken )

@@ -10,12 +10,13 @@
  * See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.support.http;
+package com.eviware.soapui.model.testsuite;
 
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.model.testsuite.SamplerTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 
-public interface HttpRequestTestStep extends SamplerTestStep
+public interface SamplerTestStep extends TestStep, Assertable
 {
-	public AbstractHttpRequest<?> getHttpRequest();
+	public TestRequest getTestRequest();
+
+	public TestStep getTestStep();
 }

@@ -48,6 +48,8 @@ public interface Response
 
 	public byte[] getRawResponseData();
 
+	public String getContentAsXml();
+
 	public String getProperty( String name );
 
 	public void setProperty( String name, String value );

@@ -55,6 +55,11 @@ public abstract class AbstractResponse<T extends Request> implements Response
 		return request;
 	}
 
+	public String getContentAsXml()
+	{
+		return getContentAsString();
+	}
+
 	public StringToStringMap getRequestHeaders()
 	{
 		return null;

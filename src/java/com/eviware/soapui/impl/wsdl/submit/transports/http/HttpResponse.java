@@ -24,8 +24,6 @@ public interface HttpResponse extends Response
 
 	public abstract void setResponseContent( String responseContent );
 
-	public abstract String getContentAsXml();
-
 	public abstract SSLInfo getSSLInfo();
 
 	public abstract URL getURL();

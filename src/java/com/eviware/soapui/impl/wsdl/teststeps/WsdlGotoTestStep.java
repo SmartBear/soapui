@@ -26,7 +26,6 @@ import com.eviware.soapui.config.GotoConditionConfig;
 import com.eviware.soapui.config.GotoConditionTypeConfig;
 import com.eviware.soapui.config.GotoStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -35,6 +34,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
 import com.eviware.soapui.model.support.XPathReferenceImpl;
+import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
@@ -108,7 +108,7 @@ public class WsdlGotoTestStep extends WsdlTestStepWithProperties implements XPat
 
 		result.startTimer();
 
-		HttpRequestTestStep previousStep = getTestCase().findPreviousStepOfType( this, HttpRequestTestStep.class );
+		SamplerTestStep previousStep = getTestCase().findPreviousStepOfType( this, SamplerTestStep.class );
 
 		if( previousStep == null )
 		{
@@ -135,7 +135,7 @@ public class WsdlGotoTestStep extends WsdlTestStepWithProperties implements XPat
 		return result;
 	}
 
-	public GotoCondition runConditions( HttpRequestTestStep previousStep, TestCaseRunContext context )
+	public GotoCondition runConditions( SamplerTestStep previousStep, TestCaseRunContext context )
 	{
 		for( GotoCondition condition : conditions )
 		{
@@ -254,7 +254,7 @@ public class WsdlGotoTestStep extends WsdlTestStepWithProperties implements XPat
 				currentStep.removePropertyChangeListener( this );
 		}
 
-		public boolean evaluate( HttpRequestTestStep previousStep, TestCaseRunContext context ) throws Exception
+		public boolean evaluate( SamplerTestStep previousStep, TestCaseRunContext context ) throws Exception
 		{
 			if( getExpression() == null || getExpression().trim().length() == 0 )
 				throw new Exception( "Missing expression in condition [" + getName() + "]" );
@@ -264,7 +264,7 @@ public class WsdlGotoTestStep extends WsdlTestStepWithProperties implements XPat
 
 			if( getType().equals( GotoConditionTypeConfig.XPATH.toString() ) )
 			{
-				AbstractHttpRequest<?> testRequest = previousStep.getHttpRequest();
+				TestRequest testRequest = previousStep.getTestRequest();
 				XmlObject xmlObject = XmlObject.Factory.parse( testRequest.getResponse().getContentAsXml() );
 
 				String expression = PropertyExpander.expandProperties( context, getExpression() );
