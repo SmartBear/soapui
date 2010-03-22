@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.mockaswar;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -42,8 +44,6 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.xml.XmlUtils;
-import java.io.File;
-import java.io.FileInputStream;
 
 /**
  * Servlet implementation class SoapUIMockServlet
@@ -90,35 +90,35 @@ public class MockAsWarServlet extends HttpServlet
 
 	protected String initMockServiceParameters()
 	{
-			if( StringUtils.hasContent( getInitParameter( "listeners" ) ) )
-			{
-				logger.info( "Init listeners" );
+		if( StringUtils.hasContent( getInitParameter( "listeners" ) ) )
+		{
+			logger.info( "Init listeners" );
 			System
 					.setProperty( "soapui.ext.listeners", getServletContext().getRealPath( getInitParameter( "listeners" ) ) );
-			}
-			else
-			{
-				logger.info( "Listeners not set!" );
-			}
-			if( StringUtils.hasContent( getInitParameter( "actions" ) ) )
-			{
-				logger.info( "Init actions" );
-				System.setProperty( "soapui.ext.actions", getServletContext().getRealPath( getInitParameter( "actions" ) ) );
-			}
-			else
-			{
-				logger.info( "Actions not set!" );
-			}
-			if( StringUtils.hasContent( getInitParameter( "soapuiSettings" ) ) )
-			{
-				logger.info( "Init settings" );
+		}
+		else
+		{
+			logger.info( "Listeners not set!" );
+		}
+		if( StringUtils.hasContent( getInitParameter( "actions" ) ) )
+		{
+			logger.info( "Init actions" );
+			System.setProperty( "soapui.ext.actions", getServletContext().getRealPath( getInitParameter( "actions" ) ) );
+		}
+		else
+		{
+			logger.info( "Actions not set!" );
+		}
+		if( StringUtils.hasContent( getInitParameter( "soapuiSettings" ) ) )
+		{
+			logger.info( "Init settings" );
 			SoapUI.setSoapUICore( new MockServletSoapUICore( getServletContext(), getInitParameter( "soapuiSettings" ) ) );
-			}
-			else
-			{
-				logger.info( "Settings not set!" );
-				SoapUI.setSoapUICore( new MockServletSoapUICore( getServletContext() ) );
-			}
+		}
+		else
+		{
+			logger.info( "Settings not set!" );
+			SoapUI.setSoapUICore( new MockServletSoapUICore( getServletContext() ) );
+		}
 
 		if( StringUtils.hasContent( getInitParameter( "enableWebUI" ) ) )
 		{
@@ -131,7 +131,7 @@ public class MockAsWarServlet extends HttpServlet
 			{
 				logger.info( "WebUI DISABLED" );
 				enableWebUI = false;
-		}
+			}
 		}
 
 		SoapUI.ensureGroovyLog().addAppender( new GroovyLogAppender() );
@@ -194,7 +194,7 @@ public class MockAsWarServlet extends HttpServlet
 		out.println( "<hr/><b>Returned Response</b>:<pre>" + XmlUtils.entitize( result.getResponseContent() ) + "</pre>" );
 	}
 
-		private List<MockRunner> mockRunners = new ArrayList<MockRunner>();
+	private List<MockRunner> mockRunners = new ArrayList<MockRunner>();
 
 	class MockServletSoapUICore extends DefaultSoapUICore implements MockEngine
 	{
@@ -222,7 +222,7 @@ public class MockAsWarServlet extends HttpServlet
 					if( result != null )
 					{
 						results.add( result );
-				}
+					}
 					return;
 				}
 			}
@@ -239,6 +239,7 @@ public class MockAsWarServlet extends HttpServlet
 					response.setContentLength( ( int )length );
 					response.setContentType( ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
 					Tools.readAndWrite( in, length, response.getOutputStream() );
+					in.close();
 				}
 				else if( pathInfo.equals( "/master" ) )
 				{
@@ -295,7 +296,7 @@ public class MockAsWarServlet extends HttpServlet
 				if( runner.getMockService() == mockService )
 				{
 					return true;
-			}
+				}
 			}
 
 			return false;
