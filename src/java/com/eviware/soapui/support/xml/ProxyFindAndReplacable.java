@@ -19,7 +19,7 @@ public class ProxyFindAndReplacable implements FindAndReplaceable
 {
 	protected FindAndReplaceable proxytarget;
 	protected boolean isReplaceAll = false;
-	protected StringBuilder sbtartget ;
+	protected StringBuilder sbtartget;
 	protected String oldValue;
 	protected String newValue;
 	protected int start;
@@ -28,10 +28,11 @@ public class ProxyFindAndReplacable implements FindAndReplaceable
 	public ProxyFindAndReplacable( FindAndReplaceable proxytarget )
 	{
 		this.proxytarget = proxytarget;
-		
+
 	}
-	
-	public void setSBTarget(){
+
+	public void setSBTarget()
+	{
 		this.sbtartget = new StringBuilder();
 		this.sbtartget.append( proxytarget.getText() );
 	}
@@ -69,14 +70,14 @@ public class ProxyFindAndReplacable implements FindAndReplaceable
 		}
 		else
 			return proxytarget.getText();
-			
+
 	}
 
 	public String getDialogText()
 	{
-			return proxytarget.getText();
+		return proxytarget.getText();
 	}
-	
+
 	public boolean isEditable()
 	{
 		return proxytarget.isEditable();
@@ -112,7 +113,14 @@ public class ProxyFindAndReplacable implements FindAndReplaceable
 
 	public void setReplaceAll( boolean isReplaceAll )
 	{
-		this.isReplaceAll = isReplaceAll;
+		if( proxytarget instanceof JEditTextArea )
+		{
+			this.isReplaceAll = isReplaceAll;
+		}
+		else
+		{
+			this.isReplaceAll = false;
+		}
 	}
 
 	public String getOldValue()
@@ -137,18 +145,21 @@ public class ProxyFindAndReplacable implements FindAndReplaceable
 
 	public void flushSBText()
 	{
-		if(proxytarget instanceof JEditTextArea){
-			((JEditTextArea)proxytarget).setText( sbtartget.toString() );
+		if( proxytarget instanceof JEditTextArea )
+		{
+			( ( JEditTextArea )proxytarget ).setText( sbtartget.toString() );
 		}
-		
+
 	}
-	
-	public void setCarretPosition(boolean forward){
-		if(proxytarget instanceof JEditTextArea){
-			((JEditTextArea)proxytarget).setCaretPosition( forward ?getEnd() : getStart());
+
+	public void setCarretPosition( boolean forward )
+	{
+		if( proxytarget instanceof JEditTextArea )
+		{
+			( ( JEditTextArea )proxytarget ).setCaretPosition( forward ? getEnd() : getStart() );
 		}
 	}
-	
+
 	public int getStart()
 	{
 		return start;
