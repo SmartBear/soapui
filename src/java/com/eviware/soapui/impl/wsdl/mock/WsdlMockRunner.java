@@ -465,6 +465,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 		response.setContentLength( ( int )length );
 		response.setContentType( ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
 		Tools.readAndWrite( in, length, response.getOutputStream() );
+		in.close();
 	}
 
 	private void dispatchCommand( String cmd, HttpServletRequest request, HttpServletResponse response )
