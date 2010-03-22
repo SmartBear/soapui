@@ -457,17 +457,27 @@ public class FindAndReplaceDialog extends AbstractAction
 	private int tweakPosition()
 	{
 		int pos = target.getCaretPosition();
-		if( forwardButton.isSelected() )
+		if( selectedLinesButton.isSelected() )
+		{
+			if( forwardButton.isSelected() )
+			{
+				int selstart = target.getSelectionStart();
+				if( selstart < pos && selstart != -1 )
+					pos = selstart;
+			}
+
+			else
+			{
+				int selend = target.getSelectionEnd();
+				if( selend > pos && selend != -1 )
+					pos = selend;
+			}
+		}
+		else
 		{
 			int selstart = target.getSelectionStart();
 			if( selstart < pos && selstart != -1 )
 				pos = selstart;
-		}
-		else
-		{
-			int selend = target.getSelectionEnd();
-			if( selend > pos && selend != -1 )
-				pos = selend;
 		}
 		return pos;
 	}
