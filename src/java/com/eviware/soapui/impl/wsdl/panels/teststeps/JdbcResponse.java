@@ -28,12 +28,12 @@ public class JdbcResponse extends AbstractResponse<JdbcRequest>
 	private long timeTaken;
 	private long timestamp;
 
-	public JdbcResponse( JdbcRequest request, Statement statement ) throws SQLException, ParserConfigurationException, TransformerConfigurationException, TransformerException
+	public JdbcResponse( JdbcRequest request, Statement statement ) throws SQLException, ParserConfigurationException,
+			TransformerConfigurationException, TransformerException
 	{
 		super( request );
-		
-		org.w3c.dom.Document xmlDocumentResult = XmlUtils.createJdbcXmlResult( statement );
-		responseContent = XmlUtils.serializePretty( xmlDocumentResult );
+
+		responseContent = XmlUtils.createJdbcXmlResult( statement );
 	}
 
 	public String getContentAsString()

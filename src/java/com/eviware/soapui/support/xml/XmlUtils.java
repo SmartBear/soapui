@@ -14,6 +14,7 @@ package com.eviware.soapui.support.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -40,6 +41,8 @@ import net.sf.saxon.expr.Token;
 import net.sf.saxon.expr.Tokenizer;
 
 import org.apache.log4j.Logger;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlCursor;
@@ -71,6 +74,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
  * General XML-related utilities
  */
 
+@SuppressWarnings( "deprecation" )
 public final class XmlUtils
 {
 	private static DocumentBuilder documentBuilder;
@@ -1425,7 +1429,7 @@ public final class XmlUtils
 		return null;
 	}
 
-	public static Document createJdbcXmlResult( Statement statement ) throws SQLException, ParserConfigurationException
+	public static String createJdbcXmlResult( Statement statement ) throws SQLException, ParserConfigurationException
 	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
@@ -1450,7 +1454,30 @@ public final class XmlUtils
 			resultsElement.appendChild( errorElement );
 		}
 
-		return xmlDocumentResult;
+		StringWriter out = new StringWriter();
+
+		OutputFormat outputFormat = new OutputFormat( xmlDocumentResult );
+		outputFormat.setOmitComments( true );
+		outputFormat.setOmitDocumentType( true );
+		outputFormat.setOmitXMLDeclaration( true );
+		outputFormat.setLineSeparator( "\n" );
+		// add this line //
+		// outputFormat.setPreserveSpace( true );
+		outputFormat.setIndent( 3 );
+		outputFormat.setIndenting( true );
+
+		try
+		{
+			XMLSerializer serializer = new XMLSerializer( new PrintWriter( out ), outputFormat );
+			serializer.asDOMSerializer();
+			serializer.serialize( xmlDocumentResult );
+		}
+		catch( IOException e )
+		{
+			SoapUI.logError( e );
+		}
+
+		return out.toString();
 	}
 
 	public static Document addResultSetXmlPart( Element resultsElement, ResultSet rs, Document xmlDocumentResult )
@@ -1483,7 +1510,9 @@ public final class XmlUtils
 				Element node = xmlDocumentResult.createElement( columnName );
 				if( !StringUtils.isNullOrEmpty( value ) )
 				{
-					node.appendChild( xmlDocumentResult.createTextNode( value.toString() ) );
+					Text textNode = xmlDocumentResult.createTextNode( "" );
+					textNode.setTextContent( value.toString() );
+					node.appendChild( textNode );
 				}
 				rowElement.appendChild( node );
 			}
