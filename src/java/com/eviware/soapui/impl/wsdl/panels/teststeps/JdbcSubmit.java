@@ -166,6 +166,7 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 		catch( Exception e )
 		{
+			UISupport.showErrorMessage( e.getMessage() );
 			SoapUI.logError( e );
 			error = e;
 		}

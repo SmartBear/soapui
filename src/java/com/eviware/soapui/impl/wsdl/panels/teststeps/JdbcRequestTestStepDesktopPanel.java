@@ -695,7 +695,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		}
 	}
 
-	public class TestConnectionAction extends AbstractAction
+	protected class TestConnectionAction extends AbstractAction
 	{
 		public TestConnectionAction()
 		{
@@ -718,6 +718,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			catch( SoapUIException e )
 			{
 				SoapUI.logError( e );
+				UISupport.showErrorMessage( e.toString() );
 			}
 			catch( SQLException e )
 			{
