@@ -1460,7 +1460,7 @@ public final class XmlUtils
 		outputFormat.setOmitComments( true );
 		outputFormat.setOmitDocumentType( true );
 		outputFormat.setOmitXMLDeclaration( true );
-		outputFormat.setLineSeparator( "\n" );
+		// outputFormat.setLineSeparator( "\n" );
 		// add this line //
 		// outputFormat.setPreserveSpace( true );
 		outputFormat.setIndent( 3 );
@@ -1510,8 +1510,7 @@ public final class XmlUtils
 				Element node = xmlDocumentResult.createElement( columnName );
 				if( !StringUtils.isNullOrEmpty( value ) )
 				{
-					Text textNode = xmlDocumentResult.createTextNode( "" );
-					textNode.setTextContent( value.toString() );
+					Text textNode = xmlDocumentResult.createTextNode( value.toString() );
 					node.appendChild( textNode );
 				}
 				rowElement.appendChild( node );
