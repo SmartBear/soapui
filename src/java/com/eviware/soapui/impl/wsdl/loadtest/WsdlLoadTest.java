@@ -469,10 +469,10 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 		public void afterTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
 				TestCaseRunContext runContext, TestStepResult result )
 		{
+			boolean added = false;
+
 			if( !assertions.isEmpty() )
 			{
-				boolean added = false;
-
 				for( LoadTestAssertion assertion : assertions )
 				{
 					String error = assertion.assertResult( loadTestRunner, context, result, testRunner, runContext );
@@ -511,22 +511,20 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 						added = true;
 					}
 				}
+			}
 
-				// discard if set to discard and there were no errors
-				if( !added )
+			// discard if set to discard and there were no errors
+			if( !added )
+			{
+				if( getTestCase().getDiscardOkResults() || getTestCase().getMaxResults() == 0 )
 				{
-					if( getTestCase().getDiscardOkResults() || getTestCase().getMaxResults() == 0 )
-					{
-						result.discard();
-					}
-					else if( getTestCase().getMaxResults() > 0 && testRunner instanceof WsdlTestCaseRunner )
-					{
-						( ( WsdlTestCaseRunner )testRunner ).enforceMaxResults( getTestCase().getMaxResults() );
-					}
+					result.discard();
+				}
+				else if( getTestCase().getMaxResults() > 0 && testRunner instanceof WsdlTestCaseRunner )
+				{
+					( ( WsdlTestCaseRunner )testRunner ).enforceMaxResults( getTestCase().getMaxResults() );
 				}
 			}
-			else
-				result.discard();
 		}
 	}
 
