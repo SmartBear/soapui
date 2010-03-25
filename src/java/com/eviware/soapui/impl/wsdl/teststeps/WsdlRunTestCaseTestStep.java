@@ -165,7 +165,7 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 			else
 			{
 				runningTestCase = targetTestCase;
-				
+
 				TestCaseRunner targetTestRunner = SoapUI.getTestMonitor().getTestRunner( targetTestCase );
 				if( targetTestRunner != null && targetTestRunner.getStatus() == TestRunner.Status.RUNNING )
 				{
@@ -196,8 +196,8 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 					{
 						if( runningTestCase.hasProperty( key ) && !returnProperties.contains( key ) )
 						{
-							String value = PropertyExpander.expandProperties( testRunContext, props.get( key ).getValue());
-							if( StringUtils.hasContent( value ) || !isIgnoreEmptyProperties())
+							String value = PropertyExpander.expandProperties( testRunContext, props.get( key ).getValue() );
+							if( StringUtils.hasContent( value ) || !isIgnoreEmptyProperties() )
 								runningTestCase.setPropertyValue( key, value );
 						}
 					}
@@ -212,18 +212,23 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 					result.startTimer();
 					StringToObjectMap properties = new StringToObjectMap();
 
-					if( isCopyLoadTestProperties())
+					if( isCopyLoadTestProperties() )
 					{
-						properties.put( TestRunContext.THREAD_INDEX, testRunContext.getProperty( TestRunContext.THREAD_INDEX ) );
-						properties.put( TestRunContext.TOTAL_RUN_COUNT, testRunContext.getProperty( TestRunContext.TOTAL_RUN_COUNT ) );
-						properties.put( TestRunContext.LOAD_TEST_CONTEXT, testRunContext.getProperty( TestRunContext.LOAD_TEST_CONTEXT ) );
-						properties.put( TestRunContext.LOAD_TEST_RUNNER, testRunContext.getProperty( TestRunContext.LOAD_TEST_RUNNER ) );
+						properties
+								.put( TestRunContext.THREAD_INDEX, testRunContext.getProperty( TestRunContext.THREAD_INDEX ) );
+						properties.put( TestRunContext.TOTAL_RUN_COUNT, testRunContext
+								.getProperty( TestRunContext.TOTAL_RUN_COUNT ) );
+						properties.put( TestRunContext.LOAD_TEST_CONTEXT, testRunContext
+								.getProperty( TestRunContext.LOAD_TEST_CONTEXT ) );
+						properties.put( TestRunContext.LOAD_TEST_RUNNER, testRunContext
+								.getProperty( TestRunContext.LOAD_TEST_RUNNER ) );
 						properties.put( TestRunContext.RUN_COUNT, testRunContext.getProperty( TestRunContext.RUN_COUNT ) );
 					}
-					
-					if( isCopyHttpSession())
+
+					if( isCopyHttpSession() )
 					{
-						properties.put( TestRunContext.HTTP_STATE_PROPERTY, testRunContext.getProperty( TestRunContext.HTTP_STATE_PROPERTY ) );
+						properties.put( TestRunContext.HTTP_STATE_PROPERTY, testRunContext
+								.getProperty( TestRunContext.HTTP_STATE_PROPERTY ) );
 					}
 
 					properties.put( TestRunContext.INTERACTIVE, testRunContext.getProperty( TestRunContext.INTERACTIVE ) );
@@ -231,7 +236,7 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 					properties.put( "#CallingRunTestCaseStep#", this );
 					properties.put( "#CallingTestCaseRunner#", testRunner );
 					properties.put( "#CallingTestRunContext#", testRunContext );
-					
+
 					testCaseRunner = runningTestCase.run( properties, true );
 					testCaseRunner.waitUntilFinished();
 					result.stopTimer();
@@ -245,8 +250,9 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 					// aggregate results
 					for( TestStepResult testStepResult : testCaseRunner.getResults() )
 					{
-						result.addMessage( testStepResult.getTestStep().getName() + " - " + testStepResult.getStatus() + " - " + testStepResult.getTimeTaken());
-						for( String msg : testStepResult.getMessages())
+						result.addMessage( testStepResult.getTestStep().getName() + " - " + testStepResult.getStatus()
+								+ " - " + testStepResult.getTimeTaken() );
+						for( String msg : testStepResult.getMessages() )
 						{
 							result.addMessage( "- " + msg );
 						}
@@ -278,6 +284,8 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 
 					if( runMode == RunTestCaseRunModeTypeConfig.PARALLELL )
 						runningTestCase.release();
+
+					runningTestCase.removeTestRunListener( testRunListener );
 
 					runningTestCase = null;
 					testCaseRunner = null;
@@ -350,7 +358,6 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 		notifyPropertyChanged( TARGET_TESTCASE, oldTestCase, testCase );
 	}
 
-	
 	public boolean isCopyHttpSession()
 	{
 		return stepConfig.getCopyHttpSession();
@@ -368,27 +375,27 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 
 	public void setCopyHttpSession( boolean arg0 )
 	{
-		if( arg0 == isCopyHttpSession())
+		if( arg0 == isCopyHttpSession() )
 			return;
-		
+
 		stepConfig.setCopyHttpSession( arg0 );
 		notifyPropertyChanged( "copyHttpSession", !arg0, arg0 );
 	}
 
 	public void setCopyLoadTestProperties( boolean arg0 )
 	{
-		if( arg0 == isCopyLoadTestProperties())
+		if( arg0 == isCopyLoadTestProperties() )
 			return;
-		
+
 		stepConfig.setCopyLoadTestProperties( arg0 );
 		notifyPropertyChanged( "copyLoadTestProperties", !arg0, arg0 );
 	}
 
 	public void setIgnoreEmptyProperties( boolean arg0 )
 	{
-		if( arg0 == isIgnoreEmptyProperties())
+		if( arg0 == isIgnoreEmptyProperties() )
 			return;
-		
+
 		stepConfig.setIgnoreEmptyProperties( arg0 );
 		notifyPropertyChanged( "ignoreEmptyProperties", !arg0, arg0 );
 	}
