@@ -322,7 +322,7 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 	{
 		public AddAction()
 		{
-			putValue( Action.SHORT_DESCRIPTION, "Adds a new Conditionr" );
+			putValue( Action.SHORT_DESCRIPTION, "Adds a new Condition" );
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
 		}
 
