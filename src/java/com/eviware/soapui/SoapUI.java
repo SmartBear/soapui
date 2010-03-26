@@ -1250,7 +1250,7 @@ public class SoapUI
 
 			UISupport.showExtendedInfo( "About soapUI", null,
 					"<html><body><p align=center> <font face=\"Verdana,Arial,Helvetica\"><strong><img src=\"" + splashURI
-							+ "\"><br>soapUI " + SOAPUI_VERSION + ", copyright (C) 2004-2009 eviware.com<br>"
+							+ "\"><br>soapUI " + SOAPUI_VERSION + ", copyright (C) 2004-2010 eviware.com<br>"
 							+ "<a href=\"http://www.soapui.org\">http://www.soapui.org</a> | "
 							+ "<a href=\"http://www.eviware.com\">http://www.eviware.com</a><br>" + "Build "
 							+ props.getProperty( "build.number" ) + ", Build Date " + props.getProperty( "build.date" )
