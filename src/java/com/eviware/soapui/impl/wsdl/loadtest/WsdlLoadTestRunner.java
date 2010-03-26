@@ -145,12 +145,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		}
 		else
 		{
-			for( LoadTestRunListener listener : loadTest.getLoadTestRunListeners() )
-			{
-				listener.afterLoadTest( this, context );
-			}
-
-			tearDown();
+			stop();
 		}
 	}
 
@@ -288,7 +283,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 
 	public Status waitUntilFinished()
 	{
-		while( runners.size() > 0 || threadsWaitingToStart > 0 )
+		while( runners.size() > 0 || threadsWaitingToStart > 0 || !hasStopped() )
 		{
 			try
 			{
