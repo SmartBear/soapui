@@ -49,6 +49,7 @@ import com.eviware.soapui.impl.wsdl.support.FileAttachment;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
@@ -68,7 +69,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 	{
 		HttpMethod httpMethod = ( HttpMethod )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 
-		String path = PropertyExpansionUtils.expandProperties( context, request.getPath() );
+		String path = PropertyExpander.expandProperties( context, request.getPath() );
 		StringBuffer query = new StringBuffer();
 
 		StringToStringMap responseProperties = ( StringToStringMap )context
@@ -78,11 +79,12 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				&& httpMethod instanceof EntityEnclosingMethod ? new MimeMultipart() : null;
 
 		RestParamsPropertyHolder params = request.getParams();
+
 		for( int c = 0; c < params.getPropertyCount(); c++ )
 		{
 			RestParamProperty param = params.getPropertyAt( c );
 
-			String value = PropertyExpansionUtils.expandProperties( context, param.getValue() );
+			String value = PropertyExpander.expandProperties( context, param.getValue() );
 			responseProperties.put( param.getName(), value );
 
 			if( value != null /* && formMp == null */&& !param.isDisableUrlEncoding() )
@@ -161,15 +163,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			}
 		}
 
-		String prefix = null;
-		if( path.contains( "://" ) )
-		{
-			prefix = path.substring( 0, path.indexOf( "://" ) + 3 );
-			path = path.substring( prefix.length() );
-		}
-		path = path.replaceAll( "/{2,}", "/" );
-		if( prefix != null )
-			path = prefix + path;
+		path = PathUtils.fixForwardSlashesInPath( path );
 
 		if( PathUtils.isHttpPath( path ) )
 		{

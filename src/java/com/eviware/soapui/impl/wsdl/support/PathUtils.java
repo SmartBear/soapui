@@ -368,4 +368,34 @@ public class PathUtils
 
 		return url;
 	}
+
+	public static String fixForwardSlashesInPath( String path )
+	{
+		String prefix = null;
+		String query = null;
+	
+		int ix = path.indexOf( '?' );
+		if( ix >= 0 )
+		{
+			query = path.substring( ix );
+			path = path.substring( 0, ix );
+		}
+	
+		if( path.contains( "://" ) )
+		{
+			prefix = path.substring( 0, path.indexOf( "://" ) + 3 );
+			path = path.substring( prefix.length() );
+		}
+	
+		// remove double-slashes in path
+		path = path.replaceAll( "/{2,}", "/" );
+	
+		if( prefix != null )
+			path = prefix + path;
+	
+		if( query != null )
+			path = path + query;
+	
+		return path;
+	}
 }
