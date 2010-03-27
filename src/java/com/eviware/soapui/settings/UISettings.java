@@ -81,6 +81,7 @@ public interface UISettings
 	public static final String SHOW_PROPERTIES_IN_TREE = UISettings.class.getSimpleName() + "@show_properties_in_tree";
 
 	public static final String SHOW_STARTUP_PAGE = UISettings.class.getSimpleName() + "@show_startup_page";
+	public static final String DISABLE_TOOLTIPS = UISettings.class.getSimpleName() + "@disable_tooltips";
 
 	@Setting( name = "Normalize Line-Breaks", description = "Normalize line-breaks when saving project", type = SettingType.BOOLEAN )
 	public static final String LINEBREAK = UISettings.class.getSimpleName() + "@" + "normalize_line-breaks";

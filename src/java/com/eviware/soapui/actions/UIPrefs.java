@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
+import javax.swing.ToolTipManager;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.settings.Settings;
@@ -50,6 +51,7 @@ public class UIPrefs implements Prefs
 	public static final String GC_INTERVAL = "Garbage Collection Interval";
 	public static final String RAW_RESPONSE_MESSAGE_SIZE = "Size of Raw Response Message to Show";
 	public static final String RAW_REQUEST_MESSAGE_SIZE = "Size of Raw Request Message to Show";
+	public static final String DISABLE_TOOLTIPS = "Disable Tooltips";
 
 	private SimpleForm editorForm;
 	private final String title;
@@ -110,6 +112,7 @@ public class UIPrefs implements Prefs
 			{
 				editorForm.appendCheckBox( SHOW_LOGS_AT_STARTUP, "Shows log tabs when starting soapUI", false );
 				editorForm.appendCheckBox( SHOW_STARTUP_PAGE, "Opens startup web page when starting soapUI", false );
+				editorForm.appendCheckBox( DISABLE_TOOLTIPS, "Disables all tooltips", false );
 			}
 
 			editorForm.appendSeparator();
@@ -155,6 +158,9 @@ public class UIPrefs implements Prefs
 		{
 			settings.setBoolean( UISettings.SHOW_LOGS_AT_STARTUP, values.getBoolean( SHOW_LOGS_AT_STARTUP ) );
 			settings.setBoolean( UISettings.SHOW_STARTUP_PAGE, values.getBoolean( SHOW_STARTUP_PAGE ) );
+			settings.setBoolean( UISettings.DISABLE_TOOLTIPS, values.getBoolean( DISABLE_TOOLTIPS ) );
+
+			ToolTipManager.sharedInstance().setEnabled( !values.getBoolean( DISABLE_TOOLTIPS ) );
 		}
 
 		settings.setString( UISettings.GC_INTERVAL, values.get( GC_INTERVAL ) );
@@ -196,6 +202,7 @@ public class UIPrefs implements Prefs
 		{
 			values.put( SHOW_LOGS_AT_STARTUP, settings.getBoolean( UISettings.SHOW_LOGS_AT_STARTUP ) );
 			values.put( SHOW_STARTUP_PAGE, settings.getBoolean( UISettings.SHOW_STARTUP_PAGE ) );
+			values.put( DISABLE_TOOLTIPS, settings.getBoolean( UISettings.DISABLE_TOOLTIPS ) );
 		}
 
 		values.put( GC_INTERVAL, settings.getString( UISettings.GC_INTERVAL, "0" ) );

@@ -15,6 +15,7 @@ package com.eviware.soapui;
 import java.awt.Color;
 import java.awt.Insets;
 
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 
@@ -56,13 +57,16 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 
 		initSoapUILookAndFeel();
 		DesktopRegistry.getInstance().addDesktop( SoapUI.DEFAULT_DESKTOP, new StandaloneDesktopFactory() );
+
+		ToolTipManager.sharedInstance().setEnabled( !getSettings().getBoolean( UISettings.DISABLE_TOOLTIPS ) );
 	}
 
+	@SuppressWarnings( "deprecation" )
 	public void initSoapUILookAndFeel()
 	{
 		try
 		{
-			if( !BrowserComponent.isJXBrowserDisabled() && Xpcom.isLinux() && !Xpcom.isSilentMode())
+			if( !BrowserComponent.isJXBrowserDisabled() && Xpcom.isLinux() && !Xpcom.isSilentMode() )
 			{
 				javax.swing.UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
 			}
