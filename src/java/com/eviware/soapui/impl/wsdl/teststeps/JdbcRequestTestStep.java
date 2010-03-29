@@ -48,11 +48,13 @@ import com.eviware.soapui.model.support.TestStepBeanProperty;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
+import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.StringUtils;
@@ -64,7 +66,7 @@ import com.eviware.soapui.support.StringUtils;
  */
 
 public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements Assertable, MutableTestPropertyHolder,
-		PropertyChangeListener
+		PropertyChangeListener, SamplerTestStep
 {
 	@SuppressWarnings( "unused" )
 	private final static Logger log = Logger.getLogger( WsdlTestRequestStep.class );
@@ -739,5 +741,15 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	public void setDiscardResponse( boolean discardResponse )
 	{
 		jdbcRequest.setDiscardResponse( discardResponse );
+	}
+
+	public TestRequest getTestRequest()
+	{
+		return jdbcRequest;
+	}
+
+	public TestStep getTestStep()
+	{
+		return this;
 	}
 }
