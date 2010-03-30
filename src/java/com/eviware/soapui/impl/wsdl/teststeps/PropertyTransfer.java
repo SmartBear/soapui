@@ -557,11 +557,11 @@ public class PropertyTransfer implements PropertyChangeNotifier
 
 		if( !StringUtils.hasContent( sourceValue ) )
 		{
-			if( getSetNullOnMissingSource() )
-				targetProperty.setValue( null );
-
 			if( !getIgnoreEmpty() )
 				throw new Exception( "Missing source value" );
+
+			if( getSetNullOnMissingSource() )
+				targetProperty.setValue( null );
 
 			return null;
 		}
