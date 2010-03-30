@@ -315,7 +315,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 	{
 		String value = sourceProperty.getValue();
 
-		if( getEntitize() )
+		if( StringUtils.hasContent( value ) && getEntitize() )
 			value = XmlUtils.entitize( value );
 
 		targetProperty.setValue( value );
@@ -325,13 +325,30 @@ public class PropertyTransfer implements PropertyChangeNotifier
 	protected String[] transferXPathToXml( TestProperty sourceProperty, TestProperty targetProperty,
 			SubmitContext context ) throws Exception
 	{
-		String sourcePropertyValue = sourceProperty.getValue();
-		XmlObject sourceXmlObject = sourcePropertyValue == null ? null : XmlObject.Factory.parse( sourcePropertyValue );
-		XmlCursor sourceXml = sourceXmlObject == null ? null : sourceXmlObject.newCursor();
+		XmlCursor sourceXml;
+		try
+		{
+			String sourcePropertyValue = sourceProperty.getValue();
+			XmlObject sourceXmlObject = sourcePropertyValue == null ? null : XmlObject.Factory.parse( sourcePropertyValue );
+			sourceXml = sourceXmlObject == null ? null : sourceXmlObject.newCursor();
+		}
+		catch( XmlException e )
+		{
+			throw new Exception( "Error parsing source property [" + e.getMessage() + "]" );
+		}
 
-		String targetPropertyValue = targetProperty.getValue();
-		XmlObject targetXmlObject = XmlObject.Factory.parse( targetPropertyValue );
-		XmlCursor targetXml = targetXmlObject.newCursor();
+		XmlObject targetXmlObject;
+		XmlCursor targetXml;
+		try
+		{
+			String targetPropertyValue = targetProperty.getValue();
+			targetXmlObject = XmlObject.Factory.parse( targetPropertyValue );
+			targetXml = targetXmlObject.newCursor();
+		}
+		catch( XmlException e )
+		{
+			throw new Exception( "Error parsing target property [" + e.getMessage() + "]" );
+		}
 
 		XmlCursor lastSource = null;
 
@@ -540,11 +557,11 @@ public class PropertyTransfer implements PropertyChangeNotifier
 
 		if( !StringUtils.hasContent( sourceValue ) )
 		{
-			if( !getIgnoreEmpty() )
-				throw new Exception( "Missing source value" );
-
 			if( getSetNullOnMissingSource() )
 				targetProperty.setValue( null );
+
+			if( !getIgnoreEmpty() )
+				throw new Exception( "Missing source value" );
 
 			return null;
 		}
