@@ -628,9 +628,10 @@ public class PropertyTransfer implements PropertyChangeNotifier
 				}
 			}
 
-			if( !getIgnoreEmpty() || ( value != null && value.length() > 0 ) )
+			if( !getIgnoreEmpty() || ( value != null && value.length() > 0 ) || 
+					(getSetNullOnMissingSource() && !StringUtils.hasContent( value )))
 			{
-				if( getEntitize() )
+				if( StringUtils.hasContent( value ) && getEntitize() )
 					value = XmlUtils.entitize( value );
 
 				targetProperty.setValue( value );
