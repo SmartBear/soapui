@@ -34,17 +34,10 @@ public abstract class AbstractPropertyExpansionTarget implements PropertyExpansi
 		{
 			modelItem = ( ( WsdlTestRequest )modelItem ).getTestStep();
 		}
-		else if( modelItem instanceof HttpTestRequestInterface )
+		else if( modelItem instanceof HttpTestRequestInterface<?> )
 		{
 			modelItem = ( ( HttpTestRequestInterface<?> )modelItem ).getTestStep();
 		}
-		// else if( modelItem instanceof WsdlMockResponse &&
-		// ((WsdlMockResponse)modelItem).getMockOperation().getMockService()
-		// instanceof WsdlTestMockService )
-		// {
-		// modelItem =
-		// ((WsdlTestMockService)((WsdlMockResponse)modelItem).getMockOperation().getMockService()).getMockResponseStep();
-		// }
 
 		return modelItem;
 	}

@@ -43,7 +43,24 @@ public class GroovyScriptEngineFactory implements SoapUIScriptEngineFactory, Soa
 
 	public String createContextExpansion( String name, PropertyExpansion expansion )
 	{
-		return "def " + name + " = context.expand( '" + expansion + "' )\n";
+		String exp = expansion.toString();
+		StringBuffer buf = new StringBuffer();
+
+		for( int c = 0; c < exp.length(); c++ )
+		{
+			char ch = exp.charAt( c );
+
+			switch( ch )
+			{
+			case '\'' :
+			case '\\' :
+				buf.append( '\\' );
+			default :
+				buf.append( ch );
+			}
+		}
+
+		return "def " + name + " = context.expand( '" + buf.toString() + "' )\n";
 	}
 
 	public String createScriptAssertionForExists( XPathData xpathData )

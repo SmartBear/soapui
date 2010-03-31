@@ -86,26 +86,6 @@ public class PropertyExpansionUtils
 
 	public static String shortenXPathForPropertyExpansion( String xpath, String value )
 	{
-		// try
-		// {
-		// XmlObject xmlObject = XmlObject.Factory.parse( value );
-		// String ns = XmlUtils.declareXPathNamespaces( xmlObject );
-		// Node domNode = XmlUtils.selectFirstDomNode( xmlObject, xpath );
-		//
-		// String shortenedXPath = XmlUtils.removeXPathNamespaceDeclarations(
-		// xpath );
-		// Node domNode2 = XmlUtils.selectFirstDomNode( xmlObject, ns +
-		// shortenedXPath );
-		//
-		// if( domNode == domNode2 )
-		// {
-		// return shortenedXPath;
-		// }
-		// }
-		// catch( XmlException e )
-		// {
-		// }
-
 		if( xpath.length() > 0 )
 		{
 			StringBuffer buf = new StringBuffer();
@@ -117,9 +97,6 @@ public class PropertyExpansionUtils
 				{
 				case '\n' :
 					buf.append( ' ' );
-					break;
-				case '\'' :
-					buf.append( "\\'" );
 					break;
 				default :
 					buf.append( ch );

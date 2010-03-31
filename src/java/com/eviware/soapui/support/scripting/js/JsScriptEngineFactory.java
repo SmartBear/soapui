@@ -43,7 +43,24 @@ public class JsScriptEngineFactory implements SoapUIScriptEngineFactory, SoapUIS
 
 	public String createContextExpansion( String name, PropertyExpansion expansion )
 	{
-		return "var " + name + " = context.expand( \"" + expansion + "\" );\n";
+		String exp = expansion.toString();
+		StringBuffer buf = new StringBuffer();
+
+		for( int c = 0; c < exp.length(); c++ )
+		{
+			char ch = exp.charAt( c );
+
+			switch( ch )
+			{
+			case '\'' :
+			case '\\' :
+				buf.append( '\\' );
+			default :
+				buf.append( ch );
+			}
+		}
+
+		return "var " + name + " = context.expand( \"" + buf.toString() + "\" );\n";
 	}
 
 	public String createScriptAssertionForExists( XPathData xpathData )
