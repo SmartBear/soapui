@@ -29,7 +29,6 @@ import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
-import org.apache.commons.httpclient.params.HostParams;
 import org.mortbay.util.IO;
 
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.LaunchForm;
@@ -77,8 +76,6 @@ public class TunnelServlet extends ProxyServlet
 	{
 		this.config = config;
 		this.context = config.getServletContext();
-
-		client = HttpClientSupport.getHttpClient();
 	}
 
 	public void service( ServletRequest request, ServletResponse response ) throws ServletException, IOException
@@ -97,10 +94,10 @@ public class TunnelServlet extends ProxyServlet
 		else
 			postMethod = new ExtendedPostMethod();
 
-			JProxyServletWsdlMonitorMessageExchange capturedData = new JProxyServletWsdlMonitorMessageExchange( project );
-			capturedData.setRequestHost( httpRequest.getRemoteHost() );
-			capturedData.setRequestHeader( httpRequest );
-			capturedData.setTargetURL( this.prot + inetAddress.getHostName() );
+		JProxyServletWsdlMonitorMessageExchange capturedData = new JProxyServletWsdlMonitorMessageExchange( project );
+		capturedData.setRequestHost( httpRequest.getRemoteHost() );
+		capturedData.setRequestHeader( httpRequest );
+		capturedData.setTargetURL( this.prot + inetAddress.getHostName() );
 
 		CaptureInputStream capture = new CaptureInputStream( httpRequest.getInputStream() );
 
@@ -153,8 +150,7 @@ public class TunnelServlet extends ProxyServlet
 		hostConfiguration = ProxyUtils.initProxySettings( settings, httpState, hostConfiguration, prot + sslEndPoint,
 				new DefaultPropertyExpansionContext( project ) );
 
-		HostParams param = hostConfiguration.getParams();
-		if (sslEndPoint.indexOf( "/" ) < 0)
+		if( sslEndPoint.indexOf( "/" ) < 0 )
 			postMethod.setPath( "/" );
 		else
 			postMethod.setPath( sslEndPoint.substring( sslEndPoint.indexOf( "/" ), sslEndPoint.length() ) );
@@ -165,11 +161,11 @@ public class TunnelServlet extends ProxyServlet
 		{
 			if( httpState == null )
 				httpState = new HttpState();
-			client.executeMethod( hostConfiguration, postMethod, httpState );
+			HttpClientSupport.getHttpClient().executeMethod( hostConfiguration, postMethod, httpState );
 		}
 		else
 		{
-			client.executeMethod( hostConfiguration, postMethod );
+			HttpClientSupport.getHttpClient().executeMethod( hostConfiguration, postMethod );
 		}
 		capturedData.stopCapture();
 

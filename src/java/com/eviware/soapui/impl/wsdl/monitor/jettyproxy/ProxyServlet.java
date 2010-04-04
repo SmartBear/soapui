@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.URI;
@@ -40,6 +39,7 @@ import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExcha
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
+import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -49,7 +49,6 @@ public class ProxyServlet implements Servlet
 
 	protected ServletConfig config;
 	protected ServletContext context;
-	protected HttpClient client;
 	protected SoapMonitor monitor;
 	protected WsdlProject project;
 	protected HttpState httpState = new HttpState();
@@ -91,16 +90,11 @@ public class ProxyServlet implements Servlet
 
 	public void init( ServletConfig config ) throws ServletException
 	{
-
 		this.config = config;
 		this.context = config.getServletContext();
-
-		client = new HttpClient();
-
 	}
 
-	public synchronized void service( ServletRequest request, ServletResponse response ) throws ServletException,
-			IOException
+	public void service( ServletRequest request, ServletResponse response ) throws ServletException, IOException
 	{
 		monitor.fireOnRequest( request, response );
 		if( response.isCommitted() )
@@ -195,11 +189,11 @@ public class ProxyServlet implements Servlet
 		{
 			if( httpState == null )
 				httpState = new HttpState();
-			client.executeMethod( hostConfiguration, method, httpState );
+			HttpClientSupport.getHttpClient().executeMethod( hostConfiguration, method, httpState );
 		}
 		else
 		{
-			client.executeMethod( hostConfiguration, method );
+			HttpClientSupport.getHttpClient().executeMethod( hostConfiguration, method );
 		}
 
 		// wait for transaction to end and store it.
@@ -231,7 +225,10 @@ public class ProxyServlet implements Servlet
 			IO.copy( new ByteArrayInputStream( capturedData.getRawResponseBody() ), httpResponse.getOutputStream() );
 		}
 
-		monitor.addMessageExchange( capturedData );
+		synchronized( this )
+		{
+			monitor.addMessageExchange( capturedData );
+		}
 	}
 
 	private byte[] getResponseToBytes( String footer, HttpMethodBase postMethod, byte[] res )
