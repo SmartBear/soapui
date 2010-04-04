@@ -1564,12 +1564,18 @@ public class SoapUI
 		@Override
 		public void run()
 		{
-			SoapUI.log( "Autosaving Workspace" );
-			WorkspaceImpl wrkspc = ( WorkspaceImpl )SoapUI.getWorkspace();
-			if( wrkspc != null )
+			SwingUtilities.invokeLater( new Runnable()
 			{
-				wrkspc.save( false, true );
-			}
+				public void run()
+				{
+					SoapUI.log( "Autosaving Workspace" );
+					WorkspaceImpl wrkspc = ( WorkspaceImpl )SoapUI.getWorkspace();
+					if( wrkspc != null )
+					{
+						wrkspc.save( false, true );
+					}
+				}
+			} );
 		}
 	}
 
