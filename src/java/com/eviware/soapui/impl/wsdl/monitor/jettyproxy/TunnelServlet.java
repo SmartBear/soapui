@@ -192,9 +192,12 @@ public class TunnelServlet extends ProxyServlet
 
 		postMethod.releaseConnection();
 
-		monitor.addMessageExchange( capturedData );
-		capturedData = null;
+		synchronized( this )
+		{
+			monitor.addMessageExchange( capturedData );
+		}
 
+		capturedData = null;
 	}
 
 	private byte[] getResponseToBytes( String footer, HttpMethodBase postMethod, byte[] res )
