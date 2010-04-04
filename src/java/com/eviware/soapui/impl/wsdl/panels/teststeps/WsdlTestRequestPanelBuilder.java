@@ -53,7 +53,8 @@ public class WsdlTestRequestPanelBuilder extends EmptyPanelBuilder<WsdlTestReque
 		table.addProperty( "Description", "description", true );
 		table.addProperty( "Message Size", "contentLength", false );
 		table.addProperty( "Encoding", "encoding", new String[] { null, "UTF-8", "iso-8859-1" } );
-		table.addProperty( "Endpoint", "endpoint", request.getInterface().getEndpoints() );
+		table.addProperty( "Endpoint", "endpoint", request.getInterface() == null ? new String[0] : request
+				.getInterface().getEndpoints() );
 		table.addProperty( "Timeout", "timeout", true );
 		table.addProperty( "Bind Address", "bindAddress", true );
 		table.addProperty( "Follow Redirects", "followRedirects", JPropertiesTable.BOOLEAN_OPTIONS );

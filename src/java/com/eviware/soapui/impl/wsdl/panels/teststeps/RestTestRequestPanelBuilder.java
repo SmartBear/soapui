@@ -60,7 +60,8 @@ public class RestTestRequestPanelBuilder extends EmptyPanelBuilder<RestTestReque
 		}
 		else
 		{
-			table.addProperty( "Endpoint", "endpoint", request.getInterface().getEndpoints() );
+			table.addProperty( "Endpoint", "endpoint", request.getInterface() == null ? new String[0] : request
+					.getInterface().getEndpoints() );
 			table.addProperty( "Service", "serviceName" );
 			table.addProperty( "Resource", "path" );
 			table.addProperty( "Method", "restMethodName" );
