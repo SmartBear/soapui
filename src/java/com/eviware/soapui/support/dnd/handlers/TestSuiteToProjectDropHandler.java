@@ -46,7 +46,7 @@ public class TestSuiteToProjectDropHandler extends AbstractAfterModelItemDropHan
 
 		if( source.getProject() == target )
 		{
-			return CloneTestSuiteAction.cloneTestSuiteWithinProject( source, name, target, source.getDescription() );
+			return CloneTestSuiteAction.cloneTestSuiteWithinProject( source, name, target, source.getDescription() ) != null;
 		}
 		else
 		{
