@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.actions.multi;
 
+import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.action.support.AbstractSoapUIMultiAction;
@@ -29,12 +31,19 @@ public class MultiTestStepDisableAction extends AbstractSoapUIMultiAction<ModelI
 	{
 		for( ModelItem target : targets )
 		{
-			( ( WsdlTestStep )target ).setDisabled( true );
+			if( target instanceof WsdlTestStep )
+				( ( WsdlTestStep )target ).setDisabled( true );
+			else if( target instanceof WsdlTestCase )
+				( ( WsdlTestCase )target ).setDisabled( true );
+			else if( target instanceof WsdlTestSuite )
+				( ( WsdlTestSuite )target ).setDisabled( true );
 		}
 	}
 
 	public boolean applies( ModelItem target )
 	{
-		return ( target instanceof WsdlTestStep ) && !( ( WsdlTestStep )target ).isDisabled();
+		return ( ( target instanceof WsdlTestStep ) && !( ( WsdlTestStep )target ).isDisabled() )
+				|| ( ( target instanceof WsdlTestCase ) && !( ( WsdlTestCase )target ).isDisabled() )
+				|| ( ( target instanceof WsdlTestSuite ) && !( ( WsdlTestSuite )target ).isDisabled() );
 	}
 }
