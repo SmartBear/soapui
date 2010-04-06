@@ -46,9 +46,10 @@ import com.eviware.x.form.support.AField.AFieldType;
  */
 
 /*
- * There is a separate class for the pro version ProCloneTestCaseAction
- * any changes made here should reflect to that class too
- * TODO refactor these two classes so that only one class needs to be changed in case of changing the core functionality
+ * There is a separate class for the pro version ProCloneTestCaseAction any
+ * changes made here should reflect to that class too TODO refactor these two
+ * classes so that only one class needs to be changed in case of changing the
+ * core functionality
  */
 public class CloneTestCaseAction extends AbstractSoapUIAction<WsdlTestCase>
 {
@@ -180,14 +181,18 @@ public class CloneTestCaseAction extends AbstractSoapUIAction<WsdlTestCase>
 					{
 						msg += iface.getName() + " [" + iface.getTechnicalId() + "]\r\n";
 					}
-					msg += "\r\nThese will be cloned to the targetProject as well";
+					msg += "\r\nShould these will be cloned to the targetProject as well?";
 
-					if( !UISupport.confirm( msg, "Clone TestCase" ) )
+					Boolean result = UISupport.confirmOrCancel( msg, "Clone TestCase" );
+					if( result == null )
 						return;
 
-					for( Interface iface : requiredInterfaces )
+					if( result )
 					{
-						project.importInterface( ( AbstractInterface<?> )iface, true, true );
+						for( Interface iface : requiredInterfaces )
+						{
+							project.importInterface( ( AbstractInterface<?> )iface, true, true );
+						}
 					}
 				}
 			}

@@ -26,6 +26,7 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -99,16 +100,19 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 			{
 				description = dialog.getValue( Form.DESCRIPTION );
 			}
+
+			TestSuite result = null;
+
 			if( targetProjectName.equals( testSuite.getProject().getName() ) )
 			{
-				cloneTestSuiteWithinProject( testSuite, name, project, description );
+				result = cloneTestSuiteWithinProject( testSuite, name, project, description );
 			}
 			else
 			{
-				cloneToAnotherProject( testSuite, targetProjectName, name, move, description );
+				result = cloneToAnotherProject( testSuite, targetProjectName, name, move, description );
 			}
 
-			if( move )
+			if( move && result != null )
 			{
 				testSuite.getProject().removeTestSuite( testSuite );
 			}
@@ -148,14 +152,18 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 			{
 				msg += iface.getName() + " [" + iface.getTechnicalId() + "]\r\n";
 			}
-			msg += "\r\nThese will be cloned to the targetProject as well";
+			msg += "\r\nShould these be cloned to the targetProject as well?";
 
-			if( !UISupport.confirm( msg, "Clone TestSuite" ) )
+			Boolean result = UISupport.confirmOrCancel( msg, "Clone TestSuite" );
+			if( result == null )
 				return null;
 
-			for( Interface iface : requiredInterfaces )
+			if( result )
 			{
-				targetProject.importInterface( ( AbstractInterface<?> )iface, true, true );
+				for( Interface iface : requiredInterfaces )
+				{
+					targetProject.importInterface( ( AbstractInterface<?> )iface, true, true );
+				}
 			}
 		}
 
@@ -165,12 +173,12 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 		return testSuite;
 	}
 
-	public static boolean cloneTestSuiteWithinProject( WsdlTestSuite testSuite, String name, WsdlProject project,
+	public static TestSuite cloneTestSuiteWithinProject( WsdlTestSuite testSuite, String name, WsdlProject project,
 			String description )
 	{
 		WsdlTestSuite newTestSuite = project.importTestSuite( testSuite, name, -1, true, description );
 		UISupport.select( newTestSuite );
-		return true;
+		return newTestSuite;
 	}
 
 	public static Set<Interface> getRequiredInterfaces( WsdlTestSuite testSuite, WsdlProject targetProject )
