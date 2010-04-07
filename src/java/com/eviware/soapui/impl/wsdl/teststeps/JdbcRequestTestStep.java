@@ -121,7 +121,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 	private void addResponseAsXMLVirtualProperty()
 	{
-		TestStepBeanProperty responseProperty = new TestStepBeanProperty( "ResponseAsXML", false, this,
+		TestStepBeanProperty responseProperty = new TestStepBeanProperty( "ResponseAsXml", false, this,
 				"responseContent", this )
 		{
 			@Override
@@ -132,7 +132,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 		};
 
-		propertyHolderSupport.addVirtualProperty( "ResponseAsXML", responseProperty );
+		propertyHolderSupport.addVirtualProperty( "ResponseAsXml", responseProperty );
 	}
 
 	public JdbcRequestTestStepConfig getJdbcRequestTestStepConfig()

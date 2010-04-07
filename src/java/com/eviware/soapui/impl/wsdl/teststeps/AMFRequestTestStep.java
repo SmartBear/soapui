@@ -129,7 +129,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 
 	private void addResponseAsXMLVirtualProperty()
 	{
-		TestStepBeanProperty responseProperty = new TestStepBeanProperty( "ResponseAsXML", false, amfRequest,
+		TestStepBeanProperty responseProperty = new TestStepBeanProperty( "ResponseAsXml", false, amfRequest,
 				"responseContent", this )
 		{
 			@Override
@@ -140,7 +140,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 
 		};
 
-		propertyHolderSupport.addVirtualProperty( "ResponseAsXML", responseProperty );
+		propertyHolderSupport.addVirtualProperty( "ResponseAsXml", responseProperty );
 	}
 
 	public AMFRequestTestStepConfig getAMFRequestTestStepConfig()
