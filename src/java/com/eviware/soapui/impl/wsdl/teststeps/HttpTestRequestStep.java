@@ -119,7 +119,7 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 			}
 		} );
 
-		addProperty( new TestStepBeanProperty( "ResponseAsXml", true, testRequest, "responseContentAsXml", this )
+		addProperty( new TestStepBeanProperty( WsdlTestStepWithProperties.RESPONSE_AS_XML, true, testRequest, "responseContentAsXml", this )
 		{
 			@Override
 			public String getDefaultValue()
@@ -583,7 +583,7 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 
 	public String getDefaultSourcePropertyName()
 	{
-		return "ResponseAsXml";
+		return WsdlTestStepWithProperties.RESPONSE_AS_XML;
 	}
 
 	public String getDefaultTargetPropertyName()

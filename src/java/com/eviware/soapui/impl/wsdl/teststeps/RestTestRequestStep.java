@@ -135,7 +135,8 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 			}
 		} );
 
-		addProperty( new TestStepBeanProperty( "ResponseAsXml", true, testRequest, "responseContentAsXml", this )
+		addProperty( new TestStepBeanProperty( WsdlTestStepWithProperties.RESPONSE_AS_XML, true, testRequest,
+				"responseContentAsXml", this )
 		{
 			@Override
 			public String getDefaultValue()

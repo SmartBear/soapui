@@ -110,7 +110,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		amfRequest = new AMFRequest( this, forLoadTest );
 
 		propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder( this, amfRequestTestStepConfig.getProperties() );
-		addResponseAsXMLVirtualProperty();
+		addResponseAsXmlVirtualProperty();
 
 		initAssertions();
 
@@ -127,9 +127,9 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 			}
 	}
 
-	private void addResponseAsXMLVirtualProperty()
+	private void addResponseAsXmlVirtualProperty()
 	{
-		TestStepBeanProperty responseProperty = new TestStepBeanProperty( "ResponseAsXml", false, amfRequest,
+		TestStepBeanProperty responseProperty = new TestStepBeanProperty( WsdlTestStepWithProperties.RESPONSE_AS_XML, false, amfRequest,
 				"responseContent", this )
 		{
 			@Override
@@ -140,7 +140,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 
 		};
 
-		propertyHolderSupport.addVirtualProperty( "ResponseAsXml", responseProperty );
+		propertyHolderSupport.addVirtualProperty( WsdlTestStepWithProperties.RESPONSE_AS_XML, responseProperty );
 	}
 
 	public AMFRequestTestStepConfig getAMFRequestTestStepConfig()
@@ -706,7 +706,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		amfRequestTestStepConfig = ( AMFRequestTestStepConfig )config.getConfig().changeType(
 				AMFRequestTestStepConfig.type );
 		propertyHolderSupport.resetPropertiesConfig( amfRequestTestStepConfig.getProperties() );
-		// addResponseAsXMLVirtualProperty();
+		// addResponseAsXmlVirtualProperty();
 		assertionsSupport.refresh();
 	}
 

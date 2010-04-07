@@ -27,6 +27,7 @@ import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepWithProperties;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
@@ -118,7 +119,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 
 			for( String name : propertyNames )
 			{
-				if( name.equals( "ResponseAsXML" ) )
+				if( name.equals( WsdlTestStepWithProperties.RESPONSE_AS_XML ) )
 					continue; // skip ResponseAsXML
 
 				TestProperty propertyValue = propertyMap.get( name );
@@ -581,7 +582,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 			sb.append( " <parameters>\n" );
 			for( String name : getPropertyNames() )
 			{
-				if( name.equals( "ResponseAsXML" ) )
+				if( name.equals( WsdlTestStepWithProperties.RESPONSE_AS_XML ) )
 					continue;
 				sb.append( "  <parameter>\n" );
 				sb.append( "   <name>" + name + "</name>\n" );

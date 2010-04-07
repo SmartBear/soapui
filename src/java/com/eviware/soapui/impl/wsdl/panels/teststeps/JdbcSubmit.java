@@ -23,6 +23,7 @@ import java.util.concurrent.Future;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.NamedParameterStatement;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepWithProperties;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -294,7 +295,7 @@ public class JdbcSubmit implements Submit, Runnable
 		for( TestProperty testProperty : props )
 		{
 			String value = PropertyExpander.expandProperties( context, testProperty.getValue() );
-			if( !testProperty.getName().equals( "ResponseAsXML" ) )
+			if( !testProperty.getName().equals( WsdlTestStepWithProperties.RESPONSE_AS_XML ) )
 			{
 				p.setString( testProperty.getName(), value );
 			}

@@ -61,6 +61,7 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepWithProperties;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Submit;
@@ -283,7 +284,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		split.setDividerLocation( 120 );
 		split.setPreferredSize( new Dimension( 300, 500 ) );
 
-		return new JScrollPane(split);
+		return new JScrollPane( split );
 
 	}
 
@@ -333,7 +334,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 						List<String> propertyNamesList = new ArrayList<String>();
 						for( String name : holder.getPropertyNames() )
 						{
-							if( name.equals( "ResponseAsXML" ) )
+							if( name.equals( WsdlTestStepWithProperties.RESPONSE_AS_XML ) )
 							{
 								continue;
 							}

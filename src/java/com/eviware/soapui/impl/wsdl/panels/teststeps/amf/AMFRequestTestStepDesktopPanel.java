@@ -58,6 +58,7 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepWithProperties;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Submit;
@@ -348,7 +349,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 						List<String> propertyNamesList = new ArrayList<String>();
 						for( String name : holder.getPropertyNames() )
 						{
-							if( name.equals( "ResponseAsXML" ) )
+							if( name.equals( WsdlTestStepWithProperties.RESPONSE_AS_XML ) )
 							{
 								continue;
 							}
