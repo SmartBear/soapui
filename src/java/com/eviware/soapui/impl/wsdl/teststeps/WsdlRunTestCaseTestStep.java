@@ -212,7 +212,7 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 					result.startTimer();
 					StringToObjectMap properties = new StringToObjectMap();
 
-					if( isCopyLoadTestProperties() )
+					if( isCopyLoadTestProperties() && properties.containsKey( TestRunContext.LOAD_TEST_CONTEXT ) )
 					{
 						properties
 								.put( TestRunContext.THREAD_INDEX, testRunContext.getProperty( TestRunContext.THREAD_INDEX ) );
@@ -225,7 +225,7 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 						properties.put( TestRunContext.RUN_COUNT, testRunContext.getProperty( TestRunContext.RUN_COUNT ) );
 					}
 
-					if( isCopyHttpSession() )
+					if( isCopyHttpSession() && properties.containsKey( TestRunContext.HTTP_STATE_PROPERTY ) )
 					{
 						properties.put( TestRunContext.HTTP_STATE_PROPERTY, testRunContext
 								.getProperty( TestRunContext.HTTP_STATE_PROPERTY ) );
