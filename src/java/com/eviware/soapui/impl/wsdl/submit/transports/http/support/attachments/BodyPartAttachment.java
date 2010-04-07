@@ -56,6 +56,11 @@ public class BodyPartAttachment implements Attachment
 		this.attachmentType = attachmentType;
 	}
 
+	public BodyPart getBodyPart()
+	{
+		return bodyPart;
+	}
+
 	public String getContentType()
 	{
 		try
