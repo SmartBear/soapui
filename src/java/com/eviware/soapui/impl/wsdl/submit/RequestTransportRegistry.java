@@ -88,7 +88,17 @@ public class RequestTransportRegistry
 
 		transports.put( HTTP, httpTransport );
 		transports.put( HTTPS, httpTransport );
-		transports.put(JMS, jmsTransport);
+		
+		
+		jmsTransport.addRequestFilter( new WssAuthenticationRequestFilter() );
+		jmsTransport.addRequestFilter( new WsaRequestFilter() );
+		jmsTransport.addRequestFilter( new WsrmRequestFilter() );
+		jmsTransport.addRequestFilter( new WssRequestFilter() );
+		for( RequestFilter filter : SoapUI.getListenerRegistry().getListeners( RequestFilter.class ) )
+		{
+			jmsTransport.addRequestFilter( filter );
+		}
+		transports.put( JMS, jmsTransport );
 	}
 
 	public static RequestTransport getTransport( String endpoint, SubmitContext submitContext )
