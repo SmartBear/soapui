@@ -26,6 +26,7 @@ public interface BaseHttpRequestTransport extends RequestTransport
 	public static final String POST_METHOD = "postMethod";
 	public static final String HTTP_CLIENT = "httpClient";
 	public static final String HOST_CONFIGURATION = "hostConfiguration";
+	public static final String REQUEST_URI = "requestUri";
 	public static final String REQUEST_CONTENT = "requestContent";
 	public static final String RESPONSE = "httpResponse";
 	public static final String RESPONSE_PROPERTIES = "httpResponseProperties";

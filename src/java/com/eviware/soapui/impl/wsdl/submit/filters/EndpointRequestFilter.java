@@ -41,7 +41,11 @@ public class EndpointRequestFilter extends AbstractRequestFilter
 		try
 		{
 			if( StringUtils.hasContent( strURL ) )
-				httpMethod.setURI( new URI( strURL, request.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) ) );
+			{
+				URI uri = new URI( strURL, request.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
+				context.setProperty( BaseHttpRequestTransport.REQUEST_URI, uri );
+				httpMethod.setURI( uri );
+			}
 		}
 		catch( Exception e )
 		{

@@ -21,6 +21,7 @@ import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpState;
+import org.apache.commons.httpclient.URI;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
@@ -82,6 +83,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			postMethod.abort();
 	}
 
+	@SuppressWarnings( "deprecation" )
 	public Response sendRequest( SubmitContext submitContext, Request request ) throws Exception
 	{
 		AbstractHttpRequestInterface<?> httpRequest = ( AbstractHttpRequestInterface<?> )request;
@@ -161,6 +163,21 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			// dump file?
 			httpMethod.setDumpFile( PathUtils.expandPath( httpRequest.getDumpFile(),
 					( AbstractWsdlModelItem<?> )httpRequest, submitContext ) );
+
+			// fix absolute URIs due to peculiarity in httpclient
+			URI uri = ( URI )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_URI );
+			if( uri != null && uri.isAbsoluteURI() )
+			{
+				hostConfiguration.setHost( uri.getHost(), uri.getPort() );
+				String str = uri.toString();
+				int ix = str.indexOf( '/', str.indexOf( "//" ) + 2 );
+				if( ix != -1 )
+				{
+					uri = new URI( str.substring( ix ) );
+					httpMethod.setURI( uri );
+					submitContext.setProperty( BaseHttpRequestTransport.REQUEST_URI, uri );
+				}
+			}
 
 			// include request time?
 			if( settings.getBoolean( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN ) )

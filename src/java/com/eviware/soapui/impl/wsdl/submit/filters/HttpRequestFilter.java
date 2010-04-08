@@ -171,7 +171,9 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			{
 				// URI(String) automatically URLencodes the input, so we need to
 				// decode it first...
-				httpMethod.setURI( new URI( URLDecoder.decode( path ) ) );
+				URI uri = new URI( URLDecoder.decode( path ) );
+				context.setProperty( BaseHttpRequestTransport.REQUEST_URI, uri );
+				httpMethod.setURI( uri );
 			}
 			catch( Exception e )
 			{

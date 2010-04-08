@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.endpoint;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -115,35 +116,38 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 
 		synchronized( defaults )
 		{
-		for( String key : defaults.keySet() )
-		{
-			if( !endpoints.contains( key ) )
+			for( String key : defaults.keySet() )
 			{
-				keys.add( key );
+				if( !endpoints.contains( key ) )
+				{
+					keys.add( key );
+				}
+			}
+
+			for( String key : keys )
+			{
+				EndpointDefaults def = defaults.remove( key );
+				config.getEndpointList().remove( def );
 			}
 		}
-
-		for( String key : keys )
-		{
-			EndpointDefaults def = defaults.remove( key );
-			config.getEndpointList().remove( def );
-		}
-	}
 	}
 
 	public void filterRequest( SubmitContext context, Request wsdlRequest )
 	{
 		HttpMethod httpMethod = ( HttpMethod )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
-		URI uri = null;
-		try
+		URI uri = ( URI )context.getProperty( BaseHttpRequestTransport.REQUEST_URI );
+		if( uri == null )
 		{
-			uri = httpMethod.getURI();
-		}
-		catch( URIException e )
-		{
-			SoapUI.logError( e, "Error for path: " + httpMethod.getPath() + ", QueryString: "
-					+ httpMethod.getQueryString() );
-			return;
+			try
+			{
+				uri = httpMethod.getURI();
+			}
+			catch( URIException e )
+			{
+				SoapUI.logError( e, "Error for path: " + httpMethod.getPath() + ", QueryString: "
+						+ httpMethod.getQueryString() );
+				return;
+			}
 		}
 
 		EndpointDefaults def = defaults.get( uri.toString() );
@@ -152,14 +156,22 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 		{
 			synchronized( defaults )
 			{
-			for( String ep : defaults.keySet() )
-			{
-				if( PropertyExpander.expandProperties( context, ep ).equals( uri.toString() ) )
+				for( String ep : defaults.keySet() )
 				{
-					def = defaults.get( ep );
-					break;
+					try
+					{
+						URL tempUri = new URL( PropertyExpander.expandProperties( context, ep ) );
+						if( tempUri.toString().equals( uri.toString() ) )
+						{
+							def = defaults.get( ep );
+							break;
+						}
+					}
+					catch( Exception e )
+					{
+						e.printStackTrace();
+					}
 				}
-			}
 			}
 
 			if( def == null )
@@ -370,9 +382,9 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 
 				synchronized( defaults )
 				{
-				defaults.remove( oldValue );
-				defaults.put( newValue, def );
-			}
+					defaults.remove( oldValue );
+					defaults.put( newValue, def );
+				}
 			}
 			else
 			{
@@ -509,10 +521,10 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 		{
 			synchronized( defaults )
 			{
-			EndpointConfig newEndpoint = config.addNewEndpoint();
-			newEndpoint.setStringValue( endpoint );
-			defaults.put( endpoint, new EndpointDefaults( newEndpoint ) );
-		}
+				EndpointConfig newEndpoint = config.addNewEndpoint();
+				newEndpoint.setStringValue( endpoint );
+				defaults.put( endpoint, new EndpointDefaults( newEndpoint ) );
+			}
 		}
 
 		return defaults.get( endpoint );
@@ -535,12 +547,12 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 					&& StringUtils.isNullOrEmpty( ec.getOutgoingWss() ) && ec.getMode() == EndpointConfig.Mode.COMPLEMENT )
 			{
 				synchronized( defaults )
-			{
-				defaults.remove( ec.getStringValue() );
-				config.removeEndpoint( c );
-				c-- ;
+				{
+					defaults.remove( ec.getStringValue() );
+					config.removeEndpoint( c );
+					c-- ;
+				}
 			}
-		}
 		}
 
 		if( config.sizeOfEndpointArray() == 0 )
@@ -590,13 +602,13 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 	{
 		synchronized( defaults )
 		{
-		EndpointDefaults endpointDefaults = defaults.remove( oldEndpoint );
-		if( endpointDefaults != null )
-		{
-			endpointDefaults.getConfig().setStringValue( newEndpoint );
-			defaults.put( newEndpoint, endpointDefaults );
+			EndpointDefaults endpointDefaults = defaults.remove( oldEndpoint );
+			if( endpointDefaults != null )
+			{
+				endpointDefaults.getConfig().setStringValue( newEndpoint );
+				defaults.put( newEndpoint, endpointDefaults );
+			}
 		}
-	}
 	}
 
 	public void afterRequest( SubmitContext context, Request request )
