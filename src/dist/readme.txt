@@ -22,7 +22,7 @@ fixes:
 - Fixed keeping of whitespaces in XML generated from JDBC results
 - Added SOAP Request assertion for MockResponse TestSteps
 - Fixed closing of opened files in MockEngine
-- Fixed Find-and-Replace (thank you Michael!)
+- Fixed Find-and-Replace 
 - Added multi-actions for enabling and disabling TestSteps, TestCases and TestSuites
 - Fixed forward slashed in .sh launchers
 - Improved moving of TestSteps
