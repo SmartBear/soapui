@@ -72,21 +72,9 @@ public class HermesJmsRequestTransport implements RequestTransport
 	protected boolean sendAsBytesMessage;
 	protected boolean addSoapAction;
 	protected Hermes hermes;
-	protected List<RequestFilter> filters = new ArrayList<RequestFilter>();
+	protected static List<RequestFilter> filters = new ArrayList<RequestFilter>();
 
-	public void abortRequest( SubmitContext submitContext )
-	{
-	}
 
-	public void addRequestFilter( RequestFilter filter )
-	{
-		filters.add( filter );
-	}
-
-	public void removeRequestFilter( RequestFilter filter )
-	{
-		filters.remove( filter );
-	}
 
 	public Response sendRequest( SubmitContext submitContext, Request request ) throws Exception
 	{
@@ -366,15 +354,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 			}
 			else
 			{
-				submitContext.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, request.getRequestContent() );
-				submitContext.setProperty( WSDL_REQUEST, request );
-
-				for( RequestFilter filter : filters )
-				{
-					filter.filterRequest( submitContext, request );
-				}
-
-				String requestContent = ( String )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
+				String requestContent = applyFilters( submitContext, request );
 				if( sendAsBytesMessage )
 				{
 					return createBytesMessageFromText( submitContext, requestContent, session );
@@ -387,6 +367,21 @@ public class HermesJmsRequestTransport implements RequestTransport
 		}
 
 		return null;
+	}
+
+	private String applyFilters( SubmitContext submitContext, Request request )
+	{
+		submitContext.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, request.getRequestContent() );
+		submitContext.setProperty( WSDL_REQUEST, request );
+
+		for( RequestFilter filter : filters )
+		{
+			filter.filterRequest( submitContext, request );
+		}
+
+		String requestContent = ( String )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
+		System.out.println(requestContent);
+		return requestContent;
 	}
 
 	private Message createBytesMessageFromText( SubmitContext submitContext, String requestContent, Session session )
@@ -540,4 +535,17 @@ public class HermesJmsRequestTransport implements RequestTransport
 		}
 	}
 
+	public void abortRequest( SubmitContext submitContext )
+	{
+	}
+
+	public void addRequestFilter( RequestFilter filter )
+	{
+		filters.add( filter );
+	}
+
+	public void removeRequestFilter( RequestFilter filter )
+	{
+		filters.remove( filter );
+	}
 }
