@@ -20,6 +20,7 @@ import com.eviware.soapui.impl.wsdl.submit.filters.EndpointRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.EndpointStrategyRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpAuthenticationRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpCompressionRequestFilter;
+import com.eviware.soapui.impl.wsdl.submit.filters.HttpPackagingResponseFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpProxyRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpSettingsRequestFilter;
@@ -31,7 +32,6 @@ import com.eviware.soapui.impl.wsdl.submit.filters.SoapHeadersRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.StripWhitespacesRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WsaRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WsdlPackagingRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.HttpPackagingResponseFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WsrmRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WssAuthenticationRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.WssRequestFilter;
@@ -57,9 +57,8 @@ public class RequestTransportRegistry
 	static
 	{
 		HttpClientRequestTransport httpTransport = new HttpClientRequestTransport();
- 		HermesJmsRequestTransport jmsTransport = new HermesJmsRequestTransport();
-	
-		
+		HermesJmsRequestTransport jmsTransport = new HermesJmsRequestTransport();
+
 		httpTransport.addRequestFilter( new EndpointRequestFilter() );
 		httpTransport.addRequestFilter( new HttpSettingsRequestFilter() );
 		httpTransport.addRequestFilter( new HttpRequestFilter() );
@@ -88,16 +87,19 @@ public class RequestTransportRegistry
 
 		transports.put( HTTP, httpTransport );
 		transports.put( HTTPS, httpTransport );
-		
-		
+
 		jmsTransport.addRequestFilter( new WssAuthenticationRequestFilter() );
+		jmsTransport.addRequestFilter( new PropertyExpansionRequestFilter() );
+		jmsTransport.addRequestFilter( new RemoveEmptyContentRequestFilter() );
+		jmsTransport.addRequestFilter( new StripWhitespacesRequestFilter() );
 		jmsTransport.addRequestFilter( new WsaRequestFilter() );
-		jmsTransport.addRequestFilter( new WsrmRequestFilter() );
 		jmsTransport.addRequestFilter( new WssRequestFilter() );
+
 		for( RequestFilter filter : SoapUI.getListenerRegistry().getListeners( RequestFilter.class ) )
 		{
 			jmsTransport.addRequestFilter( filter );
 		}
+
 		transports.put( JMS, jmsTransport );
 	}
 
@@ -109,7 +111,7 @@ public class RequestTransportRegistry
 			throw new MissingTransportException( "Missing protocol in endpoint [" + endpoint + "]" );
 
 		String protocol = endpoint.substring( 0, ix ).toLowerCase();
-		
+
 		RequestTransport transport = transports.get( protocol );
 
 		if( transport == null )
@@ -117,7 +119,6 @@ public class RequestTransportRegistry
 
 		return transport;
 	}
-
 
 	public static void addTransport( String key, RequestTransport rt )
 	{
@@ -128,15 +129,15 @@ public class RequestTransportRegistry
 	{
 		public MissingTransportException( String msg )
 		{
-			super(msg);
+			super( msg );
 		}
 	}
-	
+
 	public static class CannotResolveJmsTypeException extends Exception
 	{
 		public CannotResolveJmsTypeException( String msg )
 		{
-			super(msg);
+			super( msg );
 		}
 	}
 }

@@ -39,6 +39,7 @@ import com.eviware.soapui.impl.wsdl.submit.RequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry.CannotResolveJmsTypeException;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry.MissingTransportException;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.impl.wsdl.support.RequestFileAttachment;
@@ -56,7 +57,6 @@ import com.eviware.soapui.support.xml.XmlUtils;
 public class HermesJmsRequestTransport implements RequestTransport
 {
 
-	
 	public static final String IS_JMS_MESSAGE_RECEIVED = "JMS_MESSAGE_RECEIVE";
 	public static final String JMS_MESSAGE_SEND = "JMS_MESSAGE_SEND";
 	public static final String JMS_RESPONSE = "JMS_RESPONSE";
@@ -355,7 +355,7 @@ public class HermesJmsRequestTransport implements RequestTransport
 		{
 			if( hasAttachment( request ) )
 			{
-				if( isTextAttachment( request ) && !sendAsBytesMessage)
+				if( isTextAttachment( request ) && !sendAsBytesMessage )
 				{
 					return createTextMessageFromAttachment( submitContext, request, session );
 				}
@@ -364,25 +364,36 @@ public class HermesJmsRequestTransport implements RequestTransport
 					return createBytesMessage( request, session );
 				}
 			}
-			else if( sendAsBytesMessage )
-			{
-				return createBytesMessageFromText( submitContext, request, session );
-			}
-			
 			else
 			{
-				return createTextMessage( submitContext, request, session );
+				submitContext.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, request.getRequestContent() );
+				submitContext.setProperty( WSDL_REQUEST, request );
+
+				for( RequestFilter filter : filters )
+				{
+					filter.filterRequest( submitContext, request );
+				}
+
+				String requestContent = ( String )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
+				if( sendAsBytesMessage )
+				{
+					return createBytesMessageFromText( submitContext, requestContent, session );
+				}
+				else
+				{
+					return createTextMessage( submitContext, requestContent, session );
+				}
 			}
 		}
 
 		return null;
 	}
 
-	private Message createBytesMessageFromText( SubmitContext submitContext, Request request, Session session )
+	private Message createBytesMessageFromText( SubmitContext submitContext, String requestContent, Session session )
 			throws JMSException
 	{
 		BytesMessage bytesMessage = session.createBytesMessage();
-		bytesMessage.writeBytes( request.getRequestContent().getBytes() );
+		bytesMessage.writeBytes( requestContent.getBytes() );
 		return bytesMessage;
 	}
 
@@ -441,12 +452,11 @@ public class HermesJmsRequestTransport implements RequestTransport
 		return false;
 	}
 
-	private Message createTextMessage( SubmitContext submitContext, Request request, Session session )
+	private Message createTextMessage( SubmitContext submitContext, String requestContent, Session session )
 			throws JMSException
 	{
 		TextMessage textMessageSend = session.createTextMessage();
-		String messageBody = PropertyExpander.expandProperties( submitContext, request.getRequestContent() );
-		textMessageSend.setText( messageBody );
+		textMessageSend.setText( requestContent );
 		return textMessageSend;
 	}
 
