@@ -1,6 +1,45 @@
 Welcome to soapUI!
 
-2010-02-24 : 3.5 - the Protocol Release
+2010-04-09 : 3.5.1
+--------------------------------------------------------------------------------
+soapUI 3.5.1 is mainly a bug-fix release with dozens of minor improvements and
+fixes:
+- Added support for JMS Message Selector to filter messages with arbitrary queries
+- Added support for sending and receiving BytesMessages for SOAP requests
+- Added option to propagate SOAPAction as JMS Property
+- Added support for WS-Addressing and WS-Security for outgoing JMS messages
+- Received MapMessages are converted to XML
+- Added initial support for importing SOAP/JMS and TIBCO/JMS bindings
+- Added ResponseAsXml property for accessing XML results for JDBC and AMF TestSteps
+- Many many memory fixes
+- Added a "Discard" Response property to all requests that allow for improved memory mgmt
+- Improved multi-threaded dispatching in SOAP Monitor
+- Fixed cloning of property-transfers to include all settings
+- Fixed property-transfer logic when source is empty
+- Added UI Setting to disable tooltips
+- Added property-expansion support in SLA Assertion
+- Fixed Conditional Goto to work with all Sampler TestSteps
+- Fixed keeping of whitespaces in XML generated from JDBC results
+- Added SOAP Request assertion for MockResponse TestSteps
+- Fixed closing of opened files in MockEngine
+- Fixed Find-and-Replace (thank you Michael!)
+- Added multi-actions for enabling and disabling TestSteps, TestCases and TestSuites
+- Fixed forward slashed in .sh launchers
+- Improved moving of TestSteps
+- Improved generation of XPath statements to always include namespaces
+- Fixed JDBC Connection errors with missing password
+- Fixed incorrect JDBC Connection string templates
+- Added missing actions in menus
+- Improved error-logging from event-handlers
+- Added TestSuiteRequirements Reporting DataSource
+- Fixed DataSources to detect changes in configuration and re-initialize if neccessary
+- Spelling mistakes...
+- Updated Groovy to 1.7.2 (Library)
+- and more minor fixes.. 
+
+Thanks to all our customers and users for once again helping us make soapUI and soapUI Pro even better!
+
+2010-03-01 : 3.5 - the Protocol Release
 --------------------------------------------------------------------------------
 soapUI 3.5 adds support for JMS, JDBC and AMF for both functional and load-testing
 
