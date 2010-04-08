@@ -70,8 +70,8 @@ your Enterprise Messages, RIA's and Databases.
 </div>
 </div><!--End of second row-->
 
-<div class="highlight">Final release is out!</div>
-<p>As always a bunch of fixes and improvements, <a href="#Final_Release">Read More</a>.</p>
+<div class="highlight">3.5.1 release is out!</div>
+<p>As always a bunch of fixes and improvements, <a href="#3_5_1_Release">Read More</a>.</p>
 
 
 <div class="highlight">Thank You!</div>
@@ -340,7 +340,41 @@ soapUI XML-related features (assertions, property-transfers, scripts, etc).</li>
 </ul>
         </p>
         
-        
+        <div class="highlight" id="3_5_1_Release">3.5.1 Release</div>
+<p> <strong>The following improvements and fixes are in the 3.5.1 release:</strong></p>
+<ul class="red-dots">
+<li>Added support for JMS Message Selector to filter messages with arbitrary queries</li>
+<li>Added support for sending and receiving BytesMessages for SOAP requests</li>
+<li>Added option to propagate SOAPAction as JMS Property</li>
+<li>Added support for WS-Addressing and WS-Security for outgoing JMS messages</li>
+<li>Received MapMessages are converted to XML</li> 
+<li>Added initial support for importing SOAP/JMS and TIBCO/JMS bindings</li>
+<li>Added ResponseAsXml property for accessing XML results for JDBC and AMF TestSteps</li>
+<li>Many many memory fixes</li>
+<li>Added a "Discard" Response property to all requests that allow for improved memory mgmt</li>
+<li>Improved multi-threaded dispatching in SOAP Monitor</li>
+<li>Fixed cloning of property-transfers to include all settings</li>
+<li>Fixed property-transfer logic when source is empty</li>
+<li>Added UI Setting to disable tooltips</li>
+<li>Added property-expansion support in SLA Assertion</li>
+<li>Fixed Conditional Goto to work with all Sampler TestSteps</li>
+<li>Fixed keeping of whitespaces in XML generated from JDBC results</li>
+<li>Added SOAP Request assertion for MockResponse TestSteps</li>
+<li>Fixed closing of opened files in MockEngine</li>
+<li>Fixed Find-and-Replace</li>
+<li>Added multi-actions for enabling and disabling TestSteps, TestCases and TestSuites</li>
+<li>Fixed forward slashed in .sh launchers</li>
+<li>Improved moving of TestSteps</li>
+<li>Improved generation of XPath statements to always include namespaces</li>
+<li>Fixed JDBC Connection errors with missing password</li>
+<li>Fixed incorrect JDBC Connection string templates</li>
+<li>Added missing actions in menus</li>
+<li>Improved error-logging from event-handlers</li>
+<li>Added TestSuiteRequirements Reporting DataSource</li>
+<li>Fixed DataSources to detect changes in configuration and re-initialize if neccessary</li>
+<li>Spelling mistakes...</li>
+<li>Updated Groovy to 1.7.2 (Library)</li>
+</ul>
         </section>
     </body>
 </document>

@@ -22,14 +22,14 @@
  <link rel="stylesheet" type="text/css" href="style/new.css" />
 
 <div id="head">
-<img src="img/head.jpg" alt="soapUI Pro 3.5" />
+<img src="img/head.jpg" alt="soapUI Pro 3.5.1" />
 
 <div id="lead-text">
 soapUI, the leading tool for Web Service Testing. With more than <b>1 400 000 downloads</b>, it's the most used tool for SOA Testing in the world.
 </div>
 <div id="download-buttons">
-<a onclick="javascript:urchinTracker('/downloadOpenSource35')" href="https://sourceforge.net/projects/soapui/files/soapui/3.5"><img src="img/download-opensource.png" alt="Download Open Source" /></a>
-<a onclick="javascript:urchinTracker('/downloadPro35')" href="http://www.eviware.com/download"><img src="img/download-pro.png" alt="Download SoapUI Pro" /></a></div>
+<a onclick="javascript:urchinTracker('/downloadOpenSource351')" href="https://sourceforge.net/projects/soapui/files/soapui/3.5.1"><img src="img/download-opensource.png" alt="Download Open Source" /></a>
+<a onclick="javascript:urchinTracker('/downloadPro351')" href="http://www.eviware.com/download"><img src="img/download-pro.png" alt="Download SoapUI Pro" /></a></div>
 
 </div>
 
@@ -161,6 +161,10 @@ soapUI, the leading tool for Web Service Testing. With more than <b>1 400 000 do
                     <subsection name="Latest News">
                   
                     <p>
+                            <i>2009-04-09: soapUI 3.5.1 - Lots of Easter goodies!</i>
+                             <a href="new_and_noteworthy_3_5.html#3_5_1_Release">[Read more]</a>
+                         </p>
+                    <p>
                             <i>2009-03-01: soapUI 3.5</i>
                              <a href="new_and_noteworthy_3_5.html">[Read more]</a>
                          </p>
@@ -170,14 +174,6 @@ soapUI, the leading tool for Web Service Testing. With more than <b>1 400 000 do
                             <a href="new_and_noteworthy_3_0.html#3_0_1_Release">[Read more]</a>
                         </p>
 
-                        <p>
-                            <i>2009-07-09: soapUI 3.0 Final</i>
-                            <a href="new_and_noteworthy_3_0.html#Final_Release">[Read more]</a>
-                        </p>
-                        
-               
-                       
-                       
                           <b>
                               <a href="news.html">[More News]</a>
                            </b>
