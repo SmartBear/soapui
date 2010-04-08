@@ -120,6 +120,7 @@ public class DemoListener extends TestRunListenerAdapter
 		<li>Put the demo-listeners.xml in soapui\bin\listeners</li>
 		<li>Restart soapUI</li>
 		</ul>
+		<p>IMPORTANT NOTE! your listener xml file should be suffixed with <b>-listeners</b> as in demo-listeners.xml </p>
 		<p>That's it! You should see the following log info on startup:</p>
 		<source>...
 10:09:20,484 INFO  [SoapUI] Added [file:/C:/workspace/core/ext/soapui-demo.jar] to classpath
