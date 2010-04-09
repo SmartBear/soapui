@@ -380,7 +380,6 @@ public class HermesJmsRequestTransport implements RequestTransport
 		}
 
 		String requestContent = ( String )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
-		System.out.println(requestContent);
 		return requestContent;
 	}
 
