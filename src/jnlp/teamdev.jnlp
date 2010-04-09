@@ -10,7 +10,7 @@
 		<resources>
         <jar href="jniwrap-3.7.3.jar"/>
         <jar href="winpack-3.7.1.jar"/>
-        <jar href="jxbrowser-1.3.21478.301.jar"/>
+        <jar href="jxbrowser-1.4.jar"/>
         <property name="jws.jxbrowser.com.teamdev.www" value="true"/>
 	</resources>
 	
