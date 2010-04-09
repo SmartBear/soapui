@@ -40,6 +40,7 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.XmlQName;
+import org.apache.xmlbeans.impl.values.XmlValueDisconnectedException;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.Difference;
 import org.custommonkey.xmlunit.DifferenceEngine;
@@ -349,7 +350,15 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 					else
 						domNode.getParentNode().removeChild( domNode );
 
-					object.set( object.copy() );
+					try
+					{
+						object.set( object.copy() );
+					}
+					catch( XmlValueDisconnectedException e )
+					{
+						// this means that we've excluded the root note.. it's ok..
+						return;
+					}
 				}
 			}
 		}
