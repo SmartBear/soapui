@@ -34,7 +34,8 @@ public interface HelpUrls
 	public static final String INTERFACE_HELP_URL = HELP_URL_ROOT + "interfaces/index.html";
 
 	public static final String HEADERS_HELP_URL = HELP_URL_ROOT + "requests.html#HTTP_Headers";
-	public static final String PREPAREDPROPERTIES_HELP_URL = HELP_URL_ROOT + "functional/datasourcestep.html#JDBC_DataSource_PreparedProperties";
+	public static final String PREPAREDPROPERTIES_HELP_URL = HELP_URL_ROOT
+			+ "functional/datasourcestep.html#JDBC_DataSource_PreparedProperties";
 	// commented ones are not currently used
 	public static final String PROJECT_HELP_URL = HELP_URL_ROOT + "projects/index.html#soapui_WSDL_Projects";
 	public static final String REQUEST_HELP_URL = HELP_URL_ROOT + "requests.html";
@@ -78,8 +79,7 @@ public interface HelpUrls
 			+ "functional/propertiesstep.html#Properties_Editor";
 	public static final String TRANSFERSTEPEDITOR_HELP_URL = HELP_URL_ROOT
 			+ "functional/propertytransfers.html#The_PropertyTransfer_Editor";
-	public static final String JDBCSTEPEDITOR_HELP_URL = HELP_URL_ROOT
-	+ "functional/jdbc-requests.html";
+	public static final String JDBCSTEPEDITOR_HELP_URL = HELP_URL_ROOT + "functional/jdbc-requests.html";
 	public static final String TESTCASEEDITOR_HELP_URL = HELP_URL_ROOT + "functional/testcases.html#The_TestCase_Editor";
 	public static final String TESTSUITEEDITOR_HELP_URL = HELP_URL_ROOT + "functional/testsuites.html#TestSuite_Runner";
 	public static final String LOADTESTEDITOR_HELP_URL = HELP_URL_ROOT + "loadtest/index.html#The_LoadTest_Editor";
@@ -144,7 +144,7 @@ public interface HelpUrls
 
 	public static final String RESPONSE_ASSERTIONS_HELP_URL = HELP_URL_ROOT + "functional/response-assertions.html";
 
-	public static final String TESTRUNNER_HELP_URL = HELP_URL_ROOT + "commandline/functional.html#Launch_Dialog";
+	public static final String TESTRUNNER_HELP_URL = HELP_URL_ROOT + "commandline/testcaserunner.html#Launch_Dialog";
 	public static final String XQUERYASSERTIONEDITOR_HELP_URL = HELP_URL_ROOT
 			+ "functional/response-assertions.html#XQuery_Match_Assertion";
 
@@ -215,7 +215,7 @@ public interface HelpUrls
 	public static final String TRIAL_URL = "http://www.eviware.com/soapui/trial";
 
 	public static final String TESTSUITELIST_HELP_URL = null;
-	
+
 	public static final String JDBC_CONNECTION_HELP_URL = HELP_URL_ROOT + "projects/jdbcConnections.html";
 
 	public static final String MOCKASWAR_HELP_URL = HELP_URL_ROOT + "mock/mock_as_war.html";
