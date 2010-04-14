@@ -46,6 +46,8 @@ import javax.swing.event.ListSelectionListener;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
+import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionImpl;
@@ -177,9 +179,12 @@ public class PropertyHolderTable extends JPanel
 			JButton movePropertyDownButton = UISupport.createToolbarButton( movePropertyDownAction );
 			toolbar.add( movePropertyDownButton );
 
-			toolbar.addRelatedGap();
-			toolbar.add( UISupport.createToolbarButton( new SortPropertiesAction() ) );
-			toolbar.addRelatedGap();
+			if( !( holder instanceof AMFRequestTestStep || holder instanceof JdbcRequestTestStep ) )
+			{
+				toolbar.addRelatedGap();
+				toolbar.add( UISupport.createToolbarButton( new SortPropertiesAction() ) );
+				toolbar.addRelatedGap();
+			}
 		}
 
 		JButton clearPropertiesButton = UISupport.createToolbarButton( new ClearPropertiesAction() );
