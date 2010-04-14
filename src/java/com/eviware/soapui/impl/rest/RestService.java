@@ -46,13 +46,13 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 		{
 			resources.add( new RestResource( this, resourceConfig ) );
 		}
-		
-		if(!serviceConfig.isSetWadlVersion())
+
+		if( !serviceConfig.isSetWadlVersion() )
 		{
 			serviceConfig.setWadlVersion( serviceConfig.isSetDefinitionUrl() ? Constants.WADL10_NS : Constants.WADL11_NS );
 		}
 	}
-	
+
 	public String getWadlVersion()
 	{
 		return getConfig().getWadlVersion();
@@ -278,5 +278,10 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 	{
 		InferredSchemaManager.release( this );
 		super.release();
+	}
+
+	public List<RestResource> getResourceList()
+	{
+		return new ArrayList<RestResource>( resources );
 	}
 }

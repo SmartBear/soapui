@@ -23,6 +23,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.java.dev.wadl.x2009.x02.ApplicationDocument;
+import net.java.dev.wadl.x2009.x02.ParamStyle;
+import net.java.dev.wadl.x2009.x02.RepresentationDocument;
+import net.java.dev.wadl.x2009.x02.ResourceTypeDocument;
+import net.java.dev.wadl.x2009.x02.ApplicationDocument.Application;
+import net.java.dev.wadl.x2009.x02.DocDocument.Doc;
+import net.java.dev.wadl.x2009.x02.MethodDocument.Method;
+import net.java.dev.wadl.x2009.x02.ParamDocument.Param;
+import net.java.dev.wadl.x2009.x02.RepresentationDocument.Representation;
+import net.java.dev.wadl.x2009.x02.ResourceDocument.Resource;
+import net.java.dev.wadl.x2009.x02.ResourcesDocument.Resources;
+import net.java.dev.wadl.x2009.x02.ResponseDocument.Response;
+
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -45,19 +58,6 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
-
-import net.java.dev.wadl.x2009.x02.ApplicationDocument;
-import net.java.dev.wadl.x2009.x02.ParamStyle;
-import net.java.dev.wadl.x2009.x02.RepresentationDocument;
-import net.java.dev.wadl.x2009.x02.ResourceTypeDocument;
-import net.java.dev.wadl.x2009.x02.ApplicationDocument.Application;
-import net.java.dev.wadl.x2009.x02.DocDocument.Doc;
-import net.java.dev.wadl.x2009.x02.MethodDocument.Method;
-import net.java.dev.wadl.x2009.x02.ParamDocument.Param;
-import net.java.dev.wadl.x2009.x02.RepresentationDocument.Representation;
-import net.java.dev.wadl.x2009.x02.ResourceDocument.Resource;
-import net.java.dev.wadl.x2009.x02.ResourcesDocument.Resources;
-import net.java.dev.wadl.x2009.x02.ResponseDocument.Response;
 
 public class WadlImporter
 {
@@ -133,10 +133,42 @@ public class WadlImporter
 					String name = getFirstTitle( resource.getDocList(), resource.getPath() );
 					String path = resource.getPath();
 
-					RestResource newResource = baseResource == null ? service.addNewResource( name, path ) : baseResource
-							.addNewChildResource( name, path );
-					initResourceFromWadlResource( newResource, resource );
+					RestResource newResource = null;
 
+					if( baseResource != null )
+					{
+						for( RestResource res : baseResource.getChildResourceList() )
+						{
+							if( res.getPath().equals( path ) )
+							{
+								newResource = res;
+								break;
+							}
+						}
+
+						if( newResource == null )
+						{
+							newResource = baseResource.addNewChildResource( name, path );
+						}
+					}
+					else
+					{
+						for( RestResource res : service.getResourceList() )
+						{
+							if( res.getPath().equals( path ) )
+							{
+								newResource = res;
+								break;
+							}
+						}
+
+						if( newResource == null )
+						{
+							newResource = service.addNewResource( name, path );
+						}
+					}
+
+					initResourceFromWadlResource( newResource, resource );
 					addSubResources( newResource, resource );
 				}
 			}
@@ -190,7 +222,7 @@ public class WadlImporter
 			initMethod( newResource, method );
 		}
 
-		List types = resource.getType();
+		List<?> types = resource.getType();
 		if( types != null && types.size() > 0 )
 		{
 			for( Object obj : types )
@@ -245,27 +277,30 @@ public class WadlImporter
 		{
 			for( Representation representation : response.getRepresentationList() )
 			{
-				addRepresentation(response, restMethod, representation);
+				addRepresentation( response, restMethod, representation );
 			}
-			if(!isWADL11)
+			if( !isWADL11 )
 			{
 				NodeList children = response.getDomNode().getChildNodes();
-				for(int i=0; i<children.getLength(); i++)
+				for( int i = 0; i < children.getLength(); i++ )
 				{
 					Node n = children.item( i );
-					if( "fault".equals(n.getNodeName()) ) {
+					if( "fault".equals( n.getNodeName() ) )
+					{
 						String content = XmlUtils.serialize( n, false );
 						try
 						{
-							Map<Object,Object> map = new HashMap<Object, Object>();
+							Map<Object, Object> map = new HashMap<Object, Object>();
 							XmlCursor cursor = response.newCursor();
 							cursor.getAllNamespaces( map );
 							cursor.dispose();
 							XmlOptions options = new XmlOptions();
 							options.setLoadAdditionalNamespaces( map );
-							XmlObject obj = XmlObject.Factory.parse( content.replaceFirst( "<(([a-z]+:)?)fault ", "<$1representation " ), options );
-							RepresentationDocument representation = ( RepresentationDocument )obj.changeType( RepresentationDocument.type );
-							addRepresentation(response, restMethod, representation.getRepresentation());
+							XmlObject obj = XmlObject.Factory.parse( content.replaceFirst( "<(([a-z]+:)?)fault ",
+									"<$1representation " ), options );
+							RepresentationDocument representation = ( RepresentationDocument )obj
+									.changeType( RepresentationDocument.type );
+							addRepresentation( response, restMethod, representation.getRepresentation() );
 						}
 						catch( XmlException e )
 						{
@@ -275,12 +310,11 @@ public class WadlImporter
 			}
 		}
 
-		RestRequestInterface request = restMethod.addNewRequest( "Request 1" );
-
+		restMethod.addNewRequest( "Request 1" );
 		return restMethod;
 	}
-	
-	private void addRepresentation(Response response, RestMethod restMethod, Representation representation)
+
+	private void addRepresentation( Response response, RestMethod restMethod, Representation representation )
 	{
 		representation = resolveRepresentation( representation );
 		List<Long> status = null;
@@ -289,22 +323,22 @@ public class WadlImporter
 		else
 		{
 			Node n = representation.getDomNode().getAttributes().getNamedItem( "status" );
-			if(n != null)
+			if( n != null )
 			{
 				status = new ArrayList<Long>();
-				for(String s : n.getNodeValue().split( " " ) )
+				for( String s : n.getNodeValue().split( " " ) )
 				{
 					status.add( Long.parseLong( s ) );
 				}
 			}
 		}
 		boolean fault = false;
-		if(status != null && status.size() > 0)
+		if( status != null && status.size() > 0 )
 		{
 			fault = true;
 			for( Long s : status )
 			{
-				if(s < 400)
+				if( s < 400 )
 				{
 					fault = false;
 					break;
