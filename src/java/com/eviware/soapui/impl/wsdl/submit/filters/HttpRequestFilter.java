@@ -50,7 +50,6 @@ import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -63,7 +62,6 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 public class HttpRequestFilter extends AbstractRequestFilter
 {
-	@SuppressWarnings( "deprecation" )
 	@Override
 	public void filterHttpRequest( SubmitContext context, HttpRequestInterface<?> request )
 	{
@@ -208,8 +206,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			{
 				if( request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod )
 				{
-					String requestContent = PropertyExpansionUtils.expandProperties( context, request.getRequestContent(),
-							request.isEntitizeProperties() );
+					String requestContent = PropertyExpander.expandProperties( context, request.getRequestContent(), request
+							.isEntitizeProperties() );
 					if( StringUtils.hasContent( requestContent ) )
 					{
 						initRootPart( request, requestContent, formMp );
@@ -255,8 +253,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			}
 			else
 			{
-				String requestContent = PropertyExpansionUtils.expandProperties( context, request.getRequestContent(),
-						request.isEntitizeProperties() );
+				String requestContent = PropertyExpander.expandProperties( context, request.getRequestContent(), request
+						.isEntitizeProperties() );
 				List<Attachment> attachments = new ArrayList<Attachment>();
 
 				for( Attachment attachment : request.getAttachments() )

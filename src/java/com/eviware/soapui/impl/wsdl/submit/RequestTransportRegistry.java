@@ -22,7 +22,6 @@ import com.eviware.soapui.impl.wsdl.submit.filters.HttpAuthenticationRequestFilt
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpCompressionRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpPackagingResponseFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpProxyRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.HttpRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.HttpSettingsRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.PostPackagingRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.filters.PropertyExpansionRequestFilter;
@@ -61,7 +60,6 @@ public class RequestTransportRegistry
 
 		httpTransport.addRequestFilter( new EndpointRequestFilter() );
 		httpTransport.addRequestFilter( new HttpSettingsRequestFilter() );
-		httpTransport.addRequestFilter( new HttpRequestFilter() );
 		httpTransport.addRequestFilter( new RestRequestFilter() );
 		httpTransport.addRequestFilter( new SoapHeadersRequestFilter() );
 		httpTransport.addRequestFilter( new HttpProxyRequestFilter() );
