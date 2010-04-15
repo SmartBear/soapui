@@ -282,7 +282,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		propertiesTableComponent = buildProperties();
 		JSplitPane split = UISupport.createVerticalSplit( propertiesTableComponent, configPanel );
 		split.setDividerLocation( 120 );
-		split.setPreferredSize( new Dimension( 300, 500 ) );
+		split.setPreferredSize( new Dimension( 330, 500 ) );
 
 		return new JScrollPane( split );
 
