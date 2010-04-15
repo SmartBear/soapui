@@ -30,6 +30,7 @@ import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.LoadTest;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
+import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -42,7 +43,7 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 public class EvalPropertyResolver implements PropertyResolver
 {
 	private Logger log = Logger.getLogger( EvalPropertyResolver.class );
-	private Map<String,ScriptEnginePool> scriptEnginePools = new HashMap<String, ScriptEnginePool>();
+	private Map<String, ScriptEnginePool> scriptEnginePools = new HashMap<String, ScriptEnginePool>();
 
 	public String resolveProperty( PropertyExpansionContext context, String name, boolean globalOverride )
 	{
@@ -54,7 +55,7 @@ public class EvalPropertyResolver implements PropertyResolver
 		StringToObjectMap objects = new StringToObjectMap( context.getProperties() );
 		objects.put( "context", context );
 		objects.put( "log", SoapUI.ensureGroovyLog() );
-		
+
 		if( context instanceof TestCaseRunContext )
 		{
 			objects.put( "testRunner", ( ( TestCaseRunContext )context ).getTestRunner() );
@@ -78,6 +79,11 @@ public class EvalPropertyResolver implements PropertyResolver
 		else if( modelItem instanceof TestStep )
 		{
 			objects.put( "testStep", modelItem );
+
+			if( modelItem instanceof SamplerTestStep )
+			{
+				objects.put( "request", ( ( SamplerTestStep )modelItem ).getTestRequest() );
+			}
 		}
 		else if( modelItem instanceof TestSuite )
 		{
@@ -127,13 +133,13 @@ public class EvalPropertyResolver implements PropertyResolver
 	private String doEval( String name, ModelItem modelItem, StringToObjectMap objects )
 	{
 		String engineId = SoapUIScriptEngineRegistry.getScriptEngineId( modelItem );
-		
+
 		synchronized( this )
 		{
-			if( !scriptEnginePools.containsKey( engineId ))
+			if( !scriptEnginePools.containsKey( engineId ) )
 				scriptEnginePools.put( engineId, new ScriptEnginePool( engineId ) );
 		}
-		
+
 		ScriptEnginePool scriptEnginePool = scriptEnginePools.get( engineId );
 		SoapUIScriptEngine scriptEngine = scriptEnginePool.getScriptEngine();
 		try

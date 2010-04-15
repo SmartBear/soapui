@@ -29,6 +29,7 @@
 	<tns:action id="NewWorkspaceAction" actionClass="com.eviware.soapui.impl.actions.NewWorkspaceAction"/>
 	<tns:action id="SwitchWorkspaceAction" actionClass="com.eviware.soapui.impl.actions.SwitchWorkspaceAction"/>
 	<tns:action id="RenameWorkspaceAction" actionClass="com.eviware.soapui.impl.actions.RenameWorkspaceAction"/>
+	<tns:action id="ClearWorkspaceAction" actionClass="com.eviware.soapui.impl.actions.ClearWorkspaceAction"/>
 
 	<!-- Project Actions -->
 	<tns:action id="ReloadProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.ReloadProjectAction"/>
@@ -210,6 +211,7 @@
 		<tns:actionMapping actionId="RenameWorkspaceAction" keyStroke="F2"/>
 		<tns:actionMapping actionId="NewWorkspaceAction"/>
 		<tns:actionMapping actionId="SwitchWorkspaceAction"/>
+		<tns:actionMapping actionId="ClearWorkspaceAction"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="workspaces.html"/>
 	</tns:actionGroup>
