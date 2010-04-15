@@ -16,7 +16,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -30,8 +29,8 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.jdbc.JdbcUtils;
 
 public class JdbcSubmit implements Submit, Runnable
@@ -167,7 +166,6 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 		catch( Exception e )
 		{
-			UISupport.showErrorMessage( e.getMessage() );
 			SoapUI.logError( e );
 			error = e;
 		}
@@ -190,7 +188,7 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 	}
 
-	protected void runQuery() throws Exception
+	private void runQuery() throws Exception
 	{
 		try
 		{
@@ -199,7 +197,7 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 		catch( SQLException e )
 		{
-			throw e;
+			SoapUI.logError( e );
 		}
 		createResponse();
 	}
@@ -211,36 +209,23 @@ public class JdbcSubmit implements Submit, Runnable
 			if( statement != null )
 				statement.cancel();
 		}
-		catch( SQLFeatureNotSupportedException e )
-		{
-			UISupport.showErrorMessage( e );
-		}
 		catch( SQLException ex )
 		{
-			UISupport.showErrorMessage( ex );
+			SoapUI.logError( ex );
 		}
 	}
 
-	protected void getDatabaseConnection() throws Exception, SQLException
+	private void getDatabaseConnection() throws SQLException, SoapUIException
 	{
 		JdbcRequestTestStep testStep = request.getTestStep();
-
-		try
-		{
-			connection = JdbcUtils.initConnection( context, testStep.getDriver(), testStep.getConnectionString(), testStep
-					.getPassword() );
-			// IMPORTANT: setting as readOnly raises an exception in calling stored
-			// procedures!
-			// connection.setReadOnly( true );
-		}
-		catch( SQLException e )
-		{
-			UISupport.showErrorMessage( e );
-			throw e;
-		}
+		connection = JdbcUtils.initConnection( context, testStep.getDriver(), testStep.getConnectionString(), testStep
+				.getPassword() );
+		// IMPORTANT: setting as readOnly raises an exception in calling stored
+		// procedures!
+		// connection.setReadOnly( true );
 	}
 
-	protected void load() throws SQLException
+	private void load() throws Exception
 	{
 		try
 		{
@@ -273,7 +258,7 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 	}
 
-	protected void prepare() throws Exception
+	private void prepare() throws Exception
 	{
 		JdbcRequestTestStep testStep = request.getTestStep();
 		getDatabaseConnection();
@@ -312,7 +297,7 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 		catch( NumberFormatException e )
 		{
-			UISupport.showErrorMessage( "Problem setting timeout: " + e.getMessage() );
+			SoapUI.logError( e, "Problem setting timeout" );
 		}
 
 		try
@@ -325,7 +310,7 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 		catch( NumberFormatException e )
 		{
-			UISupport.showErrorMessage( "Problem setting maxRows: " + e.getMessage() );
+			SoapUI.logError( e, "Problem setting maxRows" );
 		}
 		try
 		{
@@ -337,7 +322,7 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 		catch( NumberFormatException e )
 		{
-			UISupport.showErrorMessage( "Problem setting fetchSize: " + e.getMessage() );
+			SoapUI.logError( e, "Problem setting fetchSize" );
 		}
 	}
 
