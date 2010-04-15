@@ -49,6 +49,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.settings.HttpSettings;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
@@ -174,7 +175,11 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				if( ix != -1 )
 				{
 					uri = new URI( str.substring( ix ) );
+					String qs = httpMethod.getQueryString();
 					httpMethod.setURI( uri );
+					if( StringUtils.hasContent( qs ) )
+						httpMethod.setQueryString( qs );
+
 					submitContext.setProperty( BaseHttpRequestTransport.REQUEST_URI, uri );
 				}
 			}
