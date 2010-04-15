@@ -26,10 +26,14 @@ import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestMockService;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestSuite;
 
 public class ModelItemPropertyResolver implements PropertyResolver
 {
@@ -103,10 +107,10 @@ public class ModelItemPropertyResolver implements PropertyResolver
 	{
 		ModelItem modelItem = context.getModelItem();
 
-		WsdlTestStep testStep = null;
-		WsdlTestCase testCase = null;
-		WsdlTestSuite testSuite = null;
-		WsdlProject project = null;
+		TestStep testStep = null;
+		TestCase testCase = null;
+		TestSuite testSuite = null;
+		Project project = null;
 		WsdlMockService mockService = null;
 		WsdlMockResponse mockResponse = null;
 
@@ -146,6 +150,13 @@ public class ModelItemPropertyResolver implements PropertyResolver
 		{
 			mockService = ( WsdlMockService )modelItem;
 			project = mockService.getProject();
+		}
+		else if( modelItem instanceof TestRequest )
+		{
+			testStep = ( ( TestRequest )modelItem ).getTestStep();
+			testCase = testStep.getTestCase();
+			testSuite = testCase.getTestSuite();
+			project = testSuite.getProject();
 		}
 		else if( modelItem instanceof AbstractHttpRequestInterface<?> )
 		{
