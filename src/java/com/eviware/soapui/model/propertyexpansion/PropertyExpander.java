@@ -120,14 +120,14 @@ public class PropertyExpander
 		int lastIx = 0;
 		while( ix != -1 )
 		{
-			if( ix > lastIx && content.charAt( ix-1 ) == '$' )
+			if( ix > lastIx && content.charAt( ix - 1 ) == '$' )
 			{
-				buf.append( content.substring( lastIx, ix-1 ) );
+				buf.append( content.substring( lastIx, ix - 1 ) );
 				lastIx = ix;
-				ix = content.indexOf( "${", lastIx+1 );
+				ix = content.indexOf( "${", lastIx + 1 );
 				continue;
 			}
-			
+
 			if( ix > lastIx )
 				buf.append( content.substring( lastIx, ix ) );
 
@@ -168,7 +168,7 @@ public class PropertyExpander
 					propertyValue = expand( context, propertyValue );
 
 				if( entitize )
-					propertyValue = XmlUtils.entitizeContent( propertyValue );
+					propertyValue = XmlUtils.entitize( propertyValue );
 
 				buf.append( propertyValue );
 			}

@@ -18,6 +18,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
@@ -58,7 +59,15 @@ public class EvalPropertyResolver implements PropertyResolver
 
 		if( context instanceof TestCaseRunContext )
 		{
-			objects.put( "testRunner", ( ( TestCaseRunContext )context ).getTestRunner() );
+			TestCaseRunContext testCaseRunContext = ( TestCaseRunContext )context;
+			objects.put( "testRunner", testCaseRunContext.getTestRunner() );
+
+			objects.put( "testStep", testCaseRunContext.getCurrentStep() );
+
+			if( testCaseRunContext.getCurrentStep() instanceof SamplerTestStep )
+			{
+				objects.put( "request", ( ( SamplerTestStep )testCaseRunContext.getCurrentStep() ).getTestRequest() );
+			}
 		}
 
 		if( context instanceof LoadTestRunContext )
@@ -75,6 +84,9 @@ public class EvalPropertyResolver implements PropertyResolver
 		if( modelItem instanceof TestCase )
 		{
 			objects.put( "testCase", modelItem );
+
+			objects.put( "testSuite", ( ( TestCase )modelItem ).getTestSuite() );
+			objects.put( "project", ( ( TestCase )modelItem ).getTestSuite().getProject() );
 		}
 		else if( modelItem instanceof TestStep )
 		{
@@ -84,14 +96,22 @@ public class EvalPropertyResolver implements PropertyResolver
 			{
 				objects.put( "request", ( ( SamplerTestStep )modelItem ).getTestRequest() );
 			}
+
+			objects.put( "testCase", ( ( TestStep )modelItem ).getTestCase() );
+			objects.put( "testSuite", ( ( TestStep )modelItem ).getTestCase().getTestSuite() );
+			objects.put( "project", ( ( TestStep )modelItem ).getTestCase().getTestSuite().getProject() );
 		}
 		else if( modelItem instanceof TestSuite )
 		{
 			objects.put( "testSuite", modelItem );
+			objects.put( "project", ( ( TestSuite )modelItem ).getProject() );
 		}
 		if( modelItem instanceof LoadTest )
 		{
 			objects.put( "loadTest", modelItem );
+			objects.put( "testCase", ( ( LoadTest )modelItem ).getTestCase() );
+			objects.put( "testSuite", ( ( LoadTest )modelItem ).getTestCase().getTestSuite() );
+			objects.put( "project", ( ( LoadTest )modelItem ).getTestCase().getTestSuite().getProject() );
 		}
 		else if( modelItem instanceof Project )
 		{
@@ -100,18 +120,33 @@ public class EvalPropertyResolver implements PropertyResolver
 		else if( modelItem instanceof MockService )
 		{
 			objects.put( "mockService", modelItem );
+			objects.put( "project", ( ( MockService )modelItem ).getProject() );
 		}
 		else if( modelItem instanceof MockOperation )
 		{
 			objects.put( "mockOperation", modelItem );
+			objects.put( "mockService", ( ( MockOperation )modelItem ).getMockService() );
+			objects.put( "project", ( ( MockOperation )modelItem ).getMockService().getProject() );
 		}
 		else if( modelItem instanceof MockResponse )
 		{
 			objects.put( "mockResponse", modelItem );
+			objects.put( "mockOperation", ( ( MockResponse )modelItem ).getMockOperation() );
+			objects.put( "mockService", ( ( MockResponse )modelItem ).getMockOperation().getMockService() );
+			objects.put( "project", ( ( MockResponse )modelItem ).getMockOperation().getMockService().getProject() );
 		}
 		else if( modelItem instanceof Request )
 		{
 			objects.put( "request", modelItem );
+
+			if( modelItem instanceof TestRequest )
+			{
+				objects.put( "testStep", ( ( TestRequest )modelItem ).getTestStep() );
+				objects.put( "testCase", ( ( TestRequest )modelItem ).getTestStep().getTestCase() );
+				objects.put( "testSuite", ( ( TestRequest )modelItem ).getTestStep().getTestCase().getTestSuite() );
+				objects.put( "project", ( ( TestRequest )modelItem ).getTestStep().getTestCase().getTestSuite()
+						.getProject() );
+			}
 		}
 		else if( modelItem instanceof Operation )
 		{
