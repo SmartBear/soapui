@@ -20,10 +20,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.list.TreeList;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
@@ -74,6 +74,7 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @todo create and return LoadTestAssertionResult from load-test assertions
  */
 
+@SuppressWarnings( "unchecked" )
 public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implements LoadTest, TestRunnable
 {
 	public final static String THREADCOUNT_PROPERTY = WsdlLoadTest.class.getName() + "@threadcount";
@@ -101,7 +102,7 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 	private ConfigurationChangePropertyListener configurationChangeListener = new ConfigurationChangePropertyListener();
 	private Set<LoadTestListener> loadTestListeners = new HashSet<LoadTestListener>();
 	private Set<LoadTestRunListener> loadTestRunListeners = new HashSet<LoadTestRunListener>();
-	private List<LoadTestLogErrorEntry> assertionErrors = new LinkedList<LoadTestLogErrorEntry>();
+	private List<LoadTestLogErrorEntry> assertionErrors = new TreeList();
 	private WsdlLoadTestRunner runner;
 	private StatisticsLogger statisticsLogger = new StatisticsLogger();
 	private SoapUIScriptEngine setupScriptEngine;

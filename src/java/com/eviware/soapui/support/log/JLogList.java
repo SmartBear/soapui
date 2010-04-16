@@ -25,7 +25,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -46,6 +45,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
+import org.apache.commons.collections.list.TreeList;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -148,27 +148,29 @@ public class JLogList extends JPanel
 		if( !isEnabled() )
 			return;
 
-		if( line instanceof LoggingEvent )
+		synchronized( model.lines )
 		{
-			LoggingEvent ev = ( LoggingEvent )line;
-			linesToAdd.push( new LoggingEventWrapper( ev ) );
-
-			if( ev.getThrowableInformation() != null )
+			if( line instanceof LoggingEvent )
 			{
-				Throwable t = ev.getThrowableInformation().getThrowable();
-				StringWriter sw = new StringWriter();
-				PrintWriter pw = new PrintWriter( sw );
-				t.printStackTrace( pw );
-				StringTokenizer st = new StringTokenizer( sw.toString(), "\r\n" );
-				while( st.hasMoreElements() )
-					linesToAdd.push( "   " + st.nextElement() );
+				LoggingEvent ev = ( LoggingEvent )line;
+				linesToAdd.push( new LoggingEventWrapper( ev ) );
+
+				if( ev.getThrowableInformation() != null )
+				{
+					Throwable t = ev.getThrowableInformation().getThrowable();
+					StringWriter sw = new StringWriter();
+					PrintWriter pw = new PrintWriter( sw );
+					t.printStackTrace( pw );
+					StringTokenizer st = new StringTokenizer( sw.toString(), "\r\n" );
+					while( st.hasMoreElements() )
+						linesToAdd.push( "   " + st.nextElement() );
+				}
+			}
+			else
+			{
+				linesToAdd.push( line );
 			}
 		}
-		else
-		{
-			linesToAdd.push( line );
-		}
-
 		if( future == null )
 		{
 			released = false;
@@ -443,18 +445,25 @@ public class JLogList extends JPanel
 	 * @author Ole.Matzura
 	 */
 
+	@SuppressWarnings( "unchecked" )
 	private final class LogListModel extends AbstractListModel implements Runnable
 	{
-		private List<Object> lines = new LinkedList<Object>();
+		private List<Object> lines = new TreeList();
 
 		public int getSize()
 		{
-			return lines.size();
+			synchronized( lines )
+			{
+				return lines.size();
+			}
 		}
 
 		public Object getElementAt( int index )
 		{
-			return lines.get( index );
+			synchronized( lines )
+			{
+				return lines.get( index );
+			}
 		}
 
 		public void clear()
@@ -463,8 +472,11 @@ public class JLogList extends JPanel
 			if( sz == 0 )
 				return;
 
-			lines.clear();
-			fireIntervalRemoved( this, 0, sz - 1 );
+			synchronized( lines )
+			{
+				lines.clear();
+				fireIntervalRemoved( this, 0, sz - 1 );
+			}
 		}
 
 		public void run()
@@ -485,27 +497,30 @@ public class JLogList extends JPanel
 								{
 									try
 									{
-										while( !linesToAdd.isEmpty() )
+										synchronized( lines )
 										{
-											int sz = lines.size();
-											lines.addAll( linesToAdd );
-											linesToAdd.clear();
-											fireIntervalAdded( LogListModel.this, sz, lines.size() - sz );
-										}
+											while( !linesToAdd.isEmpty() )
+											{
+												int sz = lines.size();
+												lines.addAll( linesToAdd );
+												linesToAdd.clear();
+												fireIntervalAdded( LogListModel.this, sz, lines.size() - sz );
+											}
 
-										int cnt = 0;
-										while( lines.size() > maxRows )
-										{
-											lines.remove( 0 );
-											cnt++ ;
-										}
+											int cnt = 0;
+											while( lines.size() > maxRows )
+											{
+												lines.remove( 0 );
+												cnt++ ;
+											}
 
-										if( cnt > 0 )
-											fireIntervalRemoved( LogListModel.this, 0, cnt - 1 );
+											if( cnt > 0 )
+												fireIntervalRemoved( LogListModel.this, 0, cnt - 1 );
 
-										if( tailing )
-										{
-											logList.ensureIndexIsVisible( lines.size() - 1 );
+											if( tailing )
+											{
+												logList.ensureIndexIsVisible( lines.size() - 1 );
+											}
 										}
 									}
 									catch( Throwable e )

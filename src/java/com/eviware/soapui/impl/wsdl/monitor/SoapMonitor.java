@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,6 +47,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
+import org.apache.commons.collections.list.TreeList;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpMethod;
 import org.jdesktop.swingx.JXTable;
@@ -810,9 +810,10 @@ public class SoapMonitor extends JPanel
 		}
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public class MonitorLogTableModel extends AbstractTableModel
 	{
-		private List<WsdlMonitorMessageExchange> exchanges = new LinkedList<WsdlMonitorMessageExchange>();
+		private List<WsdlMonitorMessageExchange> exchanges = new TreeList();
 		private DateFormat sdf;
 
 		public MonitorLogTableModel()

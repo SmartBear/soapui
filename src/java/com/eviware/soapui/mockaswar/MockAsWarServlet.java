@@ -17,7 +17,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.list.TreeList;
 import org.apache.log4j.spi.LoggingEvent;
 
 import com.eviware.soapui.DefaultSoapUICore;
@@ -48,6 +48,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
 /**
  * Servlet implementation class SoapUIMockServlet
  */
+@SuppressWarnings( "unchecked" )
 public class MockAsWarServlet extends HttpServlet
 {
 
@@ -55,8 +56,8 @@ public class MockAsWarServlet extends HttpServlet
 	protected static Logger logger = Logger.getLogger( MockAsWarServlet.class.getName() );
 	private WsdlProject project;
 	private long maxResults;
-	private List<MockResult> results = new LinkedList<MockResult>();
-	private List<LoggingEvent> events = new LinkedList<LoggingEvent>();
+	private List<MockResult> results = new TreeList();
+	private List<LoggingEvent> events = new TreeList();
 	private boolean enableWebUI;
 
 	public void init() throws ServletException

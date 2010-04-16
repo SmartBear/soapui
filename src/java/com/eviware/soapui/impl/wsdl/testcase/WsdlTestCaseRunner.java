@@ -13,9 +13,9 @@
 package com.eviware.soapui.impl.wsdl.testcase;
 
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.collections.list.TreeList;
 import org.apache.commons.httpclient.HttpState;
 
 import com.eviware.soapui.SoapUI;
@@ -39,7 +39,8 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTestRunContext> implements TestCaseRunner
 {
 	private TestRunListener[] listeners = new TestRunListener[0];
-	private List<TestStepResult> testStepResults = Collections.synchronizedList( new LinkedList<TestStepResult>() );
+	@SuppressWarnings( "unchecked" )
+	private List<TestStepResult> testStepResults = Collections.synchronizedList( new TreeList() );
 	private int gotoStepIndex;
 	private int resultCount;
 	private int initCount;

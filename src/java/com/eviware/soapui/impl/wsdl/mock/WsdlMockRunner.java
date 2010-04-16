@@ -21,7 +21,6 @@ import java.io.StringReader;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,6 +32,7 @@ import javax.wsdl.Import;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLWriter;
 
+import org.apache.commons.collections.list.TreeList;
 import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
 
@@ -65,10 +65,11 @@ import com.eviware.soapui.support.xml.XmlUtils;
  * @author ole.matzura
  */
 
+@SuppressWarnings( "unchecked" )
 public class WsdlMockRunner extends AbstractMockRunner
 {
 	private WsdlMockService mockService;
-	private final List<WsdlMockResult> mockResults = Collections.synchronizedList( new LinkedList<WsdlMockResult>() );
+	private final List<WsdlMockResult> mockResults = Collections.synchronizedList( new TreeList() );
 	private long maxResults = 100;
 	private int removed = 0;
 	private final WsdlMockRunContext mockContext;

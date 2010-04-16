@@ -22,7 +22,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -42,6 +41,8 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 import javax.swing.text.Document;
+
+import org.apache.commons.collections.list.TreeList;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -663,9 +664,10 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 			mockRunner.setMaxResults( logListModel.getMaxSize() );
 	}
 
+	@SuppressWarnings( "unchecked" )
 	private class LogListModel extends AbstractListModel
 	{
-		private List<MockResult> elements = Collections.synchronizedList( new LinkedList<MockResult>() );
+		private List<MockResult> elements = Collections.synchronizedList( new TreeList() );
 		private long maxSize;
 
 		public LogListModel()

@@ -14,10 +14,11 @@ package com.eviware.soapui.impl.wsdl.testcase;
 
 import java.lang.ref.SoftReference;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
+
+import org.apache.commons.collections.list.TreeList;
 
 import com.eviware.soapui.model.testsuite.TestStepResult;
 
@@ -27,11 +28,12 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
  * @author ole.matzura
  */
 
+@SuppressWarnings( "unchecked" )
 public class TestCaseLogModel extends AbstractListModel
 {
-	private List<Object> items = Collections.synchronizedList( new LinkedList<Object>() );
-	private List<SoftReference<TestStepResult>> results = Collections
-			.synchronizedList( new LinkedList<SoftReference<TestStepResult>>() );
+	@SuppressWarnings( "unchecked" )
+	private List<Object> items = Collections.synchronizedList( new TreeList() );
+	private List<SoftReference<TestStepResult>> results = Collections.synchronizedList( new TreeList() );
 	private int stepCount;
 	private int maxSize = 0;
 
