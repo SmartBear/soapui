@@ -969,6 +969,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
 		setEnabled( false );
 		cancelButton.setEnabled( JdbcRequestTestStepDesktopPanel.this.submit != null );
+		startTime = System.currentTimeMillis();
 		return true;
 	}
 
