@@ -149,7 +149,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			// do request
 			WsdlProject project = ( WsdlProject )ModelSupport.getModelItemProject( httpRequest );
 			WssCrypto crypto = null;
-			if( project != null )
+			if( project != null && project.getWssContainer() != null )
 			{
 				crypto = project.getWssContainer().getCryptoByName(
 						PropertyExpander.expandProperties( submitContext, httpRequest.getSslKeystore() ) );
