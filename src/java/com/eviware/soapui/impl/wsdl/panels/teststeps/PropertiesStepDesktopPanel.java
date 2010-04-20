@@ -281,6 +281,8 @@ public class PropertiesStepDesktopPanel extends ModelItemDesktopPanel<WsdlProper
 			sourceField.setText( evt.getNewValue().toString() );
 		else if( !updatingTarget && evt.getPropertyName().equals( WsdlPropertiesTestStep.TARGET_PROPERTY ) )
 			targetField.setText( evt.getNewValue().toString() );
+
+		super.propertyChange( evt );
 	}
 
 	@Override

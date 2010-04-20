@@ -153,7 +153,7 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 		return inspectorPanel.getComponent();
 	}
 
-	protected void addInspectors(JInspectorPanel inspectorPanel)
+	protected void addInspectors( JInspectorPanel inspectorPanel )
 	{
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildLog(), "LoadTest Log",
 				"The current LoadTest execution log", true ) );
@@ -373,7 +373,7 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 
 		setupGroovyEditor.release();
 		tearDownGroovyEditor.release();
-		
+
 		return release();
 	}
 
@@ -588,7 +588,7 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 						progressBar.setString( "..." );
 					}
 				}
-				else 
+				else
 				{
 					if( loadTestIsRunning && progressBar.isIndeterminate() )
 					{
@@ -596,7 +596,7 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 						progressBar.setString( null );
 					}
 
-					progressBar.setValue( runner == null ? 0 : ( int )( runner.getProgress()*100 ) );
+					progressBar.setValue( runner == null ? 0 : ( int )( runner.getProgress() * 100 ) );
 				}
 
 				try
@@ -624,6 +624,8 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 			statisticsGraphButton.setEnabled( lng != 0 );
 			testTimesGraphButton.setEnabled( lng != 0 );
 		}
+
+		super.propertyChange( evt );
 	}
 
 	private class SetupScriptGroovyEditorModel extends AbstractGroovyEditorModel
@@ -638,8 +640,10 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 				{
 					try
 					{
-						MockLoadTestRunner mockTestRunner = new MockLoadTestRunner( WsdlLoadTestDesktopPanel.this.getModelItem(), SoapUI.ensureGroovyLog() );
-						WsdlLoadTestDesktopPanel.this.getModelItem().runSetupScript( new MockLoadTestRunContext( mockTestRunner ), mockTestRunner );
+						MockLoadTestRunner mockTestRunner = new MockLoadTestRunner( WsdlLoadTestDesktopPanel.this
+								.getModelItem(), SoapUI.ensureGroovyLog() );
+						WsdlLoadTestDesktopPanel.this.getModelItem().runSetupScript(
+								new MockLoadTestRunContext( mockTestRunner ), mockTestRunner );
 					}
 					catch( Exception e1 )
 					{
@@ -651,7 +655,8 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 
 		public SetupScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "context", "loadTestRunner" }, WsdlLoadTestDesktopPanel.this.getModelItem(), "Setup" );
+			super( new String[] { "log", "context", "loadTestRunner" }, WsdlLoadTestDesktopPanel.this.getModelItem(),
+					"Setup" );
 		}
 
 		public String getScript()
@@ -677,8 +682,10 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 				{
 					try
 					{
-						MockLoadTestRunner mockTestRunner = new MockLoadTestRunner( WsdlLoadTestDesktopPanel.this.getModelItem(), SoapUI.ensureGroovyLog() );
-						WsdlLoadTestDesktopPanel.this.getModelItem().runTearDownScript( new MockLoadTestRunContext( mockTestRunner ), mockTestRunner );
+						MockLoadTestRunner mockTestRunner = new MockLoadTestRunner( WsdlLoadTestDesktopPanel.this
+								.getModelItem(), SoapUI.ensureGroovyLog() );
+						WsdlLoadTestDesktopPanel.this.getModelItem().runTearDownScript(
+								new MockLoadTestRunContext( mockTestRunner ), mockTestRunner );
 					}
 					catch( Exception e1 )
 					{
@@ -690,7 +697,8 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 
 		public TearDownScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "context", "loadTestRunner" }, WsdlLoadTestDesktopPanel.this.getModelItem(), "TearDown" );
+			super( new String[] { "log", "context", "loadTestRunner" }, WsdlLoadTestDesktopPanel.this.getModelItem(),
+					"TearDown" );
 		}
 
 		public String getScript()

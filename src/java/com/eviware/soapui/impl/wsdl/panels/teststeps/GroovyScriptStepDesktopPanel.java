@@ -185,9 +185,9 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
 		logger = null;
 		logArea.release();
 		inspectorPanel.release();
-		
+
 		getModelItem().removePropertyChangeListener( this );
-		
+
 		return super.release();
 	}
 
@@ -303,5 +303,7 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
 			editor.getEditArea().setText( ( String )evt.getNewValue() );
 			updating = false;
 		}
+
+		super.propertyChange( evt );
 	}
 }
