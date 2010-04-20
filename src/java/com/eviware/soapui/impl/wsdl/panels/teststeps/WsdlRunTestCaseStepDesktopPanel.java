@@ -367,9 +367,10 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 				optionsDialog.setValue( OptionsForm.RUN_MODE, OptionsForm.RUN_SYNCHRONIZED_TESTCASE );
 				break;
 			}
-			
+
 			optionsDialog.setBooleanValue( OptionsForm.COPY_HTTP_SESSION, getModelItem().isCopyHttpSession() );
-			optionsDialog.setBooleanValue( OptionsForm.COPY_LOADTEST_PROPERTIES, getModelItem().isCopyLoadTestProperties() );
+			optionsDialog
+					.setBooleanValue( OptionsForm.COPY_LOADTEST_PROPERTIES, getModelItem().isCopyLoadTestProperties() );
 			optionsDialog.setBooleanValue( OptionsForm.IGNORE_EMPTY_PROPERTIES, getModelItem().isIgnoreEmptyProperties() );
 
 			if( optionsDialog.show() )
@@ -397,15 +398,17 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 				}
 
 				getModelItem().setCopyHttpSession( optionsDialog.getBooleanValue( OptionsForm.COPY_HTTP_SESSION ) );
-				getModelItem().setCopyLoadTestProperties( optionsDialog.getBooleanValue( OptionsForm.COPY_LOADTEST_PROPERTIES ) );
-				getModelItem().setIgnoreEmptyProperties( optionsDialog.getBooleanValue( OptionsForm.IGNORE_EMPTY_PROPERTIES ) );
+				getModelItem().setCopyLoadTestProperties(
+						optionsDialog.getBooleanValue( OptionsForm.COPY_LOADTEST_PROPERTIES ) );
+				getModelItem().setIgnoreEmptyProperties(
+						optionsDialog.getBooleanValue( OptionsForm.IGNORE_EMPTY_PROPERTIES ) );
 
 				titledBorder.setTitle( createTitleForBorder() );
 			}
 		}
 	}
 
-	@AForm( name = "Run TestCase Options", description = "Set options for the Run TestCase Step below" )
+	@AForm( name = "Run TestCase Options", description = "Set options for the Run TestCase Step below", helpUrl = HelpUrls.RUNTESTCASESTEP_HELP_URL )
 	private static interface OptionsForm
 	{
 		public static final String RUN_PRIMARY_TEST_CASE = "Run primary TestCase (fail if already running)";
@@ -424,13 +427,13 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 		@AField( name = "Run Mode", description = "Sets how to run the target TestCase", type = AFieldType.RADIOGROUP, values = {
 				CREATE_ISOLATED_COPY_FOR_EACH_RUN, RUN_PRIMARY_TEST_CASE, RUN_SYNCHRONIZED_TESTCASE } )
 		public static final String RUN_MODE = "Run Mode";
-		
+
 		@AField( name = "Copy LoadTest Properties", description = "Copies LoadTest related properties to target context", type = AFieldType.BOOLEAN )
 		public static final String COPY_LOADTEST_PROPERTIES = "Copy LoadTest Properties";
-		
+
 		@AField( name = "Copy HTTP Session", description = "Copies LoadTest related properties to target context", type = AFieldType.BOOLEAN )
 		public static final String COPY_HTTP_SESSION = "Copy HTTP Session";
-		
+
 		@AField( name = "Ignore Empty Properties", description = "Does not set empty TestCase property values", type = AFieldType.BOOLEAN )
 		public static final String IGNORE_EMPTY_PROPERTIES = "Ignore Empty Properties";
 	}
