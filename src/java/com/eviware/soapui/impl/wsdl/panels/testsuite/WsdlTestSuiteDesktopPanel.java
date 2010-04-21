@@ -391,17 +391,18 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	{
 		public SetupScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "runner", "context", "testSuite" }, WsdlTestSuiteDesktopPanel.this.getModelItem(), "Setup" );
+			super( new String[] { "log", "runner", "context", "testSuite" },
+					WsdlTestSuiteDesktopPanel.this.getModelItem(), "Setup" );
 		}
 
 		public String getScript()
 		{
-			return  WsdlTestSuiteDesktopPanel.this.getModelItem().getSetupScript();
+			return WsdlTestSuiteDesktopPanel.this.getModelItem().getSetupScript();
 		}
 
 		public void setScript( String text )
 		{
-			 WsdlTestSuiteDesktopPanel.this.getModelItem().setSetupScript( text );
+			WsdlTestSuiteDesktopPanel.this.getModelItem().setSetupScript( text );
 		}
 
 		@Override
@@ -414,8 +415,10 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 				{
 					try
 					{
-						MockTestSuiteRunner mockRunner = new MockTestSuiteRunner(  WsdlTestSuiteDesktopPanel.this.getModelItem() );
-						 WsdlTestSuiteDesktopPanel.this.getModelItem().runSetupScript( ( TestSuiteRunContext )mockRunner.getRunContext(), mockRunner );
+						MockTestSuiteRunner mockRunner = new MockTestSuiteRunner( WsdlTestSuiteDesktopPanel.this
+								.getModelItem() );
+						WsdlTestSuiteDesktopPanel.this.getModelItem().runSetupScript(
+								( TestSuiteRunContext )mockRunner.getRunContext(), mockRunner );
 					}
 					catch( Exception e1 )
 					{
@@ -430,17 +433,18 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	{
 		public TearDownScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "runner", "context", "testSuite" },  WsdlTestSuiteDesktopPanel.this.getModelItem(), "TearDown" );
+			super( new String[] { "log", "runner", "context", "testSuite" },
+					WsdlTestSuiteDesktopPanel.this.getModelItem(), "TearDown" );
 		}
 
 		public String getScript()
 		{
-			return  WsdlTestSuiteDesktopPanel.this.getModelItem().getTearDownScript();
+			return WsdlTestSuiteDesktopPanel.this.getModelItem().getTearDownScript();
 		}
 
 		public void setScript( String text )
 		{
-			 WsdlTestSuiteDesktopPanel.this.getModelItem().setTearDownScript( text );
+			WsdlTestSuiteDesktopPanel.this.getModelItem().setTearDownScript( text );
 		}
 
 		@Override
@@ -453,8 +457,10 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 				{
 					try
 					{
-						MockTestSuiteRunner mockRunner = new MockTestSuiteRunner(  WsdlTestSuiteDesktopPanel.this.getModelItem() );
-						 WsdlTestSuiteDesktopPanel.this.getModelItem().runTearDownScript( ( TestSuiteRunContext )mockRunner.getRunContext(), mockRunner );
+						MockTestSuiteRunner mockRunner = new MockTestSuiteRunner( WsdlTestSuiteDesktopPanel.this
+								.getModelItem() );
+						WsdlTestSuiteDesktopPanel.this.getModelItem().runTearDownScript(
+								( TestSuiteRunContext )mockRunner.getRunContext(), mockRunner );
 					}
 					catch( Exception e1 )
 					{
@@ -516,5 +522,10 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 				progressBar.setString( "Starting " + testCase.getName() );
 			}
 		}
+	}
+
+	public WsdlTestSuiteRunner getTestSuiteRunner()
+	{
+		return testSuiteRunner;
 	}
 }

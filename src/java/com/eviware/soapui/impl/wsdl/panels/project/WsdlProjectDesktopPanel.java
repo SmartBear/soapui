@@ -113,6 +113,11 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 		mainTabs.addTab( "Security Configurations", null, buildWSSTab(), "Manages Security-related configurations" );
 	}
 
+	public WsdlProjectTestSuitesTabPanel getTestSuitesPanel()
+	{
+		return testSuitesPanel;
+	}
+
 	protected WsdlProjectTestSuitesTabPanel buildTestSuitesTab()
 	{
 		return new WsdlProjectTestSuitesTabPanel( getModelItem() );
@@ -146,7 +151,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 		return inspectorPanel.getComponent();
 	}
 
-	protected void addOverviewInspectors(JInspectorPanel inspectorPanel )
+	protected void addOverviewInspectors( JInspectorPanel inspectorPanel )
 	{
 		inspectorPanel.addInspector( new JFocusableComponentInspector<JPanel>( buildDescriptionPanel(), descriptionArea,
 				"Description", "Project description", true ) );

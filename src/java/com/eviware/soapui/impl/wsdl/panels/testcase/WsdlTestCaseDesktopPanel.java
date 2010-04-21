@@ -116,6 +116,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 	private JInspectorPanel testStepListInspectorPanel;
 	private JButton createLoadTestButton;
 	private JInspectorPanel inspectorPanel;
+	public TestCaseRunner lastRunner;
 
 	public WsdlTestCaseDesktopPanel( WsdlTestCase testCase )
 	{
@@ -388,8 +389,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 					{
 						public void run()
 						{
-				testStepList.setSelectedValue( testStep, true );
-		}
+							testStepList.setSelectedValue( testStep, true );
+						}
 					} );
 				}
 			}
@@ -422,6 +423,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 				testCaseLog.addText( "TestCase finished with status [" + testRunner.getStatus() + "], time taken = "
 						+ wsdlRunner.getTimeTaken() );
 
+			lastRunner = runner;
 			runner = null;
 
 			JToggleButton loopButton = ( JToggleButton )runContext.getProperty( "loopButton" );
@@ -464,6 +466,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		StringToObjectMap properties = new StringToObjectMap();
 		properties.put( "loopButton", loopButton );
 		properties.put( TestCaseRunContext.INTERACTIVE, Boolean.TRUE );
+		lastRunner = null;
 		runner = getModelItem().run( properties, true );
 	}
 
@@ -534,6 +537,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		tearDownGroovyEditor.getEditor().release();
 
 		testCaseLog.release();
+		lastRunner = null;
 
 		return release();
 	}
@@ -567,8 +571,10 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 				{
 					try
 					{
-						MockTestRunner mockTestRunner = new MockTestRunner( WsdlTestCaseDesktopPanel.this.getModelItem(), SoapUI.ensureGroovyLog() );
-						WsdlTestCaseDesktopPanel.this.getModelItem().runSetupScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
+						MockTestRunner mockTestRunner = new MockTestRunner( WsdlTestCaseDesktopPanel.this.getModelItem(),
+								SoapUI.ensureGroovyLog() );
+						WsdlTestCaseDesktopPanel.this.getModelItem().runSetupScript(
+								new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
 					}
 					catch( Exception e1 )
 					{
@@ -580,7 +586,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
 		public SetupScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "testCase", "context", "testRunner" }, WsdlTestCaseDesktopPanel.this.getModelItem(), "Setup" );
+			super( new String[] { "log", "testCase", "context", "testRunner" }, WsdlTestCaseDesktopPanel.this
+					.getModelItem(), "Setup" );
 		}
 
 		public String getScript()
@@ -606,8 +613,10 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 				{
 					try
 					{
-						MockTestRunner mockTestRunner = new MockTestRunner( WsdlTestCaseDesktopPanel.this.getModelItem(), SoapUI.ensureGroovyLog() );
-						WsdlTestCaseDesktopPanel.this.getModelItem().runTearDownScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
+						MockTestRunner mockTestRunner = new MockTestRunner( WsdlTestCaseDesktopPanel.this.getModelItem(),
+								SoapUI.ensureGroovyLog() );
+						WsdlTestCaseDesktopPanel.this.getModelItem().runTearDownScript(
+								new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
 					}
 					catch( Exception e1 )
 					{
@@ -619,7 +628,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
 		public TearDownScriptGroovyEditorModel()
 		{
-			super( new String[] { "log", "testCase", "context", "testRunner" }, WsdlTestCaseDesktopPanel.this.getModelItem(), "TearDown" );
+			super( new String[] { "log", "testCase", "context", "testRunner" }, WsdlTestCaseDesktopPanel.this
+					.getModelItem(), "TearDown" );
 		}
 
 		public String getScript()
@@ -706,5 +716,10 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		{
 			super.setDragInfo( dropInfo == null || dropInfo.length() == 0 ? null : dropInfo );
 		}
+	}
+
+	public TestCaseRunner getTestCaseRunner()
+	{
+		return runner == null ? lastRunner : runner;
 	}
 }

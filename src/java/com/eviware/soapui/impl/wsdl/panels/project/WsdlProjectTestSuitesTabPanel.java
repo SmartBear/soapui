@@ -414,7 +414,7 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel
 		{
 			if( testScenarioRunner != projectRunner )
 				return;
-			
+
 			progressBar.setValue( ++finishCount );
 
 			if( project.getRunType() == TestSuiteRunType.SEQUENTIAL )
@@ -455,5 +455,10 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel
 			if( project.getRunType() == TestSuiteRunType.SEQUENTIAL )
 				testRunnable.addTestSuiteRunListener( runLogListener );
 		}
+	}
+
+	public WsdlProjectRunner getProjectRunner()
+	{
+		return projectRunner;
 	}
 }
