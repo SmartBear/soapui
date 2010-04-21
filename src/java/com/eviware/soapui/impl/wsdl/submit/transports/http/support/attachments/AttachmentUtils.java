@@ -638,7 +638,7 @@ public class AttachmentUtils
 		String partName = attachment.getPart();
 
 		String contentID = attachment.getContentID();
-		if( contentID != null )
+		if( StringUtils.hasContent( contentID ) )
 		{
 			contentID = contentID.trim();
 			int ix = contentID.indexOf( ' ' );
