@@ -122,7 +122,7 @@ soapUI, the leading tool for Web Service Testing. With more than <b>1 400 000 do
  
     
  
-      <table class="gstable" cellspacing="0" cellpadding="0">
+<table class="gstable" cellspacing="0" cellpadding="0">
                 <tr class="a">
                     <td width="75" style="padding-top:5px">
                         <img src="images/where_do_i_start.jpg" alt="Start soapUI Testing"
@@ -132,19 +132,19 @@ soapUI, the leading tool for Web Service Testing. With more than <b>1 400 000 do
                         <table class="GSInner" width="600" border="0" cellpadding="0">
                             <tr>
                                 <td colspan="2">
-                                    <span class="gsHeader">Training Classes, 20th &amp; 21st April, London</span>
+                                    <span class="gsHeader">Get Trained</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <ul class="evilist">
-                                        <li>Learn how to use the powerful capabilities of soapUI Pro  
+                                        <li>2 day training classes, available for beginners to advanced users <a href="http://www.think88.com/soap.html">[More Info]</a> 
                                             </li>
-                                        <li>with the 7 Fundamentals of Mission-Critical Service Testing methodology
+                                        <li>Test your services for reliability and scalability
                                             </li>
-                                        <li>at Skills Matter
+                                        <li>Available onsite or via the Web
                                             </li>
-                                        <li><a href="http://skillsmatter.com/course/agile-testing/soapui-pro-training/zx-820">[More Info]</a>
+                                        <li>Classes with five students or more receive free soapUI Pro upgrades
                                         </li>
                                       
                                     </ul>
