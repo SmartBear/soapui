@@ -202,8 +202,8 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 			return data[stepIndex][statistic.getIndex()] / 100;
 		case ERRORRATIO :
 			return data[stepIndex][Statistic.COUNT.getIndex()] == 0 ? 0
-					: ( long )( ( ( float )data[stepIndex][Statistic.ERRORS.getIndex()] / ( float )data[stepIndex][Statistic.COUNT
-							.getIndex()] ) * 100 );
+					: ( long )( ( ( ( float )data[stepIndex][Statistic.ERRORS.getIndex()] / ( float )data[stepIndex][Statistic.COUNT
+							.getIndex()] ) + 0.5 ) * 100 );
 		default :
 			return data[stepIndex][statistic.getIndex()];
 		}
