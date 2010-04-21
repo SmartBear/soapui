@@ -32,7 +32,7 @@ public class OpenRequestForMockResponseAction extends AbstractSoapUIAction<WsdlM
 
 	public OpenRequestForMockResponseAction()
 	{
-		super( "Open Request", "Opens/Creates a request for this MockOperation with correct endpoint" );
+		super( "Open Request", "Opens/Creates a request for this MockResponse with correct endpoint" );
 	}
 
 	public void perform( WsdlMockResponse mockResponse, Object param )
