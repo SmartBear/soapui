@@ -1265,7 +1265,7 @@ public class SoapUI
 		public ExitWithoutSavingAction()
 		{
 			super( "Exit without saving" );
-			putValue( Action.SHORT_DESCRIPTION, "Saves all projects and exits SoapUI" );
+			putValue( Action.SHORT_DESCRIPTION, "Exits SoapUI without saving" );
 			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl shift Q" ) );
 		}
 
