@@ -1369,7 +1369,7 @@ public class SoapUI
 		public NewWsdlProjectActionDelegate()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/project.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Creates a new WSDL Project" );
+			putValue( Action.SHORT_DESCRIPTION, "Creates a new soapUI Project" );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -1383,7 +1383,7 @@ public class SoapUI
 		public ImportWsdlProjectActionDelegate()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/import_project.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Imports an existing WSDL Project into the current workspace" );
+			putValue( Action.SHORT_DESCRIPTION, "Imports an existing soapUI Project into the current workspace" );
 		}
 
 		public void actionPerformed( ActionEvent e )
