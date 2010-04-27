@@ -14,6 +14,8 @@ package com.eviware.soapui.support.editor.inspectors.attachments;
 
 import java.util.HashMap;
 
+import com.eviware.soapui.support.types.StringToStringMap;
+
 /**
  * Handles drop of files on the AttachementPanel
  * 
@@ -24,6 +26,7 @@ public class ContentTypeHandler
 {
 	private static final HashMap<String, String> suffixToContentType;
 	public static final String DEFAULT_CONTENTTYPE = "application/octet-stream";
+	private static StringToStringMap contentTypeToSuffix;
 
 	public static String getContentTypeFromFilename( String fileName )
 	{
@@ -53,9 +56,13 @@ public class ContentTypeHandler
 
 	public static String getExtensionForContentType( String contentType )
 	{
+		contentType = contentType.toLowerCase();
 		int ix = contentType.indexOf( ';' );
 		if( ix > 0 )
 			contentType = contentType.substring( 0, ix );
+
+		if( contentTypeToSuffix.containsKey( contentType ) )
+			return contentTypeToSuffix.get( contentType );
 
 		for( String key : suffixToContentType.keySet() )
 		{
@@ -68,6 +75,16 @@ public class ContentTypeHandler
 
 	static
 	{
+		contentTypeToSuffix = new StringToStringMap();
+		contentTypeToSuffix.put( "text/html", "html" );
+		contentTypeToSuffix.put( "text/plain", "txt" );
+		contentTypeToSuffix.put( "text/xml", "xml" );
+		contentTypeToSuffix.put( "image/jpeg", "jpg" );
+		contentTypeToSuffix.put( "audio/x-aiff", "aif" );
+		contentTypeToSuffix.put( "video/mpeg", "mpg" );
+		contentTypeToSuffix.put( "application/postscript", "ps" );
+		contentTypeToSuffix.put( "application/octet-stream", "dat" );
+
 		suffixToContentType = new HashMap<String, String>();
 		suffixToContentType.put( "html", "text/html" );
 		suffixToContentType.put( "htm", "text/html" );
