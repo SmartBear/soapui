@@ -33,7 +33,7 @@ public class JdbcUtils
 		if( JdbcUtils.missingConnSettings( driver, connectionString, password ) )
 		{
 			throw new SoapUIException( "Some connections settings are missing" );
-		}		
+		}
 		String drvr = PropertyExpander.expandProperties( context, driver ).trim();
 		String connStr = PropertyExpander.expandProperties( context, connectionString ).trim();
 		String pass = StringUtils.hasContent( password ) ? PropertyExpander.expandProperties( context, password ).trim()
@@ -49,7 +49,7 @@ public class JdbcUtils
 		}
 		catch( SQLException e )
 		{
-			SoapUI.logError( e );
+			// SoapUI.logError( e );
 			try
 			{
 				Class.forName( drvr ).newInstance();
