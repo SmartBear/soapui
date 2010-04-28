@@ -365,7 +365,7 @@ public class AttachmentUtils
 
 	public static boolean isSwaRefType( SchemaType schemaType )
 	{
-		return schemaType.getName() != null && schemaType.getName().equals( SWAREF_QNAME );
+		return schemaType != null && schemaType.getName() != null && schemaType.getName().equals( SWAREF_QNAME );
 	}
 
 	public static String getXmlMimeContentType( XmlCursor cursor )
