@@ -135,6 +135,15 @@ public class MockAsWarServlet extends HttpServlet
 			}
 		}
 
+		try
+		{
+			maxResults = Integer.parseInt( getInitParameter( "maxResults" ) );
+		}
+		catch( Throwable t )
+		{
+			maxResults = 1000;
+		}
+
 		SoapUI.ensureGroovyLog().addAppender( new GroovyLogAppender() );
 
 		String mockServiceEndpoint = getInitParameter( "mockServiceEndpoint" );
