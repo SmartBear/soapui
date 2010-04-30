@@ -65,7 +65,7 @@ public class ProxyPrefs implements Prefs
 			portTextField = proxyPrefForm.appendTextField( PORT, "proxy port to use" );
 			portTextField.getDocument().addDocumentListener( new ProxyDocumentListenerAdapter() );
 			proxyPrefForm.appendTextField( USERNAME, "proxy username to use" );
-			proxyPrefForm.appendTextField( PASSWORD, "proxy password to use" );
+			proxyPrefForm.appendPasswordField( PASSWORD, "proxy password to use" );
 			proxyPrefForm.appendTextField( EXCLUDES, "Comma-seperated list of hosts to exclude" );
 			enableProxyCheckbox = proxyPrefForm.appendCheckBox( ENABLE_PROXY, "enable using proxy", true );
 		}
