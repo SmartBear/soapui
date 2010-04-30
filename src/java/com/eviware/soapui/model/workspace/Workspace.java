@@ -13,6 +13,7 @@
 package com.eviware.soapui.model.workspace;
 
 import java.io.File;
+import java.util.List;
 
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
@@ -49,6 +50,8 @@ public interface Workspace extends ModelItem
 	public int getIndexOfProject( Project project );
 
 	public String getPath();
+
+	public List<? extends Project> getProjectList();
 
 	public void switchWorkspace( File newPath ) throws SoapUIException;
 
