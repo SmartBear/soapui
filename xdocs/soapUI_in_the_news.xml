@@ -5,6 +5,46 @@
     </properties>
     <body>
         <section name="soapUI in the News">
+
+        
+     <subsection name="Quality Guru's – Home of QA/QE SW Testing Workshops">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/gualityguru.gif" alt="Web Service Testing - soapUI"/>	    	    
+	    		</column>
+	    		<column align="left">
+	    		    <i>2010-05-02</i>
+	    	        <p>Czech eGovernment project Datové Schránky (ISDS) use originally..."<br/>
+	    			<a href="http://qualityguru.wordpress.com/2010/05/02/czech-egovernment-datove-schranky-with-soapui-%E2%80%93-session-based-login-scenario/">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	 </subsection>
+  
+     <subsection name="SOA, EAI, BPM, ORACLE, CORDYS, AGILE">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/roger.gif" alt="SOA Testing - soapUI"/>	    	    
+	    		</column>
+	    		<column align="left">
+	    		    <i>2010-04-22</i>
+	    	        <p>The post starts: "When you have an OTAP(Development, Test, Acceptance, Production) street you..."<br/>
+	    			<a href="http://technology.amis.nl/blog/7408/automatic-testing-oracle-service-bus-using-hudson-maven-and-soapui">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	 </subsection>
+	 
+	 <subsection name="WWW.Marcusoft.net">
+	    	<columns>
+	    		<column width="200">
+	    		<img src="images/inthenews/marcus.gif" alt="Web Service Testing - soapUI"/>	    	    
+	    		</column>
+	    		<column align="left">
+	    		    <i>2010-03-30</i>
+	    	        <p>I have been singing soapUI´s praises lately and it´s really..."<br/>
+	    			<a href="http://www.marcusoft.net/2010/03/changing-endpoint-from-command-line.html">[Read more]</a></p>
+	    		</column>
+	    	</columns>
+	 </subsection>
  
     <subsection name="Developers Blog">
 	    	<columns>
