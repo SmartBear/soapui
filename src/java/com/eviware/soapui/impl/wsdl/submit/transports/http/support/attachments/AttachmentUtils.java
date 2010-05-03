@@ -51,6 +51,7 @@ import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
 import com.eviware.soapui.impl.wsdl.WsdlAttachmentContainer;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.support.MessageXmlPart;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlValidator;
@@ -666,6 +667,25 @@ public class AttachmentUtils
 			{
 				part.setContentID( "<" + partName + "=" + System.nanoTime() + "@soapui.org>" );
 			}
+		}
+
+		// set content-disposition
+		String name = attachment.getName();
+		String file = attachment.getUrl();
+		if( PathUtils.isFilePath( file ) )
+		{
+			int ix = file.lastIndexOf( File.separatorChar );
+			if( ix == -1 )
+				ix = file.lastIndexOf( '/' );
+
+			if( ix > 0 && ix < file.length() - 1 )
+				file = file.substring( ix + 1 );
+
+			part.setDisposition( "attachment; name=\"" + name + "\"; filename=\"" + file + "\"" );
+		}
+		else
+		{
+			part.setDisposition( "attachment; name=\"" + name + "\"" );
 		}
 	}
 

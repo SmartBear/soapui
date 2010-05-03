@@ -12,10 +12,28 @@
 
 package com.eviware.soapui.impl.support;
 
+import com.eviware.soapui.support.StringUtils;
+
 public class HttpUtils
 {
 	public static boolean isErrorStatus( int statusCode )
 	{
 		return statusCode >= 400;
+	}
+
+	public static String extractHttpHeaderParameter( String headerString, String parameterName )
+	{
+		if( !StringUtils.hasContent( headerString ) || !StringUtils.hasContent( parameterName ) )
+			return null;
+
+		int ix = headerString.indexOf( parameterName + "=\"" );
+		if( ix > 0 )
+		{
+			int ix2 = headerString.indexOf( '"', ix + parameterName.length() + 2 );
+			if( ix2 > ix )
+				return headerString.substring( ix + parameterName.length() + 2, ix2 );
+		}
+
+		return null;
 	}
 }

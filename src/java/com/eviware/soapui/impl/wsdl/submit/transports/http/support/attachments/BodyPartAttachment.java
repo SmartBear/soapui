@@ -28,8 +28,10 @@ import org.apache.commons.codec.binary.Hex;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpOperation;
+import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 
 /**
@@ -110,6 +112,18 @@ public class BodyPartAttachment implements Attachment
 	{
 		try
 		{
+			String[] values = bodyPart.getHeader( "Content-Disposition" );
+			String disposition = values == null || values.length == 0 ? null : values[0];
+			String name = HttpUtils.extractHttpHeaderParameter( disposition, "name" );
+			if( StringUtils.hasContent( name ) )
+				return name;
+
+			values = bodyPart.getHeader( "Content-Type" );
+			disposition = values == null || values.length == 0 ? null : values[0];
+			name = HttpUtils.extractHttpHeaderParameter( disposition, "name" );
+			if( StringUtils.hasContent( name ) )
+				return name;
+
 			String[] header = bodyPart.getHeader( "Content-Id" );
 			if( header == null || header.length == 0 )
 				return "<missing name>";
