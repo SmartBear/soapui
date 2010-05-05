@@ -691,11 +691,16 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 
 		public Object getElementAt( int index )
 		{
-			synchronized( this )
+			try
 			{
 				if( elements.size() <= index )
 					return null;
+
 				return elements.get( index );
+			}
+			catch( Throwable t )
+			{
+				return null;
 			}
 		}
 
