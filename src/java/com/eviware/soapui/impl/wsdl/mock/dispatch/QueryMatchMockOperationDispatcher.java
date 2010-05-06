@@ -249,7 +249,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
 						if( value.equals( XmlUtils.getValueForMatch( cursor ) ) )
 						{
-							request.getRequestContext().put( "#QueryMatch#", query.getName() );
+							request.getRequestContext().put( "usedQueryMatch", query.getName() );
 							return getMockOperation().getMockResponseByName( query.getResponse() );
 						}
 					}
