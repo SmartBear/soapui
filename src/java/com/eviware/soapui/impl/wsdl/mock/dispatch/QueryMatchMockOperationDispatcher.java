@@ -199,7 +199,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 	{
 		JXToolBar toolBar = UISupport.createSmallToolbar();
 
-		addlQueryToolbarActions( toolBar );
+		addQueryToolbarActions( toolBar );
 
 		toolBar.addGlue();
 		toolBar.addFixed( ModelItemDesktopPanel.createActionButton( new ShowOnlineHelpAction(
@@ -208,7 +208,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 		return toolBar;
 	}
 
-	protected void addlQueryToolbarActions( JXToolBar toolBar )
+	protected void addQueryToolbarActions( JXToolBar toolBar )
 	{
 		toolBar.addFixed( declareNsButton );
 		toolBar.addFixed( extractFromCurrentButton );
@@ -249,6 +249,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
 						if( value.equals( XmlUtils.getValueForMatch( cursor ) ) )
 						{
+							request.getRequestContext().put( "#QueryMatch#", query.getName() );
 							return getMockOperation().getMockResponseByName( query.getResponse() );
 						}
 					}
@@ -310,6 +311,17 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 	public int getQueryCount()
 	{
 		return queries.size();
+	}
+
+	public Query getQueryByName( String name )
+	{
+		for( Query q : queries )
+		{
+			if( q.getName().equals( name ) )
+				return q;
+		}
+
+		return null;
 	}
 
 	public Query getQueryAt( int index )
