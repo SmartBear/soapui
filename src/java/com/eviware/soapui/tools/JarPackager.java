@@ -114,7 +114,7 @@ public class JarPackager
 				// Add archive entry
 				String jarName = tobeJared[i].isDirectory() ? tobeJared[i].getAbsolutePath() + "/" : tobeJared[i]
 						.getAbsolutePath();
-				jarName = jarName.replace( root.getAbsolutePath(), "" );
+				jarName = jarName.replace( root.getAbsolutePath(), "" ).substring( 1 );
 				JarEntry jarAdd = new JarEntry( jarName );
 				log.info( "Adding " + jarName );
 				jarAdd.setTime( tobeJared[i].lastModified() );

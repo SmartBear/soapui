@@ -92,7 +92,11 @@ public class MockAsWar
 
 					if( warFile != null )
 					{
-						File[] filez = getAllFilesFrom( webInf ).toArray( new File[0] );
+						ArrayList<File> files = getAllFilesFrom( webInf );
+						files.add( new File( warDir, "stylesheet.css" ) );
+						files.add( new File( warDir, "header_logo.jpg" ) );
+
+						File[] filez = files.toArray( new File[files.size()] );
 						JarPackager.createJarArchive( warFile, warDir, filez );
 					}
 				}
@@ -157,6 +161,7 @@ public class MockAsWar
 	{
 		content.replace( content.indexOf( PROJECT_FILE_NAME ), content.indexOf( PROJECT_FILE_NAME )
 				+ PROJECT_FILE_NAME.length(), projectFile.getName() );
+
 		content.replace( content.indexOf( SOAPUI_SETTINGS ), content.indexOf( SOAPUI_SETTINGS )
 				+ SOAPUI_SETTINGS.length(),
 				settingsFile != null && settingsFile.exists() && settingsFile.isFile() ? settingsFile.getAbsolutePath()
@@ -203,7 +208,6 @@ public class MockAsWar
 			File soapUIHome = new File( System.getProperty( "soapui.home" ) );
 			String[] mainJar = soapUIHome.list( new FilenameFilter()
 			{
-
 				public boolean accept( File dir, String name )
 				{
 					if( name.toLowerCase().startsWith( "soapui" ) && name.toLowerCase().endsWith( ".jar" ) )
@@ -211,12 +215,13 @@ public class MockAsWar
 					return false;
 				}
 			} );
+
 			fromDir = new File( System.getProperty( "soapui.home" ), mainJar[0] );
 			JarPackager.copyFileToDir( fromDir, lib );
 			// copy project and settings file to bin/war/WEB-INF/soapui/
 			JarPackager.copyFileToDir( projectFile, soapuiDir );
 			if( settingsFile != null && settingsFile.exists() && settingsFile.isFile() )
-			JarPackager.copyFileToDir( settingsFile, soapuiDir );
+				JarPackager.copyFileToDir( settingsFile, soapuiDir );
 
 			// actions
 			if( includeActions )
@@ -264,7 +269,7 @@ public class MockAsWar
 			}
 			else
 			{
-				clearDir(webInf);
+				clearDir( webInf );
 				lib = new File( webInf, "lib" );
 				if( !( lib.mkdir() || lib.exists() ) )
 				{
@@ -278,7 +283,7 @@ public class MockAsWar
 					return false;
 				}
 				clearDir( soapuiDir );
-				
+
 				if( includeActions )
 				{
 					actionsDir = new File( webInf, "actions" );
@@ -316,8 +321,8 @@ public class MockAsWar
 	 */
 	protected void clearDir( File dir )
 	{
-		for( File file : dir.listFiles())
-			if( file.isFile())
+		for( File file : dir.listFiles() )
+			if( file.isFile() )
 				file.delete();
 	}
 
