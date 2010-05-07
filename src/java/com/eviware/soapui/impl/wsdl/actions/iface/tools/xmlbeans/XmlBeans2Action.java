@@ -129,16 +129,15 @@ public class XmlBeans2Action extends AbstractToolsAction<Interface>
 		}
 
 		ProcessBuilder builder = new ProcessBuilder();
-		ArgumentBuilder argumentBuilder = buildArgs( modelItem );
+		ArgumentBuilder argumentBuilder = buildArgs( values, modelItem );
 		builder.command( argumentBuilder.getArgs() );
 		builder.directory( new File( xbDir + File.separatorChar + "bin" ) );
 
 		toolHost.run( new ProcessToolRunner( builder, "XmlBeans", modelItem ) );
 	}
 
-	private ArgumentBuilder buildArgs( Interface modelItem )
+	private ArgumentBuilder buildArgs( StringToStringMap values, Interface modelItem )
 	{
-		StringToStringMap values = dialog.getValues();
 		ArgumentBuilder builder = new ArgumentBuilder( values );
 
 		values.put( XSBTARGET, Tools.ensureDir( values.get( XSBTARGET ), "" ) );

@@ -100,16 +100,16 @@ public class JBossWSConsumeAction extends AbstractToolsAction<Interface>
 		}
 
 		ProcessBuilder builder = new ProcessBuilder();
-		ArgumentBuilder args = buildArgs( UISupport.isWindows(), modelItem );
+		ArgumentBuilder args = buildArgs( values, UISupport.isWindows(), modelItem );
 		builder.command( args.getArgs() );
 		builder.directory( new File( wsimportDir ) );
 
 		toolHost.run( new ProcessToolRunner( builder, "JBossWS wsconsume", modelItem ) );
 	}
 
-	private ArgumentBuilder buildArgs( boolean isWindows, Interface modelItem ) throws IOException
+	private ArgumentBuilder buildArgs( StringToStringMap values, boolean isWindows, Interface modelItem )
+			throws IOException
 	{
-		StringToStringMap values = dialog.getValues();
 		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ) );
 		values.put( SOURCE_OUTPUT, Tools.ensureDir( values.get( SOURCE_OUTPUT ), values.get( OUTPUT ) ) );
 

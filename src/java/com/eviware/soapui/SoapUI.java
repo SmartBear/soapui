@@ -732,7 +732,7 @@ public class SoapUI
 		CommandLineParser parser = new PosixParser();
 		CommandLine cmd = parser.parse( options, args );
 
-		if( !validateCommandLineArgs( cmd, options ) )
+		if( !processCommandLineArgs( cmd, options ) )
 		{
 			System.exit( 1 );
 		}
@@ -809,7 +809,7 @@ public class SoapUI
 		return soapUI;
 	}
 
-	private static boolean validateCommandLineArgs( CommandLine cmd, org.apache.commons.cli.Options options )
+	private static boolean processCommandLineArgs( CommandLine cmd, org.apache.commons.cli.Options options )
 	{
 		if( cmd.hasOption( 'w' ) )
 		{

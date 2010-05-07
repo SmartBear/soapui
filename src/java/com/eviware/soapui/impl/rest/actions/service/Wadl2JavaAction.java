@@ -87,7 +87,7 @@ public class Wadl2JavaAction extends AbstractToolsAction<Interface>
 		}
 
 		ProcessBuilder builder = new ProcessBuilder();
-		ArgumentBuilder args = buildArgs( modelItem );
+		ArgumentBuilder args = buildArgs( values, modelItem );
 		builder.command( args.getArgs() );
 		builder.directory( new File( xfireDir ) );
 
@@ -96,9 +96,8 @@ public class Wadl2JavaAction extends AbstractToolsAction<Interface>
 		toolHost.run( new ProcessToolRunner( builder, "WADL2Java", modelItem, args ) );
 	}
 
-	private ArgumentBuilder buildArgs( Interface modelItem ) throws Exception
+	private ArgumentBuilder buildArgs( StringToStringMap values, Interface modelItem ) throws Exception
 	{
-		StringToStringMap values = dialog.getValues();
 		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ) );
 
 		ArgumentBuilder builder = new ArgumentBuilder( values );
@@ -113,16 +112,16 @@ public class Wadl2JavaAction extends AbstractToolsAction<Interface>
 
 		addToolArgs( values, builder );
 		String wsdlUrl = getWadlUrl( values, ( RestService )modelItem );
-		if( PathUtils.isFilePath( wsdlUrl ))
+		if( PathUtils.isFilePath( wsdlUrl ) )
 			wsdlUrl = new File( wsdlUrl ).toURI().toURL().toString();
 		builder.addArgs( wsdlUrl );
 		return builder;
 	}
-	
+
 	protected String getWadlUrl( StringToStringMap values, RestService modelItem ) throws Exception
 	{
 		String expandPath = PathUtils.expandPath( modelItem.getDefinition(), modelItem );
-		if( PathUtils.isHttpPath( expandPath ) && !modelItem.isGenerated())
+		if( PathUtils.isHttpPath( expandPath ) && !modelItem.isGenerated() )
 		{
 			return expandPath;
 		}

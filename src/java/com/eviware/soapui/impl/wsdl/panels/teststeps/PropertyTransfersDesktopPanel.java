@@ -519,7 +519,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 			}
 		} );
 
-		toolbar.add( UISupport.setFixedSize( targetStepCombo, 200, 21 ) );
+		toolbar.add( UISupport.setFixedSize( targetStepCombo, 180, 21 ) );
 		toolbar.addUnrelatedGap();
 
 		toolbar.addFixed( new JLabel( "Property:" ) );
@@ -545,7 +545,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 			}
 		} );
 
-		toolbar.add( UISupport.setFixedSize( targetPropertyCombo, 200, 21 ) );
+		toolbar.add( UISupport.setFixedSize( targetPropertyCombo, 130, 21 ) );
 		toolbar.addGlue();
 		return toolbar;
 	}
@@ -631,7 +631,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 			}
 		} );
 
-		toolbar.add( UISupport.setFixedSize( sourceStepCombo, 200, 21 ) );
+		toolbar.add( UISupport.setFixedSize( sourceStepCombo, 180, 21 ) );
 		toolbar.addUnrelatedGap();
 
 		toolbar.addFixed( new JLabel( "Property:" ) );
@@ -657,7 +657,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 			}
 		} );
 
-		toolbar.add( UISupport.setFixedSize( sourcePropertyCombo, 200, 21 ) );
+		toolbar.add( UISupport.setFixedSize( sourcePropertyCombo, 130, 21 ) );
 		toolbar.addGlue();
 		return toolbar;
 	}

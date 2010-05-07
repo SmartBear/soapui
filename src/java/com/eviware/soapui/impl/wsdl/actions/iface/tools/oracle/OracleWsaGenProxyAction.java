@@ -83,17 +83,15 @@ public class OracleWsaGenProxyAction extends AbstractToolsAction<Interface>
 		}
 
 		ProcessBuilder builder = new ProcessBuilder();
-		ArgumentBuilder args = buildArgs( modelItem );
+		ArgumentBuilder args = buildArgs( values, modelItem );
 		builder.command( args.getArgs() );
 		builder.directory( new File( wsaDir ) );
 
 		toolHost.run( new ProcessToolRunner( builder, "Oracle wsa.jar", modelItem ) );
 	}
 
-	private ArgumentBuilder buildArgs( Interface modelItem ) throws IOException
+	private ArgumentBuilder buildArgs( StringToStringMap values, Interface modelItem ) throws IOException
 	{
-		StringToStringMap values = dialog.getValues();
-
 		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ) );
 
 		ArgumentBuilder builder = new ArgumentBuilder( values );

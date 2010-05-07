@@ -122,16 +122,15 @@ public class CXFAction extends AbstractToolsAction<Interface>
 		}
 
 		ProcessBuilder builder = new ProcessBuilder();
-		ArgumentBuilder args = buildArgs( modelItem );
+		ArgumentBuilder args = buildArgs( values, modelItem );
 		builder.command( args.getArgs() );
 		builder.directory( new File( xfireDir ) );
 
 		toolHost.run( new ProcessToolRunner( builder, "Apache CXF wsdl2java", modelItem ) );
 	}
 
-	private ArgumentBuilder buildArgs( Interface modelItem ) throws IOException
+	private ArgumentBuilder buildArgs( StringToStringMap values, Interface modelItem ) throws IOException
 	{
-		StringToStringMap values = dialog.getValues();
 		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ) );
 
 		ArgumentBuilder builder = new ArgumentBuilder( values );

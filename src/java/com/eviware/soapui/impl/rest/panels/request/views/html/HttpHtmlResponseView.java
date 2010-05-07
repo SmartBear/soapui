@@ -117,9 +117,9 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 			{
 				try
 				{
-					
+
 					String content = httpResponse.getContentAsString();
-					content = new String( content.getBytes( "UTF-8"), "iso-8859-1" );
+					content = new String( content.getBytes( "UTF-8" ), "iso-8859-1" );
 					browser.setContent( content, contentType, httpResponse.getURL().toURI().toString() );
 				}
 				catch( Exception e )

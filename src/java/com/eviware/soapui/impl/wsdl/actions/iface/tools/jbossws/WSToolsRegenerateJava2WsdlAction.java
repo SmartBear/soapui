@@ -97,7 +97,7 @@ public class WSToolsRegenerateJava2WsdlAction extends AbstractToolsAction<WsdlIn
 		{
 			protected String getConfigFile()
 			{
-				ConfigurationDocument configDocument = createConfigFile( dialog.getValues() );
+				ConfigurationDocument configDocument = createConfigFile( getDialog().getValues() );
 				return configDocument.toString();
 			}
 		} );
@@ -125,7 +125,7 @@ public class WSToolsRegenerateJava2WsdlAction extends AbstractToolsAction<WsdlIn
 		}
 
 		ProcessBuilder builder = new ProcessBuilder();
-		ArgumentBuilder args = buildArgs( UISupport.isWindows() );
+		ArgumentBuilder args = buildArgs( values, UISupport.isWindows() );
 		builder.command( args.getArgs() );
 		builder.directory( new File( wstoolsDir ) );
 
@@ -133,9 +133,8 @@ public class WSToolsRegenerateJava2WsdlAction extends AbstractToolsAction<WsdlIn
 				args ) );
 	}
 
-	private ArgumentBuilder buildArgs( boolean isWindows ) throws IOException
+	private ArgumentBuilder buildArgs( StringToStringMap values, boolean isWindows ) throws IOException
 	{
-		StringToStringMap values = dialog.getValues();
 		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ) );
 
 		ArgumentBuilder builder = new ArgumentBuilder( values );

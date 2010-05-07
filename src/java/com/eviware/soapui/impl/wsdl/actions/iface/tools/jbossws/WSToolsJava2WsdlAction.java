@@ -101,7 +101,7 @@ public class WSToolsJava2WsdlAction extends AbstractToolsAction<WsdlProject>
 		{
 			protected String getConfigFile()
 			{
-				ConfigurationDocument configDocument = createConfigFile( dialog.getValues() );
+				ConfigurationDocument configDocument = createConfigFile( getDialog().getValues() );
 				return configDocument.toString();
 			}
 		} );
@@ -129,16 +129,15 @@ public class WSToolsJava2WsdlAction extends AbstractToolsAction<WsdlProject>
 		}
 
 		ProcessBuilder builder = new ProcessBuilder();
-		ArgumentBuilder args = buildArgs( UISupport.isWindows() );
+		ArgumentBuilder args = buildArgs( values, UISupport.isWindows() );
 		builder.command( args.getArgs() );
 		builder.directory( new File( wstoolsDir ) );
 
 		toolHost.run( new ToolRunner( builder, new File( values.get( OUTPUT ) ), values.get( SERVICE_NAME ), project ) );
 	}
 
-	private ArgumentBuilder buildArgs( boolean isWindows ) throws IOException
+	private ArgumentBuilder buildArgs( StringToStringMap values, boolean isWindows ) throws IOException
 	{
-		StringToStringMap values = dialog.getValues();
 		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ) );
 
 		ArgumentBuilder builder = new ArgumentBuilder( values );
@@ -217,7 +216,7 @@ public class WSToolsJava2WsdlAction extends AbstractToolsAction<WsdlProject>
 				{
 					context.log( "Added Interface [" + ifaces[0].getName() + "] to project" );
 					ifaces[0].getSettings().setString( WSToolsRegenerateJava2WsdlAction.class.getName() + "@values",
-							dialog.getValues().toXml() );
+							getDialog().getValues().toXml() );
 					UISupport.select( ifaces[0] );
 				}
 			}

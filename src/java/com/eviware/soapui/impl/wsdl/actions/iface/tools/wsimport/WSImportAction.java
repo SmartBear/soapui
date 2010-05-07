@@ -94,7 +94,7 @@ public class WSImportAction extends AbstractToolsAction<Interface>
 		String wsimportExtension = UISupport.isWindows() ? ".bat" : ".sh";
 
 		File wscompileFile = new File( wsimportDir + File.separatorChar + "wsimport" + wsimportExtension );
-		if( !wscompileFile.exists() && wsimportExtension.equals( ".bat" ))
+		if( !wscompileFile.exists() && wsimportExtension.equals( ".bat" ) )
 		{
 			wsimportExtension = ".exe";
 			wscompileFile = new File( wsimportDir + File.separatorChar + "wsimport" + wsimportExtension );
@@ -106,7 +106,7 @@ public class WSImportAction extends AbstractToolsAction<Interface>
 		}
 
 		ProcessBuilder builder = new ProcessBuilder();
-		ArgumentBuilder args = buildArgs( UISupport.isWindows(), modelItem );
+		ArgumentBuilder args = buildArgs( values, UISupport.isWindows(), modelItem );
 		List<String> argList = args.getArgs();
 		if( wsimportExtension.equals( ".exe" ) )
 		{
@@ -120,9 +120,9 @@ public class WSImportAction extends AbstractToolsAction<Interface>
 		toolHost.run( new ProcessToolRunner( builder, "JAX-WS wsimport", modelItem ) );
 	}
 
-	private ArgumentBuilder buildArgs( boolean isWindows, Interface modelItem ) throws IOException
+	private ArgumentBuilder buildArgs( StringToStringMap values, boolean isWindows, Interface modelItem )
+			throws IOException
 	{
-		StringToStringMap values = dialog.getValues();
 		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ) );
 		values.put( SOURCE_OUTPUT, Tools.ensureDir( values.get( SOURCE_OUTPUT ), values.get( OUTPUT ) ) );
 

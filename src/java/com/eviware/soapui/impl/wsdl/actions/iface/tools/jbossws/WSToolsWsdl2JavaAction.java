@@ -174,17 +174,16 @@ public class WSToolsWsdl2JavaAction extends AbstractToolsAction<Interface>
 		}
 
 		ProcessBuilder builder = new ProcessBuilder();
-		ArgumentBuilder args = buildArgs( UISupport.isWindows(), modelItem );
+		ArgumentBuilder args = buildArgs( values, UISupport.isWindows(), modelItem );
 		builder.command( args.getArgs() );
 		builder.directory( new File( wstoolsDir ) );
 
 		toolHost.run( new ProcessToolRunner( builder, "JBossWS wstools", modelItem, args ) );
 	}
 
-	private ArgumentBuilder buildArgs( boolean isWindows, Interface modelItem ) throws IOException
+	private ArgumentBuilder buildArgs( StringToStringMap values, boolean isWindows, Interface modelItem )
+			throws IOException
 	{
-		StringToStringMap values = dialog.getValues();
-
 		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ) );
 
 		ArgumentBuilder builder = new ArgumentBuilder( values );
@@ -282,7 +281,7 @@ public class WSToolsWsdl2JavaAction extends AbstractToolsAction<Interface>
 
 		protected String getConfigFile()
 		{
-			ConfigurationDocument configDocument = createConfigFile( dialog.getValues(), modelItem );
+			ConfigurationDocument configDocument = createConfigFile( getDialog().getValues(), modelItem );
 			return configDocument.toString();
 		}
 	}

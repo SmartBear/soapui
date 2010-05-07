@@ -59,7 +59,7 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 	protected static final String JAVA_ARGS = "Java Args";
 	protected static final String TOOL_ARGS = "Tool Args";
 
-	protected XFormDialog dialog;
+	private XFormDialog dialog;
 	protected String valuesSettingID;
 	private XFormField useCached;
 	private T modelItem;
@@ -71,6 +71,11 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 	public AbstractToolsAction( String name, String description )
 	{
 		super( name, description );
+	}
+
+	public XFormDialog getDialog()
+	{
+		return dialog;
 	}
 
 	public String getValuesSettingID()
@@ -131,7 +136,7 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 			dialog.setVisible( true );
 		}
 	}
-	
+
 	/**
 	 * Perform an
 	 * 
@@ -157,7 +162,6 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 			UISupport.showErrorMessage( e1 );
 		}
 	}
-
 
 	protected StringToStringMap initValues( T modelItem, Object param )
 	{

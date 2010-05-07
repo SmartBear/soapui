@@ -124,6 +124,7 @@ public class TcpMonAction extends AbstractToolsAction<WsdlInterface>
 
 	private ArgumentBuilder buildArgs( WsdlInterface modelItem ) throws IOException
 	{
+		XFormDialog dialog = getDialog();
 		if( dialog == null )
 		{
 			ArgumentBuilder builder = new ArgumentBuilder( new StringToStringMap() );

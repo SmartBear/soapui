@@ -204,7 +204,7 @@ public class GSoapAction extends AbstractToolsAction<Interface>
 		if( values.getBoolean( WSDL2H ) )
 		{
 			ProcessBuilder wsdl2hBuilder = new ProcessBuilder();
-			ArgumentBuilder wsdl2hArgs = buildWsdl2HArgs( modelItem );
+			ArgumentBuilder wsdl2hArgs = buildWsdl2HArgs( values, modelItem );
 			wsdl2hBuilder.command( wsdl2hArgs.getArgs() );
 			// wsdl2hBuilder.directory(new File(gsoapDir));
 			wsdl2hBuilder.directory( new File( Tools.getDir( values.get( WSDL2H_OUTPUT ) ) ) );
@@ -214,7 +214,7 @@ public class GSoapAction extends AbstractToolsAction<Interface>
 		if( values.getBoolean( SOAPCPP2 ) )
 		{
 			ProcessBuilder soapcpp2Builder = new ProcessBuilder();
-			ArgumentBuilder soapcpp2Args = buildSoapcpp2Args();
+			ArgumentBuilder soapcpp2Args = buildSoapcpp2Args( values );
 			soapcpp2Builder.command( soapcpp2Args.getArgs() );
 			soapcpp2Builder.directory( new File( Tools.getDir( values.get( WSDL2H_OUTPUT ) ) ) );
 
@@ -228,10 +228,9 @@ public class GSoapAction extends AbstractToolsAction<Interface>
 					modelItem ) );
 	}
 
-	private ArgumentBuilder buildWsdl2HArgs( Interface modelItem )
+	private ArgumentBuilder buildWsdl2HArgs( StringToStringMap values, Interface modelItem )
 	{
 		String gsoapDir = SoapUI.getSettings().getString( ToolsSettings.GSOAP_LOCATION, null );
-		StringToStringMap values = dialog.getValues();
 		ArgumentBuilder builder = new ArgumentBuilder( values );
 		builder.startScript( gsoapDir + File.separator + "wsdl2h", "", "" );
 		builder.addArgs( new String[] { "-v" } );
@@ -264,10 +263,9 @@ public class GSoapAction extends AbstractToolsAction<Interface>
 		return builder;
 	}
 
-	private ArgumentBuilder buildSoapcpp2Args()
+	private ArgumentBuilder buildSoapcpp2Args( StringToStringMap values )
 	{
 		String gsoapDir = SoapUI.getSettings().getString( ToolsSettings.GSOAP_LOCATION, null );
-		StringToStringMap values = dialog.getValues();
 		ArgumentBuilder builder = new ArgumentBuilder( values );
 		builder.startScript( gsoapDir + File.separator + "soapcpp2", "", "" );
 		builder.addArgs( new String[] { "-Iimport", values.get( WSDL2H_OUTPUT ) } );

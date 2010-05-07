@@ -333,6 +333,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 
 	private ArgumentBuilder buildArgs( WsdlProject modelItem ) throws IOException
 	{
+		XFormDialog dialog = getDialog();
 		if( dialog == null )
 		{
 			ArgumentBuilder builder = new ArgumentBuilder( new StringToStringMap() );
@@ -413,7 +414,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 
 	private void addProperties( List<String> propertyArguments, String propertiyDomain, String arg )
 	{
-		StringTokenizer tokenizer = new StringTokenizer( dialog.getValue( propertiyDomain ) );
+		StringTokenizer tokenizer = new StringTokenizer( getDialog().getValue( propertiyDomain ) );
 
 		while( tokenizer.hasMoreTokens() )
 		{

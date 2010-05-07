@@ -124,16 +124,15 @@ public class JaxbXjcAction extends AbstractToolsAction<Interface>
 		}
 
 		ProcessBuilder builder = new ProcessBuilder();
-		ArgumentBuilder argumentBuilder = buildArgs( modelItem );
+		ArgumentBuilder argumentBuilder = buildArgs( values, modelItem );
 		builder.command( argumentBuilder.getArgs() );
 		builder.directory( new File( jaxbDir + File.separatorChar + "bin" ) );
 
 		toolHost.run( new ProcessToolRunner( builder, "JAXB xjc", modelItem, argumentBuilder ) );
 	}
 
-	private ArgumentBuilder buildArgs( Interface modelItem )
+	private ArgumentBuilder buildArgs( StringToStringMap values, Interface modelItem )
 	{
-		StringToStringMap values = dialog.getValues();
 		ArgumentBuilder builder = new ArgumentBuilder( values );
 
 		builder.startScript( "xjc", ".bat", ".sh" );

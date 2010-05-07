@@ -128,7 +128,8 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 		mainForm.addComboBox( LOADTEST, new String[] {}, "The LoadTest to run" );
 		mainForm.addSeparator();
 
-		XFormTextField path = mainForm.addTextField( TESTRUNNERPATH, "Folder containing TestRunner.bat to use", XForm.FieldType.FOLDER );
+		XFormTextField path = mainForm.addTextField( TESTRUNNERPATH, "Folder containing TestRunner.bat to use",
+				XForm.FieldType.FOLDER );
 		path.setValue( System.getProperty( "soapui.home", "" ) );
 		mainForm.addCheckBox( SAVEPROJECT, "Saves project before running" ).setEnabled( !modelItem.isRemote() );
 		mainForm.addCheckBox( SAVEAFTER, "Sets to save the project file after tests have been run" );
@@ -283,6 +284,7 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 
 	private ArgumentBuilder buildArgs( WsdlProject modelItem ) throws IOException
 	{
+		XFormDialog dialog = getDialog();
 		if( dialog == null )
 		{
 			ArgumentBuilder builder = new ArgumentBuilder( new StringToStringMap() );
@@ -425,7 +427,7 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 
 	private void addProperties( List<String> propertyArguments, String propertyDomain, String arg )
 	{
-		StringTokenizer tokenizer = new StringTokenizer( dialog.getValue( propertyDomain ) );
+		StringTokenizer tokenizer = new StringTokenizer( getDialog().getValue( propertyDomain ) );
 
 		while( tokenizer.hasMoreTokens() )
 		{

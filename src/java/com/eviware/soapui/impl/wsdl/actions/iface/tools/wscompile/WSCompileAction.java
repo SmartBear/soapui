@@ -58,7 +58,7 @@ public class WSCompileAction extends AbstractToolsAction<Interface>
 
 		protected String getConfigFile()
 		{
-			ConfigurationDocument configDocument = createConfigFile( dialog.getValues(), modelItem );
+			ConfigurationDocument configDocument = createConfigFile( getDialog().getValues(), modelItem );
 			return configDocument.toString();
 		}
 	}
@@ -180,16 +180,16 @@ public class WSCompileAction extends AbstractToolsAction<Interface>
 		}
 
 		ProcessBuilder builder = new ProcessBuilder();
-		ArgumentBuilder args = buildArgs( UISupport.isWindows(), modelItem );
+		ArgumentBuilder args = buildArgs( values, UISupport.isWindows(), modelItem );
 		builder.command( args.getArgs() );
 		builder.directory( new File( wscompileDir ) );
 
 		toolHost.run( new ProcessToolRunner( builder, "JAX-RPC wscompile", modelItem ) );
 	}
 
-	private ArgumentBuilder buildArgs( boolean isWindows, Interface modelItem ) throws IOException
+	private ArgumentBuilder buildArgs( StringToStringMap values, boolean isWindows, Interface modelItem )
+			throws IOException
 	{
-		StringToStringMap values = dialog.getValues();
 		ArgumentBuilder builder = new ArgumentBuilder( values );
 		builder.startScript( "wscompile" );
 
