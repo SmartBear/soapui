@@ -16,7 +16,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.apache.commons.lang.NotImplementedException;
 
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -34,8 +34,8 @@ public interface JMSPropertyInspectorModel
 	public boolean isReadOnly();
 
 	public void release();
-	
-	public void setInspector(JMSPropertyInspector inspector);
+
+	public void setInspector( JMSPropertyInspector inspector );
 
 	public static abstract class AbstractJMSPropertyModel<T extends ModelItem> implements JMSPropertyInspectorModel,
 			PropertyChangeListener

@@ -16,7 +16,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.apache.commons.lang.NotImplementedException;
 
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
@@ -26,17 +26,17 @@ public interface AMFHeadersInspectorModel
 {
 	public StringToStringMap getHeaders();
 
-	public void addPropertyChangeListener(PropertyChangeListener listener);
+	public void addPropertyChangeListener( PropertyChangeListener listener );
 
-	public void setHeaders(StringToStringMap headers);
+	public void setHeaders( StringToStringMap headers );
 
-	public void removePropertyChangeListener(PropertyChangeListener listener);
+	public void removePropertyChangeListener( PropertyChangeListener listener );
 
 	public boolean isReadOnly();
 
 	public void release();
 
-	public void setInspector(AbstractXmlInspector inspector);
+	public void setInspector( AbstractXmlInspector inspector );
 
 	public static abstract class AbstractHeadersModel<T extends ModelItem> implements AMFHeadersInspectorModel,
 			PropertyChangeListener
@@ -46,18 +46,18 @@ public interface AMFHeadersInspectorModel
 		private final T modelItem;
 		private final String propertyName;
 
-		protected AbstractHeadersModel(boolean readOnly, T modelItem, String propertyName)
+		protected AbstractHeadersModel( boolean readOnly, T modelItem, String propertyName )
 		{
 			this.readOnly = readOnly;
 			this.modelItem = modelItem;
 			this.propertyName = propertyName;
-			propertyChangeSupport = new PropertyChangeSupport(this);
-			modelItem.addPropertyChangeListener(propertyName, this);
+			propertyChangeSupport = new PropertyChangeSupport( this );
+			modelItem.addPropertyChangeListener( propertyName, this );
 		}
 
-		public void addPropertyChangeListener(PropertyChangeListener listener)
+		public void addPropertyChangeListener( PropertyChangeListener listener )
 		{
-			propertyChangeSupport.addPropertyChangeListener(listener);
+			propertyChangeSupport.addPropertyChangeListener( listener );
 		}
 
 		public boolean isReadOnly()
@@ -65,19 +65,19 @@ public interface AMFHeadersInspectorModel
 			return readOnly;
 		}
 
-		public void removePropertyChangeListener(PropertyChangeListener listener)
+		public void removePropertyChangeListener( PropertyChangeListener listener )
 		{
-			propertyChangeSupport.removePropertyChangeListener(listener);
+			propertyChangeSupport.removePropertyChangeListener( listener );
 		}
 
-		public void propertyChange(PropertyChangeEvent evt)
+		public void propertyChange( PropertyChangeEvent evt )
 		{
-			propertyChangeSupport.firePropertyChange(evt);
+			propertyChangeSupport.firePropertyChange( evt );
 		}
 
 		public void release()
 		{
-			modelItem.removePropertyChangeListener(propertyName, this);
+			modelItem.removePropertyChangeListener( propertyName, this );
 		}
 
 		public T getModelItem()
@@ -85,13 +85,13 @@ public interface AMFHeadersInspectorModel
 			return modelItem;
 		}
 
-		public void setHeaders(StringToStringMap headers)
+		public void setHeaders( StringToStringMap headers )
 		{
-			if (!readOnly)
+			if( !readOnly )
 				throw new NotImplementedException();
 		}
 
-		public void setInspector(AbstractXmlInspector inspector)
+		public void setInspector( AbstractXmlInspector inspector )
 		{
 		}
 	}

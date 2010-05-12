@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.impl.rest.support.handlers;
 
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
 
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
@@ -46,7 +46,7 @@ public class DefaultMediaTypeHandler implements MediaTypeHandler
 		{
 			if( content.charAt( c ) < 8 )
 			{
-				return result + new BASE64Encoder().encode( content.getBytes() ) + "</data>";
+				return result + Base64.encodeBase64( content.getBytes() ) + "</data>";
 			}
 		}
 

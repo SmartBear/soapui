@@ -17,7 +17,6 @@ import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFTestStepResult;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
 import com.eviware.soapui.support.editor.inspectors.amfheader.AMFHeadersInspectorModel.AbstractHeadersModel;
@@ -37,7 +36,7 @@ public class AMFHeadersInspectorFactory implements RequestInspectorFactory, Resp
 	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
 		if( modelItem instanceof AMFRequestTestStep )
-		{ 
+		{
 			AMFHeadersInspector inspector = new AMFHeadersInspector( new AMFRequestHeadersModel(
 					( AMFRequestTestStep )modelItem ) );
 			inspector.setEnabled( true );
@@ -142,21 +141,21 @@ public class AMFHeadersInspectorFactory implements RequestInspectorFactory, Resp
 		@Override
 		public void release()
 		{
-			getModelItem().removePropertyChangeListener(  AMFRequestTestStep.AMF_HEADERS_PROPERTY, this );
+			getModelItem().removePropertyChangeListener( AMFRequestTestStep.AMF_HEADERS_PROPERTY, this );
 			super.release();
 		}
-		
-		
+
 	}
 
 	private class AMFResponseHeadersModel extends AbstractHeadersModel<AMFRequestTestStep>
 	{
 		AMFRequest request;
+
 		public AMFResponseHeadersModel( AMFRequestTestStep testStep )
 		{
 			super( true, testStep, AMFRequestTestStep.AMF_HEADERS_PROPERTY );
 			this.request = testStep.getAMFRequest();
-			this.request.addPropertyChangeListener(AMFRequest.AMF_RESPONSE_PROPERTY, this );
+			this.request.addPropertyChangeListener( AMFRequest.AMF_RESPONSE_PROPERTY, this );
 		}
 
 		public StringToStringMap getHeaders()

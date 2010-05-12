@@ -44,37 +44,37 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 		return INSPECTOR_ID;
 	}
 
-	public EditorInspector<?> createRequestInspector(Editor<?> editor, ModelItem modelItem)
+	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
-		if (modelItem instanceof MessageExchangeModelItem)
+		if( modelItem instanceof MessageExchangeModelItem )
 		{
 			JMSHeaderAndPropertyInspector inspector = new JMSHeaderAndPropertyInspector(
-					(JMSHeaderAndPropertyInspectorModel) new MessageExchangeRequestJMSHeaderAndPropertiesModel(
-							(MessageExchangeModelItem) modelItem));
-			inspector.setEnabled(JMSUtils.checkIfJMS(modelItem));
+					( JMSHeaderAndPropertyInspectorModel )new MessageExchangeRequestJMSHeaderAndPropertiesModel(
+							( MessageExchangeModelItem )modelItem ) );
+			inspector.setEnabled( JMSUtils.checkIfJMS( modelItem ) );
 			return inspector;
 		}
 		return null;
 	}
 
-	public EditorInspector<?> createResponseInspector(Editor<?> editor, ModelItem modelItem)
+	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
 	{
 
-		if (modelItem instanceof AbstractHttpRequest)
+		if( modelItem instanceof AbstractHttpRequest<?> )
 		{
 			JMSHeaderAndPropertyInspector inspector = new JMSHeaderAndPropertyInspector(
-					(JMSHeaderAndPropertyInspectorModel) new ResponseJMSHeaderAndPropertiesModel(
-							(AbstractHttpRequest<?>) modelItem));
-			inspector.setEnabled(JMSUtils.checkIfJMS(modelItem));
+					( JMSHeaderAndPropertyInspectorModel )new ResponseJMSHeaderAndPropertiesModel(
+							( AbstractHttpRequest<?> )modelItem ) );
+			inspector.setEnabled( JMSUtils.checkIfJMS( modelItem ) );
 			return inspector;
 		}
-		else if (modelItem instanceof MessageExchangeModelItem)
+		else if( modelItem instanceof MessageExchangeModelItem )
 		{
 
 			JMSHeaderAndPropertyInspector inspector = new JMSHeaderAndPropertyInspector(
-					(JMSHeaderAndPropertyInspectorModel) new MessageExchangeResponseJMSHeaderAndPropertiesModel(
-							(MessageExchangeModelItem) modelItem));
-			inspector.setEnabled(JMSUtils.checkIfJMS(modelItem));
+					( JMSHeaderAndPropertyInspectorModel )new MessageExchangeResponseJMSHeaderAndPropertiesModel(
+							( MessageExchangeModelItem )modelItem ) );
+			inspector.setEnabled( JMSUtils.checkIfJMS( modelItem ) );
 			return inspector;
 
 		}
@@ -88,27 +88,27 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 		JMSHeaderAndPropertyInspector inspector;
 		StringToStringMap headersAndProperties;
 
-		public ResponseJMSHeaderAndPropertiesModel(AbstractHttpRequest<?> wsdlRequest)
+		public ResponseJMSHeaderAndPropertiesModel( AbstractHttpRequest<?> wsdlRequest )
 		{
-			super(true, wsdlRequest, "jmsHeaderAndProperties");
+			super( true, wsdlRequest, "jmsHeaderAndProperties" );
 			this.request = wsdlRequest;
-			request.addSubmitListener(this);
-			request.addPropertyChangeListener(this);
+			request.addSubmitListener( this );
+			request.addPropertyChangeListener( this );
 		}
 
-		public void propertyChange(PropertyChangeEvent evt)
+		public void propertyChange( PropertyChangeEvent evt )
 		{
-			if (request.getEndpoint() != null && evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY))
+			if( request.getEndpoint() != null && evt.getPropertyName().equals( AbstractHttpRequest.ENDPOINT_PROPERTY ) )
 			{
-				inspector.setEnabled(request.getEndpoint().startsWith(JMSEndpoint.JMS_ENDPIONT_PREFIX));
+				inspector.setEnabled( request.getEndpoint().startsWith( JMSEndpoint.JMS_ENDPIONT_PREFIX ) );
 			}
-			super.propertyChange(evt);
+			super.propertyChange( evt );
 		}
 
 		public void release()
 		{
-			request.removeSubmitListener(this);
-			request.removePropertyChangeListener(this);
+			request.removeSubmitListener( this );
+			request.removePropertyChangeListener( this );
 		}
 
 		public StringToStringMap getJMSHeadersAndProperties()
@@ -116,25 +116,25 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 			return headersAndProperties;
 		}
 
-		public void afterSubmit(Submit submit, SubmitContext context)
+		public void afterSubmit( Submit submit, SubmitContext context )
 		{
 			headersAndProperties = new StringToStringMap();
-			JMSResponse jmsResponse = (JMSResponse) context.getProperty(HermesJmsRequestTransport.JMS_RESPONSE);
-			if (jmsResponse instanceof JMSResponse)
+			JMSResponse jmsResponse = ( JMSResponse )context.getProperty( HermesJmsRequestTransport.JMS_RESPONSE );
+			if( jmsResponse instanceof JMSResponse )
 			{
 				Message message = jmsResponse.getMessageReceive();
-				if (message != null)
-					headersAndProperties.putAll(JMSHeader.getMessageHeadersAndProperties(message));
+				if( message != null )
+					headersAndProperties.putAll( JMSHeader.getMessageHeadersAndProperties( message ) );
 			}
-			inspector.getHeadersTableModel().setData(headersAndProperties);
+			inspector.getHeadersTableModel().setData( headersAndProperties );
 		}
 
-		public boolean beforeSubmit(Submit submit, SubmitContext context)
+		public boolean beforeSubmit( Submit submit, SubmitContext context )
 		{
 			return true;
 		}
 
-		public void setInspector(JMSHeaderAndPropertyInspector inspector)
+		public void setInspector( JMSHeaderAndPropertyInspector inspector )
 		{
 			this.inspector = inspector;
 		}
@@ -144,24 +144,27 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 			AbstractJMSHeaderAndPropertyModel<MessageExchangeModelItem>
 
 	{
+		@SuppressWarnings( "unused" )
 		MessageExchangeModelItem messageExchangeModelItem;
+		@SuppressWarnings( "unused" )
 		JMSHeaderAndPropertyInspector inspector;
 
-		public MessageExchangeResponseJMSHeaderAndPropertiesModel(MessageExchangeModelItem messageExchangeModelItem)
+		public MessageExchangeResponseJMSHeaderAndPropertiesModel( MessageExchangeModelItem messageExchangeModelItem )
 		{
-			super(true, messageExchangeModelItem, MessageExchangeModelItem.MESSAGE_EXCHANGE);
+			super( true, messageExchangeModelItem, MessageExchangeModelItem.MESSAGE_EXCHANGE );
 			this.messageExchangeModelItem = messageExchangeModelItem;
 		}
 
 		public StringToStringMap getJMSHeadersAndProperties()
 		{
 			MessageExchange messageExchange = getModelItem().getMessageExchange();
-			if (messageExchange != null)
+			if( messageExchange != null )
 				return messageExchange.getResponseHeaders();
 			else
-				return new StringToStringMap();		}
+				return new StringToStringMap();
+		}
 
-		public void setInspector(JMSHeaderAndPropertyInspector inspector)
+		public void setInspector( JMSHeaderAndPropertyInspector inspector )
 		{
 			this.inspector = inspector;
 		}
@@ -172,25 +175,27 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 			AbstractJMSHeaderAndPropertyModel<MessageExchangeModelItem>
 
 	{
+		@SuppressWarnings( "unused" )
 		MessageExchangeModelItem messageExchangeModelItem;
+		@SuppressWarnings( "unused" )
 		JMSHeaderAndPropertyInspector inspector;
 
-		public MessageExchangeRequestJMSHeaderAndPropertiesModel(MessageExchangeModelItem messageExchangeModelItem)
+		public MessageExchangeRequestJMSHeaderAndPropertiesModel( MessageExchangeModelItem messageExchangeModelItem )
 		{
-			super(true, messageExchangeModelItem, MessageExchangeModelItem.MESSAGE_EXCHANGE);
+			super( true, messageExchangeModelItem, MessageExchangeModelItem.MESSAGE_EXCHANGE );
 			this.messageExchangeModelItem = messageExchangeModelItem;
 		}
 
 		public StringToStringMap getJMSHeadersAndProperties()
 		{
 			MessageExchange messageExchange = getModelItem().getMessageExchange();
-			if (messageExchange != null)
+			if( messageExchange != null )
 				return messageExchange.getRequestHeaders();
 			else
 				return new StringToStringMap();
 		}
 
-		public void setInspector(JMSHeaderAndPropertyInspector inspector)
+		public void setInspector( JMSHeaderAndPropertyInspector inspector )
 		{
 			this.inspector = inspector;
 		}

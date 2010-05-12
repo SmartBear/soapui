@@ -16,7 +16,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.apache.commons.lang.NotImplementedException;
 
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -34,11 +34,11 @@ public interface JMSHeaderAndPropertyInspectorModel
 	public boolean isReadOnly();
 
 	public void release();
-	
-	public void setInspector(JMSHeaderAndPropertyInspector inspector);
 
-	public static abstract class AbstractJMSHeaderAndPropertyModel<T extends ModelItem> implements JMSHeaderAndPropertyInspectorModel,
-			PropertyChangeListener
+	public void setInspector( JMSHeaderAndPropertyInspector inspector );
+
+	public static abstract class AbstractJMSHeaderAndPropertyModel<T extends ModelItem> implements
+			JMSHeaderAndPropertyInspectorModel, PropertyChangeListener
 	{
 		private boolean readOnly;
 		private PropertyChangeSupport propertyChangeSupport;

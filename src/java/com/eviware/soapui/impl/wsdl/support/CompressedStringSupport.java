@@ -18,8 +18,7 @@ import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CompressedStringConfig;
@@ -44,8 +43,7 @@ public class CompressedStringSupport
 			{
 				try
 				{
-					BASE64Decoder decoder = new BASE64Decoder();
-					byte[] bytes = decoder.decodeBuffer( compressedStringConfig.getStringValue() );
+					byte[] bytes = Base64.decodeBase64( compressedStringConfig.getStringValue().getBytes() );
 					GZIPInputStream in = new GZIPInputStream( new ByteArrayInputStream( bytes ) );
 					return Tools.readAll( in, -1 ).toString();
 				}
@@ -72,8 +70,7 @@ public class CompressedStringSupport
 					GZIPOutputStream out = new GZIPOutputStream( byteOut );
 					out.write( value.getBytes() );
 					out.finish();
-					BASE64Encoder encoder = new BASE64Encoder();
-					value = encoder.encode( byteOut.toByteArray() );
+					value = new String( Base64.encodeBase64( byteOut.toByteArray() ) );
 					compressedStringConfig.setCompression( "gzip" );
 				}
 				catch( IOException e )
