@@ -407,7 +407,7 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 			int ix = conditionList.getSelectedIndex();
 			GotoCondition config = gotoStep.getConditionAt( ix );
 
-			String name = UISupport.prompt( "Specify name for condition", "Copy Condition", config.getName() );
+			String name = UISupport.prompt( "Specify name for condition", "Rename Condition", config.getName() );
 			if( name == null || name.trim().length() == 0 )
 				return;
 
