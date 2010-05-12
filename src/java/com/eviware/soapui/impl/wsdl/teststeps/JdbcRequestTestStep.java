@@ -513,7 +513,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 			JdbcMessageExchange messageExchange = new JdbcMessageExchange( this, getJdbcRequest().getResponse() );
 
-			if( this != null )
+			if( getJdbcRequest().getResponse() != null )
 			{
 				// assert!
 				for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
@@ -752,4 +752,18 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	{
 		return this;
 	}
+
+	@Override
+	public void prepare( TestCaseRunner testRunner, TestCaseRunContext testRunContext ) throws Exception
+	{
+		super.prepare( testRunner, testRunContext );
+
+		setResponse( null, testRunContext );
+
+		for( TestAssertion assertion : jdbcRequest.getAssertionList() )
+		{
+			assertion.prepare( testRunner, testRunContext );
+		}
+	}
+
 }
