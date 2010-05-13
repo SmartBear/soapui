@@ -101,15 +101,15 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 				testSteps.add( testStep );
 			}
 			else
+			{
 				removed.add( tsc );
+			}
 		}
 
-		// if( removed.size() > 0 )
-		// {
-		// testStepConfigs.removeAll( removed );
-		// config.setTestStepArray( testStepConfigs.toArray( new TestStepConfig[]
-		// {} ) );
-		// }
+		if( removed.size() > 0 )
+		{
+			testStepConfigs.removeAll( removed );
+		}
 
 		if( !forLoadTest )
 		{
