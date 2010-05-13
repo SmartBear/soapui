@@ -46,7 +46,7 @@ public class DefaultMediaTypeHandler implements MediaTypeHandler
 		{
 			if( content.charAt( c ) < 8 )
 			{
-				return result + Base64.encodeBase64( content.getBytes() ) + "</data>";
+				return result + new String( Base64.encodeBase64( content.getBytes() ) ) + "</data>";
 			}
 		}
 
