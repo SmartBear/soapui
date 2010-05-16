@@ -164,8 +164,8 @@ public class MockAsWar
 
 		content.replace( content.indexOf( SOAPUI_SETTINGS ), content.indexOf( SOAPUI_SETTINGS )
 				+ SOAPUI_SETTINGS.length(),
-				settingsFile != null && settingsFile.exists() && settingsFile.isFile() ? settingsFile.getAbsolutePath()
-						: "" );
+				settingsFile != null && settingsFile.exists() && settingsFile.isFile() ? "WEB-INF/soapui/"
+						+ settingsFile.getName() : settingsFile.getAbsolutePath() );
 		content.replace( content.indexOf( MOCKSERVICE_ENDPOINT ), content.indexOf( MOCKSERVICE_ENDPOINT )
 				+ MOCKSERVICE_ENDPOINT.length(), localEndpoint );
 
