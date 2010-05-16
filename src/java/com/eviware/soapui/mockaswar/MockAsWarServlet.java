@@ -208,7 +208,6 @@ public class MockAsWarServlet extends HttpServlet
 
 	class MockServletSoapUICore extends DefaultSoapUICore implements MockEngine
 	{
-
 		private final ServletContext servletContext;
 
 		public MockServletSoapUICore( ServletContext servletContext, String soapUISettings )

@@ -51,7 +51,7 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject>
 			UISupport.showErrorMessage( "Project does not have any MockServices to deploy" );
 			return;
 		}
-		
+
 		// create war file
 		if( dialog == null )
 		{
@@ -60,12 +60,8 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject>
 			{
 				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 				{
-					if( Boolean.valueOf( newValue ) )
-						dialog.getFormField( MockAsWarDialog.SETTINGS_FILE ).setEnabled( true );
-					else
-						dialog.getFormField( MockAsWarDialog.SETTINGS_FILE ).setEnabled( false );
+					dialog.getFormField( MockAsWarDialog.SETTINGS_FILE ).setEnabled( Boolean.valueOf( newValue ) );
 				}
-
 			} );
 
 			dialog.getFormField( MockAsWarDialog.WAR_DIRECTORY ).addFormFieldValidator(
@@ -74,7 +70,7 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject>
 
 		XFormField settingFile = dialog.getFormField( MockAsWarDialog.SETTINGS_FILE );
 		settingFile.setValue( ( ( DefaultSoapUICore )SoapUI.getSoapUICore() ).getSettingsFile() );
-		settingFile.setEnabled( false );
+		settingFile.setEnabled( dialog.getBooleanValue( MockAsWarDialog.GLOBAL_SETTINGS ) );
 
 		XFormField warDirectory = dialog.getFormField( MockAsWarDialog.WAR_DIRECTORY );
 		XFormField warFile = dialog.getFormField( MockAsWarDialog.WAR_FILE );
