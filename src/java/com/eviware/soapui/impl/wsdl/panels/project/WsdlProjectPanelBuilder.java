@@ -44,12 +44,13 @@ public class WsdlProjectPanelBuilder extends EmptyPanelBuilder<WsdlProject>
 
 			if( !project.isDisabled() )
 			{
-				table.addProperty( "Resource Root", "resourceRoot", new String[] { null, "${projectDir}" } );
+				table.addProperty( "Resource Root", "resourceRoot",
+						new String[] { null, "${projectDir}", "${workspaceDir}" } );
 				table.addProperty( "Cache Definitions", "cacheDefinitions", JPropertiesTable.BOOLEAN_OPTIONS );
 				table.addPropertyShadow( "Project Password", "shadowPassword", true );
 				table.addProperty( "Script Language", "defaultScriptLanguage", SoapUIScriptEngineRegistry
 						.getAvailableEngineIds() );
-				table.addProperty("Hermes Config","hermesConfig" ,true);
+				table.addProperty( "Hermes Config", "hermesConfig", true );
 			}
 		}
 		else
