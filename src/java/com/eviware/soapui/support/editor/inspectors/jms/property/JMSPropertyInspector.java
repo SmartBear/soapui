@@ -47,29 +47,30 @@ public class JMSPropertyInspector extends AbstractXmlInspector implements Proper
 	public boolean changing;
 
 	protected JMSPropertyInspector( JMSPropertyInspectorModel model )
-	{ 
-		super( "JMS Property (" + ( model.getJMSProperties() == null ? "0" : model.getJMSProperties().size() ) + ")",
+	{
+		super( "JMS Properties (" + ( model.getJMSProperties() == null ? "0" : model.getJMSProperties().size() ) + ")",
 				"Additional JMS Property for this message", true, JMSPropertyInspectorFactory.INSPECTOR_ID );
-		
+
 		this.model = model;
 
 		model.addPropertyChangeListener( this );
-		model.setInspector(this);
+		model.setInspector( this );
 	}
 
-	
 	public JComponent getComponent()
 	{
 		if( panel != null )
 			return panel;
 
-		headersTableModel = new StringToStringMapTableModel( model.getJMSProperties(), "Key", "Value", !model.isReadOnly() );
+		headersTableModel = new StringToStringMapTableModel( model.getJMSProperties(), "Key", "Value", !model
+				.isReadOnly() );
 		headersTableModel.addTableModelListener( new TableModelListener()
 		{
 			public void tableChanged( TableModelEvent arg0 )
 			{
 				model.setJMSProperties( headersTableModel.getData() );
-				setTitle( "JMS Property (" + ( model.getJMSProperties() == null ? "0" : model.getJMSProperties().size() ) + ")" );
+				setTitle( "JMS Property (" + ( model.getJMSProperties() == null ? "0" : model.getJMSProperties().size() )
+						+ ")" );
 			}
 		} );
 
@@ -88,7 +89,8 @@ public class JMSPropertyInspector extends AbstractXmlInspector implements Proper
 			removeButton = UISupport.createToolbarButton( new RemoveAction() );
 			builder.addFixed( removeButton );
 			builder.addGlue();
-//			builder.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.HEADERS_HELP_URL ) ) );
+			// builder.addFixed( UISupport.createToolbarButton( new
+			// ShowOnlineHelpAction( HelpUrls.HEADERS_HELP_URL ) ) );
 
 			panel.add( builder, BorderLayout.NORTH );
 
