@@ -248,7 +248,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
 		propertiesTable = buildPropertiesTable();
-		panel.add( new JScrollPane( propertiesTable ), BorderLayout.CENTER );
+		panel.add( propertiesTable, BorderLayout.CENTER );
 		return panel;
 	}
 

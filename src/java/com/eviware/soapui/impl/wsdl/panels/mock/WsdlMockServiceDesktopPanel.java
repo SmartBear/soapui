@@ -263,7 +263,7 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
 		propertiesTable = new PropertyHolderTable( getModelItem() );
-		panel.add( new JScrollPane( propertiesTable ), BorderLayout.CENTER );
+		panel.add( propertiesTable, BorderLayout.CENTER );
 		return panel;
 	}
 
