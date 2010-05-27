@@ -51,6 +51,7 @@ public class UIPrefs implements Prefs
 	public static final String GC_INTERVAL = "Garbage Collection Interval";
 	public static final String RAW_RESPONSE_MESSAGE_SIZE = "Size of Raw Response Message to Show";
 	public static final String RAW_REQUEST_MESSAGE_SIZE = "Size of Raw Request Message to Show";
+	public static final String WRAP_RAW_MESSAGES = "Wrap content in Raw Message Viewers";
 	public static final String DISABLE_TOOLTIPS = "Disable Tooltips";
 
 	private SimpleForm editorForm;
@@ -123,6 +124,7 @@ public class UIPrefs implements Prefs
 			editorForm.appendSeparator();
 			editorForm.appendTextField( RAW_RESPONSE_MESSAGE_SIZE, "Sets the size of raw response mesage to show." );
 			editorForm.appendTextField( RAW_REQUEST_MESSAGE_SIZE, "Sets the size of raw request mesage to show." );
+			editorForm.appendCheckBox( WRAP_RAW_MESSAGES, "Wraps content in Raw Message Viewers", false );
 		}
 
 		return editorForm;
@@ -167,6 +169,7 @@ public class UIPrefs implements Prefs
 
 		settings.setString( UISettings.RAW_RESPONSE_MESSAGE_SIZE, values.get( RAW_RESPONSE_MESSAGE_SIZE ) );
 		settings.setString( UISettings.RAW_REQUEST_MESSAGE_SIZE, values.get( RAW_REQUEST_MESSAGE_SIZE ) );
+		settings.setBoolean( UISettings.WRAP_RAW_MESSAGES, values.getBoolean( WRAP_RAW_MESSAGES ) );
 
 		SoapUI.initAutoSaveTimer();
 		SoapUI.initGCTimer();
@@ -208,6 +211,7 @@ public class UIPrefs implements Prefs
 		values.put( GC_INTERVAL, settings.getString( UISettings.GC_INTERVAL, "0" ) );
 		values.put( RAW_RESPONSE_MESSAGE_SIZE, settings.getString( UISettings.RAW_RESPONSE_MESSAGE_SIZE, "10000" ) );
 		values.put( RAW_REQUEST_MESSAGE_SIZE, settings.getString( UISettings.RAW_REQUEST_MESSAGE_SIZE, "10000" ) );
+		values.put( WRAP_RAW_MESSAGES, settings.getBoolean( UISettings.WRAP_RAW_MESSAGES ) );
 
 		return values;
 	}

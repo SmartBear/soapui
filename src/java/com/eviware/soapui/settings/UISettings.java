@@ -96,4 +96,8 @@ public interface UISettings
 	@Setting( name = "Raw Response Message Size", description = "Sets size of raw response that will be shown", type = SettingType.INT )
 	public static final String RAW_RESPONSE_MESSAGE_SIZE = UISettings.class.getSimpleName()
 			+ "@raw_response_message_size_show";
+
+	@Setting( name = "Wrap Raw Messages", description = "Wraps content in Raw message viewers", type = SettingType.BOOLEAN )
+	public static final String WRAP_RAW_MESSAGES = UISettings.class.getSimpleName() + "@wrap_raw_messages";
+
 }
