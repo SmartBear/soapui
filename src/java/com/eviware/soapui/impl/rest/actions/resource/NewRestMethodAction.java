@@ -124,7 +124,7 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 		public final static String RESOURCENAME = messages.get( "Form.ResourceName.Label" );
 
 		@AField( description = "Form.Method.Description", type = AFieldType.ENUMERATION, values = { "GET", "POST", "PUT",
-				"DELETE", "HEAD" } )
+				"DELETE", "HEAD", "TRACE", "OPTIONS" } )
 		public final static String METHOD = messages.get( "Form.Method.Label" );
 
 		@AField( description = "Form.ParamsTable.Description", type = AFieldType.COMPONENT )
