@@ -12,6 +12,9 @@
 
 package com.eviware.soapui.model.mock;
 
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.support.types.StringToStringMap;
 
@@ -30,4 +33,14 @@ public interface MockRequest
 	public String getRequestContent();
 
 	public MockRunContext getContext();
+
+	public String getMethod();
+
+	public XmlObject getContentElement() throws XmlException;
+
+	public String getPath();
+
+	public byte[] getRawRequestData();
+
+	public String getProtocol();
 }

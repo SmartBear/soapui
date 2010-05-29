@@ -148,17 +148,17 @@ public class HttpResponseMessageExchange extends AbstractMessageExchange<HttpReq
 
 	public boolean hasRawData()
 	{
-		return false;
+		return response != null;
 	}
 
 	public byte[] getRawRequestData()
 	{
-		return null;
+		return response == null ? null : response.getRawRequestData();
 	}
 
 	public byte[] getRawResponseData()
 	{
-		return null;
+		return response == null ? null : response.getRawResponseData();
 	}
 
 	public Attachment[] getResponseAttachmentsForPart( String name )
@@ -167,11 +167,12 @@ public class HttpResponseMessageExchange extends AbstractMessageExchange<HttpReq
 
 		if( getResponseAttachments() != null )
 		{
-		for( Attachment attachment : getResponseAttachments() )
-		{
-			if( attachment.getPart().equals( name ) )
-				result.add( attachment );
-		}}
+			for( Attachment attachment : getResponseAttachments() )
+			{
+				if( attachment.getPart().equals( name ) )
+					result.add( attachment );
+			}
+		}
 
 		return result.toArray( new Attachment[result.size()] );
 	}

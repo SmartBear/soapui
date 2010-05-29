@@ -140,7 +140,7 @@ public class WSAResponseAssertion extends WsdlMessageAssertion implements Reques
 		{
 			SoapUI.logError( e );
 			throw new AssertionException( new AssertionError(
-					"There has been some XmlException, ws-a couldn't be validated properly." ) );
+					"There has been some XmlException, WS-A couldn't be validated properly." ) );
 		}
 
 		return "Response WS-Addressing is valid";
@@ -180,7 +180,7 @@ public class WSAResponseAssertion extends WsdlMessageAssertion implements Reques
 
 	private void buildDialog()
 	{
-		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Ws-a properties to assert" );
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "WS-A properties to assert" );
 		XForm mainForm = builder.createForm( "Basic" );
 		mainForm.addCheckBox( ASSERT_ACTION, "Check if 'wsa:Action' exists and has the right value" );
 		mainForm.addCheckBox( ASSERT_TO, "Check if 'wsa:To' exists" );

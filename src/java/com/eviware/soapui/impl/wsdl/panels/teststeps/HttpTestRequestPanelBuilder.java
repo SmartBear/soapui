@@ -47,7 +47,7 @@ public class HttpTestRequestPanelBuilder extends EmptyPanelBuilder<HttpTestReque
 	{
 		HttpTestRequestInterface<?> request = testStep.getTestRequest();
 		JPropertiesTable<HttpTestRequestInterface<?>> table = new JPropertiesTable<HttpTestRequestInterface<?>>(
-				"REST TestRequest Properties" );
+				"HTTP TestRequest Properties" );
 
 		// basic properties
 		table.addProperty( "Name", "name", true );

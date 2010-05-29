@@ -132,4 +132,22 @@ public class WsdlMockResultMessageExchange extends AbstractWsdlMessageExchange<M
 	{
 		return mockResult.getResponseContentType();
 	}
+
+	@Override
+	public byte[] getRawRequestData()
+	{
+		return mockResult.getMockRequest().getRawRequestData();
+	}
+
+	@Override
+	public byte[] getRawResponseData()
+	{
+		return mockResult.getRawResponseData();
+	}
+
+	@Override
+	public boolean hasRawData()
+	{
+		return true;
+	}
 }

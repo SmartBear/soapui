@@ -48,7 +48,7 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 
 	public String getEndpoint()
 	{
-		return String.valueOf( response.getURL());
+		return String.valueOf( response.getURL() );
 	}
 
 	public WsdlRequest getRequest()
@@ -59,6 +59,21 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 	public WsdlResponse getResponse()
 	{
 		return response;
+	}
+
+	public boolean hasRawData()
+	{
+		return response != null;
+	}
+
+	public byte[] getRawRequestData()
+	{
+		return response == null ? null : response.getRawRequestData();
+	}
+
+	public byte[] getRawResponseData()
+	{
+		return response == null ? null : response.getRawResponseData();
 	}
 
 	public void setResponse( WsdlResponse response )

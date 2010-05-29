@@ -44,7 +44,22 @@ public class RestResponseMessageExchange extends AbstractRestMessageExchange<Res
 	{
 		return response == null ? null : response.getURL().toString();
 	}
-	
+
+	public boolean hasRawData()
+	{
+		return response != null;
+	}
+
+	public byte[] getRawRequestData()
+	{
+		return response == null ? null : response.getRawRequestData();
+	}
+
+	public byte[] getRawResponseData()
+	{
+		return response == null ? null : response.getRawResponseData();
+	}
+
 	public String getRequestContent()
 	{
 		if( requestContent != null )

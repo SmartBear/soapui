@@ -40,7 +40,6 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 		return null;
 	}
 
-
 	public String getEndpoint()
 	{
 		return getModelItem().getMockResult().getMockRequest().getHttpRequest().getRequestURI();
@@ -113,4 +112,22 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 	{
 		return getModelItem().getMockResult().getResponseContentType();
 	}
+
+	@Override
+	public boolean hasRawData()
+	{
+		return true;
+	}
+
+	@Override
+	public byte[] getRawResponseData()
+	{
+		return getModelItem().getMockResult().getRawResponseData();
+	}
+
+	public byte[] getRawRequestData()
+	{
+		return getModelItem().getMockResult().getMockRequest().getRawRequestData();
+	}
+
 }
