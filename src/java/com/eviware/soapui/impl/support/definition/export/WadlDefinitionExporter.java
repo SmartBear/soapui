@@ -51,7 +51,9 @@ public class WadlDefinitionExporter extends AbstractDefinitionExporter<RestServi
 
 	protected String[] getLocationXPathsToReplace()
 	{
-		return new String[] { "declare namespace s='" + getDefinition().getInterface().getWadlVersion() + "' .//s:grammars/s:include/@href",
+		return new String[] {
+				"declare namespace s='" + getDefinition().getInterface().getWadlVersion()
+						+ "' .//s:grammars/s:include/@href",
 				"declare namespace s='http://www.w3.org/2001/XMLSchema' .//s:import/@schemaLocation",
 				"declare namespace s='http://www.w3.org/2001/XMLSchema' .//s:include/@schemaLocation" };
 	}
@@ -68,7 +70,9 @@ public class WadlDefinitionExporter extends AbstractDefinitionExporter<RestServi
 				{
 					for( Method method : resource.getMethodList() )
 					{
-						fixRepresentations( method.getRequest().getRepresentationList() );
+						if( method.getRequest() != null )
+							fixRepresentations( method.getRequest().getRepresentationList() );
+
 						for( Response response : method.getResponseList() )
 						{
 							fixRepresentations( response.getRepresentationList() );
@@ -83,12 +87,13 @@ public class WadlDefinitionExporter extends AbstractDefinitionExporter<RestServi
 	{
 		for( Representation representation : representationList )
 		{
-			if( !( "text/xml".equals( representation.getMediaType() )
-					|| "application/xml".equals( representation.getMediaType() ) ) && representation.isSetElement())
+			if( !( "text/xml".equals( representation.getMediaType() ) || "application/xml".equals( representation
+					.getMediaType() ) )
+					&& representation.isSetElement() )
 			{
 				String prefix = representation.xgetElement().getDomNode().getNodeValue().split( ":" )[0];
 				representation.unsetElement();
-				((Element)representation.getDomNode()).removeAttribute( "xmlns:"+prefix );
+				( ( Element )representation.getDomNode() ).removeAttribute( "xmlns:" + prefix );
 			}
 		}
 	}
