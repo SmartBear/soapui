@@ -128,7 +128,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				{
 					try
 					{
-						addFormMultipart( request, formMp, param.getName(), value );
+						addFormMultipart( request, formMp, param.getName(), responseProperties.get( param.getName() ) );
 					}
 					catch( MessagingException e )
 					{

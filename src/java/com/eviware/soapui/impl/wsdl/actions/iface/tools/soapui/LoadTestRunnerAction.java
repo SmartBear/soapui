@@ -75,6 +75,7 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 	private static final String SOAPUISETTINGSPASSWORD = "soapui-setings.xml Password";
 	private static final String SAVEAFTER = "Save After";
 	private static final String WSSTYPE = "WSS Password Type";
+	private static final String OPEN_REPORT = "Open Report";
 	private static final String GENERATEREPORTSEACHTESTCASE = "Report to Generate";
 	private static final String REPORTFORMAT = "Report Format(s)";
 	private static final String GLOBALPROPERTIES = "Global Properties";
@@ -171,6 +172,8 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 	{
 		reportForm.addCheckBox( PRINTREPORTSTATISTICS, "Creates a report statistics in the specified folder" );
 		reportForm.addTextField( ROOTFOLDER, "Folder for reporting", XForm.FieldType.FOLDER );
+		reportForm.addCheckBox( OPEN_REPORT, "Opens generated report(s) in browser (soapUI Pro only)" ).setEnabled(
+				proVersion );
 		reportForm.addTextField( GENERATEREPORTSEACHTESTCASE, "Report to Generate (soapUI Pro only)",
 				XForm.FieldType.TEXT ).setEnabled( proVersion );
 		reportForm.addTextField( REPORTFORMAT, "Choose report format(s), comma-separated (soapUI Pro only)",
@@ -326,6 +329,7 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 
 		if( proVersion )
 		{
+			builder.addBoolean( OPEN_REPORT, "-o" );
 			builder.addString( GENERATEREPORTSEACHTESTCASE, "-R", "" );
 			builder.addStrings( REPORTFORMAT, "-F", "," );
 		}

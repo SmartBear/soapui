@@ -179,7 +179,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 		reportForm.addTextField( ROOTFOLDER, "Folder to export to", XForm.FieldType.FOLDER );
 		reportForm.addSeparator();
 		reportForm.addCheckBox( COVERAGE, "Generate WSDL Coverage report (soapUI Pro only)" ).setEnabled( proVersion );
-		reportForm.addCheckBox( OPEN_REPORT, "Open generated HTML report in browser (soapUI Pro only)" ).setEnabled(
+		reportForm.addCheckBox( OPEN_REPORT, "Opens generated report(s) in browser (soapUI Pro only)" ).setEnabled(
 				proVersion );
 		reportForm.addTextField( GENERATEREPORTSEACHTESTCASE, "Report to Generate (soapUI Pro only)",
 				XForm.FieldType.TEXT ).setEnabled( proVersion );

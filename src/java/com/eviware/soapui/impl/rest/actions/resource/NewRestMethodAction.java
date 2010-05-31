@@ -67,13 +67,7 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 		else
 			params = new XmlBeansRestParamsTestPropertyHolder( null, RestParametersConfig.Factory.newInstance() );
 
-		paramsTable = new MethodInternalRestParamsTable( params, ParamLocation.METHOD )
-		{
-			public int getColumnCount()
-			{
-				return getColumnCount() - 1;
-			}
-		};
+		paramsTable = new MethodInternalRestParamsTable( params, ParamLocation.METHOD );
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 
 		if( dialog.show() )
