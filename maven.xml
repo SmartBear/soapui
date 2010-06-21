@@ -32,7 +32,7 @@
 
         <!--   <attainGoal name="soapui:generate-plugin"/>   -->
         <attainGoal name="dist:build-src"/>
-<--        <attainGoal name="soapui:create-docs-zip"/> -->
+<!--        <attainGoal name="soapui:create-docs-zip"/> -->
         <attainGoal name="soapui:create-binary-dist"/>
         <attainGoal name="soapui:create-standalone-binary-dist"/>
         <attainGoal name="soapui:create-install4j"/>
